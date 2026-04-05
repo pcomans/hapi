@@ -62,7 +62,7 @@ This means:
 - **CI**: Pipeline migrations run first, then web typecheck. If the pipeline changes a column and Drizzle's schema.ts isn't regenerated, the web build fails.
 - **Schema creation**: `docker/init-schemas.sql` creates both schemas (`CREATE SCHEMA IF NOT EXISTS catalog; CREATE SCHEMA IF NOT EXISTS web;`) on first DB init.
 
-No `shared/schema.json` — the database is the contract.
+The database is the contract — no separate schema file to keep in sync.
 
 ### 3. Protocol + structural tests (encode architecture as assertions)
 

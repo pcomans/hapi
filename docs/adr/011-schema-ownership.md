@@ -1,12 +1,10 @@
 # ADR-011: Pipeline Owns DB Schema, Drizzle Introspects, Separate Postgres Schemas
 
 ## Status
-Accepted (supersedes the `shared/schema.json` approach)
+Accepted
 
 ## Context
-The original plan used `shared/schema.json` as a language-neutral contract between the Python pipeline and TypeScript web app, with CI tests verifying both Pydantic models and Drizzle schema conformed to it. In practice, this created three representations of the same data (JSON Schema, Pydantic, Drizzle) that all had to stay in sync manually.
-
-The real contract between pipeline and web is the Postgres table itself — both sides read from and write to the same database. A separate JSON Schema file was documentation pretending to be enforcement.
+The pipeline (Python) and web app (TypeScript) both need access to the same artifact data. A shared JSON Schema file would create three representations to keep in sync (JSON Schema, Pydantic, Drizzle). The real contract is the Postgres table itself — both sides read from the same database.
 
 ## Decision
 
@@ -35,13 +33,13 @@ The web app reads from `catalog.*` (read-only) and reads/writes its own `web.*` 
 
 `docker/init-schemas.sql` creates both schemas on first DB init:
 ```sql
-CREATE SCHEMA IF NOT EXISTS pipeline;
+CREATE SCHEMA IF NOT EXISTS catalog;
 CREATE SCHEMA IF NOT EXISTS web;
 ```
 
 ### Pipeline owns the data schema
 
-The pipeline (SQLAlchemy) defines all data tables in `pipeline/pipeline/types/models.py` with `MetaData(schema="catalog")`. Alembic manages migrations, with `version_table_schema="catalog"` so the migration history table also lives in the `pipeline` schema.
+The pipeline (SQLAlchemy) defines all data tables in `pipeline/pipeline/types/models.py` with `MetaData(schema="catalog")`. Alembic manages migrations, with `version_table_schema="catalog"` so the migration history table also lives in the `catalog` schema.
 
 The web app introspects `catalog.*` via `drizzle-kit introspect` to generate TypeScript types for reading artifact data.
 
@@ -75,11 +73,11 @@ cd web && pnpm drizzle-kit introspect
 ```
 
 ## Consequences
-- `shared/schema.json` is removed — no more three-way sync problem
+- Single source of truth: SQLAlchemy table definitions, no separate schema file to keep in sync
 - Clean ownership boundary: pipeline owns `catalog.*`, web owns `web.*`
 - The web app's DB user can be `SELECT`-only on `catalog.*` and full access on `web.*` (enforced via Postgres GRANT in production)
-- Cross-schema joins work natively (e.g., `web.saved_searches` referencing `pipeline.artifacts`)
+- Cross-schema joins work natively (e.g., `web.saved_searches` referencing `catalog.artifacts`)
 - Alembic and Drizzle migration histories don't interfere — each tracks its own schema
 - Both CI jobs need a Postgres service container with the init script to create schemas
-- Adding a pipeline field: update SQLAlchemy model → update Pydantic model → create Alembic migration → re-introspect Drizzle → commit all together
+- Adding a catalog field: update SQLAlchemy model → update Pydantic model → create Alembic migration → re-introspect Drizzle → commit all together
 - Adding a web-only table: define in Drizzle, run Drizzle migration, no pipeline changes needed
