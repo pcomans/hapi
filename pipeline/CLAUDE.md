@@ -43,7 +43,7 @@ class MapperProtocol(Protocol):
 
 ## Schema ownership
 
-The pipeline owns the `pipeline` Postgres schema. All pipeline tables (artifacts, raw data, fuzzy match reviews) live in `pipeline.*`. Table definitions are in `pipeline/types/models.py` (SQLAlchemy with `MetaData(schema="pipeline")`). Alembic manages migrations with `version_table_schema="pipeline"` so migration history also lives in the `pipeline` schema.
+The pipeline owns the `catalog` Postgres schema. All data tables (artifacts, raw data, fuzzy match reviews) live in `catalog.*`. Table definitions are in `pipeline/types/models.py` (SQLAlchemy with `MetaData(schema="catalog")`). Alembic manages migrations with `version_table_schema="catalog"` so migration history also lives in the `catalog` schema.
 
 The web app has its own `web` Postgres schema for app-specific tables (users, settings). Both schemas live in the same database — cross-schema joins work natively. See ADR-011.
 

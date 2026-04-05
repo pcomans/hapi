@@ -16,7 +16,7 @@ Pipeline and web tables live in the same Postgres database but in separate Postg
 
 ```
 hapi (database)
-├── pipeline.*     — owned by Alembic (Python/SQLAlchemy)
+├── catalog.*     — owned by Alembic (Python/SQLAlchemy)
 │   ├── artifacts
 │   ├── raw_met
 │   ├── raw_brooklyn
@@ -29,7 +29,7 @@ hapi (database)
     └── settings (future)
 ```
 
-The web app reads from `pipeline.*` (read-only) and reads/writes its own `web.*` tables. Both schemas live in one database, so cross-schema joins work natively.
+The web app reads from `catalog.*` (read-only) and reads/writes its own `web.*` tables. Both schemas live in one database, so cross-schema joins work natively.
 
 ### Schema creation
 
@@ -41,9 +41,9 @@ CREATE SCHEMA IF NOT EXISTS web;
 
 ### Pipeline owns the data schema
 
-The pipeline (SQLAlchemy) defines all data tables in `pipeline/pipeline/types/models.py` with `MetaData(schema="pipeline")`. Alembic manages migrations, with `version_table_schema="pipeline"` so the migration history table also lives in the `pipeline` schema.
+The pipeline (SQLAlchemy) defines all data tables in `pipeline/pipeline/types/models.py` with `MetaData(schema="catalog")`. Alembic manages migrations, with `version_table_schema="catalog"` so the migration history table also lives in the `pipeline` schema.
 
-The web app introspects `pipeline.*` via `drizzle-kit introspect` to generate TypeScript types for reading artifact data.
+The web app introspects `catalog.*` via `drizzle-kit introspect` to generate TypeScript types for reading artifact data.
 
 ### Web owns its own schema
 
@@ -51,9 +51,9 @@ The web app defines app-specific tables (users, settings, etc.) in its own Drizz
 
 ### Data flow
 ```
-SQLAlchemy models (pipeline/types/models.py, schema="pipeline")
+SQLAlchemy models (pipeline/types/models.py, schema="catalog")
     → Alembic migrations
-        → pipeline.* tables in Postgres
+        → catalog.* tables in Postgres
             → drizzle-kit introspect
                 → generated schema.ts (committed to web/src/lib/db/schema.ts)
                     → $inferSelect types used in app code
@@ -76,8 +76,8 @@ cd web && pnpm drizzle-kit introspect
 
 ## Consequences
 - `shared/schema.json` is removed — no more three-way sync problem
-- Clean ownership boundary: pipeline owns `pipeline.*`, web owns `web.*`
-- The web app's DB user can be `SELECT`-only on `pipeline.*` and full access on `web.*` (enforced via Postgres GRANT in production)
+- Clean ownership boundary: pipeline owns `catalog.*`, web owns `web.*`
+- The web app's DB user can be `SELECT`-only on `catalog.*` and full access on `web.*` (enforced via Postgres GRANT in production)
 - Cross-schema joins work natively (e.g., `web.saved_searches` referencing `pipeline.artifacts`)
 - Alembic and Drizzle migration histories don't interfere — each tracks its own schema
 - Both CI jobs need a Postgres service container with the init script to create schemas

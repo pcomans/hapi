@@ -1,6 +1,6 @@
 """SQLAlchemy table definitions — the source of truth for the Postgres schema.
 
-The pipeline owns the 'pipeline' Postgres schema via Alembic migrations.
+The pipeline owns the 'catalog' Postgres schema via Alembic migrations.
 The web app owns the 'web' schema via Drizzle migrations.
 Both live in the same database but are independently managed.
 See ADR-011.
@@ -20,9 +20,9 @@ from sqlalchemy import (
     Text,
 )
 
-PIPELINE_SCHEMA = "pipeline"
+CATALOG_SCHEMA = "catalog"
 
-metadata = MetaData(schema=PIPELINE_SCHEMA)
+metadata = MetaData(schema=CATALOG_SCHEMA)
 
 artifacts_table = Table(
     "artifacts",
