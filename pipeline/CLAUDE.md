@@ -2,6 +2,26 @@
 
 Python / Dagster data pipeline. Ingests museum data, normalizes to canonical schema, enriches with authority data, syncs to Typesense.
 
+## Critical rule
+
+**Never run pipeline assets outside of Dagster.** All ingest, normalize, enrich, and index operations must be executed through Dagster. Do not write ad-hoc Python scripts that call asset functions directly — Dagster is the orchestrator for all data operations.
+
+**The agent operates Dagster, not the user.** Use the Dagster CLI to materialize assets:
+
+```bash
+cd pipeline && uv run dagster asset materialize -m pipeline.definitions --select raw_met          # single asset
+cd pipeline && uv run dagster asset materialize -m pipeline.definitions --select raw_met,normalize_met  # multiple
+cd pipeline && uv run dagster asset materialize -m pipeline.definitions --select '*'              # all assets
+```
+
+Do not tell the user to open the Dagster UI and click buttons. The agent is responsible for triggering pipeline runs.
+
+**Dagster dev server uses port 3001** (Next.js uses 3000):
+
+```bash
+cd pipeline && uv run dagster dev -p 3001
+```
+
 ## How it works
 
 Dagster assets form a dependency chain:
