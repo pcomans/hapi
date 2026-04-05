@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: hapi
+      POSTGRES_USER: hapi
+      POSTGRES_PASSWORD: hapi
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  typesense:
+    image: typesense/typesense:27.1
+    ports:
+      - "8108:8108"
+    environment:
+      TYPESENSE_API_KEY: hapi-dev-key
+      TYPESENSE_DATA_DIR: /data
+    volumes:
+      - tsdata:/data
+
+volumes:
+  pgdata:
+  tsdata:
