@@ -43,6 +43,7 @@ These are non-negotiable principles. Every agent, every PR, every line of code m
 6. **Authority list, never hardcoded.** Ruler names, dynasty labels, site names come from authority files in `pipeline/pipeline/authority/`. Mappers extract raw text; enrichment resolves it. No string literals for domain values in mapper code.
 7. **License before render.** Never display an image without checking the artifact's `license` field first. This is a legal obligation, not a UX preference.
 8. **Generated code is not edited.** Files produced by tools (`drizzle-kit introspect`, `alembic revision --autogenerate`) are committed as-is. Hand-editing generated files creates drift that the tools can't detect.
+9. **No backwards compatibility.** This is a greenfield project with no existing users or API clients. Never add deprecation shims, migration paths, or compatibility layers. Change things directly.
 
 ## Rules
 
