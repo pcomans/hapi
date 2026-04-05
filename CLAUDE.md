@@ -8,7 +8,7 @@ Two independent systems communicate through Postgres and Typesense:
 
 - **Pipeline** (Python / Dagster): `pipeline/` — ingests museum API data, normalizes to a canonical schema, enriches with authority data, syncs to search index
 - **Web app** (TypeScript / Next.js): `web/` — search, browse, filter, map view over the indexed data
-- **Schema ownership**: The pipeline owns the DB schema (SQLAlchemy + Alembic). The web app introspects from the live DB via `drizzle-kit introspect` to generate its TypeScript types. See ADR-011.
+- **Schema ownership**: Pipeline and web tables live in the same Postgres database but in separate schemas: `pipeline.*` (owned by Alembic/SQLAlchemy) and `web.*` (owned by Drizzle). The web app reads `pipeline.*` via `drizzle-kit introspect` and manages its own `web.*` tables independently. See ADR-011.
 
 ## Key commands
 
@@ -33,7 +33,7 @@ docker compose up -d                   # Postgres + Typesense
 
 ## Rules
 
-1. **Pipeline owns the schema.** DB table definitions live in `pipeline/pipeline/types/models.py`. To change the schema: update the SQLAlchemy model → update the Pydantic model → create an Alembic migration → re-introspect Drizzle → commit all together.
+1. **Pipeline owns the data schema.** DB table definitions live in `pipeline/pipeline/types/models.py` (in the `pipeline` Postgres schema). The web app has its own `web` Postgres schema for app-specific tables (users, settings). To change the data schema: update the SQLAlchemy model → update the Pydantic model → create an Alembic migration → re-introspect Drizzle → commit all together.
 2. **Every mapper has tests.** Every Dagster mapper asset must have corresponding tests using real fixture data in `pipeline/tests/fixtures/`. No mocks for museum data shapes.
 3. **Mappers implement the protocol.** Every museum mapper must implement `MapperProtocol` defined in `pipeline/pipeline/types/protocol.py`.
 4. **License before image.** Never embed an image URL directly in the UI. Always check the `license` field on the artifact record to determine rendering: embed, thumbnail, or link-out.

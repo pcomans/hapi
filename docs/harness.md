@@ -19,7 +19,7 @@ Once a module is validated against real data and stable, error handling will be 
 
 **If a machine can verify it, encode it in code. If it's rationale, context, or guidance for the agent's judgment, put it in markdown.**
 
-Markdown that duplicates what code already says will drift and become misleading. The schema is `shared/schema.json`, not a prose description of the schema. The field mappings are mapper code + fixture-based tests, not a document describing how fields map.
+Markdown that duplicates what code already says will drift and become misleading. The schema is the SQLAlchemy table in `pipeline/pipeline/types/models.py`, not a prose description of the schema. The field mappings are mapper code + fixture-based tests, not a document describing how fields map.
 
 ## How this repo is structured as a harness
 
@@ -33,14 +33,18 @@ CLAUDE.md                    # Root: architecture overview, key commands, rules
 
 The root file is the entry point — small and directive. Each subdirectory has domain-specific instructions. An agent working on a mapper reads the pipeline CLAUDE.md; an agent working on a component reads the web CLAUDE.md. Neither needs to load the other's context.
 
-### 2. Pipeline owns the DB schema (ADR-011)
+### 2. Pipeline owns the data schema, separate Postgres schemas (ADR-011)
 
-The Postgres table definitions in `pipeline/pipeline/types/models.py` (SQLAlchemy) are the single source of truth. Alembic manages migrations. The web app generates its Drizzle types by running `drizzle-kit introspect` against the live database.
+Pipeline and web tables live in the same Postgres database but in separate Postgres schemas (namespaces): `pipeline.*` (owned by Alembic/SQLAlchemy) and `web.*` (owned by Drizzle). The `pipeline` schema contains artifact data, raw museum data, and fuzzy match reviews. The `web` schema contains app-specific tables like users, settings, and saved searches.
+
+The Postgres table definitions in `pipeline/pipeline/types/models.py` (SQLAlchemy with `MetaData(schema="pipeline")`) are the single source of truth for data tables. Alembic manages migrations with `version_table_schema="pipeline"`.
 
 This means:
-- **Pipeline**: SQLAlchemy table → Alembic migration → Postgres. Pydantic `CanonicalArtifact` is validated against the table by a structural test.
-- **Web**: `drizzle-kit introspect` → generated `schema.ts` → `$inferSelect` types. No hand-written types.
+- **Pipeline**: SQLAlchemy table → Alembic migration → `pipeline.*` tables. Pydantic `CanonicalArtifact` is validated against the table by a structural test.
+- **Web (reading pipeline data)**: `drizzle-kit introspect` → generated `schema.ts` → `$inferSelect` types. No hand-written types.
+- **Web (own tables)**: Drizzle schema definitions → Drizzle migrations → `web.*` tables. Independent of the pipeline.
 - **CI**: Pipeline migrations run first, then web typecheck. If the pipeline changes a column and Drizzle's schema.ts isn't regenerated, the web build fails.
+- **Schema creation**: `docker/init-schemas.sql` creates both schemas (`CREATE SCHEMA IF NOT EXISTS pipeline; CREATE SCHEMA IF NOT EXISTS web;`) on first DB init.
 
 No `shared/schema.json` — the database is the contract.
 

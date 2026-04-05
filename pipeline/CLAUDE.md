@@ -43,9 +43,11 @@ class MapperProtocol(Protocol):
 
 ## Schema ownership
 
-The pipeline owns the database schema. Table definitions live in `pipeline/types/models.py` (SQLAlchemy). Alembic manages migrations. The web app generates its Drizzle types by introspecting the live DB.
+The pipeline owns the `pipeline` Postgres schema. All pipeline tables (artifacts, raw data, fuzzy match reviews) live in `pipeline.*`. Table definitions are in `pipeline/types/models.py` (SQLAlchemy with `MetaData(schema="pipeline")`). Alembic manages migrations with `version_table_schema="pipeline"` so migration history also lives in the `pipeline` schema.
 
-To change the schema:
+The web app has its own `web` Postgres schema for app-specific tables (users, settings). Both schemas live in the same database — cross-schema joins work natively. See ADR-011.
+
+To change the data schema:
 1. Update SQLAlchemy table in `pipeline/types/models.py`
 2. Update Pydantic model in `pipeline/types/canonical.py`
 3. Run `uv run alembic revision --autogenerate -m "description"`
