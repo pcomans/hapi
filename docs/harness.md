@@ -78,6 +78,58 @@ Only three kinds of markdown exist in this repo:
 
 Everything else is in code: types, tests, protocols, config, authority data files.
 
+## Quality evaluation
+
+The harness has three layers of quality checks beyond linting and type checking. The principle: **use deterministic checks where possible, LLMs where judgment is needed, and always prefer task completion over opinions.**
+
+See [ADR-010](adr/010-quality-evaluation.md) for the full rationale.
+
+### Layer 1: Deterministic pipeline checks (every run)
+
+Implemented as Dagster `@asset_check` decorators, co-located with the assets they validate.
+
+- **Ingest completeness**: Record count vs API total, change detection via content hash
+- **Normalization validity**: Date ranges, enum values, ID formats, field fill rates
+- **Authority coverage**: Unmatched value frequency ranking (high-frequency unmatched = authority gap)
+- **Cross-museum consistency**: Same place name from different museums resolves to same site ID
+- **Fuzzy match confidence**: Matches below 0.85 go to the review queue (see below)
+
+Coverage metrics (% of records with ruler, site, image) are emitted as Dagster asset metadata, tracked over time in the Dagster UI.
+
+### Layer 2: LLM data audit (sample-based)
+
+A Dagster asset (`quality/llm_audit`) samples records and uses an LLM (Haiku for cost) to:
+
+- **Semantic audit**: "Does this ruler attribution match the artifact's description and period?"
+- **Batch anomaly detection**: "49 records from Deir el-Bahri are Dynasty 18; this one says Dynasty 26 — misattributed or unusual?"
+- **Authority variant suggestion**: "Is 'Thutmosis III' a known variant of an existing entry?"
+
+Runs on new/changed records only. Generates suggestions for human review, never auto-merges authority changes.
+
+### Layer 3: Fuzzy match review queue
+
+Low-confidence matches are written to a `fuzzy_match_reviews` table. An LLM agent processes pending reviews — approving obvious matches (e.g., "Menkheperre" → Thutmose III), rejecting clear mismatches, and escalating uncertain cases to a human. See [ADR-009](adr/009-review-queue.md).
+
+### Layer 4: Web quality (Playwright + Playwright MCP)
+
+**Deterministic (CI on every PR):**
+- E2E functional tests: search returns results, filters work, detail pages load
+- Visual regression: `toHaveScreenshot()` pixel-diff at desktop + mobile viewports
+- License rendering: DOM assertions verify `img` tag for CC0, link-out for restricted
+
+**LLM usability via Playwright MCP (periodic):**
+
+Instead of screenshot-based opinions, the LLM drives the browser and attempts real user tasks. This is cheaper (DOM text vs vision tokens) and more meaningful (task completion vs subjective assessment).
+
+| Evaluation | LLM task |
+|---|---|
+| Search usability | "Find all artifacts from Karnak. Use the search and filters." |
+| Artifact discovery | "Find companion pieces for this artifact." |
+| Museum browsing | "Browse the Met's Dynasty 18 collection filtered by ruler." |
+| Mobile usability | "Complete a search on a 375px viewport." |
+
+If the LLM can't accomplish the task, a human probably can't either.
+
 ## What lives where
 
 | Content | Where | Why |

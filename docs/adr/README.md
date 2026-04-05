@@ -12,3 +12,5 @@ Each file records a single architectural decision: the context, the decision, an
 | [006](006-one-mapper-per-museum.md) | One mapper per museum, no universal parser | Accepted |
 | [007](007-origin-site-first-class.md) | Origin site as first-class entity with hierarchy | Accepted |
 | [008](008-confidence-tiers.md) | Confidence tiers for companion piece matching | Accepted |
+| [009](009-review-queue.md) | Fuzzy match review queue with LLM triage | Accepted |
+| [010](010-quality-evaluation.md) | Quality evaluation: deterministic checks + LLM layers | Accepted |
