@@ -1,7 +1,7 @@
-"""Canonical artifact model. Derived from shared/schema.json.
+"""Canonical artifact model.
 
-Any changes here MUST be reflected in shared/schema.json and vice versa.
-A CI test (tests/test_structure.py) verifies consistency.
+Must stay in sync with the SQLAlchemy table in models.py.
+A structural test (tests/test_structure.py) verifies column names match.
 """
 
 from pydantic import BaseModel
