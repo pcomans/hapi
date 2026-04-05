@@ -8,51 +8,57 @@ The guiding principle: **one museum end-to-end before adding complexity.** The M
 
 Take the Met from raw API to search results on screen. This validates the entire stack — schema, ingest, mapper, search index, web — before adding other museums.
 
-### 1.1 Alembic migration for initial schema
+### ~~1.1 Alembic migration for initial schema~~ ✅
 
-Run `uv run alembic revision --autogenerate -m "initial schema"` and `uv run alembic upgrade head` to create the actual database tables. Verify all tables exist in the `catalog` schema. This must happen before any ingest or mapper work.
+Migration `744ef0c92771_initial_schema.py` created and applied. All tables exist in `catalog` schema: `artifacts`, `raw_met`, `raw_brooklyn`, `raw_harvard`, `fuzzy_match_reviews`.
 
-### 1.2 Met fixtures
+### ~~1.2 Met fixtures~~ ✅
 
-Save 3–5 real Met API responses to `tests/fixtures/met/` by calling the API directly. Choose: one richly catalogued object (full geography, reign, dates), one sparse record (minimal fields), one with ambiguous provenance ("Said to be from"), one with a co-regency or unusual reign field, one with no image. These fixtures drive all mapper development.
+5 real Met API responses saved to `tests/fixtures/met/`: `rich_object.json` (Thutmose III statuette), `sparse_object.json` (Fishtail Knife), `ambiguous_provenance.json` ("Said to be from" geography), `coregency_reign.json` (Queen Tiye ring, reign spans Amenhotep III to Akhenaten), `no_image.json` (Wedge, no image).
 
-### 1.3 Met mapper + tests
+### ~~1.3 Met mapper + tests~~ ✅
 
-Create `pipeline/assets/normalize/met.py` implementing `MapperProtocol`. Map Met fields to `CanonicalArtifact`: `objectID` → `id`, `title`, `objectName` → `object_type`, structured geography fields → `origin_site_raw` (preserve `geographyType` for provenance confidence), `period`, `dynasty`, `reign` → `ruler_display_name`, `objectBeginDate`/`objectEndDate` → `date_start`/`date_end`, `primaryImage` → `image_url`, etc. Parse date strings like "ca. 1479-1425 B.C." into integer ranges. Handle `reign` field containing period info instead of ruler names.
+`pipeline/assets/normalize/met.py` implements `MapperProtocol`. Handles: reign extraction ("reign of X" → ruler name), structured geography → origin_site_raw, geographyType → origin_certainty, medium parsing, Wikidata ID extraction. 35 tests in `tests/test_mappers/test_met.py`, all passing.
 
-Write `tests/test_mappers/test_met.py` asserting specific mapped field values for each fixture.
+### ~~1.4 Met ingest asset~~ ✅
 
-### 1.4 Met ingest asset
+`pipeline/assets/ingest/met.py` — Dagster asset with concurrent fetching (20 workers via ThreadPoolExecutor). Per-batch commits (250 objects/batch). Handles 404s for deleted objects. ~28k objects ingested in ~20 minutes.
 
-Create `pipeline/assets/ingest/met.py` — Dagster asset that fetches all Egyptian Art object IDs (`departmentIds=10`) then fetches each object record, storing raw JSON verbatim in `raw_met` table. Handle the Met's pattern: one call returns ~26k IDs, then individual fetches per object. Respect 80 req/sec rate limit. Must be idempotent (re-run overwrites).
+### ~~1.5 Dagster definitions wiring (Met)~~ ✅
 
-### 1.5 Dagster definitions wiring (Met)
+`pipeline/definitions.py` registers `raw_met`, `normalize_met`, `sync_search` assets with `DatabaseResource`. Added `[tool.dagster] module_name` to `pyproject.toml`. Dagster dev runs on port 3001 (Next.js uses 3000).
 
-Update `pipeline/definitions.py` to register Met ingest and normalize assets with proper resource configuration (database connection from environment). Verify `dagster dev` launches and shows the Met asset graph.
+### ~~1.6 Typesense sync asset~~ ✅
 
-### 1.6 Typesense sync asset
+`pipeline/assets/index/sync_search.py` — drops and recreates the Typesense collection, syncs all canonical artifacts with faceted fields for museum, period, dynasty, ruler, site, object type.
 
-Create `pipeline/assets/index/sync_search.py` — Dagster asset that syncs all canonical artifacts to the Typesense search index. Define the Typesense collection schema with appropriate field types (string, int32, float, geopoint for site coordinates). Must be idempotent.
+### ~~1.7 Drizzle setup + schema introspection~~ ✅
 
-### 1.7 Drizzle setup + schema introspection
+`drizzle-orm`, `drizzle-kit`, `postgres` installed. Schema introspected to `src/lib/db/schema.ts`. Drizzle client at `src/lib/db/index.ts`.
 
-Install Drizzle ORM dependencies (`drizzle-orm`, `drizzle-kit`, `postgres`) in `web/`. Run `pnpm drizzle-kit introspect` to generate `src/lib/db/schema.ts` from the live database. Create `web/src/lib/db/index.ts` (Drizzle client). Commit the generated schema.
+### ~~1.8 Search API route + Typesense client~~ ✅
 
-### 1.8 Search API route + Typesense client
+`web/src/lib/search/index.ts` (Typesense client, server-side). `web/src/app/api/search/route.ts` (Next.js API route proxying to Typesense with filter support).
 
-Create `web/src/lib/search/index.ts` (Typesense client, server-side only). Create `web/src/app/api/search/route.ts` — Next.js API route that proxies search requests to Typesense. Accept query string, filters (site, ruler, dynasty, object type, museum), pagination. Return typed results.
+### ~~1.9 License-aware image component~~ ✅
 
-### 1.9 License-aware image component
+`web/src/components/artifact-image.tsx` — embeds CC0 directly, embeds with attribution for CC-BY variants, shows placeholder with link-out for restricted/unknown. 8 component tests passing (Vitest + React Testing Library).
 
-Create a shared component that renders artifact images based on the `license` field: embed for CC0, embed with attribution for CC-BY-NC-ND, placeholder with link-out for unknown/restrictive. This is a legal requirement — write component tests that verify correct rendering for each license type.
+### ~~1.10 Search landing page (`/`)~~ ✅
 
-### 1.10 Search landing page (`/`)
+Search bar, faceted filters (sidebar), artifact cards in grid layout, pagination. Suggested searches (Karnak, Thutmose III, etc.) shown on empty state. Server-rendered.
 
-Build the main search page: search bar, faceted filters (site of origin, ruler, dynasty, object type, museum), results in list/grid view with artifact images (via license-aware component), pagination. Filters show counts to avoid empty results. Server-rendered for SEO. At this point, Met data should be searchable end-to-end.
+### 1.11 First full pipeline run 🔄
+
+Materialize `raw_met` → `normalize_met` → `sync_search` via Dagster CLI. Verify end-to-end: search returns Met artifacts on localhost:3000. **In progress: ingest running.**
 
 ## Milestone 2: Brooklyn + Harvard
 
 Add the other two museums to stress-test normalization across different data shapes. The pipeline, search index, and web already work from Milestone 1.
+
+**Blocked: need API keys from user.**
+- Brooklyn Museum: register at https://www.brooklynmuseum.org/opencollection/api
+- Harvard Art Museums: register at https://harvardartmuseums.org/collections/api
 
 ### 2.1 Brooklyn fixtures + mapper + tests
 
