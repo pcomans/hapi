@@ -3,7 +3,7 @@ import { defineConfig } from "drizzle-kit";
 export default defineConfig({
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL!,
+    url: process.env.DATABASE_URL,
   },
   // Only introspect the catalog schema (pipeline-owned data tables).
   // The web schema is managed by Drizzle migrations separately.
