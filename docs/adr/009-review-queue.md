@@ -4,9 +4,9 @@
 Accepted
 
 ## Context
-The enrichment stage uses fuzzy string matching to resolve raw museum text ("Menkheperre", "Deir el-Bahari") to canonical authority IDs ("thutmose-iii", "deir-el-bahri"). Fuzzy matching produces false positives, especially for: short strings, transliteration variants across languages, and names shared by multiple rulers (e.g., multiple pharaohs named Amenhotep).
+The enrichment stage resolves raw museum text ("Menkheperre", "Deir el-Bahari") to canonical authority IDs ("thutmose-iii", "deir-el-bahri"). The primary path is exact match against known variants in the authority files. When no exact match is found, a fuzzy string fallback guesses the closest entry — but fuzzy matching produces false positives, especially for: short strings, transliteration variants across languages, and names shared by multiple rulers (e.g., multiple pharaohs named Amenhotep). Levenshtein-based scores are particularly unreliable because edit distance doesn't correlate with identity ("Thutmose III" → "Thutmose IV" scores higher than "Thutmose III" → "Tuthmosis", which is the same ruler).
 
-We need a way to catch low-confidence matches without blocking the pipeline or requiring constant human oversight.
+We need a way to catch these fuzzy matches without blocking the pipeline or requiring constant human oversight.
 
 ## Decision
 Unresolved matches are written to a review queue table in Postgres rather than being silently accepted or rejected. An LLM agent processes the queue, and uncertain cases are escalated to a human.
@@ -42,7 +42,7 @@ CREATE TABLE fuzzy_match_reviews (
 
 1. Query all `status = 'pending'` rows
 2. For each, fetch the full artifact record + the authority entry it matched against
-3. Ask the LLM: "The museum record says '{raw_value}'. The fuzzy matcher mapped this to '{matched_display_name}' (variants: {variant_list}) with {confidence}% confidence. Given the artifact's title, period, and description, is this match correct?"
+3. Ask the LLM: "The museum record says '{raw_value}'. The fuzzy matcher's best guess is '{matched_display_name}' (known variants: {variant_list}). Given the artifact's title, period, and description, is this the same entity?"
 4. LLM responds with APPROVED / REJECTED / UNCERTAIN + reasoning
 5. APPROVED and REJECTED are written back with `reviewed_by = 'llm'`
 6. UNCERTAIN rows remain `pending` for human review
@@ -54,9 +54,10 @@ CREATE TABLE fuzzy_match_reviews (
 - Uses a cheap model (Haiku) for initial triage; uncertain cases can be escalated to a stronger model
 
 ## Consequences
-- Low-confidence matches are surfaced, not silently accepted — prevents false attributions from reaching users
-- The LLM handles the majority of cases correctly (Egyptological name variants are well within LLM knowledge)
+- All fuzzy matches are surfaced, not silently accepted — prevents false attributions from reaching users
+- Exact variant matching handles the majority of cases with zero ambiguity; fuzzy is the exception
+- The LLM triager handles most queued cases correctly (Egyptological name variants are well within LLM knowledge)
 - Human review effort is minimized to genuinely ambiguous cases
 - The review table provides an audit trail: which matches were human-verified vs LLM-verified
-- Match threshold (0.85) is tunable — lower it as confidence in the authority list grows
+- Approved variants feed back into authority files, so the fuzzy path fires less over time
 - The same pattern works for both ruler and site matching
