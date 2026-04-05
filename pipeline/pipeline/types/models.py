@@ -12,7 +12,6 @@ model. A structural test (test_structure.py) verifies column names match.
 from sqlalchemy import (
     ARRAY,
     Column,
-    Float,
     Integer,
     MetaData,
     String,
@@ -102,7 +101,6 @@ fuzzy_match_reviews_table = Table(
     Column("field", String, nullable=False),
     Column("raw_value", Text, nullable=False),
     Column("matched_id", String),
-    Column("confidence", Float, nullable=False),
     Column("status", String, nullable=False, default="pending"),
     Column("reviewed_by", String),
     Column("review_notes", Text),
