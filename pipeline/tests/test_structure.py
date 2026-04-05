@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 
 from pipeline.types.canonical import CanonicalArtifact
-from pipeline.types.sources import MuseumSource
+from pipeline.types.sources import MUSEUM_LICENSE, MuseumSource
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 PIPELINE_ROOT = Path(__file__).parent.parent
@@ -81,6 +81,15 @@ def test_canonical_model_matches_schema_json():
     assert not extra_in_model, (
         f"Fields in CanonicalArtifact but missing from schema.json: {extra_in_model}"
     )
+
+
+def test_every_museum_has_license():
+    """Every museum in MuseumSource must have an entry in MUSEUM_LICENSE."""
+    for source in MuseumSource:
+        assert source in MUSEUM_LICENSE, (
+            f"Missing license entry for {source.value} in MUSEUM_LICENSE. "
+            f"Add it to pipeline/types/sources.py."
+        )
 
 
 def test_required_fields_match():
