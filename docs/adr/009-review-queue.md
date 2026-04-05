@@ -29,7 +29,6 @@ CREATE TABLE fuzzy_match_reviews (
     field TEXT NOT NULL,           -- 'ruler' or 'site'
     raw_value TEXT NOT NULL,       -- what the museum record said
     matched_id TEXT,               -- authority ID the fuzzy matcher chose (NULL if no match)
-    confidence FLOAT NOT NULL,     -- fuzzy match score (0.0 - 1.0), informational only — all fuzzy matches are queued
     status TEXT NOT NULL DEFAULT 'pending',  -- 'pending', 'approved', 'rejected'
     reviewed_by TEXT,              -- 'llm' or 'human'
     review_notes TEXT,
