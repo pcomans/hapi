@@ -33,13 +33,19 @@ class MapperProtocol(Protocol):
     def map_to_canonical(self, raw: dict) -> CanonicalArtifact:
         """Map a single raw museum record to the canonical schema.
 
-        All fields in CanonicalArtifact are Optional except id, source_museum, source_url.
-        Never raise on missing data — return None for unmappable fields.
-        Ruler/site matching uses authority list lookup via the enrich stage, NOT this mapper.
-        This mapper only does field-level transformation.
+        Returns a CanonicalArtifact with None for unmappable optional fields.
+        Raises ValueError or KeyError if the record is malformed or missing
+        data required for a valid mapping (id, source_url).
+
+        Ruler/site matching uses authority list lookup via the enrich stage,
+        NOT this mapper. This mapper only does field-level transformation.
         """
         ...
 ```
+
+**When to raise vs return None:**
+- **Raise** if the record is structurally broken: missing `id`, missing `source_url`, unparseable JSON, unexpected top-level shape. These indicate a bug in the ingest or a breaking API change.
+- **Return None** for absent optional metadata: no dynasty, no image, no dimensions. Most museum records are sparse — this is expected, not an error.
 
 ## Schema ownership
 

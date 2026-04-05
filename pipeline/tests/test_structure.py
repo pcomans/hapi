@@ -4,6 +4,9 @@ These tests enforce architectural invariants:
 - Every registered museum has ingest + mapper + fixtures
 - The SQLAlchemy table model matches the Pydantic canonical model
 - All museums have license entries
+
+Assertion messages are written as remediation instructions for the agent.
+When a test fails, the message tells the agent exactly what to do to fix it.
 """
 
 from pathlib import Path
@@ -31,9 +34,9 @@ def test_every_museum_has_ingest_asset():
     for source in MuseumSource:
         path = PIPELINE_ROOT / "pipeline" / "assets" / "ingest" / f"{source.value}.py"
         assert path.exists(), (
-            f"Missing ingest asset for {source.value}. "
-            f"Expected: {path}. "
-            f"See pipeline/CLAUDE.md for the 'Adding a new museum' checklist."
+            f"Create {path} — ingest asset for {source.value}. "
+            f"It must store raw API responses verbatim in the raw_{source.value} table. "
+            f"Follow the 'Adding a new museum' checklist in pipeline/CLAUDE.md."
         )
 
 
@@ -43,9 +46,9 @@ def test_every_museum_has_normalize_mapper():
     for source in MuseumSource:
         path = PIPELINE_ROOT / "pipeline" / "assets" / "normalize" / f"{source.value}.py"
         assert path.exists(), (
-            f"Missing normalize mapper for {source.value}. "
-            f"Expected: {path}. "
-            f"See pipeline/CLAUDE.md for the 'Adding a new museum' checklist."
+            f"Create {path} — normalize mapper for {source.value}. "
+            f"It must implement MapperProtocol from pipeline/types/protocol.py. "
+            f"Follow the 'Adding a new museum' checklist in pipeline/CLAUDE.md."
         )
 
 
@@ -55,13 +58,15 @@ def test_every_museum_has_fixtures():
     for source in MuseumSource:
         fixture_dir = PIPELINE_ROOT / "tests" / "fixtures" / source.value
         assert fixture_dir.is_dir(), (
-            f"Missing fixture directory for {source.value}. "
-            f"Expected: {fixture_dir}"
+            f"Create directory {fixture_dir}/ and add 3-5 real API responses as JSON files. "
+            f"Choose diverse cases: one well-catalogued artifact, one sparse record, "
+            f"one with ambiguous provenance."
         )
         fixtures = list(fixture_dir.glob("*.json"))
         assert len(fixtures) > 0, (
-            f"No fixture JSON files for {source.value} in {fixture_dir}. "
-            f"Add 3-5 real API responses as fixture data."
+            f"Add fixture JSON files to {fixture_dir}/. "
+            f"Save 3-5 real API responses. Choose diverse cases: one well-catalogued "
+            f"artifact, one sparse record, one with ambiguous provenance."
         )
 
 
@@ -71,8 +76,9 @@ def test_every_museum_has_mapper_tests():
     for source in MuseumSource:
         path = PIPELINE_ROOT / "tests" / "test_mappers" / f"test_{source.value}.py"
         assert path.exists(), (
-            f"Missing mapper tests for {source.value}. "
-            f"Expected: {path}"
+            f"Create {path} — mapper tests for {source.value}. "
+            f"Test against every fixture file in tests/fixtures/{source.value}/. "
+            f"Assert specific field values, not just absence of errors."
         )
 
 
@@ -85,10 +91,12 @@ def test_sqlalchemy_columns_match_pydantic_fields():
     extra_in_table = sa_columns - pydantic_fields
 
     assert not missing_from_table, (
-        f"Fields in CanonicalArtifact but missing from artifacts_table: {missing_from_table}"
+        f"Add columns to artifacts_table in pipeline/types/models.py: {missing_from_table}. "
+        f"Then run: uv run alembic revision --autogenerate -m 'add columns'"
     )
     assert not extra_in_table, (
-        f"Columns in artifacts_table but missing from CanonicalArtifact: {extra_in_table}"
+        f"Add fields to CanonicalArtifact in pipeline/types/canonical.py: {extra_in_table}. "
+        f"All fields should be Optional except id, source_museum, source_url."
     )
 
 
@@ -96,6 +104,7 @@ def test_every_museum_has_license():
     """Every museum in MuseumSource must have an entry in MUSEUM_LICENSE."""
     for source in MuseumSource:
         assert source in MUSEUM_LICENSE, (
-            f"Missing license entry for {source.value} in MUSEUM_LICENSE. "
-            f"Add it to pipeline/types/sources.py."
+            f"Add MUSEUM_LICENSE[MuseumSource.{source.name}] = License.<type> "
+            f"in pipeline/types/sources.py. "
+            f"Check docs/museum-sources/{source.value}.md for license terms."
         )
