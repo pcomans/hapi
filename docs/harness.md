@@ -4,16 +4,32 @@ This project is built entirely by AI agents (Claude, Opus). The harness — the 
 
 This approach is informed by OpenAI's "Harness Engineering" methodology (2026), which demonstrated that 3 engineers shipped ~1 million lines of code across ~1,500 PRs without writing source code manually, by investing in the environment the agent works within.
 
-## Development philosophy
+## Constitutional rules
 
-**Fail fast, no defensive programming.** During development, every error should be loud and immediate. If a mapper hits a malformed record, it raises — it does not silently skip, return partial results, or wrap in try/except. A failing pipeline means a fixture is missing or the logic has a bug, and both must be fixed before proceeding.
+The root `CLAUDE.md` defines eight constitutional rules — non-negotiable principles that every agent must respect. They are the highest-authority instructions in the repo. The full list lives there (single source of truth); here we explain the reasoning behind the design.
 
-This applies across the stack:
-- **Mappers**: Raise on malformed records. Don't handle edge cases that haven't been seen in real data yet.
-- **Web components**: Let TypeScript catch type errors at compile time. Don't add runtime validation for data coming from our own database.
-- **Tests**: Assert specific values, not "it doesn't crash." A test that catches exceptions is hiding bugs.
+### Why constitutional rules exist
 
-Once a module is validated against real data and stable, error handling will be added for incoming data quality issues (museum APIs returning unexpected formats, missing fields in new records). Until then: loud failures, no defensive programming.
+AI agents are stateless between sessions. They don't remember that we decided "no defensive programming" three conversations ago. Without explicit, prominent, top-level rules, each new session starts from a blank slate and an agent will default to its training priors (add try/except, write defensive code, create abstractions "just in case").
+
+Constitutional rules solve this by being:
+- **Visible**: In `CLAUDE.md` at the root, loaded automatically by every agent session
+- **Non-negotiable**: Framed as absolutes, not suggestions. "No defensive programming" not "prefer to avoid defensive programming"
+- **Mechanically enforced where possible**: Rule 2 (deterministic enforcement over convention) is self-referential — each rule should have a corresponding test or CI check. The structural tests in `test_structure.py` already enforce several of these.
+
+### How they relate to the rest of the harness
+
+```
+Constitutional rules (CLAUDE.md)      — What is NEVER allowed
+    ↓
+Procedural rules (CLAUDE.md)          — How to do specific things
+    ↓
+Domain instructions (pipeline/ web/)  — Where and in what order
+    ↓
+Structural tests (test_structure.py)  — Mechanical enforcement
+```
+
+The constitutional rules inform everything below them. "No defensive programming" shapes how mappers are written (pipeline/CLAUDE.md), how tests are structured (assert values, not absence of errors), and what code review catches. "Single source of truth" is why we use Drizzle introspection instead of hand-written types, and why authority data is JSON files instead of inline strings.
 
 ## Core principle
 
