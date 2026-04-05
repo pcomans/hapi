@@ -51,16 +51,16 @@ The root file is the entry point — small and directive. Each subdirectory has 
 
 ### 2. Pipeline owns the data schema, separate Postgres schemas (ADR-011)
 
-Pipeline and web tables live in the same Postgres database but in separate Postgres schemas (namespaces): `pipeline.*` (owned by Alembic/SQLAlchemy) and `web.*` (owned by Drizzle). The `pipeline` schema contains artifact data, raw museum data, and fuzzy match reviews. The `web` schema contains app-specific tables like users, settings, and saved searches.
+Pipeline and web tables live in the same Postgres database but in separate Postgres schemas (namespaces): `catalog.*` (owned by Alembic/SQLAlchemy) and `web.*` (owned by Drizzle). The `catalog` schema contains artifact data, raw museum data, and fuzzy match reviews. The `web` schema contains app-specific tables like users, settings, and saved searches.
 
-The Postgres table definitions in `pipeline/pipeline/types/models.py` (SQLAlchemy with `MetaData(schema="pipeline")`) are the single source of truth for data tables. Alembic manages migrations with `version_table_schema="pipeline"`.
+The Postgres table definitions in `pipeline/pipeline/types/models.py` (SQLAlchemy with `MetaData(schema="catalog")`) are the single source of truth for data tables. Alembic manages migrations with `version_table_schema="catalog"`.
 
 This means:
-- **Pipeline**: SQLAlchemy table → Alembic migration → `pipeline.*` tables. Pydantic `CanonicalArtifact` is validated against the table by a structural test.
-- **Web (reading pipeline data)**: `drizzle-kit introspect` → generated `schema.ts` → `$inferSelect` types. No hand-written types.
+- **Pipeline**: SQLAlchemy table → Alembic migration → `catalog.*` tables. Pydantic `CanonicalArtifact` is validated against the table by a structural test.
+- **Web (reading catalog data)**: `drizzle-kit introspect` → generated `schema.ts` → `$inferSelect` types. No hand-written types.
 - **Web (own tables)**: Drizzle schema definitions → Drizzle migrations → `web.*` tables. Independent of the pipeline.
 - **CI**: Pipeline migrations run first, then web typecheck. If the pipeline changes a column and Drizzle's schema.ts isn't regenerated, the web build fails.
-- **Schema creation**: `docker/init-schemas.sql` creates both schemas (`CREATE SCHEMA IF NOT EXISTS pipeline; CREATE SCHEMA IF NOT EXISTS web;`) on first DB init.
+- **Schema creation**: `docker/init-schemas.sql` creates both schemas (`CREATE SCHEMA IF NOT EXISTS catalog; CREATE SCHEMA IF NOT EXISTS web;`) on first DB init.
 
 No `shared/schema.json` — the database is the contract.
 

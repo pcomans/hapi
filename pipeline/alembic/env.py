@@ -16,7 +16,7 @@ if config.config_file_name is not None:
 
 import os
 
-from pipeline.types.models import PIPELINE_SCHEMA, metadata
+from pipeline.types.models import CATALOG_SCHEMA, metadata
 
 target_metadata = metadata
 
@@ -50,7 +50,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         include_schemas=True,
-        version_table_schema=PIPELINE_SCHEMA,
+        version_table_schema=CATALOG_SCHEMA,
     )
 
     with context.begin_transaction():
@@ -75,7 +75,7 @@ def run_migrations_online() -> None:
             connection=connection,
             target_metadata=target_metadata,
             include_schemas=True,
-            version_table_schema=PIPELINE_SCHEMA,
+            version_table_schema=CATALOG_SCHEMA,
         )
 
         with context.begin_transaction():
