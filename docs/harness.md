@@ -113,7 +113,7 @@ Implemented as Dagster `@asset_check` decorators, co-located with the assets the
 - **Normalization validity**: Date ranges, enum values, ID formats, field fill rates
 - **Authority coverage**: Unmatched value frequency ranking (high-frequency unmatched = authority gap)
 - **Cross-museum consistency**: Same place name from different museums resolves to same site ID
-- **Fuzzy match confidence**: Matches below 0.85 go to the review queue (see below)
+- **Fuzzy match routing**: All fuzzy matches (no exact variant hit) go to the review queue (see below)
 
 Coverage metrics (% of records with ruler, site, image) are emitted as Dagster asset metadata, tracked over time in the Dagster UI.
 
@@ -129,7 +129,7 @@ Runs on new/changed records only. Generates suggestions for human review, never 
 
 ### Layer 3: Fuzzy match review queue
 
-Low-confidence matches are written to a `fuzzy_match_reviews` table. An LLM agent processes pending reviews — approving obvious matches (e.g., "Menkheperre" → Thutmose III), rejecting clear mismatches, and escalating uncertain cases to a human. See [ADR-009](adr/009-review-queue.md).
+Enrichment first attempts exact match against all known variants in the authority files. When no exact match is found, fuzzy string matching guesses the closest entry — but all fuzzy matches go to the `fuzzy_match_reviews` table regardless of score (Levenshtein distances are unreliable for Egyptological names). An LLM agent triages pending reviews — approving obvious matches (e.g., "Menkheperre" → Thutmose III), rejecting clear mismatches, and escalating uncertain cases to a human. Approved variants are added to the authority files so future occurrences resolve via exact match. See [ADR-009](adr/009-review-queue.md).
 
 ### Layer 4: Web quality (Playwright + Playwright MCP)
 

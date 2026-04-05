@@ -26,7 +26,7 @@ All data quality checks are implemented as Dagster `@asset_check` decorators, co
 | Value range validation (dates > -4000 BCE, `date_start < date_end`) | Normalize | Bad date parsing |
 | Format validation (Wikidata IDs match `Q\d+`, enums valid) | Normalize | Mapper field errors |
 | Unmatched value frequency ranking | Enrich | Authority list gaps (200 records saying "Thutmosis III" with no match = gap) |
-| Fuzzy match confidence threshold | Enrich | False matches → review queue (ADR-009) |
+| Fuzzy match routing (all fuzzy → review queue) | Enrich | False matches caught before reaching users (ADR-009) |
 | Cross-museum site consistency | Enrich | Different museums resolving to different site IDs for the same place |
 | Change detection (content hash diff) | Ingest | Museum data updates between runs |
 
@@ -72,7 +72,7 @@ This is cheaper than vision (DOM text vs image tokens) and more meaningful (actu
 ## Consequences
 - Data quality issues are caught at the pipeline level, not discovered by users
 - Coverage metrics track data completeness over time
-- The review queue (ADR-009) handles fuzzy match uncertainty without blocking the pipeline
+- The review queue (ADR-009) catches all fuzzy matches without blocking the pipeline; approved variants feed back into authority files
 - Web quality is validated by task completion (can the LLM use the site?) not opinions about screenshots
 - LLM costs are controlled: Haiku for data audit, sample-based (not exhaustive), DOM text not images
 - Deterministic checks run on every PR/pipeline execution; LLM checks are periodic/on-demand
