@@ -1,7 +1,8 @@
 """SQLAlchemy table definitions — the source of truth for the Postgres schema.
 
-The pipeline owns the database schema via Alembic migrations.
-The web app (Drizzle) introspects from the live DB to generate its types.
+The pipeline owns the 'pipeline' Postgres schema via Alembic migrations.
+The web app owns the 'web' schema via Drizzle migrations.
+Both live in the same database but are independently managed.
 See ADR-011.
 
 These table definitions must stay in sync with the Pydantic CanonicalArtifact
@@ -19,7 +20,9 @@ from sqlalchemy import (
     Text,
 )
 
-metadata = MetaData()
+PIPELINE_SCHEMA = "pipeline"
+
+metadata = MetaData(schema=PIPELINE_SCHEMA)
 
 artifacts_table = Table(
     "artifacts",

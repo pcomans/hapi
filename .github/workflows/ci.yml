@@ -32,6 +32,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Create Postgres schemas
+        run: psql "$DATABASE_URL" -f ../docker/init-schemas.sql
+        working-directory: pipeline
+
       - uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
@@ -71,6 +75,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Create Postgres schemas
+        run: psql "$DATABASE_URL" -f ../docker/init-schemas.sql
+        working-directory: web
+
       - uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
@@ -86,7 +94,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Run pipeline migrations to create DB tables, then introspect with Drizzle
       - name: Run pipeline migrations
         working-directory: pipeline
         run: uv sync && uv run alembic upgrade head

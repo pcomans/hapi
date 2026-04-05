@@ -9,6 +9,7 @@ services:
       POSTGRES_PASSWORD: hapi
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./docker/init-schemas.sql:/docker-entrypoint-initdb.d/init-schemas.sql
 
   typesense:
     image: typesense/typesense:27.1
