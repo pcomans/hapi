@@ -19,7 +19,8 @@ Each museum has its own ingest asset and its own normalize mapper. They are inde
 3. **Create ingest asset**: `pipeline/assets/ingest/{museum}.py`. Follow the pattern in `met.py`. Must store raw response verbatim in the `raw_{museum}` Postgres table.
 4. **Create normalize mapper**: `pipeline/assets/normalize/{museum}.py`. Must implement `MapperProtocol` from `pipeline/types/protocol.py`. Maps raw fields to `CanonicalArtifact`.
 5. **Add mapper tests**: `tests/test_mappers/test_{museum}.py`. Test against every fixture file. Assert specific field values, not just "it doesn't crash."
-6. **Register the source**: Add the museum to `MuseumSource` enum in `pipeline/types/sources.py` and register assets in `pipeline/definitions.py`.
+6. **Add a raw table**: Add a `raw_{museum}_table` to `pipeline/types/models.py` and create an Alembic migration.
+7. **Register the source**: Add the museum to `MuseumSource` enum in `pipeline/types/sources.py`, add its license to `MUSEUM_LICENSE`, and register assets in `pipeline/definitions.py`.
 
 ## MapperProtocol
 
@@ -39,6 +40,18 @@ class MapperProtocol(Protocol):
         """
         ...
 ```
+
+## Schema ownership
+
+The pipeline owns the database schema. Table definitions live in `pipeline/types/models.py` (SQLAlchemy). Alembic manages migrations. The web app generates its Drizzle types by introspecting the live DB.
+
+To change the schema:
+1. Update SQLAlchemy table in `pipeline/types/models.py`
+2. Update Pydantic model in `pipeline/types/canonical.py`
+3. Run `uv run alembic revision --autogenerate -m "description"`
+4. Run `uv run alembic upgrade head`
+5. In web/: `pnpm drizzle-kit introspect`
+6. Commit the migration, models, and regenerated Drizzle schema together
 
 ## Key conventions
 

@@ -14,4 +14,4 @@ Use Python for the pipeline and TypeScript/Next.js for the frontend. The two sys
 - Next.js/React is the natural choice for an interactive web app with maps, faceted search, and SSR
 - Two languages means two build systems, two CI jobs, and context switching for the developer/agent
 - The boundary is clean: Postgres and Typesense are language-agnostic interfaces
-- `shared/schema.json` serves as the contract between the two halves, with CI tests enforcing conformance on both sides
+- The pipeline owns the Postgres schema (SQLAlchemy + Alembic migrations). The web app introspects from the live DB via `drizzle-kit introspect`. See ADR-011.
