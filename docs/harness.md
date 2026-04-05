@@ -6,7 +6,7 @@ This approach is informed by OpenAI's "Harness Engineering" methodology (2026), 
 
 ## Constitutional rules
 
-The root `CLAUDE.md` defines eight constitutional rules — non-negotiable principles that every agent must respect. They are the highest-authority instructions in the repo. The full list lives there (single source of truth); here we explain the reasoning behind the design.
+The root `CLAUDE.md` defines nine constitutional rules — non-negotiable principles that every agent must respect. They are the highest-authority instructions in the repo. The full list lives there (single source of truth); here we explain the reasoning behind the design.
 
 ### Why constitutional rules exist
 
@@ -16,6 +16,7 @@ Constitutional rules solve this by being:
 - **Visible**: In `CLAUDE.md` at the root, loaded automatically by every agent session
 - **Non-negotiable**: Framed as absolutes, not suggestions. "No defensive programming" not "prefer to avoid defensive programming"
 - **Mechanically enforced where possible**: Rule 2 (deterministic enforcement over convention) is self-referential — each rule should have a corresponding test or CI check. The structural tests in `test_structure.py` already enforce several of these.
+- **Greenfield-aware**: Rule 9 (no backwards compatibility) is especially important for AI agents, which tend to add deprecation paths, compatibility shims, and migration helpers by default. There are no existing users — just change things directly.
 
 ### How they relate to the rest of the harness
 
