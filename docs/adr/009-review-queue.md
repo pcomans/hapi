@@ -9,7 +9,16 @@ The enrichment stage uses fuzzy string matching to resolve raw museum text ("Men
 We need a way to catch low-confidence matches without blocking the pipeline or requiring constant human oversight.
 
 ## Decision
-Low-confidence fuzzy matches (below a configurable threshold, initially 0.85) are written to a review queue table in Postgres rather than being silently accepted or rejected. An LLM agent processes the queue, and uncertain cases are escalated to a human.
+Unresolved matches are written to a review queue table in Postgres rather than being silently accepted or rejected. An LLM agent processes the queue, and uncertain cases are escalated to a human.
+
+### Two-stage matching
+
+Authority files (rulers.json, sites.json) include explicit variant arrays for each entry (e.g., Thutmose III has variants `["Tuthmosis III", "Menkheperre", "Djehutymes III", ...]`). Matching uses a two-stage strategy:
+
+1. **Exact match against all variants first.** Case-insensitive, whitespace-normalized. This handles known transliterations with zero ambiguity and is the primary matching path.
+2. **Fuzzy fallback for unlisted variants.** If no exact match is found, fuzzy string matching (rapidfuzz, token_sort_ratio) is used against all variant strings. Any fuzzy match — regardless of score — goes to the review queue. This is deliberate: Levenshtein-based ratios are unreliable in Egyptology because edit distance doesn't correlate with identity. "Thutmose III" is closer to "Thutmose IV" (distance 1) than to "Tuthmosis" (the same ruler). Fuzzy matches are never auto-accepted.
+
+When a fuzzy match is approved, the variant should be added to the authority file so future occurrences resolve via exact match.
 
 ### Review queue schema
 
@@ -20,7 +29,7 @@ CREATE TABLE fuzzy_match_reviews (
     field TEXT NOT NULL,           -- 'ruler' or 'site'
     raw_value TEXT NOT NULL,       -- what the museum record said
     matched_id TEXT,               -- authority ID the fuzzy matcher chose (NULL if no match)
-    confidence FLOAT NOT NULL,     -- fuzzy match score (0.0 - 1.0)
+    confidence FLOAT NOT NULL,     -- fuzzy match score (0.0 - 1.0), informational only — all fuzzy matches are queued
     status TEXT NOT NULL DEFAULT 'pending',  -- 'pending', 'approved', 'rejected'
     reviewed_by TEXT,              -- 'llm' or 'human'
     review_notes TEXT,
