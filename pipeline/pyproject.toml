@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.18.4",
     "dagster>=1.12.22",
     "dagster-postgres>=0.28.22",
     "dagster-webserver>=1.12.22",

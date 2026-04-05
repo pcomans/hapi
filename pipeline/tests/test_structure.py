@@ -2,16 +2,16 @@
 
 These tests enforce architectural invariants:
 - Every registered museum has ingest + mapper + fixtures
-- The Pydantic model matches shared/schema.json
-- All mappers implement the protocol
+- The SQLAlchemy table model matches the Pydantic canonical model
+- All museums have license entries
 """
 
-import json
 from pathlib import Path
 
 import pytest
 
 from pipeline.types.canonical import CanonicalArtifact
+from pipeline.types.models import artifacts_table
 from pipeline.types.sources import MUSEUM_LICENSE, MuseumSource
 
 # Tests marked needs_implementation are expected to fail until museum
@@ -22,9 +22,7 @@ needs_implementation = pytest.mark.skipif(
     reason="Museum implementation not started yet",
 )
 
-PROJECT_ROOT = Path(__file__).parent.parent.parent
 PIPELINE_ROOT = Path(__file__).parent.parent
-SCHEMA_PATH = PROJECT_ROOT / "shared" / "schema.json"
 
 
 @needs_implementation
@@ -78,22 +76,19 @@ def test_every_museum_has_mapper_tests():
         )
 
 
-def test_canonical_model_matches_schema_json():
-    """The Pydantic CanonicalArtifact model must match shared/schema.json."""
-    with open(SCHEMA_PATH) as f:
-        schema = json.load(f)
+def test_sqlalchemy_columns_match_pydantic_fields():
+    """The SQLAlchemy artifacts table must have the same columns as the Pydantic model fields."""
+    sa_columns = set(artifacts_table.columns.keys())
+    pydantic_fields = set(CanonicalArtifact.model_fields.keys())
 
-    schema_fields = set(schema["properties"].keys())
-    model_fields = set(CanonicalArtifact.model_fields.keys())
+    missing_from_table = pydantic_fields - sa_columns
+    extra_in_table = sa_columns - pydantic_fields
 
-    missing_from_model = schema_fields - model_fields
-    extra_in_model = model_fields - schema_fields
-
-    assert not missing_from_model, (
-        f"Fields in schema.json but missing from CanonicalArtifact: {missing_from_model}"
+    assert not missing_from_table, (
+        f"Fields in CanonicalArtifact but missing from artifacts_table: {missing_from_table}"
     )
-    assert not extra_in_model, (
-        f"Fields in CanonicalArtifact but missing from schema.json: {extra_in_model}"
+    assert not extra_in_table, (
+        f"Columns in artifacts_table but missing from CanonicalArtifact: {extra_in_table}"
     )
 
 
@@ -104,23 +99,3 @@ def test_every_museum_has_license():
             f"Missing license entry for {source.value} in MUSEUM_LICENSE. "
             f"Add it to pipeline/types/sources.py."
         )
-
-
-def test_required_fields_match():
-    """The required fields in schema.json must match the non-optional Pydantic fields."""
-    with open(SCHEMA_PATH) as f:
-        schema = json.load(f)
-
-    schema_required = set(schema.get("required", []))
-
-    # In Pydantic, required fields are those without a default value
-    model_required = set()
-    for name, field in CanonicalArtifact.model_fields.items():
-        if field.is_required():
-            model_required.add(name)
-
-    assert schema_required == model_required, (
-        f"Required field mismatch.\n"
-        f"  schema.json requires: {schema_required}\n"
-        f"  Pydantic requires: {model_required}"
-    )

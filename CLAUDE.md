@@ -8,7 +8,7 @@ Two independent systems communicate through Postgres and Typesense:
 
 - **Pipeline** (Python / Dagster): `pipeline/` — ingests museum API data, normalizes to a canonical schema, enriches with authority data, syncs to search index
 - **Web app** (TypeScript / Next.js): `web/` — search, browse, filter, map view over the indexed data
-- **Shared contract**: `shared/schema.json` — the canonical artifact schema. Both Pydantic models (pipeline) and Drizzle schema (web) derive from this file.
+- **Schema ownership**: The pipeline owns the DB schema (SQLAlchemy + Alembic). The web app introspects from the live DB via `drizzle-kit introspect` to generate its TypeScript types. See ADR-011.
 
 ## Key commands
 
@@ -17,6 +17,7 @@ Two independent systems communicate through Postgres and Typesense:
 cd pipeline && uv sync                 # Install Python deps
 cd pipeline && uv run pytest           # Run pipeline tests
 cd pipeline && uv run dagster dev      # Launch Dagster UI
+cd pipeline && uv run alembic upgrade head  # Run DB migrations
 
 # Web
 cd web && pnpm install                 # Install JS deps
@@ -24,6 +25,7 @@ cd web && pnpm dev                     # Dev server
 cd web && pnpm test                    # Run tests
 cd web && pnpm lint                    # Lint
 cd web && pnpm typecheck               # Type check
+cd web && pnpm drizzle-kit introspect  # Regenerate schema.ts from DB
 
 # Infrastructure
 docker compose up -d                   # Postgres + Typesense
@@ -31,7 +33,7 @@ docker compose up -d                   # Postgres + Typesense
 
 ## Rules
 
-1. **Schema is the contract.** Never modify `shared/schema.json` without updating BOTH the Pydantic models in `pipeline/pipeline/types/canonical.py` AND the Drizzle schema in `web/src/lib/db/schema.ts`. A CI test verifies consistency.
+1. **Pipeline owns the schema.** DB table definitions live in `pipeline/pipeline/types/models.py`. To change the schema: update the SQLAlchemy model → update the Pydantic model → create an Alembic migration → re-introspect Drizzle → commit all together.
 2. **Every mapper has tests.** Every Dagster mapper asset must have corresponding tests using real fixture data in `pipeline/tests/fixtures/`. No mocks for museum data shapes.
 3. **Mappers implement the protocol.** Every museum mapper must implement `MapperProtocol` defined in `pipeline/pipeline/types/protocol.py`.
 4. **License before image.** Never embed an image URL directly in the UI. Always check the `license` field on the artifact record to determine rendering: embed, thumbnail, or link-out.
@@ -46,7 +48,7 @@ Run the appropriate commands after any change:
 |---|---|
 | Any pipeline code | `cd pipeline && uv run pytest` |
 | A mapper | `cd pipeline && uv run pytest tests/test_mappers/` |
-| `shared/schema.json` | `cd pipeline && uv run pytest tests/test_structure.py` AND `cd web && pnpm typecheck` |
+| SQLAlchemy models | `cd pipeline && uv run alembic revision --autogenerate -m "desc"` then `uv run alembic upgrade head` then `cd ../web && pnpm drizzle-kit introspect && pnpm typecheck` |
 | Any web code | `cd web && pnpm typecheck && pnpm lint` |
 | Web components | `cd web && pnpm test` |
 | Anything before commit | `cd pipeline && uv run pytest && cd ../web && pnpm typecheck && pnpm lint` |
@@ -57,4 +59,3 @@ Run the appropriate commands after any change:
 - Product requirements: `docs/prd.md`
 - Harness engineering approach: `docs/harness.md`
 - Per-museum API notes and quirks: `docs/museum-sources/`
-- Canonical schema (source of truth): `shared/schema.json`

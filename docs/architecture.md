@@ -47,6 +47,7 @@ Key decisions:
 - [ADR-002](adr/002-dagster-orchestration.md): Dagster for pipeline orchestration
 - [ADR-006](adr/006-one-mapper-per-museum.md): One mapper per museum, no universal parser
 - [ADR-007](adr/007-origin-site-first-class.md): Origin site as first-class entity with hierarchy
+- [ADR-011](adr/011-schema-ownership.md): Pipeline owns DB schema, Drizzle introspects
 
 ## What is NOT in this architecture
 
