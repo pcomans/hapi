@@ -4,6 +4,17 @@ This project is built entirely by AI agents (Claude, Opus). The harness — the 
 
 This approach is informed by OpenAI's "Harness Engineering" methodology (2026), which demonstrated that 3 engineers shipped ~1 million lines of code across ~1,500 PRs without writing source code manually, by investing in the environment the agent works within.
 
+## Development philosophy
+
+**Fail fast, no defensive programming.** During development, every error should be loud and immediate. If a mapper hits a malformed record, it raises — it does not silently skip, return partial results, or wrap in try/except. A failing pipeline means a fixture is missing or the logic has a bug, and both must be fixed before proceeding.
+
+This applies across the stack:
+- **Mappers**: Raise on malformed records. Don't handle edge cases that haven't been seen in real data yet.
+- **Web components**: Let TypeScript catch type errors at compile time. Don't add runtime validation for data coming from our own database.
+- **Tests**: Assert specific values, not "it doesn't crash." A test that catches exceptions is hiding bugs.
+
+Once a module is validated against real data and stable, error handling will be added for incoming data quality issues (museum APIs returning unexpected formats, missing fields in new records). Until then: loud failures, no defensive programming.
+
 ## Core principle
 
 **If a machine can verify it, encode it in code. If it's rationale, context, or guidance for the agent's judgment, put it in markdown.**

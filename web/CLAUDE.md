@@ -19,12 +19,12 @@ TypeScript / Next.js frontend. Reads from Postgres (via Drizzle) and Typesense f
   - Unknown or restrictive: Show placeholder, link to `source_url` at the museum's site
   - The rendering logic must live in a shared component, never ad-hoc per page.
 - **Search goes through Typesense, not Postgres.** All user-facing search and filtering hits the Typesense index. Postgres is for detail pages and data that doesn't need full-text search.
-- **Types come from the shared schema.** TypeScript types for canonical artifacts are generated from `shared/schema.json`. Do not hand-write artifact types — they must stay in sync with the pipeline's Pydantic models.
+- **Types come from Drizzle.** The Drizzle schema in `web/src/lib/db/schema.ts` is the single TypeScript source of truth for artifact types. Use `typeof artifacts.$inferSelect` for the app-level type. The Drizzle schema must match `shared/schema.json` — a CI test verifies field-name conformance. Do not hand-write separate artifact type interfaces.
+- **Typesense is server-side only.** Never call Typesense directly from the browser. All search requests go through Next.js API routes (`src/app/api/search/route.ts`) that proxy to Typesense. This keeps the API key secure.
 
 ## Pages (planned)
 
-- `/` — Home / search landing
-- `/search` — Search results with faceted filters (site, ruler, dynasty, museum, object type)
+- `/` — Search landing (single page: search bar with suggested sites/rulers, results appear below)
 - `/artifact/[id]` — Artifact detail with related candidates
 - `/site/[id]` — All artifacts from an origin site
 - `/map` — Geographic visualization of artifact distribution

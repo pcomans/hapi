@@ -38,9 +38,23 @@ docker compose up -d                   # Postgres + Typesense
 5. **Authority list, not hardcoded values.** Ruler and site matching always goes through the authority data in `pipeline/pipeline/authority/`. Never hardcode ruler names, dynasty labels, or site names in mapper code.
 6. **Fields are nullable.** All fields in the canonical schema are optional except `id`, `source_museum`, and `source_url`. Sparse records are valid. The UI omits missing fields gracefully.
 
+## Verification commands
+
+Run the appropriate commands after any change:
+
+| What changed | Run |
+|---|---|
+| Any pipeline code | `cd pipeline && uv run pytest` |
+| A mapper | `cd pipeline && uv run pytest tests/test_mappers/` |
+| `shared/schema.json` | `cd pipeline && uv run pytest tests/test_structure.py` AND `cd web && pnpm typecheck` |
+| Any web code | `cd web && pnpm typecheck && pnpm lint` |
+| Web components | `cd web && pnpm test` |
+| Anything before commit | `cd pipeline && uv run pytest && cd ../web && pnpm typecheck && pnpm lint` |
+
 ## Deeper docs
 
-- Architecture decisions and rationale: `docs/architecture.md`
+- Architecture decisions: `docs/adr/` (individual decision records)
 - Product requirements: `docs/prd.md`
+- Harness engineering approach: `docs/harness.md`
 - Per-museum API notes and quirks: `docs/museum-sources/`
 - Canonical schema (source of truth): `shared/schema.json`
