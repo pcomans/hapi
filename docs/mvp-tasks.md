@@ -2,79 +2,79 @@
 
 Tasks to reach MVP (PRD Milestones 1–4). Each task is independent enough for a single agent session. Tasks are ordered by dependency — later tasks depend on earlier ones.
 
-## Milestone 1: Ingestion + Canonical Schema
+## Milestone 1: Ingestion + Mappers
 
-### 1.1 Authority data: rulers
+Ingest real museum data first, then build mappers against it. Authority data comes later — it should be informed by what the museums actually say, not built in a vacuum.
 
-Create `pipeline/pipeline/authority/rulers.json` with canonical Egyptian ruler entries. Each entry needs: canonical ID, display name, variant names array (personal name, throne name, Greek form, modern variants), dynasty, approximate date range (start/end BCE), and Wikidata ID. Seed from Wikidata SPARQL query for pharaohs (Q37011), validate against Met chronology. Cover all dynasties — users search for Ramesses II as often as Thutmose III. ~200-300 entries minimum.
+### 1.1 Alembic migration for initial schema
 
-### 1.2 Authority data: sites
+Run `uv run alembic revision --autogenerate -m "initial schema"` and `uv run alembic upgrade head` to create the actual database tables. Verify all tables exist in the `catalog` schema. This must happen before any ingest or mapper work.
 
-Create `pipeline/pipeline/authority/sites.json` with a curated hierarchy for the top 50–100 Egyptian sites. Each entry needs: canonical ID, display name, alternate names array, Pleiades ID, coordinates (lat/lng), parent site ID (for hierarchy: Egypt > Thebes > Western Thebes > Valley of the Kings > KV34), and Wikidata ID. Source from Pleiades gazetteer + Wikidata P131 (located in) for containment chains. Must cover: Karnak, Deir el-Bahri, Amarna, Valley of the Kings, Giza, Saqqara, Luxor, Abydos, Thebes, Memphis, Tanis at minimum.
-
-### 1.3 Met ingest asset
+### 1.2 Met ingest asset
 
 Create `pipeline/assets/ingest/met.py` — Dagster asset that fetches all Egyptian Art object IDs (`departmentIds=10`) then fetches each object record, storing raw JSON verbatim in `raw_met` table. Handle the Met's pattern: one call returns ~26k IDs, then individual fetches per object. Respect 80 req/sec rate limit. Must be idempotent (re-run overwrites).
 
-### 1.4 Met mapper
+### 1.3 Met fixtures and mapper
+
+Save 3–5 real Met API responses to `tests/fixtures/met/`. Choose: one richly catalogued object (full geography, reign, dates), one sparse record (minimal fields), one with ambiguous provenance ("Said to be from"), one with a co-regency or unusual reign field, one with no image.
 
 Create `pipeline/assets/normalize/met.py` implementing `MapperProtocol`. Map Met fields to `CanonicalArtifact`: `objectID` → `id`, `title`, `objectName` → `object_type`, structured geography fields → `origin_site_raw` (preserve `geographyType` for provenance confidence), `period`, `dynasty`, `reign` → `ruler_display_name`, `objectBeginDate`/`objectEndDate` → `date_start`/`date_end`, `primaryImage` → `image_url`, etc. Parse date strings like "ca. 1479-1425 B.C." into integer ranges. Handle `reign` field containing period info instead of ruler names.
 
-### 1.5 Met fixtures and tests
+Write `tests/test_mappers/test_met.py` asserting specific mapped field values for each fixture.
 
-Save 3–5 real Met API responses to `tests/fixtures/met/`. Choose: one richly catalogued object (full geography, reign, dates), one sparse record (minimal fields), one with ambiguous provenance ("Said to be from"), one with a co-regency or unusual reign field, one with no image. Write `tests/test_mappers/test_met.py` asserting specific mapped field values for each fixture.
-
-### 1.6 Brooklyn ingest asset
+### 1.4 Brooklyn ingest asset
 
 Create `pipeline/assets/ingest/brooklyn.py` — Dagster asset that fetches Brooklyn Museum Egyptian collection via their API, storing raw JSON in `raw_brooklyn` table. Requires API key from environment. Determine pagination and rate limit behavior during implementation.
 
-### 1.7 Brooklyn mapper
+### 1.5 Brooklyn fixtures and mapper
 
-Create `pipeline/assets/normalize/brooklyn.py` implementing `MapperProtocol`. Map Brooklyn's field structure to `CanonicalArtifact`. Field names differ from the Met — this is the first real normalization stress test. Document any fields that don't map cleanly in the mapper's docstring.
+Save 3–5 real Brooklyn API responses to `tests/fixtures/brooklyn/`. Create `pipeline/assets/normalize/brooklyn.py` implementing `MapperProtocol`. Map Brooklyn's field structure to `CanonicalArtifact`. Field names differ from the Met — this is the first real normalization stress test. Document any fields that don't map cleanly in the mapper's docstring. Write `tests/test_mappers/test_brooklyn.py` with specific value assertions.
 
-### 1.8 Brooklyn fixtures and tests
-
-Save 3–5 real Brooklyn API responses to `tests/fixtures/brooklyn/`. Write `tests/test_mappers/test_brooklyn.py` with specific value assertions.
-
-### 1.9 Harvard ingest asset
+### 1.6 Harvard ingest asset
 
 Create `pipeline/assets/ingest/harvard.py` — Dagster asset that fetches Harvard Art Museums Egyptian collection, storing raw JSON in `raw_harvard` table. Requires API key. Determine collection size and filter strategy during implementation (classification filter may need tuning to exclude Egyptianizing non-Egyptian pieces).
 
-### 1.10 Harvard mapper
+### 1.7 Harvard fixtures and mapper
 
-Create `pipeline/assets/normalize/harvard.py` implementing `MapperProtocol`. Third normalization test case — three different data shapes mapping to one canonical schema. Harvard excavation records (Reisner at Giza) may have unusually detailed provenance.
+Save 3–5 real Harvard API responses to `tests/fixtures/harvard/`. Create `pipeline/assets/normalize/harvard.py` implementing `MapperProtocol`. Third normalization test case — three different data shapes mapping to one canonical schema. Harvard excavation records (Reisner at Giza) may have unusually detailed provenance. Write `tests/test_mappers/test_harvard.py`.
 
-### 1.11 Harvard fixtures and tests
+### 1.8 Dagster definitions wiring
 
-Save 3–5 real Harvard API responses to `tests/fixtures/harvard/`. Write `tests/test_mappers/test_harvard.py`.
+Update `pipeline/definitions.py` to register all ingest and normalize assets with proper resource configuration (database connection, API keys from environment). Verify `dagster dev` launches and shows the asset graph.
 
-### 1.12 Alembic migration for initial schema
+## Milestone 2: Authority Data + Enrichment
 
-Run `uv run alembic revision --autogenerate -m "initial schema"` and `uv run alembic upgrade head` to create the actual database tables. Verify all tables exist in the `catalog` schema.
+Authority files are built from the real data ingested in Milestone 1. Analyze what ruler names, site names, and period labels actually appear across all three sources before writing the authority files.
 
-### 1.13 Dagster definitions wiring
+### 2.1 Analyze ingested data for authority seeding
 
-Update `pipeline/definitions.py` to register all ingest, normalize, and enrich assets with proper resource configuration (database connection, API keys from environment). Verify `dagster dev` launches and shows the asset graph.
+Query all normalized artifacts to extract distinct values for `ruler_display_name`, `origin_site_raw`, `period`, and `dynasty` across all three museums. Group by frequency. This analysis drives what goes into the authority files — real museum data, not guesses.
 
-## Milestone 2: Origin-Site Normalization + Enrichment
+### 2.2 Authority data: rulers
 
-### 2.1 Ruler enrichment asset
+Create `pipeline/pipeline/authority/rulers.json` with canonical Egyptian ruler entries. Each entry needs: canonical ID, display name, variant names array (personal name, throne name, Greek form, modern variants), dynasty, approximate date range (start/end BCE), and Wikidata ID. Seed from Wikidata SPARQL query for pharaohs (Q37011), but validate variants against the actual ruler names found in 2.1. Cover all dynasties — users search for Ramesses II as often as Thutmose III. ~200-300 entries minimum.
+
+### 2.3 Authority data: sites
+
+Create `pipeline/pipeline/authority/sites.json` with a curated hierarchy for the top 50–100 Egyptian sites. Each entry needs: canonical ID, display name, alternate names array, Pleiades ID, coordinates (lat/lng), parent site ID (for hierarchy: Egypt > Thebes > Western Thebes > Valley of the Kings > KV34), and Wikidata ID. Source from Pleiades gazetteer + Wikidata P131 (located in) for containment chains. Validate alternate names against the actual site names found in 2.1.
+
+### 2.4 Ruler enrichment asset
 
 Create `pipeline/assets/enrich/rulers.py` — Dagster asset that reads all canonical artifacts, matches `ruler_display_name` against the authority file's variant arrays (exact match first, fuzzy fallback to review queue per ADR-009), and writes `ruler_id` back to the artifacts table.
 
-### 2.2 Site enrichment asset
+### 2.5 Site enrichment asset
 
 Create `pipeline/assets/enrich/sites.py` — Dagster asset that reads `origin_site_raw` from all artifacts, matches against site authority file variant names (exact first, fuzzy to review queue), and writes `origin_site_id` and `origin_site_display_name` back. Must handle the hierarchy: an artifact tagged "Valley of the Kings" should also be discoverable under "Thebes" and "Western Thebes".
 
-### 2.3 Review queue triage asset
+### 2.6 Review queue triage asset
 
 Create `pipeline/assets/quality/review_queue_triage.py` — Dagster asset that processes pending fuzzy match reviews using an LLM (Haiku). Per ADR-009: fetch artifact + authority entry, ask LLM if the match is correct, write APPROVED/REJECTED/UNCERTAIN status. Approved variants get added to authority files.
 
-### 2.4 Dagster asset checks
+### 2.7 Dagster asset checks
 
 Implement `@asset_check` decorators per ADR-010 Layer 1: ingest completeness (record count vs API total), normalization validity (date ranges, enum values), authority coverage (unmatched value frequency), cross-museum site consistency. Emit coverage metrics as asset metadata.
 
-### 2.5 LLM data audit asset
+### 2.8 LLM data audit asset
 
 Create `pipeline/assets/quality/llm_audit.py` — Dagster asset that samples records and uses Haiku for semantic audit, batch anomaly detection, and authority variant suggestions per ADR-010 Layer 2.
 
