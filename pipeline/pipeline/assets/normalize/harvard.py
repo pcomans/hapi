@@ -71,8 +71,9 @@ def _parse_period_dynasty(period_str: str | None) -> tuple[str | None, str | Non
 def _parse_medium(medium: str | None) -> list[str] | None:
     """Split medium string into individual materials.
 
-    Harvard's medium field can use commas, semicolons, and \r\n as delimiters.
-    Some entries have labeled sections (e.g., "Binder: Beeswax\r\nPigments: ...").
+    Harvard's medium field uses \r\n as delimiters between labeled sections
+    (e.g., "Binder: Beeswax\r\nPigments: ..."). Unlike the Met, commas within
+    a section are part of a material list, not delimiters between materials.
     """
     if not medium:
         return None
