@@ -179,3 +179,29 @@ class TestNoImage:
 
     def test_license_restricted_for_non_public_domain(self):
         assert self.result.license == License.RESTRICTED
+
+
+class TestMultilineMedium:
+    """Oblique Lyre — medium field contains \\r\\n delimiters."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self, mapper):
+        raw = _load_fixture("multiline_medium.json")
+        self.result = mapper.map_to_canonical(raw)
+
+    def test_id(self):
+        assert self.result.id == "met-546960"
+
+    def test_materials_split_on_newlines(self):
+        assert self.result.materials == [
+            "Wood (frame)",
+            "bronze or copper alloy",
+            "(staple)",
+            "Bronze",
+        ]
+
+    def test_title(self):
+        assert self.result.title == "Partially Restored Oblique Lyre"
+
+    def test_object_type(self):
+        assert self.result.object_type == "Music, lyre, oblique"
