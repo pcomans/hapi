@@ -129,8 +129,8 @@ class TestAmbiguousProvenance:
     def test_origin_site_raw_includes_subregion(self):
         assert "Girga" in self.result.origin_site_raw
 
-    def test_license_restricted_for_non_public_domain(self):
-        assert self.result.license == License.RESTRICTED
+    def test_license_none_when_no_image(self):
+        assert self.result.license == License.NONE
 
 
 class TestCoregencyReign:
@@ -177,8 +177,8 @@ class TestNoImage:
     def test_excavation(self):
         assert self.result.excavation_id == "MMA excavations"
 
-    def test_license_restricted_for_non_public_domain(self):
-        assert self.result.license == License.RESTRICTED
+    def test_license_none_when_no_image(self):
+        assert self.result.license == License.NONE
 
 
 class TestMultilineMedium:
