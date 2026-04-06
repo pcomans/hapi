@@ -18,7 +18,7 @@ Migration `744ef0c92771_initial_schema.py` created and applied. All tables exist
 
 ### ~~1.3 Met mapper + tests~~ ✅
 
-`pipeline/assets/normalize/met.py` implements `MapperProtocol`. Handles: reign extraction ("reign of X" → ruler name), structured geography → origin_site_raw, geographyType → origin_certainty, medium parsing (comma, semicolon, and `\r\n` delimiters), Wikidata ID extraction. 6 fixture files in `tests/fixtures/met/`, 41 tests in `tests/test_mappers/test_met.py`, all passing.
+`pipeline/assets/normalize/met.py` implements `MapperProtocol`. Handles: reign extraction ("reign of X" → ruler name), structured geography → origin_site_raw, geographyType → origin_certainty, medium parsing (comma, semicolon, and `\r\n` delimiters), Wikidata ID extraction. 6 fixture files in `tests/fixtures/met/`, 57 tests in `tests/test_mappers/test_met.py`, all passing.
 
 ### ~~1.4 Met ingest asset~~ ✅
 
