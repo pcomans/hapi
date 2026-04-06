@@ -52,33 +52,36 @@ Search bar, faceted filters (sidebar), artifact cards in grid layout, pagination
 
 Full pipeline materialized via Dagster: `raw_met` → `normalize_met` → `sync_search`. 27,969 Met objects ingested, normalized, and indexed in Typesense. Search returns Met artifacts on localhost:3000.
 
-## Milestone 2: Brooklyn + Harvard
+## Milestone 2: Harvard + Brooklyn
 
-Add the other two museums to stress-test normalization across different data shapes. The pipeline, search index, and web already work from Milestone 1.
+Add the other two museums to stress-test normalization across different data shapes. The pipeline, search index, and web already work from Milestone 1. Harvard first — the Brooklyn Museum API is currently broken.
 
-**Blocked: need API keys from user.**
-- Brooklyn Museum: register at https://www.brooklynmuseum.org/opencollection/api
+**Blocked: need API key from user.**
 - Harvard Art Museums: register at https://harvardartmuseums.org/collections/api
 
-### 2.1 Brooklyn fixtures + mapper + tests
+### 2.1 Harvard fixtures + mapper + tests
 
-Save 3–5 real Brooklyn API responses to `tests/fixtures/brooklyn/`. Create `pipeline/assets/normalize/brooklyn.py` implementing `MapperProtocol`. Map Brooklyn's field structure to `CanonicalArtifact`. Field names differ from the Met — this is the first real normalization stress test. Document any fields that don't map cleanly in the mapper's docstring. Write `tests/test_mappers/test_brooklyn.py` with specific value assertions.
+Save 3–5 real Harvard API responses to `tests/fixtures/harvard/`. Create `pipeline/assets/normalize/harvard.py` implementing `MapperProtocol`. Second normalization test case — two different data shapes mapping to one canonical schema. Harvard excavation records (Reisner at Giza) may have unusually detailed provenance. Write `tests/test_mappers/test_harvard.py`.
 
-### 2.2 Brooklyn ingest asset
-
-Create `pipeline/assets/ingest/brooklyn.py` — Dagster asset that fetches Brooklyn Museum Egyptian collection via their API, storing raw JSON in `raw_brooklyn` table. Requires API key from environment. Determine pagination and rate limit behavior during implementation.
-
-### 2.3 Harvard fixtures + mapper + tests
-
-Save 3–5 real Harvard API responses to `tests/fixtures/harvard/`. Create `pipeline/assets/normalize/harvard.py` implementing `MapperProtocol`. Third normalization test case — three different data shapes mapping to one canonical schema. Harvard excavation records (Reisner at Giza) may have unusually detailed provenance. Write `tests/test_mappers/test_harvard.py`.
-
-### 2.4 Harvard ingest asset
+### 2.2 Harvard ingest asset
 
 Create `pipeline/assets/ingest/harvard.py` — Dagster asset that fetches Harvard Art Museums Egyptian collection, storing raw JSON in `raw_harvard` table. Requires API key. Determine collection size and filter strategy during implementation (classification filter may need tuning to exclude Egyptianizing non-Egyptian pieces).
 
-### 2.5 Register Brooklyn + Harvard in Dagster
+### 2.3 Register Harvard in Dagster
 
-Update `pipeline/definitions.py` to register Brooklyn and Harvard ingest and normalize assets. Verify all three museums appear in the Dagster asset graph.
+Update `pipeline/definitions.py` to register Harvard ingest and normalize assets. Verify both museums appear in the Dagster asset graph.
+
+### 2.4 Brooklyn fixtures + mapper + tests (blocked — API broken)
+
+Save 3–5 real Brooklyn API responses to `tests/fixtures/brooklyn/`. Create `pipeline/assets/normalize/brooklyn.py` implementing `MapperProtocol`. Map Brooklyn's field structure to `CanonicalArtifact`. Field names differ from the Met — this is the first real normalization stress test. Document any fields that don't map cleanly in the mapper's docstring. Write `tests/test_mappers/test_brooklyn.py` with specific value assertions.
+
+### 2.5 Brooklyn ingest asset (blocked — API broken)
+
+Create `pipeline/assets/ingest/brooklyn.py` — Dagster asset that fetches Brooklyn Museum Egyptian collection via their API, storing raw JSON in `raw_brooklyn` table. Requires API key from environment. Determine pagination and rate limit behavior during implementation.
+
+### 2.6 Register Brooklyn in Dagster
+
+### 2.7 Schema adjustments (if needed)
 
 ### 2.6 Schema adjustments (if needed)
 

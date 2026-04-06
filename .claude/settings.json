@@ -15,9 +15,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "CMD=$(jq -r '.tool_input.command') && if ! echo \"$CMD\" | grep -q '^git push'; then exit 0; fi && PR_NUMBER=$(gh pr view --json number --jq .number 2>/dev/null) || exit 0 && if [ -z \"$PR_NUMBER\" ]; then exit 0; fi && gh pr edit \"$PR_NUMBER\" --add-reviewer @copilot > /dev/null 2>&1 && echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"Copilot review requested on PR #$PR_NUMBER\\\"}}\"",
+            "command": ".claude/hooks/post-pr-create.sh",
             "timeout": 30,
-            "statusMessage": "Checking for Copilot review..."
+            "statusMessage": "Checking PR workflow..."
           }
         ]
       }
