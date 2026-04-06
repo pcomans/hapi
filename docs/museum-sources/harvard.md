@@ -5,29 +5,36 @@
 - **API**: REST, requires API key (free registration)
 - **Base URL**: `https://api.harvardartmuseums.org`
 - **Auth**: API key as query parameter (`apikey`)
-- **Egyptian collection**: Size TBD — needs to be determined during initial exploration
+- **Egyptian collection**: 722 objects (filtered by `culture=Egyptian`)
 - **Documentation**: https://github.com/harvardartmuseums/api-docs
 
 ## Endpoints
 
-- `GET /object?classification=Egyptian&size=100&page=1` — paginated object list (classification filter needs confirmation)
+- `GET /object?culture=Egyptian&size=100&page=1` — paginated object list
 - `GET /object/{id}` — single object detail
-- Supports faceted search with various filter parameters
+- Max page size: 100. At 722 objects, that's 8 pages.
 
 ## License
 
-**Non-commercial educational use.** Images and data available for non-commercial educational and scholarly purposes. More restrictive than Met (CC0) but compatible with this project's non-commercial nature. Exact terms should be confirmed during implementation.
+**Non-commercial educational use.** Images and data available for non-commercial educational and scholarly purposes. `imagepermissionlevel` field controls per-object image display: 0 = allowed, 1+ = restricted.
 
 ## Data quality notes
 
-- **Collection size unknown.** Egyptian holdings need to be scoped during initial API exploration. Harvard's collection is broader (not Egypt-focused), so the Egyptian subset may be smaller than Met or Brooklyn.
-- **Field structure differs from both Met and Brooklyn.** This is the third normalization test case — three different data shapes mapping to one canonical schema.
-- **Harvard has strong provenance research.** Objects from Harvard-affiliated excavations (e.g., Reisner expeditions at Giza) may have unusually detailed provenance records.
-- **Classification system**: Harvard uses its own classification taxonomy. Mapping to Egyptology-native categories will require exploration.
+- **722 objects total.** Small collection compared to Met (~28k). Department is "Ancient and Byzantine Art & Numismatics".
+- **No ruler/reign field.** Harvard has no equivalent of Met's `reign` field. Ruler identification deferred to enrichment stage.
+- **Period sometimes includes dynasty.** E.g., "Late Period, Dynasty 26" — mapper splits this into separate period and dynasty fields.
+- **Places field.** Array of objects with `displayname` and `type`. "Creation Place" entries use hierarchical format: "Ancient & Byzantine World, Africa, Egypt (Ancient)" or more specific like "Ancient & Byzantine World, Africa, Antinoopolis (Egypt)".
+- **No geographic confidence.** Unlike the Met's `geographyType` ("From", "Said to be from"), Harvard places don't indicate certainty.
+- **Medium can be multiline.** Uses `\r\n` delimiters with labeled sections: "Binder: Beeswax\r\nPigments: Lead white...".
+- **Dates.** `datebegin`/`dateend` are integers (negative for BCE, positive for CE). **0 means unknown**, not year zero — mapper treats 0 as null.
+- **No provenance hierarchy.** Unlike Met's structured geography (country, region, subregion, locale, locus), Harvard has a flat `places` array.
+- **Worktypes for object type.** Array of objects; mapper uses the first entry's `worktype` field.
+- **Many objects lack images.** `primaryimageurl` is null for unphoto­graphed objects. `imagepermissionlevel` may still be 0 (display allowed) even when no image exists.
 
 ## Known quirks
 
 - API key required — register at https://harvardartmuseums.org/collections/api
-- Rate limits and pagination behavior need confirmation.
-- The API is well-documented on GitHub, which should speed up mapper development.
-- May include objects that are "Egyptian-influenced" but not actually from ancient Egypt (e.g., Egyptianizing Roman pieces). The mapper needs to handle or filter these.
+- No observed rate limiting at the volumes we fetch (~8 requests total).
+- `culture=Egyptian` is the correct filter. Other filters like `classification` or `place` are too narrow or miss objects.
+- Collection includes Roman-era Egyptian material (Fayum portraits, Coptic textiles) — these are valid for this project's scope.
+- `objectid` and `id` fields both exist and contain the same value.

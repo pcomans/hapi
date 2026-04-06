@@ -20,6 +20,17 @@
             "statusMessage": "Checking for Copilot review..."
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-pr-create.sh",
+            "timeout": 10,
+            "statusMessage": "Checking for PR documentation..."
+          }
+        ]
       }
     ]
   }
