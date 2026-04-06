@@ -29,7 +29,7 @@
 - **Dates.** `datebegin`/`dateend` are integers (negative for BCE, positive for CE). **0 means unknown**, not year zero — mapper treats 0 as null.
 - **No provenance hierarchy.** Unlike Met's structured geography (country, region, subregion, locale, locus), Harvard has a flat `places` array.
 - **Worktypes for object type.** Array of objects; mapper uses the first entry's `worktype` field.
-- **Many objects lack images.** `primaryimageurl` is null for unphoto­graphed objects. `imagepermissionlevel` may still be 0 (display allowed) even when no image exists.
+- **Many objects lack images.** `primaryimageurl` is null for unphotographed objects. `imagepermissionlevel` may still be 0 (display allowed) even when no image exists.
 
 ## Known quirks
 

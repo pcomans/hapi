@@ -79,7 +79,9 @@ Save 3–5 real Brooklyn API responses to `tests/fixtures/brooklyn/`. Create `pi
 
 Create `pipeline/assets/ingest/brooklyn.py` — Dagster asset that fetches Brooklyn Museum Egyptian collection via their API, storing raw JSON in `raw_brooklyn` table. Requires API key from environment. Determine pagination and rate limit behavior during implementation.
 
-### 2.6 Register Brooklyn in Dagster + schema adjustments (if needed)
+### 2.6 Register Brooklyn in Dagster
+
+### 2.7 Schema adjustments (if needed)
 
 ### 2.6 Schema adjustments (if needed)
 

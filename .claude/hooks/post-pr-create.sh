@@ -3,7 +3,14 @@
 # - gh pr create: request Copilot review + remind agent to document learnings
 # - git push: request Copilot review if on a PR branch
 
+# TOOL_INPUT is a JSON env var with the tool's input parameters
+# For Bash tool, it contains { "command": "..." }
 CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
+
+# Fallback: try reading from stdin (older hook format uses .tool_input.command)
+if [ -z "$CMD" ]; then
+  CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
+fi
 
 # Determine what triggered us
 IS_PR_CREATE=false
