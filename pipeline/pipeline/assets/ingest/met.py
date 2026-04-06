@@ -38,7 +38,7 @@ def raw_met(context: AssetExecutionContext, database: DatabaseResource) -> None:
     engine = database.get_engine()
     total = len(object_ids)
     stored = 0
-    errors = 0
+    skipped = 0
 
     for i in range(0, total, BATCH_SIZE):
         batch_ids = object_ids[i : i + BATCH_SIZE]
@@ -50,7 +50,7 @@ def raw_met(context: AssetExecutionContext, database: DatabaseResource) -> None:
                 object_id = futures[future]
                 raw_data = future.result()
                 if raw_data is None:
-                    errors += 1
+                    skipped += 1
                     continue
                 rows.append({"object_id": str(object_id), "data": json.dumps(raw_data)})
 
@@ -64,10 +64,10 @@ def raw_met(context: AssetExecutionContext, database: DatabaseResource) -> None:
                 conn.execute(stmt)
             stored += len(rows)
 
-        context.log.info(f"Progress: {min(i + BATCH_SIZE, total)}/{total} fetched, {stored} stored, {errors} errors")
+        context.log.info(f"Progress: {min(i + BATCH_SIZE, total)}/{total} fetched, {stored} stored, {skipped} skipped (404)")
 
-    context.log.info(f"Ingest complete: {stored} stored, {errors} errors out of {total}")
-    context.add_output_metadata({"total_ids": total, "stored": stored, "errors": errors})
+    context.log.info(f"Ingest complete: {stored} stored, {skipped} skipped (404) out of {total}")
+    context.add_output_metadata({"total_ids": total, "stored": stored, "skipped_404": skipped})
 
 
 def _fetch_object_ids(context: AssetExecutionContext) -> list[int]:
@@ -85,12 +85,8 @@ def _fetch_object_ids(context: AssetExecutionContext) -> list[int]:
 def _fetch_object(object_id: int) -> dict | None:
     """Fetch a single object record. Returns None on 404 (deleted objects)."""
     url = f"{MET_API_BASE}/objects/{object_id}"
-    try:
-        resp = requests.get(url, timeout=15)
-        if resp.status_code == 404:
-            return None
-        resp.raise_for_status()
-        return resp.json()
-    except requests.RequestException:
-        logger.warning(f"Failed to fetch object {object_id}", exc_info=True)
+    resp = requests.get(url, timeout=15)
+    if resp.status_code == 404:
         return None
+    resp.raise_for_status()
+    return resp.json()

@@ -30,7 +30,6 @@ def normalize_met(context: AssetExecutionContext, database: DatabaseResource) ->
 
     total = len(raw_rows)
     mapped = 0
-    errors = 0
 
     with engine.begin() as conn:
         for i in range(0, total, BATCH_SIZE):
@@ -38,12 +37,7 @@ def normalize_met(context: AssetExecutionContext, database: DatabaseResource) ->
             rows = []
             for raw_row in batch:
                 raw_data = json.loads(raw_row["data"])
-                try:
-                    artifact = mapper.map_to_canonical(raw_data)
-                except (KeyError, ValueError) as e:
-                    context.log.warning(f"Failed to map object {raw_row['object_id']}: {e}")
-                    errors += 1
-                    continue
+                artifact = mapper.map_to_canonical(raw_data)
                 rows.append(artifact.model_dump())
 
             if rows:
@@ -55,5 +49,5 @@ def normalize_met(context: AssetExecutionContext, database: DatabaseResource) ->
                 conn.execute(stmt)
                 mapped += len(rows)
 
-    context.log.info(f"Normalized {mapped} artifacts, {errors} errors out of {total}")
-    context.add_output_metadata({"total_raw": total, "mapped": mapped, "errors": errors})
+    context.log.info(f"Normalized {mapped} artifacts out of {total}")
+    context.add_output_metadata({"total_raw": total, "mapped": mapped})

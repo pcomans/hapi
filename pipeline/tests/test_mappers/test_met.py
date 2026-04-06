@@ -73,7 +73,7 @@ class TestRichObject:
         assert "DT537.jpg" in self.result.image_url
 
     def test_thumbnail(self):
-        assert self.result.thumbnail_url is not None
+        assert self.result.thumbnail_url == "https://images.metmuseum.org/CRDImages/eg/web-large/DT537.jpg"
 
     def test_license(self):
         assert self.result.license == License.CC0
@@ -100,7 +100,7 @@ class TestSparseObject:
         assert self.result.id == "met-548235"
 
     def test_title(self):
-        assert self.result.title is not None
+        assert self.result.title == "Fishtail Knife"
 
     def test_no_dynasty(self):
         assert self.result.dynasty is None
@@ -112,8 +112,7 @@ class TestSparseObject:
         assert self.result.ruler_display_name is None
 
     def test_image_present(self):
-        # Sparse but still has an image
-        assert self.result.image_url is not None
+        assert self.result.image_url == "https://images.metmuseum.org/CRDImages/eg/original/DP112575.jpg"
 
 
 class TestAmbiguousProvenance:
@@ -168,9 +167,9 @@ class TestNoImage:
         assert self.result.thumbnail_url is None
 
     def test_still_has_required_fields(self):
-        assert self.result.id.startswith("met-")
-        assert self.result.source_url is not None
+        assert self.result.id == "met-545782"
+        assert self.result.source_url == "https://www.metmuseum.org/art/collection/search/545782"
         assert self.result.source_museum == "met"
 
     def test_excavation(self):
-        assert self.result.excavation_id is not None
+        assert self.result.excavation_id == "MMA excavations"

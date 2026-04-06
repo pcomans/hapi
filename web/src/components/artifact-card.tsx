@@ -1,4 +1,4 @@
-import { ArtifactImage } from "./artifact-image";
+import { ArtifactImage, type License } from "./artifact-image";
 
 interface ArtifactCardProps {
   id: string;
@@ -14,7 +14,7 @@ interface ArtifactCardProps {
   sourceUrl: string;
   imageUrl?: string;
   thumbnailUrl?: string;
-  license: string;
+  license: License;
 }
 
 const MUSEUM_LABELS: Record<string, string> = {
@@ -46,7 +46,7 @@ export function ArtifactCard({
         <ArtifactImage
           imageUrl={imageUrl}
           thumbnailUrl={thumbnailUrl}
-          license={license as "cc0"}
+          license={license}
           title={title ?? "Untitled artifact"}
           sourceUrl={sourceUrl}
           sourceMuseum={MUSEUM_LABELS[sourceMuseum] ?? sourceMuseum}

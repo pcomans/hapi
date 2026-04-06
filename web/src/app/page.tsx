@@ -32,20 +32,15 @@ export default async function Home({ searchParams }: PageProps) {
   }
 
   let results = null;
-  let error = null;
   const hasQuery = q || filters.length > 0;
 
   if (hasQuery) {
-    try {
-      results = await searchArtifacts({
-        q: q || "*",
-        page,
-        perPage: 24,
-        filterBy: filters.join(" && "),
-      });
-    } catch (e) {
-      error = e instanceof Error ? e.message : "Search failed";
-    }
+    results = await searchArtifacts({
+      q: q || "*",
+      page,
+      perPage: 24,
+      filterBy: filters.join(" && "),
+    });
   }
 
   return (
@@ -89,12 +84,6 @@ export default async function Home({ searchParams }: PageProps) {
                 </a>
               ))}
             </div>
-          </div>
-        )}
-
-        {error && (
-          <div className="mt-8 rounded-lg bg-red-50 p-4 text-red-700">
-            {error}
           </div>
         )}
 
