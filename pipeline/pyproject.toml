@@ -15,6 +15,9 @@ dependencies = [
     "typesense>=2.0.0",
 ]
 
+[tool.dagster]
+module_name = "pipeline.definitions"
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",

@@ -28,7 +28,10 @@
 
 ## Known quirks
 
-- The objects endpoint returns ALL object IDs at once (not paginated). For Egyptian Art this is ~26k IDs. You then fetch each object individually.
+- The objects endpoint returns ALL object IDs at once (not paginated). For Egyptian Art this is ~28k IDs (27,971 as of April 2026). You then fetch each object individually.
+- Some object IDs return 404 — these are deleted/deaccessioned objects. The ingest treats these as skips, not errors.
 - The CSV dump is updated periodically and may lag the API by days/weeks.
-- Some `objectDate` fields contain ranges like "ca. 1479-1425 B.C." that need parsing.
+- Some `objectDate` fields contain ranges like "ca. 1479-1425 B.C." that need parsing. `objectBeginDate`/`objectEndDate` are negative integers for BCE.
 - The `period` field uses the Met's own periodization which is close to but not identical to standard Egyptological periods.
+- Truly sparse records (no period, no dynasty, no dates) are rare — most objects have at least a period even when other fields are empty.
+- Full ingest takes ~7 minutes at 66 req/sec (staying under the 80 req/sec limit).
