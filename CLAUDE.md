@@ -44,6 +44,7 @@ These are non-negotiable principles. Every agent, every PR, every line of code m
 7. **License before render.** Never display an image without checking the artifact's `license` field first. This is a legal obligation, not a UX preference.
 8. **Generated code is not edited.** Files produced by tools (`drizzle-kit introspect`, `alembic revision --autogenerate`) are committed as-is. Hand-editing generated files creates drift that the tools can't detect.
 9. **No backwards compatibility.** This is a greenfield project with no existing users or API clients. Never add deprecation shims, migration paths, or compatibility layers. Change things directly.
+10. **CI failures are real failures.** Never rationalize, hand-wave, or dismiss a CI failure as "pre-existing" or "unrelated." If CI is red, fix it before moving on. A red pipeline means the web tests don't run — that's not acceptable regardless of the cause.
 
 ## Rules
 
@@ -64,6 +65,15 @@ Run the appropriate commands after any change:
 | Any web code | `cd web && pnpm typecheck && pnpm lint` |
 | Web components | `cd web && pnpm test` |
 | Anything before commit | `cd pipeline && uv run pytest && cd ../web && pnpm typecheck && pnpm lint` |
+
+## Pull request workflow
+
+After every push to a PR branch, follow these steps in order:
+
+1. **Request Copilot review.** Run `gh pr edit <number> --add-reviewer github/copilot` to request a GitHub Copilot code review.
+2. **Wait for Copilot to finish.** Poll with `gh api repos/{owner}/{repo}/pulls/<number>/reviews` until Copilot's review appears. Then fetch comments with `gh api repos/{owner}/{repo}/pulls/<number>/comments`.
+3. **Reply to every comment.** For each Copilot comment, post a reply on that comment thread using `gh api repos/{owner}/{repo}/pulls/<number>/comments/<comment_id>/replies -f body="..."`. Either explain the fix (with commit SHA) or explain why the comment doesn't apply (e.g., generated file per rule 8). Every comment must get a response — do not silently skip any.
+4. **Ensure CI is green.** After pushing fixes, poll `gh pr checks <number> --watch` until all checks complete. If any check fails, fix and push. Do not move on until CI is green.
 
 ## Deeper docs
 

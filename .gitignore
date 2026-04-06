@@ -26,6 +26,9 @@ out/
 pgdata/
 tsdata/
 
+# Dagster
+.tmp_dagster_home_*/
+
 # Test / coverage
 .pytest_cache/
 .coverage
