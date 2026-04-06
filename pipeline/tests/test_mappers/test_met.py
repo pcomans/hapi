@@ -42,7 +42,7 @@ class TestRichObject:
         assert self.result.title == "Ritual Statuette of Thutmose III"
 
     def test_object_type(self):
-        assert self.result.object_type == "Statuette"
+        assert self.result.object_type == "Statuette, kneeling king, Thutmose III"
 
     def test_materials(self):
         assert self.result.materials == ["Black bronze", "gold inlay"]
@@ -204,4 +204,4 @@ class TestMultilineMedium:
         assert self.result.title == "Partially Restored Oblique Lyre"
 
     def test_object_type(self):
-        assert self.result.object_type == "Music"
+        assert self.result.object_type == "Music, lyre, oblique"
