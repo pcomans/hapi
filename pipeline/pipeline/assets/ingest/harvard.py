@@ -47,7 +47,7 @@ def raw_harvard(context: AssetExecutionContext, database: DatabaseResource) -> N
             total_records = data["info"]["totalrecords"]
             context.log.info(f"Harvard API reports {total_records} Egyptian objects")
 
-        records = data.get("records", [])
+        records = data["records"]
         if not records:
             break
 

@@ -106,6 +106,9 @@ class TestSparseNoImage:
     def test_id(self):
         assert self.result.id == "harvard-288555"
 
+    def test_source_id(self):
+        assert self.result.source_id == "288555"
+
     def test_source_museum(self):
         assert self.result.source_museum == "harvard"
 
@@ -169,6 +172,9 @@ class TestMultilineMedium:
 
     def test_id(self):
         assert self.result.id == "harvard-219609"
+
+    def test_source_id(self):
+        assert self.result.source_id == "219609"
 
     def test_source_museum(self):
         assert self.result.source_museum == "harvard"
@@ -237,6 +243,9 @@ class TestPlacesAndDates:
 
     def test_id(self):
         assert self.result.id == "harvard-289668"
+
+    def test_source_id(self):
+        assert self.result.source_id == "289668"
 
     def test_source_museum(self):
         assert self.result.source_museum == "harvard"
