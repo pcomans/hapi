@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 export type License =
-  | "none"
   | "cc0"
   | "cc-by"
   | "cc-by-nc"
@@ -59,7 +58,7 @@ export function ArtifactImage({
 }: ArtifactImageProps) {
   const src = thumbnailUrl ?? imageUrl;
 
-  if (license === "none" || !src) {
+  if (!src) {
     return (
       <div
         className={`flex items-center justify-center bg-gray-100 text-gray-400 ${className ?? ""}`}
