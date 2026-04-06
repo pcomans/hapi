@@ -21,7 +21,6 @@ class MuseumSource(str, Enum):
 class License(str, Enum):
     """License types that govern image rendering in the UI."""
 
-    NONE = "none"  # No image available — nothing to license
     CC0 = "cc0"
     CC_BY = "cc-by"
     CC_BY_NC = "cc-by-nc"
