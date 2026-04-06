@@ -12,7 +12,8 @@ interface PageProps {
 export default async function Home({ searchParams }: PageProps) {
   const params = await searchParams;
   const q = typeof params.q === "string" ? params.q : "";
-  const page = Number(params.page ?? "1");
+  const parsedPage = Number(params.page);
+  const page = Number.isFinite(parsedPage) && parsedPage >= 1 ? Math.floor(parsedPage) : 1;
 
   // Build filter string
   const filterFacets = [
@@ -27,7 +28,7 @@ export default async function Home({ searchParams }: PageProps) {
   for (const facet of filterFacets) {
     const value = params[facet];
     if (typeof value === "string" && value) {
-      filters.push(`${facet}:=${value}`);
+      filters.push(`${facet}:=\`${value.replace(/`/g, "")}\``);
     }
   }
 

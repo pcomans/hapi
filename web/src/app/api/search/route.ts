@@ -6,8 +6,10 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
 
   const q = params.get("q") ?? "*";
-  const page = Number(params.get("page") ?? "1");
-  const perPage = Number(params.get("perPage") ?? "24");
+  const parsedPage = Number(params.get("page"));
+  const page = Number.isFinite(parsedPage) && parsedPage >= 1 ? Math.floor(parsedPage) : 1;
+  const parsedPerPage = Number(params.get("perPage"));
+  const perPage = Number.isFinite(parsedPerPage) && parsedPerPage >= 1 ? Math.min(Math.floor(parsedPerPage), 100) : 24;
 
   // Build Typesense filter string from query params
   const filters: string[] = [];
@@ -21,7 +23,7 @@ export async function GET(request: NextRequest) {
   ]) {
     const value = params.get(facet);
     if (value) {
-      filters.push(`${facet}:=${value}`);
+      filters.push(`${facet}:=\`${value.replace(/`/g, "")}\``);
     }
   }
 

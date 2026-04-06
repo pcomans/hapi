@@ -1,7 +1,6 @@
 """Dagster resources for the pipeline."""
 
 import os
-from functools import cached_property
 
 import sqlalchemy as sa
 from dagster import ConfigurableResource

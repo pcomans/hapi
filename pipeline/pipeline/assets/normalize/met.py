@@ -4,7 +4,7 @@ import re
 
 from pipeline.types.canonical import CanonicalArtifact
 from pipeline.types.protocol import MapperProtocol
-from pipeline.types.sources import MUSEUM_LICENSE, MuseumSource
+from pipeline.types.sources import MUSEUM_LICENSE, License, MuseumSource
 
 MET_BASE_URL = "https://www.metmuseum.org/art/collection/search/"
 
@@ -17,7 +17,7 @@ class MetMapper(MapperProtocol):
       "Probably from" = likely, "Said to be from" = uncertain
     - reign field sometimes contains period info instead of ruler names
     - objectBeginDate/objectEndDate are negative integers for BCE dates
-    - Met is CC0, so all images are unrestricted
+    - Met is CC0 for public domain objects; non-public-domain objects are restricted
     """
 
     source = MuseumSource.MET
@@ -49,7 +49,7 @@ class MetMapper(MapperProtocol):
             credit_line=raw.get("creditLine") or None,
             image_url=raw.get("primaryImage") or None,
             thumbnail_url=raw.get("primaryImageSmall") or None,
-            license=MUSEUM_LICENSE[MuseumSource.MET],
+            license=MUSEUM_LICENSE[MuseumSource.MET] if raw.get("isPublicDomain") else License.RESTRICTED,
             wikidata_id=_extract_wikidata_id(raw.get("objectWikidata_URL")),
         )
 

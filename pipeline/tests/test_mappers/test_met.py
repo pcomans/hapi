@@ -116,7 +116,7 @@ class TestSparseObject:
 
 
 class TestAmbiguousProvenance:
-    """Bottle — 'Said to be from' geography type."""
+    """Bottle — 'Said to be from' geography type, not public domain."""
 
     @pytest.fixture(autouse=True)
     def setup(self, mapper):
@@ -128,6 +128,9 @@ class TestAmbiguousProvenance:
 
     def test_origin_site_raw_includes_subregion(self):
         assert "Girga" in self.result.origin_site_raw
+
+    def test_license_restricted_for_non_public_domain(self):
+        assert self.result.license == License.RESTRICTED
 
 
 class TestCoregencyReign:
@@ -173,3 +176,6 @@ class TestNoImage:
 
     def test_excavation(self):
         assert self.result.excavation_id == "MMA excavations"
+
+    def test_license_restricted_for_non_public_domain(self):
+        assert self.result.license == License.RESTRICTED
