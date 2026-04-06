@@ -49,7 +49,7 @@ class MetMapper(MapperProtocol):
             credit_line=raw.get("creditLine") or None,
             image_url=raw.get("primaryImage") or None,
             thumbnail_url=raw.get("primaryImageSmall") or None,
-            license=MUSEUM_LICENSE[MuseumSource.MET] if raw.get("isPublicDomain") else License.RESTRICTED,
+            license=_determine_license(raw),
             wikidata_id=_extract_wikidata_id(raw.get("objectWikidata_URL")),
         )
 
@@ -127,6 +127,15 @@ def _build_current_location(raw: dict) -> str | None:
     if gallery:
         return f"Gallery {gallery}"
     return None
+
+
+def _determine_license(raw: dict) -> License:
+    """Determine license based on image availability and public domain status."""
+    if not raw.get("primaryImage"):
+        return License.NONE
+    if raw.get("isPublicDomain"):
+        return MUSEUM_LICENSE[MuseumSource.MET]
+    return License.RESTRICTED
 
 
 def _extract_wikidata_id(url: str | None) -> str | None:
