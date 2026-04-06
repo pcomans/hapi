@@ -63,10 +63,14 @@ def _require_str(raw: dict, field: str, object_id: str) -> str:
 
 
 def _parse_medium(medium: str | None) -> list[str] | None:
-    """Split medium string into individual materials."""
+    """Split medium string into individual materials.
+
+    Met's medium field uses commas, semicolons, and \\r\\n as delimiters.
+    Some entries mix all three (e.g., "Faience, paste\\r\\nShell (Marine)\\r\\nGold").
+    """
     if not medium:
         return None
-    parts = [m.strip() for m in re.split(r"[,;]", medium) if m.strip()]
+    parts = [m.strip() for m in re.split(r"[\r\n,;]+", medium) if m.strip()]
     return parts or None
 
 
