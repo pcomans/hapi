@@ -3,12 +3,13 @@
 import re
 
 from pipeline.types.canonical import CanonicalArtifact
+from pipeline.types.protocol import MapperProtocol
 from pipeline.types.sources import MUSEUM_LICENSE, MuseumSource
 
 MET_BASE_URL = "https://www.metmuseum.org/art/collection/search/"
 
 
-class MetMapper:
+class MetMapper(MapperProtocol):
     """Maps Met API JSON to CanonicalArtifact.
 
     Field mapping notes:
@@ -27,7 +28,7 @@ class MetMapper:
         return CanonicalArtifact(
             id=f"met-{object_id}",
             source_museum=self.source.value,
-            source_url=raw.get("objectURL") or f"{MET_BASE_URL}{object_id}",
+            source_url=_require_str(raw, "objectURL", object_id),
             source_id=object_id,
             title=raw.get("title") or None,
             description=None,  # Met API has no description field
@@ -53,6 +54,14 @@ class MetMapper:
         )
 
 
+def _require_str(raw: dict, field: str, object_id: str) -> str:
+    """Require a non-empty string field, raising ValueError if absent."""
+    value = raw.get(field)
+    if not value:
+        raise ValueError(f"Met object {object_id} missing required field '{field}'")
+    return value
+
+
 def _parse_medium(medium: str | None) -> list[str] | None:
     """Split medium string into individual materials."""
     if not medium:
@@ -75,13 +84,10 @@ def _extract_ruler(reign: str | None) -> str | None:
 
 
 def _to_int(value: object) -> int | None:
-    """Convert a value to int, returning None for non-numeric."""
+    """Convert a value to int. None and empty string mean absent; anything else must be numeric."""
     if value is None or value == "":
         return None
-    try:
-        return int(value)
-    except (ValueError, TypeError):
-        return None
+    return int(value)
 
 
 def _build_origin_site_raw(raw: dict) -> str | None:

@@ -1,3 +1,4 @@
+import type { License } from "@/components/artifact-image";
 import Typesense from "typesense";
 
 const typesenseClient = new Typesense.Client({
@@ -33,7 +34,7 @@ export interface SearchResult {
   origin_site_display_name?: string;
   image_url?: string;
   thumbnail_url?: string;
-  license: string;
+  license: License;
 }
 
 export interface SearchResponse {

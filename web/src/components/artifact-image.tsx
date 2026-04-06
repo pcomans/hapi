@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-type License =
+export type License =
   | "cc0"
   | "cc-by"
   | "cc-by-nc"
