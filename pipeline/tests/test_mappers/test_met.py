@@ -192,8 +192,20 @@ class TestMultilineMedium:
     def test_id(self):
         assert self.result.id == "met-546960"
 
+    def test_source_museum(self):
+        assert self.result.source_museum == "met"
+
+    def test_source_id(self):
+        assert self.result.source_id == "546960"
+
     def test_source_url(self):
         assert self.result.source_url == "https://www.metmuseum.org/art/collection/search/546960"
+
+    def test_description_is_none(self):
+        assert self.result.description is None
+
+    def test_dimensions(self):
+        assert "Length of crossbar 31.3 cm." in self.result.dimensions
 
     def test_title(self):
         assert self.result.title == "Partially Restored Oblique Lyre"
