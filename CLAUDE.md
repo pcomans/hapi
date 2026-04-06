@@ -67,11 +67,12 @@ Run the appropriate commands after any change:
 
 ## Pull request workflow
 
-After pushing a PR, follow these steps in order:
+After every push to a PR branch, follow these steps in order:
 
 1. **Request Copilot review.** Run `gh pr edit <number> --add-reviewer github/copilot` to request a GitHub Copilot code review.
-2. **Wait for Copilot to finish.** Poll with `gh api repos/{owner}/{repo}/pulls/<number>/reviews` until Copilot's review appears. Then fetch comments with `gh api repos/{owner}/{repo}/pulls/<number>/comments` and address every actionable comment (fix the code, push, or explain why the comment doesn't apply). Ignore comments about generated files (rule 8).
-3. **Ensure CI is green.** Check with `gh pr checks <number>`. If any check fails, fix and push until all checks pass. Do not ask the user to merge until CI is green.
+2. **Wait for Copilot to finish.** Poll with `gh api repos/{owner}/{repo}/pulls/<number>/reviews` until Copilot's review appears. Then fetch comments with `gh api repos/{owner}/{repo}/pulls/<number>/comments`.
+3. **Reply to every comment.** For each Copilot comment, post a reply on that comment thread using `gh api repos/{owner}/{repo}/pulls/<number>/comments/<comment_id>/replies -f body="..."`. Either explain the fix (with commit SHA) or explain why the comment doesn't apply (e.g., generated file per rule 8). Every comment must get a response — do not silently skip any.
+4. **Ensure CI is green.** After pushing fixes, poll `gh pr checks <number> --watch` until all checks complete. If any check fails, fix and push. Do not move on until CI is green.
 
 ## Deeper docs
 
