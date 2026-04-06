@@ -1,0 +1,46 @@
+{
+  "id": 288555,
+  "objectid": 288555,
+  "objectnumber": "1991.644.A",
+  "accessionyear": 1991,
+  "dated": "16th-11th century BCE",
+  "datebegin": 0,
+  "dateend": 0,
+  "classification": "Sculpture",
+  "classificationid": 30,
+  "medium": "Light gray stone with black accretions on surface",
+  "technique": null,
+  "techniqueid": null,
+  "period": "New Kingdom",
+  "periodid": 2836,
+  "century": "16th-11th century BCE",
+  "culture": "Egyptian",
+  "style": null,
+  "dimensions": "47 x 63.5 cm (18 1/2 x 25 in.)",
+  "copyright": null,
+  "creditline": "Harvard Art Museums/Arthur M. Sackler Museum, Bequest of Gerhardt Liebmann",
+  "department": "Department of Ancient and Byzantine Art & Numismatics",
+  "division": "Asian and Mediterranean Art",
+  "description": "Possibly represents an offering to the Baboon God Thoth. It has been suggested that it is a royal stele due to its large size. Currently covered with bitumen and broken from the base at the bottom (12/2008)",
+  "provenance": null,
+  "imagecount": 0,
+  "peoplecount": 0,
+  "imagepermissionlevel": 0,
+  "accessionmethod": "Bequest",
+  "url": "https://www.harvardartmuseums.org/collections/object/288555",
+  "titles": [
+    {
+      "titletype": "Title",
+      "titleid": 661892,
+      "displayorder": 1,
+      "title": "Relief fragment with Baboon"
+    }
+  ],
+  "title": "Relief fragment with Baboon",
+  "worktypes": [
+    {
+      "worktypeid": "331",
+      "worktype": "sculpture"
+    }
+  ]
+}
