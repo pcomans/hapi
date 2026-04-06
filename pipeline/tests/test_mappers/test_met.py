@@ -179,3 +179,90 @@ class TestNoImage:
 
     def test_license_restricted_for_non_public_domain(self):
         assert self.result.license == License.RESTRICTED
+
+
+class TestMultilineMedium:
+    """Oblique Lyre — medium field contains \\r\\n delimiters."""
+
+    @pytest.fixture(autouse=True)
+    def setup(self, mapper):
+        raw = _load_fixture("multiline_medium.json")
+        self.result = mapper.map_to_canonical(raw)
+
+    def test_id(self):
+        assert self.result.id == "met-546960"
+
+    def test_source_museum(self):
+        assert self.result.source_museum == "met"
+
+    def test_source_id(self):
+        assert self.result.source_id == "546960"
+
+    def test_source_url(self):
+        assert self.result.source_url == "https://www.metmuseum.org/art/collection/search/546960"
+
+    def test_description_is_none(self):
+        assert self.result.description is None
+
+    def test_dimensions(self):
+        assert "Length of crossbar 31.3 cm." in self.result.dimensions
+
+    def test_title(self):
+        assert self.result.title == "Partially Restored Oblique Lyre"
+
+    def test_object_type(self):
+        assert self.result.object_type == "Music, lyre, oblique"
+
+    def test_materials_split_on_newlines(self):
+        assert self.result.materials == [
+            "Wood (frame)",
+            "bronze or copper alloy",
+            "(staple)",
+            "Bronze",
+        ]
+
+    def test_period(self):
+        assert self.result.period == "New Kingdom"
+
+    def test_dynasty(self):
+        assert self.result.dynasty == "Dynasty 18, early"
+
+    def test_no_ruler(self):
+        assert self.result.ruler_display_name is None
+
+    def test_dates(self):
+        assert self.result.date_start == -1550
+        assert self.result.date_end == -1550
+
+    def test_date_display(self):
+        assert self.result.date_display == "ca. 1550\u20131458 B.C."
+
+    def test_origin_site_raw(self):
+        assert self.result.origin_site_raw == "Egypt, Upper Egypt, Thebes, Asasif, Courtyard CC 41, Pit 1, Chamber A debris"
+
+    def test_origin_certainty(self):
+        assert self.result.origin_certainty == "confirmed"
+
+    def test_excavation_id(self):
+        assert self.result.excavation_id == "MMA excavations, 1915\u201316"
+
+    def test_current_location(self):
+        assert self.result.current_location == "Gallery 114"
+
+    def test_accession_number(self):
+        assert self.result.accession_number == "16.10.504"
+
+    def test_image(self):
+        assert self.result.image_url == "https://images.metmuseum.org/CRDImages/eg/original/16.10.504.jpg"
+
+    def test_thumbnail(self):
+        assert self.result.thumbnail_url == "https://images.metmuseum.org/CRDImages/eg/web-large/16.10.504.jpg"
+
+    def test_license(self):
+        assert self.result.license == License.CC0
+
+    def test_wikidata_id(self):
+        assert self.result.wikidata_id == "Q116280296"
+
+    def test_credit_line(self):
+        assert self.result.credit_line == "Rogers Fund, 1916"

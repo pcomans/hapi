@@ -14,11 +14,11 @@ Migration `744ef0c92771_initial_schema.py` created and applied. All tables exist
 
 ### ~~1.2 Met fixtures~~ ✅
 
-5 real Met API responses saved to `tests/fixtures/met/`: `rich_object.json` (Thutmose III statuette), `sparse_object.json` (Fishtail Knife), `ambiguous_provenance.json` ("Said to be from" geography), `coregency_reign.json` (Queen Tiye ring, reign spans Amenhotep III to Akhenaten), `no_image.json` (Wedge, no image).
+6 real Met API responses saved to `tests/fixtures/met/`: `rich_object.json` (Thutmose III statuette), `sparse_object.json` (Fishtail Knife), `ambiguous_provenance.json` ("Said to be from" geography), `coregency_reign.json` (Queen Tiye ring, reign spans Amenhotep III to Akhenaten), `no_image.json` (Wedge, no image), `multiline_medium.json` (Oblique Lyre, medium with `\r\n` delimiters).
 
 ### ~~1.3 Met mapper + tests~~ ✅
 
-`pipeline/assets/normalize/met.py` implements `MapperProtocol`. Handles: reign extraction ("reign of X" → ruler name), structured geography → origin_site_raw, geographyType → origin_certainty, medium parsing, Wikidata ID extraction. 35 tests in `tests/test_mappers/test_met.py`, all passing.
+`pipeline/assets/normalize/met.py` implements `MapperProtocol`. Handles: reign extraction ("reign of X" → ruler name), structured geography → origin_site_raw, geographyType → origin_certainty, medium parsing (comma, semicolon, and `\r\n` delimiters), Wikidata ID extraction. 6 fixture files in `tests/fixtures/met/`, 57 tests in `tests/test_mappers/test_met.py`, all passing.
 
 ### ~~1.4 Met ingest asset~~ ✅
 
@@ -48,9 +48,9 @@ Migration `744ef0c92771_initial_schema.py` created and applied. All tables exist
 
 Search bar, faceted filters (sidebar), artifact cards in grid layout, pagination. Suggested searches (Karnak, Thutmose III, etc.) shown on empty state. Server-rendered.
 
-### 1.11 First full pipeline run 🔄
+### ~~1.11 First full pipeline run~~ ✅
 
-Materialize `raw_met` → `normalize_met` → `sync_search` via Dagster CLI. Verify end-to-end: search returns Met artifacts on localhost:3000. **In progress: ingest running.**
+Full pipeline materialized via Dagster: `raw_met` → `normalize_met` → `sync_search`. 27,969 Met objects ingested, normalized, and indexed in Typesense. Search returns Met artifacts on localhost:3000.
 
 ## Milestone 2: Brooklyn + Harvard
 
