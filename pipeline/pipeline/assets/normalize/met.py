@@ -32,7 +32,7 @@ class MetMapper(MapperProtocol):
             source_id=object_id,
             title=raw.get("title") or None,
             description=None,  # Met API has no description field
-            object_type=raw.get("objectName") or None,
+            object_type=_extract_object_type(raw.get("objectName")),
             materials=_parse_medium(raw.get("medium")),
             dimensions=raw.get("dimensions") or None,
             period=raw.get("period") or None,
@@ -60,6 +60,20 @@ def _require_str(raw: dict, field: str, object_id: str) -> str:
     if not value:
         raise ValueError(f"Met object {object_id} missing required field '{field}'")
     return value
+
+
+def _extract_object_type(object_name: str | None) -> str | None:
+    """Extract the primary object type from Met's objectName field.
+
+    Met's objectName often appends qualifiers after a comma — context, person,
+    or sub-type (e.g., "Scarab, private", "Relief fragment, tomb of Meketre",
+    "Shabti, Henettawy C"). We take only the part before the first comma
+    as the canonical object type.
+    """
+    if not object_name:
+        return None
+    primary = object_name.split(",", 1)[0].strip()
+    return primary or None
 
 
 def _parse_medium(medium: str | None) -> list[str] | None:
