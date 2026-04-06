@@ -58,12 +58,24 @@ export function ArtifactImage({
 }: ArtifactImageProps) {
   const src = thumbnailUrl ?? imageUrl;
 
-  if (!src || !canEmbed(license)) {
+  if (!src) {
+    return (
+      <div
+        className={`flex items-center justify-center bg-gray-100 text-gray-400 ${className ?? ""}`}
+        style={{ width, height }}
+        data-testid="image-placeholder"
+      >
+        <span className="text-center p-4 text-sm">No image available</span>
+      </div>
+    );
+  }
+
+  if (!canEmbed(license)) {
     return (
       <div
         className={`flex items-center justify-center bg-gray-100 text-gray-500 ${className ?? ""}`}
         style={{ width, height }}
-        data-testid="image-placeholder"
+        data-testid="image-restricted"
       >
         <a
           href={sourceUrl}
@@ -72,7 +84,7 @@ export function ArtifactImage({
           className="text-center p-4 hover:text-gray-700"
         >
           <span className="block text-sm">View on {sourceMuseum}</span>
-          <span className="block text-xs mt-1">Image not available for embedding</span>
+          <span className="block text-xs mt-1">Image not licensed for embedding</span>
         </a>
       </div>
     );

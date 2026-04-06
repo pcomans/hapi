@@ -70,7 +70,7 @@ describe("ArtifactImage", () => {
   });
 
   describe("restricted license (no embed)", () => {
-    it("shows placeholder with link to source", () => {
+    it("shows restricted notice with link to source", () => {
       render(
         <ArtifactImage
           {...BASE_PROPS}
@@ -80,13 +80,14 @@ describe("ArtifactImage", () => {
         />,
       );
       expect(screen.queryByRole("img")).not.toBeInTheDocument();
-      expect(screen.getByTestId("image-placeholder")).toBeInTheDocument();
+      expect(screen.getByTestId("image-restricted")).toBeInTheDocument();
       expect(screen.getByText("View on Test Museum")).toBeInTheDocument();
+      expect(screen.getByText("Image not licensed for embedding")).toBeInTheDocument();
     });
   });
 
   describe("unknown license (no embed)", () => {
-    it("shows placeholder even when image URL exists", () => {
+    it("shows restricted notice even when image URL exists", () => {
       render(
         <ArtifactImage
           {...BASE_PROPS}
@@ -96,12 +97,12 @@ describe("ArtifactImage", () => {
         />,
       );
       expect(screen.queryByRole("img")).not.toBeInTheDocument();
-      expect(screen.getByTestId("image-placeholder")).toBeInTheDocument();
+      expect(screen.getByTestId("image-restricted")).toBeInTheDocument();
     });
   });
 
   describe("no image URL", () => {
-    it("shows placeholder regardless of license", () => {
+    it("shows missing image placeholder regardless of license", () => {
       render(
         <ArtifactImage
           {...BASE_PROPS}
@@ -112,6 +113,7 @@ describe("ArtifactImage", () => {
       );
       expect(screen.queryByRole("img")).not.toBeInTheDocument();
       expect(screen.getByTestId("image-placeholder")).toBeInTheDocument();
+      expect(screen.getByText("No image available")).toBeInTheDocument();
     });
   });
 
