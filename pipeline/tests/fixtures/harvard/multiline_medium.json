@@ -1,0 +1,131 @@
+{
+  "id": 219609,
+  "objectid": 219609,
+  "objectnumber": "1923.60",
+  "accessionyear": 1923,
+  "dated": "c. 130-150 CE",
+  "datebegin": 125,
+  "dateend": 155,
+  "classification": "Paintings",
+  "classificationid": 26,
+  "medium": "Binder: Beeswax\r\nPigments: Lead white, red and yellow ochres, carbon black, indigo, madder lake, green earth (celadonite), natrojarosite\r\nSupport: Native Egyptian sycomore fig (Ficus sycomorus)",
+  "technique": "Painted",
+  "techniqueid": 2125,
+  "period": "Roman Imperial period, Middle",
+  "periodid": 632,
+  "century": "2nd century CE",
+  "culture": "Egyptian",
+  "style": null,
+  "dimensions": "35.3 \u00d7 22.5 \u00d7 2 cm (13 7/8 \u00d7 8 7/8 \u00d7 13/16 in.)",
+  "copyright": null,
+  "creditline": "Harvard Art Museums/Arthur M. Sackler Museum, Gift of Dr. Denman W. Ross",
+  "department": "Department of Ancient and Byzantine Art & Numismatics",
+  "division": "Asian and Mediterranean Art",
+  "description": "This highly naturalistic mummy portrait depicts a young woman with deep brown eyes, arched brows, and a long pointed nose. Her dark hair is pulled back with only a row of small curls framing her forehead. Her jewelry is simple: small gold double-hooped earrings, each with a pendant pearl. She wears a deep purple tunic with green shoulder bands and maroon clasps all over a white undergarment, visible only at the neckline. \r\n\r\n\r\n",
+  "provenance": "Denman Waldo Ross, Cambridge, MA, (by 1923), gift; to Fogg Art Museum, 1923.",
+  "imagecount": 2,
+  "peoplecount": 0,
+  "imagepermissionlevel": 0,
+  "accessionmethod": "Gift",
+  "url": "https://www.harvardartmuseums.org/collections/object/219609",
+  "audio": [
+    {
+      "duration": 0,
+      "copyright": "President and Fellows of Harvard College",
+      "audioid": 492584,
+      "description": "Visual description by Frances Gallart Marques Frederick Randolph Grace Curatorial Fellow in Ancient Art, Division of Asian and Mediterranean Art. Written August 2018.",
+      "transcripturl": "http://media.harvardartmuseums.org/audio/alice/mummy-portrait.txt",
+      "primaryurl": "http://media.harvardartmuseums.org/audio/alice/mummy-portrait.mp3"
+    }
+  ],
+  "gallery": {
+    "begindate": "2024-05-28",
+    "gallerynumber": "3740",
+    "galleryid": "3740",
+    "displayname": "Level 3, Room 3740,\u00a0Ancient Mediterranean and Middle Eastern Art",
+    "name": "Ancient Mediterranean and Middle Eastern Art",
+    "theme": "Ancient Egypt: Art for Eternity",
+    "floor": "3",
+    "donorname": null
+  },
+  "groupings": [
+    {
+      "groupid": 2040174,
+      "name": "Google Art Project"
+    },
+    {
+      "groupid": 2039923,
+      "name": "Collection Highlights"
+    }
+  ],
+  "images": [
+    {
+      "date": "2002-01-01",
+      "copyright": "President and Fellows of Harvard College",
+      "imageid": 56598,
+      "idsid": 17804324,
+      "format": "image/jpeg",
+      "description": "The wooden board of this painting follows the general silhouette of the subject, but with a more geometric shape. She has olive-toned skin, dark brown hair, and is wearing a purple stola with vertical green bands over a white undergarment. Her hair is pulled up and back, and row of curls frames her hairline. In each lobe she wears an earring that begins as a golden hoop, transitions into a golden diamond shape with an inset pink stone and terminates in a pearl. She has brown, rounded eyes with heavy lids beneath large eyebrows, a long nose, and small lips.",
+      "technique": null,
+      "renditionnumber": "70813",
+      "displayorder": 1,
+      "baseimageurl": "https://nrs.harvard.edu/urn-3:HUAM:70813_dynmc",
+      "alttext": "Bust portait of a woman with golden earrings.",
+      "width": 1638,
+      "publiccaption": null,
+      "iiifbaseuri": "https://nrs.harvard.edu/urn-3:HUAM:70813_dynmc",
+      "height": 2550
+    },
+    {
+      "date": "2022-08-31",
+      "copyright": "President and Fellows of Harvard College",
+      "imageid": 531490,
+      "idsid": 495316730,
+      "format": "image/jpeg",
+      "description": null,
+      "technique": null,
+      "renditionnumber": "LEG279507",
+      "displayorder": 2,
+      "baseimageurl": "https://nrs.harvard.edu/urn-3:HUAM:LEG279507",
+      "alttext": null,
+      "width": 1913,
+      "publiccaption": "back detail",
+      "iiifbaseuri": "https://nrs.harvard.edu/urn-3:HUAM:LEG279507",
+      "height": 2550
+    }
+  ],
+  "primaryimageurl": "https://nrs.harvard.edu/urn-3:HUAM:70813_dynmc",
+  "media": [
+    {
+      "filetype": "Audio File",
+      "copyright": "President and Fellows of Harvard College",
+      "thumbnailimageurl": null,
+      "fileurl": "http://media.harvardartmuseums.org/audio/alice/mummy-portrait.mp3",
+      "renditionnumber": "AUD0169",
+      "publiccaption": "Visual description by Frances Gallart Marques Frederick Randolph Grace Curatorial Fellow in Ancient Art, Division of Asian and Mediterranean Art. Written August 2018."
+    }
+  ],
+  "places": [
+    {
+      "displayname": "Ancient & Byzantine World, Africa, Antinoopolis (Egypt)",
+      "confidence": null,
+      "placeid": 2039408,
+      "type": "Creation Place"
+    }
+  ],
+  "titles": [
+    {
+      "titletype": "Title",
+      "titleid": 801650,
+      "displayorder": 1,
+      "title": "Portrait of a woman"
+    }
+  ],
+  "title": "Portrait of a woman",
+  "worktypes": [
+    {
+      "worktypeid": "251",
+      "worktype": "painting"
+    }
+  ]
+}

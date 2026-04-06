@@ -1,9 +1,69 @@
 #!/bin/bash
-# PostToolUse hook: remind agent to document learnings and update task list after creating a PR
+# PostToolUse hook for PR-related commands:
+# - gh pr create: request Copilot review + remind agent to document learnings
+# - git push: request Copilot review if on a PR branch
 
-cat <<'EOF'
+# TOOL_INPUT is a JSON env var with the tool's input parameters
+# For Bash tool, it contains { "command": "..." }
+CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
+
+# Fallback: try reading from stdin (older hook format uses .tool_input.command)
+if [ -z "$CMD" ]; then
+  CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
+fi
+
+# Determine what triggered us
+IS_PR_CREATE=false
+IS_GIT_PUSH=false
+
+if echo "$CMD" | grep -q 'gh pr create'; then
+  IS_PR_CREATE=true
+elif echo "$CMD" | grep -q '^git push'; then
+  IS_GIT_PUSH=true
+else
+  exit 0
+fi
+
+# Find the PR number
+PR_NUMBER=$(gh pr view --json number --jq .number 2>/dev/null) || true
+if [ -z "$PR_NUMBER" ]; then
+  # No PR for this branch — nothing to do
+  exit 0
+fi
+
+# Request Copilot review and verify it was added
+REVIEW_OUTPUT=$(gh pr edit "$PR_NUMBER" --add-reviewer @copilot 2>&1)
+REVIEW_STATUS=$?
+
+# Verify the reviewer was actually added
+REVIEWERS=$(gh pr view "$PR_NUMBER" --json reviewRequests --jq '.reviewRequests[].login' 2>/dev/null)
+COPILOT_ADDED=false
+if echo "$REVIEWERS" | grep -qi copilot; then
+  COPILOT_ADDED=true
+fi
+
+# Build the response message
+MESSAGES=""
+
+if [ "$COPILOT_ADDED" = true ]; then
+  MESSAGES="Copilot review requested on PR #$PR_NUMBER."
+elif [ $REVIEW_STATUS -ne 0 ]; then
+  MESSAGES="WARNING: Failed to request Copilot review on PR #$PR_NUMBER: $REVIEW_OUTPUT. Do NOT silently skip this — tell the user."
+else
+  MESSAGES="WARNING: Copilot review request returned success but reviewer was not added to PR #$PR_NUMBER. Do NOT silently skip this — tell the user."
+fi
+
+# Add documentation reminder for PR creation
+if [ "$IS_PR_CREATE" = true ]; then
+  MESSAGES="$MESSAGES\n\nYou just created PR #$PR_NUMBER. Before finishing, you MUST:\n1. Update the task list — mark completed tasks as done.\n2. Document learnings in docs/museum-sources/*.md or pipeline/CLAUDE.md.\n3. Wait for CI to pass and Copilot review, then reply to every comment."
+fi
+
+# Escape for JSON
+MESSAGES_ESCAPED=$(echo "$MESSAGES" | sed 's/"/\\"/g')
+
+cat <<HEREDOC
 {
-  "systemMessage": "You just created a PR. Before finishing, you MUST do the following:\n\n1. **Update the task list** — Mark completed tasks as done and add brief notes on what was built. Update any in-progress or blocked tasks.\n\n2. **Document learnings:**\n   - Update docs/museum-sources/*.md with any API quirks, data quality observations, or rate limit findings\n   - Update pipeline/CLAUDE.md or web/CLAUDE.md with any operational patterns or conventions discovered\n   - If an architectural decision was made, consider whether it warrants an ADR in docs/adr/\n\nReview what you learned and write it down in the appropriate place. Do not skip these steps."
+  "systemMessage": "$MESSAGES_ESCAPED"
 }
-EOF
+HEREDOC
 exit 0
