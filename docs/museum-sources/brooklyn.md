@@ -197,13 +197,17 @@ The RSC payload uses `objectDateBegin`/`objectDateEnd` while the search API uses
 
 ## Ingest strategy
 
-**Two-phase approach:**
+**Two-phase approach using Playwright for RSC detail fetches:**
 
-1. **Phase 1 — Search API pagination**: Fetch all 177 pages (`size=50`) to get every `sourceId` plus basic metadata (title, dates, classification, geographicalLocations, imageUrl, accessionNumber, startYear, endYear).
-2. **Phase 2 — RSC detail fetch**: For each `sourceId`, fetch the RSC page to get medium, dimensions, dynasty, period, creditLine, provenance, rightsType. Parse the Sanity JSON from the RSC payload.
-3. **Store merged data**: Combine both sources into `raw_brooklyn` table as one JSON blob per object.
+1. **Phase 1 — Search API pagination**: Fetch all pages (`size=50`, ~177 pages) via `requests` — the search API at `search.brooklynmuseum.org` has no bot protection. Gets: sourceId, title, dates, startYear, endYear, classification, geographicalLocations, imageUrl, accessionNumber, constituents, description, onView, collection.
+2. **Phase 2 — RSC detail fetch via Playwright**: Launch a headless Chromium browser, navigate to `brooklynmuseum.org/opencollection` to pass the Vercel Security Checkpoint, then use `page.evaluate(fetch(...))` to fetch RSC payloads from within the browser context in batches of 20. Gets: medium, dimensions, dynasty, period, creditLine, provenance, rightsType, inscribed, objectDate, objectDateBegin, objectDateEnd, section.
+3. **Store merged data**: Overlay RSC detail fields onto search API records and store in `raw_brooklyn` table as one JSON blob per object.
 
-At 20 concurrent RSC fetches, phase 2 should complete in ~3 minutes for all 8,832 objects.
+**Why Playwright?** Direct HTTP requests (`curl`, `requests`, `httpx`) to `www.brooklynmuseum.org` are blocked by Vercel's bot protection checkpoint — even with browser-like User-Agent headers. The search API at `search.brooklynmuseum.org` is unaffected. Fetching from within a real browser context that has already passed the checkpoint bypasses this restriction.
+
+**Implementation:** `pipeline/assets/ingest/brooklyn.py`. The Playwright dependency is declared in `pyproject.toml`. Chromium must be installed via `uv run playwright install chromium` before the first run.
+
+At 20 concurrent RSC fetches per batch, phase 2 should complete in ~3–5 minutes for all ~8,800 objects.
 
 ## Known quirks
 

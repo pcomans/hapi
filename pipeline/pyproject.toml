@@ -10,6 +10,7 @@ dependencies = [
     "dagster-webserver>=1.12.22",
     "psycopg2-binary>=2.9.11",
     "pydantic>=2.12.5",
+    "playwright>=1.52.0",
     "requests>=2.33.1",
     "sqlalchemy>=2.0.49",
     "typesense>=2.0.0",
