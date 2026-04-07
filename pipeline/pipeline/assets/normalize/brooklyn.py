@@ -87,7 +87,7 @@ def _to_int(value: object) -> int | None:
 def _extract_origin_site(geo_locations: list[dict] | None) -> str | None:
     """Extract origin site from geographical locations.
 
-    Uses the `name` field from the first geographical location.
+    Returns the `name` field from the first geographical location that has one.
     The `name` field is the most complete (e.g., "Saqqara, Egypt").
     """
     if not geo_locations:
