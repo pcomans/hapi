@@ -1,0 +1,52 @@
+{
+  "source": "sanity",
+  "sourceId": "118436",
+  "sourceType": "collectionObject",
+  "type": "collectionObject",
+  "url": "https://www.brooklynmuseum.org/objects/118436",
+  "title": "Funerary Cone of King\u2019s Scribe, Ramose",
+  "description": "Pottery funerary cone inscribed for the King's Scribe Ramose. The inscription is identical to that of 37.1934E. The clay is a brick red on the surface.   Condition: Partial remains of buff slip; inscription very worn.",
+  "imageUrl": "https://brooklynmuseum.b-cdn.net/collections/objects/CUR.37.1931E_37.1930E_GRPA_print_bw.JPG",
+  "accessionNumber": "37.1931E",
+  "dates": "664–332 B.C.E.",
+  "startYear": -664,
+  "endYear": -332,
+  "onView": false,
+  "classification": "Document",
+  "collection": {
+    "id": "5",
+    "name": "Egyptian, Classical, Ancient Near Eastern Art"
+  },
+  "geographicalLocations": [
+    {
+      "continent": "Africa",
+      "country": "Egypt",
+      "city": "Thebes",
+      "name": "Thebes, Egypt",
+      "id": "7093089",
+      "type": "Reportedly from"
+    }
+  ],
+  "constituents": [
+    {
+      "role": "Culture",
+      "nationality": "Egyptian",
+      "name": "Egyptian",
+      "rank": null,
+      "dates": "",
+      "id": "12429"
+    }
+  ],
+  "medium": "Clay",
+  "dimensions": "Diam. 3 15/16 x 7 1/16 in. (10 x 18 cm)\r\n\r\n",
+  "dynasty": "Dynasty 25, or later",
+  "period": "Late Period",
+  "section": "",
+  "creditLine": "Charles Edwin Wilbour Fund",
+  "provenance": null,
+  "rightsType": "Creative Commons 3D",
+  "inscribed": null,
+  "objectDate": "664–332 B.C.E.",
+  "objectDateBegin": -664,
+  "objectDateEnd": -332
+}
