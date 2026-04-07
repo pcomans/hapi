@@ -84,9 +84,9 @@ Old REST API (`/api/v2`) is retired. Undocumented replacement discovered via bro
 
 `pipeline/definitions.py` updated with `raw_brooklyn` and `normalize_brooklyn` assets. `sync_search` deps updated to include `normalize_brooklyn`. All three museums appear in Dagster asset graph. 250 tests passing (all mappers + structural tests). PR #9.
 
-### 2.8 Schema adjustments (if needed)
+### ~~2.8 Schema adjustments~~ ✅
 
-After mapping all three museums, assess whether the canonical schema needs new fields or changes. If so: update SQLAlchemy model → update Pydantic model → create Alembic migration → re-introspect Drizzle → commit all together.
+Added `provenance` text column to canonical artifacts — available from Brooklyn (925 records, 10.5%) and Harvard (151 records, 21%), not Met. `inscribed` (Brooklyn-only, sparse) deferred. Full stack: SQLAlchemy model → Pydantic model → Alembic migration `3a1c350217d9` → Drizzle introspection → mapper updates for Brooklyn and Harvard → test assertions. Also added Brooklyn culture filter (`is_egyptian`) to exclude ~1,278 non-Egyptian objects (Greek, Roman, Cypriot, etc.) during normalization, expanded geography type mapping (11 types), and hardened null geo entry handling. 7,554 Brooklyn artifacts normalized. PR #10.
 
 ## Milestone 3: Authority Data + Enrichment
 

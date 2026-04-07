@@ -185,7 +185,8 @@ The RSC payload uses `objectDateBegin`/`objectDateEnd` while the search API uses
 - **Date uncertainty offset.** Search API dates sometimes have a +/-3 offset from display dates (e.g., "ca. 3500" maps to `startYear: 3497, endYear: 3503`). This appears to encode the "ca." uncertainty range.
 - **Dynasty field is free-text.** Values like "in the style fo the late Dynasty 18" (note typo "fo") — mapper must handle varied formats.
 - **Period field is verbose.** Values like "Modern, in the style of the New Kingdom, Amarna Period" or "Predynastic Period, Naqada II" — more descriptive than Met or Harvard.
-- **Geography types indicate certainty.** `type` field: "Place made" → `made_in`, "Reportedly from" → `uncertain`, "Possible place made" → `uncertain`, "Place collected" → `collected`. Maps to `origin_certainty`.
+- **Geography types indicate certainty.** `type` field: "Place made" → `made_in`, "Place excavated"/"Place found" → `excavated`, "Reportedly from"/"Possible place made"/"Possible place collected"/"Possible place purchased"/"Possible place manufactured" → `uncertain`, "Place collected" → `collected`, "Place used" → `used`, "Place modified" → `made_in`. Maps to `origin_certainty`. Some `geographicalLocations` array entries can be `null`.
+- **Culture tags for filtering.** `constituents` array with `role: "Culture"` indicates object culture. Egyptian-adjacent cultures kept: Egyptian, Coptic, Demotic, Graeco-Egyptian, Egypto-Roman, Nubian. Non-Egyptian (Greek, Roman, Cypriot, Etruscan, etc.) filtered out during normalization. ~6,700 objects have no culture tag and are kept (majority of department, overwhelmingly Egyptian).
 - **Provenance is free-text.** Full provenance chain as a single string (e.g., "Archaeological provenance not yet documented, reportedly from Cyprus; by 1900, acquired by an anonymous individual...").
 - **Many objects lack images.** Not all objects have `imageUrl` in the search results.
 
@@ -216,6 +217,6 @@ At 20 concurrent RSC fetches per batch, phase 2 should complete in ~3–5 minute
 - `sourceId` is a string in search API results but a number in the RSC Sanity data.
 - The RSC payload format is Next.js-internal. Parsing uses a ref-map approach: split by newlines, parse `{refId}:{json}` pairs, then resolve `$`-prefixed references recursively. See "Parsing the RSC payload" section above.
 - The `maxPages` field in search metadata varies with `size` parameter and does not reliably reflect actual page count. Use `metadata.total / size` instead.
-- Collection includes non-Egyptian material (Greek, Roman, Coptic, Near Eastern). Filtering strategy needed during normalization.
+- Collection includes non-Egyptian material (Greek, Roman, Coptic, Near Eastern). Filtered during normalization via `is_egyptian()` culture check — 1,278 objects excluded, 7,554 normalized.
 - **Vercel bot protection** blocks direct HTTP requests to `www.brooklynmuseum.org`. The search API (`search.brooklynmuseum.org`) is not affected. RSC detail fetches require a browser context or headless browser.
 - The search API's free-text `q` parameter does not support searching by `sourceId` directly. To find a specific object, browse pages or filter by known fields (geo, classification, etc.).
