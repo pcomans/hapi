@@ -159,20 +159,31 @@ def _fetch_rsc_details_playwright(
 
         # Fetch RSC details in batches
         total = len(source_ids)
+        total_errors = 0
         for i in range(0, total, RSC_BATCH_SIZE):
             batch_ids = source_ids[i : i + RSC_BATCH_SIZE]
-            results = page.evaluate(_JS_FETCH_BATCH, batch_ids)
+            batch_result = page.evaluate(_JS_FETCH_BATCH, batch_ids)
 
-            for source_id, detail in results.items():
+            for source_id, detail in batch_result["results"].items():
                 if detail:
                     detail_map[source_id] = detail
 
+            batch_errors = batch_result.get("errors", [])
+            total_errors += len(batch_errors)
+            for err in batch_errors:
+                context.log.warning(
+                    f"RSC fetch failed for {err['sourceId']}: {err['error']}"
+                )
+
             context.log.info(
                 f"RSC detail: {min(i + RSC_BATCH_SIZE, total)}/{total} "
-                f"({len(detail_map)} successful)"
+                f"({len(detail_map)} successful, {total_errors} errors)"
             )
 
         browser.close()
+
+    if total_errors > 0:
+        context.log.warning(f"RSC detail fetch had {total_errors} errors out of {len(source_ids)} objects")
 
     return detail_map
 
@@ -183,6 +194,7 @@ def _fetch_rsc_details_playwright(
 _JS_FETCH_BATCH = """
 async (sourceIds) => {
     const results = {};
+    const errors = [];
 
     const fetches = sourceIds.map(async (sourceId) => {
         try {
@@ -192,6 +204,10 @@ async (sourceIds) => {
                     'Next-Url': `/DEFAULT/objects/${sourceId}`
                 }
             });
+            if (!resp.ok) {
+                errors.push({sourceId, error: `HTTP ${resp.status}`});
+                return;
+            }
             const text = await resp.text();
 
             // Build ref map from RSC lines
@@ -232,13 +248,15 @@ async (sourceIds) => {
                     objectDateEnd: obj.objectDateEnd ?? null,
                     section: obj.section || null
                 };
+            } else {
+                errors.push({sourceId, error: 'No collectionObject found in RSC payload'});
             }
         } catch(e) {
-            // Skip failed fetches — search data is still available
+            errors.push({sourceId, error: e.toString()});
         }
     });
 
     await Promise.all(fetches);
-    return results;
+    return {results, errors};
 }
 """

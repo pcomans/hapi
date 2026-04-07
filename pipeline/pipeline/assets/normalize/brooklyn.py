@@ -115,7 +115,9 @@ def _map_geography_type(geo_locations: list[dict] | None) -> str | None:
         "Possible place made": "uncertain",
         "Place collected": "collected",
     }
-    return mapping.get(geo_type, geo_type.lower())
+    if geo_type not in mapping:
+        raise ValueError(f"Unknown Brooklyn geography type: {geo_type!r}")
+    return mapping[geo_type]
 
 
 def _build_thumbnail_url(image_url: str | None) -> str | None:
