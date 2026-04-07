@@ -54,36 +54,37 @@ Full pipeline materialized via Dagster: `raw_met` → `normalize_met` → `sync_
 
 ## Milestone 2: Harvard + Brooklyn
 
-Add the other two museums to stress-test normalization across different data shapes. The pipeline, search index, and web already work from Milestone 1. Harvard first — the Brooklyn Museum API is currently broken.
+Add the other two museums to stress-test normalization across different data shapes. The pipeline, search index, and web already work from Milestone 1. Harvard first — Brooklyn's old API was retired but an undocumented replacement was found (see `docs/museum-sources/brooklyn.md`).
 
-**Blocked: need API key from user.**
-- Harvard Art Museums: register at https://harvardartmuseums.org/collections/api
+### ~~2.1 Harvard fixtures + mapper + tests~~ ✅
 
-### 2.1 Harvard fixtures + mapper + tests
+4 real Harvard API responses saved to `tests/fixtures/harvard/`. `pipeline/assets/normalize/harvard.py` implements `MapperProtocol`. Handles period/dynasty splitting ("Late Period, Dynasty 26"), multiline medium with `\r\n` delimiters, places array filtering for "Creation Place", date 0→null. 74 tests in `tests/test_mappers/test_harvard.py`, all passing. PR #7.
 
-Save 3–5 real Harvard API responses to `tests/fixtures/harvard/`. Create `pipeline/assets/normalize/harvard.py` implementing `MapperProtocol`. Second normalization test case — two different data shapes mapping to one canonical schema. Harvard excavation records (Reisner at Giza) may have unusually detailed provenance. Write `tests/test_mappers/test_harvard.py`.
+### ~~2.2 Harvard ingest asset~~ ✅
 
-### 2.2 Harvard ingest asset
+`pipeline/assets/ingest/harvard.py` — Dagster asset that paginates Harvard API (`culture=Egyptian`, 100/page, ~8 pages for 722 objects). Stores raw JSON in `raw_harvard` table with upsert. Requires `HARVARD_ART_MUSEUMS_API_KEY` env var. PR #7.
 
-Create `pipeline/assets/ingest/harvard.py` — Dagster asset that fetches Harvard Art Museums Egyptian collection, storing raw JSON in `raw_harvard` table. Requires API key. Determine collection size and filter strategy during implementation (classification filter may need tuning to exclude Egyptianizing non-Egyptian pieces).
+### ~~2.3 Register Harvard in Dagster~~ ✅
 
-### 2.3 Register Harvard in Dagster
+`pipeline/definitions.py` updated with `raw_harvard` and `normalize_harvard` assets. `sync_search` deps updated to include `normalize_harvard`. Both museums appear in Dagster asset graph. 28,691 total indexed artifacts (27,969 Met + 722 Harvard). PR #7.
 
-Update `pipeline/definitions.py` to register Harvard ingest and normalize assets. Verify both museums appear in the Dagster asset graph.
+### ~~2.4 Brooklyn API exploration~~ ✅
 
-### 2.4 Brooklyn fixtures + mapper + tests (blocked — API broken)
+Old REST API (`/api/v2`) is retired. Undocumented replacement discovered via browser network inspection: public search API at `search.brooklynmuseum.org/api/search` (no auth, CORS `*`, max page size 50) plus RSC detail pages for full Sanity CMS object data. 8,832 objects in "Egyptian, Classical, Ancient Near Eastern Art" department. Full documentation in `docs/museum-sources/brooklyn.md`. PR #8.
 
-Save 3–5 real Brooklyn API responses to `tests/fixtures/brooklyn/`. Create `pipeline/assets/normalize/brooklyn.py` implementing `MapperProtocol`. Map Brooklyn's field structure to `CanonicalArtifact`. Field names differ from the Met — this is the first real normalization stress test. Document any fields that don't map cleanly in the mapper's docstring. Write `tests/test_mappers/test_brooklyn.py` with specific value assertions.
+### 2.5 Brooklyn fixtures + mapper + tests
 
-### 2.5 Brooklyn ingest asset (blocked — API broken)
+Save 3–5 real Brooklyn object records to `tests/fixtures/brooklyn/`. Fixtures should include both search API data and RSC detail data merged into a single JSON blob (as the ingest asset will store them). Create `pipeline/assets/normalize/brooklyn.py` implementing `MapperProtocol`. Key challenges: department includes non-Egyptian objects (Greek, Roman, Coptic) — mapper or ingest must filter; dynasty field is free-text with typos; geography `type` field maps to `origin_certainty`; dates use negative for BCE in search API but may differ in RSC. Write `tests/test_mappers/test_brooklyn.py` with specific value assertions.
 
-Create `pipeline/assets/ingest/brooklyn.py` — Dagster asset that fetches Brooklyn Museum Egyptian collection via their API, storing raw JSON in `raw_brooklyn` table. Requires API key from environment. Determine pagination and rate limit behavior during implementation.
+### 2.6 Brooklyn ingest asset
 
-### 2.6 Register Brooklyn in Dagster
+Create `pipeline/assets/ingest/brooklyn.py` — two-phase Dagster asset: (1) paginate search API (`size=50`, 177 pages) to get all sourceIds and basic metadata, (2) fetch RSC detail pages concurrently (20 workers) to get medium, dimensions, dynasty, period, creditLine, provenance, rightsType. Merge both data sources and store in `raw_brooklyn` table. No API key needed. See `docs/museum-sources/brooklyn.md` for full endpoint docs.
 
-### 2.7 Schema adjustments (if needed)
+### 2.7 Register Brooklyn in Dagster
 
-### 2.6 Schema adjustments (if needed)
+Update `pipeline/definitions.py` to register Brooklyn ingest and normalize assets. Update `sync_search` deps to include `normalize_brooklyn`. Verify all three museums appear in the Dagster asset graph.
+
+### 2.8 Schema adjustments (if needed)
 
 After mapping all three museums, assess whether the canonical schema needs new fields or changes. If so: update SQLAlchemy model → update Pydantic model → create Alembic migration → re-introspect Drizzle → commit all together.
 
