@@ -98,7 +98,18 @@ Headers:
   Next-Url: /DEFAULT/objects/{sourceId}
 ```
 
-Returns `text/x-component` RSC payload (~300KB per object, mostly layout boilerplate). The Sanity collection object JSON is on a line matching `"accessionNumber"` and `"_type":"collectionObject"`, starting at `{"_id":...}`.
+Returns `text/x-component` RSC payload (~300KB per object, mostly layout boilerplate).
+
+**Vercel bot protection:** Direct `curl` requests to `www.brooklynmuseum.org` are blocked by a Vercel Security Checkpoint, even with browser-like `User-Agent` headers. RSC fetches must be made from a real browser context (e.g., `fetch()` from a page already loaded on the domain) or a headless browser that can pass the checkpoint. The ingest asset should use a strategy that handles this (e.g., Playwright, or fetching from within the domain context).
+
+### Parsing the RSC payload
+
+The RSC payload uses Next.js streaming format: each line has a ref ID prefix (e.g., `4f8:`) followed by JSON data. To extract the collection object:
+
+1. Split the payload by newlines.
+2. Build a ref map: for each line, parse `{refId}:{jsonData}` where the JSON starts with `{`, `[`, or `"`.
+3. Find the entry where `_type === "collectionObject"` and `accessionNumber` exists (skip the `globalConfiguration` entry).
+4. Resolve `$`-prefixed string references recursively — fields like `geographicalLocations`, `constituents`, `collection`, and `images` are stored as references (e.g., `"$50e"`) that point to other ref IDs in the payload.
 
 ### Full Sanity object fields
 
@@ -114,15 +125,48 @@ rightsType, section, signed, sourceId, state, title, updatedAt, visible
 
 ### Geographical locations (in RSC payload)
 
-Separate RSC lines with `_type: "collectionGeographicalLocation"`:
+Geography data is nested inside the `geographicalLocations` array after resolving refs. Each entry has a wrapper with `_key`, `type`, and a nested `geographicalLocation` object:
 
 ```json
-{ "_type": "collectionGeographicalLocation", "continent": "Africa", "country": "Egypt", "city": "El Behnasa (Oxyrhynchus)", "name": "El Behnasa (Oxyrhynchus), Egypt", "sourceId": 8036412 }
+{
+  "_key": "HS8bHFoFwCoVWzp17Jxn55",
+  "geographicalLocation": {
+    "_type": "collectionGeographicalLocation",
+    "city": "Saqqara",
+    "continent": "Africa",
+    "country": "Egypt",
+    "name": "Saqqara, Egypt",
+    "sourceId": 7127958
+  },
+  "type": "Reportedly from"
+}
 ```
 
-Referenced via: `{ "_key": "...", "geographicalLocation": "$ref", "type": "Reportedly from" }`
+The `type` field is on the wrapper object (not the inner `geographicalLocation`). Some geo entries also include `state` (e.g., `"Lower Egypt"`).
 
-Geography types observed: "Place made", "Reportedly from", "Possible place made".
+Geography types observed: "Place made", "Reportedly from", "Possible place made", "Place collected".
+
+### Constituents (in RSC payload)
+
+Constituents are also nested with a wrapper containing `role`, `prefix`, `suffix`, and an inner `artist` object:
+
+```json
+{
+  "artist": {
+    "_type": "collectionArtist",
+    "name": "Egyptian",
+    "nationality": "Egyptian",
+    "sourceId": 12429
+  },
+  "prefix": null,
+  "role": "Culture",
+  "suffix": null
+}
+```
+
+### RSC dates vs search API dates
+
+The RSC payload uses `objectDateBegin`/`objectDateEnd` while the search API uses `startYear`/`endYear`. These sometimes differ — the search API dates may include a +/-3 uncertainty offset for "ca." dates. The merged fixture stores both. The mapper should prefer `startYear`/`endYear` from the search API as these are consistently available.
 
 ## License
 
@@ -141,31 +185,37 @@ Geography types observed: "Place made", "Reportedly from", "Possible place made"
 - **Date uncertainty offset.** Search API dates sometimes have a +/-3 offset from display dates (e.g., "ca. 3500" maps to `startYear: 3497, endYear: 3503`). This appears to encode the "ca." uncertainty range.
 - **Dynasty field is free-text.** Values like "in the style fo the late Dynasty 18" (note typo "fo") — mapper must handle varied formats.
 - **Period field is verbose.** Values like "Modern, in the style of the New Kingdom, Amarna Period" or "Predynastic Period, Naqada II" — more descriptive than Met or Harvard.
-- **Geography types indicate certainty.** `type` field: "Place made" (confirmed), "Reportedly from" (uncertain), "Possible place made" (speculative). Maps to `origin_certainty`.
+- **Geography types indicate certainty.** `type` field: "Place made" → `made_in`, "Reportedly from" → `uncertain`, "Possible place made" → `uncertain`, "Place collected" → `collected`. Maps to `origin_certainty`.
 - **Provenance is free-text.** Full provenance chain as a single string (e.g., "Archaeological provenance not yet documented, reportedly from Cyprus; by 1900, acquired by an anonymous individual...").
 - **Many objects lack images.** Not all objects have `imageUrl` in the search results.
 
 ## Performance
 
 - **Search API**: No auth, no observed rate limiting. Hosted on Vercel CDN.
-- **RSC detail pages**: ~300KB per response. 5 concurrent requests complete in ~400ms total (cached). No observed rate limiting at low concurrency.
-- **Pagination**: 177 pages at size=50 for the Egyptian department.
+- **RSC detail pages**: ~300KB per response. 5 concurrent requests complete in ~400ms total (cached). No observed rate limiting at low concurrency. **Blocked by Vercel bot protection** when using `curl` or similar — requires browser context or headless browser.
+- **Pagination**: 177 pages at size=50 for the Egyptian department (but `size=5` gives `pages: 1767` — `metadata.pages` is computed from the size parameter).
 
 ## Ingest strategy
 
-**Two-phase approach:**
+**Two-phase approach using Playwright for RSC detail fetches:**
 
-1. **Phase 1 — Search API pagination**: Fetch all 177 pages (`size=50`) to get every `sourceId` plus basic metadata (title, dates, classification, geographicalLocations, imageUrl, accessionNumber, startYear, endYear).
-2. **Phase 2 — RSC detail fetch**: For each `sourceId`, fetch the RSC page to get medium, dimensions, dynasty, period, creditLine, provenance, rightsType. Parse the Sanity JSON from the RSC payload.
-3. **Store merged data**: Combine both sources into `raw_brooklyn` table as one JSON blob per object.
+1. **Phase 1 — Search API pagination**: Fetch all pages (`size=50`, ~177 pages) via `requests` — the search API at `search.brooklynmuseum.org` has no bot protection. Gets: sourceId, title, dates, startYear, endYear, classification, geographicalLocations, imageUrl, accessionNumber, constituents, description, onView, collection.
+2. **Phase 2 — RSC detail fetch via Playwright**: Launch a headless Chromium browser, navigate to `brooklynmuseum.org/opencollection` to pass the Vercel Security Checkpoint, then use `page.evaluate(fetch(...))` to fetch RSC payloads from within the browser context in batches of 20. Gets: medium, dimensions, dynasty, period, creditLine, provenance, rightsType, inscribed, objectDate, objectDateBegin, objectDateEnd, section.
+3. **Store merged data**: Overlay RSC detail fields onto search API records and store in `raw_brooklyn` table as one JSON blob per object.
 
-At 20 concurrent RSC fetches, phase 2 should complete in ~3 minutes for all 8,832 objects.
+**Why Playwright?** Direct HTTP requests (`curl`, `requests`, `httpx`) to `www.brooklynmuseum.org` are blocked by Vercel's bot protection checkpoint — even with browser-like User-Agent headers. The search API at `search.brooklynmuseum.org` is unaffected. Fetching from within a real browser context that has already passed the checkpoint bypasses this restriction.
+
+**Implementation:** `pipeline/assets/ingest/brooklyn.py`. The Playwright dependency is declared in `pyproject.toml`. Chromium must be installed via `uv run playwright install chromium` before the first run.
+
+At 20 concurrent RSC fetches per batch, phase 2 should complete in ~3–5 minutes for all ~8,800 objects.
 
 ## Known quirks
 
 - The old Brooklyn Museum REST API (`brooklynmuseum.org/api/v2`) is completely retired. No endpoints respond.
 - The search API is undocumented — it powers the Next.js frontend and could change without notice.
 - `sourceId` is a string in search API results but a number in the RSC Sanity data.
-- The RSC payload format is Next.js-internal. Parsing relies on line-by-line text matching, not structured deserialization.
-- The `maxPages` field in search metadata is always 416 regardless of actual result count — appears to be a global cap.
+- The RSC payload format is Next.js-internal. Parsing uses a ref-map approach: split by newlines, parse `{refId}:{json}` pairs, then resolve `$`-prefixed references recursively. See "Parsing the RSC payload" section above.
+- The `maxPages` field in search metadata varies with `size` parameter and does not reliably reflect actual page count. Use `metadata.total / size` instead.
 - Collection includes non-Egyptian material (Greek, Roman, Coptic, Near Eastern). Filtering strategy needed during normalization.
+- **Vercel bot protection** blocks direct HTTP requests to `www.brooklynmuseum.org`. The search API (`search.brooklynmuseum.org`) is not affected. RSC detail fetches require a browser context or headless browser.
+- The search API's free-text `q` parameter does not support searching by `sourceId` directly. To find a specific object, browse pages or filter by known fields (geo, classification, etc.).
