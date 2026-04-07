@@ -78,6 +78,9 @@ class TestRichObject:
     def test_origin_certainty_is_none(self):
         assert self.result.origin_certainty is None
 
+    def test_provenance(self):
+        assert self.result.provenance.startswith("Eddé collection, Alexandria, Egypt.")
+
     def test_accession_number(self):
         assert self.result.accession_number == "1943.1118"
 
@@ -142,6 +145,9 @@ class TestSparseNoImage:
 
     def test_date_display(self):
         assert self.result.date_display == "16th-11th century BCE"
+
+    def test_no_provenance(self):
+        assert self.result.provenance is None
 
     def test_no_origin_site(self):
         assert self.result.origin_site_raw is None
@@ -280,6 +286,9 @@ class TestPlacesAndDates:
 
     def test_origin_site_raw(self):
         assert self.result.origin_site_raw == "Ancient & Byzantine World, Africa, Egypt (Ancient)"
+
+    def test_provenance(self):
+        assert self.result.provenance.startswith("Henri and Helene Kamer")
 
     def test_accession_number(self):
         assert self.result.accession_number == "1983.96"
