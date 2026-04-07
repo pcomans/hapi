@@ -129,13 +129,17 @@ def _extract_origin_site(geo_locations: list[dict] | None) -> str | None:
 def _map_geography_type(geo_locations: list[dict] | None) -> str | None:
     """Map Brooklyn's geography type to origin certainty.
 
-    Uses the first geographical location's `type` field.
+    Uses the first non-null geographical location's `type` field.
     """
     if not geo_locations:
         return None
-    if geo_locations[0] is None:
-        return None
-    geo_type = geo_locations[0].get("type")
+    geo_type = None
+    for geo in geo_locations:
+        if geo is None:
+            continue
+        geo_type = geo.get("type")
+        if geo_type:
+            break
     if not geo_type:
         return None
     mapping = {
