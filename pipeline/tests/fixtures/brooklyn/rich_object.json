@@ -1,0 +1,57 @@
+{
+  "source": "sanity",
+  "sourceId": "4035",
+  "sourceType": "collectionObject",
+  "type": "collectionObject",
+  "url": "https://www.brooklynmuseum.org/objects/4035",
+  "title": "Isis Nursing Horus",
+  "description": "Green calcite figure of Isis seated and nursing the infant Horus. The sides of the deity's throne are decorated with texts. The stone sculpture is connected to a bronze base by means of flanges on bronze base. The figure is \"protected\" in the rear and on both sides by a vulture body with wings which curve around towards the front. The wings were once inlaid with red and blue glass. The bird itself was made of two castings: wings and body, legs and tail. They were attached to the body by means of a tang fitting into a slot on the bronze base. Two more slots in the bronze base, located before the goddess, may have been for the attachment of a worshiping figure. The goddess is crowned, in bronze, with a circular frieze of uraei from which rise a cow's horns with solar disk. The sides of the bronze base bear inscriptions.",
+  "imageUrl": "https://brooklynmuseum.b-cdn.net/collections/objects/37.400E_front_PS2.jpg",
+  "accessionNumber": "37.400Ea-c",
+  "dates": "ca. 712–525 B.C.E.",
+  "startYear": -712,
+  "endYear": -525,
+  "onView": false,
+  "classification": "Sculpture",
+  "collection": {
+    "id": "5",
+    "name": "Egyptian, Classical, Ancient Near Eastern Art"
+  },
+  "museumLocation": {
+    "id": "2147482241",
+    "name": "19th Dynasty to Roman Period, Martha A. and Robert S. Rubin Gallery, 3rd Floor",
+    "floor": 3
+  },
+  "geographicalLocations": [
+    {
+      "continent": "Africa",
+      "country": "Egypt",
+      "city": "Saqqara",
+      "name": "Saqqara, Egypt",
+      "id": "7127958",
+      "type": "Reportedly from"
+    }
+  ],
+  "constituents": [
+    {
+      "role": "Culture",
+      "nationality": "Egyptian",
+      "name": "Egyptian",
+      "rank": null,
+      "dates": "",
+      "id": "12429"
+    }
+  ],
+  "medium": "Egyptian alabaster (calcite), bronze",
+  "dimensions": "7 3/8 x 2 1/4 x 5 5/16 in. (18.7 x 5.7 x 13.5 cm)",
+  "dynasty": "second half of Dynasty 25 to Dynasty 26",
+  "period": "Third Intermediate Period to Late Period",
+  "section": "",
+  "creditLine": "Charles Edwin Wilbour Fund",
+  "provenance": null,
+  "rightsType": "Creative Commons 3D",
+  "inscribed": null,
+  "objectDate": "ca. 712–525 B.C.E.",
+  "objectDateBegin": -712,
+  "objectDateEnd": -525
+}

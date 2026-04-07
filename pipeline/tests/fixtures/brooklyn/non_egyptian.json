@@ -1,0 +1,52 @@
+{
+  "source": "sanity",
+  "sourceId": "3198",
+  "sourceType": "collectionObject",
+  "type": "collectionObject",
+  "url": "https://www.brooklynmuseum.org/objects/3198",
+  "title": "Cypriot Base-Ring Juglet (Bilbil)",
+  "description": "Undecorated jug, with long narrow cylindrical neck slightly off perpendicular, with flaring rim and strap handle rising from shoulder to handle-ridge 3/4 way up neck, forming two ridges around neck where handle is attached. Inverted pear-shaped body with conical foot; buff-colored clay with uneven dark-brown to light-brown glaze. Condition: Very good, glaze largely intact, surface clean but slightly worn. Rim chipped.",
+  "imageUrl": "https://brooklynmuseum.b-cdn.net/collections/objects/CUR.00.164_erg2.jpg",
+  "accessionNumber": "00.164",
+  "dates": "ca. 1575–1475 B.C.E.",
+  "startYear": -1577,
+  "endYear": -1573,
+  "onView": false,
+  "classification": "Vessel",
+  "collection": {
+    "id": "5",
+    "name": "Egyptian, Classical, Ancient Near Eastern Art"
+  },
+  "geographicalLocations": [
+    {
+      "continent": "Europe",
+      "country": "Cyprus",
+      "city": null,
+      "name": "Cyprus",
+      "id": "5045",
+      "type": "Place made"
+    }
+  ],
+  "constituents": [
+    {
+      "role": "Culture",
+      "nationality": "",
+      "name": "Cypriot",
+      "rank": null,
+      "dates": "",
+      "id": "382"
+    }
+  ],
+  "medium": "Clay, slip",
+  "dimensions": "5 13/16 x Diam. 2 13/16 in. (14.8 x 7.1 cm)",
+  "dynasty": null,
+  "period": "Late Cypriot IB Period",
+  "section": "Early New Kingdom",
+  "creditLine": "Anonymous gift",
+  "provenance": "Archaeological provenance not yet documented, reportedly from Cyprus; by 1900, acquired by an anonymous individual; 1900, gift of an anonymous individual to the Brooklyn Museum.",
+  "rightsType": "Creative Commons 3D",
+  "inscribed": null,
+  "objectDate": "ca. 1575–1475 B.C.E.",
+  "objectDateBegin": -1577,
+  "objectDateEnd": -1573
+}
