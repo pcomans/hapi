@@ -225,6 +225,9 @@ class TestNonEgyptian:
     def test_image_url(self):
         assert self.result.image_url == "https://brooklynmuseum.b-cdn.net/collections/objects/CUR.00.164_erg2.jpg"
 
+    def test_thumbnail_url(self):
+        assert self.result.thumbnail_url == "https://imgsrv.brooklynmuseum.org/collections/objects/CUR.00.164_erg2.jpg?width=400&quality=75"
+
     def test_license(self):
         assert self.result.license == License.CC_BY_NC_ND
 
@@ -357,6 +360,9 @@ class TestReportedlyFrom:
 
     def test_image_url(self):
         assert self.result.image_url == "https://brooklynmuseum.b-cdn.net/collections/objects/CUR.37.1931E_37.1930E_GRPA_print_bw.JPG"
+
+    def test_thumbnail_url(self):
+        assert self.result.thumbnail_url == "https://imgsrv.brooklynmuseum.org/collections/objects/CUR.37.1931E_37.1930E_GRPA_print_bw.JPG?width=400&quality=75"
 
     def test_license(self):
         assert self.result.license == License.CC_BY_NC_ND
