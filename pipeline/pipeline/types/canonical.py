@@ -46,6 +46,9 @@ class CanonicalArtifact(BaseModel):
     excavation_id: str | None = None
     tomb_temple_id: str | None = None
 
+    # Provenance / ownership history
+    provenance: str | None = None
+
     # Current location
     current_location: str | None = None
     accession_number: str | None = None
