@@ -92,35 +92,49 @@ Added `provenance` text column to canonical artifacts — available from Brookly
 
 Authority files are built from real data ingested in Milestones 1–2. Analyze what ruler names, site names, and period labels actually appear across all three sources before writing the authority files.
 
-### 3.1 Analyze ingested data for authority seeding
+### 3.1 LLM-driven normalization target generation
+
+Feed raw museum data (distinct values for `period`, `dynasty`, `ruler_display_name`, `origin_site_raw`, and other normalizable fields) to an LLM and have it one-shot the desired normalized state — canonical values, variant groupings, and mappings from raw to canonical. Use a second LLM to review the output for correctness and completeness. The reviewed output becomes the test data (expected input→output pairs) for a deterministic normalization algorithm. This inverts the usual approach: instead of writing rules first and testing later, we define the desired end state first and then write code to match it.
+
+### 3.2 Confidence and ambiguity encoding for normalized fields
+
+Design a way to encode lack of confidence, ambiguity, and ranges in normalized field values. Many raw values express uncertainty that the current schema flattens away:
+- Hedged values: "Late Period (possibly)", "probably Dynasty 18"
+- Alternatives: "Late Period, or later", "Dynasty 25 or 26"
+- Ranges: "Ptolemaic Period to Roman Period", "Dynasty 18–19"
+- Qualifiers: "in the style of the New Kingdom"
+
+The schema needs to preserve this nuance rather than silently dropping it. Options include: structured confidence fields (enum: certain/probable/uncertain/stylistic), separate range-start/range-end period/dynasty columns, or a qualifier field. Assess what patterns exist in the actual data across all three museums, then design the encoding.
+
+### 3.3 Analyze ingested data for authority seeding
 
 Query all normalized artifacts to extract distinct values for `ruler_display_name`, `origin_site_raw`, `period`, and `dynasty` across all three museums. Group by frequency. This analysis drives what goes into the authority files — real museum data, not guesses.
 
-### 3.2 Authority data: rulers
+### 3.4 Authority data: rulers
 
-Create `pipeline/pipeline/authority/rulers.json` with canonical Egyptian ruler entries. Each entry needs: canonical ID, display name, variant names array (personal name, throne name, Greek form, modern variants), dynasty, approximate date range (start/end BCE), and Wikidata ID. Seed from Wikidata SPARQL query for pharaohs (Q37011), but validate variants against the actual ruler names found in 3.1. Cover all dynasties. ~200-300 entries minimum.
+Create `pipeline/pipeline/authority/rulers.json` with canonical Egyptian ruler entries. Each entry needs: canonical ID, display name, variant names array (personal name, throne name, Greek form, modern variants), dynasty, approximate date range (start/end BCE), and Wikidata ID. Seed from Wikidata SPARQL query for pharaohs (Q37011), but validate variants against the actual ruler names found in 3.3. Cover all dynasties. ~200-300 entries minimum.
 
-### 3.3 Authority data: sites
+### 3.5 Authority data: sites
 
-Create `pipeline/pipeline/authority/sites.json` with a curated hierarchy for the top 50–100 Egyptian sites. Each entry needs: canonical ID, display name, alternate names array, Pleiades ID, coordinates (lat/lng), parent site ID (for hierarchy: Egypt > Thebes > Western Thebes > Valley of the Kings > KV34), and Wikidata ID. Source from Pleiades gazetteer + Wikidata P131 (located in) for containment chains. Validate alternate names against the actual site names found in 3.1.
+Create `pipeline/pipeline/authority/sites.json` with a curated hierarchy for the top 50–100 Egyptian sites. Each entry needs: canonical ID, display name, alternate names array, Pleiades ID, coordinates (lat/lng), parent site ID (for hierarchy: Egypt > Thebes > Western Thebes > Valley of the Kings > KV34), and Wikidata ID. Source from Pleiades gazetteer + Wikidata P131 (located in) for containment chains. Validate alternate names against the actual site names found in 3.3.
 
-### 3.4 Ruler enrichment asset
+### 3.6 Ruler enrichment asset
 
 Create `pipeline/assets/enrich/rulers.py` — Dagster asset that reads all canonical artifacts, matches `ruler_display_name` against the authority file's variant arrays (exact match first, fuzzy fallback to review queue per ADR-009), and writes `ruler_id` back to the artifacts table.
 
-### 3.5 Site enrichment asset
+### 3.7 Site enrichment asset
 
 Create `pipeline/assets/enrich/sites.py` — Dagster asset that reads `origin_site_raw` from all artifacts, matches against site authority file variant names (exact first, fuzzy to review queue), and writes `origin_site_id` and `origin_site_display_name` back. Must handle the hierarchy: an artifact tagged "Valley of the Kings" should also be discoverable under "Thebes" and "Western Thebes".
 
-### 3.6 Review queue triage asset
+### 3.8 Review queue triage asset
 
 Create `pipeline/assets/quality/review_queue_triage.py` — Dagster asset that processes pending fuzzy match reviews using an LLM (Haiku). Per ADR-009: fetch artifact + authority entry, ask LLM if the match is correct, write APPROVED/REJECTED/UNCERTAIN status. Approved variants get added to authority files.
 
-### 3.7 Dagster asset checks
+### 3.9 Dagster asset checks
 
 Implement `@asset_check` decorators per ADR-010 Layer 1: ingest completeness (record count vs API total), normalization validity (date ranges, enum values), authority coverage (unmatched value frequency), cross-museum site consistency. Emit coverage metrics as asset metadata.
 
-### 3.8 LLM data audit asset
+### 3.10 LLM data audit asset
 
 Create `pipeline/assets/quality/llm_audit.py` — Dagster asset that samples records and uses Haiku for semantic audit, batch anomaly detection, and authority variant suggestions per ADR-010 Layer 2.
 
