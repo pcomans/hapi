@@ -126,19 +126,19 @@ Geography types observed: "Place made", "Reportedly from", "Possible place made"
 
 ## License
 
-**Noncommercial use with attribution.** Per the image services page: "You may use and share images from the website for noncommercial purposes with proper attribution." Per-object `rightsType` field is "Creative Commons 3D" (CC BY 3.0) for all Egyptian collection objects observed.
+**Noncommercial use with attribution.** Per the image services page: "You may use and share images from the website for noncommercial purposes with proper attribution." The per-object `rightsType` field was observed as `"Creative Commons 3D"` for all Egyptian collection objects reviewed, but this should **not** be treated as confirmed CC BY 3.0 because that would allow commercial use and conflicts with the site-wide image terms. Unless Brooklyn Museum publishes clearer per-object rights documentation, treat the image services page as the governing reuse guidance for website images.
 
 ## Images
 
 - **Full-size CDN**: `brooklynmuseum.b-cdn.net/collections/objects/{filename}`
 - **Thumbnail server**: `imgsrv.brooklynmuseum.org/collections/objects/{filename}?width=400&quality=75`
-- Image filenames follow pattern `CUR.{accession}_view.jpg` (e.g., `CUR.47.88a-b_NegA_print_bw.jpg`).
+- Image filenames are not limited to a single pattern. Observed names commonly start with `CUR.{accession}` but use varying suffixes/rendition markers (e.g., `CUR.47.88a-b_NegA_print_bw.jpg`), so implementers should not hard-code a specific suffix.
 
 ## Data quality notes
 
 - **8,832 objects in department, but not all are Egyptian.** The department is "Egyptian, Classical, Ancient Near Eastern Art" — includes Greek (464), Roman (428), Ancient Near Eastern (122), Coptic (464), Cypriot (40), etc. Will need filtering during normalization.
 - **Dates use negative for BCE in search API.** `startYear`/`endYear` use negative integers for BCE (e.g., `-1577`). The RSC detail page uses `objectDateBegin`/`objectDateEnd` which may differ. Search API is the reliable source for date integers.
-- **Date uncertainty offset.** Search API dates sometimes have a +/-3 offset from display dates (e.g., "ca. 3500-3300" maps to `startYear: 3497, endYear: 3503`). This encodes the "ca." uncertainty range.
+- **Date uncertainty offset.** Search API dates sometimes have a +/-3 offset from display dates (e.g., "ca. 3500" maps to `startYear: 3497, endYear: 3503`). This appears to encode the "ca." uncertainty range.
 - **Dynasty field is free-text.** Values like "in the style fo the late Dynasty 18" (note typo "fo") — mapper must handle varied formats.
 - **Period field is verbose.** Values like "Modern, in the style of the New Kingdom, Amarna Period" or "Predynastic Period, Naqada II" — more descriptive than Met or Harvard.
 - **Geography types indicate certainty.** `type` field: "Place made" (confirmed), "Reportedly from" (uncertain), "Possible place made" (speculative). Maps to `origin_certainty`.
