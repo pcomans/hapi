@@ -185,7 +185,7 @@ The RSC payload uses `objectDateBegin`/`objectDateEnd` while the search API uses
 - **Date uncertainty offset.** Search API dates sometimes have a +/-3 offset from display dates (e.g., "ca. 3500" maps to `startYear: 3497, endYear: 3503`). This appears to encode the "ca." uncertainty range.
 - **Dynasty field is free-text.** Values like "in the style fo the late Dynasty 18" (note typo "fo") — mapper must handle varied formats.
 - **Period field is verbose.** Values like "Modern, in the style of the New Kingdom, Amarna Period" or "Predynastic Period, Naqada II" — more descriptive than Met or Harvard.
-- **Geography types indicate certainty.** `type` field: "Place made" (confirmed), "Reportedly from" (uncertain), "Possible place made" (speculative). Maps to `origin_certainty`.
+- **Geography types indicate certainty.** `type` field: "Place made" → `made_in`, "Reportedly from" → `uncertain`, "Possible place made" → `uncertain`, "Place collected" → `collected`. Maps to `origin_certainty`.
 - **Provenance is free-text.** Full provenance chain as a single string (e.g., "Archaeological provenance not yet documented, reportedly from Cyprus; by 1900, acquired by an anonymous individual...").
 - **Many objects lack images.** Not all objects have `imageUrl` in the search results.
 
