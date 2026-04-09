@@ -5,7 +5,7 @@ import json
 import sqlalchemy as sa
 from dagster import AssetExecutionContext, asset
 
-from pipeline.assets.normalize.brooklyn import BrooklynMapper
+from pipeline.assets.normalize.brooklyn import BrooklynMapper, is_egyptian
 from pipeline.resources import DatabaseResource
 from pipeline.types.models import artifacts_table, raw_brooklyn_table
 
@@ -30,6 +30,7 @@ def normalize_brooklyn(context: AssetExecutionContext, database: DatabaseResourc
 
     total = len(raw_rows)
     mapped = 0
+    skipped = 0
 
     with engine.begin() as conn:
         for i in range(0, total, BATCH_SIZE):
@@ -37,6 +38,9 @@ def normalize_brooklyn(context: AssetExecutionContext, database: DatabaseResourc
             rows = []
             for raw_row in batch:
                 raw_data = json.loads(raw_row["data"])
+                if not is_egyptian(raw_data):
+                    skipped += 1
+                    continue
                 artifact = mapper.map_to_canonical(raw_data)
                 rows.append(artifact.model_dump())
 
@@ -49,5 +53,5 @@ def normalize_brooklyn(context: AssetExecutionContext, database: DatabaseResourc
                 conn.execute(stmt)
                 mapped += len(rows)
 
-    context.log.info(f"Normalized {mapped} artifacts out of {total}")
-    context.add_output_metadata({"total_raw": total, "mapped": mapped})
+    context.log.info(f"Normalized {mapped} artifacts, skipped {skipped} non-Egyptian out of {total}")
+    context.add_output_metadata({"total_raw": total, "mapped": mapped, "skipped_non_egyptian": skipped})

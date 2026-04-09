@@ -56,6 +56,9 @@ artifacts_table = Table(
     Column("excavation_id", String, index=True),
     Column("tomb_temple_id", String, index=True),
 
+    # Provenance / ownership history
+    Column("provenance", Text),
+
     # Current location
     Column("current_location", String),
     Column("accession_number", String),

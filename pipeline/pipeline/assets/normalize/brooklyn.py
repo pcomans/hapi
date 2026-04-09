@@ -25,6 +25,30 @@ from pipeline.types.protocol import MapperProtocol
 from pipeline.types.sources import MUSEUM_LICENSE, License, MuseumSource
 
 
+EGYPTIAN_CULTURES = frozenset({
+    "Egyptian",
+    "Coptic",
+    "Demotic",
+    "Graeco-Egyptian",
+    "Egypto-Roman",
+    "Nubian",
+})
+
+
+def is_egyptian(raw: dict) -> bool:
+    """Return True if the record should be included in the Egyptian artifacts index.
+
+    Includes objects with no culture tag (most of the Egyptian department) and
+    objects tagged with Egyptian-adjacent cultures. Excludes objects explicitly
+    tagged as non-Egyptian (Greek, Roman, Etruscan, etc.).
+    """
+    constituents = raw.get("constituents") or []
+    cultures = [c["name"] for c in constituents if c.get("role") == "Culture"]
+    if not cultures:
+        return True
+    return any(c in EGYPTIAN_CULTURES for c in cultures)
+
+
 class BrooklynMapper(MapperProtocol):
     source = MuseumSource.BROOKLYN
 
@@ -49,6 +73,7 @@ class BrooklynMapper(MapperProtocol):
             date_display=raw.get("dates") or None,
             origin_site_raw=_extract_origin_site(raw.get("geographicalLocations")),
             origin_certainty=_map_geography_type(raw.get("geographicalLocations")),
+            provenance=raw.get("provenance") or None,
             accession_number=raw.get("accessionNumber") or None,
             credit_line=raw.get("creditLine") or None,
             image_url=raw.get("imageUrl") or None,
@@ -93,6 +118,8 @@ def _extract_origin_site(geo_locations: list[dict] | None) -> str | None:
     if not geo_locations:
         return None
     for geo in geo_locations:
+        if geo is None:
+            continue
         name = geo.get("name")
         if name:
             return name
@@ -102,18 +129,31 @@ def _extract_origin_site(geo_locations: list[dict] | None) -> str | None:
 def _map_geography_type(geo_locations: list[dict] | None) -> str | None:
     """Map Brooklyn's geography type to origin certainty.
 
-    Uses the first geographical location's `type` field.
+    Uses the first non-null geographical location's `type` field.
     """
     if not geo_locations:
         return None
-    geo_type = geo_locations[0].get("type")
+    geo_type = None
+    for geo in geo_locations:
+        if geo is None:
+            continue
+        geo_type = geo.get("type")
+        if geo_type:
+            break
     if not geo_type:
         return None
     mapping = {
         "Place made": "made_in",
+        "Place excavated": "excavated",
+        "Place found": "excavated",
+        "Place collected": "collected",
+        "Place used": "used",
+        "Place modified": "made_in",
         "Reportedly from": "uncertain",
         "Possible place made": "uncertain",
-        "Place collected": "collected",
+        "Possible place collected": "uncertain",
+        "Possible place purchased": "uncertain",
+        "Possible place manufactured": "uncertain",
     }
     if geo_type not in mapping:
         raise ValueError(f"Unknown Brooklyn geography type: {geo_type!r}")

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from pipeline.assets.normalize.brooklyn import BrooklynMapper
+from pipeline.assets.normalize.brooklyn import BrooklynMapper, is_egyptian
 from pipeline.types.sources import License
 
 FIXTURES_DIR = Path(__file__).parent.parent / "fixtures" / "brooklyn"
@@ -77,6 +77,9 @@ class TestRichObject:
 
     def test_origin_certainty(self):
         assert self.result.origin_certainty == "uncertain"
+
+    def test_provenance_is_none(self):
+        assert self.result.provenance is None
 
     def test_accession_number(self):
         assert self.result.accession_number == "37.400Ea-c"
@@ -215,6 +218,9 @@ class TestNonEgyptian:
 
     def test_origin_certainty_place_made(self):
         assert self.result.origin_certainty == "made_in"
+
+    def test_provenance(self):
+        assert self.result.provenance.startswith("Archaeological provenance not yet documented")
 
     def test_accession_number(self):
         assert self.result.accession_number == "00.164"
@@ -366,3 +372,51 @@ class TestReportedlyFrom:
 
     def test_license(self):
         assert self.result.license == License.CC_BY_NC_ND
+
+
+class TestIsEgyptian:
+    """Tests for the is_egyptian culture filter."""
+
+    def test_no_constituents(self):
+        assert is_egyptian({"constituents": []}) is True
+
+    def test_missing_constituents(self):
+        assert is_egyptian({}) is True
+
+    def test_egyptian_culture(self):
+        assert is_egyptian({"constituents": [{"role": "Culture", "name": "Egyptian"}]}) is True
+
+    def test_coptic_culture(self):
+        assert is_egyptian({"constituents": [{"role": "Culture", "name": "Coptic"}]}) is True
+
+    def test_graeco_egyptian(self):
+        assert is_egyptian({"constituents": [{"role": "Culture", "name": "Graeco-Egyptian"}]}) is True
+
+    def test_nubian_culture(self):
+        assert is_egyptian({"constituents": [{"role": "Culture", "name": "Nubian"}]}) is True
+
+    def test_greek_culture(self):
+        assert is_egyptian({"constituents": [{"role": "Culture", "name": "Greek"}]}) is False
+
+    def test_roman_culture(self):
+        assert is_egyptian({"constituents": [{"role": "Culture", "name": "Roman"}]}) is False
+
+    def test_cypriot_culture(self):
+        assert is_egyptian({"constituents": [{"role": "Culture", "name": "Cypriot"}]}) is False
+
+    def test_mixed_with_egyptian(self):
+        assert is_egyptian({"constituents": [
+            {"role": "Culture", "name": "Greek"},
+            {"role": "Culture", "name": "Egyptian"},
+        ]}) is True
+
+    def test_non_culture_role_ignored(self):
+        assert is_egyptian({"constituents": [{"role": "Artist", "name": "Greek"}]}) is True
+
+    def test_non_egyptian_fixture(self):
+        raw = _load_fixture("non_egyptian.json")
+        assert is_egyptian(raw) is False
+
+    def test_rich_object_fixture(self):
+        raw = _load_fixture("rich_object.json")
+        assert is_egyptian(raw) is True
