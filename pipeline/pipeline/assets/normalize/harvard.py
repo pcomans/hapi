@@ -45,6 +45,7 @@ class HarvardMapper(MapperProtocol):
             date_display=raw.get("dated") or None,
             origin_site_raw=_extract_origin_site(raw.get("places")),
             origin_certainty=None,  # Harvard places don't carry confidence info
+            provenance=raw.get("provenance") or None,
             accession_number=raw.get("objectnumber") or None,
             credit_line=raw.get("creditline") or None,
             image_url=_extract_image_url(raw),

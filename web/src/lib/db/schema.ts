@@ -1,4 +1,4 @@
-import { pgTable, pgSchema, varchar, index, text, integer, serial } from "drizzle-orm/pg-core"
+import { pgTable, pgSchema, varchar, serial, text, index, integer } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const catalog = pgSchema("catalog");
@@ -6,6 +6,17 @@ export const catalog = pgSchema("catalog");
 
 export const alembicVersionInCatalog = catalog.table("alembic_version", {
 	versionNum: varchar("version_num", { length: 32 }).primaryKey().notNull(),
+});
+
+export const fuzzyMatchReviewsInCatalog = catalog.table("fuzzy_match_reviews", {
+	id: serial().primaryKey().notNull(),
+	artifactId: varchar("artifact_id").notNull(),
+	field: varchar().notNull(),
+	rawValue: text("raw_value").notNull(),
+	matchedId: varchar("matched_id"),
+	status: varchar().notNull(),
+	reviewedBy: varchar("reviewed_by"),
+	reviewNotes: text("review_notes"),
 });
 
 export const artifactsInCatalog = catalog.table("artifacts", {
@@ -38,6 +49,7 @@ export const artifactsInCatalog = catalog.table("artifacts", {
 	thumbnailUrl: text("thumbnail_url"),
 	license: varchar().notNull(),
 	wikidataId: varchar("wikidata_id"),
+	provenance: text(),
 }, (table) => [
 	index("ix_catalog_artifacts_dynasty").using("btree", table.dynasty.asc().nullsLast().op("text_ops")),
 	index("ix_catalog_artifacts_excavation_id").using("btree", table.excavationId.asc().nullsLast().op("text_ops")),
@@ -48,17 +60,6 @@ export const artifactsInCatalog = catalog.table("artifacts", {
 	index("ix_catalog_artifacts_source_museum").using("btree", table.sourceMuseum.asc().nullsLast().op("text_ops")),
 	index("ix_catalog_artifacts_tomb_temple_id").using("btree", table.tombTempleId.asc().nullsLast().op("text_ops")),
 ]);
-
-export const fuzzyMatchReviewsInCatalog = catalog.table("fuzzy_match_reviews", {
-	id: serial().primaryKey().notNull(),
-	artifactId: varchar("artifact_id").notNull(),
-	field: varchar().notNull(),
-	rawValue: text("raw_value").notNull(),
-	matchedId: varchar("matched_id"),
-	status: varchar().notNull(),
-	reviewedBy: varchar("reviewed_by"),
-	reviewNotes: text("review_notes"),
-});
 
 export const rawBrooklynInCatalog = catalog.table("raw_brooklyn", {
 	objectId: varchar("object_id").primaryKey().notNull(),
