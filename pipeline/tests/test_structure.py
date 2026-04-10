@@ -11,6 +11,7 @@ When adding a new museum, these tests form the checklist. Run them with:
     uv run pytest tests/test_structure.py -v
 """
 
+import ast
 import importlib
 from pathlib import Path
 
@@ -80,8 +81,14 @@ class TestMuseumHasAllPieces:
             f"Assert specific field values, not just 'it doesn't crash'. "
             f"See tests/test_mappers/test_met.py for the pattern."
         )
-        content = path.read_text(encoding="utf-8")
-        assert "==" in content, (
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        has_equality_assert = any(
+            isinstance(node, ast.Assert)
+            and isinstance(node.test, ast.Compare)
+            and any(isinstance(op, ast.Eq) for op in node.test.ops)
+            for node in ast.walk(tree)
+        )
+        assert has_equality_assert, (
             f"tests/test_mappers/test_{source.value}.py contains no value assertions. "
             f"Every fixture test class must assert specific field values using ==. "
             f"Example: assert self.result.title == 'Seated Figure of Isis' "
