@@ -334,11 +334,11 @@ These tests are the checklist. If they all pass for your museum, the integration
 |---|---|---|
 | 1. Explore API | (research) | You can answer all key questions |
 | 2. Document source | `docs/museum-sources/{museum}.md` | File exists |
-| 3. Fixtures | `tests/fixtures/{museum}/*.json` | 3+ diverse JSON files |
-| 4. Register source | `pipeline/types/sources.py` | `test_every_museum_has_license` passes |
-| 5. Raw table | `pipeline/types/models.py` + migration | `test_raw_table_exists` passes |
-| 6. Ingest asset | `pipeline/assets/ingest/{museum}.py` | `test_ingest_asset` passes |
-| 7. Dagster registration | `pipeline/definitions.py` | `test_dagster_registration` passes, data in DB |
-| 8. Mapper | `pipeline/assets/normalize/{museum}.py` | `test_normalize_mapper` + `test_mapper_implements_protocol` pass |
-| 9. Mapper tests | `tests/test_mappers/test_{museum}.py` | `test_mapper_tests_exist` passes, all assertions pass |
-| 10. Normalize asset | `pipeline/assets/normalize/{museum}_asset.py` + definitions + sync_search dep | All structural tests pass, data in artifacts table |
+| 3. Fixtures | `pipeline/tests/fixtures/{museum}/*.json` | 3+ diverse JSON files |
+| 4. Register source | `pipeline/pipeline/types/sources.py` | `test_every_museum_has_license` passes |
+| 5. Raw table | `pipeline/pipeline/types/models.py` + migration | `test_raw_table_exists` passes |
+| 6. Ingest asset | `pipeline/pipeline/assets/ingest/{museum}.py` | `test_ingest_asset` passes |
+| 7. Dagster registration | `pipeline/pipeline/definitions.py` | `test_dagster_registration` passes, data in DB |
+| 8. Mapper | `pipeline/pipeline/assets/normalize/{museum}.py` | `test_normalize_mapper` + `test_mapper_implements_protocol` pass |
+| 9. Mapper tests | `pipeline/tests/test_mappers/test_{museum}.py` | `test_mapper_tests_exist` passes, all assertions pass |
+| 10. Normalize asset | `pipeline/pipeline/assets/normalize/{museum}_asset.py` + definitions + sync_search dep | All structural tests pass, data in artifacts table |
