@@ -80,7 +80,7 @@ class TestMuseumHasAllPieces:
             f"Assert specific field values, not just 'it doesn't crash'. "
             f"See tests/test_mappers/test_met.py for the pattern."
         )
-        content = path.read_text()
+        content = path.read_text(encoding="utf-8")
         assert "==" in content, (
             f"tests/test_mappers/test_{source.value}.py contains no value assertions. "
             f"Every fixture test class must assert specific field values using ==. "
