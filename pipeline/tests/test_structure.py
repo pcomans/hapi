@@ -80,6 +80,13 @@ class TestMuseumHasAllPieces:
             f"Assert specific field values, not just 'it doesn't crash'. "
             f"See tests/test_mappers/test_met.py for the pattern."
         )
+        content = path.read_text()
+        assert "==" in content, (
+            f"tests/test_mappers/test_{source.value}.py contains no value assertions. "
+            f"Every fixture test class must assert specific field values using ==. "
+            f"Example: assert self.result.title == 'Seated Figure of Isis' "
+            f"(Rule 4: assert values, not absence of errors)."
+        )
 
     def test_raw_table_exists(self, source: MuseumSource):
         table_name = f"raw_{source.value}"
