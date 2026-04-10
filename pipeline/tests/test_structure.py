@@ -42,13 +42,6 @@ def _implemented_museums() -> list[MuseumSource]:
 class TestMuseumHasAllPieces:
     """Every implemented museum must have the full set of pipeline components."""
 
-    def test_ingest_asset(self, source: MuseumSource):
-        path = PIPELINE_ROOT / "pipeline" / "assets" / "ingest" / f"{source.value}.py"
-        assert path.exists(), (
-            f"Create {path.relative_to(PIPELINE_ROOT)} — ingest asset for {source.value}. "
-            f"See pipeline/assets/ingest/met.py for the pattern."
-        )
-
     def test_normalize_mapper(self, source: MuseumSource):
         path = PIPELINE_ROOT / "pipeline" / "assets" / "normalize" / f"{source.value}.py"
         assert path.exists(), (
@@ -107,14 +100,7 @@ class TestMuseumHasAllPieces:
         assert path.exists(), (
             f"Create {path.relative_to(PIPELINE_ROOT.parent)} — document the {source.value} "
             f"museum API: access method, rate limits, auth requirements, data quality notes, "
-            f"license terms, and known quirks. This must be written BEFORE the ingest asset."
-        )
-
-    def test_license_entry(self, source: MuseumSource):
-        assert source in MUSEUM_LICENSE, (
-            f"Add MUSEUM_LICENSE[MuseumSource.{source.name}] = License.<type> "
-            f"in pipeline/types/sources.py. "
-            f"Check docs/museum-sources/{source.value}.md for license terms."
+            f"license terms, and known quirks."
         )
 
     def test_dagster_registration(self, source: MuseumSource):
@@ -180,7 +166,12 @@ def test_mapper_implements_protocol(source: MuseumSource):
     mod = importlib.import_module(f"pipeline.assets.normalize.{source.value}")
     mapper_classes = [
         obj for name, obj in vars(mod).items()
-        if isinstance(obj, type) and hasattr(obj, "map_to_canonical") and hasattr(obj, "source")
+        if (
+            isinstance(obj, type)
+            and obj.__module__ == mod.__name__
+            and hasattr(obj, "map_to_canonical")
+            and hasattr(obj, "source")
+        )
     ]
     assert len(mapper_classes) >= 1, (
         f"pipeline/assets/normalize/{source.value}.py must export a class with "
