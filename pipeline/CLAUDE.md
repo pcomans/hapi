@@ -34,13 +34,9 @@ Each museum has its own ingest asset and its own normalize mapper. They are inde
 
 ## Adding a new museum
 
-1. **Document the source**: Create `docs/museum-sources/{museum}.md` with API access method, rate limits, auth requirements, data quality observations, license terms, and known quirks.
-2. **Add fixture data**: Save 3-5 real API responses to `tests/fixtures/{museum}/`. Choose diverse cases: one well-catalogued artifact, one sparse record, one with ambiguous provenance.
-3. **Create ingest asset**: `pipeline/assets/ingest/{museum}.py`. Follow the pattern in `met.py`. Must store raw response verbatim in the `raw_{museum}` Postgres table.
-4. **Create normalize mapper**: `pipeline/assets/normalize/{museum}.py`. Must implement `MapperProtocol` from `pipeline/types/protocol.py`. Maps raw fields to `CanonicalArtifact`.
-5. **Add mapper tests**: `tests/test_mappers/test_{museum}.py`. Test against every fixture file. Assert specific field values, not just "it doesn't crash."
-6. **Add a raw table**: Add a `raw_{museum}_table` to `pipeline/types/models.py` and create an Alembic migration.
-7. **Register the source**: Add the museum to `MuseumSource` enum in `pipeline/types/sources.py`, add its license to `MUSEUM_LICENSE`, and register assets in `pipeline/definitions.py`.
+Follow the step-by-step playbook: **[docs/playbook-new-museum.md](../docs/playbook-new-museum.md)**
+
+The playbook has two phases: **ingest** (parallelizable, one agent per museum) and **normalization** (sequential, each museum refines the canonical vocabulary). Structural tests in `tests/test_structure.py` mechanically enforce every step — run them early and often. When a test fails, the assertion message tells you exactly what to fix.
 
 ## MapperProtocol
 
