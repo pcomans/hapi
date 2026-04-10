@@ -188,7 +188,14 @@ def test_mapper_implements_protocol(source: MuseumSource):
         f"See pipeline/assets/normalize/met.py for the pattern."
     )
     mapper_cls = mapper_classes[0]
-    instance = mapper_cls()
+    try:
+        instance = mapper_cls()
+    except TypeError as exc:
+        raise AssertionError(
+            f"Mapper {mapper_cls.__name__} in pipeline/assets/normalize/{source.value}.py "
+            f"must be constructible with no arguments so the harness can instantiate it. "
+            f"Constructor error: {exc}"
+        ) from exc
     assert instance.source == source, (
         f"Mapper in pipeline/assets/normalize/{source.value}.py has "
         f"source={instance.source!r}, expected MuseumSource.{source.name} ({source.value!r}). "
