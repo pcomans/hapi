@@ -112,7 +112,7 @@ Check `docs/museum-sources/{museum}.md` for the correct license type.
 
 **Verification:**
 ```bash
-uv run pytest tests/test_structure.py::test_every_museum_has_license -v
+cd pipeline && uv run pytest tests/test_structure.py::test_every_museum_has_license -v
 ```
 
 ### Step 5: Add the raw table
@@ -131,13 +131,13 @@ raw_{museum}_table = Table(
 
 **5b.** Create and apply the Alembic migration:
 ```bash
-uv run alembic revision --autogenerate -m "add raw_{museum} table"
-uv run alembic upgrade head
+cd pipeline && uv run alembic revision --autogenerate -m "add raw_{museum} table"
+cd pipeline && uv run alembic upgrade head
 ```
 
 **Verification:**
 ```bash
-uv run pytest tests/test_structure.py -k "raw_table" -v
+cd pipeline && uv run pytest tests/test_structure.py -k "raw_table" -v
 ```
 
 ### Step 6: Create the ingest asset
@@ -151,7 +151,7 @@ Create `pipeline/pipeline/assets/ingest/{museum}.py` with:
 - Upsert (idempotent re-runs)
 - Progress logging via `context.log.info`
 
-**Pattern:** See `pipeline/assets/ingest/met.py` (simple HTTP) or `pipeline/assets/ingest/brooklyn.py` (Playwright for bot protection).
+**Pattern:** See `pipeline/pipeline/assets/ingest/met.py` (simple HTTP) or `pipeline/pipeline/assets/ingest/brooklyn.py` (Playwright for bot protection).
 
 **Key rules:**
 - Raw data is sacred. Store the API response byte-for-byte. Never transform during ingest.
@@ -176,16 +176,16 @@ defs = Definitions(
 )
 ```
 
-**7b.** Run all structural tests:
+**7b.** Run structural tests to see your progress:
 ```bash
-uv run pytest tests/test_structure.py -v
+cd pipeline && uv run pytest tests/test_structure.py -v
 ```
 
-All tests for this museum should pass except normalize-related ones (mapper, normalize asset, sync_search dep). Those come in Phase 2.
+Phase 1 tests (raw table, source docs, Dagster registration, fixtures) should now pass. Normalize-related tests (normalize_mapper, normalize_asset, mapper_tests, sync_search dep) will fail — that is expected and becomes your Phase 2 checklist.
 
 **7c.** Run the ingest via Dagster:
 ```bash
-uv run dagster asset materialize -m pipeline.definitions --select raw_{museum}
+cd pipeline && uv run dagster asset materialize -m pipeline.definitions --select raw_{museum}
 ```
 
 **7d.** Verify data landed:
@@ -271,8 +271,8 @@ class TestRichObject:
 
 **Verification:**
 ```bash
-uv run pytest tests/test_mappers/test_{museum}.py -v
-uv run pytest tests/test_structure.py -v  # mapper + fixture tests should now pass
+cd pipeline && uv run pytest tests/test_mappers/test_{museum}.py -v
+cd pipeline && uv run pytest tests/test_structure.py -v  # mapper + fixture tests should now pass
 ```
 
 ### Step 10: Create the normalize asset and register
@@ -285,7 +285,7 @@ uv run pytest tests/test_structure.py -v  # mapper + fixture tests should now pa
 - Include any culture/collection filtering if the department has non-Egyptian objects
 - Log counts (total raw, mapped, skipped)
 
-See `pipeline/assets/normalize/met_asset.py` (simple) or `pipeline/assets/normalize/brooklyn_asset.py` (with culture filtering).
+See `pipeline/pipeline/assets/normalize/met_asset.py` (simple) or `pipeline/pipeline/assets/normalize/brooklyn_asset.py` (with culture filtering).
 
 **10b.** Register in `pipeline/pipeline/definitions.py`:
 ```python
@@ -297,7 +297,7 @@ defs = Definitions(
 )
 ```
 
-**10c.** Add as dependency of `sync_search` in `pipeline/assets/index/sync_search.py`:
+**10c.** Add as dependency of `sync_search` in `pipeline/pipeline/assets/index/sync_search.py`:
 ```python
 @asset(
     ...
@@ -307,9 +307,9 @@ defs = Definitions(
 
 **10d.** Full verification:
 ```bash
-uv run pytest -v                                    # ALL tests pass
-uv run dagster asset materialize -m pipeline.definitions --select normalize_{museum}
-uv run dagster asset materialize -m pipeline.definitions --select sync_search
+cd pipeline && uv run pytest -v                                    # ALL tests pass
+cd pipeline && uv run dagster asset materialize -m pipeline.definitions --select normalize_{museum}
+cd pipeline && uv run dagster asset materialize -m pipeline.definitions --select sync_search
 ```
 
 **10e.** Spot check:
@@ -323,7 +323,7 @@ SELECT title, period, dynasty FROM catalog.artifacts WHERE source_museum = '{mus
 `pipeline/tests/test_structure.py` mechanically verifies every step above. When a test fails, the assertion message tells you exactly what file to create or what line to add. Run structural tests early and often:
 
 ```bash
-uv run pytest tests/test_structure.py -v
+cd pipeline && uv run pytest tests/test_structure.py -v
 ```
 
 These tests are the checklist. If they all pass for your museum, the integration is complete.
@@ -337,7 +337,7 @@ These tests are the checklist. If they all pass for your museum, the integration
 | 3. Fixtures | `pipeline/tests/fixtures/{museum}/*.json` | 3+ diverse JSON files |
 | 4. Register source | `pipeline/pipeline/types/sources.py` | `test_every_museum_has_license` passes |
 | 5. Raw table | `pipeline/pipeline/types/models.py` + migration | `test_raw_table_exists` passes |
-| 6. Ingest asset | `pipeline/pipeline/assets/ingest/{museum}.py` | `test_ingest_asset` passes |
+| 6. Ingest asset | `pipeline/pipeline/assets/ingest/{museum}.py` | File exists; `test_dagster_registration` verifies Dagster sees it |
 | 7. Dagster registration | `pipeline/pipeline/definitions.py` | `test_dagster_registration` passes, data in DB |
 | 8. Mapper | `pipeline/pipeline/assets/normalize/{museum}.py` | `test_normalize_mapper` + `test_mapper_implements_protocol` pass |
 | 9. Mapper tests | `pipeline/tests/test_mappers/test_{museum}.py` | `test_mapper_tests_exist` passes, all assertions pass |
