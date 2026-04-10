@@ -70,10 +70,10 @@ The database is the contract — no separate schema file to keep in sync.
 Rather than relying on the agent to understand architectural patterns, encode them mechanically:
 
 - `MapperProtocol` — every museum mapper must implement this typed interface
-- `test_structure.py` — verifies every registered museum has an ingest asset, a mapper, and fixture data
+- `test_structure.py` — 33 structural tests enforcing every step of the museum addition playbook: ingest asset, normalize mapper, normalize asset, fixtures (minimum 3), mapper tests, raw table, source docs, license entry, Dagster registration, mapper protocol compliance (correct source enum), and sync_search dependency wiring
 - Schema consistency test — verifies SQLAlchemy table columns match Pydantic model fields
 
-These tests fail before the agent can introduce architectural drift.
+Every assertion message is a remediation instruction — it tells the agent exactly what file to create, what code to add, and what command to run. These tests fail before the agent can introduce architectural drift.
 
 ### 4. Fixture data as ground truth
 
@@ -165,6 +165,6 @@ If the LLM can't accomplish the task, a human probably can't either.
 | Site hierarchy | `pipeline/pipeline/authority/sites.json` (with Pleiades IDs, parent refs) | Queryable data, not prose |
 | Museum API quirks + rate limits | `docs/museum-sources/{museum}.md` | Judgment context for the agent |
 | Architecture decisions | `docs/adr/` (individual decision records) | Prevents undoing decisions |
-| "How to add a museum" playbook | `pipeline/CLAUDE.md` | Step-by-step for agent |
+| "How to add a museum" playbook | `docs/playbook-new-museum.md` | Step-by-step for agent, two-phase (ingest=parallel, normalize=sequential) |
 | License terms per museum | Typed enum/config in code | Rendering logic depends on it |
 | Confidence tier definitions | Code constants + comments | Matching logic uses these directly |
