@@ -1,7 +1,7 @@
 # ADR-007: Origin Site as First-Class Entity with Hierarchy
 
 ## Status
-Accepted
+Accepted (single-field assumption superseded in part by [ADR-015](015-findspot-and-production-place.md))
 
 ## Context
 The product's core value proposition is virtual reunification — showing artifacts from the same original context across museums. Origin sites need structure beyond free text.
