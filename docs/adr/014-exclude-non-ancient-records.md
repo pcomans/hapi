@@ -44,7 +44,7 @@ Any of these substrings in `period`, `dynasty`, or `title`:
 
 ### Implementation
 
-The exclusion list lives in a single file (`pipeline/pipeline/assets/normalize/exclusions.py`) and exports a single function `is_in_scope(raw: dict) -> bool`. Every museum's normalize asset calls it before mapping. Per-museum overrides go in `docs/museum-sources/{museum}.md` if a museum legitimately uses one of these phrases for an in-scope record.
+The exclusion list will live in a single file (`pipeline/pipeline/assets/normalize/exclusions.py`, to be created as part of MVP task 3.3) and export a single function `is_in_scope(raw: dict) -> bool`. Every museum's normalize asset will call it before mapping. Per-museum overrides go in `docs/museum-sources/{museum}.md` if a museum legitimately uses one of these phrases for an in-scope record.
 
 Excluded records are logged as Dagster events with the count and the trigger reason:
 
@@ -52,7 +52,7 @@ Excluded records are logged as Dagster events with the count and the trigger rea
 context.log.info(f"Excluded {n} records: trigger='Modern, in the style of'")
 ```
 
-A structural test asserts that the exclusions module exists, exports `is_in_scope`, and is imported by every normalize asset.
+A structural test (to be added as part of MVP task 3.2) will assert that the exclusions module exists, exports `is_in_scope`, and is imported by every normalize asset.
 
 ## Consequences
 - The `catalog.artifacts` table contains only in-scope ancient Egyptian artifacts; downstream code (web app, sync_search, enrich) does not need to re-filter

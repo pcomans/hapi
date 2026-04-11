@@ -68,5 +68,5 @@ Beckerath's *Handbuch der ägyptischen Königsnamen* is the citation backbone fo
 - Adding a new transliteration variant means appending to the `aliases` array — no code change
 - The structured `titulary` object preserves *which* name is which, so the UI can show "(Prenomen)" or "(Greek form)" alongside aliases
 - Beckerath IDs in the entry are the long-term citation handle — Wikidata Q-IDs may drift, Beckerath identifiers do not
-- The display name standard is enforced by a structural test that rejects entries where `display` is not present in the `nomen` titulary list (the canonical Nomen must be the display name)
+- The display name standard will be enforced by a structural test (to be added as part of MVP task 3.2) that rejects entries where `display` is not present in the `nomen` titulary list (the canonical Nomen must be the display name)
 - Co-regencies (Hatshepsut + Thutmose III, Amenemhat I + Senusret I) are handled at the artifact level via the `ruler_ids: list[str]` field from enrichment, not by creating composite ruler entries

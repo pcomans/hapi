@@ -112,6 +112,12 @@ Hand-curate the four authority files in dependency order. Each file has the mand
 3. **`rulers.json`** — Per ADR-016: canonical `display` (Anglicized Nomen), structured `titulary` object with all five name parts, flat `aliases` for the matcher. Coverage priority: New Kingdom and Late Period
 4. **`sites.json`** — Hierarchical structure (`egypt > upper_egypt > thebes > deir_el_bahri > tt_358`), ~100 most-referenced sites + KV/TT tombs
 
+Per constitutional rule 2 (deterministic enforcement), add structural tests in `pipeline/tests/test_structure.py` that load every authority file and assert:
+
+- Every authority file has a non-empty `_source` block and the `raw_file` it references exists on disk (ADR-012)
+- Every entry in `rulers.json` has its `display` value present in the `nomen` titulary list (ADR-016)
+- `pipeline/pipeline/assets/normalize/exclusions.py` exists, exports `is_in_scope`, and is imported by every normalize asset (ADR-014)
+
 ### 3.3 Schema migrations
 
 Several schema changes are required before the enrich phase can land. Each follows rule 1: SQLAlchemy → Pydantic → Alembic → Drizzle introspect → commit together.
@@ -128,7 +134,7 @@ One Dagster asset per authority in `pipeline/pipeline/assets/enrich/`, in the sa
 - `enrich_dynasties` → populates `dynasty_ids`, `dynasty_qualifier`, `dynasty_certainty`, `dynasty_relation`
 - `enrich_periods` → populates `period_ids`, `period_qualifier`, `period_certainty`, `period_relation`
 - `enrich_rulers` → populates `ruler_ids` (list, for joint reigns); also regex-scans `date_display` for "reign of X" patterns since Brooklyn and Harvard mappers leave `ruler_display_name` empty
-- `enrich_sites` → populates `production_site_id`, `findspot_site_id`, `tomb_temple_id`, `excavation_id` (KV\d+, TT\d+, MMA\d+ regex against the known monuments list)
+- `enrich_sites` → populates `production_site_id`, `findspot_site_id`, `tomb_temple_id`, `excavation_id` (`KV\d+`, `TT\d+`, `MMA\d+` regex against the known monuments list)
 
 ### 3.5 Review queue triage asset
 

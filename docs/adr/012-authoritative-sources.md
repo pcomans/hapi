@@ -50,7 +50,7 @@ Every curated authority file has an `_source` block at the top:
 }
 ```
 
-A structural test in `pipeline/tests/test_structure.py` verifies every authority file has a non-empty `_source` block and that the referenced raw file exists.
+A structural test (to be added in `pipeline/tests/test_structure.py` as part of MVP task 3.2) will verify that every authority file has a non-empty `_source` block and that the referenced raw file exists.
 
 ## Consequences
 - Authority data is auditable: every entry traces back to a citation
