@@ -4,11 +4,11 @@ A cross-museum searchable index of Egyptian artifacts, organized by origin site.
 
 ## Architecture
 
-Two independent systems communicate through Postgres and Typesense:
+Egyptian artifacts are scattered across hundreds of museums worldwide, each with its own API and data format. Two independent systems work together to unify this data into a single searchable index:
 
-- **Pipeline** (Python / Dagster): `pipeline/` — ingests museum API data, normalizes to a canonical schema, enriches with authority data, syncs to search index
-- **Web app** (TypeScript / Next.js): `web/` — search, browse, filter, map view over the indexed data
-- **Schema ownership**: Pipeline and web tables live in the same Postgres database but in separate schemas: `catalog.*` (owned by Alembic/SQLAlchemy) and `web.*` (owned by Drizzle). The web app reads `catalog.*` via `drizzle-kit introspect` and manages its own `web.*` tables independently. See ADR-011.
+- **Pipeline** (Python / Dagster): `pipeline/` — ingests museum API data, normalizes it to a canonical schema (so "Thutmose III" and "Menkheperre" resolve to the same ruler), enriches with authority data, and syncs to the search index
+- **Web app** (TypeScript / Next.js): `web/` — search, browse, filter, and map view over the indexed data, organized by origin site so users can virtually reunify artifacts that were once together
+- **Schema ownership**: Pipeline and web tables live in the same Postgres database but in separate schemas: `catalog.*` (owned by Alembic/SQLAlchemy) and `web.*` (owned by Drizzle). The web app reads `catalog.*` via `drizzle-kit introspect` and manages its own `web.*` tables independently. See ADR-011. These schemas must stay in sync — the pipeline defines the canonical data model and the web app generates its TypeScript types from it, so a schema change in SQLAlchemy that isn't followed by Drizzle introspection will cause type errors or data mismatches.
 
 ## Key commands
 
@@ -49,7 +49,7 @@ These are non-negotiable principles. Every agent, every PR, every line of code m
 
 ## Rules
 
-1. **Pipeline owns the data schema.** DB table definitions live in `pipeline/pipeline/types/models.py` (in the `catalog` Postgres schema). The web app has its own `web` Postgres schema for app-specific tables (users, settings). To change the data schema: update the SQLAlchemy model → update the Pydantic model → create an Alembic migration → re-introspect Drizzle → commit all together.
+1. **Pipeline owns the data schema.** DB table definitions live in `pipeline/pipeline/types/models.py` (in the `catalog` Postgres schema). The web app has its own `web` Postgres schema for app-specific tables (users, settings — not yet implemented). To change the data schema: update the SQLAlchemy model → update the Pydantic model → create an Alembic migration → re-introspect Drizzle → commit all together.
 2. **Every mapper has tests.** Every Dagster mapper asset must have corresponding tests using real fixture data in `pipeline/tests/fixtures/`. No mocks for museum data shapes.
 3. **Mappers implement the protocol.** Every museum mapper must implement `MapperProtocol` defined in `pipeline/pipeline/types/protocol.py`.
 4. **Fields are nullable.** All fields in the canonical schema are optional except `id`, `source_museum`, and `source_url`. Sparse records are valid. The UI omits missing fields gracefully.
