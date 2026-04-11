@@ -23,7 +23,7 @@
 - **722 objects total.** Small collection compared to Met (~28k). Department is "Ancient and Byzantine Art & Numismatics".
 - **No ruler/reign field.** Harvard has no equivalent of Met's `reign` field. Ruler identification deferred to enrichment stage.
 - **Period sometimes includes dynasty.** E.g., "Late Period, Dynasty 26" — mapper splits this into separate period and dynasty fields.
-- **Places field.** Array of objects with `displayname` and `type`. "Creation Place" entries use hierarchical format: "Ancient & Byzantine World, Africa, Egypt (Ancient)" or more specific like "Ancient & Byzantine World, Africa, Antinoopolis (Egypt)".
+- **Places field.** Array of objects with `displayname` and `type`. "Creation Place" entries use hierarchical format: "Ancient & Byzantine World, Africa, Egypt (Ancient)" or more specific like "Ancient & Byzantine World, Africa, Antinoopolis (Egypt)". **Not returned by default** — the ingest must pass `fields=*` to include `places` (and several other secondary fields) in the response.
 - **No geographic confidence.** Unlike the Met's `geographyType` ("From", "Said to be from"), Harvard places don't indicate certainty.
 - **Medium can be multiline.** Uses `\r\n` delimiters with labeled sections: "Binder: Beeswax\r\nPigments: Lead white...".
 - **Dates.** `datebegin`/`dateend` are integers (negative for BCE, positive for CE). **0 means unknown**, not year zero — mapper treats 0 as null.

@@ -38,6 +38,7 @@ def raw_harvard(context: AssetExecutionContext, database: DatabaseResource) -> N
             "culture": "Egyptian",
             "size": PAGE_SIZE,
             "page": page,
+            "fields": "*",  # Default response omits `places`; `*` returns the full field set.
         }
         resp = requests.get(url, params=params, timeout=30)
         resp.raise_for_status()
