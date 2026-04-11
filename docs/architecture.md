@@ -4,8 +4,8 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                    Raw Storage (per museum)                   │
-│  Met: JSON/CSV  │  Brooklyn: JSON  │  Harvard: JSON          │
+│         Raw History + Current Snapshot (per museum)          │
+│  fetch_runs + raw_*_history + raw_*_current in Postgres      │
 └────────┬────────┴────────┬─────────┴────────┬────────────────┘
          │                 │                  │
     ┌────▼────┐     ┌──────▼─────┐    ┌───────▼──────┐
