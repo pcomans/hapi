@@ -26,6 +26,24 @@ PHASE 2 — NORMALIZATION (sequential, builds on prior museums)
 - Confirm existing tests pass: `cd pipeline && uv run pytest`
 - Read `CLAUDE.md` at the repo root for constitutional rules
 
+## Inclusion policy
+
+Hapi is a cross-museum index of Egyptian artifacts. For new sources, use the museum's own classification as the primary inclusion signal, but do not treat it as infallible.
+
+Rules:
+
+- Preserve the museum's original classification signals verbatim in raw data: department, culture, geography, collection, period labels, and any similar source fields.
+- Use the museum's own collection or culture classification as the default rule for what enters the ingest.
+- If a source is known to mix non-Egyptian material into an Egyptian-facing collection, add explicit source-specific filtering rules during normalization and document them in `docs/museum-sources/{museum}.md`.
+- Do not silently "correct" the museum's archaeology in the mapper. If a record is ambiguous, preserve the museum's labels and map uncertainty into canonical fields where possible.
+- Exclude records only when they are clearly outside scope based on documented source behavior. The reason for exclusion must be legible in code comments or source notes.
+
+Examples:
+
+- A museum's "Egyptian Art" department is the default inclusion boundary.
+- If that department is known to include Cypriot or broader Near Eastern material, add an explicit filter based on documented source fields.
+- If a record is from Roman Egypt or Nubia but the museum classifies it as part of its Egyptian collection, keep it unless the product scope explicitly excludes it.
+
 ## Phase 1: Ingest
 
 ### Step 1: Explore the API
@@ -40,7 +58,9 @@ Key questions to answer:
 - What pagination mechanism? (page numbers, cursor, offset?)
 - Authentication required? (API key, OAuth, none?)
 - Rate limits or bot protection?
-- What license applies to images?
+- What rights fields exist on each record or image?
+- Is image licensing uniform across the whole museum, or does it vary per object?
+- If rights data is missing on some records, what fallback policy is justified?
 
 **Examples from existing museums:**
 - Met: Public REST API, department=10 for Egyptian, no auth, 80 objects/page. `docs/museum-sources/met.md`
@@ -57,7 +77,8 @@ This document is the agent's context for all future work on this museum. It must
 - Rate limits and bot protection
 - Field inventory (what fields exist, which map to canonical schema)
 - Data quality observations (sparse fields, encoding quirks, date formats)
-- License terms for images
+- Rights fields for images and whether they vary by object or are museum-wide defaults
+- Inclusion and exclusion rules for Egyptian scope, including any known mixed-collection edge cases
 - Known quirks (anything surprising discovered during exploration)
 
 **Verification:** The file must exist before proceeding. Structural tests enforce this.
@@ -108,7 +129,9 @@ MUSEUM_LICENSE: dict[MuseumSource, License] = {
 }
 ```
 
-Check `docs/museum-sources/{museum}.md` for the correct license type.
+Use `MUSEUM_LICENSE` only as a museum-level default when the source does not provide reliable per-record rights metadata. If the API exposes rights per object, the mapper should populate `CanonicalArtifact.license` from the record itself and only fall back to the museum default when necessary.
+
+Check `docs/museum-sources/{museum}.md` for the correct default license policy.
 
 **Verification:**
 ```bash
@@ -233,6 +256,7 @@ class YourMuseumMapper(MapperProtocol):
 - Raise on structurally broken records (missing ID, unparseable data).
 - Ruler/site matching happens in the enrich stage, NOT in mappers. Set `ruler_display_name` to the raw text value (or `None`). Don't try to resolve it.
 - No string literals for domain values. Raw text goes in; authority resolution happens later.
+- Use per-record rights metadata when available. Only fall back to `MUSEUM_LICENSE` when the source does not expose usable object-level rights information.
 
 **Decision points (may require vocabulary changes):**
 - Does this museum have geography types not in the existing mapping? (Brooklyn had 11 types.)
@@ -284,6 +308,13 @@ cd pipeline && uv run pytest tests/test_structure.py -v  # mapper + fixture test
 - Read from `raw_{museum}_table`, map via the mapper, upsert to `artifacts_table`
 - Include any culture/collection filtering if the department has non-Egyptian objects
 - Log counts (total raw, mapped, skipped)
+
+Filtering policy:
+
+- Use the museum's classification as the default boundary.
+- Add source-specific exclusion logic only when the source is known to include clearly out-of-scope material.
+- Keep filtering rules narrow, explicit, and documented in `docs/museum-sources/{museum}.md`.
+- When in doubt, prefer preserving the record with uncertainty metadata over aggressive exclusion.
 
 See `pipeline/pipeline/assets/normalize/met_asset.py` (simple) or `pipeline/pipeline/assets/normalize/brooklyn_asset.py` (with culture filtering).
 
