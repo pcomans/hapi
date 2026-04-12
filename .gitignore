@@ -25,11 +25,14 @@ out/
 # OS
 .DS_Store
 
-# Copyrighted source material and derivative transcriptions
-# that cannot be published in the public repo (e.g. PDF excerpts
-# from Brill, Beckerath). Contains raw sources and intermediate
-# transcription outputs; reconciled/derived authority JSON files
-# that are committable live under pipeline/pipeline/authority/.
+# Copyrighted source material and raw intermediate transcriptions
+# (e.g. PDF excerpts from Brill, Beckerath, and the per-model raw
+# transcription outputs). The final reconciled transcriptions and
+# derived authority JSON files live under pipeline/pipeline/authority/
+# and ARE committed — this repo is private, and those files are
+# thin-copyright derivatives. If this repo is ever made public,
+# files at pipeline/pipeline/authority/sources/*/reconciled.jsonl
+# must be scrubbed first.
 proprietary/
 
 # Docker volumes
