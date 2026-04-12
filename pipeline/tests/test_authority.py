@@ -15,9 +15,7 @@ HKW_DIR = AUTHORITY_SOURCES / "hkw-chronology-2006"
 WIKI_PTOLEMAIC_DIR = AUTHORITY_SOURCES / "wikipedia-ptolemaic"
 
 
-@pytest.fixture
-def hkw_rows():
-    path = HKW_DIR / "reconciled.jsonl"
+def load_jsonl(path: Path) -> list[dict]:
     rows = []
     with open(path) as f:
         for i, line in enumerate(f, 1):
@@ -28,6 +26,11 @@ def hkw_rows():
                 except json.JSONDecodeError:
                     pytest.fail(f"Invalid JSON on line {i}: {line[:80]}")
     return rows
+
+
+@pytest.fixture
+def hkw_rows():
+    return load_jsonl(HKW_DIR / "reconciled.jsonl")
 
 
 class TestHKWIntegrity:
@@ -88,17 +91,7 @@ class TestHKWIntegrity:
 
 @pytest.fixture
 def wiki_ptolemaic_rows():
-    path = WIKI_PTOLEMAIC_DIR / "reconciled.jsonl"
-    rows = []
-    with open(path) as f:
-        for i, line in enumerate(f, 1):
-            line = line.strip()
-            if line:
-                try:
-                    rows.append(json.loads(line))
-                except json.JSONDecodeError:
-                    pytest.fail(f"Invalid JSON on line {i}: {line[:80]}")
-    return rows
+    return load_jsonl(WIKI_PTOLEMAIC_DIR / "reconciled.jsonl")
 
 
 class TestWikiPtolemaicIntegrity:
@@ -149,7 +142,7 @@ class TestWikiPtolemaicIntegrity:
         assert periods[0]["label"] == "Ptolemaic Period"
 
     def test_ptolemy_vii_has_null_dates(self, wiki_ptolemaic_rows):
-        p7 = [r for r in wiki_ptolemaic_rows if r.get("display", "").startswith("Ptolemy VII ") and not r.get("display", "").startswith("Ptolemy VIII")]
+        p7 = [r for r in wiki_ptolemaic_rows if r.get("display", "").startswith("Ptolemy VII ")]
         assert len(p7) == 1, "Ptolemy VII should have exactly one row"
         assert p7[0]["start_bce"] is None and p7[0]["end_bce"] is None, (
             "Ptolemy VII never formally reigned; dates should be null"
