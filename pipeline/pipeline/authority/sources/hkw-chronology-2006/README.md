@@ -8,31 +8,27 @@ Leiden: Brill. Sections IV.2 and IV.3 (pp. 490–498).
 
 ```
 pipeline/pipeline/authority/sources/hkw-chronology-2006/   # committed
-  README.md        — this file, explaining source and workflow
-  prompt.md        — the transcription prompt for Claude/Gemini/GPT
-  reconciled.jsonl — final reconciled transcription (source of truth)
+  README.md        — this file
+  prompt.md        — schema and instructions used to produce reconciled.jsonl
+  reconciled.jsonl — transcription of record
 proprietary/hkw-chronology-2006/                           # gitignored
   hkw-iv-2-iv-3.pdf — excerpted source PDF (Brill copyright)
-  claude.jsonl    — Claude's raw transcription pass
-  gemini-raw.json — Gemini's raw transcription (different schema)
-  gpt-raw.json    — GPT's raw transcription (different schema)
-  compare.py      — local diff script used during reconciliation
-  reconciliation-report.md — notes from the reconciliation pass
 ```
 
-The PDF itself is Brill copyright and stays under `proprietary/` —
-it cannot be committed. The raw per-model transcriptions also live
-under `proprietary/` to minimise copyright surface area; they are
-regeneratable by re-running the models against the PDF if ever
-needed.
+`reconciled.jsonl` is the transcription of record. It was produced
+by LLM transcription of HKW section IV.2 against the schema in
+`prompt.md`, with manual spot-checking against the PDF. The
+reconciliation process is not preserved — only the final output.
 
-The reconciled transcription IS committed. It is a thin-copyright
-derivative — structured facts (ruler names, date ranges, dynasty
-assignments) extracted from the table, reorganized into JSONL with
-per-row notes. The repo is private, so this is analogous to a
-private research notebook. **If this repo is ever made public, this
-file must be scrubbed first** (see the gitignore header in the
+The reconciled file is a thin-copyright derivative: structured facts
+(ruler names, date ranges, dynasty assignments) reorganized into
+JSONL with per-row notes. The repo is private, so this is analogous
+to a private research notebook. **If this repo is ever made public,
+this file must be scrubbed first** (see the gitignore header in the
 repo root).
+
+The PDF itself is Brill copyright and stays under `proprietary/` —
+it cannot be committed.
 
 The final curated authority files (`dynasties.json`, `periods.json`,
 `rulers.json`) will sit directly in `pipeline/pipeline/authority/`
@@ -71,13 +67,10 @@ pass can decide how to handle them rather than re-discovering them
 each round.
 
 - **Dyns. 16 and 17 combined header.** HKW prints a single bold header
-  "Dyns. 16 and 17" covering both dynasties. Claude's pass labels the
-  dynasty row with `number: 16` and splits the rulers between
-  `dynasty: 16` (Sobekemhotep VIII et al., a multi-ruler line) and
-  `dynasty: 17` (Inyotef, two Ta'os, Kamose). Gemini and GPT may
-  pick differently; the reconciliation pass should decide whether
-  `number` on the combined header is `null`, `16`, or two separate
-  rows
+  "Dyns. 16 and 17" covering both dynasties. The reconciled file
+  labels the dynasty row with `number: 16` and splits the rulers
+  between `dynasty: 16` (Sobekemhotep VIII et al., a multi-ruler
+  line) and `dynasty: 17` (Inyotef, two Ta'os, Kamose)
 - **Dyn. 23 (UE) vs Dyn. 23 (LE).** Two separate dynasty headers
   both numbered 23 — one for Upper Egypt, one for Lower Egypt. Both
   kept with `number: 23` and distinguished by `label`
@@ -102,32 +95,6 @@ each round.
   `2119–2118+25` (1-year reign at dynasty end). The `2218` is
   almost certainly a Brill typesetting error for `2118`. Flagged
   in the row's `note` field
-
-## Transcription workflow
-
-Per the normalization plan, the chronology table is transcribed
-*three* times — once each by Claude, Gemini, and GPT — and the three
-JSONL outputs are diffed. Any row where the three disagree on
-`start_bce`, `end_bce`, dynasty assignment, or ruler display name is
-flagged for manual check against the PDF.
-
-Outputs (all three raw files live under `proprietary/` alongside the
-PDF, see Layout above):
-
-- `claude.jsonl` — Claude's pass, follows the schema in `prompt.md`
-- `gemini-raw.json` — Gemini's pass. Emitted as a single wrapper JSON
-  with a different shape (`document.dynastic_period_table` as a flat
-  array) because Gemini did not consistently follow the JSONL output
-  rule; normalized at compare time rather than fixed in a re-run
-- `gpt-raw.json` — GPT's pass. Emitted as a hierarchical JSON
-  (`sections > periods > dynasties > rulers`) for the same reason
-- `reconciled.jsonl` — final authoritative transcription, diffed
-  against all three and spot-checked against the PDF. This is the
-  only output committed to the repo
-
-The schema and the exact prompt given to each model are in `prompt.md`
-so the three runs are directly comparable even when the raw output
-shapes differ.
 
 ## Schema (one row per table entry)
 
