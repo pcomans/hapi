@@ -36,9 +36,11 @@ repo root).
 
 The final curated authority files (`dynasties.json`, `periods.json`,
 `rulers.json`) will sit directly in `pipeline/pipeline/authority/`
-once derived from `reconciled.jsonl` — those are facts about ancient
-Egypt, not creative expression, and are committable in a public repo
-with `_source` blocks citing this PDF and its page numbers.
+once derived from `reconciled.jsonl`. The intent is for those files
+to contain only the factual data needed by the pipeline (ruler
+names, date ranges, dynasty assignments), each row citing its
+`_source` PDF and page number, so they can be included in any
+eventual public release of the repo.
 
 ## Table structure
 
@@ -109,15 +111,23 @@ JSONL outputs are diffed. Any row where the three disagree on
 `start_bce`, `end_bce`, dynasty assignment, or ruler display name is
 flagged for manual check against the PDF.
 
-Outputs:
+Outputs (all three raw files live under `proprietary/` alongside the
+PDF, see Layout above):
 
-- `claude.jsonl` — this repo's Claude pass
-- `gemini.jsonl` — Gemini pass (run by human operator)
-- `gpt.jsonl` — GPT pass (run by human operator)
-- `reconciled.jsonl` — final authoritative transcription
+- `claude.jsonl` — Claude's pass, follows the schema in `prompt.md`
+- `gemini-raw.json` — Gemini's pass. Emitted as a single wrapper JSON
+  with a different shape (`document.dynastic_period_table` as a flat
+  array) because Gemini did not consistently follow the JSONL output
+  rule; normalized at compare time rather than fixed in a re-run
+- `gpt-raw.json` — GPT's pass. Emitted as a hierarchical JSON
+  (`sections > periods > dynasties > rulers`) for the same reason
+- `reconciled.jsonl` — final authoritative transcription, diffed
+  against all three and spot-checked against the PDF. This is the
+  only output committed to the repo
 
 The schema and the exact prompt given to each model are in `prompt.md`
-so the three runs are directly comparable.
+so the three runs are directly comparable even when the raw output
+shapes differ.
 
 ## Schema (one row per table entry)
 

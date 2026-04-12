@@ -66,13 +66,15 @@ Column 1 for ruler rows contains:
 {"kind": "ruler",   "display": "string", "greek_form": "string"|null, "alternative_reading": "string"|null, "prenomen": "string"|null, "start_bce": int|null, "end_bce": int|null, "approximate": bool, "uncertainty_plus_years": int|null, "dynasty": int|null, "page": int, "note": "string"|null}
 ```
 
-For dynasty headings that are not plain integers (Hyksos, Theban Dyn.
-11, Dyn. 23 UE/LE, 2nd Persian Period), use the simplest integer you
-can and put the qualifier in `label`. For "2nd Persian Period",
-"Alexander the Great", and other non-dynasty rows that appear at the
-dynasty level, use `kind: "period"` with `number: null` on the
-dynasty row or treat as period — whichever matches the bold styling
-in the PDF.
+For dynasty headings that are not plain integers (Hyksos, Theban
+Dyn. 11, Dyn. 23 UE/LE), emit `kind: "dynasty"`. Use the simplest
+integer you can in `number` and put the qualifier in `label`; if
+there is genuinely no dynasty number to assign, set `number: null`.
+
+For bold rows at the dynasty level that are *not* dynasties in any
+meaningful sense — "2nd Persian Period", "Alexander the Great" — emit
+`kind: "period"` instead. `period` rows have no `number` field at
+all; do not mix fields across kinds.
 
 ## Output rules
 
@@ -80,5 +82,10 @@ in the PDF.
 - Preserve the order of the PDF (rows in reading order)
 - Do not invent dates or names. If a cell is ambiguous or you cannot
   read it, emit `null` and add a `note` field explaining
-- Preserve diacritics (ʿ, ʾ, ' for ayin/alef) exactly as shown in the
-  PDF. The PDF uses ' for ayin and ' for alef — copy them verbatim
+- Preserve diacritics exactly as shown in the PDF. In particular:
+  HKW uses a single apostrophe-like mark for both ayin and alef
+  rather than distinct U+02BF / U+02BE characters. Copy it verbatim
+  as a plain ASCII apostrophe (`'`, U+0027) — do not try to
+  disambiguate ayin vs alef, and do not normalize to Unicode
+  half-rings. The reconciliation pass will decide whether to upgrade
+  to distinct characters later
