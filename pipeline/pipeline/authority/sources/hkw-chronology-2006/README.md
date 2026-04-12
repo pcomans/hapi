@@ -8,24 +8,37 @@ Leiden: Brill. Sections IV.2 and IV.3 (pp. 490–498).
 
 ```
 pipeline/pipeline/authority/sources/hkw-chronology-2006/   # committed
-  README.md       — this file, explaining source and workflow
-  prompt.md       — the transcription prompt for Claude/Gemini/GPT
+  README.md        — this file, explaining source and workflow
+  prompt.md        — the transcription prompt for Claude/Gemini/GPT
+  reconciled.jsonl — final reconciled transcription (source of truth)
 proprietary/hkw-chronology-2006/                           # gitignored
   hkw-iv-2-iv-3.pdf — excerpted source PDF (Brill copyright)
-  claude.jsonl    — Claude's transcription pass
+  claude.jsonl    — Claude's raw transcription pass
   gemini-raw.json — Gemini's raw transcription (different schema)
   gpt-raw.json    — GPT's raw transcription (different schema)
-  reconciled.jsonl — final reconciled transcription (TBD)
+  compare.py      — local diff script used during reconciliation
+  reconciliation-report.md — notes from the reconciliation pass
 ```
 
-The PDF and the intermediate transcriptions live under
-`proprietary/` because the PDF is Brill copyright and the
-transcriptions are derivative works. Neither can be published in the
-public repo. The final reconciled authority files (`dynasties.json`,
-`periods.json`, `rulers.json`) will sit directly in
-`pipeline/pipeline/authority/` once curated — those are facts about
-ancient Egypt, not creative expression, and are committable with
-`_source` blocks citing this PDF and its page numbers.
+The PDF itself is Brill copyright and stays under `proprietary/` —
+it cannot be committed. The raw per-model transcriptions also live
+under `proprietary/` to minimise copyright surface area; they are
+regeneratable by re-running the models against the PDF if ever
+needed.
+
+The reconciled transcription IS committed. It is a thin-copyright
+derivative — structured facts (ruler names, date ranges, dynasty
+assignments) extracted from the table, reorganized into JSONL with
+per-row notes. The repo is private, so this is analogous to a
+private research notebook. **If this repo is ever made public, this
+file must be scrubbed first** (see the gitignore header in the
+repo root).
+
+The final curated authority files (`dynasties.json`, `periods.json`,
+`rulers.json`) will sit directly in `pipeline/pipeline/authority/`
+once derived from `reconciled.jsonl` — those are facts about ancient
+Egypt, not creative expression, and are committable in a public repo
+with `_source` blocks citing this PDF and its page numbers.
 
 ## Table structure
 
