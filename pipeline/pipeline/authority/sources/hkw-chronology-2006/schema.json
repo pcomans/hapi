@@ -1,0 +1,95 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rows"],
+  "properties": {
+    "rows": {
+      "type": "array",
+      "description": "Every row of the HKW chronological table (sections IV.2 and IV.3), in reading order. Each row is a period heading, dynasty heading, or single ruler entry.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "label",
+          "number",
+          "parent_period",
+          "display",
+          "greek_form",
+          "alternative_reading",
+          "prenomen",
+          "dynasty",
+          "start_bce",
+          "end_bce",
+          "approximate",
+          "uncertainty_plus_years",
+          "page",
+          "note"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["period", "dynasty", "ruler"],
+            "description": "Row discriminator. 'period' for bold period headings (e.g. 'Early Dynastic Period', 'Old Kingdom', 'New Kingdom', and also non-dynasty bold rows like '2nd Persian Period' or 'Alexander the Great'). 'dynasty' for bold dynasty headings (e.g. 'Dyn. 1', '(Theban) Dyn. 11', 'Dyn. 15 (Hyksos)'). 'ruler' for non-bold rows listing a single ruler or, occasionally, a short comma-separated list of rulers sharing one date range."
+          },
+          "label": {
+            "type": ["string", "null"],
+            "description": "Column 1 text as printed, verbatim. Set for period and dynasty rows (e.g. 'Old Kingdom', 'Dyn. 4', '(Theban) Dyn. 11'). Null for ruler rows."
+          },
+          "number": {
+            "type": ["integer", "null"],
+            "description": "Dynasty number as an integer. Set for dynasty rows only. Null for period and ruler rows. Also null for dynasty headings with no plain integer (use 'label' for the qualifier). For qualified dynasties like 'Dyn. 15 (Hyksos)' or '(Theban) Dyn. 11' use the integer 15 or 11 and put the qualifier in 'label'. Two distinct headings for 'Dyn. 23 (UE)' and 'Dyn. 23 (LE)' both get number 23."
+          },
+          "parent_period": {
+            "type": ["string", "null"],
+            "description": "Parent period label for dynasty rows (e.g. 'Old Kingdom' for 'Dyn. 4'). Null for period and ruler rows."
+          },
+          "display": {
+            "type": ["string", "null"],
+            "description": "Display name for ruler rows: column 1 Roman-type (non-italic) text with parentheticals and square-bracket readings stripped out. Greek forms, alternative readings, and prenomina go into their own fields. For slash-separated rulers (e.g. 'Ra'djedef/Djedefre') keep the whole string as display. Null for period and dynasty rows."
+          },
+          "greek_form": {
+            "type": ["string", "null"],
+            "description": "Text inside parentheses after a ruler name WHEN that text is a Hellenized/Greek form (e.g. 'Cheops' for Khufu, 'Mycerinus' for Menkaure'). Null if the parenthetical is a Horus name, nomen, or other Egyptian reading — put those in 'alternative_reading' and flag in 'note'. Null for period/dynasty rows."
+          },
+          "alternative_reading": {
+            "type": ["string", "null"],
+            "description": "Text inside square brackets after a ruler name (e.g. 'Piye' for 'Piankhi [Piye]'). Also used as an escape hatch for non-Greek parentheticals (Horus names like 'Sehertawy', nomen like 'Ra'kha'ef'); when used that way, explain in 'note'. Null when absent."
+          },
+          "prenomen": {
+            "type": ["string", "null"],
+            "description": "Italicized text in column 1 for ruler rows (the throne name, e.g. 'Menkheperre' for Thutmose III). Multiple variants separated by '/' in the PDF are preserved as a single string with '/' as separator. Null when no italicized text is present."
+          },
+          "dynasty": {
+            "type": ["integer", "null"],
+            "description": "Parent dynasty number for ruler rows, linking each ruler to its dynasty heading. Null for period and dynasty rows."
+          },
+          "start_bce": {
+            "type": ["integer", "null"],
+            "description": "Start year as a NEGATIVE integer (2543 BCE -> -2543). Null when the PDF shows '?' for that bound. AD dates in IV.3 (late Meroitic rulers) become positive integers. For prose date ranges in IV.3 that aren't a numeric span (e.g. '2nd half of 7th cent. BC'), leave null and put the prose in 'note'."
+          },
+          "end_bce": {
+            "type": ["integer", "null"],
+            "description": "End year as a NEGATIVE integer. Null when the PDF shows '?' for that bound. Same AD/prose rules as start_bce."
+          },
+          "approximate": {
+            "type": "boolean",
+            "description": "True if column 2 shows 'ca.' for this row; false otherwise. Always set (never null)."
+          },
+          "uncertainty_plus_years": {
+            "type": ["integer", "null"],
+            "description": "Superscript '+N' error bar on the date range (common values: 25, 16, 3). Null when no superscript is present."
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number in the PDF excerpt. IV.2 spans pages 490-495; IV.3 spans 496-498."
+          },
+          "note": {
+            "type": ["string", "null"],
+            "description": "Free text for anything the schema can't capture verbatim: multi-ruler rows, co-regencies/overlaps, ambiguous or visibly erroneous dates, prose date ranges from IV.3, and any non-Greek parentheticals routed into alternative_reading. Null when nothing to flag."
+          }
+        }
+      }
+    }
+  }
+}
