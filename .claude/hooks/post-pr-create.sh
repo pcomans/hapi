@@ -58,6 +58,11 @@ if [ "$IS_PR_CREATE" = true ]; then
   MESSAGES="$MESSAGES\n\nYou just created PR #$PR_NUMBER. Before finishing, you MUST:\n1. Update the task list — mark completed tasks as done.\n2. Document learnings in docs/museum-sources/*.md or pipeline/CLAUDE.md.\n3. Wait for CI to pass and Copilot review, then reply to every comment."
 fi
 
+# After any push, remind agent to check MVP task list
+if [ "$IS_GIT_PUSH" = true ] || [ "$IS_PR_CREATE" = true ]; then
+  MESSAGES="$MESSAGES\n\nAfter this push, check docs/mvp-tasks.md for tasks that can now be marked complete (add ~~strikethrough~~ + checkmark + summary). Only mark tasks whose acceptance criteria are fully met by merged or in-PR work."
+fi
+
 # Escape for JSON
 MESSAGES_ESCAPED=$(echo "$MESSAGES" | sed 's/"/\\"/g')
 

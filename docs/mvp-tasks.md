@@ -98,7 +98,8 @@ The work is sequential by authority — dynasties first as the smallest, most co
 
 Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources/`. These can run in parallel:
 
-- Hornung/Krauss/Warburton (2006) chronology table — manual transcription from PDF with page citations, used by both `dynasties.json` and `periods.json`
+- ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
+- ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.
 - Wikidata pharaohs SPARQL dump (entities of class "pharaoh of ancient Egypt") + von Beckerath *Handbuch* (1999) cross-check pass for canonical names and titulary
 - Trismegistos Geo TM Places bulk dump (CC BY-SA 4.0) from the Trismegistos Data Services portal
 - Theban Mapping Project KV (Valley of the Kings) and TT (Theban Tombs) data
