@@ -313,8 +313,9 @@ def main():
 
     # Stats
     has_dynasty = sum(1 for r in reconciled if r["dynasty"] is not None)
-    has_dates = sum(1 for r in reconciled if r["start_bce"] or r["end_bce"])
-    has_alts = sum(1 for r in reconciled if r["alt_labels"])
+    has_dates = sum(1 for r in reconciled
+                    if r["start_bce"] is not None or r["end_bce"] is not None)
+    has_alts = sum(1 for r in reconciled if r["alt_labels"] is not None)
 
     print(f"\nStats:")
     print(f"  With dynasty number: {has_dynasty}")
