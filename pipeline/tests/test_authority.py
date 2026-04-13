@@ -259,3 +259,10 @@ class TestWikidataPharaohsIntegrity:
     def test_fetch_script_exists(self):
         fetch_path = WIKIDATA_PHARAOHS_DIR / "fetch.py"
         assert fetch_path.exists(), "fetch.py should exist for reproducible re-acquisition"
+
+    def test_known_non_pharaohs_excluded(self, wikidata_pharaoh_rows):
+        """Wikidata misclassifications must not appear in the reconciled output."""
+        qids = {row["qid"] for row in wikidata_pharaoh_rows}
+        assert "Q113564932" not in qids, "Aknamkanon (fictional Yu-Gi-Oh character) must be excluded"
+        assert "Q136446547" not in qids, "Milkyaton (Cypriot king, not a pharaoh) must be excluded"
+        assert "Q471255" not in qids, "Pothinus (Ptolemaic courtier, not a pharaoh) must be excluded"

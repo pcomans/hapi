@@ -9,7 +9,7 @@ Usage:
     cd pipeline && uv run python pipeline/authority/sources/wikidata-pharaohs/fetch.py
 
 Output:
-    raw.json          — verbatim SPARQL results (sacred raw data)
+    raw.json          — deduplicated SPARQL records (intermediate pre-reconciliation dump)
     reconciled.jsonl  — one JSON object per line in authority source schema
 """
 
@@ -82,6 +82,23 @@ _ORDINALS = {
 DYNASTY_MAP = {f"{name} Dynasty of Egypt": num for name, num in _ORDINALS.items()}
 DYNASTY_MAP["Dynasty 00"] = 0
 DYNASTY_MAP["Protodynastic Period of Egypt"] = 0
+
+# QIDs that Wikidata erroneously classifies as pharaohs. Excluded at reconciliation time.
+# Q113564932 — "Aknamkanon" is a fictional Yu-Gi-Oh! character, not a historical ruler.
+# Q136446547 — "Milkyaton" is a Cypriot king, not an Egyptian pharaoh.
+# Q471255    — Pothinus was a Ptolemaic court official/regent, not a pharaoh.
+KNOWN_NON_PHARAOHS: frozenset[str] = frozenset({
+    "Q113564932",
+    "Q136446547",
+    "Q471255",
+})
+
+# Per-QID alt_labels to drop. Used to remove Wikidata cross-contamination where one
+# pharaoh's Wikidata page incorrectly lists another pharaoh's name as an alias.
+# Q39938 (Ptolemy XIII) has "Ptolemy XII" as an alt_label — a different ruler entirely.
+BAD_ALT_LABELS: dict[str, set[str]] = {
+    "Q39938": {"Ptolemy XII"},
+}
 
 
 def _get_val(binding: dict, key: str) -> str | None:
@@ -213,10 +230,15 @@ def reconcile(records: list[dict]) -> list[dict]:
     reconciled = []
 
     for rec in records:
+        qid = rec["qid"]
         label = rec["label"]
 
+        # Skip known non-pharaohs (Wikidata misclassifications)
+        if qid in KNOWN_NON_PHARAOHS:
+            continue
+
         # Skip unresolved entities (label is just the QID)
-        if label and label.startswith("Q") and label == rec["qid"]:
+        if label and label.startswith("Q") and label == qid:
             continue
 
         dynasty = _parse_dynasty(rec["families"])
@@ -258,8 +280,9 @@ def reconcile(records: list[dict]) -> list[dict]:
         if rec["replaced_by"]:
             notes.append(f"Replaced by: {rec['replaced_by']}")
 
+        bad = BAD_ALT_LABELS.get(qid, set())
         alt_labels = [a for a in rec["alt_labels"]
-                      if len(a) > 1 and not a.isdigit() and a != label]
+                      if len(a) > 1 and not a.isdigit() and a != label and a not in bad]
 
         reconciled.append({
             "kind": "ruler",
@@ -294,11 +317,11 @@ def main():
     records = deduplicate(bindings)
     print(f"  Unique entities: {len(records)}")
 
-    # Save raw dump
+    # Save intermediate dump (deduplicated records, pre-reconciliation)
     raw_path = SOURCE_DIR / "raw.json"
     with open(raw_path, "w") as f:
         json.dump(records, f, indent=2, ensure_ascii=False)
-    print(f"  Saved raw dump → {raw_path}")
+    print(f"  Saved intermediate dump → {raw_path}")
 
     # Reconcile
     reconciled = reconcile(records)
