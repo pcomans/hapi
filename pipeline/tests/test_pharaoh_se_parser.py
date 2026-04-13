@@ -169,6 +169,109 @@ class TestParseNameCards:
         assert len(cards) == 1
         assert cards[0]["name"] == "User Maat Ra, setep en Ra"
 
+    def test_gardiner_code_detected(self):
+        """Gardiner codes like E1:D40 should be parsed as gardiner, not sources."""
+        lines = [
+            "Horus name",
+            "",
+            "![img](https://pharaoh.se/svg/pharaoh/x.svg)",
+            "",
+            "Ka nakht",
+            "",
+            "kꜢ-nḫt",
+            "",
+            "The strong bull",
+            "",
+            "E1:D40-xa:m-R19-t:O49",
+            "",
+            "Some source",
+        ]
+        cards = _parse_name_cards(lines)
+        assert cards[0]["gardiner"] == "E1:D40-xa:m-R19-t:O49"
+        assert cards[0]["sources"] == ["Some source"]
+
+    def test_plain_english_not_gardiner(self):
+        """Plain English words like 'lands' must not match as Gardiner codes."""
+        lines = [
+            "Nebty name",
+            "",
+            "![img](https://pharaoh.se/svg/pharaoh/x.svg)",
+            "",
+            "Aa shefyt em tau nebu",
+            "",
+            "ꜤꜢ-šfꞽt-m-tꜢw-nb(w)",
+            "",
+            "Great of majesty in all",
+            "",
+            "lands",
+            "",
+            "aA-F8:t-m-N17:N17:N17:nb",
+            "",
+            "Real source here",
+        ]
+        cards = _parse_name_cards(lines)
+        assert cards[0]["translation"] == "Great of majesty in all"
+        assert cards[0]["gardiner"] == "aA-F8:t-m-N17:N17:N17:nb"
+        assert "lands" in (cards[0]["sources"] or [])
+
+    def test_source_note_not_gardiner(self):
+        """Source notes like 'After name change' must not match as Gardiner codes."""
+        lines = [
+            "Horus name variant",
+            "",
+            "![img](https://pharaoh.se/svg/pharaoh/x.svg)",
+            "",
+            "Some name",
+            "",
+            "transliteration",
+            "",
+            "Translation",
+            "",
+            "E1:D40-xa",
+            "",
+            "After name change",
+            "",
+            "Real source",
+        ]
+        cards = _parse_name_cards(lines)
+        assert cards[0]["gardiner"] == "E1:D40-xa"
+        assert "After name change" in (cards[0]["sources"] or [])
+
+    def test_name_missing_filtered(self):
+        """'Name missing' placeholder entries should be filtered out."""
+        lines = [
+            "Throne name",
+            "",
+            "![img](https://pharaoh.se/svg/pharaoh/x.svg)",
+            "",
+            "Name missing",
+            "",
+            "\u2013",
+            "",
+            "\u2013",
+        ]
+        cards = _parse_name_cards(lines)
+        assert len(cards) == 0
+
+    def test_literal_null_name(self):
+        """Literal string 'null' should become None."""
+        lines = [
+            "Nebty name variant",
+            "",
+            "![img](https://pharaoh.se/svg/pharaoh/x.svg)",
+            "",
+            "null",
+            "",
+            "transliteration",
+            "",
+            "Translation",
+            "",
+            "E1:D40",
+        ]
+        cards = _parse_name_cards(lines)
+        assert len(cards) == 1
+        assert cards[0]["name"] is None
+
     def test_footer_not_in_sources(self):
         lines = [
             "Birth name",
@@ -181,7 +284,7 @@ class TestParseNameCards:
             "",
             "Given by Bastet",
             "",
-            "p-A-b",
+            "G7-A1:D40",
             "",
             "Some real source",
             "",
@@ -193,6 +296,7 @@ class TestParseNameCards:
         ]
         cards = _parse_name_cards(lines)
         assert len(cards) == 1
+        assert cards[0]["gardiner"] == "G7-A1:D40"
         assert "**PLEASE NOTE**" not in (cards[0]["sources"] or [])
         assert cards[0]["sources"] == ["Some real source"]
 

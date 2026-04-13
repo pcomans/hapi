@@ -308,6 +308,13 @@ def _parse_name_cards(section_lines: list[str]) -> list[dict]:
         # The pattern is: name, transliteration, translation, gardiner, sources...
         # Transliteration contains special Unicode chars like Ꜣ, ḫ, ꞽ, ḥ, etc.
         name = content[0]
+
+        # Skip placeholder entries ("Name missing" with en-dash transliteration)
+        if name == "Name missing":
+            continue
+        # Convert literal string "null" to actual None
+        if name == "null":
+            name = None
         transliteration = content[1] if len(content) > 1 else None
         translation = content[2] if len(content) > 2 else None
 
@@ -324,8 +331,13 @@ def _parse_name_cards(section_lines: list[str]) -> list[dict]:
                 break
             if line.startswith("[![Pharaoh.SE]"):
                 break
-            # Gardiner codes: sequences of letter-number patterns separated by :, -, *, \
-            if gardiner is None and re.match(r"^[A-Za-z0-9:*\-\\&]+$", line.replace(" ", "")):
+            # Gardiner codes: sequences like "E1:D40-xa:m-R19-t:O49".
+            # Must contain at least one uppercase-letter-followed-by-digit pattern
+            # (e.g. E1, D40, N17) to distinguish from plain English words.
+            stripped_line = line.replace(" ", "")
+            if (gardiner is None
+                    and re.match(r"^[A-Za-z0-9:*\-\\&/_.#]+$", stripped_line)
+                    and re.search(r"[A-Z]\d", stripped_line)):
                 gardiner = line
             else:
                 sources.append(line)
@@ -478,8 +490,12 @@ def reconcile(index_records: list[dict], page_data: dict[str, dict]) -> list[dic
 
         # Add compact (spaceless) prenomen form for museum catalog matching.
         # Pharaoh.se writes "Men kheper Ra"; museums use "Menkheperre".
+        # Standard Anglophone convention uses terminal -re not -ra.
         if prenomen and " " in prenomen:
             compact = prenomen.replace(" ", "").replace(",", "").lower()
+            # Normalize terminal "ra" to "re" per museum convention
+            if compact.endswith("ra"):
+                compact = compact[:-2] + "re"
             # Capitalize first letter
             compact = compact[0].upper() + compact[1:] if compact else compact
             if compact not in seen and compact.lower() != rec["display"].lower():
@@ -490,6 +506,12 @@ def reconcile(index_records: list[dict], page_data: dict[str, dict]) -> list[dic
         # These are names like "Suphis" (Khufu), "Menes" (Narmer), "Sesostris" (Senusret).
         for src in page.get("ancient_sources") or []:
             transcription = src.get("transcription")
+            if not transcription:
+                continue
+            # Strip gender symbols and other Unicode noise
+            transcription = re.sub(r"[\u2640\u2642\u2600-\u26FF]", "", transcription).strip()
+            # Strip parenthetical annotations like "(female symbol)"
+            transcription = re.sub(r"\s*\([^)]*symbol[^)]*\)", "", transcription).strip()
             if transcription and transcription not in seen and transcription != rec["display"]:
                 alt_labels.append(transcription)
                 seen.add(transcription)
