@@ -17,7 +17,7 @@ Every authority file in `pipeline/pipeline/authority/` is built from a citable s
 | Periods | Hornung, E., Krauss, R., & Warburton, D. A. (Eds.). (2006). *Ancient Egyptian Chronology*. Brill. | Copyrighted (fair use for chronological reference) |
 | Dynasties | Same Hornung/Krauss/Warburton chronology table | Copyrighted (fair use) |
 | Rulers | [Pharaoh.se](https://pharaoh.se/) by Peter Lundstrom — expert-curated royal titulary database (381 rulers, full five-name titulary, multiple scholarly chronologies, Gardiner codes, source citations). Scraped via Firecrawl. | CC BY 4.0 |
-| Sites | Trismegistos Geo (TM Places bulk dump from the Trismegistos Data Services portal) + Theban Mapping Project (KV and TT codes) | TM Geo: CC BY-SA 4.0; TMP: open access for research |
+| Sites | iDAI.gazetteer (German Archaeological Institute), REST API at `gazetteer.dainst.org` | CC BY 4.0 |
 
 ### Layout
 
@@ -27,8 +27,7 @@ pipeline/pipeline/authority/
     hkw-chronology-2006/            # transcribed chronology table with page citations
     pharaoh-se/                     # Firecrawl markdown scrape of pharaoh.se (381 rulers)
     wikipedia-ptolemaic/            # Ptolemaic period supplement
-    tm-places.csv                   # TM Places bulk dump (planned)
-    theban-mapping-project-kv.json  # (planned)
+    idai-gazetteer/raw.json         # iDAI.gazetteer API responses
   periods.json                      # curated, alias-enriched
   dynasties.json
   rulers.json
@@ -56,7 +55,7 @@ A structural test (to be added in `pipeline/tests/test_structure.py` as part of 
 ## Consequences
 - Authority data is auditable: every entry traces back to a citation
 - Adding a new entry requires either an existing source or adding a new one with citation — there is no path for "the LLM said so"
-- Trismegistos Geo is the sole site authority. Pleiades is not stored as a separate ID — TM Geo's GeoRelations Matcher can resolve Pleiades cross-references on demand if interop ever needs them. KISS
+- iDAI.gazetteer is the sole site authority, replacing the originally planned TM Places + Theban Mapping Project. TM Places was dropped because its papyrological bias (built from documentary attestations) means pharaonic sites are subsumed under coarse toponyms — e.g., Deir el-Bahari, Valley of the Kings, and Medinet Habu are all lumped into TM Geo 1341 ("Memnoneia"), making them unusable for resolving museum provenance strings. TMP was dropped because it is offline and has restrictive copyright. See `docs/site-authority-research.md` for the full evaluation of five candidate sources
 - Pharaoh.se replaces Wikidata as the ruler authority source. Wikidata had persistent quality issues (fictional characters, non-pharaohs, 0% prenomen coverage). Pharaoh.se provides expert-curated data with full five-name titulary sourced from Beckerath and other standard references. Note: pharaoh.se also covers Ptolemaic rulers, overlapping with the `wikipedia-ptolemaic` source — the downstream reconciliation layer must handle deduplication
 - Hornung/Krauss/Warburton (HKW) is copyrighted. We transcribe only the chronology table under fair use for academic reference. The full text is not redistributed
 - Re-acquisition of any source must update the `retrieved` field and the raw file together
