@@ -274,11 +274,10 @@ class TestPharaohSeIntegrity:
                     f"Row {i} ({row['display']}): {field} should be list"
                 )
                 for j, card in enumerate(names):
-                    assert card.get("name"), (
-                        f"Row {i} ({row['display']}): {field}[{j}] missing name"
-                    )
-                    assert card.get("transliteration"), (
-                        f"Row {i} ({row['display']}): {field}[{j}] missing transliteration"
+                    # Name or transliteration may be null for incomplete
+                    # attestations, but at least one should be present.
+                    assert card.get("name") or card.get("transliteration"), (
+                        f"Row {i} ({row['display']}): {field}[{j}] missing both name and transliteration"
                     )
 
     def test_raw_directory_exists(self):
