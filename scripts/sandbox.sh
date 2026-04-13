@@ -40,7 +40,7 @@ gh auth status  >/dev/null 2>&1 || error "gh CLI not authenticated. Run: gh auth
 # --- GitHub secret ---
 
 info "Setting GitHub token for sandbox access to private repo..."
-sbx secret set -g github -t "$(gh auth token)"
+sbx secret set -g github -f -t "$(gh auth token)"
 
 # --- Check if sandbox already exists ---
 
