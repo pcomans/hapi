@@ -9,9 +9,9 @@
 
 | Rank | Source | Verdict |
 |---|---|---|
-| 1 | **iDAI.gazetteer** | **Sole site authority.** 854 archaeological sites in Egypt, 100% canary hit rate, rich multilingual names, hierarchy, coordinates. CC BY 4.0. No auth. |
-| 2 | **Wikidata** | Dropped. Messy data quality, Q-IDs in original brief were all wrong. Could revisit for tomb-level granularity if individual tomb provenance becomes a mapper requirement. |
-| 3 | **PAThs** | Dropped. CC BY-NC-SA license creates a permanent ceiling on commercial use. Its unique value (TM GeoID cross-refs) is moot because we're dropping TM Places entirely. |
+| 1 | **iDAI.gazetteer** | **Sole site authority.** 2,061 Egyptian places (filter to ~1,000 site-relevant types). 29/30 sites found across Upper Egypt, Delta, Middle Egypt, Fayum, and Nubia. Rich multilingual names, hierarchy, coordinates. CC BY 4.0. No auth. |
+| 2 | **Wikidata** | Dropped. CC0 and SPARQL are attractive, but adds complexity as a second source. Could revisit for tomb-level granularity if individual tomb provenance becomes a mapper requirement. |
+| 3 | **PAThs** | Dropped. CC BY-NC-SA license creates a permanent ceiling on commercial use. |
 | 4 | **TopBib** | Not needed. Bibliographic index, not a site gazetteer. Undocumented JSON API exists if bibliography enrichment becomes a future requirement. |
 | 5 | **Theban Mapping Project** | Dead end. Site returning 403/503, no API, restrictive copyright. |
 
@@ -71,7 +71,11 @@ Records include rich multilingual name variants. Examples across the canary site
 
 This directly solves our mapper alias-matching problem — museums use wildly different spellings.
 
-**Caveat:** The canary sites tested are all Upper Egyptian. Delta and Middle Egypt coverage (Tell Basta, Naucratis, Hawara, Lahun) is unverified. The 854 archaeological-site count is promising but should be spot-checked for Delta sites before full acquisition.
+### Extended audit: Delta, Middle Egypt, and Fayum (20 additional sites)
+
+A follow-up audit tested 20 sites beyond the initial Upper Egyptian canary set. **19 out of 20 are correctly typed as `archaeological-site` and would pass the filter.** The sole exception is Qubbet el-Hawa (typed `landform`), which is why the type filter was broadened.
+
+Sites confirmed present with coordinates and cross-refs: Asasif, Sheikh Abd el-Qurna, Dra Abu el-Naga, Beni Hasan, Tell el-Amarna, Hawara, Lahun, Gurob, Naucratis, Tell Basta (Bubastis), Tanis, Lisht, Abusir, Dahshur, Dendera, Edfu, Kom Ombo, Philae, Abu Simbel.
 
 ### Hierarchy
 
@@ -115,94 +119,31 @@ identifiers: [{value, context}, ...] (cross-refs)
 tags: ["necropolis", "temple", "tell", ...]
 ```
 
-### Acquisition plan
-
-1. `GET /search.json?q=*&fq=ancestors:2042786&limit=100&offset=0` — paginate through 21 pages (2,061 results)
-2. For each result, `GET /place/{gazId}` for full record with all names and shapes
-3. Filter client-side by `types` containing `archaeological-site` (854 records)
-4. Total: ~855 HTTP requests. No rate limiting detected. Estimate: 1 hour of scripting, 5 minutes of runtime.
-
 ---
 
 ## 2. Wikidata
 
-**Verdict: ACQUIRE SECOND. Best for cross-refs, tomb granularity, and aliases.**
+**Verdict: DROPPED. Adds complexity as a second source; no current need for its unique strengths.**
 
 ### Access
 
 - **Endpoint:** `https://query.wikidata.org/sparql`
 - **License:** CC0 (public domain)
 - **Format:** SPARQL + JSON
-- **Existing pattern:** `pipeline/pipeline/authority/sources/wikidata-pharaohs/fetch.py` already queries Wikidata for pharaoh data — same approach works for sites
 
-### SPARQL queries could not be executed
-
-The sandbox blocks `*.wikidata.org` (egress policy). The four SPARQL queries from the research brief could not run. However, web search verified the following.
-
-### CRITICAL: Q-IDs in research brief are ALL WRONG
-
-Every Q-ID in the brief's Query B points to an unrelated entity. Verified correct IDs:
-
-| Site | Brief's Q-ID | Correct Q-ID | Verified via |
-|---|---|---|---|
-| Deir el-Bahari | Q309440 | **Q373909** | wikidata.org search result |
-| Valley of the Kings | Q190173 | **Q1170512** | wikidata.org search result |
-| Karnak (temple complex) | Q193446 | **Q522862** | wikidata.org search result |
-| Saqqara | Q131818 | **Q192134** | wikidata.org search result |
-| Giza pyramid complex | Q182145 | **Q12508** | wikidata.org search result |
-| Abydos | Q170486 | **Q192268** | wikidata.org search result |
-| Thebes (ancient Egypt) | Q208517 | **Q101583** | wikidata.org search result |
-| Karnak (location) | — | **Q189392** | wikidata.org search result |
-| Deir el-Medina | Q214079 | needs lookup | — |
-| Medinet Habu | Q208164 | needs lookup | — |
-| Memphis | Q134180 | needs lookup | — |
-| Amarna | Q248338 | needs lookup | — |
-| Tanis | Q329584 | needs lookup | — |
-| Dendera | Q209267 | needs lookup | — |
-| Edfu | Q217050 | needs lookup | — |
-| Elephantine | Q272877 | needs lookup | — |
-| Lisht | Q250863 | needs lookup | — |
-
-The corrected queries must be run outside this sandbox to get actual counts.
-
-### What we know from secondary sources
-
-- Wikidata has individual entries for KV tombs (e.g., Q835309 = KV62/Tutankhamun, Q1348082 = KV5)
-- Valley of the Kings (Q1170512) has `P361` (part-of) relationships to individual tomb items
-- `skos:altLabel` provides alternate English spellings — the pharaoh fetch script already uses this pattern
-- Cross-references available: TM IDs (P1598), Pleiades IDs (P1584), GeoNames IDs (P1566)
-- The `P31/P279*` subclass traversal for Q839954 (archaeological site) filtered to Q79 (Egypt) should yield hundreds of sites
-
-### Recommended corrected queries
-
-**Query A** (site count) — simplify to avoid timeout:
-```sparql
-SELECT (COUNT(?site) AS ?count)
-WHERE {
-  ?site wdt:P31/wdt:P279* wd:Q839954 .
-  ?site wdt:P17 wd:Q79 .
-}
-```
-
-**Query B** (canary sites) — use corrected Q-IDs above.
-
-**Query C** (KV tombs) — use `wd:Q1170512` not `wd:Q190173`.
-
-### Value proposition
+### What it offers
 
 - **CC0 license** — no restrictions whatsoever
 - **Tomb-level granularity** — individual KV, QV, TT entries with occupant data
-- **Alt-labels** — variant spellings in English feed the aliases array
-- **Cross-reference hub** — bridges to TM, Pleiades, GeoNames
-- **Existing integration pattern** — fetch.py template in the repo
+- **Alt-labels** (`skos:altLabel`) — variant spellings in English for alias matching
+- **Cross-reference hub** — bridges to TM (P1598), Pleiades (P1584), GeoNames (P1566)
+- **Existing integration pattern** — `wikidata-pharaohs/fetch.py` already queries Wikidata
 
-### Acquisition plan
+### Why dropped
 
-1. Fix Q-IDs in queries, run outside sandbox
-2. Adapt `wikidata-pharaohs/fetch.py` pattern for sites
-3. Use Query A to get full Egyptian archaeological site list with cross-refs
-4. Use Query C pattern for tomb-level data in KV, QV
-5. Extract alt-labels for alias matching
+Wikidata's strengths (tomb-level granularity, TM cross-refs) don't address a current requirement. No museum in our corpus provides tomb-number provenance, and we don't need TM interoperability now. Adding a second source doubles the reconciliation complexity. If either requirement materializes, Wikidata is the obvious first source to revisit.
+
+SPARQL queries from the research brief could not be executed (sandbox blocks `*.wikidata.org`). The Q-IDs in the brief were all wrong (lookup errors by the brief author, not a Wikidata quality issue), but this is moot since we're not using it.
 
 ---
 
@@ -333,18 +274,22 @@ bibliographies: [{name, cites: [{author, title, date, pages, ...}]}]
 user_notes (HTML, may contain hieroglyphic Unicode)
 ```
 
+### TM cross-references (corrected finding)
+
+Initial research incorrectly reported TopBib had no cross-references. Re-examination found **464 unique TM GeoIDs** as structured JSON in `modern_names[].sources[]`, `ancient_names[].sources[]`, and `related_places[].sources[]`. Also 106 TLA (Thesaurus Linguae Aegyptiae) cross-refs. These are first-class structured fields, not embedded HTML links.
+
 ### Why not primary
 
 - It's a bibliography, not a gazetteer — tells you where things were *published*, not where they *are*
-- Geolocation data is gated behind auth (`/geo/list` requires login)
-- No TM IDs, no Pleiades IDs, no GeoNames IDs
-- No cross-references to other gazetteers
+- Bulk geolocation data gated behind auth (`/geo/list` requires login), though 861 nodes carry lat/lng in the public tree
+- No Pleiades IDs, no GeoNames IDs (TM cross-refs are the only external identifiers)
 - Incomplete digitization (TT100 missing, many sections sparse)
 - No visible license — legal risk
+- Undocumented API with no CORS — may not be intended for external consumption
 
 ### Potential future use
 
-Could enrich artifact records with "published in PM vol.X p.Y" references. Not useful for site authority.
+Best available TM bridge if interoperability with Trismegistos becomes a requirement — pending license clarification with the Griffith Institute. Could also enrich artifact records with "published in PM vol.X p.Y" references.
 
 ---
 
@@ -395,7 +340,7 @@ Wikidata provides the same KV tomb identifiers and basic metadata under CC0. TMP
 | **Total Egypt sites** | 2,061 (~1,013 with broadened filter) | Unknown (query blocked) | 481 | 6,279 nodes (861 geolocated, 499 with TM) | ~65 |
 | **License** | **CC BY 4.0** | **CC0** | CC BY-NC-SA | No visible terms | ARCE copyright |
 | **API** | REST JSON, no auth | SPARQL, no auth | REST JSON, no auth | Undocumented JSON, partial auth | None |
-| **Acquisition effort** | ~855 HTTP requests, 1hr scripting | Adapt existing fetch.py, 2hr | ~482 HTTP requests, 1hr | ~6,280 requests, legal risk | Dead end |
+| **Acquisition effort** | 2,082 HTTP requests, 1hr scripting | Adapt existing fetch.py, 2hr | ~482 HTTP requests, 1hr | ~6,280 requests, legal risk | Dead end |
 
 ---
 
@@ -409,11 +354,11 @@ Wikidata provides the same KV tomb identifiers and basic metadata under CC0. TMP
 - `reconciled.jsonl` — normalized to site authority schema
 
 **Steps:**
-1. `GET /search.json?q=*&fq=ancestors:2042786&limit=100&offset=0` — paginate through 21 pages (2,061 results)
-2. For each result, `GET /place/{gazId}` with `Accept: application/json` for full record
-3. Filter client-side by `types` containing `archaeological-site`, `archaeological-area`, or `landform` (~1,013 records). The broader filter is needed because iDAI misclassifies some sites — e.g., Qubbet el-Hawa (a major Old Kingdom necropolis) is typed as `landform`. Genuine geographic features (wadis, gebels) included by the broader filter won't match any provenance string, so they're harmless.
+1. `GET /search.json?q=*&fq=ancestors:2042786&limit=100&offset=0` — paginate through 21 pages to get all 2,061 Egyptian place IDs
+2. For each of the 2,061 results, `GET /place/{gazId}` with `Accept: application/json` for full record
+3. Filter client-side by `types` containing `archaeological-site`, `archaeological-area`, or `landform`. The broader filter is needed because iDAI misclassifies some sites — e.g., Qubbet el-Hawa (a major Old Kingdom necropolis) is typed as `landform`. Genuine geographic features (wadis, gebels) included by the broader filter won't match any provenance string, so they're harmless. Records can have multiple types (e.g., Amarna is both `archaeological-site` and `populated-place`), so exact count after dedup needs to be determined at acquisition time.
 4. Extract: display name, all alternate names (multilingual), coordinates, parent/ancestor hierarchy, GeoNames/Pleiades cross-refs
-5. Total: ~1,013 HTTP requests. No rate limiting detected. ~1 hour of scripting, ~5 minutes of runtime.
+5. Total: 2,082 HTTP requests (21 pagination + 2,061 place fetches). No rate limiting detected. ~1 hour of scripting, ~5 minutes of runtime.
 
 **Schema for `sites.json` entries:**
 ```json
@@ -440,8 +385,8 @@ iDAI has only 5 tombs under Valley of the Kings (KV 2, KV 11, KV 17, plus two ot
 | Source | Why dropped |
 |---|---|
 | **TM Places** | Papyrological bias. Built from documentary attestations, not archaeological provenance. Pharaonic sites are present but subsumed under coarse toponyms (e.g., Deir el-Bahari, Valley of the Kings, and Medinet Habu all lumped into TM Geo 1341 "Memnoneia"). Granularity is too coarse to resolve museum provenance strings. |
-| **Wikidata** | Messy data quality. Q-IDs in research brief were all wrong. Could revisit for tomb granularity if needed. |
-| **PAThs** | CC BY-NC-SA license creates a permanent ceiling on commercial use. Its unique value (TM GeoID cross-refs) is moot since we're dropping TM Places. EU sui generis database rights may apply to substantial extraction (needs legal review). |
+| **Wikidata** | Adds complexity as a second source. Its unique strengths (tomb-level granularity, TM/Pleiades cross-refs) don't address current requirements. First source to revisit if tomb-number provenance or cross-gazetteer interoperability becomes needed. |
+| **PAThs** | CC BY-NC-SA license creates a permanent ceiling on commercial use. EU sui generis database rights may apply to substantial extraction (needs legal review). If license were permissive, its 358 TM GeoIDs would be valuable for cross-referencing. |
 | **TopBib** | Bibliographic index, not a site gazetteer. No visible license. However, re-examination found 464 unique TM GeoIDs as structured JSON cross-references across 499 geolocated records, plus 106 TLA cross-refs. If interoperability with Trismegistos or other digital Egyptology infrastructure becomes a requirement, TopBib is the best available TM bridge — pending license clarification with the Griffith Institute. |
 | **Theban Mapping Project** | Offline (403/503), no API, ARCE copyright, blocks crawlers. |
 
