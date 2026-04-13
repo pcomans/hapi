@@ -82,7 +82,8 @@ def _parse_dynasty_header(line: str) -> dict | None:
         "Twenty-sixth": 26, "Twenty-seventh": 27, "Twenty-eighth": 28,
         "Twenty-ninth": 29, "Thirtieth": 30, "Thirty-first": 31,
     }
-    for word, num in ordinals.items():
+    # Check longest names first so "Twenty-first" matches before "First"
+    for word, num in sorted(ordinals.items(), key=lambda x: -len(x[0])):
         if word.lower() in label.lower():
             return {"label": label, "number": num}
 
@@ -333,10 +334,14 @@ def _parse_name_cards(section_lines: list[str]) -> list[dict]:
 
         # Strip escaped asterisks from pharaoh.se's retroactive-attribution markers
         # (e.g. "Meni\*" → "Meni", "Khufu\*" → "Khufu")
+        # Strip markdown italic underscores from epithets
+        # (e.g. "User Maat Ra, _setep en Ra_" → "User Maat Ra, setep en Ra")
         if name:
             name = name.rstrip("*").rstrip("\\").strip()
+            name = re.sub(r"_([^_]+)_", r"\1", name)
         if transliteration:
             transliteration = transliteration.rstrip("*").rstrip("\\").strip()
+            transliteration = re.sub(r"_([^_]+)_", r"\1", transliteration)
 
         cards.append({
             "name": name,
