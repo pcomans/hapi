@@ -70,7 +70,6 @@ if [ "$IS_GIT_PUSH" = true ] || [ "$IS_PR_CREATE" = true ]; then
 HEREDOC
     exit 0
   fi
-  MESSAGES="$MESSAGES\n\nAfter this push, verify docs/mvp-tasks.md accurately reflects the current state of all tasks affected by this branch."
 fi
 
 # Escape for JSON
