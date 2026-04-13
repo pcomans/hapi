@@ -220,6 +220,8 @@ def _parse_intro(lines: list[str]) -> dict:
             info["alt_labels_from_page"] = [a.strip() for a in raw.split(",") if a.strip()]
 
         # Predecessor/successor from the info table
+        # Pharaoh.se has a typo: "Precedessor" instead of "Predecessor".
+        # The regex accommodates both spellings.
         pred_match = re.search(
             r"Prec?edec?e?ssor.*?\[([^\]]+)\]",
             line,
