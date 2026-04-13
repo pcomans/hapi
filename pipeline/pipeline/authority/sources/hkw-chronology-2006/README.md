@@ -82,7 +82,7 @@ each round.
   expanded one-ruler-per-entry; that's a reconciliation decision
 - **`"Osorkon III, Takelot III"`** is shown with `ca. 780 ± 20` — a
   midpoint with symmetric uncertainty rather than a range. Claude's
-  pass interprets this as `start_bce: -800, end_bce: -760,
+  pass interprets this as `start_year: -800, end_year: -760,
   uncertainty_plus_years: 20`. This is an interpretation, not a
   verbatim reading; reconciliation should verify
 - **`"Dyn. 8" ruler Neferirkare'`** — the PDF text layer and visual
@@ -101,9 +101,9 @@ each round.
 All rows share a discriminator `kind` field:
 
 ```json
-{"kind": "period",  "label": "Old Kingdom",   "start_bce": -2543, "end_bce": -2120, "approximate": true,  "uncertainty_plus_years": 25, "page": 490}
-{"kind": "dynasty", "number": 4, "label": "Dyn. 4",               "start_bce": -2543, "end_bce": -2436, "approximate": true,  "uncertainty_plus_years": 25, "parent_period": "Old Kingdom", "page": 490}
-{"kind": "ruler",   "display": "Khufu", "greek_form": "Cheops",   "prenomen": null,   "start_bce": -2509, "end_bce": -2483, "approximate": false, "uncertainty_plus_years": 25, "dynasty": 4, "page": 491, "note": null}
+{"kind": "period",  "label": "Old Kingdom",   "start_year": -2543, "end_year": -2120, "approximate": true,  "uncertainty_plus_years": 25, "page": 490}
+{"kind": "dynasty", "number": 4, "label": "Dyn. 4",               "start_year": -2543, "end_year": -2436, "approximate": true,  "uncertainty_plus_years": 25, "parent_period": "Old Kingdom", "page": 490}
+{"kind": "ruler",   "display": "Khufu", "greek_form": "Cheops",   "prenomen": null,   "start_year": -2509, "end_year": -2483, "approximate": false, "uncertainty_plus_years": 25, "dynasty": 4, "page": 491, "note": null}
 ```
 
 ### Field semantics
@@ -121,7 +121,7 @@ All rows share a discriminator `kind` field:
   `"Menkheperre"` for Thutmose III). Multiple prenomen variants
   separated by `/` in the PDF are preserved as a single string with
   `/` as separator. `null` when absent
-- `start_bce` / `end_bce` — negative integers (2543 BCE → `-2543`).
+- `start_year` / `end_year` — negative integers (2543 BCE → `-2543`).
   `null` when the PDF shows `?` for that bound
 - `approximate` — `true` if column 2 has `ca.` for this row
 - `uncertainty_plus_years` — the `+N` superscript (25, 16, 3, or
