@@ -387,12 +387,12 @@ Wikidata provides the same KV tomb identifiers and basic metadata under CC0. TMP
 | **Canary resolution** | 10/10 tested | Not runnable (sandbox) but sites confirmed to exist | 5/7 major sites + 111 Theban sub-sites | Not tested (bibliographic) | N/A (offline) |
 | **Coordinates** | Yes, confidence-scored, some with GeoJSON polygons | Yes | 83% coverage | Gated behind auth | N/A |
 | **Alternate names** | Exceptional (21+ per site, multilingual, ancient) | Good (skos:altLabel in English) | Good (Egyptian, Greek, Coptic, Arabic, English) | Modern + ancient names | N/A |
-| **TM cross-refs** | **NO** | Yes (P1598) | **YES — 74% coverage** (unique) | No | N/A |
+| **TM cross-refs** | **NO** | Yes (P1598) | **YES — 74% coverage** (unique) | **YES — 464 unique TM GeoIDs** (structured JSON) | N/A |
 | **Pleiades cross-refs** | Some major sites | Yes (P1584) | 68% coverage | No | N/A |
 | **Wikidata cross-refs** | No | N/A (is Wikidata) | No | No | N/A |
 | **Hierarchy** | Excellent (country > governorate > site > monument) | Part-of (P361) relationships | Parent site references | Excellent (PM topographic structure) | N/A |
 | **Tomb granularity** | Sub-monument level (individual chapels) | Yes (individual KV, TT entries) | TT/KV numbers in Theban sub-sites | Some TT entries | Would have KV |
-| **Total Egypt sites** | 2,061 (854 archaeological) | Unknown (query blocked) | 481 | 6,279 nodes (bibliographic) | ~65 |
+| **Total Egypt sites** | 2,061 (~1,013 with broadened filter) | Unknown (query blocked) | 481 | 6,279 nodes (861 geolocated, 499 with TM) | ~65 |
 | **License** | **CC BY 4.0** | **CC0** | CC BY-NC-SA | No visible terms | ARCE copyright |
 | **API** | REST JSON, no auth | SPARQL, no auth | REST JSON, no auth | Undocumented JSON, partial auth | None |
 | **Acquisition effort** | ~855 HTTP requests, 1hr scripting | Adapt existing fetch.py, 2hr | ~482 HTTP requests, 1hr | ~6,280 requests, legal risk | Dead end |
@@ -411,9 +411,9 @@ Wikidata provides the same KV tomb identifiers and basic metadata under CC0. TMP
 **Steps:**
 1. `GET /search.json?q=*&fq=ancestors:2042786&limit=100&offset=0` — paginate through 21 pages (2,061 results)
 2. For each result, `GET /place/{gazId}` with `Accept: application/json` for full record
-3. Filter client-side by `types` containing `archaeological-site` (854 records)
+3. Filter client-side by `types` containing `archaeological-site`, `archaeological-area`, or `landform` (~1,013 records). The broader filter is needed because iDAI misclassifies some sites — e.g., Qubbet el-Hawa (a major Old Kingdom necropolis) is typed as `landform`. Genuine geographic features (wadis, gebels) included by the broader filter won't match any provenance string, so they're harmless.
 4. Extract: display name, all alternate names (multilingual), coordinates, parent/ancestor hierarchy, GeoNames/Pleiades cross-refs
-5. Total: ~855 HTTP requests. No rate limiting detected. ~1 hour of scripting, ~5 minutes of runtime.
+5. Total: ~1,013 HTTP requests. No rate limiting detected. ~1 hour of scripting, ~5 minutes of runtime.
 
 **Schema for `sites.json` entries:**
 ```json
@@ -439,10 +439,10 @@ iDAI has only 5 tombs under Valley of the Kings (KV 2, KV 11, KV 17, plus two ot
 
 | Source | Why dropped |
 |---|---|
-| **TM Places** | Papyrological bias. Built from documentary attestations, not archaeological provenance. Pharaonic sites that dominate museum provenance strings are absent or subsumed. Structurally misaligned with our use case. |
+| **TM Places** | Papyrological bias. Built from documentary attestations, not archaeological provenance. Pharaonic sites are present but subsumed under coarse toponyms (e.g., Deir el-Bahari, Valley of the Kings, and Medinet Habu all lumped into TM Geo 1341 "Memnoneia"). Granularity is too coarse to resolve museum provenance strings. |
 | **Wikidata** | Messy data quality. Q-IDs in research brief were all wrong. Could revisit for tomb granularity if needed. |
 | **PAThs** | CC BY-NC-SA license creates a permanent ceiling on commercial use. Its unique value (TM GeoID cross-refs) is moot since we're dropping TM Places. EU sui generis database rights may apply to substantial extraction (needs legal review). |
-| **TopBib** | Bibliographic index, not a site gazetteer. No visible license. |
+| **TopBib** | Bibliographic index, not a site gazetteer. No visible license. However, re-examination found 464 unique TM GeoIDs as structured JSON cross-references across 499 geolocated records, plus 106 TLA cross-refs. If interoperability with Trismegistos or other digital Egyptology infrastructure becomes a requirement, TopBib is the best available TM bridge — pending license clarification with the Griffith Institute. |
 | **Theban Mapping Project** | Offline (403/503), no API, ARCE copyright, blocks crawlers. |
 
 ---
