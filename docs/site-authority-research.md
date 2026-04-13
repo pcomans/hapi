@@ -1,7 +1,7 @@
 # Site Authority Sources: Research Findings
 
 **Date:** 2026-04-13
-**Context:** ADR-012 designated TM Places as the sole site authority. Egyptologist review revealed TM Places has papyrological bias — pharaonic archaeological sites are absent or subsumed. This document reports live research into five candidate supplementary/replacement sources.
+**Context:** ADR-012 designated TM Places as the sole site authority. Egyptologist review revealed TM Places has papyrological bias — pharaonic archaeological sites are subsumed under coarse toponyms (e.g., Deir el-Bahari, Valley of the Kings, and Medinet Habu all lumped into TM Geo 1341 "Memnoneia"), making them unusable for resolving museum provenance strings. This document reports live research into five candidate replacement sources.
 
 ## Executive Summary
 
@@ -15,13 +15,13 @@
 | 4 | **TopBib** | Not needed. Bibliographic index, not a site gazetteer. Undocumented JSON API exists if bibliography enrichment becomes a future requirement. |
 | 5 | **Theban Mapping Project** | Dead end. Site returning 403/503, no API, restrictive copyright. |
 
-TM Places is dropped as a site authority source. Its papyrological bias (built from documentary attestations, not archaeological provenance) makes it structurally misaligned with museum artifact data. The pharaonic sites that dominate museum provenance strings — Deir el-Bahari, Valley of the Kings, Karnak, Deir el-Medina — are absent or subsumed under broader toponyms in TM Places. iDAI.gazetteer covers all of them natively.
+TM Places is dropped as a site authority source. Its papyrological bias (built from documentary attestations, not archaeological provenance) means pharaonic sites are present but subsumed under coarse toponyms — Deir el-Bahari, Valley of the Kings, Medinet Habu, and Deir el-Medina are all lumped into a single entry (TM Geo 1341, "Memnoneia - Djeme / Thebes west"). You cannot resolve a Met provenance string like "Thebes, Deir el-Bahri" to a specific TM place because TM Places does not distinguish these sites from each other. iDAI.gazetteer models them as separate entries with distinct coordinates and hierarchy.
 
 ---
 
 ## 1. iDAI.gazetteer (German Archaeological Institute)
 
-**Verdict: ACQUIRE FIRST. Best overall source.**
+**Verdict: SOLE SITE AUTHORITY.**
 
 ### Access
 
@@ -52,24 +52,26 @@ TM Places is dropped as a site authority source. Its papyrological bias (built f
 | Deir el-Bahari | 2110510 | 32.608, 25.738 | GeoNames 361834, Toponyms-ID 71 |
 | Valley of the Kings | 2096884 | 32.602, 25.740 | GeoNames 353494, GND 4078137-9 |
 | Karnak | 2178702 | 32.654, 25.718 | GeoNames 360964, Pleiades 786050 |
-| Saqqara | 2042907 | 31.217, 29.850 | GeoNames 349608, Pleiades 796289136 |
+| Saqqara | 2042907 | 31.217, 29.850 | GeoNames 349608, Pleiades 796289136 (sub-feature; canonical is 737148) |
 | Thebes | 2042921 | 32.638, 25.692 | GeoNames 347342, Pleiades 786017 |
 | Giza | 2089516 | 31.130, 29.980 | GeoNames 360995 |
 | Abydos | 2412478 | 31.922, 26.184 | GeoNames 445007 |
-| Amarna | 2296218 | 30.900, 27.700 | GeoNames 347585, Pleiades 149576487 |
+| Amarna | 2296218 | 30.900, 27.700 | GeoNames 347585, Pleiades 149576487 (sub-feature; canonical is 589957) |
 | Medinet Habu | 2042876 | 32.600, 25.700 | GeoNames 8224862 |
 | Elephantine | 2751511 | 32.885, 24.085 | GeoNames 359790 |
 
 ### Standout feature: multilingual alternate names
 
-The Deir el-Bahari record alone has 21 alternate names across 10+ languages including:
-- Modern Arabic (script + transliterated)
+Records include rich multilingual name variants. Examples across the canary sites:
+- Modern Arabic (script + transliterated): e.g., "الدير البحري" for Deir el-Bahari
 - Ancient Egyptian (transliterated, marked `ancient: true`)
-- Ancient Greek (e.g., "Diospolis" for Thebes)
-- Coptic (e.g., "Djeme" for Medinet Habu)
-- Meaning translations (e.g., "'northern monastery'" for Deir el-Bahari)
+- Ancient Greek: e.g., "Diospolis" for Thebes
+- Coptic: e.g., "Djeme" for Medinet Habu
+- Meaning translations: e.g., "'northern monastery'" for Deir el-Bahari
 
 This directly solves our mapper alias-matching problem — museums use wildly different spellings.
+
+**Caveat:** The canary sites tested are all Upper Egyptian. Delta and Middle Egypt coverage (Tell Basta, Naucratis, Hawara, Lahun) is unverified. The 854 archaeological-site count is promising but should be spot-checked for Delta sites before full acquisition.
 
 ### Hierarchy
 
@@ -439,7 +441,7 @@ iDAI has only 5 tombs under Valley of the Kings (KV 2, KV 11, KV 17, plus two ot
 |---|---|
 | **TM Places** | Papyrological bias. Built from documentary attestations, not archaeological provenance. Pharaonic sites that dominate museum provenance strings are absent or subsumed. Structurally misaligned with our use case. |
 | **Wikidata** | Messy data quality. Q-IDs in research brief were all wrong. Could revisit for tomb granularity if needed. |
-| **PAThs** | CC BY-NC-SA license creates a permanent ceiling on commercial use. Its unique value (TM GeoID cross-refs) is moot since we're dropping TM Places. EU sui generis database rights make even bridge-table extraction a derivative work. |
+| **PAThs** | CC BY-NC-SA license creates a permanent ceiling on commercial use. Its unique value (TM GeoID cross-refs) is moot since we're dropping TM Places. EU sui generis database rights may apply to substantial extraction (needs legal review). |
 | **TopBib** | Bibliographic index, not a site gazetteer. No visible license. |
 | **Theban Mapping Project** | Offline (403/503), no API, ARCE copyright, blocks crawlers. |
 
