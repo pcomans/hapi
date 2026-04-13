@@ -66,6 +66,8 @@ Run the appropriate commands after any change:
 | Any web code | `cd web && pnpm typecheck && pnpm lint` |
 | Web components | `cd web && pnpm test` |
 | Anything before commit | `cd pipeline && uv run pytest && cd ../web && pnpm typecheck && pnpm lint` |
+| Any ADR change | Check `docs/mvp-tasks.md` and `docs/normalization-plan.md` for stale references to the old decision |
+| Any authority source change | Update the source list in `docs/mvp-tasks.md` task 3.1 and the ADR-012 table + layout section |
 
 ## Pull request workflow
 
