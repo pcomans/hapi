@@ -394,15 +394,9 @@ iDAI has only 5 tombs under Valley of the Kings (KV 2, KV 11, KV 17, plus two ot
 
 ## Impact on ADR-012
 
-ADR-012 must be amended. The current decision states:
+ADR-012 has been amended to reflect this decision. The Sites row now designates iDAI.gazetteer as the sole site authority (CC BY 4.0), replacing TM Places + Theban Mapping Project. The layout section lists `idai-gazetteer/raw.json` as the raw source file.
 
-> Trismegistos Geo is the sole site authority. [...] + Theban Mapping Project (KV and TT codes)
-
-This should change to:
-
-> iDAI.gazetteer is the sole site authority. TM Places is dropped — its papyrological bias makes it structurally misaligned with museum artifact provenance. The Theban Mapping Project is dropped — its data is unavailable and its copyright is restrictive.
-
-The `_source` block for `sites.json`:
+The `_source` block for `sites.json` when it is created:
 ```json
 {
   "_source": {
