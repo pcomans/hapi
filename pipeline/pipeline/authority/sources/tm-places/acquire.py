@@ -28,7 +28,6 @@ FIELDS = [
     "nomos_code",
     "name_latin",
     "name_standard",
-    "full_name",
     "status",
     "ethnicon",
     "location",
@@ -36,9 +35,7 @@ FIELDS = [
     "unicode_egyptian",
     "unicode_coptic",
     "begin_date",
-    "begin_date_format",
     "end_date",
-    "end_date_format",
     "provincia",
     "coordinates",
 ]
@@ -63,11 +60,8 @@ def fetch_dump() -> str:
 def parse_coordinates(coord_str: str) -> tuple[float | None, float | None]:
     """Parse 'lat,lon' coordinate string into (latitude, longitude) floats.
 
-    Note: the bulk CSV dump does not populate the coordinates field — it is
-    always empty. Coordinates are available via the GeoResponder API
-    (georesponder.php?id=<TM_GEO_ID>) but fetching them per-record is out of
-    scope for source acquisition. Leave as null; enrich during sites.json
-    curation (task 3.2) if needed for map view (Milestone 6).
+    TM includes coordinates for a subset of records; many entries (particularly
+    in Egypt) have an empty coordinates field. Leave as null when absent.
     """
     if not coord_str or not coord_str.strip():
         return None, None

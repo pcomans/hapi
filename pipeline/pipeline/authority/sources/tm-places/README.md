@@ -46,7 +46,7 @@ One JSON object per line. `kind` is always `"site"`.
 |---|---|---|
 | `tm_id` | `id` | Unique TM Geo ID. Stable across TM releases. |
 | `name_standard` | `name_standard` | Trismegistos standard notation. Primary match key. |
-| `name_latin` | `name_latin` | Latin notation (ISO 215). Pipe-delimited variants. |
+| `name_latin` | `name_latin` | Latin notation (ISO 215). Multiple variants separated by ` - ` (e.g. `"Alexandria - Alexandrea"`). |
 | `name_greek` | `unicode_greek` | Greek notation in Unicode (ISO 200). |
 | `name_egyptian` | `unicode_egyptian` | Demotic/hieroglyphic notation in Unicode (ISO 070). |
 | `name_coptic` | `unicode_coptic` | Coptic notation in Unicode (ISO 204). |
@@ -65,14 +65,15 @@ One JSON object per line. `kind` is always `"site"`.
 
 ## Known data-quality issues
 
-- **Coordinates sparse**: Many Egyptian records have null coordinates even
-  though TM Geo has them — they are available via the GeoResponder API
-  (`/dataservices/georesponder/georesponder.php?id=<TM_GEO_ID>`) but not
-  in the bulk CSV export. Coordinates should be enriched per-record during
-  sites.json curation (task 3.2) if needed for map view (Milestone 6).
+- **Coordinates sparse**: The bulk CSV includes coordinates for a subset of
+  records (e.g. Alexandria, Meroe, Napata have them; Thebes and Memphis do
+  not). TM Geo has fuller coverage via the GeoResponder API
+  (`/dataservices/georesponder/georesponder.php?id=<TM_GEO_ID>`), which can
+  be used to enrich missing coordinates during sites.json curation (task 3.2)
+  if needed for map view (Milestone 6).
 - **`begin_date` / `end_date` = 0**: TM uses 0 as a sentinel for "no
   attestation date known". Converted to `null` in this JSONL.
-- **`name_latin` pipe-delimited variants**: e.g. `"Alexandria - Alexandrea"`.
+- **`name_latin` ` - ` separated variants**: e.g. `"Alexandria - Alexandrea"`.
   The aliases matcher in `enrich_sites` must split on ` - ` to populate
   the `aliases` array in sites.json.
 - **`status` verbose strings**: e.g.
@@ -85,9 +86,13 @@ One JSON object per line. `kind` is always `"site"`.
   (64,858 records). We keep only `country ∈ {"Egypt", "Sudan"}` since
   artifact provenance in these collections is overwhelmingly from the Nile
   Valley and ancient Nubia.
-- **All TM fields included**: All 19 available dump fields are requested.
-  `pleiades_id` and `geonames` fields are commented out in the form HTML
-  but can be added if TM exposes them in a future release.
+- **Fields requested vs. emitted**: `acquire.py` requests 16 of the 19
+  available dump fields. The three omitted — `full_name` (a derived
+  concatenation of country + nomos + name), `begin_date_format`, and
+  `end_date_format` (human-readable strings derived from the date integers)
+  — are redundant with other fields and excluded from the JSONL output.
+  `pleiades_id` and `geonames` fields are commented out in the TM form HTML
+  but can be added to the request if TM exposes them in a future release.
 - **Pleiades IDs deferred**: Available via GeoResponder API `links.close
   matches.Pleiades`, not in the bulk CSV. Add during sites.json curation.
 - **No filtering by status**: Villages, cities, nomes, rivers, and oases
