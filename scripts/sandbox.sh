@@ -3,20 +3,22 @@ set -euo pipefail
 
 # Launch a Docker AI Sandbox for Hapi development.
 #
-# The sandbox is an isolated container with its own Docker daemon,
-# filesystem, and network. Claude Code runs inside with full permissions
-# (--dangerously-skip-permissions) — safe because nothing on your host
-# is at risk. The repo is cloned fresh from GitHub inside the sandbox.
+# The sandbox is a fully isolated container — its own filesystem, Docker
+# daemon, and network. Claude Code runs with full permissions and Agent
+# Teams enabled. Nothing on the host is mounted or exposed.
+#
+# The repo is cloned from GitHub inside the sandbox, not mounted from
+# the host. When you `sbx rm`, everything is gone.
 #
 # Prerequisites:
 #   - Docker Desktop with the sbx plugin (https://docs.docker.com/ai/sandboxes/)
 #   - gh CLI authenticated (https://cli.github.com/)
 #   - Claude Max subscription (no API key needed)
+#   - sbx network policy set to Open (`sbx login` → choose Open)
 #
 # Usage:
 #   ./scripts/sandbox.sh              # launch sandbox named "hapi"
 #   ./scripts/sandbox.sh my-sandbox   # launch with a custom name
-#   SBX_SKIP_SECRET=1 ./scripts/sandbox.sh  # skip GitHub secret setup
 
 SANDBOX_NAME="${1:-hapi}"
 
@@ -37,10 +39,8 @@ gh auth status  >/dev/null 2>&1 || error "gh CLI not authenticated. Run: gh auth
 
 # --- GitHub secret ---
 
-if [[ "${SBX_SKIP_SECRET:-}" != "1" ]]; then
-    info "Setting GitHub token for sandbox access to private repo..."
-    sbx secret set -g github -t "$(gh auth token)"
-fi
+info "Setting GitHub token for sandbox access to private repo..."
+sbx secret set -g github -t "$(gh auth token)"
 
 # --- Check if sandbox already exists ---
 
@@ -63,16 +63,16 @@ if sbx ls 2>/dev/null | grep -q "$SANDBOX_NAME"; then
     esac
 fi
 
-# --- Launch ---
+# --- Launch from an empty temp dir so nothing on the host is mounted ---
 
-info "Creating sandbox '$SANDBOX_NAME'..."
-info "You'll authenticate via browser (Claude Max subscription)."
+WORKSPACE=$(mktemp -d)
+trap 'rmdir "$WORKSPACE" 2>/dev/null || true' EXIT
+
+info "Creating sandbox '$SANDBOX_NAME' (no host mount)..."
+info "Authenticate via browser when prompted (Claude Max subscription)."
 echo ""
 
-sbx run --name "$SANDBOX_NAME" claude
-
-# The sandbox is now running and attached. When you detach or exit,
-# the script continues here.
+(cd "$WORKSPACE" && sbx run --name "$SANDBOX_NAME" claude)
 
 echo ""
 info "Sandbox '$SANDBOX_NAME' is running."
