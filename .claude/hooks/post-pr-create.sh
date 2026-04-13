@@ -58,9 +58,19 @@ if [ "$IS_PR_CREATE" = true ]; then
   MESSAGES="$MESSAGES\n\nYou just created PR #$PR_NUMBER. Before finishing, you MUST:\n1. Update the task list — mark completed tasks as done.\n2. Document learnings in docs/museum-sources/*.md or pipeline/CLAUDE.md.\n3. Wait for CI to pass and Copilot review, then reply to every comment."
 fi
 
-# After any push, remind agent to check MVP task list
+# After any push, verify MVP task list has been updated
 if [ "$IS_GIT_PUSH" = true ] || [ "$IS_PR_CREATE" = true ]; then
-  MESSAGES="$MESSAGES\n\nAfter this push, check docs/mvp-tasks.md for tasks that can now be marked complete (add ~~strikethrough~~ + checkmark + summary). Only mark tasks whose acceptance criteria are fully met by merged or in-PR work."
+  MVP_CHANGED=$(git diff origin/main...HEAD --name-only 2>/dev/null | grep -c 'docs/mvp-tasks.md')
+  if [ "$MVP_CHANGED" -eq 0 ]; then
+    cat <<HEREDOC
+{
+  "decision": "block",
+  "reason": "docs/mvp-tasks.md has not been updated on this branch. Before pushing, update the MVP task list to reflect any completed, dropped, or new tasks. If no MVP tasks are affected by this change, add a comment to the relevant task section explaining why."
+}
+HEREDOC
+    exit 0
+  fi
+  MESSAGES="$MESSAGES\n\nAfter this push, verify docs/mvp-tasks.md accurately reflects the current state of all tasks affected by this branch."
 fi
 
 # Escape for JSON
