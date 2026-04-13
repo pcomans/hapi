@@ -44,7 +44,7 @@ Column 1 for ruler rows contains:
 ## Column 3 (dates)
 
 - Dates are BCE. Store as negative integers: `2543 BCE → -2543`
-- A range `2543–2436` becomes `{start_bce: -2543, end_bce: -2436}`
+- A range `2543–2436` becomes `{start_year: -2543, end_year: -2436}`
 - A `?` on either bound becomes `null` for that field
 - The `+25`, `+16`, `+3` superscripts are the `uncertainty_plus_years`
   (25, 16, 3)
@@ -53,17 +53,17 @@ Column 1 for ruler rows contains:
   BC", "early 6th cent. BC", "late 4th cent. to 2nd third of 3rd cent.
   BC". For these:
   - If the date is a numeric range like "c. 885–835 BC", parse as
-    `{start_bce: -885, end_bce: -835, approximate: true}`
+    `{start_year: -885, end_year: -835, approximate: true}`
   - If the date is prose ("2nd half of 7th cent. BC"), leave
-    `start_bce` and `end_bce` null and put the prose in `note`
+    `start_year` and `end_year` null and put the prose in `note`
   - AD dates in IV.3 (late Meroitic rulers) become positive integers
 
 ## Output schema
 
 ```json
-{"kind": "period",  "label": "string", "start_bce": int|null, "end_bce": int|null, "approximate": bool, "uncertainty_plus_years": int|null, "page": int}
-{"kind": "dynasty", "number": int|null, "label": "string", "start_bce": int|null, "end_bce": int|null, "approximate": bool, "uncertainty_plus_years": int|null, "parent_period": "string", "page": int}
-{"kind": "ruler",   "display": "string", "greek_form": "string"|null, "alternative_reading": "string"|null, "prenomen": "string"|null, "start_bce": int|null, "end_bce": int|null, "approximate": bool, "uncertainty_plus_years": int|null, "dynasty": int|null, "page": int, "note": "string"|null}
+{"kind": "period",  "label": "string", "start_year": int|null, "end_year": int|null, "approximate": bool, "uncertainty_plus_years": int|null, "page": int}
+{"kind": "dynasty", "number": int|null, "label": "string", "start_year": int|null, "end_year": int|null, "approximate": bool, "uncertainty_plus_years": int|null, "parent_period": "string", "page": int}
+{"kind": "ruler",   "display": "string", "greek_form": "string"|null, "alternative_reading": "string"|null, "prenomen": "string"|null, "start_year": int|null, "end_year": int|null, "approximate": bool, "uncertainty_plus_years": int|null, "dynasty": int|null, "page": int, "note": "string"|null}
 ```
 
 For dynasty headings that are not plain integers (Hyksos, Theban

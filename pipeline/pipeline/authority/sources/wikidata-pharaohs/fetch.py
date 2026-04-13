@@ -223,35 +223,35 @@ def reconcile(records: list[dict]) -> list[dict]:
         dynasty_label = _parse_dynasty_label(rec["families"])
 
         # Prefer reign dates; fall back to birth/death
-        start_bce = rec["reign_start"]
-        end_bce = rec["reign_end"]
+        start_year = rec["reign_start"]
+        end_year = rec["reign_end"]
         approximate = False
-        if start_bce is None and end_bce is None:
+        if start_year is None and end_year is None:
             if rec["birth_year"] is not None or rec["death_year"] is not None:
-                start_bce = rec["birth_year"]
-                end_bce = rec["death_year"]
+                start_year = rec["birth_year"]
+                end_year = rec["death_year"]
                 approximate = True
 
         # Negate positive years (Wikidata data quality issue — some BCE dates
         # stored with '+' prefix). Log each case so it's auditable.
-        for date_val, date_name in [(start_bce, "start"), (end_bce, "end")]:
+        for date_val, date_name in [(start_year, "start"), (end_year, "end")]:
             if date_val is not None and date_val > 0:
                 print(
-                    f"  WARNING: {label} ({rec['qid']}): {date_name}_bce={date_val} "
+                    f"  WARNING: {label} ({rec['qid']}): {date_name}_year={date_val} "
                     f"is positive — negating to {-date_val}",
                     file=sys.stderr,
                 )
-        if start_bce is not None and start_bce > 0:
-            start_bce = -start_bce
-        if end_bce is not None and end_bce > 0:
-            end_bce = -end_bce
+        if start_year is not None and start_year > 0:
+            start_year = -start_year
+        if end_year is not None and end_year > 0:
+            end_year = -end_year
 
         # Fix inverted date ranges (Wikidata data quality issues)
-        if start_bce is not None and end_bce is not None and start_bce > end_bce:
-            start_bce, end_bce = end_bce, start_bce
+        if start_year is not None and end_year is not None and start_year > end_year:
+            start_year, end_year = end_year, start_year
 
         notes = []
-        if approximate and (start_bce is not None or end_bce is not None):
+        if approximate and (start_year is not None or end_year is not None):
             notes.append("Dates from birth/death, not reign")
         if rec["replaces"]:
             notes.append(f"Replaces: {rec['replaces']}")
@@ -267,8 +267,8 @@ def reconcile(records: list[dict]) -> list[dict]:
             "display": label,
             "alt_labels": alt_labels if alt_labels else None,
             "prenomen": None,
-            "start_bce": start_bce,
-            "end_bce": end_bce,
+            "start_year": start_year,
+            "end_year": end_year,
             "approximate": approximate,
             "uncertainty_plus_years": None,
             "dynasty": dynasty,
@@ -280,7 +280,7 @@ def reconcile(records: list[dict]) -> list[dict]:
     # Sort by dynasty then start date
     reconciled.sort(key=lambda r: (
         r["dynasty"] if r["dynasty"] is not None else 999,
-        r["start_bce"] if r["start_bce"] is not None else 9999,
+        r["start_year"] if r["start_year"] is not None else 9999,
     ))
 
     return reconciled
@@ -314,7 +314,7 @@ def main():
     # Stats
     has_dynasty = sum(1 for r in reconciled if r["dynasty"] is not None)
     has_dates = sum(1 for r in reconciled
-                    if r["start_bce"] is not None or r["end_bce"] is not None)
+                    if r["start_year"] is not None or r["end_year"] is not None)
     has_alts = sum(1 for r in reconciled if r["alt_labels"] is not None)
 
     print(f"\nStats:")

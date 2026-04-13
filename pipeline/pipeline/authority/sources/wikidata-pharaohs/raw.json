@@ -42,6 +42,93 @@
     "replaced_by": null
   },
   {
+    "qid": "Q15150319",
+    "label": "Amenemhat Sénébef",
+    "description": "13th dynasty pharaoh",
+    "alt_labels": [
+      "Amenemhat Sonbef",
+      "Sonbef"
+    ],
+    "families": [
+      "Thirteenth Dynasty of Egypt"
+    ],
+    "periods": [],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": null,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q18288753",
+    "label": "Ânkhkarê",
+    "description": "Egyptian pharaoh of the 14th dynasty",
+    "alt_labels": [
+      "Aakara"
+    ],
+    "families": [
+      "Fourteenth Dynasty of Egypt"
+    ],
+    "periods": [],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": null,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q19901629",
+    "label": "Sharek",
+    "description": "Egyptian pharaoh",
+    "alt_labels": [
+      "Shalek"
+    ],
+    "families": [],
+    "periods": [
+      "Ancient Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": null,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q113564932",
+    "label": "Aknamkanon",
+    "description": "fictional character from Yu-Gi-Oh!",
+    "alt_labels": [
+      "Akhenamkhanen"
+    ],
+    "families": [],
+    "periods": [],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": null,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q136446547",
+    "label": "Milkyaton",
+    "description": "king of Kition and Idalion",
+    "alt_labels": [
+      "Melekyaton"
+    ],
+    "families": [],
+    "periods": [],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": null,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q2001184",
     "label": "Sewadjkare III",
     "description": "Egyptian pharaoh",
@@ -129,93 +216,6 @@
     "periods": [
       "Ancient Egypt"
     ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": null,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q15150319",
-    "label": "Amenemhat Sénébef",
-    "description": "13th dynasty pharaoh",
-    "alt_labels": [
-      "Amenemhat Sonbef",
-      "Sonbef"
-    ],
-    "families": [
-      "Thirteenth Dynasty of Egypt"
-    ],
-    "periods": [],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": null,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q18288753",
-    "label": "Ânkhkarê",
-    "description": "Egyptian pharaoh of the 14th dynasty",
-    "alt_labels": [
-      "Aakara"
-    ],
-    "families": [
-      "Fourteenth Dynasty of Egypt"
-    ],
-    "periods": [],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": null,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q19901629",
-    "label": "Sharek",
-    "description": "Egyptian pharaoh",
-    "alt_labels": [
-      "Shalek"
-    ],
-    "families": [],
-    "periods": [
-      "Ancient Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": null,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q113564932",
-    "label": "Aknamkanon",
-    "description": "fictional character from Yu-Gi-Oh!",
-    "alt_labels": [
-      "Akhenamkhanen"
-    ],
-    "families": [],
-    "periods": [],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": null,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q136446547",
-    "label": "Milkyaton",
-    "description": "king of Kition and Idalion",
-    "alt_labels": [
-      "Melekyaton"
-    ],
-    "families": [],
-    "periods": [],
     "reign_start": null,
     "reign_end": null,
     "birth_year": null,
@@ -2235,22 +2235,6 @@
     "replaced_by": null
   },
   {
-    "qid": "Q270394",
-    "label": "Mekh",
-    "description": "last predynastic Pharaoh",
-    "alt_labels": [],
-    "families": [],
-    "periods": [
-      "Ancient Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -4000,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
     "qid": "Q268647",
     "label": "Neheb",
     "description": "Egyptian ruler",
@@ -2271,22 +2255,17 @@
     "replaced_by": null
   },
   {
-    "qid": "Q318613",
-    "label": "Scorpion I",
-    "description": "predynastic Egypt pharaoh",
-    "alt_labels": [
-      "Horus Scorpion I"
-    ],
-    "families": [
-      "Protodynastic Period of Egypt"
-    ],
+    "qid": "Q270394",
+    "label": "Mekh",
+    "description": "last predynastic Pharaoh",
+    "alt_labels": [],
+    "families": [],
     "periods": [
-      "Predynastic Period of Egypt",
-      "Protodynastic Period of Egypt"
+      "Ancient Egypt"
     ],
     "reign_start": null,
     "reign_end": null,
-    "birth_year": -3500,
+    "birth_year": -4000,
     "death_year": null,
     "replaces": null,
     "replaced_by": null
@@ -2303,6 +2282,27 @@
     ],
     "periods": [
       "Predynastic Period of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -3500,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q318613",
+    "label": "Scorpion I",
+    "description": "predynastic Egypt pharaoh",
+    "alt_labels": [
+      "Horus Scorpion I"
+    ],
+    "families": [
+      "Protodynastic Period of Egypt"
+    ],
+    "periods": [
+      "Predynastic Period of Egypt",
+      "Protodynastic Period of Egypt"
     ],
     "reign_start": null,
     "reign_end": null,
@@ -2531,6 +2531,26 @@
     "replaced_by": null
   },
   {
+    "qid": "Q427309",
+    "label": "Horus Crocodile",
+    "description": "provisional name of a predynastic ruler, who might have ruled during the late Naqada III epoch",
+    "alt_labels": [
+      "Shendjw"
+    ],
+    "families": [
+      "Protodynastic Period of Egypt"
+    ],
+    "periods": [
+      "Ancient Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -3099,
+    "death_year": -3099,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q3140885",
     "label": "Double Falcon",
     "description": "ruler of Lower Egypt from Naqada III during the 32nd century BCE",
@@ -2549,26 +2569,6 @@
     "reign_end": null,
     "birth_year": -3099,
     "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q427309",
-    "label": "Horus Crocodile",
-    "description": "provisional name of a predynastic ruler, who might have ruled during the late Naqada III epoch",
-    "alt_labels": [
-      "Shendjw"
-    ],
-    "families": [
-      "Protodynastic Period of Egypt"
-    ],
-    "periods": [
-      "Ancient Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -3099,
-    "death_year": -3099,
     "replaces": null,
     "replaced_by": null
   },
@@ -2744,6 +2744,28 @@
     "replaced_by": null
   },
   {
+    "qid": "Q294266",
+    "label": "Khasekhemwy",
+    "description": "final king of the Second dynasty of Egypt",
+    "alt_labels": [
+      "Khasehemwy"
+    ],
+    "families": [
+      "Second Dynasty of Egypt"
+    ],
+    "periods": [
+      "Ancient Egypt",
+      "Early Dynastic Period of Egypt",
+      "Second Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -2800,
+    "death_year": -2700,
+    "replaces": "Sekhemib-Perenmaat",
+    "replaced_by": "Djoser"
+  },
+  {
     "qid": "Q174367",
     "label": "Djoser",
     "description": "ancient Egyptian pharaoh of the 3rd dynasty",
@@ -2842,28 +2864,6 @@
     "death_year": null,
     "replaces": null,
     "replaced_by": null
-  },
-  {
-    "qid": "Q294266",
-    "label": "Khasekhemwy",
-    "description": "final king of the Second dynasty of Egypt",
-    "alt_labels": [
-      "Khasehemwy"
-    ],
-    "families": [
-      "Second Dynasty of Egypt"
-    ],
-    "periods": [
-      "Ancient Egypt",
-      "Early Dynastic Period of Egypt",
-      "Second Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -2800,
-    "death_year": -2700,
-    "replaces": "Sekhemib-Perenmaat",
-    "replaced_by": "Djoser"
   },
   {
     "qid": "Q1034292",
@@ -3011,6 +3011,28 @@
     "replaced_by": "Djedefre"
   },
   {
+    "qid": "Q220320",
+    "label": "Khaba",
+    "description": "pharaoh of Ancient Egypt",
+    "alt_labels": [
+      "Hor-Khaba"
+    ],
+    "families": [
+      "Third Dynasty of Egypt"
+    ],
+    "periods": [
+      "Ancient Egypt",
+      "Old Kingdom of Egypt",
+      "Third Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -2700,
+    "death_year": -2700,
+    "replaces": "Sanakht",
+    "replaced_by": "Huni"
+  },
+  {
     "qid": "Q220244",
     "label": "Sanakht",
     "description": "Egyptian pharaoh",
@@ -3100,28 +3122,6 @@
     "death_year": -2700,
     "replaces": null,
     "replaced_by": null
-  },
-  {
-    "qid": "Q220320",
-    "label": "Khaba",
-    "description": "pharaoh of Ancient Egypt",
-    "alt_labels": [
-      "Hor-Khaba"
-    ],
-    "families": [
-      "Third Dynasty of Egypt"
-    ],
-    "periods": [
-      "Ancient Egypt",
-      "Old Kingdom of Egypt",
-      "Third Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -2700,
-    "death_year": -2700,
-    "replaces": "Sanakht",
-    "replaced_by": "Huni"
   },
   {
     "qid": "Q219917",
@@ -3216,26 +3216,6 @@
     "replaced_by": null
   },
   {
-    "qid": "Q220252",
-    "label": "Shepseskaf",
-    "description": "Egyptian pharaoh",
-    "alt_labels": [],
-    "families": [
-      "Fourth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Ancient Egypt",
-      "Fourth Dynasty of Egypt",
-      "Old Kingdom of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -2600,
-    "death_year": -2498,
-    "replaces": "Menkaure",
-    "replaced_by": "Userkaf"
-  },
-  {
     "qid": "Q220318",
     "label": "Bikheris",
     "description": "Egyptian pharaoh",
@@ -3268,6 +3248,26 @@
     "death_year": -2600,
     "replaces": null,
     "replaced_by": null
+  },
+  {
+    "qid": "Q220252",
+    "label": "Shepseskaf",
+    "description": "Egyptian pharaoh",
+    "alt_labels": [],
+    "families": [
+      "Fourth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Ancient Egypt",
+      "Fourth Dynasty of Egypt",
+      "Old Kingdom of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -2600,
+    "death_year": -2498,
+    "replaces": "Menkaure",
+    "replaced_by": "Userkaf"
   },
   {
     "qid": "Q1052959",
@@ -3412,6 +3412,22 @@
     "replaced_by": null
   },
   {
+    "qid": "Q885988",
+    "label": "Imhotep",
+    "description": "monarch",
+    "alt_labels": [
+      "Imhotep (pharaoh)"
+    ],
+    "families": [],
+    "periods": [],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -2300,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q320908",
     "label": "Merenre Nemtyemsaf II",
     "description": "Egyptian pharaoh",
@@ -3548,22 +3564,6 @@
     "label": "Hotep",
     "description": "Egyptian pharaoh",
     "alt_labels": [],
-    "families": [],
-    "periods": [],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -2300,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q885988",
-    "label": "Imhotep",
-    "description": "monarch",
-    "alt_labels": [
-      "Imhotep (pharaoh)"
-    ],
     "families": [],
     "periods": [],
     "reign_start": null,
@@ -4237,12 +4237,11 @@
     "replaced_by": null
   },
   {
-    "qid": "Q1658019",
-    "label": "Ijibchentre",
-    "description": "Egyptian or Nubian ruler",
+    "qid": "Q482327",
+    "label": "Qakare Ini",
+    "description": "ancient Egyptian or Nubian ruler",
     "alt_labels": [
-      "Ibkhenetre",
-      "Iyibkhentre"
+      "Intef"
     ],
     "families": [],
     "periods": [
@@ -4256,11 +4255,12 @@
     "replaced_by": null
   },
   {
-    "qid": "Q482327",
-    "label": "Qakare Ini",
-    "description": "ancient Egyptian or Nubian ruler",
+    "qid": "Q1658019",
+    "label": "Ijibchentre",
+    "description": "Egyptian or Nubian ruler",
     "alt_labels": [
-      "Intef"
+      "Ibkhenetre",
+      "Iyibkhentre"
     ],
     "families": [],
     "periods": [
@@ -4365,61 +4365,16 @@
     "replaced_by": null
   },
   {
-    "qid": "Q888879",
-    "label": "Sihathor",
+    "qid": "Q375353",
+    "label": "Hor",
     "description": "Egyptian pharaoh",
     "alt_labels": [
-      "Sahathor"
+      "Auibre"
     ],
     "families": [
       "Thirteenth Dynasty of Egypt"
     ],
     "periods": [
-      "Second Intermediate Period of Egypt",
-      "Thirteenth Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1800,
-    "death_year": -1789,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q889839",
-    "label": "Sekhemkare",
-    "description": "Egyptian pharaoh",
-    "alt_labels": [
-      "Amenemhat V"
-    ],
-    "families": [
-      "Thirteenth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Second Intermediate Period of Egypt",
-      "Thirteenth Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1800,
-    "death_year": -1800,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q1000926",
-    "label": "Sekhemrekhutawy Khabaw",
-    "description": "Egyptian pharaoh of the early 13th dynasty",
-    "alt_labels": [
-      "Khabaw Sekhemrekhutawy",
-      "Sekhemre Khouitaoui",
-      "Sekhemrê Khouitaoui"
-    ],
-    "families": [
-      "Thirteenth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Ancient Egypt",
       "Second Intermediate Period of Egypt",
       "Thirteenth Dynasty of Egypt"
     ],
@@ -4474,11 +4429,34 @@
     "replaced_by": null
   },
   {
-    "qid": "Q551461",
-    "label": "Sehetepkare Intef",
-    "description": "Egyptian pharaoh",
+    "qid": "Q18980",
+    "label": "Sobekhotep I",
+    "description": "13th Dynasty Egyptian king",
     "alt_labels": [
-      "Intef V"
+      "Khaankhre"
+    ],
+    "families": [
+      "Thirteenth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Second Intermediate Period of Egypt",
+      "Thirteenth Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1800,
+    "death_year": -1800,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q1000926",
+    "label": "Sekhemrekhutawy Khabaw",
+    "description": "Egyptian pharaoh of the early 13th dynasty",
+    "alt_labels": [
+      "Khabaw Sekhemrekhutawy",
+      "Sekhemre Khouitaoui",
+      "Sekhemrê Khouitaoui"
     ],
     "families": [
       "Thirteenth Dynasty of Egypt"
@@ -4491,16 +4469,37 @@
     "reign_start": null,
     "reign_end": null,
     "birth_year": -1800,
-    "death_year": -1760,
+    "death_year": -1800,
     "replaces": null,
     "replaced_by": null
   },
   {
-    "qid": "Q375353",
-    "label": "Hor",
+    "qid": "Q888879",
+    "label": "Sihathor",
     "description": "Egyptian pharaoh",
     "alt_labels": [
-      "Auibre"
+      "Sahathor"
+    ],
+    "families": [
+      "Thirteenth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Second Intermediate Period of Egypt",
+      "Thirteenth Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1800,
+    "death_year": -1789,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q889839",
+    "label": "Sekhemkare",
+    "description": "Egyptian pharaoh",
+    "alt_labels": [
+      "Amenemhat V"
     ],
     "families": [
       "Thirteenth Dynasty of Egypt"
@@ -4535,11 +4534,33 @@
     "replaced_by": "Âaqen"
   },
   {
-    "qid": "Q18980",
-    "label": "Sobekhotep I",
-    "description": "13th Dynasty Egyptian king",
+    "qid": "Q551461",
+    "label": "Sehetepkare Intef",
+    "description": "Egyptian pharaoh",
     "alt_labels": [
-      "Khaankhre"
+      "Intef V"
+    ],
+    "families": [
+      "Thirteenth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Ancient Egypt",
+      "Second Intermediate Period of Egypt",
+      "Thirteenth Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1800,
+    "death_year": -1760,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q225517",
+    "label": "Semenkare",
+    "description": "Egyptian pharaoh",
+    "alt_labels": [
+      "Nebennu"
     ],
     "families": [
       "Thirteenth Dynasty of Egypt"
@@ -4706,27 +4727,6 @@
     "reign_end": null,
     "birth_year": -1800,
     "death_year": -1700,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q225517",
-    "label": "Semenkare",
-    "description": "Egyptian pharaoh",
-    "alt_labels": [
-      "Nebennu"
-    ],
-    "families": [
-      "Thirteenth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Second Intermediate Period of Egypt",
-      "Thirteenth Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1800,
-    "death_year": -1800,
     "replaces": null,
     "replaced_by": null
   },
@@ -5206,6 +5206,27 @@
     "replaced_by": null
   },
   {
+    "qid": "Q508466",
+    "label": "Rahotep",
+    "description": "Egyptian pharaoh of the 17th dynasty",
+    "alt_labels": [
+      "Sekhemre Wahkhau Rehotep"
+    ],
+    "families": [
+      "Seventeenth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Second Intermediate Period of Egypt",
+      "Seventeenth Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1650,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q1054629",
     "label": "Sekhenrê",
     "description": "sovereign",
@@ -5233,27 +5254,6 @@
     "families": [],
     "periods": [
       "Ancient Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1650,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q508466",
-    "label": "Rahotep",
-    "description": "Egyptian pharaoh of the 17th dynasty",
-    "alt_labels": [
-      "Sekhemre Wahkhau Rehotep"
-    ],
-    "families": [
-      "Seventeenth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Second Intermediate Period of Egypt",
-      "Seventeenth Dynasty of Egypt"
     ],
     "reign_start": null,
     "reign_end": null,
@@ -5550,6 +5550,69 @@
     "replaced_by": null
   },
   {
+    "qid": "Q561946",
+    "label": "Aperanat",
+    "description": "ancient Egyptian king of the Second Intermediate Period",
+    "alt_labels": [
+      "'Aper-'Anati",
+      "Aper-Anat"
+    ],
+    "families": [
+      "Sixteenth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Fifteenth Dynasty of Egypt",
+      "Second Intermediate Period of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1600,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q595022",
+    "label": "Sekhemre-Wepmaat Intef",
+    "description": "Egyptian pharaoh (1600–1600)",
+    "alt_labels": [
+      "Intef VI"
+    ],
+    "families": [
+      "Seventeenth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Second Intermediate Period of Egypt",
+      "Seventeenth Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1600,
+    "death_year": -1600,
+    "replaces": "Sobekemsaf II",
+    "replaced_by": "Nubkheperre Intef"
+  },
+  {
+    "qid": "Q322169",
+    "label": "Apepi",
+    "description": "ruler of Lower Egypt during the Fifteenth Dynasty",
+    "alt_labels": [
+      "Apepi I"
+    ],
+    "families": [
+      "Fifteenth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Fifteenth Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1600,
+    "death_year": -1539,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q1662172",
     "label": "Inek",
     "description": null,
@@ -5611,53 +5674,12 @@
     "replaced_by": null
   },
   {
-    "qid": "Q322169",
-    "label": "Apepi",
-    "description": "ruler of Lower Egypt during the Fifteenth Dynasty",
+    "qid": "Q12957571",
+    "label": "Sekhemre-Heruhirmaat Intef",
+    "description": "Egyptian pharaoh of the 17th dynasty",
     "alt_labels": [
-      "Apepi I"
-    ],
-    "families": [
-      "Fifteenth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Fifteenth Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1600,
-    "death_year": -1539,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q561946",
-    "label": "Aperanat",
-    "description": "ancient Egyptian king of the Second Intermediate Period",
-    "alt_labels": [
-      "'Aper-'Anati",
-      "Aper-Anat"
-    ],
-    "families": [
-      "Sixteenth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Fifteenth Dynasty of Egypt",
-      "Second Intermediate Period of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1600,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q595022",
-    "label": "Sekhemre-Wepmaat Intef",
-    "description": "Egyptian pharaoh (1600–1600)",
-    "alt_labels": [
-      "Intef VI"
+      "Antef",
+      "Inyotef"
     ],
     "families": [
       "Seventeenth Dynasty of Egypt"
@@ -5670,8 +5692,8 @@
     "reign_end": null,
     "birth_year": -1600,
     "death_year": -1600,
-    "replaces": "Sobekemsaf II",
-    "replaced_by": "Nubkheperre Intef"
+    "replaces": null,
+    "replaced_by": null
   },
   {
     "qid": "Q337893",
@@ -5738,28 +5760,6 @@
     "reign_end": null,
     "birth_year": -1600,
     "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q12957571",
-    "label": "Sekhemre-Heruhirmaat Intef",
-    "description": "Egyptian pharaoh of the 17th dynasty",
-    "alt_labels": [
-      "Antef",
-      "Inyotef"
-    ],
-    "families": [
-      "Seventeenth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Second Intermediate Period of Egypt",
-      "Seventeenth Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1600,
-    "death_year": -1600,
     "replaces": null,
     "replaced_by": null
   },
@@ -6372,6 +6372,24 @@
     "replaced_by": "Thutmose IV"
   },
   {
+    "qid": "Q153344",
+    "label": "Meritaten",
+    "description": "ancient Egyptian queen consort",
+    "alt_labels": [
+      "Mayati"
+    ],
+    "families": [
+      "Eighteenth Dynasty of Egypt"
+    ],
+    "periods": [],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -1400,
+    "death_year": -1400,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q146029",
     "label": "Ay",
     "description": "Egyptian pharaoh of the late 18th Dynasty (14th century BCE)",
@@ -6391,24 +6409,6 @@
     "death_year": -1400,
     "replaces": "TutanKhamun",
     "replaced_by": "Horemheb"
-  },
-  {
-    "qid": "Q153344",
-    "label": "Meritaten",
-    "description": "ancient Egyptian queen consort",
-    "alt_labels": [
-      "Mayati"
-    ],
-    "families": [
-      "Eighteenth Dynasty of Egypt"
-    ],
-    "periods": [],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -1400,
-    "death_year": -1400,
-    "replaces": null,
-    "replaced_by": null
   },
   {
     "qid": "Q158003",
@@ -6839,27 +6839,6 @@
     "replaced_by": null
   },
   {
-    "qid": "Q596489",
-    "label": "Iuput I",
-    "description": "Egyptian pharaoh",
-    "alt_labels": [
-      "Auput I"
-    ],
-    "families": [
-      "Twenty-third Dynasty of Egypt"
-    ],
-    "periods": [
-      "Third Intermediate Period of Egypt",
-      "Twenty-third Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -900,
-    "death_year": -900,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
     "qid": "Q878396",
     "label": "Shoshenq III",
     "description": "Egyptian pharaoh of the 22th Dynasty",
@@ -6878,6 +6857,27 @@
     "reign_end": null,
     "birth_year": -900,
     "death_year": -797,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q596489",
+    "label": "Iuput I",
+    "description": "Egyptian pharaoh",
+    "alt_labels": [
+      "Auput I"
+    ],
+    "families": [
+      "Twenty-third Dynasty of Egypt"
+    ],
+    "periods": [
+      "Third Intermediate Period of Egypt",
+      "Twenty-third Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -900,
+    "death_year": -900,
     "replaces": null,
     "replaced_by": null
   },
@@ -7052,62 +7052,6 @@
     "replaced_by": null
   },
   {
-    "qid": "Q888780",
-    "label": "Nekauba",
-    "description": "ancient Egyptian ruler",
-    "alt_labels": [
-      "Nechepsos"
-    ],
-    "families": [],
-    "periods": [
-      "Ancient Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -800,
-    "death_year": -671,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q325744",
-    "label": "Ini",
-    "description": "Egyptian pharaoh",
-    "alt_labels": [
-      "Menkheperre Ini"
-    ],
-    "families": [],
-    "periods": [
-      "Ancient Egypt",
-      "Third Intermediate Period of Egypt",
-      "Twenty-third Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -800,
-    "death_year": -800,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q602454",
-    "label": "Djehutyemhat",
-    "description": "Egyptian ruler of Hermopolis",
-    "alt_labels": [
-      "Thotemhat"
-    ],
-    "families": [],
-    "periods": [
-      "Twenty-third Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -800,
-    "death_year": -800,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
     "qid": "Q315695",
     "label": "Piye",
     "description": "ancient Kushite king and Egyptian pharaoh",
@@ -7132,22 +7076,6 @@
     "replaced_by": null
   },
   {
-    "qid": "Q2116134",
-    "label": "Djedptahiefânkh",
-    "description": "monarch",
-    "alt_labels": [
-      "Djedptahiefankh"
-    ],
-    "families": [],
-    "periods": [],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -800,
-    "death_year": -900,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
     "qid": "Q434547",
     "label": "Shebitku",
     "description": "Egyptian pharaoh of the 25th dynasty",
@@ -7168,6 +7096,98 @@
     "reign_end": null,
     "birth_year": -800,
     "death_year": -700,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q602454",
+    "label": "Djehutyemhat",
+    "description": "Egyptian ruler of Hermopolis",
+    "alt_labels": [
+      "Thotemhat"
+    ],
+    "families": [],
+    "periods": [
+      "Twenty-third Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -800,
+    "death_year": -800,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q325744",
+    "label": "Ini",
+    "description": "Egyptian pharaoh",
+    "alt_labels": [
+      "Menkheperre Ini"
+    ],
+    "families": [],
+    "periods": [
+      "Ancient Egypt",
+      "Third Intermediate Period of Egypt",
+      "Twenty-third Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -800,
+    "death_year": -800,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q888780",
+    "label": "Nekauba",
+    "description": "ancient Egyptian ruler",
+    "alt_labels": [
+      "Nechepsos"
+    ],
+    "families": [],
+    "periods": [
+      "Ancient Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -800,
+    "death_year": -671,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q886043",
+    "label": "Sehetepibenre Pedubast",
+    "description": "sovereign",
+    "alt_labels": [
+      "Pedubast II"
+    ],
+    "families": [],
+    "periods": [
+      "Third Intermediate Period of Egypt",
+      "Twenty-second Dynasty of Egypt",
+      "Twenty-third Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -800,
+    "death_year": -800,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q2116134",
+    "label": "Djedptahiefânkh",
+    "description": "monarch",
+    "alt_labels": [
+      "Djedptahiefankh"
+    ],
+    "families": [],
+    "periods": [],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -800,
+    "death_year": -900,
     "replaces": null,
     "replaced_by": null
   },
@@ -7370,26 +7390,6 @@
     "replaced_by": null
   },
   {
-    "qid": "Q886043",
-    "label": "Sehetepibenre Pedubast",
-    "description": "sovereign",
-    "alt_labels": [
-      "Pedubast II"
-    ],
-    "families": [],
-    "periods": [
-      "Third Intermediate Period of Egypt",
-      "Twenty-second Dynasty of Egypt",
-      "Twenty-third Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -800,
-    "death_year": -800,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
     "qid": "Q777284",
     "label": "Ammeris",
     "description": "Egyptian ruler",
@@ -7439,28 +7439,6 @@
     "replaced_by": null
   },
   {
-    "qid": "Q125102",
-    "label": "Necho II",
-    "description": "2nd Egyptian pharaoh of the 26th dynasty",
-    "alt_labels": [
-      "Necos"
-    ],
-    "families": [
-      "Twenty-sixth Dynasty of Egypt"
-    ],
-    "periods": [
-      "Ancient Egypt",
-      "Late Period of ancient Egypt",
-      "Twenty-sixth Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -700,
-    "death_year": -594,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
     "qid": "Q373521",
     "label": "Psamtik II",
     "description": "3rd Egyptian pharaoh of the 26th dynasty",
@@ -7481,6 +7459,28 @@
     "reign_end": null,
     "birth_year": -700,
     "death_year": -588,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q125102",
+    "label": "Necho II",
+    "description": "2nd Egyptian pharaoh of the 26th dynasty",
+    "alt_labels": [
+      "Necos"
+    ],
+    "families": [
+      "Twenty-sixth Dynasty of Egypt"
+    ],
+    "periods": [
+      "Ancient Egypt",
+      "Late Period of ancient Egypt",
+      "Twenty-sixth Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -700,
+    "death_year": -594,
     "replaces": null,
     "replaced_by": null
   },
@@ -7567,6 +7567,28 @@
     "replaced_by": null
   },
   {
+    "qid": "Q272043",
+    "label": "Xerxes II",
+    "description": "brief ruler of the Achaemenid Empire (died 424 BC)",
+    "alt_labels": [
+      "Xerxes II of Persia"
+    ],
+    "families": [
+      "Achaemenid dynasty"
+    ],
+    "periods": [
+      "Ancient Egypt",
+      "Late Period of ancient Egypt",
+      "Twenty-seventh Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -500,
+    "death_year": -422,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q298631",
     "label": "Sogdianus",
     "description": "brief ruler of the Achaemenid Empire (423 BC)",
@@ -7635,28 +7657,6 @@
     "reign_end": null,
     "birth_year": -500,
     "death_year": -390,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q272043",
-    "label": "Xerxes II",
-    "description": "brief ruler of the Achaemenid Empire (died 424 BC)",
-    "alt_labels": [
-      "Xerxes II of Persia"
-    ],
-    "families": [
-      "Achaemenid dynasty"
-    ],
-    "periods": [
-      "Ancient Egypt",
-      "Late Period of ancient Egypt",
-      "Twenty-seventh Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -500,
-    "death_year": -422,
     "replaces": null,
     "replaced_by": null
   },
@@ -7769,6 +7769,47 @@
     "replaced_by": null
   },
   {
+    "qid": "Q881240",
+    "label": "Khababash",
+    "description": "Egyptian pharaoh of the 31st dynasty",
+    "alt_labels": [
+      "Khabash"
+    ],
+    "families": [
+      "Thirty-first Dynasty of Egypt"
+    ],
+    "periods": [
+      "Late Period of ancient Egypt",
+      "Thirty-first Dynasty of Egypt"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -400,
+    "death_year": null,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
+    "qid": "Q233771",
+    "label": "Eurydice of Egypt",
+    "description": "Egyptian queen consort",
+    "alt_labels": [
+      "Eurydice"
+    ],
+    "families": [
+      "Antipatrid dynasty"
+    ],
+    "periods": [
+      "Hellenistic period"
+    ],
+    "reign_start": null,
+    "reign_end": null,
+    "birth_year": -400,
+    "death_year": -300,
+    "replaces": null,
+    "replaced_by": null
+  },
+  {
     "qid": "Q313126",
     "label": "Nectanebo II",
     "description": "last Egyptian pharaoh of the 30th dynasty",
@@ -7831,47 +7872,6 @@
     "reign_end": null,
     "birth_year": -400,
     "death_year": -400,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q881240",
-    "label": "Khababash",
-    "description": "Egyptian pharaoh of the 31st dynasty",
-    "alt_labels": [
-      "Khabash"
-    ],
-    "families": [
-      "Thirty-first Dynasty of Egypt"
-    ],
-    "periods": [
-      "Late Period of ancient Egypt",
-      "Thirty-first Dynasty of Egypt"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -400,
-    "death_year": null,
-    "replaces": null,
-    "replaced_by": null
-  },
-  {
-    "qid": "Q233771",
-    "label": "Eurydice of Egypt",
-    "description": "Egyptian queen consort",
-    "alt_labels": [
-      "Eurydice"
-    ],
-    "families": [
-      "Antipatrid dynasty"
-    ],
-    "periods": [
-      "Hellenistic period"
-    ],
-    "reign_start": null,
-    "reign_end": null,
-    "birth_year": -400,
-    "death_year": -300,
     "replaces": null,
     "replaced_by": null
   },
