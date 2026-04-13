@@ -177,16 +177,9 @@ def _extract_parent_id(parent_field) -> str | None:
     """
     if not parent_field:
         return None
-    if isinstance(parent_field, str):
-        m = _PLACE_URL_RE.search(parent_field)
-        if m:
-            return "idai:" + m.group(1)
-        return None
-    # Defensive: if it's somehow a dict with gazId
-    if isinstance(parent_field, dict):
-        gaz_id = parent_field.get("gazId")
-        if gaz_id:
-            return "idai:" + str(gaz_id)
+    m = _PLACE_URL_RE.search(parent_field)
+    if m:
+        return "idai:" + m.group(1)
     return None
 
 
@@ -208,11 +201,12 @@ def _extract_coordinates(pref_location) -> list | None:
     return None
 
 
-def reconcile(records: list[dict]) -> list[dict]:
+def reconcile(records: list[dict]) -> tuple[list[dict], int]:
     """Filter and shape raw place records into authority records.
 
-    Returns the _source block as the first element, followed by one record
-    per filtered place.
+    Returns a tuple of (reconciled_rows, raw_total) where reconciled_rows has
+    the _source block as the first element followed by one record per filtered
+    place, and raw_total is the pre-filter count of input records.
     """
     source_block = {
         "_source": {
@@ -224,6 +218,7 @@ def reconcile(records: list[dict]) -> list[dict]:
     }
 
     reconciled = [source_block]
+    raw_total = len(records)
 
     for record in records:
         types = record.get("types", [])
@@ -267,7 +262,7 @@ def reconcile(records: list[dict]) -> list[dict]:
             "cross_refs": cross_refs,
         })
 
-    return reconciled
+    return reconciled, raw_total
 
 
 def save_reconciled(reconciled: list[dict]) -> None:
@@ -279,12 +274,12 @@ def save_reconciled(reconciled: list[dict]) -> None:
     print(f"  Saved reconciled.jsonl ({len(reconciled)} lines) → {jsonl_path}")
 
 
-def print_stats(reconciled: list[dict]) -> None:
+def print_stats(reconciled: list[dict], raw_total: int) -> None:
     """Print coverage statistics."""
     site_rows = [r for r in reconciled if "_source" not in r]
-    total = len(site_rows)
+    filtered = len(site_rows)
 
-    if total == 0:
+    if filtered == 0:
         print("Stats: no site records found")
         return
 
@@ -293,11 +288,11 @@ def print_stats(reconciled: list[dict]) -> None:
     with_geonames = sum(1 for r in site_rows if r["cross_refs"]["geonames"] is not None)
     with_parent = sum(1 for r in site_rows if r["parent_id"] is not None)
 
-    print(f"\nStats ({total} filtered / {total} total):")
-    print(f"  With coordinates:   {with_coords} ({100 * with_coords // total}%)")
-    print(f"  With alt_labels:    {with_alts} ({100 * with_alts // total}%)")
-    print(f"  With geonames ref:  {with_geonames} ({100 * with_geonames // total}%)")
-    print(f"  With parent:        {with_parent} ({100 * with_parent // total}%)")
+    print(f"\nStats ({filtered} filtered / {raw_total} total):")
+    print(f"  With coordinates:   {with_coords} ({100 * with_coords // filtered}%)")
+    print(f"  With alt_labels:    {with_alts} ({100 * with_alts // filtered}%)")
+    print(f"  With geonames ref:  {with_geonames} ({100 * with_geonames // filtered}%)")
+    print(f"  With parent:        {with_parent} ({100 * with_parent // filtered}%)")
 
 
 # ---------------------------------------------------------------------------
@@ -331,10 +326,10 @@ def main() -> None:
 
     # Phase 4: reconcile
     print("Phase 4: reconciling...")
-    reconciled = reconcile(records)
+    reconciled, raw_total = reconcile(records)
     save_reconciled(reconciled)
 
-    print_stats(reconciled)
+    print_stats(reconciled, raw_total)
 
 
 if __name__ == "__main__":

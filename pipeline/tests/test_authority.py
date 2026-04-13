@@ -314,7 +314,7 @@ class TestIdaiGazetteerIntegrity:
 
     def test_minimum_record_count(self, idai_rows):
         site_rows = [r for r in idai_rows if "_source" not in r]
-        assert len(site_rows) >= 800, f"Expected ≥800 site records after filter, got {len(site_rows)}"
+        assert len(site_rows) == 984, f"Expected 984 site records after filter, got {len(site_rows)}"
 
     def test_all_rows_have_kind_site(self, idai_rows):
         for i, row in enumerate(idai_rows, 1):
@@ -369,9 +369,8 @@ class TestIdaiGazetteerIntegrity:
         matches = [r for r in idai_rows if r.get("id") == "idai:2110510"]
         assert len(matches) == 1
         deb = matches[0]
-        assert deb["display"] is not None
-        assert deb["coordinates"] is not None
-        assert len(deb["coordinates"]) == 2
+        assert deb["display"] == "ad-dayr al-baḥrī"
+        assert deb["coordinates"] == pytest.approx([32.60771, 25.73783], abs=0.001)
         assert deb["cross_refs"]["geonames"] == "361834"
 
     def test_coordinates_are_valid(self, idai_rows):
