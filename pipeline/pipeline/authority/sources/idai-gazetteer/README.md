@@ -114,3 +114,31 @@ Requires `raw.json` to already exist. Re-runs only phase 4 (reconciliation) from
 | Amarna | 2296218 | 347585 |
 | Medinet Habu | 2042876 | 8224862 |
 | Elephantine | 2751511 | 359790 |
+
+## Phase A curation notes
+
+These are known data quality issues in the iDAI source that must be addressed
+during authority curation (`sites.json`), not here in source acquisition.
+
+**Display name language:** ~186 records have German or Arabic display names
+as iDAI `prefName` (e.g., "Theben" for Thebes, "Bibân el-Mulûk" for Valley
+of the Kings, "Luxor-Tempel" for Luxor Temple). The English name is typically
+present in `alt_labels`. Curation must promote the English alt_label to
+`display` for every such record.
+
+**Fayum region:** Absent from reconciled output — iDAI types it as
+`populated-place` or `administrative-unit`, both of which are filtered out.
+"Fayum" is a heavily-used museum provenance term (Fayum portraits, Lahun,
+Hawara). Must be added manually in `sites.json`.
+
+**Composite alias gaps:** "Thebes (Luxor)" — used by Brooklyn Museum to
+disambiguate from Greek Thebes — has no iDAI entry. Must be added as a
+manual alias in `sites.json`.
+
+**Nubian sites (Buhen, Kerma):** These are major excavation sites in Harvard
+and Brooklyn collections. They may exist in iDAI under a Sudan ancestor node
+(outside `ancestors:2042786`). Must be verified and added if absent.
+
+**Luxor Temple alt_labels:** iDAI provides zero alternate names for Luxor
+Temple (idai:2368506, display "Luxor-Tempel"). Must add "Luxor Temple",
+"Temple of Luxor" manually in `sites.json`.
