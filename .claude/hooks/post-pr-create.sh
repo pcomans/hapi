@@ -58,14 +58,39 @@ if [ "$IS_PR_CREATE" = true ]; then
   MESSAGES="$MESSAGES\n\nYou just created PR #$PR_NUMBER. Before finishing, you MUST:\n1. Update the task list — mark completed tasks as done.\n2. Document learnings in docs/museum-sources/*.md or pipeline/CLAUDE.md.\n3. Wait for CI to pass and Copilot review, then reply to every comment."
 fi
 
-# After any push, verify MVP task list has been updated
+# MVP task list guard: agent must pass TASK_LIST_UPDATED=1 AND the file must be in the diff.
+# This forces the agent to consciously confirm it reviewed and updated the task list.
+#   TASK_LIST_UPDATED=1 + file changed  → allow (agent thought about it, file confirms)
+#   TASK_LIST_UPDATED=1 + file unchanged → block (agent is lying)
+#   no flag + file changed              → block (agent didn't consciously confirm)
+#   no flag + file unchanged             → block (agent didn't think about it)
 if [ "$IS_GIT_PUSH" = true ] || [ "$IS_PR_CREATE" = true ]; then
-  MVP_CHANGED=$(git diff origin/main...HEAD --name-only 2>/dev/null | grep -c 'docs/mvp-tasks.md')
-  if [ "$MVP_CHANGED" -eq 0 ]; then
+  AGENT_CLAIMS_UPDATED=$(echo "$CMD" | grep -c 'TASK_LIST_UPDATED=1')
+  MVP_IN_DIFF=$(git diff origin/main...HEAD --name-only 2>/dev/null | grep -c 'docs/mvp-tasks.md')
+
+  if [ "$AGENT_CLAIMS_UPDATED" -gt 0 ] && [ "$MVP_IN_DIFF" -gt 0 ]; then
+    : # Both conditions met — allow
+  elif [ "$AGENT_CLAIMS_UPDATED" -gt 0 ] && [ "$MVP_IN_DIFF" -eq 0 ]; then
     cat <<HEREDOC
 {
   "decision": "block",
-  "reason": "docs/mvp-tasks.md has not been updated on this branch. Before pushing, update the MVP task list to reflect any completed, dropped, or new tasks. If no MVP tasks are affected by this change, add a comment to the relevant task section explaining why."
+  "reason": "You passed TASK_LIST_UPDATED=1 but docs/mvp-tasks.md has no changes in the branch diff. You must actually update the file before claiming you did."
+}
+HEREDOC
+    exit 0
+  elif [ "$AGENT_CLAIMS_UPDATED" -eq 0 ] && [ "$MVP_IN_DIFF" -gt 0 ]; then
+    cat <<HEREDOC
+{
+  "decision": "block",
+  "reason": "docs/mvp-tasks.md was modified but you did not pass TASK_LIST_UPDATED=1 in your push command. Prefix your push with TASK_LIST_UPDATED=1 to confirm you have reviewed the task list and the changes are correct."
+}
+HEREDOC
+    exit 0
+  else
+    cat <<HEREDOC
+{
+  "decision": "block",
+  "reason": "docs/mvp-tasks.md has not been updated on this branch. Before pushing, update the MVP task list to reflect any completed, dropped, or new tasks, then push with TASK_LIST_UPDATED=1 git push ... to confirm."
 }
 HEREDOC
     exit 0
