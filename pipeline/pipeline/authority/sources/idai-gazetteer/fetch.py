@@ -13,6 +13,7 @@ Output:
 """
 
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -37,6 +38,37 @@ PAGE_LIMIT = 100
 # provenance string, so they are harmless.
 SITE_TYPES = {"archaeological-site", "archaeological-area", "landform"}
 
+# Supplementary gazIds that the (ancestors:2042786 + type filter) search misses
+# but which are regularly referenced in Egyptian museum catalog data.
+# Each entry: (gazId, display, reason)
+# These bypass the type filter in reconcile() because iDAI types them as
+# populated-place / administrative-unit / empty (Fayum region) or places them
+# under the Sudan ancestor 2042707 (Nubian sites), so the paginated Egypt-tree
+# search excludes them. They are fetched individually via /place/{gazId} and
+# merged into raw.json alongside the Egypt-tree results.
+ADDITIONAL_GAZ_IDS: list[tuple[str, str, str]] = [
+    # Fayum region (under Egypt ancestor but excluded by type filter)
+    ("2042846", "al-Fayyūm", "populated-place; 'Fayum' is a major museum provenance term (Fayum portraits)"),
+    ("2751193", "Fayyum Oasis", "empty types; regional reference"),
+    # Nubian sites (under Sudan ancestor 2042707, outside Egypt search)
+    ("2751172", "Buhen", "Middle Kingdom fortress; heavily represented in Harvard/Brooklyn collections"),
+    ("2751351", "Kerma", "Kushite capital; Harvard excavated extensively"),
+    ("2293921", "Meroë", "Meroitic kingdom capital"),
+    ("2379057", "Napata", "Kushite royal city; Gebel Barkal complex"),
+    ("2361100", "Jebel Barkal", "Napatan sacred mountain / archaeological landmark"),
+    ("2042733", "Semna West", "Middle Kingdom fortress"),
+    ("2767800", "Tempel von Soleb", "18th Dynasty temple of Amenhotep III"),
+    ("2751349", "Kawa", "Kushite temple site"),
+    ("2751492", "Sesibi", "Akhenaten-era fortress"),
+    ("2042808", "Aniba", "Lower Nubia, Harvard/Penn excavations"),
+    ("2767808", "Uronarti", "Middle Kingdom fortress"),
+    ("2751391", "Mirgissa", "Middle Kingdom fortress"),
+    ("2751155", "Askut", "Middle Kingdom fortress"),
+    ("2751146", "Amara West", "New Kingdom Egyptian town in Nubia"),
+]
+
+ADDITIONAL_GAZ_ID_SET: set[str] = {gid for gid, _, _ in ADDITIONAL_GAZ_IDS}
+
 # User-Agent for all requests
 USER_AGENT = "hapi-pipeline/1.0 (research)"
 
@@ -45,9 +77,13 @@ USER_AGENT = "hapi-pipeline/1.0 (research)"
 # Phase 1 — Collect all Egyptian place IDs via paginated search
 # ---------------------------------------------------------------------------
 
-def collect_place_ids(session: requests.Session) -> list[int]:
-    """Paginate the iDAI search endpoint and collect all Egyptian place IDs."""
-    gaz_ids = []
+def collect_place_ids(session: requests.Session) -> list[str]:
+    """Paginate the iDAI search endpoint and collect all Egyptian place IDs.
+
+    gazIds come back from the API as strings (and are stored as strings in
+    raw.json), so they are returned as ``list[str]``.
+    """
+    gaz_ids: list[str] = []
     offset = 0
 
     print("Phase 1: collecting place IDs...")
@@ -85,9 +121,9 @@ def collect_place_ids(session: requests.Session) -> list[int]:
 # Phase 2 — Fetch full place records
 # ---------------------------------------------------------------------------
 
-def fetch_place_records(session: requests.Session, gaz_ids: list[int]) -> list[dict]:
-    """Fetch full place records for each gazId."""
-    records = []
+def fetch_place_records(session: requests.Session, gaz_ids: list[str]) -> list[dict]:
+    """Fetch full place records for each gazId (gazIds are API-typed strings)."""
+    records: list[dict] = []
     total = len(gaz_ids)
 
     print(f"Phase 2: fetching {total} place records...")
@@ -166,7 +202,7 @@ def _extract_cross_refs(identifiers: list[dict]) -> dict:
     return cross_refs
 
 
-_PLACE_URL_RE = __import__("re").compile(r"/place/(\d+)$")
+_PLACE_URL_RE = re.compile(r"/place/(\d+)$")
 
 
 def _extract_parent_id(parent_field) -> str | None:
@@ -211,7 +247,7 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
     source_block = {
         "_source": {
             "citation": "iDAI.gazetteer, German Archaeological Institute (DAI). https://gazetteer.dainst.org",
-            "retrieved": "2026-04-13",
+            "retrieved": time.strftime("%Y-%m-%d"),
             "license": "CC BY 4.0",
             "raw_file": "sources/idai-gazetteer/raw.json",
         }
@@ -222,12 +258,15 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
 
     for record in records:
         types = record.get("types", [])
-
-        # Keep only records with at least one matching type
-        if not set(types) & SITE_TYPES:
-            continue
-
         gaz_id = record["gazId"]
+
+        # Supplementary IDs bypass the type filter (they are explicitly curated
+        # for museum-provenance reasons — see ADDITIONAL_GAZ_IDS).
+        is_supplementary = gaz_id in ADDITIONAL_GAZ_ID_SET
+
+        # Keep only records with at least one matching type, unless supplementary
+        if not is_supplementary and not set(types) & SITE_TYPES:
+            continue
 
         # display name
         display = record["prefName"]["title"]
@@ -287,12 +326,17 @@ def print_stats(reconciled: list[dict], raw_total: int) -> None:
     with_alts = sum(1 for r in site_rows if r["alt_labels"] is not None)
     with_geonames = sum(1 for r in site_rows if r["cross_refs"]["geonames"] is not None)
     with_parent = sum(1 for r in site_rows if r["parent_id"] is not None)
+    supplementary_count = sum(
+        1 for r in site_rows
+        if r["id"].split(":", 1)[1] in ADDITIONAL_GAZ_ID_SET
+    )
 
     print(f"\nStats ({filtered} filtered / {raw_total} total):")
     print(f"  With coordinates:   {with_coords} ({100 * with_coords // filtered}%)")
     print(f"  With alt_labels:    {with_alts} ({100 * with_alts // filtered}%)")
     print(f"  With geonames ref:  {with_geonames} ({100 * with_geonames // filtered}%)")
     print(f"  With parent:        {with_parent} ({100 * with_parent // filtered}%)")
+    print(f"  Supplementary additions:  {supplementary_count} (outside Egypt tree or non-standard types)")
 
 
 # ---------------------------------------------------------------------------
@@ -310,6 +354,17 @@ def main() -> None:
         print("Running in parse-only mode (using saved raw.json)...")
         records = load_raw()
         print(f"  Loaded {len(records)} records from raw.json")
+
+        # A complete fetch always produces the supplementary IDs. If any are
+        # missing, raw.json is stale — fail loudly rather than silently produce
+        # a reconciled.jsonl with gaps.
+        present_ids = {r["gazId"] for r in records}
+        missing = ADDITIONAL_GAZ_ID_SET - present_ids
+        if missing:
+            raise RuntimeError(
+                f"raw.json is missing supplementary gazIds: {sorted(missing)}. "
+                "Re-run fetch.py without --parse-only to regenerate."
+            )
     else:
         session = requests.Session()
         session.headers.update({"User-Agent": USER_AGENT, "Accept": "application/json"})
@@ -319,6 +374,21 @@ def main() -> None:
 
         # Phase 2: fetch full records
         records = fetch_place_records(session, gaz_ids)
+
+        # Phase 2b: fetch supplementary IDs (outside Egypt tree or wrong type).
+        # Skip any that are already present from the Egypt-tree search (some
+        # Fayum IDs are descendants of Egypt — they are re-included here to
+        # bypass the type filter, but fetching them again would duplicate).
+        present_ids = {r["gazId"] for r in records}
+        supplementary_ids = [
+            gid for gid, _, _ in ADDITIONAL_GAZ_IDS if gid not in present_ids
+        ]
+        print(
+            f"Phase 2b: fetching {len(supplementary_ids)} supplementary place records "
+            f"({len(ADDITIONAL_GAZ_IDS) - len(supplementary_ids)} already present from Egypt search)..."
+        )
+        supplementary_records = fetch_place_records(session, supplementary_ids)
+        records.extend(supplementary_records)
 
         # Phase 3: save raw
         print("Phase 3: saving raw.json...")

@@ -131085,5 +131085,1240 @@
     "provenance": [
       "AAArC"
     ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2751172",
+    "gazId": "2751172",
+    "parent": "https://gazetteer.dainst.org/place/2042707",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Buhen",
+      "language": "egy",
+      "ancient": true
+    },
+    "names": [
+      {
+        "title": "Bouhen",
+        "language": "egy",
+        "ancient": true
+      },
+      {
+        "title": "bhn",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        31.3,
+        21.9
+      ],
+      "confidence": 3,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "000086383",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "zTopogAfrikNordaÄgyptBuhen",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "55",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "4080572-4",
+        "context": "GND-ID"
+      },
+      {
+        "value": "xTopLandSudOrt Buhen",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://d-nb.info/gnd/4080572-4",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms",
+      "Propylaeum_GNDID_Import"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2751351",
+    "gazId": "2751351",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600",
+      "https://gazetteer.dainst.org/place/2297339"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Kerma",
+      "language": "deu"
+    },
+    "names": [
+      {
+        "title": "Керма (городище)",
+        "language": "rus"
+      },
+      {
+        "title": "Дукки Гель",
+        "language": "ara",
+        "transliterated": true
+      },
+      {
+        "title": "Dukki Gel",
+        "language": "ara",
+        "transliterated": true
+      },
+      {
+        "title": "كرمة (السودان)",
+        "language": "ara"
+      },
+      {
+        "title": "مدينة كرمة",
+        "language": "ara"
+      },
+      {
+        "title": "التل الأحمر",
+        "language": "ara"
+      },
+      {
+        "title": "دكي قيل",
+        "language": "ara"
+      },
+      {
+        "title": "קרמה (נוביה)",
+        "language": "heb"
+      },
+      {
+        "title": "Pnubs",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        30.4,
+        19.6
+      ],
+      "confidence": 2,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "000086371",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "zTopogAfrikNordaSudanKerma",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "176",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "11887237",
+        "context": "geonames"
+      },
+      {
+        "value": "4356956-0",
+        "context": "GND-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://sws.geonames.org/11887237",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://sws.geonames.org/11887237",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "http://d-nb.info/gnd/4356956-0",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2293921",
+    "gazId": "2293921",
+    "parent": "https://gazetteer.dainst.org/place/2042707",
+    "relatedPlaces": [
+      "https://gazetteer.dainst.org/place/2042608"
+    ],
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042600",
+      "https://gazetteer.dainst.org/place/2042707"
+    ],
+    "types": [
+      "archaeological-area"
+    ],
+    "prefName": {
+      "title": "Meroë",
+      "language": "deu"
+    },
+    "names": [
+      {
+        "title": "Bedewe",
+        "language": "xmr"
+      },
+      {
+        "title": "Begrawiya",
+        "language": "ara",
+        "transliterated": true
+      },
+      {
+        "title": "Meroe",
+        "language": "lat",
+        "ancient": true
+      },
+      {
+        "title": "Meroë",
+        "language": "ita"
+      },
+      {
+        "title": "Méroé",
+        "language": "fra"
+      },
+      {
+        "title": "Meron",
+        "language": "grc",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Ⲡⲉⲣⲟⲩⲉ",
+        "language": "cop",
+        "ancient": true
+      },
+      {
+        "title": "Meroe",
+        "language": "por"
+      },
+      {
+        "title": "Meroë",
+        "language": "eng"
+      },
+      {
+        "title": "أهرامات مروي",
+        "language": "ara"
+      },
+      {
+        "title": "Medewe",
+        "language": "xmr"
+      },
+      {
+        "title": "Medewi",
+        "language": "xmr"
+      },
+      {
+        "title": "Meroe",
+        "language": "tur"
+      },
+      {
+        "title": "Meroe",
+        "language": "deu"
+      },
+      {
+        "title": "Meroe",
+        "language": "pol"
+      },
+      {
+        "title": "Мероэ",
+        "language": "rus"
+      },
+      {
+        "title": "NE-36-O/3-J"
+      },
+      {
+        "title": "Meroe",
+        "language": "spa"
+      },
+      {
+        "title": "B3-r(3)-w3",
+        "language": "egy"
+      },
+      {
+        "title": "Μεροή",
+        "language": "grc"
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        33.74722,
+        16.93833
+      ],
+      "confidence": 0,
+      "publicSite": true
+    },
+    "identifiers": [
+      {
+        "value": "2260847",
+        "context": "arachne-entity"
+      },
+      {
+        "value": "000075104",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "232",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "12641",
+        "context": "arachne-place"
+      },
+      {
+        "value": "zTopogAfrikNordaSudanMeroe",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "805630",
+        "context": "pleiades"
+      },
+      {
+        "value": "370131",
+        "context": "geonames"
+      },
+      {
+        "value": "NE-36-O/3-J",
+        "context": "AMS-Nr."
+      },
+      {
+        "value": "xTopLandSudOrt Meroë",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "4038739-2",
+        "context": "GND-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://sws.geonames.org/370131",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://arachne.dainst.org/entity/2260847",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "http://pleiades.stoa.org/places/805630",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://arachne.dainst.org/arachne/index.php?view[layout]=search_result_category&view[caller][project]=&view[category]=marbilderbestand&view[page]=0&view[section]=uebersicht&search[data]=ALL&search[mode]=meta&search[match]=similar&view[active_tab]=overview&search[constraints]=meroe",
+        "predicate": "rdfs:seeAlso"
+      },
+      {
+        "object": "https://sws.geonames.org/370131",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "http://d-nb.info/gnd/4038739-2",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "provenance": [
+      "geonames",
+      "DAIKairoToponyms"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2379057",
+    "gazId": "2379057",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "relatedPlaces": [
+      "https://gazetteer.dainst.org/place/2359738"
+    ],
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042707",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Napata",
+      "language": "eng"
+    },
+    "names": [
+      {
+        "title": "Ta napata",
+        "language": "grc",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "npyt",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        31.8,
+        18.5
+      ],
+      "confidence": 3,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "249",
+        "context": "Toponyms-ID"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms",
+      "Chronontology"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2361100",
+    "gazId": "2361100",
+    "parent": "https://gazetteer.dainst.org/place/2359738",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042707",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "landform"
+    ],
+    "prefName": {
+      "title": "Jebel Barkal",
+      "language": "eng"
+    },
+    "names": [
+      {
+        "title": "'pure mountain'",
+        "language": "eng"
+      },
+      {
+        "title": "Dw-wab",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Djebel Barkal",
+        "language": "ara",
+        "transliterated": true
+      },
+      {
+        "title": "Dyebel Barkal",
+        "language": "ara",
+        "transliterated": true
+      },
+      {
+        "title": "Gebel Barkal",
+        "language": "ara",
+        "transliterated": true
+      },
+      {
+        "title": "جبل البركل",
+        "language": "ara"
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        31.828358,
+        18.536915
+      ],
+      "shape": [
+        [
+          [
+            [
+              31.825697422027588,
+              18.52822533812909
+            ],
+            [
+              31.82535409927368,
+              18.527574282121705
+            ],
+            [
+              31.824839115142822,
+              18.527737046355988
+            ],
+            [
+              31.82063341140747,
+              18.538479143151367
+            ],
+            [
+              31.825997829437256,
+              18.544663679192308
+            ],
+            [
+              31.828787326812744,
+              18.54332100262693
+            ],
+            [
+              31.830546855926514,
+              18.543605813689442
+            ],
+            [
+              31.831748485565186,
+              18.543402377264684
+            ],
+            [
+              31.831576824188232,
+              18.540920433373504
+            ],
+            [
+              31.83260679244995,
+              18.539455662681352
+            ],
+            [
+              31.83415174484253,
+              18.537746747668177
+            ],
+            [
+              31.834537982940674,
+              18.537177105532166
+            ],
+            [
+              31.835739612579346,
+              18.535834370126345
+            ],
+            [
+              31.83513879776001,
+              18.53489851799803
+            ],
+            [
+              31.83462381362915,
+              18.5335557646883
+            ],
+            [
+              31.833765506744385,
+              18.53331162658943
+            ],
+            [
+              31.832520961761475,
+              18.53379990243841
+            ],
+            [
+              31.83161973953247,
+              18.533230247145653
+            ],
+            [
+              31.830761432647705,
+              18.53310817790731
+            ],
+            [
+              31.82861566543579,
+              18.5313585092441
+            ],
+            [
+              31.827542781829834,
+              18.530504013387528
+            ],
+            [
+              31.825697422027588,
+              18.52822533812909
+            ]
+          ]
+        ]
+      ],
+      "confidence": 3,
+      "publicSite": true
+    },
+    "identifiers": [
+      {
+        "value": "106",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "zTopogAfrikNordaSudanJebelBarkal",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000086370",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "xTopLandSudOrt Barkal",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      }
+    ],
+    "provenance": [
+      "ncam",
+      "DAIKairoToponyms"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2042733",
+    "gazId": "2042733",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042707",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Semna West",
+      "language": "deu"
+    },
+    "names": [
+      {
+        "title": "Semna Gharb",
+        "language": "ara",
+        "transliterated": true
+      },
+      {
+        "title": "Sammin",
+        "language": "cop",
+        "transliterated": true
+      },
+      {
+        "title": "'Khakaure (Senwosret III), justified, is powerful'",
+        "language": "eng"
+      },
+      {
+        "title": "sxm-xai-kA.w-raw-mAa-xrw",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Semna-West",
+        "language": "eng"
+      },
+      {
+        "title": "Semna West",
+        "language": "eng"
+      },
+      {
+        "title": "Semne",
+        "language": ""
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        30.966667,
+        21.5
+      ],
+      "confidence": 3,
+      "publicSite": true
+    },
+    "identifiers": [
+      {
+        "value": "384",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "000075125",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "zTopogAfrikNordaSudanSemna",
+        "context": "zenon-thesaurus"
+      }
+    ],
+    "tags": [
+      "fortification"
+    ],
+    "provenance": [
+      "DAIKairoToponyms"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2767800",
+    "gazId": "2767800",
+    "parent": "https://gazetteer.dainst.org/place/1007719",
+    "relatedPlaces": [
+      "https://gazetteer.dainst.org/place/2101095"
+    ],
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600",
+      "https://gazetteer.dainst.org/place/1007719"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Tempel von Soleb",
+      "language": "deu"
+    },
+    "names": [
+      {
+        "title": "Soleb Temple",
+        "language": "eng"
+      },
+      {
+        "title": "mennu cha-em-maat",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Mnnw-ḫˁj-m-M3ˁt",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "„Festung/Denkmal des Cha-em-maat“",
+        "language": "deu"
+      },
+      {
+        "title": "Temple d'Amon (Soleb)",
+        "language": "fra"
+      },
+      {
+        "title": "Ḫʿ-m-Mȝʿ.t",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        30.3,
+        20.4
+      ],
+      "confidence": 2,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "xTopLandSudOrt Soleb",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "11875023",
+        "context": "geonames"
+      },
+      {
+        "value": "5012895-4",
+        "context": "GND-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://sws.geonames.org/11875023",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://sws.geonames.org/11875023",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://de.wikipedia.org/wiki/Tempel_von_Soleb",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "http://d-nb.info/gnd/5012895-4",
+        "predicate": "owl:sameAs"
+      }
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2751349",
+    "gazId": "2751349",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042707",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Kawa"
+    },
+    "names": [
+      {
+        "title": "'temple of Kawa'",
+        "language": "eng"
+      },
+      {
+        "title": "pr-gm-jtn",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "gm-(pA)-jtn",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Kówwa",
+        "language": ""
+      }
+    ],
+    "identifiers": [
+      {
+        "value": "11887227",
+        "context": "geonames"
+      },
+      {
+        "value": "174",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "107412748X",
+        "context": "GND-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://sws.geonames.org/11887227",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://d-nb.info/gnd/107412748X",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://sws.geonames.org/11887227",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms",
+      "Propylaeum_GNDID_Import1"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2751492",
+    "gazId": "2751492",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042707",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Sesibi"
+    },
+    "names": [
+      {
+        "title": "Sudla",
+        "language": ""
+      },
+      {
+        "title": "Sese",
+        "language": ""
+      },
+      {
+        "title": "Sesebi",
+        "language": ""
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        30.5,
+        20.1
+      ],
+      "confidence": 3,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "xTopLandSudOrt Sesebi",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "390",
+        "context": "Toponyms-ID"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2042808",
+    "gazId": "2042808",
+    "parent": "https://gazetteer.dainst.org/place/2409908",
+    "relatedPlaces": [
+      "https://gazetteer.dainst.org/place/2042608",
+      "https://gazetteer.dainst.org/place/2768122"
+    ],
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042608",
+      "https://gazetteer.dainst.org/place/2293101",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Aniba",
+      "language": "deu"
+    },
+    "names": [
+      {
+        "title": "Mam",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Miam",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Mjam",
+        "language": "egy",
+        "ancient": true
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        32.003056,
+        22.730556
+      ],
+      "confidence": 3,
+      "publicSite": true
+    },
+    "identifiers": [
+      {
+        "value": "4796823-0",
+        "context": "GND-ID"
+      },
+      {
+        "value": "zTopogAfrikNordaÄgyptAniba",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000081557",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "19",
+        "context": "Toponyms-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://d-nb.info/gnd/4796823-0",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://d-nb.info/gnd/4796823-0",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "tags": [
+      "temple",
+      "necropolis"
+    ],
+    "provenance": [
+      "DAIKairoToponyms",
+      "Propylaeum_GNDID_Import",
+      "Propylaeum_GNDID_Import1"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2767808",
+    "gazId": "2767808",
+    "parent": "https://gazetteer.dainst.org/place/2042707",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Uronarti"
+    },
+    "prefLocation": {
+      "coordinates": [
+        31.0,
+        21.5
+      ],
+      "confidence": 0,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "xTopLandSudOrt Uronarti",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      }
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2751391",
+    "gazId": "2751391",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "relatedPlaces": [
+      "https://gazetteer.dainst.org/place/1007412"
+    ],
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600",
+      "https://gazetteer.dainst.org/place/2297339"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Mirgissa",
+      "language": "deu"
+    },
+    "names": [
+      {
+        "title": "jqn",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Mirgissa",
+        "language": "deu"
+      },
+      {
+        "title": "Iken",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "Iqen",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      },
+      {
+        "title": "ميرجيسا",
+        "language": "ara"
+      },
+      {
+        "title": "إيكن",
+        "language": "egy",
+        "ancient": true,
+        "transliterated": true
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        31.2,
+        21.8
+      ],
+      "confidence": 3,
+      "publicSite": false
+    },
+    "locations": [
+      {
+        "coordinates": [
+          31.2,
+          21.8
+        ],
+        "confidence": 2,
+        "publicSite": false
+      }
+    ],
+    "identifiers": [
+      {
+        "value": "236",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "xTopLandSudOrt Mirgissa",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "7605706-9",
+        "context": "GND-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://d-nb.info/gnd/7605706-9",
+        "predicate": "owl:sameAs"
+      },
+      {
+        "object": "https://fr.wikipedia.org/wiki/Mirgissa",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2751155",
+    "gazId": "2751155",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042707",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site",
+      "island"
+    ],
+    "prefName": {
+      "title": "Askut"
+    },
+    "names": [
+      {
+        "title": "Djer-Setiu",
+        "language": "egy",
+        "ancient": true
+      }
+    ],
+    "prefLocation": {
+      "coordinates": [
+        31.1,
+        21.6
+      ],
+      "confidence": 3,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "xTopLandSudOrt Askut",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000002486",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "25",
+        "context": "Toponyms-ID"
+      },
+      {
+        "value": "4421048-6",
+        "context": "GND-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://d-nb.info/gnd/4421048-6",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms",
+      "Propylaeum_GNDID_Import"
+    ]
+  },
+  {
+    "@id": "https://gazetteer.dainst.org/place/2751146",
+    "gazId": "2751146",
+    "parent": "https://gazetteer.dainst.org/place/2297339",
+    "relatedPlaces": [
+      "https://gazetteer.dainst.org/place/2751147"
+    ],
+    "ancestors": [
+      "https://gazetteer.dainst.org/place/2042707",
+      "https://gazetteer.dainst.org/place/2042601",
+      "https://gazetteer.dainst.org/place/2042600"
+    ],
+    "types": [
+      "archaeological-site"
+    ],
+    "prefName": {
+      "title": "Amara West",
+      "language": "eng"
+    },
+    "prefLocation": {
+      "coordinates": [
+        30.4,
+        20.8
+      ],
+      "confidence": 2,
+      "publicSite": false
+    },
+    "identifiers": [
+      {
+        "value": "zTopogAfrikNordaSudanAmara West",
+        "context": "zenon-thesaurus"
+      },
+      {
+        "value": "000086376",
+        "context": "zenon-systemnr"
+      },
+      {
+        "value": "4479525-7",
+        "context": "GND-ID"
+      },
+      {
+        "value": "13",
+        "context": "Toponyms-ID"
+      }
+    ],
+    "links": [
+      {
+        "object": "http://d-nb.info/gnd/4479525-7",
+        "predicate": "owl:sameAs"
+      }
+    ],
+    "provenance": [
+      "DAIKairoToponyms",
+      "Propylaeum_GNDID_Import"
+    ]
   }
 ]

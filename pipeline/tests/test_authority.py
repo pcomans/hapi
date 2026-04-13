@@ -314,7 +314,7 @@ class TestIdaiGazetteerIntegrity:
 
     def test_minimum_record_count(self, idai_rows):
         site_rows = [r for r in idai_rows if "_source" not in r]
-        assert len(site_rows) == 984, f"Expected 984 site records after filter, got {len(site_rows)}"
+        assert len(site_rows) == 1000, f"Expected 1000 site records after filter, got {len(site_rows)}"
 
     def test_all_rows_have_kind_site(self, idai_rows):
         for i, row in enumerate(idai_rows, 1):
@@ -339,9 +339,25 @@ class TestIdaiGazetteerIntegrity:
             assert row.get("display"), f"Row {i} ({row.get('id')}): missing display name"
 
     def test_all_types_are_filtered(self, idai_rows):
+        # Load ADDITIONAL_GAZ_IDS from the fetch module (path-loaded because
+        # the idai-gazetteer directory has a hyphen in its name).
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "idai_fetch",
+            IDAI_DIR / "fetch.py",
+        )
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        supplementary_ids = {f"idai:{gid}" for gid, _, _ in mod.ADDITIONAL_GAZ_IDS}
+
         valid = {"archaeological-site", "archaeological-area", "landform"}
         for i, row in enumerate(idai_rows, 1):
             if "_source" in row:
+                continue
+            # Supplementary additions legitimately bypass the type filter — they
+            # are curated-by-ID for museum-provenance coverage (Fayum region,
+            # Nubian sites outside the Egypt ancestor tree). See ADDITIONAL_GAZ_IDS.
+            if row["id"] in supplementary_ids:
                 continue
             types = set(row.get("types", []))
             assert types & valid, (
@@ -361,6 +377,13 @@ class TestIdaiGazetteerIntegrity:
             "idai:2296218": "Amarna",
             "idai:2042876": "Medinet Habu",
             "idai:2751511": "Elephantine",
+            # Supplementary additions — fetched explicitly because the
+            # (ancestors:2042786 + type filter) search misses them.
+            "idai:2042846": "al-Fayyūm (Fayum)",
+            "idai:2751172": "Buhen",
+            "idai:2751351": "Kerma",
+            "idai:2293921": "Meroë",
+            "idai:2379057": "Napata",
         }
         for gaz_id, name in canary.items():
             assert gaz_id in all_ids, f"Canary site missing: {name} ({gaz_id})"
