@@ -253,7 +253,8 @@ def _parse_chronology_table(lines: list[str]) -> dict[str, str]:
         if not value or value == "---":
             continue
 
-        chronologies[label] = value
+        if label:
+            chronologies[label] = value
 
     return chronologies
 
@@ -310,8 +311,16 @@ def _parse_name_cards(section_lines: list[str]) -> list[dict]:
         # Gardiner codes are typically uppercase letter + number patterns
         gardiner = None
         sources = []
+        # Footer phrases that indicate we've left the name card area
+        footer_markers = {"**PLEASE NOTE**", "Ex nihilo nihil fit", "Back to top",
+                          "There _might_ be errors", "Original text from"}
         for ci in range(3, len(content)):
             line = content[ci]
+            # Stop if we hit pharaoh.se's page footer
+            if any(marker in line for marker in footer_markers):
+                break
+            if line.startswith("[![Pharaoh.SE]"):
+                break
             # Gardiner codes: sequences of letter-number patterns separated by :, -, *, \
             if gardiner is None and re.match(r"^[A-Za-z0-9:*\-\\&]+$", line.replace(" ", "")):
                 gardiner = line
@@ -321,6 +330,13 @@ def _parse_name_cards(section_lines: list[str]) -> list[dict]:
         # If translation is "–" (dash), it means no translation available
         if translation == "–":
             translation = None
+
+        # Strip escaped asterisks from pharaoh.se's retroactive-attribution markers
+        # (e.g. "Meni\*" → "Meni", "Khufu\*" → "Khufu")
+        if name:
+            name = name.rstrip("*").rstrip("\\").strip()
+        if transliteration:
+            transliteration = transliteration.rstrip("*").rstrip("\\").strip()
 
         cards.append({
             "name": name,
@@ -434,6 +450,9 @@ def reconcile(index_records: list[dict], page_data: dict[str, dict]) -> list[dic
         alt_labels = []
         seen = set()
         for label in (rec.get("alt_labels") or []) + (page.get("alt_labels_from_page") or []):
+            # Filter dash placeholders where pharaoh.se uses "-" for "no alternate name"
+            if label in ("-", "–", "—") or not label.strip():
+                continue
             if label not in seen and label != rec["display"]:
                 alt_labels.append(label)
                 seen.add(label)
@@ -449,6 +468,24 @@ def reconcile(index_records: list[dict], page_data: dict[str, dict]) -> list[dic
         birth_names = page.get("birth_names", [])
         if birth_names:
             nomen = birth_names[0].get("name")
+
+        # Add compact (spaceless) prenomen form for museum catalog matching.
+        # Pharaoh.se writes "Men kheper Ra"; museums use "Menkheperre".
+        if prenomen and " " in prenomen:
+            compact = prenomen.replace(" ", "").replace(",", "").lower()
+            # Capitalize first letter
+            compact = compact[0].upper() + compact[1:] if compact else compact
+            if compact not in seen and compact.lower() != rec["display"].lower():
+                alt_labels.append(compact)
+                seen.add(compact)
+
+        # Propagate Greek/Manetho transcriptions from ancient_sources to alt_labels.
+        # These are names like "Suphis" (Khufu), "Menes" (Narmer), "Sesostris" (Senusret).
+        for src in page.get("ancient_sources") or []:
+            transcription = src.get("transcription")
+            if transcription and transcription not in seen and transcription != rec["display"]:
+                alt_labels.append(transcription)
+                seen.add(transcription)
 
         reconciled.append({
             "kind": "ruler",
