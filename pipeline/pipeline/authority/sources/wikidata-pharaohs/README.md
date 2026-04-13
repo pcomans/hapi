@@ -17,7 +17,7 @@ Comprehensive list of pharaohs from Wikidata, covering Predynastic through Dynas
 | `display` | 100% | English label from Wikidata |
 | `alt_labels` | 35% | English alternate names/spellings |
 | `dynasty` | 69% | Parsed from `family` (P53) property; numbered 0-31 |
-| `start_bce`/`end_bce` | 78% | Reign dates from `position held` qualifiers; falls back to birth/death dates (flagged `approximate: true`) |
+| `start_year`/`end_year` | 78% | Reign dates from `position held` qualifiers; falls back to birth/death dates (flagged `approximate: true`) |
 | `prenomen` | 0% | Not available as transliterated text from Wikidata (stored as hieroglyphic markup in P7383) |
 
 ## Schema
@@ -31,8 +31,8 @@ Each line in `reconciled.jsonl` is a JSON object with:
   "display": "Thutmose III",
   "alt_labels": ["Tuthmosis III", "Thutmosis III", "Menkheperre"],
   "prenomen": null,
-  "start_bce": -1478,
-  "end_bce": -1424,
+  "start_year": -1478,
+  "end_year": -1424,
   "approximate": false,
   "uncertainty_plus_years": null,
   "dynasty": 18,

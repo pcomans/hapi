@@ -41,7 +41,7 @@ recorded as `prenomen: null`.
 ## Design decisions
 
 - **One row per ruler** for interrupted reigns (Ptolemy VI, VIII, IX,
-  XII). The `start_bce`/`end_bce` span the full period; gaps are
+  XII). The `start_year`/`end_year` span the full period; gaps are
   documented in the `note` field. Museums attribute artifacts to
   "Ptolemy IX", not "Ptolemy IX first reign".
 - **Ptolemy VII included** with null dates and a note. He never

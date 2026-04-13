@@ -65,7 +65,7 @@ class TestHKWIntegrity:
 
     def test_dates_are_negative_or_null(self, hkw_rows):
         for i, row in enumerate(hkw_rows, 1):
-            for field in ("start_bce", "end_bce"):
+            for field in ("start_year", "end_year"):
                 val = row.get(field)
                 if val is not None:
                     assert val < 0, (
@@ -106,7 +106,7 @@ class TestWikiPtolemaicIntegrity:
 
     def test_dates_are_negative_or_null(self, wiki_ptolemaic_rows):
         for i, row in enumerate(wiki_ptolemaic_rows, 1):
-            for field in ("start_bce", "end_bce"):
+            for field in ("start_year", "end_year"):
                 val = row.get(field)
                 if val is not None:
                     assert val < 0, (
@@ -116,7 +116,7 @@ class TestWikiPtolemaicIntegrity:
 
     def test_all_dates_within_ptolemaic_range(self, wiki_ptolemaic_rows):
         for i, row in enumerate(wiki_ptolemaic_rows, 1):
-            for field in ("start_bce", "end_bce"):
+            for field in ("start_year", "end_year"):
                 val = row.get(field)
                 if val is not None:
                     assert -323 <= val <= -30, (
@@ -145,7 +145,7 @@ class TestWikiPtolemaicIntegrity:
     def test_ptolemy_vii_has_null_dates(self, wiki_ptolemaic_rows):
         p7 = [r for r in wiki_ptolemaic_rows if r.get("display", "").startswith("Ptolemy VII ")]
         assert len(p7) == 1, "Ptolemy VII should have exactly one row"
-        assert p7[0]["start_bce"] is None and p7[0]["end_bce"] is None, (
+        assert p7[0]["start_year"] is None and p7[0]["end_year"] is None, (
             "Ptolemy VII never formally reigned; dates should be null"
         )
 
@@ -183,7 +183,7 @@ class TestWikidataPharaohsIntegrity:
 
     def test_dates_are_negative_or_null(self, wikidata_pharaoh_rows):
         for i, row in enumerate(wikidata_pharaoh_rows, 1):
-            for field in ("start_bce", "end_bce"):
+            for field in ("start_year", "end_year"):
                 val = row.get(field)
                 if val is not None:
                     assert val < 0, (
@@ -192,11 +192,11 @@ class TestWikidataPharaohsIntegrity:
 
     def test_date_ranges_are_ordered(self, wikidata_pharaoh_rows):
         for i, row in enumerate(wikidata_pharaoh_rows, 1):
-            s, e = row.get("start_bce"), row.get("end_bce")
+            s, e = row.get("start_year"), row.get("end_year")
             if s is not None and e is not None:
                 assert s <= e, (
                     f"Row {i} ({row['display']}): inverted date range "
-                    f"start_bce={s} > end_bce={e}"
+                    f"start_year={s} > end_year={e}"
                 )
 
     def test_dynasty_numbers_in_valid_range(self, wikidata_pharaoh_rows):
@@ -216,7 +216,7 @@ class TestWikidataPharaohsIntegrity:
 
     def test_has_minimum_date_coverage(self, wikidata_pharaoh_rows):
         with_dates = sum(1 for r in wikidata_pharaoh_rows
-                         if r["start_bce"] is not None or r["end_bce"] is not None)
+                         if r["start_year"] is not None or r["end_year"] is not None)
         ratio = with_dates / len(wikidata_pharaoh_rows)
         assert ratio >= 0.70, (
             f"Only {ratio:.0%} of rows have dates; expected at least 70%"
@@ -237,7 +237,7 @@ class TestWikidataPharaohsIntegrity:
         t3 = matches[0]
         assert t3["qid"] == "Q157899"
         assert t3["dynasty"] == 18
-        assert t3["start_bce"] is not None and t3["start_bce"] < -1400
+        assert t3["start_year"] is not None and t3["start_year"] < -1400
 
     def test_alt_labels_are_lists_or_null(self, wikidata_pharaoh_rows):
         for i, row in enumerate(wikidata_pharaoh_rows, 1):
