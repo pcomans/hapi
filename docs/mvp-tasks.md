@@ -94,7 +94,7 @@ Authority files are built from real data ingested in Milestones 1–2. The detai
 
 The work is sequential by authority — dynasties first as the smallest, most constrained vocabulary, then periods, then rulers, then sites. Each tier validates the authority/enrich pattern before the next one starts.
 
-### 3.1 Phase 0: Source acquisition
+### ~~3.1 Phase 0: Source acquisition~~ ✅
 
 Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources/`. These can run in parallel:
 
@@ -103,7 +103,7 @@ Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources
 - ~~Wikidata pharaohs SPARQL dump~~ ✅ — 517-row source in `authority/sources/wikidata-pharaohs/reconciled.jsonl` (Predynastic through Dynasty 31 + Ptolemaic + foreign rulers). Includes Wikidata QIDs for Wikipedia linking, alt labels for alias seeding. Reproducible via `fetch.py`. Beckerath cross-check for prenomen/titulary deferred to Phase A curation. PR #21.
 - ~~Trismegistos Geo TM Places~~ — **Dropped.** Papyrological bias: pharaonic sites subsumed under coarse toponyms (e.g., Deir el-Bahari, Valley of the Kings, Medinet Habu all lumped into TM Geo 1341). Replaced by iDAI.gazetteer (see below). PR #22 closed.
 - ~~Theban Mapping Project~~ — **Dropped.** Site offline (403/503), no API, ARCE copyright. See `docs/site-authority-research.md`.
-- iDAI.gazetteer site authority (CC BY 4.0) — REST API at `gazetteer.dainst.org`. 2,061 Egyptian places, ~1,000 site-relevant after type filtering. 29/30 canary sites confirmed. See `docs/site-authority-research.md` for full evaluation. PR #24.
+- ~~iDAI.gazetteer site authority (CC BY 4.0)~~ ✅ — REST API at `gazetteer.dainst.org`. 2,061 fetched, 984 after archaeological-site/area/landform filter. 29/30 canary sites confirmed. `pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl`. PR #25.
 
 ### 3.2 Phase A: Authority curation
 
