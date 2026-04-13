@@ -87,10 +87,12 @@ DYNASTY_MAP["Protodynastic Period of Egypt"] = 0
 # Q113564932 — "Aknamkanon" is a fictional Yu-Gi-Oh! character, not a historical ruler.
 # Q136446547 — "Milkyaton" is a Cypriot king, not an Egyptian pharaoh.
 # Q471255    — Pothinus was a Ptolemaic court official/regent, not a pharaoh.
+# Q5131728   — "Cleopatra" is a fictional character from HBO's Rome, not a historical ruler.
 KNOWN_NON_PHARAOHS: frozenset[str] = frozenset({
     "Q113564932",
     "Q136446547",
     "Q471255",
+    "Q5131728",
 })
 
 # Per-QID alt_labels to drop. Used to remove Wikidata cross-contamination where one
@@ -319,7 +321,7 @@ def main():
 
     # Save intermediate dump (deduplicated records, pre-reconciliation)
     raw_path = SOURCE_DIR / "raw.json"
-    with open(raw_path, "w") as f:
+    with open(raw_path, "w", encoding="utf-8", newline="\n") as f:
         json.dump(records, f, indent=2, ensure_ascii=False)
     print(f"  Saved intermediate dump → {raw_path}")
 
@@ -329,7 +331,7 @@ def main():
 
     # Save reconciled JSONL
     jsonl_path = SOURCE_DIR / "reconciled.jsonl"
-    with open(jsonl_path, "w") as f:
+    with open(jsonl_path, "w", encoding="utf-8", newline="\n") as f:
         for row in reconciled:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
     print(f"  Saved reconciled → {jsonl_path}")
