@@ -100,7 +100,7 @@ Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources
 
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.
-- Wikidata pharaohs SPARQL dump (entities of class "pharaoh of ancient Egypt") + von Beckerath *Handbuch* (1999) cross-check pass for canonical names and titulary
+- ~~Wikidata pharaohs SPARQL dump~~ ✅ — 521-row source in `authority/sources/wikidata-pharaohs/reconciled.jsonl` (Predynastic through Dynasty 31 + Ptolemaic + foreign rulers). Includes Wikidata QIDs for Wikipedia linking, alt labels for alias seeding. Reproducible via `fetch.py`. Beckerath cross-check for prenomen/titulary deferred to Phase A curation. PR #TBD.
 - Trismegistos Geo TM Places bulk dump (CC BY-SA 4.0) from the Trismegistos Data Services portal
 - Theban Mapping Project KV (Valley of the Kings) and TT (Theban Tombs) data
 
