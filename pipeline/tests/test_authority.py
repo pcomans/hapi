@@ -190,6 +190,15 @@ class TestWikidataPharaohsIntegrity:
                         f"Row {i} ({row['display']}): {field}={val} should be negative (BCE)"
                     )
 
+    def test_date_ranges_are_ordered(self, wikidata_pharaoh_rows):
+        for i, row in enumerate(wikidata_pharaoh_rows, 1):
+            s, e = row.get("start_bce"), row.get("end_bce")
+            if s is not None and e is not None:
+                assert s <= e, (
+                    f"Row {i} ({row['display']}): inverted date range "
+                    f"start_bce={s} > end_bce={e}"
+                )
+
     def test_dynasty_numbers_in_valid_range(self, wikidata_pharaoh_rows):
         for i, row in enumerate(wikidata_pharaoh_rows, 1):
             dyn = row.get("dynasty")

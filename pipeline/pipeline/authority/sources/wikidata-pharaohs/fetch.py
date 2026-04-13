@@ -178,16 +178,16 @@ def deduplicate(bindings: list[dict]) -> list[dict]:
 
         rs = _parse_year(_get_val(r, "reignStart"))
         re_ = _parse_year(_get_val(r, "reignEnd"))
-        if rs and (rec["reign_start"] is None or rs < rec["reign_start"]):
+        if rs is not None and (rec["reign_start"] is None or rs < rec["reign_start"]):
             rec["reign_start"] = rs
-        if re_ and (rec["reign_end"] is None or re_ > rec["reign_end"]):
+        if re_ is not None and (rec["reign_end"] is None or re_ > rec["reign_end"]):
             rec["reign_end"] = re_
 
         by_ = _parse_year(_get_val(r, "birthDate"))
         dy = _parse_year(_get_val(r, "deathDate"))
-        if by_:
+        if by_ is not None:
             rec["birth_year"] = by_
-        if dy:
+        if dy is not None:
             rec["death_year"] = dy
 
         rep = _get_val(r, "replacesLabel")
@@ -232,8 +232,12 @@ def reconcile(records: list[dict]) -> list[dict]:
                 end_bce = rec["death_year"]
                 approximate = True
 
+        # Fix inverted date ranges (Wikidata data quality issues)
+        if start_bce is not None and end_bce is not None and start_bce > end_bce:
+            start_bce, end_bce = end_bce, start_bce
+
         notes = []
-        if approximate and (start_bce or end_bce):
+        if approximate and (start_bce is not None or end_bce is not None):
             notes.append("Dates from birth/death, not reign")
         if rec["replaces"]:
             notes.append(f"Replaces: {rec['replaces']}")
