@@ -14,6 +14,7 @@ Output:
 """
 
 import json
+import sys
 import urllib.request
 import urllib.parse
 from collections import Counter
@@ -90,25 +91,24 @@ def _get_val(binding: dict, key: str) -> str | None:
 def _parse_year(datestr: str | None) -> int | None:
     """Extract year from Wikidata ISO 8601 date like '-1478-01-01T00:00:00Z'.
 
-    All pharaohs predate 0 CE, so positive years from Wikidata are treated
-    as BCE (negated). Wikidata occasionally stores early dates without the
-    minus sign due to data quality issues.
+    Raises on unparseable dates — the fetch script runs manually and
+    unexpected formats should crash loudly so the parser gets updated.
     """
     if not datestr:
         return None
-    try:
-        if datestr.startswith("-"):
-            year = -int(datestr[1:].split("-")[0])
-        elif datestr.startswith("+"):
-            year = int(datestr[1:].split("-")[0])
-        else:
-            year = int(datestr.split("-")[0])
-        # All pharaohs are BCE — negate any positive years
-        if year > 0:
-            year = -year
-        return year
-    except (ValueError, IndexError):
+    # Wikidata sometimes returns blank node URIs instead of date literals
+    # for unknown/disputed dates. These are not parseable.
+    if datestr.startswith("http"):
         return None
+    if datestr.startswith("-"):
+        year = -int(datestr[1:].split("-")[0])
+    elif datestr.startswith("+"):
+        year = int(datestr[1:].split("-")[0])
+    else:
+        # Unprefixed dates from Wikidata (e.g. '2965-01-01T00:00:00Z').
+        # Parsed as-is; the reconcile step will negate and warn if positive.
+        year = int(datestr.split("-")[0])
+    return year
 
 
 def _parse_dynasty(families: list[str]) -> int | None:
@@ -231,6 +231,20 @@ def reconcile(records: list[dict]) -> list[dict]:
                 start_bce = rec["birth_year"]
                 end_bce = rec["death_year"]
                 approximate = True
+
+        # Negate positive years (Wikidata data quality issue — some BCE dates
+        # stored with '+' prefix). Log each case so it's auditable.
+        for date_val, date_name in [(start_bce, "start"), (end_bce, "end")]:
+            if date_val is not None and date_val > 0:
+                print(
+                    f"  WARNING: {label} ({rec['qid']}): {date_name}_bce={date_val} "
+                    f"is positive — negating to {-date_val}",
+                    file=sys.stderr,
+                )
+        if start_bce is not None and start_bce > 0:
+            start_bce = -start_bce
+        if end_bce is not None and end_bce > 0:
+            end_bce = -end_bce
 
         # Fix inverted date ranges (Wikidata data quality issues)
         if start_bce is not None and end_bce is not None and start_bce > end_bce:
