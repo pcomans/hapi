@@ -5,17 +5,17 @@
 
 ## Executive Summary
 
-**Recommended primary site authority: iDAI.gazetteer + Wikidata (layered)**
+**Recommended sole site authority: iDAI.gazetteer**
 
 | Rank | Source | Verdict |
 |---|---|---|
-| 1 | **iDAI.gazetteer** | Primary site gazetteer. 854 archaeological sites in Egypt, 100% canary hit rate, rich multilingual names, hierarchy, coordinates. CC BY. No auth. Acquire immediately. |
-| 2 | **Wikidata** | Cross-reference layer. CC0, SPARQL, tomb-level granularity (individual KV/TT entries), alt-labels for alias matching. Existing fetch pattern in repo. Q-IDs in original brief were wrong — corrected IDs documented below. |
-| 3 | **PAThs** | Supplementary. 481 places, 74% have TM GeoIDs (unique among candidates), good multilingual toponyms. But CC BY-NC-SA license is a concern, and missing Saqqara. |
-| 4 | **TopBib** | Enrichment only. Bibliographic index, not a site gazetteer. Undocumented JSON API exists. No visible license. Useful for linking artifacts to published literature, not for site authority. |
-| 5 | **Theban Mapping Project** | Dead end. Site returning 403/503, no API, restrictive copyright, blocks crawlers. |
+| 1 | **iDAI.gazetteer** | **Sole site authority.** 854 archaeological sites in Egypt, 100% canary hit rate, rich multilingual names, hierarchy, coordinates. CC BY 4.0. No auth. |
+| 2 | **Wikidata** | Dropped. Messy data quality, Q-IDs in original brief were all wrong. Could revisit for tomb-level granularity if individual tomb provenance becomes a mapper requirement. |
+| 3 | **PAThs** | Dropped. CC BY-NC-SA license creates a permanent ceiling on commercial use. Its unique value (TM GeoID cross-refs) is moot because we're dropping TM Places entirely. |
+| 4 | **TopBib** | Not needed. Bibliographic index, not a site gazetteer. Undocumented JSON API exists if bibliography enrichment becomes a future requirement. |
+| 5 | **Theban Mapping Project** | Dead end. Site returning 403/503, no API, restrictive copyright. |
 
-TM Places remains valuable as a cross-reference ID system (especially via PAThs' TM GeoID links), but should not be the sole authority.
+TM Places is dropped as a site authority source. Its papyrological bias (built from documentary attestations, not archaeological provenance) makes it structurally misaligned with museum artifact data. The pharaonic sites that dominate museum provenance strings — Deir el-Bahari, Valley of the Kings, Karnak, Deir el-Medina — are absent or subsumed under broader toponyms in TM Places. iDAI.gazetteer covers all of them natively.
 
 ---
 
@@ -397,16 +397,21 @@ Wikidata provides the same KV tomb identifiers and basic metadata under CC0. TMP
 
 ---
 
-## Recommended Acquisition Order
+## Acquisition Plan
 
-### Phase 1: iDAI.gazetteer (immediate)
-
-**Why first:** Highest canary hit rate, best alternate name coverage, clean hierarchy, CC BY license, no auth, no legal risk. Solves the core problem: resolving the variant site spellings our museum mappers produce.
+### iDAI.gazetteer (sole source)
 
 **Deliverable:** `pipeline/pipeline/authority/sources/idai-gazetteer/` with:
 - `fetch.py` — paginate all Egyptian descendants, fetch full records
 - `raw.json` — verbatim API responses
 - `reconciled.jsonl` — normalized to site authority schema
+
+**Steps:**
+1. `GET /search.json?q=*&fq=ancestors:2042786&limit=100&offset=0` — paginate through 21 pages (2,061 results)
+2. For each result, `GET /place/{gazId}` with `Accept: application/json` for full record
+3. Filter client-side by `types` containing `archaeological-site` (854 records)
+4. Extract: display name, all alternate names (multilingual), coordinates, parent/ancestor hierarchy, GeoNames/Pleiades cross-refs
+5. Total: ~855 HTTP requests. No rate limiting detected. ~1 hour of scripting, ~5 minutes of runtime.
 
 **Schema for `sites.json` entries:**
 ```json
@@ -424,28 +429,19 @@ Wikidata provides the same KV tomb identifiers and basic metadata under CC0. TMP
 }
 ```
 
-### Phase 2: Wikidata (next)
+### Tomb-level granularity
 
-**Why second:** CC0 license, tomb-level granularity (KV62, TT100), alt-labels for aliases, and the critical TM/Pleiades cross-refs that iDAI lacks. Existing `fetch.py` template in repo.
+iDAI has only 5 tombs under Valley of the Kings (KV 2, KV 11, KV 17, plus two others). No KV62, no TT100. However, no museum in our current corpus provides tomb-number provenance — all mapper output is settlement/monument-level ("Thebes", "Saqqara", "Valley of the Kings"). Tomb-level resolution can be deferred until a museum mapper actually produces tomb-number strings.
 
-**Deliverable:** `pipeline/pipeline/authority/sources/wikidata-sites/` with:
-- `fetch.py` — SPARQL queries with corrected Q-IDs
-- `raw.json` — query results
-- `reconciled.jsonl` — merged into site authority
+### Sources not acquired (and why)
 
-**Key task:** Fix all Q-IDs before running queries. The brief's IDs are all wrong.
-
-### Phase 3: PAThs TM bridge (if NC license clears)
-
-**Why third:** PAThs is the only source with direct TM GeoID cross-references. Using it as a bridge table (iDAI gazId <-> TM GeoID) would connect our existing TM Places data to iDAI records.
-
-**Blocker:** CC BY-NC-SA license. If Hapi is non-commercial, proceed. If commercial use is possible, either:
-- Contact PAThs team for a data-sharing agreement
-- Build the TM bridge through Pleiades instead (iDAI has some Pleiades IDs, Wikidata has TM+Pleiades)
-
-### Phase 4: TopBib (deferred)
-
-Only pursue if artifact-to-bibliography linking becomes a product requirement. Legal terms need clarification first.
+| Source | Why dropped |
+|---|---|
+| **TM Places** | Papyrological bias. Built from documentary attestations, not archaeological provenance. Pharaonic sites that dominate museum provenance strings are absent or subsumed. Structurally misaligned with our use case. |
+| **Wikidata** | Messy data quality. Q-IDs in research brief were all wrong. Could revisit for tomb granularity if needed. |
+| **PAThs** | CC BY-NC-SA license creates a permanent ceiling on commercial use. Its unique value (TM GeoID cross-refs) is moot since we're dropping TM Places. EU sui generis database rights make even bridge-table extraction a derivative work. |
+| **TopBib** | Bibliographic index, not a site gazetteer. No visible license. |
+| **Theban Mapping Project** | Offline (403/503), no API, ARCE copyright, blocks crawlers. |
 
 ---
 
@@ -453,10 +449,20 @@ Only pursue if artifact-to-bibliography linking becomes a product requirement. L
 
 ADR-012 must be amended. The current decision states:
 
-> Trismegistos Geo is the sole site authority.
+> Trismegistos Geo is the sole site authority. [...] + Theban Mapping Project (KV and TT codes)
 
 This should change to:
 
-> iDAI.gazetteer is the primary site gazetteer, supplemented by Wikidata for tomb-level granularity and cross-reference IDs. TM Places is retained as a cross-reference system (not primary authority). The Theban Mapping Project is dropped — its data is unavailable and Wikidata covers KV tomb identifiers under CC0.
+> iDAI.gazetteer is the sole site authority. TM Places is dropped — its papyrological bias makes it structurally misaligned with museum artifact provenance. The Theban Mapping Project is dropped — its data is unavailable and its copyright is restrictive.
 
-The `_source` block for `sites.json` would reference both iDAI and Wikidata, with separate raw files for each.
+The `_source` block for `sites.json`:
+```json
+{
+  "_source": {
+    "citation": "iDAI.gazetteer, German Archaeological Institute (DAI). https://gazetteer.dainst.org",
+    "retrieved": "2026-04-13",
+    "license": "CC BY 4.0",
+    "raw_file": "sources/idai-gazetteer/raw.json"
+  }
+}
+```
