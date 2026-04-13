@@ -101,8 +101,9 @@ Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.
 - ~~Wikidata pharaohs SPARQL dump~~ ✅ — 517-row source in `authority/sources/wikidata-pharaohs/reconciled.jsonl` (Predynastic through Dynasty 31 + Ptolemaic + foreign rulers). Includes Wikidata QIDs for Wikipedia linking, alt labels for alias seeding. Reproducible via `fetch.py`. Beckerath cross-check for prenomen/titulary deferred to Phase A curation. PR #21.
-- Trismegistos Geo TM Places bulk dump (CC BY-SA 4.0) from the Trismegistos Data Services portal
-- Theban Mapping Project KV (Valley of the Kings) and TT (Theban Tombs) data
+- ~~Trismegistos Geo TM Places~~ — **Dropped.** Papyrological bias: pharaonic sites subsumed under coarse toponyms (e.g., Deir el-Bahari, Valley of the Kings, Medinet Habu all lumped into TM Geo 1341). Replaced by iDAI.gazetteer (see below). PR #22 closed.
+- ~~Theban Mapping Project~~ — **Dropped.** Site offline (403/503), no API, ARCE copyright. See `docs/site-authority-research.md`.
+- iDAI.gazetteer site authority (CC BY 4.0) — REST API at `gazetteer.dainst.org`. 2,061 Egyptian places, ~1,000 site-relevant after type filtering. 29/30 canary sites confirmed. See `docs/site-authority-research.md` for full evaluation. PR #24.
 
 ### 3.2 Phase A: Authority curation
 
