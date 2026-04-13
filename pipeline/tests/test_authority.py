@@ -266,3 +266,4 @@ class TestWikidataPharaohsIntegrity:
         assert "Q113564932" not in qids, "Aknamkanon (fictional Yu-Gi-Oh character) must be excluded"
         assert "Q136446547" not in qids, "Milkyaton (Cypriot king, not a pharaoh) must be excluded"
         assert "Q471255" not in qids, "Pothinus (Ptolemaic courtier, not a pharaoh) must be excluded"
+        assert "Q5131728" not in qids, "Fictional Cleopatra (HBO's Rome) must be excluded"
