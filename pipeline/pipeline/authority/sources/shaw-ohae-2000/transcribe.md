@@ -6,13 +6,13 @@ Reproducible protocol. A reviewer should be able to run these steps from the sou
 
 1. `proprietary/books/Shaw 2000 - Oxford History of Ancient Egypt.pdf` — scanned book PDF (not committed to the public repo). SHA-256 `080a7d0e0dd9d3e19a65d0c20f031f66ee8855dbbb018bd0a5eac4534b05d83f`.
 2. `proprietary/books/Shaw 2000 - Oxford History of Ancient Egypt.txt` — Internet Archive OCR plain-text extract of the same scan (not committed). Internet Archive identifier `oxfordhistoryofa0000unse`.
-3. `raw/chapter-banners.txt` (committed) — the thirteen chapter-banner blocks transcribed verbatim from the OCR, with OCR artifacts preserved in square brackets. This is the auditable record a reviewer can check without access to the PDF.
+3. `raw/chapter-banners.txt` (committed) — the thirteen chapter-banner blocks transcribed verbatim from the OCR (banner lines are factual — chapter numbers, titles, BCE date ranges, author attributions — and are not copyrightable prose). For chapter 3, a factual paraphrase of Midant-Reynes' BCE sub-period intervals (pp. 42-43) is included in place of a verbatim quote. OCR artifacts are preserved in square brackets. This is the auditable record a reviewer can check without access to the PDF.
 
 ## Pages consulted
 
 - **Table of Contents (pp. v–vi):** lists all fifteen chapters with chapter titles, BCE date ranges, and starting page numbers.
 - **Each chapter's opening banner:** the chapter-number / title / date block, located in the OCR `.txt` by grepping for the chapter title stub (e.g. `^The Naqada Period`). Thirteen banners verified; see `raw/chapter-banners.txt`.
-- **Midant-Reynes (ch 3, pp. 42–43):** two sentences from the chapter body quoted in `raw/chapter-banners.txt` to attest the Naqada I / Naqada II BCE boundaries included as sub-periods on the chapter 3 row.
+- **Midant-Reynes (ch 3, pp. 42–43):** the BCE sub-period intervals for Naqada I (Amratian) and Naqada II (Gerzean) are stated in the opening chronology section of the chapter body; they are captured as facts (paraphrased numeric intervals, with page citation) in `raw/chapter-banners.txt` and drive the `sub_periods` entries on the chapter 3 row.
 
 ## Extraction rules
 
@@ -54,4 +54,4 @@ Reproducible protocol. A reviewer should be able to run these steps from the sou
 
 ## Verification
 
-The row-level field values are asserted by `pipeline/tests/test_sources_shaw_ohae.py` against all populated fields on five sampled rows (rule 5). A structural citation test in `tests/test_structure.py` (added when all eleven sources land) will verify every row carries `source_citation.page` and `source_citation.edition`.
+The row-level field values are asserted by `pipeline/tests/test_sources_shaw_ohae.py` against all populated fields on five sampled rows (rule 5). A structural citation test in `pipeline/tests/test_structure.py` (added when all eleven sources land) will verify every row carries `source_citation.page` and `source_citation.edition`.

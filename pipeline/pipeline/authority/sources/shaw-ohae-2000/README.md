@@ -65,7 +65,7 @@ No other chapter banner or opening chronology section in Shaw states sub-period 
 
 ## Rights
 
-OUP, in copyright. This extract contains **factual data** — period names, chapter numbers, BCE date ranges, author attributions, and page numbers — which are not copyrightable. Two chapter-body sentences from Midant-Reynes are quoted in `raw/chapter-banners.txt` solely to attest the Naqada I/II BCE boundaries; the rest of the chapter bodies is not reproduced. Per handoff rule 4, the book PDF itself is not committed; the scan lives at `proprietary/books/Shaw 2000 - Oxford History of Ancient Egypt.pdf` outside the public repo and is pinned by SHA-256 above.
+OUP, in copyright. This extract contains **factual data** — period names, chapter numbers, BCE date ranges, author attributions, and page numbers — which are not copyrightable. The Naqada I/II BCE boundaries on the chapter 3 row come from Midant-Reynes (pp. 42-43); those numeric intervals are recorded as facts (with page citations) in `raw/chapter-banners.txt` and in the `sub_periods` field, not as verbatim prose. No chapter-body sentences are reproduced. Per handoff rule 4, the book PDF itself is not committed; the scan lives at `proprietary/books/Shaw 2000 - Oxford History of Ancient Egypt.pdf` outside the public repo and is pinned by SHA-256 above.
 
 ## Method
 
