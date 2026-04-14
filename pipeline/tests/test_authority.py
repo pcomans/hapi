@@ -288,3 +288,124 @@ class TestPharaohSeIntegrity:
     def test_fetch_script_exists(self):
         fetch_path = PHARAOH_SE_DIR / "fetch.py"
         assert fetch_path.exists(), "fetch.py should exist for reproducible re-acquisition"
+
+
+IDAI_DIR = AUTHORITY_SOURCES / "idai-gazetteer"
+
+
+@pytest.fixture
+def idai_rows():
+    return load_jsonl(IDAI_DIR / "reconciled.jsonl")
+
+
+class TestIdaiGazetteerIntegrity:
+
+    def test_source_block_is_first_line(self, idai_rows):
+        src_block = idai_rows[0]
+        assert "_source" in src_block
+        src = src_block["_source"]
+        assert src["citation"].startswith("iDAI.gazetteer")
+        assert src["license"] == "CC BY 4.0"
+        assert src["raw_file"] == "sources/idai-gazetteer/raw.json"
+        assert len(src.get("retrieved", "")) == 10  # ISO date YYYY-MM-DD
+
+    def test_raw_file_exists(self):
+        assert (IDAI_DIR / "raw.json").exists(), "raw.json must be committed (ADR-012)"
+
+    def test_minimum_record_count(self, idai_rows):
+        site_rows = [r for r in idai_rows if "_source" not in r]
+        assert len(site_rows) == 1000, f"Expected 1000 site records after filter, got {len(site_rows)}"
+
+    def test_all_rows_have_kind_site(self, idai_rows):
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            assert row["kind"] == "site", f"Row {i}: expected kind='site', got {row['kind']!r}"
+
+    def test_ids_start_with_idai_prefix(self, idai_rows):
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            assert row["id"].startswith("idai:"), f"Row {i}: id must start with 'idai:'"
+
+    def test_ids_are_unique(self, idai_rows):
+        ids = [r["id"] for r in idai_rows if "_source" not in r]
+        assert len(ids) == len(set(ids)), "Duplicate idai: IDs found"
+
+    def test_all_rows_have_display(self, idai_rows):
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            assert row.get("display"), f"Row {i} ({row.get('id')}): missing display name"
+
+    def test_all_types_are_filtered(self, idai_rows):
+        # Load ADDITIONAL_GAZ_IDS from the fetch module (path-loaded because
+        # the idai-gazetteer directory has a hyphen in its name).
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "idai_fetch",
+            IDAI_DIR / "fetch.py",
+        )
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        supplementary_ids = {f"idai:{gid}" for gid, _, _ in mod.ADDITIONAL_GAZ_IDS}
+
+        valid = {"archaeological-site", "archaeological-area", "landform"}
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            # Supplementary additions legitimately bypass the type filter — they
+            # are curated-by-ID for museum-provenance coverage (Fayum region,
+            # Nubian sites outside the Egypt ancestor tree). See ADDITIONAL_GAZ_IDS.
+            if row["id"] in supplementary_ids:
+                continue
+            types = set(row.get("types", []))
+            assert types & valid, (
+                f"Row {i} ({row.get('display')}): no valid type in {types!r}"
+            )
+
+    def test_canary_sites_present(self, idai_rows):
+        all_ids = {r["id"] for r in idai_rows if "_source" not in r}
+        canary = {
+            "idai:2110510": "Deir el-Bahari",
+            "idai:2096884": "Valley of the Kings",
+            "idai:2178702": "Karnak",
+            "idai:2042907": "Saqqara",
+            "idai:2042921": "Thebes",
+            "idai:2089516": "Giza",
+            "idai:2412478": "Abydos",
+            "idai:2296218": "Amarna",
+            "idai:2042876": "Medinet Habu",
+            "idai:2751511": "Elephantine",
+            # Supplementary additions — fetched explicitly because the
+            # (ancestors:2042786 + type filter) search misses them.
+            "idai:2042846": "al-Fayyūm (Fayum)",
+            "idai:2751172": "Buhen",
+            "idai:2751351": "Kerma",
+            "idai:2293921": "Meroë",
+            "idai:2379057": "Napata",
+        }
+        for gaz_id, name in canary.items():
+            assert gaz_id in all_ids, f"Canary site missing: {name} ({gaz_id})"
+
+    def test_deir_el_bahari_data(self, idai_rows):
+        matches = [r for r in idai_rows if r.get("id") == "idai:2110510"]
+        assert len(matches) == 1
+        deb = matches[0]
+        assert deb["display"] == "ad-dayr al-baḥrī"
+        assert deb["coordinates"] == pytest.approx([32.60771, 25.73783], abs=0.001)
+        assert deb["cross_refs"]["geonames"] == "361834"
+
+    def test_coordinates_are_valid(self, idai_rows):
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            coords = row.get("coordinates")
+            if coords is None:
+                continue
+            lon, lat = coords
+            assert -180 <= lon <= 180, f"Row {i}: longitude {lon} out of range"
+            assert -90 <= lat <= 90, f"Row {i}: latitude {lat} out of range"
+
+    def test_fetch_script_exists(self):
+        assert (IDAI_DIR / "fetch.py").exists()
