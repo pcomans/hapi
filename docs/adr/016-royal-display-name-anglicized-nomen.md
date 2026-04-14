@@ -1,7 +1,5 @@
 # ADR-016: Royal Display Name Standard Is Conventional English Display Form
 
-> **Naming note.** An earlier draft called this "Anglicized Nomen," but names like *Amenhotep*, *Hatshepsut*, or *Ahmose* are conventional Egyptological transliterations, not Anglicizations in the strict sense. The policy is better described as *the display form conventionally used in Anglophone Egyptology and in the source museums' own catalogue text*. The file slug is kept for URL stability.
-
 ## Status
 Accepted
 
