@@ -18,7 +18,7 @@ This document covers the *order* of work, not the *shape* of the work.
 
 - 36,245 normalized records in `catalog.artifacts`: Met 27,969 · Brooklyn 7,554 · Harvard 722
 - Mappers extract raw text into `period`, `dynasty`, `ruler_display_name`, `origin_site_raw`
-- `pipeline/pipeline/authority/` is empty — constitutional rule 6 has nothing backing it yet
+- `pipeline/pipeline/authority/` is empty — constitutional rule 7 has nothing backing it yet
 - `pipeline/pipeline/assets/enrich/` is empty
 - The `ruler_id`, `origin_site_id` columns are unpopulated and will be replaced per ADR-015
 
@@ -51,10 +51,10 @@ Acquire the raw reference data per ADR-012. Each source goes into `pipeline/pipe
 | Source | Method | Used by |
 |---|---|---|
 | Hornung/Krauss/Warburton (2006) | Manual transcription of chronology table from PDF, with page citations | dynasties.json, periods.json |
-| Wikidata pharaohs SPARQL dump | Saved query, JSON output | rulers.json |
-| Beckerath *Handbuch* (1999) | Manual cross-check pass against Wikidata results | rulers.json |
-| TM Places bulk dump | Download from Trismegistos Data Services portal (CC BY-SA 4.0) | sites.json |
-| Theban Mapping Project (KV/TT) | Scrape or download | sites.json |
+| Pharaoh.se royal titulary database | HTML scrape, reconciled JSONL (CC BY 4.0) | rulers.json |
+| Wikipedia Ptolemaic dynasty | Scraped table, JSONL (CC BY-SA 4.0) | rulers.json, dynasties.json (Ptolemaic fill-in) |
+| Beckerath *Handbuch* (1999) | Manual cross-check pass against pharaoh.se results | rulers.json |
+| iDAI.gazetteer Egyptian places | REST API, reconciled JSONL (CC BY 4.0) | sites.json |
 
 These can run in parallel.
 
