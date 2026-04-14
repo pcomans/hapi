@@ -24,7 +24,7 @@
                    │ (ruler authority │
                    │  list, site      │
                    │  hierarchy,      │
-                   │  Wikidata IDs)   │
+                   │  period/dynasty) │
                    └────────┬────────┘
                             │
                      ┌──────▼──────┐
