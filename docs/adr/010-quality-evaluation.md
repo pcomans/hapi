@@ -24,7 +24,7 @@ All data quality checks are implemented as Dagster `@asset_check` decorators, co
 | Record count vs API total | Ingest | Missed artifacts during ingest |
 | Field fill rate (% with ruler, site, image) | Normalize | Authority list gaps, sparse data |
 | Value range validation (dates > -4000 BCE, `date_start < date_end`) | Normalize | Bad date parsing |
-| Format validation (Wikidata IDs match `Q\d+`, enums valid) | Normalize | Mapper field errors |
+| Format validation (museum IDs match expected patterns, enums valid) | Normalize | Mapper field errors |
 | Unmatched value frequency ranking | Enrich | Authority list gaps (200 records saying "Thutmosis III" with no match = gap) |
 | Fuzzy match routing (all fuzzy → review queue) | Enrich | False matches caught before reaching users (ADR-009) |
 | Cross-museum site consistency | Enrich | Different museums resolving to different site IDs for the same place |

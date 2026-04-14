@@ -100,21 +100,34 @@ Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources
 
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.
-- ~~Wikidata pharaohs SPARQL dump~~ ✅ — 517-row source in `authority/sources/wikidata-pharaohs/reconciled.jsonl` (Predynastic through Dynasty 31 + Ptolemaic + foreign rulers). Includes Wikidata QIDs for Wikipedia linking, alt labels for alias seeding. Reproducible via `fetch.py`. Beckerath cross-check for prenomen/titulary deferred to Phase A curation. PR #21.
+- ~~Wikidata pharaohs SPARQL dump~~ — **Dropped and replaced by pharaoh.se.** Wikidata had persistent quality issues (fictional characters, non-pharaohs, 0% prenomen coverage). Pharaoh.se (CC BY 4.0, expert-curated, full five-name titulary sourced from Beckerath) landed in `authority/sources/pharaoh-se/reconciled.jsonl`. See ADR-012 for the decision record. PR #21 / superseding PR.
 - ~~Trismegistos Geo TM Places~~ — **Dropped.** Papyrological bias: pharaonic sites subsumed under coarse toponyms (e.g., Deir el-Bahari, Valley of the Kings, Medinet Habu all lumped into TM Geo 1341). Replaced by iDAI.gazetteer (see below). PR #22 closed.
 - ~~Theban Mapping Project~~ — **Dropped.** Site offline (403/503), no API, ARCE copyright. See `docs/site-authority-research.md`.
 - ~~iDAI.gazetteer site authority (CC BY 4.0)~~ ✅ — REST API at `gazetteer.dainst.org`. 2,061 fetched, 984 after archaeological-site/area/landform filter. 29/30 canary sites confirmed. `pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl`. PR #27.
+
+**Additional sources required before Phase A can start** — a first attempt at Phase A curation revealed that ~10% of structured facts and ~70% of aliases had no traceable raw-source backing (model knowledge with prose citations only). Per constitutional rule 1 ("work like a scholar"), the following sources must land before Phase A is re-attempted. Each becomes its own subdirectory under `pipeline/pipeline/authority/sources/` with a `README.md` documenting method, a fetch/transcription script where applicable, a raw artifact (PDF page, scraped HTML, or CSV), and a `reconciled.jsonl`.
+
+- **Dodson & Hilton queens and royal families** → `sources/dodson-hilton-queens/reconciled.jsonl`. Transcribe the index/tables from *The Complete Royal Families of Ancient Egypt* (Dodson & Hilton, Thames & Hudson, 2004). Covers queens, princes, princesses, and royal genealogies not in pharaoh.se. Primary fix for the missing-queens gap (Nefertiti, Nefertari, Tiye, Ahmose-Nefertari, Ankhesenamun, etc.).
+- **Porter-Moss Topographical Bibliography Vol I (Theban Necropolis)** → `sources/porter-moss-theban-necropolis/reconciled.jsonl`. Transcribe KV/QV/TT tomb index with occupant, dynasty, and location for the top ~40 tombs (KV1–KV65, QV1–QV80 selected, TT1–TT400 selected). Porter-Moss I.1 (pre-1960, effectively public domain). Closes the KV/QV/TT gap that iDAI.gazetteer doesn't cover.
+- **Shaw OHAE period chapter date-ranges** → `sources/shaw-ohae-2000/reconciled.jsonl`. Transcribe the date range at the head of each chapter of *The Oxford History of Ancient Egypt* (Shaw ed., 2000) — gives period spans including Predynastic start bound and sub-period definitions (Amarna, Ramesside, Saite, etc.) that HKW does not enumerate as sub-periods.
+- **Ryholt 1997 SIP political tables** → `sources/ryholt-1997-sip/reconciled.jsonl`. Transcribe the dynastic-concurrency tables from *The Political Situation in Egypt During the Second Intermediate Period* (Ryholt, 1997). Source of truth for `polity` and `concurrent_with` on Dyns 13–17.
+- **Kitchen TIPE chronology table** → `sources/kitchen-tipe-3rd/reconciled.jsonl`. Transcribe the Third Intermediate Period chronological table from *The Third Intermediate Period in Egypt (1100–650 BC)*, 3rd ed. (Kitchen, 1996). Source for `polity` and `concurrent_with` on Dyns 21–25 and the Libyan/Kushite sub-period boundaries.
+- **Manetho fragments for Dynasty 7** → `sources/manetho-fragments/reconciled.jsonl`. Public-domain text; use Waddell 1940 Loeb edition or equivalent digitised source (e.g. attalus.org). Source for the scholarly convention of "Dynasty 7" as Manetho's ghost dynasty.
+- **Hölbl Argead bridge (Alexander → Ptolemy I)** → `sources/holbl-2001-argead/reconciled.jsonl`. Transcribe the opening chronological table of *A History of the Ptolemaic Empire* (Hölbl, 2001) for Alexander III, Philip III Arrhidaeus, Alexander IV — the 332–305 BCE bridge dynasty absent from HKW and pharaoh.se.
+- **Hendrickx Predynastic chronology** → `sources/hendrickx-predynastic/reconciled.jsonl` (optional; may defer). Covers Dynasty 0 and Naqada phases. Source: Hendrickx in HKW 2006 Chapter 2, or Hendrickx 2006 *The Relative Chronology of the Naqada Culture*.
+
+Before these sources land, Phase A curation cannot begin. Each task is a separate PR — do NOT bundle. Transcription method must be documented (book, edition, page range, whether OCR/scraped/manually typed, any normalisation applied).
 
 ### 3.2 Phase A: Authority curation
 
 Hand-curate the four authority files in dependency order. Each file has the mandatory `_source` block (ADR-012), uses the structured shapes defined in ADRs 013 and 016, and seeds its `aliases` array from the most-frequent distinct raw values in `catalog.artifacts`.
 
-1. **`dynasties.json`** — Dynasties 0–31 + Ptolemaic + Roman. Each entry: `id`, `display`, `dates`, `parent_period`, `polity` (for concurrent Intermediate-Period dynasties — 13th, 14th, 15th, 16th, 17th in different regions), `concurrent_with`, `aliases`
-2. **`periods.json`** — Predynastic through Roman. Sub-periods (Amarna, Ramesside, Saite) are their own entries with `parent_id`. Sub-period replaces parent when raw text resolves more specifically
+1. **`dynasties.json`** — Dynasties 0–31 + Ptolemaic. Each entry: `id`, `display`, `dates`, `parent_period`, `polity` (for concurrent Intermediate-Period dynasties — 13th, 14th, 15th, 16th, 17th in different regions), `concurrent_with`, `aliases`
+2. **`periods.json`** — Predynastic through Ptolemaic. Sub-periods (Amarna, Ramesside, Saite) are their own entries with `parent_id`. Sub-period replaces parent when raw text resolves more specifically
 3. **`rulers.json`** — Per ADR-016: canonical `display` (Anglicized Nomen), structured `titulary` object with all five name parts, flat `aliases` for the matcher. Coverage priority: New Kingdom and Late Period
 4. **`sites.json`** — Hierarchical structure (`egypt > upper_egypt > thebes > deir_el_bahri > tt_358`), ~100 most-referenced sites + KV/TT tombs
 
-Per constitutional rule 2 (deterministic enforcement), add structural tests in `pipeline/tests/test_structure.py` that load every authority file and assert:
+Per constitutional rule 3 (deterministic enforcement), add structural tests in `pipeline/tests/test_structure.py` that load every authority file and assert:
 
 - Every authority file has a non-empty `_source` block and the `raw_file` it references exists on disk (ADR-012)
 - Every entry in `rulers.json` has its `display` value present in the `nomen` titulary list (ADR-016)
