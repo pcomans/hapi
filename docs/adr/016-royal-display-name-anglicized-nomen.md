@@ -35,7 +35,7 @@ Each ruler entity in `pipeline/pipeline/authority/rulers.json` has exactly one c
 - Shabataka, not Shebitko
 - Tantamani, not Tenutamen
 
-The display uses the spelling conventionally used in Anglophone scholarship and — crucially — the form the three source museums (Met, Brooklyn, Harvard) actually emit in their catalogue text. Empirical check: the Met's Egyptian collection returns ~1000 hits for "Senwosret" and 0 for "Senusret"; ~21 for "Khafre" and 0 for "Khafra." Picking continental/Beckerath transliterations as `display` would show one spelling in the UI while every ingested artifact text uses another — dissonant for users and for search snippets.
+The display uses the spelling conventionally used in Anglophone scholarship and — crucially — the form the three source museums (Met, Brooklyn, Harvard) generally emit in their catalogue text. In practice, museum catalogue text heavily favours forms like "Senwosret" and "Khafre" over the continental transliterations "Senusret" and "Khafra" that appear in Beckerath-derived databases. Picking continental transliterations as `display` would show one spelling in the UI while ingested artifact text uses another — dissonant for users and for search snippets. (Any curator reconsidering this decision should re-run a live check against the Met Collection API, commit the result snapshot, and cite it — not rely on counts transcribed here, which drift as museum catalogues are revised.)
 
 Continental transliterations (Senusret, Khafra, Menkaura) and Greek forms (Sesostris, Chephren, Mycerinus) live in `aliases` so enrichment resolves all variants to the same ruler.
 
