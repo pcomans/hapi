@@ -15,7 +15,7 @@
    - **Rule 2 (No defensive programming)** — raise on parse errors. No bare `try/except`.
    - **Rule 4 (Single source of truth)** — reconciled JSONL is a faithful extract of the book. If the book is wrong, we need the original to prove it. Don't "correct" facts.
    - **Rule 5 (Tests assert values)** — write structural tests that assert specific field values for at least 3 sampled rows per source.
-2. **Also read `docs/harness.md`, `docs/adr/012-authoritative-sources.md`, `docs/mvp-tasks.md` section 3.1.** The `_source` block shape is fixed by ADR-012 — match it exactly.
+2. **Also read `docs/harness.md`, `docs/adr/012-authoritative-sources.md`, `docs/mvp-tasks.md` section 3.1.** Note that ADR-012's `_source` block applies to the *curated authority files* (`periods.json`, `dynasties.json`, `rulers.json`, `sites.json`) — not to per-source `reconciled.jsonl` extracts. For each `reconciled.jsonl` you produce, citation lives in the per-row `source_citation` field specified in each source's schema below (with at minimum `{page, edition}`).
 3. **One source = one PR = one branch.** Do NOT bundle multiple sources into a single PR. Branch name format: `feat/source-<short-slug>` (e.g. `feat/source-shaw-ohae`).
 4. **Each source directory contains:**
    - `README.md` — citation, edition, ISBN, retrieved date, rights verification, method (OCR? manual typing? scraped PDF?), known quirks
@@ -43,15 +43,15 @@
 
 ```json
 {
-  "period_name": "Predynastic Period",
-  "chapter_number": 2,
-  "chapter_title": "The Naqada Period (c. 4000–3200 BC)",
+  "period_name": "Naqada Period",
+  "chapter_number": 3,
+  "chapter_title": "The Naqada Period (c.4000-3200 bc)",
   "date_range_start_bce": -4000,
   "date_range_end_bce": -3200,
   "date_qualifier": "c.",
   "sub_periods": [
-    {"name": "Naqada I", "start_bce": -4000, "end_bce": -3500},
-    {"name": "Naqada II", "start_bce": -3500, "end_bce": -3200}
+    {"name": "Naqada I (Amratian)", "start_bce": -4000, "end_bce": -3500},
+    {"name": "Naqada II (Gerzean)", "start_bce": -3500, "end_bce": -3200}
   ],
   "source_citation": {"page": 41, "edition": "OUP 2000 hardback"}
 }
