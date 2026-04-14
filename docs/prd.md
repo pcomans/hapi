@@ -228,7 +228,7 @@ The Grand Egyptian Museum (opened November 2025) and the Egyptian Museum in Cair
 
 ### Authority Data Sources
 
-**Rulers:** Pharaoh.se (pharaoh.se) is an expert-curated royal titulary database (CC BY 4.0) covering all attested pharaohs with full five-name titulary (Horus, Nebty, Golden Horus, prenomen, nomen), Beckerath citations, and reign dates. Wikipedia's Ptolemaic dynasty article (CC BY-SA 4.0) fills the Ptolemaic period. The Hornung/Krauss/Warburton (2006) chronology provides the scholarly date backbone. Egyptian kings had up to five royal names plus Greek and modern spelling variants — all must map to a single canonical identifier per ADR-016 (Anglicized Nomen as canonical display).
+**Rulers:** Pharaoh.se (pharaoh.se) is an expert-curated royal titulary database (CC BY 4.0) covering all attested pharaohs with full five-name titulary (Horus, Nebty, Golden Horus, prenomen, nomen), Beckerath citations, and reign dates. Wikipedia's Ptolemaic dynasty article (CC BY-SA 4.0) fills the Ptolemaic period. The Hornung/Krauss/Warburton (2006) chronology provides the scholarly date backbone. Egyptian kings had up to five royal names plus Greek and modern spelling variants — all must map to a single canonical identifier per ADR-016 (Conventional English Display Form as canonical display).
 
 **Sites:** iDAI.gazetteer (gazetteer.dainst.org) is the reference gazetteer maintained by the German Archaeological Institute, CC BY 4.0 licensed, with coordinates, multilingual name variants, and archaeological-site typing. Coverage of Egypt is ~2,000 places with ~1,000 site-relevant records after type filtering. The gazetteer's parent-child containment hierarchy is sparse, so a curated hierarchy layer is built on top for key Egyptian sites.
 

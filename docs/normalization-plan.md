@@ -10,7 +10,7 @@ The architectural decisions are in ADRs and not restated here:
 - [ADR-013](adr/013-structured-dating-fields.md) — structured dating fields with qualifier, certainty, relation
 - [ADR-014](adr/014-exclude-non-ancient-records.md) — exclude non-ancient records during normalization
 - [ADR-015](adr/015-findspot-and-production-place.md) — findspot and production place are separate fields
-- [ADR-016](adr/016-royal-display-name-anglicized-nomen.md) — Anglicized Nomen as the canonical display name
+- [ADR-016](adr/016-royal-display-name-anglicized-nomen.md) — Conventional English Display Form as the canonical display name
 
 This document covers the *order* of work, not the *shape* of the work.
 
@@ -64,7 +64,7 @@ Each curated authority file is hand-built from the raw sources, following the st
 
 1. **`dynasties.json`** — Dynasties 0–31 + Ptolemaic + Roman. Each entry: `id`, `display`, `dates`, `parent_period`, `polity` (for concurrent Intermediate-Period dynasties — 13th, 14th, 15th, 16th, 17th in different regions), `concurrent_with`, `aliases` drawn from real raw values
 2. **`periods.json`** — Predynastic through Roman. Sub-periods (Amarna, Ramesside, Saite) are their own entries with `parent_id` linking up. Sub-period replaces parent when the raw text resolves more specifically
-3. **`rulers.json`** — Per ADR-016 schema: canonical `display` (Anglicized Nomen), structured `titulary` object with all five name parts, flat `aliases` for the matcher. Coverage priority: New Kingdom and Late Period (most data coverage)
+3. **`rulers.json`** — Per ADR-016 schema: canonical `display` (Conventional English Display Form), structured `titulary` object with all five name parts, flat `aliases` for the matcher. Coverage priority: New Kingdom and Late Period (most data coverage)
 4. **`sites.json`** — Hierarchical structure (`egypt > upper_egypt > thebes > deir_el_bahri > tt_358`). Coverage target: ~100 most-referenced sites + KV/TT tombs
 
 ### Phase B: Enrich assets
