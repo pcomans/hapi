@@ -1,8 +1,8 @@
 # Handoff — Phase 0 Source Transcription
 
-**Audience:** a Claude Code agent running locally on the user's machine (who has PDFs of the ten source books listed below that the sandbox agent cannot access).
+**Audience:** a Claude Code agent running locally on the user's machine (who has PDFs of the eleven source books listed below that the sandbox agent cannot access).
 
-**Goal:** transcribe ten Egyptological reference works into committed, reproducible `reconciled.jsonl` files under `pipeline/pipeline/authority/sources/`, so the Phase A authority-curation step can begin from a rigorous scholarly base (constitutional rule 1).
+**Goal:** transcribe eleven Egyptological reference works into committed, reproducible `reconciled.jsonl` files under `pipeline/pipeline/authority/sources/`, so the Phase A authority-curation step can begin from a rigorous scholarly base (constitutional rule 1).
 
 **Not your job:** curate `dynasties.json` / `periods.json` / `rulers.json` / `sites.json`. That is Phase A, done after these sources land. You are producing **raw material**, not the final authority files.
 
@@ -387,9 +387,48 @@ Also include Ptolemy I through Cleopatra VII and Caesarion from Hölbl's chronol
 
 ---
 
+## Source 11 — Dreyer 1998, *Umm el-Qaab I: Das prädynastische Königsgrab U-j*
+
+**Citation:** Dreyer, G. (1998) *Umm el-Qaab I: Das prädynastische Königsgrab U-j und seine frühen Schriftzeugnisse*. Archäologische Veröffentlichungen (AV) 86. Mainz: Philipp von Zabern (for DAI). German.
+
+**Target directory:** `pipeline/pipeline/authority/sources/dreyer-1998-umm-el-qaab/`
+
+**What to transcribe:** the Dynasty 0 / late-Predynastic ruler list (Iry-Hor, Ka / Sekhen, Narmer) and the tomb U-j chamber catalogue of early script finds that carry ruler serekhs. Focus on Dreyer's synthesis tables that enumerate attested Dyn 0 rulers with their tombs and dates. Chapter II and the Abydos cemetery U catalogue are the relevant sections.
+
+**Why:** Hendrickx in HKW Ch. 2 gives the Naqada seriation framework but does not enumerate the Dyn 0 ruler list. Dreyer is the reference for Iry-Hor, Ka, Narmer and the Abydos U-j tomb that anchors the Dyn 0 / early-writing chronology. Without this source the Dyn 0 entries in `dynasties.json` and the Dyn 0 rulers in `rulers.json` would have no scholarly backing.
+
+**Schema** — one row per Dyn 0 ruler or attested serekh-bearer. Keep German annotations and the original transliteration (ꜣ, ꜥ, ḥ, etc.):
+
+```json
+{
+  "dreyer_catalogue_ref": "U-j / Serekh A",
+  "ruler_name_transliterated": "Iry-Hor",
+  "ruler_name_alt": ["Jrj-Ḥr"],
+  "attested_monuments": ["Abydos tomb B1/B2", "U-j ivory tags"],
+  "tomb_id": "B1/B2",
+  "cemetery": "Umm el-Qaab (Abydos)",
+  "naqada_stufe": "IIIc1",
+  "date_bce_approx_start": -3200,
+  "date_bce_approx_end": -3150,
+  "approximate": true,
+  "notes_de": "Vorangehender Herrscher des Narmer-Horizonts; Serech auf Tonsiegelungen",
+  "source_citation": {"page": 173, "edition": "AV 86, von Zabern 1998"}
+}
+```
+
+Also include one or two rows for the U-j tomb itself as a monument / site entry — this will feed both `rulers.json` (the ruler) and `sites.json` (the monument via Abydos hierarchy).
+
+**Expected row count:** ~5–12 rows (Dyn 0 rulers are few; the tomb catalogue adds a handful of anchor entries). Small but high-value — this source alone closes the Dyn 0 gap the sandbox agent had flagged as unresolved.
+
+**Rights:** Philipp von Zabern / DAI. In copyright. **Before transcribing, check https://publications.dainst.org** — DAI has been putting older AV volumes into open-access PDF; AV 86 may be available under a Creative Commons licence. If so, note the licence in the README and commit the raw PDF reference. If not, facts-only extract.
+
+**Language note:** Dreyer's text is in German. Transliterations of Egyptian names use standard Egyptological orthography (Jrj-Ḥr, Kꜣ, Nꜥr-mr) — preserve these in the JSONL. Do not anglicise; Phase A handles the display-name Anglophone convention (ADR-016).
+
+---
+
 ## Workflow
 
-For each of the ten sources, in the order above:
+For each of the eleven sources, in the order above:
 
 1. **Create the branch.** `git checkout main && git pull && git checkout -b feat/source-<slug>` (e.g. `feat/source-shaw-ohae`).
 2. **Scaffold the directory.** `mkdir -p pipeline/pipeline/authority/sources/<slug>/raw` and create `README.md`, `transcribe.py` or `transcribe.md`, `reconciled.jsonl`.
@@ -399,7 +438,7 @@ For each of the ten sources, in the order above:
 6. **Commit, push, open PR.** Title: `feat: transcribe <source short name> → sources/<slug>`. Body: cite the source, row count, pages covered, rights verification summary, any known gaps.
 7. **Request Copilot review.** `gh pr edit <n> --add-reviewer @copilot`. Wait, reply to every comment on thread per `CLAUDE.md` PR workflow. Invoke the `scope-accountability-enforcer` subagent before the batch reply.
 8. **Ensure CI green.** `gh pr checks <n> --watch`.
-9. **Move to the next source only after the PR is merged.** Do not pile up ten branches in parallel — a reviewer will drown.
+9. **Move to the next source only after the PR is merged.** Do not pile up eleven branches in parallel — a reviewer will drown.
 
 ---
 
@@ -414,7 +453,7 @@ For each of the ten sources, in the order above:
 
 ## Structural test additions (required)
 
-When you finish all ten sources, the final PR should add a parametrized test in `pipeline/tests/test_structure.py`:
+When you finish all eleven sources, the final PR should add a parametrized test in `pipeline/tests/test_structure.py`:
 
 ```python
 @pytest.mark.parametrize("source_dir", sorted(SOURCES_ROOT.iterdir()))
@@ -444,20 +483,19 @@ This test will then enforce citation traceability for every source going forward
 
 ## Minor gaps you are NOT expected to close
 
-These remain as known gaps after your ten-source push and will be handled by the sandbox agent:
+These remain as known gaps after your eleven-source push and will be handled by the sandbox agent:
 
-- **Dynasty 0 rulers (Iry-Hor, Ka, Narmer)** — needs Dreyer 1998 *Umm el-Qaab I*, AV 86. Will be attempted via DAI open-access (publications.dainst.org) or deferred.
-- **Dynasty 7 / Manetho fragments** — Waddell 1940 / attalus.org. Sandbox agent can do this directly.
+- **Dynasty 7 / Manetho fragments** — Waddell 1940 / attalus.org. Sandbox agent can do this directly (public-domain digital text).
 - **Aston 1989 JEA 75** — Kitchen 2009 (your Source 10) captures the revisions that matter.
 - **Jansen-Winkeln *Inschriften der Spätzeit* 2007–2014** — 4-vol German reference; defer to post-MVP refinement if TIP royal attestation becomes a hot spot in the review queue.
-- **Kaiser 1990 MDAIK 46** — Naqada Stufe terminology; covered adequately by Hendrickx in HKW Ch. 2 for MVP.
+- **Kaiser 1990 MDAIK 46** — Naqada Stufe terminology; covered adequately by Hendrickx in HKW Ch. 2 and now by Dreyer 1998 (your Source 11) for Dyn 0 seriation.
 
 ---
 
 ## Handoff back
 
-When all ten PRs are merged, post a single comment in the Hapi repo on a new issue titled `Phase 0 transcription complete` listing:
-- The ten PR numbers
+When all eleven PRs are merged, post a single comment in the Hapi repo on a new issue titled `Phase 0 transcription complete` listing:
+- The eleven PR numbers
 - Total row counts per source
 - Any rights-verification edge cases that ended up deferring a raw-artifact commit
 - Any scholarly inconsistencies noted (e.g. spots where Baud and Dodson-Hilton disagree on a queen's parentage)
@@ -468,6 +506,6 @@ The sandbox agent will pick up from there and re-attempt Phase A with these sour
 
 ## What this unblocks
 
-Once Sources 1–10 land, Phase A (MVP section 3.2) can re-start with every structured fact in `dynasties.json`, `periods.json`, `rulers.json`, and `sites.json` traceable to a page in one of these books. That turns the authority layer from "model knowledge with citations" into "transcriptions with citations" — the difference between slop and scholarship (constitutional rule 1).
+Once Sources 1–11 land, Phase A (MVP section 3.2) can re-start with every structured fact in `dynasties.json`, `periods.json`, `rulers.json`, and `sites.json` traceable to a page in one of these books. That turns the authority layer from "model knowledge with citations" into "transcriptions with citations" — the difference between slop and scholarship (constitutional rule 1).
 
 Thank you for doing this carefully.
