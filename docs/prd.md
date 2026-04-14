@@ -127,8 +127,8 @@ Cross-museum virtual reunification is the long-term vision, but it requires stro
                    ┌────────▼────────┐
                    │ Enrichment Layer │
                    │ (ruler authority │
-                   │  list, Wikidata  │
-                   │  IDs, site       │
+                   │  list, period/   │
+                   │  dynasty, site   │
                    │  geocoding)      │
                    └────────┬────────┘
                             │
@@ -175,9 +175,9 @@ Cross-museum virtual reunification is the long-term vision, but it requires stro
 
 ## Resolved Design Decisions
 
-**Authority list for rulers and periods:** Broad coverage from day one is required — users will search for Ramesses II as often as Thutmose III. The authority list will be sourced from Wikidata (SPARQL query for all pharaohs, CC0 licensed), enriched with the Met’s own chronology and validated against the scholarly standard (Hornung, Krauss & Warburton 2006). Each ruler entry must map all name variants: personal name, throne name (prenomen), Greek forms, and modern spelling variants. Date ranges should be stored as approximate and note which chronology is followed. Egyptian chronology is contested for early dynasties — acknowledge the uncertainty rather than pretending to resolve it.
+**Authority list for rulers and periods:** Broad coverage from day one is required — users will search for Ramesses II as often as Thutmose III. The ruler authority list is sourced from Pharaoh.se (CC BY 4.0, expert-curated from Beckerath), supplemented with Wikipedia's Ptolemaic dynasty article for the Ptolemaic period, and cross-referenced against the scholarly chronology standard (Hornung, Krauss & Warburton 2006). Each ruler entry must map all name variants: personal name, throne name (prenomen), Greek forms, and modern spelling variants. Date ranges should be stored as approximate and note which chronology is followed. Egyptian chronology is contested for early dynasties — acknowledge the uncertainty rather than pretending to resolve it.
 
-**Vague or missing origin-site data:** Handle via a hierarchical site model (Egypt > Thebes > Western Thebes > Valley of the Kings > KV34). Artifacts are stored at the most specific level available, and searches at a higher level return everything below. The site taxonomy will use Pleiades gazetteer IDs as canonical identifiers (CC-BY, with coordinates and alternate names), supplemented by a custom parent-child hierarchy layer for key Egyptian sites. Wikidata “located in” (P131) properties can supplement Pleiades for containment relationships. For the MVP, approximately 50–100 key sites need to be properly structured — the major necropolises, temple complexes, and cities.
+**Vague or missing origin-site data:** Handle via a hierarchical site model (Egypt > Thebes > Western Thebes > Valley of the Kings > KV34). Artifacts are stored at the most specific level available, and searches at a higher level return everything below. The site taxonomy uses the iDAI.gazetteer (CC BY 4.0, maintained by the German Archaeological Institute) as the canonical identifier source, with coordinates, multilingual name variants, and archaeological-site typing. A custom parent-child hierarchy layer is built on top for key Egyptian sites, since the gazetteer's containment relationships are sparse. For the MVP, approximately 50–100 key sites need to be properly structured — the major necropolises, temple complexes, and cities.
 
 **Licensing:** The Met (CC0) has zero restrictions — metadata and public domain images can be used however we want. The British Museum images are CC BY-NC-SA 4.0 (non-commercial with attribution). The Louvre permits non-commercial reuse for educational/scientific purposes with credit; commercial/editorial reuse requires contacting RMN-Grand Palais. The Museo Egizio is shifting toward CC0/CC BY. Egyptian museums in Cairo/Giza have no open data policy. The data model must track license per source museum so the UI knows what it can display (full image, thumbnail only, or link-back only).
 
@@ -190,10 +190,10 @@ Cross-museum virtual reunification is the long-term vision, but it requires stro
 This is a solo developer project using Claude Code. Milestones are sequenced so each produces value and reduces risk. No fixed week estimates — ship each milestone when it’s ready, then assess.
 
 **Milestone 1: Ingestion + canonical schema**
-Met + Brooklyn + Harvard ingestion, raw storage, common schema definition, ruler/period authority list (seeded from Wikidata, validated against Met chronology). Done when: three sources ingested, mapped to common schema, with coverage stats (% of records with mapped ruler, mapped site, etc.).
+Met + Brooklyn + Harvard ingestion, raw storage, common schema definition, ruler/period authority list (seeded from pharaoh.se + HKW chronology). Done when: three sources ingested, mapped to common schema, with coverage stats (% of records with mapped ruler, mapped site, etc.).
 
 **Milestone 2: Origin-site normalization**
-Curated hierarchy for top 50–100 Egyptian sites using Pleiades IDs. Map origin fields from all three sources to site hierarchy. Done when: origin-site queries return cross-museum results for at least 10 major sites (Karnak, Deir el-Bahri, Amarna, Valley of the Kings, Giza, Saqqara, etc.).
+Canonical site authority based on iDAI.gazetteer, with a curated hierarchy layer for the top 50–100 Egyptian sites. Map origin fields from all three sources to this site hierarchy. Done when: origin-site queries return cross-museum results for at least 10 major sites (Karnak, Deir el-Bahri, Amarna, Valley of the Kings, Giza, Saqqara, etc.).
 
 **Milestone 3: Search + filter UX with rights-aware rendering**
 Search index, faceted filters, artifact detail page, match explanation (“origin derived from Met excavation field”), license-aware image display. Done when: a user can search by ruler or site and get correct cross-museum results with appropriate image handling per source.
@@ -228,9 +228,9 @@ The Grand Egyptian Museum (opened November 2025) and the Egyptian Museum in Cair
 
 ### Authority Data Sources
 
-**Rulers:** Wikidata contains structured records for pharaohs queryable via SPARQL (`instance of` pharaoh Q37011). Each item includes alternate names, throne names, dynasty, dates, predecessor/successor, and Wikidata IDs that can link to other datasets. The Met’s own published chronology (based on the Palermo Stone, Abydos Kings List, and Turin Canon) should be used to validate and supplement Wikidata. Egyptian kings had up to five royal names (Horus name, Nebty name, Golden Horus name, prenomen/throne name, nomen/personal name), plus Greek and modern spelling variants — all must map to a single canonical identifier.
+**Rulers:** Pharaoh.se (pharaoh.se) is an expert-curated royal titulary database (CC BY 4.0) covering all attested pharaohs with full five-name titulary (Horus, Nebty, Golden Horus, prenomen, nomen), Beckerath citations, and reign dates. Wikipedia's Ptolemaic dynasty article (CC BY-SA 4.0) fills the Ptolemaic period. The Hornung/Krauss/Warburton (2006) chronology provides the scholarly date backbone. Egyptian kings had up to five royal names plus Greek and modern spelling variants — all must map to a single canonical identifier per ADR-016 (Conventional English Display Form as canonical display).
 
-**Sites:** Pleiades (pleiades.stoa.org) is a community-built gazetteer of ancient places, CC-BY licensed, with coordinates, alternate names, and data dumps in GeoJSON, KML, and RDF/Turtle. Coverage of Egypt exists but is thinner than Greek/Roman material. Pleiades does not natively provide a parent-child containment hierarchy (e.g., Karnak within Thebes), so this must be built as a custom layer on top. Wikidata’s `located in` (P131) property can help construct containment chains.
+**Sites:** iDAI.gazetteer (gazetteer.dainst.org) is the reference gazetteer maintained by the German Archaeological Institute, CC BY 4.0 licensed, with coordinates, multilingual name variants, and archaeological-site typing. Coverage of Egypt is ~2,000 places with ~1,000 site-relevant records after type filtering. The gazetteer's parent-child containment hierarchy is sparse, so a curated hierarchy layer is built on top for key Egyptian sites.
 
 **Periods:** The Met’s API uses structured period fields (e.g., “New Kingdom”), dynasty fields (e.g., “Dynasty 18”), and reign fields (e.g., “Thutmose III”). Other museums will use varying conventions. The CIPEG-approved Multilingual Egyptological Thesaurus (MET) is the standard for electronic databases and should inform the common vocabulary.
 
