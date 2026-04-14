@@ -8,9 +8,10 @@ OCR of the book (Internet Archive identifier: oxfordhistoryofa0000unse).
 No prose paragraphs from the chapter bodies are reproduced.
 
 Each block: the chapter's opening banner as it appears on the named
-page, followed by (for chapters where the data is pulled from the
-chapter body rather than the banner) a short quoted attestation line.
-OCR artifacts are preserved verbatim and annotated in square brackets.
+page. For chapter 3, a factual paraphrase of Midant-Reynes' BCE
+sub-period intervals from pp. 42-43 is included below the banner —
+only numeric boundaries (facts), not verbatim prose. OCR artifacts
+are preserved verbatim and annotated in square brackets.
 
 ========================================================================
 Chapter 2 — page 16
@@ -36,11 +37,12 @@ The Naqada Period
 
 BEATRIX MIDANT-REYNES
 
-Chapter body (p. 42-43), quoted sub-period BCE intervals:
+Chapter body, pp. 42-43 — factual sub-period BCE intervals stated by
+Midant-Reynes (paraphrased; see the PDF for the exact wording):
 
-  "phase (Amratian) lies between 4000 and 3500 bc, followed by the
-   second phase (Gerzean), from 3500 to 3200 bc, and the final Pre-
-   dynastic phase runs from 3200 to 3000 bc."
+  - Naqada I (Amratian):  c. 4000-3500 BC
+  - Naqada II (Gerzean):  c. 3500-3200 BC
+  - Naqada III (final Predynastic):  c. 3200-3000 BC
 
 The Naqada III / final-Predynastic phase (3200-3000 BC) crosses the
 chapter-4 banner boundary (c.3200-2686 bc), so it is NOT captured as a
