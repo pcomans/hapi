@@ -193,7 +193,7 @@ This is a solo developer project using Claude Code. Milestones are sequenced so 
 Met + Brooklyn + Harvard ingestion, raw storage, common schema definition, ruler/period authority list (seeded from pharaoh.se + HKW chronology). Done when: three sources ingested, mapped to common schema, with coverage stats (% of records with mapped ruler, mapped site, etc.).
 
 **Milestone 2: Origin-site normalization**
-Curated hierarchy for top 50–100 Egyptian sites using Pleiades IDs. Map origin fields from all three sources to site hierarchy. Done when: origin-site queries return cross-museum results for at least 10 major sites (Karnak, Deir el-Bahri, Amarna, Valley of the Kings, Giza, Saqqara, etc.).
+Canonical site authority based on iDAI.gazetteer, with a curated hierarchy layer for the top 50–100 Egyptian sites. Map origin fields from all three sources to this site hierarchy. Done when: origin-site queries return cross-museum results for at least 10 major sites (Karnak, Deir el-Bahri, Amarna, Valley of the Kings, Giza, Saqqara, etc.).
 
 **Milestone 3: Search + filter UX with rights-aware rendering**
 Search index, faceted filters, artifact detail page, match explanation (“origin derived from Met excavation field”), license-aware image display. Done when: a user can search by ruler or site and get correct cross-museum results with appropriate image handling per source.

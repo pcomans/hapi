@@ -4,7 +4,7 @@
 Accepted
 
 ## Context
-Constitutional rule 7 requires that ruler names, dynasty labels, and site names come from authority files in `pipeline/pipeline/authority/`, with no string literals for domain values in mapper code. Constitutional rule 1 (work like a scholar) further requires that every fact in those authority files trace to a committed, reproducibly-acquired raw source on disk — not to training-data recall. Together, these rules foreclose the path of populating authority files from LLM training data, ad-hoc Wikipedia scraping, or someone's recollection — none of which are auditable or defensible to an Egyptologist.
+Constitutional rule 7 requires that ruler names, dynasty labels, and site names come from authority files in `pipeline/pipeline/authority/`, with no string literals for domain values in mapper code. Constitutional rule 1 (work like a scholar) further requires that every fact in those authority files trace to a committed, reproducibly-acquired raw source on disk — not to training-data recall. Together, these rules foreclose the path of populating authority files from LLM training data, uncommitted or non-reproducible Wikipedia extraction, or someone's recollection — none of which are auditable or defensible to an Egyptologist. Wikipedia-derived material *is* acceptable when it is acquired reproducibly, committed as a raw artifact (snapshot or scraped HTML), and cited like any other Phase 0 input — the Wikipedia Ptolemaic-dynasty source in this repo is an example.
 
 Egyptology has well-established academic and digital-humanities reference works for each domain we need to model. Picking from them deliberately, with citations committed to the repo, forecloses sloppy sourcing forever.
 
