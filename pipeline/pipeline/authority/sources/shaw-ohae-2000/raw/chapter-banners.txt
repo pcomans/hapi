@@ -1,0 +1,165 @@
+Chapter banner extracts, Shaw (ed.) 2000, The Oxford History of Ancient
+Egypt. ISBN 978-0-19-280458-7 (2003 paperback reissue of the 2000
+hardback; pagination identical).
+
+Factual extract — chapter numbers, titles, BCE date ranges, author
+attributions, and page numbers — transcribed from the Internet Archive
+OCR of the book (Internet Archive identifier: oxfordhistoryofa0000unse).
+No prose paragraphs from the chapter bodies are reproduced.
+
+Each block: the chapter's opening banner as it appears on the named
+page. For chapter 3, a factual paraphrase of Midant-Reynes' BCE
+sub-period intervals from pp. 42-43 is included below the banner —
+only numeric boundaries (facts), not verbatim prose. OCR artifacts
+are preserved verbatim and annotated in square brackets.
+
+========================================================================
+Chapter 2 — page 16
+========================================================================
+2
+
+Prehistory: From the Palaeolithic to
+the Badarian Culture
+
+(c.700, 000-4000 bc)    [OCR preserves stray space: "700, 000" = 700,000]
+
+STAN HENDRICKX and
+PIERRE VERMEERSCH
+
+========================================================================
+Chapter 3 — page 41
+========================================================================
+3
+
+The Naqada Period
+
+(c.4000-3200 bc)
+
+BEATRIX MIDANT-REYNES
+
+Chapter body, pp. 42-43 — factual sub-period BCE intervals stated by
+Midant-Reynes (paraphrased; see the PDF for the exact wording):
+
+  - Naqada I (Amratian):  c. 4000-3500 BC
+  - Naqada II (Gerzean):  c. 3500-3200 BC
+  - Naqada III (final Predynastic):  c. 3200-3000 BC
+
+The Naqada III / final-Predynastic phase (3200-3000 BC) crosses the
+chapter-4 banner boundary (c.3200-2686 bc), so it is NOT captured as a
+sub-period of Chapter 3 here — Phase A curation will reconcile.
+
+========================================================================
+Chapter 4 — page 57
+========================================================================
+4
+
+The Emergence of the Egyptian State
+
+(c.3200-2686 bc)
+
+KATHRYN A. BARD
+
+========================================================================
+Chapter 5 — page 83
+========================================================================
+5
+
+The Old Kingdom
+
+(c.2686-2160 bc)    [OCR of this line renders as "(C. 2686-2l6o BC)"
+                     — lowercase-L-for-1, lowercase-O-for-0 OCR noise;
+                     PDF prints "(c.2686-2160 bc)"]
+
+JAROMIR MALEK
+
+========================================================================
+Chapter 6 — page 108
+========================================================================
+6
+
+The First Intermediate Period
+
+(c.2160-2055 bc)
+
+STEPHAN SEIDLMAYER
+
+========================================================================
+Chapter 7 — page 137
+========================================================================
+7
+
+The Middle Kingdom Renaissance
+
+(c.2055-1650 bc)
+
+GAE CALLENDER
+
+========================================================================
+Chapter 8 — page 172
+========================================================================
+8
+
+The Second Intermediate Period
+
+(c.1650-1550 bc)
+
+JANINE BOURRIAU
+
+========================================================================
+Chapter 9 — page 207
+========================================================================
+9
+
+The 18th Dynasty before the Amarna Period
+
+(c.1550-1352 bc)
+
+BETSY M. BRYAN
+
+========================================================================
+Chapter 10 — page 265
+========================================================================
+10
+
+The Amarna Period and the Later
+New Kingdom (c.1352-1069 bc)
+
+JACOBUS VAN DIJK
+
+========================================================================
+Chapter 12 — page 324
+========================================================================
+12
+
+The Third Intermediate Period
+
+(1069-664 bc)
+
+JOHN TAYLOR
+
+========================================================================
+Chapter 13 — page 364
+========================================================================
+13
+
+The Late Period (664-332 bc)
+
+ALAN B. LLOYD
+
+========================================================================
+Chapter 14 — page 388
+========================================================================
+14
+
+The Ptolemaic Period (332-30 bc)
+
+ALAN B. LLOYD
+
+========================================================================
+Chapter 15 — page 414
+========================================================================
+15
+
+The Roman Period (30 bc-ad 395)
+
+DAVID PEACOCK
