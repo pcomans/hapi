@@ -37,12 +37,19 @@ Per `docs/handoff-phase-0-transcription.md` Source 1 spec. Each row:
 
 ### `period_name` follows Shaw's chapter titles, not canonical Egyptological labels
 
-`period_name` is the bare period name as Shaw presents it in the chapter banner — e.g. chapter 4 `period_name` is `"Emergence of the Egyptian State"` (Shaw's own framing), not a canonical label like "Early Dynastic Period." Phase A must map these chapter-title period names onto the canonical labels in `periods.json`. Keeping Shaw's own wording preserves rule 1 (faithful extract) and makes Shaw's framing auditable against HKW's and other sources' framings side-by-side during Phase A.
+`period_name` is the bare period name as Shaw presents it in the chapter banner — derived from the chapter title by dropping the leading `"The"` and the parenthetical date. For chapter 2 (whose title lacks a leading `"The"`), the compact stub `"Prehistory"` is used, matching the running-header word Shaw prints on the subsequent pages of that chapter.
 
-Two rows merit explicit flagging for Phase A curators:
+Phase A must map these chapter-title period names onto the canonical labels in `periods.json`. Keeping Shaw's own wording preserves rule 1 (faithful extract) and makes Shaw's framing auditable against HKW's and other sources' framings side-by-side during Phase A.
 
-- **Ch 9** `period_name = "18th Dynasty before the Amarna Period"` — this is a chapter-scope label, not a canonical period. Phase A should map to the first half of the 18th Dynasty (Ahmose–Amenhotep III).
-- **Ch 10** `period_name = "Amarna Period and the Later New Kingdom"` — conflates the Amarna Period (mid-18th Dyn) with the Ramesside period (Dyns 19–20). This row cannot map 1:1 to a canonical single period; Phase A curation should split or flag as a composite.
+### `source_note` field on composite / non-canonical rows
+
+Per handoff ground rule 5, rows whose `period_name` cannot map 1:1 onto a canonical Egyptological period carry a `source_note` field describing the composition and the Phase-A mapping decision required:
+
+- **Ch 4** `"Emergence of the Egyptian State"` — Shaw's framing; covers what is canonically the Early Dynastic Period (~Dyn 0–2).
+- **Ch 9** `"18th Dynasty before the Amarna Period"` — chapter-scope label; covers the first half of the 18th Dynasty (Ahmose–Amenhotep III).
+- **Ch 10** `"Amarna Period and the Later New Kingdom"` — composite: covers the Amarna Period (Akhenaten-era), the post-Amarna end of Dyn 18, and the Ramesside Period (Dyns 19–20). Van Dijk's banner gives a single combined BCE range; the chapter opening does not state sub-period boundaries in the Midant-Reynes manner, so `sub_periods` remains empty.
+
+`source_note` is present only on these three rows. `test_composite_rows_carry_source_notes` enforces the contract: the field appears iff the chapter number is in `{4, 9, 10}`.
 
 ### `sub_periods` rule: banner intervals, plus author's own BCE breakdown in the opening chronology section
 

@@ -53,9 +53,14 @@ def test_all_rows_share_edition_and_have_complete_citations() -> None:
 
 
 def test_prehistory_row_chapter_2() -> None:
-    """Ch 2 banner on p. 16: 'Prehistory: From the Palaeolithic to the Badarian Culture (c.700,000-4000 bc)'."""
+    """Ch 2 banner on p. 16: 'Prehistory: From the Palaeolithic to the Badarian Culture (c.700,000-4000 bc)'.
+
+    `period_name` uses Shaw's running-header word 'Prehistory' as the compact
+    stub (consistent with other rows which drop the chapter title's leading
+    'The' and the parenthetical date).
+    """
     row = _row_for_chapter(2)
-    assert row["period_name"] == "Prehistory: From the Palaeolithic to the Badarian Culture"
+    assert row["period_name"] == "Prehistory"
     assert (
         row["chapter_title"]
         == "Prehistory: From the Palaeolithic to the Badarian Culture (c.700,000-4000 bc)"
@@ -64,7 +69,22 @@ def test_prehistory_row_chapter_2() -> None:
     assert row["date_range_end_bce"] == -4000
     assert row["date_qualifier"] == "c."
     assert row["sub_periods"] == []
+    assert "source_note" not in row
     assert row["source_citation"] == {"page": 16, "edition": EDITION}
+
+
+def test_composite_rows_carry_source_notes() -> None:
+    """Ch 4, 9, 10 carry Shaw-specific framings that don't map 1:1 to canonical
+    Egyptological periods; each carries a `source_note` flagging this for Phase A.
+    Other rows must NOT have a `source_note` (the field is for paraphrase cases only).
+    """
+    composite_chapters = {4, 9, 10}
+    for row in _rows():
+        if row["chapter_number"] in composite_chapters:
+            assert "source_note" in row, row
+            assert row["source_note"].strip(), row
+        else:
+            assert "source_note" not in row, row
 
 
 def test_naqada_period_row_with_subperiods() -> None:
