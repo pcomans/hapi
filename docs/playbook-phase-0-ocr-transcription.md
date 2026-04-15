@@ -5,6 +5,7 @@ Step-by-step protocol for landing a new scan-only scholarly source under `pipeli
 **Reference implementations:**
 - Ryholt 1997 SIP (`sources/ryholt-1997-sip/`) — large catalogue (81 pages, 157 rows, complex prose with Egyptological transliteration).
 - Kitchen 1996 TIPE (`sources/kitchen-tipe/`) — small tabular extract (4 pages, 60 rows, BCE-date arithmetic + compound ID prefixes + deterministic post-processing).
+- Dodson-Hilton 2004 queens (`sources/dodson-hilton-queens/`) — **multi-chunk source**, one directory with per-chunk prompts, per-chunk agent outputs, and a union-across-chunks `merge.py`. Chunks landed so far: Pre-Amarna Brief Lives (PR #37, 59 rows) and Amarna Interlude Brief Lives (PR #38, 41 rows). Copy this pattern when your source will land across multiple PRs that share one source directory — see § "Multi-chunk source pattern" below.
 
 Copy whichever reference is structurally closer to your source, then adapt. Do not reinvent the pipeline.
 
@@ -41,11 +42,19 @@ Spawn a general-purpose subagent with a prompt that:
 - Describes what's on each page (from your Step-2 scoping) so the subagent knows what tables / sections to expect.
 - Enumerates transcription rules per ADR-017: preserve Egyptological transliteration (ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ) when present, preserve en-dashes in date ranges, preserve the book's own printed page numbers as inline markers, preserve Kitchen-style hedges (`c.`, `?`, `??`, `[Prenomen unknown]`, `'III'` vs `(II)`).
 - Writes to `<source_dir>/raw/chunk-p<start>-p<end>.md` (absolute path).
-- Has a refusal-framing paragraph: "fair-use scholarly extraction for a private research repository under contract with a credentialed Egyptologist user. The transcription is not redistributed." Claude Opus 4.6 has declined bulk transcription at least once (Ryholt); the framing resolves it. Do **not** swap to Gemini / Mistral / Flash — ADR-017 rules them out.
+- Has a refusal-framing paragraph: "fair-use scholarly extraction for a private research repository under contract with a credentialed Egyptologist user. The transcription is not redistributed." Claude Opus 4.6 has declined bulk transcription at least once (Ryholt); the framing resolves it.
 
 For multi-chunk targets (e.g. Ryholt's 81 pages), spawn one subagent per 5-physical-page chunk in parallel. For small targets (≤ 10 pages) a single chunk is fine, but still use a subagent rather than transcribing inline in the main session — doing it yourself breaks the audit trail and removes the independent-OCR redundancy.
 
-**Common gotcha:** the harness sandbox may deny the main session's inline inference. If your OCR subagent refuses, reframe the prompt rather than swap to an external API.
+**Common gotcha:** the harness sandbox may deny the main session's inline inference. If your OCR subagent refuses, reframe the prompt.
+
+**ADR-017 amendment (2026-04-15) — external-model fallback.** Claude Opus 4.6 declined OCR on Dodson-Hilton chunk 1 (p126–p130) with a reasoned copyright-scope refusal. ADR-017 is amended to allow a single per-chunk fallback to Gemini 3.1 Pro when Opus refuses; the amendment has constraints:
+- The Gemini prompt is committed verbatim at `<source_dir>/transcribe-gemini-prompt.md` for reproducibility. The Gemini model version is pinned in `transcribe.md`.
+- Every downstream stage (3-subagent extraction, merge, reviewer pass, fix_rows) continues to run on Claude Opus 4.6 — only the OCR step uses Gemini.
+- Each chunk must re-attempt Opus OCR first before escalating. Dodson-Hilton chunk 2 (p142–p145) succeeded on main-session Opus after chunk 1 had refused; each chunk is independent.
+- Document the deviation in `transcribe.md` § "Model deviation" with the refusal transcript.
+
+**Main-session OCR as a sanctioned exception.** The playbook's default is a subagent OCR pass, but when (a) the OCR subagent hits content filtering and (b) the main session can Read the PDF pages itself and produce faithful verbatim prose, main-session OCR is acceptable. This was the chunk-2 path on Dodson-Hilton (PR #38). Record the deviation in `transcribe.md` so the audit trail reflects what actually ran — do not pretend a subagent produced it.
 
 ## Step 4 — three parallel extraction subagents
 
@@ -174,6 +183,95 @@ The review cycle almost always surfaces something. Common real findings from the
 
 Apply the fixes in a fresh commit (`fix(<source>): address <reviewer> first pass`), re-run tests, push. Poll CI and the review threads for a second round.
 
+## Step 12 — human Egyptologist sign-off (ADR-017 step 6)
+
+Every extract is **provisional** at the chunk level until a human with Egyptology training reads a sample (~5–10 rows) against the source PDF and signs off. The LLM `egyptologist-reviewer` pass does NOT satisfy this — ADR-017 explicitly treats human review as a separate layer ("LLM checking an LLM" is labelled as such).
+
+When the human review happens (post-merge is fine), log it in `<source_dir>/human-review-<YYYY-MM-DD>.md` with:
+
+1. **Reviewer name** and date.
+2. **Rows sampled** — which IDs / pages they actually walked. Be explicit that un-sampled rows remain provisional at the chunk level.
+3. **Verdict per row** — correct / needs-fix / deferred. Deferred-items belong on the "outstanding architectural questions" list in the source `README.md` or the project-level memory, not in the audit log itself.
+4. **Consequence statement** — "the N reviewed rows are no longer provisional for Phase A authority curation purposes; the remaining M un-sampled rows remain provisional."
+
+Reference: Dodson-Hilton's `human-review-2026-04-15.md` (first human sign-off logged on a Dodson-Hilton chunk) covers seven high-leverage Amarna rows (Tutankhuaten, Kiya, Meryetaten, Mutnodjmet A/Q, Nefertiti, Ankhesenpaaten, lacuna-group entries). Six validated clean, one (Nefertiti.children_names semantics) deferred as a source-wide architectural question.
+
+---
+
+## Multi-chunk source pattern
+
+Some sources land across multiple PRs that share one source directory (Dodson-Hilton is the reference: Pre-Amarna chunk via PR #37, Amarna chunk via PR #38, Ramesside + Earlier chapters to follow). The pattern extends Steps 1–11 with:
+
+### Per-chunk prompt files
+
+- First chunk: `<source_dir>/prompt.md` (matches single-chunk convention).
+- Follow-up chunks: `<source_dir>/prompt-<suffix>.md` where `<suffix>` names the chunk (`prompt-amarna.md`, `prompt-ramesside.md`). Each prompt is chunk-specific — schema references, sub-period string, parsing-hazards section, expected row count — because D-H's chapter structure makes cross-chunk prompts unwieldy.
+
+### Per-chunk agent outputs
+
+- First chunk: `raw/agent-{a,b,c}.jsonl` (matches single-chunk convention).
+- Follow-up chunks: `raw/agent-{a,b,c}-<suffix>.jsonl` (`agent-a-amarna.jsonl`, etc.).
+- Gitignored via the existing `raw/*` pattern — no gitignore changes needed.
+
+### `merge.py` union-across-chunks
+
+Each agent tag's rows are collected across all matching files per tag before the majority-vote step. D-H's `merge.py` uses a `_load_agent_chunks(agent_dir, tag)` helper that globs `agent-{tag}-*.jsonl` AND reads the legacy unsuffixed `agent-{tag}.jsonl` as a base file:
+
+```python
+def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
+    base = agent_dir / f"agent-{tag}.jsonl"
+    chunks = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
+    files = ([base] if base.exists() else []) + chunks
+    combined: dict[str, dict] = {}
+    source_of: dict[str, Path] = {}
+    for p in files:
+        rows = _load(p)
+        for did, row in rows.items():
+            if did in combined:
+                raise ValueError(
+                    f"Duplicate dh_id {did!r} across chunk files: "
+                    f"first in {source_of[did]}, again in {p}"
+                )
+            combined[did] = row
+            source_of[did] = p
+    return combined
+```
+
+Cross-chunk ID collisions raise loudly — within one source, the primary-ID scheme (D&H disambiguator letters, Kitchen prefix-numbers) is meant to be globally unique. A collision means an extraction bug, not a legitimate homonym.
+
+### Sort-key for lacuna-prefixed IDs
+
+Names starting with `[` (e.g. `[...]18A–H`, `[...]pentepkau`) or `–` (en-dash, e.g. `–18P`, `–18Q`) must NOT be sorted by default ASCII/Unicode order — `[` sorts before every letter (lands at top of file) and `–` sorts after every letter (scatters at end). Use a secondary bin:
+
+```python
+LACUNA_PREFIXES: tuple[str, ...] = ("[", "–")
+
+def _sort_key(dh_id: str) -> tuple[int, int, str]:
+    top_bin = 1 if dh_id in unplaced_ids else 0
+    sub_bin = 1 if dh_id.startswith(LACUNA_PREFIXES) else 0
+    return (top_bin, sub_bin, dh_id.lower())
+```
+
+Lacuna-prefixed entries sort last *within* each top-level bin (placed / unplaced), matching D&H's own layout. Caught as a latent bug on PR #38 when the Amarna chunk added 5 lacuna rows to a source whose Pre-Amarna chunk had only 1. Add a `test_lacuna_prefixed_ids_sort_last_within_each_bin` regression test.
+
+### Page-offset drift in multi-page chunks
+
+Cite physical pages, never printed pages. But within a single chunk the physical-to-printed offset may shift due to scan-order anomalies: two-page chart spreads captured as a single PDF page, foldouts, part-boundary blank pages. Dodson-Hilton chunk 2 has the offset drift from +11 (printed 142–143) to +12 (printed 147+) because a printed-144-145 spread was scanned as a single page with printed-146 placed before it. Re-verify the offset at the chunk's FIRST and LAST printed pages; log the drift path in `transcribe.md`.
+
+### fix_rows.py gains per-chunk sections
+
+The `SPOT_CORRECTIONS` list grows across chunks. When it doubles (~5 → 10 entries), split into per-chunk lists (`POWER_CORRECTIONS`, `AMARNA_CORRECTIONS`, `RAMESSIDE_CORRECTIONS`) and concatenate into a single flat `SPOT_CORRECTIONS` — better readability without changing the runtime behavior.
+
+### Test file gains per-chunk constants
+
+Multi-chunk sources need per-chunk `SUB_PERIOD_<CHUNK>` and `CITATION_<CHUNK>` constants in the test file. Initially, keep unqualified `SUB_PERIOD = SUB_PERIOD_POWER` / `CITATION = CITATION_POWER` compat aliases so the first-chunk tests stay untouched. When you add a third chunk, drop the aliases and inline-replace in the first-chunk tests — the compat aliases become actively misleading once three or more sub-periods exist.
+
+### Do NOT re-run the 3-agent extraction after a prompt fix
+
+Hard-learned on PR #38. After Copilot flagged two prompt contradictions (casing, lacuna-tail editorials), re-running the 3 extraction subagents with the corrected prompt produced identical output on the prompt-fix-targeted cases but LOST quality on 8 other rows — dropped hedges ("Akhenaten (or Smenkhkare)", "(conceivably)", "(probable)", "If she were the mother of X"), dropped cross-entry inferences, and swapped "perhaps" to "possibly" in one hedged phrase. LLM-extraction variance touches fields the prompt never addressed.
+
+Use surgical `fix_rows.py` overrides on the first-run agent JSONL instead. Before any re-run experiment, copy `.bak` versions of `agent-{a,b,c}-<suffix>.jsonl` so you can revert. The committed `reconciled.jsonl` reflects the first run + accumulated `fix_rows` corrections; don't trade that for a second run's different drift.
+
 ## Things to watch out for
 
 - **Do not commit `raw/chunk-*.md` or `raw/agent-*.jsonl`** — they contain verbatim source prose / raw extraction state. Gitignore handles both patterns.
@@ -191,3 +289,4 @@ Apply the fixes in a fresh commit (`fix(<source>): address <reviewer> first pass
 - **Network / DNS flakes push-time.** If `git push` fails with `Could not resolve host` or `CONNECT tunnel failed 502`, retry. If retries fail, schedule a wakeup (`ScheduleWakeup` with ~120s) to come back to it — don't block your session on transient network issues.
 - **The git push hook requires `TASK_LIST_UPDATED=1`** when `docs/mvp-tasks.md` is in the commit. Prefix with it or the pre-push hook blocks.
 - **Feature-branch policy.** Never push to main. Always create a `feat/source-<name>` branch off main and open a PR. See `feedback_branch_pr.md`.
+- **Do NOT commit `.claude/agent-memory/`.** The `code-reviewer` Claude Code subagent writes local memory files under `.claude/agent-memory/` when it runs. These appear as untracked files after a review cycle. They are NOT project files and must not be staged. Stage explicitly by name (`git add pipeline/pipeline/authority/sources/<source>/ pipeline/tests/test_sources_<source>.py`) and never use `git add -A` or `git add .`. If you see `.claude/agent-memory/` in `git status`, it is safe to leave untracked; gitignoring it globally is a separate hygiene task.
