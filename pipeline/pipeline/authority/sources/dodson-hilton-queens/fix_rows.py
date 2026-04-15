@@ -11,15 +11,31 @@ Code subagent flagged a single verbatim-prose OCR drift on `Tiaa A`'s
 number of usurpations"`). Since `notes` is a verbatim-quotation field,
 the correction is applied rather than left in the extract.
 
-For the Amarna chunk (p142–p145), the main-agent review pass (Claude
-Opus 4.6 cross-checking `reconciled.jsonl` against the Opus-produced
-OCR chunk) flagged five field-level drifts — four editorial tails
-added by individual extraction subagents that survived majority-vote,
-plus one slash-expansion error on `Tutankhuaten`'s `alt_names` where
-"TUTANKHATEN/AMUN" was literally split to `["TUTANKHATEN", "AMUN"]`
-instead of being glossed as the successive regnal names
-`["Tutankhaten", "Tutankhamun"]`. Each correction restores the
-verbatim prose or fixes the semantic split.
+For the Amarna chunk (p142–p145), eight field-level drifts are
+corrected:
+
+- Four editorial tails added by individual extraction subagents that
+  survived majority-vote ([...]18A–H, [...]18K–N, Tey, Thutmose B
+  alt_names cross-reference).
+- One slash-expansion error on `Tutankhuaten`'s `alt_names` where
+  "TUTANKHATEN/AMUN" was literally split to `["TUTANKHATEN", "AMUN"]`
+  instead of being glossed as the successive regnal names
+  `["Tutankhaten", "Tutankhamun"]`.
+- Two allcaps-vs-titlecase alt_names normalisations flagged in the
+  egyptologist-reviewer pass (Amenhotep E, Meryetaten) — D&H's
+  BOLD-CAPITALS rendering of regnal names is typographic emphasis,
+  not a canonical spelling, and museum-catalogue matching requires
+  titlecase.
+- One hedge-preservation fix on `Ankhesenpaaten.spouse_names` where
+  agents dropped D&H's explicit "perhaps" from the Ay brief-marriage
+  qualification.
+
+Corrections sourced from a two-stage review pass: Claude Opus 4.6
+main-session cross-check against the Opus-produced OCR chunk
+(editorial tails, slash-split), followed by the egyptologist-reviewer
+Claude Code subagent walking `reconciled.jsonl` against the source
+PDF (casing, hedge loss). Each correction restores the verbatim prose
+or fixes the semantic split.
 
 No deterministic recomputation is needed for this source (the schema
 has no interval-overlap or cross-row fields).
@@ -118,6 +134,40 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Tutankhaten → Tutankhamun (the 'Tutankh-' prefix is dropped "
         "before /AMUN for typographic economy, as with other of D&H's "
         "name-change slashes). Expanded to the canonical pair.",
+    ),
+    (
+        "Amenhotep E",
+        "alt_names",
+        ["Amenhotep IV", "Akhenaten"],
+        "Agents preserved D&H's BOLD-CAPITALS rendering (used by D&H for "
+        "kings' regnal names) as ALLCAPS strings ['AMENHOTEP IV', "
+        "'AKHENATEN']. Museum catalogues and downstream authority "
+        "matching use titlecase ('Akhenaten', 'Amenhotep IV'); "
+        "normalising to titlecase is consistent with the Tutankhuaten "
+        "correction above and with titlecase alt_names already present "
+        "on Ankhesenpaaten, Nefertiti, Horemheb, and Meryetaten-tasherit. "
+        "D&H's typographic emphasis is a formatting signal, not a "
+        "canonical-name choice.",
+    ),
+    (
+        "Meryetaten",
+        "alt_names",
+        ["Neferneferuaten"],
+        "Same allcaps-vs-titlecase normalisation as Amenhotep E: agents "
+        "preserved D&H's BOLD-CAPITALS rendering of the regnal name "
+        "**NEFERNEFERUATEN** as 'NEFERNEFERUATEN'. Titlecase matches "
+        "museum-catalogue spelling and the rest of the source's alt_names.",
+    ),
+    (
+        "Ankhesenpaaten",
+        "spouse_names",
+        ["Tutankhamun", "Ay (perhaps, brief marriage)"],
+        "Agents rendered the Ay-marriage hedge as 'Ay (brief marriage)', "
+        "dropping D&H's explicit 'perhaps' from the phrase 'a ring in "
+        "Berlin that joins her cartouche with that of King Ay, perhaps "
+        "indicating a brief marriage' (p. 154). The hedge belongs on "
+        "the existence of the marriage, not its duration; preserved "
+        "verbatim in the parenthetical.",
     ),
 ]
 

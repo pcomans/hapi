@@ -61,7 +61,17 @@ One row per named royal-family member (queen, king's mother, king's wife, king's
 - **`sex`** = `"male"` or `"female"`. Inferred from role codes (`K*Son` → male; `KW`, `GW`, `KD`, `KM`, `KSis` → female). For mixed-role entries that only carry male or only female codes, the inference is unambiguous. For ambiguous cases, follow D&H's own text (bold vs italic per their legend — males bold, females bold italic in the chart key on p. 145).
 - **`spouse_names`** = list of spouses named in the prose (e.g. `"Wife of Thutmose IV"` → `["Thutmose IV"]`). Empty list when no spouse is named.
 - **`father_name` / `mother_name`** = single names from "daughter of X", "son of Y", "mother Z" constructions in the prose. `null` when D&H don't state parentage. Preserve their hedges verbatim in the name string (e.g. `"Ay (probable)"`).
-- **`children_names`** = list of named children mentioned in the prose (e.g. for Mutemwia: `["Amenhotep III"]`). Empty list when absent.
+- **`children_names`** = list of named children mentioned in the prose of this entry (e.g. for Mutemwia: `["Amenhotep III"]`). Empty list when the entry's own prose names no children.
+
+  **Extraction rule — cross-entry inference is allowed** for `children_names` when D&H's prose in *another* Brief Lives entry establishes a child-of relationship that the parent's own entry is silent on. The egyptologist-reviewer pass on PR #38 flagged this practice and sanctioned it as "methodologically acceptable"; documenting the rule here so future chunks apply it consistently.
+
+  Concrete cross-entry inference cases in the Amarna chunk (exhaustive for this chunk):
+  - `Shuttarna II.children_names = ["Gilukhipa"]` — Shuttarna II's own entry reads "Father-in-law of Amenhotep III." (p. 156), naming no children. Inferred from Gilukhipa's entry: "Wife of Amenhotep III and daughter of Shuttarna II of Mitanni."
+  - `Tushratta.children_names = ["Tadukhipa"]` — Tushratta's own entry reads "Possible father-in-law of Akhenaten." (p. 157), naming no children. Inferred from Tadukhipa's entry: "daughter of Tushratta, king of Mitanni."
+
+  All *other* parent/child relationships in the Amarna chunk are stated verbatim in the parent's own entry (e.g. Yuya's and Tjuiu's entries both directly name Tiye A as daughter; Nakhtmin A's and Mutemnub's entries both directly name Ay B as son) and are therefore NOT cross-entry inferences.
+
+  Rationale for adopting rather than excluding the rule: D&H's alphabetical-by-individual layout occasionally states the relationship on only one side of a pair, and dropping the cross-inference would produce asymmetric family trees where the child-entry knows the parent but the parent-entry does not know the child. Downstream Phase A consumers can rebuild symmetric trees either way; populating both sides in the extract avoids requiring a post-processing "invert relationships" pass. Cross-entry inferences remain traceable because each inferred child is independently attested in its own entry's verbatim `notes`.
 - **`dynasty`** = integer. Scope of this PR is Dyn 18 throughout.
 - **`sub_period`** = D&H's own subsection title within the chapter. `"The Power and the Glory"` for rows from the Pre-Amarna chunk (printed 137–141) and `"The Amarna Interlude"` for rows from the Amarna chunk (printed 154–157).
 - **`unplaced`** = `true` if the entry sits under D&H's own `Unplaced` sub-section (printed p. 141 for this chunk), `false` otherwise. These are individuals D&H flag as attested but not confidently placed in the family tree — Phase A consumers may want to apply a lower confidence score. Not every Unplaced entry carries a `Q`-suffix disambiguator; the flag follows the section heading in the book, not the name suffix.

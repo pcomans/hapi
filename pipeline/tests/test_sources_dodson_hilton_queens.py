@@ -579,7 +579,7 @@ def test_amarna_amenhotep_e_full_row() -> None:
     _assert_full_row('Amenhotep E', {
         "dh_id": 'Amenhotep E',
         "name": 'Amenhotep E',
-        "alt_names": ['AMENHOTEP IV', 'AKHENATEN'],
+        "alt_names": ['Amenhotep IV', 'Akhenaten'],
         "roles": ['KSon'],
         "sex": 'male',
         "spouse_names": [],
@@ -652,7 +652,7 @@ def test_amarna_ankhesenpaaten_full_row() -> None:
         "alt_names": ['Ankhesenamun'],
         "roles": ['KDB', 'KGW', 'L2L'],
         "sex": 'female',
-        "spouse_names": ['Tutankhamun', 'Ay (brief marriage)'],
+        "spouse_names": ['Tutankhamun', 'Ay (perhaps, brief marriage)'],
         "father_name": 'Akhenaten',
         "mother_name": 'Nefertiti',
         "children_names": [],
@@ -922,7 +922,7 @@ def test_amarna_meryetaten_full_row() -> None:
     _assert_full_row('Meryetaten', {
         "dh_id": 'Meryetaten',
         "name": 'Meryetaten',
-        "alt_names": ['NEFERNEFERUATEN'],
+        "alt_names": ['Neferneferuaten'],
         "roles": ['KDB', 'KGW'],
         "sex": 'female',
         "spouse_names": ['Smenkhkare'],

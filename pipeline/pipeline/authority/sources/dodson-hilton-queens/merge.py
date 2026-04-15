@@ -69,8 +69,13 @@ def _load(p: Path) -> dict[str, dict]:
 def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
     """Load every chunk file for one agent tag, union the rows across chunks.
 
-    Matches `agent-{tag}.jsonl` (original Pre-Amarna chunk) and
+    Matches `agent-{tag}.jsonl` (legacy unsuffixed filename, retained so
+    existing Pre-Amarna raw files still load without renaming) and
     `agent-{tag}-<chunk>.jsonl` (follow-up chunks, e.g. `agent-a-amarna.jsonl`).
+    When chunk 3 lands, the base file should be renamed to
+    `agent-{tag}-power.jsonl` and the unsuffixed-filename branch dropped;
+    see the code-reviewer note on PR #38.
+
     Raises on duplicate `dh_id` across chunk files — D&H disambiguator letters
     (`Ahmes A`, `Ahmes B`, …) guarantee per-source uniqueness, so a collision
     means an extraction bug, not a legitimate homonym.
