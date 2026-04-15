@@ -1,4 +1,21 @@
-No field-level disagreements.
+Ay A (Ay A):
+  father_name: a="Yuya (perhaps)" | b="Yuya (possibly)" | c="Yuya (perhaps)"  → chose "Yuya (perhaps)"
+
+Kiya (Kiya):
+  father_name: a="Tushratta (conceivably, if identical with Tadukhipa)" | b="Tushratta (conceivably)" | c="Tushratta (conceivably)"  → chose "Tushratta (conceivably)"
+
+Tey (Tey):
+  children_names: a=["Nakhtmin B (if she were his mother)"] | b=["Nakhtmin B (if)"] | c=["Nakhtmin B (if she were his mother)"]  → chose ["Nakhtmin B (if she were his mother)"]
+  notes: a="Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules." | b="Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min." | c="Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. (D&H prints code KGW twice; deduplicated.)"  → chose "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules."
+
+Thutmose B (Thutmose B):
+  alt_names: a=["Thutmose Q (conceivably identical)"] | b=[] | c=["Thutmose Q (conceivably identical)"]  → chose ["Thutmose Q (conceivably identical)"]
+
+[...]18A–H ([...]18A–H):
+  notes: a="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters." | b="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering daughters A through H." | c="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."  → chose "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters."
+
+[...]18K–N ([...]18K–N):
+  notes: a="Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters." | b="Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering daughters K through N." | c="Daughters of Anen; depicted with their siblings in tomb TT120."  → chose "Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters."
 
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
@@ -11,3 +28,27 @@ provisional until that happens.
 - Tiaa A: notes corrected (Gemini OCR dropped the article "a" in "including a number of usurpations" and left a stray colon after "including". The PDF (p. 140 col 2, Tiaa A entry) reads with the article; `notes` is a verbatim-quotation field so the reviewer's correction is applied rather than preserving the OCR artifact.)
     was: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including: number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
     now: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including a number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
+- [...]18A–H: notes corrected (Majority-voted notes retained an editorial tail ('Group entry covering multiple daughters.') added by agent-a that is not in D&H's prose on p. 157. `notes` is a verbatim-quotation field; the tail is stripped.)
+    was: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters."
+    now: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."
+- [...]18K–N: notes corrected (Majority-voted notes retained the same 'Group entry covering multiple daughters.' editorial tail added by agent-a. Stripped for verbatim fidelity to D&H p. 157.)
+    was: "Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters."
+    now: "Daughters of Anen; depicted with their siblings in tomb TT120."
+- Tey: notes corrected (Majority-voted notes retained agent-a's editorial tail 'D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules.' That is meta-commentary about the extraction, not D&H prose. Stripped. The KGW deduplication itself is correct (see roles field).)
+    was: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules."
+    now: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min."
+- Thutmose B: alt_names corrected (Two of three agents included 'Thutmose Q (conceivably identical)' as an alt_name, but `alt_names` is reserved for alternate forms of the same individual's name (e.g. 'Ankhesenpaaten' → 'Ankhesenamun'). Thutmose Q is a distinct Brief Lives entry that D&H flags as conceivably the same person; that cross-reference belongs in `notes` (where it is already preserved) not `alt_names`.)
+    was: ["Thutmose Q (conceivably identical)"]
+    now: []
+- Tutankhuaten: alt_names corrected (All three agents split the D&H compact-notation 'TUTANKHATEN/AMUN' literally to ['TUTANKHATEN', 'AMUN'], but the slash is D&H's shorthand for the successive regnal names Tutankhaten → Tutankhamun (the 'Tutankh-' prefix is dropped before /AMUN for typographic economy, as with other of D&H's name-change slashes). Expanded to the canonical pair.)
+    was: ["TUTANKHATEN", "AMUN"]
+    now: ["Tutankhaten", "Tutankhamun"]
+- Amenhotep E: alt_names corrected (Agents preserved D&H's BOLD-CAPITALS rendering (used by D&H for kings' regnal names) as ALLCAPS strings ['AMENHOTEP IV', 'AKHENATEN']. Museum catalogues and downstream authority matching use titlecase ('Akhenaten', 'Amenhotep IV'); normalising to titlecase is consistent with the Tutankhuaten correction above and with titlecase alt_names already present on Ankhesenpaaten, Nefertiti, Horemheb, and Meryetaten-tasherit. D&H's typographic emphasis is a formatting signal, not a canonical-name choice.)
+    was: ["AMENHOTEP IV", "AKHENATEN"]
+    now: ["Amenhotep IV", "Akhenaten"]
+- Meryetaten: alt_names corrected (Same allcaps-vs-titlecase normalisation as Amenhotep E: agents preserved D&H's BOLD-CAPITALS rendering of the regnal name **NEFERNEFERUATEN** as 'NEFERNEFERUATEN'. Titlecase matches museum-catalogue spelling and the rest of the source's alt_names.)
+    was: ["NEFERNEFERUATEN"]
+    now: ["Neferneferuaten"]
+- Ankhesenpaaten: spouse_names corrected (Agents rendered the Ay-marriage hedge as 'Ay (brief marriage)', dropping D&H's explicit 'perhaps' from the phrase 'a ring in Berlin that joins her cartouche with that of King Ay, perhaps indicating a brief marriage' (p. 154). The hedge belongs on the existence of the marriage, not its duration; preserved verbatim in the parenthetical.)
+    was: ["Tutankhamun", "Ay (brief marriage)"]
+    now: ["Tutankhamun", "Ay (perhaps, brief marriage)"]

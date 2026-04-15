@@ -1,4 +1,4 @@
-"""Merge three independent Claude Code subagent extractions into reconciled.jsonl.
+"""Merge independent Claude Code subagent extractions into reconciled.jsonl.
 
 Dodson & Hilton 2004 Brief Lives. Structure cloned from Kitchen (Ryholt
 lineage). Adaptations:
@@ -6,13 +6,20 @@ lineage). Adaptations:
 - `kitchen_id` → `dh_id` throughout.
 - `_sort_key` alphabetical by `dh_id` (D&H's own Brief Lives ordering);
   `Q`-suffix "Unplaced" entries sort after the main alphabetical run;
-  names with leading `[` (lacunae) sort last.
+  names with leading `[` / `–` (lacunae) sort last.
 - `DEFAULT_AGENT_DIR` is `<source_dir>/raw/` — the sandbox-writable path
   per the Phase-0 playbook.
 - `SENTINEL_NULL_STRINGS` unchanged from Kitchen.
+- **Multi-chunk support.** Each chunk (Pre-Amarna p126–p130, Amarna
+  p142–p145, ...) lands its three agents' extractions as
+  `agent-{a,b,c}<suffix>.jsonl`. Per-tag rows are collected across all
+  matching `agent-{tag}*.jsonl` files under `agent_dir`; `_load` raises
+  on duplicate `dh_id` within a single file AND on duplicate `dh_id`
+  across chunk files (the D&H disambiguator letters make cross-chunk
+  homonyms impossible within one source, so a collision is a bug).
 
-No structural difference beyond the three items above. See Kitchen's
-merge.py and `docs/playbook-phase-0-ocr-transcription.md` for rationale.
+See Kitchen's merge.py and `docs/playbook-phase-0-ocr-transcription.md`
+for rationale.
 
 Usage:
     cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py
@@ -59,6 +66,41 @@ def _load(p: Path) -> dict[str, dict]:
     return rows
 
 
+def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
+    """Load every chunk file for one agent tag, union the rows across chunks.
+
+    Matches `agent-{tag}.jsonl` (legacy unsuffixed filename, retained so
+    existing Pre-Amarna raw files still load without renaming) and
+    `agent-{tag}-<chunk>.jsonl` (follow-up chunks, e.g. `agent-a-amarna.jsonl`).
+    When chunk 3 lands, the base file should be renamed to
+    `agent-{tag}-power.jsonl` and the unsuffixed-filename branch dropped;
+    see the code-reviewer note on PR #38.
+
+    Raises on duplicate `dh_id` across chunk files — D&H disambiguator letters
+    (`Ahmes A`, `Ahmes B`, …) guarantee per-source uniqueness, so a collision
+    means an extraction bug, not a legitimate homonym.
+    """
+    base = agent_dir / f"agent-{tag}.jsonl"
+    chunks = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
+    files = ([base] if base.exists() else []) + chunks
+    if not files:
+        return {}
+
+    combined: dict[str, dict] = {}
+    source_of: dict[str, Path] = {}
+    for p in files:
+        rows = _load(p)
+        for did, row in rows.items():
+            if did in combined:
+                raise ValueError(
+                    f"Duplicate dh_id {did!r} across chunk files: "
+                    f"first in {source_of[did]}, again in {p}"
+                )
+            combined[did] = row
+            source_of[did] = p
+    return combined
+
+
 SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown"})
 
 
@@ -91,37 +133,64 @@ def _majority(values: list) -> tuple[object, int]:
     return None, 0
 
 
-def _sort_key_for(unplaced_ids: frozenset[str]):
-    """Return a sort-key function that bins rows by Unplaced-ness first,
-    then by case-insensitive alphabetical order within each bin.
+LACUNA_PREFIXES: tuple[str, ...] = ("[", "–")
 
+
+def _sort_key_for(unplaced_ids: frozenset[str]):
+    """Return a sort-key function that bins rows by Unplaced-ness,
+    then by lacuna-prefix (lacunae last within each bin), then by
+    case-insensitive alphabetical order.
+
+    Top-level bins:
     Bin 0: placed entries (D&H's main alphabetical Brief Lives list).
-    Bin 1: unplaced entries (D&H's trailing `Unplaced` sub-section). Includes
-           both `Q`-suffixed ids (Amenemhat Q, Henut Q, Thutmose Q) AND
-           plain-name unplaced entries (Henutiunu, Sithori, Tatau, Ti, etc.)
-           that D&H place under the Unplaced heading without a disambiguator.
+    Bin 1: unplaced entries (D&H's trailing `Unplaced` sub-section).
+           Includes both `Q`-suffixed ids (Amenemhat Q, Henut Q,
+           Thutmose Q) AND plain-name unplaced entries (Henutiunu,
+           Sithori, Tatau, Ti, etc.) that D&H place under the Unplaced
+           heading without a disambiguator.
+
+    Secondary bin (applied inside each top-level bin):
+    Sub-bin 0: names with letter-prefix first character.
+    Sub-bin 1: lacuna-prefixed ids (names starting with `[` such as
+           `[...]pentepkau`, `[...]18A–H` or with `–` such as `–18P`,
+           `–18Q`). D&H groups these at the foot of the alphabetical
+           run within the sub-section they belong to (they are
+           tentative-identity entries whose names are only partially
+           attested). Without the sub-bin, ASCII/Unicode default
+           ordering puts `[` BEFORE every letter and `–` AFTER every
+           letter, scattering lacunae across both ends of the output.
+           This was the source of a Copilot-flagged bug on PR #38 —
+           before the fix, `[...]18A–H` / `[...]18J` / `[...]18K–N`
+           appeared at the TOP of `reconciled.jsonl`.
+
+    This arrangement keeps `[...]pentepkau` (Pre-Amarna, unplaced=True,
+    lacuna) at the very end of the file — just after the other unplaced
+    non-lacuna entries — and Amarna's 5 placed lacunae (`[...]18A–H`,
+    `[...]18J`, `[...]18K–N`, `–18P`, `–18Q`) at the end of the placed
+    block (just before the unplaced sub-section). Matches D&H's own
+    layout in both chunks.
 
     Sort order cannot be determined from dh_id alone because `unplaced`
     is a per-row field, not a name-suffix convention — hence the closure
     over the unplaced-ids set computed from the merged rows.
     """
-    def _sort_key(dh_id: str) -> tuple[int, str]:
-        bin_ = 1 if dh_id in unplaced_ids else 0
-        return (bin_, dh_id.lower())
+    def _sort_key(dh_id: str) -> tuple[int, int, str]:
+        top_bin = 1 if dh_id in unplaced_ids else 0
+        sub_bin = 1 if dh_id.startswith(LACUNA_PREFIXES) else 0
+        return (top_bin, sub_bin, dh_id.lower())
 
     return _sort_key
 
 
 def main(agent_dir: Path) -> None:
-    agent_files = {tag: agent_dir / f"agent-{tag}.jsonl" for tag in "abc"}
-    missing = [p for p in agent_files.values() if not p.exists()]
-    if missing:
+    agents = {tag: _load_agent_chunks(agent_dir, tag) for tag in "abc"}
+    empty = [tag for tag, a in agents.items() if not a]
+    if empty:
         sys.exit(
-            f"ERROR: missing agent output files: {', '.join(str(p) for p in missing)}\n"
-            f"Expected three files at {agent_dir}. See transcribe.md."
+            f"ERROR: agent(s) {', '.join(empty)} produced no rows in {agent_dir}. "
+            f"Expected at least one `agent-{{tag}}.jsonl` or `agent-{{tag}}-<chunk>.jsonl` "
+            f"per agent. See transcribe.md."
         )
-
-    agents = {tag: _load(p) for tag, p in agent_files.items()}
 
     # Compute the set of unplaced dh_ids once, by majority-vote of the three
     # agents' `unplaced` fields per row. This lets _sort_key_for() bin the
