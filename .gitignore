@@ -40,10 +40,14 @@ proprietary/
 # material that must not leave the repo. Only the *derived* extract
 # (reconciled.jsonl) is committed; the raw OCR chunks stay local.
 # See ADR-017.
-pipeline/pipeline/authority/sources/*/raw/chunk-*.md
-# Per-extraction-agent JSONL outputs (3-subagent parallel extraction; ephemeral).
-# The deterministic merge over these lives in reconciled.jsonl + merge-disagreements.txt.
-pipeline/pipeline/authority/sources/*/raw/agent-*.jsonl
+# Ignore everything under any source's raw/ directory by default. The
+# authority layer commits the final reconciled.jsonl + merge-disagreements.txt
+# (alongside the source dir, NOT under raw/); nothing under raw/ is ever
+# meant to be tracked. Per-agent extraction JSONLs, per-chunk OCR markdown,
+# ad-hoc reviewer scratch all stay local. A single `raw/.gitkeep` is the
+# only tracked file (exempted with !).
+pipeline/pipeline/authority/sources/*/raw/*
+!pipeline/pipeline/authority/sources/*/raw/.gitkeep
 
 # Docker volumes
 pgdata/

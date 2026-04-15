@@ -56,14 +56,17 @@ def _compute_concurrency(rows: list[dict]) -> dict[str, list[str]]:
     because Kitchen's Table 1 Renaissance-Era block aligns him with the
     first three HPAs.
     """
-    def interval(r: dict) -> tuple[int, int] | None:
+    def interval(r: dict) -> tuple[int, int]:
         if r["kitchen_id"] == "21H.06":
             return DKF_INTERVAL
-        s, e = r.get("start_bce"), r.get("end_bce")
-        if s is None or e is None:
-            return None
-        if s > e:  # should never happen for Dyn 21 rows post-fix; guards anyway
-            return None
+        s, e = r["start_bce"], r["end_bce"]
+        if s >= e:
+            raise ValueError(
+                f"{r['kitchen_id']}: start_bce {s} not strictly earlier than "
+                f"end_bce {e}. Dyn-21 rows must have ordered intervals "
+                f"(any Kitchen-typo exceptions must be hard-coded at the top "
+                f"of this file, like DKF_INTERVAL for 21H.06)."
+            )
         return (s, e)
 
     tanite = [r for r in rows if r["kitchen_id"].startswith("21.") or r["kitchen_id"] == "20.01"]
@@ -153,7 +156,10 @@ def main() -> None:
         row[field] = new_val
 
     RECONCILED.write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n"
+        "\n".join(
+            json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows
+        )
+        + "\n"
     )
 
     existing_diff = DIFF.read_text()

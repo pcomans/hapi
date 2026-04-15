@@ -141,29 +141,62 @@ def test_dkf_kitchen_typo_preserved_verbatim() -> None:
     assert r["concurrent_with_kings"] == ["21.01"]
 
 
-def test_shoshenq_vi_parenthesised_doubtful() -> None:
-    """Shoshenq VI's whole line is parenthesised — Kitchen marks the
-    existence itself as doubtful. approximate=true; notes record "existence,
-    doubtful".
+def test_shoshenq_vi_parenthesised_doubtful_full_row() -> None:
+    """Shoshenq VI's whole line is parenthesised in Kitchen's Table 3 —
+    he marks the existence itself as doubtful. Full-row assertion per rule 5.
     """
     r = _row("23.08")
+    assert r["kitchen_id"] == "23.08"
+    assert r["dynasty"] == 23
+    assert r["sequence_in_dynasty"] == 8
     assert r["name"] == "Shoshenq VI"
+    assert r["prenomen"] == "Wasneterre Setepenre"
     assert r["start_bce"] == -720
     assert r["end_bce"] == -715
     assert r["length_of_reign_years"] == 5
     assert r["approximate"] is True
-    assert "doubtful" in (r["notes_from_kitchen"] or "").lower()
+    assert r["polity"] == "Leontopolis"
+    assert r["concurrent_with_kings"] == []
+    assert r["notes_from_kitchen"] == "existence, doubtful"
 
 
-def test_iuput_ii_bracketed_prenomen_unknown() -> None:
+def test_iuput_ii_bracketed_prenomen_unknown_full_row() -> None:
     """Kitchen prints `[Prenomen unknown]` verbatim on Iuput II's row
     (and on Takeloth I's 22.04). The bracketed string is preserved as a
-    literal prenomen value — NOT normalised to null by the sentinel
-    normaliser, because it is Kitchen's positive assertion that he knows
-    the king had a prenomen but its content is lost.
+    literal prenomen — NOT normalised to null by the sentinel normaliser —
+    because it is Kitchen's positive assertion that the king had a
+    prenomen whose content is lost. Full-row assertion on Iuput II per rule 5.
     """
-    assert _row("23.07")["prenomen"] == "[Prenomen unknown]"
-    assert _row("22.04")["prenomen"] == "[Prenomen unknown]"
+    r = _row("23.07")
+    assert r["kitchen_id"] == "23.07"
+    assert r["dynasty"] == 23
+    assert r["sequence_in_dynasty"] == 7
+    assert r["name"] == "Iuput II"
+    assert r["prenomen"] == "[Prenomen unknown]"
+    assert r["start_bce"] == -731
+    assert r["end_bce"] == -720
+    assert r["length_of_reign_years"] == 11
+    assert r["approximate"] is True
+    assert r["polity"] == "Leontopolis"
+    assert r["concurrent_with_kings"] == []
+    assert r["notes_from_kitchen"] == "11/16 y alternative; end date alternative 715"
+
+
+def test_takeloth_i_bracketed_prenomen_unknown_full_row() -> None:
+    """Kitchen's other `[Prenomen unknown]` row, Dyn 22. Full-row assertion."""
+    r = _row("22.04")
+    assert r["kitchen_id"] == "22.04"
+    assert r["dynasty"] == 22
+    assert r["sequence_in_dynasty"] == 4
+    assert r["name"] == "Takeloth I"
+    assert r["prenomen"] == "[Prenomen unknown]"
+    assert r["start_bce"] == -889
+    assert r["end_bce"] == -874
+    assert r["length_of_reign_years"] == 15
+    assert r["approximate"] is False
+    assert r["polity"] == "Tanis"
+    assert r["concurrent_with_kings"] == []
+    assert r["notes_from_kitchen"] is None
 
 
 def test_approximate_flag_on_c_prefixed_rows() -> None:
@@ -208,19 +241,36 @@ def test_polity_by_prefix() -> None:
             assert r["polity"] == expected[prefix], (prefix, r)
 
 
-def test_dyn21_concurrency_is_symmetric() -> None:
-    """If Tanite king X lists HPA H in concurrent_with_kings, H must list X.
-    This is the deterministic-overlap invariant enforced by fix_rows.py —
-    any future drift breaks this test.
+def test_dyn21_concurrency_matches_deterministic_recomputation() -> None:
+    """`concurrent_with_kings` for Dyn 21 + Ramesses XI rows must equal the
+    deterministic recomputation from `fix_rows.py`. This catches drift both
+    in the extraction (if an agent somehow overwrote the post-processed
+    values) and in `fix_rows.py` itself (if someone edits the algorithm
+    without re-running it on the committed JSONL).
+
+    Symmetry alone would be too weak an invariant: a stale-but-symmetric
+    concurrency list would still pass symmetry checks. Re-deriving from
+    the authoritative dates is the real invariant.
     """
-    rows = {r["kitchen_id"]: r for r in _rows()}
-    for kid, row in rows.items():
-        if not (kid.startswith("21.") or kid == "20.01" or kid.startswith("21H.")):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "kitchen_fix_rows",
+        SOURCE_DIR / "fix_rows.py",
+    )
+    fix_rows = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(fix_rows)
+
+    expected = fix_rows._compute_concurrency(list(_rows()))
+    for r in _rows():
+        kid = r["kitchen_id"]
+        if kid not in expected:
             continue
-        for peer in row["concurrent_with_kings"]:
-            assert kid in rows[peer]["concurrent_with_kings"], (
-                f"asymmetry: {kid} → {peer} but {peer} ↛ {kid}"
-            )
+        assert r["concurrent_with_kings"] == expected[kid], (
+            f"{kid}: stored {r['concurrent_with_kings']} != "
+            f"deterministic {expected[kid]}"
+        )
 
 
 def test_tables_3_and_4_have_empty_concurrency() -> None:
@@ -249,14 +299,24 @@ def test_taharqa_full_row() -> None:
     assert r["notes_from_kitchen"] is None
 
 
-def test_piankhy_dual_prenomen_preserved() -> None:
+def test_piankhy_dual_prenomen_full_row() -> None:
     """Kitchen prints Piankhy's prenomen as "Usimare, then Sneferre" (he
-    changed it). The string is preserved verbatim.
+    changed it mid-reign). Full-row assertion per rule 5 — especially the
+    embedded comma survives the extraction.
     """
     r = _row("25.03")
+    assert r["kitchen_id"] == "25.03"
+    assert r["dynasty"] == 25
+    assert r["sequence_in_dynasty"] == 3
     assert r["name"] == "Piankhy"
     assert r["prenomen"] == "Usimare, then Sneferre"
+    assert r["start_bce"] == -747
+    assert r["end_bce"] == -716
     assert r["length_of_reign_years"] == 31
+    assert r["approximate"] is False
+    assert r["polity"] == "Nubia (Napata)"
+    assert r["concurrent_with_kings"] == []
+    assert r["notes_from_kitchen"] is None
 
 
 def test_tefnakht_i_appears_twice() -> None:

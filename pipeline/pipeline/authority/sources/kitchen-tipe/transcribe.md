@@ -43,6 +43,17 @@ cd pipeline && uv run python pipeline/authority/sources/kitchen-tipe/merge.py
 
 Sentinel-null normalisation (`"none"`, `"-"`, `"n/a"`, etc. → `null`) is retained verbatim from Ryholt, because Kitchen also uses `"-"` in a few table cells (e.g. Iuput II's prenomen `[Prenomen unknown]` where some agents render as `"-"` and others as the bracketed phrase).
 
+### Post-processing (`fix_rows.py`) — new pattern, not in Ryholt
+
+Kitchen introduces one capability the Ryholt source didn't need: a committed post-processing script that layers (a) deterministic recomputation of fields the LLMs shouldn't be guessing and (b) spot corrections identified by the LLM reviewer pass. This is documented in `docs/playbook-phase-0-ocr-transcription.md` step 7 as the recommended new pattern for Phase-0 sources going forward.
+
+Why it exists here and not in Ryholt:
+
+- **Ryholt's concurrency** (`concurrent_with`) was a small fixed string list per dynasty (`["13"]` for Dyn 14, etc.) that every agent could copy without arithmetic.
+- **Kitchen's concurrency** (`concurrent_with_kings`) requires interval-overlap reasoning over the extracted BCE dates. Three independent LLM agents produced three different answers — not because the dates were wrong, but because none of them handled edge cases consistently (touching-boundary vs strict overlap, reversed-interval typos, the generous Table 1 Renaissance-Era alignment). Majority vote across LLM-computed concurrency produced a nonsense answer on 9 of 18 Dyn-21 rows. Deterministic Python fixed it in three lines of interval math.
+
+The pattern generalises: any authority-layer field that is a pure function of other extracted fields should be computed deterministically, not LLM-guessed. Future Phase-0 sources that need such a field add a `fix_rows.py`. Ryholt can adopt the pattern retrospectively if new deterministic fields are identified; that is a scope-separate refactor.
+
 ### Review (LLM, then human — honestly labelled)
 
 Per ADR-017 step 6:

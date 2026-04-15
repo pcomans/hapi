@@ -185,7 +185,10 @@ def main(agent_dir: Path) -> None:
         final.append(merged)
 
     OUT.write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False) for r in final) + "\n"
+        "\n".join(
+            json.dumps(r, ensure_ascii=False, sort_keys=True) for r in final
+        )
+        + "\n"
     )
     DIFF.write_text("\n".join(report) if report else "No field-level disagreements.\n")
 
