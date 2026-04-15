@@ -5,7 +5,7 @@ Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. First-half-of-Dyn-
 ## Inputs
 
 1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, ~158 MB. Not committed.
-2. Scope of this PR: chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130 (offset +11 from printed → physical holds throughout chapter 3 front-section).
+2. Scope of this PR: chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130. **Page offset formula (applies throughout the chapter 3 front-section): `physical = printed − 11`** — i.e. printed 137 → physical 126, printed 141 → physical 130. See also the "Physical vs printed page offset" section below for verification points.
 
 ## Pipeline
 
@@ -16,9 +16,11 @@ Per ADR-017: Claude Code subagent OCR of the target range, three parallel Claude
 The source PDF is 158 MB — above the 100 MB limit of the `Read` tool. The OCR subagent cannot open the book directly. Before spawning the OCR subagent, the main agent splits out the target page range into a small sub-PDF under `raw/source-pNNN-pMMM.pdf` using `pypdf`:
 
 ```bash
-cd pipeline && uv run --with pypdf python - <<'PY'
+# Run from the repo root. REPO_ROOT is wherever this repo is cloned;
+# no user-specific path is hard-coded.
+cd "$REPO_ROOT/pipeline" && uv run --with pypdf python - <<'PY'
 import pypdf
-src = "/Users/philipp/code/hapi/proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf"
+src = "../proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf"
 out = "pipeline/authority/sources/dodson-hilton-queens/raw/source-p126-p130.pdf"
 r = pypdf.PdfReader(src)
 w = pypdf.PdfWriter()
@@ -29,7 +31,7 @@ with open(out, "wb") as f:
 PY
 ```
 
-The sub-PDF is gitignored (`raw/*`). The OCR subagent then Reads the sub-PDF. Physical-page labels in `source_citation.pdf_pages` refer to the **source-book** physical page numbers (e.g. `"126-130"`), not the sub-PDF's internal numbering — the sub-PDF is just a Read-size workaround, not a citation target.
+The sub-PDF is gitignored (`raw/*`). The source PDF itself lives under `proprietary/` (repo-level gitignored — see the main `.gitignore`); the path above is repo-relative, not user-specific. The OCR subagent then Reads the sub-PDF. Physical-page labels in `source_citation.pdf_pages` refer to the **source-book** physical page numbers (e.g. `"126-130"`), not the sub-PDF's internal numbering — the sub-PDF is just a Read-size workaround, not a citation target.
 
 ### OCR
 
