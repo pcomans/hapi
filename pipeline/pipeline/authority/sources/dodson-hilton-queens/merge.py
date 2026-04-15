@@ -1,4 +1,4 @@
-"""Merge three independent Claude Code subagent extractions into reconciled.jsonl.
+"""Merge independent Claude Code subagent extractions into reconciled.jsonl.
 
 Dodson & Hilton 2004 Brief Lives. Structure cloned from Kitchen (Ryholt
 lineage). Adaptations:
@@ -6,13 +6,20 @@ lineage). Adaptations:
 - `kitchen_id` → `dh_id` throughout.
 - `_sort_key` alphabetical by `dh_id` (D&H's own Brief Lives ordering);
   `Q`-suffix "Unplaced" entries sort after the main alphabetical run;
-  names with leading `[` (lacunae) sort last.
+  names with leading `[` / `–` (lacunae) sort last.
 - `DEFAULT_AGENT_DIR` is `<source_dir>/raw/` — the sandbox-writable path
   per the Phase-0 playbook.
 - `SENTINEL_NULL_STRINGS` unchanged from Kitchen.
+- **Multi-chunk support.** Each chunk (Pre-Amarna p126–p130, Amarna
+  p142–p145, ...) lands its three agents' extractions as
+  `agent-{a,b,c}<suffix>.jsonl`. Per-tag rows are collected across all
+  matching `agent-{tag}*.jsonl` files under `agent_dir`; `_load` raises
+  on duplicate `dh_id` within a single file AND on duplicate `dh_id`
+  across chunk files (the D&H disambiguator letters make cross-chunk
+  homonyms impossible within one source, so a collision is a bug).
 
-No structural difference beyond the three items above. See Kitchen's
-merge.py and `docs/playbook-phase-0-ocr-transcription.md` for rationale.
+See Kitchen's merge.py and `docs/playbook-phase-0-ocr-transcription.md`
+for rationale.
 
 Usage:
     cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/merge.py
@@ -57,6 +64,36 @@ def _load(p: Path) -> dict[str, dict]:
         rows[did] = r
         seen_line[did] = line_no
     return rows
+
+
+def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
+    """Load every chunk file for one agent tag, union the rows across chunks.
+
+    Matches `agent-{tag}.jsonl` (original Pre-Amarna chunk) and
+    `agent-{tag}-<chunk>.jsonl` (follow-up chunks, e.g. `agent-a-amarna.jsonl`).
+    Raises on duplicate `dh_id` across chunk files — D&H disambiguator letters
+    (`Ahmes A`, `Ahmes B`, …) guarantee per-source uniqueness, so a collision
+    means an extraction bug, not a legitimate homonym.
+    """
+    base = agent_dir / f"agent-{tag}.jsonl"
+    chunks = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
+    files = ([base] if base.exists() else []) + chunks
+    if not files:
+        return {}
+
+    combined: dict[str, dict] = {}
+    source_of: dict[str, Path] = {}
+    for p in files:
+        rows = _load(p)
+        for did, row in rows.items():
+            if did in combined:
+                raise ValueError(
+                    f"Duplicate dh_id {did!r} across chunk files: "
+                    f"first in {source_of[did]}, again in {p}"
+                )
+            combined[did] = row
+            source_of[did] = p
+    return combined
 
 
 SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown"})
@@ -113,15 +150,14 @@ def _sort_key_for(unplaced_ids: frozenset[str]):
 
 
 def main(agent_dir: Path) -> None:
-    agent_files = {tag: agent_dir / f"agent-{tag}.jsonl" for tag in "abc"}
-    missing = [p for p in agent_files.values() if not p.exists()]
-    if missing:
+    agents = {tag: _load_agent_chunks(agent_dir, tag) for tag in "abc"}
+    empty = [tag for tag, a in agents.items() if not a]
+    if empty:
         sys.exit(
-            f"ERROR: missing agent output files: {', '.join(str(p) for p in missing)}\n"
-            f"Expected three files at {agent_dir}. See transcribe.md."
+            f"ERROR: agent(s) {', '.join(empty)} produced no rows in {agent_dir}. "
+            f"Expected at least one `agent-{{tag}}.jsonl` or `agent-{{tag}}-<chunk>.jsonl` "
+            f"per agent. See transcribe.md."
         )
-
-    agents = {tag: _load(p) for tag, p in agent_files.items()}
 
     # Compute the set of unplaced dh_ids once, by majority-vote of the three
     # agents' `unplaced` fields per row. This lets _sort_key_for() bin the

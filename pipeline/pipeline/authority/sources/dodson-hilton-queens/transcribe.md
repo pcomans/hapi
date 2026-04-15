@@ -1,11 +1,13 @@
 # Transcription method — Dodson & Hilton 2004
 
-Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. First-half-of-Dyn-18 Brief Lives PR. Follow-up PRs cover Amarna, Ramesside, and earlier chapters under the same method.
+Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Two chunks landed so far (Power-and-Glory Brief Lives, Amarna-Interlude Brief Lives); further chunks (Ramesside, earlier chapters) follow the same method.
 
 ## Inputs
 
 1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, ~158 MB. Not committed.
-2. Scope of this PR: chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130. **Page offset formula (applies throughout the chapter 3 front-section): `physical = printed − 11`** — i.e. printed 137 → physical 126, printed 141 → physical 130. See also the "Physical vs printed page offset" section below for verification points.
+2. Scope:
+   - **Chunk 1 (PR #37, merged):** chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130 (offset +11). `pdf_pages: "126-130"` on every row.
+   - **Chunk 2 (this PR):** chapter 3 *The New Kingdom* → section *The Amarna Interlude* → *Brief Lives* sub-block. Printed pp. 154–157, physical PDF pp. 142–145 (offset +12). `pdf_pages: "142-145"` on every row. The narrative prose of *The Amarna Interlude* (pp. 142–153) is NOT extracted — only the Brief Lives entries.
 
 ## Pipeline
 
@@ -21,10 +23,15 @@ The source PDF is 158 MB — above the 100 MB limit of the `Read` tool. The OCR 
 cd "$REPO_ROOT/pipeline" && uv run --with pypdf python - <<'PY'
 import pypdf
 src = "../proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf"
-out = "pipeline/authority/sources/dodson-hilton-queens/raw/source-p126-p130.pdf"
+# Chunk 1 (Power and Glory):
+# out = "pipeline/authority/sources/dodson-hilton-queens/raw/source-p126-p130.pdf"
+# page_range = range(125, 130)           # 0-indexed physical 126–130
+# Chunk 2 (Amarna Interlude):
+out = "pipeline/authority/sources/dodson-hilton-queens/raw/source-p142-p145.pdf"
+page_range = range(141, 145)             # 0-indexed physical 142–145
 r = pypdf.PdfReader(src)
 w = pypdf.PdfWriter()
-for i in range(125, 130):   # 0-indexed physical 126–130
+for i in page_range:
     w.add_page(r.pages[i])
 with open(out, "wb") as f:
     w.write(f)
@@ -35,9 +42,15 @@ The sub-PDF is gitignored (`raw/*`). The source PDF itself lives under `propriet
 
 ### OCR
 
-Single chunk for this PR — 5 pages of Brief Lives at `raw/source-p126-p130.pdf`. The chunk file is not committed.
+**Chunk 1 (Power and Glory, PR #37):** 5 pages of Brief Lives at `raw/source-p126-p130.pdf`. The chunk file is not committed.
 
-**Model deviation from the playbook:** Anthropic's content-filtering policy blocked Claude Opus 4.6 from transcribing these five pages (both as a Claude Code subagent and in the main session via `Write`). The cause is not confirmed — a generic `"Output blocked by content filtering policy"` error — but plausibly the combination of archaeological photographs on the pages and the density of mortuary / reburial prose in the Brief Lives text. Claude Haiku accepted the task but produced sloppy OCR (`Saqqara → Sargass`, `TT226 → TT26`, `Amenemhat → Amenhotep` conflation, etc.).
+**Chunk 2 (Amarna Interlude, this PR):** 4 pages of Brief Lives at `raw/source-p142-p145.pdf`. Extracted via the same `pypdf` one-shot (0-indexed physical pages 141–144 inclusive; see PDF-split preamble above).
+
+**Chunk 2 OCR — Claude Opus 4.6 succeeded.** Per the ADR-017 § "Amendment 2026-04-15" requirement to re-attempt Opus OCR before escalating to Gemini, the Amarna chunk was OCR'd by Claude Opus 4.6 in the main session (not a subagent) on 2026-04-15. Unlike chunk 1 — where both a Claude Code subagent and a main-session attempt were blocked, and a later retry produced a principled copyright-scope refusal — the Amarna main-session attempt produced the OCR markdown without a block or refusal. The likely contributing factors are smaller chunk size (4 pages vs 5), lower density of mortuary / reburial prose compared to the Thutmoside Brief Lives, and main-session context that fully surfaced the ADR-017 scholarly-extraction framing. The Amarna chunk therefore follows the original ADR-017 step 1 path (Claude Opus 4.6 OCR with no external-model fallback).
+
+Gemini 3.1 Pro remains the committed fallback for any future chunk where Opus refuses; `transcribe-gemini-prompt.md` is retained verbatim for reproducibility of chunk 1 and any future fallback event.
+
+**Model deviation from the playbook (chunk 1 only):** Anthropic's content-filtering policy blocked Claude Opus 4.6 from transcribing these five pages (both as a Claude Code subagent and in the main session via `Write`). The cause is not confirmed — a generic `"Output blocked by content filtering policy"` error — but plausibly the combination of archaeological photographs on the pages and the density of mortuary / reburial prose in the Brief Lives text. Claude Haiku accepted the task but produced sloppy OCR (`Saqqara → Sargass`, `TT226 → TT26`, `Amenemhat → Amenhotep` conflation, etc.).
 
 The chunk committed to the pipeline was therefore produced by **Google Gemini 3.1 Pro** (Gemini web UI, 2026-04-15) via a one-shot prompt. The exact prompt text is committed verbatim at `transcribe-gemini-prompt.md` in this same directory so the OCR step is reproducible against the SHA-pinned source PDF. Gemini's transcription was spot-checked against the PDF pages (visually, in the Claude Code main session) and is consistent with what's printed on pp. 137–141.
 
@@ -57,7 +70,14 @@ OCR rules (delta from Ryholt/Kitchen):
 
 ### Structured extraction — three parallel subagents
 
-The OCR chunk is fed to three independent extraction subagents with the identical prompt at `prompt.md`. Each writes JSONL to `<agent_dir>/agent-{a,b,c}.jsonl` (default `<source_dir>/raw/` — the same sandbox-writable path rule that Kitchen adopted). Expected ~50-60 rows across the three streams.
+Each chunk's OCR markdown is fed to three independent extraction subagents running the identical chunk-specific prompt. Each subagent writes JSONL to `<agent_dir>/agent-{a,b,c}<chunk_suffix>.jsonl` where `<agent_dir>` defaults to `<source_dir>/raw/` — the same sandbox-writable path rule that Kitchen adopted. Chunk files:
+
+| Chunk | Prompt | Agent outputs | Expected rows |
+|---|---|---|---|
+| Power and Glory (p126–p130) | `prompt.md` | `agent-{a,b,c}.jsonl` | 50–60 |
+| Amarna Interlude (p142–p145) | `prompt-amarna.md` | `agent-{a,b,c}-amarna.jsonl` | ~41 |
+
+`merge.py` discovers all `agent-{tag}*.jsonl` files per agent tag, unions their rows (raising on duplicate `dh_id` across chunks — D&H's disambiguator letters make cross-chunk homonyms impossible within one source), then majority-votes per-field across the three agents' unified dicts. Adding a chunk 3 (Ramesside, earlier chapters, etc.) is just another prompt file + another triple of `agent-{a,b,c}-<suffix>.jsonl` output files; `merge.py` does not need to know about it in advance.
 
 ### Merge + fix_rows
 
@@ -83,7 +103,19 @@ Source PDF SHA-256: `e636c49f3d0b5b6c6ec072cc6e7af9d605caf52d438c55cd84da9de7b07
 
 ## Physical vs printed page offset
 
-Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 110 — offset +11 (physical = printed − 11). Verified at printed 136 / physical 125 (chapter opening photo) and printed 141 / physical 130 (end of Power and Glory Brief Lives). The offset may drift at part-boundary pages; follow-up PRs (Amarna, Ramesside, earlier chapters) must re-verify.
+Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 110 — offset +11 (physical = printed − 11). Verified at printed 136 / physical 125 (chapter opening photo) and printed 141 / physical 130 (end of Power and Glory Brief Lives).
+
+**Amarna chunk offset drift.** The offset is `+11` through printed pp. 142–143 (physical 131–132) but changes to `+12` from printed p. 147 onwards. The cause is a two-page genealogical-chart spread at printed pp. 144–145 that the original scanner captured as a **single** PDF page (physical 134), while placing printed p. 146 before it (physical 133). This is a one-time scan-artifact jump, not a repeat drift — the `+12` offset holds stably from physical 135 through at least physical 146 (printed 158, start of "House of Ramesses"). For the Amarna Brief Lives sub-block specifically (printed pp. 154–157 / physical pp. 142–145), the `+12` offset is uniform. Every follow-up PR must re-verify the offset at both the chunk's first and last printed pages.
+
+**Amarna chunk verification points:**
+- Physical p. 131 = printed p. 142 (offset +11; chapter opening, "Historical Background")
+- Physical p. 132 = printed p. 143 (offset +11)
+- Physical p. 133 = printed p. 146 (scan anomaly)
+- Physical p. 134 = printed p. 144–145 spread
+- Physical p. 135 = printed p. 147 (offset +12; stable from here)
+- Physical p. 142 = printed p. 154 (start of Brief Lives, offset +12)
+- Physical p. 145 = printed p. 157 (end of Brief Lives, offset +12)
+- Physical p. 146 = printed p. 158 (start of "House of Ramesses", offset +12; outside Amarna scope)
 
 ## Structure of Brief Lives entries
 

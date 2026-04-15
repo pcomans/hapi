@@ -10,19 +10,24 @@ Dodson, A. & Hilton, D. (2004) *The Complete Royal Families of Ancient Egypt*. L
 - **Retrieved:** 2026-04-15 (local scan).
 - **PDF SHA-256:** `e636c49f3d0b5b6c6ec072cc6e7af9d605caf52d438c55cd84da9de7b07008a0`.
 
-## Scope — first PR (18th-Dynasty pre-Amarna only)
+## Scope — current state (two chunks landed)
 
-Chapter 3 *The New Kingdom*, section **"The Power and the Glory"** *Brief Lives* entries — printed pp. 137–141, physical PDF pp. 126–130. This is the first-half-of-Dyn-18 cohort (Ahmose I through Amenhotep III + Thutmose IV's royal ladies), ~55 named royal-family members.
+Chapter 3 *The New Kingdom*, **Brief Lives** sub-blocks of both pre-Amarna and Amarna Interlude sections. Extraction from the narrative chapter prose (Historical Background, The Royal Family, End of the Amarna Dynasty) is intentionally out of scope — only the prosopographical Brief Lives bullet-style entries are transcribed.
+
+| PR | Section | Printed pp. | Physical pp. | Rows |
+|----|---|---|---|---|
+| #37 (merged) | *The Power and the Glory* — Brief Lives (Dyn 18 pre-Amarna) | 137–141 | 126–130 | 59 (47 placed + 12 Unplaced) |
+| this PR | *The Amarna Interlude* — Brief Lives (Dyn 18 late) | 154–157 | 142–145 | 41 (36 named + 5 lacuna-group) |
+
+Combined `reconciled.jsonl` = 100 rows.
 
 Out of scope for this PR, landing in follow-up PRs:
-- **"The Amarna Interlude"** Brief Lives (printed 142–157) — Akhenaten/Nefertiti/Tutankhamun household. Separate PR.
 - **"The House of Ramesses" + "The Feud of the Ramessides" + "The Decline of the Ramessides"** Brief Lives (printed 158–194) — Dyn 19/20 prosopography. Separate PR.
 - **Chapters 1, 2, 4, 5** (Early Dynastic / OK / MK / SIP / TIP / Late Period) — separate PRs; `sources/baud-1999-ok-royal-family/` is the preferred OK source and this book is known-weaker there.
 - **Front-matter reference sections** ("The Pharaonic State" pp. 10–23, "The Royal Family" pp. 24–37, "Genealogical Groupings" pp. 38–42) are narrative exposition, not ruler-list data.
+- **Chapter 3 narrative prose** (Historical Background, The Royal Family, End of the Amarna Dynasty — printed pp. 142–153 and equivalent for the other sections) is not extracted; only the Brief Lives sub-blocks are.
 - **Genealogical chart figures** (visual diagrams on pp. 144–145 etc.) are not extracted as rows — the Brief Lives text entries contain the same parent/spouse/child relationships in prose form.
 - **Illustration captions** describing photographs / reliefs — not royal-family rows.
-
-**Expected row count (this PR):** ~50–60 rows. The handoff doc estimates ~30 rows for "MVP priority" queens; we include the full Brief Lives list for Power and Glory rather than cherry-pick because cherry-picking would require editorial judgement about which second-tier princesses "matter".
 
 **Eventual full-scope row count across all PRs:** ~150–250.
 
@@ -58,10 +63,10 @@ One row per named royal-family member (queen, king's mother, king's wife, king's
 - **`father_name` / `mother_name`** = single names from "daughter of X", "son of Y", "mother Z" constructions in the prose. `null` when D&H don't state parentage. Preserve their hedges verbatim in the name string (e.g. `"Ay (probable)"`).
 - **`children_names`** = list of named children mentioned in the prose (e.g. for Mutemwia: `["Amenhotep III"]`). Empty list when absent.
 - **`dynasty`** = integer. Scope of this PR is Dyn 18 throughout.
-- **`sub_period`** = D&H's own subsection title within the chapter. Scope of this PR: `"The Power and the Glory"` for all rows.
+- **`sub_period`** = D&H's own subsection title within the chapter. `"The Power and the Glory"` for rows from the Pre-Amarna chunk (printed 137–141) and `"The Amarna Interlude"` for rows from the Amarna chunk (printed 154–157).
 - **`unplaced`** = `true` if the entry sits under D&H's own `Unplaced` sub-section (printed p. 141 for this chunk), `false` otherwise. These are individuals D&H flag as attested but not confidently placed in the family tree — Phase A consumers may want to apply a lower confidence score. Not every Unplaced entry carries a `Q`-suffix disambiguator; the flag follows the section heading in the book, not the name suffix.
 - **`notes`** = the full prose paragraph verbatim from D&H's entry. No editorial summarisation — scholarly argumentation is Kitchen's / D&H's, and normalising would strip the evidence a reader uses to judge the entry.
-- **`source_citation.pdf_pages`** = the OCR chunk's physical-page range. Each row cites the chunk range; D&H's own printed page numbers appear in the OCR markdown so a reviewer can cross-reference trivially.
+- **`source_citation.pdf_pages`** = the physical-page range of the OCR chunk that produced this row (`"126-130"` for Power-and-Glory rows, `"142-145"` for Amarna-Interlude rows). Each row cites the chunk range, not a single page; D&H's own printed page numbers appear in the OCR markdown so a reviewer can cross-reference to a specific page within the chunk trivially.
 
 ## Rights
 

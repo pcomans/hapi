@@ -4,12 +4,22 @@ Run AFTER merge.py. Mirrors Kitchen's pattern — idempotent re-runs,
 append-only LLM-APPLIED OVERRIDES section in merge-disagreements.txt,
 every override recorded with rationale.
 
-For this chunk, the egyptologist-reviewer Claude Code subagent flagged
-a single verbatim-prose OCR drift on `Tiaa A`'s `notes`: Gemini's OCR
-dropped an article and introduced a stray colon (`"including: number
-of usurpations"` vs the PDF's `"including a number of usurpations"`).
-Since `notes` is a verbatim-quotation field, the correction is applied
-rather than left in the extract.
+For the Pre-Amarna chunk (p126–p130), the egyptologist-reviewer Claude
+Code subagent flagged a single verbatim-prose OCR drift on `Tiaa A`'s
+`notes`: Gemini's OCR dropped an article and introduced a stray colon
+(`"including: number of usurpations"` vs the PDF's `"including a
+number of usurpations"`). Since `notes` is a verbatim-quotation field,
+the correction is applied rather than left in the extract.
+
+For the Amarna chunk (p142–p145), the main-agent review pass (Claude
+Opus 4.6 cross-checking `reconciled.jsonl` against the Opus-produced
+OCR chunk) flagged five field-level drifts — four editorial tails
+added by individual extraction subagents that survived majority-vote,
+plus one slash-expansion error on `Tutankhuaten`'s `alt_names` where
+"TUTANKHATEN/AMUN" was literally split to `["TUTANKHATEN", "AMUN"]`
+instead of being glossed as the successive regnal names
+`["Tutankhaten", "Tutankhamun"]`. Each correction restores the
+verbatim prose or fixes the semantic split.
 
 No deterministic recomputation is needed for this source (the schema
 has no interval-overlap or cross-row fields).
@@ -50,6 +60,64 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "(p. 140 col 2, Tiaa A entry) reads with the article; `notes` "
         "is a verbatim-quotation field so the reviewer's correction is "
         "applied rather than preserving the OCR artifact.",
+    ),
+    # --- Amarna chunk (p142–p145) ---
+    (
+        "[...]18A–H",
+        "notes",
+        "Daughters of Amenhotep III, shown in the tomb of Kheruef "
+        "(TT192; see p. 30); some may be identical with named "
+        "daughters.",
+        "Majority-voted notes retained an editorial tail ('Group entry "
+        "covering multiple daughters.') added by agent-a that is not in "
+        "D&H's prose on p. 157. `notes` is a verbatim-quotation field; "
+        "the tail is stripped.",
+    ),
+    (
+        "[...]18K–N",
+        "notes",
+        "Daughters of Anen; depicted with their siblings in tomb TT120.",
+        "Majority-voted notes retained the same 'Group entry covering "
+        "multiple daughters.' editorial tail added by agent-a. Stripped "
+        "for verbatim fidelity to D&H p. 157.",
+    ),
+    (
+        "Tey",
+        "notes",
+        "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown "
+        "with her husband in his tomb at Amarna and later became his "
+        "queen. As such, she is depicted with Ay in his royal tomb in "
+        "the Valley of the Kings (WV23) and in the rock-chapel of Min "
+        "at Akhmim. If she were the mother of Nakhtmin B, she will also "
+        "have held the title of Adorer of Min.",
+        "Majority-voted notes retained agent-a's editorial tail 'D&H "
+        "writes the role code KGW twice in the parenthetical; treated "
+        "as a single role per extraction rules.' That is meta-commentary "
+        "about the extraction, not D&H prose. Stripped. The KGW "
+        "deduplication itself is correct (see roles field).",
+    ),
+    (
+        "Thutmose B",
+        "alt_names",
+        [],
+        "Two of three agents included 'Thutmose Q (conceivably "
+        "identical)' as an alt_name, but `alt_names` is reserved for "
+        "alternate forms of the same individual's name (e.g. "
+        "'Ankhesenpaaten' → 'Ankhesenamun'). Thutmose Q is a distinct "
+        "Brief Lives entry that D&H flags as conceivably the same "
+        "person; that cross-reference belongs in `notes` (where it is "
+        "already preserved) not `alt_names`.",
+    ),
+    (
+        "Tutankhuaten",
+        "alt_names",
+        ["Tutankhaten", "Tutankhamun"],
+        "All three agents split the D&H compact-notation 'TUTANKHATEN/"
+        "AMUN' literally to ['TUTANKHATEN', 'AMUN'], but the slash is "
+        "D&H's shorthand for the successive regnal names "
+        "Tutankhaten → Tutankhamun (the 'Tutankh-' prefix is dropped "
+        "before /AMUN for typographic economy, as with other of D&H's "
+        "name-change slashes). Expanded to the canonical pair.",
     ),
 ]
 
