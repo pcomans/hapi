@@ -41,6 +41,9 @@ proprietary/
 # (reconciled.jsonl) is committed; the raw OCR chunks stay local.
 # See ADR-017.
 pipeline/pipeline/authority/sources/*/raw/chunk-*.md
+# Per-extraction-agent JSONL outputs (3-subagent parallel extraction; ephemeral).
+# The deterministic merge over these lives in reconciled.jsonl + merge-disagreements.txt.
+pipeline/pipeline/authority/sources/*/raw/agent-*.jsonl
 
 # Docker volumes
 pgdata/
