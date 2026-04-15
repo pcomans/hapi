@@ -4,6 +4,8 @@ Tasks to reach MVP (PRD Milestones 1–5). Each task is scoped for a single agen
 
 The guiding principle: **one museum end-to-end before adding complexity.** The Met is the vertical slice that validates the entire pipeline. Brooklyn and Harvard stress-test normalization. Authority data is built from real ingested data, not guesses.
 
+Recent session handoffs live at `docs/handoff-session-*.md` (most recent first informs a fresh agent which Phase 0 task to pick up next and what session-specific context to carry forward). Phase-0-source handoffs live at `docs/handoff-<source>-*.md`.
+
 ## Milestone 1: Met Vertical Slice
 
 Take the Met from raw API to search results on screen. This validates the entire stack — schema, ingest, mapper, search index, web — before adding other museums.
