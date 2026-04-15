@@ -29,9 +29,29 @@ The chunk is the atomic unit of both OCR and citation. We do not try to split ch
 
 Before committing `reconciled.jsonl`, the transcriber reads ~2-3 sampled `raw/chunk-…md` files against the corresponding physical PDF pages, checking titulary diacritics (ꜣ ꜥ ḥ ḫ nṯ), regnal dates, and File N/M labels. Corrections are made inline in the chunk file with a short comment (e.g. `<!-- Gemini: Fuad; PDF: Fûad — corrected -->`).
 
-### JSONL derivation
+### JSONL derivation — three-subagent extraction + deterministic merge
 
-Once `raw/chunk-…md` files are committed and spot-checked, a parser (added in a later commit) walks them and emits `reconciled.jsonl`. Each row's `source_citation.pdf_pages` is the chunk's physical page range.
+The Ryholt catalogue has enough structural variety (bold vs plain Appellation headers, letter-only file suffixes like `17/a`, two different Chronological-Table layouts, lacuna markers, Roman-numeral disambiguators like `Sewadjkare (I)`) that a regex parser quickly accumulates bugs — e.g. a version that couldn't match `File 17/a` silently attributed Nebmaatre's titulary to Kamose (File 17/9). Instead, we extract via three independent Claude Code subagents and merge by majority vote.
+
+**Step 1 — run three independent extractors in parallel.** From Claude Code, spawn three general-purpose subagents with identical prompts (the prompt is committed to `prompt.md` in this directory). Each subagent reads every `raw/chunk-p*.md` file and writes JSONL to a distinct file under `/tmp/claude-501/ryholt/`:
+
+- Agent A → `/tmp/claude-501/ryholt/agent-a.jsonl`
+- Agent B → `/tmp/claude-501/ryholt/agent-b.jsonl`
+- Agent C → `/tmp/claude-501/ryholt/agent-c.jsonl`
+
+**Step 2 — deterministic merge.**
+
+```
+cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/merge.py
+```
+
+`merge.py` groups rows by `ryholt_id`, takes a per-field majority vote across the three agents, writes `reconciled.jsonl`, and writes `merge-disagreements.txt` (committed) with every row whose fields didn't fully agree. The merge is pure Python with no LLM calls; re-running it on the same three inputs produces byte-identical output. A curator reviewing the source can read the disagreements file to audit every non-unanimous decision.
+
+**Audit trail**:
+- PDF → `raw/chunk-p*.md` (Gemini OCR, committed)
+- `raw/chunk-p*.md` → three per-agent JSONLs (Claude Code subagents, non-deterministic, NOT committed — they're ephemeral)
+- three per-agent JSONLs → `reconciled.jsonl` (deterministic merge, committed)
+- `merge-disagreements.txt` (committed) lists every field where agents disagreed plus the majority-vote resolution
 
 ## The prompt
 
