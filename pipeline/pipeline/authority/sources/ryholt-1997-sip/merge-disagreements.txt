@@ -208,3 +208,47 @@ P.8 (Kha[...]re):
 
 P.9 ([...]sekhemre):
   prenomen_transliterated: a="[...]-*sḫm*-[*rꜥ*]" | b="[...]-sḫm-[rꜥ]" | c="[...]-sḫm-[rꜥ]"  → chose "[...]-sḫm-[rꜥ]"
+
+
+========================================================================
+HUMAN OVERRIDES APPLIED (post-merge, documented per ADR-017)
+========================================================================
+
+After the code-reviewer and egyptologist-reviewer passes on the initial
+merge output, the following field-level overrides were applied to
+`reconciled.jsonl`. Each is a scholarly judgment against Ryholt's own
+printed content.
+
+15.3 Sakir-Har:
+  prenomen_transliterated: "none" → null
+  Reason: Ryholt Table 96 (p. 410) prints the literal word "none" in
+  italics under Prenomen for Sakir-Har; his cartouche bears
+  ḥqꜣ-ḫꜣswt rather than sꜣ-rꜥ. The three-subagent merge voted 2/3 for
+  the string "none". Normalised to JSON null in the committed row; the
+  "no sꜣ-rꜥ, ḥqꜣ-ḫꜣswt instead" fact lives in the File 1 entry's
+  transliterated nomen and in this note. merge.py now normalises the
+  sentinel strings {"none", "-", "—", "n/a", "na", "unknown"} to null
+  at vote time.
+
+14.11 / 14.17 / 14.24 (Sewadjkare / Awibre / Sankhibre):
+  nomen: "Sewadjkare" → "Sewadjkare (III)"
+  nomen: "Awibre"     → "Awibre (II)"
+  nomen: "Sankhibre"  → "Sankhibre (II)"
+  Reason: Ryholt uses Roman-numeral suffixes in File 1 to distinguish
+  cross-dynasty homonyms (13.11 Sewadjkare vs 14.11 Sewadjkare III,
+  etc.). Tables 94 and 95 do not print the suffixes themselves. Agent
+  "a" preserved the File 1 form; agents "b" and "c" echoed the Chron
+  Table cell. Majority vote would have created cross-dynasty
+  collisions in the authority layer. Manual restoration of the File 1
+  form.
+
+Abyd.1, Abyd.2, Abyd.11, Abyd.15, Abyd.16, Abyd.a, Abyd.b, Abyd.c:
+  polity: null → "Abydos"
+  concurrent_with: [] → ["15", "16"]
+  Reason: prompt.md only mapped polity for dynasties 13-17, so Ryholt's
+  Abydos Dynasty (Part II §2.5, Table 1 Chronological/Geographical
+  Arrangement) came through with null polity. Per Ryholt's own prose
+  the Abydos Dynasty is contemporary with Dyns 15 and 16. Applied
+  uniformly to all 8 Abyd.* rows.
+
+All overrides are asserted in `pipeline/tests/test_sources_ryholt_sip.py`.

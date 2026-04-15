@@ -54,15 +54,39 @@ def _load(p: Path) -> dict[str, dict]:
     return rows
 
 
+SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown"})
+
+
+def _normalise_value(v: object) -> object:
+    """Collapse sentinel strings that mean 'null' into actual None.
+
+    Ryholt prints literal words like `none` in some Chron Table cells
+    (e.g. Sakir-Har at 15.3, whose cartouche carries no sꜣ-rꜥ prenomen).
+    Subagents faithfully transcribe those strings; we do not want them in
+    the authority JSONL as string values — downstream consumers would
+    treat them as real data.
+    """
+    if isinstance(v, str):
+        stripped = v.strip().lower()
+        if stripped in SENTINEL_NULL_STRINGS:
+            return None
+    return v
+
+
 def _majority(values: list) -> tuple[object, int]:
-    """Return (chosen_value, count_of_agreers) from a list of per-agent values."""
+    """Return (chosen_value, count_of_agreers) from a list of per-agent values.
+
+    Values are normalised first so that `"none"` and `null` count as the
+    same vote.
+    """
+    normalised = [_normalise_value(v) for v in values]
 
     def key(v):
         return json.dumps(v, ensure_ascii=False, sort_keys=True)
 
-    counts = Counter(key(v) for v in values)
+    counts = Counter(key(v) for v in normalised)
     top_key, top_count = counts.most_common(1)[0]
-    for v in values:
+    for v in normalised:
         if key(v) == top_key:
             return v, top_count
     return None, 0

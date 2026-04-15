@@ -89,6 +89,49 @@ def test_khendjer_file_13_22() -> None:
     assert r["polity"] == "Memphite"
 
 
+def test_sakir_har_15_3_no_prenomen() -> None:
+    """Ryholt prints the word "none" in the Prenomen column of Table 96 for
+    Sakir-Har, because his cartouche carries `ḥqꜣ-ḫꜣswt` rather than
+    `sꜣ-rꜥ`. The sentinel-null normaliser in merge.py turns that string
+    into JSON null; a human override on this branch also ensures the row
+    is committed with null even if future runs regress.
+    """
+    r = _row("15.3")
+    assert r["dynasty"] == 15
+    assert r["sequence_in_dynasty"] == 3
+    assert r["nomen"] == "Sakir-Har"
+    assert r["prenomen"] is None
+    assert r["prenomen_transliterated"] is None
+    assert r["polity"] == "Avaris (Hyksos)"
+
+
+def test_dyn14_homonym_disambiguators_preserved() -> None:
+    """Ryholt uses Roman-numeral suffixes in File 1 to distinguish kings
+    with the same anglicised prenomen across dynasties (13.11 Sewadjkare
+    vs 14.11 Sewadjkare III, etc.). The `nomen` field keeps those
+    suffixes so the authority layer can't collide cross-dynasty homonyms.
+    """
+    for rid, expected in [
+        ("14.11", "Sewadjkare (III)"),
+        ("14.17", "Awibre (II)"),
+        ("14.24", "Sankhibre (II)"),
+    ]:
+        assert _row(rid)["nomen"] == expected, rid
+
+
+def test_abydos_dynasty_rows_have_polity() -> None:
+    """The 8 Abyd.* rows (Wepwawemsaf, Pantjeny, Snaaib, and five
+    fragmentary kings) must carry polity="Abydos" and be concurrent with
+    Dyns 15 and 16, per Ryholt's Part II §2.5 and Table 1.
+    """
+    abyd_rows = [r for r in _rows() if r["ryholt_id"].startswith("Abyd.")]
+    assert len(abyd_rows) == 8, len(abyd_rows)
+    for r in abyd_rows:
+        assert r["dynasty"] is None, r
+        assert r["polity"] == "Abydos", r
+        assert r["concurrent_with"] == ["15", "16"], r
+
+
 def test_khamudi_file_15_6() -> None:
     """Last Hyksos king, Dyn 15. Tests the 4-column Chronological-Table
     layout (Dyn 15 has no `No` column; an earlier regex parser missed
@@ -145,8 +188,11 @@ def test_nebmaatre_file_17_a_letter_suffix() -> None:
 
 
 def test_polity_matches_dynasty() -> None:
-    """Per the handoff + Ryholt's section headers: 13=Memphite, 14=Avaris,
-    15=Avaris (Hyksos), 16/17=Theban, unattributed=null.
+    """Per Ryholt's section headers: 13=Memphite, 14=Avaris,
+    15=Avaris (Hyksos), 16/17=Theban. Abydos-Dynasty rows carry
+    `dynasty: null` (Ryholt uses an "Abyd" file-prefix, not a dynasty
+    number) but polity="Abydos". True unattributed rows (N.*, P.*, etc.)
+    carry polity=null.
     """
     expected = {
         13: "Memphite",
@@ -157,6 +203,9 @@ def test_polity_matches_dynasty() -> None:
     }
     for r in _rows():
         if r["dynasty"] is None:
-            assert r["polity"] is None, r
+            if r["ryholt_id"].startswith("Abyd."):
+                assert r["polity"] == "Abydos", r
+            else:
+                assert r["polity"] is None, r
         else:
             assert r["polity"] == expected[r["dynasty"]], r

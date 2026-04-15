@@ -55,32 +55,32 @@ Physical pages **336-416** (81 pages, 17 chunks). This spans File 1 / Catalogue 
 
 ```json
 {
-  "ryholt_id": "13.17",
+  "ryholt_id": "13.22",
   "dynasty": 13,
-  "sequence_in_dynasty": 17,
-  "appellation": "Khendjer",
-  "horus_name": "Djedkheperu",
-  "nebty_name": null,
-  "golden_horus_name": null,
-  "prenomen": "Userkare",
+  "sequence_in_dynasty": 22,
+  "sequence_suffix": null,
   "nomen": "Khendjer",
-  "nomen_transliterated": "hnḏr",
-  "father_name": null,
-  "regnal_years_attested": "at least 4 years 3 months",
+  "prenomen": "Woserkare",
+  "horus_name_transliterated": "[...]-ꜥnḫ",
+  "nebty_name_transliterated": null,
+  "golden_horus_name_transliterated": null,
+  "prenomen_transliterated": "wsr-kꜣ-rꜥ",
+  "nomen_transliterated": "ḫ-n-d-r, var. ḫ-d-r (syllabic)",
   "date_bce_start": -1764,
   "date_bce_end": -1759,
   "polity": "Memphite",
-  "concurrent_with": [],
+  "concurrent_with": ["14"],
   "source_citation": {"pdf_pages": "340-344", "edition": "CNI Publications 20, Museum Tusculanum Press, 1997"}
 }
 ```
 
-- `ryholt_id` = `{dynasty}.{zero-padded sequence}` derived from Ryholt's `File X/Y` label.
-- Egyptological transliteration fields (`*_transliterated`) carry the Unicode-correct rendering with ꜣ ꜥ ḥ ḫ etc.
-- Anglicised display-style names (`appellation`, `horus_name`, `prenomen`, `nomen`) use Ryholt's own anglicisation where he provides one, and are null where he does not.
-- `date_bce_start` / `_end` come from Ryholt's Chronological Tables and may be absent for kings whose reigns he does not date absolutely.
-- `polity` ∈ {`Memphite`, `Xois`, `Theban`, `Avaris (Hyksos)`, `Abydos`, null}.
-- `concurrent_with` lists Ryholt's dynasty numbers as strings (e.g. `["14", "15"]`) per the concurrency diagram.
+- `ryholt_id` = `{dynasty}.{sequence}{optional-suffix}` derived from Ryholt's `File X/Y` label. Suffix is lettered (`a`, `b`) for Ryholt's appendix sub-entries.
+- `dynasty` is 13-17, or `null` for `File N/...` unattributed entries.
+- `nomen` / `prenomen` carry Ryholt's anglicised forms from Chronological Tables 94-98. Homonymous kings across dynasties keep Ryholt's Roman-numeral disambiguators (e.g. `"Sewadjkare (III)"` at 14.11 to distinguish from the Sewadjkare at 13.11).
+- `*_transliterated` fields carry the Unicode-correct Egyptological rendering with ꜣ ꜥ ḥ ḫ etc., taken verbatim from Ryholt's File 1 `H: / D: / G: / P: / N:` lines. These are for display and for cross-reference with Beckerath 1999 / pharaoh.se; the authority layer's match/enrich path normalises them away.
+- `date_bce_start` / `_end` come from Ryholt's Chronological Tables and may be absent for kings whose reigns he does not date absolutely. A row with only `date_bce_end` populated (e.g. Sewadjkare at 13.11 with `-1781`) reflects Ryholt's own single-value entry, not a data error.
+- `polity` ∈ {`"Memphite"` (Dyn 13), `"Avaris"` (Dyn 14), `"Avaris (Hyksos)"` (Dyn 15), `"Theban"` (Dyns 16, 17), `"Abydos"` (Abydos Dynasty), `null` (unattributed)}.
+- `concurrent_with` is a list of dynasty-number strings per Ryholt's Table 1 (Chronological/Geographical Arrangement): 13 → ["14"]; 14 → ["13", "15"]; 15 → ["16", "17", "Abydos"]; 16 → ["15", "17"]; 17 → ["15", "16"]; Abydos → ["15", "16"]; unattributed → [].
 
 ## Rights
 
