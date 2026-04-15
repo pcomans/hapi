@@ -161,9 +161,14 @@ PR body follows the Ryholt PR (#34) template: rights verification, scope, known 
 
 Then per `CLAUDE.md` PR workflow:
 1. Request Copilot review (via `gh api` POST to `/pulls/<N>/requested_reviewers`, not `gh pr edit --add-reviewer` which has been flaky).
-2. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel on the PR.
-3. Before replying to any review batch, invoke `scope-accountability-enforcer` once, then prefix each `gh pr comment` with `SCOPE_CHECKED=1`.
-4. Poll `gh pr checks <N> --watch` until green. Fix any red check before moving on.
+2. **Arm a `Monitor` for Copilot's re-review.** Copilot lands its review minutes after the push. Sitting idle waiting for the review (or worse, waiting for the user to prompt "look at review comments") breaks the workflow. The Monitor-pattern emits one in-chat notification on the terminal state:
+   - Success: a Copilot review whose `commit_id` matches the current HEAD.
+   - Timeout: no new review in 15 min → treat as implicit acceptance or ask the user.
+   
+   See `CLAUDE.md` § "Pull request workflow" step 2 for the exact Monitor invocation. Filtering on `commit_id == <HEAD>` catches multi-round reviews (Copilot occasionally submits review #2 minutes after #1) without re-surfacing stale reviews of previous commits. Re-arm on each subsequent push so the next push's Copilot re-review also gets caught.
+3. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel on the PR — they run in the background via `Agent` with `run_in_background: true` and auto-notify on completion (no Monitor needed for those; `Agent` handles it natively).
+4. Before replying to any review batch, invoke `scope-accountability-enforcer` once, then prefix each `gh pr comment` with `SCOPE_CHECKED=1`.
+5. Poll `gh pr checks <N> --watch` until green. Fix any red check before moving on.
 
 **Reviewer-subagents return reviews inline, not to the PR.** Neither `code-reviewer` nor `egyptologist-reviewer` has `Bash` / `gh` access in the current harness, so they return their review as the final message rather than posting it. Do one of:
 - Read the review yourself, apply the fixes in a new commit, and paste the review into the PR thread as a reference if useful.

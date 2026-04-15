@@ -72,8 +72,27 @@ Run the appropriate commands after any change:
 
 After every push to a PR branch, follow these steps in order:
 
-1. **Request Copilot review.** Run `gh pr edit <number> --add-reviewer @copilot` to request a GitHub Copilot code review.
-2. **Wait for Copilot to finish.** Poll with `gh api repos/{owner}/{repo}/pulls/<number>/reviews` until Copilot's review appears. Then fetch comments with `gh api repos/{owner}/{repo}/pulls/<number>/comments`.
+1. **Request Copilot review.** Use the REST API (the `gh pr edit --add-reviewer` path has been flaky):
+   ```bash
+   gh api --method POST "/repos/{owner}/{repo}/pulls/<number>/requested_reviewers" \
+     -f 'reviewers[]=copilot-pull-request-reviewer[bot]'
+   ```
+   If the call errors with a TLS cert failure, retry with sandbox disabled. If the review-request itself fails, flag it to the user — never silently skip.
+2. **Arm a Monitor for Copilot's re-review, then keep working.** Copilot reviews land minutes after the push; sitting idle waiting for them breaks the workflow. The poll belongs in your tools, not the user's head:
+   ```
+   Monitor({
+     description: "PR #<N> Copilot re-review watch",
+     timeout_ms: 900000, persistent: false,
+     command: `TARGET_SHA=<HEAD-commit>
+       while true; do
+         hit=$(gh api /repos/{owner}/{repo}/pulls/<N>/reviews \\
+           --jq "[.[] | select(.user.login == \\"copilot-pull-request-reviewer[bot]\\") | select(.commit_id == \\"$TARGET_SHA\\")] | length" 2>/dev/null || echo 0)
+         [ "$hit" != "0" ] && [ "$hit" != "" ] && { echo "Copilot re-reviewed $TARGET_SHA"; exit 0; }
+         sleep 30
+       done`
+   })
+   ```
+   The Monitor emits a single in-chat notification on the terminal state. 15-minute timeout is enough in practice; if nothing arrives in 15 min, treat as implicit acceptance or ask the user. Filtering on `commit_id == <HEAD>` is load-bearing — it surfaces multi-round reviews (Copilot sometimes submits review #2 minutes after #1 on the same commit) without surfacing stale reviews of older commits. On notification, fetch inline comments with `gh api /repos/{owner}/{repo}/pulls/<number>/comments --jq '.[] | select(.commit_id == "<HEAD>")'`.
 3. **Reply to every comment.** For each Copilot comment, post a reply on that comment thread using `gh api repos/{owner}/{repo}/pulls/<number>/comments/<comment_id>/replies -f body="..."`. Either explain the fix (with commit SHA) or explain why the comment doesn't apply (e.g., generated file per rule 9). Every comment must get a response — do not silently skip any. **Before responding to a batch of review feedback**, invoke the `scope-accountability-enforcer` subagent *once* to audit your planned responses for improper deferrals. Then prefix every `gh pr comment` in that batch with `SCOPE_CHECKED=1` (the hook will block otherwise). One enforcer invocation covers one batch — you do not need to re-invoke it per individual reply. A new batch (e.g., a fresh review from a different reviewer, or a later round of comments) requires a fresh invocation.
 4. **Ensure CI is green.** After pushing fixes, poll `gh pr checks <number> --watch` until all checks complete. If any check fails, fix and push. Do not move on until CI is green.
 
