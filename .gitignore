@@ -35,13 +35,6 @@ out/
 # must be scrubbed first.
 proprietary/
 
-# Two-model OCR intermediate outputs (ADR-017). Only the adjudicated
-# canonical `raw/page-NNN.md` files are committed per source; the
-# per-model scratch and diff reports stay local.
-pipeline/pipeline/authority/sources/*/raw/claude/
-pipeline/pipeline/authority/sources/*/raw/gemini/
-pipeline/pipeline/authority/sources/*/raw/diff/
-
 # Docker volumes
 pgdata/
 tsdata/

@@ -9,36 +9,27 @@ Reproducible protocol per ADR-017 (two-model vision OCR with diff adjudication).
 
 ## Pipeline
 
-See `fetch.py` in this directory. Per ADR-017, Gemini is primary (handles multi-page batches); Claude is a targeted cross-check on titulary pages only (declines bulk multi-page transcription as copyright reproduction, so we call it per-page on a curated subset).
+See `fetch.py` in this directory. Per ADR-017, Gemini 3.1 Pro preview is the only OCR; human spot-check is the QA.
 
-### Bulk Gemini pass
+### Bulk OCR
 
 ```
 cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/fetch.py \
-    --pages 333-411 --batch 5 --only gemini
+    --pages 333-411 --batch 5
 ```
 
 For each 5-page batch, the runner:
 - combines the batch's physical pages into one multi-page PDF via pypdf,
 - sends it to Gemini 3.1 Pro preview (`gemini-3.1-pro-preview`) with the ADR-017 prompt (emitting `=== PAGE NNN ===` headers before each page),
-- splits the response on those headers and writes `raw/gemini/page-NNN.md` for each page.
+- splits the response on those headers and writes `raw/page-NNN.md` for each page.
 
-### Targeted Claude cross-check
+### Spot-check QA
 
-```
-cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/fetch.py \
-    --pages 336,340,344,… --batch 1 --only claude
-```
-
-Claude is called one page at a time on the pages where a new king entry begins (titulary lines H/D/G/P/N are the load-bearing fields for the authority layer). Claude's output lands in `raw/claude/page-NNN.md`; where both models ran, a diff is regenerated at `raw/diff/page-NNN.diff`.
-
-### Adjudication
-
-The transcriber reads each `page-NNN.diff` (or, for Gemini-only pages, spot-reads against the PDF), adjudicates any disagreements against the PDF page image, and commits the canonical OCR to `raw/page-NNN.md` with inline comments noting which model was right on each flagged line.
+Before committing `reconciled.jsonl`, the transcriber reads ~5 sampled `raw/page-NNN.md` files against the corresponding PDF pages, checking titulary diacritics (ꜣ ꜥ ḥ ḫ nṯ), regnal dates, and File N/M labels. Corrections are made inline in `raw/page-NNN.md` with a short comment (e.g. `# Gemini: Fuad; PDF: Fûad — corrected`).
 
 ### JSONL derivation
 
-Once `raw/page-NNN.md` files are committed, a parser (added in a later commit) walks them and emits `reconciled.jsonl`.
+Once `raw/page-NNN.md` files are committed and spot-checked, a parser (added in a later commit) walks them and emits `reconciled.jsonl`.
 
 ## The prompt
 

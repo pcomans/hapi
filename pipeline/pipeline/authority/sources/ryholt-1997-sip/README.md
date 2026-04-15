@@ -36,17 +36,16 @@ Prose chapters (Part II §2.1–§2.6 on the individual dynasties) are out of sc
 
 **Expected row count:** ~60–80 king entries across Dyns 13–17 plus the Abydos Dynasty.
 
-## Method — two-model vision OCR with diff adjudication (ADR-017)
+## Method — Gemini OCR + human spot-check (ADR-017)
 
 Per `docs/adr/017-ocr-pipeline-for-scan-only-sources.md`:
 
-1. `fetch.py --pages 333-411` runs **Claude Opus 4.6 vision** and **Gemini 3.1 Pro preview** in parallel on each printed page of the PDF.
-2. Per-page outputs land in `raw/claude/page-NNN.md` and `raw/gemini/page-NNN.md`.
-3. A character-level unified diff is written to `raw/diff/page-NNN.diff`.
-4. The transcriber reviews the diffs, adjudicates disagreements against the PDF page image, and commits the canonical per-page OCR to `raw/page-NNN.md` with short comments noting any model overrides.
-5. `reconciled.jsonl` is derived from the committed `raw/page-NNN.md` files, not from the raw model outputs.
+1. `fetch.py --pages 333-411` runs **Gemini 3.1 Pro preview** in 5-page batches on the target printed-page range.
+2. Per-page output lands directly in `raw/page-NNN.md` — one file per page, committed as the canonical OCR.
+3. The transcriber spot-checks a sample of ~5 pages against the PDF (focused on titulary diacritics, dates, File N/M labels) and makes any corrections inline in the affected `raw/page-NNN.md` with a short comment.
+4. `reconciled.jsonl` is derived from the committed `raw/page-NNN.md` files.
 
-The benchmark that motivated this pipeline (p. 336, Sobkhotep I) is documented in ADR-017; both models made different errors on the same page, which neither a single-model run nor a spot-check would have caught.
+The benchmark that sized this pipeline (p. 336, Sobkhotep I) is documented in ADR-017: Gemini 3.1 Pro correctly rendered every Egyptological transliteration character on a representative titulary page; Mistral and Gemini 3 Flash did not. The earlier plan for a two-model Claude + Gemini cross-check was dropped once it became clear that model disagreements clustered on bibliographic details outside the extraction schema.
 
 ## Schema (per handoff Source 2 spec)
 
