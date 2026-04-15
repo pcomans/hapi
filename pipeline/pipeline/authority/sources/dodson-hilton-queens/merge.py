@@ -133,23 +133,51 @@ def _majority(values: list) -> tuple[object, int]:
     return None, 0
 
 
-def _sort_key_for(unplaced_ids: frozenset[str]):
-    """Return a sort-key function that bins rows by Unplaced-ness first,
-    then by case-insensitive alphabetical order within each bin.
+LACUNA_PREFIXES: tuple[str, ...] = ("[", "–")
 
+
+def _sort_key_for(unplaced_ids: frozenset[str]):
+    """Return a sort-key function that bins rows by Unplaced-ness,
+    then by lacuna-prefix (lacunae last within each bin), then by
+    case-insensitive alphabetical order.
+
+    Top-level bins:
     Bin 0: placed entries (D&H's main alphabetical Brief Lives list).
-    Bin 1: unplaced entries (D&H's trailing `Unplaced` sub-section). Includes
-           both `Q`-suffixed ids (Amenemhat Q, Henut Q, Thutmose Q) AND
-           plain-name unplaced entries (Henutiunu, Sithori, Tatau, Ti, etc.)
-           that D&H place under the Unplaced heading without a disambiguator.
+    Bin 1: unplaced entries (D&H's trailing `Unplaced` sub-section).
+           Includes both `Q`-suffixed ids (Amenemhat Q, Henut Q,
+           Thutmose Q) AND plain-name unplaced entries (Henutiunu,
+           Sithori, Tatau, Ti, etc.) that D&H place under the Unplaced
+           heading without a disambiguator.
+
+    Secondary bin (applied inside each top-level bin):
+    Sub-bin 0: names with letter-prefix first character.
+    Sub-bin 1: lacuna-prefixed ids (names starting with `[` such as
+           `[...]pentepkau`, `[...]18A–H` or with `–` such as `–18P`,
+           `–18Q`). D&H groups these at the foot of the alphabetical
+           run within the sub-section they belong to (they are
+           tentative-identity entries whose names are only partially
+           attested). Without the sub-bin, ASCII/Unicode default
+           ordering puts `[` BEFORE every letter and `–` AFTER every
+           letter, scattering lacunae across both ends of the output.
+           This was the source of a Copilot-flagged bug on PR #38 —
+           before the fix, `[...]18A–H` / `[...]18J` / `[...]18K–N`
+           appeared at the TOP of `reconciled.jsonl`.
+
+    This arrangement keeps `[...]pentepkau` (Pre-Amarna, unplaced=True,
+    lacuna) at the very end of the file — just after the other unplaced
+    non-lacuna entries — and Amarna's 5 placed lacunae (`[...]18A–H`,
+    `[...]18J`, `[...]18K–N`, `–18P`, `–18Q`) at the end of the placed
+    block (just before the unplaced sub-section). Matches D&H's own
+    layout in both chunks.
 
     Sort order cannot be determined from dh_id alone because `unplaced`
     is a per-row field, not a name-suffix convention — hence the closure
     over the unplaced-ids set computed from the merged rows.
     """
-    def _sort_key(dh_id: str) -> tuple[int, str]:
-        bin_ = 1 if dh_id in unplaced_ids else 0
-        return (bin_, dh_id.lower())
+    def _sort_key(dh_id: str) -> tuple[int, int, str]:
+        top_bin = 1 if dh_id in unplaced_ids else 0
+        sub_bin = 1 if dh_id.startswith(LACUNA_PREFIXES) else 0
+        return (top_bin, sub_bin, dh_id.lower())
 
     return _sort_key
 

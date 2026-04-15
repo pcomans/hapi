@@ -105,7 +105,11 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_AMARNA: CITATION_AMARNA,
     }
     for r in _rows():
-        expected = citations[r["sub_period"]]
+        sub_period = r["sub_period"]
+        assert sub_period in citations, (
+            f"unknown sub_period {sub_period!r} for row {r}"
+        )
+        expected = citations[sub_period]
         assert r["source_citation"] == expected, r
 
 
@@ -141,6 +145,45 @@ def test_unplaced_rows_sort_last_in_reconciled_jsonl() -> None:
         assert r["unplaced"] is False, r["dh_id"]
     for r in rows[-12:]:
         assert r["unplaced"] is True, r["dh_id"]
+
+
+def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
+    """Regression test for the sort-key lacuna bug fixed in response to
+    Copilot review of PR #38. Names starting with `[` or `–` are D&H's
+    lacuna/tentative-identity markers; ASCII/Unicode default ordering
+    would put `[` BEFORE every letter (sort first) and `–` AFTER every
+    letter (sort last), scattering lacunae to both ends. The
+    `_sort_key_for` closure must place lacuna-prefixed ids at the END
+    of whichever top-level bin (placed / unplaced) they belong to.
+
+    Amarna chunk contributes 5 placed lacunae (`[...]18A–H`, `[...]18J`,
+    `[...]18K–N`, `–18P`, `–18Q`). Pre-Amarna contributes 1 unplaced
+    lacuna (`[...]pentepkau`). Expected positions:
+    - The 5 Amarna lacunae occupy the last 5 positions of the placed
+      block (immediately before the unplaced sub-section begins).
+    - `[...]pentepkau` is the very last row in `reconciled.jsonl`
+      (end of the unplaced sub-section).
+    """
+    rows = _rows()
+    lacuna_prefixes = ("[", "–")
+
+    placed = [r for r in rows if not r["unplaced"]]
+    assert len(placed) == 88, len(placed)
+    # The 5 trailing placed rows must all be lacuna-prefixed.
+    for r in placed[-5:]:
+        assert r["dh_id"].startswith(lacuna_prefixes), r["dh_id"]
+    # No lacuna-prefixed row may appear in the placed block BEFORE the
+    # final 5 positions.
+    for r in placed[:-5]:
+        assert not r["dh_id"].startswith(lacuna_prefixes), r["dh_id"]
+
+    unplaced = [r for r in rows if r["unplaced"]]
+    assert len(unplaced) == 12, len(unplaced)
+    # Only `[...]pentepkau` is lacuna-prefixed in the unplaced block,
+    # and it must be the last entry.
+    assert unplaced[-1]["dh_id"] == "[...]pentepkau", unplaced[-1]["dh_id"]
+    for r in unplaced[:-1]:
+        assert not r["dh_id"].startswith(lacuna_prefixes), r["dh_id"]
 
 
 def test_sex_inference_covers_every_row() -> None:
