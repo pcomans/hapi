@@ -24,17 +24,23 @@ Every frontier model made at least one error on one page — different errors on
 
 ## Decision
 
-For every scan-only Phase 0 source (and any future scholarly PDF where transliteration diacritics or tabular layout matter), the transcription method is a **two-model parallel OCR with diff adjudication**:
+For every scan-only Phase 0 source (and any future scholarly PDF where transliteration diacritics or tabular layout matter), the transcription method is **Gemini 3.1 Pro preview as the primary bulk OCR**, with **Claude Opus 4.6 vision as a targeted cross-checker** for titulary-heavy pages where diacritic fidelity matters most:
 
-1. **Run Claude Opus 4.6 vision** on each target page with a prompt constraining the character set to the Egyptological Unicode block and forbidding ASCII substitutions (`3` for ꜣ, `c` for ꜥ).
-2. **Run Gemini 3.1 Pro preview** on the same pages with the same prompt.
-3. **Diff the two markdown outputs.** Produce a per-page disagreement report in `raw/diff/page-NNN.diff` listing every character the two models disagree on.
-4. **Human adjudicates disagreements** against the physical PDF page. The canonical OCR for each page is committed as `raw/page-NNN.md` and records which model's reading won on each flagged line (with a short note, e.g. `# diff: PM II² (Claude) vs PM I² (Gemini) — chose Claude, confirmed against PDF`).
-5. **The structured `reconciled.jsonl` is derived from the committed per-page markdowns, not from the raw model outputs** — i.e. if both models were wrong about a character, the committed markdown must be corrected first, and the diff record notes the override.
+1. **Run Gemini 3.1 Pro preview** on the full target page range with a prompt constraining the character set to the Egyptological Unicode block and forbidding ASCII substitutions (`3` for ꜣ, `c` for ꜥ). Gemini handles multi-page batches without restriction (the fetch.py runner defaults to 5 pages per call).
+2. **Run Claude Opus 4.6 vision** only on a curated subset of pages where titulary lines dominate — in practice, one Claude call per king entry where the transliterated prenomen/Horus/nomen names would otherwise go unchecked. **Claude calls are one page at a time** (the model refuses bulk-book transcription requests as copyright reproduction; single-page calls with a factual-extraction framing consistently succeed).
+3. **Where both models ran, diff the outputs** into `raw/diff/page-NNN.diff`. Where only Gemini ran, the diff file is absent and the transcriber's sole cross-check is a PDF spot-read.
+4. **Human adjudicates disagreements** against the physical PDF page. The canonical OCR for each page is committed as `raw/page-NNN.md` and records which model's reading won on each flagged line (with a short comment, e.g. `# diff: PM II² (Claude) vs PM I² (Gemini) — chose Claude, confirmed against PDF`).
+5. **The structured `reconciled.jsonl` is derived from the committed per-page markdowns, not from the raw model outputs** — i.e. if both models were wrong about a character, the committed markdown must be corrected first, and the comment record notes the override.
+
+### Why not symmetric two-model OCR?
+
+The original plan was to run Claude and Gemini on every page in parallel and diff. In practice, **Claude declines multi-page transcription requests of in-copyright books as copyright reproduction** — a correct call on its side given that our proprietary PDFs are under OUP / Museum Tusculanum / IFAO / etc. licenses. Single-page Claude calls with a factual-extraction framing succeed, but running Claude single-page on every page while Gemini goes batched defeats the efficiency purpose of batching. Gemini has no equivalent restriction and handles 5-page batches reliably.
+
+The compromise: Gemini bulk, Claude targeted. Titulary pages (one per king entry, where the Egyptological transliteration is the load-bearing extract) get a Claude cross-check and a diff; everything else (Remarks, Notes, Attestations bibliographic lists) relies on Gemini alone plus human spot-check against the PDF. The benchmark on p. 336 showed Claude catches errors Gemini misses and vice versa, so this compromise trades some coverage for a pragmatic throughput.
 
 ### Why not one model plus a human?
 
-Faster, but a single model's silent conflations (e.g. Gemini 3 Flash dropping the `ṯ` under-bar on every occurrence) are exactly the errors a human reader does not catch by spot-check — the character looks reasonable. The two-model diff surfaces exactly where the models disagree; the human's attention is spent there, not on global re-reading.
+Faster, but a single model's silent conflations (e.g. Gemini 3 Flash dropping the `ṯ` under-bar on every occurrence) are exactly the errors a human reader does not catch by spot-check — the character looks reasonable. The two-model cross-check on titulary lines surfaces exactly where the models disagree; the human's attention is spent there, not on global re-reading.
 
 ### Why not Mistral OCR?
 
@@ -46,7 +52,7 @@ For pages where only facts like Roman-numeral dynasty counts, regnal-year intege
 
 ## Consequences
 
-- **Per-source API cost** is approximately $3–10 for a full book OCR pass (Claude + Gemini 3.1 Pro preview on ~80–500 pages). Trivial for the project.
+- **Per-source API cost** is approximately $2–5 for a full book OCR pass (Gemini 3.1 Pro preview in 5-page batches on ~80–500 pages, plus ~30–60 single-page Claude cross-check calls on titulary pages). Trivial for the project.
 - **Committed evidence trail**: every reconciled-JSONL row's titulary traces back to a committed per-page `.md` in the source's `raw/` directory, and that markdown traces back to one of two documented model outputs (or a human override recorded in the diff). This is the rule-1 (work like a scholar) standard for transcription.
 - **Two API keys required** in `.env`: `ANTHROPIC_API_KEY` and `GEMINI_API_KEY` (Gemini Pro models require a billing-enabled Google AI key; free tier has zero quota on the Pro lineage).
 - **Shared tooling**: the first source to use this pipeline (Ryholt) implements it in its own `fetch.py`. When Source 3 (Kitchen 1996) lands, common code is promoted to a shared module (`pipeline/pipeline/authority/ocr.py` or equivalent). No premature abstraction.
