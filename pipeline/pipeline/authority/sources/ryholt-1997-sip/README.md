@@ -36,16 +36,20 @@ Prose chapters (Part II §2.1–§2.6 on the individual dynasties) are out of sc
 
 **Expected row count:** ~60–80 king entries across Dyns 13–17 plus the Abydos Dynasty.
 
-## Method — Gemini OCR + human spot-check (ADR-017)
+## Method — Gemini OCR over physical-page chunks (ADR-017)
 
 Per `docs/adr/017-ocr-pipeline-for-scan-only-sources.md`:
 
-1. `fetch.py --pages 333-411` runs **Gemini 3.1 Pro preview** in 5-page batches on the target printed-page range.
-2. Per-page output lands directly in `raw/page-NNN.md` — one file per page, committed as the canonical OCR.
-3. The transcriber spot-checks a sample of ~5 pages against the PDF (focused on titulary diacritics, dates, File N/M labels) and makes any corrections inline in the affected `raw/page-NNN.md` with a short comment.
-4. `reconciled.jsonl` is derived from the committed `raw/page-NNN.md` files.
+1. `fetch.py --physical 336-416 --chunk-size 5` runs **Gemini 3.1 Pro preview** over physical PDF pages in 5-page chunks.
+2. Each chunk lands in `raw/chunk-pNNN-pMMM.md` (NNN-MMM = physical page range, 1-indexed). The file is the unit of both OCR and citation.
+3. `reconciled.jsonl` rows cite the chunk's physical range, e.g. `source_citation: {pdf_pages: "340-344", edition: "CNI 20, 1997"}`. A reviewer verifying a row opens the PDF at physical pages 340-344 and reads the content there; Gemini preserves Ryholt's running-header printed-page numbers inline so scholarly cross-reference to the printed edition is trivial.
+4. The transcriber spot-checks ~2-3 chunks against the PDF and inline-corrects `raw/chunk-…md` for any disagreements.
 
-The benchmark that sized this pipeline (p. 336, Sobkhotep I) is documented in ADR-017: Gemini 3.1 Pro correctly rendered every Egyptological transliteration character on a representative titulary page; Mistral and Gemini 3 Flash did not. The earlier plan for a two-model Claude + Gemini cross-check was dropped once it became clear that model disagreements clustered on bibliographic details outside the extraction schema.
+The benchmark that sized this pipeline (physical p. 340, Sobkhotep I / printed p. 336) is documented in ADR-017: Gemini 3.1 Pro correctly rendered every Egyptological transliteration character on a representative titulary page; Mistral and Gemini 3 Flash did not. The earlier plan for a two-model Claude + Gemini cross-check was dropped once it became clear that model disagreements clustered on bibliographic details outside the extraction schema.
+
+### Target physical range
+
+Physical pages **336-416** (81 pages, 17 chunks). This spans File 1 / Catalogue of Attestations (printed pp. 333-407) plus the Chronological Tables appendix (printed pp. 408-411) with generous padding at both ends to absorb offset shifts at Part boundaries.
 
 ## Schema (per handoff Source 2 spec)
 
@@ -67,7 +71,7 @@ The benchmark that sized this pipeline (p. 336, Sobkhotep I) is documented in AD
   "date_bce_end": -1759,
   "polity": "Memphite",
   "concurrent_with": [],
-  "source_citation": {"page": 340, "edition": "CNI Publications 20, Museum Tusculanum Press, 1997"}
+  "source_citation": {"pdf_pages": "340-344", "edition": "CNI Publications 20, Museum Tusculanum Press, 1997"}
 }
 ```
 

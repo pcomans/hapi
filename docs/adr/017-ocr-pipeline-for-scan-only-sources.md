@@ -24,12 +24,18 @@ Every frontier model made at least one error on one page — different errors on
 
 ## Decision
 
-For every scan-only Phase 0 source (and any future scholarly PDF where transliteration diacritics or tabular layout matter), the transcription method is **Gemini 3.1 Pro preview for bulk OCR, plus human spot-check on a sample of pages against the source PDF**:
+For every scan-only Phase 0 source (and any future scholarly PDF where transliteration diacritics or tabular layout matter), the transcription method is **Gemini 3.1 Pro preview over physical-page chunks, plus human spot-check on a sample against the source PDF**:
 
-1. **Run Gemini 3.1 Pro preview** on the full target page range with a prompt constraining the character set to the Egyptological Unicode block and forbidding ASCII substitutions (`3` for ꜣ, `c` for ꜥ). Pages are batched (the fetch.py runner defaults to 5 pages per API call) with `=== PAGE NNN ===` delimiters in the output for per-page recovery.
-2. **Per-page markdown lands in `raw/page-NNN.md` directly** — one file per page, committed as the canonical OCR. No intermediate per-model scratch directories.
-3. **Human spot-checks a sample** of ~5 pages per source against the PDF page image, focused on the fields that actually flow into `reconciled.jsonl` — king names, titulary diacritics, dates, dynasty numbers, polity assignments. If the sample is clean, the rest is trusted.
-4. **The structured `reconciled.jsonl` is derived from the committed `raw/page-NNN.md` files** — i.e. the transcription is the committed OCR. Any corrections the human finds during spot-check are made directly in `raw/page-NNN.md` with a short comment explaining the override (e.g. `# Gemini: Fuad; PDF: Fûad — corrected`).
+1. **Chunk the PDF by physical (1-indexed PDF) page index**, five pages per chunk by default. Physical page indices are unambiguous — they do not depend on resolving the book's printed page numbering against any front-matter / blank / Part-heading pages, which the agent often gets wrong.
+2. **Run Gemini 3.1 Pro preview** on each chunk with a prompt that (a) constrains the character set to the Egyptological Unicode block, (b) forbids ASCII substitutions (`3` for ꜣ, `c` for ꜥ), (c) asks the model to preserve the book's own running-header page numbers inline where they appear in the source. That way a reader cross-referencing back to a printed page can find it from the committed markdown.
+3. **Per-chunk markdown lands in `raw/chunk-pNNN-pMMM.md`** where `NNN-MMM` is the physical-page range. Each file carries a top-of-file HTML comment stating the physical range so citations can be verified. **No per-page splitting**: the whole chunk is the unit of both OCR and citation. Gemini's own per-page page-header preservation (when available) is a bonus for a human reader, not a reliance the pipeline makes.
+4. **`reconciled.jsonl` rows cite the physical-page range of the chunk they came from**: `source_citation: {pdf_pages: "340-344", edition: "…"}`. Anyone verifying a row opens the PDF at physical pages 340-344 and finds the content there.
+5. **Human spot-checks a sample** of ~2-3 chunks per source against the PDF pages, focused on the fields that actually flow into `reconciled.jsonl` — king names, titulary diacritics, dates, dynasty numbers, polity assignments. If the sample is clean, the rest is trusted.
+6. Any corrections the human finds during spot-check are made directly in `raw/chunk-…md` with a short inline comment explaining the override (e.g. `<!-- Gemini: Fuad; PDF: Fûad — corrected -->`).
+
+### Why physical pages, not printed pages
+
+Every scan has some offset between "physical page 1" (PDF page 1) and "printed page 1" (first numbered page of the book body), driven by front matter, blank filler pages inserted for even/odd page layout, Part-heading pages, and so on. That offset can also *shift mid-book* if a section break has an odd number of pages before it. An agent trying to resolve "printed page N" on the fly regularly gets it wrong; we verified this on Ryholt 1997, where the offset was 4 for File 1 (pp. 333-407) but 3 for the Chronological Tables (pp. 408-411) because of a Part-heading page. Citing by physical page sidesteps this entirely.
 
 ### Why not a two-model cross-check?
 

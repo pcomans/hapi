@@ -15,21 +15,23 @@ See `fetch.py` in this directory. Per ADR-017, Gemini 3.1 Pro preview is the onl
 
 ```
 cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/fetch.py \
-    --pages 333-411 --batch 5
+    --physical 336-416 --chunk-size 5
 ```
 
-For each 5-page batch, the runner:
-- combines the batch's physical pages into one multi-page PDF via pypdf,
-- sends it to Gemini 3.1 Pro preview (`gemini-3.1-pro-preview`) with the ADR-017 prompt (emitting `=== PAGE NNN ===` headers before each page),
-- splits the response on those headers and writes `raw/page-NNN.md` for each page.
+For each 5-page chunk, the runner:
+- combines those physical pages (1-indexed PDF pages) into one PDF via pypdf,
+- sends it to Gemini 3.1 Pro preview (`gemini-3.1-pro-preview`) with the ADR-017 prompt,
+- writes the response verbatim to `raw/chunk-pNNN-pMMM.md`, prefixed with an HTML comment stating the physical-page range.
+
+The chunk is the atomic unit of both OCR and citation. We do not try to split chunks back into per-page files — that introduces an alignment problem (see ADR-017 "Why physical pages, not printed pages") for no gain, since citations work fine at chunk-range granularity.
 
 ### Spot-check QA
 
-Before committing `reconciled.jsonl`, the transcriber reads ~5 sampled `raw/page-NNN.md` files against the corresponding PDF pages, checking titulary diacritics (ꜣ ꜥ ḥ ḫ nṯ), regnal dates, and File N/M labels. Corrections are made inline in `raw/page-NNN.md` with a short comment (e.g. `# Gemini: Fuad; PDF: Fûad — corrected`).
+Before committing `reconciled.jsonl`, the transcriber reads ~2-3 sampled `raw/chunk-…md` files against the corresponding physical PDF pages, checking titulary diacritics (ꜣ ꜥ ḥ ḫ nṯ), regnal dates, and File N/M labels. Corrections are made inline in the chunk file with a short comment (e.g. `<!-- Gemini: Fuad; PDF: Fûad — corrected -->`).
 
 ### JSONL derivation
 
-Once `raw/page-NNN.md` files are committed and spot-checked, a parser (added in a later commit) walks them and emits `reconciled.jsonl`.
+Once `raw/chunk-…md` files are committed and spot-checked, a parser (added in a later commit) walks them and emits `reconciled.jsonl`. Each row's `source_citation.pdf_pages` is the chunk's physical page range.
 
 ## The prompt
 

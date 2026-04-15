@@ -1,22 +1,19 @@
 """Gemini OCR runner for Ryholt 1997 (ADR-017).
 
-Runs Gemini 3.1 Pro preview in page batches over a specified printed-page
-range. Writes per-page markdown directly to `raw/page-NNN.md`.
+Chunks the source PDF by physical-page index and sends each chunk to
+Gemini 3.1 Pro preview. Writes one markdown file per chunk into
+`raw/chunk-pNNN-pMMM.md` where NNN-MMM is the 1-indexed physical page
+range. Citations in `reconciled.jsonl` cite that physical-page range.
 
-Quality assurance is by human spot-check against the source PDF on a
-sample of pages — not by cross-model diff (see ADR-017 for the decision
-rationale).
-
-Batching: every API call sends a multi-page PDF containing up to --batch
-printed pages (default 5). The model is prompted to emit a
-`=== PAGE NNN ===` header before each page's markdown; the runner splits
-the response on that header to recover per-page files.
+We do not try to resolve the PDF's printed page numbers on the agent
+side; any shift introduced by blank / frontispiece / Part-heading
+pages is handled by whoever verifies against the PDF.
 
 Usage:
     cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/fetch.py \\
-        --pages 333-411                  # full File 1 + Chronological Tables
+        --physical 337-415              # inclusive physical-page range (1-indexed)
     cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/fetch.py \\
-        --pages 336 --batch 1            # single page
+        --physical 337-415 --chunk-size 5
 
 Environment (from pipeline/.env):
     GEMINI_API_KEY  required (billing-enabled Google AI project)
@@ -27,7 +24,6 @@ from __future__ import annotations
 import argparse
 import io
 import os
-import re
 import sys
 import time
 from pathlib import Path
@@ -38,32 +34,26 @@ PDF_PATH = Path(__file__).resolve().parents[5] / "proprietary" / "books" / (
     "Ryholt 1997 - Political Situation SIP.pdf"
 )
 
-# Printed-page → physical-page offset. Ryholt prints p. 336 on physical
-# page 340; front matter adds 4.
-PRINTED_TO_PHYSICAL_OFFSET = 4
-
-PAGE_HEADER_RE = re.compile(r"^===\s*PAGE\s+(\d+)\s*===\s*$", re.MULTILINE)
-
-PROMPT_TEMPLATE = (
-    "Transcribe the following pages from Ryholt 1997 'The Political "
-    "Situation in Egypt During the Second Intermediate Period' as faithful "
-    "Markdown.\n\n"
+PROMPT = (
+    "Transcribe every page of this PDF as faithful Markdown. The PDF is a "
+    "multi-page extract from Ryholt 1997 'The Political Situation in Egypt "
+    "During the Second Intermediate Period'.\n\n"
     "Rules:\n"
     "- Preserve Egyptological transliteration characters exactly: "
     "ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ. Do NOT substitute ASCII look-alikes — no '3' for ꜣ, "
     "no 'c' for ꜥ, no 'h' for ḥ or ḫ.\n"
-    "- Preserve roman numerals and bibliographic references exactly as "
-    "printed. If you see what looks like Greek Π or VH, it is the OCR "
-    "mangling of II or VII — use the correct roman numeral.\n"
+    "- Preserve roman numerals and bibliographic references exactly. If a "
+    "glyph looks like Greek Π or VH in the OCR layer, it is II or VII; "
+    "render the correct roman numeral.\n"
+    "- Preserve the book's running headers (page-number banners at the "
+    "top/bottom of each page, e.g. '336 Catalogue of Attestations' or "
+    "'Chronological Tables 409'), inline where they appear. These are how "
+    "a reader cross-references to the printed page.\n"
     "- Preserve the two-column layout by emitting column 1 then column 2 "
     "in reading order.\n"
     "- Preserve underlined text with Markdown's HTML passthrough "
     "`<u>…</u>`.\n"
-    "- BEFORE each page's transcription, emit a header line of exactly "
-    "`=== PAGE NNN ===` where NNN is the printed page number (no leading "
-    "zeros). The printed page numbers for this batch are: {page_list}.\n"
-    "- Emit nothing else: no preamble, no closing remarks, no commentary "
-    "between pages."
+    "- Output only the transcription — no preamble, no closing remarks."
 )
 
 GEMINI_MODEL = "gemini-3.1-pro-preview"
@@ -75,23 +65,19 @@ def _load_env() -> None:
     load_dotenv(SOURCE_DIR.parents[3] / ".env")
 
 
-def _build_batch_pdf(physical_indices: list[int]) -> bytes:
+def _build_chunk_pdf(physical_one_indexed: list[int]) -> bytes:
     import pypdf
 
     reader = pypdf.PdfReader(str(PDF_PATH))
     writer = pypdf.PdfWriter()
-    for idx in physical_indices:
-        writer.add_page(reader.pages[idx])
+    for p in physical_one_indexed:
+        writer.add_page(reader.pages[p - 1])
     buf = io.BytesIO()
     writer.write(buf)
     return buf.getvalue()
 
 
-def _prompt_for(printed_pages: list[int]) -> str:
-    return PROMPT_TEMPLATE.format(page_list=", ".join(str(p) for p in printed_pages))
-
-
-def _gemini_ocr(pdf_bytes: bytes, prompt: str) -> str:
+def _gemini_ocr(pdf_bytes: bytes) -> str:
     from google import genai
     from google.genai import types
 
@@ -100,35 +86,13 @@ def _gemini_ocr(pdf_bytes: bytes, prompt: str) -> str:
         model=GEMINI_MODEL,
         contents=[
             types.Part.from_bytes(data=pdf_bytes, mime_type="application/pdf"),
-            prompt,
+            PROMPT,
         ],
     )
     return resp.text or ""
 
 
-def _split_by_page_header(response: str, expected_pages: list[int]) -> dict[int, str]:
-    matches = list(PAGE_HEADER_RE.finditer(response))
-    if not matches:
-        raise RuntimeError(
-            f"Batch response contained no `=== PAGE NNN ===` headers; "
-            f"expected pages {expected_pages}. Response starts: "
-            f"{response[:200]!r}"
-        )
-    found_pages = [int(m.group(1)) for m in matches]
-    if found_pages != expected_pages:
-        raise RuntimeError(
-            f"Batch response page headers {found_pages} do not match "
-            f"expected {expected_pages}."
-        )
-    out: dict[int, str] = {}
-    for i, m in enumerate(matches):
-        start = m.end()
-        end = matches[i + 1].start() if i + 1 < len(matches) else len(response)
-        out[found_pages[i]] = response[start:end].strip("\n")
-    return out
-
-
-def _parse_page_range(spec: str) -> list[int]:
+def _parse_range(spec: str) -> list[int]:
     out: list[int] = []
     for part in spec.split(","):
         if "-" in part:
@@ -143,42 +107,46 @@ def _chunk(seq: list[int], size: int) -> list[list[int]]:
     return [seq[i : i + size] for i in range(0, len(seq), size)]
 
 
-def _path(printed: int) -> Path:
-    return RAW_DIR / f"page-{printed:03d}.md"
+def _chunk_path(first: int, last: int) -> Path:
+    return RAW_DIR / f"chunk-p{first:03d}-p{last:03d}.md"
 
 
-def run(printed_pages: list[int], batch_size: int) -> None:
+def run(physical_pages: list[int], chunk_size: int) -> None:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-    for batch in _chunk(printed_pages, batch_size):
-        needed = [p for p in batch if not _path(p).exists()]
-        if not needed:
-            print(f"  batch {batch[0]}-{batch[-1]}: cached", flush=True)
+    for batch in _chunk(physical_pages, chunk_size):
+        first, last = batch[0], batch[-1]
+        out = _chunk_path(first, last)
+        if out.exists():
+            print(f"  chunk p{first:03d}-p{last:03d}: cached", flush=True)
             continue
-        print(f"  batch {batch[0]}-{batch[-1]}: {len(needed)} page(s)", flush=True)
+        print(f"  chunk p{first:03d}-p{last:03d}: {len(batch)} page(s)", flush=True)
 
-        physical = [p + PRINTED_TO_PHYSICAL_OFFSET - 1 for p in needed]
-        pdf_bytes = _build_batch_pdf(physical)
-        prompt = _prompt_for(needed)
-
-        resp = _gemini_ocr(pdf_bytes, prompt)
-        for page, md in _split_by_page_header(resp, needed).items():
-            _path(page).write_text(md + "\n")
+        pdf_bytes = _build_chunk_pdf(batch)
+        text = _gemini_ocr(pdf_bytes)
+        # Header to help readers. We do NOT try to split the chunk into
+        # per-page files — the whole chunk IS the unit of citation.
+        header = (
+            f"<!-- Ryholt 1997 — physical pages {first}-{last} "
+            f"(1-indexed PDF page numbers). Citations in reconciled.jsonl "
+            f"reference this range. -->\n\n"
+        )
+        out.write_text(header + text.rstrip() + "\n")
         time.sleep(0.2)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--pages",
+        "--physical",
         required=True,
-        help="Printed page(s) to OCR: '336' or '333-411' or '333,340,345'.",
+        help="Physical (1-indexed PDF) page range, e.g. '337-415'.",
     )
     parser.add_argument(
-        "--batch",
+        "--chunk-size",
         type=int,
         default=5,
-        help="Pages per API call (default: 5).",
+        help="Pages per chunk / per API call (default: 5).",
     )
     args = parser.parse_args()
 
@@ -186,12 +154,12 @@ def main() -> None:
     if not PDF_PATH.exists():
         sys.exit(f"ERROR: source PDF not found at {PDF_PATH}")
 
-    printed_pages = _parse_page_range(args.pages)
+    physical_pages = _parse_range(args.physical)
     print(
-        f"OCR'ing {len(printed_pages)} page(s) from {PDF_PATH.name} "
-        f"in batches of {args.batch}"
+        f"OCR'ing physical pages {physical_pages[0]}-{physical_pages[-1]} "
+        f"({len(physical_pages)} pp.) in chunks of {args.chunk_size}"
     )
-    run(printed_pages, args.batch)
+    run(physical_pages, args.chunk_size)
 
 
 if __name__ == "__main__":
