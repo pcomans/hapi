@@ -1,0 +1,210 @@
+13.11 (Sewadjkare (I)):
+  date_bce_start: a=null | b=-1669 | c=null  → chose null
+  nomen: a="Sewadjkare (I)" | b="Hori II" | c="Sewadjkare"  → chose "Sewadjkare (I)"
+  date_bce_end: a=-1781 | b=-1664 | c=-1781  → chose -1781
+
+13.17 (Djedkheperew):
+  golden_horus_name_transliterated: a="ḥrw-ꜥꜣ* (?)" | b="ḥrw-ꜥꜣ (?)" | c="ḥrw-ꜥꜣ (?)"  → chose "ḥrw-ꜥꜣ (?)"
+
+13.46 (Mer[...]re):
+  prenomen_transliterated: a="mr*-[...]-*rꜥ" | b="mr-[...]-rꜥ" | c="mr-[...]-rꜥ"  → chose "mr-[...]-rꜥ"
+
+13.51 ([...]mosre):
+  prenomen_transliterated: a="[...]-*ms-rꜥ" | b="[...]-ms-rꜥ" | c="[...]-ms-rꜥ"  → chose "[...]-ms-rꜥ"
+
+13.52 (Ibi):
+  prenomen_transliterated: a="[...]-*mꜣꜥt-rꜥ* ⁽¹⁾" | b="[...]-mꜣꜥt-rꜥ ⁽¹⁾" | c="[...]-mꜣꜥt-rꜥ ⁽¹⁾"  → chose "[...]-mꜣꜥt-rꜥ ⁽¹⁾"
+
+13.53 (Hor(..?)):
+  date_bce_start: a=null | b=-1777 | c=null  → chose null
+  nomen: a="Hor(..?)" | b="Hor I" | c="Hor(..?)"  → chose "Hor(..?)"
+  date_bce_end: a=null | b=-1775 | c=null  → chose null
+  prenomen_transliterated: a="[...]-*wbn-rꜥ" | b="[...]-wbn-rꜥ" | c="[...]-wbn-rꜥ"  → chose "[...]-wbn-rꜥ"
+  prenomen: a=null | b="Awibre" | c=null  → chose null
+  nomen_transliterated: a="ḥrw*[..?]" | b="ḥrw[..?]" | c="ḥrw[..?]"  → chose "ḥrw[..?]"
+
+13.54 (Se[...]kare):
+  prenomen_transliterated: a="s.*[...]-*kꜣ-rꜥ" | b="s.[...]-kꜣ-rꜥ" | c="s.[...]-kꜣ-rꜥ"  → chose "s.[...]-kꜣ-rꜥ"
+
+13.57 (Se[...]enre):
+  prenomen_transliterated: a="s.*[...]-*n-rꜥ" | b="s.[...]-n-rꜥ" | c="s.[...]-n-rꜥ"  → chose "s.[...]-n-rꜥ"
+
+13.8 (Amenemhet VI):
+  horus_name_transliterated: a="sꜥnḫ-ib-tꜣwy*, *sḥr-tꜣwy*⁽¹⁾" | b="sꜥnḫ-ib-tꜣwy, sḥr-tꜣwy⁽¹⁾" | c="sꜥnḫ-ib-tꜣwy, sḥr-tꜣwy⁽¹⁾"  → chose "sꜥnḫ-ib-tꜣwy, sḥr-tꜣwy⁽¹⁾"
+
+13.d (Sekhaenre):
+  date_bce_start: a=-1805 | b=null | c=null  → chose null
+  nomen: a="Yakbim" | b="Sekhaenre" | c="Sekhaenre"  → chose "Sekhaenre"
+  date_bce_end: a=-1780 | b=null | c=null  → chose null
+  prenomen: a="Sekhaenre" | b=null | c=null  → chose null
+  nomen_transliterated: a="[......]*s* ⁽¹⁾" | b="[......]s ⁽¹⁾" | c="[......]s ⁽¹⁾"  → chose "[......]s ⁽¹⁾"
+
+14.1 (Yakbim):
+  nomen_transliterated: a="ya-k-b-mu* (syllabic)" | b="ya-k-b-mu (syllabic)" | c="ya-k-b-mu (syllabic)"  → chose "ya-k-b-mu (syllabic)"
+
+14.11 (Sewadjkare):
+  nomen: a="Sewadjkare (III)" | b="Sewadjkare" | c="Sewadjkare"  → chose "Sewadjkare"
+  date_bce_end: a=-1781 | b=null | c=null  → chose null
+
+14.17 (Awibre):
+  date_bce_start: a=-1777 | b=null | c=null  → chose null
+  nomen: a="Hor I" | b="Awibre" | c="Awibre"  → chose "Awibre"
+  date_bce_end: a=-1775 | b=null | c=null  → chose null
+
+14.2 (Ya‘ammu):
+  nomen_transliterated: a="ya-ꜥ-mu*, var. *ya-mu-ꜥ* (syllabic)" | b="ya-ꜥ-mu, var. ya-mu-ꜥ (syllabic)" | c="ya-ꜥ-mu, var. ya-mu-ꜥ (syllabic)"  → chose "ya-ꜥ-mu, var. ya-mu-ꜥ (syllabic)"
+
+14.24 (Sankhibre):
+  date_bce_start: a=-1788 | b=null | c=null  → chose null
+  nomen: a="Amenemhet VI" | b="Sankhibre" | c="Sankhibre"  → chose "Sankhibre"
+  date_bce_end: a=-1785 | b=null | c=null  → chose null
+
+14.3 (Qareh):
+  nomen_transliterated: a="qa-r-ḥ* (syllabic)" | b="qa-r-ḥ (syllabic)" | c="qa-r-ḥ (syllabic)"  → chose "qa-r-ḥ (syllabic)"
+
+14.32 (Hapu(...?)):
+  nomen: a="Hapu(...?)" | b="Hapu(...?)" | c="Hapu[...?]"  → chose "Hapu(...?)"
+  prenomen: a=null | b=null | c="Semenenre"  → chose null
+  nomen_transliterated: a="ḥpw[-...?]* (syllabic?)" | b="ḥpw[-...?] (syllabic?)" | c="ḥpw[-...?] (syllabic?)"  → chose "ḥpw[-...?] (syllabic?)"
+
+14.33 (‘Anati):
+  nomen_transliterated: a="ꜥa-na-ti* (syllabic)" | b="ꜥa-na-ti (syllabic)" | c="ꜥa-na-ti (syllabic)"  → chose "ꜥa-na-ti (syllabic)"
+
+14.34 (Babnum):
+  nomen_transliterated: a="b-b-n-m* (syllabic)" | b="b-b-n-m (syllabic)" | c="b-b-n-m (syllabic)"  → chose "b-b-n-m (syllabic)"
+
+14.4 (‘Ammu):
+  nomen_transliterated: a="ꜥa-mu*, var. *ꜥ-mu* (syllabic)" | b="ꜥa-mu, var. ꜥ-mu (syllabic)" | c="ꜥa-mu, var. ꜥ-mu (syllabic)"  → chose "ꜥa-mu, var. ꜥ-mu (syllabic)"
+
+14.49 (Ink[.....]):
+  nomen_transliterated: a="in-k-[.....]* (syllabic)" | b="in-k-[.....] (syllabic)" | c="in-k-[.....] (syllabic)"  → chose "in-k-[.....] (syllabic)"
+
+14.5 (Sheshi):
+  nomen_transliterated: a="š-š-i* (syllabic)" | b="š-š-i (syllabic)" | c="š-š-i (syllabic)"  → chose "š-š-i (syllabic)"
+
+14.50 (’A[.....]):
+  nomen_transliterated: a="ꜥa-.[.....]* (syllabic)" | b="ꜥa-.[.....] (syllabic)" | c="ꜥa-.[.....] (syllabic)"  → chose "ꜥa-.[.....] (syllabic)"
+
+14.51 (’Ap[.....]):
+  nomen: a="‘Ap[.....]" | b="’Ap[.....]" | c="’Ap[.....]"  → chose "’Ap[.....]"
+  nomen_transliterated: a="ꜥa-p-[.....]* (syllabic)⁽¹⁾" | b="ꜥa-p-[.....] (syllabic)⁽¹⁾" | c="ꜥa-p-[.....] (syllabic)⁽¹⁾"  → chose "ꜥa-p-[.....] (syllabic)⁽¹⁾"
+
+14.b (Sheneh):
+  nomen_transliterated: a="š-n-ḥ* (syllabic)" | b="š-n-ḥ (syllabic)" | c="š-n-ḥ (syllabic)"  → chose "š-n-ḥ (syllabic)"
+
+14.c (Shenshek):
+  nomen_transliterated: a="š-n-š-k* (syllabic)" | b="š-n-š-k (syllabic)" | c="š-n-š-k (syllabic)"  → chose "š-n-š-k (syllabic)"
+
+14.d (Wazad):
+  nomen_transliterated: a="wꜣz-d* (syllabic)" | b="wꜣz-d (syllabic)" | c="wꜣz-d (syllabic)"  → chose "wꜣz-d (syllabic)"
+
+14.f (Yaꜥqub-Har):
+  nomen: a="Ya‘qub-Har" | b="Yaꜥqub-Har" | c="Yaꜥqub-Har"  → chose "Yaꜥqub-Har"
+  nomen_transliterated: a="yꜥ-q-b-ḥ-r* (syllabic)" | b="yꜥ-q-b-ḥ-r (syllabic)" | c="yꜥ-q-b-ḥ-r (syllabic)"  → chose "yꜥ-q-b-ḥ-r (syllabic)"
+
+14.g (Ya-k-ꜥ-r-b (?)):
+  nomen: a="Ya-k-‘-r-b (?)" | b="Ya-k-ꜥ-r-b (?)" | c="Ya-k-ꜥ-r-b (?)"  → chose "Ya-k-ꜥ-r-b (?)"
+  nomen_transliterated: a="ya-k-ꜥ-r-b ?* (syllabic)" | b="ya-k-ꜥ-r-b ? (syllabic)" | c="ya-k-ꜥ-r-b ? (syllabic)"  → chose "ya-k-ꜥ-r-b ? (syllabic)"
+
+15.1 (Šamuqēnu):
+  date_bce_start: a=null | b=-1649 | c=-1649  → chose -1649
+
+15.3 (Sakir-Har):
+  prenomen_transliterated: a="none" | b=null | c="none"  → chose "none"
+  nomen_transliterated: a="s-k-r-ḥ-r* (syllabic), not preceded by *sꜣ-rꜥ" | b="s-k-r-ḥ-r (syllabic), not preceded by sꜣ-rꜥ, but ḥqꜣ-ḫꜣswt" | c="s-k-r-ḥ-r (syllabic), not preceded by sꜣ-rꜥ"  → chose "s-k-r-ḥ-r* (syllabic), not preceded by *sꜣ-rꜥ"
+
+15.4 (Khayan):
+  nomen_transliterated: a="ḫ-ya-a-n* (syllabic)" | b="ḫ-ya-a-n (syllabic)" | c="ḫ-ya-a-n (syllabic)"  → chose "ḫ-ya-a-n (syllabic)"
+
+15.5 (Apophis):
+  prenomen_transliterated: a="ꜥꜣ-wsr-rꜥ*, *ꜥꜣ-ḳn-n-rꜥ*, *nb-ḫpš-rꜥ" | b="ꜥꜣ-wsr-rꜥ, ꜥꜣ-ḳn-n-rꜥ, nb-ḫpš-rꜥ" | c="ꜥꜣ-wsr-rꜥ, ꜥꜣ-ḳn-n-rꜥ, nb-ḫpš-rꜥ"  → chose "ꜥꜣ-wsr-rꜥ, ꜥꜣ-ḳn-n-rꜥ, nb-ḫpš-rꜥ"
+  prenomen: a="Awoserre (a.o.)" | b="Awoserre" | c="Awoserre"  → chose "Awoserre"
+  nomen_transliterated: a="'a-p-p*, *'-p-p* (syllabic)" | b="'a-p-p, '-p-p (syllabic)" | c="'a-p-p, '-p-p (syllabic)"  → chose "'a-p-p, '-p-p (syllabic)"
+
+15.6 (Khamudi):
+  prenomen: a="Hotepibre (?)" | b="Hotepibre" | c="Hotepibre"  → chose "Hotepibre"
+  nomen_transliterated: a="ḫꜣ-mw-dỉ* (syllabic)" | b="ḫꜣ-mw-dỉ (syllabic)" | c="ḫꜣ-mw-dỉ (syllabic)"  → chose "ḫꜣ-mw-dỉ (syllabic)"
+
+16.2 (Djehuty):
+  nebty_name_transliterated: a="[...]-*ḏḥwty" | b="[...]-ḏḥwty" | c="[...]-ḏḥwty"  → chose "[...]-ḏḥwty"
+
+16.4 (Neferhotep III):
+  nomen_transliterated: a="nfr-ḥtp* and *ỉy-ḥr-nfrt* (if not epithet)" | b="nfr-ḥtp and ỉy-ḥr-nfrt (if not epithet)" | c="nfr-ḥtp and ỉy-ḥr-nfrt (if not epithet)"  → chose "nfr-ḥtp and ỉy-ḥr-nfrt (if not epithet)"
+
+16.5 (Monthhotepi):
+  horus_name_transliterated: a="ḥr-nṯr.w* (?) ⁽¹⁾" | b="ḥr-nṯr.w (?) ⁽¹⁾" | c="ḥr-nṯr.w (?) ⁽¹⁾"  → chose "ḥr-nṯr.w (?) ⁽¹⁾"
+
+17.4 (Antef VII):
+  nomen_transliterated: a="in-it=f* (written 𓏎𓈖𓏏𓆑)" | b="in-it=f (written 𓏎𓈖𓏏𓆑)" | c="in-it=f (written 𓏎𓈖𓏏𓆑)"  → chose "in-it=f (written 𓏎𓈖𓏏𓆑)"
+
+17.8 (Tao):
+  horus_name_transliterated: a="ḥꜥ-m-tꜣwy*⁽¹⁾" | b="ḥꜥ-m-tꜣwy⁽¹⁾" | c="ḥꜥ-m-tꜣwy⁽¹⁾"  → chose "ḥꜥ-m-tꜣwy⁽¹⁾"
+  nomen_transliterated: a="tꜣ-ꜥꜣ* (syllabic)" | b="tꜣ-ꜥꜣ (syllabic)" | c="tꜣ-ꜥꜣ (syllabic)"  → chose "tꜣ-ꜥꜣ (syllabic)"
+
+17.9 (Kamose):
+  horus_name_transliterated: a="ḥꜥ-ḥr-nst=f*, *nfr-ḫꜣb-tꜣwy*, *s.dḏꜣ-tꜣwy" | b="ḥꜥ-ḥr-nst=f, nfr-ḫꜣb-tꜣwy, s.dḏꜣ-tꜣwy" | c="ḥꜥ-ḥr-nst=f, nfr-ḫꜣb-tꜣwy, s.dḏꜣ-tꜣwy"  → chose "ḥꜥ-ḥr-nst=f, nfr-ḫꜣb-tꜣwy, s.dḏꜣ-tꜣwy"
+  nomen_transliterated: a="kꜣ-ms*, *kꜣ-ms ḳn*; in certain contexts replaced by the epithet *pꜣ ḥḳꜣ ꜥꜣ*, 'the mighty ruler'⁽¹⁾" | b="kꜣ-ms, kꜣ-ms ḳn; in certain contexts replaced by the epithet pꜣ ḥḳꜣ ꜥꜣ, 'the mighty ruler'⁽¹⁾" | c="kꜣ-ms, kꜣ-ms ḳn; in certain contexts replaced by the epithet pꜣ ḥḳꜣ ꜥꜣ, 'the mighty ruler'⁽¹⁾"  → chose "kꜣ-ms, kꜣ-ms ḳn; in certain contexts replaced by the epithet pꜣ ḥḳꜣ ꜥꜣ, 'the mighty ruler'⁽¹⁾"
+
+N.10 (Sharek):
+  nomen_transliterated: a="š-r-k* (syllabic)" | b="š-r-k (syllabic)" | c="š-r-k (syllabic)"  → chose "š-r-k (syllabic)"
+
+N.3 (Neferhotep):
+  date_bce_start: a=-1742 | b=null | c=null  → chose null
+  nomen: a="Neferhotep I" | b="Neferhotep" | c="Neferhotep"  → chose "Neferhotep"
+  date_bce_end: a=-1731 | b=null | c=null  → chose null
+  prenomen: a="Khasekhemre" | b=null | c=null  → chose null
+
+N.5 (Sobkemsaf):
+  date_bce_start: a=-1576 | b=null | c=null  → chose null
+  nomen: a="Sobkemsaf I" | b="Sobkemsaf" | c="Sobkemsaf"  → chose "Sobkemsaf"
+  date_bce_end: a=-1573 | b=null | c=null  → chose null
+  prenomen: a="Sekhemreshedtawy" | b=null | c=null  → chose null
+
+N.6 (Sobkhotep):
+  date_bce_start: a=-1803 | b=null | c=null  → chose null
+  nomen: a="Sobkhotep I" | b="Sobkhotep" | c="Sobkhotep"  → chose "Sobkhotep"
+  date_bce_end: a=-1800 | b=null | c=null  → chose null
+  prenomen: a="Sekhemrekhutawy" | b=null | c=null  → chose null
+
+N.7 (Dedumose):
+  nomen: a="Dedumose I" | b="Dedumose" | c="Dedumose"  → chose "Dedumose"
+  prenomen: a="Djedhotepre" | b=null | c=null  → chose null
+
+N.8 (Abiya):
+  nomen_transliterated: a="ꜥꜣ-b-yꜣ* (syllabic)" | b="ꜥꜣ-b-yꜣ (syllabic)" | c="ꜥꜣ-b-yꜣ (syllabic)"  → chose "ꜥꜣ-b-yꜣ (syllabic)"
+
+P.1 (Merhotepre):
+  date_bce_start: a=-1720 | b=null | c=null  → chose null
+  nomen: a="Sobkhotep V" | b="Merhotepre" | c="Merhotepre"  → chose "Merhotepre"
+  date_bce_end: a=-1717 | b=null | c=null  → chose null
+  prenomen: a="Merhotepre" | b=null | c=null  → chose null
+
+P.10 ([...]hotepre):
+  prenomen_transliterated: a="[...]-*ḥtp*-[*rꜥ*]" | b="[...]-ḥtp-[rꜥ]" | c="[...]-ḥtp-[rꜥ]"  → chose "[...]-ḥtp-[rꜥ]"
+
+P.2 (Mersekhemre):
+  date_bce_start: a=-1672 | b=null | c=null  → chose null
+  nomen: a="Ined" | b="Mersekhemre" | c="Mersekhemre"  → chose "Mersekhemre"
+  date_bce_end: a=-1669 | b=null | c=null  → chose null
+  prenomen: a="Mersekhemre" | b=null | c=null  → chose null
+
+P.5 (Sekhemkare):
+  date_bce_start: a=-1800 | b=null | c=null  → chose null
+  nomen: a="Sonbef" | b="Sekhemkare" | c="Sekhemkare"  → chose "Sekhemkare"
+  date_bce_end: a=-1796 | b=null | c=null  → chose null
+  prenomen: a="Sekhemkare" | b=null | c=null  → chose null
+
+P.6 (Sekhemrekhutawy):
+  date_bce_start: a=-1803 | b=null | c=null  → chose null
+  nomen: a="Sobkhotep I" | b="Sekhemrekhutawy" | c="Sekhemrekhutawy"  → chose "Sekhemrekhutawy"
+  date_bce_end: a=-1800 | b=null | c=null  → chose null
+  prenomen: a="Sekhemrekhutawy" | b=null | c=null  → chose null
+
+P.7 (Sekhemre[......]):
+  prenomen_transliterated: a="sḫm-rꜥ*-[...-...]" | b="sḫm-rꜥ-[...-...]" | c="sḫm-rꜥ-[...-...]"  → chose "sḫm-rꜥ-[...-...]"
+
+P.8 (Kha[...]re):
+  prenomen_transliterated: a="ḫꜥ*-[...]-*rꜥ" | b="ḫꜥ-[...]-rꜥ" | c="ḫꜥ-[...]-rꜥ"  → chose "ḫꜥ-[...]-rꜥ"
+
+P.9 ([...]sekhemre):
+  prenomen_transliterated: a="[...]-*sḫm*-[*rꜥ*]" | b="[...]-sḫm-[rꜥ]" | c="[...]-sḫm-[rꜥ]"  → chose "[...]-sḫm-[rꜥ]"
