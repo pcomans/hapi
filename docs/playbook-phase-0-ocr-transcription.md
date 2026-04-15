@@ -131,7 +131,7 @@ Strike through the source bullet (`~~**Source name**~~ ✅`), add the row count,
 
 Stage files **explicitly by name** — never `git add .` or `git add -A`. The `raw/` contents must not be committed; `.gitignore` patterns cover them but verifying manually is cheap insurance.
 
-Expected committed files per source (10-ish):
+Expected committed files per source (11-ish):
 - `.gitignore` (if you extended the ignore pattern)
 - `docs/mvp-tasks.md`
 - `pipeline/pipeline/authority/sources/<source>/README.md`
@@ -141,17 +141,38 @@ Expected committed files per source (10-ish):
 - `pipeline/pipeline/authority/sources/<source>/fix_rows.py`
 - `pipeline/pipeline/authority/sources/<source>/reconciled.jsonl`
 - `pipeline/pipeline/authority/sources/<source>/merge-disagreements.txt`
+- `pipeline/pipeline/authority/sources/<source>/raw/.gitkeep` (keeps the dir tracked; everything else under `raw/` is ignored via `raw/*`)
 - `pipeline/tests/test_sources_<source>.py`
+
+**Deterministic JSONL output.** Write `reconciled.jsonl` with `json.dumps(..., sort_keys=True)` in both `merge.py` and `fix_rows.py`. Without sorted keys, Python's dict iteration order makes the file re-shuffle on every re-run even when values are identical — spurious diffs pollute the PR and make the authority file look unstable.
 
 PR title: `feat: transcribe <Book short name> → sources/<source>`.
 
 PR body follows the Ryholt PR (#34) template: rights verification, scope, known gaps, test plan, explicit LLM-vs-human labelling ("an actual Egyptologist sign-off pass has NOT been performed").
 
 Then per `CLAUDE.md` PR workflow:
-1. Request Copilot review.
+1. Request Copilot review (via `gh api` POST to `/pulls/<N>/requested_reviewers`, not `gh pr edit --add-reviewer` which has been flaky).
 2. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel on the PR.
 3. Before replying to any review batch, invoke `scope-accountability-enforcer` once, then prefix each `gh pr comment` with `SCOPE_CHECKED=1`.
 4. Poll `gh pr checks <N> --watch` until green. Fix any red check before moving on.
+
+**Reviewer-subagents return reviews inline, not to the PR.** Neither `code-reviewer` nor `egyptologist-reviewer` has `Bash` / `gh` access in the current harness, so they return their review as the final message rather than posting it. Do one of:
+- Read the review yourself, apply the fixes in a new commit, and paste the review into the PR thread as a reference if useful.
+- Take the review body and post it via `gh pr review <N> --comment --body-file -` (heredoc piped from the commit message).
+
+Either way, **give the review serious weight** even if it lands inline — the review was asked for; if the code-reviewer finds a rule 2 or rule 5 violation, fix it before merging.
+
+## Step 11 — post-PR review-pass cycle
+
+The review cycle almost always surfaces something. Common real findings from the first Ryholt + Kitchen cycles:
+
+- **Rule 2 defensive guards sneak in.** `if x is None: return None` or `if s > e: return None` with a "should never happen" comment is the exact pattern the constitution prohibits. Raise loudly. The reviewer catches this reliably.
+- **Rule 5 partial-field assertions.** A "themed" test on one row (e.g. "test the doubtful flag on Shoshenq VI") typically asserts 3–4 fields. If the fixture populates 12, assert 12. Rule 5 is about the bug those missing 8 assertions would have hidden.
+- **Symmetry tests that don't actually check.** A symmetry invariant (`X.concurrent ∋ Y ⇒ Y.concurrent ∋ X`) is weak — stale-but-symmetric lists pass it. Re-derive the expected values from the authoritative source (start/end dates + overlap rule) and assert equality. Import the computation from `fix_rows.py` so drift breaks the test.
+- **README prose quotations of the extract.** If the README quotes an extract value inline (e.g. "Harsiese, Hedjkheperre Setepenre"), that quotation is a second source of truth and will drift. Either delete the quote or lock it in with a test. Egyptologist-reviewer catches these.
+- **Fragile gitignore patterns.** Listing specific filename patterns (`raw/chunk-*.md`, `raw/agent-*.jsonl`) means any new file the subagent drops into `raw/` becomes committable. Prefer `raw/*` + `!raw/.gitkeep`.
+
+Apply the fixes in a fresh commit (`fix(<source>): address <reviewer> first pass`), re-run tests, push. Poll CI and the review threads for a second round.
 
 ## Things to watch out for
 
@@ -166,3 +187,7 @@ Then per `CLAUDE.md` PR workflow:
 - **Compound ID prefixes** (like Kitchen's `21H`, `24E`, `24P`) need a custom `_sort_key` — Ryholt's `[A-Za-z]+|\d+` alternation won't match `21H`. Write a prefix-to-ordering lookup dict.
 - **Interval-overlap fields** (like `concurrent_with_kings`) are a LLM failure mode. Compute them deterministically in `fix_rows.py` from already-extracted fields, not in the extraction prompt.
 - **OCR subagent refusal risk.** Reframe as "fair-use scholarly extraction"; do not swap OCR vendors.
+- **Main-session OCR is not a substitute for a subagent OCR pass.** If you've already Read the PDF pages in the main session, you can produce the chunk yourself — but doing so breaks the audit trail (`transcribe.md` claims a subagent produced it) and removes the independent-OCR redundancy that the 3-extraction-subagent majority vote relies on. Always spawn the OCR subagent, even for a 4-page target. If your first instinct is "I already have it in context, I'll just write the chunk", redo it properly — the user will call it out.
+- **Network / DNS flakes push-time.** If `git push` fails with `Could not resolve host` or `CONNECT tunnel failed 502`, retry. If retries fail, schedule a wakeup (`ScheduleWakeup` with ~120s) to come back to it — don't block your session on transient network issues.
+- **The git push hook requires `TASK_LIST_UPDATED=1`** when `docs/mvp-tasks.md` is in the commit. Prefix with it or the pre-push hook blocks.
+- **Feature-branch policy.** Never push to main. Always create a `feat/source-<name>` branch off main and open a PR. See `feedback_branch_pr.md`.
