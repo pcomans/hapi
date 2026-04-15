@@ -35,6 +35,13 @@ out/
 # must be scrubbed first.
 proprietary/
 
+# OCR'd chunks of scan-only scholarly sources contain the source's own
+# prose (introductions, section commentary) verbatim — copyrighted
+# material that must not leave the repo. Only the *derived* extract
+# (reconciled.jsonl) is committed; the raw OCR chunks stay local.
+# See ADR-017.
+pipeline/pipeline/authority/sources/*/raw/chunk-*.md
+
 # Docker volumes
 pgdata/
 tsdata/
