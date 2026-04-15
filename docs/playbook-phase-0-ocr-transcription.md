@@ -187,14 +187,16 @@ Apply the fixes in a fresh commit (`fix(<source>): address <reviewer> first pass
 
 Every extract is **provisional** at the chunk level until a human with Egyptology training reads a sample (~5–10 rows) against the source PDF and signs off. The LLM `egyptologist-reviewer` pass does NOT satisfy this — ADR-017 explicitly treats human review as a separate layer ("LLM checking an LLM" is labelled as such).
 
-When the human review happens (post-merge is fine), log it in `<source_dir>/human-review-<YYYY-MM-DD>.md` with:
+When the human review happens (post-merge is fine), log it in `<source_dir>/human-review-<YYYY-MM-DD>.md` for single-chunk sources, or `<source_dir>/human-review-<YYYY-MM-DD>-<chunk>.md` for multi-chunk sources (e.g. `human-review-2026-05-10-ramesside.md`). The chunk-suffixed form serves two purposes: it disambiguates same-day reviews when multiple chunks are signed off on one session, and it makes the file-listing a self-documenting chunk-audit index. Do NOT use the chunk suffix for single-chunk sources — the un-suffixed form is simpler and the handoff path explicitly reserves the bare date form for those.
+
+The log's body is the same regardless of suffix convention:
 
 1. **Reviewer name** and date.
 2. **Rows sampled** — which IDs / pages they actually walked. Be explicit that un-sampled rows remain provisional at the chunk level.
 3. **Verdict per row** — correct / needs-fix / deferred. Deferred-items belong on the "outstanding architectural questions" list in the source `README.md` or the project-level memory, not in the audit log itself.
 4. **Consequence statement** — "the N reviewed rows are no longer provisional for Phase A authority curation purposes; the remaining M un-sampled rows remain provisional."
 
-Reference: Dodson-Hilton's `human-review-2026-04-15.md` (first human sign-off logged on a Dodson-Hilton chunk) covers seven high-leverage Amarna rows (Tutankhuaten, Kiya, Meryetaten, Mutnodjmet A/Q, Nefertiti, Ankhesenpaaten, lacuna-group entries). Six validated clean, one (Nefertiti.children_names semantics) deferred as a source-wide architectural question.
+Reference: Dodson-Hilton's `human-review-2026-04-15.md` (first human sign-off logged on a Dodson-Hilton chunk — Amarna Interlude; single-chunk naming at that time because the suffix convention wasn't formalised yet, but subsequent Dodson-Hilton reviews must use the `-<chunk>` suffix). Seven high-leverage Amarna rows sampled (Tutankhuaten, Kiya, Meryetaten, Mutnodjmet A/Q, Nefertiti, Ankhesenpaaten, lacuna-group entries) — six validated clean, one (Nefertiti.children_names semantics) deferred as a source-wide architectural question.
 
 ---
 
@@ -215,29 +217,30 @@ Some sources land across multiple PRs that share one source directory (Dodson-Hi
 
 ### `merge.py` union-across-chunks
 
-Each agent tag's rows are collected across all matching files per tag before the majority-vote step. D-H's `merge.py` uses a `_load_agent_chunks(agent_dir, tag)` helper that globs `agent-{tag}-*.jsonl` AND reads the legacy unsuffixed `agent-{tag}.jsonl` as a base file:
+Each agent tag's rows are collected across all matching files per tag before the majority-vote step. The pattern below is generic — rename `<source>_id` to your source's actual primary-key field (D-H uses `dh_id`, Ryholt uses `ryholt_id`, Kitchen uses `kitchen_id`) before copying. Error-message text mentioning the source by name is illustrative, not load-bearing.
 
 ```python
 def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
     base = agent_dir / f"agent-{tag}.jsonl"
     chunks = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
     files = ([base] if base.exists() else []) + chunks
+    # ... (empty-files early return omitted for brevity; see merge.py on main)
     combined: dict[str, dict] = {}
     source_of: dict[str, Path] = {}
     for p in files:
         rows = _load(p)
-        for did, row in rows.items():
-            if did in combined:
+        for primary_id, row in rows.items():  # rename to <source>_id in your copy
+            if primary_id in combined:
                 raise ValueError(
-                    f"Duplicate dh_id {did!r} across chunk files: "
-                    f"first in {source_of[did]}, again in {p}"
+                    f"Duplicate {primary_id!r} across chunk files: "
+                    f"first in {source_of[primary_id]}, again in {p}"
                 )
-            combined[did] = row
-            source_of[did] = p
+            combined[primary_id] = row
+            source_of[primary_id] = p
     return combined
 ```
 
-Cross-chunk ID collisions raise loudly — within one source, the primary-ID scheme (D&H disambiguator letters, Kitchen prefix-numbers) is meant to be globally unique. A collision means an extraction bug, not a legitimate homonym.
+Cross-chunk ID collisions raise loudly — within one source, the primary-ID scheme (D&H disambiguator letters like `Ahmes A` / `Ahmes B`, Kitchen prefix-numbers like `21H`/`24E`) is meant to be globally unique. A collision means an extraction bug, not a legitimate homonym.
 
 ### Sort-key for lacuna-prefixed IDs
 
@@ -284,8 +287,12 @@ Use surgical `fix_rows.py` overrides on the first-run agent JSONL instead. Befor
 - **Subagent sandbox**: subagents cannot write to `/tmp/claude*/`. Use a gitignored path inside the repo (`<source_dir>/raw/`). Update `merge.py`'s `DEFAULT_AGENT_DIR` accordingly.
 - **Compound ID prefixes** (like Kitchen's `21H`, `24E`, `24P`) need a custom `_sort_key` — Ryholt's `[A-Za-z]+|\d+` alternation won't match `21H`. Write a prefix-to-ordering lookup dict.
 - **Interval-overlap fields** (like `concurrent_with_kings`) are a LLM failure mode. Compute them deterministically in `fix_rows.py` from already-extracted fields, not in the extraction prompt.
-- **OCR subagent refusal risk.** Reframe as "fair-use scholarly extraction"; do not swap OCR vendors.
-- **Main-session OCR is not a substitute for a subagent OCR pass.** If you've already Read the PDF pages in the main session, you can produce the chunk yourself — but doing so breaks the audit trail (`transcribe.md` claims a subagent produced it) and removes the independent-OCR redundancy that the 3-extraction-subagent majority vote relies on. Always spawn the OCR subagent, even for a 4-page target. If your first instinct is "I already have it in context, I'll just write the chunk", redo it properly — the user will call it out.
+- **OCR decision tree (supersedes the pre-2026-04-15 "never swap OCR vendors" rule).** The default is still an OCR subagent running on Claude Opus 4.6. If that refuses, retry with a reframed prompt (fair-use scholarly extraction for a private research repo). Only if re-framing also fails, escalate:
+  1. **Tier 1 — OCR subagent on Opus 4.6** (default). Content filtering is the most common failure mode; reframing resolves it most of the time (see Ryholt).
+  2. **Tier 2 — Main-session Opus 4.6.** A sanctioned exception when (a) the subagent hits content filtering on a bounded chunk AND (b) the main session can Read the PDF pages and transcribe them itself. D-H chunk 2 followed this path. Record the deviation in `transcribe.md` — do not pretend a subagent produced the chunk. The downside is the loss of independent-OCR redundancy, which is why tier 1 remains the default; but the 3-subagent EXTRACTION step (that comes after OCR) provides its own majority-vote redundancy, so losing independence at the OCR layer is not catastrophic for a single chunk.
+  3. **Tier 3 — Gemini 3.1 Pro (per-chunk fallback, per ADR-017 amendment 2026-04-15).** Only when both tiers 1 and 2 refuse. Commit the Gemini prompt verbatim at `<source_dir>/transcribe-gemini-prompt.md`; pin the Gemini model version in `transcribe.md`; keep every downstream stage (3-subagent extraction, merge, reviewer, fix_rows) on Opus 4.6. D-H chunk 1 followed this path. The amendment is per-chunk, not source-wide: follow-up chunks of the same source must re-attempt tier 1 from scratch.
+  
+  The original reason the rule was "never swap vendors" is still valid: vendor-swapping mid-chunk pipeline causes downstream inconsistency (different OCRs make different systematic errors on transliteration, layout, and proper-noun diacritics). The amendment allows the swap only at the OCR layer, only for chunks where Opus genuinely refuses, and never in the extraction / review / post-processing layers that consume the OCR output. That's the constraint that preserves the rule's original intent.
 - **Network / DNS flakes push-time.** If `git push` fails with `Could not resolve host` or `CONNECT tunnel failed 502`, retry. If retries fail, schedule a wakeup (`ScheduleWakeup` with ~120s) to come back to it — don't block your session on transient network issues.
 - **The git push hook requires `TASK_LIST_UPDATED=1`** when `docs/mvp-tasks.md` is in the commit. Prefix with it or the pre-push hook blocks.
 - **Feature-branch policy.** Never push to main. Always create a `feat/source-<name>` branch off main and open a PR. See `feedback_branch_pr.md`.

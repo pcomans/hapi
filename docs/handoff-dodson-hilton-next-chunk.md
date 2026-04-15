@@ -12,7 +12,7 @@ This doc is specific to D-H chunk 3 (Ramesside). For generic Phase 0 source onbo
 - **Landed chunks (100 rows total):**
   - Chunk 1 (Pre-Amarna "Power and the Glory" Brief Lives) — printed pp. 137–141, physical pp. 126–130. 59 rows. PR #37, merged.
   - Chunk 2 (Amarna Interlude Brief Lives) — printed pp. 154–157, physical pp. 142–145. 41 rows. PR #38, merged.
-- **Human review logged:** `pipeline/pipeline/authority/sources/dodson-hilton-queens/human-review-2026-04-15.md`. Seven Amarna rows validated non-provisional; one (Nefertiti.children_names) deferred source-wide. Pre-Amarna rows + remaining 34 Amarna rows are still provisional at chunk level.
+- **Human review logged:** `pipeline/pipeline/authority/sources/dodson-hilton-queens/human-review-2026-04-15.md`. Seven Amarna rows sampled — six validated non-provisional, one (Nefertiti.children_names) deferred source-wide. Pre-Amarna rows + the remaining 34 un-sampled Amarna rows are still provisional at chunk level.
 - **Outstanding architectural question (deferred to Phase A, NOT to this PR):** parent→child denormalization in `children_names`. Keep current mixed pattern (own-entry prose + a small set of cross-entry inferences for Shuttarna II→Gilukhipa, Tushratta→Tadukhipa) unless the user explicitly re-opens this.
 
 ---
@@ -43,13 +43,18 @@ Copy `prompt-amarna.md` and adjust:
 - Output path: `agent-{a|b|c}-ramesside.jsonl`.
 - `sub_period` — enumerate the three D&H sub-section titles verbatim. A Brief Lives entry belongs to exactly one sub-section; the OCR must preserve the sub-section heading so agents can attribute correctly. If D&H groups all three sub-sections' Brief Lives into one alphabetical run at the end of printed p. 194 (mirroring the Pre-Amarna layout), the three sub-sections collapse into one alphabetical block and every row's `sub_period` reflects its dynastic placement. If D&H gives each sub-section its own Brief Lives sub-block mid-chapter, preserve the tri-partite structure.
 - Role codes — Ramesside era has some codes chunks 1 and 2 did not exercise. Examples to watch (not exhaustive — enumerate from the actual PDF): `LuWA` (Lady of the Two Lands), `CPR` (Crown Prince, possibly), `KD` vs `KDB` distinction may matter, `PA` (Prophet of Amun) variants, military titles (`Genmo`, `Captain of the Troops`, `OMC`). Preserve codes verbatim; Phase A owns the glossary.
-- Parsing hazards — specifically list:
-  - Ramesses II's many wives (Nefertari, Isetnofret, Bintanath, Meryetamun, Nebettawy, Henutmire, plus the three Hittite princesses) — each is a separate row; D&H flags some as possibly-identical (e.g. Meryetamun vs Meryetamun D). Do NOT conflate.
-  - Disambiguator letters get used heavily — `Ramesses` alone has a dozen Brief Lives entries across Dyn 19/20 (some are kings, some are king's sons). Each gets a letter suffix.
-  - Tausret's role as regent/king. She is a Brief Lives entry; she is also in pharaoh.se; this row is the D&H-authorial view of her as queen-became-king.
-  - Bay / Irsu — included or not per D&H's authorship call. Follow the PDF.
-- Row-count expectation: ~60–80. If the three sub-sections each have their own Brief Lives block, the total adds up; if one consolidated block, read the block count.
+- Parsing hazards — specifically list (checked with the egyptologist-reviewer on PR #39):
+  - **Ramesses II's wives:** Nefertari, Isetnofret, Bintanath (daughter-wife), Meryetamun (daughter-wife), Nebettawy (daughter-wife), Henutmire (D&H treat as sister-wife), **Maathorneferure** (first Hittite princess, Year 34), and a **second unnamed Hittite princess** (Year ~40). Two Hittite diplomatic marriages, not three — verify against the PDF. Each wife is a separate row; D&H flags some as possibly-identical (e.g. `Meryetamun` vs `Meryetamun D`). Do NOT conflate.
+  - **The `Ramesses` letter-run.** D&H gives ~15–20 Brief Lives entries named `Ramesses` across Dyn 19/20, mixing kings and king's-sons. Each gets a letter suffix. The disambiguator density is the heaviest in the whole book — prompt must hammer on "do not merge across letters."
+  - **`Amenhirkhepeshef` / `Amunhirkhopshef` / `Amenherkhepshef`** — multiple princes of this name across Ramesses II, III, VI. Classic letter-suffix trap; orthography also drifts (D&H will have one spelling; museums have all three).
+  - **`Khaemwaset`** — famous son of Ramesses II (the "first Egyptologist" / HPM); also a Dyn 20 prince of the same name. Two-entry case; expect letter disambiguator.
+  - **`Setherkhepeshef`, `Meryatum`, `Merenptah`-as-prince-vs-king** — several princes who later became king appear in D&H with both a prince entry and a king entry under different letter disambiguators.
+  - **Dyn 20 contested queens:** `Tyti` (wife of Ramesses III vs Ramesses X — D&H discusses), `Takhat` (two homonymous Dyn 19/20 figures: mother of Amenmesse, and a Ramesses-III-era figure), `Iset Ta-Hemdjert` (GRW of Ramesses III, mother of Ramesses VI — confusable with Ramesses-II-era Iset-nofret), `Tentopet`, `Nubkhesbed`, `Titi`, `Duatentopet`. Multiple confusable, separable-only-by-disambiguator entries.
+  - **Tausret's role as regent/king.** She is a Brief Lives entry; she is also in pharaoh.se; this row is the D&H-authorial view of her as queen-became-king. Tausret / Tawosret / Twosret spelling drift — museums use Tawosret or Twosret more commonly; keep D&H's spelling verbatim in `dh_id` but expect the matching authority layer to handle both.
+  - **Bay / Irsu** — included or not per D&H's authorship call. Follow the PDF.
+- Row-count expectation: ~60–80 for the three-sub-section Brief Lives taken together. If the three sub-sections each have their own Brief Lives block, the total adds up; if one consolidated block, read the block count.
 - **Slash-shorthand guidance** — the corrected version of the `alt_names` and lacuna-group rules from the post-Copilot `prompt-amarna.md`. Do NOT revert these.
+- **Role codes.** The Ramesside era uses codes the earlier chunks did not exercise. Before asserting any code in the prompt's "Known codes in this chunk include..." list, check it is actually in D&H's code glossary (front matter pp. 24–37; also in chapter-opening keys) for the Ramesside chapter. Examples to verify rather than assert blindly: `LuWA` (Lady of the Two Lands?), `CPR` (Crown Prince?), `OMC`, specific spellings of `Genmo` and `PA` variants, any military-title acronyms. Treat unfamiliar codes as literal strings (per the existing prompt convention) and let Phase A expand them.
 
 ### 3. Re-attempt Claude Opus 4.6 OCR per ADR-017 amendment
 
@@ -110,7 +115,16 @@ Standard Phase 0 workflow per `CLAUDE.md` § "Pull request workflow":
 
 ### 10. After merge: log human review
 
-Repeat the PR #38 pattern. Walk ~5–10 Ramesside rows with the user against the PDF, log in `pipeline/pipeline/authority/sources/dodson-hilton-queens/human-review-<YYYY-MM-DD>-ramesside.md`. Mark remaining un-sampled rows as provisional at chunk level. Do NOT alter chunks 1 or 2's existing human-review files.
+Repeat the PR #38 pattern, but **use a larger sample for Ramesside** (~10–15 rows, not 5–10). The egyptologist-reviewer on PR #39 flagged that 5–10 is too thin for chunk 3 given the disambiguation density (multiple `Ramesses` letter-suffixes, three confusable `Takhat`/`Tyti`/`Iset Ta-Hemdjert` pairs, Tausret as queen-becomes-king, multi-generation `Amenhirkhepeshef` / `Khaemwaset`). The sample should explicitly cover:
+
+- 2–3 `Ramesses`-letter-suffix disambiguation decisions (is `Ramesses D` the king or the prince? Does `Ramesses F` come from Dyn 19 or Dyn 20?).
+- Tausret (succession-crisis interpretive call).
+- At least one Hittite-princess row (typically Maathorneferure).
+- One Dyn-20 contested queen (Tyti or Iset Ta-Hemdjert).
+- Any lacuna-group entries the chunk introduces (if none, skip).
+- At least one of the multi-generation name clusters (`Amenhirkhepeshef` or `Khaemwaset`).
+
+Log in `pipeline/pipeline/authority/sources/dodson-hilton-queens/human-review-<YYYY-MM-DD>-ramesside.md` (chunk-suffixed form; the playbook Step 12 update formalised this convention). Mark remaining un-sampled rows as provisional at chunk level. Do NOT alter chunks 1 or 2's existing human-review files.
 
 ---
 
@@ -136,7 +150,7 @@ Repeat the PR #38 pattern. Walk ~5–10 Ramesside rows with the user against the
 
 ## Memory pointers
 
-- Project-level memory: `/Users/philipp/.claude/projects/-Users-philipp-code-hapi/memory/project_current_pr_state.md` has the authoritative list of what's landed vs pending.
+- Project-level memory: in a Claude Code session, the per-project agent memory lives under the standard Claude Code projects dir, typically `~/.claude/projects/<project-slug>/memory/` on macOS (where `<project-slug>` is the repo path with `/` replaced by `-`). Look for `project_current_pr_state.md` there — it has the authoritative list of what's landed vs pending. The exact path varies by environment; a fresh Claude Code session on this repo will surface it automatically via auto-memory loading. If you're running outside Claude Code, this memory file is not portable — treat the in-tree `README.md`, `transcribe.md`, and `docs/handoff-*.md` files as authoritative instead.
 - User feedback rules: `feedback_autonomy.md`, `feedback_branch_pr.md`, `feedback_push_after_commit.md`, `feedback_pr_review_replies.md`, `feedback_ci_failures.md`, `feedback_copilot_review.md`, `feedback_pr_reviewers.md` — read all of them before starting. They reflect specific patterns the user has corrected in prior sessions.
 - Constitutional rules: `CLAUDE.md` rules 1–12 are non-negotiable. Especially rule 1 (scholarly traceability), rule 5 (tests assert values), rule 6 (raw data sacred), rule 12 (existing violations don't justify new ones).
 
