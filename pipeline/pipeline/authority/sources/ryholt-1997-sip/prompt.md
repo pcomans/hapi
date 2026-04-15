@@ -8,9 +8,9 @@ The prompt below is verbatim; the only per-agent substitution is the output-file
 
 You are extracting structured king data from OCR'd pages of Ryholt 1997, *The Political Situation in Egypt During the Second Intermediate Period*.
 
-**Input**: 17 OCR chunk files at `/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/ryholt-1997-sip/raw/chunk-p*.md`. Each file covers a physical-PDF-page range declared in an HTML comment at the top and in the filename (`chunk-pNNN-pMMM.md`).
+**Input**: 17 OCR chunk files at `<repo_root>/pipeline/pipeline/authority/sources/ryholt-1997-sip/raw/chunk-p*.md`. Each file covers a physical-PDF-page range declared in an HTML comment at the top and in the filename (`chunk-pNNN-pMMM.md`). Use absolute paths in the commands you run (the Read tool requires them).
 
-**Output**: write your final JSONL to `/tmp/claude-501/ryholt/agent-{a|b|c}.jsonl`. One JSON object per line, no trailing newline required, no preamble, no code fences.
+**Output**: write your final JSONL to `<agent_dir>/agent-{a|b|c}.jsonl`, where `<agent_dir>` is the directory passed to `merge.py --agent-dir` (default `/tmp/claude-501/ryholt`). One JSON object per line, no trailing newline required, no preamble, no code fences.
 
 **Task**: walk every chunk. Find every king entry — each one begins with a line like `Appellation: NAME File X/Y` (sometimes bolded as `**Appellation: NAME** File X/Y`). For each king, emit one row with the following schema:
 

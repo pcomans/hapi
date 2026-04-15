@@ -1,6 +1,6 @@
 # Transcription method — Ryholt 1997
 
-Reproducible protocol per ADR-017 (two-model vision OCR with diff adjudication).
+Reproducible protocol per ADR-017 (Claude Code subagent OCR, followed by three-subagent structured extraction and deterministic majority-vote merge).
 
 ## Inputs
 
@@ -23,19 +23,22 @@ For each 5-physical-page chunk, spawn a Claude Code general-purpose subagent. Th
 
 Each chunk is written to `raw/chunk-pNNN-pMMM.md` on local disk. **These files are not committed** — they contain Ryholt's prose and must stay local per ADR-017.
 
-### Spot-check QA
+### Review (LLM, then human — honestly labelled)
 
-Before finalising `reconciled.jsonl`, the transcriber reads ~2-3 king entries against the corresponding physical PDF pages, checking titulary diacritics (ꜣ ꜥ ḥ ḫ nṯ), regnal dates, and File N/M labels. Corrections are made directly in `reconciled.jsonl`, with a short line added to `merge-disagreements.txt` noting the override.
+Per ADR-017 step 6:
+
+- **LLM review (done on this source):** after the 3-subagent merge, the `egyptologist-reviewer` Claude Code subagent walks every entry in `merge-disagreements.txt`, cross-checks against the PDF, and flags rows where the majority vote is wrong. The main agent applies those corrections to `reconciled.jsonl` via a small override (committed). Every override is recorded in `merge-disagreements.txt` under the `LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED` section. **This is an LLM checking an LLM.** Better than unreviewed merge output, but it is not scholarly validation.
+- **Human review (required, NOT yet done on this source):** an actual Egyptologist reads a sample of king rows against Ryholt's printed PDF and signs off. Until that happens, the Ryholt extract is **provisional** for downstream consumers.
 
 ### JSONL derivation — three-subagent extraction + deterministic merge
 
 The Ryholt catalogue has enough structural variety (bold vs plain Appellation headers, letter-only file suffixes like `17/a`, two different Chronological-Table layouts, lacuna markers, Roman-numeral disambiguators like `Sewadjkare (I)`) that a regex parser quickly accumulates bugs — e.g. a version that couldn't match `File 17/a` silently attributed Nebmaatre's titulary to Kamose (File 17/9). Instead, we extract via three independent Claude Code subagents and merge by majority vote.
 
-**Step 1 — run three independent extractors in parallel.** From Claude Code, spawn three general-purpose subagents with identical prompts (the prompt is committed to `prompt.md` in this directory). Each subagent reads every `raw/chunk-p*.md` file and writes JSONL to a distinct file under `/tmp/claude-501/ryholt/`:
+**Step 1 — run three independent extractors in parallel.** From Claude Code, spawn three general-purpose subagents with identical prompts (the prompt is committed to `prompt.md` in this directory). Each subagent reads every `raw/chunk-p*.md` file and writes JSONL to a distinct file under the merge agent-directory (default `/tmp/claude-501/ryholt/`, overridable via `--agent-dir` / `RYHOLT_AGENT_DIR`):
 
-- Agent A → `/tmp/claude-501/ryholt/agent-a.jsonl`
-- Agent B → `/tmp/claude-501/ryholt/agent-b.jsonl`
-- Agent C → `/tmp/claude-501/ryholt/agent-c.jsonl`
+- Agent A → `<agent_dir>/agent-a.jsonl`
+- Agent B → `<agent_dir>/agent-b.jsonl`
+- Agent C → `<agent_dir>/agent-c.jsonl`
 
 **Step 2 — deterministic merge.**
 
@@ -43,7 +46,7 @@ The Ryholt catalogue has enough structural variety (bold vs plain Appellation he
 cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/merge.py
 ```
 
-`merge.py` groups rows by `ryholt_id`, takes a per-field majority vote across the three agents, writes `reconciled.jsonl`, and writes `merge-disagreements.txt` (committed) with every row whose fields didn't fully agree. The merge is pure Python with no LLM calls; re-running it on the same three inputs produces byte-identical output. A curator reviewing the source can read the disagreements file to audit every non-unanimous decision.
+`merge.py` groups rows by `ryholt_id`, takes a per-field majority vote across the three agents, writes `reconciled.jsonl`, and writes `merge-disagreements.txt` (committed) with every row whose fields didn't fully agree. The merge is pure Python with no LLM calls; re-running it on the same three inputs produces byte-identical output. Reviewers auditing the source can read the disagreements file to see every non-unanimous decision, and the LLM-applied overrides section at the bottom.
 
 **Audit trail**:
 - PDF (SHA-256 pinned in README; not committed) → `raw/chunk-p*.md` (Claude Code subagent OCR; not committed, per-transcriber regenerable)
@@ -70,7 +73,12 @@ The prompt is the load-bearing part of the pipeline — a generic "transcribe th
 
 ## PDF page ↔ printed page mapping
 
-Front matter adds 4 physical pages before page 1 of the main text. Printed page N = physical page N + 4 (i.e. the 0-indexed `reader.pages[N + 3]`). Verified by spot-check: printed p. 336 (Sobkhotep I entry) is physical page 340.
+Per ADR-017 ("Why physical pages, not printed pages"), we cite by physical page number rather than resolving the book's own page numbering, because Ryholt's PDF has a Part-heading break at printed p. 408 that drops a blank and shifts the physical→printed offset from +4 to +3. For reference:
+
+- In File 1 (printed pp. 333–407, ~Part VI): physical page N = printed page N + 3 (i.e. 0-indexed `reader.pages[N + 2]` for printed N). Verified at printed p. 336 / physical 340.
+- In Chronological Tables (printed pp. 408–411): the offset is +2 (one page smaller). Verified at printed p. 408 / physical 410.
+
+Citations in `reconciled.jsonl` use the physical-page range of the OCR chunk the row came from, so no offset arithmetic is needed to verify a row.
 
 ## Structure of File 1 entries
 

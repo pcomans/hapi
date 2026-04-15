@@ -40,10 +40,10 @@ Prose chapters (Part II §2.1–§2.6 on the individual dynasties) are out of sc
 
 Per `docs/adr/017-ocr-pipeline-for-scan-only-sources.md`:
 
-1. **OCR**: Claude Code subagents transcribe the PDF in physical-page chunks (1-indexed, 5 pages per chunk by default). Each chunk is written to `raw/chunk-pNNN-pMMM.md` locally. These chunk files are **not committed** — they contain Ryholt's own prose verbatim and would redistribute copyrighted material. The transcriber regenerates them from the committed-SHA PDF when needed.
+1. **OCR**: Claude Code subagents transcribe the PDF in physical-page chunks (1-indexed, 5 pages per chunk by default). Each chunk is written to `raw/chunk-pNNN-pMMM.md` locally. These chunk files are **not committed** — they contain Ryholt's own prose verbatim and would redistribute copyrighted material. Anyone re-running the pipeline regenerates them from the SHA-pinned PDF.
 2. **Structured extraction**: three independent Claude Code subagents each read every chunk and emit JSONL per the schema below. `merge.py` deterministically majority-votes per-field and writes the final `reconciled.jsonl` plus `merge-disagreements.txt` (committed) for audit.
 3. `reconciled.jsonl` rows cite the chunk's physical-page range, e.g. `source_citation: {pdf_pages: "340-344", edition: "CNI 20, 1997"}`. A reviewer verifying a row opens the PDF at physical pages 340-344 and reads the content there; the book's running-header printed-page numbers are visible on each page so scholarly cross-reference to the printed edition is trivial.
-4. The transcriber spot-checks ~2-3 king entries against the PDF and corrects `reconciled.jsonl` directly for any disagreements, noting the override in `merge-disagreements.txt`.
+4. **Review**: the `egyptologist-reviewer` Claude Code subagent walks `merge-disagreements.txt`, cross-checks against the PDF, and flags rows where majority vote picked the wrong answer. The main agent applies the flagged corrections via an override script, recording each change in `merge-disagreements.txt` under `LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED`. **This is LLM review.** A human-scholar sign-off pass against the PDF is still owed on this source and has NOT been performed — the extract is provisional until that happens (ADR-017 step 6).
 
 The benchmark that sized this pipeline (physical p. 340, Sobkhotep I / printed p. 336) is documented in ADR-017.
 

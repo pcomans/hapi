@@ -153,6 +153,49 @@ Instead of screenshot-based opinions, the LLM drives the browser and attempts re
 
 If the LLM can't accomplish the task, a human probably can't either.
 
+## Lessons from Phase 0 transcription
+
+Transcribing in-copyright scholarly books into committed JSONL authority sources surfaced several harness-level patterns and near-misses. Each is captured as a rule / pattern so the next source doesn't repeat them.
+
+### Don't claim human review when there isn't one
+
+LLM agents (including the `egyptologist-reviewer` subagent) can produce review-shaped output that looks scholarly. Calling that output "human review" or "scholarly validation" in commit messages, README, or `merge-disagreements.txt` is a rule-1 violation — it dresses up LLM judgment as human judgment. Be explicit about the provenance of every review call:
+
+- **LLM review** = a Claude Code subagent (or Claude API call) read the data and flagged issues. Label it "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED" in audit files. This is better than unreviewed merge output, but it is not scholarly validation.
+- **Human review** = a working domain expert read the source PDF, signed off, and left a name / date in the audit trail.
+
+ADR-017 step 6 now splits these explicitly. The authority layer should eventually carry a per-source `validation_status` field so downstream consumers can distinguish LLM-reviewed from human-signed-off data.
+
+### Three-subagent + deterministic merge > regex parsing (for messy semi-structured text)
+
+Ryholt's catalogue has enough format variation (bold vs plain headers, letter-only file suffixes, two Chronological-Table layouts, homonym disambiguators) that a regex parser silently accumulated bugs — at one point attributing Nebmaatre's titulary to Kamose because its regex couldn't match a letter-only file suffix. Replaced by: three independent Claude Code subagents each emit JSONL, a deterministic `merge.py` takes per-field majority votes, every disagreement is logged. The merge is reproducible; the extraction is not — but the *committed* output is the source of truth.
+
+Pattern is reusable: any future source whose schema has many edge cases should prefer LLM-extraction-plus-majority-vote over hand-maintained regex.
+
+### Sentinel-string normalisation in merge logic
+
+Models faithfully transcribe literal words like `"none"`, `"-"`, `"unknown"` when a source prints them to mean "no data here." Those strings must collapse to JSON `null` **before** the majority vote, or a 2/3 vote can commit a sentinel string as real data. `merge.py` normalises `{"none", "-", "—", "n/a", "na", "unknown"}` → `null`.
+
+### OCR of in-copyright books: raw chunks stay local
+
+`raw/chunk-*.md` files contain the source's own prose verbatim and must not be committed. `.gitignore` excludes `pipeline/pipeline/authority/sources/*/raw/chunk-*.md` repo-wide. A near-miss on Ryholt resulted in a history rewrite — see git-filter-repo lesson below.
+
+### Physical page numbers > printed page numbers for OCR citations
+
+Any scanned book has an offset between the PDF's physical pages (page-1 is the PDF cover) and the book's own printed pagination (page-1 is after front matter). That offset can *shift mid-book* if a Part-heading break drops an odd-numbered blank. A hardcoded offset silently misaligned our Ryholt Chronological-Tables chunks for a full OCR pass. ADR-017 now mandates physical-page citations (`pdf_pages: "340-344"`) — anyone verifying opens the PDF at that physical range and finds the content without offset arithmetic.
+
+### Claude Code subagent OCR > external API
+
+The `Read` tool accepts PDFs and renders them as images to the model, so a general-purpose subagent can OCR pages under the existing Claude Code subscription — no external vendor, no per-page billing, same network trust boundary as any other tool use. Observed on Ryholt: diacritic quality matches Gemini 3.1 Pro preview on a representative titulary page, and the model does not refuse when the task is framed as "fair-use scholarly extraction for a private research repository." Gemini / Mistral / Flash stay in the bench-comparison only; not in the production pipeline (ADR-017).
+
+### Never run `git filter-repo` on the whole repo
+
+`git filter-repo` is the right tool for scrubbing copyrighted material from commit history, but by default it rewrites EVERY commit SHA — including ones already merged to `main`. Doing this without `--refs feat/*` (or an equivalent branch scope) orphans the feature branch from the remote's `main` (no common ancestor), and force-pushing a history-rewritten branch auto-closes its PR. Recovery is: save the net diff as a patch, hard-reset local `main` to `origin/main`, create a fresh feature branch from clean `main`, re-apply the patch as a single commit, open a new PR. Loses multi-commit granularity. Do it right the first time: scope the filter to the feature branch.
+
+### Duplicate-detection in JSONL loaders
+
+`rows[ryholt_id] = r` silently overwrites on duplicate IDs. Always raise on duplicate keys at load time so extraction bugs fail loud, not silent.
+
 ## What lives where
 
 | Content | Where | Why |

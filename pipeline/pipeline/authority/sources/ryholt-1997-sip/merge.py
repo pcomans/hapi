@@ -11,46 +11,59 @@ Ryholt schema. This script deterministically merges those three outputs:
   1. Group rows by `ryholt_id`.
   2. For each field in each row, majority-vote across the three agents.
   3. Write the merged rows to `reconciled.jsonl`.
-  4. Write a human-readable disagreement report to `merge-disagreements.txt`
-     for curator review.
+  4. Write the field-level disagreement report to `merge-disagreements.txt`
+     for downstream review (LLM reviewer pass first, then eventually
+     an actual scholar — see ADR-017 step 6).
 
 The extraction step is non-deterministic (LLM output); the merge step IS
 deterministic. The committed `reconciled.jsonl` is the source of truth;
 anyone can re-run the 3-agent extraction and diff.
 
-Inputs:
-    /tmp/claude-501/ryholt/agent-a.jsonl
-    /tmp/claude-501/ryholt/agent-b.jsonl
-    /tmp/claude-501/ryholt/agent-c.jsonl
+Usage:
+    cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/merge.py
+    cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/merge.py \\
+        --agent-dir /some/other/path
+    RYHOLT_AGENT_DIR=/some/other/path \\
+        uv run python pipeline/authority/sources/ryholt-1997-sip/merge.py
 
 Outputs:
     reconciled.jsonl                 (this source dir)
     merge-disagreements.txt          (this source dir; committed for audit)
-
-See `transcribe.md` for the full workflow and the subagent prompt.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
+import os
+import re
+import sys
 from collections import Counter
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
-AGENT_DIR = Path("/tmp/claude-501/ryholt")
-AGENT_FILES = {tag: AGENT_DIR / f"agent-{tag}.jsonl" for tag in "abc"}
+DEFAULT_AGENT_DIR = Path("/tmp/claude-501/ryholt")
 OUT = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
 def _load(p: Path) -> dict[str, dict]:
+    """Load a single agent's JSONL. Raises on duplicate ryholt_id within a file."""
     rows: dict[str, dict] = {}
-    for line in p.read_text().splitlines():
+    seen_line: dict[str, int] = {}
+    for line_no, line in enumerate(p.read_text().splitlines(), start=1):
         s = line.strip()
         if not s:
             continue
         r = json.loads(s)
-        rows[r["ryholt_id"]] = r
+        rid = r["ryholt_id"]
+        if rid in rows:
+            raise ValueError(
+                f"Duplicate ryholt_id {rid!r} in {p} "
+                f"(first seen on line {seen_line[rid]}, again on line {line_no})"
+            )
+        rows[rid] = r
+        seen_line[rid] = line_no
     return rows
 
 
@@ -92,14 +105,39 @@ def _majority(values: list) -> tuple[object, int]:
     return None, 0
 
 
-def main() -> None:
-    agents = {tag: _load(p) for tag, p in AGENT_FILES.items()}
+_RID_RE = re.compile(r"^(?P<prefix>[A-Za-z]+|\d+)(?:\.(?P<seq>\d+)(?P<suffix>[a-z]*))?$")
+
+
+def _sort_key(rid: str) -> tuple[int, str, int, str]:
+    """Sort order: numeric dynasty (13-17) ascending, then sequence number
+    ascending (not lexicographic — so 13.10 sorts AFTER 13.9), then suffix.
+    Non-numeric prefixes (Abyd, N, P, H, D, G) sort after numeric dynasties,
+    alphabetically by prefix then by sequence.
+    """
+    m = _RID_RE.match(rid)
+    if not m:
+        return (9999, rid, 0, "")
+    prefix = m.group("prefix")
+    seq = int(m.group("seq")) if m.group("seq") else -1
+    suffix = m.group("suffix") or ""
+    if prefix.isdigit():
+        return (int(prefix), "", seq, suffix)
+    return (9999, prefix, seq, suffix)
+
+
+def main(agent_dir: Path) -> None:
+    agent_files = {tag: agent_dir / f"agent-{tag}.jsonl" for tag in "abc"}
+    missing = [p for p in agent_files.values() if not p.exists()]
+    if missing:
+        sys.exit(
+            f"ERROR: missing agent output files: {', '.join(str(p) for p in missing)}\n"
+            f"Expected three files at {agent_dir}. See transcribe.md."
+        )
+
+    agents = {tag: _load(p) for tag, p in agent_files.items()}
     all_ids = sorted(
         set().union(*[a.keys() for a in agents.values()]),
-        key=lambda rid: (
-            int(rid.split(".")[0]) if rid.split(".")[0].isdigit() else 999,
-            rid,
-        ),
+        key=_sort_key,
     )
 
     final: list[dict] = []
@@ -142,7 +180,7 @@ def main() -> None:
     )
     DIFF.write_text("\n".join(report) if report else "No field-level disagreements.\n")
 
-    print(f"Agents: " + ", ".join(f"{t}={len(a)}" for t, a in agents.items()))
+    print("Agents: " + ", ".join(f"{t}={len(a)}" for t, a in agents.items()))
     print(f"Merged rows: {len(final)}")
     rows_with_disagreement = sum(1 for r in report if r.strip())
     print(f"Rows with ≥1 field disagreement: {rows_with_disagreement}")
@@ -151,4 +189,12 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--agent-dir",
+        type=Path,
+        default=Path(os.environ.get("RYHOLT_AGENT_DIR", DEFAULT_AGENT_DIR)),
+        help=f"Directory containing agent-a/b/c.jsonl (default: {DEFAULT_AGENT_DIR}).",
+    )
+    args = parser.parse_args()
+    main(args.agent_dir)
