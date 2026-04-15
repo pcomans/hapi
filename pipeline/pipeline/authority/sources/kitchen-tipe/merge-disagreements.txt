@@ -1,0 +1,71 @@
+21.02 (Amenemnisu):
+  concurrent_with_kings: a=["21H.04"] | b=["21H.04", "21H.07"] | c=["21H.04", "21H.07"]  → chose ["21H.04", "21H.07"]
+
+21.03 (Psusennes I):
+  concurrent_with_kings: a=["21H.04", "21H.05", "21H.06", "21H.07", "21H.08"] | b=["21H.04", "21H.07"] | c=["21H.04", "21H.07", "21H.08"]  → chose ["21H.04", "21H.05", "21H.06", "21H.07", "21H.08"]
+
+21.04 (Amenemope):
+  concurrent_with_kings: a=["21H.07"] | b=["21H.07", "21H.08", "21H.09"] | c=["21H.07", "21H.08", "21H.09"]  → chose ["21H.07", "21H.08", "21H.09"]
+
+21.05 (Osochor):
+  concurrent_with_kings: a=["21H.07"] | b=["21H.09"] | c=["21H.09"]  → chose ["21H.09"]
+
+21.06 (Siamun):
+  concurrent_with_kings: a=["21H.07"] | b=["21H.09", "21H.10"] | c=["21H.09", "21H.10"]  → chose ["21H.09", "21H.10"]
+
+21.07 ((Har-)Psusennes II):
+  concurrent_with_kings: a=["21H.07", "21H.08"] | b=["21H.10"] | c=["21H.10"]  → chose ["21H.10"]
+
+21H.01 (Herihor):
+  notes_from_kitchen: a="hp" | b="in S" | c=null  → chose "hp"
+
+21H.02 (Piankh):
+  notes_from_kitchen: a="hp" | b=null | c=null  → chose null
+
+21H.05 (Masaharta):
+  concurrent_with_kings: a=["21.01", "21.03"] | b=["21.01"] | c=["21.01"]  → chose ["21.01"]
+
+21H.06 (Djed-Khons-ef-ankh):
+  concurrent_with_kings: a=["21.03"] | b=["21.01"] | c=[]  → chose ["21.03"]
+  end_bce: a=-1056 | b=-1056 | c=-1045  → chose -1056
+  notes_from_kitchen: a=null | b="OCR shows '1046–1056' but 1 y duration implies 1046–1045" | c=null  → chose null
+
+21H.07 (Menkheperre):
+  concurrent_with_kings: a=["21.03", "21.04", "21.05", "21.06", "21.07"] | b=["21.02", "21.03", "21.04"] | c=["21.02", "21.03", "21.04"]  → chose ["21.02", "21.03", "21.04"]
+
+21H.08 (Smendes II):
+  concurrent_with_kings: a=["21.03", "21.07"] | b=["21.04"] | c=["21.03", "21.04"]  → chose ["21.03", "21.07"]
+
+21H.09 (Pinudjem II):
+  concurrent_with_kings: a=["21.07"] | b=["21.04", "21.05", "21.06"] | c=["21.04", "21.05", "21.06"]  → chose ["21.04", "21.05", "21.06"]
+
+21H.10 (Psusennes 'III'):
+  concurrent_with_kings: a=["21.07"] | b=["21.06", "21.07"] | c=["21.06", "21.07"]  → chose ["21.06", "21.07"]
+
+24E.01 (Pimay (the later king??)):
+  name: a="Pimay (the later king??)" | b="Pimay" | c="Pimay (the later king??)"  → chose "Pimay (the later king??)"
+  notes_from_kitchen: a=null | b="the later king??" | c=null  → chose null
+
+24E.02 (Two further governors?):
+  name: a="Two further governors?" | b="Two further governors" | c="Two further governors?"  → chose "Two further governors?"
+  notes_from_kitchen: a=null | b="two further governors?" | c=null  → chose null
+
+LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
+===========================================
+Corrections applied by fix_rows.py AFTER the 3-subagent majority-vote
+merge. Source of each correction: either (a) deterministic
+recomputation from extracted fields where LLM agents disagreed on
+arithmetic, or (b) egyptologist-reviewer Claude Code subagent pass
+against the source PDF. No human scholar has signed off on this
+extract yet — per ADR-017 step 6, the extract is provisional until
+that happens.
+
+- 21.01: concurrent_with_kings ["21H.01", "21H.02", "21H.03", "21H.04", "21H.05"] → ["21H.03", "21H.04", "21H.05", "21H.06", "21H.07"] (deterministic interval-overlap recomputation from start_bce/end_bce)
+- 21.03: concurrent_with_kings ["21H.04", "21H.05", "21H.06", "21H.07", "21H.08"] → ["21H.04", "21H.07", "21H.08"] (deterministic interval-overlap recomputation from start_bce/end_bce)
+- 21H.01: concurrent_with_kings ["20.01", "21.01"] → ["20.01"] (deterministic interval-overlap recomputation from start_bce/end_bce)
+- 21H.02: concurrent_with_kings ["20.01", "21.01"] → ["20.01"] (deterministic interval-overlap recomputation from start_bce/end_bce)
+- 21H.06: concurrent_with_kings ["21.03"] → ["21.01"] (deterministic interval-overlap recomputation from start_bce/end_bce)
+- 21H.07: concurrent_with_kings ["21.02", "21.03", "21.04"] → ["21.01", "21.02", "21.03", "21.04"] (deterministic interval-overlap recomputation from start_bce/end_bce)
+- 21H.08: concurrent_with_kings ["21.03", "21.07"] → ["21.03", "21.04"] (deterministic interval-overlap recomputation from start_bce/end_bce)
+- 21H.01: notes_from_kitchen "hp" → null (Table 1 shows "Herihor in S (6 y)" — the "hp" marker Kitchen uses to disambiguate Pinudjem I hp vs Pinudjem I 'kg' does not appear on Herihor. Majority vote picked "hp" from a confused agent.)
+- 21H.06: notes_from_kitchen null → "Kitchen prints the date range as '1046–1056' with a 1 y length; predecessor Masaharta ends 1046 and successor Menkheperre starts 1045, so the printed 1056 is a typographic reversal and the true end is 1045. end_bce preserved verbatim as -1056; concurrency computed against the corrected interval." (Annotate Kitchen's 1046–1056 typo explicitly so downstream consumers don't silently compute a -11 year reign from the BCE endpoints.)
