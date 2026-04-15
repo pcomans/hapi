@@ -9,25 +9,23 @@ Reproducible protocol per ADR-017 (two-model vision OCR with diff adjudication).
 
 ## Pipeline
 
-See `fetch.py` in this directory. Per ADR-017, Gemini 3.1 Pro preview is the only OCR; human spot-check is the QA.
+Per ADR-017: Claude Code subagent OCR of physical-page chunks, followed by a three-subagent structured extraction and a deterministic majority-vote merge. The OCR runs under the existing Claude Code subscription (same trust boundary as any other Claude Code tool use) — no new external vendor and no per-page OCR billing.
 
-### Bulk OCR
+### Bulk OCR (Claude Code subagents)
 
-```
-cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/fetch.py \
-    --physical 336-416 --chunk-size 5
-```
+For each 5-physical-page chunk, spawn a Claude Code general-purpose subagent. The subagent uses the `Read` tool to open the source PDF at the chunk's physical-page range (1-indexed, max 20 pages per Read call) and transcribes each page as Markdown with the ADR-017 rules:
 
-For each 5-page chunk, the runner:
-- combines those physical pages (1-indexed PDF pages) into one PDF via pypdf,
-- sends it to Gemini 3.1 Pro preview (`gemini-3.1-pro-preview`) with the ADR-017 prompt,
-- writes the response verbatim to `raw/chunk-pNNN-pMMM.md`, prefixed with an HTML comment stating the physical-page range.
+- Preserve Egyptological transliteration exactly (ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ); refuse ASCII substitutions.
+- Preserve roman numerals and bibliographic references.
+- Preserve the book's own running-header page-numbers inline.
+- Preserve the two-column layout by emitting column 1 then column 2.
+- Preserve underlined text with `<u>…</u>`.
 
-The chunk is the atomic unit of both OCR and citation. We do not try to split chunks back into per-page files — that introduces an alignment problem (see ADR-017 "Why physical pages, not printed pages") for no gain, since citations work fine at chunk-range granularity.
+Each chunk is written to `raw/chunk-pNNN-pMMM.md` on local disk. **These files are not committed** — they contain Ryholt's prose and must stay local per ADR-017.
 
 ### Spot-check QA
 
-Before committing `reconciled.jsonl`, the transcriber reads ~2-3 sampled `raw/chunk-…md` files against the corresponding physical PDF pages, checking titulary diacritics (ꜣ ꜥ ḥ ḫ nṯ), regnal dates, and File N/M labels. Corrections are made inline in the chunk file with a short comment (e.g. `<!-- Gemini: Fuad; PDF: Fûad — corrected -->`).
+Before finalising `reconciled.jsonl`, the transcriber reads ~2-3 king entries against the corresponding physical PDF pages, checking titulary diacritics (ꜣ ꜥ ḥ ḫ nṯ), regnal dates, and File N/M labels. Corrections are made directly in `reconciled.jsonl`, with a short line added to `merge-disagreements.txt` noting the override.
 
 ### JSONL derivation — three-subagent extraction + deterministic merge
 
@@ -48,10 +46,10 @@ cd pipeline && uv run python pipeline/authority/sources/ryholt-1997-sip/merge.py
 `merge.py` groups rows by `ryholt_id`, takes a per-field majority vote across the three agents, writes `reconciled.jsonl`, and writes `merge-disagreements.txt` (committed) with every row whose fields didn't fully agree. The merge is pure Python with no LLM calls; re-running it on the same three inputs produces byte-identical output. A curator reviewing the source can read the disagreements file to audit every non-unanimous decision.
 
 **Audit trail**:
-- PDF → `raw/chunk-p*.md` (Gemini OCR, committed)
-- `raw/chunk-p*.md` → three per-agent JSONLs (Claude Code subagents, non-deterministic, NOT committed — they're ephemeral)
+- PDF (SHA-256 pinned in README; not committed) → `raw/chunk-p*.md` (Claude Code subagent OCR; not committed, per-transcriber regenerable)
+- `raw/chunk-p*.md` → three per-extraction-agent JSONLs (Claude Code subagents, non-deterministic, ephemeral — not committed)
 - three per-agent JSONLs → `reconciled.jsonl` (deterministic merge, committed)
-- `merge-disagreements.txt` (committed) lists every field where agents disagreed plus the majority-vote resolution
+- `merge-disagreements.txt` (committed) lists every field where extraction agents disagreed plus the majority-vote resolution
 
 ## The prompt
 
@@ -62,13 +60,13 @@ Both models receive an identical prompt that:
 - Demands Markdown output preserving the two-column layout and HTML `<u>…</u>` for underlined primary attestation locations
 - Forbids any preamble or closing remarks
 
-The prompt is the load-bearing part of the pipeline — a generic "transcribe this PDF" prompt produces worse diacritic output. See `fetch.py` for the exact text.
+The prompt is the load-bearing part of the pipeline — a generic "transcribe this PDF" prompt produces worse diacritic output. See the "Bulk OCR (Claude Code subagents)" section above for the rules that every OCR-subagent prompt enforces.
 
 ## Known model biases (from the p. 336 benchmark)
 
-- **Claude Opus 4.6** has been observed to conflate `ḥ` and `ḫ` in Horus names (`mnḫ` → `mnḥ`). Trust Gemini where they disagree on the h-with-dot diacritic unless the PDF pixels say otherwise.
-- **Gemini 3.1 Pro preview** has been observed to drop proper-noun diacritics (`Fûad` → `Fuad`) and to misread some roman-numeral references (`PM II²` → `PM I²`). Trust Claude on roman numerals and on the circumflex/macron accents on proper nouns.
-- Both are reliable on `ꜣ ꜥ nṯ` once the prompt is enforced.
+- Claude Opus 4.6 has been observed to conflate `ḥ` and `ḫ` in Horus names (`mnḫ` → `mnḥ`) on early single-subagent tests; the diacritic prompt significantly reduces this.
+- Proper-noun diacritics on French/Arabic transliterations (e.g. `Fûad` vs `Fūad`) and some roman-numeral references in bibliographies (e.g. `PM II²`) can drift between extractions. These fields do not flow into `reconciled.jsonl` so the drift has no authority-layer impact; it is noted here for curators who read the raw chunks.
+- All tested subagent runs are reliable on `ꜣ ꜥ nṯ` once the prompt is enforced.
 
 ## PDF page ↔ printed page mapping
 
@@ -105,7 +103,7 @@ These pages summarise Ryholt's reconstructed parallel-dynasty chronology. They p
 
 ## PDF hash pinning
 
-Source PDF SHA-256: `078c0d92bc3310c1044d4b736db6a8af9c309ef6839bd9e96b6864d200bbc972`. A reviewer re-running `fetch.py` against a PDF with a different hash should not expect byte-for-byte OCR reproduction (model outputs are stochastic across different input bytes even when the content looks identical).
+Source PDF SHA-256: `078c0d92bc3310c1044d4b736db6a8af9c309ef6839bd9e96b6864d200bbc972`. A reviewer re-running the pipeline against a PDF with a different hash should not expect byte-for-byte output reproduction; model outputs are stochastic, and the committed `reconciled.jsonl` is the source of truth.
 
 ## Verification
 

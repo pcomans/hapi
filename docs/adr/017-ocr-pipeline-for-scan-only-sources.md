@@ -24,36 +24,31 @@ Every frontier model made at least one error on one page — different errors on
 
 ## Decision
 
-For every scan-only Phase 0 source (and any future scholarly PDF where transliteration diacritics or tabular layout matter), the transcription method is **Gemini 3.1 Pro preview over physical-page chunks, plus human spot-check on a sample against the source PDF**:
+For every scan-only Phase 0 source (and any future scholarly PDF where transliteration diacritics or tabular layout matter), the transcription method is **Claude Code subagents over physical-page chunks, with the chunks treated as local-only intermediate artifacts** and a three-subagent + deterministic-merge extraction on the committed-to-disk chunks:
 
-1. **Chunk the PDF by physical (1-indexed PDF) page index**, five pages per chunk by default. Physical page indices are unambiguous — they do not depend on resolving the book's printed page numbering against any front-matter / blank / Part-heading pages, which the agent often gets wrong.
-2. **Run Gemini 3.1 Pro preview** on each chunk with a prompt that (a) constrains the character set to the Egyptological Unicode block, (b) forbids ASCII substitutions (`3` for ꜣ, `c` for ꜥ), (c) asks the model to preserve the book's own running-header page numbers inline where they appear in the source. That way a reader cross-referencing back to a printed page can find it from the committed markdown.
-3. **Per-chunk markdown lands in `raw/chunk-pNNN-pMMM.md`** where `NNN-MMM` is the physical-page range. Each file carries a top-of-file HTML comment stating the physical range so citations can be verified. **No per-page splitting**: the whole chunk is the unit of both OCR and citation. Gemini's own per-page page-header preservation (when available) is a bonus for a human reader, not a reliance the pipeline makes.
-4. **`reconciled.jsonl` rows cite the physical-page range of the chunk they came from**: `source_citation: {pdf_pages: "340-344", edition: "…"}`. Anyone verifying a row opens the PDF at physical pages 340-344 and finds the content there.
-5. **Human spot-checks a sample** of ~2-3 chunks per source against the PDF pages, focused on the fields that actually flow into `reconciled.jsonl` — king names, titulary diacritics, dates, dynasty numbers, polity assignments. If the sample is clean, the rest is trusted.
-6. Any corrections the human finds during spot-check are made directly in `raw/chunk-…md` with a short inline comment explaining the override (e.g. `<!-- Gemini: Fuad; PDF: Fûad — corrected -->`).
+1. **OCR pass — Claude Code subagent per chunk.** The `Read` tool in Claude Code renders PDF pages as images for the model, so a general-purpose subagent can directly OCR a physical-page range of the source PDF with no external API call. One subagent call handles up to ~20 pages; for larger books, spawn multiple parallel subagents, each covering a chunk of the PDF. A single-subagent test on Ryholt pp. 336-340 produced correct Egyptological diacritics (ꜣ ꜥ ḥ ḫ nṯ) with no copyright refusal when the task was framed as "fair-use scholarly extraction for a private research repository."
+2. **Chunk the PDF by physical (1-indexed PDF) page index**, five pages per chunk by default. Physical page indices are unambiguous — they do not depend on resolving the book's printed page numbering against any front-matter / blank / Part-heading pages, which the agent often gets wrong.
+3. **Per-chunk markdown is written to `raw/chunk-pNNN-pMMM.md`** where `NNN-MMM` is the physical-page range. **These files are NOT committed.** They contain the source's own introductory prose / section commentary verbatim — copyrightable material the repo cannot redistribute. `.gitignore` excludes `pipeline/pipeline/authority/sources/*/raw/chunk-*.md`. The chunks exist on the transcriber's local machine only; a reviewer re-running the pipeline regenerates them from the (also uncommitted) PDF.
+4. **Structured extraction — three parallel subagents + deterministic merge.** Once the chunks are on disk, spawn three independent Claude Code subagents in parallel, each reading every chunk and emitting JSONL per the source's schema. Then run a deterministic `merge.py` that majority-votes per-field across the three outputs. The merge is the reproducible step; the extraction is not (LLM output), but the committed `reconciled.jsonl` and `merge-disagreements.txt` ARE the audit trail.
+5. **`reconciled.jsonl` rows cite the physical-page range of the chunk the row came from**: `source_citation: {pdf_pages: "340-344", edition: "…"}`. Anyone verifying a row opens the PDF at physical pages 340-344 and finds the content there.
+6. **Human spot-checks** a sample of ~2-3 chunks per source against the PDF, focused on the fields that flow into `reconciled.jsonl` — king names, titulary diacritics, dates, dynasty numbers, polity assignments. Corrections are made directly in `reconciled.jsonl` (the only committed artifact), with a short comment in `merge-disagreements.txt` explaining the override.
 
 ### Why physical pages, not printed pages
 
 Every scan has some offset between "physical page 1" (PDF page 1) and "printed page 1" (first numbered page of the book body), driven by front matter, blank filler pages inserted for even/odd page layout, Part-heading pages, and so on. That offset can also *shift mid-book* if a section break has an odd number of pages before it. An agent trying to resolve "printed page N" on the fly regularly gets it wrong; we verified this on Ryholt 1997, where the offset was 4 for File 1 (pp. 333-407) but 3 for the Chronological Tables (pp. 408-411) because of a Part-heading page. Citing by physical page sidesteps this entirely.
 
-### Why not a two-model cross-check?
+### Why not a two-model OCR cross-check?
 
-The benchmark on p. 336 initially motivated a Claude + Gemini diff pipeline. In practice:
+The benchmark on p. 336 initially motivated a multi-model diff pipeline. In practice:
 
-- **On the fields we actually extract into `reconciled.jsonl`** (titulary diacritics, dates, dynasty numbers, polity), Gemini 3.1 Pro was clean on the benchmark. The specific Egyptological errors we were guarding against (`ꜣ`/`ꜥ`/`ḥ`/`ḫ`/`nṯ` conflations) happened in Gemini 3 *Flash* and Mistral — not in Gemini 3.1 *Pro*, which handled all five correctly. Claude, surprisingly, got `mnḫ` wrong as `mnḥ`.
-- **The disagreements the diff did surface** (`PM II²` vs `PM I²`, `Fûad` vs `Fūad`) were in bibliographic reference details that don't feed the authority layer. The diff cost its own overhead without producing actionable fixes for extracted fields.
-- **Claude Opus 4.6 declines bulk multi-page transcription** of in-copyright scholarly PDFs as copyright reproduction — a correct call on Anthropic's side. Working around it (single-page Claude while Gemini batches) surrenders the batching throughput advantage.
+- **On the fields we actually extract into `reconciled.jsonl`** (titulary diacritics, dates, dynasty numbers, polity), single-model runs were clean on representative titulary pages. The specific Egyptological errors we were guarding against (`ꜣ`/`ꜥ`/`ḥ`/`ḫ`/`nṯ` conflations) happened only in the weaker OCRs (Gemini 3 Flash preview, Mistral OCR) — not in Claude Code subagent OCR on Opus 4.6, which handled every diacritic correctly once given a prompt naming the Unicode character set.
+- **The disagreements the diff surfaced** in earlier benchmarks were in bibliographic reference details (`PM II²` vs `PM I²`, proper-noun diacritics like `Fûad` vs `Fūad`) that don't feed the authority layer. Cross-checking OCRs costs its own overhead without producing actionable fixes for extracted fields.
 
-So: trust Gemini 3.1 Pro, sample the output for QA, and stop paying the two-model overhead for cross-checking errors outside the extraction schema.
+So: trust Claude Code subagent OCR on a model with a strong prompt, sample the output for QA, and stop paying multi-model overhead for cross-checking errors outside the extraction schema.
 
-### Why not Mistral OCR?
+### Why not Mistral OCR or Gemini 3 Flash?
 
-Mistral's Egyptological-transliteration substitutions (`ꜣ→š`, `ꜥ→ᵉ`) are systematic, not random, and were *worse than pdftotext's*. Mistral is viable only for pages with no transliteration at all (bibliographic-only pages, index pages).
-
-### Why not Gemini 3 Flash?
-
-Flash conflates `ḥ` and `ḫ` (h-with-dot-above vs h-with-dot-below) and drops the `ṯ` under-bar. Both are silent discipline-level errors that a human reader does not catch by spot-check because the characters look plausible. Flash stays in reserve for non-titulary pages only.
+Mistral's Egyptological-transliteration substitutions (`ꜣ→š`, `ꜥ→ᵉ`) are systematic, not random, and were *worse than pdftotext's*. Flash conflates `ḥ` and `ḫ` (h-with-dot-above vs h-with-dot-below) and drops the `ṯ` under-bar. Both are silent discipline-level errors that a human reader does not catch by spot-check because the characters look plausible. Both stay in reserve for non-titulary pages only, and are not part of the production pipeline.
 
 ### Pages that do not need the full pipeline
 
@@ -61,14 +56,13 @@ For pages where only facts like Roman-numeral dynasty counts, regnal-year intege
 
 ## Consequences
 
-- **Per-source API cost** is approximately $1–3 for a full book OCR pass (Gemini 3.1 Pro preview in 5-page batches on ~80–500 pages). Trivial for the project.
-- **Committed evidence trail**: every `reconciled.jsonl` row traces back to a committed `raw/page-NNN.md` in the source's `raw/` directory. The markdown is Gemini's output with any human-spot-check corrections inline-commented. This is the rule-1 (work like a scholar) standard for transcription.
-- **One API key required** in `.env`: `GEMINI_API_KEY` (Gemini Pro models require a billing-enabled Google AI key; free tier has zero quota on the Pro lineage).
-- **Shared tooling**: the first source to use this pipeline (Ryholt) implements it in its own `fetch.py`. When Source 3 (Kitchen 1996) lands, common code is promoted to a shared module (`pipeline/pipeline/authority/ocr.py` or equivalent). No premature abstraction.
-- **Supersedes the "Fire-PDF first" provisional plan**: Firecrawl's PDF parser is URL-only, which requires exposing a proprietary in-copyright book on a public URL — an unacceptable rights risk. Gemini accepts base64 document input directly, keeping the PDF local.
+- **Per-source cost**: $0 in external API charges. OCR and extraction both run under the existing Claude Code subscription.
+- **Committed evidence trail**: every `reconciled.jsonl` row traces back to a `pdf_pages` range in the source PDF. The intermediate `raw/chunk-*.md` files are NOT committed (they contain the source's prose) — they are regenerated from the PDF by anyone re-running the pipeline. `merge-disagreements.txt` IS committed and records the three subagents' per-field disagreements plus the majority-vote resolution. This is the rule-1 (work like a scholar) standard for transcription: the input (PDF) is pinned by SHA-256, the output (JSONL) is committed, the intermediate model outputs are reproducible by re-running three subagents against the pinned PDF.
+- **No external API keys required** beyond Claude Code. No per-page OCR billing.
+- **Shared tooling**: `merge.py` lives per-source for now. When Source 3 (Kitchen 1996) lands, common code is promoted to a shared module. No premature abstraction.
+- **Supersedes earlier provisional plans** (Firecrawl's URL-only PDF parser, external OCR APIs): Claude Code subagents route the PDF through Anthropic's Claude API under the existing subscription — same network trust boundary as any other Claude Code tool use, no new external vendor, no per-page OCR billing. Firecrawl was ruled out because it requires exposing the PDF at a public URL, which is a genuinely different (and worse) rights posture.
 
 ## Not covered by this ADR
 
-- **Claude Opus 4.6 as a targeted spot-checker** is still available if a specific page's titulary looks suspicious during the human QA sample and we want a second opinion. Single-page Claude calls work; it's only bulk batches the model refuses. Use sparingly.
-- **Gemini 3 Flash and Mistral** remain in the toolbox for bulk non-titulary pages but are not primary transcribers for anything with Egyptological diacritics. If a future source is all-bibliographic (e.g. the Porter-Moss index volumes), Flash or Mistral may be promoted to primary and revisited in a follow-up ADR.
-- **Vision-LLM cost at scale** (all eleven sources) is bounded — current projection is under $30 total across the Phase 0 handoff list. Revisit if a source with >2,000 titulary pages is added.
+- **External OCR APIs** (the models listed in the benchmark table) are referenced only as historical baselines. They are not part of the production pipeline. If Claude Code subagents ever refuse a specific source's OCR, we revisit this ADR rather than silently fall back.
+- **Bulk cost at scale**: projected $0 in external charges across the remaining scan-only sources. Revisit only if a subagent refusal pattern emerges or if Claude Code's subscription limits become a bottleneck.

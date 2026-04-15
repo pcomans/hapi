@@ -36,16 +36,16 @@ Prose chapters (Part II §2.1–§2.6 on the individual dynasties) are out of sc
 
 **Expected row count:** ~60–80 king entries across Dyns 13–17 plus the Abydos Dynasty.
 
-## Method — Gemini OCR over physical-page chunks (ADR-017)
+## Method — Claude Code subagent OCR + three-subagent structured extraction (ADR-017)
 
 Per `docs/adr/017-ocr-pipeline-for-scan-only-sources.md`:
 
-1. `fetch.py --physical 336-416 --chunk-size 5` runs **Gemini 3.1 Pro preview** over physical PDF pages in 5-page chunks.
-2. Each chunk lands in `raw/chunk-pNNN-pMMM.md` (NNN-MMM = physical page range, 1-indexed). The file is the unit of both OCR and citation.
-3. `reconciled.jsonl` rows cite the chunk's physical range, e.g. `source_citation: {pdf_pages: "340-344", edition: "CNI 20, 1997"}`. A reviewer verifying a row opens the PDF at physical pages 340-344 and reads the content there; Gemini preserves Ryholt's running-header printed-page numbers inline so scholarly cross-reference to the printed edition is trivial.
-4. The transcriber spot-checks ~2-3 chunks against the PDF and inline-corrects `raw/chunk-…md` for any disagreements.
+1. **OCR**: Claude Code subagents transcribe the PDF in physical-page chunks (1-indexed, 5 pages per chunk by default). Each chunk is written to `raw/chunk-pNNN-pMMM.md` locally. These chunk files are **not committed** — they contain Ryholt's own prose verbatim and would redistribute copyrighted material. The transcriber regenerates them from the committed-SHA PDF when needed.
+2. **Structured extraction**: three independent Claude Code subagents each read every chunk and emit JSONL per the schema below. `merge.py` deterministically majority-votes per-field and writes the final `reconciled.jsonl` plus `merge-disagreements.txt` (committed) for audit.
+3. `reconciled.jsonl` rows cite the chunk's physical-page range, e.g. `source_citation: {pdf_pages: "340-344", edition: "CNI 20, 1997"}`. A reviewer verifying a row opens the PDF at physical pages 340-344 and reads the content there; the book's running-header printed-page numbers are visible on each page so scholarly cross-reference to the printed edition is trivial.
+4. The transcriber spot-checks ~2-3 king entries against the PDF and corrects `reconciled.jsonl` directly for any disagreements, noting the override in `merge-disagreements.txt`.
 
-The benchmark that sized this pipeline (physical p. 340, Sobkhotep I / printed p. 336) is documented in ADR-017: Gemini 3.1 Pro correctly rendered every Egyptological transliteration character on a representative titulary page; Mistral and Gemini 3 Flash did not. The earlier plan for a two-model Claude + Gemini cross-check was dropped once it became clear that model disagreements clustered on bibliographic details outside the extraction schema.
+The benchmark that sized this pipeline (physical p. 340, Sobkhotep I / printed p. 336) is documented in ADR-017.
 
 ### Target physical range
 

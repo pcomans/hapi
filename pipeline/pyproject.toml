@@ -16,9 +16,6 @@ dependencies = [
     "typesense>=2.0.0",
     "firecrawl-py>=4.22.1",
     "python-dotenv>=1.2.2",
-    "anthropic>=0.42.0",
-    "google-genai>=1.0.0",
-    "pypdf>=5.0.0",
 ]
 
 [tool.dagster]
