@@ -64,7 +64,7 @@ Per ADR-017 step 6:
 ## Audit trail
 
 - PDF (SHA-256 pinned below; not committed) → `raw/chunk-p240-p243.md` (Claude Code subagent OCR; not committed, per-transcriber regenerable)
-- `raw/chunk-p240-p243.md` → three per-extraction-agent JSONLs (Claude Code subagents; non-deterministic; ephemeral in `/tmp/claude-501/kitchen/` — not committed)
+- `raw/chunk-p240-p243.md` → three per-extraction-agent JSONLs at `raw/agent-{a,b,c}.jsonl` (or any path passed to `merge.py --agent-dir` / `KITCHEN_AGENT_DIR`; Claude Code subagents; non-deterministic; not committed — gitignored via `raw/*`)
 - three per-agent JSONLs → `reconciled.jsonl` (deterministic merge, committed)
 - `merge-disagreements.txt` (committed) lists every field where extraction agents disagreed plus the majority-vote resolution and the LLM reviewer's overrides.
 

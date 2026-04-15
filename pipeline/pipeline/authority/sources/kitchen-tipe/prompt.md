@@ -60,7 +60,7 @@ The `dynasty` integer follows the table (HPAs → 21; Early-Saite Princes → 24
 - `"945–924: Shoshenq I, Hedjkheperre Setepenre (21 y)"` → `name:"Shoshenq I"`, `prenomen:"Hedjkheperre Setepenre"`, `start_bce:-945`, `end_bce:-924`, `length_of_reign_years:21`, `approximate:false`.
 - `"c. 890: Shoshenq II, Heqakheperre Setepenre (x yrs; co-rgt only)"` → `name:"Shoshenq II"`, `prenomen:"Heqakheperre Setepenre"`, `start_bce:-890`, `end_bce:-890` (single-point date), `length_of_reign_years: null`, `approximate: true`, `notes_from_kitchen: "co-rgt only"`.
 - `"889–874: Takeloth I, [Prenomen unknown] (15 y)"` → `prenomen:"[Prenomen unknown]"` verbatim (do NOT null this out — downstream knows to treat the bracketed phrase as "unknown").
-- `"(720–715): Shoshenq VI, Wasneterre Setepene (c. 5 y??); existence, doubtful."` → `start_bce:-720`, `end_bce:-715`, `length_of_reign_years:5`, `approximate:true`, `notes_from_kitchen:"existence, doubtful"`.
+- `"(720–715): Shoshenq VI, Wasneterre Setepenre (c. 5 y??); existence, doubtful."` → `start_bce:-720`, `end_bce:-715`, `length_of_reign_years:5`, `approximate:true`, `notes_from_kitchen:"existence, doubtful"`.
 - `"731–720: Iuput II, [Prenomen unknown] (c. 11/16 y?) (or 715)"` → `length_of_reign_years: 11` (take the lower value of `11/16`), `approximate: true`, `notes_from_kitchen: "11/16 y alternative; end date alternative 715"`.
 - `"818–793: Pedubast I, Usimare Setepenamun (25 y). [Start of Dyn. 23.]"` → treat `[Start of Dyn. 23.]` as a structural marker, not a note; omit from `notes_from_kitchen`.
 
@@ -79,12 +79,7 @@ Otherwise `approximate: false`.
 
 ## Concurrency
 
-Populate `concurrent_with_kings` **only for Dyn 21 (Table 1)** based on the horizontal Tanite↔HPA alignment in Table 1. For each Tanite king in `21.*`, list the `kitchen_id` of every HPA whose tenure overlaps (Kitchen lays them side-by-side in the two columns). Conversely, each HPA lists the Tanite kings it overlaps with. Example:
-
-- Smendes I `21.01` overlaps with Herihor `21H.01`, Piankh `21H.02`, Pinudjem I `hp` `21H.03`, Pinudjem I `'kg'` `21H.04`, and Masaharta `21H.05` (during their dates per Table 1).
-- Ramesses XI `20.01` overlaps with Herihor `21H.01`, Piankh `21H.02`, Pinudjem I `hp` `21H.03`.
-
-For Tables 3 and 4 (Dyns 22–26), leave `concurrent_with_kings: []` — cross-dynasty concurrency (Kitchen's Table 6 ready-reckoner data) is deferred to Phase A.
+Emit `concurrent_with_kings: []` for **every row, without exception**. This field is deterministically recomputed in `fix_rows.py` from `start_bce` / `end_bce` as an interval-overlap calculation — LLM agents doing interval arithmetic in parallel produced inconsistent results and polluted the merge with spurious disagreements. Do not hand-populate overlaps from Table 1's side-by-side layout. Whatever you emit here will be overwritten downstream; emitting `[]` keeps the three-agent merge clean.
 
 ## `source_citation`
 
