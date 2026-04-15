@@ -25,7 +25,7 @@ import argparse
 import io
 import os
 import sys
-import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
@@ -111,28 +111,39 @@ def _chunk_path(first: int, last: int) -> Path:
     return RAW_DIR / f"chunk-p{first:03d}-p{last:03d}.md"
 
 
-def run(physical_pages: list[int], chunk_size: int) -> None:
+def _process_chunk(batch: list[int]) -> str:
+    """OCR one chunk and write its file. Returns a short log line."""
+    first, last = batch[0], batch[-1]
+    out = _chunk_path(first, last)
+    if out.exists():
+        return f"  chunk p{first:03d}-p{last:03d}: cached"
+
+    pdf_bytes = _build_chunk_pdf(batch)
+    text = _gemini_ocr(pdf_bytes)
+    header = (
+        f"<!-- Ryholt 1997 — physical pages {first}-{last} "
+        f"(1-indexed PDF page numbers). Citations in reconciled.jsonl "
+        f"reference this range. -->\n\n"
+    )
+    out.write_text(header + text.rstrip() + "\n")
+    return f"  chunk p{first:03d}-p{last:03d}: {len(batch)} page(s) OK"
+
+
+def run(physical_pages: list[int], chunk_size: int, workers: int) -> None:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
+    batches = _chunk(physical_pages, chunk_size)
 
-    for batch in _chunk(physical_pages, chunk_size):
-        first, last = batch[0], batch[-1]
-        out = _chunk_path(first, last)
-        if out.exists():
-            print(f"  chunk p{first:03d}-p{last:03d}: cached", flush=True)
-            continue
-        print(f"  chunk p{first:03d}-p{last:03d}: {len(batch)} page(s)", flush=True)
+    if workers <= 1:
+        for batch in batches:
+            print(_process_chunk(batch), flush=True)
+        return
 
-        pdf_bytes = _build_chunk_pdf(batch)
-        text = _gemini_ocr(pdf_bytes)
-        # Header to help readers. We do NOT try to split the chunk into
-        # per-page files — the whole chunk IS the unit of citation.
-        header = (
-            f"<!-- Ryholt 1997 — physical pages {first}-{last} "
-            f"(1-indexed PDF page numbers). Citations in reconciled.jsonl "
-            f"reference this range. -->\n\n"
-        )
-        out.write_text(header + text.rstrip() + "\n")
-        time.sleep(0.2)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = {pool.submit(_process_chunk, batch): batch for batch in batches}
+        for fut in as_completed(futures):
+            # Raise on failure so the caller sees a traceback, but keep the
+            # other in-flight chunks going.
+            print(fut.result(), flush=True)
 
 
 def main() -> None:
@@ -148,6 +159,12 @@ def main() -> None:
         default=5,
         help="Pages per chunk / per API call (default: 5).",
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=5,
+        help="Concurrent OCR workers (default: 5; set to 1 for serial).",
+    )
     args = parser.parse_args()
 
     _load_env()
@@ -157,9 +174,10 @@ def main() -> None:
     physical_pages = _parse_range(args.physical)
     print(
         f"OCR'ing physical pages {physical_pages[0]}-{physical_pages[-1]} "
-        f"({len(physical_pages)} pp.) in chunks of {args.chunk_size}"
+        f"({len(physical_pages)} pp.) in chunks of {args.chunk_size}, "
+        f"{args.workers} worker(s)"
     )
-    run(physical_pages, args.chunk_size)
+    run(physical_pages, args.chunk_size, args.workers)
 
 
 if __name__ == "__main__":
