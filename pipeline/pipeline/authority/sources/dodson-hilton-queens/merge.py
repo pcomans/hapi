@@ -91,20 +91,25 @@ def _majority(values: list) -> tuple[object, int]:
     return None, 0
 
 
-def _sort_key(dh_id: str) -> tuple[int, str]:
-    """Three sort buckets:
-    0 = regular letter-disambiguated or bare names (Ahmes B, Mutemwia, …)
-    1 = `Q`-suffix Unplaced entries
-    2 = lacuna-prefixed names like `[...]pentepkau`
+def _sort_key_for(unplaced_ids: frozenset[str]):
+    """Return a sort-key function that bins rows by Unplaced-ness first,
+    then by case-insensitive alphabetical order within each bin.
 
-    Within each bucket, case-insensitive alphabetical.
+    Bin 0: placed entries (D&H's main alphabetical Brief Lives list).
+    Bin 1: unplaced entries (D&H's trailing `Unplaced` sub-section). Includes
+           both `Q`-suffixed ids (Amenemhat Q, Henut Q, Thutmose Q) AND
+           plain-name unplaced entries (Henutiunu, Sithori, Tatau, Ti, etc.)
+           that D&H place under the Unplaced heading without a disambiguator.
+
+    Sort order cannot be determined from dh_id alone because `unplaced`
+    is a per-row field, not a name-suffix convention — hence the closure
+    over the unplaced-ids set computed from the merged rows.
     """
-    if dh_id.startswith("["):
-        return (2, dh_id.lower())
-    # `Q`-suffix detection: ends with " Q" (space-Q) per D&H's convention
-    if dh_id.endswith(" Q"):
-        return (1, dh_id.lower())
-    return (0, dh_id.lower())
+    def _sort_key(dh_id: str) -> tuple[int, str]:
+        bin_ = 1 if dh_id in unplaced_ids else 0
+        return (bin_, dh_id.lower())
+
+    return _sort_key
 
 
 def main(agent_dir: Path) -> None:
@@ -117,10 +122,19 @@ def main(agent_dir: Path) -> None:
         )
 
     agents = {tag: _load(p) for tag, p in agent_files.items()}
-    all_ids = sorted(
-        set().union(*[a.keys() for a in agents.values()]),
-        key=_sort_key,
-    )
+
+    # Compute the set of unplaced dh_ids once, by majority-vote of the three
+    # agents' `unplaced` fields per row. This lets _sort_key_for() bin the
+    # output correctly without making the sort-key function itself depend on
+    # the per-row merge result (which is computed below).
+    all_ids_unsorted = set().union(*[a.keys() for a in agents.values()])
+    unplaced_ids: set[str] = set()
+    for did in all_ids_unsorted:
+        votes = [a[did].get("unplaced", False) for a in agents.values() if did in a]
+        if sum(1 for v in votes if v) > len(votes) / 2:
+            unplaced_ids.add(did)
+
+    all_ids = sorted(all_ids_unsorted, key=_sort_key_for(frozenset(unplaced_ids)))
 
     final: list[dict] = []
     report: list[str] = []

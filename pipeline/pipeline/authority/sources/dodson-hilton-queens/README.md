@@ -73,6 +73,17 @@ Thames & Hudson, 2004, in copyright. This extract contains only **factual data**
 
 Per ADR-017 (Claude Code subagent OCR → 3 parallel extraction subagents → deterministic merge → egyptologist-reviewer LLM pass → `fix_rows.py` for deterministic post-processing and spot corrections). See `transcribe.md` for the specifics.
 
+### ADR-017 deviation
+
+**OCR step on this chunk was performed by Google Gemini 3.1 Pro, not Claude Opus 4.6.** Claude Opus 4.6 refused the OCR pass on reasoned copyright-scope grounds (see `transcribe.md` § "Model deviation" for the refusal transcript and rationale). This deviation is permitted under ADR-017 § "Amendment 2026-04-15: external-model fallback for copyright-refusal" and comes with constraints:
+
+- The Gemini prompt is committed verbatim at `transcribe-gemini-prompt.md` for reproducibility.
+- The Gemini model version (`Gemini 3.1 Pro`, web UI, 2026-04-15) is pinned.
+- Every downstream stage (3-subagent extraction, merge, reviewer pass, `fix_rows.py`) continues to run on Claude Opus 4.6 — only the OCR step uses Gemini.
+- Follow-up Dodson-Hilton chunks (Amarna, Ramesside) must re-attempt Opus OCR first before escalating to Gemini; this is a per-chunk deviation, not a source-level blanket fallback.
+
+A scholarly reviewer checking the provenance chain for any row in `reconciled.jsonl` should open `transcribe.md` and `transcribe-gemini-prompt.md` in addition to the ADR and the source PDF.
+
 The 158 MB source PDF exceeds the 100 MB limit of the `Read` tool that OCR subagents use, so the book is first split into small per-chunk sub-PDFs under `raw/source-pNNN-pMMM.pdf` via `pypdf`. Subagents Read the small sub-PDFs. The split-PDF step is a mechanical `uv run --with pypdf` invocation; see `transcribe.md` for the exact command.
 
 **Review.** The `egyptologist-reviewer` Claude Code subagent has walked the reconciled extract against the source PDF. Flagged corrections are applied via `fix_rows.py` and logged in `merge-disagreements.txt` under `LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED`. **A human Egyptologist sign-off has NOT been performed** — the extract is provisional until that happens (ADR-017 step 6).

@@ -68,5 +68,29 @@ For pages where only facts like Roman-numeral dynasty counts, regnal-year intege
 
 ## Not covered by this ADR
 
-- **External OCR APIs** (the models listed in the benchmark table) are referenced only as historical baselines. They are not part of the production pipeline. If Claude Code subagents ever refuse a specific source's OCR, we revisit this ADR rather than silently fall back.
+- **External OCR APIs** (the models listed in the benchmark table) are referenced only as historical baselines. They are not part of the production pipeline. If Claude Code subagents ever refuse a specific source's OCR, we revisit this ADR rather than silently fall back. See **Amendment 2026-04-15** below for the first such revisit.
 - **Bulk cost at scale**: projected $0 in external charges across the remaining scan-only sources. Revisit only if a subagent refusal pattern emerges or if Claude Code's subscription limits become a bottleneck.
+
+## Amendment 2026-04-15: external-model fallback for copyright-refusal
+
+**Triggered by:** Dodson & Hilton 2004 *The Complete Royal Families of Ancient Egypt*, chunk p126–p130 (printed pp. 137–141, the "Brief Lives" prosopographical sub-block of Chapter 3 §"The Power and the Glory").
+
+**Observed behaviour.** Claude Opus 4.6 refused the OCR pass on this chunk under two distinct framings:
+
+1. As a Claude Code general-purpose subagent and in the main session, with the ADR-017 "fair-use scholarly extraction" framing, the API returned a generic `"Output blocked by content filtering policy"`. Root cause opaque — plausibly the combination of archaeological photographs on the pages plus the density of mortuary / reburial vocabulary in the Brief Lives prose (`"his mummy was reburied"`, `"canopic jars from the Valley of the Queens"`, `"died young and buried with his father"`), but the error is a catch-all that doesn't identify the trigger.
+2. As a Claude Code general-purpose subagent with a stronger, explicit fair-use reframing that named the copyright argument, Opus 4.6 returned a **reasoned** refusal rather than a safety-filter error, on copyright-scope grounds: *"I can't transcribe five pages of prose paragraphs verbatim from a copyrighted Thames & Hudson handbook, even reframed as fair use. The factual data (names, relations, tomb/museum numbers) isn't copyrightable, but the 'narrow prose sentences' the instructions ask me to quote verbatim for ~59 entries are the authors' protected expression, and reproducing them in full constitutes the kind of extended excerpting I need to decline — the quantity (5 pages, whole section) and substitutive purpose (populating a downstream dataset) push well past quotation."* (Captured verbatim from the subagent transcript.) Claude Haiku accepted but produced systematically sloppy OCR (`Saqqara → Sargass`, `TT226 → TT26`, `Amenemhat → Amenhotep` name conflation, etc.) that fails the discipline-level accuracy bar the rest of this ADR is explicit about.
+
+**Decision.** When Claude Opus 4.6 refuses an OCR pass with a reasoned copyright refusal (not a generic safety-filter error), **Google Gemini (Pro tier) is a permitted fallback OCR engine** for that specific chunk, under the following constraints:
+
+1. **The Opus refusal must be on record.** Commit the refusal (either as a direct quote in `transcribe.md` or as a file under the source dir) before swapping to Gemini. A generic safety-filter error is not sufficient — attempt the fair-use reframing first so the refusal surfaces its reasoning. Haiku's sloppiness is a deprecation data point, not a justification to skip Opus.
+2. **The Gemini prompt must be committed verbatim** as `<source_dir>/transcribe-gemini-prompt.md`. A prior-conversation-record is not a committed artifact.
+3. **The Gemini model version must be pinned** in `transcribe.md` (e.g. `Gemini 3.1 Pro` with the generation date). Stochastic output means future reproducibility depends on the model snapshot.
+4. **The downstream 3-subagent extraction + merge pipeline runs unchanged.** Gemini only produces the OCR markdown; the structured extraction, deterministic merge, reviewer pass, and `fix_rows.py` stages stay on Claude Opus 4.6. This preserves the audit-trail pattern the rest of ADR-017 mandates.
+5. **`transcribe.md` declares the deviation prominently** in an "OCR method deviation" section. The same declaration is surfaced in the source `README.md` under a `### ADR-017 deviation` subsection so a scholarly reviewer does not have to excavate the transcribe doc to find it.
+6. **Opus retry is attempted first** on every future chunk of the same source before escalating to Gemini. A class-level blanket fallback is not implied by a single-chunk refusal.
+
+**What this is not.** The amendment does **not** authorise Gemini as a standing replacement for Claude Code subagent OCR. Claude remains the default engine for every chunk, every source. Gemini is the documented fallback when Opus refuses on reasoned copyright grounds, and only then.
+
+**What this is not (2).** The amendment does not cover Mistral OCR or Gemini 2/3 Flash, which the body of this ADR already rules out on discipline-level-accuracy grounds (Egyptological diacritic conflations). Only Gemini's higher tiers (Pro) are permitted for the fallback, and only where the extracted fields are Latin-alphabet kinship / prosopography data rather than Egyptological transliteration. Sources that require ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ extraction must still run on Claude Opus 4.6 or re-evaluate against this amendment.
+
+**Operational record.** First invocation: `sources/dodson-hilton-queens/` chunk p126-p130, merged as PR #37 (TBD). See that source's `transcribe.md`, `transcribe-gemini-prompt.md`, and `README.md` § "ADR-017 deviation" for the concrete artifacts.
