@@ -188,9 +188,29 @@ The review cycle almost always surfaces something. Common real findings from the
 
 Apply the fixes in a fresh commit (`fix(<source>): address <reviewer> first pass`), re-run tests, push. Poll CI and the review threads for a second round.
 
+## Step 11.5 — risk-driven automated checks
+
+The LLM reviewers (especially `egyptologist-reviewer`) reliably flag *categories* of failure mode, not just individual rows: "lacuna preservation", "hedge promotion in Unplaced rows", "Syrian-extraction trio cross-refs", and so on. Treating each of those as a row-by-row to-do for the human reviewer is the wrong loop — it burns scarce human attention to confirm negatives. Each category is mechanically detectable on the reconciled JSONL.
+
+For every category a reviewer flags (in this PR or a previous one), author one assertion in the source's `diff_<chunk>.py` script alongside the existing roles/notes character-diff. The check inventory grows monotonically as new sources surface new conventions; checks ported from a previous source's script are free.
+
+**Current inventory** (extend as new categories surface):
+
+- **Lacuna preservation.** Any `dh_id` in the transcription containing `[?]`, `[ka?]`, leading `[...]`, or similar bracketed lacuna markers must appear verbatim in reconciled `dh_id` and `name`. Trivial regex check.
+- **Hedge preservation on relationship fields.** For every "probable", "perhaps", "possibly", "probably" appearing in `notes`, the corresponding relationship field (`father_name`, `mother_name`, `spouse_names`, `children_names`) must either be null or contain the hedge word in parens (e.g. `"Ahmose I (probable)"`, `"Amenemhat B (perhaps)"`). Promotion of a hedged claim to a hard claim is the signature failure.
+- **Unplaced parentage.** Rows with `unplaced=True` must have null `father_name`/`mother_name`/`spouse_names`/`children_names` *unless* `notes` contains a placeholder phrase (`"a king of the Nth Dynasty"`, `"a king of the mid-Nth Dynasty"`). Placeholder captures are routed to a Phase A design queue (whether the placeholder string belongs in a structured field is a curation decision), not flagged as extraction errors.
+- **Role-tuple fidelity.** Sorted reconciled `roles` equals sorted role tuple parsed from the transcription's bold-italic header line. Already implicit in any diff script that parses transcription headers; make it an explicit per-row assertion so the failure message names the row, not the chunk.
+- **Agent-corrected OCR typo.** When the auto-diff finds a single short-phrase mismatch where reconciled is closer to plausible English than transcription, route it to a *transcription-fix queue* rather than an extraction-fix queue. (Reference example: Dodson-Hilton Power chunk Tiaa A `"including:"` → `"including a"` — three extraction agents independently corrected an OCR typo in `chunk-p126-p130.md`.) The diff is real but the fix belongs to the transcription, not the row.
+
+The human review in Step 12 is invoked only when (a) any check above fails, (b) a small fidelity-drift random sample needs walking against the printed PDF, or (c) the LLM egyptologist-reviewer flags a category not yet in the inventory — in which case Step 12 is the one-time human pass that validates the new category before it is added as a check for all future chunks.
+
+Reference: Dodson-Hilton Power chunk's `human-review-2026-04-15-power.md` documents the four-layer methodology this section was derived from. Layer 1 (notes/roles diff via `diff_power.py`) is the seed; Layers 2b (targeted hedge-risk spot-check) and 2c (algorithmic Unplaced audit) were the human passes that became the inventory entries above.
+
 ## Step 12 — human Egyptologist sign-off (ADR-017 step 6)
 
-Every extract is **provisional** at the chunk level until a human with Egyptology training reads a sample (~5–10 rows) against the source PDF and signs off. The LLM `egyptologist-reviewer` pass does NOT satisfy this — ADR-017 explicitly treats human review as a separate layer ("LLM checking an LLM" is labelled as such).
+Step 11.5 reduces the human's surface area to: any row that fails an automated check, plus a small (~3 row) random sample for transcription-vs-PDF fidelity drift, plus any new category the LLM egyptologist-reviewer flagged that isn't yet in the Step 11.5 inventory. The remainder of the chunk is signed off algorithmically.
+
+Every extract is still **provisional** at the chunk level until that residual human pass runs. The LLM `egyptologist-reviewer` does NOT satisfy this — ADR-017 explicitly treats human review as a separate layer ("LLM checking an LLM" is labelled as such). Step 11.5 raises the floor; it does not eliminate the human step.
 
 When the human review happens (post-merge is fine), log it in `<source_dir>/human-review-<YYYY-MM-DD>.md` for single-chunk sources, or `<source_dir>/human-review-<YYYY-MM-DD>-<chunk>.md` for multi-chunk sources (e.g. `human-review-2026-05-10-ramesside.md`). The chunk-suffixed form serves two purposes: it disambiguates same-day reviews when multiple chunks are signed off on one session, and it makes the file-listing a self-documenting chunk-audit index. Do NOT use the chunk suffix for single-chunk sources — the un-suffixed form is simpler and the handoff path explicitly reserves the bare date form for those.
 
