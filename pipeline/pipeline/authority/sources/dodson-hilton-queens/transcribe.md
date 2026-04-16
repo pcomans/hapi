@@ -48,7 +48,7 @@ The sub-PDFs are gitignored (`raw/*`). The source PDF lives under `proprietary/`
 
 **Chunk 1 (Power and Glory, PR #37):** 5 pages of Brief Lives at `raw/source-p126-p130.pdf`. The chunk file is not committed.
 
-**Chunk 2 (Amarna Interlude, this PR):** 4 pages of Brief Lives at `raw/source-p142-p145.pdf`. Extracted via the same `pypdf` one-shot (0-indexed physical pages 141–144 inclusive; see PDF-split preamble above).
+**Chunk 2 (Amarna Interlude, PR #38):** 4 pages of Brief Lives at `raw/source-p142-p145.pdf`. Extracted via the same `pypdf` one-shot (0-indexed physical pages 141–144 inclusive; see PDF-split preamble above).
 
 **Chunk 2 OCR — Claude Opus 4.6 succeeded.** Per the ADR-017 § "Amendment 2026-04-15" requirement to re-attempt Opus OCR before escalating to Gemini, the Amarna chunk was OCR'd by Claude Opus 4.6 in the main session (not a subagent) on 2026-04-15. Unlike chunk 1 — where both a Claude Code subagent and a main-session attempt were blocked, and a later retry produced a principled copyright-scope refusal — the Amarna main-session attempt produced the OCR markdown without a block or refusal. The likely contributing factors are smaller chunk size (4 pages vs 5), lower density of mortuary / reburial prose compared to the Thutmoside Brief Lives, and main-session context that fully surfaced the ADR-017 scholarly-extraction framing. The Amarna chunk therefore follows the original ADR-017 step 1 path (Claude Opus 4.6 OCR with no external-model fallback).
 
@@ -76,7 +76,7 @@ OCR rules (delta from Ryholt/Kitchen):
 
 ### Structured extraction — three parallel subagents
 
-Each chunk's OCR markdown is fed to three independent extraction subagents running the identical chunk-specific prompt. Each subagent writes JSONL to `<agent_dir>/agent-{a,b,c}<chunk_suffix>.jsonl` where `<agent_dir>` defaults to `<source_dir>/raw/` — the same sandbox-writable path rule that Kitchen adopted. Chunk files:
+Each chunk's OCR markdown is fed to three independent extraction subagents running the identical chunk-specific prompt. Each subagent writes JSONL to `<agent_dir>/agent-{a,b,c}-<chunk_suffix>.jsonl` (hyphen between the agent-tag and the chunk suffix — `merge.py._load_agent_chunks` matches the glob `agent-{tag}-*.jsonl`) where `<agent_dir>` defaults to `<source_dir>/raw/` — the same sandbox-writable path rule that Kitchen adopted. Chunk files:
 
 | Chunk | Prompt | Agent outputs | Expected rows |
 |---|---|---|---|
