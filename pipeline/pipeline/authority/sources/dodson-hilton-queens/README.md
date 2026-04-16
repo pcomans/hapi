@@ -14,7 +14,7 @@ Dodson, A. & Hilton, D. (2004) *The Complete Royal Families of Ancient Egypt*. L
 
 Chapter 3 *The New Kingdom*, **Brief Lives** sub-blocks of both pre-Amarna and Amarna Interlude sections. Extraction from the narrative chapter prose (Historical Background, The Royal Family, End of the Amarna Dynasty) is intentionally out of scope — only the prosopographical Brief Lives bullet-style entries are transcribed.
 
-| PR | Section | Printed pp. | Physical pp. | Rows |
+| PR | Section | Printed pp. | PDF-viewer pp. | Rows |
 |----|---|---|---|---|
 | #37 (merged) | *The Power and the Glory* — Brief Lives (Dyn 18 pre-Amarna) | 137–141 | 126–130 | 59 (47 placed + 12 Unplaced) |
 | this PR | *The Amarna Interlude* — Brief Lives (Dyn 18 late) | 154–157 | 142–145 | 41 (36 named + 5 lacuna-group) |
@@ -76,7 +76,7 @@ One row per named royal-family member (queen, king's mother, king's wife, king's
 - **`sub_period`** = D&H's own subsection title within the chapter. `"The Power and the Glory"` for rows from the Pre-Amarna chunk (printed 137–141) and `"The Amarna Interlude"` for rows from the Amarna chunk (printed 154–157).
 - **`unplaced`** = `true` if the entry sits under D&H's own `Unplaced` sub-section (printed p. 141 for this chunk), `false` otherwise. These are individuals D&H flag as attested but not confidently placed in the family tree — Phase A consumers may want to apply a lower confidence score. Not every Unplaced entry carries a `Q`-suffix disambiguator; the flag follows the section heading in the book, not the name suffix.
 - **`notes`** = the full prose paragraph verbatim from D&H's entry. No editorial summarisation — scholarly argumentation is Kitchen's / D&H's, and normalising would strip the evidence a reader uses to judge the entry.
-- **`source_citation.pdf_pages`** = the physical-page range of the OCR chunk that produced this row (`"126-130"` for Power-and-Glory rows, `"142-145"` for Amarna-Interlude rows). Each row cites the chunk range, not a single page; D&H's own printed page numbers appear in the OCR markdown so a reviewer can cross-reference to a specific page within the chunk trivially.
+- **`source_citation.pdf_pages`** = the **PDF-viewer page range** of the OCR chunk that produced this row — i.e., the page numbers a reader sees when opening the raw PDF in a viewer, counting from the first rendered page (`"126-130"` for Power-and-Glory rows, `"142-145"` for Amarna-Interlude rows). These differ from the book's **printed page numbers** (Power 137–141, Amarna 154–157) by the frontmatter offset (~11 pages). Each row cites the chunk range, not a single page; D&H's own printed page numbers appear in the OCR markdown so a reviewer can cross-reference to a specific printed page within the chunk trivially.
 
 ## Rights
 

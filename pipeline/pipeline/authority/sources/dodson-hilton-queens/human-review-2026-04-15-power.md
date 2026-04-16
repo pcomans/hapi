@@ -7,9 +7,10 @@ run over the full chunk.
 
 This is the second human sign-off on a Dodson-Hilton chunk (the Amarna
 Interlude was signed off earlier the same day in
-`human-review-2026-04-15.md`). With both chunks signed off, all 100
-reconciled rows across PRs #37 and #38 are validated for Phase A
-authority-curation purposes, modulo the caveats below.
+`human-review-2026-04-15.md`). This review fully validates the 59
+reconciled Power rows for Phase A authority-curation purposes, modulo
+the caveats below; the earlier Amarna sign-off accepted only its
+sampled rows, and the remaining 34 Amarna rows remain provisional.
 
 ## Methodology — four-layer validation
 
@@ -22,27 +23,29 @@ rows).
 
 ### Layer 1 — automated extraction-vs-transcription diff (all 59 rows)
 
-A script (`/tmp/claude/diff_power.py` at the time of review) parsed
-the transcribed source chunk (`raw/chunk-p126-p130.md`) and compared
-each reconciled row's `roles` and `notes` fields character-for-
-character against the corresponding transcription entry.
+The committed script `diff_power.py` (in this directory) parses the
+transcribed source chunk (`raw/chunk-p126-p130.md`) and compares each
+reconciled row's `roles` and `notes` fields character-for-character
+against the corresponding transcription entry. Run it with
+`python3 diff_power.py` from this directory.
 
-Result: **58 of 59 rows match exactly**; 1 row (`Tiaa A`) differs by
-a single character where the reconciled value matches the printed PDF
-and the transcription contains a 1-character OCR typo
-(`"including:"` in transcription vs `"including a"` in both the
-reconciled row and the printed scan). The 3 extraction agents silently
-corrected the transcription error during extraction. **Reconciled is
-authoritative; transcription has the typo.**
+Result: **58 of 59 rows match exactly**; 1 row (`Tiaa A`) differs in
+one short phrase where the reconciled value matches the printed PDF
+and the transcription contains a short OCR typo
+(`"including: number"` in transcription vs `"including a number"` in
+both the reconciled row and the printed scan). The 3 extraction agents
+silently corrected the transcription error during extraction.
+**Reconciled is authoritative; transcription has the typo.**
 
 This proves row-level extraction fidelity across all 59 rows for the
 auto-diffable fields (`roles`, `notes`).
 
 ### Layer 2a — human spot-check against printed scan (8 rows, diversified sample)
 
-The reviewer walked 8 rows against the printed PDF (physical pages
-137–141 of the Thames & Hudson 2004 hardback; see metadata caveat
-below) selected to diversify on fame (Ahmes B, Tiaa A, Neferure A vs
+The reviewer walked 8 rows against the printed PDF (printed pp.
+137–141 of the Thames & Hudson 2004 hardback; PDF-viewer pp. 126–130
+per the convention documented in `README.md`) selected to diversify
+on fame (Ahmes B, Tiaa A, Neferure A vs
 obscure Pyihia, Webensenu), role-tuple complexity (single-role
 Menkheperre A vs four-role Mutneferet A territory), and name-form
 quirks (parenthetical Meryetre(-Hatshepsut), bracketed
@@ -81,7 +84,7 @@ Result: **all 9 rows verified clean.** Per-row verdicts:
 | R1 | `Mutneferet A` | "probable daughter of Ahmose I" | `father_name: "Ahmose I (probable)"` | ✅ Hedge preserved in value |
 | R2 | `Hatshepsut D` | "and later king" | Preserved in `notes`; role tuple includes `UWC` as printed | ✅ Reign acknowledged |
 | R3 | `Sitiah` | "perhaps the mother of Amenemhat B" | `children_names: ["Amenemhat B (perhaps)"]`; `mother_name: "Ipu B"` | ✅ Hedge preserved |
-| R4 | `Iset A` | no parents stated in entry | `father_name: null`, `mother_name: null`, `children: ["Thutmose III"]` | ✅ Faithful silence |
+| R4 | `Iset A` | no parents stated in entry | `father_name: null`, `mother_name: null`, `children_names: ["Thutmose III"]` | ✅ Faithful silence |
 | R5 | `Menhet` | "probably of Syrian extraction" | Origin hedge lives in `notes`, not promoted to a structured origin field | ✅ |
 | R6 | `Menwi` | ditto | ditto | ✅ |
 | R7 | `Merti` | ditto | ditto | ✅ |
@@ -157,32 +160,22 @@ No row was deferred at this review. The source-wide
 `children_names` architectural question (Q5 in the Amarna log) still
 stands as a Phase A decision, not a Power-chunk concern.
 
-## Metadata finding — `source_citation.pdf_pages` is wrong
+## Metadata note — `source_citation.pdf_pages` convention (retracted earlier finding)
 
-Every Power row in `reconciled.jsonl` carries
-`source_citation.pdf_pages: "126-130"`, which is a printed-page-
-vs-PDF-viewer-page confusion. The printed page numbers in the
-Dodson-Hilton book for this chunk are **137–141**, not 126–130.
-The raw file `raw/source-p126-p130.pdf` is similarly misnamed.
-Offset is ~11 pages of frontmatter.
+An earlier draft of this log flagged
+`source_citation.pdf_pages: "126-130"` as a bug on the theory that
+printed pages should be cited. That was wrong: `README.md` in this
+directory documents `pdf_pages` as the **PDF-viewer page range** of
+the OCR chunk (counting from the first rendered PDF page, before
+frontmatter offset). By that convention, `"126-130"` for Power and
+`"142-145"` for Amarna are both correct; the printed page numbers
+(137–141 and 154–157 respectively) are cross-referenced through the
+OCR markdown. No metadata fix is needed.
 
-Scope of the error:
-- All 59 Power rows need `pdf_pages` corrected to `"137-141"`.
-- The Amarna chunk has the same offset bug confirmed
-  (code-reviewer on PR #40 verified every Amarna row carries
-  `pdf_pages: "142-145"`); correct all 41 Amarna rows as part of the
-  same follow-up PR.
-- The transcription filenames (`chunk-p126-p130.md`,
-  `chunk-p142-p145.md`) and raw-PDF filenames are consistent with
-  each other but inconsistent with the printed book. Decision: rename
-  or leave with a CONVENTIONS note. Prefer renaming for future
-  chunks (Ramesside and beyond) so the filename reflects the
-  printed page numbers that citations will use downstream.
-
-This is a metadata cleanup, **not** a correctness issue for the
-extracted row content — rows were extracted from the right pages,
-the citation field just labels them with the wrong page numbers.
-Low-risk hygiene fix; suitable as a standalone PR.
+As part of addressing this review round, the README's wording was
+tightened from "physical-page range" (imprecise — a PDF page is not
+physical) to "PDF-viewer page range" so the convention is harder to
+misread in future.
 
 ## Pointers
 
@@ -191,4 +184,6 @@ Low-risk hygiene fix; suitable as a standalone PR.
   41 Amarna)
 - Raw transcription used for Layer 1: `raw/chunk-p126-p130.md`
 - Raw PDF used for Layer 2: `raw/source-p126-p130.pdf`
-  (printed pp. 137–141; see metadata finding above)
+  (PDF-viewer pp. 126–130 = printed pp. 137–141; see README for the
+  `pdf_pages` convention)
+- Diff script: `diff_power.py` (in this directory)

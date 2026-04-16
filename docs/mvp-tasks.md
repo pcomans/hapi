@@ -4,7 +4,7 @@ Tasks to reach MVP (PRD Milestones 1–5). Each task is scoped for a single agen
 
 The guiding principle: **one museum end-to-end before adding complexity.** The Met is the vertical slice that validates the entire pipeline. Brooklyn and Harvard stress-test normalization. Authority data is built from real ingested data, not guesses.
 
-Recent session handoffs live at `docs/handoff-session-*.md` (most recent first informs a fresh agent which Phase 0 task to pick up next and what session-specific context to carry forward). Phase-0-source handoffs live at `docs/handoff-<source>-*.md`.
+Phase-0-source handoffs live at `docs/handoff-<source>-*.md` (e.g. `docs/handoff-dodson-hilton-next-chunk.md`, `docs/handoff-phase-0-transcription.md`) and persist across sessions. Ad-hoc session handoffs may also be written at `docs/handoff-session-*.md` when a session ends with significant transient state; these are deleted by the next session that consumes them.
 
 ## Milestone 1: Met Vertical Slice
 
