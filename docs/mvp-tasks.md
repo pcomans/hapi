@@ -98,7 +98,7 @@ The work is sequential by authority — dynasties first as the smallest, most co
 
 ### ~~3.1 Phase 0: Source acquisition~~ ✅
 
-Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources/`. These can run in parallel:
+Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources/`. The operational protocol lives in [`docs/playbook-phase-0-ocr-transcription.md`](playbook-phase-0-ocr-transcription.md) — most recent iteration adds **Step 11.5 risk-driven automated checks** (PR #41) so reviewer-flagged failure-mode categories become deterministic checks in each source's diff script rather than per-row human to-dos. These can run in parallel:
 
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.
