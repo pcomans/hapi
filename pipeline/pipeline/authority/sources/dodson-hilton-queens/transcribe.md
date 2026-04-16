@@ -38,7 +38,7 @@ with open(out, "wb") as f:
 PY
 ```
 
-The sub-PDF is gitignored (`raw/*`). The source PDF itself lives under `proprietary/` (repo-level gitignored — see the main `.gitignore`); the path above is repo-relative, not user-specific. The OCR subagent then Reads the sub-PDF. Physical-page labels in `source_citation.pdf_pages` refer to the **source-book** physical page numbers (e.g. `"126-130"`), not the sub-PDF's internal numbering — the sub-PDF is just a Read-size workaround, not a citation target.
+The sub-PDF is gitignored (`raw/*`). The source PDF itself lives under `proprietary/` (repo-level gitignored — see the main `.gitignore`); the path above is repo-relative, not user-specific. The OCR subagent then Reads the sub-PDF. `source_citation.pdf_pages` carries the **PDF-viewer page range** of the OCR chunk in the source PDF (e.g. `"126-130"` — counted from the first rendered page of the source PDF, before frontmatter offset; see `README.md` for the full convention), not the sub-PDF's internal numbering. The sub-PDF is just a Read-size workaround, not a citation target.
 
 ### OCR
 

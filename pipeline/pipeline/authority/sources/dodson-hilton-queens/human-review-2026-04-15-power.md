@@ -25,20 +25,23 @@ rows).
 
 The committed script `diff_power.py` (in this directory) parses the
 transcribed source chunk (`raw/chunk-p126-p130.md`) and compares each
-reconciled row's `roles` and `notes` fields character-for-character
-against the corresponding transcription entry. Run it with
-`python3 diff_power.py` from this directory.
+reconciled row's `notes` (after whitespace normalization and
+markdown-asterisk stripping) and `roles` (order-insensitive,
+duplicates ignored) against the corresponding transcription entry.
+Run it with `python3 diff_power.py` from this directory.
 
-Result: **58 of 59 rows match exactly**; 1 row (`Tiaa A`) differs in
-one short phrase where the reconciled value matches the printed PDF
-and the transcription contains a short OCR typo
-(`"including: number"` in transcription vs `"including a number"` in
-both the reconciled row and the printed scan). The 3 extraction agents
-silently corrected the transcription error during extraction.
-**Reconciled is authoritative; transcription has the typo.**
+Result: **58 of 59 rows match under the script's comparison rules**;
+1 row (`Tiaa A`) differs in one short phrase where the reconciled
+value matches the printed PDF and the transcription contains a short
+OCR typo (`"including: number"` in transcription vs
+`"including a number"` in both the reconciled row and the printed
+scan). The 3 extraction agents silently corrected the transcription
+error during extraction. **Reconciled is authoritative; transcription
+has the typo.**
 
 This proves row-level extraction fidelity across all 59 rows for the
-auto-diffable fields (`roles`, `notes`).
+auto-diffable fields (`roles`, `notes`) under the normalization-aware
+diff described above.
 
 ### Layer 2a — human spot-check against printed scan (8 rows, diversified sample)
 
