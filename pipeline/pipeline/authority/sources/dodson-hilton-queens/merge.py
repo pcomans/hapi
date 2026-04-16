@@ -89,9 +89,11 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[RowKey, dict]:
 
     Matches `agent-{tag}-<chunk>.jsonl` (e.g. `agent-a-power.jsonl`,
     `agent-a-amarna.jsonl`, `agent-a-ramesside.jsonl`). Every agent
-    output must carry a chunk suffix — the unsuffixed filename was
-    retired in the Ramesside PR (#38 deferred the rename; the
-    Ramesside PR collected it alongside the composite-key change).
+    output must carry a chunk suffix — the legacy unsuffixed
+    `agent-{tag}.jsonl` form (used by Pre-Amarna before chunk 2)
+    was retired in the Ramesside PR. PR #38 (Amarna) deferred the
+    rename to reduce review surface-area; this PR collected it
+    alongside the composite-key change.
 
     Raises on duplicate `(dh_id, sub_period)` across chunk files —
     a composite-key collision means two extractions produced the

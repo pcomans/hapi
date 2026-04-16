@@ -231,6 +231,23 @@ RAMESSIDE_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
         "to Iset E's eventual appointment) and brings the row in line "
         "with the granddaughter mention already in `notes`.",
     ),
+    (
+        "Hori A",
+        "The House of Ramesses",
+        "father_name",
+        "Khaemwaset C (probable)",
+        "D&H p. 171 reads 'Probably a grandson of Ramesses II and son "
+        "of Khaemwaset C.' Standard English coordination scopes "
+        "'probably' over the whole nominal phrase — both the grandson "
+        "claim and the son-of-Khaemwaset-C claim share the hedge. The "
+        "extraction agents stripped the hedge from `father_name`; "
+        "restored verbatim to match the chunks-1-2 hedge-preservation "
+        "convention ('Yuya (probable)' on Mutemwia etc.). The paired "
+        "cross-entry inference on Khaemwaset C keeps "
+        "`children_names = ['Hori A', ...]` bare per the README's "
+        "hedge-handling rule (hedges live on the child-row's "
+        "`father_name`, not on the parent's `children_names` list).",
+    ),
 ]
 
 

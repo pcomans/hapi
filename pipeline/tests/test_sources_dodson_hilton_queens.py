@@ -54,10 +54,13 @@ def _row(dh_id: str, sub_period: str | None = None) -> dict:
     """Return the unique row matching `dh_id` (+ optional `sub_period`).
 
     Chunks 1 and 2 row tests pass `dh_id` only — those ids are unique
-    across the file. The Ramesside chunk introduced cross-section
-    duplicates (`Takhat A`, `Isetneferet C`, `Ramesses C` each appear
-    in two `sub_period`s); callers targeting a specific sub_period
-    disambiguate by passing `sub_period`.
+    across the file. The Ramesside chunk introduced two distinct
+    phenomena that can produce the same `dh_id` under two `sub_period`s
+    (see `CROSS_SECTION_DUPLICATE_IDS` below and the README § Schema):
+    `Takhat A` and `Isetneferet C` are the SAME individual listed under
+    two sub-sections; `Ramesses C` is TWO DIFFERENT individuals that
+    share D&H's letter via per-sub-section letter-scoping. Either way,
+    callers targeting a specific sub_period disambiguate by passing it.
     """
     if sub_period is not None:
         hits = [r for r in _rows() if r["dh_id"] == dh_id and r["sub_period"] == sub_period]
@@ -166,6 +169,35 @@ def test_cross_section_duplicate_ids_match_expected_set() -> None:
         by_id[r["dh_id"]].add(r["sub_period"])
     actual_duplicates = {k: v for k, v in by_id.items() if len(v) > 1}
     assert actual_duplicates == CROSS_SECTION_DUPLICATE_IDS, actual_duplicates
+
+
+def test_cross_section_duplicate_pairs_sort_by_sub_period_alphabetically() -> None:
+    """Pins the current sort order of cross-section-duplicate pairs so
+    a silent _sort_key_for change cannot swap them unnoticed.
+
+    `merge.py._sort_key_for` uses `sub_period` as the final tiebreaker
+    (after top_bin / sub_bin / case-insensitive `dh_id`), so pairs with
+    the same `dh_id` sort alphabetically by `sub_period` — NOT
+    chronologically or by dynasty. For example `Ramesses C` under
+    "The Decline of the Ramessides" (Dyn 20, Ramesses IV) sorts BEFORE
+    "The House of Ramesses" (Dyn 19, Ramesses II's grandson) because
+    `"The Decline..." < "The House..."` in ASCII order. This is
+    intentional — the alphabetical tiebreaker is deterministic and
+    cheap — but worth asserting so a future reader isn't surprised by
+    the reverse-dynasty ordering.
+    """
+    rows = _rows()
+    for dh_id, expected_sub_periods in CROSS_SECTION_DUPLICATE_IDS.items():
+        positions = [(i, r["sub_period"]) for i, r in enumerate(rows) if r["dh_id"] == dh_id]
+        assert len(positions) == 2, positions
+        (idx_a, sp_a), (idx_b, sp_b) = positions
+        assert idx_a < idx_b, positions
+        assert sp_a < sp_b, (
+            f"{dh_id}: expected alphabetical sub_period order, got "
+            f"{sp_a!r} before {sp_b!r}"
+        )
+        # Expected pair still matches the set constant.
+        assert {sp_a, sp_b} == expected_sub_periods
 
 
 def test_every_row_has_complete_citation() -> None:
@@ -1676,8 +1708,10 @@ def test_amarna_18q_full_row() -> None:
 # merge + fix_rows pass (11 overrides: 9 from chunks 1-2 + 2 Ramesside review
 # corrections on Khaemwaset C and Iset D Ta-Hemdjert children_names). The
 # generator reads reconciled.jsonl, sorts by (sub_period, unplaced, dh_id),
-# and emits _assert_full_row calls. Cross-section-duplicate rows
-# (Takhat A, Isetneferet C, Ramesses C) pass sub_period= to disambiguate.
+# and emits _assert_full_row calls. Rows whose `dh_id` appears under two
+# sub_periods (`Takhat A` and `Isetneferet C` — same individual in two
+# sections; `Ramesses C` — two different individuals with reused letter)
+# pass `sub_period=` to disambiguate.
 # ---------------------------------------------------------------------------
 
 def test_p_rehirwenemef_a_house_full_row() -> None:
@@ -2336,7 +2370,7 @@ def test_hori_a_house_full_row() -> None:
         "roles": ["HPM"],
         "sex": "male",
         "spouse_names": [],
-        "father_name": "Khaemwaset C",
+        "father_name": "Khaemwaset C (probable)",
         "mother_name": None,
         "children_names": ["Hori B"],
         "dynasty": 19,

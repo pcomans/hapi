@@ -19,12 +19,11 @@ source PDF before being either applied or dismissed.
 
 ### 1. `Hori A.father_name` hedge ambiguity
 
-- Current: `"father_name": "Khaemwaset C"` (unhedged).
+- Current: `"father_name": "Khaemwaset C (probable)"` (hedge restored; see below).
 - D&H p. 171: `"Probably a grandson of Ramesses II and son of Khaemwaset C."`
-- Reading A (row's current interpretation): `"Probably"` scopes only to `"grandson of Ramesses II"`; the son-of-Khaemwaset-C is asserted. Plausible, since the Ramesses II claim is the further-removed one.
-- Reading B: `"Probably"` scopes to the entire coordinated phrase (grandson-and-son). English syntax doesn't force a choice; D&H's own other entries sometimes collapse two claims under one hedge.
-- Recommendation: **if a judgment call is needed**, correct to `"Khaemwaset C (probable)"` to preserve the hedge. If the main agent reads the PDF and decides the hedge only scopes to the Ramesses II clause (the unhedged reading the row currently encodes), leave as-is.
-- Not applied to `fix_rows.py` because the PDF and the current OCR wording are literally the same and the dispute is interpretive.
+- Reading A: `"Probably"` scopes only to `"grandson of Ramesses II"`; the son-of-Khaemwaset-C is asserted.
+- Reading B: `"Probably"` scopes to the entire coordinated phrase (grandson-and-son). English syntax doesn't force a choice, but coordinated nominal phrases without a comma typically share the modifier, and D&H uses the comma form elsewhere when narrowing scope.
+- **Resolved (main agent, 2026-04-16):** Reading B is the safer interpretation. Corrected to `"Khaemwaset C (probable)"` via `RAMESSIDE_CORRECTIONS` in `fix_rows.py`, matching chunks-1-2 hedge-preservation convention (`"Yuya (probable)"` on Mutemwia, `"Ay (probable)"` on Nefertiti etc.). The paired Khaemwaset C cross-entry inference keeps `children_names = ["Hori A", ...]` unhedged per the README's hedge-handling rule (hedges live on the child-row's `father_name`, not on the parent's `children_names` list).
 
 ### 2. `Sethirkopshef B.roles` — `MH` vs `MoH`, trailing period
 
@@ -59,6 +58,20 @@ The string `"Ramesses C"` now appears in `children_names` on two rows:
 - `Iset D Ta-Hemdjert [The Decline of the Ramessides].children_names → ["Amenhirkopshef C", "Ramesses C"]` — referring to the Dyn-20 Ramesses C (later RAMESSES IV).
 
 The composite primary key `(dh_id, sub_period)` on the row side already distinguishes these. But bare-string `children_names` references can only be disambiguated by the parent row's own `sub_period`. Phase A consumers resolving these references must scope to the same `sub_period` when looking up the child's own row — a simple rule but worth making explicit in downstream code. Not a data bug; a Phase-A consumer contract note.
+
+## Pre-commit diff attestation (Step 11.5 item 0)
+
+Playbook Step 11.5 item 0 (baseline transcription diff) was run locally before this PR landed:
+
+```
+cd pipeline && uv run python pipeline/authority/sources/dodson-hilton-queens/diff_ramesside.py
+# [The House of Ramesses]   matched=125 mismatches=0 unmatched=0 missing_in_recon=0
+# [The Feud of Ramessides]  matched=10  mismatches=0 unmatched=0 missing_in_recon=0
+# [The Decline of Ramessides] matched=35  mismatches=0 unmatched=0 missing_in_recon=0
+# Ramesside totals across 3 sub-blocks: mismatches=0 unmatched=0 missing_in_recon=0
+```
+
+Clean run against all 170 Ramesside rows. The three OCR chunk files (`raw/chunk-p157-p162.md`, `raw/chunk-p169-p170.md`, `raw/chunk-p178-p180.md`) are gitignored per ADR-017 / `.gitignore:49` (OCR'd copyrighted prose must not leave the repo). The `diff_ramesside.py` script itself is committed so any reviewer who re-runs the OCR step locally from the SHA-pinned source PDF can re-verify the same clean run. This matches the playbook's pre-commit-gate model for gitignored-transcription sources (Step 11.5 § implementation-vehicle list).
 
 ## Out of scope for this pass
 

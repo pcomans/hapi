@@ -14,7 +14,7 @@ Pick this up when the user asks to continue the Dodson-Hilton transcription seri
   - Chunk 2 — Amarna Interlude Brief Lives (printed pp. 154–157, physical pp. 142–145). 41 rows. PR #38, merged.
   - Chunk 3 — Ramesside Brief Lives (three sub-blocks at printed pp. 170–175, 182–183, 192–194 / physical pp. 157–162, 169–170, 178–180). 170 rows. PR TBD.
 - **Human review logged:** `human-review-2026-04-15-power.md`, `human-review-2026-04-15.md` (Amarna). Ramesside human review pending (a larger ~10–15-row sample is scheduled post-merge per the PR #39 egyptologist-reviewer recommendation).
-- **Primary key is composite** `(dh_id, sub_period)` — introduced in chunk 3 because D&H lists Takhat A, Isetneferet C, and Ramesses C under two Brief Lives sub-sections each. Future chunks will probably encounter more such cases (especially in the OK chapters where Baud 1999's coverage overlaps D&H).
+- **Primary key is composite** `(dh_id, sub_period)` — introduced in chunk 3 to handle two *distinct* phenomena that both produce the same `dh_id` under two sub-sections: (a) **cross-section duplicates of the same individual**, where D&H lists one person's Brief Life in two sub-sections with different prose (Takhat A appears as daughter-of-Ramesses-II in House *and* as wife-of-Sety-II in Feud; Isetneferet C is similar); and (b) **letter-suffix reuse for different individuals**, where D&H re-scopes the disambiguator letter per family tree (Ramesses C in House is Ramesses II's grandson via Khaemwaset C; Ramesses C in Decline is Ramesses III's heir who became Ramesses IV — NOT the same person). Both patterns need the composite key. Future chunks will probably encounter more of each (especially in the OK chapters where Baud 1999's coverage overlaps D&H).
 
 ---
 
