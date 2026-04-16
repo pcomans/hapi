@@ -1,8 +1,86 @@
+(Ramesses-)Siptah A ((Ramesses-)Siptah A):
+  mother_name: a="Sutererey (probable)" | b="Sutererey (probable)" | c="Sutererey"  → chose "Sutererey (probable)"
+
+Amenhirwenemef/Amenhirkopshef A (Amenhirwenemef/Amenhirkopshef A):
+  alt_names: a=["Sethirkopshef A"] | b=["Sethirkopshef A"] | c=["Sethirkopshef (A)"]  → chose ["Sethirkopshef A"]
+
 Ay A (Ay A):
   father_name: a="Yuya (perhaps)" | b="Yuya (possibly)" | c="Yuya (perhaps)"  → chose "Yuya (perhaps)"
 
+Baketwernel A (Baketwernel A):
+  spouse_names: a=["Ramesses IX (possibly)"] | b=["Ramesses IX (possibly)"] | c=["Ramesses IX (possible)"]  → chose ["Ramesses IX (possibly)"]
+
+Hattusilis III (Hattusilis III):
+  spouse_names: a=["Pudukhepa"] | b=["Pudukhepa"] | c=[]  → chose ["Pudukhepa"]
+
+Hemdjert (Hemdjert):
+  alt_names: a=[] | b=["Hebnerdjent"] | c=["Hebnerdjent"]  → chose ["Hebnerdjent"]
+
+Henttawy Q (Henttawy Q):
+  mother_name: a=null | b="Tentamun A" | c=null  → chose null
+  spouse_names: a=[] | b=["Pinudjem I"] | c=[]  → chose []
+
+Henutmire (Henutmire):
+  father_name: a="Sety I (probable)" | b="Sety I (probable)" | c="Sety I"  → chose "Sety I (probable)"
+
+Isetneferet A (Isetneferet A):
+  children_names: a=["Merenptah", "Khaemwaset C"] | b=["Merenptah", "Khaemwaset C"] | c=["Merenptah"]  → chose ["Merenptah", "Khaemwaset C"]
+
+Isetneferet B (Isetneferet B):
+  spouse_names: a=[] | b=["Merenptah (possibly)"] | c=["Merenptah (possible)"]  → chose []
+
+Isetneferet D (Isetneferet D):
+  father_name: a="Merenptah (probable)" | b="Merenptah (probable)" | c="Merenptah"  → chose "Merenptah (probable)"
+
+Khaemwaset C (Khaemwaset C):
+  children_names: a=[] | b=["Hori A", "Isetneferet C", "Ramesses C"] | c=[]  → chose []
+
+Khaemwaset E (Khaemwaset E):
+  father_name: a=null | b="Ramesses III" | c=null  → chose null
+
 Kiya (Kiya):
   father_name: a="Tushratta (conceivably, if identical with Tadukhipa)" | b="Tushratta (conceivably)" | c="Tushratta (conceivably)"  → chose "Tushratta (conceivably)"
+
+Maathorneferure (Maathorneferure):
+  mother_name: a=null | b="Pudukhepa" | c=null  → chose null
+
+Mentuhirkopshef B (Mentuhirkopshef B):
+  spouse_names: a=[] | b=["Takhat B (probable)"] | c=[]  → chose []
+
+Merenptah A (Merenptah A):
+  alt_names: a=[] | b=["Merenptah"] | c=[]  → chose []
+
+Merenptah B (Merenptah B):
+  father_name: a="Merenptah (probable)" | b="Merenptah (probable)" | c="Merenptah"  → chose "Merenptah (probable)"
+
+Messuy (Messuy):
+  mother_name: a="Takhat A (probable)" | b="Takhat A (probable)" | c="Takhat A"  → chose "Takhat A (probable)"
+  father_name: a="Sety II (probable)" | b="Sety II (probable)" | c="Sety II"  → chose "Sety II (probable)"
+
+Nesibanebdjedet (Nesibanebdjedet):
+  spouse_names: a=[] | b=["Tentamun B"] | c=[]  → chose []
+
+Pinudjem I (Pinudjem I):
+  spouse_names: a=[] | b=["Henttawy Q"] | c=[]  → chose []
+
+Pudukhepa (Pudukhepa):
+  children_names: a=[] | b=["Maathorneferure"] | c=[]  → chose []
+
+Ramesses-Userpehty (Ramesses-Userpehty):
+  father_name: a="Ramesses II (probable)" | b="Ramesses II (probable)" | c="Ramesses II"  → chose "Ramesses II (probable)"
+
+Sety A (Sety A):
+  children_names: a=["Ramesses I"] | b=["Paramessu"] | c=["Ramesses I"]  → chose ["Ramesses I"]
+
+Sitre A (Sitre A):
+  alt_names: a=["Tia Q"] | b=["Tia Q (perhaps)"] | c=["Tia (Q)"]  → chose ["Tia Q"]
+
+Sutererey (Sutererey):
+  children_names: a=["(Ramesses-)Siptah A"] | b=["(Ramesses-)Siptah A"] | c=["Ramesses-Siptah"]  → chose ["(Ramesses-)Siptah A"]
+  spouse_names: a=["Ramesses II (probable)"] | b=["Ramesses II (probable)"] | c=["Ramesses II (probably)"]  → chose ["Ramesses II (probable)"]
+
+Tentamun A (Tentamun A):
+  spouse_names: a=["Ramesses XI (probable)"] | b=["Ramesses XI (probable)"] | c=["Ramesses XI (probably)"]  → chose ["Ramesses XI (probable)"]
 
 Tey (Tey):
   children_names: a=["Nakhtmin B (if she were his mother)"] | b=["Nakhtmin B (if)"] | c=["Nakhtmin B (if she were his mother)"]  → chose ["Nakhtmin B (if she were his mother)"]
@@ -10,6 +88,16 @@ Tey (Tey):
 
 Thutmose B (Thutmose B):
   alt_names: a=["Thutmose Q (conceivably identical)"] | b=[] | c=["Thutmose Q (conceivably identical)"]  → chose ["Thutmose Q (conceivably identical)"]
+
+Tia Q (Tia Q):
+  children_names: a=["Vizier Sety"] | b=["Sety (Vizier)"] | c=["Sety"]  → chose ["Vizier Sety"]
+
+Tjia (Tjia):
+  children_names: a=[] | b=["[Mut]metennefer", "[...]19B"] | c=[]  → chose []
+  father_name: a="Amenwahsu" | b="Amenwahsu" | c=null  → chose "Amenwahsu"
+
+Tyti (Tyti):
+  spouse_names: a=["Ramesses X (possibly)"] | b=["Ramesses X (possibly)"] | c=["Ramesses X (possible)"]  → chose ["Ramesses X (possibly)"]
 
 [...]18A–H ([...]18A–H):
   notes: a="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters." | b="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering daughters A through H." | c="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."  → chose "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters."
@@ -25,30 +113,36 @@ Code subagent pass against the source PDF. No human scholar has
 signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
-- Tiaa A: notes corrected (Gemini OCR dropped the article "a" in "including a number of usurpations" and left a stray colon after "including". The PDF (p. 140 col 2, Tiaa A entry) reads with the article; `notes` is a verbatim-quotation field so the reviewer's correction is applied rather than preserving the OCR artifact.)
+- Tiaa A [The Power and the Glory]: notes corrected (Gemini OCR dropped the article "a" in "including a number of usurpations" and left a stray colon after "including". The PDF (p. 140 col 2, Tiaa A entry) reads with the article; `notes` is a verbatim-quotation field so the reviewer's correction is applied rather than preserving the OCR artifact.)
     was: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including: number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
     now: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including a number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
-- [...]18A–H: notes corrected (Majority-voted notes retained an editorial tail ('Group entry covering multiple daughters.') added by agent-a that is not in D&H's prose on p. 157. `notes` is a verbatim-quotation field; the tail is stripped.)
+- [...]18A–H [The Amarna Interlude]: notes corrected (Majority-voted notes retained an editorial tail ('Group entry covering multiple daughters.') added by agent-a that is not in D&H's prose on p. 157. `notes` is a verbatim-quotation field; the tail is stripped.)
     was: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters."
     now: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."
-- [...]18K–N: notes corrected (Majority-voted notes retained the same 'Group entry covering multiple daughters.' editorial tail added by agent-a. Stripped for verbatim fidelity to D&H p. 157.)
+- [...]18K–N [The Amarna Interlude]: notes corrected (Majority-voted notes retained the same 'Group entry covering multiple daughters.' editorial tail added by agent-a. Stripped for verbatim fidelity to D&H p. 157.)
     was: "Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters."
     now: "Daughters of Anen; depicted with their siblings in tomb TT120."
-- Tey: notes corrected (Majority-voted notes retained agent-a's editorial tail 'D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules.' That is meta-commentary about the extraction, not D&H prose. Stripped. The KGW deduplication itself is correct (see roles field).)
+- Tey [The Amarna Interlude]: notes corrected (Majority-voted notes retained agent-a's editorial tail 'D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules.' That is meta-commentary about the extraction, not D&H prose. Stripped. The KGW deduplication itself is correct (see roles field).)
     was: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules."
     now: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min."
-- Thutmose B: alt_names corrected (Two of three agents included 'Thutmose Q (conceivably identical)' as an alt_name, but `alt_names` is reserved for alternate forms of the same individual's name (e.g. 'Ankhesenpaaten' → 'Ankhesenamun'). Thutmose Q is a distinct Brief Lives entry that D&H flags as conceivably the same person; that cross-reference belongs in `notes` (where it is already preserved) not `alt_names`.)
+- Thutmose B [The Amarna Interlude]: alt_names corrected (Two of three agents included 'Thutmose Q (conceivably identical)' as an alt_name, but `alt_names` is reserved for alternate forms of the same individual's name (e.g. 'Ankhesenpaaten' → 'Ankhesenamun'). Thutmose Q is a distinct Brief Lives entry that D&H flags as conceivably the same person; that cross-reference belongs in `notes` (where it is already preserved) not `alt_names`.)
     was: ["Thutmose Q (conceivably identical)"]
     now: []
-- Tutankhuaten: alt_names corrected (All three agents split the D&H compact-notation 'TUTANKHATEN/AMUN' literally to ['TUTANKHATEN', 'AMUN'], but the slash is D&H's shorthand for the successive regnal names Tutankhaten → Tutankhamun (the 'Tutankh-' prefix is dropped before /AMUN for typographic economy, as with other of D&H's name-change slashes). Expanded to the canonical pair.)
+- Tutankhuaten [The Amarna Interlude]: alt_names corrected (All three agents split the D&H compact-notation 'TUTANKHATEN/AMUN' literally to ['TUTANKHATEN', 'AMUN'], but the slash is D&H's shorthand for the successive regnal names Tutankhaten → Tutankhamun (the 'Tutankh-' prefix is dropped before /AMUN for typographic economy, as with other of D&H's name-change slashes). Expanded to the canonical pair.)
     was: ["TUTANKHATEN", "AMUN"]
     now: ["Tutankhaten", "Tutankhamun"]
-- Amenhotep E: alt_names corrected (Agents preserved D&H's BOLD-CAPITALS rendering (used by D&H for kings' regnal names) as ALLCAPS strings ['AMENHOTEP IV', 'AKHENATEN']. Museum catalogues and downstream authority matching use titlecase ('Akhenaten', 'Amenhotep IV'); normalising to titlecase is consistent with the Tutankhuaten correction above and with titlecase alt_names already present on Ankhesenpaaten, Nefertiti, Horemheb, and Meryetaten-tasherit. D&H's typographic emphasis is a formatting signal, not a canonical-name choice.)
+- Amenhotep E [The Amarna Interlude]: alt_names corrected (Agents preserved D&H's BOLD-CAPITALS rendering (used by D&H for kings' regnal names) as ALLCAPS strings ['AMENHOTEP IV', 'AKHENATEN']. Museum catalogues and downstream authority matching use titlecase ('Akhenaten', 'Amenhotep IV'); normalising to titlecase is consistent with the Tutankhuaten correction above and with titlecase alt_names already present on Ankhesenpaaten, Nefertiti, Horemheb, and Meryetaten-tasherit. D&H's typographic emphasis is a formatting signal, not a canonical-name choice.)
     was: ["AMENHOTEP IV", "AKHENATEN"]
     now: ["Amenhotep IV", "Akhenaten"]
-- Meryetaten: alt_names corrected (Same allcaps-vs-titlecase normalisation as Amenhotep E: agents preserved D&H's BOLD-CAPITALS rendering of the regnal name **NEFERNEFERUATEN** as 'NEFERNEFERUATEN'. Titlecase matches museum-catalogue spelling and the rest of the source's alt_names.)
+- Meryetaten [The Amarna Interlude]: alt_names corrected (Same allcaps-vs-titlecase normalisation as Amenhotep E: agents preserved D&H's BOLD-CAPITALS rendering of the regnal name **NEFERNEFERUATEN** as 'NEFERNEFERUATEN'. Titlecase matches museum-catalogue spelling and the rest of the source's alt_names.)
     was: ["NEFERNEFERUATEN"]
     now: ["Neferneferuaten"]
-- Ankhesenpaaten: spouse_names corrected (Agents rendered the Ay-marriage hedge as 'Ay (brief marriage)', dropping D&H's explicit 'perhaps' from the phrase 'a ring in Berlin that joins her cartouche with that of King Ay, perhaps indicating a brief marriage' (p. 154). The hedge belongs on the existence of the marriage, not its duration; preserved verbatim in the parenthetical.)
+- Ankhesenpaaten [The Amarna Interlude]: spouse_names corrected (Agents rendered the Ay-marriage hedge as 'Ay (brief marriage)', dropping D&H's explicit 'perhaps' from the phrase 'a ring in Berlin that joins her cartouche with that of King Ay, perhaps indicating a brief marriage' (p. 154). The hedge belongs on the existence of the marriage, not its duration; preserved verbatim in the parenthetical.)
     was: ["Tutankhamun", "Ay (brief marriage)"]
     now: ["Tutankhamun", "Ay (perhaps, brief marriage)"]
+- Khaemwaset C [The House of Ramesses]: children_names corrected (Chunk-2 sanctioned cross-entry-inference pattern: Khaemwaset C's own entry (p. 171) names no children, while three separate Brief Lives entries in the same sub-section explicitly name him as father — Hori A (p. 171, 'Probably a grandson of Ramesses II and son of Khaemwaset C'), Isetneferet C House-row (p. 171, 'daughter of Khaemwaset C'), Ramesses C House-row (p. 173, 'Dedicator at Memphis of a statue of his father, Khaemwaset C'). Agent-b captured all three; the majority voted [] and lost the symmetry. Same mechanism as the Shuttarna II → Gilukhipa and Tushratta → Tadukhipa inferences sanctioned in the Amarna chunk README.)
+    was: []
+    now: ["Hori A", "Isetneferet C", "Ramesses C"]
+- Iset D Ta-Hemdjert [The Decline of the Ramessides]: children_names corrected (Chunk-2 sanctioned cross-entry-inference pattern: Iset D Ta-Hemdjert's own entry (p. 192) names only her granddaughter Iset E, but both Amenhirkopshef C (p. 192, 'Son of Ramesses III and Iset D') and Ramesses C Decline-row (p. 194, 'Son of Ramesses III and Iset D') explicitly name her as mother. D&H uses the short form 'Iset D' in the children's entries and the long compound 'Iset D Ta-Hemdjert' as her own dh_id — same individual. Without this inference the family tree is asymmetric. Populating children here matches the chunk-2 precedent (the mother's and grandmother's entries both point to Iset E's eventual appointment) and brings the row in line with the granddaughter mention already in `notes`.)
+    was: []
+    now: ["Amenhirkopshef C", "Ramesses C"]
