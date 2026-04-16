@@ -11,11 +11,14 @@ Interlude was signed off earlier the same day in
 reconciled rows across PRs #37 and #38 are validated for Phase A
 authority-curation purposes, modulo the caveats below.
 
-## Methodology — two-layer validation
+## Methodology — four-layer validation
 
-The 59 Power rows were validated by two complementary passes. Neither
-pass alone is sufficient; together they cover all the risks the
-earlier single-sample Amarna methodology missed.
+The 59 Power rows were validated by four complementary passes. No
+single pass is sufficient; together they give stronger coverage on
+`roles`/`notes` than the Amarna-chunk protocol (character-diff of all
+59 rows) and comparable-but-more-targeted coverage on relationship
+fields (17 rows human-sampled + algorithmic audit of the 12 Unplaced
+rows).
 
 ### Layer 1 — automated extraction-vs-transcription diff (all 59 rows)
 
@@ -35,7 +38,7 @@ authoritative; transcription has the typo.**
 This proves row-level extraction fidelity across all 59 rows for the
 auto-diffable fields (`roles`, `notes`).
 
-### Layer 2 — human spot-check against printed scan (8 rows)
+### Layer 2a — human spot-check against printed scan (8 rows, diversified sample)
 
 The reviewer walked 8 rows against the printed PDF (physical pages
 137–141 of the Thames & Hudson 2004 hardback; see metadata caveat
@@ -56,7 +59,54 @@ cobra" transcription-uncertainty wording.
 
 Result: **all 8 rows verified clean.** No corrections, no deferrals.
 
-## Verdict per sampled row
+### Layer 2b — targeted hedge-risk spot-check (9 rows)
+
+After the initial egyptologist-reviewer pass on PR #40 flagged that
+relationship-field verification on Layer 2a's 8 rows was too narrow,
+the reviewer identified ~12 hedge-sensitive rows where the
+highest-risk extraction failures would be expected (hedge promotion,
+Syrian-extraction trio cross-refs, lacuna-token normalization,
+Unplaced-section parentage fabrication).
+
+9 of those flagged rows were surfaced to the human reviewer for a
+focused second-layer check: `Mutneferet A`, `Hatshepsut D`, `Sitiah`,
+`Iset A`, `Menhet`, `Menwi`, `Merti`, `Akheper[ka?]re`,
+`[...]pentepkau`. The remaining flagged rows in the Unplaced section
+were handled by Layer 2c (below).
+
+Result: **all 9 rows verified clean.** Per-row verdicts:
+
+| R# | Row | D&H hedge | Reconciled capture | Verdict |
+|---|---|---|---|---|
+| R1 | `Mutneferet A` | "probable daughter of Ahmose I" | `father_name: "Ahmose I (probable)"` | ✅ Hedge preserved in value |
+| R2 | `Hatshepsut D` | "and later king" | Preserved in `notes`; role tuple includes `UWC` as printed | ✅ Reign acknowledged |
+| R3 | `Sitiah` | "perhaps the mother of Amenemhat B" | `children_names: ["Amenemhat B (perhaps)"]`; `mother_name: "Ipu B"` | ✅ Hedge preserved |
+| R4 | `Iset A` | no parents stated in entry | `father_name: null`, `mother_name: null`, `children: ["Thutmose III"]` | ✅ Faithful silence |
+| R5 | `Menhet` | "probably of Syrian extraction" | Origin hedge lives in `notes`, not promoted to a structured origin field | ✅ |
+| R6 | `Menwi` | ditto | ditto | ✅ |
+| R7 | `Merti` | ditto | ditto | ✅ |
+| R8 | `Akheper[ka?]re` | lacuna bracket `[ka?]` in name | Preserved verbatim in `dh_id` and `name` | ✅ Lacuna survives |
+| R9 | `[...]pentepkau` | leading lacuna ellipsis | Preserved verbatim in `dh_id` and `name` | ✅ Lacuna survives |
+
+### Layer 2c — algorithmic audit of the Unplaced section (12 rows)
+
+All 12 rows in the Power chunk's "Unplaced" subsection were scanned
+for any non-null relationship field (`father_name`, `mother_name`,
+`spouse_names`, `children_names`). 8 rows had all-null relationship
+fields as expected. 4 rows carry a D&H-native placeholder phrase in
+the relevant field (`Henut Q` / `Nebetnehat A`:
+`spouse_names: ["a king of the mid-18th Dynasty"]`; `Ti`:
+`father_name: "a king of the mid-18th Dynasty"`; `Merybennu`:
+`father_name: "Thutmose III or Amenhotep II (probable)"`).
+
+Result: **zero fabricated parentage across 12 Unplaced rows.** The 4
+placeholder-phrase captures are faithful reproductions of D&H's own
+wording, not extractor inventions. Whether a placeholder phrase like
+`"a king of the mid-18th Dynasty"` should surface in a structured
+relationship field at all is a design question for Phase A authority
+curation, not an extraction-correctness issue.
+
+## Verdict per Layer 2a sampled row
 
 | # | Row | D&H p. (printed) | Verdict | Notes |
 |---|---|---|---|---|
@@ -69,17 +119,35 @@ Result: **all 8 rows verified clean.** No corrections, no deferrals.
 | Q7 | `Meryetre(-Hatshepsut)` | 139 | ✅ | D&H prints the headword with parentheses exactly as extracted; no father listed in source |
 | Q8 | `Pyihia` | 140 | ✅ | Name spelling `Pyihia` confirmed against the printed headword; role `KD` only — no additional titles |
 
-## Consequence
+## Consequence — sign-off split by field type
 
-All 59 reconciled Power rows are sign-off accepted for Phase A
-authority-curation purposes. Combining Layer 1 (full-chunk automated
-fidelity proof on `roles` and `notes`) and Layer 2 (8-row human
-spot-check on derived relationship fields and narrative accuracy
-against the printed scan) gives coverage materially stronger than the
-Amarna-chunk sample-only protocol. **All 59 rows should no longer be
-marked provisional.**
+The sign-off claim is deliberately split by field type to reflect
+what each validation layer actually proves:
 
-The 1 auto-diff residue (`Tiaa A` `"including: number"` →
+- **`roles` and `notes` on all 59 rows — sign-off accepted.** Layer 1
+  character-diffs every row's `roles` and `notes` against the
+  transcription; 58/59 match exactly and the 59th is a
+  transcription-layer correction in reconciled's favor.
+- **Relationship fields (`father_name`, `mother_name`,
+  `spouse_names`, `children_names`) on 17 rows (Layer 2a's 8-row
+  diversified sample ∪ Layer 2b's 9-row hedge-risk sample) — sign-off
+  accepted.** Includes all rows the egyptologist-reviewer flagged as
+  hedge-sensitive, plus the original diversified spot-check.
+- **Relationship fields on the 12 Unplaced rows — algorithmically
+  audited.** Zero fabrications found; 4 placeholder-phrase captures
+  are D&H-native wording, not invented parentage. Sign-off accepted.
+- **Relationship fields on the remaining 42 rows — accepted with
+  medium confidence, not rigorously validated.** These 42 rows were
+  not hedge-flagged by the egyptologist-reviewer and are not in the
+  Layer 2a/2b human samples. No fabricated parentage was found in the
+  29 human-sampled + algorithmically-audited rows (17 + 12), which is
+  strong circumstantial evidence the extractor's hedge-preservation
+  behaviour is consistent, but the 42 are not individually
+  human-verified. **De-provisionalise for Phase A, but flag for
+  revisit if any cross-source reconciliation during authority
+  curation surfaces an unexpected parent/spouse claim.**
+
+The 1 Layer 1 auto-diff residue (`Tiaa A` `"including: number"` →
 `"including a number"`) is a transcription-layer correction, not a
 row error — it improves fidelity relative to `chunk-p126-p130.md`.
 
@@ -100,9 +168,10 @@ Offset is ~11 pages of frontmatter.
 
 Scope of the error:
 - All 59 Power rows need `pdf_pages` corrected to `"137-141"`.
-- The Amarna chunk likely has the same offset bug
-  (`raw/source-p142-p145.pdf` likely corresponds to printed pp.
-  ~153–156, not 142–145); check and correct all 41 Amarna rows.
+- The Amarna chunk has the same offset bug confirmed
+  (code-reviewer on PR #40 verified every Amarna row carries
+  `pdf_pages: "142-145"`); correct all 41 Amarna rows as part of the
+  same follow-up PR.
 - The transcription filenames (`chunk-p126-p130.md`,
   `chunk-p142-p145.md`) and raw-PDF filenames are consistent with
   each other but inconsistent with the printed book. Decision: rename
