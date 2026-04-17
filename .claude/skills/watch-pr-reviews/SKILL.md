@@ -9,44 +9,29 @@ Default args (derive if not supplied):
 - `SHA` = `git rev-parse HEAD`
 - `REPO` = `gh repo view --json nameWithOwner -q .nameWithOwner`
 
-Arm a `Monitor` with a 15-minute timeout and this command. Seed the "already seen" set before the loop so only new reviews fire:
+Arm a `Monitor` with a 15-minute timeout and this command. The poll logic lives in committed Python files (`seed.py`, `poll.py`) next to this skill — the bash wrapper just invokes them, so no Python source is ever embedded in the bash string.
 
 ```bash
+PR=<pr>; SHA=<sha>; REPO=<owner/repo>
 TOKEN=$(gh auth token)
 SEEN=$(mktemp)
+SKILL_DIR=.claude/skills/watch-pr-reviews
+
 curl -sS -H "Authorization: token $TOKEN" \
   "https://api.github.com/repos/$REPO/pulls/$PR/reviews" \
-  | SHA="$SHA" python3 -c "
-import json, os, sys
-for r in json.loads(sys.stdin.read(), strict=False):
-    if r.get('commit_id') == os.environ['SHA']:
-        print(r['id'])
-" > "$SEEN"
+  | SHA="$SHA" python3 "$SKILL_DIR/seed.py" > "$SEEN"
 
 while true; do
-  resp=$(curl -sS -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
-    "https://api.github.com/repos/$REPO/pulls/$PR/reviews" 2>&1)
-  out=$(printf '%s' "$resp" | SEEN="$SEEN" SHA="$SHA" python3 -c "
-import json, os, sys
-try:
-    data = json.loads(sys.stdin.read(), strict=False)
-except Exception as e:
-    print(f'POLL-ERROR: {e}'); sys.exit(0)
-seen = set(open(os.environ['SEEN']).read().split())
-for r in data:
-    if r.get('commit_id') == os.environ['SHA']:
-        rid = str(r['id'])
-        if rid not in seen:
-            print(f\"REVIEW {r['user']['login']} {r.get('state','?')} id={rid}\")
-            open(os.environ['SEEN'], 'a').write(rid + '\n')
-" 2>&1)
-  [ -n "$out" ] && echo "$out"
+  curl -sS -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
+    "https://api.github.com/repos/$REPO/pulls/$PR/reviews" 2>&1 \
+    | SEEN="$SEEN" SHA="$SHA" python3 "$SKILL_DIR/poll.py"
   sleep 30
 done
 ```
 
 Rules (load-bearing — do not relax):
-- `curl` + `python3` only. Not `gh api` (keychain TLS error in the Monitor's sandbox). Not `jq` (chokes on control characters inside review bodies, silently).
-- Parse or HTTP errors surface as `POLL-ERROR: <detail>` events. Never `2>/dev/null` a poll error — that silenced a four-Monitor streak once.
-- On event, follow up with `curl .../pulls/$PR/comments` to fetch inline comments for the review, so the main loop can act on specifics.
-- If the 15-minute timeout fires with no event, verify manually via `curl .../pulls/$PR/reviews` — timeout is not acceptance.
+- **Python lives in committed `.py` files, never embedded in `python3 -c "..."`.** Every past attempt to inline the poll logic hit a different shell-escape landmine (`!=` expanded by zsh history, nested double quotes mangled, backslashes injected). The `.py` files sidestep all of it.
+- `curl` + `python3`. Not `gh api` (keychain TLS error in the Monitor's sandbox). Not `jq` (silently errors on control characters in review bodies).
+- `poll.py` surfaces JSON parse errors as `POLL-ERROR:` lines on stdout. Do not wrap the `python3` call in `2>/dev/null` — silenced errors hid four consecutive Monitor failures in one session.
+- On event, fetch inline comments with `curl .../pulls/$PR/comments`.
+- If the 15-minute timeout fires with no event, verify manually via `curl .../pulls/$PR/reviews` and re-arm. Timeout is **not** acceptance.
