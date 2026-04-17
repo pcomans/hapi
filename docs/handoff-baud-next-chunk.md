@@ -1,6 +1,15 @@
 # Handoff — Baud 1999 Old Kingdom royal family (next chunk)
 
-**Written 2026-04-17.** Pick this up when the user asks to start or continue the Baud 1999 Old-Kingdom prosopography transcription.
+**Written 2026-04-17, updated 2026-04-17 after chunk 1 landed.** Pick this up when the user asks to start or continue the Baud 1999 Old-Kingdom prosopography transcription.
+
+## State as of this update
+
+- **Chunk 1** (entries `[1]`–`[40]`, physical pp. 11–49) landed in PR #TBD with 40 rows, 8 fix_rows.py overrides from the egyptologist-reviewer pass, and 20 passing pytest assertions.
+- **Schema stabilised across chunks.** See `pipeline/pipeline/authority/sources/baud-1999-ok-royal-family/README.md` § Schema. Fields added beyond the initial handoff sketch: `baud_refs` dict (Baer / Strudwick / Seipel / Harpur / Troy / Schmitz cross-refs from Baud's `(e)` header), `service_personnel` bool (from asterisk on headword), separated `monument` / `localisation` / `pm_ref` fields.
+- **Deterministic transliteration normalization via `fix_rows.py`.** The PDF's text layer emits `ˁ` (U+02C1) and `ɜ` (U+025C) as ayin/aleph fallbacks; `fix_rows.py` translates to canonical IFAO `ꜥ` (U+A725) and `ꜣ` (U+A723) across every string field. This is a deterministic post-merge pass — reviewer does not adjudicate codepoints. Carry the same normalization unchanged into chunks 2–7.
+- **Roles controlled vocabulary** seeded in chunk 1: `king`, `queen`, `king's mother`, `king's wife`, `king's son`, `king's daughter`, `king's son-in-law`, `king's eldest son of his body`, `vizier`, `priest of the royal pyramid`, `priest of the king's mother`, `priest of the king's wife`, `priest of the king`, `steward of the queen`, `sem priest`, `overseer of the treasury of pr-ꜥꜣ`, `overseer of scribes of pr-ꜥꜣ`. Pytest enforces. Chunk 2 is likely to surface `steward of the king's children` (from `jmj-r prw msw nswt` / `jmj-r pr jnꜥwt nwt msw nswt`); the reviewer flagged this on baud-10 and baud-40 but we deferred the vocabulary-expansion decision to chunk 2.
+- **Known-risk pattern: role narrowing by majority vote.** When one agent proposes a richer `roles` list from a pyramid-cult title (e.g. `ḥm-nṯr Nfr-jr-kꜣ-Rꜥ` → add `priest of the royal pyramid`) and two agents omit it, the majority strips the role. Chunk 1 hit this at baud-28 and baud-40. Mitigation in chunk 2: add a prompt bullet "when TITRES contains `ḥm-nṯr` or `wꜥb` of a named pyramid cult, `priest of the royal pyramid` is additive, not optional."
+- **Known-risk pattern: hedge-level promotion.** Baud-33 had a mother inferred via Strudwick's titular-synchronism argument. Extractors used `(probable)` hedge; reviewer corrected to `(per Baud)` since the attribution is scholarly inference, not physical attestation. The two hedge conventions mean different things per README § "Interpretive-facts caveat" — reinforce in chunk 2 prompt.
 
 Baud is the OK analogue of Dodson-Hilton. Per `docs/mvp-tasks.md`: "without it, OK queen/consort coverage will be thin while NK/LP is dense, producing an uneven authority. Required, not optional." D&H covers the earlier chapters too, but D&H's OK coverage is explicitly flagged as weaker; Baud is the preferred OK source.
 
@@ -45,9 +54,16 @@ Refine the entry-to-page mapping during chunk 1 scoping (the entries-per-page di
 
 ## Scaffolding state
 
-**No Baud scaffolding exists on `main`.** A previous session had a `sources/baud-1999-ok-royal-family/` directory staged but not committed; those stashes were dropped in the 2026-04-17 session. Nothing to rebase off. Start fresh from the playbook's Step 1.
+**Scaffolding exists on `main` from chunk 1.** Extend the existing `pipeline/pipeline/authority/sources/baud-1999-ok-royal-family/` directory — do NOT rebuild from scratch. `README.md`, `transcribe.md`, `merge.py`, `fix_rows.py`, `reconciled.jsonl`, and `merge-disagreements.txt` all exist. Add:
 
-`proprietary/books/Baud 1999 ...pdf` may or may not be present on the user's machine. Confirm `ls proprietary/books/` and ask if it's missing — without the PDF no transcription is possible.
+- `prompt-chunk-<N>.md` — new per-chunk prompt, cloned from `prompt-chunk-1.md` with updated page range, boundary entry numbers, and any chunk-specific hazards.
+- `raw/source-chunk-<N>.pdf` — new sub-PDF for the chunk (gitignored).
+- `raw/agent-{a,b,c}-chunk-<N>.jsonl` — new per-agent extraction outputs (gitignored).
+- `merge.py` — NO change needed. `_load_agent_chunks` already globs `agent-{tag}-*.jsonl` and unions across chunks. Just run it.
+- `fix_rows.py` — add `CHUNK<N>_CORRECTIONS` list post-review; concatenate into `SPOT_CORRECTIONS`.
+- `tests/test_sources_baud_ok_royal_family.py` — update `CHUNK1_EXPECTED_ROWS` → running chunk total (40 + chunk N's count), add new flagship-row assertions.
+
+**PDF vol. 2 path confirmed:** `proprietary/books/Baud 1999 - Famille royale AE vol 2.pdf` (SHA-256 `8768536a13fb5428d8ec7fbd96263d028aabb557a5411e7f796cad99ed6881cb`).
 
 ---
 
