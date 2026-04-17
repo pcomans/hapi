@@ -173,7 +173,7 @@ Expected committed files per source (11-ish):
 - `pipeline/pipeline/authority/sources/<source>/fix_rows.py`
 - `pipeline/pipeline/authority/sources/<source>/reconciled.jsonl`
 - `pipeline/pipeline/authority/sources/<source>/merge-disagreements.txt`
-- `pipeline/pipeline/authority/sources/<source>/raw/.gitkeep` (keeps the dir tracked; everything else under `raw/` is ignored via `raw/*`)
+- `pipeline/pipeline/authority/sources/<source>/raw/.gitkeep` (keeps the dir tracked; everything else under `raw/` is ignored via the root `.gitignore`'s `pipeline/pipeline/authority/sources/*/raw/*` pattern)
 - `pipeline/tests/test_sources_<source>.py`
 
 **Deterministic JSONL output.** Write `reconciled.jsonl` with `json.dumps(..., sort_keys=True)` in both `merge.py` and `fix_rows.py`. Without sorted keys, Python's dict iteration order makes the file re-shuffle on every re-run even when values are identical — spurious diffs pollute the PR and make the authority file look unstable.
@@ -207,7 +207,7 @@ The review cycle almost always surfaces something. Common real findings from the
 - **Rule 5 partial-field assertions.** A "themed" test on one row (e.g. "test the doubtful flag on Shoshenq VI") typically asserts 3–4 fields. If the fixture populates 12, assert 12. Rule 5 is about the bug those missing 8 assertions would have hidden.
 - **Symmetry tests that don't actually check.** A symmetry invariant (`X.concurrent ∋ Y ⇒ Y.concurrent ∋ X`) is weak — stale-but-symmetric lists pass it. Re-derive the expected values from the authoritative source (start/end dates + overlap rule) and assert equality. Import the computation from `fix_rows.py` so drift breaks the test.
 - **README prose quotations of the extract.** If the README quotes an extract value inline (e.g. "Harsiese, Hedjkheperre Setepenre"), that quotation is a second source of truth and will drift. Either delete the quote or lock it in with a test. Egyptologist-reviewer catches these.
-- **Fragile gitignore patterns.** Listing specific filename patterns (`raw/chunk-*.md`, `raw/agent-*.jsonl`) means any new file the subagent drops into `raw/` becomes committable. Prefer `raw/*` + `!raw/.gitkeep`.
+- **Fragile gitignore patterns.** Listing specific filename patterns (e.g. `pipeline/pipeline/authority/sources/*/raw/chunk-*.md`, `.../raw/agent-*.jsonl`) means any new file the subagent drops into `raw/` becomes committable. Prefer the wildcard form the repo root uses: `pipeline/pipeline/authority/sources/*/raw/*` + `!pipeline/pipeline/authority/sources/*/raw/.gitkeep`.
 
 Apply the fixes in a fresh commit (`fix(<source>): address <reviewer> first pass`), re-run tests, push. Poll CI and the review threads for a second round.
 
@@ -273,7 +273,7 @@ Some sources land across multiple PRs that share one source directory (Dodson-Hi
 
 - First chunk: `raw/agent-{a,b,c}.jsonl` (matches single-chunk convention).
 - Follow-up chunks: `raw/agent-{a,b,c}-<suffix>.jsonl` (`agent-a-amarna.jsonl`, etc.).
-- Gitignored via the existing `raw/*` pattern — no gitignore changes needed.
+- Gitignored via the existing root `pipeline/pipeline/authority/sources/*/raw/*` pattern — no gitignore changes needed.
 
 ### `merge.py` union-across-chunks
 
