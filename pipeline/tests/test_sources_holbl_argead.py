@@ -131,8 +131,11 @@ def test_argead_01_alexander_the_great_full_row() -> None:
     """Alexander the Great (Alexander III of Macedon) — first Argead ruler of
     Egypt. Egyptian accession 332 (post-invasion); Macedonian accession 336
     is NOT captured here because Hölbl's Egypt-anchored appendix uses the
-    332 invasion year. Died 10 June 323 in Babylon; Hölbl's table states
-    only "Death of Alexander", so the notes are faithful to the rubric cell.
+    332 invasion year. Died 10 June 323; Hölbl's table states only "Death of
+    Alexander", so the notes are faithful to the rubric cell (the Babylon
+    setting is consensus scholarship but is deliberately omitted from
+    `notes_from_holbl` because it is not attested in this specific table
+    cell — see `fix_rows.py` and `test_notes_do_not_add_facts_beyond_holbl_rubric`).
     """
     r = _row("argead.01")
     assert r["holbl_id"] == "argead.01"
