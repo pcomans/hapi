@@ -218,7 +218,9 @@ def test_no_tracked_files_under_raw_for_phase0_sources():
     """Phase-0 scan-only source directories must not commit anything under `raw/`
     except `.gitkeep`. Backstops the playbook's "Rights policy" invariant
     (docs/playbook-phase-0-ocr-transcription.md § "Rights policy") against
-    `git add -f` overrides that bypass the `raw/*` + `!raw/.gitkeep` gitignore.
+    `git add -f` overrides that bypass the
+    `pipeline/pipeline/authority/sources/*/raw/*` + `!.../raw/.gitkeep`
+    gitignore rules at the repo root.
 
     A directory is treated as a Phase-0 source iff it has a `transcribe.md` at
     source-dir root. Sources with different rights models (pharaoh.se web scrape,
