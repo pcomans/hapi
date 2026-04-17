@@ -183,12 +183,12 @@ PR title: `feat: transcribe <Book short name> → sources/<source>`.
 PR body follows the Ryholt PR (#34) template: rights verification, scope, known gaps, test plan, explicit LLM-vs-human labelling ("an actual Egyptologist sign-off pass has NOT been performed").
 
 Then per `CLAUDE.md` PR workflow:
-1. Request Copilot review (via `gh api` POST to `/pulls/<N>/requested_reviewers`, not `gh pr edit --add-reviewer` which has been flaky).
-2. **Arm a `Monitor` for Copilot's re-review.** Copilot lands its review minutes after the push. Sitting idle waiting for the review (or worse, waiting for the user to prompt "look at review comments") breaks the workflow. The Monitor-pattern emits one in-chat notification on the terminal state:
-   - Success: a Copilot review whose `commit_id` matches the current HEAD.
-   - Timeout: no new review in 15 min → treat as implicit acceptance or ask the user.
+1. Gemini Code Assist auto-reviews new PRs within ~5 minutes — no explicit trigger on PR creation. On subsequent pushes, post `/gemini review` via `gh pr comment <N> --body "/gemini review"` to request a fresh review.
+2. **Arm a `Monitor` via the `/watch-pr-reviews` skill.** Reviews land minutes after the trigger. Sitting idle waiting for the review (or worse, waiting for the user to prompt "look at review comments") breaks the workflow. The Monitor-pattern emits one in-chat notification on the terminal state:
+   - Success: a Gemini Code Assist review whose `commit_id` matches the current HEAD.
+   - Timeout: no new review in 15 min → verify manually via `curl -H "Authorization: token $(gh auth token)" .../pulls/<N>/reviews`; timeout is not acceptance.
    
-   See `CLAUDE.md` § "Pull request workflow" step 2 for the exact Monitor invocation. Filtering on `commit_id == <HEAD>` catches multi-round reviews (Copilot occasionally submits review #2 minutes after #1) without re-surfacing stale reviews of previous commits. Re-arm on each subsequent push so the next push's Copilot re-review also gets caught.
+   See `CLAUDE.md` § "Pull request workflow" step 2 and `.claude/skills/watch-pr-reviews/` for the exact invocation. Filtering on `commit_id == <HEAD>` catches multi-round reviews (reviewers occasionally submit review #2 minutes after #1) without re-surfacing stale reviews of previous commits. Re-arm on each subsequent push so the next push's re-review also gets caught.
 3. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel on the PR — they run in the background via `Agent` with `run_in_background: true` and auto-notify on completion (no Monitor needed for those; `Agent` handles it natively).
 4. Before replying to any review batch, invoke `scope-accountability-enforcer` once, then prefix each `gh pr comment` with `SCOPE_CHECKED=1`.
 5. Poll `gh pr checks <N> --watch` until green. Fix any red check before moving on.
@@ -331,7 +331,7 @@ Multi-chunk sources need per-chunk `SUB_PERIOD_<CHUNK>` and `CITATION_<CHUNK>` c
 
 ### Do NOT re-run the 3-agent extraction after a prompt fix
 
-Hard-learned on PR #38. After Copilot flagged two prompt contradictions (casing, lacuna-tail editorials), re-running the 3 extraction subagents with the corrected prompt produced identical output on the prompt-fix-targeted cases but LOST quality on 8 other rows — dropped hedges ("Akhenaten (or Smenkhkare)", "(conceivably)", "(probable)", "If she were the mother of X"), dropped cross-entry inferences, and swapped "perhaps" to "possibly" in one hedged phrase. LLM-extraction variance touches fields the prompt never addressed.
+Hard-learned on PR #38. After the PR reviewer flagged two prompt contradictions (casing, lacuna-tail editorials), re-running the 3 extraction subagents with the corrected prompt produced identical output on the prompt-fix-targeted cases but LOST quality on 8 other rows — dropped hedges ("Akhenaten (or Smenkhkare)", "(conceivably)", "(probable)", "If she were the mother of X"), dropped cross-entry inferences, and swapped "perhaps" to "possibly" in one hedged phrase. LLM-extraction variance touches fields the prompt never addressed.
 
 Use surgical `fix_rows.py` overrides on the first-run agent JSONL instead. Before any re-run experiment, copy `.bak` versions of `agent-{a,b,c}-<suffix>.jsonl` so you can revert. The committed `reconciled.jsonl` reflects the first run + accumulated `fix_rows` corrections; don't trade that for a second run's different drift.
 

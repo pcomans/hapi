@@ -178,7 +178,7 @@ def _sort_key_for(unplaced_keys: frozenset[RowKey]):
            attested). Without the sub-bin, ASCII/Unicode default
            ordering puts `[` BEFORE every letter and `–` AFTER every
            letter, scattering lacunae across both ends of the output.
-           This was the source of a Copilot-flagged bug on PR #38 —
+           This was the source of a review-flagged bug on PR #38 —
            before the fix, `[...]18A–H` / `[...]18J` / `[...]18K–N`
            appeared at the TOP of `reconciled.jsonl`.
 
