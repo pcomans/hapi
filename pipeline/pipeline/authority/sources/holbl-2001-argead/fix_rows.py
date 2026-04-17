@@ -37,7 +37,11 @@ RECONCILED = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
-# Spot corrections identified by the egyptologist-reviewer LLM pass.
+# Spot corrections identified by the main-session self-review pass.
+# (NOT the egyptologist-reviewer Claude Code subagent — that subagent was
+# not invoked on this source; the harness exposed no Task/Agent tool, so
+# review happened in the main session alongside extraction. See
+# transcribe.md § "Model deviation" for the full disclosure.)
 # Each entry: (holbl_id, field, new_value, rationale).
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
@@ -118,10 +122,13 @@ def main() -> None:
         f"{marker}\n"
         + "=" * len(marker) + "\n"
         "Corrections applied by fix_rows.py AFTER the 3-extractor majority-\n"
-        "vote merge. Source of each correction: the egyptologist-reviewer\n"
-        "LLM pass against Hölbl's printed appendix rubric-block. No human\n"
-        "scholar has signed off on this extract yet — per ADR-017 step 6,\n"
-        "the extract is provisional until that happens.\n\n"
+        "vote merge. Source of each correction: the main-session self-\n"
+        "review pass against Hölbl's printed appendix rubric-block (NOT\n"
+        "the egyptologist-reviewer Claude Code subagent — that subagent\n"
+        "was not invoked on this source; the harness exposed no Task/Agent\n"
+        "tool, so review happened in the main session alongside extraction).\n"
+        "No human scholar has signed off on this extract yet — per ADR-017\n"
+        "step 6, the extract is provisional until that happens.\n\n"
         "The log below is derived deterministically from SPOT_CORRECTIONS\n"
         "in fix_rows.py; it describes the TARGET value fix_rows.py enforces\n"
         "on each row and the rationale. It is re-emitted on every run so\n"

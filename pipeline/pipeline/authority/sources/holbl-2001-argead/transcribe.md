@@ -59,7 +59,7 @@ Sentinel-null normalisation (`"none"`, `"-"`, `"n/a"`, etc. → `null`) is retai
 
 Unlike Kitchen, Hölbl's three rows need no deterministic recomputation — there is no `concurrent_with_kings` interval arithmetic (the three Argead rulers reign sequentially, not concurrently) and no interval-overlap field.
 
-`fix_rows.py` is present with spot corrections from the egyptologist-reviewer LLM pass. Two corrections on `notes_from_holbl` were required to remove extractor-introduced interpolations that are not attested in Hölbl's rubric-cell text:
+`fix_rows.py` is present with two spot corrections from the **main-session self-review pass** (see § "Model deviation" above — the `egyptologist-reviewer` Claude Code subagent was NOT invoked on this source; review happened in the main session alongside extraction). Both corrections remove extractor-introduced interpolations that are not attested in Hölbl's rubric-cell text:
 
 - `argead.01`: majority-vote text appended "in Babylon" to "Died 10 June 323"; Hölbl's rubric states only "10 June 323: Death of Alexander" (Babylon setting is consensus scholarship but not in this specific cell).
 - `argead.03`: majority-vote text contained the editorial parenthetical "(316, per Hölbl — reflecting a BCE sequencing issue in the appendix)" which is extractor commentary, not a Hölbl fact — Hölbl's 316 entry refers to the birth of Arsinoe II, not Alexander IV.
@@ -70,7 +70,7 @@ Both overrides are logged in `merge-disagreements.txt` under `LLM-APPLIED OVERRI
 
 Per ADR-017 step 6:
 
-- **LLM review (performed on this source):** after the 3-subagent merge, the `egyptologist-reviewer` Claude Code subagent walks the three reconciled rows against the PDF and flags any majority-vote mistakes. With only 3 rows, the review is fast. Flagged corrections are applied via a small committed override (inline in `reconciled.jsonl` via a minimal `fix_rows.py` if needed, or left unapplied if no corrections surface).
+- **LLM review on this source — main-session self-review, NOT `egyptologist-reviewer` subagent.** The playbook's default is to spawn the `egyptologist-reviewer` Claude Code subagent after merge to cross-check the reconciled rows against the PDF; that subagent was NOT invoked here because the harness exposed no `Task` / `Agent` tool (see § "Model deviation" above). Review happened in the main session alongside extraction: the same Claude Opus 4.7 (1M context) that produced the three JSONL outputs cross-checked the majority-vote merge against the PDF rubric block and flagged two `notes_from_holbl` interpolations ("in Babylon" on `argead.01`, "(316, per Hölbl...)" on `argead.03`). Corrections applied via `fix_rows.py`. This is **self-review by the same model**, not independent review — the audit trail labels it as such throughout (`fix_rows.py` docstring, `SPOT_CORRECTIONS` comment, `merge-disagreements.txt` section header).
 - **Human review (required, NOT yet done on this source):** an actual Egyptologist reads the three rows against Hölbl's printed PDF and signs off. Until that happens, this extract is **provisional**.
 
 ## Audit trail

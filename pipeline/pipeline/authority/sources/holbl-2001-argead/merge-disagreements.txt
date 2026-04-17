@@ -10,10 +10,13 @@ argead.03 (Alexander IV):
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
 Corrections applied by fix_rows.py AFTER the 3-extractor majority-
-vote merge. Source of each correction: the egyptologist-reviewer
-LLM pass against Hölbl's printed appendix rubric-block. No human
-scholar has signed off on this extract yet — per ADR-017 step 6,
-the extract is provisional until that happens.
+vote merge. Source of each correction: the main-session self-
+review pass against Hölbl's printed appendix rubric-block (NOT
+the egyptologist-reviewer Claude Code subagent — that subagent
+was not invoked on this source; the harness exposed no Task/Agent
+tool, so review happened in the main session alongside extraction).
+No human scholar has signed off on this extract yet — per ADR-017
+step 6, the extract is provisional until that happens.
 
 The log below is derived deterministically from SPOT_CORRECTIONS
 in fix_rows.py; it describes the TARGET value fix_rows.py enforces
