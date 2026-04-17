@@ -22,13 +22,12 @@ Phase 0 source work extracts factual data from copyrighted scholarly books. Two 
 
 **Layer 1 — the PDF is never committed.** The book lives in `proprietary/books/` (gitignored) and stays there. `README.md` and `transcribe.md` reference it by citation + SHA-256, but the source object itself is never redistributed through this repo. This removes the clearest copyright exposure.
 
-**Layer 2 — only transformative/derivative work is committed.** Committed artifacts fall into three safe categories:
+**Layer 2 — only transformative/derivative work is committed, and nothing under `raw/` ever is.** `raw/` is gitignored wholesale (`raw/*` + `!raw/.gitkeep`); per-agent JSONLs and per-chunk OCR markdown are working state, not deliverables. Committed artifacts live at the source-dir root (next to `README.md`), never under `raw/`, and fall into two safe categories:
 
-- **Structured extraction JSONL** (`raw/agent-*.jsonl`, `reconciled.jsonl`) — facts only (names, dates, dynasty IDs, titulary strings). Facts are not copyrightable (US *Feist v. Rural*; UK/EU database right runs 15 years from last substantial revision and does not cover transformative extraction).
-- **OCR of tabular content** (`raw/chunk-*.md` when the source section is a table: HKW chronology, Kitchen Tables 1/3/4, Shaw chapter banners, Hölbl chronology, Beckerath king-tables, Porter-Moss tomb indexes). Transcribing a table is fact extraction.
-- **Hand transcriptions of tabular content** (e.g. `raw/chapter-banners.txt`) — same principle.
+- **Reconciled structured-extraction JSONL** — `reconciled.jsonl`, produced by the 3-subagent merge. Facts only (names, dates, dynasty IDs, titulary strings). The project's working legal posture treats a reconciled fact list as a transformative derivative: US copyright law has held raw facts uncopyrightable since *Feist v. Rural* (499 U.S. 340, 1991), and the project reads the UK/EU *sui generis* database right as not reaching fact-level extractions of the sort committed here. This is the project's working assumption, not a legal opinion — a jurisdiction-specific question for a specific source goes in the source `README.md`.
+- **Hand transcriptions of tabular content** — a text or CSV file at source-dir root (e.g. `chapter-banners.txt` alongside `reconciled.jsonl`), used when the source section is itself a table (HKW chronology, Kitchen Tables 1/3/4, Shaw chapter banners, Hölbl chronology, Beckerath king-tables, Porter-Moss tomb indexes). Transcribing a table is fact extraction. Do **not** place these under `raw/` — the gitignore comment pins the source-dir-root location explicitly.
 
-**What is not safe to commit:** full-prose OCR of a source whose target is narrative prose (Dodson-Hilton Brief Lives, Baud prosopographical paragraphs, Porter-Moss tomb *descriptions*). Running OCR against a prose source is fine as an internal pipeline step, but the OCR chunk MUST NOT be committed. Feed the PDF directly to the extraction subagents and commit only the structured `agent-*.jsonl` output. The `.gitignore` pattern `raw/*` + `!raw/.gitkeep` enforces this mechanically; do not relax it.
+**What is not safe to commit:** verbatim prose OCR of narrative-prose sources (Dodson-Hilton Brief Lives, Baud prosopographical paragraphs, Porter-Moss tomb *descriptions*). Running OCR against a prose source is fine as an internal pipeline step, but the OCR chunk MUST NOT be committed. Feed the PDF directly to the extraction subagents and commit only `reconciled.jsonl`. The `.gitignore` pattern `raw/*` + `!raw/.gitkeep` enforces this mechanically; do not relax it.
 
 **"Rights verification" per `docs/mvp-tasks.md` is satisfied by choosing the derived-extract path.** Tasks that call out rights verification (Porter-Moss I, Porter-Moss III, Manetho) ask *either* for an explicit redistribution-license basis *or* for the decision to commit only a derived extract. The derived-extract path is this project's default and the documented basis for every Phase 0 source landed so far.
 
@@ -36,7 +35,7 @@ Phase 0 source work extracts factual data from copyrighted scholarly books. Two 
 - Citation and edition, PDF SHA-256.
 - "Source PDF held in `proprietary/books/<filename>`, not committed."
 - What's extracted (facts / tabular data) vs what is deliberately NOT extracted (narrative prose, illustrations).
-- Basis: fair-use scholarly extraction for a cross-museum provenance index; facts uncopyrightable; PDF never redistributed.
+- Basis: transformative scholarly extraction for a cross-museum provenance index; the project's working assumption is that the committed extract is a fact compilation rather than a derivative of the source's protectable expression; PDF never redistributed. Per-source edition / jurisdiction notes go here when they are materially different from this default (e.g. a source under an explicit license, or a source with a live jurisdictional question).
 
 ## Step 1 — scaffold the source directory
 
