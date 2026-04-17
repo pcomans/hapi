@@ -43,7 +43,8 @@ if [ "$IS_GIT_PUSH" = true ]; then
   if [ $? -eq 0 ]; then
     MESSAGES="Gemini Code Assist re-review requested on PR #$PR_NUMBER."
   else
-    MESSAGES="WARNING: Failed to post /gemini review on PR #$PR_NUMBER: $REVIEW_OUTPUT. Do NOT silently skip this — tell the user."
+    REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
+    MESSAGES="WARNING: Failed to post /gemini review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user."
   fi
 else
   MESSAGES="Gemini Code Assist will auto-review PR #$PR_NUMBER within ~5 minutes."

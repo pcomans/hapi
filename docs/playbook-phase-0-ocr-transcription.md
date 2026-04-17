@@ -185,8 +185,8 @@ PR body follows the Ryholt PR (#34) template: rights verification, scope, known 
 Then per `CLAUDE.md` PR workflow:
 1. Gemini Code Assist auto-reviews new PRs within ~5 minutes — no explicit trigger on PR creation. On subsequent pushes, post `/gemini review` via `gh pr comment <N> --body "/gemini review"` to request a fresh review.
 2. **Arm a `Monitor` via the `/watch-pr-reviews` skill.** Reviews land minutes after the trigger. Sitting idle waiting for the review (or worse, waiting for the user to prompt "look at review comments") breaks the workflow. The Monitor-pattern emits one in-chat notification on the terminal state:
-   - Success: a reviewer review whose `commit_id` matches the current HEAD.
-   - Timeout: no new review in 15 min → verify manually via `curl .../pulls/<N>/reviews` with auth header; timeout is not acceptance.
+   - Success: a Gemini Code Assist review whose `commit_id` matches the current HEAD.
+   - Timeout: no new review in 15 min → verify manually via `curl -H "Authorization: token $(gh auth token)" .../pulls/<N>/reviews`; timeout is not acceptance.
    
    See `CLAUDE.md` § "Pull request workflow" step 2 and `.claude/skills/watch-pr-reviews/` for the exact invocation. Filtering on `commit_id == <HEAD>` catches multi-round reviews (reviewers occasionally submit review #2 minutes after #1) without re-surfacing stale reviews of previous commits. Re-arm on each subsequent push so the next push's re-review also gets caught.
 3. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel on the PR — they run in the background via `Agent` with `run_in_background: true` and auto-notify on completion (no Monitor needed for those; `Agent` handles it natively).
