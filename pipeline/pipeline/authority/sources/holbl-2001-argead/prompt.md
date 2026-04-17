@@ -66,7 +66,7 @@ If your row count is not exactly 3, re-read the rubric-block carefully. The thre
 
 **`notes_from_holbl` field.** Free-text string distilled from Hölbl's rubric block. Capture, concisely:
 
-- For `argead.01`: Alexander the Great's Egyptian accession after his 332 invasion; his visit to the Ammoneion / Siwa oracle; his foundation of Alexandria; his departure in spring 331; his death in Babylon 10 June 323. (Keep the note under ~2 sentences; this is a brief-summary field, not a retranscription of the rubric.)
+- For `argead.01`: Alexander the Great's Egyptian accession after his 332 invasion; his visit to the Ammoneion / Siwa oracle; his foundation of Alexandria; his departure in spring 331; his death 10 June 323 (do NOT append "in Babylon" — Hölbl's rubric cell states only "Death of Alexander"; the Babylon setting is consensus scholarship but is not attested in the specific table cell and `fix_rows.py` removes it). (Keep the note under ~2 sentences; this is a brief-summary field, not a retranscription of the rubric.)
 - For `argead.02`: Hölbl's characterisation of Philip III Arrhidaios as the "feeble-minded half-brother of Alexander" acknowledged as joint king with the pregnant Roxane's possible son; Ptolemy as Satrap of Egypt through this reign; murdered 317.
 - For `argead.03`: Alexander IV born 323 (the posthumous son of Alexander the Great and Roxane); joint king with Philip III Arrhidaios until Philip's murder in 317; thereafter sole nominal king; murdered 310/09 by Kassandros; Ptolemy as Satrap throughout.
 

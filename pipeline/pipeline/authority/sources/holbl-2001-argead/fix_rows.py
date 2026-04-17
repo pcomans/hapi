@@ -80,19 +80,24 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
 
-    override_log: list[str] = []
+    applied_this_run = 0
+    # Stable audit log derived from SPOT_CORRECTIONS, independent of whether
+    # this run actually changed anything. Re-running fix_rows.py on an
+    # already-corrected reconciled.jsonl keeps the audit section intact.
+    stable_log: list[str] = []
 
     for hid, field, new_val, rationale in SPOT_CORRECTIONS:
         row = next((r for r in rows if r["holbl_id"] == hid), None)
         if row is None:
             raise KeyError(f"No row with holbl_id {hid!r}")
         old_val = row.get(field)
+        stable_log.append(
+            f"{hid}: {field} target → {json.dumps(new_val, ensure_ascii=False)} "
+            f"({rationale})"
+        )
         if old_val == new_val:
             continue
-        override_log.append(
-            f"{hid}: {field} {json.dumps(old_val, ensure_ascii=False)} → "
-            f"{json.dumps(new_val, ensure_ascii=False)} ({rationale})"
-        )
+        applied_this_run += 1
         row[field] = new_val
 
     RECONCILED.write_text(
@@ -117,11 +122,17 @@ def main() -> None:
         "LLM pass against Hölbl's printed appendix rubric-block. No human\n"
         "scholar has signed off on this extract yet — per ADR-017 step 6,\n"
         "the extract is provisional until that happens.\n\n"
-        + "\n".join(f"- {line}" for line in override_log) + "\n"
+        "The log below is derived deterministically from SPOT_CORRECTIONS\n"
+        "in fix_rows.py; it describes the TARGET value fix_rows.py enforces\n"
+        "on each row and the rationale. It is re-emitted on every run so\n"
+        "the audit trail survives a re-run that finds everything already\n"
+        "correct (old_val == new_val).\n\n"
+        + "\n".join(f"- {line}" for line in stable_log) + "\n"
     )
     DIFF.write_text(appended)
 
-    print(f"Applied {len(override_log)} override(s).")
+    print(f"Applied {applied_this_run} override(s) this run "
+          f"({len(stable_log)} spot-correction(s) total in SPOT_CORRECTIONS).")
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
     print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
 
