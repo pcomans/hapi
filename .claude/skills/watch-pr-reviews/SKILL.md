@@ -7,13 +7,12 @@ allowed-tools: Bash, Monitor
 Arm a `Monitor` with a 15-minute timeout running:
 
 ```
-.claude/skills/watch-pr-reviews/monitor.sh <PR> <SHA> <owner/repo>
+.claude/skills/watch-pr-reviews/monitor.sh <PR> [SHA] [owner/repo]
 ```
 
-Default args if not supplied:
-- `PR` = `gh pr view --json number -q .number`
-- `SHA` = `git rev-parse HEAD`
-- `REPO` = `gh repo view --json nameWithOwner -q .nameWithOwner`
+- `PR` is **required** — no safe default inside the Monitor sandbox. `gh pr view` uses GraphQL, which fails on keychain TLS there, so the agent arming the Monitor must pass the PR number explicitly (get it via `gh pr view --json number -q .number` from the main agent's shell, not the Monitor's).
+- `SHA` defaults to `git rev-parse HEAD` (git-only, sandbox-safe).
+- `REPO` defaults to `owner/name` parsed from `git remote get-url origin` (git-only, sandbox-safe).
 
 Rules (load-bearing):
 - **Parse / HTTP errors surface as `POLL-ERROR: <detail>`.** The script never `2>/dev/null`s anything — silenced errors ate four consecutive Monitors in one session.
