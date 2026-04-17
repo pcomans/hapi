@@ -17,6 +17,6 @@ Default args if not supplied:
 
 Rules (load-bearing):
 - **Parse / HTTP errors surface as `POLL-ERROR: <detail>`.** The script never `2>/dev/null`s anything — silenced errors ate four consecutive Monitors in one session.
-- **Timeout is not acceptance.** If the 15-minute window fires with no event, verify manually via `curl .../pulls/<PR>/reviews` and re-arm.
+- **Timeout is not acceptance.** If the 15-minute window fires with no event, verify manually via `curl -H "Authorization: token $(gh auth token)" -H "Accept: application/vnd.github+json" .../pulls/<PR>/reviews` and re-arm.
 - **Python stays in `seed.py` / `poll.py`**, never inside `python3 -c "..."`. Every attempt to inline the logic hit a shell-escape landmine (`!=` → `\!=` zsh history expansion, env-var passthrough losing state through nested subshells).
-- On event, fetch inline comments with `curl .../pulls/<PR>/comments` to act on specifics.
+- On event, fetch inline comments with `curl -H "Authorization: token $(gh auth token)" -H "Accept: application/vnd.github+json" .../pulls/<PR>/comments` to act on specifics.

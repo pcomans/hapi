@@ -35,7 +35,7 @@ try:
                 continue
             rid_val = r.get("id")
             if rid_val is None:
-                continue
+                raise ValueError("review missing `id`")
             rid = str(rid_val)
             if rid in seen:
                 continue
