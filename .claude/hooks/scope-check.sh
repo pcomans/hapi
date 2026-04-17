@@ -19,6 +19,15 @@ if ! echo "$CMD" | grep -q 'gh pr comment'; then
   exit 0
 fi
 
+# Exempt `/gemini <command>` trigger-comments. Those are workflow triggers
+# for the Gemini Code Assist GitHub App (e.g. `/gemini review`,
+# `/gemini summary`), not replies to feedback, so they don't need a
+# scope-accountability check. Match `--body` followed by optional whitespace
+# and an optional quote char then `/gemini`.
+if echo "$CMD" | grep -qE -- '--body[[:space:]]+["'"'"']?/gemini'; then
+  exit 0
+fi
+
 if echo "$CMD" | grep -q 'SCOPE_CHECKED=1'; then
   exit 0
 fi
