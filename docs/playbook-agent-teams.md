@@ -40,24 +40,24 @@ Two paths:
 
 **Natural language (docs-default):** tell Claude in the lead session "create a team with N teammates to ..." and let it compose the `TeamCreate` + `Agent` calls. Simpler, fewer knobs.
 
-**Programmatic (explicit):**
+**Programmatic (explicit):** these are tool calls as they appear in the lead's harness; use JSON-object argument shape consistently.
 ```
-TeamCreate(team_name="phase-0-batch-<date>", agent_type="team-lead", description="...")
-TaskCreate(subject="...", description="..." ) × N
-Agent(
-  subagent_type="general-purpose",  # or a custom .claude/agents/ definition by name
-  team_name="phase-0-batch-<date>",
-  name="<teammate-name>",
-  prompt="<self-contained brief; teammate does NOT inherit lead conversation history>",
-  run_in_background=true,
-)
+TeamCreate({"team_name": "phase-0-batch-<date>", "agent_type": "team-lead", "description": "..."})
+TaskCreate({"subject": "...", "description": "..."})  # repeat per task
+Agent({
+  "subagent_type": "general-purpose",    // or a custom .claude/agents/ definition by name
+  "team_name": "phase-0-batch-<date>",
+  "name": "<teammate-name>",
+  "prompt": "<self-contained brief; teammate does NOT inherit lead conversation history>",
+  "run_in_background": true
+})
 ```
 
-Notes on parameters:
-- **Do NOT pass `isolation: "worktree"`.** Teammates are already independent sessions. Passing worktree isolation on top is redundant at best; in the 2026-04-16 attempt, 2 of 3 teammates ended up working in the main repo tree anyway (switching its branch under the lead's feet). If you need a worktree, create it yourself before spawning and point the teammate at it via `cwd`-like instructions in the prompt — do not rely on the `isolation` parameter.
-- **`run_in_background: true`** is correct for long-running Phase-0 work; notifications arrive automatically via mailbox.
-- **`mode: "bypassPermissions"`** inherits from the lead's permission mode regardless; per-teammate modes can't be set at spawn time.
-- **`subagent_type: "general-purpose"`** gets the widest tool surface on paper (`Tools: *`) but still loses the `Agent` tool (see hard limit above). Custom `.claude/agents/` definitions honour their `tools` allowlist for teammates, but `skills` and `mcpServers` frontmatter fields are NOT applied when a subagent definition runs as a teammate.
+Notes on parameters (same `key: value` JSON shape as above):
+- **Do NOT pass `"isolation": "worktree"`.** Teammates are already independent sessions. Passing worktree isolation on top is redundant at best; in the 2026-04-16 attempt, 2 of 3 teammates ended up working in the main repo tree anyway (switching its branch under the lead's feet). If you need a worktree, create it yourself before spawning and point the teammate at it via `cwd`-like instructions in the prompt — do not rely on the `isolation` parameter.
+- **`"run_in_background": true`** is correct for long-running Phase-0 work; notifications arrive automatically via mailbox.
+- **`"mode": "bypassPermissions"`** inherits from the lead's permission mode regardless; per-teammate modes can't be set at spawn time.
+- **`"subagent_type": "general-purpose"`** gets the widest tool surface on paper (`Tools: *`) but still loses the `Agent` tool (see hard limit above). Custom `.claude/agents/` definitions honour their `tools` allowlist for teammates, but `skills` and `mcpServers` frontmatter fields are NOT applied when a subagent definition runs as a teammate.
 
 ## Workaround for nested parallelism: lead-spawns-on-behalf
 
@@ -79,7 +79,7 @@ Cost: lead context grows with each spawn round; keep briefs terse.
 ## Shutdown and cleanup
 
 Strict order:
-1. `SendMessage(to="<teammate>", message={"type": "shutdown_request"})` for every teammate. The `type` key lives *inside* the `message` object — passing it as a top-level argument errors on the schema. Teammate responds with `{"type": "shutdown_response", "approve": true/false, "request_id": "..."}`. Wait for approval.
+1. `SendMessage({"to": "<teammate>", "message": {"type": "shutdown_request"}})` for every teammate. The `type` key lives *inside* the `message` object — passing it as a top-level argument errors on the schema. Teammate responds with `{"type": "shutdown_response", "approve": true/false, "request_id": "..."}`. Wait for approval.
 2. `TeamDelete()` after all teammates are gone. Fails if any are still active.
 3. Filesystem: `git worktree list` → `git worktree remove -f <path>` for each, `git branch -D <teammate-branches>`, remove any remote branches the teammates pushed.
 4. Task list and team config: automatically wiped by `TeamDelete` (they live at `~/.claude/teams/{name}/` and `~/.claude/tasks/{name}/`, outside the repo).
