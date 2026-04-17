@@ -1,157 +1,158 @@
-# Handoff — Dodson-Hilton next chunk (Ramesside Brief Lives)
+# Handoff — Dodson-Hilton next chunk (earlier chapters)
 
-**Written 2026-04-15** by the agent who shipped PR #37 (Pre-Amarna, 59 rows) and PR #38 (Amarna Interlude, 41 rows). Pick this up when the user asks to continue the Dodson-Hilton transcription series, or when a fresh session needs to pick up Phase 0 authority work and has spare review budget.
+**Written 2026-04-16** by the agent who shipped the Ramesside chunk (PR TBD — 170 rows across House of Ramesses + Feud of the Ramessides + Decline of the Ramessides Brief Lives). Three D&H chunks have now landed, closing chapter 3 (the New Kingdom). The remaining scope is chapters 1, 2, 4, and 5.
 
-This doc is specific to D-H chunk 3 (Ramesside). For generic Phase 0 source onboarding, see `docs/playbook-phase-0-ocr-transcription.md`. This handoff **supersedes** the playbook where they disagree (the multi-chunk-source pattern sections in the playbook were promoted from this very handoff; future agents should read both).
+Pick this up when the user asks to continue the Dodson-Hilton transcription series. For generic Phase 0 source onboarding, see `docs/playbook-phase-0-ocr-transcription.md`. This handoff **supersedes** the playbook where they disagree — the multi-chunk-source and cross-section-duplicate patterns promoted from chunks 1–3 should be followed verbatim.
 
 ---
 
 ## Current state on `main` (verify before starting)
 
 - **Dodson-Hilton source directory:** `pipeline/pipeline/authority/sources/dodson-hilton-queens/`
-- **Landed chunks (100 rows total):**
-  - Chunk 1 (Pre-Amarna "Power and the Glory" Brief Lives) — printed pp. 137–141, physical pp. 126–130. 59 rows. PR #37, merged.
-  - Chunk 2 (Amarna Interlude Brief Lives) — printed pp. 154–157, physical pp. 142–145. 41 rows. PR #38, merged.
-- **Human review logged:** `pipeline/pipeline/authority/sources/dodson-hilton-queens/human-review-2026-04-15.md`. Seven Amarna rows sampled — six validated non-provisional, one (Nefertiti.children_names) deferred source-wide. Pre-Amarna rows + the remaining 34 un-sampled Amarna rows are still provisional at chunk level.
-- **Outstanding architectural question (deferred to Phase A, NOT to this PR):** parent→child denormalization in `children_names`. Keep current mixed pattern (own-entry prose + a small set of cross-entry inferences for Shuttarna II→Gilukhipa, Tushratta→Tadukhipa) unless the user explicitly re-opens this.
+- **Landed chunks (270 rows total, all in chapter 3):**
+  - Chunk 1 — Pre-Amarna "Power and the Glory" Brief Lives (printed pp. 137–141, physical pp. 126–130). 59 rows. PR #37, merged.
+  - Chunk 2 — Amarna Interlude Brief Lives (printed pp. 154–157, physical pp. 142–145). 41 rows. PR #38, merged.
+  - Chunk 3 — Ramesside Brief Lives (three sub-blocks at printed pp. 170–175, 182–183, 192–194 / physical pp. 157–162, 169–170, 178–180). 170 rows. PR TBD.
+- **Human review logged:** `human-review-2026-04-15-power.md`, `human-review-2026-04-15.md` (Amarna). Ramesside human review pending (a larger ~10–15-row sample is scheduled post-merge per the PR #39 egyptologist-reviewer recommendation).
+- **Primary key is composite** `(dh_id, sub_period)` — introduced in chunk 3 to handle two *distinct* phenomena that both produce the same `dh_id` under two sub-sections: (a) **cross-section duplicates of the same individual**, where D&H lists one person's Brief Life in two sub-sections with different prose (Takhat A appears as daughter-of-Ramesses-II in House *and* as wife-of-Sety-II in Feud; Isetneferet C is similar); and (b) **letter-suffix reuse for different individuals**, where D&H re-scopes the disambiguator letter per family tree (Ramesses C in House is Ramesses II's grandson via Khaemwaset C; Ramesses C in Decline is Ramesses III's heir who became Ramesses IV — NOT the same person). Both patterns need the composite key. Future chunks will probably encounter more of each (especially in the OK chapters where Baud 1999's coverage overlaps D&H).
 
 ---
 
-## Target for this chunk
+## Target for the next chunk
 
-**Chunk 3 — House of Ramesses / Feud of the Ramessides / Decline of the Ramessides Brief Lives.** Printed pp. 158–194. Dynasty 19 and 20 prosopography — Nefertari, Isetnofret, Tausret, the multiple Ramesses, Merenptah, Sety I/II, and the Dyn-20 succession. Expected row count: ~60–80 Brief Lives entries across three sub-sections.
+**Remaining scope: chapters 1, 2, 4, and 5 Brief Lives sub-blocks.**
 
-**Schema:** identical to chunks 1 and 2 (same book, same schema). The existing `README.md` schema section is authoritative; extend the `sub_period` enumeration with the three Dyn-19/20 sub-section titles as D&H prints them.
+| Chapter | Section | Expected rows | Notes |
+|---|---|---|---|
+| 1 | Early Dynastic (Dyns 0 / 1 / 2) | ~30–50 | D&H's Dyn 0 list is less authoritative than Dreyer 1998; cross-check. |
+| 1 | Old Kingdom (Dyns 3 / 4 / 5 / 6) | ~80–120 | D&H's OK coverage is known-weaker than Baud 1999. Prefer Baud for the OK canonical queens; D&H rows can still land as a cross-reference layer. |
+| 1 | "Unplaced — OK / ED" | varies | Check for a trailing Unplaced sub-block. |
+| 2 | First Intermediate Period (Dyns 7 / 8 / 9 / 10 / 11) | sparse | D&H's FIP coverage is thin. |
+| 2 | Middle Kingdom (Dyns 11 / 12) | ~60–100 | MK queens (Nefru, Mereret, Khnemetneferhedjet I/II, Weret) — well-attested. |
+| 2 | Second Intermediate Period (Dyns 13 / 14 / 15 / 16 / 17) | ~40–80 | Ryholt 1997 has more authority here; D&H rows are a cross-reference. |
+| 4 | Third Intermediate Period (Dyns 21 / 22 / 23 / 24 / 25) | ~80–120 | Kitchen 1996 TIP + Kitchen 2009 revisions are the authority; D&H provides family-tree context. |
+| 5 | Late Period (Dyns 26–31) | ~40–60 | Thin but structured. |
+| 5 | Ptolemaic | ~20 | Overlaps `wikipedia-ptolemaic` and `holbl-2001-argead`; cross-reference. |
+
+**Ship one chapter per PR** — chapter 1 is the biggest and should probably split further (OK is a natural sub-chunk given Baud overlap). Don't try to bundle chapters 1–5 into a single PR. The Ramesside PR's ~170-row scale is the upper-bound comfortable size.
 
 ---
 
-## Step-by-step plan
+## Step-by-step plan (for whichever chapter you take next)
 
 ### 1. Scope the Brief Lives sub-blocks in the source PDF
 
-- Source PDF: `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` (gitignored). SHA pinned in `README.md` and `transcribe.md`.
-- Open it with `Read` (`pages:"N-M"`) to find where each section's Brief Lives sub-block starts. The narrative "Historical Background + Royal Family + End of the [section]" prose is NOT transcribed — only the Brief Lives sub-block (lettered roles, alphabetical, 30–80-word prose per entry).
-- On chunks 1 and 2, the Brief Lives sub-block sat at the END of each section's page range. Expect the same for Ramesside.
-- **Re-verify the physical-to-printed page offset at the first and last printed pages of each sub-block.** Chunk 2 saw a +11 → +12 drift mid-chunk due to a two-page chart spread. Ramesside may have similar.
-- Extract a `raw/source-p<start>-p<end>.pdf` per sub-block (three sub-PDFs if the three sub-sections have separate Brief Lives blocks; one sub-PDF if they share). Use the same `pypdf` one-shot as in chunk 2's `transcribe.md`.
+- Source PDF: `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` (gitignored). SHA pinned in `README.md` and `transcribe.md`: `e636c49f3d0b5b6c6ec072cc6e7af9d605caf52d438c55cd84da9de7b07008a0`.
+- Each chapter has ONE Brief Lives sub-block (sometimes with a trailing Unplaced sub-block), typically at the end of the chapter's page range. Verify by extracting a scoping sub-PDF and scanning for the `Brief Lives ●●●●` / `Males in bold, females in bold italic.` header.
+- **Re-verify the physical-to-printed offset at both ends of the chunk.** Each two-page genealogical-chart spread captured as a single physical PDF page adds +1 to the offset. Chunk 2 saw one drift (+11 → +12). Chunk 3 saw two (+12 → +13 at printed 160–161 / physical 148, and +13 → +14 at printed 186–187 / physical 173). Earlier chapters may have similar or more.
+- Extract a `raw/source-p<start>-p<end>.pdf` per sub-block using the `pypdf` one-shot in `transcribe.md`. Non-contiguous sub-blocks get separate sub-PDFs (chunk 3 pattern: three separate PDFs for the three Ramesside sub-blocks).
 
-### 2. Write `prompt-ramesside.md`
+### 2. Write `prompt-<chapter>.md`
 
-Copy `prompt-amarna.md` and adjust:
+Copy the structure from `prompt-ramesside.md` — it's the most complete prompt with the composite-key rules and cross-section-duplicate guidance. Adjust:
 
-- Input path: `raw/chunk-p<start>-p<end>.md` — update to the new chunk range.
-- Output path: `agent-{a|b|c}-ramesside.jsonl`.
-- `sub_period` — enumerate the three D&H sub-section titles verbatim. A Brief Lives entry belongs to exactly one sub-section; the OCR must preserve the sub-section heading so agents can attribute correctly. If D&H groups all three sub-sections' Brief Lives into one alphabetical run at the end of printed p. 194 (mirroring the Pre-Amarna layout), the three sub-sections collapse into one alphabetical block and every row's `sub_period` reflects its dynastic placement. If D&H gives each sub-section its own Brief Lives sub-block mid-chapter, preserve the tri-partite structure.
-- Role codes — Ramesside era has some codes chunks 1 and 2 did not exercise. Examples to watch (not exhaustive — enumerate from the actual PDF): `LuWA` (Lady of the Two Lands), `CPR` (Crown Prince, possibly), `KD` vs `KDB` distinction may matter, `PA` (Prophet of Amun) variants, military titles (`Genmo`, `Captain of the Troops`, `OMC`). Preserve codes verbatim; Phase A owns the glossary.
-- Parsing hazards — specifically list (checked with the egyptologist-reviewer on PR #39):
-  - **Ramesses II's wives:** Nefertari, Isetnofret, Bintanath (daughter-wife), Meryetamun (daughter-wife), Nebettawy (daughter-wife), Henutmire (D&H treat as sister-wife), **Maathorneferure** (first Hittite princess, Year 34), and a **second unnamed Hittite princess** (Year ~40). Two Hittite diplomatic marriages, not three — verify against the PDF. Each wife is a separate row; D&H flags some as possibly-identical (e.g. `Meryetamun` vs `Meryetamun D`). Do NOT conflate.
-  - **The `Ramesses` letter-run.** D&H gives ~15–20 Brief Lives entries named `Ramesses` across Dyn 19/20, mixing kings and king's-sons. Each gets a letter suffix. The disambiguator density is the heaviest in the whole book — prompt must hammer on "do not merge across letters."
-  - **`Amenhirkhepeshef` / `Amunhirkhopshef` / `Amenherkhepshef`** — multiple princes of this name across Ramesses II, III, VI. Classic letter-suffix trap; orthography also drifts (D&H will have one spelling; museums have all three).
-  - **`Khaemwaset`** — famous son of Ramesses II (the "first Egyptologist" / HPM); also a Dyn 20 prince of the same name. Two-entry case; expect letter disambiguator.
-  - **`Setherkhepeshef`, `Meryatum`, `Merenptah`-as-prince-vs-king** — several princes who later became king appear in D&H with both a prince entry and a king entry under different letter disambiguators.
-  - **Dyn 20 contested queens:** `Tyti` (wife of Ramesses III vs Ramesses X — D&H discusses), `Takhat` (two homonymous Dyn 19/20 figures: mother of Amenmesse, and a Ramesses-III-era figure), `Iset Ta-Hemdjert` (GRW of Ramesses III, mother of Ramesses VI — confusable with Ramesses-II-era Iset-nofret), `Tentopet`, `Nubkhesbed`, `Titi`, `Duatentopet`. Multiple confusable, separable-only-by-disambiguator entries.
-  - **Tausret's role as regent/king.** She is a Brief Lives entry; she is also in pharaoh.se; this row is the D&H-authorial view of her as queen-became-king. Tausret / Tawosret / Twosret spelling drift — museums use Tawosret or Twosret more commonly; keep D&H's spelling verbatim in `dh_id` but expect the matching authority layer to handle both.
-  - **Bay / Irsu** — included or not per D&H's authorship call. Follow the PDF.
-- Row-count expectation: ~60–80 for the three-sub-section Brief Lives taken together. If the three sub-sections each have their own Brief Lives block, the total adds up; if one consolidated block, read the block count.
-- **Slash-shorthand guidance** — the corrected version of the `alt_names` and lacuna-group rules from the post-Copilot `prompt-amarna.md`. Do NOT revert these.
-- **Role codes.** The Ramesside era uses codes the earlier chunks did not exercise. Before asserting any code in the prompt's "Known codes in this chunk include..." list, check it is actually in D&H's code glossary (front matter pp. 24–37; also in chapter-opening keys) for the Ramesside chapter. Examples to verify rather than assert blindly: `LuWA` (Lady of the Two Lands?), `CPR` (Crown Prince?), `OMC`, specific spellings of `Genmo` and `PA` variants, any military-title acronyms. Treat unfamiliar codes as literal strings (per the existing prompt convention) and let Phase A expand them.
+- Input chunk-file paths.
+- `sub_period` enumeration for the chapter's Brief Lives sub-sections.
+- `dynasty` assignments per sub_period.
+- Role codes. The D&H role-code repertoire is stable — all previously-seen codes are listed in `README.md` § Schema `roles`. Chapter 1 (OK / ED) may introduce new codes for OK-specific roles (e.g. Chief of the Khent, Sole Friend); preserve verbatim. Phase A's code glossary handles expansion.
+- Chapter-specific parsing hazards (name-change slashes, multi-generation homonym clusters, etc.).
+- **Cross-section duplicates warning** — this is a known issue for this source. Tell agents to flag any `dh_id` they see under two sub-sections in their final report. Do NOT change the schema — the composite `(dh_id, sub_period)` key handles these.
 
-### 3. Re-attempt Claude Opus 4.6 OCR per ADR-017 amendment
+### 3. OCR via the Phase-0 pipeline
 
-Try a general-purpose subagent first. If it refuses (chunk 1 pattern), re-attempt main-session Opus 4.6 (chunk 2 pattern, worked for the Amarna 4 pages). Only if BOTH refuse, fall back to Gemini 3.1 Pro with the prompt at `transcribe-gemini-prompt.md` — the amendment requires the re-attempt, not just re-use of the fallback.
-
-Document whichever path worked in `transcribe.md` § "Model deviation" for chunk 3. Do NOT edit chunks 1 or 2's deviation notes.
+- Attempt a Claude Opus OCR subagent first (default playbook path). Claude Opus 4.7 (1M context) subagents succeeded on all three Ramesside sub-blocks in parallel on 2026-04-16 with a fair-use-framed prompt — template the same framing. See the Ramesside OCR subagent prompts in git log for a working model.
+- If OCR refuses, re-attempt in main session, then escalate to Gemini 3.1 Pro per ADR-017's amendment. `transcribe-gemini-prompt.md` is the verbatim Gemini prompt used on chunk 1; adapt for the new chunk.
+- OCR output format: match `raw/chunk-p157-p162.md` (chunk 3 House of Ramesses). H1 title, short header with page range / OCR method / photo-caption disclosure, H2 per printed page, entries as paragraphs in column-order reading, male names bold / female names bold-italic, role-code parentheses verbatim, footnote superscripts inline, photo captions omitted.
 
 ### 4. Spawn 3 extraction subagents in parallel
 
-Same pattern as chunk 2. Each reads `prompt-ramesside.md` + `chunk-p<start>-p<end>.md` and writes `agent-{a|b|c}-ramesside.jsonl`. Rate-limit note: PR #38's first run hit the 3pm-PT limit right at agent-completion; if this happens again, the agent files are on disk even if the subagent's "report" response gets truncated. Check the files before respawning.
+Same pattern as chunk 3. Each reads the new prompt + the new chunk file(s) and writes `agent-{a|b|c}-<chapter>.jsonl` under `raw/`. Rate-limit note: when a long-running parallel run hits the 3pm-PT limit, subagent files are on disk even if the "report" response gets truncated. Check files before respawning.
 
-**Before spawning:** copy `.bak` versions of chunks 1 and 2's `agent-*-*.jsonl` files. Multi-chunk re-extraction risk is real; you want the ability to revert if anything corrupts.
+**Before spawning:** copy `.bak` versions of chunks 1–3's agent JSONLs. Chunk 3 introduced the habit of backing up before any re-extraction; keep it.
 
-### 5. Adapt `merge.py` — likely zero changes needed
+### 5. merge.py and fix_rows.py are ready as-is
 
-`merge.py` already globs `agent-{tag}-*.jsonl`; adding a third chunk is zero code change. Cross-chunk `dh_id` collisions will raise loudly — D&H's disambiguator letters make cross-chunk homonyms impossible within one source, so a collision is an extraction bug not a legitimate homonym.
+The composite-key machinery landed with chunk 3 and handles cross-section duplicates. Chunk 4 just needs:
+- A new per-chapter section in `fix_rows.py` (e.g. `EARLY_DYNASTIC_CORRECTIONS: list[tuple[str, str, str, object, str]] = [...]`) concatenated into `SPOT_CORRECTIONS`.
+- No merge.py changes expected unless the source PDF has a new edge case.
 
-**Recommended one-time cleanups for this chunk's PR (deferred from PR #38 per code-reviewer scope):**
+### 6. Run `fix_rows.py` — apply egyptologist-reviewer's corrections
 
-- Rename Pre-Amarna raw files `agent-{a,b,c}.jsonl` → `agent-{a,b,c}-power.jsonl`. Drop the base-unsuffixed-filename branch in `_load_agent_chunks`. The rename is a no-op because the files live under `raw/` (gitignored) — re-extract Pre-Amarna from existing OCR if needed, or just rename on disk.
-- Split `SPOT_CORRECTIONS` into per-chunk lists (`POWER_CORRECTIONS`, `AMARNA_CORRECTIONS`, `RAMESSIDE_CORRECTIONS`) concatenated into the top-level list. Readability win, zero behavior change.
-- Drop `SUB_PERIOD = SUB_PERIOD_POWER` / `CITATION = CITATION_POWER` compat aliases in the test file; inline-replace in the 12 Pre-Amarna test fixtures.
+Corrections come from two stages:
+1. Main-agent cross-check against the OCR chunk file (editorial tails, slash-split artifacts).
+2. `egyptologist-reviewer` Claude Code subagent walking `reconciled.jsonl` against the source PDF (casing, hedge loss, verbatim-prose drift, cross-entry inference over-reach).
 
-### 6. Run `fix_rows.py` — expect ~5–10 new entries
-
-Chunk 3 corrections will be a mix of:
-- **Expected drift categories** (same as chunks 1 and 2): verbatim-prose hedge loss, allcaps-vs-titlecase on regnal alt_names, occasional cross-reference in `alt_names` instead of `notes`.
-- **Chunk-3-specific drift** unpredictable from the chunk-1 and chunk-2 experience. The Ramesside era has heavier naming overlap (many Ramesses princes named for their grandfathers) and more contested identities — expect Mutnodjmet-A-vs-Q-style hedging on several pairs.
-
-The main-agent review pass (cross-check reconciled.jsonl against the OCR chunk yourself) + egyptologist-reviewer subagent pass will surface the corrections.
+The egyptologist-reviewer writes corrections directly into `fix_rows.py`'s new chapter CORRECTIONS list when high-confidence, or to `reviewer-notes-<chapter>.md` for medium-confidence flags. Main agent applies the latter manually.
 
 ### 7. Write tests
 
-Every new row gets a rule-5 full-row fixture. Update invariants:
-
-- `test_row_count` → 100 + N (where N is chunk-3 row count).
-- `test_row_counts_per_chunk` → add the new sub_period key(s) and value(s).
-- `test_every_row_has_complete_citation` citations dict gets new entries.
-- `test_role_code_set_spans_the_known_codes` — add any new chunk-3 role codes asserted-present.
-- `test_lacuna_prefixed_ids_sort_last_within_each_bin` — update expected counts. Verify chunk 3 introduces zero new lacuna entries (if it does, adjust).
-
-Use the generator script approach: a one-shot Python script that reads `reconciled.jsonl`, filters for the new `sub_period`, and emits test function bodies. See PR #38 commit `8446a61` for the generator pattern; delete the generator before committing.
+- New rule-5 full-row fixtures for every new row. Use the generator pattern at `/tmp/claude/gen_*_fixtures.py` — chunk 3 used `gen_ramesside_fixtures.py` which reads `reconciled.jsonl`, sorts by sub_period then alphabetically, and emits `_assert_full_row(...)` blocks. Delete the generator before committing.
+- Update invariants in `tests/test_sources_dodson_hilton_queens.py`:
+  - `test_row_count` — add the chapter's row count.
+  - `test_row_counts_per_chunk` — add entries for each new sub_period.
+  - `test_every_row_has_complete_citation` — add the chapter's CITATION_* constant.
+  - `test_dynasty_per_chunk` — add the chapter's sub_period → dynasty mapping.
+  - `test_unplaced_set_is_the_expected_ids` — add any new Unplaced ids.
+  - `test_unplaced_rows_sort_last_in_reconciled_jsonl` — update the trailing-row count.
+  - `test_lacuna_prefixed_ids_sort_last_within_each_bin` — update the placed-row count.
+  - `test_role_code_set_spans_the_known_codes` — add new codes.
+  - `test_kings_cross_referenced_in_bold_caps_not_extracted_as_entries` — add new regnal-name CROSS-REFERENCES.
+  - `CROSS_SECTION_DUPLICATE_IDS` — add any new cross-section duplicates the chapter introduces.
 
 ### 8. Update docs
 
-- `README.md` — extend the scope table with chunk 3; update `sub_period` field-semantics to list all three Dyn-19/20 sub-section titles.
-- `transcribe.md` — add chunk 3 scope, page offset re-verification, OCR method used.
-- `docs/mvp-tasks.md` — strike through the Dodson-Hilton "House of Ramesses" bullet and add row count + PR number.
-- `docs/handoff-dodson-hilton-next-chunk.md` (this file) — update to point at the earlier-chapters chunk as the next target, or delete if all chunks are complete.
+- `README.md` — add the chapter's row to the scope table; extend `sub_period` semantics.
+- `transcribe.md` — add the chapter's offset verification points + OCR method used.
+- `docs/mvp-tasks.md` — strike through the chapter's bullet with row count + PR number.
+- `docs/handoff-dodson-hilton-next-chunk.md` (this file) — update to point at the next chapter, or delete if the Dodson-Hilton series is complete.
 
 ### 9. PR, reviewers, CI
 
 Standard Phase 0 workflow per `CLAUDE.md` § "Pull request workflow":
 1. Push branch, open PR, request Copilot review via API.
-2. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel.
+2. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel after Copilot posts.
 3. Invoke `scope-accountability-enforcer` before replying to any review batch; prefix replies with `SCOPE_CHECKED=1`.
 4. Poll `gh pr checks <N> --watch` until green.
 
 ### 10. After merge: log human review
 
-Repeat the PR #38 pattern, but **use a larger sample for Ramesside** (~10–15 rows, not 5–10). The egyptologist-reviewer on PR #39 flagged that 5–10 is too thin for chunk 3 given the disambiguation density (multiple `Ramesses` letter-suffixes, three confusable `Takhat`/`Tyti`/`Iset Ta-Hemdjert` pairs, Tausret as queen-becomes-king, multi-generation `Amenhirkhepeshef` / `Khaemwaset`). The sample should explicitly cover:
+Sample 10–15 rows for egyptologist spot-check. Cover:
+- Any cross-section duplicates the chapter introduces (each of the two rows gets a separate sample).
+- Any disambiguation-density hot spots (chapter 1 OK: Hetepheres I / II / III / IV; chapter 4 TIP: multiple Shoshenqs; chapter 5 LP: Nitocris / Ankhnesneferibre).
+- At least one lacuna-prefixed entry.
+- At least one Unplaced entry (if the chapter has them).
+- At least one role with a novel role code.
 
-- 2–3 `Ramesses`-letter-suffix disambiguation decisions (is `Ramesses D` the king or the prince? Does `Ramesses F` come from Dyn 19 or Dyn 20?).
-- Tausret (succession-crisis interpretive call).
-- At least one Hittite-princess row (typically Maathorneferure).
-- One Dyn-20 contested queen (Tyti or Iset Ta-Hemdjert).
-- Any lacuna-group entries the chunk introduces (if none, skip).
-- At least one of the multi-generation name clusters (`Amenhirkhepeshef` or `Khaemwaset`).
-
-Log in `pipeline/pipeline/authority/sources/dodson-hilton-queens/human-review-<YYYY-MM-DD>-ramesside.md` (chunk-suffixed form; the playbook Step 12 update formalised this convention). Mark remaining un-sampled rows as provisional at chunk level. Do NOT alter chunks 1 or 2's existing human-review files.
+Log in `human-review-<YYYY-MM-DD>-<chapter>.md`. Mark remaining un-sampled rows as provisional at chunk level.
 
 ---
 
-## Known traps (learned on chunks 1 and 2)
+## Known traps (learned on chunks 1–3)
 
 1. **Do NOT re-run the 3-agent extraction after a prompt fix.** Re-running loses quality on fields the prompt never targeted. Use `fix_rows.py` for surgical corrections instead. See the playbook's "Do NOT re-run the 3-agent extraction after a prompt fix" section for the concrete PR #38 regression.
-2. **Scan-order anomalies shift the physical-to-printed offset mid-chunk.** Verify at both ends of the chunk; document the drift path in `transcribe.md`.
-3. **Copilot catches sort-key bugs when the chunk introduces the first rows in a new prefix class.** Chunk 3 is likely to exercise the existing lacuna bin (if Ramesside has lacuna entries) but may also introduce entries that sort strangely under case-insensitive alphabetical. If names contain accented characters (`é`, `ā`) or Greek letters, check the sort ordering empirically.
-4. **Agent JSONL files stay under `raw/` and are gitignored.** Stage explicitly by filename when committing; never `git add -A`. The `code-reviewer` subagent writes local memory under `.claude/agent-memory/` that must NOT be staged.
-5. **The pre-push hook requires `TASK_LIST_UPDATED=1`** when `docs/mvp-tasks.md` is in the commit. Prefix with it or the hook blocks.
-6. **`gh pr create` may hit TLS sandbox errors.** Retry with `dangerouslyDisableSandbox: true` on that specific call — sandbox-restricted networking blocks GitHub's GraphQL endpoint in some configurations. Do not swap to other tools.
+2. **Scan-order anomalies shift the physical-to-printed offset mid-chunk.** Verify at both ends of every chunk; document the drift path in `transcribe.md`. Each two-page chart spread captured as one physical page adds +1 to the offset.
+3. **Cross-section duplicates are legitimate.** Do NOT merge them or drop them. Each Brief Lives entry is its own row; the composite `(dh_id, sub_period)` key preserves both. D&H uses this pattern when an individual's family role spans two sub-sections (e.g. Takhat A is both daughter-of-Ramesses-II in House of Ramesses and wife-of-Sety-II in Feud).
+4. **Letter-suffix reuse across sub-sections is also legitimate.** Ramesses C in House of Ramesses (grandson of Ramesses II) is a DIFFERENT individual from Ramesses C in Decline of Ramessides (son of Ramesses III, later Ramesses IV). D&H re-scopes letter suffixes per chapter's family tree. Composite key handles this.
+5. **Agent JSONL files stay under `raw/` and are gitignored.** Stage explicitly by filename when committing; never `git add -A`. The `code-reviewer` subagent writes local memory under `.claude/agent-memory/` that must NOT be staged.
+6. **The pre-push hook requires `TASK_LIST_UPDATED=1`** when `docs/mvp-tasks.md` is in the commit. Prefix with it or the hook blocks.
+7. **`gh pr create` may hit TLS sandbox errors.** Retry with `dangerouslyDisableSandbox: true` on that specific call — sandbox-restricted networking blocks GitHub's GraphQL endpoint in some configurations. Do not swap to other tools.
+8. **The legacy unsuffixed `agent-{a,b,c}.jsonl` filename pattern was retired in chunk 3.** Every chunk from now on carries an explicit suffix (`-power`, `-amarna`, `-ramesside`, `-ed_ok`, etc.). `merge.py`'s `_load_agent_chunks` only matches `agent-{tag}-*.jsonl` now.
 
 ---
 
-## Non-goals for this chunk
+## Non-goals for the next chunk
 
-- Do NOT pick up the Phase A authority-curation work — Phase 0 must be complete first (Porter-Moss I and III, Baud 1999 OK, and the earlier Dodson-Hilton chapters are the last hard blockers).
+- Do NOT pick up the Phase A authority-curation work — Phase 0 must be complete first (Porter-Moss I and III, Baud 1999 OK, and the remaining D&H chapters are the last hard blockers).
 - Do NOT re-open the parent→child denormalization question. It's deferred to Phase A and the decision must be made consistently across all Phase 0 sources; making it per-source creates drift.
-- Do NOT re-run chunks 1 or 2's extraction subagents. Their `reconciled.jsonl` values are committed; chunk-level diffs from an unnecessary re-run will pollute this PR.
-- Do NOT start on the earlier-chapters chunk in the same PR. One chunk per PR keeps review surface-area tractable.
+- Do NOT re-run chunks 1–3's extraction subagents. Their `reconciled.jsonl` values are committed; chunk-level diffs from an unnecessary re-run will pollute the next PR.
+- Do NOT start on a second chapter in the same PR. One chapter per PR keeps review surface-area tractable.
 
 ---
 
 ## Memory pointers
 
-- Project-level memory: in a Claude Code session, the per-project agent memory lives under the standard Claude Code projects dir, typically `~/.claude/projects/<project-slug>/memory/` on macOS (where `<project-slug>` is the repo path with `/` replaced by `-`). Look for `project_current_pr_state.md` there — it has the authoritative list of what's landed vs pending. The exact path varies by environment; a fresh Claude Code session on this repo will surface it automatically via auto-memory loading. If you're running outside Claude Code, this memory file is not portable — treat the in-tree `README.md`, `transcribe.md`, and `docs/handoff-*.md` files as authoritative instead.
+- Project-level memory: in a Claude Code session, the per-project agent memory lives under `~/.claude/projects/<project-slug>/memory/` on macOS. Look for `project_current_pr_state.md` there — it has the authoritative list of what's landed vs pending. The exact path varies by environment; a fresh Claude Code session on this repo will surface it automatically via auto-memory loading.
 - User feedback rules: `feedback_autonomy.md`, `feedback_branch_pr.md`, `feedback_push_after_commit.md`, `feedback_pr_review_replies.md`, `feedback_ci_failures.md`, `feedback_copilot_review.md`, `feedback_pr_reviewers.md` — read all of them before starting. They reflect specific patterns the user has corrected in prior sessions.
 - Constitutional rules: `CLAUDE.md` rules 1–12 are non-negotiable. Especially rule 1 (scholarly traceability), rule 5 (tests assert values), rule 6 (raw data sacred), rule 12 (existing violations don't justify new ones).
 
-Good luck. The pattern is well-established now; chunk 3 should be a clean ~half-day pass if the source PDF is readable and the OCR doesn't refuse.
+Good luck. The pattern is well-established across three chunks now; chapter-per-PR should be a clean pass if the source PDF is readable and the OCR doesn't refuse.

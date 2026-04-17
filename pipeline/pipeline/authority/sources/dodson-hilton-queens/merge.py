@@ -4,19 +4,30 @@ Dodson & Hilton 2004 Brief Lives. Structure cloned from Kitchen (Ryholt
 lineage). Adaptations:
 
 - `kitchen_id` → `dh_id` throughout.
+- **Composite primary key `(dh_id, sub_period)`.** D&H occasionally lists
+  the same individual under two Brief Lives sub-sections when their
+  family role spans both (e.g. `Takhat A` appears in "The House of
+  Ramesses" as a daughter of Ramesses II and again in "The Feud of
+  the Ramessides" as the wife of Sety II, each entry contributing
+  distinct prose and role codes). Keying on `dh_id` alone would
+  collapse such entries; keying on the composite preserves D&H's
+  authorial choice. Phase A reconciles to one individual downstream.
+  Chunks 1 and 2 continue to work unchanged — their `dh_id`s were
+  already globally unique, so the composite key reduces to the old
+  behaviour for them.
 - `_sort_key` alphabetical by `dh_id` (D&H's own Brief Lives ordering);
-  `Q`-suffix "Unplaced" entries sort after the main alphabetical run;
-  names with leading `[` / `–` (lacunae) sort last.
+  rows where `unplaced=True` sort after the main alphabetical run;
+  names with leading `[` / `–` (lacunae) sort last; `sub_period` acts
+  as a final tiebreaker so composite-key duplicates land adjacently.
 - `DEFAULT_AGENT_DIR` is `<source_dir>/raw/` — the sandbox-writable path
   per the Phase-0 playbook.
 - `SENTINEL_NULL_STRINGS` unchanged from Kitchen.
 - **Multi-chunk support.** Each chunk (Pre-Amarna p126–p130, Amarna
-  p142–p145, ...) lands its three agents' extractions as
-  `agent-{a,b,c}<suffix>.jsonl`. Per-tag rows are collected across all
-  matching `agent-{tag}*.jsonl` files under `agent_dir`; `_load` raises
-  on duplicate `dh_id` within a single file AND on duplicate `dh_id`
-  across chunk files (the D&H disambiguator letters make cross-chunk
-  homonyms impossible within one source, so a collision is a bug).
+  p142–p145, Ramesside p157–p162/p169–p170/p178–p180, ...) lands its
+  three agents' extractions as `agent-{a,b,c}-<chunk>.jsonl`. Per-tag
+  rows are collected across all matching `agent-{tag}-*.jsonl` files
+  under `agent_dir`; `_load` raises on duplicate `(dh_id, sub_period)`
+  within a single file AND across chunk files.
 
 See Kitchen's merge.py and `docs/playbook-phase-0-ocr-transcription.md`
 for rationale.
@@ -46,58 +57,65 @@ OUT = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
-def _load(p: Path) -> dict[str, dict]:
-    """Load a single agent's JSONL. Raises on duplicate dh_id within a file."""
-    rows: dict[str, dict] = {}
-    seen_line: dict[str, int] = {}
+RowKey = tuple[str, str]  # (dh_id, sub_period)
+
+
+def _row_key(r: dict) -> RowKey:
+    return (r["dh_id"], r["sub_period"])
+
+
+def _load(p: Path) -> dict[RowKey, dict]:
+    """Load a single agent's JSONL. Raises on duplicate (dh_id, sub_period)."""
+    rows: dict[RowKey, dict] = {}
+    seen_line: dict[RowKey, int] = {}
     for line_no, line in enumerate(p.read_text().splitlines(), start=1):
         s = line.strip()
         if not s:
             continue
         r = json.loads(s)
-        did = r["dh_id"]
-        if did in rows:
+        key = _row_key(r)
+        if key in rows:
             raise ValueError(
-                f"Duplicate dh_id {did!r} in {p} "
-                f"(first seen on line {seen_line[did]}, again on line {line_no})"
+                f"Duplicate (dh_id, sub_period)={key!r} in {p} "
+                f"(first seen on line {seen_line[key]}, again on line {line_no})"
             )
-        rows[did] = r
-        seen_line[did] = line_no
+        rows[key] = r
+        seen_line[key] = line_no
     return rows
 
 
-def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
+def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[RowKey, dict]:
     """Load every chunk file for one agent tag, union the rows across chunks.
 
-    Matches `agent-{tag}.jsonl` (legacy unsuffixed filename, retained so
-    existing Pre-Amarna raw files still load without renaming) and
-    `agent-{tag}-<chunk>.jsonl` (follow-up chunks, e.g. `agent-a-amarna.jsonl`).
-    When chunk 3 lands, the base file should be renamed to
-    `agent-{tag}-power.jsonl` and the unsuffixed-filename branch dropped;
-    see the code-reviewer note on PR #38.
+    Matches `agent-{tag}-<chunk>.jsonl` (e.g. `agent-a-power.jsonl`,
+    `agent-a-amarna.jsonl`, `agent-a-ramesside.jsonl`). Every agent
+    output must carry a chunk suffix — the legacy unsuffixed
+    `agent-{tag}.jsonl` form (used by Pre-Amarna before chunk 2)
+    was retired in the Ramesside PR. PR #38 (Amarna) deferred the
+    rename to reduce review surface-area; this PR collected it
+    alongside the composite-key change.
 
-    Raises on duplicate `dh_id` across chunk files — D&H disambiguator letters
-    (`Ahmes A`, `Ahmes B`, …) guarantee per-source uniqueness, so a collision
-    means an extraction bug, not a legitimate homonym.
+    Raises on duplicate `(dh_id, sub_period)` across chunk files —
+    a composite-key collision means two extractions produced the
+    same logical row, so it's a bug. A `dh_id` that appears with
+    distinct `sub_period`s is legitimate (D&H cross-section duplicates).
     """
-    base = agent_dir / f"agent-{tag}.jsonl"
-    chunks = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
-    files = ([base] if base.exists() else []) + chunks
+    files = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
     if not files:
         return {}
 
-    combined: dict[str, dict] = {}
-    source_of: dict[str, Path] = {}
+    combined: dict[RowKey, dict] = {}
+    source_of: dict[RowKey, Path] = {}
     for p in files:
         rows = _load(p)
-        for did, row in rows.items():
-            if did in combined:
+        for key, row in rows.items():
+            if key in combined:
                 raise ValueError(
-                    f"Duplicate dh_id {did!r} across chunk files: "
-                    f"first in {source_of[did]}, again in {p}"
+                    f"Duplicate (dh_id, sub_period)={key!r} across chunk files: "
+                    f"first in {source_of[key]}, again in {p}"
                 )
-            combined[did] = row
-            source_of[did] = p
+            combined[key] = row
+            source_of[key] = p
     return combined
 
 
@@ -136,10 +154,11 @@ def _majority(values: list) -> tuple[object, int]:
 LACUNA_PREFIXES: tuple[str, ...] = ("[", "–")
 
 
-def _sort_key_for(unplaced_ids: frozenset[str]):
+def _sort_key_for(unplaced_keys: frozenset[RowKey]):
     """Return a sort-key function that bins rows by Unplaced-ness,
     then by lacuna-prefix (lacunae last within each bin), then by
-    case-insensitive alphabetical order.
+    case-insensitive alphabetical order, with `sub_period` as a
+    final tiebreaker for cross-section duplicates.
 
     Top-level bins:
     Bin 0: placed entries (D&H's main alphabetical Brief Lives list).
@@ -172,12 +191,13 @@ def _sort_key_for(unplaced_ids: frozenset[str]):
 
     Sort order cannot be determined from dh_id alone because `unplaced`
     is a per-row field, not a name-suffix convention — hence the closure
-    over the unplaced-ids set computed from the merged rows.
+    over the unplaced-keys set computed from the merged rows.
     """
-    def _sort_key(dh_id: str) -> tuple[int, int, str]:
-        top_bin = 1 if dh_id in unplaced_ids else 0
+    def _sort_key(key: RowKey) -> tuple[int, int, str, str]:
+        dh_id, sub_period = key
+        top_bin = 1 if key in unplaced_keys else 0
         sub_bin = 1 if dh_id.startswith(LACUNA_PREFIXES) else 0
-        return (top_bin, sub_bin, dh_id.lower())
+        return (top_bin, sub_bin, dh_id.lower(), sub_period)
 
     return _sort_key
 
@@ -188,32 +208,41 @@ def main(agent_dir: Path) -> None:
     if empty:
         sys.exit(
             f"ERROR: agent(s) {', '.join(empty)} produced no rows in {agent_dir}. "
-            f"Expected at least one `agent-{{tag}}.jsonl` or `agent-{{tag}}-<chunk>.jsonl` "
-            f"per agent. See transcribe.md."
+            f"Expected at least one `agent-{{tag}}-<chunk>.jsonl` per agent. "
+            f"See transcribe.md."
         )
 
-    # Compute the set of unplaced dh_ids once, by majority-vote of the three
-    # agents' `unplaced` fields per row. This lets _sort_key_for() bin the
-    # output correctly without making the sort-key function itself depend on
-    # the per-row merge result (which is computed below).
-    all_ids_unsorted = set().union(*[a.keys() for a in agents.values()])
-    unplaced_ids: set[str] = set()
-    for did in all_ids_unsorted:
-        votes = [a[did].get("unplaced", False) for a in agents.values() if did in a]
+    # Compute the set of unplaced composite keys once, by majority-vote of the
+    # three agents' `unplaced` fields per row. This lets _sort_key_for() bin
+    # the output correctly without making the sort-key function itself depend
+    # on the per-row merge result (which is computed below).
+    all_keys_unsorted = set().union(*[a.keys() for a in agents.values()])
+    unplaced_keys: set[RowKey] = set()
+    for key in all_keys_unsorted:
+        votes = [a[key].get("unplaced", False) for a in agents.values() if key in a]
         if sum(1 for v in votes if v) > len(votes) / 2:
-            unplaced_ids.add(did)
+            unplaced_keys.add(key)
 
-    all_ids = sorted(all_ids_unsorted, key=_sort_key_for(frozenset(unplaced_ids)))
+    all_keys = sorted(all_keys_unsorted, key=_sort_key_for(frozenset(unplaced_keys)))
+
+    # A `dh_id` that occurs under more than one `sub_period` is a D&H
+    # cross-section duplicate (e.g. Takhat A as daughter-of-Ramesses-II in
+    # House of Ramesses AND as wife-of-Sety-II in Feud of the Ramessides).
+    # Disambiguate those in the report; leave the common case bare.
+    dh_id_counts = Counter(dh for dh, _ in all_keys_unsorted)
+    duplicated_dh_ids = {dh for dh, n in dh_id_counts.items() if n > 1}
 
     final: list[dict] = []
     report: list[str] = []
 
-    for did in all_ids:
-        versions = [(tag, agents[tag].get(did)) for tag in "abc"]
+    for key in all_keys:
+        dh_id, sub_period = key
+        label = f"{dh_id} [{sub_period}]" if dh_id in duplicated_dh_ids else dh_id
+        versions = [(tag, agents[tag].get(key)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
             final.append(present[0][1])
-            report.append(f"{did}: only 1/3 agents found this entry (kept it).\n")
+            report.append(f"{label}: only 1/3 agents found this entry (kept it).\n")
             continue
 
         all_fields = set().union(*[v.keys() for _, v in present])
@@ -234,7 +263,7 @@ def main(agent_dir: Path) -> None:
                 )
         if row_disagreements:
             report.append(
-                f"{did} ({merged.get('name', '?')}):\n"
+                f"{label} ({merged.get('name', '?')}):\n"
                 + "\n".join(row_disagreements)
                 + "\n"
             )

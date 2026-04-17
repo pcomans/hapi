@@ -58,10 +58,15 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
 # Spot corrections identified by the egyptologist-reviewer subagent pass.
-# Each entry: (dh_id, field, new_value, rationale).
-SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
+# Each entry: (dh_id, sub_period, field, new_value, rationale).
+# The composite `(dh_id, sub_period)` key matches merge.py's row key —
+# D&H lists some individuals (e.g. Takhat A) under two Brief Lives
+# sub-sections as separate rows, so a correction may target only one
+# of those rows.
+POWER_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
     (
         "Tiaa A",
+        "The Power and the Glory",
         "notes",
         "Wife of Amenhotep II and mother of Thutmose IV. A number of "
         "monuments were created for her by the latter at Giza, Thebes "
@@ -77,9 +82,13 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "is a verbatim-quotation field so the reviewer's correction is "
         "applied rather than preserving the OCR artifact.",
     ),
-    # --- Amarna chunk (p142–p145) ---
+]
+
+
+AMARNA_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
     (
         "[...]18A–H",
+        "The Amarna Interlude",
         "notes",
         "Daughters of Amenhotep III, shown in the tomb of Kheruef "
         "(TT192; see p. 30); some may be identical with named "
@@ -91,6 +100,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "[...]18K–N",
+        "The Amarna Interlude",
         "notes",
         "Daughters of Anen; depicted with their siblings in tomb TT120.",
         "Majority-voted notes retained the same 'Group entry covering "
@@ -99,6 +109,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "Tey",
+        "The Amarna Interlude",
         "notes",
         "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown "
         "with her husband in his tomb at Amarna and later became his "
@@ -114,6 +125,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "Thutmose B",
+        "The Amarna Interlude",
         "alt_names",
         [],
         "Two of three agents included 'Thutmose Q (conceivably "
@@ -126,6 +138,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "Tutankhuaten",
+        "The Amarna Interlude",
         "alt_names",
         ["Tutankhaten", "Tutankhamun"],
         "All three agents split the D&H compact-notation 'TUTANKHATEN/"
@@ -137,6 +150,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "Amenhotep E",
+        "The Amarna Interlude",
         "alt_names",
         ["Amenhotep IV", "Akhenaten"],
         "Agents preserved D&H's BOLD-CAPITALS rendering (used by D&H for "
@@ -151,6 +165,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "Meryetaten",
+        "The Amarna Interlude",
         "alt_names",
         ["Neferneferuaten"],
         "Same allcaps-vs-titlecase normalisation as Amenhotep E: agents "
@@ -160,6 +175,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "Ankhesenpaaten",
+        "The Amarna Interlude",
         "spouse_names",
         ["Tutankhamun", "Ay (perhaps, brief marriage)"],
         "Agents rendered the Ay-marriage hedge as 'Ay (brief marriage)', "
@@ -172,19 +188,92 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Ramesside-chunk corrections (House of Ramesses, Feud of the Ramessides,
+# Decline of the Ramessides Brief Lives) from the egyptologist-reviewer
+# pass. Two cross-entry-inference misses: agents majority-voted empty
+# `children_names` in cases where the sanctioned chunk-2 pattern
+# (parent's own entry silent + child's entry explicitly names parent)
+# clearly applies. Agent-b flagged both in the merge disagreements but
+# lost the vote.
+RAMESSIDE_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
+    (
+        "Khaemwaset C",
+        "The House of Ramesses",
+        "children_names",
+        ["Hori A", "Isetneferet C", "Ramesses C"],
+        "Chunk-2 sanctioned cross-entry-inference pattern: Khaemwaset "
+        "C's own entry (p. 171) names no children, while three separate "
+        "Brief Lives entries in the same sub-section explicitly name him "
+        "as father — Hori A (p. 171, 'Probably a grandson of Ramesses "
+        "II and son of Khaemwaset C'), Isetneferet C House-row (p. 171, "
+        "'daughter of Khaemwaset C'), Ramesses C House-row (p. 173, "
+        "'Dedicator at Memphis of a statue of his father, Khaemwaset "
+        "C'). Agent-b captured all three; the majority voted [] and "
+        "lost the symmetry. Same mechanism as the Shuttarna II → "
+        "Gilukhipa and Tushratta → Tadukhipa inferences sanctioned in "
+        "the Amarna chunk README.",
+    ),
+    (
+        "Iset D Ta-Hemdjert",
+        "The Decline of the Ramessides",
+        "children_names",
+        ["Amenhirkopshef C", "Ramesses C"],
+        "Chunk-2 sanctioned cross-entry-inference pattern: Iset D "
+        "Ta-Hemdjert's own entry (p. 192) names only her granddaughter "
+        "Iset E, but both Amenhirkopshef C (p. 192, 'Son of Ramesses "
+        "III and Iset D') and Ramesses C Decline-row (p. 194, 'Son of "
+        "Ramesses III and Iset D') explicitly name her as mother. D&H "
+        "uses the short form 'Iset D' in the children's entries and "
+        "the long compound 'Iset D Ta-Hemdjert' as her own dh_id — "
+        "same individual. Without this inference the family tree is "
+        "asymmetric. Populating children here matches the chunk-2 "
+        "precedent (the mother's and grandmother's entries both point "
+        "to Iset E's eventual appointment) and brings the row in line "
+        "with the granddaughter mention already in `notes`.",
+    ),
+    (
+        "Hori A",
+        "The House of Ramesses",
+        "father_name",
+        "Khaemwaset C (probable)",
+        "D&H p. 171 reads 'Probably a grandson of Ramesses II and son "
+        "of Khaemwaset C.' Standard English coordination scopes "
+        "'probably' over the whole nominal phrase — both the grandson "
+        "claim and the son-of-Khaemwaset-C claim share the hedge. The "
+        "extraction agents stripped the hedge from `father_name`; "
+        "restored verbatim to match the chunks-1-2 hedge-preservation "
+        "convention ('Yuya (probable)' on Mutemwia etc.). The paired "
+        "cross-entry inference on Khaemwaset C keeps "
+        "`children_names = ['Hori A', ...]` bare per the README's "
+        "hedge-handling rule (hedges live on the child-row's "
+        "`father_name`, not on the parent's `children_names` list).",
+    ),
+]
+
+
+SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
+    POWER_CORRECTIONS + AMARNA_CORRECTIONS + RAMESSIDE_CORRECTIONS
+)
+
+
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
 
     override_log: list[str] = []
-    for dh_id, field, new_val, rationale in SPOT_CORRECTIONS:
-        row = next((r for r in rows if r["dh_id"] == dh_id), None)
+    for dh_id, sub_period, field, new_val, rationale in SPOT_CORRECTIONS:
+        row = next(
+            (r for r in rows if r["dh_id"] == dh_id and r["sub_period"] == sub_period),
+            None,
+        )
         if row is None:
-            raise KeyError(f"No row with dh_id {dh_id!r}")
+            raise KeyError(
+                f"No row with (dh_id, sub_period)=({dh_id!r}, {sub_period!r})"
+            )
         old_val = row.get(field)
         if old_val == new_val:
             continue
         override_log.append(
-            f"- {dh_id}: {field} corrected ({rationale})\n"
+            f"- {dh_id} [{sub_period}]: {field} corrected ({rationale})\n"
             f"    was: {json.dumps(old_val, ensure_ascii=False)}\n"
             f"    now: {json.dumps(new_val, ensure_ascii=False)}"
         )

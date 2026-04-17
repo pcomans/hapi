@@ -1,13 +1,17 @@
 # Transcription method — Dodson & Hilton 2004
 
-Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Two chunks landed so far (Power-and-Glory Brief Lives, Amarna-Interlude Brief Lives); further chunks (Ramesside, earlier chapters) follow the same method.
+Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Three chunks landed so far (Power-and-Glory, Amarna Interlude, Ramesside sub-blocks); further chunks (earlier chapters) follow the same method.
 
 ## Inputs
 
-1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, ~158 MB. Not committed.
+1. `proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf` — 282 physical pages, ~151 MB. Not committed.
 2. Scope:
    - **Chunk 1 (PR #37, merged):** chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130 (offset +11). `pdf_pages: "126-130"` on every row.
-   - **Chunk 2 (this PR):** chapter 3 *The New Kingdom* → section *The Amarna Interlude* → *Brief Lives* sub-block. Printed pp. 154–157, physical PDF pp. 142–145 (offset +12). `pdf_pages: "142-145"` on every row. The narrative prose of *The Amarna Interlude* (pp. 142–153) is NOT extracted — only the Brief Lives entries.
+   - **Chunk 2 (PR #38, merged):** chapter 3 *The New Kingdom* → section *The Amarna Interlude* → *Brief Lives* sub-block. Printed pp. 154–157, physical PDF pp. 142–145 (offset +12). `pdf_pages: "142-145"` on every row. Narrative prose pp. 142–153 NOT extracted.
+   - **Chunk 3 (this PR) — three sub-blocks:**
+     - *The House of Ramesses* — Brief Lives. Printed pp. 170–175, physical PDF pp. 157–162 (offset +13). `pdf_pages: "157-162"` on every row. Narrative prose pp. 158–169 NOT extracted.
+     - *The Feud of the Ramessides* — Brief Lives. Printed pp. 182–183, physical PDF pp. 169–170 (offset +13). `pdf_pages: "169-170"`. Narrative prose pp. 176–181 NOT extracted.
+     - *The Decline of the Ramessides* — Brief Lives + Unplaced sub-section. Printed pp. 192–194, physical PDF pp. 178–180 (offset +14). `pdf_pages: "178-180"`. Narrative prose pp. 184–191 NOT extracted. Unplaced sub-block (`Anuketemheb`, `Taiay`) sits at the bottom of printed p. 194, under its own `Unplaced` sub-heading.
 
 ## Pipeline
 
@@ -15,38 +19,40 @@ Per ADR-017: Claude Code subagent OCR of the target range, three parallel Claude
 
 ### PDF-split preamble (new, not in Ryholt / Kitchen)
 
-The source PDF is 158 MB — above the 100 MB limit of the `Read` tool. The OCR subagent cannot open the book directly. Before spawning the OCR subagent, the main agent splits out the target page range into a small sub-PDF under `raw/source-pNNN-pMMM.pdf` using `pypdf`:
+The source PDF is ~151 MB — above the 100 MB limit of the `Read` tool. The OCR subagent cannot open the book directly. Before spawning the OCR subagent, the main agent splits out the target page range into a small sub-PDF under `raw/source-pNNN-pMMM.pdf` using `pypdf`. For chunk 3 the three sub-blocks are non-contiguous (pp. 157–162, 169–170, 178–180), so three separate sub-PDFs are extracted:
 
 ```bash
-# Run from the repo root. REPO_ROOT is wherever this repo is cloned;
-# no user-specific path is hard-coded.
-cd "$REPO_ROOT/pipeline" && uv run --with pypdf python - <<'PY'
+# Run from <repo>/pipeline; path is repo-relative.
+uv run --with pypdf python - <<'PY'
 import pypdf
 src = "../proprietary/books/Dodson & Hilton 2004 - Complete Royal Families.pdf"
-# Chunk 1 (Power and Glory):
-# out = "pipeline/authority/sources/dodson-hilton-queens/raw/source-p126-p130.pdf"
-# page_range = range(125, 130)           # 0-indexed physical 126–130
-# Chunk 2 (Amarna Interlude):
-out = "pipeline/authority/sources/dodson-hilton-queens/raw/source-p142-p145.pdf"
-page_range = range(141, 145)             # 0-indexed physical 142–145
 r = pypdf.PdfReader(src)
-w = pypdf.PdfWriter()
-for i in page_range:
-    w.add_page(r.pages[i])
-with open(out, "wb") as f:
-    w.write(f)
+for out_name, phys_range in [
+    # Chunk 1 (Power and Glory):        range(125, 130)  # physical 126–130
+    # Chunk 2 (Amarna Interlude):       range(141, 145)  # physical 142–145
+    ("source-p157-p162.pdf", range(156, 162)),  # Chunk 3 — House of Ramesses
+    ("source-p169-p170.pdf", range(168, 170)),  # Chunk 3 — Feud of the Ramessides
+    ("source-p178-p180.pdf", range(177, 180)),  # Chunk 3 — Decline of the Ramessides
+]:
+    w = pypdf.PdfWriter()
+    for i in phys_range:
+        w.add_page(r.pages[i])
+    with open(f"pipeline/authority/sources/dodson-hilton-queens/raw/{out_name}", "wb") as f:
+        w.write(f)
 PY
 ```
 
-The sub-PDF is gitignored (`raw/*`). The source PDF itself lives under `proprietary/` (repo-level gitignored — see the main `.gitignore`); the path above is repo-relative, not user-specific. The OCR subagent then Reads the sub-PDF. Physical-page labels in `source_citation.pdf_pages` refer to the **source-book** physical page numbers (e.g. `"126-130"`), not the sub-PDF's internal numbering — the sub-PDF is just a Read-size workaround, not a citation target.
+The sub-PDFs are gitignored (`raw/*`). The source PDF lives under `proprietary/` (repo-level gitignored). Physical-page labels in `source_citation.pdf_pages` refer to the **source-book** physical page numbers (e.g. `"157-162"`), not the sub-PDF's internal numbering — the sub-PDF is just a Read-size workaround, not a citation target.
 
 ### OCR
 
 **Chunk 1 (Power and Glory, PR #37):** 5 pages of Brief Lives at `raw/source-p126-p130.pdf`. The chunk file is not committed.
 
-**Chunk 2 (Amarna Interlude, this PR):** 4 pages of Brief Lives at `raw/source-p142-p145.pdf`. Extracted via the same `pypdf` one-shot (0-indexed physical pages 141–144 inclusive; see PDF-split preamble above).
+**Chunk 2 (Amarna Interlude, PR #38):** 4 pages of Brief Lives at `raw/source-p142-p145.pdf`. Extracted via the same `pypdf` one-shot (0-indexed physical pages 141–144 inclusive; see PDF-split preamble above).
 
 **Chunk 2 OCR — Claude Opus 4.6 succeeded.** Per the ADR-017 § "Amendment 2026-04-15" requirement to re-attempt Opus OCR before escalating to Gemini, the Amarna chunk was OCR'd by Claude Opus 4.6 in the main session (not a subagent) on 2026-04-15. Unlike chunk 1 — where both a Claude Code subagent and a main-session attempt were blocked, and a later retry produced a principled copyright-scope refusal — the Amarna main-session attempt produced the OCR markdown without a block or refusal. The likely contributing factors are smaller chunk size (4 pages vs 5), lower density of mortuary / reburial prose compared to the Thutmoside Brief Lives, and main-session context that fully surfaced the ADR-017 scholarly-extraction framing. The Amarna chunk therefore follows the original ADR-017 step 1 path (Claude Opus 4.6 OCR with no external-model fallback).
+
+**Chunk 3 OCR — Claude Opus 4.7 (1M context) subagents succeeded across all three sub-blocks.** Per the ADR-017 amendment, the default path is a Claude Code OCR subagent on the latest Opus. All three Ramesside sub-blocks (House 6pp, Feud 2pp, Decline 3pp) were OCR'd by parallel Claude Opus 4.7 subagents on 2026-04-16 with a fair-use scholarly-extraction framing. No refusal, no block. Outputs: `raw/chunk-p157-p162.md` (~126 entries), `raw/chunk-p169-p170.md` (10 entries), `raw/chunk-p178-p180.md` (35 entries). This restores the playbook default (subagent OCR) — chunk 2's main-session deviation was specific to chunk 2.
 
 Gemini 3.1 Pro remains the committed fallback for any future chunk where Opus refuses; `transcribe-gemini-prompt.md` is retained verbatim for reproducibility of chunk 1 and any future fallback event.
 
@@ -70,14 +76,17 @@ OCR rules (delta from Ryholt/Kitchen):
 
 ### Structured extraction — three parallel subagents
 
-Each chunk's OCR markdown is fed to three independent extraction subagents running the identical chunk-specific prompt. Each subagent writes JSONL to `<agent_dir>/agent-{a,b,c}<chunk_suffix>.jsonl` where `<agent_dir>` defaults to `<source_dir>/raw/` — the same sandbox-writable path rule that Kitchen adopted. Chunk files:
+Each chunk's OCR markdown is fed to three independent extraction subagents running the identical chunk-specific prompt. Each subagent writes JSONL to `<agent_dir>/agent-{a,b,c}-<chunk_suffix>.jsonl` (hyphen between the agent-tag and the chunk suffix — `merge.py._load_agent_chunks` matches the glob `agent-{tag}-*.jsonl`) where `<agent_dir>` defaults to `<source_dir>/raw/` — the same sandbox-writable path rule that Kitchen adopted. Chunk files:
 
 | Chunk | Prompt | Agent outputs | Expected rows |
 |---|---|---|---|
-| Power and Glory (p126–p130) | `prompt.md` | `agent-{a,b,c}.jsonl` | 50–60 |
-| Amarna Interlude (p142–p145) | `prompt-amarna.md` | `agent-{a,b,c}-amarna.jsonl` | ~41 |
+| Power and Glory (p126–p130) | `prompt.md` | `agent-{a,b,c}-power.jsonl` | 59 |
+| Amarna Interlude (p142–p145) | `prompt-amarna.md` | `agent-{a,b,c}-amarna.jsonl` | 41 |
+| Ramesside (p157–p162 + p169–p170 + p178–p180) | `prompt-ramesside.md` | `agent-{a,b,c}-ramesside.jsonl` | 170 |
 
-`merge.py` discovers all `agent-{tag}*.jsonl` files per agent tag, unions their rows (raising on duplicate `dh_id` across chunks — D&H's disambiguator letters make cross-chunk homonyms impossible within one source), then majority-votes per-field across the three agents' unified dicts. Adding a chunk 3 (Ramesside, earlier chapters, etc.) is just another prompt file + another triple of `agent-{a,b,c}-<suffix>.jsonl` output files; `merge.py` does not need to know about it in advance.
+`merge.py` discovers all `agent-{tag}-*.jsonl` files per agent tag, unions their rows, then majority-votes per-field across the three agents' unified dicts. The primary key is the composite `(dh_id, sub_period)` — `dh_id` alone is not unique across the full reconciled file because D&H occasionally lists the same individual under two Brief Lives sub-sections (chunk 3 introduced this case with `Takhat A` and `Isetneferet C`; see README § Schema). Adding a future chunk (earlier chapters) is still just another prompt file + another triple of `agent-{a,b,c}-<suffix>.jsonl` output files; `merge.py` does not need to know about it in advance.
+
+**The Ramesside PR retired the legacy unsuffixed filenames.** Originally Pre-Amarna rows lived in `agent-{a,b,c}.jsonl` (no suffix) and follow-up chunks added `-amarna`/`-ramesside` suffixes. The Ramesside PR renamed Pre-Amarna raw files to `-power` and dropped the base-unsuffixed branch in `_load_agent_chunks`. Every chunk from here on carries an explicit chunk suffix.
 
 ### Merge + fix_rows
 
@@ -116,6 +125,27 @@ Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 110 — offset
 - Physical p. 142 = printed p. 154 (start of Brief Lives, offset +12)
 - Physical p. 145 = printed p. 157 (end of Brief Lives, offset +12)
 - Physical p. 146 = printed p. 158 (start of "House of Ramesses", offset +12; outside Amarna scope)
+
+**Ramesside chunk offset drifts.** The +12 offset stable at the start of the Ramesside range shifts twice:
+
+1. **+12 → +13 at printed pp. 160–161 (physical p. 148).** The 19th Dynasty part 1 genealogical-chart spread spans two printed pages but was captured as a single PDF page (a scanner two-page-spread-as-one-page, same pattern as the Amarna chunk's pp. 144–145 anomaly). The offset holds at +13 from physical p. 148 through physical p. 172 (printed p. 185).
+2. **+13 → +14 at printed pp. 186–187 (physical p. 173).** The 20th Dynasty genealogical-chart spread has the same single-page-spread capture, shifting the offset again. Holds at +14 from physical p. 174 through the end of the Decline chunk (physical p. 180 = printed p. 194) and continues into the 21st Dynasty section beyond this PR's scope.
+
+**Ramesside chunk verification points:**
+- Physical p. 146 = printed p. 158 (start of "House of Ramesses", offset +12)
+- Physical p. 147 = printed p. 159 (offset +12)
+- Physical p. 148 = printed pp. 160–161 spread (19th Dyn pt 1 chart)
+- Physical p. 149 = printed p. 162 (offset +13; stable from here)
+- Physical p. 157 = printed p. 170 (start of House Brief Lives, offset +13)
+- Physical p. 162 = printed p. 175 (end of House Brief Lives, offset +13)
+- Physical p. 169 = printed p. 182 (start of Feud Brief Lives, offset +13)
+- Physical p. 170 = printed p. 183 (end of Feud Brief Lives, offset +13)
+- Physical p. 173 = printed pp. 186–187 spread (20th Dyn chart)
+- Physical p. 174 = printed p. 188 (offset +14; stable from here)
+- Physical p. 178 = printed p. 192 (start of Decline Brief Lives, offset +14)
+- Physical p. 180 = printed p. 194 (end of Decline Brief Lives + Unplaced, offset +14)
+
+Every follow-up PR must re-verify the offset at both the chunk's first and last printed pages; each two-page chart spread captured as a single physical page adds +1 to the offset.
 
 ## Structure of Brief Lives entries
 
