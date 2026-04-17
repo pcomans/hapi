@@ -1,7 +1,9 @@
 #!/bin/bash
 # PostToolUse hook for PR-related commands:
-# - gh pr create: request Copilot review + remind agent to document learnings
-# - git push: request Copilot review if on a PR branch
+# - gh pr create: Gemini Code Assist auto-reviews on PR open; just remind
+#   the agent to document learnings.
+# - git push: post a /gemini review comment so Gemini re-reviews the new
+#   HEAD (auto-review only fires on PR creation, not on subsequent pushes).
 
 # TOOL_INPUT is a JSON env var with the tool's input parameters
 # For Bash tool, it contains { "command": "..." }
@@ -31,31 +33,25 @@ if [ -z "$PR_NUMBER" ]; then
   exit 0
 fi
 
-# Request Copilot review and verify it was added
-REVIEW_OUTPUT=$(gh pr edit "$PR_NUMBER" --add-reviewer @copilot 2>&1)
-REVIEW_STATUS=$?
-
-# Verify the reviewer was actually added
-REVIEWERS=$(gh pr view "$PR_NUMBER" --json reviewRequests --jq '.reviewRequests[].login' 2>/dev/null)
-COPILOT_ADDED=false
-if echo "$REVIEWERS" | grep -qi copilot; then
-  COPILOT_ADDED=true
-fi
-
-# Build the response message
+# Build the response message. For PR creation the Gemini Code Assist
+# GitHub App auto-reviews; no explicit trigger needed. For subsequent
+# pushes we post `/gemini review` so the bot re-reviews the new HEAD.
 MESSAGES=""
 
-if [ "$COPILOT_ADDED" = true ]; then
-  MESSAGES="Copilot review requested on PR #$PR_NUMBER."
-elif [ $REVIEW_STATUS -ne 0 ]; then
-  MESSAGES="WARNING: Failed to request Copilot review on PR #$PR_NUMBER: $REVIEW_OUTPUT. Do NOT silently skip this — tell the user."
+if [ "$IS_GIT_PUSH" = true ]; then
+  REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "/gemini review" 2>&1)
+  if [ $? -eq 0 ]; then
+    MESSAGES="Gemini Code Assist re-review requested on PR #$PR_NUMBER."
+  else
+    MESSAGES="WARNING: Failed to post /gemini review on PR #$PR_NUMBER: $REVIEW_OUTPUT. Do NOT silently skip this — tell the user."
+  fi
 else
-  MESSAGES="WARNING: Copilot review request returned success but reviewer was not added to PR #$PR_NUMBER. Do NOT silently skip this — tell the user."
+  MESSAGES="Gemini Code Assist will auto-review PR #$PR_NUMBER within ~5 minutes."
 fi
 
 # Add documentation reminder for PR creation
 if [ "$IS_PR_CREATE" = true ]; then
-  MESSAGES="$MESSAGES\n\nYou just created PR #$PR_NUMBER. Before finishing, you MUST:\n1. Update the task list — mark completed tasks as done.\n2. Document learnings in docs/museum-sources/*.md or pipeline/CLAUDE.md.\n3. Wait for CI to pass and Copilot review, then reply to every comment."
+  MESSAGES="$MESSAGES\n\nYou just created PR #$PR_NUMBER. Before finishing, you MUST:\n1. Update the task list — mark completed tasks as done.\n2. Document learnings in docs/museum-sources/*.md or pipeline/CLAUDE.md.\n3. Wait for CI to pass and the Gemini Code Assist review, then reply to every comment."
 fi
 
 # MVP task list guard: agent must pass TASK_LIST_UPDATED=1 AND the file must be in the diff.

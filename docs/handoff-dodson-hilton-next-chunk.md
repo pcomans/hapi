@@ -109,8 +109,8 @@ The egyptologist-reviewer writes corrections directly into `fix_rows.py`'s new c
 ### 9. PR, reviewers, CI
 
 Standard Phase 0 workflow per `CLAUDE.md` § "Pull request workflow":
-1. Push branch, open PR, request Copilot review via API.
-2. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel after Copilot posts.
+1. Push branch, open PR. Gemini Code Assist auto-reviews on PR creation within ~5 minutes. For re-review after subsequent pushes, post `/gemini review` as a PR comment.
+2. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel after Gemini Code Assist posts.
 3. Invoke `scope-accountability-enforcer` before replying to any review batch; prefix replies with `SCOPE_CHECKED=1`.
 4. Poll `gh pr checks <N> --watch` until green.
 
@@ -152,7 +152,7 @@ Log in `human-review-<YYYY-MM-DD>-<chapter>.md`. Mark remaining un-sampled rows 
 ## Memory pointers
 
 - Project-level memory: in a Claude Code session, the per-project agent memory lives under `~/.claude/projects/<project-slug>/memory/` on macOS. Look for `project_current_pr_state.md` there — it has the authoritative list of what's landed vs pending. The exact path varies by environment; a fresh Claude Code session on this repo will surface it automatically via auto-memory loading.
-- User feedback rules: `feedback_autonomy.md`, `feedback_branch_pr.md`, `feedback_push_after_commit.md`, `feedback_pr_review_replies.md`, `feedback_ci_failures.md`, `feedback_copilot_review.md`, `feedback_pr_reviewers.md` — read all of them before starting. They reflect specific patterns the user has corrected in prior sessions.
+- User feedback rules: `feedback_autonomy.md`, `feedback_branch_pr.md`, `feedback_push_after_commit.md`, `feedback_pr_review_replies.md`, `feedback_ci_failures.md`, `feedback_gemini_review.md`, `feedback_pr_reviewers.md` — read all of them before starting. They reflect specific patterns the user has corrected in prior sessions.
 - Constitutional rules: `CLAUDE.md` rules 1–12 are non-negotiable. Especially rule 1 (scholarly traceability), rule 5 (tests assert values), rule 6 (raw data sacred), rule 12 (existing violations don't justify new ones).
 
 Good luck. The pattern is well-established across three chunks now; chapter-per-PR should be a clean pass if the source PDF is readable and the OCR doesn't refuse.

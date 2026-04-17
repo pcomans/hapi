@@ -436,7 +436,7 @@ For each of the eleven sources, in the order above:
 4. **Transcribe.** Use OCR + manual verification for scanned PDFs, or direct copy-paste + normalisation for text PDFs. Whichever method, document it in `transcribe.md` step by step so a reviewer can reproduce.
 5. **Validate.** Run the existing structural tests: `cd pipeline && uv run pytest tests/test_structure.py` should stay green (you're not touching tested files, but sanity-check). Write a source-specific test in `pipeline/tests/test_sources_<slug>.py` that loads your JSONL and asserts specific field values for 3 known rows (e.g. for Shaw, assert that the row for Predynastic has `date_range_start_bce == -4000`).
 6. **Commit, push, open PR.** Title: `feat: transcribe <source short name> → sources/<slug>`. Body: cite the source, row count, pages covered, rights verification summary, any known gaps.
-7. **Request Copilot review.** `gh pr edit <n> --add-reviewer @copilot`. Wait, reply to every comment on thread per `CLAUDE.md` PR workflow. Invoke the `scope-accountability-enforcer` subagent before the batch reply.
+7. **Gemini Code Assist auto-reviews on PR creation.** For re-review after subsequent pushes, post `/gemini review` as a PR comment (`gh pr comment <n> --body "/gemini review"`). Wait, reply to every comment on thread per `CLAUDE.md` PR workflow. Invoke the `scope-accountability-enforcer` subagent before the batch reply.
 8. **Ensure CI green.** `gh pr checks <n> --watch`.
 9. **Move to the next source only after the PR is merged.** Do not pile up eleven branches in parallel — a reviewer will drown.
 
