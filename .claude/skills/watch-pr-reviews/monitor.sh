@@ -21,7 +21,15 @@ REPO=${3:-$(gh repo view --json nameWithOwner -q .nameWithOwner)}
 SKILL_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
 TOKEN=$(gh auth token)
-SEEN=$(mktemp)
+
+# macOS default TMPDIR (/var/folders/...) is not in the Monitor's
+# sandbox write-allowlist; /tmp/claude is. Prefer that when it exists,
+# fall back to default mktemp outside the sandbox.
+if mkdir -p /tmp/claude 2>/dev/null && [ -w /tmp/claude ]; then
+  SEEN=$(mktemp /tmp/claude/watch-pr-reviews.XXXXXX)
+else
+  SEEN=$(mktemp)
+fi
 trap 'rm -f "$SEEN"' EXIT
 
 # Seed: fail loud if the request or parse fails. An empty seed set
