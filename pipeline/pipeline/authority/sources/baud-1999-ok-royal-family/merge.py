@@ -159,9 +159,11 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(baud_id)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            final.append(present[0][1])
+            # Single-agent rows still go through _majority so sentinel
+            # strings ("none", "-", "n/a") are normalised to null — merge
+            # must produce a uniform schema regardless of how many agents
+            # voted on a given row.
             report.append(f"{baud_id}: only 1/3 agents found this entry (kept it).\n")
-            continue
 
         all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}
