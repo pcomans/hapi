@@ -82,7 +82,7 @@ Each chunk's OCR markdown is fed to three independent extraction subagents runni
 |---|---|---|---|
 | Power and Glory (p126–p130) | `prompt.md` | `agent-{a,b,c}-power.jsonl` | 59 |
 | Amarna Interlude (p142–p145) | `prompt-amarna.md` | `agent-{a,b,c}-amarna.jsonl` | 41 |
-| Ramesside (p157–p162 + p169–p170 + p178–p180) | `prompt-ramesside.md` | `agent-{a,b,c}-ramesside.jsonl` | ~171 |
+| Ramesside (p157–p162 + p169–p170 + p178–p180) | `prompt-ramesside.md` | `agent-{a,b,c}-ramesside.jsonl` | 170 |
 
 `merge.py` discovers all `agent-{tag}-*.jsonl` files per agent tag, unions their rows, then majority-votes per-field across the three agents' unified dicts. The primary key is the composite `(dh_id, sub_period)` — `dh_id` alone is not unique across the full reconciled file because D&H occasionally lists the same individual under two Brief Lives sub-sections (chunk 3 introduced this case with `Takhat A` and `Isetneferet C`; see README § Schema). Adding a future chunk (earlier chapters) is still just another prompt file + another triple of `agent-{a,b,c}-<suffix>.jsonl` output files; `merge.py` does not need to know about it in advance.
 
