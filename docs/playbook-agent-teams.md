@@ -22,7 +22,7 @@ This is the single most important fact about agent teams and the reason the 2026
 
 > "Teammates cannot spawn subagents, create teams, or add other teammates. The `Agent` tool, `TeamCreate`, `TeamDelete`, and `CronCreate/Delete/List` are all removed from teammates at spawn time."
 
-The docs at https://code.claude.com/docs/en/sub-agents line 318 say: "Subagents cannot spawn other subagents, so `Agent(agent_type)` has no effect in subagent definitions." Teammates inherit this — despite the agent-teams doc calling them "full, independent Claude Code sessions," empirically they have no `Agent` tool in their harness. No settings flag, no env var, no `tools: Agent, ...` line in a subagent definition overrides this. Adding `Agent` to a subagent's `tools` has "no effect" when it runs as a subagent or teammate; only main-thread agents (`claude --agent`) respect it.
+The Claude Code sub-agents documentation ([docs.claude.com/en/docs/claude-code/sub-agents](https://docs.claude.com/en/docs/claude-code/sub-agents)) states that subagents cannot spawn other subagents, and that listing `Agent` in a subagent's `tools` allowlist has no effect when that definition runs as a subagent. Teammates inherit this — despite the agent-teams docs calling them "full, independent Claude Code sessions," empirically they have no `Agent` tool in their harness. No settings flag, no env var, no `tools: Agent, ...` line in a subagent definition overrides this; only main-thread agents (`claude --agent`) honour the `Agent` tool.
 
 GitHub issues confirming: [#32731](https://github.com/anthropics/claude-code/issues/32731), [#23506](https://github.com/anthropics/claude-code/issues/23506), [#4182](https://github.com/anthropics/claude-code/issues/4182).
 
@@ -30,11 +30,9 @@ GitHub issues confirming: [#32731](https://github.com/anthropics/claude-code/iss
 
 ## Enabling agent teams
 
-Prerequisites:
+Prerequisites (both are user-local, not tracked in this repo — verify before spawning a team):
 - Claude Code v2.1.32+ (check with `claude --version`).
-- `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `~/.claude.json` env block or shell environment.
-
-Both are already set in this repo's environment.
+- `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` exported in your shell, or set in your user-level `~/.claude.json` env block.
 
 ## Spawning teammates (canonical pattern)
 
@@ -81,7 +79,7 @@ Cost: lead context grows with each spawn round; keep briefs terse.
 ## Shutdown and cleanup
 
 Strict order:
-1. `SendMessage(to="<teammate>", type="shutdown_request")` for every teammate. Teammate responds `shutdown_response` approve/reject. Wait for approval.
+1. `SendMessage(to="<teammate>", message={"type": "shutdown_request"})` for every teammate. The `type` key lives *inside* the `message` object — passing it as a top-level argument errors on the schema. Teammate responds with `{"type": "shutdown_response", "approve": true/false, "request_id": "..."}`. Wait for approval.
 2. `TeamDelete()` after all teammates are gone. Fails if any are still active.
 3. Filesystem: `git worktree list` → `git worktree remove -f <path>` for each, `git branch -D <teammate-branches>`, remove any remote branches the teammates pushed.
 4. Task list and team config: automatically wiped by `TeamDelete` (they live at `~/.claude/teams/{name}/` and `~/.claude/tasks/{name}/`, outside the repo).
@@ -98,7 +96,7 @@ The 2026-04-16 session lost its shell to exactly this. `git worktree remove -f` 
 - Teammate idle notifications are NORMAL — not errors. "Idle" means waiting for input. Do not react to idle as if something broke; only react if the teammate messages with a specific question or blocker.
 - One team per lead session. Cannot transfer leadership; the session that created the team is lead for team lifetime.
 - Teammates inherit the lead's permission mode. If you ran the lead with `--dangerously-skip-permissions`, all teammates do too.
-- Hook enforcement: `TeammateIdle`, `TaskCreated`, `TaskCompleted` hooks can gate teammate behaviour. See `/en/hooks`.
+- Hook enforcement: `TeammateIdle`, `TaskCreated`, `TaskCompleted` hooks can gate teammate behaviour. See the Claude Code hooks documentation at [docs.claude.com/en/docs/claude-code/hooks](https://docs.claude.com/en/docs/claude-code/hooks).
 
 ## Known bugs to watch for
 
