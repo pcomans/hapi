@@ -16,7 +16,7 @@ lineage). Adaptations:
   already globally unique, so the composite key reduces to the old
   behaviour for them.
 - `_sort_key` alphabetical by `dh_id` (D&H's own Brief Lives ordering);
-  `Q`-suffix "Unplaced" entries sort after the main alphabetical run;
+  rows where `unplaced=True` sort after the main alphabetical run;
   names with leading `[` / `–` (lacunae) sort last; `sub_period` acts
   as a final tiebreaker so composite-key duplicates land adjacently.
 - `DEFAULT_AGENT_DIR` is `<source_dir>/raw/` — the sandbox-writable path
