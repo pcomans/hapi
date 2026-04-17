@@ -39,7 +39,7 @@ trap 'rm -f "$SEEN"' EXIT
 # Seed: seed.py writes the SEEN file itself (via $SEEN env var) and
 # prints POLL-ERROR to stdout on any failure. Exits 2 on seed failure
 # so this script bails loud rather than proceeding with an empty set.
-if ! curl -fsSL -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
+if ! curl -fsSL -H "Authorization: token $TOKEN" \
        "https://api.github.com/repos/$REPO/pulls/$PR/reviews" 2>&1 \
      | SHA="$SHA" SEEN="$SEEN" python3 "$SKILL_DIR/seed.py"; then
   exit 2

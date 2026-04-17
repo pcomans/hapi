@@ -17,12 +17,7 @@ import sys
 try:
     sha = os.environ["SHA"]
     seen_path = os.environ["SEEN"]
-    raw = sys.stdin.read()
-    try:
-        data = json.loads(raw, strict=False)
-    except Exception as exc:
-        excerpt = raw[:200].replace("\n", " ")
-        raise ValueError(f"JSON parse failed: {exc}; raw: {excerpt!r}")
+    data = json.loads(sys.stdin.read(), strict=False)
     if not isinstance(data, list):
         raise ValueError(
             f"expected JSON array of reviews, got {type(data).__name__}"
