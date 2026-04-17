@@ -85,7 +85,7 @@ The three-agent extraction prompt should explicitly include a "preserve Baud's h
 Follow the playbook's Step 1–11 for Phase-0 sources. Baud-specific deviations:
 
 1. **Scope the sub-PDF for chunk 1 (entries `[1]`–`[40]`).** Find the page range in vol. 2 that covers those entries. Re-verify at both ends of the chunk per the playbook's page-offset warning.
-2. **OCR via a Claude Code subagent** on Opus 4.6 first. If Opus refuses on French scholarly prose, reframe the prompt (fair-use extraction for a private research repo). If that also fails, escalate to Gemini per ADR-017 amendment — but Baud's French prose should not hit the same content-filter that Dodson-Hilton's Brief Lives did, since it's scholarly prosopography not royal-children narrative.
+2. **OCR via a Claude Code subagent** on Claude Opus 4.7 (the current-good OCR model on this project — Dodson-Hilton's `transcribe.md` records its use on 2026-04-16 chunks). If Opus refuses on French scholarly prose, reframe the prompt (fair-use extraction for a private research repo). If that also fails, escalate to Gemini per ADR-017 amendment — but Baud's French prose should not hit the same content-filter that Dodson-Hilton's Brief Lives did, since it's scholarly prosopography not royal-children narrative.
 3. **Three parallel extraction subagents** with the Baud-specific `prompt-chunk-1.md`. Each writes `raw/agent-{a,b,c}-chunk-1.jsonl`. Expected row count: ~40 (range 35–45 is a sanity-check bound).
 4. **Deterministic merge** via `merge.py` adapted from Ryholt or Kitchen. Primary key: `baud_id`. **Use a single key, not composite — Baud's entry-number scheme doesn't reuse labels across sub-sections (he has a flat numeric list, unlike D&H's sub-section-scoped letter suffixes).**
 5. **LLM reviewer pass** via `egyptologist-reviewer` subagent, targeting Baud-specific risks:
@@ -105,7 +105,7 @@ Follow the playbook's Step 1–11 for Phase-0 sources. Baud-specific deviations:
 2. **Scan-order anomalies shift the physical-to-printed offset mid-chunk.** Verify at both ends of every chunk; document the drift path in `transcribe.md`. IFAO PDFs are more likely to have fold-outs than Thames-and-Hudson because of the larger scholarly-apparatus footprint.
 3. **Agent JSONL files stay under `raw/` and are gitignored.** The `tests/test_structure.py::test_no_tracked_files_under_raw_for_phase0_sources` test (landed in PR #47) will fail CI if any non-`.gitkeep` file under `raw/` is committed. Stage by filename, never `git add -A`.
 4. **Pre-push hook requires `TASK_LIST_UPDATED=1`** when `docs/mvp-tasks.md` is in the commit. Prefix with it or the hook blocks.
-5. **Baud's French prose.** The extraction prompt must explicitly instruct agents to preserve Egyptian transliteration verbatim (Baud uses the French-school convention, not the Anglo convention — `ꜣḥw.t-ḥr.w` vs `Ahutheruw`). Conversion happens in Phase A, not extraction.
+5. **Baud's transliteration convention.** Both the French and Anglo-American schools use the same diacritic character set (ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ) — there is no character-set difference to normalise. The real distinctions are conventions like the dot-for-suffix (Baud writes `mw.t-nsw`, some Anglo-American treatments elide the dot), `j` vs `i` for the iod glyph, and morpheme-boundary marking. The extraction prompt must instruct agents to preserve Baud's printed form verbatim — dots, hyphens, glyph choices are load-bearing for later reconciliation against pharaoh.se and Beckerath. Normalisation to a single house style happens in Phase A, not extraction.
 
 ---
 
