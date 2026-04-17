@@ -65,11 +65,11 @@ No other chapter banner or opening chronology section in Shaw states sub-period 
 
 ## Rights
 
-OUP, in copyright. This extract contains **factual data** — period names, chapter numbers, BCE date ranges, author attributions, and page numbers — which are not copyrightable. The Naqada I/II BCE boundaries on the chapter 3 row come from Midant-Reynes (pp. 42-43); those numeric intervals are recorded as facts (with page citations) in `raw/chapter-banners.txt` and in the `sub_periods` field, not as verbatim prose. No chapter-body sentences are reproduced. Per handoff rule 4, the book PDF itself is not committed; the scan lives at `proprietary/books/Shaw 2000 - Oxford History of Ancient Egypt.pdf` outside the public repo and is pinned by SHA-256 above.
+OUP, in copyright. This extract contains **factual data** — period names, chapter numbers, BCE date ranges, author attributions, and page numbers — which are not copyrightable. The Naqada I/II BCE boundaries on the chapter 3 row come from Midant-Reynes (pp. 42-43); those numeric intervals are recorded as facts (with page citations) in `chapter-banners.txt` and in the `sub_periods` field, not as verbatim prose. No chapter-body sentences are reproduced. Per handoff rule 4, the book PDF itself is not committed; the scan lives at `proprietary/books/Shaw 2000 - Oxford History of Ancient Egypt.pdf` outside the public repo and is pinned by SHA-256 above.
 
 ## Method
 
-See `transcribe.md`. Summary: chapter titles, date ranges, and opening page numbers were read from the book's Table of Contents (pp. v–vi) and re-verified against each chapter's opening banner in the Internet Archive OCR `.txt` extract; the PDF page image was consulted wherever the OCR was noisy. `raw/chapter-banners.txt` commits the thirteen banner blocks verbatim from the OCR so a reviewer without the PDF can still audit the extracted values.
+See `transcribe.md`. Summary: chapter titles, date ranges, and opening page numbers were read from the book's Table of Contents (pp. v–vi) and re-verified against each chapter's opening banner in the Internet Archive OCR `.txt` extract; the PDF page image was consulted wherever the OCR was noisy. `chapter-banners.txt` commits the thirteen banner blocks verbatim from the OCR so a reviewer without the PDF can still audit the extracted values.
 
 ## Known gaps
 

@@ -13,6 +13,7 @@ When adding a new museum, these tests form the checklist. Run them with:
 
 import ast
 import importlib
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -211,6 +212,44 @@ def test_mapper_implements_protocol(source: MuseumSource):
 # ---------------------------------------------------------------------------
 # Normalize asset wires to sync_search
 # ---------------------------------------------------------------------------
+
+
+def test_no_tracked_files_under_raw_for_phase0_sources():
+    """Phase-0 scan-only source directories must not commit anything under `raw/`
+    except `.gitkeep`. Backstops the playbook's "Rights policy" invariant
+    (docs/playbook-phase-0-ocr-transcription.md § "Rights policy") against
+    `git add -f` overrides that bypass the `raw/*` + `!raw/.gitkeep` gitignore.
+
+    A directory is treated as a Phase-0 source iff it has a `transcribe.md` at
+    source-dir root. Sources with different rights models (pharaoh.se web scrape,
+    iDAI gazetteer, wikipedia-ptolemaic, HKW) have no `transcribe.md` and are
+    correctly skipped.
+    """
+    repo_root = PIPELINE_ROOT.parent
+    sources_root = PIPELINE_ROOT / "pipeline" / "authority" / "sources"
+    phase0_source_dirs = [
+        d for d in sorted(sources_root.iterdir())
+        if d.is_dir() and (d / "transcribe.md").exists()
+    ]
+
+    violators: dict[str, list[str]] = {}
+    for source_dir in phase0_source_dirs:
+        raw_rel = (source_dir / "raw").relative_to(repo_root)
+        result = subprocess.run(
+            ["git", "ls-files", "--", str(raw_rel)],
+            capture_output=True, text=True, check=True, cwd=str(repo_root),
+        )
+        tracked = [line for line in result.stdout.splitlines() if line]
+        bad = [p for p in tracked if not p.endswith("/raw/.gitkeep")]
+        if bad:
+            violators[source_dir.name] = bad
+
+    assert not violators, (
+        "Phase-0 source `raw/` directories must only contain `.gitkeep`. "
+        "Commit tabular transcriptions at source-dir root instead — see "
+        "docs/playbook-phase-0-ocr-transcription.md § 'Rights policy'. "
+        f"Violators: {violators}"
+    )
 
 
 def test_sync_search_depends_on_all_normalize_assets():
