@@ -76,7 +76,7 @@ Define the full schema in `prompt-chunk-1.md` before extraction; refine across c
 
 Per `docs/playbook-phase-0-ocr-transcription.md` § "Interpretive facts are still facts, but cite them as such": Baud's attributions are not bare givens. When extracted facts depend on Baud's judgment (e.g., "probable mother of X", tomb assignments that Baud reconstructs from fragmentary evidence), the extracted field must either carry the hedge or cite `source_note: "per Baud 1999 §N"` so Phase A can distinguish attested-in-the-source from asserted-by-Baud.
 
-The three-agent extraction prompt should explicitly include a "preserve Baud's hedges" rule in its pitfalls block — same pattern as Dodson-Hilton's hedge-preservation rule in `raw/prompt-ramesside.md`.
+The three-agent extraction prompt should explicitly include a "preserve Baud's hedges" rule in its pitfalls block — same pattern as Dodson-Hilton's hedge-preservation rule in `pipeline/pipeline/authority/sources/dodson-hilton-queens/prompt-ramesside.md`.
 
 ---
 
