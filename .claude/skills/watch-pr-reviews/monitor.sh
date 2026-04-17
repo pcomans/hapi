@@ -8,11 +8,11 @@
 #
 # Emits to stdout:
 #   REVIEW <login> <state> id=<id>   — one line per new review
-#   POLL-ERROR: <detail>             — on parse / HTTP / shape failure
+#   POLL-ERROR: seed: <detail>       — seed stage failure (then exit 2)
+#   POLL-ERROR: poll: <detail>       — poll stage failure (loop continues)
 #
-# Exits only on SIGTERM (Monitor timeout or TaskStop), or non-zero if
-# the initial seed request fails — an empty seen set would mis-fire on
-# every existing review. Cleans up the temp seed file on any exit.
+# Exits only on SIGTERM (Monitor timeout / TaskStop) or seed failure.
+# Cleans up the temp seed file on any exit.
 set -uo pipefail
 
 PR=${1:-$(gh pr view --json number -q .number)}
@@ -24,25 +24,29 @@ TOKEN=$(gh auth token)
 
 # macOS default TMPDIR (/var/folders/...) is not in the Monitor's
 # sandbox write-allowlist; /tmp/claude is. Prefer that when it exists,
-# fall back to default mktemp outside the sandbox.
+# fall back to default mktemp outside the sandbox. Check exit status
+# either way — a missing $SEEN would manifest as a confusing redirect
+# error several lines later.
 if mkdir -p /tmp/claude 2>/dev/null && [ -w /tmp/claude ]; then
-  SEEN=$(mktemp /tmp/claude/watch-pr-reviews.XXXXXX)
+  SEEN=$(mktemp /tmp/claude/watch-pr-reviews.XXXXXX) \
+    || { echo "POLL-ERROR: mktemp failed under /tmp/claude"; exit 2; }
 else
-  SEEN=$(mktemp)
+  SEEN=$(mktemp) \
+    || { echo "POLL-ERROR: mktemp failed (no writable tempdir)"; exit 2; }
 fi
 trap 'rm -f "$SEEN"' EXIT
 
-# Seed: fail loud if the request or parse fails. An empty seed set
-# would cause every pre-existing review to look new on the first poll.
-if ! curl -fsSL -H "Authorization: token $TOKEN" \
+# Seed: seed.py writes the SEEN file itself (via $SEEN env var) and
+# prints POLL-ERROR to stdout on any failure. Exits 2 on seed failure
+# so this script bails loud rather than proceeding with an empty set.
+if ! curl -fsSL -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
        "https://api.github.com/repos/$REPO/pulls/$PR/reviews" 2>&1 \
-     | SHA="$SHA" python3 "$SKILL_DIR/seed.py" > "$SEEN"; then
-  echo "POLL-ERROR: seed failed for $REPO#$PR @ $SHA"
+     | SHA="$SHA" SEEN="$SEEN" python3 "$SKILL_DIR/seed.py"; then
   exit 2
 fi
 
 while true; do
-  # Merge curl stderr into stdout so network / HTTP errors reach
+  # curl stderr merged into stdout so network / HTTP errors reach
   # poll.py, which emits them as POLL-ERROR. No 2>/dev/null anywhere.
   curl -sS -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
        "https://api.github.com/repos/$REPO/pulls/$PR/reviews" 2>&1 \
