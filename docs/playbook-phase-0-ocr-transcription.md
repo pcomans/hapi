@@ -16,6 +16,29 @@ Copy whichever reference is structurally closer to your source, then adapt. Do n
 3. **Read the constitutional rules in `CLAUDE.md`.** Especially rule 1 (scholar), rule 5 (tests assert values), rule 6 (raw data sacred), rule 12 (existing violations don't justify new ones).
 4. **Branch off main**: `git checkout main && git pull && git checkout -b feat/source-<short-name>`.
 
+## Rights policy
+
+Phase 0 source work extracts factual data from copyrighted scholarly books. Two layers of protection keep this clean. **Scope:** this rights policy governs transcription-based Phase-0 sources — directories under `pipeline/pipeline/authority/sources/` that hold a `transcribe.md` at source-dir root. Web-scrape sources (pharaoh.se), third-party gazetteer mirrors (iDAI), and already-structured reference data (HKW, Wikipedia) have different rights models and document their own per-source posture in their own `README.md`.
+
+**Layer 1 — the PDF is never committed.** The book lives in `proprietary/books/` (gitignored) and stays there. `README.md` and `transcribe.md` reference it by citation + SHA-256, but the source object itself is never redistributed through this repo. This removes the clearest copyright exposure.
+
+**Layer 2 — only transformative/derivative work is committed, and nothing under `raw/` ever is.** `raw/` is gitignored wholesale at the repo root (`pipeline/pipeline/authority/sources/*/raw/*` + `!pipeline/pipeline/authority/sources/*/raw/.gitkeep`); per-agent JSONLs and per-chunk OCR markdown are working state, not deliverables. Committed artifacts live at the source-dir root (next to `README.md`), never under `raw/`, and fall into two safe categories:
+
+- **Reconciled structured-extraction JSONL** — `reconciled.jsonl`, produced by the 3-subagent merge. The primary content is facts (names, dates, dynasty IDs, titulary strings). Short prose fragments — the author's hedges, parenthetical cross-references, explicit "probably" / "perhaps" scoping — are preserved verbatim in fields like `notes` when dropping them would lose the attested fact (e.g. Dodson-Hilton's `notes` carries sentence-length fragments from the Brief Lives entries). This is still a fact-level extract, not a prose transcription, because the per-row budget is a sentence or two and the extract as a whole is not a substitute for the source: a reader of `reconciled.jsonl` cannot reconstruct the source chapter. The project's working legal posture treats the reconciled output as a transformative derivative: US copyright law has held raw facts uncopyrightable since *Feist v. Rural* (499 U.S. 340, 1991), and the project reads the UK/EU *sui generis* database right as not reaching fact-level extractions of the sort committed here. This is the project's working assumption, not a legal opinion — a jurisdiction-specific question for a specific source goes in the source `README.md`.
+- **Hand transcriptions of tabular content** — a text or CSV file at source-dir root (e.g. `chapter-banners.txt` alongside `reconciled.jsonl`), used when the source section is itself a table (HKW chronology, Kitchen Tables 1/3/4, Shaw chapter banners, Hölbl chronology, Beckerath king-tables, Porter-Moss tomb indexes). Transcribing a table is fact extraction. Do **not** place these under `raw/` — the gitignore comment pins the source-dir-root location explicitly.
+
+**What is not safe to commit:** verbatim prose OCR of narrative-prose sources (Dodson-Hilton Brief Lives, Baud prosopographical paragraphs, Porter-Moss tomb *descriptions*). Running OCR against a prose source is fine as an internal pipeline step, but the OCR chunk MUST NOT be committed. Feed the PDF directly to the extraction subagents and commit only `reconciled.jsonl`. The root `.gitignore` patterns `pipeline/pipeline/authority/sources/*/raw/*` + `!pipeline/pipeline/authority/sources/*/raw/.gitkeep` are the mechanical default, and `cd pipeline && uv run pytest tests/test_structure.py::test_no_tracked_files_under_raw_for_phase0_sources` backstops them by failing CI if any Phase-0 source commits a non-`.gitkeep` file under `raw/`. Do not relax either. A `git add -f` that bypasses the gitignore still gets caught by the test.
+
+**"Rights verification" per `docs/mvp-tasks.md` is satisfied by choosing the derived-extract path.** Tasks that call out rights verification (Porter-Moss I, Porter-Moss III, Manetho) ask *either* for an explicit redistribution-license basis *or* for the decision to commit only a derived extract. The derived-extract path is this project's default and the documented basis for every Phase 0 source landed so far. The default does not override a *source-specific* documented licence: Porter-Moss scans are redistributed by the Griffith Institute under explicit licence terms (see `docs/handoff-phase-0-transcription.md`), and the PM source `README.md` must still record those terms alongside the derived-extract framing.
+
+**Interpretive facts are still facts, but cite them as such.** Two of the named corpora carry facts that are *also* the author's scholarly judgment: Baud's BdE 126 prosopographical entries weave factual headwords (name, filiation, attested titles) with Baud's own attributions and skepticism — extracted facts should be attributed in `source_note` (e.g. `"per Baud 1999 §X"`) rather than flattened to bare givens. Beckerath's MÄS-49 numbering scheme is likewise his expression — carry it as `beckerath_number`, do not paraphrase his commentary. A source README that calls out which of its extracted fields are author-attributions is the right place to land the distinction.
+
+**What the source `README.md` rights statement must record:**
+- Citation and edition, PDF SHA-256.
+- "Source PDF held in `proprietary/books/<filename>`, not committed."
+- What's extracted (facts / tabular data) vs what is deliberately NOT extracted (narrative prose, illustrations).
+- Basis: transformative scholarly extraction for a cross-museum provenance index; the project's working assumption is that the committed extract is a fact compilation rather than a derivative of the source's protectable expression; PDF never redistributed. Per-source edition / jurisdiction notes go here when they are materially different from this default (e.g. a source under an explicit licence, a source with a live jurisdictional question, or extracts whose "fact" layer is entangled with the author's scholarly judgment).
+
 ## Step 1 — scaffold the source directory
 
 Create `pipeline/pipeline/authority/sources/<source>/` with:
@@ -150,7 +173,7 @@ Expected committed files per source (11-ish):
 - `pipeline/pipeline/authority/sources/<source>/fix_rows.py`
 - `pipeline/pipeline/authority/sources/<source>/reconciled.jsonl`
 - `pipeline/pipeline/authority/sources/<source>/merge-disagreements.txt`
-- `pipeline/pipeline/authority/sources/<source>/raw/.gitkeep` (keeps the dir tracked; everything else under `raw/` is ignored via `raw/*`)
+- `pipeline/pipeline/authority/sources/<source>/raw/.gitkeep` (keeps the dir tracked; everything else under `raw/` is ignored via the root `.gitignore`'s `pipeline/pipeline/authority/sources/*/raw/*` pattern)
 - `pipeline/tests/test_sources_<source>.py`
 
 **Deterministic JSONL output.** Write `reconciled.jsonl` with `json.dumps(..., sort_keys=True)` in both `merge.py` and `fix_rows.py`. Without sorted keys, Python's dict iteration order makes the file re-shuffle on every re-run even when values are identical — spurious diffs pollute the PR and make the authority file look unstable.
@@ -184,7 +207,7 @@ The review cycle almost always surfaces something. Common real findings from the
 - **Rule 5 partial-field assertions.** A "themed" test on one row (e.g. "test the doubtful flag on Shoshenq VI") typically asserts 3–4 fields. If the fixture populates 12, assert 12. Rule 5 is about the bug those missing 8 assertions would have hidden.
 - **Symmetry tests that don't actually check.** A symmetry invariant (`X.concurrent ∋ Y ⇒ Y.concurrent ∋ X`) is weak — stale-but-symmetric lists pass it. Re-derive the expected values from the authoritative source (start/end dates + overlap rule) and assert equality. Import the computation from `fix_rows.py` so drift breaks the test.
 - **README prose quotations of the extract.** If the README quotes an extract value inline (e.g. "Harsiese, Hedjkheperre Setepenre"), that quotation is a second source of truth and will drift. Either delete the quote or lock it in with a test. Egyptologist-reviewer catches these.
-- **Fragile gitignore patterns.** Listing specific filename patterns (`raw/chunk-*.md`, `raw/agent-*.jsonl`) means any new file the subagent drops into `raw/` becomes committable. Prefer `raw/*` + `!raw/.gitkeep`.
+- **Fragile gitignore patterns.** Listing specific filename patterns (e.g. `pipeline/pipeline/authority/sources/*/raw/chunk-*.md`, `.../raw/agent-*.jsonl`) means any new file the subagent drops into `raw/` becomes committable. Prefer the wildcard form the repo root uses: `pipeline/pipeline/authority/sources/*/raw/*` + `!pipeline/pipeline/authority/sources/*/raw/.gitkeep`.
 
 Apply the fixes in a fresh commit (`fix(<source>): address <reviewer> first pass`), re-run tests, push. Poll CI and the review threads for a second round.
 
@@ -250,7 +273,7 @@ Some sources land across multiple PRs that share one source directory (Dodson-Hi
 
 - First chunk: `raw/agent-{a,b,c}.jsonl` (matches single-chunk convention).
 - Follow-up chunks: `raw/agent-{a,b,c}-<suffix>.jsonl` (`agent-a-amarna.jsonl`, etc.).
-- Gitignored via the existing `raw/*` pattern — no gitignore changes needed.
+- Gitignored via the existing root `pipeline/pipeline/authority/sources/*/raw/*` pattern — no gitignore changes needed.
 
 ### `merge.py` union-across-chunks
 
