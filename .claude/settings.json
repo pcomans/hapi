@@ -5,7 +5,9 @@
   "permissions": {
     "allow": [
       "Bash(gh:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(git status)",
+      "Bash(git status:*)"
     ]
   },
   "hooks": {

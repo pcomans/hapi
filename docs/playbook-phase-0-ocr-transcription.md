@@ -16,6 +16,28 @@ Copy whichever reference is structurally closer to your source, then adapt. Do n
 3. **Read the constitutional rules in `CLAUDE.md`.** Especially rule 1 (scholar), rule 5 (tests assert values), rule 6 (raw data sacred), rule 12 (existing violations don't justify new ones).
 4. **Branch off main**: `git checkout main && git pull && git checkout -b feat/source-<short-name>`.
 
+## Rights policy
+
+Phase 0 source work extracts factual data from copyrighted scholarly books. Two layers of protection keep this clean:
+
+**Layer 1 — the PDF is never committed.** The book lives in `proprietary/books/` (gitignored) and stays there. `README.md` and `transcribe.md` reference it by citation + SHA-256, but the source object itself is never redistributed through this repo. This removes the clearest copyright exposure.
+
+**Layer 2 — only transformative/derivative work is committed.** Committed artifacts fall into three safe categories:
+
+- **Structured extraction JSONL** (`raw/agent-*.jsonl`, `reconciled.jsonl`) — facts only (names, dates, dynasty IDs, titulary strings). Facts are not copyrightable (US *Feist v. Rural*; UK/EU database right runs 15 years from last substantial revision and does not cover transformative extraction).
+- **OCR of tabular content** (`raw/chunk-*.md` when the source section is a table: HKW chronology, Kitchen Tables 1/3/4, Shaw chapter banners, Hölbl chronology, Beckerath king-tables, Porter-Moss tomb indexes). Transcribing a table is fact extraction.
+- **Hand transcriptions of tabular content** (e.g. `raw/chapter-banners.txt`) — same principle.
+
+**What is not safe to commit:** full-prose OCR of a source whose target is narrative prose (Dodson-Hilton Brief Lives, Baud prosopographical paragraphs, Porter-Moss tomb *descriptions*). Running OCR against a prose source is fine as an internal pipeline step, but the OCR chunk MUST NOT be committed. Feed the PDF directly to the extraction subagents and commit only the structured `agent-*.jsonl` output. The `.gitignore` pattern `raw/*` + `!raw/.gitkeep` enforces this mechanically; do not relax it.
+
+**"Rights verification" per `docs/mvp-tasks.md` is satisfied by choosing the derived-extract path.** Tasks that call out rights verification (Porter-Moss I, Porter-Moss III, Manetho) ask *either* for an explicit redistribution-license basis *or* for the decision to commit only a derived extract. The derived-extract path is this project's default and the documented basis for every Phase 0 source landed so far.
+
+**What the source `README.md` rights statement must record:**
+- Citation and edition, PDF SHA-256.
+- "Source PDF held in `proprietary/books/<filename>`, not committed."
+- What's extracted (facts / tabular data) vs what is deliberately NOT extracted (narrative prose, illustrations).
+- Basis: fair-use scholarly extraction for a cross-museum provenance index; facts uncopyrightable; PDF never redistributed.
+
 ## Step 1 — scaffold the source directory
 
 Create `pipeline/pipeline/authority/sources/<source>/` with:

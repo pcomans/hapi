@@ -102,3 +102,5 @@ After every push to a PR branch, follow these steps in order:
 - Product requirements: `docs/prd.md`
 - Harness engineering approach: `docs/harness.md`
 - Per-museum API notes and quirks: `docs/museum-sources/`
+- **Phase 0 authority-source protocol**: `docs/playbook-phase-0-ocr-transcription.md` — follow this exactly when adding a new scholarly authority source (OCR, 3-subagent extraction, merge, review, rights policy). Do not reinvent the pipeline.
+- **New-museum onboarding protocol**: `docs/playbook-new-museum.md` — follow this exactly when adding a new museum API source (fixtures, mapper, ingest asset, Dagster wiring).
