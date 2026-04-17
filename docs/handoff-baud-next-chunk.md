@@ -60,7 +60,7 @@ Baud's per-entry data maps to a JSONL row with at least:
 - `name_anglicised` — conventional English form where Baud gives one; null otherwise. Phase A will reconcile against pharaoh.se's Conventional English Display Form.
 - `dynasty` — string like `"4"`, `"5"`, `"6"`, `"3-4"` for cross-dynasty attestations, or `"unknown"`.
 - `sub_period` — OK sub-period if Baud attests it (e.g. "early Dyn 4"), else null.
-- `roles` — structured list. OK-appropriate role vocabulary includes `king`, `queen`, `king's mother`, `king's wife`, `king's son`, `king's daughter`, `vizier`, `king's eldest son of his body`. Use Baud's exact title list in `titles_from_baud` as the raw source.
+- `roles` — structured list of normalised roles derived from `titles_from_baud` at extraction time. OK-appropriate role vocabulary includes `king`, `queen`, `king's mother`, `king's wife`, `king's son`, `king's daughter`, `vizier`, `king's eldest son of his body`.
 - `titles_from_baud` — verbatim title list from Baud's entry (raw cells of the prosopography, not interpretive).
 - `father_name` / `mother_name` / `spouse_names` / `children_names` — relationship strings. **Attribute scholarly judgments** — Baud sometimes states a filiation Baud himself is not certain of. When the hedge is in Baud's prose, use the playbook's hedge convention: parenthesised for probable, square-bracketed for reconstructed, sentinel-null for "unattested per Baud."
 - `tomb` — tomb designation (`G xxxx`, `D xx`, etc.) if attested. Cross-references to Porter-Moss III will be resolved in Phase A.
