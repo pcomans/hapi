@@ -3,8 +3,14 @@
 # target commit. Used as the `command` arg to the Monitor tool via the
 # watch-pr-reviews skill.
 #
-# Usage: monitor.sh [PR] [SHA] [OWNER/REPO]
-#   Each arg defaults to values derived from the working copy / gh CLI.
+# Usage: monitor.sh <PR> [SHA] [OWNER/REPO]
+#
+#   PR    required — no safe default inside the Monitor sandbox. The
+#         obvious fallback (`gh pr view`) uses GraphQL, which fails on
+#         keychain TLS in the Monitor's sandbox.
+#   SHA   defaults to `git rev-parse HEAD` (git-only, sandbox-safe).
+#   REPO  defaults to the owner/name parsed from `git remote get-url
+#         origin` (git-only, sandbox-safe).
 #
 # Emits to stdout:
 #   REVIEW <login> <state> id=<id>   — one line per new review
@@ -15,9 +21,17 @@
 # Cleans up the temp seed file on any exit.
 set -uo pipefail
 
-PR=${1:-$(gh pr view --json number -q .number)}
+if [ -z "${1:-}" ]; then
+  echo "POLL-ERROR: monitor.sh requires a PR number as arg 1 (cannot derive inside the Monitor sandbox — gh pr view uses GraphQL which fails on keychain TLS)"
+  exit 2
+fi
+PR=$1
 SHA=${2:-$(git rev-parse HEAD)}
-REPO=${3:-$(gh repo view --json nameWithOwner -q .nameWithOwner)}
+REPO=${3:-$(git remote get-url origin 2>/dev/null | sed -E 's#^.*github\.com[:/]##; s#\.git$##')}
+if ! echo "$REPO" | grep -qE '^[^/]+/[^/]+$'; then
+  echo "POLL-ERROR: could not derive OWNER/REPO from git remote origin (got '$REPO'); pass as arg 3"
+  exit 2
+fi
 SKILL_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
 TOKEN=$(gh auth token)
