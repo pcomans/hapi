@@ -34,11 +34,11 @@ except Exception as e:
     print(f'POLL-ERROR: {e}'); sys.exit(0)
 seen = set(open(os.environ['SEEN']).read().split())
 for r in data:
-    if r.get('commit_id') != os.environ['SHA']: continue
-    rid = str(r['id'])
-    if rid in seen: continue
-    print(f\"REVIEW {r['user']['login']} {r.get('state','?')} id={rid}\")
-    open(os.environ['SEEN'], 'a').write(rid + '\n')
+    if r.get('commit_id') == os.environ['SHA']:
+        rid = str(r['id'])
+        if rid not in seen:
+            print(f\"REVIEW {r['user']['login']} {r.get('state','?')} id={rid}\")
+            open(os.environ['SEEN'], 'a').write(rid + '\n')
 " 2>&1)
   [ -n "$out" ] && echo "$out"
   sleep 30
