@@ -104,3 +104,4 @@ After every push to a PR branch, follow these steps in order:
 - Per-museum API notes and quirks: `docs/museum-sources/`
 - **Phase 0 authority-source protocol**: `docs/playbook-phase-0-ocr-transcription.md` — follow this exactly when adding a new scholarly authority source (OCR, 3-subagent extraction, merge, review, rights policy). Do not reinvent the pipeline.
 - **New-museum onboarding protocol**: `docs/playbook-new-museum.md` — follow this exactly when adding a new museum API source (fixtures, mapper, ingest asset, Dagster wiring).
+- **Agent-teams playbook**: `docs/playbook-agent-teams.md` — when to use agent teams vs subagents vs plain `Agent` calls, canonical spawn pattern, the hard "teammates cannot spawn subagents" limit, lead-spawns-on-behalf workaround, shutdown/cleanup discipline (and the rm-rf-your-own-cwd trap).
