@@ -1,6 +1,6 @@
 # Extraction prompt for Dodson & Hilton Brief Lives — Ramesside (chunk 3)
 
-Pass this to **three** independent Claude Code subagents in parallel. Each writes JSONL to a distinct filename; `merge.py` majority-votes across all chunk batches (Power `agent-{a,b,c}-power.jsonl`, Amarna `agent-{a,b,c}-amarna.jsonl`, Ramesside `agent-{a,b,c}-ramesside.jsonl`). The prompt is verbatim; the only per-agent substitution is the output-file suffix (`-a`, `-b`, `-c`).
+Pass this to **three** independent Claude Code subagents in parallel. Each writes JSONL to a distinct filename; `merge.py` majority-votes across all chunk batches (Power `agent-{a,b,c}-power.jsonl`, Amarna `agent-{a,b,c}-amarna.jsonl`, Ramesside `agent-{a,b,c}-ramesside.jsonl`). The prompt is verbatim; the only per-agent substitution is the agent tag in the output filename (`a`, `b`, or `c` in `agent-{tag}-ramesside.jsonl`).
 
 ---
 

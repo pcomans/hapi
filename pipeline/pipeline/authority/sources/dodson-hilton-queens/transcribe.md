@@ -86,7 +86,7 @@ Each chunk's OCR markdown is fed to three independent extraction subagents runni
 
 `merge.py` discovers all `agent-{tag}-*.jsonl` files per agent tag, unions their rows, then majority-votes per-field across the three agents' unified dicts. The primary key is the composite `(dh_id, sub_period)` — `dh_id` alone is not unique across the full reconciled file because D&H occasionally lists the same individual under two Brief Lives sub-sections (chunk 3 introduced this case with `Takhat A` and `Isetneferet C`; see README § Schema). Adding a future chunk (earlier chapters) is still just another prompt file + another triple of `agent-{a,b,c}-<suffix>.jsonl` output files; `merge.py` does not need to know about it in advance.
 
-**PR #38 cleanup retired the legacy unsuffixed filenames.** Originally Pre-Amarna rows lived in `agent-{a,b,c}.jsonl` (no suffix) and follow-up chunks added `-amarna`/`-ramesside` suffixes. The Ramesside PR renamed Pre-Amarna raw files to `-power` and dropped the base-unsuffixed branch in `_load_agent_chunks`. Every chunk from here on carries an explicit chunk suffix.
+**The Ramesside PR retired the legacy unsuffixed filenames.** Originally Pre-Amarna rows lived in `agent-{a,b,c}.jsonl` (no suffix) and follow-up chunks added `-amarna`/`-ramesside` suffixes. The Ramesside PR renamed Pre-Amarna raw files to `-power` and dropped the base-unsuffixed branch in `_load_agent_chunks`. Every chunk from here on carries an explicit chunk suffix.
 
 ### Merge + fix_rows
 

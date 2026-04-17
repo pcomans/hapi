@@ -22,7 +22,7 @@ Chapter 3 *The New Kingdom*, **Brief Lives** sub-blocks of the pre-Amarna, Amarn
 | this PR | *The Feud of the Ramessides* — Brief Lives (Dyn 19 pt 2) | 182–183 | 169–170 | ~10 |
 | this PR | *The Decline of the Ramessides* — Brief Lives + Unplaced (Dyn 20) | 192–194 | 178–180 | ~35 (33 placed + 2 Unplaced) |
 
-Combined `reconciled.jsonl` ≈ 271 rows (final count set after merge + fix_rows).
+Combined `reconciled.jsonl` 270 rows (59 Power + 41 Amarna + 170 Ramesside).
 
 Out of scope for this PR, landing in follow-up PRs:
 - **Chapters 1, 2, 4, 5** (Early Dynastic / OK / MK / SIP / TIP / Late Period) — separate PRs; `sources/baud-1999-ok-royal-family/` is the preferred OK source and this book is known-weaker there.

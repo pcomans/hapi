@@ -24,8 +24,8 @@ lineage). Adaptations:
 - `SENTINEL_NULL_STRINGS` unchanged from Kitchen.
 - **Multi-chunk support.** Each chunk (Pre-Amarna p126–p130, Amarna
   p142–p145, Ramesside p157–p162/p169–p170/p178–p180, ...) lands its
-  three agents' extractions as `agent-{a,b,c}<suffix>.jsonl`. Per-tag
-  rows are collected across all matching `agent-{tag}*.jsonl` files
+  three agents' extractions as `agent-{a,b,c}-<chunk>.jsonl`. Per-tag
+  rows are collected across all matching `agent-{tag}-*.jsonl` files
   under `agent_dir`; `_load` raises on duplicate `(dh_id, sub_period)`
   within a single file AND across chunk files.
 
