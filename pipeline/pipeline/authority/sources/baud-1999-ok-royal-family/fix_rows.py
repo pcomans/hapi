@@ -367,6 +367,98 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "existing vocab term covered it, so `high priest of Ptah` added "
         "to the controlled vocabulary in this chunk.",
     ),
+    # Second-pass egyptologist-reviewer on PR #57 surfaced a systemic
+    # over-extraction: seven rows carry `king's eldest son of his body`
+    # when TITRES has either `smsw` or `nj ẖt.f` but not both. The vocab
+    # term (per the chunk-2 baud-42 correction) specifically requires both
+    # elements. Applying the same rule consistently — body-son without
+    # smsw = `king's son` only; smsw without nj ẖt.f = `king's son` only.
+    (
+        "baud-41",
+        "roles",
+        ["king's son"],
+        "PDF p. 432: TITRES `zꜣ nswt`, `zꜣ nswt smsw`, `tz nḫn(?)`. "
+        "`smsw` present, `nj ẖt.f` absent — same rule as baud-42. Drop "
+        "`king's eldest son of his body` (requires both elements).",
+    ),
+    (
+        "baud-44",
+        "roles",
+        ["king's daughter"],
+        "Wꜥtt-ḫt-ḥr Zšzšt (PDF p. 434) is a king's daughter (Téti) married "
+        "to the vizier Mererouka, NOT to a king. Majority-vote added "
+        "`king's wife` and `priest of the king's wife`, but her `ḥmt-nṯr "
+        "Ḥwt-Ḥr` / `ḥmt-nṯr Nt` titles are priestess-of-GODDESS, not of a "
+        "queen's cult — both roles are fabricated. Spouse Mrr-wj-kꜣj is "
+        "a vizier, not a king. Dropped both.",
+    ),
+    (
+        "baud-55",
+        "roles",
+        ["vizier", "king's son"],
+        "PDF p. 442 TITRES: `zꜣ nswt`, `zꜣ nswt nj ẖt.f`, `smr wꜥtj n jt.f`. "
+        "No `smsw` anywhere. Same rule as baud-42: drop `king's eldest son "
+        "of his body`. (father_name correction already in this chunk.)",
+    ),
+    (
+        "baud-60a",
+        "father_name",
+        None,
+        "PDF p. 446 [60a] Pn-mdw has NO PARENTÉ section — Baud gives only "
+        "DATATION (Pépi Iᵉʳ, based on the monument location in the "
+        "complex) and a DIVERS name-reading caveat. Promoting a "
+        "reign-date to a filiation claim is fabrication. The graffito's "
+        "place of attestation is in notes; structured parent field is null.",
+    ),
+    (
+        "baud-60a",
+        "roles",
+        ["king's son"],
+        "PDF p. 446: only title is `zꜣ nswt smsw`. `smsw` present, "
+        "`nj ẖt.f` absent — same rule as baud-42.",
+    ),
+    (
+        "baud-67",
+        "roles",
+        ["vizier", "king's son", "king's son-in-law"],
+        "Ptahshepses of Abusir, PDF p. 452. TITRES carries `zꜣ nswt nj "
+        "ẖt.f` only; no `smsw`. Famously NOT born royal (married into "
+        "the royal family via the king's daughter Ḥꜥ-mrr-Nbtj II). "
+        "`king's eldest son of his body` unattested and historically wrong.",
+    ),
+    (
+        "baud-71",
+        "roles",
+        ["king's son"],
+        "PDF p. 457 TITRES: `zꜣ nswt`, `zꜣ nswt nj ẖt.f`, "
+        "`zꜣ nsw[t] nj ẖt.f [mr]jj.f`. No `smsw`. Same rule as baud-42.",
+    ),
+    (
+        "baud-73",
+        "roles",
+        ["king's son"],
+        "PDF p. 458–459: TITRES `zꜣ nswt (2)`, `zꜣ nswt nj ẖt.f`; no "
+        "`smsw`. Also not a direct royal son — Baud makes him son of the "
+        "zꜣt nswt Sḏjt [222]. `king's eldest son of his body` doubly "
+        "unattested.",
+    ),
+    (
+        "baud-76",
+        "spouse_names",
+        ["Rêkhaef (?)"],
+        "PDF p. 461 PARENTÉ: 'on a proposé Rêkhaef' — Baud reports the "
+        "proposal without endorsing. `(probable)` overstates his hedge; "
+        "`(?)` matches Baud's `on a proposé` more honestly (hedge-level 4 "
+        "per README).",
+    ),
+    (
+        "baud-79",
+        "roles",
+        ["king's son"],
+        "PDF p. 464: TITRES `zꜣ nswt nj ẖt.f` only. No `smsw`. "
+        "Attribution rests on onomastics + Giza-East locality, not on "
+        "an eldest-son title. Same rule as baud-42.",
+    ),
     # Gemini Code Assist PR #57 suggested adding a `steward of the king's
     # children` entry for baud-69 (`smsw pr n jrj-pꜥt`). The
     # scope-accountability-enforcer review flagged this as a vocab-

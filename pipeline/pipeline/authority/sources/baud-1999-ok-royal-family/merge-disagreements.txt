@@ -563,3 +563,33 @@ provisional until that happens.
     value: ["Mrwt Zšzšt (?)"]
 - baud-68: roles corrected (Baud's TITRES for Ptḥ-špss (physical p. 68–69) includes `wr ḫrp ḥmwwt` — the canonical title of the High Priest of Ptah at Memphis. This is Ptahshepses of Saqqara whose biography Baud cites (Urk. I 51–53). Majority-vote omitted the role; no existing vocab term covered it, so `high priest of Ptah` added to the controlled vocabulary in this chunk.)
     value: ["sem priest", "king's son-in-law", "priest of the king", "high priest of Ptah"]
+- baud-41: roles corrected (PDF p. 432: TITRES `zꜣ nswt`, `zꜣ nswt smsw`, `tz nḫn(?)`. `smsw` present, `nj ẖt.f` absent — same rule as baud-42. Drop `king's eldest son of his body` (requires both elements).)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-44: roles corrected (Wꜥtt-ḫt-ḥr Zšzšt (PDF p. 434) is a king's daughter (Téti) married to the vizier Mererouka, NOT to a king. Majority-vote added `king's wife` and `priest of the king's wife`, but her `ḥmt-nṯr Ḥwt-Ḥr` / `ḥmt-nṯr Nt` titles are priestess-of-GODDESS, not of a queen's cult — both roles are fabricated. Spouse Mrr-wj-kꜣj is a vizier, not a king. Dropped both.)
+    was: ["king's daughter", "king's wife", "priest of the king's wife"]
+    now: ["king's daughter"]
+- baud-55: roles corrected (PDF p. 442 TITRES: `zꜣ nswt`, `zꜣ nswt nj ẖt.f`, `smr wꜥtj n jt.f`. No `smsw` anywhere. Same rule as baud-42: drop `king's eldest son of his body`. (father_name correction already in this chunk.))
+    was: ["vizier", "king's son", "king's eldest son of his body"]
+    now: ["vizier", "king's son"]
+- baud-60a: father_name corrected (PDF p. 446 [60a] Pn-mdw has NO PARENTÉ section — Baud gives only DATATION (Pépi Iᵉʳ, based on the monument location in the complex) and a DIVERS name-reading caveat. Promoting a reign-date to a filiation claim is fabrication. The graffito's place of attestation is in notes; structured parent field is null.)
+    was: "Pépi Iᵉʳ (probable)"
+    now: null
+- baud-60a: roles corrected (PDF p. 446: only title is `zꜣ nswt smsw`. `smsw` present, `nj ẖt.f` absent — same rule as baud-42.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-67: roles corrected (Ptahshepses of Abusir, PDF p. 452. TITRES carries `zꜣ nswt nj ẖt.f` only; no `smsw`. Famously NOT born royal (married into the royal family via the king's daughter Ḥꜥ-mrr-Nbtj II). `king's eldest son of his body` unattested and historically wrong.)
+    was: ["vizier", "king's son", "king's eldest son of his body", "king's son-in-law"]
+    now: ["vizier", "king's son", "king's son-in-law"]
+- baud-71: roles corrected (PDF p. 457 TITRES: `zꜣ nswt`, `zꜣ nswt nj ẖt.f`, `zꜣ nsw[t] nj ẖt.f [mr]jj.f`. No `smsw`. Same rule as baud-42.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-73: roles corrected (PDF p. 458–459: TITRES `zꜣ nswt (2)`, `zꜣ nswt nj ẖt.f`; no `smsw`. Also not a direct royal son — Baud makes him son of the zꜣt nswt Sḏjt [222]. `king's eldest son of his body` doubly unattested.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-76: spouse_names corrected (PDF p. 461 PARENTÉ: 'on a proposé Rêkhaef' — Baud reports the proposal without endorsing. `(probable)` overstates his hedge; `(?)` matches Baud's `on a proposé` more honestly (hedge-level 4 per README).)
+    was: ["Rêkhaef (probable)"]
+    now: ["Rêkhaef (?)"]
+- baud-79: roles corrected (PDF p. 464: TITRES `zꜣ nswt nj ẖt.f` only. No `smsw`. Attribution rests on onomastics + Giza-East locality, not on an eldest-son title. Same rule as baud-42.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
