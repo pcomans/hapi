@@ -572,11 +572,113 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # appear here. `test_all_corrections_includes_every_chunk_list` asserts
 # module-level `CHUNK*` list attributes are all present — dropping one
 # silently destroys its audit trail and the test fails loud.
+CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-123",
+        "spouse_names",
+        ["Ouserkaf (probable)"],
+        "Egyptologist-reviewer PR #59: p.493 Grdseloff's hypothesis, "
+        "explicitly 'conjecturale'. Baud reports but does not assert. "
+        "`(per Baud)` over-promotes; `(probable)` matches Baud's hedge.",
+    ),
+    (
+        "baud-123",
+        "children_names",
+        ["Sahourê (probable)"],
+        "Egyptologist-reviewer PR #59: p.494 multi-author hypothesis "
+        "(Callender/Jánosi/Labrousse) Baud relays. Same pattern as spouse; "
+        "`(per Baud)` → `(probable)`.",
+    ),
+    (
+        "baud-126",
+        "father_name",
+        None,
+        "Gemini PR #59: notes explicitly say Baud 'ne s'engage pas' on the "
+        "filiation. Per hedge-level 6, `null` is the honest mapping when "
+        "Baud reports a hypothesis without endorsing it.",
+    ),
+    (
+        "baud-128",
+        "roles",
+        ["king's daughter"],
+        "Egyptologist-reviewer PR #59: `ḥmt-nṯr Snfrw` on a king's daughter "
+        "is royal-cult priestess titulary, not service-personnel `priest "
+        "of the king`. Same pattern as chunk-3 baud-86/93; consistent "
+        "resolution across chunks.",
+    ),
+    (
+        "baud-133",
+        "mother_name",
+        "Nt [136] (probable)",
+        "Egyptologist-reviewer PR #59: p.504 Seipel's localisation-based "
+        "hypothesis Baud relays. `(per Baud)` → `(probable)`.",
+    ),
+    (
+        "baud-136",
+        "children_names",
+        ["Merenrê II (probable)"],
+        "Egyptologist-reviewer PR #59: pp.506-507 heavily hedged "
+        "(Goedicke's proposal, 'sauf extraordinaire longévité... s'il "
+        "s'agit de Nmtj-m-zꜣ.f'). `(per Baud)` → `(probable)`.",
+    ),
+    (
+        "baud-137",
+        "roles",
+        ["king's son", "priest of the royal pyramid"],
+        "Gemini PR #59: TITRES has `ḥm-nṯr ḫnt Ḫꜥ-Snfrw` — priest of "
+        "Sneferu's pyramid (`Ḫꜥ-Snfrw` = pyramid cartouche). Adds "
+        "`priest of the royal pyramid`. Drops spurious `overseer of "
+        "scribes of pr-ꜥꜣ` (unattested — actual title is `zš ḫrjt-ꜥ "
+        "nswt`, a different administrative office).",
+    ),
+    (
+        "baud-143",
+        "roles",
+        ["king's son", "vizier"],
+        "Gemini + egyptologist PR #59: `zꜣ nswt nj ẖt.f` and `smsw jzt` "
+        "are SEPARATE titles. `smsw jzt` is a chamber-office title "
+        "(`jzt` = office/chamber), NOT kinship. The `king's eldest son "
+        "of his body` vocab term requires `smsw` AND `nj ẖt.f` in the "
+        "SAME title string. Drop; `vizier` retained.",
+    ),
+    (
+        "baud-151",
+        "roles",
+        ["king's son", "vizier"],
+        "Egyptologist-reviewer PR #59: same pattern as baud-143. "
+        "`zꜣ nswt nj ẖt.f` and `smsw jzt` present but not conjoined; "
+        "`smsw` sits on the chamber title only. Drop `king's eldest son "
+        "of his body`; `vizier` retained.",
+    ),
+    (
+        "baud-155",
+        "spouse_names",
+        [],
+        "Egyptologist-reviewer PR #59: the list item "
+        "`Mr.s-ꜥnḫ II [75] (hypothèse controversée)` puts a French "
+        "parenthetical-hedge inside the value, which breaks downstream "
+        "Phase-A matching. Baud himself labels the marriage 'controversée'. "
+        "Empty list is honest; notes_from_baud already captures the "
+        "hypothesis verbatim.",
+    ),
+    (
+        "baud-158",
+        "roles",
+        ["king's son"],
+        "Gemini + egyptologist PR #59: Hordjedef's TITRES has only "
+        "`zꜣ nswt nj ẖt.f` — `smsw` is not attested anywhere. First-born "
+        "status is later-literary (Westcar Papyrus), not OK titular. "
+        "Drop `king's eldest son of his body`.",
+    ),
+]
+
+
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
+    CHUNK4_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])

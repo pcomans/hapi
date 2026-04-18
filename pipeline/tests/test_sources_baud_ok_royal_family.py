@@ -32,6 +32,7 @@ CHUNK_PDF_PAGES: dict[range, str] = {
     range(1, 41): "11-49",
     range(41, 81): "49-82",
     range(81, 121): "82-109",
+    range(121, 161): "109-141",
 }
 
 
@@ -55,6 +56,9 @@ CHUNK2_EXPECTED_ROWS = 41
 # Chunk 3 emits 42 rows: [81]–[120] (40 integer-numbered) plus two
 # sub-entries [94b] Nj-ꜥnḫ-Ḥwt-Ḥr and [101a] N(j)-s(w)-jr(w).
 CHUNK3_EXPECTED_ROWS = 42
+# Chunk 4 emits 43 rows: [121]–[160] (40 integer-numbered) plus three
+# sub-entries [126a], [133b], [139a].
+CHUNK4_EXPECTED_ROWS = 43
 
 
 @lru_cache(maxsize=1)
@@ -74,7 +78,10 @@ def _row(baud_id: str) -> dict:
 def test_row_count() -> None:
     """Merged Corpus = sum of every chunk's expected row count."""
     expected = (
-        CHUNK1_EXPECTED_ROWS + CHUNK2_EXPECTED_ROWS + CHUNK3_EXPECTED_ROWS
+        CHUNK1_EXPECTED_ROWS
+        + CHUNK2_EXPECTED_ROWS
+        + CHUNK3_EXPECTED_ROWS
+        + CHUNK4_EXPECTED_ROWS
     )
     assert len(_rows()) == expected, len(_rows())
 
@@ -430,13 +437,29 @@ def test_service_personnel_rows_have_attested_titles() -> None:
     (reviewer flagged 'steward of the king's children' at baud-10 for
     chunk 2 vocab expansion).
     """
+    # Baud sometimes explicitly notes "titres non conservés" — the
+    # monument is damaged and the titles are lost. Asterisk-status
+    # survives because Baud can still identify the figure as service
+    # personnel from context (tomb location, iconography), but TITRES
+    # is honestly empty. Sample: baud-138 Nṯr(.j)-pw-nswt.
+    titles_lost_re = re.compile(
+        r"(titres non conservés|titres perdus|titres non préservés|titres non attestés)",
+        re.IGNORECASE,
+    )
     for r in _rows():
         if not r["service_personnel"]:
             continue
-        assert r["titles_from_baud"], (
-            f"{r['baud_id']} is service_personnel=True but has no titles — "
-            f"Baud's asterisk marks function-attached personnel, so TITRES "
-            f"must exist. Likely extraction miss."
+        if r["titles_from_baud"]:
+            continue
+        notes = r["notes_from_baud"] or ""
+        if titles_lost_re.search(notes):
+            continue
+        raise AssertionError(
+            f"{r['baud_id']} is service_personnel=True but has no titles "
+            f"and no titres-non-conservés note — Baud's asterisk marks "
+            f"function-attached personnel, so TITRES must exist unless "
+            f"Baud explicitly notes the titles were lost. Likely "
+            f"extraction miss."
         )
 
 
