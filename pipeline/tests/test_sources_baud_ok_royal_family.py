@@ -34,6 +34,7 @@ CHUNK_PDF_PAGES: dict[range, str] = {
     range(81, 121): "82-109",
     range(121, 161): "109-141",
     range(161, 201): "142-179",
+    range(201, 241): "179-213",
 }
 
 
@@ -62,6 +63,9 @@ CHUNK3_EXPECTED_ROWS = 42
 CHUNK4_EXPECTED_ROWS = 43
 # Chunk 5 covers [161]-[200] — 40 rows; no sub-entries surfaced.
 CHUNK5_EXPECTED_ROWS = 40
+# Chunk 6 emits 41 rows: [201]-[240] (40 integer-numbered) plus one
+# sub-entry [206a].
+CHUNK6_EXPECTED_ROWS = 41
 
 
 @lru_cache(maxsize=1)
@@ -86,6 +90,7 @@ def test_row_count() -> None:
         + CHUNK3_EXPECTED_ROWS
         + CHUNK4_EXPECTED_ROWS
         + CHUNK5_EXPECTED_ROWS
+        + CHUNK6_EXPECTED_ROWS
     )
     assert len(_rows()) == expected, len(_rows())
 
@@ -163,6 +168,14 @@ def test_dynasty_coverage_is_ok_only() -> None:
     # and `dynasty == None` is the only honest mapping — scholarly
     # rigour beats forcing a date Baud himself refused.
     baud_declines_to_date_re = re.compile(r"^Date\s*\?", re.IGNORECASE)
+    # Baud also uses 'PPI' (Première Période Intermédiaire / First
+    # Intermediate Period) for a small number of entries whose style
+    # dates them post-OK. These are outside the OK dynasty range
+    # (3-6); dynasty = null is the honest mapping, with the FIP
+    # information captured in `sub_period` and the verbatim 'PPI' in
+    # `date_attested`. Sample: baud-213 Sntj (Firth/Gunn's "miserable
+    # little stela" secteur Téti).
+    baud_fip_re = re.compile(r"^PPI\b", re.IGNORECASE)
     for r in _rows():
         d = r["dynasty"]
         if d is None:
@@ -176,6 +189,16 @@ def test_dynasty_coverage_is_ok_only() -> None:
                 continue
             if baud_declines_to_date_re.match(da):
                 # Baud's explicit "I can't date this" — honest mapping.
+                continue
+            if baud_fip_re.match(da):
+                # Baud dates to First Intermediate Period; outside OK
+                # dynasty range. Expect sub_period to carry the FIP
+                # info.
+                assert r["sub_period"] == "First Intermediate Period", (
+                    f"{r['baud_id']}: date_attested={da!r} (FIP) but "
+                    f"sub_period={r['sub_period']!r} — expected 'First "
+                    f"Intermediate Period'."
+                )
                 continue
             raise AssertionError(
                 f"{r['baud_id']}: dynasty=None but date_attested={da!r} — "
