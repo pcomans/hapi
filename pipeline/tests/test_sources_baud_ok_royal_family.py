@@ -33,6 +33,7 @@ CHUNK_PDF_PAGES: dict[range, str] = {
     range(41, 81): "49-82",
     range(81, 121): "82-109",
     range(121, 161): "109-141",
+    range(161, 201): "142-179",
 }
 
 
@@ -59,6 +60,8 @@ CHUNK3_EXPECTED_ROWS = 42
 # Chunk 4 emits 43 rows: [121]–[160] (40 integer-numbered) plus three
 # sub-entries [126a], [133b], [139a].
 CHUNK4_EXPECTED_ROWS = 43
+# Chunk 5 covers [161]-[200] — 40 rows; no sub-entries surfaced.
+CHUNK5_EXPECTED_ROWS = 40
 
 
 @lru_cache(maxsize=1)
@@ -82,6 +85,7 @@ def test_row_count() -> None:
         + CHUNK2_EXPECTED_ROWS
         + CHUNK3_EXPECTED_ROWS
         + CHUNK4_EXPECTED_ROWS
+        + CHUNK5_EXPECTED_ROWS
     )
     assert len(_rows()) == expected, len(_rows())
 

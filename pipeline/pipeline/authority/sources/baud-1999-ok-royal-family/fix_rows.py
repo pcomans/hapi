@@ -673,12 +673,17 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-5 corrections — populated after reviewer pass.
+CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
+    CHUNK5_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
