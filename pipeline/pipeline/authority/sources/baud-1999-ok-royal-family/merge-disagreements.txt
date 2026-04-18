@@ -1513,91 +1513,131 @@ signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
 - baud-22: monument corrected (Baud's header for Jnt-kꜣ.s (printed p. 415) enumerates two documents: (1) the Saqqara stèles-bornes and (2) a representation in Djoser's Heliopolis temple. Majority-vote dropped document 2, losing the Heliopolis provenance that Phase A site-reconciliation will want. Restored with the '1:' / '2:' numbering Baud uses.)
-    value: "1: Stèles-bornes, remployées, complexe funéraire de Djoser; 2: Représentée dans le temple de Djoser à Héliopolis"
+    was: "Stèles-bornes, remployées, complexe funéraire de Djoser"
+    now: "1: Stèles-bornes, remployées, complexe funéraire de Djoser; 2: Représentée dans le temple de Djoser à Héliopolis"
 - baud-26: children_names corrected (Baud's DIVERS + figure 34 (physical p. 418–419) make clear that Sꜥnḫ-n-Ptḥ is Jḫj's grandchild (petit-fils), not child. Baud's own prose: '(b) Sꜥnḫ-n-Ptḥ, son petit-fils' — an unnamed son-generation sits between them. `children_names` is scoped to direct children per README; the grandchild is already correctly captured in `notes_from_baud`. No fabrication of the intermediate 'X' son — Baud himself leaves it unnamed.)
-    value: []
+    was: ["Sꜥnḫ-n-Ptḥ"]
+    now: []
 - baud-28: roles corrected (Baud's TITRES (physical p. 420) lists wꜥb Bꜣ-Nfr-jr-kꜣ-Rꜥ as the first title — 'priest of Neferirkare's pyramid'. The controlled vocab includes `priest of the royal pyramid` for exactly this ḥm-nṯr/wꜥb-of-named-pyramid pattern. Agent A proposed the richer list and was majority-voted down; the title is unambiguous and derives directly from titles_from_baud per README rules.)
-    value: ["priest of the king's mother", "priest of the royal pyramid"]
+    was: ["priest of the king's mother"]
+    now: ["priest of the king's mother", "priest of the royal pyramid"]
 - baud-33: mother_name corrected (Baud's PARENTÉ for ꜥnḫ-m-ꜥ-Rꜥ (physical p. 423) reports Strudwick's hypothesis verbatim: 'la mère Mr.s-ꜥnḫ III [76] est hypothétique d'après Strudwick.' Baud himself is reporting another scholar's hypothesis, not asserting — 'hypothétique d'après Strudwick' is Strudwick's guess, and Baud's own commentary raises doubts ('est-ce l'appartenance à une autre branche par sa mère?'). Two reviewer passes conflicted on the right field value here: first pass wrote '(per Baud)' reading Baud as endorser, second pass pushed back noting Baud is questioning the hypothesis, not affirming it. Null is the reading most honest to the primary source — the mother-connection in the structured field is not attested by Baud himself; notes_from_baud already captures Strudwick's hypothesis verbatim for the reader's benefit.)
-    value: null
+    was: "Mr.s-ꜥnḫ III (probable)"
+    now: null
 - baud-37: name_anglicised corrected ('Ankhesenmerire' directly transliterates the French-form Mrjj-Rꜥ; the conventional English form in modern Egyptological scholarship is 'Ankhesenmeryre' (Dodson-Hilton) or 'Ankhesenpepi' (Wikipedia, some museum catalogs, following the double-name attestation). Provisional pending Phase A reconciliation against pharaoh.se's Conventional English Display Form — if pharaoh.se canonicalises to 'Ankhesenpepi I', the Phase A curation step will update the authority accordingly. 'Ankhesenmeryre' is the reviewer's recommended default until that reconciliation runs.)
-    value: "Ankhesenmeryre I"
+    was: "Ankhesenmerire I"
+    now: "Ankhesenmeryre I"
 - baud-38: name_anglicised corrected (Same provisional French-to-English choice as baud-37 — Ankhesenmerire → Ankhesenmeryre. Wikipedia's convention for this individual is 'Ankhesenpepi II'; either form is acceptable modern English-Egyptological usage. Preserves the naming-parallel with baud-37 (her predecessor of the same name). Phase A will reconcile the final form against pharaoh.se.)
-    value: "Ankhesenmeryre II"
+    was: "Ankhesenmerire II"
+    now: "Ankhesenmeryre II"
 - baud-38: spouse_names corrected (ꜥnḫ.s-n-Mrjj-Rꜥ II was the mother of Pépi II, not a wife — Baud's titles list (physical p. 428) gives her ḥmt nswt Mn-nfr-Mrjj-Rꜥ (wife of Pépi Iᵉʳ's pyramid) and mwt nswt Mn-ꜥnḫ-Nfr-kꜣ-Rꜥ (mother of Pépi II's pyramid). The 'Pépi II (?)' entry in spouse_names is a confusion with her regent role for her son. children_names already correctly contains Pépi II.)
-    value: ["Pépi Iᵉʳ"]
+    was: ["Pépi Iᵉʳ", "Pépi II (?)"]
+    now: ["Pépi Iᵉʳ"]
 - baud-40: roles corrected (Baud's TITRES (physical p. 432) lists three ḥm-nṯr royal-cult titles (ḥm-nṯr Ḫwfw, ḥm-nṯr Sꜣḥw-Rꜥ, ḥm-nṯr Nfr-jr-kꜣ-Rꜥ) — each maps to `priest of the royal pyramid` in the controlled vocab. Agent A proposed the richer list; majority-vote narrowed to the generic `priest of the king` only. DIVERS rubric also highlights prêtrises + intendance. `jmj-r prw msw nswt` (steward of the king's children's houses) is an additional role attested here but not yet in the seeded controlled vocabulary; it is deferred to a chunk-2 prompt update for the vocab expansion. Same vocab gap applies to baud-10, baud-25, baud-34 — see README § 'Known gaps'.)
-    was: ["priest of the king", "priest of the royal pyramid", "steward of the king's children"]
+    was: ["priest of the king"]
     now: ["priest of the king", "priest of the royal pyramid"]
 - baud-20: roles corrected (2nd-pass egyptologist-reviewer correction. Baud's (b) monument block places Jmnj at queen Wḏbt-n.j's funerary complex, and his TITRES carry `jmꜣḫw ḫr ḥnwt.f` ('honored-by-his-mistress', where ḥnwt = mistress/queen) — together establishing queen-attached service personnel. Majority-vote left roles empty despite the attested queen-attachment. `steward of the queen` is in the seeded controlled vocabulary.)
-    value: ["steward of the queen"]
+    was: []
+    now: ["steward of the queen"]
 - baud-36: children_names corrected (2nd-pass egyptologist-reviewer correction. Baud's TITRES (physical p. 427) include `mwt nswt Ḏd-ꜥnḫ-Nfr-kꜣ-Rꜥ` — a cartouche-scoped 'mother of king Neferkare' title explicitly attested in the pyramid-mortuary-cult formula. The `(probable)` hedge on majority-voted `children_names` is wrong when the mother-of-Neferkare relation is attested in an own-titulary inscription, not inferred. Hedge removed per README § 'Interpretive-facts caveat' — title-attested kinship is asserted bare.)
-    value: ["Néferkarê"]
+    was: ["Néferkarê (probable)"]
+    now: ["Néferkarê"]
 - baud-10: roles corrected (TITRES includes `jmj-r pr ... nwt msw nswt` (steward of the king's children's house). Chunk 1 left roles empty pending vocab expansion; chunk 2 adds `steward of the king's children` to the controlled vocabulary.)
-    value: ["steward of the king's children"]
+    was: []
+    now: ["steward of the king's children"]
 - baud-25: roles corrected (TITRES includes `jmj-r sbꜣ n msw nswt nw ẖt.f` (overseer of the door/schooling of the king's own-body children). `msw nswt`-scoped administrative title maps to `steward of the king's children` in the expanded vocab.)
-    value: ["steward of the king's children"]
+    was: []
+    now: ["steward of the king's children"]
 - baud-34: roles corrected (TITRES includes `jmj-r prw msw nswt` (overseer of the houses of the king's children) — the canonical form of this role. Chunk 1 left roles empty pending vocab expansion.)
-    value: ["steward of the king's children"]
+    was: []
+    now: ["steward of the king's children"]
 - baud-40: roles corrected (TITRES includes `jmj-r prw msw nswt (2)`. Chunk-1 correction already set roles to `[priest of the king, priest of the royal pyramid]`; chunk 2 appends `steward of the king's children` now that the vocab accepts it.)
     was: ["priest of the king", "priest of the royal pyramid"]
     now: ["priest of the king", "priest of the royal pyramid", "steward of the king's children"]
 - baud-42: roles corrected (Baud's TITRES for Ḥꜣ-w(j)-kꜣ.j (physical p. 50) gives `[zꜣ nswt] nj ẖt.f mrr jt.f`. The `smsw` (eldest) glyph is absent; `mrr jt.f` / `nj ẖt.f` alone attest body-son, not eldest. The `king's eldest son of his body` vocab term specifically requires `smsw`. Removed; `king's son` remains as the bare direct attestation.)
-    value: ["king's son"]
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
 - baud-43: roles corrected (Baud's TITRES for Wꜣš-Ptḥ (physical p. 50) gives `jmj-r ḥmw-kꜣ (nw zꜣt nswt...?)` — overseer of the ka-priests of a king's daughter (Ḥꜥ-mrr-Nbtj II per notes), NOT a queen. Majority-vote mapped this to `steward of the queen` which is semantically wrong (queen ≠ king's daughter). Dropped the role; the daughter-scoped administrative title has no clean vocab home and is preserved in `titles_from_baud`.)
-    value: ["priest of the king", "priest of the royal pyramid"]
+    was: ["priest of the king", "priest of the royal pyramid", "steward of the queen"]
+    now: ["priest of the king", "priest of the royal pyramid"]
 - baud-55: father_name corrected (Baud's PARENTÉ for Bꜣ-bꜣ.f II (physical p. 58–59) reports Reisner's hypothesis — 'Fils de Dwꜣ-n-Rꜥ selon Reisner … idée reprise hypothétiquement par PM 155 … Strudwick … ne remet pas vraiment en question l'hypothèse'. Baud himself does not endorse. Same pattern as chunk-1 baud-33 (Strudwick hypothesis): structured field is null, notes_from_baud already captures the hypothesis verbatim for readers.)
-    value: null
+    was: "Dwꜣ-n-Rꜥ [248] (per Baud)"
+    now: null
 - baud-57: roles corrected (Baud's TITRES for Bꜣ-kꜣ.j (physical p. 60–61) opens with `ḥm-nṯr Rꜥ-ḏd.f` — priest of the royal cult of Rêdjedef. Same additive-role pattern as chunk-1 baud-28 / baud-40: `ḥm-nṯr <royal-cartouche>` attests `priest of the royal pyramid`. Majority-vote omitted this role; the other three were preserved.)
-    value: ["king's son", "king's eldest son of his body", "priest of the king", "priest of the royal pyramid"]
+    was: ["king's son", "king's eldest son of his body", "priest of the king"]
+    now: ["king's son", "king's eldest son of his body", "priest of the king", "priest of the royal pyramid"]
 - baud-62: roles corrected (Baud's TITRES for Pr-sn* (physical p. 64) are `jmj-r jzwj ḥkr nswt`, `jmj-r mrḫt ḥkr nswt`, `jmj-r ḥkr nswt`, `šḏ pr-ꜥꜣ`. `ḥkr nswt` is the king's ornaments/jewelry cult-institution, NOT the treasury (`pr-ḥḏ`). Majority-vote mapped to the treasury vocab term. Replaced with `overseer of the king's ornaments` (new vocab term added in this chunk). Baud explicitly notes (p. 447 n. 53) that `pr-ꜥꜣ` is associated with `šḏ`, not `ḥkr nswt` — so the three are three different institutions.)
-    value: ["overseer of the king's ornaments"]
+    was: ["overseer of the treasury of pr-ꜥꜣ"]
+    now: ["overseer of the king's ornaments"]
 - baud-64: roles corrected (Baud's TITRES for Pḥ-r-nfr* (physical p. 66) includes `ḥqꜣ ḥwt-ꜥꜣt ḥwt Mr.s-ꜥnḫ` — ruler of the great estate of the domain of Meresankh (the king's mother per notes_from_baud). This is an estate administrator, not a priest. Majority-vote mis-coded as `priest of the king's mother`. Replaced with the new vocab term `steward of the king's mother` — parallel to `steward of the queen` and `steward of the king's children`.)
-    value: ["steward of the king's mother"]
+    was: ["priest of the king's mother"]
+    now: ["steward of the king's mother"]
 - baud-66: spouse_names corrected (Baud's PARENTÉ for Ptḥ-m-hꜣt Ptḥj (physical p. 67) reads 'Époux (?) de la fille royale Mrwt Zšzšt [82]' — the literal question mark is Baud's own hedge, not a transcription artifact. Majority-vote dropped it. Preserved per README hedge-level 4 (`X (?)` = legible sign, reading/attribution disputed).)
-    value: ["Mrwt Zšzšt (?)"]
+    was: ["Mrwt Zšzšt"]
+    now: ["Mrwt Zšzšt (?)"]
 - baud-68: roles corrected (Baud's TITRES for Ptḥ-špss (physical p. 68–69) includes `wr ḫrp ḥmwwt` — the canonical title of the High Priest of Ptah at Memphis. This is Ptahshepses of Saqqara whose biography Baud cites (Urk. I 51–53). Majority-vote omitted the role; no existing vocab term covered it, so `high priest of Ptah` added to the controlled vocabulary in this chunk.)
-    value: ["sem priest", "king's son-in-law", "priest of the king", "high priest of Ptah"]
+    was: ["sem priest", "king's son-in-law", "priest of the king"]
+    now: ["sem priest", "king's son-in-law", "priest of the king", "high priest of Ptah"]
 - baud-41: roles corrected (PDF p. 432: TITRES `zꜣ nswt`, `zꜣ nswt smsw`, `tz nḫn(?)`. `smsw` present, `nj ẖt.f` absent — same rule as baud-42. Drop `king's eldest son of his body` (requires both elements).)
-    value: ["king's son"]
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
 - baud-44: roles corrected (Wꜥtt-ḫt-ḥr Zšzšt (PDF p. 434) is a king's daughter (Téti) married to the vizier Mererouka, NOT to a king. Majority-vote added `king's wife` and `priest of the king's wife`, but her `ḥmt-nṯr Ḥwt-Ḥr` / `ḥmt-nṯr Nt` titles are priestess-of-GODDESS, not of a queen's cult — both roles are fabricated. Spouse Mrr-wj-kꜣj is a vizier, not a king. Dropped both.)
-    value: ["king's daughter"]
+    was: ["king's daughter", "king's wife", "priest of the king's wife"]
+    now: ["king's daughter"]
 - baud-55: roles corrected (PDF p. 442 TITRES: `zꜣ nswt`, `zꜣ nswt nj ẖt.f`, `smr wꜥtj n jt.f`. No `smsw` anywhere. Same rule as baud-42: drop `king's eldest son of his body`. (father_name correction already in this chunk.))
-    value: ["vizier", "king's son"]
+    was: ["vizier", "king's son", "king's eldest son of his body"]
+    now: ["vizier", "king's son"]
 - baud-60a: father_name corrected (PDF p. 446 [60a] Pn-mdw has NO PARENTÉ section — Baud gives only DATATION (Pépi Iᵉʳ, based on the monument location in the complex) and a DIVERS name-reading caveat. Promoting a reign-date to a filiation claim is fabrication. The graffito's place of attestation is in notes; structured parent field is null.)
-    value: null
+    was: "Pépi Iᵉʳ (probable)"
+    now: null
 - baud-60a: roles corrected (PDF p. 446: only title is `zꜣ nswt smsw`. `smsw` present, `nj ẖt.f` absent — same rule as baud-42.)
-    value: ["king's son"]
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
 - baud-67: roles corrected (Ptahshepses of Abusir, PDF p. 452. TITRES carries `zꜣ nswt nj ẖt.f` only; no `smsw`. Famously NOT born royal (married into the royal family via the king's daughter Ḥꜥ-mrr-Nbtj II). `king's eldest son of his body` unattested and historically wrong.)
-    value: ["vizier", "king's son", "king's son-in-law"]
+    was: ["vizier", "king's son", "king's eldest son of his body", "king's son-in-law"]
+    now: ["vizier", "king's son", "king's son-in-law"]
 - baud-71: roles corrected (PDF p. 457 TITRES: `zꜣ nswt`, `zꜣ nswt nj ẖt.f`, `zꜣ nsw[t] nj ẖt.f [mr]jj.f`. No `smsw`. Same rule as baud-42.)
-    value: ["king's son"]
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
 - baud-73: roles corrected (PDF p. 458–459: TITRES `zꜣ nswt (2)`, `zꜣ nswt nj ẖt.f`; no `smsw`. Also not a direct royal son — Baud makes him son of the zꜣt nswt Sḏjt [222]. `king's eldest son of his body` doubly unattested.)
-    value: ["king's son"]
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
 - baud-76: spouse_names corrected (PDF p. 461 PARENTÉ: 'on a proposé Rêkhaef' — Baud reports the proposal without endorsing. `(probable)` overstates his hedge; `(?)` matches Baud's `on a proposé` more honestly (hedge-level 4 per README).)
-    value: ["Rêkhaef (?)"]
+    was: ["Rêkhaef (probable)"]
+    now: ["Rêkhaef (?)"]
 - baud-79: roles corrected (PDF p. 464: TITRES `zꜣ nswt nj ẖt.f` only. No `smsw`. Attribution rests on onomastics + Giza-East locality, not on an eldest-son title. Same rule as baud-42.)
-    value: ["king's son"]
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
 - baud-85: children_names corrected (Baud writes 'si la reconstitution de Smith est exacte' — Kꜣ.j-wꜥb is Smith's reconstruction that Baud reports (not endorses). `(per Baud)` over-promoted; `(probable)` matches the actual hedge.)
-    value: ["Kꜣ.j-wꜥb (probable)"]
+    was: ["Kꜣ.j-wꜥb (per Baud)"]
+    now: ["Kꜣ.j-wꜥb (probable)"]
 - baud-86: roles corrected (TITRES has `ḥmt-nṯr Ḫwfw, ḥmt-nṯr Nt, ḥmt-nṯr Ḥwt-Ḥr` on a king's daughter — priestess of royal cult of Khoufou plus goddess-cults (Neith, Hathor). Majority-vote added `priest of the king` but the title is female royal-cult priestess, not service-personnel `priest of the king`. Role vocab intends the latter. Dropped.)
-    value: ["king's daughter"]
+    was: ["king's daughter", "priest of the king"]
+    now: ["king's daughter"]
 - baud-117: roles corrected (Nfr-mꜣꜥt I's TITRES has `zꜣ nswt smsw` — `smsw` is present but `nj ẖt.f` is absent. Per the chunk-2 baud-42 rule (vocab term `king's eldest son of his body` requires BOTH elements), drop the role. `king's son` remains as the bare attestation; `vizier` from other titulary preserved.)
-    value: ["king's son", "vizier"]
+    was: ["king's son", "king's eldest son of his body", "vizier"]
+    now: ["king's son", "vizier"]
 - baud-87: father_name corrected (Baud's PARENTÉ reports Schmitz's supposition: 'Schmitz … ont amené à supposer qu'il s'agit … d'une fille du couple Ptḥ-špss et Ḫꜥ-mrr-Nbtj'. `(per Baud)` over-promotes a reported hypothesis; `(probable)` matches Baud's stance.)
-    value: "Ptḥ-špss (probable)"
+    was: "Ptḥ-špss (per Baud)"
+    now: "Ptḥ-špss (probable)"
 - baud-87: mother_name corrected (Same Schmitz-supposition as baud-87 father_name. `(per Baud)` → `(probable)` for consistency with how Baud hedges.)
-    value: "Ḫꜥ-mrr-Nbtj (probable)"
+    was: "Ḫꜥ-mrr-Nbtj (per Baud)"
+    now: "Ḫꜥ-mrr-Nbtj (probable)"
 - baud-93: roles corrected (Same pattern as baud-86: TITRES has `ḥmt-nṯr Ḫwfw, ḥmt-nṯr Ḥwt-Ḥr, ḥkrt nswt` on a king's daughter — female royal-cult priestess plus goddess-cult. `priest of the king` is the service-personnel vocab; doesn't fit a female royal's own titulary. Dropped.)
-    value: ["king's daughter"]
+    was: ["king's daughter", "priest of the king"]
+    now: ["king's daughter"]
 - baud-94: father_name corrected (Baud's PARENTÉ says the Rêkhaef filiation 'est motivée par le secteur' but `on peut néanmoins en douter`. Baud reports the hypothesis and hedges it; `(per Baud)` over-promotes. `(probable)` is the most generous honest mapping.)
-    value: "Rêkhaef (probable)"
+    was: "Rêkhaef (per Baud)"
+    now: "Rêkhaef (probable)"
 - baud-92: roles corrected (Gemini PR #58 review. TITRES has `ḥm pr mwt nswt` (servant of the house of the king's mother) — administrative/domestic, not priestly. `priest of the king's mother` vocab requires `ḥm-nṯr mwt nswt X`; this row only has `ḥm pr`. Dropped. `steward of the king's mother` retained (from `ḥqꜣ n mwt nswt Nj-mꜣꜥt-Ḥp`, genuinely administrative).)
-    value: ["steward of the king's mother"]
+    was: ["steward of the king's mother", "priest of the king's mother"]
+    now: ["steward of the king's mother"]
 - baud-94b: titles_from_baud corrected (Gemini PR #58 review. baud-94b has NO TITRES rubric — the extracted `[zꜣt nswt] (probablement)` was inferred from prose, not a verbatim TITRES line. Per schema, `titles_from_baud` is the verbatim TITRES rubric only. Empty list is honest; roles already empty (deferred earlier).)
-    value: []
+    was: ["[zꜣt nswt] (probablement)"]
+    now: []
 - baud-97: roles corrected (TITRES includes `jmj-r ḥst pr-ꜥꜣ` — overseer of the STOREROOM (`ḥst`) of the great-house, NOT the treasury (`pr-ḥḏ`). `overseer of the treasury of pr-ꜥꜣ` was mis-applied by majority-vote. Dropped (no clean vocab fit for storeroom); the priest-of-royal-cult roles from `ḥm-nṯr Šzp-jb-Rꜥ` etc. retained.)
-    value: ["priest of the king's mother", "priest of the royal pyramid"]
+    was: ["priest of the king's mother", "priest of the royal pyramid", "overseer of the treasury of pr-ꜥꜣ"]
+    now: ["priest of the king's mother", "priest of the royal pyramid"]
 - baud-123: spouse_names corrected (Egyptologist-reviewer PR #59: p.493 Grdseloff's hypothesis, explicitly 'conjecturale'. Baud reports but does not assert. `(per Baud)` over-promotes; `(probable)` matches Baud's hedge.)
     was: ["Ouserkaf (per Baud)"]
     now: ["Ouserkaf (probable)"]
