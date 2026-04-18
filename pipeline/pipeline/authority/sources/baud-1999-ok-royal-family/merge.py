@@ -95,7 +95,7 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
     across chunk files — Baud's numeric ID namespace is meant to be globally
     unique across all chunks (entries [1]–[282]), so a collision is a bug.
     """
-    files = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
+    files = sorted(agent_dir.glob(f"agent-{tag}-chunk-*.jsonl"))
     if not files:
         return {}
 

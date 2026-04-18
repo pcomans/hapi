@@ -367,6 +367,17 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "existing vocab term covered it, so `high priest of Ptah` added "
         "to the controlled vocabulary in this chunk.",
     ),
+    # Gemini Code Assist PR #57 suggested adding a `steward of the king's
+    # children` entry for baud-69 (`smsw pr n jrj-pꜥt`). The
+    # scope-accountability-enforcer review flagged this as a vocab-
+    # integrity stretch: `jrj-pꜥt` is a court rank (hereditary
+    # prince/noble), not `msw nswt` ("king's children"). The chunk-1
+    # backfill pattern applies specifically to `msw nswt`-scoped titles;
+    # extending it to `jrj-pꜥt` would conflate distinct title elements.
+    # baud-69's `roles: []` is the honest mapping — `smsw pr` is an
+    # administrative-household title with no clean vocab home, and
+    # `jrj-pꜥt` scoping deserves its own vocab term when a future chunk
+    # attests it more broadly. Deferred.
 ]
 
 
@@ -381,6 +392,28 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
+
+# Guard against accidental `(baud_id, field)` duplicates across correction
+# lists — a duplicate silently stomps the earlier value based on list
+# order. Today `baud-40 / roles` is intentionally in both
+# `CHUNK1_CORRECTIONS` and `CHUNK1_BACKFILL` (the backfill appends
+# `steward of the king's children` to the chunk-1 corrected list); the
+# `_ALLOWED_DUPLICATES` allowlist acknowledges this. Any other
+# accidental duplicate fails loud.
+_ALLOWED_DUPLICATES: frozenset[tuple[str, str]] = frozenset(
+    {("baud-40", "roles")}
+)
+_seen: dict[tuple[str, str], int] = {}
+for _baud_id, _field, _, _ in SPOT_CORRECTIONS:
+    _key = (_baud_id, _field)
+    _seen[_key] = _seen.get(_key, 0) + 1
+    if _seen[_key] > 1 and _key not in _ALLOWED_DUPLICATES:
+        raise ValueError(
+            f"Duplicate SPOT_CORRECTIONS entry for {_key!r}; "
+            f"later value silently overrides. Add to _ALLOWED_DUPLICATES "
+            f"if intentional, or merge the two entries."
+        )
+del _seen, _baud_id, _field, _key
 
 
 def main() -> None:

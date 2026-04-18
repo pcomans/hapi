@@ -548,26 +548,18 @@ provisional until that happens.
     was: ["priest of the king", "priest of the royal pyramid"]
     now: ["priest of the king", "priest of the royal pyramid", "steward of the king's children"]
 - baud-42: roles corrected (Baud's TITRES for Ḥꜣ-w(j)-kꜣ.j (physical p. 50) gives `[zꜣ nswt] nj ẖt.f mrr jt.f`. The `smsw` (eldest) glyph is absent; `mrr jt.f` / `nj ẖt.f` alone attest body-son, not eldest. The `king's eldest son of his body` vocab term specifically requires `smsw`. Removed; `king's son` remains as the bare direct attestation.)
-    was: ["king's son", "king's eldest son of his body"]
-    now: ["king's son"]
+    value: ["king's son"]
 - baud-43: roles corrected (Baud's TITRES for Wꜣš-Ptḥ (physical p. 50) gives `jmj-r ḥmw-kꜣ (nw zꜣt nswt...?)` — overseer of the ka-priests of a king's daughter (Ḥꜥ-mrr-Nbtj II per notes), NOT a queen. Majority-vote mapped this to `steward of the queen` which is semantically wrong (queen ≠ king's daughter). Dropped the role; the daughter-scoped administrative title has no clean vocab home and is preserved in `titles_from_baud`.)
-    was: ["priest of the king", "priest of the royal pyramid", "steward of the queen"]
-    now: ["priest of the king", "priest of the royal pyramid"]
+    value: ["priest of the king", "priest of the royal pyramid"]
 - baud-55: father_name corrected (Baud's PARENTÉ for Bꜣ-bꜣ.f II (physical p. 58–59) reports Reisner's hypothesis — 'Fils de Dwꜣ-n-Rꜥ selon Reisner … idée reprise hypothétiquement par PM 155 … Strudwick … ne remet pas vraiment en question l'hypothèse'. Baud himself does not endorse. Same pattern as chunk-1 baud-33 (Strudwick hypothesis): structured field is null, notes_from_baud already captures the hypothesis verbatim for readers.)
-    was: "Dwꜣ-n-Rꜥ [248] (per Baud)"
-    now: null
+    value: null
 - baud-57: roles corrected (Baud's TITRES for Bꜣ-kꜣ.j (physical p. 60–61) opens with `ḥm-nṯr Rꜥ-ḏd.f` — priest of the royal cult of Rêdjedef. Same additive-role pattern as chunk-1 baud-28 / baud-40: `ḥm-nṯr <royal-cartouche>` attests `priest of the royal pyramid`. Majority-vote omitted this role; the other three were preserved.)
-    was: ["king's son", "king's eldest son of his body", "priest of the king"]
-    now: ["king's son", "king's eldest son of his body", "priest of the king", "priest of the royal pyramid"]
+    value: ["king's son", "king's eldest son of his body", "priest of the king", "priest of the royal pyramid"]
 - baud-62: roles corrected (Baud's TITRES for Pr-sn* (physical p. 64) are `jmj-r jzwj ḥkr nswt`, `jmj-r mrḫt ḥkr nswt`, `jmj-r ḥkr nswt`, `šḏ pr-ꜥꜣ`. `ḥkr nswt` is the king's ornaments/jewelry cult-institution, NOT the treasury (`pr-ḥḏ`). Majority-vote mapped to the treasury vocab term. Replaced with `overseer of the king's ornaments` (new vocab term added in this chunk). Baud explicitly notes (p. 447 n. 53) that `pr-ꜥꜣ` is associated with `šḏ`, not `ḥkr nswt` — so the three are three different institutions.)
-    was: ["overseer of the treasury of pr-ꜥꜣ"]
-    now: ["overseer of the king's ornaments"]
+    value: ["overseer of the king's ornaments"]
 - baud-64: roles corrected (Baud's TITRES for Pḥ-r-nfr* (physical p. 66) includes `ḥqꜣ ḥwt-ꜥꜣt ḥwt Mr.s-ꜥnḫ` — ruler of the great estate of the domain of Meresankh (the king's mother per notes_from_baud). This is an estate administrator, not a priest. Majority-vote mis-coded as `priest of the king's mother`. Replaced with the new vocab term `steward of the king's mother` — parallel to `steward of the queen` and `steward of the king's children`.)
-    was: ["priest of the king's mother"]
-    now: ["steward of the king's mother"]
+    value: ["steward of the king's mother"]
 - baud-66: spouse_names corrected (Baud's PARENTÉ for Ptḥ-m-hꜣt Ptḥj (physical p. 67) reads 'Époux (?) de la fille royale Mrwt Zšzšt [82]' — the literal question mark is Baud's own hedge, not a transcription artifact. Majority-vote dropped it. Preserved per README hedge-level 4 (`X (?)` = legible sign, reading/attribution disputed).)
-    was: ["Mrwt Zšzšt"]
-    now: ["Mrwt Zšzšt (?)"]
+    value: ["Mrwt Zšzšt (?)"]
 - baud-68: roles corrected (Baud's TITRES for Ptḥ-špss (physical p. 68–69) includes `wr ḫrp ḥmwwt` — the canonical title of the High Priest of Ptah at Memphis. This is Ptahshepses of Saqqara whose biography Baud cites (Urk. I 51–53). Majority-vote omitted the role; no existing vocab term covered it, so `high priest of Ptah` added to the controlled vocabulary in this chunk.)
-    was: ["sem priest", "king's son-in-law", "priest of the king"]
-    now: ["sem priest", "king's son-in-law", "priest of the king", "high priest of Ptah"]
+    value: ["sem priest", "king's son-in-law", "priest of the king", "high priest of Ptah"]

@@ -45,13 +45,13 @@ Divers (h).
 
 See `pipeline/pipeline/authority/sources/baud-1999-ok-royal-family/README.md` § "Schema" for the canonical spec. Summary of mandatory field semantics:
 
-- **`baud_id`**: `"baud-<N>"` where `<N>` is Baud's 1-282 Corpus entry number.
+- **`baud_id`**: `"baud-<N>"` or `"baud-<N><letter>"` where `<N>` is Baud's 1-282 Corpus entry number and `<letter>` is an optional lowercase a-z suffix Baud uses for rare sub-entries (e.g. `"baud-60a"` for `[60a] Pn-mdw` on p. 63).
 - **`name_egyptian`**: transliteration headword, verbatim including ASCII-equivalents of diacritics when the PDF text layer gives them. Preserve dots (`mw.t-nsw`), hyphens, and case exactly as printed. If the PDF text layer is unreliable for a glyph, fall back to a Unicode-correct rendering using the standard Egyptological character set (ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ) — but prefer verbatim.
 - **`name_anglicised`**: conventional English form (e.g. Khufu, Sneferu, Hetepheres, Iheti-hotep) if obvious to a specialist; `null` if there is no common English rendering. Do NOT invent one for obscure non-royal names.
 - **`service_personnel`**: `true` if the headword ends in `*`, else `false`. The asterisk itself is stripped from `name_egyptian`.
 - **`monument`**, **`localisation`**, **`pm_ref`**: split from header lines `(b)` and `(c)`. `null` when not attested.
 - **`date_attested`**: Baud's `(d)` line verbatim (French text allowed; it's a scholarly dating, not prose).
-- **`dynasty`**: string form `"3"`, `"4"`, `"5"`, `"6"`, or a range `"4-5"` for cross-dynasty, or `"unknown"` when Baud declines to date. Derive from `date_attested` — map French dynasty numerals (`IVᵉ` → `"4"`, `"Vᵉ"` → `"5"`, etc.).
+- **`dynasty`**: string form `"3"`, `"4"`, `"5"`, `"6"`, or a range `"4-5"` for cross-dynasty. **`null` when Baud declines to date** (writes `"Date?"` in his `(d)` line). Derive from `date_attested` — map French dynasty numerals (`IVᵉ` → `"4"`, `"Vᵉ"` → `"5"`, etc.). Do NOT emit `"unknown"` — the test suite explicitly rejects it.
 - **`sub_period`**: `null` unless Baud explicitly names an OK sub-period (e.g. `"début IVᵉ dynastie"` → `"early Dyn 4"`; `"Fin IVᵉ – début Vᵉ"` → `"end Dyn 4 – early Dyn 5"`).
 - **`baud_refs`**: dict. Keys are lowercase author surnames used by Baud in his `(e)` convention: `baer`, `strudwick`, `seipel`, `harpur`, `troy`, `schmitz`. Values are the reference strings as printed (the number/page/entry Baud cites). `{}` when Baud gives no `(e)` line.
 - **`titles_from_baud`**: list of verbatim title strings from the `TITRES.` rubric, split on commas. `[]` when the entry has no `TITRES.` rubric.
@@ -70,6 +70,9 @@ See `pipeline/pipeline/authority/sources/baud-1999-ok-royal-family/README.md` §
   - `steward of the king's children` (`jmj-r prw msw nswt` and equivalents; any `jmj-r pr` or `jmj-r sbꜣ` that scopes to `msw nswt`). Additive whenever this scoping appears, even alongside other roles.
   - `sem priest` (`sm`)
   - `overseer of the treasury of pr-ꜥꜣ` / `overseer of scribes of pr-ꜥꜣ` — for complex administrative titles.
+  - `steward of the king's mother` — for estate-administrator titles scoping to a king's mother (e.g. `ḥqꜣ ḥwt-ꜥꜣt ḥwt <mother-cartouche>`).
+  - `high priest of Ptah` — for the title `wr ḫrp ḥmwwt`.
+  - `overseer of the king's ornaments` — for the title `jmj-r ḥkr nswt` (note: `ḥkr nswt` ≠ `pr-ḥḏ` treasury).
 
   **Additive, not alternative.** When a TITRES rubric gives `ḥm-nṯr <pyramid-cartouche>` or `wꜥb <pyramid-cartouche>`, add `priest of the royal pyramid` — do not collapse it into a generic `priest of the king`. Same principle for `msw nswt`-scoped administrative titles: keep the specific role code. Chunk-1 majority-vote narrowed this kind of list too aggressively; please be inclusive.
 
@@ -118,7 +121,7 @@ Write newline-delimited JSON to `pipeline/pipeline/authority/sources/baud-1999-o
 
 Every row MUST contain every field in the schema — use `null` / `[]` / `{}` / `false` for missing values per the per-field rules above. Downstream `merge.py` expects a uniform schema; missing keys confuse the majority vote.
 
-**Expected row count:** 40 rows (entries `[41]`–`[80]`). If your extraction produces < 35 or > 45, re-read the prompt and the boundary warnings; something is off.
+**Expected row count:** 41 rows (entries `[41]`–`[80]` plus Baud's sub-entry `[60a] Pn-mdw` on physical p. 63). If your extraction produces < 35 or > 45, re-read the prompt and the boundary warnings; something is off.
 
 ## Report
 

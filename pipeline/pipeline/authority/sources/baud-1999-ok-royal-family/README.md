@@ -18,9 +18,9 @@ Landed across multiple PRs, one chunk per PR, ~40 entries per chunk:
 
 | PR | Entries | Physical pp. (vol. 2) | Rows |
 |----|---|---|---|
-| this PR | `[1]`–`[40]` | 11–49 | ~40 |
-| future | `[41]`–`[80]` | TBD | ~40 |
-| future | `[81]`–`[120]` | TBD | ~40 |
+| #53 (merged) | `[1]`–`[40]` | 11–49 | 40 |
+| #57 (this PR) | `[41]`–`[80]` + `[60a]` | 49–82 | 41 |
+| future | `[81]`–`[120]` | 82–109 (est.) | ~40 |
 | future | `[121]`–`[160]` | TBD | ~40 |
 | future | `[161]`–`[200]` | TBD | ~40 |
 | future | `[201]`–`[240]` | TBD | ~40 |
