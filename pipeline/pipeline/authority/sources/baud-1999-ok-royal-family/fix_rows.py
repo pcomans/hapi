@@ -267,9 +267,15 @@ def main() -> None:
 
     existing_diff = DIFF.read_text()
     marker = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
-    if marker in existing_diff:
-        head, _, _ = existing_diff.partition(f"\n\n{marker}")
-        existing_diff = head
+    # Strip the previous LLM-APPLIED OVERRIDES section in-place so the
+    # rewritten section replaces (not duplicates) it. Use the bare marker
+    # as the split point rather than `\n\n{marker}` — the latter would
+    # silently fail to match and produce a duplicate section if the file
+    # were ever manually edited to use a different whitespace separator.
+    # The `rstrip()` handles trailing whitespace before the marker.
+    idx = existing_diff.find(marker)
+    if idx != -1:
+        existing_diff = existing_diff[:idx].rstrip()
     body = (
         "\n".join(override_log)
         if override_log

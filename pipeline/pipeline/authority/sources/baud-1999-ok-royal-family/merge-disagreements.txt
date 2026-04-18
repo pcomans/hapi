@@ -231,32 +231,22 @@ signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
 - baud-22: monument corrected (Baud's header for Jnt-kꜣ.s (printed p. 415) enumerates two documents: (1) the Saqqara stèles-bornes and (2) a representation in Djoser's Heliopolis temple. Majority-vote dropped document 2, losing the Heliopolis provenance that Phase A site-reconciliation will want. Restored with the '1:' / '2:' numbering Baud uses.)
-    was: "Stèles-bornes, remployées, complexe funéraire de Djoser"
-    now: "1: Stèles-bornes, remployées, complexe funéraire de Djoser; 2: Représentée dans le temple de Djoser à Héliopolis"
+    value: "1: Stèles-bornes, remployées, complexe funéraire de Djoser; 2: Représentée dans le temple de Djoser à Héliopolis"
 - baud-26: children_names corrected (Baud's DIVERS + figure 34 (physical p. 418–419) make clear that Sꜥnḫ-n-Ptḥ is Jḫj's grandchild (petit-fils), not child. Baud's own prose: '(b) Sꜥnḫ-n-Ptḥ, son petit-fils' — an unnamed son-generation sits between them. `children_names` is scoped to direct children per README; the grandchild is already correctly captured in `notes_from_baud`. No fabrication of the intermediate 'X' son — Baud himself leaves it unnamed.)
-    was: ["Sꜥnḫ-n-Ptḥ"]
-    now: []
+    value: []
 - baud-28: roles corrected (Baud's TITRES (physical p. 420) lists wꜥb Bꜣ-Nfr-jr-kꜣ-Rꜥ as the first title — 'priest of Neferirkare's pyramid'. The controlled vocab includes `priest of the royal pyramid` for exactly this ḥm-nṯr/wꜥb-of-named-pyramid pattern. Agent A proposed the richer list and was majority-voted down; the title is unambiguous and derives directly from titles_from_baud per README rules.)
-    was: ["priest of the king's mother"]
-    now: ["priest of the king's mother", "priest of the royal pyramid"]
+    value: ["priest of the king's mother", "priest of the royal pyramid"]
 - baud-33: mother_name corrected (Baud's PARENTÉ for ꜥnḫ-m-ꜥ-Rꜥ (physical p. 423) reports Strudwick's hypothesis verbatim: 'la mère Mr.s-ꜥnḫ III [76] est hypothétique d'après Strudwick.' Baud himself is reporting another scholar's hypothesis, not asserting — 'hypothétique d'après Strudwick' is Strudwick's guess, and Baud's own commentary raises doubts ('est-ce l'appartenance à une autre branche par sa mère?'). Two reviewer passes conflicted on the right field value here: first pass wrote '(per Baud)' reading Baud as endorser, second pass pushed back noting Baud is questioning the hypothesis, not affirming it. Null is the reading most honest to the primary source — the mother-connection in the structured field is not attested by Baud himself; notes_from_baud already captures Strudwick's hypothesis verbatim for the reader's benefit.)
-    was: "Mr.s-ꜥnḫ III (probable)"
-    now: null
+    value: null
 - baud-37: name_anglicised corrected ('Ankhesenmerire' directly transliterates the French-form Mrjj-Rꜥ; the conventional English form in modern Egyptological scholarship is 'Ankhesenmeryre' (Dodson-Hilton) or 'Ankhesenpepi' (Wikipedia, some museum catalogs, following the double-name attestation). Provisional pending Phase A reconciliation against pharaoh.se's Conventional English Display Form — if pharaoh.se canonicalises to 'Ankhesenpepi I', the Phase A curation step will update the authority accordingly. 'Ankhesenmeryre' is the reviewer's recommended default until that reconciliation runs.)
-    was: "Ankhesenmerire I"
-    now: "Ankhesenmeryre I"
+    value: "Ankhesenmeryre I"
 - baud-38: name_anglicised corrected (Same provisional French-to-English choice as baud-37 — Ankhesenmerire → Ankhesenmeryre. Wikipedia's convention for this individual is 'Ankhesenpepi II'; either form is acceptable modern English-Egyptological usage. Preserves the naming-parallel with baud-37 (her predecessor of the same name). Phase A will reconcile the final form against pharaoh.se.)
-    was: "Ankhesenmerire II"
-    now: "Ankhesenmeryre II"
+    value: "Ankhesenmeryre II"
 - baud-38: spouse_names corrected (ꜥnḫ.s-n-Mrjj-Rꜥ II was the mother of Pépi II, not a wife — Baud's titles list (physical p. 428) gives her ḥmt nswt Mn-nfr-Mrjj-Rꜥ (wife of Pépi Iᵉʳ's pyramid) and mwt nswt Mn-ꜥnḫ-Nfr-kꜣ-Rꜥ (mother of Pépi II's pyramid). The 'Pépi II (?)' entry in spouse_names is a confusion with her regent role for her son. children_names already correctly contains Pépi II.)
-    was: ["Pépi Iᵉʳ", "Pépi II (?)"]
-    now: ["Pépi Iᵉʳ"]
+    value: ["Pépi Iᵉʳ"]
 - baud-40: roles corrected (Baud's TITRES (physical p. 432) lists three ḥm-nṯr royal-cult titles (ḥm-nṯr Ḫwfw, ḥm-nṯr Sꜣḥw-Rꜥ, ḥm-nṯr Nfr-jr-kꜣ-Rꜥ) — each maps to `priest of the royal pyramid` in the controlled vocab. Agent A proposed the richer list; majority-vote narrowed to the generic `priest of the king` only. DIVERS rubric also highlights prêtrises + intendance. `jmj-r prw msw nswt` (steward of the king's children's houses) is an additional role attested here but not yet in the seeded controlled vocabulary; it is deferred to a chunk-2 prompt update for the vocab expansion. Same vocab gap applies to baud-10, baud-25, baud-34 — see README § 'Known gaps'.)
-    was: ["priest of the king"]
-    now: ["priest of the king", "priest of the royal pyramid"]
+    value: ["priest of the king", "priest of the royal pyramid"]
 - baud-20: roles corrected (2nd-pass egyptologist-reviewer correction. Baud's (b) monument block places Jmnj at queen Wḏbt-n.j's funerary complex, and his TITRES carry `jmꜣḫw ḫr ḥnwt.f` ('honored-by-his-mistress', where ḥnwt = mistress/queen) — together establishing queen-attached service personnel. Majority-vote left roles empty despite the attested queen-attachment. `steward of the queen` is in the seeded controlled vocabulary.)
-    was: []
-    now: ["steward of the queen"]
+    value: ["steward of the queen"]
 - baud-36: children_names corrected (2nd-pass egyptologist-reviewer correction. Baud's TITRES (physical p. 427) include `mwt nswt Ḏd-ꜥnḫ-Nfr-kꜣ-Rꜥ` — a cartouche-scoped 'mother of king Neferkare' title explicitly attested in the pyramid-mortuary-cult formula. The `(probable)` hedge on majority-voted `children_names` is wrong when the mother-of-Neferkare relation is attested in an own-titulary inscription, not inferred. Hedge removed per README § 'Interpretive-facts caveat' — title-attested kinship is asserted bare.)
-    was: ["Néferkarê (probable)"]
-    now: ["Néferkarê"]
+    value: ["Néferkarê"]
