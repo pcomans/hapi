@@ -31,6 +31,7 @@ EDITION = "IFAO 1999 vol. 2"
 CHUNK_PDF_PAGES: dict[range, str] = {
     range(1, 41): "11-49",
     range(41, 81): "49-82",
+    range(81, 121): "82-109",
 }
 
 
@@ -51,6 +52,9 @@ CHUNK1_EXPECTED_ROWS = 40
 # Chunk 2 emits 41 rows: [41]–[80] (40 integer-numbered) plus Baud's
 # sub-entry [60a] Pn-mdw (physical p. 63, one graffito-attested prince).
 CHUNK2_EXPECTED_ROWS = 41
+# Chunk 3 emits 42 rows: [81]–[120] (40 integer-numbered) plus two
+# sub-entries [94b] Nj-ꜥnḫ-Ḥwt-Ḥr and [101a] N(j)-s(w)-jr(w).
+CHUNK3_EXPECTED_ROWS = 42
 
 
 @lru_cache(maxsize=1)
@@ -69,7 +73,9 @@ def _row(baud_id: str) -> dict:
 
 def test_row_count() -> None:
     """Merged Corpus = sum of every chunk's expected row count."""
-    expected = CHUNK1_EXPECTED_ROWS + CHUNK2_EXPECTED_ROWS
+    expected = (
+        CHUNK1_EXPECTED_ROWS + CHUNK2_EXPECTED_ROWS + CHUNK3_EXPECTED_ROWS
+    )
     assert len(_rows()) == expected, len(_rows())
 
 
@@ -137,7 +143,10 @@ def test_dynasty_coverage_is_ok_only() -> None:
     # collapses the "unknown" string to None, so the final output should
     # never carry `"unknown"` as a dynasty value. Including it here would
     # let a merge regression that skipped normalization slip through.
-    valid_dynasties = {"3", "4", "5", "6", "3-4", "4-5", "5-6"}
+    # `2-3` admitted for the Early-Dynastic / OK transition — Baud
+    # includes some figures like baud-98 Nj-mꜣꜥt-Ḥp I at "Fin IIᵉ à début
+    # IIIᵉ dynastie". Conservative: still no bare `2`.
+    valid_dynasties = {"2-3", "3", "4", "5", "6", "3-4", "4-5", "5-6"}
     # Baud himself declines to date some entries, writing `Date?` in the
     # (d) line. Those rows carry `date_attested == "Date ?"` (or similar)
     # and `dynasty == None` is the only honest mapping — scholarly
