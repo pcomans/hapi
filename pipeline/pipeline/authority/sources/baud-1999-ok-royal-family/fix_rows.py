@@ -768,15 +768,80 @@ CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
-# Chunk-6 corrections.
+# Chunk-6 corrections. After egyptologist-reviewer PR #61 pass.
+#
+# Critical correction: 'PPI' in Baud's abbreviation-table is "Première
+# Période Intermédiaire" (First Intermediate Period), NOT "Pépi Iᵉʳ" as
+# initially assumed. The earlier wrong correction (dynasty='6') is
+# replaced with dynasty=null and sub_period='First Intermediate Period'
+# for baud-213.
 CHUNK6_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-205",
+        "father_name",
+        "Ouserkaf (probable)",
+        "Egyptologist PR #61: PDF p. 567 — 'Spencer suppose, par "
+        "conséquent, qu'il est un fils d'Ouserkaf'. Baud reports Spencer's "
+        "hypothesis without endorsing. `(per Baud)` → `(probable)`.",
+    ),
     (
         "baud-213",
         "dynasty",
-        "6",
-        "Baud's (d) line for Sntj is the shorthand 'PPI' = Pépi Iᵉʳ "
-        "(Dyn 6). date_attested preserves the verbatim 'PPI'; dynasty "
-        "derived correctly.",
+        None,
+        "Egyptologist PR #61: 'PPI' in Baud's (d) line is the standard "
+        "French abbreviation for Première Période Intermédiaire (First "
+        "Intermediate Period), NOT Pépi Iᵉʳ. The FIP 'miserable little "
+        "stela' dating (Firth/Gunn) is style-based. FIP is post-OK; "
+        "dynasty falls outside the OK vocab. Supersedes the earlier "
+        "(wrong) dynasty='6' correction.",
+    ),
+    (
+        "baud-213",
+        "sub_period",
+        "First Intermediate Period",
+        "Egyptologist PR #61: PPI = FIP. sub_period captures the "
+        "stylistic dating; date_attested stays verbatim 'PPI' per "
+        "Baud's convention.",
+    ),
+    (
+        "baud-223",
+        "roles",
+        ["priest of the royal pyramid"],
+        "Egyptologist PR #61: TITRES are `jmj-r prwj-ḥḏ` (overseer of "
+        "the TWO treasuries) and `jmj-r šwj pr-ꜥꜣ` (overseer of the two "
+        "basins of the Great House) — neither maps cleanly to `overseer "
+        "of the treasury of pr-ꜥꜣ` (which expects `jmj-r pr-ḥḏ pr-ꜥꜣ`). "
+        "Dropped; `priest of the royal pyramid` from `sḥḏ ḥmw-nṯr "
+        "Ḏd-swt-Ttj` retained.",
+    ),
+    (
+        "baud-224",
+        "father_name",
+        "Ounas (probable)",
+        "Egyptologist PR #61: PDF pp. 580-581 — Baud concludes 'le "
+        "prince héritier d'Ounas' but explicitly flags the conclusion "
+        "as 'conjecturale... dans l'état actuel des données'. Not a "
+        "full endorsement; demote `(per Baud)` → `(probable)`.",
+    ),
+    (
+        "baud-232",
+        "roles",
+        [],
+        "Egyptologist PR #61: titles `ḥrp ꜣṯw sbꜣ msw nswt` (controller "
+        "of troops TEACHING the king's children — `sbꜣ` = teach) and "
+        "`jmj-r st pr-mnꜥt` (overseer of the nursery) are teacher/"
+        "nursery-overseer titles, NOT `jmj-r prw msw nswt` steward "
+        "pattern. No clean vocab match — honest empty list. Baud's own "
+        "gloss: 'professeur des enfants royaux'.",
+    ),
+    (
+        "baud-239",
+        "children_names",
+        ["Kꜣ(.j)-swḏꜣ (probable)", "Mrt-jt.s"],
+        "Egyptologist PR #61: PDF p. 593 — Mrt-jt.s is titled `ḥkrt "
+        "nswt` (certain attestation); Kꜣ(.j)-swḏꜣ is Junker's inference "
+        "from G 5340 homonymy, Baud accepts as 'très concevable' but "
+        "doesn't assert. Add `(probable)` hedge.",
     ),
 ]
 
