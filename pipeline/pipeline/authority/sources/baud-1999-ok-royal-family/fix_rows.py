@@ -768,6 +768,19 @@ CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-6 corrections.
+CHUNK6_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-213",
+        "dynasty",
+        "6",
+        "Baud's (d) line for Sntj is the shorthand 'PPI' = Pépi Iᵉʳ "
+        "(Dyn 6). date_attested preserves the verbatim 'PPI'; dynasty "
+        "derived correctly.",
+    ),
+]
+
+
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
@@ -775,6 +788,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
+    CHUNK6_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
