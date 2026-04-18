@@ -86,7 +86,11 @@ def test_dynasty_coverage_is_ok_only() -> None:
     stubs — entries whose `(d)` line is empty because the content lives
     under another Corpus number (e.g. baud-9 `Jj-[ḥr ?]-nfr. Voir à
     Nfrt-kꜣw II [132]`)."""
-    valid_dynasties = {"3", "4", "5", "6", "3-4", "4-5", "5-6", "unknown"}
+    # `"unknown"` is NOT in the valid set — `merge.py`'s SENTINEL_NULL_STRINGS
+    # collapses the "unknown" string to None, so the final output should
+    # never carry `"unknown"` as a dynasty value. Including it here would
+    # let a merge regression that skipped normalization slip through.
+    valid_dynasties = {"3", "4", "5", "6", "3-4", "4-5", "5-6"}
     for r in _rows():
         d = r["dynasty"]
         if d is None:
@@ -199,23 +203,50 @@ def test_ihetihotep_baud_3_full_populated_row() -> None:
 
 def test_ankhesenmeryre_i_baud_37_full_populated_row() -> None:
     """Second flagship row — a well-attested Dyn-6 queen (Pépi I's wife,
-    Merenrê's mother). Every populated field asserted. Checks
+    Merenrê's mother). Every populated field asserted per rule 5. Checks
     name_anglicised normalization to the conventional English form.
     """
     r = _row("baud-37")
     assert r["name_egyptian"] == "ꜥnḫ.s-n-Mrjj-Rꜥ Iʳᵉ"
     assert r["name_anglicised"] == "Ankhesenmeryre I"
     assert r["service_personnel"] is False
+    assert r["monument"] == "Stèle (ou pilier ?) du vizir Ḏꜥw"
     assert r["localisation"] == "Abydos"
+    assert r["pm_ref"] == "PM V, p. 95"
     assert r["date_attested"] == "Pépi Iᵉʳ-Merenrê"
     assert r["dynasty"] == "6"
     assert r["sub_period"] is None
+    assert r["baud_refs"] == {
+        "schmitz": "138 (359)",
+        "seipel": "6.4.1",
+        "troy": "6.6",
+    }
+    assert r["titles_from_baud"] == [
+        "wrt ḥzt",
+        "wrt ḥts",
+        "mwt nswt (3)",
+        "mwt nswt Ḫꜥ-nfr-Mrjj-n-Rꜥ (2)",
+        "mwt nswt-bjtj Ḫꜥ-nfr-Mrjj-n-Rꜥ",
+        "ḥmt nswt Mn-nfr-Mrjj-Rꜥ",
+        "ḥt Wr",
+        "smrt Ḥr",
+        "tjst Ḥr",
+    ]
     assert r["roles"] == ["king's mother", "king's wife"]
     assert r["father_name"] == "Ḫwj"
     assert r["mother_name"] is None
     assert r["spouse_names"] == ["Pépi Iᵉʳ"]
     assert r["children_names"] == ["Merenrê"]
     assert r["tomb"] is None
+    assert r["notes_from_baud"] == (
+        "Épouse de Pépi Iᵉʳ et mère de Merenrê; fille du vizir Ḫwj, "
+        "représentant d'une puissante famille abydénienne."
+    )
+    assert r["source_citation"] == {
+        "source": "Baud 1999 BdE 126 Corpus [37]",
+        "pdf_pages": "11-49",
+        "edition": "IFAO 1999 vol. 2",
+    }
 
 
 def test_baud_26_grandchild_not_listed_as_child() -> None:
@@ -237,44 +268,77 @@ def test_baud_38_spouse_is_only_pepi_i() -> None:
     assert "Pépi II" in r["children_names"]
 
 
-def test_baud_33_mother_hedge_uses_per_baud_convention() -> None:
-    """Regression: baud-33's mother Mr.s-ꜥnḫ III is Strudwick's
-    titular-synchronism inference, not an inscribed attestation —
-    the schema distinguishes '(probable)' from '(per Baud)'.
+def test_baud_33_mother_is_null_not_hedged() -> None:
+    """Regression: baud-33's mother is Strudwick's hypothesis ('la mère
+    Mr.s-ꜥnḫ III est hypothétique d'après Strudwick'), not Baud's own
+    attribution. First-pass reviewer wrote `(per Baud)`; second-pass
+    pushed back noting Baud is reporting Strudwick's hypothesis, not
+    asserting it. Resolved to null — the mother-connection in the
+    structured field is not attested by Baud; notes_from_baud captures
+    Strudwick's hypothesis verbatim for the reader's benefit.
     """
     r = _row("baud-33")
-    assert r["mother_name"] == "Mr.s-ꜥnḫ III (per Baud)", r["mother_name"]
+    assert r["mother_name"] is None, r["mother_name"]
+    # The Strudwick hypothesis must still be visible to readers via notes.
+    assert "Strudwick" in (r["notes_from_baud"] or ""), r["notes_from_baud"]
 
 
 def test_hedge_preservation_on_filiation_fields() -> None:
     """Baud is hedge-heavy; rows with a '(probable)' or '(per Baud)' or
-    '[X]'-reconstructed father should survive intact. Sample: baud-2
-    (Jḫ-Rꜥ's probable father Rêkhaef), baud-13 (Jwn-Mnw's Rêkhaef),
-    baud-14 (Jwn-Rꜥ's Rêkhaef).
+    '[X]'-reconstructed father should survive intact. Samples: baud-2
+    (Jḫ-Rꜥ's probable father Rêkhaef), baud-13 (Jwn-Mnw's hedged
+    Rêkhaef-by-synchronism father), baud-14 (Jwn-Rꜥ's explicit
+    inscription-attested Rêkhaef father).
     """
     r2 = _row("baud-2")
     assert r2["father_name"] == "Rêkhaef (probable)"
+    r13 = _row("baud-13")
+    assert r13["father_name"] == "Rêkhaef (probable)"
     r14 = _row("baud-14")
     assert r14["father_name"] == "Rêkhaef"  # baud-14 is explicit, not hedged
 
 
-def test_baud_40_includes_priest_of_the_royal_pyramid() -> None:
+def test_baud_40_roles_full_list_preserved() -> None:
     """Regression: reviewer-flagged role-under-extraction. ꜥnḫ-Špss-kꜣ.f
     holds three ḥm-nṯr pyramid-cult titles (Ḫwfw, Sꜣḥw-Rꜥ, Nfr-jr-kꜣ-Rꜥ);
     majority-vote initially narrowed roles to `priest of the king` alone.
-    fix_rows.py adds the priest-of-the-royal-pyramid role back.
+    fix_rows.py adds `priest of the royal pyramid` back — pin the full
+    two-role list so a later regression dropping either role fails loud.
     """
     r = _row("baud-40")
-    assert "priest of the royal pyramid" in r["roles"], r["roles"]
+    assert r["roles"] == ["priest of the king", "priest of the royal pyramid"], r["roles"]
 
 
-def test_baud_28_includes_priest_of_the_royal_pyramid() -> None:
+def test_baud_28_roles_full_list_preserved() -> None:
     """Same role-under-extraction pattern at baud-28 — wꜥb Bꜣ-Nfr-jr-kꜣ-Rꜥ
     (Neferirkare's pyramid-cult priest) was stripped from the majority
-    merge. Restored by fix_rows.py.
+    merge. Restored by fix_rows.py. Pin the full list for regression.
     """
     r = _row("baud-28")
-    assert "priest of the royal pyramid" in r["roles"], r["roles"]
+    assert r["roles"] == [
+        "priest of the king's mother",
+        "priest of the royal pyramid",
+    ], r["roles"]
+
+
+def test_baud_20_steward_of_the_queen_restored() -> None:
+    """2nd-pass egyptologist-reviewer correction: baud-20 (Jmnj) has
+    `jmꜣḫw ḫr ḥnwt.f` + queen-funerary-complex attachment, establishing
+    queen-attached service — roles must include `steward of the queen`.
+    Majority-vote left the list empty.
+    """
+    r = _row("baud-20")
+    assert r["roles"] == ["steward of the queen"], r["roles"]
+
+
+def test_baud_36_children_neferkare_no_hedge() -> None:
+    """2nd-pass egyptologist-reviewer correction: baud-36's title list
+    explicitly attests mwt nswt Ḏd-ꜥnḫ-Nfr-kꜣ-Rꜥ — the mother-of-Neferkare
+    kinship is title-attested, not inferred. The `(probable)` hedge on
+    `children_names` is wrong. Drop it.
+    """
+    r = _row("baud-36")
+    assert r["children_names"] == ["Néferkarê"], r["children_names"]
 
 
 def test_service_personnel_rows_have_attested_titles() -> None:

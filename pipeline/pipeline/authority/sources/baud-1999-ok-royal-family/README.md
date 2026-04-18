@@ -50,7 +50,7 @@ One row per numbered Baud Corpus entry:
   "dynasty": "4",
   "sub_period": null,
   "baud_refs": {"baer": "7", "schmitz": "121-122 (356)", "harpur": "10"},
-  "titles_from_baud": ["/// n jmɜt (?)", "ɛd-mr wḥɛw", "ḥm [bɜw] Nḫn", "ḥm-nṯr Ḫwfw", "ḥrp ɛḥ", "smr", "smr wɛtj"],
+  "titles_from_baud": ["/// n jmꜣt (?)", "ꜥd-mr wḥꜥw", "ḥm [bꜣw] Nḫn", "ḥm-nṯr Ḫwfw", "ḥrp ꜥḥ", "smr", "smr wꜥtj"],
   "roles": ["king's son-in-law"],
   "father_name": null,
   "mother_name": null,
@@ -61,6 +61,8 @@ One row per numbered Baud Corpus entry:
   "source_citation": {"source": "Baud 1999 BdE 126 Corpus [3]", "pdf_pages": "11-49", "edition": "IFAO 1999 vol. 2"}
 }
 ```
+
+The JSON example uses the canonical IFAO Egyptological codepoints (`ꜣ` U+A723 for aleph, `ꜥ` U+A725 for ayin) — post-normalization form matching `reconciled.jsonl`. The extraction agents sometimes emit fallback codepoints (`ɜ`, `ˁ`, `ɛ`) that `fix_rows.py`'s deterministic transliteration pass replaces; the test suite asserts no fallbacks survive.
 
 Field-by-field:
 
@@ -98,7 +100,8 @@ Per ADR-017: extractors Read the sub-PDF directly (no committed OCR) → 3 paral
 
 ## Known gaps / Phase A notes
 
-- **Role-code vocabulary.** The `roles` vocabulary is seeded from chunk 1 and will grow across chunks as Baud's Corpus surfaces new titles. Phase A authors the canonical expansion table.
+- **Role-code vocabulary.** The `roles` vocabulary is seeded from chunk 1 and will grow across chunks as Baud's Corpus surfaces new titles. Phase A authors the canonical expansion table. Specific chunk-1 gaps flagged by the reviewer passes and deferred to the chunk-2 prompt update:
+  - **`steward of the king's children`** (for `jmj-r prw msw nswt` / `jmj-r pr jnꜥwt nwt msw nswt` / similar). Affects baud-10, baud-25, baud-34, baud-40 — each has an administrative king's-children-household title that doesn't map cleanly to the current vocab. baud-40's override already pins `priest of the royal pyramid` + `priest of the king`; the king's-children-steward role remains unrepresented. When the vocab is expanded in chunk 2, a `fix_rows.py` backfill over these four rows is the cleanest way to populate them.
 - **Transliteration normalisation.** Baud uses the French Egyptological school's conventions (dot for suffix, `j` vs `i` for iod, morpheme-boundary marking). `name_egyptian` preserves his form verbatim; Phase A normalises across sources.
 - **Overlap with D&H earlier chapters.** D&H's Chapters 1–2 also cover OK queens; both are extracted, and Phase A reconciles by name + parent + spouse triangulation. D&H disambiguator letters are NOT the same as Baud's numeric IDs.
 - **Porter-Moss III cross-reference.** Tomb designations (`G xxxx`, `D xx`) are preserved verbatim. Resolution to canonical PM III site entries happens in Phase A after `sources/porter-moss-memphis/` lands.

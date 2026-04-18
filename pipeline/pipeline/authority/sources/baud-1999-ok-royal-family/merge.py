@@ -152,6 +152,18 @@ def main(agent_dir: Path) -> None:
     all_ids_unsorted = set().union(*[a.keys() for a in agents.values()])
     all_ids = sorted(all_ids_unsorted, key=_baud_num)
 
+    # Schema uniformity: every row in reconciled.jsonl must carry every
+    # field that ANY agent produced on ANY row. Per-row field derivation
+    # (the old `set().union(*[v.keys() for _, v in present])` pattern)
+    # let a field that one agent omitted on one row vanish from the merged
+    # output for that row while remaining in every other row — breaking
+    # the prompt's "every row must contain every schema field" guarantee.
+    # Computing the field set once across the full agent output keeps the
+    # merged JSONL a rectangular table.
+    all_fields = sorted(
+        set().union(*[set(row.keys()) for a in agents.values() for row in a.values()])
+    )
+
     final: list[dict] = []
     report: list[str] = []
 
@@ -165,7 +177,6 @@ def main(agent_dir: Path) -> None:
             # voted on a given row.
             report.append(f"{baud_id}: only 1/3 agents found this entry (kept it).\n")
 
-        all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}
         row_disagreements: list[str] = []
         for field in all_fields:

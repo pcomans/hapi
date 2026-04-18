@@ -118,34 +118,45 @@ CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "baud-33",
         "mother_name",
-        "Mr.s-ꜥnḫ III (per Baud)",
-        "Baud's PARENTÉ for ꜥnḫ-m-ꜥ-Rꜥ (physical p. 423) introduces the "
-        "mother through Hassan → Strudwick's titular-synchronism argument, "
-        "with Baud explicitly flagging it as inferential: 'est-ce "
-        "l'appartenance à une autre branche par sa mère?' This is a "
-        "scholarly-judgment attribution, not an attested filiation; the "
-        "`(probable)` hedge understates it. Per README § 'Interpretive-"
-        "facts caveat', `(per Baud)` distinguishes asserted-by-Baud from "
-        "attested-in-source.",
+        None,
+        "Baud's PARENTÉ for ꜥnḫ-m-ꜥ-Rꜥ (physical p. 423) reports Strudwick's "
+        "hypothesis verbatim: 'la mère Mr.s-ꜥnḫ III [76] est hypothétique "
+        "d'après Strudwick.' Baud himself is reporting another scholar's "
+        "hypothesis, not asserting — 'hypothétique d'après Strudwick' is "
+        "Strudwick's guess, and Baud's own commentary raises doubts ('est-ce "
+        "l'appartenance à une autre branche par sa mère?'). Two reviewer "
+        "passes conflicted on the right field value here: first pass wrote "
+        "'(per Baud)' reading Baud as endorser, second pass pushed back "
+        "noting Baud is questioning the hypothesis, not affirming it. "
+        "Null is the reading most honest to the primary source — the "
+        "mother-connection in the structured field is not attested by Baud "
+        "himself; notes_from_baud already captures Strudwick's hypothesis "
+        "verbatim for the reader's benefit.",
     ),
     (
         "baud-37",
         "name_anglicised",
         "Ankhesenmeryre I",
-        "'Ankhesenmerire' transliterates the French-form Mrjj-Rꜥ directly; "
-        "the conventional English form used in modern Egyptological "
-        "scholarship (Dodson-Hilton, pharaoh.se) is 'Ankhesenmeryre' "
-        "(with -y- in the Meryre component). Phase A reconciliation against "
-        "pharaoh.se's Conventional English Display Form expects this form.",
+        "'Ankhesenmerire' directly transliterates the French-form Mrjj-Rꜥ; "
+        "the conventional English form in modern Egyptological scholarship "
+        "is 'Ankhesenmeryre' (Dodson-Hilton) or 'Ankhesenpepi' (Wikipedia, "
+        "some museum catalogs, following the double-name attestation). "
+        "Provisional pending Phase A reconciliation against pharaoh.se's "
+        "Conventional English Display Form — if pharaoh.se canonicalises to "
+        "'Ankhesenpepi I', the Phase A curation step will update the "
+        "authority accordingly. 'Ankhesenmeryre' is the reviewer's "
+        "recommended default until that reconciliation runs.",
     ),
     (
         "baud-38",
         "name_anglicised",
         "Ankhesenmeryre II",
-        "Same French-to-conventional-English fix as baud-37 — "
-        "Ankhesenmerire → Ankhesenmeryre. Preserves the homonymy with "
-        "baud-37 (her predecessor of the same name) under the "
-        "standard English convention.",
+        "Same provisional French-to-English choice as baud-37 — "
+        "Ankhesenmerire → Ankhesenmeryre. Wikipedia's convention for this "
+        "individual is 'Ankhesenpepi II'; either form is acceptable modern "
+        "English-Egyptological usage. Preserves the naming-parallel with "
+        "baud-37 (her predecessor of the same name). Phase A will "
+        "reconcile the final form against pharaoh.se.",
     ),
     (
         "baud-38",
@@ -170,7 +181,35 @@ CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "prêtrises + intendance. `jmj-r prw msw nswt` (steward of the "
         "king's children's houses) is an additional role attested here "
         "but not yet in the seeded controlled vocabulary; it is deferred "
-        "to a chunk-2 prompt update for the vocab expansion.",
+        "to a chunk-2 prompt update for the vocab expansion. Same vocab "
+        "gap applies to baud-10, baud-25, baud-34 — see README § 'Known "
+        "gaps'.",
+    ),
+    (
+        "baud-20",
+        "roles",
+        ["steward of the queen"],
+        "2nd-pass egyptologist-reviewer correction. Baud's (b) monument "
+        "block places Jmnj at queen Wḏbt-n.j's funerary complex, and his "
+        "TITRES carry `jmꜣḫw ḫr ḥnwt.f` ('honored-by-his-mistress', where "
+        "ḥnwt = mistress/queen) — together establishing queen-attached "
+        "service personnel. Majority-vote left roles empty despite the "
+        "attested queen-attachment. `steward of the queen` is in the "
+        "seeded controlled vocabulary.",
+    ),
+    (
+        "baud-36",
+        "children_names",
+        ["Néferkarê"],
+        "2nd-pass egyptologist-reviewer correction. Baud's TITRES "
+        "(physical p. 427) include `mwt nswt Ḏd-ꜥnḫ-Nfr-kꜣ-Rꜥ` — a "
+        "cartouche-scoped 'mother of king Neferkare' title explicitly "
+        "attested in the pyramid-mortuary-cult formula. The `(probable)` "
+        "hedge on majority-voted `children_names` is wrong when the "
+        "mother-of-Neferkare relation is attested in an own-titulary "
+        "inscription, not inferred. Hedge removed per README § "
+        "'Interpretive-facts caveat' — title-attested kinship is "
+        "asserted bare.",
     ),
 ]
 
@@ -185,20 +224,39 @@ def main() -> None:
     rows = [_normalise_transliteration(r) for r in rows]
 
     # Pass 2: LLM-reviewer spot corrections.
+    #
+    # The log must describe the *state* of reconciled.jsonl, not the *delta*
+    # from the previous run. On a second run every `old_val == new_val`, so a
+    # delta-style log would incorrectly report "no overrides applied" while
+    # the file on disk reflects all the applied overrides. Instead: always
+    # log every SPOT_CORRECTION entry, showing the rationale and the current
+    # value. `applied_count` tracks how many rows actually changed this run
+    # for the terminal "Applied N overrides" line (0 on a re-run is
+    # correct — nothing changed — but the disk log still describes the
+    # complete override set).
     override_log: list[str] = []
+    applied_count = 0
     for baud_id, field, new_val, rationale in SPOT_CORRECTIONS:
         row = next((r for r in rows if r["baud_id"] == baud_id), None)
         if row is None:
             raise KeyError(f"No row with baud_id={baud_id!r}")
         old_val = row.get(field)
-        if old_val == new_val:
-            continue
-        override_log.append(
-            f"- {baud_id}: {field} corrected ({rationale})\n"
-            f"    was: {json.dumps(old_val, ensure_ascii=False)}\n"
-            f"    now: {json.dumps(new_val, ensure_ascii=False)}"
-        )
-        row[field] = new_val
+        if old_val != new_val:
+            applied_count += 1
+            override_log.append(
+                f"- {baud_id}: {field} corrected ({rationale})\n"
+                f"    was: {json.dumps(old_val, ensure_ascii=False)}\n"
+                f"    now: {json.dumps(new_val, ensure_ascii=False)}"
+            )
+            row[field] = new_val
+        else:
+            # Row already reflects the override — still emit a log entry
+            # so the on-disk audit trail describes the full committed
+            # override set, not just this run's deltas.
+            override_log.append(
+                f"- {baud_id}: {field} corrected ({rationale})\n"
+                f"    value: {json.dumps(new_val, ensure_ascii=False)}"
+            )
 
     RECONCILED.write_text(
         "\n".join(
@@ -231,7 +289,7 @@ def main() -> None:
     )
     DIFF.write_text(appended)
 
-    print(f"Applied {len(override_log)} override(s).")
+    print(f"Applied {applied_count} override(s) this run ({len(override_log)} total in log).")
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
     print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
 
