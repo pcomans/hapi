@@ -572,11 +572,15 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # appear here. `test_all_corrections_includes_every_chunk_list` asserts
 # module-level `CHUNK*` list attributes are all present — dropping one
 # silently destroys its audit trail and the test fails loud.
+CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
+    CHUNK4_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
