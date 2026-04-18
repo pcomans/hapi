@@ -48,10 +48,10 @@ Michel Baud, *Famille royale et pouvoir sous l'Ancien Empire égyptien*, Bibliot
 - **`raw/agent-{a,b,c}-chunk-<N>.jsonl`** — 3 parallel `general-purpose` subagents Read the sub-PDF directly; no committed OCR. Gitignored.
 - **`fix_rows.py`** — APPEND a new `CHUNK<N>_CORRECTIONS: list[tuple[str, str, object, str]]` constant alongside every existing chunk constant (do not edit prior lists). Chunk 2 replaces the current singleton `SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = CHUNK1_CORRECTIONS` with the list-based aggregation:
   ```python
-  ALL_CORRECTIONS = [CHUNK1_CORRECTIONS, CHUNK2_CORRECTIONS]
+  ALL_CORRECTIONS = [CHUNK1_CORRECTIONS, CHUNK1_BACKFILL, CHUNK2_CORRECTIONS]
   SPOT_CORRECTIONS = sum(ALL_CORRECTIONS, [])
   ```
-  Each later chunk appends its constant to `ALL_CORRECTIONS` (single-line edit). Dropping any chunk from the list silently destroys its audit trail — a parallel test that iterates module-level `CHUNK*_CORRECTIONS` attributes and asserts each appears in `ALL_CORRECTIONS` catches the omission.
+  If chunk 2 implements the `CHUNK1_BACKFILL` list from the decision checklist (see below), include it in `ALL_CORRECTIONS` alongside the per-chunk constants. Each later chunk appends its constant to `ALL_CORRECTIONS` (single-line edit). Dropping any constant from the list silently destroys its audit trail — a parallel test that iterates module-level `CHUNK*_CORRECTIONS` / `CHUNK*_BACKFILL` attributes and asserts each appears in `ALL_CORRECTIONS` catches the omission.
 - **`tests/test_sources_baud_ok_royal_family.py`**:
   - ADD a new `CHUNK<N>_EXPECTED_ROWS = 40` module-level constant next to every existing chunk-count constant. Do NOT rename existing constants.
   - UPDATE `test_row_count` to the list form `assert len(_rows()) == sum([CHUNK1_EXPECTED_ROWS, CHUNK2_EXPECTED_ROWS, ...])`. Pair with an iteration-based omission-catch test for the same reason as `ALL_CORRECTIONS` above.
@@ -111,7 +111,7 @@ If an unknown fallback codepoint appears, add it to `_TRANSLIT_NORMALIZE` in the
 1. **Scope chunk boundaries.** Open the PDF at the expected physical-page start/end; confirm entry-number boundaries (first and last). Update `transcribe.md` § Chunks.
 2. **Split the sub-PDF** with `pypdf`. Target ~1–2 MB.
 3. **Three parallel `general-purpose` subagents** Read the sub-PDF directly — no committed OCR (Baud's prose is the playbook's unsafe-to-commit-verbatim category). Each writes `raw/agent-{a,b,c}-chunk-<N>.jsonl`.
-4. **Deterministic merge** via `merge.py`. Expect 40 rows with every schema field; merge.py is unchanged from chunk 1.
+4. **Deterministic merge** via `merge.py`. `_load_agent_chunks()` unions every `raw/agent-{tag}-*.jsonl` it finds, so `reconciled.jsonl`'s row count is *cumulative*: chunk 2 produces 80 rows (40 prior + 40 new), chunk 3 produces 120, etc. Sanity-check the new chunk added exactly 40 (or the expected chunk size) rather than the raw total. merge.py itself is unchanged from chunk 1.
 5. **Transliteration normalization** fires automatically when `fix_rows.py` runs.
 6. **`egyptologist-reviewer` subagent pass** on the reconciled JSONL + PDF; use chunk 1's review prompt as a template, updating the page range and chunk number.
 7. **Apply reviewer corrections** via new `CHUNK<N>_CORRECTIONS` list; append to `ALL_CORRECTIONS`.
