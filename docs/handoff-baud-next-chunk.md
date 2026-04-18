@@ -16,10 +16,11 @@ Read `docs/playbook-phase-0-ocr-transcription.md` § "Multi-chunk source pattern
 
 ---
 
-## State as of 2026-04-18
+## State as of 2026-04-17 (post-chunk-2)
 
-- ✅ **Chunk 1** (`[1]`–`[40]`, physical pp. 11–49) — 40 rows merged in PR #53. 22 pytest test functions (65 asserts). 10 `fix_rows.py` LLM-APPLIED OVERRIDES (8 first-pass + 2 second-pass egyptologist-reviewer corrections) logged under `NOT HUMAN-VALIDATED`. Pipeline CI + web CI green on merge.
-- 🔜 **Chunks 2–7** — pending. Chunk size remains ~40 entries per chunk (7 PRs total).
+- ✅ **Chunk 1** (`[1]`–`[40]`, physical pp. 11–49) — merged PR #53. 40 rows, 10 LLM-APPLIED OVERRIDES.
+- ✅ **Chunk 2** (`[41]`–`[80]` + sub-entry `[60a]`, physical pp. 49–82) — this PR. 41 rows (40 integer-numbered + Baud's sub-entry `[60a] Pn-mdw` on p. 63). 8 `CHUNK2_CORRECTIONS` + 4 `CHUNK1_BACKFILL` entries applied. Vocab expanded: `steward of the king's children`, `steward of the king's mother`, `high priest of Ptah`, `overseer of the king's ornaments`.
+- 🔜 **Chunks 3–7** — pending. ~40 entries per chunk.
 - **Related cleanup tracked elsewhere:** Issue #54 — the `sources/dodson-hilton-queens/` merge.py + fix_rows.py carry the same three bugs fixed in chunk 1 (normalization bypass, idempotence, per-row field set). Not blocking any Baud chunk; fix when D&H earlier-chapters chunks are touched.
 
 ---
@@ -29,8 +30,8 @@ Read `docs/playbook-phase-0-ocr-transcription.md` § "Multi-chunk source pattern
 | Chunk | Entries | Status | Tentative pages |
 |---|---|---|---|
 | 1 | `[1]`–`[40]` | ✅ merged (PR #53) | physical pp. 11–49 (incl. Corpus methodological intro pp. 11–16) |
-| 2 | `[41]`–`[80]` | 🔜 next | physical pp. 49–~83 (scope at start; entry `[41]`'s headword starts at the bottom of p. 49 and continues onto p. 50 — **include p. 49** in the chunk-2 sub-PDF so extractors see the `[41]` headword even though chunk 1 also covered p. 49. One-page boundary overlap is the standard multi-chunk extraction convention) |
-| 3 | `[81]`–`[120]` | pending | TBD |
+| 2 | `[41]`–`[80]` + `[60a]` | ✅ this PR | physical pp. 49–82 (41 rows; `[60a] Pn-mdw` is Baud's own sub-entry on p. 63) |
+| 3 | `[81]`–`[120]` | 🔜 **next** | physical pp. 82–? (`[81]`'s header bleeds from the bottom of p. 82; include p. 82 in the chunk-3 sub-PDF so extractors see it) |
 | 4 | `[121]`–`[160]` | pending | TBD |
 | 5 | `[161]`–`[200]` | pending | TBD |
 | 6 | `[201]`–`[240]` | pending | TBD |
@@ -172,6 +173,27 @@ Per ADR-017 + playbook. All stages on Claude Opus 4.7.
 14. **Transliteration normalizer covers new field shapes recursively.** `_normalise_transliteration` walks `dict` / `list` / `str` / scalar recursively, so new schema fields in chunk 2 are handled automatically. Spot-check: after chunk-2's first merge, run the character-inventory recipe above against `reconciled.jsonl` and confirm no fallback codepoints (U+02C1, U+025B, U+025C) survived the normalizer pass.
 
 ---
+
+## Chunk-2 additions (chunk-3 inherits)
+
+Three patterns surfaced in chunk 2 that were not documented post-chunk-1:
+
+1. **Letter-suffix sub-entries.** Baud numbers rare sub-entries like `[60a] Pn-mdw` (physical p. 63). `merge.py`'s `_BAUD_ID_RE` now accepts `^baud-(\d+)([a-z]?)$`; sort key is `(int, letter)` so `baud-60 < baud-60a < baud-61`. Test file has `_BID_RE` accepting `[a-z]?` suffix, `_pdf_pages_for()` strips the suffix to look up the chunk range, and `test_baud_id_is_contiguous_to_running_total` only enforces integer-namespace contiguity (sub-entries are additive). If chunk 3+ surfaces another `[Na]`-style entry, the plumbing is in place.
+2. **`CHUNK*_EXPECTED_ROWS` counts include sub-entries.** Chunk 2's count is 41, not 40. Derive `last_n` for contiguity from `CHUNK_PDF_PAGES.keys()` (the integer ranges), not from `sum(CHUNK*_EXPECTED_ROWS)`.
+3. **Baud-declines-to-date rows.** `date_attested == "Date ?"` (literal question mark) is Baud's own "I can't date this". Dynasty stays `null` — scholarly-honest mapping. `test_dynasty_coverage_is_ok_only` has a regex branch for `^Date\s*\?`; a chunk-3 entry that declines to date will also pass.
+
+Vocab expansions committed in chunk 2 (canonical set lives in `test_roles_vocabulary_is_bounded`):
+
+- `steward of the king's children` — `jmj-r prw msw nswt` and equivalents; also backfilled four chunk-1 rows (`CHUNK1_BACKFILL` in `fix_rows.py`).
+- `steward of the king's mother` — `ḥqꜣ ḥwt-ꜥꜣt ḥwt <mother-cartouche>` estate-administrator titles.
+- `high priest of Ptah` — `wr ḫrp ḥmwwt`.
+- `overseer of the king's ornaments` — `jmj-r ḥkr nswt` (NOT to be conflated with `overseer of the treasury of pr-ꜥꜣ`; `ḥkr nswt` ≠ `pr-ḥḏ`).
+
+Chunk-2 failure modes seen during the reviewer pass (chunk 3's prompt should keep warning about these):
+
+- Hedge under-/over-extraction on filiation continues: chunk 2 had **baud-55** where `"Dwꜣ-n-Rꜥ (per Baud)"` was Reisner's hypothesis (Baud reporting, not asserting) — same pattern as chunk-1 baud-33. Any `(per Baud)` on filiation should trigger a reviewer re-read of Baud's actual stance.
+- Role mis-mapping when title targets a *different* kin relation than majority-vote assumed: **baud-43** had `"steward of the queen"` for a title that actually scopes to a king's daughter; **baud-62** had `"overseer of the treasury"` for ornaments (`ḥkr nswt`); **baud-64** had `"priest of the king's mother"` for an estate-administrator title. When a title is `jmj-r X` or `ḥqꜣ X`, check what X actually is before picking a role code.
+- Lost inline `(?)` hedges in `spouse_names` / `children_names` — **baud-66** dropped Baud's own `"Époux (?)"`. Literal question marks in the source stay.
 
 ## After chunk N merges
 

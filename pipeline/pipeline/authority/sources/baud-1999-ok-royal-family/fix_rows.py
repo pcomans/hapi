@@ -214,7 +214,173 @@ CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
-SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = CHUNK1_CORRECTIONS
+# Chunk-1 backfill: the `steward of the king's children` role
+# (`jmj-r prw msw nswt` and equivalents) was surfaced by the PR #53 reviewer
+# pass but deferred from chunk 1 because the controlled vocabulary had not
+# yet accepted it. Chunk 2 adds the role to the vocab (`README.md` § Schema,
+# `prompt-chunk-2.md`, `test_roles_vocabulary_is_bounded`), so chunk 1's
+# four affected rows can be backfilled here in the chunk-2 PR. Kept in a
+# separate list so the audit trail distinguishes reviewer-flagged
+# chunk-1 errors (CHUNK1_CORRECTIONS) from vocab-expansion backfills.
+CHUNK1_BACKFILL: list[tuple[str, str, object, str]] = [
+    (
+        "baud-10",
+        "roles",
+        ["steward of the king's children"],
+        "TITRES includes `jmj-r pr ... nwt msw nswt` (steward of the "
+        "king's children's house). Chunk 1 left roles empty pending vocab "
+        "expansion; chunk 2 adds `steward of the king's children` to the "
+        "controlled vocabulary.",
+    ),
+    (
+        "baud-25",
+        "roles",
+        ["steward of the king's children"],
+        "TITRES includes `jmj-r sbꜣ n msw nswt nw ẖt.f` (overseer of the "
+        "door/schooling of the king's own-body children). `msw nswt`-scoped "
+        "administrative title maps to `steward of the king's children` in "
+        "the expanded vocab.",
+    ),
+    (
+        "baud-34",
+        "roles",
+        ["steward of the king's children"],
+        "TITRES includes `jmj-r prw msw nswt` (overseer of the houses of "
+        "the king's children) — the canonical form of this role. Chunk 1 "
+        "left roles empty pending vocab expansion.",
+    ),
+    (
+        "baud-40",
+        "roles",
+        [
+            "priest of the king",
+            "priest of the royal pyramid",
+            "steward of the king's children",
+        ],
+        "TITRES includes `jmj-r prw msw nswt (2)`. Chunk-1 correction "
+        "already set roles to `[priest of the king, priest of the royal "
+        "pyramid]`; chunk 2 appends `steward of the king's children` now "
+        "that the vocab accepts it.",
+    ),
+]
+
+
+# Chunk-2 corrections from the egyptologist-reviewer pass.
+CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-42",
+        "roles",
+        ["king's son"],
+        "Baud's TITRES for Ḥꜣ-w(j)-kꜣ.j (physical p. 50) gives `[zꜣ nswt] "
+        "nj ẖt.f mrr jt.f`. The `smsw` (eldest) glyph is absent; "
+        "`mrr jt.f` / `nj ẖt.f` alone attest body-son, not eldest. The "
+        "`king's eldest son of his body` vocab term specifically requires "
+        "`smsw`. Removed; `king's son` remains as the bare direct attestation.",
+    ),
+    (
+        "baud-43",
+        "roles",
+        ["priest of the king", "priest of the royal pyramid"],
+        "Baud's TITRES for Wꜣš-Ptḥ (physical p. 50) gives `jmj-r ḥmw-kꜣ "
+        "(nw zꜣt nswt...?)` — overseer of the ka-priests of a king's "
+        "daughter (Ḥꜥ-mrr-Nbtj II per notes), NOT a queen. Majority-vote "
+        "mapped this to `steward of the queen` which is semantically wrong "
+        "(queen ≠ king's daughter). Dropped the role; the daughter-scoped "
+        "administrative title has no clean vocab home and is preserved in "
+        "`titles_from_baud`.",
+    ),
+    (
+        "baud-55",
+        "father_name",
+        None,
+        "Baud's PARENTÉ for Bꜣ-bꜣ.f II (physical p. 58–59) reports Reisner's "
+        "hypothesis — 'Fils de Dwꜣ-n-Rꜥ selon Reisner … idée reprise "
+        "hypothétiquement par PM 155 … Strudwick … ne remet pas vraiment "
+        "en question l'hypothèse'. Baud himself does not endorse. Same "
+        "pattern as chunk-1 baud-33 (Strudwick hypothesis): structured "
+        "field is null, notes_from_baud already captures the hypothesis "
+        "verbatim for readers.",
+    ),
+    (
+        "baud-57",
+        "roles",
+        [
+            "king's son",
+            "king's eldest son of his body",
+            "priest of the king",
+            "priest of the royal pyramid",
+        ],
+        "Baud's TITRES for Bꜣ-kꜣ.j (physical p. 60–61) opens with "
+        "`ḥm-nṯr Rꜥ-ḏd.f` — priest of the royal cult of Rêdjedef. Same "
+        "additive-role pattern as chunk-1 baud-28 / baud-40: `ḥm-nṯr "
+        "<royal-cartouche>` attests `priest of the royal pyramid`. "
+        "Majority-vote omitted this role; the other three were preserved.",
+    ),
+    (
+        "baud-62",
+        "roles",
+        ["overseer of the king's ornaments"],
+        "Baud's TITRES for Pr-sn* (physical p. 64) are `jmj-r jzwj ḥkr "
+        "nswt`, `jmj-r mrḫt ḥkr nswt`, `jmj-r ḥkr nswt`, `šḏ pr-ꜥꜣ`. "
+        "`ḥkr nswt` is the king's ornaments/jewelry cult-institution, NOT "
+        "the treasury (`pr-ḥḏ`). Majority-vote mapped to the treasury "
+        "vocab term. Replaced with `overseer of the king's ornaments` "
+        "(new vocab term added in this chunk). Baud explicitly notes "
+        "(p. 447 n. 53) that `pr-ꜥꜣ` is associated with `šḏ`, not `ḥkr "
+        "nswt` — so the three are three different institutions.",
+    ),
+    (
+        "baud-64",
+        "roles",
+        ["steward of the king's mother"],
+        "Baud's TITRES for Pḥ-r-nfr* (physical p. 66) includes `ḥqꜣ ḥwt-"
+        "ꜥꜣt ḥwt Mr.s-ꜥnḫ` — ruler of the great estate of the domain of "
+        "Meresankh (the king's mother per notes_from_baud). This is an "
+        "estate administrator, not a priest. Majority-vote mis-coded as "
+        "`priest of the king's mother`. Replaced with the new vocab term "
+        "`steward of the king's mother` — parallel to `steward of the "
+        "queen` and `steward of the king's children`.",
+    ),
+    (
+        "baud-66",
+        "spouse_names",
+        ["Mrwt Zšzšt (?)"],
+        "Baud's PARENTÉ for Ptḥ-m-hꜣt Ptḥj (physical p. 67) reads "
+        "'Époux (?) de la fille royale Mrwt Zšzšt [82]' — the literal "
+        "question mark is Baud's own hedge, not a transcription artifact. "
+        "Majority-vote dropped it. Preserved per README hedge-level 4 "
+        "(`X (?)` = legible sign, reading/attribution disputed).",
+    ),
+    (
+        "baud-68",
+        "roles",
+        [
+            "sem priest",
+            "king's son-in-law",
+            "priest of the king",
+            "high priest of Ptah",
+        ],
+        "Baud's TITRES for Ptḥ-špss (physical p. 68–69) includes `wr ḫrp "
+        "ḥmwwt` — the canonical title of the High Priest of Ptah at "
+        "Memphis. This is Ptahshepses of Saqqara whose biography Baud "
+        "cites (Urk. I 51–53). Majority-vote omitted the role; no "
+        "existing vocab term covered it, so `high priest of Ptah` added "
+        "to the controlled vocabulary in this chunk.",
+    ),
+]
+
+
+# Aggregation: every chunk's corrections list AND every backfill list must
+# appear here. `test_all_corrections_includes_every_chunk_list` asserts
+# module-level `CHUNK*` list attributes are all present — dropping one
+# silently destroys its audit trail and the test fails loud.
+ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
+    CHUNK1_CORRECTIONS,
+    CHUNK1_BACKFILL,
+    CHUNK2_CORRECTIONS,
+]
+
+SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
 
 
 def main() -> None:
