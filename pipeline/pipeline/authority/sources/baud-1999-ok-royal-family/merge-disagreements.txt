@@ -2173,6 +2173,47 @@ provisional until that happens.
     value: []
 - baud-239: children_names corrected (Egyptologist PR #61: PDF p. 593 — Mrt-jt.s is titled `ḥkrt nswt` (certain attestation); Kꜣ(.j)-swḏꜣ is Junker's inference from G 5340 homonymy, Baud accepts as 'très concevable' but doesn't assert. Add `(probable)` hedge.)
     value: ["Kꜣ(.j)-swḏꜣ (probable)", "Mrt-jt.s"]
-- baud-264: date_attested corrected (Anonymous 'Nom perdu' entry — the statue fragments at G 5280/5380 are undated; Baud gives no explicit (d) line but the tomb context places it in Dyn 4-5. Normalising to Baud's convention `Date ?` so the null-dynasty mapping follows the `declines-to-date` branch. Test otherwise treats date=null + titles-populated as an extraction bug.)
-    was: null
-    now: "Date ?"
+- baud-264: date_attested corrected (Anonymous 'Nom perdu' entry — the statue fragments at G 5280/5380 are undated; Baud gives no explicit (d) line but the tomb context places it in Dyn 4-5. Normalising to Baud's convention `Date ?` so the null-dynasty mapping follows the `declines-to-date` branch.)
+    value: "Date ?"
+- baud-242: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-243: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-248: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["vizier", "king's son", "king's eldest son of his body"]
+    now: ["vizier", "king's son"]
+- baud-249: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-250: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-251: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-252: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-254: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-256: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped. baud-256 has `smsw jzt` — chamber-eldest admin office, NOT kinship marker.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-259: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["vizier", "king's son", "king's eldest son of his body"]
+    now: ["vizier", "king's son"]
+- baud-260: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-266: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped. baud-266 has `smsw` in a SEPARATE title (`zꜣ nswt smsw` alone) from `nj ẖt.f` — strict rule requires same title string.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-269: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-270: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped. baud-270 has fragmentary `zꜣ nswt nj ẖ[t.f]` and `smsw ///` separately — not same title string.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
