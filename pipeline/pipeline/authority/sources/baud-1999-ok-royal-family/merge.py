@@ -3,11 +3,12 @@
 Baud 1999 BdE 126 *Corpus*. Structure cloned from Dodson-Hilton. Adaptations:
 
 - `dh_id` → `baud_id` throughout.
-- **Flat primary key `baud_id`.** Baud uses a single numeric 1–282 namespace
-  across the full Corpus — no sub-section letter suffixes, no cross-section
-  duplicates. A `baud_id` collision across agents or chunks is therefore a
-  bug, and `merge.py` fails loud on duplicates.
-- `_sort_key` numeric by the trailing number of `baud_id` (`baud-1` < `baud-2` < ... < `baud-40`).
+- **Primary key `baud_id`.** Baud's Corpus is numbered 1–282, but a handful of
+  sub-entries appear with a letter-suffix (e.g. `[60a] Pn-mdw` on physical
+  p. 63, between `[60]` and `[61]`). The id namespace is therefore `baud-<N>`
+  OR `baud-<N><letter>`, with `<letter>` a single lowercase a–z. Duplicate
+  ids across agents/chunks are still bugs — `merge.py` fails loud on them.
+- `_sort_key` orders first by integer N, then by letter suffix (`baud-60` < `baud-60a` < `baud-61`).
   Baud's own Corpus is alphabetical-by-Egyptian-transliteration, not numerical,
   but the merge output is numerical so that chunks concatenate cleanly across
   PRs. Phase A consumers who want alphabetical ordering re-sort.
@@ -49,15 +50,21 @@ OUT = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
-_BAUD_ID_RE = re.compile(r"^baud-(\d+)$")
+_BAUD_ID_RE = re.compile(r"^baud-(\d+)([a-z]?)$")
 
 
-def _baud_num(baud_id: str) -> int:
-    """Extract the numeric suffix from a baud-N id. Raises on malformed ids."""
+def _baud_num(baud_id: str) -> tuple[int, str]:
+    """Extract the (N, suffix) sort key from a baud-N or baud-Na id.
+    Raises on malformed ids. `baud-60` → (60, ''), `baud-60a` → (60, 'a').
+    Tuple comparison gives the desired ordering: 60 < 60a < 61.
+    """
     m = _BAUD_ID_RE.match(baud_id)
     if not m:
-        raise ValueError(f"Malformed baud_id {baud_id!r}; expected 'baud-<N>'.")
-    return int(m.group(1))
+        raise ValueError(
+            f"Malformed baud_id {baud_id!r}; expected 'baud-<N>' or "
+            f"'baud-<N><letter>' (single a-z suffix for sub-entries)."
+        )
+    return (int(m.group(1)), m.group(2))
 
 
 def _load(p: Path) -> dict[str, dict]:
@@ -88,7 +95,7 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
     across chunk files — Baud's numeric ID namespace is meant to be globally
     unique across all chunks (entries [1]–[282]), so a collision is a bug.
     """
-    files = sorted(agent_dir.glob(f"agent-{tag}-*.jsonl"))
+    files = sorted(agent_dir.glob(f"agent-{tag}-chunk-*.jsonl"))
     if not files:
         return {}
 

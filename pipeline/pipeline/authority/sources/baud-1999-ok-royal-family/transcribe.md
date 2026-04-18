@@ -48,6 +48,14 @@ Per ADR-017 and the Phase-0 playbook. One chunk per PR, ~40 entries per chunk, s
 - **Last entry:** `[40] ɛnḫ-Špss-kɜ.f*` on physical p. 49 (printed p. 432). `[41]` header appears at the bottom of physical p. 49 and continues onto p. 50; the extraction prompt instructs extractors to stop at the end of `[40]` and to NOT extract `[41]`.
 - **Offset drift:** printed–physical drift ranges from 384 (at p. 11/printed 395) to 383 (at p. 49/printed 432). Normal inter-frontmatter drift; document, do not resolve. Cite physical pages only.
 
+### Chunk 2 — entries `[41]`–`[80]`
+
+- **Physical pages:** 49–82 (vol. 2). p. 49 overlaps with chunk 1 (contains the tail of `[40]` + the header block of `[41]`); extractors are told to skip `[40]`. 34 physical pages, 40 entries = 1.18 entries/content-page — matches chunk-1 density.
+- **First entry:** `[41] ꜥnḫ-Ttj` on physical p. 49 (header + TITRES), continuing with DATATION/PARENTÉ/DIVERS on p. 50.
+- **Last entry:** `[80] Mrjj-Ḫwfw*` on physical p. 82 (printed p. 465). `[81]` header appears at the bottom of physical p. 82 and continues onto p. 83; extractors are instructed to stop at the end of `[80]` and NOT extract `[81]`.
+- **Monument schema decision (from chunk-1 checklist).** Multi-monument entries keep the `"1: ...; 2: ..."` single-string convention established by `CHUNK1_CORRECTIONS` for baud-22. Not migrating to `list[str]` unless chunk-3+ surfaces enough multi-monument cases to justify the backfill churn.
+- **Offset drift:** printed-to-physical drift continues the chunk-1 pattern (~383–384 pages). Not resolved; cite physical only.
+
 Subsequent chunks: see `README.md` table. Boundary physical-page ranges are determined during each chunk's scoping step.
 
 ## Model pinning
