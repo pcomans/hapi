@@ -673,8 +673,99 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
-# Chunk-5 corrections — populated after reviewer pass.
-CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = []
+# Chunk-5 corrections from egyptologist + Gemini reviewer passes.
+# Systemic pattern this chunk: female figures with `zꜣt nswt nt ẖt.f (smst)`
+# were mechanically assigned `king's eldest son of his body` (male-coded
+# vocab term). No equivalent female-coded role exists; dropping is the
+# honest fix.
+CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-163",
+        "roles",
+        ["queen", "king's wife", "king's daughter"],
+        "Egyptologist PR #60: TITRES has `ḥmt-nṯr Bꜣpf, Tꜣzp(t.f), "
+        "Ḏḥwtj` — priesthoods of GODS only (Bapef, Tazepf, Thoth), NOT "
+        "of queens. `priest of the king's wife` requires `ḥmt-nṯr <queen-"
+        "cartouche>`; dropped.",
+    ),
+    (
+        "baud-164",
+        "roles",
+        ["king's daughter"],
+        "Egyptologist + Gemini PR #60: female figure (Ḥtp-ḥr.s). "
+        "`king's eldest son of his body` is male-coded vocab — dropped. "
+        "`priest of the king` also dropped: `ḥmt-nṯr Snfrw (?)` is her "
+        "own female royal-cult priestess titulary, not service-personnel "
+        "priesthood (same rule as chunks-3/4 baud-86/93/128).",
+    ),
+    (
+        "baud-172",
+        "roles",
+        ["queen", "king's wife", "king's daughter"],
+        "Egyptologist PR #60: Ḫꜥ-mrr-nbtj II is female — her `zꜣt nswt "
+        "nt ẖt.f smst` is 'eldest daughter', not son. `king's eldest son "
+        "of his body` male-coded; dropped.",
+    ),
+    (
+        "baud-173",
+        "roles",
+        ["king's daughter"],
+        "Egyptologist PR #60: `ḥkrt nswt wꜥtt` = 'sole royal ornament', "
+        "an honorific/service designation on HERSELF, NOT an `jmj-r "
+        "ḥkrwt` overseer role. Chunk-2 vocab intended the overseer "
+        "pattern. Dropped; baud-167 (same title, no role) is the "
+        "consistent precedent.",
+    ),
+    (
+        "baud-187",
+        "roles",
+        ["queen", "king's mother", "king's wife"],
+        "Egyptologist PR #60: Ḫnt-kꜣw.s II's only `ḥmt-nṯr` titles are "
+        "of gods (Bapef, Tazepf, Thoth). `mrt Nfr-jr-kꜣ-Rꜥ rꜥ nb` is an "
+        "epithet, not a priesthood. `priest of the king` dropped; her "
+        "queen/mother/wife roles from the kinship titulary remain.",
+    ),
+    (
+        "baud-188",
+        "roles",
+        ["king's daughter"],
+        "Egyptologist + Gemini PR #60: female `zꜣt nswt nt ẖt.f`; no "
+        "`smst` marker. `king's eldest son of his body` doubly wrong "
+        "(male-coded vocab, no eldest marker). Dropped.",
+    ),
+    (
+        "baud-189",
+        "roles",
+        ["king's daughter"],
+        "Egyptologist PR #60: female `zꜣt nswt nt ẖt.f`; no eldest "
+        "marker. Same rule violation as baud-188. `king's eldest son "
+        "of his body` dropped.",
+    ),
+    (
+        "baud-190",
+        "roles",
+        ["king's daughter"],
+        "Egyptologist PR #60: female with `zꜣt nswt nt ẖt.f smst` — "
+        "eldest daughter, not son. Male-coded vocab mis-applied. Dropped.",
+    ),
+    (
+        "baud-191",
+        "roles",
+        ["king's son"],
+        "Egyptologist + Gemini PR #60: Ḫntj-r-kꜣ.j's only title is "
+        "`zꜣ nswt nj ẖ<t>.f` — no `smsw`. Rule-8 AND-test fails "
+        "(requires BOTH smsw and nj ẖt.f). Dropped `king's eldest son "
+        "of his body`; `king's son` retained.",
+    ),
+    (
+        "baud-198",
+        "roles",
+        ["king's daughter"],
+        "Egyptologist + Gemini PR #60: Ḥkrt-Nbtj, female, titles `zꜣt "
+        "nswt nt ẖt.f (var. mrt.f)` — no eldest marker. Male-coded "
+        "vocab wrong on two counts. Dropped.",
+    ),
+]
 
 
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
