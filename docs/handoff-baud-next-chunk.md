@@ -53,10 +53,15 @@ Ship one chunk per PR. Do NOT bundle.
   - expected-row-count sanity bound
 - `raw/source-chunk-<N>.pdf` — split with `pypdf`, gitignored under `raw/*`
 - `raw/agent-{a,b,c}-chunk-<N>.jsonl` — 3 parallel extractions, gitignored
-- `fix_rows.py` — APPEND a new `CHUNK<N>_CORRECTIONS: list[tuple[str, str, object, str]] = [...]` constant alongside every existing chunk constant (do not edit prior lists), then change the `SPOT_CORRECTIONS` assignment to a concatenation of **every** chunk constant in order. The current assignment is a singleton (`SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = CHUNK1_CORRECTIONS`); chunk 2 replaces it with `SPOT_CORRECTIONS = CHUNK1_CORRECTIONS + CHUNK2_CORRECTIONS`, chunk 3 extends to `+ CHUNK3_CORRECTIONS`, etc. Dropping any intermediate chunk's constant from the sum silently destroys its audit trail.
+- `fix_rows.py` — APPEND a new `CHUNK<N>_CORRECTIONS: list[tuple[str, str, object, str]] = [...]` constant alongside every existing chunk constant (do not edit prior lists). Chunk 2 replaces the current singleton (`SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = CHUNK1_CORRECTIONS`) with a list-based aggregation to keep later chunks maintainable:
+  ```python
+  ALL_CORRECTIONS = [CHUNK1_CORRECTIONS, CHUNK2_CORRECTIONS]
+  SPOT_CORRECTIONS = sum(ALL_CORRECTIONS, [])  # flatten
+  ```
+  Each subsequent chunk appends its constant to `ALL_CORRECTIONS` (single-line edit). Dropping any chunk from the list silently destroys its audit trail; a test that iterates module-level `CHUNK*_CORRECTIONS` attributes and asserts each is present in `ALL_CORRECTIONS` catches the omission.
 - `tests/test_sources_baud_ok_royal_family.py`:
   - ADD a new `CHUNK<N>_EXPECTED_ROWS = 40` module-level constant next to every existing chunk-count constant. Do NOT rename the existing chunk constants.
-  - UPDATE `test_row_count` to assert `len(_rows()) == sum of every CHUNK<N>_EXPECTED_ROWS` (e.g. chunk 3 asserts `CHUNK1_EXPECTED_ROWS + CHUNK2_EXPECTED_ROWS + CHUNK3_EXPECTED_ROWS`). Same concern as the `fix_rows.py` sum — dropping any constant hides row-count regressions.
+  - UPDATE `test_row_count` to the list-based aggregation `assert len(_rows()) == sum([CHUNK1_EXPECTED_ROWS, CHUNK2_EXPECTED_ROWS, ...])` — same maintainability reason as the `fix_rows.py` pattern. Chunk 3 appends `CHUNK3_EXPECTED_ROWS` to the list, etc. A parallel omission-catch test (iterate `CHUNK*_EXPECTED_ROWS` module attributes and assert each is summed) prevents silently dropped counts.
   - RENAME `test_baud_id_covers_1_to_40` → `test_baud_id_is_contiguous_to_running_total` and generalize its body to `range(1, running_total + 1)` where `running_total` is the sum of every `CHUNK<N>_EXPECTED_ROWS`.
   - ADD a new flagship-row test asserting **every populated field** on the chunk's best-attested entry (rule 5 — follow the pattern of `test_ihetihotep_baud_3_full_populated_row` with every dict key asserted, not a 5-field smoke test).
   - ADD a regression test per `CHUNK<N>_CORRECTIONS` entry that asserts the post-override field value (same pattern as `test_baud_26_grandchild_not_listed_as_child`).
