@@ -846,6 +846,56 @@ CHUNK6_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-7 corrections — the final chunk.
+#
+# Systemic finding from egyptologist-reviewer PR #62: 12+ entries mis-
+# assigned `king's eldest son of his body` on the strength of `nj ẖt.f`
+# alone, without `smsw`. Same recurring pattern as chunks 3/4/5. The
+# vocab term requires BOTH markers in the SAME title string. baud-282
+# is the only clean case in the chunk — `zꜣ nswt smsw nj ẖt.f` present
+# as a single title string.
+_CHUNK7_ROLES_RATIONALE = (
+    "Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) "
+    "present in TITRES; no `smsw` marker anywhere. The `king's eldest "
+    "son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` "
+    "in the SAME title string. Same systemic over-claim seen in "
+    "chunks 3/4/5. Dropped."
+)
+
+
+def _drop_eldest_son_from(roles: list[str]) -> list[str]:
+    """Helper: produce a roles list without the male-eldest-of-body role."""
+    return [r for r in roles if r != "king's eldest son of his body"]
+
+
+CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-264",
+        "date_attested",
+        "Date ?",
+        "Anonymous 'Nom perdu' entry — the statue fragments at G 5280/5380 "
+        "are undated; Baud gives no explicit (d) line but the tomb "
+        "context places it in Dyn 4-5. Normalising to Baud's convention "
+        "`Date ?` so the null-dynasty mapping follows the "
+        "`declines-to-date` branch.",
+    ),
+    ("baud-242", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-243", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-248", "roles", ["vizier", "king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-249", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-250", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-251", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-252", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-254", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-256", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE + " baud-256 has `smsw jzt` — chamber-eldest admin office, NOT kinship marker."),
+    ("baud-259", "roles", ["vizier", "king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-260", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-266", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE + " baud-266 has `smsw` in a SEPARATE title (`zꜣ nswt smsw` alone) from `nj ẖt.f` — strict rule requires same title string."),
+    ("baud-269", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE),
+    ("baud-270", "roles", ["king's son"], _CHUNK7_ROLES_RATIONALE + " baud-270 has fragmentary `zꜣ nswt nj ẖ[t.f]` and `smsw ///` separately — not same title string."),
+]
+
+
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
@@ -854,6 +904,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
     CHUNK6_CORRECTIONS,
+    CHUNK7_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])

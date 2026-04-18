@@ -1747,6 +1747,282 @@ baud-240 (Kꜣ(.j)-ḥr-st.f):
   notes_from_baud: a="Ziegler redates to late Vᵉ/début VIᵉ; Baud prefers early IVᵉ based on Cherpion parallels." | b=null | c=null  → chose null
   titles_from_baud: a=["zš msw nswt", "sbꜣw (dwꜣw?) n ///", "sḥḏ zšw n zꜣb"] | b=["zš msw nswt", "sbꜣw (dwꜣw ?) n /// (en relation avec le titre précédent ?)", "šḏ zšw n zꜣb"] | c=["zš msw nswt", "sbꜣw (dwꜣw?) n ///", "sḥḏ zšw n zꜣb"]  → chose ["zš msw nswt", "sbꜣw (dwꜣw?) n ///", "sḥḏ zšw n zꜣb"]
 
+baud-241 (Kꜣ(.j)-ḥr-st.f):
+  date_attested: a="Probablement VIᵉ dynastie" | b="Probablement VIᵉ dynastie." | c="Probablement VIᵉ dynastie"  → chose "Probablement VIᵉ dynastie"
+  notes_from_baud: a="Par proximité, on a supposé que l'épouse royale évoquée dans les titres serait Rḫt-Rꜥ [149]." | b="Baud suggests the royal wife referenced may be Rḫt-Rꜥ [149]." | c="Service personnel; epouse royale evoked in titles may be Rḫt-Rꜥ [149]."  → chose "Par proximité, on a supposé que l'épouse royale évoquée dans les titres serait Rḫt-Rꜥ [149]."
+  roles: a=["steward of the queen", "overseer of the treasury of pr-ꜥꜣ"] | b=["steward of the queen"] | c=["steward of the queen", "overseer of the treasury of pr-ꜥꜣ"]  → chose ["steward of the queen", "overseer of the treasury of pr-ꜥꜣ"]
+  titles_from_baud: a=["jmj-r n wpwt pr-ꜥꜣ", "jmj-r pr-nw pr-ꜥꜣ", "jmj-r ḥmw-kꜣ nw ḥmt nswt", "jmj-ḫt n sqbb", "rḫ nswt", "rḫ nswt pr-ꜥꜣ", "šd sqbb pr-ꜥꜣ", "šd qbḥ", "sqbb pr-ꜥꜣ"] | b=["jmj-r n wpwt pr-ꜥꜣ", "jmj-r pr-nw pr-ꜥꜣ", "jmj-r ḥmw-kꜣ nw ḥmt nswt", "jmj-ḫt n sqbb", "rḫ nswt", "rḫ nswt pr-ꜥꜣ", "šd sqbb pr-ꜥꜣ", "šd qbḥ", "sqbb pr-ꜥꜣ"] | c=["jmj-r n wpwt pr-ꜥꜣ", "jmj-r pr-nw pr-ꜥꜣ", "jmj-r ḥmw-kꜣ nw ḥmt nswt", "jmj-ḫt n sqbb", "rḫ nswt", "rḫ nswt pr-ꜥꜣ", "sḥḏ sqbb pr-ꜥꜣ", "sḥḏ qbb", "sqbb pr-ꜥꜣ"]  → chose ["jmj-r n wpwt pr-ꜥꜣ", "jmj-r pr-nw pr-ꜥꜣ", "jmj-r ḥmw-kꜣ nw ḥmt nswt", "jmj-ḫt n sqbb", "rḫ nswt", "rḫ nswt pr-ꜥꜣ", "šd sqbb pr-ꜥꜣ", "šd qbḥ", "sqbb pr-ꜥꜣ"]
+
+baud-242 (Kꜣ(.j)-ḫnt):
+  children_names: a=[] | b=["Kꜣ(.j)-ḫnt (of A 3) (per Baud)"] | c=["Kꜣ(.j)-ḫnt (A 3)"]  → chose []
+  date_attested: a="Fin IVᵉ à début Vᵉ dynastie" | b="Fin IVᵉ à début Vᵉ dynastie." | c="Fin IVᵉ à début Vᵉ dynastie"  → chose "Fin IVᵉ à début Vᵉ dynastie"
+  father_name: a="Rꜥ-ḥtp (per Baud)" | b="Rꜥ-ḥtp (per Baud)" | c="Rꜥ-ḥtp (probable)"  → chose "Rꜥ-ḥtp (per Baud)"
+  notes_from_baud: a="Son père est probablement Rꜥ-ḥtp, propriétaire de l'hypogée C 5 (per Kanawati/El-Khouli)." | b="Baud argues A 2 precedes A 3; the zꜣ nswt title was erased after decoration." | c="Kanawati revises order A 3–A 2; Baud argues A 2 precedes A 3. Two homonyms of the same name."  → chose "Son père est probablement Rꜥ-ḥtp, propriétaire de l'hypogée C 5 (per Kanawati/El-Khouli)."
+  pm_ref: a="PM V, p. 8-9" | b="PM V, p. 8-9" | c="PM V, 8-9"  → chose "PM V, p. 8-9"
+  roles: a=["king's son", "king's eldest son of his body"] | b=["king's son", "king's eldest son of his body"] | c=["king's son", "king's eldest son of his body", "steward of the king's mother"]  → chose ["king's son", "king's eldest son of his body"]
+  titles_from_baud: a=["jmj-r ꜥḥ", "jmj-r wpwt", "jmj-r nswtjw", "jmj-r zꜣw šmꜥw", "jmj-r kꜣt (var. nswt)", "jmj-r kꜣt (var. nbt) m spꜣwt ḫrjwtj-jb šmꜥw", "wr mḏ šmꜥw", "rḫ nswt", "ḥqꜣ ḥwt-ꜥꜣt", "ḥrp ꜥḥ", "zꜣ nswt", "zꜣ nswt nj ẖt.f", "smr wꜥtj"] | b=["jmj-r ꜥḥ", "jmj-r wpwt", "jmj-r nswtjw", "jmj-r zꜣw šmꜥw", "jmj-r kꜣt (var. nswt)", "jmj-r kꜣt (var. nbt) m spꜣwt ḥrjwt-jb šmꜥw", "wr md šmꜥw", "rḫ nswt", "ḥqꜣ ḥwt-ꜥꜣt", "ḥrp ꜥḥ", "zꜣ nswt", "zꜣ nswt nj ḫt.f", "smr wꜥtj"] | c=["jmj-r ꜥḥ", "jmj-r wpwt", "jmj-r nswtjw", "jmj-r zꜣw šmꜥw", "jmj-r kꜣt (var. nswt)", "jmj-r kꜣt (var. nbt) m spꜣwt ḫrjwt-jb šmꜥw", "wr mḏ šmꜥw", "rḫ nswt", "ḥqꜣ ḥwt-ꜥꜣt", "ḥtp ꜥḥ", "zꜣ nswt", "zꜣ nswt nj ẖt.f", "smr wꜥtj"]  → chose ["jmj-r ꜥḥ", "jmj-r wpwt", "jmj-r nswtjw", "jmj-r zꜣw šmꜥw", "jmj-r kꜣt (var. nswt)", "jmj-r kꜣt (var. nbt) m spꜣwt ḫrjwtj-jb šmꜥw", "wr mḏ šmꜥw", "rḫ nswt", "ḥqꜣ ḥwt-ꜥꜣt", "ḥrp ꜥḥ", "zꜣ nswt", "zꜣ nswt nj ẖt.f", "smr wꜥtj"]
+  tomb: a="A 2 Hammamia" | b="A 2" | c="A 2 Hammamia"  → chose "A 2 Hammamia"
+
+baud-243 (Kꜣ(.j)-ḏdd):
+  notes_from_baud: a="Baud juge très probable une datation fin IVᵉ (Menkaourê ou Chepseskaf)." | b="Baud argues for late Dyn 4, Menkaourê or Chepseskaf." | c="Probably dated end Dyn 4, Menkaourê or Chepseskaf."  → chose "Baud juge très probable une datation fin IVᵉ (Menkaourê ou Chepseskaf)."
+  roles: a=["king's son", "king's eldest son of his body"] | b=["king's son"] | c=["king's son", "king's eldest son of his body"]  → chose ["king's son", "king's eldest son of his body"]
+  titles_from_baud: a=["ḥtmw nṯr (?)", "zꜣ nswt (?)", "zꜣ nswt nj ẖt.f"] | b=["ḥtmw nṯr (?)", "zꜣ nswt (?)", "zꜣ nswt nj ḫt.f"] | c=["ḥtmw nṯr (?)", "zꜣ nswt (?)", "zꜣ nswt nj ẖt.f"]  → chose ["ḥtmw nṯr (?)", "zꜣ nswt (?)", "zꜣ nswt nj ẖt.f"]
+
+baud-244 (Gm.n(.j)-kꜣ(.j) Mmj):
+  children_names: a=["ꜥnḫ-Ttj", "Gm.n.j-[kꜣ.j]"] | b=["ꜥnḫ-Ttj", "Gm.n.j-(kꜣ.j)"] | c=["ꜥnḫ-Ttj", "Gm.n.j-kꜣ(.j)"]  → chose ["ꜥnḫ-Ttj", "Gm.n.j-[kꜣ.j]"]
+  date_attested: a="Téti" | b="Téti." | c="Téti"  → chose "Téti"
+  localisation: a="Saqqara, nécropole de Téti" | b="nécropole de Téti, Saqqara" | c="nécropole de Téti, Saqqara"  → chose "nécropole de Téti, Saqqara"
+  notes_from_baud: a="Époux de la fille royale Nwb-ḫt-Nbtj Zšzšt [111], fille de Téti." | b="Spouse is a king's daughter of Téti; two eldest sons represented." | c="Époux de la fille royale Nwb-ḫt-Nbtj Zšzšt [111], fille de Téti. King's son-in-law via marriage to Téti's daughter."  → chose "Époux de la fille royale Nwb-ḫt-Nbtj Zšzšt [111], fille de Téti."
+  roles: a=["vizier", "king's son-in-law", "priest of the royal pyramid"] | b=["vizier", "priest of the royal pyramid", "king's son-in-law"] | c=["vizier", "priest of the royal pyramid"]  → chose ["vizier", "king's son-in-law", "priest of the royal pyramid"]
+  titles_from_baud: a=["jmj-r prwj-nwb", "jmj-r prwj-ḥḏ", "jmj-r njwt Ḏd-swt-Ttj", "jmj-r ḥwt wrwt ssw", "jmj-r ꜥ nswt", "jmj-r šmꜥw mḥjt", "jmj-r šnwtj", "jmj-r gswj-pr", "jmj-r kꜣt nbt nt nswt", "jrj-pꜥt", "jt nṯr", "ꜥꜣ Jwnw", "ḥꜣtj-ꜥ", "ḫrj-ḥb ḫrj-tp", "smr wꜥtj", "sḥḏ ḥmw-nṯr Ḏd-swt-Ttj", "šd Ḏd-swt-Ttj", "tꜣjtj zꜣb ṯꜣtj (var. mꜣꜥ)"] | b=["jmj-r prwj-nwb", "jmj-r prwj-ḥḏ", "jmj-r njwt Dd-swt-Ttj", "jmj-r ḥwt wrwt ssw", "jmj-r ꜥ nswt", "jmj-r šmꜥw mḥjt", "jmj-r šnwtj", "jmj-r gswj-pr", "jmj-r kꜣt nbt nt nswt", "jrj-pꜥt", "jrj nfr-ḥꜣt", "wr mꜣ Jwnw", "ḥꜣtj-ꜥ", "ẖrj-ḥb ẖrj-tp", "smr wꜥtj", "šd ḥmw-nṯr Dd-swt-Ttj", "šd Dd-swt-Ttj (sic?)", "tꜣjtj zꜣb tꜣtj (var. mꜣꜥ)"] | c=["jmj-r prwj-nwb", "jmj-r prwj-ḥḏ", "jmj-r njwt Ḏd-swt-Ttj", "jmj-r ḥwt wrwt ssw", "jmj-r ꜥ nswt", "jmj-r šmꜥw mḥjt", "jmj-r šnwtj", "jmj-r gswj-pr", "jmj-r kꜣt nbt nt nswt", "jrj-pꜥt", "jrj nfr-ḥꜣt", "wr mꜣ Jwnw", "ḥꜣtj-ꜥ", "ḫrj-ḥb ḥrj-tp", "smr wꜥtj", "sḥḏ ḥmw-nṯr Ḏd-swt-Ttj", "sḥḏ Ḏd-swt-Ttj", "tꜣjtj zꜣb tꜣtj"]  → chose ["jmj-r prwj-nwb", "jmj-r prwj-ḥḏ", "jmj-r njwt Ḏd-swt-Ttj", "jmj-r ḥwt wrwt ssw", "jmj-r ꜥ nswt", "jmj-r šmꜥw mḥjt", "jmj-r šnwtj", "jmj-r gswj-pr", "jmj-r kꜣt nbt nt nswt", "jrj-pꜥt", "jt nṯr", "ꜥꜣ Jwnw", "ḥꜣtj-ꜥ", "ḫrj-ḥb ḫrj-tp", "smr wꜥtj", "sḥḏ ḥmw-nṯr Ḏd-swt-Ttj", "šd Ḏd-swt-Ttj", "tꜣjtj zꜣb ṯꜣtj (var. mꜣꜥ)"]
+
+baud-245 (Ttj):
+  date_attested: a="Fin du règne de Pépi II" | b="Fin du règne de Pépi II." | c="Fin du règne de Pépi II"  → chose "Fin du règne de Pépi II"
+  localisation: a="Saqqara-Sud, est de la pyramide de Pépi II" | b="Saqqara-Sud" | c="Saqqara-Sud, à l'est de la pyramide de Pépi II"  → chose "Saqqara-Sud, est de la pyramide de Pépi II"
+  notes_from_baud: a="Jéquier rattache Ttj à la famille royale mais exclut qu'il soit fils du roi (absence de nj ẖt.f). Schmitz le classe parmi les princes titulaires." | b="Baud: Jéquier links to royal family but excludes sonship due to absence of nj ḫt.f; Schmitz classes him among 'titular princes'. Both arguments fragile." | c="Jéquier links him to royal family, excludes filiation by absence of nj ẖt.f. Schmitz classes as titular prince."  → chose "Jéquier rattache Ttj à la famille royale mais exclut qu'il soit fils du roi (absence de nj ẖt.f). Schmitz le classe parmi les princes titulaires."
+  roles: a=["vizier", "king's son", "sem priest", "priest of the royal pyramid", "overseer of scribes of pr-ꜥꜣ"] | b=["vizier", "king's son", "sem priest"] | c=["vizier", "king's son"]  → chose ["vizier", "king's son", "sem priest", "priest of the royal pyramid", "overseer of scribes of pr-ꜥꜣ"]
+  titles_from_baud: a=["jmj-r prwj-ḥḏ", "jmj-r njwt Mn-ꜥnḫ-Nfr-kꜣ-Rꜥ Ppjj", "jmj-r njwt Mn-nfr-Mrjj-Rꜥ Ppjj", "jmj-r zš ꜥ nswt", "jmj-r zšw", "jmj-r šnwtj", "jmj-r gs-pr", "jmj-r gswj-pr", "jrj-pꜥt", "jt nṯr", "ꜥꜣ Dwꜣw", "wt Jnpw", "ḥꜣtj-ꜥ", "ḥqꜣ Bꜣt", "ḥqꜣ ḥwt", "ḥts Jnpw", "ḫwꜥ", "ḫrp jzt nbt nṯrt", "ḫrp jmjw nṯrw", "ḫrp šnḏjt nbt", "ḫtmw bjtj", "ḫrj-ḥb", "ḫrj-ḥb ḫrj-tp", "zꜣ nswt", "zꜣ nswt smsw", "zš mḏꜣt nṯr", "sm", "smr wꜥtj", "smsw snwt", "sḏtj nswt", "tꜣjtj zꜣb ṯꜣtj"] | b=["jmj-r prwj-ḥḏ", "jmj-r njwt Mn-ꜥnḫ-Nfr-kꜣ-Rꜥ Ppjj", "jmj-r njwt Mn-nfr-Mrjj-Rꜥ Ppjj", "jmj-r zš ꜥ nswt", "jmj-r zšw", "jmj-r šnwtj", "jmj-r gs-pr", "jmj-r gswj-pr", "jrj-pꜥt", "jt nṯr", "ꜥꜣ Dwꜣw", "wt Jnpw", "ḥꜣtj-ꜥ", "ḥqꜣ Bꜣt", "ḥqꜣ ḥwt", "ḥts Jnpw", "ḥwꜥ", "ḥrp jꜣt nbt nṯrt", "ḥrp jmjw nṯrw", "ḥrp šndjt nbt", "ḥtmw bjtj", "ẖrj-ḥb", "ẖrj-ḥb ẖrj-tp", "zꜣ nswt", "zꜣ nswt smsw", "zš mḏꜣt nṯr", "sm", "smr wꜥtj", "smsw snwt", "sḏtj nswt", "tꜣjtj zꜣb tꜣtj"] | c=["jmj-r prwj-ḥḏ", "jmj-r njwt Mn-ꜥnḫ-Nfr-kꜣ-Rꜥ Ppjj", "jmj-r njwt Mn-nfr-Mrjj-Rꜥ Ppjj", "jmj-r zš ꜥ nswt", "jmj-r zšw", "jmj-r šnwtj", "jmj-r gs-pr", "jmj-r gswj-pr", "jrj-pꜥt", "jt nṯr", "ꜥꜣ Dwꜣw", "wt Jnpw", "ḥꜣtj-ꜥ", "ḥqꜣ Bꜣt", "ḥqꜣ ḥwt", "ḥts Jnpw", "ḥwꜥ", "ḥrp jꜣt nbt nṯrt", "ḥrp jmjw nṯrw", "ḥrp šnḏjt nbt", "ḥtmw bjtj", "ḫrj-ḥb", "ḫrj-ḥb ḥrj-tp", "zꜣ nswt", "zꜣ nswt smsw", "zš mḏꜣt nṯr", "sm", "smr wꜥtj", "smsw snwt", "sḏtj nswt", "tꜣjtj zꜣb tꜣtj"]  → chose ["jmj-r prwj-ḥḏ", "jmj-r njwt Mn-ꜥnḫ-Nfr-kꜣ-Rꜥ Ppjj", "jmj-r njwt Mn-nfr-Mrjj-Rꜥ Ppjj", "jmj-r zš ꜥ nswt", "jmj-r zšw", "jmj-r šnwtj", "jmj-r gs-pr", "jmj-r gswj-pr", "jrj-pꜥt", "jt nṯr", "ꜥꜣ Dwꜣw", "wt Jnpw", "ḥꜣtj-ꜥ", "ḥqꜣ Bꜣt", "ḥqꜣ ḥwt", "ḥts Jnpw", "ḫwꜥ", "ḫrp jzt nbt nṯrt", "ḫrp jmjw nṯrw", "ḫrp šnḏjt nbt", "ḫtmw bjtj", "ḫrj-ḥb", "ḫrj-ḥb ḫrj-tp", "zꜣ nswt", "zꜣ nswt smsw", "zš mḏꜣt nṯr", "sm", "smr wꜥtj", "smsw snwt", "sḏtj nswt", "tꜣjtj zꜣb ṯꜣtj"]
+
+baud-246 (Tntj):
+  children_names: a=["Ppj"] | b=["Ppj*"] | c=["Ppj*"]  → chose ["Ppj*"]
+  date_attested: a="Peut-être IVᵉ dynastie" | b="Peut-être IVᵉ dynastie." | c="Peut-être IVᵉ dynastie"  → chose "Peut-être IVᵉ dynastie"
+  notes_from_baud: a="En-tête du document mentionne mwt nswt Ḥtp-ḥr.s; prêtres funéraires attachés à la fondation de Ḥtp-ḥr.s Iʳᵉ [162]." | b="Attached to the funerary foundation of mwt nswt Htp-ḥr.s, doubtless Htp-ḥr.s Iʳᵉ [162]." | c="Funerary priests of mwt nswt Ḥtp-ḥr.s (probably Ḥtp-ḥr.s Iʳᵉ [162])."  → chose "En-tête du document mentionne mwt nswt Ḥtp-ḥr.s; prêtres funéraires attachés à la fondation de Ḥtp-ḥr.s Iʳᵉ [162]."
+
+baud-247 (Tntt):
+  date_attested: a="Seconde moitié de la IVᵉ dynastie" | b="Seconde moitié de la IVᵉ dynastie." | c="Seconde moitié de la IVᵉ dynastie"  → chose "Seconde moitié de la IVᵉ dynastie"
+  father_name: a="Wnšt [48]" | b="Wnšt [48] (per Baud)" | c="Wnšt [48] (per Baud)"  → chose "Wnšt [48] (per Baud)"
+  monument: a="1: Tombe dans la nécropole occidentale de Gîza, peut-être à l'est de G 4840; 2: Représentée sur la fausse-porte de Wnšt [48], G 4840" | b="1: Tombe dans la nécropole occidentale de Gîza, peut-être à l'est de G 4840; 2: Représentée sur la fausse-porte de Wnšt [48], G 4840" | c="1 : Tombe dans la nécropole occidentale de Gîza, peut-être à l'est de G 4840; 2 : Représentée sur la fausse-porte de Wnšt [48], G 4840"  → chose "1: Tombe dans la nécropole occidentale de Gîza, peut-être à l'est de G 4840; 2: Représentée sur la fausse-porte de Wnšt [48], G 4840"
+  notes_from_baud: a="Elle serait la fille de Wnšt [48] et la sœur de Wḥm-nfrt [49]." | b="Baud: daughter of Wnšt [48] and sister of Wḥm-nfrt [49]." | c="Daughter of Wnšt [48] and sister of Wḥm-nfrt [49] per Baud."  → chose "Elle serait la fille de Wnšt [48] et la sœur de Wḥm-nfrt [49]."
+  pm_ref: a="PM 139" | b="PM 139; JG 1, fig. 63" | c="PM 139"  → chose "PM 139"
+
+baud-248 (Dwꜣ-n(.j)-Rꜥ):
+  date_attested: a="Rêkhaef ou Menkaourê" | b="Rêkhaef ou Menkaourê." | c="Rêkhaef ou Menkaourê"  → chose "Rêkhaef ou Menkaourê"
+  father_name: a="Menkaourê (probable)" | b=null | c=null  → chose null
+  monument: a="1: Mastaba G 5110 (LG 44), nécropole occidentale de Gîza; 2: Cité chez Ḥmt-nw [182]" | b="1: Mastaba G 5110 (LG 44), nécropole occidentale de Gîza; 2: Cité chez Ḥmt-nw [182]? Voir cette fiche." | c="1 : Mastaba G 5110 (LG 44), nécropole occidentale de Gîza; 2 : Cité chez Ḥmt-nw [182]"  → chose "1: Mastaba G 5110 (LG 44), nécropole occidentale de Gîza; 2: Cité chez Ḥmt-nw [182]"
+  notes_from_baud: a="Date sous Menkaourê probable mais possibilité sous Rêkhaef (chap. 1, p. 60)." | b="Baud follows Strudwick: distinct from Dwꜣ-Rꜥ [250] and Dwꜣ-Rꜥ [251]; probably son of Khufu per Strudwick." | c="Strudwick rejects Reisner's identification with Dwꜣ-Rꜥ [250]; may be son of Khoufou per Strudwick's hypothesis."  → chose "Date sous Menkaourê probable mais possibilité sous Rêkhaef (chap. 1, p. 60)."
+  titles_from_baud: a=["jmj-jz", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "ꜥḏ-mr wḥꜥw", "wr mḏ [wꜣjr djw pr-(Ḏḥwtj)]", "wt Jnpw", "mnjw Nḫn", "mḏḥ ꜣms", "mḏḥ zšw nswt", "mḏḥ sšꜣ", "r P nb", "ḥꜣtj-ꜥ", "ḥm-nṯr Ḥr Jnpw ḫntjwj pr šmswt", "ḫrj-wḏb m ḥwt-ꜥnḫ", "ḫrj-tp Nḫb", "ḫwꜥ", "ḫrp jꜣts km", "[ḫrp] ꜥḥ", "ḫrp tjs bjtj", "ḫrj-ḥb ḫrj-tp", "ḫrj-tp nswt m prwj", "zꜣ nswt nj ẖt.f", "zš mḏꜣt nṯr", "smꜣ ///", "[smr] wꜥ[tj]", "tꜣjtj zꜣb ṯꜣtj"] | b=["jmj-jz", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "ꜥd-mr wḥꜥw", "wr [wjr djw pr-(Ḏḥwtj)]", "wt Jnpw", "mnjw Nḫn", "mdḥ ꜣms", "mdḥ zšw nswt", "mdḥ", "r P nb", "ḥꜣtj-ꜥ", "ḥm-nṯr Ḥr Jnpw ḫntjwj pr šmswt", "ẖrj-wḏb m ḥwt-ꜥnḫ", "ẖrj-tp Nḫb", "ḥwꜥ", "ḥrp jꜣts km", "[ḥrp] ꜥḥ", "ḥrp tjs bjtj", "ẖrj-ḥb ẖrj-tp", "ẕꜣ nswt m prwj", "zꜣ nswt nj ḫt.f", "zš mḏꜣt nṯr", "smꜣ ///", "[smr] wꜥ[tj]", "tꜣjtj zꜣb tꜣtj"] | c=["jmj-jz", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "ꜥd-mr wḥꜥw", "wr jdt", "[wjr djw pr-Ḏḥwtj]", "wt Jnpw", "mnjw Nḫn", "mḏḥ ꜣms", "mḏḥ zšw nswt", "mḏḥ", "r P nb", "ḥꜣtj-ꜥ", "ḥm-nṯr Ḥr Jnpw ḫntjwj pr šmswt", "ḥrj-wdb m ḥwt-ꜥnḫ", "ḥrj-tp Nḫb", "ḥwꜥ", "ḥrp jꜣts km", "[ḥrp] ꜥḥ", "ḥrp tjs bjtj", "ḫrj-ḥb ḥrj-tp", "ḥrj-tp nswt m prwj", "zꜣ nswt nj ẖt.f", "zš mḏꜣt nṯr", "smꜣ ///", "[smr] wꜥ[tj]", "tꜣjtj zꜣb tꜣtj"]  → chose ["jmj-jz", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "ꜥḏ-mr wḥꜥw", "wr mḏ [wꜣjr djw pr-(Ḏḥwtj)]", "wt Jnpw", "mnjw Nḫn", "mḏḥ ꜣms", "mḏḥ zšw nswt", "mḏḥ sšꜣ", "r P nb", "ḥꜣtj-ꜥ", "ḥm-nṯr Ḥr Jnpw ḫntjwj pr šmswt", "ḫrj-wḏb m ḥwt-ꜥnḫ", "ḫrj-tp Nḫb", "ḫwꜥ", "ḫrp jꜣts km", "[ḫrp] ꜥḥ", "ḫrp tjs bjtj", "ḫrj-ḥb ḫrj-tp", "ḫrj-tp nswt m prwj", "zꜣ nswt nj ẖt.f", "zš mḏꜣt nṯr", "smꜣ ///", "[smr] wꜥ[tj]", "tꜣjtj zꜣb ṯꜣtj"]
+
+baud-249 (Dwꜣ-n(.j)-Ḥr):
+  date_attested: a="Deuxième moitié de la IVᵉ dynastie (Rêkhaef?)" | b="Deuxième moitié de la IVᵉ dynastie (Rêkhaef?)." | c="Deuxième moitié de la IVᵉ dynastie (Rêkhaef?)"  → chose "Deuxième moitié de la IVᵉ dynastie (Rêkhaef?)"
+  notes_from_baud: a="Reisner suppose un fils de Kꜣ.j-wꜥb [230] et Ḥtp-ḥr.s II [163]; Baer et Strudwick contestent; Strudwick propose un fils de Khoufou." | b="Baud reports Reisner's reconstruction (son of Kꜣ.j-wꜥb and Ḥtp-ḥr.s II) but notes no element supports it; cites Baer and Strudwick critiques — probably son of Khufu." | c="Reisner proposed son of Kꜣ(j)-wꜥb [230] and Ḥtp-ḥr.s II [163], but Baer and Strudwick reject; Strudwick suggests son of Khoufou."  → chose "Reisner suppose un fils de Kꜣ.j-wꜥb [230] et Ḥtp-ḥr.s II [163]; Baer et Strudwick contestent; Strudwick propose un fils de Khoufou."
+  titles_from_baud: a=["zꜣ nswt nj ẖt.f mrjj.f", "smr n jt.f", "nb jmꜣḫ ḫr jt.f"] | b=["zꜣ nswt nj ḫt.f mrjj.f", "smr n jt.f", "nb jmꜣḫ ḫr jt.f"] | c=["zꜣ nswt nj ẖt.f mrjj.f", "smr n jt.f", "nb jmꜣḫ ḫr jt.f"]  → chose ["zꜣ nswt nj ẖt.f mrjj.f", "smr n jt.f", "nb jmꜣḫ ḫr jt.f"]
+
+baud-250 (Dwꜣ-Rꜥ):
+  date_attested: a="Milieu de la IVᵉ dynastie" | b="Milieu de la IVᵉ dynastie." | c="Milieu de la IVᵉ dynastie"  → chose "Milieu de la IVᵉ dynastie"
+  father_name: a="Rêkhaef" | b="Rêkhaef (per Baud)" | c="Rêkhaef (per Baud)"  → chose "Rêkhaef (per Baud)"
+  localisation: a="Gîza" | b="nécropole orientale de Gîza" | c="Gîza"  → chose "Gîza"
+  monument: a="1: Représenté chez sa mère Mr.s-ꜥnḫ III [76], nécropole orientale de Gîza; 2: Probablement représenté chez Nb.j-m-ꜣḫtj [113], nécropole centrale de Gîza" | b="1: Représenté chez sa mère Mr.s-ꜥnḫ III [76], nécropole orientale de Gîza; 2: Probablement représenté chez Nb.j-m-ꜣḫtj [113], nécropole centrale de Gîza" | c="1 : Représenté chez sa mère Mr.s-ꜥnḫ III [76], nécropole orientale de Gîza; 2 : Probablement représenté chez Nb.j-m-ꜣḫtj [113], nécropole centrale de Gîza"  → chose "1: Représenté chez sa mère Mr.s-ꜥnḫ III [76], nécropole orientale de Gîza; 2: Probablement représenté chez Nb.j-m-ꜣḫtj [113], nécropole centrale de Gîza"
+  notes_from_baud: a="Fils de Mr.s-ꜥnḫ III [76] et donc de Rêkhaef; sans doute un frère de Nb.j-m-ꜣḫtj [113]." | b="Fils de Mr.s-ꜥnḫ III [76] donc de Rêkhaef; probably brother of Nb.j-m-ꜣḫtj [113]. May be same person as [251]." | c="Son of Mr.s-ꜥnḫ III [76] and thus of Rêkhaef; likely brother of Nb.j-m-ꜣḫtj [113]."  → chose "Fils de Mr.s-ꜥnḫ III [76] et donc de Rêkhaef; sans doute un frère de Nb.j-m-ꜣḫtj [113]."
+  titles_from_baud: a=["zꜣ nswt nj ẖt.f (1, 2)"] | b=["zꜣ nswt nj ḫt.f (1, 2)"] | c=["zꜣ nswt nj ẖt.f (1, 2)"]  → chose ["zꜣ nswt nj ẖt.f (1, 2)"]
+
+baud-251 (Dwꜣ-Rꜥ):
+  date_attested: a="Milieu de la IVᵉ dynastie ou début Vᵉ" | b="Milieu de la IVᵉ dynastie ou début Vᵉ." | c="Milieu de la IVᵉ dynastie ou début Vᵉ"  → chose "Milieu de la IVᵉ dynastie ou début Vᵉ"
+  notes_from_baud: a="Peut-être à identifier avec Dwꜣ-Rꜥ [250]. Fille Nfr-ḥtp.s titrée rḫt nswt, ḥkrt nswt." | b="Perhaps identical to Dwꜣ-Rꜥ [250]. Daughter Nfr-ḥtp.s titled rḫt nswt, ḥkrt nswt." | c="Perhaps identical to Dwꜣ-Rꜥ [250]. Daughter Nfr-ḥtp.s titled rḫt nswt, ḥkrt nswt."  → chose "Perhaps identical to Dwꜣ-Rꜥ [250]. Daughter Nfr-ḥtp.s titled rḫt nswt, ḥkrt nswt."
+  sub_period: a=null | b=null | c="end Dyn 4 – early Dyn 5"  → chose null
+  titles_from_baud: a=["zꜣ nswt nj ẖt.f"] | b=["zꜣ nswt nj ḫt.f"] | c=["zꜣ nswt nj ẖt.f"]  → chose ["zꜣ nswt nj ẖt.f"]
+
+baud-252 (Dwꜣ-Ḥwt-Ḥr):
+  notes_from_baud: a="Restitution du nom incertaine; déterminatif indique un homme." | b="Restitution du nom pas certaine; determinative indicates a man despite theophoric female divinity in name." | c="Reading uncertain; determinative indicates a male despite deity in name."  → chose "Restitution du nom incertaine; déterminatif indique un homme."
+  titles_from_baud: a=["zꜣ nswt nj ẖt.f"] | b=["zꜣ nswt nj ḫt.f"] | c=["zꜣ nswt nj ẖt.f"]  → chose ["zꜣ nswt nj ẖt.f"]
+
+baud-253 (Ḏꜣꜣ):
+  date_attested: a="Vᵉ dynastie" | b="Vᵉ dynastie." | c="Vᵉ dynastie"  → chose "Vᵉ dynastie"
+  name_egyptian: a="Ḏꜣꜣ" | b="Ḏꜣꜣ" | c="Dꜣšꜣ"  → chose "Ḏꜣꜣ"
+  notes_from_baud: a=null | b=null | c="Service personnel; wꜥb of the king, priest of unnamed king's mother."  → chose null
+
+baud-254 (Ḏꜣtjj):
+  children_names: a=["Ḏꜣtjj (de G 5370)"] | b=["Ḏꜣtjj (G 5370) (per Baud)"] | c=["Ḏꜣtjj (G 5370)"]  → chose ["Ḏꜣtjj (de G 5370)"]
+  date_attested: a="Rêkhaef-Menkaourê" | b="Rêkhaef-Menkaourê." | c="Rêkhaef-Menkaourê"  → chose "Rêkhaef-Menkaourê"
+  father_name: a="Khoufou (probable)" | b=null | c="Khoufou (per Baud)"  → chose "Khoufou (probable)"
+  notes_from_baud: a="Reisner propose un fils de Mr.s-ꜥnḫ III [75]; Strudwick critique et propose plutôt un fils de Khoufou. Son fils homonyme G 5370 n'a pas de parenté royale." | b="Strudwick suggests son of Khufu; Reisner thought son of Mr.s-ꜥnḫ II. The homonymous son in G 5370 dates to around Néferirkarê." | c="Reisner supposed son of Mr.s-ꜥnḫ II [75]; Strudwick suggests son of Khoufou. Homonym at G 5370 likely his son."  → chose "Reisner propose un fils de Mr.s-ꜥnḫ III [75]; Strudwick critique et propose plutôt un fils de Khoufou. Son fils homonyme G 5370 n'a pas de parenté royale."
+  titles_from_baud: a=["jmj-r mšꜥ", "jmj-r kꜣt nbt nt nswt", "[ḥtmw nṯr?] jmw", "zꜣ nswt", "zꜣ nswt nj ẖt.f", "smr"] | b=["jmj-r mšꜥ", "jmj-r kꜣt nbt nt nswt", "[ḥtmw nṯr?] jmw", "zꜣ nswt", "zꜣ nswt nj ḫt.f", "smr"] | c=["jmj-r mšꜥ", "jmj-r kꜣt nbt nt nswt", "[ḥtmw nṯr?] jmw", "zꜣ nswt", "zꜣ nswt nj ẖt.f", "smr"]  → chose ["jmj-r mšꜥ", "jmj-r kꜣt nbt nt nswt", "[ḥtmw nṯr?] jmw", "zꜣ nswt", "zꜣ nswt nj ẖt.f", "smr"]
+
+baud-255 (Groupe statuaire, complexe de Djoser):
+  date_attested: a=null | b="Date?" | c=null  → chose null
+  localisation: a="complexe de Djoser" | b="complexe de Djoser" | c="complexe de Djoser, Saqqara"  → chose "complexe de Djoser"
+  monument: a=null | b="Groupe statuaire, complexe de Djoser" | c="Groupe statuaire, complexe de Djoser"  → chose "Groupe statuaire, complexe de Djoser"
+  notes_from_baud: a="Cross-reference to [22]." | b="Cross-reference to [22] § divers." | c="Cross-reference to [22], § divers."  → chose "Cross-reference to [22]."
+
+baud-256 (Représentation anonyme, «expedition leader», Sinaï):
+  baud_refs: a={} | b={"schmitz": "p. 369"} | c={"schmitz": "p. 369"}  → chose {"schmitz": "p. 369"}
+  date_attested: a="Sekhemkhet" | b="Sekhemkhet." | c="Sekhemkhet"  → chose "Sekhemkhet"
+  father_name: a=null | b="Sekhemkhet (per Baud)" | c=null  → chose null
+  name_egyptian: a="Représentation anonyme, «expedition leader», Sinaï" | b="Représentation anonyme, « expedition leader », Sinaï" | c="Représentation anonyme, expedition leader, Sinaï"  → chose "Représentation anonyme, «expedition leader», Sinaï"
+  notes_from_baud: a="En arrière du personnage se tient le roi, au nom d'Horus Sḫm-ḫt, représenté trois fois. Lecture zꜣ nswt <nj> ẖt.<f> proposée par Giveon sur suggestion d'Edel." | b="Horus Shm-ḫt represented three times behind the personage." | c="Behind the figure, king's Horus-name Sḫm-ḫt represented three times. zꜣ nswt restored from unclear signs."  → chose "En arrière du personnage se tient le roi, au nom d'Horus Sḫm-ḫt, représenté trois fois. Lecture zꜣ nswt <nj> ẖt.<f> proposée par Giveon sur suggestion d'Edel."
+  titles_from_baud: a=["jmj-r mšꜥ", "ḥꜣtj-ꜥ", "zꜣ nswt <nj> ẖt.<f>", "smr", "smsw jzt", "šḏ... (?) nswt"] | b=["jmj-r mšꜥ", "ḥꜣtj-ꜥ", "zꜣ nswt <nj> ḫt.<f>", "smr", "smsw jzt", "šḏ... (?) nswt"] | c=["jmj-r mšꜥ", "ḥꜣtj-ꜥ", "zꜣ nswt <nj> ḫt.<f>", "smr", "smsw jzt", "sḥḏ... (?) nswt"]  → chose ["jmj-r mšꜥ", "ḥꜣtj-ꜥ", "zꜣ nswt <nj> ẖt.<f>", "smr", "smsw jzt", "šḏ... (?) nswt"]
+
+baud-257 (Complexes G I-a, b et c):
+  baud_refs: a={"seipel": "n° 4.3.2 (G I-b); n° 4.3.3 (G I-c)", "troy": "n° 4.7 (G I-c)"} | b={"seipel": "n° 4.3.2 (G I-b); n° 4.3.3 et Troy n° 4.7 (G I-c)"} | c={"seipel": "n° 4.3.2 (G I-b); n° 4.3.3 (G I-c)", "troy": "n° 4.7 (G I-c)"}  → chose {"seipel": "n° 4.3.2 (G I-b); n° 4.3.3 (G I-c)", "troy": "n° 4.7 (G I-c)"}
+  date_attested: a="Khoufou" | b="Khoufou." | c="Khoufou"  → chose "Khoufou"
+  localisation: a="Gîza, est de la pyramide de Khoufou" | b="Gîza" | c="à l'est de la pyramide de Khoufou, Gîza"  → chose "Gîza, est de la pyramide de Khoufou"
+  notes_from_baud: a="Trois reines concernées; identités débattues. Lehner propose G I-a = pyramide de Ḥtp-ḥr.s Iʳᵉ [162], mère de Khoufou. Candidates: Mrt-jt.s et une reine inconnue." | b="G I-a possibly pyramid of Htp-ḥr.s I [162] per Lehner; G I-b may belong to Mrt-jt.s, G I-c to unknown queen." | c="Three queens of Khoufou; G I-a probably for Ḥtp-ḥr.s Iʳᵉ [162] per Lehner; G I-b for Mrt-jt.s Iʳᵉ [85]; G I-c candidate reine."  → chose "Trois reines concernées; identités débattues. Lehner propose G I-a = pyramide de Ḥtp-ḥr.s Iʳᵉ [162], mère de Khoufou. Candidates: Mrt-jt.s et une reine inconnue."
+  pm_ref: a="PM 16-17" | b="PM 16; PM 16; PM 16-17" | c="PM 16; PM 16; PM 16-17"  → chose "PM 16; PM 16; PM 16-17"
+  roles: a=["king's wife", "queen"] | b=["king's wife"] | c=["king's wife"]  → chose ["king's wife"]
+  spouse_names: a=["Khoufou"] | b=["Khoufou (per Baud)"] | c=["Khoufou (per Baud)"]  → chose ["Khoufou (per Baud)"]
+  titles_from_baud: a=["wrt ḥts (G I-b)", "ḥm[t nswt] (?) (G I-b)"] | b=["wrt ḥts", "ḥm[t nswt] (?)"] | c=["wrt ḥts", "ḥm[t nswt] (?)"]  → chose ["wrt ḥts", "ḥm[t nswt] (?)"]
+
+baud-258 (Nom perdu, reine de Khoufou, représentée en G 7140):
+  children_names: a=["Ḥwfw-ḫꜥ.f I [179]"] | b=["Ḥwfw-ḫꜥ.f I [179]"] | c=["Ḥwfw-Ḥꜥ.f I [179]"]  → chose ["Ḥwfw-ḫꜥ.f I [179]"]
+  date_attested: a="Khoufou" | b="Khoufou." | c="Khoufou"  → chose "Khoufou"
+  monument: a="Femme représentée chez Ḥwfw-ḫꜥ.f I [179], mastaba G 7140, nécropole orientale de Gîza" | b="Femme représentée chez Ḥwfw-ḫꜥ.f I [179], mastaba G 7140, nécropole orientale de Gîza" | c="Femme représentée chez Ḥwfw-ḥꜥ.f I [179], mastaba G 7140, nécropole orientale de Gîza"  → chose "Femme représentée chez Ḥwfw-ḫꜥ.f I [179], mastaba G 7140, nécropole orientale de Gîza"
+  notes_from_baud: a="Représentée comme mère de Ḥwfw-ḫꜥ.f I; titres en font une reine, sans doute de Khoufou." | b="Represented as mother of Ḥwfw-ḫꜥ.f I; her titles make her a queen, doubtless of Khoufou. Possibly occupied G I-c." | c="Mother of Ḥwfw-Ḥꜥ.f I; titles denote queen, likely of Khoufou."  → chose "Représentée comme mère de Ḥwfw-ḫꜥ.f I; titres en font une reine, sans doute de Khoufou."
+  roles: a=["king's wife", "queen", "king's mother"] | b=["king's wife"] | c=["king's wife", "king's mother"]  → chose ["king's wife", "queen", "king's mother"]
+  spouse_names: a=["Khoufou (per Baud)"] | b=["Khoufou (probable)"] | c=["Khoufou (per Baud)"]  → chose ["Khoufou (per Baud)"]
+  titles_from_baud: a=["wr[t ḥts]", "mꜣꜣt Ḥr Stḫ"] | b=["wr[t ḥts]", "mꜣꜣt Ḥr Stḫ"] | c=["wr[t ḥts]", "mꜣꜣt Ḥr Stḥ"]  → chose ["wr[t ḥts]", "mꜣꜣt Ḥr Stḫ"]
+
+baud-259 (Nom perdu, dit «Ḫnmw-bꜣ.f», G 7310+20):
+  date_attested: a="Khoufou environ" | b="Khoufou environ." | c="Khoufou environ"  → chose "Khoufou environ"
+  father_name: a="Khoufou (probable)" | b="Khoufou (probable)" | c="Khoufou (per Baud)"  → chose "Khoufou (probable)"
+  name_egyptian: a="Nom perdu, dit «Ḫnmw-bꜣ.f», G 7310+20" | b="Nom perdu, dit « Ḫnmw-bꜣ.f », G 7310+20" | c="Nom perdu, dit Ḫnmw-bꜣ.f, G 7310+20"  → chose "Nom perdu, dit «Ḫnmw-bꜣ.f», G 7310+20"
+  notes_from_baud: a="Strudwick propose début du règne de Rêkhaef. Nom du propriétaire perdu; restitution Ḫnmw-bꜣ.f repose sur fragment incertain." | b="Name of owner lost; restitution in Ḫnmw-bꜣ.f speculative per Strudwick. Title parentage preserved on a fragment per Simpson." | c="Name lost; Simpson's restoration Ḫnmw-bꜣ.f rests on a ram sign. Strudwick hypothesizes start of Rêkhaef's reign."  → chose "Strudwick propose début du règne de Rêkhaef. Nom du propriétaire perdu; restitution Ḫnmw-bꜣ.f repose sur fragment incertain."
+  titles_from_baud: a=["/// nb (= r P nb?)", "jmj-jz", "[jmj-r?] wšḫt", "[jmj-r kꜣt nbt nt] nswt", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "wr djw [pr-Ḏḥwtj]", "mnjw Nḫn", "[ḥꜣtj-ꜥ]", "[ḥm-nṯr] wn-rw [ḫntj Ḥmj]", "ḥm-nṯr [Bꜣ] ꜥnpt", "[ḥm-nṯr] Bꜣstt", "(ḥm-nṯr Spdw)", "ḫrp ꜥḥ", "zꜣ [nswt] nj [ẖt.f]?", "tꜣjtj [zꜣb ṯꜣtj]"] | b=["/// nb (= r P nb?)", "jmj-jz", "[jmj-r] wšht", "[jmj-r kꜣt [nbt nt] nswt]", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "wr djw [pr-Ḏḥwtj]", "mnjw Nḫn", "[ḥꜣtj-ꜥ]", "[ḥm-nṯr] wn-rw [ḫntj Ḥmj]", "ḥm-nṯr [Bꜣ] ꜥpht", "[ḥm-nṯr] Bꜣstt", "(ḥm-nṯr Spdw)", "ḥrp ꜥḥ", "zꜣ [nswt] nj [ḫt.f]?", "tꜣjtj [zꜣb tꜣtj]"] | c=["/// nb (= r P nb?)", "jmj-jz", "[jmj-r?] wšḫt", "[jmj-r kꜣt [nbt nt] nswt]", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "wr djw [pr-Ḏḥwtj]", "mnjw Nḫn", "[ḥꜣtj-ꜥ]", "[ḥm-nṯr] wn-rw [ḫntj Ḥmj]", "ḥm-nṯr [Bꜣ] ꜥnpt", "[ḥm-nṯr] Bꜣstt", "(ḥm-nṯr Spdw)", "ḥrp ꜥḥ", "zꜣ [nswt] nj [ẖt.f]?", "tꜣjtj [zꜣb tꜣtj]"]  → chose ["/// nb (= r P nb?)", "jmj-jz", "[jmj-r?] wšḫt", "[jmj-r kꜣt nbt nt] nswt", "jrj-pꜥt", "ꜥꜣ Dwꜣw", "wr djw [pr-Ḏḥwtj]", "mnjw Nḫn", "[ḥꜣtj-ꜥ]", "[ḥm-nṯr] wn-rw [ḫntj Ḥmj]", "ḥm-nṯr [Bꜣ] ꜥnpt", "[ḥm-nṯr] Bꜣstt", "(ḥm-nṯr Spdw)", "ḫrp ꜥḥ", "zꜣ [nswt] nj [ẖt.f]?", "tꜣjtj [zꜣb ṯꜣtj]"]
+
+baud-260 (Nom perdu, G 7330+40):
+  date_attested: a="Khoufou environ" | b="Khoufou environ." | c="Khoufou environ"  → chose "Khoufou environ"
+  notes_from_baud: a="Attribution du titre à cette tombe conditionnelle; fragment de granit inscrit trouvé en G 7332V." | b="Attribution rests on sector; fragment may come from elsewhere." | c="Fragment provenance uncertain; attribution to royal family rests on sector."  → chose "Attribution du titre à cette tombe conditionnelle; fragment de granit inscrit trouvé en G 7332V."
+  titles_from_baud: a=["zꜣ nswt nj ẖt.f"] | b=["zꜣ nswt nj ḫt.f"] | c=["zꜣ nswt nj ẖt.f"]  → chose ["zꜣ nswt nj ẖt.f"]
+
+baud-261 (Nom perdu, soi-disant Ḥtp-ḥr.s II, G 7350):
+  date_attested: a="Seconde moitié de la IVᵉ dynastie" | b="Seconde moitié de la IVᵉ dynastie." | c="Seconde moitié de la IVᵉ dynastie"  → chose "Seconde moitié de la IVᵉ dynastie"
+  monument: a="Mastaba G 7350 dans nécropole orientale de Gîza" | b="Mastaba G 7350 dans la nécropole orientale de Gîza" | c="Mastaba G 7350 dans nécropole orientale de Gîza"  → chose "Mastaba G 7350 dans nécropole orientale de Gîza"
+  notes_from_baud: a="Seul titre préservé est celui de la fille (?) représentée en arrière. Tombe probablement contemporaine de Rêkhaef. Pas la tombe de Ḥtp-ḥr.s II [163]." | b="Title only preserved on a fragment showing the (?) daughter; tomb cannot be Ḥtp-ḥr.s II [163]. Owner masculine, unknown." | c="Tomb not Ḥtp-ḥr.s II's; has a male owner. Preserved title ḥmt nswt of the daughter."  → chose "Seul titre préservé est celui de la fille (?) représentée en arrière. Tombe probablement contemporaine de Rêkhaef. Pas la tombe de Ḥtp-ḥr.s II [163]."
+
+baud-262 (Nom perdu, fragment de relief, nécropole orientale de Gîza):
+  date_attested: a="Khoufou et plus" | b="Khoufou et plus." | c="Khoufou et plus"  → chose "Khoufou et plus"
+  notes_from_baud: a="Seule candidate connue pour ces deux titres est Mrt-jt.s [86], mais documentation trop parcellaire." | b="Candidat du secteur, déjà connu pour ces deux titres, est Mrt-jt.s [86] — documentation trop parcellaire." | c="Candidate Mrt-jt.s [86] per Baud, but documentation too fragmentary."  → chose "Seule candidate connue pour ces deux titres est Mrt-jt.s [86], mais documentation trop parcellaire."
+  roles: a=["king's daughter"] | b=["king's daughter", "priest of the king"] | c=["king's daughter"]  → chose ["king's daughter"]
+  titles_from_baud: a=["ḥmt-nṯr Ḥwfw", "zꜣt nswt nt ẖt.f"] | b=["ḥmt-nṯr Ḥwfw", "zꜣt nswt nt ḫt.f"] | c=["ḥmt-nṯr Ḥwfw", "zꜣt nswt nt ẖt.f"]  → chose ["ḥmt-nṯr Ḥwfw", "zꜣt nswt nt ẖt.f"]
+
+baud-263 (Nom perdu, fragments de stèle tableau, nécropole occidentale de Gîza):
+  date_attested: a="Khoufou environ" | b="Khoufou environ." | c="Khoufou environ"  → chose "Khoufou environ"
+  notes_from_baud: a="Stèle retrouvée près de la tombe de Snnw, même secteur que Kꜣ.j-tp. Cherpion date première moitié IVᵉ dynastie." | b="Stela found near tomb of Snnw." | c="Stele found near Snnw tomb; Cherpion dates first half Dyn 4."  → chose "Stèle retrouvée près de la tombe de Snnw, même secteur que Kꜣ.j-tp. Cherpion date première moitié IVᵉ dynastie."
+  titles_from_baud: a=["zꜣt [nswt] [n]t [ẖ][t].f"] | b=["zꜣt [nswt] [n]t [ḫ]t.f"] | c=["zꜣt [nswt] [n]t [ẖ][t].f"]  → chose ["zꜣt [nswt] [n]t [ẖ][t].f"]
+
+baud-264 (Nom perdu, fragments de statue, nécropole G 5000 de Gîza):
+  date_attested: a=null | b="Date?" | c=null  → chose null
+  monument: a="Fragments d'une statuette en albâtre, découverts dans des puits secondaires des mastabas G 5280 et 5380, nécropole occidentale de Gîza" | b="Fragments d'une statuette en albâtre, découverts dans des puits secondaires des mastabas G 5280 et 5380, nécropole occidentale de Gîza" | c="Fragments d'une statuette en albâtre, découverts dans des puits secondaires des mastabas G 5280 et 5380"  → chose "Fragments d'une statuette en albâtre, découverts dans des puits secondaires des mastabas G 5280 et 5380, nécropole occidentale de Gîza"
+  notes_from_baud: a="Statue peut-être du vizir Šm-nfr III (G 5170), candidat potentiel." | b="Šm-nfr III (G 5170) is a potential candidate though his 'fils royal' title carries nj ḫt.f." | c="Possibly from G 5180/5380 (anonymous tombs); Šm-nfr III a potential candidate."  → chose "Statue peut-être du vizir Šm-nfr III (G 5170), candidat potentiel."
+  titles_from_baud: a=["ḫrj-ḥb ḫrj-tp", "zꜣ nswt", "tꜣjtj zꜣb ṯꜣtj"] | b=["ẖrj-ḥb ẖrj-tp", "zꜣ nswt", "tꜣjtj zꜣb tꜣtj"] | c=["ḫrj-ḥb ḥrj-tp", "zꜣ nswt", "tꜣjtj zꜣb tꜣtj"]  → chose ["ḫrj-ḥb ḫrj-tp", "zꜣ nswt", "tꜣjtj zꜣb ṯꜣtj"]
+
+baud-265 (Statues «de reine», temple bas de Rêkhaef):
+  date_attested: a="Rêkhaef" | b="Rêkhaef." | c="Rêkhaef"  → chose "Rêkhaef"
+  localisation: a="Gîza, temple bas de Rêkhaef" | b="Gîza" | c="Gîza"  → chose "Gîza"
+  name_egyptian: a="Statues «de reine», temple bas de Rêkhaef" | b="Statues « de reine », temple bas de Rêkhaef" | c="Statues de reine, temple bas de Rêkhaef"  → chose "Statues «de reine», temple bas de Rêkhaef"
+  notes_from_baud: a="Coiffe à dépouille de vautour, attribut de reines/déesses. Probablement reine et mère du roi; groupe familial similaire à celui de Djoser [255]." | b="Some fragments show vulture-skin headdress; likely queen and king's mother of Rêkhaef." | c="Vulture-headed coiffure fragments; may represent queen and king's mother."  → chose "Coiffe à dépouille de vautour, attribut de reines/déesses. Probablement reine et mère du roi; groupe familial similaire à celui de Djoser [255]."
+  roles: a=["king's wife", "king's mother"] | b=[] | c=[]  → chose []
+  spouse_names: a=["Rêkhaef (per Baud)"] | b=[] | c=[]  → chose []
+
+baud-266 (Anonyme, sceau de Rêkhaef):
+  date_attested: a="Rêkhaef" | b="Rêkhaef." | c="Rêkhaef"  → chose "Rêkhaef"
+  father_name: a="Rêkhaef" | b="Rêkhaef (per Baud)" | c="Rêkhaef (per Baud)"  → chose "Rêkhaef (per Baud)"
+  localisation: a="Gîza, pyramide satellite de Rêkhaef" | b="Gîza" | c="Gîza"  → chose "Gîza"
+  notes_from_baud: a="Sceau comporte le serekh de Rêkhaef." | b="Serekh of Rêkhaef on seal confirms date." | c="Seal bears Rêkhaef's double serekh; name of individual not mentioned."  → chose "Sceau comporte le serekh de Rêkhaef."
+  titles_from_baud: a=["jmj-[jz] (?)", "zꜣ nswt nj ẖt.f mrjj.f", "zꜣ nswt smsw", "smr wꜥtj"] | b=["jmj-[jz] (?)", "zꜣ nswt nj ḫt.f mrjj.f", "zꜣ nswt smsw", "smr wꜥtj"] | c=["jmj-[jz] (?)", "zꜣ nswt nj ẖt.f mrjj.f", "zꜣ nswt smsw", "smr wꜥtj"]  → chose ["jmj-[jz] (?)", "zꜣ nswt nj ẖt.f mrjj.f", "zꜣ nswt smsw", "smr wꜥtj"]
+
+baud-267 (Complexes G III-a, b et c):
+  date_attested: a="Menkaourê" | b="Menkaourê." | c="Menkaourê"  → chose "Menkaourê"
+  localisation: a="Gîza, sud de la pyramide de Menkaourê" | b="Gîza" | c="Gîza"  → chose "Gîza"
+  name_egyptian: a="Complexes G IIII-a, b et c" | b="Complexes G III-a, b et c" | c="Complexes G III-a, b et c"  → chose "Complexes G III-a, b et c"
+  notes_from_baud: a="Trois complexes probablement des reines de Menkaourê. G IIII-a peut-être réutilisée pour une reine; identification avec Ḫꜥ-mrr-Nbtj II [172] écartée." | b="G III-a probably reused for a queen's burial (king's mother of a Menkaourê successor); G III-b and c probably queens." | c="G III-a reused for a queen; G III-b and c probably queens; G III-c unfinished."  → chose "Trois complexes probablement des reines de Menkaourê. G IIII-a peut-être réutilisée pour une reine; identification avec Ḫꜥ-mrr-Nbtj II [172] écartée."
+  pm_ref: a="PM 34-35" | b="PM 34; PM 34-35; PM 35" | c="PM 34; PM 34-35; PM 35"  → chose "PM 34; PM 34-35; PM 35"
+  spouse_names: a=[] | b=["Menkaourê (per Baud)"] | c=[]  → chose []
+
+baud-268 (Couple royal anonyme, temple bas de Menkaourê):
+  date_attested: a="Menkaourê" | b="Menkaourê." | c="Menkaourê"  → chose "Menkaourê"
+  localisation: a="Gîza, temple bas de Menkaourê" | b="Gîza" | c="Gîza"  → chose "Gîza"
+  monument: a="Deux statues formant une paire, anépigraphes, découvertes dans le temple bas de Menkaourê, Gîza" | b="Deux statues formant une paire, anépigraphes, découvertes dans le temple bas de Menkaourê, Gîza" | c="Deux statues formant une paire, anépigraphes, temple bas de Menkaourê, Gîza"  → chose "Deux statues formant une paire, anépigraphes, découvertes dans le temple bas de Menkaourê, Gîza"
+  notes_from_baud: a="Couple identifié comme le roi et la reine Ḫꜥ-mrr-nbtj II [172] (Fay); Seipel propose plutôt une occupante des complexes G III-b ou c." | b="Statue pair generally considered the king with queen Ḫꜥ-mrr-nbtj II [172]; Seipel suggests an occupant of G III-b or c." | c="Often considered Ḫꜥ-mrr-Nbtj II [172]; Seipel suggests an occupant of G III-b or c."  → chose "Couple identifié comme le roi et la reine Ḫꜥ-mrr-nbtj II [172] (Fay); Seipel propose plutôt une occupante des complexes G III-b ou c."
+  roles: a=["king's wife", "queen"] | b=["king's wife"] | c=[]  → chose ["king's wife", "queen"]
+  spouse_names: a=["Menkaourê (per Baud)"] | b=["Menkaourê (probable)"] | c=[]  → chose ["Menkaourê (per Baud)"]
+
+baud-269 (Nom perdu, statue, temple bas de Menkaourê):
+  date_attested: a="Menkaourê" | b="Menkaourê." | c="Menkaourê"  → chose "Menkaourê"
+  father_name: a="Menkaourê (per Baud)" | b="Menkaourê (per Baud)" | c=null  → chose "Menkaourê (per Baud)"
+  localisation: a="Gîza, temple bas de Menkaourê" | b="Gîza" | c="Gîza"  → chose "Gîza"
+  notes_from_baud: a="Titres restitués d'après la traduction anglaise de Reisner." | b="Titles restituted from Reisner's English translation." | c="Titles restored from Reisner's English translation; plate illegible."  → chose "Titres restitués d'après la traduction anglaise de Reisner."
+  titles_from_baud: a=["ḫrj-ḥb n jt.f", "zꜣ nswt nj ẖt.f (var. mr[jj.f])"] | b=["ẖrj-ḥb n jt.f", "zꜣ nswt nj ḫt.f (var. mr[jj.f])"] | c=["ḫrj-ḥb n jt.f", "zꜣ nswt nj ẖt.f (var. mrjj.f)"]  → chose ["ḫrj-ḥb n jt.f", "zꜣ nswt nj ẖt.f (var. mr[jj.f])"]
+
+baud-270 (Nom perdu, fragments de reliefs déplacés, LG 100):
+  date_attested: a="Fin IVᵉ à début Vᵉ dynastie (?)" | b="Fin IVᵉ à début Vᵉ dynastie (?)." | c="Fin IVᵉ à début Vᵉ dynastie (?)"  → chose "Fin IVᵉ à début Vᵉ dynastie (?)"
+  notes_from_baud: a="Provenance exacte des fragments indéterminable." | b="Fragments may not all belong to this tomb." | c="Fragments perhaps not part of Ḫnt-kꜣw.s tomb; titles commonly held by royal sons."  → chose "Provenance exacte des fragments indéterminable."
+  titles_from_baud: a=["zꜣ nswt nj ẖ[t.f]", "smsw ///", "[r P] nb", "ḥm bꜣw Nḫn"] | b=["zꜣ nswt nj ḫ[t.f]", "smsw ///", "[r P] nb", "ḥm bꜣw Nḫn"] | c=["zꜣ nswt nj ẖt.f", "smsw ///", "[r P] nb", "ḥm bꜣw Nḫn"]  → chose ["zꜣ nswt nj ẖ[t.f]", "smsw ///", "[r P] nb", "ḥm bꜣw Nḫn"]
+
+baud-271 (Nom perdu, table d'offrandes, temple de la vallée de Menkaourê):
+  date_attested: a="Début Vᵉ dynastie (?)" | b="Début Vᵉ dynastie (?)." | c="Début Vᵉ dynastie (?)"  → chose "Début Vᵉ dynastie (?)"
+  localisation: a="Gîza, temple de la vallée de Menkaourê" | b="Gîza" | c="Gîza"  → chose "Gîza"
+  notes_from_baud: a="Attribution à Ḫnt-kꜣw.s Iʳᵉ [186] suggérée mais incertaine; lecture zꜣ ou zꜣt nswt disputée." | b="Baud reports Callender's proposal to attribute to Ḫnt-kꜣw.s Iʳᵉ [186] but cannot confirm; inscription could read zꜣ or zꜣt." | c="Suggested to belong to Ḫnt-kꜣw.s Iʳᵉ [186] but inscription too lacunary to confirm."  → chose "Attribution à Ḫnt-kꜣw.s Iʳᵉ [186] suggérée mais incertaine; lecture zꜣ ou zꜣt nswt disputée."
+
+baud-272 (Nom perdu, graffito de la pyramide de Néferirkarê):
+  date_attested: a="Néferirkarê" | b="Néferirkarê." | c="Néferirkarê"  → chose "Néferirkarê"
+  father_name: a=null | b="Néferirkarê (per Baud)" | c=null  → chose null
+  localisation: a="Abousir, complexe de Néferirkarê" | b="Abousir" | c="Abousir"  → chose "Abousir"
+  notes_from_baud: a="Personnage distinct des autres fils royaux connus par graffiti (Nfr-sšm-... [124] et Rꜥ-ḥtp-wḏꜣ [145])." | b="Distinct from other 'fils royaux' known by graffiti." | c="Distinct from other fils royaux known by graffiti (cf. Nfr-sšm-... [124], Rꜥ-ḥtp-wḏꜣ [145])."  → chose "Personnage distinct des autres fils royaux connus par graffiti (Nfr-sšm-... [124] et Rꜥ-ḥtp-wḏꜣ [145])."
+
+baud-273 (Nom(s) perdu(s), fils de Niouserrê, temple funéraire de ce roi):
+  date_attested: a="Niouserrê" | b="Niouserrê." | c="Niouserrê"  → chose "Niouserrê"
+  localisation: a="Abousir, temple funéraire de Niouserrê" | b="Abousir" | c="Abousir"  → chose "Abousir"
+  notes_from_baud: a="Fils de Niouserrê. Les trois derniers fragments se rapportent probablement à un seul personnage; aîné de Niouserrê. Titre smsw seul (sans nj ẖt.f) — pas de king's eldest son of his body." | b="Probably all four fragments concern a single person; possibly the eldest son of Niouserrê." | c="Son of Niouserrê; possibly a single eldest son represented on four fragments."  → chose "Fils de Niouserrê. Les trois derniers fragments se rapportent probablement à un seul personnage; aîné de Niouserrê. Titre smsw seul (sans nj ẖt.f) — pas de king's eldest son of his body."
+  titles_from_baud: a=["jrj-pꜥt", "zꜣ nswt [smsw?]", "ḫrj-[ḥb ///]", "[zꜣ nswt] smsw", "[zꜣ nswt] smsw, [smꜣ?] Mnw", "zꜣ [nswt] smsw"] | b=["jrj-pꜥt", "zꜣ nswt [smsw?]", "ẖrj-[ḥb ///]", "[zꜣ nswt] smsw", "[zꜣ nswt] smsw, [smꜣ?] Mnw", "zꜣ [nswt] smsw"] | c=["jrj-pꜥt", "zꜣ nswt [smsw?]", "ḫrj-[ḥb ///]", "[zꜣ nswt] smsw", "[zꜣ nswt] smsw, [smꜣ?] Mnw", "zꜣ [nswt] smsw"]  → chose ["jrj-pꜥt", "zꜣ nswt [smsw?]", "ḫrj-[ḥb ///]", "[zꜣ nswt] smsw", "[zꜣ nswt] smsw, [smꜣ?] Mnw", "zꜣ [nswt] smsw"]
+
+baud-274 (Nom perdu):
+  date_attested: a="Niouserrê" | b="Niouserrê." | c="Niouserrê"  → chose "Niouserrê"
+  localisation: a="Abousir, temple funéraire de Niouserrê" | b="Abousir" | c="Abousir"  → chose "Abousir"
+  monument: a="Fonctionnaire représenté dans le temple" | b="Fonctionnaire représenté dans le temple funéraire de Niouserrê" | c="Fonctionnaire représenté dans le temple funéraire de Niouserrê"  → chose "Fonctionnaire représenté dans le temple funéraire de Niouserrê"
+  notes_from_baud: a=null | b=null | c="Service personnel; official in Niouserrê's funerary temple."  → chose null
+
+baud-275 (Nom perdu, dit «Ptḥ-mr-zt.f»):
+  localisation: a="Abousir, est de la pyramide de Niouserrê" | b="Abousir" | c="Abousir"  → chose "Abousir"
+  monument: a="1: Fragment d'une paroi, à l'est de la pyramide de Niouserrê, Abousir; 2: Bloc mentionnant la ḥwt-nṯr d'une «mère royale»" | b="1: Fragment d'une paroi, à l'est de la pyramide de Niouserrê, Abousir; 2: Bloc mentionnant la ḥwt-nṯr d'une « mère royale »" | c="1 : Fragment d'une paroi, à l'est de la pyramide de Niouserrê, Abousir; 2 : Bloc mentionnant la ḥwt-nṯr d'une mère royale, peut-être de la même tombe que précédemment"  → chose "1: Fragment d'une paroi, à l'est de la pyramide de Niouserrê, Abousir; 2: Bloc mentionnant la ḥwt-nṯr d'une «mère royale»"
+  name_egyptian: a="Nom perdu, dit «Ptḥ-mr-zt.f»" | b="Nom perdu, dit « Ptḥ-mr-zt.f »" | c="Nom perdu, dit Ptḥ-mr-zꜣ.f"  → chose "Nom perdu, dit «Ptḥ-mr-zt.f»"
+  notes_from_baud: a="«Mère royale» = Ḫnt-kꜣw.s II [187]. Le nom lu Ptḥ-mr-zt.f par Schäfer doit être corrigé; lecture Ptḥ mr zt problématique." | b="The 'mère royale' is Ḫnt-kꜣw.s II [187] per Verner." | c="Service personnel; king's mother named is Ḫnt-kꜣw.s II [187] per Verner. Last royal name cited is Néferirkarê."  → chose "«Mère royale» = Ḫnt-kꜣw.s II [187]. Le nom lu Ptḥ-mr-zt.f par Schäfer doit être corrigé; lecture Ptḥ mr zt problématique."
+  roles: a=["priest of the king's mother", "priest of the royal pyramid"] | b=["steward of the king's mother"] | c=["priest of the king's mother"]  → chose ["priest of the king's mother", "priest of the royal pyramid"]
+  titles_from_baud: a=["jmj-r wpwt ḥtpt nṯr", "jmj-r njwt Bꜣ-Nfr-jr-kꜣ-Rꜥ", "jmj-ḫt ḥmw-kꜣ mwt nswt Ḫnt-kꜣw.s", "ḫrj-tp nswt", "zt [n] Ptḥ (?)", "sḥḏ wꜥbw ꜣḫt-Ḥwfw", "sḥḏ zšw [mrt?]"] | b=["jmj-r wpwt ḥtpt nṯr", "jmj-r njwt Bꜣ-Nfr-jr-kꜣ-Rꜥ", "jmj-ḫt ḥmw-kꜣ mwt nswt Ḫnt-kꜣw.s", "ẖrj-tp nswt", "zt [n] Ptḥ (?)", "šd wꜥbw Ꜣḫt-Ḫwfw", "šd zšw [mrt?]"] | c=["jmj-r wpwt ḥtpt nṯr", "jmj-r njwt Bꜣ-Nfr-jr-kꜣ-Rꜥ", "jmj-ḫt ḥmw-kꜣ mwt nswt Ḫnt-kꜣw.s", "ḥrj-tp nswt", "zt [n] Ptḥ (?)", "sḥḏ wꜥbw Jḫt-Ḥwfw", "sḥḏ zšw [mrt?]"]  → chose ["jmj-r wpwt ḥtpt nṯr", "jmj-r njwt Bꜣ-Nfr-jr-kꜣ-Rꜥ", "jmj-ḫt ḥmw-kꜣ mwt nswt Ḫnt-kꜣw.s", "ḫrj-tp nswt", "zt [n] Ptḥ (?)", "sḥḏ wꜥbw ꜣḫt-Ḥwfw", "sḥḏ zšw [mrt?]"]
+
+baud-276 (Complexe anonyme, au nord de celui de Djedkarê, Saqqara-Sud):
+  monument: a="Complexe funéraire anonyme au nord de celui de Djedkarê" | b="Complexe funéraire, Saqqara-Sud" | c="Complexe funéraire, Saqqara-Sud"  → chose "Complexe funéraire, Saqqara-Sud"
+  notes_from_baud: a="Complexe attribué à une reine de Djedkarê. Fragments Hathor nbt nht, Hathor nbt Junt — rôle de reine-épouse et mère royale." | b="One fragment associates wrt ḥts wrt ḥzt with name of Djedkarê." | c="Complex assigned to a queen of Djedkarê; Jánosi questions Königsinnenanlage identification but Baud reaffirms."  → chose "Complexe attribué à une reine de Djedkarê. Fragments Hathor nbt nht, Hathor nbt Junt — rôle de reine-épouse et mère royale."
+  roles: a=["king's wife", "queen"] | b=["king's wife"] | c=["king's wife"]  → chose ["king's wife"]
+  spouse_names: a=["Djedkarê (probable)"] | b=["Djedkarê (probable)"] | c=[]  → chose ["Djedkarê (probable)"]
+  titles_from_baud: a=["wrt ḥzt", "wrt ḥts", "ḥmt nswt"] | b=["wrt ḥzt", "wrt ḥts"] | c=["wrt ḥzt", "wrt ḥts"]  → chose ["wrt ḥzt", "wrt ḥts"]
+
+baud-277 (Nom perdu, mère d'Ouserkarê citée sur les annales royales de la VIᵉ dynastie):
+  date_attested: a="Ouserkarê" | b="Ouserkarê." | c="Ouserkarê"  → chose "Ouserkarê"
+  name_egyptian: a="Nom perdu, mère d'Ouserkarê" | b="Nom perdu, mère d'Ouserkarê citée sur les annales royales de la VIᵉ dynastie" | c="Nom perdu, mère d'Ouserkarê citée sur les annales royales de la VIᵉ dynastie"  → chose "Nom perdu, mère d'Ouserkarê citée sur les annales royales de la VIᵉ dynastie"
+  notes_from_baud: a="Nom de la reine non conservé. Pas Ḫntt-/// [194]. On a proposé Ḥwjt II [178] (Stadelmann), sans données suffisantes." | b="Baud reports Stadelmann's proposal that this is Ḥwjt II [178] but data insufficient." | c="Queen-mother of Ouserkarê; name not preserved. Proposition of Ḥwjt II [178] lacks data."  → chose "Nom de la reine non conservé. Pas Ḫntt-/// [194]. On a proposé Ḥwjt II [178] (Stadelmann), sans données suffisantes."
+
+baud-278 (Personnage chargé du culte d'Jpwt Iʳᵉ):
+  date_attested: a="Pépi Iᵉʳ (ou plus)" | b="Pépi Iᵉʳ (ou plus)." | c="Pépi Iᵉʳ (ou plus)"  → chose "Pépi Iᵉʳ (ou plus)"
+  localisation: a="Saqqara, nécropole de Téti" | b="nécropole de Téti, Saqqara" | c="nécropole de Téti, Saqqara"  → chose "nécropole de Téti, Saqqara"
+  monument: a="Fragment, secteur du mastaba de Ḫntt-kꜣ.j" | b="Fragment, secteur du mastaba de Ḫntt-kꜣ.j" | c="Fragment, secteur du mastaba de Ḫnt-kꜣ.j"  → chose "Fragment, secteur du mastaba de Ḫntt-kꜣ.j"
+  notes_from_baud: a="La «mère royale» Jpwt est Jpwt Iʳᵉ [17]; sous-directeur des prêtres de la propriété funéraire de la mère royale Jpwt." | b="The 'mère royale' Jpwt is Jpwt Iʳᵉ [17]." | c="Service personnel; sous-directeur des prêtres de la propriété funéraire de la mère royale Jpwt Iʳᵉ [17]."  → chose "La «mère royale» Jpwt est Jpwt Iʳᵉ [17]; sous-directeur des prêtres de la propriété funéraire de la mère royale Jpwt."
+
+baud-279 (Complexe de reine de Pépi Iᵉʳ, So):
+  date_attested: a="Pépi Iᵉʳ" | b="Pépi Iᵉʳ." | c="Pépi Iᵉʳ"  → chose "Pépi Iᵉʳ"
+  monument: a="Complexe funéraire à pyramide, dit «reine de l'ouest» (So), au sud de la pyramide de Pépi Iᵉʳ" | b="Complexe funéraire à pyramide, au sud de la pyramide de Pépi Iᵉʳ, Saqqara-Sud" | c="Complexe funéraire à pyramide, dit de la reine de l'ouest (So), au sud de la pyramide de Pépi Iᵉʳ, Saqqara-Sud"  → chose "Complexe funéraire à pyramide, dit «reine de l'ouest» (So), au sud de la pyramide de Pépi Iᵉʳ"
+  notes_from_baud: a="4ᵉ dans l'ordre chronologique d'installation des complexes des reines de Pépi Iᵉʳ." | b="Obelisk summit found against west wall of funerary temple only hypothetically associated." | c="4th in chronological order of queens' complexes of Pépi Iᵉʳ."  → chose "4ᵉ dans l'ordre chronologique d'installation des complexes des reines de Pépi Iᵉʳ."
+  roles: a=["king's wife", "queen", "king's daughter"] | b=["king's wife"] | c=["king's wife", "king's daughter"]  → chose ["king's wife", "queen", "king's daughter"]
+  titles_from_baud: a=["Mn-nfr-Mrjj-Rꜥ: ḥmt nswt", "zꜣt nswt smst"] | b=["Mn-nfr-Mrjj-Rꜥ", "ḥmt nswt", "zꜣt nswt smst"] | c=["Mn-nfr-Mrjj-Rꜥ: ḥmt nswt", "zꜣt nswt smst"]  → chose ["Mn-nfr-Mrjj-Rꜥ: ḥmt nswt", "zꜣt nswt smst"]
+
+baud-280 (Reine anonyme de Pépi Iᵉʳ, citée dans la biographie d'Wnj):
+  date_attested: a="Pépi Iᵉʳ" | b="Pépi Iᵉʳ." | c="Pépi Iᵉʳ"  → chose "Pépi Iᵉʳ"
+  monument: a="Urk. I, 100" | b="Biographie d'Wnj" | c="Citation dans biographie d'Wnj (Urk. I, 100)"  → chose "Urk. I, 100"
+  notes_from_baud: a="Épouse de Pépi Iᵉʳ. Hypothèses qu'elle soit mère de Merenrê ou fille royale Zšzšt [44] jugées extravagantes/invraisemblables." | b="Baud rejects hypotheses she was mother of Merenrê or the king's daughter Zšzšt [44]." | c="Identification as mother of Merenrê (Goedicke) or as Zšzšt [44] remarried to Mrr-wj-kꜣ.j [83] (Stock) rejected."  → chose "Épouse de Pépi Iᵉʳ. Hypothèses qu'elle soit mère de Merenrê ou fille royale Zšzšt [44] jugées extravagantes/invraisemblables."
+  roles: a=["king's wife", "queen"] | b=["king's wife"] | c=["king's wife"]  → chose ["king's wife"]
+
+baud-281 (Représentations de reine(s) dans le temple funéraire de Pépi II):
+  date_attested: a="Pépi II" | b="Pépi II." | c="Pépi II"  → chose "Pépi II"
+  localisation: a="Saqqara-Sud, temple de Pépi II" | b="Saqqara-Sud" | c="Saqqara-Sud"  → chose "Saqqara-Sud"
+  monument: a="Temple funéraire de Pépi II" | b="Représentations de femmes dans le temple royal de Pépi II" | c="Représentations de femmes dans le temple royal de Pépi II"  → chose "Représentations de femmes dans le temple royal de Pépi II"
+  notes_from_baud: a="Fragments comportant des titres de reine; absence de nom empêche l'identification." | b="Two fragments bearing queen's titles attest queen(s) presence; cannot identify to a known queen." | c="Anonymous queen fragments; names lost."  → chose "Fragments comportant des titres de reine; absence de nom empêche l'identification."
+  roles: a=["king's wife", "queen"] | b=["king's wife"] | c=["king's wife"]  → chose ["king's wife"]
+  titles_from_baud: a=["mꜣꜣt [Ḥr] Stḫ", "wrt ḥts", "ḥmt nswt"] | b=["mꜣꜣt [Ḥr] Stḫ", "wrt ḥts", "ḥmt nswt"] | c=["mꜣꜣt [Ḥr] Stḥ", "wrt ḥts", "ḥmt nswt"]  → chose ["mꜣꜣt [Ḥr] Stḫ", "wrt ḥts", "ḥmt nswt"]
+
+baud-282 (Nom perdu, fils de Pépi II, représenté dans le temple funéraire de ce roi):
+  date_attested: a="Pépi II" | b="Pépi II." | c="Pépi II"  → chose "Pépi II"
+  localisation: a="Saqqara-Sud, temple de Pépi II" | b="Saqqara-Sud" | c="Saqqara-Sud"  → chose "Saqqara-Sud"
+  notes_from_baud: a="Candidat idéal: Nmtj-m-zꜣ.f [133], successeur possible de Pépi II, mais nom non conservé." | b="Possible candidate is Nmtj-m-zꜣ.f [133], eventual successor of Pépi II." | c="Ideal candidate: Nmtj-m-zꜣ.f [133], Pépi II's eventual successor, though cannot be proven."  → chose "Candidat idéal: Nmtj-m-zꜣ.f [133], successeur possible de Pépi II, mais nom non conservé."
+  titles_from_baud: a=["jrj-p[ꜥt]", "zꜣ nswt smsw nj ẖt.f"] | b=["jrj-p[ꜥt]", "zꜣ nswt smsw nj ḫt.f"] | c=["jrj-p[ꜥt]", "zꜣ nswt smsw nj ẖt.f"]  → chose ["jrj-p[ꜥt]", "zꜣ nswt smsw nj ẖt.f"]
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
 Corrections applied by fix_rows.py AFTER the 3-subagent majority-vote
@@ -1884,23 +2160,60 @@ provisional until that happens.
 - baud-198: roles corrected (Egyptologist + Gemini PR #60: Ḥkrt-Nbtj, female, titles `zꜣt nswt nt ẖt.f (var. mrt.f)` — no eldest marker. Male-coded vocab wrong on two counts. Dropped.)
     value: ["king's daughter"]
 - baud-205: father_name corrected (Egyptologist PR #61: PDF p. 567 — 'Spencer suppose, par conséquent, qu'il est un fils d'Ouserkaf'. Baud reports Spencer's hypothesis without endorsing. `(per Baud)` → `(probable)`.)
-    was: "Ouserkaf (per Baud)"
-    now: "Ouserkaf (probable)"
+    value: "Ouserkaf (probable)"
 - baud-213: dynasty corrected (Egyptologist PR #61: 'PPI' in Baud's (d) line is the standard French abbreviation for Première Période Intermédiaire (First Intermediate Period), NOT Pépi Iᵉʳ. The FIP 'miserable little stela' dating (Firth/Gunn) is style-based. FIP is post-OK; dynasty falls outside the OK vocab. Supersedes the earlier (wrong) dynasty='6' correction.)
-    was: "6"
-    now: null
+    value: null
 - baud-213: sub_period corrected (Egyptologist PR #61: PPI = FIP. sub_period captures the stylistic dating; date_attested stays verbatim 'PPI' per Baud's convention.)
-    was: null
-    now: "First Intermediate Period"
+    value: "First Intermediate Period"
 - baud-223: roles corrected (Egyptologist PR #61: TITRES are `jmj-r prwj-ḥḏ` (overseer of the TWO treasuries) and `jmj-r šwj pr-ꜥꜣ` (overseer of the two basins of the Great House) — neither maps cleanly to `overseer of the treasury of pr-ꜥꜣ` (which expects `jmj-r pr-ḥḏ pr-ꜥꜣ`). Dropped; `priest of the royal pyramid` from `sḥḏ ḥmw-nṯr Ḏd-swt-Ttj` retained.)
-    was: ["overseer of the treasury of pr-ꜥꜣ", "priest of the royal pyramid"]
-    now: ["priest of the royal pyramid"]
+    value: ["priest of the royal pyramid"]
 - baud-224: father_name corrected (Egyptologist PR #61: PDF pp. 580-581 — Baud concludes 'le prince héritier d'Ounas' but explicitly flags the conclusion as 'conjecturale... dans l'état actuel des données'. Not a full endorsement; demote `(per Baud)` → `(probable)`.)
-    was: "Ounas (per Baud)"
-    now: "Ounas (probable)"
+    value: "Ounas (probable)"
 - baud-232: roles corrected (Egyptologist PR #61: titles `ḥrp ꜣṯw sbꜣ msw nswt` (controller of troops TEACHING the king's children — `sbꜣ` = teach) and `jmj-r st pr-mnꜥt` (overseer of the nursery) are teacher/nursery-overseer titles, NOT `jmj-r prw msw nswt` steward pattern. No clean vocab match — honest empty list. Baud's own gloss: 'professeur des enfants royaux'.)
-    was: ["steward of the king's children"]
-    now: []
+    value: []
 - baud-239: children_names corrected (Egyptologist PR #61: PDF p. 593 — Mrt-jt.s is titled `ḥkrt nswt` (certain attestation); Kꜣ(.j)-swḏꜣ is Junker's inference from G 5340 homonymy, Baud accepts as 'très concevable' but doesn't assert. Add `(probable)` hedge.)
-    was: ["Kꜣ(.j)-swḏꜣ", "Mrt-jt.s"]
-    now: ["Kꜣ(.j)-swḏꜣ (probable)", "Mrt-jt.s"]
+    value: ["Kꜣ(.j)-swḏꜣ (probable)", "Mrt-jt.s"]
+- baud-264: date_attested corrected (Anonymous 'Nom perdu' entry — the statue fragments at G 5280/5380 are undated; Baud gives no explicit (d) line but the tomb context places it in Dyn 4-5. Normalising to Baud's convention `Date ?` so the null-dynasty mapping follows the `declines-to-date` branch.)
+    value: "Date ?"
+- baud-242: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-243: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-248: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["vizier", "king's son", "king's eldest son of his body"]
+    now: ["vizier", "king's son"]
+- baud-249: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-250: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-251: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-252: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-254: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-256: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped. baud-256 has `smsw jzt` — chamber-eldest admin office, NOT kinship marker.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-259: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["vizier", "king's son", "king's eldest son of his body"]
+    now: ["vizier", "king's son"]
+- baud-260: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-266: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped. baud-266 has `smsw` in a SEPARATE title (`zꜣ nswt smsw` alone) from `nj ẖt.f` — strict rule requires same title string.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-269: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-270: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped. baud-270 has fragmentary `zꜣ nswt nj ẖ[t.f]` and `smsw ///` separately — not same title string.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
