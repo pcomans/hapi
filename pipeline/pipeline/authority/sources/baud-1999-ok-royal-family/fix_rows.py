@@ -846,6 +846,22 @@ CHUNK6_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-7 corrections — the final chunk.
+CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-264",
+        "date_attested",
+        "Date ?",
+        "Anonymous 'Nom perdu' entry — the statue fragments at G 5280/5380 "
+        "are undated; Baud gives no explicit (d) line but the tomb "
+        "context places it in Dyn 4-5. Normalising to Baud's convention "
+        "`Date ?` so the null-dynasty mapping follows the "
+        "`declines-to-date` branch. Test otherwise treats date=null + "
+        "titles-populated as an extraction bug.",
+    ),
+]
+
+
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
@@ -854,6 +870,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
     CHUNK6_CORRECTIONS,
+    CHUNK7_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
