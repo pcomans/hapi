@@ -461,15 +461,26 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     # Gemini Code Assist PR #57 suggested adding a `steward of the king's
     # children` entry for baud-69 (`smsw pr n jrj-pꜥt`). The
-    # scope-accountability-enforcer review flagged this as a vocab-
-    # integrity stretch: `jrj-pꜥt` is a court rank (hereditary
-    # prince/noble), not `msw nswt` ("king's children"). The chunk-1
-    # backfill pattern applies specifically to `msw nswt`-scoped titles;
-    # extending it to `jrj-pꜥt` would conflate distinct title elements.
-    # baud-69's `roles: []` is the honest mapping — `smsw pr` is an
-    # administrative-household title with no clean vocab home, and
-    # `jrj-pꜥt` scoping deserves its own vocab term when a future chunk
-    # attests it more broadly. Deferred.
+    # scope-accountability-enforcer flagged it as a vocab-integrity stretch:
+    # `jrj-pꜥt` is a court rank (hereditary prince/noble), not `msw nswt`
+    # ("king's children"). The chunk-1 backfill pattern applies specifically
+    # to `msw nswt`-scoped titles. baud-69's `roles: []` is the honest
+    # mapping. Deferred.
+]
+
+
+# Chunk-3 corrections.
+CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-117",
+        "roles",
+        ["king's son", "vizier"],
+        "Nfr-mꜣꜥt I's TITRES has `zꜣ nswt smsw` — `smsw` is present but "
+        "`nj ẖt.f` is absent. Per the chunk-2 baud-42 rule (vocab term "
+        "`king's eldest son of his body` requires BOTH elements), drop "
+        "the role. `king's son` remains as the bare attestation; "
+        "`vizier` from other titulary preserved.",
+    ),
 ]
 
 
@@ -481,6 +492,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
     CHUNK2_CORRECTIONS,
+    CHUNK3_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
