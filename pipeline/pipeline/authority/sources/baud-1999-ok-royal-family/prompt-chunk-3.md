@@ -105,14 +105,14 @@ Six levels (increasing distance from attested fact). Chunk 1 surfaced the **unde
 
 ## Pitfalls (skim before extracting)
 
-- **Do NOT extract `[40]` or `[81]`.** Your sub-PDF starts on p. 49 (containing `[40]`'s tail) and ends on p. 82 (containing `[81]`'s header). Any row with `baud_id == 40` or `baud_id >= 81` is a bug.
+- **Do NOT extract `[80]` or `[121]`.** Your sub-PDF starts on p. 82 (containing `[80]`'s tail) and ends on p. 109 (containing `[121]`'s header). Any row with `baud_id == 80` or `baud_id >= 121` is a bug. Sub-entries `[94b]`, `[101a]` (letter-suffixed) are legitimate and stay.
 - **Asterisks in names are significant.** `Jḥtj-ḥtp*` is service personnel; `Jḥtj-ḥtp` (same name, no asterisk, different entry number) is a family member. The asterisk sets `service_personnel: true` and changes `roles` semantics.
 - **Grandchild vs child.** `zꜣ` (son, direct) ≠ `zꜣ n zꜣ` / French `petit-fils` (grandson). `children_names` is direct-children only. Chunk-1 regression: baud-26 where a `petit-fils` was promoted to `children_names` by majority vote.
 - **Spouse vs mother.** A woman titled `mwt nswt X` is the mother of king X, not his wife. Chunk-1 regression: baud-38 where Pépi II was incorrectly added to `spouse_names` — he was her son, not her husband. Check titles: `mwt nswt` → `children_names`, `ḥmt nswt` → `spouse_names`.
 - **Half-sibling marriage.** `zꜣt nswt` + `ḥmt nswt` attests a woman as simultaneously daughter-of-King-A and wife-of-King-B. `father_name` and `spouse_names` may name **different** kings — populate both independently.
 - **Role narrowing by majority vote — be additive.** If TITRES contains `ḥm-nṯr` or `wꜥb` of a named pyramid cult, `priest of the royal pyramid` is additive, not optional. Same for `msw nswt`-scoped `jmj-r pr` / `jmj-r prw` / `jmj-r sbꜣ` titles: include `steward of the king's children` whenever attested.
 - **Cross-reference-only entries.** Some short entries are pure cross-references (e.g. `"///-Ḥr. Voir Ḥr/// [154]"`). Emit the row with the baud_id from the original numbered entry, minimal fields, and `notes_from_baud` = `"Cross-reference to [N]."`. Do not try to follow the ref.
-- **Corpus entries are alphabetical by Egyptian transliteration, not by dynasty.** Chunk 2 contains a mix of Dyn 3, 4, 5, and 6 entries.
+- **Corpus entries are alphabetical by Egyptian transliteration, not by dynasty.** Chunk 3 contains a mix of Dyn 2/3-transition, 3, 4, 5, and 6 entries.
 - **Hedge-heavy source.** Baud explicitly says "dans de nombreux cas, les informations sur la parenté sont inexistantes et les hypothèses généalogiques fragiles." He names probable parents knowing he's inferring. Preserve every hedge; promoting a hedge to a hard claim is the signature failure mode.
 - **Don't anglicize French regnal names.** `Snéfrou`, `Pépi Iᵉʳ`, `Téti`, `Merenrê`, `Niouserrê`, `Djedkarê`, `Ounas`, `Rêkhaef`, `Menkaourê`, `Chepseskaf`, `Néferirkarê`, `Sahourê` stay verbatim in `father_name` / `spouse_names` / `children_names` / `date_attested`. `name_anglicised` is the only field carrying an English form.
 - **French vs Anglo-American transliteration.** Baud uses French-school conventions (dots, `j`). Your output keeps French-school verbatim in `name_egyptian`; normalisation to a house style is Phase A.
@@ -121,7 +121,7 @@ Six levels (increasing distance from attested fact). Chunk 1 surfaced the **unde
 
 ## Output format
 
-Write newline-delimited JSON to `pipeline/pipeline/authority/sources/baud-1999-ok-royal-family/raw/agent-<YOUR_TAG>-chunk-2.jsonl`, where `<YOUR_TAG>` is `a`, `b`, or `c` (the spawner will tell you which). One row per Baud Corpus entry, in ascending `baud_id` order.
+Write newline-delimited JSON to `pipeline/pipeline/authority/sources/baud-1999-ok-royal-family/raw/agent-<YOUR_TAG>-chunk-3.jsonl`, where `<YOUR_TAG>` is `a`, `b`, or `c` (the spawner will tell you which). One row per Baud Corpus entry, in ascending `baud_id` order.
 
 Every row MUST contain every field in the schema — use `null` / `[]` / `{}` / `false` for missing values per the per-field rules above. Downstream `merge.py` expects a uniform schema; missing keys confuse the majority vote.
 

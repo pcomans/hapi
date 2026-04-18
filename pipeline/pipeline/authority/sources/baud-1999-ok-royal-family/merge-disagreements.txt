@@ -912,6 +912,25 @@ provisional until that happens.
     value: ["Rêkhaef (?)"]
 - baud-79: roles corrected (PDF p. 464: TITRES `zꜣ nswt nj ẖt.f` only. No `smsw`. Attribution rests on onomastics + Giza-East locality, not on an eldest-son title. Same rule as baud-42.)
     value: ["king's son"]
+- baud-85: children_names corrected (Baud writes 'si la reconstitution de Smith est exacte' — Kꜣ.j-wꜥb is Smith's reconstruction that Baud reports (not endorses). `(per Baud)` over-promoted; `(probable)` matches the actual hedge.)
+    value: ["Kꜣ.j-wꜥb (probable)"]
+- baud-86: roles corrected (TITRES has `ḥmt-nṯr Ḫwfw, ḥmt-nṯr Nt, ḥmt-nṯr Ḥwt-Ḥr` on a king's daughter — priestess of royal cult of Khoufou plus goddess-cults (Neith, Hathor). Majority-vote added `priest of the king` but the title is female royal-cult priestess, not service-personnel `priest of the king`. Role vocab intends the latter. Dropped.)
+    value: ["king's daughter"]
 - baud-117: roles corrected (Nfr-mꜣꜥt I's TITRES has `zꜣ nswt smsw` — `smsw` is present but `nj ẖt.f` is absent. Per the chunk-2 baud-42 rule (vocab term `king's eldest son of his body` requires BOTH elements), drop the role. `king's son` remains as the bare attestation; `vizier` from other titulary preserved.)
-    was: ["king's son", "king's eldest son of his body", "vizier"]
-    now: ["king's son", "vizier"]
+    value: ["king's son", "vizier"]
+- baud-87: father_name corrected (Baud's PARENTÉ reports Schmitz's supposition: 'Schmitz … ont amené à supposer qu'il s'agit … d'une fille du couple Ptḥ-špss et Ḫꜥ-mrr-Nbtj'. `(per Baud)` over-promotes a reported hypothesis; `(probable)` matches Baud's stance.)
+    value: "Ptḥ-špss (probable)"
+- baud-87: mother_name corrected (Same Schmitz-supposition as baud-87 father_name. `(per Baud)` → `(probable)` for consistency with how Baud hedges.)
+    value: "Ḫꜥ-mrr-Nbtj (probable)"
+- baud-93: roles corrected (Same pattern as baud-86: TITRES has `ḥmt-nṯr Ḫwfw, ḥmt-nṯr Ḥwt-Ḥr, ḥkrt nswt` on a king's daughter — female royal-cult priestess plus goddess-cult. `priest of the king` is the service-personnel vocab; doesn't fit a female royal's own titulary. Dropped.)
+    value: ["king's daughter"]
+- baud-94: father_name corrected (Baud's PARENTÉ says the Rêkhaef filiation 'est motivée par le secteur' but `on peut néanmoins en douter`. Baud reports the hypothesis and hedges it; `(per Baud)` over-promotes. `(probable)` is the most generous honest mapping.)
+    value: "Rêkhaef (probable)"
+- baud-92: roles corrected (Gemini PR #58 review. TITRES has `ḥm pr mwt nswt` (servant of the house of the king's mother) — administrative/domestic, not priestly. `priest of the king's mother` vocab requires `ḥm-nṯr mwt nswt X`; this row only has `ḥm pr`. Dropped. `steward of the king's mother` retained (from `ḥqꜣ n mwt nswt Nj-mꜣꜥt-Ḥp`, genuinely administrative).)
+    was: ["steward of the king's mother", "priest of the king's mother"]
+    now: ["steward of the king's mother"]
+- baud-94b: titles_from_baud corrected (Gemini PR #58 review. baud-94b has NO TITRES rubric — the extracted `[zꜣt nswt] (probablement)` was inferred from prose, not a verbatim TITRES line. Per schema, `titles_from_baud` is the verbatim TITRES rubric only. Empty list is honest; roles already empty (deferred earlier).)
+    was: ["[zꜣt nswt] (probablement)"]
+    now: []
+- baud-97: roles corrected (TITRES includes `jmj-r ḥst pr-ꜥꜣ` — overseer of the STOREROOM (`ḥst`) of the great-house, NOT the treasury (`pr-ḥḏ`). `overseer of the treasury of pr-ꜥꜣ` was mis-applied by majority-vote. Dropped (no clean vocab fit for storeroom); the priest-of-royal-cult roles from `ḥm-nṯr Šzp-jb-Rꜥ` etc. retained.)
+    value: ["priest of the king's mother", "priest of the royal pyramid"]

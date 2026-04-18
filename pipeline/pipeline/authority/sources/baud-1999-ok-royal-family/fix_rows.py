@@ -472,6 +472,24 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # Chunk-3 corrections.
 CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
+        "baud-85",
+        "children_names",
+        ["Kꜣ.j-wꜥb (probable)"],
+        "Baud writes 'si la reconstitution de Smith est exacte' — Kꜣ.j-wꜥb "
+        "is Smith's reconstruction that Baud reports (not endorses). "
+        "`(per Baud)` over-promoted; `(probable)` matches the actual hedge.",
+    ),
+    (
+        "baud-86",
+        "roles",
+        ["king's daughter"],
+        "TITRES has `ḥmt-nṯr Ḫwfw, ḥmt-nṯr Nt, ḥmt-nṯr Ḥwt-Ḥr` on a king's "
+        "daughter — priestess of royal cult of Khoufou plus goddess-cults "
+        "(Neith, Hathor). Majority-vote added `priest of the king` but the "
+        "title is female royal-cult priestess, not service-personnel "
+        "`priest of the king`. Role vocab intends the latter. Dropped.",
+    ),
+    (
         "baud-117",
         "roles",
         ["king's son", "vizier"],
@@ -480,6 +498,72 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "`king's eldest son of his body` requires BOTH elements), drop "
         "the role. `king's son` remains as the bare attestation; "
         "`vizier` from other titulary preserved.",
+    ),
+    (
+        "baud-87",
+        "father_name",
+        "Ptḥ-špss (probable)",
+        "Baud's PARENTÉ reports Schmitz's supposition: 'Schmitz … ont "
+        "amené à supposer qu'il s'agit … d'une fille du couple Ptḥ-špss "
+        "et Ḫꜥ-mrr-Nbtj'. `(per Baud)` over-promotes a reported "
+        "hypothesis; `(probable)` matches Baud's stance.",
+    ),
+    (
+        "baud-87",
+        "mother_name",
+        "Ḫꜥ-mrr-Nbtj (probable)",
+        "Same Schmitz-supposition as baud-87 father_name. `(per Baud)` → "
+        "`(probable)` for consistency with how Baud hedges.",
+    ),
+    (
+        "baud-93",
+        "roles",
+        ["king's daughter"],
+        "Same pattern as baud-86: TITRES has `ḥmt-nṯr Ḫwfw, ḥmt-nṯr "
+        "Ḥwt-Ḥr, ḥkrt nswt` on a king's daughter — female royal-cult "
+        "priestess plus goddess-cult. `priest of the king` is the "
+        "service-personnel vocab; doesn't fit a female royal's own "
+        "titulary. Dropped.",
+    ),
+    (
+        "baud-94",
+        "father_name",
+        "Rêkhaef (probable)",
+        "Baud's PARENTÉ says the Rêkhaef filiation 'est motivée par le "
+        "secteur' but `on peut néanmoins en douter`. Baud reports the "
+        "hypothesis and hedges it; `(per Baud)` over-promotes. "
+        "`(probable)` is the most generous honest mapping.",
+    ),
+    (
+        "baud-92",
+        "roles",
+        ["steward of the king's mother"],
+        "Gemini PR #58 review. TITRES has `ḥm pr mwt nswt` (servant of "
+        "the house of the king's mother) — administrative/domestic, not "
+        "priestly. `priest of the king's mother` vocab requires "
+        "`ḥm-nṯr mwt nswt X`; this row only has `ḥm pr`. Dropped. "
+        "`steward of the king's mother` retained (from `ḥqꜣ n mwt nswt "
+        "Nj-mꜣꜥt-Ḥp`, genuinely administrative).",
+    ),
+    (
+        "baud-94b",
+        "titles_from_baud",
+        [],
+        "Gemini PR #58 review. baud-94b has NO TITRES rubric — the "
+        "extracted `[zꜣt nswt] (probablement)` was inferred from prose, "
+        "not a verbatim TITRES line. Per schema, `titles_from_baud` is "
+        "the verbatim TITRES rubric only. Empty list is honest; roles "
+        "already empty (deferred earlier).",
+    ),
+    (
+        "baud-97",
+        "roles",
+        ["priest of the king's mother", "priest of the royal pyramid"],
+        "TITRES includes `jmj-r ḥst pr-ꜥꜣ` — overseer of the STOREROOM "
+        "(`ḥst`) of the great-house, NOT the treasury (`pr-ḥḏ`). "
+        "`overseer of the treasury of pr-ꜥꜣ` was mis-applied by "
+        "majority-vote. Dropped (no clean vocab fit for storeroom); the "
+        "priest-of-royal-cult roles from `ḥm-nṯr Šzp-jb-Rꜥ` etc. retained.",
     ),
 ]
 
