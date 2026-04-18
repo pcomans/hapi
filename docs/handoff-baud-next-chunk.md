@@ -29,7 +29,7 @@ Read `docs/playbook-phase-0-ocr-transcription.md` § "Multi-chunk source pattern
 | Chunk | Entries | Status | Tentative pages |
 |---|---|---|---|
 | 1 | `[1]`–`[40]` | ✅ merged (PR #53) | physical pp. 11–49 (incl. Corpus methodological intro pp. 11–16) |
-| 2 | `[41]`–`[80]` | 🔜 next | physical pp. 50–~83 (scope at start; entry `[41]` starts bottom of p. 49 continuing onto p. 50 — skip p. 49 since chunk 1 already covered it) |
+| 2 | `[41]`–`[80]` | 🔜 next | physical pp. 49–~83 (scope at start; entry `[41]`'s headword starts at the bottom of p. 49 and continues onto p. 50 — **include p. 49** in the chunk-2 sub-PDF so extractors see the `[41]` headword even though chunk 1 also covered p. 49. One-page boundary overlap is the standard multi-chunk extraction convention) |
 | 3 | `[81]`–`[120]` | pending | TBD |
 | 4 | `[121]`–`[160]` | pending | TBD |
 | 5 | `[161]`–`[200]` | pending | TBD |
@@ -53,11 +53,11 @@ Ship one chunk per PR. Do NOT bundle.
   - expected-row-count sanity bound
 - `raw/source-chunk-<N>.pdf` — split with `pypdf`, gitignored under `raw/*`
 - `raw/agent-{a,b,c}-chunk-<N>.jsonl` — 3 parallel extractions, gitignored
-- `fix_rows.py` — APPEND a new `CHUNK<N>_CORRECTIONS: list[tuple[str, str, object, str]] = [...]` constant alongside `CHUNK1_CORRECTIONS` (do not edit the chunk-1 list), then rewrite the concatenation line explicitly: `SPOT_CORRECTIONS = CHUNK1_CORRECTIONS + CHUNK<N>_CORRECTIONS`.
+- `fix_rows.py` — APPEND a new `CHUNK<N>_CORRECTIONS: list[tuple[str, str, object, str]] = [...]` constant alongside every existing chunk constant (do not edit prior lists), then rewrite the concatenation line to sum **every** chunk constant in order: e.g. chunk 3 writes `SPOT_CORRECTIONS = CHUNK1_CORRECTIONS + CHUNK2_CORRECTIONS + CHUNK3_CORRECTIONS`, chunk 4 adds `+ CHUNK4_CORRECTIONS`, etc. Dropping any intermediate chunk's constant from the sum silently destroys its audit trail.
 - `tests/test_sources_baud_ok_royal_family.py`:
-  - ADD a new `CHUNK<N>_EXPECTED_ROWS = 40` module-level constant next to `CHUNK1_EXPECTED_ROWS`. Do NOT rename the chunk-1 constant.
-  - UPDATE `test_row_count` to assert `len(_rows()) == CHUNK1_EXPECTED_ROWS + CHUNK<N>_EXPECTED_ROWS` (etc. for later chunks).
-  - RENAME `test_baud_id_covers_1_to_40` → `test_baud_id_is_contiguous_to_running_total` and generalize its body to `range(1, running_total + 1)`.
+  - ADD a new `CHUNK<N>_EXPECTED_ROWS = 40` module-level constant next to every existing chunk-count constant. Do NOT rename the existing chunk constants.
+  - UPDATE `test_row_count` to assert `len(_rows()) == sum of every CHUNK<N>_EXPECTED_ROWS` (e.g. chunk 3 asserts `CHUNK1_EXPECTED_ROWS + CHUNK2_EXPECTED_ROWS + CHUNK3_EXPECTED_ROWS`). Same concern as the `fix_rows.py` sum — dropping any constant hides row-count regressions.
+  - RENAME `test_baud_id_covers_1_to_40` → `test_baud_id_is_contiguous_to_running_total` and generalize its body to `range(1, running_total + 1)` where `running_total` is the sum of every `CHUNK<N>_EXPECTED_ROWS`.
   - ADD a new flagship-row test asserting **every populated field** on the chunk's best-attested entry (rule 5 — follow the pattern of `test_ihetihotep_baud_3_full_populated_row` with every dict key asserted, not a 5-field smoke test).
   - ADD a regression test per `CHUNK<N>_CORRECTIONS` entry that asserts the post-override field value (same pattern as `test_baud_26_grandchild_not_listed_as_child`).
 
@@ -156,7 +156,7 @@ Per ADR-017 + playbook. All stages on Claude Opus 4.7.
 5. **Spouse vs mother, and half-sibling marriage.** Two related OK-specific pitfalls:
    - Regent mother confused with wife. baud-38 had `"Pépi II (?)"` in `spouse_names` but he is her son (she was regent). Distinction: is the named king her husband (spouse) or her child (regent)? Titles give the answer.
    - **Half-sibling marriage and generational collapse.** A woman titled `sꜣt nswt` + `ḥmt nswt` is simultaneously daughter-of-King-A and wife-of-King-B (her brother/half-brother). `father_name` and `spouse_names` refer to *different* kings — do NOT dedupe when both name the same king (e.g. Khufu's daughters who married Khafre). Both slots must be populated.
-6. **Monument enumeration.** baud-22 has two monuments numbered "1:" / "2:" in Baud's header. The current schema carries them in a single string field with `"1: ...; 2: ..."` micro-convention. A schema evolution to `monuments: list[str]` is a reasonable chunk-2 planning question — decide BEFORE chunk-2 extraction starts to minimize backfill complexity (per Gemini's review of this handoff).
+6. **Monument enumeration.** baud-22 has two monuments numbered "1:" / "2:" in Baud's header. The current schema carries them in a single string field with `"1: ...; 2: ..."` micro-convention. A schema evolution to `monuments: list[str]` is a reasonable chunk-2 planning question — decide BEFORE chunk-2 extraction starts to minimize backfill complexity.
 7. **Cross-reference stub rows** (baud-9 in chunk 1) have all-null structured fields and a `notes_from_baud` describing the redirect. The `test_dynasty_coverage_is_ok_only` test now accepts `null` for these — preserve the pattern.
 8. **Do not anglicize French regnal names in kinship fields.** `Snéfrou`, `Pépi Iᵉʳ`, `Téti`, `Merenrê`, `Niouserrê`, `Djedkarê`, `Ounas`, `Rêkhaef`, etc. stay verbatim in `father_name` / `spouse_names` / `children_names` / `date_attested`. Normalization against pharaoh.se's Conventional English Display Form is Phase A's job, not chunk extraction's. `name_anglicised` is the only field that carries an English form.
 9. **Physical PDF pages vs Baud's printed pages.** `source_citation.pdf_pages` records PDF-internal physical pages (chunk 1: `"11-49"`), NOT Baud's printed pages (chunk 1 would be `"395-432"` printed). Per ADR-017 § "Cite physical pages, not printed pages" — physical page numbers are reproducible across any copy of the PDF; printed pages drift from physical pages at multi-volume boundaries. Baud vol. 2 has continuous pagination with vol. 1 (printed pp. 395–675), so printed-to-physical drift is not cleanly computable — another reason to stick with physical.
