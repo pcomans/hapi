@@ -96,13 +96,13 @@ Add to vocab + test when first attested; don't pre-seed.
 
 ### Hedge conventions (Baud-specific)
 
-Five levels, in increasing distance from attested fact:
+Six levels, in increasing distance from attested fact:
 
 - `"X"` — bare value, **inscribed attestation** (e.g. title `mwt nswt Nfr-kꜣ-Rꜥ` → `children_names = ["Néferkarê"]`). Titles naming a specific king are direct attestations; do NOT hedge-wrap the named king. chunk-1 regression: baud-36.
+- `"X (per Baud)"` — field value inferred by Baud on iconographic or titular-synchronism grounds (not direct inscribed attestation). Stronger than `(probable)`: Baud commits to the reading based on his own scholarly argument.
 - `"X (probable)"` — Baud's own probable attribution (plausible, well-supported, but not inscribed).
 - `"X (?)"` — **Baud retains a literal question-mark glyph** where a sign is legible but the reading/attribution is disputed. Distinct from `(probable)` (Baud-endorsed) and `[X]` (lacuna). Preserve Baud's `(?)` verbatim in the value string; do not promote to `(probable)` or demote to `null`. Chunk 1 saw this pattern in PARENTÉ rubrics flagged "peu sûr" / "lecture incertaine".
 - `"[X]"` — Baud's **bracketed reconstruction from a lacuna** (the sign itself is physically damaged or missing).
-- `"X (per Baud)"` — field value inferred by Baud on iconographic or titular-synchronism grounds (not direct inscribed attestation). Stronger than `(probable)`: Baud commits to the reading based on his own scholarly argument.
 - `null` — NOT attested by Baud at all, OR Baud reports another scholar's hypothesis without endorsing it. Chunk 1 resolved baud-33's Strudwick hypothesis to `null` after two reviewer passes conflicted (first pass: `(per Baud)`, second pass: Baud is reporting Strudwick's guess, not asserting).
 
 ### Transliteration normalization (deterministic)
