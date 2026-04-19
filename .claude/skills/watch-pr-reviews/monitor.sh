@@ -34,8 +34,8 @@ SHA=${2:-$(git rev-parse HEAD)}
 # --verify <X>^{commit}` resolves any commit-ish (short SHA, branch, tag,
 # HEAD~N, etc.) to its full 40-char form; failure means the ref doesn't
 # resolve and we should bail loud before the seed stage.
-FULL_SHA=$(git rev-parse --verify "$SHA^{commit}" 2>/dev/null) || {
-  echo "POLL-ERROR: cannot resolve SHA '$SHA' via git rev-parse (need a commit-ish — short SHA, branch, tag, or HEAD~N)"
+FULL_SHA=$(git rev-parse --verify "$SHA^{commit}") || {
+  echo "POLL-ERROR: cannot resolve SHA '$SHA' via git rev-parse (need a commit-ish — short SHA, branch, tag, or HEAD~N). The git stderr above is the underlying reason."
   exit 2
 }
 # NB: do NOT add `--` between `--verify` and the revision — unlike other
