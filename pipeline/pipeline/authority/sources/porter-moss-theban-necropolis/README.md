@@ -58,6 +58,12 @@ The chunk-1 extract example below shows what a typical KV row looks like AFTER P
 }
 ```
 
+**Diacritic-stripping policy (`occupant_name` vs `notes_from_pm`).** PM's typesetting uses scholarly diacritics: underdot-H (`ḥ`), macron (`ē`, `ō`), ayin (`ʿ`), etc. The extract applies TWO different conventions depending on the field:
+- `occupant_name` is the matchable name field used for Phase-A ruler-authority joining. It strips scholarly diacritics (`MAIḤIRPER` → `Mahirper`, `MERNEPTAḤ-SIPTAḤ` → `Merneptah-Siptah`, `AMENEMŌPET` → `Amenemopet`, `ḤAREMḤAB` → `Haremhab`). Exceptions: PM's ayin in royal names like `Raʿmeses-Mentuhirkhopshef` IS preserved (the ayin is a distinguishing radical, not a styling diacritic).
+- `notes_from_pm` is verbatim-preserve. Capture PM's wording as-printed including diacritics (`Smenkhkarēʿ` stays `Smenkhkarēʿ`, not `Smenkhkare`).
+
+This split lets downstream joins against pharaoh.se / Beckerath work on a normalised key while preserving PM's scholarly text for display and citation.
+
 **Field semantics:**
 - `tomb_id` — `KV<n>`, `QV<n>`, `TT<n>`. Letter-suffix variants (`KV5a`) are reproduced verbatim.
 - `valley` — Coarse sub-area: `"Valley of the Kings"`, `"Valley of the Queens"`, `"Dra' Abu el-Naga"`, `"Deir el-Bahri"`, `"Asasif"`, `"Sheikh Abd el-Qurna"`, `"Khokha"`, `"Qurnet Mura'i"`, `"Deir el-Medina"`, `"Ramesseum"`, `"Medinet Habu"`. The valley a tomb belongs to is structural in PM (each numbered tomb sits within a section / sub-section).
@@ -91,9 +97,14 @@ Per ADR-017 + the Phase-0 playbook (`docs/playbook-phase-0-ocr-transcription.md`
 This source lands across multiple PRs (Dodson-Hilton pattern). Per the playbook § "Multi-chunk source pattern":
 - **Chunk 1** (PR #66): `KV1–KV10` from PM I.2 § I.A. 10 rows, physical p.37–60.
 - **Chunk 2** (PR #68): `KV11–KV20` from PM I.2 § I.A. 10 rows, physical p.60–90. Note: **KV21 is absent from this PM section** — the list jumps from KV20 to KV22, so chunk 2 holds exactly 10 rows despite the "KV11–KV20" range label.
-- **Chunk 3 (this PR)**: `KV22–KV46` from PM I.2 § I.A, physical p.89–106. 11 rows: {KV22, KV23, KV34, KV35, KV36, KV38, KV39, KV42, KV43, KV45, KV46}. **KV24–KV33, KV37, KV40, KV41, KV44 are absent from PM I.2** — PM's 1964 edition did not catalogue these numbers as inscribed royal tombs (they correspond to uninscribed pits or post-1964 discoveries). Chunk 3 introduces three new row shapes: `West Valley` `location_sub_area` (KV22, KV23), the multi-occupant pattern (KV46 Yuia and Thuiu), and the re-used-tomb pattern (KV45 Userhet re-used by Merenkhons).
+- **Chunk 3** (PR #69): `KV22–KV46` from PM I.2 § I.A, physical p.89–106. 11 rows: {KV22, KV23, KV34, KV35, KV36, KV38, KV39, KV42, KV43, KV45, KV46}. **KV24–KV33, KV37, KV40, KV41, KV44 are absent from PM I.2** — PM's 1964 edition did not catalogue these as inscribed royal tombs. Introduced three row shapes: `West Valley` `location_sub_area` (KV22, KV23), multi-occupant (KV46 Yuia and Thuiu), re-used-tomb (KV45 Userhet re-used by Merenkhons).
+- **Chunk 4 (this PR)**: `KV47–KV57` from PM I.2 § I.A, physical p.106–111. 5 rows: {KV47, KV48, KV55, KV56, KV57}. **KV49–KV54 and KV58–KV61 are absent from PM I.2** (PM jumps 48 → 55 and 57 → 62). Introduces two row shapes: hedged-attribution (KV55 `Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ.` — the `Probably` hedge is stripped from `occupant_name` but preserved verbatim in `notes_from_pm`) and the first `Vizier` role (KV48 Amenemopet, distinct from chunks 1–3's `Official` role for Chancellors / Standard-bearers). KV56 is the `'Gold Tomb', uninscribed.` row — another null-name + `Unknown` row like chunk-2 KV12 and chunk-3 KV39.
+- **Chunk 5 (future, separate PR)**: `KV62` Tutankhamun **standalone**. PM's KV62 entry spans ~17 printed pages (p.569–586) — more than 3× the size of chunk 4 — with the densest bibliographic ribbon in PM I.2. Warrants its own extraction PR, own per-chunk prompt, and its own egyptologist-reviewer pass. See `docs/mvp-tasks.md` for scope.
 - **Future chunks** (each its own PR):
-  - `KV47–KV65` and adjacent sparse ranges — one or two chunks across PM I.2 § I.A for the remaining numbered KV tombs. Note that KV62 Tutankhamun is a large standalone section that warrants its own chunk.
+  - `KV63–KV65` if PM I.2 1964 catalogues them (likely not — those are post-1964 discoveries).
+  - The South-West Valleys, Dra' Abu el-Naga, Asasif, Deir el-Bahri, Sheikh Abd el-Qurna, Khokha, Qurnet Mura'i, Deir el-Medina, Ramesseum, Medinet Habu sections from PM I.2 (each section its own chunk; non-KV ID schemes TBD when first valley lands).
+  - The `QV1`–`QV80` Valley of the Queens tombs from PM I.2 § X.
+  - The numbered Theban Tombs `TT1`–`TT400+` from PM I.1 (many chunks).
   - PM I.2 § I.B "Finds", § I.C "Rest-houses", § I.D "Graffiti" — one chunk if KV-related, else dropped.
   - PM I.2 § II–IX (South-West Valleys, Dra' Abu el-Naga, Asasif, Deir el-Bahri, Sheikh Abd el-Qurna, Ramesseum, Deir el-Medina) — chunked by section.
   - PM I.2 § X "Valley of the Queens" (QV1–QV80).

@@ -56,8 +56,15 @@ CHUNK3_TOMB_IDS: frozenset[str] = frozenset(
     {"KV22", "KV23", "KV34", "KV35", "KV36", "KV38", "KV39", "KV42",
      "KV43", "KV45", "KV46"}
 )
+# Chunk-4: KV47-KV57 sparse. KV49-KV54 and KV58-KV61 absent from PM I.2
+# § I.A (PM jumps 48 → 55, 57 → 62). KV62 Tutankhamun is deferred to a
+# dedicated chunk 5 because PM's KV62 entry spans 17 printed pages and
+# warrants its own extraction PR.
+CHUNK4_TOMB_IDS: frozenset[str] = frozenset(
+    {"KV47", "KV48", "KV55", "KV56", "KV57"}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
-    CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
+    CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
 )
 
 
@@ -1126,6 +1133,198 @@ def test_chunk3_kv46_yuia_and_thuiu_multi_occupant() -> None:
     )
     assert r["source_citation"] == {
         "page": 562,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+# ---------------------------------------------------------------------------
+# Chunk-4 specific value-assertion tests (KV47, 48, 55, 56, 57)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk4_page_range() -> None:
+    """Chunk 4 headwords sit on PM I.2 printed pages 564–567."""
+    for tid in CHUNK4_TOMB_IDS:
+        r = _row(tid)
+        page = r["source_citation"]["page"]
+        assert 564 <= page <= 567, (tid, page)
+        assert r["source_citation"]["edition"] == EDITION_PM_I2
+        assert r["source_citation"]["section"] == "I.A"
+
+
+def test_chunk4_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
+    """Every chunk-4 row has valley=VoK and null dynasty/dates/discoverer."""
+    for tid in CHUNK4_TOMB_IDS:
+        r = _row(tid)
+        assert r["valley"] == "Valley of the Kings"
+        assert r["dynasty"] is None
+        assert r["sub_period"] is None
+        assert r["date_bce_approx_start"] is None
+        assert r["date_bce_approx_end"] is None
+        assert r["discovery_year"] is None
+        assert r["discoverer"] is None
+
+
+def test_chunk4_missing_kv_ids_absent_from_expected_set() -> None:
+    """KV49–54, KV58–61 are absent from PM I.2 § I.A. KV62 (Tutankhamun)
+    is deferred to a dedicated chunk PR.
+    """
+    must_be_absent = (
+        [f"KV{n}" for n in range(49, 55)]
+        + [f"KV{n}" for n in range(58, 62)]
+        + ["KV62"]
+    )
+    for tid in must_be_absent:
+        assert tid not in EXPECTED_TOMB_IDS, tid
+
+
+def test_chunk4_kv47_merneptah_siptah() -> None:
+    """KV47 — Merneptah-Siptah, King, first Dyn-19 joint-name occupant.
+    PM's `MERNEPTAḤ-SIPTAḤ` → `Merneptah-Siptah` (underdots stripped in
+    occupant_name per the README's diacritic policy). Asserts every
+    field per rule 5.
+    """
+    r = _row("KV47")
+    assert r["tomb_id"] == "KV47"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Merneptah-Siptah"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] is None
+    assert r["source_citation"] == {
+        "page": 564,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk4_kv48_amenemopet_vizier() -> None:
+    """KV48 — Amenemopet, Vizier, temp. Amenophis II. First `Vizier` role
+    in the landed extract (vs `Official` for Bay in KV13). PM's notes
+    clause preserves the title pair, regnal-dating, and TT29 cross-ref.
+    Asserts every field per rule 5.
+    """
+    r = _row("KV48")
+    assert r["tomb_id"] == "KV48"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Amenemopet"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Vizier"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == (
+        "Governor of the town, Vizier. Temp. Amenophis II. "
+        "(Also owner of Theb. tb. 29.)"
+    )
+    assert r["source_citation"] == {
+        "page": 565,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk4_kv55_amenophis_iv_hedged_attribution() -> None:
+    """KV55 — PM's headword: `Probably AMENOPHIS IV, formerly attributed
+    to Queen Teye or to Smenkhkarēʿ.` The structured `occupant_name`
+    strips PM's `Probably` hedge (clean matchable name); the full
+    hedging clause is captured verbatim in `notes_from_pm` including
+    PM's macron-e and trailing ayin on `Smenkhkarēʿ`. Asserts every
+    field per rule 5.
+    """
+    r = _row("KV55")
+    assert r["tomb_id"] == "KV55"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Amenophis IV"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == (
+        "Probably Amenophis IV, formerly attributed to Queen Teye or to "
+        "Smenkhkarēʿ."
+    )
+    assert r["source_citation"] == {
+        "page": 565,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk4_kv56_gold_tomb_uninscribed() -> None:
+    """KV56 — PM's `'Gold Tomb', uninscribed.` (the nickname stems from
+    the rich Tausert / Sethos II jewelry finds in this tomb). Null name
+    + `Unknown` role + PM's nickname captured verbatim in notes.
+    Asserts every field per rule 5.
+    """
+    r = _row("KV56")
+    assert r["tomb_id"] == "KV56"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] is None
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Unknown"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == "'Gold Tomb', uninscribed."
+    assert r["source_citation"] == {
+        "page": 567,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk4_kv57_haremhab() -> None:
+    """KV57 — Haremhab, King. PM's `ḤAREMḤAB` → `Haremhab` (underdots
+    stripped in occupant_name). Asserts every field per rule 5.
+    """
+    r = _row("KV57")
+    assert r["tomb_id"] == "KV57"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Haremhab"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] is None
+    assert r["source_citation"] == {
+        "page": 567,
         "edition": EDITION_PM_I2,
         "section": "I.A",
     }
