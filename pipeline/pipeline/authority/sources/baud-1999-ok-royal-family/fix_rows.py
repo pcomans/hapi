@@ -82,6 +82,18 @@ _WORD_LEVEL_FIXES: tuple[tuple[str, str], ...] = (
     # across chunks; all 18 are mid-title occurrences of this canonical
     # title, zero legitimately-attested `ꜥd-mr` variants exist.
     ("ꜥd-mr", "ꜥḏ-mr"),
+    # `ṯꜣtj` = "vizier" (Wb V 344; Jones, Titles §3706). In Baud's
+    # standard compound vizier title `tꜣjtj zꜣb ṯꜣtj`, the final word
+    # ALWAYS has `ṯ` in canonical spelling — a plain `zꜣb tꜣtj` second
+    # word is drift. 11 instances; the fix targets only the `zꜣb tꜣtj`
+    # substring to preserve the legitimate `tꜣjtj` first-word variant.
+    #
+    # Three of the 11 (baud-55, baud-67, baud-70) also drift on the
+    # FIRST word as `tꜣtj zꜣb tꜣtj`; the full-title substitution runs
+    # first and catches those, then the `zꜣb tꜣtj` fixes the remaining
+    # second-word-only drift.
+    ("tꜣtj zꜣb tꜣtj", "ṯꜣtj zꜣb ṯꜣtj"),
+    ("zꜣb tꜣtj", "zꜣb ṯꜣtj"),
 )
 
 
