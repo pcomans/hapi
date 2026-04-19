@@ -329,14 +329,15 @@ def main() -> None:
     # summary's correctness from ALL_CORRECTIONS's iteration order.
     chunk_pattern = re.compile(r"^CHUNK(\d+)_CORRECTIONS$")
     module_globals = dict(globals())
-    chunk_attrs = sorted(
-        (attr for attr in module_globals if chunk_pattern.match(attr)),
-        key=lambda attr: int(chunk_pattern.match(attr).group(1)),
-    )
+    chunks = [
+        (int(match.group(1)), attr, module_globals[attr])
+        for attr, value in module_globals.items()
+        if (match := chunk_pattern.match(attr))
+    ]
+    chunks.sort(key=lambda entry: entry[0])
     chunk_summary_lines = [
-        f"- Chunk {chunk_pattern.match(attr).group(1)}: "
-        f"{len(module_globals[attr])} correction(s) defined in {attr}."
-        for attr in chunk_attrs
+        f"- Chunk {number}: {len(corrections)} correction(s) defined in {attr}."
+        for number, attr, corrections in chunks
     ]
     chunk_summary = "Per-chunk correction counts:\n" + "\n".join(chunk_summary_lines)
 
