@@ -43,7 +43,8 @@ Multi-chunk source. Each chunk is its own PR; this file's "Chunks" section is up
 | 1 | KV1–KV10 (PM I.2 § I.A) | p.495–518 | p.37–60 | landed | #66 |
 | 2 | KV11–KV20 (PM I.2 § I.A) | p.518–548 | p.60–90 | landed | #68 |
 | 3 | KV22–KV46 (PM I.2 § I.A, sparse) | p.547–564 | p.89–106 | landed | #69 |
-| 4 | KV47–KV57 (PM I.2 § I.A, sparse) | p.564–569 | p.106–111 | in-progress | (this PR) |
+| 4 | KV47–KV57 (PM I.2 § I.A, sparse) | p.564–569 | p.106–111 | landed | #70 |
+| 5 | KV62 Tutʿankhamun (PM I.2 § I.A, headword only) | p.569–570 | p.111–112 | in-progress | (this PR) |
 
 The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at chunk-1's first and last printed pages, at chunk-2 boundaries, and at chunk-3 boundaries — no part-boundary drift within the KV1–KV46 span. Foldout plates (Plan II at the start of § I; the shared plan p.528 for KV11–KV14 Finds; the plan p.548 for KV20/22/23/38; the plan p.552 for KV34/35/42) and figure pages occupy intervening physical pages; the chunk ranges each cross a floor-plan page but the offset is stable across KV headwords.
 

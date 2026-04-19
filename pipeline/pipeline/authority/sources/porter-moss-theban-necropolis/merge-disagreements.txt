@@ -66,7 +66,7 @@ provisional until that happens.
 - KV42: notes_from_pm corrected this run (PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own attribution-uncertainty marker. Keep occupant_name structured as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes (no paraphrase, per rule 1 PM-verbatim policy). Preserve the existing 'Excavated by Loret' headword clause; join with '. ' per chunk-2 KV14.)
     was: "Excavated by Loret"
     now: "(?). Excavated by Loret"
-- KV55: notes_from_pm corrected this run (PM p.565 prints 'Smenkhkarēʿ' with macron-e and trailing ayin `ʿ`; notes_from_pm is verbatim-preserve, so both diacritics must be restored. Final period closes PM's sentence.)
+- KV55: notes_from_pm corrected this run (The text-layer OCR for chunk 4 drops PM's macron-e and renders the ayin as `c` (`Smenkhkarec`); agents carried that through to the reconciled notes. Egyptologist-reviewer pre-merge pass on PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both the macron and the trailing ayin, and confirmed the sentence-final period closes PM's sentence. notes_from_pm is verbatim-preserve against PM's printed text (not against the OCR text layer) — restore both diacritics.)
     was: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkare."
     now: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
 - KV56: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)

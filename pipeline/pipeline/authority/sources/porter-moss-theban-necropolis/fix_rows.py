@@ -213,6 +213,15 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-5 (KV62 Tutʿankhamun, single-row, headword-only per user direction
+# that tomb-row granularity is sufficient for the museum-data-join use case).
+# The 3 extraction subagents were unanimous on every field under the field-
+# rule-based prompt — no reviewer-identified corrections needed. The empty
+# list is retained (rather than dropped) so `test_all_corrections_includes_
+# every_chunk_list` continues to enforce ALL_CORRECTIONS aggregation.
+CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -222,6 +231,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
+    CHUNK5_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
