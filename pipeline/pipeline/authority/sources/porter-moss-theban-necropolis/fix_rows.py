@@ -216,9 +216,18 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # Chunk-5 (KV62 Tutʿankhamun, single-row, headword-only per user direction
 # that tomb-row granularity is sufficient for the museum-data-join use case).
 # The 3 extraction subagents were unanimous on every field under the field-
-# rule-based prompt — no reviewer-identified corrections needed. The empty
-# list is retained (rather than dropped) so `test_all_corrections_includes_
-# every_chunk_list` continues to enforce ALL_CORRECTIONS aggregation.
+# rule-based prompt. Egyptologist-reviewer pre-merge pass on PR #71 verified
+# PM p.569 prints `TUT'ANKHAMŪN` with apostrophe-for-ayin + macron-u, and
+# the bracketed `[1st ed. 58]` cross-reference in the headword; the chunk-5
+# row's `Tutʿankhamun` (apostrophe normalised to Unicode ayin per chunk-2
+# KV19 precedent; macron-u dropped per the occupant_name diacritic-stripping
+# policy, which applies in royal-name English forms across chunks 1-4) and
+# `notes_from_pm` value `"1st ed. 58. Excavated by Carnarvon and Carter."`
+# (with `[1st ed. N]` normalised to `1st ed. N` per chunk-3 KV34 precedent
+# and joined per chunk-2 KV14 `". "` pattern) both match PM's printed text.
+# No reviewer-identified corrections needed. The empty list is retained
+# (rather than dropped) so `test_all_corrections_includes_every_chunk_list`
+# continues to enforce ALL_CORRECTIONS aggregation.
 CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = []
 
 
@@ -305,6 +314,17 @@ def main() -> None:
         else "- No overrides applied. The reviewer pass produced no "
         "actionable corrections on `reconciled.jsonl` for this chunk."
     )
+    # Per-chunk summary header — distinguishes "chunk has 0 corrections"
+    # from "chunk was never processed". Flagged by the PR #71 code-reviewer
+    # as an audit-trail gap when a chunk's CHUNK*_CORRECTIONS list is empty
+    # (no log lines get emitted, so the chunk's absence looks identical to
+    # a skipped run).
+    chunk_summary_lines = [
+        f"- Chunk {i + 1}: {len(chunk)} correction(s) defined in CHUNK{i + 1}_CORRECTIONS."
+        for i, chunk in enumerate(ALL_CORRECTIONS)
+    ]
+    chunk_summary = "Per-chunk correction counts:\n" + "\n".join(chunk_summary_lines)
+
     appended = (
         f"{existing_diff.rstrip()}\n\n"
         f"{marker}\n"
@@ -314,6 +334,7 @@ def main() -> None:
         "Code subagent pass against the source PDF. No human scholar has\n"
         "signed off on this extract yet — per ADR-017 step 6, the extract is\n"
         "provisional until that happens.\n\n"
+        f"{chunk_summary}\n\n"
         f"{body}\n"
     )
     DIFF.write_text(appended)

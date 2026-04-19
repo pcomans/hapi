@@ -75,7 +75,7 @@ This split lets downstream joins against pharaoh.se / Beckerath work on a normal
 - `dynasty` — Roman-numeral dynasty as a STRING (`"18"`, `"19"`, `"20"`, `"XVIII"` etc. — final form normalised to Arabic numerals). PM does not always state dynasty in the headword; this is filled by reference to the king authority (pharaoh.se, Beckerath) downstream.
 - `sub_period` — Optional finer chronological label (`"First Intermediate Period"`, `"Amarna"`, `"Saite"`). Null for most rows.
 - `date_bce_approx_start` / `date_bce_approx_end` — Negative integers (BCE convention). Drawn from king-authority dates downstream, not from PM's text. Null until the cross-reference is wired.
-- `location_sub_area` — Sub-region within the valley (e.g. `"East Valley"` for KV62 Tutankhamun). PM I.1 Appendix D gives this for TT; for KV the section header is the source.
+- `location_sub_area` — Sub-region within the valley when PM's headword explicitly flags one (e.g. `"West Valley"` for KV22 Amenophis III and KV23 Ay, which PM marks with a `West Valley.` flag in the headword parenthetical). Null when PM doesn't flag a sub-area (KV62 Tutʿankhamun is in the East Valley but PM does not use a `East Valley.` flag — emit null rather than infer). PM I.1 Appendix D gives this for TT; for KV the section header is the source.
 - `discovery_year` / `discoverer` — Modern excavation history. PM mentions both in body prose; extracted only when present in the headword's parenthetical biblio refs (rare).
 - `is_unfinished` — `true` when PM headword carries the literal word `Unfinished` (KV3, KV5 do).
 - `shared_with_tombs` — When PM's headword has `See also Tomb N`, list the cross-referenced tombs here (KV3 → `["KV11"]`, KV5 → `["KV7"]`, KV11 → `["KV3"]`).
