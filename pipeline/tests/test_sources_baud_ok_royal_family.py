@@ -290,7 +290,7 @@ def test_ihetihotep_baud_3_full_populated_row() -> None:
     }
     assert r["titles_from_baud"] == [
         "/// n jmꜣt (?)",
-        "ꜥd-mr wḥꜥw",
+        "ꜥḏ-mr wḥꜥw",
         "ḥm [bꜣw] Nḫn",
         "ḥm-nṯr Ḫwfw",
         "ḥrp ꜥḥ",
