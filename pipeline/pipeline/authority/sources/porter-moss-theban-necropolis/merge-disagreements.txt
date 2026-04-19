@@ -30,27 +30,23 @@ Code subagent pass against the source PDF. No human scholar has
 signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
-- KV12: occupant_role corrected this run (prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
-    was: null
-    now: "Unknown"
-- KV13: notes_from_pm corrected this run (strip 'Chancellor.' (already encoded as occupant_role=Official) and normalise 'ḥ' → 'h' to match chunk-1's no-underdot convention (Merneptah in KV8 is rendered without underdot).)
-    was: "Chancellor. Temp. Merneptaḥ-Siptaḥ"
-    now: "Temp. Merneptah-Siptah"
-- KV18: notes_from_pm corrected this run (strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
-    was: "(formerly XI)"
-    now: "formerly XI"
-- KV19: occupant_name corrected this run (PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
-    was: "Raʿmeses-Mentuḥirkhopshef"
-    now: "Raʿmeses-Mentuhirkhopshef"
-- KV22: occupant_name corrected this run (PM p.547 text layer 'AMENOPHIS I Il' = I + Il(=II) = III. Majority vote was misled by a mistaken prompt example; agent A counted glyphs and got III. Egyptologist-reviewer confirmed KV22 is Amenhotep III's West Valley tomb.)
-    was: "Amenophis II"
-    now: "Amenophis III"
-- KV34: notes_from_pm corrected this run (PM p.551 headword prints `34· [Ist ed. 24] TUTHMOSIS III` — the bracketed cross-ref to 1st-edition tomb numbering is headword material (parallel to chunk-1 KV4 'formerly XII'); all three agents silently dropped it.)
-    was: null
-    now: "1st ed. 24"
-- KV39: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.559 prints 'Uninscribed tomb, attributed to Amenophis I by Weigall...'; agents emitted null despite the rule.)
-    was: null
-    now: "Unknown"
-- KV42: notes_from_pm corrected this run (PM p.559 prints 'TUTHMOSIS II (?)' with attribution-uncertainty marker. Keep occupant_name structured; record the (?) in notes. Preserve the existing 'Excavated by Loret' headword clause — both belong in notes_from_pm, joined with '. ' per chunk-2 KV14.)
-    was: "Excavated by Loret"
-    now: "PM attribution uncertain. Excavated by Loret"
+- KV12: occupant_role already matches override (no-op this run; prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
+    value: "Unknown"
+- KV13: notes_from_pm already matches override (no-op this run; strip 'Chancellor.' (already encoded as occupant_role=Official) and normalise 'ḥ' → 'h' to match chunk-1's no-underdot convention (Merneptah in KV8 is rendered without underdot).)
+    value: "Temp. Merneptah-Siptah"
+- KV18: notes_from_pm already matches override (no-op this run; strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
+    value: "formerly XI"
+- KV19: occupant_name already matches override (no-op this run; PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
+    value: "Raʿmeses-Mentuhirkhopshef"
+- KV22: occupant_name already matches override (no-op this run; PM p.547 text layer 'AMENOPHIS I Il' = I + Il(=II) = III. Majority vote was misled by a mistaken prompt example; agent A counted glyphs and got III. Egyptologist-reviewer confirmed KV22 is Amenhotep III's West Valley tomb.)
+    value: "Amenophis III"
+- KV34: notes_from_pm already matches override (no-op this run; PM p.551 headword prints `34· [Ist ed. 24] TUTHMOSIS III` — the bracketed cross-ref to 1st-edition tomb numbering is headword material (parallel to chunk-1 KV4 'formerly XII'); all three agents silently dropped it.)
+    value: "1st ed. 24"
+- KV36: occupant_name corrected this run (PM p.556 headword prints `36. MAI;IIRPER` — the `I;I` glyph is the underdot-H (ḥ). Applying the chunk-1/2 rule `I;I → h` yields `MA` + `h` + `IRPER` = `MAHIRPER` → `Mahirper`. Agent B got this right; agents A and C kept a spurious `i` before the `h`. Egyptologist-reviewer second-pass confirmed no published Egyptological form reads 'Maihirper'.)
+    was: "Maihirper"
+    now: "Mahirper"
+- KV39: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.559 prints 'Uninscribed tomb, attributed to Amenophis I by Weigall...'; agents emitted null despite the rule.)
+    value: "Unknown"
+- KV42: notes_from_pm corrected this run (PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own attribution-uncertainty marker. Keep occupant_name structured as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes (no paraphrase, per rule 1 PM-verbatim policy). Preserve the existing 'Excavated by Loret' headword clause; join with '. ' per chunk-2 KV14.)
+    was: "PM attribution uncertain. Excavated by Loret"
+    now: "(?). Excavated by Loret"

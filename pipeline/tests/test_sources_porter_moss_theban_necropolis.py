@@ -882,16 +882,19 @@ def test_chunk3_kv34_tuthmosis_iii_first_edition_note() -> None:
     }
 
 
-def test_chunk3_kv36_maihirper_official() -> None:
-    """KV36 (Maihirper) — non-royal `Official` role (Standard-bearer, Child
-    of the nursery, temp. Hatshepsut). PM-verbatim no-underdot spelling
-    (`MAI;IIRPER` → `Maihirper`, not Maiherperi or Maḥirper). Asserts
-    every field per rule 5.
+def test_chunk3_kv36_mahirper_official() -> None:
+    """KV36 (Mahirper) — non-royal `Official` role (Standard-bearer, Child
+    of the nursery, temp. Hatshepsut). PM's text layer prints `MAI;IIRPER`
+    where `I;I` is the underdot-H glyph; applying the chunk-1/2 rule
+    `I;I → h` yields `Mahirper` (not `Maihirper` — that leaves a
+    spurious `i` before the `h`; egyptologist-reviewer second-pass on
+    PR #69 confirmed no published Egyptological form reads `Maihirper`).
+    Asserts every field per rule 5.
     """
     r = _row("KV36")
     assert r["tomb_id"] == "KV36"
     assert r["valley"] == "Valley of the Kings"
-    assert r["occupant_name"] == "Maihirper"
+    assert r["occupant_name"] == "Mahirper"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
     assert r["dynasty"] is None
@@ -969,7 +972,89 @@ def test_chunk3_kv42_tuthmosis_ii_attribution_uncertain() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "PM attribution uncertain. Excavated by Loret"
+    assert r["notes_from_pm"] == "(?). Excavated by Loret"
+    assert r["source_citation"] == {
+        "page": 559,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk3_kv35_amenophis_ii() -> None:
+    """KV35 (Amenophis II) — straightforward King row. PM's text layer
+    renders `II` as `n` in this headword; the extract normalises to
+    `Amenophis II`. Asserts every field per rule 5.
+    """
+    r = _row("KV35")
+    assert r["tomb_id"] == "KV35"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Amenophis II"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] is None
+    assert r["source_citation"] == {
+        "page": 554,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk3_kv38_tuthmosis_i() -> None:
+    """KV38 (Tuthmosis I) — King row with `Excavated by Loret` headword
+    clause in notes. Asserts every field per rule 5.
+    """
+    r = _row("KV38")
+    assert r["tomb_id"] == "KV38"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Tuthmosis I"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == "Excavated by Loret"
+    assert r["source_citation"] == {
+        "page": 557,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk3_kv43_tuthmosis_iv() -> None:
+    """KV43 (Tuthmosis IV) — King row with `Excavated by Davis` headword
+    clause in notes. Asserts every field per rule 5.
+    """
+    r = _row("KV43")
+    assert r["tomb_id"] == "KV43"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Tuthmosis IV"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == "Excavated by Davis"
     assert r["source_citation"] == {
         "page": 559,
         "edition": EDITION_PM_I2,

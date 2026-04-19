@@ -132,6 +132,17 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "agents silently dropped it.",
     ),
     (
+        "KV36",
+        "occupant_name",
+        "Mahirper",
+        "PM p.556 headword prints `36. MAI;IIRPER` — the `I;I` glyph is "
+        "the underdot-H (ḥ). Applying the chunk-1/2 rule `I;I → h` "
+        "yields `MA` + `h` + `IRPER` = `MAHIRPER` → `Mahirper`. "
+        "Agent B got this right; agents A and C kept a spurious `i` "
+        "before the `h`. Egyptologist-reviewer second-pass confirmed no "
+        "published Egyptological form reads 'Maihirper'.",
+    ),
+    (
         "KV39",
         "occupant_role",
         "Unknown",
@@ -142,11 +153,13 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "KV42",
         "notes_from_pm",
-        "PM attribution uncertain. Excavated by Loret",
-        "PM p.559 prints 'TUTHMOSIS II (?)' with attribution-uncertainty "
-        "marker. Keep occupant_name structured; record the (?) in notes. "
-        "Preserve the existing 'Excavated by Loret' headword clause — "
-        "both belong in notes_from_pm, joined with '. ' per chunk-2 KV14.",
+        "(?). Excavated by Loret",
+        "PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own "
+        "attribution-uncertainty marker. Keep occupant_name structured "
+        "as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes "
+        "(no paraphrase, per rule 1 PM-verbatim policy). Preserve the "
+        "existing 'Excavated by Loret' headword clause; join with '. ' "
+        "per chunk-2 KV14.",
     ),
 ]
 
