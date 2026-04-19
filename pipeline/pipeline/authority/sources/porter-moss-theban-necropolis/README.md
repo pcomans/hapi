@@ -89,9 +89,10 @@ Per ADR-017 + the Phase-0 playbook (`docs/playbook-phase-0-ocr-transcription.md`
 ## Multi-chunk plan
 
 This source lands across multiple PRs (Dodson-Hilton pattern). Per the playbook § "Multi-chunk source pattern":
-- **Chunk 1 (this PR)**: `KV1–KV10` from PM I.2 § I.A. ~10 rows, physical p.37–60.
+- **Chunk 1** (PR #66): `KV1–KV10` from PM I.2 § I.A. 10 rows, physical p.37–60.
+- **Chunk 2 (this PR)**: `KV11–KV20` from PM I.2 § I.A. 10 rows, physical p.60–90. Note: **KV21 is absent from this PM section** — the list jumps from KV20 to KV22, so chunk 2 holds exactly 10 rows despite the "KV11–KV20" range label.
 - **Future chunks** (each its own PR):
-  - `KV11–KV20`, `KV21–KV35`, `KV36–KV65` — three chunks across PM I.2 § I.A.
+  - `KV22–KV35`, `KV36–KV65` — two chunks across PM I.2 § I.A for the remaining KV tombs.
   - PM I.2 § I.B "Finds", § I.C "Rest-houses", § I.D "Graffiti" — one chunk if KV-related, else dropped.
   - PM I.2 § II–IX (South-West Valleys, Dra' Abu el-Naga, Asasif, Deir el-Bahri, Sheikh Abd el-Qurna, Ramesseum, Deir el-Medina) — chunked by section.
   - PM I.2 § X "Valley of the Queens" (QV1–QV80).

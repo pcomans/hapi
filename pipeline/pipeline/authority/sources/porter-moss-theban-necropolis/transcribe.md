@@ -40,9 +40,10 @@ Multi-chunk source. Each chunk is its own PR; this file's "Chunks" section is up
 
 | Chunk | Section | Printed pages | Physical pages | Status | PR |
 |---|---|---|---|---|---|
-| 1 | KV1–KV10 (PM I.2 § I.A) | p.495–518 | p.37–60 | in-progress | (this PR) |
+| 1 | KV1–KV10 (PM I.2 § I.A) | p.495–518 | p.37–60 | landed | #66 |
+| 2 | KV11–KV20 (PM I.2 § I.A) | p.518–548 | p.60–90 | in-progress | (this PR) |
 
-The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at the chunk's first and last printed pages — no part-boundary drift within KV section. Foldout plates (Plan II at the start of § I) and figure pages occupy intervening physical pages and shift the offset elsewhere in the volume; the chunk-1 range is offset-stable.
+The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at chunk-1's first and last printed pages and at chunk-2 boundaries — no part-boundary drift within the KV1–KV20 span. Foldout plates (Plan II at the start of § I; the shared plan p.528 for KV11–KV14 Finds; the plan p.548 for KV20/22/23/38) and figure pages occupy intervening physical pages; the chunk ranges above each cross a floor-plan page but the offset is stable across KV headwords. Chunk 2's file is `raw/chunk-p60-p90.txt` (31 physical pages) — includes p.60 to capture KV11's headword at the tail (KV10 body is out of scope and skipped by the extraction prompt) and extends through p.90 so the agents can see the `Tombs 20, 22, 23, 38` plan marking the KV20 / KV22 boundary. **KV21 is absent from this section of PM I.2** — the list jumps from KV20 to KV22.
 
 ## Extraction prompt design rationale
 

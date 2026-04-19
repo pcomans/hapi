@@ -1,4 +1,14 @@
-No field-level disagreements.
+KV13 (Bay):
+  notes_from_pm: a="Chancellor. Temp. Merneptaḥ-Siptaḥ" | b="Chancellor. Temp. Merneptah-Siptah" | c="Chancellor. Temp. Merneptaḥ-Siptaḥ"  → chose "Chancellor. Temp. Merneptaḥ-Siptaḥ"
+
+KV15 (Sethos II):
+  source_citation: a={"edition": "PM I.2 2nd ed. 1964", "page": 533, "section": "I.A"} | b={"edition": "PM I.2 2nd ed. 1964", "page": 532, "section": "I.A"} | c={"edition": "PM I.2 2nd ed. 1964", "page": 532, "section": "I.A"}  → chose {"edition": "PM I.2 2nd ed. 1964", "page": 532, "section": "I.A"}
+
+KV19 (Raʿmeses-Mentuḥirkhopshef):
+  occupant_name: a="Raʿmeses-Mentuḥirkhopshef" | b="Raʿmeses-Mentuhirkhopshef" | c="Raʿmeses-Mentuḥirkhopshef"  → chose "Raʿmeses-Mentuḥirkhopshef"
+
+KV20 (Hatshepsut):
+  occupant_name: a="Hatshepsut" | b="Hatshepsut" | c="Ḥatshepsut"  → chose "Hatshepsut"
 
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
@@ -8,4 +18,15 @@ Code subagent pass against the source PDF. No human scholar has
 signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
-- No overrides applied. The reviewer pass produced no actionable corrections on `reconciled.jsonl` for this chunk.
+- KV12: occupant_role corrected this run (prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
+    was: null
+    now: "Unknown"
+- KV13: notes_from_pm corrected this run (strip 'Chancellor.' (already encoded as occupant_role=Official) and normalise 'ḥ' → 'h' to match chunk-1's no-underdot convention (Merneptah in KV8 is rendered without underdot).)
+    was: "Chancellor. Temp. Merneptaḥ-Siptaḥ"
+    now: "Temp. Merneptah-Siptah"
+- KV18: notes_from_pm corrected this run (strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
+    was: "(formerly XI)"
+    now: "formerly XI"
+- KV19: occupant_name corrected this run (PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
+    was: "Raʿmeses-Mentuḥirkhopshef"
+    now: "Raʿmeses-Mentuhirkhopshef"
