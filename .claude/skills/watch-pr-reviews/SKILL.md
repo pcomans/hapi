@@ -11,7 +11,7 @@ Arm a `Monitor` with a 15-minute timeout running:
 ```
 
 - `PR` is **required** — no safe default inside the Monitor sandbox. `gh pr view` uses GraphQL, which fails on keychain TLS there, so the agent arming the Monitor must pass the PR number explicitly (get it via `gh pr view --json number -q .number` from the main agent's shell, not the Monitor's).
-- `SHA` defaults to `git rev-parse HEAD` (git-only, sandbox-safe).
+- `SHA` defaults to `git rev-parse HEAD` (git-only, sandbox-safe). Any commit-ish is accepted — a short SHA, branch name, tag, or `HEAD~N` all work; `monitor.sh` normalises to the full 40-char SHA via `git rev-parse --verify <X>^{commit}` before passing to the poll loop. (GitHub's `/pulls/<N>/reviews` API returns full 40-char `commit_id` values and the filter uses string equality — without normalisation, a short SHA silently matches nothing and the Monitor polls in silence until it times out.)
 - `REPO` defaults to `owner/name` parsed from `git remote get-url origin` (git-only, sandbox-safe).
 
 Rules (load-bearing):
