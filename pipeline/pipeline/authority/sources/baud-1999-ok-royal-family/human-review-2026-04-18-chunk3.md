@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-18
 **Authoriser:** Philipp Comans (project owner)
-**Verifier:** Claude Opus 4.7 via visual PDF rendering + field-by-field comparison.
+**Verifier:** Claude Opus 4.7 via visual PDF rendering + field-by-field comparison. The LLM-assisted verification is explicitly labelled below (not claimed as independent human validation).
 
 ## Rows sampled (4 of 42)
 
