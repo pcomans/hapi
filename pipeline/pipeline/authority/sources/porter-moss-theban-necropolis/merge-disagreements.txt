@@ -10,6 +10,18 @@ KV19 (Raʿmeses-Mentuḥirkhopshef):
 KV20 (Hatshepsut):
   occupant_name: a="Hatshepsut" | b="Hatshepsut" | c="Ḥatshepsut"  → chose "Hatshepsut"
 
+KV22 (Amenophis II):
+  occupant_name: a="Amenophis III" | b="Amenophis II" | c="Amenophis II"  → chose "Amenophis II"
+
+KV36 (Maihirper):
+  occupant_name: a="Maihirper" | b="Mahirper" | c="Maihirper"  → chose "Maihirper"
+
+KV42 (Tuthmosis II):
+  occupant_name: a="Tuthmosis II" | b="Tuthmosis II (?)" | c="Tuthmosis II"  → chose "Tuthmosis II"
+
+KV46 (Yuia and Thuiu):
+  notes_from_pm: a="Yuia, Divine father; Thuiu, Chief of the harim of Amun, parents of Queen Teye" | b="Divine father; Chief of the harim of Amun; parents of Queen Teye" | c="Yuia, Divine father; Thuiu, Chief of the harim of Amun; parents of Queen Teye"  → chose "Yuia, Divine father; Thuiu, Chief of the harim of Amun, parents of Queen Teye"
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
 Corrections applied by fix_rows.py AFTER the 3-subagent majority-vote
@@ -30,3 +42,15 @@ provisional until that happens.
 - KV19: occupant_name corrected this run (PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
     was: "Raʿmeses-Mentuḥirkhopshef"
     now: "Raʿmeses-Mentuhirkhopshef"
+- KV22: occupant_name corrected this run (PM p.547 text layer 'AMENOPHIS I Il' = I + Il(=II) = III. Majority vote was misled by a mistaken prompt example; agent A counted glyphs and got III. Egyptologist-reviewer confirmed KV22 is Amenhotep III's West Valley tomb.)
+    was: "Amenophis II"
+    now: "Amenophis III"
+- KV34: notes_from_pm corrected this run (PM p.551 headword prints `34· [Ist ed. 24] TUTHMOSIS III` — the bracketed cross-ref to 1st-edition tomb numbering is headword material (parallel to chunk-1 KV4 'formerly XII'); all three agents silently dropped it.)
+    was: null
+    now: "1st ed. 24"
+- KV39: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.559 prints 'Uninscribed tomb, attributed to Amenophis I by Weigall...'; agents emitted null despite the rule.)
+    was: null
+    now: "Unknown"
+- KV42: notes_from_pm corrected this run (PM p.559 prints 'TUTHMOSIS II (?)' with attribution-uncertainty marker. Keep occupant_name structured; record the (?) in notes. Preserve the existing 'Excavated by Loret' headword clause — both belong in notes_from_pm, joined with '. ' per chunk-2 KV14.)
+    was: "Excavated by Loret"
+    now: "PM attribution uncertain. Excavated by Loret"
