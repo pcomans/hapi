@@ -34,26 +34,59 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = []
 
 
-# Chunk-2 (KV11–KV20) corrections from the egyptologist-reviewer pass.
-# The 3-agent majority vote produced zero field disagreements; the reviewer
-# caught two facts where all three agents agreed on the wrong value.
+# Chunk-2 (KV11–KV20) corrections. The prompt was rewritten post-PR-#68
+# code-review (original prompt was flagged as an answer-table — rule 1/7
+# regression) and the three agents were re-run under the field-rule prompt.
+# Four residual corrections remain after the re-merge:
+#
+# 1. KV12 — `occupant_role`: prompt rule 1 says role="Unknown" when
+#    occupant_name is null (UNINSCRIBED tombs), but all three agents
+#    still emit null (transcribing the empty cell alongside empty name).
+# 2. KV13 — `notes_from_pm`: agents captured PM's full headword suffix
+#    `"Chancellor. Temp. Merneptaḥ-Siptaḥ"`. The `Chancellor` title is
+#    already encoded via `occupant_role="Official"` per prompt rule 2
+#    — duplicating it in notes violates single-source-of-truth. Strip
+#    the prefix and normalise `ḥ` → `h` to match chunk-1's convention
+#    (Merneptah without underdot).
+# 3. KV18 — `notes_from_pm`: agents captured `"(formerly XI)"` including
+#    the parentheses. Chunk 1's KV4 note for the same pattern is
+#    `"formerly XII"` without parens. Strip parens for consistency.
+# 4. KV19 — `occupant_name`: the `MENTUHIRKHOPSHEF` glyph in PM's text
+#    layer has no underdot-H marker (it's `UH`, not the `I:I` form seen
+#    elsewhere), but two of three agents over-normalised to `Mentuḥir...`.
+#    Align with chunk-1's no-underdot convention (Hatshepsut, Merneptah).
+#    Egyptologist-reviewer on PR #68 confirmed PM prints no underdot here.
 CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "KV12",
         "occupant_role",
         "Unknown",
-        "prompt requires 'Unknown' for the uninscribed tomb but all three "
-        "agents emitted null; PM p.527 headword carries only 'UNINSCRIBED' "
-        "and 'Unknown' is the controlled-vocab match.",
+        "prompt rule 1 says role='Unknown' when occupant_name is null; "
+        "PM p.527 headword is 'UNINSCRIBED' and all three agents still "
+        "emit null despite the rule.",
     ),
     (
         "KV13",
         "notes_from_pm",
         "Temp. Merneptah-Siptah",
-        "PM p.527 headword reads 'BAY, Chancellor. Temp. Merneptaḥ-Siptaḥ.' "
-        "— the regnal-dating phrase is inside the headword (parallel to "
-        "KV19's 'son of Ramesses IX' note); all three agents silently "
-        "dropped it.",
+        "strip 'Chancellor.' (already encoded as occupant_role=Official) "
+        "and normalise 'ḥ' → 'h' to match chunk-1's no-underdot "
+        "convention (Merneptah in KV8 is rendered without underdot).",
+    ),
+    (
+        "KV18",
+        "notes_from_pm",
+        "formerly XI",
+        "strip parentheses to match chunk-1's KV4 pattern "
+        "('formerly XII' without parens).",
+    ),
+    (
+        "KV19",
+        "occupant_name",
+        "Raʿmeses-Mentuhirkhopshef",
+        "PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no "
+        "underdot glyph in the text layer); agents over-normalised to "
+        "Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.",
     ),
 ]
 
