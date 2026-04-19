@@ -8,4 +8,9 @@ Code subagent pass against the source PDF. No human scholar has
 signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
-- No overrides applied. The reviewer pass produced no actionable corrections on `reconciled.jsonl` for this chunk.
+- KV12: occupant_role corrected this run (prompt requires 'Unknown' for the uninscribed tomb but all three agents emitted null; PM p.527 headword carries only 'UNINSCRIBED' and 'Unknown' is the controlled-vocab match.)
+    was: null
+    now: "Unknown"
+- KV13: notes_from_pm corrected this run (PM p.527 headword reads 'BAY, Chancellor. Temp. Merneptaḥ-Siptaḥ.' — the regnal-dating phrase is inside the headword (parallel to KV19's 'son of Ramesses IX' note); all three agents silently dropped it.)
+    was: null
+    now: "Temp. Merneptah-Siptah"

@@ -36,13 +36,19 @@ JSONL = SOURCE_DIR / "reconciled.jsonl"
 EDITION_PM_I2 = "PM I.2 2nd ed. 1964"
 EDITION_PM_I1 = "PM I.1 2nd ed. 1960"
 
-# Chunk-1 (KV1–KV10) is the only landed chunk so far. Extend this set in
-# follow-up chunk PRs; the row-count and ID-coverage tests reference it
-# rather than hard-coded numbers so the tests stay correct as the source grows.
+# Chunk-1 (KV1–KV10) and chunk-2 (KV11–KV20) are the landed chunks. Extend
+# as follow-up chunk PRs land. `EXPECTED_TOMB_IDS` is the union — row-count
+# and ID-coverage tests reference it so they stay correct as the source grows.
+#
+# KV21 is absent from this PM section (PM I.2 § I.A jumps from KV20 to KV22)
+# so chunk-2 is KV11–KV20 only, 10 rows.
 CHUNK1_TOMB_IDS: frozenset[str] = frozenset(
     {f"KV{n}" for n in range(1, 11)}
 )
-EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS
+CHUNK2_TOMB_IDS: frozenset[str] = frozenset(
+    {f"KV{n}" for n in range(11, 21)}
+)
+EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS
 
 
 @lru_cache(maxsize=1)
@@ -427,6 +433,178 @@ def test_chunk1_kv8_merneptah_page_507() -> None:
     r = _row("KV8")
     assert r["occupant_name"] == "Merneptah"
     assert r["source_citation"]["page"] == 507
+
+
+# ---------------------------------------------------------------------------
+# Chunk-2 specific value-assertion tests (KV11–KV20)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk2_page_range() -> None:
+    """Chunk 2 covers PM I.2 printed pages 518–548. Every chunk-2 row's page
+    citation must fall within that range.
+    """
+    for tid in CHUNK2_TOMB_IDS:
+        r = _row(tid)
+        page = r["source_citation"]["page"]
+        assert 518 <= page <= 548, (tid, page)
+        assert r["source_citation"]["edition"] == EDITION_PM_I2
+        assert r["source_citation"]["section"] == "I.A"
+
+
+def test_chunk2_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
+    """Every chunk-2 row has valley=VoK and null dynasty/dates/discoverer —
+    same extraction-stage discipline as chunk 1.
+    """
+    for tid in CHUNK2_TOMB_IDS:
+        r = _row(tid)
+        assert r["valley"] == "Valley of the Kings"
+        assert r["dynasty"] is None
+        assert r["sub_period"] is None
+        assert r["date_bce_approx_start"] is None
+        assert r["date_bce_approx_end"] is None
+        assert r["location_sub_area"] is None
+        assert r["discovery_year"] is None
+        assert r["discoverer"] is None
+
+
+def test_chunk2_unfinished_flag() -> None:
+    """KV18 (Ramesses X) is the only chunk-2 tomb flagged `Unfinished` in PM."""
+    expected_unfinished = {"KV18"}
+    for tid in CHUNK2_TOMB_IDS:
+        r = _row(tid)
+        if tid in expected_unfinished:
+            assert r["is_unfinished"] is True, tid
+        else:
+            assert r["is_unfinished"] is False, tid
+
+
+def test_chunk2_shared_with_tombs() -> None:
+    """KV11 ↔ KV3 cross-chunk symmetry: both rows reference each other.
+    KV20's informal `See also South Tomb` is NOT a numbered cross-ref — stays empty.
+    """
+    assert _row("KV11")["shared_with_tombs"] == ["KV3"]
+    assert _row("KV3")["shared_with_tombs"] == ["KV11"]
+    for tid in CHUNK2_TOMB_IDS - {"KV11"}:
+        assert _row(tid)["shared_with_tombs"] == [], tid
+
+
+def test_chunk2_kv11_ramesses_iii_full_row() -> None:
+    """KV11 (Ramesses III) flagship row — exercises the cross-chunk KV3
+    back-reference, classical aliases (`Bruce's tomb`, `the Harper's tomb`)
+    from PM's headword parenthetical, and headword-at-page-tail extraction
+    (KV11's headword sits at the bottom of physical p.60 / printed 518).
+    """
+    r = _row("KV11")
+    assert r["tomb_id"] == "KV11"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Ramesses III"
+    assert r["occupant_alt_names"] == ["Bruce's tomb", "the Harper's tomb"]
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == ["KV3"]
+    assert r["notes_from_pm"] is None
+    assert r["source_citation"] == {
+        "page": 518,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk2_kv12_uninscribed() -> None:
+    """KV12 (PM: `UNINSCRIBED`) — the tomb has no named occupant. Per the
+    extraction prompt + fix_rows.py correction: `occupant_name=null` and
+    `occupant_role='Unknown'`.
+    """
+    r = _row("KV12")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["occupant_alt_names"] == []
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] is None
+    assert r["source_citation"]["page"] == 527
+
+
+def test_chunk2_kv13_bay_chancellor() -> None:
+    """KV13 (Bay, Chancellor — non-royal). Exercises:
+    - non-King occupant_role (`Official`),
+    - the `notes_from_pm` regnal-dating fragment from PM's headword
+      (`Temp. Merneptah-Siptah`), captured via fix_rows.py after the
+      reviewer flagged that all three extraction agents dropped it.
+    """
+    r = _row("KV13")
+    assert r["occupant_name"] == "Bay"
+    assert r["occupant_role"] == "Official"
+    assert r["occupant_alt_names"] == []
+    assert r["notes_from_pm"] == "Temp. Merneptah-Siptah"
+    assert r["source_citation"]["page"] == 527
+
+
+def test_chunk2_kv14_tausert_usurpation_note() -> None:
+    """KV14 (Tausert, usurped by Setnakht) — exercises the biographical-plus-
+    usurpation `notes_from_pm` clause, distinct from `occupant_alt_names`
+    (Setnakht is a later usurper, NOT a classical alias of Tausert).
+    """
+    r = _row("KV14")
+    assert r["occupant_name"] == "Tausert"
+    assert r["occupant_role"] == "King"
+    assert r["occupant_alt_names"] == []
+    assert r["notes_from_pm"] == "wife of Sethos II. Usurped by Setnakht"
+    assert r["source_citation"]["page"] == 527
+
+
+def test_chunk2_kv17_sethos_i_belzoni_alias() -> None:
+    """KV17 (Sethos I) — exercises the `Belzoni's tomb` classical alias from
+    PM's headword single-quote parenthetical. PM's spelling `Sethos I` is
+    preserved verbatim (the authority matches to the modern convention
+    `Seti I` in Phase A; extract stays faithful to PM).
+    """
+    r = _row("KV17")
+    assert r["occupant_name"] == "Sethos I"
+    assert r["occupant_alt_names"] == ["Belzoni's tomb"]
+    assert r["is_unfinished"] is False
+    assert r["source_citation"]["page"] == 535
+
+
+def test_chunk2_kv18_ramesses_x_unfinished() -> None:
+    """KV18 (Ramesses X) — exercises `is_unfinished=True` and the `formerly XI`
+    regnal-number disambiguation note. PM's headword literally prints
+    `RAMESSES X (formerly XI)` and `Unfinished.` after the bibliographic
+    ribbon.
+    """
+    r = _row("KV18")
+    assert r["occupant_name"] == "Ramesses X"
+    assert r["is_unfinished"] is True
+    assert r["notes_from_pm"] == "formerly XI"
+    assert r["source_citation"]["page"] == 545
+
+
+def test_chunk2_kv19_prince_ramesses_mentuherkhepshef() -> None:
+    """KV19 (Ramesses-Mentuherkhepshef, son of Ramesses IX) — exercises the
+    `Prince` role (royal son who never reigned, distinct from `King` for
+    the rest of the chunk's royal tombs) and the `son of Ramesses IX`
+    relational note from PM's headword.
+    """
+    r = _row("KV19")
+    assert r["occupant_name"] == "Ramesses-Mentuherkhepshef"
+    assert r["occupant_role"] == "Prince"
+    assert r["notes_from_pm"] == "son of Ramesses IX"
+    assert r["source_citation"]["page"] == 546
+
+
+def test_chunk2_kv20_hatshepsut_king() -> None:
+    """KV20 (Hatshepsut) — exercises Hatshepsut-as-ruling-King disposition
+    (not Queen), and `shared_with_tombs=[]` (PM's `See also South Tomb`
+    is informal, not a numbered KV cross-ref).
+    """
+    r = _row("KV20")
+    assert r["occupant_name"] == "Hatshepsut"
+    assert r["occupant_role"] == "King"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["source_citation"]["page"] == 546
 
 
 # ---------------------------------------------------------------------------

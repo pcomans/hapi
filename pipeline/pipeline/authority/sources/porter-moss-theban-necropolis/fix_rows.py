@@ -34,12 +34,37 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = []
 
 
+# Chunk-2 (KV11–KV20) corrections from the egyptologist-reviewer pass.
+# The 3-agent majority vote produced zero field disagreements; the reviewer
+# caught two facts where all three agents agreed on the wrong value.
+CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "KV12",
+        "occupant_role",
+        "Unknown",
+        "prompt requires 'Unknown' for the uninscribed tomb but all three "
+        "agents emitted null; PM p.527 headword carries only 'UNINSCRIBED' "
+        "and 'Unknown' is the controlled-vocab match.",
+    ),
+    (
+        "KV13",
+        "notes_from_pm",
+        "Temp. Merneptah-Siptah",
+        "PM p.527 headword reads 'BAY, Chancellor. Temp. Merneptaḥ-Siptaḥ.' "
+        "— the regnal-dating phrase is inside the headword (parallel to "
+        "KV19's 'son of Ramesses IX' note); all three agents silently "
+        "dropped it.",
+    ),
+]
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
 # destroys its audit trail.
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
+    CHUNK2_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
