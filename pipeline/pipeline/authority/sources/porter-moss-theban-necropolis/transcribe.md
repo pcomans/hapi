@@ -44,7 +44,8 @@ Multi-chunk source. Each chunk is its own PR; this file's "Chunks" section is up
 | 2 | KV11–KV20 (PM I.2 § I.A) | p.518–548 | p.60–90 | landed | #68 |
 | 3 | KV22–KV46 (PM I.2 § I.A, sparse) | p.547–564 | p.89–106 | landed | #69 |
 | 4 | KV47–KV57 (PM I.2 § I.A, sparse) | p.564–569 | p.106–111 | landed | #70 |
-| 5 | KV62 Tutʿankhamun (PM I.2 § I.A, headword only) | p.569–570 | p.111–112 | in-progress | (this PR) |
+| 5 | KV62 Tutʿankhamun (PM I.2 § I.A, headword only) | p.569–570 | p.111–112 | landed | #71 |
+| 6 | KV63–KV65 sweep / § I.A closure (no rows) | — | — | in-progress | (this PR) |
 
 The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at chunk-1's first and last printed pages, at chunk-2 boundaries, and at chunk-3 boundaries — no part-boundary drift within the KV1–KV46 span. Foldout plates (Plan II at the start of § I; the shared plan p.528 for KV11–KV14 Finds; the plan p.548 for KV20/22/23/38; the plan p.552 for KV34/35/42) and figure pages occupy intervening physical pages; the chunk ranges each cross a floor-plan page but the offset is stable across KV headwords.
 
@@ -52,6 +53,10 @@ Absence patterns within PM I.2 § I.A:
 - **KV21** is absent — the list jumps from KV20 to KV22 (chunk-2 boundary).
 - **KV24–KV33** are absent — the list jumps from KV23 to KV34 (chunk-3 boundary). These numbers are assigned to real tombs by modern surveys but were not catalogued as inscribed royal tombs in the 1964 PM I.2 edition.
 - **KV37, KV40, KV41, KV44** are absent from chunk 3's range.
+- **KV49–KV54, KV58–KV61** are absent from chunk 4's range (PM jumps 48 → 55 and 57 → 62).
+- **KV63–KV65** are absent from PM I.2 1964 entirely (chunk 6 sweep). KV63 was discovered 2005, KV64 in 2011, KV65 in 2019 — all post-date PM I.2's 2nd edition. PM I.2 § I.A ends with KV62; the volume immediately continues with § I.B "Finds from the Valley of the Kings" (physical p.128 / printed 586), § I.C "Rest-houses and Shrines" (printed 588), § I.D "Graffiti" (printed 590), then § II "South-West Valleys" (printed 592). Those sections are a separate concern from the tomb-row extractor and land as later chunks if at all.
+
+**PM I.2 § I.A KV tomb-row coverage is now complete**: chunks 1–5 delivered 37 rows covering KV1–KV62 (with the absences enumerated above). Chunk 6 formally closes the KV series — no rows added, just this documentation + roadmap update.
 
 Chunk 2's file is `raw/chunk-p60-p90.txt` (31 physical pages) — includes p.60 to capture KV11's headword at the tail and extends through p.90 so the agents can see the `Tombs 20, 22, 23, 38` plan marking the KV20 / KV22 boundary. Chunk 3's file is `raw/chunk-p89-p106.txt` (18 physical pages) — includes p.89 to capture KV22's headword at the tail (KV20's body is out of scope) and extends through p.106 so the agents can see the KV47 heading as a boundary marker closing KV46.
 
