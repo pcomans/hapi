@@ -15,7 +15,7 @@
 
 | baud_id | verdict | notes |
 |---|---|---|
-| baud-83 | ✅ all fields match PDF p.84 | Mererouka's Téti-Saqqara mastaba, PM 525-534, date "Téti", all cross-ref author-refs (Baer 197, Strudwick 68, Harpur 420) verbatim. Author INDEPENDENTLY re-verified the `tꜣjtj zꜣb ṯꜣtj` vizier title after the word-level translit fix (`tꜣtj → ṯꜣtj`) was applied; confirmed match against PDF typography including dot-under `ṯ`. |
+| baud-83 | ✅ all fields match PDF p.84 | Mererouka's Téti-Saqqara mastaba, PM 525-534, date "Téti", all cross-ref author-refs (Baer 197, Strudwick 68, Harpur 420) verbatim. Authoriser (Philipp Comans) INDEPENDENTLY re-verified the `tꜣjtj zꜣb ṯꜣtj` vizier title after the word-level translit fix (`tꜣtj → ṯꜣtj`) was applied; confirmed match against PDF p.84 typography including the dot-under `ṯ` on the final `ṯꜣtj`. |
 | baud-99 | ✅ all fields match PDF p.95 | Nj-mꜣꜥt-Ḥp II, Mastaba G 4712, PM 136, "Première moitié de la Vᵉ dynastie", father null (Baud: "Inconnue"). |
 | baud-94b | ✅ sub-entry matches PDF p.92 | Djoser-Heliopolis relief fragment, PM IV p.61, `titles_from_baud: []` after chunk-3 correction (no TITRES rubric — just "probablement zꜣt nswt" from DIVERS). |
 | baud-101a | ✅ sub-entry matches PDF p.97 | Graffito at Pépi Iᵉʳ's complex, title `zꜣ nswt`, date "Pépi Iᵉʳ". |
