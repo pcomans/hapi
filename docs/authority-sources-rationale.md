@@ -48,7 +48,7 @@ No single source covers the whole authority. The Egyptological authority is nece
 
 **Why this one:** the only single volume covering the full royal family across New Kingdom and Late Period with cross-referenced genealogies. Porter-Moss has objects by tomb; D&H has PEOPLE by family tree.
 
-**Method:** multi-chunk 3-agent majority-vote extraction from Brief Lives prose. First ADR-017 invocation of the Gemini 3.1 Pro OCR amendment on the Ramesside chunk p126–p130 (Chapter 3 §"The Power and the Glory" Brief Lives sub-block) — Opus 4.6 issued a reasoned copyright refusal on the grounds that the 5-page-of-prose quantity exceeded fair-use excerpting. Gemini 3.1 Pro produced the OCR markdown; downstream 3-agent extraction + merge + reviewer pass stayed on Opus.
+**Method:** multi-chunk 3-agent majority-vote extraction from Brief Lives prose. First ADR-017 invocation of the Gemini 3.1 Pro OCR amendment on the 18th Dynasty chunk p126–p130 (Chapter 3 §"The Power and the Glory" Brief Lives sub-block, Thutmoside period) — Opus 4.6 issued a reasoned copyright refusal on the grounds that the 5-page-of-prose quantity exceeded fair-use excerpting. Gemini 3.1 Pro produced the OCR markdown; downstream 3-agent extraction + merge + reviewer pass stayed on Opus.
 
 **Coverage:** Nefertiti, Nefertari, Tiye, Ahmose-Nefertari, Ankhesenamun, plus hundreds of minor royal-family members. Genealogical edges (parent-of, spouse-of) captured as structured fields.
 
