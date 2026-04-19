@@ -173,6 +173,46 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-4 (KV47, 48, 55, 56, 57 — 5 rows after skipping absent KV49-54
+# and KV58-61; KV62 Tutankhamun deferred to its own chunk). Two residual
+# corrections after the field-rule-based prompt + 3-agent merge +
+# egyptologist-reviewer pass:
+#
+# 1. KV55 — `notes_from_pm`: agents stripped PM's `Smenkhkarēʿ` (macron-e
+#    + trailing ayin `ʿ`) down to plain `Smenkhkare`, and dropped the
+#    sentence-ending period. PM p.565 prints `Smenkhkarēʿ.` with both
+#    diacritics and the period as part of the sentence. `notes_from_pm`
+#    is the verbatim-preserve field, so both the macron and the ayin
+#    must be restored.
+# 2. KV56 — `occupant_role`: prompt rule 1 says role="Unknown" when
+#    occupant_name is null. PM p.567 headword is the bare `'Gold Tomb',
+#    uninscribed.` with no attribution clause; agents emitted null for
+#    role. Same fix pattern as chunk-2 KV12 and chunk-3 KV39.
+CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "KV55",
+        "notes_from_pm",
+        "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ.",
+        "The text-layer OCR for chunk 4 drops PM's macron-e and renders "
+        "the ayin as `c` (`Smenkhkarec`); agents carried that through to "
+        "the reconciled notes. Egyptologist-reviewer pre-merge pass on "
+        "PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both "
+        "the macron and the trailing ayin, and confirmed the sentence-"
+        "final period closes PM's sentence. notes_from_pm is verbatim-"
+        "preserve against PM's printed text (not against the OCR text "
+        "layer) — restore both diacritics.",
+    ),
+    (
+        "KV56",
+        "occupant_role",
+        "Unknown",
+        "prompt rule 1: role='Unknown' when occupant_name is null. PM "
+        "p.567 headword is the bare `'Gold Tomb', uninscribed.` with no "
+        "attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.",
+    ),
+]
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -181,6 +221,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
+    CHUNK4_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
