@@ -35,23 +35,25 @@ Per the playbook's derived-extract default (`docs/playbook-phase-0-ocr-transcrip
 
 One row per tomb. All fields except `tomb_id`, `valley`, and `source_citation` are nullable (per CLAUDE.md rule 4 — sparse rows are valid).
 
+The chunk-1 extract example below shows what a typical KV row looks like AFTER PM-headword extraction but BEFORE Phase A king-authority enrichment fills `dynasty` and BCE dates. Per CLAUDE.md rule 7 and rule 1, those fields stay null at this stage — they don't appear in PM headwords and we don't supply them from "what the model knows" or from a hardcoded prompt table. The fields are reserved in the schema so the Phase A enrichment writes to a known shape.
+
 ```json
 {
   "tomb_id": "KV9",
   "valley": "Valley of the Kings",
   "occupant_name": "Ramesses VI",
-  "occupant_alt_names": ["Memnon (classical)"],
+  "occupant_alt_names": ["Memnon"],
   "occupant_role": "King",
-  "dynasty": "20",
+  "dynasty": null,
   "sub_period": null,
-  "date_bce_approx_start": -1145,
-  "date_bce_approx_end": -1137,
+  "date_bce_approx_start": null,
+  "date_bce_approx_end": null,
   "location_sub_area": null,
   "discovery_year": null,
   "discoverer": null,
   "is_unfinished": false,
   "shared_with_tombs": [],
-  "notes_from_pm": null,
+  "notes_from_pm": "doorways in outer part usurped from Ramesses V",
   "source_citation": {"page": 511, "edition": "PM I.2 2nd ed. 1964", "section": "I.A"}
 }
 ```
@@ -60,7 +62,7 @@ One row per tomb. All fields except `tomb_id`, `valley`, and `source_citation` a
 - `tomb_id` — `KV<n>`, `QV<n>`, `TT<n>`. Letter-suffix variants (`KV5a`) are reproduced verbatim.
 - `valley` — Coarse sub-area: `"Valley of the Kings"`, `"Valley of the Queens"`, `"Dra' Abu el-Naga"`, `"Deir el-Bahri"`, `"Asasif"`, `"Sheikh Abd el-Qurna"`, `"Khokha"`, `"Qurnet Mura'i"`, `"Deir el-Medina"`, `"Ramesseum"`, `"Medinet Habu"`. The valley a tomb belongs to is structural in PM (each numbered tomb sits within a section / sub-section).
 - `occupant_name` — Conventional English form of the king's / queen's / official's name. Drawn verbatim from PM's headword (e.g. `Sethos I`, `Ramesses IV`, `Tut'ankhamun`). PM uses `Sethos` not `Seti`; preserved as-is, the name authority handles cross-resolution to `Seti I`.
-- `occupant_alt_names` — Other names PM gives parenthetically (e.g. classical-period names like `Memnon`). Defaults to `[]`.
+- `occupant_alt_names` — Other names PM prints in the headword block, typically as a `('Tomb of X', or 'Tomb of Y'. ...)` parenthetical with classical-period aliases inside the quotes. KV9's `Memnon` (PM headword: `'Tomb of Memnon'`) is the chunk-1 example. The alias is captured even though the surface form is `Tomb of Memnon` — the alias attaches to the occupant per the museum-catalog convention "from the Tomb of Memnon" = "from KV9". Empty list `[]` when PM gives no parenthetical alt-name.
 - `occupant_role` — Controlled vocabulary: `King`, `Queen`, `Royal Family`, `Vizier`, `Official`, `High Priest`, `Princess`, `Prince`, `Unknown`. KV almost always `King`, QV almost always `Queen`/`Princess`, TT mostly `Vizier` / `Official` / `High Priest`. PM does not always state the role bare; controlled-vocab assignment is a Phase A enrichment in advisory mode.
 - `dynasty` — Roman-numeral dynasty as a STRING (`"18"`, `"19"`, `"20"`, `"XVIII"` etc. — final form normalised to Arabic numerals). PM does not always state dynasty in the headword; this is filled by reference to the king authority (pharaoh.se, Beckerath) downstream.
 - `sub_period` — Optional finer chronological label (`"First Intermediate Period"`, `"Amarna"`, `"Saite"`). Null for most rows.

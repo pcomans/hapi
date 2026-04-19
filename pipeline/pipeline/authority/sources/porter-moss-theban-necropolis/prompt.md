@@ -2,7 +2,7 @@
 
 You are one of three independent extraction subagents. Your job: read the text-layer chunk file at `pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p37-p60.txt` and produce a JSONL file with one structured row per Theban tomb in this chunk. The other two agents see the same prompt and the same chunk; their outputs will be majority-voted by `merge.py` to produce `reconciled.jsonl`. Disagreements are resolved by majority vote per field.
 
-This is a fact-extraction task on the Griffith Institute's published topographical bibliography. We extract: tomb number, occupant, dynasty, and headword-only metadata. We do NOT extract Moss's per-room descriptive prose.
+This is a fact-extraction task on the Griffith Institute's published topographical bibliography. We extract: tomb number, occupant name, and headword-only metadata (the `Unfinished` flag, `See also Tomb N` cross-refs, classical aliases, page citation). We do NOT extract Moss's per-room descriptive prose. We do NOT supply dynasty or BCE dates from outside knowledge — those fields stay null and are filled in Phase A by reconciling against the king authority (pharaoh.se).
 
 ## Source
 
@@ -31,87 +31,102 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
   "tomb_id": "KV9",
   "valley": "Valley of the Kings",
   "occupant_name": "Ramesses VI",
-  "occupant_alt_names": [],
+  "occupant_alt_names": ["Memnon"],
   "occupant_role": "King",
-  "dynasty": "20",
+  "dynasty": null,
   "sub_period": null,
-  "date_bce_approx_start": -1145,
-  "date_bce_approx_end": -1137,
+  "date_bce_approx_start": null,
+  "date_bce_approx_end": null,
   "location_sub_area": null,
   "discovery_year": null,
   "discoverer": null,
   "is_unfinished": false,
   "shared_with_tombs": [],
-  "notes_from_pm": null,
+  "notes_from_pm": "doorways in outer part usurped from Ramesses V",
   "source_citation": {"page": 511, "edition": "PM I.2 2nd ed. 1964", "section": "I.A"}
 }
 ```
 
-### Field-by-field rules
+## Field-by-field extraction rules
 
-- **`tomb_id`** — `KV<N>` where `<N>` is the Arabic-numeral tomb number. PM's text-layer renders the leading `1.` of Tomb 1 as `I.` (Roman one); the headword name and surrounding context still establish it as Tomb 1. Disambiguate by sequence: tombs in this chunk are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 in order. If you find more than 10 tomb numbers, you have over-matched (probably grabbed numbered scene refs `1, King...` as if they were tomb headers).
+Every field is extracted from PM's HEADWORD BLOCK, never from the body prose. The headword block for tomb N starts at the line `N. NAME (cartouches) (parenthetical)` and ends at the first body sub-header (`Approach.`, `Corridor A.`, `Hall D.`, `Side-room K.`, `Pillars.`, `Ceiling.`, `Sarcophagus Chamber X.`, `Finds`, etc.) OR at the next tomb-number heading. The bibliographic-references paragraph immediately after the headword (the one that lists `LEFEBURE, ...; CHAMP., ...; L. D. Text, ...`) is NOT body prose — it's part of the bibliographic ribbon and contains classical aliases / cross-refs you may need.
 
-- **`valley`** — Always exactly the string `"Valley of the Kings"` for this chunk. Do not abbreviate.
+### `tomb_id`
 
-- **`occupant_name`** — Conventional English form, titlecase, exactly as PM prints in the headword. Treat the text-layer noise:
-  - `RAMESSES Ill` (capital I + lowercase L + lowercase L) → `Ramesses III` (Roman three).
-  - `RAMESSES I I` → `Ramesses II`.
-  - `MERNEPTAI;I` → `Merneptah`. PM consistently uses the spelling `Merneptah`; the `;I` is the text layer's rendering of an `H` glyph that printed weirdly.
-  - `RAMESSES XI (formerly XII)` → `Ramesses XI` (the `(formerly XII)` is a parenthetical for `notes_from_pm`).
-  - `AMENMESSE` → `Amenmesse`. PM's spelling — do NOT regularise to `Amenmesses`.
-  - `RAMESSES VII` → `Ramesses VII`.
-  Use the Roman numeral for the regnal-number suffix exactly as PM prints (after correcting the OCR drift): `I, II, III, IV, V, VI, VII, VIII, IX, X, XI`.
+`KV<N>` where `<N>` is the Arabic-numeral tomb number. PM's text-layer renders the leading `1.` of Tomb 1 as `I.` (Roman one) due to font OCR; treat it as Arabic 1. The chunk contains tomb numbers 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 in order. If you find more than 10 distinct tomb numbers, you have over-matched (probably grabbed numbered scene refs `1, King...` as if they were tomb headers).
 
-- **`occupant_alt_names`** — Alternative names PM gives parenthetically as part of the headword (NOT classical-traveller cross-refs like `Descr. Ant. 1st tomb west` — those go in `notes_from_pm`). Defaults to `[]`. For this chunk, KV9 (Ramesses VI) has been called "Memnon" in some 18th–19th c. sources, but PM does not state this in the headword — leave the array empty unless PM literally prints the alt-name in the headword block.
+### `valley`
 
-- **`occupant_role`** — Always exactly `"King"` for this chunk. KV1–KV10 are all kings.
+Always exactly the string `"Valley of the Kings"` for this chunk. (PM I.2 § I.A is "Valley of the Kings — A. Tombs".)
 
-- **`dynasty`** — String form of the Arabic dynasty number. PM does not always state it bare in the headword; you must supply it from the standard Egyptological consensus for each named king. For the chunk-1 kings:
-  - `Ramesses VII` (KV1): Dyn `"20"`.
-  - `Ramesses IV` (KV2): Dyn `"20"`.
-  - `Ramesses III` (KV3): Dyn `"20"`.
-  - `Ramesses XI` (KV4): Dyn `"20"`.
-  - `Ramesses II` (KV5 and KV7): Dyn `"19"`.
-  - `Ramesses IX` (KV6): Dyn `"20"`.
-  - `Merneptah` (KV8): Dyn `"19"`.
-  - `Ramesses VI` (KV9): Dyn `"20"`.
-  - `Amenmesse` (KV10): Dyn `"19"`.
+### `occupant_name`
 
-- **`sub_period`** — `null` for everything in this chunk (all are New Kingdom Dyn 19/20, no sub-period qualifier needed).
+Conventional English form, titlecase, exactly as PM prints in the headword (after correcting the OCR drift). Treat the predictable text-layer noise:
+- `RAMESSES Ill` (capital I + lowercase L + lowercase L) → `Ramesses III` (Roman three).
+- `RAMESSES I I` (with stray space) → `Ramesses II`.
+- `MERNEPTAI;I` → `Merneptah`. PM consistently uses the spelling `Merneptah`; the `;I` is the text layer's rendering of an `H` glyph that printed weirdly.
+- `RAMESSES XI (formerly XII)` → `Ramesses XI` (the `(formerly XII)` is a parenthetical for `notes_from_pm`).
+- `AMENMESSE` → `Amenmesse`. PM's spelling — do NOT regularise to `Amenmesses`.
+Use the Roman numeral for the regnal-number suffix exactly as PM prints (after OCR correction): `I, II, III, IV, V, VI, VII, VIII, IX, X, XI`.
 
-- **`date_bce_approx_start` / `date_bce_approx_end`** — Negative integers; the BCE convention. For this chunk, use the standard high-chronology consensus:
-  - `Ramesses VII` (KV1): start `-1136`, end `-1129`.
-  - `Ramesses IV` (KV2): start `-1153`, end `-1147`.
-  - `Ramesses III` (KV3): start `-1184`, end `-1153`.
-  - `Ramesses XI` (KV4): start `-1107`, end `-1077`.
-  - `Ramesses II` (KV5 and KV7): start `-1279`, end `-1213`.
-  - `Ramesses IX` (KV6): start `-1126`, end `-1108`.
-  - `Merneptah` (KV8): start `-1213`, end `-1203`.
-  - `Ramesses VI` (KV9): start `-1145`, end `-1137`.
-  - `Amenmesse` (KV10): start `-1203`, end `-1200`.
+### `occupant_alt_names`
 
-- **`location_sub_area`** — `null` for KV in this chunk. PM does not identify East Valley vs West Valley vs Branch in the chunk-1 headwords for these tombs.
+A list of alternative names PM gives in the headword block — typically as a parenthetical right after the cartouches. Most KV in this chunk have none, in which case use `[]`.
 
-- **`discovery_year` / `discoverer`** — `null` unless PM literally prints the year and the discoverer's name in the headword block. (The body prose will name Belzoni, Loret, Carter, etc. but those refs sit in dropped material.)
+**KV9 (Ramesses VI) is the example for this chunk** — its headword block contains the parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`. The classical alias `Memnon` is a 19th-c. ascription that travel literature (and museum catalog provenance text) uses for KV9. Capture it as `["Memnon"]`. Do NOT include `Tomb of Metempsychosis` — that's a tomb-name not an occupant-name.
 
-- **`is_unfinished`** — `true` when the headword line literally contains the word `Unfinished`. For this chunk: KV3 (Ramesses III) and KV5 (Ramesses II) are flagged; KV4 (Ramesses XI) was also unfinished but PM's headword phrasing differs — only set `true` when the literal word appears.
+`Tomb of <Name>` parentheticals like the one in KV9's headword are PM's signal for classical aliases; treat the alias inside the quotes as an alt name when the named figure is plausibly the occupant or an ascribed classical alias for the occupant.
 
-- **`shared_with_tombs`** — When the headword has `See also Tomb N`, list the cross-referenced tombs as `KV<N>` strings. For this chunk:
-  - KV3 (Ramesses III) headword: `See also Tomb 11.` → `["KV11"]`.
-  - KV5 (Ramesses II) headword: `See also Tomb 7.` → `["KV7"]`.
-  - KV7 (Ramesses II) headword: `See also Tomb 5.` → `["KV5"]`.
-  - All others: `[]`.
+### `occupant_role`
 
-- **`notes_from_pm`** — Short verbatim prose fragment from the headword that doesn't fit a structured field. Examples:
-  - KV4 (Ramesses XI): `"formerly XII"` — PM's parenthetical regnal-number disambiguation.
-  - KV9 (Ramesses VI): `"doorways in outer part usurped from"` — verbatim from the headword line; PM continues the sentence onto the next line (the doorways were usurped from another tomb's owner, named in the running prose).
-  Otherwise: `null`.
+Always exactly `"King"` for this chunk. KV1–KV10 are all kings. (Future chunks for QV will use `Queen`; TT uses `Vizier`/`Official`/`High Priest`.)
 
-- **`source_citation`** — Object with three fixed keys:
-  - `"page"`: integer printed page number where the tomb's headword line appears. Per-tomb page mapping for chunk 1:
-    - KV1: `495`. KV2: `497`. KV3: `500`. KV4: `501`. KV5: `501`. KV6: `501`. KV7: `505`. KV8: `509`. KV9: `511`. KV10: `517`.
-  - `"edition"`: exactly the string `"PM I.2 2nd ed. 1964"`.
-  - `"section"`: exactly the string `"I.A"` (Section I "Valley of the Kings", subsection A "Tombs").
+### `dynasty`
+
+**`null`** for every row in this chunk. PM's headwords do NOT print dynasty. The `dynasty` field is filled in Phase A by reconciling `occupant_name` against the king authority (pharaoh.se). Do NOT supply dynasty from your own knowledge of who Ramesses III was — per CLAUDE.md rule 7, domain values come from authority lookup, not from string literals.
+
+### `sub_period`
+
+`null` for everything in this chunk.
+
+### `date_bce_approx_start` / `date_bce_approx_end`
+
+**`null`** for every row in this chunk, same reasoning as `dynasty`. Phase A king-authority reconciliation supplies BCE dates.
+
+### `location_sub_area`
+
+`null` for KV in this chunk. PM's KV section does not subdivide into East / West Valley at the headword level for these tombs.
+
+### `discovery_year` / `discoverer`
+
+`null` for every row in this chunk. PM does mention Belzoni / Loret / Carter / Carnarvon / Champollion / Wilkinson in the bibliographic-references paragraph, but those are RECORD-OF-WORK references (who published a description), not statements of who DISCOVERED the tomb. Do not infer discoverer from the bibliographic ribbon.
+
+### `is_unfinished`
+
+`true` if the literal word `Unfinished` appears in the headword block (the parenthetical right after the cartouches typically). Else `false`. Spot-check: search the headword block for the literal string `Unfinished`; the search is case-sensitive but PM consistently capitalises this word.
+
+### `shared_with_tombs`
+
+A list of `KV<N>` strings parsed from any `See also Tomb N` (or `See also Tombs N and M`, `See also Tomb N.`) phrase in the headword block. PM uses this convention to cross-reference tombs that are physically related (e.g. an unfinished + completed pair). Empty list `[]` if no such cross-ref appears.
+
+### `notes_from_pm`
+
+A short verbatim prose fragment from the headword block that doesn't fit a structured field. Preserve the EXACT PM wording (post OCR correction). If the prose continues onto a second physical line within the same headword block (before the bibliographic-references paragraph), include the continuation. Example: KV9's headword has `doorways in outer part usurped from RAMESSES V` spread across two lines — capture the full clause `doorways in outer part usurped from Ramesses V` (titlecase the king-name, since that's the canonical-English form and matches `occupant_name` casing). Other example: KV4's `RAMESSES XI (formerly XII)` — the parenthetical `formerly XII` goes here.
+
+If no such fragment exists, use `null`.
+
+### `source_citation`
+
+Object with three fixed keys. **The `page` value is extracted from the chunk text — DO NOT supply it from a hardcoded table.** Instead:
+
+1. The chunk file is divided into physical pages by the form-feed character (`\f`, ASCII 12, `chr(12)`). Each page starts with a running header that contains the printed page number (e.g. `Tombs 7 and 8 507` or `Tomb 9 511` at the top of the page).
+2. To find the printed page for a tomb's headword: locate the headword line (e.g. `8. MERNEPTAH ...`) in the chunk text, identify which form-feed-delimited physical page it sits on, and read the printed page number from the running header on that page.
+3. Cross-check: physical page = printed page − 458 (offset documented in `transcribe.md`). Physical page 1 in the chunk corresponds to PM I.2 printed page 495.
+4. Use the printed page number from the running header. Do NOT guess; do NOT supply from outside knowledge.
+
+The other two keys are fixed:
+- `"edition"`: exactly the string `"PM I.2 2nd ed. 1964"`.
+- `"section"`: exactly the string `"I.A"` (Section I "Valley of the Kings", subsection A "Tombs").
 
 ## Edge-case handling
 
@@ -125,18 +140,18 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 
 - **Tomb 5 has very little material** — PM gives essentially just the headword + a one-sentence `Remains of left jamb of entrance` note. Still emit a full row with all fields populated per the rules above.
 
-- **Tombs 5 and 7 are both Ramesses II** — they are two distinct tombs both attributed to Ramesses II, cross-referenced by `See also Tomb 5` / `See also Tomb 7` headwords. Emit two rows, both with `occupant_name: "Ramesses II"`, both with `dynasty: "19"`, identical date fields, but different `tomb_id` and `source_citation.page` and `shared_with_tombs`.
+- **Tombs 5 and 7 are both Ramesses II** — they are two distinct tombs both attributed to Ramesses II, cross-referenced by `See also Tomb 5` / `See also Tomb 7` headwords. Emit two rows, both with `occupant_name: "Ramesses II"`, identical `occupant_role`, but different `tomb_id` and `source_citation.page`, and `shared_with_tombs` = the OTHER tomb's id.
 
 ## Pitfall summary (read this LAST before running)
 
 1. **10 rows expected**, one per KV1–KV10. Not 9. Not 11. If your count is off, recheck — over-matching scene refs is the most common failure.
 2. **`occupant_name` is titlecase, conventional English**, with the regnal-number suffix as a Roman numeral. NOT all-caps (PM headwords print all-caps for typesetting).
-3. **`dynasty` is a STRING**, not an integer. `"19"` not `19`.
-4. **Dates are negative integers**.
+3. **`dynasty`, `date_bce_approx_*` are null** — Phase A king-authority enrichment fills them. Do NOT supply from your own knowledge.
+4. **`source_citation.page` comes from the chunk text running header**, not from a hardcoded table. Identify the form-feed-delimited physical page where the headword sits, read the printed page number from the page's running header.
 5. **Drop everything from `Corridor`/`Hall`/`Side-room`/`Approach`/`Pillars`/`Ceiling`/`Finds` headers onward** — those are descriptive prose, out of scope.
 6. **Cartouches render as garbage** — drop them.
-7. **`source_citation.page` is the PRINTED page** (495–518 range), not the physical PDF page (37–60 range).
-8. **`shared_with_tombs` are the cross-referenced KV IDs**, not the body's `See also Tomb N` raw string.
+7. **`shared_with_tombs` are the cross-referenced KV IDs**, parsed from `See also Tomb N` literal text in the headword.
+8. **`is_unfinished` is true ONLY if the literal word `Unfinished` appears in the headword block.**
 
 ## Report back
 

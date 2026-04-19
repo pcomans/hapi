@@ -4,13 +4,13 @@ Run AFTER merge.py. Mirrors Kitchen / Baud / Dodson-Hilton patterns —
 idempotent re-runs, append-only LLM-APPLIED OVERRIDES section in
 merge-disagreements.txt, every override recorded with rationale.
 
-For chunk 1 (KV1–KV10), the 3-subagent extraction produced zero field-level
-disagreements (the per-tomb mapping in `prompt.md` was authoritative enough
-that all three agents emitted identical output). This file commits with an
-empty SPOT_CORRECTIONS list as a placeholder; the egyptologist-reviewer pass
-runs post-PR-open per CLAUDE.md PR workflow, and any reviewer-identified
-corrections land in this file's CHUNK1_CORRECTIONS list and through to
-SPOT_CORRECTIONS.
+For chunk 1 (KV1–KV10): the field-rule-based prompt rewrite (post code-
+reviewer feedback on PR #66) means agents now extract `source_citation.page`
+from the chunk text running header, capture the complete `notes_from_pm`
+clause across two-line headword wraps, and populate `occupant_alt_names`
+from headword classical-alias parentheticals. The egyptologist-reviewer's
+chunk-1 findings are therefore handled at extraction time; CHUNK1_CORRECTIONS
+is empty pending any further reviewer-identified fixes.
 
 Run:
     cd pipeline && uv run python pipeline/authority/sources/porter-moss-theban-necropolis/fix_rows.py
@@ -29,12 +29,8 @@ RECONCILED = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
-# Chunk-1 corrections from the egyptologist-reviewer pass.
+# Chunk-1 corrections from the egyptologist-reviewer pass on PR #66.
 # Each entry: (tomb_id, field, new_value, rationale).
-#
-# Empty for the initial PR landing — the egyptologist-reviewer subagent
-# runs post-PR-open per CLAUDE.md § "Pull request workflow" step 3, and
-# any actionable corrections land in this list in a follow-up commit.
 CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = []
 
 
@@ -48,23 +44,20 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
 
-# Guard against accidental `(tomb_id, field)` duplicates across correction
-# lists — a duplicate silently stomps the earlier value based on list order.
-# Empty allowlist for now; add intentional-override tuples if needed.
-_ALLOWED_DUPLICATES: frozenset[tuple[str, str]] = frozenset()
-_seen: dict[tuple[str, str], int] = {}
+# Duplicate-detection: a `(tomb_id, field)` pair appearing twice across the
+# CHUNK_*_CORRECTIONS lists silently stomps the earlier value based on list
+# order. Raise loud on any duplicate. (No allowlist needed yet — add one only
+# when a legitimate intentional duplicate appears.)
+_seen: set[tuple[str, str]] = set()
 for _tomb_id, _field, _, _ in SPOT_CORRECTIONS:
     _key = (_tomb_id, _field)
-    _seen[_key] = _seen.get(_key, 0) + 1
-    if _seen[_key] > 1 and _key not in _ALLOWED_DUPLICATES:
+    if _key in _seen:
         raise ValueError(
-            f"Duplicate SPOT_CORRECTIONS entry for {_key!r}; "
-            f"later value silently overrides. Add to _ALLOWED_DUPLICATES "
-            f"if intentional, or merge the two entries."
+            f"Duplicate SPOT_CORRECTIONS entry for {_key!r}; later value "
+            f"silently overrides. Merge the two entries, or refactor."
         )
+    _seen.add(_key)
 del _seen
-if SPOT_CORRECTIONS:
-    del _tomb_id, _field, _key
 
 
 def main() -> None:
@@ -76,7 +69,8 @@ def main() -> None:
     # from the previous run. On a second run every `old_val == new_val`, so a
     # delta-style log would incorrectly report "no overrides applied" while
     # the file on disk reflects all the applied overrides. Instead: always
-    # log every SPOT_CORRECTION entry.
+    # log every SPOT_CORRECTION entry, distinguishing between this-run-changed
+    # and already-in-state-on-disk so the log doesn't lie about what happened.
     override_log: list[str] = []
     applied_count = 0
     for tomb_id, field, new_val, rationale in SPOT_CORRECTIONS:
@@ -87,14 +81,14 @@ def main() -> None:
         if old_val != new_val:
             applied_count += 1
             override_log.append(
-                f"- {tomb_id}: {field} corrected ({rationale})\n"
+                f"- {tomb_id}: {field} corrected this run ({rationale})\n"
                 f"    was: {json.dumps(old_val, ensure_ascii=False)}\n"
                 f"    now: {json.dumps(new_val, ensure_ascii=False)}"
             )
             row[field] = new_val
         else:
             override_log.append(
-                f"- {tomb_id}: {field} corrected ({rationale})\n"
+                f"- {tomb_id}: {field} already matches override (no-op this run; {rationale})\n"
                 f"    value: {json.dumps(new_val, ensure_ascii=False)}"
             )
 
