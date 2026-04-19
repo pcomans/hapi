@@ -1,0 +1,88 @@
+# Transcription method — Porter-Moss Vol I (Theban Necropolis)
+
+Per ADR-017 + the Phase-0 playbook (`docs/playbook-phase-0-ocr-transcription.md`), with a documented method deviation: **no OCR step**.
+
+## Source
+
+Two PDFs, both Griffith Institute free-distribution scans (downloaded from `griffith.ox.ac.uk/topbib/pdf/`):
+
+| Volume | File in `proprietary/books/` | SHA-256 |
+|---|---|---|
+| PM I.1 (Private Tombs) | `Porter & Moss - PM I Theban Necropolis.pdf` | `1d98326920f18faa25c3273c0c3b1b38dbc9fe18faeae07fa89f873a47a75455` |
+| PM I.2 (Royal Tombs and Smaller Cemeteries) | `Porter & Moss - PM I.2 Royal Tombs and Smaller Cemeteries.pdf` | `bd79be57b1180ea8766d0f8195a35d99dd02bfd986c0caf4f0026e568b209a42` |
+
+The two volumes share a continuous printed page numbering — PM I.1 ends at p.493, PM I.2 begins at p.495. References to "printed p.N" disambiguate by volume only when N is in the overlap (which it isn't — the volumes are sequential).
+
+## Method deviation: text-layer extraction replaces OCR subagent
+
+**ADR-017 specifies an OCR subagent for scan-only sources.** The PM I.2 PDF distributed by the Griffith Institute carries a publisher text layer — the scan was OCRed at the source. Verified by `pypdf.PdfReader(...).pages[n].extract_text()` returning the printed prose verbatim (with the typical post-1960s lithographic-OCR noise — see "Known text-layer noise" below). **The OCR subagent step is therefore unnecessary** and would only re-OCR the same scan worse than Griffith already did.
+
+The substitute step is deterministic text-layer extraction:
+
+```bash
+cd pipeline && uv run python -c "
+import pypdf
+r = pypdf.PdfReader('/Users/philipp/code/hapi/proprietary/books/Porter & Moss - PM I.2 Royal Tombs and Smaller Cemeteries.pdf')
+text = ''.join(p.extract_text() + chr(12) for p in r.pages[36:60])  # physical p.37-60
+open('pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p37-p60.txt', 'w').write(text)
+"
+```
+
+This file is gitignored (`raw/*` per the repo-root `.gitignore`) — same rule as OCR chunks. It contains verbatim copyrighted prose; same redistribution constraint as an OCR transcript.
+
+**Downstream stages are unchanged from the playbook:** three parallel extraction subagents read `raw/chunk-*.txt` and produce JSONL; `merge.py` majority-votes; `fix_rows.py` applies LLM-reviewer corrections; tests assert specific values.
+
+The Dodson-Hilton precedent (PR #38, main-session OCR for chunk 2 after subagent OCR refused on chunk 1) covers the more general principle: when the playbook's default OCR-subagent path is unnecessary, document the deviation in `transcribe.md` and proceed with the substitute. The Dodson-Hilton case substituted main-session OCR for subagent OCR; this case substitutes deterministic text-layer extraction for any OCR at all.
+
+## Chunks
+
+Multi-chunk source. Each chunk is its own PR; this file's "Chunks" section is updated as chunks land.
+
+| Chunk | Section | Printed pages | Physical pages | Status | PR |
+|---|---|---|---|---|---|
+| 1 | KV1–KV10 (PM I.2 § I.A) | p.495–518 | p.37–60 | in-progress | (this PR) |
+
+The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at the chunk's first and last printed pages — no part-boundary drift within KV section. Foldout plates (Plan II at the start of § I) and figure pages occupy intervening physical pages and shift the offset elsewhere in the volume; the chunk-1 range is offset-stable.
+
+## Extraction prompt design rationale
+
+PM headwords are short and structured — the FIRST line of each tomb's section carries the tomb number, the conventional-English occupant name in titlecase, the cartouches (which render as garbage), parenthetical bibliographic / classical-traveller cross-references, and a `Plan, p. N` marker. The body is multi-page descriptive prose detailing every wall, corridor, side-room, and ceiling — emphatically out of scope per the rights policy.
+
+The extraction prompt at `prompt.md` instructs the agents to:
+- Find each tomb's section by the regex pattern `^[0-9]+\.\s+[A-Z]` at line start.
+- Extract only the headword line (the first paragraph after the tomb-number heading).
+- Drop everything from "Corridor", "Hall", "Room", "Side-room", "Approach", "Pillars", "Ceiling", "Sarcophagus" headers onward.
+- Preserve the literal `Unfinished` flag and `See also Tomb N` cross-references when present.
+- Emit `null` for any field absent from the headword (do not infer from body prose).
+
+This keeps the extract on the safe side of the fact / expression line for copyright purposes AND keeps each agent's output narrow enough to majority-vote consistently.
+
+## Known text-layer noise
+
+Predictable artifacts in the Griffith text layer that the extraction prompt must call out (and `fix_rows.py` may need to clean up):
+
+- **`pi.` for `pl.`** (plate references). Example: `LEFEBURE, pi. xii` should be `pl. xii`. Doesn't reach our structured fields (sits in dropped body prose).
+- **`1` for `l`** in word interiors (`pis.` for `pls.`, `Muh1k` for `Muluk`, `MoLLER` for `MOLLER`). Same: typically in dropped prose.
+- **`BuRTON` capitalisation** (small caps in original render as `B`+`u`+`RTON` from the text layer). Doesn't affect our extract.
+- **Cartouche garbage**: PM prints the royal cartouches inline (e.g. `(o│|║) (∘|)│`); the text layer outputs combinations like `(~~~ ::) ( e~ f ~g ffi_ j j gJ` or `(•~~)`. The titlecase English name BEFORE the cartouches is the canonical handle. Drop the cartouche garbage entirely. Phase A re-acquires the cartouches from a typed king authority (pharaoh.se / Beckerath).
+- **`Re c` for `Reʿ`** (Egyptological ayin rendered as a separated `c`). When this appears in a king-name (e.g. `Khepermaʿtreʿ Ramesses VI` → text layer: `Khepermac trec`), normalise via `fix_rows.py`'s `_WORD_LEVEL_FIXES`-style table. Same template as Baud's `_WORD_LEVEL_FIXES` for the `ꜥd-mr → ꜥḏ-mr` case.
+- **`sox` for `501`, `sos` for `505`** etc. (page numbers in running headers OCRed as letter forms). The structured `source_citation.page` is parsed from the start-of-tomb context, not from running headers, so this typically doesn't bite. Cross-check during reviewer pass.
+- **Printed-page numbers in the running header sometimes float off-line** (lithographic margin drift). When `prompt.md` asks the agent to attribute a tomb to a page, the agent should use the `Plan, p. N` reference inside the tomb's headword OR the running-header page number from the first body page after the tomb number, not the running header on the tomb-number line itself.
+
+## Reproducibility
+
+To re-extract the chunk-1 text layer:
+```bash
+cd pipeline && uv run python -c "
+import pypdf
+r = pypdf.PdfReader('/Users/philipp/code/hapi/proprietary/books/Porter & Moss - PM I.2 Royal Tombs and Smaller Cemeteries.pdf')
+text = ''.join(p.extract_text() + chr(12) for p in r.pages[36:60])
+open('pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p37-p60.txt', 'w').write(text)
+"
+```
+
+Form-feed (`chr(12)` = `\f`) separates per-page output so the extraction agent can recover physical-page boundaries when assigning `source_citation.page`. The PDF SHA pinned above + `pypdf` version (`pyproject.toml`) are sufficient to re-derive the byte-identical chunk text.
+
+## Provisional-status disclaimer
+
+Per ADR-017 step 6: `reconciled.jsonl` is **provisional** until human Egyptologist sign-off. The LLM `egyptologist-reviewer` subagent does NOT satisfy this — it is "LLM checking an LLM" per ADR-017's own framing. Human review logged at `human-review-<YYYY-MM-DD>-<chunk>.md` per chunk; un-reviewed chunks remain provisional even after the LLM review pass.

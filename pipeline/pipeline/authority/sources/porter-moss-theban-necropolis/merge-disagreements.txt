@@ -1,0 +1,11 @@
+No field-level disagreements.
+
+LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
+===========================================
+Corrections applied by fix_rows.py AFTER the 3-subagent majority-vote
+merge. Source of each correction: the egyptologist-reviewer Claude
+Code subagent pass against the source PDF. No human scholar has
+signed off on this extract yet — per ADR-017 step 6, the extract is
+provisional until that happens.
+
+- No overrides applied. The reviewer pass produced no actionable corrections on `reconciled.jsonl` for this chunk.

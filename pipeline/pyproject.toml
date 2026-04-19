@@ -23,6 +23,7 @@ module_name = "pipeline.definitions"
 
 [dependency-groups]
 dev = [
+    "pypdf>=6.10.2",
     "pytest>=9.0.2",
     "pytest-cov>=7.1.0",
 ]
