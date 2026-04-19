@@ -328,13 +328,14 @@ def main() -> None:
     # sort (which reorders chunks at 10+). Numeric sort here decouples the
     # summary's correctness from ALL_CORRECTIONS's iteration order.
     chunk_pattern = re.compile(r"^CHUNK(\d+)_CORRECTIONS$")
+    module_globals = dict(globals())
     chunk_attrs = sorted(
-        (attr for attr in globals() if chunk_pattern.match(attr)),
+        (attr for attr in module_globals if chunk_pattern.match(attr)),
         key=lambda attr: int(chunk_pattern.match(attr).group(1)),
     )
     chunk_summary_lines = [
         f"- Chunk {chunk_pattern.match(attr).group(1)}: "
-        f"{len(globals()[attr])} correction(s) defined in {attr}."
+        f"{len(module_globals[attr])} correction(s) defined in {attr}."
         for attr in chunk_attrs
     ]
     chunk_summary = "Per-chunk correction counts:\n" + "\n".join(chunk_summary_lines)
