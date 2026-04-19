@@ -60,14 +60,65 @@ _TRANSLIT_NORMALIZE = {
     0x025C: 0xA723,  # ɜ → ꜣ
 }
 
+# Word-level transliteration fixes. The character-level `_TRANSLIT_NORMALIZE`
+# handles ayin/aleph fallback codepoints but cannot catch dropped
+# dot-under / dot-above diacritics (e.g. `ḏ` → `d`, `ṯ` → `t`). Those need
+# to be identified by canonical-word recognition, not character mapping —
+# most `d`s in Egyptian transliteration should stay `d`, and we only want
+# to upgrade to `ḏ` when the word is a canonical lexicographic unit.
+#
+# Entries are (plain_form, canonical_form) pairs. Each is substring-
+# replaced in every string field. Keys must be specific enough that no
+# valid non-Egyptological text contains them as substrings (short Egyptian
+# words like `tw` or `nb` are NOT safe keys; multi-character titles with
+# hyphens or distinctive suffixes ARE).
+#
+# Cross-referenced against Faulkner's *Concise Dictionary of Middle
+# Egyptian* and the *Wörterbuch der ägyptischen Sprache* for canonical
+# spellings. Audit is a one-line grep per candidate: count the
+# canonical form vs. the suspected-drift form across reconciled.jsonl;
+# if the canonical form appears at all AND the drifted form is
+# frequent, the drifted form is almost certainly extraction loss.
+_WORD_LEVEL_FIXES: tuple[tuple[str, str], ...] = (
+    # `ꜥḏ-mr` = "district administrator" (Faulkner 52; Wb I 239).
+    # Baud extraction dropped the dot-under `ḏ` → `d` on 18 instances
+    # across chunks; all 18 are mid-title occurrences of this canonical
+    # title, zero legitimately-attested `ꜥd-mr` variants exist.
+    ("ꜥd-mr", "ꜥḏ-mr"),
+    # `ṯꜣtj` = "vizier" (Wb V 344; Jones, Titles §3706). In Baud's
+    # standard compound vizier title `tꜣjtj zꜣb ṯꜣtj`, the final word
+    # ALWAYS has `ṯ` in canonical spelling — a plain `zꜣb tꜣtj` second
+    # word is drift. 11 instances; the fix targets only the `zꜣb tꜣtj`
+    # substring to preserve the legitimate `tꜣjtj` first-word variant.
+    #
+    # Three of the 11 (baud-55, baud-67, baud-70) also drift on the
+    # FIRST word as `tꜣtj zꜣb tꜣtj`; the full-title substitution runs
+    # first and catches those, then the `zꜣb tꜣtj` fixes the remaining
+    # second-word-only drift.
+    ("tꜣtj zꜣb tꜣtj", "ṯꜣtj zꜣb ṯꜣtj"),
+    ("zꜣb tꜣtj", "zꜣb ṯꜣtj"),
+)
+
+
+def _apply_word_fixes(s: str) -> str:
+    """Apply word-level transliteration fixes to a string."""
+    for plain, canonical in _WORD_LEVEL_FIXES:
+        s = s.replace(plain, canonical)
+    return s
+
 
 def _normalise_transliteration(obj: object) -> object:
     """Recursively apply the transliteration normalization to every string
     value in the row. Preserves structure (dict/list/scalar) and non-string
     leaves (int, bool, None) unchanged.
+
+    Two passes run together here (order matters):
+    1. Character-level codepoint remapping (ayin/aleph fallbacks).
+    2. Word-level fixes for canonical Egyptological titles whose
+       dot-under / dot-above diacritics the extraction layer dropped.
     """
     if isinstance(obj, str):
-        return obj.translate(_TRANSLIT_NORMALIZE)
+        return _apply_word_fixes(obj.translate(_TRANSLIT_NORMALIZE))
     if isinstance(obj, list):
         return [_normalise_transliteration(v) for v in obj]
     if isinstance(obj, dict):
