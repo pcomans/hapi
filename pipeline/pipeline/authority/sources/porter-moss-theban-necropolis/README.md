@@ -104,17 +104,13 @@ This source lands across multiple PRs (Dodson-Hilton pattern). Per the playbook 
 - **Chunk 5** (PR #71): `KV62 Tutʿankhamun` as a **standalone single-row** chunk. Per user direction: tomb-row granularity is sufficient for the museum-data-join use case. PM's KV62 body spans physical p.112–128 but is out of scope; the chunk-5 file is trimmed to physical p.111–112 (headword block only). Preserves PM's ayin in `occupant_name` (`Tutʿankhamun`, Unicode half-ring). Captures `1st ed. 58` cross-reference + `Excavated by Carnarvon and Carter.` clause in `notes_from_pm`. All 3 subagents unanimous; zero `CHUNK5_CORRECTIONS` needed.
 - **Chunk 6 (this PR)**: **§ I.A closure sweep, no rows added.** Verified against PM I.2 p.569–594 that **KV63, KV64, KV65 are not catalogued in the 1964 2nd edition** — the volume transitions from KV62's body (ending ~p.586) directly to § I.B "Finds from the Valley of the Kings" (p.586 tail), § I.C "Rest-houses and Shrines" (p.588), § I.D "Graffiti" (p.590), then § II "South-West Valleys" (p.592). KV63 was discovered 2005, KV64 in 2011, KV65 in 2019 — all post-1964 and out of scope for this source. This PR formally closes PM I.2 § I.A with a documentation entry; the 37-row KV corpus from chunks 1–5 is the complete PM I.2 § I.A tomb-row coverage.
 - **Future chunks** (each its own PR):
-  - PM I.2 § I.B "Finds" (if in scope — mostly object lists already redundant with museum APIs, likely skipped).
+  - PM I.2 § I.B "Finds from the Valley of the Kings" — mostly object lists already redundant with museum APIs, likely skipped.
   - PM I.2 § I.C "Rest-houses and Shrines" — workmen's villages, non-KV structures; schema fit uncertain.
   - PM I.2 § I.D "Graffiti" — graffiti numbering, out of scope for tomb-row.
-  - PM I.2 § II "South-West Valleys" onward (Dra' Abu el-Naga, Asasif, Deir el-Bahri, Sheikh Abd el-Qurna, Khokha, Qurnet Mura'i, Deir el-Medina, Ramesseum, Medinet Habu — each section likely its own chunk; non-KV ID schemes TBD when first valley lands).
+  - PM I.2 § II–IX "South-West Valleys" / Dra' Abu el-Naga / Asasif / Deir el-Bahri / Sheikh Abd el-Qurna / Khokha / Qurnet Mura'i / Deir el-Medina / Ramesseum — each section likely its own chunk; non-KV ID schemes TBD when first valley lands.
   - PM I.2 § X "Valley of the Queens" — `QV1`–`QV80`.
-  - PM I.1 numbered Theban Tombs `TT1`–`TT400+` (many chunks).
-  - PM I.2 § I.B "Finds", § I.C "Rest-houses", § I.D "Graffiti" — one chunk if KV-related, else dropped.
-  - PM I.2 § II–IX (South-West Valleys, Dra' Abu el-Naga, Asasif, Deir el-Bahri, Sheikh Abd el-Qurna, Ramesseum, Deir el-Medina) — chunked by section.
-  - PM I.2 § X "Valley of the Queens" (QV1–QV80).
-  - PM I.2 § XI "Medinet Habu", § XII "Objects from Thebes".
-  - PM I.1 numbered tombs TT1–TT400+ — many chunks.
+  - PM I.2 § XI "Medinet Habu", § XII "Objects from Thebes" — schema fit uncertain.
+  - PM I.1 numbered Theban Tombs `TT1`–`TT400+` (many chunks, likely keyed by numbered-tomb decades).
 
 Per-chunk prompt files: `prompt.md` (chunk 1), `prompt-<chunk>.md` (chunks 2+). Per-chunk agent JSONLs: `raw/agent-{a,b,c}.jsonl` (chunk 1), `raw/agent-{a,b,c}-<chunk>.jsonl` (chunks 2+).
 
