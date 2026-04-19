@@ -42,7 +42,9 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
 ]
 
-SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
+SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    correction for chunk in ALL_CORRECTIONS for correction in chunk
+]
 
 # Duplicate-detection: a `(tomb_id, field)` pair appearing twice across the
 # CHUNK_*_CORRECTIONS lists silently stomps the earlier value based on list
@@ -62,6 +64,7 @@ del _seen
 
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+    by_id = {r["tomb_id"]: r for r in rows}
 
     # Spot corrections.
     #
@@ -74,7 +77,7 @@ def main() -> None:
     override_log: list[str] = []
     applied_count = 0
     for tomb_id, field, new_val, rationale in SPOT_CORRECTIONS:
-        row = next((r for r in rows if r["tomb_id"] == tomb_id), None)
+        row = by_id.get(tomb_id)
         if row is None:
             raise KeyError(f"No row with tomb_id={tomb_id!r}")
         old_val = row.get(field)

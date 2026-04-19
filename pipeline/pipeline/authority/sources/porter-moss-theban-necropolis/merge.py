@@ -55,6 +55,13 @@ VALLEY_ORDER: dict[str, int] = {
     "TT": 2,  # Theban Tomb (Private Tombs, PM I.1)
 }
 
+# Sentinel ranks for unrecognised prefixes / malformed IDs — they sort to
+# the end so committed reconciled.jsonl stays correctly ordered for the
+# known prefixes even when a malformed ID slips through (the duplicate
+# detection in `_load` catches the malformed ID separately).
+UNRECOGNISED_VALLEY_RANK = 9999
+MALFORMED_TOMB_RANK = 999_999
+
 
 _TOMB_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-z]?)$")
 
@@ -67,11 +74,11 @@ def _sort_key(tomb_id: str) -> tuple[int, int, str, str]:
     """
     m = _TOMB_RE.match(tomb_id)
     if not m:
-        return (9999, 999_999, "", tomb_id)
+        return (UNRECOGNISED_VALLEY_RANK, MALFORMED_TOMB_RANK, "", tomb_id)
     prefix = m.group("prefix")
     num = int(m.group("num"))
     suffix = m.group("suffix")
-    rank = VALLEY_ORDER.get(prefix, 9999)
+    rank = VALLEY_ORDER.get(prefix, UNRECOGNISED_VALLEY_RANK)
     return (rank, num, suffix, tomb_id)
 
 
@@ -180,9 +187,14 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(tid)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            final.append(present[0][1])
+            # Single-agent rows fall through to the majority-vote path
+            # below (which handles len(present) == 1 correctly: every
+            # field is unanimous because there's only one agent). The
+            # advantage over a special-case `final.append(present[0][1])`
+            # is that `_normalise_value` runs uniformly across all rows
+            # — so a sentinel string like `"none"` collapses to JSON null
+            # whether one or three agents emitted it.
             report.append(f"{tid}: only 1/3 agents found this entry (kept it).\n")
-            continue
 
         all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}
