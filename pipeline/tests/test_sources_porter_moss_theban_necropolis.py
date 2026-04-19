@@ -1,0 +1,463 @@
+"""Structural value-assertion tests for Porter & Moss Vol I source extract.
+
+Per CLAUDE.md rule 5: every populated field on every fixture-class row is
+asserted, not just the field the test class is "themed" around.
+
+Chunk 1 covers KV1–KV10 (PM I.2 § I.A "Tombs", printed p.495–518). Future
+chunks (KV11–KV65, QV, TT...) extend `EXPECTED_TOMB_IDS` and add per-chunk
+value-assertion tests; the structural tests below are forward-compatible.
+
+Note on null `dynasty` and BCE-date fields: per CLAUDE.md rule 1 (every
+authoritative fact must trace to a committed raw source) and rule 7
+(authority lookup, not hard-coded), PM headwords don't print dynasty or
+BCE dates — those fields stay null at this extraction stage and Phase A
+king-authority enrichment (against pharaoh.se) fills them. The test suite
+therefore asserts these fields are null on every chunk-1 row, not that
+they carry expected dynasty values.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import re
+from functools import lru_cache
+from pathlib import Path
+
+SOURCE_DIR = (
+    Path(__file__).parent.parent
+    / "pipeline"
+    / "authority"
+    / "sources"
+    / "porter-moss-theban-necropolis"
+)
+JSONL = SOURCE_DIR / "reconciled.jsonl"
+
+EDITION_PM_I2 = "PM I.2 2nd ed. 1964"
+EDITION_PM_I1 = "PM I.1 2nd ed. 1960"
+
+# Chunk-1 (KV1–KV10) is the only landed chunk so far. Extend this set in
+# follow-up chunk PRs; the row-count and ID-coverage tests reference it
+# rather than hard-coded numbers so the tests stay correct as the source grows.
+CHUNK1_TOMB_IDS: frozenset[str] = frozenset(
+    {f"KV{n}" for n in range(1, 11)}
+)
+EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS
+
+
+@lru_cache(maxsize=1)
+def _rows() -> tuple[dict, ...]:
+    return tuple(
+        json.loads(line) for line in JSONL.read_text().splitlines() if line.strip()
+    )
+
+
+def _row(tomb_id: str) -> dict:
+    hits = [r for r in _rows() if r["tomb_id"] == tomb_id]
+    if len(hits) != 1:
+        raise AssertionError(f"expected 1 row for {tomb_id}, got {len(hits)}")
+    return hits[0]
+
+
+# ---------------------------------------------------------------------------
+# Structural tests (forward-compatible across chunks)
+# ---------------------------------------------------------------------------
+
+
+def test_row_count_matches_expected_set() -> None:
+    """Exact-match row count to the union of all landed chunks' tomb IDs."""
+    assert len(_rows()) == len(EXPECTED_TOMB_IDS), len(_rows())
+
+
+def test_tomb_ids_match_expected_set() -> None:
+    """Every expected tomb id is present, and no unexpected ids snuck in."""
+    actual = {r["tomb_id"] for r in _rows()}
+    assert actual == EXPECTED_TOMB_IDS, sorted(actual ^ EXPECTED_TOMB_IDS)
+
+
+def test_tomb_id_is_unique() -> None:
+    """No duplicate tomb_id in the committed extract."""
+    ids = [r["tomb_id"] for r in _rows()]
+    assert len(ids) == len(set(ids)), "duplicate tomb_id detected"
+
+
+# Forward-compatible: extend the alternation as future chunks introduce
+# non-KV/QV/TT prefixes (Dra' Abu el-Naga, Deir el-Medina, etc. may use
+# their own scheme). Today the extract only uses KV.
+_TOMB_ID_RE = re.compile(r"^(KV|QV|TT)\d+[a-z]?$")
+
+
+def test_tomb_id_shape() -> None:
+    """Every id matches `(KV|QV|TT)\\d+[a-z]?`. Extend the regex when a
+    follow-up chunk lands a section with a different ID convention.
+    """
+    for r in _rows():
+        assert _TOMB_ID_RE.match(r["tomb_id"]), r["tomb_id"]
+
+
+def test_required_fields_present_on_every_row() -> None:
+    """Schema discipline: every row carries every key, even when null/empty.
+
+    Sparse rows are valid (CLAUDE.md rule 4), but the KEY must be present
+    so downstream Phase A code can assume the schema without `.get()` calls.
+    """
+    required = {
+        "tomb_id",
+        "valley",
+        "occupant_name",
+        "occupant_alt_names",
+        "occupant_role",
+        "dynasty",
+        "sub_period",
+        "date_bce_approx_start",
+        "date_bce_approx_end",
+        "location_sub_area",
+        "discovery_year",
+        "discoverer",
+        "is_unfinished",
+        "shared_with_tombs",
+        "notes_from_pm",
+        "source_citation",
+    }
+    for r in _rows():
+        missing = required - r.keys()
+        assert not missing, (r["tomb_id"], sorted(missing))
+
+
+def test_valley_constraint() -> None:
+    """`valley` belongs to a known controlled vocabulary.
+
+    Forward-compatible: extend the allowlist as future chunks add
+    Dra' Abu el-Naga, Deir el-Bahri, Asasif, Sheikh Abd el-Qurna,
+    Khokha, Qurnet Mura'i, Deir el-Medina, Ramesseum, Medinet Habu.
+    """
+    valid = {
+        "Valley of the Kings",
+        "Valley of the Queens",
+        "Dra' Abu el-Naga",
+        "Deir el-Bahri",
+        "Asasif",
+        "Sheikh Abd el-Qurna",
+        "Khokha",
+        "Qurnet Mura'i",
+        "Deir el-Medina",
+        "Ramesseum",
+        "Medinet Habu",
+    }
+    for r in _rows():
+        assert r["valley"] in valid, (r["tomb_id"], r["valley"])
+
+
+def test_kv_rows_have_kv_tomb_id() -> None:
+    """`tomb_id` prefix matches the `valley` value."""
+    for r in _rows():
+        if r["valley"] == "Valley of the Kings":
+            assert r["tomb_id"].startswith("KV"), r
+        if r["valley"] == "Valley of the Queens":
+            assert r["tomb_id"].startswith("QV"), r
+
+
+def test_dynasty_is_null_or_string() -> None:
+    """`dynasty` is null at the extraction stage (Phase A enrichment fills
+    it from the king authority). When populated by future enrichment, it
+    must be the Arabic-numeral STRING form — Phase A relies on the string
+    form for joining against the king authority; drift to int silently
+    breaks that join.
+    """
+    for r in _rows():
+        v = r["dynasty"]
+        assert v is None or isinstance(v, str), (r["tomb_id"], v)
+
+
+def test_dates_null_at_extraction_stage() -> None:
+    """Per CLAUDE.md rule 1: PM headwords don't print BCE dates, so the
+    dates fields stay null at extraction. Phase A king-authority enrichment
+    against pharaoh.se populates them later. When populated, dates are
+    negative ints.
+    """
+    for r in _rows():
+        for field in ("date_bce_approx_start", "date_bce_approx_end"):
+            v = r[field]
+            if v is not None:
+                assert isinstance(v, int) and v < 0, (r["tomb_id"], field, v)
+
+
+def test_date_start_before_date_end() -> None:
+    """For any row with both date_bce_approx_start and _end populated,
+    start (more-negative, i.e. EARLIER BCE date) must be ≤ end. PM does
+    not give regnal-end-then-start ordering anywhere; an inverted pair
+    means a Phase A enrichment bug.
+    """
+    for r in _rows():
+        s, e = r["date_bce_approx_start"], r["date_bce_approx_end"]
+        if s is not None and e is not None:
+            assert s <= e, (r["tomb_id"], s, e)
+
+
+def test_source_citation_shape() -> None:
+    """`source_citation` is a dict with `page` (int), `edition` (str), `section` (str)."""
+    valid_editions = {EDITION_PM_I1, EDITION_PM_I2}
+    for r in _rows():
+        c = r["source_citation"]
+        assert set(c.keys()) == {"page", "edition", "section"}, (r["tomb_id"], c.keys())
+        assert isinstance(c["page"], int) and c["page"] > 0, (r["tomb_id"], c["page"])
+        assert c["edition"] in valid_editions, (r["tomb_id"], c["edition"])
+        assert isinstance(c["section"], str) and c["section"], (r["tomb_id"], c["section"])
+
+
+def test_source_citation_page_in_chunk1_range() -> None:
+    """Chunk 1 covers PM I.2 printed pages 495–518. Every chunk-1 row's
+    page citation must fall within that range. Catches off-by-one bugs
+    in extraction's running-header parsing.
+    """
+    for tid in CHUNK1_TOMB_IDS:
+        r = _row(tid)
+        page = r["source_citation"]["page"]
+        assert 495 <= page <= 518, (tid, page)
+
+
+def test_shared_with_tombs_are_valid_tomb_ids() -> None:
+    """Every entry in `shared_with_tombs` matches the tomb-id regex."""
+    for r in _rows():
+        for tid in r["shared_with_tombs"]:
+            assert _TOMB_ID_RE.match(tid), (r["tomb_id"], tid)
+
+
+def test_shared_with_tombs_symmetry_within_chunk() -> None:
+    """If KV5.shared_with_tombs lists KV7, then KV7.shared_with_tombs lists KV5.
+
+    Symmetry is enforced only for tomb pairs where BOTH ends sit in the
+    landed extract — across chunks, a one-sided cross-ref is legitimate
+    (e.g. chunk 1 KV3 → KV11, but KV11 lands in chunk 2). The check uses
+    the actual extract membership rather than the chunk plan so it stays
+    correct as new chunks land.
+    """
+    by_id = {r["tomb_id"]: r for r in _rows()}
+    for r in _rows():
+        for partner in r["shared_with_tombs"]:
+            if partner in by_id:
+                back_refs = by_id[partner]["shared_with_tombs"]
+                assert r["tomb_id"] in back_refs, (
+                    f"{r['tomb_id']} → {partner} but {partner} → {back_refs}"
+                )
+
+
+def test_occupant_role_controlled_vocab() -> None:
+    """Controlled vocabulary for `occupant_role`. Extend as new sections add roles."""
+    valid = {"King", "Queen", "Royal Family", "Vizier", "Official",
+             "High Priest", "Princess", "Prince", "Unknown"}
+    for r in _rows():
+        if r["occupant_role"] is not None:
+            assert r["occupant_role"] in valid, (r["tomb_id"], r["occupant_role"])
+
+
+# ---------------------------------------------------------------------------
+# Chunk-1 specific value-assertion tests (KV1–KV10)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk1_all_rows_kv_kings_no_dynasty_or_dates() -> None:
+    """KV1–KV10 are all kings — `valley` and `occupant_role` are uniform.
+    Dynasty + BCE dates are null at this stage (Phase A enrichment).
+    """
+    for tid in CHUNK1_TOMB_IDS:
+        r = _row(tid)
+        assert r["valley"] == "Valley of the Kings"
+        assert r["occupant_role"] == "King"
+        assert r["dynasty"] is None
+        assert r["sub_period"] is None
+        assert r["date_bce_approx_start"] is None
+        assert r["date_bce_approx_end"] is None
+        assert r["location_sub_area"] is None
+        assert r["discovery_year"] is None
+        assert r["discoverer"] is None
+        assert r["source_citation"]["edition"] == EDITION_PM_I2
+        assert r["source_citation"]["section"] == "I.A"
+
+
+def test_chunk1_unfinished_flag() -> None:
+    """KV3 (Ramesses III's first attempt) and KV5 (Ramesses II) are flagged
+    `Unfinished` literally in PM. KV4 (Ramesses XI) was historically
+    unfinished but PM doesn't use the literal word — `is_unfinished` stays
+    false. This test pins the literal-text rule.
+    """
+    expected_unfinished = {"KV3", "KV5"}
+    for tid in CHUNK1_TOMB_IDS:
+        r = _row(tid)
+        if tid in expected_unfinished:
+            assert r["is_unfinished"] is True, tid
+        else:
+            assert r["is_unfinished"] is False, tid
+
+
+def test_chunk1_shared_with_tombs() -> None:
+    """KV3 → KV11 (chunk 2 — one-sided), KV5 ↔ KV7 (both chunk 1)."""
+    assert _row("KV3")["shared_with_tombs"] == ["KV11"]
+    assert _row("KV5")["shared_with_tombs"] == ["KV7"]
+    assert _row("KV7")["shared_with_tombs"] == ["KV5"]
+    # All other chunk-1 rows have empty shared_with_tombs.
+    for tid in CHUNK1_TOMB_IDS - {"KV3", "KV5", "KV7"}:
+        assert _row(tid)["shared_with_tombs"] == [], tid
+
+
+def test_chunk1_kv1_minimal_row() -> None:
+    """KV1 (Ramesses VII) is the minimal-shape KV chunk-1 row: no Unfinished
+    flag, no cross-refs, no notes, no alt-names. Asserts every field.
+
+    The KV3 flagship row (separate test below) exercises is_unfinished +
+    shared_with_tombs; KV9 exercises notes_from_pm + occupant_alt_names.
+    Together they cover every populated-field shape per rule 5.
+    """
+    r = _row("KV1")
+    assert r["tomb_id"] == "KV1"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Ramesses VII"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] is None
+    assert r["source_citation"] == {
+        "page": 495,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk1_kv3_flagship_full_row() -> None:
+    """KV3 (Ramesses III's unfinished tomb) is the flagship full-row test:
+    exercises `is_unfinished=true` and `shared_with_tombs=["KV11"]` (a
+    one-sided cross-chunk reference). Asserts every field per rule 5.
+    """
+    r = _row("KV3")
+    assert r["tomb_id"] == "KV3"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Ramesses III"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is True
+    assert r["shared_with_tombs"] == ["KV11"]
+    assert r["notes_from_pm"] is None
+    assert r["source_citation"] == {
+        "page": 500,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk1_kv9_ramesses_vi_notes_and_alias() -> None:
+    """KV9 exercises `notes_from_pm` (the cross-line clause about Ramesses V's
+    doorway usurpation) and `occupant_alt_names` (the Memnon classical alias
+    from PM's `'Tomb of Memnon'` parenthetical). Asserts every field per
+    rule 5.
+    """
+    r = _row("KV9")
+    assert r["tomb_id"] == "KV9"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Ramesses VI"
+    assert r["occupant_alt_names"] == ["Memnon"]
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == "doorways in outer part usurped from Ramesses V"
+    assert r["source_citation"] == {
+        "page": 511,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+def test_chunk1_kv4_ramesses_xi_notes_preserved() -> None:
+    """KV4's headword: `RAMESSES XI (formerly XII)`. The parenthetical
+    `(formerly XII)` is PM's regnal-number disambiguation — earlier
+    scholarship counted this king as Ramesses XII. Preserved as a
+    structured `notes_from_pm` rather than embedded in `occupant_name`,
+    so downstream museum-data joins on the canonical `Ramesses XI` work.
+    """
+    r = _row("KV4")
+    assert r["occupant_name"] == "Ramesses XI"
+    assert r["notes_from_pm"] == "formerly XII"
+
+
+def test_chunk1_two_ramesses_ii_tombs() -> None:
+    """KV5 and KV7 are both attributed to Ramesses II (KV5 unfinished, KV7
+    the actual completed tomb). Mutually-cross-referenced via shared_with_tombs.
+    """
+    kv5 = _row("KV5")
+    kv7 = _row("KV7")
+    for r in (kv5, kv7):
+        assert r["occupant_name"] == "Ramesses II"
+        assert r["valley"] == "Valley of the Kings"
+        assert r["occupant_role"] == "King"
+    assert kv5["is_unfinished"] is True
+    assert kv7["is_unfinished"] is False
+    assert kv5["shared_with_tombs"] == ["KV7"]
+    assert kv7["shared_with_tombs"] == ["KV5"]
+    assert kv5["source_citation"]["page"] == 501
+    assert kv7["source_citation"]["page"] == 505
+
+
+def test_chunk1_kv8_merneptah_page_507() -> None:
+    """KV8 (Merneptah) headword opens at PM I.2 printed page 507, NOT 509.
+    Egyptologist-reviewer caught the mis-citation in PR #66's first round;
+    the field-rule-based prompt rewrite (with page extracted from chunk
+    text running headers) produces the correct page. This test pins it.
+    """
+    r = _row("KV8")
+    assert r["occupant_name"] == "Merneptah"
+    assert r["source_citation"]["page"] == 507
+
+
+# ---------------------------------------------------------------------------
+# Audit-trail tests for fix_rows.py
+# ---------------------------------------------------------------------------
+
+
+def _import_fix_rows():
+    """Load the source's fix_rows.py module by file path (the directory has a
+    hyphen so `importlib.import_module` doesn't work directly).
+    """
+    spec = importlib.util.spec_from_file_location(
+        "pm_theban_fix_rows", SOURCE_DIR / "fix_rows.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_all_corrections_includes_every_chunk_list() -> None:
+    """fix_rows.py's `ALL_CORRECTIONS` aggregates every `CHUNK*_CORRECTIONS`
+    list. Dropping a chunk's corrections list silently destroys its audit
+    trail — this test fails loud if a chunk is added without being included.
+    """
+    fix_rows = _import_fix_rows()
+    chunk_attrs = sorted(
+        attr for attr in dir(fix_rows)
+        if attr.startswith("CHUNK") and attr.endswith("_CORRECTIONS")
+    )
+    expected = [getattr(fix_rows, a) for a in chunk_attrs]
+    assert fix_rows.ALL_CORRECTIONS == expected, (
+        f"ALL_CORRECTIONS missing one of the per-chunk lists. "
+        f"Found chunk attrs: {chunk_attrs}"
+    )
