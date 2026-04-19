@@ -22,7 +22,7 @@ The substitute step is deterministic text-layer extraction:
 ```bash
 cd pipeline && uv run python -c "
 import pypdf
-r = pypdf.PdfReader('/Users/philipp/code/hapi/proprietary/books/Porter & Moss - PM I.2 Royal Tombs and Smaller Cemeteries.pdf')
+r = pypdf.PdfReader('proprietary/books/Porter & Moss - PM I.2 Royal Tombs and Smaller Cemeteries.pdf')
 text = ''.join(p.extract_text() + chr(12) for p in r.pages[36:60])  # physical p.37-60
 open('pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p37-p60.txt', 'w').write(text)
 "
@@ -75,7 +75,7 @@ To re-extract the chunk-1 text layer:
 ```bash
 cd pipeline && uv run python -c "
 import pypdf
-r = pypdf.PdfReader('/Users/philipp/code/hapi/proprietary/books/Porter & Moss - PM I.2 Royal Tombs and Smaller Cemeteries.pdf')
+r = pypdf.PdfReader('proprietary/books/Porter & Moss - PM I.2 Royal Tombs and Smaller Cemeteries.pdf')
 text = ''.join(p.extract_text() + chr(12) for p in r.pages[36:60])
 open('pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p37-p60.txt', 'w').write(text)
 "
