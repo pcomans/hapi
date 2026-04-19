@@ -759,6 +759,12 @@ def test_chunk3_page_range() -> None:
 def test_chunk3_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
     """Every chunk-3 row has valley=VoK and null dynasty/dates/discoverer —
     same extraction-stage discipline as chunks 1 and 2.
+
+    `is_unfinished` and `shared_with_tombs` are pinned per-row in the
+    themed tests below rather than here — asserting them as chunk-wide
+    invariants would fail if a future reviewer-caught correction
+    identifies an Unfinished tomb or cross-ref in this PM range, and
+    the per-row tests already give full coverage.
     """
     for tid in CHUNK3_TOMB_IDS:
         r = _row(tid)
@@ -769,8 +775,6 @@ def test_chunk3_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
         assert r["date_bce_approx_end"] is None
         assert r["discovery_year"] is None
         assert r["discoverer"] is None
-        assert r["is_unfinished"] is False
-        assert r["shared_with_tombs"] == []
 
 
 def test_chunk3_kv21_absent_from_expected_set() -> None:

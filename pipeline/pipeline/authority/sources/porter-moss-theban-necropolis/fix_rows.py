@@ -100,10 +100,15 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
 #    had a mistaken example (`AMENOPHIS Il → Amenophis II`). Agent A
 #    counted glyphs correctly. Egyptologist-reviewer confirmed KV22 is
 #    Amenhotep III's West Valley tomb.
-# 2. KV34 — `notes_from_pm`: PM p.551 prints `34· [Ist ed. 24] TUTHMOSIS III`
-#    — the bracketed `[Ist ed. 24]` is PM's cross-ref to its 1st-edition
-#    tomb numbering. Parallel to chunk-1 KV4 `"formerly XII"` and chunk-2
-#    KV18 `"formerly XI"`. All three agents silently dropped it.
+# 2. KV34 — `notes_from_pm`: PM p.551 prints `34. [1st ed. 24] TUTHMOSIS
+#    III`; the raw OCR for KV34 renders `[rst ed. 24]` (the text layer's
+#    Arabic `1` got mangled to `rst` for this specific line). `1st ed.`
+#    is the Arabic form PM actually prints: across chunks 1-3 the OCR
+#    produces 52 `[1st ed.` tokens vs 60 mangled variants (`Ist` 23,
+#    `rst` 17, `xst` 20) — all OCR misreads of the same Arabic-1 glyph.
+#    The bracketed 1st-edition cross-ref is structurally parallel to
+#    chunk-1 KV4 `"formerly XII"` and chunk-2 KV18 `"formerly XI"`.
+#    All three agents silently dropped it.
 # 3. KV39 — `occupant_role`: prompt rule 1 says role="Unknown" when
 #    occupant_name is null. PM p.559 prints `39· Uninscribed tomb,
 #    attributed to Amenophis I by Weigall...`; agents emitted null despite
@@ -126,10 +131,14 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "KV34",
         "notes_from_pm",
         "1st ed. 24",
-        "PM p.551 headword prints `34· [Ist ed. 24] TUTHMOSIS III` — the "
-        "bracketed cross-ref to 1st-edition tomb numbering is headword "
-        "material (parallel to chunk-1 KV4 'formerly XII'); all three "
-        "agents silently dropped it.",
+        "PM p.551 headword prints `34. [1st ed. 24] TUTHMOSIS III`. The "
+        "chunk-3 text-layer OCR for this specific line renders the "
+        "bracketed Arabic `1` as `rst`; across chunks 1-3 the same "
+        "printed `[1st ed. N]` token OCRs to `1st` 52 times and to "
+        "mangled variants (`Ist`/`rst`/`xst`) 60 times. Store the "
+        "PM-verbatim `1st ed. 24` in notes_from_pm rather than "
+        "transcribing any one OCR variant. Parallel in shape to "
+        "chunk-1 KV4 'formerly XII' / chunk-2 KV18 'formerly XI'.",
     ),
     (
         "KV36",
