@@ -27,6 +27,23 @@ if [ -z "${1:-}" ]; then
 fi
 PR=$1
 SHA=${2:-$(git rev-parse HEAD)}
+# Normalise to a full 40-char SHA. GitHub's /pulls/<N>/reviews API always
+# returns commit_id as the full 40-char SHA; seed.py and poll.py use literal
+# string equality to filter, so a short (7-char) SHA here silently matches
+# nothing and the Monitor polls in silence until it times out. `git rev-parse
+# --verify <X>^{commit}` resolves any commit-ish (short SHA, branch, tag,
+# HEAD~N, etc.) to its full 40-char form; failure means the ref doesn't
+# resolve and we should bail loud before the seed stage.
+FULL_SHA=$(git rev-parse --verify "$SHA^{commit}") || {
+  echo "POLL-ERROR: cannot resolve SHA '$SHA' via git rev-parse (need a commit-ish — short SHA, branch, tag, or HEAD~N). The git stderr above is the underlying reason."
+  exit 2
+}
+# NB: do NOT add `--` between `--verify` and the revision — unlike other
+# git subcommands, `rev-parse --verify` treats arguments after `--` as
+# PATHSPECS (file paths), not revisions, so the command fails with
+# "Needed a single revision". Caught live on PR #73 when a Gemini-suggested
+# `--` broke the Monitor's seed step on its first arm cycle.
+SHA=$FULL_SHA
 REPO=${3:-$(git remote get-url origin 2>/dev/null | sed -E 's#^.*github\.com[:/]##; s#\.git$##')}
 if ! echo "$REPO" | grep -qE '^[^/]+/[^/]+$'; then
   echo "POLL-ERROR: could not derive OWNER/REPO from git remote origin (got '$REPO'); pass as arg 3"
