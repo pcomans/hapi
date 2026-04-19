@@ -319,9 +319,24 @@ def main() -> None:
     # as an audit-trail gap when a chunk's CHUNK*_CORRECTIONS list is empty
     # (no log lines get emitted, so the chunk's absence looks identical to
     # a skipped run).
+    #
+    # Label each chunk by its numeric suffix read from the attribute name
+    # (NOT by list-position). Gemini code-review on PR #71 flagged that
+    # labelling by enumerate index breaks at chunk 10+ because the sibling
+    # `test_all_corrections_includes_every_chunk_list` uses lexicographic
+    # sort (which reorders chunks at 10+). Numeric sort here decouples the
+    # summary's correctness from ALL_CORRECTIONS's iteration order.
+    import re as _re
+    _module = globals()
+    _chunk_re = _re.compile(r"^CHUNK(\d+)_CORRECTIONS$")
+    _chunk_attrs = sorted(
+        (attr for attr in _module if _chunk_re.match(attr)),
+        key=lambda attr: int(_chunk_re.match(attr).group(1)),
+    )
     chunk_summary_lines = [
-        f"- Chunk {i + 1}: {len(chunk)} correction(s) defined in CHUNK{i + 1}_CORRECTIONS."
-        for i, chunk in enumerate(ALL_CORRECTIONS)
+        f"- Chunk {_chunk_re.match(attr).group(1)}: "
+        f"{len(_module[attr])} correction(s) defined in {attr}."
+        for attr in _chunk_attrs
     ]
     chunk_summary = "Per-chunk correction counts:\n" + "\n".join(chunk_summary_lines)
 

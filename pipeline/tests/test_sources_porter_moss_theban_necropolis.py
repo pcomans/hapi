@@ -1404,11 +1404,18 @@ def test_all_corrections_includes_every_chunk_list() -> None:
     """fix_rows.py's `ALL_CORRECTIONS` aggregates every `CHUNK*_CORRECTIONS`
     list. Dropping a chunk's corrections list silently destroys its audit
     trail — this test fails loud if a chunk is added without being included.
+
+    Uses natural-numeric sort on the chunk suffix (NOT lexicographic sort)
+    so the test stays correct at chunk 10+. Gemini code-review on PR #71
+    flagged that the prior lex-sort would mis-order `CHUNK10` before
+    `CHUNK2`, invalidating the equality assertion against a numerically-
+    ordered `ALL_CORRECTIONS`.
     """
     fix_rows = _import_fix_rows()
+    chunk_re = re.compile(r"^CHUNK(\d+)_CORRECTIONS$")
     chunk_attrs = sorted(
-        attr for attr in dir(fix_rows)
-        if attr.startswith("CHUNK") and attr.endswith("_CORRECTIONS")
+        (attr for attr in dir(fix_rows) if chunk_re.match(attr)),
+        key=lambda attr: int(chunk_re.match(attr).group(1)),
     )
     expected = [getattr(fix_rows, a) for a in chunk_attrs]
     assert fix_rows.ALL_CORRECTIONS == expected, (
