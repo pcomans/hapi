@@ -91,6 +91,88 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-3 (KV22, 23, 34, 35, 36, 38, 39, 42, 43, 45, 46 — 11 rows after
+# skipping absent KV24–33/37/40/41/44). Corrections after the field-rule-
+# based prompt + 3-agent merge + egyptologist-reviewer second pass:
+#
+# 1. KV22 — `occupant_name`: PM text layer `AMENOPHIS I Il` = I + Il(=II)
+#    = III; majority vote fell to "Amenophis II" because the chunk-3 prompt
+#    had a mistaken example (`AMENOPHIS Il → Amenophis II`). Agent A
+#    counted glyphs correctly. Egyptologist-reviewer confirmed KV22 is
+#    Amenhotep III's West Valley tomb.
+# 2. KV34 — `notes_from_pm`: PM p.551 prints `34. [1st ed. 24] TUTHMOSIS
+#    III`; the raw OCR for KV34 renders `[rst ed. 24]` (the text layer's
+#    Arabic `1` got mangled to `rst` for this specific line). `1st ed.`
+#    is the Arabic form PM actually prints: across chunks 1-3 the OCR
+#    produces 52 `[1st ed.` tokens vs 60 mangled variants (`Ist` 23,
+#    `rst` 17, `xst` 20) — all OCR misreads of the same Arabic-1 glyph.
+#    The bracketed 1st-edition cross-ref is structurally parallel to
+#    chunk-1 KV4 `"formerly XII"` and chunk-2 KV18 `"formerly XI"`.
+#    All three agents silently dropped it.
+# 3. KV39 — `occupant_role`: prompt rule 1 says role="Unknown" when
+#    occupant_name is null. PM p.559 prints `39· Uninscribed tomb,
+#    attributed to Amenophis I by Weigall...`; agents emitted null despite
+#    the rule.
+# 4. KV42 — `notes_from_pm`: PM p.559 prints `42. TUTHMOSIS II (?)` with
+#    attribution-uncertainty marker. Keep `occupant_name` structured and
+#    absorb the (?) into notes alongside the existing `Excavated by Loret`
+#    headword clause (period-space separator, chunk-2 KV14 precedent).
+CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "KV22",
+        "occupant_name",
+        "Amenophis III",
+        "PM p.547 text layer 'AMENOPHIS I Il' = I + Il(=II) = III. "
+        "Majority vote was misled by a mistaken prompt example; agent A "
+        "counted glyphs and got III. Egyptologist-reviewer confirmed KV22 "
+        "is Amenhotep III's West Valley tomb.",
+    ),
+    (
+        "KV34",
+        "notes_from_pm",
+        "1st ed. 24",
+        "PM p.551 headword prints `34. [1st ed. 24] TUTHMOSIS III`. The "
+        "chunk-3 text-layer OCR for this specific line renders the "
+        "bracketed Arabic `1` as `rst`; across chunks 1-3 the same "
+        "printed `[1st ed. N]` token OCRs to `1st` 52 times and to "
+        "mangled variants (`Ist`/`rst`/`xst`) 60 times. Store the "
+        "PM-verbatim `1st ed. 24` in notes_from_pm rather than "
+        "transcribing any one OCR variant. Parallel in shape to "
+        "chunk-1 KV4 'formerly XII' / chunk-2 KV18 'formerly XI'.",
+    ),
+    (
+        "KV36",
+        "occupant_name",
+        "Mahirper",
+        "PM p.556 headword prints `36. MAI;IIRPER` — the `I;I` glyph is "
+        "the underdot-H (ḥ). Applying the chunk-1/2 rule `I;I → h` "
+        "yields `MA` + `h` + `IRPER` = `MAHIRPER` → `Mahirper`. "
+        "Agent B got this right; agents A and C kept a spurious `i` "
+        "before the `h`. Egyptologist-reviewer second-pass confirmed no "
+        "published Egyptological form reads 'Maihirper'.",
+    ),
+    (
+        "KV39",
+        "occupant_role",
+        "Unknown",
+        "prompt rule 1: role='Unknown' when occupant_name is null. PM "
+        "p.559 prints 'Uninscribed tomb, attributed to Amenophis I by "
+        "Weigall...'; agents emitted null despite the rule.",
+    ),
+    (
+        "KV42",
+        "notes_from_pm",
+        "(?). Excavated by Loret",
+        "PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own "
+        "attribution-uncertainty marker. Keep occupant_name structured "
+        "as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes "
+        "(no paraphrase, per rule 1 PM-verbatim policy). Preserve the "
+        "existing 'Excavated by Loret' headword clause; join with '. ' "
+        "per chunk-2 KV14.",
+    ),
+]
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -98,6 +180,7 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK2_CORRECTIONS,
+    CHUNK3_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [

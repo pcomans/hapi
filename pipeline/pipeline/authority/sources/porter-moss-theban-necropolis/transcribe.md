@@ -41,9 +41,17 @@ Multi-chunk source. Each chunk is its own PR; this file's "Chunks" section is up
 | Chunk | Section | Printed pages | Physical pages | Status | PR |
 |---|---|---|---|---|---|
 | 1 | KV1–KV10 (PM I.2 § I.A) | p.495–518 | p.37–60 | landed | #66 |
-| 2 | KV11–KV20 (PM I.2 § I.A) | p.518–548 | p.60–90 | in-progress | (this PR) |
+| 2 | KV11–KV20 (PM I.2 § I.A) | p.518–548 | p.60–90 | landed | #68 |
+| 3 | KV22–KV46 (PM I.2 § I.A, sparse) | p.547–564 | p.89–106 | in-progress | (this PR) |
 
-The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at chunk-1's first and last printed pages and at chunk-2 boundaries — no part-boundary drift within the KV1–KV20 span. Foldout plates (Plan II at the start of § I; the shared plan p.528 for KV11–KV14 Finds; the plan p.548 for KV20/22/23/38) and figure pages occupy intervening physical pages; the chunk ranges above each cross a floor-plan page but the offset is stable across KV headwords. Chunk 2's file is `raw/chunk-p60-p90.txt` (31 physical pages) — includes p.60 to capture KV11's headword at the tail (KV10 body is out of scope and skipped by the extraction prompt) and extends through p.90 so the agents can see the `Tombs 20, 22, 23, 38` plan marking the KV20 / KV22 boundary. **KV21 is absent from this section of PM I.2** — the list jumps from KV20 to KV22.
+The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at chunk-1's first and last printed pages, at chunk-2 boundaries, and at chunk-3 boundaries — no part-boundary drift within the KV1–KV46 span. Foldout plates (Plan II at the start of § I; the shared plan p.528 for KV11–KV14 Finds; the plan p.548 for KV20/22/23/38; the plan p.552 for KV34/35/42) and figure pages occupy intervening physical pages; the chunk ranges each cross a floor-plan page but the offset is stable across KV headwords.
+
+Absence patterns within PM I.2 § I.A:
+- **KV21** is absent — the list jumps from KV20 to KV22 (chunk-2 boundary).
+- **KV24–KV33** are absent — the list jumps from KV23 to KV34 (chunk-3 boundary). These numbers are assigned to real tombs by modern surveys but were not catalogued as inscribed royal tombs in the 1964 PM I.2 edition.
+- **KV37, KV40, KV41, KV44** are absent from chunk 3's range.
+
+Chunk 2's file is `raw/chunk-p60-p90.txt` (31 physical pages) — includes p.60 to capture KV11's headword at the tail and extends through p.90 so the agents can see the `Tombs 20, 22, 23, 38` plan marking the KV20 / KV22 boundary. Chunk 3's file is `raw/chunk-p89-p106.txt` (18 physical pages) — includes p.89 to capture KV22's headword at the tail (KV20's body is out of scope) and extends through p.106 so the agents can see the KV47 heading as a boundary marker closing KV46.
 
 ## Extraction prompt design rationale
 
