@@ -10,7 +10,7 @@ This is a fact-extraction task on the Griffith Institute's published topographic
 
 - Book: Porter, B. & Moss, R.L.B. *Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings. Volume I, Part 2: Royal Tombs and Smaller Cemeteries.* 2nd edition, Oxford 1964.
 - Section: I. Valley of the Kings, A. Tombs.
-- Chunk tomb range: **KV47, KV48, KV55, KV56, KV57** — 5 rows expected. The following KV numbers ARE NOT in this chunk's range (either genuinely absent from PM I.2, or deferred to a later chunk): KV49–KV54 and KV58–KV61 are absent from PM I.2 § I.A (PM jumps 48 → 55, 57 → 62). KV62 (Tutankhamun) is deferred to a later chunk because PM's KV62 entry spans 11 pages and warrants its own extraction PR.
+- Chunk tomb range: **KV47, KV48, KV55, KV56, KV57** — 5 rows expected. The following KV numbers ARE NOT in this chunk's range (either genuinely absent from PM I.2, or deferred to a later chunk): KV49–KV54 and KV58–KV61 are absent from PM I.2 § I.A (PM jumps 48 → 55, 57 → 62). KV62 (Tutankhamun) is deferred to a later chunk because PM's KV62 entry spans ~17 printed pages (p.569–586) and warrants its own extraction PR.
 - Printed page range: p.564–569. Physical PDF page range: p.106–111. Offset: physical = printed − 458.
 - The chunk file begins at physical p.106 (printed 564) deliberately — KV47's headword sits at the tail of p.106 (KV46 body is out of scope, belonging to chunk 3). The file extends through p.111 so you can see the KV62 boundary marker closing KV57.
 - Text layer: extracted by `pypdf` from the Griffith Institute's distributed PDF. See `transcribe.md` § "Method deviation".
@@ -75,7 +75,7 @@ Always `"Valley of the Kings"`.
 **PM-verbatim, conventional-English form, titlecase, with regnal Roman numeral.** Extract the NAME token from the heading line after normalising text-layer noise. Preserve PM's scholarly spelling (PM uses `Amenophis`/`Tuthmosis`/`Sethos`; do NOT modernise to `Amenhotep`/`Thutmose`/`Seti`).
 
 Text-layer noise to normalise (glyph-rendering artifacts, not PM's scholarly choice):
-- `I:I` or `I;I` → `h` (underdot-H glyph — NOT ayin): `MERNEPTAI;I-SIPTAI;I` → `Merneptah-Siptah`, `I:IAREMI}AB` → `Haremhab`. The `I:I` consumes its surrounding slot — no stray `i` is left.
+- Underdot-H (`ḥ`) renders variably in the text layer: `I:I`, `I;I`, and `I}` are all the same underdot-H glyph. Normalise any of these to `h`: `MERNEPTAI;I-SIPTAI;I` → `Merneptah-Siptah`, `I:IAREMI}AB` → `Haremhab`. The glyph consumes its surrounding slot — no stray `i` is left before the `h`.
 - Regnal Roman numerals are glyph-counted. Count capital-I glyphs — including ones that appear as lowercase `l` (`Il`) or separated by spaces. Examples: `Il` → `II`, `I Il` → `III`, `Ill` → `III`.
 - Cartouches after the name render as garbage — drop entirely.
 - Titlecase the all-caps heading: `MERNEPTAH-SIPTAH` → `Merneptah-Siptah`, `AMENEMOPET` → `Amenemopet`.
