@@ -87,14 +87,13 @@ Always exactly `"Valley of the Kings"` for this chunk.
 - If PM prints `SETHOS`, emit `Sethos` (not `Seti`). Same principle for any other scholarly-variant spelling.
 - If PM prints `AMENOPHIS`, emit `Amenophis` (PM's preferred English form at the time; Phase A reconciles to modern `Amenhotep` if needed). Do NOT substitute `Amenhotep`.
 - If PM prints `TUTHMOSIS`, emit `Tuthmosis` (PM's form). Do NOT substitute `Thutmose`.
-- If PM prints a compound name with ayin like `MAI:IIRPER`, render the underdot as plain `h` (chunk-1/2 precedent: Hatshepsut / Merneptah without underdot). The `I:I` glyph drops to `h`, not `ḥ`.
+- If PM prints a compound name with an **underdot-H** glyph like `MAI:IIRPER` (the `:I` / `;I` sequence is the text-layer rendering of the underdot `ḥ`, NOT an ayin `ꜥ`), render the underdot as plain `h` (chunk-1/2 precedent: Hatshepsut / Merneptah without underdot). The `I:I` glyph drops to `h`, not `ḥ`.
 - If PM prints `UNINSCRIBED` or a descriptive phrase (e.g. `Uninscribed tomb, attributed to ...`) instead of a name, emit `occupant_name: null`. Put the descriptive content in `notes_from_pm`.
 
 Text-layer noise to normalise (glyph-rendering artifacts, not PM's scholarly choice):
 
-- `I:I` or `I;I` → `h`: `MAI:IIRPER` → `Maihirper`, `MERNEPTAI;I` → `Merneptah`.
-- `Il` (capital-I + lowercase-l) in a regnal-numeral position → Roman `II`: `AMENOPHIS Il` → `Amenophis II`. (`Sethos Il` follows the same rule, though Sethos II is in chunk 2.)
-- `Ill` in a regnal-numeral position → Roman `III`.
+- `I:I` or `I;I` → `h`: `MAI:IIRPER` → `Mahirper` (the I;I consumes its surrounding slot — no `i` is left before the `h`; the pattern is `MA` + `h` + `IRPER`, NOT `MAI` + `h` + `IRPER`). Same for `MERNEPTAI;I` → `Merneptah`.
+- Regnal-numeral Roman numerals are GLYPH-COUNTED from the text layer. Count the capital-I glyphs — including any that appear as lowercase-l (`Il`) or separated by spaces — and emit the total Roman numeral. Examples: `SETHOS Il` → `Sethos II` (two I-glyphs: `I` + `l`). `AMENOPHIS I Il` → `Amenophis III` (three I-glyphs: `I` + `I` + `l`). `Ill` at the end of a name → `III`. Do NOT memorise a per-king table — count the glyphs in each row and sum them.
 - `n` as a regnal numeral (lower-case `n`) in some headwords → Roman `II`: if you see `AMENOPHIS n` at a headword that's clearly Amenophis II, that's a text-layer rendering of `II`, not the letter `n`.
 - Middle-dot `·` in the heading's number separator → period.
 - Cartouches after the name render as garbage — drop entirely.
