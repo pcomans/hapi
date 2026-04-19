@@ -22,6 +22,7 @@ section in merge-disagreements.txt.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
@@ -213,6 +214,24 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-5 (KV62 Tutʿankhamun, single-row, headword-only per user direction
+# that tomb-row granularity is sufficient for the museum-data-join use case).
+# The 3 extraction subagents were unanimous on every field under the field-
+# rule-based prompt. Egyptologist-reviewer pre-merge pass on PR #71 verified
+# PM p.569 prints `TUT'ANKHAMŪN` with apostrophe-for-ayin + macron-u, and
+# the bracketed `[1st ed. 58]` cross-reference in the headword; the chunk-5
+# row's `Tutʿankhamun` (apostrophe normalised to Unicode ayin per chunk-2
+# KV19 precedent; macron-u dropped per the occupant_name diacritic-stripping
+# policy, which applies in royal-name English forms across chunks 1-4) and
+# `notes_from_pm` value `"1st ed. 58. Excavated by Carnarvon and Carter."`
+# (with `[1st ed. N]` normalised to `1st ed. N` per chunk-3 KV34 precedent
+# and joined per chunk-2 KV14 `". "` pattern) both match PM's printed text.
+# No reviewer-identified corrections needed. The empty list is retained
+# (rather than dropped) so `test_all_corrections_includes_every_chunk_list`
+# continues to enforce ALL_CORRECTIONS aggregation.
+CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -222,6 +241,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
+    CHUNK5_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -295,6 +315,32 @@ def main() -> None:
         else "- No overrides applied. The reviewer pass produced no "
         "actionable corrections on `reconciled.jsonl` for this chunk."
     )
+    # Per-chunk summary header — distinguishes "chunk has 0 corrections"
+    # from "chunk was never processed". Flagged by the PR #71 code-reviewer
+    # as an audit-trail gap when a chunk's CHUNK*_CORRECTIONS list is empty
+    # (no log lines get emitted, so the chunk's absence looks identical to
+    # a skipped run).
+    #
+    # Label each chunk by its numeric suffix read from the attribute name
+    # (NOT by list-position). Gemini code-review on PR #71 flagged that
+    # labelling by enumerate index breaks at chunk 10+ because the sibling
+    # `test_all_corrections_includes_every_chunk_list` uses lexicographic
+    # sort (which reorders chunks at 10+). Numeric sort here decouples the
+    # summary's correctness from ALL_CORRECTIONS's iteration order.
+    chunk_pattern = re.compile(r"^CHUNK(\d+)_CORRECTIONS$")
+    module_globals = dict(globals())
+    chunks = [
+        (int(match.group(1)), attr, module_globals[attr])
+        for attr, value in module_globals.items()
+        if (match := chunk_pattern.match(attr))
+    ]
+    chunks.sort(key=lambda entry: entry[0])
+    chunk_summary_lines = [
+        f"- Chunk {number}: {len(corrections)} correction(s) defined in {attr}."
+        for number, attr, corrections in chunks
+    ]
+    chunk_summary = "Per-chunk correction counts:\n" + "\n".join(chunk_summary_lines)
+
     appended = (
         f"{existing_diff.rstrip()}\n\n"
         f"{marker}\n"
@@ -304,6 +350,7 @@ def main() -> None:
         "Code subagent pass against the source PDF. No human scholar has\n"
         "signed off on this extract yet — per ADR-017 step 6, the extract is\n"
         "provisional until that happens.\n\n"
+        f"{chunk_summary}\n\n"
         f"{body}\n"
     )
     DIFF.write_text(appended)

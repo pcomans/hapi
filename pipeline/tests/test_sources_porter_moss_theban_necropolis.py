@@ -63,8 +63,17 @@ CHUNK3_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK4_TOMB_IDS: frozenset[str] = frozenset(
     {"KV47", "KV48", "KV55", "KV56", "KV57"}
 )
+# Chunk-5: KV62 Tutʿankhamun as a standalone single-row chunk. User
+# direction on chunk 5 scope: tomb-row granularity is sufficient for the
+# museum-data-join use case; per-chamber sub-structure would inflate the
+# schema past what downstream enrichment needs.
+CHUNK5_TOMB_IDS: frozenset[str] = frozenset({"KV62"})
 EXPECTED_TOMB_IDS: frozenset[str] = (
-    CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
+    CHUNK1_TOMB_IDS
+    | CHUNK2_TOMB_IDS
+    | CHUNK3_TOMB_IDS
+    | CHUNK4_TOMB_IDS
+    | CHUNK5_TOMB_IDS
 )
 
 
@@ -1167,13 +1176,12 @@ def test_chunk4_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
 
 
 def test_chunk4_missing_kv_ids_absent_from_expected_set() -> None:
-    """KV49–54, KV58–61 are absent from PM I.2 § I.A. KV62 (Tutankhamun)
-    is deferred to a dedicated chunk PR.
+    """KV49–54 and KV58–61 are absent from PM I.2 § I.A (PM jumps 48 → 55
+    and 57 → 62). KV62 (Tutʿankhamun) IS in the expected set as of chunk 5.
     """
     must_be_absent = (
         [f"KV{n}" for n in range(49, 55)]
         + [f"KV{n}" for n in range(58, 62)]
-        + ["KV62"]
     )
     for tid in must_be_absent:
         assert tid not in EXPECTED_TOMB_IDS, tid
@@ -1331,6 +1339,51 @@ def test_chunk4_kv57_haremhab() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Chunk-5 specific value-assertion tests (KV62 Tutʿankhamun, standalone)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk5_kv62_tutankhamun_full_row() -> None:
+    """KV62 — Tutʿankhamun, standalone single-row chunk. Exercises PM's
+    ayin glyph preservation in `occupant_name` (matches chunk-2 KV19
+    `Raʿmeses-Mentuhirkhopshef` precedent — ayin is a royal-name
+    radical, not a styling diacritic, so preserved even though the
+    `occupant_name` field otherwise strips diacritics).
+
+    Also exercises the joint `notes_from_pm` capture:
+    - PM's `[1st ed. 58]` cross-ref → `"1st ed. 58"` (same normalisation
+      as chunk-3 KV34).
+    - PM's `Excavated by Carnarvon and Carter.` ribbon clause.
+    - Joined with `". "` per chunk-2 KV14 pattern.
+
+    Asserts every field per CLAUDE.md rule 5.
+    """
+    r = _row("KV62")
+    assert r["tomb_id"] == "KV62"
+    assert r["valley"] == "Valley of the Kings"
+    assert r["occupant_name"] == "Tutʿankhamun"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "King"
+    assert r["dynasty"] is None
+    assert r["sub_period"] is None
+    assert r["date_bce_approx_start"] is None
+    assert r["date_bce_approx_end"] is None
+    assert r["location_sub_area"] is None
+    assert r["discovery_year"] is None
+    assert r["discoverer"] is None
+    assert r["is_unfinished"] is False
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == (
+        "1st ed. 58. Excavated by Carnarvon and Carter."
+    )
+    assert r["source_citation"] == {
+        "page": 569,
+        "edition": EDITION_PM_I2,
+        "section": "I.A",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Audit-trail tests for fix_rows.py
 # ---------------------------------------------------------------------------
 
@@ -1351,11 +1404,18 @@ def test_all_corrections_includes_every_chunk_list() -> None:
     """fix_rows.py's `ALL_CORRECTIONS` aggregates every `CHUNK*_CORRECTIONS`
     list. Dropping a chunk's corrections list silently destroys its audit
     trail — this test fails loud if a chunk is added without being included.
+
+    Uses natural-numeric sort on the chunk suffix (NOT lexicographic sort)
+    so the test stays correct at chunk 10+. Gemini code-review on PR #71
+    flagged that the prior lex-sort would mis-order `CHUNK10` before
+    `CHUNK2`, invalidating the equality assertion against a numerically-
+    ordered `ALL_CORRECTIONS`.
     """
     fix_rows = _import_fix_rows()
+    chunk_re = re.compile(r"^CHUNK(\d+)_CORRECTIONS$")
     chunk_attrs = sorted(
-        attr for attr in dir(fix_rows)
-        if attr.startswith("CHUNK") and attr.endswith("_CORRECTIONS")
+        (attr for attr in dir(fix_rows) if chunk_re.match(attr)),
+        key=lambda attr: int(chunk_re.match(attr).group(1)),
     )
     expected = [getattr(fix_rows, a) for a in chunk_attrs]
     assert fix_rows.ALL_CORRECTIONS == expected, (
