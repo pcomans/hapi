@@ -58,9 +58,11 @@ The chunk-1 extract example below shows what a typical KV row looks like AFTER P
 }
 ```
 
-**Diacritic-stripping policy (`occupant_name` vs `notes_from_pm`).** PM's typesetting uses scholarly diacritics: underdot-H (`ḥ`), macron (`ē`, `ō`), ayin (`ʿ`), etc. The extract applies TWO different conventions depending on the field:
-- `occupant_name` is the matchable name field used for Phase-A ruler-authority joining. It strips scholarly diacritics (`MAIḤIRPER` → `Mahirper`, `MERNEPTAḤ-SIPTAḤ` → `Merneptah-Siptah`, `AMENEMŌPET` → `Amenemopet`, `ḤAREMḤAB` → `Haremhab`). Exceptions: PM's ayin in royal names like `Raʿmeses-Mentuhirkhopshef` IS preserved (the ayin is a distinguishing radical, not a styling diacritic).
-- `notes_from_pm` is verbatim-preserve. Capture PM's wording as-printed including diacritics (`Smenkhkarēʿ` stays `Smenkhkarēʿ`, not `Smenkhkare`).
+**Diacritic-stripping policy (`occupant_name` vs `notes_from_pm`).** PM's typesetting uses scholarly diacritics (underdot-H `ḥ`, ayin `ʿ`, macron `ē`/`ō`, etc.) but the Griffith Institute's PDF text layer OCRs most of these imperfectly — `ḥ` renders as `I:I` / `I;I`, `ʿ` often renders as `c` or gets dropped, macrons typically get dropped entirely. The reference for "what PM actually prints" is the PDF page image, verified via the egyptologist-reviewer pre-merge pass; the text layer is the reproducible extraction substrate but is NOT the source of truth for diacritics.
+
+The extract applies TWO different conventions depending on the field:
+- `occupant_name` is the matchable name field used for Phase-A ruler-authority joining. It strips scholarly diacritics (`MERNEPTAḤ-SIPTAḤ` → `Merneptah-Siptah`, `MAIḤIRPER` → `Mahirper`, `ḤAREMḤAB` → `Haremhab`). Exception: ayin in royal names where the ayin is a distinguishing radical (e.g. `RAʿMESES-MENTUHIRKHOPSHEF` keeps its ayin → `Raʿmeses-Mentuhirkhopshef`).
+- `notes_from_pm` is verbatim-preserve against PM's printed text. Capture PM's wording as-printed including diacritics even when the text-layer OCR has dropped them. Example from chunk 4: KV55's hedge clause in PM ends `...Smenkhkarēʿ.` with macron-e + ayin + closing period; the OCR text layer reads `Smenkhkarec.`; `fix_rows.py` restores the `ēʿ` against the egyptologist-reviewer pass.
 
 This split lets downstream joins against pharaoh.se / Beckerath work on a normalised key while preserving PM's scholarly text for display and citation.
 

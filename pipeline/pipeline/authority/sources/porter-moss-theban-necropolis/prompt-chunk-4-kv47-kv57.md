@@ -153,11 +153,10 @@ Object with three fixed keys:
 - `"section"`: exactly `"I.A"`.
 - `"page"`: the printed page number on which the tomb's headword line sits. **Extract from the chunk text** — do NOT supply from memory. Use form-feed (`\f`) to identify physical pages, read the printed-page digit from the running header (`Tombs 47, 48, and 55 565`, `Tombs 56 and 57`, `Tombs 57 and 62`, or the verso-style `N VALLEY OF THE KINGS` headers). When the digit is OCR-mangled (e.g. `s66` for 566), derive via the offset: printed = physical + 458.
 
-## Known chunk-4 uncertainties to watch
+## Structural gotchas to watch
 
-- **KV47** and **KV56** share a Finds section (per the PM layout) — the objects listed on p.108 between the KV47 headword and the KV48 headword appear to be shared KV47/KV48/KV55 finds. Treat all such object lists as body prose — they sit past the first `Finds` / `Objects in Cairo Museum` sub-header and are out of scope.
-- **KV55** is a famous ambiguity in PM — the occupant was contested (Queen Tiye vs. Smenkhkare vs. Akhenaten). PM's 1964 wording "Probably AMENOPHIS IV, formerly attributed to Queen Teye or to Smenkhkare<" literally expresses that hedge. Record PM's exact wording in `notes_from_pm` alongside the structured `occupant_name`.
-- **KV56** is PM's `'Gold Tomb', uninscribed.` — treat exactly like chunk-2's KV12 (occupant_name=null, role=Unknown) BUT additionally capture the `'Gold Tomb'` nickname in `notes_from_pm`.
+- **Shared `Finds` / `Objects in Cairo Museum` sections.** PM groups some tomb finds under a shared header when artifacts were recovered together (e.g. a running header like `Tombs 47, 48, and 55` announces a shared finds section). Object lists under such a shared header sit past the first body sub-header and are out of scope for headword extraction. Do NOT copy finds lists into any of the three tombs' `notes_from_pm`.
+- **Layout headers vs cross-refs.** Page running headers like `Tombs 47, 48, and 55` or `Tombs 56 and 57` are PAGE-LAYOUT groupings, not `See also Tomb N` cross-references. Only populate `shared_with_tombs` from explicit `See also Tomb N` phrases inside the headword block.
 
 ## Pitfall summary (read LAST before running)
 
@@ -165,7 +164,7 @@ Object with three fixed keys:
 2. **Do NOT supply dynasty / BCE dates** from your knowledge.
 3. **Do NOT over-modernise** occupant names. PM-verbatim spelling (`Merneptah-Siptah`, `Haremhab`, `Amenophis IV`, `Amenemopet`).
 4. **Hedged attributions** go in `notes_from_pm` while the structured `occupant_name` stays clean (strip the `Probably` / `Attributed to` prefix).
-5. **Uninscribed tombs** (including KV56's `'Gold Tomb'`): `occupant_name=null`, `occupant_role="Unknown"`.
+5. **Uninscribed tombs** (whether PM uses `UNINSCRIBED` or a nicknamed form like `'X Tomb', uninscribed.`): `occupant_name=null`, `occupant_role="Unknown"`, PM's nickname (if any) captured verbatim in `notes_from_pm`.
 6. **Page running headers like `Tombs 47, 48, and 55`** are layout headers, NOT `shared_with_tombs` sources.
 7. **Cartouche garbage drops entirely**.
 8. **`source_citation.page` comes from the chunk text**, not memory.

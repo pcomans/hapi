@@ -193,9 +193,14 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "KV55",
         "notes_from_pm",
         "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ.",
-        "PM p.565 prints 'Smenkhkarēʿ' with macron-e and trailing ayin "
-        "`ʿ`; notes_from_pm is verbatim-preserve, so both diacritics "
-        "must be restored. Final period closes PM's sentence.",
+        "The text-layer OCR for chunk 4 drops PM's macron-e and renders "
+        "the ayin as `c` (`Smenkhkarec`); agents carried that through to "
+        "the reconciled notes. Egyptologist-reviewer pre-merge pass on "
+        "PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both "
+        "the macron and the trailing ayin, and confirmed the sentence-"
+        "final period closes PM's sentence. notes_from_pm is verbatim-"
+        "preserve against PM's printed text (not against the OCR text "
+        "layer) — restore both diacritics.",
     ),
     (
         "KV56",
