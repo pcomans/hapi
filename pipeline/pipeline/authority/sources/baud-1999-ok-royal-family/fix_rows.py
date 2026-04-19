@@ -75,7 +75,10 @@ _TRANSLIT_NORMALIZE = {
 #
 # Cross-referenced against Faulkner's *Concise Dictionary of Middle
 # Egyptian* and the *Wörterbuch der ägyptischen Sprache* for canonical
-# spellings. Audit count via `/tmp/claude/translit_audit.py`.
+# spellings. Audit is a one-line grep per candidate: count the
+# canonical form vs. the suspected-drift form across reconciled.jsonl;
+# if the canonical form appears at all AND the drifted form is
+# frequent, the drifted form is almost certainly extraction loss.
 _WORD_LEVEL_FIXES: tuple[tuple[str, str], ...] = (
     # `ꜥḏ-mr` = "district administrator" (Faulkner 52; Wb I 239).
     # Baud extraction dropped the dot-under `ḏ` → `d` on 18 instances
