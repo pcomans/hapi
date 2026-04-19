@@ -101,17 +101,16 @@ This source lands across multiple PRs (Dodson-Hilton pattern). Per the playbook 
 - **Chunk 2** (PR #68): `KV11–KV20` from PM I.2 § I.A. 10 rows, physical p.60–90. Note: **KV21 is absent from this PM section** — the list jumps from KV20 to KV22, so chunk 2 holds exactly 10 rows despite the "KV11–KV20" range label.
 - **Chunk 3** (PR #69): `KV22–KV46` from PM I.2 § I.A, physical p.89–106. 11 rows: {KV22, KV23, KV34, KV35, KV36, KV38, KV39, KV42, KV43, KV45, KV46}. **KV24–KV33, KV37, KV40, KV41, KV44 are absent from PM I.2** — PM's 1964 edition did not catalogue these as inscribed royal tombs. Introduced three row shapes: `West Valley` `location_sub_area` (KV22, KV23), multi-occupant (KV46 Yuia and Thuiu), re-used-tomb (KV45 Userhet re-used by Merenkhons).
 - **Chunk 4** (PR #70): `KV47–KV57` from PM I.2 § I.A, physical p.106–111. 5 rows: {KV47, KV48, KV55, KV56, KV57}. **KV49–KV54 and KV58–KV61 are absent from PM I.2**. Introduced hedged-attribution (KV55 `Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ.`) and the first `Vizier` role (KV48 Amenemopet). KV56 `'Gold Tomb', uninscribed.` — another null-name + `Unknown` row.
-- **Chunk 5 (this PR)**: `KV62 Tutʿankhamun` as a **standalone single-row** chunk. Per user direction on chunk-5 scope: tomb-row granularity is sufficient for the museum-data-join use case (Phase-A ruler/site enrichment needs `KV62 → Tutʿankhamun`, not per-chamber sub-structure). PM's KV62 entry body (room-by-room scene catalogues + object-by-object find lists) spans physical p.112–128 but is out of scope; the chunk-5 file is trimmed to physical p.111–112 (just the headword block, 2 pages) to prevent agents from wandering into the body. Preserves PM's ayin in `occupant_name` (`Tutʿankhamun`, Unicode half-ring U+02BF, matching chunk-2 KV19 precedent). Captures PM's `1st ed. 58` 1st-edition cross-reference and the `Excavated by Carnarvon and Carter.` ribbon clause in `notes_from_pm`. All 3 extraction subagents unanimous under the field-rule-based prompt; zero CHUNK5_CORRECTIONS needed.
+- **Chunk 5** (PR #71): `KV62 Tutʿankhamun` as a **standalone single-row** chunk. Per user direction: tomb-row granularity is sufficient for the museum-data-join use case. PM's KV62 body spans physical p.112–128 but is out of scope; the chunk-5 file is trimmed to physical p.111–112 (headword block only). Preserves PM's ayin in `occupant_name` (`Tutʿankhamun`, Unicode half-ring). Captures `1st ed. 58` cross-reference + `Excavated by Carnarvon and Carter.` clause in `notes_from_pm`. All 3 subagents unanimous; zero `CHUNK5_CORRECTIONS` needed.
+- **Chunk 6 (this PR)**: **§ I.A closure sweep, no rows added.** Verified against PM I.2 p.569–594 that **KV63, KV64, KV65 are not catalogued in the 1964 2nd edition** — the volume transitions from KV62's body (ending ~p.586) directly to § I.B "Finds from the Valley of the Kings" (p.586 tail), § I.C "Rest-houses and Shrines" (p.588), § I.D "Graffiti" (p.590), then § II "South-West Valleys" (p.592). KV63 was discovered 2005, KV64 in 2011, KV65 in 2019 — all post-1964 and out of scope for this source. This PR formally closes PM I.2 § I.A with a documentation entry; the 37-row KV corpus from chunks 1–5 is the complete PM I.2 § I.A tomb-row coverage.
 - **Future chunks** (each its own PR):
-  - `KV63–KV65` if PM I.2 1964 catalogues them (likely not — those are post-1964 discoveries).
-  - The South-West Valleys, Dra' Abu el-Naga, Asasif, Deir el-Bahri, Sheikh Abd el-Qurna, Khokha, Qurnet Mura'i, Deir el-Medina, Ramesseum, Medinet Habu sections from PM I.2 (each section its own chunk; non-KV ID schemes TBD when first valley lands).
-  - The `QV1`–`QV80` Valley of the Queens tombs from PM I.2 § X.
-  - The numbered Theban Tombs `TT1`–`TT400+` from PM I.1 (many chunks).
-  - PM I.2 § I.B "Finds", § I.C "Rest-houses", § I.D "Graffiti" — one chunk if KV-related, else dropped.
-  - PM I.2 § II–IX (South-West Valleys, Dra' Abu el-Naga, Asasif, Deir el-Bahri, Sheikh Abd el-Qurna, Ramesseum, Deir el-Medina) — chunked by section.
-  - PM I.2 § X "Valley of the Queens" (QV1–QV80).
-  - PM I.2 § XI "Medinet Habu", § XII "Objects from Thebes".
-  - PM I.1 numbered tombs TT1–TT400+ — many chunks.
+  - PM I.2 § I.B "Finds from the Valley of the Kings" — mostly object lists already redundant with museum APIs, likely skipped.
+  - PM I.2 § I.C "Rest-houses and Shrines" — workmen's villages, non-KV structures; schema fit uncertain.
+  - PM I.2 § I.D "Graffiti" — graffiti numbering, out of scope for tomb-row.
+  - PM I.2 § II–IX "South-West Valleys" / Dra' Abu el-Naga / Asasif / Deir el-Bahri / Sheikh Abd el-Qurna / Khokha / Qurnet Mura'i / Deir el-Medina / Ramesseum — each section likely its own chunk; non-KV ID schemes TBD when first valley lands.
+  - PM I.2 § X "Valley of the Queens" — `QV1`–`QV80`.
+  - PM I.2 § XI "Medinet Habu", § XII "Objects from Thebes" — schema fit uncertain.
+  - PM I.1 numbered Theban Tombs `TT1`–`TT400+` (many chunks, likely keyed by numbered-tomb decades).
 
 Per-chunk prompt files: `prompt.md` (chunk 1), `prompt-<chunk>.md` (chunks 2+). Per-chunk agent JSONLs: `raw/agent-{a,b,c}.jsonl` (chunk 1), `raw/agent-{a,b,c}-<chunk>.jsonl` (chunks 2+).
 
