@@ -126,18 +126,26 @@ EARLY_DYNASTIC_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20: same pattern as 2.01 — chained
     # translator-glosses from fns. 81 and 82 leaked into source_note.
     (
+        # Canonical Khasekhemwy Horus/Seth 2 source_note. Applied to all
+        # THREE dual-emit copies (horus_names[1], nebty_names[0],
+        # seth_names[0]) so the symmetry invariant holds — the fn. 83
+        # honorific-transposition note is scholarly commentary on the
+        # entry's meaning, not Nebty-specific, and belongs on every copy.
+        # Code-reviewer 2026-04-20 PR #86 P2-2 (dual-emit symmetry).
         "leprohon-2.08",
         "horus_names.1.source_note",
         (
             "Horus/Seth 2 form: the king reconciled the Seth and Horus "
             "traditions; the serekh is topped by BOTH Horus and Seth "
             "animals. See the accompanying Two Ladies entries which "
-            "repeat this dual form."
+            "repeat this dual form. If the two signs nbwy in the last "
+            "phrase were placed in honorific transposition, this part "
+            "of the name might read ḥtp nbwy im.f, \"The two lords "
+            "within him are satisfied.\""
         ),
-        "Trim trailing 'Horus and Seth; both animals appear on the top of "
-        "the serekh. Horus and Seth again.' — these are fns. 81 and 82 "
-        "glossing 'two powerful ones' and 'two lords' in the translation, "
-        "not source-notes.",
+        "Trim fn. 81/82 translator-glosses leaked from the translation "
+        "column; mirror fn. 83 honorific-transposition note across all "
+        "three Horus/Seth 2 copies for dual-emit symmetry.",
     ),
     (
         "leprohon-2.08",
@@ -151,14 +159,147 @@ EARLY_DYNASTIC_CORRECTIONS: list[tuple[str, str, object, str]] = [
             "of the name might read ḥtp nbwy im.f, \"The two lords "
             "within him are satisfied.\""
         ),
-        "Keep the honorific-transposition footnote (fn. 83 — scholarly "
-        "note on the name's meaning) but remove the duplicated dual-form "
-        "description if it's chained in. Minimal rewrite to lock the canonical form.",
+        "Canonical Horus/Seth 2 source_note — identical to horus_names[1] "
+        "and seth_names[0] per dual-emit symmetry (code-reviewer P2-2).",
+    ),
+    (
+        "leprohon-2.08",
+        "seth_names.0.source_note",
+        (
+            "Horus/Seth 2 form: the king reconciled the Seth and Horus "
+            "traditions; the serekh is topped by BOTH Horus and Seth "
+            "animals. See the accompanying Two Ladies entries which "
+            "repeat this dual form. If the two signs nbwy in the last "
+            "phrase were placed in honorific transposition, this part "
+            "of the name might read ḥtp nbwy im.f, \"The two lords "
+            "within him are satisfied.\""
+        ),
+        "Canonical Horus/Seth 2 source_note — identical to horus_names[1] "
+        "and nebty_names[0] per dual-emit symmetry (code-reviewer P2-2).",
+    ),
+]
+
+FIP_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Gemini Code Assist 2026-04-20 (PR #86 review): the pypdf MdC
+    # normaliser only normalises transliteration spans inside name-rows,
+    # NOT prose or footnote text. Leprohon's footnotes reference the
+    # Egyptian word being discussed in MdC shorthand — `Xt`, `tAwy`,
+    # `sA ra` — and those bare references leak into source_note fields
+    # when agents pull footnote text. Spot-normalise each occurrence to
+    # the Egyptological Unicode form to match the transliteration
+    # convention used everywhere else.
+    (
+        "leprohon-9-10a.01",
+        "birth_names.0.source_note",
+        (
+            "Although the name is missing in the Turin Canon (col. 4,18), "
+            "Manetho's Ninth Dynasty consisted of \"nineteen kings of "
+            "Herakleopolis,\" the first of whom was a \"King Achthoes\" "
+            "(Waddell 1940, 60–61). Hence, it is possible that the missing "
+            "name in Turin 4,18 was a King Khety, as the original Egyptian "
+            "name read, who is numbered as the First here. The name "
+            "Achthoes is sometimes rendered as Akhtoy in history books. "
+            "For the term ẖt meaning \"the (divine) Corporation,\" "
+            "referring to the Ennead, see Wb III, 357:18 and Hannig 2006b, "
+            "1972. Ramesside-attested only — no contemporary attestation "
+            "per Leprohon's headword asterisk. Leprohon marks this king's "
+            "headword with square brackets, indicating a reconstructed name."
+        ),
+        "Normalise MdC `Xt` → Unicode `ẖt` inside footnote prose. Gemini "
+        "Code Assist 2026-04-20 P2 inline comment on line 88.",
+    ),
+    (
+        "leprohon-9-10b.05",
+        "nebty_names.0.source_note",
+        (
+            "The Two Ladies name is known from the previously mentioned "
+            "staff as well as a fragmentary inlaid ivory chest from Lisht, "
+            "where the end of the cobra over the basket hieroglyphs is "
+            "clear immediately before the mry ib tꜣwy elements (Hayes "
+            "1953, 143, fig. 86). Henceforth, the Two Ladies name becomes "
+            "a regular part of the royal titulary; see von Beckerath 1999, "
+            "74 n. 6."
+        ),
+        "Three fixes: grammar `names is known` → `name is known`; `are "
+        "clear` → `is clear`; MdC `tAwy` → Unicode `tꜣwy`. Gemini Code "
+        "Assist 2026-04-20 P2 inline comment on line 101.",
+    ),
+    # Egyptologist-reviewer 2026-04-20 P2-3 (chunk 3 PR #86): the Intef I
+    # footnote-30 content attaches biographic / etymology commentary about
+    # the name "Intef" that belongs on the Birth name entry (where "Intef"
+    # is the actual name being qualified), not on the Horus name
+    # `shr tꜣwy`. Move the etymology content to birth_names, and merge it
+    # with the existing Tod-chapel / Postel 2003 note there (which also
+    # needed the Gemini MdC+typo fixes).
+    (
+        "leprohon-11a.02",
+        "horus_names.0.source_note",
+        None,
+        "Relocate king-level etymology content to birth_names where the "
+        "name 'Intef' is the entry subject. Egyptologist-reviewer "
+        "2026-04-20 P2-3.",
+    ),
+    (
+        "leprohon-11a.02",
+        "birth_names.0.source_note",
+        (
+            "Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name "
+            "\"Intef\" is sometimes rendered \"Inyotef\"; the latter name "
+            "reflects the Coptic word for father, eiwt. At Tod, in a "
+            "chapel erected by Mentuhotep II, the epithet sꜣ rꜥ (sa ra), "
+            "\"The son of Re,\" is added within the cartouche; see Postel "
+            "2003, 409, fig. 3."
+        ),
+        "Merge etymology content from horus_names[0] (egyptologist P2-3 "
+        "relocation) with existing Postel 2003 chapel note; fix MdC `sA "
+        "ra` → `sꜣ rꜥ` and typo `fig, 3` → `fig. 3` (Gemini Code Assist "
+        "2026-04-20 P2 inline comment on line 104).",
+    ),
+    # Egyptologist-reviewer 2026-04-20 (chunk 3 PR #86): dual-emitted
+    # `Throne and birth:` entries must carry SYMMETRIC source_notes on both
+    # copies. Agents consistently emitted the Ramesside-only tag / bracket-
+    # reconstruction note / footnote context only on the `throne_names`
+    # copy, leaving the `birth_names` copy with just the "Throne and Birth"
+    # dual-emission note. Fix: copy the full throne_names source_note into
+    # birth_names so downstream consumers see the same provenance regardless
+    # of which side of the dual-emission they read from.
+    (
+        "leprohon-9-10a.07",
+        "birth_names.0.source_note",
+        (
+            "Ramesside-attested only — no contemporary attestation per "
+            "Leprohon's headword asterisk. Leprohon marks this king's "
+            "headword with square brackets, indicating a reconstructed "
+            "name. Leprohon labels as 'Throne and Birth' — a combined "
+            "prenomen/nomen where fragmentary evidence prevents separation."
+        ),
+        "Khety IV is dual-emitted to throne_names + birth_names (combined "
+        "'Throne and birth:' label); both copies must carry identical "
+        "provenance. birth_names copy was missing the Ramesside-only tag "
+        "and bracket-reconstruction note present on throne_names. "
+        "Egyptologist-reviewer 2026-04-20 P2-1.",
+    ),
+    (
+        "leprohon-9-10b.03",
+        "birth_names.0.source_note",
+        (
+            "The cartouche is found in the same quarry as the preceding "
+            "entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a "
+            "verb, is unreadable. Leprohon labels as 'Throne and Birth' — "
+            "a combined prenomen/nomen where fragmentary evidence "
+            "prevents separation."
+        ),
+        "Khety VI is dual-emitted to throne_names + birth_names (combined "
+        "'Throne and birth:' label); both copies must carry identical "
+        "provenance. birth_names copy was missing the fn. 16–17 Anthes-"
+        "quarry context present on throne_names. "
+        "Egyptologist-reviewer 2026-04-20 P2-2.",
     ),
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
+    *FIP_CORRECTIONS,
 ]
 
 
@@ -223,6 +364,35 @@ NAME_LIST_FIELDS = (
 )
 
 
+def backfill_name_list_fields(rows: list[dict]) -> list[str]:
+    """Ensure every row has every key in `NAME_LIST_FIELDS`, defaulting `[]`.
+
+    Chunk-3 introduced `later_horus_names` as a new top-level name-type
+    field. Chunk-1 / chunk-2 rows were extracted before the field existed
+    and their reconciled entries are missing the key. Constitutional rule
+    4 (single source of truth) requires the schema shape be consistent
+    across all rows so tests can iterate `r[field]` directly without
+    `.get(field, [])` masking missing-vs-empty distinctions.
+
+    Gemini / code-reviewer 2026-04-20 PR #86: "add a deterministic pass in
+    fix_rows.py that ensures every row has every key in NAME_LIST_FIELDS".
+    """
+    log_lines: list[str] = []
+    for row in rows:
+        lid = row["leprohon_id"]
+        added: list[str] = []
+        for field in NAME_LIST_FIELDS:
+            if field not in row:
+                row[field] = []
+                added.append(field)
+        if added:
+            log_lines.append(
+                f"  {lid}: backfilled missing name-list fields "
+                f"{added!r} as []"
+            )
+    return log_lines
+
+
 def strip_debug_leakage(rows: list[dict]) -> list[str]:
     """Walk every name-entry in every row and strip the OCR-vs-pypdf debug
     string from `source_note`. Returns log lines describing each strip.
@@ -258,8 +428,10 @@ def apply_corrections() -> list[str]:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
     log_lines: list[str] = []
 
-    # Deterministic pass first — strips debug-string leakage uniformly so that
-    # any spot corrections that follow operate on clean text.
+    # Deterministic passes first — normalise schema shape + strip debug-string
+    # leakage uniformly so that any spot corrections that follow operate on
+    # clean, fully-keyed rows.
+    log_lines.extend(backfill_name_list_fields(rows))
     log_lines.extend(strip_debug_leakage(rows))
 
     by_id = {r["leprohon_id"]: r for r in rows}

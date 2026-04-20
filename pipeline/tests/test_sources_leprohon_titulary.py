@@ -274,18 +274,29 @@ NAME_ENTRY_FIELDS = frozenset(
 )
 
 
+def test_name_list_fields_present_on_every_row() -> None:
+    """Rule 4 (single source of truth): every row carries every name-type
+    field with `[]` default when empty, so downstream consumers don't need
+    to branch on present-vs-absent. Backfilled by `fix_rows.backfill_
+    name_list_fields` across chunks that pre-date a newly-introduced
+    name-type field (e.g. chunk 3 added `later_horus_names`)."""
+    for r in _rows():
+        missing = set(NAME_LIST_FIELDS) - set(r)
+        assert not missing, f"{r['leprohon_id']}: missing name-list keys {missing!r}"
+
+
 def test_name_lists_are_lists() -> None:
     """Every name-type field is a list (possibly empty), never null."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            assert isinstance(r.get(field, []), list), f"{r['leprohon_id']}.{field}"
+            assert isinstance(r[field], list), f"{r['leprohon_id']}.{field}"
 
 
 def test_name_entries_have_required_fields() -> None:
     """Every name entry exposes the 7-field schema exactly."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for entry in r.get(field, []):
+            for entry in r[field]:
                 missing = NAME_ENTRY_FIELDS - set(entry)
                 extra = set(entry) - NAME_ENTRY_FIELDS
                 assert not missing, f"{r['leprohon_id']}.{field}: missing {missing}"
@@ -296,9 +307,9 @@ def test_variant_index_starts_at_one() -> None:
     """First entry in every name list has variant_index=1, is_variant=False."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            if not r.get(field, []):
+            if not r[field]:
                 continue
-            first = r.get(field, [])[0]
+            first = r[field][0]
             assert first["variant_index"] == 1, f"{r['leprohon_id']}.{field}[0]"
             assert first["is_variant"] is False, f"{r['leprohon_id']}.{field}[0]"
 
@@ -307,7 +318,7 @@ def test_variant_index_is_monotonic() -> None:
     """variant_index values increment by 1 within each list: 1, 2, 3, ..."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for i, entry in enumerate(r.get(field, []), start=1):
+            for i, entry in enumerate(r[field], start=1):
                 assert entry["variant_index"] == i, (
                     f"{r['leprohon_id']}.{field}[{i-1}]: "
                     f"variant_index={entry['variant_index']}, expected {i}"
@@ -318,7 +329,7 @@ def test_is_variant_matches_position() -> None:
     """is_variant is False iff variant_index == 1; True otherwise."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for entry in r.get(field, []):
+            for entry in r[field]:
                 expected = entry["variant_index"] > 1
                 assert entry["is_variant"] == expected, (
                     f"{r['leprohon_id']}.{field}: "
@@ -331,7 +342,7 @@ def test_attested_in_is_list() -> None:
     """attested_in is always a list (possibly empty), never null."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for entry in r.get(field, []):
+            for entry in r[field]:
                 assert isinstance(entry["attested_in"], list), (
                     f"{r['leprohon_id']}.{field}"
                 )
@@ -750,6 +761,18 @@ def test_ramesside_only_tagging_is_applied_where_expected() -> None:
         "leprohon-3a.04",  # Nebkare
         "leprohon-4.05",  # Baufre
         "leprohon-6.07",  # Queen Neith-Iqeret / Nitocris
+        # Chunk 3 FIP (Dyn 9–10a): 7 explicitly-asterisked headwords plus
+        # 1 Senen//// (headword asterisk `5. SENEN ////*`). All except
+        # `/////` stub (9-10a.02 — no name entries to attach a tag to)
+        # and Neferkare III (9-10a.03 — contemporarily attested per fn. 6)
+        # carry the Ramesside-only tag.
+        "leprohon-9-10a.01",  # Khety I
+        "leprohon-9-10a.04",  # Khety II
+        "leprohon-9-10a.05",  # Senen////
+        "leprohon-9-10a.06",  # Khety III
+        "leprohon-9-10a.07",  # Khety IV
+        "leprohon-9-10a.08",  # Shed////
+        "leprohon-9-10a.09",  # Hu////
     }
     for lid in expected_tagged:
         r = _row(lid)
@@ -757,6 +780,66 @@ def test_ramesside_only_tagging_is_applied_where_expected() -> None:
         assert RAMESSIDE_ONLY_TAG in sn, (
             f"{lid} ({r['display_name']}): expected Ramesside-only tag in "
             f"source_note, got: {sn[:120]!r}"
+        )
+
+
+DUAL_EMIT_PAIRS: dict[str, tuple[tuple[str, int], ...]] = {
+    # Extraction-pipeline dual-emissions where a single Leprohon-labelled
+    # entry is duplicated into multiple name-type lists. Enumerated
+    # explicitly (rather than inferred from shared transliteration) because
+    # many kings have COINCIDENTAL text overlaps across name types that
+    # are NOT dual-emits — e.g. Qaa's Horus `ḳꜣ-ꜥ` and Nebty `ḳꜣ-ꜥ` are two
+    # separate Leprohon entries with different footnote commentary, not a
+    # single entry duplicated.
+    #
+    # Tuple elements are `(field, variant_index)` identifying each copy;
+    # all copies must share a single `source_note`.
+    "leprohon-2.08": (
+        # Khasekhemwy: `Horus/Seth 2` form — the Horus name entry (variant 2),
+        # the Nebty name entry (variant 1), and the Seth name entry (variant 1)
+        # are all the SAME Leprohon-labelled entry. Historically the Nebty
+        # copy carried an additional `nbwy` honorific-transposition footnote
+        # that horus/seth did not; the fix_rows pass reconciled them.
+        ("horus_names", 2),
+        ("nebty_names", 1),
+        ("seth_names", 1),
+    ),
+    "leprohon-9-10a.07": (  # Khety IV: `Throne and birth:` dual
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+    "leprohon-9-10b.03": (  # Khety VI: `Throne and birth:` dual
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+}
+
+
+def test_dual_emit_source_notes_are_symmetric() -> None:
+    """When the extraction pipeline dual-emits a single Leprohon-labelled
+    entry to TWO or more name-type lists (Khasekhemwy's `Horus/Seth 2`;
+    Khety IV / Khety VI's `Throne and birth:`), every copy must carry the
+    SAME `source_note`. Rule 4 (single source of truth): Ramesside-only
+    tags, bracket-reconstruction notes, footnote provenance, and dual-
+    classification commentary live on the entry regardless of which list
+    a consumer reads from. Regression guard — a future extraction that
+    forgets to mirror a tag fails here before the data ships."""
+    for lid, pairs in DUAL_EMIT_PAIRS.items():
+        r = _row(lid)
+        notes = []
+        for field, variant_index in pairs:
+            candidates = [e for e in r[field] if e["variant_index"] == variant_index]
+            assert len(candidates) == 1, (
+                f"{lid}: {field}[variant_index={variant_index}] "
+                f"expected 1 match, got {len(candidates)}"
+            )
+            notes.append((field, candidates[0].get("source_note")))
+        distinct = {n for _, n in notes}
+        assert len(distinct) == 1, (
+            f"{lid}: dual-emit source_notes diverge across "
+            f"{[f for f, _ in notes]}:\n  " + "\n  ".join(
+                f"{f}: {n!r}" for f, n in notes
+            )
         )
 
 
