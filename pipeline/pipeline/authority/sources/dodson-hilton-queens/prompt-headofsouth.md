@@ -10,7 +10,7 @@ You are extracting structured royal-family-member rows from OCR'd Brief Lives en
 
 One OCR chunk file covering D&H's chapter 2 "Head of the South" Brief Lives sub-block (11th Dynasty transition, the unification of Upper Egypt under the Theban kings that closes the First Intermediate Period):
 
-1. `<repo_root>/pipeline/pipeline/authority/sources/dodson-hilton-queens/raw/chunk-p81-p82.md` — printed pp. 88–89, physical PDF pp. 81–82. 13 entries expected (12 placed + 1 unplaced).
+1. `<repo_root>/pipeline/pipeline/authority/sources/dodson-hilton-queens/raw/chunk-p81-p82.md` — printed pp. 88–89, physical PDF pp. 81–82.
 
 ## Output
 
@@ -18,91 +18,77 @@ Write JSONL to `<agent_dir>/agent-{a|b|c}-headofsouth.jsonl`, where `<agent_dir>
 
 ## Task
 
-Every Brief Lives entry gets one row. Entries begin with a bold name (`**Name**` upright for males, `***Name***` italic for females — this is the D&H typographic convention for sex) followed by role codes in parentheses, then a 1–3 sentence prose paragraph. Read the chunk in order and preserve every entry.
+Every Brief Lives entry gets one row. Entries begin with a bold name (`**Name**` upright for males, `***Name***` italic for females — this is D&H's typographic convention for sex) followed by role codes in parentheses, then a 1–3 sentence prose paragraph. Read the chunk in order and preserve every entry. The chunk also contains a trailing `### Unplaced` sub-heading under which D&H lists any entry they cannot confidently place in the 11th-Dynasty family tree; rows beneath that heading take `unplaced: true`.
 
 ## Schema
 
 ```json
 {
-  "dh_id": "Neferu II",
-  "name": "Neferu II",
+  "dh_id": "<D&H's bold name-with-disambiguator verbatim>",
+  "name": "<same string as dh_id>",
   "alt_names": [],
-  "roles": ["KW", "KD"],
+  "roles": ["<role code 1>", "<role code 2>", "..."],
   "sex": "female",
-  "spouse_names": ["Mentuhotep II"],
-  "father_name": "Inyotef III",
-  "mother_name": "Iah",
+  "spouse_names": [],
+  "father_name": null,
+  "mother_name": null,
   "children_names": [],
   "dynasty": 11,
   "sub_period": "The Head of the South",
   "unplaced": false,
-  "notes": "Daughter of Inyotef III and Iah, and wife of Mentuhotep II; buried in tomb TT319 at Deir el-Bahari.",
+  "notes": "<full prose paragraph verbatim>",
   "source_citation": {"pdf_pages": "81-82", "edition": "Thames & Hudson 2004 hardback"}
 }
 ```
 
 ## Field semantics
 
-- **`dh_id`** — D&H's name-with-disambiguator exactly as printed in bold. Letter suffixes (`Inyotef A`, `Neferu I`, `Neferu II`) are part of the id. The chunk contains no lacuna-prefixed names and no compound-form name-change slashes.
-
-  **Duplicates within this chunk**: the chunk is expected to have no cross-section duplicates (the "Head of the South" is one sub_period in isolation — other Ch 2 sub-blocks are extracted in separate PRs). Each `dh_id` appears once within this extract. If you observe any `dh_id` twice, flag it in your final report.
+- **`dh_id`** — D&H's bold name-with-disambiguator exactly as printed in the chunk. Letter suffixes (e.g. a trailing single capital letter) and Roman-numeral disambiguators are part of the id. No lacuna-prefixed names appear in this chunk and no compound-form name-change slashes. If you observe any `dh_id` twice within your own output, flag it in your final report.
 
 - **`name`** — same string as `dh_id` for this source. Kept separate for cross-source schema parity.
 
-- **`alt_names`** — list of variant name strings D&H records inline. Empty for every entry in this chunk (no inline `"Also known as …"` phrases appear in the source). Return `[]`.
+- **`alt_names`** — list of variant name strings D&H records inline in the current entry's own prose (e.g. `"Also known as …"`). Empty list when D&H's prose for the entry lists no alternative. This chunk's Brief Lives does not include inline `alt_names` phrases for any entry; expect `[]` for every row.
 
-- **`roles`** — list of role-code strings from the parenthetical after the name. Split on `;` with whitespace trimmed. Known codes (carried forward from Ramesside / Amarna / Power chunks): `K`, `KD`, `KDB`, `KM`, `KW`, `KGW`, `KSis`, `KSon`. Additional codes expected in this chunk, preserved verbatim even if new:
-  - `PH` — appears on several female wives buried in Deir el-Bahari mortuary complex tombs (Ashayet, Henhenet, Kawit, Kemsit, Sadhe). Do NOT expand the code; keep as `"PH"`.
-  - `GS` — appears on Tem (wife of Mentuhotep II). Keep as `"GS"`.
-  - `Nomarch` — on Inyotef A (provincial governor, male non-king). Keep verbatim as a single token `"Nomarch"`.
+- **`roles`** — list of role-code tokens from the parenthetical after the name. Split on `;` and trim whitespace. Preserve every token verbatim, including trailing modifiers like `?` (which encode D&H's hedge on whether the subject actually held that role). Never expand a code to long-form, never decode; Phase A owns the role-code glossary. Unfamiliar codes (i.e. codes not on the cross-chunk list below) are preserved as-is. Codes observed on prior chunks (Power, Amarna, Ramesside) include: `K`, `KD`, `KDB`, `KM`, `KW`, `KGW`, `GW`, `KSis`, `KSon`, `KSonB`, `EKSon`, `1KSonB`, `HPH`, `HPM`, `SPP`, `HPA`, `GWA`, `Ador`, `GM`, `MULE`, `MoH`, `Genmo`, `Exec`, `ExecH2L`, `L2L`, `M2L`, `GBW`, `Fanbearer`, `Nomarch`, `King of Hittites`, `King of Mitanni`, `Viz`, plus hedged forms like `KW?`. This chunk may introduce codes never seen before — preserve them verbatim.
 
-  Preserve code strings verbatim even if unfamiliar — D&H's role-code glossary is a Phase-A concern. For hedged codes like `"(PH; KW?)"` with a question mark inside the parentheses, split as two codes: `["PH", "KW?"]` — the `?` is part of the code string and reflects D&H's authorial hedge on whether the individual actually held that role. Keep it.
+- **`sex`** — `"male"` if the entry is typographically `**Name**` (upright bold), `"female"` if `***Name***` (bold italic). Confirm with prose pronouns (`"he/his/son of"` vs `"she/her/daughter of"`) as tiebreaker only when the typography is ambiguous in the OCR.
 
-- **`sex`** — `"male"` or `"female"`:
-  - **male**: `Nomarch`, `KSon`, `K`; BOLD upright entry rendering (`**Name**`); prose uses `"son of"`, `"he"`, `"his"`.
-  - **female**: `KD`, `KDB`, `KM`, `KW`, `KGW`, `KSis`, `PH`, `GS`; BOLD ITALIC entry rendering (`***Name***`); prose uses `"daughter of"`, `"wife of"`, `"mother of"`, `"she"`, `"her"`.
-  - In this chunk, the only male entry is `Inyotef A` (Nomarch). All other 12 entries are female (wives, mothers, and daughters of Mentuhotep II and surrounding Dyn-11 transition kings).
+- **`spouse_names`** — list of spouse names from `"wife of X"`, `"husband of Y"`, `"married Z"`, `"consort of W"` phrases in the current entry's own prose. Hedges are preserved verbatim inside the string (e.g. if D&H writes `"Possibly a wife of NAME"`, emit `["NAME (possibly)"]` — the `(possibly)` suffix captures D&H's hedge). Empty list when the prose names no specific spouse; in particular, when D&H's prose says the spouse is **unknown**, anonymous, or simply "a king" without identification, emit `[]` rather than inventing an entity name — Phase A treats empty as "no resolvable target", which is the correct semantics for unidentifiable relatives. Do NOT conflate parent cross-references (`"daughter of"`, `"son of"`, `"mother of"`) with spouses.
 
-- **`spouse_names`** — list of spouse names from `"wife of X"`, `"husband of Y"`. Hedges preserved verbatim in the string (e.g. `"Mentuhotep II (possibly)"`). Empty list when no spouse is named in the prose. Do NOT include cross-reference mentions like `"mother of"` or `"daughter of"` — those fill `mother_name` / `father_name` not `spouse_names`.
+- **`father_name`** / **`mother_name`** — single string from `"son of X"`, `"daughter of Y"`, `"mother NAME"` / `"father NAME"` prose in the entry itself. `null` when the prose either doesn't name the parent at all OR names the parent only as "unknown", anonymous, or otherwise unresolvable. Do not invent a placeholder entity (e.g. `"unknown king"`) where D&H's prose offers no specific individual — `null` is the honest encoding and Phase A handles it correctly. D&H's explicit hedges on a **named** parent (e.g. `"probably"`, `"possibly"`) are preserved verbatim inside the string (e.g. `"NAME (possibly)"`).
 
-- **`father_name`** / **`mother_name`** — single strings from `"son of X"`, `"daughter of Y"`, `"mother Z"` / `"father W"`. `null` when D&H doesn't state the parent. Hedges preserved verbatim.
+- **`children_names`** — list of children named in the current entry's own prose (e.g. `"mother of A and B"`, `"father of C"`). Do NOT do cross-entry inference for this chunk: if the prose of the current entry does not name a child, the list is empty even when another entry's prose names the current entry as a parent. (Cross-entry inference is reserved for specific symmetric cases in other chunks; this chunk's prose is dense enough that the straight verbatim rule suffices.)
 
-- **`children_names`** — list of children named in this entry's own prose. The cross-entry-inference rule from chunk 2 is NOT extended to this chunk — every `children_names` list is either empty or populated from names the current entry's own prose explicitly mentions as the subject's children. Example: `Iah`'s entry says "mother of Mentuhotep II and Neferu II" → `children_names: ["Mentuhotep II", "Neferu II"]`. `Tem`'s entry says "mother of Mentuhotep III" → `children_names: ["Mentuhotep III"]`. `Neferu I`'s entry says "Mother of Inyotef II" → `children_names: ["Inyotef II"]`. `Ikui`'s entry says "Mother of Inyotef A" → `children_names: ["Inyotef A"]`. `Imi`'s entry says "Mother of Mentuhotep IV" → `children_names: ["Mentuhotep IV"]`. Entries that say "wife of X" without naming children: `children_names: []`.
-
-- **`dynasty`** — integer `11` for every row in this chunk. (The 11th Dynasty spans both the late First Intermediate Period and the early Middle Kingdom; D&H groups the entire dynasty under this sub_period.)
+- **`dynasty`** — integer `11` for every row in this chunk. D&H groups the entire 11th Dynasty under this sub-section regardless of whether a given individual belongs to the late First Intermediate Period or the early Middle Kingdom phase of the dynasty.
 
 - **`sub_period`** — string, exactly `"The Head of the South"` on every row.
 
-- **`unplaced`** — `true` only for entries that appear under the `### Unplaced` sub-heading (at least `Neferkayet` on p. 89). `false` for every other entry.
+- **`unplaced`** — `true` for entries appearing under the `### Unplaced` sub-heading at the end of the chunk. `false` for every entry appearing above that heading.
 
-- **`notes`** — the full prose paragraph verbatim, single-line-joined. Preserve museum catalogue locations (`Cairo Museum`, `British Museum`, `Metropolitan Museum of Art`, `Ny Carlsberg`, `Moscow`, `Brussels`), tomb IDs (`DBXI.7`, `DBXI.9`, `DBXI.11`, `DBXI.15`, `DBXI.17`, `TT308`, `TT319`), and named stela / statue / block references (`stela of Tjetji (British Museum)`, `stelae of Tjetji`, `scribe-statue dedicated by Senwosret I`, `block now in the British Museum`, `Karnak king list`). Trim leading / trailing whitespace. Do NOT summarise, editorialise, or add scope commentary.
+- **`notes`** — the full prose paragraph for the entry, verbatim, single-line-joined. Preserve museum locations (Cairo Museum, British Museum, Metropolitan Museum, Moscow, Brussels, Ny Carlsberg, etc.), tomb IDs (`DBXI.N`, `TT-number`), named stela / statue / block references, and D&H's hedges (`probably`, `possibly`, `perhaps`). Trim leading / trailing whitespace. Do NOT summarise, editorialise, or add scope commentary.
 
 - **`source_citation`** — fixed literal `{"pdf_pages": "81-82", "edition": "Thames & Hudson 2004 hardback"}` on every row.
 
-## Parsing hazards (Head of the South)
+## Abstract parsing rules (no per-row answer enumeration)
 
-- **`Inyotef A` vs `Inyotef II` vs `Inyotef III`**. `Inyotef A` is the nomarch-father of Mentuhotep I (letter-suffix = non-regnal individual, predynasty-11 in the numbering convention). `Inyotef II` and `Inyotef III` are regnal numerals for kings of the 11th Dynasty and appear ONLY as cross-references in prose (e.g. `"mother of Inyotef II"`), NOT as their own Brief Lives entries in this chunk. Only `Inyotef A` is a row here; do NOT extract `Inyotef II` or `Inyotef III` as entries.
-- **`Mentuhotep I/II/III/IV`** appear only as cross-references (husband / son / father of the women listed). No Mentuhotep gets his own Brief Lives entry in this chunk. `Mentuhotep II` is the most-cited spouse. Do NOT extract regnal-name kings as separate rows for this chunk.
-- **`Neferu I` vs `Neferu II`**. Two distinct women — `Neferu I` is the *mother of Inyotef II* (her son is named with the epithet "born of Neferu" on several stelae), `Neferu II` is the *wife of Mentuhotep II* and daughter of Inyotef III + Iah. Two separate rows; D&H's Roman-numeral suffix is the disambiguator.
-- **`Kawit` and `Kemsit` shared hedging**: D&H lists both with `(PH; KW?)` — the `KW?` hedge is preserved verbatim as the code string `"KW?"`. Do NOT drop the `?`.
-- **`Neferkayet` is Unplaced**: she appears under the `### Unplaced` sub-heading on p. 89. `unplaced: true`. D&H says she is "Daughter and wife of unknown kings" — `father_name` and `spouse_names` each carry `"unknown king"` or similar per the prose wording, OR `null` if you judge the phrase "unknown kings" to be too vague to commit to. Per constitutional rule 1 (scholarly traceability), prefer capturing D&H's phrase verbatim over normalizing to `null` — use `father_name: "unknown king"` and `spouse_names: ["unknown king"]`.
+- **Non-regnal vs regnal names.** A bare name with a trailing single-letter capital suffix (`A`, `B`, `C`, ...) is D&H's per-family-tree disambiguator for a non-regnal individual. A name with a Roman-numeral suffix (`II`, `III`, `IV`) is the regnal form of a pharaoh's name and appears in the Brief Lives only as a cross-reference in other entries' prose, not as its own Brief Lives entry (even when the regnal-name king is mentioned many times). Emit rows for the letter-suffixed individuals you see; do NOT emit rows for Roman-numeral kings referenced in someone else's prose.
+- **Name-disambiguator Roman numerals on non-regnal names.** Occasionally D&H uses Roman-numeral suffixes on non-regnal individuals to disambiguate homonyms (e.g. two women sharing the same given name across different generations). These ARE their own Brief Lives entries — tell them apart from regnal-king references by whether the individual has their own bold `***Name N***` entry in the chunk. If the Roman-numeral name appears in bold at the start of an entry, it's a row; if it appears only inside other entries' prose, it's a cross-reference.
+- **Hedged attributions.** D&H's role-code hedges (`?`) and prose hedges (`possibly`, `probably`) are preserved verbatim — on roles inside the parenthetical, hedges attach to the code token; on relationships inside the prose, hedges attach to the name string.
 
 ## Sort order
 
-Alphabetical by `dh_id`, case-insensitive. Unplaced entries sort after placed entries. Expected order: `Ashayet, Henhenet, Iah, Ikui, Imi, Inyotef A, Kawit, Kemsit, Neferu I, Neferu II, Sadhe, Tem, [Neferkayet unplaced]`.
+Alphabetical by `dh_id`, case-insensitive, within each `unplaced` bin. The merge step handles the final placed-then-unplaced ordering; you may emit rows in reading order.
 
 ## Expected row count
 
-**13 rows**: 12 placed (`Ashayet`, `Henhenet`, `Iah`, `Ikui`, `Imi`, `Inyotef A`, `Kawit`, `Kemsit`, `Neferu I`, `Neferu II`, `Sadhe`, `Tem`) + 1 unplaced (`Neferkayet`).
-
-If your row count is below 12 or above 14, re-read the chunk and count entries before writing.
+Count the bold-name entries in the chunk (placed + under the `### Unplaced` sub-heading) before writing. If the OCR is well-formed and no entry is OCR-mangled, the count is uniquely determined by the chunk. Agents should NOT invent rows to meet an expected count — if the count differs from prior Brief Lives chunks' expectation, flag it in your final report.
 
 ## Output
 
 Write the JSONL. In your final response, report:
-1. Total row count and confirmation of the 12 placed + 1 unplaced split.
-2. Any cross-section duplicate `dh_id`s (expected: none).
-3. Any novel role code beyond `PH`, `GS`, `Nomarch`, `KW?` that you encountered and preserved verbatim.
+1. Total row count and the placed/unplaced split.
+2. Any cross-section duplicate `dh_id`s within your output (a true duplicate within a single chunk is an extraction bug — flag immediately).
+3. Any novel role-code tokens you preserved verbatim (tokens not in the list above).
 4. Anything anomalous in the OCR (entry that didn't fit the template, unclear bold-vs-italic typography, ambiguous parental clause).
 
 Under 100 words.

@@ -4900,6 +4900,12 @@ def test_headofsouth_imi_full_row() -> None:
 
 
 def test_headofsouth_inyotef_a_full_row() -> None:
+    """Sole male entry in the Head-of-South chunk (Nomarch role).
+    D&H describes him as `son of Ikui` and `probable father of
+    Mentuhotep I`. The probability hedge is preserved verbatim on
+    `children_names` per the abstract-rule encoding in the prompt:
+    `"Mentuhotep I (probably)"` rather than an unhedged `"Mentuhotep I"`.
+    """
     _assert_full_row('Inyotef A', {
         'dh_id': 'Inyotef A',
         'name': 'Inyotef A',
@@ -4909,7 +4915,7 @@ def test_headofsouth_inyotef_a_full_row() -> None:
         'spouse_names': [],
         'father_name': None,
         'mother_name': 'Ikui',
-        'children_names': ['Mentuhotep I'],
+        'children_names': ['Mentuhotep I (probably)'],
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
@@ -5033,14 +5039,23 @@ def test_headofsouth_tem_full_row() -> None:
 
 
 def test_headofsouth_neferkayet_full_row() -> None:
+    """Sole Unplaced entry in the Head-of-South chunk. D&H's prose
+    reads `"Daughter and wife of unknown kings"` — plural `"kings"`
+    covers two distinct unidentifiable relationships (the unknown
+    father and the unknown husband). The extract uses `father_name:
+    null` and `spouse_names: []` per the abstract-rule encoding for
+    unresolvable relatives: no specific individual is named, so no
+    placeholder entity is invented. Phase A's authority-matcher
+    correctly treats null/empty as `"no resolvable target"`.
+    """
     _assert_full_row('Neferkayet', {
         'dh_id': 'Neferkayet',
         'name': 'Neferkayet',
         'alt_names': [],
         'roles': ['KW', 'KD'],
         'sex': 'female',
-        'spouse_names': ['unknown king'],
-        'father_name': 'unknown king',
+        'spouse_names': [],
+        'father_name': None,
         'mother_name': None,
         'children_names': [],
         'dynasty': 11,
