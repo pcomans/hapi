@@ -52,6 +52,17 @@ PDF_PAGES_HEADOFSOUTH = "81-82"
 SUB_PERIOD_HEADOFSOUTH = "The Head of the South"
 CITATION_HEADOFSOUTH = {"pdf_pages": PDF_PAGES_HEADOFSOUTH, "edition": EDITION}
 
+# Seizers of the Two Lands chunk (Chapter 2 "Seizers of the Two Lands"
+# Brief Lives, printed pp. 96-99 / physical pp. 88-91). 12th Dynasty
+# Middle Kingdom proper — the dense Amenemhat I → Sobkneferu royal-
+# family prosopography, with five Khnemet / Khnemetneferhedjet homonym
+# clusters, five lacuna-bearing `dh_id`s, the flagship female-king
+# candidate Neferuptah B, and the trailing Unplaced trio of Didit /
+# Neferet Q / Sithathor Q (all sisters-of-unknown-kings).
+PDF_PAGES_SEIZERS = "88-91"
+SUB_PERIOD_SEIZERS = "Seizers of the Two Lands"
+CITATION_SEIZERS = {"pdf_pages": PDF_PAGES_SEIZERS, "edition": EDITION}
+
 
 @lru_cache(maxsize=1)
 def _rows() -> tuple[dict, ...]:
@@ -114,8 +125,8 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 
 
 def test_row_count() -> None:
-    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) = 283 rows total."""
-    assert len(_rows()) == 283, len(_rows())
+    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) = 331 rows total."""
+    assert len(_rows()) == 331, len(_rows())
 
 
 def test_row_counts_per_chunk() -> None:
@@ -128,6 +139,8 @@ def test_row_counts_per_chunk() -> None:
     - Decline of the Ramessides: 35 (33 placed + 2 Unplaced:
       Anuketemheb, Taiay)
     - Head of the South: 13 (12 placed + 1 Unplaced: Neferkayet)
+    - Seizers of the Two Lands: 48 (45 placed + 3 Unplaced:
+      Didit, Neferet Q, Sithathor Q)
     """
     by_period: dict[str, int] = {}
     for r in _rows():
@@ -139,6 +152,7 @@ def test_row_counts_per_chunk() -> None:
         SUB_PERIOD_FEUD: 10,
         SUB_PERIOD_DECLINE: 35,
         SUB_PERIOD_HEADOFSOUTH: 13,
+        SUB_PERIOD_SEIZERS: 48,
     }, by_period
 
 
@@ -219,6 +233,7 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_FEUD: CITATION_FEUD,
         SUB_PERIOD_DECLINE: CITATION_DECLINE,
         SUB_PERIOD_HEADOFSOUTH: CITATION_HEADOFSOUTH,
+        SUB_PERIOD_SEIZERS: CITATION_SEIZERS,
     }
     for r in _rows():
         sub_period = r["sub_period"]
@@ -242,6 +257,7 @@ def test_dynasty_per_chunk() -> None:
         SUB_PERIOD_FEUD: 19,
         SUB_PERIOD_DECLINE: 20,
         SUB_PERIOD_HEADOFSOUTH: 11,
+        SUB_PERIOD_SEIZERS: 12,
     }
     for r in _rows():
         assert r["dynasty"] == expected_dynasty[r["sub_period"]], r
@@ -254,37 +270,44 @@ POWER_UNPLACED_IDS = frozenset({
 })
 DECLINE_UNPLACED_IDS = frozenset({"Anuketemheb", "Taiay"})
 HEADOFSOUTH_UNPLACED_IDS = frozenset({"Neferkayet"})
+SEIZERS_UNPLACED_IDS = frozenset({"Didit", "Neferet Q", "Sithathor Q"})
 
 
 def test_unplaced_set_is_the_expected_ids() -> None:
     """D&H's Unplaced sub-blocks: 12 at the end of Power (printed p. 141)
     + 2 at the end of Decline (printed p. 194) + 1 at the end of Head of
-    South (printed p. 89) = 15 unplaced rows total. No Unplaced sub-block
-    in Amarna / House / Feud.
+    South (printed p. 89) + 3 at the end of Seizers (printed p. 99 — Didit,
+    Neferet Q, Sithathor Q, all sisters-of-unknown-kings) = 18 unplaced
+    rows total. No Unplaced sub-block in Amarna / House / Feud.
     """
     unplaced = [r for r in _rows() if r["unplaced"]]
-    assert len(unplaced) == 15, f"expected 15 unplaced, got {len(unplaced)}"
+    assert len(unplaced) == 18, f"expected 18 unplaced, got {len(unplaced)}"
     assert {r["dh_id"] for r in unplaced} == (
-        POWER_UNPLACED_IDS | DECLINE_UNPLACED_IDS | HEADOFSOUTH_UNPLACED_IDS
+        POWER_UNPLACED_IDS
+        | DECLINE_UNPLACED_IDS
+        | HEADOFSOUTH_UNPLACED_IDS
+        | SEIZERS_UNPLACED_IDS
     )
     power_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_POWER}
     decline_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_DECLINE}
     hos_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_HEADOFSOUTH}
+    seizers_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_SEIZERS}
     assert power_unplaced == POWER_UNPLACED_IDS
     assert decline_unplaced == DECLINE_UNPLACED_IDS
     assert hos_unplaced == HEADOFSOUTH_UNPLACED_IDS
+    assert seizers_unplaced == SEIZERS_UNPLACED_IDS
 
 
 def test_unplaced_rows_sort_last_in_reconciled_jsonl() -> None:
-    """The 15 unplaced rows must occupy the trailing 15 positions of
+    """The 18 unplaced rows must occupy the trailing 18 positions of
     `reconciled.jsonl` — merge.py's sort groups them into a final bin so
     the file reads as placed-alphabetical, then unplaced-alphabetical.
     Regression on the code-reviewer-flagged sort-key bug from PR #38.
     """
     rows = _rows()
-    for r in rows[:-15]:
+    for r in rows[:-18]:
         assert r["unplaced"] is False, r["dh_id"]
-    for r in rows[-15:]:
+    for r in rows[-18:]:
         assert r["unplaced"] is True, r["dh_id"]
 
 
@@ -317,8 +340,8 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     lacuna_prefixes = ("[", "–")
 
     placed = [r for r in rows if not r["unplaced"]]
-    # 283 - 15 unplaced = 268 placed.
-    assert len(placed) == 268, len(placed)
+    # 331 - 18 unplaced = 313 placed.
+    assert len(placed) == 313, len(placed)
 
     # All lacuna-prefixed placed rows must be at the tail of the placed
     # block. Count them and assert no lacuna-prefixed row appears before
@@ -333,7 +356,7 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     )
 
     unplaced = [r for r in rows if r["unplaced"]]
-    assert len(unplaced) == 15, len(unplaced)
+    assert len(unplaced) == 18, len(unplaced)
     # `[...]pentepkau` (Power unplaced, lacuna) sorts after the other
     # Power unplaced entries (letter-prefixed) but before Decline's
     # Unplaced entries (letter-prefixed: Anuketemheb, Taiay).
@@ -381,6 +404,16 @@ def test_role_code_set_spans_the_known_codes() -> None:
     for expected in ["PH", "GS", "Nomarch", "KW?"]:
         assert expected in all_codes, (
             f"expected Head of South code {expected!r} never extracted"
+        )
+    # Seizers of the Two Lands codes (new in chunk 5): `UWC` (Uniter-of-
+    # the-Two-Crowns or similar — heavily used on Dyn-12 wives); `GF` (on
+    # the father-of-Amenemhat-I entry Senwosret A — a gendered role code
+    # not on prior-chunk list); the long-form role-phrase
+    # `Mistress of All Women` (on Kaneferu — preserved as a single
+    # verbatim token rather than split on spaces).
+    for expected in ["UWC", "GF", "Mistress of All Women"]:
+        assert expected in all_codes, (
+            f"expected Seizers code {expected!r} never extracted"
         )
 
 
@@ -5063,4 +5096,916 @@ def test_headofsouth_neferkayet_full_row() -> None:
         'unplaced': True,
         'notes': 'Daughter and wife of unknown kings; named on the stela of her steward, Rediukhnum, from Dendara, now in Cairo.',
         'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_seizers_lac12a_full_row() -> None:
+    _assert_full_row('[...]12A', {
+        'dh_id': '[...]12A',
+        'name': '[...]12A',
+        'alt_names': [],
+        'roles': ['KD', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret III'],
+        'father_name': 'Senwosret II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Senwosret II and wife of Senwosret III; owner of Pyramid IV in the complex of her husband at Dahshur.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_lac12b_full_row() -> None:
+    _assert_full_row('[...]12B', {
+        'dh_id': '[...]12B',
+        'name': '[...]12B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': ['Amenemhat III'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Wife of Amenemhat III; buried under his pyramid at Dahshur.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_aat_full_row() -> None:
+    _assert_full_row('Aat', {
+        'dh_id': 'Aat',
+        'name': 'Aat',
+        'alt_names': [],
+        'roles': ['KW', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Amenemhat III'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Wife of Amenemhat III; buried under his pyramid at Dahshur – a false door, an offering table, funerary equipment and a sarcophagus being recovered.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_amenemhatankh_full_row() -> None:
+    _assert_full_row('Amenemhatankh', {
+        'dh_id': 'Amenemhatankh',
+        'name': 'Amenemhatankh',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Amenemhat II (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probable son of Amenemhat II; known from fragments of false door found reused in the tombs of Khnemet and Siese (Dahshur tomb L.LV), a text on a block statue recording his appointment of the priest Tetiemsaf (from Saqqara, now in Cairo), the block statue of a certain Horemsaf (B) (Saqqara), a statue-base from the temple of Mut at Karnak (now in Cairo), and from a posthumous mention in the autobiographical text of Khnumhotep (Dahshur tomb 2).',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_ameny_a_full_row() -> None:
+    _assert_full_row('Ameny A', {
+        'dh_id': 'Ameny A',
+        'name': 'Ameny A',
+        'alt_names': [],
+        'roles': ['EKSonB'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Senwosret I',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Eldest son of Senwosret I; later king as AMENEMHAT II. Amenemhat, nomarch of Beni Hasan, states that the prince sailed with him when he went 'southward ... to bring gold for the person of the Dual King, Kheperkare, ... with 400 of the choicest of [his] troops, who returned safely, without loss' (text in Beni Hasan tomb BH2).",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_hathorhetepet_full_row() -> None:
+    _assert_full_row('Hathorhetepet', {
+        'dh_id': 'Hathorhetepet',
+        'name': 'Hathorhetepet',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat III (possibly)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Possibly a daughter of Amenemhat III; a fragment of her canopic jar was found in his complex at Dahshur.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_hetepti_full_row() -> None:
+    _assert_full_row('Hetepti', {
+        'dh_id': 'Hetepti',
+        'name': 'Hetepti',
+        'alt_names': [],
+        'roles': ['KM', 'M2L', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Amenemhat III (possibly)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Amenemhat IV'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Mother of Amenemhat IV, and possibly a wife of Amenemhat III; depicted in a relief at Medinet Maadi.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_ita_full_row() -> None:
+    _assert_full_row('Ita', {
+        'dh_id': 'Ita',
+        'name': 'Ita',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Daughter of Amenemhat II. Owner of a sphinx, found at Qatna in Syria, and now in the Louvre; buried in a double-tomb with Khnemet in their father's funerary enclosure.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_itakayet_a_full_row() -> None:
+    _assert_full_row('Itakayet A', {
+        'dh_id': 'Itakayet A',
+        'name': 'Itakayet A',
+        'alt_names': [],
+        'roles': ['KDB'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret I (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Probable daughter of Senwosret I; owner of Pyramid 2 in the latter's pyramid complex, but possibly not buried there. It is not impossible that she may be identical with Itakayet B.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_itakayet_b_full_row() -> None:
+    _assert_full_row('Itakayet B', {
+        'dh_id': 'Itakayet B',
+        'name': 'Itakayet B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat II (probably)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probably a daughter of Amenemhat II; named on a cylinder seal in Berlin that also bears the cartouche of an Amenemhat; conceivably identical with Itakayet C.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_itakayet_c_full_row() -> None:
+    _assert_full_row('Itakayet C', {
+        'dh_id': 'Itakayet C',
+        'name': 'Itakayet C',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret II (probably)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probably a daughter of Senwosret II; buried in Pyramid III in the funerary complex of Senwosret III at Dahshur, and probably the lady of the name listed with other members of the royal family on a papyrus from Kahun.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_itaweret_full_row() -> None:
+    _assert_full_row('Itaweret', {
+        'dh_id': 'Itaweret',
+        'name': 'Itaweret',
+        'alt_names': [],
+        'roles': ['KD', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret II (probably)'],
+        'father_name': 'Amenemhat II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Daughter of Amenemhat II, and probably wife of Senwosret II; buried in a double-tomb with Sithathormeryet in her father's funerary enclosure.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_kaneferu_full_row() -> None:
+    _assert_full_row('Kaneferu', {
+        'dh_id': 'Kaneferu',
+        'name': 'Kaneferu',
+        'alt_names': [],
+        'roles': ['Mistress of All Women'],
+        'sex': 'female',
+        'spouse_names': ['Amenemhat II (probably)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probably a wife of Amenemhat II; named with him on a seal in Tübingen.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_kayet_full_row() -> None:
+    _assert_full_row('Kayet', {
+        'dh_id': 'Kayet',
+        'name': 'Kayet',
+        'alt_names': [],
+        'roles': ['KDB'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat I',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Amenemhat I; known from a fragment of relief from Lisht.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_keminub_full_row() -> None:
+    _assert_full_row('Keminub', {
+        'dh_id': 'Keminub',
+        'name': 'Keminub',
+        'alt_names': [],
+        'roles': ['KW'],
+        'sex': 'female',
+        'spouse_names': ['Amenemhat II'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Wife of Amenemhat II; buried in a tomb in her husband's funerary enclosure at Dahshur, shared with a certain Amenhotep (i).",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_khnemet_full_row() -> None:
+    _assert_full_row('Khnemet', {
+        'dh_id': 'Khnemet',
+        'name': 'Khnemet',
+        'alt_names': [],
+        'roles': ['KD', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret II (probably)'],
+        'father_name': 'Amenemhat II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Daughter of Amenemhat II, and probably a wife of Senwosret II; buried in a double-tomb with Ita in her father's funerary enclosure.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_khnemetlac_full_row() -> None:
+    _assert_full_row('Khnemet[...]', {
+        'dh_id': 'Khnemet[...]',
+        'name': 'Khnemet[...]',
+        'alt_names': [],
+        'roles': ['KDB'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Senwosret III; known from a fragment of relief from his pyramid complex at Dahshur.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_khnemetneferhedjet_a_full_row() -> None:
+    _assert_full_row('Khnemetneferhedjet A', {
+        'dh_id': 'Khnemetneferhedjet A',
+        'name': 'Khnemetneferhedjet A',
+        'alt_names': [],
+        'roles': ['KDB'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Amenemhat II; named on a cylinder seal in New York, alongside her father. Conceivably identical with Khnemetneferhedjet I Weret.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_khnemetneferhedjet_i_weret_full_row() -> None:
+    _assert_full_row('Khnemetneferhedjet I Weret', {
+        'dh_id': 'Khnemetneferhedjet I Weret',
+        'name': 'Khnemetneferhedjet I Weret',
+        'alt_names': [],
+        'roles': ['KM', 'KW', 'M2L'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret II'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Senwosret III'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Wife of Senwosret II and mother of Senwosret III. Known from a seal found at Lahun and now in Tonbridge; a mention in a Kahun papyrus in Berlin; a statue in the British Museum; and her cenotaph in the pyramid complex of her son (Pyramid VIII). She was probably buried in the small pyramid in her husband's complex at Lahun.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_khnemetneferhedjet_ii_weret_full_row() -> None:
+    _assert_full_row('Khnemetneferhedjet II Weret', {
+        'dh_id': 'Khnemetneferhedjet II Weret',
+        'name': 'Khnemetneferhedjet II Weret',
+        'alt_names': [],
+        'roles': ['GS', 'KW'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret III'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Wife of Senwosret III; known from a statue of her husband in the British Museum and another from Herakleopolis (now in Cairo). Buried in Pyramid IX in her son's complex, where a set of her jewellery was found in 1994.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_menet_full_row() -> None:
+    _assert_full_row('Menet', {
+        'dh_id': 'Menet',
+        'name': 'Menet',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur. Two sets of canopic jar fragments are in the Cairo Museum.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_mereret_b_full_row() -> None:
+    _assert_full_row('Mereret B', {
+        'dh_id': 'Mereret B',
+        'name': 'Mereret B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur. Her jewellery is now in the Cairo Museum, and includes items bearing the name of Amenemhat III.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_mertseger_full_row() -> None:
+    _assert_full_row('Mertseger', {
+        'dh_id': 'Mertseger',
+        'name': 'Mertseger',
+        'alt_names': [],
+        'roles': ['KW', 'KGW'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret III'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Wife of Senwosret III; depicted on a broken stela in the British Museum and in an inscription at Semna dating to the time of Thutmose III in honour of her husband.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferet_b_full_row() -> None:
+    _assert_full_row('Neferet B', {
+        'dh_id': 'Neferet B',
+        'name': 'Neferet B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret II (probably)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probably a daughter of Senwosret II; listed with other members of the royal family on a papyrus from Kahun, now in Berlin.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferet_i_full_row() -> None:
+    _assert_full_row('Neferet I', {
+        'dh_id': 'Neferet I',
+        'name': 'Neferet I',
+        'alt_names': [],
+        'roles': ['KM'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Amenemhat I (probable)'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Probable mother of Amenemhat I; named on an offering table found reused in a later house near the king's pyramid at Lisht.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferet_ii_full_row() -> None:
+    _assert_full_row('Neferet II', {
+        'dh_id': 'Neferet II',
+        'name': 'Neferet II',
+        'alt_names': [],
+        'roles': ['KDB', 'GS', 'M2L'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret II'],
+        'father_name': 'Amenemhat II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Amenemhat II and wife of Senwosret II; owner of two statues, from Tanis and now in Cairo. Possible owner of the small pyramid in the complex of Senwosret II at Lahun.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferhenut_full_row() -> None:
+    _assert_full_row('Neferhenut', {
+        'dh_id': 'Neferhenut',
+        'name': 'Neferhenut',
+        'alt_names': [],
+        'roles': ['KW', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret III'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Wife of Senwosret III; buried in tomb II in her husband's funerary complex at Dahshur.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferitatjenen_full_row() -> None:
+    _assert_full_row('Neferitatjenen', {
+        'dh_id': 'Neferitatjenen',
+        'name': 'Neferitatjenen',
+        'alt_names': [],
+        'roles': ['KM'],
+        'sex': 'female',
+        'spouse_names': ['Amenemhat I'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Senwosret I'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Wife of Amenemhat I and mother of Senwosret I. Named on a statuette of her son, stolen from the Louvre in 1830.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferu_iii_full_row() -> None:
+    _assert_full_row('Neferu III', {
+        'dh_id': 'Neferu III',
+        'name': 'Neferu III',
+        'alt_names': [],
+        'roles': ['KD', 'KW', 'KM'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret I'],
+        'father_name': 'Amenemhat I',
+        'mother_name': None,
+        'children_names': ['Amenemhat II'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Daughter of Amenemhat I and wife of Senwosret I; mentioned in the Story of Sinuhe and known from a fragment of stone found in Amenemhat I's complex at Lisht, Amenemhat II's shrine of Senwosret I at Serabit el-Khadim, and her pyramid in her husband's cemetery. This pyramid may not have been used for her burial, in which case it is possible she was interred at Dahshur near her son, Amenemhat II.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferuptah_a_full_row() -> None:
+    _assert_full_row('Neferuptah A', {
+        'dh_id': 'Neferuptah A',
+        'name': 'Neferuptah A',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret I (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probable daughter of Senwosret I; an ivory wand bearing her name was found near his pyramid.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferuptah_b_full_row() -> None:
+    _assert_full_row('Neferuptah B', {
+        'dh_id': 'Neferuptah B',
+        'name': 'Neferuptah B',
+        'alt_names': [],
+        'roles': ['GS', 'KDB'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Amenemhat III; towards the end of her life she obtained the use of a cartouche, and it is possible that she may have been regarded as a potential female king before her premature death. She was originally provided with a burial place alongside her father in his burial chamber at Hawara, but seems to have been translated to her own pyramid at Hawara-South; this was found to be intact in 1956, the contents now in Cairo. Besides her funerary equipment, she is also known from a relief in the temple at Medinet Maadi, a statue from Elephantine, a sphinx of her father, and a reference in a Kahun papyrus.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferusherit_full_row() -> None:
+    _assert_full_row('Neferusherit', {
+        'dh_id': 'Neferusherit',
+        'name': 'Neferusherit',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat I',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Daughter of Amenemhat I; known from a granite object found amongst the shaft-tombs west of her father's pyramid at Lisht.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferusobk_full_row() -> None:
+    _assert_full_row('Neferusobk', {
+        'dh_id': 'Neferusobk',
+        'name': 'Neferusobk',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret I (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probable daughter of Senwosret I; a fragment of a granite bowl bearing her name was found near his pyramid. It is conceivable that the bowl may be from a later offering, and that this lady is identical with Sobkneferu.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_nensedlac_full_row() -> None:
+    _assert_full_row('Nensed[...]', {
+        'dh_id': 'Nensed[...]',
+        'name': 'Nensed[...]',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret I (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probable daughter of Senwosret I; a fragment of a dish bearing her name was found near his pyramid.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_nubhotepet_full_row() -> None:
+    _assert_full_row('Nubhotepet', {
+        'dh_id': 'Nubhotepet',
+        'name': 'Nubhotepet',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat III (possibly)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Possibly a daughter of Amenemhat III; a fragment of her canopic jar was found in his complex at Dahshur.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sebat_full_row() -> None:
+    _assert_full_row('Sebat', {
+        'dh_id': 'Sebat',
+        'name': 'Sebat',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret I',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Daughter of Senwosret I; mentioned in Amenemhat II's shrine of Senwosret I at Serabit el-Khadim.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_senetsenbetes_full_row() -> None:
+    _assert_full_row('Senetsenbetes', {
+        'dh_id': 'Senetsenbetes',
+        'name': 'Senetsenbetes',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_senwosret_a_full_row() -> None:
+    _assert_full_row('Senwosret A', {
+        'dh_id': 'Senwosret A',
+        'name': 'Senwosret A',
+        'alt_names': [],
+        'roles': ['GF'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Amenemhat I (probable)'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probable father of Amenemhat I; named alongside Mentuhotep II and III on a block from a chapel at Karnak of the time of Amenhotep I.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_senwosretsonbe_full_row() -> None:
+    _assert_full_row('Senwosretsonbe', {
+        'dh_id': 'Senwosretsonbe',
+        'name': 'Senwosretsonbe',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Senwosret II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Son of Senwosret II; included in a papyrus from Kahun, now in Berlin, listing offerings to the family of the king.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sitlacja_full_row() -> None:
+    _assert_full_row('Sit[...]JA', {
+        'dh_id': 'Sit[...]JA',
+        'name': 'Sit[...]JA',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Senwosret III; buried in the lower galleries of his complex at Dahshur.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sithathor_a_full_row() -> None:
+    _assert_full_row('Sithathor A', {
+        'dh_id': 'Sithathor A',
+        'name': 'Sithathor A',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Senwosret III (probably)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Probably a daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur. Her jewellery is in the Cairo Museum, including a pectoral of Senwosret II.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sithathor_b_full_row() -> None:
+    _assert_full_row('Sithathor B', {
+        'dh_id': 'Sithathor B',
+        'name': 'Sithathor B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat III (possible)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Possible daughter of Amenemhat III; buried in a cutting in the entrance staircase of the king's pyramid at Dahshur.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sithathoriunet_full_row() -> None:
+    _assert_full_row('Sithathoriunet', {
+        'dh_id': 'Sithathoriunet',
+        'name': 'Sithathoriunet',
+        'alt_names': [],
+        'roles': ['KD', 'KW'],
+        'sex': 'female',
+        'spouse_names': ['Senwosret III (probably)'],
+        'father_name': 'Senwosret II',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Senwosret II and probably wife of Senwosret III; buried at Lahun, where her jewellery (now in Cairo and New York) was found in 1914.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sithathormeryet_full_row() -> None:
+    _assert_full_row('Sithathormeryet', {
+        'dh_id': 'Sithathormeryet',
+        'name': 'Sithathormeryet',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': "Probably a member of the family of Amenemhat II; buried in a double-tomb with Itaweret in the king's funerary enclosure.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sobkneferu_full_row() -> None:
+    _assert_full_row('Sobkneferu', {
+        'dh_id': 'Sobkneferu',
+        'name': 'Sobkneferu',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Amenemhat III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': False,
+        'notes': 'Daughter of Amenemhat III; later female king, and probably the owner as a princess of statue-base from Gezer, and perhaps a bowl from Lisht.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_didit_full_row() -> None:
+    _assert_full_row('Didit', {
+        'dh_id': 'Didit',
+        'name': 'Didit',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Neferet Q'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': True,
+        'notes': "Sister of an unknown king; mother of Neferet Q; named on the latter's stela in Munich.",
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_neferet_q_full_row() -> None:
+    _assert_full_row('Neferet Q', {
+        'dh_id': 'Neferet Q',
+        'name': 'Neferet Q',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': 'Didit',
+        'children_names': [],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': True,
+        'notes': 'Sister of an unknown king; named on her funerary stela in Munich alongside her mother, Didit.',
+        'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_seizers_sithathor_q_full_row() -> None:
+    _assert_full_row('Sithathor Q', {
+        'dh_id': 'Sithathor Q',
+        'name': 'Sithathor Q',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Didit'],
+        'dynasty': 12,
+        "sub_period": SUB_PERIOD_SEIZERS,
+        'unplaced': True,
+        'notes': 'Mother of Didit, named on the funerary stela of Neferet Q in Munich.',
+        'source_citation': CITATION_SEIZERS,
     })
