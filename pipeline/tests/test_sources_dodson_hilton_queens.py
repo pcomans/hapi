@@ -5310,10 +5310,17 @@ def test_seizers_amenemhatankh_full_row() -> None:
 
 
 def test_seizers_ameny_a_full_row() -> None:
+    """Ameny A's `alt_names: ['Amenemhat II']` is restored via
+    `SEIZERS_CORRECTIONS` in `fix_rows.py` — his prose explicitly names
+    him as "later king as AMENEMHAT II", matching the regnal-alias
+    aliasing convention Paramessu / Ramesses A / Amenhotep E set in
+    earlier chunks. Finding surfaced by Codex retrospective review on
+    the merged PR #77 (run 2026-04-19).
+    """
     _assert_full_row('Ameny A', {
         'dh_id': 'Ameny A',
         'name': 'Ameny A',
-        'alt_names': [],
+        'alt_names': ['Amenemhat II'],
         'roles': ['EKSonB'],
         'sex': 'male',
         'spouse_names': [],
@@ -6095,6 +6102,15 @@ def test_seizers_sobkneferu_full_row() -> None:
 
 
 def test_seizers_didit_full_row() -> None:
+    """Didit's `mother_name: 'Sithathor Q'` is restored via
+    `SEIZERS_CORRECTIONS` in `fix_rows.py` — `Sithathor Q`'s Brief Life
+    in the same Unplaced sub-block opens `Mother of Didit…`. The cross-
+    entry-inference rule established in chunk-2 Amarna (Gilukhipa /
+    Shuttarna II) and chunk-3 Ramesside (Hattusilis III / Pudukhepa)
+    requires the symmetric kinship edge; Seizers extraction missed the
+    parent→child direction. Finding surfaced by Codex retrospective
+    review on the merged PR #77 (run 2026-04-19).
+    """
     _assert_full_row('Didit', {
         'dh_id': 'Didit',
         'name': 'Didit',
@@ -6103,7 +6119,7 @@ def test_seizers_didit_full_row() -> None:
         'sex': 'female',
         'spouse_names': [],
         'father_name': None,
-        'mother_name': None,
+        'mother_name': 'Sithathor Q',
         'children_names': ['Neferet Q'],
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,

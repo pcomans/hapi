@@ -45,14 +45,19 @@ preserved typography.
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
-SRC = Path("/Users/philipp/Downloads/source-p44-p45.txt")
-DST = Path(
-    "/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/"
-    "dodson-hilton-queens/raw/chunk-p44-p45.md"
+# See `transform_kc.py` for the pattern rationale. SRC is overridable
+# via `DH_FOUNDERS_INPUT` env var; DST is resolved repo-relative.
+SRC = Path(
+    os.environ.get(
+        "DH_FOUNDERS_INPUT",
+        str(Path.home() / "Downloads" / "source-p44-p45.txt"),
+    )
 )
+DST = Path(__file__).resolve().parent / "raw" / "chunk-p44-p45.md"
 
 
 # First bold-name entry on each printed page, used as a marker to insert
