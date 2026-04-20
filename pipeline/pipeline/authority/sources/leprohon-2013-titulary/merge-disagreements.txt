@@ -2537,6 +2537,7 @@ leprohon-20.10 (Ramesses XI):
     → chose: [{"anglicised": "men maat ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The established one belonging to the Maat of Re", "transliteration": "mn mꜣꜥt rꜥ", "variant_index": 1}, {"anglicised": "sekhem, setep en ptah", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Throne name.", "translation": "The powerful one who was chosen by Ptah", "transliteration": "sḫm stp n ptḥ", "variant_index": 2}, {"anglicised": "setep en ptah", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Throne name.", "translation": "Chosen by Ptah", "transliteration": "stp n ptḥ", "variant_index": 3}]
 
 
+
 === LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED ===
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
@@ -2625,3 +2626,15 @@ leprohon-20.10 (Ramesses XI):
   leprohon-20.01 / golden_horus_names.1.attested_in:
     new value: ["Sinai stela (Gardiner and Peet 1955, no. 271)"]
     rationale: Move Sinai-stela attestation from source_note prose into structured `attested_in` field. Egyptologist-reviewer 2026-04-20 PR #93 P2-2.
+  leprohon-20.02 / horus_names.7.transliteration:
+    new value: "sḫm-pḥty ḥd ḥfnw dḫ nꜣ pḥw sw dmḏ (ẖr) ṯbwy.f(y)"
+    rationale: Fix `hd` → `ḥd` (smite). Gemini PR #93.
+  leprohon-20.05 / nebty_names.0.transliteration:
+    new value: "wsr-ḫpš ḥd ḥfnw"
+    rationale: Fix `hd` → `ḥd` (smite). Gemini PR #93.
+  leprohon-20.10 / nebty_names.0.transliteration:
+    new value: "wsr-ḫpš ḥd ḥfnw"
+    rationale: Fix `hd` → `ḥd` (smite). Gemini PR #93.
+  leprohon-20.02 / nebty_names.3.transliteration:
+    new value: "[wr-ḥbw-sd mi tꜣ-ṯnn] ptpt ṯḥnw m iwnw ḥr st.sn"
+    rationale: Fix `tḥnw` → `ṯḥnw` (Tehenu Libyan ethnonym). Gemini PR #93.
