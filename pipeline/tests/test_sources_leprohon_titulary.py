@@ -176,6 +176,18 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (107, 125),
         "physical_page_range": (128, 146),
     },
+    "dyn20": {
+        # Chapter VII New Kingdom Dyn 20 (the "Ramesside" line). 10
+        # numbered king entries: Sethnakht (founder) + Ramesses III
+        # through Ramesses XI. All contemporarily attested per Leprohon's
+        # prose preamble.
+        "chapter": "New Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 20": 10,
+        },
+        "printed_page_range": (125, 135),
+        "physical_page_range": (146, 156),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -901,6 +913,24 @@ def test_khufu_has_greek_alias_cheops() -> None:
 # Dyn 8a is contemporarily attested — no Ramesside-only tags despite being
 # a sub-dynasty. This test locks in the lesson from the chunk-2 prompt error.
 # ---------------------------------------------------------------------------
+
+
+def test_dyn_20_is_contemporarily_attested_no_ramesside_only_tags() -> None:
+    """All 10 Dyn 20 kings (Sethnakht + Ramesses III through XI) are
+    contemporarily attested per Leprohon's chapter VII NK Dyn 20 prose
+    preamble. Code-reviewer PR #93 P2-a guard mirroring the chunk-9
+    Dyn 19 guard. Per CLAUDE.md rule 3 (deterministic enforcement),
+    the "no Ramesside-only tags in Dyn 20" invariant cannot live only
+    in prose / prompt markdown."""
+    dyn_20_rows = [r for r in _rows() if r["dynasty_label"] == "Dynasty 20"]
+    assert len(dyn_20_rows) == 10, len(dyn_20_rows)
+    for r in dyn_20_rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): Dyn 20 is "
+            f"contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
 
 
 def test_dyn_19_is_contemporarily_attested_no_ramesside_only_tags() -> None:

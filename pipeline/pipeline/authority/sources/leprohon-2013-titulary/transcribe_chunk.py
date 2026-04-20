@@ -129,8 +129,15 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # entries (Ramses I, Sety I, Ramses II, Merenptah/Merneptah, Sety II,
     # Amenmesse, Siptah, Tausret) and STOP at the Dyn 20 header.
     "dyn19": (128, 146, "VII. New Kingdom (Dyn 19)"),
+    # Chunk 10 (this PR): chapter VII New Kingdom — Dyn 20. Printed 125-135,
+    # offset +21, physical 146-156. Physical p. 146 is shared with chunk 9
+    # (Tausret tail at top, then Dyn 20 opening prose). The prompt tells
+    # agents to START at the `Dynasty 20` header — Tausret is OUT OF
+    # SCOPE for this chunk (already extracted in chunk 9). Includes
+    # Sethnakht (Dyn 20 entry 1) + Ramesses III through Ramesses XI.
+    "dyn20": (146, 156, "VII. New Kingdom (Dyn 20)"),
 }
-DEFAULT_CHUNK = "dyn19"
+DEFAULT_CHUNK = "dyn20"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
