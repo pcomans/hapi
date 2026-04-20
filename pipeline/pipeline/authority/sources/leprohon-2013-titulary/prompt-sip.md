@@ -43,7 +43,7 @@ Dyn 16 ends with a multi-slot stub `11–15. FIVE NAMES LOST`. Dyn 17 has TWO mu
 
 ### Ramesside-only headword asterisks
 
-Apply the canonical Ramesside-only tag (`"Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk."`) to every row whose HEADWORD carries a trailing `*`. Particularly in Dyn 17 entries 1, 2, 11, 15, 16 (fragmentary Abydos-Dynasty-reassigned kings). Per-entry asterisks on individual name-rows stay in their originating name-type list with a per-entry source_note, same as chunks 4–6.
+Apply the canonical Ramesside-only tag (`"Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk."`) to every row whose HEADWORD carries a trailing `*`. Per-entry asterisks on individual name-rows stay in their originating name-type list with a per-entry source_note, same as chunks 4–6.
 
 ### Fragmentary / bracketed name headwords
 
