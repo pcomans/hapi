@@ -452,6 +452,59 @@ MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+TIP_LATE_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Chunk-12 (PR #95): extend the chunk-11 Shoshenq-alias pattern to
+    # Dyn 23's three Sheshonq entries (VI, VIa, VII). Museum-standard
+    # spelling is "Shoshenq" — same transliteration-variant rationale
+    # as chunk 11.
+    (
+        "leprohon-23.03",
+        "alt_display_names",
+        ["Shoshenq VI"],
+        "Add `Shoshenq VI` museum-standard spelling. Extends chunk-11 pattern.",
+    ),
+    (
+        "leprohon-23.07",
+        "alt_display_names",
+        ["Shoshenq VIa"],
+        "Add `Shoshenq VIa` museum-standard spelling. Extends chunk-11 pattern.",
+    ),
+    (
+        "leprohon-23.09",
+        "alt_display_names",
+        ["Shoshenq VII"],
+        "Add `Shoshenq VII` museum-standard spelling. Extends chunk-11 pattern.",
+    ),
+    # Taharqa has one of the most recognizable museum-catalog names
+    # and is often spelled "Taharka" (without q) or "Tirhakah" (biblical
+    # form). Add both for Phase-A matching.
+    (
+        "leprohon-25.06",
+        "alt_display_names",
+        ["Taharka", "Tirhakah"],
+        "Add older museum spellings `Taharka` (non-ḳ) and biblical "
+        "form `Tirhakah` to Taharqa's alt_display_names for Phase-A "
+        "museum-record matching.",
+    ),
+    # Tantamani / Tanutamani / Tanwetamani are all attested museum
+    # spellings; Leprohon uses `Tanutamun` per the chunk. Add the other
+    # forms as aliases.
+    (
+        "leprohon-25.07",
+        "alt_display_names",
+        ["Tantamani", "Tanwetamani"],
+        "Add museum-standard `Tantamani` and scholarly `Tanwetamani` "
+        "spellings to Tanutamun's alt_display_names.",
+    ),
+    # Shabaka and Kashta museum aliases (no Leprohon parenthetical).
+    (
+        "leprohon-25.04",
+        "alt_display_names",
+        ["Shabako"],
+        "Add museum spelling `Shabako` to Shabaka's alt_display_names.",
+    ),
+]
+
 TIP_EARLY_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Chunk-11 (PR #94) page-citation merge dispute: agent A emitted
     # printed=139, agent B emitted printed=138, agent C emitted (137,
@@ -598,6 +651,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *DYN19_CORRECTIONS,
     *DYN20_CORRECTIONS,
     *TIP_EARLY_CORRECTIONS,
+    *TIP_LATE_CORRECTIONS,
 ]
 
 

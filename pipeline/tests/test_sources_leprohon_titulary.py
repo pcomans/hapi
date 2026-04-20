@@ -188,6 +188,21 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (125, 135),
         "physical_page_range": (146, 156),
     },
+    "tip-late": {
+        # Chapter VIII TIP late — Dyn 23 (Tanite/Theban split) + Dyn 23a
+        # (collateral) + Dyn 24 (Saite — Tefnakhte, Bakenrenef) + Dyn 25
+        # (Nubian/Kushite — Kashta, Piye, Shabaka, Shabataka, Taharqa,
+        # Tantamani). Per-dynasty counts verified post-extraction.
+        "chapter": "Third Intermediate Period",
+        "rows_by_dynasty_label": {
+            "Dynasty 23": 9,
+            "Dynasty 23a": 5,
+            "Dynasty 24": 2,
+            "Dynasty 25": 7,
+        },
+        "printed_page_range": (153, 163),
+        "physical_page_range": (174, 184),
+    },
     "tip-early": {
         # Chapter VIII Third Intermediate Period — Dyn 21 (Tanite) +
         # Dyn 21a (Theban HPA parallel) + Dyn 22 (Bubastite Sheshonqs,

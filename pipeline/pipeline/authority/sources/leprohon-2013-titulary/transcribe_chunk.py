@@ -145,8 +145,15 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # into chunks 11 (this) and 12 (Dyn 23+23a+24+25, ~41 entries) to
     # keep agent context loads manageable.
     "tip-early": (157, 173, "VIII. TIP early (Dyn 21 + 21a + 22 + 22a)"),
+    # Chunk 12 (this PR): chapter VIII Third Intermediate Period — Dyn 23
+    # + 23a + 24 + 25 (Tanite/Theban Dyn 23 split + Saite Dyn 24 +
+    # Nubian Dyn 25). Printed 153-163, offset +21, physical 174-184.
+    # Dyn 25 is the Nubian/Kushite line (Piye, Shabaka, Shabataka,
+    # Taharqa, Tantamani) — culturally significant though Leprohon
+    # treats them at typical TIP density (mostly Throne + Birth).
+    "tip-late": (174, 184, "VIII. TIP late (Dyn 23 + 23a + 24 + 25)"),
 }
-DEFAULT_CHUNK = "tip-early"
+DEFAULT_CHUNK = "tip-late"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
