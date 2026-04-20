@@ -52,12 +52,14 @@ All TIP kings are contemporarily attested (this is post-Ramesside). Do NOT apply
 
 ## Expected row counts
 
-- **Dyn 21:** ~14 entries (Tanite line: Smendes I, Amenemnesut, Psusennes I, etc.).
-- **Dyn 21a:** ~4 entries (HPA Theban line).
-- **Dyn 22:** ~28 entries (Sheshonq I onward; the densest section of TIP).
-- **Dyn 22a:** ~3 entries (collateral / second-tier).
+Per the post-Broekman renumbering Leprohon adopts (verified post-extraction):
 
-**Total: ~49 rows.** If you produce fewer than 44 or more than 54, re-scan.
+- **Dyn 21:** 8 entries (Herihor, Smendes/Nesbanebdjed, Amenemnesut, Psusennes I, Amenemope, Osorkon the Elder, Siamun, Psusennes II).
+- **Dyn 21a:** 3 entries (Theban HPA line: Pinodjem I, Menkheperre, Psusennes III).
+- **Dyn 22:** 13 entries (Sheshonq I/IIa/IIb/IIc/III/IV/V, Osorkon I/II/IV, Takelot I/II, Pamiu — Broekman renumbering halves the older count).
+- **Dyn 22a:** 1 entry (Harsiese).
+
+**Total: 25 rows.** If you produce fewer than 23 or more than 27, re-scan for missed entries.
 
 ## Output ordering
 
