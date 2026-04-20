@@ -169,8 +169,8 @@ def _majority(values: list) -> tuple[object, int]:
 #   FIP where he bundles Dynasties 9 and 10 into groups a/b)
 #
 # NN is a zero-padded 2-digit sequence. Sort order: the LOWER integer of
-# the dynasty group ascending, then suffix ascending (empty before `a`),
-# then the hyphenated-range indicator (plain `9` sorts before `9-10`),
+# the dynasty group ascending, then the hyphenated-range indicator (plain
+# `9` sorts before `9-10`), then suffix ascending (empty before `a`),
 # then sequence ascending. This keeps `leprohon-3.01` between `leprohon-
 # 2a.02` and `leprohon-3a.01`, and `leprohon-9-10a.NN` between `leprohon-
 # 8a.08` and `leprohon-11a.01` in reconciled.jsonl.
