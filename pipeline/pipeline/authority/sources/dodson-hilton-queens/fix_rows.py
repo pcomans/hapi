@@ -304,8 +304,62 @@ FOUNDERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
 ]
 
 
+# Seizers of the Two Lands (chunk 5) post-merge corrections surfaced by
+# the retrospective Codex review on PR #77 (run 2026-04-19 under the
+# `feedback_codex_review_every_pr` discipline established after the
+# session wrap; the initial PR #77 merge predated that discipline).
+SEIZERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
+    (
+        "Ameny A",
+        "Seizers of the Two Lands",
+        "alt_names",
+        ["Amenemhat II"],
+        "Ameny A's prose explicitly states 'later king as AMENEMHAT II' "
+        "(D&H's BOLD-CAPITALS convention for a regnal-name reference). "
+        "Earlier D&H chunks consistently populate `alt_names` with the "
+        "titlecase regnal form when an individual has a later-king "
+        "reference — precedents include `Paramessu` (alt_names: "
+        "'Ramesses I'), `Ramesses A` (alt_names: 'Ramesses II'), "
+        "`Amenhotep E` (alt_names: 'Amenhotep IV', 'Akhenaten'), and "
+        "`Sobkhotep C` which the Kings and Commoners chunk later "
+        "applied the same rule to ('later co-regent and king as "
+        "SOBKHOTEP IV'). Seizers extraction missed the rule. "
+        "Surfaced by Codex review on 2026-04-19 retrospective pass; "
+        "fix restores cross-chunk-consistent aliasing so Phase-A "
+        "matcher can hit Ameny A via either his D&H dh_id or his "
+        "pharaoh.se canonical-name `Amenemhat II`.",
+    ),
+    (
+        "Didit",
+        "Seizers of the Two Lands",
+        "mother_name",
+        "Sithathor Q",
+        "Didit's Brief Life ends with `mother of Neferet Q`; "
+        "`Sithathor Q`'s Brief Life in the same sub-section's Unplaced "
+        "block opens `Mother of Didit, named on the funerary stela of "
+        "Neferet Q in Munich.` The cross-entry-inference rule D&H "
+        "adopted in chunk 2 Amarna (Gilukhipa / Shuttarna II pair) "
+        "and chunk 3 Ramesside (Hattusilis III / Pudukhepa pair, and "
+        "others) symmetrises kinship: a parent-named-as-X-in-child's-"
+        "notes populates `father_name`/`mother_name` on the child's "
+        "row, and the reciprocal `children_names` on the parent's "
+        "row. Seizers extraction applied the symmetry on child→parent "
+        "(Didit's entry names Neferet Q as child → Neferet Q's row "
+        "must have mother_name `Didit` — which it does) but missed "
+        "the other symmetry edge: parent→child. `Sithathor Q` is a "
+        "mother in her own entry but `Didit`'s row has `mother_name: "
+        "null`. Surfaced by Codex review on 2026-04-19 retrospective "
+        "pass; fix restores intra-chunk kinship symmetry.",
+    ),
+]
+
+
 SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
-    POWER_CORRECTIONS + AMARNA_CORRECTIONS + RAMESSIDE_CORRECTIONS + FOUNDERS_CORRECTIONS
+    POWER_CORRECTIONS
+    + AMARNA_CORRECTIONS
+    + RAMESSIDE_CORRECTIONS
+    + FOUNDERS_CORRECTIONS
+    + SEIZERS_CORRECTIONS
 )
 
 

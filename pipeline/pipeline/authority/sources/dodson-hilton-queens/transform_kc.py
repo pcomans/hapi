@@ -109,14 +109,25 @@ the raw Gemini output to be present at the SRC path below.
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
-SRC = Path("/Users/philipp/Downloads/source-p98-p103.txt")
-DST = Path(
-    "/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/"
-    "dodson-hilton-queens/raw/chunk-p98-p103.md"
+# SRC: Gemini web-UI paste output file. Defaults to the user's Downloads
+# folder (the obvious drop zone for Gemini web-UI paste) with a
+# predictable filename, but accepts `DH_KC_INPUT` env-var override for
+# CI reruns or non-default user layouts. The default path uses
+# `Path.home()` so the script is portable across contributor machines.
+SRC = Path(
+    os.environ.get(
+        "DH_KC_INPUT",
+        str(Path.home() / "Downloads" / "source-p98-p103.txt"),
+    )
 )
+# DST: committed chunk-file path, resolved repo-relative from this
+# script's own location (script sits in the source directory, chunk
+# lives in `./raw/` relative to the script).
+DST = Path(__file__).resolve().parent / "raw" / "chunk-p98-p103.md"
 
 # Male entry names for typography restoration. Each entry not in this set
 # gets `***Name***` bold-italic; entries in this set keep `**Name**` bold
