@@ -93,10 +93,12 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # Chunk 6 (this PR): chapter V Middle Kingdom tail — the Ramesside-
     # added sub-dynasties Dyn 13a + Dyn 14 + Dyn 14a. Printed 72-80,
     # offset +21, physical 93-101. Dyn 13a is a small Ramesside-list
-    # group of kings not attested contemporarily; Dyn 14 (~20 kings) and
-    # Dyn 14a (5 kings) are additional late-MK material Leprohon places
-    # at the end of chapter V before the chapter VI SIP boundary.
-    # ~32 kings expected in total.
+    # group (7 kings) not attested contemporarily; Dyn 14 (40 rows — 38
+    # numbered king-entries with gaps at 20-21, 35-42 plus 2 multi-slot
+    # "N names lost" stubs at slots 46-48 and 52-56) and Dyn 14a (6 rows,
+    # Semitic-origin kings whose position in the dynasty is uncertain)
+    # are additional late-MK material Leprohon places at the end of
+    # chapter V before the chapter VI SIP boundary. 53 total rows.
     "dyn13a-14": (93, 101, "V. Middle Kingdom (Dyn 13a + 14 + 14a tail)"),
 }
 DEFAULT_CHUNK = "dyn13a-14"
@@ -201,21 +203,32 @@ def _find_gloss_open_paren(after_colon: str) -> int | None:
     # Trim trailing footnote digits and whitespace — they sit after the gloss
     # but shouldn't affect the scan.
     stripped = after_colon.rstrip()
-    # Find the END of the gloss. The gloss always terminates with `), ` (comma
-    # + space introducing the translation) OR `)<optional footnote digits>$`
-    # (end of line). The translation itself can start with `(` (Leprohon
-    # hedged English parentheticals like `(Possessor of?) The kas...`) or
-    # `/` (fragmentary Egyptian elements preserved in the translation like
-    # `////-i (son of) Hor`), so we do NOT constrain what follows the
-    # comma-space — only that it IS a comma-space after the gloss's `)`.
+    # Preferred rule: the gloss ends at the LAST `), ` (close-paren + comma-
+    # space) in the line — that's the translit → gloss → translation
+    # boundary. Translations can themselves contain parens (e.g.
+    # `, (Possessor of?) The kas...`), so we can't just use "last close
+    # paren". Lines like `(gloss), translation (?)<footnote>` have TWO
+    # `)` characters: one that terminates the gloss (before `, `) and
+    # one that terminates the `(?)` uncertainty marker inside the
+    # translation. Picking the LAST `)` would wrongly absorb the
+    # translation into the transliteration.
     gloss_end = None
     for i in range(len(stripped) - 1, -1, -1):
         if stripped[i] != ")":
             continue
-        after = stripped[i + 1:]
-        if after == "" or re.match(r"^\d*$", after) or after.startswith(", "):
+        if stripped[i + 1:].startswith(", "):
             gloss_end = i
             break
+    # Fallback: if no `), ` separator exists, the gloss runs to end-of-line
+    # (no translation, e.g. `Label: TRANSLIT (GLOSS)`). Use the LAST `)`
+    # followed only by optional footnote digits.
+    if gloss_end is None:
+        for i in range(len(stripped) - 1, -1, -1):
+            if stripped[i] != ")":
+                continue
+            if re.match(r"^\d*$", stripped[i + 1:]):
+                gloss_end = i
+                break
     if gloss_end is None:
         return None
     # Walk backwards to find the matching `(`, balancing nested parens.

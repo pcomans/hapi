@@ -32,31 +32,49 @@ Apply the canonical tag (`"Ramesside-attested only — no contemporary attestati
 
 Dyn 13a as a whole is a Ramesside-list sub-section but Leprohon still uses `*` marking selectively per headword; do not assume all Dyn 13a kings carry the tag — check each headword.
 
-### Non-standard Dyn 13a headwords (entries 5, 6, 7)
+### Non-standard headwords with name-type labels inline
 
-Three Dyn 13a entries have atypical headwords:
+Some entries have headwords of the form `N. NAME_TYPE_LABEL NAME` where
+the name-type label is fused into the identity string because Leprohon
+only has that one name-type attested for this king (e.g. a king known
+ONLY by his Horus name, ONLY by his Nebty name, ONLY by a Golden Horus
+name — no standard SMALLCAP personal name). Rules:
 
-- `5. HORUS MERYTAWY` — a king attested only by a Horus name; no standard SMALLCAP king name.
-- `6. TWO LADIES USERKHAU` — a king attested only by a Nebty/Two-Ladies name.
-- `7. SEKHAENPTAH` — standard SMALLCAP.
-
-For entries 5 and 6, the `display_name` should preserve Leprohon's full headword verbatim (title-cased): `"Horus Merytawy"`, `"Two Ladies Userkhau"`. The king has no separate SMALLCAP name — the Horus/Nebty designation IS the display_name.
-
-The corresponding name-row under these entries will be the ONLY name-type attested (e.g. entry 5 will have populated `horus_names` and empty everything else).
+- `display_name` preserves Leprohon's full headword verbatim (Title-Cased): `"Horus <Name>"`, `"Two Ladies <Name>"`, `"Golden Horus <Name>"`.
+- `alt_display_names`: include the bare name without the name-type prefix (e.g. if display_name is `"Horus <Name>"`, add `"<Name>"` to alt_display_names) so downstream Phase-A museum-record matching has a matchable handle.
+- Only the corresponding name-type list is populated; all other name-lists are empty for that row.
 
 ### Stub entries for destroyed / missing names
 
-Dyn 14 has stub entries where the king's name is lost (e.g. `14. NAME LOST`, `15. /// -DJEFARE`, `16. /// WEBENRE II`, `49. ONE NAME LOST`). Handle per chunk-5 convention:
-- If the headword is a pure descriptor phrase like `NAME LOST` / `ONE NAME LOST`, Title-Case the phrase for `display_name`, emit all empty name-lists.
-- If the headword has partial name with `///` fragmentary-reading markers, preserve the `///` verbatim in `display_name`.
+Two flavours of stub entries appear in this chunk, both preserving
+Leprohon's sequence-numbering for entries whose name is unreadable in
+his sources:
+
+**Single-slot stub** — one numbered entry with a pure descriptor phrase
+as headword (e.g. `N. NAME LOST`). Handle per chunk-5 convention:
+Title-Case the phrase for `display_name`, emit all empty name-lists,
+`sequence_in_chapter_section` is the single slot number.
+
+**Multi-slot stub** — one entry header spans a range of sequence
+numbers (e.g. `N1–N2. <COUNT_WORD> NAMES LOST` like `THREE NAMES LOST`
+covering 3 slots, `FIVE NAMES LOST` covering 5 slots). Emit ONE row
+per stub header (NOT one per covered slot). Set
+`sequence_in_chapter_section` to the FIRST slot in the range;
+`display_name` Title-Cases the descriptor phrase (`"Three Names Lost"`,
+`"Five Names Lost"`); empty name-lists.
+
+Headwords with partial name + `///` fragmentary-reading markers are
+NOT stubs; they ARE real king entries with a partially-reconstructed
+name — preserve the `///` verbatim in `display_name` and populate
+whatever name-type rows Leprohon gives.
 
 ### Expected row counts
 
-- **Dyn 13a:** 7 rows (entries 1–7, contiguous)
-- **Dyn 14:** 38 rows (entries 1–19 contiguous + 22–34 + 43–45 + 49–51; Leprohon skips 20–21, 35–42, 46–48 in his own numbering)
-- **Dyn 14a:** 6 rows (entries 1–6, contiguous)
+- **Dyn 13a:** 7 rows (entries 1–7, contiguous).
+- **Dyn 14:** 40 rows — entries 1–19 (19 rows), 22–34 (13 rows), 43–45 (3 rows), multi-slot stub at slots 46–48 (1 row), 49–51 (3 rows), multi-slot stub at slots 52–56 (1 row). Leprohon's own numbering skips 20–21 and 35–42.
+- **Dyn 14a:** 6 rows (entries 1–6, contiguous).
 
-**Total: 51 rows.** If you come in significantly under 47 or over 55, re-scan for missed entries.
+**Total: 53 rows.** If you come in significantly under 49 or over 57, re-scan for missed entries — in particular, DO NOT skip the multi-slot stub rows.
 
 ### Numbering gaps
 
@@ -65,6 +83,17 @@ Dyn 14 has numbering gaps (20–21, 35–42, 46–48 missing). These are Leproho
 ### Per-dynasty sparse titularies
 
 Dyn 13a, 14, 14a kings are mostly fragmentary: most have only Throne + Birth. `Horus: none attested` → empty `horus_names: []` etc. Same as chunk 5.
+
+### Name-rows with no anglicised gloss / no translation
+
+Some entries (particularly in Dyn 14a) give ONLY the transliteration,
+with no parenthetical anglicised gloss and no English translation (e.g.
+a `Birth:` row of the form `Birth: transliteration` on its own, no
+`(gloss), translation` continuation). Emit `anglicised: null` and
+`translation: null` for those rows — do NOT synthesize an anglicised
+form from the transliteration, and do NOT copy the anglicised form into
+the translation field. Constitutional rule 2 (no defensive programming):
+an absent field is `null`, not a fabricated guess.
 
 ## Output ordering
 

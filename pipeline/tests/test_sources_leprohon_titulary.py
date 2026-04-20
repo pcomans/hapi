@@ -114,13 +114,15 @@ LANDED_CHUNKS: dict[str, dict] = {
     },
     "dyn13a-14": {
         # Chapter V MK tail — Ramesside-added sub-dynasties: Dyn 13a (7
-        # rows), Dyn 14 (38 rows with numbering gaps at 20-21, 35-42,
-        # 46-48), Dyn 14a (6 rows). All `chapter: "Middle Kingdom"` per
-        # Leprohon's editorial placement.
+        # rows), Dyn 14 (40 rows — 19 contiguous + 13 + 3 + multi-slot
+        # stub "Three Names Lost" at slots 46-48 + 3 + multi-slot stub
+        # "Five Names Lost" at slots 52-56; Leprohon's own numbering
+        # skips 20-21 and 35-42), Dyn 14a (6 rows). All `chapter:
+        # "Middle Kingdom"` per Leprohon's editorial placement.
         "chapter": "Middle Kingdom",
         "rows_by_dynasty_label": {
             "Dynasty 13a": 7,
-            "Dynasty 14": 38,
+            "Dynasty 14": 40,
             "Dynasty 14a": 6,
         },
         "printed_page_range": (72, 80),
@@ -895,6 +897,49 @@ def test_ramesside_only_tagging_is_applied_where_expected() -> None:
         "leprohon-9-10a.07",  # Khety IV
         "leprohon-9-10a.08",  # Shed////
         "leprohon-9-10a.09",  # Hu////
+        # Chunk 5 Dyn 13: 11 headword-asterisked entries
+        "leprohon-13.07",  # Iufni
+        "leprohon-13.11",  # Sewadjkare (I)
+        "leprohon-13.12",  # Nedjemibre
+        "leprohon-13.36",  # Ined
+        "leprohon-13.37",  # Sobekhotep VII
+        "leprohon-13.46",  # Mer [///]re
+        "leprohon-13.48",  # Mer Ka [Re]
+        "leprohon-13.51",  # Ibi II
+        "leprohon-13.52",  # (headword-asterisked entry)
+        "leprohon-13.53",  # Se /// Kare
+        "leprohon-13.54",  # Se /// Kare sibling
+        # Chunk 6 Dyn 14: 28 headword-asterisked entries. Verified
+        # tagged per agent-majority vote, per egyptologist-reviewer
+        # confirmation, and per code-reviewer P2-c regression guard.
+        "leprohon-14.07",
+        "leprohon-14.08",
+        "leprohon-14.09",
+        "leprohon-14.10",
+        "leprohon-14.11",
+        "leprohon-14.12",
+        "leprohon-14.13",
+        "leprohon-14.15",
+        "leprohon-14.16",
+        "leprohon-14.17",
+        "leprohon-14.18",
+        "leprohon-14.23",
+        "leprohon-14.24",
+        "leprohon-14.25",
+        "leprohon-14.26",
+        "leprohon-14.27",
+        "leprohon-14.28",
+        "leprohon-14.29",
+        "leprohon-14.30",
+        "leprohon-14.31",
+        "leprohon-14.32",
+        "leprohon-14.33",
+        "leprohon-14.34",
+        "leprohon-14.43",
+        "leprohon-14.44",
+        "leprohon-14.45",
+        "leprohon-14.49",
+        "leprohon-14.51",
     }
     for lid in expected_tagged:
         r = _row(lid)

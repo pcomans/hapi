@@ -96,16 +96,16 @@ leprohon-1.07 (Qaa):
     b: [{"anglicised": "qebeh", "attested_in": ["Abydos 8", "Turin 2,19", "Saqqara 2"], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kbḥ', pypdf='ḳbḥ'.", "translation": "The cool one", "transliteration": "ḳbḥ", "variant_index": 1}]
     c: [{"anglicised": "qebeh", "attested_in": ["Abydos 8", "Turin 2,19", "Saqqara 2"], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kbḥ', pypdf='ḳbḥ'", "translation": "The cool one", "transliteration": "ḳbḥ", "variant_index": 1}]
     → chose: [{"anglicised": "qebeh", "attested_in": ["Abydos 8", "Turin 2,19", "Saqqara 2"], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kbḥ', pypdf='ḳbḥ'", "translation": "The cool one", "transliteration": "ḳbḥ", "variant_index": 1}]
-  horus_names:
-    a: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
-    b: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'. Cf. the Smiting King motif.", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
-    c: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
-    → chose: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
   nebty_names:
     a: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}, {"anglicised": "sen", "attested_in": [], "is_variant": true, "source_note": "That is, have given him the breath of life; cf. the relief from Dahshur where King Snefru is kissed by a leonine goddess (easily accessible in Fakhry 1961, p. 82, fig. 46). This seems more likely than rendering the name as \"equal\" or \"brother\" (so T. A. H. Wilkinson 2001, 204), since an actual identification of the king with a divinity is less likely.", "translation": "The one whom the Two Ladies have kissed.", "transliteration": "sn", "variant_index": 2}, {"anglicised": "sehetep nebty", "attested_in": [], "is_variant": true, "source_note": "For references, see T. A. H. Wilkinson 2001, 204–5.", "translation": "The one who has pacified the Two Ladies", "transliteration": "sḥtp (nbty)", "variant_index": 3}]
     b: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'.", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}, {"anglicised": "sen", "attested_in": [], "is_variant": true, "source_note": "That is, have given him the breath of life; cf. the relief from Dahshur where King Snefru is kissed by a leonine goddess (easily accessible in Fakhry 1961, p. 82, fig. 46). This seems more likely than rendering the name as \"equal\" or \"brother\" (so T. A. H. Wilkinson 2001, 204), since an actual identification of the king with a divinity is less likely.", "translation": "The one whom the Two Ladies have kissed.", "transliteration": "sn", "variant_index": 2}, {"anglicised": "sehetep nebty", "attested_in": [], "is_variant": true, "source_note": "For references, see T. A. H. Wilkinson 2001, 204–5.", "translation": "The one who has pacified the Two Ladies", "transliteration": "sḥtp (nbty)", "variant_index": 3}]
     c: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}, {"anglicised": "sen", "attested_in": [], "is_variant": true, "source_note": "That is, have given him the breath of life; cf. the relief from Dahshur where King Snefru is kissed by a leonine goddess (easily accessible in Fakhry 1961, p. 82, fig. 46). This seems more likely than rendering the name as \"equal\" or \"brother\" (so T. A. H. Wilkinson 2001, 204), since an actual identification of the king with a divinity is less likely.", "translation": "The one whom the Two Ladies have kissed.", "transliteration": "sn", "variant_index": 2}, {"anglicised": "sehetep nebty", "attested_in": [], "is_variant": true, "source_note": "For references, see T. A. H. Wilkinson 2001, 204–5.", "translation": "The one who has pacified the Two Ladies", "transliteration": "sḥtp (nbty)", "variant_index": 3}]
     → chose: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}, {"anglicised": "sen", "attested_in": [], "is_variant": true, "source_note": "That is, have given him the breath of life; cf. the relief from Dahshur where King Snefru is kissed by a leonine goddess (easily accessible in Fakhry 1961, p. 82, fig. 46). This seems more likely than rendering the name as \"equal\" or \"brother\" (so T. A. H. Wilkinson 2001, 204), since an actual identification of the king with a divinity is less likely.", "translation": "The one whom the Two Ladies have kissed.", "transliteration": "sn", "variant_index": 2}, {"anglicised": "sehetep nebty", "attested_in": [], "is_variant": true, "source_note": "For references, see T. A. H. Wilkinson 2001, 204–5.", "translation": "The one who has pacified the Two Ladies", "transliteration": "sḥtp (nbty)", "variant_index": 3}]
+  horus_names:
+    a: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
+    b: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'. Cf. the Smiting King motif.", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
+    c: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "qa-a", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'", "translation": "(Whose) arm is raised", "transliteration": "ḳꜣ-ꜥ", "variant_index": 1}]
 
 leprohon-2.01 (Hetepsekhemwy):
   later_cartouche_names:
@@ -172,16 +172,16 @@ leprohon-2.08 (Khasekhem/Khasekhemwy):
     b: [{"anglicised": "djadjay", "attested_in": ["Abydos 14; according to Kitchen (1993, 154), this refers to King Khasekhemwy"], "is_variant": false, "source_note": null, "translation": "The head-man (?)", "transliteration": "ḏꜣḏꜣy", "variant_index": 1}, {"anglicised": "beby/bebty", "attested_in": ["Saqqara 11", "Turin 3,3"], "is_variant": true, "source_note": null, "translation": "Beby/Bebty", "transliteration": "bby/bbty", "variant_index": 2}]
     c: [{"anglicised": "djadjay", "attested_in": ["Abydos 14; according to Kitchen (1993, 154), this refers to King Khasekhemwy"], "is_variant": false, "source_note": null, "translation": "The head-man (?)", "transliteration": "ḏꜣḏꜣy", "variant_index": 1}, {"anglicised": "beby/bebty", "attested_in": ["Saqqara 11", "Turin 3,3"], "is_variant": true, "source_note": "OCR vs pypdf transliteration disagreement: OCR='bhy/bhty', pypdf='bby/bbty'", "translation": "Beby/Bebty", "transliteration": "bby/bbty", "variant_index": 2}]
     → chose: [{"anglicised": "djadjay", "attested_in": ["Abydos 14; according to Kitchen (1993, 154), this refers to King Khasekhemwy"], "is_variant": false, "source_note": null, "translation": "The head-man (?)", "transliteration": "ḏꜣḏꜣy", "variant_index": 1}, {"anglicised": "beby/bebty", "attested_in": ["Saqqara 11", "Turin 3,3"], "is_variant": true, "source_note": "OCR vs pypdf transliteration disagreement: OCR='bhy/bhty', pypdf='bby/bbty'", "translation": "Beby/Bebty", "transliteration": "bby/bbty", "variant_index": 2}]
-  horus_names:
-    a: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 34–36, 47–48; von Beckerath 1999, 44–45. That is, Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. Horus and Seth; both animals appear on the top of the serekh. Horus and Seth again.", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
-    b: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "That is, Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form.", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
-    c: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 34–36, 47–48; von Beckerath 1999, 44–45. 'The powerful one' glossed by Leprohon as Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. 'The two powerful ones' = Horus and Seth; 'the two lords' = Horus and Seth again. If the two signs nbwy in the last phrase were placed in honorific transposition, this part of the name might read ḥtp nbwy im.f, \"The two lords within him are satisfied.\"", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
-    → chose: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 34–36, 47–48; von Beckerath 1999, 44–45. That is, Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. Horus and Seth; both animals appear on the top of the serekh. Horus and Seth again.", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
   nebty_names:
     a: [{"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": false, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. If the two signs nbwy in the last phrase were placed in honorific transposition, this part of the name might read ḥtp nbwy im.f, \"The two lords within him are satisfied.\"", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 1}, {"anglicised": "kha sekhemwy nebu khet.sen", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. OCR vs pypdf transliteration disagreement: OCR='ḫꜥ sḫmy nbw ḫt.sn', pypdf='ḫꜥ sḫmy nbw ẖt.sn'", "translation": "The two powerful ones have appeared, the golden one of their bodies", "transliteration": "ḫꜥ sḫmy nbw ẖt.sn", "variant_index": 2}]
     b: [{"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": false, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. If the two signs nbwy in the last phrase were placed in honorific transposition, this part of the name might read ḥtp nbwy im.f, \"The two lords within him are satisfied.\"", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 1}, {"anglicised": "kha sekhemwy nebu khet.sen", "attested_in": [], "is_variant": true, "source_note": "OCR vs pypdf transliteration disagreement: OCR='ḫꜥ sḫmy nbw ḫt.sn', pypdf='ḫꜥ sḫmy nbw ẖt.sn'.", "translation": "The two powerful ones have appeared, the golden one of their bodies", "transliteration": "ḫꜥ sḫmy nbw ẖt.sn", "variant_index": 2}]
     c: [{"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": false, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form.", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 1}, {"anglicised": "kha sekhemwy nebu khet.sen", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. OCR vs pypdf transliteration disagreement: OCR='nbw ḫt.sn', pypdf='nbw ẖt.sn'", "translation": "The two powerful ones have appeared, the golden one of their bodies", "transliteration": "ḫꜥ sḫmy nbw ẖt.sn", "variant_index": 2}]
     → chose: [{"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": false, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. If the two signs nbwy in the last phrase were placed in honorific transposition, this part of the name might read ḥtp nbwy im.f, \"The two lords within him are satisfied.\"", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 1}, {"anglicised": "kha sekhemwy nebu khet.sen", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. OCR vs pypdf transliteration disagreement: OCR='ḫꜥ sḫmy nbw ḫt.sn', pypdf='ḫꜥ sḫmy nbw ẖt.sn'", "translation": "The two powerful ones have appeared, the golden one of their bodies", "transliteration": "ḫꜥ sḫmy nbw ẖt.sn", "variant_index": 2}]
+  horus_names:
+    a: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 34–36, 47–48; von Beckerath 1999, 44–45. That is, Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. Horus and Seth; both animals appear on the top of the serekh. Horus and Seth again.", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
+    b: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "That is, Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form.", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
+    c: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 34–36, 47–48; von Beckerath 1999, 44–45. 'The powerful one' glossed by Leprohon as Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. 'The two powerful ones' = Horus and Seth; 'the two lords' = Horus and Seth again. If the two signs nbwy in the last phrase were placed in honorific transposition, this part of the name might read ḥtp nbwy im.f, \"The two lords within him are satisfied.\"", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
+    → chose: [{"anglicised": "kha sekhem", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 34–36, 47–48; von Beckerath 1999, 44–45. That is, Horus.", "translation": "The powerful one has appeared", "transliteration": "ḫꜥ sḫm", "variant_index": 1}, {"anglicised": "kha sekhemwy nebwy hetep(u) im.ef", "attested_in": [], "is_variant": true, "source_note": "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. Horus and Seth; both animals appear on the top of the serekh. Horus and Seth again.", "translation": "The two powerful ones have appeared, the two lords being satisfied with him", "transliteration": "ḫꜥ sḫmy nbwy ḥtp(.w) im.f", "variant_index": 2}]
 
 leprohon-2.09 (Seneferka):
   horus_names:
@@ -295,16 +295,16 @@ leprohon-4.03 (Radjedef):
     b: [{"anglicised": "re djed.ef", "attested_in": [], "is_variant": false, "source_note": "I have opted for the reading Radjedef because of its later Greek form Rathotis (Waddell 1940, 102). A reading \"Djedefre\" would give us \"Re endures,\" lit. \"He endures, (namely) Re,\" but such a phrase would not refer to the king himself, which a name ought to do. It is also to be noted that Radjedef was the first to use the designation sꜣ rꜥ, \"the son of Re,\" to introduce his Throne name.", "translation": "Re is his stability", "transliteration": "rꜥ ḏd.f", "variant_index": 1}]
     c: [{"anglicised": "re djed.ef", "attested_in": [], "is_variant": false, "source_note": "I have opted for the reading Radjedef because of its later Greek form Rathotis (Waddell 1940, 102). A reading \"Djedefre\" would give us \"Re endures,\" lit. \"He endures, (namely) Re,\" but such a phrase would not refer to the king himself, which a name ought to do. It is also to be noted that Radjedef was the first to use the designation sA ra, \"the son of Re,\" to introduce his Throne name.", "translation": "Re is his stability", "transliteration": "rꜥ ḏd.f", "variant_index": 1}]
     → chose: [{"anglicised": "re djed.ef", "attested_in": [], "is_variant": false, "source_note": "I have opted for the reading Radjedef because of its later Greek form Rathotis (Waddell 1940, 102). A reading \"Djedefre\" would give us \"Re endures,\" lit. \"He endures, (namely) Re,\" but such a phrase would not refer to the king himself, which a name ought to do. It is also to be noted that Radjedef was the first to use the designation sꜣ rꜥ, \"the son of Re,\" to introduce his Throne name.", "translation": "Re is his stability", "transliteration": "rꜥ ḏd.f", "variant_index": 1}]
-  horus_names:
-    a: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 83–85; von Beckerath 1999, 52–53.", "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
-    b: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
-    c: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
-    → chose: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
   alt_display_names:
     a: ["Djedefre"]
     b: []
     c: ["Djedefre"]
     → chose: ["Djedefre"]
+  horus_names:
+    a: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 83–85; von Beckerath 1999, 52–53.", "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
+    b: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
+    c: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
+    → chose: [{"anglicised": "kheper", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has manifested (himself)", "transliteration": "ḫpr", "variant_index": 1}]
 
 leprohon-4.04 (Khafre):
   horus_names:
@@ -345,16 +345,16 @@ leprohon-5.01 (Userkaf):
     → chose: [{"anglicised": "ir maat", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has accomplished Maat", "transliteration": "ir mꜣꜥt", "variant_index": 1}]
 
 leprohon-5.02 (Sahure):
-  horus_names:
-    a: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 109–13; von Beckerath 1999, 56–57. Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
-    b: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
-    c: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
-    → chose: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "sah w(i) ra", "attested_in": [], "is_variant": false, "source_note": "For this meaning of sꜣḥ, see Wb IV, 21:15–20; and Hannig 2006b, 2088.", "translation": "Re has endowed me", "transliteration": "sꜣḥ w(i) rꜥ", "variant_index": 1}]
     b: [{"anglicised": "sah w(i) ra", "attested_in": [], "is_variant": false, "source_note": "For this meaning of sꜣḥ, see Wb IV, 21:15–20; and Hannig 2006b, 2088.", "translation": "Re has endowed me", "transliteration": "sꜣḥ w(i) rꜥ", "variant_index": 1}]
     c: [{"anglicised": "sah w(i) ra", "attested_in": [], "is_variant": false, "source_note": "For this meaning of sAH, see Wb IV, 21:15–20; and Hannig 2006b, 2088.", "translation": "Re has endowed me", "transliteration": "sꜣḥ w(i) rꜥ", "variant_index": 1}]
     → chose: [{"anglicised": "sah w(i) ra", "attested_in": [], "is_variant": false, "source_note": "For this meaning of sꜣḥ, see Wb IV, 21:15–20; and Hannig 2006b, 2088.", "translation": "Re has endowed me", "transliteration": "sꜣḥ w(i) rꜥ", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 109–13; von Beckerath 1999, 56–57. Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
+    b: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
+    c: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
+    → chose: [{"anglicised": "neb khau", "attested_in": [], "is_variant": false, "source_note": "Less likely, \"Possessor of crowns.\"", "translation": "Possessor of appearances", "transliteration": "nb ḫꜥw", "variant_index": 1}]
 
 leprohon-5.03 (Neferirkare (I)):
   golden_horus_names:
@@ -362,19 +362,24 @@ leprohon-5.03 (Neferirkare (I)):
     b: [{"anglicised": "sekhemu nebu", "attested_in": [], "is_variant": false, "source_note": "Or perhaps literally \"The three powers,\" referring to the first three kings of the dynasty, with the three sekhem-scepter hieroglyphs replacing the falcon sign in the name; see Dobrev 1993, 190 n. 41.", "translation": "The triple power", "transliteration": "sḫmw nbw", "variant_index": 1}]
     c: [{"anglicised": "sekhemu nebu", "attested_in": [], "is_variant": false, "source_note": "Or perhaps literally \"The three powers,\" referring to the first three kings of the dynasty, with the three sekhem- scepter hieroglyphs replacing the falcon sign in the name; see Dobrev 1993, 190 n. 41.", "translation": "The triple power", "transliteration": "sḫmw nbw", "variant_index": 1}]
     → chose: [{"anglicised": "sekhemu nebu", "attested_in": [], "is_variant": false, "source_note": "Or perhaps literally \"The three powers,\" referring to the first three kings of the dynasty, with the three sekhem- scepter hieroglyphs replacing the falcon sign in the name; see Dobrev 1993, 190 n. 41.", "translation": "The triple power", "transliteration": "sḫmw nbw", "variant_index": 1}]
-  horus_names:
-    a: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 116–19; von Beckerath 1999, 56–57.", "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
-    b: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
-    c: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
-    → chose: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "ka ka.i", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth (?) name\" — uncertainty hedge on whether this was a Birth name proper.", "translation": "My ka is a (true) ka (?)", "transliteration": "kꜣ kꜣ.i", "variant_index": 1}]
     b: [{"anglicised": "ka ka.i", "attested_in": [], "is_variant": false, "source_note": "Labelled by Leprohon as \"Birth (?) name\".", "translation": "My ka is a (true) ka (?)", "transliteration": "kꜣ kꜣ.i", "variant_index": 1}]
     c: [{"anglicised": "ka ka.i", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this as 'Birth (?) name'.", "translation": "My ka is a (true) ka (?)", "transliteration": "kꜣ kꜣ.i", "variant_index": 1}]
     → chose: [{"anglicised": "ka ka.i", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth (?) name\" — uncertainty hedge on whether this was a Birth name proper.", "translation": "My ka is a (true) ka (?)", "transliteration": "kꜣ kꜣ.i", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 116–19; von Beckerath 1999, 56–57.", "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
+    b: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
+    c: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
+    → chose: [{"anglicised": "weser khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Strong of appearances", "transliteration": "wsr-ḫꜥw", "variant_index": 1}]
 
 leprohon-5.04 (Shepseskare):
   golden_horus_names:
+    a: []
+    b: [{"anglicised": "unknown", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown", "transliteration": "unknown", "variant_index": 1}]
+    c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown", "transliteration": "unknown", "variant_index": 1}]
+    → chose: []
+  nebty_names:
     a: []
     b: [{"anglicised": "unknown", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown", "transliteration": "unknown", "variant_index": 1}]
     c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown", "transliteration": "unknown", "variant_index": 1}]
@@ -384,11 +389,6 @@ leprohon-5.04 (Shepseskare):
     b: [{"anglicised": "sekhem khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Powerful of appearances", "transliteration": "sḫm ḫꜥw", "variant_index": 1}]
     c: [{"anglicised": "sekhem khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Powerful of appearances", "transliteration": "sḫm ḫꜥw", "variant_index": 1}]
     → chose: [{"anglicised": "sekhem khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Powerful of appearances", "transliteration": "sḫm ḫꜥw", "variant_index": 1}]
-  nebty_names:
-    a: []
-    b: [{"anglicised": "unknown", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown", "transliteration": "unknown", "variant_index": 1}]
-    c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown", "transliteration": "unknown", "variant_index": 1}]
-    → chose: []
 
 leprohon-5.05 (Nefer(ef)re):
   throne_names:
@@ -403,28 +403,28 @@ leprohon-5.05 (Nefer(ef)re):
     → chose: [{"anglicised": "nefer khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Perfect of appearances", "transliteration": "nfr ḫꜥw", "variant_index": 1}]
 
 leprohon-5.06 (Niuserre):
-  horus_names:
-    a: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 124–29; von Beckerath 1999, 58–59. Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
-    b: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
-    c: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
-    → chose: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "ini", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth (?)\" — uncertainty hedge. One might suggest \"The delayed one\" (CDME, 23), perhaps referring to a baby whose birth was overdue. Alternatively, perhaps the name means something like \"The (one with the bushy?) eyebrows\" (CDME, 23). Perhaps simpler, the name may be a nickname of Niuserre; see Scheele-Schweitzer 2007.", "translation": "Ini", "transliteration": "ini", "variant_index": 1}]
     b: [{"anglicised": "ini", "attested_in": [], "is_variant": false, "source_note": "Labelled by Leprohon as \"Birth (?)\". One might suggest \"The delayed one\" (CDME, 23), perhaps referring to a baby whose birth was overdue. Alternatively, perhaps the name means something like \"The (one with the bushy?) eyebrows\" (CDME, 23). Perhaps simpler, the name may be a nickname of Niuserre; see Scheele-Schweitzer 2007.", "translation": "Ini", "transliteration": "ini", "variant_index": 1}]
     c: [{"anglicised": "ini", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this as 'Birth (?)'. One might suggest \"The delayed one\" (CDME, 23), perhaps referring to a baby whose birth was overdue. Alternatively, perhaps the name means something like \"The (one with the bushy?) eyebrows\" (CDME, 23). Perhaps simpler, the name may be a nickname of Niuserre; see Scheele-Schweitzer 2007.", "translation": "Ini", "transliteration": "ini", "variant_index": 1}]
     → chose: [{"anglicised": "ini", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth (?)\" — uncertainty hedge. One might suggest \"The delayed one\" (CDME, 23), perhaps referring to a baby whose birth was overdue. Alternatively, perhaps the name means something like \"The (one with the bushy?) eyebrows\" (CDME, 23). Perhaps simpler, the name may be a nickname of Niuserre; see Scheele-Schweitzer 2007.", "translation": "Ini", "transliteration": "ini", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 124–29; von Beckerath 1999, 58–59. Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
+    b: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
+    c: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
+    → chose: [{"anglicised": "set-ib tawy", "attested_in": [], "is_variant": false, "source_note": "Lit. \"the place of the heart.\"", "translation": "The favorite of the Two Lands", "transliteration": "st-ib tꜣwy", "variant_index": 1}]
 
 leprohon-5.07 (Menkauhor):
-  horus_names:
-    a: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 130–32; von Beckerath 1999, 58–59.", "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
-    b: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
-    c: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
-    → chose: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "ikau hor", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth (?) 1\" — uncertainty hedge.", "translation": "Ikauhor", "transliteration": "ikꜣw ḥr", "variant_index": 1}, {"anglicised": "ikau", "attested_in": [], "is_variant": true, "source_note": "Leprohon labels this entry \"Birth (?) 2\" — uncertainty hedge. The name Ikau was simply an abbreviation of the fuller name Ikauhor (Gauthier 1907, 123; von Beckerath 1999, 58); the latter was itself derived from the Throne name Menkauhor (Edel 1960, 79–80; and Fischer 1989a, 23 n. 6), which may again mean that the name was not actually the king's Birth name.", "translation": "Ikau", "transliteration": "ikꜣw", "variant_index": 2}]
     b: [{"anglicised": "ikau hor", "attested_in": [], "is_variant": false, "source_note": "Labelled by Leprohon as \"Birth (?) 1\".", "translation": "Ikauhor", "transliteration": "ikꜣw ḥr", "variant_index": 1}, {"anglicised": "ikau", "attested_in": [], "is_variant": true, "source_note": "Labelled by Leprohon as \"Birth (?) 2\". The name Ikau was simply an abbreviation of the fuller name Ikauhor (Gauthier 1907, 123; von Beckerath 1999, 58); the latter was itself derived from the Throne name Menkauhor (Edel 1960, 79–80; and Fischer 1989a, 23 n. 6), which may again mean that the name was not actually the king's Birth name.", "translation": "Ikau", "transliteration": "ikꜣw", "variant_index": 2}]
     c: [{"anglicised": "ikau hor", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this as 'Birth (?) 1'.", "translation": "Ikauhor", "transliteration": "ikꜣw ḥr", "variant_index": 1}, {"anglicised": "ikau", "attested_in": [], "is_variant": true, "source_note": "Leprohon labels this as 'Birth (?) 2'. The name Ikau was simply an abbreviation of the fuller name Ikauhor (Gauthier 1907, 123; von Beckerath 1999, 58); the latter was itself derived from the Throne name Menkauhor (Edel 1960, 79–80; and Fischer 1989a, 23 n. 6), which may again mean that the name was not actually the king's Birth name.", "translation": "Ikau", "transliteration": "ikꜣw", "variant_index": 2}]
     → chose: [{"anglicised": "ikau hor", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth (?) 1\" — uncertainty hedge.", "translation": "Ikauhor", "transliteration": "ikꜣw ḥr", "variant_index": 1}, {"anglicised": "ikau", "attested_in": [], "is_variant": true, "source_note": "Leprohon labels this entry \"Birth (?) 2\" — uncertainty hedge. The name Ikau was simply an abbreviation of the fuller name Ikauhor (Gauthier 1907, 123; von Beckerath 1999, 58); the latter was itself derived from the Throne name Menkauhor (Edel 1960, 79–80; and Fischer 1989a, 23 n. 6), which may again mean that the name was not actually the king's Birth name.", "translation": "Ikau", "transliteration": "ikꜣw", "variant_index": 2}]
+  horus_names:
+    a: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 130–32; von Beckerath 1999, 58–59.", "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
+    b: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
+    c: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
+    → chose: [{"anglicised": "men khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Established of appearances", "transliteration": "mn-ḫꜥw", "variant_index": 1}]
 
 leprohon-5.08 (Djedkare):
   horus_names:
@@ -441,6 +441,11 @@ leprohon-5.09 (Unas):
     → chose: [{"anglicised": "wadj tawy", "attested_in": [], "is_variant": false, "source_note": "Unas's titulary is discussed by Aufrère (1982, 52–53), who has suggested an unattested Throne name *Wadjkare.", "translation": "The sturdy one of the Two Lands", "transliteration": "wꜣḏ tꜣwy", "variant_index": 1}]
 
 leprohon-6.01 (Teti):
+  birth_names:
+    a: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
+    b: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
+    c: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sA ra, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
+    → chose: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
   throne_names:
     a: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": "Leprohon prints Throne: (unknown). See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti.", "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
     b: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": "See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti.", "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
@@ -451,11 +456,6 @@ leprohon-6.01 (Teti):
     b: [{"anglicised": "sehetep tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has satisfied the Two Lands", "transliteration": "sḥtp tꜣwy", "variant_index": 1}]
     c: [{"anglicised": "sehetep tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has satisfied the Two Lands", "transliteration": "sḥtp tꜣwy", "variant_index": 1}]
     → chose: [{"anglicised": "sehetep tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The one who has satisfied the Two Lands", "transliteration": "sḥtp tꜣwy", "variant_index": 1}]
-  birth_names:
-    a: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
-    b: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
-    c: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sA ra, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
-    → chose: [{"anglicised": "teti", "attested_in": [], "is_variant": false, "source_note": "Some examples of the name show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche and preceding the name Teti.", "translation": "Teti", "transliteration": "tti", "variant_index": 1}]
 
 leprohon-6.02 (Userkare (I)):
   golden_horus_names:
@@ -468,28 +468,28 @@ leprohon-6.02 (Userkare (I)):
     b: [{"anglicised": "weser ka ra", "attested_in": ["Abydos 35"], "is_variant": false, "source_note": "Labelled by Leprohon as \"Throne/Birth (?)\". On this obscure king, who probably reigned for a short period of time between Teti and Pepy I, see Baud and Dobrev 1995, 59–63, and Baud 1999, 625, and the references given there. His memory lived on, as he is also attested in the Ramesside Abydos List (no. 35) between the two aforementioned rulers. His identification with the King Iti mentioned in two graffiti in the Wadi Hammamat (Couyat and Montet 1913, nos. 168, 169) is highly speculative; see Baud and Dobrev 1995, 60 and n. 95.", "translation": "The strong one belonging to the ka of Re", "transliteration": "wsr kꜣ rꜥ", "variant_index": 1}]
     c: [{"anglicised": "weser ka ra", "attested_in": ["Abydos 35"], "is_variant": false, "source_note": "Leprohon labels this as 'Throne/Birth (?)'. On this obscure king, who probably reigned for a short period of time between Teti and Pepy I, see Baud and Dobrev 1995, 59–63, and Baud 1999, 625, and the references given there. His memory lived on, as he is also attested in the Ramesside Abydos List (no. 35) between the two aforementioned rulers. His identification with the King Iti mentioned in two graffiti in the Wadi Hammamat (Couyat and Montet 1913, nos. 168, 169) is highly speculative; see Baud and Dobrev 1995, 60 and n. 95.", "translation": "The strong one belonging to the ka of Re", "transliteration": "wsr kꜣ rꜥ", "variant_index": 1}]
     → chose: [{"anglicised": "weser ka ra", "attested_in": ["Abydos 35"], "is_variant": false, "source_note": "Leprohon labels this entry \"Throne/Birth (?)\" — uncertainty about whether the form is a Throne or Birth name.", "translation": "The strong one belonging to the ka of Re", "transliteration": "wsr kꜣ rꜥ", "variant_index": 1}]
-  horus_names:
-    a: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 145; von Beckerath 1999, 62–63. On this obscure king, who probably reigned for a short period of time between Teti and Pepy I, see Baud and Dobrev 1995, 59–63, and Baud 1999, 625, and the references given there. His memory lived on, as he is also attested in the Ramesside Abydos List (no. 35) between the two aforementioned rulers. His identification with the King Iti mentioned in two graffiti in the Wadi Hammamat (Couyat and Montet 1913, nos. 168, 169) is highly speculative; see Baud and Dobrev 1995, 60 and n. 95.", "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
-    b: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
-    c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
-    → chose: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 145; von Beckerath 1999, 62–63. On this obscure king, who probably reigned for a short period of time between Teti and Pepy I, see Baud and Dobrev 1995, 59–63, and Baud 1999, 625, and the references given there. His memory lived on, as he is also attested in the Ramesside Abydos List (no. 35) between the two aforementioned rulers. His identification with the King Iti mentioned in two graffiti in the Wadi Hammamat (Couyat and Montet 1913, nos. 168, 169) is highly speculative; see Baud and Dobrev 1995, 60 and n. 95.", "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
   nebty_names:
     a: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
     b: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
     c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
     → chose: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 145; von Beckerath 1999, 62–63. On this obscure king, who probably reigned for a short period of time between Teti and Pepy I, see Baud and Dobrev 1995, 59–63, and Baud 1999, 625, and the references given there. His memory lived on, as he is also attested in the Ramesside Abydos List (no. 35) between the two aforementioned rulers. His identification with the King Iti mentioned in two graffiti in the Wadi Hammamat (Couyat and Montet 1913, nos. 168, 169) is highly speculative; see Baud and Dobrev 1995, 60 and n. 95.", "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
+    b: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
+    c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
+    → chose: [{"anglicised": "(unknown)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 145; von Beckerath 1999, 62–63. On this obscure king, who probably reigned for a short period of time between Teti and Pepy I, see Baud and Dobrev 1995, 59–63, and Baud 1999, 625, and the references given there. His memory lived on, as he is also attested in the Ramesside Abydos List (no. 35) between the two aforementioned rulers. His identification with the King Iti mentioned in two graffiti in the Wadi Hammamat (Couyat and Montet 1913, nos. 168, 169) is highly speculative; see Baud and Dobrev 1995, 60 and n. 95.", "translation": "(unknown)", "transliteration": "(unknown)", "variant_index": 1}]
 
 leprohon-6.03 (Pepy I):
-  horus_names:
-    a: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 150–62; von Beckerath 1999, 62–63.", "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
-    b: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
-    c: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
-    → chose: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "As with King Teti, some instances show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche. For the transliteration of the name, see Fischer 1989b.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
     b: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "As with King Teti, some instances show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche. For the transliteration of the name, see Fischer 1989b.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
     c: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "As with King Teti, some instances show the epithet sA ra, \"the son of Re,\" written within the cartouche. For the transliteration of the name, see Fischer 1989b.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
     → chose: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "As with King Teti, some instances show the epithet sꜣ rꜥ, \"the son of Re,\" written within the cartouche. For the transliteration of the name, see Fischer 1989b.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 150–62; von Beckerath 1999, 62–63.", "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
+    b: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
+    c: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
+    → chose: [{"anglicised": "mery tawy", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Beloved of the Two Lands", "transliteration": "mry tꜣwy", "variant_index": 1}]
 
 leprohon-6.04 (Merenre (I)):
   horus_names:
@@ -499,16 +499,16 @@ leprohon-6.04 (Merenre (I)):
     → chose: [{"anglicised": "ankh khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(Whose) appearances are (very much) alive", "transliteration": "ꜥnḫ ḫꜥw", "variant_index": 1}]
 
 leprohon-6.05 (Pepy II):
-  horus_names:
-    a: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 169–76; von Beckerath 1999, 64–65.", "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
-    b: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
-    c: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
-    → chose: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth 1\". As with Kings Teti and Pepy I, the epithet sꜣ rꜥ can sometimes precede the name within the cartouche.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
     b: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "Labelled by Leprohon as \"Birth 1\". As with Kings Teti and Pepy I, the epithet sꜣ rꜥ can sometimes precede the name within the cartouche.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
     c: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this as 'Birth 1'. As with Kings Teti and Pepy I, the epithet sA ra can sometimes precede the name within the cartouche.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
     → chose: [{"anglicised": "pepy", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels this entry \"Birth 1\". As with Kings Teti and Pepy I, the epithet sꜣ rꜥ can sometimes precede the name within the cartouche.", "translation": "Pepy", "transliteration": "ppy", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 169–76; von Beckerath 1999, 64–65.", "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
+    b: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
+    c: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
+    → chose: [{"anglicised": "netjeri khau", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Divine of appearances", "transliteration": "nṯri-ḫꜥw", "variant_index": 1}]
 
 leprohon-6.06 (Merenre II):
   golden_horus_names:
@@ -521,16 +521,16 @@ leprohon-6.06 (Merenre II):
     b: [{"anglicised": "mer.en ra [nemty?] em za.ef", "attested_in": ["Abydos 39"], "is_variant": false, "source_note": "Von Beckerath (1999, p. 64, n. 3) has suggested reading the sign in the Abydos List (no. 39) as ḏfꜣ, \"lacuna,\" but this presumably indicates a missing divine name nmty.", "translation": "The one whom Re has loved, [Nemty] is his protection", "transliteration": "mr.n rꜥ [nmty?] m zꜣ.f", "variant_index": 1}]
     c: [{"anglicised": "mer.en ra [nemty?] em za.ef", "attested_in": ["Abydos 39"], "is_variant": false, "source_note": "Von Beckerath (1999, p. 64, n. 3) has suggested reading the sign in the Abydos List (no. 39) as DfA, \"lacuna,\" but this presumably indicates a missing divine name nmty.", "translation": "The one whom Re has loved, [Nemty] is his protection", "transliteration": "mr.n rꜥ [nmty?] m zꜣ.f", "variant_index": 1}]
     → chose: [{"anglicised": "mer.en ra [nemty?] em za.ef", "attested_in": ["Abydos 39"], "is_variant": false, "source_note": "Von Beckerath (1999, p. 64, n. 3) has suggested reading the sign in the Abydos List (no. 39) as ḏfꜣ, \"lacuna,\" but this presumably indicates a missing divine name nmty.", "translation": "The one whom Re has loved, [Nemty] is his protection", "transliteration": "mr.n rꜥ [nmty?] m zꜣ.f", "variant_index": 1}]
-  horus_names:
-    a: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 176; von Beckerath 1999, 64–65.", "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
-    b: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
-    c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
-    → chose: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 176; von Beckerath 1999, 64–65.", "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
   nebty_names:
     a: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
     b: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
     c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
     → chose: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 176; von Beckerath 1999, 64–65.", "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
+    b: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
+    c: [{"anglicised": "", "attested_in": [], "is_variant": false, "source_note": null, "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
+    → chose: [{"anglicised": "unknown (?)", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 176; von Beckerath 1999, 64–65.", "translation": "unknown (?)", "transliteration": "unknown (?)", "variant_index": 1}]
 
 leprohon-6.07 (Queen Neith-Iqeret):
   birth_names:
@@ -631,16 +631,16 @@ leprohon-8.13 (Neferkamin Anu):
     → chose: [{"anglicised": "nefer ka menu", "attested_in": ["Abydos 52", "Turin 4,9"], "is_variant": false, "source_note": "As with the previous king named Neferkamin (8:8), the Ramesside scribe (Abydos 52) read the name as Seneferka; the other Ramesside scribe (Turin 4,9) simply offers the name \"Nefer.\" See Gauthier 1907, 190; von Beckerath 1999, 68–69. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The perfect one of the ka of Min", "transliteration": "nfr kꜣ mnw", "variant_index": 1}, {"anglicised": "anu", "attested_in": [], "is_variant": true, "source_note": "Leprohon labels this as \"Second later cartouche name\". Here one is tempted to render the full name as Neferkamin the Fair.", "translation": "The beautiful one", "transliteration": "ꜥnw", "variant_index": 2}]
 
 leprohon-8.14 (Qakare Ibi I):
-  throne_names:
-    a: [{"anglicised": "qa ka ra", "attested_in": ["Abydos 53", "Turin 4,10"], "is_variant": false, "source_note": "Turin (4,10) only gives the Birth name Ibi. This king is known from an unfinished pyramid at South Saqqara, for which see Jéquier 1935; and von Beckerath 1962, 141, 144. Abydos 53, which gives only the Throne name, offers the plural kꜣw (kau), \". . . the kas of Re.\" Gauthier 1907, 190; von Beckerath 1999, 68–69.", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
-    b: [{"anglicised": "qa ka ra", "attested_in": ["Abydos 53"], "is_variant": false, "source_note": "Abydos 53, which gives only the Throne name, offers the plural kꜣw (kau), \". . . the kas of Re.\"", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
-    c: [{"anglicised": "qa ka ra", "attested_in": ["Turin 4,10", "Abydos 53"], "is_variant": false, "source_note": "Turin (4,10) only gives the Birth name Ibi. This king is known from an unfinished pyramid at South Saqqara, for which see Jéquier 1935; and von Beckerath 1962, 141, 144. Abydos 53, which gives only the Throne name, offers the plural kAw (kau), \". . . the kas of Re.\"", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
-    → chose: [{"anglicised": "qa ka ra", "attested_in": ["Abydos 53", "Turin 4,10"], "is_variant": false, "source_note": "Turin (4,10) only gives the Birth name Ibi. This king is known from an unfinished pyramid at South Saqqara, for which see Jéquier 1935; and von Beckerath 1962, 141, 144. Abydos 53, which gives only the Throne name, offers the plural kꜣw (kau), \". . . the kas of Re.\" Gauthier 1907, 190; von Beckerath 1999, 68–69.", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "ibi", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The kid (lit. \"the young goat\")", "transliteration": "ibi", "variant_index": 1}]
     b: [{"anglicised": "ibi", "attested_in": ["Turin 4,10"], "is_variant": false, "source_note": "Turin (4,10) only gives the Birth name Ibi. This king is known from an unfinished pyramid at South Saqqara, for which see Jéquier 1935; and von Beckerath 1962, 141, 144.", "translation": "The kid (lit. \"the young goat\")", "transliteration": "ibi", "variant_index": 1}]
     c: [{"anglicised": "ibi", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The kid (lit. \"the young goat\")", "transliteration": "ibi", "variant_index": 1}]
     → chose: [{"anglicised": "ibi", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The kid (lit. \"the young goat\")", "transliteration": "ibi", "variant_index": 1}]
+  throne_names:
+    a: [{"anglicised": "qa ka ra", "attested_in": ["Abydos 53", "Turin 4,10"], "is_variant": false, "source_note": "Turin (4,10) only gives the Birth name Ibi. This king is known from an unfinished pyramid at South Saqqara, for which see Jéquier 1935; and von Beckerath 1962, 141, 144. Abydos 53, which gives only the Throne name, offers the plural kꜣw (kau), \". . . the kas of Re.\" Gauthier 1907, 190; von Beckerath 1999, 68–69.", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "qa ka ra", "attested_in": ["Abydos 53"], "is_variant": false, "source_note": "Abydos 53, which gives only the Throne name, offers the plural kꜣw (kau), \". . . the kas of Re.\"", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "qa ka ra", "attested_in": ["Turin 4,10", "Abydos 53"], "is_variant": false, "source_note": "Turin (4,10) only gives the Birth name Ibi. This king is known from an unfinished pyramid at South Saqqara, for which see Jéquier 1935; and von Beckerath 1962, 141, 144. Abydos 53, which gives only the Throne name, offers the plural kAw (kau), \". . . the kas of Re.\"", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "qa ka ra", "attested_in": ["Abydos 53", "Turin 4,10"], "is_variant": false, "source_note": "Turin (4,10) only gives the Birth name Ibi. This king is known from an unfinished pyramid at South Saqqara, for which see Jéquier 1935; and von Beckerath 1962, 141, 144. Abydos 53, which gives only the Throne name, offers the plural kꜣw (kau), \". . . the kas of Re.\" Gauthier 1907, 190; von Beckerath 1999, 68–69.", "translation": "The exalted (lit. \"high\") one of the ka of Re", "transliteration": "ḳꜣ kꜣ rꜥ", "variant_index": 1}]
 
 leprohon-8.15 (Neferkaure):
   throne_names:
@@ -725,40 +725,40 @@ leprohon-9-10b.02 (Mery///):
     → chose: [{"anglicised": "mery ///", "attested_in": [], "is_variant": false, "source_note": "From a graffito in the travertine (Egyptian alabaster) quarries at the site of Hatnub, southeast of Tell el-Amarna (= Anthes 1928, pl. 7, no. IX).", "translation": "Beloved of [divine name]", "transliteration": "mry ///", "variant_index": 1}]
 
 leprohon-9-10b.03 (Khety (VI)):
-  throne_names:
-    a: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "The cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
-    b: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 16: the cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). Per fn. 17: the word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
-    c: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "The cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
-    → chose: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "The cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
     b: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 17: the word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
     c: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "The cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
     → chose: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
+  throne_names:
+    a: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "The cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
+    b: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 16: the cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). Per fn. 17: the word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
+    c: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "The cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
+    → chose: [{"anglicised": "se//// ra khety", "attested_in": [], "is_variant": false, "source_note": "The cartouche is found in the same quarry as the preceding entry (= Anthes 1928, pl. 6, no. X). The word, a noun or a verb, is unreadable. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "Who //// Re, Khety", "transliteration": "s//// rꜥ ẖty", "variant_index": 1}]
 
 leprohon-9-10b.04 (Nebkaure Khety (VII)):
-  throne_names:
-    a: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "This king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element \"Re\" is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name \"Re\" is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
-    b: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 18: this king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element 'Re' is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name 'Re' is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
-    c: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "This king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element \"Re\" is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name \"Re\" is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
-    → chose: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "This king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element \"Re\" is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name \"Re\" is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "khety", "attested_in": [], "is_variant": false, "source_note": "Note that both Throne and Birth names are written on the seal, with the element \"The Dual King\" immediately preceding the name Khety. Because of the frequency of the proper name \"Khety\" in this dynasty, I have opted to present the latter as a Birth name.", "translation": "Khety", "transliteration": "ẖty", "variant_index": 1}]
     b: [{"anglicised": "khety", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 19: note that both Throne and Birth names are written on the seal, with the element 'The Dual King' immediately preceding the name Khety. Because of the frequency of the proper name 'Khety' in this dynasty, I have opted to present the latter as a Birth name.", "translation": "Khety", "transliteration": "ẖty", "variant_index": 1}]
     c: [{"anglicised": "khety", "attested_in": [], "is_variant": false, "source_note": "Note that both Throne and Birth names are written on the seal, with the element \"The Dual King\" immediately preceding the name Khety. Because of the frequency of the proper name \"Khety\" in this dynasty, I have opted to present the latter as a Birth name.", "translation": "Khety", "transliteration": "ẖty", "variant_index": 1}]
     → chose: [{"anglicised": "khety", "attested_in": [], "is_variant": false, "source_note": "Note that both Throne and Birth names are written on the seal, with the element \"The Dual King\" immediately preceding the name Khety. Because of the frequency of the proper name \"Khety\" in this dynasty, I have opted to present the latter as a Birth name.", "translation": "Khety", "transliteration": "ẖty", "variant_index": 1}]
+  throne_names:
+    a: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "This king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element \"Re\" is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name \"Re\" is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
+    b: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 18: this king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element 'Re' is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name 'Re' is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
+    c: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "This king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element \"Re\" is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name \"Re\" is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
+    → chose: [{"anglicised": "nesu bity neb kau ra ankh djet", "attested_in": [], "is_variant": false, "source_note": "This king is known from two sources: a red jasper weight from the Wadi Tumilat (Petrie 1906, 32, pl. 33:4; Petrie 1917, 13, pl. X, no. 9.2), from which the divine element \"Re\" is missing in the name; and the famous story of the Eloquent Peasant (= texts B1 104 [= Pap. Berlin 3023] and R 17.1 [Pap. Berlin 10499], for which see Parkinson 1991, 19), where the divine name \"Re\" is written in the cartouche; Gauthier 1907, 206.", "translation": "The Dual King \"The possessor of the kas of Re,\" living forever", "transliteration": "n-sw-bity nb kꜣw rꜥ ꜥnḫ ḏt", "variant_index": 1}]
 
 leprohon-9-10b.05 (Meryibre Khety (VIII)):
-  horus_names:
-    a: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
-    b: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 20: the titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
-    c: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
-    → chose: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
   nebty_names:
     a: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The Two Ladies names is known from the previously mentioned staff as well as a fragmentary inlaid ivory chest from Lisht, where the end of the cobra over the basket hieroglyphs are clear immediately before the mry ib tAwy elements (Hayes 1953, 143, fig. 86). Henceforth, the Two Ladies name becomes a regular part of the royal titulary; see von Beckerath 1999, 74 n. 6.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
     b: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 21: the Two Ladies name is known from the previously mentioned staff as well as a fragmentary inlaid ivory chest from Lisht, where the end of the cobra over the basket hieroglyphs are clear immediately before the mry ib tAwy elements (Hayes 1953, 143, fig. 86). Henceforth, the Two Ladies name becomes a regular part of the royal titulary; see von Beckerath 1999, 74 n. 6.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
     c: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The Two Ladies names is known from the previously mentioned staff as well as a fragmentary inlaid ivory chest from Lisht, where the end of the cobra over the basket hieroglyphs are clear immediately before the mry ib tAwy elements (Hayes 1953, 143, fig. 86). Henceforth, the Two Ladies name becomes a regular part of the royal titulary; see von Beckerath 1999, 74 n. 6.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
     → chose: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The Two Ladies names is known from the previously mentioned staff as well as a fragmentary inlaid ivory chest from Lisht, where the end of the cobra over the basket hieroglyphs are clear immediately before the mry ib tAwy elements (Hayes 1953, 143, fig. 86). Henceforth, the Two Ladies name becomes a regular part of the royal titulary; see von Beckerath 1999, 74 n. 6.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
+    b: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 20: the titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
+    c: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
+    → chose: [{"anglicised": "mery ib tawy", "attested_in": [], "is_variant": false, "source_note": "The titulary of this king is known in full from a broken ebony staff found in a tomb at Meir (Kamal 1910) and partially from a small copper vessel now in the Louvre (Maspero 1891, 429–31); on the latter piece, the Horus name is abbreviated to mry ib while the Golden Horus name is absent.", "translation": "Beloved of the mind of the Two Lands", "transliteration": "mry ib tꜣwy", "variant_index": 1}]
 
 leprohon-9-10b.06 (Merykare):
   throne_names:
@@ -780,16 +780,16 @@ leprohon-11a.01 (Mentuhotep I):
     → chose: [{"anglicised": "tepy a", "attested_in": [], "is_variant": false, "source_note": "Karnak List (Urk. IV, 608:14); per Leprohon fn. 27, this Horus name is a New Kingdom fabrication (cf. Postel 2004, 46).", "translation": "\"The ancestor\"", "transliteration": "tp ꜥ", "variant_index": 1}]
 
 leprohon-11a.02 (Intef I):
-  horus_names:
-    a: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name \"Intef\" is sometimes rendered \"Inyotef\"; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
-    b: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 30: Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name 'Intef' is sometimes rendered 'Inyotef'; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
-    c: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name \"Intef\" is sometimes rendered \"Inyotef\"; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
-    → chose: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name \"Intef\" is sometimes rendered \"Inyotef\"; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "in it.ef", "attested_in": [], "is_variant": false, "source_note": "At Tod, in a chapel erected by Mentuhotep II, the epithet sA ra (sa ra), \"The son of Re,\" is added within the cartouche; see Postel 2003, 409, fig, 3.", "translation": "The one whom his father has brought forth", "transliteration": "in it.f", "variant_index": 1}]
     b: [{"anglicised": "in it.ef", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 31: at Tod, in a chapel erected by Mentuhotep II, the epithet sꜣ rꜥ (sa ra), 'The son of Re,' is added within the cartouche; see Postel 2003, 409, fig. 3.", "translation": "The one whom his father has brought forth", "transliteration": "in it.f", "variant_index": 1}]
     c: [{"anglicised": "in it.ef", "attested_in": [], "is_variant": false, "source_note": "At Tod, in a chapel erected by Mentuhotep II, the epithet sA ra (sa ra), \"The son of Re,\" is added within the cartouche; see Postel 2003, 409, fig, 3.", "translation": "The one whom his father has brought forth", "transliteration": "in it.f", "variant_index": 1}]
     → chose: [{"anglicised": "in it.ef", "attested_in": [], "is_variant": false, "source_note": "At Tod, in a chapel erected by Mentuhotep II, the epithet sA ra (sa ra), \"The son of Re,\" is added within the cartouche; see Postel 2003, 409, fig, 3.", "translation": "The one whom his father has brought forth", "transliteration": "in it.f", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name \"Intef\" is sometimes rendered \"Inyotef\"; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
+    b: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 30: Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name 'Intef' is sometimes rendered 'Inyotef'; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
+    c: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name \"Intef\" is sometimes rendered \"Inyotef\"; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
+    → chose: [{"anglicised": "seher tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 204–5; von Beckerath 1999, 76–77. The name \"Intef\" is sometimes rendered \"Inyotef\"; the latter name reflects the Coptic word for father, eiwt.", "translation": "Who has made the Two Lands content", "transliteration": "shr tꜣwy", "variant_index": 1}]
 
 leprohon-11a.03 (Intef II):
   horus_names:
@@ -806,16 +806,16 @@ leprohon-11a.04 (Intef III):
     → chose: [{"anglicised": "nakht neb tep-nefer", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 227; von Beckerath 1999, 76–77. Or perhaps \"The victorious one is the possessor of a perfect beginning.\" A stela in the Metropolitan Museum of Art (14.2.6), for which Clère and Vandier 1948, p. 18, §22, abbreviates the name to nb tp-nfr, \"The possessor of a perfect beginning.\" For the rendering of nxt as \"victorious\" in the context of a royal titulary, see Galán 1995, 42–44.", "translation": "The possessor of a perfect beginning is victorious", "transliteration": "nḫt nb tp-nfr", "variant_index": 1}]
 
 leprohon-11b.05a (Mentuhotep II (a)):
-  horus_names:
-    a: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 228; von Beckerath 1999, 78–79. Lit. \"caused to live.\" Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
-    b: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 6 (on the 5a. MENTUHOTEP II (a) headword): Gauthier 1907, 228; von Beckerath 1999, 78–79. Per fn. 7 on this Horus name: Lit. 'caused to live.' Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
-    c: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 228; von Beckerath 1999, 78–79. Lit. \"caused to live.\" Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
-    → chose: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 228; von Beckerath 1999, 78–79. Lit. \"caused to live.\" Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "sa ra mentu hetpu", "attested_in": [], "is_variant": false, "source_note": "The epithet is written within the cartouche.", "translation": "The son of Re, Montu is satisfied", "transliteration": "sꜣ rꜥ mnṯw ḥtp(.w)", "variant_index": 1}]
     b: [{"anglicised": "sa ra mentu hetpu", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 8: The epithet is written within the cartouche.", "translation": "The son of Re, Montu is satisfied", "transliteration": "sꜣ rꜥ mnṯw ḥtp(.w)", "variant_index": 1}]
     c: [{"anglicised": "sa ra mentu hetpu", "attested_in": [], "is_variant": false, "source_note": "The epithet is written within the cartouche.", "translation": "The son of Re, Montu is satisfied", "transliteration": "sꜣ rꜥ mnṯw ḥtp(.w)", "variant_index": 1}]
     → chose: [{"anglicised": "sa ra mentu hetpu", "attested_in": [], "is_variant": false, "source_note": "The epithet is written within the cartouche.", "translation": "The son of Re, Montu is satisfied", "transliteration": "sꜣ rꜥ mnṯw ḥtp(.w)", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 228; von Beckerath 1999, 78–79. Lit. \"caused to live.\" Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
+    b: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 6 (on the 5a. MENTUHOTEP II (a) headword): Gauthier 1907, 228; von Beckerath 1999, 78–79. Per fn. 7 on this Horus name: Lit. 'caused to live.' Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
+    c: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 228; von Beckerath 1999, 78–79. Lit. \"caused to live.\" Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
+    → chose: [{"anglicised": "sankh ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 228; von Beckerath 1999, 78–79. Lit. \"caused to live.\" Leprohon distinguishes this king's successive titulary-stages by letter suffixes (5a/5b/5c for Mentuhotep II's three reforms; 1a/1b for Amenemhat I's pre-/post-Itj-tawy-move). Each stage is emitted as its own row to preserve cross-name-type correlation.", "translation": "The one who has sustained the mind of the Two Lands", "transliteration": "sꜥnḫ ib tꜣwy", "variant_index": 1}]
 
 leprohon-11b.05b (Mentuhotep II (b)):
   throne_names:
@@ -885,16 +885,16 @@ leprohon-12.01b (Amenemhat I (b)):
     → chose: [{"anglicised": "wehem mesut", "attested_in": [], "is_variant": false, "source_note": "This new set of names taken by Amenemhat I may have coincided with his move from Thebes north to Itj-tawy, modern-day Lisht, near the ancient capital city of Memphis; on this move, see especially Do. Arnold 1991. An expression often referred to as a \"Renaissance.\" Note that I have retained the traditional translation of mswt as \"births,\" contra Baines's suggested \"manifestations\" (1986).", "translation": "The one who has repeated births", "transliteration": "wḥm mswt", "variant_index": 1}]
 
 leprohon-12.02 (Senwosret I):
-  horus_names:
-    a: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered \"Usertesen\" in older publications. The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
-    b: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 31 (on the 2. SENWOSRET I headword): Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered 'Usertesen' in older publications. Per fn. 32 on this Horus name: The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
-    c: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered \"Usertesen\" in older publications. The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
-    → chose: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered \"Usertesen\" in older publications. The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "s en wosret", "attested_in": [], "is_variant": false, "source_note": "Sometimes transliterated zi; the Egyptian word is only one letter, which can be rendered s or, in its earlier form, z.", "translation": "The man belonging to (the goddess) Wosret", "transliteration": "s n wsrt", "variant_index": 1}]
     b: [{"anglicised": "s en wosret", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 33: Sometimes transliterated zi; the Egyptian word is only one letter, which can be rendered s or, in its earlier form, z.", "translation": "The man belonging to (the goddess) Wosret", "transliteration": "s n wsrt", "variant_index": 1}]
     c: [{"anglicised": "s en wosret", "attested_in": [], "is_variant": false, "source_note": "Sometimes transliterated zi; the Egyptian word is only one letter, which can be rendered s or, in its earlier form, z.", "translation": "The man belonging to (the goddess) Wosret", "transliteration": "s n wsrt", "variant_index": 1}]
     → chose: [{"anglicised": "s en wosret", "attested_in": [], "is_variant": false, "source_note": "Sometimes transliterated zi; the Egyptian word is only one letter, which can be rendered s or, in its earlier form, z.", "translation": "The man belonging to (the goddess) Wosret", "transliteration": "s n wsrt", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered \"Usertesen\" in older publications. The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
+    b: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 31 (on the 2. SENWOSRET I headword): Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered 'Usertesen' in older publications. Per fn. 32 on this Horus name: The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
+    c: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered \"Usertesen\" in older publications. The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
+    → chose: [{"anglicised": "ankh mesut", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 265–84; von Beckerath 1999, 82–83. For a study of the reign of Senwosret I, see Obsomer 1995. The name Senwosret (Greek Sesostris) was rendered \"Usertesen\" in older publications. The phrase refers to his father Amenemhat I's political renaissance.", "translation": "The one who has lived the (re)birth", "transliteration": "ꜥnḫ mswt", "variant_index": 1}]
 
 leprohon-12.03 (Amenemhat II):
   golden_horus_names:
@@ -914,16 +914,16 @@ leprohon-12.03 (Amenemhat II):
     → chose: [{"anglicised": "heken em maat", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 284–94; von Beckerath 1999, 84–85. Lit. \"by means of.\"", "translation": "The one who has been acclaimed by Maat", "transliteration": "ḥkn m mꜣꜥt", "variant_index": 1}]
 
 leprohon-12.04 (Senwosret II):
-  horus_names:
-    a: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Or \"the planner of\"; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
-    b: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 38 (on the 4. SENWOSRET II headword): Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Per fn. 39 on this Horus name: Or 'the planner of'; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
-    c: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Or \"the planner of\"; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
-    → chose: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Or \"the planner of\"; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
   nebty_names:
     a: [{"anglicised": "sekha maat", "attested_in": [], "is_variant": false, "source_note": "Both von Beckerath (1999, 84–85) and Dessoudeix (2008, 152) give an abbreviated form of Amenemhat II's Horus name without the noun \"maat,\" citing de Morgan 1894, 24, no. 165, but the maat-hieroglyph is clear in LD II, 123d.", "translation": "The one who has caused Maat to appear", "transliteration": "sḫꜥ mꜣꜥt", "variant_index": 1}]
     b: [{"anglicised": "sekha maat", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 40: Both von Beckerath (1999, 84–85) and Dessoudeix (2008, 152) give an abbreviated form of Amenemhat II's Horus name without the noun 'maat,' citing de Morgan 1894, 24, no. 165, but the maat-hieroglyph is clear in LD II, 123d.", "translation": "The one who has caused Maat to appear", "transliteration": "sḫꜥ mꜣꜥt", "variant_index": 1}]
     c: [{"anglicised": "sekha maat", "attested_in": [], "is_variant": false, "source_note": "Both von Beckerath (1999, 84–85) and Dessoudeix (2008, 152) give an abbreviated form of Amenemhat II's Horus name without the noun \"maat,\" citing de Morgan 1894, 24, no. 165, but the maat-hieroglyph is clear in LD II, 123d.", "translation": "The one who has caused Maat to appear", "transliteration": "sḫꜥ mꜣꜥt", "variant_index": 1}]
     → chose: [{"anglicised": "sekha maat", "attested_in": [], "is_variant": false, "source_note": "Both von Beckerath (1999, 84–85) and Dessoudeix (2008, 152) give an abbreviated form of Amenemhat II's Horus name without the noun \"maat,\" citing de Morgan 1894, 24, no. 165, but the maat-hieroglyph is clear in LD II, 123d.", "translation": "The one who has caused Maat to appear", "transliteration": "sḫꜥ mꜣꜥt", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Or \"the planner of\"; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
+    b: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 38 (on the 4. SENWOSRET II headword): Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Per fn. 39 on this Horus name: Or 'the planner of'; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
+    c: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Or \"the planner of\"; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
+    → chose: [{"anglicised": "seshem tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 295–301; von Beckerath 1999, 84–85. Or \"the planner of\"; see Leprohon 2010b, 4.", "translation": "The one who has guided the Two Lands", "transliteration": "sšm tꜣwy", "variant_index": 1}]
 
 leprohon-12.05 (Senwosret III):
   horus_names:
@@ -957,26 +957,26 @@ leprohon-12.07 (Amenemhat IV):
     → chose: [{"anglicised": "kheper kheperu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 338–41; von Beckerath 1999, 86–87.", "translation": "The (very) manifestation of manifestations", "transliteration": "ḫpr ḫprw", "variant_index": 1}]
 
 leprohon-12.08 ((Queen) Sobekneferu):
-  horus_names:
-    a: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
-    b: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 46 (on the 8. (QUEEN) SOBEKNEFRU headword): Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). Per fn. 47 on this Horus name: The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
-    c: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
-    → chose: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
   alt_display_names:
     a: []
     b: ["Sobeknefru"]
     c: []
     → chose: []
-  display_name:
-    a: "(Queen) Sobekneferu"
-    b: "(Queen) Sobeknefru"
-    c: "(Queen) Sobekneferu"
-    → chose: "(Queen) Sobekneferu"
   nebty_names:
     a: [{"anglicised": "sat sekhem nebet tawy", "attested_in": [], "is_variant": false, "source_note": "Referring to her father Amenemhat III.", "translation": "The daughter of the powerful one is (now) Mistress of the Two Lands", "transliteration": "sꜣt sḫm nbt tꜣwy", "variant_index": 1}]
     b: [{"anglicised": "sat sekhem nebet tawy", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 48: Referring to her father Amenemhat III.", "translation": "The daughter of the powerful one is (now) Mistress of the Two Lands", "transliteration": "sꜣt sḫm nbt tꜣwy", "variant_index": 1}]
     c: [{"anglicised": "sat sekhem nebet tawy", "attested_in": [], "is_variant": false, "source_note": "Referring to her father Amenemhat III.", "translation": "The daughter of the powerful one is (now) Mistress of the Two Lands", "transliteration": "sꜣt sḫm nbt tꜣwy", "variant_index": 1}]
     → chose: [{"anglicised": "sat sekhem nebet tawy", "attested_in": [], "is_variant": false, "source_note": "Referring to her father Amenemhat III.", "translation": "The daughter of the powerful one is (now) Mistress of the Two Lands", "transliteration": "sꜣt sḫm nbt tꜣwy", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Per Leprohon fn. 46 (on the 8. (QUEEN) SOBEKNEFRU headword): Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). Per fn. 47 on this Horus name: The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "meryt ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 341–43; von Beckerath 1999, 86–87. For a study of the reign, see Pignattari 2008. I have opted for reading the name as Sobeknefru, as opposed to Nefrusobek, because of its later Greek version, Scemiophris (Waddell 1940, 68–69). The passive participle, here used as a noun, is in its feminine form.", "translation": "The one beloved of Re", "transliteration": "mryt rꜥ", "variant_index": 1}]
+  display_name:
+    a: "(Queen) Sobekneferu"
+    b: "(Queen) Sobeknefru"
+    c: "(Queen) Sobekneferu"
+    → chose: "(Queen) Sobekneferu"
 
 leprohon-13.01 (Sobekhotep I):
   golden_horus_names:
@@ -1014,16 +1014,16 @@ leprohon-13.13 (Sobekhotep II):
     → chose: [{"anglicised": "kau netjeru", "attested_in": [], "is_variant": false, "source_note": "Unless the word kꜣw stands for \"sustenance\" here.", "translation": "(Possessor of?) The kas of the gods", "transliteration": "kꜣw nṯrw", "variant_index": 1}]
 
 leprohon-13.15 (Hor (I)):
-  horus_names:
-    a: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>ḥtp ib tꜣwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
-    b: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>Htp ib tAwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
-    c: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>Htp ib tAwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
-    → chose: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>Htp ib tAwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "hor", "attested_in": [], "is_variant": false, "source_note": "The name can also be written with its accompanying title in the cartouche: sꜣ rꜥ ḥr, \"The son of Re, Horus\"; see von Beckerath 1999, 93 (E3). For a more recent discussion of the position of this king within the late Middle Kingdom, see Aufrère 2001.", "translation": "Horus", "transliteration": "ḥr", "variant_index": 1}]
     b: [{"anglicised": "hor", "attested_in": [], "is_variant": false, "source_note": "The name can also be written with its accompanying title in the cartouche: sA ra Hr, \"The son of Re, Horus\"; see von Beckerath 1999, 93 (E3). For a more recent discussion of the position of this king within the late Middle Kingdom, see Aufrère 2001.", "translation": "Horus", "transliteration": "ḥr", "variant_index": 1}]
     c: [{"anglicised": "hor", "attested_in": [], "is_variant": false, "source_note": "The name can also be written with its accompanying title in the cartouche: sA ra Hr, \"The son of Re, Horus\"; see von Beckerath 1999, 93 (E3). For a more recent discussion of the position of this king within the late Middle Kingdom, see Aufrère 2001.", "translation": "Horus", "transliteration": "ḥr", "variant_index": 1}]
     → chose: [{"anglicised": "hor", "attested_in": [], "is_variant": false, "source_note": "The name can also be written with its accompanying title in the cartouche: sA ra Hr, \"The son of Re, Horus\"; see von Beckerath 1999, 93 (E3). For a more recent discussion of the position of this king within the late Middle Kingdom, see Aufrère 2001.", "translation": "Horus", "transliteration": "ḥr", "variant_index": 1}]
+  horus_names:
+    a: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>ḥtp ib tꜣwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
+    b: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>Htp ib tAwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
+    c: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>Htp ib tAwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
+    → chose: [{"anglicised": "hetep ib tawy", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1907, 317–19; von Beckerath 1999, 92–93. Perhaps for <s>Htp ib tAwy, \"Who has propitiated the mind of the Two Lands.\"", "translation": "The mind of the Two Lands is satisfied", "transliteration": "ḥtp ib tꜣwy", "variant_index": 1}]
 
 leprohon-13.16 (Sekhemre Khutawy):
   golden_horus_names:
@@ -1033,6 +1033,11 @@ leprohon-13.16 (Sekhemre Khutawy):
     → chose: [{"anglicised": "ankh renput", "attested_in": [], "is_variant": false, "source_note": null, "translation": "(Fully) Alive of years", "transliteration": "ꜥnḫ-rnpwt", "variant_index": 1}]
 
 leprohon-13.17 ([User]kare (II)):
+  birth_names:
+    a: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sꜣ> ḥr", "variant_index": 1}]
+    b: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sA> Hr", "variant_index": 1}]
+    c: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sꜣ> ḥr", "variant_index": 1}]
+    → chose: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sꜣ> ḥr", "variant_index": 1}]
   throne_names:
     a: [{"anglicised": "[weser] ka ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "[The strong one of] the ka of Re", "transliteration": "[wsr] kꜣ rꜥ", "variant_index": 1}]
     b: [{"anglicised": "[weser] ka ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "[The strong one of] the ka of Re", "transliteration": "[wsr] kA ra", "variant_index": 1}]
@@ -1043,23 +1048,18 @@ leprohon-13.17 ([User]kare (II)):
     b: [{"anglicised": "djed kheperu", "attested_in": [], "is_variant": false, "source_note": "See Ryholt 1997a, 217. Leprohon's headword carries square brackets around the reconstructed opening element.", "translation": "Stable of manifestations", "transliteration": "ḏd-ḫprw", "variant_index": 1}]
     c: [{"anglicised": "djed kheperu", "attested_in": [], "is_variant": false, "source_note": "See Ryholt 1997a, 217.", "translation": "Stable of manifestations", "transliteration": "ḏd-ḫprw", "variant_index": 1}]
     → chose: [{"anglicised": "djed kheperu", "attested_in": [], "is_variant": false, "source_note": "See Ryholt 1997a, 217.", "translation": "Stable of manifestations", "transliteration": "ḏd-ḫprw", "variant_index": 1}]
-  birth_names:
-    a: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sꜣ> ḥr", "variant_index": 1}]
-    b: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sA> Hr", "variant_index": 1}]
-    c: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sꜣ> ḥr", "variant_index": 1}]
-    → chose: [{"anglicised": "[///]-i <sa> hor", "attested_in": [], "is_variant": false, "source_note": null, "translation": "////-i (son of) Hor", "transliteration": "[///]i <sꜣ> ḥr", "variant_index": 1}]
 
 leprohon-13.18 (Seb / Sab (?)):
-  display_name:
-    a: "Seb / Sab (?)"
-    b: "Seb / Sab (?)"
-    c: "Seb/Sab (?)"
-    → chose: "Seb / Sab (?)"
   birth_names:
     a: [{"anglicised": "s<ꜥ>b", "attested_in": [], "is_variant": false, "source_note": "This king is only attested as filiation in the name of the next king, his son Kay; see Ryholt 1997a, 219.", "translation": "the jackal (?)", "transliteration": "s<ꜣ?>b", "variant_index": 1}]
     b: [{"anglicised": "s<ꜥ>b", "attested_in": [], "is_variant": false, "source_note": "This king is only attested as filiation in the name of the next king, his son Kay; see Ryholt 1997a, 219.", "translation": "The jackal (?)", "transliteration": "s<ꜣ?>b", "variant_index": 1}]
     c: [{"anglicised": "s<ꜥ>b", "attested_in": [], "is_variant": false, "source_note": "This king is only attested as filiation in the name of the next king, his son Kay; see Ryholt 1997a, 219.", "translation": "ṯhe jꜥckꜥl (?)", "transliteration": "s<ꜣ?>b", "variant_index": 1}]
     → chose: [{"anglicised": "s<ꜥ>b", "attested_in": [], "is_variant": false, "source_note": "This king is only attested as filiation in the name of the next king, his son Kay; see Ryholt 1997a, 219.", "translation": "the jackal (?)", "transliteration": "s<ꜣ?>b", "variant_index": 1}]
+  display_name:
+    a: "Seb / Sab (?)"
+    b: "Seb / Sab (?)"
+    c: "Seb/Sab (?)"
+    → chose: "Seb / Sab (?)"
 
 leprohon-13.19 (Kay):
   birth_names:
@@ -1083,16 +1083,16 @@ leprohon-13.22 (Khendjer):
     → chose: [{"anglicised": "[///] ankh", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 138–39; von Beckerath 1999, 94–95.", "translation": "/// alive ///", "transliteration": "[///] ꜥnḫ", "variant_index": 1}]
 
 leprohon-13.23 (Imy-Ra Mesha):
-  display_name:
-    a: "Imy-ra Mesha"
-    b: "Imy-Ra Mesha"
-    c: "Imy-Ra Mesha"
-    → chose: "Imy-Ra Mesha"
   birth_names:
     a: [{"anglicised": "imy-er meshꜥ", "attested_in": [], "is_variant": false, "source_note": null, "translation": "the General (lit. \"Overseer of the army\")", "transliteration": "imy-r mšꜥ", "variant_index": 1}]
     b: [{"anglicised": "imy-er meshꜥ", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The General (lit. \"Overseer of the army\")", "transliteration": "imy-r mšꜥ", "variant_index": 1}]
     c: [{"anglicised": "imy-er meshꜥ", "attested_in": [], "is_variant": false, "source_note": null, "translation": "ṯhe Generꜥl (lit. \"Overseer of the army\")", "transliteration": "imy-r mšꜥ", "variant_index": 1}]
     → chose: [{"anglicised": "imy-er meshꜥ", "attested_in": [], "is_variant": false, "source_note": null, "translation": "the General (lit. \"Overseer of the army\")", "transliteration": "imy-r mšꜥ", "variant_index": 1}]
+  display_name:
+    a: "Imy-ra Mesha"
+    b: "Imy-Ra Mesha"
+    c: "Imy-Ra Mesha"
+    → chose: "Imy-Ra Mesha"
 
 leprohon-13.25 (Seth):
   source_citation:
@@ -1109,16 +1109,16 @@ leprohon-13.32 (Ib-Iau):
     → chose: [{"anglicised": "ib iꜥu", "attested_in": [], "is_variant": false, "source_note": null, "translation": "the quiet one (lit. \"whose heart/mind is washed\")", "transliteration": "ib iꜥ(w)", "variant_index": 1}]
 
 leprohon-13.35 (Sewadjtu):
-  throne_names:
-    a: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon presents this name as a combined \"Throne and Birth names\" entry; emitted here under throne_names as the canonical slot.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
-    b: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon labels the row \"Throne and Birth names\" — a combined prenomen/nomen entry where fragmentary evidence prevents separation. The same string is emitted to both throne_names and birth_names.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
-    c: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon prints a single combined 'Throne and Birth names:' line for this king; the same entry is emitted in both throne_names and birth_names to preserve the combined-label origin.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
-    → chose: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon presents this name as a combined \"Throne and Birth names\" entry; emitted here under throne_names as the canonical slot.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
   birth_names:
     a: []
     b: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon labels the row \"Throne and Birth names\" — a combined prenomen/nomen entry where fragmentary evidence prevents separation. The same string is emitted to both throne_names and birth_names.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
     c: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon prints a single combined 'Throne and Birth names:' line for this king; the same entry is emitted in both throne_names and birth_names to preserve the combined-label origin.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
     → chose: []
+  throne_names:
+    a: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon presents this name as a combined \"Throne and Birth names\" entry; emitted here under throne_names as the canonical slot.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
+    b: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon labels the row \"Throne and Birth names\" — a combined prenomen/nomen entry where fragmentary evidence prevents separation. The same string is emitted to both throne_names and birth_names.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
+    c: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon prints a single combined 'Throne and Birth names:' line for this king; the same entry is emitted in both throne_names and birth_names to preserve the combined-label origin.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
+    → chose: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon presents this name as a combined \"Throne and Birth names\" entry; emitted here under throne_names as the canonical slot.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
 
 leprohon-13.37 (Hori):
   birth_names:
@@ -1147,16 +1147,16 @@ leprohon-13.51 ([///]-Mesra):
     → chose: "[///]-Mesra"
 
 leprohon-13.52 (Ibi II):
-  throne_names:
-    a: [{"anglicised": "/// maat ra", "attested_in": ["Turin 8,22"], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
-    b: [{"anglicised": "/// maat ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
-    c: [{"anglicised": "/// maat ra", "attested_in": ["Turin 8,22"], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
-    → chose: [{"anglicised": "/// maat ra", "attested_in": ["Turin 8,22"], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
   birth_names:
     a: [{"anglicised": "ibi", "attested_in": [], "is_variant": false, "source_note": null, "translation": "the kid (lit. \"young goat\")", "transliteration": "ibi", "variant_index": 1}]
     b: [{"anglicised": "ibi", "attested_in": ["Turin 8,22"], "is_variant": false, "source_note": null, "translation": "The kid (lit. \"young goat\")", "transliteration": "ibi", "variant_index": 1}]
     c: [{"anglicised": "ibi", "attested_in": [], "is_variant": false, "source_note": null, "translation": "ṯhe kid (lit. \"young goat\")", "transliteration": "ibi", "variant_index": 1}]
     → chose: [{"anglicised": "ibi", "attested_in": [], "is_variant": false, "source_note": null, "translation": "the kid (lit. \"young goat\")", "transliteration": "ibi", "variant_index": 1}]
+  throne_names:
+    a: [{"anglicised": "/// maat ra", "attested_in": ["Turin 8,22"], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "/// maat ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "/// maat ra", "attested_in": ["Turin 8,22"], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "/// maat ra", "attested_in": ["Turin 8,22"], "is_variant": false, "source_note": "Von Beckerath 1999, 100–101. Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk.", "translation": "The truth of Re is ///", "transliteration": "[///] mꜣꜥt rꜥ", "variant_index": 1}]
 
 leprohon-13.54 (Se///kare):
   throne_names:
@@ -1170,275 +1170,182 @@ leprohon-13.54 (Se///kare):
     c: "Se/// Kare"
     → chose: "Se///kare"
 
-leprohon-14.01 (Yakob-Mu):
+leprohon-13a.04 (Sekhaenre):
+  throne_names:
+    a: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 210; von Beckerath 1999, 100–101. Perhaps meaning \"crowned.\"", "translation": "The one whom Re has caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 210; von Beckerath 1999, 100–101. Perhaps meaning \"crowned.\"", "translation": "The one whom Re has caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 210; von Beckerath 1999, 100–101. Perhaps meaning “crowned.”", "translation": "The one whom Re has caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 210; von Beckerath 1999, 100–101. Perhaps meaning \"crowned.\"", "translation": "The one whom Re has caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
+
+leprohon-13a.06 (Two Ladies Userkhau):
+  alt_display_names:
+    a: ["Userkhau"]
+    b: ["Userkhau"]
+    c: ["User-Khau"]
+    → chose: ["Userkhau"]
+  display_name:
+    a: "Two Ladies Userkhau"
+    b: "Two Ladies Userkhau"
+    c: "Two Ladies User-Khau"
+    → chose: "Two Ladies Userkhau"
+
+leprohon-14.01 (Yakob-mu):
+  birth_names:
+    a: [{"anglicised": "yakeb mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 130–31.", "translation": "\"(the goddess) Aya is a rock\"", "transliteration": "yꜣ-k-b-mw", "variant_index": 1}]
+    b: [{"anglicised": "yakeb mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 130–31.", "translation": "\"(the goddess) Aya is a rock\"", "transliteration": "yꜣ-k-b-mw", "variant_index": 1}]
+    c: [{"anglicised": "yakeb mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 130–31.", "translation": "“(the goddess) Aya is a rock”", "transliteration": "yꜣ-k-b-mw", "variant_index": 1}]
+    → chose: [{"anglicised": "yakeb mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 130–31.", "translation": "\"(the goddess) Aya is a rock\"", "transliteration": "yꜣ-k-b-mw", "variant_index": 1}]
+  throne_names:
+    a: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 118–19. Or perhaps simply \"crowned.\"", "translation": "The one whom Re caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 118–19. Or perhaps simply \"crowned.\"", "translation": "The one whom Re caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 118–19. Or perhaps simply “crowned.”", "translation": "The one whom Re caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "sekha.en ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 118–19. Or perhaps simply \"crowned.\"", "translation": "The one whom Re caused to appear", "transliteration": "sḫꜥ.n rꜥ", "variant_index": 1}]
   display_name:
     a: "Yakob-mu"
-    b: "Yakob-Mu"
+    b: "Yakob-mu"
     c: "Yakob-Mu"
-    → chose: "Yakob-Mu"
+    → chose: "Yakob-mu"
 
-leprohon-14a.01 (Nuya):
+leprohon-14.02 (Iamu):
   birth_names:
-    a: [{"anglicised": "nu-ya", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Nuya", "transliteration": "nu-ya", "variant_index": 1}]
-    b: [{"anglicised": "nu-ya", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Nuya", "transliteration": "nu-ya", "variant_index": 1}]
-    c: [{"anglicised": "nu-ya", "attested_in": [], "is_variant": false, "source_note": null, "translation": "nu-ya", "transliteration": "nu-ya", "variant_index": 1}]
-    → chose: [{"anglicised": "nu-ya", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Nuya", "transliteration": "nu-ya", "variant_index": 1}]
+    a: [{"anglicised": "ya-mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 126–27.", "translation": "\"Where is the uncle?\"", "transliteration": "yꜥ-mw", "variant_index": 1}]
+    b: [{"anglicised": "ya-mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 126–27.", "translation": "\"Where is the uncle?\"", "transliteration": "yꜥ-mw", "variant_index": 1}]
+    c: [{"anglicised": "ya-mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 126–27.", "translation": "“Where is the uncle?”", "transliteration": "yꜥ-mw", "variant_index": 1}]
+    → chose: [{"anglicised": "ya-mu", "attested_in": [], "is_variant": false, "source_note": "T. Schneider 1998, 126–27.", "translation": "\"Where is the uncle?\"", "transliteration": "yꜥ-mw", "variant_index": 1}]
+
+leprohon-14.04 (Aamu):
+  birth_names:
+    a: [{"anglicised": "aa mu", "attested_in": [], "is_variant": false, "source_note": null, "translation": "\"The Asiatic\" (?)", "transliteration": "ꜥꜣ-mw", "variant_index": 1}]
+    b: [{"anglicised": "aa mu", "attested_in": [], "is_variant": false, "source_note": null, "translation": "\"The Asiatic\" (?)", "transliteration": "ꜥꜣ-mw", "variant_index": 1}]
+    c: [{"anglicised": "aa mu", "attested_in": [], "is_variant": false, "source_note": null, "translation": "“The Asiatic” (?)", "transliteration": "ꜥꜣ-mw", "variant_index": 1}]
+    → chose: [{"anglicised": "aa mu", "attested_in": [], "is_variant": false, "source_note": null, "translation": "\"The Asiatic\" (?)", "transliteration": "ꜥꜣ-mw", "variant_index": 1}]
+
+leprohon-14.07 (Khakherure):
+  throne_names:
+    a: [{"anglicised": "kha kheru ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 56; von Beckerath 1999, 108–9. King Khakherure's name was entered as xa tit ra (kha tit ra), \"The (very) appearance of the image of Re,\" in Turin 9,2, with the copyist reading the xrw-oar sign as a ti-pestle sign; see KRI II, 838:6.", "translation": "The (very) appearance of the voice of Re", "transliteration": "ḫꜥ ḫrw rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "kha kheru ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 56; von Beckerath 1999, 108–9. King Khakherure's name was entered as xa tit ra (kha tit ra), \"The (very) appearance of the image of Re,\" in Turin 9,2, with the copyist reading the xrw-oar sign as a ti-pestle sign; see KRI II, 838:6.", "translation": "The (very) appearance of the voice of Re", "transliteration": "ḫꜥ ḫrw rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "kha kheru ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 56; von Beckerath 1999, 108–9. King Khakherure's name was entered as xa tit ra (kha tit ra), “The (very) appearance of the image of Re,” in Turin 9,2, with the copyist reading the xrw-oar sign as a ti-pestle sign; see KRI II, 838:6.", "translation": "The (very) appearance of the voice of Re", "transliteration": "ḫꜥ ḫrw rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "kha kheru ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 56; von Beckerath 1999, 108–9. King Khakherure's name was entered as xa tit ra (kha tit ra), \"The (very) appearance of the image of Re,\" in Turin 9,2, with the copyist reading the xrw-oar sign as a ti-pestle sign; see KRI II, 838:6.", "translation": "The (very) appearance of the voice of Re", "transliteration": "ḫꜥ ḫrw rꜥ", "variant_index": 1}]
+
+leprohon-14.09 (Sehebre):
+  throne_names:
+    a: [{"anglicised": "seheb ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 57; von Beckerath 1999, 108–9. Or perhaps \"The one whom Re has made festive.\"", "translation": "The one who has made Re festive", "transliteration": "sḥb rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "seheb ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 57; von Beckerath 1999, 108–9. Or perhaps \"The one whom Re has made festive.\"", "translation": "The one who has made Re festive", "transliteration": "sḥb rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "seheb ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 57; von Beckerath 1999, 108–9. Or perhaps “The one whom Re has made festive.”", "translation": "The one who has made Re festive", "transliteration": "sḥb rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "seheb ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 57; von Beckerath 1999, 108–9. Or perhaps \"The one whom Re has made festive.\"", "translation": "The one who has made Re festive", "transliteration": "sḥb rꜥ", "variant_index": 1}]
+
+leprohon-14.25 (Nefertum /// Re):
+  throne_names:
+    a: [{"anglicised": "nefertum /// ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 62; von Beckerath 1999, 110–11. The divine representation of the primeval lotus blossom, from which the sun god emerged. Von Beckerath (1999, 110–11), suggests adding the word kA after the divine name Nefertum (followed by Dessoudeix 2008, 217), which could mean \"Nefertum is the ka of Re,\" but such a name would hardly seem to refer to the current king.", "translation": "Re is the /// of Nefertum (?)", "transliteration": "nfrtm /// rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "nefertum /// ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 62; von Beckerath 1999, 110–11. The divine representation of the primeval lotus blossom, from which the sun god emerged. Von Beckerath (1999, 110–11), suggests adding the word kA after the divine name Nefertum (followed by Dessoudeix 2008, 217), which could mean \"Nefertum is the ka of Re,\" but such a name would hardly seem to refer to the current king.", "translation": "Re is the /// of Nefertum (?)", "transliteration": "nfrtm /// rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "nefertum /// ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 62; von Beckerath 1999, 110–11. The divine representation of the primeval lotus blossom, from which the sun god emerged. Von Beckerath (1999, 110–11), suggests adding the word kA after the divine name Nefertum (followed by Dessoudeix 2008, 217), which could mean “Nefertum is the ka of Re,” but such a name would hardly seem to refer to the current king.", "translation": "Re is the /// of Nefertum (?)", "transliteration": "nfrtm /// rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "nefertum /// ra", "attested_in": [], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 62; von Beckerath 1999, 110–11. The divine representation of the primeval lotus blossom, from which the sun god emerged. Von Beckerath (1999, 110–11), suggests adding the word kA after the divine name Nefertum (followed by Dessoudeix 2008, 217), which could mean \"Nefertum is the ka of Re,\" but such a name would hardly seem to refer to the current king.", "translation": "Re is the /// of Nefertum (?)", "transliteration": "nfrtm /// rꜥ", "variant_index": 1}]
+
+leprohon-14.32 (Hepu):
+  birth_names:
+    a: [{"anglicised": "hepu", "attested_in": [], "is_variant": false, "source_note": "Or, less likely, \"the oar.\"", "translation": "The runner", "transliteration": "ḥpw", "variant_index": 1}]
+    b: [{"anglicised": "hepu", "attested_in": [], "is_variant": false, "source_note": "Or, less likely, \"the oar.\"", "translation": "The runner", "transliteration": "ḥpw", "variant_index": 1}]
+    c: [{"anglicised": "hepu", "attested_in": [], "is_variant": false, "source_note": "Or, less likely, “the oar.”", "translation": "The runner", "transliteration": "ḥpw", "variant_index": 1}]
+    → chose: [{"anglicised": "hepu", "attested_in": [], "is_variant": false, "source_note": "Or, less likely, \"the oar.\"", "translation": "The runner", "transliteration": "ḥpw", "variant_index": 1}]
+
+leprohon-14.33 (Anati):
+  birth_names:
+    a: [{"anglicised": "aa-na-ti", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a, 100.", "translation": "Anati", "transliteration": "ꜥꜣ-nꜣ-ti", "variant_index": 1}]
+    b: [{"anglicised": "aa-na-ti", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a,100.", "translation": "Anati", "transliteration": "ꜥꜣ-nꜣ-ti", "variant_index": 1}]
+    c: [{"anglicised": "aa-na-ti", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a,100.", "translation": "Anati", "transliteration": "ꜥꜣ-nꜣ-ti", "variant_index": 1}]
+    → chose: [{"anglicised": "aa-na-ti", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a,100.", "translation": "Anati", "transliteration": "ꜥꜣ-nꜣ-ti", "variant_index": 1}]
+
+leprohon-14.34 (Bebnem):
+  birth_names:
+    a: [{"anglicised": "bebnem", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a, 100.", "translation": "Bebnem", "transliteration": "b-b-n-m", "variant_index": 1}]
+    b: [{"anglicised": "bebnem", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a,100.", "translation": "Bebnem", "transliteration": "b-b-n-m", "variant_index": 1}]
+    c: [{"anglicised": "bebnem", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a,100.", "translation": "Bebnem", "transliteration": "b-b-n-m", "variant_index": 1}]
+    → chose: [{"anglicised": "bebnem", "attested_in": [], "is_variant": false, "source_note": "For the name, see Ryholt 1997a,100.", "translation": "Bebnem", "transliteration": "b-b-n-m", "variant_index": 1}]
+
+leprohon-14.43 (Senefer /// Re):
+  throne_names:
+    a: [{"anglicised": "senefer /// ra", "attested_in": ["Turin 10,7"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath 1999, 112–13.", "translation": "Whom the /// of Re has made perfect", "transliteration": "snfr /// rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "senefer /// ra", "attested_in": ["Turin 10,7"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. von Beckerath 1999, 112–13.", "translation": "Whom the /// of Re has made perfect", "transliteration": "snfr /// rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "senefer /// ra", "attested_in": ["Turin 10,7"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath 1999, 112–13.", "translation": "Whom the /// of Re has made perfect", "transliteration": "snfr /// rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "senefer /// ra", "attested_in": ["Turin 10,7"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath 1999, 112–13.", "translation": "Whom the /// of Re has made perfect", "transliteration": "snfr /// rꜥ", "variant_index": 1}]
+
+leprohon-14.44 (Men /// Re):
+  throne_names:
+    a: [{"anglicised": "men /// ra", "attested_in": ["Turin 10,8"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath (1999, 112–13 [14d]) suggests the name mn -[ib]-ra (men [ib] ra), \"The established one belonging to the mind of Re.\"", "translation": "The established one of /// of Re", "transliteration": "mn /// rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "men /// ra", "attested_in": ["Turin 10,8"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. von Beckerath (1999, 112–13 [14d]) suggests the name mn -[ib]-ra (men [ib] ra), \"The established one belonging to the mind of Re.\"", "translation": "The established one of /// of Re", "transliteration": "mn /// rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "men /// ra", "attested_in": ["Turin 10,8"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath (1999, 112–13 [14d]) suggests the name mn -[ib]-ra (men [ib] ra), “The established one belonging to the mind of Re.”", "translation": "The established one of /// of Re", "transliteration": "mn /// rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "men /// ra", "attested_in": ["Turin 10,8"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath (1999, 112–13 [14d]) suggests the name mn -[ib]-ra (men [ib] ra), \"The established one belonging to the mind of Re.\"", "translation": "The established one of /// of Re", "transliteration": "mn /// rꜥ", "variant_index": 1}]
+
+leprohon-14.45 (Djed /// Re):
+  throne_names:
+    a: [{"anglicised": "djed /// ra", "attested_in": ["Turin 10,9"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath 1999, 112–13.", "translation": "The enduring one of the //// of Re", "transliteration": "ḏd /// rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "djed /// ra", "attested_in": ["Turin 10,9"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. von Beckerath 1999, 112–13.", "translation": "The enduring one of the //// of Re", "transliteration": "ḏd /// rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "djed /// ra", "attested_in": ["Turin 10,9"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath 1999, 112–13.", "translation": "The enduring one of the //// of Re", "transliteration": "ḏd /// rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "djed /// ra", "attested_in": ["Turin 10,9"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Von Beckerath 1999, 112–13.", "translation": "The enduring one of the //// of Re", "transliteration": "ḏd /// rꜥ", "variant_index": 1}]
+
+leprohon-14.49 (Inek):
+  birth_names:
+    a: [{"anglicised": "in-ek", "attested_in": ["Turin 10,13"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21; perhaps for inq, \"The one who has united <the Two Lands>.\"", "translation": "Inek", "transliteration": "in-k", "variant_index": 1}]
+    b: [{"anglicised": "in-ek", "attested_in": ["Turin 10,13"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21; perhaps for inq, \"The one who has united <the Two Lands>.\"", "translation": "Inek", "transliteration": "in-k", "variant_index": 1}]
+    c: [{"anglicised": "in-ek", "attested_in": ["Turin 10,13"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21; perhaps for inq, “The one who has united <the Two Lands>.”", "translation": "Inek", "transliteration": "in-k", "variant_index": 1}]
+    → chose: [{"anglicised": "in-ek", "attested_in": ["Turin 10,13"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21; perhaps for inq, \"The one who has united <the Two Lands>.\"", "translation": "Inek", "transliteration": "in-k", "variant_index": 1}]
+
+leprohon-14.50 (I-Neb ///):
+  birth_names:
+    a: [{"anglicised": "i neb ///", "attested_in": ["Turin 10,14"], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": "O the lord /// (?)", "transliteration": "i nb ///", "variant_index": 1}]
+    b: [{"anglicised": "i neb ///", "attested_in": ["Turin 10,14"], "is_variant": false, "source_note": "von Beckerath 1999, 120–21.", "translation": "O the lord /// (?)", "transliteration": "i nb ///", "variant_index": 1}]
+    c: [{"anglicised": "i neb ///", "attested_in": ["Turin 10,14"], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": "O the lord /// (?)", "transliteration": "i nb ///", "variant_index": 1}]
+    → chose: [{"anglicised": "i neb ///", "attested_in": ["Turin 10,14"], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": "O the lord /// (?)", "transliteration": "i nb ///", "variant_index": 1}]
+
+leprohon-14.51 (Ip-///):
+  birth_names:
+    a: [{"anglicised": "ip ///", "attested_in": ["Turin 10,15"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21. Perhaps for \"Apophis ///.\" See Ryholt 1997a, 381.", "translation": "Ip ///", "transliteration": "ip ///", "variant_index": 1}]
+    b: [{"anglicised": "ip ///", "attested_in": ["Turin 10,15"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21. Perhaps for \"Apophis ///.\" See Ryholt 1997a, 381.", "translation": "Ip ///", "transliteration": "ip ///", "variant_index": 1}]
+    c: [{"anglicised": "ip ///", "attested_in": ["Turin 10,15"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21. Perhaps for “Apophis ///.” See Ryholt 1997a, 381.", "translation": "Ip ///", "transliteration": "ip ///", "variant_index": 1}]
+    → chose: [{"anglicised": "ip ///", "attested_in": ["Turin 10,15"], "is_variant": false, "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk. Gauthier 1912, 69; von Beckerath 1999, 120–21. Perhaps for \"Apophis ///.\" See Ryholt 1997a, 381.", "translation": "Ip ///", "transliteration": "ip ///", "variant_index": 1}]
 
 leprohon-14a.02 (Sheneh):
   birth_names:
-    a: [{"anglicised": "sheneh", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Sheneh", "transliteration": "š-n-ḥ", "variant_index": 1}]
-    b: [{"anglicised": "sheneh", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Sheneh", "transliteration": "š-n-ḥ", "variant_index": 1}]
-    c: [{"anglicised": "S-n-H", "attested_in": [], "is_variant": false, "source_note": null, "translation": "S-n-H", "transliteration": "S-n-H", "variant_index": 1}]
-    → chose: [{"anglicised": "sheneh", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Sheneh", "transliteration": "š-n-ḥ", "variant_index": 1}]
+    a: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "š-n-ḥ", "variant_index": 1}]
+    b: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "S-n-H", "variant_index": 1}]
+    c: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "š-n-ḥ", "variant_index": 1}]
+    → chose: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "š-n-ḥ", "variant_index": 1}]
+
+leprohon-14a.03 (Shenshek):
+  birth_names:
+    a: [{"anglicised": "shenshek", "attested_in": [], "is_variant": false, "source_note": "For the suggested rendering, see T. Schneider 1998, 140–41.", "translation": "\"The rescuer\" (?)", "transliteration": "š-n-š-k", "variant_index": 1}]
+    b: [{"anglicised": "shenshek", "attested_in": [], "is_variant": false, "source_note": "For the suggested rendering, see T. Schneider 1998, 140–41.", "translation": "\"The rescuer\" (?)", "transliteration": "š-n-š-k", "variant_index": 1}]
+    c: [{"anglicised": "shenshek", "attested_in": [], "is_variant": false, "source_note": "For the suggested rendering, see T. Schneider 1998, 140–41.", "translation": "“The rescuer” (?)", "transliteration": "š-n-š-k", "variant_index": 1}]
+    → chose: [{"anglicised": "shenshek", "attested_in": [], "is_variant": false, "source_note": "For the suggested rendering, see T. Schneider 1998, 140–41.", "translation": "\"The rescuer\" (?)", "transliteration": "š-n-š-k", "variant_index": 1}]
 
 leprohon-14a.04 (Wadjed):
   birth_names:
-    a: [{"anglicised": "wadjed", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": "Wadjed", "transliteration": "wꜣḏd", "variant_index": 1}]
-    b: [{"anglicised": "wadjed", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": "Wadjed", "transliteration": "wꜣḏd", "variant_index": 1}]
-    c: [{"anglicised": "wADd", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": "wADd", "transliteration": "wADd", "variant_index": 1}]
-    → chose: [{"anglicised": "wadjed", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": "Wadjed", "transliteration": "wꜣḏd", "variant_index": 1}]
+    a: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": null, "transliteration": "wꜣḏd", "variant_index": 1}]
+    b: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": null, "transliteration": "wADd", "variant_index": 1}]
+    c: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": null, "transliteration": "wꜣḏd", "variant_index": 1}]
+    → chose: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 120–21.", "translation": null, "transliteration": "wꜣḏd", "variant_index": 1}]
 
 leprohon-14a.05 (Khamure):
   birth_names:
-    a: [{"anglicised": "kha-mu-ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Khamure", "transliteration": "ḫꜥ-mw-rꜥ", "variant_index": 1}]
-    b: [{"anglicised": "kha-mu-ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Khamure", "transliteration": "ḫꜥ-mw-rꜥ", "variant_index": 1}]
-    c: [{"anglicised": "xa-mw-ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "xa-mw-ra", "transliteration": "xa-mw-ra", "variant_index": 1}]
-    → chose: [{"anglicised": "kha-mu-ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Khamure", "transliteration": "ḫꜥ-mw-rꜥ", "variant_index": 1}]
+    a: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "ḫꜥ-mw-rꜥ", "variant_index": 1}]
+    b: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "xa-mw-ra", "variant_index": 1}]
+    c: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "ḫꜥ-mw-rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": "ḫꜥ-mw-rꜥ", "variant_index": 1}]
+
+leprohon-14a.06 (Yakub-Her):
+  birth_names:
+    a: [{"anglicised": "ya-keb-her", "attested_in": [], "is_variant": false, "source_note": "For the rendering, see T. Schneider 1998, 131.", "translation": "\"(the god) Haddad protects\"", "transliteration": "yꜥ-kb-hr", "variant_index": 1}]
+    b: [{"anglicised": "ya-keb-her", "attested_in": [], "is_variant": false, "source_note": "For the rendering, see T. Schneider 1998, 131.", "translation": "\"(the god) Haddad protects\"", "transliteration": "yꜥ-kb-hr", "variant_index": 1}]
+    c: [{"anglicised": "ya-keb-her", "attested_in": [], "is_variant": false, "source_note": "For the rendering, see T. Schneider 1998, 131.", "translation": "“(the god) Haddad protects”", "transliteration": "yꜥ-kb-hr", "variant_index": 1}]
+    → chose: [{"anglicised": "ya-keb-her", "attested_in": [], "is_variant": false, "source_note": "For the rendering, see T. Schneider 1998, 131.", "translation": "\"(the god) Haddad protects\"", "transliteration": "yꜥ-kb-hr", "variant_index": 1}]
+  throne_names:
+    a: [{"anglicised": "mer weser ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 116–17.", "translation": "The beloved one of the strength of Re", "transliteration": "mr wsr rꜥ", "variant_index": 1}]
+    b: [{"anglicised": "mer weser ra", "attested_in": [], "is_variant": false, "source_note": "Ibid., 116–17.", "translation": "The beloved one of the strength of Re", "transliteration": "mr wsr rꜥ", "variant_index": 1}]
+    c: [{"anglicised": "mer weser ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 116–17.", "translation": "The beloved one of the strength of Re", "transliteration": "mr wsr rꜥ", "variant_index": 1}]
+    → chose: [{"anglicised": "mer weser ra", "attested_in": [], "is_variant": false, "source_note": "Von Beckerath 1999, 116–17.", "translation": "The beloved one of the strength of Re", "transliteration": "mr wsr rꜥ", "variant_index": 1}]
+
 
 === LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED ===
-  leprohon-0.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.10: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.11: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.12: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2a.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2a.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.10: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.11: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.12: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.13: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.14: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.15: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.16: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.17: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.01: backfilled stage_suffix=None
-  leprohon-0.02: backfilled stage_suffix=None
-  leprohon-0.03: backfilled stage_suffix=None
-  leprohon-0.04: backfilled stage_suffix=None
-  leprohon-0.05: backfilled stage_suffix=None
-  leprohon-0.06: backfilled stage_suffix=None
-  leprohon-0.07: backfilled stage_suffix=None
-  leprohon-0.08: backfilled stage_suffix=None
-  leprohon-0.09: backfilled stage_suffix=None
-  leprohon-0.10: backfilled stage_suffix=None
-  leprohon-0.11: backfilled stage_suffix=None
-  leprohon-0.12: backfilled stage_suffix=None
-  leprohon-1.01: backfilled stage_suffix=None
-  leprohon-1.02: backfilled stage_suffix=None
-  leprohon-1.03: backfilled stage_suffix=None
-  leprohon-1.04: backfilled stage_suffix=None
-  leprohon-1.05: backfilled stage_suffix=None
-  leprohon-1.06: backfilled stage_suffix=None
-  leprohon-1.07: backfilled stage_suffix=None
-  leprohon-2.01: backfilled stage_suffix=None
-  leprohon-2.02: backfilled stage_suffix=None
-  leprohon-2.03: backfilled stage_suffix=None
-  leprohon-2.04: backfilled stage_suffix=None
-  leprohon-2.05: backfilled stage_suffix=None
-  leprohon-2.06: backfilled stage_suffix=None
-  leprohon-2.07: backfilled stage_suffix=None
-  leprohon-2.08: backfilled stage_suffix=None
-  leprohon-2.09: backfilled stage_suffix=None
-  leprohon-2a.01: backfilled stage_suffix=None
-  leprohon-2a.02: backfilled stage_suffix=None
-  leprohon-3.01: backfilled stage_suffix=None
-  leprohon-3.02: backfilled stage_suffix=None
-  leprohon-3.03: backfilled stage_suffix=None
-  leprohon-3.04: backfilled stage_suffix=None
-  leprohon-3.05: backfilled stage_suffix=None
-  leprohon-3a.01: backfilled stage_suffix=None
-  leprohon-3a.02: backfilled stage_suffix=None
-  leprohon-3a.03: backfilled stage_suffix=None
-  leprohon-3a.04: backfilled stage_suffix=None
-  leprohon-4.01: backfilled stage_suffix=None
-  leprohon-4.02: backfilled stage_suffix=None
-  leprohon-4.03: backfilled stage_suffix=None
-  leprohon-4.04: backfilled stage_suffix=None
-  leprohon-4.05: backfilled stage_suffix=None
-  leprohon-4.06: backfilled stage_suffix=None
-  leprohon-4.07: backfilled stage_suffix=None
-  leprohon-5.01: backfilled stage_suffix=None
-  leprohon-5.02: backfilled stage_suffix=None
-  leprohon-5.03: backfilled stage_suffix=None
-  leprohon-5.04: backfilled stage_suffix=None
-  leprohon-5.05: backfilled stage_suffix=None
-  leprohon-5.06: backfilled stage_suffix=None
-  leprohon-5.07: backfilled stage_suffix=None
-  leprohon-5.08: backfilled stage_suffix=None
-  leprohon-5.09: backfilled stage_suffix=None
-  leprohon-6.01: backfilled stage_suffix=None
-  leprohon-6.02: backfilled stage_suffix=None
-  leprohon-6.03: backfilled stage_suffix=None
-  leprohon-6.04: backfilled stage_suffix=None
-  leprohon-6.05: backfilled stage_suffix=None
-  leprohon-6.06: backfilled stage_suffix=None
-  leprohon-6.07: backfilled stage_suffix=None
-  leprohon-8.01: backfilled stage_suffix=None
-  leprohon-8.02: backfilled stage_suffix=None
-  leprohon-8.03: backfilled stage_suffix=None
-  leprohon-8.04: backfilled stage_suffix=None
-  leprohon-8.05: backfilled stage_suffix=None
-  leprohon-8.06: backfilled stage_suffix=None
-  leprohon-8.07: backfilled stage_suffix=None
-  leprohon-8.08: backfilled stage_suffix=None
-  leprohon-8.09: backfilled stage_suffix=None
-  leprohon-8.10: backfilled stage_suffix=None
-  leprohon-8.11: backfilled stage_suffix=None
-  leprohon-8.12: backfilled stage_suffix=None
-  leprohon-8.13: backfilled stage_suffix=None
-  leprohon-8.14: backfilled stage_suffix=None
-  leprohon-8.15: backfilled stage_suffix=None
-  leprohon-8.16: backfilled stage_suffix=None
-  leprohon-8.17: backfilled stage_suffix=None
-  leprohon-8a.01: backfilled stage_suffix=None
-  leprohon-8a.02: backfilled stage_suffix=None
-  leprohon-8a.03: backfilled stage_suffix=None
-  leprohon-8a.04: backfilled stage_suffix=None
-  leprohon-8a.05: backfilled stage_suffix=None
-  leprohon-8a.06: backfilled stage_suffix=None
-  leprohon-8a.07: backfilled stage_suffix=None
-  leprohon-8a.08: backfilled stage_suffix=None
-  leprohon-9-10a.01: backfilled stage_suffix=None
-  leprohon-9-10a.02: backfilled stage_suffix=None
-  leprohon-9-10a.03: backfilled stage_suffix=None
-  leprohon-9-10a.04: backfilled stage_suffix=None
-  leprohon-9-10a.05: backfilled stage_suffix=None
-  leprohon-9-10a.06: backfilled stage_suffix=None
-  leprohon-9-10a.07: backfilled stage_suffix=None
-  leprohon-9-10a.08: backfilled stage_suffix=None
-  leprohon-9-10a.09: backfilled stage_suffix=None
-  leprohon-9-10b.01: backfilled stage_suffix=None
-  leprohon-9-10b.02: backfilled stage_suffix=None
-  leprohon-9-10b.03: backfilled stage_suffix=None
-  leprohon-9-10b.04: backfilled stage_suffix=None
-  leprohon-9-10b.05: backfilled stage_suffix=None
-  leprohon-9-10b.06: backfilled stage_suffix=None
-  leprohon-11a.01: backfilled stage_suffix=None
-  leprohon-11a.02: backfilled stage_suffix=None
-  leprohon-11a.03: backfilled stage_suffix=None
-  leprohon-11a.04: backfilled stage_suffix=None
-  leprohon-0.08 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='hꜣty-<ḥr>', pypdf='ḥꜣty-<ḥr>'"
-    after:  null
-  leprohon-1.05 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Gauthier 1907, 9–11; von Beckerath 1999, 40–41. The first sign has also been read ꜥnḏ, giving the name ꜥnḏ-ib (anedj-ib, or Anedjib); see Wb I, 208. Kaplony (1972, col. 63, n. 1) renders as \"Brave of heart,\" lit. \"fat-hearted\"; for ꜥḏ, see Kahl 2002, 96–100. OCR vs pypdf transliteration disagreement: OCR='ꜥd-ib', pypdf='ꜥḏ-ib'"
-    after:  "Gauthier 1907, 9–11; von Beckerath 1999, 40–41. The first sign has also been read ꜥnḏ, giving the name ꜥnḏ-ib (anedj-ib, or Anedjib); see Wb I, 208. Kaplony (1972, col. 63, n. 1) renders as \"Brave of heart,\" lit. \"fat-hearted\"; for ꜥḏ, see Kahl 2002, 96–100"
-  leprohon-1.05 / throne_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "The name is preceded by the expression swty-bity, \"He of the sedge and the bee.\" For the adjective biꜣi, see Kahl 2002, 137–38. OCR vs pypdf transliteration disagreement: OCR='mr(y) p biꜣꜣ', pypdf='mr(y) p biꜣi'"
-    after:  "The name is preceded by the expression swty-bity, \"He of the sedge and the bee.\" For the adjective biꜣi, see Kahl 2002, 137–38"
-  leprohon-1.06 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Gauthier 1907, 11–14; von Beckerath 1999, 40–41. OCR vs pypdf transliteration disagreement: OCR='smr ḫt', pypdf='smr ẖt'"
-    after:  "Gauthier 1907, 11–14; von Beckerath 1999, 40–41"
-  leprohon-1.07 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'"
-    after:  "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif"
-  leprohon-1.07 / nebty_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'"
-    after:  null
-  leprohon-1.07 / later_cartouche_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='kbḥ', pypdf='ḳbḥ'"
-    after:  null
-  leprohon-2.07 / seth_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Von Beckerath 1999, 44–45. Less likely, \"The dwelling place of their will.\" OCR vs pypdf transliteration disagreement: OCR='stḫ pr(w) ib.sn', pypdf='stẖ pr(w) ib.sn'"
-    after:  "Von Beckerath 1999, 44–45. Less likely, \"The dwelling place of their will.\""
-  leprohon-2.08 / nebty_names.1.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form. OCR vs pypdf transliteration disagreement: OCR='ḫꜥ sḫmy nbw ḫt.sn', pypdf='ḫꜥ sḫmy nbw ẖt.sn'"
-    after:  "Horus/Seth 2 form: the king reconciled the Seth and Horus traditions; the serekh is topped by BOTH Horus and Seth animals. See the accompanying Two Ladies entries which repeat this dual form"
-  leprohon-2.08 / later_cartouche_names.1.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='bhy/bhty', pypdf='bby/bbty'"
-    after:  null
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
     rationale: Leprohon p. 22 fn. 12 opens with 'Gauthier 1907, 1–3, 17–19'; OCR misread as '4–5', pypdf had it correctly. Egyptologist-reviewer 2026-04-20 confirmed against the PDF.
@@ -1484,3 +1391,6 @@ leprohon-14a.05 (Khamure):
   leprohon-13.35 / birth_names:
     new value: [{"anglicised": "sankh.en ra, sewadj.tu", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon labels as 'Throne and Birth' — a combined prenomen/nomen where fragmentary evidence prevents separation.", "translation": "The one whom Re has sustained (when?) <He> was made to flourish", "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw", "variant_index": 1}]
     rationale: Restore missing dual-emission to birth_names (Gemini Code Assist 2026-04-20 PR #88). 3-way agent disagreement on source_note phrasing caused merge to pick `[]` by first-seen; this override mirrors the canonical throne_names entry verbatim.
+  leprohon-14.03 / alt_display_names:
+    new value: ["Qar"]
+    rationale: Add historical alt-spelling `Qar` (Leprohon p. 95 fn. 140, pre-Ryholt reading) for Phase-A museum-record matching. Egyptologist-reviewer 2026-04-20 P2-4.
