@@ -35,8 +35,8 @@ Chapters II–X of the book, each covering one historical period:
 | IV | First Intermediate Period (Dyn 9–11 early) | 49–53 | 70–74 | chunk 3 |
 | V | Middle Kingdom (Dyn 11 late–12) | 54–80 | 75–101 | chunk 4 |
 | VI | Second Intermediate Period (Dyn 13–17) | 81–92 | 102–113 | chunk 5 |
-| VII | New Kingdom (Dyn 18–20) | 93–163 | 114–184 | chunks 6–9 (likely Dyn 18 / Dyn 19 / Dyn 20 splits) |
-| VIII | Third Intermediate Period (Dyn 21–25) | 94?–163 | TBD | chunk 10 |
+| VII | New Kingdom (Dyn 18–20) | 93–135 | 114–156 | chunks 6–9 (likely Dyn 18 / Dyn 19 / Dyn 20 splits) |
+| VIII | Third Intermediate Period (Dyn 21–25) | 136–163 | 157–184 | chunk 10 |
 | IX | Late Period (Dyn 26–31) | 164–174 | 185–195 | chunk 11 |
 | X | Macedonian and Ptolemaic Dynasties | 175–188 | 196–209 | chunk 12 |
 
@@ -132,7 +132,7 @@ Multi-chunk source pattern: this is the first chunk. Subsequent chunks ship as s
 - **Footnote vs attestation distinction.** The per-entry footnote often has TWO pieces: a scholarly source citation (Gauthier/von Beckerath/Wilkinson) AND the primary attestation (Abydos/Turin/Saqqara number). Split them: `attested_in` gets only the king-list citations; `source_note` gets the scholarly chain.
 - **Multi-form variants.** When Leprohon numbers a name-type (`Horus 1`, `Horus 2`), both forms are attested variants of the same name class. Emit them as two entries in the same list, with `is_variant: false, true`. When Leprohon writes `Two Ladies 1`, `Two Ladies 2`, `Two Ladies 3`, emit three entries. The `is_variant` flag matches the `false`-for-first, `true`-for-rest convention pharaoh.se uses.
 - **Peribsen's `Seth name`.** Dyn-2 king Peribsen replaced his Horus name with a Seth name — one of the few such cases in all of Egyptian history. This goes in `seth_names`, not `horus_names`. Do not coerce it into the Horus slot.
-- **Khasekhem/Khasekhemwy `Horus/Seth 2`.** Dyn-2 king Khasekhemwy reconciles the Seth and Horus traditions; one of his name-form entries is labelled `Horus/Seth 2`. Emit this as an entry in both `horus_names` and `seth_names` (duplicated across lists, since it is genuinely both) with `is_variant: true` in each list, and a `source_note` explaining the dual classification.
+- **Khasekhem/Khasekhemwy `Horus/Seth 2`.** Dyn-2 king Khasekhemwy reconciles the Seth and Horus traditions; one of his name-form entries is labelled `Horus/Seth 2`. Emit this as an entry in both `horus_names` and `seth_names` (duplicated across lists, since it is genuinely both). `is_variant` tracks position *within each list*: in `horus_names` the entry is `is_variant: true` (it is the second Horus entry, following the plain `Horus: ḫꜥ sḫm`); in `seth_names` it is `is_variant: false` (it is the only / first Seth entry). The `variant_index` follows the same per-list rule (`horus_names[1].variant_index == 2`, `seth_names[0].variant_index == 1`). Include a `source_note` in both copies explaining the dual classification.
 - **Hedges in attestations.** Leprohon hedges some attestations with `(?)` or a follow-on clause (`Abydos 14; according to Kitchen (1993, 154), this refers to King Khasekhemwy`). Preserve the full hedge verbatim in `attested_in` — do not strip to just the bare number.
 - **Homonym slashes.** `Djet/Wadjet`, `Khasekhem/Khasekhemwy`: keep the slash verbatim in `display_name`, split into individual forms in `alt_display_names`. Do not pick one as canonical — that decision is Phase-A's, not extraction's.
 - **Bracket-hedged name glyphs.** Leprohon encodes partially-reconstructed names with angle brackets: `n(y)-<ḥr>` (`ny-<hor>`), `hꜣty-<ḥr>` (`haty-<hor>`). Preserve the brackets verbatim — they are the author's positive assertion of "reading is partially hypothetical."
