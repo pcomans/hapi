@@ -72,19 +72,32 @@ EARLY_DYNASTIC_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "misread as '4–5', pypdf had it correctly. Egyptologist-reviewer "
         "2026-04-20 confirmed against the PDF.",
     ),
-    # Egyptologist-reviewer 2026-04-20: the one case where OCR was right
-    # about a transliteration and pypdf was wrong. Leprohon p. 26 prints
-    # `smr xt` → MdC `x` = ḫ (h-with-breve-below), NOT ẖ (h-with-bar-below).
-    # The anglicised gloss `(semer khet)` confirms: `kh` maps to ḫ. pypdf's
-    # MdC normalizer defaulted x → ẖ incorrectly for this token.
-    (
-        "leprohon-1.06",
-        "horus_names.0.transliteration",
-        "smr ḫt",
-        "Leprohon p. 26 prints 'smr xt' (MdC x = ḫ). Anglicised gloss "
-        "'(semer khet)' with 'kh' confirms ḫ not ẖ. pypdf MdC mapping "
-        "went wrong here; OCR and reviewer concur on ḫ.",
-    ),
+    # NOTE: the original egyptologist-reviewer 2026-04-20 pass flagged
+    # leprohon-1.06 Semerkhet's Horus transliteration `smr ẖt` as wanting
+    # `smr ḫt` instead. That correction was WRONG and has been removed
+    # after user-directed re-verification (2026-04-20):
+    #
+    # 1. The publisher's embedded PDF text layer for Leprohon p. 26 is
+    #    `smr Xt` (capital X). In Manuel de Codage, `X` → ẖ (h-with-line-
+    #    below, "body"); `x` → ḫ (h-with-breve-below, "thing"). pypdf
+    #    read the text layer faithfully and the MdC normalizer applied
+    #    the correct `X → ẖ` mapping.
+    # 2. The reviewer argued `kh` in the anglicised gloss `(semer khet)`
+    #    implied ḫ — but `kh` is an anglicisation of BOTH ẖ and ḫ, so
+    #    the gloss alone doesn't disambiguate.
+    # 3. Semantic check: ẖt = "body", ḫt = "thing / matter". Leprohon's
+    #    own translation reads "Friend of the (divine) body (i.e., the
+    #    Ennead)" — "body" maps to ẖt, confirming pypdf.
+    # 4. Visual inspection of the rendered PDF page 26 (user request,
+    #    2026-04-20) confirms the glyph is h-with-line-below (ẖ), not
+    #    h-with-breve (ḫ). The reviewer misread the rendered diacritic.
+    #
+    # Lesson recorded in user feedback memory: don't silently apply
+    # reviewer corrections that contradict deterministic pipeline output
+    # plus the source's own translation. Over-trusting a single reviewer
+    # verdict against corroborating evidence produced a regression here.
+    # Future MdC `X` vs `x` disagreements: verify text layer + gloss +
+    # translation semantics BEFORE overriding pypdf.
     # Egyptologist-reviewer 2026-04-20: the extractors included the
     # translation's leading "Seth, " in the anglicised column. Leprohon
     # p. 29 prints only `(per(u) ib.sen)` in the parenthetical gloss; the

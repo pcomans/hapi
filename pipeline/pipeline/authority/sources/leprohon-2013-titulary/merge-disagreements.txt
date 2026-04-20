@@ -227,9 +227,6 @@ leprohon-2.08 (Khasekhem/Khasekhemwy):
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
     rationale: Leprohon p. 22 fn. 12 opens with 'Gauthier 1907, 1–3, 17–19'; OCR misread as '4–5', pypdf had it correctly. Egyptologist-reviewer 2026-04-20 confirmed against the PDF.
-  leprohon-1.06 / horus_names.0.transliteration:
-    new value: "smr ḫt"
-    rationale: Leprohon p. 26 prints 'smr xt' (MdC x = ḫ). Anglicised gloss '(semer khet)' with 'kh' confirms ḫ not ẖ. pypdf MdC mapping went wrong here; OCR and reviewer concur on ḫ.
   leprohon-2.07 / seth_names.0.anglicised:
     new value: "per(u) ib.sen"
     rationale: Leprohon p. 29: parenthetical gloss is '(per(u) ib.sen)' only. The 'Seth,' prefix the agents concatenated belongs to the translation column ('Seth, (for whom ?) their will has come forth'), not the anglicised field. Egyptologist-reviewer 2026-04-20 high-confidence.
