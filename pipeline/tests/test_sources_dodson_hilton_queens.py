@@ -63,6 +63,20 @@ PDF_PAGES_SEIZERS = "88-91"
 SUB_PERIOD_SEIZERS = "Seizers of the Two Lands"
 CITATION_SEIZERS = {"pdf_pages": PDF_PAGES_SEIZERS, "edition": EDITION}
 
+# Kings and Commoners chunk (Chapter 2 "Kings and Commoners" Brief Lives,
+# printed pp. 108-113 / physical pp. 98-103). 13th Dynasty, start of the
+# Second Intermediate Period — the largest Ch 2 sub-block at 108 entries
+# (91 placed + 17 Unplaced). Dense extended-family material around Iy
+# and her sisters-in-law, the Sobkhotep / Neferhotep royal lineages, and
+# the Nubkhaes A matrilineal cluster. Introduces the cross-section
+# duplicate pattern for an 11th/12th↔13th-Dynasty individual (Hetepti —
+# full prose in Seizers, stub here with `notes: "See previous section."`).
+# Printed p. 110 is a full-bleed photograph with zero entries, so the
+# chunk page-header sequence skips 110.
+PDF_PAGES_KC = "98-103"
+SUB_PERIOD_KC = "Kings and Commoners"
+CITATION_KC = {"pdf_pages": PDF_PAGES_KC, "edition": EDITION}
+
 
 @lru_cache(maxsize=1)
 def _rows() -> tuple[dict, ...]:
@@ -125,8 +139,8 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 
 
 def test_row_count() -> None:
-    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) = 331 rows total."""
-    assert len(_rows()) == 331, len(_rows())
+    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) = 439 rows total."""
+    assert len(_rows()) == 439, len(_rows())
 
 
 def test_row_counts_per_chunk() -> None:
@@ -141,6 +155,7 @@ def test_row_counts_per_chunk() -> None:
     - Head of the South: 13 (12 placed + 1 Unplaced: Neferkayet)
     - Seizers of the Two Lands: 48 (45 placed + 3 Unplaced:
       Didit, Neferet Q, Sithathor Q)
+    - Kings and Commoners: 108 (91 placed + 17 Unplaced; Dyn 13, SIP start)
     """
     by_period: dict[str, int] = {}
     for r in _rows():
@@ -153,6 +168,7 @@ def test_row_counts_per_chunk() -> None:
         SUB_PERIOD_DECLINE: 35,
         SUB_PERIOD_HEADOFSOUTH: 13,
         SUB_PERIOD_SEIZERS: 48,
+        SUB_PERIOD_KC: 108,
     }, by_period
 
 
@@ -167,6 +183,13 @@ CROSS_SECTION_DUPLICATE_IDS = {
     # (later Ramesses IV) in Decline. The same dh_id refers to TWO
     # different individuals; Phase A does not reconcile these.
     "Ramesses C": {SUB_PERIOD_HOUSE, SUB_PERIOD_DECLINE},
+    # Hetepti (KM; M2L; UWC) — mother of Amenemhat IV, possibly wife of
+    # Amenemhat III. D&H prints her full Brief Life in the Seizers of
+    # the Two Lands section (Dyn 12) and a single-line stub
+    # `See previous section.` in Kings and Commoners (Dyn 13). Same
+    # individual, two sub_periods. First cross-section duplicate that
+    # spans dynasties rather than sharing the same chapter.
+    "Hetepti": {SUB_PERIOD_SEIZERS, SUB_PERIOD_KC},
 }
 
 
@@ -234,6 +257,7 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_DECLINE: CITATION_DECLINE,
         SUB_PERIOD_HEADOFSOUTH: CITATION_HEADOFSOUTH,
         SUB_PERIOD_SEIZERS: CITATION_SEIZERS,
+        SUB_PERIOD_KC: CITATION_KC,
     }
     for r in _rows():
         sub_period = r["sub_period"]
@@ -258,6 +282,7 @@ def test_dynasty_per_chunk() -> None:
         SUB_PERIOD_DECLINE: 20,
         SUB_PERIOD_HEADOFSOUTH: 11,
         SUB_PERIOD_SEIZERS: 12,
+        SUB_PERIOD_KC: 13,
     }
     for r in _rows():
         assert r["dynasty"] == expected_dynasty[r["sub_period"]], r
@@ -271,43 +296,54 @@ POWER_UNPLACED_IDS = frozenset({
 DECLINE_UNPLACED_IDS = frozenset({"Anuketemheb", "Taiay"})
 HEADOFSOUTH_UNPLACED_IDS = frozenset({"Neferkayet"})
 SEIZERS_UNPLACED_IDS = frozenset({"Didit", "Neferet Q", "Sithathor Q"})
+KC_UNPLACED_IDS = frozenset({
+    "Ahhotepti", "Anuqneferetweben", "Dedetamun", "Dedetsobk", "Dedusobk A",
+    "Haankhef Q", "Hatshepsut C", "Horhotep Q", "Iuhetibu Q", "Neferet R",
+    "Neferhotep Q", "Neferu Q", "Reniseneb Q", "Reniseneb R", "Senetmut",
+    "Sobkhotep Q", "[...]djeb",
+})
 
 
 def test_unplaced_set_is_the_expected_ids() -> None:
     """D&H's Unplaced sub-blocks: 12 at the end of Power (printed p. 141)
     + 2 at the end of Decline (printed p. 194) + 1 at the end of Head of
     South (printed p. 89) + 3 at the end of Seizers (printed p. 99 — Didit,
-    Neferet Q, Sithathor Q, all sisters-of-unknown-kings) = 18 unplaced
+    Neferet Q, Sithathor Q, all sisters-of-unknown-kings) + 17 at the end
+    of Kings and Commoners (printed p. 113 — Ahhotepti through [...]djeb;
+    Dyn-13 sisters/daughters/sons/wives of unknown kings) = 35 unplaced
     rows total. No Unplaced sub-block in Amarna / House / Feud.
     """
     unplaced = [r for r in _rows() if r["unplaced"]]
-    assert len(unplaced) == 18, f"expected 18 unplaced, got {len(unplaced)}"
+    assert len(unplaced) == 35, f"expected 35 unplaced, got {len(unplaced)}"
     assert {r["dh_id"] for r in unplaced} == (
         POWER_UNPLACED_IDS
         | DECLINE_UNPLACED_IDS
         | HEADOFSOUTH_UNPLACED_IDS
         | SEIZERS_UNPLACED_IDS
+        | KC_UNPLACED_IDS
     )
     power_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_POWER}
     decline_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_DECLINE}
     hos_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_HEADOFSOUTH}
     seizers_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_SEIZERS}
+    kc_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_KC}
     assert power_unplaced == POWER_UNPLACED_IDS
     assert decline_unplaced == DECLINE_UNPLACED_IDS
     assert hos_unplaced == HEADOFSOUTH_UNPLACED_IDS
     assert seizers_unplaced == SEIZERS_UNPLACED_IDS
+    assert kc_unplaced == KC_UNPLACED_IDS
 
 
 def test_unplaced_rows_sort_last_in_reconciled_jsonl() -> None:
-    """The 18 unplaced rows must occupy the trailing 18 positions of
+    """The 35 unplaced rows must occupy the trailing 35 positions of
     `reconciled.jsonl` — merge.py's sort groups them into a final bin so
     the file reads as placed-alphabetical, then unplaced-alphabetical.
     Regression on the code-reviewer-flagged sort-key bug from PR #38.
     """
     rows = _rows()
-    for r in rows[:-18]:
+    for r in rows[:-35]:
         assert r["unplaced"] is False, r["dh_id"]
-    for r in rows[-18:]:
+    for r in rows[-35:]:
         assert r["unplaced"] is True, r["dh_id"]
 
 
@@ -332,6 +368,7 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     - Decline chunk contributes 0 lacunae (both unplaced entries are
       letter-prefixed).
     - Power chunk contributes 1 unplaced lacuna (`[...]pentepkau`).
+    - Kings and Commoners chunk contributes 1 unplaced lacuna (`[...]djeb`).
 
     Composite-key detail: `Ramesses C` under House sorts adjacent to
     `Ramesses C` under Decline via the `sub_period` tiebreaker.
@@ -340,8 +377,8 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     lacuna_prefixes = ("[", "–")
 
     placed = [r for r in rows if not r["unplaced"]]
-    # 331 - 18 unplaced = 313 placed.
-    assert len(placed) == 313, len(placed)
+    # 439 - 35 unplaced = 404 placed.
+    assert len(placed) == 404, len(placed)
 
     # All lacuna-prefixed placed rows must be at the tail of the placed
     # block. Count them and assert no lacuna-prefixed row appears before
@@ -356,16 +393,17 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     )
 
     unplaced = [r for r in rows if r["unplaced"]]
-    assert len(unplaced) == 18, len(unplaced)
-    # `[...]pentepkau` (Power unplaced, lacuna) sorts after the other
-    # Power unplaced entries (letter-prefixed) but before Decline's
-    # Unplaced entries (letter-prefixed: Anuketemheb, Taiay).
-    # The sort key is (unplaced_bin=1, lacuna_sub_bin, dh_id.lower(),
-    # sub_period); within the unplaced bin, letter-prefixed rows from
-    # both Power and Decline sort before `[...]pentepkau` regardless of
-    # sub_period.
+    assert len(unplaced) == 35, len(unplaced)
+    # `[...]djeb` (Kings and Commoners unplaced, lacuna) and
+    # `[...]pentepkau` (Power unplaced, lacuna) both sort after every
+    # letter-prefixed unplaced entry. The sort key is
+    # (unplaced_bin=1, lacuna_sub_bin, dh_id.lower(), sub_period); within
+    # the unplaced-lacuna tail the two lacuna ids order alphabetically
+    # (`[...]djeb` < `[...]pentepkau`). The trailing two rows of the
+    # file are therefore `[...]djeb`, then `[...]pentepkau`.
+    assert unplaced[-2]["dh_id"] == "[...]djeb", unplaced[-2]["dh_id"]
     assert unplaced[-1]["dh_id"] == "[...]pentepkau", unplaced[-1]["dh_id"]
-    for r in unplaced[:-1]:
+    for r in unplaced[:-2]:
         assert not r["dh_id"].startswith(lacuna_prefixes), r["dh_id"]
 
 
@@ -416,6 +454,27 @@ def test_role_code_set_spans_the_known_codes() -> None:
     for expected in ["GF", "Mistress of All Women"]:
         assert expected in all_codes, (
             f"expected Seizers code {expected!r} never extracted"
+        )
+    # Kings and Commoners codes (Dyn 13 chunk) add one short-token role
+    # (`RO` — Royal Ornament; on Inyotef C only) and a cluster of long-
+    # form spelled-out role tokens preserved as single-token strings
+    # (same treatment as `King of Hittites` / `Mistress of All Women`).
+    # The long-form tokens are non-royal administrative roles attached
+    # to the extended-family commoners D&H introduces in this chunk
+    # (governors, stewards, scribes of the vizier, etc.).
+    for expected in [
+        "RO",
+        "Governor of El-Kab",
+        "Overseer of the Fields",
+        "Chief Scribe of the Vizier",
+        "Elder of the Portal",
+        "High Steward",
+        "Attendant of Dog-Keepers",
+        "Townsman",
+        "Royal Representative",
+    ]:
+        assert expected in all_codes, (
+            f"expected Kings and Commoners code {expected!r} never extracted"
         )
 
 
@@ -5216,6 +5275,12 @@ def test_seizers_hathorhetepet_full_row() -> None:
 
 
 def test_seizers_hetepti_full_row() -> None:
+    """Hetepti is a cross-section duplicate: full Brief Life here
+    (Seizers of the Two Lands / Dyn 12) + stub `See previous section.`
+    in Kings and Commoners / Dyn 13. The composite key resolves both;
+    this test explicitly passes `sub_period` so `_row` picks the
+    Seizers row.
+    """
     _assert_full_row('Hetepti', {
         'dh_id': 'Hetepti',
         'name': 'Hetepti',
@@ -5231,7 +5296,7 @@ def test_seizers_hetepti_full_row() -> None:
         'unplaced': False,
         'notes': 'Mother of Amenemhat IV, and possibly a wife of Amenemhat III; depicted in a relief at Medinet Maadi.',
         'source_citation': CITATION_SEIZERS,
-    })
+    }, sub_period=SUB_PERIOD_SEIZERS)
 
 
 def test_seizers_ita_full_row() -> None:
@@ -6010,4 +6075,2062 @@ def test_seizers_sithathor_q_full_row() -> None:
         'unplaced': True,
         'notes': 'Mother of Didit, named on the funerary stela of Neferet Q in Munich.',
         'source_citation': CITATION_SEIZERS,
+    })
+
+
+def test_kc_lac13a_full_row() -> None:
+    _assert_full_row('[...]13A', {
+        'dh_id': '[...]13A',
+        'name': '[...]13A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Non-royal father of either Imyromesha or Inyotef IV, on the basis of the data from the court accounts of his son's reign.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_lac13b_full_row() -> None:
+    _assert_full_row('[...]13B', {
+        'dh_id': '[...]13B',
+        'name': '[...]13B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Brother of Iy; known from his stela in Würzburg.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_lac13c_full_row() -> None:
+    _assert_full_row('[...]13C', {
+        'dh_id': '[...]13C',
+        'name': '[...]13C',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': ['Iuhetibu A'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Second husband of Iuhetibu A and step-father of Sobkhotep III; shown with the latter on an altar from Sehel.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_lac13d_full_row() -> None:
+    _assert_full_row('[...]13D', {
+        'dh_id': '[...]13D',
+        'name': '[...]13D',
+        'alt_names': [],
+        'roles': ['GF'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Sobkhotep V'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Father of Sobkhotep V; known from a broken seal-impression from Tukh.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_lac13e_full_row() -> None:
+    _assert_full_row('[...]13E', {
+        'dh_id': '[...]13E',
+        'name': '[...]13E',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': ['Reniseneb B'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Wife of Reniseneb B and the descendant of Senebsen, as well as Aya A.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_amenhotep_a_full_row() -> None:
+    _assert_full_row('Amenhotep A', {
+        'dh_id': 'Amenhotep A',
+        'name': 'Amenhotep A',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep IV',
+        'mother_name': 'Tjin',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Sobkhotep IV and Tjin; named on a box in Cairo.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_ankhu_a_full_row() -> None:
+    _assert_full_row('Ankhu A', {
+        'dh_id': 'Ankhu A',
+        'name': 'Ankhu A',
+        'alt_names': [],
+        'roles': ['Overseer of the Fields'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': 'Merestekhi',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Merestekhi, and so possibly nephew of Amenemhat IV; known from a number of sources, in particular a block in Boston.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_ankhu_b_full_row() -> None:
+    _assert_full_row('Ankhu B', {
+        'dh_id': 'Ankhu B',
+        'name': 'Ankhu B',
+        'alt_names': [],
+        'roles': ['Viz'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Father of the wife of the brother of Iy; in office under Khendjer and known from a series of statues and Papyrus Bulaq 18.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_aya_a_full_row() -> None:
+    _assert_full_row('Aya A', {
+        'dh_id': 'Aya A',
+        'name': 'Aya A',
+        'alt_names': [],
+        'roles': ['Governor of El-Kab'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son-in-law of Nubkhaes A; mentioned in a genealogy in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_aya_b_full_row() -> None:
+    _assert_full_row('Aya B', {
+        'dh_id': 'Aya B',
+        'name': 'Aya B',
+        'alt_names': [],
+        'roles': ['Viz', 'Governor of El-Kab'],
+        'sex': 'male',
+        'spouse_names': ['Reditenes B'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Husband of Reditenes B; known from the Juridical Stela from Karnak (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_aya_c_full_row() -> None:
+    _assert_full_row('Aya C', {
+        'dh_id': 'Aya C',
+        'name': 'Aya C',
+        'alt_names': [],
+        'roles': ['Governor of El-Kab'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Aya B',
+        'mother_name': 'Reditenes B',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Aya B and Reditenes B; known from the Juridical Stela from Karnak (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_ayameru_a_full_row() -> None:
+    _assert_full_row('Ayameru A', {
+        'dh_id': 'Ayameru A',
+        'name': 'Ayameru A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Aya A'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Father of Aya A; mentioned in a genealogy in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_ayameru_b_full_row() -> None:
+    _assert_full_row('Ayameru B', {
+        'dh_id': 'Ayameru B',
+        'name': 'Ayameru B',
+        'alt_names': [],
+        'roles': ['Viz', 'Governor of El-Kab'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Aya B',
+        'mother_name': 'Reditenes B',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Aya B and Reditenes B; known from the Juridical Stela from Karnak (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_bebi_a_full_row() -> None:
+    _assert_full_row('Bebi A', {
+        'dh_id': 'Bebi A',
+        'name': 'Bebi A',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_bebi_b_full_row() -> None:
+    _assert_full_row('Bebi B', {
+        'dh_id': 'Bebi B',
+        'name': 'Bebi B',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in a set of palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_bebi_c_full_row() -> None:
+    _assert_full_row('Bebi C', {
+        'dh_id': 'Bebi C',
+        'name': 'Bebi C',
+        'alt_names': [],
+        'roles': ['EKSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep VII',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Sobkhotep VII; depicted on a statue of his father from Karnak, now in Cairo, and the owner of two stelae set up at Abydos by his steward, Ptaha (Cairo and Bologna).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_bebires_full_row() -> None:
+    _assert_full_row('Bebires', {
+        'dh_id': 'Bebires',
+        'name': 'Bebires',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': 'Nubkhaes A',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Daughter of Nubkhaes A; mentioned in her stela in the Louvre.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_dedetanuq_full_row() -> None:
+    _assert_full_row('Dedetanuq', {
+        'dh_id': 'Dedetanuq',
+        'name': 'Dedetanuq',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Daughter of Sobkhotep III; shown with her sister on a stela from Koptos (Louvre) and with other members of her family on a stela in Wadi el-Hol.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_dedusobk_bebi_full_row() -> None:
+    _assert_full_row('Dedusobk Bebi', {
+        'dh_id': 'Dedusobk Bebi',
+        'name': 'Dedusobk Bebi',
+        'alt_names': [],
+        'roles': ['Chief Scribe of the Vizier'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Nubkhaes A'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Father of Nubkhaes A; mentioned in her stela in the Louvre.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_duaneferet_a_full_row() -> None:
+    _assert_full_row('Duaneferet A', {
+        'dh_id': 'Duaneferet A',
+        'name': 'Duaneferet A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Nubkhaes A'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Mother of Nubkhaes A; mentioned in her stela in the Louvre.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_duaneferet_b_full_row() -> None:
+    _assert_full_row('Duaneferet B', {
+        'dh_id': 'Duaneferet B',
+        'name': 'Duaneferet B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': 'Nubkhaes A',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Daughter of Nubkhaes A; mentioned in her stela in the Louvre.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_haankhef_a_full_row() -> None:
+    _assert_full_row('Haankhef A', {
+        'dh_id': 'Haankhef A',
+        'name': 'Haankhef A',
+        'alt_names': [],
+        'roles': ['GF'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Neferhotep I', 'Sihathor', 'Sobkhotep IV'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Father of Neferhotep I, Sihathor and Sobkhotep IV; owner of a stela (probably from Heliopolis) in Rio de Janeiro, and named on a number of scarabs of his elder sons, together with inscriptions of Neferhotep I.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_haankhef_b_full_row() -> None:
+    _assert_full_row('Haankhef B', {
+        'dh_id': 'Haankhef B',
+        'name': 'Haankhef B',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Neferhotep I',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Son of Neferhotep I; named in his father's Sehel inscription.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_haankhef_c_ikherneferet_full_row() -> None:
+    _assert_full_row('Haankhef C Ikherneferet', {
+        'dh_id': 'Haankhef C Ikherneferet',
+        'name': 'Haankhef C Ikherneferet',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep IV',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Sobkhotep IV; named on a stela of his father in the Wadi Hammamat.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_hapyu_full_row() -> None:
+    _assert_full_row('Hapyu', {
+        'dh_id': 'Hapyu',
+        'name': 'Hapyu',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Grandmother of Nubkhaes A; mentioned in her stela in the Louvre.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_hatshepsut_b_full_row() -> None:
+    _assert_full_row('Hatshepsut B', {
+        'dh_id': 'Hatshepsut B',
+        'name': 'Hatshepsut B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': ['Neferhotep B'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Wife of Neferhotep B and descendant of Senebsen; mentioned in a genealogy in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_henut_a_full_row() -> None:
+    _assert_full_row('Henut A', {
+        'dh_id': 'Henut A',
+        'name': 'Henut A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Seneb B',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Niece of Sobkhotep III; named on the Vienna stela of her father, Seneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_hetepti_full_row() -> None:
+    """Hetepti is a cross-section duplicate: the stub here (Kings and
+    Commoners / Dyn 13) points back to her full Brief Life in the
+    Seizers of the Two Lands / Dyn 12 chunk. The composite key resolves
+    both; this test explicitly passes `sub_period` so `_row` picks the
+    Kings and Commoners stub row.
+    """
+    _assert_full_row('Hetepti', {
+        'dh_id': 'Hetepti',
+        'name': 'Hetepti',
+        'alt_names': [],
+        'roles': ['KM', 'M2L', 'UWC'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'See previous section.',
+        'source_citation': CITATION_KC,
+    }, sub_period=SUB_PERIOD_KC)
+
+
+def test_kc_horemheb_a_full_row() -> None:
+    _assert_full_row('Horemheb A', {
+        'dh_id': 'Horemheb A',
+        'name': 'Horemheb A',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_inni_full_row() -> None:
+    _assert_full_row('Inni', {
+        'dh_id': 'Inni',
+        'name': 'Inni',
+        'alt_names': [],
+        'roles': ['KGW', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Aya (possible)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Possible wife of Aya; known from at least 21 scarabs and one seal-impression, the latter from Kerma in Nubia.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_inyotef_b_full_row() -> None:
+    _assert_full_row('Inyotef B', {
+        'dh_id': 'Inyotef B',
+        'name': 'Inyotef B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Amenemhat V (probable)',
+        'mother_name': None,
+        'children_names': ['Amenemhat VI'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Probable son of Amenemhat V and father of Amenemhat VI; known only from the filiative nomen of his son.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_inyotef_c_full_row() -> None:
+    _assert_full_row('Inyotef C', {
+        'dh_id': 'Inyotef C',
+        'name': 'Inyotef C',
+        'alt_names': [],
+        'roles': ['RO'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister of Iy; known from a stela of her probable brother in Würzburg.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_iuhetibu_a_full_row() -> None:
+    _assert_full_row('Iuhetibu A', {
+        'dh_id': 'Iuhetibu A',
+        'name': 'Iuhetibu A',
+        'alt_names': [],
+        'roles': ['KM'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Sobkhotep III'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Mother of Sobkhotep III, shown with him on an altar from Sehel and a stela in the Wadi el-Hol.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_iuhetibu_b_fendy_full_row() -> None:
+    _assert_full_row('Iuhetibu B Fendy', {
+        'dh_id': 'Iuhetibu B Fendy',
+        'name': 'Iuhetibu B Fendy',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep III',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Daughter of Sobkhotep III; shown with her sister on a stela from Koptos (Louvre) and with other members of her family on a stela in Wadi el-Hol.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_iuhetibu_c_full_row() -> None:
+    _assert_full_row('Iuhetibu C', {
+        'dh_id': 'Iuhetibu C',
+        'name': 'Iuhetibu C',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Seneb B',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Niece of Sobkhotep III; named on the Vienna stela of her father, Seneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_iy_full_row() -> None:
+    _assert_full_row('Iy', {
+        'dh_id': 'Iy',
+        'name': 'Iy',
+        'alt_names': [],
+        'roles': ['KW'],
+        'sex': 'female',
+        'spouse_names': ['Imyromesha (either) (probably)', 'Inyotef IV (either) (probably)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Probably wife of either Imyromesha or Inyotef IV; mentioned in palace accounts in Cairo (Papyrus Bulaq 18) and on a stela in Würzburg.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_kay_full_row() -> None:
+    _assert_full_row('Kay', {
+        'dh_id': 'Kay',
+        'name': 'Kay',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Amenemhat VII'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Father of Amenemhat VII, on the basis of the latter's filiative nomen.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_kebsi_full_row() -> None:
+    _assert_full_row('Kebsi', {
+        'dh_id': 'Kebsi',
+        'name': 'Kebsi',
+        'alt_names': [],
+        'roles': ['Governor of El-Kab'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Ayameru B',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Ayameru B; known from the Juridical Stela from Karnak (Cairo), in which he sold the Governorate to one Sobknakhte (B) in the time of Nebiriau I.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_kemi_a_full_row() -> None:
+    _assert_full_row('Kemi A', {
+        'dh_id': 'Kemi A',
+        'name': 'Kemi A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Neferhotep I', 'Sihathor', 'Sobkhotep IV'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Mother of Neferhotep I, Sihathor and Sobkhotep IV; named on a number of scarabs of her sons, inscriptions of Neferhotep I from around the area of the First Cataract of the Nile, near Aswan, and on two statues of Sihathor.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_kemi_b_full_row() -> None:
+    _assert_full_row('Kemi B', {
+        'dh_id': 'Kemi B',
+        'name': 'Kemi B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Neferhotep I',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Daughter of Neferhotep I; named in her father's Sehel inscription and two scarabs.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_khakau_full_row() -> None:
+    _assert_full_row('Khakau', {
+        'dh_id': 'Khakau',
+        'name': 'Khakau',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Brother of Sobkhotep III; shown with the king and other members of his family on a stela in the Wadi el-Hol and on an altar from Sehel.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_khemmet_full_row() -> None:
+    _assert_full_row('Khemmet', {
+        'dh_id': 'Khemmet',
+        'name': 'Khemmet',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_khonskhufsy_full_row() -> None:
+    _assert_full_row('Khonskhufsy', {
+        'dh_id': 'Khonskhufsy',
+        'name': 'Khonskhufsy',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': ['Aya A'],
+        'father_name': None,
+        'mother_name': 'Nubkhaes A',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Daughter of Nubkhaes A and wife of Aya A; mentioned in a genealogy in the tomb of Reniseneb B and on her mother's stela in the Louvre.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_mentuhotep_a_full_row() -> None:
+    _assert_full_row('Mentuhotep A', {
+        'dh_id': 'Mentuhotep A',
+        'name': 'Mentuhotep A',
+        'alt_names': [],
+        'roles': ['GF'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Sobkhotep III'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Father of Sobkhotep III; named on scarabs of his son, as well as being depicted with his sons, his wife and step-daughter on an altar from Sehel and a stela at Wadi el-Hol.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_mentuhotep_b_full_row() -> None:
+    _assert_full_row('Mentuhotep B', {
+        'dh_id': 'Mentuhotep B',
+        'name': 'Mentuhotep B',
+        'alt_names': [],
+        'roles': ['Attendant of Dog-Keepers'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Seneb B',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Nephew of Sobkhotep III; named on the Vienna stela of his father, Seneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_merestekhi_full_row() -> None:
+    _assert_full_row('Merestekhi', {
+        'dh_id': 'Merestekhi',
+        'name': 'Merestekhi',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Ankhu A'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Mother of Ankhu A and possibly sister of Amenemhat IV; known from the monuments of her son.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_minemaes_full_row() -> None:
+    _assert_full_row('Minemaes', {
+        'dh_id': 'Minemaes',
+        'name': 'Minemaes',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Se[...]kare (possibly)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Possibly the daughter of Se[...]kare, depicted on a stela now in Cairo alongside her brother, Sankhptahi.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nebankh_full_row() -> None:
+    _assert_full_row('Nebankh', {
+        'dh_id': 'Nebankh',
+        'name': 'Nebankh',
+        'alt_names': [],
+        'roles': ['High Steward'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Uncle of Nubkhaes A; mentioned in her stela in the Louvre, and also in the family lists of Neferhotep I at Philae and Sehel.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nebetiunet_a_full_row() -> None:
+    _assert_full_row('Nebetiunet A', {
+        'dh_id': 'Nebetiunet A',
+        'name': 'Nebetiunet A',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep IV',
+        'mother_name': 'Tjin',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Daughter of Sobkhotep IV and Tjin; named on a now-lost vase and a scarab in Basel.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nebtit_full_row() -> None:
+    _assert_full_row('Nebtit', {
+        'dh_id': 'Nebtit',
+        'name': 'Nebtit',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': ['Seneb B'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Sobkhotep III; named on the Vienna stela of her husband, Seneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neferetiu_full_row() -> None:
+    _assert_full_row('Neferetiu', {
+        'dh_id': 'Neferetiu',
+        'name': 'Neferetiu',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neferhotep_a_full_row() -> None:
+    _assert_full_row('Neferhotep A', {
+        'dh_id': 'Neferhotep A',
+        'name': 'Neferhotep A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': ['Ressonbe'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Descendant of Senebsen; mentioned in a genealogy in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neferhotep_b_full_row() -> None:
+    _assert_full_row('Neferhotep B', {
+        'dh_id': 'Neferhotep B',
+        'name': 'Neferhotep B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': ['Hatshepsut B'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Grandson of Nubkhaes A; mentioned in a genealogy in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neferu_a_full_row() -> None:
+    _assert_full_row('Neferu A', {
+        'dh_id': 'Neferu A',
+        'name': 'Neferu A',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nehy_full_row() -> None:
+    _assert_full_row('Nehy', {
+        'dh_id': 'Nehy',
+        'name': 'Nehy',
+        'alt_names': [],
+        'roles': ['Townsman'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Grandfather of Neferhotep I, Sihathor and Sobkhotep IV; named on the Rio de Janeiro stela of Haankhef A.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nenqlac_full_row() -> None:
+    _assert_full_row('Nen?[...]', {
+        'dh_id': 'Nen?[...]',
+        'name': 'Nen?[...]',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Sobkhotep II'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Father of Sobkhotep II, named in the Turin Canon.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neni_full_row() -> None:
+    _assert_full_row('Neni', {
+        'dh_id': 'Neni',
+        'name': 'Neni',
+        'alt_names': [],
+        'roles': ['KW'],
+        'sex': 'female',
+        'spouse_names': ['Sobkhotep III'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Iuhetibu B', 'Dedetanuq'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Wife of Sobkhotep III; named as the mother of Iuhetibu B and Dedetanuq on a stela in the Louvre, and also probably shown on stela in the Wadi el-Hol.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neshemethotepti_full_row() -> None:
+    _assert_full_row('Neshemethotepti', {
+        'dh_id': 'Neshemethotepti',
+        'name': 'Neshemethotepti',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Niece of Iy; known from a stela of her father in Würzburg.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nubhotepti_a_full_row() -> None:
+    _assert_full_row('Nubhotepti A', {
+        'dh_id': 'Nubhotepti A',
+        'name': 'Nubhotepti A',
+        'alt_names': [],
+        'roles': ['KGW', 'UWC', 'KM'],
+        'sex': 'female',
+        'spouse_names': ['Hor (probable)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Probable wife of Hor; known from two distinct groups of scarabs, one of which gives her the title of King's Mother.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nubhotepti_b_full_row() -> None:
+    _assert_full_row('Nubhotepti B', {
+        'dh_id': 'Nubhotepti B',
+        'name': 'Nubhotepti B',
+        'alt_names': [],
+        'roles': ['KM'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Sobkhotep V'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Mother of Sobkhotep V; named on two scarabs in London and New York.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nubhoteptikhered_full_row() -> None:
+    _assert_full_row('Nubhoteptikhered', {
+        'dh_id': 'Nubhoteptikhered',
+        'name': 'Nubhoteptikhered',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Hor (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Probable daughter of Hor; buried in a shaft-tomb alongside that of Hor on the north side of the pyramid of Amenemhat III at Dahshur. Her tomb was found intact in 1894, its contents now being in the Cairo Museum.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_nubkhaes_a_full_row() -> None:
+    _assert_full_row('Nubkhaes A', {
+        'dh_id': 'Nubkhaes A',
+        'name': 'Nubkhaes A',
+        'alt_names': [],
+        'roles': ['KGW', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Sobkhotep V (probable)', 'Sobkhotep VI (probable)', 'Iaib (probable)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Probable wife of either Sobkhotep V, Sobkhotep VI or Iaib; owner of a stela in the Louvre and mentioned in the tomb of Reniseneb B at El-Kab.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_peshu_full_row() -> None:
+    _assert_full_row('Peshu', {
+        'dh_id': 'Peshu',
+        'name': 'Peshu',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_redienef_full_row() -> None:
+    _assert_full_row('Redienef', {
+        'dh_id': 'Redienef',
+        'name': 'Redienef',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': 'Iy',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_reditenes_a_full_row() -> None:
+    _assert_full_row('Reditenes A', {
+        'dh_id': 'Reditenes A',
+        'name': 'Reditenes A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': ['Ayameru A'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Wife of Ayameru A; mentioned in a genealogy in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_reditenes_b_full_row() -> None:
+    _assert_full_row('Reditenes B', {
+        'dh_id': 'Reditenes B',
+        'name': 'Reditenes B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': ['Aya B'],
+        'father_name': 'King Aya (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Probable daughter of King Aya and wife of Aya B; known from the Juridical Stela from Karnak (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_reniseneb_a_full_row() -> None:
+    _assert_full_row('Reniseneb A', {
+        'dh_id': 'Reniseneb A',
+        'name': 'Reniseneb A',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Half-sister of Sobkhotep III, shown with him on an altar from Sehel.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_reniseneb_b_full_row() -> None:
+    _assert_full_row('Reniseneb B', {
+        'dh_id': 'Reniseneb B',
+        'name': 'Reniseneb B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Husband of a descendant of Senebsen; owner of tomb 9 at El-Kab.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_resi_full_row() -> None:
+    _assert_full_row('Resi', {
+        'dh_id': 'Resi',
+        'name': 'Resi',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_ressonbe_full_row() -> None:
+    _assert_full_row('Ressonbe', {
+        'dh_id': 'Ressonbe',
+        'name': 'Ressonbe',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': ['Neferhotep A'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Husband of Neferhotep A; mentioned in a genealogy in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sankhptahi_full_row() -> None:
+    _assert_full_row('Sankhptahi', {
+        'dh_id': 'Sankhptahi',
+        'name': 'Sankhptahi',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Se[...]kare (possibly)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Possibly the son of Se[...]kare, depicted on a stela now in Cairo; probably later king.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_seb_full_row() -> None:
+    _assert_full_row('Seb', {
+        'dh_id': 'Seb',
+        'name': 'Seb',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Grandfather of Amenemhat VII, on the basis of the latter's filiative nomen.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_seneb_a_full_row() -> None:
+    _assert_full_row('Seneb A', {
+        'dh_id': 'Seneb A',
+        'name': 'Seneb A',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_seneb_b_full_row() -> None:
+    _assert_full_row('Seneb B', {
+        'dh_id': 'Seneb B',
+        'name': 'Seneb B',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Brother of Sobkhotep III; shown with his brother and other members of his family on a stela in the Wadi el-Hol and on an altar from Sehel, while a stela of his own is in Vienna.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_senebhenas_a_full_row() -> None:
+    _assert_full_row('Seneb[henas A]', {
+        'dh_id': 'Seneb[henas A]',
+        'name': 'Seneb[henas A]',
+        'alt_names': [],
+        'roles': ['KW'],
+        'sex': 'female',
+        'spouse_names': ['Khendjer (probable)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': "Probable wife of Khendjer; known from a canopic jar fragment from the king's pyramid complex and a number of scarabs.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_senebhenas_b_full_row() -> None:
+    _assert_full_row('Senebhenas B', {
+        'dh_id': 'Senebhenas B',
+        'name': 'Senebhenas B',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; known from the monuments of her husband.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_senebhenas_c_full_row() -> None:
+    _assert_full_row('Senebhenas C', {
+        'dh_id': 'Senebhenas C',
+        'name': 'Senebhenas C',
+        'alt_names': [],
+        'roles': ['KW', 'UWC'],
+        'sex': 'female',
+        'spouse_names': ['Sobkhotep III'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Wife of Sobkhotep III; shown with him on an altar from Sehel and a stela in the Wadi el-Hol.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_senebsen_full_row() -> None:
+    _assert_full_row('Senebsen', {
+        'dh_id': 'Senebsen',
+        'name': 'Senebsen',
+        'alt_names': [],
+        'roles': ['KW'],
+        'sex': 'female',
+        'spouse_names': ['Neferhotep I'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Wife of Neferhotep I. Recorded in the Sehel inscription of the king. Mentioned in the tomb of Reniseneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_senebtisi_full_row() -> None:
+    _assert_full_row('Senebtisi', {
+        'dh_id': 'Senebtisi',
+        'name': 'Senebtisi',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Grandmother of Neferhotep I, Sihathor and Sobkhotep IV; named on the Rio de Janeiro stela of Haankhef A; conceivably the lady of this name who was buried at Lisht, and has her funerary equipment in the Metropolitan Museum of Art.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sihathor_full_row() -> None:
+    _assert_full_row('Sihathor', {
+        'dh_id': 'Sihathor',
+        'name': 'Sihathor',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Brother of Neferhotep I and Sobkhotep IV; known from the Philae and Sehel texts of his elder brother and the Wadi Hammamat stela of Sobkhotep IV, as well as two statues of his own from Elephantine and another, dedicated by Sobkhotep IV, in the Qurna temple of Sety I. It is possible he was briefly co-regent with his elder brother, but the last monument only refers to him as a prince.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sitlacb_full_row() -> None:
+    _assert_full_row('Sit[...]B', {
+        'dh_id': 'Sit[...]B',
+        'name': 'Sit[...]B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Se[...]kare (possibly)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Possibly the daughter of Se[...]kare, depicted on a stela now in Cairo alongside her brother, Sankhptahi.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sithathor_c_full_row() -> None:
+    _assert_full_row('Sithathor C', {
+        'dh_id': 'Sithathor C',
+        'name': 'Sithathor C',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_a_full_row() -> None:
+    _assert_full_row('Sobkhotep A', {
+        'dh_id': 'Sobkhotep A',
+        'name': 'Sobkhotep A',
+        'alt_names': [],
+        'roles': ['Elder of the Portal'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Seneb B',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Nephew of Sobkhotep III; named on the Vienna stela of his father, Seneb B.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_b_full_row() -> None:
+    _assert_full_row('Sobkhotep B', {
+        'dh_id': 'Sobkhotep B',
+        'name': 'Sobkhotep B',
+        'alt_names': [],
+        'roles': ['High Steward'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Grandfather of Nubkhaes A; mentioned in her stela in the Louvre.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_c_full_row() -> None:
+    _assert_full_row('Sobkhotep C', {
+        'dh_id': 'Sobkhotep C',
+        'name': 'Sobkhotep C',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Brother of Neferhotep I; known from the Philae and Sehel texts of that king, and perhaps a few scarabs. Later co-regent and king as SOBKHOTEP IV.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_d_miu_full_row() -> None:
+    _assert_full_row('Sobkhotep D Miu', {
+        'dh_id': 'Sobkhotep D Miu',
+        'name': 'Sobkhotep D Miu',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep IV',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Sobkhotep IV; named on a stela of his father in the Wadi Hammamat, and probably on another from Wadi el-Hudi (Aswan Museum).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_e_djadja_full_row() -> None:
+    _assert_full_row('Sobkhotep E Djadja', {
+        'dh_id': 'Sobkhotep E Djadja',
+        'name': 'Sobkhotep E Djadja',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep IV',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Sobkhotep IV; named on a stela of his father in the Wadi Hammamat.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_f_full_row() -> None:
+    _assert_full_row('Sobkhotep F', {
+        'dh_id': 'Sobkhotep F',
+        'name': 'Sobkhotep F',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Sihathor (probable)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Probable son of Sihathor; named as the offspring of a prince of that name on a scarab.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_g_full_row() -> None:
+    _assert_full_row('Sobkhotep G', {
+        'dh_id': 'Sobkhotep G',
+        'name': 'Sobkhotep G',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': 'Sobkhotep VII',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Son of Sobkhotep VII; depicted on a statue of his father from Karnak, now in Cairo.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_tjin_full_row() -> None:
+    _assert_full_row('Tjin', {
+        'dh_id': 'Tjin',
+        'name': 'Tjin',
+        'alt_names': [],
+        'roles': ['KW'],
+        'sex': 'female',
+        'spouse_names': ['Sobkhotep IV'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Wife of Sobkhotep IV; named on a box in Cairo, on a vase of her daughter and on a bead in the British Museum.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_wepwawethotep_full_row() -> None:
+    _assert_full_row('Wepwawethotep', {
+        'dh_id': 'Wepwawethotep',
+        'name': 'Wepwawethotep',
+        'alt_names': [],
+        'roles': ['Royal Representative'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': False,
+        'notes': 'Brother of Iy; known from a stela of his probable brother in Würzburg.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_lacdjeb_full_row() -> None:
+    _assert_full_row('[...]djeb', {
+        'dh_id': '[...]djeb',
+        'name': '[...]djeb',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Daughter of an unknown king; known from a stela from Abydos (Cairo) that also names Haankhef Q, Horhotep Q and Neferhotep Q.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_ahhotepti_full_row() -> None:
+    _assert_full_row('Ahhotepti', {
+        'dh_id': 'Ahhotepti',
+        'name': 'Ahhotepti',
+        'alt_names': [],
+        'roles': ['KW', 'KM'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Wife and mother of unknown kings; known from a scarab, once in a Cairo private collection, the design of which suggests that she lived prior to the reign of Sobkhotep III.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_anuqneferetweben_full_row() -> None:
+    _assert_full_row('Anuqneferetweben', {
+        'dh_id': 'Anuqneferetweben',
+        'name': 'Anuqneferetweben',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Daughter of an unknown king; known from three seals, roughly datable to the time of Sobkhotep IV or Sobkhotep V.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_dedetamun_full_row() -> None:
+    _assert_full_row('Dedetamun', {
+        'dh_id': 'Dedetamun',
+        'name': 'Dedetamun',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': ['Nebsenet'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': "Daughter of a king whose prenomen included the syllable 'hotep' (perhaps Sobkhotep V, Sobkhotep VI or Ini I); wife of the God's Seal-Bearer, Nebsenet, son of one Bembu. Known from a stela from Abydos (Vatican).",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_dedetsobk_full_row() -> None:
+    _assert_full_row('Dedetsobk', {
+        'dh_id': 'Dedetsobk',
+        'name': 'Dedetsobk',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Dedusobk A',
+        'mother_name': 'Iuhetibu Q',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Sister of an unknown king, daughter of Iuhetibu Q and Dedusobk A; known from a stela from Abydos (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_dedusobk_a_full_row() -> None:
+    _assert_full_row('Dedusobk A', {
+        'dh_id': 'Dedusobk A',
+        'name': 'Dedusobk A',
+        'alt_names': [],
+        'roles': ['GF'],
+        'sex': 'male',
+        'spouse_names': ['Iuhetibu Q'],
+        'father_name': 'Bebiankh (Q)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Father of an unknown king, husband of Iuhetibu Q and son of a certain Bebiankh (Q); known from a stela from Abydos (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_haankhef_q_full_row() -> None:
+    _assert_full_row('Haankhef Q', {
+        'dh_id': 'Haankhef Q',
+        'name': 'Haankhef Q',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Son of an unknown king; known from a stela from Abydos (Cairo) that also names Neferhotep Q, Horhotep Q and [...]djeb.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_hatshepsut_c_full_row() -> None:
+    _assert_full_row('Hatshepsut C', {
+        'dh_id': 'Hatshepsut C',
+        'name': 'Hatshepsut C',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': ['Nedjesankh-Iu'],
+        'father_name': None,
+        'mother_name': 'Neferet R',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Daughter of Neferet R and an unknown king; known from a stela of her husband, Nedjesankh-Iu.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_horhotep_q_full_row() -> None:
+    _assert_full_row('Horhotep Q', {
+        'dh_id': 'Horhotep Q',
+        'name': 'Horhotep Q',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Son of an unknown king; known from a stela from Abydos (Cairo) that also names Haankhef Q, Neferhotep Q and [...]djeb.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_iuhetibu_q_full_row() -> None:
+    _assert_full_row('Iuhetibu Q', {
+        'dh_id': 'Iuhetibu Q',
+        'name': 'Iuhetibu Q',
+        'alt_names': [],
+        'roles': ['KM'],
+        'sex': 'female',
+        'spouse_names': ['Dedusobk A'],
+        'father_name': 'Senwosret (Q)',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Mother of an unknown king, wife of Dedusobk A and daughter of a certain Senwosret (Q); known from a stela from Abydos (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neferet_r_full_row() -> None:
+    _assert_full_row('Neferet R', {
+        'dh_id': 'Neferet R',
+        'name': 'Neferet R',
+        'alt_names': [],
+        'roles': ['KW'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Hatshepsut C'],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': "Wife of an unknown king; known from a stela of a man named Nedjesankh-Iu, one of whose wives (Hatshepsut C) was Neferet's daughter.",
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neferhotep_q_full_row() -> None:
+    _assert_full_row('Neferhotep Q', {
+        'dh_id': 'Neferhotep Q',
+        'name': 'Neferhotep Q',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Daughter of an unknown king; known from a stela from Abydos (Cairo) that also names Haankhef Q, Horhotep Q and [...]djeb.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_neferu_q_full_row() -> None:
+    _assert_full_row('Neferu Q', {
+        'dh_id': 'Neferu Q',
+        'name': 'Neferu Q',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': ['Sobkhotep'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Daughter of an unknown king and wife of the Chief of Police of the temple of Anubis, Sobkhotep, the son of Dediresu and Ptahqeni. Known from a stela from Abydos (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_reniseneb_q_full_row() -> None:
+    _assert_full_row('Reniseneb Q', {
+        'dh_id': 'Reniseneb Q',
+        'name': 'Reniseneb Q',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Daughter of an unknown king; known from a seal, roughly datable to the time of Sobkhotep IV or Sobkhotep V.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_reniseneb_r_full_row() -> None:
+    _assert_full_row('Reniseneb R', {
+        'dh_id': 'Reniseneb R',
+        'name': 'Reniseneb R',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Daughter of an unknown king, and perhaps sister of Sobkhotep Q; known from a seal, roughly datable to the latter part of the 13th Dynasty.',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_senetmut_full_row() -> None:
+    _assert_full_row('Senetmut', {
+        'dh_id': 'Senetmut',
+        'name': 'Senetmut',
+        'alt_names': [],
+        'roles': ['KSis'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Dedusobk A',
+        'mother_name': 'Iuhetibu Q',
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Sister of an unknown king, daughter of Iuhetibu Q and Dedusobk A; known from a stela from Abydos (Cairo).',
+        'source_citation': CITATION_KC,
+    })
+
+
+def test_kc_sobkhotep_q_full_row() -> None:
+    _assert_full_row('Sobkhotep Q', {
+        'dh_id': 'Sobkhotep Q',
+        'name': 'Sobkhotep Q',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 13,
+        "sub_period": SUB_PERIOD_KC,
+        'unplaced': True,
+        'notes': 'Son of an unknown king, and perhaps brother of Reniseneb R; known from a seal, roughly datable to the latter part of the 13th Dynasty.',
+        'source_citation': CITATION_KC,
     })
