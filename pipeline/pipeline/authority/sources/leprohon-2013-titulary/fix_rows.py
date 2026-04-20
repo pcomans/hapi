@@ -297,9 +297,31 @@ FIP_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist-reviewer 2026-04-20 (PR #87): Leprohon's own section
+    # header on PDF p. 81 line 320 reads `(Queen) Sobeknefru` (no 'e'
+    # between f and r); footnote 46 explicitly argues FOR this spelling
+    # over `Nefrusobek` on Greek-version (Scemiophris) grounds. The
+    # reconciled display_name is the museum-matching default `Sobekneferu`
+    # (Met, Brooklyn, BM), but `alt_display_names` should carry the
+    # Leprohon-preferred `Sobeknefru` plus the older `Nefrusobek` /
+    # `Neferusobek` forms that appear in older museum records. Phase-A
+    # matching needs all three to resolve museum catalog entries.
+    (
+        "leprohon-12.08",
+        "alt_display_names",
+        ["Sobeknefru", "Nefrusobek", "Neferusobek"],
+        "Add Leprohon-endorsed spelling `Sobeknefru` (per Leprohon p. 81 "
+        "§ header line 320 + fn. 46 Greek-version argument) plus older "
+        "forms `Nefrusobek` / `Neferusobek` for Phase-A matching against "
+        "older museum catalogs. Egyptologist-reviewer 2026-04-20 P2-1.",
+    ),
+]
+
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
+    *MK_CORRECTIONS,
 ]
 
 

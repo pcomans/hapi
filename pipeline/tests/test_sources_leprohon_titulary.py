@@ -211,8 +211,11 @@ def test_leprohon_id_is_unique() -> None:
     assert len(ids) == len(set(ids)), "duplicate leprohon_id detected"
 
 
-_LID_RE = re.compile(r"^leprohon-\d+(?:-\d+)?[a-z]?\.\d{2}[a-z]?$")
-_LID_TAIL_RE = re.compile(r"^(?P<seq>\d+)(?P<stage>[a-z]?)$")
+_LID_RE = re.compile(
+    r"^leprohon-"
+    r"(?P<dyn_group>\d+(?:-\d+)?[a-z]?)"
+    r"\.(?P<seq>\d{2})(?P<stage>[a-z]?)$"
+)
 
 
 def test_leprohon_id_shape() -> None:
@@ -236,18 +239,39 @@ def test_leprohon_id_shape() -> None:
 
 
 def test_sequence_matches_id() -> None:
-    """`sequence_in_chapter_section` matches the NUMERIC tail of leprohon_id
-    (ignoring any single-letter stage suffix); `stage_suffix` matches the
-    letter tail when present or is None when absent."""
+    """`sequence_in_chapter_section` matches the NUMERIC seq group of
+    leprohon_id; `stage_suffix` matches the letter stage group when
+    present or is None when absent.
+
+    Reuses `_LID_RE`'s own named groups (seq / stage) instead of a
+    separate tail regex — the reviewer-called-out redundancy is now
+    eliminated. `test_leprohon_id_shape` runs first and asserts the
+    ID matches `_LID_RE`, so `.match(...)` here is guaranteed non-None."""
     for r in _rows():
-        _, tail = r["leprohon_id"].rsplit(".", 1)
-        m = _LID_TAIL_RE.match(tail)
+        m = _LID_RE.match(r["leprohon_id"])
         assert m is not None, r["leprohon_id"]
         assert r["sequence_in_chapter_section"] == int(m.group("seq")), r
         stage = m.group("stage") or None
-        assert r.get("stage_suffix") == stage, (
+        assert r["stage_suffix"] == stage, (
             f"{r['leprohon_id']}: id stage={stage!r} vs row "
-            f"stage_suffix={r.get('stage_suffix')!r}"
+            f"stage_suffix={r['stage_suffix']!r}"
+        )
+
+
+VALID_STAGE_SUFFIXES = frozenset({None, "a", "b", "c"})
+
+
+def test_stage_suffix_is_valid_letter_or_none() -> None:
+    """Constraint `stage_suffix ∈ {None, 'a', 'b', 'c'}` per the attested
+    domain in Leprohon's titulary-stage numbering (Mentuhotep II a/b/c is
+    the widest extent; Amenemhat I a/b; Akhenaten a/b in Dyn 18 — anything
+    past 'c' or non-lowercase-letter would be an extraction bug or an
+    as-yet-unseen Leprohon convention that warrants a deliberate test
+    update). Code-reviewer 2026-04-20 PR #87 P2."""
+    for r in _rows():
+        assert r["stage_suffix"] in VALID_STAGE_SUFFIXES, (
+            f"{r['leprohon_id']}: stage_suffix={r['stage_suffix']!r} "
+            f"not in {sorted(VALID_STAGE_SUFFIXES, key=lambda x: '' if x is None else x)!r}"
         )
 
 
