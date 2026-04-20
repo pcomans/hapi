@@ -2967,6 +2967,7 @@ leprohon-22a.01 (Harsiese):
     → chose: [{"anglicised": "ka nakht kha em waset", "attested_in": [], "is_variant": false, "source_note": "Gauthier 1914, 348–50; von Beckerath 1999, 196–97. The numbering of Dyn 22a is purely for reasons of convenience and is not meant to introduce a new dynasty.", "translation": "The victorious bull who has appeared in Thebes", "transliteration": "kꜣ nḫt ḫꜥ m wꜣst", "variant_index": 1}]
 
 
+
 === LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED ===
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
@@ -3070,3 +3071,33 @@ leprohon-22a.01 (Harsiese):
   leprohon-21.02 / source_citation.printed_page:
     new value: 138
     rationale: Fix Smendes printed_page citation to match physical 159's running header. Agent disagreement; verified against chunk file.
+  leprohon-22.01 / alt_display_names:
+    new value: ["Shoshenq I"]
+    rationale: Add `Shoshenq I` to alt_display_names for Phase-A museum-record matching (Met / Brooklyn / Harvard / Kitchen-TIPE all use Shoshenq spelling). Egyptologist-reviewer 2026-04-20 PR #94 P1-2.
+  leprohon-22.03 / alt_display_names:
+    new value: ["Shoshenq IIa"]
+    rationale: Add `Shoshenq IIa` to alt_display_names for Phase-A museum-record matching (Met / Brooklyn / Harvard / Kitchen-TIPE all use Shoshenq spelling). Egyptologist-reviewer 2026-04-20 PR #94 P1-2.
+  leprohon-22.04 / alt_display_names:
+    new value: ["Shoshenq IIb"]
+    rationale: Add `Shoshenq IIb` to alt_display_names for Phase-A museum-record matching (Met / Brooklyn / Harvard / Kitchen-TIPE all use Shoshenq spelling). Egyptologist-reviewer 2026-04-20 PR #94 P1-2.
+  leprohon-22.08 / alt_display_names:
+    new value: ["Shoshenq IIc"]
+    rationale: Add `Shoshenq IIc` to alt_display_names for Phase-A museum-record matching (Met / Brooklyn / Harvard / Kitchen-TIPE all use Shoshenq spelling). Egyptologist-reviewer 2026-04-20 PR #94 P1-2.
+  leprohon-22.09 / alt_display_names:
+    new value: ["Shoshenq III"]
+    rationale: Add `Shoshenq III` to alt_display_names for Phase-A museum-record matching (Met / Brooklyn / Harvard / Kitchen-TIPE all use Shoshenq spelling). Egyptologist-reviewer 2026-04-20 PR #94 P1-2.
+  leprohon-22.10 / alt_display_names:
+    new value: ["Shoshenq IV"]
+    rationale: Add `Shoshenq IV` to alt_display_names for Phase-A museum-record matching (Met / Brooklyn / Harvard / Kitchen-TIPE all use Shoshenq spelling). Egyptologist-reviewer 2026-04-20 PR #94 P1-2.
+  leprohon-22.12 / alt_display_names:
+    new value: ["Shoshenq V"]
+    rationale: Add `Shoshenq V` to alt_display_names for Phase-A museum-record matching (Met / Brooklyn / Harvard / Kitchen-TIPE all use Shoshenq spelling). Egyptologist-reviewer 2026-04-20 PR #94 P1-2.
+  leprohon-21.04 / alt_display_names:
+    new value: ["Psusennes I", "Psousennes I"]
+    rationale: Add older `Psousennes I` spelling for Phase-A matching (Bonhême/Montet publications used in older Met catalogs). Egyptologist-reviewer 2026-04-20 PR #94 P2.
+  leprohon-21.08 / alt_display_names:
+    new value: ["Psusennes II", "Psousennes II"]
+    rationale: Add older `Psousennes II` spelling. Egyptologist 2026-04-20 PR #94 P2.
+  leprohon-21a.03 / alt_display_names:
+    new value: ["Psusennes III", "Psousennes III"]
+    rationale: Add older `Psousennes III` spelling. Egyptologist 2026-04-20 PR #94 P2.
