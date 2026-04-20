@@ -343,20 +343,6 @@ DYN13_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
-DYN19_CORRECTIONS: list[tuple[str, str, object, str]] = [
-    # Egyptologist + Gemini PR #92: Ramesses II Golden Horus variant 14
-    # has a real ASCII typo in the anglicised field (`sekehm` should be
-    # `sekhem`). Distinct from MdC-in-prose findings — this is a plain
-    # English-spelling typo in the anglicisation.
-    (
-        "leprohon-19.03",
-        "golden_horus_names.13.anglicised",
-        "sekhem khepesh",
-        "Fix ASCII spelling typo `sekehm` → `sekhem` in anglicised field. "
-        "Egyptologist + Gemini PR #92.",
-    ),
-]
-
 DYN18_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 PR #91 P2: Akhenaten's two stages
     # (10a/10b) currently have display_name = "Amenhotep IV (Regnal Years
@@ -408,6 +394,24 @@ DYN18_CORRECTIONS: list[tuple[str, str, object, str]] = [
         ),
         "Canonical source_note for Smenkhkare dual-emit (matches "
         "throne_names copy exactly per dual-emit symmetry).",
+    ),
+]
+
+DYN19_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist + Gemini PR #92: Ramesses II Golden Horus variant 14
+    # has a real ASCII typo in the anglicised field (`sekehm` should be
+    # `sekhem`) AND was missing the trailing `der pedjut 9` portion of
+    # Leprohon's parenthetical anglicisation. Source on physical p. 130:
+    # `Golden Horus 14: sḫm-ḫpš dr pḏwt 9 (sekehm khepesh, der pedjut 9),
+    # The powerful of arm/sword, who has repelled the Nine Bows`. Restore
+    # the full anglicised string with the typo corrected.
+    (
+        "leprohon-19.03",
+        "golden_horus_names.13.anglicised",
+        "sekhem khepesh, der pedjut 9",
+        "Fix ASCII typo `sekehm` → `sekhem` AND restore missing "
+        "`der pedjut 9` suffix per Leprohon's anglicisation. "
+        "Egyptologist + Gemini PR #92.",
     ),
 ]
 

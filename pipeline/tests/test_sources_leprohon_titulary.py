@@ -160,14 +160,15 @@ LANDED_CHUNKS: dict[str, dict] = {
         "physical_page_range": (114, 128),
     },
     "dyn19": {
-        # Chapter VII New Kingdom Dyn 19 (Ramesside founders). 7 numbered
+        # Chapter VII New Kingdom Dyn 19 (Ramesside founders). 8 numbered
         # king entries: Ramesses I, Sety I, Ramesses II, Merenptah,
-        # Sety II, Amenmesse, Siptah. Tausret is name-dropped in
-        # Leprohon's prose preamble but her formal numbered entry begins
-        # on printed p. 124+ which falls in chunk 10 (Dyn 20). The
-        # Horemheb scope-recovery row (counted under Dyn 18 above) is
-        # also extracted by chunk-9 agents but lives under "Dynasty 18"
-        # for tabulation purposes.
+        # Sety II, Amenmesse, Siptah, Tausret. The chunk-9 scope was
+        # extended from physical 145 → 146 specifically to capture
+        # Tausret (Leprohon's Dyn 19 entry 8 sits at the top of physical
+        # p. 146 just before the Dyn 20 header). The Horemheb scope-
+        # recovery row (counted under Dyn 18 above) is also extracted by
+        # chunk-9 agents but lives under "Dynasty 18" for tabulation
+        # purposes.
         "chapter": "New Kingdom",
         "rows_by_dynasty_label": {
             "Dynasty 19": 8,
