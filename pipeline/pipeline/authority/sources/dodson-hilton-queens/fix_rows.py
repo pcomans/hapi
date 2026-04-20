@@ -251,8 +251,61 @@ RAMESSIDE_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
 ]
 
 
+# Per-row dynasty refinements on the Founders chunk. D&H's section title
+# jointly covers the 1st, 2nd and 3rd Dynasties under "The Founders", and
+# `prompt-founders.md` defaults `dynasty: 1` for every row as a coarse
+# extraction pass. Four Unplaced rows carry an EXPLICIT Egyptological-
+# dynasty cue in their notes prose (`"2nd Dynasty;"` or `"3rd Dynasty;"`
+# at the start of the sentence), making the coarse `dynasty: 1` a
+# contradiction of the row's own evidence. Per constitutional rule 1
+# (scholarly traceability), overriding `dynasty` to the notes-cue value
+# is more honest than keeping the chunk-default. This is NOT a Phase-A
+# deferral — the cue is on-row and parseable with zero ambiguity; Phase
+# A would make the identical correction from the identical cue. Applying
+# it here keeps the extract self-consistent.
+FOUNDERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
+    (
+        "Shepsetipet",
+        "The Founders",
+        "dynasty",
+        2,
+        "Notes prose explicitly opens with '2nd Dynasty; known from a "
+        "stela found near tomb S3477 at Saqqara …' — the chunk-default "
+        "`dynasty: 1` from D&H's Ch-1-joint-dynasties section placement "
+        "contradicts the row's own evidence. Refined to 2 here.",
+    ),
+    (
+        "Sitba",
+        "The Founders",
+        "dynasty",
+        2,
+        "Notes prose explicitly opens with '2nd Dynasty; buried in "
+        "Helwan tomb 1241 H9.' — chunk-default `dynasty: 1` contradicts "
+        "on-row evidence. Refined to 2.",
+    ),
+    (
+        "Syhefernerer",
+        "The Founders",
+        "dynasty",
+        2,
+        "Notes prose explicitly opens with '2nd Dynasty; buried in "
+        "Saqqara tomb S2146E …' — chunk-default `dynasty: 1` contradicts "
+        "on-row evidence. Refined to 2.",
+    ),
+    (
+        "Redji",
+        "The Founders",
+        "dynasty",
+        3,
+        "Notes prose explicitly ends with 'dated stylistically to the "
+        "3rd Dynasty.' — chunk-default `dynasty: 1` contradicts on-row "
+        "evidence. Refined to 3.",
+    ),
+]
+
+
 SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
-    POWER_CORRECTIONS + AMARNA_CORRECTIONS + RAMESSIDE_CORRECTIONS
+    POWER_CORRECTIONS + AMARNA_CORRECTIONS + RAMESSIDE_CORRECTIONS + FOUNDERS_CORRECTIONS
 )
 
 
