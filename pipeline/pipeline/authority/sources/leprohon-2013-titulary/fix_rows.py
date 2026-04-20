@@ -482,6 +482,17 @@ TIP_LATE_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
     ),
     (
+        "leprohon-23.04",
+        "birth_names",
+        [
+            {"transliteration": "wsrkn", "anglicised": "weserken", "translation": "Osorkon", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": "As with the previous ruler, the epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche."},
+            {"transliteration": "sꜣ ꜣst mry imn", "anglicised": "sa aset, mery imen", "translation": "Son of Isis, beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "nṯr ḥḳꜣ wꜣst", "anglicised": "netjer heqa waset", "translation": "The divine ruler of Thebes", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet `stp n imn` duplicate from Osorkon III "
+        "birth_names; re-index. Gemini PR #95 second-pass HIGH P1.",
+    ),
+    (
         "leprohon-23.05",
         "birth_names",
         [

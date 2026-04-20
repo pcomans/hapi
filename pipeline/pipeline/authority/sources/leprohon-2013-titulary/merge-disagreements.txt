@@ -3261,6 +3261,7 @@ leprohon-25.07 (Tanutamun):
 
 
 
+
 === LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED ===
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
@@ -3400,6 +3401,9 @@ leprohon-25.07 (Tanutamun):
   leprohon-23.03 / birth_names:
     new value: [{"anglicised": "shesheneq", "attested_in": [], "is_variant": false, "source_note": "The epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche.", "translation": "Sheshonq", "transliteration": "ššnḳ", "variant_index": 1}, {"anglicised": "mery imen", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Birth name.", "translation": "Beloved of Amun", "transliteration": "mry imn", "variant_index": 2}]
     rationale: Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.
+  leprohon-23.04 / birth_names:
+    new value: [{"anglicised": "weserken", "attested_in": [], "is_variant": false, "source_note": "As with the previous ruler, the epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche.", "translation": "Osorkon", "transliteration": "wsrkn", "variant_index": 1}, {"anglicised": "sa aset, mery imen", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Birth name.", "translation": "Son of Isis, beloved of Amun", "transliteration": "sꜣ ꜣst mry imn", "variant_index": 2}, {"anglicised": "netjer heqa waset", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Birth name.", "translation": "The divine ruler of Thebes", "transliteration": "nṯr ḥḳꜣ wꜣst", "variant_index": 3}]
+    rationale: Remove throne-epithet `stp n imn` duplicate from Osorkon III birth_names; re-index. Gemini PR #95 second-pass HIGH P1.
   leprohon-23.05 / birth_names:
     new value: [{"anglicised": "takelot", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Takelot", "transliteration": "tklt", "variant_index": 1}, {"anglicised": "sa aset, mery imen, netjer heqa waset", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Birth name.", "translation": "Son of Isis, beloved of Amun, the divine ruler of Thebes", "transliteration": "sꜣ ꜣst mry imn nṯr ḥḳꜣ wꜣst", "variant_index": 2}]
     rationale: Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.
