@@ -78,7 +78,7 @@ whatever name-type rows Leprohon gives.
 
 ### Numbering gaps
 
-Dyn 14 has numbering gaps (20–21, 35–42, 46–48 missing). These are Leprohon's own decision — he numbered what he included and left holes where unnumbered. Emit ONLY the entries that exist in the chunk file. Do not invent rows for the gaps.
+Dyn 14 has true numbering gaps (20–21, 35–42 missing — no entry in the chunk file for those slots). These are Leprohon's own decision — he numbered what he included and left holes where unnumbered. Emit ONLY the entries that exist in the chunk file. Do not invent rows for the gaps. Note that slots 46–48 and 52–56 are NOT gaps in the same sense — they are multi-slot stub entries (see "Stub entries" section above); emit one row per stub header at the first slot of each range.
 
 ### Per-dynasty sparse titularies
 
