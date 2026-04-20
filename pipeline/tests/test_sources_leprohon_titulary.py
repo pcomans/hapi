@@ -170,10 +170,10 @@ LANDED_CHUNKS: dict[str, dict] = {
         # for tabulation purposes.
         "chapter": "New Kingdom",
         "rows_by_dynasty_label": {
-            "Dynasty 19": 7,
+            "Dynasty 19": 8,
         },
-        "printed_page_range": (107, 124),
-        "physical_page_range": (128, 145),
+        "printed_page_range": (107, 125),
+        "physical_page_range": (128, 146),
     },
 }
 
@@ -900,6 +900,23 @@ def test_khufu_has_greek_alias_cheops() -> None:
 # Dyn 8a is contemporarily attested — no Ramesside-only tags despite being
 # a sub-dynasty. This test locks in the lesson from the chunk-2 prompt error.
 # ---------------------------------------------------------------------------
+
+
+def test_dyn_19_is_contemporarily_attested_no_ramesside_only_tags() -> None:
+    """Per Leprohon's chapter VII NK Dyn 19 prose preamble, all 8 Dyn 19
+    kings (Ramesses I, Sety I, Ramesses II, Merenptah, Sety II,
+    Amenmesse, Siptah, Tausret) are contemporarily attested with full
+    titularies; none should carry the Ramesside-only tag. Code-reviewer
+    PR #92 P2-a guard against future regression."""
+    dyn_19_rows = [r for r in _rows() if r["dynasty_label"] == "Dynasty 19"]
+    assert len(dyn_19_rows) >= 8, len(dyn_19_rows)
+    for r in dyn_19_rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): Dyn 19 is "
+            f"contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
 
 
 def test_dyn_8a_is_contemporarily_attested_not_ramesside_only() -> None:

@@ -6,7 +6,9 @@ Pass this to **three** independent Claude Code subagents in parallel. Each agent
 
 You are extracting structured king data from Leprohon, Ronald J. (2013) *The Great Name: Ancient Egyptian Royal Titulary*, SBL WAW 33.
 
-**Input:** `/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/leprohon-2013-titulary/raw/chunk-p128-p145-pypdf.md` — physical pp. 128–145 = printed 107–124. Contains Leprohon's Chapter VII NK **Dynasty 19** (the Ramesside founders + early Ramessides).
+**Input:** `/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/leprohon-2013-titulary/raw/chunk-p128-p146-pypdf.md` — physical pp. 128–146 = printed 107–125. Contains Leprohon's Chapter VII NK **Dynasty 19** (the Ramesside founders + early Ramessides), including Tausret on physical p. 146.
+
+**Scope boundary at p. 146:** physical p. 146 contains the END of Tausret (Dyn 19 entry 8) at the top, then the `Dynasty 20 (1185-1070 B.C.E.)` header mid-page. **EXTRACT Tausret's complete entry from p. 146** and **STOP at the `Dynasty 20` header**. Do NOT emit any Dyn 20 / Sethnakht rows from this chunk; those land in chunk 10.
 
 **Output:** `/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/leprohon-2013-titulary/raw/agent-{a|b|c}-dyn19.jsonl`
 
@@ -54,9 +56,9 @@ Possible Greek aliases (Sethos, Ramses → Ramesses, etc.) printed in headword p
 ## Expected row count
 
 - **Horemheb scope-recovery:** 1 row (Dyn 18.15).
-- **Dyn 19:** ≈ 8 numbered entries (Ramesses I, Sety I, Ramesses II, Merenptah, Sety II, Amenmesse, Siptah, Tausret — or whatever Leprohon actually numbers; verify against the chunk file).
+- **Dyn 19:** Leprohon numbers entries 1–8 in this section (verify against the chunk file). The 8 numbered entries include the founder, the early Ramessides, and the queen-regent who closes the dynasty.
 
-**Total: ≈ 9 rows.** If you produce fewer than 8 or more than 11, re-scan for missed entries or stages.
+**Total: ≈ 9 rows** (1 Horemheb scope-recovery + 8 Dyn 19). If you produce fewer than 8 or more than 11, re-scan for missed entries or stages.
 
 ## Output ordering
 

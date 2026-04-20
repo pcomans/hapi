@@ -118,14 +118,17 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # the prompt tells agents to STOP at the `Dynasty 19` header so
     # only Ay's tail is consumed from p. 128.
     "dyn18": (114, 128, "VII. New Kingdom (Dyn 18)"),
-    # Chunk 9 (this PR): chapter VII New Kingdom — Dyn 19. Printed 107-124,
-    # offset +21, physical 128-145. Physical p. 128 is shared with chunk 8
-    # (Ay's tail at top, Dyn 19 opening prose mid-page). The prompt tells
-    # agents to START at the `Dynasty 19` header — Ay is OUT OF SCOPE
-    # for this chunk (already extracted in chunk 8). Includes Horemheb
-    # (Leprohon's Dyn 19 entry 1) + Ramesside line: Ramesses I, Seti I,
-    # Ramesses II, Merneptah, Amenmesse, Seti II, Siptah, Tausret.
-    "dyn19": (128, 145, "VII. New Kingdom (Dyn 19)"),
+    # Chunk 9 (this PR): chapter VII New Kingdom — Dyn 19 + Horemheb
+    # scope-recovery. Printed 107-125, offset +21, physical 128-146.
+    # Physical p. 128 contains Ay's tail (already extracted in chunk 8)
+    # AND Horemheb (Leprohon's Dyn 18 entry 15, missed by chunk 8 — this
+    # chunk recovers him with `dynasty_label: "Dynasty 18"`) AND the
+    # `Dynasty 19` header opening Ramses I's section. Physical p. 146
+    # contains the END of Tausret (Dyn 19 entry 8) AND the `Dynasty 20`
+    # header. The prompt tells agents to extract Horemheb + all 8 Dyn 19
+    # entries (Ramses I, Sety I, Ramses II, Merenptah/Merneptah, Sety II,
+    # Amenmesse, Siptah, Tausret) and STOP at the Dyn 20 header.
+    "dyn19": (128, 146, "VII. New Kingdom (Dyn 19)"),
 }
 DEFAULT_CHUNK = "dyn19"
 
