@@ -841,6 +841,19 @@ def test_dual_emit_source_notes_are_symmetric() -> None:
                 f"{f}: {n!r}" for f, n in notes
             )
         )
+        # Guard against a future regression where both copies drop their
+        # source_note to None — symmetric-but-empty would trivially pass
+        # the distinct-values check above without actually preserving the
+        # Ramesside-only / bracket / dual-classification tags the pair
+        # is supposed to carry. Dual-emits by construction have non-None
+        # notes because the dual-emission marker phrase itself (e.g.
+        # "Horus/Seth 2 form", "Throne and Birth") is required.
+        # Codex review 2026-04-20 PR #86 P2.
+        for field, note in notes:
+            assert note is not None, (
+                f"{lid}: dual-emit entry in {field} has source_note=None; "
+                f"dual-emits must carry the canonical marker phrase."
+            )
 
 
 def test_every_populated_field_on_flagship_den_asserted() -> None:
