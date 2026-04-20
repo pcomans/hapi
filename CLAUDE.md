@@ -78,11 +78,11 @@ After every push to a PR branch, follow these steps in order:
    ```
    Other useful invocations: `/gemini summary`, `/gemini help`. If the comment itself fails to post (network / TLS / auth), flag it to the user — never silently skip.
 
-   **Quota-exhaustion fallback to Codex.** Gemini has a daily quota and posts a warning comment (`You have reached your daily quota limit. Please wait up to 24 hours...`) when exhausted. **Before every Gemini re-trigger**, check the PR's issue comments for a quota warning from `gemini-code-assist[bot]` within the last 24h (use `curl` + `gh auth token` — `gh api` fails in the sandbox with a macOS-keychain TLS error):
+   **Quota-exhaustion fallback to Codex.** Gemini has a daily quota and posts a warning comment (`You have reached your daily quota limit. Please wait up to 24 hours...`) when exhausted. **Before every Gemini re-trigger**, check whether `gemini-code-assist[bot]` posted a quota warning within the last 24h (use `curl` + `gh auth token` — `gh api` fails in the sandbox with a macOS-keychain TLS error). The check filters to the bot's own comments only (a human casually mentioning "quota" in an unrelated comment must not trigger the fallback) and outputs a single status token (`QUOTA_EXHAUSTED` or `OK`):
    ```bash
    TOKEN=$(gh auth token) && curl -sS -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
      "https://api.github.com/repos/<owner>/<repo>/issues/<number>/comments" \
-     | python3 -c "import json,sys,datetime; now=datetime.datetime.now(datetime.timezone.utc); [print(c['user']['login'], c['created_at'], 'QUOTA' if 'quota' in (c.get('body') or '').lower() else '-') for c in json.load(sys.stdin) if (now-datetime.datetime.fromisoformat(c['created_at'].replace('Z','+00:00'))).total_seconds() < 86400]"
+     | python3 -c "import json,sys,datetime; now=datetime.datetime.now(datetime.timezone.utc); comments=json.load(sys.stdin); hit=any(c['user']['login']=='gemini-code-assist[bot]' and 'quota' in (c.get('body') or '').lower() and (now-datetime.datetime.fromisoformat(c['created_at'].replace('Z','+00:00'))).total_seconds() < 86400 for c in comments); print('QUOTA_EXHAUSTED' if hit else 'OK')"
    ```
    If a quota warning is present, **fall back to tagging `@codex` in a PR issue comment** for review — the `chatgpt-codex-connector[bot]` GitHub App is also installed on this repo and posts a structured review (same inline-comment format, P1/P2 severity tiers) in response to `@codex review`:
    ```bash
