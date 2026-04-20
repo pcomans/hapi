@@ -667,9 +667,13 @@ def test_slashed_display_names_have_alt_forms() -> None:
     for r in _rows():
         if "/" in r["display_name"] and "//" not in r["display_name"]:
             # Strip trailing `(?)` before splitting — it applies to the
-            # whole entry, not to an individual homonym.
+            # whole entry, not to an individual homonym. Also strip
+            # whitespace from each split segment because Leprohon's
+            # typography varies between `X/Y` (no spaces) and `X / Y`
+            # (spaces around the slash).
             stripped = re.sub(r"\s*\(\?\)\s*$", "", r["display_name"])
-            assert r["alt_display_names"] == stripped.split("/"), r
+            segments = [s.strip() for s in stripped.split("/")]
+            assert r["alt_display_names"] == segments, r
 
 
 def test_headword_display_names_are_title_cased() -> None:

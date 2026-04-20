@@ -52,47 +52,26 @@ Unlike MK proper (chunk 4) where kings had full fivefold titularies, Dyn 13 king
 
 Entries `7. IUFNI*`, `11. SEWADJKARE (I)*`, `12. NEDJEMIBRE*`, `36. INED*`, etc. carry headword-asterisks marking Ramesside-only attestation (per Leprohon's opening prose: "As before, the names not attested in contemporary records will be followed by an asterisk."). Apply the canonical Ramesside-only source_note tag (`"Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk."`) on the first populated name-entry of those rows. Same convention as chunks 2 and 3.
 
-### Stub entry `49. one name lost`
+### Stub entries for destroyed / missing names
 
-Entry 49 is `49. ONE NAME LOST` — similar to the Dyn 9-10a.02 `/////` stub. Leprohon preserves the sequence-numbering slot even though the name is unreadable in his sources. Emit as a row:
-
-```json
-{
-  "leprohon_id": "leprohon-13.49",
-  "dynasty_number": 13,
-  "dynasty_label": "Dynasty 13",
-  "chapter": "Middle Kingdom",
-  "sequence_in_chapter_section": 49,
-  "stage_suffix": null,
-  "display_name": "one name lost",
-  "alt_display_names": [],
-  "horus_names": [],
-  "nebty_names": [],
-  "golden_horus_names": [],
-  "throne_names": [],
-  "birth_names": [],
-  "later_cartouche_names": [],
-  "later_horus_names": [],
-  "seth_names": [],
-  "source_citation": { ... appropriate page ... }
-}
-```
+Leprohon sometimes preserves a sequence-numbering slot for a king whose name is entirely unreadable in his sources (e.g. a Turin Canon row that survives as a number-only entry without legible name glyphs). The pattern looks like `N. [DESCRIPTIVE PHRASE IN SMALLCAP]` with no name-row section following. Apply the same general convention as every other headword: normalise the SMALLCAP phrase to Title Case for `display_name`. Emit empty lists for every name-type field. Similar to the chunk-3 `/////` stub (Dyn 9-10a.02) except the descriptor is a prose phrase rather than a glyph sequence.
 
 ### Roman-numeral disambiguators and parenthesised qualifiers
 
-Dyn 13 uses many: `Sobekhotep I`, `Amenemhat V`, `Sewadjkare (I)`, `Iy (?)`, etc. Preserve verbatim in `display_name`. No `alt_display_names` unless there's an actual alternate spelling.
+Dyn 13 uses many Roman-numeral disambiguators (`I`, `II`, `III`, `IV`, `V`, `VI`, `VII`) and occasional `(?)` uncertainty markers. Preserve verbatim in `display_name`. No `alt_display_names` for Roman numerals alone; `alt_display_names` only gets populated when the display_name contains SLASH-separated homonyms.
 
-### Fragmentary names with `////` wildcards
+### Fragmentary names with `////` wildcards and `[...]` epigraphic reconstructions
 
-Similar to chunk 3: some entries (`16. SEKHEMRE KHUTAWY`, `54. SE///KARE`, etc.) have `////` wildcards in the name or transliteration. Preserve verbatim in `transliteration` and `display_name` fields. Hedge-glyphs are Leprohon's positive assertion of "reading is fragmentary."
+Several entries have `////` wildcards (four consecutive slashes) or `[square brackets]` indicating partially-reconstructed readings. Preserve verbatim in `transliteration` and `display_name` fields. Hedge-glyphs are Leprohon's positive assertion of "reading is fragmentary / partially hypothetical." Do not strip, smooth, or normalise.
 
-### Headword patterns to watch for
+### Headword-pattern rules
 
-- Plain SMALLCAP: `1. SOBEKHOTEP I`, `4. AMENEMHAT V`, `27. NEFERHOTEP I`
-- With `(I)` disambiguation: `11. SEWADJKARE (I)*`, `34. INI (I)`
-- With `(?)` uncertainty: `18. SEB / SAB (?)`, `33. IY (?)` — preserve the `(?)` in display_name
-- With slash-homonyms: `18. SEB / SAB (?)` — `display_name: "Seb/Sab (?)"`, `alt_display_names: ["Seb", "Sab"]` (strip the `(?)` before splitting)
-- Fragmentary: `46. MER [///]RE*`, `48. MER KA [RE]*`, `54. SE /// KARE*`
+- Plain SMALLCAP headword (`N. NAME I`): Title-Case the name, preserve any Roman-numeral disambiguator.
+- Headword with parenthesised roman-numeral disambiguator (`N. NAME (I)`): Title-Case and preserve the `(I)`, `(II)`, etc.
+- Headword with trailing `(?)` uncertainty marker: preserve the `(?)` verbatim in `display_name`.
+- Headword with a slash between two or more homonyms (e.g. `NAME1 / NAME2` or `NAME1 / NAME2 (?)`): `display_name` keeps the slash and any trailing `(?)` verbatim; `alt_display_names` lists each slash-separated form individually (strip any trailing `(?)` before splitting, because the uncertainty qualifies the whole king-identification, not a specific homonym spelling).
+- Headword with fragmentary-reading markers (`[...]`, `////`): preserve verbatim in `display_name` and `transliteration` fields.
+- Trailing `*` on the headword (not on a name-row): signals Ramesside-only attestation for the whole king. Drop the `*` from `display_name`, append the canonical Ramesside-only tag to the first populated name-entry's `source_note` (same rule as chunks 2-3).
 
 ### Family-reference "son of" genealogy in Birth names
 
