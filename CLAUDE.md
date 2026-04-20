@@ -72,11 +72,25 @@ Run the appropriate commands after any change:
 
 After every push to a PR branch, follow these steps in order:
 
-1. **Trigger Gemini Code Assist review.** The `gemini-code-assist[bot]` GitHub App is installed on this repo and auto-reviews every newly-opened PR within ~5 minutes — no action needed on PR creation. For subsequent pushes, request a fresh review by posting a `/gemini review` comment on the PR:
+1. **Trigger Gemini Code Assist review — with Codex fallback when Gemini is over quota.** The `gemini-code-assist[bot]` GitHub App is installed on this repo and auto-reviews every newly-opened PR within ~5 minutes — no action needed on PR creation. For subsequent pushes, request a fresh review by posting a `/gemini review` comment on the PR:
    ```bash
    gh pr comment <number> --body "/gemini review"
    ```
-   Other useful invocations: `/gemini summary` (post-summary of the PR state), `/gemini help` (list all commands). If the comment itself fails to post (network / TLS / auth), flag it to the user — never silently skip.
+   Other useful invocations: `/gemini summary`, `/gemini help`. If the comment itself fails to post (network / TLS / auth), flag it to the user — never silently skip.
+
+   **Quota-exhaustion fallback to Codex.** Gemini has a daily quota and posts a warning comment (`You have reached your daily quota limit. Please wait up to 24 hours...`) when exhausted. **Before every Gemini re-trigger**, check the PR's issue comments for a quota warning from `gemini-code-assist[bot]` within the last 24h (use `curl` + `gh auth token` — `gh api` fails in the sandbox with a macOS-keychain TLS error):
+   ```bash
+   TOKEN=$(gh auth token) && curl -sS -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
+     "https://api.github.com/repos/<owner>/<repo>/issues/<number>/comments" \
+     | python3 -c "import json,sys,datetime; now=datetime.datetime.now(datetime.timezone.utc); [print(c['user']['login'], c['created_at'], 'QUOTA' if 'quota' in (c.get('body') or '').lower() else '-') for c in json.load(sys.stdin) if (now-datetime.datetime.fromisoformat(c['created_at'].replace('Z','+00:00'))).total_seconds() < 86400]"
+   ```
+   If a quota warning is present, **fall back to tagging `@codex` in a PR issue comment** for review — the `chatgpt-codex-connector[bot]` GitHub App is also installed on this repo and posts a structured review (same inline-comment format, P1/P2 severity tiers) in response to `@codex review`:
+   ```bash
+   TOKEN=$(gh auth token) && curl -sS -X POST -H "Authorization: token $TOKEN" -H "Accept: application/vnd.github+json" \
+     -d '{"body":"@codex review"}' \
+     https://api.github.com/repos/<owner>/<repo>/issues/<number>/comments
+   ```
+   Codex has a separate quota from Gemini, so the two provide redundant coverage when one is exhausted. The fallback is not a pure substitute — Gemini tends to catch style / convention issues; Codex tends to focus on logic bugs and architectural concerns. Either triggers a useful review; when both are available, prefer Gemini (auto-fires on PR open, no explicit trigger needed). When Gemini is over quota, Codex is always better than skipping the review step. If Codex is ALSO over quota, escalate via local `/codex:rescue` skill (documented in `feedback_codex_review_every_pr.md`).
 2. **Arm a review-watch Monitor, then keep working.** Reviews land minutes after the trigger; sitting idle breaks the workflow. Invoke `/watch-pr-reviews` (see `.claude/skills/watch-pr-reviews/`) — it arms a `Monitor` that notifies on any new review (any reviewer, first review or re-review) on the current HEAD commit, with the `curl + python3` pattern that handles the JSON parse failures and sandbox TLS issues that silently broke earlier templates. If the 15-min timeout fires with no event, verify manually via `curl -H "Authorization: token $(gh auth token)" .../pulls/<N>/reviews` and re-arm — timeout is **not** acceptance. On notification, fetch inline comments with `gh api /repos/{owner}/{repo}/pulls/<number>/comments --jq '.[] | select(.commit_id == "<HEAD>")'`.
 3. **Reply to every comment.** For each Gemini Code Assist comment, post a reply on that comment thread using `gh api /repos/{owner}/{repo}/pulls/<number>/comments/<comment_id>/replies -f body="..."`. Either explain the fix (with commit SHA) or explain why the comment doesn't apply (e.g., generated file per rule 9). Every comment must get a response — do not silently skip any. **Before responding to a batch of review feedback**, invoke the `scope-accountability-enforcer` subagent *once* to audit your planned responses for improper deferrals. Then prefix every `gh pr comment` in that batch with `SCOPE_CHECKED=1` (the hook will block otherwise). One enforcer invocation covers one batch — you do not need to re-invoke it per individual reply. A new batch (e.g., a fresh review from a different reviewer, or a later round of comments) requires a fresh invocation.
 4. **Ensure CI is green.** After pushing fixes, poll `gh pr checks <number> --watch` until all checks complete. If any check fails, fix and push. Do not move on until CI is green.
