@@ -20,8 +20,8 @@ Hemdjert (Hemdjert):
   alt_names: a=[] | b=["Hebnerdjent"] | c=["Hebnerdjent"]  → chose ["Hebnerdjent"]
 
 Henttawy Q (Henttawy Q):
-  spouse_names: a=[] | b=["Pinudjem I"] | c=[]  → chose []
   mother_name: a=null | b="Tentamun A" | c=null  → chose null
+  spouse_names: a=[] | b=["Pinudjem I"] | c=[]  → chose []
 
 Henutmire (Henutmire):
   father_name: a="Sety I (probable)" | b="Sety I (probable)" | c="Sety I"  → chose "Sety I (probable)"
@@ -63,8 +63,8 @@ Merenptah B (Merenptah B):
   father_name: a="Merenptah (probable)" | b="Merenptah (probable)" | c="Merenptah"  → chose "Merenptah (probable)"
 
 Messuy (Messuy):
-  father_name: a="Sety II (probable)" | b="Sety II (probable)" | c="Sety II"  → chose "Sety II (probable)"
   mother_name: a="Takhat A (probable)" | b="Takhat A (probable)" | c="Takhat A"  → chose "Takhat A (probable)"
+  father_name: a="Sety II (probable)" | b="Sety II (probable)" | c="Sety II"  → chose "Sety II (probable)"
 
 Neferet I (Neferet I):
   children_names: a=["Amenemhat I (probable)"] | b=["Amenemhat I (probable)"] | c=["Amenemhat I"]  → chose ["Amenemhat I (probable)"]
@@ -73,8 +73,8 @@ Neferhotep A (Neferhotep A):
   spouse_names: a=["Ressonbe"] | b=["Ressonbe"] | c=[]  → chose ["Ressonbe"]
 
 Neferhotep B (Neferhotep B):
-  sex: a="female" | b="male" | c="male"  → chose "male"
   spouse_names: a=["Hatshepsut B"] | b=["Hatshepsut B"] | c=[]  → chose ["Hatshepsut B"]
+  sex: a="female" | b="male" | c="male"  → chose "male"
 
 Nesibanebdjedet (Nesibanebdjedet):
   spouse_names: a=[] | b=["Tentamun B"] | c=[]  → chose []
@@ -92,8 +92,8 @@ Ramesses-Userpehty (Ramesses-Userpehty):
   father_name: a="Ramesses II (probable)" | b="Ramesses II (probable)" | c="Ramesses II"  → chose "Ramesses II (probable)"
 
 Redienef (Redienef):
-  father_name: a=null | b=null | c="Iy"  → chose null
   mother_name: a="Iy" | b="Iy" | c=null  → chose "Iy"
+  father_name: a=null | b=null | c="Iy"  → chose null
 
 Senwosret A (Senwosret A):
   children_names: a=["Amenemhat I (probable)"] | b=["Amenemhat I (probable)"] | c=["Amenemhat I"]  → chose ["Amenemhat I (probable)"]
@@ -178,6 +178,15 @@ provisional until that happens.
 - Hori A [The House of Ramesses]: father_name corrected (D&H p. 171 reads 'Probably a grandson of Ramesses II and son of Khaemwaset C.' Standard English coordination scopes 'probably' over the whole nominal phrase — both the grandson claim and the son-of-Khaemwaset-C claim share the hedge. The extraction agents stripped the hedge from `father_name`; restored verbatim to match the chunks-1-2 hedge-preservation convention ('Yuya (probable)' on Mutemwia etc.). The paired cross-entry inference on Khaemwaset C keeps `children_names = ['Hori A', ...]` bare per the README's hedge-handling rule (hedges live on the child-row's `father_name`, not on the parent's `children_names` list).)
     was: "Khaemwaset C"
     now: "Khaemwaset C (probable)"
-- Nymaathap A [The Founders]: notes corrected (Nymaathap A's prose wraps across D&H's p. 48/49 print boundary: the closing phrase 'referred to in the early-' on p. 48 col 3 continues with '4th Dynasty tomb of Metjen at Saqqara (LS6).' at the top of p. 49 col 1 before Perneb's entry. Gemini 3.1 Pro's OCR dropped the continuation entirely; main-session Read cross-check against the source PDF recovered it and the pre-extraction `transform_founders.py` hard-codes it in the chunk file. The trailing `-` in 'early-' is D&H's soft-hyphen line-break artefact (not a real hyphen); standard English typography-normalisation resolves it to a plain space between 'early' and '4th'. Extraction agents preserved D&H's literal soft-hyphen form 'early- 4th Dynasty' verbatim from the chunk file's concatenated prose (which retains the hyphen during pre-extraction as part of Gemini's faithful OCR preservation); this correction strips the soft-hyphen artefact so the reconciled row carries D&H's intended reading 'early 4th Dynasty'. The chunk file itself was also updated to match (via a second `transform_founders.py` revision) so `diff_founders.py` compares apples-to-apples and the soft-hyphen artefact is consistently stripped at both pre-extraction AND post-merge layers.)
-    was: "Named on sealings from the funerary complex of Khasekhemwy at Abydos, and from tomb K1 at Beit Khallaf. Her posthumous cult is referred to in the early- 4th Dynasty tomb of Metjen at Saqqara (LS6)."
-    now: "Named on sealings from the funerary complex of Khasekhemwy at Abydos, and from tomb K1 at Beit Khallaf. Her posthumous cult is referred to in the early 4th Dynasty tomb of Metjen at Saqqara (LS6)."
+- Shepsetipet [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; known from a stela found near tomb S3477 at Saqqara …' — the chunk-default `dynasty: 1` from D&H's Ch-1-joint-dynasties section placement contradicts the row's own evidence. Refined to 2 here.)
+    was: 1
+    now: 2
+- Sitba [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; buried in Helwan tomb 1241 H9.' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 2.)
+    was: 1
+    now: 2
+- Syhefernerer [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; buried in Saqqara tomb S2146E …' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 2.)
+    was: 1
+    now: 2
+- Redji [The Founders]: dynasty corrected (Notes prose explicitly ends with 'dated stylistically to the 3rd Dynasty.' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 3.)
+    was: 1
+    now: 3

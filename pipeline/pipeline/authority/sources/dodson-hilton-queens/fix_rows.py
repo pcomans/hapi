@@ -251,36 +251,55 @@ RAMESSIDE_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
 ]
 
 
+# Per-row dynasty refinements on the Founders chunk. D&H's section title
+# jointly covers the 1st, 2nd and 3rd Dynasties under "The Founders", and
+# `prompt-founders.md` defaults `dynasty: 1` for every row as a coarse
+# extraction pass. Four Unplaced rows carry an EXPLICIT Egyptological-
+# dynasty cue in their notes prose (`"2nd Dynasty;"` or `"3rd Dynasty;"`
+# at the start of the sentence), making the coarse `dynasty: 1` a
+# contradiction of the row's own evidence. Per constitutional rule 1
+# (scholarly traceability), overriding `dynasty` to the notes-cue value
+# is more honest than keeping the chunk-default. This is NOT a Phase-A
+# deferral — the cue is on-row and parseable with zero ambiguity; Phase
+# A would make the identical correction from the identical cue. Applying
+# it here keeps the extract self-consistent.
 FOUNDERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
     (
-        "Nymaathap A",
+        "Shepsetipet",
         "The Founders",
-        "notes",
-        "Named on sealings from the funerary complex of Khasekhemwy at "
-        "Abydos, and from tomb K1 at Beit Khallaf. Her posthumous cult "
-        "is referred to in the early 4th Dynasty tomb of Metjen at "
-        "Saqqara (LS6).",
-        "Nymaathap A's prose wraps across D&H's p. 48/49 print boundary: "
-        "the closing phrase 'referred to in the early-' on p. 48 col 3 "
-        "continues with '4th Dynasty tomb of Metjen at Saqqara (LS6).' "
-        "at the top of p. 49 col 1 before Perneb's entry. Gemini 3.1 "
-        "Pro's OCR dropped the continuation entirely; main-session "
-        "Read cross-check against the source PDF recovered it and the "
-        "pre-extraction `transform_founders.py` hard-codes it in the "
-        "chunk file. The trailing `-` in 'early-' is D&H's soft-hyphen "
-        "line-break artefact (not a real hyphen); standard English "
-        "typography-normalisation resolves it to a plain space between "
-        "'early' and '4th'. Extraction agents preserved D&H's literal "
-        "soft-hyphen form 'early- 4th Dynasty' verbatim from the chunk "
-        "file's concatenated prose (which retains the hyphen during "
-        "pre-extraction as part of Gemini's faithful OCR preservation); "
-        "this correction strips the soft-hyphen artefact so the "
-        "reconciled row carries D&H's intended reading 'early 4th "
-        "Dynasty'. The chunk file itself was also updated to match "
-        "(via a second `transform_founders.py` revision) so "
-        "`diff_founders.py` compares apples-to-apples and the "
-        "soft-hyphen artefact is consistently stripped at both "
-        "pre-extraction AND post-merge layers.",
+        "dynasty",
+        2,
+        "Notes prose explicitly opens with '2nd Dynasty; known from a "
+        "stela found near tomb S3477 at Saqqara …' — the chunk-default "
+        "`dynasty: 1` from D&H's Ch-1-joint-dynasties section placement "
+        "contradicts the row's own evidence. Refined to 2 here.",
+    ),
+    (
+        "Sitba",
+        "The Founders",
+        "dynasty",
+        2,
+        "Notes prose explicitly opens with '2nd Dynasty; buried in "
+        "Helwan tomb 1241 H9.' — chunk-default `dynasty: 1` contradicts "
+        "on-row evidence. Refined to 2.",
+    ),
+    (
+        "Syhefernerer",
+        "The Founders",
+        "dynasty",
+        2,
+        "Notes prose explicitly opens with '2nd Dynasty; buried in "
+        "Saqqara tomb S2146E …' — chunk-default `dynasty: 1` contradicts "
+        "on-row evidence. Refined to 2.",
+    ),
+    (
+        "Redji",
+        "The Founders",
+        "dynasty",
+        3,
+        "Notes prose explicitly ends with 'dated stylistically to the "
+        "3rd Dynasty.' — chunk-default `dynasty: 1` contradicts on-row "
+        "evidence. Refined to 3.",
     ),
 ]
 

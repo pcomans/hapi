@@ -287,24 +287,55 @@ def test_every_row_has_complete_citation() -> None:
 
 
 def test_dynasty_per_chunk() -> None:
-    """Dynasty alignment: chunks 1-2 are Dyn 18; House + Feud are Dyn 19;
-    Decline (incl. Unplaced heading `in 19th and 20th Dynasties`) is
-    Dyn 20 by default unless a row's prose anchors it to 19. Nothing
-    in the current extract falls into that escape hatch.
+    """Dynasty alignment per sub_period. Most sub_periods have a single
+    dynasty; `The Founders` spans Dyns 1/2/3 because D&H's section title
+    joins the 1st, 2nd and 3rd Dynasties — the chunk-default is Dyn 1
+    (D&H's section placement) with per-row refinements via
+    `FOUNDERS_CORRECTIONS` in `fix_rows.py` for the four Unplaced rows
+    whose notes prose explicitly anchors them to Dyn 2 (Shepsetipet,
+    Sitba, Syhefernerer) or Dyn 3 (Redji).
     """
     expected_dynasty = {
-        SUB_PERIOD_POWER: 18,
-        SUB_PERIOD_AMARNA: 18,
-        SUB_PERIOD_HOUSE: 19,
-        SUB_PERIOD_FEUD: 19,
-        SUB_PERIOD_DECLINE: 20,
-        SUB_PERIOD_HEADOFSOUTH: 11,
-        SUB_PERIOD_SEIZERS: 12,
-        SUB_PERIOD_KC: 13,
-        SUB_PERIOD_FOUNDERS: 1,
+        SUB_PERIOD_POWER: {18},
+        SUB_PERIOD_AMARNA: {18},
+        SUB_PERIOD_HOUSE: {19},
+        SUB_PERIOD_FEUD: {19},
+        SUB_PERIOD_DECLINE: {20},
+        SUB_PERIOD_HEADOFSOUTH: {11},
+        SUB_PERIOD_SEIZERS: {12},
+        SUB_PERIOD_KC: {13},
+        SUB_PERIOD_FOUNDERS: {1, 2, 3},
     }
     for r in _rows():
-        assert r["dynasty"] == expected_dynasty[r["sub_period"]], r
+        assert r["dynasty"] in expected_dynasty[r["sub_period"]], r
+
+
+def test_founders_per_row_dynasty_refinement() -> None:
+    """Four Unplaced rows in Founders carry on-row dynasty evidence
+    in their notes ("2nd Dynasty;" or "3rd Dynasty.") and the
+    `FOUNDERS_CORRECTIONS` in `fix_rows.py` refines their `dynasty`
+    field accordingly. All other Founders rows keep the chunk-default
+    `dynasty: 1`. This test asserts exact per-row dynasty values for
+    the refined rows and the default for a random sample of non-
+    refined rows.
+    """
+    founders = [r for r in _rows() if r["sub_period"] == SUB_PERIOD_FOUNDERS]
+    by_id = {r["dh_id"]: r for r in founders}
+
+    refined_to_2 = {"Shepsetipet", "Sitba", "Syhefernerer"}
+    refined_to_3 = {"Redji"}
+    for dh_id in refined_to_2:
+        assert by_id[dh_id]["dynasty"] == 2, by_id[dh_id]
+    for dh_id in refined_to_3:
+        assert by_id[dh_id]["dynasty"] == 3, by_id[dh_id]
+
+    default_dyn1_sample = {
+        "Batirytes", "Benerib", "Herneith", "Meryetneith A",
+        "Nymaathap A", "Perneb", "Hotephirnebty", "Intkaes",
+        "Khnemetptah", "Menehpet", "Wadjetefni",
+    }
+    for dh_id in default_dyn1_sample:
+        assert by_id[dh_id]["dynasty"] == 1, by_id[dh_id]
 
 
 POWER_UNPLACED_IDS = frozenset({
@@ -8578,6 +8609,11 @@ def test_founders_qaienneith_full_row() -> None:
 
 
 def test_founders_redji_full_row() -> None:
+    """Redji — `dynasty: 3` refined via `FOUNDERS_CORRECTIONS` from the
+    notes cue 'dated stylistically to the 3rd Dynasty.'. Default is
+    `dynasty: 1` (D&H's Ch-1-joint-dynasties section placement); the
+    refinement preserves on-row evidence per rule 1.
+    """
     _assert_full_row('Redji', {
         'dh_id': 'Redji',
         'name': 'Redji',
@@ -8588,7 +8624,7 @@ def test_founders_redji_full_row() -> None:
         'father_name': None,
         'mother_name': None,
         'children_names': [],
-        'dynasty': 1,
+        'dynasty': 3,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
         'notes': 'Owner of a statuette (now in the Turin Museum) dated stylistically to the 3rd Dynasty.',
@@ -8597,6 +8633,7 @@ def test_founders_redji_full_row() -> None:
 
 
 def test_founders_shepsetipet_full_row() -> None:
+    """Shepsetipet — `dynasty: 2` refined from the notes cue."""
     _assert_full_row('Shepsetipet', {
         'dh_id': 'Shepsetipet',
         'name': 'Shepsetipet',
@@ -8607,7 +8644,7 @@ def test_founders_shepsetipet_full_row() -> None:
         'father_name': None,
         'mother_name': None,
         'children_names': [],
-        'dynasty': 1,
+        'dynasty': 2,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
         'notes': '2nd Dynasty; known from a stela found near tomb S3477[^61] at Saqqara, to which it may have belonged. The body found in the tomb was that of a woman at least 60 years old, suffering from a badly deformed jaw.',
@@ -8616,6 +8653,7 @@ def test_founders_shepsetipet_full_row() -> None:
 
 
 def test_founders_sitba_full_row() -> None:
+    """Sitba — `dynasty: 2` refined from the notes cue."""
     _assert_full_row('Sitba', {
         'dh_id': 'Sitba',
         'name': 'Sitba',
@@ -8626,7 +8664,7 @@ def test_founders_sitba_full_row() -> None:
         'father_name': None,
         'mother_name': None,
         'children_names': [],
-        'dynasty': 1,
+        'dynasty': 2,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
         'notes': '2nd Dynasty; buried in Helwan tomb 1241 H9.',
@@ -8635,6 +8673,7 @@ def test_founders_sitba_full_row() -> None:
 
 
 def test_founders_syhefernerer_full_row() -> None:
+    """Syhefernerer — `dynasty: 2` refined from the notes cue."""
     _assert_full_row('Syhefernerer', {
         'dh_id': 'Syhefernerer',
         'name': 'Syhefernerer',
@@ -8645,7 +8684,7 @@ def test_founders_syhefernerer_full_row() -> None:
         'father_name': None,
         'mother_name': None,
         'children_names': [],
-        'dynasty': 1,
+        'dynasty': 2,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
         'notes': '2nd Dynasty; buried in Saqqara tomb S2146E, from which came her stela, now in Cairo.[^62]',

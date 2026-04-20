@@ -102,15 +102,10 @@ def main() -> None:
     raw = SRC.read_text(encoding="utf-8")
 
     # Step 0 (pre-transform): restore Nymaathap A's page-break continuation.
-    # Gemini's output ended her notes with `"the early-"` at the p. 48
-    # column break. The continuation `"4th Dynasty tomb of Metjen at
-    # Saqqara (LS6)."` sits at the top of printed p. 49 before Perneb's
-    # entry — captured by main-session Read on the PDF but not included
-    # in the Gemini text. The terminal `"-"` in `"the early-"` is D&H's
-    # soft-hyphen line-break artifact, not a real hyphen in the prose; the
-    # reassembled word is `"early"`, joining the next page's `"4th Dynasty
-    # tomb of Metjen..."` with a space (NOT a hyphen) per D&H's actual
-    # print reading when the soft-break is resolved.
+    # See the module docstring § "One page-break continuation restored"
+    # for the full rationale (OCR recovery + soft-hyphen resolution
+    # to plain space per D&H's intended reading of the reassembled
+    # line-break).
     raw = raw.replace(
         "Her posthumous cult is referred to in the early-\n",
         "Her posthumous cult is referred to in the early " + NYMAATHAP_CONTINUATION + "\n",
