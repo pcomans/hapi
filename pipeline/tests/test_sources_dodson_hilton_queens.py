@@ -63,6 +63,20 @@ PDF_PAGES_SEIZERS = "88-91"
 SUB_PERIOD_SEIZERS = "Seizers of the Two Lands"
 CITATION_SEIZERS = {"pdf_pages": PDF_PAGES_SEIZERS, "edition": EDITION}
 
+# The Founders chunk (Chapter 1 "The Founders" Brief Lives,
+# printed pp. 48-49 / physical pp. 44-45). 1st/2nd/3rd Dynasty Early
+# Dynastic period — the smallest D&H chunk at 26 entries (15 placed + 11
+# Unplaced). All rows take `dynasty: 1` per D&H's joint section-title
+# treatment of Dyns 1-3; per-row dynasty refinement is Phase-A work
+# (prose cues distinguish Dyn 2 individuals like `Shepsetipet`/`Sitba`/
+# `Syhefernerer` from Dyn 3 `Redji`). Introduces 5 Early-Dynastic-
+# specific role codes (`CTL`, `FW`, `SH`, `SCH`, `ScH`) all on female
+# entries, Phase-A likely decodes as women's cult / priestess / lineage
+# roles.
+PDF_PAGES_FOUNDERS = "44-45"
+SUB_PERIOD_FOUNDERS = "The Founders"
+CITATION_FOUNDERS = {"pdf_pages": PDF_PAGES_FOUNDERS, "edition": EDITION}
+
 # Kings and Commoners chunk (Chapter 2 "Kings and Commoners" Brief Lives,
 # printed pp. 108-113 / physical pp. 98-103). 13th Dynasty, start of the
 # Second Intermediate Period — the largest Ch 2 sub-block at 108 entries
@@ -139,8 +153,8 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 
 
 def test_row_count() -> None:
-    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) = 439 rows total."""
-    assert len(_rows()) == 439, len(_rows())
+    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) = 465 rows total."""
+    assert len(_rows()) == 465, len(_rows())
 
 
 def test_row_counts_per_chunk() -> None:
@@ -156,6 +170,8 @@ def test_row_counts_per_chunk() -> None:
     - Seizers of the Two Lands: 48 (45 placed + 3 Unplaced:
       Didit, Neferet Q, Sithathor Q)
     - Kings and Commoners: 108 (91 placed + 17 Unplaced; Dyn 13, SIP start)
+    - The Founders: 26 (15 placed + 11 Unplaced; Dyn 1/2/3 Early
+      Dynastic — the smallest D&H chunk).
     """
     by_period: dict[str, int] = {}
     for r in _rows():
@@ -169,6 +185,7 @@ def test_row_counts_per_chunk() -> None:
         SUB_PERIOD_HEADOFSOUTH: 13,
         SUB_PERIOD_SEIZERS: 48,
         SUB_PERIOD_KC: 108,
+        SUB_PERIOD_FOUNDERS: 26,
     }, by_period
 
 
@@ -258,6 +275,7 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_HEADOFSOUTH: CITATION_HEADOFSOUTH,
         SUB_PERIOD_SEIZERS: CITATION_SEIZERS,
         SUB_PERIOD_KC: CITATION_KC,
+        SUB_PERIOD_FOUNDERS: CITATION_FOUNDERS,
     }
     for r in _rows():
         sub_period = r["sub_period"]
@@ -283,6 +301,7 @@ def test_dynasty_per_chunk() -> None:
         SUB_PERIOD_HEADOFSOUTH: 11,
         SUB_PERIOD_SEIZERS: 12,
         SUB_PERIOD_KC: 13,
+        SUB_PERIOD_FOUNDERS: 1,
     }
     for r in _rows():
         assert r["dynasty"] == expected_dynasty[r["sub_period"]], r
@@ -302,6 +321,11 @@ KC_UNPLACED_IDS = frozenset({
     "Neferhotep Q", "Neferu Q", "Reniseneb Q", "Reniseneb R", "Senetmut",
     "Sobkhotep Q", "[...]djeb",
 })
+FOUNDERS_UNPLACED_IDS = frozenset({
+    "Khnemetptah", "Menehpet", "Mesenka", "Neithhotep B", "Nysuheqat",
+    "Qaienneith", "Redji", "Shepsetipet", "Sitba", "Syhefernerer",
+    "Wadjetefni",
+})
 
 
 def test_unplaced_set_is_the_expected_ids() -> None:
@@ -310,40 +334,45 @@ def test_unplaced_set_is_the_expected_ids() -> None:
     South (printed p. 89) + 3 at the end of Seizers (printed p. 99 — Didit,
     Neferet Q, Sithathor Q, all sisters-of-unknown-kings) + 17 at the end
     of Kings and Commoners (printed p. 113 — Ahhotepti through [...]djeb;
-    Dyn-13 sisters/daughters/sons/wives of unknown kings) = 35 unplaced
-    rows total. No Unplaced sub-block in Amarna / House / Feud.
+    Dyn-13 sisters/daughters/sons/wives of unknown kings) + 11 at the end
+    of The Founders (printed p. 49 — Khnemetptah through Wadjetefni;
+    Early-Dynastic (Dyn 1/2/3) unplaced princes/princesses/queens) = 46
+    unplaced rows total. No Unplaced sub-block in Amarna / House / Feud.
     """
     unplaced = [r for r in _rows() if r["unplaced"]]
-    assert len(unplaced) == 35, f"expected 35 unplaced, got {len(unplaced)}"
+    assert len(unplaced) == 46, f"expected 46 unplaced, got {len(unplaced)}"
     assert {r["dh_id"] for r in unplaced} == (
         POWER_UNPLACED_IDS
         | DECLINE_UNPLACED_IDS
         | HEADOFSOUTH_UNPLACED_IDS
         | SEIZERS_UNPLACED_IDS
         | KC_UNPLACED_IDS
+        | FOUNDERS_UNPLACED_IDS
     )
     power_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_POWER}
     decline_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_DECLINE}
     hos_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_HEADOFSOUTH}
     seizers_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_SEIZERS}
     kc_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_KC}
+    founders_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_FOUNDERS}
     assert power_unplaced == POWER_UNPLACED_IDS
     assert decline_unplaced == DECLINE_UNPLACED_IDS
     assert hos_unplaced == HEADOFSOUTH_UNPLACED_IDS
     assert seizers_unplaced == SEIZERS_UNPLACED_IDS
     assert kc_unplaced == KC_UNPLACED_IDS
+    assert founders_unplaced == FOUNDERS_UNPLACED_IDS
 
 
 def test_unplaced_rows_sort_last_in_reconciled_jsonl() -> None:
-    """The 35 unplaced rows must occupy the trailing 35 positions of
+    """The 46 unplaced rows must occupy the trailing 46 positions of
     `reconciled.jsonl` — merge.py's sort groups them into a final bin so
     the file reads as placed-alphabetical, then unplaced-alphabetical.
     Regression on the code-reviewer-flagged sort-key bug from PR #38.
     """
     rows = _rows()
-    for r in rows[:-35]:
+    for r in rows[:-46]:
         assert r["unplaced"] is False, r["dh_id"]
-    for r in rows[-35:]:
+    for r in rows[-46:]:
         assert r["unplaced"] is True, r["dh_id"]
 
 
@@ -377,8 +406,8 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     lacuna_prefixes = ("[", "–")
 
     placed = [r for r in rows if not r["unplaced"]]
-    # 439 - 35 unplaced = 404 placed.
-    assert len(placed) == 404, len(placed)
+    # 465 - 46 unplaced = 419 placed.
+    assert len(placed) == 419, len(placed)
 
     # All lacuna-prefixed placed rows must be at the tail of the placed
     # block. Count them and assert no lacuna-prefixed row appears before
@@ -393,7 +422,7 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     )
 
     unplaced = [r for r in rows if r["unplaced"]]
-    assert len(unplaced) == 35, len(unplaced)
+    assert len(unplaced) == 46, len(unplaced)
     # `[...]djeb` (Kings and Commoners unplaced, lacuna) and
     # `[...]pentepkau` (Power unplaced, lacuna) both sort after every
     # letter-prefixed unplaced entry. The sort key is
@@ -475,6 +504,19 @@ def test_role_code_set_spans_the_known_codes() -> None:
     ]:
         assert expected in all_codes, (
             f"expected Kings and Commoners code {expected!r} never extracted"
+        )
+    # The Founders codes (Early Dynastic — Dyn 1/2/3). Five short tokens
+    # new to the D&H corpus in this chunk, all on female entries. D&H's
+    # abbreviation legend (front matter pp. 24–37) defines them; Phase A
+    # decodes formally. Likely readings (informal): `CTL` = Companion
+    # of the Two Ladies or Consort of the Two Lands; `FW` = First Wife
+    # or Favoured of the West; `SH` = She of Horus or Sister of Horus;
+    # `SCH`/`ScH` = casing variants of the same code on different rows
+    # (Nakhtneith vs Seshemetka) — D&H typographic inconsistency the
+    # extractors preserved verbatim.
+    for expected in ["CTL", "FW", "SH", "SCH", "ScH"]:
+        assert expected in all_codes, (
+            f"expected Founders code {expected!r} never extracted"
         )
 
 
@@ -8133,4 +8175,498 @@ def test_kc_sobkhotep_q_full_row() -> None:
         'unplaced': True,
         'notes': 'Son of an unknown king, and perhaps brother of Reniseneb R; known from a seal, roughly datable to the latter part of the 13th Dynasty.',
         'source_citation': CITATION_KC,
+    })
+
+
+def test_founders_lac1a_full_row() -> None:
+    _assert_full_row('[...]1A', {
+        'dh_id': '[...]1A',
+        'name': '[...]1A',
+        'alt_names': [],
+        'roles': ['SH'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Known from her stela (number 128), from a grave in the funerary complex of the Horus Den at Umm el-Qaab.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_batirytes_full_row() -> None:
+    _assert_full_row('Batirytes', {
+        'dh_id': 'Batirytes',
+        'name': 'Batirytes',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Semerkhet'],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Mother of Semerkhet; named on the Cairo Annals Stone.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_benerib_full_row() -> None:
+    _assert_full_row('Benerib', {
+        'dh_id': 'Benerib',
+        'name': 'Benerib',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': ['Hor-Aha (presumably)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Name written alongside that of Hor-Aha and presumably his wife; possibly owner of tomb B14 at Umm el-Qaab.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_herneith_full_row() -> None:
+    _assert_full_row('Herneith', {
+        'dh_id': 'Herneith',
+        'name': 'Herneith',
+        'alt_names': [],
+        'roles': ['CTL', 'FW'],
+        'sex': 'female',
+        'spouse_names': ['Djer (probable)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Probable wife of Djer, and possible owner of Saqqara S3507 which contains vases bearing her name, as well as seals showing the names of Den and Qaa.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_hotephirnebty_full_row() -> None:
+    _assert_full_row('Hotephirnebty', {
+        'dh_id': 'Hotephirnebty',
+        'name': 'Hotephirnebty',
+        'alt_names': [],
+        'roles': ['SH', 'KD', 'GS'],
+        'sex': 'female',
+        'spouse_names': ['Djoser'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Wife of Djoser. Named on a series of boundary stelae from the Step Pyramid enclosure (now in various museums) and a fragment of relief from a building at Heliopolis, now in Turin.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_intkaes_full_row() -> None:
+    _assert_full_row('Intkaes', {
+        'dh_id': 'Intkaes',
+        'name': 'Intkaes',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': 'Djoser',
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Daughter of Djoser. Named on a series of boundary stelae from the Step Pyramid enclosure (now in various museums) and a fragment of relief from Heliopolis.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_khenthap_full_row() -> None:
+    _assert_full_row('Khenthap', {
+        'dh_id': 'Khenthap',
+        'name': 'Khenthap',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Djer'],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Stated to have been the mother of the Horus Djer on the Cairo Annals Stone.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_meryetneith_a_full_row() -> None:
+    _assert_full_row('Meryetneith A', {
+        'dh_id': 'Meryetneith A',
+        'name': 'Meryetneith A',
+        'alt_names': [],
+        'roles': ['FW', 'KM'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Den'],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': "Mother of Den. Owner of Umm el-Qaab tomb Y, the stela from which is in the Cairo Museum. The tomb and stela are like those used for contemporary kings, but on the stela Meryetneith's name is written without the serekh used on kingly examples. She is named as Den's mother on a seal from Abydos and probably on the Palermo Stone. One of her officials was buried in Saqqara tomb S3503.",
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_nakhtneith_full_row() -> None:
+    _assert_full_row('Nakhtneith', {
+        'dh_id': 'Nakhtneith',
+        'name': 'Nakhtneith',
+        'alt_names': [],
+        'roles': ['SCH'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Known from her stela (number 95), from a grave in the funerary complex of Djer at Umm el-Qaab.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_neithhotep_a_full_row() -> None:
+    _assert_full_row('Neithhotep A', {
+        'dh_id': 'Neithhotep A',
+        'name': 'Neithhotep A',
+        'alt_names': [],
+        'roles': ['CTL', 'FW'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Known from the Royal Tomb at Naqada, an ivory lid found in the tomb of Djer at Abydos, and on a label from Helwan.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_nymaathap_a_full_row() -> None:
+    _assert_full_row('Nymaathap A', {
+        'dh_id': 'Nymaathap A',
+        'name': 'Nymaathap A',
+        'alt_names': [],
+        'roles': ['GS', 'KM', 'KW'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Named on sealings from the funerary complex of Khasekhemwy at Abydos, and from tomb K1 at Beit Khallaf. Her posthumous cult is referred to in the early 4th Dynasty tomb of Metjen at Saqqara (LS6).',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_perneb_full_row() -> None:
+    _assert_full_row('Perneb', {
+        'dh_id': 'Perneb',
+        'name': 'Perneb',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Seal-impressions bearing his name were found in Hotepsekhemwy at Saqqara.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_semat_full_row() -> None:
+    _assert_full_row('Semat', {
+        'dh_id': 'Semat',
+        'name': 'Semat',
+        'alt_names': [],
+        'roles': ['SH'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Known from her stela (number 129), found in a grave in the funerary complex of Den at Umm el-Qaab.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_serethor_full_row() -> None:
+    _assert_full_row('Serethor', {
+        'dh_id': 'Serethor',
+        'name': 'Serethor',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Known from her stela, excavated in a grave in the funerary complex of Den at Umm el-Qaab and now in the Louvre.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_seshemetka_full_row() -> None:
+    _assert_full_row('Seshemetka', {
+        'dh_id': 'Seshemetka',
+        'name': 'Seshemetka',
+        'alt_names': [],
+        'roles': ['SH', 'ScH'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': False,
+        'notes': 'Known from her stela (number 126), discovered in a grave in the funerary complex of Den at Umm el-Qaab.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_khnemetptah_full_row() -> None:
+    _assert_full_row('Khnemetptah', {
+        'dh_id': 'Khnemetptah',
+        'name': 'Khnemetptah',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Buried in tomb 175 H8 at Helwan.[^60]',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_menehpet_full_row() -> None:
+    _assert_full_row('Menehpet', {
+        'dh_id': 'Menehpet',
+        'name': 'Menehpet',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Known from a seal of unknown origin.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_mesenka_full_row() -> None:
+    _assert_full_row('Mesenka', {
+        'dh_id': 'Mesenka',
+        'name': 'Mesenka',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Name inscribed on a diorite vessel found under the Step Pyramid.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_neithhotep_b_full_row() -> None:
+    _assert_full_row('Neithhotep B', {
+        'dh_id': 'Neithhotep B',
+        'name': 'Neithhotep B',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Known from an inscribed vessel of unknown provenance.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_nysuheqat_full_row() -> None:
+    _assert_full_row('Nysuheqat', {
+        'dh_id': 'Nysuheqat',
+        'name': 'Nysuheqat',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Owner of tomb 964 H8 at Helwan.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_qaienneith_full_row() -> None:
+    _assert_full_row('Qaienneith', {
+        'dh_id': 'Qaienneith',
+        'name': 'Qaienneith',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Known from a seal of unknown provenance.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_redji_full_row() -> None:
+    _assert_full_row('Redji', {
+        'dh_id': 'Redji',
+        'name': 'Redji',
+        'alt_names': [],
+        'roles': ['KDB'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Owner of a statuette (now in the Turin Museum) dated stylistically to the 3rd Dynasty.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_shepsetipet_full_row() -> None:
+    _assert_full_row('Shepsetipet', {
+        'dh_id': 'Shepsetipet',
+        'name': 'Shepsetipet',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': '2nd Dynasty; known from a stela found near tomb S3477[^61] at Saqqara, to which it may have belonged. The body found in the tomb was that of a woman at least 60 years old, suffering from a badly deformed jaw.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_sitba_full_row() -> None:
+    _assert_full_row('Sitba', {
+        'dh_id': 'Sitba',
+        'name': 'Sitba',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': '2nd Dynasty; buried in Helwan tomb 1241 H9.',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_syhefernerer_full_row() -> None:
+    _assert_full_row('Syhefernerer', {
+        'dh_id': 'Syhefernerer',
+        'name': 'Syhefernerer',
+        'alt_names': [],
+        'roles': ['KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': '2nd Dynasty; buried in Saqqara tomb S2146E, from which came her stela, now in Cairo.[^62]',
+        'source_citation': CITATION_FOUNDERS,
+    })
+
+
+def test_founders_wadjetefni_full_row() -> None:
+    _assert_full_row('Wadjetefni', {
+        'dh_id': 'Wadjetefni',
+        'name': 'Wadjetefni',
+        'alt_names': [],
+        'roles': ['KSon'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 1,
+        "sub_period": SUB_PERIOD_FOUNDERS,
+        'unplaced': True,
+        'notes': 'Named on a diorite vessel from below the Step Pyramid.',
+        'source_citation': CITATION_FOUNDERS,
     })

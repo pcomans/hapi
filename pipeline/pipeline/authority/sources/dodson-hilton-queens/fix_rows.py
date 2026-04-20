@@ -251,8 +251,42 @@ RAMESSIDE_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
 ]
 
 
+FOUNDERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
+    (
+        "Nymaathap A",
+        "The Founders",
+        "notes",
+        "Named on sealings from the funerary complex of Khasekhemwy at "
+        "Abydos, and from tomb K1 at Beit Khallaf. Her posthumous cult "
+        "is referred to in the early 4th Dynasty tomb of Metjen at "
+        "Saqqara (LS6).",
+        "Nymaathap A's prose wraps across D&H's p. 48/49 print boundary: "
+        "the closing phrase 'referred to in the early-' on p. 48 col 3 "
+        "continues with '4th Dynasty tomb of Metjen at Saqqara (LS6).' "
+        "at the top of p. 49 col 1 before Perneb's entry. Gemini 3.1 "
+        "Pro's OCR dropped the continuation entirely; main-session "
+        "Read cross-check against the source PDF recovered it and the "
+        "pre-extraction `transform_founders.py` hard-codes it in the "
+        "chunk file. The trailing `-` in 'early-' is D&H's soft-hyphen "
+        "line-break artefact (not a real hyphen); standard English "
+        "typography-normalisation resolves it to a plain space between "
+        "'early' and '4th'. Extraction agents preserved D&H's literal "
+        "soft-hyphen form 'early- 4th Dynasty' verbatim from the chunk "
+        "file's concatenated prose (which retains the hyphen during "
+        "pre-extraction as part of Gemini's faithful OCR preservation); "
+        "this correction strips the soft-hyphen artefact so the "
+        "reconciled row carries D&H's intended reading 'early 4th "
+        "Dynasty'. The chunk file itself was also updated to match "
+        "(via a second `transform_founders.py` revision) so "
+        "`diff_founders.py` compares apples-to-apples and the "
+        "soft-hyphen artefact is consistently stripped at both "
+        "pre-extraction AND post-merge layers.",
+    ),
+]
+
+
 SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
-    POWER_CORRECTIONS + AMARNA_CORRECTIONS + RAMESSIDE_CORRECTIONS
+    POWER_CORRECTIONS + AMARNA_CORRECTIONS + RAMESSIDE_CORRECTIONS + FOUNDERS_CORRECTIONS
 )
 
 
