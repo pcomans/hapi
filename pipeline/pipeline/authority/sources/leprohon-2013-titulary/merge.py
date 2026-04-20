@@ -160,17 +160,29 @@ def _majority(values: list) -> tuple[object, int]:
     return None, 0
 
 
-# leprohon_id is always `leprohon-{dynasty}.{NN}` where dynasty is 0–33 and
-# NN is a zero-padded 2-digit sequence. Sort order: dynasty ascending (with
-# 0 first for Dyn 0), then sequence ascending within dynasty.
-_LID_RE = re.compile(r"^leprohon-(?P<dynasty>\d+)\.(?P<seq>\d+)$")
+# leprohon_id is `leprohon-{dynasty_group}.{NN}` where dynasty_group is either
+# a plain integer (`0`, `3`, `18`) or an integer followed by a single
+# lowercase-letter suffix (`2a`, `3a`, `8a`) denoting a Leprohon sub-dynasty
+# section (Ramesside-added kings with no contemporary attestation). NN is a
+# zero-padded 2-digit sequence within that dynasty_group. Sort order: dynasty
+# numeric ascending, then suffix ascending (empty-suffix before `a`), then
+# sequence ascending. Sub-dynasties (2a, 3a, 8a) sort immediately after their
+# parent (2, 3, 8) so the file reads in book-section order.
+_LID_RE = re.compile(
+    r"^leprohon-(?P<dynasty_num>\d+)(?P<dynasty_suffix>[a-z]?)\.(?P<seq>\d+)$"
+)
 
 
-def _sort_key(lid: str) -> tuple[int, int, str]:
+def _sort_key(lid: str) -> tuple[int, str, int, str]:
     match = _LID_RE.match(lid)
     if match is None:
-        return (9999, 9999, lid)
-    return (int(match.group("dynasty")), int(match.group("seq")), lid)
+        return (9999, "", 9999, lid)
+    return (
+        int(match.group("dynasty_num")),
+        match.group("dynasty_suffix"),
+        int(match.group("seq")),
+        lid,
+    )
 
 
 def main(agent_dir: Path) -> None:

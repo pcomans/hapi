@@ -1,34 +1,59 @@
-"""Leprohon 2013 chunk-1 deterministic pypdf transcription.
+"""Leprohon 2013 deterministic pypdf transcription (chunk-agnostic).
 
-Pulls physical PDF pages 42-50 (= printed pp. 21-29, chapter II *Early Dynastic
-Period*) via pypdf, applies a Manuel de Codage (MdC) → Egyptological-Unicode
-normalization on transliteration tokens (identified structurally: between a
-name-type label like `Horus:` and the parenthetical anglicised gloss `(...)`
-that follows), and writes the result to `raw/chunk-p42-p50-pypdf.md`.
+Pulls a physical-PDF-page range via pypdf, applies a Manuel de Codage (MdC)
+→ Egyptological-Unicode normalization on transliteration tokens (identified
+structurally: between a name-type label like `Horus:` and the parenthetical
+anglicised gloss `(...)` that follows), and writes the result to
+`raw/chunk-p<start>-p<end>-pypdf.md`.
 
-Runs in parallel with an OCR-subagent transcription to
-`raw/chunk-p42-p50-ocr.md` — the user's choice on 2026-04-20 was to run both
-methods and diff the outputs before feeding the 3 extraction subagents. This
-script is the deterministic arm of that parallel pair; the OCR path is the
-independent-source arm. Both outputs are gitignored.
+Per the chunk-1 validation (PR #83), the OCR subagent step is skipped for
+chunks 2+ — pypdf+MdC is strictly more accurate on transliteration content
+for this born-digital InDesign PDF, and the 3-agent extraction majority
+vote downstream provides the redundancy layer. See transcribe.md for the
+policy.
 
-Invoked from the repo root:
+Invocation:
 
-    cd pipeline && uv run python pipeline/authority/sources/leprohon-2013-titulary/transcribe_chunk.py
+    # Run the default (latest) chunk:
+    uv run --project pipeline python \\
+        pipeline/pipeline/authority/sources/leprohon-2013-titulary/transcribe_chunk.py
 
-Future chunks can generalise the PAGES tuple to a CLI arg; chunk 1 hard-codes
-it to keep the extractor-validation chunk's scope unambiguous.
+    # Run a specific chunk by name (defined in CHUNKS below):
+    uv run --project pipeline python \\
+        pipeline/pipeline/authority/sources/leprohon-2013-titulary/transcribe_chunk.py \\
+        --chunk old-kingdom
+
+    # Run an ad-hoc page range (useful for scoping future chunks):
+    uv run --project pipeline python \\
+        pipeline/pipeline/authority/sources/leprohon-2013-titulary/transcribe_chunk.py \\
+        --pages 51-68
 """
 
 from __future__ import annotations
 
+import argparse
 import re
 from pathlib import Path
 
 from pypdf import PdfReader
 
-# Chunk 1: physical PDF pages 42-50 (inclusive), = printed pages 21-29.
-CHUNK_PAGES: tuple[int, ...] = tuple(range(42, 51))
+# Registered chunks. Each entry: chunk-name → (physical_start, physical_end,
+# chapter_label). Physical-page ranges verified at the chunk's FIRST and LAST
+# page per the playbook, with the printed-to-physical offset noted alongside.
+CHUNKS: dict[str, tuple[int, int, str]] = {
+    # Chunk 1 (PR #83): chapter II Early Dynastic Period (Dyn 0/1/2),
+    # printed 21-29, offset +21. NOTE: this range silently omitted printed
+    # p. 30 (Dyn 2 tail `9. SENEFERKA` + `Dynasty 2a` sub-section with 2
+    # Ramesside-only entries). Chunk 2 picks those up.
+    "early-dynastic": (42, 50, "II. Early Dynastic Period"),
+    # Chunk 2 (this PR): Dyn 2 tail + Dyn 2a (missed from chunk 1) + chapter
+    # III Old Kingdom (Dyn 3-8 + Dyn 3a + Dyn 8a). Printed 30-48, offset +21,
+    # physical 51-69. Initial extraction run scoped to 51-68 (printed 30-47)
+    # cut off mid-Dyn-8a after entry 2; extended to 51-69 to include Dyn 8a
+    # entries 3-8 (Iti, Imhotep, Hotep, Khui, Isu, Iytjenu) on printed p. 48.
+    "old-kingdom": (51, 69, "III. Old Kingdom (+ Dyn 2/2a tail)"),
+}
+DEFAULT_CHUNK = "old-kingdom"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
@@ -36,7 +61,11 @@ PDF_PATH = (
     / "books"
     / "Leprohon 2013 - The Great Name.pdf"
 )
-OUT_PATH = Path(__file__).parent / "raw" / "chunk-p42-p50-pypdf.md"
+RAW_DIR = Path(__file__).parent / "raw"
+
+
+def _out_path(physical_start: int, physical_end: int) -> Path:
+    return RAW_DIR / f"chunk-p{physical_start}-p{physical_end}-pypdf.md"
 
 # Manuel de Codage → Egyptological Unicode. Applied only inside transliteration
 # tokens, never to surrounding prose or to the anglicised parenthetical gloss.
@@ -116,13 +145,20 @@ def _normalize_line(line: str) -> str:
     return f"{label}:{whitespace}{mdc_to_unicode(translit)}{rest}"
 
 
-def transcribe(pages: tuple[int, ...], pdf_path: Path, out_path: Path) -> None:
+def transcribe(
+    physical_start: int,
+    physical_end: int,
+    chapter_label: str,
+    pdf_path: Path,
+    out_path: Path,
+) -> None:
     reader = PdfReader(str(pdf_path))
     parts: list[str] = [
-        "<!-- Leprohon 2013 chapter II (Early Dynastic Period), physical pp. "
-        f"{pages[0]}-{pages[-1]}, deterministic pypdf+MdC transcription. -->\n\n"
+        f"<!-- Leprohon 2013 {chapter_label}, physical pp. "
+        f"{physical_start}-{physical_end}, deterministic pypdf+MdC "
+        f"transcription. -->\n\n"
     ]
-    for physical_page in pages:
+    for physical_page in range(physical_start, physical_end + 1):
         page = reader.pages[physical_page - 1]  # pypdf is 0-indexed
         text = page.extract_text()
         parts.append(f"<!-- physical page {physical_page} -->\n")
@@ -133,7 +169,39 @@ def transcribe(pages: tuple[int, ...], pdf_path: Path, out_path: Path) -> None:
     out_path.write_text("".join(parts))
 
 
+def _parse_pages(spec: str) -> tuple[int, int]:
+    """Parse `START-END` into an inclusive (start, end) tuple."""
+    match = re.match(r"^(\d+)-(\d+)$", spec)
+    if match is None:
+        raise ValueError(f"--pages must be `START-END` format, got {spec!r}")
+    start, end = int(match.group(1)), int(match.group(2))
+    if start > end:
+        raise ValueError(f"--pages start {start} must be ≤ end {end}")
+    return start, end
+
+
 if __name__ == "__main__":
-    transcribe(CHUNK_PAGES, PDF_PATH, OUT_PATH)
-    size = OUT_PATH.stat().st_size
-    print(f"wrote {OUT_PATH} ({size} bytes)")
+    parser = argparse.ArgumentParser(description=__doc__)
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--chunk",
+        choices=sorted(CHUNKS),
+        default=DEFAULT_CHUNK,
+        help=f"Registered chunk name (default: {DEFAULT_CHUNK}).",
+    )
+    group.add_argument(
+        "--pages",
+        type=_parse_pages,
+        help="Ad-hoc physical-page range, e.g. '51-68'. Writes to "
+        "raw/chunk-p<start>-p<end>-pypdf.md without a chapter label.",
+    )
+    args = parser.parse_args()
+    if args.pages is not None:
+        start, end = args.pages
+        label = f"ad-hoc p{start}-p{end}"
+    else:
+        start, end, label = CHUNKS[args.chunk]
+    out = _out_path(start, end)
+    transcribe(start, end, label, PDF_PATH, out)
+    size = out.stat().st_size
+    print(f"wrote {out} ({size} bytes) — {label}")

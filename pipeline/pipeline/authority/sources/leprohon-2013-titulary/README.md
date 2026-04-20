@@ -30,8 +30,8 @@ Chapters II–X of the book, each covering one historical period:
 
 | Chapter | Period | Printed pages | Physical-PDF pages | Chunk |
 |---|---|---|---|---|
-| II | Early Dynastic Period (Dyn 0–2) | 21–29 | 42–50 | **chunk 1 (this PR)** |
-| III | Old Kingdom (Dyn 3–8) | 31–47 | 52–68 | chunk 2 |
+| II | Early Dynastic Period (Dyn 0–2) | 21–30 | 42–51 | chunk 1 (PR #83) + recovered p. 30 in chunk 2 |
+| III | Old Kingdom (Dyn 3–8) | 31–48 | 52–69 | **chunk 2 (this PR)** |
 | IV | First Intermediate Period (Dyn 9–11 early) | 49–53 | 70–74 | chunk 3 |
 | V | Middle Kingdom (Dyn 11 late–12) | 54–80 | 75–101 | chunk 4 |
 | VI | Second Intermediate Period (Dyn 13–17) | 81–92 | 102–113 | chunk 5 |

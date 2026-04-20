@@ -22,7 +22,80 @@ JSONL = SOURCE_DIR / "reconciled.jsonl"
 
 BOOK = "Leprohon 2013"
 EDITION = "SBL Writings from the Ancient World 33"
-CHAPTER = "Early Dynastic Period"
+
+# Per-chunk expectations. As chunks land, add the chunk's row into this
+# table rather than editing individual tests — the cross-chunk invariant
+# tests (row count, dynasty coverage, chapter labels, citation-page ranges)
+# iterate over this table.
+#
+# Each entry:
+#   - chapter:           Leprohon TOC chapter title this chunk covers
+#   - rows_by_dynasty_label: dict mapping `dynasty_label` to expected row count
+#   - printed_page_range: (min, max) inclusive
+#   - physical_page_range: (min, max) inclusive
+#
+# NOTE: chunk 2 (PR #8x, Old Kingdom) also adds 3 rows on printed p. 30 that
+# belong structurally to chunk 1 / Chapter II (recovered from chunk 1's
+# scope miss — Seneferka + Neferkasokar + Hudjefa). Those rows are
+# accounted for in the "early-dynastic" chunk entry below, not
+# "old-kingdom", because their `chapter` field is "Early Dynastic Period".
+LANDED_CHUNKS: dict[str, dict] = {
+    "early-dynastic": {
+        "chapter": "Early Dynastic Period",
+        "rows_by_dynasty_label": {
+            'Dynasty "0"': 12,
+            "Dynasty 1": 7,
+            "Dynasty 2": 9,  # 8 chunk-1 rows + Seneferka recovered in chunk 2
+            "Dynasty 2a": 2,  # recovered in chunk 2
+        },
+        "printed_page_range": (21, 30),
+        "physical_page_range": (42, 51),
+    },
+    "old-kingdom": {
+        "chapter": "Old Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 3": 5,
+            "Dynasty 3a": 4,
+            "Dynasty 4": 7,
+            "Dynasty 5": 9,
+            "Dynasty 6": 7,
+            "Dynasty 8": 17,
+            "Dynasty 8a": 8,
+        },
+        "printed_page_range": (31, 48),
+        "physical_page_range": (52, 69),
+    },
+}
+
+EXPECTED_TOTAL_ROWS: int = sum(
+    count
+    for chunk in LANDED_CHUNKS.values()
+    for count in chunk["rows_by_dynasty_label"].values()
+)
+
+EXPECTED_CHAPTERS: frozenset[str] = frozenset(
+    chunk["chapter"] for chunk in LANDED_CHUNKS.values()
+)
+
+EXPECTED_DYNASTY_LABELS: dict[str, str] = {
+    # maps dynasty_label → parent chapter (for dynasty-label consistency tests)
+    label: chunk["chapter"]
+    for chunk in LANDED_CHUNKS.values()
+    for label in chunk["rows_by_dynasty_label"]
+}
+
+EXPECTED_PRINTED_PAGE_MIN = min(
+    chunk["printed_page_range"][0] for chunk in LANDED_CHUNKS.values()
+)
+EXPECTED_PRINTED_PAGE_MAX = max(
+    chunk["printed_page_range"][1] for chunk in LANDED_CHUNKS.values()
+)
+EXPECTED_PHYSICAL_PAGE_MIN = min(
+    chunk["physical_page_range"][0] for chunk in LANDED_CHUNKS.values()
+)
+EXPECTED_PHYSICAL_PAGE_MAX = max(
+    chunk["physical_page_range"][1] for chunk in LANDED_CHUNKS.values()
+)
 
 
 @lru_cache(maxsize=1)
@@ -45,36 +118,55 @@ def _row(lid: str) -> dict:
 
 
 def test_row_count() -> None:
-    """Chapter II covers Dyn 0 (12 kings), Dyn 1 (7), Dyn 2 (8) = 27 total."""
-    assert len(_rows()) == 27, len(_rows())
+    """Total row count matches the sum of expected-rows across landed chunks."""
+    assert len(_rows()) == EXPECTED_TOTAL_ROWS, (
+        f"got {len(_rows())}, expected {EXPECTED_TOTAL_ROWS}"
+    )
 
 
-def test_dynasty_coverage() -> None:
-    """Every chapter-II dynasty (0, 1, 2) is represented; nothing else."""
-    dynasties = {r["dynasty_number"] for r in _rows()}
-    assert dynasties == {0, 1, 2}, dynasties
+def test_chapter_coverage() -> None:
+    """Every chapter present in LANDED_CHUNKS appears in the data; nothing else."""
+    chapters = {r["chapter"] for r in _rows()}
+    assert chapters == EXPECTED_CHAPTERS, chapters
 
 
-def test_rows_per_dynasty() -> None:
-    """Dyn 0: 12 kings (Iry-Hor through Horus \"Pe\"). Dyn 1: 7 (Aha through
-    Qa'a). Dyn 2: 8 (Hetepsekhemwy through Khasekhem/Khasekhemwy)."""
-    counts = {d: sum(1 for r in _rows() if r["dynasty_number"] == d) for d in (0, 1, 2)}
-    assert counts == {0: 12, 1: 7, 2: 8}, counts
+def test_rows_per_dynasty_label() -> None:
+    """Row count per `dynasty_label` matches the per-chunk expectation table.
 
-
-def test_chapter_label_uniform() -> None:
-    """Every chunk-1 row is tagged with the chapter-II label."""
+    Keys on `dynasty_label` rather than `dynasty_number` because a single
+    dynasty_number (e.g. 2) spans multiple sub-dynasty labels (Dynasty 2,
+    Dynasty 2a) and they should be counted separately.
+    """
+    expected = {
+        label: count
+        for chunk in LANDED_CHUNKS.values()
+        for label, count in chunk["rows_by_dynasty_label"].items()
+    }
+    actual: dict[str, int] = {}
     for r in _rows():
-        assert r["chapter"] == CHAPTER, r
+        actual[r["dynasty_label"]] = actual.get(r["dynasty_label"], 0) + 1
+    assert actual == expected, f"expected {expected}, got {actual}"
 
 
-def test_dynasty_label_shape() -> None:
-    """Dyn 0 rows carry the quoted form `Dynasty "0"` (Leprohon's own
-    convention); Dyn 1/2 rows use bare `Dynasty 1` / `Dynasty 2`."""
-    labels = {r["dynasty_number"]: r["dynasty_label"] for r in _rows()}
-    assert labels[0] == 'Dynasty "0"', labels[0]
-    assert labels[1] == "Dynasty 1", labels[1]
-    assert labels[2] == "Dynasty 2", labels[2]
+def test_dynasty_label_matches_chapter() -> None:
+    """Each row's `dynasty_label` is consistent with its `chapter` field —
+    no row has `dynasty_label: "Dynasty 3a"` (an Old-Kingdom sub-dynasty) but
+    `chapter: "Early Dynastic Period"`."""
+    for r in _rows():
+        label, chapter = r["dynasty_label"], r["chapter"]
+        expected_chapter = EXPECTED_DYNASTY_LABELS.get(label)
+        assert expected_chapter == chapter, (
+            f"{r['leprohon_id']}: dynasty_label {label!r} expected chapter "
+            f"{expected_chapter!r}, got {chapter!r}"
+        )
+
+
+def test_dyn0_label_is_quoted() -> None:
+    """Dyn 0 rows carry the quoted form `Dynasty "0"` — Leprohon's own
+    typographic convention for the uncertain pre-dynastic status."""
+    dyn0_rows = [r for r in _rows() if r["dynasty_number"] == 0]
+    for r in dyn0_rows:
+        assert r["dynasty_label"] == 'Dynasty "0"', r
 
 
 # ---------------------------------------------------------------------------
@@ -87,11 +179,14 @@ def test_leprohon_id_is_unique() -> None:
     assert len(ids) == len(set(ids)), "duplicate leprohon_id detected"
 
 
-_LID_RE = re.compile(r"^leprohon-\d+\.\d{2}$")
+_LID_RE = re.compile(r"^leprohon-\d+[a-z]?\.\d{2}$")
 
 
 def test_leprohon_id_shape() -> None:
-    """Every id matches `leprohon-{dynasty}.{NN}` — NN is exactly two digits."""
+    """Every id matches `leprohon-{dynasty}{optional_suffix}.{NN}` — NN is
+    exactly two digits. Suffix `[a-z]` handles Leprohon's sub-dynasty sections
+    (Dyn 2a, 3a, 8a — Ramesside-added king lists with no contemporary
+    attestation, formally typeset as "Dynasty 2a" etc. in the book)."""
     for r in _rows():
         assert _LID_RE.match(r["leprohon_id"]), r["leprohon_id"]
 
@@ -109,16 +204,20 @@ def test_sequence_matches_id() -> None:
 
 
 def test_every_row_has_complete_citation() -> None:
-    """Rule 1: every row traces back to book + edition + printed/physical pages."""
+    """Rule 1: every row traces back to book + edition + printed/physical pages.
+    Printed/physical page ranges are union of all landed chunks; +21 offset
+    is invariant across chapters II and III (verified at chunk 1 and chunk 2
+    boundaries).
+    """
     for r in _rows():
         c = r["source_citation"]
         assert c["book"] == BOOK, r
         assert c["edition"] == EDITION, r
         assert isinstance(c["printed_page"], int), r
         assert isinstance(c["physical_pdf_page"], int), r
-        assert 21 <= c["printed_page"] <= 29, r
-        assert 42 <= c["physical_pdf_page"] <= 50, r
-        # Chunk-1 offset is +21 at both ends; no drift within the chunk.
+        assert EXPECTED_PRINTED_PAGE_MIN <= c["printed_page"] <= EXPECTED_PRINTED_PAGE_MAX, r
+        assert EXPECTED_PHYSICAL_PAGE_MIN <= c["physical_pdf_page"] <= EXPECTED_PHYSICAL_PAGE_MAX, r
+        # +21 offset is invariant across chapters II and III.
         assert c["physical_pdf_page"] == c["printed_page"] + 21, r
 
 
@@ -442,44 +541,50 @@ def test_only_dyn0_uses_quoted_dynasty_label() -> None:
 
 
 def test_slashed_display_names_have_alt_forms() -> None:
-    """Rows whose `display_name` contains `/` must have matching
-    `alt_display_names` split on `/`. Rows without `/` must have
-    empty `alt_display_names`."""
+    """Rows whose `display_name` contains `/` (Leprohon's authorial
+    homonym convention) must have `alt_display_names` equal to the
+    slash-split parts. Rows without `/` MAY still have `alt_display_names`
+    populated — for example, Greek aliases that Leprohon prints in the
+    SMALLCAP headword parenthetical (`KHUFU (CHEOPS)` → display_name
+    "Khufu", alt_display_names ["Cheops"])."""
     for r in _rows():
         if "/" in r["display_name"]:
             assert r["alt_display_names"] == r["display_name"].split("/"), r
-        else:
-            assert r["alt_display_names"] == [], r
 
 
 def test_headword_display_names_are_title_cased() -> None:
     """Leprohon prints headwords in SMALLCAP (`1. IRY-HOR`). Agents must
-    normalise to Title Case (`Iry-Hor`) — with three explicit exceptions:
-      1. Letter-tagged variants like `Horus "A"` / `Horus "Pe"` (the `A`/`Pe`
-         suffix carries its own casing).
-      2. Angle-bracketed partial readings like `Ny-<Hor>` (brackets preserved
-         verbatim per the partial-reading convention).
-      3. Parenthesised prefixes like `(Two Ladies) Weneg` where Leprohon
-         flags an absent Horus name and substitutes the Two Ladies name as
-         the headword form."""
+    normalise to Title Case (`Iry-Hor`) — with documented exceptions for
+    Leprohon's own typographic conventions:
+      1. Letter-tagged Horus entries like `Horus "A"` / `Horus "Pe"`.
+      2. Angle-bracketed partial readings like `Ny-<Hor>`.
+      3. Parenthesised prefixes like `(Two Ladies) Weneg` (absent Horus).
+      4. Quote-wrapped names like `"Hudjefa" (I)` / `"Hudjefa" (II)` used
+         for Ramesside-only kings whose names Leprohon flags as uncertain.
+      5. Roman-numeral disambiguators in parentheses like `(I)`, `(II)`.
+
+    The test strips leading/trailing non-letter characters from each segment
+    before checking the first letter is uppercase."""
     for r in _rows():
         display = r["display_name"]
-        # Exception 1: letter-tagged Horus entries
+        # Exception 1: letter-tagged Horus entries (`Horus "A"`, `Horus "Pe"`)
         if display.startswith("Horus") and '"' in display:
             continue
-        # Exception 3: Leprohon-parenthesised prefixes — skip the parenthetical
-        # group, test remaining tokens. `(Two Ladies) Weneg` → skip `(Two`, skip
-        # `Ladies)`, require `Weneg` to start uppercase.
         for part in display.replace("/", " ").split():
             if part.startswith("(") or part.endswith(")"):
-                continue
-            # Exception 2: angle-bracketed segments
+                continue  # Exception 3/5: parenthesised groups
             if part.startswith("<"):
-                continue
+                continue  # Exception 2: angle-bracketed
             for seg in part.split("-"):
                 if seg.startswith("<"):
                     continue
-                assert seg[0].isupper(), f"{r['leprohon_id']}: {display!r}"
+                # Strip leading/trailing non-alphabetic chars (quotes, etc.).
+                stripped = seg.lstrip('"\'').rstrip('"\',.;:')
+                if not stripped:
+                    continue
+                assert stripped[0].isupper(), (
+                    f"{r['leprohon_id']}: {display!r} segment {seg!r}"
+                )
 
 
 def test_later_cartouche_is_separate_from_birth_names() -> None:
@@ -512,6 +617,113 @@ def test_only_peribsen_has_empty_horus_with_populated_seth() -> None:
     khas = _row("leprohon-2.08")
     assert khas["horus_names"] != []
     assert khas["seth_names"] != []
+
+
+RAMESSIDE_ONLY_TAG = (
+    "Ramesside-attested only — no contemporary attestation per "
+    "Leprohon's headword asterisk."
+)
+
+
+def _first_source_note(row: dict) -> str:
+    """Return the source_note of the first populated name-entry, or empty."""
+    for field in NAME_LIST_FIELDS:
+        if row[field]:
+            return row[field][0].get("source_note") or ""
+    return ""
+
+
+# ---------------------------------------------------------------------------
+# Flagship row: leprohon-2.09 Seneferka (recovered from chunk-1 scope miss)
+# ---------------------------------------------------------------------------
+
+
+def test_seneferka_recovered_from_chunk_1_scope_miss() -> None:
+    """Leprohon prints a Dyn-2 entry `9. SENEFERKA` on printed p. 30, which
+    chunk 1 (PR #83) silently dropped because its scope ended at printed p.
+    29. Chunk 2 recovers it: `chapter: "Early Dynastic Period"`, `dynasty_
+    label: "Dynasty 2"`, printed_page 30, physical 51."""
+    r = _row("leprohon-2.09")
+    assert r["display_name"] == "Seneferka"
+    assert r["dynasty_number"] == 2
+    assert r["dynasty_label"] == "Dynasty 2"
+    assert r["chapter"] == "Early Dynastic Period"
+    assert r["source_citation"]["printed_page"] == 30
+    assert r["source_citation"]["physical_pdf_page"] == 51
+    assert r["horus_names"][0]["transliteration"] == "snfr kꜣ"
+    assert r["horus_names"][0]["anglicised"] == "senefer ka"
+    assert r["horus_names"][0]["translation"] == "The one whom a ka has made perfect"
+
+
+# ---------------------------------------------------------------------------
+# Flagship row: leprohon-4.02 Khufu (Greek alias from headword parenthetical)
+# ---------------------------------------------------------------------------
+
+
+def test_khufu_has_greek_alias_cheops() -> None:
+    """Leprohon prints `2. KHUFU (CHEOPS)` in the chapter-III Dyn-4 list.
+    The parenthesised Greek form goes into `alt_display_names`."""
+    r = _row("leprohon-4.02")
+    assert r["display_name"] == "Khufu"
+    assert r["alt_display_names"] == ["Cheops"]
+    assert r["dynasty_number"] == 4
+    assert r["chapter"] == "Old Kingdom"
+
+
+# ---------------------------------------------------------------------------
+# Dyn 8a is contemporarily attested — no Ramesside-only tags despite being
+# a sub-dynasty. This test locks in the lesson from the chunk-2 prompt error.
+# ---------------------------------------------------------------------------
+
+
+def test_dyn_8a_is_contemporarily_attested_not_ramesside_only() -> None:
+    """Leprohon's Dyn 8a section is titled `Dynasty 8a – attested names` and
+    opens `eight rulers who are attested contemporaneously` (p. 44). The
+    extraction prompt for chunk 2 incorrectly framed Dyn 8a as Ramesside-
+    only (conflating it with Dyn 2a's opening); all three agents correctly
+    ignored the wrong instruction per constitutional rule 1 (`work like a
+    scholar` — prefer the primary source over the task framing).
+
+    This test locks that in: no Dyn-8a row carries the Ramesside-only tag."""
+    dyn_8a_rows = [r for r in _rows() if r["dynasty_label"] == "Dynasty 8a"]
+    assert len(dyn_8a_rows) == 8, len(dyn_8a_rows)
+    for r in dyn_8a_rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): Dyn 8a is "
+            f"contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Dyn 2a, 3a, and the asterisked individual kings ARE Ramesside-only
+# ---------------------------------------------------------------------------
+
+
+def test_ramesside_only_tagging_is_applied_where_expected() -> None:
+    """Ramesside-only tag is applied on every headword-asterisked king and
+    on every Dyn 2a / 3a entry. Dyn 4.05 Baufre and Dyn 6.07 Queen Neith-
+    Iqeret/Nitocris are asterisked-in-parenthetical exceptions that the
+    extractors correctly tag."""
+    expected_tagged = {
+        "leprohon-2a.01",  # Neferkasokar
+        "leprohon-2a.02",  # "Hudjefa" (I)
+        "leprohon-3.05",  # Qa Hedjet/Hui/Huni (headword asterisk)
+        "leprohon-3a.01",  # Sedjes
+        "leprohon-3a.02",  # "Hudjefa" (II)
+        "leprohon-3a.03",  # Neferkare (I)
+        "leprohon-3a.04",  # Nebkare
+        "leprohon-4.05",  # Baufre
+        "leprohon-6.07",  # Queen Neith-Iqeret / Nitocris
+    }
+    for lid in expected_tagged:
+        r = _row(lid)
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG in sn, (
+            f"{lid} ({r['display_name']}): expected Ramesside-only tag in "
+            f"source_note, got: {sn[:120]!r}"
+        )
 
 
 def test_every_populated_field_on_flagship_den_asserted() -> None:
