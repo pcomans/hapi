@@ -30,16 +30,9 @@ All rows: `stage_suffix: null`. Each sub-dynasty resets sequence at 1.
 
 All TIP kings are contemporarily attested per Leprohon's prose preamble. Do NOT apply the Ramesside-only tag.
 
-### Dyn 25 alt_display_names — Greek-form aliases
+### Dyn 25 (Nubian) alt_display_names
 
-Several Dyn 25 (Nubian) kings have well-established Greek/alternate-spelling aliases consistently used by museums:
-- **Piye** also spelled "Piankhi" (older Egyptological reading).
-- **Shabaka** also "Shabako".
-- **Shabataka** also "Shebitku" / "Shebitqo".
-- **Taharqa** also "Taharka" / "Tirhakah" (the biblical form).
-- **Tantamani** also "Tanutamani" / "Tanwetamani".
-
-Populate `alt_display_names` only if Leprohon prints these forms in the SMALLCAP headword parenthetical. If Leprohon prints `25. PIYE (PIANKHI)`, then `display_name: "Piye"`, `alt_display_names: ["Piankhi"]`. Otherwise leave alt_display_names empty (per the established prompt rule).
+Same general convention as prior chunks: populate `alt_display_names` only with forms Leprohon explicitly prints in the SMALLCAP headword (parenthesised Greek alias OR slash-separated homonym). Do NOT add scholarly / museum-standard aliases not printed by Leprohon — those land via fix_rows post-pass with explicit egyptologist-reviewer attribution.
 
 ### Sheshonq spelling alias for Dyn 23
 

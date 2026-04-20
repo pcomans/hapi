@@ -453,55 +453,107 @@ MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 TIP_LATE_CORRECTIONS: list[tuple[str, str, object, str]] = [
-    # Chunk-12 (PR #95): extend the chunk-11 Shoshenq-alias pattern to
-    # Dyn 23's three Sheshonq entries (VI, VIa, VII). Museum-standard
-    # spelling is "Shoshenq" — same transliteration-variant rationale
-    # as chunk 11.
+    # Gemini Code Assist PR #95 high-priority finding: 6 rows in Dyn 23
+    # have throne-name epithets duplicated into the `birth_names` list
+    # (in addition to their correct placement in `throne_names`). The
+    # duplicates carry source_note "Epithet added to the Throne name."
+    # — the agents extracted the epithet block once for throne_names
+    # and wrongly emitted it again for birth_names. Remove the
+    # duplicates and re-index variant_index on the remaining birth_names
+    # entries. The throne_names placement is correct and unchanged.
     (
-        "leprohon-23.03",
-        "alt_display_names",
-        ["Shoshenq VI"],
-        "Add `Shoshenq VI` museum-standard spelling. Extends chunk-11 pattern.",
+        "leprohon-23.01",
+        "birth_names",
+        [
+            {"transliteration": "pꜣ di bꜣstt", "anglicised": "pa di bastet", "translation": "He whom Bastet has given", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ ꜣst", "anglicised": "sa aset", "translation": "Son of Isis", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet `stp n imn` wrongly duplicated into "
+        "birth_names; re-index remaining birth entries. Gemini PR #95 P1.",
     ),
     (
-        "leprohon-23.07",
-        "alt_display_names",
-        ["Shoshenq VIa"],
-        "Add `Shoshenq VIa` museum-standard spelling. Extends chunk-11 pattern.",
+        "leprohon-23.03",
+        "birth_names",
+        [
+            {"transliteration": "ššnḳ", "anglicised": "shesheneq", "translation": "Sheshonq", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": "The epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche."},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    (
+        "leprohon-23.05",
+        "birth_names",
+        [
+            {"transliteration": "tklt", "anglicised": "takelot", "translation": "Takelot", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ ꜣst mry imn nṯr ḥḳꜣ wꜣst", "anglicised": "sa aset, mery imen, netjer heqa waset", "translation": "Son of Isis, beloved of Amun, the divine ruler of Thebes", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    (
+        "leprohon-23.08",
+        "birth_names",
+        [
+            {"transliteration": "iwpwt", "anglicised": "iuput", "translation": "Iuput", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ bꜣstt mry imn", "anglicised": "sa bastet, mery imen", "translation": "Son of Bastet, beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
     ),
     (
         "leprohon-23.09",
-        "alt_display_names",
-        ["Shoshenq VII"],
-        "Add `Shoshenq VII` museum-standard spelling. Extends chunk-11 pattern.",
+        "birth_names",
+        [
+            {"transliteration": "ššnḳ", "anglicised": "shesheneq", "translation": "Sheshonq", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "nṯr ḥḳꜣ wꜣst", "anglicised": "netjer heqa waset", "translation": "The divine ruler of Thebes", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
     ),
-    # Taharqa has one of the most recognizable museum-catalog names
-    # and is often spelled "Taharka" (without q) or "Tirhakah" (biblical
-    # form). Add both for Phase-A matching.
+    (
+        "leprohon-23a.01",
+        "birth_names",
+        [
+            {"transliteration": "pꜣ di bꜣstt", "anglicised": "pa di bastet", "translation": "He whom Bastet has given", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ ꜣst", "anglicised": "sa aset", "translation": "Son of Isis", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "sꜣ bꜣstt", "anglicised": "sa bastet", "translation": "Son of Bastet", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 4, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "stp n imn-rꜥ mꜣꜥt", "anglicised": "setep en imen-ra, maat", "translation": "Chosen by Amun-Re of Maat", "variant_index": 5, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    # Egyptologist-reviewer 2026-04-20 PR #95 P2 (Dyn 25 aliases): 4
+    # museum/scholarly aliases for the Nubian kings, attributed per
+    # rule 1 (scholarly traceability) per code-reviewer PR #95 P1
+    # demand. The Shoshenq VI/VIa/VII aliases were removed from this
+    # block — agents already emitted them per prompt rule (verified
+    # against merge-disagreements.txt — agents unanimous on those
+    # aliases, fix_rows would have been pure no-op churn).
     (
         "leprohon-25.06",
         "alt_display_names",
         ["Taharka", "Tirhakah"],
-        "Add older museum spellings `Taharka` (non-ḳ) and biblical "
-        "form `Tirhakah` to Taharqa's alt_display_names for Phase-A "
-        "museum-record matching.",
+        "Add `Taharka` (Leclant/Kitchen orthography per egyptologist) "
+        "and `Tirhakah` (biblical form, Isaiah 37:9 — appears in older "
+        "museum catalogs that use biblical names). Egyptologist-reviewer "
+        "2026-04-20 PR #95.",
     ),
-    # Tantamani / Tanutamani / Tanwetamani are all attested museum
-    # spellings; Leprohon uses `Tanutamun` per the chunk. Add the other
-    # forms as aliases.
     (
         "leprohon-25.07",
         "alt_display_names",
-        ["Tantamani", "Tanwetamani"],
-        "Add museum-standard `Tantamani` and scholarly `Tanwetamani` "
-        "spellings to Tanutamun's alt_display_names.",
+        ["Tantamani", "Tanutamani", "Tanwetamani"],
+        "Add `Tantamani` (von Beckerath standard transliteration), "
+        "`Tanutamani` (Gemini PR #95: missed alias from prompt's own "
+        "alias enumeration), and `Tanwetamani` (post-Kitchen scholarly "
+        "form). Leprohon's `Tanutamun` is the rarer reading; museums "
+        "consistently use Tantamani or Tanwetamani.",
     ),
-    # Shabaka and Kashta museum aliases (no Leprohon parenthetical).
     (
         "leprohon-25.04",
         "alt_display_names",
         ["Shabako"],
-        "Add museum spelling `Shabako` to Shabaka's alt_display_names.",
+        "Add `Shabako` (Leclant orthography per egyptologist; standard "
+        "in Kitchen-TIPE and post-Kitchen Kushite scholarship). "
+        "Egyptologist-reviewer 2026-04-20 PR #95.",
     ),
 ]
 

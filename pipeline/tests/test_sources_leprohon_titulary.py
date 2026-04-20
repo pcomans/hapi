@@ -949,6 +949,23 @@ def test_khufu_has_greek_alias_cheops() -> None:
 # ---------------------------------------------------------------------------
 
 
+def test_tip_late_no_ramesside_only_tags() -> None:
+    """All Dyn 23 / 23a / 24 / 25 kings (chunk 12 TIP-late) are
+    contemporarily attested per Leprohon's prose preamble. Code-reviewer
+    PR #95 P2 guard mirroring the chunk-9/10/11 per-preamble pattern.
+    Per CLAUDE.md rule 3, the invariant cannot live only in prose."""
+    tip_late_labels = {"Dynasty 23", "Dynasty 23a", "Dynasty 24", "Dynasty 25"}
+    rows = [r for r in _rows() if r["dynasty_label"] in tip_late_labels]
+    assert len(rows) == 23, len(rows)
+    for r in rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): {r['dynasty_label']} "
+            f"is contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
+
+
 def test_tip_early_no_ramesside_only_tags() -> None:
     """All Dyn 21 / 21a / 22 / 22a kings (chunk 11 TIP-early) are
     contemporarily attested — Leprohon's chapter VIII prose preamble
