@@ -145,17 +145,35 @@ LANDED_CHUNKS: dict[str, dict] = {
         "physical_page_range": (102, 113),
     },
     "dyn18": {
-        # Chapter VII New Kingdom Dyn 18. 14 numbered king entries +
+        # Chapter VII New Kingdom Dyn 18. 15 numbered king entries +
         # 2 multi-stage doublings (Thutmose III 5a/5b separately-numbered
         # MK-style + Akhenaten 10a/10b inline-stage NK convention) =
-        # 16 rows. Horemheb placed in Dyn 19 per Leprohon's editorial
-        # scheme; will land in chunk 9.
+        # 17 rows. Horemheb (Dyn 18 entry 15) was missed by the chunk-8
+        # scope and recovered as the first row of chunk 9 — same
+        # editorial convention as chunk 1's missed p. 30 (Seneferka,
+        # Neferkasokar, Hudjefa) recovered in chunk 2.
         "chapter": "New Kingdom",
         "rows_by_dynasty_label": {
-            "Dynasty 18": 16,
+            "Dynasty 18": 17,
         },
         "printed_page_range": (93, 107),
         "physical_page_range": (114, 128),
+    },
+    "dyn19": {
+        # Chapter VII New Kingdom Dyn 19 (Ramesside founders). 7 numbered
+        # king entries: Ramesses I, Sety I, Ramesses II, Merenptah,
+        # Sety II, Amenmesse, Siptah. Tausret is name-dropped in
+        # Leprohon's prose preamble but her formal numbered entry begins
+        # on printed p. 124+ which falls in chunk 10 (Dyn 20). The
+        # Horemheb scope-recovery row (counted under Dyn 18 above) is
+        # also extracted by chunk-9 agents but lives under "Dynasty 18"
+        # for tabulation purposes.
+        "chapter": "New Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 19": 7,
+        },
+        "printed_page_range": (107, 124),
+        "physical_page_range": (128, 145),
     },
 }
 

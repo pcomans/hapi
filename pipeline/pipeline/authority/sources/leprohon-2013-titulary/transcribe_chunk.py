@@ -118,8 +118,16 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # the prompt tells agents to STOP at the `Dynasty 19` header so
     # only Ay's tail is consumed from p. 128.
     "dyn18": (114, 128, "VII. New Kingdom (Dyn 18)"),
+    # Chunk 9 (this PR): chapter VII New Kingdom — Dyn 19. Printed 107-124,
+    # offset +21, physical 128-145. Physical p. 128 is shared with chunk 8
+    # (Ay's tail at top, Dyn 19 opening prose mid-page). The prompt tells
+    # agents to START at the `Dynasty 19` header — Ay is OUT OF SCOPE
+    # for this chunk (already extracted in chunk 8). Includes Horemheb
+    # (Leprohon's Dyn 19 entry 1) + Ramesside line: Ramesses I, Seti I,
+    # Ramesses II, Merneptah, Amenmesse, Seti II, Siptah, Tausret.
+    "dyn19": (128, 145, "VII. New Kingdom (Dyn 19)"),
 }
-DEFAULT_CHUNK = "dyn18"
+DEFAULT_CHUNK = "dyn19"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
