@@ -30,17 +30,21 @@ Chapters II–X of the book, each covering one historical period:
 
 | Chapter | Period | Printed pages | Physical-PDF pages | Chunk |
 |---|---|---|---|---|
-| II | Early Dynastic Period (Dyn 0–2) | 21–30 | 42–51 | chunk 1 (PR #83) + recovered p. 30 in chunk 2 |
-| III | Old Kingdom (Dyn 3–8) | 31–48 | 52–69 | **chunk 2 (this PR)** |
+| II | Early Dynastic Period (Dyn 0–2) | 21–30 | 42–51 | chunk 1 + recovered p. 30 in chunk 2 |
+| III | Old Kingdom (Dyn 3–8) | 31–48 | 52–69 | chunk 2 |
 | IV | First Intermediate Period (Dyn 9–11 early) | 49–53 | 70–74 | chunk 3 |
-| V | Middle Kingdom (Dyn 11 late–12) | 54–80 | 75–101 | chunk 4 |
-| VI | Second Intermediate Period (Dyn 13–17) | 81–92 | 102–113 | chunk 5 |
-| VII | New Kingdom (Dyn 18–20) | 93–135 | 114–156 | chunks 6–9 (likely Dyn 18 / Dyn 19 / Dyn 20 splits) |
-| VIII | Third Intermediate Period (Dyn 21–25) | 136–163 | 157–184 | chunk 10 |
-| IX | Late Period (Dyn 26–31) | 164–174 | 185–195 | chunk 11 |
-| X | Macedonian and Ptolemaic Dynasties | 175–188 | 196–209 | chunk 12 |
+| V | Middle Kingdom (Dyn 11b + 12 proper) | 54–60 | 75–81 | **chunk 4 (this PR)** |
+| V | Middle Kingdom late (Dyn 13 ephemeral line) | 60–71 | 81–92 | chunk 5 (~37 kings in one dynasty) |
+| V | Middle Kingdom tail (Dyn 13a + 14 + 14a Ramesside-added) | 72–80 | 93–101 | chunk 6 (~32 kings) |
+| VI | Second Intermediate Period (Dyn 15–17 Hyksos + Theban) | 81–92 | 102–113 | chunk 7 |
+| VII | New Kingdom (Dyn 18–20) | 93–135 | 114–156 | chunks 8–10 (likely Dyn 18 / Dyn 19 / Dyn 20 splits) |
+| VIII | Third Intermediate Period (Dyn 21–25) | 136–163 | 157–184 | chunk 11 |
+| IX | Late Period (Dyn 26–31) | 164–174 | 185–195 | chunk 12 |
+| X | Macedonian and Ptolemaic Dynasties | 175–188 | 196–209 | chunk 13 |
 
-(Physical-PDF-page ranges for chunks 2+ will be verified at the chunk's first and last pages per the playbook — the +21 offset observed in chunk 1 may drift at part boundaries. Chapter lengths are nominal; final chunk count depends on kings-per-chapter density. Egyptologist estimate: ~10–14 PRs total, with Dyn 18 and Dyn 19 warranting one PR each given the density of attested prenomen variants per king.)
+**Chunk-5/6/7 scope note:** Leprohon's chapter-V / chapter-VI boundary is not what an Egyptological reader might expect. He puts Dyn 13, 13a, 14, 14a ALL in chapter V Middle Kingdom (despite their post-Sobekneferu chronology) and reserves chapter VI Second Intermediate Period for Dyn 15–17 (the Hyksos and the contemporary Theban Dyn 17). The README pre-chunk-4 had this boundary wrong — the correction is that chapter V spans physical 75–101, not 75–81 or 75–80 as earlier drafts implied. Chunks 5 and 6 split chapter V's large post-Sobekneferu content along Leprohon's own sub-dynasty section markers to keep per-chunk king counts manageable (~35 rows each).
+
+(Physical-PDF-page ranges were verified at the chunk boundaries by rendering the PDF. The +21 offset observed in chunk 1 holds across chapters II–V. Chapter lengths are nominal; final chunk count depends on kings-per-chapter density. Egyptologist estimate: ~13–16 PRs total, with Dyn 18 and Dyn 19 warranting one PR each given the density of attested prenomen variants per king.)
 
 **In scope:**
 
@@ -79,6 +83,7 @@ Multi-chunk source pattern: this is the first chunk. Subsequent chunks ship as s
   "dynasty_label": "Dynasty \"0\"",
   "chapter": "Early Dynastic Period",
   "sequence_in_chapter_section": 1,
+  "stage_suffix": null,
   "display_name": "Iry-Hor",
   "alt_display_names": [],
   "horus_names": [
@@ -113,7 +118,8 @@ Multi-chunk source pattern: this is the first chunk. Subsequent chunks ship as s
 - `dynasty_number`: integer 0, 1, 2, ..., 31. `0` for Dyn 0; explicit (not null) for Ptolemaic rulers (mapped to dynasty `33` by convention consistent with pharaoh.se).
 - `dynasty_label`: Leprohon's own label verbatim, including the quotation marks on "Dynasty '0'" and the roman-numeral chapter label. `Dynasty "0"`, `Dynasty 1`, `Dynasty 2`, ..., `Macedonian Dynasty`, `Ptolemaic Dynasty`.
 - `chapter`: Leprohon's chapter title. For Early Dynastic, `"Early Dynastic Period"`.
-- `sequence_in_chapter_section`: the integer in Leprohon's own numbering (`1.`, `2.`, etc.). Resets at each dynasty section within a chapter.
+- `sequence_in_chapter_section`: the integer in Leprohon's own numbering (`1.`, `2.`, etc.). **Usually** resets at each dynasty section within a chapter. Exception: Dyn 11b's numbering continues from Dyn 11a's tail (Dyn 11a ends at entry 4; Dyn 11b starts at entry 5) because Leprohon treats the late Eleventh Dynasty as a continuation of the early Eleventh Dynasty split across chapters IV and V. No other sub-dynasty exhibits this behavior.
+- `stage_suffix`: `str | None`. When Leprohon marks a king entry with a stage-letter suffix in the SMALLCAP headword (`5a. MENTUHOTEP II (a)`, `1b. AMENEMHAT I (b)`), the stage letter lives here (`"a"`, `"b"`, `"c"`); `None` when the king has a single unified titulary. **Semantics:** stages represent the SAME king adopting successively-different titulary sets during his reign (Mentuhotep II's three titulary reforms at year 14 and year 39; Amenemhat I's pre-/post-Itj-tawy-move titulary; Akhenaten's pre-/post-name-change). Stages are emitted as SEPARATE rows per stage because each stage carries its own full cross-name-type titulary (Horus, Nebty, Throne, etc.) and the cross-name-type correlation ("in stage b, Throne=X AND Nebty=Y") is row-level, not per-name-list. This is distinct from `variant_index` within a single name-list, which tracks alternative ATTESTATIONS of the same titulary-slot within the same stage.
 - `display_name`: the SMALLCAP headword from Leprohon verbatim, title-cased (e.g. `IRY-HOR` → `Iry-Hor`, `DJET/WADJET` → `Djet/Wadjet`). Slash-separated homonyms are preserved in the display name; both forms are also populated in `alt_display_names`.
 - `alt_display_names`: for slashed homonyms (`Djet/Wadjet`, `Khasekhem/Khasekhemwy`), list each form individually so Phase A can match against either. Empty list for single-form names.
 - `horus_names` / `nebty_names` / `golden_horus_names` / `throne_names` / `birth_names` / `later_cartouche_names` / `later_horus_names` / `seth_names`: lists of name entries. Empty list if Leprohon records none.

@@ -168,25 +168,37 @@ def _majority(values: list) -> tuple[object, int]:
 #   labels for dynasties he considers inseparable (introduced in chapter IV
 #   FIP where he bundles Dynasties 9 and 10 into groups a/b)
 #
-# NN is a zero-padded 2-digit sequence. Sort order: the LOWER integer of
-# the dynasty group ascending, then the hyphenated-range indicator (plain
-# `9` sorts before `9-10`), then suffix ascending (empty before `a`),
-# then sequence ascending. This keeps `leprohon-3.01` between `leprohon-
-# 2a.02` and `leprohon-3a.01`, and `leprohon-9-10a.NN` between `leprohon-
-# 8a.08` and `leprohon-11a.01` in reconciled.jsonl.
+# NN is a zero-padded 2-digit sequence, optionally followed by a single
+# lowercase letter (`5a`, `1b`, `10b`) that marks a *titulary stage* — same
+# king adopted successive sets of names during his reign (Mentuhotep II's
+# a/b/c stages, Amenemhat I's a/b pre/post-Itj-tawy-move, Amenhotep IV/
+# Akhenaten's name-change years in NK). Stages are emitted as SEPARATE
+# rows per stage because each stage has its own full cross-name-type
+# titulary (Horus, Nebty, Throne, etc.) and the cross-name-type correlation
+# ("in stage b, Throne is X AND Nebty is Y") would be lost if stages were
+# collapsed into per-name-list variant entries.
+#
+# Sort order: the LOWER integer of the dynasty group ascending, then the
+# hyphenated-range indicator (plain `9` sorts before `9-10`), then
+# dynasty-suffix ascending (empty before `a`), then sequence-NUMBER
+# ascending, then stage-suffix ascending (empty before `a`). This keeps
+# `leprohon-3.01` between `leprohon-2a.02` and `leprohon-3a.01`,
+# `leprohon-9-10a.NN` between `leprohon-8a.08` and `leprohon-11a.01`, and
+# `leprohon-11b.05a < 5b < 5c < 6` inside Dyn 11b.
 _LID_RE = re.compile(
     r"^leprohon-"
     r"(?P<dynasty_num>\d+)"
     r"(?:-(?P<dynasty_num_end>\d+))?"
     r"(?P<dynasty_suffix>[a-z]?)"
-    r"\.(?P<seq>\d+)$"
+    r"\.(?P<seq>\d+)"
+    r"(?P<stage_suffix>[a-z]?)$"
 )
 
 
-def _sort_key(lid: str) -> tuple[int, int, str, int, str]:
+def _sort_key(lid: str) -> tuple[int, int, str, int, str, str]:
     match = _LID_RE.match(lid)
     if match is None:
-        return (9999, 9999, "", 9999, lid)
+        return (9999, 9999, "", 9999, "", lid)
     dynasty_num = int(match.group("dynasty_num"))
     # `is_range` tiebreaker: plain `9` sorts before `9-10` because the plain
     # form is conceptually "Dynasty 9 standalone", the ranged form is a
@@ -197,6 +209,7 @@ def _sort_key(lid: str) -> tuple[int, int, str, int, str]:
         is_range,
         match.group("dynasty_suffix"),
         int(match.group("seq")),
+        match.group("stage_suffix"),
         lid,
     )
 

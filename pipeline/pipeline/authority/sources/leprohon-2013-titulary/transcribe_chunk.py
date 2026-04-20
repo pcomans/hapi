@@ -61,8 +61,26 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # `Later Horus name: tp a*` is itself flagged as a Ramesside fabrication
     # per Leprohon's footnote 27).
     "fip": (70, 74, "IV. First Intermediate Period"),
+    # Chunk 4 (this PR): chapter V Middle Kingdom — the "classical" MK
+    # proper. Printed 54-60, offset +21, physical 75-81. Dyn 11b
+    # (Mentuhotep II/III/IV — the late Eleventh Dynasty, paired with the
+    # early Dyn 11a that landed in chunk 3 FIP) + Dyn 12 (Amenemhat I-IV,
+    # Senwosret I-III, Queen Sobekneferu). ~19 kings but with very dense
+    # per-king titularies (Mentuhotep II alone has three successive
+    # titulary reforms during his 51-year reign; Dyn 12 kings routinely
+    # have 3-5 variant entries per name type). The chunk boundary stops
+    # at physical p. 81 which contains both the last Dyn 12 entry
+    # (Queen Sobekneferu) AND the opening of Dyn 13 — the prompt
+    # explicitly tells agents to stop at the Dyn 13 header.
+    #
+    # Note: Leprohon places Dyn 13, 13a, 14, 14a all in chapter V MK
+    # (despite their "post-Sobekneferu" chronology), because only Dyn
+    # 15-17 are chapter VI SIP per his editorial choice. These later MK
+    # ephemeral dynasties ship as their own chunks (future chunk 5 = Dyn
+    # 13 alone ~37 kings; future chunk 6 = Dyn 13a+14+14a ~32 kings).
+    "mk": (75, 81, "V. Middle Kingdom (Dyn 11b + Dyn 12)"),
 }
-DEFAULT_CHUNK = "fip"
+DEFAULT_CHUNK = "mk"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
