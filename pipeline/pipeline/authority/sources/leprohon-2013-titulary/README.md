@@ -96,6 +96,7 @@ Multi-chunk source pattern: this is the first chunk. Subsequent chunks ship as s
   "throne_names": [],
   "birth_names": [],
   "later_cartouche_names": [],
+  "later_horus_names": [],
   "seth_names": [],
   "source_citation": {
     "book": "Leprohon 2013",
@@ -115,7 +116,15 @@ Multi-chunk source pattern: this is the first chunk. Subsequent chunks ship as s
 - `sequence_in_chapter_section`: the integer in Leprohon's own numbering (`1.`, `2.`, etc.). Resets at each dynasty section within a chapter.
 - `display_name`: the SMALLCAP headword from Leprohon verbatim, title-cased (e.g. `IRY-HOR` → `Iry-Hor`, `DJET/WADJET` → `Djet/Wadjet`). Slash-separated homonyms are preserved in the display name; both forms are also populated in `alt_display_names`.
 - `alt_display_names`: for slashed homonyms (`Djet/Wadjet`, `Khasekhem/Khasekhemwy`), list each form individually so Phase A can match against either. Empty list for single-form names.
-- `horus_names` / `nebty_names` / `golden_horus_names` / `throne_names` / `birth_names` / `later_cartouche_names` / `seth_names`: lists of name entries. Empty list if Leprohon records none.
+- `horus_names` / `nebty_names` / `golden_horus_names` / `throne_names` / `birth_names` / `later_cartouche_names` / `later_horus_names` / `seth_names`: lists of name entries. Empty list if Leprohon records none.
+- `later_horus_names`: an attestation class introduced in chapter IV. Leprohon uses the label `Later Horus name:` when a Horus name is a *post-hoc* Ramesside fabrication (e.g. Mentuhotep I's `tp a*` per Karnak List / Postel 2004, 46) — the individual name entry is attested only in a later king-list, not contemporarily. The trailing `*` on the name itself (not the king headword) is the same signal used on `later_cartouche_names` entries and is consumed by the field-name convention (not preserved in `transliteration`).
+
+### Editorial classification choices (chunk 3 / First Intermediate Period)
+
+Chapter IV introduces two non-standard Leprohon labels that this extract normalises by convention rather than by inventing new schema fields. These are **editorial classifications made by the extraction pipeline**, not by Leprohon himself; a future consumer should read them as "the extract's best-guess placement" rather than "Leprohon's authorial classification."
+
+- `Throne and birth:` (Leprohon's combined label for entries where fragmentary evidence prevents prenomen/nomen separation — appears in Dyn 9–10a #7 Khety IV and Dyn 9–10b #3 Khety VI) → **emit the same entry into BOTH `throne_names` AND `birth_names`**, each with `variant_index: 1, is_variant: false` and a `source_note` flagging the combined classification. This follows the same dual-emission pattern as the chunk-1 Khasekhemwy `Horus/Seth 2` case.
+- `Cartouche:` (Leprohon's label for a standalone cartouche-enclosed name that cannot be classified — appears only in Dyn 9–10a #5 Senen////) → **emit to `birth_names` only**, with a `source_note` flagging the unclassified-cartouche origin. Rationale: a standalone cartouche without the `nesu-bity` prefix most plausibly represents the king's personal name (nomen); emitting to both `throne_names` and `birth_names` would overstate the evidence.
 - Each name entry:
   - `transliteration`: the italicised transliteration in Leprohon's leftmost position, with Egyptological diacritics preserved verbatim (ꜣ ꜥ ḥ ḫ ẖ š ṯ ḏ). Substitution characters (3, c, h, etc.) that arise in broken PDF text layers are a *failure mode* and must be corrected from the PDF's visual rendering.
   - `anglicised`: Leprohon's parenthetical gloss in the middle position (e.g. `(iry-hor)`, `(ka)`, `(nar mer)`).
@@ -150,6 +159,7 @@ The source PDF is held in `proprietary/books/Leprohon 2013 - The Great Name.pdf`
 - **Greek-Egyptian equivalents (Appendix C).** Not transcribed in this source; for Ptolemaic-period kings the Greek form is picked up from pharaoh.se's `alt_labels` instead. If Phase-A surfaces a Ptolemaic queen where Leprohon-chapter-X and pharaoh.se disagree on the Greek alias, revisit Appendix C.
 - **Bibliography (pp. 243–260), Concordances (pp. 269+), and Indexes (pp. 261–267).** Not transcribed. These are working-scholar cross-references, not primary titulary data.
 - **Human Egyptologist sign-off.** Per ADR-017 step 6, a credentialed reviewer walking a sample of rows against the PDF has NOT been performed. The extract is provisional at the chunk level until that happens; the `egyptologist-reviewer` subagent does NOT satisfy this. Log the future human-review pass in `human-review-<YYYY-MM-DD>-<chunk>.md`.
+- **`source_label_raw` per name entry — not yet captured.** The extract projects Leprohon's non-standard labels (`Cartouche:`, `Throne and birth:`) onto the closest fit in the canonical schema (`birth_names` for Cartouche; dual-emitted to `throne_names` + `birth_names` for Throne-and-birth), documenting the projection in `source_note` prose. A Phase-A consumer who wants to distinguish "Leprohon labelled this `Cartouche:`" from "Leprohon labelled this `Birth:`" can only recover that by regex-matching the `source_note` text. Raised by code-reviewer 2026-04-20 on PR #86 as P2-4. Suggested future fix: add a `source_label_raw: str | None` field to each name entry (e.g. `"Cartouche"`, `"Throne and birth"`, `"Later Horus name"`, `None` for standard labels). Touches chunk 1 (`leprohon-2.08` Khasekhemwy `Horus/Seth 2` dual-emit), chunk 3 (`leprohon-9-10a.05` Senen//// Cartouche; `leprohon-9-10a.07` Khety IV + `leprohon-9-10b.03` Khety VI Throne-and-birth; `leprohon-11a.01` Mentuhotep I Later Horus name), and every subsequent chunk whose labels cannot be cleanly mapped to the existing name-type fields. Deferred from PR #86 because it's a schema change with its own design questions (per-name vs per-row, interaction with dual-emit) rather than a chunk-3 correction.
 
 ## Running the pipeline
 

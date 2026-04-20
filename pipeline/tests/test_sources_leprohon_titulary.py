@@ -65,6 +65,20 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (31, 48),
         "physical_page_range": (52, 69),
     },
+    "fip": {
+        "chapter": "First Intermediate Period",
+        "rows_by_dynasty_label": {
+            # Leprohon preserves the en-dash `–` in his typeset labels;
+            # `dynasty_label` retains it verbatim. ASCII hyphen is used
+            # only in `leprohon_id` (`leprohon-9-10a.01`) where regex /
+            # filesystem safety matters.
+            "Dynasties 9–10a": 9,  # 1 stub + 1 contemporarily-attested + 7 Ramesside-only
+            "Dynasties 9–10b": 6,
+            "Dynasty 11a": 4,
+        },
+        "printed_page_range": (49, 53),
+        "physical_page_range": (70, 74),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -179,22 +193,33 @@ def test_leprohon_id_is_unique() -> None:
     assert len(ids) == len(set(ids)), "duplicate leprohon_id detected"
 
 
-_LID_RE = re.compile(r"^leprohon-\d+[a-z]?\.\d{2}$")
+_LID_RE = re.compile(r"^leprohon-\d+(?:-\d+)?[a-z]?\.\d{2}$")
 
 
 def test_leprohon_id_shape() -> None:
-    """Every id matches `leprohon-{dynasty}{optional_suffix}.{NN}` — NN is
-    exactly two digits. Suffix `[a-z]` handles Leprohon's sub-dynasty sections
-    (Dyn 2a, 3a, 8a — Ramesside-added king lists with no contemporary
-    attestation, formally typeset as "Dynasty 2a" etc. in the book)."""
+    """Every id matches `leprohon-{dynasty_group}.{NN}` — NN is exactly two
+    digits. `dynasty_group` is one of:
+      - a plain integer (`0`, `3`, `18`);
+      - integer + single lowercase suffix (`2a`, `3a`, `8a`, `11a`) — Leprohon's
+        sub-dynasty sections (typeset as "Dynasty 2a" etc. in the book,
+        sometimes Ramesside-only reconstructions, sometimes contemporarily
+        attested — see per-section treatment);
+      - hyphenated range + suffix (`9-10a`, `9-10b`) — Leprohon's chapter-IV
+        combined labels for Dynasties 9 and 10 which he treats as inseparable.
+    """
     for r in _rows():
         assert _LID_RE.match(r["leprohon_id"]), r["leprohon_id"]
 
 
 def test_sequence_matches_id() -> None:
-    """`sequence_in_chapter_section` equals the numeric tail of leprohon_id."""
+    """`sequence_in_chapter_section` equals the numeric tail of leprohon_id.
+
+    `.split(".", 1)` so that any future `.` in the dynasty-group segment
+    (none today — all groups are hyphen-separated) would not confuse the
+    tail extraction.
+    """
     for r in _rows():
-        _, tail = r["leprohon_id"].split(".")
+        _, tail = r["leprohon_id"].rsplit(".", 1)
         assert r["sequence_in_chapter_section"] == int(tail), r
 
 
@@ -232,6 +257,7 @@ NAME_LIST_FIELDS = (
     "throne_names",
     "birth_names",
     "later_cartouche_names",
+    "later_horus_names",
     "seth_names",
 )
 
@@ -246,6 +272,17 @@ NAME_ENTRY_FIELDS = frozenset(
         "source_note",
     }
 )
+
+
+def test_name_list_fields_present_on_every_row() -> None:
+    """Rule 4 (single source of truth): every row carries every name-type
+    field with `[]` default when empty, so downstream consumers don't need
+    to branch on present-vs-absent. Backfilled by `fix_rows.backfill_
+    name_list_fields` across chunks that pre-date a newly-introduced
+    name-type field (e.g. chunk 3 added `later_horus_names`)."""
+    for r in _rows():
+        missing = set(NAME_LIST_FIELDS) - set(r)
+        assert not missing, f"{r['leprohon_id']}: missing name-list keys {missing!r}"
 
 
 def test_name_lists_are_lists() -> None:
@@ -546,9 +583,17 @@ def test_slashed_display_names_have_alt_forms() -> None:
     slash-split parts. Rows without `/` MAY still have `alt_display_names`
     populated — for example, Greek aliases that Leprohon prints in the
     SMALLCAP headword parenthetical (`KHUFU (CHEOPS)` → display_name
-    "Khufu", alt_display_names ["Cheops"])."""
+    "Khufu", alt_display_names ["Cheops"]).
+
+    Exception: hedge-glyph slashes (two or more consecutive `/`) are
+    Leprohon's typography for fragmentary / destroyed readings in the
+    Turin Canon, not homonym separators. Rows like `/////` (the Dyn 9–10a
+    stub for the destroyed Turin 4,19 entry), `Senen////`, `Shed////`,
+    `Hu////`, `Mery///` carry `alt_display_names: []`. Genuine homonyms
+    always use a single `/` between alternatives (`Djet/Wadjet`,
+    `Khasekhem/Khasekhemwy`, `Qa Hedjet/Hui/Huni`)."""
     for r in _rows():
-        if "/" in r["display_name"]:
+        if "/" in r["display_name"] and "//" not in r["display_name"]:
             assert r["alt_display_names"] == r["display_name"].split("/"), r
 
 
@@ -716,6 +761,18 @@ def test_ramesside_only_tagging_is_applied_where_expected() -> None:
         "leprohon-3a.04",  # Nebkare
         "leprohon-4.05",  # Baufre
         "leprohon-6.07",  # Queen Neith-Iqeret / Nitocris
+        # Chunk 3 FIP (Dyn 9–10a): 7 explicitly-asterisked headwords plus
+        # 1 Senen//// (headword asterisk `5. SENEN ////*`). All except
+        # `/////` stub (9-10a.02 — no name entries to attach a tag to)
+        # and Neferkare III (9-10a.03 — contemporarily attested per fn. 6)
+        # carry the Ramesside-only tag.
+        "leprohon-9-10a.01",  # Khety I
+        "leprohon-9-10a.04",  # Khety II
+        "leprohon-9-10a.05",  # Senen////
+        "leprohon-9-10a.06",  # Khety III
+        "leprohon-9-10a.07",  # Khety IV
+        "leprohon-9-10a.08",  # Shed////
+        "leprohon-9-10a.09",  # Hu////
     }
     for lid in expected_tagged:
         r = _row(lid)
@@ -724,6 +781,79 @@ def test_ramesside_only_tagging_is_applied_where_expected() -> None:
             f"{lid} ({r['display_name']}): expected Ramesside-only tag in "
             f"source_note, got: {sn[:120]!r}"
         )
+
+
+DUAL_EMIT_PAIRS: dict[str, tuple[tuple[str, int], ...]] = {
+    # Extraction-pipeline dual-emissions where a single Leprohon-labelled
+    # entry is duplicated into multiple name-type lists. Enumerated
+    # explicitly (rather than inferred from shared transliteration) because
+    # many kings have COINCIDENTAL text overlaps across name types that
+    # are NOT dual-emits — e.g. Qaa's Horus `ḳꜣ-ꜥ` and Nebty `ḳꜣ-ꜥ` are two
+    # separate Leprohon entries with different footnote commentary, not a
+    # single entry duplicated.
+    #
+    # Tuple elements are `(field, variant_index)` identifying each copy;
+    # all copies must share a single `source_note`.
+    "leprohon-2.08": (
+        # Khasekhemwy: `Horus/Seth 2` form — the Horus name entry (variant 2),
+        # the Nebty name entry (variant 1), and the Seth name entry (variant 1)
+        # are all the SAME Leprohon-labelled entry. Historically the Nebty
+        # copy carried an additional `nbwy` honorific-transposition footnote
+        # that horus/seth did not; the fix_rows pass reconciled them.
+        ("horus_names", 2),
+        ("nebty_names", 1),
+        ("seth_names", 1),
+    ),
+    "leprohon-9-10a.07": (  # Khety IV: `Throne and birth:` dual
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+    "leprohon-9-10b.03": (  # Khety VI: `Throne and birth:` dual
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+}
+
+
+def test_dual_emit_source_notes_are_symmetric() -> None:
+    """When the extraction pipeline dual-emits a single Leprohon-labelled
+    entry to TWO or more name-type lists (Khasekhemwy's `Horus/Seth 2`;
+    Khety IV / Khety VI's `Throne and birth:`), every copy must carry the
+    SAME `source_note`. Rule 4 (single source of truth): Ramesside-only
+    tags, bracket-reconstruction notes, footnote provenance, and dual-
+    classification commentary live on the entry regardless of which list
+    a consumer reads from. Regression guard — a future extraction that
+    forgets to mirror a tag fails here before the data ships."""
+    for lid, pairs in DUAL_EMIT_PAIRS.items():
+        r = _row(lid)
+        notes = []
+        for field, variant_index in pairs:
+            candidates = [e for e in r[field] if e["variant_index"] == variant_index]
+            assert len(candidates) == 1, (
+                f"{lid}: {field}[variant_index={variant_index}] "
+                f"expected 1 match, got {len(candidates)}"
+            )
+            notes.append((field, candidates[0].get("source_note")))
+        distinct = {n for _, n in notes}
+        assert len(distinct) == 1, (
+            f"{lid}: dual-emit source_notes diverge across "
+            f"{[f for f, _ in notes]}:\n  " + "\n  ".join(
+                f"{f}: {n!r}" for f, n in notes
+            )
+        )
+        # Guard against a future regression where both copies drop their
+        # source_note to None — symmetric-but-empty would trivially pass
+        # the distinct-values check above without actually preserving the
+        # Ramesside-only / bracket / dual-classification tags the pair
+        # is supposed to carry. Dual-emits by construction have non-None
+        # notes because the dual-emission marker phrase itself (e.g.
+        # "Horus/Seth 2 form", "Throne and Birth") is required.
+        # Codex review 2026-04-20 PR #86 P2.
+        for field, note in notes:
+            assert note is not None, (
+                f"{lid}: dual-emit entry in {field} has source_note=None; "
+                f"dual-emits must carry the canonical marker phrase."
+            )
 
 
 def test_every_populated_field_on_flagship_den_asserted() -> None:

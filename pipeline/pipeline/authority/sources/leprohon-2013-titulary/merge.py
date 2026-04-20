@@ -160,25 +160,41 @@ def _majority(values: list) -> tuple[object, int]:
     return None, 0
 
 
-# leprohon_id is `leprohon-{dynasty_group}.{NN}` where dynasty_group is either
-# a plain integer (`0`, `3`, `18`) or an integer followed by a single
-# lowercase-letter suffix (`2a`, `3a`, `8a`) denoting a Leprohon sub-dynasty
-# section (Ramesside-added kings with no contemporary attestation). NN is a
-# zero-padded 2-digit sequence within that dynasty_group. Sort order: dynasty
-# numeric ascending, then suffix ascending (empty-suffix before `a`), then
-# sequence ascending. Sub-dynasties (2a, 3a, 8a) sort immediately after their
-# parent (2, 3, 8) so the file reads in book-section order.
+# leprohon_id is `leprohon-{dynasty_group}.{NN}` where dynasty_group is one of:
+# - a plain integer (`0`, `3`, `18`) — standard dynasty
+# - an integer + single lowercase-letter suffix (`2a`, `3a`, `8a`, `11a`) —
+#   Leprohon sub-dynasty section
+# - a hyphenated range + suffix (`9-10a`, `9-10b`) — Leprohon's combined
+#   labels for dynasties he considers inseparable (introduced in chapter IV
+#   FIP where he bundles Dynasties 9 and 10 into groups a/b)
+#
+# NN is a zero-padded 2-digit sequence. Sort order: the LOWER integer of
+# the dynasty group ascending, then the hyphenated-range indicator (plain
+# `9` sorts before `9-10`), then suffix ascending (empty before `a`),
+# then sequence ascending. This keeps `leprohon-3.01` between `leprohon-
+# 2a.02` and `leprohon-3a.01`, and `leprohon-9-10a.NN` between `leprohon-
+# 8a.08` and `leprohon-11a.01` in reconciled.jsonl.
 _LID_RE = re.compile(
-    r"^leprohon-(?P<dynasty_num>\d+)(?P<dynasty_suffix>[a-z]?)\.(?P<seq>\d+)$"
+    r"^leprohon-"
+    r"(?P<dynasty_num>\d+)"
+    r"(?:-(?P<dynasty_num_end>\d+))?"
+    r"(?P<dynasty_suffix>[a-z]?)"
+    r"\.(?P<seq>\d+)$"
 )
 
 
-def _sort_key(lid: str) -> tuple[int, str, int, str]:
+def _sort_key(lid: str) -> tuple[int, int, str, int, str]:
     match = _LID_RE.match(lid)
     if match is None:
-        return (9999, "", 9999, lid)
+        return (9999, 9999, "", 9999, lid)
+    dynasty_num = int(match.group("dynasty_num"))
+    # `is_range` tiebreaker: plain `9` sorts before `9-10` because the plain
+    # form is conceptually "Dynasty 9 standalone", the ranged form is a
+    # grouped label Leprohon uses when he can't cleanly separate the two.
+    is_range = 1 if match.group("dynasty_num_end") else 0
     return (
-        int(match.group("dynasty_num")),
+        dynasty_num,
+        is_range,
         match.group("dynasty_suffix"),
         int(match.group("seq")),
         lid,

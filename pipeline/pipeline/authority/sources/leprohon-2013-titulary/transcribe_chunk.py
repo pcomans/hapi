@@ -52,8 +52,17 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # cut off mid-Dyn-8a after entry 2; extended to 51-69 to include Dyn 8a
     # entries 3-8 (Iti, Imhotep, Hotep, Khui, Isu, Iytjenu) on printed p. 48.
     "old-kingdom": (51, 69, "III. Old Kingdom (+ Dyn 2/2a tail)"),
+    # Chunk 3: chapter IV First Intermediate Period. Printed 49-53, offset
+    # +21, physical 70-74. Contains Dyn 9-10a (9 entries, 8 Ramesside-only +
+    # 1 contemporarily-attested Neferkare III; entry 2 is a `/////` stub for
+    # a Turin-Canon name-missing row), Dyn 9-10b (6 entries, all
+    # contemporarily attested), and Dyn 11a (4 entries: Mentuhotep I +
+    # Intef I/II/III, all contemporarily attested — though Mentuhotep I's
+    # `Later Horus name: tp a*` is itself flagged as a Ramesside fabrication
+    # per Leprohon's footnote 27).
+    "fip": (70, 74, "IV. First Intermediate Period"),
 }
-DEFAULT_CHUNK = "old-kingdom"
+DEFAULT_CHUNK = "fip"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
@@ -87,12 +96,16 @@ MDC_MAP: dict[str, str] = {
 NAME_LABELS: tuple[str, ...] = (
     "Horus/Seth",
     "Later cartouche name",
+    "Later Horus name",
     "Two Ladies",
     "Golden Horus",
     "Seth name",
+    "Throne and birth",
+    "Throne and Birth",
     "Horus",
     "Throne",
     "Birth",
+    "Cartouche",
 )
 
 # A single Leprohon name row, after pypdf text-layer extraction, looks like:
