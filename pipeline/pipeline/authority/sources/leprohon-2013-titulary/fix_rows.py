@@ -445,6 +445,12 @@ MDC_MAP: dict[str, str] = {
     "q": "ḳ",
 }
 
+# Uppercase-only MdC subset (unambiguous normalisation targets — see
+# `_apply_mdc_on_uppercase` rationale for why lowercase `a`/`q`/`x` are
+# excluded). frozenset for O(1) membership checks in the per-character
+# generator expression.
+_UPPERCASE_MDC_CODES = frozenset(("A", "H", "X", "S", "T", "D"))
+
 
 def _apply_mdc_on_uppercase(text: str) -> str:
     """Apply MdC → Egyptological Unicode on uppercase-letter MdC codes only.
@@ -461,7 +467,7 @@ def _apply_mdc_on_uppercase(text: str) -> str:
     The uppercase set is unambiguous: no Egyptological Unicode transliteration
     ever contains uppercase Latin, so any occurrence is a normalisation gap.
     """
-    return "".join(MDC_MAP[ch] if ch in ("A", "H", "X", "S", "T", "D") else ch for ch in text)
+    return "".join(MDC_MAP[ch] if ch in _UPPERCASE_MDC_CODES else ch for ch in text)
 
 
 def normalize_translit_mdc(rows: list[dict]) -> list[str]:
