@@ -415,6 +415,42 @@ DYN19_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+DYN20_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist-reviewer 2026-04-20 PR #93 P2-1: Ramesses III Horus
+    # variants 9-15 are listed in Leprohon under the subheading "Various
+    # monuments found outside the Royal Palace" (PDF p. 149, line 165),
+    # explicitly distinct from the preceding Medinet-Habu-tagged block
+    # (variants 1-8). The "Medinet Habu, " prefix mis-attributes them
+    # back to the preceding block. Use the author's own subheading text
+    # verbatim. (Royal Palace IS at Medinet Habu temple complex per
+    # Hölscher 1941, but Leprohon's editorial choice was to separate
+    # them; preserve that distinction.)
+    *[
+        (
+            "leprohon-20.02",
+            f"horus_names.{idx}.attested_in",
+            ["Various monuments found outside the Royal Palace"],
+            f"Replace incorrect 'Medinet Habu, ...' prefix on Horus "
+            f"variant {idx + 1} with Leprohon's own subheading text. "
+            f"Egyptologist-reviewer 2026-04-20 PR #93 P2-1.",
+        )
+        for idx in range(8, 15)  # H9 (idx 8) through H15 (idx 14)
+    ],
+    # Egyptologist-reviewer 2026-04-20 PR #93 P2-2: Sethnakht GH2 has
+    # `attested_in: []` despite the source_note saying "Stela from the
+    # Sinai (Gardiner and Peet 1955, no. 271)". Move the attestation
+    # citation into the structured field for consistency with how
+    # Ramesses III variants capture provenance.
+    (
+        "leprohon-20.01",
+        "golden_horus_names.1.attested_in",
+        ["Sinai stela (Gardiner and Peet 1955, no. 271)"],
+        "Move Sinai-stela attestation from source_note prose into "
+        "structured `attested_in` field. Egyptologist-reviewer "
+        "2026-04-20 PR #93 P2-2.",
+    ),
+]
+
 DYN13A14_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 PR #89 P2-4: Dyn 14 entry 3 Qareh
     # was previously catalogued by museums as "Qar" (per Leprohon p. 95
@@ -460,6 +496,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *DYN13A14_CORRECTIONS,
     *DYN18_CORRECTIONS,
     *DYN19_CORRECTIONS,
+    *DYN20_CORRECTIONS,
 ]
 
 
