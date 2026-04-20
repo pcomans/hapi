@@ -109,13 +109,15 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # includes Senakhtenre, Seqenenre, Kamose — the immediate
     # predecessors of Ahmose I.
     "sip": (102, 113, "VI. Second Intermediate Period"),
-    # Chunk 8 (this PR): chapter VII New Kingdom — Dyn 18. Printed 93-106,
-    # offset +21, physical 114-127 (Dyn 19 starts at 128). The densest
-    # per-king chunk in the book — Thutmose III alone has dozens of
-    # attested prenomen / epithet variants, Hatshepsut / Akhenaten have
-    # mid-reign titulary stages (stage_suffix a/b). ~14 kings but many
-    # name-entries per king.
-    "dyn18": (114, 127, "VII. New Kingdom (Dyn 18)"),
+    # Chunk 8 (this PR): chapter VII New Kingdom — Dyn 18. Printed 93-107,
+    # offset +21, physical 114-128. The densest per-king chunk in the
+    # book — Thutmose III alone has dozens of attested prenomen / epithet
+    # variants, Akhenaten has the NK inline-stage convention (10a / 10b).
+    # Physical p. 128 is shared with chunk 9 (Ay's Birth name spills
+    # over from p. 127 to p. 128, AND Horemheb starts Dyn 19 mid-page);
+    # the prompt tells agents to STOP at the `Dynasty 19` header so
+    # only Ay's tail is consumed from p. 128.
+    "dyn18": (114, 128, "VII. New Kingdom (Dyn 18)"),
 }
 DEFAULT_CHUNK = "dyn18"
 

@@ -343,6 +343,60 @@ DYN13_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+DYN18_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist-reviewer 2026-04-20 PR #91 P2: Akhenaten's two stages
+    # (10a/10b) currently have display_name = "Amenhotep IV (Regnal Years
+    # 1 to 5)" / "Akhenaten (Regnal Years 5 to 17)". Phase-A museum-record
+    # matching needs the bare king names too — museums catalog under plain
+    # "Amenhotep IV" or "Akhenaten", not the parenthetical-included form.
+    (
+        "leprohon-18.10a",
+        "alt_display_names",
+        ["Amenhotep IV"],
+        "Add bare king-name alt for Phase-A museum-record matching. "
+        "Egyptologist-reviewer 2026-04-20 PR #91 P2.",
+    ),
+    (
+        "leprohon-18.10b",
+        "alt_display_names",
+        ["Akhenaten"],
+        "Add bare king-name alt for Phase-A museum-record matching. "
+        "Egyptologist-reviewer 2026-04-20 PR #91 P2.",
+    ),
+    # Code-reviewer 2026-04-20 PR #91 P1: Smenkhkare (18.12) is a
+    # `Throne and Birth names:` combined-cartouche dual-emit (same
+    # convention as Sewadjtu 13.35, Khety IV/VI, Khasekhemwy). The 3
+    # agents emitted divergent source_note phrasings; canonicalize
+    # both copies to a single text matching the chunk-3/5 convention
+    # so `test_dual_emit_source_notes_are_symmetric` (after Smenkhkare
+    # is added to DUAL_EMIT_PAIRS) holds.
+    (
+        "leprohon-18.12",
+        "throne_names.0.source_note",
+        (
+            "Gauthier 1912, 362–64. Leprohon labels as 'Throne and Birth' "
+            "— a combined entry where Throne and Birth names share a "
+            "single cartouche. Horus, Two Ladies, and Golden Horus names "
+            "are not attested for this king."
+        ),
+        "Canonical source_note for Smenkhkare dual-emit (chunk-3/5 "
+        "convention). Agents disagreed on phrasing; canonicalize to a "
+        "single richer text on both copies for symmetry-test compliance.",
+    ),
+    (
+        "leprohon-18.12",
+        "birth_names.0.source_note",
+        (
+            "Gauthier 1912, 362–64. Leprohon labels as 'Throne and Birth' "
+            "— a combined entry where Throne and Birth names share a "
+            "single cartouche. Horus, Two Ladies, and Golden Horus names "
+            "are not attested for this king."
+        ),
+        "Canonical source_note for Smenkhkare dual-emit (matches "
+        "throne_names copy exactly per dual-emit symmetry).",
+    ),
+]
+
 DYN13A14_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 PR #89 P2-4: Dyn 14 entry 3 Qareh
     # was previously catalogued by museums as "Qar" (per Leprohon p. 95
@@ -386,6 +440,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *MK_CORRECTIONS,
     *DYN13_CORRECTIONS,
     *DYN13A14_CORRECTIONS,
+    *DYN18_CORRECTIONS,
 ]
 
 
@@ -462,29 +517,34 @@ MDC_MAP: dict[str, str] = {
     "q": "ḳ",
 }
 
-# Uppercase-only MdC subset (unambiguous normalisation targets — see
-# `_apply_mdc_on_uppercase` rationale for why lowercase `a`/`q`/`x` are
-# excluded). frozenset for O(1) membership checks in the per-character
-# generator expression.
-_UPPERCASE_MDC_CODES = frozenset(("A", "H", "X", "S", "T", "D"))
+# All MdC codes in the MDC_MAP are normalisation targets in the
+# transliteration safety net. Lowercase codes (`a`/`q`/`x`) ARE
+# applied here even though they're ambiguous with English letters —
+# this function only runs on `transliteration` fields, which are pure
+# Egyptological text (no English prose), so the ambiguity doesn't
+# apply. The earlier uppercase-only restriction was too conservative;
+# it left `xa`, `xprw`, `smnx`, `iwa ra` etc. unnormalised in the
+# Dyn 18 epithets-added blocks (Gemini PR #91 high-priority finding).
+# frozenset for O(1) membership checks in the per-character generator.
+_TRANSLIT_MDC_CODES = frozenset(MDC_MAP)
 
 
-def _apply_mdc_on_uppercase(text: str) -> str:
-    """Apply MdC → Egyptological Unicode on uppercase-letter MdC codes only.
+def _apply_mdc_on_transliteration(text: str) -> str:
+    """Apply MdC → Egyptological Unicode normalisation across the full
+    MdC subset (uppercase A/H/X/S/T/D + lowercase a/q/x).
 
-    Safety net for transliteration fields that slipped past transcribe_chunk.py's
-    gloss-boundary detection. Egyptological Unicode transliterations are
-    all-lowercase (with diacritical marks); any uppercase Latin letter in a
-    `transliteration` field is almost certainly an unnormalised MdC code
-    (A→ꜣ, H→ḥ, X→ẖ, S→š, T→ṯ, D→ḏ). The lowercase MdC codes (a→ꜥ, q→ḳ, x→ḫ)
-    are deliberately NOT touched by this safety net because `a` is also a
-    valid anglicised-gloss letter, `q` appears as a Latin letter in some
-    English words, and `x` is rare but ambiguous — those require the
-    upstream gloss-boundary detection in transcribe_chunk.py to disambiguate.
-    The uppercase set is unambiguous: no Egyptological Unicode transliteration
-    ever contains uppercase Latin, so any occurrence is a normalisation gap.
+    Safety net for transliteration fields that slipped past
+    transcribe_chunk.py's gloss-boundary detection. Egyptological
+    Unicode transliterations are all-lowercase Latin + diacritical
+    marks; ANY MdC code character in a `transliteration` field is an
+    unnormalised gap.
+
+    Lowercase ambiguity caveat: `a`, `q`, `x` are valid English letters.
+    This function MUST NOT be applied to `source_note` / `translation` /
+    `anglicised` fields — only to `transliteration`, which is pure
+    Egyptological text where the ambiguity doesn't arise.
     """
-    return "".join(MDC_MAP[ch] if ch in _UPPERCASE_MDC_CODES else ch for ch in text)
+    return "".join(MDC_MAP[ch] if ch in _TRANSLIT_MDC_CODES else ch for ch in text)
 
 
 def normalize_translit_mdc(rows: list[dict]) -> list[str]:
@@ -506,7 +566,7 @@ def normalize_translit_mdc(rows: list[dict]) -> list[str]:
                 translit = entry.get("transliteration")
                 if not isinstance(translit, str):
                     continue
-                normalised = _apply_mdc_on_uppercase(translit)
+                normalised = _apply_mdc_on_transliteration(translit)
                 if normalised != translit:
                     entry["transliteration"] = normalised
                     log_lines.append(

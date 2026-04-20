@@ -6,7 +6,9 @@ Pass this to **three** independent Claude Code subagents in parallel. Each agent
 
 You are extracting structured king data from Leprohon, Ronald J. (2013) *The Great Name: Ancient Egyptian Royal Titulary*, SBL WAW 33.
 
-**Input:** `/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/leprohon-2013-titulary/raw/chunk-p114-p127-pypdf.md` — physical pp. 114–127 = printed 93–106. Contains all of **Dynasty 18** from Leprohon's chapter VII New Kingdom.
+**Input:** `/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/leprohon-2013-titulary/raw/chunk-p114-p128-pypdf.md` — physical pp. 114–128 = printed 93–107. Contains all of **Dynasty 18** from Leprohon's chapter VII New Kingdom.
+
+**Scope boundary:** physical p. 128 is SHARED with chunk 9. The page contains the END of Ay's entry (his Birth name spills over from p. 127) AND the OPENING of Dynasty 19 (Horemheb is Leprohon's Dyn 19 entry 1). **EXTRACT Ay's complete entry** including the Birth name from p. 128, then **STOP at the `Dynasty 19` header**. Do NOT emit any Dyn 19 / Horemheb rows from this chunk; those land in chunk 9.
 
 **Output:** `/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/leprohon-2013-titulary/raw/agent-{a|b|c}-dyn18.jsonl`
 
