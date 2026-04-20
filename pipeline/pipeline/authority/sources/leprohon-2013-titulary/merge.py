@@ -190,7 +190,7 @@ _LID_RE = re.compile(
     r"(?P<dynasty_num>\d+)"
     r"(?:-(?P<dynasty_num_end>\d+))?"
     r"(?P<dynasty_suffix>[a-z]?)"
-    r"\.(?P<seq>\d+)"
+    r"\.(?P<seq>\d{2})"
     r"(?P<stage_suffix>[a-z]?)$"
 )
 
