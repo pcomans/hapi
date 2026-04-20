@@ -405,13 +405,15 @@ def test_role_code_set_spans_the_known_codes() -> None:
         assert expected in all_codes, (
             f"expected Head of South code {expected!r} never extracted"
         )
-    # Seizers of the Two Lands codes (new in chunk 5): `UWC` (Uniter-of-
-    # the-Two-Crowns or similar — heavily used on Dyn-12 wives); `GF` (on
+    # Seizers of the Two Lands codes genuinely new in chunk 5: `GF` (on
     # the father-of-Amenemhat-I entry Senwosret A — a gendered role code
-    # not on prior-chunk list); the long-form role-phrase
+    # not on prior-chunk list), and the long-form role-phrase
     # `Mistress of All Women` (on Kaneferu — preserved as a single
-    # verbatim token rather than split on spaces).
-    for expected in ["UWC", "GF", "Mistress of All Women"]:
+    # verbatim token rather than split on spaces). `UWC` appears heavily
+    # on Dyn-12 wives but is NOT new — the Power chunk's Hatshepsut D
+    # already carries it (see `test_hatshepsut_d_full_row`), so the
+    # Seizers chunk adds new density rather than a new code.
+    for expected in ["GF", "Mistress of All Women"]:
         assert expected in all_codes, (
             f"expected Seizers code {expected!r} never extracted"
         )
