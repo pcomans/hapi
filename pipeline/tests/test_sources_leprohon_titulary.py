@@ -188,6 +188,21 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (125, 135),
         "physical_page_range": (146, 156),
     },
+    "tip-late": {
+        # Chapter VIII TIP late — Dyn 23 (Tanite/Theban split) + Dyn 23a
+        # (collateral) + Dyn 24 (Saite — Tefnakhte, Bakenrenef) + Dyn 25
+        # (Nubian/Kushite — Kashta, Piye, Shabaka, Shabataka, Taharqa,
+        # Tantamani). Per-dynasty counts verified post-extraction.
+        "chapter": "Third Intermediate Period",
+        "rows_by_dynasty_label": {
+            "Dynasty 23": 9,
+            "Dynasty 23a": 5,
+            "Dynasty 24": 2,
+            "Dynasty 25": 7,
+        },
+        "printed_page_range": (153, 163),
+        "physical_page_range": (174, 184),
+    },
     "tip-early": {
         # Chapter VIII Third Intermediate Period — Dyn 21 (Tanite) +
         # Dyn 21a (Theban HPA parallel) + Dyn 22 (Bubastite Sheshonqs,
@@ -932,6 +947,23 @@ def test_khufu_has_greek_alias_cheops() -> None:
 # Dyn 8a is contemporarily attested — no Ramesside-only tags despite being
 # a sub-dynasty. This test locks in the lesson from the chunk-2 prompt error.
 # ---------------------------------------------------------------------------
+
+
+def test_tip_late_no_ramesside_only_tags() -> None:
+    """All Dyn 23 / 23a / 24 / 25 kings (chunk 12 TIP-late) are
+    contemporarily attested per Leprohon's prose preamble. Code-reviewer
+    PR #95 P2 guard mirroring the chunk-9/10/11 per-preamble pattern.
+    Per CLAUDE.md rule 3, the invariant cannot live only in prose."""
+    tip_late_labels = {"Dynasty 23", "Dynasty 23a", "Dynasty 24", "Dynasty 25"}
+    rows = [r for r in _rows() if r["dynasty_label"] in tip_late_labels]
+    assert len(rows) == 23, len(rows)
+    for r in rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): {r['dynasty_label']} "
+            f"is contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
 
 
 def test_tip_early_no_ramesside_only_tags() -> None:

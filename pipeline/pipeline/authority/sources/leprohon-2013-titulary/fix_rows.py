@@ -452,6 +452,122 @@ MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+TIP_LATE_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Gemini Code Assist PR #95 high-priority finding: 6 rows in Dyn 23
+    # have throne-name epithets duplicated into the `birth_names` list
+    # (in addition to their correct placement in `throne_names`). The
+    # duplicates carry source_note "Epithet added to the Throne name."
+    # — the agents extracted the epithet block once for throne_names
+    # and wrongly emitted it again for birth_names. Remove the
+    # duplicates and re-index variant_index on the remaining birth_names
+    # entries. The throne_names placement is correct and unchanged.
+    (
+        "leprohon-23.01",
+        "birth_names",
+        [
+            {"transliteration": "pꜣ di bꜣstt", "anglicised": "pa di bastet", "translation": "He whom Bastet has given", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ ꜣst", "anglicised": "sa aset", "translation": "Son of Isis", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet `stp n imn` wrongly duplicated into "
+        "birth_names; re-index remaining birth entries. Gemini PR #95 P1.",
+    ),
+    (
+        "leprohon-23.03",
+        "birth_names",
+        [
+            {"transliteration": "ššnḳ", "anglicised": "shesheneq", "translation": "Sheshonq", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": "The epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche."},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    (
+        "leprohon-23.04",
+        "birth_names",
+        [
+            {"transliteration": "wsrkn", "anglicised": "weserken", "translation": "Osorkon", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": "As with the previous ruler, the epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche."},
+            {"transliteration": "sꜣ ꜣst mry imn", "anglicised": "sa aset, mery imen", "translation": "Son of Isis, beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "nṯr ḥḳꜣ wꜣst", "anglicised": "netjer heqa waset", "translation": "The divine ruler of Thebes", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet `stp n imn` duplicate from Osorkon III "
+        "birth_names; re-index. Gemini PR #95 second-pass HIGH P1.",
+    ),
+    (
+        "leprohon-23.05",
+        "birth_names",
+        [
+            {"transliteration": "tklt", "anglicised": "takelot", "translation": "Takelot", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ ꜣst mry imn nṯr ḥḳꜣ wꜣst", "anglicised": "sa aset, mery imen, netjer heqa waset", "translation": "Son of Isis, beloved of Amun, the divine ruler of Thebes", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    (
+        "leprohon-23.08",
+        "birth_names",
+        [
+            {"transliteration": "iwpwt", "anglicised": "iuput", "translation": "Iuput", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ bꜣstt mry imn", "anglicised": "sa bastet, mery imen", "translation": "Son of Bastet, beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    (
+        "leprohon-23.09",
+        "birth_names",
+        [
+            {"transliteration": "ššnḳ", "anglicised": "shesheneq", "translation": "Sheshonq", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "nṯr ḥḳꜣ wꜣst", "anglicised": "netjer heqa waset", "translation": "The divine ruler of Thebes", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    (
+        "leprohon-23a.01",
+        "birth_names",
+        [
+            {"transliteration": "pꜣ di bꜣstt", "anglicised": "pa di bastet", "translation": "He whom Bastet has given", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "sꜣ ꜣst", "anglicised": "sa aset", "translation": "Son of Isis", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "sꜣ bꜣstt", "anglicised": "sa bastet", "translation": "Son of Bastet", "variant_index": 3, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "mry imn", "anglicised": "mery imen", "translation": "Beloved of Amun", "variant_index": 4, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+            {"transliteration": "stp n imn-rꜥ mꜣꜥt", "anglicised": "setep en imen-ra, maat", "translation": "Chosen by Amun-Re of Maat", "variant_index": 5, "is_variant": True, "attested_in": [], "source_note": "Epithet added to the Birth name."},
+        ],
+        "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
+    ),
+    # Egyptologist-reviewer 2026-04-20 PR #95 P2 (Dyn 25 aliases): 4
+    # museum/scholarly aliases for the Nubian kings, attributed per
+    # rule 1 (scholarly traceability) per code-reviewer PR #95 P1
+    # demand. The Shoshenq VI/VIa/VII aliases were removed from this
+    # block — agents already emitted them per prompt rule (verified
+    # against merge-disagreements.txt — agents unanimous on those
+    # aliases, fix_rows would have been pure no-op churn).
+    (
+        "leprohon-25.06",
+        "alt_display_names",
+        ["Taharka", "Tirhakah"],
+        "Add `Taharka` (Leclant/Kitchen orthography per egyptologist) "
+        "and `Tirhakah` (biblical form, Isaiah 37:9 — appears in older "
+        "museum catalogs that use biblical names). Egyptologist-reviewer "
+        "2026-04-20 PR #95.",
+    ),
+    (
+        "leprohon-25.07",
+        "alt_display_names",
+        ["Tantamani", "Tanutamani", "Tanwetamani"],
+        "Add `Tantamani` (von Beckerath standard transliteration), "
+        "`Tanutamani` (Gemini PR #95: missed alias from prompt's own "
+        "alias enumeration), and `Tanwetamani` (post-Kitchen scholarly "
+        "form). Leprohon's `Tanutamun` is the rarer reading; museums "
+        "consistently use Tantamani or Tanwetamani.",
+    ),
+    (
+        "leprohon-25.04",
+        "alt_display_names",
+        ["Shabako"],
+        "Add `Shabako` (Leclant orthography per egyptologist; standard "
+        "in Kitchen-TIPE and post-Kitchen Kushite scholarship). "
+        "Egyptologist-reviewer 2026-04-20 PR #95.",
+    ),
+]
+
 TIP_EARLY_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Chunk-11 (PR #94) page-citation merge dispute: agent A emitted
     # printed=139, agent B emitted printed=138, agent C emitted (137,
@@ -598,6 +714,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *DYN19_CORRECTIONS,
     *DYN20_CORRECTIONS,
     *TIP_EARLY_CORRECTIONS,
+    *TIP_LATE_CORRECTIONS,
 ]
 
 
