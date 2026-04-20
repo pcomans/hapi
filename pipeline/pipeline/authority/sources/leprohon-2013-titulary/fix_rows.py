@@ -297,6 +297,23 @@ FIP_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+DYN13_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Chunk-5 stub row leprohon-13.49 is the "one name lost" placeholder —
+    # Leprohon preserves the sequence slot for a Turin-Canon entry whose
+    # name is unreadable (similar to chunk-3 `/////` stub). Leprohon prints
+    # the label in SMALLCAP (`49. ONE NAME LOST`); pypdf extracts it
+    # lowercase because the SMALLCAP typography doesn't survive the text-
+    # layer extraction. Title-case the display_name to match the agents'
+    # standard SMALLCAP → title-case convention applied everywhere else.
+    (
+        "leprohon-13.49",
+        "display_name",
+        "One Name Lost",
+        "Title-case stub display_name to match SMALLCAP → title-case "
+        "convention applied to all other Leprohon headwords.",
+    ),
+]
+
 MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 (PR #87): Leprohon's own section
     # header on PDF p. 81 line 320 reads `(Queen) Sobeknefru` (no 'e'
@@ -322,6 +339,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
     *MK_CORRECTIONS,
+    *DYN13_CORRECTIONS,
 ]
 
 

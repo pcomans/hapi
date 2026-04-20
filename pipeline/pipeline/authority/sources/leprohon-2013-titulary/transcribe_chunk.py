@@ -79,8 +79,19 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # ephemeral dynasties ship as their own chunks (future chunk 5 = Dyn
     # 13 alone ~37 kings; future chunk 6 = Dyn 13a+14+14a ~32 kings).
     "mk": (75, 81, "V. Middle Kingdom (Dyn 11b + Dyn 12)"),
+    # Chunk 5 (this PR): chapter V Middle Kingdom continuation — the late
+    # MK Dynasty 13 ephemeral line. Printed 60-71, offset +21, physical
+    # 81-92. Physical p. 81 is shared with chunk 4 (Queen Sobekneferu
+    # tail of Dyn 12 is on the same page as the Dyn 13 opening header);
+    # the prompt tells agents to START at the `Dynasty 13` header and
+    # skip the Sobekneferu row already extracted in chunk 4. Expected
+    # ~37 kings making this the densest-king-count chunk in the book;
+    # most are fragmentary (`////` wildcards, Ramesside-list-only) and
+    # most name-types-per-king are much sparser than MK proper (Throne
+    # name + Birth name is typical; full fivefold titulary is rare).
+    "dyn13": (81, 92, "V. Middle Kingdom (Dyn 13 ephemeral line)"),
 }
-DEFAULT_CHUNK = "mk"
+DEFAULT_CHUNK = "dyn13"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
