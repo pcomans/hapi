@@ -109,8 +109,15 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # includes Senakhtenre, Seqenenre, Kamose — the immediate
     # predecessors of Ahmose I.
     "sip": (102, 113, "VI. Second Intermediate Period"),
+    # Chunk 8 (this PR): chapter VII New Kingdom — Dyn 18. Printed 93-106,
+    # offset +21, physical 114-127 (Dyn 19 starts at 128). The densest
+    # per-king chunk in the book — Thutmose III alone has dozens of
+    # attested prenomen / epithet variants, Hatshepsut / Akhenaten have
+    # mid-reign titulary stages (stage_suffix a/b). ~14 kings but many
+    # name-entries per king.
+    "dyn18": (114, 127, "VII. New Kingdom (Dyn 18)"),
 }
-DEFAULT_CHUNK = "sip"
+DEFAULT_CHUNK = "dyn18"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]

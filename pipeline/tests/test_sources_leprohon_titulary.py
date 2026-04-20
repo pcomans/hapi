@@ -144,6 +144,19 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (81, 92),
         "physical_page_range": (102, 113),
     },
+    "dyn18": {
+        # Chapter VII New Kingdom Dyn 18. 14 numbered king entries +
+        # 2 multi-stage doublings (Thutmose III 5a/5b separately-numbered
+        # MK-style + Akhenaten 10a/10b inline-stage NK convention) =
+        # 16 rows. Horemheb placed in Dyn 19 per Leprohon's editorial
+        # scheme; will land in chunk 9.
+        "chapter": "New Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 18": 16,
+        },
+        "printed_page_range": (93, 106),
+        "physical_page_range": (114, 127),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -744,6 +757,16 @@ def test_headword_display_names_are_title_cased() -> None:
         # alphabetical title-casing anyway.
         if "//" in display or "[" in display or "]" in display:
             continue
+        # Strip interior parenthetical expressions (e.g. NK inline-stage
+        # markers like `Amenhotep IV (Regnal Years 1 to 5)`) before
+        # tokenising. The non-parenthesised portion is the actual king
+        # name and is what the title-case rule applies to; the
+        # parenthetical is descriptive metadata (regnal years, Greek
+        # alias, roman-numeral disambiguator, etc.) that may contain
+        # digits, lowercase function words, or other non-title content.
+        display = re.sub(r"\s*\([^)]*\)", "", display).strip()
+        if not display:
+            continue  # all-parenthetical display name (e.g. dummy stub)
         for part in display.replace("/", " ").split():
             if part.startswith("(") or part.endswith(")"):
                 continue  # Exception 3/5: parenthesised groups
