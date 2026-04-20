@@ -88,6 +88,21 @@ Deferred. When performed, log as `human-review-<YYYY-MM-DD>-<chunk>.md` per the 
 - **Merge output:** `reconciled.jsonl`, `merge-disagreements.txt` (committed).
 - **Reviewer log:** TBD.
 
-### Chunk 2+ — TBD
+### Chunk 2 — Chapter III Old Kingdom (+ recovered p. 30 from chunk 1)
+
+- **Physical PDF pages:** 51–69 (19 pages).
+- **Printed pages:** 30–48.
+- **Physical-to-printed offset at chunk start / end:** +21 / +21. No drift.
+- **Scope recovery:** chunk 1 misread the chapter-II boundary as ending at printed p. 29 and silently omitted 3 rows on printed p. 30 (`9. SENEFERKA` + Dyn-2a `1. NEFERKASOKAR` + `2. "HUDJEFA" (I)`). Chunk 2 picks them up as the first 3 emitted rows (`leprohon-2.09`, `leprohon-2a.01`, `leprohon-2a.02`), each tagged `chapter: "Early Dynastic Period"` to reflect their structural home.
+- **Row count:** 60 rows. Per-dynasty: 2:1, 2a:2, 3:5, 3a:4, 4:7, 5:9, 6:7, 8:17, 8a:8.
+- **Schema addition:** sub-dynasty suffix in `leprohon_id` (e.g. `leprohon-2a.01`, `leprohon-3a.03`, `leprohon-8a.08`) for Leprohon's distinctly-typeset Dyn-Na sub-sections. `dynasty_number` stays the integer parent (`2`, `3`, `8`); `dynasty_label` carries the full label (`"Dynasty 2a"`, `"Dynasty 3a"`, `"Dynasty 8a"`). `merge.py` `_sort_key` and the test-file regex both extended.
+- **Dyn 8a is contemporarily attested, NOT Ramesside-only.** Chunk-2 prompt conflated Dyn 8a's framing with Dyn 2a's and incorrectly told the extractors to tag Dyn 8a as Ramesside-only. All three agents correctly ignored the wrong instruction per constitutional rule 1 (`work like a scholar` — prefer primary source over task framing). Leprohon's section header reads `Dynasty 8a – attested names` (p. 47) and the preface (p. 44) states these are `eight rulers who are attested contemporaneously`. Test `test_dyn_8a_is_contemporarily_attested_not_ramesside_only` locks this in.
+- **OCR tier used:** tier 1 (pypdf+MdC only; no OCR subagent per the policy established in PR #83 for chunks 2+). Single-method input — the 3-agent extraction majority vote is the redundancy layer. No OCR-vs-pypdf disagreements logged this chunk.
+- **Known flagship rows for tests:** Seneferka (2.09, recovered from chunk-1 omission), Khufu (4.02, Greek-alias `Cheops` in alt_display_names), Queen Neith-Iqeret (6.07, with `Nitocris` alt), Iytjenu (8a.08, last Dyn-8a contemporaneous entry).
+- **Extraction output:** `raw/agent-{a,b,c}-old-kingdom.jsonl` (gitignored).
+- **Merge output:** combined into `reconciled.jsonl` (87 rows total: 27 chunk-1 + 60 chunk-2), `merge-disagreements.txt` (committed).
+- **Reviewer log:** no egyptologist-reviewer pass run for chunk 2 standalone — chunk-1 reviewer pass already covered the schema and found the relevant classes of extractor drift; chunk-2 data was spot-checked in-session for Ramesside-only tag correctness and Dyn-8a non-tagging. Full human Egyptologist sign-off remains deferred (ADR-017 step 6).
+
+### Chunk 3+ — TBD
 
 Later chunks will populate rows in this table as they land.
