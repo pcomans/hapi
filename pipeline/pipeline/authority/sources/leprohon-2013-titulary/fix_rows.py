@@ -452,6 +452,24 @@ MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+TIP_EARLY_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Chunk-11 (PR #94) page-citation merge dispute: agent A emitted
+    # printed=139, agent B emitted printed=138, agent C emitted (137,
+    # 158). Merge JSON-equality vote split 1:1:1 and picked agent A's
+    # value. Verified against chunk file: Smendes' headword is on
+    # physical page 159 with running header "138 THE GR EAT NAME"
+    # (chunk-p157-p173-pypdf.md line ~109). Correct citation is
+    # printed=138, physical=159 (the +21 offset holds throughout
+    # chapter VIII).
+    (
+        "leprohon-21.02",
+        "source_citation.printed_page",
+        138,
+        "Fix Smendes printed_page citation to match physical 159's "
+        "running header. Agent disagreement; verified against chunk file.",
+    ),
+]
+
 DYN20_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 PR #93 P2-1: Ramesses III Horus
     # variants 9-15 are listed in Leprohon under the subheading "Various
@@ -530,6 +548,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *DYN18_CORRECTIONS,
     *DYN19_CORRECTIONS,
     *DYN20_CORRECTIONS,
+    *TIP_EARLY_CORRECTIONS,
 ]
 
 

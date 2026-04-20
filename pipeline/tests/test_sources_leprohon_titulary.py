@@ -188,6 +188,25 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (125, 135),
         "physical_page_range": (146, 156),
     },
+    "tip-early": {
+        # Chapter VIII Third Intermediate Period — Dyn 21 (Tanite) +
+        # Dyn 21a (Theban HPA parallel) + Dyn 22 (Bubastite Sheshonqs,
+        # post-Broekman renumbering: 13 numbered kings) + Dyn 22a
+        # (collateral). The TIP chapter was originally scoped as one
+        # chunk in the README but split into chunks 11 (this) and 12
+        # (Dyn 23+23a+24+25) to keep agent context loads manageable.
+        # Initial heuristic estimate of ~49 rows was significantly off;
+        # all 3 agents converged on 25.
+        "chapter": "Third Intermediate Period",
+        "rows_by_dynasty_label": {
+            "Dynasty 21": 8,
+            "Dynasty 21a": 3,
+            "Dynasty 22": 13,
+            "Dynasty 22a": 1,
+        },
+        "printed_page_range": (136, 152),
+        "physical_page_range": (157, 173),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
