@@ -297,9 +297,31 @@ FIP_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist-reviewer 2026-04-20 (PR #87): Leprohon's own section
+    # header on PDF p. 81 line 320 reads `(Queen) Sobeknefru` (no 'e'
+    # between f and r); footnote 46 explicitly argues FOR this spelling
+    # over `Nefrusobek` on Greek-version (Scemiophris) grounds. The
+    # reconciled display_name is the museum-matching default `Sobekneferu`
+    # (Met, Brooklyn, BM), but `alt_display_names` should carry the
+    # Leprohon-preferred `Sobeknefru` plus the older `Nefrusobek` /
+    # `Neferusobek` forms that appear in older museum records. Phase-A
+    # matching needs all three to resolve museum catalog entries.
+    (
+        "leprohon-12.08",
+        "alt_display_names",
+        ["Sobeknefru", "Nefrusobek", "Neferusobek"],
+        "Add Leprohon-endorsed spelling `Sobeknefru` (per Leprohon p. 81 "
+        "§ header line 320 + fn. 46 Greek-version argument) plus older "
+        "forms `Nefrusobek` / `Neferusobek` for Phase-A matching against "
+        "older museum catalogs. Egyptologist-reviewer 2026-04-20 P2-1.",
+    ),
+]
+
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
+    *MK_CORRECTIONS,
 ]
 
 
@@ -362,6 +384,29 @@ NAME_LIST_FIELDS = (
     "later_horus_names",
     "seth_names",
 )
+
+
+def backfill_stage_suffix(rows: list[dict]) -> list[str]:
+    """Ensure every row has the `stage_suffix` top-level field.
+
+    Chunk 4 (Middle Kingdom) introduces `stage_suffix: str | None` to
+    represent Leprohon's titulary-stage numbering (Mentuhotep II's a/b/c,
+    Amenemhat I's a/b). Chunks 1/2/3 rows have no stages and need
+    `stage_suffix: None` backfilled so the schema shape is uniform and
+    downstream consumers don't need to branch on present-vs-absent.
+
+    Code-reviewer-style consistency with the `backfill_name_list_fields`
+    pattern — rule 4 (single source of truth) requires the schema shape
+    be invariant across all rows.
+    """
+    log_lines: list[str] = []
+    for row in rows:
+        if "stage_suffix" not in row:
+            row["stage_suffix"] = None
+            log_lines.append(
+                f"  {row['leprohon_id']}: backfilled stage_suffix=None"
+            )
+    return log_lines
 
 
 def backfill_name_list_fields(rows: list[dict]) -> list[str]:
@@ -432,6 +477,7 @@ def apply_corrections() -> list[str]:
     # leakage uniformly so that any spot corrections that follow operate on
     # clean, fully-keyed rows.
     log_lines.extend(backfill_name_list_fields(rows))
+    log_lines.extend(backfill_stage_suffix(rows))
     log_lines.extend(strip_debug_leakage(rows))
 
     by_id = {r["leprohon_id"]: r for r in rows}

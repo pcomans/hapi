@@ -79,6 +79,24 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (49, 53),
         "physical_page_range": (70, 74),
     },
+    "mk": {
+        "chapter": "Middle Kingdom",
+        "rows_by_dynasty_label": {
+            # Dyn 11b: 5 rows — Mentuhotep II has 3 titulary stages
+            # (5a/5b/5c), Mentuhotep III (entry 6), Mentuhotep IV (entry
+            # 7). Sequence continues from Dyn 11a's tail (Dyn 11a ends
+            # at entry 4 Intef III in chunk 3 FIP), which is Leprohon's
+            # editorial continuation across chapters IV and V.
+            "Dynasty 11b": 5,
+            # Dyn 12: 9 rows — Amenemhat I has 2 stages (1a/1b), then
+            # Senwosret I (2), Amenemhat II (3), Senwosret II (4),
+            # Senwosret III (5), Amenemhat III (6), Amenemhat IV (7),
+            # Queen Sobekneferu (8). 7 base entries + 2 stages.
+            "Dynasty 12": 9,
+        },
+        "printed_page_range": (54, 60),
+        "physical_page_range": (75, 81),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -193,34 +211,68 @@ def test_leprohon_id_is_unique() -> None:
     assert len(ids) == len(set(ids)), "duplicate leprohon_id detected"
 
 
-_LID_RE = re.compile(r"^leprohon-\d+(?:-\d+)?[a-z]?\.\d{2}$")
+_LID_RE = re.compile(
+    r"^leprohon-"
+    r"(?P<dyn_group>\d+(?:-\d+)?[a-z]?)"
+    r"\.(?P<seq>\d{2})(?P<stage>[a-z]?)$"
+)
 
 
 def test_leprohon_id_shape() -> None:
-    """Every id matches `leprohon-{dynasty_group}.{NN}` — NN is exactly two
-    digits. `dynasty_group` is one of:
+    """Every id matches `leprohon-{dynasty_group}.{NN}{stage?}` — NN is
+    exactly two digits, optional single-letter `stage` suffix.
+    `dynasty_group` is one of:
       - a plain integer (`0`, `3`, `18`);
-      - integer + single lowercase suffix (`2a`, `3a`, `8a`, `11a`) — Leprohon's
-        sub-dynasty sections (typeset as "Dynasty 2a" etc. in the book,
-        sometimes Ramesside-only reconstructions, sometimes contemporarily
-        attested — see per-section treatment);
+      - integer + single lowercase suffix (`2a`, `3a`, `8a`, `11a`, `11b`) —
+        Leprohon's sub-dynasty sections (Ramesside-only reconstructions for
+        2a/3a; contemporarily-attested late-Dyn-11 for 11b; see per-section
+        treatment);
       - hyphenated range + suffix (`9-10a`, `9-10b`) — Leprohon's chapter-IV
         combined labels for Dynasties 9 and 10 which he treats as inseparable.
-    """
+
+    The optional `stage` suffix marks a titulary-stage (same king, successive
+    name sets during reign — Mentuhotep II's a/b/c, Amenemhat I's a/b,
+    Akhenaten's a/b). Stages are emitted as separate rows so each carries
+    its own full cross-name-type titulary."""
     for r in _rows():
         assert _LID_RE.match(r["leprohon_id"]), r["leprohon_id"]
 
 
 def test_sequence_matches_id() -> None:
-    """`sequence_in_chapter_section` equals the numeric tail of leprohon_id.
+    """`sequence_in_chapter_section` matches the NUMERIC seq group of
+    leprohon_id; `stage_suffix` matches the letter stage group when
+    present or is None when absent.
 
-    `.split(".", 1)` so that any future `.` in the dynasty-group segment
-    (none today — all groups are hyphen-separated) would not confuse the
-    tail extraction.
-    """
+    Reuses `_LID_RE`'s own named groups (seq / stage) instead of a
+    separate tail regex — the reviewer-called-out redundancy is now
+    eliminated. `test_leprohon_id_shape` runs first and asserts the
+    ID matches `_LID_RE`, so `.match(...)` here is guaranteed non-None."""
     for r in _rows():
-        _, tail = r["leprohon_id"].rsplit(".", 1)
-        assert r["sequence_in_chapter_section"] == int(tail), r
+        m = _LID_RE.match(r["leprohon_id"])
+        assert m is not None, r["leprohon_id"]
+        assert r["sequence_in_chapter_section"] == int(m.group("seq")), r
+        stage = m.group("stage") or None
+        assert r["stage_suffix"] == stage, (
+            f"{r['leprohon_id']}: id stage={stage!r} vs row "
+            f"stage_suffix={r['stage_suffix']!r}"
+        )
+
+
+VALID_STAGE_SUFFIXES = frozenset({None, "a", "b", "c"})
+
+
+def test_stage_suffix_is_valid_letter_or_none() -> None:
+    """Constraint `stage_suffix ∈ {None, 'a', 'b', 'c'}` per the attested
+    domain in Leprohon's titulary-stage numbering (Mentuhotep II a/b/c is
+    the widest extent; Amenemhat I a/b; Akhenaten a/b in Dyn 18 — anything
+    past 'c' or non-lowercase-letter would be an extraction bug or an
+    as-yet-unseen Leprohon convention that warrants a deliberate test
+    update). Code-reviewer 2026-04-20 PR #87 P2."""
+    for r in _rows():
+        assert r["stage_suffix"] in VALID_STAGE_SUFFIXES, (
+            f"{r['leprohon_id']}: stage_suffix={r['stage_suffix']!r} "
+            f"not in {sorted(VALID_STAGE_SUFFIXES, key=lambda x: '' if x is None else x)!r}"
+        )
 
 
 # ---------------------------------------------------------------------------
