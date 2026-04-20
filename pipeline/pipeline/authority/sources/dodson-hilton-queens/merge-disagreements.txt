@@ -20,8 +20,8 @@ Hemdjert (Hemdjert):
   alt_names: a=[] | b=["Hebnerdjent"] | c=["Hebnerdjent"]  → chose ["Hebnerdjent"]
 
 Henttawy Q (Henttawy Q):
-  spouse_names: a=[] | b=["Pinudjem I"] | c=[]  → chose []
   mother_name: a=null | b="Tentamun A" | c=null  → chose null
+  spouse_names: a=[] | b=["Pinudjem I"] | c=[]  → chose []
 
 Henutmire (Henutmire):
   father_name: a="Sety I (probable)" | b="Sety I (probable)" | c="Sety I"  → chose "Sety I (probable)"
@@ -37,6 +37,9 @@ Isetneferet B (Isetneferet B):
 
 Isetneferet D (Isetneferet D):
   father_name: a="Merenptah (probable)" | b="Merenptah (probable)" | c="Merenptah"  → chose "Merenptah (probable)"
+
+Iy (Iy):
+  spouse_names: a=["Imyromesha (either) (probably)", "Inyotef IV (either) (probably)"] | b=["Imyromesha (either)", "Inyotef IV (either)"] | c=["Imyromesha (either, probable)", "Inyotef IV (either, probable)"]  → chose ["Imyromesha (either) (probably)", "Inyotef IV (either) (probably)"]
 
 Khaemwaset C (Khaemwaset C):
   children_names: a=[] | b=["Hori A", "Isetneferet C", "Ramesses C"] | c=[]  → chose []
@@ -60,14 +63,24 @@ Merenptah B (Merenptah B):
   father_name: a="Merenptah (probable)" | b="Merenptah (probable)" | c="Merenptah"  → chose "Merenptah (probable)"
 
 Messuy (Messuy):
-  father_name: a="Sety II (probable)" | b="Sety II (probable)" | c="Sety II"  → chose "Sety II (probable)"
   mother_name: a="Takhat A (probable)" | b="Takhat A (probable)" | c="Takhat A"  → chose "Takhat A (probable)"
+  father_name: a="Sety II (probable)" | b="Sety II (probable)" | c="Sety II"  → chose "Sety II (probable)"
 
 Neferet I (Neferet I):
   children_names: a=["Amenemhat I (probable)"] | b=["Amenemhat I (probable)"] | c=["Amenemhat I"]  → chose ["Amenemhat I (probable)"]
 
+Neferhotep A (Neferhotep A):
+  spouse_names: a=["Ressonbe"] | b=["Ressonbe"] | c=[]  → chose ["Ressonbe"]
+
+Neferhotep B (Neferhotep B):
+  sex: a="female" | b="male" | c="male"  → chose "male"
+  spouse_names: a=["Hatshepsut B"] | b=["Hatshepsut B"] | c=[]  → chose ["Hatshepsut B"]
+
 Nesibanebdjedet (Nesibanebdjedet):
   spouse_names: a=[] | b=["Tentamun B"] | c=[]  → chose []
+
+Nubkhaes A (Nubkhaes A):
+  spouse_names: a=["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"] | b=["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"] | c=["Sobkhotep V (either, probable)", "Sobkhotep VI (either, probable)", "Iaib (either, probable)"]  → chose ["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"]
 
 Pinudjem I (Pinudjem I):
   spouse_names: a=[] | b=["Henttawy Q"] | c=[]  → chose []
@@ -77,6 +90,10 @@ Pudukhepa (Pudukhepa):
 
 Ramesses-Userpehty (Ramesses-Userpehty):
   father_name: a="Ramesses II (probable)" | b="Ramesses II (probable)" | c="Ramesses II"  → chose "Ramesses II (probable)"
+
+Redienef (Redienef):
+  mother_name: a="Iy" | b="Iy" | c=null  → chose "Iy"
+  father_name: a=null | b=null | c="Iy"  → chose null
 
 Senwosret A (Senwosret A):
   children_names: a=["Amenemhat I (probable)"] | b=["Amenemhat I (probable)"] | c=["Amenemhat I"]  → chose ["Amenemhat I (probable)"]
@@ -88,8 +105,8 @@ Sitre A (Sitre A):
   alt_names: a=["Tia Q"] | b=["Tia Q (perhaps)"] | c=["Tia (Q)"]  → chose ["Tia Q"]
 
 Sutererey (Sutererey):
-  spouse_names: a=["Ramesses II (probable)"] | b=["Ramesses II (probable)"] | c=["Ramesses II (probably)"]  → chose ["Ramesses II (probable)"]
   children_names: a=["(Ramesses-)Siptah A"] | b=["(Ramesses-)Siptah A"] | c=["Ramesses-Siptah"]  → chose ["(Ramesses-)Siptah A"]
+  spouse_names: a=["Ramesses II (probable)"] | b=["Ramesses II (probable)"] | c=["Ramesses II (probably)"]  → chose ["Ramesses II (probable)"]
 
 Tentamun A (Tentamun A):
   spouse_names: a=["Ramesses XI (probable)"] | b=["Ramesses XI (probable)"] | c=["Ramesses XI (probably)"]  → chose ["Ramesses XI (probable)"]
