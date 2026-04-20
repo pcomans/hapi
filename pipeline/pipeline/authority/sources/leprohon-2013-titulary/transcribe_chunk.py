@@ -153,6 +153,17 @@ def transcribe(
     out_path: Path,
 ) -> None:
     reader = PdfReader(str(pdf_path))
+    total_pages = len(reader.pages)
+    # Loud-failure bounds check: give a descriptive error before pypdf would
+    # raise an opaque IndexError on `reader.pages[physical_page - 1]`. The
+    # CLI accepts arbitrary `--pages <start>-<end>` values, so this is the
+    # right layer to validate rather than the argparse parser.
+    if physical_start < 1 or physical_end > total_pages:
+        raise ValueError(
+            f"requested physical pages {physical_start}-{physical_end} "
+            f"exceed PDF bounds 1-{total_pages} "
+            f"({pdf_path.name!r})"
+        )
     parts: list[str] = [
         f"<!-- Leprohon 2013 {chapter_label}, physical pp. "
         f"{physical_start}-{physical_end}, deterministic pypdf+MdC "
