@@ -145,17 +145,36 @@ LANDED_CHUNKS: dict[str, dict] = {
         "physical_page_range": (102, 113),
     },
     "dyn18": {
-        # Chapter VII New Kingdom Dyn 18. 14 numbered king entries +
+        # Chapter VII New Kingdom Dyn 18. 15 numbered king entries +
         # 2 multi-stage doublings (Thutmose III 5a/5b separately-numbered
         # MK-style + Akhenaten 10a/10b inline-stage NK convention) =
-        # 16 rows. Horemheb placed in Dyn 19 per Leprohon's editorial
-        # scheme; will land in chunk 9.
+        # 17 rows. Horemheb (Dyn 18 entry 15) was missed by the chunk-8
+        # scope and recovered as the first row of chunk 9 — same
+        # editorial convention as chunk 1's missed p. 30 (Seneferka,
+        # Neferkasokar, Hudjefa) recovered in chunk 2.
         "chapter": "New Kingdom",
         "rows_by_dynasty_label": {
-            "Dynasty 18": 16,
+            "Dynasty 18": 17,
         },
         "printed_page_range": (93, 107),
         "physical_page_range": (114, 128),
+    },
+    "dyn19": {
+        # Chapter VII New Kingdom Dyn 19 (Ramesside founders). 8 numbered
+        # king entries: Ramesses I, Sety I, Ramesses II, Merenptah,
+        # Sety II, Amenmesse, Siptah, Tausret. The chunk-9 scope was
+        # extended from physical 145 → 146 specifically to capture
+        # Tausret (Leprohon's Dyn 19 entry 8 sits at the top of physical
+        # p. 146 just before the Dyn 20 header). The Horemheb scope-
+        # recovery row (counted under Dyn 18 above) is also extracted by
+        # chunk-9 agents but lives under "Dynasty 18" for tabulation
+        # purposes.
+        "chapter": "New Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 19": 8,
+        },
+        "printed_page_range": (107, 125),
+        "physical_page_range": (128, 146),
     },
 }
 
@@ -882,6 +901,23 @@ def test_khufu_has_greek_alias_cheops() -> None:
 # Dyn 8a is contemporarily attested — no Ramesside-only tags despite being
 # a sub-dynasty. This test locks in the lesson from the chunk-2 prompt error.
 # ---------------------------------------------------------------------------
+
+
+def test_dyn_19_is_contemporarily_attested_no_ramesside_only_tags() -> None:
+    """Per Leprohon's chapter VII NK Dyn 19 prose preamble, all 8 Dyn 19
+    kings (Ramesses I, Sety I, Ramesses II, Merenptah, Sety II,
+    Amenmesse, Siptah, Tausret) are contemporarily attested with full
+    titularies; none should carry the Ramesside-only tag. Code-reviewer
+    PR #92 P2-a guard against future regression."""
+    dyn_19_rows = [r for r in _rows() if r["dynasty_label"] == "Dynasty 19"]
+    assert len(dyn_19_rows) >= 8, len(dyn_19_rows)
+    for r in dyn_19_rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): Dyn 19 is "
+            f"contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
 
 
 def test_dyn_8a_is_contemporarily_attested_not_ramesside_only() -> None:

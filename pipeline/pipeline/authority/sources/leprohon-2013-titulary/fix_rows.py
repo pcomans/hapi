@@ -397,6 +397,24 @@ DYN18_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+DYN19_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist + Gemini PR #92: Ramesses II Golden Horus variant 14
+    # has a real ASCII typo in the anglicised field (`sekehm` should be
+    # `sekhem`) AND was missing the trailing `der pedjut 9` portion of
+    # Leprohon's parenthetical anglicisation. Source on physical p. 130:
+    # `Golden Horus 14: sḫm-ḫpš dr pḏwt 9 (sekehm khepesh, der pedjut 9),
+    # The powerful of arm/sword, who has repelled the Nine Bows`. Restore
+    # the full anglicised string with the typo corrected.
+    (
+        "leprohon-19.03",
+        "golden_horus_names.13.anglicised",
+        "sekhem khepesh, der pedjut 9",
+        "Fix ASCII typo `sekehm` → `sekhem` AND restore missing "
+        "`der pedjut 9` suffix per Leprohon's anglicisation. "
+        "Egyptologist + Gemini PR #92.",
+    ),
+]
+
 DYN13A14_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 PR #89 P2-4: Dyn 14 entry 3 Qareh
     # was previously catalogued by museums as "Qar" (per Leprohon p. 95
@@ -441,6 +459,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *DYN13_CORRECTIONS,
     *DYN13A14_CORRECTIONS,
     *DYN18_CORRECTIONS,
+    *DYN19_CORRECTIONS,
 ]
 
 
