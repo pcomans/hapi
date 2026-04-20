@@ -128,6 +128,22 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (72, 80),
         "physical_page_range": (93, 101),
     },
+    "sip": {
+        # Chapter VI Second Intermediate Period — Dyn 15 Hyksos + Dyn 16
+        # Theban + Dyn 16a uncertain + Dyn 17 Theban (Abydos-Dynasty-
+        # assigned + core Seventeenth) + Dyn 17a. Multi-slot stubs at
+        # 16:11-15, 17:3-10, 17:12-14 collapsed to single rows each.
+        "chapter": "Second Intermediate Period",
+        "rows_by_dynasty_label": {
+            "Dynasty 15": 6,
+            "Dynasty 16": 11,
+            "Dynasty 16a": 5,
+            "Dynasty 17": 19,
+            "Dynasty 17a": 1,
+        },
+        "printed_page_range": (81, 92),
+        "physical_page_range": (102, 113),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
