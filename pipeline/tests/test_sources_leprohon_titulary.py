@@ -920,6 +920,10 @@ DUAL_EMIT_PAIRS: dict[str, tuple[tuple[str, int], ...]] = {
         ("throne_names", 1),
         ("birth_names", 1),
     ),
+    "leprohon-13.35": (  # Sewadjtu: `Throne and Birth names:` dual
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
 }
 
 

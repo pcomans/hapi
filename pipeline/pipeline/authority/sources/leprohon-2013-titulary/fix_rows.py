@@ -297,6 +297,52 @@ FIP_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+DYN13_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Gemini Code Assist 2026-04-20 PR #88: entry 13.35 Sewadjtu is a
+    # combined "Throne and Birth names" row that should dual-emit to both
+    # throne_names and birth_names (same pattern as chunk-3 Khety IV /
+    # Khety VI, chunk-1 Khasekhemwy Horus/Seth 2). Two of three agents
+    # did dual-emit but with slightly different source_note phrasings; the
+    # merge JSON-string-equality vote split 1:1:1 and picked `[]` for
+    # birth_names by first-seen. fix_rows restores the dual-emission with
+    # a canonical source_note matching the chunk-3 convention exactly so
+    # the `test_dual_emit_source_notes_are_symmetric` invariant holds.
+    (
+        "leprohon-13.35",
+        "throne_names.0.source_note",
+        (
+            "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon "
+            "labels as 'Throne and Birth' — a combined prenomen/nomen "
+            "where fragmentary evidence prevents separation."
+        ),
+        "Canonical source_note for dual-emitted Throne-and-Birth entry, "
+        "matching the chunk-3 Khety IV/VI convention exactly for symmetry.",
+    ),
+    (
+        "leprohon-13.35",
+        "birth_names",
+        [
+            {
+                "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw",
+                "anglicised": "sankh.en ra, sewadj.tu",
+                "translation": "The one whom Re has sustained (when?) <He> was made to flourish",
+                "variant_index": 1,
+                "is_variant": False,
+                "attested_in": [],
+                "source_note": (
+                    "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon "
+                    "labels as 'Throne and Birth' — a combined prenomen/nomen "
+                    "where fragmentary evidence prevents separation."
+                ),
+            }
+        ],
+        "Restore missing dual-emission to birth_names (Gemini Code Assist "
+        "2026-04-20 PR #88). 3-way agent disagreement on source_note "
+        "phrasing caused merge to pick `[]` by first-seen; this override "
+        "mirrors the canonical throne_names entry verbatim.",
+    ),
+]
+
 MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 (PR #87): Leprohon's own section
     # header on PDF p. 81 line 320 reads `(Queen) Sobeknefru` (no 'e'
@@ -322,6 +368,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
     *MK_CORRECTIONS,
+    *DYN13_CORRECTIONS,
 ]
 
 

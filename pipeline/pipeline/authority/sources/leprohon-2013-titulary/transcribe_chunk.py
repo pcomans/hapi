@@ -153,20 +153,14 @@ NAME_LABELS: tuple[str, ...] = (
 # whitespace-paren boundary correctly separates translit from gloss in all
 # chunk-1 cases.
 #
-# The label alternation is sorted longest-first so that "Horus/Seth" wins over
-# "Horus" and "Later cartouche name" wins over "Seth name" even though they
-# share no suffix — regex alternation is first-match-wins.
-# Optional ` name` / ` names` suffix on each label — Leprohon uses both the
-# short form (`Horus:`, `Two Ladies:`) and the long form (`Horus name:`,
-# `Two Ladies name:`, `Throne and Birth names:`) across chapters. The suffix
-# is consumed by the regex so the label-match doesn't need to list each
-# variant separately. Variant-digit (`Horus 1`, `Two Ladies 3`) is still
-# matched by the `(?:\s\d+)?` group after the optional name/names suffix.
-NAME_ROW_RE: re.Pattern[str] = re.compile(
-    r"^((?:"
-    + "|".join(re.escape(lbl) for lbl in NAME_LABELS)
-    + r")(?:\s+names?)?(?:\s\d+)?):(\s*)(.+?)(\s+\(.*)$"
-)
+# NOTE: earlier revisions of this module used a monolithic `NAME_ROW_RE`
+# that captured transliteration and gloss in a single match. That
+# approach failed on transliterations with embedded parens (filiation
+# markers like `(sꜣ)`, morphological markers like `(y)` / `(.w)`) because
+# the lazy-match boundary `\s+\(.*$` would stop at the FIRST space-paren,
+# mis-identifying the gloss boundary. `_normalize_line` now uses a
+# smaller `prefix_match` for the label + colon, and a dedicated
+# reverse-scanning `_find_gloss_open_paren` for the gloss boundary.
 
 
 def mdc_to_unicode(text: str) -> str:
