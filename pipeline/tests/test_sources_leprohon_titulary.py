@@ -188,6 +188,25 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (125, 135),
         "physical_page_range": (146, 156),
     },
+    "tip-early": {
+        # Chapter VIII Third Intermediate Period — Dyn 21 (Tanite) +
+        # Dyn 21a (Theban HPA parallel) + Dyn 22 (Bubastite Sheshonqs,
+        # post-Broekman renumbering: 13 numbered kings) + Dyn 22a
+        # (collateral). The TIP chapter was originally scoped as one
+        # chunk in the README but split into chunks 11 (this) and 12
+        # (Dyn 23+23a+24+25) to keep agent context loads manageable.
+        # Initial heuristic estimate of ~49 rows was significantly off;
+        # all 3 agents converged on 25.
+        "chapter": "Third Intermediate Period",
+        "rows_by_dynasty_label": {
+            "Dynasty 21": 8,
+            "Dynasty 21a": 3,
+            "Dynasty 22": 13,
+            "Dynasty 22a": 1,
+        },
+        "printed_page_range": (136, 152),
+        "physical_page_range": (157, 173),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -913,6 +932,25 @@ def test_khufu_has_greek_alias_cheops() -> None:
 # Dyn 8a is contemporarily attested — no Ramesside-only tags despite being
 # a sub-dynasty. This test locks in the lesson from the chunk-2 prompt error.
 # ---------------------------------------------------------------------------
+
+
+def test_tip_early_no_ramesside_only_tags() -> None:
+    """All Dyn 21 / 21a / 22 / 22a kings (chunk 11 TIP-early) are
+    contemporarily attested — Leprohon's chapter VIII prose preamble
+    confirms the post-Ramesside line is uniformly contemporarily
+    attested. Code-reviewer PR #94 P2 guard mirroring the chunk-9/10
+    Ramesside-exclusion guards. Per CLAUDE.md rule 3, the invariant
+    cannot live only in prose / prompt markdown."""
+    tip_early_labels = {"Dynasty 21", "Dynasty 21a", "Dynasty 22", "Dynasty 22a"}
+    rows = [r for r in _rows() if r["dynasty_label"] in tip_early_labels]
+    assert len(rows) == 25, len(rows)
+    for r in rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): {r['dynasty_label']} "
+            f"is contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
 
 
 def test_dyn_20_is_contemporarily_attested_no_ramesside_only_tags() -> None:

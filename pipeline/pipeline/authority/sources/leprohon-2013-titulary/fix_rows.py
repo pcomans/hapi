@@ -452,6 +452,73 @@ MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+TIP_EARLY_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Chunk-11 (PR #94) page-citation merge dispute: agent A emitted
+    # printed=139, agent B emitted printed=138, agent C emitted (137,
+    # 158). Merge JSON-equality vote split 1:1:1 and picked agent A's
+    # value. Verified against chunk file: Smendes' headword is on
+    # physical page 159 with running header "138 THE GR EAT NAME"
+    # (chunk-p157-p173-pypdf.md line ~109). Correct citation is
+    # printed=138, physical=159 (the +21 offset holds throughout
+    # chapter VIII).
+    (
+        "leprohon-21.02",
+        "source_citation.printed_page",
+        138,
+        "Fix Smendes printed_page citation to match physical 159's "
+        "running header. Agent disagreement; verified against chunk file.",
+    ),
+    # Egyptologist-reviewer 2026-04-20 PR #94 P1-2: Shoshenq is the
+    # museum-standard transliteration variant of Sheshonq (Met / Brooklyn
+    # / Harvard / Kitchen-TIPE all use Shoshenq). Per the prompt's
+    # "transliteration-variant ≠ Greek alias" distinction, populate
+    # alt_display_names for every Dyn 22 Sheshonq entry.
+    *[
+        (
+            f"leprohon-22.{seq:02d}",
+            "alt_display_names",
+            [shoshenq_form],
+            f"Add `{shoshenq_form}` to alt_display_names for Phase-A "
+            f"museum-record matching (Met / Brooklyn / Harvard / "
+            f"Kitchen-TIPE all use Shoshenq spelling). "
+            f"Egyptologist-reviewer 2026-04-20 PR #94 P1-2.",
+        )
+        for seq, shoshenq_form in [
+            (1, "Shoshenq I"),
+            (3, "Shoshenq IIa"),
+            (4, "Shoshenq IIb"),
+            (8, "Shoshenq IIc"),
+            (9, "Shoshenq III"),
+            (10, "Shoshenq IV"),
+            (12, "Shoshenq V"),
+        ]
+    ],
+    # Egyptologist-reviewer 2026-04-20 PR #94 P2: Psousennes is the
+    # older Bonhême/Montet spelling used in Met catalog entries
+    # pre-Kitchen. Add to alt_display_names alongside the existing
+    # Psusennes entries.
+    (
+        "leprohon-21.04",
+        "alt_display_names",
+        ["Psusennes I", "Psousennes I"],
+        "Add older `Psousennes I` spelling for Phase-A matching "
+        "(Bonhême/Montet publications used in older Met catalogs). "
+        "Egyptologist-reviewer 2026-04-20 PR #94 P2.",
+    ),
+    (
+        "leprohon-21.08",
+        "alt_display_names",
+        ["Psusennes II", "Psousennes II"],
+        "Add older `Psousennes II` spelling. Egyptologist 2026-04-20 PR #94 P2.",
+    ),
+    (
+        "leprohon-21a.03",
+        "alt_display_names",
+        ["Psusennes III", "Psousennes III"],
+        "Add older `Psousennes III` spelling. Egyptologist 2026-04-20 PR #94 P2.",
+    ),
+]
+
 DYN20_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 PR #93 P2-1: Ramesses III Horus
     # variants 9-15 are listed in Leprohon under the subheading "Various
@@ -530,6 +597,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *DYN18_CORRECTIONS,
     *DYN19_CORRECTIONS,
     *DYN20_CORRECTIONS,
+    *TIP_EARLY_CORRECTIONS,
 ]
 
 

@@ -136,8 +136,17 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # SCOPE for this chunk (already extracted in chunk 9). Includes
     # Sethnakht (Dyn 20 entry 1) + Ramesses III through Ramesses XI.
     "dyn20": (146, 156, "VII. New Kingdom (Dyn 20)"),
+    # Chunk 11 (this PR): chapter VIII Third Intermediate Period — Dyn 21
+    # + 21a + 22 + 22a (Tanite + HPA Theban parallel + Bubastite Sheshonqs
+    # main line + collateral). Printed 136-152, offset +21, physical
+    # 157-173. Dyn 22 alone has 28 entries (the long Sheshonq/Osorkon/
+    # Takeloth line); chunk 11 totals ~49 entries. The TIP chapter VIII
+    # was originally scoped as a single chunk in the README but split
+    # into chunks 11 (this) and 12 (Dyn 23+23a+24+25, ~41 entries) to
+    # keep agent context loads manageable.
+    "tip-early": (157, 173, "VIII. TIP early (Dyn 21 + 21a + 22 + 22a)"),
 }
-DEFAULT_CHUNK = "dyn20"
+DEFAULT_CHUNK = "tip-early"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
