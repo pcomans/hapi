@@ -343,6 +343,22 @@ DYN13_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+DYN13A14_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist-reviewer 2026-04-20 PR #89 P2-4: Dyn 14 entry 3 Qareh
+    # was previously catalogued by museums as "Qar" (per Leprohon p. 95
+    # fn. 140 "this king, whose name was previously read as Qar").
+    # Museums catalogued before Ryholt 1997 still use "Qar"; Phase-A
+    # matching needs both forms.
+    (
+        "leprohon-14.03",
+        "alt_display_names",
+        ["Qar"],
+        "Add historical alt-spelling `Qar` (Leprohon p. 95 fn. 140, "
+        "pre-Ryholt reading) for Phase-A museum-record matching. "
+        "Egyptologist-reviewer 2026-04-20 P2-4.",
+    ),
+]
+
 MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 (PR #87): Leprohon's own section
     # header on PDF p. 81 line 320 reads `(Queen) Sobeknefru` (no 'e'
@@ -369,6 +385,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *FIP_CORRECTIONS,
     *MK_CORRECTIONS,
     *DYN13_CORRECTIONS,
+    *DYN13A14_CORRECTIONS,
 ]
 
 
