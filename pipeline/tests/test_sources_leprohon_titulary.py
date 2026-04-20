@@ -176,6 +176,18 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (107, 125),
         "physical_page_range": (128, 146),
     },
+    "dyn20": {
+        # Chapter VII New Kingdom Dyn 20 (the "Ramesside" line). 10
+        # numbered king entries: Sethnakht (founder) + Ramesses III
+        # through Ramesses XI. All contemporarily attested per Leprohon's
+        # prose preamble.
+        "chapter": "New Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 20": 10,
+        },
+        "printed_page_range": (125, 135),
+        "physical_page_range": (146, 156),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
