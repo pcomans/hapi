@@ -44,6 +44,14 @@ CITATION_HOUSE = {"pdf_pages": PDF_PAGES_HOUSE, "edition": EDITION}
 CITATION_FEUD = {"pdf_pages": PDF_PAGES_FEUD, "edition": EDITION}
 CITATION_DECLINE = {"pdf_pages": PDF_PAGES_DECLINE, "edition": EDITION}
 
+# Head of the South chunk (Chapter 2 "The Head of the South" Brief Lives,
+# printed pp. 88-89 / physical pp. 81-82). 11th Dynasty transition —
+# Mentuhotep II's Deir el-Bahari mortuary-chapel wives plus the Inyotef-
+# line kinship web that closes the 1st Intermediate Period.
+PDF_PAGES_HEADOFSOUTH = "81-82"
+SUB_PERIOD_HEADOFSOUTH = "The Head of the South"
+CITATION_HEADOFSOUTH = {"pdf_pages": PDF_PAGES_HEADOFSOUTH, "edition": EDITION}
+
 
 @lru_cache(maxsize=1)
 def _rows() -> tuple[dict, ...]:
@@ -106,8 +114,8 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 
 
 def test_row_count() -> None:
-    """Power (59) + Amarna (41) + Ramesside (170) = 270 rows total."""
-    assert len(_rows()) == 270, len(_rows())
+    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) = 283 rows total."""
+    assert len(_rows()) == 283, len(_rows())
 
 
 def test_row_counts_per_chunk() -> None:
@@ -119,6 +127,7 @@ def test_row_counts_per_chunk() -> None:
     - Feud of the Ramessides: 10
     - Decline of the Ramessides: 35 (33 placed + 2 Unplaced:
       Anuketemheb, Taiay)
+    - Head of the South: 13 (12 placed + 1 Unplaced: Neferkayet)
     """
     by_period: dict[str, int] = {}
     for r in _rows():
@@ -129,6 +138,7 @@ def test_row_counts_per_chunk() -> None:
         SUB_PERIOD_HOUSE: 125,
         SUB_PERIOD_FEUD: 10,
         SUB_PERIOD_DECLINE: 35,
+        SUB_PERIOD_HEADOFSOUTH: 13,
     }, by_period
 
 
@@ -208,6 +218,7 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_HOUSE: CITATION_HOUSE,
         SUB_PERIOD_FEUD: CITATION_FEUD,
         SUB_PERIOD_DECLINE: CITATION_DECLINE,
+        SUB_PERIOD_HEADOFSOUTH: CITATION_HEADOFSOUTH,
     }
     for r in _rows():
         sub_period = r["sub_period"]
@@ -230,6 +241,7 @@ def test_dynasty_per_chunk() -> None:
         SUB_PERIOD_HOUSE: 19,
         SUB_PERIOD_FEUD: 19,
         SUB_PERIOD_DECLINE: 20,
+        SUB_PERIOD_HEADOFSOUTH: 11,
     }
     for r in _rows():
         assert r["dynasty"] == expected_dynasty[r["sub_period"]], r
@@ -241,32 +253,38 @@ POWER_UNPLACED_IDS = frozenset({
     "[...]pentepkau",
 })
 DECLINE_UNPLACED_IDS = frozenset({"Anuketemheb", "Taiay"})
+HEADOFSOUTH_UNPLACED_IDS = frozenset({"Neferkayet"})
 
 
 def test_unplaced_set_is_the_expected_ids() -> None:
     """D&H's Unplaced sub-blocks: 12 at the end of Power (printed p. 141)
-    + 2 at the end of Decline (printed p. 194) = 14 unplaced rows total.
-    No Unplaced sub-block in Amarna / House / Feud.
+    + 2 at the end of Decline (printed p. 194) + 1 at the end of Head of
+    South (printed p. 89) = 15 unplaced rows total. No Unplaced sub-block
+    in Amarna / House / Feud.
     """
     unplaced = [r for r in _rows() if r["unplaced"]]
-    assert len(unplaced) == 14, f"expected 14 unplaced, got {len(unplaced)}"
-    assert {r["dh_id"] for r in unplaced} == POWER_UNPLACED_IDS | DECLINE_UNPLACED_IDS
+    assert len(unplaced) == 15, f"expected 15 unplaced, got {len(unplaced)}"
+    assert {r["dh_id"] for r in unplaced} == (
+        POWER_UNPLACED_IDS | DECLINE_UNPLACED_IDS | HEADOFSOUTH_UNPLACED_IDS
+    )
     power_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_POWER}
     decline_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_DECLINE}
+    hos_unplaced = {r["dh_id"] for r in unplaced if r["sub_period"] == SUB_PERIOD_HEADOFSOUTH}
     assert power_unplaced == POWER_UNPLACED_IDS
     assert decline_unplaced == DECLINE_UNPLACED_IDS
+    assert hos_unplaced == HEADOFSOUTH_UNPLACED_IDS
 
 
 def test_unplaced_rows_sort_last_in_reconciled_jsonl() -> None:
-    """The 14 unplaced rows must occupy the trailing 14 positions of
+    """The 15 unplaced rows must occupy the trailing 15 positions of
     `reconciled.jsonl` — merge.py's sort groups them into a final bin so
     the file reads as placed-alphabetical, then unplaced-alphabetical.
     Regression on the code-reviewer-flagged sort-key bug from PR #38.
     """
     rows = _rows()
-    for r in rows[:-14]:
+    for r in rows[:-15]:
         assert r["unplaced"] is False, r["dh_id"]
-    for r in rows[-14:]:
+    for r in rows[-15:]:
         assert r["unplaced"] is True, r["dh_id"]
 
 
@@ -299,8 +317,8 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     lacuna_prefixes = ("[", "–")
 
     placed = [r for r in rows if not r["unplaced"]]
-    # 270 - 14 unplaced = 256 placed.
-    assert len(placed) == 256, len(placed)
+    # 283 - 15 unplaced = 268 placed.
+    assert len(placed) == 268, len(placed)
 
     # All lacuna-prefixed placed rows must be at the tail of the placed
     # block. Count them and assert no lacuna-prefixed row appears before
@@ -315,7 +333,7 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     )
 
     unplaced = [r for r in rows if r["unplaced"]]
-    assert len(unplaced) == 14, len(unplaced)
+    assert len(unplaced) == 15, len(unplaced)
     # `[...]pentepkau` (Power unplaced, lacuna) sorts after the other
     # Power unplaced entries (letter-prefixed) but before Decline's
     # Unplaced entries (letter-prefixed: Anuketemheb, Taiay).
@@ -354,6 +372,16 @@ def test_role_code_set_spans_the_known_codes() -> None:
         "GWA", "Ador", "King of Hittites", "Fanbearer",
     ]:
         assert expected in all_codes, f"expected Ramesside code {expected!r} never extracted"
+    # Head of the South codes (new in the 11th-Dynasty transition chunk):
+    # `PH` appears on most Mentuhotep-II Deir el-Bahari-tomb wives
+    # (Ashayet, Henhenet, Kawit, Kemsit, Sadhe) and on Iah; `GS` appears
+    # only on Tem; `Nomarch` is the sole male-role token for Inyotef A;
+    # `KW?` is the explicit-hedge variant D&H uses on possible-wife
+    # classifications (Kawit, Kemsit).
+    for expected in ["PH", "GS", "Nomarch", "KW?"]:
+        assert expected in all_codes, (
+            f"expected Head of South code {expected!r} never extracted"
+        )
 
 
 def test_kings_cross_referenced_in_bold_caps_not_extracted_as_entries() -> None:
@@ -4774,3 +4802,265 @@ def test_taiay_decline_full_row() -> None:
         "source_citation": CITATION_DECLINE,
     })
 
+
+
+def test_headofsouth_ashayet_full_row() -> None:
+    _assert_full_row('Ashayet', {
+        'dh_id': 'Ashayet',
+        'name': 'Ashayet',
+        'alt_names': [],
+        'roles': ['PH', 'KW'],
+        'sex': 'female',
+        'spouse_names': ['Mentuhotep II'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Wife of Mentuhotep II; buried in tomb DBXI.17 within the king's mortuary chapel during the second third of his reign. Her sarcophagus and coffin are in the Cairo Museum, as is her mummy (previously in Qasr el-Aini Medical School).",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_henhenet_full_row() -> None:
+    _assert_full_row('Henhenet', {
+        'dh_id': 'Henhenet',
+        'name': 'Henhenet',
+        'alt_names': [],
+        'roles': ['PH', 'KW'],
+        'sex': 'female',
+        'spouse_names': ['Mentuhotep II'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Wife of Mentuhotep II; died in childbirth and buried in tomb DBXI.11 within the king's mortuary chapel during the second third of his reign. Her sarcophagus is in New York, while her mummy is in Cairo (previously in New York and then Qasr el-Aini Medical School).",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_iah_full_row() -> None:
+    _assert_full_row('Iah', {
+        'dh_id': 'Iah',
+        'name': 'Iah',
+        'alt_names': [],
+        'roles': ['KM', 'KD', 'PH'],
+        'sex': 'female',
+        'spouse_names': ['Inyotef III'],
+        'father_name': 'Inyotef II',
+        'mother_name': None,
+        'children_names': ['Mentuhotep II', 'Neferu II'],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': 'Daughter of Inyotef II, wife of Inyotef III and mother of Mentuhotep II and Neferu II. Depicted with her son and late husband at Shatt el-Rigal, and on a block now in the British Museum; she is also named in the tomb of her daughter.',
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_ikui_full_row() -> None:
+    _assert_full_row('Ikui', {
+        'dh_id': 'Ikui',
+        'name': 'Ikui',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Inyotef A'],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': 'Mother of Inyotef A; her name is coupled with that of her son on two of his posthumous memorials.',
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_imi_full_row() -> None:
+    _assert_full_row('Imi', {
+        'dh_id': 'Imi',
+        'name': 'Imi',
+        'alt_names': [],
+        'roles': ['KM'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Mentuhotep IV'],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Mother of Mentuhotep IV; named in an inscription in the Wadi Hammamat recording an expedition to quarry stone there for the king's sarcophagus.",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_inyotef_a_full_row() -> None:
+    """Sole male entry in the Head-of-South chunk (Nomarch role).
+    D&H describes him as `son of Ikui` and `probable father of
+    Mentuhotep I`. The probability hedge is preserved verbatim on
+    `children_names` per the abstract-rule encoding in the prompt:
+    `"Mentuhotep I (probably)"` rather than an unhedged `"Mentuhotep I"`.
+    """
+    _assert_full_row('Inyotef A', {
+        'dh_id': 'Inyotef A',
+        'name': 'Inyotef A',
+        'alt_names': [],
+        'roles': ['Nomarch'],
+        'sex': 'male',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': 'Ikui',
+        'children_names': ['Mentuhotep I (probably)'],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Son of Ikui, and probable father of Mentuhotep I; commemorated by the 11th Dynasty stela of Maat (New York) and a scribe-statue dedicated by Senwosret I at Karnak (Cairo), as well as much later in Thutmose III's Karnak king list.",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_kawit_full_row() -> None:
+    _assert_full_row('Kawit', {
+        'dh_id': 'Kawit',
+        'name': 'Kawit',
+        'alt_names': [],
+        'roles': ['PH', 'KW?'],
+        'sex': 'female',
+        'spouse_names': ['Mentuhotep II (possibly)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Possibly a wife of Mentuhotep II; buried in tomb DBXI.9 within the king's mortuary chapel during the second third of his reign. Her sarcophagus is in the Cairo Museum.",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_kemsit_full_row() -> None:
+    _assert_full_row('Kemsit', {
+        'dh_id': 'Kemsit',
+        'name': 'Kemsit',
+        'alt_names': [],
+        'roles': ['PH', 'KW?'],
+        'sex': 'female',
+        'spouse_names': ['Mentuhotep II (possibly)'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Possibly a wife of Mentuhotep II; buried in tomb TT308 within the king's mortuary chapel during the second third of his reign. The fragments of her sarcophagus are in the British Museum.",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_neferu_i_full_row() -> None:
+    _assert_full_row('Neferu I', {
+        'dh_id': 'Neferu I',
+        'name': 'Neferu I',
+        'alt_names': [],
+        'roles': [],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Inyotef II'],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Mother of Inyotef II; her son is given the epithet 'born of Neferu' on the stelae of Tjetji (British Museum), Heny (Moscow), and Djari (Cairo and Brussels), as well as one of his own (Metropolitan Museum of Art).",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_neferu_ii_full_row() -> None:
+    _assert_full_row('Neferu II', {
+        'dh_id': 'Neferu II',
+        'name': 'Neferu II',
+        'alt_names': [],
+        'roles': ['KW', 'KD'],
+        'sex': 'female',
+        'spouse_names': ['Mentuhotep II'],
+        'father_name': 'Inyotef III',
+        'mother_name': 'Iah',
+        'children_names': [],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': 'Daughter of Inyotef III and Iah, and wife of Mentuhotep II; buried in tomb TT319 at Deir el-Bahari.',
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_sadhe_full_row() -> None:
+    _assert_full_row('Sadhe', {
+        'dh_id': 'Sadhe',
+        'name': 'Sadhe',
+        'alt_names': [],
+        'roles': ['PH', 'KW'],
+        'sex': 'female',
+        'spouse_names': ['Mentuhotep II'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': "Wife of Mentuhotep II; buried in tomb DBXI.7 within the king's mortuary chapel during the second third of his reign.",
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_tem_full_row() -> None:
+    _assert_full_row('Tem', {
+        'dh_id': 'Tem',
+        'name': 'Tem',
+        'alt_names': [],
+        'roles': ['KW', 'GS', 'KM'],
+        'sex': 'female',
+        'spouse_names': ['Mentuhotep II'],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': ['Mentuhotep III'],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': False,
+        'notes': 'Wife of Mentuhotep II and mother of Mentuhotep III; buried in tomb DBXI.15, within the mortuary temple of her husband.',
+        'source_citation': CITATION_HEADOFSOUTH,
+    })
+
+
+def test_headofsouth_neferkayet_full_row() -> None:
+    """Sole Unplaced entry in the Head-of-South chunk. D&H's prose
+    reads `"Daughter and wife of unknown kings"` — plural `"kings"`
+    covers two distinct unidentifiable relationships (the unknown
+    father and the unknown husband). The extract uses `father_name:
+    null` and `spouse_names: []` per the abstract-rule encoding for
+    unresolvable relatives: no specific individual is named, so no
+    placeholder entity is invented. Phase A's authority-matcher
+    correctly treats null/empty as `"no resolvable target"`.
+    """
+    _assert_full_row('Neferkayet', {
+        'dh_id': 'Neferkayet',
+        'name': 'Neferkayet',
+        'alt_names': [],
+        'roles': ['KW', 'KD'],
+        'sex': 'female',
+        'spouse_names': [],
+        'father_name': None,
+        'mother_name': None,
+        'children_names': [],
+        'dynasty': 11,
+        "sub_period": SUB_PERIOD_HEADOFSOUTH,
+        'unplaced': True,
+        'notes': 'Daughter and wife of unknown kings; named on the stela of her steward, Rediukhnum, from Dendara, now in Cairo.',
+        'source_citation': CITATION_HEADOFSOUTH,
+    })

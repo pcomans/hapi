@@ -1,6 +1,6 @@
 # Transcription method — Dodson & Hilton 2004
 
-Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Three chunks landed so far (Power-and-Glory, Amarna Interlude, Ramesside sub-blocks); further chunks (earlier chapters) follow the same method.
+Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Four chunks landed so far (Power-and-Glory, Amarna Interlude, Ramesside sub-blocks, Head of the South); further chunks (remaining earlier chapters) follow the same method.
 
 ## Inputs
 
@@ -8,10 +8,11 @@ Per ADR-017 and `docs/playbook-phase-0-ocr-transcription.md`. Three chunks lande
 2. Scope:
    - **Chunk 1 (PR #37, merged):** chapter 3 *The New Kingdom* → section *The Power and the Glory* → *Brief Lives* sub-block. Printed pp. 137–141, physical PDF pp. 126–130 (offset +11). `pdf_pages: "126-130"` on every row.
    - **Chunk 2 (PR #38, merged):** chapter 3 *The New Kingdom* → section *The Amarna Interlude* → *Brief Lives* sub-block. Printed pp. 154–157, physical PDF pp. 142–145 (offset +12). `pdf_pages: "142-145"` on every row. Narrative prose pp. 142–153 NOT extracted.
-   - **Chunk 3 (this PR) — three sub-blocks:**
+   - **Chunk 3 (merged) — three sub-blocks:**
      - *The House of Ramesses* — Brief Lives. Printed pp. 170–175, physical PDF pp. 157–162 (offset +13). `pdf_pages: "157-162"` on every row. Narrative prose pp. 158–169 NOT extracted.
      - *The Feud of the Ramessides* — Brief Lives. Printed pp. 182–183, physical PDF pp. 169–170 (offset +13). `pdf_pages: "169-170"`. Narrative prose pp. 176–181 NOT extracted.
      - *The Decline of the Ramessides* — Brief Lives + Unplaced sub-section. Printed pp. 192–194, physical PDF pp. 178–180 (offset +14). `pdf_pages: "178-180"`. Narrative prose pp. 184–191 NOT extracted. Unplaced sub-block (`Anuketemheb`, `Taiay`) sits at the bottom of printed p. 194, under its own `Unplaced` sub-heading.
+   - **Chunk 4 (this PR) — Head of the South:** chapter 2 *The 1st Intermediate Period, the Middle Kingdom and 2nd Intermediate Period* → section *The Head of the South* → *Brief Lives* sub-block + trailing *Unplaced*. Printed pp. 88–89, physical PDF pp. 81–82 (offset +7). `pdf_pages: "81-82"` on every row. Covers the 11th Dynasty transition — Mentuhotep II's Deir el-Bahari mortuary-chapel wives (Ashayet, Henhenet, Kawit, Kemsit, Sadhe), plus the Inyotef-line kinship web (Iah, Neferu I, Neferu II, Inyotef A the nomarch) and trailing Unplaced `Neferkayet`. Narrative prose for the 11th Dyn chapter body (printed pp. 81–87) NOT extracted.
 
 ## Pipeline
 
@@ -53,6 +54,8 @@ The sub-PDFs are gitignored (`raw/*`). The source PDF lives under `proprietary/`
 **Chunk 2 OCR — Claude Opus 4.6 succeeded.** Per the ADR-017 § "Amendment 2026-04-15" requirement to re-attempt Opus OCR before escalating to Gemini, the Amarna chunk was OCR'd by Claude Opus 4.6 in the main session (not a subagent) on 2026-04-15. Unlike chunk 1 — where both a Claude Code subagent and a main-session attempt were blocked, and a later retry produced a principled copyright-scope refusal — the Amarna main-session attempt produced the OCR markdown without a block or refusal. The likely contributing factors are smaller chunk size (4 pages vs 5), lower density of mortuary / reburial prose compared to the Thutmoside Brief Lives, and main-session context that fully surfaced the ADR-017 scholarly-extraction framing. The Amarna chunk therefore follows the original ADR-017 step 1 path (Claude Opus 4.6 OCR with no external-model fallback).
 
 **Chunk 3 OCR — Claude Opus 4.7 (1M context) subagents succeeded across all three sub-blocks.** Per the ADR-017 amendment, the default path is a Claude Code OCR subagent on the latest Opus. All three Ramesside sub-blocks (House 6pp, Feud 2pp, Decline 3pp) were OCR'd by parallel Claude Opus 4.7 subagents on 2026-04-16 with a fair-use scholarly-extraction framing. No refusal, no block. Outputs: `raw/chunk-p157-p162.md` (~126 entries), `raw/chunk-p169-p170.md` (10 entries), `raw/chunk-p178-p180.md` (35 entries). This restores the playbook default (subagent OCR) — chunk 2's main-session deviation was specific to chunk 2.
+
+**Chunk 4 OCR — Claude Opus 4.7 (1M context) main-session pass succeeded.** Head of the South is a small 2-page sub-block (printed pp. 88–89 / physical 81–82); OCR was performed by Claude Opus 4.7 in the main session on 2026-04-16 with the same scholarly-extraction framing as chunk 3. Output: `raw/chunk-p81-p82.md` (13 entries — 12 placed + 1 Unplaced `Neferkayet`). No refusal, no block. The main-session (rather than subagent) path was used here only because the PDF-split sub-PDF `raw/source-p81-p82.pdf` was already on disk and the main session was already in the Read-context for downstream scoping work — it would otherwise be a subagent call per the playbook default. The three extraction subagents (agent-{a,b,c}-headofsouth.jsonl) ran against a rule-based `prompt-headofsouth.md` (no per-row answer enumeration — re-written and re-run after the first attempt leaked per-row values; see `merge-disagreements.txt` for the resulting genuine field-level disagreement on `Inyotef A.children_names` probability-hedge wording, resolved 2-1 by majority vote in favour of `"Mentuhotep I (probably)"`).
 
 Gemini 3.1 Pro remains the committed fallback for any future chunk where Opus refuses; `transcribe-gemini-prompt.md` is retained verbatim for reproducibility of chunk 1 and any future fallback event.
 
@@ -146,6 +149,15 @@ Chapter 3 *The New Kingdom* opens at printed p. 121 / physical p. 110 — offset
 - Physical p. 180 = printed p. 194 (end of Decline Brief Lives + Unplaced, offset +14)
 
 Every follow-up PR must re-verify the offset at both the chunk's first and last printed pages; each two-page chart spread captured as a single physical page adds +1 to the offset.
+
+**Head of the South chunk offset (chapter 2, 11th Dynasty).** The offset earlier in the book is `+7` at the Head of the South Brief Lives sub-block — considerably smaller than Ch 3's `+11→+14` range because fewer genealogical-chart-spread scan anomalies have accumulated by that point. The `+7` offset is uniform across the Brief Lives sub-block's two pages (printed 88–89 / physical 81–82). No mid-chunk drift.
+
+**Head of South chunk verification points:**
+- Physical p. 81 = printed p. 88 (offset +7; start of Brief Lives)
+- Physical p. 82 = printed p. 89 (offset +7; end of Brief Lives + Unplaced `Neferkayet`)
+- Physical p. 83 = printed p. 90 (offset +7; outside chunk scope — next section "The Great Domain")
+
+The offset drift picks up (incrementally, through the MK and 2IP Brief Lives sub-blocks yet to be extracted) before reaching the Ch 3 `+11`. Each Ch 2 follow-up chunk must re-verify the offset at its own boundaries.
 
 ## Structure of Brief Lives entries
 
