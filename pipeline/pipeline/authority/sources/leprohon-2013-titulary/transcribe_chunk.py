@@ -90,8 +90,16 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # most name-types-per-king are much sparser than MK proper (Throne
     # name + Birth name is typical; full fivefold titulary is rare).
     "dyn13": (81, 92, "V. Middle Kingdom (Dyn 13 ephemeral line)"),
+    # Chunk 6 (this PR): chapter V Middle Kingdom tail — the Ramesside-
+    # added sub-dynasties Dyn 13a + Dyn 14 + Dyn 14a. Printed 72-80,
+    # offset +21, physical 93-101. Dyn 13a is a small Ramesside-list
+    # group of kings not attested contemporarily; Dyn 14 (~20 kings) and
+    # Dyn 14a (5 kings) are additional late-MK material Leprohon places
+    # at the end of chapter V before the chapter VI SIP boundary.
+    # ~32 kings expected in total.
+    "dyn13a-14": (93, 101, "V. Middle Kingdom (Dyn 13a + 14 + 14a tail)"),
 }
-DEFAULT_CHUNK = "dyn13"
+DEFAULT_CHUNK = "dyn13a-14"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]

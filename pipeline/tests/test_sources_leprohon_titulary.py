@@ -112,6 +112,20 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (60, 71),
         "physical_page_range": (81, 92),
     },
+    "dyn13a-14": {
+        # Chapter V MK tail — Ramesside-added sub-dynasties: Dyn 13a (7
+        # rows), Dyn 14 (38 rows with numbering gaps at 20-21, 35-42,
+        # 46-48), Dyn 14a (6 rows). All `chapter: "Middle Kingdom"` per
+        # Leprohon's editorial placement.
+        "chapter": "Middle Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 13a": 7,
+            "Dynasty 14": 38,
+            "Dynasty 14a": 6,
+        },
+        "printed_page_range": (72, 80),
+        "physical_page_range": (93, 101),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
