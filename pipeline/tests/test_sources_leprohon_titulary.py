@@ -144,6 +144,19 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (81, 92),
         "physical_page_range": (102, 113),
     },
+    "dyn18": {
+        # Chapter VII New Kingdom Dyn 18. 14 numbered king entries +
+        # 2 multi-stage doublings (Thutmose III 5a/5b separately-numbered
+        # MK-style + Akhenaten 10a/10b inline-stage NK convention) =
+        # 16 rows. Horemheb placed in Dyn 19 per Leprohon's editorial
+        # scheme; will land in chunk 9.
+        "chapter": "New Kingdom",
+        "rows_by_dynasty_label": {
+            "Dynasty 18": 16,
+        },
+        "printed_page_range": (93, 107),
+        "physical_page_range": (114, 128),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -744,6 +757,16 @@ def test_headword_display_names_are_title_cased() -> None:
         # alphabetical title-casing anyway.
         if "//" in display or "[" in display or "]" in display:
             continue
+        # Strip interior parenthetical expressions (e.g. NK inline-stage
+        # markers like `Amenhotep IV (Regnal Years 1 to 5)`) before
+        # tokenising. The non-parenthesised portion is the actual king
+        # name and is what the title-case rule applies to; the
+        # parenthetical is descriptive metadata (regnal years, Greek
+        # alias, roman-numeral disambiguator, etc.) that may contain
+        # digits, lowercase function words, or other non-title content.
+        display = re.sub(r"\s*\([^)]*\)", "", display).strip()
+        if not display:
+            continue  # all-parenthetical display name (e.g. dummy stub)
         for part in display.replace("/", " ").split():
             if part.startswith("(") or part.endswith(")"):
                 continue  # Exception 3/5: parenthesised groups
@@ -1031,7 +1054,93 @@ DUAL_EMIT_PAIRS: dict[str, tuple[tuple[str, int], ...]] = {
         ("throne_names", 3),
         ("birth_names", 1),
     ),
+    # Chunk 8 Dyn 18: Smenkhkare's `Throne and Birth names:` combined
+    # cartouche — same dual-emit pattern as Sewadjtu (13.35) and the
+    # chunk-3 Khety IV / Khety VI.
+    "leprohon-18.12": (
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
 }
+
+
+def test_akhenaten_inline_stage_correlation() -> None:
+    """Flagship test for the chunk-8 NK inline-stage convention. Akhenaten
+    (`leprohon-18.10`) is printed by Leprohon as a single numbered entry
+    with internal `a. Regnal Years 1 to 5` and `b. Regnal Years 5 to 17`
+    sub-section markers. Each stage's full titulary differs because the
+    king changed his Birth name from Amenhotep IV to Akhenaten mid-reign.
+    Constraints:
+      - Both stages share the same Throne name (`nfr ḫprw rꜥ wꜥ n rꜥ`,
+        Neferkheperure-waenre).
+      - Stage 10a's display_name preserves "Amenhotep IV", and 10a's
+        `alt_display_names` lists the bare "Amenhotep IV" form.
+      - Stage 10b's display_name preserves "Akhenaten", and 10b's
+        `alt_display_names` lists the bare "Akhenaten" form.
+      - Both stages have `stage_suffix` set to "a" / "b" respectively;
+        sequence_in_chapter_section is 10 on both.
+      - Stage 10a carries the canonical NK inline-stage marker phrase
+        in its first populated name-entry's source_note; 10b does not."""
+    a = _row("leprohon-18.10a")
+    b = _row("leprohon-18.10b")
+    assert a["sequence_in_chapter_section"] == 10
+    assert b["sequence_in_chapter_section"] == 10
+    assert a["stage_suffix"] == "a"
+    assert b["stage_suffix"] == "b"
+    assert a["throne_names"][0]["transliteration"] == b["throne_names"][0]["transliteration"], (
+        f"Akhenaten 10a/10b throne names differ: "
+        f"a={a['throne_names'][0]['transliteration']!r} vs "
+        f"b={b['throne_names'][0]['transliteration']!r}"
+    )
+    assert "Amenhotep IV" in a["alt_display_names"], a["alt_display_names"]
+    assert "Akhenaten" in b["alt_display_names"], b["alt_display_names"]
+    assert "Amenhotep IV" in a["display_name"], a["display_name"]
+    assert "Akhenaten" in b["display_name"], b["display_name"]
+
+
+def test_thutmose_iii_stage_correlation() -> None:
+    """Flagship test for chunk-8 MK-style separately-numbered stages
+    (same convention as chunk-4 Mentuhotep II 5a/5b/5c). Thutmose III
+    (`leprohon-18.05`) has stages 5a and 5b. Constraints:
+      - Both stages share the same display_name root "Thutmose III".
+      - sequence_in_chapter_section is 5 on both.
+      - stage_suffix is "a" / "b" respectively.
+      - Both have populated horus_names (the densest titulary in the
+        book — 5b alone has multiple Horus / Throne / Birth variants)."""
+    a = _row("leprohon-18.05a")
+    b = _row("leprohon-18.05b")
+    assert a["sequence_in_chapter_section"] == 5
+    assert b["sequence_in_chapter_section"] == 5
+    assert a["stage_suffix"] == "a"
+    assert b["stage_suffix"] == "b"
+    assert "Thutmose III" in a["display_name"], a["display_name"]
+    assert "Thutmose III" in b["display_name"], b["display_name"]
+    assert len(a["horus_names"]) >= 1
+    assert len(b["horus_names"]) >= 2, (
+        "Thutmose III stage b is documented as the densest titulary in "
+        f"chunk 8; expected ≥2 Horus variants, got {len(b['horus_names'])}"
+    )
+
+
+def test_ay_birth_name_complete() -> None:
+    """Regression guard for the chunk-8 scope-recovery: Ay (entry 14)
+    has his Birth name spilled across the p. 127 / p. 128 boundary in
+    Leprohon's printing. The original chunk scope (114-127) truncated
+    Ay before the Birth name; egyptologist-reviewer 2026-04-20 P1 on
+    PR #91 flagged this as blocking. Scope was extended to p. 128 to
+    capture Ay's complete entry. This test guards that Ay's Birth
+    name is populated (matching `it nṯr iy` per Leprohon p. 107)."""
+    r = _row("leprohon-18.14")
+    assert r["display_name"] == "Ay"
+    assert len(r["birth_names"]) >= 1, (
+        "Ay's Birth name should be populated — chunk-8 scope was "
+        "extended specifically to capture this. Empty birth_names "
+        "indicates the chunk-truncation regression has reappeared."
+    )
+    assert "it nṯr iy" in r["birth_names"][0]["transliteration"], (
+        f"Ay's Birth name should contain `it nṯr iy` per Leprohon p. 107; "
+        f"got {r['birth_names'][0]['transliteration']!r}"
+    )
 
 
 def test_dual_emit_source_notes_are_symmetric() -> None:
