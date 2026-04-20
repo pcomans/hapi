@@ -297,6 +297,52 @@ FIP_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+DYN13_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Gemini Code Assist 2026-04-20 PR #88: entry 13.35 Sewadjtu is a
+    # combined "Throne and Birth names" row that should dual-emit to both
+    # throne_names and birth_names (same pattern as chunk-3 Khety IV /
+    # Khety VI, chunk-1 Khasekhemwy Horus/Seth 2). Two of three agents
+    # did dual-emit but with slightly different source_note phrasings; the
+    # merge JSON-string-equality vote split 1:1:1 and picked `[]` for
+    # birth_names by first-seen. fix_rows restores the dual-emission with
+    # a canonical source_note matching the chunk-3 convention exactly so
+    # the `test_dual_emit_source_notes_are_symmetric` invariant holds.
+    (
+        "leprohon-13.35",
+        "throne_names.0.source_note",
+        (
+            "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon "
+            "labels as 'Throne and Birth' — a combined prenomen/nomen "
+            "where fragmentary evidence prevents separation."
+        ),
+        "Canonical source_note for dual-emitted Throne-and-Birth entry, "
+        "matching the chunk-3 Khety IV/VI convention exactly for symmetry.",
+    ),
+    (
+        "leprohon-13.35",
+        "birth_names",
+        [
+            {
+                "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw",
+                "anglicised": "sankh.en ra, sewadj.tu",
+                "translation": "The one whom Re has sustained (when?) <He> was made to flourish",
+                "variant_index": 1,
+                "is_variant": False,
+                "attested_in": [],
+                "source_note": (
+                    "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon "
+                    "labels as 'Throne and Birth' — a combined prenomen/nomen "
+                    "where fragmentary evidence prevents separation."
+                ),
+            }
+        ],
+        "Restore missing dual-emission to birth_names (Gemini Code Assist "
+        "2026-04-20 PR #88). 3-way agent disagreement on source_note "
+        "phrasing caused merge to pick `[]` by first-seen; this override "
+        "mirrors the canonical throne_names entry verbatim.",
+    ),
+]
+
 MK_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Egyptologist-reviewer 2026-04-20 (PR #87): Leprohon's own section
     # header on PDF p. 81 line 320 reads `(Queen) Sobeknefru` (no 'e'
@@ -322,6 +368,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
     *MK_CORRECTIONS,
+    *DYN13_CORRECTIONS,
 ]
 
 
@@ -384,6 +431,72 @@ NAME_LIST_FIELDS = (
     "later_horus_names",
     "seth_names",
 )
+
+
+MDC_MAP: dict[str, str] = {
+    "A": "ꜣ",
+    "a": "ꜥ",
+    "H": "ḥ",
+    "x": "ḫ",
+    "X": "ẖ",
+    "S": "š",
+    "T": "ṯ",
+    "D": "ḏ",
+    "q": "ḳ",
+}
+
+# Uppercase-only MdC subset (unambiguous normalisation targets — see
+# `_apply_mdc_on_uppercase` rationale for why lowercase `a`/`q`/`x` are
+# excluded). frozenset for O(1) membership checks in the per-character
+# generator expression.
+_UPPERCASE_MDC_CODES = frozenset(("A", "H", "X", "S", "T", "D"))
+
+
+def _apply_mdc_on_uppercase(text: str) -> str:
+    """Apply MdC → Egyptological Unicode on uppercase-letter MdC codes only.
+
+    Safety net for transliteration fields that slipped past transcribe_chunk.py's
+    gloss-boundary detection. Egyptological Unicode transliterations are
+    all-lowercase (with diacritical marks); any uppercase Latin letter in a
+    `transliteration` field is almost certainly an unnormalised MdC code
+    (A→ꜣ, H→ḥ, X→ẖ, S→š, T→ṯ, D→ḏ). The lowercase MdC codes (a→ꜥ, q→ḳ, x→ḫ)
+    are deliberately NOT touched by this safety net because `a` is also a
+    valid anglicised-gloss letter, `q` appears as a Latin letter in some
+    English words, and `x` is rare but ambiguous — those require the
+    upstream gloss-boundary detection in transcribe_chunk.py to disambiguate.
+    The uppercase set is unambiguous: no Egyptological Unicode transliteration
+    ever contains uppercase Latin, so any occurrence is a normalisation gap.
+    """
+    return "".join(MDC_MAP[ch] if ch in _UPPERCASE_MDC_CODES else ch for ch in text)
+
+
+def normalize_translit_mdc(rows: list[dict]) -> list[str]:
+    """Walk every name-entry's `transliteration` field and apply the uppercase-
+    MdC safety net. Logs every actual normalisation; silent on fields that
+    already contain no uppercase MdC codes.
+
+    Addresses transcribe_chunk.py regex gaps where embedded-paren filiation
+    markers (`(sꜣ)`) or post-colon-label patterns (`Throne and Birth names:`)
+    previously escaped the gloss-boundary detection; those are fixed upstream
+    in transcribe_chunk.py, but committed reconciled.jsonl rows that were
+    extracted before the fix still need normalisation.
+    """
+    log_lines: list[str] = []
+    for row in rows:
+        lid = row["leprohon_id"]
+        for field in NAME_LIST_FIELDS:
+            for idx, entry in enumerate(row.get(field, [])):
+                translit = entry.get("transliteration")
+                if not isinstance(translit, str):
+                    continue
+                normalised = _apply_mdc_on_uppercase(translit)
+                if normalised != translit:
+                    entry["transliteration"] = normalised
+                    log_lines.append(
+                        f"  {lid} / {field}.{idx}.transliteration: "
+                        f"{translit!r} → {normalised!r}"
+                    )
+    return log_lines
 
 
 def backfill_stage_suffix(rows: list[dict]) -> list[str]:
@@ -479,6 +592,7 @@ def apply_corrections() -> list[str]:
     log_lines.extend(backfill_name_list_fields(rows))
     log_lines.extend(backfill_stage_suffix(rows))
     log_lines.extend(strip_debug_leakage(rows))
+    log_lines.extend(normalize_translit_mdc(rows))
 
     by_id = {r["leprohon_id"]: r for r in rows}
     for lid, path, new_value, rationale in SPOT_CORRECTIONS:

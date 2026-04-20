@@ -79,8 +79,19 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # ephemeral dynasties ship as their own chunks (future chunk 5 = Dyn
     # 13 alone ~37 kings; future chunk 6 = Dyn 13a+14+14a ~32 kings).
     "mk": (75, 81, "V. Middle Kingdom (Dyn 11b + Dyn 12)"),
+    # Chunk 5 (this PR): chapter V Middle Kingdom continuation — the late
+    # MK Dynasty 13 ephemeral line. Printed 60-71, offset +21, physical
+    # 81-92. Physical p. 81 is shared with chunk 4 (Queen Sobekneferu
+    # tail of Dyn 12 is on the same page as the Dyn 13 opening header);
+    # the prompt tells agents to START at the `Dynasty 13` header and
+    # skip the Sobekneferu row already extracted in chunk 4. Expected
+    # ~37 kings making this the densest-king-count chunk in the book;
+    # most are fragmentary (`////` wildcards, Ramesside-list-only) and
+    # most name-types-per-king are much sparser than MK proper (Throne
+    # name + Birth name is typical; full fivefold titulary is rare).
+    "dyn13": (81, 92, "V. Middle Kingdom (Dyn 13 ephemeral line)"),
 }
-DEFAULT_CHUNK = "mk"
+DEFAULT_CHUNK = "dyn13"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
@@ -142,14 +153,14 @@ NAME_LABELS: tuple[str, ...] = (
 # whitespace-paren boundary correctly separates translit from gloss in all
 # chunk-1 cases.
 #
-# The label alternation is sorted longest-first so that "Horus/Seth" wins over
-# "Horus" and "Later cartouche name" wins over "Seth name" even though they
-# share no suffix — regex alternation is first-match-wins.
-NAME_ROW_RE: re.Pattern[str] = re.compile(
-    r"^((?:"
-    + "|".join(re.escape(lbl) for lbl in NAME_LABELS)
-    + r")(?:\s\d+)?):(\s*)(.+?)(\s+\(.*)$"
-)
+# NOTE: earlier revisions of this module used a monolithic `NAME_ROW_RE`
+# that captured transliteration and gloss in a single match. That
+# approach failed on transliterations with embedded parens (filiation
+# markers like `(sꜣ)`, morphological markers like `(y)` / `(.w)`) because
+# the lazy-match boundary `\s+\(.*$` would stop at the FIRST space-paren,
+# mis-identifying the gloss boundary. `_normalize_line` now uses a
+# smaller `prefix_match` for the label + colon, and a dedicated
+# reverse-scanning `_find_gloss_open_paren` for the gloss boundary.
 
 
 def mdc_to_unicode(text: str) -> str:
@@ -162,18 +173,97 @@ def mdc_to_unicode(text: str) -> str:
     return "".join(MDC_MAP.get(ch, ch) for ch in text)
 
 
+def _find_gloss_open_paren(after_colon: str) -> int | None:
+    """Return the character index of the opening `(` of the anglicised gloss.
+
+    Transliterations can contain embedded parentheticals like `(sꜣ)` for
+    filiation, `(y)` / `(.w)` / `(w)` for morphological optional glyphs.
+    The anglicised gloss is always the LAST `(...)` group that ends
+    immediately before the `, <TRANSLATION>` boundary (comma + uppercase
+    letter starting the English translation) or end-of-line.
+
+    Algorithm: scan from right to left. Find the `)` that precedes `, [A-Z]`
+    or end-of-line; then walk back to its matching `(` accounting for
+    balanced nesting (the gloss itself can contain nested parens like
+    `(imeny (sa) qemau)`).
+
+    Returns None if no balanced paren group is found before the translation
+    boundary — caller falls back to no normalisation.
+    """
+    # Trim trailing footnote digits and whitespace — they sit after the gloss
+    # but shouldn't affect the scan.
+    stripped = after_colon.rstrip()
+    # Find the END of the gloss. The gloss always terminates with `), ` (comma
+    # + space introducing the translation) OR `)<optional footnote digits>$`
+    # (end of line). The translation itself can start with `(` (Leprohon
+    # hedged English parentheticals like `(Possessor of?) The kas...`) or
+    # `/` (fragmentary Egyptian elements preserved in the translation like
+    # `////-i (son of) Hor`), so we do NOT constrain what follows the
+    # comma-space — only that it IS a comma-space after the gloss's `)`.
+    gloss_end = None
+    for i in range(len(stripped) - 1, -1, -1):
+        if stripped[i] != ")":
+            continue
+        after = stripped[i + 1:]
+        if after == "" or re.match(r"^\d*$", after) or after.startswith(", "):
+            gloss_end = i
+            break
+    if gloss_end is None:
+        return None
+    # Walk backwards to find the matching `(`, balancing nested parens.
+    depth = 1
+    for i in range(gloss_end - 1, -1, -1):
+        if stripped[i] == ")":
+            depth += 1
+        elif stripped[i] == "(":
+            depth -= 1
+            if depth == 0:
+                # The `(` must be preceded by whitespace (transliteration
+                # embedded parens are glued to the previous character).
+                if i == 0 or stripped[i - 1].isspace():
+                    return i
+                return None
+    return None
+
+
 def _normalize_line(line: str) -> str:
     """Apply MdC mapping to the transliteration span of a Leprohon name row.
 
     Lines that are not name rows (prose paragraphs, headwords, footnotes,
     section headers, empty lines) pass through unchanged — the MdC substitutions
     would corrupt regular English text (`a` → `ꜥ` would turn "and" into "ꜥnd").
+
+    Handles embedded parentheticals in transliterations (e.g. `imny (sA)
+    qmAw (imeny (sa) qemau)`) by scanning backward from the end to find the
+    gloss's opening `(`, accounting for balanced nested parens inside the
+    gloss itself.
     """
-    match = NAME_ROW_RE.match(line)
-    if match is None:
+    # Match just the label + colon + whitespace prefix; everything after
+    # that is handled by `_find_gloss_open_paren` which accounts for
+    # embedded-paren transliterations.
+    prefix_match = re.match(
+        r"^((?:"
+        + "|".join(re.escape(lbl) for lbl in NAME_LABELS)
+        + r")(?:\s+names?)?(?:\s\d+)?):(\s*)",
+        line,
+    )
+    if prefix_match is None:
         return line
-    label, whitespace, translit, rest = match.groups()
-    return f"{label}:{whitespace}{mdc_to_unicode(translit)}{rest}"
+    prefix_end = prefix_match.end()
+    after_colon = line[prefix_end:]
+    gloss_start_rel = _find_gloss_open_paren(after_colon)
+    if gloss_start_rel is None:
+        # Could not locate a gloss — either it's `none attested` (no gloss
+        # expected) or unusual formatting. Return line unchanged to avoid
+        # mis-normalising non-translit text.
+        return line
+    # Transliteration runs from start-of-after-colon to the gloss opener
+    # (exclusive of the space separator).
+    translit_end_rel = gloss_start_rel
+    # Strip trailing whitespace from translit span.
+    translit = after_colon[:translit_end_rel].rstrip()
+    rest = after_colon[len(translit):]
+    return f"{line[:prefix_end]}{mdc_to_unicode(translit)}{rest}"
 
 
 def transcribe(

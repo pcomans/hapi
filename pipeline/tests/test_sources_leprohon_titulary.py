@@ -97,6 +97,21 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (54, 60),
         "physical_page_range": (75, 81),
     },
+    "dyn13": {
+        # Dyn 13 is chapter-V Middle Kingdom per Leprohon's editorial
+        # scheme (despite its post-Sobekneferu chronology). Chapter VI
+        # SIP is reserved for Dyn 15-17 Hyksos + Theban (future chunk 7).
+        "chapter": "Middle Kingdom",
+        "rows_by_dynasty_label": {
+            # Leprohon numbers Dyn 13 entries 1-38 contiguously, then
+            # skips 39-45, then continues 46-55 (with 49 a "one name lost"
+            # stub like the Dyn 9-10a.02 stub). 38 + 10 = 48 rows total.
+            # All sparse titularies; most with only Throne + Birth.
+            "Dynasty 13": 48,
+        },
+        "printed_page_range": (60, 71),
+        "physical_page_range": (81, 92),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -637,16 +652,28 @@ def test_slashed_display_names_have_alt_forms() -> None:
     SMALLCAP headword parenthetical (`KHUFU (CHEOPS)` → display_name
     "Khufu", alt_display_names ["Cheops"]).
 
-    Exception: hedge-glyph slashes (two or more consecutive `/`) are
+    Exception 1: hedge-glyph slashes (two or more consecutive `/`) are
     Leprohon's typography for fragmentary / destroyed readings in the
     Turin Canon, not homonym separators. Rows like `/////` (the Dyn 9–10a
     stub for the destroyed Turin 4,19 entry), `Senen////`, `Shed////`,
     `Hu////`, `Mery///` carry `alt_display_names: []`. Genuine homonyms
     always use a single `/` between alternatives (`Djet/Wadjet`,
-    `Khasekhem/Khasekhemwy`, `Qa Hedjet/Hui/Huni`)."""
+    `Khasekhem/Khasekhemwy`, `Qa Hedjet/Hui/Huni`).
+
+    Exception 2: trailing `(?)` uncertainty markers (chunk 5 Dyn 13 entry
+    18 `Seb/Sab (?)`) are preserved verbatim in `display_name` but are
+    NOT copied into `alt_display_names` — the `(?)` qualifies the whole
+    king-identification, not either homonym individually."""
     for r in _rows():
         if "/" in r["display_name"] and "//" not in r["display_name"]:
-            assert r["alt_display_names"] == r["display_name"].split("/"), r
+            # Strip trailing `(?)` before splitting — it applies to the
+            # whole entry, not to an individual homonym. Also strip
+            # whitespace from each split segment because Leprohon's
+            # typography varies between `X/Y` (no spaces) and `X / Y`
+            # (spaces around the slash).
+            stripped = re.sub(r"\s*\(\?\)\s*$", "", r["display_name"])
+            segments = [s.strip() for s in stripped.split("/")]
+            assert r["alt_display_names"] == segments, r
 
 
 def test_headword_display_names_are_title_cased() -> None:
@@ -659,29 +686,58 @@ def test_headword_display_names_are_title_cased() -> None:
       4. Quote-wrapped names like `"Hudjefa" (I)` / `"Hudjefa" (II)` used
          for Ramesside-only kings whose names Leprohon flags as uncertain.
       5. Roman-numeral disambiguators in parentheses like `(I)`, `(II)`.
+      6. Square-bracketed partial readings like `[User]kare (II)` — the
+         brackets signal epigraphic reconstruction of a damaged segment.
+      7. Hyphenated compound names where later segments are Egyptian
+         function words that stay lowercase by convention — e.g.
+         `Imy-ra Mesha` ("Overseer Mesha", where `imy-ra` is the Egyptian
+         title "who is in the mouth of" and the `ra` is a lowercase
+         Egyptian particle, not an English word). The test only requires
+         the FIRST hyphen-separated segment of each space-delimited token
+         to start uppercase, not every sub-segment.
 
-    The test strips leading/trailing non-letter characters from each segment
-    before checking the first letter is uppercase."""
+    The test strips leading/trailing non-letter characters from the first
+    segment before checking the first letter is uppercase."""
     for r in _rows():
         display = r["display_name"]
         # Exception 1: letter-tagged Horus entries (`Horus "A"`, `Horus "Pe"`)
         if display.startswith("Horus") and '"' in display:
+            continue
+        # Exception 6: display names containing fragmentary-reading markers
+        # (`[///]`, `///`, `////`) are Leprohon's epigraphic-reconstruction
+        # typography and defeat any whitespace-based tokenizer. Skip the
+        # title-case check for these entries; the extraction has already
+        # preserved the structure verbatim per the verbatim-typography
+        # rule, and `display_name` for these rows is not a candidate for
+        # alphabetical title-casing anyway.
+        if "//" in display or "[" in display or "]" in display:
             continue
         for part in display.replace("/", " ").split():
             if part.startswith("(") or part.endswith(")"):
                 continue  # Exception 3/5: parenthesised groups
             if part.startswith("<"):
                 continue  # Exception 2: angle-bracketed
-            for seg in part.split("-"):
-                if seg.startswith("<"):
-                    continue
-                # Strip leading/trailing non-alphabetic chars (quotes, etc.).
-                stripped = seg.lstrip('"\'').rstrip('"\',.;:')
-                if not stripped:
-                    continue
-                assert stripped[0].isupper(), (
-                    f"{r['leprohon_id']}: {display!r} segment {seg!r}"
-                )
+            # Exception: hedge-glyph segments containing `//` are
+            # Leprohon's fragmentary-reading typography (e.g. chunk-5
+            # Dyn 13 entry 46 `Mer [///]re`) — skip casing check.
+            if "//" in part:
+                continue
+            # Only check the FIRST hyphen-separated segment of each
+            # space-delimited token — exception 7 allows subsequent
+            # Egyptian-particle segments to stay lowercase.
+            segments = part.split("-")
+            first_seg = segments[0]
+            if first_seg.startswith("<"):
+                continue
+            # Strip leading/trailing non-alphabetic chars (quotes,
+            # brackets, slashes, etc.) — exception 4 / 6.
+            strip_set = '"\'[]/,.;:\\-'
+            stripped = first_seg.strip(strip_set)
+            if not stripped:
+                continue
+            assert stripped[0].isupper(), (
+                f"{r['leprohon_id']}: {display!r} segment {first_seg!r}"
+            )
 
 
 def test_later_cartouche_is_separate_from_birth_names() -> None:
@@ -861,6 +917,10 @@ DUAL_EMIT_PAIRS: dict[str, tuple[tuple[str, int], ...]] = {
         ("birth_names", 1),
     ),
     "leprohon-9-10b.03": (  # Khety VI: `Throne and birth:` dual
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+    "leprohon-13.35": (  # Sewadjtu: `Throne and Birth names:` dual
         ("throne_names", 1),
         ("birth_names", 1),
     ),
