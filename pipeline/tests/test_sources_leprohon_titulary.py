@@ -188,6 +188,23 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (125, 135),
         "physical_page_range": (146, 156),
     },
+    "late-period": {
+        # Chapter IX Late Period — Dyn 26 (Saite) + Dyn 27 (1st Persian)
+        # + Dyn 28 (Amyrtaios) + Dyn 29 (Mendesian) + Dyn 30 (Sebennytic)
+        # + Dyn 31 (2nd Persian). Per-dynasty counts verified
+        # post-extraction.
+        "chapter": "Late Period",
+        "rows_by_dynasty_label": {
+            "Dynasty 26": 6,
+            "Dynasty 27": 7,  # includes 3 placeholder rows for Xerxes II / Darius II / Artaxerxes II (no hieroglyphic attestation)
+            "Dynasty 28": 1,
+            "Dynasty 29": 4,
+            "Dynasty 30": 3,
+            "Dynasty 31": 4,  # includes Khababash (Egyptian rebel during 2nd Persian period)
+        },
+        "printed_page_range": (164, 174),
+        "physical_page_range": (185, 195),
+    },
     "tip-late": {
         # Chapter VIII TIP late — Dyn 23 (Tanite/Theban split) + Dyn 23a
         # (collateral) + Dyn 24 (Saite — Tefnakhte, Bakenrenef) + Dyn 25
