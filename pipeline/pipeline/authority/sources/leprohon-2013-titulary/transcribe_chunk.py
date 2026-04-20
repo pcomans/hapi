@@ -100,8 +100,17 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # are additional late-MK material Leprohon places at the end of
     # chapter V before the chapter VI SIP boundary. 53 total rows.
     "dyn13a-14": (93, 101, "V. Middle Kingdom (Dyn 13a + 14 + 14a tail)"),
+    # Chunk 7 (this PR): chapter VI Second Intermediate Period — Dyn 15
+    # (Hyksos), Dyn 16, Dyn 17 (Theban). Printed 81-92, offset +21,
+    # physical 102-113. This is where Leprohon's chapter VI actually
+    # starts (not at the Dyn 13 opening as the pre-chunk-4 README had
+    # wrong). The Hyksos kings have partial titularies drawn from
+    # scarabs + royal-statuary inscriptions; Dyn 17 is Theban and
+    # includes Senakhtenre, Seqenenre, Kamose — the immediate
+    # predecessors of Ahmose I.
+    "sip": (102, 113, "VI. Second Intermediate Period"),
 }
-DEFAULT_CHUNK = "dyn13a-14"
+DEFAULT_CHUNK = "sip"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]

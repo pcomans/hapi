@@ -128,6 +128,22 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (72, 80),
         "physical_page_range": (93, 101),
     },
+    "sip": {
+        # Chapter VI Second Intermediate Period — Dyn 15 Hyksos + Dyn 16
+        # Theban + Dyn 16a uncertain + Dyn 17 Theban (Abydos-Dynasty-
+        # assigned + core Seventeenth) + Dyn 17a. Multi-slot stubs at
+        # 16:11-15, 17:3-10, 17:12-14 collapsed to single rows each.
+        "chapter": "Second Intermediate Period",
+        "rows_by_dynasty_label": {
+            "Dynasty 15": 6,
+            "Dynasty 16": 11,
+            "Dynasty 16a": 5,
+            "Dynasty 17": 19,
+            "Dynasty 17a": 1,
+        },
+        "printed_page_range": (81, 92),
+        "physical_page_range": (102, 113),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -940,6 +956,15 @@ def test_ramesside_only_tagging_is_applied_where_expected() -> None:
         "leprohon-14.45",
         "leprohon-14.49",
         "leprohon-14.51",
+        # Chunk 7 SIP: 7 headword-asterisked entries across Dyn 16 and
+        # Dyn 17 (no asterisks in Dyn 15 Hyksos, Dyn 16a, Dyn 17a).
+        "leprohon-16.07",  # Nebiryerau II
+        "leprohon-16.10",  # Sekhemreshedwaset
+        "leprohon-17.01",  # Weser /// Re (I)
+        "leprohon-17.02",  # Weser /// Re (II)
+        "leprohon-17.11",  # /// Hebre (I)
+        "leprohon-17.15",  # /// Heb(?)-Re (II)
+        "leprohon-17.16",  # /// Webenre (III)
     }
     for lid in expected_tagged:
         r = _row(lid)
@@ -981,6 +1006,29 @@ DUAL_EMIT_PAIRS: dict[str, tuple[tuple[str, int], ...]] = {
     ),
     "leprohon-13.35": (  # Sewadjtu: `Throne and Birth names:` dual
         ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+    # Chunk 7 Dyn 15 Hyksos: `Title and [birth] name:` combined labels
+    # (Leprohon's `ḥqꜣ ḫꜣswt` "Ruler of Foreign Lands" ruler-title fused
+    # with the king's personal name) — dual-emitted to throne_names +
+    # birth_names per chunk-7 convention.
+    "leprohon-15.01": (  # Semqen
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+    "leprohon-15.02": (  # Aper-anati
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+    "leprohon-15.03": (  # Seker-her
+        ("throne_names", 1),
+        ("birth_names", 1),
+    ),
+    # Apepi has 2 plain Throne names PLUS the Title-and-birth-name
+    # combined entry as Throne variant 3; the dual-emit partner lives
+    # at birth_names variant 1.
+    "leprohon-15.05": (  # Apepi / Apophis
+        ("throne_names", 3),
         ("birth_names", 1),
     ),
 }
