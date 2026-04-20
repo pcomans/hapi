@@ -218,6 +218,7 @@ NAME_LIST_FIELDS = (
     "throne_names",
     "birth_names",
     "later_cartouche_names",
+    "later_horus_names",
     "seth_names",
 )
 

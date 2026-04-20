@@ -65,6 +65,20 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (31, 48),
         "physical_page_range": (52, 69),
     },
+    "fip": {
+        "chapter": "First Intermediate Period",
+        "rows_by_dynasty_label": {
+            # Leprohon preserves the en-dash `–` in his typeset labels;
+            # `dynasty_label` retains it verbatim. ASCII hyphen is used
+            # only in `leprohon_id` (`leprohon-9-10a.01`) where regex /
+            # filesystem safety matters.
+            "Dynasties 9–10a": 9,  # 1 stub + 1 contemporarily-attested + 7 Ramesside-only
+            "Dynasties 9–10b": 6,
+            "Dynasty 11a": 4,
+        },
+        "printed_page_range": (49, 53),
+        "physical_page_range": (70, 74),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -179,22 +193,33 @@ def test_leprohon_id_is_unique() -> None:
     assert len(ids) == len(set(ids)), "duplicate leprohon_id detected"
 
 
-_LID_RE = re.compile(r"^leprohon-\d+[a-z]?\.\d{2}$")
+_LID_RE = re.compile(r"^leprohon-\d+(?:-\d+)?[a-z]?\.\d{2}$")
 
 
 def test_leprohon_id_shape() -> None:
-    """Every id matches `leprohon-{dynasty}{optional_suffix}.{NN}` — NN is
-    exactly two digits. Suffix `[a-z]` handles Leprohon's sub-dynasty sections
-    (Dyn 2a, 3a, 8a — Ramesside-added king lists with no contemporary
-    attestation, formally typeset as "Dynasty 2a" etc. in the book)."""
+    """Every id matches `leprohon-{dynasty_group}.{NN}` — NN is exactly two
+    digits. `dynasty_group` is one of:
+      - a plain integer (`0`, `3`, `18`);
+      - integer + single lowercase suffix (`2a`, `3a`, `8a`, `11a`) — Leprohon's
+        sub-dynasty sections (typeset as "Dynasty 2a" etc. in the book,
+        sometimes Ramesside-only reconstructions, sometimes contemporarily
+        attested — see per-section treatment);
+      - hyphenated range + suffix (`9-10a`, `9-10b`) — Leprohon's chapter-IV
+        combined labels for Dynasties 9 and 10 which he treats as inseparable.
+    """
     for r in _rows():
         assert _LID_RE.match(r["leprohon_id"]), r["leprohon_id"]
 
 
 def test_sequence_matches_id() -> None:
-    """`sequence_in_chapter_section` equals the numeric tail of leprohon_id."""
+    """`sequence_in_chapter_section` equals the numeric tail of leprohon_id.
+
+    `.split(".", 1)` so that any future `.` in the dynasty-group segment
+    (none today — all groups are hyphen-separated) would not confuse the
+    tail extraction.
+    """
     for r in _rows():
-        _, tail = r["leprohon_id"].split(".")
+        _, tail = r["leprohon_id"].rsplit(".", 1)
         assert r["sequence_in_chapter_section"] == int(tail), r
 
 
@@ -232,6 +257,7 @@ NAME_LIST_FIELDS = (
     "throne_names",
     "birth_names",
     "later_cartouche_names",
+    "later_horus_names",
     "seth_names",
 )
 
@@ -252,14 +278,14 @@ def test_name_lists_are_lists() -> None:
     """Every name-type field is a list (possibly empty), never null."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            assert isinstance(r[field], list), f"{r['leprohon_id']}.{field}"
+            assert isinstance(r.get(field, []), list), f"{r['leprohon_id']}.{field}"
 
 
 def test_name_entries_have_required_fields() -> None:
     """Every name entry exposes the 7-field schema exactly."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for entry in r[field]:
+            for entry in r.get(field, []):
                 missing = NAME_ENTRY_FIELDS - set(entry)
                 extra = set(entry) - NAME_ENTRY_FIELDS
                 assert not missing, f"{r['leprohon_id']}.{field}: missing {missing}"
@@ -270,9 +296,9 @@ def test_variant_index_starts_at_one() -> None:
     """First entry in every name list has variant_index=1, is_variant=False."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            if not r[field]:
+            if not r.get(field, []):
                 continue
-            first = r[field][0]
+            first = r.get(field, [])[0]
             assert first["variant_index"] == 1, f"{r['leprohon_id']}.{field}[0]"
             assert first["is_variant"] is False, f"{r['leprohon_id']}.{field}[0]"
 
@@ -281,7 +307,7 @@ def test_variant_index_is_monotonic() -> None:
     """variant_index values increment by 1 within each list: 1, 2, 3, ..."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for i, entry in enumerate(r[field], start=1):
+            for i, entry in enumerate(r.get(field, []), start=1):
                 assert entry["variant_index"] == i, (
                     f"{r['leprohon_id']}.{field}[{i-1}]: "
                     f"variant_index={entry['variant_index']}, expected {i}"
@@ -292,7 +318,7 @@ def test_is_variant_matches_position() -> None:
     """is_variant is False iff variant_index == 1; True otherwise."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for entry in r[field]:
+            for entry in r.get(field, []):
                 expected = entry["variant_index"] > 1
                 assert entry["is_variant"] == expected, (
                     f"{r['leprohon_id']}.{field}: "
@@ -305,7 +331,7 @@ def test_attested_in_is_list() -> None:
     """attested_in is always a list (possibly empty), never null."""
     for r in _rows():
         for field in NAME_LIST_FIELDS:
-            for entry in r[field]:
+            for entry in r.get(field, []):
                 assert isinstance(entry["attested_in"], list), (
                     f"{r['leprohon_id']}.{field}"
                 )
@@ -546,9 +572,17 @@ def test_slashed_display_names_have_alt_forms() -> None:
     slash-split parts. Rows without `/` MAY still have `alt_display_names`
     populated — for example, Greek aliases that Leprohon prints in the
     SMALLCAP headword parenthetical (`KHUFU (CHEOPS)` → display_name
-    "Khufu", alt_display_names ["Cheops"])."""
+    "Khufu", alt_display_names ["Cheops"]).
+
+    Exception: hedge-glyph slashes (two or more consecutive `/`) are
+    Leprohon's typography for fragmentary / destroyed readings in the
+    Turin Canon, not homonym separators. Rows like `/////` (the Dyn 9–10a
+    stub for the destroyed Turin 4,19 entry), `Senen////`, `Shed////`,
+    `Hu////`, `Mery///` carry `alt_display_names: []`. Genuine homonyms
+    always use a single `/` between alternatives (`Djet/Wadjet`,
+    `Khasekhem/Khasekhemwy`, `Qa Hedjet/Hui/Huni`)."""
     for r in _rows():
-        if "/" in r["display_name"]:
+        if "/" in r["display_name"] and "//" not in r["display_name"]:
             assert r["alt_display_names"] == r["display_name"].split("/"), r
 
 
