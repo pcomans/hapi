@@ -152,8 +152,16 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # Taharqa, Tantamani) — culturally significant though Leprohon
     # treats them at typical TIP density (mostly Throne + Birth).
     "tip-late": (174, 184, "VIII. TIP late (Dyn 23 + 23a + 24 + 25)"),
+    # Chunk 13 (this PR): chapter IX Late Period — Dyn 26 (Saite) +
+    # Dyn 27 (1st Persian) + Dyn 28 + Dyn 29 + Dyn 30 + Dyn 31 (2nd
+    # Persian). Printed 164-174, offset +21, physical 185-195.
+    # Includes the Saite renaissance kings (Psamtik I-III, Necho I-II,
+    # Apries, Amasis), the Persian satrapal "kings" (Cambyses, Darius,
+    # Xerxes), and the brief native Dyn 28-30 lines (Amyrtaios,
+    # Nepherites, Hakor, Nectanebo I/II).
+    "late-period": (185, 195, "IX. Late Period"),
 }
-DEFAULT_CHUNK = "tip-late"
+DEFAULT_CHUNK = "late-period"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
