@@ -1337,6 +1337,26 @@ def test_dual_emit_source_notes_are_symmetric() -> None:
             )
 
 
+def test_dyn23_sheshonq_rows_preserve_shoshenq_aliases() -> None:
+    """Regression lock for PR #96: chunk 13 accidentally cleared
+    `alt_display_names` on three Dyn 23 Sheshonq rows, stripping the
+    `Shoshenq VI/VIa/VII` museum-spelling variants that chunk 12 added
+    for downstream matching. Codex review caught it post-merge; this
+    test prevents the same class of regression on future chunks.
+    """
+    expected = {
+        "leprohon-23.03": ["Shoshenq VI"],
+        "leprohon-23.07": ["Shoshenq VIa"],
+        "leprohon-23.09": ["Shoshenq VII"],
+    }
+    for lid, aliases in expected.items():
+        r = _row(lid)
+        assert r["alt_display_names"] == aliases, (
+            f"{lid}: expected alt_display_names={aliases}, "
+            f"got {r['alt_display_names']}"
+        )
+
+
 def test_every_populated_field_on_flagship_den_asserted() -> None:
     """Rule 5 sentinel: this test exists so the flagship row's field count
     is re-verified when the schema changes. If `test_den_full_titulary`
