@@ -24,7 +24,7 @@ All rows: `stage_suffix: null`. No multi-stage kings expected in LP (verify).
 
 ### Persian kings (Dyn 27 and Dyn 31)
 
-The Achaemenid Persian rulers (Cambyses, Darius I, Xerxes I, Artaxerxes I, Darius II, Artaxerxes II — Dyn 27; Artaxerxes III, Arses, Darius III — Dyn 31) appear as pharaohs in Leprohon because they took Egyptian titularies during their rule of Egypt. Their `display_name` should preserve Leprohon's Egyptian-form headword (e.g. `KAMBYTHET` for Cambyses, `INTARYUSHA` for Darius). Standard Greek / Persian forms (`Cambyses`, `Darius I`, `Xerxes I`) go into `alt_display_names` only if Leprohon prints them in the headword parenthetical. Don't force Greek aliases that aren't in Leprohon — those land via fix_rows post-pass with explicit attribution.
+The Achaemenid Persian rulers (Cambyses, Darius I, Xerxes I, Artaxerxes I, Darius II, Artaxerxes II — Dyn 27; Artaxerxes III, Arses, Darius III — Dyn 31) appear as pharaohs in Leprohon because they took Egyptian titularies during their rule of Egypt. Leprohon prints their headwords in **Greek/Persian form** — not Egyptian-form SMALLCAP — so `display_name` is the Greek/Persian form as printed (e.g. `Cambyses`, `Darius I`, `Xerxes I`, `Artaxerxes I`, `Arses`). The Egyptian transliterated form of the Birth name (e.g. `kmbwd`, `driwš`, `ḫšyrš`, `ꜣrtḫšsš`) belongs in the `birth_names` row, not as `display_name`. `alt_display_names` stays empty unless Leprohon prints an alias parenthetical — standard non-Leprohon Greek variants (e.g. `Kambyses`, `Ochus` for Artaxerxes III) land via fix_rows post-pass with explicit attribution.
 
 ### Greek aliases for Saite kings (Dyn 26)
 
