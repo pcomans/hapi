@@ -239,6 +239,19 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (136, 152),
         "physical_page_range": (157, 173),
     },
+    "macedonian-ptolemaic": {
+        # Chapter X Macedonian and Ptolemaic Dynasties. 3 Macedonian +
+        # 21 Ptolemaic rows (17 numbered + 4 queen sub-entries 2a/3a/5a/8a).
+        # Named-dynasty convention: dynasty_number is null, dynasty_label
+        # carries "Macedonian Dynasty" / "Ptolemaic Dynasty".
+        "chapter": "Macedonian and Ptolemaic",
+        "rows_by_dynasty_label": {
+            "Macedonian Dynasty": 3,
+            "Ptolemaic Dynasty": 21,
+        },
+        "printed_page_range": (175, 188),
+        "physical_page_range": (196, 209),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -355,7 +368,7 @@ def test_leprohon_id_is_unique() -> None:
 
 _LID_RE = re.compile(
     r"^leprohon-"
-    r"(?P<dyn_group>\d+(?:-\d+)?[a-z]?)"
+    r"(?P<dyn_group>\d+(?:-\d+)?[a-z]?|macedonian|ptolemaic)"
     r"\.(?P<seq>\d{2})(?P<stage>[a-z]?)$"
 )
 
@@ -370,7 +383,12 @@ def test_leprohon_id_shape() -> None:
         2a/3a; contemporarily-attested late-Dyn-11 for 11b; see per-section
         treatment);
       - hyphenated range + suffix (`9-10a`, `9-10b`) — Leprohon's chapter-IV
-        combined labels for Dynasties 9 and 10 which he treats as inseparable.
+        combined labels for Dynasties 9 and 10 which he treats as inseparable;
+      - a named post-Persian dynasty slug (`macedonian`, `ptolemaic`) —
+        Chapter X dynasties that Leprohon prints without a canonical dynasty
+        number. Project convention (matching pharaoh-se) is `dynasty_number:
+        null` with the slug carrying the grouping rather than fabricating
+        Dyn 32/33 numbers Leprohon did not print.
 
     The optional `stage` suffix marks a titulary-stage (same king, successive
     name sets during reign — Mentuhotep II's a/b/c, Amenemhat I's a/b,
@@ -800,6 +818,20 @@ def test_slashed_display_names_have_alt_forms() -> None:
             # (spaces around the slash).
             stripped = re.sub(r"\s*\(\?\)\s*$", "", r["display_name"])
             segments = [s.strip() for s in stripped.split("/")]
+            # Exception 3: Greek/Macedonian headwords where Leprohon elides
+            # the repeated prefix after a slash — e.g. "Alexander II/IV"
+            # where the full enumerable forms are ["Alexander II",
+            # "Alexander IV"]. Detect by a trailing segment that does not
+            # start with a letter while the first segment contains a space.
+            if len(segments) > 1 and " " in segments[0]:
+                prefix = segments[0].rsplit(" ", 1)[0]
+                for i in range(1, len(segments)):
+                    # A trailing segment that looks like a Roman numeral
+                    # (e.g. "IV" in "Alexander II/IV") is an elided prefix.
+                    # Genuine Egyptian name segments like "Hui" / "Huni" in
+                    # "Qa Hedjet/Hui/Huni" do not match this pattern.
+                    if segments[i] and re.fullmatch(r"[IVXLCDM]+", segments[i]):
+                        segments[i] = f"{prefix} {segments[i]}"
             assert r["alt_display_names"] == segments, r
 
 
@@ -871,6 +903,14 @@ def test_headword_display_names_are_title_cased() -> None:
             strip_set = '"\'[]/,.;:\\-'
             stripped = first_seg.strip(strip_set)
             if not stripped:
+                continue
+            # Exception 8: English articles / prepositions in Greek and
+            # Macedonian headwords (e.g. "Alexander the Great",
+            # "Ptolemy XII Neos Dionysos (Auletes)" where the parenthetical
+            # was already stripped above). These are Leprohon's verbatim
+            # Greek headwords, not Egyptian names, and English function
+            # words stay lowercase by English title-case rules.
+            if stripped.lower() in {"the", "of", "and", "by", "for", "in"}:
                 continue
             assert stripped[0].isupper(), (
                 f"{r['leprohon_id']}: {display!r} segment {first_seg!r}"
@@ -1388,3 +1428,60 @@ def test_every_populated_field_on_flagship_den_asserted() -> None:
         "later_cartouche_names",
         "source_citation",
     }, sorted(populated_top_level)
+
+
+# ---------------------------------------------------------------------------
+# merge._sort_key unit tests (landed-data-agnostic)
+# ---------------------------------------------------------------------------
+
+
+@lru_cache(maxsize=1)
+def _merge_module():
+    """Import `merge.py` from the source dir (hyphenated path → importlib)."""
+    import importlib.util
+
+    merge_path = SOURCE_DIR / "merge.py"
+    spec = importlib.util.spec_from_file_location("leprohon_merge", merge_path)
+    assert spec is not None and spec.loader is not None
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_sort_key_orders_named_dynasties_after_numeric() -> None:
+    """Macedonian + Ptolemaic slugs sort chronologically after every numeric
+    dynasty. Regression guard for the chunk-14 schema extension — if someone
+    swaps the sentinel to a numeric value that collides with Dyn 31, the
+    ordering here breaks."""
+    sort_key = _merge_module()._sort_key
+    unsorted = [
+        "leprohon-ptolemaic.17",  # Caesarion (last Ptolemy)
+        "leprohon-26.01",  # Psamtik I
+        "leprohon-macedonian.01",  # Alexander the Great
+        "leprohon-31.04",  # Khababash (last Dyn 31 row)
+        "leprohon-ptolemaic.01",  # Ptolemy I Soter
+        "leprohon-macedonian.03",  # Alexander II/IV
+        "leprohon-30.03",  # Nectanebo II
+    ]
+    expected_order = [
+        "leprohon-26.01",
+        "leprohon-30.03",
+        "leprohon-31.04",
+        "leprohon-macedonian.01",
+        "leprohon-macedonian.03",
+        "leprohon-ptolemaic.01",
+        "leprohon-ptolemaic.17",
+    ]
+    assert sorted(unsorted, key=sort_key) == expected_order
+
+
+def test_sort_key_matches_lid_regex_for_slugs() -> None:
+    """`_LID_RE` in merge.py accepts the two named-dynasty slugs; unknown
+    slugs fall through to the catch-all 9999 tail key."""
+    lid_re = _merge_module()._LID_RE
+    for slug in ("macedonian", "ptolemaic"):
+        m = lid_re.match(f"leprohon-{slug}.05")
+        assert m is not None, slug
+        assert m.group("dynasty_slug") == slug
+        assert m.group("seq") == "05"
+    assert lid_re.match("leprohon-argead.01") is None  # not a recognised slug

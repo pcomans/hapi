@@ -160,8 +160,15 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # Xerxes), and the brief native Dyn 28-30 lines (Amyrtaios,
     # Nepherites, Hakor, Nectanebo I/II).
     "late-period": (185, 195, "IX. Late Period"),
+    # Chunk 14 (this PR): chapter X Macedonian and Ptolemaic Dynasties.
+    # Printed 175-188, offset +21, physical 196-209. Three Macedonian rulers
+    # (Alexander the Great, Philip Arrhidaeus, Alexander II/IV) followed by
+    # the Ptolemaic line (Ptolemy I Soter through Ptolemy XV Caesarion),
+    # including four queen sub-entries (2a Arsinoe II, 3a Berenike II,
+    # 5a Cleopatra I, 8a Cleopatra II).
+    "macedonian-ptolemaic": (196, 209, "X. Macedonian and Ptolemaic Dynasties"),
 }
-DEFAULT_CHUNK = "late-period"
+DEFAULT_CHUNK = "macedonian-ptolemaic"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]

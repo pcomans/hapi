@@ -4289,3 +4289,6 @@ leprohon-31.04 (Khababash):
   leprohon-25.04 / alt_display_names:
     new value: ["Shabako"]
     rationale: Add `Shabako` (Leclant orthography per egyptologist; standard in Kitchen-TIPE and post-Kitchen Kushite scholarship). Egyptologist-reviewer 2026-04-20 PR #95.
+
+--- Chunk 14 (macedonian-ptolemaic) ---
+No field-level disagreements.

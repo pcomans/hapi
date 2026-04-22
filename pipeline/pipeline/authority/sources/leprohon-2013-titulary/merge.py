@@ -167,6 +167,11 @@ def _majority(values: list) -> tuple[object, int]:
 # - a hyphenated range + suffix (`9-10a`, `9-10b`) — Leprohon's combined
 #   labels for dynasties he considers inseparable (introduced in chapter IV
 #   FIP where he bundles Dynasties 9 and 10 into groups a/b)
+# - a named post-Persian dynasty slug (`macedonian`, `ptolemaic`) — chapter X
+#   dynasties that Leprohon prints without a canonical dynasty number.
+#   Project convention (cf. pharaoh-se) is `dynasty_number: null` with the
+#   slug carrying the grouping; giving them numbers 32/33 would fabricate
+#   a fact Leprohon did not print.
 #
 # NN is a zero-padded 2-digit sequence, optionally followed by a single
 # lowercase letter (`5a`, `1b`, `10b`) that marks a *titulary stage* — same
@@ -184,21 +189,41 @@ def _majority(values: list) -> tuple[object, int]:
 # ascending, then stage-suffix ascending (empty before `a`). This keeps
 # `leprohon-3.01` between `leprohon-2a.02` and `leprohon-3a.01`,
 # `leprohon-9-10a.NN` between `leprohon-8a.08` and `leprohon-11a.01`, and
-# `leprohon-11b.05a < 5b < 5c < 6` inside Dyn 11b.
+# `leprohon-11b.05a < 5b < 5c < 6` inside Dyn 11b. Named dynasty slugs sort
+# after every numeric group in chronological order (`macedonian` before
+# `ptolemaic`).
 _LID_RE = re.compile(
     r"^leprohon-"
+    r"(?:"
     r"(?P<dynasty_num>\d+)"
     r"(?:-(?P<dynasty_num_end>\d+))?"
     r"(?P<dynasty_suffix>[a-z]?)"
+    r"|"
+    r"(?P<dynasty_slug>macedonian|ptolemaic)"
+    r")"
     r"\.(?P<seq>\d{2})"
     r"(?P<stage_suffix>[a-z]?)$"
 )
+
+# Chronological order for named post-Persian dynasties. Sorted after every
+# numeric group by using a sentinel dynasty_num larger than any real dynasty.
+_NAMED_DYNASTY_ORDER = {"macedonian": 1000, "ptolemaic": 1001}
 
 
 def _sort_key(lid: str) -> tuple[int, int, str, int, str, str]:
     match = _LID_RE.match(lid)
     if match is None:
         return (9999, 9999, "", 9999, "", lid)
+    slug = match.group("dynasty_slug")
+    if slug is not None:
+        return (
+            _NAMED_DYNASTY_ORDER[slug],
+            0,
+            "",
+            int(match.group("seq")),
+            match.group("stage_suffix"),
+            lid,
+        )
     dynasty_num = int(match.group("dynasty_num"))
     # `is_range` tiebreaker: plain `9` sorts before `9-10` because the plain
     # form is conceptually "Dynasty 9 standalone", the ranged form is a
