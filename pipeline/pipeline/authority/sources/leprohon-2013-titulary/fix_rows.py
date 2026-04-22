@@ -532,13 +532,40 @@ TIP_LATE_CORRECTIONS: list[tuple[str, str, object, str]] = [
         ],
         "Remove throne-epithet duplicate; re-index. Gemini PR #95 P1.",
     ),
+    # PR #97 root-cause fix: the three Dyn 23 Sheshonq alt_display_names
+    # entries (Shoshenq VI / VIa / VII) were originally patched directly
+    # into reconciled.jsonl in PR #97 rather than added here. That made
+    # the aliases survive only as long as the file wasn't re-merged —
+    # the chunk-14 re-merge (this PR) correctly blew them away because
+    # the agent files don't carry them. Add the corrections here so
+    # they're durable across future re-merges. Test
+    # `test_dyn23_sheshonq_rows_preserve_shoshenq_aliases` locks the
+    # invariant.
+    (
+        "leprohon-23.03",
+        "alt_display_names",
+        ["Shoshenq VI"],
+        "Restore `Shoshenq VI` museum-spelling alias (Met / Brooklyn / "
+        "Harvard / Kitchen-TIPE convention). PR #97 patched this into "
+        "reconciled.jsonl directly; chunk-14 re-merge made it clear "
+        "fix_rows.py is the durable place. Egyptologist 2026-04-20 PR #95.",
+    ),
+    (
+        "leprohon-23.07",
+        "alt_display_names",
+        ["Shoshenq VIa"],
+        "Restore `Shoshenq VIa` museum-spelling alias. See 23.03 note.",
+    ),
+    (
+        "leprohon-23.09",
+        "alt_display_names",
+        ["Shoshenq VII"],
+        "Restore `Shoshenq VII` museum-spelling alias. See 23.03 note.",
+    ),
     # Egyptologist-reviewer 2026-04-20 PR #95 P2 (Dyn 25 aliases): 4
     # museum/scholarly aliases for the Nubian kings, attributed per
     # rule 1 (scholarly traceability) per code-reviewer PR #95 P1
-    # demand. The Shoshenq VI/VIa/VII aliases were removed from this
-    # block — agents already emitted them per prompt rule (verified
-    # against merge-disagreements.txt — agents unanimous on those
-    # aliases, fix_rows would have been pure no-op churn).
+    # demand.
     (
         "leprohon-25.06",
         "alt_display_names",
@@ -704,6 +731,59 @@ DYN20_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+MACEDONIAN_PTOLEMAIC_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # Egyptologist-reviewer 2026-04-21 (PR for chunk 14): Cleopatra I's
+    # Horus name has a pypdf text-layer corruption in the Khnum-ornamented
+    # token. The pypdf+MdC pipeline produces `ẖḳr(t).n ẖnmw` — but the
+    # PDF visual rendering on p. 181 shows `ḫkr(t).n ẖnmw` (verified
+    # against the user-supplied screenshot 2026-04-21). The text layer
+    # mis-encoded `ḫ` as `X` (capital, → ẖ) and `k` as `q` (→ ḳ); the
+    # second token (`ẖnmw` Khnum) is correct. Fix the transliteration
+    # only; the anglicised gloss `kheqer(et).en khnemu` is Leprohon's
+    # own printed gloss (which has its own internal-vs-translit
+    # divergence Leprohon never resolves) and stays as-is.
+    (
+        "leprohon-33.05a",
+        "horus_names.0.transliteration",
+        "ḥwn(t) sꜣt ḥḳꜣ ir(t).n ḥḳꜣ mr(t) nṯrw bꜣḳt ḫkr(t).n ẖnmw "
+        "ṯꜣtt sꜣt ḏḥwty wr(t)-pḥty shr(t) tꜣwy rdi n.s nbty rḫyt n nfrw "
+        "ḳni sy nt nb(t) sꜣw ṯni sy ḥt-ḥr m mrwt.s",
+        "Fix pypdf text-layer corruption: `ẖḳr(t).n` → `ḫkr(t).n` "
+        "(`ḫ` mis-encoded as `X`/ẖ, `k` mis-encoded as `q`/ḳ). PDF "
+        "visual on p. 181 verified via user screenshot 2026-04-21. "
+        "Egyptologist-reviewer P0/P1 finding.",
+    ),
+    # Egyptologist-reviewer 2026-04-21: Berenike at Ptolemaic slot 12 is
+    # Berenike III in standard scholarship (daughter of Ptolemy IX, brief
+    # 81 BCE co-rule). Leprohon prints only `BERENIKE` as the headword
+    # (no roman numeral), so display_name stays `Berenike`, but Phase-A
+    # matching against museum catalogs needs the disambiguated form.
+    (
+        "leprohon-33.12",
+        "alt_display_names",
+        ["Berenike III"],
+        "Add `Berenike III` alias (standard Ptolemaic-history numbering: "
+        "daughter of Ptolemy IX). Leprohon prints headword as bare "
+        "`BERENIKE`. Egyptologist-reviewer P1.",
+    ),
+    # Egyptologist-reviewer 2026-04-21: the Alexander II/IV row's Horus
+    # source_note was carrying pipeline-internal denoising commentary
+    # (`Leprohon's chapter preamble names this king 'Alexander II'; the
+    # SMALLCAP headword in the pypdf transcription reads 'ALEXANDER II/IV'
+    # (denoised from 'a l EXan DEr  ii /i V')`). source_note is for
+    # Leprohon's own scholarly footnote text, not pipeline meta-commentary
+    # — trim to just the bibliographic chain. The slashed-display-name
+    # decision is documented in the chunk log of transcribe.md instead.
+    (
+        "leprohon-32.03",
+        "horus_names.0.source_note",
+        "Gauthier 1916, 207–11; von Beckerath 1999, 232–33.",
+        "Trim pipeline-internal denoising commentary out of source_note "
+        "(belongs in transcribe.md chunk log, not the per-row scholarly "
+        "footnote field). Egyptologist-reviewer P2.",
+    ),
+]
+
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
@@ -715,6 +795,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *DYN20_CORRECTIONS,
     *TIP_EARLY_CORRECTIONS,
     *TIP_LATE_CORRECTIONS,
+    *MACEDONIAN_PTOLEMAIC_CORRECTIONS,
 ]
 
 

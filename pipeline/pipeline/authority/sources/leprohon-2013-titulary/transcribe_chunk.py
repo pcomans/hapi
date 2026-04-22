@@ -160,8 +160,23 @@ CHUNKS: dict[str, tuple[int, int, str]] = {
     # Xerxes), and the brief native Dyn 28-30 lines (Amyrtaios,
     # Nepherites, Hakor, Nectanebo I/II).
     "late-period": (185, 195, "IX. Late Period"),
+    # Chunk 14 (this PR): chapter X Macedonian and Ptolemaic Dynasties.
+    # Printed 175-188, offset +21, physical 196-209. The Macedonian
+    # Dynasty (Alexander the Great, Philip Arrhidaeus, Alexander IV) is
+    # 3 entries; the Ptolemaic Dynasty runs 17 entries (Ptolemy I Soter
+    # through Ptolemy XV Caesarion, with Berenike inserted as entry 12
+    # between Ptolemy XI and Ptolemy XII). Total ~20 rows. Per the
+    # README schema convention, `dynasty_number: 32` for Macedonian and
+    # `dynasty_number: 33` for Ptolemaic (pharaoh.se itself uses null
+    # for both — the README's "consistent with pharaoh.se" rationale
+    # for `33` is a Leprohon-local extrapolation, not a literal
+    # alignment). Headwords in the pypdf text layer are letter-spaced
+    # (`a l EXan DEr  t HE g r Eat`, `Ptol Emy  i s ot Er`) — agents
+    # must collapse intra-word whitespace and title-case before
+    # emitting `display_name`.
+    "macedonian-ptolemaic": (196, 209, "X. Macedonian and Ptolemaic Dynasties"),
 }
-DEFAULT_CHUNK = "late-period"
+DEFAULT_CHUNK = "macedonian-ptolemaic"
 
 PDF_PATH = (
     Path(__file__).resolve().parents[5]
