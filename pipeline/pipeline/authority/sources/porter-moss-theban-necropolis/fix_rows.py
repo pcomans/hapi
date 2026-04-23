@@ -293,7 +293,7 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "DAN-AhmosiNefertere",
         "notes_from_pm",
         "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I "
-        "by Carter, later equated by Černý with `House of Amenophis of the Garden'.",
+        "by Carter, later equated by Černý with 'House of Amenophis of the Garden'.",
         "PM p.599-600 §III.C headword spells out the Carter attribution "
         "history in detail; the pre-review note dropped the Černý follow-up. "
         "Restore per egyptologist-reviewer P2 finding (verbatim preserve of "

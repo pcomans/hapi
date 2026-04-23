@@ -103,5 +103,6 @@ Field corrections:
     value: "Official"
 - DAN-MentuhotpIWifeOfDjhuti: notes_from_pm already matches override (no-op this run; PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through. Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy (chunk-1..6 convention). tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
     value: "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
-- DAN-AhmosiNefertere: notes_from_pm already matches override (no-op this run; PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
-    value: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with `House of Amenophis of the Garden'."
+- DAN-AhmosiNefertere: notes_from_pm corrected this run (PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
+    was: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with `House of Amenophis of the Garden'."
+    now: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with 'House of Amenophis of the Garden'."
