@@ -1,8 +1,12 @@
-# Hornung/Krauss/Warburton (2006) — Chronological Table
+# Hornung/Krauss/Warburton (2006) — Chronological Authority
 
 Source: Hornung, E., Krauss, R., & Warburton, D. A. (Eds.). (2006).
 *Ancient Egyptian Chronology*. Handbook of Oriental Studies, vol. 83.
-Leiden: Brill. Sections IV.2 and IV.3 (pp. 490–498).
+Leiden: Brill.
+
+**Extracted sections:**
+- **IV.2 + IV.3** — the consensus dynastic chronology table (pp. 490–498). Produced the initial 203-row extract (periods, dynasties, Dyn-1 → Ptolemaic rulers with absolute BCE date ranges + ±25 yr error bars).
+- **Ch 2 Hendrickx** — "Predynastic–Early Dynastic Chronology" (pp. 55–93). Added 3 Dyn-0 ruler rows (Iry-Hor, Ka, Scorpion I) to close the pharaoh.se U-j / Dyn-0 authority gap that was previously blocked on Dreyer 1998 *Umm el-Qaab I*.
 
 ## Layout
 
@@ -10,15 +14,24 @@ Leiden: Brill. Sections IV.2 and IV.3 (pp. 490–498).
 pipeline/pipeline/authority/sources/hkw-chronology-2006/   # committed
   README.md        — this file
   prompt.md        — schema and instructions used to produce reconciled.jsonl
-  reconciled.jsonl — transcription of record
+  reconciled.jsonl — transcription of record (206 rows)
+  raw/             — extraction working files (gitignored)
+    chunk-ch2-p55-p93.txt — pypdf text-layer of Hendrickx Ch 2
+proprietary/books/                                         # gitignored
+  Hornung-Krauss-Warburton 2006 - Ancient Egyptian Chronology.pdf
+    — full 530-page book, SHA-256 304a75ce18090cd683fc47650eaf5741dc73c9e4abdd8fbdc13dda707cd47c55
 proprietary/hkw-chronology-2006/                           # gitignored
-  hkw-iv-2-iv-3.pdf — excerpted source PDF (Brill copyright)
+  (original extraction working files — pre-full-book era; historical)
 ```
 
-`reconciled.jsonl` is the transcription of record. It was produced
-by LLM transcription of HKW section IV.2 against the schema in
-`prompt.md`, with manual spot-checking against the PDF. The
-reconciliation process is not preserved — only the final output.
+Prior layout used an excerpted `hkw-iv-2-iv-3.pdf` (9 pages of the chronology table only). That excerpt has been superseded by the full book PDF at `proprietary/books/` and removed.
+
+`reconciled.jsonl` is the transcription of record. The initial 203 rows were
+produced by LLM transcription of HKW section IV.2 against the schema in
+`prompt.md`, with manual spot-checking against the PDF. The 3 Dyn-0 ruler
+rows (Iry-Hor, Ka, Scorpion I — at the top of the ruler section, before the
+Nar-mer row that opens Dyn 1) were hand-extracted from Hendrickx's Tables
+II.1.6 (p.89) and II.1.7 (p.92) with explicit per-row page citations.
 
 The reconciled file is a thin-copyright derivative: structured facts
 (ruler names, date ranges, dynasty assignments) reorganized into
