@@ -903,9 +903,15 @@ def test_headword_display_names_are_title_cased() -> None:
         # `Alexander the Great`). Title-case convention keeps short
         # connectives lowercase. Apply only when the particle appears
         # AFTER the first token (the first word always gets cased).
-        # ENGLISH_PARTICLES set is defined at module scope.
+        # Gemini PR #99: don't just skip validation — assert the particle
+        # is actually lowercase, so `Alexander THE Great` would still
+        # fail. ENGLISH_PARTICLES set is defined at module scope.
         for idx, part in enumerate(display.replace("/", " ").split()):
             if idx > 0 and part.lower() in ENGLISH_PARTICLES:
+                assert part == part.lower(), (
+                    f"{r['leprohon_id']}: English particle {part!r} in "
+                    f"{display!r} must be lowercase."
+                )
                 continue
             if part.startswith("(") or part.endswith(")"):
                 continue  # Exception 3/5: parenthesised groups
