@@ -133,10 +133,10 @@ And **OCCUPANT-DESCRIPTOR** is a compact identifier:
 
 ## `occupant_name`
 
-**PM-verbatim, conventional-English form, titlecase, ayin PRESERVED as `ʿ` where PM prints it** in the actual occupant name (e.g. `ʿAhhotep`, `ʿAhmose`, `ʿAhmose-Nefertari`). This is the `occupant_name` convention from the chunk-5 Tutʿankhamun precedent — ayin is kept in `occupant_name`, stripped only in `tomb_id`.
+**PM-verbatim conventional-English form, titlecase, with this project's diacritic split:** ayin `ʿ` is **PRESERVED** in `occupant_name` (distinguishing radical); underdot-H `ḥ` is **STRIPPED** to plain `h` per the README's matchable-name-field convention. So `ʿAḥḥotp` → `ʿAhhotp` (keep ayin, strip both ḥs); `ʿAḥmosi Nefertere` → `ʿAhmosi Nefertere`; `Mentuḥotp` → `Mentuhotp`; `ḤATSHEPSUT` → `Hatshepsut`. In `tomb_id` the ayin is ALSO stripped; only in `occupant_name` and `notes_from_pm` is ayin preserved.
 
 Text-layer noise to normalise (not PM's scholarly choice):
-- Underdot-H (`ḥ`) renders variably: `I:I`, `I;I`, `I}` → `ḥ` (Unicode underdot-H) in `occupant_name` per `notes_from_pm` policy, but strip to `h` in `tomb_id` per above.
+- Underdot-H (`ḥ`) renders variably: `I:I`, `I;I`, `I}` → **STRIP to plain `h`** in `occupant_name` per the README's matchable-name-field diacritic-stripping convention (e.g. `MERNEPTAḤ-SIPTAḤ` → `Merneptah-Siptah`, `ḤATSHEPSUT` → `Hatshepsut`, `ʿAḤMOSI` → `ʿAhmosi`). Same strip applies in `tomb_id`. In `notes_from_pm` ONLY, preserve underdot-H verbatim per PM's printed text.
 - Regnal Roman numerals: count capital-I glyphs even if rendered as `Il` / `I Il` / `Ill`.
 - Cartouches → drop entirely.
 - Ayin rendered as `<`, `c` in the text layer → `ʿ` in `occupant_name` when PM's actual print shows ayin (the `<` rendering is typical of scholarly ayin).
@@ -222,7 +222,7 @@ Object with three fixed keys:
 
 - **§ III.A Antef Cemetery:** PM's section starts with general Petrie-tomb prose (Qurneh tombs 1–28, mostly non-royal Dyn-XI/XII dependents); the actual Dyn-XI *ruler* tombs are announced by all-caps `ANTEF (PRENOMEN)` headwords further into the section. Do not emit a row for the general prose; only for the all-caps ruler headwords.
 - **§ III.D BURIALS sub-block:** this is the big one. Every all-caps royal or royal-family headword in the BURIALS prose is a tomb row. Watch for ~7-9 headwords in this sub-block (Kamose, Ahhotep, Antef-Nubkheperre, Antef-Sekhemre-Wepmaet, Queen Mentuhotep wife of Djehuti, Ahmose son of Seqenenre, Ahhor, and potentially Seqenenre-Taʿa himself). Chunk-1 found ~6-8; do not truncate if you see more.
-- **§ III.C "TOMB OF QUEEN ʿAHMOSI NEFERTERE (probably)":** the parenthetical `(probably)` is PM's own hedge on the attribution. Keep it in `notes_from_pm`, emit `occupant_name: "ʿAḥmosi Nefertere"` (PM-verbatim form with PM's ayin + underdot-H + `-osi` / `-ere` letter choices preserved).
+- **§ III.C "TOMB OF QUEEN ʿAHMOSI NEFERTERE (probably)":** the parenthetical `(probably)` is PM's own hedge on the attribution. Keep it in `notes_from_pm`, emit `occupant_name: "ʿAhmosi Nefertere"` (PM-form with ayin PRESERVED, underdot-H STRIPPED per the README's matchable-name-field convention).
 - **Boundary at physical p.148 / printed p.606:** STOP emitting rows before `E. PETRIE EXCAVATIONS.` (physical p.148 begins the out-of-scope excavator-organised find-report block). The chunk file extends through p.148 only so you can see the boundary; do NOT extract Petrie Excavation rows.
 - **`Tomb 20` reference** in the South Tomb of Hatshepsut headword is **KV20** (our chunk-3 row), not a Dra' Abu el-Naga tomb. → `shared_with_tombs: ["KV20"]`.
 
