@@ -239,6 +239,27 @@ LANDED_CHUNKS: dict[str, dict] = {
         "printed_page_range": (136, 152),
         "physical_page_range": (157, 173),
     },
+    "macedonian-ptolemaic": {
+        # Chapter X Macedonian and Ptolemaic Dynasties — Dyn 32
+        # (Macedonian: Alexander the Great, Philip Arrhidaeus, Alexander
+        # II/IV) + Dyn 33 (Ptolemaic: 17 numbered slots — Ptolemies I-XII,
+        # Berenike at slot 12, Cleopatra VII at slot 14, Ptolemies XIII-XV
+        # — plus 4 queen-consort sub-entries Arsinoe II, Berenike II,
+        # Cleopatra I, Cleopatra II at Leprohon's printed `2A. / 3A. /
+        # 5A. / 8A.` sub-headwords, emitted with `stage_suffix: "a"`
+        # mirroring the literal headword pattern). Per-README schema
+        # convention: dynasty_number 32 for Macedonian, 33 for Ptolemaic
+        # (pharaoh.se uses null for both — the README's "consistent with
+        # pharaoh.se" rationale is a Leprohon-local extrapolation, not a
+        # literal alignment).
+        "chapter": "Macedonian and Ptolemaic Dynasties",
+        "rows_by_dynasty_label": {
+            "Macedonian Dynasty": 3,
+            "Ptolemaic Dynasty": 21,  # 17 numbered slots + 4 queen-consort sub-entries
+        },
+        "printed_page_range": (175, 188),
+        "physical_page_range": (196, 209),
+    },
 }
 
 EXPECTED_TOTAL_ROWS: int = sum(
@@ -401,6 +422,12 @@ def test_sequence_matches_id() -> None:
 
 
 VALID_STAGE_SUFFIXES = frozenset({None, "a", "b", "c"})
+
+# English particles allowed to stay lowercase after the first token in
+# `display_name` (e.g. `Alexander the Great`). Title-case convention
+# keeps short connectives lowercase. Module-scope per code-reviewer PR
+# #99 P2 (was loop-local in test_headword_display_names_are_title_cased).
+ENGLISH_PARTICLES = frozenset({"the", "of", "and"})
 
 
 def test_stage_suffix_is_valid_letter_or_none() -> None:
@@ -790,7 +817,19 @@ def test_slashed_display_names_have_alt_forms() -> None:
     Exception 2: trailing `(?)` uncertainty markers (chunk 5 Dyn 13 entry
     18 `Seb/Sab (?)`) are preserved verbatim in `display_name` but are
     NOT copied into `alt_display_names` — the `(?)` qualifies the whole
-    king-identification, not either homonym individually."""
+    king-identification, not either homonym individually.
+
+    Exception 3: shared-prefix roman-numeral homonyms — `Alexander II/IV`
+    (chunk 14 leprohon-32.03) is Leprohon's contracted form for
+    `Alexander II / Alexander IV` (his Egyptian-pharaoh numbering vs the
+    standard Macedon numbering). The right-hand segment after the slash
+    is a bare roman numeral that does NOT stand alone as a king name;
+    `alt_display_names` carries the spelled-out form (`["Alexander II",
+    "Alexander IV"]`) for downstream museum matching, not the literal
+    slash-split (`["Alexander II", "IV"]`). The test detects this case
+    when the right-hand segment after the slash matches the bare-roman-
+    numeral pattern (`II`, `III`, `IV`, ..., `XV`)."""
+    BARE_ROMAN_RE = re.compile(r"^[IVXLCDM]+$")
     for r in _rows():
         if "/" in r["display_name"] and "//" not in r["display_name"]:
             # Strip trailing `(?)` before splitting — it applies to the
@@ -800,6 +839,17 @@ def test_slashed_display_names_have_alt_forms() -> None:
             # (spaces around the slash).
             stripped = re.sub(r"\s*\(\?\)\s*$", "", r["display_name"])
             segments = [s.strip() for s in stripped.split("/")]
+            # Exception 3: if the right-hand segment is a bare roman
+            # numeral, expand it by inheriting the left-hand segment's
+            # name prefix (`Alexander II/IV` → `["Alexander II",
+            # "Alexander IV"]`).
+            if (
+                len(segments) == 2
+                and BARE_ROMAN_RE.match(segments[1])
+                and " " in segments[0]
+            ):
+                prefix = segments[0].rsplit(" ", 1)[0]
+                segments = [segments[0], f"{prefix} {segments[1]}"]
             assert r["alt_display_names"] == segments, r
 
 
@@ -849,7 +899,20 @@ def test_headword_display_names_are_title_cased() -> None:
         display = re.sub(r"\s*\([^)]*\)", "", display).strip()
         if not display:
             continue  # all-parenthetical display name (e.g. dummy stub)
-        for part in display.replace("/", " ").split():
+        # Exception 8: English particles in proper names (chunk 14
+        # `Alexander the Great`). Title-case convention keeps short
+        # connectives lowercase. Apply only when the particle appears
+        # AFTER the first token (the first word always gets cased).
+        # Gemini PR #99: don't just skip validation — assert the particle
+        # is actually lowercase, so `Alexander THE Great` would still
+        # fail. ENGLISH_PARTICLES set is defined at module scope.
+        for idx, part in enumerate(display.replace("/", " ").split()):
+            if idx > 0 and part.lower() in ENGLISH_PARTICLES:
+                assert part == part.lower(), (
+                    f"{r['leprohon_id']}: English particle {part!r} in "
+                    f"{display!r} must be lowercase."
+                )
+                continue
             if part.startswith("(") or part.endswith(")"):
                 continue  # Exception 3/5: parenthesised groups
             if part.startswith("<"):
@@ -1355,6 +1418,126 @@ def test_dyn23_sheshonq_rows_preserve_shoshenq_aliases() -> None:
             f"{lid}: expected alt_display_names={aliases}, "
             f"got {r['alt_display_names']}"
         )
+
+
+def test_chunk14_macedonian_ptolemaic_dynasty_numbering() -> None:
+    """Chunk 14 (Ch X Macedonian + Ptolemaic) extends the dynasty-number
+    domain beyond the standard 1-31 range. Per the README schema convention:
+    dynasty_number=32 for Macedonian, 33 for Ptolemaic. Lock both.
+    """
+    macedonian = [r for r in _rows() if r["dynasty_number"] == 32]
+    ptolemaic = [r for r in _rows() if r["dynasty_number"] == 33]
+    assert len(macedonian) == 3, len(macedonian)
+    assert len(ptolemaic) == 21, len(ptolemaic)
+    for r in macedonian:
+        assert r["dynasty_label"] == "Macedonian Dynasty", r
+    for r in ptolemaic:
+        assert r["dynasty_label"] == "Ptolemaic Dynasty", r
+
+
+def test_chunk14_queen_consort_sub_entries_use_stage_suffix_a() -> None:
+    """Chunk 14 (Ch X Macedonian + Ptolemaic) emits the four queen-consort
+    sub-entries (Arsinoe II, Berenike II, Cleopatra I, Cleopatra II) as
+    separate rows mirroring Leprohon's printed `2A. / 3A. / 5A. / 8A.`
+    sub-headword pattern. They carry `stage_suffix: "a"` to disambiguate
+    from the `2 / 3 / 5 / 8`-numbered Ptolemy rows they follow. This is a
+    structural extension of `stage_suffix` beyond the README's original
+    "same king, successive titulary stages" semantic — flagged by the
+    egyptologist-reviewer 2026-04-21 as a semantic overload, deferred to
+    a future schema-change PR (see transcribe.md chunk-14 log).
+    """
+    expected = {
+        "leprohon-33.02a": "Arsinoe II",
+        "leprohon-33.03a": "Berenike II",
+        "leprohon-33.05a": "Cleopatra I",
+        "leprohon-33.08a": "Cleopatra II",
+    }
+    for lid, name in expected.items():
+        r = _row(lid)
+        assert r["stage_suffix"] == "a", f"{lid}: stage_suffix={r['stage_suffix']!r}"
+        assert r["display_name"] == name, f"{lid}: display_name={r['display_name']!r}"
+        assert r["dynasty_number"] == 33, lid
+        assert r["dynasty_label"] == "Ptolemaic Dynasty", lid
+
+
+def test_chunk14_alexander_ii_iv_slashed_homonym() -> None:
+    """Chunk 14: king 3 of the Macedonian Dynasty has a slashed-homonym
+    headword `ALEXANDER II/IV` (Leprohon's chapter preamble names him
+    `Alexander II`; modern scholarship calls him `Alexander IV` of Macedon).
+    Per chunk-1 slashed-homonym convention, both forms populate
+    alt_display_names.
+    """
+    r = _row("leprohon-32.03")
+    assert r["display_name"] == "Alexander II/IV", r["display_name"]
+    assert r["alt_display_names"] == ["Alexander II", "Alexander IV"], r["alt_display_names"]
+
+
+def test_chunk14_ptolemaic_kings_with_no_attested_titulary_have_empty_name_lists() -> None:
+    """Leprohon p. 182 / 186 / 188 explicitly print "No royal titulary is
+    attested in hieroglyphs" for Ptolemy VII (slot 7), Ptolemy XI (slot
+    11), Ptolemy XIII (slot 15), Ptolemy XIV (slot 16). Their reconciled
+    rows must be present (the row exists, the king is named) but every
+    name-list field must be empty.
+    """
+    name_fields = (
+        "horus_names",
+        "nebty_names",
+        "golden_horus_names",
+        "throne_names",
+        "birth_names",
+        "later_cartouche_names",
+        "later_horus_names",
+        "seth_names",
+    )
+    for lid in ("leprohon-33.07", "leprohon-33.11", "leprohon-33.15", "leprohon-33.16"):
+        r = _row(lid)
+        for field in name_fields:
+            assert r[field] == [], f"{lid}.{field} should be empty, got {r[field]!r}"
+
+
+def test_chunk14_berenike_has_berenike_iii_alias() -> None:
+    """Regression lock for the chunk-14 fix_rows correction: Berenike at
+    Ptolemaic slot 12 is `Berenike III` in standard scholarship (daughter
+    of Ptolemy IX, brief 81 BCE co-rule). Leprohon prints only `BERENIKE`
+    as the headword, so display_name stays bare; the disambiguated form
+    lives in alt_display_names for Phase-A museum matching.
+    """
+    r = _row("leprohon-33.12")
+    assert r["display_name"] == "Berenike", r["display_name"]
+    assert r["alt_display_names"] == ["Berenike III"], r["alt_display_names"]
+
+
+def test_chunk14_macedonian_ptolemaic_no_ramesside_only_tags() -> None:
+    """All Macedonian and Ptolemaic kings are contemporarily attested
+    (Egyptian-era textual, not Ramesside-king-list reconstructions). The
+    chunk-14 prompt asserts this in prose; per CLAUDE.md rule 3 the
+    invariant needs a deterministic test — matches the chunk-9/10/11/12
+    per-preamble pattern. Code-reviewer PR #99 P1.
+    """
+    chapter_x_labels = {"Macedonian Dynasty", "Ptolemaic Dynasty"}
+    rows = [r for r in _rows() if r["dynasty_label"] in chapter_x_labels]
+    assert len(rows) == 24, len(rows)
+    for r in rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): {r['dynasty_label']} "
+            f"is contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
+
+
+def test_chunk14_cleopatra_i_horus_translit_uses_corrected_khnum_token() -> None:
+    """Regression lock for the chunk-14 pypdf-text-layer correction:
+    Cleopatra I's Horus name had `ẖḳr(t).n ẖnmw` in the deterministic
+    pypdf+MdC output, but Leprohon's PDF p. 181 visually prints
+    `ḫkr(t).n ẖnmw` (the text layer mis-encoded `ḫ` as `X` and `k` as
+    `q`). fix_rows.py applies the correction; this test prevents a
+    regression if the pypdf transcription is ever re-run.
+    """
+    r = _row("leprohon-33.05a")
+    translit = r["horus_names"][0]["transliteration"]
+    assert "ḫkr(t).n ẖnmw" in translit, translit
+    assert "ẖḳr(t).n ẖnmw" not in translit, translit
 
 
 def test_every_populated_field_on_flagship_den_asserted() -> None:
