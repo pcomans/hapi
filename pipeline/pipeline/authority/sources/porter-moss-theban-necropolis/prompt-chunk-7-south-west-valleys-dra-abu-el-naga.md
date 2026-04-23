@@ -110,8 +110,8 @@ And **OCCUPANT-DESCRIPTOR** is a compact identifier:
 - For § II.B Tomb of Three Princesses: `ThreePrincesses` → `tomb_id: "SWV-ThreePrincesses"`
 - For § II.B Tomb probably of Princess Neferure: `Neferure` → `tomb_id: "SWV-Neferure"`
 - For § III.A Dyn-11 Antefs: use prenomen as disambiguator — `AntefSehertaui`, `AntefWahankh`, `AntefNakhtnebtepnefer` (if present) → `DAN-AntefSehertaui`, `DAN-AntefWahankh`, etc.
-- For § III.C Queen Ahmose-Nefertari: `AhmoseNefertari` → `DAN-AhmoseNefertari`
-- For § III.D Dyn-17 Cemetery: same prenomen disambiguator — `KamoseWadjkheperre`, `Ahhotep`, `AntefNubkheperre`, `AntefSekhemreWepmaet`, `MentuhotepIWifeOfDjehuti`, `AhmoseSonOfSeqenenre`, `Ahhor` → e.g. `tomb_id: "DAN-KamoseWadjkheperre"`.
+- For § III.C Queen Ahmose-Nefertari: `AhmosiNefertere` → `DAN-AhmosiNefertere` (PM prints `ʿAḤMOSI NEFERTERE` — keep the `-osi` / `-ere` letter choices per the PM-faithful rule below).
+- For § III.D Dyn-17 Cemetery: same prenomen disambiguator, PM-faithful spelling — `KamosiWazkheperre`, `Ahhotep`, `AntefNubkheperre`, `AntefSekhemreWepmaet`, `MentuhotpIWifeOfDjhuti`, `AhmosiSonOfSeqenenre`, `Aqhor` (PM prints `ʿAḲ-ḤOR`, not `ʿAḥḥor`) → e.g. `tomb_id: "DAN-KamosiWazkheperre"`.
 
 **Normalisation rules for the descriptor token (after the hyphen):**
 - TitleCase, no spaces, no diacritics, no cartouche garbage.
@@ -222,7 +222,7 @@ Object with three fixed keys:
 
 - **§ III.A Antef Cemetery:** PM's section starts with general Petrie-tomb prose (Qurneh tombs 1–28, mostly non-royal Dyn-XI/XII dependents); the actual Dyn-XI *ruler* tombs are announced by all-caps `ANTEF (PRENOMEN)` headwords further into the section. Do not emit a row for the general prose; only for the all-caps ruler headwords.
 - **§ III.D BURIALS sub-block:** this is the big one. Every all-caps royal or royal-family headword in the BURIALS prose is a tomb row. Watch for ~7-9 headwords in this sub-block (Kamose, Ahhotep, Antef-Nubkheperre, Antef-Sekhemre-Wepmaet, Queen Mentuhotep wife of Djehuti, Ahmose son of Seqenenre, Ahhor, and potentially Seqenenre-Taʿa himself). Chunk-1 found ~6-8; do not truncate if you see more.
-- **§ III.C "TOMB OF QUEEN ʿAHMOSI NEFERTERE (probably)":** the parenthetical `(probably)` is PM's own hedge on the attribution. Keep it in `notes_from_pm`, emit `occupant_name: "ʿAhmose-Nefertari"` (PM-anglicised form).
+- **§ III.C "TOMB OF QUEEN ʿAHMOSI NEFERTERE (probably)":** the parenthetical `(probably)` is PM's own hedge on the attribution. Keep it in `notes_from_pm`, emit `occupant_name: "ʿAḥmosi Nefertere"` (PM-verbatim form with PM's ayin + underdot-H + `-osi` / `-ere` letter choices preserved).
 - **Boundary at physical p.148 / printed p.606:** STOP emitting rows before `E. PETRIE EXCAVATIONS.` (physical p.148 begins the out-of-scope excavator-organised find-report block). The chunk file extends through p.148 only so you can see the boundary; do NOT extract Petrie Excavation rows.
 - **`Tomb 20` reference** in the South Tomb of Hatshepsut headword is **KV20** (our chunk-3 row), not a Dra' Abu el-Naga tomb. → `shared_with_tombs: ["KV20"]`.
 

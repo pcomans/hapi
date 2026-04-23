@@ -1747,3 +1747,29 @@ def test_all_corrections_includes_every_chunk_list() -> None:
         f"ALL_CORRECTIONS missing one of the per-chunk lists. "
         f"Found chunk attrs: {chunk_attrs}"
     )
+
+
+def test_all_renames_includes_every_chunk_dict() -> None:
+    """fix_rows.py's `ALL_RENAMES` aggregates every `CHUNK*_RENAMES` dict.
+    Analogous to `test_all_corrections_includes_every_chunk_list` — dropping
+    a per-chunk rename dict silently destroys its audit trail so a
+    reconciled.jsonl pulled from a fresh merge would contain the pre-rename
+    tomb_ids without `fix_rows.py` catching the omission.
+
+    Gemini code-review on PR #100 round 3 flagged the lack of this
+    validation test. Uses the same natural-numeric chunk-suffix sort as
+    `ALL_CORRECTIONS`'s test so chunk 10+ ordering stays correct.
+    """
+    fix_rows = _import_fix_rows()
+    chunk_re = re.compile(r"^CHUNK(\d+)_RENAMES$")
+    chunk_attrs = sorted(
+        (attr for attr in dir(fix_rows) if chunk_re.match(attr)),
+        key=lambda attr: int(chunk_re.match(attr).group(1)),
+    )
+    expected: dict[str, str] = {}
+    for a in chunk_attrs:
+        expected.update(getattr(fix_rows, a))
+    assert fix_rows.ALL_RENAMES == expected, (
+        f"ALL_RENAMES missing one of the per-chunk dicts. "
+        f"Found chunk attrs: {chunk_attrs}"
+    )

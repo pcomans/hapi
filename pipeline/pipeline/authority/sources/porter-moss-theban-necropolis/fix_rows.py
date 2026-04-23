@@ -496,7 +496,10 @@ def main() -> None:
     )
     DIFF.write_text(appended)
 
-    print(f"Applied {applied_count} override(s) this run ({len(override_log)} total in log).")
+    print(
+        f"Applied {applied_renames} rename(s) and {applied_count} override(s) this run "
+        f"({len(rename_log)} renames + {len(override_log)} corrections total in log)."
+    )
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
     print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
 
