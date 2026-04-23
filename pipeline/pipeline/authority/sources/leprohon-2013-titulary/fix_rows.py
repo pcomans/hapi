@@ -766,6 +766,114 @@ MACEDONIAN_PTOLEMAIC_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "daughter of Ptolemy IX). Leprohon prints headword as bare "
         "`BERENIKE`. Egyptologist-reviewer P1.",
     ),
+    # Gemini Code Assist PR #99 medium-priority finding: Ptolemy V's
+    # Throne 1 transliteration has a stray comma after `it` — this is
+    # the ONLY transliteration in the entire 395-row extract containing
+    # a comma (verified by grep). The comma was carried over verbatim
+    # from Leprohon's PDF text layer (chunk-p196-p209-pypdf.md line 309
+    # reads `stp(n) ptH wsr kA ra sxm anx imn` preceded by `mrwy it,`).
+    # Egyptological transliteration by convention does not use commas
+    # for clause separation — this is a text-layer artifact, not a
+    # Leprohon typesetting choice. Strip.
+    (
+        "leprohon-33.05",
+        "throne_names.0.transliteration",
+        "iwꜥ n nṯrwy mrwy it stp(n) ptḥ wsr kꜣ rꜥ sḫm ꜥnḫ imn",
+        "Remove stray comma after `it` in transliteration "
+        "(text-layer artifact, not Leprohon convention). "
+        "Gemini Code Assist PR #99 medium finding.",
+    ),
+    # Gemini Code Assist PR #99 medium-priority finding: three chunk-14
+    # Birth names encode alternative phonetic forms as slash-separated
+    # tokens in a single entry (Alexander the Great, Alexander II/IV,
+    # Cleopatra I). The established schema convention (e.g. Ptolemy XV
+    # Caesarion birth_names at leprohon-33.17) splits these into
+    # separate entries with `is_variant` / `variant_index` progression.
+    # Normalize the three offenders.
+    (
+        "leprohon-32.01",
+        "birth_names",
+        [
+            {"transliteration": "ꜣlksndrs", "anglicised": "aleksendres", "translation": "Alexander", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "ꜣlksindrs", "anglicised": "aleksindres", "translation": "Alexander", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Phonetic variant of the Birth name."},
+        ],
+        "Split slash-separated Birth name variants into separate entries "
+        "(schema convention established in Ptolemy XV Caesarion). "
+        "Gemini Code Assist PR #99 medium finding.",
+    ),
+    (
+        "leprohon-32.03",
+        "birth_names",
+        [
+            {"transliteration": "ꜣlksndrs", "anglicised": "aleksendres", "translation": "Alexander", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "ꜣlksindrs", "anglicised": "aleksindres", "translation": "Alexander", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Phonetic variant of the Birth name."},
+        ],
+        "Split slash-separated Birth name variants into separate entries. "
+        "Gemini Code Assist PR #99 medium finding.",
+    ),
+    (
+        "leprohon-33.05a",
+        "birth_names",
+        [
+            {"transliteration": "ḳlw-pꜣ-trꜣ", "anglicised": "qlu-pa-tra", "translation": "Cleopatra", "variant_index": 1, "is_variant": False, "attested_in": [], "source_note": None},
+            {"transliteration": "ḳlꜣw-pꜣ-drꜣ", "anglicised": "qliu-pa-dra", "translation": "Cleopatra", "variant_index": 2, "is_variant": True, "attested_in": [], "source_note": "Phonetic variant of the Birth name."},
+        ],
+        "Split slash-separated Birth name variants into separate entries. "
+        "Gemini Code Assist PR #99 medium finding.",
+    ),
+    # Gemini Code Assist PR #99 medium-priority finding: five chunk-14
+    # rows put row-level "none known/attested" narrative metadata into
+    # an individual name-entry's `source_note`, which misuses the field
+    # (source_note is for scholarly footnote text specific to the name
+    # entry, not a row-level description of which OTHER name types are
+    # absent). The empty name-list itself is the canonical "none known"
+    # semantic — the narrative is redundant at best, schema-wrong at
+    # worst. Strip the redundant narrative from these five rows.
+    #
+    # An identical pattern exists on leprohon-27.02 and leprohon-29.02
+    # (chunk 13) — tracked as a follow-up sweep; the proper long-term
+    # fix (adding a top-level `notes` field) is a schema design that
+    # belongs in its own PR. This correction addresses only the 5
+    # rows introduced in chunk 14, per constitutional rule 12
+    # ("existing violations do not justify new ones").
+    # scope-accountability-enforcer review 2026-04-21 PR #99.
+    (
+        "leprohon-32.01",
+        "throne_names.0.source_note",
+        None,
+        "Strip row-level `Two Ladies and Golden Horus names: none known.` "
+        "narrative from individual name-entry source_note. Empty name-lists "
+        "are the canonical absence semantic. Gemini PR #99 medium.",
+    ),
+    (
+        "leprohon-33.01",
+        "throne_names.0.source_note",
+        None,
+        "Strip row-level `Golden Horus name: none known.` narrative. "
+        "Gemini PR #99 medium.",
+    ),
+    (
+        "leprohon-33.12",
+        "birth_names.0.source_note",
+        "Gauthier 1916, 389–91; von Beckerath 1999, 244–45.",
+        "Strip trailing `Horus, Two Ladies, Golden Horus, and Throne names: "
+        "none attested.` narrative; preserve the bibliographic chain. "
+        "Gemini PR #99 medium.",
+    ),
+    (
+        "leprohon-33.14",
+        "birth_names.0.source_note",
+        None,
+        "Strip row-level `Two Ladies, Golden Horus, and Throne names: "
+        "none attested.` narrative. Gemini PR #99 medium.",
+    ),
+    (
+        "leprohon-33.17",
+        "throne_names.0.source_note",
+        None,
+        "Strip row-level `Two Ladies and Golden Horus names: none attested.` "
+        "narrative. Gemini PR #99 medium.",
+    ),
     # Egyptologist-reviewer 2026-04-21: the Alexander II/IV row's Horus
     # source_note was carrying pipeline-internal denoising commentary
     # (`Leprohon's chapter preamble names this king 'Alexander II'; the

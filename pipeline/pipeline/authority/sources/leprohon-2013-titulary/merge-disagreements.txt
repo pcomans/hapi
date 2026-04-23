@@ -3925,6 +3925,8 @@ leprohon-33.17 (Ptolemy XV Caesarion):
     → chose: [{"anglicised": "ptolemys", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Ptolemy", "transliteration": "ptwlmys", "variant_index": 1}, {"anglicised": "kiseres", "attested_in": ["From the scenes of the divine birth of Caesarion at Armant; see LD IV, 60b; and LD IV, 63a"], "is_variant": true, "source_note": "Additional Birth name (Birth 2).", "translation": "Caesar", "transliteration": "kisrs", "variant_index": 2}, {"anglicised": "ptolemys djed.tu enef kiseres", "attested_in": ["From a similar scene on a reused block found at Coptos; see Gauthier 1916, 419, XXVII.A.e"], "is_variant": true, "source_note": "Additional Birth name (Birth 3).", "translation": "Ptolemy, also called Caesar", "transliteration": "ptwlmys ḏd.tw n.f kisrs", "variant_index": 3}, {"anglicised": "ankh djet, mery ptah aset", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Birth name.", "translation": "Living forever, beloved of Ptah and Isis", "transliteration": "ꜥnḫ ḏt mry ptḥ ꜣst", "variant_index": 4}]
 
 
+
+
 === LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED ===
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
@@ -4103,6 +4105,33 @@ leprohon-33.17 (Ptolemy XV Caesarion):
   leprohon-33.12 / alt_display_names:
     new value: ["Berenike III"]
     rationale: Add `Berenike III` alias (standard Ptolemaic-history numbering: daughter of Ptolemy IX). Leprohon prints headword as bare `BERENIKE`. Egyptologist-reviewer P1.
+  leprohon-33.05 / throne_names.0.transliteration:
+    new value: "iwꜥ n nṯrwy mrwy it stp(n) ptḥ wsr kꜣ rꜥ sḫm ꜥnḫ imn"
+    rationale: Remove stray comma after `it` in transliteration (text-layer artifact, not Leprohon convention). Gemini Code Assist PR #99 medium finding.
+  leprohon-32.01 / birth_names:
+    new value: [{"anglicised": "aleksendres", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Alexander", "transliteration": "ꜣlksndrs", "variant_index": 1}, {"anglicised": "aleksindres", "attested_in": [], "is_variant": true, "source_note": "Phonetic variant of the Birth name.", "translation": "Alexander", "transliteration": "ꜣlksindrs", "variant_index": 2}]
+    rationale: Split slash-separated Birth name variants into separate entries (schema convention established in Ptolemy XV Caesarion). Gemini Code Assist PR #99 medium finding.
+  leprohon-32.03 / birth_names:
+    new value: [{"anglicised": "aleksendres", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Alexander", "transliteration": "ꜣlksndrs", "variant_index": 1}, {"anglicised": "aleksindres", "attested_in": [], "is_variant": true, "source_note": "Phonetic variant of the Birth name.", "translation": "Alexander", "transliteration": "ꜣlksindrs", "variant_index": 2}]
+    rationale: Split slash-separated Birth name variants into separate entries. Gemini Code Assist PR #99 medium finding.
+  leprohon-33.05a / birth_names:
+    new value: [{"anglicised": "qlu-pa-tra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "Cleopatra", "transliteration": "ḳlw-pꜣ-trꜣ", "variant_index": 1}, {"anglicised": "qliu-pa-dra", "attested_in": [], "is_variant": true, "source_note": "Phonetic variant of the Birth name.", "translation": "Cleopatra", "transliteration": "ḳlꜣw-pꜣ-drꜣ", "variant_index": 2}]
+    rationale: Split slash-separated Birth name variants into separate entries. Gemini Code Assist PR #99 medium finding.
+  leprohon-32.01 / throne_names.0.source_note:
+    new value: null
+    rationale: Strip row-level `Two Ladies and Golden Horus names: none known.` narrative from individual name-entry source_note. Empty name-lists are the canonical absence semantic. Gemini PR #99 medium.
+  leprohon-33.01 / throne_names.0.source_note:
+    new value: null
+    rationale: Strip row-level `Golden Horus name: none known.` narrative. Gemini PR #99 medium.
+  leprohon-33.12 / birth_names.0.source_note:
+    new value: "Gauthier 1916, 389–91; von Beckerath 1999, 244–45."
+    rationale: Strip trailing `Horus, Two Ladies, Golden Horus, and Throne names: none attested.` narrative; preserve the bibliographic chain. Gemini PR #99 medium.
+  leprohon-33.14 / birth_names.0.source_note:
+    new value: null
+    rationale: Strip row-level `Two Ladies, Golden Horus, and Throne names: none attested.` narrative. Gemini PR #99 medium.
+  leprohon-33.17 / throne_names.0.source_note:
+    new value: null
+    rationale: Strip row-level `Two Ladies and Golden Horus names: none attested.` narrative. Gemini PR #99 medium.
   leprohon-32.03 / horus_names.0.source_note:
     new value: "Gauthier 1916, 207–11; von Beckerath 1999, 232–33."
     rationale: Trim pipeline-internal denoising commentary out of source_note (belongs in transcribe.md chunk log, not the per-row scholarly footnote field). Egyptologist-reviewer P2.

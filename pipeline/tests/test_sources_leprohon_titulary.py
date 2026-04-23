@@ -423,6 +423,12 @@ def test_sequence_matches_id() -> None:
 
 VALID_STAGE_SUFFIXES = frozenset({None, "a", "b", "c"})
 
+# English particles allowed to stay lowercase after the first token in
+# `display_name` (e.g. `Alexander the Great`). Title-case convention
+# keeps short connectives lowercase. Module-scope per code-reviewer PR
+# #99 P2 (was loop-local in test_headword_display_names_are_title_cased).
+ENGLISH_PARTICLES = frozenset({"the", "of", "and"})
+
 
 def test_stage_suffix_is_valid_letter_or_none() -> None:
     """Constraint `stage_suffix ∈ {None, 'a', 'b', 'c'}` per the attested
@@ -897,7 +903,7 @@ def test_headword_display_names_are_title_cased() -> None:
         # `Alexander the Great`). Title-case convention keeps short
         # connectives lowercase. Apply only when the particle appears
         # AFTER the first token (the first word always gets cased).
-        ENGLISH_PARTICLES = {"the", "of", "and"}
+        # ENGLISH_PARTICLES set is defined at module scope.
         for idx, part in enumerate(display.replace("/", " ").split()):
             if idx > 0 and part.lower() in ENGLISH_PARTICLES:
                 continue
@@ -1493,6 +1499,25 @@ def test_chunk14_berenike_has_berenike_iii_alias() -> None:
     r = _row("leprohon-33.12")
     assert r["display_name"] == "Berenike", r["display_name"]
     assert r["alt_display_names"] == ["Berenike III"], r["alt_display_names"]
+
+
+def test_chunk14_macedonian_ptolemaic_no_ramesside_only_tags() -> None:
+    """All Macedonian and Ptolemaic kings are contemporarily attested
+    (Egyptian-era textual, not Ramesside-king-list reconstructions). The
+    chunk-14 prompt asserts this in prose; per CLAUDE.md rule 3 the
+    invariant needs a deterministic test — matches the chunk-9/10/11/12
+    per-preamble pattern. Code-reviewer PR #99 P1.
+    """
+    chapter_x_labels = {"Macedonian Dynasty", "Ptolemaic Dynasty"}
+    rows = [r for r in _rows() if r["dynasty_label"] in chapter_x_labels]
+    assert len(rows) == 24, len(rows)
+    for r in rows:
+        sn = _first_source_note(r)
+        assert RAMESSIDE_ONLY_TAG not in sn, (
+            f"{r['leprohon_id']} ({r['display_name']}): {r['dynasty_label']} "
+            f"is contemporarily attested, should not carry the Ramesside-only "
+            f"tag — found in source_note: {sn!r}"
+        )
 
 
 def test_chunk14_cleopatra_i_horus_translit_uses_corrected_khnum_token() -> None:
