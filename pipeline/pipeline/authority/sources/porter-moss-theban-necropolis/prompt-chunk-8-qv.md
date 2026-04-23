@@ -35,13 +35,13 @@ Text-layer digit rendering: QV tomb numbers may be rendered as `33·`, `38.`, `4
 
 ## Expected QV numbering in PM I.2 § X.A
 
-The PM 1964 2nd edition catalogues these QV numbers (verified by a headword scan of the chunk text): **QV33, QV36, QV38, QV40, QV42, QV43, QV44, QV46, QV47, QV51, QV52, QV53, QV55, QV66, QV68, QV71, QV73, QV74, QV75**. That's **19 rows**.
+The PM 1964 2nd edition catalogues these QV numbers (verified by a headword scan of the chunk text and corroborated by the plate caption `QUEENS' TOMBS, 60, 66, 68, 71, 73-5` at printed p.760): **QV33, QV36, QV38, QV40, QV42, QV43, QV44, QV46, QV47, QV51, QV52, QV53, QV55, QV60, QV66, QV68, QV71, QV73, QV74, QV75**. That's **20 rows**.
 
 Numbers absent from PM I.2 § X.A:
 - QV1–QV32 (never catalogued in the 1964 edition)
-- QV34, QV35, QV37, QV39, QV41, QV45, QV48–QV50, QV54, QV56–QV65, QV67, QV69, QV70, QV72, QV76–QV80 (numbered tombs PM does not catalogue as inscribed)
+- QV34, QV35, QV37, QV39, QV41, QV45, QV48–QV50, QV54, QV56–QV59, QV61–QV65, QV67, QV69, QV70, QV72, QV76–QV80 (numbered tombs PM does not catalogue as inscribed)
 
-If your headword scan returns a number outside the expected-19 list, RE-CHECK the chunk file — it may be (a) a scene-number marker like `(38)` (not a tomb row), (b) a plate-caption tomb-number reference like "Tomb 71", or (c) a find-cross-reference in the § X.B unnumbered-tombs-and-pits sub-section. Those are NOT tomb headwords.
+If your headword scan returns a number outside the expected-20 list, RE-CHECK the chunk file — it may be (a) a scene-number marker like `(38)` (not a tomb row), (b) a plate-caption tomb-number reference like "Tomb 71", or (c) a find-cross-reference in the § X.B unnumbered-tombs-and-pits sub-section. Those are NOT tomb headwords.
 
 **False-positive watch:**
 - `38. Nebnery` at printed p.757 is a SCENE-ITEM inside QV44's body (a figure labelled "Nebnery" in scene 38), NOT a tomb headword.
@@ -77,7 +77,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 
 ### `tomb_id`
 
-`QV<N>` where `<N>` is the Arabic tomb number from the heading line (19 expected values — see list above).
+`QV<N>` where `<N>` is the Arabic tomb number from the heading line (20 expected values — see list above).
 
 ### `valley`
 
@@ -177,7 +177,7 @@ Object with three fixed keys:
 
 ## Pitfall summary (read LAST before running)
 
-1. **19 rows expected**: QV{33, 36, 38, 40, 42, 43, 44, 46, 47, 51, 52, 53, 55, 66, 68, 71, 73, 74, 75}.
+1. **20 rows expected**: QV{33, 36, 38, 40, 42, 43, 44, 46, 47, 51, 52, 53, 55, 60, 66, 68, 71, 73, 74, 75}.
 2. **QV33 is the LOWEST expected tomb number.** Any headword matching `\d+\.` at line start with number < 33 is almost certainly a scene item (`(38) Nebnery`) or § X.B find-cross-reference.
 3. **Do NOT extract § X.B / § X.C / § X.D / § XI rows.** STOP at `B. UNNUMBERED TOMBS AND PITS` (~printed p.769).
 4. **Do NOT supply dynasty / BCE dates** from your knowledge.
@@ -190,7 +190,7 @@ Object with three fixed keys:
 ## Report back
 
 After writing the JSONL, output a one-paragraph report with:
-- Row count (should be 19) and the complete list of QV tomb_ids you emitted.
+- Row count (should be 20) and the complete list of QV tomb_ids you emitted.
 - Any row where you're unsure about a field, with the field name and your best-guess value.
 - Any unexpected text-layer noise that this prompt doesn't already flag.
 

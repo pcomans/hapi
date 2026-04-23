@@ -14,7 +14,11 @@
 ### QV36 — no-name princess — OK (post-fix)
 - PM p.751: "A PRINCESS, no name." `occupant_name=null`, role=`Unknown` (per CHUNK8_CORRECTIONS). Correct.
 
-### QV38 — Sitreʿ — **P1**
+### QV38 — Sitreʿ — **P1 investigated: FALSE ALARM (no fix needed)**
+
+**Post-review verification:** direct inspection of `reconciled.jsonl` on commit `a317dc5` shows `QV38.is_unfinished=true`. The flag is correctly set by the 3-subagent majority vote (agents B + C captured the `Unfinished` literal; agent A's 19-row output missed QV60 entirely and may have been the snapshot the reviewer inspected). `test_chunk8_only_qv38_unfinished` pins the True value. **No `CHUNK8_CORRECTIONS` entry needed** — fix_rows.py would be a no-op. The reviewer's P1 claim was based on a pre-merge snapshot.
+
+Original reviewer note (kept verbatim for audit):
 - PM p.751: "QUEEN SITRĒʿ [cart.], wife of Ramesses I. **Unfinished.**"
 - Row has `is_unfinished=false`. The Unfinished headword is the one case prompted for; it was **dropped**. Set `is_unfinished=true`. `notes_from_pm` currently reads "wife of Ramesses I. Unfinished. (…)" — the note kept the word but the boolean flag didn't fire. **P1 — fix.**
 - Minor: PM headword is "SITRĒʿ" (macron-e). Row uses `Sitreʿ` without macron. Consistent with the corpus-wide decision to drop vowel macrons; leave as-is unless this changes globally. **P3.**
@@ -93,6 +97,6 @@ None. No § X.B, § X.C (Finds, pp. 770–771), § X.D (Graffiti, p. 771), or §
 
 ## Priority recap
 
-- **P1 (must fix):** QV38 `is_unfinished` should be `true`.
+- **P1 (investigated, NO FIX NEEDED):** QV38 `is_unfinished` is already `true` post-merge — the reviewer's snapshot was pre-merge. See QV38 entry above.
 - **P2 (should fix):** QV47 `Sit-gḥout` → `Sit-dḥout`; QV74 consider adding footnoted kinship hedge.
 - **P3 (style/optional):** Macron-long-vowel dropped across the set (Sitreʿ, Khaʿemweset, Ēsi, Merytamūn, Tentōpet) — a project-wide policy call, not a chunk-8 defect.
