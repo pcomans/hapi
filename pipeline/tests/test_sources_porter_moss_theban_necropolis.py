@@ -1614,23 +1614,23 @@ def test_chunk7_occupant_names_and_alt_names() -> None:
     (prenomens where PM prints `NAME (PRENOMEN)`).
     """
     expected_name = {
-        "SWV-HatshepsutSouth": "Ḥatshepsut",
+        "SWV-HatshepsutSouth": "Hatshepsut",
         "SWV-Neferure": "Neferureʿ",
         "SWV-ThreePrincesses": "Menhet, Merti, and Menwi",
         "DAN-AntefSehertaui": "Antef",
         "DAN-AntefWahankh": "Antef",
-        "DAN-MentuhotpSankhibtaui": "Mentuḥotp-Sʿankhibtaui",
-        "DAN-AhmosiNefertere": "ʿAḥmosi Nefertere",
-        "DAN-Aqhor": "ʿAḳ-ḥor",
-        "DAN-Ahhotep": "ʿAḥḥotp",
-        "DAN-AhmosiHenutempet": "ʿAḥmosi Ḥenutempet",
-        "DAN-AhmosiSonOfSeqenenre": "ʿAḥmosi",
+        "DAN-MentuhotpSankhibtaui": "Mentuhotp-Sʿankhibtaui",
+        "DAN-AhmosiNefertere": "ʿAhmosi Nefertere",
+        "DAN-Aqhor": "ʿAḳ-hor",
+        "DAN-Ahhotep": "ʿAhhotp",
+        "DAN-AhmosiHenutempet": "ʿAhmosi Henutempet",
+        "DAN-AhmosiSonOfSeqenenre": "ʿAhmosi",
         "DAN-AntefNubkheperre": "Antef",
         "DAN-AntefSekhemreHeruhirmaet": "Antef",
         "DAN-AntefSekhemreWepmaet": "Antef",
         "DAN-KamosiWazkheperre": "Kamosi",
-        "DAN-MentuhotpIWifeOfDjhuti": "Mentuḥotp I",
-        "DAN-Neferhotep": "Neferḥotep",
+        "DAN-MentuhotpIWifeOfDjhuti": "Mentuhotp I",
+        "DAN-Neferhotep": "Neferhotep",
         "DAN-SebkemsafSekhemreShedtaui": "Sebkemsaf II",
     }
     for tid, name in expected_name.items():
@@ -1810,15 +1810,15 @@ def test_chunk8_occupant_names() -> None:
         "QV36": None,
         "QV38": "Sitreʿ",
         "QV40": None,
-        "QV42": "Paraʿḥirwenemef",
-        "QV43": "Set-ḥirkhopshef",
+        "QV42": "Paraʿhirwenemef",
+        "QV43": "Set-hirkhopshef",
         "QV44": "Khaʿemweset",
-        "QV46": "Imḥotep",
-        "QV47": "ʿAḥmosi",
+        "QV46": "Imhotep",
+        "QV47": "ʿAhmosi",
         "QV51": "Esi II",
         "QV52": "Tyti",
         "QV53": "Raʿmeses",
-        "QV55": "Amen(ḥir)khopshef",
+        "QV55": "Amen(hir)khopshef",
         "QV60": "Nebttaui",
         "QV66": "Nefertari",
         "QV68": "Merytamun",
@@ -1846,10 +1846,11 @@ def test_chunk8_source_citation_pages() -> None:
     }
     for tid, page in expected_page.items():
         actual = _row(tid)["source_citation"]["page"]
-        # Allow ±1 tolerance for PM page-header ambiguities that can
-        # straddle a page break (e.g. a tomb's headword starting at the
-        # bottom of p.N and continuing to p.N+1).
-        assert abs(actual - page) <= 1, (tid, actual, page)
+        # Exact match: page numbers are extracted from explicit
+        # `===== PRINTED PAGE M =====` markers in the chunk text, so the
+        # extraction must be exact — a ±1 tolerance would hide off-by-one
+        # extraction bugs.
+        assert actual == page, (tid, actual, page)
 
 
 def test_chunk8_notes_from_pm_royal_kinship() -> None:
@@ -1859,7 +1860,7 @@ def test_chunk8_notes_from_pm_royal_kinship() -> None:
     """
     expected = {
         "QV38": "wife of Ramesses I",
-        "QV42": "son of Ramesses",
+        "QV42": "son of Ramesses III",
         "QV43": "King's son",
         "QV44": "son of Ramesses III",
         "QV47": "daughter of Seḳenenreʿ-Taʿa",

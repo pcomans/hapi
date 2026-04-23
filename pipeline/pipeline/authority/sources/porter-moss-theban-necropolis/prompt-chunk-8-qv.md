@@ -94,10 +94,10 @@ Occupant-type prefixes in PM's QV headwords vary:
 - Plain `<NAME>` (no preceding role word) → `occupant_name: "<Name>"`.
 - `A PRINCESS, no name.` / `A QUEEN, cartouche blank.` / `A QUEEN, no name.` → `occupant_name: null`. Capture the prose in `notes_from_pm`.
 
-Text-layer noise to normalise (same rules as chunks 1–7):
-- Underdot-H (`ḥ`) renders as `I:I`, `I;I`, `I}`, `l;I`, `1;1`; normalise per-convention:
-  - In `occupant_name`: PRESERVE the `ḥ` diacritic when PM prints it scholarly-style (e.g. `KHAʿEMWESET`'s `ḥ` in the prenomen stays as `Khaʿemweset`; `MERYTAMUN` has no underdot).
-  - In `notes_from_pm`: preserve underdot-H verbatim per PM.
+Text-layer noise to normalise (project-wide diacritic policy per the source's `README.md`):
+- Underdot-H (`ḥ`) renders as `I:I`, `I;I`, `I}`, `l;I`, `1;1`. Normalise per field:
+  - In `occupant_name`: **STRIP** the `ḥ` diacritic to plain `h` (the matchable-name-field policy from the README: `MERNEPTAḤ-SIPTAḤ` → `Merneptah-Siptah`, `KHAʿEMWESET` → `Khaʿemweset` with plain h, `IMḤOTEP` → `Imhotep`, `PARAʿḤIRWENEMEF` → `Paraʿhirwenemef`). Ayin `ʿ` is PRESERVED in royal names where it is a distinguishing radical; only underdot-H is stripped.
+  - In `notes_from_pm`: preserve underdot-H verbatim per PM — this field is verbatim-preserve against PM's printed text, not against the text-layer OCR.
 - Ayin `ʿ` / text-layer `<` / `c` → use Unicode `ʿ` in `occupant_name` where PM prints the ayin (e.g. `BENTʿANTA`, `PARAʿḤIRWENEMEF`, `AMEN(ḤIR)KHOPSHEF`, `KHAʿEMWESET`).
 - Cartouches render as garbage: drop entirely.
 - Regnal Roman numerals: count capital-I glyphs even if rendered `Il` / `I Il` / `Ill`. `ESI II` → `Esi II`.

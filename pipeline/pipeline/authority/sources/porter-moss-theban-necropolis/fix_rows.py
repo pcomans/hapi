@@ -264,10 +264,13 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "DAN-Aqhor",
         "occupant_name",
-        "ʿAḳ-ḥor",
+        "ʿAḳ-hor",
         "PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' "
         "compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' "
-        "misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.",
+        "misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES. "
+        "Underdot-H stripped to plain `h` per README's matchable-name-field "
+        "convention (Gemini round-3 sweep on PR #101). ḳ (underdot-K) "
+        "preserved as a distinguishing radical.",
     ),
     (
         "DAN-Aqhor",
@@ -298,6 +301,70 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "history in detail; the pre-review note dropped the Černý follow-up. "
         "Restore per egyptologist-reviewer P2 finding (verbatim preserve of "
         "the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.",
+    ),
+    # Chunk-7 `ḥ` sweep (Gemini round-3 on PR #101): the chunk-7 prompt
+    # allowed `ḥ` in `occupant_name`, contradicting the README's project-wide
+    # strip-ḥ policy (KV8 Merneptah, KV36 Mahirper, etc.). Retroactive
+    # alignment: 8 additional chunk-7 rows have `ḥ` stripped here. DAN-Aqhor
+    # `occupant_name` is handled in the earlier entry above (ʿAḳ-hor instead
+    # of ʿAḳ-ḥor). Ayin `ʿ` and underdot-K `ḳ` are preserved as distinguishing
+    # radicals per README; only underdot-H is stripped in the matchable name.
+    (
+        "SWV-HatshepsutSouth",
+        "occupant_name",
+        "Hatshepsut",
+        "Strip underdot-H (ḥ → h) per README's matchable-name-field convention. "
+        "Gemini round-3 sweep on PR #101.",
+    ),
+    (
+        "DAN-Ahhotep",
+        "occupant_name",
+        "ʿAhhotp",
+        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
+        "Gemini round-3 sweep on PR #101.",
+    ),
+    (
+        "DAN-AhmosiHenutempet",
+        "occupant_name",
+        "ʿAhmosi Henutempet",
+        "Strip underdot-H (ḥ → h) per README's convention; both the `Aḥmosi` "
+        "and `Ḥenutempet` underdot-Hs are stripped to plain h. Ayin ʿ retained. "
+        "Gemini round-3 sweep on PR #101.",
+    ),
+    (
+        "DAN-AhmosiNefertere",
+        "occupant_name",
+        "ʿAhmosi Nefertere",
+        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
+        "Gemini round-3 sweep on PR #101.",
+    ),
+    (
+        "DAN-AhmosiSonOfSeqenenre",
+        "occupant_name",
+        "ʿAhmosi",
+        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
+        "Gemini round-3 sweep on PR #101.",
+    ),
+    (
+        "DAN-MentuhotpIWifeOfDjhuti",
+        "occupant_name",
+        "Mentuhotp I",
+        "Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 "
+        "sweep on PR #101.",
+    ),
+    (
+        "DAN-MentuhotpSankhibtaui",
+        "occupant_name",
+        "Mentuhotp-Sʿankhibtaui",
+        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
+        "Gemini round-3 sweep on PR #101.",
+    ),
+    (
+        "DAN-Neferhotep",
+        "occupant_name",
+        "Neferhotep",
+        "Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 "
+        "sweep on PR #101.",
     ),
 ]
 
@@ -356,6 +423,46 @@ CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Černý, Seele) that the headword-only extraction dropped. Egyptologist-"
         "reviewer P2: restore the footnote kinship hedges since they are the "
         "only filiation info PM gives for Tentopet.",
+    ),
+    # Gemini round-3 finding on PR #101: the chunk-8 prompt drifted from the
+    # project-wide README convention ("strip ḥ in occupant_name; keep ayin").
+    # Chunk 7's `occupant_name` values drifted in the same direction — chunk-7
+    # cleanup is a separate followup PR (those values are already merged). The
+    # 5 corrections below align chunk 8 back to the README convention; QV44
+    # `Khaʿemweset` already uses plain h so no correction is needed there.
+    (
+        "QV42",
+        "occupant_name",
+        "Paraʿhirwenemef",
+        "Strip underdot-H (ḥ → h) in occupant_name per README's "
+        "matchable-name-field diacritic-stripping convention (KV8 Merneptah "
+        "precedent). Ayin ʿ retained.",
+    ),
+    (
+        "QV43",
+        "occupant_name",
+        "Set-hirkhopshef",
+        "Strip underdot-H (ḥ → h) in occupant_name per README convention.",
+    ),
+    (
+        "QV46",
+        "occupant_name",
+        "Imhotep",
+        "Strip underdot-H (ḥ → h) in occupant_name per README convention.",
+    ),
+    (
+        "QV47",
+        "occupant_name",
+        "ʿAhmosi",
+        "Strip underdot-H (ḥ → h) in occupant_name per README convention. "
+        "Ayin ʿ retained.",
+    ),
+    (
+        "QV55",
+        "occupant_name",
+        "Amen(hir)khopshef",
+        "Strip underdot-H (ḥ → h) in occupant_name per README convention. "
+        "Parenthetical infix `(hir)` preserved verbatim from PM.",
     ),
 ]
 

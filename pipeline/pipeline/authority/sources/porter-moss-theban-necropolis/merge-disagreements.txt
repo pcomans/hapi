@@ -109,8 +109,8 @@ Per-chunk correction counts:
 - Chunk 3: 5 correction(s) defined in CHUNK3_CORRECTIONS.
 - Chunk 4: 2 correction(s) defined in CHUNK4_CORRECTIONS.
 - Chunk 5: 0 correction(s) defined in CHUNK5_CORRECTIONS.
-- Chunk 7: 4 correction(s) defined in CHUNK7_CORRECTIONS.
-- Chunk 8: 6 correction(s) defined in CHUNK8_CORRECTIONS.
+- Chunk 7: 12 correction(s) defined in CHUNK7_CORRECTIONS.
+- Chunk 8: 11 correction(s) defined in CHUNK8_CORRECTIONS.
 
 Tomb-id renames:
 - DAN-Ahhor → DAN-Aqhor (already renamed; no-op this run)
@@ -141,14 +141,39 @@ Field corrections:
     value: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
 - KV56: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)
     value: "Unknown"
-- DAN-Aqhor: occupant_name already matches override (no-op this run; PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.)
-    value: "ʿAḳ-ḥor"
+- DAN-Aqhor: occupant_name corrected this run (PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES. Underdot-H stripped to plain `h` per README's matchable-name-field convention (Gemini round-3 sweep on PR #101). ḳ (underdot-K) preserved as a distinguishing radical.)
+    was: "ʿAḳ-ḥor"
+    now: "ʿAḳ-hor"
 - DAN-Aqhor: occupant_role already matches override (no-op this run; `Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
     value: "Official"
 - DAN-MentuhotpIWifeOfDjhuti: notes_from_pm already matches override (no-op this run; PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through. Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy (chunk-1..6 convention). tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
     value: "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
 - DAN-AhmosiNefertere: notes_from_pm already matches override (no-op this run; PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
     value: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with 'House of Amenophis of the Garden'."
+- SWV-HatshepsutSouth: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's matchable-name-field convention. Gemini round-3 sweep on PR #101.)
+    was: "Ḥatshepsut"
+    now: "Hatshepsut"
+- DAN-Ahhotep: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    was: "ʿAḥḥotp"
+    now: "ʿAhhotp"
+- DAN-AhmosiHenutempet: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention; both the `Aḥmosi` and `Ḥenutempet` underdot-Hs are stripped to plain h. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    was: "ʿAḥmosi Ḥenutempet"
+    now: "ʿAhmosi Henutempet"
+- DAN-AhmosiNefertere: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    was: "ʿAḥmosi Nefertere"
+    now: "ʿAhmosi Nefertere"
+- DAN-AhmosiSonOfSeqenenre: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    was: "ʿAḥmosi"
+    now: "ʿAhmosi"
+- DAN-MentuhotpIWifeOfDjhuti: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 sweep on PR #101.)
+    was: "Mentuḥotp I"
+    now: "Mentuhotp I"
+- DAN-MentuhotpSankhibtaui: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    was: "Mentuḥotp-Sʿankhibtaui"
+    now: "Mentuhotp-Sʿankhibtaui"
+- DAN-Neferhotep: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 sweep on PR #101.)
+    was: "Neferḥotep"
+    now: "Neferhotep"
 - QV36: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A PRINCESS, no name.')
     value: "Unknown"
 - QV40: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A QUEEN, cartouche blank.')
@@ -157,8 +182,17 @@ Field corrections:
     value: "Unknown"
 - QV75: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.768 headword is 'A QUEEN, no name.')
     value: "Unknown"
-- QV47: notes_from_pm corrected this run (PM p.755 prints the mother's name as 'Sit-ḍḥout' (ḍ = d with underdot, not plain d and not g). The text-layer OCR renders 'ḍḥ' as 'gḥ' — a character-level misread. Egyptologist-reviewer P2 finding: restore PM-verbatim Unicode spelling with `ḍ` (U+1E0D, Latin small letter d with dot below) to match PM's typography.)
-    was: "daughter of Seḳenenreʿ-Taʿa and Sit-dḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
-    now: "daughter of Seḳenenreʿ-Taʿa and Sit-ḍḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
+- QV47: notes_from_pm already matches override (no-op this run; PM p.755 prints the mother's name as 'Sit-ḍḥout' (ḍ = d with underdot, not plain d and not g). The text-layer OCR renders 'ḍḥ' as 'gḥ' — a character-level misread. Egyptologist-reviewer P2 finding: restore PM-verbatim Unicode spelling with `ḍ` (U+1E0D, Latin small letter d with dot below) to match PM's typography.)
+    value: "daughter of Seḳenenreʿ-Taʿa and Sit-ḍḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
 - QV74: notes_from_pm already matches override (no-op this run; PM p.767 footnote 1 carries three hedged filiation facts (Gauthier, Černý, Seele) that the headword-only extraction dropped. Egyptologist-reviewer P2: restore the footnote kinship hedges since they are the only filiation info PM gives for Tentopet.)
     value: "Great King's mother and King's wife. Wife(?) of Ramesses IV; mother of Ramesses V; daughter of Ramesses IV (per PM p.767 footnote 1). (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"
+- QV42: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) in occupant_name per README's matchable-name-field diacritic-stripping convention (KV8 Merneptah precedent). Ayin ʿ retained.)
+    value: "Paraʿhirwenemef"
+- QV43: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) in occupant_name per README convention.)
+    value: "Set-hirkhopshef"
+- QV46: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) in occupant_name per README convention.)
+    value: "Imhotep"
+- QV47: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) in occupant_name per README convention. Ayin ʿ retained.)
+    value: "ʿAhmosi"
+- QV55: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) in occupant_name per README convention. Parenthetical infix `(hir)` preserved verbatim from PM.)
+    value: "Amen(hir)khopshef"
