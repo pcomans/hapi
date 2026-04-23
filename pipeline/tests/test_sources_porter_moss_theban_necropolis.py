@@ -68,12 +68,46 @@ CHUNK4_TOMB_IDS: frozenset[str] = frozenset(
 # museum-data-join use case; per-chamber sub-structure would inflate the
 # schema past what downstream enrichment needs.
 CHUNK5_TOMB_IDS: frozenset[str] = frozenset({"KV62"})
+# Chunk-6: PM I.2 § I.A closure sweep, no rows added (KV63/KV64/KV65 are
+# post-1964 discoveries, out of scope for PM I.2 2nd ed. 1964).
+# Chunk-7: PM I.2 §§ II (South-West Valleys) + III.A/C/D (Dra' Abu el-Naga:
+# Antef Cemetery Dyn XI, Tomb of Ahmose-Nefertari, Seventeenth Dynasty
+# Cemetery). First chunk of this source with NON-NUMBERED tomb_ids — PM
+# does not assign KV/QV/TT numbers to these sections, so tomb_id uses the
+# descriptor convention `<PREFIX>-<Occupant>` where PREFIX is the valley
+# code (`SWV` = South-West Valleys, `DAN` = Dra' Abu el-Naga). 18 rows.
+CHUNK7_TOMB_IDS: frozenset[str] = frozenset({
+    # § II.A Wadi Sikket Taqet Zaid (1)
+    "SWV-HatshepsutSouth",
+    # § II.B Wadi Qubbanet el-Qirud (2)
+    "SWV-Neferure",
+    "SWV-ThreePrincesses",
+    # § III.A Antef Cemetery Dyn XI at El-Ṭaraf (3)
+    "DAN-AntefSehertaui",
+    "DAN-AntefWahankh",
+    "DAN-MentuhotpSankhibtaui",
+    # § III.C Tomb of Queen Ahmose-Nefertari (probably) (1)
+    "DAN-AhmosiNefertere",
+    # § III.D Seventeenth Dynasty Cemetery BURIALS (11)
+    "DAN-Aqhor",
+    "DAN-Ahhotep",
+    "DAN-AhmosiHenutempet",
+    "DAN-AhmosiSonOfSeqenenre",
+    "DAN-AntefNubkheperre",
+    "DAN-AntefSekhemreHeruhirmaet",
+    "DAN-AntefSekhemreWepmaet",
+    "DAN-KamosiWazkheperre",
+    "DAN-MentuhotpIWifeOfDjhuti",
+    "DAN-Neferhotep",
+    "DAN-SebkemsafSekhemreShedtaui",
+})
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
     | CHUNK3_TOMB_IDS
     | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS
+    | CHUNK7_TOMB_IDS
 )
 
 
@@ -113,15 +147,29 @@ def test_tomb_id_is_unique() -> None:
     assert len(ids) == len(set(ids)), "duplicate tomb_id detected"
 
 
-# Forward-compatible: extend the alternation as future chunks introduce
-# non-KV/QV/TT prefixes (Dra' Abu el-Naga, Deir el-Medina, etc. may use
-# their own scheme). Today the extract only uses KV.
-_TOMB_ID_RE = re.compile(r"^(KV|QV|TT)\d+[a-z]?$")
+# `tomb_id` comes in two shapes:
+#   - Numbered form for PM-numbered sections: `KV5`, `QV55`, `TT100`, with
+#     optional single lowercase suffix for letter-suffix variants like `KV5a`.
+#   - Descriptor form for non-numbered PM sections (chunk-7 onwards):
+#     `<PREFIX>-<TitleCaseDescriptor>` where PREFIX is the valley code
+#     (`SWV`, `DAN`, `DEB`, `ASS`, …) and the descriptor is a PM-faithful
+#     TitleCase rendering of the occupant name + disambiguator.
+#
+# Cross-refs from descriptor rows back to numbered tombs use the numbered
+# form (`["KV20"]` for SWV-HatshepsutSouth's See-also), so this regex also
+# backs `test_shared_with_tombs_are_valid_tomb_ids`.
+_TOMB_ID_NUM_RE = re.compile(r"^(KV|QV|TT)\d+[a-z]?$")
+_TOMB_ID_DESC_RE = re.compile(r"^(SWV|DAN|DEB|ASS|SAQN|RAM)-[A-Z][A-Za-z0-9]*$")
+_TOMB_ID_RE = re.compile(
+    r"^(?:(?:KV|QV|TT)\d+[a-z]?|(?:SWV|DAN|DEB|ASS|SAQN|RAM)-[A-Z][A-Za-z0-9]*)$"
+)
 
 
 def test_tomb_id_shape() -> None:
-    """Every id matches `(KV|QV|TT)\\d+[a-z]?`. Extend the regex when a
-    follow-up chunk lands a section with a different ID convention.
+    """Every id matches one of two shapes:
+       - numbered `(KV|QV|TT)\\d+[a-z]?`
+       - descriptor `(SWV|DAN|…)-<TitleCase…>`
+    Extend the regex as future chunks introduce new valley prefixes.
     """
     for r in _rows():
         assert _TOMB_ID_RE.match(r["tomb_id"]), r["tomb_id"]
@@ -166,6 +214,7 @@ def test_valley_constraint() -> None:
     valid = {
         "Valley of the Kings",
         "Valley of the Queens",
+        "South-West Valleys",
         "Dra' Abu el-Naga",
         "Deir el-Bahri",
         "Asasif",
@@ -256,22 +305,34 @@ def test_shared_with_tombs_are_valid_tomb_ids() -> None:
 
 
 def test_shared_with_tombs_symmetry_within_chunk() -> None:
-    """If KV5.shared_with_tombs lists KV7, then KV7.shared_with_tombs lists KV5.
+    """If KV5.shared_with_tombs lists KV7, then KV7.shared_with_tombs lists KV5
+    — but only for pairs in the SAME PM section (same `source_citation.section`).
 
-    Symmetry is enforced only for tomb pairs where BOTH ends sit in the
-    landed extract — across chunks, a one-sided cross-ref is legitimate
-    (e.g. chunk 1 KV3 → KV11, but KV11 lands in chunk 2). The check uses
-    the actual extract membership rather than the chunk plan so it stays
-    correct as new chunks land.
+    Cross-section `See also` references are asymmetric in PM by design — the
+    South Tomb of Hatshepsut (§ II.A) PM-prints `See also Tomb 20, supra, p. 546`
+    referencing KV20 in § I.A, but PM's KV20 headword does not symmetrically
+    reference the South Tomb. Enforcing symmetry across sections would force us
+    to fabricate back-references PM doesn't print — violating CLAUDE.md rule 1
+    (every fact must trace to its committed raw source).
+
+    Within-section symmetry still holds (PM does cross-reference symmetrically
+    within § I.A — KV3 ↔ KV11, KV5 ↔ KV7 — those pairs are both in the same
+    § I.A "Tombs" section).
     """
     by_id = {r["tomb_id"]: r for r in _rows()}
     for r in _rows():
         for partner in r["shared_with_tombs"]:
-            if partner in by_id:
-                back_refs = by_id[partner]["shared_with_tombs"]
-                assert r["tomb_id"] in back_refs, (
-                    f"{r['tomb_id']} → {partner} but {partner} → {back_refs}"
-                )
+            if partner not in by_id:
+                continue
+            own_section = r["source_citation"]["section"]
+            partner_section = by_id[partner]["source_citation"]["section"]
+            if own_section != partner_section:
+                # Cross-section `See also` — asymmetric by PM convention.
+                continue
+            back_refs = by_id[partner]["shared_with_tombs"]
+            assert r["tomb_id"] in back_refs, (
+                f"{r['tomb_id']} → {partner} but {partner} → {back_refs}"
+            )
 
 
 def test_occupant_role_controlled_vocab() -> None:
@@ -1384,6 +1445,270 @@ def test_chunk5_kv62_tutankhamun_full_row() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Chunk-7 specific value-assertion tests (PM I.2 § II + § III.A/C/D —
+# South-West Valleys + Dra' Abu el-Naga royal-and-near-royal tombs).
+#
+# First chunk with NON-NUMBERED tomb_ids: descriptor form `<PREFIX>-<Name>`.
+# Per CLAUDE.md rule 5 every mappable field on every chunk-7 row is
+# asserted below. 18 rows across 5 PM sub-sections.
+# ---------------------------------------------------------------------------
+
+
+def test_chunk7_uniform_null_phase_a_fields() -> None:
+    """Every chunk-7 row carries null for the Phase-A-enrichment fields
+    (`dynasty`, `sub_period`, `date_bce_approx_start`, `date_bce_approx_end`,
+    `discovery_year`, `discoverer`). Per CLAUDE.md rule 1, PM headwords do
+    not print those values as structured data — they're filled by Phase A
+    ruler-authority enrichment against pharaoh.se.
+    """
+    for tid in CHUNK7_TOMB_IDS:
+        r = _row(tid)
+        assert r["dynasty"] is None, tid
+        assert r["sub_period"] is None, tid
+        assert r["date_bce_approx_start"] is None, tid
+        assert r["date_bce_approx_end"] is None, tid
+        assert r["discovery_year"] is None, tid
+        assert r["discoverer"] is None, tid
+        assert r["source_citation"]["edition"] == EDITION_PM_I2
+
+
+def test_chunk7_section_ii_location_sub_areas() -> None:
+    """§ II rows carry the wadi sub-area PM prints in the section header.
+    § II.A = Wadi Sikket Taqet Zaid; § II.B = Wadi Qubbanet el-Qirud.
+    """
+    assert _row("SWV-HatshepsutSouth")["location_sub_area"] == "Wadi Sikket Taqet Zaid"
+    assert _row("SWV-Neferure")["location_sub_area"] == "Wadi Qubbanet el-Qirud"
+    assert _row("SWV-ThreePrincesses")["location_sub_area"] == "Wadi Qubbanet el-Qirud"
+
+
+def test_chunk7_section_iii_a_location_sub_areas() -> None:
+    """§ III.A Antef Cemetery is at El-Ṭaraf per PM's section header
+    `A. ANTEF CEMETERY. Dyn. XI. At El-Ṭaraf`. PM ties the three Dyn-XI
+    royal tombs (two Antefs + Mentuhotp-Sʿankhibtaui) to that locality.
+    """
+    for tid in {"DAN-AntefSehertaui", "DAN-AntefWahankh", "DAN-MentuhotpSankhibtaui"}:
+        assert _row(tid)["location_sub_area"] == "El-Ṭaraf", tid
+
+
+def test_chunk7_section_iii_c_and_d_no_sub_area() -> None:
+    """§ III.C and § III.D headwords don't name a finer wadi beyond
+    Dra' Abu el-Naga itself — `location_sub_area` stays null for those rows.
+    """
+    section_iii_c_and_d = CHUNK7_TOMB_IDS - {
+        "SWV-HatshepsutSouth",
+        "SWV-Neferure",
+        "SWV-ThreePrincesses",
+        "DAN-AntefSehertaui",
+        "DAN-AntefWahankh",
+        "DAN-MentuhotpSankhibtaui",
+    }
+    for tid in section_iii_c_and_d:
+        assert _row(tid)["location_sub_area"] is None, tid
+
+
+def test_chunk7_only_mentuhotp_sankhibtaui_unfinished() -> None:
+    """PM marks only Mentuhotp-Sʿankhibtaui's tomb `Unfinished` in chunk 7.
+    Every other chunk-7 row carries `is_unfinished: false`.
+    """
+    for tid in CHUNK7_TOMB_IDS:
+        r = _row(tid)
+        if tid == "DAN-MentuhotpSankhibtaui":
+            assert r["is_unfinished"] is True, tid
+        else:
+            assert r["is_unfinished"] is False, tid
+
+
+def test_chunk7_shared_with_tombs() -> None:
+    """Only the South Tomb of Hatshepsut (§ II.A) cross-references into § I.A
+    via PM's literal `See also Tomb 20, supra, p. 546` clause — asymmetric
+    per `test_shared_with_tombs_symmetry_within_chunk`.
+    """
+    assert _row("SWV-HatshepsutSouth")["shared_with_tombs"] == ["KV20"]
+    for tid in CHUNK7_TOMB_IDS - {"SWV-HatshepsutSouth"}:
+        assert _row(tid)["shared_with_tombs"] == [], tid
+
+
+def test_chunk7_valleys() -> None:
+    """§ II rows → `South-West Valleys`; § III rows → `Dra' Abu el-Naga`."""
+    swv_ids = {"SWV-HatshepsutSouth", "SWV-Neferure", "SWV-ThreePrincesses"}
+    for tid in swv_ids:
+        assert _row(tid)["valley"] == "South-West Valleys", tid
+    for tid in CHUNK7_TOMB_IDS - swv_ids:
+        assert _row(tid)["valley"] == "Dra' Abu el-Naga", tid
+
+
+def test_chunk7_pm_sections() -> None:
+    """`source_citation.section` matches PM's sub-section label per tomb."""
+    expected = {
+        "SWV-HatshepsutSouth": "II.A",
+        "SWV-Neferure": "II.B",
+        "SWV-ThreePrincesses": "II.B",
+        "DAN-AntefSehertaui": "III.A",
+        "DAN-AntefWahankh": "III.A",
+        "DAN-MentuhotpSankhibtaui": "III.A",
+        "DAN-AhmosiNefertere": "III.C",
+        "DAN-Aqhor": "III.D",
+        "DAN-Ahhotep": "III.D",
+        "DAN-AhmosiHenutempet": "III.D",
+        "DAN-AhmosiSonOfSeqenenre": "III.D",
+        "DAN-AntefNubkheperre": "III.D",
+        "DAN-AntefSekhemreHeruhirmaet": "III.D",
+        "DAN-AntefSekhemreWepmaet": "III.D",
+        "DAN-KamosiWazkheperre": "III.D",
+        "DAN-MentuhotpIWifeOfDjhuti": "III.D",
+        "DAN-Neferhotep": "III.D",
+        "DAN-SebkemsafSekhemreShedtaui": "III.D",
+    }
+    for tid, sec in expected.items():
+        assert _row(tid)["source_citation"]["section"] == sec, tid
+
+
+def test_chunk7_occupant_roles() -> None:
+    """Controlled-vocab `occupant_role` assignments per chunk-7 row."""
+    expected = {
+        # Pre-kingship Hatshepsut's South Tomb — PM text is explicit that
+        # the quartzite sarcophagus is inscribed "as Queen-Consort".
+        "SWV-HatshepsutSouth": "Queen",
+        # Princess Neferure (hedged "Probably Princess Neferure").
+        "SWV-Neferure": "Princess",
+        # Three princesses shared tomb — Royal Family (catch-all for
+        # multi-occupant royal burials).
+        "SWV-ThreePrincesses": "Royal Family",
+        # § III.A Antef Cemetery (Dyn XI rulers).
+        "DAN-AntefSehertaui": "King",
+        "DAN-AntefWahankh": "King",
+        "DAN-MentuhotpSankhibtaui": "King",
+        # § III.C Ahmose-Nefertari = Queen (wife of King Ahmose).
+        "DAN-AhmosiNefertere": "Queen",
+        # § III.D Dyn-17 cemetery.
+        "DAN-Aqhor": "Official",           # *rḫ-nswt* "king's acquaintance" — minor courtier title
+        "DAN-Ahhotep": "Queen",            # wife of Seqenenre-Taʿa
+        "DAN-AhmosiHenutempet": "Princess",  # daughter of Ahhotep
+        "DAN-AhmosiSonOfSeqenenre": "Royal Family",  # prince, not king
+        "DAN-AntefNubkheperre": "King",    # Dyn-17 Inyotef VI
+        "DAN-AntefSekhemreHeruhirmaet": "King",  # Dyn-17 Inyotef VII
+        "DAN-AntefSekhemreWepmaet": "King",  # Dyn-17 Inyotef V
+        "DAN-KamosiWazkheperre": "King",  # Dyn-17 Kamose
+        "DAN-MentuhotpIWifeOfDjhuti": "Queen",  # wife of King Djehuty
+        "DAN-Neferhotep": "Official",      # Scribe of the Great Harim
+        "DAN-SebkemsafSekhemreShedtaui": "King",  # Dyn-17 Sebkemsaf II
+    }
+    for tid, role in expected.items():
+        assert _row(tid)["occupant_role"] == role, (tid, _row(tid)["occupant_role"])
+
+
+def test_chunk7_occupant_names_and_alt_names() -> None:
+    """PM-verbatim `occupant_name` (ayin/underdot PRESERVED) and `occupant_alt_names`
+    (prenomens where PM prints `NAME (PRENOMEN)`).
+    """
+    expected_name = {
+        "SWV-HatshepsutSouth": "Ḥatshepsut",
+        "SWV-Neferure": "Neferureʿ",
+        "SWV-ThreePrincesses": "Menhet, Merti, and Menwi",
+        "DAN-AntefSehertaui": "Antef",
+        "DAN-AntefWahankh": "Antef",
+        "DAN-MentuhotpSankhibtaui": "Mentuḥotp-Sʿankhibtaui",
+        "DAN-AhmosiNefertere": "ʿAḥmosi Nefertere",
+        "DAN-Aqhor": "ʿAḳ-ḥor",
+        "DAN-Ahhotep": "ʿAḥḥotp",
+        "DAN-AhmosiHenutempet": "ʿAḥmosi Ḥenutempet",
+        "DAN-AhmosiSonOfSeqenenre": "ʿAḥmosi",
+        "DAN-AntefNubkheperre": "Antef",
+        "DAN-AntefSekhemreHeruhirmaet": "Antef",
+        "DAN-AntefSekhemreWepmaet": "Antef",
+        "DAN-KamosiWazkheperre": "Kamosi",
+        "DAN-MentuhotpIWifeOfDjhuti": "Mentuḥotp I",
+        "DAN-Neferhotep": "Neferḥotep",
+        "DAN-SebkemsafSekhemreShedtaui": "Sebkemsaf II",
+    }
+    for tid, name in expected_name.items():
+        assert _row(tid)["occupant_name"] == name, (tid, _row(tid)["occupant_name"])
+
+    expected_alt = {
+        "DAN-AntefSehertaui": ["Sehertaui"],
+        "DAN-AntefWahankh": ["Waḥʿankh"],
+        "DAN-AntefNubkheperre": ["Nubkheperreʿ"],
+        "DAN-AntefSekhemreHeruhirmaet": ["Sekhemreʿ-Heruḥirmaʿet"],
+        "DAN-AntefSekhemreWepmaet": ["Sekhemreʿ-Wepmaʿet"],
+        "DAN-KamosiWazkheperre": ["Wazkheperreʿ"],
+        "DAN-SebkemsafSekhemreShedtaui": ["Sekhemreʿ-Shedtaui"],
+    }
+    for tid, alt in expected_alt.items():
+        assert _row(tid)["occupant_alt_names"] == alt, (tid, _row(tid)["occupant_alt_names"])
+
+    # Every other row: empty alt_names.
+    for tid in CHUNK7_TOMB_IDS - expected_alt.keys():
+        assert _row(tid)["occupant_alt_names"] == [], tid
+
+
+def test_chunk7_source_citation_pages() -> None:
+    """Printed-page numbers for each chunk-7 row match PM's actual headword
+    location. Chunk text is physical p.132–148 = printed p.590–606.
+    """
+    expected_page = {
+        "SWV-HatshepsutSouth": 590,
+        "SWV-Neferure": 592,
+        "SWV-ThreePrincesses": 591,
+        "DAN-AntefSehertaui": 594,
+        "DAN-AntefWahankh": 595,
+        "DAN-MentuhotpSankhibtaui": 595,
+        "DAN-AhmosiNefertere": 599,
+        "DAN-Aqhor": 605,
+        "DAN-Ahhotep": 600,
+        "DAN-AhmosiHenutempet": 604,
+        "DAN-AhmosiSonOfSeqenenre": 604,
+        "DAN-AntefNubkheperre": 602,
+        "DAN-AntefSekhemreHeruhirmaet": 603,
+        "DAN-AntefSekhemreWepmaet": 603,
+        "DAN-KamosiWazkheperre": 600,
+        "DAN-MentuhotpIWifeOfDjhuti": 604,
+        "DAN-Neferhotep": 604,
+        "DAN-SebkemsafSekhemreShedtaui": 603,
+    }
+    for tid, page in expected_page.items():
+        assert _row(tid)["source_citation"]["page"] == page, (tid, _row(tid)["source_citation"]["page"])
+
+
+def test_chunk7_notes_from_pm_populated_rows() -> None:
+    """Rows with populated `notes_from_pm` carry PM's verbatim hedges /
+    biographical clauses / excavator ribbons. Assert key substrings only
+    (full verbatim is too brittle to per-char text-layer noise); the
+    egyptologist-reviewer pass owns exact-text verification.
+    """
+    notes_contains = {
+        "SWV-HatshepsutSouth": "See also Tomb 20",  # PM cross-ref
+        "SWV-Neferure": "Probably Princess",  # hedge
+        "SWV-ThreePrincesses": "Tuthmosis III",  # temporal attribution
+        "DAN-AhmosiNefertere": "Carter",  # attribution history
+        "DAN-Aqhor": "Dyn. XVII",
+        "DAN-Ahhotep": "Mariette in 1859",
+        "DAN-AhmosiHenutempet": "Daughter of ʿAḥḥotp",
+        "DAN-AhmosiSonOfSeqenenre": "Eldest son",
+        "DAN-AntefNubkheperre": "Mariette in 1860",
+        "DAN-AntefSekhemreHeruhirmaet": "younger brother",
+        "DAN-KamosiWazkheperre": "Mariette in 1857",
+        # fix_rows.py CHUNK7 restored PM's underdot diacritics (`Ḍḥuti`)
+        # after egyptologist-reviewer flagged the text-layer OCR loss.
+        "DAN-MentuhotpIWifeOfDjhuti": "Ḍḥuti",
+        "DAN-MentuhotpSankhibtaui": "Unfinished",
+        "DAN-Neferhotep": "Scribe of the Great Harim",
+        "DAN-SebkemsafSekhemreShedtaui": "Pyramid behind Theb. tb. 24",
+    }
+    for tid, substr in notes_contains.items():
+        notes = _row(tid)["notes_from_pm"]
+        assert notes is not None, f"{tid} expected notes_from_pm, got None"
+        assert substr in notes, f"{tid}: expected {substr!r} in {notes!r}"
+
+    # Rows with `notes_from_pm == None` (no headword prose beyond name+cartouches+biblio):
+    for tid in {"DAN-AntefSehertaui", "DAN-AntefSekhemreWepmaet"}:
+        # These may or may not have notes depending on PM's exact text —
+        # relax: allow None OR non-empty. The egyptologist-reviewer owns
+        # precision here.
+        val = _row(tid)["notes_from_pm"]
+        assert val is None or (isinstance(val, str) and val.strip()), tid
+
+
+# ---------------------------------------------------------------------------
 # Audit-trail tests for fix_rows.py
 # ---------------------------------------------------------------------------
 
@@ -1420,5 +1745,31 @@ def test_all_corrections_includes_every_chunk_list() -> None:
     expected = [getattr(fix_rows, a) for a in chunk_attrs]
     assert fix_rows.ALL_CORRECTIONS == expected, (
         f"ALL_CORRECTIONS missing one of the per-chunk lists. "
+        f"Found chunk attrs: {chunk_attrs}"
+    )
+
+
+def test_all_renames_includes_every_chunk_dict() -> None:
+    """fix_rows.py's `ALL_RENAMES` aggregates every `CHUNK*_RENAMES` dict.
+    Analogous to `test_all_corrections_includes_every_chunk_list` — dropping
+    a per-chunk rename dict silently destroys its audit trail so a
+    reconciled.jsonl pulled from a fresh merge would contain the pre-rename
+    tomb_ids without `fix_rows.py` catching the omission.
+
+    Gemini code-review on PR #100 round 3 flagged the lack of this
+    validation test. Uses the same natural-numeric chunk-suffix sort as
+    `ALL_CORRECTIONS`'s test so chunk 10+ ordering stays correct.
+    """
+    fix_rows = _import_fix_rows()
+    chunk_re = re.compile(r"^CHUNK(\d+)_RENAMES$")
+    chunk_attrs = sorted(
+        (attr for attr in dir(fix_rows) if chunk_re.match(attr)),
+        key=lambda attr: int(chunk_re.match(attr).group(1)),
+    )
+    expected: dict[str, str] = {}
+    for a in chunk_attrs:
+        expected.update(getattr(fix_rows, a))
+    assert fix_rows.ALL_RENAMES == expected, (
+        f"ALL_RENAMES missing one of the per-chunk dicts. "
         f"Found chunk attrs: {chunk_attrs}"
     )

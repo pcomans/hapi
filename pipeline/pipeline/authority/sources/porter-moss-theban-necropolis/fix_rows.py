@@ -232,6 +232,76 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = []
 
 
+# Chunk-7 (PM I.2 §§ II + III.A/C/D — 18 descriptor-id rows) corrections
+# from the egyptologist-reviewer pass on this PR (reviewer notes at
+# `reviewer-notes-chunk7.md`).
+#
+# P1 corrections:
+# 1. DAN-Aqhor (renamed from DAN-Ahhor) — PM p.605 prints headword `ʿAḲ-ḤOR`
+#    (*rḫ-nswt* "king's acquaintance"), not `ʿAḥḥor`. This is a courtier,
+#    not a royal-family member. `occupant_name` → "ʿAḳ-ḥor",
+#    `occupant_role` → "Official" (was "Royal Family").
+# 2. DAN-MentuhotpIWifeOfDjhuti (renamed from DAN-MentuhotpIWifeOfDjehuti)
+#    — PM p.604 prints "Ḍḥuti" (underdot-D, underdot-H). The text-layer
+#    OCR lost both diacritics. `notes_from_pm` restores "Ḍḥuti" verbatim.
+# 3. DAN-AhmosiNefertari → renamed to DAN-AhmosiNefertere (PM prints
+#    "Nefertere" not "Nefertari"). `notes_from_pm` expanded to capture
+#    PM's Carter/Amenophis-I attribution history.
+# 4. DAN-KamosiWazkheperre (renamed from DAN-KamoseWadjkheperre) — PM
+#    p.600 headword is "KAMOSI (WAZKHEPERREʿ)"; descriptor uses PM-faithful
+#    forms per the Ahmosi/Mentuhotp convention.
+#
+# CHUNK7_RENAMES below runs before CHUNK7_CORRECTIONS — the corrections
+# reference the NEW tomb_ids.
+CHUNK7_RENAMES: dict[str, str] = {
+    "DAN-Ahhor": "DAN-Aqhor",
+    "DAN-AhmosiNefertari": "DAN-AhmosiNefertere",
+    "DAN-KamoseWadjkheperre": "DAN-KamosiWazkheperre",
+    "DAN-MentuhotpIWifeOfDjehuti": "DAN-MentuhotpIWifeOfDjhuti",
+}
+
+CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "DAN-Aqhor",
+        "occupant_name",
+        "ʿAḳ-ḥor",
+        "PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' "
+        "compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' "
+        "misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.",
+    ),
+    (
+        "DAN-Aqhor",
+        "occupant_role",
+        "Official",
+        "`Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a "
+        "royal-family affiliation. Downgrade role from 'Royal Family' to "
+        "'Official' per egyptologist-reviewer P1 finding.",
+    ),
+    (
+        "DAN-MentuhotpIWifeOfDjhuti",
+        "notes_from_pm",
+        "Wife of King Ḍḥuti. Found in tomb by Passalacqua.",
+        "PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and "
+        "underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` "
+        "(no diacritics) and the agents carried that through. Restore the "
+        "PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve "
+        "policy (chunk-1..6 convention). tomb_id renamed to "
+        "`DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor "
+        "consistency with the PM-faithful spelling convention.",
+    ),
+    (
+        "DAN-AhmosiNefertere",
+        "notes_from_pm",
+        "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I "
+        "by Carter, later equated by Černý with 'House of Amenophis of the Garden'.",
+        "PM p.599-600 §III.C headword spells out the Carter attribution "
+        "history in detail; the pre-review note dropped the Černý follow-up. "
+        "Restore per egyptologist-reviewer P2 finding (verbatim preserve of "
+        "the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.",
+    ),
+]
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -242,7 +312,16 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
+    CHUNK7_CORRECTIONS,
 ]
+
+# `ALL_RENAMES` aggregates per-chunk `CHUNK<N>_RENAMES` dicts (only chunk 7
+# has renames so far; future chunks can define their own `CHUNK<N>_RENAMES`
+# and merge it in here). Kept as a separate `main`-function input so the
+# rename path stays symmetric to the field-correction path.
+ALL_RENAMES: dict[str, str] = {
+    **CHUNK7_RENAMES,
+}
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     correction for chunk in ALL_CORRECTIONS for correction in chunk
@@ -264,9 +343,68 @@ for _tomb_id, _field, _, _ in SPOT_CORRECTIONS:
 del _seen
 
 
+def _import_merge_sort_key():
+    """Import `_sort_key` from sibling `merge.py` to re-order rows after renames.
+
+    The merge's sort key understands both numbered (`KV5`) and descriptor
+    (`DAN-Aqhor`) tomb_id shapes, so renamed rows land back in their correct
+    sort position instead of at the tail of the JSONL — preventing the
+    reordering drift Gemini code review (PR #100) flagged.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "pm_theban_merge", SOURCE_DIR / "merge.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module._sort_key
+
+
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+
+    # Renames first: some reviewer-flagged corrections involve renaming a
+    # descriptor tomb_id to match PM's printed name (e.g. `DAN-Ahhor` →
+    # `DAN-Aqhor` because PM actually prints `ʿAḲ-ḤOR`, not `ʿAḥḥor`).
+    # Renames MUST run before SPOT_CORRECTIONS because the corrections
+    # reference the NEW tomb_id. Idempotent: re-running finds no rename
+    # matches on already-renamed rows.
+    #
+    # Logging convention mirrors field corrections (per Gemini code-review on
+    # PR #100): every declared rename logs EVERY run — distinguishing between
+    # "renamed this run" and "already renamed (no-op)" — so the diff file
+    # never silently loses the audit trail on idempotent re-runs.
+    rename_log: list[str] = []
+    applied_renames = 0
     by_id = {r["tomb_id"]: r for r in rows}
+    for old_id, new_id in ALL_RENAMES.items():
+        if old_id in by_id and new_id in by_id:
+            raise ValueError(
+                f"Rename target {new_id!r} already exists; cannot rename "
+                f"{old_id!r} → {new_id!r} without merging."
+            )
+        if old_id in by_id:
+            applied_renames += 1
+            by_id[old_id]["tomb_id"] = new_id
+            by_id[new_id] = by_id.pop(old_id)
+            rename_log.append(
+                f"- {old_id} → {new_id} (renamed this run)"
+            )
+        elif new_id in by_id:
+            rename_log.append(
+                f"- {old_id} → {new_id} (already renamed; no-op this run)"
+            )
+        else:
+            raise KeyError(
+                f"Neither {old_id!r} nor {new_id!r} found in reconciled.jsonl "
+                f"— declared rename has no target row to act on."
+            )
+
+    # Re-sort rows by the merge's `_sort_key` so renamed rows land back in
+    # their correct lexicographic position (not at the dict-insertion-order
+    # tail). Required for reconciled.jsonl to stay sorted across fix_rows runs.
+    sort_key = _import_merge_sort_key()
+    rows = sorted(by_id.values(), key=lambda r: sort_key(r["tomb_id"]))
 
     # Spot corrections.
     #
@@ -309,10 +447,13 @@ def main() -> None:
     idx = existing_diff.find(marker)
     if idx != -1:
         existing_diff = existing_diff[:idx].rstrip()
-    body = (
-        "\n".join(override_log)
-        if override_log
-        else "- No overrides applied. The reviewer pass produced no "
+    body_sections: list[str] = []
+    if rename_log:
+        body_sections.append("Tomb-id renames:\n" + "\n".join(rename_log))
+    if override_log:
+        body_sections.append("Field corrections:\n" + "\n".join(override_log))
+    body = "\n\n".join(body_sections) if body_sections else (
+        "- No overrides applied. The reviewer pass produced no "
         "actionable corrections on `reconciled.jsonl` for this chunk."
     )
     # Per-chunk summary header — distinguishes "chunk has 0 corrections"
@@ -355,7 +496,10 @@ def main() -> None:
     )
     DIFF.write_text(appended)
 
-    print(f"Applied {applied_count} override(s) this run ({len(override_log)} total in log).")
+    print(
+        f"Applied {applied_renames} rename(s) and {applied_count} override(s) this run "
+        f"({len(rename_log)} renames + {len(override_log)} corrections total in log)."
+    )
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
     print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
 
