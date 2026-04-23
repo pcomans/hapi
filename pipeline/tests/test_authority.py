@@ -36,7 +36,9 @@ def hkw_rows():
 
 class TestHKWIntegrity:
     def test_row_count(self, hkw_rows):
-        assert len(hkw_rows) == 203
+        # 203 IV.2/IV.3 chronology-table rows + 1 Dyn-0 dynasty row
+        # + 3 Dyn-0 ruler rows (Iry-Hor, Ka, Scorpion I) from Ch 2 Hendrickx.
+        assert len(hkw_rows) == 207
 
     def test_valid_kinds(self, hkw_rows):
         valid = {"period", "dynasty", "ruler"}
@@ -83,11 +85,68 @@ class TestHKWIntegrity:
                 )
 
     def test_page_numbers_in_range(self, hkw_rows):
-        valid_pages = set(range(490, 499))
+        # IV.2 + IV.3 chronology table pp.490-498 PLUS Ch 2 Hendrickx
+        # pp.55-93 (currently citing 88, 89, 91 for the Dyn-0 rows).
+        valid_pages = set(range(490, 499)) | set(range(55, 94))
         for i, row in enumerate(hkw_rows, 1):
             assert row["page"] in valid_pages, (
-                f"Row {i}: page {row['page']} outside expected range 490-498"
+                f"Row {i}: page {row['page']} outside expected "
+                f"ranges (490-498 for IV.2/IV.3; 55-93 for Ch 2 Hendrickx)"
             )
+
+    def test_dyn0_rulers_present(self, hkw_rows):
+        """Ch 2 Hendrickx Dyn-0 rulers (Iry-Hor, Ka, Scorpion I) are all
+        present with `dynasty=0` and page cites in the 55-93 range.
+        """
+        dyn0_rulers = {
+            r["display"]: r for r in hkw_rows
+            if r["kind"] == "ruler" and r.get("dynasty") == 0
+        }
+        assert set(dyn0_rulers) == {"Iry-Hor", "Ka", "Scorpion I"}, (
+            f"Expected {{Iry-Hor, Ka, Scorpion I}}, got {sorted(dyn0_rulers)}"
+        )
+        for name, r in dyn0_rulers.items():
+            assert r["start_year"] is None, (name, r["start_year"])
+            assert r["end_year"] is None, (name, r["end_year"])
+            assert 55 <= r["page"] <= 93, (name, r["page"])
+            assert r["approximate"] is True, name
+            assert r["note"] and "Hendrickx" in r["note"], name
+
+    def test_dyn0_ruler_alternative_readings(self, hkw_rows):
+        """Iry-Hor has `Irj-Hor` (Hendrickx's occasional spelling p.89).
+        Ka has `Sekhen` (traditional cartouche-reading alternative).
+        Scorpion I has no alternative reading in Hendrickx's Ch 2 text.
+
+        Filtered to `dynasty: 0` to avoid display-name collisions with
+        Dyn-17 homonyms (Gemini round-1 on PR #102 flagged that building a
+        dict keyed on `display` would collide on rows like "Ta'o" which
+        appears twice in the Dyn-17 block).
+        """
+        dyn0_by_display = {
+            r["display"]: r for r in hkw_rows
+            if r["kind"] == "ruler" and r.get("dynasty") == 0
+        }
+        assert dyn0_by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
+        assert dyn0_by_display["Ka"]["alternative_reading"] == "Sekhen"
+        assert dyn0_by_display["Scorpion I"]["alternative_reading"] is None
+
+    def test_dyn0_dynasty_row_present(self, hkw_rows):
+        """A `kind: dynasty` row with `number: 0` exists so the
+        `test_ruler_dynasty_references_exist` invariant holds for the
+        Dyn-0 ruler rows.
+        """
+        dyn0 = [
+            r for r in hkw_rows
+            if r["kind"] == "dynasty" and r.get("number") == 0
+        ]
+        assert len(dyn0) == 1, f"expected 1 Dyn-0 dynasty row, got {len(dyn0)}"
+        r = dyn0[0]
+        assert r["label"] == "Dyn. 0"
+        assert r["start_year"] is None
+        assert r["end_year"] is None
+        # Hendrickx does not assign Dyn 0 to the Early Dynastic Period —
+        # it sits at the Predynastic / Early Dynastic boundary.
+        assert r.get("parent_period") is None
 
 
 @pytest.fixture
