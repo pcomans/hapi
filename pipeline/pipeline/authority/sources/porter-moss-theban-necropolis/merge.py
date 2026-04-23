@@ -46,13 +46,18 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
 # Valley-prefix sort order. Lower rank sorts first. Add new prefixes here as
-# follow-up chunks introduce them (e.g. `DAN` Dra' Abu el-Naga, `DEM` Deir
-# el-Medina, `RAM` Ramesseum etc. — Phase A may use different conventions
-# but the chunk-1 KV-only ordering is forward-compatible).
+# follow-up chunks introduce them. KV/QV/TT use the numbered-tomb-id form
+# (`KV5`, `QV55`, `TT100`); `SWV` / `DAN` / `DEB` / `ASS` / `SAQ` / `GIZ`
+# / etc. use the descriptor form `<PREFIX>-<Descriptor>` (chunk 7 introduced
+# the descriptor convention — PM has no tomb-numbering for non-KV/QV Theban
+# or Memphite sections). Descriptor IDs sort alphabetically within their
+# valley rank.
 VALLEY_ORDER: dict[str, int] = {
-    "KV": 0,  # Valley of the Kings
-    "QV": 1,  # Valley of the Queens
-    "TT": 2,  # Theban Tomb (Private Tombs, PM I.1)
+    "KV": 0,   # Valley of the Kings (PM I.2 § I)
+    "QV": 1,   # Valley of the Queens (PM I.2 § X)
+    "TT": 2,   # Theban Tomb — numbered private tombs (PM I.1)
+    "SWV": 3,  # South-West Valleys (PM I.2 § II) — descriptor IDs
+    "DAN": 4,  # Dra' Abu el-Naga (PM I.2 § III) — descriptor IDs
 }
 
 # Sentinel ranks for unrecognised prefixes / malformed IDs — they sort to
@@ -63,23 +68,36 @@ UNRECOGNISED_VALLEY_RANK = 9999
 MALFORMED_TOMB_RANK = 999_999
 
 
-_TOMB_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-z]?)$")
+# Numbered-tomb form: `KV5`, `QV55a`, `TT100`, etc.
+_TOMB_NUM_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-z]?)$")
+# Descriptor-tomb form: `SWV-HatshepsutSouth`, `DAN-KamoseWadjkheperre`.
+_TOMB_DESC_RE = re.compile(r"^(?P<prefix>[A-Z]+)-(?P<desc>[A-Za-z][A-Za-z0-9]*)$")
 
 
 def _sort_key(tomb_id: str) -> tuple[int, int, str, str]:
-    """Sort by (valley_rank, numeric_tomb, suffix, raw_id).
+    """Sort by (valley_rank, numeric_tomb_or_zero, descriptor_or_suffix, raw_id).
 
-    Suffixed IDs (`KV5a`) sort directly after the unsuffixed parent (`KV5`).
-    Unrecognised valley prefixes sort to the end.
+    Numbered IDs (`KV5`, `KV5a`) sort by prefix rank then numeric value then
+    suffix. Descriptor IDs (`DAN-AntefSehertaui`) sort by prefix rank then
+    alphabetically on the descriptor. Numbered and descriptor IDs with the
+    same prefix cannot coexist by design (a prefix is either numbered or
+    descriptor, fixed per the PM section's convention).
     """
-    m = _TOMB_RE.match(tomb_id)
-    if not m:
-        return (UNRECOGNISED_VALLEY_RANK, MALFORMED_TOMB_RANK, "", tomb_id)
-    prefix = m.group("prefix")
-    num = int(m.group("num"))
-    suffix = m.group("suffix")
-    rank = VALLEY_ORDER.get(prefix, UNRECOGNISED_VALLEY_RANK)
-    return (rank, num, suffix, tomb_id)
+    m = _TOMB_NUM_RE.match(tomb_id)
+    if m:
+        prefix = m.group("prefix")
+        num = int(m.group("num"))
+        suffix = m.group("suffix")
+        rank = VALLEY_ORDER.get(prefix, UNRECOGNISED_VALLEY_RANK)
+        return (rank, num, suffix, tomb_id)
+    m = _TOMB_DESC_RE.match(tomb_id)
+    if m:
+        prefix = m.group("prefix")
+        desc = m.group("desc")
+        rank = VALLEY_ORDER.get(prefix, UNRECOGNISED_VALLEY_RANK)
+        # Descriptor rows all share numeric-slot 0 and sort by descriptor.
+        return (rank, 0, desc, tomb_id)
+    return (UNRECOGNISED_VALLEY_RANK, MALFORMED_TOMB_RANK, "", tomb_id)
 
 
 def _load(p: Path) -> dict[str, dict]:

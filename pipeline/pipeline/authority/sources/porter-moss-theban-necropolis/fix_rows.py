@@ -232,6 +232,76 @@ CHUNK4_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK5_CORRECTIONS: list[tuple[str, str, object, str]] = []
 
 
+# Chunk-7 (PM I.2 §§ II + III.A/C/D — 18 descriptor-id rows) corrections
+# from the egyptologist-reviewer pass on this PR (reviewer notes at
+# `reviewer-notes-chunk7.md`).
+#
+# P1 corrections:
+# 1. DAN-Aqhor (renamed from DAN-Ahhor) — PM p.605 prints headword `ʿAḲ-ḤOR`
+#    (*rḫ-nswt* "king's acquaintance"), not `ʿAḥḥor`. This is a courtier,
+#    not a royal-family member. `occupant_name` → "ʿAḳ-ḥor",
+#    `occupant_role` → "Official" (was "Royal Family").
+# 2. DAN-MentuhotpIWifeOfDjhuti (renamed from DAN-MentuhotpIWifeOfDjehuti)
+#    — PM p.604 prints "Ḍḥuti" (underdot-D, underdot-H). The text-layer
+#    OCR lost both diacritics. `notes_from_pm` restores "Ḍḥuti" verbatim.
+# 3. DAN-AhmosiNefertari → renamed to DAN-AhmosiNefertere (PM prints
+#    "Nefertere" not "Nefertari"). `notes_from_pm` expanded to capture
+#    PM's Carter/Amenophis-I attribution history.
+# 4. DAN-KamosiWazkheperre (renamed from DAN-KamoseWadjkheperre) — PM
+#    p.600 headword is "KAMOSI (WAZKHEPERREʿ)"; descriptor uses PM-faithful
+#    forms per the Ahmosi/Mentuhotp convention.
+#
+# CHUNK7_RENAMES below runs before CHUNK7_CORRECTIONS — the corrections
+# reference the NEW tomb_ids.
+CHUNK7_RENAMES: dict[str, str] = {
+    "DAN-Ahhor": "DAN-Aqhor",
+    "DAN-AhmosiNefertari": "DAN-AhmosiNefertere",
+    "DAN-KamoseWadjkheperre": "DAN-KamosiWazkheperre",
+    "DAN-MentuhotpIWifeOfDjehuti": "DAN-MentuhotpIWifeOfDjhuti",
+}
+
+CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "DAN-Aqhor",
+        "occupant_name",
+        "ʿAḳ-ḥor",
+        "PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' "
+        "compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' "
+        "misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.",
+    ),
+    (
+        "DAN-Aqhor",
+        "occupant_role",
+        "Official",
+        "`Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a "
+        "royal-family affiliation. Downgrade role from 'Royal Family' to "
+        "'Official' per egyptologist-reviewer P1 finding.",
+    ),
+    (
+        "DAN-MentuhotpIWifeOfDjhuti",
+        "notes_from_pm",
+        "Wife of King Ḍḥuti. Found in tomb by Passalacqua.",
+        "PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and "
+        "underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` "
+        "(no diacritics) and the agents carried that through. Restore the "
+        "PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve "
+        "policy (chunk-1..6 convention). tomb_id renamed to "
+        "`DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor "
+        "consistency with the PM-faithful spelling convention.",
+    ),
+    (
+        "DAN-AhmosiNefertere",
+        "notes_from_pm",
+        "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I "
+        "by Carter, later equated by Černý with `House of Amenophis of the Garden'.",
+        "PM p.599-600 §III.C headword spells out the Carter attribution "
+        "history in detail; the pre-review note dropped the Černý follow-up. "
+        "Restore per egyptologist-reviewer P2 finding (verbatim preserve of "
+        "the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.",
+    ),
+]
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -242,6 +312,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
+    CHUNK7_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -266,7 +337,26 @@ del _seen
 
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+
+    # Renames first: some reviewer-flagged corrections involve renaming a
+    # descriptor tomb_id to match PM's printed name (e.g. `DAN-Ahhor` →
+    # `DAN-Aqhor` because PM actually prints `ʿAḲ-ḤOR`, not `ʿAḥḥor`).
+    # Renames MUST run before SPOT_CORRECTIONS because the corrections
+    # reference the NEW tomb_id. Idempotent: re-running finds no rename
+    # matches on already-renamed rows.
+    rename_log: list[str] = []
     by_id = {r["tomb_id"]: r for r in rows}
+    for old_id, new_id in CHUNK7_RENAMES.items():
+        if old_id in by_id:
+            if new_id in by_id:
+                raise ValueError(
+                    f"Rename target {new_id!r} already exists; cannot rename "
+                    f"{old_id!r} → {new_id!r} without merging."
+                )
+            by_id[old_id]["tomb_id"] = new_id
+            by_id[new_id] = by_id.pop(old_id)
+            rename_log.append(f"- renamed {old_id} → {new_id}")
+    rows = list(by_id.values())
 
     # Spot corrections.
     #
@@ -309,10 +399,13 @@ def main() -> None:
     idx = existing_diff.find(marker)
     if idx != -1:
         existing_diff = existing_diff[:idx].rstrip()
-    body = (
-        "\n".join(override_log)
-        if override_log
-        else "- No overrides applied. The reviewer pass produced no "
+    body_sections: list[str] = []
+    if rename_log:
+        body_sections.append("Tomb-id renames:\n" + "\n".join(rename_log))
+    if override_log:
+        body_sections.append("Field corrections:\n" + "\n".join(override_log))
+    body = "\n\n".join(body_sections) if body_sections else (
+        "- No overrides applied. The reviewer pass produced no "
         "actionable corrections on `reconciled.jsonl` for this chunk."
     )
     # Per-chunk summary header — distinguishes "chunk has 0 corrections"
