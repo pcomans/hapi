@@ -116,13 +116,19 @@ class TestHKWIntegrity:
         """Iry-Hor has `Irj-Hor` (Hendrickx's occasional spelling p.89).
         Ka has `Sekhen` (traditional cartouche-reading alternative).
         Scorpion I has no alternative reading in Hendrickx's Ch 2 text.
+
+        Filtered to `dynasty: 0` to avoid display-name collisions with
+        Dyn-17 homonyms (Gemini round-1 on PR #102 flagged that building a
+        dict keyed on `display` would collide on rows like "Ta'o" which
+        appears twice in the Dyn-17 block).
         """
-        by_display = {
-            r["display"]: r for r in hkw_rows if r["kind"] == "ruler"
+        dyn0_by_display = {
+            r["display"]: r for r in hkw_rows
+            if r["kind"] == "ruler" and r.get("dynasty") == 0
         }
-        assert by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
-        assert by_display["Ka"]["alternative_reading"] == "Sekhen"
-        assert by_display["Scorpion I"]["alternative_reading"] is None
+        assert dyn0_by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
+        assert dyn0_by_display["Ka"]["alternative_reading"] == "Sekhen"
+        assert dyn0_by_display["Scorpion I"]["alternative_reading"] is None
 
     def test_dyn0_dynasty_row_present(self, hkw_rows):
         """A `kind: dynasty` row with `number: 0` exists so the

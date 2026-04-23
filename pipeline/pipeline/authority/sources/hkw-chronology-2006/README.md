@@ -14,7 +14,7 @@ Leiden: Brill.
 pipeline/pipeline/authority/sources/hkw-chronology-2006/   # committed
   README.md        — this file
   prompt.md        — schema and instructions used to produce reconciled.jsonl
-  reconciled.jsonl — transcription of record (206 rows)
+  reconciled.jsonl — transcription of record (207 rows)
   raw/             — extraction working files (gitignored)
     chunk-ch2-p55-p93.txt — pypdf text-layer of Hendrickx Ch 2
 proprietary/books/                                         # gitignored
@@ -26,12 +26,15 @@ proprietary/hkw-chronology-2006/                           # gitignored
 
 Prior layout used an excerpted `hkw-iv-2-iv-3.pdf` (9 pages of the chronology table only). That excerpt has been superseded by the full book PDF at `proprietary/books/` and removed.
 
-`reconciled.jsonl` is the transcription of record. The initial 203 rows were
-produced by LLM transcription of HKW section IV.2 against the schema in
-`prompt.md`, with manual spot-checking against the PDF. The 3 Dyn-0 ruler
-rows (Iry-Hor, Ka, Scorpion I — at the top of the ruler section, before the
-Nar-mer row that opens Dyn 1) were hand-extracted from Hendrickx's Tables
-II.1.6 (p.89) and II.1.7 (p.92) with explicit per-row page citations.
+`reconciled.jsonl` is the transcription of record (**207 rows total**). The
+initial 203 rows were produced by LLM transcription of HKW section IV.2
+against the schema in `prompt.md`, with manual spot-checking against the PDF.
+The 4 rows added from Hendrickx Ch 2 are: **1 Dyn-0 dynasty row** (`kind:
+dynasty`, `number: 0`, page 88) plus **3 Dyn-0 ruler rows** — Iry-Hor (p.89),
+Ka (p.89), Scorpion I (p.91) — at the top of the ruler section before the
+Nar-mer row that opens Dyn 1. All 4 were hand-extracted from Hendrickx's
+narrative prose and Tables II.1.6 (p.89) and II.1.7 (p.92) with explicit
+per-row page citations.
 
 The reconciled file is a thin-copyright derivative: structured facts
 (ruler names, date ranges, dynasty assignments) reorganized into
