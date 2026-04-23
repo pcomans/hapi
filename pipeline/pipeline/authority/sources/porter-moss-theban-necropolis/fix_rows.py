@@ -315,6 +315,14 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK7_CORRECTIONS,
 ]
 
+# `ALL_RENAMES` aggregates per-chunk `CHUNK<N>_RENAMES` dicts (only chunk 7
+# has renames so far; future chunks can define their own `CHUNK<N>_RENAMES`
+# and merge it in here). Kept as a separate `main`-function input so the
+# rename path stays symmetric to the field-correction path.
+ALL_RENAMES: dict[str, str] = {
+    **CHUNK7_RENAMES,
+}
+
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     correction for chunk in ALL_CORRECTIONS for correction in chunk
 ]
@@ -335,6 +343,23 @@ for _tomb_id, _field, _, _ in SPOT_CORRECTIONS:
 del _seen
 
 
+def _import_merge_sort_key():
+    """Import `_sort_key` from sibling `merge.py` to re-order rows after renames.
+
+    The merge's sort key understands both numbered (`KV5`) and descriptor
+    (`DAN-Aqhor`) tomb_id shapes, so renamed rows land back in their correct
+    sort position instead of at the tail of the JSONL — preventing the
+    reordering drift Gemini code review (PR #100) flagged.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "pm_theban_merge", SOURCE_DIR / "merge.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module._sort_key
+
+
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
 
@@ -344,19 +369,42 @@ def main() -> None:
     # Renames MUST run before SPOT_CORRECTIONS because the corrections
     # reference the NEW tomb_id. Idempotent: re-running finds no rename
     # matches on already-renamed rows.
+    #
+    # Logging convention mirrors field corrections (per Gemini code-review on
+    # PR #100): every declared rename logs EVERY run — distinguishing between
+    # "renamed this run" and "already renamed (no-op)" — so the diff file
+    # never silently loses the audit trail on idempotent re-runs.
     rename_log: list[str] = []
+    applied_renames = 0
     by_id = {r["tomb_id"]: r for r in rows}
-    for old_id, new_id in CHUNK7_RENAMES.items():
+    for old_id, new_id in ALL_RENAMES.items():
+        if old_id in by_id and new_id in by_id:
+            raise ValueError(
+                f"Rename target {new_id!r} already exists; cannot rename "
+                f"{old_id!r} → {new_id!r} without merging."
+            )
         if old_id in by_id:
-            if new_id in by_id:
-                raise ValueError(
-                    f"Rename target {new_id!r} already exists; cannot rename "
-                    f"{old_id!r} → {new_id!r} without merging."
-                )
+            applied_renames += 1
             by_id[old_id]["tomb_id"] = new_id
             by_id[new_id] = by_id.pop(old_id)
-            rename_log.append(f"- renamed {old_id} → {new_id}")
-    rows = list(by_id.values())
+            rename_log.append(
+                f"- {old_id} → {new_id} (renamed this run)"
+            )
+        elif new_id in by_id:
+            rename_log.append(
+                f"- {old_id} → {new_id} (already renamed; no-op this run)"
+            )
+        else:
+            raise KeyError(
+                f"Neither {old_id!r} nor {new_id!r} found in reconciled.jsonl "
+                f"— declared rename has no target row to act on."
+            )
+
+    # Re-sort rows by the merge's `_sort_key` so renamed rows land back in
+    # their correct lexicographic position (not at the dict-insertion-order
+    # tail). Required for reconciled.jsonl to stay sorted across fix_rows runs.
+    sort_key = _import_merge_sort_key()
+    rows = sorted(by_id.values(), key=lambda r: sort_key(r["tomb_id"]))
 
     # Spot corrections.
     #

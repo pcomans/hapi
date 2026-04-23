@@ -69,10 +69,10 @@ Per-chunk correction counts:
 - Chunk 7: 4 correction(s) defined in CHUNK7_CORRECTIONS.
 
 Tomb-id renames:
-- renamed DAN-Ahhor → DAN-Aqhor
-- renamed DAN-AhmosiNefertari → DAN-AhmosiNefertere
-- renamed DAN-KamoseWadjkheperre → DAN-KamosiWazkheperre
-- renamed DAN-MentuhotpIWifeOfDjehuti → DAN-MentuhotpIWifeOfDjhuti
+- DAN-Ahhor → DAN-Aqhor (already renamed; no-op this run)
+- DAN-AhmosiNefertari → DAN-AhmosiNefertere (already renamed; no-op this run)
+- DAN-KamoseWadjkheperre → DAN-KamosiWazkheperre (already renamed; no-op this run)
+- DAN-MentuhotpIWifeOfDjehuti → DAN-MentuhotpIWifeOfDjhuti (already renamed; no-op this run)
 
 Field corrections:
 - KV12: occupant_role already matches override (no-op this run; prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
@@ -97,15 +97,11 @@ Field corrections:
     value: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
 - KV56: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)
     value: "Unknown"
-- DAN-Aqhor: occupant_name corrected this run (PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.)
-    was: "ʿAḥḥor"
-    now: "ʿAḳ-ḥor"
-- DAN-Aqhor: occupant_role corrected this run (`Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
-    was: "Royal Family"
-    now: "Official"
-- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm corrected this run (PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through. Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy (chunk-1..6 convention). tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
-    was: "Wife of King Djhuti. Found in tomb by Passalacqua."
-    now: "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
-- DAN-AhmosiNefertere: notes_from_pm corrected this run (PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
-    was: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter."
-    now: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with `House of Amenophis of the Garden'."
+- DAN-Aqhor: occupant_name already matches override (no-op this run; PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.)
+    value: "ʿAḳ-ḥor"
+- DAN-Aqhor: occupant_role already matches override (no-op this run; `Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
+    value: "Official"
+- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm already matches override (no-op this run; PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through. Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy (chunk-1..6 convention). tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
+    value: "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
+- DAN-AhmosiNefertere: notes_from_pm already matches override (no-op this run; PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
+    value: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with `House of Amenophis of the Garden'."

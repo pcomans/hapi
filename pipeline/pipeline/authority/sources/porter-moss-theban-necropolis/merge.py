@@ -47,11 +47,12 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 # Valley-prefix sort order. Lower rank sorts first. Add new prefixes here as
 # follow-up chunks introduce them. KV/QV/TT use the numbered-tomb-id form
-# (`KV5`, `QV55`, `TT100`); `SWV` / `DAN` / `DEB` / `ASS` / `SAQ` / `GIZ`
-# / etc. use the descriptor form `<PREFIX>-<Descriptor>` (chunk 7 introduced
+# (`KV5`, `QV55`, `TT100`); `SWV` / `DAN` / `DEB` / `ASS` / `SAQN` / `RAM`
+# etc. use the descriptor form `<PREFIX>-<Descriptor>` (chunk 7 introduced
 # the descriptor convention — PM has no tomb-numbering for non-KV/QV Theban
 # or Memphite sections). Descriptor IDs sort alphabetically within their
-# valley rank.
+# valley rank. Prefix vocabulary is kept in sync with the test regex at
+# `tests/test_sources_porter_moss_theban_necropolis.py::_TOMB_ID_RE`.
 VALLEY_ORDER: dict[str, int] = {
     "KV": 0,   # Valley of the Kings (PM I.2 § I)
     "QV": 1,   # Valley of the Queens (PM I.2 § X)
