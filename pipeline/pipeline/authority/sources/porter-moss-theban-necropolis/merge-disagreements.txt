@@ -157,9 +157,8 @@ Field corrections:
     value: "Unknown"
 - QV75: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.768 headword is 'A QUEEN, no name.')
     value: "Unknown"
-- QV47: notes_from_pm corrected this run (PM p.755 prints the mother's name as 'Sit-dḥout' (d with underdot, not g). The text-layer OCR renders 'dḥ' as 'gḥ' — a character-level misread. Egyptologist-reviewer P2 finding: restore PM-verbatim spelling.)
-    was: "daughter of Seḳenenreʿ-Taʿa and Sit-gḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
-    now: "daughter of Seḳenenreʿ-Taʿa and Sit-dḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
-- QV74: notes_from_pm corrected this run (PM p.767 footnote 1 carries three hedged filiation facts (Gauthier, Černý, Seele) that the headword-only extraction dropped. Egyptologist-reviewer P2: restore the footnote kinship hedges since they are the only filiation info PM gives for Tentopet.)
-    was: "Great King's mother and King's wife. (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"
-    now: "Great King's mother and King's wife. Wife(?) of Ramesses IV; mother of Ramesses V; daughter of Ramesses IV (per PM p.767 footnote 1). (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"
+- QV47: notes_from_pm corrected this run (PM p.755 prints the mother's name as 'Sit-ḍḥout' (ḍ = d with underdot, not plain d and not g). The text-layer OCR renders 'ḍḥ' as 'gḥ' — a character-level misread. Egyptologist-reviewer P2 finding: restore PM-verbatim Unicode spelling with `ḍ` (U+1E0D, Latin small letter d with dot below) to match PM's typography.)
+    was: "daughter of Seḳenenreʿ-Taʿa and Sit-dḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
+    now: "daughter of Seḳenenreʿ-Taʿa and Sit-ḍḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
+- QV74: notes_from_pm already matches override (no-op this run; PM p.767 footnote 1 carries three hedged filiation facts (Gauthier, Černý, Seele) that the headword-only extraction dropped. Egyptologist-reviewer P2: restore the footnote kinship hedges since they are the only filiation info PM gives for Tentopet.)
+    value: "Great King's mother and King's wife. Wife(?) of Ramesses IV; mother of Ramesses V; daughter of Ramesses IV (per PM p.767 footnote 1). (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"

@@ -339,11 +339,12 @@ CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "QV47",
         "notes_from_pm",
-        "daughter of Seḳenenreʿ-Taʿa and Sit-dḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)",
-        "PM p.755 prints the mother's name as 'Sit-dḥout' (d with underdot, "
-        "not g). The text-layer OCR renders 'dḥ' as 'gḥ' — a character-level "
-        "misread. Egyptologist-reviewer P2 finding: restore PM-verbatim "
-        "spelling.",
+        "daughter of Seḳenenreʿ-Taʿa and Sit-ḍḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)",
+        "PM p.755 prints the mother's name as 'Sit-ḍḥout' (ḍ = d with "
+        "underdot, not plain d and not g). The text-layer OCR renders 'ḍḥ' "
+        "as 'gḥ' — a character-level misread. Egyptologist-reviewer P2 "
+        "finding: restore PM-verbatim Unicode spelling with `ḍ` (U+1E0D, "
+        "Latin small letter d with dot below) to match PM's typography.",
     ),
     (
         "QV74",

@@ -44,7 +44,7 @@ Original reviewer note (kept verbatim for audit):
 
 ### QV47 — ʿAḥmosi — **P2**
 - PM p.755: "PRINCESS ʿAḤMOSI…, daughter of Seḳenenreʿ-Taʿa and Sit-**dhout**…"
-- Row: `Sit-**gḥout**`. PM prints Sit-**dḥout** (d with underdot, not g). Appears to be an OCR misread of "dḥ" as "gḥ". **P2 — fix to `Sit-dḥout`.**
+- Row: `Sit-**gḥout**`. PM prints Sit-**dḥout** (d with underdot, not g). Appears to be an OCR misread of "dḥ" as "gḥ". **P2 — fix to `Sit-ḍḥout`.**
 
 ### QV51 — Esi II — **P2**
 - PM p.756: "QUEEN ĒSI II [cart.], mother of Ramesses VI, daughter of Ḥubalzanet … (i.e. **Ḥemzert**)."
@@ -98,5 +98,5 @@ None. No § X.B, § X.C (Finds, pp. 770–771), § X.D (Graffiti, p. 771), or §
 ## Priority recap
 
 - **P1 (investigated, NO FIX NEEDED):** QV38 `is_unfinished` is already `true` post-merge — the reviewer's snapshot was pre-merge. See QV38 entry above.
-- **P2 (should fix):** QV47 `Sit-gḥout` → `Sit-dḥout`; QV74 consider adding footnoted kinship hedge.
+- **P2 (should fix):** QV47 `Sit-gḥout` → `Sit-ḍḥout`; QV74 consider adding footnoted kinship hedge.
 - **P3 (style/optional):** Macron-long-vowel dropped across the set (Sitreʿ, Khaʿemweset, Ēsi, Merytamūn, Tentōpet) — a project-wide policy call, not a chunk-8 defect.

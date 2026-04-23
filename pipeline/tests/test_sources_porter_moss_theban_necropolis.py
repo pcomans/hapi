@@ -1786,7 +1786,7 @@ def test_chunk8_occupant_roles() -> None:
         "QV43": "Prince",    # PRINCE SET-ḤIRKHOPSHEF
         "QV44": "Prince",    # PRINCE KHAʿEMWESET
         "QV46": "Vizier",    # IMḤOTEP, Vizier
-        "QV47": "Princess",  # PRINCESS ʿAḤMOSI, daughter of Seqenenre
+        "QV47": "Princess",  # PRINCESS ʿAḤMOSI, daughter of Seḳenenreʿ-Taʿa
         "QV51": "Queen",     # QUEEN ESI II, mother of Ramesses VI
         "QV52": "Queen",     # QUEEN TYTI
         "QV53": "Prince",    # PRINCE RAʿMESES, son of Ramesses III
