@@ -302,6 +302,66 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-8 (PM I.2 § X.A Valley of the Queens — 20 numbered tombs).
+# Four null-name rows (QV36, QV40, QV73, QV75) emit role=null despite the
+# prompt's rule that role='Unknown' when occupant_name is null. Same fix
+# pattern as chunk-2 KV12, chunk-3 KV39, chunk-4 KV56: agents transcribe
+# the empty-cell shape literally instead of applying the rule.
+CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "QV36",
+        "occupant_role",
+        "Unknown",
+        "prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 "
+        "headword is 'A PRINCESS, no name.'",
+    ),
+    (
+        "QV40",
+        "occupant_role",
+        "Unknown",
+        "prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 "
+        "headword is 'A QUEEN, cartouche blank.'",
+    ),
+    (
+        "QV73",
+        "occupant_role",
+        "Unknown",
+        "prompt rule 1: role='Unknown' when occupant_name is null. PM p.767 "
+        "headword is 'A PRINCESS, no name. Dyn. XX.'",
+    ),
+    (
+        "QV75",
+        "occupant_role",
+        "Unknown",
+        "prompt rule 1: role='Unknown' when occupant_name is null. PM p.768 "
+        "headword is 'A QUEEN, no name.'",
+    ),
+    (
+        "QV47",
+        "notes_from_pm",
+        "daughter of Seḳenenreʿ-Taʿa and Sit-dḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)",
+        "PM p.755 prints the mother's name as 'Sit-dḥout' (d with underdot, "
+        "not g). The text-layer OCR renders 'dḥ' as 'gḥ' — a character-level "
+        "misread. Egyptologist-reviewer P2 finding: restore PM-verbatim "
+        "spelling.",
+    ),
+    (
+        "QV74",
+        "notes_from_pm",
+        "Great King's mother and King's wife. Wife(?) of Ramesses IV; mother of Ramesses V; "
+        "daughter of Ramesses IV (per PM p.767 footnote 1). (CHAMPOLLION, No. 15, L. D. Text, "
+        "No. 2, HAY, No. 7.)",
+        "PM p.767 footnote 1 carries three hedged filiation facts (Gauthier, "
+        "Černý, Seele) that the headword-only extraction dropped. Egyptologist-"
+        "reviewer P2: restore the footnote kinship hedges since they are the "
+        "only filiation info PM gives for Tentopet.",
+    ),
+]
+
+
+CHUNK8_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -313,6 +373,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
     CHUNK7_CORRECTIONS,
+    CHUNK8_CORRECTIONS,
 ]
 
 # `ALL_RENAMES` aggregates per-chunk `CHUNK<N>_RENAMES` dicts (only chunk 7
@@ -321,6 +382,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
 # rename path stays symmetric to the field-correction path.
 ALL_RENAMES: dict[str, str] = {
     **CHUNK7_RENAMES,
+    **CHUNK8_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [

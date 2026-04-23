@@ -31,6 +31,49 @@ KV55 (Amenophis IV):
 KV56 (None):
   notes_from_pm: a="'Gold Tomb', uninscribed." | b="'Gold Tomb', uninscribed." | c="'Gold Tomb', uninscribed"  → chose "'Gold Tomb', uninscribed."
 
+QV33 (Tanezem(t)):
+  notes_from_pm: a="Dyn. XX(?). Buried. (L. D. Text, No. q, Bibl. i, 1st ed. No. 37.)" | b="Dyn. XX(?). Buried. (L. D. Text, No. 14, Bibl. i, 1st ed. No. 37.)" | c="Dyn. XX(?). Buried. (L. D. Text, No. 14, Bibl. i, 1st ed. No. 37.)"  → chose "Dyn. XX(?). Buried. (L. D. Text, No. 14, Bibl. i, 1st ed. No. 37.)"
+
+QV36 (None):
+  notes_from_pm: a="A PRINCESS, no name." | b="A PRINCESS, no name." | c="A Princess, no name."  → chose "A PRINCESS, no name."
+
+QV38 (Sitreʿ):
+  notes_from_pm: a="wife of Ramesses I. Unfinished. (CHAMPOLLION, No. 7, L. D. Text, No. 13, WILKINSON, No. 19.)" | b="wife of Ramesses I. Unfinished. (CHAMPOLLION, No. 7, L. D. Text, No. 13, WILKINSON, No. 19.)" | c="Wife of Ramesses I. Unfinished. (CHAMPOLLION, No. 7, L. D. Text, No. 13, WILKINSON, No. 19.)"  → chose "wife of Ramesses I. Unfinished. (CHAMPOLLION, No. 7, L. D. Text, No. 13, WILKINSON, No. 19.)"
+
+QV40 (None):
+  notes_from_pm: a="A QUEEN, cartouche blank. (CHAMPOLLION, No. 6, L. D. Text, No. 12, WILKINSON, No. 18.)" | b="A QUEEN, cartouche blank. (CHAMPOLLION, No. 6, L. D. Text, No. 12, WILKINSON, No. 18.)" | c="A Queen, cartouche blank. (CHAMPOLLION, No. 6, L. D. Text, No. 12, WILKINSON, No. 18.)"  → chose "A QUEEN, cartouche blank. (CHAMPOLLION, No. 6, L. D. Text, No. 12, WILKINSON, No. 18.)"
+
+QV44 (Khaʿemweset):
+  notes_from_pm: a="sem-priest of Ptaḥ, son of Ramesses III." | b="sem-priest of Ptaḥ, son of Ramesses III." | c="Sem-priest of Ptaḥ, son of Ramesses III."  → chose "sem-priest of Ptaḥ, son of Ramesses III."
+
+QV47 (ʿAḥmosi):
+  notes_from_pm: a="daughter of Seḳenenreʿ-Taʿa and Sit-gḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)" | b="daughter of Seḳenenreʿ-Taʿa and Sit-gehut. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)" | c="Daughter of Seḳenenreʿ-Taʿa and Sit-gḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"  → chose "daughter of Seḳenenreʿ-Taʿa and Sit-gḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
+
+QV51 (Esi II):
+  source_citation: a={"edition": "PM I.2 2nd ed. 1964", "page": 755, "section": "X.A"} | b={"edition": "PM I.2 2nd ed. 1964", "page": 756, "section": "X.A"} | c={"edition": "PM I.2 2nd ed. 1964", "page": 756, "section": "X.A"}  → chose {"edition": "PM I.2 2nd ed. 1964", "page": 756, "section": "X.A"}
+  notes_from_pm: a="mother of Ramesses VI, daughter of Ḥubalzanet (i.e. Ḥemzert). (CHAMPOLLION, No. 4, L. D. Text, No. 10, WILKINSON, No. 14.)" | b="mother of Ramesses VI, daughter of Ḥubalzanet (i.e. Ḥemzert). (CHAMPOLLION, No. 4, L. D. Text, No. 10, WILKINSON, No. 14.)" | c="Mother of Ramesses VI, daughter of Ḫubalzanet (i.e. Ḥemzert). (CHAMPOLLION, No. 4, L. D. Text, No. 10, WILKINSON, No. 14.)"  → chose "mother of Ramesses VI, daughter of Ḥubalzanet (i.e. Ḥemzert). (CHAMPOLLION, No. 4, L. D. Text, No. 10, WILKINSON, No. 14.)"
+
+QV53 (Raʿmeses):
+  notes_from_pm: a="son of Ramesses III. (L. D. Text, No. 8, WILKINSON, No. 11, HAY, No. 3.)" | b="son of Ramesses III. (L. D. Text, No. 8, WILKINSON, No. 11, HAY, No. 3.)" | c="Son of Ramesses III. (L. D. Text, No. 8, WILKINSON, No. 11, HAY, No. 3.)"  → chose "son of Ramesses III. (L. D. Text, No. 8, WILKINSON, No. 11, HAY, No. 3.)"
+
+QV60 (Nebttaui):
+  notes_from_pm: b="daughter of Ramesses II. (CHAMPOLLION, No. 11, L. D. Text, No. 6, HAY, 2nd tomb east.)" | c="Daughter of Ramesses II. (CHAMPOLLION, No. 11, L. D. Text, No. 6, HAY, 2nd tomb east.)"  → chose "daughter of Ramesses II. (CHAMPOLLION, No. 11, L. D. Text, No. 6, HAY, 2nd tomb east.)"
+
+QV66 (Nefertari):
+  notes_from_pm: a="wife of Ramesses II." | b="wife of Ramesses II." | c="Wife of Ramesses II."  → chose "wife of Ramesses II."
+
+QV68 (Merytamun):
+  notes_from_pm: a="daughter of Ramesses II. (CHAMPOLLION, No. 12, L. D. Text, No. 5, HAY, No. 4.)" | b="daughter of Ramesses II. (CHAMPOLLION, No. 12, L. D. Text, No. 5, HAY, No. 4.)" | c="Daughter of Ramesses II. (CHAMPOLLION, No. 12, L. D. Text, No. 5, HAY, No. 4.)"  → chose "daughter of Ramesses II. (CHAMPOLLION, No. 12, L. D. Text, No. 5, HAY, No. 4.)"
+
+QV71 (Bentʿanta):
+  notes_from_pm: a="daughter of Ramesses II. (CHAMPOLLION, No. 13, L. D. Text, No. 4, HAY, No. 5.)" | b="daughter of Ramesses II. (CHAMPOLLION, No. 13, L. D. Text, No. 4, HAY, No. 5.)" | c="Daughter of Ramesses II. (CHAMPOLLION, No. 13, L. D. Text, No. 4, HAY, No. 5.)"  → chose "daughter of Ramesses II. (CHAMPOLLION, No. 13, L. D. Text, No. 4, HAY, No. 5.)"
+
+QV73 (None):
+  notes_from_pm: a="A PRINCESS, no name. Dyn. XX. (CHAMPOLLION, No. 14, L. D. Text, No. 3, HAY, No. 6.)" | b="A PRINCESS, no name. Dyn. XX. (CHAMPOLLION, No. 14, L. D. Text, No. 3, HAY, No. 6.)" | c="A Princess, no name. Dyn. XX. (CHAMPOLLION, No. 14, L. D. Text, No. 3, HAY, No. 6.)"  → chose "A PRINCESS, no name. Dyn. XX. (CHAMPOLLION, No. 14, L. D. Text, No. 3, HAY, No. 6.)"
+
+QV75 (None):
+  notes_from_pm: a="A QUEEN, no name. (CHAMPOLLION, No. 16, L. D. Text, No. 1, HAY, No. 8.)" | b="A QUEEN, no name. (CHAMPOLLION, No. 16, L. D. Text, No. 1, HAY, No. 8.)" | c="A Queen, no name. (CHAMPOLLION, No. 16, L. D. Text, No. 1, HAY, No. 8.)"  → chose "A QUEEN, no name. (CHAMPOLLION, No. 16, L. D. Text, No. 1, HAY, No. 8.)"
+
 SWV-ThreePrincesses (Menhet, Merti, and Menwi):
   source_citation: a={"edition": "PM I.2 2nd ed. 1964", "page": 590, "section": "II.B"} | b={"edition": "PM I.2 2nd ed. 1964", "page": 591, "section": "II.B"} | c={"edition": "PM I.2 2nd ed. 1964", "page": 591, "section": "II.B"}  → chose {"edition": "PM I.2 2nd ed. 1964", "page": 591, "section": "II.B"}
 
@@ -38,8 +81,8 @@ DAN-Ahhor (ʿAḥḥor):
   occupant_name: a="ʿAḥḥor" | b="ʿAḥḥor" | c="ʿAḥhor"  → chose "ʿAḥḥor"
 
 DAN-AhmosiHenutempet (ʿAḥmosi Ḥenutempet):
-  occupant_role: a="Princess" | b="Royal Family" | c="Princess"  → chose "Princess"
   notes_from_pm: a="Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa)." | b="Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa). Coffin, possibly from here, formerly in possession of Castellari." | c="Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa)."  → chose "Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa)."
+  occupant_role: a="Princess" | b="Royal Family" | c="Princess"  → chose "Princess"
 
 DAN-AhmosiNefertari (ʿAḥmosi Nefertere):
   occupant_name: a="ʿAḥmosi Nefertere" | b="ʿAhmosi Nefertere" | c="ʿAḥmosi Nefertere"  → chose "ʿAḥmosi Nefertere"
@@ -67,56 +110,56 @@ Per-chunk correction counts:
 - Chunk 4: 2 correction(s) defined in CHUNK4_CORRECTIONS.
 - Chunk 5: 0 correction(s) defined in CHUNK5_CORRECTIONS.
 - Chunk 7: 4 correction(s) defined in CHUNK7_CORRECTIONS.
+- Chunk 8: 6 correction(s) defined in CHUNK8_CORRECTIONS.
 
 Tomb-id renames:
-- DAN-Ahhor → DAN-Aqhor (renamed this run)
-- DAN-AhmosiNefertari → DAN-AhmosiNefertere (renamed this run)
-- DAN-KamoseWadjkheperre → DAN-KamosiWazkheperre (renamed this run)
-- DAN-MentuhotpIWifeOfDjehuti → DAN-MentuhotpIWifeOfDjhuti (renamed this run)
+- DAN-Ahhor → DAN-Aqhor (already renamed; no-op this run)
+- DAN-AhmosiNefertari → DAN-AhmosiNefertere (already renamed; no-op this run)
+- DAN-KamoseWadjkheperre → DAN-KamosiWazkheperre (already renamed; no-op this run)
+- DAN-MentuhotpIWifeOfDjehuti → DAN-MentuhotpIWifeOfDjhuti (already renamed; no-op this run)
 
 Field corrections:
-- KV12: occupant_role corrected this run (prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
-    was: null
-    now: "Unknown"
-- KV13: notes_from_pm corrected this run (strip 'Chancellor.' (already encoded as occupant_role=Official) and normalise 'ḥ' → 'h' to match chunk-1's no-underdot convention (Merneptah in KV8 is rendered without underdot).)
-    was: "Chancellor. Temp. Merneptaḥ-Siptaḥ"
-    now: "Temp. Merneptah-Siptah"
-- KV18: notes_from_pm corrected this run (strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
-    was: "(formerly XI)"
-    now: "formerly XI"
-- KV19: occupant_name corrected this run (PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
-    was: "Raʿmeses-Mentuḥirkhopshef"
-    now: "Raʿmeses-Mentuhirkhopshef"
-- KV22: occupant_name corrected this run (PM p.547 text layer 'AMENOPHIS I Il' = I + Il(=II) = III. Majority vote was misled by a mistaken prompt example; agent A counted glyphs and got III. Egyptologist-reviewer confirmed KV22 is Amenhotep III's West Valley tomb.)
-    was: "Amenophis II"
-    now: "Amenophis III"
-- KV34: notes_from_pm corrected this run (PM p.551 headword prints `34. [1st ed. 24] TUTHMOSIS III`. The chunk-3 text-layer OCR for this specific line renders the bracketed Arabic `1` as `rst`; across chunks 1-3 the same printed `[1st ed. N]` token OCRs to `1st` 52 times and to mangled variants (`Ist`/`rst`/`xst`) 60 times. Store the PM-verbatim `1st ed. 24` in notes_from_pm rather than transcribing any one OCR variant. Parallel in shape to chunk-1 KV4 'formerly XII' / chunk-2 KV18 'formerly XI'.)
-    was: null
-    now: "1st ed. 24"
-- KV36: occupant_name corrected this run (PM p.556 headword prints `36. MAI;IIRPER` — the `I;I` glyph is the underdot-H (ḥ). Applying the chunk-1/2 rule `I;I → h` yields `MA` + `h` + `IRPER` = `MAHIRPER` → `Mahirper`. Agent B got this right; agents A and C kept a spurious `i` before the `h`. Egyptologist-reviewer second-pass confirmed no published Egyptological form reads 'Maihirper'.)
-    was: "Maihirper"
-    now: "Mahirper"
-- KV39: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.559 prints 'Uninscribed tomb, attributed to Amenophis I by Weigall...'; agents emitted null despite the rule.)
-    was: null
-    now: "Unknown"
-- KV42: notes_from_pm corrected this run (PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own attribution-uncertainty marker. Keep occupant_name structured as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes (no paraphrase, per rule 1 PM-verbatim policy). Preserve the existing 'Excavated by Loret' headword clause; join with '. ' per chunk-2 KV14.)
-    was: "Excavated by Loret"
-    now: "(?). Excavated by Loret"
-- KV55: notes_from_pm corrected this run (The text-layer OCR for chunk 4 drops PM's macron-e and renders the ayin as `c` (`Smenkhkarec`); agents carried that through to the reconciled notes. Egyptologist-reviewer pre-merge pass on PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both the macron and the trailing ayin, and confirmed the sentence-final period closes PM's sentence. notes_from_pm is verbatim-preserve against PM's printed text (not against the OCR text layer) — restore both diacritics.)
-    was: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkare."
-    now: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
-- KV56: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)
-    was: null
-    now: "Unknown"
-- DAN-Aqhor: occupant_name corrected this run (PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.)
-    was: "ʿAḥḥor"
-    now: "ʿAḳ-ḥor"
-- DAN-Aqhor: occupant_role corrected this run (`Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
-    was: "Royal Family"
-    now: "Official"
-- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm corrected this run (PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through. Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy (chunk-1..6 convention). tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
-    was: "Wife of King Djhuti. Found in tomb by Passalacqua."
-    now: "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
-- DAN-AhmosiNefertere: notes_from_pm corrected this run (PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
-    was: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter."
-    now: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with 'House of Amenophis of the Garden'."
+- KV12: occupant_role already matches override (no-op this run; prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
+    value: "Unknown"
+- KV13: notes_from_pm already matches override (no-op this run; strip 'Chancellor.' (already encoded as occupant_role=Official) and normalise 'ḥ' → 'h' to match chunk-1's no-underdot convention (Merneptah in KV8 is rendered without underdot).)
+    value: "Temp. Merneptah-Siptah"
+- KV18: notes_from_pm already matches override (no-op this run; strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
+    value: "formerly XI"
+- KV19: occupant_name already matches override (no-op this run; PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
+    value: "Raʿmeses-Mentuhirkhopshef"
+- KV22: occupant_name already matches override (no-op this run; PM p.547 text layer 'AMENOPHIS I Il' = I + Il(=II) = III. Majority vote was misled by a mistaken prompt example; agent A counted glyphs and got III. Egyptologist-reviewer confirmed KV22 is Amenhotep III's West Valley tomb.)
+    value: "Amenophis III"
+- KV34: notes_from_pm already matches override (no-op this run; PM p.551 headword prints `34. [1st ed. 24] TUTHMOSIS III`. The chunk-3 text-layer OCR for this specific line renders the bracketed Arabic `1` as `rst`; across chunks 1-3 the same printed `[1st ed. N]` token OCRs to `1st` 52 times and to mangled variants (`Ist`/`rst`/`xst`) 60 times. Store the PM-verbatim `1st ed. 24` in notes_from_pm rather than transcribing any one OCR variant. Parallel in shape to chunk-1 KV4 'formerly XII' / chunk-2 KV18 'formerly XI'.)
+    value: "1st ed. 24"
+- KV36: occupant_name already matches override (no-op this run; PM p.556 headword prints `36. MAI;IIRPER` — the `I;I` glyph is the underdot-H (ḥ). Applying the chunk-1/2 rule `I;I → h` yields `MA` + `h` + `IRPER` = `MAHIRPER` → `Mahirper`. Agent B got this right; agents A and C kept a spurious `i` before the `h`. Egyptologist-reviewer second-pass confirmed no published Egyptological form reads 'Maihirper'.)
+    value: "Mahirper"
+- KV39: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.559 prints 'Uninscribed tomb, attributed to Amenophis I by Weigall...'; agents emitted null despite the rule.)
+    value: "Unknown"
+- KV42: notes_from_pm already matches override (no-op this run; PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own attribution-uncertainty marker. Keep occupant_name structured as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes (no paraphrase, per rule 1 PM-verbatim policy). Preserve the existing 'Excavated by Loret' headword clause; join with '. ' per chunk-2 KV14.)
+    value: "(?). Excavated by Loret"
+- KV55: notes_from_pm already matches override (no-op this run; The text-layer OCR for chunk 4 drops PM's macron-e and renders the ayin as `c` (`Smenkhkarec`); agents carried that through to the reconciled notes. Egyptologist-reviewer pre-merge pass on PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both the macron and the trailing ayin, and confirmed the sentence-final period closes PM's sentence. notes_from_pm is verbatim-preserve against PM's printed text (not against the OCR text layer) — restore both diacritics.)
+    value: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
+- KV56: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)
+    value: "Unknown"
+- DAN-Aqhor: occupant_name already matches override (no-op this run; PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES.)
+    value: "ʿAḳ-ḥor"
+- DAN-Aqhor: occupant_role already matches override (no-op this run; `Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
+    value: "Official"
+- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm already matches override (no-op this run; PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through. Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy (chunk-1..6 convention). tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
+    value: "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
+- DAN-AhmosiNefertere: notes_from_pm already matches override (no-op this run; PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
+    value: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with 'House of Amenophis of the Garden'."
+- QV36: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A PRINCESS, no name.')
+    value: "Unknown"
+- QV40: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A QUEEN, cartouche blank.')
+    value: "Unknown"
+- QV73: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.767 headword is 'A PRINCESS, no name. Dyn. XX.')
+    value: "Unknown"
+- QV75: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.768 headword is 'A QUEEN, no name.')
+    value: "Unknown"
+- QV47: notes_from_pm corrected this run (PM p.755 prints the mother's name as 'Sit-dḥout' (d with underdot, not g). The text-layer OCR renders 'dḥ' as 'gḥ' — a character-level misread. Egyptologist-reviewer P2 finding: restore PM-verbatim spelling.)
+    was: "daughter of Seḳenenreʿ-Taʿa and Sit-gḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
+    now: "daughter of Seḳenenreʿ-Taʿa and Sit-dḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
+- QV74: notes_from_pm corrected this run (PM p.767 footnote 1 carries three hedged filiation facts (Gauthier, Černý, Seele) that the headword-only extraction dropped. Egyptologist-reviewer P2: restore the footnote kinship hedges since they are the only filiation info PM gives for Tentopet.)
+    was: "Great King's mother and King's wife. (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"
+    now: "Great King's mother and King's wife. Wife(?) of Ramesses IV; mother of Ramesses V; daughter of Ramesses IV (per PM p.767 footnote 1). (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"

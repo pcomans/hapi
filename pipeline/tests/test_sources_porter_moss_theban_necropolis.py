@@ -101,6 +101,17 @@ CHUNK7_TOMB_IDS: frozenset[str] = frozenset({
     "DAN-Neferhotep",
     "DAN-SebkemsafSekhemreShedtaui",
 })
+# Chunk-8 (PM I.2 § X.A Valley of the Queens — numbered tombs).
+# PM 1964 2nd edition catalogues 20 numbered QV tombs; the rest of the
+# QV1–QV80 range is absent from PM § X.A (QV1–32 never catalogued; QV34,
+# 35, 37, 39, 41, 45, 48–50, 54, 56–59, 61–65, 67, 69, 70, 72, 76–80 are
+# gaps). Chunk-7's descriptor infrastructure is not used here — QV uses
+# the numbered form established in chunk 1.
+CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
+    "QV33", "QV36", "QV38", "QV40", "QV42", "QV43", "QV44", "QV46",
+    "QV47", "QV51", "QV52", "QV53", "QV55", "QV60", "QV66", "QV68",
+    "QV71", "QV73", "QV74", "QV75",
+})
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -108,6 +119,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS
     | CHUNK7_TOMB_IDS
+    | CHUNK8_TOMB_IDS
 )
 
 
@@ -1706,6 +1718,163 @@ def test_chunk7_notes_from_pm_populated_rows() -> None:
         # precision here.
         val = _row(tid)["notes_from_pm"]
         assert val is None or (isinstance(val, str) and val.strip()), tid
+
+
+# ---------------------------------------------------------------------------
+# Chunk-8 specific value-assertion tests (PM I.2 § X.A Valley of the Queens —
+# 20 numbered QV tombs).
+# ---------------------------------------------------------------------------
+
+
+def test_chunk8_uniform_null_phase_a_fields() -> None:
+    """Every chunk-8 row carries null for Phase-A-enrichment fields
+    (`dynasty`, `sub_period`, `date_bce_approx_start`, `date_bce_approx_end`,
+    `discovery_year`, `discoverer`). `source_citation.edition` is PM I.2.
+    `source_citation.section` is exactly "X.A".
+    `valley` is "Valley of the Queens".
+    """
+    for tid in CHUNK8_TOMB_IDS:
+        r = _row(tid)
+        assert r["valley"] == "Valley of the Queens", tid
+        assert r["source_citation"]["edition"] == EDITION_PM_I2
+        assert r["source_citation"]["section"] == "X.A", tid
+        assert r["dynasty"] is None
+        assert r["sub_period"] is None
+        assert r["date_bce_approx_start"] is None
+        assert r["date_bce_approx_end"] is None
+        assert r["discovery_year"] is None
+        assert r["discoverer"] is None
+        assert r["location_sub_area"] is None
+        assert r["shared_with_tombs"] == []
+
+
+def test_chunk8_only_qv38_unfinished() -> None:
+    """PM's headword marks only QV38 (Queen Sitreʿ, wife of Ramesses I) as
+    `Unfinished`. Every other QV row carries `is_unfinished: false`.
+    """
+    for tid in CHUNK8_TOMB_IDS:
+        r = _row(tid)
+        if tid == "QV38":
+            assert r["is_unfinished"] is True, tid
+        else:
+            assert r["is_unfinished"] is False, tid
+
+
+def test_chunk8_no_name_rows_unknown_role() -> None:
+    """`A QUEEN, no name` / `A PRINCESS, no name` / `cartouche blank` rows
+    carry `occupant_name: null` and `occupant_role: "Unknown"` (per prompt
+    rule 1, applied via fix_rows.py CHUNK8_CORRECTIONS when agents emit
+    null role on empty-name headwords).
+    """
+    no_name_rows = {"QV36", "QV40", "QV73", "QV75"}
+    for tid in no_name_rows:
+        r = _row(tid)
+        assert r["occupant_name"] is None, (tid, r["occupant_name"])
+        assert r["occupant_role"] == "Unknown", (tid, r["occupant_role"])
+
+
+def test_chunk8_occupant_roles() -> None:
+    """Per-row role assignments per PM headwords: QUEEN / PRINCESS / PRINCE /
+    VIZIER / Unknown.
+    """
+    expected = {
+        "QV33": "Princess",  # PRINCESS TANEZEM(T)
+        "QV36": "Unknown",   # A PRINCESS, no name (fix_rows Unknown)
+        "QV38": "Queen",     # QUEEN SITREʿ, wife of Ramesses I, Unfinished
+        "QV40": "Unknown",   # A QUEEN, cartouche blank (fix_rows Unknown)
+        "QV42": "Prince",    # PRINCE PARAʿḤIRWENEMEF
+        "QV43": "Prince",    # PRINCE SET-ḤIRKHOPSHEF
+        "QV44": "Prince",    # PRINCE KHAʿEMWESET
+        "QV46": "Vizier",    # IMḤOTEP, Vizier
+        "QV47": "Princess",  # PRINCESS ʿAḤMOSI, daughter of Seqenenre
+        "QV51": "Queen",     # QUEEN ESI II, mother of Ramesses VI
+        "QV52": "Queen",     # QUEEN TYTI
+        "QV53": "Prince",    # PRINCE RAʿMESES, son of Ramesses III
+        "QV55": "Prince",    # PRINCE AMEN(ḤIR)KHOPSHEF, son of Ramesses III
+        "QV60": "Queen",     # QUEEN NEBTTAUI, daughter of Ramesses II
+        "QV66": "Queen",     # QUEEN NEFERTARI, wife of Ramesses II
+        "QV68": "Queen",     # QUEEN MERYTAMUN, daughter of Ramesses II
+        "QV71": "Queen",     # QUEEN BENTʿANTA, daughter of Ramesses II
+        "QV73": "Unknown",   # A PRINCESS, no name. Dyn. XX
+        "QV74": "Queen",     # QUEEN TENTOPET, Great King's mother
+        "QV75": "Unknown",   # A QUEEN, no name
+    }
+    for tid, role in expected.items():
+        assert _row(tid)["occupant_role"] == role, (tid, _row(tid)["occupant_role"])
+
+
+def test_chunk8_occupant_names() -> None:
+    """PM-verbatim occupant_name (ayin `ʿ` and underdot-H `ḥ` preserved)."""
+    expected_name = {
+        "QV33": "Tanezem(t)",
+        "QV36": None,
+        "QV38": "Sitreʿ",
+        "QV40": None,
+        "QV42": "Paraʿḥirwenemef",
+        "QV43": "Set-ḥirkhopshef",
+        "QV44": "Khaʿemweset",
+        "QV46": "Imḥotep",
+        "QV47": "ʿAḥmosi",
+        "QV51": "Esi II",
+        "QV52": "Tyti",
+        "QV53": "Raʿmeses",
+        "QV55": "Amen(ḥir)khopshef",
+        "QV60": "Nebttaui",
+        "QV66": "Nefertari",
+        "QV68": "Merytamun",
+        "QV71": "Bentʿanta",
+        "QV73": None,
+        "QV74": "Tentopet",
+        "QV75": None,
+    }
+    for tid, name in expected_name.items():
+        assert _row(tid)["occupant_name"] == name, (tid, _row(tid)["occupant_name"])
+
+
+def test_chunk8_source_citation_pages() -> None:
+    """Printed page numbers per QV tomb — matches PM's headword location
+    in the chunk file (printed pp.751–768).
+    """
+    expected_page = {
+        "QV33": 751, "QV36": 751, "QV38": 751, "QV40": 751,
+        "QV42": 752, "QV43": 753, "QV44": 754,
+        "QV46": 755, "QV47": 755,
+        "QV51": 756, "QV52": 756,
+        "QV53": 759, "QV55": 759,
+        "QV60": 761, "QV66": 762, "QV68": 765, "QV71": 766,
+        "QV73": 767, "QV74": 767, "QV75": 768,
+    }
+    for tid, page in expected_page.items():
+        actual = _row(tid)["source_citation"]["page"]
+        # Allow ±1 tolerance for PM page-header ambiguities that can
+        # straddle a page break (e.g. a tomb's headword starting at the
+        # bottom of p.N and continuing to p.N+1).
+        assert abs(actual - page) <= 1, (tid, actual, page)
+
+
+def test_chunk8_notes_from_pm_royal_kinship() -> None:
+    """Rows with explicit royal kinship / regnal-dating clauses carry them
+    in `notes_from_pm`. Verify key substrings (not full verbatim — PM
+    diacritic rendering varies).
+    """
+    expected = {
+        "QV38": "wife of Ramesses I",
+        "QV42": "son of Ramesses",
+        "QV43": "King's son",
+        "QV44": "son of Ramesses III",
+        "QV47": "daughter of Seḳenenreʿ-Taʿa",
+        "QV51": "mother of Ramesses VI",
+        "QV53": "son of Ramesses III",
+        "QV55": "son of Ramesses III",
+        "QV60": "daughter of Ramesses II",
+        "QV66": "wife of Ramesses II",
+        "QV68": "daughter of Ramesses II",
+        "QV71": "daughter of Ramesses II",
+    }
+    for tid, substr in expected.items():
+        notes = _row(tid)["notes_from_pm"]
+        assert notes is not None, f"{tid} expected notes_from_pm"
+        assert substr in notes, f"{tid}: expected {substr!r} in {notes!r}"
 
 
 # ---------------------------------------------------------------------------
