@@ -1,7 +1,7 @@
 # Phase-0 Authority Sweep Audit - 2026-04-23
 
 Retrospective sweep across all committed directories in `pipeline/pipeline/authority/sources/`.
-Reviewer-set decisions: all book/transcription sources received code-reviewer and egyptologist-reviewer coverage; `pharaoh-se` and `wikipedia-ptolemaic` received both because ruler-attestation correctness matters; `idai-gazetteer` received code-reviewer only because it is a geographic gazetteer source.
+Reviewer-set decisions (applied at sweep start, before the drop decisions recorded below): all book/transcription sources received code-reviewer and egyptologist-reviewer coverage; `pharaoh-se` and `wikipedia-ptolemaic` received both because ruler-attestation correctness matters; `idai-gazetteer` received code-reviewer only because it is a geographic gazetteer source.
 
 **Scope decisions actioned after the sweep (same day):** `holbl-2001-argead` and `wikipedia-ptolemaic` were **dropped** rather than fixed. Hölbl's reconciled source was never on `main` (PR #74 was closed after egyptologist review confirmed pharaoh.se already covers the three Argead rulers with full Beckerath titulary); the sweep flagged it as P1 only because the stale directory remained on disk. Wikipedia-Ptolemaic's coverage is redundant with pharaoh.se + Leprohon Ch X chunk 14, so fixing the Rule-1 provenance gap (no committed URLs / revision IDs / raw snapshots) was not worth the effort. The 3 Ptolemaic queens unique to Wikipedia-Ptolemaic (Cleopatra III, Cleopatra V, Berenice IV) are now a pending gap scheduled for D&H Ch 5 House-of-Ptolemy; Cleopatra VII and Berenice III are already covered by Leprohon chunk 14 at `leprohon-33.14` / `leprohon-33.12`. See `docs/mvp-tasks.md` for the scope changes.
 
@@ -70,6 +70,7 @@ The table below records sweep findings **as of the sweep start** — i.e., befor
 
 ## Artifacts Produced
 
-- 12 `code-review-sweep-2026.md` files, one per source.
-- 11 `reviewer-notes-sweep-2026.md` files, excluding `idai-gazetteer` by design.
+- 10 `code-review-sweep-2026.md` files, one per source that remains on `main` after the drop decisions above (`baud-1999-ok-royal-family`, `dodson-hilton-queens`, `hkw-chronology-2006`, `idai-gazetteer`, `kitchen-tipe`, `leprohon-2013-titulary`, `pharaoh-se`, `porter-moss-theban-necropolis`, `ryholt-1997-sip`, `shaw-ohae-2000`).
+- 9 `reviewer-notes-sweep-2026.md` files, excluding `idai-gazetteer` by design (code-only reviewer set).
+- The sweep also produced per-source findings for `holbl-2001-argead` and `wikipedia-ptolemaic` at sweep time; those two sources were then dropped in the same PR that landed this summary, so their per-source files are not committed. The drop-row table entries above retain their P1/P2/P3 counts for historical reference.
 - This coordinator summary.
