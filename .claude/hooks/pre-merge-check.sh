@@ -12,6 +12,30 @@
 #   merge commit on main inherits whatever the PR body currently says, so
 #   a stale body bakes bad history into the repo. Force a deliberate
 #   review step at the last responsible moment.
+#
+# KNOWN LIMITATIONS (shlex rewrite TODO).
+# After 8 rounds of regex hardening the matcher reliably handles every
+# realistic agent-originated merge-attempt form (bare curl/gh/gh-api,
+# multi-line `\` continuations, env-var prefixes, space- or `=`-separated
+# flag values, quoted-argument MENTIONS inside other commands). It has,
+# however, hit its ceiling on adversarial shell tokenisation:
+#   - Env-var VALUES with quoted whitespace (`FOO="bar baz" curl ...`) —
+#     the `VAR=[^[:space:]]*` pattern truncates at the first internal
+#     space and falls out of the prefix group. Gemini's round-8 cited
+#     examples used impossible inputs (repo slugs cannot contain
+#     whitespace; GitHub PATs are alphanumeric), but the underlying
+#     regex gap generalises to any env-var whose value happens to carry
+#     quoted spaces (e.g. `GIT_AUTHOR_NAME="John Doe"`).
+#   - Flag VALUES with quoted whitespace (`gh --repo "owner/repo name"
+#     api ...`) — same root cause.
+# A proper fix needs shell-aware tokenisation: invoke
+#   python3 -c "import shlex, sys; print('\n'.join(shlex.split(sys.stdin.read())))"
+# on `$CMD_FLAT`, split the token list on `;`/`&&`/`||`/`|`, and inspect
+# the first token of each statement. That is a categorically different
+# mechanism from a regex patch and is tracked as a follow-up PR rather
+# than another round of regex accretion. See this block for the current
+# state-of-the-art regex; see the harness at `/tmp/claude/run-hook-tests.sh`
+# (local dev artifact, not versioned) for the 42 cases it covers.
 
 CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
 if [ -z "$CMD" ]; then
@@ -26,7 +50,7 @@ fi
 # `printf '%s\n'` rather than `echo` avoids `echo`'s misbehaviour when
 # the first argument starts with `-`. Gemini round-1 HIGH + round-4
 # medium findings on PR #104.
-CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\$//' | tr '\n' ' ')
+CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\[[:space:]]*$//' | tr '\n' ' ')
 
 # --- Block 1: curl-to-API merge bypass --------------------------------------
 # Three independent AND-ed checks so an adversarially-formatted merge call

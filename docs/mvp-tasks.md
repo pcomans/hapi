@@ -112,16 +112,10 @@ let session-2026-04-23's PRs #100/#101/#102 merge without the
 `feedback_pr_reviewers.md` requires; see the retrospective fix-up PRs
 #103 + #105); (3) `post-pr-create.sh` — auto-posts `/gemini review` on
 push to a PR branch and **blocks pushes that don't include a
-`docs/mvp-tasks.md` update with `TASK_LIST_UPDATED=1`**. Both matchers restrict what tokens may appear between `gh` and the
-subcommand to flag-shaped sequences (`--?flag[=val]` with an optional
-non-dash value token per flag), which structurally prevents
-quoted-argument mentions of the forbidden verb from matching — so
-`gh pr comment -b "I tried to gh pr merge..."` correctly PASSes rather
-than false-REMINDing. Env-var prefix absorption
-(`([A-Z_][A-Z0-9_]*=[^[:space:]]*[[:space:]]+)*`) closes the
-`GH_TOKEN=x gh pr merge` and `GITHUB_TOKEN=x curl -X PUT ...` bypass
-routes. The curl block also covers `gh api -X PUT /repos/.../merge`
-(with or without leading slash) as a sibling bypass.
+`docs/mvp-tasks.md` update with `TASK_LIST_UPDATED=1`**. See the hook file for the
+current regex structure and harness (covers `curl`, `gh api`,
+env-var-prefixed invocations, multi-line continuations, and
+quoted-argument mentions).
 
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.
