@@ -1,19 +1,40 @@
 #!/bin/bash
-# PreToolUse hook for `gh pr merge`:
-# Injects a reminder to verify the PR title and description match the final
-# merged state before the merge lands.
-#
-# Rationale: PR titles and bodies are written at PR-open time and frequently
-# drift as commits accrete, reviewers request changes, and scope shifts. The
-# merge commit message on main inherits whatever the PR body currently says,
-# so a stale body bakes bad history into the repo. This hook forces a
-# deliberate review step at the last responsible moment.
+# PreToolUse hook for PR merges:
+# - Block 1 — `curl -X PUT .../pulls/<N>/merge` (the GitHub REST API merge
+#   path): BLOCK the call. The agent has been bypassing the `gh pr merge`
+#   reminder by using curl directly against the API. This hook now funnels
+#   all merges through the single enforced path. Per CLAUDE.md rule 3
+#   (deterministic enforcement over convention).
+# - Block 2 — `gh pr merge`: inject a reminder to verify PR title and
+#   description match the final merged state before the merge lands. PR
+#   titles and bodies are written at PR-open time and frequently drift as
+#   commits accrete, reviewers request changes, and scope shifts. The
+#   merge commit on main inherits whatever the PR body currently says, so
+#   a stale body bakes bad history into the repo. Force a deliberate
+#   review step at the last responsible moment.
 
 CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
 if [ -z "$CMD" ]; then
   CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
 fi
 
+# --- Block 1: curl-to-API merge bypass --------------------------------------
+# Match any `curl` invocation whose URL hits a GitHub pulls-merge endpoint.
+# Covers the canonical `https://api.github.com/repos/<owner>/<repo>/pulls/<N>/merge`
+# pattern and its path-only form. Intentionally permissive on flags/method
+# so `-X PUT`, `-XPUT`, `--request PUT`, shorthand variants and subsequent
+# piped invocations all match. Blocks the call and redirects to `gh pr merge`.
+if echo "$CMD" | grep -qE 'curl.*/repos/[^/]+/[^/]+/pulls/[0-9]+/merge'; then
+  cat <<'HEREDOC'
+{
+  "decision": "block",
+  "reason": "Direct curl-to-GitHub-API merges bypass the pre-merge-check reminder and make the merge path non-uniform. Use `gh pr merge <N> --squash --delete-branch` instead (add `--body '...'` if you need a custom merge commit message). The `gh` CLI routes through this hook so you get the title/body drift check before the merge lands. Constitutional rule 3: deterministic enforcement over convention — one merge path, one hook."
+}
+HEREDOC
+  exit 0
+fi
+
+# --- Block 2: gh pr merge reminder ------------------------------------------
 # Only fire on `gh pr merge`. Any other Bash command passes through untouched.
 if ! echo "$CMD" | grep -q 'gh pr merge'; then
   exit 0
