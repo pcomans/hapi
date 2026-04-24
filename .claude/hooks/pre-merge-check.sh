@@ -43,14 +43,24 @@ CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\$//' | tr '\n' ' ')
 # (e.g. `-X "PUT"`, `--request='PUT'`). Word boundaries on `curl` and the
 # URL suffix prevent substring false-positives (e.g. `occurl`, or commands
 # that merely echo the URL as text — including this hook's own output).
-# The `(^|[|;&(])[[:space:]]*curl\b` statement-start anchor (round-5)
-# further ensures `curl` is being INVOKED, not merely mentioned inside a
-# quoted string (`gh pr comment -b "curl -X PUT .../merge"` no longer
-# trips the block). Statement separators covered: start-of-string, `|`,
-# `;`, `&`, `(`. Gemini round-2 + round-3 + round-5 findings on PR #104.
-if printf '%s' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*curl\b' \
-   && printf '%s' "$CMD_FLAT" | grep -qE '/repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
-   && printf '%s' "$CMD_FLAT" | grep -qiE "(-X|--request|--method)[ =]*[\"']?PUT[\"']?"; then
+# The statement-start anchor ensures the forbidden verb is being INVOKED,
+# not merely mentioned inside a quoted string. Additional round-6
+# hardening:
+#   * `(VAR=val[[:space:]]+)*` absorbs zero-or-more leading env-var
+#     assignments (`GITHUB_TOKEN=xxx curl -X PUT ...`) which the plain
+#     anchor would have missed;
+#   * alternation `curl|gh\b.*\bapi` also blocks `gh api -X PUT .../merge`,
+#     the sibling bypass route — `gh api` hits the same REST endpoint
+#     without going through `gh pr merge` so the title-drift reminder is
+#     skipped;
+#   * URL path made `/?repos/...` so `gh api repos/o/r/pulls/N/merge`
+#     (leading-slash-omitted form that gh api accepts) still matches;
+#   * `printf '%s\n'` (trailing newline) for POSIX-portable `grep` input.
+# Statement separators covered: start-of-string, `|`, `;`, `&`, `(`.
+# Gemini round-2 + round-3 + round-5 + round-6 findings on PR #104.
+if printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*(curl|gh\b.*[[:space:]]api)\b' \
+   && printf '%s\n' "$CMD_FLAT" | grep -qE '/?repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
+   && printf '%s\n' "$CMD_FLAT" | grep -qiE "(-X|--request|--method)[ =]*[\"']?PUT[\"']?"; then
   cat <<'HEREDOC'
 {
   "decision": "block",
@@ -62,7 +72,7 @@ fi
 
 # --- Block 2: gh pr merge reminder ------------------------------------------
 # Only fire on `gh pr merge`. Any other Bash command passes through untouched.
-# `(^|[|;&(])[[:space:]]*gh\b.*\bpr[[:space:]]+merge\b` requires:
+# Regex requires:
 #   - `gh` at a command-statement boundary (start-of-string or after a
 #     shell separator `| ; & (`) so strings like
 #     `gh pr comment --body "gh pr merge"` or `echo "gh pr merge"` don't
@@ -71,8 +81,11 @@ fi
 #     round-4 tightening (eliminates `gh pr list --search "merge"` and
 #     `gh pr view --json body` false positives);
 #   - `.*` between `gh` and `pr` so global flags like `--repo o/r` still
-#     pass (round-3 requirement: `gh --repo o/r pr merge` must REMIND).
-if ! printf '%s' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*gh\b.*\bpr[[:space:]]+merge\b'; then
+#     pass (round-3 requirement: `gh --repo o/r pr merge` must REMIND);
+#   - `(VAR=val[[:space:]]+)*` absorbs leading env-var assignments so
+#     `GH_TOKEN=xxx gh pr merge 1` still REMINDs (round-6 finding);
+#   - `printf '%s\n'` for POSIX-portable `grep` input.
+if ! printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*gh\b.*\bpr[[:space:]]+merge\b'; then
   exit 0
 fi
 
