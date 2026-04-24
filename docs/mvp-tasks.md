@@ -113,9 +113,11 @@ let session-2026-04-23's PRs #100/#101/#102 merge without the
 #103 + #105); (3) `post-pr-create.sh` — auto-posts `/gemini review` on
 push to a PR branch and **blocks pushes that don't include a
 `docs/mvp-tasks.md` update with `TASK_LIST_UPDATED=1`**. Known remaining
-gap: the `gh pr merge` matcher in `pre-merge-check.sh` uses `grep -q 'gh pr merge'`
-which false-positives on commit messages or PR bodies containing the
-literal string; follow-up tightening TODO.
+gap: the `gh pr merge` matcher in `pre-merge-check.sh` uses a
+token-presence regex (`\bgh\b.*\bpr[[:space:]]+merge\b`) which still
+false-positives on commit messages or PR bodies containing those tokens
+in sequence (e.g. a commit message that quotes `gh pr merge`
+documentation); follow-up tightening TODO.
 
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.

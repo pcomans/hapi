@@ -18,12 +18,15 @@ if [ -z "$CMD" ]; then
   CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
 fi
 
-# Normalise the command once: flatten multi-line commands (e.g. long curl
-# calls with `\` line-continuations) into a single line, so a line-oriented
-# `grep` can't be bypassed by splitting the command across lines. Using
-# `printf '%s\n'` rather than `echo` avoids `echo`'s misbehaviour when the
-# first argument starts with `-`. Gemini round-1 HIGH finding on PR #104.
-CMD_FLAT=$(printf '%s\n' "$CMD" | tr '\n' ' ')
+# Normalise the command once: strip the trailing `\` that shell line-
+# continuations leave at end-of-line, THEN flatten newlines to spaces.
+# Without the strip step, a split like `curl -X \<NL>PUT` flattens to
+# `curl -X \ PUT`, and the subsequent `-X[ =]*PUT` method-grep fails
+# because `[ =]*` does not match a literal backslash. Using
+# `printf '%s\n'` rather than `echo` avoids `echo`'s misbehaviour when
+# the first argument starts with `-`. Gemini round-1 HIGH + round-4
+# medium findings on PR #104.
+CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\$//' | tr '\n' ' ')
 
 # --- Block 1: curl-to-API merge bypass --------------------------------------
 # Three independent AND-ed checks so an adversarially-formatted merge call
@@ -55,13 +58,15 @@ fi
 
 # --- Block 2: gh pr merge reminder ------------------------------------------
 # Only fire on `gh pr merge`. Any other Bash command passes through untouched.
-# `\bgh\b.*\bpr\b.*\bmerge\b` allows global `gh` flags (like `--repo o/r`)
-# to appear between the command tokens per Gemini round-3 finding on
-# PR #104: `gh --repo o/r pr merge 1 --squash` is a valid invocation that
-# the prior `gh +pr +merge` adjacency-matcher missed. Word boundaries
-# prevent substring false-positives; `.*` tolerates arbitrary flags and
-# whitespace (incl. line-continuation joins) between tokens.
-if ! printf '%s' "$CMD_FLAT" | grep -qE '\bgh\b.*\bpr\b.*\bmerge\b'; then
+# `\bgh\b.*\bpr[[:space:]]+merge\b` allows global `gh` flags (like
+# `--repo o/r`) to appear between `gh` and `pr` (round-3 requirement), but
+# requires `pr` and `merge` to be adjacent with only whitespace between
+# them — `pr merge` IS the canonical gh subcommand sequence. Round-4
+# finding: the looser `gh.*pr.*merge` matched unrelated invocations like
+# `gh pr list --search "merge"` or `gh pr view --json body`. Restoring
+# pr+merge adjacency eliminates that class of false positive without
+# re-opening the global-flag bypass.
+if ! printf '%s' "$CMD_FLAT" | grep -qE '\bgh\b.*\bpr[[:space:]]+merge\b'; then
   exit 0
 fi
 
