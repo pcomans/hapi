@@ -26,16 +26,24 @@ fi
 CMD_FLAT=$(printf '%s\n' "$CMD" | tr '\n' ' ')
 
 # --- Block 1: curl-to-API merge bypass --------------------------------------
-# Match any `curl` invocation whose URL hits a GitHub pulls-merge endpoint
-# AND uses the PUT method (the verb that actually performs the merge). A GET
-# on `/pulls/<N>/merge` is a read-only "has this been merged?" status check
-# and must not be blocked. Word boundaries on `curl` and the path suffix
-# prevent substring false-positives (e.g. `occurl`, or commands that merely
-# echo the URL as text — including this hook's own output). Covers flag
-# shorthands `-X PUT`, `-XPUT`, `--request PUT`, `--request=PUT`
-# (case-insensitive). Gemini round-2 medium finding on PR #104.
-if printf '%s' "$CMD_FLAT" | grep -qE '\bcurl\b.*/repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
-   && printf '%s' "$CMD_FLAT" | grep -qiE '(-X|--request)[ =]*PUT'; then
+# Three independent AND-ed checks so an adversarially-formatted merge call
+# still trips the hook:
+#   (a) `\bcurl\b` somewhere in the flattened command;
+#   (b) the GitHub pulls-merge URL path somewhere in the flattened command;
+#   (c) a PUT method flag somewhere in the flattened command.
+# Splitting into three independent matches (rather than `\bcurl\b.*URL`)
+# closes the `URL="..."; curl -X PUT $URL` bypass where the URL appears
+# BEFORE `curl` in the shell source. A read-only GET on the same endpoint
+# ("has this PR been merged?") has no PUT flag, so it passes unblocked.
+# Method alternation covers `-X`, `--request`, and `--method` (case-
+# insensitive) with optional space / `=` / surrounding quotes around PUT
+# (e.g. `-X "PUT"`, `--request='PUT'`). Word boundaries on `curl` and the
+# URL suffix prevent substring false-positives (e.g. `occurl`, or commands
+# that merely echo the URL as text — including this hook's own output).
+# Gemini round-2 + round-3 findings on PR #104.
+if printf '%s' "$CMD_FLAT" | grep -qE '\bcurl\b' \
+   && printf '%s' "$CMD_FLAT" | grep -qE '/repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
+   && printf '%s' "$CMD_FLAT" | grep -qiE "(-X|--request|--method)[ =]*[\"']?PUT[\"']?"; then
   cat <<'HEREDOC'
 {
   "decision": "block",
@@ -47,9 +55,13 @@ fi
 
 # --- Block 2: gh pr merge reminder ------------------------------------------
 # Only fire on `gh pr merge`. Any other Bash command passes through untouched.
-# The `gh +pr +merge` pattern (one-or-more spaces between tokens) tolerates
-# extra whitespace from line-continuation joins.
-if ! printf '%s' "$CMD_FLAT" | grep -qE 'gh +pr +merge'; then
+# `\bgh\b.*\bpr\b.*\bmerge\b` allows global `gh` flags (like `--repo o/r`)
+# to appear between the command tokens per Gemini round-3 finding on
+# PR #104: `gh --repo o/r pr merge 1 --squash` is a valid invocation that
+# the prior `gh +pr +merge` adjacency-matcher missed. Word boundaries
+# prevent substring false-positives; `.*` tolerates arbitrary flags and
+# whitespace (incl. line-continuation joins) between tokens.
+if ! printf '%s' "$CMD_FLAT" | grep -qE '\bgh\b.*\bpr\b.*\bmerge\b'; then
   exit 0
 fi
 
