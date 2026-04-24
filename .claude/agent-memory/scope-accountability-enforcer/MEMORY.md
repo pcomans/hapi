@@ -1,3 +1,4 @@
 - [Phase-0 extraction scope boundaries](project_phase0_scope.md) — What counts as in-scope vs deferrable for a Phase-0 chunk PR
 - [Deferral-legitimacy checklist](feedback_deferral_checklist.md) — Two conditions a "follow-up PR" deferral must meet to be legitimate
 - [Red-flag phrases in main-agent responses](feedback_red_flag_phrases.md) — Language patterns that signal an illegitimate punt
+- [Rule-vs-flag consistency audits](feedback_rule_vs_flag_consistency.md) — Tighten-rule vs demote-flags: decide by the rule's stated rationale, not its enumerated categories
