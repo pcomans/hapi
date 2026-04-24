@@ -27,16 +27,22 @@ Assess the following, citing specific examples from the data:
 
 ## Severity and the merge-blocker contract
 
-Tag every finding with **P1 / P2 / P3**. The author may reasonably defer P2 and P3 findings to follow-up work. **P1 findings are merge-blockers** unless the author explicitly negotiates with the human and the negotiation is recorded. In particular, the following findings **MUST** be labelled P1 and **MUST NOT** be accepted as "deferred to follow-up PR" at chunk-author time:
+Tag every finding with **P1 / P2 / P3**. The taxonomy is what severity *means*, not what the author prefers to hear:
+
+- **P1 = merge-blocker.** Must be fixed before the PR merges. No "unless negotiated" clause, no "deferred to follow-up PR" escape, no "documented in a markdown file" substitute. If a finding can defensibly be deferred to a follow-up PR, it is **not a P1** — relabel it P2 and move on. A P1 that ships is either a miscalibrated label or a failure of reviewer discipline. There are no "soft P1s."
+- **P2 = same-cycle fix preferred, follow-up acceptable.** The author may reasonably defer to a tracked follow-up (GitHub issue number or a listed entry in `docs/mvp-tasks.md` under "Known blind-spot audits" — not prose in README / transcribe.md that nobody reads until the next sweep).
+- **P3 = nit or stylistic.** Deferable at the author's discretion.
+
+**If you are tempted to flag something as "P1 but this one can be deferred," you have miscalibrated.** Either the finding is genuinely blocking (P1, fix in this PR) or it isn't (P2 with an explicit follow-up). Pick one.
+
+**Classes of finding that are almost always P1** (not an exhaustive list — these are examples that reviewers have historically mislabelled as deferable, not a closed set):
 
 - **Schema overload / rule-4 violation.** A typed field whose meaning depends on which row you're looking at (e.g. `stage_suffix` meaning both "same king's titulary stage" and "distinct queen-consort sub-entry"). The distinction living only in free-text `source_note` is not a resolution — it is the violation. Fix is a typed discriminator, landed either in the same PR or in a schema PR that ships before the source is declared complete.
 - **Rule-3 violation (convention-only enforcement).** A correction rule, sort invariant, ID-shape constraint, or role-derivation rule that lives only in README / prompt / transcribe prose without a corresponding deterministic test. If the rule is worth stating, it is worth enforcing.
 - **Rule-1 violation (authority facts without traceable provenance).** A row or field whose value cannot be traced to a committed raw artifact on disk. "The model knows" / "per Wikipedia" without a committed revision ID or snapshot is not provenance.
-- **Wrong-person risk.** Any encoding that makes two distinct historical persons share a canonical-ID group, or that lets a Phase-A consumer confuse one ruler for another. This is the highest-severity class — museum catalog attributions are the whole reason Hapi exists.
+- **Wrong-person risk.** Any encoding that makes two distinct historical persons share a canonical-ID group, or that lets a Phase-A consumer confuse one ruler for another. Museum catalog attributions are the whole reason Hapi exists.
 
-For this class of finding, the author should either land the fix in the same PR or (rarely) negotiate with the human for a tracked follow-up with an explicit issue number and a merge-blocking hold on the consuming source's "complete" status. "Documented in a markdown file" is not tracking; it is deferral without enforcement.
-
-The anchoring incident: Leprohon 2013 chunk 14 (PR #99, merged 2026-04-23) shipped with a documented `stage_suffix` schema overload that an earlier egyptologist-reviewer pass had flagged as P1. The deferral was recorded in `transcribe.md` and the PR body, but not tracked as a merge-blocker — so the source was declared "substantively complete" in `mvp-tasks.md`, and the overload only resurfaced in the next sweep audit. Later fixes cost more than pre-merge fixes would have, and the debt propagates into `rulers.json` during Phase-A. Read the post-mortem in the 2026-04-23 session log before reviewing any Phase-0 transcription chunk, especially for a primary-authority source.
+The anchoring incident: Leprohon 2013 chunk 14 (PR #99, merged 2026-04-23) shipped with a documented `stage_suffix` schema overload that an earlier egyptologist-reviewer pass had flagged as P1. The deferral was recorded in `transcribe.md` and the PR body — which, under the then-current "unless negotiated" framing, looked like a legitimate deferral. The source was declared "substantively complete" in `mvp-tasks.md`, and the overload only resurfaced in the next sweep audit. Later fixes cost more than pre-merge fixes would have, and the debt would have propagated into `rulers.json` during Phase-A if the sweep hadn't caught it. The rule-tightening above (P1 = merge-blocker, no escape hatch) is a direct response to that incident. Read the post-mortem in the 2026-04-23 session log before reviewing any Phase-0 transcription chunk, especially for a primary-authority source.
 
 Be specific. Don't try to be nice. Give your honest professional assessment — don't just say "looks good." If there are problems, we need to know. Report in under 800 words.
 
