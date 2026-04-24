@@ -30,7 +30,7 @@ You are the **sweep-coordinator agent**. Execute these steps in order.
 ### Step 1: enumerate
 
 ```bash
-cd /Users/philipp/code/hapi
+cd <REPO_ROOT>   # the hapi working tree; e.g. the one you currently have checked out
 ls pipeline/pipeline/authority/sources/ | sort > /tmp/sweep-sources.txt
 cat /tmp/sweep-sources.txt
 ```
@@ -58,8 +58,8 @@ For each source, the reviewer briefs look like this.
 #### Code-reviewer brief template
 
 ```
-Retrospective code review of source `pipeline/pipeline/authority/sources/<SOURCE>/` at
-/Users/philipp/code/hapi. The source was merged in a prior PR without running a
+Retrospective code review of source `pipeline/pipeline/authority/sources/<SOURCE>/` in
+the current hapi repo checkout. The source was merged in a prior PR without running a
 code-reviewer subagent during the cycle (policy from feedback_pr_reviewers.md was
 memory-only, not enforced by a hook — fixed in session-2026-04-23).
 
@@ -106,7 +106,7 @@ run merge.py or fix_rows.py, don't open a PR.
 
 ```
 Retrospective scholarly review of source `pipeline/pipeline/authority/sources/<SOURCE>/`
-at /Users/philipp/code/hapi. The source was merged in a prior PR without running
+in the current hapi repo checkout. The source was merged in a prior PR without running
 the egyptologist-reviewer subagent during the cycle (policy from
 feedback_pr_reviewers.md was memory-only, not enforced by a hook — fixed in
 session-2026-04-23).
