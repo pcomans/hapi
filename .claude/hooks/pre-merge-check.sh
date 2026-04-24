@@ -43,8 +43,12 @@ CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\$//' | tr '\n' ' ')
 # (e.g. `-X "PUT"`, `--request='PUT'`). Word boundaries on `curl` and the
 # URL suffix prevent substring false-positives (e.g. `occurl`, or commands
 # that merely echo the URL as text — including this hook's own output).
-# Gemini round-2 + round-3 findings on PR #104.
-if printf '%s' "$CMD_FLAT" | grep -qE '\bcurl\b' \
+# The `(^|[|;&(])[[:space:]]*curl\b` statement-start anchor (round-5)
+# further ensures `curl` is being INVOKED, not merely mentioned inside a
+# quoted string (`gh pr comment -b "curl -X PUT .../merge"` no longer
+# trips the block). Statement separators covered: start-of-string, `|`,
+# `;`, `&`, `(`. Gemini round-2 + round-3 + round-5 findings on PR #104.
+if printf '%s' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*curl\b' \
    && printf '%s' "$CMD_FLAT" | grep -qE '/repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
    && printf '%s' "$CMD_FLAT" | grep -qiE "(-X|--request|--method)[ =]*[\"']?PUT[\"']?"; then
   cat <<'HEREDOC'
@@ -58,15 +62,17 @@ fi
 
 # --- Block 2: gh pr merge reminder ------------------------------------------
 # Only fire on `gh pr merge`. Any other Bash command passes through untouched.
-# `\bgh\b.*\bpr[[:space:]]+merge\b` allows global `gh` flags (like
-# `--repo o/r`) to appear between `gh` and `pr` (round-3 requirement), but
-# requires `pr` and `merge` to be adjacent with only whitespace between
-# them — `pr merge` IS the canonical gh subcommand sequence. Round-4
-# finding: the looser `gh.*pr.*merge` matched unrelated invocations like
-# `gh pr list --search "merge"` or `gh pr view --json body`. Restoring
-# pr+merge adjacency eliminates that class of false positive without
-# re-opening the global-flag bypass.
-if ! printf '%s' "$CMD_FLAT" | grep -qE '\bgh\b.*\bpr[[:space:]]+merge\b'; then
+# `(^|[|;&(])[[:space:]]*gh\b.*\bpr[[:space:]]+merge\b` requires:
+#   - `gh` at a command-statement boundary (start-of-string or after a
+#     shell separator `| ; & (`) so strings like
+#     `gh pr comment --body "gh pr merge"` or `echo "gh pr merge"` don't
+#     false-REMIND (round-5 finding);
+#   - `pr merge` adjacent with only whitespace between them, per the
+#     round-4 tightening (eliminates `gh pr list --search "merge"` and
+#     `gh pr view --json body` false positives);
+#   - `.*` between `gh` and `pr` so global flags like `--repo o/r` still
+#     pass (round-3 requirement: `gh --repo o/r pr merge` must REMIND).
+if ! printf '%s' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*gh\b.*\bpr[[:space:]]+merge\b'; then
   exit 0
 fi
 
