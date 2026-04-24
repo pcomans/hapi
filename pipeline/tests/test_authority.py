@@ -174,7 +174,10 @@ class TestHKWIntegrity:
             for r in hkw_rows
             if r["kind"] == "ruler"
             and r["display"] in {"Iry-Hor", "Ka", "Scorpion I"}
-            and (r.get("dynasty") == 0 or r["display"] == "Scorpion I")
+            and (
+                r.get("dynasty") == 0
+                or (r["display"] == "Scorpion I" and r.get("dynasty") is None)
+            )
         }
         assert by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
         assert by_display["Ka"]["alternative_reading"] is None
