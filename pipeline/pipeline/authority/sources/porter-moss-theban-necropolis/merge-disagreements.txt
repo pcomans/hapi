@@ -141,39 +141,30 @@ Field corrections:
     value: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
 - KV56: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)
     value: "Unknown"
-- DAN-Aqhor: occupant_name corrected this run (PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES. Underdot-H stripped to plain `h` per README's matchable-name-field convention (Gemini round-3 sweep on PR #101). ḳ (underdot-K) preserved as a distinguishing radical.)
-    was: "ʿAḳ-ḥor"
-    now: "ʿAḳ-hor"
+- DAN-Aqhor: occupant_name already matches override (no-op this run; PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES. Underdot-H stripped to plain `h` per README's matchable-name-field convention (Gemini round-3 sweep on PR #101). ḳ (underdot-K) preserved as a distinguishing radical.)
+    value: "ʿAḳ-hor"
 - DAN-Aqhor: occupant_role already matches override (no-op this run; `Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
     value: "Official"
-- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm already matches override (no-op this run; PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through. Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy (chunk-1..6 convention). tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
+- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm already matches override (no-op this run; Egyptologist-reviewer P1 finding on PR #100 (reviewer-notes-chunk7.md line 20, paraphrased here: 'QV38 Sitreʿ lost its is_unfinished flag' — separate issue; for this row, reviewer-notes-chunk7 flagged that PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H, but the text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) and the agents carried that through). Restore the PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve policy. tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor consistency with the PM-faithful spelling convention.)
     value: "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
-- DAN-AhmosiNefertere: notes_from_pm already matches override (no-op this run; PM p.599-600 §III.C headword spells out the Carter attribution history in detail; the pre-review note dropped the Černý follow-up. Restore per egyptologist-reviewer P2 finding (verbatim preserve of the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.)
+- DAN-AhmosiNefertere: notes_from_pm already matches override (no-op this run; Egyptologist-reviewer P2 finding on PR #100 (reviewer-notes-chunk7.md): PM p.599-600 §III.C headword spells out the Carter attribution history in detail ('attributed to Amenophis I by Carter; Černý equates with House of Amenophis of the Garden'); the pre-review note dropped the Černý follow-up. Restore verbatim per the reviewer's citation of the full attribution-history clause. tomb_id renamed via CHUNK7_RENAMES.)
     value: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with 'House of Amenophis of the Garden'."
-- SWV-HatshepsutSouth: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's matchable-name-field convention. Gemini round-3 sweep on PR #101.)
-    was: "Ḥatshepsut"
-    now: "Hatshepsut"
-- DAN-Ahhotep: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
-    was: "ʿAḥḥotp"
-    now: "ʿAhhotp"
-- DAN-AhmosiHenutempet: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention; both the `Aḥmosi` and `Ḥenutempet` underdot-Hs are stripped to plain h. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
-    was: "ʿAḥmosi Ḥenutempet"
-    now: "ʿAhmosi Henutempet"
-- DAN-AhmosiNefertere: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
-    was: "ʿAḥmosi Nefertere"
-    now: "ʿAhmosi Nefertere"
-- DAN-AhmosiSonOfSeqenenre: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
-    was: "ʿAḥmosi"
-    now: "ʿAhmosi"
-- DAN-MentuhotpIWifeOfDjhuti: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 sweep on PR #101.)
-    was: "Mentuḥotp I"
-    now: "Mentuhotp I"
-- DAN-MentuhotpSankhibtaui: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
-    was: "Mentuḥotp-Sʿankhibtaui"
-    now: "Mentuhotp-Sʿankhibtaui"
-- DAN-Neferhotep: occupant_name corrected this run (Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 sweep on PR #101.)
-    was: "Neferḥotep"
-    now: "Neferhotep"
+- SWV-HatshepsutSouth: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's matchable-name-field convention. Gemini round-3 sweep on PR #101.)
+    value: "Hatshepsut"
+- DAN-Ahhotep: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    value: "ʿAhhotp"
+- DAN-AhmosiHenutempet: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's convention; both the `Aḥmosi` and `Ḥenutempet` underdot-Hs are stripped to plain h. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    value: "ʿAhmosi Henutempet"
+- DAN-AhmosiNefertere: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    value: "ʿAhmosi Nefertere"
+- DAN-AhmosiSonOfSeqenenre: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    value: "ʿAhmosi"
+- DAN-MentuhotpIWifeOfDjhuti: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 sweep on PR #101.)
+    value: "Mentuhotp I"
+- DAN-MentuhotpSankhibtaui: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. Gemini round-3 sweep on PR #101.)
+    value: "Mentuhotp-Sʿankhibtaui"
+- DAN-Neferhotep: occupant_name already matches override (no-op this run; Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 sweep on PR #101.)
+    value: "Neferhotep"
 - QV36: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A PRINCESS, no name.')
     value: "Unknown"
 - QV40: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A QUEEN, cartouche blank.')

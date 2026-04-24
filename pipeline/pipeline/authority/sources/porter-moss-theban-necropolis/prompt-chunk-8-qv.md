@@ -139,7 +139,7 @@ For `A QUEEN, cartouche blank` / `A QUEEN, no name`: `occupant_name: null`, `occ
 
 ### `is_unfinished`
 
-`true` iff the literal word `Unfinished` (capital-U) appears in the headword block. Note: QV38 (Queen Sitreʿ, wife of Ramesses I) has `Unfinished` explicitly in PM's headword — that's a known case. Other QV tombs should default to `false`.
+`true` iff the literal word `Unfinished` (capital-U) appears in the headword block of a QV tomb. Otherwise `false`. Apply this rule mechanically to each headword; do not rely on any per-tomb example or assumption this prompt might have given about which QV rows carry the flag.
 
 ### `shared_with_tombs`
 

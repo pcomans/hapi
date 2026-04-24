@@ -51,22 +51,20 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 # etc. use the descriptor form `<PREFIX>-<Descriptor>` (chunk 7 introduced
 # the descriptor convention — PM has no tomb-numbering for non-KV/QV Theban
 # or Memphite sections). Descriptor IDs sort alphabetically within their
-# valley rank. Prefix vocabulary is kept in sync with the test regex at
-# `tests/test_sources_porter_moss_theban_necropolis.py::_TOMB_ID_RE`.
+# valley rank. The prefix vocabulary below matches the test regex at
+# `tests/test_sources_porter_moss_theban_necropolis.py::_TOMB_ID_RE`;
+# `test_prefix_vocabulary_consistent` enforces that equality mechanically.
+# Future chunks extend both structures together when they land.
 VALLEY_ORDER: dict[str, int] = {
     "KV": 0,    # Valley of the Kings (PM I.2 § I)
     "QV": 1,    # Valley of the Queens (PM I.2 § X)
     "TT": 2,    # Theban Tomb — numbered private tombs (PM I.1)
     "SWV": 3,   # South-West Valleys (PM I.2 § II) — descriptor IDs
     "DAN": 4,   # Dra' Abu el-Naga (PM I.2 § III) — descriptor IDs
-    # Pre-registered for future chunks (matches the test regex vocabulary
-    # at tests/…::_TOMB_ID_RE; without these entries, descriptor tombs in
-    # those valleys would fall to UNRECOGNISED_VALLEY_RANK and sort to the
-    # end of the file):
-    "ASS": 5,   # Asasif (PM I.2 § IV)
-    "DEB": 6,   # Deir el-Bahri (PM I.2 § V)
-    "SAQN": 7,  # Sheikh Abd el-Qurna (PM I.2 § VII)
-    "RAM": 8,   # Ramesseum (PM I.2 § VIII)
+    # Future chunks extend this dict AS THEY LAND their first row; the
+    # retrospective code-review on PR #100 flagged pre-registered prefixes
+    # as speculative generality. `tests/…::test_prefix_vocabulary_consistent`
+    # pins this dict against the test regex so the two stay in sync.
 }
 
 # Sentinel ranks for unrecognised prefixes / malformed IDs — they sort to
