@@ -85,50 +85,103 @@ class TestHKWIntegrity:
                 )
 
     def test_page_numbers_in_range(self, hkw_rows):
-        # IV.2 + IV.3 chronology table pp.490-498 PLUS Ch 2 Hendrickx
-        # pp.55-93 (currently citing 88, 89, 91 for the Dyn-0 rows).
-        valid_pages = set(range(490, 499)) | set(range(55, 94))
+        # IV.2 + IV.3 chronology table pp.490-498 PLUS the specific Ch 2
+        # Hendrickx pages we actually cite (pp. 88 for Dyn-0 dynasty row,
+        # 89 for Iry-Hor + Ka, 91 for Scorpion I). Tightened from
+        # range(55, 94) per code-reviewer retrospective finding: allowing
+        # the full 55-93 range silently permits incorrect cite pages.
+        valid_pages = set(range(490, 499)) | {88, 89, 91}
         for i, row in enumerate(hkw_rows, 1):
             assert row["page"] in valid_pages, (
                 f"Row {i}: page {row['page']} outside expected "
-                f"ranges (490-498 for IV.2/IV.3; 55-93 for Ch 2 Hendrickx)"
+                f"pages (490-498 for IV.2/IV.3; {{88, 89, 91}} for Ch 2 "
+                f"Hendrickx Dyn-0 block)"
             )
 
     def test_dyn0_rulers_present(self, hkw_rows):
-        """Ch 2 Hendrickx Dyn-0 rulers (Iry-Hor, Ka, Scorpion I) are all
-        present with `dynasty=0` and page cites in the 55-93 range.
+        """Ch 2 Hendrickx Dyn-0 rulers Iry-Hor and Ka are both `dynasty=0`
+        per Hendrickx p.88 ("the only consistency [in Dyn 0 usage] is the
+        inclusion of Iry-Hor and Ka"). Scorpion I is a separate assertion
+        (`test_scorpion_i_dynasty_null` below) — he sits in cemetery U at
+        Naqada IIIA1 and pre-dates the cemetery-B Dyn-0 kings, so his
+        `dynasty` is null not 0 (egyptologist-reviewer P1 finding on the
+        retrospective PR #102 review).
         """
         dyn0_rulers = {
             r["display"]: r for r in hkw_rows
             if r["kind"] == "ruler" and r.get("dynasty") == 0
         }
-        assert set(dyn0_rulers) == {"Iry-Hor", "Ka", "Scorpion I"}, (
-            f"Expected {{Iry-Hor, Ka, Scorpion I}}, got {sorted(dyn0_rulers)}"
+        assert set(dyn0_rulers) == {"Iry-Hor", "Ka"}, (
+            f"Expected {{Iry-Hor, Ka}}, got {sorted(dyn0_rulers)}"
         )
         for name, r in dyn0_rulers.items():
             assert r["start_year"] is None, (name, r["start_year"])
             assert r["end_year"] is None, (name, r["end_year"])
-            assert 55 <= r["page"] <= 93, (name, r["page"])
+            assert r["page"] == 89, (name, r["page"])
             assert r["approximate"] is True, name
             assert r["note"] and "Hendrickx" in r["note"], name
+            # Per CLAUDE.md rule 5: assert every mappable field on every
+            # fixture row, not just the theme the test is named for.
+            assert r["greek_form"] is None, name
+            assert r["prenomen"] is None, name
+            assert r["uncertainty_plus_years"] is None, name
+
+    def test_scorpion_i_dynasty_null(self, hkw_rows):
+        """Scorpion I carries `dynasty=null` (not 0) per the egyptologist-
+        reviewer P1 finding on the retrospective PR #102 review:
+        Hendrickx p.88 names only Iry-Hor and Ka as consistent Dyn-0
+        rulers. Scorpion I is cemetery U / Naqada IIIA1, pre-dating the
+        cemetery-B Dyn-0 kings. Phase-A consumers may elect Dyn 00 / Dyn 0
+        / null per local convention; we pin null so downstream joins
+        don't silently claim Hendrickx-sourced Dyn-0 for Scorpion I.
+        """
+        scorpion = [
+            r for r in hkw_rows
+            if r["kind"] == "ruler" and r["display"] == "Scorpion I"
+        ]
+        assert len(scorpion) == 1, "expected exactly one Scorpion I row"
+        r = scorpion[0]
+        assert r["dynasty"] is None, r["dynasty"]
+        assert r["page"] == 91, r["page"]
+        assert r["start_year"] is None
+        assert r["end_year"] is None
+        assert r["uncertainty_plus_years"] is None
+        assert r["greek_form"] is None
+        assert r["prenomen"] is None
+        assert r["alternative_reading"] is None
+        assert r["approximate"] is True
+        # Note must cite Hendrickx p.88 (Dyn-0-inclusion caveat) and the
+        # U-j tomb — both load-bearing facts that a reader would rely on.
+        assert "p.88" in r["note"] and "U-j" in r["note"], r["note"][:200]
 
     def test_dyn0_ruler_alternative_readings(self, hkw_rows):
         """Iry-Hor has `Irj-Hor` (Hendrickx's occasional spelling p.89).
-        Ka has `Sekhen` (traditional cartouche-reading alternative).
-        Scorpion I has no alternative reading in Hendrickx's Ch 2 text.
+        Ka has `alternative_reading: null` (the earlier "Sekhen" value
+        was a provenance leak — Hendrickx does not use it; removed per
+        egyptologist-reviewer + code-reviewer P2 finding on the
+        retrospective PR #102 review). Scorpion I similarly null.
 
-        Filtered to `dynasty: 0` to avoid display-name collisions with
-        Dyn-17 homonyms (Gemini round-1 on PR #102 flagged that building a
-        dict keyed on `display` would collide on rows like "Ta'o" which
-        appears twice in the Dyn-17 block).
+        Filtered with BOTH `dynasty == 0` AND the explicit display-name
+        allow-list to avoid homonym collisions — per Gemini round-1 finding
+        on PR #103 (the prior version was a plain `display in {...}` filter
+        which would silently collide if any other dynasty happens to carry
+        a ruler with the same display name). Scorpion I sits at
+        `dynasty: null` (per egyptologist review on PR #102 retrospective),
+        so the OR-clause keeps him reachable.
         """
-        dyn0_by_display = {
-            r["display"]: r for r in hkw_rows
-            if r["kind"] == "ruler" and r.get("dynasty") == 0
+        by_display = {
+            r["display"]: r
+            for r in hkw_rows
+            if r["kind"] == "ruler"
+            and r["display"] in {"Iry-Hor", "Ka", "Scorpion I"}
+            and (
+                r.get("dynasty") == 0
+                or (r["display"] == "Scorpion I" and r.get("dynasty") is None)
+            )
         }
-        assert dyn0_by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
-        assert dyn0_by_display["Ka"]["alternative_reading"] == "Sekhen"
-        assert dyn0_by_display["Scorpion I"]["alternative_reading"] is None
+        assert by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
+        assert by_display["Ka"]["alternative_reading"] is None
+        assert by_display["Scorpion I"]["alternative_reading"] is None
 
     def test_dyn0_dynasty_row_present(self, hkw_rows):
         """A `kind: dynasty` row with `number: 0` exists so the
