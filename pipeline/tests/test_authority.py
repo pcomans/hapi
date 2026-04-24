@@ -12,7 +12,6 @@ import pytest
 
 AUTHORITY_SOURCES = Path(__file__).parent.parent / "pipeline" / "authority" / "sources"
 HKW_DIR = AUTHORITY_SOURCES / "hkw-chronology-2006"
-WIKI_PTOLEMAIC_DIR = AUTHORITY_SOURCES / "wikipedia-ptolemaic"
 PHARAOH_SE_DIR = AUTHORITY_SOURCES / "pharaoh-se"
 
 
@@ -200,66 +199,6 @@ class TestHKWIntegrity:
         # Hendrickx does not assign Dyn 0 to the Early Dynastic Period —
         # it sits at the Predynastic / Early Dynastic boundary.
         assert r.get("parent_period") is None
-
-
-@pytest.fixture
-def wiki_ptolemaic_rows():
-    return load_jsonl(WIKI_PTOLEMAIC_DIR / "reconciled.jsonl")
-
-
-class TestWikiPtolemaicIntegrity:
-    def test_row_count(self, wiki_ptolemaic_rows):
-        assert len(wiki_ptolemaic_rows) == 24
-
-    def test_valid_kinds(self, wiki_ptolemaic_rows):
-        valid = {"period", "dynasty", "ruler"}
-        for i, row in enumerate(wiki_ptolemaic_rows, 1):
-            assert row["kind"] in valid, f"Row {i}: invalid kind {row['kind']!r}"
-
-    def test_dates_are_negative_or_null(self, wiki_ptolemaic_rows):
-        for i, row in enumerate(wiki_ptolemaic_rows, 1):
-            for field in ("start_year", "end_year"):
-                val = row.get(field)
-                if val is not None:
-                    assert val < 0, (
-                        f"Row {i} ({row.get('display') or row.get('label')}): "
-                        f"{field}={val} should be negative (BCE)"
-                    )
-
-    def test_all_dates_within_ptolemaic_range(self, wiki_ptolemaic_rows):
-        for i, row in enumerate(wiki_ptolemaic_rows, 1):
-            for field in ("start_year", "end_year"):
-                val = row.get(field)
-                if val is not None:
-                    assert -323 <= val <= -30, (
-                        f"Row {i} ({row.get('display') or row.get('label')}): "
-                        f"{field}={val} outside Ptolemaic range (-323 to -30)"
-                    )
-
-    def test_page_is_null(self, wiki_ptolemaic_rows):
-        for i, row in enumerate(wiki_ptolemaic_rows, 1):
-            assert row["page"] is None, (
-                f"Row {i}: page should be null for Wikipedia source"
-            )
-
-    def test_dynasty_is_null(self, wiki_ptolemaic_rows):
-        rulers = [r for r in wiki_ptolemaic_rows if r["kind"] == "ruler"]
-        for row in rulers:
-            assert row["dynasty"] is None, (
-                f"{row['display']}: dynasty should be null for Ptolemaic rulers"
-            )
-
-    def test_has_period_entry(self, wiki_ptolemaic_rows):
-        periods = [r for r in wiki_ptolemaic_rows if r["kind"] == "period"]
-        assert len(periods) == 1
-        assert periods[0]["label"] == "Ptolemaic Period"
-
-    def test_ptolemy_vii_has_null_dates(self, wiki_ptolemaic_rows):
-        p7 = [r for r in wiki_ptolemaic_rows if r.get("display", "").startswith("Ptolemy VII ")]
-        assert len(p7) == 1, "Ptolemy VII should have exactly one row"
-        assert p7[0]["start_year"] is None and p7[0]["end_year"] is None, (
-            "Ptolemy VII never formally reigned; dates should be null"
-        )
 
 
 @pytest.fixture

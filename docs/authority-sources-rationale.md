@@ -28,7 +28,7 @@ No single source covers the whole authority. The Egyptological authority is nece
 
 **Coverage:** Dyn 1 through Ptolemaic kings with full five-name titulary (Horus, Nebty, Golden Horus, Prenomen, Nomen).
 
-**Gap it does NOT cover:** queens, princes, princesses, viziers, or any non-king member of the royal family. Also weak on Dyn 7 convention, the Argead bridge (Alexander → Ptolemy I), and some Dyn 0 / Predynastic rulers.
+**Gap it does NOT cover:** queens, princes, princesses, viziers, or any non-king member of the royal family. Also weak on Dyn 7 convention and some Dyn 0 / Predynastic rulers.
 
 ### HKW 2006 *Ancient Egyptian Chronology* (Hornung / Krauss / Warburton)
 
@@ -128,13 +128,9 @@ No single source covers the whole authority. The Egyptological authority is nece
 
 **Method:** derived-extract of the Dyn-7 kinglist from Africanus / Eusebius / Barbarus epitomators.
 
-### Hölbl 2001 *A History of the Ptolemaic Empire* — PENDING
+### ~~Hölbl 2001 *A History of the Ptolemaic Empire*~~ — DROPPED 2026-04-23
 
-**Fills:** Argead bridge dynasty.
-
-**Why this one:** Alexander III, Philip III Arrhidaeus, Alexander IV ruled Egypt 332-305 BCE — absent from both HKW and pharaoh.se. Museums with late-fourth-century BCE material need this bridge.
-
-**Method:** transcribe the opening chronological table.
+See ADR-012 Consequences and `docs/handoff-sweep-audit-2026.md` for the rationale and decision record.
 
 ### Beckerath 1999 *Handbuch der ägyptischen Königsnamen*, 2nd ed. — PENDING
 

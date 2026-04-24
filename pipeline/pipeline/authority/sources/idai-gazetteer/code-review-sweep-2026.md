@@ -1,0 +1,13 @@
+# Code Review Sweep - 2026
+
+## P2 Findings
+
+- **`retrieved` is regenerated from wall-clock time instead of pinned to the fetched raw source.** `fetch.py` builds the `_source` block with `time.strftime("%Y-%m-%d")` during reconciliation (`fetch.py:247-253`), including `--parse-only`, while `README.md:8` and committed `reconciled.jsonl` say the data was retrieved on `2026-04-13`. Re-running parse-only against the exact committed `raw.json` on a later date changes an authoritative citation field without any new acquisition, so the same raw source no longer deterministically produces the same authority output. The test only checks that the date has length 10 (`test_authority.py:415-422`), not that it matches the documented retrieval date. Pin this value in code/metadata derived from acquisition, and assert the exact value in tests.
+
+- **The curated type-filter bypass list is not mechanically enforced end to end.** `README.md:40-63` and `fetch.py:49-68` define 16 supplementary gazIds that intentionally bypass the normal `SITE_TYPES` filter, and `parse-only` fails if they are missing from `raw.json` (`fetch.py:358-367`). CI does not enforce the equivalent condition for committed `reconciled.jsonl`: `test_all_types_are_filtered` merely exempts whatever is currently in `ADDITIONAL_GAZ_IDS` (`test_authority.py:453-477`), while `test_canary_sites_present` checks only 5 of the 16 supplementary rows (`test_authority.py:479-501`). A regression could drop Semna West, Soleb, Kawa, Sesibi, Aniba, Uronarti, Mirgissa, Askut, Amara West, Jebel Barkal, or Fayyum Oasis from `reconciled.jsonl` and still pass if the total row count stayed at 1000. Add a test that `ADDITIONAL_GAZ_IDS` exactly equals the supplementary IDs present in raw and reconciled output, with expected display/type behavior for all 16.
+
+- **Value-pinning coverage is too thin for the mapped fields.** The only row-level value test is Deir el-Bahari, and it asserts `display`, `coordinates`, and `cross_refs.geonames` only (`test_authority.py:503-509`). It does not pin `alt_labels`, `types`, `parent_id`, `pleiades`, `gnd`, `dai-arachne`, or `cross_refs.other`, even though `reconcile()` maps all of those fields (`fetch.py:271-301`) and README documents their extraction rules. Broad shape checks catch empty displays, duplicate IDs, and coordinate ranges, but they would not catch a parent URL parsing regression, loss of non-GeoNames identifiers, alt-label dedupe errors, or a schema drift that drops `cross_refs.other`. Add focused canary assertions covering every mapped field, preferably on one rich row like `idai:2110510` plus at least one supplementary row such as `idai:2042846` or `idai:2751193`.
+
+## P3 Findings
+
+- None.
