@@ -285,14 +285,13 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "notes_from_pm",
         "Wife of King Ḍḥuti. Found in tomb by Passalacqua.",
         "Egyptologist-reviewer P1 finding on PR #100 (reviewer-notes-chunk7.md "
-        "line 20, paraphrased here: 'QV38 Sitreʿ lost its is_unfinished flag' "
-        "— separate issue; for this row, reviewer-notes-chunk7 flagged that PM "
-        "p.604 prints `wife of King Ḍḥuti` with both underdot-D and underdot-H, "
-        "but the text-layer OCR rendered `Ql_J.uti` as `Djhuti` (no diacritics) "
-        "and the agents carried that through). Restore the PM-verbatim "
-        "diacritics per the `notes_from_pm` verbatim-preserve policy. "
-        "tomb_id renamed to `DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES "
-        "for descriptor consistency with the PM-faithful spelling convention.",
+        "line 20): PM p.604 prints `wife of King Ḍḥuti` with both underdot-D "
+        "and underdot-H, but the text-layer OCR rendered `Ql_J.uti` as "
+        "`Djhuti` (no diacritics) and the agents carried that through. "
+        "Restore the PM-verbatim diacritics per the `notes_from_pm` "
+        "verbatim-preserve policy. tomb_id renamed to "
+        "`DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor "
+        "consistency with the PM-faithful spelling convention.",
     ),
     (
         "DAN-AhmosiNefertere",

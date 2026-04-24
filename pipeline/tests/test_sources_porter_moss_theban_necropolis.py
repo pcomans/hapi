@@ -180,8 +180,6 @@ _TOMB_ID_RE = re.compile(
     r"^(?:(?:KV|QV|TT)\d+[a-z]?|(?:SWV|DAN)-[A-Z][A-Za-z0-9]*)$"
 )
 
-_DESCRIPTOR_PREFIX_RE = re.compile(r"^(?P<prefix>[A-Z]+)-")
-
 
 def test_tomb_id_shape() -> None:
     """Every id matches one of two shapes:
@@ -204,16 +202,7 @@ def test_prefix_vocabulary_consistent() -> None:
     mis-sort or silent mis-validation. This test converts that drift into
     a CI failure.
     """
-    import importlib.util
-
-    merge_path = (
-        Path(__file__).parent.parent
-        / "pipeline"
-        / "authority"
-        / "sources"
-        / "porter-moss-theban-necropolis"
-        / "merge.py"
-    )
+    merge_path = SOURCE_DIR / "merge.py"
     spec = importlib.util.spec_from_file_location("pm_theban_merge", merge_path)
     merge_mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(merge_mod)
