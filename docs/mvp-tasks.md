@@ -112,23 +112,16 @@ let session-2026-04-23's PRs #100/#101/#102 merge without the
 `feedback_pr_reviewers.md` requires; see the retrospective fix-up PRs
 #103 + #105); (3) `post-pr-create.sh` — auto-posts `/gemini review` on
 push to a PR branch and **blocks pushes that don't include a
-`docs/mvp-tasks.md` update with `TASK_LIST_UPDATED=1`**. Known remaining
-gap: the `gh pr merge` matcher in `pre-merge-check.sh` uses a
-statement-anchored regex
-(`(^|[|;&(])[[:space:]]*gh\b.*\bpr[[:space:]]+merge\b`) which correctly
-ignores `gh pr merge` mentioned inside quoted arguments of **other**
-commands (e.g. `echo "gh pr merge 1"`), but still false-REMINDs when
-the outer command is itself `gh pr <subcommand> -b "...gh pr merge..."`
-because the anchor matches the outer `gh`; this is non-blocking (just a
-reminder) and low-harm. Note the asymmetry vs the `curl` matcher
-(`gh pr comment -b "...curl -X PUT..."` correctly PASSes because the
-outer `gh` is not itself a forbidden verb): it falls out of the
-statement-anchor semantics, not a bug. Follow-up to fully suppress:
-replace the regex with shell-aware tokenisation — e.g. invoke
-`python3 -c "import shlex; print(shlex.split(sys.stdin.read()))"`
-on `$CMD_FLAT` and inspect the FIRST token of each statement after
-splitting on `;`/`&&`/`||`/`|`, so quoted-argument mentions are
-structurally ignored. Regex hardening has now hit its ceiling.
+`docs/mvp-tasks.md` update with `TASK_LIST_UPDATED=1`**. Both matchers restrict what tokens may appear between `gh` and the
+subcommand to flag-shaped sequences (`--?flag[=val]` with an optional
+non-dash value token per flag), which structurally prevents
+quoted-argument mentions of the forbidden verb from matching — so
+`gh pr comment -b "I tried to gh pr merge..."` correctly PASSes rather
+than false-REMINDing. Env-var prefix absorption
+(`([A-Z_][A-Z0-9_]*=[^[:space:]]*[[:space:]]+)*`) closes the
+`GH_TOKEN=x gh pr merge` and `GITHUB_TOKEN=x curl -X PUT ...` bypass
+routes. The curl block also covers `gh api -X PUT /repos/.../merge`
+(with or without leading slash) as a sibling bypass.
 
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.

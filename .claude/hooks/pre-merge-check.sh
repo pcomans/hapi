@@ -58,7 +58,7 @@ CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\$//' | tr '\n' ' ')
 #   * `printf '%s\n'` (trailing newline) for POSIX-portable `grep` input.
 # Statement separators covered: start-of-string, `|`, `;`, `&`, `(`.
 # Gemini round-2 + round-3 + round-5 + round-6 findings on PR #104.
-if printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*(curl|gh\b.*[[:space:]]api)\b' \
+if printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*(curl|gh\b([[:space:]]+--?[a-zA-Z0-9-]+(=[^[:space:]]*)?([[:space:]]+[^-[:space:]][^[:space:]]*)?)*[[:space:]]+api)\b' \
    && printf '%s\n' "$CMD_FLAT" | grep -qE '/?repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
    && printf '%s\n' "$CMD_FLAT" | grep -qiE "(-X|--request|--method)[ =]*[\"']?PUT[\"']?"; then
   cat <<'HEREDOC'
@@ -85,7 +85,7 @@ fi
 #   - `(VAR=val[[:space:]]+)*` absorbs leading env-var assignments so
 #     `GH_TOKEN=xxx gh pr merge 1` still REMINDs (round-6 finding);
 #   - `printf '%s\n'` for POSIX-portable `grep` input.
-if ! printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*gh\b.*\bpr[[:space:]]+merge\b'; then
+if ! printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*gh\b([[:space:]]+--?[a-zA-Z0-9-]+(=[^[:space:]]*)?([[:space:]]+[^-[:space:]][^[:space:]]*)?)*[[:space:]]+pr[[:space:]]+merge\b'; then
   exit 0
 fi
 
