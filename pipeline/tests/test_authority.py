@@ -173,6 +173,7 @@ class TestHKWIntegrity:
             r["display"]: r
             for r in hkw_rows
             if r["kind"] == "ruler"
+            and r["display"] in {"Iry-Hor", "Ka", "Scorpion I"}
             and (r.get("dynasty") == 0 or r["display"] == "Scorpion I")
         }
         assert by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
