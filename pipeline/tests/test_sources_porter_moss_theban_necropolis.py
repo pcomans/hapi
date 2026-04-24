@@ -207,22 +207,37 @@ def test_prefix_vocabulary_consistent() -> None:
     merge_mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(merge_mod)
 
-    # Numbered prefixes per the merge's VALLEY_ORDER that also appear in
-    # the regex's numbered alternation (KV|QV|TT).
-    numbered_prefixes = {"KV", "QV", "TT"}
-    # Descriptor prefixes are every VALLEY_ORDER key that isn't numbered.
-    descriptor_prefixes = set(merge_mod.VALLEY_ORDER) - numbered_prefixes
+    # Extract BOTH alternations from `_TOMB_ID_RE` so the test reports
+    # drift on either axis (numbered or descriptor) rather than silently
+    # misattributing a numbered-prefix divergence as a descriptor
+    # divergence. Gemini round-2 finding on PR #105: hardcoding
+    # `numbered_prefixes = {"KV","QV","TT"}` in the test means that if a
+    # future chunk adds a new numbered prefix to VALLEY_ORDER + the regex
+    # but not this test, the set-diff shifts the new prefix into
+    # `descriptor_prefixes` and the failure message points at the wrong
+    # alternation.
+    numbered_match = re.search(r"\(\?:([A-Z|]+)\)\\d\+", _TOMB_ID_RE.pattern)
+    assert numbered_match, (
+        "could not parse numbered alternation from _TOMB_ID_RE; "
+        "regex shape changed — update this test to match"
+    )
+    regex_numbered = set(numbered_match.group(1).split("|"))
 
-    # Extract the descriptor alternation from _TOMB_ID_RE's pattern.
-    m = re.search(r"\(\?:([A-Z|]+)\)-\[A-Z\]", _TOMB_ID_RE.pattern)
-    assert m, "could not parse descriptor alternation from _TOMB_ID_RE"
-    regex_descriptors = set(m.group(1).split("|"))
+    descriptor_match = re.search(r"\(\?:([A-Z|]+)\)-\[A-Z\]", _TOMB_ID_RE.pattern)
+    assert descriptor_match, (
+        "could not parse descriptor alternation from _TOMB_ID_RE; "
+        "regex shape changed — update this test to match"
+    )
+    regex_descriptors = set(descriptor_match.group(1).split("|"))
 
-    assert descriptor_prefixes == regex_descriptors, (
-        f"VALLEY_ORDER descriptor prefixes {sorted(descriptor_prefixes)} "
-        f"diverged from _TOMB_ID_RE's descriptor alternation "
-        f"{sorted(regex_descriptors)}. Keep the two in sync when adding "
-        f"a new chunk that introduces a new valley prefix."
+    regex_all = regex_numbered | regex_descriptors
+    valley_order_set = set(merge_mod.VALLEY_ORDER)
+
+    assert valley_order_set == regex_all, (
+        f"VALLEY_ORDER {sorted(valley_order_set)} diverged from "
+        f"_TOMB_ID_RE alternations (numbered={sorted(regex_numbered)}, "
+        f"descriptor={sorted(regex_descriptors)}). Keep the two in sync "
+        f"when adding a new chunk that introduces a new valley prefix."
     )
 
 
@@ -2001,13 +2016,20 @@ def test_chunk8_reviewer_inserted_characters_pinned() -> None:
 
 
 def test_chunk8_notes_from_pm_remaining_rows() -> None:
-    """QV33, QV46, QV52, QV73, QV75 have populated `notes_from_pm` values
-    that `test_chunk8_notes_from_pm_royal_kinship` does not cover. Rule 5
-    thematic-gap fix from the chunk-8 retrospective code-review.
+    """QV33, QV36, QV40, QV46, QV52, QV73, QV75 have populated
+    `notes_from_pm` values that `test_chunk8_notes_from_pm_royal_kinship`
+    does not cover. Rule 5 thematic-gap fix from the chunk-8 retrospective
+    code-review; QV36 + QV40 added per Gemini round-2 finding on PR #105
+    (PM prints populated text for both — leaving them unasserted meant a
+    silent regression on those rows would not break this test).
     """
     expected_substrings = {
         # QV33: earlier-edition cross-numbering + dating hedge.
         "QV33": "Dyn. XX(?)",
+        # QV36: PM's bare "A PRINCESS, no name." clause (no citation tail).
+        "QV36": "A PRINCESS, no name.",
+        # QV40: PM's "A QUEEN, cartouche blank" clause + 19th-c. cross-refs.
+        "QV40": "A QUEEN, cartouche blank.",
         # QV46 Imhotep: hedged attribution + regnal-dating clause.
         "QV46": "Vizier. Temp. Tuthmosis I.",
         # QV52 Tyti: dating + earlier-edition cross-ref.
