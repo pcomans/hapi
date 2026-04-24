@@ -1557,7 +1557,9 @@ def test_every_populated_field_on_flagship_den_asserted() -> None:
     # dynasty_label, chapter, sequence_in_chapter_section, display_name,
     # horus_names, golden_horus_names, throne_names, later_cartouche_names,
     # source_citation. (alt_display_names, nebty_names, birth_names,
-    # seth_names are all empty, correctly.)
+    # seth_names are all empty, correctly. printed_under is explicitly null
+    # for Den, so excluded from `populated_top_level` by the v is None
+    # filter above — same treatment as stage_suffix.)
     assert set(populated_top_level) == {
         "leprohon_id",
         "dynasty_number",
@@ -1571,3 +1573,172 @@ def test_every_populated_field_on_flagship_den_asserted() -> None:
         "later_cartouche_names",
         "source_citation",
     }, sorted(populated_top_level)
+
+
+# ---------------------------------------------------------------------------
+# printed_under — schema discriminator for Chapter X queen-consort sub-entries
+# ---------------------------------------------------------------------------
+#
+# Background: Chapter X uses Leprohon's `Na.` sub-headword convention for 4
+# queen-consort entries (Arsinoe II, Berenike II, Cleopatra I, Cleopatra II).
+# Each is a distinct person printed immediately after a specific king's entry.
+# Before the 2026-04-24 schema PR, these shared the `stage_suffix: "a"` field
+# with the 9 same-king titulary-stage rows (Mentuhotep II a/b/c, Amenemhat I
+# a/b, Thutmose III a/b, Amenhotep IV → Akhenaten) — a field-level rule-4
+# overload flagged as P1 by the in-session egyptologist-reviewer on
+# 2026-04-21 (recorded in transcribe.md) and resurfaced by the 2026-04-23
+# sweep audit.
+#
+# The fix: a typed discriminator `printed_under: <leprohon_id> | null`.
+# The field is named `printed_under` rather than `consort_of` because the
+# 2026-04-24 egyptologist-reviewer verification against Leprohon's prose
+# found only 1 of the 4 pairs has an explicit Leprohon scholarly claim
+# (Cleopatra I → Ptolemy V via footnote 39's "two Epiphanes gods"); the
+# other 3 are book-layout placements with no prose attribution. The field
+# honestly records what we can verify — "Leprohon printed this row under
+# king X in his book layout" — and leaves authoritative consort-relation
+# extraction to Phase A (D&H queens states relationships explicitly in prose).
+#
+# The 4 tests below convert the convention-only guidance that lived in
+# transcribe.md into enforced invariants — closing the rule-3 gap that let
+# the overload ship in chunk 14.
+
+
+# Expected consort / king pairs. Hardcoded rather than derived from the
+# `leprohon_id` suffix so the test is value-pinning (rule 5), not shape-
+# checking — same discipline as the CONSORT_ROWS dict that drives merge.py.
+EXPECTED_PRINTED_UNDER_PAIRS = {
+    "leprohon-33.02a": (
+        "Arsinoe II",
+        "leprohon-33.02",
+        "Ptolemy II Philadelphus",
+    ),
+    "leprohon-33.03a": (
+        "Berenike II",
+        "leprohon-33.03",
+        "Ptolemy III Euergetes",
+    ),
+    "leprohon-33.05a": (
+        "Cleopatra I",
+        "leprohon-33.05",
+        "Ptolemy V Epiphanes",
+    ),
+    "leprohon-33.08a": (
+        "Cleopatra II",
+        "leprohon-33.08",
+        "Ptolemy VIII Euergetes II Tryphon",
+    ),
+}
+
+
+def test_printed_under_field_present_on_every_row() -> None:
+    """Rule 3: every row carries the `printed_under` key (null on most rows,
+    a pointer on the 4 Chapter-X consort rows). Absence of the key would
+    mean `merge.py`'s post-merge injection loop skipped a row — a silent
+    schema drift that would leave downstream consumers unable to
+    distinguish same-king stages from distinct consort sub-entries.
+    """
+    for r in _rows():
+        assert "printed_under" in r, (
+            f"Row {r['leprohon_id']} is missing the `printed_under` field. "
+            f"merge.py must inject this on every row."
+        )
+
+
+def test_printed_under_points_at_valid_leprohon_id() -> None:
+    """Rule 3: every non-null `printed_under` value must be the
+    `leprohon_id` of a row that exists in `reconciled.jsonl` (foreign-key
+    integrity). Otherwise a Phase-A join following the pointer hits a
+    dangling reference.
+    """
+    ids_in_file = {r["leprohon_id"] for r in _rows()}
+    for r in _rows():
+        target = r.get("printed_under")
+        if target is not None:
+            assert target in ids_in_file, (
+                f"{r['leprohon_id']} has `printed_under: {target!r}` but no "
+                f"row with that id exists."
+            )
+
+
+def test_printed_under_only_in_chapter_x() -> None:
+    """Scope invariant: only Chapter X (`Macedonian and Ptolemaic
+    Dynasties`) may contain `printed_under != null` rows. The Na.
+    sub-headword convention Leprohon uses for consort queens appears in
+    no other chapter in the whole source. If a future chunk edit
+    inadvertently populates `printed_under` elsewhere, that's a signal
+    the convention leaked and must be investigated before the PR merges.
+    """
+    for r in _rows():
+        if r.get("printed_under") is not None:
+            assert r["chapter"] == "Macedonian and Ptolemaic Dynasties", (
+                f"Row {r['leprohon_id']} in chapter {r['chapter']!r} carries "
+                f"`printed_under: {r['printed_under']!r}` — this convention "
+                f"is only valid in Chapter X."
+            )
+
+
+def test_four_known_printed_under_pairs_resolve() -> None:
+    """Rule 5 value-pinning: the 4 Chapter-X consort rows have exactly the
+    expected (display_name, printed_under, parent's display_name)
+    triples. Locks the semantic claim of the schema PR: these specific
+    queens are printed under these specific kings in Leprohon's book
+    layout. See merge.py's PRINTED_UNDER_ROWS dict for the author-
+    attributed scholarly status of each pair (per 2026-04-24 egyptologist-
+    reviewer verification: only Cleopatra I → Ptolemy V is an explicit
+    Leprohon prose claim; the other 3 are layout-only).
+    """
+    for consort_lid, (
+        consort_display,
+        parent_lid,
+        parent_display,
+    ) in EXPECTED_PRINTED_UNDER_PAIRS.items():
+        consort_row = _row(consort_lid)
+        assert consort_row["display_name"] == consort_display, (
+            f"{consort_lid}: expected display_name {consort_display!r}, "
+            f"got {consort_row['display_name']!r}"
+        )
+        assert consort_row["printed_under"] == parent_lid, (
+            f"{consort_lid}: expected printed_under {parent_lid!r}, "
+            f"got {consort_row['printed_under']!r}"
+        )
+        parent_row = _row(parent_lid)
+        assert parent_row["display_name"] == parent_display, (
+            f"{parent_lid} ({consort_lid}'s parent): expected display_name "
+            f"{parent_display!r}, got {parent_row['display_name']!r}"
+        )
+
+
+def test_same_king_stages_have_null_printed_under() -> None:
+    """Rule 5 value-pinning: the 9 same-king titulary-stage rows (which
+    also carry `stage_suffix != null`) must have `printed_under == null`.
+    This is the structural twin of
+    `test_four_known_printed_under_pairs_resolve`: it asserts that the 9
+    stage rows (Mentuhotep II a/b/c, Amenemhat I a/b, Thutmose III a/b,
+    Amenhotep IV → Akhenaten) are NOT mis-classified as consort sub-entries.
+    If a future edit ever adds a `printed_under` pointer to one of these
+    rows, the consort/stage distinction — which was the whole point of
+    the 2026-04-24 schema PR — has broken.
+    """
+    stage_ids = {
+        "leprohon-11b.05a",  # Mentuhotep II (a)
+        "leprohon-11b.05b",  # Mentuhotep II (b)
+        "leprohon-11b.05c",  # Mentuhotep II (c)
+        "leprohon-12.01a",   # Amenemhat I (a)
+        "leprohon-12.01b",   # Amenemhat I (b)
+        "leprohon-18.05a",   # Thutmose III (a)
+        "leprohon-18.05b",   # Thutmose III (b)
+        "leprohon-18.10a",   # Amenhotep IV
+        "leprohon-18.10b",   # Akhenaten
+    }
+    for lid in stage_ids:
+        r = _row(lid)
+        assert r["stage_suffix"] is not None, (
+            f"{lid}: stage row lost its stage_suffix — something else broke."
+        )
+        assert r["printed_under"] is None, (
+            f"{lid}: stage row incorrectly carries `printed_under: "
+            f"{r['printed_under']!r}`. Stage rows (same king, different "
+            f"titulary phase) must have printed_under == null; only the 4 "
+            f"Chapter-X consort sub-entries may point elsewhere."
+        )

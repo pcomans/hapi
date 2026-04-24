@@ -108,6 +108,36 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
 SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})
 
 
+# Queen-consort sub-entries in Leprohon's Chapter X. Each key is the
+# consort's leprohon_id (matching Leprohon's printed `NA.` sub-headword);
+# each value is the preceding king's leprohon_id under whose entry
+# Leprohon prints the sub-headword.
+#
+# Resolves the `stage_suffix` overload P1 flagged by egyptologist-reviewer
+# on 2026-04-21 (recorded in transcribe.md). `stage_suffix` retains its
+# primary meaning ("same king's successive titulary stages"); the 4 chapter-X
+# queen-consort sub-entries additionally carry `printed_under`, which
+# encodes WHERE Leprohon printed them in his book layout — not a Leprohon-
+# asserted consort relation. This distinction matters: the 2026-04-24
+# egyptologist-reviewer verification found that 3 of the 4 pairs have no
+# Leprohon prose attribution (only Cleopatra I → Ptolemy V is a scholarly
+# pairing via Leprohon's footnote 39 on the "two Epiphanes gods"). Naming
+# the field `printed_under` rather than `consort_of` keeps the data
+# honest: Phase-A consumers can use it as a weak signal for grouping and
+# source the authoritative consort relation from D&H 2004 (which
+# states relationships explicitly in prose).
+#
+# These are the ONLY rows in the whole extract where `printed_under` is
+# non-null. Adding a new entry requires an explicit edit here plus a
+# matching update to `test_four_known_printed_under_pairs_resolve`.
+PRINTED_UNDER_ROWS: dict[str, str] = {
+    "leprohon-33.02a": "leprohon-33.02",  # Arsinoe II    (layout-only; no Leprohon prose attribution)
+    "leprohon-33.03a": "leprohon-33.03",  # Berenike II   (layout-only; no Leprohon prose attribution)
+    "leprohon-33.05a": "leprohon-33.05",  # Cleopatra I   (UNAMBIGUOUS; Leprohon footnote 39 names "two Epiphanes gods" = Ptolemy V + Cleopatra I)
+    "leprohon-33.08a": "leprohon-33.08",  # Cleopatra II  (layout-only; historically sister-wife of both Ptolemy VI and Ptolemy VIII)
+}
+
+
 def _normalise_value(v: object) -> object:
     """Collapse sentinel strings that mean 'null' into actual None.
 
@@ -242,7 +272,12 @@ def main(agent_dir: Path) -> None:
             )
             continue
 
-        all_fields = set().union(*[v.keys() for _, v in present])
+        # Sort field iteration so the disagreement report is deterministic
+        # across re-runs. Without this, Python's set-iteration order
+        # reshuffles the per-field blocks on every run and produces a huge
+        # noise diff against merge-disagreements.txt. `reconciled.jsonl`
+        # itself is already deterministic via json sort_keys.
+        all_fields = sorted(set().union(*[v.keys() for _, v in present]))
         merged: dict = {}
         row_disagreements: list[str] = []
         for field in all_fields:
@@ -265,6 +300,13 @@ def main(agent_dir: Path) -> None:
                 + "\n"
             )
         final.append(merged)
+
+    # Inject `printed_under` on every row — the field is always present
+    # (null on 391 rows, pointer on 4). See PRINTED_UNDER_ROWS docstring for
+    # the semantic. This runs after the merge loop so both singleton and
+    # majority cases get the field uniformly.
+    for row in final:
+        row["printed_under"] = PRINTED_UNDER_ROWS.get(row["leprohon_id"])
 
     # Deterministic JSONL output: sort keys so re-runs do not shuffle the file
     # (playbook step 10, "Deterministic JSONL output"). json.dumps sort_keys
