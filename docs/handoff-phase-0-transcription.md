@@ -24,7 +24,7 @@
    - `reconciled.jsonl` — one JSON object per line, following the schema specified below for each source.
 5. **Never redistribute copyrighted text you can't license.** Facts (king names, dates, tomb numbers, occupants) are not copyrightable and are the goal of the extract. Prose passages, tables-as-layout, and images are copyrightable; transcribe the facts without copying the book's prose wholesale. If in doubt, cite and paraphrase in a `source_note` field instead of copying.
 6. **Every `reconciled.jsonl` row must carry a `source_citation` field** with at minimum `{page: int, edition: string}` so any reader can verify the row against the physical book.
-7. **Language:** source material is in English (Shaw, Dodson-Hilton, Kitchen, Hölbl), French (Baud), or German (Beckerath). Transliterations and names in the source's original orthography — do NOT anglicise during transcription. Anglicisation is a Phase A concern (ADR-016). Your job is faithful extract.
+7. **Language:** source material is in English (Shaw, Dodson-Hilton, Kitchen), French (Baud), or German (Beckerath). Transliterations and names in the source's original orthography — do NOT anglicise during transcription. Anglicisation is a Phase A concern (ADR-016). Your job is faithful extract.
 8. **Work through the list in the order given below.** It's ordered by (a) ease and (b) unblocking power for Phase A. Stop and ship each PR before starting the next.
 
 ---
@@ -324,37 +324,9 @@ Keep transliterated Egyptian in its original Beckerath form (with ꜣ, ꜥ, etc.
 
 ---
 
-## Source 9 — Hölbl 2001, *A History of the Ptolemaic Empire*
+## ~~Source 9 — Hölbl 2001, *A History of the Ptolemaic Empire*~~ — DROPPED
 
-**Citation:** Hölbl, G. (2001) *A History of the Ptolemaic Empire* (tr. T. Saavedra). London: Routledge. ISBN 978-0415201452.
-
-**Target directory:** `pipeline/pipeline/authority/sources/holbl-2001-argead-ptolemaic/`
-
-**What to transcribe:** the opening chronological table (lists Alexander III, Philip III Arrhidaeus, Alexander IV — the Argead bridge — and then the full Ptolemaic sequence). Chapter 1 covers the Argead period in detail; for the MVP focus on the chronological-table data.
-
-**Why:** HKW stops at Alexander's conquest (332 BCE). pharaoh.se doesn't cover the Argead rulers. Hölbl's chronological table is the source for the 332–305 BCE bridge dynasty absent from other sources.
-
-**Schema** — one row per ruler:
-
-```json
-{
-  "holbl_sequence": 1,
-  "name": "Alexander III (the Great)",
-  "alt_names": ["Alexander the Great", "Alexandros III"],
-  "period": "Argead",
-  "start_bce": -332,
-  "end_bce": -323,
-  "status_in_egypt": "Conqueror; satrap of Egypt = Ptolemy I 323 onwards",
-  "parentage": "Son of Philip II of Macedon and Olympias",
-  "source_citation": {"page": "xx", "edition": "Routledge 2001 paperback"}
-}
-```
-
-Also include Ptolemy I through Cleopatra VII and Caesarion from Hölbl's chronological table — this overlaps with the existing `wikipedia-ptolemaic` source but provides a second, scholarly-quality cross-reference. Transcribe and let Phase A reconcile.
-
-**Expected row count:** ~20 rows (Argead 3 + Ptolemies 15 + major queens 5).
-
-**Rights:** Routledge, in copyright. Facts only.
+**Dropped 2026-04-23.** The premise (Argead rulers are absent from HKW + pharaoh.se) is wrong: pharaoh.se already covers Alexander III, Philip III Arrhidaeus, and Alexander IV with full five-name Beckerath titulary and Greek↔Latinate `alt_labels`. The Ptolemaic overlap rationale is also obsolete — `wikipedia-ptolemaic` was dropped the same day. PR #74 was closed; no Hölbl source is planned. See `docs/mvp-tasks.md`.
 
 ---
 

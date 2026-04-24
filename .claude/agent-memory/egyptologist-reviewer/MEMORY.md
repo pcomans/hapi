@@ -1,5 +1,4 @@
 - [Baud 1999 chunk-review recurring patterns](project_baud_chunk_review_patterns.md) — recurring failure modes in Baud Corpus chunks: hedge misuse, roles-field data loss, anglicisation over-confidence
 - [PM Theban Necropolis chunk-review patterns](project_pm_theban_chunk_review_patterns.md) — recurring issues in PM I.2 royal-tomb chunks: PM-verbatim vs modern consensus, truncated notes, dangling cross-refs
-- [Argead bridge — pharaoh.se actually covers these kings](project_argead_bridge_pharaohse_overlap.md) — Hölbl-argead README's gap-filling premise is wrong; pharaoh.se already has all 3 Argeads with full Beckerath titulary
 - [Dodson-Hilton queens chunk-review patterns](project_dh_queens_chunk_review_patterns.md) — recurring downstream-matching risks in D&H Brief Lives chunks: hedge-string spouses, KW? tokens, alt_names=[], unknown-king sentinels
 - [Leprohon chunk-review recurring patterns](project_leprohon_chunk_review_patterns.md) — OCR-artefact leakage into anglicised/translation, silent translation fabrication, MdC in anglicised, missing old-reading aliases

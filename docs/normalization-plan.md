@@ -52,7 +52,6 @@ Acquire the raw reference data per ADR-012. Each source goes into `pipeline/pipe
 |---|---|---|
 | Hornung/Krauss/Warburton (2006) | Manual transcription of chronology table from PDF, with page citations | dynasties.json, periods.json |
 | Pharaoh.se royal titulary database | HTML scrape, reconciled JSONL (CC BY 4.0) | rulers.json |
-| Wikipedia Ptolemaic dynasty | Scraped table, JSONL (CC BY-SA 4.0) | rulers.json, dynasties.json (Ptolemaic fill-in) |
 | Beckerath *Handbuch* (1999) | Manual cross-check pass against pharaoh.se results | rulers.json |
 | iDAI.gazetteer Egyptian places | REST API, reconciled JSONL (CC BY 4.0) | sites.json |
 

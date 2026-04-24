@@ -224,8 +224,7 @@ def test_no_tracked_files_under_raw_for_phase0_sources():
 
     A directory is treated as a Phase-0 source iff it has a `transcribe.md` at
     source-dir root. Sources with different rights models (pharaoh.se web scrape,
-    iDAI gazetteer, wikipedia-ptolemaic, HKW) have no `transcribe.md` and are
-    correctly skipped.
+    iDAI gazetteer, HKW) have no `transcribe.md` and are correctly skipped.
     """
     repo_root = PIPELINE_ROOT.parent
     sources_root = PIPELINE_ROOT / "pipeline" / "authority" / "sources"
