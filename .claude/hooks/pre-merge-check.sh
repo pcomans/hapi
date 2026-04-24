@@ -26,12 +26,16 @@ fi
 CMD_FLAT=$(printf '%s\n' "$CMD" | tr '\n' ' ')
 
 # --- Block 1: curl-to-API merge bypass --------------------------------------
-# Match any `curl` invocation whose URL hits a GitHub pulls-merge endpoint.
-# Covers the canonical `https://api.github.com/repos/<owner>/<repo>/pulls/<N>/merge`
-# pattern and its path-only form. Intentionally permissive on flags/method
-# so `-X PUT`, `-XPUT`, `--request PUT`, shorthand variants and subsequent
-# piped invocations all match. Blocks the call and redirects to `gh pr merge`.
-if printf '%s' "$CMD_FLAT" | grep -qE 'curl.*/repos/[^/]+/[^/]+/pulls/[0-9]+/merge'; then
+# Match any `curl` invocation whose URL hits a GitHub pulls-merge endpoint
+# AND uses the PUT method (the verb that actually performs the merge). A GET
+# on `/pulls/<N>/merge` is a read-only "has this been merged?" status check
+# and must not be blocked. Word boundaries on `curl` and the path suffix
+# prevent substring false-positives (e.g. `occurl`, or commands that merely
+# echo the URL as text — including this hook's own output). Covers flag
+# shorthands `-X PUT`, `-XPUT`, `--request PUT`, `--request=PUT`
+# (case-insensitive). Gemini round-2 medium finding on PR #104.
+if printf '%s' "$CMD_FLAT" | grep -qE '\bcurl\b.*/repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
+   && printf '%s' "$CMD_FLAT" | grep -qiE '(-X|--request)[ =]*PUT'; then
   cat <<'HEREDOC'
 {
   "decision": "block",
