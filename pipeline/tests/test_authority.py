@@ -161,17 +161,23 @@ class TestHKWIntegrity:
         egyptologist-reviewer + code-reviewer P2 finding on the
         retrospective PR #102 review). Scorpion I similarly null.
 
-        Filtered per-ruler (not a dict-by-display-name) to avoid any
-        homonym collisions in the HKW corpus (e.g. Dyn-17 Ta'o twice).
+        Filtered with BOTH `dynasty == 0` AND the explicit display-name
+        allow-list to avoid homonym collisions — per Gemini round-1 finding
+        on PR #103 (the prior version was a plain `display in {...}` filter
+        which would silently collide if any other dynasty happens to carry
+        a ruler with the same display name). Scorpion I sits at
+        `dynasty: null` (per egyptologist review on PR #102 retrospective),
+        so the OR-clause keeps him reachable.
         """
-        by_kind_and_display = {
+        by_display = {
             r["display"]: r
             for r in hkw_rows
-            if r["kind"] == "ruler" and r["display"] in {"Iry-Hor", "Ka", "Scorpion I"}
+            if r["kind"] == "ruler"
+            and (r.get("dynasty") == 0 or r["display"] == "Scorpion I")
         }
-        assert by_kind_and_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
-        assert by_kind_and_display["Ka"]["alternative_reading"] is None
-        assert by_kind_and_display["Scorpion I"]["alternative_reading"] is None
+        assert by_display["Iry-Hor"]["alternative_reading"] == "Irj-Hor"
+        assert by_display["Ka"]["alternative_reading"] is None
+        assert by_display["Scorpion I"]["alternative_reading"] is None
 
     def test_dyn0_dynasty_row_present(self, hkw_rows):
         """A `kind: dynasty` row with `number: 0` exists so the
