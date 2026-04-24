@@ -100,6 +100,23 @@ The work is sequential by authority — dynasties first as the smallest, most co
 
 Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources/`. The operational protocol lives in [`docs/playbook-phase-0-ocr-transcription.md`](playbook-phase-0-ocr-transcription.md) — most recent iteration adds **Step 11.5 risk-driven automated checks** (PR #41) so reviewer-flagged failure-mode categories become deterministic checks in each source's diff script rather than per-row human to-dos. These can run in parallel:
 
+**PR hygiene hooks (infrastructure, constitutional rule 3 enforcement).**
+`.claude/hooks/` contains deterministic guards that convert the project's
+memory-only policies into CI-level failures so the agent can't silently skip
+them. As of PR #104 the enforced guards are: (1) `scope-check.sh` — blocks
+`gh pr comment` replies to review feedback without a prior scope-accountability-enforcer
+invocation; (2) `pre-merge-check.sh` — reminds on `gh pr merge` and
+**blocks `curl -X PUT .../pulls/<N>/merge` self-merges** (the bypass that
+let session-2026-04-23's PRs #100/#101/#102 merge without the
+`code-reviewer` + `egyptologist-reviewer` subagent passes that
+`feedback_pr_reviewers.md` requires; see the retrospective fix-up PRs
+#103 + #105); (3) `post-pr-create.sh` — auto-posts `/gemini review` on
+push to a PR branch and **blocks pushes that don't include a
+`docs/mvp-tasks.md` update with `TASK_LIST_UPDATED=1`**. See the hook file for the
+current regex structure and harness (covers `curl`, `gh api`,
+env-var-prefixed invocations, multi-line continuations, and
+quoted-argument mentions).
+
 - ~~Hornung/Krauss/Warburton (2006) chronology table~~ ✅ — 203-row transcription in `authority/sources/hkw-chronology-2006/reconciled.jsonl` (Early Dynastic → Alexander). PR #18.
 - ~~Wikipedia Ptolemaic dynasty~~ ✅ — 24-row source in `authority/sources/wikipedia-ptolemaic/reconciled.jsonl` (Ptolemy I–XV + 8 queens, 305–30 BCE). Fills gap left by HKW. PR #19.
 - ~~Wikidata pharaohs SPARQL dump~~ — **Dropped and replaced by pharaoh.se.** Wikidata had persistent quality issues (fictional characters, non-pharaohs, 0% prenomen coverage). Pharaoh.se (CC BY 4.0, expert-curated, full five-name titulary sourced from Beckerath) landed in `authority/sources/pharaoh-se/reconciled.jsonl`. See ADR-012 for the decision record. PR #21 / superseding PR.
