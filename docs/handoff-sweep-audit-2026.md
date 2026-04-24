@@ -7,6 +7,8 @@ Reviewer-set decisions: all book/transcription sources received code-reviewer an
 
 ## Source Coverage
 
+The table below records sweep findings **as of the sweep start** — i.e., before the scope decisions above were actioned. The two struck-through rows (`holbl-2001-argead`, `wikipedia-ptolemaic`) were reviewed in the same pass as everything else and their findings stand; they were then dropped rather than fixed, so the P1/P2/P3 counts are historical rather than work-to-do. Counts for every other source are open work.
+
 | Source | Reviewers | P1 | P2 | P3 | Key issues |
 |---|---:|---:|---:|---:|---|
 | `baud-1999-ok-royal-family` | code + egyptologist | 2 | 4 | 5 | Missed over-asserted eldest-son roles; `baud-126` child assigned to wrong mother; chunks 3-7 under-pinned; stale README/schema docs. |
