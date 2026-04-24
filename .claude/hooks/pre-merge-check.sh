@@ -18,13 +18,20 @@ if [ -z "$CMD" ]; then
   CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
 fi
 
+# Normalise the command once: flatten multi-line commands (e.g. long curl
+# calls with `\` line-continuations) into a single line, so a line-oriented
+# `grep` can't be bypassed by splitting the command across lines. Using
+# `printf '%s\n'` rather than `echo` avoids `echo`'s misbehaviour when the
+# first argument starts with `-`. Gemini round-1 HIGH finding on PR #104.
+CMD_FLAT=$(printf '%s\n' "$CMD" | tr '\n' ' ')
+
 # --- Block 1: curl-to-API merge bypass --------------------------------------
 # Match any `curl` invocation whose URL hits a GitHub pulls-merge endpoint.
 # Covers the canonical `https://api.github.com/repos/<owner>/<repo>/pulls/<N>/merge`
 # pattern and its path-only form. Intentionally permissive on flags/method
 # so `-X PUT`, `-XPUT`, `--request PUT`, shorthand variants and subsequent
 # piped invocations all match. Blocks the call and redirects to `gh pr merge`.
-if echo "$CMD" | grep -qE 'curl.*/repos/[^/]+/[^/]+/pulls/[0-9]+/merge'; then
+if printf '%s' "$CMD_FLAT" | grep -qE 'curl.*/repos/[^/]+/[^/]+/pulls/[0-9]+/merge'; then
   cat <<'HEREDOC'
 {
   "decision": "block",
@@ -36,7 +43,9 @@ fi
 
 # --- Block 2: gh pr merge reminder ------------------------------------------
 # Only fire on `gh pr merge`. Any other Bash command passes through untouched.
-if ! echo "$CMD" | grep -q 'gh pr merge'; then
+# The `gh +pr +merge` pattern (one-or-more spaces between tokens) tolerates
+# extra whitespace from line-continuation joins.
+if ! printf '%s' "$CMD_FLAT" | grep -qE 'gh +pr +merge'; then
   exit 0
 fi
 
