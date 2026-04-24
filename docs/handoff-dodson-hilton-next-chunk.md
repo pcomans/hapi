@@ -32,7 +32,7 @@ Pick this up when the user asks to continue the Dodson-Hilton transcription seri
 | 2 | Second Intermediate Period (Dyns 13 / 14 / 15 / 16 / 17) | ~40–80 | Ryholt 1997 has more authority here; D&H rows are a cross-reference. |
 | 4 | Third Intermediate Period (Dyns 21 / 22 / 23 / 24 / 25) | ~80–120 | Kitchen 1996 TIP + Kitchen 2009 revisions are the authority; D&H provides family-tree context. |
 | 5 | Late Period (Dyns 26–31) | ~40–60 | Thin but structured. |
-| 5 | Ptolemaic | ~20 | Kings overlap with `pharaoh-se` + `leprohon-2013-titulary` Ch X; sole planned source for Cleopatra III/V/VII and Berenice III/IV queens since `wikipedia-ptolemaic` was dropped 2026-04-23. |
+| 5 | Ptolemaic | ~20 | Kings overlap with `pharaoh-se` + `leprohon-2013-titulary` Ch X; sole planned source for 3 Ptolemaic queens (Cleopatra III, Cleopatra V, Berenice IV) since `wikipedia-ptolemaic` was dropped 2026-04-23. Cleopatra VII and Berenice III are already in Leprohon at `leprohon-33.14` / `leprohon-33.12`. |
 
 **Ship one chapter per PR** — chapter 1 is the biggest and should probably split further (OK is a natural sub-chunk given Baud overlap). Don't try to bundle chapters 1–5 into a single PR. The Ramesside PR's ~170-row scale is the upper-bound comfortable size.
 

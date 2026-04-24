@@ -130,7 +130,7 @@ No single source covers the whole authority. The Egyptological authority is nece
 
 ### ~~Hölbl 2001 *A History of the Ptolemaic Empire*~~ — DROPPED 2026-04-23
 
-The original rationale ("absent from both HKW and pharaoh.se") was wrong: pharaoh.se already covers Alexander III, Philip III Arrhidaeus, and Alexander IV with full Beckerath titulary. PR #74 was closed and never merged to `main`; the source directory has been deleted. See `docs/mvp-tasks.md`.
+See ADR-012 Consequences and `docs/handoff-sweep-audit-2026.md` for the rationale and decision record.
 
 ### Beckerath 1999 *Handbuch der ägyptischen Königsnamen*, 2nd ed. — PENDING
 
