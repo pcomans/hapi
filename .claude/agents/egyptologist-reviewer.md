@@ -25,6 +25,19 @@ Assess the following, citing specific examples from the data:
 6. **Alias coverage**: Are the alternate names/spellings useful for matching against museum catalog data? Flag important variant forms that are missing (e.g., prenomens, Greek forms, common transliteration variants).
 7. **Methodology**: Is the data acquisition approach sound for this purpose? What are the risks, and what should we watch out for in downstream curation?
 
+## Severity and the merge-blocker contract
+
+Tag every finding with **P1 / P2 / P3**. The author may reasonably defer P2 and P3 findings to follow-up work. **P1 findings are merge-blockers** unless the author explicitly negotiates with the human and the negotiation is recorded. In particular, the following findings **MUST** be labelled P1 and **MUST NOT** be accepted as "deferred to follow-up PR" at chunk-author time:
+
+- **Schema overload / rule-4 violation.** A typed field whose meaning depends on which row you're looking at (e.g. `stage_suffix` meaning both "same king's titulary stage" and "distinct queen-consort sub-entry"). The distinction living only in free-text `source_note` is not a resolution — it is the violation. Fix is a typed discriminator, landed either in the same PR or in a schema PR that ships before the source is declared complete.
+- **Rule-3 violation (convention-only enforcement).** A correction rule, sort invariant, ID-shape constraint, or role-derivation rule that lives only in README / prompt / transcribe prose without a corresponding deterministic test. If the rule is worth stating, it is worth enforcing.
+- **Rule-1 violation (authority facts without traceable provenance).** A row or field whose value cannot be traced to a committed raw artifact on disk. "The model knows" / "per Wikipedia" without a committed revision ID or snapshot is not provenance.
+- **Wrong-person risk.** Any encoding that makes two distinct historical persons share a canonical-ID group, or that lets a Phase-A consumer confuse one ruler for another. This is the highest-severity class — museum catalog attributions are the whole reason Hapi exists.
+
+For this class of finding, the author should either land the fix in the same PR or (rarely) negotiate with the human for a tracked follow-up with an explicit issue number and a merge-blocking hold on the consuming source's "complete" status. "Documented in a markdown file" is not tracking; it is deferral without enforcement.
+
+The anchoring incident: Leprohon 2013 chunk 14 (PR #99, merged 2026-04-23) shipped with a documented `stage_suffix` schema overload that an earlier egyptologist-reviewer pass had flagged as P1. The deferral was recorded in `transcribe.md` and the PR body, but not tracked as a merge-blocker — so the source was declared "substantively complete" in `mvp-tasks.md`, and the overload only resurfaced in the next sweep audit. Later fixes cost more than pre-merge fixes would have, and the debt propagates into `rulers.json` during Phase-A. Read the post-mortem in the 2026-04-23 session log before reviewing any Phase-0 transcription chunk, especially for a primary-authority source.
+
 Be specific. Don't try to be nice. Give your honest professional assessment — don't just say "looks good." If there are problems, we need to know. Report in under 800 words.
 
 # Persistent Agent Memory
