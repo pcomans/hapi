@@ -284,11 +284,12 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "DAN-MentuhotpIWifeOfDjhuti",
         "notes_from_pm",
         "Wife of King Ḍḥuti. Found in tomb by Passalacqua.",
-        "PM p.604 prints `wife of King Ḍḥuti` with both underdot-D and "
-        "underdot-H. The text-layer OCR rendered `Ql_J.uti` as `Djhuti` "
-        "(no diacritics) and the agents carried that through. Restore the "
-        "PM-verbatim diacritics per the `notes_from_pm` verbatim-preserve "
-        "policy (chunk-1..6 convention). tomb_id renamed to "
+        "Egyptologist-reviewer P1 finding on PR #100 (reviewer-notes-chunk7.md "
+        "line 20): PM p.604 prints `wife of King Ḍḥuti` with both underdot-D "
+        "and underdot-H, but the text-layer OCR rendered `Ql_J.uti` as "
+        "`Djhuti` (no diacritics) and the agents carried that through. "
+        "Restore the PM-verbatim diacritics per the `notes_from_pm` "
+        "verbatim-preserve policy. tomb_id renamed to "
         "`DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor "
         "consistency with the PM-faithful spelling convention.",
     ),
@@ -297,10 +298,12 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "notes_from_pm",
         "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I "
         "by Carter, later equated by Černý with 'House of Amenophis of the Garden'.",
+        "Egyptologist-reviewer P2 finding on PR #100 (reviewer-notes-chunk7.md): "
         "PM p.599-600 §III.C headword spells out the Carter attribution "
-        "history in detail; the pre-review note dropped the Černý follow-up. "
-        "Restore per egyptologist-reviewer P2 finding (verbatim preserve of "
-        "the attribution-history clause). tomb_id renamed via CHUNK7_RENAMES.",
+        "history in detail ('attributed to Amenophis I by Carter; Černý equates "
+        "with House of Amenophis of the Garden'); the pre-review note dropped "
+        "the Černý follow-up. Restore verbatim per the reviewer's citation of "
+        "the full attribution-history clause. tomb_id renamed via CHUNK7_RENAMES.",
     ),
     # Chunk-7 `ḥ` sweep (Gemini round-3 on PR #101): the chunk-7 prompt
     # allowed `ḥ` in `occupant_name`, contradicting the README's project-wide

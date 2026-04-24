@@ -170,10 +170,14 @@ def test_tomb_id_is_unique() -> None:
 # Cross-refs from descriptor rows back to numbered tombs use the numbered
 # form (`["KV20"]` for SWV-HatshepsutSouth's See-also), so this regex also
 # backs `test_shared_with_tombs_are_valid_tomb_ids`.
-_TOMB_ID_NUM_RE = re.compile(r"^(KV|QV|TT)\d+[a-z]?$")
-_TOMB_ID_DESC_RE = re.compile(r"^(SWV|DAN|DEB|ASS|SAQN|RAM)-[A-Z][A-Za-z0-9]*$")
+# Descriptor-prefix vocabulary is limited to the prefixes actually in use
+# (chunks landed to date: SWV South-West Valleys, DAN Dra' Abu el-Naga).
+# Future chunks extend this regex AS THEY LAND their first row — speculative
+# pre-registration was removed after the retrospective code-review on PR #100
+# flagged it as YAGNI. See `test_prefix_vocabulary_consistent` below which
+# pins the descriptor regex against `merge.VALLEY_ORDER`.
 _TOMB_ID_RE = re.compile(
-    r"^(?:(?:KV|QV|TT)\d+[a-z]?|(?:SWV|DAN|DEB|ASS|SAQN|RAM)-[A-Z][A-Za-z0-9]*)$"
+    r"^(?:(?:KV|QV|TT)\d+[a-z]?|(?:SWV|DAN)-[A-Z][A-Za-z0-9]*)$"
 )
 
 
@@ -185,6 +189,81 @@ def test_tomb_id_shape() -> None:
     """
     for r in _rows():
         assert _TOMB_ID_RE.match(r["tomb_id"]), r["tomb_id"]
+
+
+def test_prefix_vocabulary_consistent() -> None:
+    """The descriptor-prefix set in `merge.py::VALLEY_ORDER` must match the
+    descriptor alternation in `_TOMB_ID_RE` exactly.
+
+    Rule-3 fix on the retrospective code-review of PR #100: the prior
+    sync-by-comment (`merge.py:50` said \"kept in sync with the test regex\")
+    is a markdown rule, not enforcement — if a future chunk registers a
+    prefix in one place but not the other, the failure mode is silent
+    mis-sort or silent mis-validation. This test converts that drift into
+    a CI failure.
+    """
+    merge_path = SOURCE_DIR / "merge.py"
+    spec = importlib.util.spec_from_file_location("pm_theban_merge", merge_path)
+    merge_mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(merge_mod)
+
+    # Extract BOTH alternations from `_TOMB_ID_RE` so the test reports
+    # drift on either axis (numbered or descriptor) rather than silently
+    # misattributing a numbered-prefix divergence as a descriptor
+    # divergence. Gemini round-2 finding on PR #105: hardcoding
+    # `numbered_prefixes = {"KV","QV","TT"}` in the test means that if a
+    # future chunk adds a new numbered prefix to VALLEY_ORDER + the regex
+    # but not this test, the set-diff shifts the new prefix into
+    # `descriptor_prefixes` and the failure message points at the wrong
+    # alternation.
+    numbered_match = re.search(r"\(\?:([A-Z|]+)\)\\d\+", _TOMB_ID_RE.pattern)
+    assert numbered_match, (
+        "could not parse numbered alternation from _TOMB_ID_RE; "
+        "regex shape changed — update this test to match"
+    )
+    regex_numbered = set(numbered_match.group(1).split("|"))
+
+    descriptor_match = re.search(r"\(\?:([A-Z|]+)\)-\[A-Z\]", _TOMB_ID_RE.pattern)
+    assert descriptor_match, (
+        "could not parse descriptor alternation from _TOMB_ID_RE; "
+        "regex shape changed — update this test to match"
+    )
+    regex_descriptors = set(descriptor_match.group(1).split("|"))
+
+    regex_all = regex_numbered | regex_descriptors
+    valley_order_set = set(merge_mod.VALLEY_ORDER)
+
+    assert valley_order_set == regex_all, (
+        f"VALLEY_ORDER {sorted(valley_order_set)} diverged from "
+        f"_TOMB_ID_RE alternations (numbered={sorted(regex_numbered)}, "
+        f"descriptor={sorted(regex_descriptors)}). Keep the two in sync "
+        f"when adding a new chunk that introduces a new valley prefix."
+    )
+
+
+def test_occupant_name_has_no_underdot_h() -> None:
+    """CLAUDE.md rule 3 deterministic-enforcement: the README's strip-ḥ
+    policy on `occupant_name` (matchable name field) must be enforced by a
+    test, not just by prose in the README / prompts / after-the-fact
+    `CHUNK*_CORRECTIONS`.
+
+    Chunk-8 retrospective code-review P1 finding: the retroactive ḥ-sweep
+    across chunks 7 + 8 only happened because a Gemini comment on PR #101
+    spotted the drift. A test like this converts the next drift into a CI
+    failure on the first subagent run, not a 5-round review cycle.
+
+    Underdot-K (`ḳ`) is preserved as a distinguishing radical per the
+    README exception (e.g. chunk-7 `ʿAḳ-hor`); this test only asserts
+    absence of underdot-H (U+1E25).
+    """
+    for r in _rows():
+        name = r.get("occupant_name") or ""
+        assert "ḥ" not in name and "Ḥ" not in name, (
+            f"{r['tomb_id']}: occupant_name {name!r} contains underdot-H — "
+            "the README's matchable-name-field convention strips ḥ → h. "
+            "If PM's text genuinely requires preserving the diacritic here, "
+            "the exception must be documented and this test updated."
+        )
 
 
 def test_required_fields_present_on_every_row() -> None:
@@ -1681,43 +1760,68 @@ def test_chunk7_source_citation_pages() -> None:
         assert _row(tid)["source_citation"]["page"] == page, (tid, _row(tid)["source_citation"]["page"])
 
 
-def test_chunk7_notes_from_pm_populated_rows() -> None:
-    """Rows with populated `notes_from_pm` carry PM's verbatim hedges /
-    biographical clauses / excavator ribbons. Assert key substrings only
-    (full verbatim is too brittle to per-char text-layer noise); the
-    egyptologist-reviewer pass owns exact-text verification.
-    """
-    notes_contains = {
-        "SWV-HatshepsutSouth": "See also Tomb 20",  # PM cross-ref
-        "SWV-Neferure": "Probably Princess",  # hedge
-        "SWV-ThreePrincesses": "Tuthmosis III",  # temporal attribution
-        "DAN-AhmosiNefertere": "Carter",  # attribution history
-        "DAN-Aqhor": "Dyn. XVII",
-        "DAN-Ahhotep": "Mariette in 1859",
-        "DAN-AhmosiHenutempet": "Daughter of ʿAḥḥotp",
-        "DAN-AhmosiSonOfSeqenenre": "Eldest son",
-        "DAN-AntefNubkheperre": "Mariette in 1860",
-        "DAN-AntefSekhemreHeruhirmaet": "younger brother",
-        "DAN-KamosiWazkheperre": "Mariette in 1857",
-        # fix_rows.py CHUNK7 restored PM's underdot diacritics (`Ḍḥuti`)
-        # after egyptologist-reviewer flagged the text-layer OCR loss.
-        "DAN-MentuhotpIWifeOfDjhuti": "Ḍḥuti",
-        "DAN-MentuhotpSankhibtaui": "Unfinished",
-        "DAN-Neferhotep": "Scribe of the Great Harim",
-        "DAN-SebkemsafSekhemreShedtaui": "Pyramid behind Theb. tb. 24",
-    }
-    for tid, substr in notes_contains.items():
-        notes = _row(tid)["notes_from_pm"]
-        assert notes is not None, f"{tid} expected notes_from_pm, got None"
-        assert substr in notes, f"{tid}: expected {substr!r} in {notes!r}"
+def test_chunk7_notes_from_pm() -> None:
+    """Exact-match `notes_from_pm` for every chunk-7 row — tightened from
+    the earlier substring-match on the retrospective code-review of PR #100.
 
-    # Rows with `notes_from_pm == None` (no headword prose beyond name+cartouches+biblio):
-    for tid in {"DAN-AntefSehertaui", "DAN-AntefSekhemreWepmaet"}:
-        # These may or may not have notes depending on PM's exact text —
-        # relax: allow None OR non-empty. The egyptologist-reviewer owns
-        # precision here.
-        val = _row(tid)["notes_from_pm"]
-        assert val is None or (isinstance(val, str) and val.strip()), tid
+    The code-reviewer flagged two issues with the prior version: (a)
+    substring-match weakens CLAUDE.md rule 5 discipline (chunks 1–5
+    exact-match; chunk 7 should too); and (b) the `None or non-empty`
+    fallback on DAN-AntefSehertaui / DAN-AntefSekhemreWepmaet is literally
+    the rule-5 anti-pattern ("absence of errors"). `fix_rows.py` exists
+    precisely to pin PM-verbatim values even against noisy text-layer
+    OCR, so exact match is achievable and preferred.
+    """
+    expected = {
+        "SWV-HatshepsutSouth": (
+            "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, "
+            "quartzite, in Cairo Mus. Ent. 47032."
+        ),
+        "SWV-Neferure": "Probably Princess Neferureʿ, daughter of Ḥatshepsut.",
+        "SWV-ThreePrincesses": "Temp. Tuthmosis III.",
+        "DAN-AhmosiNefertere": (
+            "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to "
+            "Amenophis I by Carter, later equated by Černý with "
+            "'House of Amenophis of the Garden'."
+        ),
+        "DAN-Aqhor": "Royal acquaintance. Dyn. XVII. Objects found by Vassalli in 1863.",
+        "DAN-Ahhotep": "Wife of King Seḳenenreʿ-Taʿa. Found by Mariette in 1859.",
+        "DAN-AhmosiHenutempet": "Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa).",
+        "DAN-AhmosiSonOfSeqenenre": "Eldest son of King Seḳenenreʿ-Taʿa and ʿAḥḥotp.",
+        "DAN-AntefNubkheperre": "Found by Mariette in 1860. Pyramid, see Hay MSS. 29816.",
+        "DAN-AntefSekhemreHeruhirmaet": (
+            "Probably younger brother and successor of Antef (Sekhemreʿ-Wepmaʿet)."
+        ),
+        "DAN-KamosiWazkheperre": (
+            "Found by Mariette in 1857. For pyramid, possibly of Kamosi, "
+            "see infra, p. 620."
+        ),
+        # fix_rows.py CHUNK7_CORRECTIONS restored PM's underdot diacritics
+        # (`Ḍḥuti` with underdot-D + underdot-H) after egyptologist-reviewer
+        # flagged the text-layer OCR loss. This assertion pins the
+        # reviewer-inserted characters per rule 5 + the
+        # `feedback_fix_rows_unattributed_restoration` memory.
+        "DAN-MentuhotpIWifeOfDjhuti": (
+            "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
+        ),
+        "DAN-MentuhotpSankhibtaui": "Unfinished.",
+        "DAN-Neferhotep": (
+            "Scribe of the Great Harim, probably temp. Antef (Nubkheperreʿ), "
+            "rock-tomb, uninscribed. Found by Mariette in 1860, probably "
+            "near Theb. tb. 13."
+        ),
+        "DAN-SebkemsafSekhemreShedtaui": (
+            "Pyramid behind Theb. tb. 24, perhaps belonging to this tomb."
+        ),
+    }
+    for tid, note in expected.items():
+        assert _row(tid)["notes_from_pm"] == note, (tid, _row(tid)["notes_from_pm"])
+
+    # Rows where PM has no prose beyond name + cartouches + bibliographic
+    # ribbon — `notes_from_pm` is exactly None (not empty-string, not a
+    # bare-punctuation value).
+    for tid in ("DAN-AntefSehertaui", "DAN-AntefWahankh", "DAN-AntefSekhemreWepmaet"):
+        assert _row(tid)["notes_from_pm"] is None, (tid, _row(tid)["notes_from_pm"])
 
 
 # ---------------------------------------------------------------------------
@@ -1875,6 +1979,69 @@ def test_chunk8_notes_from_pm_royal_kinship() -> None:
     for tid, substr in expected.items():
         notes = _row(tid)["notes_from_pm"]
         assert notes is not None, f"{tid} expected notes_from_pm"
+        assert substr in notes, f"{tid}: expected {substr!r} in {notes!r}"
+
+
+def test_chunk8_reviewer_inserted_characters_pinned() -> None:
+    """Every reviewer-inserted character in `CHUNK8_CORRECTIONS` must be
+    pinned by a test substring assertion — rule 5 + the
+    `feedback_fix_rows_unattributed_restoration` memory. Retrospective
+    chunk-8 code-reviewer P2 finding: QV47 `Sit-ḍḥout` (ḍ restored vs OCR's
+    `gḥ`) and the QV74 Tentopet footnote restoration were both applied by
+    fix_rows.py but not pinned by a test — silent regression risk.
+    """
+    # QV47: PM p.755 prints underdot-d in `Sit-ḍḥout`; the text-layer OCR
+    # rendered `ḍḥ` as `gḥ`. fix_rows.py restored `ḍ` via CHUNK8_CORRECTIONS.
+    qv47_notes = _row("QV47")["notes_from_pm"]
+    assert "Sit-ḍḥout" in qv47_notes, (
+        f"QV47 expected reviewer-restored 'Sit-ḍḥout'; got {qv47_notes!r}"
+    )
+    assert "Sit-gḥout" not in qv47_notes, (
+        f"QV47 must not carry the pre-fix OCR form; got {qv47_notes!r}"
+    )
+    # QV74 Tentopet: PM p.767 footnote 1 carries 3 hedged filiation facts
+    # (Gauthier/Černý/Seele) that the headword-only extraction dropped.
+    # fix_rows.py CHUNK8_CORRECTIONS restored them with "per PM p.767
+    # footnote 1" citation.
+    qv74_notes = _row("QV74")["notes_from_pm"]
+    for substr in (
+        "Wife(?) of Ramesses IV",
+        "mother of Ramesses V",
+        "daughter of Ramesses IV",
+        "per PM p.767 footnote 1",
+    ):
+        assert substr in qv74_notes, (
+            f"QV74 expected reviewer-restored {substr!r}; got {qv74_notes!r}"
+        )
+
+
+def test_chunk8_notes_from_pm_remaining_rows() -> None:
+    """QV33, QV36, QV40, QV46, QV52, QV73, QV75 have populated
+    `notes_from_pm` values that `test_chunk8_notes_from_pm_royal_kinship`
+    does not cover. Rule 5 thematic-gap fix from the chunk-8 retrospective
+    code-review; QV36 + QV40 added per Gemini round-2 finding on PR #105
+    (PM prints populated text for both — leaving them unasserted meant a
+    silent regression on those rows would not break this test).
+    """
+    expected_substrings = {
+        # QV33: earlier-edition cross-numbering + dating hedge.
+        "QV33": "Dyn. XX(?)",
+        # QV36: PM's bare "A PRINCESS, no name." clause (no citation tail).
+        "QV36": "A PRINCESS, no name.",
+        # QV40: PM's "A QUEEN, cartouche blank" clause + 19th-c. cross-refs.
+        "QV40": "A QUEEN, cartouche blank.",
+        # QV46 Imhotep: hedged attribution + regnal-dating clause.
+        "QV46": "Vizier. Temp. Tuthmosis I.",
+        # QV52 Tyti: dating + earlier-edition cross-ref.
+        "QV52": "Ramesside.",
+        # QV73: PM's "A PRINCESS, no name" clause captured verbatim.
+        "QV73": "A PRINCESS, no name. Dyn. XX.",
+        # QV75: PM's "A QUEEN, no name" clause.
+        "QV75": "A QUEEN, no name.",
+    }
+    for tid, substr in expected_substrings.items():
+        notes = _row(tid)["notes_from_pm"]
+        assert notes is not None, f"{tid} expected notes_from_pm, got None"
         assert substr in notes, f"{tid}: expected {substr!r} in {notes!r}"
 
 
