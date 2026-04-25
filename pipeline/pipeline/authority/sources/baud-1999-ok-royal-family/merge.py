@@ -143,7 +143,9 @@ def _majority(values: list) -> tuple[object, int]:
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
-    return None, 0
+    # Unreachable: top_key was generated from `normalised`, so the loop
+    # above must find a match. Raise rather than return None silently.
+    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
 
 
 def main(agent_dir: Path) -> None:
@@ -178,11 +180,17 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(baud_id)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            # Single-agent rows still go through _majority so sentinel
-            # strings ("none", "-", "n/a") are normalised to null — merge
-            # must produce a uniform schema regardless of how many agents
-            # voted on a given row.
-            report.append(f"{baud_id}: only 1/3 agents found this entry (kept it).\n")
+            # 3-agent majority-vote safety model requires ≥2 agents to
+            # corroborate a row (issue #114). The earlier "fall through to
+            # _majority for sentinel-null normalisation" rationale doesn't
+            # justify admitting unverified data — a hallucinated baud_id
+            # gets through with no corroboration. Loud failure per rule 2.
+            only_tag = present[0][0] if present else "(none)"
+            raise ValueError(
+                f"merge.py: row {baud_id!r} appears in only {len(present)}/3 "
+                f"agents (agent {only_tag!r}). Re-run extraction agent(s) "
+                f"that missed this row, or hand-resolve before merging."
+            )
 
         merged: dict = {}
         row_disagreements: list[str] = []

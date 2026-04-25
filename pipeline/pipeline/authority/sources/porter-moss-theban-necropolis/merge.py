@@ -187,7 +187,9 @@ def _majority(values: list) -> tuple[object, int]:
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
-    return None, 0
+    # Unreachable: top_key was generated from `normalised`, so the loop
+    # above must find a match. Raise rather than return None silently.
+    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
 
 
 def main(agent_dir: Path) -> None:
@@ -212,14 +214,17 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(tid)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            # Single-agent rows fall through to the majority-vote path
-            # below (which handles len(present) == 1 correctly: every
-            # field is unanimous because there's only one agent). The
-            # advantage over a special-case `final.append(present[0][1])`
-            # is that `_normalise_value` runs uniformly across all rows
-            # — so a sentinel string like `"none"` collapses to JSON null
-            # whether one or three agents emitted it.
-            report.append(f"{tid}: only 1/3 agents found this entry (kept it).\n")
+            # 3-agent majority-vote safety model requires ≥2 agents to
+            # corroborate a row (issue #114). The earlier "fall through to
+            # _majority for sentinel-null normalisation" rationale doesn't
+            # justify admitting unverified data — a hallucinated tomb_id
+            # gets through with no corroboration. Loud failure per rule 2.
+            only_tag = present[0][0] if present else "(none)"
+            raise ValueError(
+                f"merge.py: row {tid!r} appears in only {len(present)}/3 "
+                f"agents (agent {only_tag!r}). Re-run extraction agent(s) "
+                f"that missed this row, or hand-resolve before merging."
+            )
 
         all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}
