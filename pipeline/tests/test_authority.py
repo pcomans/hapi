@@ -6,6 +6,7 @@ is caught immediately.
 """
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -339,6 +340,183 @@ class TestPharaohSeIntegrity:
     def test_fetch_script_exists(self):
         fetch_path = PHARAOH_SE_DIR / "fetch.py"
         assert fetch_path.exists(), "fetch.py should exist for reproducible re-acquisition"
+
+    def test_every_index_slug_has_raw_page(self):
+        """Constitutional rule 2 (loud-fail) + reviewer-notes-sweep-2026 P2.
+
+        The reconciler must not emit index-only rows when a ruler's page is
+        missing from raw/. Pin the raw stem set against the index slug set
+        so a dropped scrape is caught at test time, not at use time.
+        """
+        raw_dir = PHARAOH_SE_DIR / "raw"
+        raw_stems = {p.stem for p in raw_dir.glob("*.md") if p.stem != "index"}
+        index_md = (raw_dir / "index.md").read_text(encoding="utf-8")
+        # Slugs in the index appear as
+        # ``[Name](https://pharaoh.se/ancient-egypt/pharaoh/<slug>)``.
+        index_slugs = {
+            m.group(1).rstrip("/")
+            for m in re.finditer(
+                r"https://pharaoh\.se/ancient-egypt/pharaoh/([^)]+)",
+                index_md,
+            )
+        }
+        missing = sorted(index_slugs - raw_stems)
+        assert not missing, (
+            f"{len(missing)} index slug(s) have no raw/<slug>.md page: "
+            f"{missing[:10]}"
+        )
+
+    # --- Canary rows for fetch.py reign-date parsing (issue #110) ---
+    # Pharaoh.se's index has row-shifted reign columns for the late Roman
+    # emperors and drops the era marker, so a single-year Roman reign in the
+    # index can't be sign-disambiguated without dynasty context. The fix in
+    # fetch.py (a) flags Roman-emperor reigns as positive (CE) and (b)
+    # prefers the per-page reign over the index when they disagree. These
+    # rows pin the corrected values so a regression in either rule fails
+    # loudly.
+
+    def test_otho_positive_year_reign(self, pharaoh_se_rows):
+        """Otho's single-year reign 69 (CE) must be positive, not -69.
+
+        Pharaoh.se index column shows '69' with no era marker; the bare
+        number defaults to BCE for non-Roman dynasties. The fix detects
+        the Roman-Emperors dynasty and keeps the year positive.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Otho"]
+        assert len(matches) == 1, "Otho should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_label"] == "Roman Emperors"
+        assert r["start_year"] == 69, r["start_year"]
+        assert r["end_year"] is None, r["end_year"]
+
+    def test_late_roman_reigns_use_page_over_index(self, pharaoh_se_rows):
+        """Page-vs-index precedence: when the ruler's own page contradicts
+        the index column, the page wins. The pharaoh.se index has shifted
+        reign cells for the late-Roman block (Caracalla onward); the page
+        ``| Reign of NAME |`` row carries the correct historical reign.
+
+        Diadumenianus is pinned at 217-218 (the Caesar-onward span shown
+        on pharaoh.se) rather than the issue's bare "218" (sole-Augustus
+        phase). Per the project rule "page wins when it disagrees with
+        the index", the page's 217-218 is the correct outcome and is the
+        standard catalog/coinage convention (RIC, Mattingly).
+        """
+        expected = {
+            "Caracalla":       (198, 217),
+            "Geta":            (209, 211),
+            "Macrinus":        (217, 218),
+            "Diadumenianus":   (217, 218),
+            "Philippus Arabs": (244, 249),
+            "Trajanus Decius": (249, 251),
+            "Valerianus":      (253, 260),
+        }
+        by_display = {r["display"]: r for r in pharaoh_se_rows}
+        for name, (start, end) in expected.items():
+            r = by_display.get(name)
+            assert r is not None, f"missing row for {name}"
+            assert r["dynasty_label"] == "Roman Emperors", name
+            assert r["start_year"] == start, (name, r["start_year"])
+            assert r["end_year"] == end, (name, r["end_year"])
+
+    def test_hatshepsut_bce_page_wins(self, pharaoh_se_rows):
+        """Page-vs-index precedence applies corpus-wide, not just to Roman
+        emperors. Pharaoh.se's index lists Hatshepsut as 1473-1458 but the
+        page's AE Chronology row says 1479-1458 (HKW low-chronology
+        figure). Locks in that the page-wins rule covers BCE rulers too,
+        so a regression that re-enabled "index always wins for BCE"
+        fails loudly.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Hatshepsut"]
+        assert len(matches) == 1, "Hatshepsut should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_number"] == 18
+        assert r["start_year"] == -1479, r["start_year"]
+        assert r["end_year"] == -1458, r["end_year"]
+
+    def test_augustus_bc_ad_boundary(self, pharaoh_se_rows):
+        """Augustus reigns across the BC/AD boundary (27 BCE - 14 CE).
+        Locks in that mixed-era ranges parse with the right signs and that
+        the per-field merge does not flip either endpoint.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Augustus"]
+        assert len(matches) == 1, "Augustus should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_label"] == "Roman Emperors"
+        assert r["start_year"] == -27, r["start_year"]
+        assert r["end_year"] == 14, r["end_year"]
+
+    def test_cleopatra_vii_data(self, pharaoh_se_rows):
+        """Cleopatra VII 51-30 BCE — high-traffic ruler in museum
+        catalogs, end_year is the smallest legitimate |val| in the BCE
+        corpus (Octavian's annexation), so this row anchors both
+        catalog-matching coverage and the lower bound of the
+        microscopic-year sentinel.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Cleopatra VII"]
+        assert len(matches) == 1, "Cleopatra VII should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_label"] == "Ptolemaic Dynasty"
+        assert r["start_year"] == -51, r["start_year"]
+        assert r["end_year"] == -30, r["end_year"]
+
+    def test_mixed_source_date_ranges_are_pinned(self, pharaoh_se_rows):
+        """Egyptologist-reviewer P2 (issue #110): the per-field page-wins
+        merge can silently produce mixed-source ranges (start_year and
+        end_year sourced from different places). For four rulers the
+        index supplies one endpoint and the page supplies the other:
+
+        * Kamose (-1555, -1540): start from index, end from page (1540
+          is the von Beckerath terminus).
+        * Tutankhamun (-1332, -1324): start from index, end from page
+          (page renders ``?–1324``).
+        * Neferneferuaten (-1334, -1332): start agrees with index; end
+          from index because the page ends ``?``.
+        * Ramesses VIII (-1130, -1129): start from page = index; end
+          from index only because the page is ``-1130``.
+
+        Pinning the exact set so a future widening of the page-vs-index
+        precedence rule (or a regression that loses one endpoint) fails
+        loudly. Adding a fifth ruler to this set is a signal that the
+        merge needs a per-row provenance field, not a wider sentinel.
+        """
+        # Display names for which start_year and end_year are both
+        # non-null AND come from different sources after the per-field
+        # merge. We can't introspect source-of-each-field from the
+        # reconciled row alone, so we encode the known set:
+        expected_mixed = {
+            "Kamose":          (-1555, -1540),
+            "Tutankhamun":     (-1332, -1324),
+            "Neferneferuaten": (-1334, -1332),
+            "Ramesses VIII":   (-1130, -1129),
+        }
+        by_display = {r["display"]: r for r in pharaoh_se_rows}
+        for name, (start, end) in expected_mixed.items():
+            r = by_display.get(name)
+            assert r is not None, f"missing row for {name}"
+            assert r["start_year"] == start, (name, r["start_year"])
+            assert r["end_year"] == end, (name, r["end_year"])
+
+    def test_no_microscopic_year_values(self, pharaoh_se_rows):
+        """Sentinel against a regression in the page-reign extractor.
+
+        Earlier drafts of the page-reign extractor returned values like
+        '4th millenium BCE' or Turin-King-List durations ('2y 1m 1d'),
+        which `_parse_reign_dates` then truncated to year=4 / year=2.
+        The smallest legitimate absolute years in this corpus are
+        Tiberius +14 (start), Cleopatra VII -30 (end), and Augustus -27
+        (start). The threshold is set to |val| >= 14 so a future editor
+        does not widen the band past Tiberius and silently re-admit
+        single-digit duration values.
+        """
+        for r in pharaoh_se_rows:
+            for field in ("start_year", "end_year"):
+                val = r.get(field)
+                if val is None:
+                    continue
+                assert abs(val) >= 14, (
+                    f"{r['display']}: {field}={val} is suspiciously small "
+                    f"(likely a duration / descriptive string parsed as a year)"
+                )
 
 
 IDAI_DIR = AUTHORITY_SOURCES / "idai-gazetteer"

@@ -57,6 +57,121 @@ class TestParseReignDates:
         assert start == -1479
         assert end == -1425
 
+    # --- is_roman flag (issue #110) ---
+    # The pharaoh.se index drops era markers, so a bare single-year reign
+    # like Otho's "69" needs dynasty context to choose the sign. The
+    # is_roman flag opts the value into positive (CE) handling instead of
+    # the BCE default that fits the rest of the corpus.
+
+    def test_single_year_default_is_bce(self):
+        assert _parse_reign_dates("69") == (-69, None)
+
+    def test_single_year_roman_is_positive(self):
+        assert _parse_reign_dates("69", is_roman=True) == (69, None)
+
+    def test_roman_range_already_ascending_unchanged(self):
+        # Ranges with clear ascending direction stay positive even without
+        # the flag — the flag only matters for ambiguous cases.
+        assert _parse_reign_dates("98–117") == (98, 117)
+        assert _parse_reign_dates("98–117", is_roman=True) == (98, 117)
+
+    def test_descending_range_default_is_bce(self):
+        assert _parse_reign_dates("1479–1425") == (-1479, -1425)
+        assert _parse_reign_dates("1479–1425", is_roman=False) == (-1479, -1425)
+
+    def test_open_ended_single_year_roman(self):
+        # "?–69" with is_roman=True should keep 69 positive
+        assert _parse_reign_dates("?–69", is_roman=True) == (None, 69)
+        assert _parse_reign_dates("?–69") == (None, -69)
+
+    # Regression: Gemini PR #111 round-1 HIGH finding. A single-endpoint
+    # range with an explicit BC/CE marker must NOT be re-flipped by the
+    # is_roman heuristic — the marker is sign-final.
+
+    def test_open_end_explicit_bc_keeps_negative(self):
+        # "?-218 BC" should stay (None, -218) regardless of is_roman.
+        assert _parse_reign_dates("?–218 BC") == (None, -218)
+        assert _parse_reign_dates("?–218 BC", is_roman=True) == (None, -218)
+
+    def test_open_end_explicit_ce_keeps_positive(self):
+        # "?-218 CE" should stay (None, 218) regardless of is_roman.
+        assert _parse_reign_dates("?–218 CE") == (None, 218)
+        assert _parse_reign_dates("?–218 CE", is_roman=False) == (None, 218)
+
+    def test_open_start_explicit_bc_keeps_negative(self):
+        assert _parse_reign_dates("218 BC–?") == (-218, None)
+        assert _parse_reign_dates("218 BC–?", is_roman=True) == (-218, None)
+
+    def test_explicit_marker_overrides_is_roman_default(self):
+        # Single bare year "14" defaults to BCE (-14); single "14 AD"
+        # must stay positive even when is_roman=False.
+        assert _parse_reign_dates("14") == (-14, None)
+        assert _parse_reign_dates("14 AD") == (14, None)
+        assert _parse_reign_dates("14 AD", is_roman=False) == (14, None)
+
+    def test_two_endpoint_one_explicit_bc_other_bare(self):
+        # "218 BC–200": leading marker fixes era; bare end takes the
+        # same era. Must NOT flip the bare end positive in non-Roman
+        # context (the dynasty heuristic only applies when neither
+        # endpoint is explicit).
+        assert _parse_reign_dates("218 BC–200") == (-218, -200)
+        assert _parse_reign_dates("218 BC–200", is_roman=True) == (-218, -200)
+
+    def test_two_endpoint_one_explicit_ce_other_bare(self):
+        # Mirror of the above: leading "CE" marker propagates positive.
+        assert _parse_reign_dates("14 CE–37") == (14, 37)
+        assert _parse_reign_dates("14 CE–37", is_roman=False) == (14, 37)
+
+    def test_leading_endpoint_explicit_ce_non_roman(self):
+        # Single leading endpoint with explicit CE marker, in a non-
+        # Roman dynasty context: the dynasty heuristic must NOT
+        # override the marker.
+        assert _parse_reign_dates("14 CE", is_roman=False) == (14, None)
+        assert _parse_reign_dates("14 CE") == (14, None)
+
+
+class TestExtractPageReign:
+    """Page-reign extraction (issue #110) — the per-page header is the
+    authoritative reign source, beating the index's row-shifted column."""
+
+    def test_ae_chronology_row(self):
+        lines = [
+            "| Precedessor<br>[X] |",
+            "| Reign of **Test** |",
+            "| AE Chronology | 1479–1425 |",
+            "| Shaw | 1479–1425 |",
+        ]
+        assert _mod._extract_page_reign(lines) == "1479–1425"
+
+    def test_roman_unlabelled_row(self):
+        lines = [
+            "| Precedessor<br>[X] |",
+            "| Reign of **Otho** |",
+            "|  | 69 |",
+        ]
+        assert _mod._extract_page_reign(lines) == "69"
+
+    def test_rejects_descriptive_millennium(self):
+        # 'Reign of Khayu' followed by '|  | 4th millenium BCE |' must NOT
+        # be extracted as a year; the parser would otherwise return -4.
+        lines = [
+            "| Reign of **Khayu** |",
+            "|  | 4th millenium BCE |",
+        ]
+        assert _mod._extract_page_reign(lines) is None
+
+    def test_rejects_duration_rows(self):
+        # 'Turin King List | 2y 1m 1d' is a reign DURATION, not dates.
+        # The first cell has a label, so it's not the empty-cell Roman row.
+        lines = [
+            "| Reign of **Qakara Ibi** |",
+            "| Turin King List | 2y 1m 1d |",
+        ]
+        assert _mod._extract_page_reign(lines) is None
+
+    def test_no_reign_section_returns_none(self):
+        assert _mod._extract_page_reign(["# Header", ""]) is None
+
 
 class TestParseDynastyHeader:
     def test_numbered_dynasty(self):

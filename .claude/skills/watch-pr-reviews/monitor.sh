@@ -51,7 +51,18 @@ if ! echo "$REPO" | grep -qE '^[^/]+/[^/]+$'; then
 fi
 SKILL_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
-TOKEN=$(gh auth token)
+# Token resolution: prefer $GITHUB_TOKEN (set in environments without `gh`,
+# e.g. CI runners and the Claude Code sandbox), fall back to `gh auth token`.
+# Suppress `gh`'s "command not found" stderr when missing — this is the
+# expected fallback path, not an error worth raising. If both are empty,
+# bail loud rather than letting the curl request 401 with an HTML body
+# that seed.py will then fail to JSON-parse (the original symptom that
+# caused the watch-pr-reviews monitor to die at seed in this very repo).
+TOKEN=${GITHUB_TOKEN:-$(gh auth token 2>/dev/null || true)}
+if [ -z "$TOKEN" ]; then
+  echo "POLL-ERROR: no GitHub token available — set \$GITHUB_TOKEN or install + auth \`gh\`. Without a token the reviews API returns HTML 401 which seed.py cannot parse."
+  exit 2
+fi
 
 # macOS default TMPDIR (/var/folders/...) is not in the Monitor's
 # sandbox write-allowlist; /tmp/claude is. Prefer that when it exists,
