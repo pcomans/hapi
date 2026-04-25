@@ -148,7 +148,9 @@ def _majority(values: list) -> tuple[object, int]:
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
-    return None, 0
+    # Unreachable: top_key was generated from `normalised`, so the loop
+    # above must find a match. Raise rather than return None silently.
+    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
 
 
 LACUNA_PREFIXES: tuple[str, ...] = ("[", "–")
@@ -241,9 +243,14 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(key)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            final.append(present[0][1])
-            report.append(f"{label}: only 1/3 agents found this entry (kept it).\n")
-            continue
+            # 3-agent majority-vote safety model requires ≥2 agents to
+            # corroborate a row (issue #114). Loud failure per rule 2.
+            only_tag = present[0][0] if present else "(none)"
+            raise ValueError(
+                f"merge.py: row {label!r} appears in only {len(present)}/3 "
+                f"agents (agent {only_tag!r}). Re-run extraction agent(s) "
+                f"that missed this row, or hand-resolve before merging."
+            )
 
         all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}

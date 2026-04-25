@@ -102,7 +102,12 @@ def _normalise_value(v: object) -> object:
 
 
 def _majority(values: list) -> tuple[object, int]:
-    """Return (chosen_value, count_of_agreers) from a list of per-agent values."""
+    """Return (chosen_value, count_of_agreers) from a list of per-agent values.
+
+    Caller invariant: `values` is non-empty (the call site in `main()`
+    only calls this with a per-field list drawn from `present`, where
+    `len(present) >= 2`). Per constitutional rule 2, no silent fallbacks.
+    """
     normalised = [_normalise_value(v) for v in values]
 
     def key(v):
@@ -113,7 +118,9 @@ def _majority(values: list) -> tuple[object, int]:
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
-    return None, 0
+    # Unreachable: top_key was generated from `normalised`, so the loop
+    # above must find a match. Raise rather than return None silently.
+    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
 
 
 _KID_RE = re.compile(r"^(?P<prefix>[0-9]+[A-Za-z]*)\.(?P<seq>\d+)$")
@@ -122,15 +129,24 @@ _KID_RE = re.compile(r"^(?P<prefix>[0-9]+[A-Za-z]*)\.(?P<seq>\d+)$")
 def _sort_key(kid: str) -> tuple[int, int, str, int]:
     """Sort by (dynasty_int, polity_rank, prefix, sequence_in_stream).
 
-    Prefixes outside `STREAM_ORDER` sort to the end. Sequences that aren't
-    pure integers sort after integer sequences within their prefix.
+    Raises ``ValueError`` if ``kid`` doesn't match ``{prefix}.{seq}`` or if
+    the parsed prefix isn't in ``STREAM_ORDER``. Per constitutional rule 2,
+    a malformed ID is a loud failure, not silently sorted to the end.
     """
     m = _KID_RE.match(kid)
     if not m:
-        return (9999, 9999, kid, -1)
+        raise ValueError(
+            f"merge.py: kitchen_id {kid!r} does not match "
+            f"{{prefix}}.{{seq}} pattern"
+        )
     prefix = m.group("prefix")
     seq = int(m.group("seq"))
-    dyn, rank = STREAM_ORDER.get(prefix, (9999, 9999))
+    if prefix not in STREAM_ORDER:
+        raise ValueError(
+            f"merge.py: kitchen_id {kid!r} has unknown prefix {prefix!r}; "
+            f"known prefixes: {sorted(STREAM_ORDER)}"
+        )
+    dyn, rank = STREAM_ORDER[prefix]
     return (dyn, rank, prefix, seq)
 
 
@@ -156,9 +172,20 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(kid)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            final.append(present[0][1])
-            report.append(f"{kid}: only 1/3 agents found this entry (kept it).\n")
-            continue
+            # 3-agent majority-vote safety model requires ≥2 agents to
+            # corroborate a row. A single hallucinated or mis-keyed
+            # kitchen_id silently writing into reconciled.jsonl undermines
+            # the entire merge architecture (issue #114). Loud failure
+            # per rule 2 — re-run the extractors or hand-resolve before
+            # merging.
+            only_tag = present[0][0] if present else "(none)"
+            raise ValueError(
+                f"merge.py: row {kid!r} appears in only {len(present)}/3 "
+                f"agents (agent {only_tag!r}). Majority-vote merge "
+                f"requires ≥2 agents to corroborate. Re-run the extraction "
+                f"agent(s) that missed this row, or hand-resolve the "
+                f"singleton before merging."
+            )
 
         all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}

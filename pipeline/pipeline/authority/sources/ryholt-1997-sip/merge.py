@@ -102,10 +102,15 @@ def _majority(values: list) -> tuple[object, int]:
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
-    return None, 0
+    # Unreachable: top_key was generated from `normalised`, so the loop
+    # above must find a match. Raise rather than return None silently.
+    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
 
 
 _RID_RE = re.compile(r"^(?P<prefix>[A-Za-z]+|\d+)(?:\.(?P<seq>\d+)(?P<suffix>[a-z]*))?$")
+
+
+_NON_NUMERIC_PREFIX_RANK = 100  # "after numeric dynasties" — domain semantic, not defensive
 
 
 def _sort_key(rid: str) -> tuple[int, str, int, str]:
@@ -113,16 +118,21 @@ def _sort_key(rid: str) -> tuple[int, str, int, str]:
     ascending (not lexicographic — so 13.10 sorts AFTER 13.9), then suffix.
     Non-numeric prefixes (Abyd, N, P, H, D, G) sort after numeric dynasties,
     alphabetically by prefix then by sequence.
+
+    Raises ``ValueError`` on a malformed ryholt_id. Per constitutional
+    rule 2, no silent coercion to a sentinel sort position.
     """
     m = _RID_RE.match(rid)
     if not m:
-        return (9999, rid, 0, "")
+        raise ValueError(
+            f"merge.py: ryholt_id {rid!r} does not match _RID_RE pattern"
+        )
     prefix = m.group("prefix")
     seq = int(m.group("seq")) if m.group("seq") else -1
     suffix = m.group("suffix") or ""
     if prefix.isdigit():
         return (int(prefix), "", seq, suffix)
-    return (9999, prefix, seq, suffix)
+    return (_NON_NUMERIC_PREFIX_RANK, prefix, seq, suffix)
 
 
 def main(agent_dir: Path) -> None:
@@ -147,9 +157,14 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(rid)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            final.append(present[0][1])
-            report.append(f"{rid}: only 1/3 agents found this entry (kept it).\n")
-            continue
+            # 3-agent majority-vote safety model requires ≥2 agents to
+            # corroborate a row (issue #114). Loud failure per rule 2.
+            only_tag = present[0][0] if present else "(none)"
+            raise ValueError(
+                f"merge.py: row {rid!r} appears in only {len(present)}/3 "
+                f"agents (agent {only_tag!r}). Re-run extraction agent(s) "
+                f"that missed this row, or hand-resolve before merging."
+            )
 
         all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}

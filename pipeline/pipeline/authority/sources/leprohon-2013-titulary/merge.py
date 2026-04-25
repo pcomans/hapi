@@ -187,7 +187,9 @@ def _majority(values: list) -> tuple[object, int]:
     for v in normalised:
         if key(v) == top_key:
             return v, top_count
-    return None, 0
+    # Unreachable: top_key was generated from `normalised`, so the loop
+    # above must find a match. Raise rather than return None silently.
+    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
 
 
 # leprohon_id is `leprohon-{dynasty_group}.{NN}` where dynasty_group is one of:
@@ -228,7 +230,11 @@ _LID_RE = re.compile(
 def _sort_key(lid: str) -> tuple[int, int, str, int, str, str]:
     match = _LID_RE.match(lid)
     if match is None:
-        return (9999, 9999, "", 9999, "", lid)
+        # Per constitutional rule 2 (no defensive fallbacks): a malformed
+        # leprohon_id is a loud failure, not silently sorted to the end.
+        raise ValueError(
+            f"merge.py: leprohon_id {lid!r} does not match _LID_RE pattern"
+        )
     dynasty_num = int(match.group("dynasty_num"))
     # `is_range` tiebreaker: plain `9` sorts before `9-10` because the plain
     # form is conceptually "Dynasty 9 standalone", the ranged form is a
@@ -266,11 +272,14 @@ def main(agent_dir: Path) -> None:
         versions = [(tag, agents[tag].get(lid)) for tag in "abc"]
         present = [(t, v) for t, v in versions if v is not None]
         if len(present) < 2:
-            final.append(present[0][1])
-            report.append(
-                f"{lid}: only {len(present)}/3 agents found this entry (kept it).\n"
+            # 3-agent majority-vote safety model requires ≥2 agents to
+            # corroborate a row (issue #114). Loud failure per rule 2.
+            only_tag = present[0][0] if present else "(none)"
+            raise ValueError(
+                f"merge.py: row {lid!r} appears in only {len(present)}/3 "
+                f"agents (agent {only_tag!r}). Re-run extraction agent(s) "
+                f"that missed this row, or hand-resolve before merging."
             )
-            continue
 
         # Sort field iteration so the disagreement report is deterministic
         # across re-runs. Without this, Python's set-iteration order
