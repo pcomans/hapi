@@ -124,16 +124,23 @@ OVERRIDES: dict[str, dict] = {
         "notes_from_beckerath": "Antritt 14.8.1473",
     },
 
-    # ── 18.05 Kgin. Hat-schepsut — OCR-corrupt end date (scan-107 left) ───
-    # Scan-107 shows "Kgin. Hat-schepsut (Maat-ka-rê) 1479/73–1458".
-    # Same "341/837" garble maps to the bare endpoint "1458". The start
-    # 1479/73 is already correct in the merge (start_high=-1479,
-    # start_low=-1473). Override end dates; end_approximate = false.
+    # ── 18.05 Kgin. Hat-schepsut — OCR-corrupt end date + editorial residue
+    # Two corrections merged into one entry (Gemini PR #117 caught the
+    # duplicate-key data-loss bug):
+    # 1) (PR #113) Scan-107 shows "Kgin. Hat-schepsut (Maat-ka-rê)
+    #    1479/73–1458". Same "341/837" garble maps to the bare endpoint
+    #    "1458". The start 1479/73 is already correct in the merge
+    #    (start_high=-1479, start_low=-1473). Override end dates;
+    #    end_approximate = false.
+    # 2) (#115 egyptologist sweep) The earlier "start 1479/73" string in
+    #    notes_from_beckerath was editorial residue (Beckerath does not
+    #    annotate her accession date in Anhang A). Stripped to null per
+    #    rule 1 — notes must contain only verbatim Beckerath text.
     "18.05": {
         "end_bce_high": -1458,
         "end_bce_low": -1458,
         "end_approximate": False,
-        "notes_from_beckerath": "start 1479/73",
+        "notes_from_beckerath": None,
     },
 
     # ── 15.04 Chajan — inverted end date (scan-106 left-half) ─────────────
@@ -218,11 +225,19 @@ OVERRIDES: dict[str, dict] = {
     "31.02": {
         "egyptian_titulary": "Arses",
     },
-    # 31.04 Chabbasch: OCR "Chadabasch" / "Sanm-sotep-en-ptah". Beckerath
-    # gives `Chabbasch (Senem-sotep-en-ptah)`.
+    # 31.04 Chabbasch — two corrections merged into one entry (Gemini PR
+    # #117 caught the duplicate-key data-loss bug):
+    # 1) (Gemini PR #113) OCR "Chadabasch" / "Sanm-sotep-en-ptah". Beckerath
+    #    gives `Chabbasch (Senem-sotep-en-ptah)`. Both name and titulary
+    #    corrected.
+    # 2) (#115 egyptologist sweep) The titulary `Senem-sotep-en-ptah` was
+    #    tagged kind="nomen" by the earlier correction, but the
+    #    `-sotep-en-X` suffix is prenomen morphology throughout Beckerath.
+    #    Corrected kind to "prenomen".
     "31.04": {
         "name": "Chabbasch",
         "egyptian_titulary": "Senem-sotep-en-ptah",
+        "egyptian_titulary_kind": "prenomen",
     },
 
     # ── Editorial-prose stripping in notes_from_beckerath (rule 1) ───────
@@ -237,12 +252,11 @@ OVERRIDES: dict[str, dict] = {
     "11.01": {
         "notes_from_beckerath": "in Theben",
     },
-    "19.07": {
-        "notes_from_beckerath": (
-            "Antritt 10.1194/93; und Kgin. Te-wosret (Thuoris); "
-            "anfang Sich-ka-rê sotep-en-rê; später Ach-en-rê sotep-en-rê"
-        ),
-    },
+    # 19.07 Si-ptah — earlier editorial-strip entry MERGED into the later
+    # 19.07 entry below to avoid the duplicate-key data-loss bug Gemini
+    # caught on PR #117. The cleaner egyptologist-sweep version (which
+    # drops the "später Ach-en-rê" merge artifact and uses "Anfangsname")
+    # is the surviving version.
     "27.05": {
         "notes_from_beckerath": "Perser",
     },
@@ -278,14 +292,10 @@ OVERRIDES: dict[str, dict] = {
         "egyptian_titulary_kind": "mixed",
     },
 
-    # 18.05 Hat-schepsut [P1] — editorial residue. Beckerath does not
-    # annotate her accession date in Anhang A; "start 1479/73" was a
-    # leftover from the Gemini correction pass that stripped "end date
-    # OCR corrupt" but failed to strip the start half. Per rule 1, notes
-    # must contain only verbatim Beckerath annotations.
-    "18.05": {
-        "notes_from_beckerath": None,
-    },
+    # 18.05 Hat-schepsut [P1] — editorial residue MERGED into the earlier
+    # 18.05 entry above (line 139) to avoid the duplicate-key data-loss
+    # bug Gemini caught on PR #117. The notes_from_beckerath=None
+    # correction now lives in the consolidated entry.
 
     # 19.07 Si-ptah [P2] — three-way prenomen conflict. Beckerath's
     # Supplement zu A (scan-108 right) gives Si-ptah's primary throne name
@@ -312,14 +322,9 @@ OVERRIDES: dict[str, dict] = {
         "egyptian_titulary_kind": "prenomen",
     },
 
-    # 31.04 Chabbasch [P2] — wrong egyptian_titulary_kind. The
-    # `-sotep-en-X` suffix is prenomen morphology throughout Beckerath
-    # ("Senem-sotep-en-ptah" is "Chosen of Ptah" — a throne name, not a
-    # nomen). The earlier Gemini correction (commit 90a8dda0) tagged it
-    # as nomen by mistake.
-    "31.04": {
-        "egyptian_titulary_kind": "prenomen",
-    },
+    # 31.04 Chabbasch [P2] — kind=prenomen MERGED into the earlier 31.04
+    # entry above to avoid the duplicate-key data-loss bug Gemini caught
+    # on PR #117.
 
     # 06.05 Pepy II. [P1] — same compound-titulary truncation pattern as
     # 29.02 Achoris. Beckerath's parenthetical "(Phiops, Neferkare)" is
@@ -401,9 +406,12 @@ OVERRIDE_LOG: dict[str, str] = {
         "Notes cleaned: 'Antritt 14.8.1473'. [P1]"
     ),
     "18.05": (
-        "18.05 Kgin. Hat-schepsut: scan-107 left-half shows '1479/73–1458'; "
-        "same '341/837' garble; end_bce_high=-1458, end_bce_low=-1458, "
-        "end_approximate=false. [P1]"
+        "18.05 Kgin. Hat-schepsut: TWO corrections merged. (1) scan-107 "
+        "left shows '1479/73–1458'; '341/837' garble maps to bare 1458; "
+        "end_high=-1458, end_low=-1458, end_approximate=false. (2) The "
+        "earlier 'start 1479/73' note was editorial residue (Beckerath "
+        "does not annotate her accession date in Anhang A); stripped to "
+        "null per rule 1. [P1+P1, both Gemini PR #117-flagged dup-key]"
     ),
     "15.04": (
         "15.04 Chajan: scan-106 left-half shows '1590/87–1549/1546'; "
@@ -457,9 +465,12 @@ OVERRIDE_LOG: dict[str, str] = {
         "'Arses (Arses)'. Gemini flagged. Corrected to 'Arses'. [P1]"
     ),
     "31.04": (
-        "31.04 Chabbasch: OCR rendered name as 'Chadabasch' and titulary "
-        "'Sanm-sotep-en-ptah'; scan-108 right shows 'Chabbasch "
-        "(Senem-sotep-en-ptah)'. Gemini flagged. Both corrected. [P1]"
+        "31.04 Chabbasch: TWO corrections merged. (1) OCR rendered name "
+        "as 'Chadabasch' and titulary 'Sanm-sotep-en-ptah'; scan-108 "
+        "right shows 'Chabbasch (Senem-sotep-en-ptah)' — name + titulary "
+        "corrected. (2) The earlier correction tagged kind='nomen' but "
+        "the `-sotep-en-X` suffix is prenomen morphology — kind corrected "
+        "to 'prenomen'. [P1+P2, both Gemini PR #117-flagged dup-key]"
     ),
     "18.10": (
         "18.10 Akhenaten: OCR dropped the 'r' between 'u' and 'ê' in "
@@ -478,11 +489,11 @@ OVERRIDE_LOG: dict[str, str] = {
         "editorial 'end date not given'. Stripped; kept 'in Theben' "
         "(Beckerath's parenthetical placement annotation). [P1 — rule 1]"
     ),
-    "19.07": (
-        "19.07 Si-ptah: notes_from_beckerath had an agent prefix "
-        "'supplement notes:'. Stripped the prefix; preserved the "
-        "Beckerath/Supplement-zu-A content. [P1 — rule 1]"
-    ),
+    # 19.07 — earlier prefix-strip audit MERGED into the later 19.07 entry
+    # below to align with the consolidated OVERRIDES dict (Gemini PR #117
+    # duplicate-key fix). The cleaner egyptologist-sweep version (with
+    # "Anfangsname" instead of the merge-artifact "später Ach-en-rê") is
+    # the surviving version.
     "27.05": (
         "27.05 Xerxes II.: notes_from_beckerath contained agent editorial "
         "'end date not given in source'. Stripped; kept 'Perser' "
@@ -507,14 +518,9 @@ OVERRIDE_LOG: dict[str, str] = {
         "extracted ONE valid component. Corrected to "
         "egyptian_titulary='Hagor, Chnem-maat-rê', kind='mixed'. [P1]"
     ),
-    "18.05": (
-        "18.05 Hat-schepsut: notes_from_beckerath had editorial residue "
-        "'start 1479/73' — leftover from the Gemini correction pass that "
-        "stripped 'end date OCR corrupt' but failed to strip the start "
-        "half. Beckerath does not annotate her accession date in Anhang A. "
-        "Per rule 1 notes must contain only verbatim Beckerath text. "
-        "Stripped to null. [P1]"
-    ),
+    # 18.05 — editorial residue audit MERGED into the earlier 18.05 entry
+    # above to align with the consolidated OVERRIDES dict (Gemini PR #117
+    # duplicate-key fix).
     "19.07": (
         "19.07 Si-ptah: three-way prenomen conflict between primary throne "
         "name (Sech-en-rê mer-amun), notes (anfang/später annotations), "
@@ -530,13 +536,9 @@ OVERRIDE_LOG: dict[str, str] = {
         "Neferkare — a prenomen (throne name), not a nomen. Corrected to "
         "kind='prenomen'. [P2]"
     ),
-    "31.04": (
-        "31.04 Chabbasch: egyptian_titulary_kind was 'nomen' for "
-        "'Senem-sotep-en-ptah'. The `-sotep-en-X` suffix is prenomen "
-        "morphology throughout Beckerath. Corrected to kind='prenomen'. "
-        "(The earlier Gemini correction in commit 90a8dda0 tagged it as "
-        "nomen by mistake.) [P2]"
-    ),
+    # 31.04 — kind=prenomen audit MERGED into the earlier 31.04 entry
+    # above to align with the consolidated OVERRIDES dict (Gemini PR
+    # #117 duplicate-key fix).
     "06.05": (
         "06.05 Pepy II.: same compound-titulary truncation pattern as "
         "29.02 Achoris. Parenthetical '(Phiops, Neferkare)' is Greek-form "
