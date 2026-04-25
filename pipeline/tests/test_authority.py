@@ -394,6 +394,12 @@ class TestPharaohSeIntegrity:
         the index column, the page wins. The pharaoh.se index has shifted
         reign cells for the late-Roman block (Caracalla onward); the page
         ``| Reign of NAME |`` row carries the correct historical reign.
+
+        Diadumenianus is pinned at 217-218 (the Caesar-onward span shown
+        on pharaoh.se) rather than the issue's bare "218" (sole-Augustus
+        phase). Per the project rule "page wins when it disagrees with
+        the index", the page's 217-218 is the correct outcome and is the
+        standard catalog/coinage convention (RIC, Mattingly).
         """
         expected = {
             "Caracalla":       (198, 217),
@@ -412,16 +418,44 @@ class TestPharaohSeIntegrity:
             assert r["start_year"] == start, (name, r["start_year"])
             assert r["end_year"] == end, (name, r["end_year"])
 
+    def test_hatshepsut_bce_page_wins(self, pharaoh_se_rows):
+        """Page-vs-index precedence applies corpus-wide, not just to Roman
+        emperors. Pharaoh.se's index lists Hatshepsut as 1473-1458 but the
+        page's AE Chronology row says 1479-1458 (HKW low-chronology
+        figure). Locks in that the page-wins rule covers BCE rulers too,
+        so a regression that re-enabled "index always wins for BCE"
+        fails loudly.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Hatshepsut"]
+        assert len(matches) == 1, "Hatshepsut should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_number"] == 18
+        assert r["start_year"] == -1479, r["start_year"]
+        assert r["end_year"] == -1458, r["end_year"]
+
+    def test_augustus_bc_ad_boundary(self, pharaoh_se_rows):
+        """Augustus reigns across the BC/AD boundary (27 BCE - 14 CE).
+        Locks in that mixed-era ranges parse with the right signs and that
+        the per-field merge does not flip either endpoint.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Augustus"]
+        assert len(matches) == 1, "Augustus should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_label"] == "Roman Emperors"
+        assert r["start_year"] == -27, r["start_year"]
+        assert r["end_year"] == 14, r["end_year"]
+
     def test_no_microscopic_year_values(self, pharaoh_se_rows):
         """Sentinel against a regression in the page-reign extractor.
 
         Earlier drafts of the page-reign extractor returned values like
         '4th millenium BCE' or Turin-King-List durations ('2y 1m 1d'),
         which `_parse_reign_dates` then truncated to year=4 / year=2.
-        Real pharaoh reigns are at least |13| (Tiberius starts CE 14;
-        Augustus starts BCE 27 — the smallest absolute years that
-        legitimately appear). Anything inside that band is almost
-        certainly a parsed-duration regression.
+        The smallest legitimate absolute years in this corpus are
+        Tiberius +14 (start), Cleopatra VII -30 (end), and Augustus -27
+        (start). The threshold is set to |val| >= 14 so a future editor
+        does not widen the band past Tiberius and silently re-admit
+        single-digit duration values.
         """
         for r in pharaoh_se_rows:
             for field in ("start_year", "end_year"):

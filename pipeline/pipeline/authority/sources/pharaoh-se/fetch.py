@@ -162,11 +162,6 @@ def _parse_reign_dates(
     return None, None
 
 
-def _is_roman_dynasty(dynasty_label: str | None) -> bool:
-    """Return True for the 'Roman Emperors' dynasty group on pharaoh.se."""
-    return bool(dynasty_label) and "Roman" in dynasty_label
-
-
 def parse_index(markdown: str) -> list[dict]:
     """Parse the pharaohs index page markdown into a list of basic pharaoh records."""
     records = []
@@ -257,8 +252,8 @@ def _parse_intro(lines: list[str]) -> dict:
 
 _DATE_VALUE_RE = re.compile(
     r"^\s*"
-    r"(?:\?|\d+)\s*(?:BC|BCE|CE|AD)?\s*"
-    r"(?:[–\-]\s*(?:\?|\d*)\s*(?:BC|BCE|CE|AD)?)?\s*"
+    r"(?:\?|\d{2,})\s*(?:BC|BCE|CE|AD)?\s*"
+    r"(?:[–\-]\s*(?:\?|\d{0,})\s*(?:BC|BCE|CE|AD)?)?\s*"
     r"$",
     re.IGNORECASE,
 )
@@ -268,8 +263,24 @@ def _looks_like_date(value: str) -> bool:
     """Reject prose like '4th millenium BCE', durations like '2y 1m 1d',
     and labels like 'Year 54' that show up in 'Reign of' rows for sparse
     rulers. Only digit-and-separator forms (with optional era markers) pass.
+
+    The leading number requires >= 2 digits so a stray single digit (e.g.
+    a footnote marker, the leading digit of '4th millennium', or a
+    1-digit ordinal that survives an upstream regex) cannot pass as a
+    legitimate year. Pharaoh.se's earliest single-year Roman reign is
+    Galba/Otho/Vitellius at 68/69 — all 2 digits — so this floor is safe.
     """
     return bool(value) and bool(_DATE_VALUE_RE.match(value))
+
+
+def _is_roman_dynasty(dynasty_label: str | None) -> bool:
+    """Return True for pharaoh.se's 'Roman Emperors' dynasty group.
+
+    This matches the source's own header text, not a canonical authority
+    value — the function lives in the pharaoh.se mapper specifically to
+    parse pharaoh.se's vocabulary, not to assert a project-wide name.
+    """
+    return bool(dynasty_label) and "Roman" in dynasty_label
 
 
 def _extract_page_reign(chronology_lines: list[str]) -> str | None:
