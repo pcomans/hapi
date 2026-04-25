@@ -527,8 +527,8 @@ OVERRIDE_LOG: dict[str, str] = {
         "and an editorially-merged 'später Ach-en-rê sotep-en-rê' (which "
         "is the same throne name in another transliteration; the 'später' "
         "framing was an agent merge artifact). Cleaned to: prenomen holds "
-        "primary form, notes carries only Beckerath's accession-date and "
-        "Anfangsname annotations. [P2]"
+        "primary form, notes carries Beckerath's accession-date, "
+        "co-regency (Te-wosret/Thuoris), and Anfangsname annotations. [P2]"
     ),
     "21.02": (
         "21.02 Amen-em-nisu: egyptian_titulary_kind was 'nomen' for the "
