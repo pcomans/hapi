@@ -259,6 +259,75 @@ OVERRIDES: dict[str, dict] = {
         "end_bce_high": -1550,
         "end_bce_low": -1550,
     },
+
+    # ── Egyptologist post-merge sweep findings (issue #115, 2026-04-25) ───
+    #
+    # Methodology blind-spot: the disagreement-log review is structurally
+    # unable to catch cases where all three agents AGREED on a wrong or
+    # incomplete value. The compound-titulary truncation pattern
+    # (Beckerath prints `Name (nomen, prenomen)`, agents disagree which
+    # half to extract, majority selects one) recurs across the corpus and
+    # is not visible in merge-disagreements.txt.
+
+    # 29.02 Achoris [P1] — compound titulary truncation. scan-108 shows
+    # Beckerath's parenthetical as "Achoris (Hagor, Chnem-maat-rê)" — a
+    # nomen + prenomen compound. Committed row had only "Chnem-maat-rê"
+    # with kind="prenomen"; the "Hagor" nomen half was entirely absent.
+    "29.02": {
+        "egyptian_titulary": "Hagor, Chnem-maat-rê",
+        "egyptian_titulary_kind": "mixed",
+    },
+
+    # 18.05 Hat-schepsut [P1] — editorial residue. Beckerath does not
+    # annotate her accession date in Anhang A; "start 1479/73" was a
+    # leftover from the Gemini correction pass that stripped "end date
+    # OCR corrupt" but failed to strip the start half. Per rule 1, notes
+    # must contain only verbatim Beckerath annotations.
+    "18.05": {
+        "notes_from_beckerath": None,
+    },
+
+    # 19.07 Si-ptah [P2] — three-way prenomen conflict. Beckerath's
+    # Supplement zu A (scan-108 right) gives Si-ptah's primary throne name
+    # as "Sech-en-rê mer-amun" with a beginning-of-reign form
+    # "Sich-ka-rê sotep-en-rê" (and the Übersicht parenthetical was
+    # already null). Reconcile: prenomen holds the primary form; notes
+    # carries only what Beckerath literally annotates around the reign
+    # date and the "anfang ..." beginning-of-reign annotation. Drop the
+    # editorially-merged "später Ach-en-rê sotep-en-rê" string (Ach-en-rê
+    # is the same as Sech-en-rê in another transliteration; preserving
+    # both as "later" form was an agent merge artifact).
+    "19.07": {
+        "notes_from_beckerath": (
+            "Antritt 10.1194/93; und Kgin. Te-wosret (Thuoris); "
+            "Anfangsname Sich-ka-rê sotep-en-rê"
+        ),
+    },
+
+    # 21.02 Amen-em-nisu [P2] — wrong egyptian_titulary_kind. The value
+    # "Nephercheres" is the Greek rendering of Neferkare — a prenomen
+    # (throne name), not a nomen. Beckerath uses Nephercheres in the
+    # Übersicht parenthetical as the Greek-form throne name.
+    "21.02": {
+        "egyptian_titulary_kind": "prenomen",
+    },
+
+    # 31.04 Chabbasch [P2] — wrong egyptian_titulary_kind. The
+    # `-sotep-en-X` suffix is prenomen morphology throughout Beckerath
+    # ("Senem-sotep-en-ptah" is "Chosen of Ptah" — a throne name, not a
+    # nomen). The earlier Gemini correction (commit 90a8dda0) tagged it
+    # as nomen by mistake.
+    "31.04": {
+        "egyptian_titulary_kind": "prenomen",
+    },
+
+    # 06.05 Pepy II. [P1] — same compound-titulary truncation pattern as
+    # 29.02 Achoris. Beckerath's parenthetical "(Phiops, Neferkare)" is
+    # Greek-form nomen + prenomen, not a single nomen. Discovered by the
+    # new compound-titulary invariant test (issue #115 methodology fix).
+    "06.05": {
+        "egyptian_titulary_kind": "mixed",
+    },
 }
 
 
@@ -426,6 +495,53 @@ OVERRIDE_LOG: dict[str, str] = {
         "end_bce_high=-1539 (wrong, phantom) and end_bce_low=-1550. "
         "Corrected to end_bce_high=end_bce_low=-1550 (single endpoint). "
         "Surfaced by codex review (P2 inversion → P1 OCR-bleed). [P1]"
+    ),
+    # ── Egyptologist post-merge sweep findings (issue #115) ───────────────
+    "29.02": (
+        "29.02 Achoris: scan-108 shows Beckerath's parenthetical as "
+        "'Achoris (Hagor, Chnem-maat-rê)' — a nomen+prenomen compound. "
+        "Committed row had only 'Chnem-maat-rê' with kind='prenomen'; the "
+        "'Hagor' nomen half was missing entirely. Methodology root cause: "
+        "the disagreement-log reviewer only sees fields where ≥2 agents "
+        "differ; this case had no logged content-gap because each agent "
+        "extracted ONE valid component. Corrected to "
+        "egyptian_titulary='Hagor, Chnem-maat-rê', kind='mixed'. [P1]"
+    ),
+    "18.05": (
+        "18.05 Hat-schepsut: notes_from_beckerath had editorial residue "
+        "'start 1479/73' — leftover from the Gemini correction pass that "
+        "stripped 'end date OCR corrupt' but failed to strip the start "
+        "half. Beckerath does not annotate her accession date in Anhang A. "
+        "Per rule 1 notes must contain only verbatim Beckerath text. "
+        "Stripped to null. [P1]"
+    ),
+    "19.07": (
+        "19.07 Si-ptah: three-way prenomen conflict between primary throne "
+        "name (Sech-en-rê mer-amun), notes (anfang/später annotations), "
+        "and an editorially-merged 'später Ach-en-rê sotep-en-rê' (which "
+        "is the same throne name in another transliteration; the 'später' "
+        "framing was an agent merge artifact). Cleaned to: prenomen holds "
+        "primary form, notes carries only Beckerath's accession-date and "
+        "Anfangsname annotations. [P2]"
+    ),
+    "21.02": (
+        "21.02 Amen-em-nisu: egyptian_titulary_kind was 'nomen' for the "
+        "value 'Nephercheres'. Nephercheres is the Greek rendering of "
+        "Neferkare — a prenomen (throne name), not a nomen. Corrected to "
+        "kind='prenomen'. [P2]"
+    ),
+    "31.04": (
+        "31.04 Chabbasch: egyptian_titulary_kind was 'nomen' for "
+        "'Senem-sotep-en-ptah'. The `-sotep-en-X` suffix is prenomen "
+        "morphology throughout Beckerath. Corrected to kind='prenomen'. "
+        "(The earlier Gemini correction in commit 90a8dda0 tagged it as "
+        "nomen by mistake.) [P2]"
+    ),
+    "06.05": (
+        "06.05 Pepy II.: same compound-titulary truncation pattern as "
+        "29.02 Achoris. Parenthetical '(Phiops, Neferkare)' is Greek-form "
+        "nomen + prenomen, not a single nomen. Surfaced by the new "
+        "compound-titulary invariant test in PR for issue #115. [P1]"
     ),
 }
 

@@ -490,3 +490,57 @@ def test_akhenaten_prenomen_typo_fixed() -> None:
     r = _row("18.10")
     assert "Ach-en-aten" in r["name"]
     assert r["egyptian_titulary"] == "Nefer-cheprurê wa-en-rê"
+
+
+def test_compound_titulary_implies_mixed_kind() -> None:
+    """**Methodology invariant** — when Beckerath prints a compound
+    parenthetical containing a comma (e.g. `(Hagor, Chnem-maat-rê)`,
+    `(Tarakos, Chu-nefertem-rê)`, `(Wah-ib-rê, Haa-ib-rê)`), the
+    `egyptian_titulary_kind` must be `"mixed"`. This is enforceable as a
+    pure derivation from the parenthetical text — no content judgement
+    needed — and catches the compound-titulary truncation class flagged
+    by the egyptologist post-merge sweep (issue #115). Two-component
+    parentheticals where the agents disagreed which half to extract
+    historically slipped through the disagreement-log reviewer because
+    the agents AGREED on a wrong/partial value.
+
+    Carve-out: Beckerath also writes Greek-disambiguator alternates with
+    a comma (e.g. `(Nikku, Nechao II.)` in Supplement zu A). Those are
+    name-form variants, not nomen+prenomen compounds. The current data
+    does not contain any such carve-out case, so this test asserts the
+    strict comma → mixed rule. If a future re-extraction surfaces a
+    true name-variant carve-out, refine the test rather than relax the
+    invariant — the test failure will document the case.
+    """
+    for r in _rows():
+        tit = r.get("egyptian_titulary")
+        if isinstance(tit, str) and "," in tit:
+            assert r["egyptian_titulary_kind"] == "mixed", (
+                r["beckerath_id"],
+                tit,
+                r["egyptian_titulary_kind"],
+            )
+
+
+def test_no_editorial_prefixes_in_notes_extended() -> None:
+    """Extended editorial-prose check (issue #115). The previous
+    `test_notes_have_no_editorial_prose` covered a fixed list; this
+    expands it with patterns that surfaced in the post-merge sweep:
+    bare `start`/`end` annotations as fragments, `Antrittsjahr`,
+    `später` (used as agent merge filler when reconciling alternative
+    throne names), and `(reign change)` style hedges.
+    """
+    forbidden_substrings = (
+        "start ",  # used as residue in 18.05
+        "end date",
+        "later form",
+        "(reign change)",
+        "OCR",
+        "garbled",
+    )
+    for r in _rows():
+        notes = r.get("notes_from_beckerath")
+        if not isinstance(notes, str):
+            continue
+        for sub in forbidden_substrings:
+            assert sub.lower() not in notes.lower(), (r["beckerath_id"], sub, notes)
