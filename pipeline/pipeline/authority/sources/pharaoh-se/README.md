@@ -2,6 +2,25 @@
 
 Academically sourced list of Egyptian pharaohs with full five-name royal titulary, scraped from [pharaoh.se](https://pharaoh.se/ancient-egypt/pharaohs) using Firecrawl.
 
+## Role in the authority architecture
+
+**As of 2026-04-25 (post-Beckerath landing):** pharaoh.se is a **gap-fill secondary** source. Phase-A `build_rulers.py` consumers should NOT read this source's titulary or chronology fields blindly across the whole 381-row corpus. Use it scoped to specific clusters:
+
+- **Roman emperors (30 rows)** — pharaoh.se is currently the ONLY on-disk Phase-0 source covering imperial-period pharaohs (Augustus → Caracalla and beyond, with Egyptian throne-name cartouches). This is the cluster preventing outright drop. Replaced when **Bagnall & Rathbone 2004** lands as a Roman-period Phase-0 source.
+- **Unplaced kings / Abydos Dynasty / Dyn-13–14 long-tail (~11+ rows)** — kings attested only on a single inscription that no chronology source enumerates. Beckerath, Kitchen, HKW silently omit them. Leprohon 2013 covers some via the Abydos-Dynasty section.
+- **`alt_labels` (347/381 rows)** — Greek/Latin variant graph (Akoris/Akhoris, Necho/Nekau, Psamtik/Psammetichos) Leprohon does not exhaustively maintain. Used as a *supplement* to Leprohon's `alt_display_names`.
+- **Argead / Ptolemaic (19 rows)** — secondary to Leprohon Ch X chunk 14 (3 Macedonian + 21 Ptolemaic rows including queen-consort sub-entries).
+
+**What NOT to read from this source post-Beckerath:**
+
+- **Chronology dates / `chronologies` dict.** Second-hand to Beckerath 1997 / HKW 2006 / Kitchen 1996, all of which are now standalone Phase-0 sources. Use `sources/beckerath-1997-chronologie/` (lead) + `sources/hkw-chronology-2006/` (fallback) + `sources/kitchen-tipe/` (Dyn 21–26 finer grain) via the plural-named-chronologies map in `rulers.json::chronologies` instead.
+- **Titulary on rulers Leprohon covers.** Leprohon 2013 (`sources/leprohon-2013-titulary/`) is the **primary** titulary authority (395 rows across Dyn 0 → Ptolemaic). pharaoh.se titulary fields are only consulted when Leprohon is silent on a given ruler.
+- **`predecessor` / `successor` chains** as the source of truth. Derive predecessor/successor from `sequence_in_dynasty` ordering across Beckerath / Leprohon / Ryholt / Kitchen instead. pharaoh.se chains remain useful as a cross-validation signal but not the source.
+
+**End-state target:** drop pharaoh.se entirely once Bagnall & Rathbone 2004 lands (covering Roman emperors) AND the unplaced-king long-tail is curated into Leprohon's existing Abydos-Dynasty / problematic-king sections or accepted as a documented MVP gap.
+
+**Decision audit trail:** ADR-012 (Consequences section, 2026-04-25 entry); `docs/mvp-tasks.md` § Milestone 3.2 (deferred-decision section "Deferred decision: pharaoh.se drop after Beckerath landed"); GitHub issue #112 (closed 2026-04-25 with this decision documented inline).
+
 ## Source
 
 - **Website**: [pharaoh.se](https://pharaoh.se/) by Peter Lundstrom
