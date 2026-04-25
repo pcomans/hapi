@@ -7,7 +7,7 @@ type: project
 Three errors survived all prior review passes (original merge → 19 fix_rows.py overrides → Gemini/Codex corrections).
 
 **P1 — Row 29.02 Achoris: truncated egyptian_titulary**
-Scan-108 shows "Achoris (Hagor, Chnem-maat-rê)" but reconciled.jsonl has `egyptian_titulary="Chnem-maat-rê"` and `egyptian_titulary_kind="prenomen"`. The "Hagor" nomen is missing. Correct values: `"Hagor, Chnem-maat-rê"` with `egyptian_titulary_kind="mixed"`. Invisible to the disagreement log because no two agents had identical titulary values, so majority collapsed to the shortest form with no logged content-gap disagreement.
+Scan-108 shows "Achoris (Hagor, Chnem-maat-rê)" but reconciled.jsonl has `egyptian_titulary="Chnem-maat-rê"` and `egyptian_titulary_kind="prenomen"`. The "Hagor" nomen is missing. Correct values: `"Hagor, Chnem-maat-rê"` with `egyptian_titulary_kind="mixed"`. Invisible to the disagreement log because the agree-but-wrong pattern surfaced as 2v1 on the same partial value: a majority of agents extracted only the prenomen half ("Chnem-maat-rê"), the third extracted only the nomen ("Hagor"), and no agent emitted the full compound — so the per-field disagreement log shows 2 agents agreeing on the prenomen with no logged content-gap, while the nomen half was silently lost.
 
 **P1 — Row 18.05 Hat-schepsut: editorial residue in notes_from_beckerath**
 `notes_from_beckerath="start 1479/73"` is not a Beckerath annotation; it is an editorial note left over from the Gemini correction pass that stripped "end date OCR corrupt" but left "start 1479/73". Should be null per Constitutional rule 1.
