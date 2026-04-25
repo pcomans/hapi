@@ -340,6 +340,99 @@ class TestPharaohSeIntegrity:
         fetch_path = PHARAOH_SE_DIR / "fetch.py"
         assert fetch_path.exists(), "fetch.py should exist for reproducible re-acquisition"
 
+    def test_every_index_slug_has_raw_page(self):
+        """Constitutional rule 2 (loud-fail) + reviewer-notes-sweep-2026 P2.
+
+        The reconciler must not emit index-only rows when a ruler's page is
+        missing from raw/. Pin the raw stem set against the index slug set
+        so a dropped scrape is caught at test time, not at use time.
+        """
+        raw_dir = PHARAOH_SE_DIR / "raw"
+        raw_stems = {p.stem for p in raw_dir.glob("*.md") if p.stem != "index"}
+        index_md = (raw_dir / "index.md").read_text(encoding="utf-8")
+        # Slugs in the index appear as
+        # ``[Name](https://pharaoh.se/ancient-egypt/pharaoh/<slug>)``.
+        import re
+        index_slugs = {
+            m.group(1).rstrip("/")
+            for m in re.finditer(
+                r"https://pharaoh\.se/ancient-egypt/pharaoh/([^)]+)",
+                index_md,
+            )
+        }
+        missing = sorted(index_slugs - raw_stems)
+        assert not missing, (
+            f"{len(missing)} index slug(s) have no raw/<slug>.md page: "
+            f"{missing[:10]}"
+        )
+
+    # --- Canary rows for fetch.py reign-date parsing (issue #110) ---
+    # Pharaoh.se's index has row-shifted reign columns for the late Roman
+    # emperors and drops the era marker, so a single-year Roman reign in the
+    # index can't be sign-disambiguated without dynasty context. The fix in
+    # fetch.py (a) flags Roman-emperor reigns as positive (CE) and (b)
+    # prefers the per-page reign over the index when they disagree. These
+    # rows pin the corrected values so a regression in either rule fails
+    # loudly.
+
+    def test_otho_positive_year_reign(self, pharaoh_se_rows):
+        """Otho's single-year reign 69 (CE) must be positive, not -69.
+
+        Pharaoh.se index column shows '69' with no era marker; the bare
+        number defaults to BCE for non-Roman dynasties. The fix detects
+        the Roman-Emperors dynasty and keeps the year positive.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Otho"]
+        assert len(matches) == 1, "Otho should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_label"] == "Roman Emperors"
+        assert r["start_year"] == 69, r["start_year"]
+        assert r["end_year"] is None, r["end_year"]
+
+    def test_late_roman_reigns_use_page_over_index(self, pharaoh_se_rows):
+        """Page-vs-index precedence: when the ruler's own page contradicts
+        the index column, the page wins. The pharaoh.se index has shifted
+        reign cells for the late-Roman block (Caracalla onward); the page
+        ``| Reign of NAME |`` row carries the correct historical reign.
+        """
+        expected = {
+            "Caracalla":       (198, 217),
+            "Geta":            (209, 211),
+            "Macrinus":        (217, 218),
+            "Diadumenianus":   (217, 218),
+            "Philippus Arabs": (244, 249),
+            "Trajanus Decius": (249, 251),
+            "Valerianus":      (253, 260),
+        }
+        by_display = {r["display"]: r for r in pharaoh_se_rows}
+        for name, (start, end) in expected.items():
+            r = by_display.get(name)
+            assert r is not None, f"missing row for {name}"
+            assert r["dynasty_label"] == "Roman Emperors", name
+            assert r["start_year"] == start, (name, r["start_year"])
+            assert r["end_year"] == end, (name, r["end_year"])
+
+    def test_no_microscopic_year_values(self, pharaoh_se_rows):
+        """Sentinel against a regression in the page-reign extractor.
+
+        Earlier drafts of the page-reign extractor returned values like
+        '4th millenium BCE' or Turin-King-List durations ('2y 1m 1d'),
+        which `_parse_reign_dates` then truncated to year=4 / year=2.
+        Real pharaoh reigns are at least |13| (Tiberius starts CE 14;
+        Augustus starts BCE 27 — the smallest absolute years that
+        legitimately appear). Anything inside that band is almost
+        certainly a parsed-duration regression.
+        """
+        for r in pharaoh_se_rows:
+            for field in ("start_year", "end_year"):
+                val = r.get(field)
+                if val is None:
+                    continue
+                assert abs(val) >= 14, (
+                    f"{r['display']}: {field}={val} is suspiciously small "
+                    f"(likely a duration / descriptive string parsed as a year)"
+                )
+
 
 IDAI_DIR = AUTHORITY_SOURCES / "idai-gazetteer"
 

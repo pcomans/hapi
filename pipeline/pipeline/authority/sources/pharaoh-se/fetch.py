@@ -91,12 +91,18 @@ def _parse_dynasty_header(line: str) -> dict | None:
     return {"label": label, "number": None}
 
 
-def _parse_reign_dates(date_str: str) -> tuple[int | None, int | None]:
+def _parse_reign_dates(
+    date_str: str, is_roman: bool = False
+) -> tuple[int | None, int | None]:
     """Parse reign date string like '1479–1425' into (start_year, end_year).
 
     BCE dates are stored as negative integers. AD dates (Roman emperors)
     are stored as positive integers. Pharaoh.se uses bare numbers without
     BC/AD markers. BCE ranges descend (1479→1425), AD ranges ascend (14→37).
+
+    For ambiguous single-year reigns (e.g. Otho "69"), the dynasty context is
+    needed to disambiguate. ``is_roman=True`` flags that the reign is from a
+    Roman-emperor entry, in which case unmarked values are positive (CE).
     """
     if not date_str or not date_str.strip():
         return None, None
@@ -140,15 +146,25 @@ def _parse_reign_dates(date_str: str) -> tuple[int | None, int | None]:
     # BCE ranges descend (1479→1425): negate both.
     # AD ranges ascend (14→37): keep positive.
     if raw_start is not None and raw_end is not None:
-        if raw_start >= raw_end:
+        if raw_start == raw_end:
+            # Equal endpoints (e.g., a single-year span "218–218"): direction
+            # is ambiguous, so fall back to dynasty context.
+            return (raw_start, raw_end) if is_roman else (-raw_start, -raw_end)
+        if raw_start > raw_end:
             return -raw_start, -raw_end
-        else:
-            return raw_start, raw_end
+        return raw_start, raw_end
 
-    # Single date without marker: assume BCE (all pharaoh.se BCE dates are >= 300)
+    # Single date without marker: dynasty context decides the sign.
     if raw_start is not None:
-        return -raw_start, None
-    return None, -raw_end if raw_end is not None else None
+        return (raw_start if is_roman else -raw_start), None
+    if raw_end is not None:
+        return None, (raw_end if is_roman else -raw_end)
+    return None, None
+
+
+def _is_roman_dynasty(dynasty_label: str | None) -> bool:
+    """Return True for the 'Roman Emperors' dynasty group on pharaoh.se."""
+    return bool(dynasty_label) and "Roman" in dynasty_label
 
 
 def parse_index(markdown: str) -> list[dict]:
@@ -185,7 +201,10 @@ def parse_index(markdown: str) -> list[dict]:
             if cleaned:
                 alt_labels = [a.strip() for a in cleaned.split(",") if a.strip()]
 
-        start_year, end_year = _parse_reign_dates(reign_raw)
+        is_roman = _is_roman_dynasty(
+            current_dynasty["label"] if current_dynasty else None
+        )
+        start_year, end_year = _parse_reign_dates(reign_raw, is_roman=is_roman)
 
         url = f"{PHARAOH_BASE_URL}/{slug}/"
 
@@ -234,6 +253,69 @@ def _parse_intro(lines: list[str]) -> dict:
             info["successor"] = succ_match.group(1)
 
     return info
+
+
+_DATE_VALUE_RE = re.compile(
+    r"^\s*"
+    r"(?:\?|\d+)\s*(?:BC|BCE|CE|AD)?\s*"
+    r"(?:[–\-]\s*(?:\?|\d*)\s*(?:BC|BCE|CE|AD)?)?\s*"
+    r"$",
+    re.IGNORECASE,
+)
+
+
+def _looks_like_date(value: str) -> bool:
+    """Reject prose like '4th millenium BCE', durations like '2y 1m 1d',
+    and labels like 'Year 54' that show up in 'Reign of' rows for sparse
+    rulers. Only digit-and-separator forms (with optional era markers) pass.
+    """
+    return bool(value) and bool(_DATE_VALUE_RE.match(value))
+
+
+def _extract_page_reign(chronology_lines: list[str]) -> str | None:
+    """Extract the ruler's reign-date string from the page header table.
+
+    Two pharaoh.se layouts produce a usable reign date:
+
+    * BCE rulers carry an explicit ``| AE Chronology | YYYY–YYYY |`` row in
+      the chronology table.
+    * Roman emperors omit the chronology table entirely — the reign appears
+      as a 2-cell row immediately following the ``| Reign of **NAME** |``
+      header (e.g. ``|  | 69 |``).
+
+    Returns the raw date string (caller parses with the right era context)
+    or ``None`` if no reign row is present.
+    """
+    # Prefer the AE-Chronology row when present (BCE rulers)
+    for line in chronology_lines:
+        m = re.match(r"\|\s*AE Chronology\s*\|\s*(.+?)\s*\|", line)
+        if m:
+            value = m.group(1).strip()
+            if _looks_like_date(value):
+                return value
+
+    # Fall back to the unlabeled row after '| Reign of **NAME** |'. Roman
+    # emperor pages render the reign as a 2-cell row with an empty first
+    # cell ('|  | 69 |'). Other rulers without an AE Chronology row may
+    # have labelled scholar rows there (e.g., 'Turin King List | 2y 1m 1d')
+    # which encode a reign DURATION, not a date range — skip those.
+    for i, line in enumerate(chronology_lines):
+        if not re.search(r"\|\s*Reign of\s+\*\*", line):
+            continue
+        for next_line in chronology_lines[i + 1 : i + 5]:
+            m = re.match(r"\|\s*(.*?)\s*\|\s*(.+?)\s*\|", next_line)
+            if not m:
+                continue
+            label = m.group(1).strip()
+            value = m.group(2).strip()
+            if label:
+                # Labelled row → not the empty-cell Roman-emperor reign row
+                continue
+            if _looks_like_date(value):
+                return value
+        break
+
+    return None
 
 
 def _parse_chronology_table(lines: list[str]) -> dict[str, str]:
@@ -432,6 +514,7 @@ def parse_pharaoh_page(markdown: str, slug: str) -> dict:
             ancient_source_lines.append(line)
 
     chronologies = _parse_chronology_table(chronology_lines)
+    page_reign = _extract_page_reign(chronology_lines)
 
     # Parse name sections
     titulary = {}
@@ -448,6 +531,7 @@ def parse_pharaoh_page(markdown: str, slug: str) -> dict:
         "successor": intro["successor"],
         "alt_labels_from_page": intro["alt_labels_from_page"],
         "chronologies": chronologies if chronologies else None,
+        "page_reign": page_reign,
         **titulary,
         "ancient_sources": ancient_sources,
     }
@@ -464,6 +548,21 @@ def reconcile(index_records: list[dict], page_data: dict[str, dict]) -> list[dic
     for rec in index_records:
         slug = rec["slug"]
         page = page_data.get(slug, {})
+
+        # Reign dates: the ruler's own page wins when it disagrees with the
+        # index column. The pharaoh.se index has row-shift bugs in the late
+        # Roman section (e.g., Macrinus indexed as 244–249 vs page 217–218),
+        # and it also drops the era marker, so a single-year Roman reign in
+        # the index can't be sign-disambiguated without dynasty context. The
+        # per-page header (AE Chronology / 'Reign of' row) is authoritative.
+        # Merge per-field: page value wins where present, otherwise fall
+        # back to the index so a sparse page (e.g. Tutankhamun "?–1324")
+        # doesn't drop a known endpoint that the index supplies.
+        is_roman = _is_roman_dynasty(rec.get("dynasty_label"))
+        page_reign_str = page.get("page_reign")
+        page_start, page_end = _parse_reign_dates(page_reign_str, is_roman=is_roman)
+        start_year = page_start if page_start is not None else rec["start_year"]
+        end_year = page_end if page_end is not None else rec["end_year"]
 
         # Merge alt labels from index and page (dedup, preserve order)
         alt_labels = []
@@ -524,8 +623,8 @@ def reconcile(index_records: list[dict], page_data: dict[str, dict]) -> list[dic
             "alt_labels": alt_labels if alt_labels else None,
             "prenomen": prenomen,
             "nomen": nomen,
-            "start_year": rec["start_year"],
-            "end_year": rec["end_year"],
+            "start_year": start_year,
+            "end_year": end_year,
             "dynasty_label": rec["dynasty_label"],
             "dynasty_number": rec["dynasty_number"],
             "ordinal": rec["ordinal"],
@@ -648,7 +747,14 @@ def main():
 
     missing = [s for s in slugs if s not in page_data]
     if missing:
-        print(f"  WARNING: {len(missing)} pages missing: {missing[:10]}...", file=sys.stderr)
+        # Constitutional rule 2: loud-fail on missing source pages. Partial
+        # reconciliation produces index-only rows with null titulary, which
+        # silently degrades the authority data. Raise so the caller fixes
+        # the scrape (or removes the slug from the index) before reconcile.
+        raise RuntimeError(
+            f"{len(missing)} pages missing from raw/: {missing}. "
+            "Re-run fetch without --parse-only or restore the missing files."
+        )
 
     # Step 5: Reconcile
     reconciled = reconcile(index_records, page_data)
