@@ -445,6 +445,57 @@ class TestPharaohSeIntegrity:
         assert r["start_year"] == -27, r["start_year"]
         assert r["end_year"] == 14, r["end_year"]
 
+    def test_cleopatra_vii_data(self, pharaoh_se_rows):
+        """Cleopatra VII 51-30 BCE — high-traffic ruler in museum
+        catalogs, end_year is the smallest legitimate |val| in the BCE
+        corpus (Octavian's annexation), so this row anchors both
+        catalog-matching coverage and the lower bound of the
+        microscopic-year sentinel.
+        """
+        matches = [r for r in pharaoh_se_rows if r["display"] == "Cleopatra VII"]
+        assert len(matches) == 1, "Cleopatra VII should have exactly one row"
+        r = matches[0]
+        assert r["dynasty_label"] == "Ptolemaic Dynasty"
+        assert r["start_year"] == -51, r["start_year"]
+        assert r["end_year"] == -30, r["end_year"]
+
+    def test_mixed_source_date_ranges_are_pinned(self, pharaoh_se_rows):
+        """Egyptologist-reviewer P2 (issue #110): the per-field page-wins
+        merge can silently produce mixed-source ranges (start_year and
+        end_year sourced from different places). For four rulers the
+        index supplies one endpoint and the page supplies the other:
+
+        * Kamose (-1555, -1540): start from index, end from page (1540
+          is the von Beckerath terminus).
+        * Tutankhamun (-1332, -1324): start from index, end from page
+          (page renders ``?–1324``).
+        * Neferneferuaten (-1334, -1332): start agrees with index; end
+          from index because the page ends ``?``.
+        * Ramesses VIII (-1130, -1129): start from page = index; end
+          from index only because the page is ``-1130``.
+
+        Pinning the exact set so a future widening of the page-vs-index
+        precedence rule (or a regression that loses one endpoint) fails
+        loudly. Adding a fifth ruler to this set is a signal that the
+        merge needs a per-row provenance field, not a wider sentinel.
+        """
+        # Display names for which start_year and end_year are both
+        # non-null AND come from different sources after the per-field
+        # merge. We can't introspect source-of-each-field from the
+        # reconciled row alone, so we encode the known set:
+        expected_mixed = {
+            "Kamose":          (-1555, -1540),
+            "Tutankhamun":     (-1332, -1324),
+            "Neferneferuaten": (-1334, -1332),
+            "Ramesses VIII":   (-1130, -1129),
+        }
+        by_display = {r["display"]: r for r in pharaoh_se_rows}
+        for name, (start, end) in expected_mixed.items():
+            r = by_display.get(name)
+            assert r is not None, f"missing row for {name}"
+            assert r["start_year"] == start, (name, r["start_year"])
+            assert r["end_year"] == end, (name, r["end_year"])
+
     def test_no_microscopic_year_values(self, pharaoh_se_rows):
         """Sentinel against a regression in the page-reign extractor.
 
