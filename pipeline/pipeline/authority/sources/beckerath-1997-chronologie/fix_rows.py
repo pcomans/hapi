@@ -463,25 +463,33 @@ def main() -> None:
             raise KeyError(f"No row with beckerath_id {bid!r} in {RECONCILED}")
 
     applied: list[str] = []
+    actually_mutated_count = 0
 
     for row in rows:
         bid = row["beckerath_id"]
         if bid not in OVERRIDES:
             continue
         fields = OVERRIDES[bid]
-        mutated_any = False
         for field, new_val in fields.items():
             old_val = row.get(field)
             if old_val == new_val:
                 continue
             row[field] = new_val
-            mutated_any = True
-        if mutated_any:
-            applied.append(OVERRIDE_LOG[bid])
+            actually_mutated_count += 1
+        # `applied` documents what corrections this script DEFINES — it is
+        # the committed audit trail, not a per-run mutation log. Always
+        # record every OVERRIDE that exists, even on idempotent re-runs
+        # where no field actually changed; otherwise the audit log
+        # silently shrinks across runs and loses provenance.
+        applied.append(OVERRIDE_LOG[bid])
 
     # Systematic spelling fix runs after OVERRIDES so individual overrides
     # (e.g. on a Schoschenq row's prenomen) win first, then any remaining
-    # "Schoscheng" → "Schoschenq" rewrites land.
+    # "Schoscheng" → "Schoschenq" rewrites land. The schoschenq helper
+    # already filters to "actually-mutated" entries (it only appends when
+    # `Schoscheng` was found and replaced), so its return is naturally
+    # empty on re-runs — that's the correct behaviour for a string-replace
+    # pass, and is documented in the helper's docstring.
     applied.extend(_apply_schoschenq_spelling_fix(rows))
 
     RECONCILED.write_text(
@@ -494,13 +502,26 @@ def main() -> None:
     existing_diff = DIFF.read_text()
     marker = "## LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
     if marker in existing_diff:
-        head, _, _ = existing_diff.partition(f"\n\n{marker}")
-        existing_diff = head
+        # Whitespace-tolerant: split on the marker itself and trim trailing
+        # blank lines. Was previously sensitive to exactly two preceding
+        # newlines, which would silently double-write the override block if
+        # the file had been hand-edited or if a prior run produced different
+        # spacing (Gemini PR #113).
+        head, _, _ = existing_diff.partition(marker)
+        existing_diff = head.rstrip()
 
+    # NOTE: parenthesise "=" * N explicitly. Python's implicit string-literal
+    # concatenation rule means an unparenthesised `"=" * N` next to other
+    # string literals binds the multiplication to the WHOLE adjacent-literal
+    # concatenation, producing N copies of the entire string. (Discovered
+    # 2026-04-25 when fix_rows.py spuriously wrote 43 sections to merge-
+    # disagreements.txt.)
+    divider = "=" * (len(marker) - 3)
+    audit_lines = "\n".join(f"- {line}" for line in applied)
     appended = (
         f"{existing_diff.rstrip()}\n\n"
         f"{marker}\n"
-        "=" * (len(marker) - 3) + "\n"
+        f"{divider}\n"
         "Corrections applied by fix_rows.py AFTER the 3-subagent majority-vote\n"
         "merge. Source: egyptologist-reviewer Claude Code subagent pass against\n"
         "pre-rendered JPEG scans (scan-105.jpg–scan-109.jpg) of Beckerath 1997\n"
@@ -508,11 +529,14 @@ def main() -> None:
         "extract — per ADR-017 step 6, the extract is provisional.\n\n"
         "Severity tags: P1 = corrects a clearly-wrong value (merge-blocker);\n"
         "P2 = style / audit context only.\n\n"
-        + "\n".join(f"- {line}" for line in applied) + "\n"
+        f"{audit_lines}\n"
     )
     DIFF.write_text(appended)
 
-    print(f"Applied {len(applied)} override(s) across {len(OVERRIDES)} row(s).")
+    print(
+        f"Applied {len(applied)} override(s) across {len(OVERRIDES)} row(s); "
+        f"{actually_mutated_count} field-value mutation(s) on this run."
+    )
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
     print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
 
