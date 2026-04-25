@@ -210,7 +210,7 @@ def test_schoschenq_iii_alternative_end_in_notes() -> None:
     `ca.` prefix); `end_approximate` is false (no qualifier on -798 itself).
     """
     r = _row("22.06")
-    assert r["name"] == "Schoscheng III."
+    assert r["name"] == "Schoschenq III."
     assert r["start_approximate"] is True
     assert r["end_approximate"] is False
     assert r["start_bce_high"] == -837
@@ -336,3 +336,124 @@ def test_supplement_prenomens_merged_for_dyn19_23() -> None:
     """
     # Schoschenq III (22.06) gets `User-maat-rê sotep-en-rê` from the Supplement.
     assert _row("22.06")["prenomen"] == "User-maat-rê sotep-en-rê"
+
+
+# ── Tests pinning fix_rows.py overrides not covered above ────────────────
+# Each of these locks a specific reviewer-applied correction. If someone
+# re-runs merge.py and forgets fix_rows.py, these tests fail loudly.
+
+def test_dyn4_etwa_propagation_locked() -> None:
+    """`fix_rows.py` corrected start_approximate / end_approximate to True
+    on every Dyn-4 row (04.02 through 04.08) because Beckerath's heading
+    `4. Dynastie (etwa 2639/2589–2504/2454)` propagates to all rows.
+    Agent C's 'false' votes had tipped the merge majority on 6 of these.
+    """
+    for kid in ("04.02", "04.03", "04.04", "04.05", "04.06", "04.07", "04.08"):
+        r = _row(kid)
+        assert r["start_approximate"] is True, kid
+        assert r["end_approximate"] is True, kid
+
+
+def test_chajan_dyn15_end_date_locked() -> None:
+    """`fix_rows.py` corrected `end_bce_high` for Chajan from -1149 (a
+    400-year OCR corruption) to -1549 (matching scan-106 left's
+    `1590/87–1549/1546`).
+    """
+    r = _row("15.04")
+    assert r["name"] == "Chajan"
+    assert r["end_bce_high"] == -1549
+    assert r["end_bce_low"] == -1546
+
+
+def test_hatschepsut_end_date_locked() -> None:
+    """`fix_rows.py` recovered Hat-schepsut's end dates from the OCR-garbled
+    `341/837` to the correct `1458` per scan-107 left's `1479/73–1458`.
+    """
+    r = _row("18.05")
+    assert r["name"] == "Kgin. Hat-schepsut"
+    assert r["end_bce_high"] == -1458
+    assert r["end_bce_low"] == -1458
+    assert r["end_approximate"] is False
+
+
+def test_amen_mes_su_prenomen_supplement_locked() -> None:
+    """`fix_rows.py` corrected Amen-mes-su's prenomen from `Amen-mes-su
+    mer-amun` (which is Beckerath's Eigenname) to `Men-mi-rê sotep-en-rê`
+    (the actual Thronname from Supplement zu A).
+    """
+    r = _row("19.05")
+    assert r["name"] == "Amen-mes-su"
+    assert r["prenomen"] == "Men-mi-rê sotep-en-rê"
+
+
+def test_sethos_ii_prenomen_supplement_locked() -> None:
+    """`fix_rows.py` corrected Sethós II's prenomen from
+    `Ba-en-rê-meri-netjeru` (which is Merenptah's prenomen — a splice
+    error) to `User-chepru-rê mer-amun` per Supplement zu A.
+    """
+    r = _row("19.06")
+    assert r["name"] == "Sethós II."
+    assert r["prenomen"] == "User-chepru-rê mer-amun"
+
+
+def test_necho_ii_prenomen_locked() -> None:
+    """Gemini-flagged: `fix_rows.py` corrected Necho II's titulary from
+    `Nefer-ib-rê` (a splice from Psamtik II's row) to `Wahem-ib-rê`.
+    """
+    r = _row("26.02")
+    assert "Nech" in r["name"]
+    assert r["egyptian_titulary"] == "Wahem-ib-rê"
+
+
+def test_chabbasch_dyn31_locked() -> None:
+    """Gemini-flagged: `fix_rows.py` corrected the Dyn 31 Egyptian
+    counter-king's name to `Chabbasch` and titulary to
+    `Senem-sotep-en-ptah`.
+    """
+    r = _row("31.04")
+    assert r["name"] == "Chabbasch"
+    assert r["egyptian_titulary"] == "Senem-sotep-en-ptah"
+
+
+def test_schoschenq_spelling_systematic() -> None:
+    """`fix_rows.py` runs a systematic Schoscheng→Schoschenq fix because
+    OCR mis-read q→g on every occurrence in Dyn 22. No row may contain
+    `Schoscheng`; every Schoschenq row must spell it correctly.
+    """
+    for r in _rows():
+        for field in ("name", "prenomen", "egyptian_titulary", "notes_from_beckerath"):
+            v = r.get(field)
+            if isinstance(v, str):
+                assert "Schoscheng" not in v, (r["beckerath_id"], field, v)
+    # Spot-check that the Dyn 22 Schoschenq rows are present and spelled correctly.
+    assert _row("22.01")["name"] == "Schoschenq I."
+
+
+def test_notes_have_no_editorial_prose() -> None:
+    """`notes_from_beckerath` must contain only Beckerath's own annotations.
+    `fix_rows.py` strips agent editorial fragments like "end date not given",
+    "combined Dyn 9/10", "supplement notes:". Lock that no such fragment
+    survives.
+    """
+    forbidden_substrings = (
+        "end date not given",
+        "combined Dyn",
+        "supplement notes:",
+        "OCR",
+        "garbled",
+    )
+    for r in _rows():
+        notes = r.get("notes_from_beckerath")
+        if not isinstance(notes, str):
+            continue
+        for sub in forbidden_substrings:
+            assert sub.lower() not in notes.lower(), (r["beckerath_id"], sub, notes)
+
+
+def test_akhenaten_prenomen_typo_fixed() -> None:
+    """`fix_rows.py` corrected Akhenaten's prenomen from `Nefer-chepruê
+    wa-en-rê` (OCR dropped the `r`) to `Nefer-cheprurê wa-en-rê`.
+    """
+    r = _row("18.10")
+    assert "Ach-en-aten" in r["name"]
+    assert r["egyptian_titulary"] == "Nefer-cheprurê wa-en-rê"

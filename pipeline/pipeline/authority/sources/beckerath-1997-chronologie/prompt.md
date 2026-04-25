@@ -122,7 +122,7 @@ By `dynasty` ascending, within dynasty by `sub_line` (null first, then alphabeti
 
 ## Expected row count
 
-~225 rows. First calibration target is 230.
+**172 rows** (locked by `tests/test_sources_beckerath_1997_chronologie.py::test_row_count`). The lower-than-naive count reflects how Beckerath actually structures Anhang A: dynasties 7, 8, 9/10, 13, 14, 16, and 17 each get a single placeholder row carrying a regnal-count annotation (`"18 Könige"` etc.) rather than enumerated kings, and the Dyn 21 Hohepriester sub-line contributes only 2 names from the *Supplement zu A* tail paragraph (not a full parallel column). Aim for 172; if your count diverges, the merge step will surface the discrepancy on the per-`beckerath_id` join.
 
 ## Output
 

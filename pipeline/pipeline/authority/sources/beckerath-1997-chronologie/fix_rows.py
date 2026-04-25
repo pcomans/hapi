@@ -195,7 +195,68 @@ OVERRIDES: dict[str, dict] = {
         "end_bce_high": -465,
         "end_bce_low": -464,
     },
+
+    # ── Akhenaten prenomen OCR typo (scan-107 left-half) ──────────────────
+    # Beckerath: "Amenophis IV. Ach-en-aten (Nefer-cheprurê wa-en-rê)".
+    # OCR dropped the `r` between `u` and `ê` → `Nefer-chepruê`.
+    "18.10": {
+        "egyptian_titulary": "Nefer-cheprurê wa-en-rê",
+    },
+
+    # ── Gemini Code Assist (PR #113, 2026-04-25) — scan-verified ─────────
+    # 26.02 Necho II prenomen: OCR splice from Psamtik II's adjacent line.
+    # Beckerath p.193 gives Wahem-ib-rê (Wḥm-ib-rꜥ).
+    "26.02": {
+        "egyptian_titulary": "Wahem-ib-rê",
+    },
+    # 26.04 Apries: extra `i` in second titulary. Should be Haa-ib-rê.
+    "26.04": {
+        "egyptian_titulary": "Wah-ib-rê, Haa-ib-rê",
+    },
+    # 31.02 Arses: OCR "Artges" (mis-OCR of "Arses"; Beckerath gives the
+    # Greek form as Egyptian rendering since no Egyptian titulary attested).
+    "31.02": {
+        "egyptian_titulary": "Arses",
+    },
+    # 31.04 Chabbasch: OCR "Chadabasch" / "Sanm-sotep-en-ptah". Beckerath
+    # gives `Chabbasch (Senem-sotep-en-ptah)`.
+    "31.04": {
+        "name": "Chabbasch",
+        "egyptian_titulary": "Senem-sotep-en-ptah",
+    },
+
+    # ── Editorial-prose stripping in notes_from_beckerath (rule 1) ───────
+    # The notes_from_beckerath field schema is "free-text annotations
+    # Beckerath himself adds in the table cell". LLM extractors had inserted
+    # editorial commentary like "end date not given" / "combined Dyn 9/10"
+    # / "supplement notes:" — those are agent meta-prose, not Beckerath
+    # text. Strip them; preserve Beckerath's actual annotations.
+    "09.01": {
+        "notes_from_beckerath": "in Herakleopolis; 18 Könige",
+    },
+    "11.01": {
+        "notes_from_beckerath": "in Theben",
+    },
+    "19.07": {
+        "notes_from_beckerath": (
+            "Antritt 10.1194/93; und Kgin. Te-wosret (Thuoris); "
+            "anfang Sich-ka-rê sotep-en-rê; später Ach-en-rê sotep-en-rê"
+        ),
+    },
+    "27.05": {
+        "notes_from_beckerath": "Perser",
+    },
 }
+
+
+# ── Systematic spelling fix: Schoscheng → Schoschenq ─────────────────────
+# Beckerath consistently writes "Schoschenq" (with q-descender) in Anhang A
+# and Supplement zu A (verified against scan-107 right-half + scan-108
+# right-half). OCR systematically misread q→g on every Schoschenq row,
+# including the prenomen Eigenname-half "Schoschenq mer-amun" form.
+# Apply via string-replace on `name` and `prenomen` fields wherever
+# "Schoscheng" appears.
+SCHOSCHENG_TO_SCHOSCHENQ_FIELDS = ("name", "prenomen")
 
 
 # Human-readable rationale for the audit log (one entry per override key).
@@ -291,11 +352,89 @@ OVERRIDE_LOG: dict[str, str] = {
         "set end_bce_low=-484 (wrong — appears to be a carry-over of "
         "start_bce_low); correct end_bce_low=-464. [P1]"
     ),
+    # ── Gemini Code Assist review pass (2026-04-25, PR #113) ──────────────
+    "26.02": (
+        "26.02 Necho II: OCR rendered titulary as 'Nefer-ib-rê' (which is "
+        "Psamtik II's prenomen on the next line); scan-108 left shows "
+        "Necho II's titulary is 'Wahem-ib-rê' (Wḥm-ib-rꜥ). Gemini Code "
+        "Assist flagged the splice. Corrected. [P1]"
+    ),
+    "26.04": (
+        "26.04 Apries: OCR rendered second titulary as 'Haai-ib-rê' (extra "
+        "'i'); scan-108 left shows 'Haa-ib-rê' (Ḥꜥꜥ-ib-rꜥ). Gemini Code "
+        "Assist flagged. Corrected. [P2]"
+    ),
+    "31.02": (
+        "31.02 Arses: OCR rendered Egyptian titulary as 'Artges' (mis- "
+        "OCR of 'Arses' / no separate Egyptian form); scan-108 right shows "
+        "'Arses (Arses)'. Gemini flagged. Corrected to 'Arses'. [P1]"
+    ),
+    "31.04": (
+        "31.04 Chabbasch: OCR rendered name as 'Chadabasch' and titulary "
+        "'Sanm-sotep-en-ptah'; scan-108 right shows 'Chabbasch "
+        "(Senem-sotep-en-ptah)'. Gemini flagged. Both corrected. [P1]"
+    ),
+    "18.10": (
+        "18.10 Akhenaten: OCR dropped the 'r' between 'u' and 'ê' in "
+        "the prenomen → 'Nefer-chepruê wa-en-rê'; scan-107 left shows "
+        "'Nefer-cheprurê wa-en-rê'. Discovered during 18.11–18.14 spot- "
+        "verify (code-reviewer P2.3). Corrected. [P1 — typo]"
+    ),
+    "09.01": (
+        "09.01 9./10. Dynastie: notes_from_beckerath contained agent "
+        "editorial 'combined Dyn 9/10'. Beckerath's actual cell text is "
+        "'(in Herakleopolis, etwa 2170/2120-2025/2020) 18 Könige'. "
+        "Stripped editorial; kept Beckerath text. [P1 — rule 1]"
+    ),
+    "11.01": (
+        "11.01 An-jotef I. Dyn 11: notes_from_beckerath contained agent "
+        "editorial 'end date not given'. Stripped; kept 'in Theben' "
+        "(Beckerath's parenthetical placement annotation). [P1 — rule 1]"
+    ),
+    "19.07": (
+        "19.07 Si-ptah: notes_from_beckerath had an agent prefix "
+        "'supplement notes:'. Stripped the prefix; preserved the "
+        "Beckerath/Supplement-zu-A content. [P1 — rule 1]"
+    ),
+    "27.05": (
+        "27.05 Xerxes II.: notes_from_beckerath contained agent editorial "
+        "'end date not given in source'. Stripped; kept 'Perser' "
+        "(Beckerath's annotation). [P1 — rule 1]"
+    ),
 }
+
+
+def _apply_schoschenq_spelling_fix(rows: list[dict]) -> list[str]:
+    """Replace 'Schoscheng' → 'Schoschenq' on `name` and `prenomen` fields.
+
+    Beckerath consistently writes Schoschenq (with q-descender). OCR misread
+    q→g on every occurrence; the systematic correction is applied here as
+    a final pass after OVERRIDES.
+
+    Returns a list of audit-log entries naming each row that was rewritten.
+    """
+    fixed: list[str] = []
+    for row in rows:
+        for field in SCHOSCHENG_TO_SCHOSCHENQ_FIELDS:
+            v = row.get(field)
+            if isinstance(v, str) and "Schoscheng" in v:
+                row[field] = v.replace("Schoscheng", "Schoschenq")
+                fixed.append(
+                    f"{row['beckerath_id']} {row.get('name', '?')}: "
+                    f"{field}: {v!r} → {row[field]!r} "
+                    f"(Schoscheng→Schoschenq systematic OCR fix). [P2]"
+                )
+    return fixed
 
 
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+
+    # Validate every beckerath_id in OVERRIDES is present BEFORE mutating.
+    found_ids = {r["beckerath_id"] for r in rows}
+    for bid in OVERRIDES:
+        if bid not in found_ids:
+            raise KeyError(f"No row with beckerath_id {bid!r} in {RECONCILED}")
 
     applied: list[str] = []
 
@@ -304,18 +443,20 @@ def main() -> None:
         if bid not in OVERRIDES:
             continue
         fields = OVERRIDES[bid]
+        mutated_any = False
         for field, new_val in fields.items():
             old_val = row.get(field)
             if old_val == new_val:
                 continue
             row[field] = new_val
-        applied.append(OVERRIDE_LOG[bid])
+            mutated_any = True
+        if mutated_any:
+            applied.append(OVERRIDE_LOG[bid])
 
-    # Validate every beckerath_id in OVERRIDES was found.
-    found_ids = {r["beckerath_id"] for r in rows}
-    for bid in OVERRIDES:
-        if bid not in found_ids:
-            raise KeyError(f"No row with beckerath_id {bid!r} in {RECONCILED}")
+    # Systematic spelling fix runs after OVERRIDES so individual overrides
+    # (e.g. on a Schoschenq row's prenomen) win first, then any remaining
+    # "Schoscheng" → "Schoschenq" rewrites land.
+    applied.extend(_apply_schoschenq_spelling_fix(rows))
 
     RECONCILED.write_text(
         "\n".join(
