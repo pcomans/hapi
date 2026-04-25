@@ -534,8 +534,14 @@ def test_no_editorial_prefixes_in_notes_extended() -> None:
         "start ",  # used as residue in 18.05
         "end date",
         "later form",
-        "später",  # German "later" — agent merge filler reconciling throne names
-        "Antrittsjahr",  # German "accession year" — agent prose, not Beckerath
+        # `"später"` alone would false-positive on legitimate Beckerath
+        # German prose like "späterer Zusatz" or "später in Theben". The
+        # specific agent merge-artifact pattern was `"; später "` introducing
+        # a duplicate throne-name reading; ban that exact substring.
+        "; später ",
+        # "Antrittsjahr" (accession year) is agent prose; Beckerath uses
+        # bare "Antritt N.M.YYYY" instead.
+        "Antrittsjahr",
         "(reign change)",
         "OCR",
         "garbled",
