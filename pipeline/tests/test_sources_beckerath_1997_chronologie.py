@@ -464,14 +464,40 @@ def test_schoschenq_spelling_systematic() -> None:
 
 def test_notes_have_no_editorial_prose() -> None:
     """`notes_from_beckerath` must contain only Beckerath's own annotations.
-    `fix_rows.py` strips agent editorial fragments like "end date not given",
-    "combined Dyn 9/10", "supplement notes:". Lock that no such fragment
-    survives.
+    `fix_rows.py` strips agent editorial fragments. Lock that no known
+    agent-prose fragment survives.
+
+    Forbidden-substring inventory (all surfaced by reviewer rounds on
+    PR #113 + #117 — the egyptologist post-merge sweep, issue #115):
+
+    - `"end date not given"` / `"end date"` — agent meta-comment about
+      missing data (rule 1 violation: notes must be Beckerath's own text).
+    - `"combined Dyn"` — agent meta-comment about Beckerath's Dyn 9/10
+      combination (the placement is content; the meta-comment is not).
+    - `"supplement notes:"` — agent prefix introducing Supplement zu A
+      content; the content stays, the prefix goes.
+    - `"start "` — leftover residue from a date-correction pass on 18.05.
+    - `"later form"` — agent paraphrase of Beckerath's anfang/später
+      annotations.
+    - `"; später "` (specific pattern, NOT bare `"später"`) — agent merge
+      filler reconciling alternative throne names. Bare "später" is
+      legitimate German prose Beckerath might use (e.g. "späterer Zusatz",
+      "später in Theben"); only the comma-separator merge artifact is the
+      defect.
+    - `"Antrittsjahr"` — agent prose; Beckerath writes bare
+      "Antritt N.M.YYYY" instead.
+    - `"(reign change)"` — agent hedge prose.
+    - `"OCR"` / `"garbled"` — agent meta-comments about OCR quality.
     """
     forbidden_substrings = (
-        "end date not given",
+        "end date",  # also catches "end date not given"
         "combined Dyn",
         "supplement notes:",
+        "start ",  # used as residue in 18.05
+        "later form",
+        "; später ",  # narrow: bare "später" is legitimate German
+        "Antrittsjahr",
+        "(reign change)",
         "OCR",
         "garbled",
     )
@@ -490,3 +516,40 @@ def test_akhenaten_prenomen_typo_fixed() -> None:
     r = _row("18.10")
     assert "Ach-en-aten" in r["name"]
     assert r["egyptian_titulary"] == "Nefer-cheprurê wa-en-rê"
+
+
+def test_compound_titulary_implies_mixed_kind() -> None:
+    """**Methodology invariant** — when Beckerath prints a compound
+    parenthetical containing a comma (e.g. `(Hagor, Chnem-maat-rê)`,
+    `(Tarakos, Chu-nefertem-rê)`, `(Wah-ib-rê, Haa-ib-rê)`), the
+    `egyptian_titulary_kind` must be `"mixed"`. This is enforceable as a
+    pure derivation from the parenthetical text — no content judgement
+    needed — and catches the compound-titulary truncation class flagged
+    by the egyptologist post-merge sweep (issue #115). Two-component
+    parentheticals where the agents disagreed which half to extract
+    historically slipped through the disagreement-log reviewer because
+    the agents AGREED on a wrong/partial value.
+
+    Carve-out: Beckerath also writes Greek-disambiguator alternates with
+    a comma (e.g. `(Nikku, Nechao II.)` in Supplement zu A). Those are
+    name-form variants, not nomen+prenomen compounds. The current data
+    does not contain any such carve-out case, so this test asserts the
+    strict comma → mixed rule. If a future re-extraction surfaces a
+    true name-variant carve-out, refine the test rather than relax the
+    invariant — the test failure will document the case.
+    """
+    for r in _rows():
+        tit = r.get("egyptian_titulary")
+        if isinstance(tit, str) and "," in tit:
+            assert r["egyptian_titulary_kind"] == "mixed", (
+                r["beckerath_id"],
+                tit,
+                r["egyptian_titulary_kind"],
+            )
+
+
+# test_no_editorial_prefixes_in_notes_extended — DELETED 2026-04-25 per
+# Gemini PR #117 review (3142716688). Its forbidden-substring list has
+# been merged into `test_notes_have_no_editorial_prose` above so we have
+# one test, one inventory, one source of truth for editorial-prose
+# detection in `notes_from_beckerath`.
