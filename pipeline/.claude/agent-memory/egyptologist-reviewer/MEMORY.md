@@ -1,3 +1,4 @@
 - [Project: Baud 1999 extraction](project_baud_1999.md) — chunk-by-chunk Phase-0 extraction of Baud BdE 126 vol. 2 Corpus; ~40 entries per PR
+- [Project: Beckerath 1997 extraction](project_beckerath_1997.md) — reviewer pass complete; fix_rows.py written; 15 overrides across 13 rows
 - [Feedback: French vs anglicized filiation names](feedback_filiation_name_consistency.md) — Baud uses French king names (Rêkhaef, Snéfrou, Pépi Iᵉʳ); preserve in filiation fields, don't silently anglicize
 - [Feedback: hedge preservation priority](feedback_hedge_preservation.md) — Baud's hedges ("(?)", "probable", "per Baud") are load-bearing; flag any stripped hedge
