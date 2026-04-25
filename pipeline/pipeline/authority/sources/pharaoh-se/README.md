@@ -13,7 +13,7 @@ Academically sourced list of Egyptian pharaohs with full five-name royal titular
 
 **What NOT to read from this source post-Beckerath:**
 
-- **Chronology dates / `chronologies` dict.** Second-hand to Beckerath 1997 / HKW 2006 / Kitchen 1996, all of which are now standalone Phase-0 sources. Use `sources/beckerath-1997-chronologie/` (lead) + `sources/hkw-chronology-2006/` (fallback) + `sources/kitchen-tipe/` (Dyn 21–26 finer grain) via the plural-named-chronologies map in `rulers.json::chronologies` instead.
+- **Chronology dates / `chronologies` dict.** Redundant with the project's primary chronology sources (Beckerath 1997, HKW 2006, Kitchen 1996). pharaoh.se's own dict is second-hand to the sources IT cites (Beckerath, Shaw, Dodson, etc.); the project now uses those primaries directly. Use `sources/beckerath-1997-chronologie/` (lead) + `sources/hkw-chronology-2006/` (fallback) + `sources/kitchen-tipe/` (Dyn 21–26 finer grain) via the plural-named-chronologies map in `rulers.json::chronologies` instead.
 - **Titulary on rulers Leprohon covers.** Leprohon 2013 (`sources/leprohon-2013-titulary/`) is the **primary** titulary authority (395 rows across Dyn 0 → Ptolemaic). pharaoh.se titulary fields are only consulted when Leprohon is silent on a given ruler.
 - **`predecessor` / `successor` chains** as the source of truth. Derive predecessor/successor from `sequence_in_dynasty` ordering across Beckerath / Leprohon / Ryholt / Kitchen instead. pharaoh.se chains remain useful as a cross-validation signal but not the source.
 

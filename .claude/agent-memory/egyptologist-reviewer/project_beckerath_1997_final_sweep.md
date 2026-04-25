@@ -12,8 +12,8 @@ Scan-108 shows "Achoris (Hagor, Chnem-maat-rê)" but reconciled.jsonl has `egypt
 **P1 — Row 18.05 Hat-schepsut: editorial residue in notes_from_beckerath**
 `notes_from_beckerath="start 1479/73"` is not a Beckerath annotation; it is an editorial note left over from the Gemini correction pass that stripped "end date OCR corrupt" but left "start 1479/73". Should be null per Constitutional rule 1.
 
-**P2 — Row 19.07 Si-ptah: three incompatible prenomen readings**
-`prenomen="Sech-en-rê mer-amun"` in the prenomen field conflicts with notes containing "Sich-ka-rê sotep-en-rê" and "Ach-en-rê sotep-en-rê". All three cannot be correct simultaneously; needs verification against Supplement zu A scan-108/109.
+**P2 — Row 19.07 Si-ptah: incomplete egyptian_titulary mapping**
+`prenomen="Sech-en-rê mer-amun"` is correct, but the variants "Sich-ka-rê sotep-en-rê" and "Ach-en-rê sotep-en-rê" are relegated to notes. Beckerath (p. 108) explicitly identifies them as successive names ("anfang" / "später"), not incompatible readings. The mapping issue is that the `egyptian_titulary` field is null but should carry the full Übersicht parenthetical string from scan-108/109 with the successive-name relationship preserved either as a compound titulary or via a structured sub-field.
 
 **P2 — Row 21.02 Amen-em-nisu: wrong egyptian_titulary_kind**
 `kind="nomen"` but "Nephercheres" is the Greek form of the prenomen Neferkare. Should be `kind="prenomen"`.
