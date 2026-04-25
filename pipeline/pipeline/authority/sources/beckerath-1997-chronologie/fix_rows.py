@@ -246,6 +246,19 @@ OVERRIDES: dict[str, dict] = {
     "27.05": {
         "notes_from_beckerath": "Perser",
     },
+
+    # ── Dyn 17 OCR bleed (scan-106 right-half, codex review PR #113) ──────
+    # Beckerath's Dyn 17 heading reads "17. Dynastie (in Theben, etwa
+    # 1645–1550) 13 (?) Könige (siehe S. 124)" — a single 1550 endpoint,
+    # no slash. OCR transcribed "1645-1539/1550", bleeding "1539" from the
+    # adjacent Dyn 15 Hyksos line ("1648/1645-1539/1536"). The merge stored
+    # end_bce_high=-1539 + end_bce_low=-1550 — both wrong (1539 is a
+    # phantom; the correct value is a single -1550). Codex P2 surfaced the
+    # high<=low inversion, which prompted re-verification against the scan.
+    "17.01": {
+        "end_bce_high": -1550,
+        "end_bce_low": -1550,
+    },
 }
 
 
@@ -405,6 +418,14 @@ OVERRIDE_LOG: dict[str, str] = {
         "27.05 Xerxes II.: notes_from_beckerath contained agent editorial "
         "'end date not given in source'. Stripped; kept 'Perser' "
         "(Beckerath's annotation). [P1 — rule 1]"
+    ),
+    "17.01": (
+        "17.01 17. Dynastie: scan-106 right shows '17. Dynastie (in Theben, "
+        "etwa 1645–1550) 13 (?) Könige'. OCR inserted phantom '1539/' from "
+        "the Dyn-15 Hyksos line above ('1648/1645–1539/1536'); merge stored "
+        "end_bce_high=-1539 (wrong, phantom) and end_bce_low=-1550. "
+        "Corrected to end_bce_high=end_bce_low=-1550 (single endpoint). "
+        "Surfaced by codex review (P2 inversion → P1 OCR-bleed). [P1]"
     ),
 }
 

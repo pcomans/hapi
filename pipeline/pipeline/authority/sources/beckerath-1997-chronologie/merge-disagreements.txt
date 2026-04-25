@@ -29334,4 +29334,4 @@ extract — per ADR-017 step 6, the extract is provisional.
 Severity tags: P1 = corrects a clearly-wrong value (merge-blocker);
 P2 = style / audit context only.
 
-
+- 17.01 17. Dynastie: scan-106 right shows '17. Dynastie (in Theben, etwa 1645–1550) 13 (?) Könige'. OCR inserted phantom '1539/' from the Dyn-15 Hyksos line above ('1648/1645–1539/1536'); merge stored end_bce_high=-1539 (wrong, phantom) and end_bce_low=-1550. Corrected to end_bce_high=end_bce_low=-1550 (single endpoint). Surfaced by codex review (P2 inversion → P1 OCR-bleed). [P1]

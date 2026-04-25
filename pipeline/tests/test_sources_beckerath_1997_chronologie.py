@@ -114,6 +114,39 @@ def test_egyptian_titulary_kind_is_one_of_five() -> None:
             assert r["egyptian_titulary_kind"] is None, r
 
 
+def test_bce_endpoints_obey_high_ge_older_convention() -> None:
+    """Within an endpoint pair, `_high` must be older (more negative or
+    equal) than `_low`. Beckerath's slash form `X/Y` is normalised so X
+    (higher / older) goes into `_high` and Y (lower / younger) into `_low`.
+    Surfaced by codex review (PR #113): the Dyn 17 row was inverted due to
+    an OCR bleed from the adjacent Dyn 15 line. The fix in `fix_rows.py`
+    is locked here as a row-level invariant.
+    """
+    for r in _rows():
+        sh, sl = r["start_bce_high"], r["start_bce_low"]
+        eh, el = r["end_bce_high"], r["end_bce_low"]
+        if sh is not None and sl is not None:
+            assert sh <= sl, (r["beckerath_id"], "start", sh, sl)
+        if eh is not None and el is not None:
+            assert eh <= el, (r["beckerath_id"], "end", eh, el)
+
+
+def test_dyn17_marker_row_locked() -> None:
+    """Dyn 17 is a marker row (no individual kings enumerated). The OCR
+    inserted a phantom `1539` from the adjacent Dyn 15 Hyksos line; the
+    real Beckerath text gives a single `1550` endpoint. Lock the
+    fix_rows.py correction.
+    """
+    r = _row("17.01")
+    assert r["dynasty"] == 17
+    assert r["start_bce_high"] == -1645
+    assert r["start_bce_low"] == -1645
+    assert r["end_bce_high"] == -1550
+    assert r["end_bce_low"] == -1550
+    assert r["start_approximate"] is True
+    assert r["end_approximate"] is True
+
+
 def test_no_dates_after_330_bce() -> None:
     """Beckerath's coverage ends with Alexander's conquest of Egypt in 332 BCE,
     but the book's last enumerated reign — Darius III (336/335–332/330) —
