@@ -464,14 +464,40 @@ def test_schoschenq_spelling_systematic() -> None:
 
 def test_notes_have_no_editorial_prose() -> None:
     """`notes_from_beckerath` must contain only Beckerath's own annotations.
-    `fix_rows.py` strips agent editorial fragments like "end date not given",
-    "combined Dyn 9/10", "supplement notes:". Lock that no such fragment
-    survives.
+    `fix_rows.py` strips agent editorial fragments. Lock that no known
+    agent-prose fragment survives.
+
+    Forbidden-substring inventory (all surfaced by reviewer rounds on
+    PR #113 + #117 — the egyptologist post-merge sweep, issue #115):
+
+    - `"end date not given"` / `"end date"` — agent meta-comment about
+      missing data (rule 1 violation: notes must be Beckerath's own text).
+    - `"combined Dyn"` — agent meta-comment about Beckerath's Dyn 9/10
+      combination (the placement is content; the meta-comment is not).
+    - `"supplement notes:"` — agent prefix introducing Supplement zu A
+      content; the content stays, the prefix goes.
+    - `"start "` — leftover residue from a date-correction pass on 18.05.
+    - `"later form"` — agent paraphrase of Beckerath's anfang/später
+      annotations.
+    - `"; später "` (specific pattern, NOT bare `"später"`) — agent merge
+      filler reconciling alternative throne names. Bare "später" is
+      legitimate German prose Beckerath might use (e.g. "späterer Zusatz",
+      "später in Theben"); only the comma-separator merge artifact is the
+      defect.
+    - `"Antrittsjahr"` — agent prose; Beckerath writes bare
+      "Antritt N.M.YYYY" instead.
+    - `"(reign change)"` — agent hedge prose.
+    - `"OCR"` / `"garbled"` — agent meta-comments about OCR quality.
     """
     forbidden_substrings = (
-        "end date not given",
+        "end date",  # also catches "end date not given"
         "combined Dyn",
         "supplement notes:",
+        "start ",  # used as residue in 18.05
+        "later form",
+        "; später ",  # narrow: bare "später" is legitimate German
+        "Antrittsjahr",
+        "(reign change)",
         "OCR",
         "garbled",
     )
@@ -522,33 +548,8 @@ def test_compound_titulary_implies_mixed_kind() -> None:
             )
 
 
-def test_no_editorial_prefixes_in_notes_extended() -> None:
-    """Extended editorial-prose check (issue #115). The previous
-    `test_notes_have_no_editorial_prose` covered a fixed list; this
-    expands it with patterns that surfaced in the post-merge sweep:
-    bare `start`/`end` annotations as fragments, `Antrittsjahr`,
-    `später` (used as agent merge filler when reconciling alternative
-    throne names), and `(reign change)` style hedges.
-    """
-    forbidden_substrings = (
-        "start ",  # used as residue in 18.05
-        "end date",
-        "later form",
-        # `"später"` alone would false-positive on legitimate Beckerath
-        # German prose like "späterer Zusatz" or "später in Theben". The
-        # specific agent merge-artifact pattern was `"; später "` introducing
-        # a duplicate throne-name reading; ban that exact substring.
-        "; später ",
-        # "Antrittsjahr" (accession year) is agent prose; Beckerath uses
-        # bare "Antritt N.M.YYYY" instead.
-        "Antrittsjahr",
-        "(reign change)",
-        "OCR",
-        "garbled",
-    )
-    for r in _rows():
-        notes = r.get("notes_from_beckerath")
-        if not isinstance(notes, str):
-            continue
-        for sub in forbidden_substrings:
-            assert sub.lower() not in notes.lower(), (r["beckerath_id"], sub, notes)
+# test_no_editorial_prefixes_in_notes_extended — DELETED 2026-04-25 per
+# Gemini PR #117 review (3142716688). Its forbidden-substring list has
+# been merged into `test_notes_have_no_editorial_prose` above so we have
+# one test, one inventory, one source of truth for editorial-prose
+# detection in `notes_from_beckerath`.
