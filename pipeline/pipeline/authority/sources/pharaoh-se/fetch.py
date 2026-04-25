@@ -113,52 +113,72 @@ def _parse_reign_dates(
     # Use en-dash or hyphen as separator
     parts = re.split(r"[–\-]", date_str, maxsplit=1)
 
-    def _parse_part(part: str) -> int | None:
-        """Parse a single date part, respecting explicit BC/BCE/CE/AD markers."""
+    def _parse_part(part: str) -> tuple[int | None, bool]:
+        """Parse a single date part. Returns (value, era_explicit).
+
+        ``era_explicit=True`` means the part carried a BC/BCE/CE/AD marker
+        and the value is sign-final — the caller must NOT re-apply the
+        ``is_roman`` heuristic. ``era_explicit=False`` means the value is
+        unsigned (raw number) and the caller decides the sign from range
+        direction or dynasty context.
+        """
         part = part.strip()
         m = re.search(r"(\d+)", part)
         if not m:
-            return None
+            return None, False
         val = int(m.group(1))
-        # Explicit era markers
         if re.search(r"\b(CE|AD)\b", part, re.IGNORECASE):
-            return val
+            return val, True
         if re.search(r"\b(BC|BCE)\b", part, re.IGNORECASE):
-            return -val
-        # No marker — return raw value, sign determined by range context
-        return val
+            return -val, True
+        return val, False
 
-    raw_start = _parse_part(parts[0]) if len(parts) >= 1 else None
-    raw_end = _parse_part(parts[1]) if len(parts) >= 2 else None
+    start_val, start_explicit = (
+        _parse_part(parts[0]) if len(parts) >= 1 else (None, False)
+    )
+    end_val, end_explicit = (
+        _parse_part(parts[1]) if len(parts) >= 2 else (None, False)
+    )
 
-    # If explicit markers resolved the signs, we're done
-    if raw_start is not None and raw_start > 0 and raw_end is not None and raw_end < 0:
-        # e.g., "14 CE" (positive) and something BC (negative) — shouldn't happen
-        return raw_start, raw_end
-    if raw_start is not None and raw_start < 0:
-        # Explicit BC marker was present
-        return raw_start, raw_end if raw_end is not None else None
-    if raw_end is not None and raw_end > 0 and raw_start is not None and raw_start < 0:
-        # Mixed: "27 BC–14 CE"
-        return raw_start, raw_end
+    # Both endpoints carry explicit era markers (e.g., "27 BC–14 CE"):
+    # the values are already sign-final, return as-is.
+    if start_explicit and end_explicit:
+        return start_val, end_val
 
-    # No explicit markers — infer from range direction.
-    # BCE ranges descend (1479→1425): negate both.
-    # AD ranges ascend (14→37): keep positive.
-    if raw_start is not None and raw_end is not None:
-        if raw_start == raw_end:
-            # Equal endpoints (e.g., a single-year span "218–218"): direction
-            # is ambiguous, so fall back to dynasty context.
-            return (raw_start, raw_end) if is_roman else (-raw_start, -raw_end)
-        if raw_start > raw_end:
-            return -raw_start, -raw_end
-        return raw_start, raw_end
+    # One endpoint explicit, the other unmarked: respect the explicit
+    # value, infer the unmarked side from era context. Pharaoh.se has no
+    # observed mixed-marker ranges today, but the explicit-marker support
+    # in `_parse_part` is a public-shape contract that callers rely on
+    # (Gemini PR #111 review caught this gap on single-endpoint forms
+    # like "?–218 BC").
+    if start_explicit and not end_explicit and end_val is not None:
+        # Sign of the unmarked end matches the start's era.
+        signed_end = end_val if start_val is not None and start_val >= 0 else -end_val
+        return start_val, signed_end
+    if end_explicit and not start_explicit and start_val is not None:
+        signed_start = start_val if end_val is not None and end_val >= 0 else -start_val
+        return signed_start, end_val
 
-    # Single date without marker: dynasty context decides the sign.
-    if raw_start is not None:
-        return (raw_start if is_roman else -raw_start), None
-    if raw_end is not None:
-        return None, (raw_end if is_roman else -raw_end)
+    # Neither endpoint explicit — infer from range direction (BCE
+    # descends, AD ascends), or dynasty context for single / equal values.
+    if start_val is not None and end_val is not None:
+        if start_val == end_val:
+            # Equal endpoints (e.g., "218–218"): direction is ambiguous,
+            # fall back to dynasty context.
+            return (start_val, end_val) if is_roman else (-start_val, -end_val)
+        if start_val > end_val:
+            return -start_val, -end_val
+        return start_val, end_val
+
+    # Single unmarked endpoint: dynasty context decides the sign.
+    if start_val is not None:
+        if start_explicit:
+            return start_val, None
+        return (start_val if is_roman else -start_val), None
+    if end_val is not None:
+        if end_explicit:
+            return None, end_val
+        return None, (end_val if is_roman else -end_val)
     return None, None
 
 
@@ -297,9 +317,11 @@ def _extract_page_reign(chronology_lines: list[str]) -> str | None:
     Returns the raw date string (caller parses with the right era context)
     or ``None`` if no reign row is present.
     """
-    # Prefer the AE-Chronology row when present (BCE rulers)
+    # Prefer the AE-Chronology row when present (BCE rulers).
+    # Leading `\s*` tolerates indented markdown table rows that some
+    # Firecrawl output variants produce (Gemini PR #111 round-1 finding).
     for line in chronology_lines:
-        m = re.match(r"\|\s*AE Chronology\s*\|\s*(.+?)\s*\|", line)
+        m = re.match(r"\s*\|\s*AE Chronology\s*\|\s*(.+?)\s*\|", line)
         if m:
             value = m.group(1).strip()
             if _looks_like_date(value):
@@ -314,7 +336,9 @@ def _extract_page_reign(chronology_lines: list[str]) -> str | None:
         if not re.search(r"\|\s*Reign of\s+\*\*", line):
             continue
         for next_line in chronology_lines[i + 1 : i + 5]:
-            m = re.match(r"\|\s*(.*?)\s*\|\s*(.+?)\s*\|", next_line)
+            # Leading `\s*` for the same indented-row tolerance as the
+            # AE-Chronology branch above.
+            m = re.match(r"\s*\|\s*(.*?)\s*\|\s*(.+?)\s*\|", next_line)
             if not m:
                 continue
             label = m.group(1).strip()

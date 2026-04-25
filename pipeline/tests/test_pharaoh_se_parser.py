@@ -84,6 +84,51 @@ class TestParseReignDates:
         assert _parse_reign_dates("?–69", is_roman=True) == (None, 69)
         assert _parse_reign_dates("?–69") == (None, -69)
 
+    # Regression: Gemini PR #111 round-1 HIGH finding. A single-endpoint
+    # range with an explicit BC/CE marker must NOT be re-flipped by the
+    # is_roman heuristic — the marker is sign-final.
+
+    def test_open_end_explicit_bc_keeps_negative(self):
+        # "?-218 BC" should stay (None, -218) regardless of is_roman.
+        assert _parse_reign_dates("?–218 BC") == (None, -218)
+        assert _parse_reign_dates("?–218 BC", is_roman=True) == (None, -218)
+
+    def test_open_end_explicit_ce_keeps_positive(self):
+        # "?-218 CE" should stay (None, 218) regardless of is_roman.
+        assert _parse_reign_dates("?–218 CE") == (None, 218)
+        assert _parse_reign_dates("?–218 CE", is_roman=False) == (None, 218)
+
+    def test_open_start_explicit_bc_keeps_negative(self):
+        assert _parse_reign_dates("218 BC–?") == (-218, None)
+        assert _parse_reign_dates("218 BC–?", is_roman=True) == (-218, None)
+
+    def test_explicit_marker_overrides_is_roman_default(self):
+        # Single bare year "14" defaults to BCE (-14); single "14 AD"
+        # must stay positive even when is_roman=False.
+        assert _parse_reign_dates("14") == (-14, None)
+        assert _parse_reign_dates("14 AD") == (14, None)
+        assert _parse_reign_dates("14 AD", is_roman=False) == (14, None)
+
+    def test_two_endpoint_one_explicit_bc_other_bare(self):
+        # "218 BC–200": leading marker fixes era; bare end takes the
+        # same era. Must NOT flip the bare end positive in non-Roman
+        # context (the dynasty heuristic only applies when neither
+        # endpoint is explicit).
+        assert _parse_reign_dates("218 BC–200") == (-218, -200)
+        assert _parse_reign_dates("218 BC–200", is_roman=True) == (-218, -200)
+
+    def test_two_endpoint_one_explicit_ce_other_bare(self):
+        # Mirror of the above: leading "CE" marker propagates positive.
+        assert _parse_reign_dates("14 CE–37") == (14, 37)
+        assert _parse_reign_dates("14 CE–37", is_roman=False) == (14, 37)
+
+    def test_leading_endpoint_explicit_ce_non_roman(self):
+        # Single leading endpoint with explicit CE marker, in a non-
+        # Roman dynasty context: the dynasty heuristic must NOT
+        # override the marker.
+        assert _parse_reign_dates("14 CE", is_roman=False) == (14, None)
+        assert _parse_reign_dates("14 CE") == (14, None)
+
 
 class TestExtractPageReign:
     """Page-reign extraction (issue #110) — the per-page header is the

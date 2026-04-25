@@ -6,6 +6,7 @@ is caught immediately.
 """
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -352,7 +353,6 @@ class TestPharaohSeIntegrity:
         index_md = (raw_dir / "index.md").read_text(encoding="utf-8")
         # Slugs in the index appear as
         # ``[Name](https://pharaoh.se/ancient-egypt/pharaoh/<slug>)``.
-        import re
         index_slugs = {
             m.group(1).rstrip("/")
             for m in re.finditer(
