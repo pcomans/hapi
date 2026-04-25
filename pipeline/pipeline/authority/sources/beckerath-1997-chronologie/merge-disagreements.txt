@@ -29334,18 +29334,4 @@ extract — per ADR-017 step 6, the extract is provisional.
 Severity tags: P1 = corrects a clearly-wrong value (merge-blocker);
 P2 = style / audit context only.
 
-- 09.01 9./10. Dynastie: notes_from_beckerath contained agent editorial 'combined Dyn 9/10'. Beckerath's actual cell text is '(in Herakleopolis, etwa 2170/2120-2025/2020) 18 Könige'. Stripped editorial; kept Beckerath text. [P1 — rule 1]
-- 11.01 An-jotef I. Dyn 11: notes_from_beckerath contained agent editorial 'end date not given'. Stripped; kept 'in Theben' (Beckerath's parenthetical placement annotation). [P1 — rule 1]
-- 18.10 Akhenaten: OCR dropped the 'r' between 'u' and 'ê' in the prenomen → 'Nefer-chepruê wa-en-rê'; scan-107 left shows 'Nefer-cheprurê wa-en-rê'. Discovered during 18.11–18.14 spot- verify (code-reviewer P2.3). Corrected. [P1 — typo]
-- 19.07 Si-ptah: notes_from_beckerath had an agent prefix 'supplement notes:'. Stripped the prefix; preserved the Beckerath/Supplement-zu-A content. [P1 — rule 1]
-- 26.02 Necho II: OCR rendered titulary as 'Nefer-ib-rê' (which is Psamtik II's prenomen on the next line); scan-108 left shows Necho II's titulary is 'Wahem-ib-rê' (Wḥm-ib-rꜥ). Gemini Code Assist flagged the splice. Corrected. [P1]
-- 26.04 Apries: OCR rendered second titulary as 'Haai-ib-rê' (extra 'i'); scan-108 left shows 'Haa-ib-rê' (Ḥꜥꜥ-ib-rꜥ). Gemini Code Assist flagged. Corrected. [P2]
-- 27.05 Xerxes II.: notes_from_beckerath contained agent editorial 'end date not given in source'. Stripped; kept 'Perser' (Beckerath's annotation). [P1 — rule 1]
-- 31.02 Arses: OCR rendered Egyptian titulary as 'Artges' (mis- OCR of 'Arses' / no separate Egyptian form); scan-108 right shows 'Arses (Arses)'. Gemini flagged. Corrected to 'Arses'. [P1]
-- 31.04 Chabbasch: OCR rendered name as 'Chadabasch' and titulary 'Sanm-sotep-en-ptah'; scan-108 right shows 'Chabbasch (Senem-sotep-en-ptah)'. Gemini flagged. Both corrected. [P1]
-- 22.01 Schoschenq I.: name: 'Schoscheng I.' → 'Schoschenq I.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.04 Schoschenq II.: name: 'Schoscheng II.' → 'Schoschenq II.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.06 Schoschenq III.: name: 'Schoscheng III.' → 'Schoschenq III.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.07 Schoschenq IIIa.: name: 'Schoscheng IIIa.' → 'Schoschenq IIIa.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.09 Schoschenq V.: name: 'Schoscheng V.' → 'Schoschenq V.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.14 Schoschenq IV.: name: 'Schoscheng IV.' → 'Schoschenq IV.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
+

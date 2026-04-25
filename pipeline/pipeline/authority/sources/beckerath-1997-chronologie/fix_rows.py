@@ -256,7 +256,12 @@ OVERRIDES: dict[str, dict] = {
 # including the prenomen Eigenname-half "Schoschenq mer-amun" form.
 # Apply via string-replace on `name` and `prenomen` fields wherever
 # "Schoscheng" appears.
-SCHOSCHENG_TO_SCHOSCHENQ_FIELDS = ("name", "prenomen")
+SCHOSCHENG_TO_SCHOSCHENQ_FIELDS = (
+    "name",
+    "prenomen",
+    "egyptian_titulary",
+    "notes_from_beckerath",
+)
 
 
 # Human-readable rationale for the audit log (one entry per override key).
