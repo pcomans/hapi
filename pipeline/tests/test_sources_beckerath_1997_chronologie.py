@@ -322,7 +322,10 @@ def test_dyn3_brace_bracket_shared_range() -> None:
     Sôuphis,Mesochris / Ahu (Huni,Aches), all sharing the range
     `2663/2613-2639/2589`. The egyptologist override corrected this from
     null (which the majority vote produced because 2 of 3 agents missed
-    the bracket) to the shared values.
+    the bracket) to the shared values. The cross-row scan-context note
+    lives in `editorial_notes` (English commentary), not in
+    `notes_from_beckerath` (which is reserved for Beckerath's verbatim
+    cell text).
     """
     cha_bai = _row("03.04")
     souphis = _row("03.05")
@@ -332,6 +335,44 @@ def test_dyn3_brace_bracket_shared_range() -> None:
         assert r["start_bce_low"] == -2613
         assert r["end_bce_high"] == -2639
         assert r["end_bce_low"] == -2589
+        assert r["notes_from_beckerath"] is None
+        assert r["editorial_notes"] is not None
+        assert "shared bracket range" in r["editorial_notes"]
+        assert "(scan-105)" in r["editorial_notes"]
+    # Cross-row references in editorial_notes must use the canonical
+    # `name` field plus `(beckerath_id)` (per README field contract).
+    assert "Sôuphis, Mesochris (03.05)" in cha_bai["editorial_notes"]
+    assert "Ahu (Huni, Aches) (03.06)" in cha_bai["editorial_notes"]
+    assert "Hor Cha-bai (03.04)" in souphis["editorial_notes"]
+    assert "Ahu (Huni, Aches) (03.06)" in souphis["editorial_notes"]
+    assert "Hor Cha-bai (03.04)" in ahu["editorial_notes"]
+    assert "Sôuphis, Mesochris (03.05)" in ahu["editorial_notes"]
+
+
+def test_te_wosret_editorial_coregent_note_separated() -> None:
+    """19.08 Kgin. Te-wosret: Beckerath's Anhang A cell for her is empty
+    (she shares Si-ptah's date range with no per-cell annotation).
+    Agent A had injected the English cross-reference "co-regent with
+    Si-ptah" into `notes_from_beckerath`; that prose is editorial, not
+    Beckerath's text. fix_rows.py moved it to `editorial_notes` and
+    nulled `notes_from_beckerath`. The co-regency itself is also encoded
+    on 19.07 Si-ptah via Beckerath's actual "und Kgin. Te-wosret
+    (Thuoris)" annotation.
+    """
+    r = _row("19.08")
+    assert r["name"] == "Te-wosret"
+    assert r["notes_from_beckerath"] is None
+    assert r["editorial_notes"] == "co-regent with Si-ptah (19.07)"
+    si_ptah = _row("19.07")
+    assert "Te-wosret" in (si_ptah["notes_from_beckerath"] or "")
+
+
+def test_editorial_notes_field_present_on_every_row() -> None:
+    """`editorial_notes` is part of the source schema and must be present
+    on every row (default null). Locks the fix_rows.py setdefault pass.
+    """
+    for r in _rows():
+        assert "editorial_notes" in r, r["beckerath_id"]
 
 
 def test_taharqo_mixed_titulary() -> None:
@@ -467,8 +508,12 @@ def test_notes_have_no_editorial_prose() -> None:
     `fix_rows.py` strips agent editorial fragments. Lock that no known
     agent-prose fragment survives.
 
-    Forbidden-substring inventory (all surfaced by reviewer rounds on
-    PR #113 + #117 — the egyptologist post-merge sweep, issue #115):
+    The check has two layers — both run inside this single test so there
+    is one inventory and one row-iteration:
+
+    **Forbidden-substring inventory** (literal patterns surfaced by
+    reviewer rounds on PR #113 + #117 — the egyptologist post-merge
+    sweep, issue #115 — and the editorial_notes-separation PR #119):
 
     - `"end date not given"` / `"end date"` — agent meta-comment about
       missing data (rule 1 violation: notes must be Beckerath's own text).
@@ -488,6 +533,29 @@ def test_notes_have_no_editorial_prose() -> None:
       "Antritt N.M.YYYY" instead.
     - `"(reign change)"` — agent hedge prose.
     - `"OCR"` / `"garbled"` — agent meta-comments about OCR quality.
+    - `"shared bracket range"` — auditor commentary from PR #119; belongs
+      in `editorial_notes`, not here.
+
+    **Shape-based regex tripwires** (enumeration-free, phrasing-
+    independent — added in PR #119 to catch future regressions the
+    literal-substring list misses):
+
+    1. `\\(scan-\\d+` — any `(scan-NNN)` tag is a transcriber/auditor
+       artifact (the agents do not see scan numbers; only the
+       fix_rows.py editorial pass adds them). Migrated rows
+       (03.04/03.05/03.06) carried this shape; this regex catches any
+       future re-introduction regardless of wording.
+    2. `\\bco-(regents?|rulers?|kings?|regenc(?:y|ies))\\b` — English
+       co-rulership prose. 19.08 migration cleared one such instance;
+       locking the broader morphological family catches "co-ruler
+       with…", "co-king of…", or the abstract-noun "co-regency with…"
+       rephrasings the literal-substring list would miss. Singular and
+       plural forms (`co-regents`, `co-regencies`) are both covered so
+       a `\\b`-locked tail vowel cannot leak past the tripwire.
+
+    A harder positive whitelist of legitimate German cell idioms
+    (Antritt, Mitregent, Gegenkönig, in Sais, …) is tracked as #120 for
+    next-round hardening.
     """
     forbidden_substrings = (
         "end date",  # also catches "end date not given"
@@ -500,6 +568,15 @@ def test_notes_have_no_editorial_prose() -> None:
         "(reign change)",
         "OCR",
         "garbled",
+        "shared bracket range",  # PR #119 — belongs in editorial_notes
+    )
+    forbidden_patterns = (
+        # `(scan-NNN)` editorial tag — strictly more general than the
+        # literal `(scan-` substring; covers future digit variants.
+        re.compile(r"\(scan-\d+"),
+        # English co-rulership prose. Strictly more general than the
+        # literal `co-regent` substring; catches `co-ruler` / `co-king`.
+        re.compile(r"\bco-(regents?|rulers?|kings?|regenc(?:y|ies))\b", re.IGNORECASE),
     )
     for r in _rows():
         notes = r.get("notes_from_beckerath")
@@ -507,6 +584,8 @@ def test_notes_have_no_editorial_prose() -> None:
             continue
         for sub in forbidden_substrings:
             assert sub.lower() not in notes.lower(), (r["beckerath_id"], sub, notes)
+        for pat in forbidden_patterns:
+            assert not pat.search(notes), (r["beckerath_id"], pat.pattern, notes)
 
 
 def test_akhenaten_prenomen_typo_fixed() -> None:
