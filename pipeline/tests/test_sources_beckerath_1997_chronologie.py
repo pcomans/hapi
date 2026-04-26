@@ -322,7 +322,10 @@ def test_dyn3_brace_bracket_shared_range() -> None:
     Sôuphis,Mesochris / Ahu (Huni,Aches), all sharing the range
     `2663/2613-2639/2589`. The egyptologist override corrected this from
     null (which the majority vote produced because 2 of 3 agents missed
-    the bracket) to the shared values.
+    the bracket) to the shared values. The cross-row scan-context note
+    lives in `editorial_notes` (English commentary), not in
+    `notes_from_beckerath` (which is reserved for Beckerath's verbatim
+    cell text).
     """
     cha_bai = _row("03.04")
     souphis = _row("03.05")
@@ -332,6 +335,57 @@ def test_dyn3_brace_bracket_shared_range() -> None:
         assert r["start_bce_low"] == -2613
         assert r["end_bce_high"] == -2639
         assert r["end_bce_low"] == -2589
+        assert r["notes_from_beckerath"] is None
+        assert r["editorial_notes"] is not None
+        assert "shared bracket range" in r["editorial_notes"]
+        assert "(scan-105)" in r["editorial_notes"]
+
+
+def test_te_wosret_editorial_coregent_note_separated() -> None:
+    """19.08 Kgin. Te-wosret: Beckerath's Anhang A cell for her is empty
+    (she shares Si-ptah's date range with no per-cell annotation).
+    Agent A had injected the English cross-reference "co-regent with
+    Si-ptah" into `notes_from_beckerath`; that prose is editorial, not
+    Beckerath's text. fix_rows.py moved it to `editorial_notes` and
+    nulled `notes_from_beckerath`. The co-regency itself is also encoded
+    on 19.07 Si-ptah via Beckerath's actual "und Kgin. Te-wosret
+    (Thuoris)" annotation.
+    """
+    r = _row("19.08")
+    assert r["name"] == "Te-wosret"
+    assert r["notes_from_beckerath"] is None
+    assert r["editorial_notes"] == "co-regent with Si-ptah"
+    si_ptah = _row("19.07")
+    assert "Te-wosret" in (si_ptah["notes_from_beckerath"] or "")
+
+
+def test_editorial_notes_field_present_on_every_row() -> None:
+    """`editorial_notes` is part of the source schema and must be present
+    on every row (default null). Locks the fix_rows.py setdefault pass.
+    """
+    for r in _rows():
+        assert "editorial_notes" in r, r["beckerath_id"]
+
+
+def test_notes_from_beckerath_has_no_english_editorial_phrases() -> None:
+    """Per Constitutional rules 1 and 6, `notes_from_beckerath` carries
+    only Beckerath's own German cell text. English editorial prose
+    (cross-row references, scan-context tags, etc.) must live in
+    `editorial_notes` instead. Lock the four known migrations
+    (03.04/03.05/03.06 brace-bracket scan tags, 19.08 co-regent
+    cross-reference) so a regression cannot silently re-merge them.
+    """
+    forbidden = (
+        "co-regent",
+        "shared bracket range",
+        "(scan-",
+    )
+    for r in _rows():
+        notes = r.get("notes_from_beckerath")
+        if not isinstance(notes, str):
+            continue
+        for sub in forbidden:
+            assert sub.lower() not in notes.lower(), (r["beckerath_id"], sub, notes)
 
 
 def test_taharqo_mixed_titulary() -> None:

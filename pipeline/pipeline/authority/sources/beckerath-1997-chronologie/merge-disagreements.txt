@@ -690,9 +690,9 @@ extract — per ADR-017 step 6, the extract is provisional.
 Severity tags: P1 = corrects a clearly-wrong value (merge-blocker);
 P2 = style / audit context only.
 
-- 03.04 Hor Cha-bai: brace bracket on scan-105 right-half spans rows 03.04/03.05/03.06; majority vote left notes_from_beckerath null because agents B+C missed the bracket; dates already correct; audit note added. [P2]
-- 03.05 Sôuphis,Mesochris: same brace bracket as 03.04; notes added. [P2]
-- 03.06 Ahu (Huni,Aches): same brace bracket as 03.04; notes added. [P2]
+- 03.04 Hor Cha-bai: brace bracket on scan-105 right-half spans rows 03.04/03.05/03.06; majority vote left notes_from_beckerath null because agents B+C missed the bracket; dates already correct; scan-context audit note added in editorial_notes (English cross-row commentary, not Beckerath's verbatim cell text). [P2]
+- 03.05 Sôuphis,Mesochris: same brace bracket as 03.04; scan-context note added in editorial_notes. [P2]
+- 03.06 Ahu (Huni,Aches): same brace bracket as 03.04; scan-context note added in editorial_notes. [P2]
 - 04.02 Cheops: Dyn-4 heading on scan-105 right-half reads 'etwa 2639/2589–2504/2454'; 'etwa' propagates to all Dyn-4 rows; Agent C voted false on both flags, tipping merge; corrected to start_approximate=true, end_approximate=true. [P1]
 - 04.03 Djedefre: same Dyn-4 'etwa' propagation; corrected to start_approximate=true, end_approximate=true. [P1]
 - 04.04 Chephren: same Dyn-4 'etwa' propagation; corrected. [P1]
@@ -712,6 +712,7 @@ P2 = style / audit context only.
 - 19.05 Amen-mes-su: Supplement zu A on scan-108 right reads 'Men-mi-rê sotep-en-rê, Ra-mes-su hotep-er-maat'; Thronname (prenomen) is 'Men-mi-rê sotep-en-rê', not 'Amen-mes-su mer-amun' (which is the Eigenname). Prenomen corrected. OCR-artifact 'Mit ein glatt' note stripped; Antritt date preserved. [P1]
 - 19.06 Sethós II.: Supplement zu A on scan-108 right reads 'User-chepru-rê mer-amun, Ra-mes-su Amen-hir-chepeschef'; Thronname is 'User-chepru-rê mer-amun'. Merge had 'Ba-en-rê-meri-netjeru' which is Merenptah's prenomen — a splice error. Corrected. OCR- artifact 'Mi ein glatt' note stripped. [P1]
 - 19.07 Si-ptah: three-way prenomen conflict between primary throne name (Sech-en-rê mer-amun), notes (anfang/später annotations), and an editorially-merged 'später Ach-en-rê sotep-en-rê' (which is the same throne name in another transliteration; the 'später' framing was an agent merge artifact). Cleaned to: prenomen holds primary form, notes carries Beckerath's accession-date, co-regency (Te-wosret/Thuoris), and Anfangsname annotations. [P2]
+- 19.08 Kgin. Te-wosret: agent-A 'co-regent with Si-ptah' was English editorial prose, not Beckerath's verbatim cell text (Beckerath's Anhang A cell for Te-wosret is empty — she shares Si-ptah's date range with no per-cell annotation). Moved to editorial_notes; nulled notes_from_beckerath per rule 1 / 6 (raw data is sacred). [P1]
 - 21.02 Amen-em-nisu: egyptian_titulary_kind was 'nomen' for the value 'Nephercheres'. Nephercheres is the Greek rendering of Neferkare — a prenomen (throne name), not a nomen. Corrected to kind='prenomen'. [P2]
 - 24.01 Fürst Tef-nachte: scan-108 left-half shows SPÄTZEIT heading above Dyn 26 (664–525); Dyn 24 and 25 fall under III. ZWISCHENZEIT. Merge picked 'Spätzeit' (A+C 2v1) but scan contradicts it. Corrected to 'III. Zwischenzeit'. [P1]
 - 24.02 Bokchoris: same III. ZWISCHENZEIT heading applies; corrected from 'Spätzeit'. [P1]

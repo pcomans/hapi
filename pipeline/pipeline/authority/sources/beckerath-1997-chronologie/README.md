@@ -45,6 +45,7 @@ Part III. Anhang, Section A — *Chronologische Übersicht über die Geschichte 
   "end_approximate": true,
   "period": "Frühzeit",
   "notes_from_beckerath": null,
+  "editorial_notes": null,
   "source_citation": {"pdf_pages": "105-109", "edition": "MÄS 46, von Zabern 1997"}
 }
 ```
@@ -65,7 +66,8 @@ Part III. Anhang, Section A — *Chronologische Übersicht über die Geschichte 
   - `31.5.1279` (day.month.year accession date) → record full date in `notes_from_beckerath: "Antritt 31.5.1279"`; numeric endpoint is `-1279`.
 - `start_approximate` / `end_approximate` = booleans. True when Beckerath prefixes the corresponding endpoint with `ca.` / `etwa` / `vor` / `nach` / `um` / hedges with `"?"`, OR when the row sits in a section Beckerath introduces with `"etwa N Jahre"` (e.g. Dyn 0 *ungefähr 150 Jahre*). Otherwise false. **Dyn 0** has no numeric endpoints — set both `*_bce_*` to null and both `*_approximate` to true with `notes_from_beckerath: "ungefähr 150 Jahre"`.
 - `period` ∈ {"Vorgeschichte", "Frühzeit", "Altes Reich", "I. Zwischenzeit", "Mittleres Reich", "II. Zwischenzeit", "Neues Reich", "III. Zwischenzeit", "Spätzeit"}. Drives from Beckerath's italicised section headings within Anhang A. *Note:* `"Vorgeschichte"` truncates Beckerath's full heading `VORGESCHICHTE (PRÄDYNASTISCHE ZEIT)` for brevity; the parenthetical is dropped.
-- `notes_from_beckerath` = free-text string for per-row annotations Beckerath adds (e.g. `"Mitregent"`, `"in Sais"`, `"Antritt 31.5.1279"`, `"Herbst 1337"`, `"Gegenkönig der 3 vorigen"`). Null when absent.
+- `notes_from_beckerath` = free-text string for per-row annotations Beckerath adds *in the Anhang A cell itself* (e.g. `"Mitregent"`, `"in Sais"`, `"Antritt 31.5.1279"`, `"Herbst 1337"`, `"Gegenkönig der 3 vorigen"`). Null when absent. Per Constitutional rules 1 and 6 (raw data is sacred), this field must contain ONLY Beckerath's verbatim cell text — no editorial commentary, scan-context tags, agent meta-prose, or English paraphrase. Editorial commentary belongs in `editorial_notes`.
+- `editorial_notes` = nullable string for free-text editorial commentary added during transcription/review that is NOT in Beckerath's text. Examples: cross-row context discovered during scan review (`"shared bracket range with Sôuphis,Mesochris and Ahu (scan-105)"`), explicit cross-references in English (`"co-regent with Si-ptah"`). This field exists to keep `notes_from_beckerath` clean of non-source prose while still surfacing useful auditor context. Null when absent.
 
 **Dyn 2 *Gegenkönig* row.** Beckerath prints a composite annotation `Gegenkönig der 3 vorigen: Seth Per-ib-sen / Hor-Seth Cha-sechemui` spanning two physical name lines. Extract as **two rows** — `02.NN` Seth Per-ib-sen and `02.NN+1` Hor-Seth Cha-sechemui — with `notes_from_beckerath: "Gegenkönig der 3 vorigen"` on both, both sharing Beckerath's bracketed date range covering the 3 contested kings.
 

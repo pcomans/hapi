@@ -36,13 +36,16 @@ OVERRIDES: dict[str, dict] = {
     # bracket (the dates themselves were correctly picked up by the 2v1 vote).
     # Adding the audit note; dates already correct so no date override needed.
     "03.04": {
-        "notes_from_beckerath": "shared bracket range with Sôuphis,Mesochris and Ahu (scan-105)",
+        "notes_from_beckerath": None,
+        "editorial_notes": "shared bracket range with Sôuphis,Mesochris and Ahu (scan-105)",
     },
     "03.05": {
-        "notes_from_beckerath": "shared bracket range with Hor Cha-bai and Ahu (scan-105)",
+        "notes_from_beckerath": None,
+        "editorial_notes": "shared bracket range with Hor Cha-bai and Ahu (scan-105)",
     },
     "03.06": {
-        "notes_from_beckerath": "shared bracket range with Hor Cha-bai and Sôuphis,Mesochris (scan-105)",
+        "notes_from_beckerath": None,
+        "editorial_notes": "shared bracket range with Hor Cha-bai and Sôuphis,Mesochris (scan-105)",
     },
 
     # ── Dyn 4: approximate flags (scan-105 right-half) ────────────────────
@@ -333,6 +336,19 @@ OVERRIDES: dict[str, dict] = {
     "06.05": {
         "egyptian_titulary_kind": "mixed",
     },
+
+    # 19.08 Kgin. Te-wosret — agent-A "co-regent with Si-ptah" was English
+    # editorial prose that the merge majority promoted into
+    # notes_from_beckerath. Beckerath's actual Anhang A cell for Te-wosret
+    # is empty (she shares Si-ptah's date range and gets no per-cell
+    # annotation). Move the cross-reference to editorial_notes; null out
+    # notes_from_beckerath. The co-regency is also already encoded in
+    # 19.07 Si-ptah's notes (Beckerath's actual "und Kgin. Te-wosret
+    # (Thuoris)" annotation).
+    "19.08": {
+        "notes_from_beckerath": None,
+        "editorial_notes": "co-regent with Si-ptah",
+    },
 }
 
 
@@ -356,14 +372,17 @@ OVERRIDE_LOG: dict[str, str] = {
     "03.04": (
         "03.04 Hor Cha-bai: brace bracket on scan-105 right-half spans rows "
         "03.04/03.05/03.06; majority vote left notes_from_beckerath null "
-        "because agents B+C missed the bracket; dates already correct; audit "
-        "note added. [P2]"
+        "because agents B+C missed the bracket; dates already correct; "
+        "scan-context audit note added in editorial_notes (English "
+        "cross-row commentary, not Beckerath's verbatim cell text). [P2]"
     ),
     "03.05": (
-        "03.05 Sôuphis,Mesochris: same brace bracket as 03.04; notes added. [P2]"
+        "03.05 Sôuphis,Mesochris: same brace bracket as 03.04; "
+        "scan-context note added in editorial_notes. [P2]"
     ),
     "03.06": (
-        "03.06 Ahu (Huni,Aches): same brace bracket as 03.04; notes added. [P2]"
+        "03.06 Ahu (Huni,Aches): same brace bracket as 03.04; "
+        "scan-context note added in editorial_notes. [P2]"
     ),
     "04.02": (
         "04.02 Cheops: Dyn-4 heading on scan-105 right-half reads "
@@ -545,6 +564,14 @@ OVERRIDE_LOG: dict[str, str] = {
         "nomen + prenomen, not a single nomen. Surfaced by the new "
         "compound-titulary invariant test in PR for issue #115. [P1]"
     ),
+    "19.08": (
+        "19.08 Kgin. Te-wosret: agent-A 'co-regent with Si-ptah' was "
+        "English editorial prose, not Beckerath's verbatim cell text "
+        "(Beckerath's Anhang A cell for Te-wosret is empty — she shares "
+        "Si-ptah's date range with no per-cell annotation). Moved to "
+        "editorial_notes; nulled notes_from_beckerath per rule 1 / 6 "
+        "(raw data is sacred). [P1]"
+    ),
 }
 
 
@@ -609,6 +636,14 @@ def main() -> None:
     # empty on re-runs — that's the correct behaviour for a string-replace
     # pass, and is documented in the helper's docstring.
     applied.extend(_apply_schoschenq_spelling_fix(rows))
+
+    # Ensure every row carries an editorial_notes key (default None).
+    # merge.py only emits keys present in ≥1 agent payload, and the agents
+    # do not produce this field — fix_rows.py is the introduction point.
+    # Set explicitly so the JSONL has a uniform schema, sort_keys lines up,
+    # and downstream consumers can rely on the field's presence.
+    for row in rows:
+        row.setdefault("editorial_notes", None)
 
     RECONCILED.write_text(
         "\n".join(
