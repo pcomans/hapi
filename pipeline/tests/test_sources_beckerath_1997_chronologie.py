@@ -375,39 +375,6 @@ def test_editorial_notes_field_present_on_every_row() -> None:
         assert "editorial_notes" in r, r["beckerath_id"]
 
 
-def test_notes_from_beckerath_no_editorial_shape_patterns() -> None:
-    """Shape-based tripwires for editorial-prose regressions in
-    `notes_from_beckerath`.
-
-    Per Constitutional rules 1 and 6 the field must contain only
-    Beckerath's verbatim German cell text. Two regex shapes are
-    enumeration-free regression catchers (independent of phrasing):
-
-    1. `\\(scan-\\d+` — any `(scan-NNN)` tag is a transcriber/auditor
-       artifact (the agents do not see scan numbers; only the
-       fix_rows.py editorial pass adds them). The four migrated rows
-       (03.04/03.05/03.06) carried this shape; locking it here catches
-       any future re-introduction regardless of wording.
-    2. `\\bco-(regent|ruler|king)\\b` — English co-rulership prose. The
-       19.08 migration cleared one such instance; locking the broader
-       morphological family (co-regent / co-ruler / co-king) catches a
-       merge that re-emits the C1-reviewer-named "co-ruler with…"
-       rephrasing.
-
-    A harder positive whitelist of legitimate German cell idioms
-    (Antritt, Mitregent, Gegenkönig, in Sais, …) is tracked separately
-    as a follow-up for next-round hardening.
-    """
-    scan_tag = re.compile(r"\(scan-\d+")
-    co_rulership = re.compile(r"\bco-(regent|ruler|king)\b", re.IGNORECASE)
-    for r in _rows():
-        notes = r.get("notes_from_beckerath")
-        if not isinstance(notes, str):
-            continue
-        assert not scan_tag.search(notes), (r["beckerath_id"], notes)
-        assert not co_rulership.search(notes), (r["beckerath_id"], notes)
-
-
 def test_taharqo_mixed_titulary() -> None:
     """Beckerath gives Taharqo's parenthetical as `Tarakos, Chu-nefertem-rê`
     — a comma-separated nomen+prenomen pair. The mixed-kind label captures
@@ -541,8 +508,12 @@ def test_notes_have_no_editorial_prose() -> None:
     `fix_rows.py` strips agent editorial fragments. Lock that no known
     agent-prose fragment survives.
 
-    Forbidden-substring inventory (all surfaced by reviewer rounds on
-    PR #113 + #117 — the egyptologist post-merge sweep, issue #115):
+    The check has two layers — both run inside this single test so there
+    is one inventory and one row-iteration:
+
+    **Forbidden-substring inventory** (literal patterns surfaced by
+    reviewer rounds on PR #113 + #117 — the egyptologist post-merge
+    sweep, issue #115 — and the editorial_notes-separation PR #119):
 
     - `"end date not given"` / `"end date"` — agent meta-comment about
       missing data (rule 1 violation: notes must be Beckerath's own text).
@@ -562,6 +533,26 @@ def test_notes_have_no_editorial_prose() -> None:
       "Antritt N.M.YYYY" instead.
     - `"(reign change)"` — agent hedge prose.
     - `"OCR"` / `"garbled"` — agent meta-comments about OCR quality.
+    - `"shared bracket range"` — auditor commentary from PR #119; belongs
+      in `editorial_notes`, not here.
+
+    **Shape-based regex tripwires** (enumeration-free, phrasing-
+    independent — added in PR #119 to catch future regressions the
+    literal-substring list misses):
+
+    1. `\\(scan-\\d+` — any `(scan-NNN)` tag is a transcriber/auditor
+       artifact (the agents do not see scan numbers; only the
+       fix_rows.py editorial pass adds them). Migrated rows
+       (03.04/03.05/03.06) carried this shape; this regex catches any
+       future re-introduction regardless of wording.
+    2. `\\bco-(regent|ruler|king)\\b` — English co-rulership prose.
+       19.08 migration cleared one such instance; locking the broader
+       morphological family catches "co-ruler with…" / "co-king of…"
+       rephrasings the literal-substring list would miss.
+
+    A harder positive whitelist of legitimate German cell idioms
+    (Antritt, Mitregent, Gegenkönig, in Sais, …) is tracked as #120 for
+    next-round hardening.
     """
     forbidden_substrings = (
         "end date",  # also catches "end date not given"
@@ -574,12 +565,15 @@ def test_notes_have_no_editorial_prose() -> None:
         "(reign change)",
         "OCR",
         "garbled",
-        # Folded in from the editorial_notes-separation PR (issue #119).
-        # `notes_from_beckerath` must never carry these English-prose
-        # fragments; they belong in `editorial_notes`.
-        "co-regent",
-        "shared bracket range",
-        "(scan-",
+        "shared bracket range",  # PR #119 — belongs in editorial_notes
+    )
+    forbidden_patterns = (
+        # `(scan-NNN)` editorial tag — strictly more general than the
+        # literal `(scan-` substring; covers future digit variants.
+        re.compile(r"\(scan-\d+"),
+        # English co-rulership prose. Strictly more general than the
+        # literal `co-regent` substring; catches `co-ruler` / `co-king`.
+        re.compile(r"\bco-(regent|ruler|king)\b", re.IGNORECASE),
     )
     for r in _rows():
         notes = r.get("notes_from_beckerath")
@@ -587,6 +581,8 @@ def test_notes_have_no_editorial_prose() -> None:
             continue
         for sub in forbidden_substrings:
             assert sub.lower() not in notes.lower(), (r["beckerath_id"], sub, notes)
+        for pat in forbidden_patterns:
+            assert not pat.search(notes), (r["beckerath_id"], pat.pattern, notes)
 
 
 def test_akhenaten_prenomen_typo_fixed() -> None:
