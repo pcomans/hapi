@@ -35,17 +35,21 @@ OVERRIDES: dict[str, dict] = {
     # notes_from_beckerath null on 03.04 because agents B and C missed the
     # bracket (the dates themselves were correctly picked up by the 2v1 vote).
     # Adding the audit note; dates already correct so no date override needed.
+    # Cross-row editorial_notes always reference sister rows by their
+    # canonical `name` field plus `beckerath_id` in parentheses (per
+    # README field contract) so a downstream consumer can grep-resolve
+    # without name-form fuzziness.
     "03.04": {
         "notes_from_beckerath": None,
-        "editorial_notes": "shared bracket range with Sôuphis,Mesochris and Ahu (scan-105)",
+        "editorial_notes": "shared bracket range with Sôuphis, Mesochris (03.05) and Ahu (Huni, Aches) (03.06) (scan-105)",
     },
     "03.05": {
         "notes_from_beckerath": None,
-        "editorial_notes": "shared bracket range with Hor Cha-bai and Ahu (scan-105)",
+        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Ahu (Huni, Aches) (03.06) (scan-105)",
     },
     "03.06": {
         "notes_from_beckerath": None,
-        "editorial_notes": "shared bracket range with Hor Cha-bai and Sôuphis,Mesochris (scan-105)",
+        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Sôuphis, Mesochris (03.05) (scan-105)",
     },
 
     # ── Dyn 4: approximate flags (scan-105 right-half) ────────────────────
@@ -347,7 +351,7 @@ OVERRIDES: dict[str, dict] = {
     # (Thuoris)" annotation).
     "19.08": {
         "notes_from_beckerath": None,
-        "editorial_notes": "co-regent with Si-ptah",
+        "editorial_notes": "co-regent with Si-ptah (19.07)",
     },
 }
 

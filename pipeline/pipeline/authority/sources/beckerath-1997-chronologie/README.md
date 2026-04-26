@@ -27,47 +27,49 @@ Part III. Anhang, Section A — *Chronologische Übersicht über die Geschichte 
 
 ## Schema
 
+Field order in this section is the on-disk JSONL order (`json.dumps(..., sort_keys=True)` — strict alphabetical at every nesting level), so a reader can scan the example top-to-bottom against any committed row.
+
 ```json
 {
   "beckerath_id": "01.01",
   "dynasty": 1,
-  "sub_line": null,
-  "sequence_in_dynasty": 1,
-  "name": "Menes",
+  "editorial_notes": null,
   "egyptian_titulary": "Hor Aha",
   "egyptian_titulary_kind": "horus_name",
-  "prenomen": null,
-  "start_bce_high": -3032,
-  "start_bce_low": -2982,
+  "end_approximate": true,
   "end_bce_high": -3000,
   "end_bce_low": -2950,
-  "start_approximate": true,
-  "end_approximate": true,
-  "period": "Frühzeit",
+  "name": "Menes",
   "notes_from_beckerath": null,
-  "editorial_notes": null,
-  "source_citation": {"pdf_pages": "105-109", "edition": "MÄS 46, von Zabern 1997"}
+  "period": "Frühzeit",
+  "prenomen": null,
+  "sequence_in_dynasty": 1,
+  "source_citation": {"edition": "MÄS 46, von Zabern 1997", "pdf_pages": "105-109"},
+  "start_approximate": true,
+  "start_bce_high": -3032,
+  "start_bce_low": -2982,
+  "sub_line": null
 }
 ```
 
 - `beckerath_id` = `"{dyn:02}.{NN:02}"` zero-padded. Sequence is continuous within the dynasty, regardless of `sub_line` (i.e. Dyn 22 main + Oberägyptische Linie share one numbering 22.01 → 22.NN). Predynastic anchor is `"00.01"`.
 - `dynasty` = integer 0..31. Beckerath uses `0. Dynastie` for the predynastic anchor; Dyn 16 is the *Hyksos-Vasallen* dynasty (Beckerath's own labelling), not a sub-line of 15.
-- `sub_line` = nullable string. `null` for the main line. Set to `"Oberägyptische Linie"` for Dyn 22 OAL kings (Har-si-ëset → Ini), and to `"Hohepriester"` for the two HPA names appearing in the *Supplement zu A* tail paragraph (PDF p.109). No other sub-lines exist in Beckerath's Anhang A.
-- `sequence_in_dynasty` = integer `NN`, 1-indexed continuously within the dynasty.
-- `name` = Beckerath's main rendering of the king's primary identifier (typically the Greek/manethonic form, e.g. `"Menes"`, `"Cheops"`, `"Schoschenq I."`). Preserve diacritics and capitalisation verbatim.
+- `editorial_notes` = nullable string for free-text editorial commentary added during transcription/review that is NOT in Beckerath's text. Examples: cross-row context discovered during scan review (`"shared bracket range with Sôuphis, Mesochris (03.05) and Ahu (Huni, Aches) (03.06) (scan-105)"`), explicit cross-references in English (`"co-regent with Si-ptah (19.07)"`). When referencing sister rows, use the row's canonical `name` field plus its `beckerath_id` in parentheses so a downstream consumer can grep-resolve. Null when absent.
 - `egyptian_titulary` = the parenthetical Egyptian-language royal name Beckerath gives in the Übersicht. Heterogeneous: in Dyn 1–3 it is typically the Horus name (`"Hor Aha"` for Menes); in Dyn 4 the Eigenname/nomen (`"Chufu"` for Cheops); in Dyn 18+ frequently the Thronname/prenomen (`"Nefer-cheprurê wa-en-rê"` for Akhenaten). Preserve verbatim. Null when Beckerath gives none.
 - `egyptian_titulary_kind` ∈ {`"horus_name"`, `"nomen"`, `"prenomen"`, `"mixed"`, `null`}. Records *what kind* of name Beckerath put in the parenthetical. Use `"horus_name"` when the parenthetical begins with `Hor` or contains a Horus-name pattern; `"prenomen"` when it ends with `-rê` / `-rî` (cartouche-style throne name); `"nomen"` otherwise; `"mixed"` when Beckerath gives both (Dyn 19–20 Supplement format). Null when `egyptian_titulary` is null.
-- `prenomen` = the Thronname when Beckerath gives one *in addition to* the Übersicht parenthetical (i.e. the Supplement zu A pulls in an extra prenomen for Dyn 19–23 kings). Null otherwise.
-- `start_bce_high` / `start_bce_low` / `end_bce_high` / `end_bce_low` = negative integers, individually nullable. Beckerath writes `"3032/2982–3000/2950"` meaning start-range 3032 BCE high / 2982 BCE low → end-range 3000 BCE high / 2950 BCE low. When Beckerath gives a single endpoint (e.g. `"ca. 880"`) populate both high and low with the same value. When only one half of a slash pair is given (e.g. `"1186/85–1183/82"` where the right-hand side is a 2-digit short form for `1185`), expand to the full 4-digit year. **Mixed-certainty rules:**
+- `end_approximate` / `start_approximate` = booleans. True when Beckerath prefixes the corresponding endpoint with `ca.` / `etwa` / `vor` / `nach` / `um` / hedges with `"?"`, OR when the row sits in a section Beckerath introduces with `"etwa N Jahre"` (e.g. Dyn 0 *ungefähr 150 Jahre*). Otherwise false. **Dyn 0** has no numeric endpoints — set both `*_bce_*` to null and both `*_approximate` to true with `notes_from_beckerath: "ungefähr 150 Jahre"`.
+- `end_bce_high` / `end_bce_low` / `start_bce_high` / `start_bce_low` = negative integers, individually nullable. Beckerath writes `"3032/2982–3000/2950"` meaning start-range 3032 BCE high / 2982 BCE low → end-range 3000 BCE high / 2950 BCE low. When Beckerath gives a single endpoint (e.g. `"ca. 880"`) populate both high and low with the same value. When only one half of a slash pair is given (e.g. `"1186/85–1183/82"` where the right-hand side is a 2-digit short form for `1185`), expand to the full 4-digit year. **Mixed-certainty rules:**
   - `vor ca. 746` (terminus ante quem on a single endpoint) → `start_bce_high: null, start_bce_low: null, start_approximate: true, end_bce_high: -746, end_bce_low: -746, end_approximate: true, notes_from_beckerath: "vor ca. 746"`.
   - `664–ca.655` (per-endpoint certainty differs) → `start_bce_high: -664, start_bce_low: -664, start_approximate: false, end_bce_high: -655, end_bce_low: -655, end_approximate: true`.
   - `ca. 837–798 (785?)` (alternative endpoint in parens) → `start_approximate: true, end_bce_high: -798, end_bce_low: -798, end_approximate: false, notes_from_beckerath: "alternative end 785"`.
   - `Herbst 1337–1333` (season prefix) → drop "Herbst" from numeric fields; record in `notes_from_beckerath: "Herbst 1337"`.
   - `31.5.1279` (day.month.year accession date) → record full date in `notes_from_beckerath: "Antritt 31.5.1279"`; numeric endpoint is `-1279`.
-- `start_approximate` / `end_approximate` = booleans. True when Beckerath prefixes the corresponding endpoint with `ca.` / `etwa` / `vor` / `nach` / `um` / hedges with `"?"`, OR when the row sits in a section Beckerath introduces with `"etwa N Jahre"` (e.g. Dyn 0 *ungefähr 150 Jahre*). Otherwise false. **Dyn 0** has no numeric endpoints — set both `*_bce_*` to null and both `*_approximate` to true with `notes_from_beckerath: "ungefähr 150 Jahre"`.
-- `period` ∈ {"Vorgeschichte", "Frühzeit", "Altes Reich", "I. Zwischenzeit", "Mittleres Reich", "II. Zwischenzeit", "Neues Reich", "III. Zwischenzeit", "Spätzeit"}. Drives from Beckerath's italicised section headings within Anhang A. *Note:* `"Vorgeschichte"` truncates Beckerath's full heading `VORGESCHICHTE (PRÄDYNASTISCHE ZEIT)` for brevity; the parenthetical is dropped.
+- `name` = Beckerath's main rendering of the king's primary identifier (typically the Greek/manethonic form, e.g. `"Menes"`, `"Cheops"`, `"Schoschenq I."`). Preserve diacritics and capitalisation verbatim.
 - `notes_from_beckerath` = free-text string for per-row annotations Beckerath adds *in the Anhang A cell itself* (e.g. `"Mitregent"`, `"in Sais"`, `"Antritt 31.5.1279"`, `"Herbst 1337"`, `"Gegenkönig der 3 vorigen"`). Null when absent. Per Constitutional rules 1 and 6 (raw data is sacred), this field must contain ONLY Beckerath's verbatim cell text — no editorial commentary, scan-context tags, agent meta-prose, or English paraphrase. Editorial commentary belongs in `editorial_notes`.
-- `editorial_notes` = nullable string for free-text editorial commentary added during transcription/review that is NOT in Beckerath's text. Examples: cross-row context discovered during scan review (`"shared bracket range with Sôuphis,Mesochris and Ahu (scan-105)"`), explicit cross-references in English (`"co-regent with Si-ptah"`). This field exists to keep `notes_from_beckerath` clean of non-source prose while still surfacing useful auditor context. Null when absent.
+- `period` ∈ {"Vorgeschichte", "Frühzeit", "Altes Reich", "I. Zwischenzeit", "Mittleres Reich", "II. Zwischenzeit", "Neues Reich", "III. Zwischenzeit", "Spätzeit"}. Drives from Beckerath's italicised section headings within Anhang A. *Note:* `"Vorgeschichte"` truncates Beckerath's full heading `VORGESCHICHTE (PRÄDYNASTISCHE ZEIT)` for brevity; the parenthetical is dropped.
+- `prenomen` = the Thronname when Beckerath gives one *in addition to* the Übersicht parenthetical (i.e. the Supplement zu A pulls in an extra prenomen for Dyn 19–23 kings). Null otherwise.
+- `sequence_in_dynasty` = integer `NN`, 1-indexed continuously within the dynasty.
+- `sub_line` = nullable string. `null` for the main line. Set to `"Oberägyptische Linie"` for Dyn 22 OAL kings (Har-si-ëset → Ini), and to `"Hohepriester"` for the two HPA names appearing in the *Supplement zu A* tail paragraph (PDF p.109). No other sub-lines exist in Beckerath's Anhang A.
 
 **Dyn 2 *Gegenkönig* row.** Beckerath prints a composite annotation `Gegenkönig der 3 vorigen: Seth Per-ib-sen / Hor-Seth Cha-sechemui` spanning two physical name lines. Extract as **two rows** — `02.NN` Seth Per-ib-sen and `02.NN+1` Hor-Seth Cha-sechemui — with `notes_from_beckerath: "Gegenkönig der 3 vorigen"` on both, both sharing Beckerath's bracketed date range covering the 3 contested kings.
 

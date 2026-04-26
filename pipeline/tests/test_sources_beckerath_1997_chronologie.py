@@ -339,6 +339,14 @@ def test_dyn3_brace_bracket_shared_range() -> None:
         assert r["editorial_notes"] is not None
         assert "shared bracket range" in r["editorial_notes"]
         assert "(scan-105)" in r["editorial_notes"]
+    # Cross-row references in editorial_notes must use the canonical
+    # `name` field plus `(beckerath_id)` (per README field contract).
+    assert "Sôuphis, Mesochris (03.05)" in cha_bai["editorial_notes"]
+    assert "Ahu (Huni, Aches) (03.06)" in cha_bai["editorial_notes"]
+    assert "Hor Cha-bai (03.04)" in souphis["editorial_notes"]
+    assert "Ahu (Huni, Aches) (03.06)" in souphis["editorial_notes"]
+    assert "Hor Cha-bai (03.04)" in ahu["editorial_notes"]
+    assert "Sôuphis, Mesochris (03.05)" in ahu["editorial_notes"]
 
 
 def test_te_wosret_editorial_coregent_note_separated() -> None:
@@ -354,7 +362,7 @@ def test_te_wosret_editorial_coregent_note_separated() -> None:
     r = _row("19.08")
     assert r["name"] == "Te-wosret"
     assert r["notes_from_beckerath"] is None
-    assert r["editorial_notes"] == "co-regent with Si-ptah"
+    assert r["editorial_notes"] == "co-regent with Si-ptah (19.07)"
     si_ptah = _row("19.07")
     assert "Te-wosret" in (si_ptah["notes_from_beckerath"] or "")
 
@@ -367,25 +375,37 @@ def test_editorial_notes_field_present_on_every_row() -> None:
         assert "editorial_notes" in r, r["beckerath_id"]
 
 
-def test_notes_from_beckerath_has_no_english_editorial_phrases() -> None:
-    """Per Constitutional rules 1 and 6, `notes_from_beckerath` carries
-    only Beckerath's own German cell text. English editorial prose
-    (cross-row references, scan-context tags, etc.) must live in
-    `editorial_notes` instead. Lock the four known migrations
-    (03.04/03.05/03.06 brace-bracket scan tags, 19.08 co-regent
-    cross-reference) so a regression cannot silently re-merge them.
+def test_notes_from_beckerath_no_editorial_shape_patterns() -> None:
+    """Shape-based tripwires for editorial-prose regressions in
+    `notes_from_beckerath`.
+
+    Per Constitutional rules 1 and 6 the field must contain only
+    Beckerath's verbatim German cell text. Two regex shapes are
+    enumeration-free regression catchers (independent of phrasing):
+
+    1. `\\(scan-\\d+` — any `(scan-NNN)` tag is a transcriber/auditor
+       artifact (the agents do not see scan numbers; only the
+       fix_rows.py editorial pass adds them). The four migrated rows
+       (03.04/03.05/03.06) carried this shape; locking it here catches
+       any future re-introduction regardless of wording.
+    2. `\\bco-(regent|ruler|king)\\b` — English co-rulership prose. The
+       19.08 migration cleared one such instance; locking the broader
+       morphological family (co-regent / co-ruler / co-king) catches a
+       merge that re-emits the C1-reviewer-named "co-ruler with…"
+       rephrasing.
+
+    A harder positive whitelist of legitimate German cell idioms
+    (Antritt, Mitregent, Gegenkönig, in Sais, …) is tracked separately
+    as a follow-up for next-round hardening.
     """
-    forbidden = (
-        "co-regent",
-        "shared bracket range",
-        "(scan-",
-    )
+    scan_tag = re.compile(r"\(scan-\d+")
+    co_rulership = re.compile(r"\bco-(regent|ruler|king)\b", re.IGNORECASE)
     for r in _rows():
         notes = r.get("notes_from_beckerath")
         if not isinstance(notes, str):
             continue
-        for sub in forbidden:
-            assert sub.lower() not in notes.lower(), (r["beckerath_id"], sub, notes)
+        assert not scan_tag.search(notes), (r["beckerath_id"], notes)
+        assert not co_rulership.search(notes), (r["beckerath_id"], notes)
 
 
 def test_taharqo_mixed_titulary() -> None:
@@ -554,6 +574,12 @@ def test_notes_have_no_editorial_prose() -> None:
         "(reign change)",
         "OCR",
         "garbled",
+        # Folded in from the editorial_notes-separation PR (issue #119).
+        # `notes_from_beckerath` must never carry these English-prose
+        # fragments; they belong in `editorial_notes`.
+        "co-regent",
+        "shared bracket range",
+        "(scan-",
     )
     for r in _rows():
         notes = r.get("notes_from_beckerath")
