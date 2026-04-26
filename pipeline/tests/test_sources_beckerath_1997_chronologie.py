@@ -545,9 +545,10 @@ def test_notes_have_no_editorial_prose() -> None:
        fix_rows.py editorial pass adds them). Migrated rows
        (03.04/03.05/03.06) carried this shape; this regex catches any
        future re-introduction regardless of wording.
-    2. `\\bco-(regent|ruler|king)\\b` — English co-rulership prose.
-       19.08 migration cleared one such instance; locking the broader
-       morphological family catches "co-ruler with…" / "co-king of…"
+    2. `\\bco-(regent|ruler|king|regency)\\b` — English co-rulership
+       prose. 19.08 migration cleared one such instance; locking the
+       broader morphological family catches "co-ruler with…",
+       "co-king of…", or the abstract-noun "co-regency with…"
        rephrasings the literal-substring list would miss.
 
     A harder positive whitelist of legitimate German cell idioms
@@ -573,7 +574,7 @@ def test_notes_have_no_editorial_prose() -> None:
         re.compile(r"\(scan-\d+"),
         # English co-rulership prose. Strictly more general than the
         # literal `co-regent` substring; catches `co-ruler` / `co-king`.
-        re.compile(r"\bco-(regent|ruler|king)\b", re.IGNORECASE),
+        re.compile(r"\bco-(regent|ruler|king|regency)\b", re.IGNORECASE),
     )
     for r in _rows():
         notes = r.get("notes_from_beckerath")
