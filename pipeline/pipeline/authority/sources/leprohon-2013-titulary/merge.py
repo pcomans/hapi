@@ -108,6 +108,291 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
 SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})
 
 
+# Manuel-de-Codage → canonical IFAO transliteration mapping. Per
+# transcribe.md ("MdC map"): `A→ꜣ, a→ꜥ, H→ḥ, x→ḫ, X→ẖ, S→š, T→ṯ, D→ḏ,
+# q→ḳ`. Applied PRE-MERGE (in `_normalise_for_merge`) so encoding-style
+# differences (`HqA tAwy` MdC vs `ḥḳꜣ tꜣwy` canonical) collapse to a
+# single equivalence class before the majority vote — otherwise the
+# vote ties on an encoding diff and silently first-seen-picks a value.
+# Issue #128 (this PR) found 102 of the 134 IDENTIFIER-tier ties were
+# pure encoding-style differences resolvable by this normalisation.
+#
+# Restricted to the `transliteration` sub-field of name-list dicts;
+# applying it to general string fields (source_note, anglicised,
+# translation) corrupts English words containing the letters above
+# (e.g. "the" → "ṯhe"). Egyptological convention is that
+# `transliteration` is ALWAYS in canonical IFAO form; the agents'
+# disagreement is on which encoding to emit, not on the underlying
+# Egyptian.
+_MDC_TO_CANONICAL: dict[int, str] = str.maketrans({
+    "A": "ꜣ",
+    "a": "ꜥ",
+    "H": "ḥ",
+    "x": "ḫ",
+    "X": "ẖ",
+    "S": "š",
+    "T": "ṯ",
+    "D": "ḏ",
+    "q": "ḳ",
+})
+
+# Codepoint fallbacks the extraction layer occasionally emits for
+# ayin/aleph instead of canonical U+A725 / U+A723.
+_TRANSLIT_FALLBACK_CODEPOINTS: dict[int, int] = {
+    0x025C: 0xA723,  # ɜ → ꜣ
+    0x025B: 0xA725,  # ɛ → ꜥ
+    0x02C1: 0xA725,  # ˁ → ꜥ
+}
+
+
+# Name-list fields whose entries are dicts with a `transliteration`
+# sub-field. Pre-merge MdC normalisation runs only on those.
+_NAME_LIST_FIELDS: frozenset[str] = frozenset({
+    "horus_names", "nebty_names", "golden_horus_names",
+    "throne_names", "birth_names",
+    # `seth_names` covers Dyn-2 Peribsen and the Khasekhemwy
+    # serekh-with-Seth-and-Horus form (Gemini round-2 finding on PR #128).
+    "seth_names",
+    "later_horus_names", "later_nebty_names", "later_golden_horus_names",
+    "later_throne_names", "later_birth_names", "later_cartouche_names",
+})
+
+
+def _normalise_translit(s: object) -> object:
+    if not isinstance(s, str):
+        return s
+    out = s.translate(_MDC_TO_CANONICAL)
+    out = out.translate(_TRANSLIT_FALLBACK_CODEPOINTS)
+    return out
+
+
+def _normalise_for_merge(row: dict) -> dict:
+    """Apply pre-merge canonicalisations that should NOT be silent
+    first-seen-pick at vote time. Currently: MdC → canonical IFAO on
+    every `transliteration` sub-field of name-list fields. Returns a
+    new dict; does not mutate the input.
+
+    Run on each agent's row BEFORE the per-field majority vote so
+    encoding-style differences collapse pre-vote and don't trigger
+    spurious ties.
+    """
+    if not isinstance(row, dict):
+        return row
+    out = dict(row)
+    for field in _NAME_LIST_FIELDS:
+        v = out.get(field)
+        if not isinstance(v, list):
+            continue
+        new_list = []
+        for entry in v:
+            if isinstance(entry, dict) and "transliteration" in entry:
+                new_entry = dict(entry)
+                new_entry["transliteration"] = _normalise_translit(entry["transliteration"])
+                new_list.append(new_entry)
+            else:
+                new_list.append(entry)
+        out[field] = new_list
+    return out
+
+
+# === TIE_BREAK_OVERRIDES =====================================================
+#
+# Authoritative resolutions for (leprohon_id, field) tuples where the
+# three extraction agents tie 1/1/1 on an IDENTIFIER-bearing sub-field
+# (transliteration, anglicised, translation, variant_index, is_variant)
+# AND the tie cannot be resolved by pre-merge MdC normalisation OR
+# by the deterministic prose-only rule below.
+#
+# Loaded from `tie-break-overrides.json` (alongside this file). Each
+# entry's key is `"<leprohon_id>|<field>"` (JSON keys must be strings;
+# the loader splits back to a tuple). Each value is `{"value": ...,
+# "rationale": "..."}`.
+#
+# `value` MUST already be in post-normalisation canonical form.
+# `rationale` MUST cite the source page (Leprohon 2013 physical PDF
+# page) and the basis for the resolution (e.g. "blind 3-arbiter
+# re-extraction agreed", "human-reviewed against printed text").
+#
+# When `_majority` hits a tie with no override, it RAISES — option (a)
+# enforcement: data is sacred, fail loudly. The merge is broken until
+# every uncovered identifier-tie has an entry here. This is intentional.
+#
+# Adding a new override requires (1) the citation in `rationale`,
+# (2) a corresponding test in `test_sources_leprohon_titulary.py` that
+# pins the resolved value on disk, (3) re-running merge.py to apply it.
+#
+# The current file was populated by the 2026-04-27 issue #128
+# 3-arbiter blind re-extraction sweep (30 agents across 10 chunks)
+# resolving every IDENTIFIER + STRUCTURE + SCALAR tie that survived
+# pre-merge MdC normalisation. See `docs/handoff-leprohon-tie-break.md`
+# for the methodology.
+_OVERRIDES_PATH = SOURCE_DIR / "tie-break-overrides.json"
+
+
+def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
+    if not _OVERRIDES_PATH.exists():
+        return {}
+    raw = json.loads(_OVERRIDES_PATH.read_text())
+    out: dict[tuple[str, str], dict[str, object]] = {}
+    for k, v in raw.items():
+        if "|" not in k:
+            raise ValueError(
+                f"merge.py: tie-break-overrides.json key {k!r} missing '|' "
+                f"separator (expected '<leprohon_id>|<field>')"
+            )
+        lid, field = k.split("|", 1)
+        out[(lid, field)] = v
+    return out
+
+
+TIE_BREAK_OVERRIDES: dict[tuple[str, str], dict[str, object]] = _load_overrides()
+
+
+# Sub-fields that are LOAD-BEARING for downstream identification.
+# A tie that touches any of these is an IDENTIFIER tie and requires
+# an explicit override (raise on uncovered case). A tie that touches
+# only non-identifier sub-fields (typically source_note prose,
+# attested_in citations) is resolved by `_resolve_prose_tie` below.
+_IDENTIFIER_SUBFIELDS: frozenset[str] = frozenset({
+    "anglicised", "transliteration", "translation",
+    "variant_index", "is_variant",
+})
+
+
+def _classify_tie(field: str, normalised_values: list) -> str:
+    """Classify a 1/1/1 (or N/N) tie. Returns one of:
+      * "STRUCTURE": list lengths differ across agents (different
+        variant counts) — needs human review, raise.
+      * "IDENTIFIER": at least one IDENTIFIER sub-field disagrees —
+        needs an override, raise if missing.
+      * "PROSE": only source_note / attested_in disagree — resolve
+        deterministically (see _resolve_prose_tie).
+      * "SCALAR": field is not a name-list field at all — IDENTIFIER
+        by default (these fields are display_name etc., load-bearing).
+    """
+    if field not in _NAME_LIST_FIELDS:
+        return "SCALAR"
+    if not all(isinstance(v, list) for v in normalised_values):
+        return "STRUCTURE"
+    lengths = {len(v) for v in normalised_values}
+    if len(lengths) > 1:
+        return "STRUCTURE"
+    n = next(iter(lengths))
+    if n == 0:
+        return "PROSE"
+    diffs: set[str] = set()
+    for variant_idx in range(n):
+        # If any agent emits a non-dict at this position, that's a
+        # STRUCTURE mismatch — the schema requires dict entries.
+        # Treating non-dicts as empty {} (the previous behaviour)
+        # silently dropped IDENTIFIER signal: e.g. agent A: "x",
+        # agent B/C: {transliteration: "y"} would score as
+        # source_note-only divergence (no diffs at all in fact),
+        # mis-classified as PROSE, silently resolved. Gemini round-1
+        # finding on PR #128.
+        if not all(isinstance(v[variant_idx], dict) for v in normalised_values):
+            return "STRUCTURE"
+
+        # Compare every key that ANY agent emitted at this position.
+        # The previous loop only inspected keys actually emitted in
+        # at-least-one entry, then required ≥2 agents to disagree on
+        # that key. That missed key-PRESENCE diffs: agent A emits
+        # transliteration, agent B/C don't. Now we walk the key-union
+        # and use entry.get(k) (returning None for absent keys) so a
+        # presence/absence diff registers as a value diff. Gemini
+        # round-1 finding on PR #128.
+        all_keys: set[str] = set()
+        for v in normalised_values:
+            all_keys.update(v[variant_idx].keys())
+        for k in all_keys:
+            vals = {
+                json.dumps(v[variant_idx].get(k), ensure_ascii=False, sort_keys=True)
+                for v in normalised_values
+            }
+            if len(vals) > 1:
+                diffs.add(k)
+    if diffs & _IDENTIFIER_SUBFIELDS:
+        return "IDENTIFIER"
+    return "PROSE"
+
+
+def _resolve_prose_tie(values: list) -> object:
+    """Deterministic rule for prose-only ties (only source_note and/or
+    attested_in differ across agents). Per project policy: prose
+    differences are NOT load-bearing for normalisation, so a silent
+    deterministic resolution is acceptable here (unlike IDENTIFIER
+    ties, which fail loud).
+
+    Two distinct sub-fields with different semantics:
+
+    * `source_note` is editorial prose. Multiple agents disagreeing
+      means one or more added scaffolding ("Per Leprohon fn. N:"
+      prefixes, paraphrased glosses) — the right disposition is
+      "shortest wins" (closest to source).
+
+    * `attested_in` is a list of provenance citations ("Turin 8,21",
+      "Karnak Cachette", etc.). Citations are ADDITIVE: if one agent
+      catches a citation that another missed, it should be preserved,
+      not silently dropped. Shortest-wins on a list-shaped citation
+      field would discard real provenance — Gemini PR #128 round-1
+      P1 finding.
+
+    Resolution: for each name-list entry position, take the
+    shortest-JSON entry as the BASE, then UNION its `attested_in`
+    list with citations from every other agent's entry at the same
+    position (deduplicated, first-seen order preserved). The base
+    value's `source_note` (and other fields) win; only `attested_in`
+    is unioned.
+
+    Caller has already classified PROSE — i.e. no IDENTIFIER
+    sub-field disagrees — so the base entry's identifying fields
+    are interchangeable across agents.
+    """
+    # Sort by JSON length ascending; lex-smallest on length tie.
+    # (Variable named for clarity per code-reviewer round-1 P3-5.)
+    sorted_by_length = sorted(
+        zip(
+            [json.dumps(v, ensure_ascii=False, sort_keys=True) for v in values],
+            values,
+        ),
+        key=lambda pk: (len(pk[0]), pk[0]),
+    )
+    base = sorted_by_length[0][1]
+
+    # Only name-list values get attested_in unioned. Other shapes
+    # (rare in practice — _classify_tie returns SCALAR for non-list
+    # fields and never lands here) pass through.
+    if not isinstance(base, list):
+        return base
+
+    out: list = []
+    for i, base_entry in enumerate(base):
+        if not isinstance(base_entry, dict):
+            out.append(base_entry)
+            continue
+        # Collect attested_in entries from every agent at this position.
+        all_atts: list = []
+        seen_keys: set[str] = set()
+        for v in values:
+            if not isinstance(v, list) or i >= len(v):
+                continue
+            entry = v[i]
+            if not isinstance(entry, dict):
+                continue
+            atts = entry.get("attested_in")
+            if not isinstance(atts, list):
+                continue
+            for att in atts:
+                k = json.dumps(att, ensure_ascii=False, sort_keys=True)
+                if k not in seen_keys:
+                    seen_keys.add(k)
+                    all_atts.append(att)
+        new_entry = dict(base_entry)
+        new_entry["attested_in"] = all_atts
+        out.append(new_entry)
+    return out
+
+
 # Queen-consort sub-entries in Leprohon's Chapter X. Each key is the
 # consort's leprohon_id (matching Leprohon's printed `NA.` sub-headword);
 # each value is the preceding king's leprohon_id under whose entry
@@ -170,12 +455,29 @@ def _deep_normalise(v: object) -> object:
     return _normalise_value(v)
 
 
-def _majority(values: list) -> tuple[object, int]:
+def _majority(values: list, *, lid: str, field: str) -> tuple[object, int]:
     """Return (chosen_value, count_of_agreers) from a list of per-agent values.
 
     Values are deep-normalised first so that sentinel nulls in nested dicts
     do not force spurious disagreements. JSON serialisation with sorted keys
     is the equality key — handles nested dicts/lists correctly by value.
+
+    Tie handling (option (a) enforcement, issue #128):
+      - Clear majority (top count > second count): use it.
+      - Tie at the top (top count == second count):
+          1. Look up `(lid, field)` in TIE_BREAK_OVERRIDES → use override.
+          2. If field is name-list with prose-only diffs → deterministic
+             rule via `_resolve_prose_tie` (silent OK; attested_in
+             citations are unioned, not dropped).
+          3. Otherwise (IDENTIFIER / STRUCTURE / SCALAR tie with no
+             override) → raise. Data is sacred. Fail loudly.
+
+    `lid` and `field` are keyword-only required arguments. Constitutional
+    rule 10 (no backwards compatibility): the previous signature had
+    them as Optional with a silent first-seen fallback for "legacy
+    callers" — that path was dead in practice (every call site passes
+    both) and was exactly the slop pattern this PR exists to kill.
+    Removed in PR #128 round-1 review (Gemini round-1 finding).
     """
     normalised = [_deep_normalise(v) for v in values]
 
@@ -183,13 +485,48 @@ def _majority(values: list) -> tuple[object, int]:
         return json.dumps(v, ensure_ascii=False, sort_keys=True)
 
     counts = Counter(key(v) for v in normalised)
-    top_key, top_count = counts.most_common(1)[0]
-    for v in normalised:
-        if key(v) == top_key:
-            return v, top_count
-    # Unreachable: top_key was generated from `normalised`, so the loop
-    # above must find a match. Raise rather than return None silently.
-    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
+    most = counts.most_common()
+    top_key, top_count = most[0]
+
+    # Detect tie at the top. If only one distinct value (unanimous) or
+    # the second distinct value has strictly fewer counts, no tie.
+    is_tie = len(most) >= 2 and most[0][1] == most[1][1]
+
+    if not is_tie:
+        for v in normalised:
+            if key(v) == top_key:
+                return v, top_count
+        raise RuntimeError(
+            f"_majority loop failed to find top_key {top_key!r} in {normalised!r}"
+        )
+
+    # ---- Tie path. ----
+
+    # 1. Explicit override.
+    override = TIE_BREAK_OVERRIDES.get((lid, field))
+    if override is not None:
+        # Override carries the resolved value; treat as if it had top_count
+        # agreers (it's an authoritative human/arbiter-set value).
+        return override["value"], top_count
+
+    # 2. Prose-only tie → deterministic rule.
+    kind = _classify_tie(field, normalised)
+    if kind == "PROSE":
+        return _resolve_prose_tie(normalised), top_count
+
+    # 3. IDENTIFIER / STRUCTURE / SCALAR tie with no override → raise.
+    # Build a diagnostic that names every distinct value so the agent
+    # adding the override has the candidates in front of it.
+    candidates = [
+        f"  candidate {i+1} (count={cnt}): {k}"
+        for i, (k, cnt) in enumerate(most)
+    ]
+    raise ValueError(
+        f"Unresolved {kind} tie at ({lid!r}, {field!r}). "
+        f"Add an entry to TIE_BREAK_OVERRIDES with a cited rationale, "
+        f"or extend the agents' extractions until a majority emerges. "
+        f"Candidates:\n" + "\n".join(candidates)
+    )
 
 
 # leprohon_id is `leprohon-{dynasty_group}.{NN}` where dynasty_group is one of:
@@ -281,6 +618,12 @@ def main(agent_dir: Path) -> None:
                 f"that missed this row, or hand-resolve before merging."
             )
 
+        # Apply pre-merge canonicalisations (currently: MdC → IFAO on
+        # transliteration sub-fields). This collapses encoding-style
+        # ties that would otherwise force silent first-seen-pick.
+        # See `_normalise_for_merge` docstring + issue #128.
+        present = [(t, _normalise_for_merge(v)) for t, v in present]
+
         # Sort field iteration so the disagreement report is deterministic
         # across re-runs. Without this, Python's set-iteration order
         # reshuffles the per-field blocks on every run and produces a huge
@@ -291,7 +634,7 @@ def main(agent_dir: Path) -> None:
         row_disagreements: list[str] = []
         for field in all_fields:
             values = [v.get(field) for _, v in present]
-            chosen, count = _majority(values)
+            chosen, count = _majority(values, lid=lid, field=field)
             merged[field] = chosen
             if count < len(present):
                 row_disagreements.append(
