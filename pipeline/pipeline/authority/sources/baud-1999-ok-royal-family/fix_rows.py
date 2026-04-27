@@ -947,6 +947,95 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Sweep-2026 corrections — post-merge audit (reviewer-notes-sweep-2026.md
+# P1 + code-review-sweep-2026.md L29/L30/L57 finding). These rows were
+# missed by the per-chunk reviewer passes when the smsw/nj-ẖt.f
+# conjunction rule was introduced in chunk-2 (baud-42) and applied
+# systematically in chunks 3/4/5/7. The rule is:
+#
+#   `king's eldest son of his body` (vocab) requires BOTH `smsw` AND
+#   `nj ẖt.f` markers to appear in the SAME single title string within
+#   `titles_from_baud`. `smsw` alone (= `zꜣ nswt smsw`) attests only
+#   `king's son` + the `smsw` distinction-marker; `nj ẖt.f` alone
+#   attests body-son but not eldest. Two SEPARATE titles each carrying
+#   one marker do NOT satisfy the conjunction.
+#
+# Also fixes baud-126 child-misassignment per Baud vol. 2 pp. 496–498
+# fig. 40 (Mḥw's two wives' children separated). See
+# `reviewer-notes-sweep-2026.md` for the full chain.
+SWEEP_2026_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "baud-29",
+        "roles",
+        ["king's son"],
+        "Sweep-2026 P1 (code-review L29). TITRES carries only "
+        "`zꜣ nswt smsw` — `smsw` alone, no `nj ẖt.f` marker anywhere. "
+        "Same systemic over-claim fixed for chunks 2/4/5/7; this row "
+        "was missed in earlier passes. Drop `king's eldest son of his "
+        "body` (the vocab term requires BOTH markers in the SAME title "
+        "string). `king's son` retained as the bare body-of-titulary "
+        "attestation.",
+    ),
+    (
+        "baud-30",
+        "roles",
+        ["king's son"],
+        "Sweep-2026 P1 (code-review L30). TITRES carries only "
+        "`zꜣ nswt smsw`. Same rule violation as baud-29; `smsw` alone "
+        "without `nj ẖt.f` in the same title string fails the "
+        "conjunction rule. Drop `king's eldest son of his body`.",
+    ),
+    (
+        "baud-57",
+        "roles",
+        ["king's son", "priest of the king", "priest of the royal pyramid"],
+        "Sweep-2026 P1 (code-review L57). TITRES carries `zꜣ nswt nj "
+        "ẖt.f mrjj.f` AND `zꜣ nswt smsw` as TWO SEPARATE title strings "
+        "— neither single string contains both `smsw` and `nj ẖt.f`. "
+        "Conjunction rule (vocab term requires BOTH markers in the SAME "
+        "title string) fails. Same precedent as baud-143/151/266/270 "
+        "in earlier chunks. Drop `king's eldest son of his body`; "
+        "`priest of the king` + `priest of the royal pyramid` retained "
+        "(set in CHUNK2_CORRECTIONS).",
+    ),
+    (
+        "baud-126",
+        "children_names",
+        ["Mrwt"],
+        "Sweep-2026 P1 (reviewer-notes baud-126). Baud vol. 2 pp. "
+        "496–498, fig. 40 separates Mḥw's two wives' children: Nbt is "
+        "mother of `[aîné?]` and Kꜣ.j-ḥtp; Nfr-kꜣw.s Jkw (this row) "
+        "is mother of `[aîné]` and Mrwt. The merged value mis-attributed "
+        "Kꜣ.j-ḥtp to Nfr-kꜣw.s Jkw. Strip Kꜣ.j-ḥtp; Mrwt remains. "
+        "(Nbt is not present as her own headword in the Corpus; "
+        "capturing Kꜣ.j-ḥtp under her is out of scope here per the "
+        "sweep-2026 PR scope.)",
+    ),
+    (
+        "baud-89",
+        "notes_from_baud",
+        (
+            "Époux de la fille royale Nfr-kꜣw.s Jkw [126], peut-être "
+            "fille d'Ounas; Mḥw tient des domaines au nom de la mère "
+            "royale Zšzšt [200] et de Špsj-pw-Ptḥ [224]. "
+            "Selon Baud fig. 40, Mḥw a aussi une épouse Nbt (mère de "
+            "Kꜣ.j-ḥtp; ≠ baud-115); voir issue #125."
+        ),
+        "Sweep-2026 P2 (egyptologist-reviewer PR #123) + Gemini round-2 "
+        "feedback (condense to ≤ 2 sentences / ≤ 50 words per "
+        "README schema rule on notes_from_baud). When baud-126 "
+        "stripped Kꜣ.j-ḥtp from Nfr-kꜣw.s Jkw's children (per Baud "
+        "fig. 40 he belongs to Mḥw's other wife Nbt, not to her), "
+        "Kꜣ.j-ḥtp's filiation became invisible in the corpus — Nbt "
+        "as a wife of Mḥw is not yet a Baud headword. Append a brief "
+        "pointer to baud-89's notes so the deletion stays auditable: "
+        "names Nbt, disambiguates from baud-115 (a different Nbt, "
+        "Ounas's wife), links tracking issue #125 for the eventual "
+        "headword. Final note value = 2 sentences / ~47 words.",
+    ),
+]
+
+
 ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK1_BACKFILL,
@@ -956,6 +1045,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK5_CORRECTIONS,
     CHUNK6_CORRECTIONS,
     CHUNK7_CORRECTIONS,
+    SWEEP_2026_CORRECTIONS,
 ]
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
@@ -968,7 +1058,17 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = sum(ALL_CORRECTIONS, [])
 # `_ALLOWED_DUPLICATES` allowlist acknowledges this. Any other
 # accidental duplicate fails loud.
 _ALLOWED_DUPLICATES: frozenset[tuple[str, str]] = frozenset(
-    {("baud-40", "roles")}
+    {
+        ("baud-40", "roles"),
+        # Sweep-2026: baud-57's roles were set by CHUNK2_CORRECTIONS to
+        # `[king's son, king's eldest son of his body, priest of the
+        # king, priest of the royal pyramid]`. Sweep-2026 supersedes that
+        # by stripping `king's eldest son of his body` (smsw / nj ẖt.f
+        # conjunction-rule miss). Both entries kept for audit-trail
+        # completeness — ALL_CORRECTIONS applies them in order so
+        # SWEEP_2026 wins.
+        ("baud-57", "roles"),
+    }
 )
 _seen: dict[tuple[str, str], int] = {}
 for _baud_id, _field, _, _ in SPOT_CORRECTIONS:
