@@ -279,14 +279,33 @@ def _classify_tie(field: str, normalised_values: list) -> str:
         return "PROSE"
     diffs: set[str] = set()
     for variant_idx in range(n):
-        per_subfield: dict[str, set[str]] = {}
+        # If any agent emits a non-dict at this position, that's a
+        # STRUCTURE mismatch — the schema requires dict entries.
+        # Treating non-dicts as empty {} (the previous behaviour)
+        # silently dropped IDENTIFIER signal: e.g. agent A: "x",
+        # agent B/C: {transliteration: "y"} would score as
+        # source_note-only divergence (no diffs at all in fact),
+        # mis-classified as PROSE, silently resolved. Gemini round-1
+        # finding on PR #128.
+        if not all(isinstance(v[variant_idx], dict) for v in normalised_values):
+            return "STRUCTURE"
+
+        # Compare every key that ANY agent emitted at this position.
+        # The previous loop only inspected keys actually emitted in
+        # at-least-one entry, then required ≥2 agents to disagree on
+        # that key. That missed key-PRESENCE diffs: agent A emits
+        # transliteration, agent B/C don't. Now we walk the key-union
+        # and use entry.get(k) (returning None for absent keys) so a
+        # presence/absence diff registers as a value diff. Gemini
+        # round-1 finding on PR #128.
+        all_keys: set[str] = set()
         for v in normalised_values:
-            entry = v[variant_idx] if isinstance(v[variant_idx], dict) else {}
-            for k, vv in entry.items():
-                per_subfield.setdefault(k, set()).add(
-                    json.dumps(vv, ensure_ascii=False, sort_keys=True)
-                )
-        for k, vals in per_subfield.items():
+            all_keys.update(v[variant_idx].keys())
+        for k in all_keys:
+            vals = {
+                json.dumps(v[variant_idx].get(k), ensure_ascii=False, sort_keys=True)
+                for v in normalised_values
+            }
             if len(vals) > 1:
                 diffs.add(k)
     if diffs & _IDENTIFIER_SUBFIELDS:

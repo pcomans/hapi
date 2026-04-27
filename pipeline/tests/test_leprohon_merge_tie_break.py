@@ -302,6 +302,65 @@ def test_classify_scalar_field_is_scalar(merge_module):
     assert merge_module._classify_tie("display_name", values) == "SCALAR"
 
 
+def test_classify_non_dict_entry_at_position_is_structure(merge_module):
+    """If any agent emits a non-dict at a list position (e.g. a string
+    instead of the schema's dict shape), treat as STRUCTURE — a real
+    schema mismatch. Previous behaviour silently coerced to {},
+    erasing the IDENTIFIER signal. Gemini round-1 finding on PR #128.
+    """
+    values = [
+        [{"transliteration": "x", "anglicised": "x", "translation": "x",
+          "variant_index": 1, "is_variant": False, "source_note": None,
+          "attested_in": []}],
+        ["string_instead_of_dict"],  # malformed entry
+        [{"transliteration": "y", "anglicised": "y", "translation": "y",
+          "variant_index": 1, "is_variant": False, "source_note": None,
+          "attested_in": []}],
+    ]
+    assert merge_module._classify_tie("horus_names", values) == "STRUCTURE"
+
+
+def test_classify_key_presence_diff_is_identifier(merge_module):
+    """If agents disagree on whether a key is PRESENT (one emits
+    transliteration, others don't), that's an IDENTIFIER diff — must
+    not slip into PROSE. Previous behaviour only checked agreement on
+    keys at-least-one agent emitted, missing presence/absence diffs.
+    Gemini round-1 finding on PR #128.
+    """
+    values = [
+        [{"transliteration": "x", "anglicised": "x", "translation": "x",
+          "variant_index": 1, "is_variant": False, "source_note": None,
+          "attested_in": []}],
+        [{"anglicised": "x", "translation": "x",
+          "variant_index": 1, "is_variant": False, "source_note": None,
+          "attested_in": []}],  # transliteration ABSENT
+        [{"anglicised": "x", "translation": "x",
+          "variant_index": 1, "is_variant": False, "source_note": None,
+          "attested_in": []}],  # transliteration ABSENT
+    ]
+    assert merge_module._classify_tie("horus_names", values) == "IDENTIFIER"
+
+
+def test_classify_source_note_presence_diff_is_prose(merge_module):
+    """Conversely: if agents disagree on whether source_note is
+    present (some emit None, some omit the key entirely, some emit a
+    string), that's still a PROSE diff (source_note isn't an
+    IDENTIFIER sub-field), so it gets the deterministic shortest-wins
+    treatment, not a raise."""
+    values = [
+        [{"transliteration": "x", "anglicised": "x", "translation": "x",
+          "variant_index": 1, "is_variant": False, "source_note": "p1",
+          "attested_in": []}],
+        [{"transliteration": "x", "anglicised": "x", "translation": "x",
+          "variant_index": 1, "is_variant": False, "source_note": None,
+          "attested_in": []}],
+        [{"transliteration": "x", "anglicised": "x", "translation": "x",
+          "variant_index": 1, "is_variant": False,
+          "attested_in": []}],  # source_note key ABSENT entirely
+    ]
+    assert merge_module._classify_tie("horus_names", values) == "PROSE"
+
+
 # === SCALAR tie raises ===================================================
 
 def test_majority_tie_scalar_raises(merge_module):
