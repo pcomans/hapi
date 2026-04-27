@@ -1,0 +1,1834 @@
+{
+  "leprohon-4.07|golden_horus_names": {
+    "value": [
+      {
+        "transliteration": "(unknown)",
+        "anglicised": "(unknown)",
+        "translation": "(unknown)",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "See Dobrev 1993, 189 n. 37."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Leprohon p. 37: 'Golden Horus: (unknown)42'. Footnote 42 (p. 37): 'See Dobrev 1993, 189 n. 37.' Per chunk-1 prompt rule, source_note is verbatim from the footnote text — no editorial prefix. The (unknown) parens-form is preserved literally in all three name-fields, consistent with how the IDENTIFIER"
+  },
+  "leprohon-5.04|golden_horus_names": {
+    "value": [
+      {
+        "transliteration": null,
+        "anglicised": null,
+        "translation": null,
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'none']. Basis (arbiter d): Leprohon p. 39: 'Golden Horus: unknown' (bare 'unknown', no parens, no '(?)' hedge). Leprohon explicitly records the Golden-Horus row for Shepseskare with the value 'unknown' — so the slot is not empty (vs. agent a's []), but he provides no transliteration / anglicised / translation content, so the "
+  },
+  "leprohon-5.04|nebty_names": {
+    "value": [
+      {
+        "transliteration": null,
+        "anglicised": null,
+        "translation": null,
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'none']. Basis (arbiter d): Leprohon p. 39: 'Two Ladies: unknown' — same shape as the Golden Horus row above. Slot is recorded but content is null."
+  },
+  "leprohon-6.01|throne_names": {
+    "value": [
+      {
+        "transliteration": "(unknown)",
+        "anglicised": "(unknown)",
+        "translation": "(unknown)",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Leprohon p. 42: 'Throne: (unknown)72'. Footnote 72 (p. 42): 'See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti.' source_note is verbatim from the footnote — no editorial prefix. (unknown) parens-form preserved literally in all thr"
+  },
+  "leprohon-6.02|horus_names": {
+    "value": [
+      {
+        "transliteration": "(unknown)",
+        "anglicised": "(unknown)",
+        "translation": "(unknown)",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter e): Leprohon p. 42: 'Horus: (unknown)' for Userkare — the row carries no per-entry superscript footnote. Footnote 74 is attached to the headword line ('2. USERKARE (I)74') and contains Gauthier/Beckerath/Baud-Dobrev scholarly references about the king as a whole, not the Horus name in particular. Per th"
+  },
+  "leprohon-6.06|horus_names": {
+    "value": [
+      {
+        "transliteration": "unknown (?)",
+        "anglicised": "unknown (?)",
+        "translation": "unknown (?)",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter e): Leprohon p. 43: 'Horus: unknown (?)' for Merenre II — no per-row footnote. Footnote 82 is attached to the headword line ('6. MERENRE II82') and contains Gauthier/Beckerath references about the king as a whole; same rule as 6.02 applies — headword footnotes do not feed per-entry source_note. Agent a "
+  },
+  "leprohon-11a.01|later_horus_names": {
+    "value": [
+      {
+        "transliteration": "tp ꜥ",
+        "anglicised": "tepy a",
+        "translation": "\"The ancestor\"",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Karnak List (Urk. IV, 608:14); per Leprohon fn. 27, this Horus name is a New Kingdom fabrication (cf. Postel 2004, 46)."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=fip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): Leprohon p. 53 line 'Later Horus name: tp ꜥ (tepy a),* \"The ancestor\"27'. Translation preserves the smart quotes verbatim (matches a and b; c strips them). For source_note, prompt-fip.md explicitly provides the canonical string: 'Karnak List (Urk. IV, 608:14); per Leprohon fn. 27, this Horus name is"
+  },
+  "leprohon-13.18|birth_names": {
+    "value": [
+      {
+        "transliteration": "s<ꜣ?>b",
+        "anglicised": "s<ꜥ>b",
+        "translation": "The jackal (?)",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "This king is only attested as filiation in the name of the next king, his son Kay; see Ryholt 1997a, 219."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Source p.81 line 266 has 'ṯhe jꜥckꜥl' — an OCR/MdC over-normalisation artifact (t→ṯ, a→ꜥ) of the English translation. Leprohon's actual prose is 'The jackal (?)' (capital T per his convention shown by uncorrupted entry 32 throne 'The enduring one ...'). Agent c preserved the corrupted glyphs verbati"
+  },
+  "leprohon-13.23|birth_names": {
+    "value": [
+      {
+        "transliteration": "imy-r mšꜥ",
+        "anglicised": "imy-er meshꜥ",
+        "translation": "The General (lit. \"Overseer of the army\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Source line 312 'ṯhe Generꜥl' is the same OCR/MdC over-normalisation artifact (t→ṯ, a→ꜥ). Intended English is 'The General' with leading capital per Leprohon's convention."
+  },
+  "leprohon-13.32|birth_names": {
+    "value": [
+      {
+        "transliteration": "ib iꜥ(w)",
+        "anglicised": "ib iꜥu",
+        "translation": "The quiet one (lit. \"whose heart/mind is washed\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Source line 409 'ṯhe ḳuiet one' is the same OCR/MdC over-normalisation artifact (t→ṯ, q→ḳ). Intended English is 'The quiet one' with leading capital per Leprohon's convention (cf. line 408 'The enduring one')."
+  },
+  "leprohon-13.35|birth_names": {
+    "value": [
+      {
+        "transliteration": "sꜥnḫ.n rꜥ swꜣḏ.tw",
+        "anglicised": "sankh.en ra, sewadj.tu",
+        "translation": "The one whom Re has sustained (when?) <He> was made to flourish",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon labels the row \"Throne and Birth names\" — a combined prenomen/nomen entry where fragmentary evidence prevents separation. The same string is emitted to both throne_names and birth_names."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Source line 441 reads 'Throne and Birth names: sꜥnḫ.n rꜥ swꜣḏ.tw ...'. The combined-label row must be emitted into both throne_names and birth_names lists per chunk-4 convention. Agent a wrongly returned an empty list (drops a real entry). Agents b and c are factually equivalent; b's source_note phr"
+  },
+  "leprohon-13.51|throne_names": {
+    "value": [
+      {
+        "transliteration": "[///] ms rꜥ",
+        "anglicised": "/// mes rꜥ",
+        "translation": "The one whom Re bore (?)",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [
+          "Turin 8,21"
+        ],
+        "source_note": "Ramesside-attested only — no contemporary attestation per Leprohon's headword asterisk."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Source line 530 'ṯhe one whom Re bore (?)' is the same OCR/MdC over-normalisation artifact (t→ṯ). Intended English is 'The one whom Re bore (?)' with leading capital."
+  },
+  "leprohon-13.52|birth_names": {
+    "value": [
+      {
+        "transliteration": "ibi",
+        "anglicised": "ibi",
+        "translation": "The kid (lit. \"young goat\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [
+          "Turin 8,22"
+        ],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'b']. Basis (arbiter d): Two issues. (1) Translation: source line 536 'ṯhe kid' is the OCR/MdC artifact for 'The kid'. (2) attested_in: footnote marker '119' is printed on line 537 immediately after the birth-name line; footnote 119 (line 559-560) reads 'Turin 8,22'. The footnote attaches to the birth name entry. Agent b co"
+  },
+  "leprohon-13.54|display_name": {
+    "value": "Se /// Kare",
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Source line 544 SMALLCAP headword reads 's E /// Kar E*121'. Un-SMALLCAP-ing per the chunk-5 prompt rule 'Headword with fragmentary-reading markers (`[...]`, `////`): preserve verbatim in display_name' yields 'Se /// Kare' with the spaces around the wildcard preserved and Title-Case applied to the l"
+  },
+  "leprohon-19.02|horus_names": {
+    "value": [
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ m wꜣst sꜥnḫ tꜣwy",
+        "anglicised": "ka nakht kha em waset, sankh tawy",
+        "translation": "The victorious bull who has appeared in Thebes and sustained the Two Lands",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt mry rꜥ",
+        "anglicised": "ka nakht mery ra",
+        "translation": "Victorious bull, beloved of Re",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [
+          "Barque Stand, Avaris"
+        ],
+        "source_note": "KRI I, 232–34; the quartzite stand, erected in the area of Khatâna-Qantir, is dedicated to the god Seth. The names are found on the right side of the upper register of text, from a scene showing the king tying the symbols of Upper and Lower Egypt together; see Habachi 1974, 97, fig. 2."
+      },
+      {
+        "transliteration": "kꜣ nḫt dr ḫꜣswt m nḫtw.f",
+        "anglicised": "ka nakht der khasut em nakhtu.ef",
+        "translation": "The victorious bull who has repelled foreign lands with his victories",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [
+          "Obelisk, Heliopolis (main text, south face)"
+        ],
+        "source_note": "KRI I, 118–20; PM VII, 409 (2). The east face of the obelisk was inscribed for Ramses II."
+      },
+      {
+        "transliteration": "kꜣ nḫt mry rꜥ mꜣꜥt",
+        "anglicised": "ka nakht mery ra maat",
+        "translation": "Victorious bull, beloved of Re and Maat",
+        "variant_index": 4,
+        "is_variant": true,
+        "attested_in": [
+          "Obelisk, Heliopolis (main text, west face)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ḥtp ḥr mꜣꜥt",
+        "anglicised": "ka nakht hetep her maat",
+        "translation": "The victorious bull who is satisfied with Maat",
+        "variant_index": 5,
+        "is_variant": true,
+        "attested_in": [
+          "Obelisk, Heliopolis (main text, north face)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt mitt mnṯw",
+        "anglicised": "ka nakht mitet mentju",
+        "translation": "The victorious bull and the (very) likeness of Montu",
+        "variant_index": 6,
+        "is_variant": true,
+        "attested_in": [
+          "Obelisk, Heliopolis (base scene, west face)"
+        ],
+        "source_note": "The Theban war god."
+      },
+      {
+        "transliteration": "kꜣ nḫt sꜣ itmw",
+        "anglicised": "ka nakht sa itemu",
+        "translation": "The victorious bull and the son of Atum",
+        "variant_index": 7,
+        "is_variant": true,
+        "attested_in": [
+          "Obelisk, Heliopolis (base scene, north face)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ m ḥḏt mry rꜥ",
+        "anglicised": "ka nakht kha em hedjet, mery ra",
+        "translation": "The victorious bull who has appeared in the White Crown, the beloved of Re",
+        "variant_index": 8,
+        "is_variant": true,
+        "attested_in": [
+          "Temple, Kanais"
+        ],
+        "source_note": "KRI I, 70–71; Kanais is in the Wadi Mia, Eastern Desert, east of Edfu. As is often the case, the king's original titulary is found on the temple's main texts; the additional names given here were carved on the pillars in the main hall; see KRI I, 71:14 and the plan in PM VII, 322."
+      },
+      {
+        "transliteration": "kꜣ nḫt ꜥꜣ-šfyt mry rꜥ",
+        "anglicised": "ka nakht aa shefyt, mery ra",
+        "translation": "The victorious bull, great of majesty and beloved of Re",
+        "variant_index": 9,
+        "is_variant": true,
+        "attested_in": [
+          "Temple, Kanais"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ḳꜣ-ḥḏt mry mꜣꜥt",
+        "anglicised": "ka nakht qa hedjet, mery maat",
+        "translation": "Victorious bull, (whose) White Crown is high, the beloved of Maat",
+        "variant_index": 10,
+        "is_variant": true,
+        "attested_in": [
+          "Temple, Kanais"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt sḫpr tꜣwy",
+        "anglicised": "ka nakht sekheper tawy",
+        "translation": "The victorious bull who has created the Two Lands",
+        "variant_index": 11,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple"
+        ],
+        "source_note": "KRI I, 134:12."
+      },
+      {
+        "transliteration": "kꜣ nḫt sḫm-pḥty",
+        "anglicised": "ka nakht sekhem pehty",
+        "translation": "Victorious bull, powerful of might",
+        "variant_index": 12,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple"
+        ],
+        "source_note": "KRI I, 185:8."
+      },
+      {
+        "transliteration": "kꜣ nḫt ꜥꜣ-ḫpš",
+        "anglicised": "ka nakht aa khepesh",
+        "translation": "Victorious bull, great of strong arm",
+        "variant_index": 13,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple"
+        ],
+        "source_note": "KRI I, 185:10."
+      },
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ-ḫꜥw",
+        "anglicised": "ka nakht kha khau",
+        "translation": "Victorious bull, the (very) appearance of appearances",
+        "variant_index": 14,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple"
+        ],
+        "source_note": "KRI I, 185:12."
+      },
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ m wꜣst sꜥnḫ tꜣwy",
+        "anglicised": "ka nakht kha em waset, sankh tawy",
+        "translation": "The victorious bull who has appeared in Thebes and sustained the Two Lands",
+        "variant_index": 15,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — King's chapel (a)"
+        ],
+        "source_note": "Abydos, Great Temple, Seven Chapels. For the sake of completeness, Leprohon gives all names carved on each chapel's walls. Sometimes names are borrowed from other elements (e.g. original Two Ladies or Golden Horus as Horus). KRI I, 147–62. KRI I, 147–49."
+      },
+      {
+        "transliteration": "kꜣ nḫt wḥm mswt",
+        "anglicised": "ka nakht wehem mesut",
+        "translation": "The victorious bull who has renewed births",
+        "variant_index": 16,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — King's chapel (b)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt sḫm-ḫpš",
+        "anglicised": "ka nakht sekhem khepesh",
+        "translation": "The victorious bull and strong-armed one",
+        "variant_index": 17,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — King's chapel (c)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "[kꜣ nḫt wḥm] ḫꜥw",
+        "anglicised": "[ka nakht wehem] khau",
+        "translation": "The victorious bull who has repeated appearances",
+        "variant_index": 18,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — King's chapel (d)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "////",
+        "anglicised": "////",
+        "translation": "(destroyed)",
+        "variant_index": 19,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — King's chapel (e)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt [ḫꜥ m wꜣst sꜥnḫ tꜣwy]",
+        "anglicised": "ka nakht [kha em waset, sankh tawy]",
+        "translation": "The victorious bull [who has appeared in Thebes and sustained the Two Lands]",
+        "variant_index": 20,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Ptah (a)"
+        ],
+        "source_note": "KRI I, 149–50. Destroyed but can be reconstructed because the original name appears in every first instance in these chapels."
+      },
+      {
+        "transliteration": "kꜣ nḫt [wḥm mswt] sḫm-ḫpš",
+        "anglicised": "ka nakht [wehem mesut] sekhem khepesh",
+        "translation": "The victorious bull [who has renewed births], the strong-armed one",
+        "variant_index": 21,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Ptah (b)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt wḥm ḫꜥw <dr> pḏwt 9",
+        "anglicised": "ka nakht wehem khau, <der> pedjut 9",
+        "translation": "The victorious bull who has repeated appearances and <repelled> the Nine Bows",
+        "variant_index": 22,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Ptah (c)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt wsr-pḏwt",
+        "anglicised": "ka nakht weser pedjut",
+        "translation": "The victorious bull, strong of troops",
+        "variant_index": 23,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Ptah (d)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt wꜣḥ-nsyt",
+        "anglicised": "ka nakht wah nesyt",
+        "translation": "The victorious bull, enduring of kingship",
+        "variant_index": 24,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Ptah (e)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "[kꜣ nḫt ḫꜥ m wꜣst sꜥnḫ tꜣwy]",
+        "anglicised": "[ka nakht kha em waset, sankh tawy]",
+        "translation": "[The victorious bull who has appeared in Thebes and sustained the Two Lands]",
+        "variant_index": 25,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Re-Harakhty (a)"
+        ],
+        "source_note": "KRI I, 151–52."
+      },
+      {
+        "transliteration": "[kꜣ nḫt] mry [rꜥ?]",
+        "anglicised": "[ka nakht] mery [ra?]",
+        "translation": "[The victorious bull], beloved of [Re?]",
+        "variant_index": 26,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Re-Harakhty (b)"
+        ],
+        "source_note": "This is Kitchen's suggested reconstruction (1993, 127), which would be expected in a chapel dedicated to Re-Harakhty, especially given the two following divine names."
+      },
+      {
+        "transliteration": "[kꜣ nḫt] sꜣ ḫpri",
+        "anglicised": "[ka nakht], sa khepri",
+        "translation": "Victorious bull, the son of Khepri",
+        "variant_index": 27,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Re-Harakhty (c)"
+        ],
+        "source_note": "The early morning manifestation of the sun god."
+      },
+      {
+        "transliteration": "kꜣ nḫt tit rꜥ itmw",
+        "anglicised": "ka nakht tit ra itmu",
+        "translation": "Victorious bull, the (very) image of Re-Atum",
+        "variant_index": 28,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Re-Harakhty (d)"
+        ],
+        "source_note": "The evening manifestation of the sun god."
+      },
+      {
+        "transliteration": "kꜣ nḫt ir.n rꜥ",
+        "anglicised": "ka nakht ir.en ra",
+        "translation": "Victorious bull, begotten of Re",
+        "variant_index": 29,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Re-Harakhty (e)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ m wꜣst sꜥnḫ tꜣwy",
+        "anglicised": "ka nakht kha em waset, sankh tawy",
+        "translation": "The victorious bull who has appeared in Thebes and sustained the Two Lands",
+        "variant_index": 30,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Amun (a)"
+        ],
+        "source_note": "KRI I, 153–54."
+      },
+      {
+        "transliteration": "kꜣ nḫt sꜣ imn",
+        "anglicised": "ka nakht sa imen",
+        "translation": "The victorious bull and son of Amun",
+        "variant_index": 31,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Amun (b)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt tit imn",
+        "anglicised": "ka nakht tit imen",
+        "translation": "The victorious bull and the (very) image of Amun",
+        "variant_index": 32,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Amun (c)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt stp.n imn",
+        "anglicised": "ka nakht setep.en imen",
+        "translation": "Victorious bull, whom Amun has chosen",
+        "variant_index": 33,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Amun (d)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt mr.n imn",
+        "anglicised": "ka nakht mer.en imen",
+        "translation": "Victorious bull, whom Amun has loved",
+        "variant_index": 34,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Amun (e)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "[kꜣ nḫt ḫꜥ m wꜣst sꜥnḫ] tꜣwy",
+        "anglicised": "[ka nakht kha em waset, sankh] tawy",
+        "translation": "[The victorious bull who has appeared in Thebes and sustained] the Two Lands",
+        "variant_index": 35,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Osiris (a)"
+        ],
+        "source_note": "KRI I, 154–57."
+      },
+      {
+        "transliteration": "[kꜣ nḫt wḥm] mswt",
+        "anglicised": "[ka nakht wehem] mesut",
+        "translation": "[The victorious bull who has renewed] births",
+        "variant_index": 36,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Osiris (b)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "[kꜣ nḫt wḥm ḫꜥw]",
+        "anglicised": "[ka nakht wehem khau]",
+        "translation": "[The victorious bull who has repeated appearances]",
+        "variant_index": 37,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Osiris (c)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "[kꜣ nḫt sꜣ wsir]",
+        "anglicised": "[ka nakht sa wesir]",
+        "translation": "[The victorious bull and son of Osiris]",
+        "variant_index": 38,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Osiris (d)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ///",
+        "anglicised": "ka nakht ///",
+        "translation": "The victorious bull and ///",
+        "variant_index": 39,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Osiris (e)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ m wꜣst sꜥnḫ tꜣwy",
+        "anglicised": "ka nakht kha em waset, sankh tawy",
+        "translation": "The victorious bull who has appeared in Thebes and sustained the Two Lands",
+        "variant_index": 40,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Isis (a)"
+        ],
+        "source_note": "KRI I, 157–59."
+      },
+      {
+        "transliteration": "kꜣ nḫt wḥm mswt",
+        "anglicised": "ka nakht wehem mesut",
+        "translation": "The victorious bull who has renewed births",
+        "variant_index": 41,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Isis (b)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt wḥm ḫꜥw",
+        "anglicised": "ka nakht wehem khau",
+        "translation": "The victorious bull who has repeated appearances",
+        "variant_index": 42,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Isis (c)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt sꜣ wsir",
+        "anglicised": "ka nakht sa wesir",
+        "translation": "The victorious bull and son of Osiris",
+        "variant_index": 43,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Isis (d)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt nḏty rꜥ",
+        "anglicised": "ka nakht nedjty ra",
+        "translation": "The victorious bull and protector of Re",
+        "variant_index": 44,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Isis (e)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ m wꜣst sꜥnḫ tꜣwy",
+        "anglicised": "ka nakht kha em waset, sankh tawy",
+        "translation": "The victorious bull who has appeared in Thebes and sustained the Two Lands",
+        "variant_index": 45,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Horus (a)"
+        ],
+        "source_note": "KRI I, 159–62."
+      },
+      {
+        "transliteration": "kꜣ nḫt wḥm mswt",
+        "anglicised": "ka nakht wehem mesut",
+        "translation": "The victorious bull who has renewed births",
+        "variant_index": 46,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Horus (b)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt wḥm ḫꜥw",
+        "anglicised": "ka nakht wehem khau",
+        "translation": "The victorious bull who has repeated appearances",
+        "variant_index": 47,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Horus (c)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt wsr-kꜣw",
+        "anglicised": "ka nakht weser kau",
+        "translation": "The victorious bull, who is strong of kas",
+        "variant_index": 48,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Horus (d)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt wr-nsyt",
+        "anglicised": "ka nakht wer nesyt",
+        "translation": "The victorious bull, who is great of kingship",
+        "variant_index": 49,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Horus (e)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt ḫꜥ m ḥḏt",
+        "anglicised": "ka nakht kha em hedjet",
+        "translation": "The victorious bull who has appeared in the White Crown",
+        "variant_index": 50,
+        "is_variant": true,
+        "attested_in": [
+          "Abydos, Great Temple, Seven Chapels — Chapel of Horus, Ceiling Dedication"
+        ],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+  },
+  "leprohon-19.03|birth_names": {
+    "value": [
+      {
+        "transliteration": "rꜥ ms sw",
+        "anglicised": "ra mes su",
+        "translation": "Re is the one who bore him",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "s-sw",
+        "anglicised": "se-su",
+        "translation": "(Shortened form of the Birth name)",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Additionally, a shortened form of the Birth name appears occasionally."
+      },
+      {
+        "transliteration": "wr-mnw",
+        "anglicised": "wer menu",
+        "translation": "Great of monuments",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      },
+      {
+        "transliteration": "mry imn",
+        "anglicised": "mery imen",
+        "translation": "Beloved of Amun",
+        "variant_index": 4,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      },
+      {
+        "transliteration": "mrwty mi itmw",
+        "anglicised": "meruty mi itemu",
+        "translation": "The beloved one, like Atum",
+        "variant_index": 5,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      },
+      {
+        "transliteration": "nṯri ḥḳꜣ iwnw",
+        "anglicised": "netjeri, heqa iunu",
+        "translation": "The divine one and ruler of Heliopolis",
+        "variant_index": 6,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 3/3 arbiters converged. Per-arbiter matches_agent: ['a']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+  },
+  "leprohon-19.03|golden_horus_names": {
+    "value": [
+      {
+        "transliteration": "wsr-rnpwt ꜥꜣ-nḫtw",
+        "anglicised": "weser renput, aa nakhtu",
+        "translation": "Rich in years and great of victories",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "di kmt m ršwt m šnyt.f imyw m ḥꜥꜥ m mrwt.f",
+        "anglicised": "di kemet em reshwet em shenyt.ef, imyu em haa em merut.ef",
+        "translation": "Who caused Egypt to delight in his company; those who are in it continually rejoice because of love of him",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "An additional phrase occasionally added to the original Golden Horus name. Lit. \"to be in joy in his entourage.\""
+      },
+      {
+        "transliteration": "ꜥꜣ-ḫpš mry tꜣwy",
+        "anglicised": "aa khepesh, mery tawy",
+        "translation": "Great of effectiveness, beloved of the Two Lands",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [
+          "Karnak Cachette"
+        ],
+        "source_note": "KRI II, 586:10"
+      },
+      {
+        "transliteration": "wꜥf bštw",
+        "anglicised": "waf beshtu",
+        "translation": "Who has subdued the rebellious ones",
+        "variant_index": 4,
+        "is_variant": true,
+        "attested_in": [
+          "Derr temple, Nubia"
+        ],
+        "source_note": "KRI II, 740:2"
+      },
+      {
+        "transliteration": "wꜥf ḫꜣswt dr bštw",
+        "anglicised": "waf khasut, der beshtu",
+        "translation": "Who has subdued foreign countries and repelled the rebellious ones",
+        "variant_index": 5,
+        "is_variant": true,
+        "attested_in": [
+          "Luxor obelisk"
+        ],
+        "source_note": "KRI II, 599:5–6"
+      },
+      {
+        "transliteration": "wr-fꜣwt sḫm-pḥty",
+        "anglicised": "wer fawet, sekhem pehty",
+        "translation": "Great of splendor and powerful of strength",
+        "variant_index": 6,
+        "is_variant": true,
+        "attested_in": [
+          "Luxor obelisk"
+        ],
+        "source_note": "KRI II, 603:2–3"
+      },
+      {
+        "transliteration": "wr-nḫtw ḥr ḫꜣst nbt",
+        "anglicised": "wer nakhtu her khaset nebet",
+        "translation": "Great of victories in every foreign country",
+        "variant_index": 7,
+        "is_variant": true,
+        "attested_in": [
+          "Luxor obelisk"
+        ],
+        "source_note": "KRI II, 602:16"
+      },
+      {
+        "transliteration": "wḫꜣ mi imy wꜣst",
+        "anglicised": "wekha, mi imy waset",
+        "translation": "A (veritable) pillar, like the one who is in Thebes",
+        "variant_index": 8,
+        "is_variant": true,
+        "attested_in": [
+          "Luxor obelisk"
+        ],
+        "source_note": "KRI II, 599:3; for wxA comparing the king to a pillar, i.e., a support for the sky, see Grimal 1986, 240 and n. 758."
+      },
+      {
+        "transliteration": "wsr-rnpwt ꜥꜣ-nsyt mi itmw ity ms nṯrw sḫpr tꜣwy",
+        "anglicised": "weser renput, aa nesyt mi itemu, ity, mes netjeru, sekheper tawy",
+        "translation": "Rich in years and great of kingship like Atum, the sovereign whom the gods fashioned, the one who has fostered the Two Lands",
+        "variant_index": 9,
+        "is_variant": true,
+        "attested_in": [
+          "South Girdle Wall, Karnak"
+        ],
+        "source_note": "KRI II, 583:4"
+      },
+      {
+        "transliteration": "wsr-ḫpš",
+        "anglicised": "weser khepesh",
+        "translation": "Strong of might",
+        "variant_index": 10,
+        "is_variant": true,
+        "attested_in": [
+          "Derr temple, Nubia"
+        ],
+        "source_note": "KRI II, 740:6"
+      },
+      {
+        "transliteration": "wsr-ḫpš mry tꜣwy",
+        "anglicised": "weser khepesh, mery tawy",
+        "translation": "Strong of might, beloved of the Two Lands",
+        "variant_index": 11,
+        "is_variant": true,
+        "attested_in": [
+          "Luxor obelisk; Luxor pylon"
+        ],
+        "source_note": "KRI II, 599:8; KRI II, 352:13"
+      },
+      {
+        "transliteration": "wsr-ḫpš dr pḏwt 9",
+        "anglicised": "weser khepesh, der pedjut 9",
+        "translation": "The one great of strength, who has repelled the Nine Bows",
+        "variant_index": 12,
+        "is_variant": true,
+        "attested_in": [
+          "Bentresh Stela"
+        ],
+        "source_note": "KRI II, 284:14"
+      },
+      {
+        "transliteration": "ḥḥy ꜣḫwt n ms sw",
+        "anglicised": "hehy akhut en mes su",
+        "translation": "Who seeks benefits for the one who bore him",
+        "variant_index": 13,
+        "is_variant": true,
+        "attested_in": [
+          "Luxor pylon"
+        ],
+        "source_note": "KRI II, 605:12"
+      },
+      {
+        "transliteration": "sḫm-ḫpš dr pḏwt 9",
+        "anglicised": "sekehm khepesh, der pedjut 9",
+        "translation": "The powerful of arm/sword, who has repelled the Nine Bows",
+        "variant_index": 14,
+        "is_variant": true,
+        "attested_in": [
+          "Luxor pylon"
+        ],
+        "source_note": "KRI II, 605:15–16"
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 3/3 arbiters converged. Per-arbiter matches_agent: ['a']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+  },
+  "leprohon-19.04|horus_names": {
+    "value": [
+      {
+        "transliteration": "kꜣ nḫt ḥꜥ m mꜣꜥt",
+        "anglicised": "ka nakht ha em maat",
+        "translation": "Victorious bull, who has rejoiced in Maat",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Gauthier 1914, 113–26; von Beckerath 1999, 156–59. The titulary has been discussed in Iskander 2002, 247–58."
+      },
+      {
+        "transliteration": "ḥnk sw n rꜥ m ẖrt-hrw",
+        "anglicised": "henek su en ra em kheret-heru",
+        "translation": "(Victorious bull, who has rejoiced in Maat), Who offers it (Maat) to Re in the course of every day",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [
+          "passim"
+        ],
+        "source_note": "A phrase often added to the original Horus name."
+      },
+      {
+        "transliteration": "bꜣ n rꜥ ḏt itmw",
+        "anglicised": "ba en ra, djet itemu",
+        "translation": "The spirit of Re and (the very) body of Atum",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [
+          "Heliopolis obelisk (face 1)"
+        ],
+        "source_note": "Found at the site of Qaha, in the south-central Delta; for the text, see KRI IV, 31:1–13. One of the faces of the obelisk had been cut away; it is possible that this now-destroyed side contained the original Horus name of the king. See Daressy 1920; Sourouzian 1989, no. 16, pp. 60–61, pl. 11a; and Iskander 2002, 161, no. 3.5.3."
+      },
+      {
+        "transliteration": "ḥtp ḥr mꜣꜥt mi tꜣ-ṯnn",
+        "anglicised": "hetep her maat mi ta-tjenen",
+        "translation": "Satisfied with Maat, like Ta-tjenen",
+        "variant_index": 4,
+        "is_variant": true,
+        "attested_in": [
+          "Heliopolis obelisk (face 1)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "nḏ ḥr it.f mity mꜣꜥt",
+        "anglicised": "nedj her it.ef, mity maat",
+        "translation": "Protector of his father, the likeness of Maat",
+        "variant_index": 5,
+        "is_variant": true,
+        "attested_in": [
+          "Heliopolis obelisk (face 2)"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "kꜣ nḫt pr m rꜥ",
+        "anglicised": "ka nakht per em ra",
+        "translation": "Victorious bull, who has emerged from Re",
+        "variant_index": 6,
+        "is_variant": true,
+        "attested_in": [
+          "Heliopolis obelisk (face 4)"
+        ],
+        "source_note": "Or \"as.\""
+      },
+      {
+        "transliteration": "kꜣ nḫt dr pḏwt 9",
+        "anglicised": "ka nakht der pedjut 9",
+        "translation": "Victorious bull who has repelled the Nine Bows",
+        "variant_index": 7,
+        "is_variant": true,
+        "attested_in": [
+          "Memphis palace (lintel)"
+        ],
+        "source_note": "For the texts, see KRI IV, 54–55. KRI IV, 54:11."
+      },
+      {
+        "transliteration": "nb ḥbw ḫꜥw",
+        "anglicised": "neb hebu khau",
+        "translation": "Possessor of Appearance Festivals",
+        "variant_index": 8,
+        "is_variant": true,
+        "attested_in": [
+          "Memphis palace (doorway into pillared hall)"
+        ],
+        "source_note": "KRI IV, 54:14. Or \"possessor of festivals and crowns.\""
+      },
+      {
+        "transliteration": "kꜣ nḫt nsw tꜣwy",
+        "anglicised": "ka nakht nesu tawy",
+        "translation": "Victorious bull and king of the Two Lands",
+        "variant_index": 9,
+        "is_variant": true,
+        "attested_in": [
+          "Memphis palace (side door)"
+        ],
+        "source_note": "KRI IV, 54:16."
+      },
+      {
+        "transliteration": "kꜣ nḫt sꜣ rꜥ",
+        "anglicised": "ka nakht sa ra",
+        "translation": "Victorious bull, the son of Re",
+        "variant_index": 10,
+        "is_variant": true,
+        "attested_in": [
+          "Memphis palace (side door)"
+        ],
+        "source_note": "KRI IV, 55:1."
+      },
+      {
+        "transliteration": "kꜣ nḫt ꜣḫ n itmw",
+        "anglicised": "ka nakht akh en itemu",
+        "translation": "Victorious bull, beneficial to Atum",
+        "variant_index": 11,
+        "is_variant": true,
+        "attested_in": [
+          "Dyad from Kafr Matbûl (near Xois)"
+        ],
+        "source_note": "KRI IV, 50:13."
+      },
+      {
+        "transliteration": "kꜣ nḫt sꜣ imn",
+        "anglicised": "ka nakht sa imen",
+        "translation": "Victorious bull, the son of Amun",
+        "variant_index": 12,
+        "is_variant": true,
+        "attested_in": [
+          "Tanis statue"
+        ],
+        "source_note": "KRI IV, 43:9."
+      },
+      {
+        "transliteration": "kꜣ nḫt mꜣi ḥbn.n.f",
+        "anglicised": "ka nakht mai heben.en.ef",
+        "translation": "Victorious bull, a lion who has triumphed",
+        "variant_index": 13,
+        "is_variant": true,
+        "attested_in": [
+          "Amada Temple, Nubia"
+        ],
+        "source_note": "KRI IV, 1:8."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+  },
+  "leprohon-20.01|nebty_names": {
+    "value": [
+      {
+        "transliteration": "twt ḫꜥw mi tꜣ-ṯnn",
+        "anglicised": "tut-khau mi ta-tjenen",
+        "translation": "The (very) image of appearances like Ta-tjenen",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source p.147 prints `twt xaw mi tA-Tnn (tut-khau mi ta-tjenen)` with hyphen; agents a/b match the hyphenated anglicisation, c omits hyphen. `attested_in` should be [] because 'Original titulary' is a section label, not a monument locus — agent b's inclusion is a category error. Agent a is fully corr"
+  },
+  "leprohon-20.02|horus_names": {
+    "value": [
+      {
+        "transliteration": "kꜣ nḫt ꜥꜣ-nsyt",
+        "anglicised": "ka nakht aa nesyt",
+        "translation": "Victorious bull, great of kingship",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Gauthier 1914, 156–78; von Beckerath 1999, 164–67. For a discussion of Ramses III's titulary, see Grandet 1993, 52–53."
+      },
+      {
+        "transliteration": "kꜣ pḥty sḫm-ḫpš nḫt-ꜥ nb nrw m tꜣw ḫꜣswt fnḫw tmḥw",
+        "anglicised": "ka pehty, sekhem khepesh, nakht-a, neb neru em tau khasut fenkhu temehu",
+        "translation": "Powerful bull, potent of sword, strong-armed, lord of dread in the lowlands and the highlands of the Fenkhu-Asiatics and the Temehu-Libyans",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, southern end of the First Court"
+        ],
+        "source_note": "Additional Horus name (Horus 2). KRI V, 49:14."
+      },
+      {
+        "transliteration": "kꜣ nḫt mꜣi pḥty nḫt-ꜥ nb ḫpš ḥꜣḳ sttiw",
+        "anglicised": "ka nakht mai pehty, nakht a, neb khepesh, haq setetiu",
+        "translation": "Victorious bull and powerful lion, strong-armed, the lord of strength who has captured the Asiatics",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, western end of the First Court, exterior of the Second Pylon"
+        ],
+        "source_note": "Additional Horus name (Horus 3). KRI V, 37:10."
+      },
+      {
+        "transliteration": "kꜣ nḫt mnḫ-mnw sḥtp nb-r-ḏr m nꜣy.f ꜣḫwt",
+        "anglicised": "ka nakht menekh menu, sehetep neb-er-djer em nay.ef akhut",
+        "translation": "Victorious bull, splendid of monuments, who has satisfied the Lord of All with his benefactions",
+        "variant_index": 4,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, eastern end of the Second Court"
+        ],
+        "source_note": "Additional Horus name (Horus 4). A designation of the god Re (Lord of All). KRI V, 314:8."
+      },
+      {
+        "transliteration": "kꜣ nḫt swsḫ kmt wsr-ḫpš nḫt-ꜥ smꜣ ṯḥnw",
+        "anglicised": "ka nakht sewesekh kemet, weser khepesh, nakht a, sema tjehenu",
+        "translation": "The victorious bull who has widened (the boundaries of) Egypt, the one powerful of sword and strong of arm who has slaughtered the Libyans",
+        "variant_index": 5,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, northern end of the Second Court"
+        ],
+        "source_note": "Additional Horus name (Horus 5). KRI V, 20:14."
+      },
+      {
+        "transliteration": "kꜣ nḫt-ꜥ dm ḥnwty mn-ib wr-pḥty ḥr bꜣwy n ḳnw",
+        "anglicised": "ka nakht-a, dem henuty, men ib, wer pehty her bawy en qenu",
+        "translation": "The strong-armed bull who has sharpened (his) two horns, decisive and great of strength on the battlefield of bravery",
+        "variant_index": 6,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, northern end of the Second Court"
+        ],
+        "source_note": "Additional Horus name (Horus 6). Lit. \"strong-minded.\" KRI V, 315:11."
+      },
+      {
+        "transliteration": "ꜥšꜣ-mnw",
+        "anglicised": "asha menu",
+        "translation": "With many monuments",
+        "variant_index": 7,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, eastern end of the Second Court"
+        ],
+        "source_note": "Additional Horus name (Horus 7). Lit. \"the one of many monuments.\" KRI V, 316:6."
+      },
+      {
+        "transliteration": "sḫm-pḥty hd ḥfnw dḫ nꜣ pḥw sw dmḏ (ẖr) ṯbwy.f(y)",
+        "anglicised": "sekhem pehty, hed hefnu, dekh na pehu su, demedj (kher) tjebwy.fy",
+        "translation": "Powerful of strength, who has attacked hundreds of thousands, overthrown those who have attacked him, and gathered (them) (under) his sandals",
+        "variant_index": 8,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, exterior north wall of the Second Court"
+        ],
+        "source_note": "Additional Horus name (Horus 8). KRI V, 30:14."
+      },
+      {
+        "transliteration": "ꜥn ḥr srḫ mi sꜣ ꜣst",
+        "anglicised": "an her serekh mi sa aset",
+        "translation": "Beautiful on the throne like the son of Isis",
+        "variant_index": 9,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, various monuments found outside the Royal Palace"
+        ],
+        "source_note": "Additional Horus name (Horus 9). Hölscher 1941, pl. 32 (a)."
+      },
+      {
+        "transliteration": "bity wr-mnw wr-biꜣwt mḥ ipt-swt ḥr rn.f",
+        "anglicised": "bity, wer menu, wer biaut, meh ipet-sut her ren.ef",
+        "translation": "The king of Lower Egypt, great of monuments and great of wonders, who has filled Ipet-sut with his renown",
+        "variant_index": 10,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, various monuments found outside the Royal Palace"
+        ],
+        "source_note": "Additional Horus name (Horus 10). Or perhaps simply \"The reigning king,\" as suggested in the introduction; see Quirke 1986, 123–24. Lit. \"name.\" Hölscher 1941, pl. 32 (a)."
+      },
+      {
+        "transliteration": "nb ꜥḥꜥw mi it.f rꜥ",
+        "anglicised": "neb ahau mi it.ef ra",
+        "translation": "Lord of a lifetime like his father Re",
+        "variant_index": 11,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, various monuments found outside the Royal Palace"
+        ],
+        "source_note": "Additional Horus name (Horus 11). Hölscher 1941, pl. 32 (a)."
+      },
+      {
+        "transliteration": "sꜣ imn",
+        "anglicised": "sa imen",
+        "translation": "Son of Amun",
+        "variant_index": 12,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, various monuments found outside the Royal Palace"
+        ],
+        "source_note": "Additional Horus name (Horus 12). Hölscher 1941, pl. 32 (a)."
+      },
+      {
+        "transliteration": "sꜥꜣ ḫꜥw mi ꜣḫty wbn.f ꜥnḫ rḫyt",
+        "anglicised": "saa khau mi akhty weben.ef, ankh rekhyet",
+        "translation": "Who has magnified (his) appearances like the One of the Two Horizons when he rises, the (very) life of the rekhyet-people",
+        "variant_index": 13,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, various monuments found outside the Royal Palace"
+        ],
+        "source_note": "Additional Horus name (Horus 13). Lit. \"made great.\" Hölscher 1941, pl. 32 (a)."
+      },
+      {
+        "transliteration": "nb ḥbw-sd mi tꜣ-ṯnn",
+        "anglicised": "neb hebu-sed mi ta-tjenen",
+        "translation": "Possessor of Sed festivals like Ta-tjenen",
+        "variant_index": 14,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, various monuments found outside the Royal Palace"
+        ],
+        "source_note": "Additional Horus name (Horus 14). Hölscher 1941, pl. 35 (b)."
+      },
+      {
+        "transliteration": "ṯḥn-ḫꜥw",
+        "anglicised": "tjehen-khau",
+        "translation": "Dazzling of appearances",
+        "variant_index": 15,
+        "is_variant": true,
+        "attested_in": [
+          "Medinet Habu, various monuments found outside the Royal Palace"
+        ],
+        "source_note": "Additional Horus name (Horus 15). Hölscher 1941, pl. 35 (b)."
+      },
+      {
+        "transliteration": "ꜥn n nsw mi itmw mr.tw.f ꜣb.tw.f mi ḥm n rꜥ",
+        "anglicised": "an en nesu mi itemu, mer.tu.ef ab.tu.ef mi hem en ra",
+        "translation": "Beautiful as king like Atum, he is loved and wished for like the majesty of Re",
+        "variant_index": 16,
+        "is_variant": true,
+        "attested_in": [
+          "Karnak, Ramses III's temple in the precinct of Mut"
+        ],
+        "source_note": "Additional Horus name (Horus 16). KRI V, 289:3."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Agent a is most faithful to the source structure: physical locus belongs in `attested_in`, KRI/Hölscher publication references belong in `source_note`. The source distinguishes loci (e.g. 'northern end of the Second Court') from publication refs (footnoted KRI/Hölscher). Agent a uniquely preserves '"
+  },
+  "leprohon-20.09|throne_names": {
+    "value": [
+      {
+        "transliteration": "ḫpr mꜣꜥt rꜥ",
+        "anglicised": "kheper maat ra",
+        "translation": "The (very) manifestation of the Maat of Re",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "ḫpr mꜣꜥt n rꜥ",
+        "anglicised": "kheper maat en ra",
+        "translation": "The (very) manifestation of the Maat of Re",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Throne Name 2. The same as the original Throne name, with the added indirect genitive marker."
+      },
+      {
+        "transliteration": "mry imn",
+        "anglicised": "mery imen",
+        "translation": "Beloved of Amun",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Throne name."
+      },
+      {
+        "transliteration": "stp n rꜥ",
+        "anglicised": "setep en ra",
+        "translation": "Chosen by Re",
+        "variant_index": 4,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Throne name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source p.155 prints `stp n ra (setep en ra)` — agents a/c match 'setep en ra'; agent b's 'setep n ra' breaks the consistent `n` → 'en' anglicisation rule used throughout the chunk. attested_in for v1 is correctly [] in a/c; agent b incorrectly inserts 'Original titulary' (section label, not a locus)"
+  },
+  "leprohon-15.01|birth_names": {
+    "value": [
+      {
+        "transliteration": "ḥḳꜣ ḫꜣswt s-m-ḳ-n",
+        "anglicised": "heqa khasut semqen",
+        "translation": "The Ruler of Foreign Lands Semqen (\"He is my gift\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Leprohon labels as 'Title and name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching. Von Beckerath 1999, 116–17. For the rendering, see T. Schneider 1998, 137–38. The attribution of this king to the Fifteenth Dynasty is uncertain; see Ryholt 1997a, 383."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['c', 'none']. Basis (arbiter d): All three agents agree on data fields (translit, anglicised, translation per source p.81 line 30-31). Source-note ordering: PDF footnotes appear as fn.4 (Von Beckerath, headword) then fn.5 (rendering + Ryholt attribution). Agent C's narrative ordering follows the source-order of the footnotes (fn.4 "
+  },
+  "leprohon-15.01|throne_names": {
+    "value": [
+      {
+        "transliteration": "ḥḳꜣ ḫꜣswt s-m-ḳ-n",
+        "anglicised": "heqa khasut semqen",
+        "translation": "The Ruler of Foreign Lands Semqen (\"He is my gift\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Leprohon labels as 'Title and name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching. Von Beckerath 1999, 116–17. For the rendering, see T. Schneider 1998, 137–38. The attribution of this king to the Fifteenth Dynasty is uncertain; see Ryholt 1997a, 383."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['c', 'none']. Basis (arbiter d): Mirror of birth_names dual-emission for Semqen. Agent C's source-order narrative matches PDF footnote sequence (fn.4 Von Beckerath before fn.5 Schneider/Ryholt) and uses straight quotes."
+  },
+  "leprohon-15.02|birth_names": {
+    "value": [
+      {
+        "transliteration": "ḥḳꜣ ḫꜣswt ꜥpr-ꜥn-ti",
+        "anglicised": "heqa khasut aper-an-ti",
+        "translation": "The Ruler of Foreign Lands Aper-anati (\"the crew of [the goddess] Anat\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Leprohon labels as 'Title and name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching. Von Beckerath 1999, 116–17. For a discussion of the name, see T. Schneider 1998, 133."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['c', 'none']. Basis (arbiter d): All agents agree on data fields per source p.82 line 49-50. Source order: fn.6 (Von Beckerath, headword) then fn.7 (Schneider, name discussion). Agent C's source-ordered narrative matches the PDF footnote sequence and uses straight quotes."
+  },
+  "leprohon-15.02|throne_names": {
+    "value": [
+      {
+        "transliteration": "ḥḳꜣ ḫꜣswt ꜥpr-ꜥn-ti",
+        "anglicised": "heqa khasut aper-an-ti",
+        "translation": "The Ruler of Foreign Lands Aper-anati (\"the crew of [the goddess] Anat\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Leprohon labels as 'Title and name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching. Von Beckerath 1999, 116–17. For a discussion of the name, see T. Schneider 1998, 133."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['c', 'none']. Basis (arbiter d): Mirror of birth_names dual-emission for Aper-anati. Agent C's source-order narrative matches PDF footnote sequence."
+  },
+  "leprohon-15.05|throne_names": {
+    "value": [
+      {
+        "transliteration": "ꜥꜣ ḳn.n rꜥ",
+        "anglicised": "aa qen.en ra",
+        "translation": "The great one, whom Re has made brave",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Gauthier 1912, 139–43; von Beckerath 1999, 114–15."
+      },
+      {
+        "transliteration": "ꜥꜣ wsr rꜥ",
+        "anglicised": "aa weser ra",
+        "translation": "The great one, whom Re has made strong",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "ḥḳꜣ n ḥwt-wꜥrt ipp",
+        "anglicised": "heqa en hut-waret, ipep",
+        "translation": "The ruler of Avaris, Apophis",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Leprohon labels as 'Title and birth name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): STRUCTURE tie. Per chunk-7 prompt, 'Title and birth name' must dual-emit to BOTH throne_names and birth_names. Agents A and B include the dual-emission as variant 3; Agent C INCORRECTLY drops it and emits only 2 variants — a violation of the canonical rule. Between A and B: A's variant-1 source_note"
+  },
+  "leprohon-16.06|birth_names": {
+    "value": [
+      {
+        "transliteration": "nb iry r ꜣw",
+        "anglicised": "nb iry er au",
+        "translation": "The possessor of all",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Lit. \"what pertains to the length (of time or space).\""
+      },
+      {
+        "transliteration": "nb iry <r> ꜣw rꜥ",
+        "anglicised": "nb iry <er> au ra",
+        "translation": "The possessor of all (the things of) Re",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "The additional divine name is found in Turin 11,5, for which see KRI II, 842:13."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Source p.84 line 162 reads 'Birth 1: nb iry r ꜣw (nb iry er au)' — there IS a space between r and ꜣw. Agent A preserves the space; Agents B and C collapse to 'nb iry rꜣw' which contradicts the source MdC. Agent A's transliteration is correct. For the attested_in field, A and C agree on empty list (n"
+  },
+  "leprohon-17.18|birth_names": {
+    "value": [
+      {
+        "transliteration": "p(ꜣ) n ṯni",
+        "anglicised": "pa en tjeny",
+        "translation": "Pantjeny (\"The man of Thinis\")",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "See Ryholt 1997a, 316 and 392; and Allen in Ben-Tor et al. 1999, 52."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): All three agents agree on data fields per source p.89 line 381. Source_note: A and C use clean narrative form matching the footnote text verbatim (fn.57); B prefixes 'Per Leprohon fn. 57'. The substantive content is identical; A/C is more readable. Agent C uses straight quotes (matching downstream c"
+  },
+  "leprohon-17.22|birth_names": {
+    "value": [
+      {
+        "transliteration": "in it.f ꜥꜣ",
+        "anglicised": "in it.ef aa",
+        "translation": "Intef (\"the one whom his father brought forth\") the Great",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Or \"the Elder.\""
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): All agents agree on data fields per source p.90 line 427-428. Source_note: A and C use the bare footnote text (fn.62: 'Or the Elder.'); B prefixes 'Per Leprohon fn. 62'. Picking C for straight-quote consistency."
+  },
+  "leprohon-17.27|birth_names": {
+    "value": [
+      {
+        "transliteration": "ḏḥwty ꜥꜣ(.w)",
+        "anglicised": "djehuty aa(u)",
+        "translation": "Thoth is great",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "For the reading Djehuty (Thoth), which is written with the bread-loaf hieroglyph and has thus occasioned the rendering of the king's name as Taa or Tao, see Parlebas 1975."
+      },
+      {
+        "transliteration": "ḏḥwty ꜥꜣ(.w) ḳn",
+        "anglicised": "djehuty aa(u) qen",
+        "translation": "Tao (\"Thoth is great\") the Brave",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): All three agents agree on translit/anglicised/translation per source p.91 line 480-482. Source_note: A and C carry fn.70 verbatim on variant 1 and null on variant 2 (fn.70 attaches to Birth 1 in the source per superscript 70 placement); B uses 'Leprohon labels as Birth 1/2' but loses the null marker"
+  },
+  "leprohon-21.01|nebty_names": {
+    "value": [
+      {
+        "transliteration": "sḥtp nṯrw ḳd ḥwt.sn ir hrrt kꜣw.sn",
+        "anglicised": "sehetep netjeru, qed hut.sen, ir herreret kau.sen",
+        "translation": "The one who has satisfied the gods (by) building their temples and who has accomplished what pleases their kas",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [
+          "Original titulary"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "swꜥb bnbn mḥ sw m mnw sṯḥnt mi ꜣḫt im.s",
+        "anglicised": "sewab benben, meh su em menu setjehenet mi akhet im.es",
+        "translation": "The one who has purified the Benenet and filled it with monuments that gleam like the horizon which is within it",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [
+          "Additional names; temple of Khonsu, southern portion of the Karnak Temple complex"
+        ],
+        "source_note": "Two Ladies 2. bnbn written for bnnt, the temple of Khonsu at Karnak, where this text was found. For the identification, see von Beckerath 1999, 176 n. 2; and PM II2, 224."
+      },
+      {
+        "transliteration": "sḥb wꜣst m mnw wrw",
+        "anglicised": "seheb waset em menu weru",
+        "translation": "The one who has made Thebes festive with great monuments",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [
+          "Additional names; temple of Khonsu, southern portion of the Karnak Temple complex"
+        ],
+        "source_note": "Two Ladies 3."
+      },
+      {
+        "transliteration": "wsr-ḫpš ꜥnḫ tꜣwy",
+        "anglicised": "weser khepesh, ankh tawy",
+        "translation": "Powerful of arm, the (very) life of the Two Lands",
+        "variant_index": 4,
+        "is_variant": true,
+        "attested_in": [
+          "Additional names; temple of Khonsu, southern portion of the Karnak Temple complex"
+        ],
+        "source_note": "Two Ladies 4."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'b']. Basis (arbiter d): Agent b's attested_in tags ('Original titulary' for v1, 'Additional names; temple of Khonsu, southern portion of the Karnak Temple complex' for v2-v4) faithfully reproduce the source's section header on physical p.158 ('Additional names') combined with footnote 6: 'All from the temple of Khonsu, in "
+  },
+  "leprohon-21.02|source_citation": {
+    "value": {
+      "book": "Leprohon 2013",
+      "edition": "SBL Writings from the Ancient World 33",
+      "printed_page": 138,
+      "physical_pdf_page": 159
+    },
+    "rationale": "3-arbiter blind re-extraction was inconsistent with the OCR running header. Re-verified against chunk-p157-p173-pypdf.md: line 95 carries the 'p.138' running header; Smendes' section header (line 110) follows after it, putting the entry on printed page 138 / physical 159. Matches the pre-existing fix_rows.py SPOT_CORRECTION. Issue #128 post-arbiter manual override per /Users/philipp/code/hapi reading."
+  },
+  "leprohon-21.04|display_name": {
+    "value": "Pa-Seba-Kha-En-Niut I",
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source headword line 154: 'Pa -s Eba -KHa -En -niut  (Psus Enn Es ) i'. Once smallcaps and stretched spaces are normalised, the Egyptian-transcription portion is 'Pa-Seba-Kha-En-Niut' (hyphenated, title-case). Per the prompt's 'Possible Greek aliases' section, parenthesised Greek forms like (Psusenn"
+  },
+  "leprohon-21.08|birth_names": {
+    "value": [
+      {
+        "transliteration": "pꜣ sbꜣ ḫꜥ n niwt",
+        "anglicised": "pa seba kha en niut",
+        "translation": "The star who has appeared in Niut",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Lit. \"the City,\" a designation of Thebes."
+      },
+      {
+        "transliteration": "mry imn",
+        "anglicised": "mery imen",
+        "translation": "Beloved of Amun",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      },
+      {
+        "transliteration": "ḥr",
+        "anglicised": "hor",
+        "translation": "The Horus",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Title added to the Birth name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source line 257: 'Birth: pꜣ sbꜣ ḫꜥ n niwt (pa seba kha en niut), The star who has appeared in Niut' with footnote 24: 'Lit. \"the City,\" a designation of Thebes.' Agent a reproduces the printed translation verbatim and places the footnote text verbatim in source_note. Agent b drops the footnote (sour"
+  },
+  "leprohon-21.08|display_name": {
+    "value": "Pa-Seba-Kha-En-Niut II",
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source headword line 252: '8. Pa -s Eba -KHa -En -niut  (Psus Enn Es ) ii'. Same reasoning as leprohon-21.04: hyphenated title-case is the printed Egyptian-transcription form; Greek alias (Psusennes) belongs in alt_display_names per prompt rules. Agent c alone preserves hyphenation and case."
+  },
+  "leprohon-21a.03|display_name": {
+    "value": "Pa-Seba-Kha-En-Niut III",
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source headword line 335: '3. Pa -s Eba -KHa -En -niut  (Psus Enn Es ) iii'. Same reasoning as leprohon-21.04 and leprohon-21.08: hyphenated title-case from the printed headword, Greek alias deferred to alt_display_names. Agent c is the only agent preserving Leprohon's exact orthography."
+  },
+  "leprohon-22.02|birth_names": {
+    "value": [
+      {
+        "transliteration": "wsrkn",
+        "anglicised": "weserken",
+        "translation": "Osorkon",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "mry imn",
+        "anglicised": "mery imen",
+        "translation": "Chosen by Amun",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source line 466: 'mry imn (mery imen), Chosen by Amun' - Leprohon explicitly prints 'Chosen by Amun' as the gloss for Osorkon I's epithet, even though mry imn elsewhere = 'Beloved of Amun'. Agent a silently overrides the printed gloss to 'Beloved of Amun' (source_note unchanged), violating Constitut"
+  },
+  "leprohon-23.01|alt_display_names": {
+    "value": [
+      "Pedubastis I"
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Header 'Pa Dibast Et (PEDubastis) i' p.174: primary smallcap = Padibastet (display_name); parenthesised alias = Pedubastis I belongs in alt_display_names per chunk-12 alt-name convention."
+  },
+  "leprohon-23.03|birth_names": {
+    "value": [
+      {
+        "transliteration": "ššnḳ",
+        "anglicised": "shesheneq",
+        "translation": "Sheshonq",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "The epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche."
+      },
+      {
+        "transliteration": "mry imn",
+        "anglicised": "mery imen",
+        "translation": "Beloved of Amun",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Sheshonq VI p.175: birth_names should hold only the Birth name + birth-name epithets. Source lists 'Epithet added to the Throne name: mry imn' and 'Epithet added to the Birth name: mry imn' separately. Agent a wrongly placed the throne-name epithet inside birth_names; agents b and c correctly includ"
+  },
+  "leprohon-23.04|birth_names": {
+    "value": [
+      {
+        "transliteration": "wsrkn",
+        "anglicised": "weserken",
+        "translation": "Osorkon",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "As with the previous ruler, the epithet pr-aA, \"Pharaoh,\" was sometimes written before the name inside the cartouche."
+      },
+      {
+        "transliteration": "sꜣ ꜣst mry imn",
+        "anglicised": "sa aset, mery imen",
+        "translation": "The son of Isis, beloved of Amun",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      },
+      {
+        "transliteration": "nṯr ḥḳꜣ wꜣst",
+        "anglicised": "netjer, heqa waset",
+        "translation": "The god and ruler of Thebes",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 3/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Osorkon III p.175: birth_names = Birth + 2 birth-name epithets (sA Ast mry imn; nTr HqA wAst). Agent a wrongly included the Throne-name epithet stp n imn inside birth_names. Source-note retains double quotes around 'Pharaoh' per source orthography."
+  },
+  "leprohon-23.05|birth_names": {
+    "value": [
+      {
+        "transliteration": "tklt",
+        "anglicised": "tekelet",
+        "translation": "Takelot",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "sꜣ ꜣst mry imn nṯr ḥḳꜣ wꜣst",
+        "anglicised": "sa aset mery imen netjer heqa waset",
+        "translation": "The son of Isis, beloved of Amun, the god, ruler of Thebes",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Birth name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Takelot III p.176: source prints a single multi-component birth-name epithet 'sA Ast mry imn nTr HqA wAst (sa aset mery imen netjer heqa waset)' without commas in the parenthesised anglicisation. Agent a wrongly added the throne-name epithet to birth_names; agent c added editorial commas absent from"
+  },
+  "leprohon-23a.01|alt_display_names": {
+    "value": [
+      "Pedubastis II"
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Header 'Pa Dibast Et (PEDubastis) ii' p.177: same convention as 23.01 — primary = Padibastet II; parenthesised alias Pedubastis II belongs in alt_display_names."
+  },
+  "leprohon-23a.01|throne_names": {
+    "value": [
+      {
+        "transliteration": "wsr mꜣꜥt rꜥ",
+        "anglicised": "weser maat ra",
+        "translation": "The strong one belonging to the Maat of Re",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Von Beckerath 1999, 200–201."
+      },
+      {
+        "transliteration": "stp n imn",
+        "anglicised": "setep en imen",
+        "translation": "Chosen by Amun",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [],
+        "source_note": "Epithet added to the Throne name."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Padibastet II p.177-178: throne_names = Throne + throne-name epithet stp n imn (2 variants). Agent a missed the epithet entirely. Footnote 83 ('Von Beckerath 1999, 200–201.') is attached to the king, while footnote 82 (the 'Dynasty 22a' rationale) is attached to the dynasty header, not to the king's"
+  },
+  "leprohon-26.05|alt_display_names": {
+    "value": [
+      "Amasis"
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=late-period): 3/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Chunk file p185-p195 line 113 prints the headword as 'aHmosE (amasis) iii' — Leprohon's parenthetical alias is exactly '(Amasis)', with the dynastic ordinal 'III' attached to the Egyptian-form headword Ahmose (= display_name 'Ahmose III'), not to the Greek alias. Per the chunk-13 prompt rule 'Popula"
+  },
+  "leprohon-33.06|throne_names": {
+    "value": [
+      {
+        "transliteration": "iwꜥ n nṯrwy prw stp n ptḥ-ḫpri ir mꜣꜥt (n) imn-rꜥ",
+        "anglicised": "iwa en netjerwy peru, setep en ptah-khepri, ir maat (en) imen-ra",
+        "translation": "Heir of the two \"Epiphanes\" gods, chosen by Ptah-Khepri, who has carried out Maat for Amun-Re",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Lit. 'the two gods who have emerged,' that is, Ptolemy V and Cleopatra I. One example of this Throne name adds 'forever' at the end."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 3/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Leprohon p. 181 (Ptolemy VI Philometor) prints the Throne name with footnote 39 ('Lit. \"the two gods who have emerged,\" that is, Ptolemy V and Cleopatra I.') and footnote 40 ('One example of this Throne name adds \"forever\" at the end.'). Source uses double quotes around \"Epiphanes\" in Leprohon's tra"
+  },
+  "leprohon-33.13|horus_names": {
+    "value": [
+      {
+        "transliteration": "ḥwnw nfr bnr-mrwt ṯni sw nbty rḫyt ḥnꜥ kꜣ.f dwꜣ n.f ẖnmw šps r šsp n.f ḫꜥ m nsw snsn.n sḥnw m ḥꜥꜥw mi nḏt it.f tḥn-msw(t) ḥr nst it.f mi ḥr kꜣ nḫt ity psḏ m tꜣ-mry mi ḥpw ꜥnḫ rdi n.f ḥbw-sd ꜥšꜣw wrw mi ptḥ tꜣ-ṯnn it nṯrw",
+        "anglicised": "hunu nefer, bener-merut, tjeni su nebty rekhyet hena ka.f, dua en.ef khnum, shepes er shesep en.ef kha em nesu, sensen.en sehnu em haaw mi nedjet it.ef tjehen mesu(t) her neset it.ef mi hor ka nakht, ity pesedj em ta-mery mi hapu ankh, redi en.ef hebu-sed ashau weru mi ptah ta-tjenen it netjeru",
+        "translation": "The perfect youth sweet of love, whom the Two Mistresses and the common folk have elevated along with his ka, whom the august Khnum praised in order to assume the crown of kingship for himself, with whom commanders have readily (lit. \"in joy\") associated like the Protector-of-his-Father, dazzling of birth on the throne of his father like Horus, the victorious bull, the sovereign who shines in Ta-mery like the living Apis bull, to whom has been given a great many Sed festivals like Ptah Ta-tjenen, the father of the gods",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Gauthier 1916, 392–410; von Beckerath 1999, 244–45. 'Protector-of-his-Father' = Horus."
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 2/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Leprohon p. 186 (Ptolemy XII Neos Dionysos Auletes) Original-titulary Horus name. Footnote 51 = scholarly chain (Gauthier 1916, 392–410; von Beckerath 1999, 244–45); footnote 52 = 'Horus' glossing 'Protector-of-his-Father' in the translation. Agent c keeps the translation faithful to Leprohon's main"
+  },
+  "leprohon-33.13|throne_names": {
+    "value": [
+      {
+        "transliteration": "iwꜥ n pꜣ nṯr nty nḥm stp n ptḥ ir mꜣꜥt rꜥ sḫm ꜥnḫ imn",
+        "anglicised": "iwa en pa netjer nety nehem, setep en ptah, ir maat ra, sekhem ankh imen",
+        "translation": "Heir of the god-who-rescues, chosen by Ptah, who has accomplished the Maat of Re, the living image of Amun",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": null
+      },
+      {
+        "transliteration": "iwꜥ n pꜣ nṯr nty nḥm stp n ptḥ ir mꜣꜥt imn-rꜥ",
+        "anglicised": "iwa en pa netjer nety nehem, setep en ptah, ir maat imen-ra",
+        "translation": "Heir of the god-who-rescues, chosen by Ptah, who has accomplished the Maat of Amun-Re",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [
+          "From an architrave at the temple of Philae; see Gauthier 1916, 401, XXXII"
+        ],
+        "source_note": null
+      },
+      {
+        "transliteration": "pꜣ nṯr mry it sn wsir ḥwnw",
+        "anglicised": "pa netjer, mery it sen, wesir hunu",
+        "translation": "The god who is beloved of his father and brother, the youthful Osiris ('Neos Dionysos')",
+        "variant_index": 3,
+        "is_variant": true,
+        "attested_in": [
+          "From a reused block found near the temple of Hathor at Philae; see Gauthier 1916, 401, XXXV"
+        ],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): full-JSON vote was 1/1/1 but 2/3 arbiters matches_agent='b'. Differences across the 3 arbiters are in non-IDENTIFIER framing (typically source_note phrasing); resolving to agent b's original value as the closest unmodified fit."
+  },
+  "leprohon-33.14|horus_names": {
+    "value": [
+      {
+        "transliteration": "wr(t) nb(t) nfrw ꜣḫ(t)-sḥ",
+        "anglicised": "wer(et), neb(et) neferu, akh(et) seh",
+        "translation": "The great one, possessor of perfection and splendid of shrine",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Gauthier 1916, 410–22; von Beckerath 1999, 244–45. Chauveau (1997, 62) points out that, like her ancestor Cleopatra I, Cleopatra VII was not given a full titulary, possibly out of reluctance to accept the fact of having a queen on the throne."
+      },
+      {
+        "transliteration": "wrt twt n it.s",
+        "anglicised": "weret, tut en it.es",
+        "translation": "The great one and the (very) image of her father",
+        "variant_index": 2,
+        "is_variant": true,
+        "attested_in": [
+          "Part of a scene from the temple of Armant, showing scenes of the divine birth of her son Caesarion; see Gauthier 1916, 417–17, XVIII,H"
+        ],
+        "source_note": null
+      }
+    ],
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Leprohon pp. 187–188 (Cleopatra VII Philopator). Variant 2 transliteration: source line 634 prints 'wrt twt n it.s' — no parentheses on wrt. Agents b and c match the source verbatim; agent a fabricates parentheses '(wr(t))' to mirror variant 1's feminine markers (constitutional rule: do not invent)."
+  }
+}

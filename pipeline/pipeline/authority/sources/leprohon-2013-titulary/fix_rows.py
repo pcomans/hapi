@@ -596,21 +596,16 @@ TIP_LATE_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 TIP_EARLY_CORRECTIONS: list[tuple[str, str, object, str]] = [
-    # Chunk-11 (PR #94) page-citation merge dispute: agent A emitted
-    # printed=139, agent B emitted printed=138, agent C emitted (137,
-    # 158). Merge JSON-equality vote split 1:1:1 and picked agent A's
-    # value. Verified against chunk file: Smendes' headword is on
-    # physical page 159 with running header "138 THE GR EAT NAME"
-    # (chunk-p157-p173-pypdf.md line ~109). Correct citation is
-    # printed=138, physical=159 (the +21 offset holds throughout
-    # chapter VIII).
-    (
-        "leprohon-21.02",
-        "source_citation.printed_page",
-        138,
-        "Fix Smendes printed_page citation to match physical 159's "
-        "running header. Agent disagreement; verified against chunk file.",
-    ),
+    # leprohon-21.02 page-citation: previously a fix_rows
+    # SPOT_CORRECTION setting source_citation.printed_page=138 because
+    # the merge silently picked agent A's wrong 139. Issue #128
+    # promoted source_citation tie resolution to a TIE_BREAK_OVERRIDES
+    # entry (consulted DURING merge), so the manual fix here is now
+    # obsolete — see `tie-break-overrides.json` entry for
+    # `leprohon-21.02|source_citation` carrying both printed=138 and
+    # physical=159 in one shot. Removed from this file to avoid
+    # double-correction.
+    #
     # Egyptologist-reviewer 2026-04-20 PR #94 P1-2: Shoshenq is the
     # museum-standard transliteration variant of Sheshonq (Met / Brooklyn
     # / Harvard / Kitchen-TIPE all use Shoshenq). Per the prompt's
