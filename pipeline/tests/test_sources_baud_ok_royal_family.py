@@ -681,26 +681,45 @@ def _load_fix_rows_module():
     return mod
 
 
-def test_all_corrections_includes_every_chunk_list() -> None:
-    """Every `CHUNK*_CORRECTIONS` / `CHUNK*_BACKFILL` module-level constant
-    in fix_rows.py MUST appear in ALL_CORRECTIONS. Dropping one silently
-    destroys that correction set's audit trail — this test iterates the
-    module namespace and fails loud if any CHUNK* list is missing from
-    the aggregator.
+def test_all_corrections_includes_every_correction_list() -> None:
+    """Every module-level `*_CORRECTIONS` / `*_BACKFILL` list in
+    fix_rows.py MUST appear in ALL_CORRECTIONS. Dropping one silently
+    destroys that correction set's audit trail.
+
+    Predicate covers any module-level constant whose name ends in
+    `_CORRECTIONS` or `_BACKFILL` and whose value is a list — not
+    just `CHUNK*` lists. Sweep-2026 introduced `SWEEP_2026_CORRECTIONS`,
+    a non-CHUNK list; the original `name.startswith("CHUNK")` filter
+    silently failed to cover it (PR #123 code-reviewer P1). Broadened
+    here so any future review-round / sweep / backfill list with the
+    same shape is mechanically verified.
+
+    Excludes the aggregator itself (`ALL_CORRECTIONS`), the flattened
+    output (`SPOT_CORRECTIONS`), and any list whose values are not the
+    `(baud_id, field, value, rationale)` correction tuple shape.
     """
     mod = _load_fix_rows_module()
-    chunk_lists = {
+    correction_lists = {
         name: getattr(mod, name)
         for name in dir(mod)
-        if name.startswith("CHUNK")
-        and (name.endswith("_CORRECTIONS") or name.endswith("_BACKFILL"))
+        if (name.endswith("_CORRECTIONS") or name.endswith("_BACKFILL"))
+        and name not in ("ALL_CORRECTIONS", "SPOT_CORRECTIONS")
+        and isinstance(getattr(mod, name), list)
+        # Heuristic: a correction list contains 4-tuples
+        # (baud_id, field, value, rationale). The aggregator is a
+        # list-of-lists which doesn't match.
+        and all(
+            isinstance(entry, tuple) and len(entry) == 4
+            for entry in getattr(mod, name)
+        )
     }
     aggregator = mod.ALL_CORRECTIONS
-    for name, lst in chunk_lists.items():
+    for name, lst in correction_lists.items():
         assert lst in aggregator, (
-            f"{name} is a module-level CHUNK* correction list but does not "
-            f"appear in ALL_CORRECTIONS. Add it, or chunk-specific overrides "
-            f"will silently stop applying."
+            f"{name} is a module-level correction list but does not appear "
+            f"in ALL_CORRECTIONS. Add it, or its overrides will silently "
+            f"stop applying. (Predicate matches any *_CORRECTIONS / "
+            f"*_BACKFILL list of correction tuples — not just CHUNK* lists.)"
         )
 
 
@@ -723,56 +742,199 @@ def test_chunk_expected_rows_constants_match_row_count() -> None:
     )
 
 
-def test_baud_29_drops_eldest_son_smsw_alone() -> None:
-    """Sweep-2026 P1 (code-review L29) regression: baud-29's titulary is
+def test_baud_29_full_row_after_sweep() -> None:
+    """Sweep-2026 P1 (code-review L29). baud-29 (Jdw)'s titulary is
     `[jrj-pꜥt, zꜣ nswt smsw]` — `smsw` alone, no `nj ẖt.f` marker. The
-    `king's eldest son of his body` vocab term requires BOTH markers in
-    the SAME title string. Drop the role; `king's son` retained.
+    `king's eldest son of his body` vocab term requires BOTH markers
+    in the SAME title string. Drop the role; `king's son` retained.
+
+    Pins every populated field per Rule 5 — not just the `roles` field
+    the correction touched, so a regression in any other field on this
+    row would surface here.
     """
     r = _row("baud-29")
-    assert r["roles"] == ["king's son"], r["roles"]
-    assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"], r["titles_from_baud"]
+    assert r["baud_id"] == "baud-29"
+    assert r["baud_refs"] == {}
+    assert r["children_names"] == []
+    assert r["date_attested"] == "Pépi II (ou plus)"
+    assert r["dynasty"] == "6"
+    assert r["father_name"] is None
+    assert r["localisation"] == "Saqqara-Sud"
+    assert r["monument"] == (
+        "Table d'offrandes découverte près du mastaba M 15"
+    )
+    assert r["mother_name"] is None
+    assert r["name_anglicised"] is None
+    assert r["name_egyptian"] == "Jdw"
+    assert r["notes_from_baud"] == (
+        "Peut-être le même personnage que Jdw-tp-kꜣw [30], "
+        "hypocoristique en Jdw."
+    )
+    assert r["pm_ref"] == "PM 684"
+    assert r["roles"] == ["king's son"]
+    assert r["service_personnel"] is False
+    assert r["source_citation"] == {
+        "edition": "IFAO 1999 vol. 2",
+        "pdf_pages": "11-49",
+        "source": "Baud 1999 BdE 126 Corpus [29]",
+    }
+    assert r["spouse_names"] == []
+    assert r["sub_period"] is None
+    assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"]
+    assert r["tomb"] is None
 
 
-def test_baud_30_drops_eldest_son_smsw_alone() -> None:
-    """Sweep-2026 P1 (code-review L30) regression: baud-30 mirrors
+def test_baud_30_full_row_after_sweep() -> None:
+    """Sweep-2026 P1 (code-review L30). baud-30 (Jdw-tp-kꜣw) mirrors
     baud-29 — `[jrj-pꜥt, zꜣ nswt smsw]`, no `nj ẖt.f`. Same conjunction-
     rule violation. `king's eldest son of his body` dropped.
+
+    Pins every populated field per Rule 5.
     """
     r = _row("baud-30")
-    assert r["roles"] == ["king's son"], r["roles"]
-    assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"], r["titles_from_baud"]
+    assert r["baud_id"] == "baud-30"
+    assert r["baud_refs"] == {"baer": "80", "schmitz": "36 (358)"}
+    assert r["children_names"] == []
+    assert r["date_attested"] == "Pépi II (ou plus)"
+    assert r["dynasty"] == "6"
+    assert r["father_name"] is None
+    assert r["localisation"] == "Saqqara-Sud"
+    assert r["monument"] == "Obélisque découvert à proximité du mastaba M 13"
+    assert r["mother_name"] is None
+    assert r["name_anglicised"] is None
+    assert r["name_egyptian"] == "Jdw-tp-kꜣw"
+    assert r["notes_from_baud"] is None
+    assert r["pm_ref"] == "PM 683"
+    assert r["roles"] == ["king's son"]
+    assert r["service_personnel"] is False
+    assert r["source_citation"] == {
+        "edition": "IFAO 1999 vol. 2",
+        "pdf_pages": "11-49",
+        "source": "Baud 1999 BdE 126 Corpus [30]",
+    }
+    assert r["spouse_names"] == []
+    assert r["sub_period"] is None
+    assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"]
+    assert r["tomb"] is None
 
 
-def test_baud_57_drops_eldest_son_separate_titles() -> None:
-    """Sweep-2026 P1 (code-review L57) regression: baud-57 carries
+def test_baud_57_full_row_after_sweep() -> None:
+    """Sweep-2026 P1 (code-review L57). baud-57 (Bꜣ-kꜣ.j) carries
     `zꜣ nswt nj ẖt.f mrjj.f` AND `zꜣ nswt smsw` as TWO SEPARATE title
     strings — neither single string contains both markers. The
-    conjunction rule fails (vocab term requires both in the same
-    string). Drop `king's eldest son of his body`; `priest of the king`
-    + `priest of the royal pyramid` remain (set by CHUNK2_CORRECTIONS).
+    conjunction rule fails. Drop `king's eldest son of his body`;
+    `priest of the king` + `priest of the royal pyramid` remain
+    (set by CHUNK2_CORRECTIONS — SWEEP_2026 supersedes via the
+    `(baud-57, roles)` `_ALLOWED_DUPLICATES` entry).
+
+    Pins every populated field per Rule 5.
     """
     r = _row("baud-57")
+    assert r["baud_id"] == "baud-57"
+    assert r["baud_refs"] == {"baer": "126", "schmitz": "22-23 (359)"}
+    assert r["children_names"] == []
+    assert r["date_attested"] == "Rêdjedef"
+    assert r["dynasty"] == "4"
+    assert r["father_name"] == "Rêdjedef"
+    assert r["localisation"] == "Abou Rawash"
+    assert r["monument"] == (
+        "Socle de statue accroupie, découvert dans le temple "
+        "funéraire de Rêdjedef à Abou Rawash"
+    )
+    assert r["mother_name"] is None
+    assert r["name_anglicised"] is None
+    assert r["name_egyptian"] == "Bꜣ-kꜣ.j"
+    assert r["notes_from_baud"] == (
+        "Étant donné les titres, il s'agit certainement d'un fils de "
+        "Rêdjedef."
+    )
+    assert r["pm_ref"] == "PM 3"
     assert r["roles"] == [
         "king's son",
         "priest of the king",
         "priest of the royal pyramid",
-    ], r["roles"]
-    # Both markers present, but in DIFFERENT title strings:
-    assert "zꜣ nswt nj ẖt.f mrjj.f" in r["titles_from_baud"]
-    assert "zꜣ nswt smsw" in r["titles_from_baud"]
+    ]
+    assert r["service_personnel"] is False
+    assert r["source_citation"] == {
+        "edition": "IFAO 1999 vol. 2",
+        "pdf_pages": "49-82",
+        "source": "Baud 1999 BdE 126 Corpus [57]",
+    }
+    assert r["spouse_names"] == []
+    assert r["sub_period"] is None
+    assert r["titles_from_baud"] == [
+        "ḥm-nṯr Rꜥ-ḏd.f",
+        "ḥrj-wdb ḥwt-ꜥnḫ",
+        "ḥrj-tp Nḫb",
+        "ḥrp ꜥḥ",
+        "smr",
+        "smr wꜥtj",
+        "zꜣ nswt nj ẖt.f mrjj.f",
+        "zꜣ nswt smsw",
+        "nb jmꜣḫ ḫr jt.f",
+    ]
+    assert r["tomb"] is None
 
 
-def test_baud_126_children_names_strips_kahetep() -> None:
-    """Sweep-2026 P1 (reviewer-notes baud-126) regression: Baud's
-    fig. 40 (vol. 2 pp. 496–498) separates Mḥw's two wives' children
-    — Nbt is mother of Kꜣ.j-ḥtp; Nfr-kꜣw.s Jkw (this row) is mother of
-    Mrwt only. Strip Kꜣ.j-ḥtp from this row's `children_names`.
+def test_baud_126_full_row_after_sweep() -> None:
+    """Sweep-2026 P1 (reviewer-notes baud-126). Baud's fig. 40 (vol. 2
+    pp. 496–498) separates Mḥw's two wives' children — Nbt is mother
+    of Kꜣ.j-ḥtp; Nfr-kꜣw.s Jkw (this row) is mother of Mrwt only.
+    Strip Kꜣ.j-ḥtp from this row's `children_names`.
+
+    Pins every populated field per Rule 5.
     """
     r = _row("baud-126")
-    assert r["children_names"] == ["Mrwt"], r["children_names"]
-    assert r["spouse_names"] == ["Mḥw"]
+    assert r["baud_id"] == "baud-126"
+    assert r["baud_refs"] == {}
+    assert r["children_names"] == ["Mrwt"]
+    assert r["date_attested"] == "Pépi Iᵉʳ"
+    assert r["dynasty"] == "6"
+    assert r["father_name"] is None
+    assert r["localisation"] == "nécropole d'Ounas, Saqqara"
+    assert r["monument"] == (
+        "Représentée dans le mastaba de son époux Mḥw [89], "
+        "nécropole d'Ounas, Saqqara"
+    )
+    assert r["mother_name"] is None
+    assert r["name_anglicised"] is None
     assert r["name_egyptian"] == "Nfr-kꜣw.s Jkw"
+    assert r["notes_from_baud"] == (
+        "Peut-être fille d'Ounas en vertu de la localisation "
+        "(Strudwick); Baud ne s'engage pas."
+    )
+    assert r["pm_ref"] == "PM 619-622"
+    assert r["roles"] == ["king's daughter"]
+    assert r["service_personnel"] is False
+    assert r["source_citation"] == {
+        "edition": "IFAO 1999 vol. 2",
+        "pdf_pages": "109-141",
+        "source": "Baud 1999 BdE 126 Corpus [126]",
+    }
+    assert r["spouse_names"] == ["Mḥw"]
+    assert r["sub_period"] is None
+    assert r["titles_from_baud"] == ["zꜣt nswt nt ẖt.f"]
+    assert r["tomb"] is None
+
+
+def test_baud_89_notes_pointer_to_kahetep_filiation() -> None:
+    """Sweep-2026 P2 (egyptologist-reviewer PR #123): when baud-126
+    stripped Kꜣ.j-ḥtp from Nfr-kꜣw.s Jkw's children, his filiation
+    became invisible in the corpus (Mḥw's other wife Nbt is not yet
+    a Baud headword). Append a pointer to baud-89 (Mḥw)'s
+    notes_from_baud so readers see where the missing filiation
+    lives in Baud, with a tracking-issue link (#125) for the
+    eventual headword.
+    """
+    r = _row("baud-89")
+    assert r["name_egyptian"] == "Mḥw"
+    assert r["spouse_names"] == ["Nfr-kꜣw.s Jkw"]
+    notes = r["notes_from_baud"]
+    assert notes is not None
+    assert "Nbt" in notes
+    assert "Kꜣ.j-ḥtp" in notes
+    assert "fig. 40" in notes
+    assert "issue #125" in notes
 
 
 def test_eldest_son_role_requires_smsw_and_nj_khet_f_in_same_title() -> None:
@@ -796,6 +958,16 @@ def test_eldest_son_role_requires_smsw_and_nj_khet_f_in_same_title() -> None:
     The vocab term `king's eldest son of his body` corresponds ONLY to
     the conjunction. Two separate titles each carrying one marker do
     not satisfy it.
+
+    Caveat — proxy: "BOTH markers in the SAME single title string" is
+    a deterministic proxy for "the composite title `smsw n(j) ẖt.f`
+    is attested for this person as one morphological unit." Baud's
+    TITRES rubric reliably emits each composite title as a single
+    list item, so the proxy holds in practice for this corpus. A
+    line-broken composite (which Baud doesn't produce) would slip
+    past — accept that loss; it has not occurred in 282 rows. The
+    role-derivation policy itself is documented in the source's
+    README.md ("Role-derivation conventions").
     """
     for r in _rows():
         if "king's eldest son of his body" not in r["roles"]:

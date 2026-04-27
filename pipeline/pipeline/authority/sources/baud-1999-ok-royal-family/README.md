@@ -86,6 +86,24 @@ Field-by-field:
 - **`notes_from_baud`** = short prose fragment (≤ 2 sentences, ≤ 50 words) from Baud's PARENTÉ or DIVERS prose when the hedge or cross-reference changes the factual reading but doesn't fit the structured fields. Default is `null`. **Do not reproduce full paragraphs** — per the playbook's rights policy Baud's paragraphs are the unsafe-to-commit category; this field carries only the fragment a reviewer needs to understand why a hedge is in `father_name` / `mother_name` or why `roles` includes a tentative code.
 - **`source_citation`** = dict with `source` (`"Baud 1999 BdE 126 Corpus [N]"` format), `pdf_pages` (physical-page range of the chunk sub-PDF, per ADR-017), `edition` (`"IFAO 1999 vol. 2"`).
 
+## Role-derivation conventions
+
+`roles` codes are derived from `titles_from_baud` plus Baud's filiation prose. Two derivations are stricter than the prosopographic literature's looser convention; this section records them so downstream consumers know what they're getting and can fall back to `titles_from_baud` when the loose form is wanted.
+
+**`king's eldest son of his body` — single-string conjunction.** OK Egyptian distinguishes three formulae:
+
+- `zꜣ nswt smsw` — "king's eldest son" (an ordinal claim, attested as a Rangtitel for *Titularprinzen* per Schmitz 1976).
+- `zꜣ nswt nj ẖt.f` — "king's son of his body" (an attestation of biological direct kinship, distinguishing from titular sons).
+- `zꜣ nswt smsw nj ẖt.f` (or its variants `zꜣ nswt nj ẖt.f smsw`, `… mrjj.f`, etc.) — "king's eldest son of his body", the *conjoined* form.
+
+The `roles` vocab term `king's eldest son of his body` corresponds **only** to the conjoined form, attested as a single composite title string in `titles_from_baud`. **Two separate titles each carrying one marker do not satisfy it** — even when the same row also separately attests `zꜣ nswt nj ẖt.f` and `zꜣ nswt smsw`.
+
+This is stricter than the loose prosopographic convention, which often treats co-attestation across a titulary as evidence for the conjoined claim (Schmitz, Strudwick, and Baud himself all do this analytically in vol. 1). The strict reading is a deliberate project-internal choice: it keeps `roles` mechanically derivable from a deterministic test (`test_eldest_son_role_requires_smsw_and_nj_khet_f_in_same_title` in the test suite, which iterates every row and fails loud on violations), and it keeps the `roles` controlled vocabulary unambiguous about *what kind of attestation* it represents.
+
+**Matching consequence.** A row whose holder is catalogued by a downstream museum as "king's eldest son of his body of King X" but whose Baud titulary lists `smsw` and `nj ẖt.f` only as separate titles will *not* carry the `roles` term. The `titles_from_baud` field still contains both Egyptian titles verbatim, so a Phase-A matcher that wants the looser reading can recover it from there. Curators reading an empty `roles` field should consult `titles_from_baud` before concluding "Baud doesn't attest the kinship at all."
+
+The conjunction rule is enforced both at correction time (in `fix_rows.py` chunk-2/4/5/7 + sweep-2026 rationales) and at test time (the universal invariant test).
+
 ## Rights
 
 IFAO, 1999, in copyright. Per ADR-017 and the Phase-0 playbook's rights policy, this extract contains only **factual data** — names, kinship relations, Baud's verbatim title lists, monument/tomb/PM references, attested dynasty or reign dates, and (optionally) short hedge fragments from Baud's prose. The source PDF is not committed (lives in `proprietary/books/`, gitignored). Per-agent extraction JSONL under `raw/` is gitignored. **No verbatim OCR of Baud's prose is committed** — prosopographical paragraphs are explicitly the unsafe-to-commit category per the playbook, so extractors Read the sub-PDF directly and write only structured JSONL. `notes_from_baud` carries at most a 2-sentence fragment when a hedge is load-bearing.

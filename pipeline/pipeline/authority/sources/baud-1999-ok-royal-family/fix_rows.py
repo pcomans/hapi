@@ -1011,6 +1011,27 @@ SWEEP_2026_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "capturing Kꜣ.j-ḥtp under her is out of scope here per the "
         "sweep-2026 PR scope.)",
     ),
+    (
+        "baud-89",
+        "notes_from_baud",
+        (
+            "Époux de la fille royale Nfr-kꜣw.s Jkw [126], peut-être "
+            "fille d'Ounas; Mḥw tient des domaines au nom de la mère "
+            "royale Zšzšt [200] et de Špsj-pw-Ptḥ [224]. "
+            "Per Baud vol. 2 fig. 40 (pp. 496–498), Mḥw a aussi une "
+            "seconde épouse Nbt, mère de Kꜣ.j-ḥtp; cette Nbt n'est "
+            "pas (encore) une entrée Baud distincte (Nbt baud-115 est "
+            "une autre personne, épouse d'Ounas). Suivi: issue #125."
+        ),
+        "Sweep-2026 P2 (egyptologist-reviewer PR #123). When baud-126 "
+        "stripped Kꜣ.j-ḥtp from Nfr-kꜣw.s Jkw's children (per Baud "
+        "fig. 40 he belongs to Mḥw's other wife Nbt, not to her), "
+        "Kꜣ.j-ḥtp's filiation became invisible in the corpus — Nbt "
+        "as a wife of Mḥw is not yet a Baud headword. Append a "
+        "pointer to baud-89's notes so the deletion stays auditable: "
+        "readers see where the missing Kꜣ.j-ḥtp filiation lives in "
+        "Baud, with a tracking-issue link for the eventual headword.",
+    ),
 ]
 
 
