@@ -314,28 +314,80 @@ def _classify_tie(field: str, normalised_values: list) -> str:
 
 
 def _resolve_prose_tie(values: list) -> object:
-    """Deterministic rule for prose-only ties (only source_note /
+    """Deterministic rule for prose-only ties (only source_note and/or
     attested_in differ across agents). Per project policy: prose
     differences are NOT load-bearing for normalisation, so a silent
     deterministic resolution is acceptable here (unlike IDENTIFIER
     ties, which fail loud).
 
-    Rule: pick the value whose serialised JSON length is SHORTEST.
-    Shorter source_notes are typically closer-to-source (less editorial
-    scaffolding like "Per Leprohon fn. N:" prefixes, fewer paraphrased
-    interpretations). The 3-arbiter sweeps repeatedly identified
-    "shortest = most verbatim" as the right disposition. On length tie,
-    pick the lexicographically first canonical-JSON form (deterministic
-    regardless of agent iteration order).
+    Two distinct sub-fields with different semantics:
+
+    * `source_note` is editorial prose. Multiple agents disagreeing
+      means one or more added scaffolding ("Per Leprohon fn. N:"
+      prefixes, paraphrased glosses) — the right disposition is
+      "shortest wins" (closest to source).
+
+    * `attested_in` is a list of provenance citations ("Turin 8,21",
+      "Karnak Cachette", etc.). Citations are ADDITIVE: if one agent
+      catches a citation that another missed, it should be preserved,
+      not silently dropped. Shortest-wins on a list-shaped citation
+      field would discard real provenance — Gemini PR #128 round-1
+      P1 finding.
+
+    Resolution: for each name-list entry position, take the
+    shortest-JSON entry as the BASE, then UNION its `attested_in`
+    list with citations from every other agent's entry at the same
+    position (deduplicated, first-seen order preserved). The base
+    value's `source_note` (and other fields) win; only `attested_in`
+    is unioned.
+
+    Caller has already classified PROSE — i.e. no IDENTIFIER
+    sub-field disagrees — so the base entry's identifying fields
+    are interchangeable across agents.
     """
-    keys = [
-        json.dumps(v, ensure_ascii=False, sort_keys=True)
-        for v in values
-    ]
-    # Sort by (length, key) so shortest comes first; on length tie,
-    # lex-smallest wins.
-    pairs = sorted(zip(keys, values), key=lambda pk: (len(pk[0]), pk[0]))
-    return pairs[0][1]
+    # Sort by JSON length ascending; lex-smallest on length tie.
+    # (Variable named for clarity per code-reviewer round-1 P3-5.)
+    sorted_by_length = sorted(
+        zip(
+            [json.dumps(v, ensure_ascii=False, sort_keys=True) for v in values],
+            values,
+        ),
+        key=lambda pk: (len(pk[0]), pk[0]),
+    )
+    base = sorted_by_length[0][1]
+
+    # Only name-list values get attested_in unioned. Other shapes
+    # (rare in practice — _classify_tie returns SCALAR for non-list
+    # fields and never lands here) pass through.
+    if not isinstance(base, list):
+        return base
+
+    out: list = []
+    for i, base_entry in enumerate(base):
+        if not isinstance(base_entry, dict):
+            out.append(base_entry)
+            continue
+        # Collect attested_in entries from every agent at this position.
+        all_atts: list = []
+        seen_keys: set[str] = set()
+        for v in values:
+            if not isinstance(v, list) or i >= len(v):
+                continue
+            entry = v[i]
+            if not isinstance(entry, dict):
+                continue
+            atts = entry.get("attested_in")
+            if not isinstance(atts, list):
+                continue
+            for att in atts:
+                k = json.dumps(att, ensure_ascii=False, sort_keys=True)
+                if k not in seen_keys:
+                    seen_keys.add(k)
+                    all_atts.append(att)
+        new_entry = dict(base_entry)
+        new_entry["attested_in"] = all_atts
+        out.append(new_entry)
+    return out
 
 
 # Queen-consort sub-entries in Leprohon's Chapter X. Each key is the
@@ -400,7 +452,7 @@ def _deep_normalise(v: object) -> object:
     return _normalise_value(v)
 
 
-def _majority(values: list, lid: str | None = None, field: str | None = None) -> tuple[object, int]:
+def _majority(values: list, *, lid: str, field: str) -> tuple[object, int]:
     """Return (chosen_value, count_of_agreers) from a list of per-agent values.
 
     Values are deep-normalised first so that sentinel nulls in nested dicts
@@ -412,14 +464,17 @@ def _majority(values: list, lid: str | None = None, field: str | None = None) ->
       - Tie at the top (top count == second count):
           1. Look up `(lid, field)` in TIE_BREAK_OVERRIDES → use override.
           2. If field is name-list with prose-only diffs → deterministic
-             rule via `_resolve_prose_tie` (silent OK).
+             rule via `_resolve_prose_tie` (silent OK; attested_in
+             citations are unioned, not dropped).
           3. Otherwise (IDENTIFIER / STRUCTURE / SCALAR tie with no
              override) → raise. Data is sacred. Fail loudly.
 
-    `lid` and `field` are required for tie raising / override lookup;
-    they are optional in the signature for backward compatibility with
-    test fixtures that call `_majority` directly, but production use
-    always passes both.
+    `lid` and `field` are keyword-only required arguments. Constitutional
+    rule 10 (no backwards compatibility): the previous signature had
+    them as Optional with a silent first-seen fallback for "legacy
+    callers" — that path was dead in practice (every call site passes
+    both) and was exactly the slop pattern this PR exists to kill.
+    Removed in PR #128 round-1 review (Gemini round-1 finding).
     """
     normalised = [_deep_normalise(v) for v in values]
 
@@ -445,41 +500,29 @@ def _majority(values: list, lid: str | None = None, field: str | None = None) ->
     # ---- Tie path. ----
 
     # 1. Explicit override.
-    if lid is not None and field is not None:
-        override = TIE_BREAK_OVERRIDES.get((lid, field))
-        if override is not None:
-            # Override carries the resolved value; treat as if it had top_count
-            # agreers (it's an authoritative human/arbiter-set value).
-            return override["value"], top_count
+    override = TIE_BREAK_OVERRIDES.get((lid, field))
+    if override is not None:
+        # Override carries the resolved value; treat as if it had top_count
+        # agreers (it's an authoritative human/arbiter-set value).
+        return override["value"], top_count
 
     # 2. Prose-only tie → deterministic rule.
-    if field is not None:
-        kind = _classify_tie(field, normalised)
-        if kind == "PROSE":
-            return _resolve_prose_tie(normalised), top_count
+    kind = _classify_tie(field, normalised)
+    if kind == "PROSE":
+        return _resolve_prose_tie(normalised), top_count
 
-        # 3. IDENTIFIER / STRUCTURE / SCALAR tie with no override → raise.
-        # Build a diagnostic that names every distinct value so the agent
-        # adding the override has the candidates in front of it.
-        candidates = [
-            f"  candidate {i+1} (count={cnt}): {k}"
-            for i, (k, cnt) in enumerate(most)
-        ]
-        raise ValueError(
-            f"Unresolved {kind} tie at ({lid!r}, {field!r}). "
-            f"Add an entry to TIE_BREAK_OVERRIDES with a cited rationale, "
-            f"or extend the agents' extractions until a majority emerges. "
-            f"Candidates:\n" + "\n".join(candidates)
-        )
-
-    # No lid/field passed (legacy callers) — preserve old behaviour: pick
-    # first-seen, but at least flag in the docstring this is silent. Tests
-    # still call _majority(values) directly without context.
-    for v in normalised:
-        if key(v) == top_key:
-            return v, top_count
-    raise RuntimeError(
-        f"_majority loop failed to find top_key {top_key!r} in {normalised!r}"
+    # 3. IDENTIFIER / STRUCTURE / SCALAR tie with no override → raise.
+    # Build a diagnostic that names every distinct value so the agent
+    # adding the override has the candidates in front of it.
+    candidates = [
+        f"  candidate {i+1} (count={cnt}): {k}"
+        for i, (k, cnt) in enumerate(most)
+    ]
+    raise ValueError(
+        f"Unresolved {kind} tie at ({lid!r}, {field!r}). "
+        f"Add an entry to TIE_BREAK_OVERRIDES with a cited rationale, "
+        f"or extend the agents' extractions until a majority emerges. "
+        f"Candidates:\n" + "\n".join(candidates)
     )
 
 

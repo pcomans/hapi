@@ -206,6 +206,66 @@ def test_majority_tie_uncovered_structure_raises(merge_module):
 
 # === _majority — prose tie resolved deterministically ====================
 
+def test_majority_tie_prose_unions_attested_in(merge_module):
+    """1/1/1 with only attested_in differing → all citations are
+    UNIONED, not dropped. Earlier rule was shortest-wins on the full
+    JSON, which silently discarded real provenance. Gemini PR #128
+    round-1 P1 finding."""
+    a = [{"transliteration": "x", "variant_index": 1, "is_variant": False,
+          "anglicised": "x", "translation": "x", "source_note": None,
+          "attested_in": ["Karnak Cachette"]}]
+    b = [{"transliteration": "x", "variant_index": 1, "is_variant": False,
+          "anglicised": "x", "translation": "x", "source_note": None,
+          "attested_in": ["Turin 8,21"]}]
+    c = [{"transliteration": "x", "variant_index": 1, "is_variant": False,
+          "anglicised": "x", "translation": "x", "source_note": None,
+          "attested_in": ["Abydos king-list"]}]
+    chosen, _ = merge_module._majority(
+        [a, b, c], lid="leprohon-att.99", field="horus_names"
+    )
+    # All three citations are present (order is deterministic but
+    # implementation-dependent — assert as a set).
+    assert set(chosen[0]["attested_in"]) == {
+        "Karnak Cachette", "Turin 8,21", "Abydos king-list"
+    }
+
+
+def test_majority_tie_prose_unions_attested_in_dedup(merge_module):
+    """If two agents share a citation, it's preserved once (deduplicated)."""
+    a = [{"transliteration": "x", "variant_index": 1, "is_variant": False,
+          "anglicised": "x", "translation": "x", "source_note": None,
+          "attested_in": ["Karnak Cachette", "Turin 8,21"]}]
+    b = [{"transliteration": "x", "variant_index": 1, "is_variant": False,
+          "anglicised": "x", "translation": "x", "source_note": None,
+          "attested_in": ["Karnak Cachette"]}]
+    c = [{"transliteration": "x", "variant_index": 1, "is_variant": False,
+          "anglicised": "x", "translation": "x", "source_note": None,
+          "attested_in": ["Abydos king-list"]}]
+    chosen, _ = merge_module._majority(
+        [a, b, c], lid="leprohon-att.99", field="horus_names"
+    )
+    # Karnak Cachette appears once even though two agents emitted it.
+    assert chosen[0]["attested_in"].count("Karnak Cachette") == 1
+    assert set(chosen[0]["attested_in"]) == {
+        "Karnak Cachette", "Turin 8,21", "Abydos king-list"
+    }
+
+
+def test_majority_requires_lid_and_field(merge_module):
+    """Constitutional rule 10: no backwards compatibility shim. The
+    previous signature accepted Optional lid/field with a silent
+    first-seen fallback for "legacy callers" — that path was the
+    exact slop pattern this module exists to kill. Now keyword-only
+    required."""
+    import pytest as _pytest
+    with _pytest.raises(TypeError):
+        merge_module._majority(["a", "b", "c"])
+    with _pytest.raises(TypeError):
+        merge_module._majority(["a", "b", "c"], lid="x.01")
+    with _pytest.raises(TypeError):
+        merge_module._majority(["a", "b", "c"], field="display_name")
+
+
 def test_majority_tie_prose_resolves_to_shortest(merge_module):
     """1/1/1 with only source_note differing → deterministic shortest-wins.
     Shorter source_notes are typically closer-to-source (less editorial

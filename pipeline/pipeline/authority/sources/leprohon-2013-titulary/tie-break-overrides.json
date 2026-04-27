@@ -11,7 +11,7 @@
         "source_note": "See Dobrev 1993, 189 n. 37."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Leprohon p. 37: 'Golden Horus: (unknown)42'. Footnote 42 (p. 37): 'See Dobrev 1993, 189 n. 37.' Per chunk-1 prompt rule, source_note is verbatim from the footnote text — no editorial prefix. The (unknown) parens-form is preserved literally in all three name-fields, consistent with how the IDENTIFIER"
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Leprohon p. 37: 'Golden Horus: (unknown)42'. Footnote 42 (p. 37): 'See Dobrev 1993, 189 n. 37.' Per chunk-1 prompt rule, source_note is verbatim from the footnote text — no editorial prefix. The (unknown) parens-form is preserved literally in all three name-fields, consistent with how the IDENTIFIER convention treats Leprohon's printed (unknown) placeholder."
   },
   "leprohon-5.04|golden_horus_names": {
     "value": [
@@ -25,7 +25,7 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'none']. Basis (arbiter d): Leprohon p. 39: 'Golden Horus: unknown' (bare 'unknown', no parens, no '(?)' hedge). Leprohon explicitly records the Golden-Horus row for Shepseskare with the value 'unknown' — so the slot is not empty (vs. agent a's []), but he provides no transliteration / anglicised / translation content, so the "
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'none']. Basis (arbiter d): Leprohon p. 39: 'Golden Horus: unknown' (bare 'unknown', no parens, no '(?)' hedge). Leprohon explicitly records the Golden-Horus row for Shepseskare with the value 'unknown' — so the slot is not empty (vs. agent a's []), but he provides no transliteration / anglicised / translation content, so the fields are null. Distinct from the parens-form '(unknown)' placeholder used elsewhere."
   },
   "leprohon-5.04|nebty_names": {
     "value": [
@@ -53,7 +53,7 @@
         "source_note": "See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Leprohon p. 42: 'Throne: (unknown)72'. Footnote 72 (p. 42): 'See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti.' source_note is verbatim from the footnote — no editorial prefix. (unknown) parens-form preserved literally in all thr"
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Leprohon p. 42: 'Throne: (unknown)72'. Footnote 72 (p. 42): 'See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti.' source_note is verbatim from the footnote — no editorial prefix. (unknown) parens-form preserved literally in all three fields."
   },
   "leprohon-6.02|horus_names": {
     "value": [
@@ -67,7 +67,7 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter e): Leprohon p. 42: 'Horus: (unknown)' for Userkare — the row carries no per-entry superscript footnote. Footnote 74 is attached to the headword line ('2. USERKARE (I)74') and contains Gauthier/Beckerath/Baud-Dobrev scholarly references about the king as a whole, not the Horus name in particular. Per th"
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter e): Leprohon p. 42: 'Horus: (unknown)' for Userkare — the row carries no per-entry superscript footnote. Footnote 74 is attached to the headword line ('2. USERKARE (I)74') and contains Gauthier/Beckerath/Baud-Dobrev scholarly references about the king as a whole, not the Horus name in particular. Per the prompt rule (chunk-1 prompt.md, source_note section by analogy with attested_in: 'Only populate attested_in from footnotes that are attached to the SPECIFIC name entry via Leprohon's superscript numbering'), the headword footnote does not feed per-entry source_note. Agent a wrongly hoisted footnote 74 onto the horus_names row; agents b and c correctly leave source_note null. Agent c's empty-string anglicised is internally inconsistent."
   },
   "leprohon-6.06|horus_names": {
     "value": [
@@ -81,7 +81,7 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter e): Leprohon p. 43: 'Horus: unknown (?)' for Merenre II — no per-row footnote. Footnote 82 is attached to the headword line ('6. MERENRE II82') and contains Gauthier/Beckerath references about the king as a whole; same rule as 6.02 applies — headword footnotes do not feed per-entry source_note. Agent a "
+    "rationale": "3-arbiter blind re-extraction (chunk=old-kingdom): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter e): Leprohon p. 43: 'Horus: unknown (?)' for Merenre II — no per-row footnote. Footnote 82 is attached to the headword line ('6. MERENRE II82') and contains Gauthier/Beckerath references about the king as a whole; same rule as 6.02 applies — headword footnotes do not feed per-entry source_note. Agent a wrongly hoisted footnote 82 onto the horus_names row. Agent c's empty-string anglicised is internally inconsistent with the non-empty transliteration/translation."
   },
   "leprohon-11a.01|later_horus_names": {
     "value": [
@@ -95,7 +95,7 @@
         "source_note": "Karnak List (Urk. IV, 608:14); per Leprohon fn. 27, this Horus name is a New Kingdom fabrication (cf. Postel 2004, 46)."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=fip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): Leprohon p. 53 line 'Later Horus name: tp ꜥ (tepy a),* \"The ancestor\"27'. Translation preserves the smart quotes verbatim (matches a and b; c strips them). For source_note, prompt-fip.md explicitly provides the canonical string: 'Karnak List (Urk. IV, 608:14); per Leprohon fn. 27, this Horus name is"
+    "rationale": "3-arbiter blind re-extraction (chunk=fip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): Leprohon p. 53 line 'Later Horus name: tp ꜥ (tepy a),* \"The ancestor\"27'. Translation preserves the smart quotes verbatim (matches a and b; c strips them). For source_note, prompt-fip.md explicitly provides the canonical string: 'Karnak List (Urk. IV, 608:14); per Leprohon fn. 27, this Horus name is a New Kingdom fabrication (cf. Postel 2004, 46).' — agents a and c match this verbatim; agent b adds an extra 'Literally The one (who came) before.' clause from fn. 27, exceeding the spec. Agent a satisfies both axes (quoted translation + spec-exact source_note); agent b fails on source_note (over-spec); agent c fails on translation (quotes stripped). Transliteration tp ꜥ is correct MdC (a→ꜥ); anglicised 'tepy a' matches printed parenthetical."
   },
   "leprohon-13.18|birth_names": {
     "value": [
@@ -109,7 +109,7 @@
         "source_note": "This king is only attested as filiation in the name of the next king, his son Kay; see Ryholt 1997a, 219."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Source p.81 line 266 has 'ṯhe jꜥckꜥl' — an OCR/MdC over-normalisation artifact (t→ṯ, a→ꜥ) of the English translation. Leprohon's actual prose is 'The jackal (?)' (capital T per his convention shown by uncorrupted entry 32 throne 'The enduring one ...'). Agent c preserved the corrupted glyphs verbati"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'b']. Basis (arbiter d): Source p.81 line 266 has 'ṯhe jꜥckꜥl' — an OCR/MdC over-normalisation artifact (t→ṯ, a→ꜥ) of the English translation. Leprohon's actual prose is 'The jackal (?)' (capital T per his convention shown by uncorrupted entry 32 throne 'The enduring one ...'). Agent c preserved the corrupted glyphs verbatim; agent a lowercased; agent b restored the intended capitalised English."
   },
   "leprohon-13.23|birth_names": {
     "value": [
@@ -151,7 +151,7 @@
         "source_note": "Gauthier 1912, 46; von Beckerath 1999, 98–99. Leprohon labels the row \"Throne and Birth names\" — a combined prenomen/nomen entry where fragmentary evidence prevents separation. The same string is emitted to both throne_names and birth_names."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Source line 441 reads 'Throne and Birth names: sꜥnḫ.n rꜥ swꜣḏ.tw ...'. The combined-label row must be emitted into both throne_names and birth_names lists per chunk-4 convention. Agent a wrongly returned an empty list (drops a real entry). Agents b and c are factually equivalent; b's source_note phr"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Source line 441 reads 'Throne and Birth names: sꜥnḫ.n rꜥ swꜣḏ.tw ...'. The combined-label row must be emitted into both throne_names and birth_names lists per chunk-4 convention. Agent a wrongly returned an empty list (drops a real entry). Agents b and c are factually equivalent; b's source_note phrasing is more precise about the structural reason (fragmentary evidence preventing separation)."
   },
   "leprohon-13.51|throne_names": {
     "value": [
@@ -183,11 +183,11 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'b']. Basis (arbiter d): Two issues. (1) Translation: source line 536 'ṯhe kid' is the OCR/MdC artifact for 'The kid'. (2) attested_in: footnote marker '119' is printed on line 537 immediately after the birth-name line; footnote 119 (line 559-560) reads 'Turin 8,22'. The footnote attaches to the birth name entry. Agent b co"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'b']. Basis (arbiter d): Two issues. (1) Translation: source line 536 'ṯhe kid' is the OCR/MdC artifact for 'The kid'. (2) attested_in: footnote marker '119' is printed on line 537 immediately after the birth-name line; footnote 119 (line 559-560) reads 'Turin 8,22'. The footnote attaches to the birth name entry. Agent b correctly emitted ['Turin 8,22']; agents a and c missed it."
   },
   "leprohon-13.54|display_name": {
     "value": "Se /// Kare",
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Source line 544 SMALLCAP headword reads 's E /// Kar E*121'. Un-SMALLCAP-ing per the chunk-5 prompt rule 'Headword with fragmentary-reading markers (`[...]`, `////`): preserve verbatim in display_name' yields 'Se /// Kare' with the spaces around the wildcard preserved and Title-Case applied to the l"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn13): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Source line 544 SMALLCAP headword reads 's E /// Kar E*121'. Un-SMALLCAP-ing per the chunk-5 prompt rule 'Headword with fragmentary-reading markers (`[...]`, `////`): preserve verbatim in display_name' yields 'Se /// Kare' with the spaces around the wildcard preserved and Title-Case applied to the lexical halves. Agent a stripped spaces and lowercased the second half ('Se///kare'); agent c kept partial spacing ('Se/// Kare'). Agent b matches the verbatim-preservation rule."
   },
   "leprohon-19.02|horus_names": {
     "value": [
@@ -740,7 +740,7 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden Horus N.' enumeration prefixes in source_note are non-conformant (only 3/1379) - agent b adds them throughout; (3) attested_in for the original-titulary row should be empty list - agent b uses ['Original titulary'] which is a meta-tag not present in any reconciled row. Tie 0 (Sety I, leprohon-19.02 horus_names): a preserves correct attested_in pattern 'Abydos, Great Temple, Seven Chapels - King's chapel (a-e)' with sub-letter labels matching Leprohon's source enumeration (p.133 lines 261-269); a's '(destroyed)' translation for the lacuna at idx=18 matches reconciled convention (precedent: '(destroyed)' appears verbatim in reconciled.jsonl). Acknowledged minor: a paraphrases the p.133 narrative source_note at idx=14; b is more verbatim there but contaminates 30+ other rows with 'Horus N.' prefixes - net trade favors a."
   },
   "leprohon-19.03|birth_names": {
     "value": [
@@ -799,7 +799,7 @@
         "source_note": "Epithet added to the Birth name."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 3/3 arbiters converged. Per-arbiter matches_agent: ['a']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 3/3 arbiters converged. Per-arbiter matches_agent: ['a']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden Horus N.' enumeration prefixes in source_note are non-conformant (only 3/1379) - agent b adds them throughout; (3) attested_in for the original-titulary row should be empty list - agent b uses ['Original titulary'] which is a meta-tag not present in any reconciled row. Tie 1 (Ramesses II, leprohon-19.03 birth_names): only 2 contested keys. a's source_note 'Additionally, a shortened form of the Birth name appears occasionally.' directly quotes Leprohon p.135 line 405 ('Additionally, a shortened form...'); a's translation '(Shortened form of the Birth name)' matches the parens-meta-gloss convention (cf. '(Shortened form of the Birth name)' precedent in reconciled.jsonl)."
   },
   "leprohon-19.03|golden_horus_names": {
     "value": [
@@ -954,7 +954,7 @@
         "source_note": "KRI II, 605:15–16"
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 3/3 arbiters converged. Per-arbiter matches_agent: ['a']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 3/3 arbiters converged. Per-arbiter matches_agent: ['a']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden Horus N.' enumeration prefixes in source_note are non-conformant (only 3/1379) - agent b adds them throughout; (3) attested_in for the original-titulary row should be empty list - agent b uses ['Original titulary'] which is a meta-tag not present in any reconciled row. Tie 2 (Ramesses II, leprohon-19.03 golden_horus_names): a has correct MdC 'ḥꜥꜥ' at idx=1 transliteration matching source p.140 line 607 'Haa' (capital H = ḥ); agent c writes 'hꜥꜥ' (lowercase, no dot below) which is incorrect MdC. Plus the standard KRI-in-source_note vs KRI-in-attested_in convention favors a as above."
   },
   "leprohon-19.04|horus_names": {
     "value": [
@@ -1100,7 +1100,7 @@
         "source_note": "KRI IV, 1:8."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden H"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn19): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Agent a wins on three independently-verified rule-conformance counts vs reconciled.jsonl convention from chunks 1-8: (1) KRI references belong in source_note (104/1379 precedent) not in attested_in (only 1/1379) - agent b appends KRI to attested_in, agent c omits KRI; (2) bare 'Horus N.' / 'Golden Horus N.' enumeration prefixes in source_note are non-conformant (only 3/1379) - agent b adds them throughout; (3) attested_in for the original-titulary row should be empty list - agent b uses ['Original titulary'] which is a meta-tag not present in any reconciled row. Tie 3 (Merenptah, leprohon-19.04 horus_names): a's KRI placement in source_note matches convention; b/c attach KRI to attested_in. a's translation gloss '(Maat)' at idx=1 inlines footnote 123 ('Maat.') in the parenthetical-gloss style precedented by reconciled rows like '(Whose) White Crown is high'."
   },
   "leprohon-20.01|nebty_names": {
     "value": [
@@ -1114,7 +1114,7 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source p.147 prints `twt xaw mi tA-Tnn (tut-khau mi ta-tjenen)` with hyphen; agents a/b match the hyphenated anglicisation, c omits hyphen. `attested_in` should be [] because 'Original titulary' is a section label, not a monument locus — agent b's inclusion is a category error. Agent a is fully corr"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source p.147 prints `twt xaw mi tA-Tnn (tut-khau mi ta-tjenen)` with hyphen; agents a/b match the hyphenated anglicisation, c omits hyphen. `attested_in` should be [] because 'Original titulary' is a section label, not a monument locus — agent b's inclusion is a category error. Agent a is fully correct (a/c on attested_in; a/b on anglicisation)."
   },
   "leprohon-20.02|horus_names": {
     "value": [
@@ -1293,7 +1293,7 @@
         "source_note": "Additional Horus name (Horus 16). KRI V, 289:3."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Agent a is most faithful to the source structure: physical locus belongs in `attested_in`, KRI/Hölscher publication references belong in `source_note`. The source distinguishes loci (e.g. 'northern end of the Second Court') from publication refs (footnoted KRI/Hölscher). Agent a uniquely preserves '"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Agent a is most faithful to the source structure: physical locus belongs in `attested_in`, KRI/Hölscher publication references belong in `source_note`. The source distinguishes loci (e.g. 'northern end of the Second Court') from publication refs (footnoted KRI/Hölscher). Agent a uniquely preserves 'Various monuments found outside the Royal Palace' as a locus for variants 9-15 (the source p.149 prints this as a heading); b/c collapse the locus into Hölscher publication and lose it. Agent c also has a normalisation error in v5 (`tḥnw` instead of `ṯḥnw`; source MdC `THnw` = ṯḥnw) and v15 (drops hyphen in `tjehen khau`). Agent b incorrectly puts 'Original titulary' (section label) in attested_in for v1."
   },
   "leprohon-20.09|throne_names": {
     "value": [
@@ -1334,7 +1334,7 @@
         "source_note": "Epithet added to the Throne name."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source p.155 prints `stp n ra (setep en ra)` — agents a/c match 'setep en ra'; agent b's 'setep n ra' breaks the consistent `n` → 'en' anglicisation rule used throughout the chunk. attested_in for v1 is correctly [] in a/c; agent b incorrectly inserts 'Original titulary' (section label, not a locus)"
+    "rationale": "3-arbiter blind re-extraction (chunk=dyn20): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source p.155 prints `stp n ra (setep en ra)` — agents a/c match 'setep en ra'; agent b's 'setep n ra' breaks the consistent `n` → 'en' anglicisation rule used throughout the chunk. attested_in for v1 is correctly [] in a/c; agent b incorrectly inserts 'Original titulary' (section label, not a locus). Agent a is fully correct (matches a/c on v4 anglicisation; a/c on v1 attested_in)."
   },
   "leprohon-15.01|birth_names": {
     "value": [
@@ -1348,7 +1348,7 @@
         "source_note": "Leprohon labels as 'Title and name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching. Von Beckerath 1999, 116–17. For the rendering, see T. Schneider 1998, 137–38. The attribution of this king to the Fifteenth Dynasty is uncertain; see Ryholt 1997a, 383."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['c', 'none']. Basis (arbiter d): All three agents agree on data fields (translit, anglicised, translation per source p.81 line 30-31). Source-note ordering: PDF footnotes appear as fn.4 (Von Beckerath, headword) then fn.5 (rendering + Ryholt attribution). Agent C's narrative ordering follows the source-order of the footnotes (fn.4 "
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['c', 'none']. Basis (arbiter d): All three agents agree on data fields (translit, anglicised, translation per source p.81 line 30-31). Source-note ordering: PDF footnotes appear as fn.4 (Von Beckerath, headword) then fn.5 (rendering + Ryholt attribution). Agent C's narrative ordering follows the source-order of the footnotes (fn.4 first, fn.5 second) and uses straight quotes consistent with downstream conventions. Agent A has reverse footnote order; Agent B is verbose with explicit 'Per Leprohon fn.4/fn.5' prefixes."
   },
   "leprohon-15.01|throne_names": {
     "value": [
@@ -1422,7 +1422,7 @@
         "source_note": "Leprohon labels as 'Title and birth name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): STRUCTURE tie. Per chunk-7 prompt, 'Title and birth name' must dual-emit to BOTH throne_names and birth_names. Agents A and B include the dual-emission as variant 3; Agent C INCORRECTLY drops it and emits only 2 variants — a violation of the canonical rule. Between A and B: A's variant-1 source_note"
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): STRUCTURE tie. Per chunk-7 prompt, 'Title and birth name' must dual-emit to BOTH throne_names and birth_names. Agents A and B include the dual-emission as variant 3; Agent C INCORRECTLY drops it and emits only 2 variants — a violation of the canonical rule. Between A and B: A's variant-1 source_note preserves the headword citation 'Gauthier 1912, 139–43; von Beckerath 1999, 114–15' (per fn.11 source p.82 line 82-83), which is the load-bearing scholarly attribution; B uses 'Leprohon labels as Throne 1' which loses the citation. Agent A is the correct synthesis."
   },
   "leprohon-16.06|birth_names": {
     "value": [
@@ -1445,7 +1445,7 @@
         "source_note": "The additional divine name is found in Turin 11,5, for which see KRI II, 842:13."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Source p.84 line 162 reads 'Birth 1: nb iry r ꜣw (nb iry er au)' — there IS a space between r and ꜣw. Agent A preserves the space; Agents B and C collapse to 'nb iry rꜣw' which contradicts the source MdC. Agent A's transliteration is correct. For the attested_in field, A and C agree on empty list (n"
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'none']. Basis (arbiter d): Source p.84 line 162 reads 'Birth 1: nb iry r ꜣw (nb iry er au)' — there IS a space between r and ꜣw. Agent A preserves the space; Agents B and C collapse to 'nb iry rꜣw' which contradicts the source MdC. Agent A's transliteration is correct. For the attested_in field, A and C agree on empty list (no convention in chunk-7 prompt to populate attested_in from prose footnotes); B's inclusion of 'Turin 11,5' goes beyond the agreed schema, so 2-of-3 majority + source-fidelity favors A."
   },
   "leprohon-17.18|birth_names": {
     "value": [
@@ -1459,7 +1459,7 @@
         "source_note": "See Ryholt 1997a, 316 and 392; and Allen in Ben-Tor et al. 1999, 52."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): All three agents agree on data fields per source p.89 line 381. Source_note: A and C use clean narrative form matching the footnote text verbatim (fn.57); B prefixes 'Per Leprohon fn. 57'. The substantive content is identical; A/C is more readable. Agent C uses straight quotes (matching downstream c"
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): All three agents agree on data fields per source p.89 line 381. Source_note: A and C use clean narrative form matching the footnote text verbatim (fn.57); B prefixes 'Per Leprohon fn. 57'. The substantive content is identical; A/C is more readable. Agent C uses straight quotes (matching downstream convention) — A and C are equivalent here, picking C for straight-quote consistency with rest of arbitration."
   },
   "leprohon-17.22|birth_names": {
     "value": [
@@ -1496,7 +1496,7 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): All three agents agree on translit/anglicised/translation per source p.91 line 480-482. Source_note: A and C carry fn.70 verbatim on variant 1 and null on variant 2 (fn.70 attaches to Birth 1 in the source per superscript 70 placement); B uses 'Leprohon labels as Birth 1/2' but loses the null marker"
+    "rationale": "3-arbiter blind re-extraction (chunk=sip): 2/3 arbiters converged. Per-arbiter matches_agent: ['a', 'c']. Basis (arbiter d): All three agents agree on translit/anglicised/translation per source p.91 line 480-482. Source_note: A and C carry fn.70 verbatim on variant 1 and null on variant 2 (fn.70 attaches to Birth 1 in the source per superscript 70 placement); B uses 'Leprohon labels as Birth 1/2' but loses the null marker for variant 2. Picking C for straight-quote consistency with downstream convention; A and C are functionally equivalent."
   },
   "leprohon-21.01|nebty_names": {
     "value": [
@@ -1545,20 +1545,20 @@
         "source_note": "Two Ladies 4."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'b']. Basis (arbiter d): Agent b's attested_in tags ('Original titulary' for v1, 'Additional names; temple of Khonsu, southern portion of the Karnak Temple complex' for v2-v4) faithfully reproduce the source's section header on physical p.158 ('Additional names') combined with footnote 6: 'All from the temple of Khonsu, in "
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'b']. Basis (arbiter d): Agent b's attested_in tags ('Original titulary' for v1, 'Additional names; temple of Khonsu, southern portion of the Karnak Temple complex' for v2-v4) faithfully reproduce the source's section header on physical p.158 ('Additional names') combined with footnote 6: 'All from the temple of Khonsu, in the southern portion of the Karnak Temple complex.' Source-notes for b also preserve von Beckerath 1999, 176 n.2 + PM II2, 224 citation for v2 verbatim. Agent c has an MdC error on v2 transliteration ('sṯhnt' instead of source 'sTHnt' = 'sṯḥnt'). Agent a leaves attested_in empty, dropping the explicit attestation provided by Leprohon."
   },
   "leprohon-21.02|source_citation": {
     "value": {
       "book": "Leprohon 2013",
       "edition": "SBL Writings from the Ancient World 33",
-      "printed_page": 138,
-      "physical_pdf_page": 159
+      "printed_page": 137,
+      "physical_pdf_page": 158
     },
-    "rationale": "3-arbiter blind re-extraction was inconsistent with the OCR running header. Re-verified against chunk-p157-p173-pypdf.md: line 95 carries the 'p.138' running header; Smendes' section header (line 110) follows after it, putting the entry on printed page 138 / physical 159. Matches the pre-existing fix_rows.py SPOT_CORRECTION. Issue #128 post-arbiter manual override per /Users/philipp/code/hapi reading."
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Smendes (Nesbanebdjed) section header '2. n Es -ba -n Eb -Dj ED (s m En DEs )' appears on physical p.158 (printed running header '137'), line 110 of chunk-p157-p173-pypdf.md. Convention: source_citation records the entry's starting page. Agent a's printed_page=139 is wrong (139 is Psusennes I's start). Agent b's printed_page=138 corresponds to where the section continues but not where it begins."
   },
   "leprohon-21.04|display_name": {
     "value": "Pa-Seba-Kha-En-Niut I",
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source headword line 154: 'Pa -s Eba -KHa -En -niut  (Psus Enn Es ) i'. Once smallcaps and stretched spaces are normalised, the Egyptian-transcription portion is 'Pa-Seba-Kha-En-Niut' (hyphenated, title-case). Per the prompt's 'Possible Greek aliases' section, parenthesised Greek forms like (Psusenn"
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 2/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source headword line 154: 'Pa -s Eba -KHa -En -niut  (Psus Enn Es ) i'. Once smallcaps and stretched spaces are normalised, the Egyptian-transcription portion is 'Pa-Seba-Kha-En-Niut' (hyphenated, title-case). Per the prompt's 'Possible Greek aliases' section, parenthesised Greek forms like (Psusennes) belong in alt_display_names, not display_name. Agent c preserves Leprohon's exact hyphenation; agents a (partial hyphens, lowercase) and b (no hyphens) both depart from the printed form."
   },
   "leprohon-21.08|birth_names": {
     "value": [
@@ -1590,7 +1590,7 @@
         "source_note": "Title added to the Birth name."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source line 257: 'Birth: pꜣ sbꜣ ḫꜥ n niwt (pa seba kha en niut), The star who has appeared in Niut' with footnote 24: 'Lit. \"the City,\" a designation of Thebes.' Agent a reproduces the printed translation verbatim and places the footnote text verbatim in source_note. Agent b drops the footnote (sour"
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'a']. Basis (arbiter d): Source line 257: 'Birth: pꜣ sbꜣ ḫꜥ n niwt (pa seba kha en niut), The star who has appeared in Niut' with footnote 24: 'Lit. \"the City,\" a designation of Thebes.' Agent a reproduces the printed translation verbatim and places the footnote text verbatim in source_note. Agent b drops the footnote (source_note null). Agent c bakes the footnote into the translation field, mixing Leprohon's main text with annotation - a fidelity violation."
   },
   "leprohon-21.08|display_name": {
     "value": "Pa-Seba-Kha-En-Niut II",
@@ -1621,7 +1621,7 @@
         "source_note": "Epithet added to the Birth name."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source line 466: 'mry imn (mery imen), Chosen by Amun' - Leprohon explicitly prints 'Chosen by Amun' as the gloss for Osorkon I's epithet, even though mry imn elsewhere = 'Beloved of Amun'. Agent a silently overrides the printed gloss to 'Beloved of Amun' (source_note unchanged), violating Constitut"
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Source line 466: 'mry imn (mery imen), Chosen by Amun' - Leprohon explicitly prints 'Chosen by Amun' as the gloss for Osorkon I's epithet, even though mry imn elsewhere = 'Beloved of Amun'. Agent a silently overrides the printed gloss to 'Beloved of Amun' (source_note unchanged), violating Constitutional Rule 1 (sourced facts only). Agent b preserves the gloss but adds editorialising commentary in source_note ('Leprohon prints ... commonly = ...'), which is interpretive overlay rather than transcription. Agent c reproduces the gloss faithfully with a clean source-only note. | Note: Leprohon prints 'Chosen by Amun' UNIQUELY for Osorkon I. Every other Dyn 21–22 entry glosses the same glyph string `mry imn` as 'Beloved of Amun' (Herihor, Smendes, Sheshonq I/IIa/IIb/IIc/III/IV, Takelot I/II, Osorkon II, Pamiu). Per CLAUDE.md rule 1 (work like a scholar), preserved verbatim. Egyptologist round-1 P3-1 finding on PR #128."
   },
   "leprohon-23.01|alt_display_names": {
     "value": [
@@ -1650,7 +1650,7 @@
         "source_note": "Epithet added to the Birth name."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Sheshonq VI p.175: birth_names should hold only the Birth name + birth-name epithets. Source lists 'Epithet added to the Throne name: mry imn' and 'Epithet added to the Birth name: mry imn' separately. Agent a wrongly placed the throne-name epithet inside birth_names; agents b and c correctly includ"
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Sheshonq VI p.175: birth_names should hold only the Birth name + birth-name epithets. Source lists 'Epithet added to the Throne name: mry imn' and 'Epithet added to the Birth name: mry imn' separately. Agent a wrongly placed the throne-name epithet inside birth_names; agents b and c correctly include only the birth-name epithet variant. Source-note quoting style preserved (double quotes per source)."
   },
   "leprohon-23.04|birth_names": {
     "value": [
@@ -1705,7 +1705,7 @@
         "source_note": "Epithet added to the Birth name."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Takelot III p.176: source prints a single multi-component birth-name epithet 'sA Ast mry imn nTr HqA wAst (sa aset mery imen netjer heqa waset)' without commas in the parenthesised anglicisation. Agent a wrongly added the throne-name epithet to birth_names; agent c added editorial commas absent from"
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 3/3 arbiters converged. Per-arbiter matches_agent: ['b']. Basis (arbiter d): Takelot III p.176: source prints a single multi-component birth-name epithet 'sA Ast mry imn nTr HqA wAst (sa aset mery imen netjer heqa waset)' without commas in the parenthesised anglicisation. Agent a wrongly added the throne-name epithet to birth_names; agent c added editorial commas absent from the source."
   },
   "leprohon-23a.01|alt_display_names": {
     "value": [
@@ -1734,13 +1734,13 @@
         "source_note": "Epithet added to the Throne name."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Padibastet II p.177-178: throne_names = Throne + throne-name epithet stp n imn (2 variants). Agent a missed the epithet entirely. Footnote 83 ('Von Beckerath 1999, 200–201.') is attached to the king, while footnote 82 (the 'Dynasty 22a' rationale) is attached to the dynasty header, not to the king's"
+    "rationale": "3-arbiter blind re-extraction (chunk=tip-late): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Padibastet II p.177-178: throne_names = Throne + throne-name epithet stp n imn (2 variants). Agent a missed the epithet entirely. Footnote 83 ('Von Beckerath 1999, 200–201.') is attached to the king, while footnote 82 (the 'Dynasty 22a' rationale) is attached to the dynasty header, not to the king's throne name. Agent b conflated the dynasty footnote into the king's source_note; agent c correctly cites only fn 83."
   },
   "leprohon-26.05|alt_display_names": {
     "value": [
       "Amasis"
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=late-period): 3/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Chunk file p185-p195 line 113 prints the headword as 'aHmosE (amasis) iii' — Leprohon's parenthetical alias is exactly '(Amasis)', with the dynastic ordinal 'III' attached to the Egyptian-form headword Ahmose (= display_name 'Ahmose III'), not to the Greek alias. Per the chunk-13 prompt rule 'Popula"
+    "rationale": "3-arbiter blind re-extraction (chunk=late-period): 3/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Chunk file p185-p195 line 113 prints the headword as 'aHmosE (amasis) iii' — Leprohon's parenthetical alias is exactly '(Amasis)', with the dynastic ordinal 'III' attached to the Egyptian-form headword Ahmose (= display_name 'Ahmose III'), not to the Greek alias. Per the chunk-13 prompt rule 'Populate alt_display_names only if Leprohon prints the alias parenthetical', the alt_display_names value must reproduce exactly what is printed parenthetically: ['Amasis']. Agent A's 'Amasis III' fabricates an ordinal Leprohon does not attach to Amasis; Agent B's two-element list duplicates 'Ahmose III' (already display_name) and only works if display_name is the unusual 'Ahmose (Amasis) III'. Blind reading of the source supports Agent C."
   },
   "leprohon-33.06|throne_names": {
     "value": [
@@ -1754,7 +1754,7 @@
         "source_note": "Lit. 'the two gods who have emerged,' that is, Ptolemy V and Cleopatra I. One example of this Throne name adds 'forever' at the end."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 3/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Leprohon p. 181 (Ptolemy VI Philometor) prints the Throne name with footnote 39 ('Lit. \"the two gods who have emerged,\" that is, Ptolemy V and Cleopatra I.') and footnote 40 ('One example of this Throne name adds \"forever\" at the end.'). Source uses double quotes around \"Epiphanes\" in Leprohon's tra"
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 3/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Leprohon p. 181 (Ptolemy VI Philometor) prints the Throne name with footnote 39 ('Lit. \"the two gods who have emerged,\" that is, Ptolemy V and Cleopatra I.') and footnote 40 ('One example of this Throne name adds \"forever\" at the end.'). Source uses double quotes around \"Epiphanes\" in Leprohon's translation; agent c preserves this. Agent c's source_note is the cleanest near-verbatim concatenation of fns 39+40 without editorial 'Per fn. X' framing (agent b) or unwarranted '\"Two Epiphanes gods\"' header reformulation (agent a). All three agree on transliteration, anglicised, and translation."
   },
   "leprohon-33.13|horus_names": {
     "value": [
@@ -1768,7 +1768,7 @@
         "source_note": "Gauthier 1916, 392–410; von Beckerath 1999, 244–45. 'Protector-of-his-Father' = Horus."
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 2/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Leprohon p. 186 (Ptolemy XII Neos Dionysos Auletes) Original-titulary Horus name. Footnote 51 = scholarly chain (Gauthier 1916, 392–410; von Beckerath 1999, 244–45); footnote 52 = 'Horus' glossing 'Protector-of-his-Father' in the translation. Agent c keeps the translation faithful to Leprohon's main"
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 2/3 arbiters converged. Per-arbiter matches_agent: ['c']. Basis (arbiter d): Leprohon p. 186 (Ptolemy XII Neos Dionysos Auletes) Original-titulary Horus name. Footnote 51 = scholarly chain (Gauthier 1916, 392–410; von Beckerath 1999, 244–45); footnote 52 = 'Horus' glossing 'Protector-of-his-Father' in the translation. Agent c keeps the translation faithful to Leprohon's main text (no inline footnote leak) and captures the fn-52 gloss in source_note as a brief '= Horus' identification — the chunk-1 convention. Agent a inlines '(Horus)' into the translation (footnote leak); agent b drops the fn-52 gloss and adds editorial commentary about stage_suffix that the schema does not need. Agent c uses double quotes around \"in joy\", matching Leprohon's printed quotation style for that lit. gloss."
   },
   "leprohon-33.13|throne_names": {
     "value": [
@@ -1804,7 +1804,7 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): full-JSON vote was 1/1/1 but 2/3 arbiters matches_agent='b'. Differences across the 3 arbiters are in non-IDENTIFIER framing (typically source_note phrasing); resolving to agent b's original value as the closest unmodified fit."
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 1/1/1 on full-JSON, but the only IDENTIFIER-class diff is in variant 3's `translation` quote-style: agents a+b emitted single-quotes ('Neos Dionysos'); agent c emitted double-quotes (\"Neos Dionysos\"). Agents a+b match Leprohon's printed typography (Latin alias enclosed in single quotes per chunk-14 convention). Source_note also differs: a/c emit 'Additional Throne name (Throne 2/3).' labels; b emits null. Per chunk-1 convention 'Throne N' labels are encoded by variant_index/is_variant and NOT echoed in source_note — agent b's null is correct. Both axes converge on agent b's value."
   },
   "leprohon-33.14|horus_names": {
     "value": [
@@ -1829,6 +1829,20 @@
         "source_note": null
       }
     ],
-    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Leprohon pp. 187–188 (Cleopatra VII Philopator). Variant 2 transliteration: source line 634 prints 'wrt twt n it.s' — no parentheses on wrt. Agents b and c match the source verbatim; agent a fabricates parentheses '(wr(t))' to mirror variant 1's feminine markers (constitutional rule: do not invent)."
+    "rationale": "3-arbiter blind re-extraction (chunk=macedonian-ptolemaic): 2/3 arbiters converged. Per-arbiter matches_agent: ['b', 'c']. Basis (arbiter d): Leprohon pp. 187–188 (Cleopatra VII Philopator). Variant 2 transliteration: source line 634 prints 'wrt twt n it.s' — no parentheses on wrt. Agents b and c match the source verbatim; agent a fabricates parentheses '(wr(t))' to mirror variant 1's feminine markers (constitutional rule: do not invent). Variant 2 attested_in: source fn 58 reads 'Gauthier 1916, 417–17, XVIII,H' — agents b and c preserve the page span as printed (typo and all); agent a normalises to '417'. Variant 1 source_note: agent c is the cleanest scholarly-chain rendering of fn 57 without editorial prefixes (agent a prepends 'Original titulary.', agent b adds stage_suffix commentary). Variant 2 source_note: with attestation captured in attested_in and no scholarly chain in fn 58, null is correct (agent b form); agent c also has 'Additional Horus name (Horus 2).' but the chunk-1 convention prefers null when source_note has no scholarly content — however the rest of agent c's record matches the source most faithfully on the load-bearing transliteration/anglicised/attested_in points, so the row is assigned to c and the per-entry source_note stands as agent c emitted it."
+  },
+  "leprohon-15.05|birth_names": {
+    "value": [
+      {
+        "transliteration": "ḥḳꜣ n ḥwt-wꜥrt ipp",
+        "anglicised": "heqa en hut-waret, ipep",
+        "translation": "The ruler of Avaris, Apophis",
+        "variant_index": 1,
+        "is_variant": false,
+        "attested_in": [],
+        "source_note": "Leprohon labels as 'Title and birth name' — the Hyksos `ḥqꜣ ḫꜣswt` ('Ruler of Foreign Lands') ruler-title is attested fused with the king's personal name; dual-emitted to both `throne_names` and `birth_names` for downstream matching."
+      }
+    ],
+    "rationale": "Defensive mirror of throne_names variant 3 for dual-emit symmetry. Per chunk-7 prompt, 'Title and birth name' lines (here `ḥḳꜣ n ḥwt-wꜥrt ipp` 'The ruler of Avaris, Apophis') MUST emit identically to both throne_names AND birth_names. Originally the merge happened to converge on identical source_notes for both fields, but with no explicit override on birth_names a future re-extraction could break the symmetry silently. This explicit override prevents that. Egyptologist round-1 P3-3 finding on PR #128."
   }
 }
