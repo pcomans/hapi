@@ -103,16 +103,28 @@ Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources
 **PR hygiene hooks (infrastructure, constitutional rule 3 enforcement).**
 `.claude/hooks/` contains deterministic guards that convert the project's
 memory-only policies into CI-level failures so the agent can't silently skip
-them. As of PR #104 the enforced guards are: (1) `scope-check.sh` — blocks
+them. As of 2026-04-27 the enforced guards are: (1) `scope-check.sh` — blocks
 `gh pr comment` replies to review feedback without a prior scope-accountability-enforcer
 invocation; (2) `pre-merge-check.sh` — reminds on `gh pr merge` and
 **blocks `curl -X PUT .../pulls/<N>/merge` self-merges** (the bypass that
 let session-2026-04-23's PRs #100/#101/#102 merge without the
 `code-reviewer` + `egyptologist-reviewer` subagent passes that
 `feedback_pr_reviewers.md` requires; see the retrospective fix-up PRs
-#103 + #105); (3) `post-pr-create.sh` — auto-posts `/gemini review` on
-push to a PR branch and **blocks pushes that don't include a
-`docs/mvp-tasks.md` update with `TASK_LIST_UPDATED=1`**. See the hook file for the
+#103 + #105). **Extended 2026-04-27** to also block `gh pr merge`
+without a `REVIEWERS_SPAWNED=1` env-var prefix on the command — mirrors
+the existing `TASK_LIST_UPDATED=1` idiom and forces the agent to
+explicitly confirm it spawned `code-reviewer` + `egyptologist-reviewer`
+subagents in parallel against the PR diff before merging; (3)
+`post-pr-create.sh` — auto-posts `/gemini review` on push to a PR
+branch, **blocks pushes that don't include a `docs/mvp-tasks.md` update
+with `TASK_LIST_UPDATED=1`**, and emits a focused systemMessage on PR
+creation requiring the agent to spawn both reviewer subagents and arm
+`/watch-pr-reviews` (the merge gate above is what enforces it); (4)
+`block-curl-github.sh` (new 2026-04-27) — blocks any `curl` against
+`(api.)?github.com`, forcing all GitHub interactions through `gh` so
+PR/issue creation routes through `post-pr-create.sh` and the workflow
+can't be bypassed via curl. Carve-out: Monitor polling loops (different
+tool surface, hook doesn't fire there). See each hook file for the
 current regex structure and harness (covers `curl`, `gh api`,
 env-var-prefixed invocations, multi-line continuations, and
 quoted-argument mentions).

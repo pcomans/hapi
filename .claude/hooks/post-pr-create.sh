@@ -14,13 +14,22 @@ if [ -z "$CMD" ]; then
   CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
 fi
 
-# Determine what triggered us
+# Determine what triggered us. We match three patterns:
+#   * `gh pr create` — direct PR creation via gh CLI.
+#   * `gh api .../pulls -f ...` (POST) — PR creation via gh REST passthrough.
+#   * `git push` — push to a branch that already has an open PR (re-review).
+# curl-based PR creation is blocked upstream by block-curl-github.sh, so we
+# don't need a curl matcher here.
 IS_PR_CREATE=false
 IS_GIT_PUSH=false
 
-if echo "$CMD" | grep -q 'gh pr create'; then
+if echo "$CMD" | grep -qE 'gh[[:space:]]+pr[[:space:]]+create\b'; then
   IS_PR_CREATE=true
-elif echo "$CMD" | grep -q '^git push'; then
+elif echo "$CMD" | grep -qE 'gh[[:space:]]+api\b' \
+     && echo "$CMD" | grep -qE '/pulls\b' \
+     && echo "$CMD" | grep -qE '(-X|--request|--method)[[:space:]=]*[\"'\'']?POST[\"'\'']?|[[:space:]]-f[[:space:]]'; then
+  IS_PR_CREATE=true
+elif echo "$CMD" | grep -qE '^[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*git[[:space:]]+push\b'; then
   IS_GIT_PUSH=true
 else
   exit 0
@@ -50,9 +59,12 @@ else
   MESSAGES="Gemini Code Assist will auto-review PR #$PR_NUMBER within ~5 minutes."
 fi
 
-# Add documentation reminder for PR creation
+# Add reviewer-spawn requirement for PR creation. Kept focused: reviewer
+# spawning + Monitor armament are the tightly-coupled post-PR-creation
+# protocol. Task-list updates have their own gate above; doc-learnings
+# are soft and don't belong stacked next to a hard rule (signal dilution).
 if [ "$IS_PR_CREATE" = true ]; then
-  MESSAGES="$MESSAGES\n\nYou just created PR #$PR_NUMBER. Before finishing, you MUST:\n1. Update the task list — mark completed tasks as done.\n2. Document learnings in docs/museum-sources/*.md or pipeline/CLAUDE.md.\n3. Wait for CI to pass and the Gemini Code Assist review, then reply to every comment."
+  MESSAGES="$MESSAGES\n\nPR #$PR_NUMBER created. Required next actions (the merge will be blocked otherwise):\n1. Spawn code-reviewer AND egyptologist-reviewer subagents IN PARALLEL (single message, two Agent tool calls) against the PR diff.\n2. Arm /watch-pr-reviews so Gemini's review notifies you when it lands.\n3. When merging, prefix the command with REVIEWERS_SPAWNED=1 (e.g. REVIEWERS_SPAWNED=1 gh pr merge $PR_NUMBER --squash --delete-branch). The pre-merge hook blocks without it."
 fi
 
 # MVP task list guard: agent must pass TASK_LIST_UPDATED=1 AND the file must be in the diff.

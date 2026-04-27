@@ -94,6 +94,29 @@ HEREDOC
   exit 0
 fi
 
+# --- Block 1.5: gh pr merge requires REVIEWERS_SPAWNED=1 --------------------
+# Mirrors the TASK_LIST_UPDATED=1 / SCOPE_CHECKED=1 idiom: agent must
+# explicitly prefix the merge command with REVIEWERS_SPAWNED=1 to confirm
+# it spawned code-reviewer + egyptologist-reviewer subagents on the PR
+# diff (see post-pr-create.sh systemMessage). Constitutional rule 3 +
+# memory feedback_pr_reviewers.md (every PR runs both subagents in
+# parallel) + memory feedback_never_merge_without_gemini_or_codex.md.
+#
+# This block fires ONLY on `gh pr merge` invocations (matched the same
+# way as Block 2 below). If the env var is absent, block. If present,
+# fall through to Block 2's title/body drift reminder.
+if printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*gh\b([[:space:]]+--?[a-zA-Z0-9-]+(=[^[:space:]]*)?([[:space:]]+[^-[:space:]][^[:space:]]*)?)*[[:space:]]+pr[[:space:]]+merge\b'; then
+  if ! printf '%s\n' "$CMD_FLAT" | grep -qE '\bREVIEWERS_SPAWNED=1\b'; then
+    cat <<'HEREDOC'
+{
+  "decision": "block",
+  "reason": "Merge blocked: REVIEWERS_SPAWNED=1 not set. Before merging, you MUST have spawned code-reviewer AND egyptologist-reviewer subagents in parallel against the PR diff (memory: feedback_pr_reviewers.md), confirmed Gemini/Codex review on the current HEAD via `gh api repos/{owner}/{repo}/pulls/<N>/reviews` (memory: feedback_never_merge_without_gemini_or_codex.md), and addressed every reviewer finding. Once done, re-run with `REVIEWERS_SPAWNED=1 gh pr merge ...` to confirm. Constitutional rule 3: deterministic enforcement over convention."
+}
+HEREDOC
+    exit 0
+  fi
+fi
+
 # --- Block 2: gh pr merge reminder ------------------------------------------
 # Only fire on `gh pr merge`. Any other Bash command passes through untouched.
 # Regex requires:
