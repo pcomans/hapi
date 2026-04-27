@@ -150,6 +150,9 @@ _TRANSLIT_FALLBACK_CODEPOINTS: dict[int, int] = {
 _NAME_LIST_FIELDS: frozenset[str] = frozenset({
     "horus_names", "nebty_names", "golden_horus_names",
     "throne_names", "birth_names",
+    # `seth_names` covers Dyn-2 Peribsen and the Khasekhemwy
+    # serekh-with-Seth-and-Horus form (Gemini round-2 finding on PR #128).
+    "seth_names",
     "later_horus_names", "later_nebty_names", "later_golden_horus_names",
     "later_throne_names", "later_birth_names", "later_cartouche_names",
 })
