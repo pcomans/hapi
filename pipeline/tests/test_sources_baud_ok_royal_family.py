@@ -969,17 +969,26 @@ def test_eldest_son_role_requires_smsw_and_nj_khet_f_in_same_title() -> None:
     role-derivation policy itself is documented in the source's
     README.md ("Role-derivation conventions").
     """
+    # Strip editorial brackets `[]` and `<>` before the substring check
+    # so reconstructed/restored titles like `zꜣ nsw[t] nj ẖt.f` or
+    # `zꜣ nswt nj ẖt.f <smsw>` still match. Per Gemini round-3 feedback
+    # on PR #123: brackets are a documented Baud convention for
+    # reconstructed text and are NOT semantic content; they should not
+    # cause false negatives in this conjunction test.
+    bracket_strip = str.maketrans("", "", "[]<>")
     for r in _rows():
         if "king's eldest son of his body" not in r["roles"]:
             continue
         conjoined = [
             t for t in r["titles_from_baud"]
-            if "smsw" in t and "nj ẖt.f" in t
+            if "smsw" in t.translate(bracket_strip)
+            and "nj ẖt.f" in t.translate(bracket_strip)
         ]
         assert conjoined, (
             f"{r['baud_id']}: roles include `king's eldest son of his "
             f"body` but no titles_from_baud entry contains both `smsw` "
-            f"and `nj ẖt.f` in the same string. "
+            f"and `nj ẖt.f` in the same string (after stripping "
+            f"editorial brackets `[]` and `<>`). "
             f"titles_from_baud={r['titles_from_baud']}"
         )
 
