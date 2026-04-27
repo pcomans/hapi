@@ -251,6 +251,31 @@ def test_majority_tie_prose_unions_attested_in_dedup(merge_module):
     }
 
 
+def test_leprohon_21_02_source_citation_is_138_159(merge_module):
+    """Invariant pin per code-reviewer round-1 P2-4.
+
+    leprohon-21.02 (Smendes / Nesbanebdjed) had a 1/1/1 source_citation
+    tie; agent A=printed-139, B=printed-138, C=(printed-137, physical-158).
+    The OCR running header at chunk-p157-p173-pypdf.md line 95 ('138 THE
+    GR EAT NAME') confirms Smendes' headword (line 110) is on printed
+    138 / physical 159. Both the previous fix_rows SPOT_CORRECTION and
+    the current TIE_BREAK_OVERRIDES entry agree on these values; this
+    test pins them on the loaded reconciled.jsonl so a future
+    re-extraction or re-aggregation can't drift back to one of the
+    wrong agent values.
+    """
+    import json
+    reconciled_path = SOURCE_DIR / "reconciled.jsonl"
+    rows = [json.loads(line) for line in reconciled_path.read_text().splitlines() if line.strip()]
+    smendes = [r for r in rows if r.get("leprohon_id") == "leprohon-21.02"]
+    assert len(smendes) == 1
+    citation = smendes[0]["source_citation"]
+    assert citation["printed_page"] == 138
+    assert citation["physical_pdf_page"] == 159
+    assert citation["book"] == "Leprohon 2013"
+    assert citation["edition"] == "SBL Writings from the Ancient World 33"
+
+
 def test_majority_requires_lid_and_field(merge_module):
     """Constitutional rule 10: no backwards compatibility shim. The
     previous signature accepted Optional lid/field with a silent

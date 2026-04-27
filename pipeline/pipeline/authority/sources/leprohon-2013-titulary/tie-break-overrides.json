@@ -1551,10 +1551,10 @@
     "value": {
       "book": "Leprohon 2013",
       "edition": "SBL Writings from the Ancient World 33",
-      "printed_page": 137,
-      "physical_pdf_page": 158
+      "printed_page": 138,
+      "physical_pdf_page": 159
     },
-    "rationale": "3-arbiter blind re-extraction (chunk=tip-early): 3/3 arbiters converged. Per-arbiter matches_agent: ['?', 'c']. Basis (arbiter d): Smendes (Nesbanebdjed) section header '2. n Es -ba -n Eb -Dj ED (s m En DEs )' appears on physical p.158 (printed running header '137'), line 110 of chunk-p157-p173-pypdf.md. Convention: source_citation records the entry's starting page. Agent a's printed_page=139 is wrong (139 is Psusennes I's start). Agent b's printed_page=138 corresponds to where the section continues but not where it begins."
+    "rationale": "3-arbiter blind re-extraction was inconsistent with the OCR running header. Re-verified against chunk-p157-p173-pypdf.md: line 95 carries the 'p.138' running header; Smendes' section header (line 110) follows after it, putting the entry on printed page 138 / physical 159. Matches the pre-existing fix_rows.py SPOT_CORRECTION (which was removed in PR #128 because the override now sets both fields). Test test_leprohon_21_02_source_citation_is_138_159 pins the values on reconciled.jsonl. Issue #128 post-arbiter manual override per OCR re-verification."
   },
   "leprohon-21.04|display_name": {
     "value": "Pa-Seba-Kha-En-Niut I",

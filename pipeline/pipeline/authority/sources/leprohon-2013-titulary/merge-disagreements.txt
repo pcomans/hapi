@@ -2476,7 +2476,7 @@ leprohon-21.02 (Nesbanebdjed (Smendes)):
     a: {"book": "Leprohon 2013", "edition": "SBL Writings from the Ancient World 33", "physical_pdf_page": 159, "printed_page": 139}
     b: {"book": "Leprohon 2013", "edition": "SBL Writings from the Ancient World 33", "physical_pdf_page": 159, "printed_page": 138}
     c: {"book": "Leprohon 2013", "edition": "SBL Writings from the Ancient World 33", "physical_pdf_page": 158, "printed_page": 137}
-    → chose: {"book": "Leprohon 2013", "edition": "SBL Writings from the Ancient World 33", "physical_pdf_page": 158, "printed_page": 137}
+    → chose: {"book": "Leprohon 2013", "edition": "SBL Writings from the Ancient World 33", "physical_pdf_page": 159, "printed_page": 138}
   throne_names:
     a: [{"anglicised": "hedj kheper ra", "attested_in": [], "is_variant": false, "source_note": null, "translation": "The dazzling one is the (very) manifestation of Re", "transliteration": "ḥḏ ḫpr rꜥ", "variant_index": 1}, {"anglicised": "setep en ra", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Throne name.", "translation": "Chosen by Re", "transliteration": "stp n rꜥ", "variant_index": 2}]
     b: [{"anglicised": "hedj kheper ra", "attested_in": [], "is_variant": false, "source_note": "Leprohon notes Smendes was the first to call himself the Dual King ḥḏ ḫpr rꜥ, a phrase subsequently used by a number of Third Intermediate Period kings for their Throne names.", "translation": "The dazzling one is the (very) manifestation of Re", "transliteration": "ḥḏ ḫpr rꜥ", "variant_index": 1}, {"anglicised": "setep en ra", "attested_in": [], "is_variant": true, "source_note": "Epithet added to the Throne name.", "translation": "Chosen by Re", "transliteration": "stp n rꜥ", "variant_index": 2}]
