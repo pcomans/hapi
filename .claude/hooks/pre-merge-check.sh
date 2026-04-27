@@ -1,121 +1,228 @@
 #!/bin/bash
 # PreToolUse hook for PR merges:
-# - Block 1 — `curl -X PUT .../pulls/<N>/merge` (the GitHub REST API merge
-#   path): BLOCK the call. The agent has been bypassing the `gh pr merge`
-#   reminder by using curl directly against the API. This hook now funnels
-#   all merges through the single enforced path. Per CLAUDE.md rule 3
-#   (deterministic enforcement over convention).
-# - Block 2 — `gh pr merge`: inject a reminder to verify PR title and
-#   description match the final merged state before the merge lands. PR
-#   titles and bodies are written at PR-open time and frequently drift as
-#   commits accrete, reviewers request changes, and scope shifts. The
-#   merge commit on main inherits whatever the PR body currently says, so
-#   a stale body bakes bad history into the repo. Force a deliberate
-#   review step at the last responsible moment.
+# - Block 1 — `curl -X PUT .../pulls/<N>/merge` and `gh api -X PUT
+#   .../pulls/<N>/merge`: BLOCK the call. The agent has been bypassing
+#   the `gh pr merge` reminder by using REST passthrough directly.
+#   This hook funnels all merges through the single enforced path.
+#   Constitutional rule 3 (deterministic enforcement over convention).
+# - Block 1.5 — `gh pr merge` without `REVIEWERS_SPAWNED=1`: BLOCK.
+#   Mirrors the existing TASK_LIST_UPDATED=1 idiom; forces explicit
+#   confirmation that code-reviewer + egyptologist-reviewer subagents
+#   were spawned in parallel against the PR diff before merging.
+# - Block 2 — `gh pr merge` (with REVIEWERS_SPAWNED=1): inject a
+#   reminder to verify PR title and description match the final merged
+#   state before the merge lands. PR titles and bodies are written at
+#   PR-open time and frequently drift as commits accrete; the merge
+#   commit on main inherits whatever the PR body currently says.
 #
-# KNOWN LIMITATIONS (shlex rewrite TODO).
-# After 8 rounds of regex hardening the matcher reliably handles every
-# realistic agent-originated merge-attempt form (bare curl/gh/gh-api,
-# multi-line `\` continuations, env-var prefixes, space- or `=`-separated
-# flag values, quoted-argument MENTIONS inside other commands). It has,
-# however, hit its ceiling on adversarial shell tokenisation:
-#   - Env-var VALUES with quoted whitespace (`FOO="bar baz" curl ...`) —
-#     the `VAR=[^[:space:]]*` pattern truncates at the first internal
-#     space and falls out of the prefix group. Gemini's round-8 cited
-#     examples used impossible inputs (repo slugs cannot contain
-#     whitespace; GitHub PATs are alphanumeric), but the underlying
-#     regex gap generalises to any env-var whose value happens to carry
-#     quoted spaces (e.g. `GIT_AUTHOR_NAME="John Doe"`).
-#   - Flag VALUES with quoted whitespace (`gh --repo "owner/repo name"
-#     api ...`) — same root cause.
-# A proper fix needs shell-aware tokenisation: invoke
-#   python3 -c "import shlex, sys; print('\n'.join(shlex.split(sys.stdin.read())))"
-# on `$CMD_FLAT`, split the token list on `;`/`&&`/`||`/`|`, and inspect
-# the first token of each statement. That is a categorically different
-# mechanism from a regex patch and is tracked as a follow-up PR rather
-# than another round of regex accretion. See this block for the current
-# state-of-the-art regex; see the harness at `/tmp/claude/run-hook-tests.sh`
-# (local dev artifact, not versioned) for the 42 cases it covers.
+# Implementation: shlex tokenisation (same pattern as the other hooks
+# in this dir). Earlier rounds of regex-only matching had documented
+# false-positive classes when commit bodies / PR descriptions
+# literally quoted the matched patterns. shlex tokens come from
+# POSIX-aware quoting, so the verb check operates on actual command
+# tokens, not on string contents inside quoted arguments.
 
-CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
-if [ -z "$CMD" ]; then
-  CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
-fi
+CMD=$(printf '%s' "$TOOL_INPUT" | jq -r '.command // .tool_input.command // ""' 2>/dev/null)
 
-# Normalise the command once: strip the trailing `\` that shell line-
-# continuations leave at end-of-line, THEN flatten newlines to spaces.
-# Without the strip step, a split like `curl -X \<NL>PUT` flattens to
-# `curl -X \ PUT`, and the subsequent `-X[ =]*PUT` method-grep fails
-# because `[ =]*` does not match a literal backslash. Using
-# `printf '%s\n'` rather than `echo` avoids `echo`'s misbehaviour when
-# the first argument starts with `-`. Gemini round-1 HIGH + round-4
-# medium findings on PR #104.
-CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\[[:space:]]*$//' | tr '\n' ' ')
+# Empty CMD → nothing to check.
+[ -z "$CMD" ] && exit 0
 
-# --- Block 1: curl-to-API merge bypass --------------------------------------
-# Three independent AND-ed checks so an adversarially-formatted merge call
-# still trips the hook:
-#   (a) `\bcurl\b` somewhere in the flattened command;
-#   (b) the GitHub pulls-merge URL path somewhere in the flattened command;
-#   (c) a PUT method flag somewhere in the flattened command.
-# Splitting into three independent matches (rather than `\bcurl\b.*URL`)
-# closes the `URL="..."; curl -X PUT $URL` bypass where the URL appears
-# BEFORE `curl` in the shell source. A read-only GET on the same endpoint
-# ("has this PR been merged?") has no PUT flag, so it passes unblocked.
-# Method alternation covers `-X`, `--request`, and `--method` (case-
-# insensitive) with optional space / `=` / surrounding quotes around PUT
-# (e.g. `-X "PUT"`, `--request='PUT'`). Word boundaries on `curl` and the
-# URL suffix prevent substring false-positives (e.g. `occurl`, or commands
-# that merely echo the URL as text — including this hook's own output).
-# The statement-start anchor ensures the forbidden verb is being INVOKED,
-# not merely mentioned inside a quoted string. Additional round-6
-# hardening:
-#   * `(VAR=val[[:space:]]+)*` absorbs zero-or-more leading env-var
-#     assignments (`GITHUB_TOKEN=xxx curl -X PUT ...`) which the plain
-#     anchor would have missed;
-#   * alternation `curl|gh\b.*\bapi` also blocks `gh api -X PUT .../merge`,
-#     the sibling bypass route — `gh api` hits the same REST endpoint
-#     without going through `gh pr merge` so the title-drift reminder is
-#     skipped;
-#   * URL path made `/?repos/...` so `gh api repos/o/r/pulls/N/merge`
-#     (leading-slash-omitted form that gh api accepts) still matches;
-#   * `printf '%s\n'` (trailing newline) for POSIX-portable `grep` input.
-# Statement separators covered: start-of-string, `|`, `;`, `&`, `(`.
-# Gemini round-2 + round-3 + round-5 + round-6 findings on PR #104.
-if printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*(curl|gh\b([[:space:]]+--?[a-zA-Z0-9-]+(=[^[:space:]]*)?([[:space:]]+[^-[:space:]][^[:space:]]*)?)*[[:space:]]+api)\b' \
-   && printf '%s\n' "$CMD_FLAT" | grep -qE '/?repos/[^/]+/[^/]+/pulls/[0-9]+/merge\b' \
-   && printf '%s\n' "$CMD_FLAT" | grep -qiE "(-X|--request|--method)[ =]*[\"']?PUT[\"']?"; then
-  cat <<'HEREDOC'
+# Decide via python3 + shlex. Output is one of:
+#   API_PUT_MERGE_BYPASS — curl or gh-api PUT to /pulls/<N>/merge
+#   GH_PR_MERGE_NEED_REVIEWERS — gh pr merge without REVIEWERS_SPAWNED=1
+#   GH_PR_MERGE_OK — gh pr merge with REVIEWERS_SPAWNED=1
+#   NONE — no merge-relevant statement found
+DECISION=$(CMD_TO_CHECK="$CMD" python3 <<'PYEOF'
+import os
+import re
+import shlex
+import sys
+
+cmd = os.environ.get("CMD_TO_CHECK", "")
+if not cmd.strip():
+    print("NONE")
+    sys.exit(0)
+
+try:
+    tokens = shlex.split(cmd, comments=False, posix=True)
+except ValueError:
+    print("NONE")
+    sys.exit(0)
+
+SEP_RE = re.compile(r'(&&|\|\||;|\||&|\(|\))')
+flat = []
+for t in tokens:
+    parts = SEP_RE.split(t)
+    for p in parts:
+        if p:
+            flat.append(p)
+
+SEPS = {"&&", "||", ";", "|", "&", "(", ")"}
+statements = []
+current = []
+for t in flat:
+    if t in SEPS:
+        if current:
+            statements.append(current)
+            current = []
+    else:
+        current.append(t)
+if current:
+    statements.append(current)
+
+ENV_VAR_RE = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*=')
+# PULLS_MERGE_RE matches both the gh-api short form
+# (`repos/o/r/pulls/N/merge`) and the curl long form
+# (`https://api.github.com/repos/o/r/pulls/N/merge`). Anchored on
+# `(?:^|/)repos/...` so any valid URL prefix (host, scheme, leading
+# slash, or none) passes; trailing `(?:/|$)` so a longer sub-path
+# (`/merge/foo`) does NOT spuriously match.
+PULLS_MERGE_RE = re.compile(
+    r'(?:^|/)repos/[^/]+/[^/]+/pulls/[0-9]+/merge(?:/|$)'
+)
+
+
+def extract_method(rest):
+    """Walk `rest` looking for the request method via `-X / --request /
+    --method`. Handles both `-X POST` and `-X=POST` forms. Other flags
+    that take values (e.g. curl's `-H "..."`) are tolerated by walking
+    one token at a time and not consuming arbitrary flag values."""
+    method = None
+    j = 0
+    while j < len(rest):
+        t = rest[j]
+        if t in ("-X", "--request", "--method"):
+            if j + 1 < len(rest):
+                method = rest[j + 1].upper()
+                j += 2
+                continue
+        elif t.startswith("-X="):
+            method = t[3:].upper()
+        elif t.startswith("--request="):
+            method = t[len("--request="):].upper()
+        elif t.startswith("--method="):
+            method = t[len("--method="):].upper()
+        j += 1
+    return method
+
+
+def find_pulls_merge_url(rest, pattern):
+    """Walk `rest` and return the first token that matches `pattern`.
+    More robust than picking-the-first-non-flag-token because curl
+    invocations interleave flag values (`-H "Authorization: ..."`) with
+    URLs; we don't want to mistake a header value for a URL. Pattern
+    is precompiled and matches the path shape, which can appear
+    anywhere in the token (host prefix, leading slash, or bare)."""
+    for t in rest:
+        if pattern.search(t):
+            return t
+    return None
+
+
+def find_chain_after_verb(stmt_after_verb, chain):
+    """Return the index in `stmt_after_verb` of the LAST chain token,
+    skipping global flags between/around them (parallels the helper
+    in post-pr-create.sh and scope-check.sh — `gh --repo o/r pr merge`
+    must be classified as a `pr merge` invocation, not silently
+    passed through). Two flag forms handled:
+      * `--flag=value` (single token; consume one).
+      * `--flag value` (two tokens; consume two — UNLESS the next
+        token equals the expected chain element, in which case treat
+        `--flag` as a boolean and consume one).
+    Returns the index of the last chain element, or None.
+    """
+    j = 0
+    chain_idx = 0
+    while j < len(stmt_after_verb) and chain_idx < len(chain):
+        t = stmt_after_verb[j]
+        if t.startswith("-"):
+            if "=" in t:
+                j += 1
+            else:
+                if j + 1 < len(stmt_after_verb) \
+                        and stmt_after_verb[j + 1] == chain[chain_idx]:
+                    j += 1
+                else:
+                    j += 2
+            continue
+        if t == chain[chain_idx]:
+            chain_idx += 1
+            if chain_idx == len(chain):
+                return j
+            j += 1
+        else:
+            return None
+    return None
+
+
+for stmt in statements:
+    env_prefixes = []
+    i = 0
+    while i < len(stmt) and ENV_VAR_RE.match(stmt[i]):
+        env_prefixes.append(stmt[i])
+        i += 1
+    if i >= len(stmt):
+        continue
+    verb = stmt[i]
+    rest_after_verb = stmt[i + 1:]
+
+    # Block 1: curl PUT to /pulls/<N>/merge
+    if verb == "curl":
+        method = extract_method(rest_after_verb)
+        url = find_pulls_merge_url(rest_after_verb, PULLS_MERGE_RE)
+        if url and method == "PUT":
+            print("API_PUT_MERGE_BYPASS")
+            sys.exit(0)
+        # Curl to anything else — defer to other hooks (block-curl-github.sh
+        # already covers all curl-to-github traffic).
+        continue
+
+    # Block 1: gh api PUT to /pulls/<N>/merge (with global-flag handling)
+    if verb == "gh":
+        api_idx = find_chain_after_verb(rest_after_verb, ("api",))
+        if api_idx is not None:
+            sub = rest_after_verb[api_idx + 1:]
+            method = extract_method(sub)
+            url = find_pulls_merge_url(sub, PULLS_MERGE_RE)
+            if url and method == "PUT":
+                print("API_PUT_MERGE_BYPASS")
+                sys.exit(0)
+            continue
+
+        # Block 1.5 / Block 2: gh pr merge (with global-flag handling)
+        merge_idx = find_chain_after_verb(rest_after_verb, ("pr", "merge"))
+        if merge_idx is not None:
+            if any(p == "REVIEWERS_SPAWNED=1" for p in env_prefixes):
+                print("GH_PR_MERGE_OK")
+                sys.exit(0)
+            print("GH_PR_MERGE_NEED_REVIEWERS")
+            sys.exit(0)
+
+print("NONE")
+PYEOF
+)
+
+case "$DECISION" in
+    API_PUT_MERGE_BYPASS)
+        cat <<'HEREDOC'
 {
   "decision": "block",
-  "reason": "Direct curl-to-GitHub-API merges bypass the pre-merge-check reminder and make the merge path non-uniform. Use `gh pr merge <N> --squash --delete-branch` instead (add `--body '...'` if you need a custom merge commit message). The `gh` CLI routes through this hook so you get the title/body drift check before the merge lands. Constitutional rule 3: deterministic enforcement over convention — one merge path, one hook."
+  "reason": "Direct curl/gh-api PUT-to-/pulls/<N>/merge bypasses the pre-merge-check reminder and the REVIEWERS_SPAWNED=1 gate. Use `REVIEWERS_SPAWNED=1 gh pr merge <N> --squash --delete-branch` instead (add `--body '...'` if you need a custom merge commit message). The `gh pr merge` route is the single enforced merge path: it triggers Block 1.5 (REVIEWERS_SPAWNED=1 gate) AND Block 2 (title/body drift reminder). Constitutional rule 3: deterministic enforcement over convention — one merge path, one hook."
 }
 HEREDOC
-  exit 0
-fi
-
-# --- Block 2: gh pr merge reminder ------------------------------------------
-# Only fire on `gh pr merge`. Any other Bash command passes through untouched.
-# Regex requires:
-#   - `gh` at a command-statement boundary (start-of-string or after a
-#     shell separator `| ; & (`) so strings like
-#     `gh pr comment --body "gh pr merge"` or `echo "gh pr merge"` don't
-#     false-REMIND (round-5 finding);
-#   - `pr merge` adjacent with only whitespace between them, per the
-#     round-4 tightening (eliminates `gh pr list --search "merge"` and
-#     `gh pr view --json body` false positives);
-#   - `.*` between `gh` and `pr` so global flags like `--repo o/r` still
-#     pass (round-3 requirement: `gh --repo o/r pr merge` must REMIND);
-#   - `(VAR=val[[:space:]]+)*` absorbs leading env-var assignments so
-#     `GH_TOKEN=xxx gh pr merge 1` still REMINDs (round-6 finding);
-#   - `printf '%s\n'` for POSIX-portable `grep` input.
-if ! printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*gh\b([[:space:]]+--?[a-zA-Z0-9-]+(=[^[:space:]]*)?([[:space:]]+[^-[:space:]][^[:space:]]*)?)*[[:space:]]+pr[[:space:]]+merge\b'; then
-  exit 0
-fi
-
-# Emit additionalContext — the merge is NOT blocked, the agent just gets
-# a reminder injected into the model context before the tool call runs.
-cat <<'HEREDOC'
+        exit 0
+        ;;
+    GH_PR_MERGE_NEED_REVIEWERS)
+        cat <<'HEREDOC'
+{
+  "decision": "block",
+  "reason": "Merge blocked: REVIEWERS_SPAWNED=1 not set. Before merging, you MUST have spawned code-reviewer AND egyptologist-reviewer subagents in parallel against the PR diff (memory: feedback_pr_reviewers.md), confirmed Gemini/Codex review on the current HEAD via `gh api repos/{owner}/{repo}/pulls/<N>/reviews` (memory: feedback_never_merge_without_gemini_or_codex.md), and addressed every reviewer finding. Once done, re-run with `REVIEWERS_SPAWNED=1 gh pr merge ...` to confirm. Constitutional rule 3: deterministic enforcement over convention."
+}
+HEREDOC
+        exit 0
+        ;;
+    GH_PR_MERGE_OK)
+        cat <<'HEREDOC'
 {
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
@@ -123,4 +230,9 @@ cat <<'HEREDOC'
   }
 }
 HEREDOC
-exit 0
+        exit 0
+        ;;
+    *)
+        exit 0
+        ;;
+esac

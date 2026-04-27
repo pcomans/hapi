@@ -6,38 +6,174 @@
 # Rationale: the main agent tends to defer in-scope work ("I'll handle this in
 # Phase A...") when responding to reviewers. The enforcer subagent challenges
 # those deferrals. This hook ensures the enforcer runs before any public reply.
+#
+# Implementation: shlex tokenisation (same pattern as block-curl-github.sh
+# and post-pr-create.sh). A pure-grep matcher misfires when a commit body /
+# heredoc literally contains `gh pr comment` as a quoted example (e.g. when
+# documenting this hook). shlex strips quoting so the verb check operates
+# on actual tokens, not on string contents.
 
-CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
-if [ -z "$CMD" ]; then
-  CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
-fi
+CMD=$(printf '%s' "$TOOL_INPUT" | jq -r '.command // .tool_input.command // ""' 2>/dev/null)
 
-# Only guard `gh pr comment`. That's the one command where the agent writes
-# natural-language responses to reviewer feedback — the place where deferrals
-# show up as prose.
-if ! echo "$CMD" | grep -q 'gh pr comment'; then
-  exit 0
-fi
+# Empty CMD → nothing to check.
+[ -z "$CMD" ] && exit 0
 
-# Exempt `/gemini <command>` trigger-comments. Those are workflow triggers
-# for the Gemini Code Assist GitHub App (e.g. `/gemini review`,
-# `/gemini summary`), not replies to feedback, so they don't need a
-# scope-accountability check. Match the long form `--body`, the short form
-# `-b` (with a leading word boundary so it doesn't match things like
-# `--body-b`), either a whitespace or `=` separator, and an optional quote
-# char before `/gemini`.
-if echo "$CMD" | grep -qE -- '(--body|[[:space:]]-b)([[:space:]]+|=)["'"'"']?/gemini'; then
-  exit 0
-fi
+# Decide via python3 + shlex. Outputs a single token: BLOCK, EXEMPT, or OK.
+#  - BLOCK: at least one statement is `gh pr comment <args>` and SCOPE_CHECKED=1
+#    is not present in the env-var prefix of that statement. Also exclude
+#    `/gemini ...` trigger comments (workflow triggers, not feedback replies).
+#  - EXEMPT: SCOPE_CHECKED=1 set OR every gh-pr-comment statement is a
+#    /gemini trigger.
+#  - OK: no `gh pr comment` invocation at all (e.g. `git commit` whose body
+#    happens to contain the literal string).
+DECISION=$(CMD_TO_CHECK="$CMD" python3 <<'PYEOF'
+import os
+import re
+import shlex
+import sys
 
-if echo "$CMD" | grep -q 'SCOPE_CHECKED=1'; then
-  exit 0
-fi
+cmd = os.environ.get("CMD_TO_CHECK", "")
+if not cmd.strip():
+    print("OK")
+    sys.exit(0)
 
-cat <<'HEREDOC'
+try:
+    tokens = shlex.split(cmd, comments=False, posix=True)
+except ValueError:
+    # Unbalanced quotes — let it through; loud-fail elsewhere.
+    print("OK")
+    sys.exit(0)
+
+SEP_RE = re.compile(r'(&&|\|\||;|\||&|\(|\))')
+flat = []
+for t in tokens:
+    parts = SEP_RE.split(t)
+    for p in parts:
+        if p:
+            flat.append(p)
+
+SEPS = {"&&", "||", ";", "|", "&", "(", ")"}
+statements = []
+current = []
+for t in flat:
+    if t in SEPS:
+        if current:
+            statements.append(current)
+            current = []
+    else:
+        current.append(t)
+if current:
+    statements.append(current)
+
+ENV_VAR_RE = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*=')
+
+
+def find_chain_after_verb(stmt_after_verb, chain):
+    """Return the index in `stmt_after_verb` of the LAST chain token,
+    skipping global flags between/around them. Identical to the
+    helper in post-pr-create.sh — global flags handled in two forms:
+      * `--flag=value` (single token; consume one).
+      * `--flag value` (two tokens; consume two — UNLESS the next
+        token equals the expected chain element, in which case
+        treat `--flag` as a boolean and consume one).
+    Returns the index of the last chain element, or None.
+    """
+    j = 0
+    chain_idx = 0
+    while j < len(stmt_after_verb) and chain_idx < len(chain):
+        t = stmt_after_verb[j]
+        if t.startswith("-"):
+            if "=" in t:
+                j += 1
+            else:
+                if j + 1 < len(stmt_after_verb) \
+                        and stmt_after_verb[j + 1] == chain[chain_idx]:
+                    j += 1
+                else:
+                    j += 2
+            continue
+        if t == chain[chain_idx]:
+            chain_idx += 1
+            if chain_idx == len(chain):
+                return j
+            j += 1
+        else:
+            return None
+    return None
+
+
+found_any_pr_comment = False
+
+for stmt in statements:
+    # Capture any env-var prefixes (so we can detect SCOPE_CHECKED=1).
+    env_prefixes = []
+    i = 0
+    while i < len(stmt) and ENV_VAR_RE.match(stmt[i]):
+        env_prefixes.append(stmt[i])
+        i += 1
+    if i >= len(stmt):
+        continue
+    verb = stmt[i]
+    rest_after_verb = stmt[i + 1:]
+    if verb != "gh":
+        continue
+
+    # Locate `pr comment` after the verb, skipping global flags
+    # (e.g. `gh --repo owner/repo pr comment 124 --body x`).
+    end_idx = find_chain_after_verb(rest_after_verb, ("pr", "comment"))
+    if end_idx is None:
+        continue
+
+    rest = rest_after_verb[end_idx + 1:]
+    found_any_pr_comment = True
+
+    # SCOPE_CHECKED=1 anywhere in the env prefix exempts this statement.
+    if any(p == "SCOPE_CHECKED=1" for p in env_prefixes):
+        continue
+
+    # /gemini trigger comments are exempt (workflow triggers, not replies).
+    # Look for `--body /gemini...`, `--body=/gemini...`, `-b /gemini...`,
+    # `-b=/gemini...`.
+    is_gemini_trigger = False
+    j = 0
+    while j < len(rest):
+        t = rest[j]
+        if t in ("--body", "-b"):
+            if j + 1 < len(rest) and rest[j + 1].lstrip().startswith("/gemini"):
+                is_gemini_trigger = True
+                break
+            j += 2
+            continue
+        if t.startswith("--body=") and t[len("--body="):].lstrip().startswith("/gemini"):
+            is_gemini_trigger = True
+            break
+        if t.startswith("-b=") and t[len("-b="):].lstrip().startswith("/gemini"):
+            is_gemini_trigger = True
+            break
+        j += 1
+    if is_gemini_trigger:
+        continue
+
+    print("BLOCK")
+    sys.exit(0)
+
+# We saw at least one gh pr comment but every one was exempted (gemini
+# trigger or SCOPE_CHECKED=1).
+if found_any_pr_comment:
+    print("EXEMPT")
+else:
+    print("OK")
+PYEOF
+)
+
+if [ "$DECISION" = "BLOCK" ]; then
+  cat <<'HEREDOC'
 {
   "decision": "block",
   "reason": "Before posting a reply to PR feedback, you MUST invoke the scope-accountability-enforcer subagent to verify you are not improperly deferring in-scope work. Then re-run this command prefixed with SCOPE_CHECKED=1 (e.g., SCOPE_CHECKED=1 gh pr comment ...)."
 }
 HEREDOC
+  exit 0
+fi
+
 exit 0
