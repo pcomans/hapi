@@ -10,35 +10,109 @@
 #   - Reads via curl are ad-hoc; gh wraps them with auth, retry, paging.
 #   - One uniform tool surface = one hook surface.
 #
-# Detection: any curl invocation whose flat token sequence contains a
-# (api.)?github.com host. Covers:
-#   * curl https://api.github.com/...
-#   * curl -H "..." https://github.com/...
-#   * curl ${GITHUB_API}/repos/... where the URL is in an env var → still
-#     matches because the literal string is in the command line as
-#     "$GITHUB_API/..." or after expansion is in the resolved CMD.
-#   * Multi-line continuation (\) — flattened first.
-# Method-agnostic: GET / POST / PUT / PATCH / DELETE all blocked.
-#
-# False-positive avoidance:
-#   * Word-boundary anchor on `curl` so `occurl` etc. don't trip.
-#   * Statement-start anchor (start of line / after shell separator) so
-#     a github.com URL mentioned inside an unrelated command body (e.g.
-#     `echo "see https://github.com/foo for details"`) does not match.
-#   * Allow `gh api` (which talks to api.github.com under the hood) — the
-#     anchor is on the `curl` token, not the host.
+# Implementation: shell-aware tokenisation via `python3 -c 'shlex'`. A
+# pure-regex pass against the flat command misfires when a PR body /
+# comment / heredoc literally contains the words "curl" and
+# "github.com" (e.g. when documenting the very block hook below). shlex
+# strips quoting so we only see the actual argument tokens, not their
+# string contents — `gh pr create --body "we block curl to api.github.com"`
+# tokenises to ['gh','pr','create','--body','we block curl to api.github.com']
+# and the github.com substring lives inside the --body argument, not as
+# its own token, so the per-statement check below correctly does not
+# trip on it.
 
 CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
 if [ -z "$CMD" ]; then
   CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
 fi
 
-CMD_FLAT=$(printf '%s\n' "$CMD" | sed 's/\\[[:space:]]*$//' | tr '\n' ' ')
+# Empty CMD → nothing to check.
+[ -z "$CMD" ] && exit 0
 
-# (a) `curl` invoked at a statement boundary, possibly after env-var prefixes
-# (b) (api.)?github.com appearing somewhere in the same flat command
-if printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(`$])[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*curl\b' \
-   && printf '%s\n' "$CMD_FLAT" | grep -qE '\b(api\.)?github\.com\b'; then
+# Tokenise the whole command via shlex, then split on shell statement
+# separators (;, &, |, &&, ||, (). For each statement, scan the leading
+# tokens (skipping env-var assignments like `FOO=bar`) for a `curl`
+# command verb. If we find one, check whether ANY token within that
+# same statement contains a github.com host.
+#
+# The python script reads CMD from the CMD_TO_CHECK env var (NOT stdin —
+# the heredoc itself redirects stdin to feed python the script, so a
+# `printf | python3 <<HEREDOC` pipe is silently swallowed by the
+# heredoc redirect). prints "BLOCK" if a blocking pattern is found,
+# "OK" otherwise. shlex.split honours POSIX quoting, so quoted strings
+# collapse into single tokens whose *content* doesn't pollute the
+# per-statement check.
+RESULT=$(CMD_TO_CHECK="$CMD" python3 <<'PYEOF'
+import os
+import re
+import shlex
+import sys
+
+cmd = os.environ.get("CMD_TO_CHECK", "")
+if not cmd.strip():
+    print("OK")
+    sys.exit(0)
+
+try:
+    tokens = shlex.split(cmd, comments=False, posix=True)
+except ValueError:
+    # Unbalanced quotes etc. — let it through; regex hooks downstream
+    # will still see the literal text. Loud failure beats silent block.
+    print("OK")
+    sys.exit(0)
+
+# Statement separators we recognise as their own tokens after shlex.
+# shlex does NOT split on these — it keeps "&&" / "||" / ";" / "|" /
+# "(" / ")" as part of adjacent tokens unless they're whitespace-
+# separated. So we re-split each token on these operators.
+SEP_RE = re.compile(r'(&&|\|\||;|\||&|\(|\))')
+
+flat = []
+for t in tokens:
+    parts = SEP_RE.split(t)
+    for p in parts:
+        if p:
+            flat.append(p)
+
+# Group tokens into statements (split on separator tokens).
+SEPS = {"&&", "||", ";", "|", "&", "(", ")"}
+statements = []
+current = []
+for t in flat:
+    if t in SEPS:
+        if current:
+            statements.append(current)
+            current = []
+    else:
+        current.append(t)
+if current:
+    statements.append(current)
+
+ENV_VAR_RE = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*=')
+GITHUB_RE = re.compile(r'\b(api\.)?github\.com\b')
+
+for stmt in statements:
+    # Skip leading env-var assignments to find the verb.
+    i = 0
+    while i < len(stmt) and ENV_VAR_RE.match(stmt[i]):
+        i += 1
+    if i >= len(stmt):
+        continue
+    verb = stmt[i]
+    if verb != "curl":
+        continue
+    # Found a curl invocation. Check if any token in this statement
+    # references a github.com host.
+    for tok in stmt[i:]:
+        if GITHUB_RE.search(tok):
+            print("BLOCK")
+            sys.exit(0)
+
+print("OK")
+PYEOF
+)
+
+if [ "$RESULT" = "BLOCK" ]; then
   cat <<'HEREDOC'
 {
   "decision": "block",
