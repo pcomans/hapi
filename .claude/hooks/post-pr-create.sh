@@ -129,15 +129,15 @@ def extract_method(rest):
         t = rest[j]
         if t in ("-X", "--request", "--method"):
             if j + 1 < len(rest):
-                method = rest[j + 1].strip("\"'").upper()
+                method = rest[j + 1].upper()
                 j += 2
                 continue
         elif t.startswith("-X="):
-            method = t[3:].strip("\"'").upper()
+            method = t[3:].upper()
         elif t.startswith("--request="):
-            method = t[len("--request="):].strip("\"'").upper()
+            method = t[len("--request="):].upper()
         elif t.startswith("--method="):
-            method = t[len("--method="):].strip("\"'").upper()
+            method = t[len("--method="):].upper()
         j += 1
     return method
 
