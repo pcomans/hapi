@@ -13,10 +13,7 @@
 # documenting this hook). shlex strips quoting so the verb check operates
 # on actual tokens, not on string contents.
 
-CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
-if [ -z "$CMD" ]; then
-  CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
-fi
+CMD=$(printf '%s' "$TOOL_INPUT" | jq -r '.command // .tool_input.command // ""' 2>/dev/null)
 
 # Empty CMD → nothing to check.
 [ -z "$CMD" ] && exit 0
@@ -70,6 +67,41 @@ if current:
 
 ENV_VAR_RE = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*=')
 
+
+def find_chain_after_verb(stmt_after_verb, chain):
+    """Return the index in `stmt_after_verb` of the LAST chain token,
+    skipping global flags between/around them. Identical to the
+    helper in post-pr-create.sh — global flags handled in two forms:
+      * `--flag=value` (single token; consume one).
+      * `--flag value` (two tokens; consume two — UNLESS the next
+        token equals the expected chain element, in which case
+        treat `--flag` as a boolean and consume one).
+    Returns the index of the last chain element, or None.
+    """
+    j = 0
+    chain_idx = 0
+    while j < len(stmt_after_verb) and chain_idx < len(chain):
+        t = stmt_after_verb[j]
+        if t.startswith("-"):
+            if "=" in t:
+                j += 1
+            else:
+                if j + 1 < len(stmt_after_verb) \
+                        and stmt_after_verb[j + 1] == chain[chain_idx]:
+                    j += 1
+                else:
+                    j += 2
+            continue
+        if t == chain[chain_idx]:
+            chain_idx += 1
+            if chain_idx == len(chain):
+                return j
+            j += 1
+        else:
+            return None
+    return None
+
+
 found_any_pr_comment = False
 
 for stmt in statements:
@@ -79,13 +111,20 @@ for stmt in statements:
     while i < len(stmt) and ENV_VAR_RE.match(stmt[i]):
         env_prefixes.append(stmt[i])
         i += 1
-    if i + 2 >= len(stmt):
+    if i >= len(stmt):
         continue
-    verb, sub, action = stmt[i], stmt[i + 1], stmt[i + 2]
-    rest = stmt[i + 3:]
-    if verb != "gh" or sub != "pr" or action != "comment":
+    verb = stmt[i]
+    rest_after_verb = stmt[i + 1:]
+    if verb != "gh":
         continue
 
+    # Locate `pr comment` after the verb, skipping global flags
+    # (e.g. `gh --repo owner/repo pr comment 124 --body x`).
+    end_idx = find_chain_after_verb(rest_after_verb, ("pr", "comment"))
+    if end_idx is None:
+        continue
+
+    rest = rest_after_verb[end_idx + 1:]
     found_any_pr_comment = True
 
     # SCOPE_CHECKED=1 anywhere in the env prefix exempts this statement.

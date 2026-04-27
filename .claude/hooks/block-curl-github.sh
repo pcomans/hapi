@@ -42,10 +42,7 @@
 # closes the accidental-bypass surface — typing `curl` in a normal
 # Bash command — not the deliberate-bypass surface.
 
-CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
-if [ -z "$CMD" ]; then
-  CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
-fi
+CMD=$(printf '%s' "$TOOL_INPUT" | jq -r '.command // .tool_input.command // ""' 2>/dev/null)
 
 # Empty CMD → nothing to check.
 [ -z "$CMD" ] && exit 0

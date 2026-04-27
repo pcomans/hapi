@@ -6,13 +6,10 @@
 #   HEAD (auto-review only fires on PR creation, not on subsequent pushes).
 
 # TOOL_INPUT is a JSON env var with the tool's input parameters
-# For Bash tool, it contains { "command": "..." }
-CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
-
-# Fallback: try reading from stdin (older hook format uses .tool_input.command)
-if [ -z "$CMD" ]; then
-  CMD=$(jq -r '.tool_input.command // ""' 2>/dev/null)
-fi
+# For Bash tool, it contains { "command": "..." }. Older hook format
+# wraps it as { "tool_input": { "command": "..." } }; jq's `//` operator
+# tries each path in turn.
+CMD=$(printf '%s' "$TOOL_INPUT" | jq -r '.command // .tool_input.command // ""' 2>/dev/null)
 
 # Determine what triggered us. We match three patterns:
 #   * `gh pr create` — direct PR creation via gh CLI.
@@ -75,49 +72,117 @@ if current:
     statements.append(current)
 
 ENV_VAR_RE = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*=')
-PULLS_COLLECTION_RE = re.compile(r'^/?repos/[^/]+/[^/]+/pulls/?$')
+# Pattern for the bare pulls collection URL — anchored end-to-end so a
+# trailing `/<N>` or `/<N>/...` sub-path does NOT match. Allows host
+# prefix (`https://api.github.com/...`) or bare path forms.
+PULLS_COLLECTION_RE = re.compile(
+    r'(?:^|/)repos/[^/]+/[^/]+/pulls/?$'
+)
+
+
+def find_chain_after_verb(stmt_after_verb, chain):
+    """Return the index in `stmt_after_verb` of the LAST chain token,
+    skipping global flags between/around them. Global flags are
+    handled in two forms:
+      * `--flag=value` (single token; consume one).
+      * `--flag value` (two tokens; consume two — UNLESS the next
+        token equals the expected chain element, in which case treat
+        `--flag` as a boolean and consume one).
+
+    Returns the integer index of the last chain element on success,
+    or None if the chain is not found in order.
+
+    Example: for `['--repo', 'o/r', 'pr', 'comment', '124']` and
+    chain=('pr', 'comment'), returns 3 (index of 'comment').
+    """
+    j = 0
+    chain_idx = 0
+    while j < len(stmt_after_verb) and chain_idx < len(chain):
+        t = stmt_after_verb[j]
+        if t.startswith("-"):
+            if "=" in t:
+                j += 1
+            else:
+                if j + 1 < len(stmt_after_verb) \
+                        and stmt_after_verb[j + 1] == chain[chain_idx]:
+                    j += 1
+                else:
+                    j += 2
+            continue
+        if t == chain[chain_idx]:
+            chain_idx += 1
+            if chain_idx == len(chain):
+                return j
+            j += 1
+        else:
+            return None
+    return None
+
+
+def extract_method(rest):
+    """Find request method via -X / --request / --method. Walks tokens
+    one at a time, only consuming pairs for known method-bearing flags
+    so it doesn't mistake an arbitrary flag value for the method."""
+    method = None
+    j = 0
+    while j < len(rest):
+        t = rest[j]
+        if t in ("-X", "--request", "--method"):
+            if j + 1 < len(rest):
+                method = rest[j + 1].strip("\"'").upper()
+                j += 2
+                continue
+        elif t.startswith("-X="):
+            method = t[3:].strip("\"'").upper()
+        elif t.startswith("--request="):
+            method = t[len("--request="):].strip("\"'").upper()
+        elif t.startswith("--method="):
+            method = t[len("--method="):].strip("\"'").upper()
+        j += 1
+    return method
+
+
+def find_url_matching(rest, pattern):
+    """Find the first token in `rest` matching `pattern`. Robust
+    against interleaved flag values like `-H "Authorization: ..."`."""
+    for t in rest:
+        if pattern.search(t):
+            return t
+    return None
+
 
 for stmt in statements:
     i = 0
     while i < len(stmt) and ENV_VAR_RE.match(stmt[i]):
         i += 1
-    if i + 1 >= len(stmt):
+    if i >= len(stmt):
         continue
-    verb, sub = stmt[i], stmt[i + 1]
-    rest = stmt[i + 2:]
+    verb = stmt[i]
+    rest = stmt[i + 1:]
 
-    # gh pr create
-    if verb == "gh" and sub == "pr" and len(rest) >= 1 and rest[0] == "create":
-        print("PR_CREATE")
-        sys.exit(0)
-
-    # gh api repos/o/r/pulls -X POST (no sub-resource path)
-    if verb == "gh" and sub == "api":
-        url_token = None
-        method = None
-        j = 0
-        while j < len(rest):
-            t = rest[j]
-            if t in ("-X", "--request", "--method"):
-                if j + 1 < len(rest):
-                    method = rest[j + 1].strip("\"'").upper()
-                    j += 2
-                    continue
-            elif t.startswith("-X="):
-                method = t[3:].strip("\"'").upper()
-            elif t.startswith("--request=") or t.startswith("--method="):
-                method = t.split("=", 1)[1].strip("\"'").upper()
-            elif not t.startswith("-") and url_token is None:
-                url_token = t
-            j += 1
-        if url_token and PULLS_COLLECTION_RE.match(url_token) and method == "POST":
+    # gh pr create (skips global flags like `gh --repo o/r pr create`)
+    if verb == "gh":
+        end_idx = find_chain_after_verb(rest, ("pr", "create"))
+        if end_idx is not None:
             print("PR_CREATE")
             sys.exit(0)
 
+        # gh api repos/o/r/pulls -X POST (no sub-resource path)
+        api_idx = find_chain_after_verb(rest, ("api",))
+        if api_idx is not None:
+            api_rest = rest[api_idx + 1:]
+            method = extract_method(api_rest)
+            url = find_url_matching(api_rest, PULLS_COLLECTION_RE)
+            if url and method == "POST":
+                print("PR_CREATE")
+                sys.exit(0)
+
     # git push
-    if verb == "git" and sub == "push":
-        print("GIT_PUSH")
-        sys.exit(0)
+    if verb == "git":
+        end_idx = find_chain_after_verb(rest, ("push",))
+        if end_idx is not None:
+            print("GIT_PUSH")
+            sys.exit(0)
 
 print("NONE")
 PYEOF
