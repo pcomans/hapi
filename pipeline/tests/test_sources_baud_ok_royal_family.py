@@ -699,22 +699,32 @@ def test_all_corrections_includes_every_correction_list() -> None:
     `(baud_id, field, value, rationale)` correction tuple shape.
     """
     mod = _load_fix_rows_module()
+    # Filter by name + type only. The shape-validation moves into the
+    # loop body so that a malformed list (e.g. someone adding a
+    # 3-tuple instead of a 4-tuple) fails LOUD instead of getting
+    # silently excluded by the predicate. The whole point of this
+    # tripwire is "no silent skips" — applying the shape check as a
+    # filter would create a hole exactly the kind of hole the test
+    # exists to prevent (Gemini round-3 finding on PR #123).
     correction_lists = {
         name: getattr(mod, name)
         for name in dir(mod)
         if (name.endswith("_CORRECTIONS") or name.endswith("_BACKFILL"))
-        and name not in ("ALL_CORRECTIONS", "SPOT_CORRECTIONS")
+        and name not in ("ALL_CORRECTIONS", "SPOT_CORRECTIONS", "SPOT_CORRECTION")
         and isinstance(getattr(mod, name), list)
-        # Heuristic: a correction list contains 4-tuples
-        # (baud_id, field, value, rationale). The aggregator is a
-        # list-of-lists which doesn't match.
-        and all(
-            isinstance(entry, tuple) and len(entry) == 4
-            for entry in getattr(mod, name)
-        )
     }
     aggregator = mod.ALL_CORRECTIONS
     for name, lst in correction_lists.items():
+        # Shape check first — every correction-list entry MUST be a
+        # 4-tuple (baud_id, field, value, rationale). A malformed list
+        # is its own bug; surface it here loudly rather than letting
+        # it slip through.
+        for idx, entry in enumerate(lst):
+            assert isinstance(entry, tuple) and len(entry) == 4, (
+                f"{name}[{idx}] is not a 4-tuple "
+                f"(baud_id, field, value, rationale): got "
+                f"type={type(entry).__name__} value={entry!r}"
+            )
         assert lst in aggregator, (
             f"{name} is a module-level correction list but does not appear "
             f"in ALL_CORRECTIONS. Add it, or its overrides will silently "
