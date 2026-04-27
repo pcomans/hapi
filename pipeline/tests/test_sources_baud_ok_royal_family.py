@@ -723,6 +723,95 @@ def test_chunk_expected_rows_constants_match_row_count() -> None:
     )
 
 
+def test_baud_29_drops_eldest_son_smsw_alone() -> None:
+    """Sweep-2026 P1 (code-review L29) regression: baud-29's titulary is
+    `[jrj-pꜥt, zꜣ nswt smsw]` — `smsw` alone, no `nj ẖt.f` marker. The
+    `king's eldest son of his body` vocab term requires BOTH markers in
+    the SAME title string. Drop the role; `king's son` retained.
+    """
+    r = _row("baud-29")
+    assert r["roles"] == ["king's son"], r["roles"]
+    assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"], r["titles_from_baud"]
+
+
+def test_baud_30_drops_eldest_son_smsw_alone() -> None:
+    """Sweep-2026 P1 (code-review L30) regression: baud-30 mirrors
+    baud-29 — `[jrj-pꜥt, zꜣ nswt smsw]`, no `nj ẖt.f`. Same conjunction-
+    rule violation. `king's eldest son of his body` dropped.
+    """
+    r = _row("baud-30")
+    assert r["roles"] == ["king's son"], r["roles"]
+    assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"], r["titles_from_baud"]
+
+
+def test_baud_57_drops_eldest_son_separate_titles() -> None:
+    """Sweep-2026 P1 (code-review L57) regression: baud-57 carries
+    `zꜣ nswt nj ẖt.f mrjj.f` AND `zꜣ nswt smsw` as TWO SEPARATE title
+    strings — neither single string contains both markers. The
+    conjunction rule fails (vocab term requires both in the same
+    string). Drop `king's eldest son of his body`; `priest of the king`
+    + `priest of the royal pyramid` remain (set by CHUNK2_CORRECTIONS).
+    """
+    r = _row("baud-57")
+    assert r["roles"] == [
+        "king's son",
+        "priest of the king",
+        "priest of the royal pyramid",
+    ], r["roles"]
+    # Both markers present, but in DIFFERENT title strings:
+    assert "zꜣ nswt nj ẖt.f mrjj.f" in r["titles_from_baud"]
+    assert "zꜣ nswt smsw" in r["titles_from_baud"]
+
+
+def test_baud_126_children_names_strips_kahetep() -> None:
+    """Sweep-2026 P1 (reviewer-notes baud-126) regression: Baud's
+    fig. 40 (vol. 2 pp. 496–498) separates Mḥw's two wives' children
+    — Nbt is mother of Kꜣ.j-ḥtp; Nfr-kꜣw.s Jkw (this row) is mother of
+    Mrwt only. Strip Kꜣ.j-ḥtp from this row's `children_names`.
+    """
+    r = _row("baud-126")
+    assert r["children_names"] == ["Mrwt"], r["children_names"]
+    assert r["spouse_names"] == ["Mḥw"]
+    assert r["name_egyptian"] == "Nfr-kꜣw.s Jkw"
+
+
+def test_eldest_son_role_requires_smsw_and_nj_khet_f_in_same_title() -> None:
+    """Deterministic invariant (code-review-sweep-2026 P2 / Rule 3
+    coverage). For every row carrying `king's eldest son of his body`
+    in `roles`, at least ONE entry in `titles_from_baud` must contain
+    BOTH `smsw` and `nj ẖt.f` substrings within the SAME single title
+    string. This catches the systemic over-claim pattern fixed in
+    chunks 2/3/4/5/7 and the sweep-2026 PR (baud-29, baud-30, baud-57)
+    across ALL rows, not just the ones flagged by individual reviewer
+    passes.
+
+    Rationale: Baud's vocabulary (and OK Egyptian titulary in general)
+    distinguishes:
+      - `zꜣ nswt smsw` — "king's eldest son" (an ordinal claim).
+      - `zꜣ nswt nj ẖt.f` — "king's son of his body" (an attestation
+        of biological direct kinship, distinguishing from titular sons).
+      - `zꜣ nswt smsw nj ẖt.f` (or its variants `zꜣ nswt nj ẖt.f
+        smsw`, `zꜣ nswt nj ẖt.f smsw mrjj.f`, etc.) — "king's eldest
+        son of his body", the conjunction.
+    The vocab term `king's eldest son of his body` corresponds ONLY to
+    the conjunction. Two separate titles each carrying one marker do
+    not satisfy it.
+    """
+    for r in _rows():
+        if "king's eldest son of his body" not in r["roles"]:
+            continue
+        conjoined = [
+            t for t in r["titles_from_baud"]
+            if "smsw" in t and "nj ẖt.f" in t
+        ]
+        assert conjoined, (
+            f"{r['baud_id']}: roles include `king's eldest son of his "
+            f"body` but no titles_from_baud entry contains both `smsw` "
+            f"and `nj ẖt.f` in the same string. "
+            f"titles_from_baud={r['titles_from_baud']}"
+        )
+
+
 def test_tomb_designation_shape_when_populated() -> None:
     """Tomb designations follow OK conventions: G xxxx (Giza), D xx (Saqqara
     Dahchour), LG nn (Lepsius-numbered), or freeform (`Mastaba 17 Meidum`).

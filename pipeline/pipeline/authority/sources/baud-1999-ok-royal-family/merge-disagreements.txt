@@ -2203,3 +2203,15 @@ provisional until that happens.
     value: ["king's son"]
 - baud-270: roles corrected (Egyptologist PR #62: Only `zꜣ nswt nj ẖt.f` (or equivalent) present in TITRES; no `smsw` marker anywhere. The `king's eldest son of his body` vocab term requires BOTH `smsw` AND `nj ẖt.f` in the SAME title string. Same systemic over-claim seen in chunks 3/4/5. Dropped. baud-270 has fragmentary `zꜣ nswt nj ẖ[t.f]` and `smsw ///` separately — not same title string.)
     value: ["king's son"]
+- baud-29: roles corrected (Sweep-2026 P1 (code-review L29). TITRES carries only `zꜣ nswt smsw` — `smsw` alone, no `nj ẖt.f` marker anywhere. Same systemic over-claim fixed for chunks 2/4/5/7; this row was missed in earlier passes. Drop `king's eldest son of his body` (the vocab term requires BOTH markers in the SAME title string). `king's son` retained as the bare body-of-titulary attestation.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-30: roles corrected (Sweep-2026 P1 (code-review L30). TITRES carries only `zꜣ nswt smsw`. Same rule violation as baud-29; `smsw` alone without `nj ẖt.f` in the same title string fails the conjunction rule. Drop `king's eldest son of his body`.)
+    was: ["king's son", "king's eldest son of his body"]
+    now: ["king's son"]
+- baud-57: roles corrected (Sweep-2026 P1 (code-review L57). TITRES carries `zꜣ nswt nj ẖt.f mrjj.f` AND `zꜣ nswt smsw` as TWO SEPARATE title strings — neither single string contains both `smsw` and `nj ẖt.f`. Conjunction rule (vocab term requires BOTH markers in the SAME title string) fails. Same precedent as baud-143/151/266/270 in earlier chunks. Drop `king's eldest son of his body`; `priest of the king` + `priest of the royal pyramid` retained (set in CHUNK2_CORRECTIONS).)
+    was: ["king's son", "king's eldest son of his body", "priest of the king", "priest of the royal pyramid"]
+    now: ["king's son", "priest of the king", "priest of the royal pyramid"]
+- baud-126: children_names corrected (Sweep-2026 P1 (reviewer-notes baud-126). Baud vol. 2 pp. 496–498, fig. 40 separates Mḥw's two wives' children: Nbt is mother of `[aîné?]` and Kꜣ.j-ḥtp; Nfr-kꜣw.s Jkw (this row) is mother of `[aîné]` and Mrwt. The merged value mis-attributed Kꜣ.j-ḥtp to Nfr-kꜣw.s Jkw. Strip Kꜣ.j-ḥtp; Mrwt remains. (Nbt is not present as her own headword in the Corpus; capturing Kꜣ.j-ḥtp under her is out of scope here per the sweep-2026 PR scope.))
+    was: ["Mrwt", "Kꜣ.j-ḥtp (per Baud)"]
+    now: ["Mrwt"]
