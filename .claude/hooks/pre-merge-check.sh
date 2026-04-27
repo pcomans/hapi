@@ -119,6 +119,42 @@ def find_pulls_merge_url(rest, pattern):
     return None
 
 
+def find_chain_after_verb(stmt_after_verb, chain):
+    """Return the index in `stmt_after_verb` of the LAST chain token,
+    skipping global flags between/around them (parallels the helper
+    in post-pr-create.sh and scope-check.sh — `gh --repo o/r pr merge`
+    must be classified as a `pr merge` invocation, not silently
+    passed through). Two flag forms handled:
+      * `--flag=value` (single token; consume one).
+      * `--flag value` (two tokens; consume two — UNLESS the next
+        token equals the expected chain element, in which case treat
+        `--flag` as a boolean and consume one).
+    Returns the index of the last chain element, or None.
+    """
+    j = 0
+    chain_idx = 0
+    while j < len(stmt_after_verb) and chain_idx < len(chain):
+        t = stmt_after_verb[j]
+        if t.startswith("-"):
+            if "=" in t:
+                j += 1
+            else:
+                if j + 1 < len(stmt_after_verb) \
+                        and stmt_after_verb[j + 1] == chain[chain_idx]:
+                    j += 1
+                else:
+                    j += 2
+            continue
+        if t == chain[chain_idx]:
+            chain_idx += 1
+            if chain_idx == len(chain):
+                return j
+            j += 1
+        else:
+            return None
+    return None
+
+
 for stmt in statements:
     env_prefixes = []
     i = 0
@@ -141,26 +177,26 @@ for stmt in statements:
         # already covers all curl-to-github traffic).
         continue
 
-    # Block 1: gh api PUT to /pulls/<N>/merge
-    if verb == "gh" and len(rest_after_verb) >= 1 and rest_after_verb[0] == "api":
-        sub = rest_after_verb[1:]
-        method = extract_method(sub)
-        url = find_pulls_merge_url(sub, PULLS_MERGE_RE)
-        if url and method == "PUT":
-            print("API_PUT_MERGE_BYPASS")
-            sys.exit(0)
-        continue
+    # Block 1: gh api PUT to /pulls/<N>/merge (with global-flag handling)
+    if verb == "gh":
+        api_idx = find_chain_after_verb(rest_after_verb, ("api",))
+        if api_idx is not None:
+            sub = rest_after_verb[api_idx + 1:]
+            method = extract_method(sub)
+            url = find_pulls_merge_url(sub, PULLS_MERGE_RE)
+            if url and method == "PUT":
+                print("API_PUT_MERGE_BYPASS")
+                sys.exit(0)
+            continue
 
-    # Block 1.5 / Block 2: gh pr merge
-    if (verb == "gh"
-            and len(rest_after_verb) >= 2
-            and rest_after_verb[0] == "pr"
-            and rest_after_verb[1] == "merge"):
-        if any(p == "REVIEWERS_SPAWNED=1" for p in env_prefixes):
-            print("GH_PR_MERGE_OK")
+        # Block 1.5 / Block 2: gh pr merge (with global-flag handling)
+        merge_idx = find_chain_after_verb(rest_after_verb, ("pr", "merge"))
+        if merge_idx is not None:
+            if any(p == "REVIEWERS_SPAWNED=1" for p in env_prefixes):
+                print("GH_PR_MERGE_OK")
+                sys.exit(0)
+            print("GH_PR_MERGE_NEED_REVIEWERS")
             sys.exit(0)
-        print("GH_PR_MERGE_NEED_REVIEWERS")
-        sys.exit(0)
 
 print("NONE")
 PYEOF
