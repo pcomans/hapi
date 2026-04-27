@@ -20,6 +20,27 @@
 # and the github.com substring lives inside the --body argument, not as
 # its own token, so the per-statement check below correctly does not
 # trip on it.
+#
+# KNOWN EVASION CLASSES (deliberately unhandled — this is policy
+# enforcement against accidental bypass, not adversarial sandboxing):
+#
+#   * **Backtick command substitution:** `echo \`curl ...github.com\``.
+#     shlex(posix=True) does not interpret backticks; tokens come out
+#     as `['echo', '\\`curl', '...\\`']`, the verb is `echo`, no block.
+#     `$(...)` IS handled because SEP_RE catches `(` and `)` as
+#     statement separators. Recommended idiom: `$(...)`.
+#   * **Indirect invocation via `bash -c "curl ..."`:** quoted
+#     argument is one token, verb is `bash`, no block.
+#   * **Pipe through `xargs`:** `echo URL | xargs curl` — verb of the
+#     final statement is `xargs`, not `curl`.
+#
+# All three are pre-existing shell-quoting limitations and would require
+# a defensive sandboxing-grade matcher to catch (recursive shlex on
+# nested -c args; full bash parser). Out of scope: an agent who wants
+# to bypass the hook on purpose has many easier paths (e.g. running
+# `gh` itself bypasses curl entirely, which is the point). The hook
+# closes the accidental-bypass surface — typing `curl` in a normal
+# Bash command — not the deliberate-bypass surface.
 
 CMD=$(echo "$TOOL_INPUT" | jq -r '.command // ""' 2>/dev/null)
 if [ -z "$CMD" ]; then

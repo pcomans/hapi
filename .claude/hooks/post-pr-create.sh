@@ -26,8 +26,18 @@ IS_GIT_PUSH=false
 if echo "$CMD" | grep -qE 'gh[[:space:]]+pr[[:space:]]+create\b'; then
   IS_PR_CREATE=true
 elif echo "$CMD" | grep -qE 'gh[[:space:]]+api\b' \
-     && echo "$CMD" | grep -qE '/pulls\b' \
-     && echo "$CMD" | grep -qE '(-X|--request|--method)[[:space:]=]*[\"'\'']?POST[\"'\'']?|[[:space:]]-f[[:space:]]'; then
+     && echo "$CMD" | grep -qE 'repos/[^/]+/[^/]+/pulls([[:space:]]|"|'\''|$)' \
+     && echo "$CMD" | grep -qE '(-X|--request|--method)[[:space:]=]*[\"'\'']?POST[\"'\'']?'; then
+  # PR creation via gh api uses the *exact* `pulls` collection endpoint
+  # (no sub-resource path) with POST. The earlier matcher used
+  # `/pulls\b` + `-f`, which also matched
+  # `repos/o/r/pulls/<N>/comments/<id>/replies -f body=...` — the
+  # CLAUDE.md-mandated review-reply form — and incorrectly tagged
+  # every comment-reply as PR-creation. Anchor the URL so a trailing
+  # `/<N>/...` sub-path does NOT match: only `…/pulls` followed by
+  # whitespace, quote, or end-of-string. Also require explicit
+  # `-X POST` (or `--request POST`) since `-f` alone is ambiguous —
+  # comment-reply, review-post, and PR-edit all use `-f`.
   IS_PR_CREATE=true
 elif echo "$CMD" | grep -qE '^[[:space:]]*([a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]*[[:space:]]+)*git[[:space:]]+push\b'; then
   IS_GIT_PUSH=true

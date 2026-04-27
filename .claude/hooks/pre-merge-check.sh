@@ -88,7 +88,7 @@ if printf '%s\n' "$CMD_FLAT" | grep -qE '(^|[|;&(])[[:space:]]*([a-zA-Z_][a-zA-Z
   cat <<'HEREDOC'
 {
   "decision": "block",
-  "reason": "Direct curl-to-GitHub-API merges bypass the pre-merge-check reminder and make the merge path non-uniform. Use `gh pr merge <N> --squash --delete-branch` instead (add `--body '...'` if you need a custom merge commit message). The `gh` CLI routes through this hook so you get the title/body drift check before the merge lands. Constitutional rule 3: deterministic enforcement over convention — one merge path, one hook."
+  "reason": "Direct curl-to-GitHub-API merges bypass the pre-merge-check reminder and make the merge path non-uniform. Use `REVIEWERS_SPAWNED=1 gh pr merge <N> --squash --delete-branch` instead (add `--body '...'` if you need a custom merge commit message). The `REVIEWERS_SPAWNED=1` prefix is required by Block 1.5 of this hook on the `gh pr merge` route — see post-pr-create.sh systemMessage. The `gh` CLI routes through this hook so you get the title/body drift check before the merge lands. Constitutional rule 3: deterministic enforcement over convention — one merge path, one hook."
 }
 HEREDOC
   exit 0
