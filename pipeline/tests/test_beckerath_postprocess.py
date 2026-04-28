@@ -30,24 +30,32 @@ _spec.loader.exec_module(pp)
 
 
 def test_recognises_section_headings() -> None:
-    assert pp._is_section_heading("### FRÜHZEIT") == "Frühzeit"
-    assert pp._is_section_heading("### ALTES REICH") == "Altes Reich"
-    assert pp._is_section_heading("### I. ZWISCHENZEIT") == "I. Zwischenzeit"
-    assert pp._is_section_heading("### MITTLERES REICH") == "Mittleres Reich"
-    assert pp._is_section_heading("### II. ZWISCHENZEIT") == "II. Zwischenzeit"
-    assert pp._is_section_heading("### NEUES REICH") == "Neues Reich"
-    assert pp._is_section_heading("### III. ZWISCHENZEIT") == "III. Zwischenzeit"
-    assert pp._is_section_heading("### SPÄTZEIT") == "Spätzeit"
-    assert (
-        pp._is_section_heading("### VORGESCHICHTE (PRÄDYNASTISCHE ZEIT)")
-        == "Vorgeschichte"
+    assert pp._is_section_heading("### FRÜHZEIT") == (True, "Frühzeit")
+    assert pp._is_section_heading("### ALTES REICH") == (True, "Altes Reich")
+    assert pp._is_section_heading("### I. ZWISCHENZEIT") == (True, "I. Zwischenzeit")
+    assert pp._is_section_heading("### MITTLERES REICH") == (True, "Mittleres Reich")
+    assert pp._is_section_heading("### II. ZWISCHENZEIT") == (True, "II. Zwischenzeit")
+    assert pp._is_section_heading("### NEUES REICH") == (True, "Neues Reich")
+    assert pp._is_section_heading("### III. ZWISCHENZEIT") == (True, "III. Zwischenzeit")
+    assert pp._is_section_heading("### SPÄTZEIT") == (True, "Spätzeit")
+    assert pp._is_section_heading("### VORGESCHICHTE (PRÄDYNASTISCHE ZEIT)") == (
+        True,
+        "Vorgeschichte",
     )
 
 
-def test_section_heading_returns_none_for_non_match() -> None:
-    assert pp._is_section_heading("**4. Dynastie**") is None
-    assert pp._is_section_heading("Senofru (Soris)\t2639/2589") is None
-    assert pp._is_section_heading("## Book p187") is None
+def test_section_heading_returns_false_for_non_match() -> None:
+    assert pp._is_section_heading("**4. Dynastie**") == (False, None)
+    assert pp._is_section_heading("Senofru (Soris)\t2639/2589") == (False, None)
+    assert pp._is_section_heading("## Book p187") == (False, None)
+
+
+def test_section_heading_unknown_returns_true_with_none_name() -> None:
+    """`### Supplement zu A` is a `### ...` heading but not one of the eight
+    canonical period names. Must classify as heading-but-unknown so the
+    process_chunk loop resets state instead of leaking the previous section."""
+    assert pp._is_section_heading("### Supplement zu A") == (True, None)
+    assert pp._is_section_heading("### Some Other Heading") == (True, None)
 
 
 def test_recognises_bold_dynasty_heading() -> None:
@@ -62,10 +70,22 @@ def test_recognises_bold_dynasty_heading() -> None:
     # Dyn 28-31 use the spelling drift `Dynaste` (no `i`).
     assert pp._is_dynasty_heading("**28. Dynaste**") == "28. Dynaste"
     # `0. Dynastie` with a tab/whitespace tail (chunk has it followed by date)
-    # — we just need to match the `**...**` opening.
+    # — capture the trailing date too so the dynasty-context comment
+    # preserves Beckerath's full heading line.
     assert (
         pp._is_dynasty_heading("**0. Dynastie**\tungefähr 150 Jahre")
-        == "0. Dynastie"
+        == "0. Dynastie\tungefähr 150 Jahre"
+    )
+
+
+def test_dynasty_heading_with_parenthetical_outside_bold() -> None:
+    """Defensive: capture the parenthetical qualifier even if a future OCR
+    variant emits `**N. Dynastie** (etwa ...)` with the parenthetical OUTSIDE
+    the bold markers. Without group 2 capture the `etwa` qualifier would be
+    lost from the dynasty-context refresh."""
+    assert (
+        pp._is_dynasty_heading("**4. Dynastie** (etwa 2639/2589–2504/2454)")
+        == "4. Dynastie (etwa 2639/2589–2504/2454)"
     )
 
 
@@ -113,6 +133,47 @@ def test_attaches_period_after_dynasty_heading() -> None:
     # is emitted ON the line directly after each dynasty heading.
     assert "**24. Dynastie (in Sais)**\n<!-- period: III. Zwischenzeit -->" in out
     assert "**25. Dynastie (Kuschiten)**\n<!-- period: III. Zwischenzeit -->" in out
+
+
+def test_supplement_zu_a_does_not_inherit_spaetzeit_period() -> None:
+    """REGRESSION (Gemini PR #138 + code-reviewer). Beckerath's Anhang A
+    ends with `### SPÄTZEIT` (Dyn 26-31). The Supplement zu A is introduced
+    by `### Supplement zu A` and contains supplementary titulary entries
+    for Dyn 19-23 — those entries are Neues Reich (19/20) or III. Zwischenzeit
+    (21/22/23), NOT Spätzeit. The supplement's `### ...` heading must reset
+    the section state so the supplement's `**19. Dynastie**` etc. headings
+    don't get a `<!-- period: Spätzeit -->` annotation leaked from the
+    preceding `### SPÄTZEIT` block."""
+    md = (
+        "### SPÄTZEIT\n"
+        "\n"
+        "**31. Dynaste (Perserherrschaft, 342–332)**\n"
+        "Artaxerxes III. Ochos\t342–338\n"
+        "\n"
+        "## Book p193\n"
+        "\n"
+        "### Supplement zu A\n"
+        "\n"
+        "Die vollständigen Namen.\n"
+        "\n"
+        "**19. Dynastie**\n"
+        "Ramses I.:\tMen-pehti-rê, Ra-mes-su\n"
+        "\n"
+        "**20. Dynastie**\n"
+        "Seth-nachte:\tUser-chau-rê sotep-en-rê\n"
+    )
+    out = pp.process_chunk(md)
+    # The two supplement dynasty headings must NOT carry a `<!-- period: ... -->`
+    # comment; current_section is None after the unrecognised supplement
+    # heading reset state.
+    assert "**19. Dynastie**\n<!-- period:" not in out
+    assert "**20. Dynastie**\n<!-- period:" not in out
+    # The `### Supplement zu A` heading is still preserved verbatim in output.
+    assert "### Supplement zu A" in out
+    # The dynasty-context refresh after the page break must not leak
+    # `Spätzeit` either — `### Supplement zu A` follows the page break
+    # immediately, so the look-ahead suppresses the refresh.
+    assert "## Book p193\n<!--" not in out
 
 
 def test_section_change_resets_dynasty_context() -> None:
@@ -273,39 +334,100 @@ def test_full_chunk_shape() -> None:
     assert "**5. Dynastie (etwa 2504/2454–2347/2297)**\n<!-- period: Altes Reich -->" in out
 
 
-# === Real chunk smoke test =================================================
+# === Whole-chunk integration test (synthetic, mirrors real chunk shape) =====
 
 
-def test_real_chunk_p105_p109_no_regressions() -> None:
-    """Smoke test: applying the post-processor to the real OCR chunk file
-    must not delete or reorder existing content. Skipped when the chunk
-    file is not present (gitignored, regenerable)."""
-    chunk_path = (
-        Path(__file__).parent.parent
-        / "pipeline"
-        / "authority"
-        / "sources"
-        / "beckerath-1997-chronologie"
-        / "raw"
-        / "chunk-p105-p109.md"
+def test_full_chunk_with_supplement_zu_a_integration() -> None:
+    """Whole-chunk integration test: a synthetic mini-chunk that exercises
+    every transition the real `chunk-p105-p109.md` does — section headings,
+    bolded dynasty headings, page boundaries, mid-dynasty page break, and
+    the trailing `### Supplement zu A` non-period section. This replaces
+    the always-skipping real-file smoke test (the OCR chunk is gitignored
+    and regenerable; the synthetic fixture is committed and runs in CI).
+
+    Asserts:
+    - Period annotations on every `**N. Dynastie ...**` in Anhang A
+    - Page-break inside Dyn-4 refreshes dynasty + period
+    - Page-break BEFORE a section/dynasty heading does NOT refresh
+    - Supplement zu A resets state — its dynasty headings get NO period leak
+    - Every original line preserved in order (no loss/reorder)
+    """
+    md = (
+        "## Book p187\n"
+        "\n"
+        "### A. CHRONOLOGISCHE ÜBERSICHT ÜBER DIE GESCHICHTE ALTÄGYPTENS\n"
+        "\n"
+        "### FRÜHZEIT\n"
+        "\n"
+        "**1. Dynastie (etwa 3032/2982–2853/2803)**\n"
+        "Menes (Hor Aha)\tetwa 3032/2982–3000/2950\n"
+        "\n"
+        "### ALTES REICH\n"
+        "\n"
+        "**4. Dynastie (etwa 2639/2589–2504/2454)**\n"
+        "Senofru\t2639/2589–2604/2554\n"
+        "\n"
+        "## Book p188\n"
+        "\n"
+        "Cheops\tetwa 2604/2554–2581/2531\n"
+        "\n"
+        "### III. ZWISCHENZEIT\n"
+        "\n"
+        "**24. Dynastie (in Sais)**\n"
+        "Fürst Tef-nachte\tum 740–719/17\n"
+        "\n"
+        "### SPÄTZEIT\n"
+        "\n"
+        "**26. Dynastie (664–525)**\n"
+        "Psamtik I.\t664–610\n"
+        "\n"
+        "## Book p193\n"
+        "\n"
+        "### Supplement zu A\n"
+        "\n"
+        "Die vollständigen Namen.\n"
+        "\n"
+        "**19. Dynastie**\n"
+        "Ramses I.:\tMen-pehti-rê, Ra-mes-su\n"
     )
-    if not chunk_path.exists():
-        import pytest
-
-        pytest.skip("chunk file not present; run OCR step first")
-    md = chunk_path.read_text()
     out = pp.process_chunk(md)
-    # Every original line still appears in the output, in order.
+
+    # Anhang A dynasty headings get period attached.
+    assert (
+        "**1. Dynastie (etwa 3032/2982–2853/2803)**\n<!-- period: Frühzeit -->"
+        in out
+    )
+    assert (
+        "**4. Dynastie (etwa 2639/2589–2504/2454)**\n<!-- period: Altes Reich -->"
+        in out
+    )
+    assert (
+        "**24. Dynastie (in Sais)**\n<!-- period: III. Zwischenzeit -->" in out
+    )
+    assert "**26. Dynastie (664–525)**\n<!-- period: Spätzeit -->" in out
+
+    # Page-break inside Dyn-4 refreshes dynasty + period.
+    assert (
+        "## Book p188\n"
+        "<!-- dynasty-context: 4. Dynastie (etwa 2639/2589–2504/2454) -->\n"
+        "<!-- period: Altes Reich -->"
+    ) in out
+
+    # Page-break before `### Supplement zu A` does NOT refresh (next non-blank
+    # line is a section heading).
+    assert "## Book p193\n<!--" not in out
+
+    # Supplement's dynasty heading does NOT get a Spätzeit period leak.
+    assert "**19. Dynastie**\n<!-- period:" not in out
+
+    # Every original line preserved in order.
     original_lines = md.splitlines()
     output_lines = out.splitlines()
     j = 0
     for line in original_lines:
-        # Find the next occurrence of `line` in the output starting at j.
         try:
             j = output_lines.index(line, j) + 1
-        except ValueError:
+        except ValueError as exc:
             raise AssertionError(
-                f"original line lost or reordered in postprocessed output: {line!r}"
-            )
-    # The output is strictly larger or equal (annotations only added).
-    assert len(output_lines) >= len(original_lines)
+                f"original line lost or reordered: {line!r}"
+            ) from exc

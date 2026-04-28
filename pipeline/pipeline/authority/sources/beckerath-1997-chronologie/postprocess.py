@@ -91,8 +91,14 @@ _SECTION_HEADING_RE = re.compile(r"^###\s+(.+?)\s*$")
 # chunk lines 246/249/256/261). Also handles compound headings
 # `9./10. Dynastie (in Herakleopolis, etwa ...)` which are NOT bolded in the
 # OCR output. The compound case is matched by `_DYNASTY_HEADING_COMPOUND_RE`.
+#
+# Group 1 = bolded inner text (`N. Dynastie (etwa ...)`); group 2 = remainder
+# of the line AFTER the closing `**`. Capturing the remainder defensively
+# preserves the dynasty's parenthetical qualifier (`etwa`, `ca.`, dynastic
+# placement notes) when a future OCR variant emits `**N. Dynastie** (etwa ...)`
+# with the parenthetical OUTSIDE the bold markers.
 _DYNASTY_HEADING_BOLD_RE = re.compile(
-    r"^\*\*(\d+(?:\.\s*[a-z])?\.?\s*Dynast(?:ie|e)\b.*?)\*\*"
+    r"^\*\*(\d+(?:\.\s*[a-z])?\.?\s*Dynast(?:ie|e)\b.*?)\*\*(.*)$"
 )
 _DYNASTY_HEADING_COMPOUND_RE = re.compile(
     r"^(\d+\.?/\d+\.?\s*Dynast(?:ie|e)\b.*)$"
@@ -107,27 +113,40 @@ _INJECTED_COMMENT_RE = re.compile(
 )
 
 
-def _is_section_heading(line: str) -> str | None:
-    """Return the title-cased section name if `line` is a section heading."""
+def _is_section_heading(line: str) -> tuple[bool, str | None]:
+    """Classify a line as a section heading.
+
+    Returns `(is_heading, title_cased_name)`:
+    - `(False, None)` — not a `### ...` heading at all (e.g. a king row, page
+      boundary, dynasty heading)
+    - `(True, "Frühzeit")` — recognised section heading; second value is the
+      title-cased period name from `SECTION_TITLE_CASE`
+    - `(True, None)` — looks like a section heading (`### Something`) but
+      `Something` is not one of the eight canonical period headings. Beckerath
+      uses `### Supplement zu A` for the prenomen-supplement appendix; treating
+      the supplement as a section boundary is the right call (it resets the
+      dynasty context too, defeating the leak from the preceding `### SPÄTZEIT`
+      block into the supplement's `**19. Dynastie**` heading).
+    """
     m = _SECTION_HEADING_RE.match(line)
     if not m:
-        return None
-    raw = m.group(1).strip().rstrip(".").upper()
-    # `VORGESCHICHTE (PRÄDYNASTISCHE ZEIT)` is matched verbatim against the
-    # mapping; other headings come through as-is.
-    return SECTION_TITLE_CASE.get(raw)
+        return False, None
+    raw = m.group(1).strip(" .").upper()
+    return True, SECTION_TITLE_CASE.get(raw)
 
 
 def _is_dynasty_heading(line: str) -> str | None:
     """Return the dynasty heading inner text if `line` is a dynasty heading.
 
-    Returns the inner text WITHOUT the leading `**` / trailing `**` (for the
-    bold form) and WITHOUT modification (for the compound form). Strips
-    whitespace.
+    For the bolded form, concatenates the inside-`**` text with any text that
+    follows the closing `**` on the same line (defensively preserves an
+    OCR-variant where the parenthetical qualifier is outside the bold markers).
+    For the compound form (`9./10. Dynastie ...`), returns the line verbatim.
+    Strips whitespace.
     """
     m = _DYNASTY_HEADING_BOLD_RE.match(line)
     if m:
-        return m.group(1).strip()
+        return (m.group(1) + m.group(2)).strip()
     m = _DYNASTY_HEADING_COMPOUND_RE.match(line)
     if m:
         return m.group(1).strip()
@@ -160,11 +179,14 @@ def process_chunk(md: str) -> str:
     while i < len(lines):
         line = lines[i]
 
-        section = _is_section_heading(line)
-        if section is not None:
+        is_section, section = _is_section_heading(line)
+        if is_section:
+            # Update section state on EVERY `### ...` heading, recognised or
+            # not. An unrecognised heading (e.g. `### Supplement zu A`) sets
+            # `current_section = None` and resets the dynasty context, which
+            # prevents the previous section's period from leaking onto the
+            # supplement's `**19. Dynastie**` etc. headings.
             current_section = section
-            # Crossing a section heading also implicitly resets the dynasty
-            # context — the next dynasty heading will set it.
             current_dynasty_heading = None
             out.append(line)
             i += 1
@@ -176,7 +198,10 @@ def process_chunk(md: str) -> str:
             out.append(line)
             # Attach the section directly to the dynasty heading so agents
             # don't have to look upward for it. Defeats the Dyn-24/25
-            # mis-attribution to Spätzeit case.
+            # mis-attribution to Spätzeit case. Skipped when current_section
+            # is None — the supplement's dynasty headings inherit period via
+            # the existing prompt rule that supplement entries merge by name
+            # into the main Übersicht rows.
             if current_section:
                 out.append(f"<!-- period: {current_section} -->")
             i += 1
@@ -186,14 +211,17 @@ def process_chunk(md: str) -> str:
             out.append(line)
             # Look ahead: if the next non-blank line is itself a section or
             # dynasty heading, the agent will get fresh context from that
-            # heading; no refresh needed.
+            # heading; no refresh needed. `_is_section_heading` returns
+            # `(True, ...)` for any `### ...` line whether the name is
+            # recognised or not, so unrecognised section headings still
+            # suppress the duplicate refresh.
             j = i + 1
             while j < len(lines) and _is_blank(lines[j]):
                 j += 1
             need_refresh = True
             if j < len(lines):
                 if (
-                    _is_section_heading(lines[j]) is not None
+                    _is_section_heading(lines[j])[0]
                     or _is_dynasty_heading(lines[j]) is not None
                 ):
                     need_refresh = False
