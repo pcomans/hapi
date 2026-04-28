@@ -349,21 +349,30 @@ def main() -> None:
     annotated = process_chunk(md)
     # Atomic write: stage to a temp file in the same directory, then rename
     # over the destination. Prevents data loss if the script is interrupted
-    # mid-write (the destination either holds the previous content or the
-    # new content, never a partial write). The temp file lives in the same
+    # mid-write — the destination either holds the previous content or the
+    # new content, never a partial write. The temp file lives in the same
     # directory so the final `os.replace` is a same-filesystem rename.
+    # `try/finally` cleans up the staged temp file if the write OR the
+    # replace raises (delete=False means the temp file isn't auto-removed
+    # by the context manager).
     output_path = output_path.resolve()
-    with tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        dir=output_path.parent,
-        prefix=f".{output_path.name}.",
-        suffix=".tmp",
-        delete=False,
-    ) as tmp:
-        tmp.write(annotated)
-        tmp_path = Path(tmp.name)
-    os.replace(tmp_path, output_path)
+    tmp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=output_path.parent,
+            prefix=f".{output_path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as tmp:
+            tmp.write(annotated)
+            tmp_path = Path(tmp.name)
+        os.replace(tmp_path, output_path)
+        tmp_path = None  # successful rename — destination now holds it
+    finally:
+        if tmp_path is not None and tmp_path.exists():
+            tmp_path.unlink()
     print(f"wrote {output_path} ({len(annotated)} bytes)")
 
 
