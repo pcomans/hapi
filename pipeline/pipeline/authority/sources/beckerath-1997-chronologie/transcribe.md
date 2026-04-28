@@ -13,17 +13,48 @@ Reproducible protocol per ADR-017 (Claude Code subagent OCR, followed by three-s
 
 Per ADR-017: Claude Code subagent OCR of the target range, followed by three parallel Claude Code subagent extractors and a deterministic majority-vote merge. All LLM work runs under the Claude Code subscription.
 
-### OCR
+### OCR — split single-book-page scans
 
-Beckerath's PDF is a gscan2pdf scan with **no embedded text layer** and a **double-page-spread layout** — every physical PDF page renders two facing book pages side-by-side. The OCR pass is one Claude Code general-purpose subagent (sonnet model) that uses the `Read` tool to ingest pre-rendered JPEGs of the target PDF pages from `$TMPDIR/beckerath_scan/scan-NNN.jpg` and writes a single Markdown chunk file at `raw/chunk-p105-p109.md` capturing both book pages per PDF page in left-then-right reading order.
+Beckerath's PDF is a gscan2pdf scan with **no embedded text layer** and a **double-page-spread layout** — every physical PDF page renders two facing book pages side-by-side. The original OCR pipeline fed each double-page JPEG to one subagent expecting it to maintain reading order across the gutter. Spot-checking row 11.03 An-jotef III against the printed PDF (project lead, 2026-04-28) revealed a **column-drift class of OCR error**: the subagent's reading order slipped at the page fold and spliced fragments from the opposite book page into a king's parenthetical. The subagent emitted a confident, deterministic-looking corruption that all three downstream extraction agents read identically — making the disagreement log structurally blind to it.
 
-Within each PDF-page render, the subagent preserves Beckerath's typography:
+The OCR step now feeds each book page as its own JPEG, eliminating the cross-fold drift mechanism entirely.
+
+**Cropping.** Render half-pages directly from the PDF with `pdftoppm`'s `-x -y -W -H` crop options. Each scan-NNN double-page JPEG is 4870×3541 px at `-r 100`; cut at the gutter (column ~2400) with a small overlap so neither half clips inner-margin content:
+
+```bash
+PDF="proprietary/books/Beckerath 1997 - Chronologie des pharaonischen Aegypten.pdf"
+OUT="$TMPDIR/beckerath_scan"
+# left halves (book pp 188, 190, 192, 194 — even page numbers)
+for n in 106 107 108 109; do
+    pdftoppm -r 100 -f $n -l $n -x 0    -y 0 -W 2500 -H 3541 -jpeg "$PDF" "$OUT/scan-$n-left"
+done
+# right halves (book pp 187, 189, 191, 193 — odd page numbers)
+for n in 105 106 107 108; do
+    pdftoppm -r 100 -f $n -l $n -x 2370 -y 0 -W 2500 -H 3541 -jpeg "$PDF" "$OUT/scan-$n-right"
+done
+# strip pdftoppm's trailing -NNN suffix on the output filenames
+cd "$OUT" && for f in scan-*-*-*.jpg; do mv "$f" "${f%-*}.jpg"; done
+```
+
+Pages-needed checklist (Anhang A is bracketed by these eight half-pages):
+
+- `scan-105-right.jpg` → book p187 (start of Anhang A; left of scan-105 is book p186, out of scope)
+- `scan-106-left.jpg` → book p188
+- `scan-106-right.jpg` → book p189
+- `scan-107-left.jpg` → book p190
+- `scan-107-right.jpg` → book p191
+- `scan-108-left.jpg` → book p192
+- `scan-108-right.jpg` → book p193
+- `scan-109-left.jpg` → book p194 (end of *Supplement zu A*; right of scan-109 starts Anhang B, out of scope per the fold cutoff rule)
+
+**OCR pass.** One Claude Code general-purpose subagent (sonnet model) reads the eight half-page JPEGs in `## Book pNNN` order and emits one consolidated `raw/chunk-p105-p109.md`. Each input is now a SINGLE BOOK PAGE — no facing column, no gutter, no drift mechanism. The subagent prompt explicitly forbids cross-row substitution: when a parenthetical is unclear, emit `(?)` rather than splice from a nearby row. Beckerath's typography is preserved per the bullets below.
+
+Within each book-page render, the subagent preserves Beckerath's typography:
 
 - Italic section headings (`FRÜHZEIT`, `ALTES REICH`, `I. ZWISCHENZEIT`, `MITTLERES REICH`, `II. ZWISCHENZEIT`, `NEUES REICH`, `III. ZWISCHENZEIT`, `SPÄTZEIT`) drive the `period` field downstream.
 - Dynasty headings (`1. Dynastie (etwa 3032/2982–2853/2803)`) anchor the `dynasty` integer and provide a sanity-check for the rows that follow.
 - Two-column dates `3032/2982–3000/2950` — the slash separates Beckerath's high and low alternative endpoints; both must be preserved.
-- Italicised Egyptian titularies in parentheses (e.g. `(Hor Aha)`, `(Nefer-cheprurê wa-en-rê)`).
-- The printed page numbers `186` / `187` / `188` ... at the top of each book-page render are preserved inline so a reviewer can cross-reference.
+- Italicised Egyptian titularies in parentheses (e.g. `(Hor Aha)`, `(Nefer-cheprurê wa-en-rê)`); editorial-bracket markers like `(Hor[-nacht] Neb-tep-nofer)` are preserved verbatim including the brackets.
 
 The chunk file is **not committed** (gitignored via `pipeline/pipeline/authority/sources/*/raw/chunk-*.md`).
 

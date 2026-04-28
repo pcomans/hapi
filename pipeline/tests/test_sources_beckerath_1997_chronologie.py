@@ -50,13 +50,18 @@ def _row(beckerath_id: str) -> dict:
 
 
 def test_row_count() -> None:
-    """The Übersicht extracts to ~170 rows: every dynasty 0..31 named king
+    """The Übersicht extracts to 174 rows: every dynasty 0..31 named king
     plus dynasty-only marker rows for 7, 8, 9/10, 13, 14, 16, 17 (Beckerath
     gives counts not individual kings there) plus the two Dyn 21 HPA names
     from Supplement zu A's tail paragraph. The exact count is locked here so
     silent re-extraction drift is detected on CI.
+
+    Count went 172 → 174 in the 2026-04-28 OCR redo: the previous
+    double-page-spread OCR pass missed Ment-hotpe I. (Dyn 11.01) and
+    Sesostris III. (now 12.05) entirely. Both restorations are verified
+    against the printed PDF (book pp 188-189, scan-106-{left,right}).
     """
-    assert len(_rows()) == 172, len(_rows())
+    assert len(_rows()) == 174, len(_rows())
 
 
 def test_dynasty_coverage() -> None:
@@ -210,13 +215,14 @@ def test_menes_full_row() -> None:
 
 
 def test_amenophis_i_dyn18_identity_correction_locked() -> None:
-    """The egyptologist-reviewer override pass corrected this row from a
-    misidentified `An-jotef I.` (Hor Neb-cheper-rê) to the correct
-    `Amenophis I.` (Djeser-ka-rê). Lock the corrected row so a re-merge
-    can't silently re-introduce the OCR confusion.
+    """Beckerath prints `Amenophis (Amen-hotpe) I. (Djeser-ka-rê) 13.7.1525–1504`
+    on book p189 (scan-106-right). Lock the row to detect drift. The pre-OCR-
+    redo branch had this misidentified as `An-jotef I.` (Hor Neb-cheper-rê) due
+    to column-drift OCR; the split-page OCR now extracts the correct form
+    directly (no fix_rows.py override needed).
     """
     r = _row("18.02")
-    assert r["name"] == "Amenophis I."
+    assert r["name"] == "Amenophis (Amen-hotpe) I."
     assert r["egyptian_titulary"] == "Djeser-ka-rê"
     assert r["egyptian_titulary_kind"] == "prenomen"
     assert r["start_bce_high"] == -1525
@@ -225,15 +231,21 @@ def test_amenophis_i_dyn18_identity_correction_locked() -> None:
 
 
 def test_tuthmosis_ii_accession_date_in_notes() -> None:
-    """Beckerath gives Tuthmosis II's accession date as `14.8.1473`. The
-    day.month.year prefix lives in `notes_from_beckerath`; the numeric BCE
-    endpoint is `-1473`.
+    """Beckerath prints `Tuthmosis II. (A-cheper-en-rê) Frühj.(?) 1492–1479`
+    on book p189 (scan-106-right). The "Frühj.(?)" (spring-question-mark)
+    accession prefix lives in `notes_from_beckerath`; numeric endpoints are
+    -1492 and -1479. Pre-OCR-redo branch had a fix_rows.py override forcing
+    `end=-1458` (which is Hat-schepsut's end, not Tuthmosis II's) — the
+    override was based on a misreading of the previous OCR's column-drift
+    splice and is now removed.
     """
     r = _row("18.04")
     assert r["name"] == "Tuthmosis II."
-    assert r["start_bce_high"] == -1473
-    assert r["end_bce_high"] == -1458
-    assert r["notes_from_beckerath"] == "Antritt 14.8.1473"
+    assert r["start_bce_high"] == -1492
+    assert r["start_bce_low"] == -1492
+    assert r["end_bce_high"] == -1479
+    assert r["end_bce_low"] == -1479
+    assert r["notes_from_beckerath"] == "Frühj.(?) 1492"
 
 
 def test_schoschenq_iii_alternative_end_in_notes() -> None:
@@ -408,12 +420,14 @@ def test_taharqo_mixed_titulary() -> None:
 
 def test_psamtik_i_dyn26_full_row() -> None:
     """Late Period flagship: prenomen `Wah-ib-rê` is the parenthetical; both
-    approximate flags false (Beckerath gives bare numbers); Spätzeit period."""
+    approximate flags false (Beckerath gives bare numbers); Spätzeit period.
+    Beckerath spells the name `Psametik (Psammêtichos) I.` on book p192
+    (scan-108-left)."""
     r = _row("26.01")
     assert r["dynasty"] == 26
     assert r["sub_line"] is None
     assert r["sequence_in_dynasty"] == 1
-    assert "Psamtik" in r["name"]
+    assert "Psametik" in r["name"]
     assert r["egyptian_titulary"] == "Wah-ib-rê"
     assert r["egyptian_titulary_kind"] == "prenomen"
     assert r["start_bce_high"] == -664
@@ -454,24 +468,33 @@ def test_dyn4_etwa_propagation_locked() -> None:
 
 
 def test_chajan_dyn15_end_date_locked() -> None:
-    """`fix_rows.py` corrected `end_bce_high` for Chajan from -1149 (a
-    400-year OCR corruption) to -1549 (matching scan-106 left's
-    `1590/87–1549/1546`).
+    """Beckerath prints a brace bracket on book p189 (scan-106-right) spanning
+    Bêôn / Apachnas / Chajan with shared range 1648/1645–1590/1587. Chajan
+    inherits the bracket dates via fix_rows.py (the brace glyph is invisible
+    to OCR). The pre-OCR-redo branch had Chajan's end overridden to
+    -1549/-1546 (which are Apophis's dates) — that override was based on a
+    misreading of the brace span and is removed.
     """
     r = _row("15.04")
-    assert r["name"] == "Chajan"
-    assert r["end_bce_high"] == -1549
-    assert r["end_bce_low"] == -1546
+    assert "Chajan" in r["name"]
+    assert r["start_bce_high"] == -1648
+    assert r["start_bce_low"] == -1645
+    assert r["end_bce_high"] == -1590
+    assert r["end_bce_low"] == -1587
 
 
 def test_hatschepsut_end_date_locked() -> None:
-    """`fix_rows.py` recovered Hat-schepsut's end dates from the OCR-garbled
-    `341/837` to the correct `1458` per scan-107 left's `1479/73–1458`.
+    """Beckerath prints `Kgin.Hat-schepsut (Maat-ka-rê) 1479/1473–1458/57` on
+    book p189 (scan-106-right). The slash-pair end `1458/57` expands to
+    -1458 (high) / -1457 (low). Pre-OCR-redo branch had a fix_rows.py
+    override forcing end_low=-1458, which collapsed the slash pair — the
+    override was based on the previous OCR's garble (`341/837`) and is now
+    removed (clean OCR produces the slash pair correctly).
     """
     r = _row("18.05")
-    assert r["name"] == "Kgin. Hat-schepsut"
+    assert "Hat-schepsut" in r["name"]
     assert r["end_bce_high"] == -1458
-    assert r["end_bce_low"] == -1458
+    assert r["end_bce_low"] == -1457
     assert r["end_approximate"] is False
 
 
@@ -486,32 +509,45 @@ def test_amen_mes_su_prenomen_supplement_locked() -> None:
 
 
 def test_sethos_ii_prenomen_supplement_locked() -> None:
-    """`fix_rows.py` corrected Sethós II's prenomen from
-    `Ba-en-rê-meri-netjeru` (which is Merenptah's prenomen — a splice
-    error) to `User-chepru-rê mer-amun` per Supplement zu A.
+    """Beckerath prints `Sethôs II.: User-chepru-rê mer-amun, Setoy mer-en-ptah`
+    in the Supplement zu A (book p193, scan-108-right). The 2026-04-28 OCR
+    redo extracts the prenomen cleanly without a fix_rows.py override.
+    Note: the diacritic is `ô` (circumflex), not `ó` (acute).
     """
     r = _row("19.06")
-    assert r["name"] == "Sethós II."
+    assert r["name"] == "Sethôs II."
     assert r["prenomen"] == "User-chepru-rê mer-amun"
 
 
 def test_necho_ii_prenomen_locked() -> None:
-    """Gemini-flagged: `fix_rows.py` corrected Necho II's titulary from
-    `Nefer-ib-rê` (a splice from Psamtik II's row) to `Wahem-ib-rê`.
+    """Beckerath prints `Nekaw (Nekôs/Nechaô, Uhem-ib-rê)` on book p192
+    (scan-108-left) — the parenthetical Egyptian titulary is `Uhem-ib-rê`.
+    The pre-OCR-redo branch had a fix_rows.py override forcing
+    `Wahem-ib-rê` based on a hieroglyphic-transliteration argument (Egyptian
+    Wḥm-ib-rꜥ → Wahem-ib-rê), but Beckerath's printed text says Uhem.
+    Per the constitutional rule "data is sacred", follow what Beckerath
+    actually prints; override removed.
     """
     r = _row("26.02")
-    assert "Nech" in r["name"]
-    assert r["egyptian_titulary"] == "Wahem-ib-rê"
+    assert "Nek" in r["name"]
+    assert r["egyptian_titulary"] == "Uhem-ib-rê"
 
 
 def test_chabbasch_dyn31_locked() -> None:
-    """Gemini-flagged: `fix_rows.py` corrected the Dyn 31 Egyptian
-    counter-king's name to `Chabbasch` and titulary to
-    `Senem-sotep-en-ptah`.
+    """Beckerath prints `Chababasch (Senen-sotep-en-ptah)` under the
+    `Ägypt. Gegenkönig:` sub-block of Dyn 31 (book p192, scan-108-left).
+    Note: `Chababasch` (b-a-b-a, four-syllable spelling Beckerath uses) and
+    `Senen-` (with N, not M). The pre-OCR-redo branch had a fix_rows.py
+    override forcing `Chabbasch` (one syllable shorter) and `Senem-` (with
+    M) based on alternative scholarly transliterations; per constitutional
+    rule "data is sacred", follow Beckerath's printed text. The
+    `-sotep-en-X` suffix is prenomen morphology; fix_rows.py corrects only
+    the kind (the underlying titulary is already extracted correctly).
     """
     r = _row("31.04")
-    assert r["name"] == "Chabbasch"
-    assert r["egyptian_titulary"] == "Senem-sotep-en-ptah"
+    assert r["name"] == "Chababasch"
+    assert r["egyptian_titulary"] == "Senen-sotep-en-ptah"
+    assert r["egyptian_titulary_kind"] == "prenomen"
 
 
 def test_schoschenq_spelling_systematic() -> None:

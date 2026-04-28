@@ -1,150 +1,459 @@
-01.02 (Iti):
-  egyptian_titulary: a="Heti ?" | b="Heti?" | c="Heti ?"  → chose "Heti ?"
+02.06 (Nefer-ka-rê (Nephercheres)):
+  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
 
-03.05 (Sôuphis):
-  name: a="Sôuphis, Mesochris" | b="Sôuphis" | c="Sôuphis"  → chose "Sôuphis"
-  egyptian_titulary: a=null | b="Mesochris" | c="Mesochris"  → chose "Mesochris"
-  egyptian_titulary_kind: a=null | b="nomen" | c="nomen"  → chose "nomen"
+02.07 (Nefer-ka-sokar (Sesochris)):
+  egyptian_titulary: a="Sesochris" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+03.04 (Hor Cha-bai):
+  egyptian_titulary: a=null | b=null | c="Hor Cha-bai"  → chose null
+  start_bce_low: a=-2613 | b=null | c=-2613  → chose -2613
+  end_bce_high: a=-2639 | b=null | c=-2639  → chose -2639
+  name: a="Hor Cha-bai" | b="Hor Cha-bai" | c="Sôuphis, Mesochris"  → chose "Hor Cha-bai"
+  egyptian_titulary_kind: a=null | b=null | c="horus_name"  → chose null
+  end_bce_low: a=-2589 | b=null | c=-2589  → chose -2589
+  notes_from_beckerath: a=null | b=null | c="Ahu (Huni, Aches) als alternative Namen"  → chose null
+  start_bce_high: a=-2663 | b=null | c=-2663  → chose -2663
+
+03.06 (Ahu (Huni, Aches)):
+  egyptian_titulary: a=null | b="Huni, Aches"  → chose null
+  start_bce_low: a=-2613 | b=null  → chose -2613
+  end_bce_high: a=-2639 | b=null  → chose -2639
+  name: a="Ahu (Huni, Aches)" | b="Ahu"  → chose "Ahu (Huni, Aches)"
+  egyptian_titulary_kind: a=null | b="nomen"  → chose null
+  end_bce_low: a=-2589 | b=null  → chose -2589
+  start_bce_high: a=-2663 | b=null  → chose -2663
+
+04.01 (Senofru (Soris)):
+  egyptian_titulary: a="Soris" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+04.02 (Cheops):
+  name: a="Cheops (Chufu)" | b="Cheops" | c="Cheops"  → chose "Cheops"
+
+04.04 (Chephren):
+  name: a="Chephren (Cha'ef-rê)" | b="Chephren" | c="Chephren"  → chose "Chephren"
+
+04.06 (Mykerinos):
+  name: a="Mykerinos (Men-kaw-rê)" | b="Mykerinos" | c="Mykerinos"  → chose "Mykerinos"
+
+04.07 (Schepses-kaf (Seberchéres)):
+  egyptian_titulary: a="Seberchéres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.01 (User-kaf (Userchéres)):
+  egyptian_titulary: a="Userchéres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.02 (Sahu-rê (Sephres)):
+  egyptian_titulary: a="Sephres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.03 (Nefer-ir-ka-rê Kakai (Nephercheres)):
+  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.04 (Schepses-ka-rê (Sisires)):
+  egyptian_titulary: a="Sisires" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.05 (Neferef-rê Isi (Cheres)):
+  egyptian_titulary: a="Cheres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.06 (Ni-user-rê Ini (Rathores)):
+  egyptian_titulary: a="Rathores" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.07 (Men-kaw-hor (Mencheres)):
+  egyptian_titulary: a="Mencheres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.08 (Djed-ka-re Isesi (Tancheres)):
+  egyptian_titulary: a="Tancheres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+05.09 (Unas (Onnos)):
+  egyptian_titulary: a="Onnos" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+06.01 (Teti (Othoês)):
+  egyptian_titulary: a="Othoês" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+06.03 (Pepi I.):
+  egyptian_titulary: a="Phios, Meri-rê" | b=null | c="Phios, Meri-rê"  → chose "Phios, Meri-rê"
+  name: a="Pepi I." | b="Pepi I. (Phios, Meri-rê)" | c="Pepi I."  → chose "Pepi I."
+  egyptian_titulary_kind: a="mixed" | b=null | c="mixed"  → chose "mixed"
+
+06.04 (Nemti-em-saf I.):
+  egyptian_titulary: a="Methusuphis, Mer-en-ptah" | b=null | c="Methusuphis, Mer-en-ptah"  → chose "Methusuphis, Mer-en-ptah"
+  name: a="Nemti-em-saf I." | b="Nemti-em-saf I. (Methusuphis, Mer-en-ptah)" | c="Nemti-em-saf I."  → chose "Nemti-em-saf I."
+  egyptian_titulary_kind: a="mixed" | b=null | c="mixed"  → chose "mixed"
+
+06.05 (Pepi II.):
+  egyptian_titulary: a="Phiops, Nefer-ka-rê" | b=null | c="Phiops, Nefer-ka-rê"  → chose "Phiops, Nefer-ka-rê"
+  name: a="Pepi II." | b="Pepi II. (Phiops, Nefer-ka-rê)" | c="Pepi II."  → chose "Pepi II."
+  egyptian_titulary_kind: a="mixed" | b=null | c="mixed"  → chose "mixed"
+
+06.06 (Nemti-em-saf II. (Menthesuphis)):
+  egyptian_titulary: a="Menthesuphis" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+06.07 (Kgin. Nitokris):
+  name: a="Kgin. Nitokris (Neit-aqerti)" | b="Kgin. Nitokris" | c="Kgin. Nitokris"  → chose "Kgin. Nitokris"
+
+07.01 (7. Dynastie):
+  name: a="Manethos 7. Dynastie" | b="7. Dynastie" | c="7. Dynastie"  → chose "7. Dynastie"
+  notes_from_beckerath: a="Manetho ?7 Tage" | b="Manetho 7 Tage" | c="Manetho 7 Tage"  → chose "Manetho 7 Tage"
+
+09.01 (9./10. Dynastie):
+  notes_from_beckerath: a="in Herakleopolis, 18 Könige" | b="18 Könige, in Herakleopolis" | c="in Herakleopolis, 18 Könige"  → chose "in Herakleopolis, 18 Könige"
+
+11.01 (Ment-hotpe I.):
+  end_approximate: a=true | b=true | c=false  → chose true
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
+
+11.02 (An-jotef I.):
+  start_approximate: a=true | b=true | c=false  → chose true
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
+
+11.03 (An-jotef II.):
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
+
+11.04 (An-jotef III.):
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
+
+11.05 (Ment-hotpe II.):
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
+
+11.06 (Ment-hotpe III.):
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
+
+11.07 (Ment-hotpe IV.):
+  name: a="Ment-hotpe IV. (Neb-towi-rê) und Gegenkönige" | b="Ment-hotpe IV." | c="Ment-hotpe IV."  → chose "Ment-hotpe IV."
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="und Gegenkönige" | c="und Gegenkönige"  → chose "und Gegenkönige"
+
+12.08 (Kgin. Nefru-sobek):
+  egyptian_titulary: a="Skemiophris, Ka-sobek-rê" | b="Ka-sobek-rê" | c="Skemiophris, Ka-sobek-rê"  → chose "Skemiophris, Ka-sobek-rê"
+  name: a="Kgin. Nefru-sobek (Skemiophris, Ka-sobek-rê)" | b="Kgin. Nefru-sobek" | c="Kgin. Nefru-sobek"  → chose "Kgin. Nefru-sobek"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a=null | b="Skemiophris" | c=null  → chose null
+
+13.01 (13. Dynastie):
+  notes_from_beckerath: a="50 (?) Könige (siehe S. 123–24)" | b="50 (?) Könige" | c="50 (?) Könige (siehe S. 123–24)"  → chose "50 (?) Könige (siehe S. 123–24)"
+
+15.01 (Salitis):
+  start_approximate: a=false | b=true | c=true  → chose true
+  start_bce_low: a=-1645 | b=null | c=null  → chose null
+  start_bce_high: a=-1648 | b=null | c=null  → chose null
+
+15.02 (Bêôn (Bnón)):
+  egyptian_titulary: a="Bnón" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+15.03 (Apachnas (Pachnan)):
+  start_approximate: a=false | b=false | c=true  → chose false
+  egyptian_titulary: a="Pachnan" | b=null | c=null  → chose null
+  end_approximate: a=false | b=false | c=true  → chose false
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+15.04 (Chajan (Iannas, Se'user-en-rê)):
+  egyptian_titulary: a="Iannas, Se'user-en-rê" | b="Se'user-en-rê" | c="Se'user-en-rê"  → chose "Se'user-en-rê"
+  name: a="Chajan (Iannas, Se'user-en-rê)" | b="Chajan" | c="Chajan (Iannas)"  → chose "Chajan (Iannas, Se'user-en-rê)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Iannas" | c=null  → chose null
+
+15.05 (Apophis):
+  start_approximate: a=false | b=false | c=true  → chose false
+  end_approximate: a=false | b=false | c=true  → chose false
+  name: a="Apophis (A-qen-en-rê/A-user-rê)" | b="Apophis" | c="Apophis"  → chose "Apophis"
 
 15.06 (Chamudi):
-  end_bce_high: a=-1539 | b=null | c=-1539  → chose -1539
-  end_bce_low: a=-1536 | b=null | c=-1536  → chose -1536
-
-16.01 (16. Dynastie):
-  notes_from_beckerath: a="in Theben, (?) Könige (zeitw. S. 124)" | b="in Theben, (?) Könige" | c="in Theben, (?) Könige (zeitw. S. 124)"  → chose "in Theben, (?) Könige (zeitw. S. 124)"
+  start_approximate: a=false | b=false | c=true  → chose false
+  end_approximate: a=false | b=false | c=true  → chose false
 
 17.01 (17. Dynastie):
-  end_approximate: a=true | b=false | c=true  → chose true
-  notes_from_beckerath: a="in Theben, (?) Könige (zeitw. S. 124)" | b="in Theben, (?) Könige" | c="in Theben, (?) Könige (zeitw. S. 124)"  → chose "in Theben, (?) Könige (zeitw. S. 124)"
+  end_approximate: a=false | b=false | c=true  → chose false
+  notes_from_beckerath: a="in Theben, 15 (?) Könige (siehe S. 124)" | b="15 (?) Könige, in Theben" | c="in Theben, 15 (?) Könige (siehe S. 124)"  → chose "in Theben, 15 (?) Könige (siehe S. 124)"
 
-18.01 (Amosis (Ahmosê) I.):
-  notes_from_beckerath: a="Antritt 1.(??) 1550" | b="1.(??) 1550" | c="Antritt 1.(??) 1550"  → chose "Antritt 1.(??) 1550"
+18.01 (Amosis (Ah-mose) I.):
+  start_approximate: a=false | b=false | c=true  → chose false
+  notes_from_beckerath: a="3.(?) 1550" | b="Antritt 3.(?).1550" | c="3.(?) 1550"  → chose "3.(?) 1550"
 
 18.04 (Tuthmosis II.):
-  start_bce_high: a=-1473 | b=-1479 | c=-1473  → chose -1473
-  end_bce_high: a=-341 | b=-1479 | c=-341  → chose -341
-  end_bce_low: a=-837 | b=-1473 | c=-837  → chose -837
+  start_approximate: a=true | b=false | c=true  → chose true
+  notes_from_beckerath: a="Frühj.(?) 1492" | b="Antritt Frühjahr(?).1492" | c="Frühj.(?) 1492"  → chose "Frühj.(?) 1492"
 
-18.05 (Kgin. Hat-schepsut):
-  end_bce_high: a=-341 | b=-1458 | c=-341  → chose -341
-  notes_from_beckerath: a=null | b="Mitregentin von Tuthmosis III." | c=null  → chose null
-  end_bce_low: a=-837 | b=-1458 | c=-837  → chose -837
+18.05 (Kgin.Hat-schepsut):
+  name: a="Kgin.Hat-schepsut" | b="Kgin. Hat-schepsut" | c="Kgin.Hat-schepsut"  → chose "Kgin.Hat-schepsut"
 
 18.06 (Tuthmosis III.):
-  notes_from_beckerath: a="Antritt 28.4.1479; Ende 11.3.1425" | b="Antritt 28.4.1479; Ende 11.3.1425" | c="Antritt 28.4.1479; Tod 11.3.1425"  → chose "Antritt 28.4.1479; Ende 11.3.1425"
+  notes_from_beckerath: a="Antritt 28.4.1479" | b="Antritt 28.4.1479, Ende 11.3.1425" | c="Antritt 28.4.1479, Ende 11.3.1425"  → chose "Antritt 28.4.1479, Ende 11.3.1425"
 
-19.05 (Amen-mes-su):
-  prenomen: a="Amen-mes-su mer-amun" | b="User-chepru-rê mer-amun" | c="User-chepru-rê mer-amun"  → chose "User-chepru-rê mer-amun"
+18.11 (Kgin. Nofret-ete):
+  name: a="Kgin. Nofret-ete" | b="Kgin. Nofret-ete" | c="Kgin.Nofret-ete"  → chose "Kgin. Nofret-ete"
+
+19.01 (Ramses (Ra-mes-su, griech. Ramessês) I.):
+  name: a="Ramses (Ra-mes-su, griech. Ramessês) I." | b="Ramses I." | c="Ramses (Ra-mes-su, griech. Ramessês) I."  → chose "Ramses (Ra-mes-su, griech. Ramessês) I."
+
+19.02 (Sethôs (Setoy) I.):
+  start_approximate: a=false | b=false | c=true  → chose false
+  name: a="Sethôs (Setoy) I." | b="Sethôs I." | c="Sethôs (Setoy) I."  → chose "Sethôs (Setoy) I."
+  notes_from_beckerath: a="Antritt 6.(?) 1290" | b="Antritt 6.(?).1290" | c="Antritt 6.(?) 1290"  → chose "Antritt 6.(?) 1290"
+
+19.06 (Sethôs II.):
+  notes_from_beckerath: a="Antritt 12.1200/1199" | b="Antritt 12.1200" | c="Antritt 12.1200/1199"  → chose "Antritt 12.1200/1199"
+
+19.07 (Si-ptah):
+  notes_from_beckerath: a="Antritt 10.1194/93" | b="Antritt 10.1194" | c="Antritt 10.1194/93"  → chose "Antritt 10.1194/93"
+
+19.08 (Kgin. Te-wosret (Thuoris)):
+  name: a="Kgin. Te-wosret (Thuoris)" | b="Kgin. Te-wosret" | c="Kgin.Te-wosret"  → chose "Kgin. Te-wosret (Thuoris)"
+
+20.01 (Seth-nachte):
+  notes_from_beckerath: a="Antritt 3.1186/85" | b="Antritt 3.1186" | c="Antritt 3.1186/85"  → chose "Antritt 3.1186/85"
+
+20.02 (Ramses III.):
+  notes_from_beckerath: a="Antritt 7.3.1183/82" | b="Antritt 7.3.1183" | c="Antritt 7.3.1183/82"  → chose "Antritt 7.3.1183/82"
 
 20.03 (Ramses IV.):
-  notes_from_beckerath: a="Antritt 17.4.1152/51" | b="Antritt 17.4.1152/51; 2. J.: User-maat-rê sotep-en-amun" | c="Antritt 17.4.1152/51"  → chose "Antritt 17.4.1152/51"
+  notes_from_beckerath: a="Antritt 17.4.1152/51" | b="Antritt 17.4.1152" | c="Antritt 17.4.1152/51"  → chose "Antritt 17.4.1152/51"
+
+20.04 (Ramses V.):
+  notes_from_beckerath: a="Antritt 1.1145/44" | b="Antritt 1.1145" | c="Antritt 1.1145/44"  → chose "Antritt 1.1145/44"
+
+20.05 (Ramses VI.):
+  notes_from_beckerath: a="Antritt 10./11.1142/40" | b="Antritt 10./11.1142" | c="Antritt 10./11.1142/40"  → chose "Antritt 10./11.1142/40"
+
+20.06 (Ramses VII.):
+  notes_from_beckerath: a="Antritt 12.1134/1132" | b="Antritt 12.1134" | c="Antritt 12.1134/1132"  → chose "Antritt 12.1134/1132"
+
+20.08 (Ramses IX.):
+  notes_from_beckerath: a="Antritt 6.1125/1121" | b="Antritt 6.1125" | c="Antritt 6.1125/1121"  → chose "Antritt 6.1125/1121"
+
+20.09 (Ramses X.):
+  notes_from_beckerath: a="Antritt 10.1107/1103" | b="Antritt 10.1107" | c="Antritt 10.1107/1103"  → chose "Antritt 10.1107/1103"
+
+20.10 (Ramses XI.):
+  notes_from_beckerath: a="Antritt 4.1103/1099" | b="Antritt 4.1103" | c="Antritt 4.1103/1099"  → chose "Antritt 4.1103/1099"
+
+21.01 (Smendes (Nes-bi-neb-dedet)):
+  egyptian_titulary: a="Nes-bi-neb-dedet" | b="Nes-bi-neb-dedet" | c=null  → chose "Nes-bi-neb-dedet"
+  name: a="Smendes (Nes-bi-neb-dedet)" | b="Smendes" | c="Smendes (Nes-bi-neb-dedet)"  → chose "Smendes (Nes-bi-neb-dedet)"
+  egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+
+21.02 (Amen-em-nisu (Nephercheres)):
+  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+21.03 (Psusennes (Pe-sib-cha-en-nêwet) I.):
+  egyptian_titulary: a="Pe-sib-cha-en-nêwet" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+21.04 (Amen-em-opet (Amenophthis)):
+  egyptian_titulary: a="Amenophthis" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+21.05 (Osochor (Osorkon)):
+  egyptian_titulary: a="Osorkon" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
 
 21.08 (Pi-nodjem I.):
+  prenomen: a="Cheper-cha-rê sotep-en-amun" | b=null | c="Cheper-cha-rê sotep-en-amun"  → chose "Cheper-cha-rê sotep-en-amun"
+  egyptian_titulary: a=null | b="Cheper-cha-rê sotep-en-amun" | c=null  → chose null
+  egyptian_titulary_kind: a=null | b="prenomen" | c=null  → chose null
+  notes_from_beckerath: a=null | b="Hohepriester, führt Königstitel" | c="Hohepriester, führt Königstitel"  → chose "Hohepriester, führt Königstitel"
+
+21.09 (Psusennes):
+  prenomen: a="Tit-cheper-rê sotep-en-amun" | b=null | c="Tit-cheper-rê sotep-en-amun"  → chose "Tit-cheper-rê sotep-en-amun"
+  egyptian_titulary: a=null | b="Tit-cheper-rê sotep-en-amun" | c=null  → chose null
+  name: a="Psusennes" | b="Psusennes" | c="Psusennes (Hohepriester)"  → chose "Psusennes"
+  egyptian_titulary_kind: a=null | b="prenomen" | c=null  → chose null
+  notes_from_beckerath: a=null | b="Hohepriester, führt Königstitel" | c="Hohepriester, führt Königstitel"  → chose "Hohepriester, führt Königstitel"
+
+22.01 (Schoschenq I.):
+  name: a="Schoschenq I. (Sesonchis)" | b="Schoschenq I." | c="Schoschenq I."  → chose "Schoschenq I."
+
+22.02 (Osorkon I. (Osorthon)):
+  egyptian_titulary: a="Osorthon" | b="Osorthon" | c=null  → chose "Osorthon"
+  name: a="Osorkon I. (Osorthon)" | b="Osorkon I." | c="Osorkon I. (Osorthon)"  → chose "Osorkon I. (Osorthon)"
+  egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+
+22.03 (Takelot I. (Takelothis)):
+  egyptian_titulary: a="Takelothis" | b="Takelothis" | c=null  → chose "Takelothis"
+  name: a="Takelot I. (Takelothis)" | b="Takelot I." | c="Takelot I. (Takelothis)"  → chose "Takelot I. (Takelothis)"
+  egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+
+22.05 (Osorkon II.):
   end_approximate: a=false | b=false | c=true  → chose false
-  prenomen: a="Cheper-cha-rê sotep-en-amun" | b="Cheper-cha-rê sotep-en-amun" | c=null  → chose "Cheper-cha-rê sotep-en-amun"
-  start_approximate: a=false | b=false | c=true  → chose false
-  notes_from_beckerath: a="Den Königstitel führen außerdem in der 21. Dynastie die Hohenpriester" | b="Hohepriester führt Königstitel" | c="Den Königstitel führen außerdem in der 21. Dynastie die Hohenpriester"  → chose "Den Königstitel führen außerdem in der 21. Dynastie die Hohenpriester"
-  egyptian_titulary: a=null | b=null | c="Cheper-cha-rê sotep-en-amun"  → chose null
-  egyptian_titulary_kind: a=null | b=null | c="prenomen"  → chose null
 
-21.09 (Pusennes):
-  name: a="Pusennes" | b="Psusennes" | c="Pusennes"  → chose "Pusennes"
-  end_approximate: a=false | b=false | c=true  → chose false
-  prenomen: a="Tit-cheper-rê sotep-en-amun" | b="Tit-cheper-rê sotep-en-amun" | c=null  → chose "Tit-cheper-rê sotep-en-amun"
-  start_approximate: a=false | b=false | c=true  → chose false
-  notes_from_beckerath: a="Den Königstitel führen außerdem in der 21. Dynastie die Hohenpriester" | b="Hohepriester führt Königstitel" | c="Den Königstitel führen außerdem in der 21. Dynastie die Hohenpriester"  → chose "Den Königstitel führen außerdem in der 21. Dynastie die Hohenpriester"
-  egyptian_titulary: a=null | b=null | c="Tit-cheper-rê sotep-en-amun"  → chose null
-  egyptian_titulary_kind: a=null | b=null | c="prenomen"  → chose null
-
-22.01 (Schoscheng I.):
-  name: a="Schoscheng I." | b="Schoscheng I." | c="Schoschenq I."  → chose "Schoscheng I."
-
-22.04 (Schoscheng II.):
-  name: a="Schoscheng II." | b="Schoscheng II." | c="Schoschenq II."  → chose "Schoscheng II."
-
-22.06 (Schoscheng III.):
-  name: a="Schoscheng III." | b="Schoscheng III." | c="Schoschenq III."  → chose "Schoscheng III."
-
-22.07 (Schoscheng IIIa.):
-  name: a="Schoscheng IIIa." | b="Schoscheng IIIa." | c="Schoschenq IIIa."  → chose "Schoscheng IIIa."
+22.07 (Schoschenq IIIa.):
+  notes_from_beckerath: a=null | b=null | c="(785 ?)"  → chose null
 
 22.08 (Pe-mu):
-  end_approximate: a=true | b=false | c=true  → chose true
+  end_approximate: a=false | b=false | c=true  → chose false
 
-22.09 (Schoscheng V.):
-  name: a="Schoscheng V." | b="Schoscheng V." | c="Schoschenq V."  → chose "Schoscheng V."
-  end_approximate: a=true | b=false | c=true  → chose true
+22.09 (Schoschenq V.):
+  end_approximate: a=false | b=false | c=true  → chose false
+
+22.10 (Har-si-êset):
+  end_approximate: a=false | b=true | c=true  → chose true
+
+22.11 (Takelot II.):
+  end_approximate: a=false | b=true | c=true  → chose true
+
+22.12 (Petubastis (Pe-di-bastet) I.):
+  egyptian_titulary: a="Pe-di-bastet" | b=null | c=null  → chose null
+  end_approximate: a=false | b=true | c=true  → chose true
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
 
 22.13 (Auput I.):
-  prenomen: a="(Th. unbekannt)" | b="(Th. unbekannt)" | c=null  → chose "(Th. unbekannt)"
-  notes_from_beckerath: a=null | b=null | c="Th. unbekannt"  → chose null
+  end_approximate: a=false | b=true | c=true  → chose true
 
-22.14 (Schoscheng IV.):
-  name: a="Schoscheng IV." | b="Schoscheng IV." | c="Schoschenq IV."  → chose "Schoscheng IV."
+22.14 (Schoschenq IV.):
+  end_approximate: a=false | b=true | c=true  → chose true
 
-23.04 („Psammûs" (?)):
-  name: a="„Psammûs\" (?)" | b="„Psammûs\" (?)" | c="„Psammûs\""  → chose "„Psammûs\" (?)"
+22.15 (Osorkon III.):
+  end_approximate: a=false | b=true | c=true  → chose true
 
-25.01 (Kaschta):
-  notes_from_beckerath: a="Kuschiten; vor ca. 746" | b="vor ca. 746" | c="Kuschiten; vor ca. 746"  → chose "Kuschiten; vor ca. 746"
+22.16 (Takelot III.):
+  end_approximate: a=false | b=true | c=true  → chose true
+
+22.17 (Rud-amun):
+  end_approximate: a=false | b=true | c=true  → chose true
+
+22.18 (Ini):
+  end_approximate: a=false | b=true | c=true  → chose true
+
+23.01 (Petubastis II.):
+  end_approximate: a=false | b=true | c=true  → chose true
+  name: a="Petubastis II. (in Bubastis/Tanis)" | b="Petubastis II." | c="Petubastis II."  → chose "Petubastis II."
+
+23.02 (Auput II.):
+  name: a="Auput II. (in Leontopolis)" | b="Auput II." | c="Auput II."  → chose "Auput II."
+
+23.04 („Psammûs“ (?)):
+  end_approximate: a=false | b=false | c=true  → chose false
+
+24.01 (Fürst Tef-nachte):
+  notes_from_beckerath: a="in Sais" | b="um 740, in Sais" | c="in Sais"  → chose "in Sais"
+
+24.02 (Bokchoris):
+  egyptian_titulary: a="Bak-en-rinef, Wah-ka-rê" | b="Wah-ka-rê" | c="Bak-en-rinef, Wah-ka-rê"  → chose "Bak-en-rinef, Wah-ka-rê"
+  name: a="Bokchoris (Bak-en-rinef, Wah-ka-rê)" | b="Bokchoris" | c="Bokchoris"  → chose "Bokchoris"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a="in Sais" | b="Bak-en-rinef, in Sais" | c="in Sais"  → chose "in Sais"
 
 25.02 (Pije):
-  notes_from_beckerath: a="Kuschiten" | b=null | c="Kuschiten"  → chose "Kuschiten"
+  egyptian_titulary: a="User-maat-re/Senefer-rê" | b="User-maat-rê/Senefer-rê" | c="User-maat-re/Senefer-rê"  → chose "User-maat-re/Senefer-rê"
+  end_approximate: a=false | b=false | c=true  → chose false
+  name: a="Pije (User-maat-re/Senefer-rê)" | b="Pije" | c="Pije"  → chose "Pije"
 
 25.03 (Schabako):
-  notes_from_beckerath: a="Kuschiten" | b=null | c="Kuschiten"  → chose "Kuschiten"
+  start_approximate: a=false | b=false | c=true  → chose false
+  egyptian_titulary: a="Sabakon, Nefer-ka-rê" | b="Nefer-ka-rê" | c="Sabakon, Nefer-ka-rê"  → chose "Sabakon, Nefer-ka-rê"
+  end_approximate: a=false | b=false | c=true  → chose false
+  name: a="Schabako (Sabakon, Nefer-ka-rê)" | b="Schabako" | c="Schabako"  → chose "Schabako"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a=null | b="Sabakon" | c=null  → chose null
 
-25.04 (Schebîtko):
-  notes_from_beckerath: a="Kuschiten" | b=null | c="Kuschiten"  → chose "Kuschiten"
+25.04 (Schebitko):
+  start_approximate: a=false | b=false | c=true  → chose false
+  egyptian_titulary: a="Sebichós, Djed-kaw-rê" | b="Djed-kaw-rê" | c="Sebichós, Djed-kaw-rê"  → chose "Sebichós, Djed-kaw-rê"
+  name: a="Schebitko (Sebichós, Djed-kaw-rê)" | b="Schebitko" | c="Schebitko"  → chose "Schebitko"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a=null | b="Sebichós" | c=null  → chose null
 
 25.05 (Taharqo):
-  notes_from_beckerath: a="Kuschiten" | b=null | c="Kuschiten"  → chose "Kuschiten"
+  egyptian_titulary: a="Tarakos, Chu-nefertem-rê" | b="Chu-nefertem-rê" | c="Tarakos, Chu-nefertem-rê"  → chose "Tarakos, Chu-nefertem-rê"
+  name: a="Taharqo (Tarakos, Chu-nefertem-rê)" | b="Taharqo" | c="Taharqo"  → chose "Taharqo"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a=null | b="Tarakos" | c=null  → chose null
 
 25.06 (Tanot-amun):
-  notes_from_beckerath: a="Kuschiten; Nachfolger regieren in Napata (Nubien)" | b="Nachfolger regieren in Napata (Nubien)" | c="Kuschiten; Nachfolger regieren in Napata (Nubien)"  → chose "Kuschiten; Nachfolger regieren in Napata (Nubien)"
+  name: a="Tanot-amun (Bi-ka-rê)" | b="Tanot-amun" | c="Tanot-amun"  → chose "Tanot-amun"
 
-27.03 (Xerxes I.):
-  end_bce_low: a=-464 | b=-464 | c=-484  → chose -464
+26.02 (Nekaw (Nekôs/Nechaô)):
+  name: a="Nekaw (Nekôs/Nechaô, Uhem-ib-rê)" | b="Nekaw (Nekôs/Nechaô)" | c="Nekaw (Nekôs/Nechaô)"  → chose "Nekaw (Nekôs/Nechaô)"
 
-29.01 (Nepherites (Nef-aw-rud.) I.):
-  name: a="Nepherites (Nef-aw-rud. I." | b="Nepherites (Nef-aw-rud.) I." | c="Nepherites (Nef-aw-rud.) I."  → chose "Nepherites (Nef-aw-rud.) I."
+26.04 (Apries):
+  name: a="Apries (Wah-ib-rê, Haa-ib-rê)" | b="Apries" | c="Apries"  → chose "Apries"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
 
-29.03 (Gegenkönig Psamuthis):
-  name: a="Gegenkönig Psamuthis" | b="Psamuthis" | c="Gegenkönig Psamuthis"  → chose "Gegenkönig Psamuthis"
-  notes_from_beckerath: a=null | b="Gegenkönig" | c=null  → chose null
+26.05 (Amosis II. (Amasis)):
+  egyptian_titulary: a="Amasis, Chnem-ib-rê" | b="Chnem-ib-rê" | c="Chnem-ib-rê"  → chose "Chnem-ib-rê"
+  name: a="Amosis II. (Amasis, Chnem-ib-rê)" | b="Amosis II. (Amasis)" | c="Amosis II. (Amasis)"  → chose "Amosis II. (Amasis)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+
+27.05 (Xerxes II.):
+  start_bce_low: a=-423 | b=-424 | c=-423  → chose -423
+  end_bce_high: a=-424 | b=-423 | c=-424  → chose -424
+
+28.01 (Amyrtaios (Amen-ir-di-su)):
+  egyptian_titulary: a="Amen-ir-di-su" | b="Amen-ir-di-su" | c=null  → chose "Amen-ir-di-su"
+  name: a="Amyrtaios (Amen-ir-di-su)" | b="Amyrtaios" | c="Amyrtaios (Amen-ir-di-su)"  → chose "Amyrtaios (Amen-ir-di-su)"
+  egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+
+29.02 (Achoris (Hagor)):
+  egyptian_titulary: a="Hagor, Chnem-maat-rê" | b="Chnem-maat-rê" | c="Chnem-maat-rê"  → chose "Chnem-maat-rê"
+  name: a="Achoris (Hagor, Chnem-maat-rê)" | b="Achoris (Hagor)" | c="Achoris (Hagor)"  → chose "Achoris (Hagor)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+
+29.03 (Psamuthis (Pe-sche[re-n-]mut, User-rê)):
+  egyptian_titulary: a="Pe-sche[re-n-]mut, User-rê" | b="User-rê" | c="User-rê"  → chose "User-rê"
+  start_bce_low: a=-392 | b=-393 | c=-392  → chose -392
+  end_bce_high: a=-393 | b=-392 | c=-393  → chose -393
+  name: a="Psamuthis (Pe-sche[re-n-]mut, User-rê)" | b="Psamuthis" | c="Psamuthis (Pe-sche[re-n-]mut)"  → chose "Psamuthis (Pe-sche[re-n-]mut, User-rê)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a="Gegenkönig" | b="Gegenkönig, Pe-sche[re-n-]mut" | c="Gegenkönig"  → chose "Gegenkönig"
+
+30.01 (Nektanebês (Necht-nebef, Cheper-ka-rê)):
+  egyptian_titulary: a="Necht-nebef, Cheper-ka-rê" | b="Cheper-ka-rê" | c="Cheper-ka-rê"  → chose "Cheper-ka-rê"
+  name: a="Nektanebês (Necht-nebef, Cheper-ka-rê)" | b="Nektanebês" | c="Nektanebês (Necht-nebef)"  → chose "Nektanebês (Necht-nebef, Cheper-ka-rê)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Necht-nebef" | c=null  → chose null
+
+30.02 (Teôs (Djed-hor, Iri-maat-en-rê)):
+  egyptian_titulary: a="Djed-hor, Iri-maat-en-rê" | b="Iri-maat-en-rê" | c="Iri-maat-en-rê"  → chose "Iri-maat-en-rê"
+  name: a="Teôs (Djed-hor, Iri-maat-en-rê)" | b="Teôs" | c="Teôs (Djed-hor)"  → chose "Teôs (Djed-hor, Iri-maat-en-rê)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Djed-hor" | c=null  → chose null
+
+30.03 (Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)):
+  egyptian_titulary: a="Necht-har-ehbojet, Senedjem-ib-rê" | b="Senedjem-ib-rê" | c="Senedjem-ib-rê"  → chose "Senedjem-ib-rê"
+  name: a="Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)" | b="Nektanebôs" | c="Nektanebôs (Necht-har-ehbojet)"  → chose "Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Necht-har-ehbojet" | c=null  → chose null
+
+31.02 (Arses (Aroges)):
+  egyptian_titulary: a="Aroges" | b=null | c=null  → chose null
+  egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+
+31.04 (Chababasch (Senen-sotep-en-ptah)):
+  egyptian_titulary: a="Senen-sotep-en-ptah" | b="Senen-sotep-en-ptah" | c=null  → chose "Senen-sotep-en-ptah"
+  name: a="Chababasch (Senen-sotep-en-ptah)" | b="Chababasch" | c="Chababasch (Senen-sotep-en-ptah)"  → chose "Chababasch (Senen-sotep-en-ptah)"
+  egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
 
 ## LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
 Corrections applied by fix_rows.py AFTER the 3-subagent majority-vote
 merge. Source: egyptologist-reviewer Claude Code subagent pass against
-pre-rendered JPEG scans (scan-105.jpg–scan-109.jpg) of Beckerath 1997
-Anhang A + Supplement zu A. No human scholar has signed off on this
-extract — per ADR-017 step 6, the extract is provisional.
+pre-rendered single-book-page JPEG scans (scan-NNN-{left,right}.jpg)
+of Beckerath 1997 Anhang A + Supplement zu A. No human scholar has
+signed off on this extract — per ADR-017 step 6, the extract is
+provisional.
 
 Severity tags: P1 = corrects a clearly-wrong value (merge-blocker);
 P2 = style / audit context only.
 
-- 03.04 Hor Cha-bai: brace bracket on scan-105 right-half spans rows 03.04/03.05/03.06; agents extract dates on 03.04 correctly but the bracket span itself is invisible in the OCR markdown. Cross-row audit note added in editorial_notes. [P2]
-- 03.05 Sôuphis: same brace bracket as 03.04. Agents emit no dates (the bracket-propagation cue is a visual `}` glyph the OCR doesn't preserve); inherit dates from 03.04 per Beckerath's printed bracket. Scan-context note added in editorial_notes. [P1+P2]
-- 03.06 Ahu: same brace bracket as 03.04. Inherit dates from 03.04 per the printed bracket; scan-context note added in editorial_notes. [P1+P2]
-- 11.03 An-jotef III: chunk OCR fully garbled the Horus name. Beckerath 1997 Chronologie prints `An-jotef III. (Hor[-nacht] Neb-tep-nofer)`. The OCR rendered this as `(Hor Men-cheper nach) Nub` — three substantive corruptions, not just a stray paren. Human-verified against the printed PDF by the project lead 2026-04-28. Override sets the verbatim Beckerath form. [P1]
-- 15.04 Chajan: scan-106 left-half shows '1590/87–1549/1546'; end_bce_high was OCR-corrupted to -1149 (flagged by Agent A); corrected to -1549. end_bce_low=-1546 already correct in merge. [P1]
-- 17.01 17. Dynastie: scan-106 right shows '17. Dynastie (in Theben, etwa 1645–1550) 13 (?) Könige'. OCR inserted phantom '1539/' from the Dyn-15 Hyksos line above ('1648/1645–1539/1536'); merge stored end_bce_high=-1539 (wrong, phantom) and end_bce_low=-1550. Corrected to end_bce_high=end_bce_low=-1550 (single endpoint). Surfaced by codex review (P2 inversion → P1 OCR-bleed). [P1]
-- 18.02 IDENTITY ERROR — merge produced name='An-jotef I.' with egyptian_titulary='Hor Neb-cheper-rê'; scan-107 left-half clearly shows the Dyn-18 second king is 'Amenophis I. (Djeser-ka-rê) 1525–1504'. Agent A self-flagged 'OCR anomaly: name An-jotef I. appears in Dyn 18 context'. 'Hor Neb-cheper-rê' is the Horus name of a Dyn-17 Antef, not Amenophis I. Full override: name, titulary, titulary_kind, dates. [P1 CRITICAL]
-- 18.04 Tuthmosis II.: scan-107 left-half shows '14.8.1473–1458'; the '341/837' OCR garble maps to bare endpoint 1458; end_bce_high=-1458, end_bce_low=-1458, end_approximate=false. Notes cleaned: 'Antritt 14.8.1473'. [P1]
-- 18.05 Kgin. Hat-schepsut: TWO corrections merged. (1) scan-107 left shows '1479/73–1458'; '341/837' garble maps to bare 1458; end_high=-1458, end_low=-1458, end_approximate=false. (2) The earlier 'start 1479/73' note was editorial residue (Beckerath does not annotate her accession date in Anhang A); stripped to null per rule 1. [P1+P1, both Gemini PR #117-flagged dup-key]
-- 18.10 Akhenaten: OCR dropped the 'r' between 'u' and 'ê' in the prenomen → 'Nefer-chepruê wa-en-rê'; scan-107 left shows 'Nefer-cheprurê wa-en-rê'. Discovered during 18.11–18.14 spot- verify (code-reviewer P2.3). Corrected. [P1 — typo]
-- 19.05 Amen-mes-su Thronname: Supplement zu A on scan-108 right reads 'Men-mi-rê sotep-en-rê, Ra-mes-su hotep-er-maat'. The OCR garbles the `Amen-mes-su:` label as `Mit ein glatt:`, which breaks the king-to-prenomen anchor. Even after the post-processor (PR #138) and the new co-regent / OCR-duplicate prompt rules, all 3 agents splice Amen-mes-su's prenomen with the next king's row. Override to scan-verified Thronname `Men-mi-rê sotep-en-rê`. Human-verified against the 1997 Chronologie printed PDF by the project lead 2026-04-28; overrides this entry's prior 'LLM-applied' status to human-confirmed-against-source. [P1]
-- 19.06 Sethós II Thronname: same `Mit ein glatt:` / `Mi ein glatt:` OCR-label garble shape as 19.05. After re-extraction the merge still produces `Ba-en-rê-meri-netjeru` (Merenptah's prenomen) for Sethós II. Override to scan-verified `User-chepru-rê mer-amun`. Human-verified against the 1997 Chronologie printed PDF by the project lead 2026-04-28; the 1999 Handbuch's `User-chepru-rê sotep-en-rê` reading is a later edition divergence, not a 1997 transcription error. [P1]
-- 19.07 Si-ptah Anfangsname: re-extraction emits 'Antritt 10.1194/93' cleanly but does not capture the indented 'anfang Sich-ka-rê sotep-en-rê' annotation from Supplement zu A. Override appends the Anfangsname annotation to notes_from_beckerath. The earlier 'und Kgin. Te-wosret (Thuoris)' inclusion is dropped because Te-wosret now extracts as her own row 19.08 under the Co-regent queen rule. [P2]
-- 21.02 Amen-em-nisu: egyptian_titulary_kind was 'nomen' for the value 'Nephercheres'. Nephercheres is the Greek rendering of Neferkare — a prenomen (throne name), not a nomen. Corrected to kind='prenomen'. [P2]
-- 26.02 Necho II: OCR rendered titulary as 'Nefer-ib-rê' (which is Psamtik II's prenomen on the next line); scan-108 left shows Necho II's titulary is 'Wahem-ib-rê' (Wḥm-ib-rꜥ). Gemini Code Assist flagged the splice. Corrected. [P1]
-- 26.04 Apries: OCR rendered second titulary as 'Haai-ib-rê' (extra 'i'); scan-108 left shows 'Haa-ib-rê' (Ḥꜥꜥ-ib-rꜥ). Gemini Code Assist flagged. Corrected. [P2]
-- 31.02 Arses: OCR rendered Egyptian titulary as 'Artges' (mis- OCR of 'Arses' / no separate Egyptian form); scan-108 right shows 'Arses (Arses)'. Gemini flagged. Corrected to 'Arses'. [P1]
-- 31.04 Chabbasch: TWO corrections merged. (1) OCR rendered name as 'Chadabasch' and titulary 'Sanm-sotep-en-ptah'; scan-108 right shows 'Chabbasch (Senem-sotep-en-ptah)' — name + titulary corrected. (2) The earlier correction tagged kind='nomen' but the `-sotep-en-X` suffix is prenomen morphology — kind corrected to 'prenomen'. [P1+P2, both Gemini PR #117-flagged dup-key]
-- 22.01 Schoschenq I.: name: 'Schoscheng I.' → 'Schoschenq I.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.04 Schoschenq II.: name: 'Schoscheng II.' → 'Schoschenq II.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.06 Schoschenq III.: name: 'Schoscheng III.' → 'Schoschenq III.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.07 Schoschenq IIIa.: name: 'Schoscheng IIIa.' → 'Schoschenq IIIa.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.09 Schoschenq V.: name: 'Schoscheng V.' → 'Schoschenq V.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
-- 22.14 Schoschenq IV.: name: 'Schoscheng IV.' → 'Schoschenq IV.' (Schoscheng→Schoschenq systematic OCR fix). [P2]
+- 03.04 Hor Cha-bai: brace bracket on scan-105-right spans rows 03.04 / 03.05 / 03.06 with shared range 2663/2613–2639/2589. Merge majority extracts the dates correctly; this override adds the cross-row editorial_notes tying the three bracketed rows together. [P2]
+- 03.05 Sôuphis, Mesochris: same brace bracket as 03.04. Merge produces the correct dates; this override adds the cross-row editorial_notes. [P2]
+- 03.06 Ahu (Huni, Aches): same brace bracket as 03.04. Merge produces the correct dates; this override adds the cross-row editorial_notes. [P2]
+- 15.02 Bêôn: scan-106-right brace bracket spans Bêôn / Apachnas / Chajan with shared range 1648/1645–1590/1587. The merge majority propagated the dates onto Apachnas (brace centre) but left Bêôn with null dates. Override fills in the bracket dates to match the printed PDF. [P1]
+- 15.04 Chajan (Iannas, Se'user-en-rê): same brace bracket as 15.02. Merge majority left Chajan with null dates; override fills in the bracket dates. (Replaces a pre-OCR-redo override that erroneously set Chajan's end to Apophis's dates -1549/-1546; the previous override was based on a misreading of the brace span.) [P1]
+- 17.01 Dyn 17 marker row: heading-level `etwa` qualifier in `17. Dynastie (in Theben, etwa 1645–1550) 15 (?) Könige` propagates to BOTH endpoints (matching Dyn 1, Dyn 2, Dyn 4-6 etwa-headings). Merge set start_approximate=True but end_approximate=False because 1550 reads as bare numeric to agents; force end_approximate=True to match Beckerath's heading semantics. [P2]
+- 19.08 Kgin. Te-wosret: Co-regent queen rule prescribes `name="Kgin. <queen-name>"` (no parenthetical) with the parenthetical content moved to egyptian_titulary. Agents extract titulary correctly (`Thuoris`, kind=nomen) but kept the paren in name; this override strips the redundant `(Thuoris)` from name. [P2]
+- 21.02 Amen-em-nisu: standard Greek-alias-in-parens pattern (matching Schoschenq I. `(Sesonchis)`) puts the alias in egyptian_titulary with kind=nomen. Agents folded `(Nephercheres)` into name with titulary=null; this override splits name and titulary to match the canonical pattern. [P2]
+- 31.04 Chababasch: scan-108-left prints `Chababasch (Senen-sotep-en-ptah)` under the `Ägypt. Gegenkönig:` sub-block. The agents folded the parenthetical into name; standard pattern elsewhere strips it. Also corrects kind to prenomen — the suffix `-sotep-en-X` is throne-name morphology throughout Beckerath. [P2]
