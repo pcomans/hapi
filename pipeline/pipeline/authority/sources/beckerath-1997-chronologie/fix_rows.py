@@ -64,9 +64,10 @@ OVERRIDES: dict[str, dict] = {
     # shared range 1648/1645–1590/1587. The merge propagated the dates onto
     # 15.03 Apachnas (the brace's vertical centre) but left 15.02 Bêôn and
     # 15.04 Chajan with null dates because the OCR markdown lacks the brace
-    # glyph. Overrides fill in the bracket dates on Bêôn and Chajan to match
-    # what Beckerath prints. Salitis (15.01) sits OUTSIDE the bracket and
-    # has no individual date — leave it null.
+    # glyph. Overrides fill in the bracket dates on Bêôn and Chajan, plus a
+    # cross-row editorial_notes entry on Apachnas tying all three rows
+    # together (mirrors the Dyn 3 pattern). Salitis (15.01) sits OUTSIDE
+    # the bracket and has no individual date — leave it null.
     "15.02": {
         "start_bce_high": -1648,
         "start_bce_low": -1645,
@@ -75,6 +76,9 @@ OVERRIDES: dict[str, dict] = {
         "start_approximate": False,
         "end_approximate": False,
         "editorial_notes": "shared brace bracket with Apachnas (15.03) and Chajan (15.04) (scan-106-right)",
+    },
+    "15.03": {
+        "editorial_notes": "shared brace bracket with Bêôn (15.02) and Chajan (15.04) (scan-106-right)",
     },
     "15.04": {
         "start_bce_high": -1648,
@@ -380,6 +384,12 @@ OVERRIDE_LOG: dict[str, str] = {
         "with null dates. Override fills in the bracket dates to match the "
         "printed PDF. [P1]"
     ),
+    "15.03": (
+        "15.03 Apachnas: same brace bracket as 15.02. Merge produces the "
+        "correct dates; this override adds the cross-row editorial_notes "
+        "tying the three bracketed rows together (mirrors Dyn 3 pattern "
+        "on 03.04 / 03.05 / 03.06). [P2]"
+    ),
     "15.04": (
         "15.04 Chajan (Iannas, Se'user-en-rê): same brace bracket as 15.02. "
         "Merge majority left Chajan with null dates; override fills in the "
@@ -416,7 +426,7 @@ OVERRIDE_LOG: dict[str, str] = {
         "[P2]"
     ),
     "21.02": (
-        "21.02 Amen-em-nisu: Greek-alias-in-parens split — see _GREEK_ALIAS_NOTE. [P1]"
+        "21.02 Amen-em-nisu: Greek-alias-in-parens split — See _GREEK_ALIAS_NOTE. [P1]"
     ),
     # Greek-alias-in-parens split rule applied uniformly across the
     # canonical Old-Kingdom + Dyn 21 rows where Beckerath uses
