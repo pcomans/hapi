@@ -402,6 +402,39 @@ _FOOTNOTE_NUM_ONLY_RE = re.compile(r"^(\d{1,3})\s*$")
 _NUM_PERIOD_ONLY_RE = re.compile(r"^(\d{1,3})\.\s*$")
 _PERIOD_CONTINUATION_RE = re.compile(r"^\.\s")
 _YEAR_RE = re.compile(r"\b(?:1[5-9]|20)\d{2}\b")
+# Name-row labels emitted by Leprohon for king titularies. If a *candidate
+# footnote body* (after merging across line breaks) contains one of these as
+# `Label: ` mid-string, the candidate is actually a king entry that was
+# numerically contiguous with the trailing footnotes (e.g. on a page where
+# kings 1-3 are followed by fns 4-9 — the walk-back-monotonic detector picks
+# up all nine starts as candidates because their numbers decrement cleanly).
+# Real footnote bodies in Leprohon never contain `Label: ` — the labels are
+# strictly body content, not citation prose.
+# Match anywhere — neither `\b` nor a leading non-letter prefix would catch
+# the merged-body case where a king's smallcap name (e.g. `KHa S EKHEm`) is
+# concatenated against the next line's `Horus:` label without intervening
+# whitespace. The `: \s` suffix + the closed alternation of Leprohon's
+# canonical name-row labels is sufficient to distinguish from arbitrary
+# prose; no real Leprohon footnote body in any of the 14 chunks contains
+# `Horus: ` / `Throne: ` / etc. as a substring.
+_KING_ENTRY_LABEL_RE = re.compile(
+    r"("
+    r"Horus(?:\s+\d+)?"
+    r"|Throne(?:\s+(?:and\s+(?:Birth|birth|Name|name)|\d+))?"
+    r"|Two\s+Ladies(?:\s+\d+)?"
+    r"|Golden\s+Horus(?:\s+\d+)?"
+    r"|Birth(?:\s+\(\?\))?(?:\s+\d+)?"
+    r"|Cartouche(?:\s+\d+)?"
+    r"|Seth\s+name"
+    r"|Later\s+Horus\s+name"
+    r"|Later\s+cartouche\s+name"
+    r"|Title\s+and\s+(?:birth|name)(?:\s+\(\?\))?(?:\s+name)?"
+    r"|Throne\s+and\s+[Bb]irth"
+    r"|Original\s+titulary"
+    r"|Additional\s+names"
+    r"):\s"
+)
+
 # Tokens that strongly imply a footnote body (vs. a king-headword smallcap
 # name). Includes scholarly-citation abbreviations common in Egyptology
 # (KRI = Kitchen, Ramesside Inscriptions; LÄ; PM; ANET; Urk.) and the
@@ -590,13 +623,24 @@ def _split_page(
         else:
             break
 
-    # Merge each candidate footnote body, then apply an at-least-one prose
-    # safeguard (see the comment on `prose_count == 0` below). The previous
-    # majority-vote rule (`prose_count * 2 < len(candidate)`) rejected real
-    # footnote blocks where most footnotes were short — e.g. page 125 of
-    # the Dyn 18 chunk has fns 48 / 49 / 50 = `Lit. "possessor."` /
-    # `Gauthier 1912, 343–61; von Beckerath 1999, 142–43.` /
-    # `Or "crowns."`, only one of which carries a prose token.
+    # Merge each candidate footnote body, then apply two safeguards:
+    #
+    # (a) King-entry exclusion: drop trailing-block-prefix candidates whose
+    #     merged body contains a `Horus: ` / `Throne: ` / etc. label. This
+    #     defeats the false-positive where a page has kings 1-3 numerically
+    #     adjacent to footnotes 4-9 (observed on physical p. 186 of the Late
+    #     Period chunk: walk-back monotonic builds [1..9], but only [4..9]
+    #     are real footnotes). After filtering, the remaining candidates
+    #     must form a contiguous tail — if a king-entry interrupts the
+    #     middle of the candidate block, the page layout violates the
+    #     fn-block-at-end invariant and we reject the whole block.
+    #
+    # (b) At-least-one prose match (the comment on `prose_count == 0` below).
+    #     The previous majority-vote rule (`prose_count * 2 < len(candidate)`)
+    #     rejected real footnote blocks where most footnotes were short —
+    #     e.g. page 125 of the Dyn 18 chunk has fns 48 / 49 / 50 =
+    #     `Lit. "possessor."` / `Gauthier 1912, 343–61; ...` / `Or "crowns."`,
+    #     only one of which carries a prose token.
     fn_start_line = block[0][0]
     candidate: list[tuple[int, str]] = []
     for i, (start_idx, num) in enumerate(block):
@@ -607,6 +651,24 @@ def _split_page(
         chunks = [first_body] + lines[start_idx + 1 : end_idx]
         merged = re.sub(r"\s+", " ", "".join(chunks)).strip()
         candidate.append((num, merged))
+
+    # Drop king-entry-label candidates from the front of the block. The
+    # remaining tail (if non-empty) is the real footnote block.
+    while candidate and _KING_ENTRY_LABEL_RE.search(candidate[0][1]):
+        candidate.pop(0)
+        # Track the new fn-block start so the body slice below is correct.
+        if candidate:
+            fn_start_line = block[len(block) - len(candidate)][0]
+        else:
+            fn_start_line = len(lines)
+    # Any king-entry-label candidate that survived past the front means a
+    # king entry was sandwiched between two real footnotes on the same page
+    # — Leprohon's typesetting doesn't do that, so this is a detection
+    # failure. Reject the block so the page falls back to body-only output.
+    if any(_KING_ENTRY_LABEL_RE.search(body_text) for _, body_text in candidate):
+        return lines, []
+    if not candidate:
+        return lines, []
 
     # At-least-one prose match is the safeguard. King-headword bodies are
     # smallcap names (`s Em QEn`, `n am E lost`) — no year, no scholarly

@@ -353,6 +353,51 @@ def test_full_page_processing_emits_structured_block() -> None:
     assert '<fn id="5">For the rendering, see T. Schneider 1998, 137–38.</fn>' in out
 
 
+def test_excludes_king_entry_at_block_front_when_numerically_contiguous() -> None:
+    """Late Period page 186 layout: kings 1-3 followed by fns 4-9 in the
+    same block. The walk-back-monotonic detector picks up all nine starts;
+    only [4..9] are real footnotes. King-entry-label exclusion drops [1..3]
+    from the block front while keeping [4..9]."""
+    page = [
+        "1. Psamt EK (Psamm Etic Hus ) i 4",
+        "Horus: ꜥꜣ-ib (aa ib), Strong-minded",
+        "Two Ladies: nb ꜥ (neb a), Possessor of a (strong) arm",
+        "Birth: psmtk (psemtek), Psamtek5",
+        "2. n EKau (n Ec Ho ) ii 6",
+        "Horus: siꜣ-ib (sia ib), Perceptive-minded",
+        "Birth: n(y) kꜣw (ni kau), Who belongs to the kas7",
+        "3. Psamt EK (Psamm Etic Hus ) ii 8",
+        "Horus: mnḫ-ib (menekh ib), The efficacious one",
+        "4. Gauthier 1916, 66–68; von Beckerath 1999, 214–15.",
+        "5. A possible etymology of the name; see von Beckerath 1999, 214 n. 1.",
+        "6. Gauthier 1916, 86–92.",
+        "7. Although the word kA is sometimes written with the bull hieroglyph.",
+        "8. Gauthier 1916, 92–104.",
+        "9. A fragmentary granite relief shows the Horus name added to the Throne name.",
+    ]
+    body, footnotes = tc._split_page(page)
+    fn_nums = [n for n, _ in footnotes]
+    assert fn_nums == [4, 5, 6, 7, 8, 9]
+    # King entries land in body, intact.
+    assert any("Psamt EK" in line for line in body)
+    assert any("Horus:" in line for line in body)
+
+
+def test_rejects_block_with_king_entry_sandwiched_between_footnotes() -> None:
+    """Defensive: if a king entry appears in the middle of the candidate
+    block (Leprohon never lays out this way, but the detection must reject
+    rather than silently emit broken footnotes), return body-only."""
+    page = [
+        "1. Gauthier 1912, real-footnote-prose; see Beckerath 1999.",
+        "2. KHa S EKHEm",
+        "Horus: ḥtp nbwy (hetep nebuy), king-entry-label",
+        "3. Another real footnote prose; see Schneider.",
+    ]
+    body, footnotes = tc._split_page(page)
+    assert footnotes == []
+    assert any("Horus:" in line for line in body)
+
+
 def test_parse_pages_rejects_invalid_format() -> None:
     """`--pages` with non-`START-END` shape must raise loudly."""
     import pytest
