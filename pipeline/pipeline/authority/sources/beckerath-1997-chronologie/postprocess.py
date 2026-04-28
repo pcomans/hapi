@@ -83,6 +83,57 @@ SECTION_TITLE_CASE: dict[str, str] = {
     "SPÄTZEIT": "Spätzeit",
 }
 
+# Canonical Beckerath dynasty → period mapping, sourced from Beckerath's own
+# Anhang A section headings as he prints them in the 1997 Chronologie. The
+# `<!-- period: ... -->` annotation is derived from THIS mapping, not from
+# the OCR-step's section-heading state. Reason: stochastic LLM-OCR can drop
+# a section heading entirely (observed: chunk-p105-p109.md missing
+# `### II. ZWISCHENZEIT` between Dyn 12 and Dyn 13), and the post-processor
+# must not silently amplify that omission into a five-dynasty period mis-
+# attribution downstream. Dynasty number is unambiguous in the OCR (every
+# dynasty heading carries a leading integer); period derivation from it is
+# robust against section-heading omissions.
+DYNASTY_PERIOD: dict[int, str] = {
+    0: "Vorgeschichte",
+    1: "Frühzeit",
+    2: "Frühzeit",
+    3: "Altes Reich",
+    4: "Altes Reich",
+    5: "Altes Reich",
+    6: "Altes Reich",
+    7: "Altes Reich",
+    8: "Altes Reich",
+    9: "I. Zwischenzeit",
+    10: "I. Zwischenzeit",
+    11: "Mittleres Reich",
+    12: "Mittleres Reich",
+    13: "II. Zwischenzeit",
+    14: "II. Zwischenzeit",
+    15: "II. Zwischenzeit",
+    16: "II. Zwischenzeit",
+    17: "II. Zwischenzeit",
+    18: "Neues Reich",
+    19: "Neues Reich",
+    20: "Neues Reich",
+    21: "III. Zwischenzeit",
+    22: "III. Zwischenzeit",
+    23: "III. Zwischenzeit",
+    24: "III. Zwischenzeit",
+    25: "III. Zwischenzeit",
+    26: "Spätzeit",
+    27: "Spätzeit",
+    28: "Spätzeit",
+    29: "Spätzeit",
+    30: "Spätzeit",
+    31: "Spätzeit",
+}
+
+# Leading-dynasty-number extractor for both bolded `**N. Dynastie ...**` and
+# compound `N./M. Dynastie ...` headings. The first integer is the canonical
+# dynasty key (compound `9./10.` resolves to 9 — the period is the same for
+# both halves of a compound heading anyway).
+_LEADING_DYN_NUM_RE = re.compile(r"^(\d+)")
+
 # A section heading line in the OCR markdown is `### <UPPERCASE NAME>`.
 _SECTION_HEADING_RE = re.compile(r"^###\s+(.+?)\s*$")
 
@@ -157,6 +208,33 @@ def _is_dynasty_heading(line: str) -> str | None:
     return None
 
 
+def _dynasty_number(heading: str) -> int | None:
+    """Extract the leading integer dynasty number from a heading string.
+
+    Handles `4. Dynastie (...)`, `28. Dynaste`, `9./10. Dynastie (...)`,
+    `0. Dynastie (...)`. Returns None if no leading integer is found.
+    """
+    m = _LEADING_DYN_NUM_RE.match(heading)
+    if m:
+        return int(m.group(1))
+    return None
+
+
+def _period_for_dynasty(heading: str) -> str | None:
+    """Look up the canonical period for a dynasty heading.
+
+    Returns the title-cased period name from `DYNASTY_PERIOD`, or None if
+    the dynasty number cannot be parsed or is not in the canonical mapping.
+    Per constitutional rule 2 (loud failures), an unknown dynasty number is
+    surfaced as None so the caller can decide whether to omit the annotation
+    or raise.
+    """
+    n = _dynasty_number(heading)
+    if n is None:
+        return None
+    return DYNASTY_PERIOD.get(n)
+
+
 def _is_page_boundary(line: str) -> bool:
     return bool(_PAGE_BOUNDARY_RE.match(line))
 
@@ -176,8 +254,15 @@ def process_chunk(md: str) -> str:
     raw_lines = md.splitlines()
     lines = [ln for ln in raw_lines if not _INJECTED_COMMENT_RE.match(ln)]
     out: list[str] = []
-    current_section: str | None = None
+    # `inside_main_uebersicht` flips from False (before Anhang A's first
+    # canonical section heading) to True (after Frühzeit/Vorgeschichte etc.
+    # is seen) and back to False on an unrecognised `### ...` heading
+    # (Supplement zu A and similar). Period annotations are suppressed
+    # outside the main Übersicht because supplement entries merge by name
+    # into Anhang A rows per the prompt's existing rule.
+    inside_main_uebersicht: bool = False
     current_dynasty_heading: str | None = None
+    current_period: str | None = None
 
     i = 0
     while i < len(lines):
@@ -185,13 +270,13 @@ def process_chunk(md: str) -> str:
 
         is_section, section = _is_section_heading(line)
         if is_section:
-            # Update section state on EVERY `### ...` heading, recognised or
-            # not. An unrecognised heading (e.g. `### Supplement zu A`) sets
-            # `current_section = None` and resets the dynasty context, which
-            # prevents the previous section's period from leaking onto the
-            # supplement's `**19. Dynastie**` etc. headings.
-            current_section = section
+            # Recognised period heading flips us into the main Übersicht;
+            # unrecognised heading (Supplement zu A, the chapter title
+            # `### A. CHRONOLOGISCHE ÜBERSICHT ...`) flips us out. In both
+            # cases the dynasty context is reset.
+            inside_main_uebersicht = section is not None
             current_dynasty_heading = None
+            current_period = None
             out.append(line)
             i += 1
             continue
@@ -199,15 +284,15 @@ def process_chunk(md: str) -> str:
         dynasty = _is_dynasty_heading(line)
         if dynasty is not None:
             current_dynasty_heading = dynasty
+            # Period is derived from the dynasty number via the canonical
+            # mapping, NOT from the surrounding section heading. This makes
+            # the post-processor robust against OCR-step omissions of a
+            # section heading (observed: `### II. ZWISCHENZEIT` missing
+            # between Dyn 12 and Dyn 13 in the current chunk-p105-p109.md).
+            current_period = _period_for_dynasty(dynasty)
             out.append(line)
-            # Attach the section directly to the dynasty heading so agents
-            # don't have to look upward for it. Defeats the Dyn-24/25
-            # mis-attribution to Spätzeit case. Skipped when current_section
-            # is None — the supplement's dynasty headings inherit period via
-            # the existing prompt rule that supplement entries merge by name
-            # into the main Übersicht rows.
-            if current_section:
-                out.append(f"<!-- period: {current_section} -->")
+            if inside_main_uebersicht and current_period:
+                out.append(f"<!-- period: {current_period} -->")
             i += 1
             continue
 
@@ -215,10 +300,7 @@ def process_chunk(md: str) -> str:
             out.append(line)
             # Look ahead: if the next non-blank line is itself a section or
             # dynasty heading, the agent will get fresh context from that
-            # heading; no refresh needed. `_is_section_heading` returns
-            # `(True, ...)` for any `### ...` line whether the name is
-            # recognised or not, so unrecognised section headings still
-            # suppress the duplicate refresh.
+            # heading; no refresh needed.
             j = i + 1
             while j < len(lines) and _is_blank(lines[j]):
                 j += 1
@@ -235,8 +317,8 @@ def process_chunk(md: str) -> str:
                 out.append(
                     f"<!-- dynasty-context: {current_dynasty_heading} -->"
                 )
-                if current_section:
-                    out.append(f"<!-- period: {current_section} -->")
+                if inside_main_uebersicht and current_period:
+                    out.append(f"<!-- period: {current_period} -->")
             i += 1
             continue
 

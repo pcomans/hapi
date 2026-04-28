@@ -147,6 +147,72 @@ def test_attaches_period_after_dynasty_heading() -> None:
     assert "**25. Dynastie (Kuschiten)**\n<!-- period: III. Zwischenzeit -->" in out
 
 
+def test_period_derived_from_dynasty_number_not_from_ocr_section_heading() -> None:
+    """REGRESSION (egyptologist-reviewer PR #138). The OCR-step output for
+    chunk-p105-p109.md does NOT capture `### II. ZWISCHENZEIT` between
+    Dyn 12 and Dyn 13. If the post-processor derived period from the OCR
+    section heading state, Dyn 13–17 would silently get the prior heading's
+    period (`Mittleres Reich`) — wrong by one whole epoch. The fix derives
+    period from the canonical Beckerath dynasty→period mapping so the
+    annotation is correct even when OCR drops a heading.
+
+    Structure here mirrors the actual chunk's Dyn-12 → Dyn-13 transition
+    with no intervening II. ZWISCHENZEIT heading."""
+    md = (
+        "### MITTLERES REICH\n"
+        "\n"
+        "**12. Dynastie (1976–1794/93)**\n"
+        "Amenemnes I.\t1976–1947\n"
+        "\n"
+        "**13. Dynastie (1794/93–1648/1645)**\n"
+        "(60 (?) Könige (zeitw. 6 Könige)\n"
+        "\n"
+        "**15. Dynastie (Hyksos, 1648/1645–1539/1536)**\n"
+        "Salitis (Bnôn)\t1648/1645–1590/1587\n"
+        "\n"
+        "**17. Dynastie (in Theben, etwa 1645–1539/1550)** (?) Könige\n"
+    )
+    out = pp.process_chunk(md)
+    # Dyn 12 gets Mittleres Reich (correct).
+    assert "**12. Dynastie (1976–1794/93)**\n<!-- period: Mittleres Reich -->" in out
+    # Dyn 13 gets II. Zwischenzeit DESPITE the missing OCR heading.
+    assert (
+        "**13. Dynastie (1794/93–1648/1645)**\n<!-- period: II. Zwischenzeit -->"
+        in out
+    )
+    assert "**15. Dynastie (Hyksos, 1648/1645–1539/1536)**\n<!-- period: II. Zwischenzeit -->" in out
+    # Dyn 17 also gets II. Zwischenzeit (still SIP).
+    assert "**17. Dynastie (in Theben, etwa 1645–1539/1550)** (?) Könige\n<!-- period: II. Zwischenzeit -->" in out
+
+
+def test_canonical_dynasty_period_mapping_covers_dyn_0_through_31() -> None:
+    """Sanity: every Beckerath dynasty number (0..31) has a canonical period
+    in `DYNASTY_PERIOD`. Adding a new dynasty without a period would silently
+    emit no `<!-- period: ... -->` annotation."""
+    for n in range(0, 32):
+        assert n in pp.DYNASTY_PERIOD, f"missing canonical period for Dyn {n}"
+    # Spot-checks against the schema's eight-period vocabulary.
+    assert pp.DYNASTY_PERIOD[0] == "Vorgeschichte"
+    assert pp.DYNASTY_PERIOD[1] == "Frühzeit"
+    assert pp.DYNASTY_PERIOD[8] == "Altes Reich"
+    assert pp.DYNASTY_PERIOD[10] == "I. Zwischenzeit"
+    assert pp.DYNASTY_PERIOD[12] == "Mittleres Reich"
+    assert pp.DYNASTY_PERIOD[13] == "II. Zwischenzeit"
+    assert pp.DYNASTY_PERIOD[20] == "Neues Reich"
+    assert pp.DYNASTY_PERIOD[25] == "III. Zwischenzeit"
+    assert pp.DYNASTY_PERIOD[31] == "Spätzeit"
+
+
+def test_dynasty_number_extractor_handles_all_heading_shapes() -> None:
+    assert pp._dynasty_number("4. Dynastie (etwa 2639/2589–2504/2454)") == 4
+    assert pp._dynasty_number("28. Dynaste") == 28
+    assert pp._dynasty_number("0. Dynastie") == 0
+    # Compound `9./10.` resolves to 9 (the leading number); the period is the
+    # same for both halves of a Beckerath compound dynasty heading.
+    assert pp._dynasty_number("9./10. Dynastie (in Herakleopolis, ...)") == 9
+    assert pp._dynasty_number("not a dynasty heading") is None
+
+
 def test_supplement_zu_a_does_not_inherit_spaetzeit_period() -> None:
     """REGRESSION (Gemini PR #138 + code-reviewer). Beckerath's Anhang A
     ends with `### SPÄTZEIT` (Dyn 26-31). The Supplement zu A is introduced
