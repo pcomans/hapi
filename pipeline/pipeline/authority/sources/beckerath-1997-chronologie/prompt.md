@@ -95,6 +95,15 @@ One of (verbatim):
 
 Drives from Beckerath's italicised section headings within Anhang A. `"Vorgeschichte"` is shorthand for the full `VORGESCHICHTE (PRÄDYNASTISCHE ZEIT)` heading.
 
+## Post-processor annotations (`<!-- period: ... -->`, `<!-- dynasty-context: ... -->`)
+
+The chunk file is run through `postprocess.py` AFTER OCR and BEFORE you read it. The post-processor injects two HTML-comment annotations to make persistent context visible at every point in the document:
+
+- `<!-- period: <SectionTitleCase> -->` appears immediately AFTER each dynasty heading. Treat it as authoritative for the `period` field of every row in that dynasty's span. Use the value from the most recent `<!-- period: ... -->` comment as the `period` of all subsequent rows up to the next dynasty heading.
+- `<!-- dynasty-context: <full-dynasty-heading-text> -->` appears AFTER a `## Book pNNN` page boundary that lands inside a dynasty's span. Treat it as the dynasty heading for the rows that follow on the new page (just as if Beckerath had repeated the heading at the top of the page). Apply ALL per-heading rules (the `etwa`/`ca.` qualifier, parenthetical placement annotations like `"in Theben"`, etc.) as if the heading appeared inline.
+
+These comments do not introduce new schema semantics — they make the existing per-heading rules unambiguous when the heading text is on a previous page or far above the row you are extracting. If the comments are absent (older runs of the OCR pipeline), fall back to scanning upward for the nearest section/dynasty heading.
+
 ## `notes_from_beckerath`
 
 Free text. Examples:

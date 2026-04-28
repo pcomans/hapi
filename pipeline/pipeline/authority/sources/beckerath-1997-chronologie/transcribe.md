@@ -27,6 +27,28 @@ Within each PDF-page render, the subagent preserves Beckerath's typography:
 
 The chunk file is **not committed** (gitignored via `pipeline/pipeline/authority/sources/*/raw/chunk-*.md`).
 
+### Page-level post-processing — `postprocess.py`
+
+After OCR and BEFORE the 3-subagent extraction reads `chunk-p105-p109.md`, run:
+
+```
+cd pipeline && uv run python pipeline/authority/sources/beckerath-1997-chronologie/postprocess.py
+```
+
+The post-processor restores **persistent dynasty + section context across page boundaries** that the OCR markdown loses. It injects two HTML-comment annotations into the chunk file (in place by default; pure-function `process_chunk(md) -> md` is also available as a library):
+
+1. **After every dynasty heading** (`**N. Dynastie (...)**`), emit `<!-- period: <SectionTitleCase> -->` so the section is *directly attached* to the dynasty heading. Defeats the look-ahead-too-far misfile observed in `merge-disagreements.txt` LLM-OVERRIDES at rows 24.01 and 24.02 — Dyn 24 and 25 sit under `### III. ZWISCHENZEIT` but agents read the closer-following `### SPÄTZEIT` and mis-attribute these short dynasties to Spätzeit.
+
+2. **After every `## Book pNNN` page boundary that lands inside a dynasty's span** (i.e. the next non-empty line is NOT itself a section heading or new dynasty heading), emit `<!-- dynasty-context: <full-dynasty-heading-text> -->` and `<!-- period: <SectionTitleCase> -->`. Defeats the page-break-loses-`etwa` case observed in LLM-OVERRIDES at rows 04.02–04.08 — the Dyn-4 heading `**4. Dynastie (etwa 2639/2589–2504/2454)**` is on book p187 but rows from Cheops onward are on book p188, and agents reading p188 silently dropped `start_approximate=true`/`end_approximate=true` because the heading context was off-screen.
+
+The 3 extraction agents interpret these comments per `prompt.md`'s "post-processor annotations" rule: a `<!-- dynasty-context: ... -->` comment refreshes the dynasty heading at that point in the document; `<!-- period: ... -->` directly attaches the section to the dynasty for the `period` field. The post-processor adds NO new agent-facing semantics beyond making the existing context inescapably visible at every page within a span.
+
+Idempotent: running the post-processor twice on the same chunk file yields the same output (existing injected comments are stripped on re-run before re-emission).
+
+The post-processed file overwrites the OCR chunk file at `raw/chunk-p105-p109.md` (gitignored). The OCR step is regenerable from the PDF; the post-processor pass is a pure function on that file.
+
+Reference: PR #130 (Leprohon `transcribe_chunk.py`) is the prototype this method mirrors — same thesis (rebuild structural metadata that the OCR flatten loses), source-specific implementation.
+
 ### Structured extraction — three parallel subagents
 
 The single OCR chunk is read by three independent Claude Code general-purpose subagents (**sonnet model**) in parallel, each with the identical prompt committed to `prompt.md`. Each writes JSONL to a distinct file under the agent directory (default `<source_dir>/raw/`, overridable via `--agent-dir` / `BECKERATH_AGENT_DIR`):
