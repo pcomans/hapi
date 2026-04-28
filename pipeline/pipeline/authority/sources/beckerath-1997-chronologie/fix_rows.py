@@ -101,6 +101,18 @@ OVERRIDES: dict[str, dict] = {
     "31.04": {
         "name": "Chababasch",
         "egyptian_titulary_kind": "prenomen",
+        # Beckerath's Anhang A prints `Senen-sotep-en-ptah` (with `sotep`);
+        # his own *Handbuch der ägyptischen Königsnamen* (1999), p. 270,
+        # gives this king's prenomen as `Senen-setep-en-ptah` (with `setep`).
+        # Faithful transcription is correct per the source-fidelity rule, but
+        # flag the divergence here so downstream curators don't assume it's
+        # an OCR error. Egyptologist-reviewer call.
+        "editorial_notes": (
+            "Anhang A prints `Senen-sotep-en-ptah`; HdÄK p.270 gives "
+            "`Senen-setep-en-ptah` — typographic inconsistency within "
+            "Beckerath's own corpus, transcribed verbatim per source-"
+            "fidelity rule"
+        ),
     },
 
     # ── 17.01 Dyn-17 marker row: heading-level `etwa` propagates ──────────
@@ -114,39 +126,211 @@ OVERRIDES: dict[str, dict] = {
         "end_approximate": True,
     },
 
-    # ── 19.08 Kgin. Te-wosret name split (scan-107-right) ─────────────────
-    # Beckerath chains her on Si-ptah's row as `und Kgin. Te-wosret
-    # (Thuoris)`. The Co-regent queen rule (prompt.md) splits this into a
-    # separate row with `name="Kgin. <queen-name>"` and the parenthetical
-    # `(Thuoris)` extracted into egyptian_titulary. The merge's titulary
-    # extraction worked (`Thuoris`, kind=`nomen`) but name retained the
-    # paren content (`Kgin. Te-wosret (Thuoris)`); strip the redundant
-    # parenthetical from name to match the rule's name format.
+    # ── 19.08 Kgin.Te-wosret name split (scan-107-right) ──────────────────
+    # Beckerath chains her on Si-ptah's row as `und Kgin.Te-wosret
+    # (Thuoris)` (no space after Kgin., per the standardisation below).
+    # The Co-regent queen rule (prompt.md) splits this into a separate row
+    # with `name="Kgin.<queen-name>"` and the parenthetical `(Thuoris)`
+    # extracted into egyptian_titulary. The merge's titulary extraction
+    # worked (`Thuoris`, kind=`nomen`) but name retained the paren content
+    # (`Kgin. Te-wosret (Thuoris)`); strip the redundant parenthetical AND
+    # the post-`Kgin.` space.
     "19.08": {
-        "name": "Kgin. Te-wosret",
+        "name": "Kgin.Te-wosret",
     },
 
-    # ── 21.02 Amen-em-nisu name/titulary split (scan-107-right) ───────────
-    # Beckerath prints `Amen-em-nisu (Nephercheres)` in the Übersicht. The
-    # standard Greek-alias-in-parens pattern (matching Schoschenq I.
-    # `(Sesonchis)`, etc.) puts the alias in egyptian_titulary with
-    # kind=`nomen`. The agents folded the parenthetical into name; split
-    # to match the canonical pattern.
+    # ── Greek-alias-in-parens split (Old Kingdom + Dyn 21) ───────────────
+    # Beckerath consistently uses `<EgyptianName> (<GreekAlias>)` for kings
+    # whose Greek/Manethonic alias is a single non-compound form (Sesonchis,
+    # Onnos, Othoês, etc.). The canonical extraction pattern — matching
+    # Schoschenq I. `(Sesonchis)` → name=`Schoschenq I.`, titulary=`Sesonchis`,
+    # kind=`nomen` — splits these into a king-form `name` and an alias
+    # `egyptian_titulary`. The agents/merge correctly split the Dyn 22
+    # Schoschenq + Osorkon rows but left ~17 Old-Kingdom and Dyn 21 rows
+    # with the parenthetical folded into name (titulary=null), because in
+    # those rows the agent majority disagreed about how to handle the alias.
+    # Apply the canonical split uniformly so downstream consumers see one
+    # consistent name/titulary contract.
+    #
+    # Discriminator (vs. compound mixed titulary kept inline): a SINGLE
+    # non-compound Greek-alias goes in titulary (`Onnos`, `Soris`, etc.);
+    # COMPOUND forms with internal commas (`Sôuphis, Mesochris` on 03.05;
+    # `Iannas, Se'user-en-rê` on 15.04; `Huni, Aches` on 03.06) stay in name
+    # because the comma-separated structure is itself part of Beckerath's
+    # naming convention for those rows.
+    "02.06": {
+        "name": "Nefer-ka-rê",
+        "egyptian_titulary": "Nephercheres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "02.07": {
+        "name": "Nefer-ka-sokar",
+        "egyptian_titulary": "Sesochris",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "04.01": {
+        "name": "Senofru",
+        "egyptian_titulary": "Soris",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "04.07": {
+        "name": "Schepses-kaf",
+        "egyptian_titulary": "Seberchéres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.01": {
+        "name": "User-kaf",
+        "egyptian_titulary": "Userchéres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.02": {
+        "name": "Sahu-rê",
+        "egyptian_titulary": "Sephres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.03": {
+        "name": "Nefer-ir-ka-rê Kakai",
+        "egyptian_titulary": "Nephercheres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.04": {
+        "name": "Schepses-ka-rê",
+        "egyptian_titulary": "Sisires",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.05": {
+        "name": "Neferef-rê Isi",
+        "egyptian_titulary": "Cheres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.06": {
+        "name": "Ni-user-rê Ini",
+        "egyptian_titulary": "Rathores",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.07": {
+        "name": "Men-kaw-hor",
+        "egyptian_titulary": "Mencheres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.08": {
+        "name": "Djed-ka-re Isesi",
+        "egyptian_titulary": "Tancheres",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "05.09": {
+        "name": "Unas",
+        "egyptian_titulary": "Onnos",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "06.01": {
+        "name": "Teti",
+        "egyptian_titulary": "Othoês",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "06.06": {
+        "name": "Nemti-em-saf II.",
+        "egyptian_titulary": "Menthesuphis",
+        "egyptian_titulary_kind": "nomen",
+    },
     "21.02": {
         "name": "Amen-em-nisu",
         "egyptian_titulary": "Nephercheres",
         "egyptian_titulary_kind": "nomen",
     },
+    "21.04": {
+        "name": "Amen-em-opet",
+        "egyptian_titulary": "Amenophthis",
+        "egyptian_titulary_kind": "nomen",
+    },
+    "21.05": {
+        "name": "Osochor",
+        "egyptian_titulary": "Osorkon",
+        "egyptian_titulary_kind": "nomen",
+    },
+
+    # ── Schoschenq IIIa. existence-hedge parens (scan-107-right) ─────────
+    # Beckerath prints `(Schoschenq IIIa.)` in parentheses — typographic
+    # hedge for "this king's existence/identity is uncertain". The agents
+    # dropped the parens. Restore them in name to preserve the hedge.
+    "22.07": {
+        "name": "(Schoschenq IIIa.)",
+        "editorial_notes": "Beckerath parenthesises the name as an existence-hedge marker (scan-107-right)",
+    },
+
+    # ── 22.06 Schoschenq III. notes verbatim hedge ───────────────────────
+    # PDF prints `ca. 837–798 (785 ?)`. The merge paraphrased this as
+    # `notes_from_beckerath = "alternative end 785"` which loses the `?`
+    # hedge token and Beckerath's parenthesised form. Restore verbatim.
+    "22.06": {
+        "notes_from_beckerath": "(785 ?)",
+    },
+
+    # ── 18.04 Tuthmosis II. accession-prefix scoping ──────────────────────
+    # PDF prints `Frühj.(?) 1492–1479` — `Frühj.(?)` qualifies the start
+    # date only. Notes_from_beckerath stored just `"Frühj.(?) 1492"` which
+    # is technically correct but ambiguous about scope. Match the
+    # `Antritt 22.3.1504` pattern used on 18.03 Tuthmosis I.
+    "18.04": {
+        "notes_from_beckerath": "Antritt Frühj.(?) 1492",
+    },
+
+    # ── 25.02 Pije slash semantics (alias-coverage editorial note) ────────
+    # PDF prints `Pije (User-maat-re/Senefer-rê)`. The slash separates two
+    # prenomens used in succession or as alternates. The merge stored both
+    # in egyptian_titulary as a single string; downstream alias-matching
+    # needs to split on the slash. Flag in editorial_notes so consumers
+    # know the slash is meaningful.
+    "25.02": {
+        "editorial_notes": "egyptian_titulary contains TWO prenomens separated by `/` (User-maat-re; Senefer-rê) — Beckerath records two alternative throne-name forms",
+    },
+
+    # ── 19.07 Si-ptah Anfangsname/Spätname editorial note ─────────────────
+    # PDF prints two prenomens for Si-ptah: `anfangs Secha-en-rê mer-amun,
+    # später Ach-en-rê sotep-en-rê`. The merge stored the whole
+    # German-prefixed string in `prenomen`. That's faithful but breaks
+    # alias-matching because consumers searching for `Secha-en-rê` or
+    # `Ach-en-rê` won't pattern-match the prefixed string. Flag in
+    # editorial_notes the early-vs-late distinction so downstream split
+    # logic can handle it.
+    "19.07": {
+        "editorial_notes": "prenomen contains TWO throne names with German anfangs/später prefixes (Anfangsname Secha-en-rê mer-amun; Spätname Ach-en-rê sotep-en-rê) — split on `, später ` for alias-matching",
+    },
+
+    # ── Kgin. spacing standardisation ─────────────────────────────────────
+    # Beckerath consistently prints `Kgin.` with NO space before the queen's
+    # name (verified `Kgin.Hat-schepsut`, `Kgin.Nofret-ete`, `Kgin.Te-wosret`
+    # on scan-106-right and scan-107-left). The agents extracted some rows
+    # with a space and others without. Standardise to no-space across all
+    # five queen rows so downstream string matching is uniform.
+    # 18.05 already extracts as `Kgin.Hat-schepsut` (no space) — no override
+    # needed there.
+    "06.07": {
+        "name": "Kgin.Nitokris",
+    },
+    "12.08": {
+        "name": "Kgin.Nefru-sobek",
+    },
+    "18.11": {
+        "name": "Kgin.Nofret-ete",
+    },
+    # 19.08 Te-wosret is already standardised above — `name="Kgin.Te-wosret"`
+    # — so no separate entry here.
 }
 
 
-# ── Systematic spelling fix: Schoscheng → Schoschenq ─────────────────────
-# Beckerath consistently writes "Schoschenq" (with q-descender) in Anhang A
-# and Supplement zu A (verified against scan-107 right-half + scan-108
-# right-half). OCR systematically misread q→g on every Schoschenq row,
-# including the prenomen Eigenname-half "Schoschenq mer-amun" form.
-# Apply via string-replace on `name` and `prenomen` fields wherever
-# "Schoscheng" appears.
+# ── Systematic spelling tripwire: Schoscheng → Schoschenq ────────────────
+# Defense-in-depth tripwire retained as a no-op against the post-OCR-redo
+# reconciled.jsonl. Beckerath consistently writes "Schoschenq" (with
+# q-descender) in Anhang A and Supplement zu A (verified scan-107-right +
+# scan-108-right). The previous double-page-spread OCR systematically
+# misread q→g on every Schoschenq row; the split-single-book-page OCR no
+# longer produces the misread, so this string-replace currently rewrites
+# zero rows. Kept anyway because (a) it's idempotent and free, and (b) the
+# matching test `test_schoschenq_spelling_systematic` asserts the invariant
+# directly — if a future re-OCR regresses on the q-descender, this pass
+# silently corrects it AND the test traces what was rewritten via the
+# returned audit-log entries.
 SCHOSCHENG_TO_SCHOSCHENQ_FIELDS = (
     "name",
     "prenomen",
@@ -172,7 +356,11 @@ OVERRIDE_LOG: dict[str, str] = {
     "03.06": (
         "03.06 Ahu (Huni, Aches): same brace bracket as 03.04. Merge "
         "produces the correct dates; this override adds the cross-row "
-        "editorial_notes. [P2]"
+        "editorial_notes. Note: name is `Ahu (Huni, Aches)` with the "
+        "compound parenthetical kept inline (vs. the Greek-alias-strip "
+        "rule applied to single-alias rows below) — `Huni, Aches` is a "
+        "comma-compound mixed-titulary form that belongs in name, not a "
+        "single Greek alias to extract into titulary. [P2]"
     ),
     "15.02": (
         "15.02 Bêôn: scan-106-right brace bracket spans Bêôn / Apachnas / "
@@ -184,9 +372,14 @@ OVERRIDE_LOG: dict[str, str] = {
     "15.04": (
         "15.04 Chajan (Iannas, Se'user-en-rê): same brace bracket as 15.02. "
         "Merge majority left Chajan with null dates; override fills in the "
-        "bracket dates. (Replaces a pre-OCR-redo override that erroneously "
-        "set Chajan's end to Apophis's dates -1549/-1546; the previous "
-        "override was based on a misreading of the brace span.) [P1]"
+        "bracket dates. Note: name is `Chajan (Iannas, Se'user-en-rê)` with "
+        "the compound parenthetical kept inline (vs. the Greek-alias-strip "
+        "rule applied to single-alias rows below) — `Iannas, Se'user-en-rê` "
+        "is a comma-compound mixed-titulary form (Greek alias + Egyptian "
+        "throne-name) that belongs in name, not a single Greek alias to "
+        "extract. (Replaces a pre-OCR-redo override that erroneously set "
+        "Chajan's end to Apophis's dates -1549/-1546; the previous override "
+        "was based on a misreading of the brace span.) [P1]"
     ),
     "31.04": (
         "31.04 Chababasch: scan-108-left prints `Chababasch "
@@ -212,13 +405,96 @@ OVERRIDE_LOG: dict[str, str] = {
         "[P2]"
     ),
     "21.02": (
-        "21.02 Amen-em-nisu: standard Greek-alias-in-parens pattern "
-        "(matching Schoschenq I. `(Sesonchis)`) puts the alias in "
-        "egyptian_titulary with kind=nomen. Agents folded `(Nephercheres)` "
-        "into name with titulary=null; this override splits name and "
-        "titulary to match the canonical pattern. [P2]"
+        "21.02 Amen-em-nisu: Greek-alias-in-parens split — see _GREEK_ALIAS_NOTE. [P1]"
+    ),
+    # Greek-alias-in-parens split rule applied uniformly across the
+    # canonical Old-Kingdom + Dyn 21 rows where Beckerath uses
+    # `<EgyptianName> (<single Greek alias>)`.  All entries below share
+    # the same rationale; collapse to a single shared note rather than
+    # repeating per-row.
+    "02.06": "02.06 Nefer-ka-rê: Greek-alias-in-parens split (Nephercheres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "02.07": "02.07 Nefer-ka-sokar: Greek-alias-in-parens split (Sesochris → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "04.01": "04.01 Senofru: Greek-alias-in-parens split (Soris → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "04.07": "04.07 Schepses-kaf: Greek-alias-in-parens split (Seberchéres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.01": "05.01 User-kaf: Greek-alias-in-parens split (Userchéres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.02": "05.02 Sahu-rê: Greek-alias-in-parens split (Sephres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.03": "05.03 Nefer-ir-ka-rê Kakai: Greek-alias-in-parens split (Nephercheres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.04": "05.04 Schepses-ka-rê: Greek-alias-in-parens split (Sisires → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.05": "05.05 Neferef-rê Isi: Greek-alias-in-parens split (Cheres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.06": "05.06 Ni-user-rê Ini: Greek-alias-in-parens split (Rathores → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.07": "05.07 Men-kaw-hor: Greek-alias-in-parens split (Mencheres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.08": "05.08 Djed-ka-re Isesi: Greek-alias-in-parens split (Tancheres → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "05.09": "05.09 Unas: Greek-alias-in-parens split (Onnos → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "06.01": "06.01 Teti: Greek-alias-in-parens split (Othoês → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "06.06": "06.06 Nemti-em-saf II.: Greek-alias-in-parens split (Menthesuphis → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "21.04": "21.04 Amen-em-opet: Greek-alias-in-parens split (Amenophthis → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "21.05": "21.05 Osochor: Greek-alias-in-parens split (Osorkon → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+
+    "22.07": (
+        "22.07 (Schoschenq IIIa.): scan-107-right prints the name in "
+        "parentheses — Beckerath's typographic existence-hedge for an "
+        "uncertain king. Agents dropped the parens; restore them in name "
+        "to preserve the hedge. Editorial_notes flags the convention. "
+        "[P2]"
+    ),
+    "22.06": (
+        "22.06 Schoschenq III.: scan-107-right prints `ca. 837–798 (785 ?)` "
+        "— the trailing `(785 ?)` is Beckerath's verbatim alternative-end "
+        "hedge with a load-bearing `?`. Merge paraphrased to "
+        "`alternative end 785` which lost the `?`; restore verbatim. [P2]"
+    ),
+    "18.04": (
+        "18.04 Tuthmosis II.: scan-106-right prints `Frühj.(?) 1492–1479` — "
+        "the `Frühj.(?)` accession-prefix qualifies the START date only. "
+        "Notes_from_beckerath stored `Frühj.(?) 1492` which is technically "
+        "correct but ambiguous; rewrite to `Antritt Frühj.(?) 1492` to "
+        "match the `Antritt 22.3.1504` pattern used on 18.03 Tuthmosis I. "
+        "[P2]"
+    ),
+    "25.02": (
+        "25.02 Pije: scan-107-right prints `Pije (User-maat-re/Senefer-rê)` "
+        "— two prenomens separated by `/` (alternates or successive). "
+        "Editorial_notes flags the slash semantics so downstream alias-"
+        "matching can split for lookup. [P2]"
+    ),
+    "19.07": (
+        "19.07 Si-ptah: scan-107-right prints `anfangs Secha-en-rê "
+        "mer-amun, später Ach-en-rê sotep-en-rê` — two prenomens with "
+        "German anfangs/später prefixes (Anfangsname / Spätname). "
+        "Editorial_notes flags the early-vs-late distinction so downstream "
+        "alias-matching can split on `, später ` for lookup. [P2]"
+    ),
+    "06.07": (
+        "06.07 Kgin.Nitokris: scan-106-left prints `Kgin.Nitokris` with no "
+        "space between the abbreviation and the queen's name. Standardise "
+        "to no-space across all five Kgin. rows (06.07 / 12.08 / 18.05 / "
+        "18.11 / 19.08) to match the printed convention. [P2]"
+    ),
+    "12.08": (
+        "12.08 Kgin.Nefru-sobek: scan-106-right prints `Kgin.Nefru-sobek`. "
+        "See _KGIN_NOTE on 06.07. [P2]"
+    ),
+    "18.11": (
+        "18.11 Kgin.Nofret-ete: scan-107-left prints `Kgin.Nofret-ete`. "
+        "See _KGIN_NOTE on 06.07. [P2]"
     ),
 }
+
+# Shared rationale strings — collapsed via constants so the OVERRIDE_LOG
+# entries above stay scannable. (Audit log writer expands them inline.)
+_GREEK_ALIAS_NOTE = (
+    "Beckerath consistently uses `<EgyptianName> (<single Greek alias>)` "
+    "for these kings. Canonical extraction (matching the Schoschenq I. "
+    "(Sesonchis) precedent on 22.01) puts the alias in egyptian_titulary "
+    "with kind=nomen. The agents/merge correctly split the Dyn 22 "
+    "Schoschenq + Osorkon rows but left the Old Kingdom and Dyn 21 rows "
+    "with the alias folded into name (titulary=null). These overrides "
+    "apply the canonical split uniformly so downstream consumers see one "
+    "consistent name/titulary contract. Discriminator: this rule applies "
+    "to SINGLE non-compound aliases only; compound parentheticals with "
+    "internal commas (e.g. 03.06 `Ahu (Huni, Aches)`, 15.04 `Chajan "
+    "(Iannas, Se'user-en-rê)`) are kept inline in name."
+)
 
 
 def _apply_schoschenq_spelling_fix(rows: list[dict]) -> list[str]:
@@ -271,8 +547,12 @@ def main() -> None:
         # the committed audit trail, not a per-run mutation log. Always
         # record every OVERRIDE that exists, even on idempotent re-runs
         # where no field actually changed; otherwise the audit log
-        # silently shrinks across runs and loses provenance.
-        applied.append(OVERRIDE_LOG[bid])
+        # silently shrinks across runs and loses provenance. Expand the
+        # `See _GREEK_ALIAS_NOTE.` shorthand inline so the audit log is
+        # self-contained for readers who only have merge-disagreements.txt.
+        applied.append(
+            OVERRIDE_LOG[bid].replace("See _GREEK_ALIAS_NOTE.", _GREEK_ALIAS_NOTE)
+        )
 
     # Systematic spelling fix runs after OVERRIDES so individual overrides
     # (e.g. on a Schoschenq row's prenomen) win first, then any remaining

@@ -26,14 +26,18 @@ PDF="proprietary/books/Beckerath 1997 - Chronologie des pharaonischen Aegypten.p
 OUT="$TMPDIR/beckerath_scan"
 # left halves (book pp 188, 190, 192, 194 — even page numbers)
 for n in 106 107 108 109; do
-    pdftoppm -r 100 -f $n -l $n -x 0    -y 0 -W 2500 -H 3541 -jpeg "$PDF" "$OUT/scan-$n-left"
+    pdftoppm -r 100 -f $n -l $n -x 0 -y 0 -W 2500 -H 3541 -jpeg "$PDF" "$OUT/scan-$n-left"
 done
 # right halves (book pp 187, 189, 191, 193 — odd page numbers)
 for n in 105 106 107 108; do
     pdftoppm -r 100 -f $n -l $n -x 2370 -y 0 -W 2500 -H 3541 -jpeg "$PDF" "$OUT/scan-$n-right"
 done
-# strip pdftoppm's trailing -NNN suffix on the output filenames
-cd "$OUT" && for f in scan-*-*-*.jpg; do mv "$f" "${f%-*}.jpg"; done
+# strip pdftoppm's trailing `-NNN` numeric suffix on the output filenames.
+# Restrict the glob to entries that still carry the numeric suffix so a
+# re-run on the same $OUT directory doesn't move already-renamed files
+# (`scan-105-right.jpg` would otherwise match `scan-*-*-*.jpg` and be
+# wrongly truncated to `scan-105.jpg`).
+cd "$OUT" && for f in scan-*-*-[0-9]*.jpg; do mv "$f" "${f%-[0-9]*}.jpg"; done
 ```
 
 Pages-needed checklist (Anhang A is bracketed by these eight half-pages):

@@ -137,10 +137,14 @@ def test_bce_endpoints_obey_high_ge_older_convention() -> None:
 
 
 def test_dyn17_marker_row_locked() -> None:
-    """Dyn 17 is a marker row (no individual kings enumerated). The OCR
-    inserted a phantom `1539` from the adjacent Dyn 15 Hyksos line; the
-    real Beckerath text gives a single `1550` endpoint. Lock the
-    fix_rows.py correction.
+    """Dyn 17 is a marker row (no individual kings enumerated). Beckerath
+    prints `17. Dynastie (in Theben, etwa 1645–1550) 15 (?) Könige`. The
+    pre-OCR-redo branch had a phantom `1539` from the adjacent Dyn 15
+    Hyksos line — the post-OCR-redo merge produces the bare `-1550`
+    endpoint directly (no override on dates). Only `end_approximate=True`
+    is forced via fix_rows.py to honour the heading-level `etwa`
+    propagation rule. Test retained as a regression tripwire on OCR
+    fidelity for this marker row.
     """
     r = _row("17.01")
     assert r["dynasty"] == 17
@@ -245,14 +249,16 @@ def test_tuthmosis_ii_accession_date_in_notes() -> None:
     assert r["start_bce_low"] == -1492
     assert r["end_bce_high"] == -1479
     assert r["end_bce_low"] == -1479
-    assert r["notes_from_beckerath"] == "Frühj.(?) 1492"
+    assert r["notes_from_beckerath"] == "Antritt Frühj.(?) 1492"
 
 
 def test_schoschenq_iii_alternative_end_in_notes() -> None:
-    """Beckerath writes Schoschenq III's reign as `ca. 837–798 (785?)`. The
-    `(785?)` alternative goes in `notes_from_beckerath` while the numeric
-    end stays at the primary endpoint -798. `start_approximate` is true (the
-    `ca.` prefix); `end_approximate` is false (no qualifier on -798 itself).
+    """Beckerath writes Schoschenq III's reign as `ca. 837–798 (785 ?)` on
+    book p191 (scan-107-right). The `(785 ?)` alternative-end hedge goes
+    verbatim into `notes_from_beckerath` (the `?` is load-bearing); the
+    numeric end stays at the primary endpoint -798. `start_approximate` is
+    true (the `ca.` prefix); `end_approximate` is false (no qualifier on
+    -798 itself).
     """
     r = _row("22.06")
     assert r["name"] == "Schoschenq III."
@@ -260,7 +266,7 @@ def test_schoschenq_iii_alternative_end_in_notes() -> None:
     assert r["end_approximate"] is False
     assert r["start_bce_high"] == -837
     assert r["end_bce_high"] == -798
-    assert r["notes_from_beckerath"] == "alternative end 785"
+    assert r["notes_from_beckerath"] == "(785 ?)"
 
 
 def test_dyn21_hohepriester_subline_present() -> None:
@@ -322,9 +328,10 @@ def test_period_assignment_for_intermediate_periods() -> None:
 
 
 def test_xerxes_i_endpoints_not_inverted() -> None:
-    """Beckerath: Xerxes I 486/85–465/64. The merge initially produced
-    end_bce_low=-484 (a carryover of start_bce_low). The override corrected
-    end_bce_low to -464.
+    """Beckerath: Xerxes I 486/85–465/64. Pre-OCR-redo a fix_rows.py
+    override corrected end_bce_low from a -484 carryover; post-OCR-redo
+    the merge produces these endpoints directly (no override needed).
+    Test retained as a regression tripwire on slash-pair extraction.
     """
     r = _row("27.03")
     assert r["name"] == "Xerxes I."
@@ -385,7 +392,9 @@ def test_te_wosret_coregent_row_extracted() -> None:
     Beckerath's printed text.
     """
     r = _row("19.08")
-    assert r["name"] == "Kgin. Te-wosret"
+    # Kgin. spacing is standardised to no-space across all 5 queen rows
+    # (matches the printed PDF's typography on scan-107-left).
+    assert r["name"] == "Kgin.Te-wosret"
     assert r["egyptian_titulary"] == "Thuoris"
     assert r["egyptian_titulary_kind"] == "nomen"
     # German verbatim co-regency annotation (the Co-regent queen rule
@@ -499,9 +508,10 @@ def test_hatschepsut_end_date_locked() -> None:
 
 
 def test_amen_mes_su_prenomen_supplement_locked() -> None:
-    """`fix_rows.py` corrected Amen-mes-su's prenomen from `Amen-mes-su
-    mer-amun` (which is Beckerath's Eigenname) to `Men-mi-rê sotep-en-rê`
-    (the actual Thronname from Supplement zu A).
+    """Amen-mes-su's Thronname per Supplement zu A is `Men-mi-rê
+    sotep-en-rê`. Pre-OCR-redo a fix_rows.py override forced this against
+    a splice with Sethós II's row; post-OCR-redo the merge extracts it
+    directly (no override needed). Test retained as a regression tripwire.
     """
     r = _row("19.05")
     assert r["name"] == "Amen-mes-su"
@@ -650,8 +660,11 @@ def test_notes_have_no_editorial_prose() -> None:
 
 
 def test_akhenaten_prenomen_typo_fixed() -> None:
-    """`fix_rows.py` corrected Akhenaten's prenomen from `Nefer-chepruê
-    wa-en-rê` (OCR dropped the `r`) to `Nefer-cheprurê wa-en-rê`.
+    """Akhenaten's prenomen per Beckerath book p190 is `Nefer-cheprurê
+    wa-en-rê`. The pre-OCR-redo branch had a fix_rows.py override
+    correcting an OCR `r`-drop (`Nefer-chepruê` → `Nefer-cheprurê`); the
+    split-page OCR reads the `r` correctly (no override needed). Test
+    retained as a regression tripwire on this typography-sensitive row.
     """
     r = _row("18.10")
     assert "Ach-en-aten" in r["name"]
