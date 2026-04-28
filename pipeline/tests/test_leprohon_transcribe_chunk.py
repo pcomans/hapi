@@ -353,6 +353,46 @@ def test_full_page_processing_emits_structured_block() -> None:
     assert '<fn id="5">For the rendering, see T. Schneider 1998, 137–38.</fn>' in out
 
 
+def test_parse_pages_rejects_invalid_format() -> None:
+    """`--pages` with non-`START-END` shape must raise loudly."""
+    import pytest
+
+    with pytest.raises(ValueError, match="must be `START-END` format"):
+        tc._parse_pages("foo")
+    with pytest.raises(ValueError, match="must be `START-END` format"):
+        tc._parse_pages("51")
+
+
+def test_parse_pages_rejects_inverted_range() -> None:
+    """`--pages 80-50` (start > end) must raise loudly."""
+    import pytest
+
+    with pytest.raises(ValueError, match="start 80 must be ≤ end 50"):
+        tc._parse_pages("80-50")
+
+
+def test_transcribe_rejects_out_of_bounds_pages(tmp_path) -> None:
+    """`transcribe()` must raise when pages exceed the PDF range, with a
+    descriptive message that names the PDF basename and the actual bounds.
+
+    Constructed with a temp 2-page PDF (using pypdf's PdfWriter) so the
+    test is hermetic and doesn't depend on the proprietary book file.
+    """
+    import pytest
+    from pypdf import PdfWriter
+
+    pdf_path = tmp_path / "tiny.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(width=72, height=72)
+    writer.add_blank_page(width=72, height=72)
+    with open(pdf_path, "wb") as fh:
+        writer.write(fh)
+
+    out_path = tmp_path / "out.md"
+    with pytest.raises(ValueError, match="exceed PDF bounds 1-2"):
+        tc.transcribe(1, 5, "test", pdf_path, out_path)
+
+
 def test_mdc_normalisation_still_applied_inside_processed_page() -> None:
     """`_process_page` must keep applying MdC mapping to name-row lines."""
     raw = [

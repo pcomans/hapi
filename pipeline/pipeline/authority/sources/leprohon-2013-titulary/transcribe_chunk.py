@@ -404,17 +404,22 @@ _PERIOD_CONTINUATION_RE = re.compile(r"^\.\s")
 _YEAR_RE = re.compile(r"\b(?:1[5-9]|20)\d{2}\b")
 # Tokens that strongly imply a footnote body (vs. a king-headword smallcap
 # name). Includes scholarly-citation abbreviations common in Egyptology
-# (KRI = Kitchen, Ramesside Inscriptions; LÄ; Wb; PM; ANET; Urk.; LD =
-# Lepsius Denkmäler) and the most-cited authors in Leprohon's references.
+# (KRI = Kitchen, Ramesside Inscriptions; LÄ; PM; ANET; Urk.) and the
+# most-cited authors in Leprohon's references. Case-sensitive: `re.IGNORECASE`
+# would cause short ambiguous tokens (`Wb`, `LD`) to false-positive on any
+# body text that happens to contain `wb` / `ld` as a word, so `Ibid` and
+# `See` are listed alongside their lowercase `ibid` / `see` forms instead.
 _PROSE_TOKEN_RE = re.compile(
-    r"\b(see|cf\.|ibid|von\s+Beckerath|et\s+al|Schneider|Ryholt|Kitchen|Gauthier"
+    r"\b(see|See|cf\.|Cf\.|ibid|Ibid"
+    r"|von\s+Beckerath|et\s+al"
+    r"|Schneider|Ryholt|Kitchen|Gauthier"
     r"|Redford|Bietak|Davies|Turin|Waddell|Aufrère|Dobrev|Spalinger"
-    r"|KRI|LÄ|Wb|PM|ANET|Urk|LD)\b",
-    re.IGNORECASE,
+    r"|KRI|LÄ|PM|ANET|Urk)\b"
 )
 
 
 def _is_ebsco(line: str) -> bool:
+    """Return True if the line is one of the three EBSCO watermark lines."""
     return any(p.match(line) for p in EBSCO_PATTERNS)
 
 
@@ -455,14 +460,14 @@ def _merge_split_footnote_numbers(lines: list[str]) -> list[str]:
     while i < len(lines):
         cur = lines[i]
         # Shape A: `34` + `. Turi`.
+        m_a = _FOOTNOTE_NUM_ONLY_RE.match(cur)
         if (
-            i + 1 < len(lines)
-            and _FOOTNOTE_NUM_ONLY_RE.match(cur)
+            m_a
+            and i + 1 < len(lines)
             and _PERIOD_CONTINUATION_RE.match(lines[i + 1])
         ):
-            num = _FOOTNOTE_NUM_ONLY_RE.match(cur).group(1)
             after_dot = lines[i + 1][1:].lstrip()
-            merged.append(f"{num}. {after_dot}")
+            merged.append(f"{m_a.group(1)}. {after_dot}")
             i += 2
             continue
         # Shape B: `56.` + ` The na`. The continuation line must start with
@@ -536,6 +541,11 @@ def _split_page(
        only).
     5. Merge each footnote's multi-line body into a single string.
     """
+    # Pre-pass first, header/EBSCO strip second. Order matters: the Shape-C
+    # split-3-digit-number merge (`12\n2. Ibid` → `122. Ibid`) operates on a
+    # bare-digit line whose value (1-99) overlaps the running-header shape
+    # `^\s*\d+\s*$`. Stripping headers first would consume the leading half
+    # of a Shape-C split if it lived at the top of a page.
     lines = _merge_split_footnote_numbers(lines)
 
     # Strip trailing EBSCO watermark + any trailing blank lines before/after it.
@@ -580,13 +590,13 @@ def _split_page(
         else:
             break
 
-    # Merge each candidate footnote body, then apply a majority prose
-    # safeguard: at least half of the merged candidates must look like
-    # prose (carry an author/year/see-cf./Kitchen-citation token). This
-    # protects pages of only king-headwords (smallcap names with no
-    # scholarly tokens) from being misidentified as footnotes, while
-    # tolerating a single short citation like `KRI II, 842:9–843:6.`
-    # inside a real footnote block.
+    # Merge each candidate footnote body, then apply an at-least-one prose
+    # safeguard (see the comment on `prose_count == 0` below). The previous
+    # majority-vote rule (`prose_count * 2 < len(candidate)`) rejected real
+    # footnote blocks where most footnotes were short — e.g. page 125 of
+    # the Dyn 18 chunk has fns 48 / 49 / 50 = `Lit. "possessor."` /
+    # `Gauthier 1912, 343–61; von Beckerath 1999, 142–43.` /
+    # `Or "crowns."`, only one of which carries a prose token.
     fn_start_line = block[0][0]
     candidate: list[tuple[int, str]] = []
     for i, (start_idx, num) in enumerate(block):
@@ -631,6 +641,19 @@ def _annotate_anchors(body: list[str], known_fns: set[int]) -> list[str]:
        starts a continuation of the previous body line's sentence (the
        superscript was placed at the wrap-line start by pypdf).
     """
+    # Hoisted out of the per-line loop: closure over `known_fns` is constant
+    # for the whole call, so we only need to define it once. NB: a candidate
+    # mid-line match like `Ibid., 16 King` would be wrapped if `16` happens
+    # to be a footnote on the same page. Tolerated because (a) such
+    # constructions are rare in Leprohon's titulary-list body text and
+    # (b) the wrap is purely additive markup — it doesn't drop content, so
+    # downstream agents can still recover the original digit.
+    def _replace_mid(m: re.Match[str]) -> str:
+        num = int(m.group("num"))
+        if num not in known_fns:
+            return m.group(0)
+        return f'{m.group("pre")}<sup data-fn="{num}">{num}</sup>{m.group("post")}'
+
     out: list[str] = []
     for line in body:
         # Case 1: standalone digit line.
@@ -648,7 +671,14 @@ def _annotate_anchors(body: list[str], known_fns: set[int]) -> list[str]:
             num = int(m.group(1))
             out.append(f'<sup data-fn="{num}">{num}</sup> {m.group(2)}')
             continue
-        # Case 2: end-of-line digit run preceded by non-digit, non-dash.
+        # Case 2: end-of-line digit run preceded by non-digit, non-dash. The
+        # digit may be glued to the preceding text (`gods26`, `wAst).17`)
+        # OR space-separated (`victories 20`, `Fifteenth Dynasty. 15`) —
+        # both are real footnote-anchor patterns in Leprohon's typesetting.
+        # The `known_fns` gate (anchor wraps only if the digit value matches
+        # a footnote on the same page) is the real discriminator against
+        # `Dynasty 16` style false-positives, since dynasty references
+        # appear mid-line followed by ` (` not end-of-line.
         m2 = re.search(r"(?<=[^\d–—\-])(\d+)\s*$", line)
         if m2 and int(m2.group(1)) in known_fns:
             num = int(m2.group(1))
@@ -663,12 +693,6 @@ def _annotate_anchors(body: list[str], known_fns: set[int]) -> list[str]:
         # paragraph, like `Lands. 16 King ...` or `today, 14 Ryholt ...`.
         # Excluding the `Dynasty 16` and `(1663–1555 b .c .E.)` patterns by
         # requiring punctuation+space context.
-        def _replace_mid(m: re.Match[str]) -> str:
-            num = int(m.group("num"))
-            if num not in known_fns:
-                return m.group(0)
-            return f'{m.group("pre")}<sup data-fn="{num}">{num}</sup>{m.group("post")}'
-
         line = re.sub(
             r"(?P<pre>[.,;]\s)(?P<num>\d+)(?P<post>\s+[A-Z])",
             _replace_mid,
