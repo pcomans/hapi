@@ -121,6 +121,28 @@ Null when Beckerath gives no annotation.
 
 Beckerath prints `Gegenkönig der 3 vorigen: Seth Per-ib-sen / Hor-Seth Cha-sechemui` as a composite annotation. Extract as **two rows** — one for `Seth Per-ib-sen`, one for `Hor-Seth Cha-sechemui` — both with `notes_from_beckerath: "Gegenkönig der 3 vorigen"` and both inheriting the bracketed BCE range Beckerath assigns to that block.
 
+## Co-regent queen rule (Mitregentin with own titulary → separate row)
+
+A queen co-regent printed with her own throne name in parentheses is a SEPARATE row in the dynasty's sequence. Two structural shapes Beckerath uses:
+
+1. **Indented `mit Kgin. <name> (<titulary>)` line** placed under a king's row. The leading 4-space indent + `mit Kgin.` token signals a co-regent annotation. When followed by a parenthetical `(<titulary>)` (the queen's own throne or birth name), emit her as the next sequence row in the dynasty.
+
+2. **Chained `<king> und Kgin. <name> (<titulary>)`** on the same line as the king. The `und Kgin.` token + parenthetical titulary signals two distinct rows: the king first, the queen as next sequence.
+
+For both shapes:
+- `name` is `"Kgin.<queen-name>"` (preserve Beckerath's `Kgin.` honorific verbatim — note: NO space between `Kgin.` and the queen's name, matching the printed PDF's typography on `Kgin.Hat-schepsut`, `Kgin.Nofret-ete`, `Kgin.Te-wosret`).
+- `egyptian_titulary` is the parenthetical content; `egyptian_titulary_kind` is whatever the `(<titulary>)` represents (use the same heuristic as for kings: `prenomen` if the form ends `-rê` or `-ka-rê` style throne-name suffix; `nomen` if Greek-alias-style; `mixed` otherwise).
+- BCE range INHERITS from the immediately-preceding king's row (the queen co-rules during her king's reign).
+- `notes_from_beckerath` is `"Mitregentin von <king-name>"` (German for "co-regent of <king>").
+
+Discriminator: she gets her own row IF AND ONLY IF the `mit Kgin.` / `und Kgin.` is followed by a parenthetical `(<titulary>)`. If `mit Kgin.` or `Mitregent` appears without a titulary parenthetical, fold into the king's `notes_from_beckerath` instead.
+
+## OCR-duplicate detection (one king, two rows)
+
+If a king appears in two consecutive (or near-consecutive) lines within the same dynasty with overlapping or conflicting date ranges, it is an OCR artifact — NOT a separate row. Indicator: identical `name` field in two lines, where one has an incomplete date (`<start>–` with no end) and the other has a complete chronologically-coherent date that fits the dynasty's other entries.
+
+Resolution: emit ONLY the chronologically-coherent occurrence. Verify by checking that the surviving entry's start date is ≥ the previous king's end date AND its end date ≤ the following king's start date — if so, it is the correct entry.
+
 ## `source_citation`
 
 Every row has `source_citation: {"pdf_pages": "105-109", "edition": "MÄS 46, von Zabern 1997"}`.
