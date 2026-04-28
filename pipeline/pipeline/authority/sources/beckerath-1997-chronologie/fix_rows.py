@@ -547,8 +547,12 @@ _GREEK_ALIAS_NOTE = (
     "apply the canonical split uniformly so downstream consumers see one "
     "consistent name/titulary contract. Discriminator: this rule applies "
     "to SINGLE non-compound aliases only; compound parentheticals with "
-    "internal commas (e.g. 03.06 `Ahu (Huni, Aches)`, 15.04 `Chajan "
-    "(Iannas, Se'user-en-rê)`) are kept inline in name."
+    "internal commas where the compound is two name-form variants of a "
+    "single concept (e.g. 03.05 `Sôuphis, Mesochris`, 03.06 `Ahu (Huni, "
+    "Aches)`) are kept inline in name. Compounds that are Greek-alias + "
+    "Egyptian-prenomen pairs (e.g. 15.04 `Iannas, Se'user-en-rê`, 06.04 "
+    "`Methusuphis, Mer-en-rê`, 26.04 `Wah-ib-rê, Haa-ib-rê`) split with "
+    "kind=mixed instead — see the discriminator on the OVERRIDES dict."
 )
 
 
@@ -591,11 +595,15 @@ def main() -> None:
     # failures), the validation raises rather than silently fallback to
     # a "rationale missing" placeholder.
     missing_log = sorted(set(OVERRIDES) - set(OVERRIDE_LOG))
-    if missing_log:
+    stale_log = sorted(set(OVERRIDE_LOG) - set(OVERRIDES))
+    if missing_log or stale_log:
         raise KeyError(
-            f"OVERRIDE_LOG is missing rationale entries for: {missing_log}. "
-            "Every key in OVERRIDES must have a matching OVERRIDE_LOG entry "
-            "so the audit trail in merge-disagreements.txt stays complete."
+            "OVERRIDE_LOG mismatch: "
+            f"missing entries for {missing_log}; "
+            f"stale entries (no matching OVERRIDES key) for {stale_log}. "
+            "Every key in OVERRIDES must have a matching OVERRIDE_LOG "
+            "entry, and vice versa, so the audit trail stays complete and "
+            "rationale dictionary doesn't accumulate dead entries."
         )
 
     applied: list[str] = []
