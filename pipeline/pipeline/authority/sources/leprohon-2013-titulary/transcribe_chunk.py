@@ -362,6 +362,430 @@ def _normalize_line(line: str) -> str:
     return f"{line[:prefix_end]}{mdc_to_unicode(translit)}{rest}"
 
 
+# Trailing EBSCO watermark — three lines that appear at the bottom of every
+# PDF page. Not transcribed content; stripped per the policy in transcribe.md.
+EBSCO_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"^EBSCO Publishing\s*:\s*eBook"),
+    re.compile(r"^AN:\s*\d+\s*;"),
+    re.compile(r"^Account:\s*s\d+"),
+)
+
+# Per-page running headers. Examples encountered in chunk 7:
+#   `81`                                  bare page number (chapter opener)
+#   `VI`                                  bare roman chapter marker
+#   `82 THE GR EAT NAME`                  even-page header
+#   ` SECO ND INTERMEDIATE PERIOD  83`    odd-page header
+# The chapter-opening smallcap title (e.g. `s Econ D i nt Erm EDiat E PErio D`)
+# is NOT a running header — it's content the agents need to identify the chapter
+# context, so it stays. Running-header stripping only applies to the leading
+# lines of a page (top of page is where pypdf places these).
+_RUNNING_HEADER_RE = re.compile(
+    r"^\s*("
+    r"\d{1,3}"  # bare page number
+    r"|[IVX]{1,4}"  # bare roman numeral chapter marker
+    r"|\d{1,3}\s+(?:THE\s+)?[A-Z][A-Z\s]{2,}"  # even-page: page-num + caps
+    r"|[A-Z][A-Z\s]{2,}\s+\d{1,3}"  # odd-page: caps + page-num
+    r")\s*$"
+)
+
+# Footnote-number detection. Footnote numbers in Leprohon are 1-3 digits
+# (chapter VII is the largest chapter at 132 footnotes). Capping at 3 digits
+# excludes 4-digit years like `1985. The reading Renefer/Reneferef...` which
+# appear inside footnote bodies and would otherwise be mis-detected as a
+# footnote start.
+_FOOTNOTE_START_RE = re.compile(r"^(\d{1,3})\.\s")
+_FOOTNOTE_NUM_ONLY_RE = re.compile(r"^(\d{1,3})\s*$")
+# pypdf occasionally splits a footnote's `N.` from its body. Two observed
+# shapes (handled by `_merge_split_footnote_numbers`):
+#   `34\n. Turi\nn 11,9 (= KRI II, 843:1); von Beckerath 1999, 128–29.`
+#   `56.\n The na\nme may simply be...`
+_NUM_PERIOD_ONLY_RE = re.compile(r"^(\d{1,3})\.\s*$")
+_PERIOD_CONTINUATION_RE = re.compile(r"^\.\s")
+_YEAR_RE = re.compile(r"\b(?:1[5-9]|20)\d{2}\b")
+# Name-row labels emitted by Leprohon for king titularies. If a *candidate
+# footnote body* (after merging across line breaks) contains one of these as
+# `Label: ` mid-string, the candidate is actually a king entry that was
+# numerically contiguous with the trailing footnotes (e.g. on a page where
+# kings 1-3 are followed by fns 4-9 — the walk-back-monotonic detector picks
+# up all nine starts as candidates because their numbers decrement cleanly).
+# Real footnote bodies in Leprohon never contain `Label: ` — the labels are
+# strictly body content, not citation prose.
+# Match anywhere — neither `\b` nor a leading non-letter prefix would catch
+# the merged-body case where a king's smallcap name (e.g. `KHa S EKHEm`) is
+# concatenated against the next line's `Horus:` label without intervening
+# whitespace. The `: \s` suffix + the closed alternation of Leprohon's
+# canonical name-row labels is sufficient to distinguish from arbitrary
+# prose; no real Leprohon footnote body in any of the 14 chunks contains
+# `Horus: ` / `Throne: ` / etc. as a substring.
+_KING_ENTRY_LABEL_RE = re.compile(
+    r"("
+    r"Horus(?:\s+\d+)?"
+    r"|Throne(?:\s+(?:and\s+(?:Birth|birth|Name|name)|\d+))?"
+    r"|Two\s+Ladies(?:\s+\d+)?"
+    r"|Golden\s+Horus(?:\s+\d+)?"
+    r"|Birth(?:\s+\(\?\))?(?:\s+\d+)?"
+    r"|Cartouche(?:\s+\d+)?"
+    r"|Seth\s+name"
+    r"|Later\s+Horus\s+name"
+    r"|Later\s+cartouche\s+name"
+    r"|Title\s+and\s+(?:birth|name)(?:\s+\(\?\))?(?:\s+name)?"
+    r"|Throne\s+and\s+[Bb]irth"
+    r"|Original\s+titulary"
+    r"|Additional\s+names"
+    r"):\s"
+)
+
+# Tokens that strongly imply a footnote body (vs. a king-headword smallcap
+# name). Includes scholarly-citation abbreviations common in Egyptology
+# (KRI = Kitchen, Ramesside Inscriptions; LÄ; PM; ANET; Urk.) and the
+# most-cited authors in Leprohon's references. Case-sensitive: `re.IGNORECASE`
+# would cause short ambiguous tokens (`Wb`, `LD`) to false-positive on any
+# body text that happens to contain `wb` / `ld` as a word, so `Ibid` and
+# `See` are listed alongside their lowercase `ibid` / `see` forms instead.
+_PROSE_TOKEN_RE = re.compile(
+    r"\b(see|See|cf\.|Cf\.|ibid|Ibid"
+    r"|von\s+Beckerath|et\s+al"
+    r"|Schneider|Ryholt|Kitchen|Gauthier"
+    r"|Redford|Bietak|Davies|Turin|Waddell|Aufrère|Dobrev|Spalinger"
+    r"|KRI|LÄ|PM|ANET|Urk)\b"
+)
+
+
+def _is_ebsco(line: str) -> bool:
+    """Return True if the line is one of the three EBSCO watermark lines."""
+    return any(p.match(line) for p in EBSCO_PATTERNS)
+
+
+def _is_running_header(line: str) -> bool:
+    """Match the three running-header line shapes used in Leprohon 2013."""
+    return bool(_RUNNING_HEADER_RE.match(line))
+
+
+def _merge_split_footnote_numbers(lines: list[str]) -> list[str]:
+    """Pre-pass: merge split-number footnote starts into `\\d+. <body>`.
+
+    pypdf occasionally emits a footnote whose number is broken away from its
+    body by a soft line break. Two shapes seen in real chunks:
+
+      Shape A — number alone, period+body on next line:
+        `34`
+        `. Turi`
+        `n 11,9 (= KRI II, 843:1); von Beckerath 1999, 128–29.`
+
+      Shape B — number+period alone, body on next line:
+        `56.`
+        ` The na`
+        `me may simply be...`
+
+      Shape C — 3-digit footnote number split across the line break:
+        `12`
+        `2. Ibid`
+        `., 106–7.`
+        →  `122. Ibid., 106-7.`  (body merged later by the block detector)
+
+    Reconstruct all three into `\\d+. <body>` so the downstream footnote-
+    block detector sees a normal start pattern. The 3-digit cap on the
+    matching regexes prevents 4-digit years like `1985.` from being
+    treated as footnote-number prefixes.
+    """
+    merged: list[str] = []
+    i = 0
+    while i < len(lines):
+        cur = lines[i]
+        # Shape A: `34` + `. Turi`.
+        m_a = _FOOTNOTE_NUM_ONLY_RE.match(cur)
+        if (
+            m_a
+            and i + 1 < len(lines)
+            and _PERIOD_CONTINUATION_RE.match(lines[i + 1])
+        ):
+            after_dot = lines[i + 1][1:].lstrip()
+            merged.append(f"{m_a.group(1)}. {after_dot}")
+            i += 2
+            continue
+        # Shape B: `56.` + ` The na`. The continuation line must start with
+        # whitespace or a letter (not another `\d+\.` footnote start).
+        m_b = _NUM_PERIOD_ONLY_RE.match(cur)
+        if (
+            m_b
+            and i + 1 < len(lines)
+            and lines[i + 1]
+            and not _FOOTNOTE_START_RE.match(lines[i + 1])
+            and not _FOOTNOTE_NUM_ONLY_RE.match(lines[i + 1])
+        ):
+            merged.append(f"{m_b.group(1)}. {lines[i + 1].lstrip()}")
+            i += 2
+            continue
+        # Shape C: `12` + `2. Ibid` → `122. Ibid` (3-digit footnote-number
+        # split across the line break). Restricted to combined numbers in
+        # 100-250 to exclude (a) body-text footnote anchors `42\n1. headword`
+        # — `421` exceeds the range — and (b) anything below 100 where the
+        # digit-only line is more plausibly a standalone anchor.
+        m_c_prefix = _FOOTNOTE_NUM_ONLY_RE.match(cur)
+        if m_c_prefix and i + 1 < len(lines):
+            m_c_next = _FOOTNOTE_START_RE.match(lines[i + 1])
+            if m_c_next:
+                combined_str = f"{m_c_prefix.group(1)}{m_c_next.group(1)}"
+                combined_num = int(combined_str)
+                if 100 <= combined_num <= 250:
+                    rest = lines[i + 1][m_c_next.end():]
+                    merged.append(f"{combined_num}. {rest}")
+                    i += 2
+                    continue
+        merged.append(cur)
+        i += 1
+    return merged
+
+
+def _looks_like_footnote_body(text: str) -> bool:
+    """Heuristic: does this look like a footnote body (prose) vs a king headword?
+
+    Footnote bodies are prose: typically > 20 chars, contain a year, "see" /
+    "cf." / "ibid", or a recognizable scholarly author. King headwords are
+    smallcap-rendered names: short, with the spaced-mixed-case typography
+    pattern. The discriminator protects pages that have only headwords (no
+    footnotes) from being misidentified as all-footnote.
+    """
+    if len(text) > 60:
+        return True
+    if _YEAR_RE.search(text):
+        return True
+    if _PROSE_TOKEN_RE.search(text):
+        return True
+    return False
+
+
+def _split_page(
+    lines: list[str],
+) -> tuple[list[str], list[tuple[int, str]]]:
+    """Split a page into (body_lines, [(footnote_num, footnote_body)]).
+
+    1. Strip trailing EBSCO watermark.
+    2. Strip leading running-header lines.
+    3. Detect the trailing footnote block: longest sequence of `\\d+\\. `
+       starts whose numbers form a contiguous, monotonically increasing run
+       (decreasing-by-1 when walked backward from the last footnote start).
+       The detection trusts the increasing-by-1 invariant of Leprohon's
+       per-chapter footnote numbering — king-headword `\\d+\\. ` lines that
+       appear earlier on the same page break the sequence and are correctly
+       excluded from the block.
+    4. Apply a prose safeguard: if the candidate block's first body fails
+       `_looks_like_footnote_body`, the page has no footnotes (return body
+       only).
+    5. Merge each footnote's multi-line body into a single string.
+    """
+    # Pre-pass first, header/EBSCO strip second. Order matters: the Shape-C
+    # split-3-digit-number merge (`12\n2. Ibid` → `122. Ibid`) operates on a
+    # bare-digit line whose value (1-99) overlaps the running-header shape
+    # `^\s*\d+\s*$`. Stripping headers first would consume the leading half
+    # of a Shape-C split if it lived at the top of a page.
+    lines = _merge_split_footnote_numbers(lines)
+
+    # Strip trailing EBSCO watermark + any trailing blank lines before/after it.
+    while lines and (not lines[-1].strip() or _is_ebsco(lines[-1])):
+        lines.pop()
+
+    # Strip leading running-header lines (only at top-of-page; never elsewhere
+    # because a bare-digit line in the body is a footnote anchor).
+    while lines and (not lines[0].strip() or _is_running_header(lines[0])):
+        lines.pop(0)
+
+    if not lines:
+        return [], []
+
+    # Locate every `\d+. ` start across the page. Exclude matches where the
+    # PREVIOUS line ends with an en-dash or em-dash — those signal a wrapped
+    # page-line citation (e.g. `KRI IV, 31:1–\n13. ` where `13.` is the
+    # citation tail of fn 124, not the start of fn 13). The plain hyphen `-`
+    # is intentionally NOT in this exclusion set: `bet-\nter` style word-wrap
+    # hyphens at line ends are common in body prose and unrelated to
+    # citation continuations.
+    starts: list[tuple[int, int]] = []
+    for i, line in enumerate(lines):
+        m = _FOOTNOTE_START_RE.match(line)
+        if not m:
+            continue
+        if i > 0 and lines[i - 1].rstrip().endswith(("–", "—")):
+            continue
+        starts.append((i, int(m.group(1))))
+
+    if not starts:
+        return lines, []
+
+    # Walk backwards from the last `\d+. ` start, accumulating the longest
+    # contiguous block of decrementing-by-1 numbers.
+    block: list[tuple[int, int]] = [starts[-1]]
+    expected = starts[-1][1] - 1
+    for idx, num in reversed(starts[:-1]):
+        if num == expected:
+            block.insert(0, (idx, num))
+            expected -= 1
+        else:
+            break
+
+    # Merge each candidate footnote body, then apply two safeguards:
+    #
+    # (a) King-entry exclusion: drop trailing-block-prefix candidates whose
+    #     merged body contains a `Horus: ` / `Throne: ` / etc. label. This
+    #     defeats the false-positive where a page has kings 1-3 numerically
+    #     adjacent to footnotes 4-9 (observed on physical p. 186 of the Late
+    #     Period chunk: walk-back monotonic builds [1..9], but only [4..9]
+    #     are real footnotes). After filtering, the remaining candidates
+    #     must form a contiguous tail — if a king-entry interrupts the
+    #     middle of the candidate block, the page layout violates the
+    #     fn-block-at-end invariant and we reject the whole block.
+    #
+    # (b) At-least-one prose match (the comment on `prose_count == 0` below).
+    #     The previous majority-vote rule (`prose_count * 2 < len(candidate)`)
+    #     rejected real footnote blocks where most footnotes were short —
+    #     e.g. page 125 of the Dyn 18 chunk has fns 48 / 49 / 50 =
+    #     `Lit. "possessor."` / `Gauthier 1912, 343–61; ...` / `Or "crowns."`,
+    #     only one of which carries a prose token.
+    fn_start_line = block[0][0]
+    candidate: list[tuple[int, str]] = []
+    for i, (start_idx, num) in enumerate(block):
+        end_idx = block[i + 1][0] if i + 1 < len(block) else len(lines)
+        first = lines[start_idx]
+        prefix = f"{num}. "
+        first_body = first[len(prefix):] if first.startswith(prefix) else first
+        chunks = [first_body] + lines[start_idx + 1 : end_idx]
+        merged = re.sub(r"\s+", " ", "".join(chunks)).strip()
+        candidate.append((num, merged))
+
+    # Drop king-entry-label candidates from the front of the block. The
+    # remaining tail (if non-empty) is the real footnote block.
+    while candidate and _KING_ENTRY_LABEL_RE.search(candidate[0][1]):
+        candidate.pop(0)
+        # Track the new fn-block start so the body slice below is correct.
+        if candidate:
+            fn_start_line = block[len(block) - len(candidate)][0]
+        else:
+            fn_start_line = len(lines)
+    # Any king-entry-label candidate that survived past the front means a
+    # king entry was sandwiched between two real footnotes on the same page
+    # — Leprohon's typesetting doesn't do that, so this is a detection
+    # failure. Reject the block so the page falls back to body-only output.
+    if any(_KING_ENTRY_LABEL_RE.search(body_text) for _, body_text in candidate):
+        return lines, []
+    if not candidate:
+        return lines, []
+
+    # At-least-one prose match is the safeguard. King-headword bodies are
+    # smallcap names (`s Em QEn`, `n am E lost`) — no year, no scholarly
+    # author/abbreviation token, no `see`/`cf.`/`ibid` — so a pure-headword
+    # block reliably has zero prose matches and is rejected. Real footnote
+    # blocks reliably have at least one entry with a year or citation token,
+    # even when individual footnotes are short (`Lit. "possessor."`,
+    # `Or "crowns."`).
+    prose_count = sum(
+        1 for _, body_text in candidate if _looks_like_footnote_body(body_text)
+    )
+    if prose_count == 0:
+        return lines, []
+
+    body = lines[:fn_start_line]
+    return body, candidate
+
+
+def _annotate_anchors(body: list[str], known_fns: set[int]) -> list[str]:
+    """Wrap inline footnote anchors in body text as `<sup data-fn="N">N</sup>`.
+
+    Three positional patterns are handled:
+
+    1. Standalone-digit line `27` where `27` is in `known_fns` (pypdf
+       sometimes places a body-text superscript on its own line).
+    2. Line ending in `\\d+` glued to a non-digit, non-en/em-dash char
+       (e.g. `gods26`, `Re30`, `wAst).17`). The non-en-dash exclusion guards
+       against year ranges like `1999, 116–17`. The non-digit exclusion
+       guards against multi-digit page numbers — but NB: footnote numbers
+       are themselves multi-digit in late chunks.
+    3. Line of shape `<digit>+ <lowercase-letter-prose>` where the digit
+       starts a continuation of the previous body line's sentence (the
+       superscript was placed at the wrap-line start by pypdf).
+    """
+    # Hoisted out of the per-line loop: closure over `known_fns` is constant
+    # for the whole call, so we only need to define it once. NB: a candidate
+    # mid-line match like `Ibid., 16 King` would be wrapped if `16` happens
+    # to be a footnote on the same page. Tolerated because (a) such
+    # constructions are rare in Leprohon's titulary-list body text and
+    # (b) the wrap is purely additive markup — it doesn't drop content, so
+    # downstream agents can still recover the original digit.
+    def _replace_mid(m: re.Match[str]) -> str:
+        num = int(m.group("num"))
+        if num not in known_fns:
+            return m.group(0)
+        return f'{m.group("pre")}<sup data-fn="{num}">{num}</sup>{m.group("post")}'
+
+    out: list[str] = []
+    for line in body:
+        # Case 1: standalone digit line.
+        stripped = line.strip()
+        if stripped.isdigit() and int(stripped) in known_fns:
+            out.append(f'<sup data-fn="{int(stripped)}">{int(stripped)}</sup>')
+            continue
+        # Case 3: digit+space+sentence-continuation (anchor at line start +
+        # rest of wrapped sentence). Discriminated from king-headwords like
+        # `2. a PEr -anati 6` by requiring no `.` after the digit. Allows
+        # both lowercase mid-word continuation (`asily accessible`) and
+        # uppercase sentence start (`In the south, the ruler...`).
+        m = re.match(r"^(\d+)\s+(?!\.)([A-Za-z].*)$", line)
+        if m and int(m.group(1)) in known_fns:
+            num = int(m.group(1))
+            out.append(f'<sup data-fn="{num}">{num}</sup> {m.group(2)}')
+            continue
+        # Case 2: end-of-line digit run preceded by non-digit, non-dash. The
+        # digit may be glued to the preceding text (`gods26`, `wAst).17`)
+        # OR space-separated (`victories 20`, `Fifteenth Dynasty. 15`) —
+        # both are real footnote-anchor patterns in Leprohon's typesetting.
+        # The `known_fns` gate (anchor wraps only if the digit value matches
+        # a footnote on the same page) is the real discriminator against
+        # `Dynasty 16` style false-positives, since dynasty references
+        # appear mid-line followed by ` (` not end-of-line.
+        m2 = re.search(r"(?<=[^\d–—\-])(\d+)\s*$", line)
+        if m2 and int(m2.group(1)) in known_fns:
+            num = int(m2.group(1))
+            head = line[: m2.start(1)]
+            tail = line[m2.end(1) :]
+            line = f'{head}<sup data-fn="{num}">{num}</sup>{tail}'
+            # fall through to case 4 (the same line may also have a mid-line
+            # anchor before the end-of-line one)
+        # Case 4: mid-line digit run preceded by sentence-end punctuation
+        # (`. ` or `, `) and followed by a space + capitalised word. This
+        # catches inline footnote anchors that pypdf preserved within a
+        # paragraph, like `Lands. 16 King ...` or `today, 14 Ryholt ...`.
+        # Excluding the `Dynasty 16` and `(1663–1555 b .c .E.)` patterns by
+        # requiring punctuation+space context.
+        line = re.sub(
+            r"(?P<pre>[.,;]\s)(?P<num>\d+)(?P<post>\s+[A-Z])",
+            _replace_mid,
+            line,
+        )
+        out.append(line)
+    return out
+
+
+def _process_page(
+    physical_page: int, raw_lines: list[str]
+) -> str:
+    """Apply page-level processing: strip headers/EBSCO, merge footnotes,
+    annotate inline footnote anchors, emit a structured block.
+    """
+    # MdC normalisation is line-level and unchanged from the original method.
+    normalised = [_normalize_line(ln) for ln in raw_lines]
+    body, footnotes = _split_page(normalised)
+    known_fns = {num for num, _ in footnotes}
+    annotated_body = _annotate_anchors(body, known_fns)
+    parts: list[str] = [f"<!-- physical page {physical_page} -->\n"]
+    for ln in annotated_body:
+        parts.append(ln + "\n")
+    if footnotes:
+        parts.append("<!-- footnotes -->\n")
+        for num, body_text in footnotes:
+            parts.append(f'<fn id="{num}">{body_text}</fn>\n')
+    parts.append("\n")
+    return "".join(parts)
+
+
 def transcribe(
     physical_start: int,
     physical_end: int,
@@ -389,10 +813,7 @@ def transcribe(
     for physical_page in range(physical_start, physical_end + 1):
         page = reader.pages[physical_page - 1]  # pypdf is 0-indexed
         text = page.extract_text()
-        parts.append(f"<!-- physical page {physical_page} -->\n")
-        for raw_line in text.splitlines():
-            parts.append(_normalize_line(raw_line) + "\n")
-        parts.append("\n")
+        parts.append(_process_page(physical_page, text.splitlines()))
     out_path.parent.mkdir(exist_ok=True, parents=True)
     out_path.write_text("".join(parts))
 
