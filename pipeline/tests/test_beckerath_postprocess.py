@@ -111,6 +111,24 @@ def test_recognises_bold_variant_of_compound_dynasty_heading() -> None:
     )
 
 
+def test_recognises_compound_with_bold_around_name_only() -> None:
+    """REGRESSION (Gemini round-4 PR #138 G10/G11). A future OCR run might
+    bold ONLY the dynasty name and leave the parenthetical qualifier outside
+    the bold markers — `**9./10. Dynastie** (etwa ...)`. The unified regex
+    must strip the embedded `**` markers from the captured text so the
+    dynasty-context comment is clean.
+    """
+    assert (
+        pp._is_dynasty_heading("**9./10. Dynastie** (etwa 2170/2120–2025/2020)")
+        == "9./10. Dynastie (etwa 2170/2120–2025/2020)"
+    )
+    # Same shape, single dynasty:
+    assert (
+        pp._is_dynasty_heading("**4. Dynastie** (etwa 2639/2589–2504/2454)")
+        == "4. Dynastie (etwa 2639/2589–2504/2454)"
+    )
+
+
 def test_dynasty_heading_returns_none_for_non_match() -> None:
     assert pp._is_dynasty_heading("### FRÜHZEIT") is None
     assert pp._is_dynasty_heading("Senofru (Soris)\t2639/2589") is None

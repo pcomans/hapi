@@ -61,7 +61,9 @@ same path so the 3-subagent extraction can continue to read
 from __future__ import annotations
 
 import argparse
+import os
 import re
+import tempfile
 from pathlib import Path
 
 # Italicised section heading shapes Beckerath uses. Keys are the chunk-file
@@ -137,26 +139,22 @@ _LEADING_DYN_NUM_RE = re.compile(r"^(\d+)")
 # A section heading line in the OCR markdown is `### <UPPERCASE NAME>`.
 _SECTION_HEADING_RE = re.compile(r"^###\s+(.+?)\s*$")
 
-# A dynasty heading is bolded: `**N. Dynastie (...)**` or
-# `**N. Dynaste (...)**` (Beckerath's spelling drift in late dynasties; see
-# chunk lines 246/249/256/261). Also handles compound headings
-# `9./10. Dynastie (in Herakleopolis, etwa ...)` which are NOT bolded in the
-# OCR output. The compound case is matched by `_DYNASTY_HEADING_COMPOUND_RE`.
+# Unified dynasty heading regex. Matches BOTH
+#   `N. Dynastie (etwa ...)` / `N. Dynaste` (single, with Beckerath's
+#       spelling drift `Dynaste` in chapters Dyn 28-31)
+#   `N./M. Dynastie (...)`     (compound, e.g. `9./10. Dynastie (...)`)
+# with optional `**...**` bold markers anywhere on the line — bolding the
+# whole heading, just the dynasty name, or none of it. Stochastic LLM-OCR
+# may emit any of these variants on future regenerations of the chunk.
 #
-# Group 1 = bolded inner text (`N. Dynastie (etwa ...)`); group 2 = remainder
-# of the line AFTER the closing `**`. Capturing the remainder defensively
-# preserves the dynasty's parenthetical qualifier (`etwa`, `ca.`, dynastic
-# placement notes) when a future OCR variant emits `**N. Dynastie** (etwa ...)`
-# with the parenthetical OUTSIDE the bold markers.
-_DYNASTY_HEADING_BOLD_RE = re.compile(
-    r"^\*\*(\d+(?:\.\s*[a-z])?\.?\s*Dynast(?:ie|e)\b.*?)\*\*(.*)$"
-)
-# Compound headings like `9./10. Dynastie (...)` are NOT bolded in the
-# current OCR output, but stochastic LLM-OCR variants may introduce bold
-# markers on future regenerations. Optional `**…**` wrapping is matched
-# defensively without changing the captured inner text.
-_DYNASTY_HEADING_COMPOUND_RE = re.compile(
-    r"^(?:\*\*)?(\d+\.?/\d+\.?\s*Dynast(?:ie|e)\b.*?)(?:\*\*)?$"
+# Group 1 captures the entire heading text (possibly with embedded `**`
+# markers when bolding wraps only part of the line, e.g.
+# `**N. Dynastie** (etwa ...)`). The caller strips any embedded `**` from
+# the captured text before using it as the dynasty-context comment value.
+_DYNASTY_HEADING_RE = re.compile(
+    r"^\*{0,2}\s*"
+    r"((?:\d+\.?/\d+\.?|\d+(?:\.\s*[a-z])?\.?)\s*Dynast(?:ie|e)\b.*?)"
+    r"\s*\*{0,2}\s*$"
 )
 
 _PAGE_BOUNDARY_RE = re.compile(r"^##\s+Book\s+p\d+\s*$")
@@ -193,19 +191,17 @@ def _is_section_heading(line: str) -> tuple[bool, str | None]:
 def _is_dynasty_heading(line: str) -> str | None:
     """Return the dynasty heading inner text if `line` is a dynasty heading.
 
-    For the bolded form, concatenates the inside-`**` text with any text that
-    follows the closing `**` on the same line (defensively preserves an
-    OCR-variant where the parenthetical qualifier is outside the bold markers).
-    For the compound form (`9./10. Dynastie ...`), returns the line verbatim.
-    Strips whitespace.
+    Handles all OCR-formatting variants: single (`N. Dynastie ...`) or
+    compound (`N./M. Dynastie ...`); bolded entirely (`**...**`), partially
+    (`**N. Dynastie** (etwa ...)`), or not at all. Strips embedded `**`
+    markers from the captured text before returning so the dynasty-context
+    comment never contains stray bold markers (which would confuse agents
+    looking for the verbatim heading text).
     """
-    m = _DYNASTY_HEADING_BOLD_RE.match(line)
-    if m:
-        return (m.group(1) + m.group(2)).strip()
-    m = _DYNASTY_HEADING_COMPOUND_RE.match(line)
-    if m:
-        return m.group(1).strip()
-    return None
+    m = _DYNASTY_HEADING_RE.match(line)
+    if not m:
+        return None
+    return m.group(1).replace("**", "").strip()
 
 
 def _dynasty_number(heading: str) -> int | None:
@@ -304,15 +300,16 @@ def process_chunk(md: str) -> str:
             j = i + 1
             while j < len(lines) and _is_blank(lines[j]):
                 j += 1
-            need_refresh = True
-            if j < len(lines):
-                if (
-                    _is_section_heading(lines[j])[0]
-                    or _is_dynasty_heading(lines[j]) is not None
-                ):
-                    need_refresh = False
-            else:
-                need_refresh = False
+            # Refresh only if the next non-blank line exists AND is neither
+            # a section heading (any `### ...`) nor a dynasty heading. When
+            # either heading is the immediate next content line, the agent
+            # gets fresh context from that heading itself; an additional
+            # comment refresh would just be noise.
+            need_refresh = (
+                j < len(lines)
+                and not _is_section_heading(lines[j])[0]
+                and _is_dynasty_heading(lines[j]) is None
+            )
             if need_refresh and current_dynasty_heading:
                 out.append(
                     f"<!-- dynasty-context: {current_dynasty_heading} -->"
@@ -350,7 +347,23 @@ def main() -> None:
     output_path = args.output if args.output is not None else args.input
     md = args.input.read_text(encoding="utf-8")
     annotated = process_chunk(md)
-    output_path.write_text(annotated, encoding="utf-8")
+    # Atomic write: stage to a temp file in the same directory, then rename
+    # over the destination. Prevents data loss if the script is interrupted
+    # mid-write (the destination either holds the previous content or the
+    # new content, never a partial write). The temp file lives in the same
+    # directory so the final `os.replace` is a same-filesystem rename.
+    output_path = output_path.resolve()
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=output_path.parent,
+        prefix=f".{output_path.name}.",
+        suffix=".tmp",
+        delete=False,
+    ) as tmp:
+        tmp.write(annotated)
+        tmp_path = Path(tmp.name)
+    os.replace(tmp_path, output_path)
     print(f"wrote {output_path} ({len(annotated)} bytes)")
 
 
