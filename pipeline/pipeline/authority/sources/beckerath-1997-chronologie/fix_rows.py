@@ -81,10 +81,10 @@ OVERRIDES: dict[str, dict] = {
         "end_bce_low": -1587,
         "start_approximate": False,
         "end_approximate": False,
-        "editorial_notes": "shared brace bracket with Apachnas (Pachnan) (15.03) and Chajan (Iannas, Se'user-en-rê) (15.04) (scan-106-right)",
+        "editorial_notes": "shared brace bracket with Apachnas (Pachnan) (15.03) and Chajan (15.04) (scan-106-right)",
     },
     "15.03": {
-        "editorial_notes": "shared brace bracket with Bêôn (Bnón) (15.02) and Chajan (Iannas, Se'user-en-rê) (15.04) (scan-106-right)",
+        "editorial_notes": "shared brace bracket with Bêôn (Bnón) (15.02) and Chajan (15.04) (scan-106-right)",
     },
     "15.04": {
         "start_bce_high": -1648,
@@ -93,6 +93,18 @@ OVERRIDES: dict[str, dict] = {
         "end_bce_low": -1587,
         "start_approximate": False,
         "end_approximate": False,
+        # The merge produced a partial titulary extraction —
+        # name=`Chajan (Iannas, Se'user-en-rê)` with titulary=`Se'user-en-rê`
+        # — splitting only the prenomen half and leaving the compound in
+        # name. That's an inconsistent state (compound duplicated across
+        # name + titulary). Realign to the kind="mixed" split pattern that
+        # the merge produces directly for 26.04 Apries `(Wah-ib-rê,
+        # Haa-ib-rê)` and that this PR's 06.04 override applies to
+        # `(Methusuphis, Mer-en-rê)`: name=just-the-king, titulary=full
+        # compound, kind=mixed. (Round-6 Gemini PR #139 finding.)
+        "name": "Chajan",
+        "egyptian_titulary": "Iannas, Se'user-en-rê",
+        "egyptian_titulary_kind": "mixed",
         "editorial_notes": "shared brace bracket with Bêôn (Bnón) (15.02) and Apachnas (Pachnan) (15.03) (scan-106-right)",
     },
 
@@ -162,12 +174,19 @@ OVERRIDES: dict[str, dict] = {
     # Apply the canonical split uniformly so downstream consumers see one
     # consistent name/titulary contract.
     #
-    # Discriminator (vs. compound mixed titulary kept inline): a SINGLE
-    # non-compound Greek-alias goes in titulary (`Onnos`, `Soris`, etc.);
-    # COMPOUND forms with internal commas (`Sôuphis, Mesochris` on 03.05;
-    # `Iannas, Se'user-en-rê` on 15.04; `Huni, Aches` on 03.06) stay in name
-    # because the comma-separated structure is itself part of Beckerath's
-    # naming convention for those rows.
+    # Discriminator: a SINGLE non-compound Greek-alias goes in titulary
+    # with kind=`nomen` (`Onnos`, `Soris`, etc.). COMPOUND comma-separated
+    # parentheticals get one of two treatments:
+    # - When the compound is two name-form variants of a single concept
+    #   (e.g. `Sôuphis, Mesochris` on 03.05 — two Greek transcriptions of
+    #   the same king; `Huni, Aches` on 03.06 — Egyptian + Greek nomen
+    #   variants), keep the compound INLINE in name with titulary=null.
+    # - When the compound is a Greek-alias + Egyptian-prenomen pair
+    #   (e.g. `(Iannas, Se'user-en-rê)` on 15.04, `(Methusuphis, Mer-en-rê)`
+    #   on 06.04, `(Wah-ib-rê, Haa-ib-rê)` on 26.04), split: name=just-
+    #   the-king, titulary=full compound, kind=`mixed` (the test
+    #   `test_compound_titulary_implies_mixed_kind` enforces this when
+    #   titulary contains a comma).
     "02.06": {
         "name": "Nefer-ka-rê",
         "egyptian_titulary": "Nephercheres",
@@ -397,16 +416,16 @@ OVERRIDE_LOG: dict[str, str] = {
         "on 03.04 / 03.05 / 03.06). [P2]"
     ),
     "15.04": (
-        "15.04 Chajan (Iannas, Se'user-en-rê): same brace bracket as 15.02. "
-        "Merge majority left Chajan with null dates; override fills in the "
-        "bracket dates. Note: name is `Chajan (Iannas, Se'user-en-rê)` with "
-        "the compound parenthetical kept inline (vs. the Greek-alias-strip "
-        "rule applied to single-alias rows below) — `Iannas, Se'user-en-rê` "
-        "is a comma-compound mixed-titulary form (Greek alias + Egyptian "
-        "throne-name) that belongs in name, not a single Greek alias to "
-        "extract. (Replaces a pre-OCR-redo override that erroneously set "
-        "Chajan's end to Apophis's dates -1549/-1546; the previous override "
-        "was based on a misreading of the brace span.) [P1]"
+        "15.04 Chajan: same brace bracket as 15.02 — fills in the bracket "
+        "dates the merge missed. ALSO realigns the compound titulary "
+        "extraction: the merge produced an inconsistent state with "
+        "name=`Chajan (Iannas, Se'user-en-rê)` AND titulary=`Se'user-en-rê` "
+        "(half-compound duplicated across name + titulary). Override sets "
+        "name=`Chajan`, titulary=`Iannas, Se'user-en-rê`, kind=`mixed` to "
+        "match the 26.04 Apries / 06.04 Nemti-em-saf I. mixed-split pattern. "
+        "(Replaces a pre-OCR-redo override that erroneously set Chajan's "
+        "end to Apophis's dates -1549/-1546; the previous override was "
+        "based on a misreading of the brace span.) [P1]"
     ),
     "31.04": (
         "31.04 Chababasch: scan-108-left prints `Chababasch "

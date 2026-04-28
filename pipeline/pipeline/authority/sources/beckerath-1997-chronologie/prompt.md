@@ -130,7 +130,7 @@ A queen co-regent printed with her own throne name in parentheses is a SEPARATE 
 2. **Chained `<king> und Kgin. <name> (<titulary>)`** on the same line as the king. The `und Kgin.` token + parenthetical titulary signals two distinct rows: the king first, the queen as next sequence.
 
 For both shapes:
-- `name` is `"Kgin. <queen-name>"` (preserve Beckerath's `Kgin.` honorific verbatim).
+- `name` is `"Kgin.<queen-name>"` (preserve Beckerath's `Kgin.` honorific verbatim — note: NO space between `Kgin.` and the queen's name, matching the printed PDF's typography on `Kgin.Hat-schepsut`, `Kgin.Nofret-ete`, `Kgin.Te-wosret`).
 - `egyptian_titulary` is the parenthetical content; `egyptian_titulary_kind` is whatever the `(<titulary>)` represents (use the same heuristic as for kings: `prenomen` if the form ends `-rê` or `-ka-rê` style throne-name suffix; `nomen` if Greek-alias-style; `mixed` otherwise).
 - BCE range INHERITS from the immediately-preceding king's row (the queen co-rules during her king's reign).
 - `notes_from_beckerath` is `"Mitregentin von <king-name>"` (German for "co-regent of <king>").
