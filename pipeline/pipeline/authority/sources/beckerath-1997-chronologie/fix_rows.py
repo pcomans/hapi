@@ -249,6 +249,17 @@ OVERRIDES: dict[str, dict] = {
         "egyptian_titulary_kind": "nomen",
     },
 
+    # ── 06.04 Nemti-em-saf I. titulary OCR drift (scan-106-left) ──────────
+    # PDF book p188 prints `Nemti-em-saf I. (Methusuphis, Mer-en-rê)`.
+    # The OCR pass transcribed `Mer-en-ptah` — almost certainly an LLM
+    # autocomplete-from-training-data substitution (Merenptah/Mer-en-ptah
+    # is a famous Dyn 19 king, more familiar than the Dyn 6 king's
+    # Mer-en-rê prenomen). Detected by egyptologist diff against the
+    # printed PDF post-merge, 2026-04-28.
+    "06.04": {
+        "egyptian_titulary": "Methusuphis, Mer-en-rê",
+    },
+
     # ── Schoschenq IIIa. existence-hedge parens (scan-107-right) ─────────
     # Beckerath prints `(Schoschenq IIIa.)` in parentheses — typographic
     # hedge for "this king's existence/identity is uncertain". The agents
@@ -429,6 +440,14 @@ OVERRIDE_LOG: dict[str, str] = {
     "06.06": "06.06 Nemti-em-saf II.: Greek-alias-in-parens split (Menthesuphis → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
     "21.04": "21.04 Amen-em-opet: Greek-alias-in-parens split (Amenophthis → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
     "21.05": "21.05 Osochor: Greek-alias-in-parens split (Osorkon → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "06.04": (
+        "06.04 Nemti-em-saf I.: scan-106-left prints `(Methusuphis, "
+        "Mer-en-rê)` but the OCR pass emitted `Mer-en-ptah` — an LLM "
+        "autocomplete substitution to the more familiar Dyn-19 king "
+        "Merenptah. Override restores the verbatim printed `Mer-en-rê`. "
+        "Detected by egyptologist diff against printed PDF, 2026-04-28. "
+        "[P1]"
+    ),
 
     "22.07": (
         "22.07 (Schoschenq IIIa.): scan-107-right prints the name in "
