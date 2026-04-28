@@ -1,33 +1,33 @@
 02.06 (Nefer-ka-rê (Nephercheres)):
-  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
 
 02.07 (Nefer-ka-sokar (Sesochris)):
-  egyptian_titulary: a="Sesochris" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Sesochris" | b=null | c=null  → chose null
 
 03.04 (Hor Cha-bai):
-  notes_from_beckerath: a=null | b=null | c="Ahu (Huni, Aches) als alternative Namen"  → chose null
-  egyptian_titulary: a=null | b=null | c="Hor Cha-bai"  → chose null
-  end_bce_low: a=-2589 | b=null | c=-2589  → chose -2589
   name: a="Hor Cha-bai" | b="Hor Cha-bai" | c="Sôuphis, Mesochris"  → chose "Hor Cha-bai"
+  egyptian_titulary_kind: a=null | b=null | c="horus_name"  → chose null
+  end_bce_low: a=-2589 | b=null | c=-2589  → chose -2589
+  notes_from_beckerath: a=null | b=null | c="Ahu (Huni, Aches) als alternative Namen"  → chose null
+  start_bce_high: a=-2663 | b=null | c=-2663  → chose -2663
+  egyptian_titulary: a=null | b=null | c="Hor Cha-bai"  → chose null
   start_bce_low: a=-2613 | b=null | c=-2613  → chose -2613
   end_bce_high: a=-2639 | b=null | c=-2639  → chose -2639
-  start_bce_high: a=-2663 | b=null | c=-2663  → chose -2663
-  egyptian_titulary_kind: a=null | b=null | c="horus_name"  → chose null
 
 03.06 (Ahu (Huni, Aches)):
-  egyptian_titulary: a=null | b="Huni, Aches"  → chose null
-  end_bce_low: a=-2589 | b=null  → chose -2589
   name: a="Ahu (Huni, Aches)" | b="Ahu"  → chose "Ahu (Huni, Aches)"
+  egyptian_titulary_kind: a=null | b="nomen"  → chose null
+  end_bce_low: a=-2589 | b=null  → chose -2589
+  start_bce_high: a=-2663 | b=null  → chose -2663
+  egyptian_titulary: a=null | b="Huni, Aches"  → chose null
   start_bce_low: a=-2613 | b=null  → chose -2613
   end_bce_high: a=-2639 | b=null  → chose -2639
-  start_bce_high: a=-2663 | b=null  → chose -2663
-  egyptian_titulary_kind: a=null | b="nomen"  → chose null
 
 04.01 (Senofru (Soris)):
-  egyptian_titulary: a="Soris" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Soris" | b=null | c=null  → chose null
 
 04.02 (Cheops):
   name: a="Cheops (Chufu)" | b="Cheops" | c="Cheops"  → chose "Cheops"
@@ -39,81 +39,81 @@
   name: a="Mykerinos (Men-kaw-rê)" | b="Mykerinos" | c="Mykerinos"  → chose "Mykerinos"
 
 04.07 (Schepses-kaf (Seberchéres)):
-  egyptian_titulary: a="Seberchéres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Seberchéres" | b=null | c=null  → chose null
 
 05.01 (User-kaf (Userchéres)):
-  egyptian_titulary: a="Userchéres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Userchéres" | b=null | c=null  → chose null
 
 05.02 (Sahu-rê (Sephres)):
-  egyptian_titulary: a="Sephres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Sephres" | b=null | c=null  → chose null
 
 05.03 (Nefer-ir-ka-rê Kakai (Nephercheres)):
-  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
 
 05.04 (Schepses-ka-rê (Sisires)):
-  egyptian_titulary: a="Sisires" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Sisires" | b=null | c=null  → chose null
 
 05.05 (Neferef-rê Isi (Cheres)):
-  egyptian_titulary: a="Cheres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Cheres" | b=null | c=null  → chose null
 
 05.06 (Ni-user-rê Ini (Rathores)):
-  egyptian_titulary: a="Rathores" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Rathores" | b=null | c=null  → chose null
 
 05.07 (Men-kaw-hor (Mencheres)):
-  egyptian_titulary: a="Mencheres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Mencheres" | b=null | c=null  → chose null
 
 05.08 (Djed-ka-re Isesi (Tancheres)):
-  egyptian_titulary: a="Tancheres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Tancheres" | b=null | c=null  → chose null
 
 05.09 (Unas (Onnos)):
-  egyptian_titulary: a="Onnos" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Onnos" | b=null | c=null  → chose null
 
 06.01 (Teti (Othoês)):
-  egyptian_titulary: a="Othoês" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Othoês" | b=null | c=null  → chose null
 
 06.03 (Pepi I.):
-  egyptian_titulary: a="Phios, Meri-rê" | b=null | c="Phios, Meri-rê"  → chose "Phios, Meri-rê"
   name: a="Pepi I." | b="Pepi I. (Phios, Meri-rê)" | c="Pepi I."  → chose "Pepi I."
   egyptian_titulary_kind: a="mixed" | b=null | c="mixed"  → chose "mixed"
+  egyptian_titulary: a="Phios, Meri-rê" | b=null | c="Phios, Meri-rê"  → chose "Phios, Meri-rê"
 
 06.04 (Nemti-em-saf I.):
-  egyptian_titulary: a="Methusuphis, Mer-en-ptah" | b=null | c="Methusuphis, Mer-en-ptah"  → chose "Methusuphis, Mer-en-ptah"
   name: a="Nemti-em-saf I." | b="Nemti-em-saf I. (Methusuphis, Mer-en-ptah)" | c="Nemti-em-saf I."  → chose "Nemti-em-saf I."
   egyptian_titulary_kind: a="mixed" | b=null | c="mixed"  → chose "mixed"
+  egyptian_titulary: a="Methusuphis, Mer-en-ptah" | b=null | c="Methusuphis, Mer-en-ptah"  → chose "Methusuphis, Mer-en-ptah"
 
 06.05 (Pepi II.):
-  egyptian_titulary: a="Phiops, Nefer-ka-rê" | b=null | c="Phiops, Nefer-ka-rê"  → chose "Phiops, Nefer-ka-rê"
   name: a="Pepi II." | b="Pepi II. (Phiops, Nefer-ka-rê)" | c="Pepi II."  → chose "Pepi II."
   egyptian_titulary_kind: a="mixed" | b=null | c="mixed"  → chose "mixed"
+  egyptian_titulary: a="Phiops, Nefer-ka-rê" | b=null | c="Phiops, Nefer-ka-rê"  → chose "Phiops, Nefer-ka-rê"
 
 06.06 (Nemti-em-saf II. (Menthesuphis)):
-  egyptian_titulary: a="Menthesuphis" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Menthesuphis" | b=null | c=null  → chose null
 
 06.07 (Kgin. Nitokris):
   name: a="Kgin. Nitokris (Neit-aqerti)" | b="Kgin. Nitokris" | c="Kgin. Nitokris"  → chose "Kgin. Nitokris"
 
 07.01 (7. Dynastie):
-  notes_from_beckerath: a="Manetho ?7 Tage" | b="Manetho 7 Tage" | c="Manetho 7 Tage"  → chose "Manetho 7 Tage"
   name: a="Manethos 7. Dynastie" | b="7. Dynastie" | c="7. Dynastie"  → chose "7. Dynastie"
+  notes_from_beckerath: a="Manetho ?7 Tage" | b="Manetho 7 Tage" | c="Manetho 7 Tage"  → chose "Manetho 7 Tage"
 
 09.01 (9./10. Dynastie):
   notes_from_beckerath: a="in Herakleopolis, 18 Könige" | b="18 Könige, in Herakleopolis" | c="in Herakleopolis, 18 Könige"  → chose "in Herakleopolis, 18 Könige"
 
 11.01 (Ment-hotpe I.):
-  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
   end_approximate: a=true | b=true | c=false  → chose true
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
 
 11.02 (An-jotef I.):
   notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
@@ -132,51 +132,51 @@
   notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="in Theben" | c="in Theben, später in ganz Ägypten"  → chose "in Theben, später in ganz Ägypten"
 
 11.07 (Ment-hotpe IV.):
-  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="und Gegenkönige" | c="und Gegenkönige"  → chose "und Gegenkönige"
   name: a="Ment-hotpe IV. (Neb-towi-rê) und Gegenkönige" | b="Ment-hotpe IV." | c="Ment-hotpe IV."  → chose "Ment-hotpe IV."
+  notes_from_beckerath: a="in Theben, später in ganz Ägypten" | b="und Gegenkönige" | c="und Gegenkönige"  → chose "und Gegenkönige"
 
 12.08 (Kgin. Nefru-sobek):
-  notes_from_beckerath: a=null | b="Skemiophris" | c=null  → chose null
-  egyptian_titulary: a="Skemiophris, Ka-sobek-rê" | b="Ka-sobek-rê" | c="Skemiophris, Ka-sobek-rê"  → chose "Skemiophris, Ka-sobek-rê"
   name: a="Kgin. Nefru-sobek (Skemiophris, Ka-sobek-rê)" | b="Kgin. Nefru-sobek" | c="Kgin. Nefru-sobek"  → chose "Kgin. Nefru-sobek"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a=null | b="Skemiophris" | c=null  → chose null
+  egyptian_titulary: a="Skemiophris, Ka-sobek-rê" | b="Ka-sobek-rê" | c="Skemiophris, Ka-sobek-rê"  → chose "Skemiophris, Ka-sobek-rê"
 
 13.01 (13. Dynastie):
   notes_from_beckerath: a="50 (?) Könige (siehe S. 123–24)" | b="50 (?) Könige" | c="50 (?) Könige (siehe S. 123–24)"  → chose "50 (?) Könige (siehe S. 123–24)"
 
 15.01 (Salitis):
-  start_bce_low: a=-1645 | b=null | c=null  → chose null
   start_bce_high: a=-1648 | b=null | c=null  → chose null
+  start_bce_low: a=-1645 | b=null | c=null  → chose null
   start_approximate: a=false | b=true | c=true  → chose true
 
 15.02 (Bêôn (Bnón)):
-  egyptian_titulary: a="Bnón" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Bnón" | b=null | c=null  → chose null
 
 15.03 (Apachnas (Pachnan)):
-  egyptian_titulary: a="Pachnan" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
-  start_approximate: a=false | b=false | c=true  → chose false
   end_approximate: a=false | b=false | c=true  → chose false
+  egyptian_titulary: a="Pachnan" | b=null | c=null  → chose null
+  start_approximate: a=false | b=false | c=true  → chose false
 
 15.04 (Chajan (Iannas, Se'user-en-rê)):
-  notes_from_beckerath: a=null | b="Iannas" | c=null  → chose null
-  egyptian_titulary: a="Iannas, Se'user-en-rê" | b="Se'user-en-rê" | c="Se'user-en-rê"  → chose "Se'user-en-rê"
   name: a="Chajan (Iannas, Se'user-en-rê)" | b="Chajan" | c="Chajan (Iannas)"  → chose "Chajan (Iannas, Se'user-en-rê)"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Iannas" | c=null  → chose null
+  egyptian_titulary: a="Iannas, Se'user-en-rê" | b="Se'user-en-rê" | c="Se'user-en-rê"  → chose "Se'user-en-rê"
 
 15.05 (Apophis):
   name: a="Apophis (A-qen-en-rê/A-user-rê)" | b="Apophis" | c="Apophis"  → chose "Apophis"
-  start_approximate: a=false | b=false | c=true  → chose false
   end_approximate: a=false | b=false | c=true  → chose false
+  start_approximate: a=false | b=false | c=true  → chose false
 
 15.06 (Chamudi):
-  start_approximate: a=false | b=false | c=true  → chose false
   end_approximate: a=false | b=false | c=true  → chose false
+  start_approximate: a=false | b=false | c=true  → chose false
 
 17.01 (17. Dynastie):
-  notes_from_beckerath: a="in Theben, 15 (?) Könige (siehe S. 124)" | b="15 (?) Könige, in Theben" | c="in Theben, 15 (?) Könige (siehe S. 124)"  → chose "in Theben, 15 (?) Könige (siehe S. 124)"
   end_approximate: a=false | b=false | c=true  → chose false
+  notes_from_beckerath: a="in Theben, 15 (?) Könige (siehe S. 124)" | b="15 (?) Könige, in Theben" | c="in Theben, 15 (?) Könige (siehe S. 124)"  → chose "in Theben, 15 (?) Könige (siehe S. 124)"
 
 18.01 (Amosis (Ah-mose) I.):
   notes_from_beckerath: a="3.(?) 1550" | b="Antritt 3.(?).1550" | c="3.(?) 1550"  → chose "3.(?) 1550"
@@ -199,8 +199,8 @@
   name: a="Ramses (Ra-mes-su, griech. Ramessês) I." | b="Ramses I." | c="Ramses (Ra-mes-su, griech. Ramessês) I."  → chose "Ramses (Ra-mes-su, griech. Ramessês) I."
 
 19.02 (Sethôs (Setoy) I.):
-  notes_from_beckerath: a="Antritt 6.(?) 1290" | b="Antritt 6.(?).1290" | c="Antritt 6.(?) 1290"  → chose "Antritt 6.(?) 1290"
   name: a="Sethôs (Setoy) I." | b="Sethôs I." | c="Sethôs (Setoy) I."  → chose "Sethôs (Setoy) I."
+  notes_from_beckerath: a="Antritt 6.(?) 1290" | b="Antritt 6.(?).1290" | c="Antritt 6.(?) 1290"  → chose "Antritt 6.(?) 1290"
   start_approximate: a=false | b=false | c=true  → chose false
 
 19.06 (Sethôs II.):
@@ -240,51 +240,51 @@
   notes_from_beckerath: a="Antritt 4.1103/1099" | b="Antritt 4.1103" | c="Antritt 4.1103/1099"  → chose "Antritt 4.1103/1099"
 
 21.01 (Smendes (Nes-bi-neb-dedet)):
-  egyptian_titulary: a="Nes-bi-neb-dedet" | b="Nes-bi-neb-dedet" | c=null  → chose "Nes-bi-neb-dedet"
   name: a="Smendes (Nes-bi-neb-dedet)" | b="Smendes" | c="Smendes (Nes-bi-neb-dedet)"  → chose "Smendes (Nes-bi-neb-dedet)"
   egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+  egyptian_titulary: a="Nes-bi-neb-dedet" | b="Nes-bi-neb-dedet" | c=null  → chose "Nes-bi-neb-dedet"
 
 21.02 (Amen-em-nisu (Nephercheres)):
-  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Nephercheres" | b=null | c=null  → chose null
 
 21.03 (Psusennes (Pe-sib-cha-en-nêwet) I.):
-  egyptian_titulary: a="Pe-sib-cha-en-nêwet" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Pe-sib-cha-en-nêwet" | b=null | c=null  → chose null
 
 21.04 (Amen-em-opet (Amenophthis)):
-  egyptian_titulary: a="Amenophthis" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Amenophthis" | b=null | c=null  → chose null
 
 21.05 (Osochor (Osorkon)):
-  egyptian_titulary: a="Osorkon" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Osorkon" | b=null | c=null  → chose null
 
 21.08 (Pi-nodjem I.):
-  notes_from_beckerath: a=null | b="Hohepriester, führt Königstitel" | c="Hohepriester, führt Königstitel"  → chose "Hohepriester, führt Königstitel"
-  egyptian_titulary: a=null | b="Cheper-cha-rê sotep-en-amun" | c=null  → chose null
   egyptian_titulary_kind: a=null | b="prenomen" | c=null  → chose null
   prenomen: a="Cheper-cha-rê sotep-en-amun" | b=null | c="Cheper-cha-rê sotep-en-amun"  → chose "Cheper-cha-rê sotep-en-amun"
+  notes_from_beckerath: a=null | b="Hohepriester, führt Königstitel" | c="Hohepriester, führt Königstitel"  → chose "Hohepriester, führt Königstitel"
+  egyptian_titulary: a=null | b="Cheper-cha-rê sotep-en-amun" | c=null  → chose null
 
 21.09 (Psusennes):
-  notes_from_beckerath: a=null | b="Hohepriester, führt Königstitel" | c="Hohepriester, führt Königstitel"  → chose "Hohepriester, führt Königstitel"
-  egyptian_titulary: a=null | b="Tit-cheper-rê sotep-en-amun" | c=null  → chose null
   name: a="Psusennes" | b="Psusennes" | c="Psusennes (Hohepriester)"  → chose "Psusennes"
   egyptian_titulary_kind: a=null | b="prenomen" | c=null  → chose null
   prenomen: a="Tit-cheper-rê sotep-en-amun" | b=null | c="Tit-cheper-rê sotep-en-amun"  → chose "Tit-cheper-rê sotep-en-amun"
+  notes_from_beckerath: a=null | b="Hohepriester, führt Königstitel" | c="Hohepriester, führt Königstitel"  → chose "Hohepriester, führt Königstitel"
+  egyptian_titulary: a=null | b="Tit-cheper-rê sotep-en-amun" | c=null  → chose null
 
 22.01 (Schoschenq I.):
   name: a="Schoschenq I. (Sesonchis)" | b="Schoschenq I." | c="Schoschenq I."  → chose "Schoschenq I."
 
 22.02 (Osorkon I. (Osorthon)):
-  egyptian_titulary: a="Osorthon" | b="Osorthon" | c=null  → chose "Osorthon"
   name: a="Osorkon I. (Osorthon)" | b="Osorkon I." | c="Osorkon I. (Osorthon)"  → chose "Osorkon I. (Osorthon)"
   egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+  egyptian_titulary: a="Osorthon" | b="Osorthon" | c=null  → chose "Osorthon"
 
 22.03 (Takelot I. (Takelothis)):
-  egyptian_titulary: a="Takelothis" | b="Takelothis" | c=null  → chose "Takelothis"
   name: a="Takelot I. (Takelothis)" | b="Takelot I." | c="Takelot I. (Takelothis)"  → chose "Takelot I. (Takelothis)"
   egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+  egyptian_titulary: a="Takelothis" | b="Takelothis" | c=null  → chose "Takelothis"
 
 22.05 (Osorkon II.):
   end_approximate: a=false | b=false | c=true  → chose false
@@ -305,9 +305,9 @@
   end_approximate: a=false | b=true | c=true  → chose true
 
 22.12 (Petubastis (Pe-di-bastet) I.):
-  egyptian_titulary: a="Pe-di-bastet" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
   end_approximate: a=false | b=true | c=true  → chose true
+  egyptian_titulary: a="Pe-di-bastet" | b=null | c=null  → chose null
 
 22.13 (Auput I.):
   end_approximate: a=false | b=true | c=true  → chose true
@@ -341,36 +341,36 @@
   notes_from_beckerath: a="in Sais" | b="um 740, in Sais" | c="in Sais"  → chose "in Sais"
 
 24.02 (Bokchoris):
-  notes_from_beckerath: a="in Sais" | b="Bak-en-rinef, in Sais" | c="in Sais"  → chose "in Sais"
-  egyptian_titulary: a="Bak-en-rinef, Wah-ka-rê" | b="Wah-ka-rê" | c="Bak-en-rinef, Wah-ka-rê"  → chose "Bak-en-rinef, Wah-ka-rê"
   name: a="Bokchoris (Bak-en-rinef, Wah-ka-rê)" | b="Bokchoris" | c="Bokchoris"  → chose "Bokchoris"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a="in Sais" | b="Bak-en-rinef, in Sais" | c="in Sais"  → chose "in Sais"
+  egyptian_titulary: a="Bak-en-rinef, Wah-ka-rê" | b="Wah-ka-rê" | c="Bak-en-rinef, Wah-ka-rê"  → chose "Bak-en-rinef, Wah-ka-rê"
 
 25.02 (Pije):
-  egyptian_titulary: a="User-maat-re/Senefer-rê" | b="User-maat-rê/Senefer-rê" | c="User-maat-re/Senefer-rê"  → chose "User-maat-re/Senefer-rê"
   name: a="Pije (User-maat-re/Senefer-rê)" | b="Pije" | c="Pije"  → chose "Pije"
   end_approximate: a=false | b=false | c=true  → chose false
+  egyptian_titulary: a="User-maat-re/Senefer-rê" | b="User-maat-rê/Senefer-rê" | c="User-maat-re/Senefer-rê"  → chose "User-maat-re/Senefer-rê"
 
 25.03 (Schabako):
-  notes_from_beckerath: a=null | b="Sabakon" | c=null  → chose null
-  egyptian_titulary: a="Sabakon, Nefer-ka-rê" | b="Nefer-ka-rê" | c="Sabakon, Nefer-ka-rê"  → chose "Sabakon, Nefer-ka-rê"
   name: a="Schabako (Sabakon, Nefer-ka-rê)" | b="Schabako" | c="Schabako"  → chose "Schabako"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
-  start_approximate: a=false | b=false | c=true  → chose false
   end_approximate: a=false | b=false | c=true  → chose false
+  notes_from_beckerath: a=null | b="Sabakon" | c=null  → chose null
+  egyptian_titulary: a="Sabakon, Nefer-ka-rê" | b="Nefer-ka-rê" | c="Sabakon, Nefer-ka-rê"  → chose "Sabakon, Nefer-ka-rê"
+  start_approximate: a=false | b=false | c=true  → chose false
 
 25.04 (Schebitko):
-  notes_from_beckerath: a=null | b="Sebichós" | c=null  → chose null
-  egyptian_titulary: a="Sebichós, Djed-kaw-rê" | b="Djed-kaw-rê" | c="Sebichós, Djed-kaw-rê"  → chose "Sebichós, Djed-kaw-rê"
   name: a="Schebitko (Sebichós, Djed-kaw-rê)" | b="Schebitko" | c="Schebitko"  → chose "Schebitko"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a=null | b="Sebichós" | c=null  → chose null
+  egyptian_titulary: a="Sebichós, Djed-kaw-rê" | b="Djed-kaw-rê" | c="Sebichós, Djed-kaw-rê"  → chose "Sebichós, Djed-kaw-rê"
   start_approximate: a=false | b=false | c=true  → chose false
 
 25.05 (Taharqo):
-  notes_from_beckerath: a=null | b="Tarakos" | c=null  → chose null
-  egyptian_titulary: a="Tarakos, Chu-nefertem-rê" | b="Chu-nefertem-rê" | c="Tarakos, Chu-nefertem-rê"  → chose "Tarakos, Chu-nefertem-rê"
   name: a="Taharqo (Tarakos, Chu-nefertem-rê)" | b="Taharqo" | c="Taharqo"  → chose "Taharqo"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
+  notes_from_beckerath: a=null | b="Tarakos" | c=null  → chose null
+  egyptian_titulary: a="Tarakos, Chu-nefertem-rê" | b="Chu-nefertem-rê" | c="Tarakos, Chu-nefertem-rê"  → chose "Tarakos, Chu-nefertem-rê"
 
 25.06 (Tanot-amun):
   name: a="Tanot-amun (Bi-ka-rê)" | b="Tanot-amun" | c="Tanot-amun"  → chose "Tanot-amun"
@@ -383,58 +383,58 @@
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="mixed"  → chose "mixed"
 
 26.05 (Amosis II. (Amasis)):
-  egyptian_titulary: a="Amasis, Chnem-ib-rê" | b="Chnem-ib-rê" | c="Chnem-ib-rê"  → chose "Chnem-ib-rê"
   name: a="Amosis II. (Amasis, Chnem-ib-rê)" | b="Amosis II. (Amasis)" | c="Amosis II. (Amasis)"  → chose "Amosis II. (Amasis)"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  egyptian_titulary: a="Amasis, Chnem-ib-rê" | b="Chnem-ib-rê" | c="Chnem-ib-rê"  → chose "Chnem-ib-rê"
 
 27.05 (Xerxes II.):
   start_bce_low: a=-423 | b=-424 | c=-423  → chose -423
   end_bce_high: a=-424 | b=-423 | c=-424  → chose -424
 
 28.01 (Amyrtaios (Amen-ir-di-su)):
-  egyptian_titulary: a="Amen-ir-di-su" | b="Amen-ir-di-su" | c=null  → chose "Amen-ir-di-su"
   name: a="Amyrtaios (Amen-ir-di-su)" | b="Amyrtaios" | c="Amyrtaios (Amen-ir-di-su)"  → chose "Amyrtaios (Amen-ir-di-su)"
   egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+  egyptian_titulary: a="Amen-ir-di-su" | b="Amen-ir-di-su" | c=null  → chose "Amen-ir-di-su"
 
 29.02 (Achoris (Hagor)):
-  egyptian_titulary: a="Hagor, Chnem-maat-rê" | b="Chnem-maat-rê" | c="Chnem-maat-rê"  → chose "Chnem-maat-rê"
   name: a="Achoris (Hagor, Chnem-maat-rê)" | b="Achoris (Hagor)" | c="Achoris (Hagor)"  → chose "Achoris (Hagor)"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  egyptian_titulary: a="Hagor, Chnem-maat-rê" | b="Chnem-maat-rê" | c="Chnem-maat-rê"  → chose "Chnem-maat-rê"
 
 29.03 (Psamuthis (Pe-sche[re-n-]mut, User-rê)):
+  name: a="Psamuthis (Pe-sche[re-n-]mut, User-rê)" | b="Psamuthis" | c="Psamuthis (Pe-sche[re-n-]mut)"  → chose "Psamuthis (Pe-sche[re-n-]mut, User-rê)"
+  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
   notes_from_beckerath: a="Gegenkönig" | b="Gegenkönig, Pe-sche[re-n-]mut" | c="Gegenkönig"  → chose "Gegenkönig"
   egyptian_titulary: a="Pe-sche[re-n-]mut, User-rê" | b="User-rê" | c="User-rê"  → chose "User-rê"
-  name: a="Psamuthis (Pe-sche[re-n-]mut, User-rê)" | b="Psamuthis" | c="Psamuthis (Pe-sche[re-n-]mut)"  → chose "Psamuthis (Pe-sche[re-n-]mut, User-rê)"
   start_bce_low: a=-392 | b=-393 | c=-392  → chose -392
   end_bce_high: a=-393 | b=-392 | c=-393  → chose -393
-  egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
 
 30.01 (Nektanebês (Necht-nebef, Cheper-ka-rê)):
-  notes_from_beckerath: a=null | b="Necht-nebef" | c=null  → chose null
-  egyptian_titulary: a="Necht-nebef, Cheper-ka-rê" | b="Cheper-ka-rê" | c="Cheper-ka-rê"  → chose "Cheper-ka-rê"
   name: a="Nektanebês (Necht-nebef, Cheper-ka-rê)" | b="Nektanebês" | c="Nektanebês (Necht-nebef)"  → chose "Nektanebês (Necht-nebef, Cheper-ka-rê)"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Necht-nebef" | c=null  → chose null
+  egyptian_titulary: a="Necht-nebef, Cheper-ka-rê" | b="Cheper-ka-rê" | c="Cheper-ka-rê"  → chose "Cheper-ka-rê"
 
 30.02 (Teôs (Djed-hor, Iri-maat-en-rê)):
-  notes_from_beckerath: a=null | b="Djed-hor" | c=null  → chose null
-  egyptian_titulary: a="Djed-hor, Iri-maat-en-rê" | b="Iri-maat-en-rê" | c="Iri-maat-en-rê"  → chose "Iri-maat-en-rê"
   name: a="Teôs (Djed-hor, Iri-maat-en-rê)" | b="Teôs" | c="Teôs (Djed-hor)"  → chose "Teôs (Djed-hor, Iri-maat-en-rê)"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Djed-hor" | c=null  → chose null
+  egyptian_titulary: a="Djed-hor, Iri-maat-en-rê" | b="Iri-maat-en-rê" | c="Iri-maat-en-rê"  → chose "Iri-maat-en-rê"
 
 30.03 (Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)):
-  notes_from_beckerath: a=null | b="Necht-har-ehbojet" | c=null  → chose null
-  egyptian_titulary: a="Necht-har-ehbojet, Senedjem-ib-rê" | b="Senedjem-ib-rê" | c="Senedjem-ib-rê"  → chose "Senedjem-ib-rê"
   name: a="Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)" | b="Nektanebôs" | c="Nektanebôs (Necht-har-ehbojet)"  → chose "Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)"
   egyptian_titulary_kind: a="mixed" | b="prenomen" | c="prenomen"  → chose "prenomen"
+  notes_from_beckerath: a=null | b="Necht-har-ehbojet" | c=null  → chose null
+  egyptian_titulary: a="Necht-har-ehbojet, Senedjem-ib-rê" | b="Senedjem-ib-rê" | c="Senedjem-ib-rê"  → chose "Senedjem-ib-rê"
 
 31.02 (Arses (Aroges)):
-  egyptian_titulary: a="Aroges" | b=null | c=null  → chose null
   egyptian_titulary_kind: a="nomen" | b=null | c=null  → chose null
+  egyptian_titulary: a="Aroges" | b=null | c=null  → chose null
 
 31.04 (Chababasch (Senen-sotep-en-ptah)):
-  egyptian_titulary: a="Senen-sotep-en-ptah" | b="Senen-sotep-en-ptah" | c=null  → chose "Senen-sotep-en-ptah"
   name: a="Chababasch (Senen-sotep-en-ptah)" | b="Chababasch" | c="Chababasch (Senen-sotep-en-ptah)"  → chose "Chababasch (Senen-sotep-en-ptah)"
   egyptian_titulary_kind: a="nomen" | b="nomen" | c=null  → chose "nomen"
+  egyptian_titulary: a="Senen-sotep-en-ptah" | b="Senen-sotep-en-ptah" | c=null  → chose "Senen-sotep-en-ptah"
 
 ## LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================

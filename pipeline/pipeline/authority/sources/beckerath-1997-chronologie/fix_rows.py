@@ -49,14 +49,20 @@ OVERRIDES: dict[str, dict] = {
     # date through). The remaining override is the cross-row editorial note
     # tying the three rows together for downstream readers; the field
     # contract reads canonical `name` plus `beckerath_id` in parentheses.
+    # Cross-row references in `editorial_notes` use the canonical `name`
+    # field plus `beckerath_id` in parentheses, so downstream consumers
+    # can grep-resolve sister rows without name-form fuzziness. For rows
+    # whose canonical name is itself compound (e.g. 03.05 `Sôuphis,
+    # Mesochris`, 03.06 `Ahu (Huni, Aches)`), the FULL compound goes in
+    # the cross-reference text — not the bare leading form.
     "03.04": {
-        "editorial_notes": "shared bracket range with Sôuphis (03.05) and Ahu (03.06) (scan-105-right)",
+        "editorial_notes": "shared bracket range with Sôuphis, Mesochris (03.05) and Ahu (Huni, Aches) (03.06) (scan-105-right)",
     },
     "03.05": {
-        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Ahu (03.06) (scan-105-right)",
+        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Ahu (Huni, Aches) (03.06) (scan-105-right)",
     },
     "03.06": {
-        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Sôuphis (03.05) (scan-105-right)",
+        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Sôuphis, Mesochris (03.05) (scan-105-right)",
     },
 
     # ── Dyn 15 Hyksos brace bracket (scan-106-right) ──────────────────────
@@ -75,10 +81,10 @@ OVERRIDES: dict[str, dict] = {
         "end_bce_low": -1587,
         "start_approximate": False,
         "end_approximate": False,
-        "editorial_notes": "shared brace bracket with Apachnas (15.03) and Chajan (15.04) (scan-106-right)",
+        "editorial_notes": "shared brace bracket with Apachnas (Pachnan) (15.03) and Chajan (Iannas, Se'user-en-rê) (15.04) (scan-106-right)",
     },
     "15.03": {
-        "editorial_notes": "shared brace bracket with Bêôn (15.02) and Chajan (15.04) (scan-106-right)",
+        "editorial_notes": "shared brace bracket with Bêôn (Bnón) (15.02) and Chajan (Iannas, Se'user-en-rê) (15.04) (scan-106-right)",
     },
     "15.04": {
         "start_bce_high": -1648,
@@ -87,7 +93,7 @@ OVERRIDES: dict[str, dict] = {
         "end_bce_low": -1587,
         "start_approximate": False,
         "end_approximate": False,
-        "editorial_notes": "shared brace bracket with Bêôn (15.02) and Apachnas (15.03) (scan-106-right)",
+        "editorial_notes": "shared brace bracket with Bêôn (Bnón) (15.02) and Apachnas (Pachnan) (15.03) (scan-106-right)",
     },
 
     # ── 31.04 Chabbasch (scan-108-left): name + titulary kind ─────────────
