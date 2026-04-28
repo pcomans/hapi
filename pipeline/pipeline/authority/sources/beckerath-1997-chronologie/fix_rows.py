@@ -564,6 +564,20 @@ def main() -> None:
     for bid in OVERRIDES:
         if bid not in found_ids:
             raise KeyError(f"No row with beckerath_id {bid!r} in {RECONCILED}")
+    # Validate OVERRIDE_LOG covers every OVERRIDES key before the mutation
+    # loop runs the lookup. This catches the "added an OVERRIDES entry,
+    # forgot the matching OVERRIDE_LOG rationale" mistake at startup with
+    # a clear error, rather than letting OVERRIDE_LOG[bid] raise KeyError
+    # mid-mutation on an arbitrary row. Per constitutional rule 2 (loud
+    # failures), the validation raises rather than silently fallback to
+    # a "rationale missing" placeholder.
+    missing_log = sorted(set(OVERRIDES) - set(OVERRIDE_LOG))
+    if missing_log:
+        raise KeyError(
+            f"OVERRIDE_LOG is missing rationale entries for: {missing_log}. "
+            "Every key in OVERRIDES must have a matching OVERRIDE_LOG entry "
+            "so the audit trail in merge-disagreements.txt stays complete."
+        )
 
     applied: list[str] = []
     actually_mutated_count = 0
