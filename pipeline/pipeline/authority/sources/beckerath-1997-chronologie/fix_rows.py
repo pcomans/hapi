@@ -483,24 +483,25 @@ OVERRIDE_LOG: dict[str, str] = {
         "Editorial_notes flags the early-vs-late distinction so downstream "
         "alias-matching can split on `, später ` for lookup. [P2]"
     ),
-    "06.07": (
-        "06.07 Kgin.Nitokris: scan-106-left prints `Kgin.Nitokris` with no "
-        "space between the abbreviation and the queen's name. Standardise "
-        "to no-space across all five Kgin. rows (06.07 / 12.08 / 18.05 / "
-        "18.11 / 19.08) to match the printed convention. [P2]"
-    ),
-    "12.08": (
-        "12.08 Kgin.Nefru-sobek: scan-106-right prints `Kgin.Nefru-sobek`. "
-        "See _KGIN_NOTE on 06.07. [P2]"
-    ),
-    "18.11": (
-        "18.11 Kgin.Nofret-ete: scan-107-left prints `Kgin.Nofret-ete`. "
-        "See _KGIN_NOTE on 06.07. [P2]"
-    ),
+    "06.07": "06.07 Kgin.Nitokris: scan-106-left prints `Kgin.Nitokris`. See _KGIN_NOTE. [P2]",
+    "12.08": "12.08 Kgin.Nefru-sobek: scan-106-right prints `Kgin.Nefru-sobek`. See _KGIN_NOTE. [P2]",
+    "18.11": "18.11 Kgin.Nofret-ete: scan-107-left prints `Kgin.Nofret-ete`. See _KGIN_NOTE. [P2]",
 }
 
 # Shared rationale strings — collapsed via constants so the OVERRIDE_LOG
 # entries above stay scannable. (Audit log writer expands them inline.)
+_KGIN_NOTE = (
+    "Beckerath prints the queen-honorific abbreviation `Kgin.` with NO "
+    "space before the queen's name (verified `Kgin.Hat-schepsut` on "
+    "scan-106-right, `Kgin.Nofret-ete` and `Kgin.Te-wosret` on "
+    "scan-107-left, `Kgin.Nitokris` on scan-106-left, `Kgin.Nefru-sobek` "
+    "on scan-106-right). The agents extracted some rows with a space and "
+    "others without; this override standardises to no-space across all "
+    "five queen rows (06.07 / 12.08 / 18.05 / 18.11 / 19.08) so downstream "
+    "string matching is uniform. (18.05 already extracts as "
+    "`Kgin.Hat-schepsut`; 19.08 strip is folded into the existing "
+    "Te-wosret name override above.)"
+)
 _GREEK_ALIAS_NOTE = (
     "Beckerath consistently uses `<EgyptianName> (<single Greek alias>)` "
     "for these kings. Canonical extraction (matching the Schoschenq I. "
@@ -569,9 +570,10 @@ def main() -> None:
         # silently shrinks across runs and loses provenance. Expand the
         # `See _GREEK_ALIAS_NOTE.` shorthand inline so the audit log is
         # self-contained for readers who only have merge-disagreements.txt.
-        applied.append(
-            OVERRIDE_LOG[bid].replace("See _GREEK_ALIAS_NOTE.", _GREEK_ALIAS_NOTE)
-        )
+        rationale = OVERRIDE_LOG[bid]
+        rationale = rationale.replace("See _GREEK_ALIAS_NOTE.", _GREEK_ALIAS_NOTE)
+        rationale = rationale.replace("See _KGIN_NOTE.", _KGIN_NOTE)
+        applied.append(rationale)
 
     # Systematic spelling fix runs after OVERRIDES so individual overrides
     # (e.g. on a Schoschenq row's prenomen) win first, then any remaining
