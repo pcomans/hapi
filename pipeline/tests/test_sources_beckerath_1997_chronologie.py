@@ -351,11 +351,15 @@ def test_dyn3_brace_bracket_shared_range() -> None:
     printed bracket. The cross-row scan-context note lives in
     `editorial_notes` (English commentary), not in `notes_from_beckerath`.
 
-    NB: post-PR-#138 re-extraction parses `Sôuphis, Mesochris` as
-    name=`Sôuphis` + egyptian_titulary=`Mesochris` (Greek-form nomen)
-    and similarly `Ahu (Huni, Aches)` as name=`Ahu` +
-    egyptian_titulary=`Huni, Aches`. Cross-references in editorial_notes
-    use the canonical `name` field per the README field contract.
+    NB: 03.05 row keeps the compound `Sôuphis, Mesochris` inline as
+    `name` (per the COMPOUND-stays-in-name discriminator in fix_rows.py)
+    — these are not Greek-alias-strip candidates because the comma-
+    separated form is itself part of Beckerath's printed convention for
+    these rows. Same applies to 03.06 `Ahu (Huni, Aches)`. Cross-
+    references in editorial_notes use the FULL canonical `name` field
+    plus the `beckerath_id` in parens (per the field contract in
+    fix_rows.py) so downstream consumers can grep-resolve sister rows
+    without name-form fuzziness.
     """
     cha_bai = _row("03.04")
     souphis = _row("03.05")
@@ -369,14 +373,15 @@ def test_dyn3_brace_bracket_shared_range() -> None:
         assert r["editorial_notes"] is not None
         assert "shared bracket range" in r["editorial_notes"]
         assert "scan-105" in r["editorial_notes"]
-    # Cross-row references use the canonical `name` field (which post-PR-#138
-    # is the king's bare name, with Greek-form variants in egyptian_titulary).
-    assert "Sôuphis (03.05)" in cha_bai["editorial_notes"]
-    assert "Ahu (03.06)" in cha_bai["editorial_notes"]
+    # Cross-row references use the canonical `name` field plus
+    # beckerath_id, including the FULL compound form when the canonical
+    # name is itself compound (Sôuphis, Mesochris; Ahu (Huni, Aches)).
+    assert "Sôuphis, Mesochris (03.05)" in cha_bai["editorial_notes"]
+    assert "Ahu (Huni, Aches) (03.06)" in cha_bai["editorial_notes"]
     assert "Hor Cha-bai (03.04)" in souphis["editorial_notes"]
-    assert "Ahu (03.06)" in souphis["editorial_notes"]
+    assert "Ahu (Huni, Aches) (03.06)" in souphis["editorial_notes"]
     assert "Hor Cha-bai (03.04)" in ahu["editorial_notes"]
-    assert "Sôuphis (03.05)" in ahu["editorial_notes"]
+    assert "Sôuphis, Mesochris (03.05)" in ahu["editorial_notes"]
 
 
 def test_te_wosret_coregent_row_extracted() -> None:
