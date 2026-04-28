@@ -366,14 +366,22 @@ def main() -> None:
             suffix=".tmp",
             delete=False,
         ) as tmp:
-            tmp.write(annotated)
+            # Assign tmp_path BEFORE the write so the finally cleanup
+            # catches a write-time failure too (the file exists from the
+            # moment NamedTemporaryFile returns, regardless of whether
+            # tmp.write() succeeds).
             tmp_path = Path(tmp.name)
+            tmp.write(annotated)
         os.replace(tmp_path, output_path)
         tmp_path = None  # successful rename — destination now holds it
     finally:
         if tmp_path is not None and tmp_path.exists():
             tmp_path.unlink()
-    print(f"wrote {output_path} ({len(annotated)} bytes)")
+    # Report byte size (UTF-8 encoded) rather than character count — the
+    # German umlauts and en-dash separators are multi-byte, so len(annotated)
+    # under-reports the on-disk size.
+    byte_size = len(annotated.encode("utf-8"))
+    print(f"wrote {output_path} ({byte_size} bytes)")
 
 
 if __name__ == "__main__":
