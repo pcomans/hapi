@@ -295,9 +295,14 @@ def test_dyn16_is_hyksos_vassals_not_a_subline_of_15() -> None:
 
 
 def test_period_assignment_for_intermediate_periods() -> None:
-    """Spot-check that the egyptologist override on Dyn 24 (period was wrongly
-    `Spätzeit` per agent vote, corrected to `III. Zwischenzeit`) is locked.
-    Dyn 26 onward IS Spätzeit.
+    """Spot-check Dyn 24 sits under III. Zwischenzeit (NOT Spätzeit) and
+    Dyn 26 onward IS Spätzeit. Pre-PR-#138 this required a fix_rows.py
+    override (agents looked past `### III. ZWISCHENZEIT` to the closer
+    `### SPÄTZEIT` and mis-attributed Dyn 24/25 to Spätzeit). PR #138's
+    post-processor emits `<!-- period: III. Zwischenzeit -->` directly
+    after the Dyn 24/25 dynasty headings (derived from the canonical
+    DYNASTY_PERIOD mapping), so agents now extract the correct period
+    unaided — override removed.
     """
     assert _row("24.01")["period"] == "III. Zwischenzeit"
     assert _row("24.02")["period"] == "III. Zwischenzeit"
@@ -319,13 +324,19 @@ def test_xerxes_i_endpoints_not_inverted() -> None:
 
 def test_dyn3_brace_bracket_shared_range() -> None:
     """Beckerath's Dyn 3 has a brace bracket spanning Hor Cha-bai /
-    Sôuphis,Mesochris / Ahu (Huni,Aches), all sharing the range
-    `2663/2613-2639/2589`. The egyptologist override corrected this from
-    null (which the majority vote produced because 2 of 3 agents missed
-    the bracket) to the shared values. The cross-row scan-context note
-    lives in `editorial_notes` (English commentary), not in
-    `notes_from_beckerath` (which is reserved for Beckerath's verbatim
-    cell text).
+    Sôuphis (with Greek-form `Mesochris` as nomen) / Ahu (with Greek
+    forms `Huni, Aches` as mixed titulary), all sharing the range
+    `2663/2613-2639/2589`. Pre-PR-#138, the majority vote produced
+    null dates on 03.05 / 03.06 because 2 of 3 agents missed the
+    bracket; the override propagates the dates from 03.04 per Beckerath's
+    printed bracket. The cross-row scan-context note lives in
+    `editorial_notes` (English commentary), not in `notes_from_beckerath`.
+
+    NB: post-PR-#138 re-extraction parses `Sôuphis, Mesochris` as
+    name=`Sôuphis` + egyptian_titulary=`Mesochris` (Greek-form nomen)
+    and similarly `Ahu (Huni, Aches)` as name=`Ahu` +
+    egyptian_titulary=`Huni, Aches`. Cross-references in editorial_notes
+    use the canonical `name` field per the README field contract.
     """
     cha_bai = _row("03.04")
     souphis = _row("03.05")
@@ -338,33 +349,42 @@ def test_dyn3_brace_bracket_shared_range() -> None:
         assert r["notes_from_beckerath"] is None
         assert r["editorial_notes"] is not None
         assert "shared bracket range" in r["editorial_notes"]
-        assert "(scan-105)" in r["editorial_notes"]
-    # Cross-row references in editorial_notes must use the canonical
-    # `name` field plus `(beckerath_id)` (per README field contract).
-    assert "Sôuphis, Mesochris (03.05)" in cha_bai["editorial_notes"]
-    assert "Ahu (Huni, Aches) (03.06)" in cha_bai["editorial_notes"]
+        assert "scan-105" in r["editorial_notes"]
+    # Cross-row references use the canonical `name` field (which post-PR-#138
+    # is the king's bare name, with Greek-form variants in egyptian_titulary).
+    assert "Sôuphis (03.05)" in cha_bai["editorial_notes"]
+    assert "Ahu (03.06)" in cha_bai["editorial_notes"]
     assert "Hor Cha-bai (03.04)" in souphis["editorial_notes"]
-    assert "Ahu (Huni, Aches) (03.06)" in souphis["editorial_notes"]
+    assert "Ahu (03.06)" in souphis["editorial_notes"]
     assert "Hor Cha-bai (03.04)" in ahu["editorial_notes"]
-    assert "Sôuphis, Mesochris (03.05)" in ahu["editorial_notes"]
+    assert "Sôuphis (03.05)" in ahu["editorial_notes"]
 
 
-def test_te_wosret_editorial_coregent_note_separated() -> None:
-    """19.08 Kgin. Te-wosret: Beckerath's Anhang A cell for her is empty
-    (she shares Si-ptah's date range with no per-cell annotation).
-    Agent A had injected the English cross-reference "co-regent with
-    Si-ptah" into `notes_from_beckerath`; that prose is editorial, not
-    Beckerath's text. fix_rows.py moved it to `editorial_notes` and
-    nulled `notes_from_beckerath`. The co-regency itself is also encoded
-    on 19.07 Si-ptah via Beckerath's actual "und Kgin. Te-wosret
-    (Thuoris)" annotation.
+def test_te_wosret_coregent_row_extracted() -> None:
+    """19.08 Kgin. Te-wosret: Beckerath chains her on Si-ptah's row as
+    `Si-ptah und Kgin. Te-wosret (Thuoris)`. The Co-regent queen prompt
+    rule (PR following PR #138) extracts her as a separate row preserving
+    Beckerath's `Kgin.` honorific and the Greek-form `Thuoris` as
+    egyptian_titulary. Per the rule, her notes_from_beckerath records
+    the co-regency in German verbatim form (`Mitregentin von Si-ptah`),
+    NOT as English editorial prose. Pre-PR-#138 baseline used a different
+    `notes=null + editorial_notes="co-regent..."` shape derived from
+    incomplete agent extraction; the new shape is more faithful to
+    Beckerath's printed text.
     """
     r = _row("19.08")
-    assert r["name"] == "Te-wosret"
-    assert r["notes_from_beckerath"] is None
-    assert r["editorial_notes"] == "co-regent with Si-ptah (19.07)"
+    assert r["name"] == "Kgin. Te-wosret"
+    assert r["egyptian_titulary"] == "Thuoris"
+    assert r["egyptian_titulary_kind"] == "nomen"
+    # German verbatim co-regency annotation (the Co-regent queen rule
+    # mandates "Mitregentin von <king>"), NOT English editorial prose.
+    assert r["notes_from_beckerath"] == "Mitregentin von Si-ptah"
+    # Te-wosret inherits Si-ptah's BCE range (Co-regent queen rule).
     si_ptah = _row("19.07")
-    assert "Te-wosret" in (si_ptah["notes_from_beckerath"] or "")
+    assert r["start_bce_high"] == si_ptah["start_bce_high"]
+    assert r["start_bce_low"] == si_ptah["start_bce_low"]
+    assert r["end_bce_high"] == si_ptah["end_bce_high"]
+    assert r["end_bce_low"] == si_ptah["end_bce_low"]
 
 
 def test_editorial_notes_field_present_on_every_row() -> None:
@@ -417,10 +437,15 @@ def test_supplement_prenomens_merged_for_dyn19_23() -> None:
 # re-runs merge.py and forgets fix_rows.py, these tests fail loudly.
 
 def test_dyn4_etwa_propagation_locked() -> None:
-    """`fix_rows.py` corrected start_approximate / end_approximate to True
-    on every Dyn-4 row (04.02 through 04.08) because Beckerath's heading
-    `4. Dynastie (etwa 2639/2589–2504/2454)` propagates to all rows.
-    Agent C's 'false' votes had tipped the merge majority on 6 of these.
+    """Dyn-4 rows 04.02 through 04.08 must all have start_approximate=true
+    and end_approximate=true because Beckerath's heading
+    `4. Dynastie (etwa 2639/2589–2504/2454)` propagates `etwa` to every
+    row. Pre-PR-#138 this required fix_rows.py overrides on all 7 rows
+    (agents lost the `etwa` qualifier when crossing the book p187 → p188
+    page break). PR #138's post-processor emits a
+    `<!-- dynasty-context: 4. Dynastie (etwa 2639/2589–2504/2454) -->`
+    refresh comment after the page break, so agents now propagate `etwa`
+    correctly unaided — overrides removed.
     """
     for kid in ("04.02", "04.03", "04.04", "04.05", "04.06", "04.07", "04.08"):
         r = _row(kid)

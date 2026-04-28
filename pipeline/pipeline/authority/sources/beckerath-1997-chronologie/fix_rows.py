@@ -40,63 +40,39 @@ OVERRIDES: dict[str, dict] = {
     # README field contract) so a downstream consumer can grep-resolve
     # without name-form fuzziness.
     "03.04": {
-        "notes_from_beckerath": None,
-        "editorial_notes": "shared bracket range with Sôuphis, Mesochris (03.05) and Ahu (Huni, Aches) (03.06) (scan-105)",
+        "editorial_notes": "shared bracket range with Sôuphis (03.05) and Ahu (03.06) (scan-105 right-half)",
     },
     "03.05": {
-        "notes_from_beckerath": None,
-        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Ahu (Huni, Aches) (03.06) (scan-105)",
+        # Agents emit no dates because the bracket-propagation cue is a
+        # visual `}` glyph the OCR doesn't preserve. Inherit from 03.04 per
+        # the brace bracket Beckerath prints over the three rows.
+        "start_bce_high": -2663,
+        "start_bce_low": -2613,
+        "end_bce_high": -2639,
+        "end_bce_low": -2589,
+        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Ahu (03.06) (scan-105 right-half)",
     },
     "03.06": {
-        "notes_from_beckerath": None,
-        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Sôuphis, Mesochris (03.05) (scan-105)",
+        "start_bce_high": -2663,
+        "start_bce_low": -2613,
+        "end_bce_high": -2639,
+        "end_bce_low": -2589,
+        "editorial_notes": "shared bracket range with Hor Cha-bai (03.04) and Sôuphis (03.05) (scan-105 right-half)",
     },
 
-    # ── Dyn 4: approximate flags (scan-105 right-half) ────────────────────
-    # Beckerath's heading reads "4. Dynastie (etwa 2639/2589–2504/2454)".
-    # The "etwa" propagates to all individual rows per the extraction rules.
-    # Agent C voted false for both flags on all Dyn 4 rows; the 2v1 majority
-    # correctly set Senofru (04.01) true/true, but 04.02 through 04.08 were
-    # tipped false by Agent C on end_approximate, and false on start_approximate
-    # for 04.03–04.08 (Agent B voted true but C and the merge logic diverged).
-    # All Dyn 4 rows must have start_approximate=true, end_approximate=true.
-    "04.02": {
-        "start_approximate": True,
-        "end_approximate": True,
-    },
-    "04.03": {
-        "start_approximate": True,
-        "end_approximate": True,
-    },
-    "04.04": {
-        "start_approximate": True,
-        "end_approximate": True,
-    },
-    "04.05": {
-        "start_approximate": True,
-        "end_approximate": True,
-    },
-    "04.06": {
-        "start_approximate": True,
-        "end_approximate": True,
-    },
-    "04.07": {
-        "start_approximate": True,
-        "end_approximate": True,
-    },
-    "04.08": {
-        "start_approximate": True,
-        "end_approximate": True,
-    },
+    # ── Dyn 4 etwa propagation (rows 04.02–04.08): NOW REDUNDANT after
+    #    PR #138 (postprocess.py emits <!-- dynasty-context: ... -->
+    #    refresh after each page break inside a dynasty's span). The
+    #    Beckerath re-extraction against the post-processed chunk now
+    #    propagates `etwa` correctly across the book p187/p188 break;
+    #    all 7 overrides removed.
 
-    # ── Dyn 5 and 6: approximate flags (scan-106 left-half) ───────────────
+    # ── Dyn 5 and 6: approximate flags — confirmation entry only.
     # Beckerath's Dyn 5 heading reads "5. Dynastie (etwa 2504/2454–2347/2297)";
-    # Dyn 6 heading reads "6. Dynastie (etwa 2347/2297–2216/2166)".
-    # Agent C voted false on all, tipping no overrides in Dyn 5/6 but the
-    # disagreement log confirms every 05.xx and 06.xx row had a 2v1 majority
-    # (A+B true, C false). The majority vote picked true correctly for
-    # 05.01–05.09 and 06.01–06.07. These are CONFIRMED CORRECT — no override.
-    # (Included here as explicit confirmation audit entry only.)
+    # Dyn 6 heading reads "6. Dynastie (etwa 2347/2297–2216/2166)". The
+    # majority vote always set start_approximate=true / end_approximate=true
+    # correctly (no page break disrupts attention within these dynasties).
+    # No override needed.
 
     # ── 18.02 Amenophis I. — critical identity error (scan-107 left-half) ─
     # The merge produced name="An-jotef I." with egyptian_titulary="Hor
@@ -161,54 +137,32 @@ OVERRIDES: dict[str, dict] = {
         "notes_from_beckerath": None,
     },
 
-    # ── 19.05 Amen-mes-su — garbled prenomen and notes (scan-108 right) ───
-    # Supplement zu A (scan-108 right) shows:
-    #   "Amen-mes-su: Men-mi-rê sotep-en-rê, Ra-mes-su hotep-er-maat"
-    # The Thronname (prenomen) is "Men-mi-rê sotep-en-rê"; the Eigenname
-    # (nomen) is "Ra-mes-su hotep-er-maat". The merge erroneously set
-    # prenomen="Amen-mes-su mer-amun" (which is the Eigenname form, not the
-    # Thronname). Also strip the OCR-artifact "Mit ein glatt" note.
+    # ── 19.05 Amen-mes-su / 19.06 Sethós II Supplement-zu-A splice ────────
+    # The Supplement zu A's `Mit ein glatt:` / `Mi ein glatt:` OCR garbles
+    # break the `<King>:` label that anchors prenomen/nomen pairs to the
+    # right king. After re-extraction (PR #138 post-processor), 3-agent vote
+    # STILL splices Amen-mes-su's prenomen with Sethós II's, and Sethós II's
+    # with Merenptah's. The splice is baked into the OCR markdown and a
+    # post-processor on top of OCR can't fix it; needs explicit override
+    # backed by scan-108-right verification.
     "19.05": {
         "prenomen": "Men-mi-rê sotep-en-rê",
         "notes_from_beckerath": "Antritt 3.5.1203",
     },
-
-    # ── 19.06 Sethós II. — wrong prenomen and garbled notes (scan-108 right)
-    # Supplement zu A (scan-108 right) shows:
-    #   "Sethós II.: User-chepru-rê mer-amun, Ra-mes-su Amen-hir-chepeschef"
-    # The Thronname (prenomen) is "User-chepru-rê mer-amun"; the Eigenname
-    # is "Ra-mes-su Amen-hir-chepeschef". The merge set prenomen=
-    # "Ba-en-rê-meri-netjeru" which is Merenptah's prenomen — a clear splice
-    # error. Also strip the OCR-artifact "Mi ein glatt" note.
     "19.06": {
         "prenomen": "User-chepru-rê mer-amun",
         "notes_from_beckerath": "Antritt 12.1200/1199",
     },
 
-    # ── 24.01 Fürst Tef-nachte — wrong period (scan-108 left-half) ─────────
-    # Scan-108 left shows the SPÄTZEIT heading appears above Dyn 26 (664–525),
-    # not above Dyn 24. Dynasties 24 and 25 sit under the III. ZWISCHENZEIT
-    # heading. The merge picked "Spätzeit" (2 of 3 agents: A+C) but the scan
-    # contradicts this. Correct period is "III. Zwischenzeit".
-    "24.01": {
-        "period": "III. Zwischenzeit",
-    },
+    # ── 24.01 / 24.02 Tef-nachte / Bokchoris period: NOW REDUNDANT after
+    #    PR #138 (postprocess.py emits `<!-- period: III. Zwischenzeit -->`
+    #    directly after the Dyn-24 / Dyn-25 headings, derived from the
+    #    canonical Beckerath dynasty→period mapping in DYNASTY_PERIOD).
+    #    Overrides removed.
 
-    # ── 24.02 Bokchoris — wrong period (scan-108 left-half) ─────────────────
-    # Same III. ZWISCHENZEIT heading applies to Bokchoris (Dyn 24 second king).
-    "24.02": {
-        "period": "III. Zwischenzeit",
-    },
-
-    # ── 27.03 Xerxes I. — inverted end dates (scan-108 left-half) ───────────
-    # Scan-108 shows "Xerxes I. 486/85–465/64". The merge set
-    # end_bce_high=-465 and end_bce_low=-484 — the low is wrong (should be
-    # -464, and is inverted relative to high). Correct: end_high=-465,
-    # end_low=-464.
-    "27.03": {
-        "end_bce_high": -465,
-        "end_bce_low": -464,
-    },
+    # ── 27.03 Xerxes I. dates: NOW REDUNDANT after re-extraction; the
+    #    new majority emits the correct end_bce_low=-464 directly. Override
+    #    removed.
 
     # ── Akhenaten prenomen OCR typo (scan-107 left-half) ──────────────────
     # Beckerath: "Amenophis IV. Ach-en-aten (Nefer-cheprurê wa-en-rê)".
@@ -247,26 +201,11 @@ OVERRIDES: dict[str, dict] = {
         "egyptian_titulary_kind": "prenomen",
     },
 
-    # ── Editorial-prose stripping in notes_from_beckerath (rule 1) ───────
-    # The notes_from_beckerath field schema is "free-text annotations
-    # Beckerath himself adds in the table cell". LLM extractors had inserted
-    # editorial commentary like "end date not given" / "combined Dyn 9/10"
-    # / "supplement notes:" — those are agent meta-prose, not Beckerath
-    # text. Strip them; preserve Beckerath's actual annotations.
-    "09.01": {
-        "notes_from_beckerath": "in Herakleopolis; 18 Könige",
-    },
-    "11.01": {
-        "notes_from_beckerath": "in Theben",
-    },
-    # 19.07 Si-ptah — earlier editorial-strip entry MERGED into the later
-    # 19.07 entry below to avoid the duplicate-key data-loss bug Gemini
-    # caught on PR #117. The cleaner egyptologist-sweep version (which
-    # drops the "später Ach-en-rê" merge artifact and uses "Anfangsname")
-    # is the surviving version.
-    "27.05": {
-        "notes_from_beckerath": "Perser",
-    },
+    # ── Editorial-prose stripping in notes_from_beckerath (rule 1):
+    #    NOW REDUNDANT for 09.01 / 11.01 / 27.05. Re-extraction against
+    #    the post-processed chunk now emits clean Beckerath-verbatim notes
+    #    (`in Herakleopolis; 18 Könige`, `in Theben`, `Perser`) without
+    #    the agent-editorial prose contamination. Overrides removed.
 
     # ── Dyn 17 OCR bleed (scan-106 right-half, codex review PR #113) ──────
     # Beckerath's Dyn 17 heading reads "17. Dynastie (in Theben, etwa
@@ -290,38 +229,40 @@ OVERRIDES: dict[str, dict] = {
     # half to extract, majority selects one) recurs across the corpus and
     # is not visible in merge-disagreements.txt.
 
-    # 29.02 Achoris [P1] — compound titulary truncation. scan-108 shows
-    # Beckerath's parenthetical as "Achoris (Hagor, Chnem-maat-rê)" — a
-    # nomen + prenomen compound. Committed row had only "Chnem-maat-rê"
-    # with kind="prenomen"; the "Hagor" nomen half was entirely absent.
-    "29.02": {
-        "egyptian_titulary": "Hagor, Chnem-maat-rê",
-        "egyptian_titulary_kind": "mixed",
-    },
+    # ── 29.02 Achoris compound titulary: NOW REDUNDANT. Re-extraction
+    #    against the post-processed chunk now emits the full
+    #    `Hagor, Chnem-maat-rê` compound (kind=mixed) directly. Override
+    #    removed.
 
-    # 18.05 Hat-schepsut [P1] — editorial residue MERGED into the earlier
-    # 18.05 entry above (line 139) to avoid the duplicate-key data-loss
-    # bug Gemini caught on PR #117. The notes_from_beckerath=None
-    # correction now lives in the consolidated entry.
+    # ── 06.05 Pepy II compound titulary: NOW REDUNDANT. Re-extraction
+    #    emits kind=mixed directly. Override removed.
 
-    # 19.07 Si-ptah [P2] — three-way prenomen conflict. Beckerath's
-    # Supplement zu A (scan-108 right) gives Si-ptah's primary throne name
-    # as "Sech-en-rê mer-amun" with a beginning-of-reign form
-    # "Sich-ka-rê sotep-en-rê" (and the Übersicht parenthetical was
-    # already null). Reconcile: prenomen holds the primary form; notes
-    # carries only what Beckerath literally annotates around the reign
-    # date and the "anfang ..." beginning-of-reign annotation. Drop the
-    # editorially-merged "später Ach-en-rê sotep-en-rê" string (Ach-en-rê
-    # is the same as Sech-en-rê in another transliteration; preserving
-    # both as "later" form was an agent merge artifact).
+    # ── 19.07 Si-ptah Anfangsname annotation. The Supplement zu A indented
+    #    `anfang Sich-ka-rê sotep-en-rê` annotation is a beginning-of-reign
+    #    throne-name variant Beckerath prints as a per-row note. Re-extraction
+    #    captures `Antritt 10.1194/93` cleanly but does not yet pull in the
+    #    indented Anfangsname annotation; appended here.
     "19.07": {
         "notes_from_beckerath": (
-            "Antritt 10.1194/93; und Kgin. Te-wosret (Thuoris); "
-            "Anfangsname Sich-ka-rê sotep-en-rê"
+            "Antritt 10.1194/93; Anfangsname Sich-ka-rê sotep-en-rê; "
+            "Spätname Ach-en-rê sotep-en-rê"
         ),
     },
 
-    # 21.02 Amen-em-nisu [P2] — wrong egyptian_titulary_kind. The value
+    # ── 11.03 An-jotef III Horus name — full OCR garble (human-verified)
+    # The OCR rendered the parenthetical as `(Hor Men-cheper nach) Nub`
+    # — that's three substantive corruptions, not just a stray paren:
+    #   `Men-cheper` should be `[-nacht]` (editorial-bracketed restoration)
+    #   `nach`       should be `Neb`
+    #   `Nub`        should be `tep-nofer`
+    # Beckerath 1997 Chronologie prints
+    #   `An-jotef III. (Hor[-nacht] Neb-tep-nofer)`
+    # Human-verified against the printed PDF by the project lead 2026-04-28.
+    "11.03": {
+        "egyptian_titulary": "Hor[-nacht] Neb-tep-nofer",
+    },
+
+    # 21.02 Amen-em-nisu — wrong egyptian_titulary_kind. The value
     # "Nephercheres" is the Greek rendering of Neferkare — a prenomen
     # (throne name), not a nomen. Beckerath uses Nephercheres in the
     # Übersicht parenthetical as the Greek-form throne name.
@@ -329,30 +270,13 @@ OVERRIDES: dict[str, dict] = {
         "egyptian_titulary_kind": "prenomen",
     },
 
-    # 31.04 Chabbasch [P2] — kind=prenomen MERGED into the earlier 31.04
-    # entry above to avoid the duplicate-key data-loss bug Gemini caught
-    # on PR #117.
-
-    # 06.05 Pepy II. [P1] — same compound-titulary truncation pattern as
-    # 29.02 Achoris. Beckerath's parenthetical "(Phiops, Neferkare)" is
-    # Greek-form nomen + prenomen, not a single nomen. Discovered by the
-    # new compound-titulary invariant test (issue #115 methodology fix).
-    "06.05": {
-        "egyptian_titulary_kind": "mixed",
-    },
-
-    # 19.08 Kgin. Te-wosret — agent-A "co-regent with Si-ptah" was English
-    # editorial prose that the merge majority promoted into
-    # notes_from_beckerath. Beckerath's actual Anhang A cell for Te-wosret
-    # is empty (she shares Si-ptah's date range and gets no per-cell
-    # annotation). Move the cross-reference to editorial_notes; null out
-    # notes_from_beckerath. The co-regency is also already encoded in
-    # 19.07 Si-ptah's notes (Beckerath's actual "und Kgin. Te-wosret
-    # (Thuoris)" annotation).
-    "19.08": {
-        "notes_from_beckerath": None,
-        "editorial_notes": "co-regent with Si-ptah (19.07)",
-    },
+    # ── 19.08 Kgin. Te-wosret: NOW REDUNDANT. Re-extraction (with the new
+    #    co-regent-queen prompt rule) emits Te-wosret as a full row with
+    #    name=`Kgin. Te-wosret`, egyptian_titulary=`Thuoris`, prenomen=
+    #    `Sit-rê sotep-en-muat`, notes=`Mitregentin von Si-ptah`. The old
+    #    override (which nulled notes and added an English editorial cross-
+    #    reference) would now NULL OUT the correct Beckerath-derived
+    #    `Mitregentin von Si-ptah` annotation. Override removed.
 }
 
 
@@ -375,43 +299,20 @@ SCHOSCHENG_TO_SCHOSCHENQ_FIELDS = (
 OVERRIDE_LOG: dict[str, str] = {
     "03.04": (
         "03.04 Hor Cha-bai: brace bracket on scan-105 right-half spans rows "
-        "03.04/03.05/03.06; majority vote left notes_from_beckerath null "
-        "because agents B+C missed the bracket; dates already correct; "
-        "scan-context audit note added in editorial_notes (English "
-        "cross-row commentary, not Beckerath's verbatim cell text). [P2]"
+        "03.04/03.05/03.06; agents extract dates on 03.04 correctly but "
+        "the bracket span itself is invisible in the OCR markdown. Cross-row "
+        "audit note added in editorial_notes. [P2]"
     ),
     "03.05": (
-        "03.05 Sôuphis,Mesochris: same brace bracket as 03.04; "
-        "scan-context note added in editorial_notes. [P2]"
+        "03.05 Sôuphis: same brace bracket as 03.04. Agents emit no dates "
+        "(the bracket-propagation cue is a visual `}` glyph the OCR doesn't "
+        "preserve); inherit dates from 03.04 per Beckerath's printed bracket. "
+        "Scan-context note added in editorial_notes. [P1+P2]"
     ),
     "03.06": (
-        "03.06 Ahu (Huni,Aches): same brace bracket as 03.04; "
-        "scan-context note added in editorial_notes. [P2]"
-    ),
-    "04.02": (
-        "04.02 Cheops: Dyn-4 heading on scan-105 right-half reads "
-        "'etwa 2639/2589–2504/2454'; 'etwa' propagates to all Dyn-4 rows; "
-        "Agent C voted false on both flags, tipping merge; corrected to "
-        "start_approximate=true, end_approximate=true. [P1]"
-    ),
-    "04.03": (
-        "04.03 Djedefre: same Dyn-4 'etwa' propagation; corrected to "
-        "start_approximate=true, end_approximate=true. [P1]"
-    ),
-    "04.04": (
-        "04.04 Chephren: same Dyn-4 'etwa' propagation; corrected. [P1]"
-    ),
-    "04.05": (
-        "04.05 Bikheris: same Dyn-4 'etwa' propagation; corrected. [P1]"
-    ),
-    "04.06": (
-        "04.06 Mykerinos: same Dyn-4 'etwa' propagation; corrected. [P1]"
-    ),
-    "04.07": (
-        "04.07 Schepseskaf: same Dyn-4 'etwa' propagation; corrected. [P1]"
-    ),
-    "04.08": (
-        "04.08 Thamphthis: same Dyn-4 'etwa' propagation; corrected. [P1]"
+        "03.06 Ahu: same brace bracket as 03.04. Inherit dates from 03.04 "
+        "per the printed bracket; scan-context note added in editorial_notes. "
+        "[P1+P2]"
     ),
     "18.02": (
         "18.02 IDENTITY ERROR — merge produced name='An-jotef I.' with "
@@ -440,35 +341,6 @@ OVERRIDE_LOG: dict[str, str] = {
         "15.04 Chajan: scan-106 left-half shows '1590/87–1549/1546'; "
         "end_bce_high was OCR-corrupted to -1149 (flagged by Agent A); "
         "corrected to -1549. end_bce_low=-1546 already correct in merge. [P1]"
-    ),
-    "19.05": (
-        "19.05 Amen-mes-su: Supplement zu A on scan-108 right reads "
-        "'Men-mi-rê sotep-en-rê, Ra-mes-su hotep-er-maat'; Thronname "
-        "(prenomen) is 'Men-mi-rê sotep-en-rê', not 'Amen-mes-su mer-amun' "
-        "(which is the Eigenname). Prenomen corrected. OCR-artifact 'Mit ein "
-        "glatt' note stripped; Antritt date preserved. [P1]"
-    ),
-    "19.06": (
-        "19.06 Sethós II.: Supplement zu A on scan-108 right reads "
-        "'User-chepru-rê mer-amun, Ra-mes-su Amen-hir-chepeschef'; Thronname "
-        "is 'User-chepru-rê mer-amun'. Merge had 'Ba-en-rê-meri-netjeru' "
-        "which is Merenptah's prenomen — a splice error. Corrected. OCR- "
-        "artifact 'Mi ein glatt' note stripped. [P1]"
-    ),
-    "24.01": (
-        "24.01 Fürst Tef-nachte: scan-108 left-half shows SPÄTZEIT heading "
-        "above Dyn 26 (664–525); Dyn 24 and 25 fall under III. ZWISCHENZEIT. "
-        "Merge picked 'Spätzeit' (A+C 2v1) but scan contradicts it. "
-        "Corrected to 'III. Zwischenzeit'. [P1]"
-    ),
-    "24.02": (
-        "24.02 Bokchoris: same III. ZWISCHENZEIT heading applies; corrected "
-        "from 'Spätzeit'. [P1]"
-    ),
-    "27.03": (
-        "27.03 Xerxes I.: scan-108 left-half shows '486/85–465/64'; merge "
-        "set end_bce_low=-484 (wrong — appears to be a carry-over of "
-        "start_bce_low); correct end_bce_low=-464. [P1]"
     ),
     # ── Gemini Code Assist review pass (2026-04-25, PR #113) ──────────────
     "26.02": (
@@ -501,26 +373,27 @@ OVERRIDE_LOG: dict[str, str] = {
         "'Nefer-cheprurê wa-en-rê'. Discovered during 18.11–18.14 spot- "
         "verify (code-reviewer P2.3). Corrected. [P1 — typo]"
     ),
-    "09.01": (
-        "09.01 9./10. Dynastie: notes_from_beckerath contained agent "
-        "editorial 'combined Dyn 9/10'. Beckerath's actual cell text is "
-        "'(in Herakleopolis, etwa 2170/2120-2025/2020) 18 Könige'. "
-        "Stripped editorial; kept Beckerath text. [P1 — rule 1]"
+    "19.05": (
+        "19.05 Amen-mes-su Thronname: Supplement zu A on scan-108 right "
+        "reads 'Men-mi-rê sotep-en-rê, Ra-mes-su hotep-er-maat'. The OCR "
+        "garbles the `Amen-mes-su:` label as `Mit ein glatt:`, which breaks "
+        "the king-to-prenomen anchor. Even after the post-processor (PR #138) "
+        "and the new co-regent / OCR-duplicate prompt rules, all 3 agents "
+        "splice Amen-mes-su's prenomen with the next king's row. Override "
+        "to scan-verified Thronname `Men-mi-rê sotep-en-rê`. Human-verified "
+        "against the 1997 Chronologie printed PDF by the project lead "
+        "2026-04-28; overrides this entry's prior 'LLM-applied' status to "
+        "human-confirmed-against-source. [P1]"
     ),
-    "11.01": (
-        "11.01 An-jotef I. Dyn 11: notes_from_beckerath contained agent "
-        "editorial 'end date not given'. Stripped; kept 'in Theben' "
-        "(Beckerath's parenthetical placement annotation). [P1 — rule 1]"
-    ),
-    # 19.07 — earlier prefix-strip audit MERGED into the later 19.07 entry
-    # below to align with the consolidated OVERRIDES dict (Gemini PR #117
-    # duplicate-key fix). The cleaner egyptologist-sweep version (with
-    # "Anfangsname" instead of the merge-artifact "später Ach-en-rê") is
-    # the surviving version.
-    "27.05": (
-        "27.05 Xerxes II.: notes_from_beckerath contained agent editorial "
-        "'end date not given in source'. Stripped; kept 'Perser' "
-        "(Beckerath's annotation). [P1 — rule 1]"
+    "19.06": (
+        "19.06 Sethós II Thronname: same `Mit ein glatt:` / `Mi ein glatt:` "
+        "OCR-label garble shape as 19.05. After re-extraction the merge "
+        "still produces `Ba-en-rê-meri-netjeru` (Merenptah's prenomen) for "
+        "Sethós II. Override to scan-verified `User-chepru-rê mer-amun`. "
+        "Human-verified against the 1997 Chronologie printed PDF by the "
+        "project lead 2026-04-28; the 1999 Handbuch's `User-chepru-rê "
+        "sotep-en-rê` reading is a later edition divergence, not a 1997 "
+        "transcription error. [P1]"
     ),
     "17.01": (
         "17.01 17. Dynastie: scan-106 right shows '17. Dynastie (in Theben, "
@@ -530,28 +403,13 @@ OVERRIDE_LOG: dict[str, str] = {
         "Corrected to end_bce_high=end_bce_low=-1550 (single endpoint). "
         "Surfaced by codex review (P2 inversion → P1 OCR-bleed). [P1]"
     ),
-    # ── Egyptologist post-merge sweep findings (issue #115) ───────────────
-    "29.02": (
-        "29.02 Achoris: scan-108 shows Beckerath's parenthetical as "
-        "'Achoris (Hagor, Chnem-maat-rê)' — a nomen+prenomen compound. "
-        "Committed row had only 'Chnem-maat-rê' with kind='prenomen'; the "
-        "'Hagor' nomen half was missing entirely. Methodology root cause: "
-        "the disagreement-log reviewer only sees fields where ≥2 agents "
-        "differ; this case had no logged content-gap because each agent "
-        "extracted ONE valid component. Corrected to "
-        "egyptian_titulary='Hagor, Chnem-maat-rê', kind='mixed'. [P1]"
-    ),
-    # 18.05 — editorial residue audit MERGED into the earlier 18.05 entry
-    # above to align with the consolidated OVERRIDES dict (Gemini PR #117
-    # duplicate-key fix).
     "19.07": (
-        "19.07 Si-ptah: three-way prenomen conflict between primary throne "
-        "name (Sech-en-rê mer-amun), notes (anfang/später annotations), "
-        "and an editorially-merged 'später Ach-en-rê sotep-en-rê' (which "
-        "is the same throne name in another transliteration; the 'später' "
-        "framing was an agent merge artifact). Cleaned to: prenomen holds "
-        "primary form, notes carries Beckerath's accession-date, "
-        "co-regency (Te-wosret/Thuoris), and Anfangsname annotations. [P2]"
+        "19.07 Si-ptah Anfangsname: re-extraction emits 'Antritt 10.1194/93' "
+        "cleanly but does not capture the indented 'anfang Sich-ka-rê "
+        "sotep-en-rê' annotation from Supplement zu A. Override appends the "
+        "Anfangsname annotation to notes_from_beckerath. The earlier 'und "
+        "Kgin. Te-wosret (Thuoris)' inclusion is dropped because Te-wosret "
+        "now extracts as her own row 19.08 under the Co-regent queen rule. [P2]"
     ),
     "21.02": (
         "21.02 Amen-em-nisu: egyptian_titulary_kind was 'nomen' for the "
@@ -559,22 +417,14 @@ OVERRIDE_LOG: dict[str, str] = {
         "Neferkare — a prenomen (throne name), not a nomen. Corrected to "
         "kind='prenomen'. [P2]"
     ),
-    # 31.04 — kind=prenomen audit MERGED into the earlier 31.04 entry
-    # above to align with the consolidated OVERRIDES dict (Gemini PR
-    # #117 duplicate-key fix).
-    "06.05": (
-        "06.05 Pepy II.: same compound-titulary truncation pattern as "
-        "29.02 Achoris. Parenthetical '(Phiops, Neferkare)' is Greek-form "
-        "nomen + prenomen, not a single nomen. Surfaced by the new "
-        "compound-titulary invariant test in PR for issue #115. [P1]"
-    ),
-    "19.08": (
-        "19.08 Kgin. Te-wosret: agent-A 'co-regent with Si-ptah' was "
-        "English editorial prose, not Beckerath's verbatim cell text "
-        "(Beckerath's Anhang A cell for Te-wosret is empty — she shares "
-        "Si-ptah's date range with no per-cell annotation). Moved to "
-        "editorial_notes; nulled notes_from_beckerath per rule 1 / 6 "
-        "(raw data is sacred). [P1]"
+    "11.03": (
+        "11.03 An-jotef III: chunk OCR fully garbled the Horus name. "
+        "Beckerath 1997 Chronologie prints "
+        "`An-jotef III. (Hor[-nacht] Neb-tep-nofer)`. The OCR rendered "
+        "this as `(Hor Men-cheper nach) Nub` — three substantive "
+        "corruptions, not just a stray paren. Human-verified against "
+        "the printed PDF by the project lead 2026-04-28. Override sets "
+        "the verbatim Beckerath form. [P1]"
     ),
 }
 
