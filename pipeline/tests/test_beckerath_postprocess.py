@@ -99,6 +99,18 @@ def test_recognises_compound_dynasty_heading() -> None:
     )
 
 
+def test_recognises_bold_variant_of_compound_dynasty_heading() -> None:
+    """Defensive: a future OCR run may emit the compound heading with `**`
+    wrapping (`**9./10. Dynastie (...)**`). The bold markers must be
+    stripped from the captured inner text."""
+    assert (
+        pp._is_dynasty_heading(
+            "**9./10. Dynastie (in Herakleopolis, etwa 2170/2120–2025/2020) 18 Könige**"
+        )
+        == "9./10. Dynastie (in Herakleopolis, etwa 2170/2120–2025/2020) 18 Könige"
+    )
+
+
 def test_dynasty_heading_returns_none_for_non_match() -> None:
     assert pp._is_dynasty_heading("### FRÜHZEIT") is None
     assert pp._is_dynasty_heading("Senofru (Soris)\t2639/2589") is None

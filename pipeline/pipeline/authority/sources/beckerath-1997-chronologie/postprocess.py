@@ -100,8 +100,12 @@ _SECTION_HEADING_RE = re.compile(r"^###\s+(.+?)\s*$")
 _DYNASTY_HEADING_BOLD_RE = re.compile(
     r"^\*\*(\d+(?:\.\s*[a-z])?\.?\s*Dynast(?:ie|e)\b.*?)\*\*(.*)$"
 )
+# Compound headings like `9./10. Dynastie (...)` are NOT bolded in the
+# current OCR output, but stochastic LLM-OCR variants may introduce bold
+# markers on future regenerations. Optional `**…**` wrapping is matched
+# defensively without changing the captured inner text.
 _DYNASTY_HEADING_COMPOUND_RE = re.compile(
-    r"^(\d+\.?/\d+\.?\s*Dynast(?:ie|e)\b.*)$"
+    r"^(?:\*\*)?(\d+\.?/\d+\.?\s*Dynast(?:ie|e)\b.*?)(?:\*\*)?$"
 )
 
 _PAGE_BOUNDARY_RE = re.compile(r"^##\s+Book\s+p\d+\s*$")
@@ -262,9 +266,9 @@ def main() -> None:
     )
     args = parser.parse_args()
     output_path = args.output if args.output is not None else args.input
-    md = args.input.read_text()
+    md = args.input.read_text(encoding="utf-8")
     annotated = process_chunk(md)
-    output_path.write_text(annotated)
+    output_path.write_text(annotated, encoding="utf-8")
     print(f"wrote {output_path} ({len(annotated)} bytes)")
 
 
