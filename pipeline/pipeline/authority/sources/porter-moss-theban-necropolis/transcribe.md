@@ -30,7 +30,16 @@ open('pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chun
 
 This file is gitignored (`raw/*` per the repo-root `.gitignore`) — same rule as OCR chunks. It contains verbatim copyrighted prose; same redistribution constraint as an OCR transcript.
 
-**Downstream stages are unchanged from the playbook:** three parallel extraction subagents read `raw/chunk-*.txt` and produce JSONL; `merge.py` majority-votes; `fix_rows.py` applies LLM-reviewer corrections; tests assert specific values.
+After the text-layer dump lands, run `postprocess.py` against each chunk file in place — it normalises the publisher OCR's reproducible glyph-class noise into canonical Unicode (`J:I`/`I:I`/`I;I`/`l:I`/`I:J` → `Ḥ`; `<` adjacent to a letter → `ʿ`; whitelisted Egyptian-name `c` → `ʿ` for tokens like `Smenkhkarec`/`Rec`/`Takhact`; `[Ist ed.` → `[1st ed.`; king-name-anchored Roman numerals `Ill`/`Il`/`11` → `III`/`II`) so the 3-agent extraction sees the same canonical form across runs instead of diverging on glyph readings. The fixup table is documented in `postprocess.py`'s module docstring; tests in `pipeline/tests/test_porter_moss_postprocess.py` lock the per-rule behaviour and the bidirectional digit hazard (catalog numbers like `5I109` and years like `I922` must NOT be rewritten).
+
+```bash
+cd pipeline && uv run python pipeline/authority/sources/porter-moss-theban-necropolis/postprocess.py \
+    --input pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p89-p106.txt
+```
+
+The postprocessor is idempotent (every rule's RHS does not contain its LHS); re-running on its own output is a no-op.
+
+**Downstream stages are unchanged from the playbook:** three parallel extraction subagents read the postprocessed `raw/chunk-*.txt` and produce JSONL; `merge.py` majority-votes; `fix_rows.py` applies LLM-reviewer corrections; tests assert specific values.
 
 The Dodson-Hilton precedent (PR #38, main-session OCR for chunk 2 after subagent OCR refused on chunk 1) covers the more general principle: when the playbook's default OCR-subagent path is unnecessary, document the deviation in `transcribe.md` and proceed with the substitute. The Dodson-Hilton case substituted main-session OCR for subagent OCR; this case substitutes deterministic text-layer extraction for any OCR at all.
 
