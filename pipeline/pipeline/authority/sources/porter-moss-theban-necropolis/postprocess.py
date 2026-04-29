@@ -130,17 +130,19 @@ _SUBSTRING_FIXES: list[tuple[str, str]] = [
 # legitimate ayin contexts.
 # Two anchors so ``<`` fires both as a word-internal/trailing ayin (`Re<`,
 # `Ma<et`) AND as a word-initial ayin (`<Ahhotp`, `<Ankhef...`, `<Aqmosi`).
-# Lookbehind admits ASCII letters AND the Phase-1 substitution products
-# ``Ḥ``/``ḥ``/``ḍ`` so a ``<`` immediately after a substituted underdot-H
-# also fires (defensive — e.g. ``Re<-l:Iarakhti`` would mid-pass produce
-# ``Reʿ-Ḥ<arakhti`` if any chunk variant placed `<` after the underdot-H).
-# ``\w`` is rejected because it admits digits and the chunk text contains
-# digit-cluster noise like ``pp. 22<)-47`` where ``<`` is a misread digit,
-# not an ayin — firing there would corrupt page-citation pages. Lookahead
-# is ASCII-letter-only — verified safe by ``grep -E '<[A-Za-z]'`` over all
-# raw chunks: every hit is Egyptian transliteration (`<a`, `<A`, `<Ankh*`,
-# `<Anen`, `<Aqmosi`, etc.) — no HTML/math/citation false positives.
-_AYIN_RE = re.compile(r"(?<=[A-Za-zḤḥḍ])<|<(?=[A-Za-z])")
+# Both anchors admit ASCII letters AND the Phase-1 substitution products
+# ``Ḥ``/``ḥ``/``ḍ`` (kept symmetric so neither side silently misses a
+# Phase-1 output): a ``<`` between an underdot-H and a vowel fires from
+# the lookbehind (`Reʿ-Ḥ<arakhti`); a ``<`` immediately before an
+# underdot consonant (e.g. a future chunk `<Ḥtp`) fires from the
+# lookahead. ``\w`` is rejected because it admits digits and chunk text
+# contains digit-cluster noise like ``pp. 22<)-47`` where ``<`` is a
+# misread digit, not an ayin — firing there would corrupt page-citation
+# pages. Verified safe by ``grep -hoE '<[A-Za-z]'`` over all raw chunks:
+# every word-initial hit is Egyptian transliteration (`<a`, `<A`,
+# `<Ankh*`, `<Anen`, `<Aqmosi`, etc.) — no HTML/math/citation false
+# positives.
+_AYIN_RE = re.compile(r"(?<=[A-Za-zḤḥḍ])<|<(?=[A-Za-zḤḥḍ])")
 
 # --- Phase 3: whitelisted token-exact substitutions -------------------------
 # Tokens whose trailing ``c`` is the ayin glyph rendered as a letter ``c``

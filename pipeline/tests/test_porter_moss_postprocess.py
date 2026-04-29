@@ -126,6 +126,17 @@ def test_word_initial_ayin() -> None:
     assert pp.process_chunk("<Aqmosi") == "ʿAqmosi"
 
 
+def test_word_initial_ayin_admits_phase1_underdot() -> None:
+    """The lookahead is symmetric with the lookbehind — both admit Phase-1
+    substitution products (`Ḥ`/`ḥ`/`ḍ`) so that a future chunk shape with
+    ``<`` immediately before an underdot consonant (e.g. a hypothetical
+    ``<Ḥtp`` if PM ever transliterates the king's name with leading
+    ayin + underdot-H) does not silently survive untranslated. Synthetic
+    test: ``<Ḥtp`` should fire as ``ʿḤtp``."""
+    assert pp.process_chunk("<Ḥtp") == "ʿḤtp"
+    assert pp.process_chunk("<ḥtp") == "ʿḥtp"
+
+
 def test_ayin_does_not_fire_on_digit_lookbehind() -> None:
     """Lookbehind explicitly excludes digits — chunk text contains
     digit-cluster citation noise like ``pp. 22<)-47`` where ``<`` is a
