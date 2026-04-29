@@ -165,6 +165,20 @@ def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
         merge_module._OVERRIDES_PATH = orig
 
 
+def test_load_overrides_rejects_non_dict_root(merge_module, tmp_path):
+    """Per Gemini PR #157 round-1 (parity from Ryholt)."""
+    for bad_root in ([], "string-at-root", 42):
+        bad = tmp_path / "tie-break-overrides.json"
+        bad.write_text(json.dumps(bad_root))
+        orig = merge_module._OVERRIDES_PATH
+        merge_module._OVERRIDES_PATH = bad
+        try:
+            with pytest.raises(ValueError, match="top-level JSON must be a dict"):
+                merge_module._load_overrides()
+        finally:
+            merge_module._OVERRIDES_PATH = orig
+
+
 def test_load_overrides_rejects_non_dict_value(merge_module, tmp_path):
     """Per Gemini PR #155 round-1 — every override value MUST be a dict
     (not a bare string). A malformed entry would silently break the
