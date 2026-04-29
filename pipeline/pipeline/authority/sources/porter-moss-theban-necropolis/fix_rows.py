@@ -97,7 +97,7 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "KV13",
         "notes_from_pm",
-        "Temp. Merneptaḥ-Siptaḥ",
+        "Temp. Merneptaḥ-Siptaḥ.",
         "Strip 'Chancellor.' prefix (already encoded as "
         "occupant_role=Official). Preserve PM's underdot-Ḥ in the "
         "verbatim-preserve `notes_from_pm` field — earlier override "

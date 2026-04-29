@@ -749,7 +749,7 @@ def test_chunk2_kv13_bay_chancellor() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "Temp. Merneptaḥ-Siptaḥ"
+    assert r["notes_from_pm"] == "Temp. Merneptaḥ-Siptaḥ."
     assert r["source_citation"] == {
         "page": 527,
         "edition": EDITION_PM_I2,
