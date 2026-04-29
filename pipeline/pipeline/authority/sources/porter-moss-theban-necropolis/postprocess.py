@@ -141,6 +141,9 @@ _WORD_FIXES: dict[str, str] = {
     "Rec": "Reʿ",
     "Takhact": "Takhaʿt",
 }
+_WORD_FIXES_RE = re.compile(
+    r"\b(" + "|".join(re.escape(s) for s in _WORD_FIXES) + r")\b"
+)
 
 # --- Phase 4: king-name-anchored Roman numerals -----------------------------
 # The Griffith Institute text layer confuses ``I``, ``1``, and ``l`` in both
@@ -169,7 +172,8 @@ _KING_NAMES: tuple[str, ...] = (
     "Ptolemy",
 )
 _ROMAN_FIX_RE = re.compile(
-    r"\b(" + "|".join(_KING_NAMES) + r")\s+(III|II|Ill|Il|11)\b"
+    r"\b(" + "|".join(re.escape(name) for name in _KING_NAMES)
+    + r")(\s+)(III|II|Ill|Il|11)\b"
 )
 _ROMAN_NORMALIZE: dict[str, str] = {
     "III": "III",
@@ -181,7 +185,7 @@ _ROMAN_NORMALIZE: dict[str, str] = {
 
 
 def _roman_sub(m: "re.Match[str]") -> str:
-    return f"{m.group(1)} {_ROMAN_NORMALIZE[m.group(2)]}"
+    return f"{m.group(1)}{m.group(2)}{_ROMAN_NORMALIZE[m.group(3)]}"
 
 
 def process_chunk(text: str) -> str:
@@ -197,9 +201,10 @@ def process_chunk(text: str) -> str:
         out = out.replace(src, dst)
     # Phase 2: inline ayin
     out = _AYIN_RE.sub("ʿ", out)
-    # Phase 3: whitelisted token-exact rewrites (post-Phase-1-and-2 forms)
-    for src, dst in _WORD_FIXES.items():
-        out = re.sub(r"\b" + re.escape(src) + r"\b", dst, out)
+    # Phase 3: whitelisted token-exact rewrites (post-Phase-1-and-2 forms).
+    # Single combined-regex pass; one scan over the text, mapping each match
+    # to its canonical form via the dict.
+    out = _WORD_FIXES_RE.sub(lambda m: _WORD_FIXES[m.group(1)], out)
     # Phase 4: king-name-anchored Roman numerals
     out = _ROMAN_FIX_RE.sub(_roman_sub, out)
     return out
