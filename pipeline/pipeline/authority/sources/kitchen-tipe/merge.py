@@ -107,6 +107,11 @@ def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
     if not _OVERRIDES_PATH.exists():
         return {}
     raw = json.loads(_OVERRIDES_PATH.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ValueError(
+            f"merge.py: {_OVERRIDES_PATH} top-level JSON must be a dict; "
+            f"got {type(raw).__name__}"
+        )
     out: dict[tuple[str, str], dict[str, object]] = {}
     for k, v in raw.items():
         if "|" not in k:
