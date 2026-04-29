@@ -121,6 +121,24 @@ def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
                 f"or field after splitting on '|' (expected "
                 f"'<kitchen_id>|<field>' with both halves non-empty)"
             )
+        # Validate value shape per Gemini PR #155 round-1: every entry MUST
+        # be a dict with `value` and `rationale` keys. A malformed entry
+        # (e.g. a bare string mistakenly written instead of a dict) would
+        # fail downstream at `override["value"]` lookup with an opaque
+        # KeyError; raise loudly here with the offending key + actual
+        # shape so the override-file author sees the problem at load time.
+        if not isinstance(v, dict):
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value must be a dict "
+                f"with 'value' and 'rationale' keys; got {type(v).__name__}: {v!r}"
+            )
+        missing = {"value", "rationale"} - set(v.keys())
+        if missing:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value is missing "
+                f"required key(s) {sorted(missing)} (expected dict with "
+                f"'value' and 'rationale'); got: {v!r}"
+            )
         out[(kid, field)] = v
     return out
 
