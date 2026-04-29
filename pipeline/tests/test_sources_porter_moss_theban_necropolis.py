@@ -545,15 +545,15 @@ def test_chunk1_kv3_flagship_full_row() -> None:
 
 def test_chunk1_kv9_ramesses_vi_notes_and_alias() -> None:
     """KV9 exercises `notes_from_pm` (the cross-line clause about Ramesses V's
-    doorway usurpation) and `occupant_alt_names` (the Memnon classical alias
-    from PM's `'Tomb of Memnon'` parenthetical). Asserts every field per
-    rule 5.
+    doorway usurpation) and `occupant_alt_names` (the two classical aliases
+    from PM's `'Tomb of Metempsychosis', or 'Tomb of Memnon'` parenthetical).
+    Asserts every field per rule 5.
     """
     r = _row("KV9")
     assert r["tomb_id"] == "KV9"
     assert r["valley"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses VI"
-    assert r["occupant_alt_names"] == ["Memnon"]
+    assert r["occupant_alt_names"] == ["Tomb of Metempsychosis", "Tomb of Memnon"]
     assert r["occupant_role"] == "King"
     assert r["dynasty"] is None
     assert r["sub_period"] is None
@@ -730,7 +730,7 @@ def test_chunk2_kv12_uninscribed() -> None:
 def test_chunk2_kv13_bay_chancellor() -> None:
     """KV13 (Bay, Chancellor — non-royal). Exercises non-King
     `occupant_role` (`Official`) and the `notes_from_pm` regnal-dating
-    fragment from PM's headword (`Temp. Merneptah-Siptah`), captured
+    fragment from PM's headword (`Temp. Merneptaḥ-Siptaḥ`), captured
     via fix_rows.py after the reviewer flagged that all three extraction
     agents dropped it. Asserts every field per rule 5.
     """
@@ -749,7 +749,7 @@ def test_chunk2_kv13_bay_chancellor() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "Temp. Merneptah-Siptah"
+    assert r["notes_from_pm"] == "Temp. Merneptaḥ-Siptaḥ."
     assert r["source_citation"] == {
         "page": 527,
         "edition": EDITION_PM_I2,
@@ -1079,7 +1079,7 @@ def test_chunk3_kv36_mahirper_official() -> None:
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
-        "Standard-bearer, Child of the nursery. Temp. Hatshepsut. "
+        "Standard-bearer, Child of the nursery. Temp. Ḥatshepsut. "
         "Excavated by Loret."
     )
     assert r["source_citation"] == {
@@ -1257,8 +1257,8 @@ def test_chunk3_kv45_userhet_re_used() -> None:
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
-        "Overseer of the Fields of Amun, Dyn. XVIII; re-used by Merenkhons, "
-        "Doorkeeper of the House of Amun, Dyn. XXII (name from scarab). "
+        "Overseer of the Fields of Amūn, Dyn. XVIII, re-used by Merenkhons, "
+        "Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). "
         "Excavated by Davis and Carter."
     )
     assert r["source_citation"] == {
@@ -1291,8 +1291,8 @@ def test_chunk3_kv46_yuia_and_thuiu_multi_occupant() -> None:
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
-        "Yuia: Divine father; Thuiu: Chief of the harim of Amun; parents "
-        "of Queen Teye."
+        "Divine father, and Chief of the harîm of Amūn, parents of "
+        "Queen Teye."
     )
     assert r["source_citation"] == {
         "page": 562,
@@ -1808,7 +1808,7 @@ def test_chunk7_notes_from_pm() -> None:
         ),
         "DAN-MentuhotpSankhibtaui": "Unfinished.",
         "DAN-Neferhotep": (
-            "Scribe of the Great Harim, probably temp. Antef (Nubkheperreʿ). "
+            "Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). "
             "Rock-tomb, uninscribed. Found by Mariette in 1860, probably "
             "near Theb. tb. 13."
         ),
