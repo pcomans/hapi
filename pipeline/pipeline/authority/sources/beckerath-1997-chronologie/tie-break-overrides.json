@@ -1,0 +1,54 @@
+{
+  "03.06|name": {
+    "value": "Ahu (Huni, Aches)",
+    "rationale": "Dyn 3 brace bracket on book p187 (scan-105-right). Agent C dropped this row entirely; agents A and B split 1/1 on `name` (A=`Ahu (Huni, Aches)` keeping the compound parenthetical inline, B=bare `Ahu`). Per fix_rows.py discriminator: when the compound parenthetical with internal commas is two name-form variants of a single concept (here `Huni, Aches` are Egyptian + Greek nomen variants), the compound stays inline in `name` with `egyptian_titulary` null. Agent A's value is the canonical form; cross-row references in the Dyn 3 brace-bracket cohort (`03.04` editorial_notes references `Ahu (Huni, Aches) (03.06)`) require this exact spelling."
+  },
+  "03.06|egyptian_titulary": {
+    "value": null,
+    "rationale": "Dyn 3 brace bracket on book p187 (scan-105-right). Agent C dropped this row; agents A and B split 1/1 on titulary (A=null, B=`Huni, Aches`). Per the compound-stays-in-name discriminator (see `03.06|name` above), the compound parenthetical lives in `name`, not `egyptian_titulary` — agent A's null is correct. Agent B's extraction wrongly split a compound that should stay inline."
+  },
+  "03.06|egyptian_titulary_kind": {
+    "value": null,
+    "rationale": "Dyn 3 brace bracket on book p187 (scan-105-right). Follows from `03.06|egyptian_titulary` being null — kind is null when titulary is null per README schema (`egyptian_titulary_kind` ∈ {`null`, ...} `null when egyptian_titulary is null`). Agent A=null, B=`nomen`; A is correct because the compound parenthetical stays in `name` rather than splitting into titulary+kind."
+  },
+  "03.06|start_bce_high": {
+    "value": -2663,
+    "rationale": "Dyn 3 brace bracket on book p187 (scan-105-right) spans rows 03.04 / 03.05 / 03.06 with shared range 2663/2613–2639/2589 (visible `}` glyph in printed source; invisible to OCR). Agent C dropped this row; agents A and B split 1/1 (A=-2663, B=null). The bracket-shared range matches 03.04 Hor Cha-bai's start_bce_high. Agent A propagated the bracket dates; agent B left them null because the OCR markdown lacks the brace glyph."
+  },
+  "03.06|start_bce_low": {
+    "value": -2613,
+    "rationale": "Dyn 3 brace bracket on book p187 (scan-105-right). Same provenance as `03.06|start_bce_high` — bracket-shared range matches 03.04 Hor Cha-bai. Agent A=-2613, B=null."
+  },
+  "03.06|end_bce_high": {
+    "value": -2639,
+    "rationale": "Dyn 3 brace bracket on book p187 (scan-105-right). Same provenance as `03.06|start_bce_high` — bracket-shared range matches 03.04 Hor Cha-bai. Agent A=-2639, B=null."
+  },
+  "03.06|end_bce_low": {
+    "value": -2589,
+    "rationale": "Dyn 3 brace bracket on book p187 (scan-105-right). Same provenance as `03.06|start_bce_high` — bracket-shared range matches 03.04 Hor Cha-bai. Agent A=-2589, B=null."
+  },
+  "15.04|name": {
+    "value": "Chajan",
+    "rationale": "Dyn 15 Hyksos brace bracket on book p189 (scan-106-right). Agents split 1/1/1 on `name`: A=`Chajan (Iannas, Se'user-en-rê)` (full compound), B=`Chajan` (bare), C=`Chajan (Iannas)` (partial). Resolution per the Greek-alias + Egyptian-prenomen pair discriminator (also applied to 26.04 Apries `(Wah-ib-rê, Haa-ib-rê)`, 06.04 Nemti-em-saf I. `(Methusuphis, Mer-en-rê)`): name=just-the-king, egyptian_titulary=full compound, egyptian_titulary_kind=`mixed`. Pick agent B's bare `Chajan`; the compound moves to titulary via the existing fix_rows.py 15.04 entry (which also fills in the bracket dates the OCR missed)."
+  },
+  "19.08|name": {
+    "value": "Kgin.Te-wosret",
+    "rationale": "Dyn 19 Si-ptah co-regent queen on book p190 (scan-107-left). Agents split 1/1/1: A=`Kgin. Te-wosret (Thuoris)` (space + parens), B=`Kgin. Te-wosret` (space, no parens), C=`Kgin.Te-wosret` (no space, no parens). Resolution combines two rules: (1) the Co-regent queen rule (prompt.md) splits Te-wosret into a separate row with `name=\"Kgin.<queen-name>\"` and the parenthetical `(Thuoris)` extracted into `egyptian_titulary`; (2) the Kgin spacing standardisation (verified across all 5 queen rows on scan-106-right and scan-107-left) prints `Kgin.` with NO space before the queen's name. Agent C's `Kgin.Te-wosret` matches both rules verbatim."
+  },
+  "29.03|name": {
+    "value": "Psamuthis (Pe-sche[re-n-]mut, User-rê)",
+    "rationale": "Dyn 29 Late Period on book p193 (scan-108-right). Agents split 1/1/1 on `name`: A=full compound `Psamuthis (Pe-sche[re-n-]mut, User-rê)`, B=`Psamuthis` (bare), C=`Psamuthis (Pe-sche[re-n-]mut)` (partial — Egyptian nomen only, no prenomen). Pin agent A's full compound form pending egyptologist printed-source review — this row is in the same inconsistent half-split state as 15.04 Chajan (name carries full compound while egyptian_titulary holds only the prenomen `User-rê`); follow-up review may apply the 15.04-style split (name=just-king, kind=mixed, titulary=full compound) via fix_rows.py if the printed source confirms the discriminator applies."
+  },
+  "30.01|name": {
+    "value": "Nektanebês (Necht-nebef, Cheper-ka-rê)",
+    "rationale": "Dyn 30 Late Period on book p193 (scan-108-right). Agents split 1/1/1 on `name`: A=full compound `Nektanebês (Necht-nebef, Cheper-ka-rê)`, B=`Nektanebês` (bare), C=`Nektanebês (Necht-nebef)` (partial). Pin agent A's full compound form pending egyptologist printed-source review — same inconsistent half-split state as 29.03 / 15.04 (name carries full compound while egyptian_titulary holds only the prenomen `Cheper-ka-rê`); follow-up review may apply the 15.04-style split via fix_rows.py."
+  },
+  "30.02|name": {
+    "value": "Teôs (Djed-hor, Iri-maat-en-rê)",
+    "rationale": "Dyn 30 Late Period on book p193 (scan-108-right). Agents split 1/1/1 on `name`: A=full compound `Teôs (Djed-hor, Iri-maat-en-rê)`, B=`Teôs` (bare), C=`Teôs (Djed-hor)` (partial). Pin agent A's full compound form pending egyptologist printed-source review — same inconsistent half-split state as 29.03 / 30.01 / 15.04 (name carries full compound while egyptian_titulary holds only the prenomen `Iri-maat-en-rê`); follow-up review may apply the 15.04-style split via fix_rows.py."
+  },
+  "30.03|name": {
+    "value": "Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)",
+    "rationale": "Dyn 30 Late Period on book p193 (scan-108-right). Agents split 1/1/1 on `name`: A=full compound `Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)`, B=`Nektanebôs` (bare), C=`Nektanebôs (Necht-har-ehbojet)` (partial). Pin agent A's full compound form pending egyptologist printed-source review — same inconsistent half-split state as 29.03 / 30.01 / 30.02 / 15.04 (name carries full compound while egyptian_titulary holds only the prenomen `Senedjem-ib-rê`); follow-up review may apply the 15.04-style split via fix_rows.py."
+  }
+}
