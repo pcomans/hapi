@@ -209,7 +209,7 @@ def test_load_overrides_rejects_non_dict_root(merge_module, tmp_path):
     """Per Gemini PR #157 round-1 — top-level JSON must be a dict.
     A list / null / string at the root previously raised AttributeError
     at `.items()`; now raises ValueError with the file path."""
-    for bad_root in ([], "string-at-root", 42):
+    for bad_root in ([], "string-at-root", 42, None):
         bad = tmp_path / "tie-break-overrides.json"
         bad.write_text(json.dumps(bad_root))
         orig = merge_module._OVERRIDES_PATH

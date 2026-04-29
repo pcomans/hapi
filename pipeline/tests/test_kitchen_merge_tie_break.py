@@ -167,7 +167,7 @@ def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
 
 def test_load_overrides_rejects_non_dict_root(merge_module, tmp_path):
     """Per Gemini PR #157 round-1 (parity from Ryholt)."""
-    for bad_root in ([], "string-at-root", 42):
+    for bad_root in ([], "string-at-root", 42, None):
         bad = tmp_path / "tie-break-overrides.json"
         bad.write_text(json.dumps(bad_root))
         orig = merge_module._OVERRIDES_PATH
