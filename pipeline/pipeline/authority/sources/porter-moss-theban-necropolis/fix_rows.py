@@ -89,6 +89,18 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "underdot glyph in the text layer); agents over-normalised to "
         "Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.",
     ),
+    (
+        "KV20",
+        "occupant_name",
+        "Hatshepsut",
+        "Strip underdot-H (Ḥ → H) per README's matchable-name-field "
+        "diacritic-stripping convention. Pre-postprocessor (PR #140), the "
+        "publisher OCR's variant cap-Ḥ glyphs (`I:I` in `I:Iatshepsut`) "
+        "led the agents to emit plain `Hatshepsut` after their own "
+        "case-aware normalisation; post-postprocessor the agents see "
+        "canonical Unicode `Ḥ` and one or more carry the diacritic into "
+        "occupant_name despite the README rule. Align here.",
+    ),
 ]
 
 
@@ -96,61 +108,73 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # skipping absent KV24–33/37/40/41/44). Corrections after the field-rule-
 # based prompt + 3-agent merge + egyptologist-reviewer second pass:
 #
-# 1. KV22 — `occupant_name`: PM text layer `AMENOPHIS I Il` = I + Il(=II)
-#    = III; majority vote fell to "Amenophis II" because the chunk-3 prompt
-#    had a mistaken example (`AMENOPHIS Il → Amenophis II`). Agent A
-#    counted glyphs correctly. Egyptologist-reviewer confirmed KV22 is
-#    Amenhotep III's West Valley tomb.
-# 2. KV34 — `notes_from_pm`: PM p.551 prints `34. [1st ed. 24] TUTHMOSIS
-#    III`; the raw OCR for KV34 renders `[rst ed. 24]` (the text layer's
-#    Arabic `1` got mangled to `rst` for this specific line). `1st ed.`
-#    is the Arabic form PM actually prints: across chunks 1-3 the OCR
-#    produces 52 `[1st ed.` tokens vs 60 mangled variants (`Ist` 23,
-#    `rst` 17, `xst` 20) — all OCR misreads of the same Arabic-1 glyph.
-#    The bracketed 1st-edition cross-ref is structurally parallel to
-#    chunk-1 KV4 `"formerly XII"` and chunk-2 KV18 `"formerly XI"`.
-#    All three agents silently dropped it.
-# 3. KV39 — `occupant_role`: prompt rule 1 says role="Unknown" when
+# 1. KV34 — `notes_from_pm`: PM p.551 prints `34. [1st ed. 24] TUTHMOSIS
+#    III`; the bracketed cross-ref is structurally parallel to chunk-1
+#    KV4 `"formerly XII"` and chunk-2 KV18 `"formerly XI"`. All three
+#    agents silently dropped it.
+# 2. KV39 — `occupant_role`: prompt rule 1 says role="Unknown" when
 #    occupant_name is null. PM p.559 prints `39· Uninscribed tomb,
 #    attributed to Amenophis I by Weigall...`; agents emitted null despite
 #    the rule.
-# 4. KV42 — `notes_from_pm`: PM p.559 prints `42. TUTHMOSIS II (?)` with
+# 3. KV42 — `notes_from_pm`: PM p.559 prints `42. TUTHMOSIS II (?)` with
 #    attribution-uncertainty marker. Keep `occupant_name` structured and
 #    absorb the (?) into notes alongside the existing `Excavated by Loret`
 #    headword clause (period-space separator, chunk-2 KV14 precedent).
+#
+# Previously also corrected KV22 and KV36 occupant_name. The postprocessor
+# (PR #140 / #132) now normalises `AMENOPHIS I Il` → `AMENOPHIS III` (king-
+# name-anchored Roman-numeral fix) and `MAI;IIRPER` → `MAḤIRPER` (`I;I` →
+# `Ḥ` substitution) at chunk-text level before agents read it, so the
+# 3-agent merge produces the correct value unanimously and these two
+# overrides became no-ops. The post-merge audit (compare merge-only
+# reconciled.jsonl against fix_rows desired values) confirmed this
+# empirically — see PR #140's audit output. Re-running these as overrides
+# would not change the row, so they are dropped.
 CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "KV22",
-        "occupant_name",
-        "Amenophis III",
-        "PM p.547 text layer 'AMENOPHIS I Il' = I + Il(=II) = III. "
-        "Majority vote was misled by a mistaken prompt example; agent A "
-        "counted glyphs and got III. Egyptologist-reviewer confirmed KV22 "
-        "is Amenhotep III's West Valley tomb.",
+        "notes_from_pm",
+        "Excavated by Davis, and by Carnarvon and Carter.",
+        "PM p.547 headword excavator clause `Excavated by Davis, and by "
+        "Carnarvon and Carter, see CARTER and MACE...` — same shape as "
+        "KV23/KV43/KV45/KV48 excavator clauses. The post-postprocessor "
+        "rerun's three agents all dropped this `Excavated by ...` tail "
+        "from notes_from_pm even though the postprocessor surfaced it "
+        "cleanly. Restore via override (egyptologist-reviewer flagged "
+        "as R1 in PR #140 review).",
+    ),
+    (
+        "KV23",
+        "notes_from_pm",
+        "Excavated by Belzoni.",
+        "PM p.550 headword excavator clause `Excavated by Belzoni, see "
+        "id. Narrative of the Researches ... in Egypt and Nubia, "
+        "pp. 123-4.` — same systemic dropout as KV22. Egyptologist-"
+        "reviewer flagged as R2 in PR #140 review.",
+    ),
+    (
+        "KV38",
+        "notes_from_pm",
+        "Excavated by Loret.",
+        "PM p.557 headword excavator clause `Excavated by Loret, see "
+        "DAVIS, &c., The Tomb of Hatshopsttu, p. xiv...` (chunk-3 line "
+        "393) — same R1/R2 systemic loss as KV22/KV23/KV43/KV45. The "
+        "egyptologist-reviewer's spot-check missed this one but the "
+        "shape is identical: headword bibliographic-ribbon excavator "
+        "clause that the post-postprocessor agents stripped.",
     ),
     (
         "KV34",
         "notes_from_pm",
         "1st ed. 24",
         "PM p.551 headword prints `34. [1st ed. 24] TUTHMOSIS III`. The "
-        "chunk-3 text-layer OCR for this specific line renders the "
-        "bracketed Arabic `1` as `rst`; across chunks 1-3 the same "
-        "printed `[1st ed. N]` token OCRs to `1st` 52 times and to "
-        "mangled variants (`Ist`/`rst`/`xst`) 60 times. Store the "
-        "PM-verbatim `1st ed. 24` in notes_from_pm rather than "
-        "transcribing any one OCR variant. Parallel in shape to "
-        "chunk-1 KV4 'formerly XII' / chunk-2 KV18 'formerly XI'.",
-    ),
-    (
-        "KV36",
-        "occupant_name",
-        "Mahirper",
-        "PM p.556 headword prints `36. MAI;IIRPER` — the `I;I` glyph is "
-        "the underdot-H (ḥ). Applying the chunk-1/2 rule `I;I → h` "
-        "yields `MA` + `h` + `IRPER` = `MAHIRPER` → `Mahirper`. "
-        "Agent B got this right; agents A and C kept a spurious `i` "
-        "before the `h`. Egyptologist-reviewer second-pass confirmed no "
-        "published Egyptological form reads 'Maihirper'.",
+        "postprocessor normalises `[Ist|rst|xst ed.` → `[1st ed.` at "
+        "chunk-text level, so the agents now see the canonical form, but "
+        "all three still drop the bracketed cross-ref entirely from "
+        "notes_from_pm — they treat it as a section reference rather "
+        "than headword content. Restore the PM-verbatim `1st ed. 24` "
+        "string. Parallel in shape to chunk-1 KV4 'formerly XII' and "
+        "chunk-2 KV18 'formerly XI'.",
     ),
     (
         "KV39",
@@ -170,6 +194,28 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "(no paraphrase, per rule 1 PM-verbatim policy). Preserve the "
         "existing 'Excavated by Loret' headword clause; join with '. ' "
         "per chunk-2 KV14.",
+    ),
+    (
+        "KV43",
+        "notes_from_pm",
+        "Excavated by Davis.",
+        "PM p.559 headword excavator clause for KV43 (Tuthmosis IV) — "
+        "same systemic R1/R2 dropout: post-postprocessor agents lost "
+        "the `Excavated by ...` tail. Egyptologist-reviewer flagged as "
+        "R1/R2/R4 sibling.",
+    ),
+    (
+        "KV45",
+        "notes_from_pm",
+        "Overseer of the Fields of Amun, Dyn. XVIII; re-used by Merenkhons, "
+        "Doorkeeper of the House of Amun, Dyn. XXII (name from scarab). "
+        "Excavated by Davis and Carter.",
+        "PM p.562 headword tail `Excavated by Davis and Carter.` (chunk-3 "
+        "lines 565-568) was dropped by post-postprocessor agents on "
+        "rerun — same R1/R2 systemic loss. Restore the merged-value body "
+        "and append the dropped tail. (The `;` separator after Dyn. XVIII "
+        "is retained from the merged value; PM uses `,` but the "
+        "egyptologist-reviewer marked this as a mild paraphrase.)",
     ),
 ]
 
@@ -307,67 +353,143 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     # Chunk-7 `ḥ` sweep (Gemini round-3 on PR #101): the chunk-7 prompt
     # allowed `ḥ` in `occupant_name`, contradicting the README's project-wide
-    # strip-ḥ policy (KV8 Merneptah, KV36 Mahirper, etc.). Retroactive
-    # alignment: 8 additional chunk-7 rows have `ḥ` stripped here. DAN-Aqhor
-    # `occupant_name` is handled in the earlier entry above (ʿAḳ-hor instead
-    # of ʿAḳ-ḥor). Ayin `ʿ` and underdot-K `ḳ` are preserved as distinguishing
-    # radicals per README; only underdot-H is stripped in the matchable name.
-    (
-        "SWV-HatshepsutSouth",
-        "occupant_name",
-        "Hatshepsut",
-        "Strip underdot-H (ḥ → h) per README's matchable-name-field convention. "
-        "Gemini round-3 sweep on PR #101.",
-    ),
-    (
-        "DAN-Ahhotep",
-        "occupant_name",
-        "ʿAhhotp",
-        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
-        "Gemini round-3 sweep on PR #101.",
-    ),
-    (
-        "DAN-AhmosiHenutempet",
-        "occupant_name",
-        "ʿAhmosi Henutempet",
-        "Strip underdot-H (ḥ → h) per README's convention; both the `Aḥmosi` "
-        "and `Ḥenutempet` underdot-Hs are stripped to plain h. Ayin ʿ retained. "
-        "Gemini round-3 sweep on PR #101.",
-    ),
-    (
-        "DAN-AhmosiNefertere",
-        "occupant_name",
-        "ʿAhmosi Nefertere",
-        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
-        "Gemini round-3 sweep on PR #101.",
-    ),
-    (
-        "DAN-AhmosiSonOfSeqenenre",
-        "occupant_name",
-        "ʿAhmosi",
-        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
-        "Gemini round-3 sweep on PR #101.",
-    ),
+    # strip-ḥ policy. Most of these overrides became no-ops once the chunk-text
+    # postprocessor (PR #140 / #132) started normalising the publisher OCR's
+    # variant ḥ glyphs (`J:I`/`I:I`/`I;I`/`l:I`/`I:J`) to canonical Unicode `Ḥ`
+    # at the chunk-text level: agents now see the same ḥ in every position and
+    # apply the README's strip-ḥ rule consistently in occupant_name. Seven
+    # `occupant_name` overrides (SWV-HatshepsutSouth, DAN-Ahhotep,
+    # DAN-AhmosiHenutempet, DAN-AhmosiNefertere, DAN-AhmosiSonOfSeqenenre,
+    # DAN-MentuhotpSankhibtaui, DAN-Neferhotep) are dropped as empirically
+    # redundant — verified by comparing merge-only reconciled.jsonl to the
+    # desired values during PR #140's post-merge audit. Two entries remain:
+    # DAN-MentuhotpIWifeOfDjhuti (the agents preserve PM's "Queen" prefix in
+    # occupant_name; the override strips it to match the role-encoded canonical
+    # form) and DAN-Aqhor's occupant_name (handled in the earlier
+    # P1-rename block above; underdot-K `ḳ` is a distinguishing radical that
+    # the postprocessor does not touch).
     (
         "DAN-MentuhotpIWifeOfDjhuti",
         "occupant_name",
         "Mentuhotp I",
-        "Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 "
-        "sweep on PR #101.",
+        "Agents preserve PM's `Queen` prefix from the headword (`QUEEN "
+        "MENTUHOTP I, wife of King Ḍḥuti`); the project-wide convention is "
+        "to encode the title in `occupant_role` and keep `occupant_name` "
+        "as the bare regnal name. Strip the prefix here.",
+    ),
+    # Post-postprocessor rerun: the seven Dyn-17 royal rows below carried
+    # their parenthetical prenomen INTO `occupant_name` (`Antef (Sehertaui)`,
+    # `Kamosi (Wazkheperreʿ)`, etc.). The README defines `occupant_name` as
+    # the matchable name field for Phase-A king-authority joining; pharaoh.se
+    # and Beckerath key the multiple Antef kings on the bare prenomen list
+    # (in `occupant_alt_names`), not on a parenthetical-string-in-name.
+    # Strip the parenthetical so the joinable form matches the pharaoh.se
+    # `Antef` entries. The prenomen survives in `occupant_alt_names`.
+    # Egyptologist-reviewer flagged as R6 in PR #140 review.
+    ("DAN-AntefSehertaui", "occupant_name", "Antef",
+     "Strip parenthetical prenomen `(Sehertaui)`; alt_names retains it. "
+     "R6 in egyptologist-reviewer PR #140 review."),
+    ("DAN-AntefWahankh", "occupant_name", "Antef",
+     "Strip parenthetical prenomen `(Wahankh)`; alt_names retains it."),
+    ("DAN-AntefNubkheperre", "occupant_name", "Antef",
+     "Strip parenthetical prenomen `(Nubkheperreʿ)`; alt_names retains it."),
+    ("DAN-AntefSekhemreHeruhirmaet", "occupant_name", "Antef",
+     "Strip parenthetical prenomen `(Sekhemreʿ-Heruhirmaʿet)`; alt_names "
+     "retains it."),
+    ("DAN-AntefSekhemreWepmaet", "occupant_name", "Antef",
+     "Strip parenthetical prenomen `(Sekhemreʿ-Wepmaʿet)`; alt_names "
+     "retains it."),
+    ("DAN-KamosiWazkheperre", "occupant_name", "Kamosi",
+     "Strip parenthetical prenomen `(Wazkheperreʿ)`; alt_names retains it."),
+    ("DAN-SebkemsafSekhemreShedtaui", "occupant_name", "Sebkemsaf II",
+     "Strip parenthetical prenomen `(Sekhemreʿ-Shedtaui)`; alt_names "
+     "retains it."),
+    # Post-postprocessor rerun: three rows had their `notes_from_pm` ḥ/ḳ
+    # diacritics stripped despite the README's verbatim-preserve policy
+    # for that field. The agents now correctly strip ḥ in `occupant_name`
+    # (per the postprocessor's canonical Unicode handoff) but extended the
+    # strip to `notes_from_pm`, which the README forbids. Restore the PM-
+    # printed underdots. Egyptologist-reviewer flagged as R7 in PR #140.
+    (
+        "DAN-Ahhotep",
+        "notes_from_pm",
+        "Wife of King Seḳenenreʿ-Taʿa. Found by Mariette in 1859.",
+        "Restore underdot-K (ḳ) in `Seḳenenreʿ-Taʿa` per README's "
+        "notes_from_pm verbatim-preserve policy. PM p.600 prints "
+        "Seḳenenreʿ-Taʿa with the underdot.",
     ),
     (
-        "DAN-MentuhotpSankhibtaui",
-        "occupant_name",
-        "Mentuhotp-Sʿankhibtaui",
-        "Strip underdot-H (ḥ → h) per README's convention. Ayin ʿ retained. "
-        "Gemini round-3 sweep on PR #101.",
+        "DAN-AhmosiHenutempet",
+        "notes_from_pm",
+        "Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa).",
+        "Restore underdot-H (ḥ) in `ʿAḥḥotp` and underdot-K (ḳ) in "
+        "`Seḳenenreʿ-Taʿa` per README's notes_from_pm verbatim-preserve "
+        "policy. PM p.605 prints both underdots in headword. Drop the "
+        "`Coffin possibly from here.` tail the post-postprocessor agents "
+        "added — that comes from the find-list line below the headword "
+        "(`Coffin, possibly from here, formerly in possession of "
+        "Castellari`) which is body content, not headword.",
     ),
     (
-        "DAN-Neferhotep",
-        "occupant_name",
-        "Neferhotep",
-        "Strip underdot-H (ḥ → h) per README's convention. Gemini round-3 "
-        "sweep on PR #101.",
+        "DAN-AhmosiSonOfSeqenenre",
+        "notes_from_pm",
+        "Eldest son of King Seḳenenreʿ-Taʿa and ʿAḥḥotp.",
+        "Restore underdot-K and underdot-H per README's notes_from_pm "
+        "verbatim-preserve policy.",
+    ),
+    # DAN-AhmosiHenutempet is the well-known Dyn-17 princess (daughter of
+    # Ahhotep, sister of Ahmose I); the OLD test expected `Princess` and
+    # the post-postprocessor merge downgraded to the more generic
+    # `Royal Family`. Restore the more specific egyptological vocab.
+    (
+        "DAN-AhmosiHenutempet",
+        "occupant_role",
+        "Princess",
+        "Daughter of a queen-consort; standard Egyptological convention "
+        "is `Princess` for daughters of kings. The OLD merged value was "
+        "`Princess`; post-postprocessor agents picked `Royal Family` "
+        "(more generic). Egyptologist-reviewer R8 in PR #140 review.",
+    ),
+    # Post-postprocessor rerun lost two pyramid cross-refs from headword
+    # tails. Same systemic R1/R2/R4 clause-loss pattern but on chunk-7
+    # rows. Restore.
+    (
+        "DAN-KamosiWazkheperre",
+        "notes_from_pm",
+        "Found by Mariette in 1857. For pyramid, possibly of Kamosi, see infra, p. 620.",
+        "Restore the dropped pyramid cross-ref `For pyramid, possibly "
+        "of Kamosi, see infra, p. 620.` from PM p.600 headword tail. "
+        "Egyptologist-reviewer R9 in PR #140 review.",
+    ),
+    (
+        "DAN-AntefNubkheperre",
+        "notes_from_pm",
+        "Found by Mariette in 1860. Pyramid, see Hay MSS. 29816.",
+        "Restore the dropped pyramid cross-ref `Pyramid, see HAY MSS. "
+        "29816.` from PM p.602 headword tail. Egyptologist-reviewer R10 "
+        "in PR #140 review.",
+    ),
+    (
+        "DAN-SebkemsafSekhemreShedtaui",
+        "notes_from_pm",
+        "Pyramid behind Theb. tb. 24, perhaps belonging to this tomb.",
+        "Same R9/R10 systemic clause-loss: post-postprocessor agents "
+        "dropped the pyramid cross-ref from PM p.604 headword tail. "
+        "Restore.",
+    ),
+    # Post-postprocessor rerun dropped the `, quartzite, in Cairo Mus.
+    # Ent. 47032` object-cite tail from SWV-HatshepsutSouth. The Cairo
+    # Mus. Ent. 47032 reference (sarcophagus of Hatshepsut as Queen-
+    # Consort, quartzite — confirmed by HAYES, Royal Sarcophagi, and the
+    # standard sarcophagus literature) is exactly the catalogable fact
+    # the schema is meant to retain. Egyptologist-reviewer R5 in PR #140.
+    (
+        "SWV-HatshepsutSouth",
+        "notes_from_pm",
+        "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite, in Cairo Mus. Ent. 47032.",
+        "Restore the `, quartzite, in Cairo Mus. Ent. 47032` object-cite "
+        "tail from PM p.591 headword. Egyptologist-reviewer R5 in PR "
+        "#140 review.",
     ),
 ]
 
@@ -427,46 +549,16 @@ CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "reviewer P2: restore the footnote kinship hedges since they are the "
         "only filiation info PM gives for Tentopet.",
     ),
-    # Gemini round-3 finding on PR #101: the chunk-8 prompt drifted from the
-    # project-wide README convention ("strip ḥ in occupant_name; keep ayin").
-    # Chunk 7's `occupant_name` values drifted in the same direction — chunk-7
-    # cleanup is a separate followup PR (those values are already merged). The
-    # 5 corrections below align chunk 8 back to the README convention; QV44
-    # `Khaʿemweset` already uses plain h so no correction is needed there.
-    (
-        "QV42",
-        "occupant_name",
-        "Paraʿhirwenemef",
-        "Strip underdot-H (ḥ → h) in occupant_name per README's "
-        "matchable-name-field diacritic-stripping convention (KV8 Merneptah "
-        "precedent). Ayin ʿ retained.",
-    ),
-    (
-        "QV43",
-        "occupant_name",
-        "Set-hirkhopshef",
-        "Strip underdot-H (ḥ → h) in occupant_name per README convention.",
-    ),
-    (
-        "QV46",
-        "occupant_name",
-        "Imhotep",
-        "Strip underdot-H (ḥ → h) in occupant_name per README convention.",
-    ),
-    (
-        "QV47",
-        "occupant_name",
-        "ʿAhmosi",
-        "Strip underdot-H (ḥ → h) in occupant_name per README convention. "
-        "Ayin ʿ retained.",
-    ),
-    (
-        "QV55",
-        "occupant_name",
-        "Amen(hir)khopshef",
-        "Strip underdot-H (ḥ → h) in occupant_name per README convention. "
-        "Parenthetical infix `(hir)` preserved verbatim from PM.",
-    ),
+    # Gemini round-3 finding on PR #101 originally added 5 occupant_name
+    # ḥ-strip overrides here (QV42, QV43, QV46, QV47, QV55) to align chunk 8
+    # back to the project-wide README convention ("strip ḥ in occupant_name;
+    # keep ayin"). All 5 became no-ops once the chunk-text postprocessor
+    # (PR #140 / #132) began normalising the publisher OCR's variant cap-Ḥ
+    # glyphs (`I;I` in `PARAʿḤIRWENEMEF`, `J:I` in `SET-ḤIRKHOPSHEF`,
+    # `I;I` in `IMḤOTEP` / `CAḤMOSI` / `AMEN(ḤIR)KHOPSHEF`) to canonical
+    # Unicode `Ḥ` at chunk-text level: agents now see the same ḥ in every
+    # position and apply the README strip-ḥ rule consistently. Dropped here
+    # as empirically redundant — verified by PR #140's post-merge audit.
 ]
 
 

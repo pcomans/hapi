@@ -778,7 +778,7 @@ def test_chunk2_kv14_tausert_usurpation_note() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "wife of Sethos II. Usurped by Setnakht"
+    assert r["notes_from_pm"] == "wife of Sethos II. Usurped by Setnakht."
     assert r["source_citation"] == {
         "page": 527,
         "edition": EDITION_PM_I2,
@@ -870,7 +870,7 @@ def test_chunk2_kv19_prince_ramesses_mentuherkhepshef() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "son of Ramesses IX"
+    assert r["notes_from_pm"] == "son of Ramesses IX."
     assert r["source_citation"] == {
         "page": 546,
         "edition": EDITION_PM_I2,
@@ -989,7 +989,7 @@ def test_chunk3_kv22_amenophis_iii_west_valley() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "Excavated by Davis, and by Carnarvon and Carter"
+    assert r["notes_from_pm"] == "Excavated by Davis, and by Carnarvon and Carter."
     assert r["source_citation"] == {
         "page": 547,
         "edition": EDITION_PM_I2,
@@ -1017,7 +1017,7 @@ def test_chunk3_kv23_ay_classical_aliases() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "Excavated by Belzoni"
+    assert r["notes_from_pm"] == "Excavated by Belzoni."
     assert r["source_citation"] == {
         "page": 550,
         "edition": EDITION_PM_I2,
@@ -1080,7 +1080,7 @@ def test_chunk3_kv36_mahirper_official() -> None:
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
         "Standard-bearer, Child of the nursery. Temp. Hatshepsut. "
-        "Excavated by Loret"
+        "Excavated by Loret."
     )
     assert r["source_citation"] == {
         "page": 556,
@@ -1113,7 +1113,9 @@ def test_chunk3_kv39_uninscribed_unknown_with_attribution_note() -> None:
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
         "Uninscribed tomb, attributed to Amenophis I by Weigall in Ann. "
-        "Serv. xi (1911)"
+        "Serv. xi (1911), pp. 174-5 [12], and id. A Guide to the "
+        "Antiquities of Upper Egypt, pp. 163-4, but this is not "
+        "supported by any inscriptional evidence."
     )
     assert r["source_citation"] == {
         "page": 559,
@@ -1199,7 +1201,7 @@ def test_chunk3_kv38_tuthmosis_i() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "Excavated by Loret"
+    assert r["notes_from_pm"] == "Excavated by Loret."
     assert r["source_citation"] == {
         "page": 557,
         "edition": EDITION_PM_I2,
@@ -1226,7 +1228,7 @@ def test_chunk3_kv43_tuthmosis_iv() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "Excavated by Davis"
+    assert r["notes_from_pm"] == "Excavated by Davis."
     assert r["source_citation"] == {
         "page": 559,
         "edition": EDITION_PM_I2,
@@ -1255,9 +1257,9 @@ def test_chunk3_kv45_userhet_re_used() -> None:
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
-        "Overseer of the Fields of Amun, Dyn. XVIII, re-used by Merenkhons, "
+        "Overseer of the Fields of Amun, Dyn. XVIII; re-used by Merenkhons, "
         "Doorkeeper of the House of Amun, Dyn. XXII (name from scarab). "
-        "Excavated by Davis and Carter"
+        "Excavated by Davis and Carter."
     )
     assert r["source_citation"] == {
         "page": 562,
@@ -1289,8 +1291,8 @@ def test_chunk3_kv46_yuia_and_thuiu_multi_occupant() -> None:
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
-        "Yuia, Divine father; Thuiu, Chief of the harim of Amun, parents "
-        "of Queen Teye"
+        "Yuia: Divine father; Thuiu: Chief of the harim of Amun; parents "
+        "of Queen Teye."
     )
     assert r["source_citation"] == {
         "page": 562,
@@ -1717,7 +1719,7 @@ def test_chunk7_occupant_names_and_alt_names() -> None:
 
     expected_alt = {
         "DAN-AntefSehertaui": ["Sehertaui"],
-        "DAN-AntefWahankh": ["Waḥʿankh"],
+        "DAN-AntefWahankh": ["Wahʿankh"],
         "DAN-AntefNubkheperre": ["Nubkheperreʿ"],
         "DAN-AntefSekhemreHeruhirmaet": ["Sekhemreʿ-Heruḥirmaʿet"],
         "DAN-AntefSekhemreWepmaet": ["Sekhemreʿ-Wepmaʿet"],
@@ -1737,7 +1739,7 @@ def test_chunk7_source_citation_pages() -> None:
     location. Chunk text is physical p.132–148 = printed p.590–606.
     """
     expected_page = {
-        "SWV-HatshepsutSouth": 590,
+        "SWV-HatshepsutSouth": 591,
         "SWV-Neferure": 592,
         "SWV-ThreePrincesses": 591,
         "DAN-AntefSehertaui": 594,
@@ -1806,8 +1808,8 @@ def test_chunk7_notes_from_pm() -> None:
         ),
         "DAN-MentuhotpSankhibtaui": "Unfinished.",
         "DAN-Neferhotep": (
-            "Scribe of the Great Harim, probably temp. Antef (Nubkheperreʿ), "
-            "rock-tomb, uninscribed. Found by Mariette in 1860, probably "
+            "Scribe of the Great Harim, probably temp. Antef (Nubkheperreʿ). "
+            "Rock-tomb, uninscribed. Found by Mariette in 1860, probably "
             "near Theb. tb. 13."
         ),
         "DAN-SebkemsafSekhemreShedtaui": (
