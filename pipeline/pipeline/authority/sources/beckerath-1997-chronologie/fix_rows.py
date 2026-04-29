@@ -323,15 +323,22 @@ OVERRIDES: dict[str, dict] = {
     # a half-split state. Verified against the printed Beckerath PDF
     # (PDF p108 = book p192) on PR closing #150.
     #
-    # NB: rows in this cohort have INVERSE-DIRECTION linguistic semantics
-    # vs the Old Kingdom + Dyn 21 single-alias cohort:
+    # NB: linguistic semantics in this cohort are MIXED — the discriminator's
+    # structural shape (single alias → `nomen` split; alias-pair → `mixed`
+    # split) is language-agnostic and applies regardless of which side is
+    # which:
     #   - Old Kingdom cohort (`Senofru (Soris)` etc.): name = Egyptian,
     #     parenthetical = Greek alias.
-    #   - Late Period cohort (this PR): name = Greek/Manethonic display
-    #     form, parenthetical = Egyptian birth name (sometimes + Egyptian
-    #     prenomen). The discriminator's structural shape (single alias
-    #     → `nomen` split; alias-pair → `mixed` split) still applies; the
-    #     LANGUAGE of each side just flips.
+    #   - 28.01 / 26.05 / 29.02 (this PR): INVERSE-direction —
+    #     name = Greek/Manethonic display form, parenthetical = Egyptian
+    #     birth name (sometimes + Egyptian prenomen).
+    #   - 26.02 Nekaw: SAME-direction as the Old Kingdom cohort —
+    #     name = Egyptian birth name, parenthetical = Greek transcriptions
+    #     `Nekôs/Nechaô` + Egyptian prenomen `Uhem-ib-rê`. Beckerath uses
+    #     the Egyptian display form for Nekaw specifically; the Greek
+    #     forms are alternative transcriptions in the parenthetical.
+    # The discriminator doesn't care which side is which — it pivots only
+    # on the parenthetical's internal structure (single alias vs alias-pair).
     #
     # - 28.01 Amyrtaios: print is `Amyrtaios (Amen-ir-di-su)` — single
     #   Egyptian nomen in parens (Amyrtaios is the Greek/Manethonic form).
