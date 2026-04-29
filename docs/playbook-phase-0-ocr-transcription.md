@@ -46,7 +46,8 @@ Create `pipeline/pipeline/authority/sources/<source>/` with:
 - `README.md` — citation, PDF SHA, scope (in/out), schema + field semantics, rights statement, known gaps. Explicitly list anything you are NOT extracting and why.
 - `transcribe.md` — method per ADR-017, target physical-page range, pipeline (OCR → 3-subagent → merge → review → post-processing), PDF hash pin.
 - `prompt.md` — the identical prompt fed to all three extraction subagents. Names the book, enumerates schema fields, lists row-format edge cases, specifies the `<agent_dir>` output paths.
-- `merge.py` — copied and adapted from Ryholt or Kitchen. Renames the primary ID field (`ryholt_id` → `<source>_id`), adjusts `_sort_key` for the source's ID scheme, sets `DEFAULT_AGENT_DIR` to `Path(__file__).parent / "raw"`.
+- `merge.py` — copied and adapted from Kitchen (post-PR #155 canonical). Renames the primary ID field (`kitchen_id` → `<source>_id`), adjusts `_sort_key` for the source's ID scheme, sets `DEFAULT_AGENT_DIR` to `Path(__file__).parent / "raw"`. The canonical merge.py carries rule-2 (no silent first-seen-pick) enforcement: `_majority` requires keyword-only `<id>`/`field`, raises on uncovered ties, looks up `tie-break-overrides.json` first. See § "Canonical merge.py shape" below for the full machinery.
+- `tie-break-overrides.json` — empty `{}` initially. Authoritative resolutions for ties keyed by `"<id>|<field>"`; each value is `{"value": ..., "rationale": "..."}` with a printed-source citation. Loader validates: top-level dict, both halves of key non-empty, value is dict with `value` + `rationale` keys.
 - `raw/` — gitignored working directory (created empty; agents write here).
 
 Do not commit `raw/` contents. The `.gitignore` patterns covering `pipeline/pipeline/authority/sources/*/raw/chunk-*.md` and `pipeline/pipeline/authority/sources/*/raw/agent-*.jsonl` handle both the OCR chunks and the per-extraction-agent JSONLs.
@@ -104,10 +105,18 @@ cd pipeline && uv run python pipeline/authority/sources/<source>/merge.py
 
 Outputs `reconciled.jsonl` + `merge-disagreements.txt`. The merge:
 - Groups rows by primary ID.
-- Majority-votes per field across the three agents (sentinel strings like `"none"` / `"-"` normalise to `null`).
-- Writes every non-unanimous row to `merge-disagreements.txt` for audit.
+- Majority-votes per field across the three agents (sentinel strings like `"none"` / `"-"` / `"null"` normalise to `null`).
+- Writes every non-unanimous row to `merge-disagreements.txt` for audit (fields sorted for determinism per issue #142).
+- **Raises loudly on uncovered ties** (constitutional rule 2): if 1/1/1 across three agents OR 1/1 when one agent missed the row, and no `tie-break-overrides.json` entry exists, `_majority` raises `ValueError` naming the row × field + every distinct candidate. The merge does NOT silently first-seen-pick.
 
-Review the disagreements file visually. A few disagreements are normal (typographic drift). Many disagreements on the same field across many rows indicates a prompt ambiguity — fix `prompt.md` and re-run the extraction before proceeding.
+The first run on a fresh source typically raises on a handful of ties. Each raise is a row × field decision the data needs you to make:
+1. Read the printed PDF at the cited row to determine the correct value.
+2. Add an entry to `tie-break-overrides.json` keyed `"<id>|<field>"`, with `value` set to the correct value and `rationale` citing the printed page (book p<N> + scan-NNN-{left,right} if applicable).
+3. Re-run merge.py. The next raise (if any) surfaces; iterate.
+
+When the merge runs cleanly, every reconciled value traces to either (a) genuine multi-agent agreement, (b) a real majority, or (c) an explicit cited override — per constitutional rule 6.
+
+Review the disagreements file visually. A few non-tied disagreements are normal (typographic drift). Many disagreements on the same field across many rows indicates a prompt ambiguity — fix `prompt.md` and re-run the extraction before proceeding.
 
 ## Step 6 — LLM reviewer pass
 
@@ -135,7 +144,9 @@ Re-running `fix_rows.py` must be idempotent — guard against duplicating the ov
 
 ## Step 8 — write the tests
 
-`pipeline/tests/test_sources_<source>.py`, 10–20 value-assertion tests. Per rule 5, every populated field on at least one fully-filled row must be asserted. Tests to include:
+Two test files per source:
+
+1. **`pipeline/tests/test_sources_<source>.py`** — 10–20 value-assertion tests. Per rule 5, every populated field on at least one fully-filled row must be asserted. Tests to include:
 
 - **Row count.** Exact (or tight range) match.
 - **Dynasty / category coverage.** Set-equality over a known set.
@@ -152,7 +163,17 @@ Re-running `fix_rows.py` must be idempotent — guard against duplicating the ov
 - **Cross-field invariants.** E.g. Dyn-21 concurrency symmetry: if X lists Y, then Y lists X.
 - **Polity/dynasty constraint matrix.** Iterate every row and assert `polity` matches the expected value for the row's prefix.
 
-Run: `cd pipeline && uv run pytest tests/test_sources_<source>.py -v`.
+2. **`pipeline/tests/test_<source>_merge_tie_break.py`** — unit tests pinning the rule-2 enforcement machinery. Copy from `test_kitchen_merge_tie_break.py` (post-PR #155 canonical). 16+ tests covering:
+
+- `_majority` unanimous / clear majority / 1/1 partial-row / 1/1/1 tie / sentinel-null collapse / keyword-only `<id>`/`field` signature.
+- Override resolution paths: 1/1/1 tie + override → override value; 1/1 tie + override → override value; tie without override → raise with diagnostic listing every candidate.
+- Override-loader schema validation: top-level dict, `|` separator present, both halves non-empty, value is dict, value carries `value` + `rationale` keys.
+- `SENTINEL_NULL_STRINGS` includes `"null"` (Leprohon parity per PR #146 P1.3).
+- Override `value` passes through `_deep_normalise` (Gemini PR #155 round-2 parity).
+- On-disk pin tests: for every `tie-break-overrides.json` entry, assert reconciled.jsonl carries the resolved value (catches silent regression if someone removes an override).
+- A meta-test `test_post_fix_rows_pipeline_determinism` (per PR #161, closes the constitutional rule 3 gap on the override → fix_rows multi-file convention): pin the FINAL post-fix-rows reconciled.jsonl value for every tie-break override row × field with coverage sanity-checks.
+
+Run: `cd pipeline && uv run pytest tests/test_sources_<source>.py tests/test_<source>_merge_tie_break.py -v`.
 Then run the full suite: `uv run pytest`. If any unrelated test fails, fix it — do not merge a red tree.
 
 ## Step 9 — update `docs/mvp-tasks.md`
@@ -163,7 +184,7 @@ Strike through the source bullet (`~~**Source name**~~ ✅`), add the row count,
 
 Stage files **explicitly by name** — never `git add .` or `git add -A`. The `raw/` contents must not be committed; `.gitignore` patterns cover them but verifying manually is cheap insurance.
 
-Expected committed files per source (11-ish):
+Expected committed files per source (13-ish):
 - `.gitignore` (if you extended the ignore pattern)
 - `docs/mvp-tasks.md`
 - `pipeline/pipeline/authority/sources/<source>/README.md`
@@ -171,10 +192,12 @@ Expected committed files per source (11-ish):
 - `pipeline/pipeline/authority/sources/<source>/prompt.md`
 - `pipeline/pipeline/authority/sources/<source>/merge.py`
 - `pipeline/pipeline/authority/sources/<source>/fix_rows.py`
+- `pipeline/pipeline/authority/sources/<source>/tie-break-overrides.json` (initially `{}` if no ties; populated as ties surface)
 - `pipeline/pipeline/authority/sources/<source>/reconciled.jsonl`
 - `pipeline/pipeline/authority/sources/<source>/merge-disagreements.txt`
 - `pipeline/pipeline/authority/sources/<source>/raw/.gitkeep` (keeps the dir tracked; everything else under `raw/` is ignored via the root `.gitignore`'s `pipeline/pipeline/authority/sources/*/raw/*` pattern)
 - `pipeline/tests/test_sources_<source>.py`
+- `pipeline/tests/test_<source>_merge_tie_break.py`
 
 **Deterministic JSONL output.** Write `reconciled.jsonl` with `json.dumps(..., sort_keys=True)` in both `merge.py` and `fix_rows.py`. Without sorted keys, Python's dict iteration order makes the file re-shuffle on every re-run even when values are identical — spurious diffs pollute the PR and make the authority file look unstable.
 
@@ -357,3 +380,34 @@ Use surgical `fix_rows.py` overrides on the first-run agent JSONL instead. Befor
 - **The git push hook requires `TASK_LIST_UPDATED=1`** when `docs/mvp-tasks.md` is in the commit. Prefix with it or the pre-push hook blocks.
 - **Feature-branch policy.** Never push to main. Always create a `feat/source-<name>` branch off main and open a PR. See `feedback_branch_pr.md`.
 - **Do NOT commit `.claude/agent-memory/`.** The `code-reviewer` Claude Code subagent writes local memory files under `.claude/agent-memory/` when it runs. These appear as untracked files after a review cycle. They are NOT project files and must not be staged. Stage explicitly by name (`git add pipeline/pipeline/authority/sources/<source>/ pipeline/tests/test_sources_<source>.py`) and never use `git add -A` or `git add .`. If you see `.claude/agent-memory/` in `git status`, it is safe to leave untracked; gitignoring it globally is a separate hygiene task.
+
+## Canonical merge.py shape
+
+Post-PR #155 (Kitchen) is canonical; Ryholt PR #157 / Beckerath PR #146 / Porter-Moss PR #151 / Leprohon PR #128 are all aligned. When scaffolding a new source's merge.py, copy from `pipeline/pipeline/authority/sources/kitchen-tipe/merge.py` and adapt these source-specific pieces:
+
+1. Primary-ID symbol throughout: `kitchen_id` → `<source>_id`. The `_majority` parameter is `kid` → renamed to match.
+2. `_sort_key` for the source's ID scheme.
+3. `DEFAULT_AGENT_DIR = SOURCE_DIR / "raw"`.
+
+Keep verbatim (source-agnostic):
+
+- `SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})` — the `"null"` entry is parity with Leprohon (PR #146 P1.3); a `(None, "null")` pair must collapse to a single vote.
+- `_normalise_value` + `_deep_normalise` — sentinel-null collapse, recursive across dicts and lists so a `{"page": "-"}` vs `{"page": null}` agent diff doesn't register as a tie.
+- `_normalise_for_merge` — pre-merge canonicalisation hook. Default is a stub returning a shallow copy. Leprohon implements MdC → IFAO transliteration normalisation here for translit sub-fields; other sources currently have no normalisation candidates but the hook is the extension point if a future re-extraction surfaces encoding-style ties.
+- `_load_overrides` — JSON loader with strict validation: `isinstance(raw, dict)` at root, `|` separator in every key, both halves non-empty, every value is a dict carrying `value` + `rationale` keys. UTF-8 encoding on `read_text` (override values can carry Egyptian diacritics).
+- `_majority` signature and body — keyword-only `<id>`/`field` (constitutional rule 10: no Optional fallback for "legacy callers"); deep-normalise input; tie detection via `len(most) >= 2 and most[0][1] == most[1][1]`; lookup `TIE_BREAK_OVERRIDES.get((id, field))` on tie; if hit, return `_deep_normalise(override["value"])` (Gemini PR #155 round-2 parity); if miss, raise with diagnostic listing every distinct candidate.
+- `main()` loop: the per-row loop sorts `all_fields` (incidental fix to issue #142 — deterministic merge-disagreements.txt across re-runs) and passes `<id>=<id>, field=field` to `_majority`. Apply `_normalise_for_merge` to each agent's row before the per-field loop.
+
+The override file `tie-break-overrides.json` ships empty `{}` initially. Each tie that surfaces during the first merge run gets:
+1. An entry keyed `"<id>|<field>"`, value `{"value": <correct>, "rationale": "<printed-source-citation>"}`.
+2. A corresponding test pin in `test_<source>_merge_tie_break.py` asserting the resolved value on disk.
+3. A re-run of merge.py to apply.
+
+Iterate until the merge runs cleanly. The override table is the authority's audit trail for every reconciled value that didn't trace to genuine multi-agent agreement.
+
+For sources where the egyptologist post-merge sweep (Step 6) flags row-level corrections that aren't tie-breaks but rather post-merge editorial passes (e.g. Greek-alias-in-parens splits, underdot diacritic restoration, Bibl. ribbon completion), those land in `fix_rows.py`, NOT in `tie-break-overrides.json`. The two files have distinct contracts:
+
+- **`tie-break-overrides.json`** = pre-fix-rows resolution of an ambiguous merge result. Pins agent-extractable values that the 3-agent vote couldn't resolve.
+- **`fix_rows.py`** = post-merge editorial corrections that DON'T fit the 3-agent extraction format. Recomputed deterministic fields (Kitchen's `concurrent_with_kings`), printed-source corrections that supersede the verbatim agent extraction, cross-row editorial annotations.
+
+Per constitutional rule 3 (deterministic enforcement over convention), the override → fix_rows interaction is locked by `test_post_fix_rows_pipeline_determinism` per source: pin the FINAL post-fix-rows reconciled value for every override row × field. The pins serve as a tripwire when EITHER file changes the result. See PR #161 for the canonical implementation.
