@@ -167,13 +167,18 @@ def test_whitelisted_egyptian_c_rewrite() -> None:
 def test_whitelisted_egyptian_c_rewrite_case_insensitive() -> None:
     """The whitelist regex is case-insensitive (IGNORECASE), so all-caps
     variants like ``SMENKHKAREC`` in a hypothetical PM section heading
-    also normalise. Current chunks have no all-caps c-trailing variant
-    of these tokens (only ``CHIC`` for ``CHIC OR. INST.`` exists, which
-    is not in the whitelist), but the case-insensitive match defends
-    against future chunks where PM may render the ayin-ending name in
-    section-heading capitalisation."""
-    assert pp.process_chunk("SMENKHKAREC") == "Smenkhkareʿ"
+    also normalise — and the substitution preserves the input's case
+    style: all-caps in → all-caps out (``SMENKHKAREʿ``), Title-Case in
+    → Title-Case out (``Smenkhkareʿ``). Current chunks have no all-caps
+    c-trailing variant of these tokens, but the case-insensitive match
+    + case-preserving substitution defends against future chunks where
+    PM may render the ayin-ending name in section-heading capitalisation
+    AND keeps the source casing intact for downstream agents that may
+    use heading-vs-body case as a structural signal."""
+    assert pp.process_chunk("SMENKHKAREC") == "SMENKHKAREʿ"
+    assert pp.process_chunk("Smenkhkarec") == "Smenkhkareʿ"
     assert pp.process_chunk("Menkheperrec") == "Menkheperreʿ"
+    assert pp.process_chunk("MENKHEPERREC") == "MENKHEPERREʿ"
 
 
 def test_whitelisted_c_rewrite_does_not_fire_on_english_abbrev() -> None:

@@ -244,7 +244,17 @@ def process_chunk(text: str) -> str:
     # Phase 3: whitelisted token-exact rewrites (post-Phase-1-and-2 forms).
     # Single combined-regex pass; one scan over the text, mapping each match
     # to its canonical form via the dict.
-    out = _WORD_FIXES_RE.sub(lambda m: _WORD_FIXES_LOWER[m.group(1).lower()], out)
+    def _word_sub(m: "re.Match[str]") -> str:
+        # Preserve the input's case style — an all-caps heading token
+        # (`SMENKHKAREC`) stays all-caps in the substituted form
+        # (`SMENKHKAREʿ`); a Title-Case body-prose token stays Title-
+        # Case (`Smenkhkareʿ`). Forcing Title-Case on every match would
+        # silently mutate source heading casing, which the postprocessor
+        # is not authorised to do.
+        word = m.group(1)
+        fixed = _WORD_FIXES_LOWER[word.lower()]
+        return fixed.upper() if word.isupper() else fixed
+    out = _WORD_FIXES_RE.sub(_word_sub, out)
     # Phase 4: king-name-anchored Roman numerals
     out = _ROMAN_FIX_RE.sub(_roman_sub, out)
     return out
