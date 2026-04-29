@@ -318,27 +318,42 @@ OVERRIDES: dict[str, dict] = {
     },
 
     # ── #150 — Late Period adjacent-row half-split sweep (scan-108-left) ──
-    # Egyptologist printed-source review on PR #148 surfaced 4 rows on PM
-    # I.2 p192 adjacent to the Dyn 29-30 cohort that exhibit the same
-    # discriminator pattern. Verified against the printed Beckerath PDF
-    # (PDF p108 = book p192) on PR closing #150:
+    # Egyptologist printed-source review on PR #148 surfaced 4 rows on
+    # Beckerath book p192 adjacent to the Dyn 29-30 cohort that exhibit
+    # a half-split state. Verified against the printed Beckerath PDF
+    # (PDF p108 = book p192) on PR closing #150.
+    #
+    # NB: rows in this cohort have INVERSE-DIRECTION linguistic semantics
+    # vs the Old Kingdom + Dyn 21 single-alias cohort:
+    #   - Old Kingdom cohort (`Senofru (Soris)` etc.): name = Egyptian,
+    #     parenthetical = Greek alias.
+    #   - Late Period cohort (this PR): name = Greek/Manethonic display
+    #     form, parenthetical = Egyptian birth name (sometimes + Egyptian
+    #     prenomen). The discriminator's structural shape (single alias
+    #     → `nomen` split; alias-pair → `mixed` split) still applies; the
+    #     LANGUAGE of each side just flips.
     #
     # - 28.01 Amyrtaios: print is `Amyrtaios (Amen-ir-di-su)` — single
-    #   Greek alias in parens. Apply the SINGLE-alias rule (matches the
-    #   Old Kingdom + Dyn 21 cohort): name=bare Greek lemma,
-    #   titulary=alias, kind=`nomen`.
+    #   Egyptian nomen in parens (Amyrtaios is the Greek/Manethonic form).
+    #   Apply the SINGLE-alias rule structurally (same shape as the Old
+    #   Kingdom cohort, semantics inverted): name=Greek display lemma,
+    #   titulary=Egyptian nomen, kind=`nomen`.
     # - 26.02 Nekaw: print is `Nekaw (Nekôs/Nechaô, Uhem-ib-rê)` — TWO
-    #   Greek alternatives separated by `/`, then Egyptian prenomen
-    #   `Uhem-ib-rê` after a comma. Apply 15.04-style mixed split:
-    #   name=bare Greek lemma, titulary=full inner compound including
-    #   the slash-compound and prenomen, kind=`mixed`.
+    #   Greek alternatives separated by `/` (Manetho's Νεχώς vs
+    #   Herodotus's Νεκώς — alternative transcriptions of the same
+    #   Greek form), then Egyptian prenomen `Uhem-ib-rê` after a comma.
+    #   `Nekaw` itself is Egyptian. Apply 15.04-style mixed split:
+    #   name=bare Egyptian display lemma, titulary=full inner compound
+    #   including the Greek slash-compound + Egyptian prenomen, kind=`mixed`.
     # - 26.05 Amosis II: print is `Amosis II. (Amasis, Chnem-ib-rê)` —
-    #   Greek-alias + Egyptian-prenomen pair. Apply 15.04-style mixed
-    #   split: name=`Amosis II.`, titulary=`Amasis, Chnem-ib-rê`,
+    #   Greek/Manethonic-alias + Egyptian-prenomen pair. Apply 15.04-style
+    #   mixed split: name=`Amosis II.`, titulary=`Amasis, Chnem-ib-rê`,
     #   kind=`mixed`.
     # - 29.02 Achoris: print is `Achoris (Hagor, Chnem-maat-rê)` —
-    #   Greek-alias + Egyptian-prenomen pair. Apply 15.04-style mixed
-    #   split: name=`Achoris`, titulary=`Hagor, Chnem-maat-rê`,
+    #   Egyptian-nomen `Hagor` (Beckerath's rendering of Egyptian Ḥgr,
+    #   the king's actual birth name) + Egyptian-prenomen pair, with
+    #   `Achoris` as the Greek/Manethonic display form. Apply 15.04-style
+    #   mixed split: name=`Achoris`, titulary=`Hagor, Chnem-maat-rê`,
     #   kind=`mixed`.
     "28.01": {
         "name": "Amyrtaios",
@@ -605,47 +620,53 @@ OVERRIDE_LOG: dict[str, str] = {
         "applies. [P1]"
     ),
     "28.01": (
-        "28.01 Amyrtaios: Greek-alias-in-parens single-alias split "
+        "28.01 Amyrtaios: Egyptian-nomen-in-parens single-alias split "
         "(issue #150). Beckerath p192 (scan-108-left) prints `Amyrtaios "
-        "(Amen-ir-di-su)` — single Greek alias in parens, matching the "
-        "Old Kingdom + Dyn 21 single-alias cohort (`Sesonchis`, `Onnos`, "
-        "etc.). Pre-#150 state had name=full compound + duplicated "
-        "titulary=`Amen-ir-di-su` — inconsistent. Realign to the "
-        "single-alias canonical: name=`Amyrtaios`, titulary="
-        "`Amen-ir-di-su`, kind=`nomen`. Egyptologist printed-source "
-        "review on PR #148 retro flagged this row; PR closing #150 "
-        "verified directly against book p192. [P2]"
+        "(Amen-ir-di-su)` — single Egyptian nomen in parens (Amyrtaios "
+        "is the Greek/Manethonic display form). Inverse-direction of the "
+        "Old Kingdom + Dyn 21 single-alias cohort (`Senofru (Soris)` "
+        "etc.) where the parenthetical is Greek and the king-name is "
+        "Egyptian; here it's flipped, but the structural shape (single "
+        "alias → `nomen` split) still applies. Pre-#150 state had "
+        "name=full compound + duplicated titulary=`Amen-ir-di-su` — "
+        "inconsistent. Realign to the single-alias canonical: name="
+        "`Amyrtaios`, titulary=`Amen-ir-di-su`, kind=`nomen`. Egyptologist "
+        "printed-source review on PR #148 retro flagged this row; PR "
+        "closing #150 verified directly against book p192. [P1]"
     ),
     "26.02": (
         "26.02 Nekaw: Greek/Greek + Egyptian-prenomen split (issue "
         "#150). Beckerath p192 (scan-108-left) prints `Nekaw "
         "(Nekôs/Nechaô, Uhem-ib-rê)` — TWO Greek alternatives separated "
-        "by `/` (the slash-compound is two transcriptions of the same "
-        "Greek name) followed by the Egyptian prenomen `Uhem-ib-rê` "
-        "after a comma. Apply 15.04-style mixed split: name=`Nekaw`, "
-        "titulary=`Nekôs/Nechaô, Uhem-ib-rê` (preserving the slash-"
-        "compound + prenomen verbatim), kind=`mixed`. PR closing #150 "
-        "verified against book p192. [P2]"
+        "by `/` (Manetho's Νεχώς vs Herodotus's Νεκώς, two transcriptions "
+        "of the same Greek form) followed by the Egyptian prenomen "
+        "`Uhem-ib-rê` after a comma. `Nekaw` itself is Egyptian (the "
+        "king's birth name). Apply 15.04-style mixed split: name=`Nekaw`, "
+        "titulary=`Nekôs/Nechaô, Uhem-ib-rê` (preserving the Greek slash-"
+        "compound + Egyptian prenomen verbatim), kind=`mixed`. PR closing "
+        "#150 verified against book p192. [P1]"
     ),
     "26.05": (
         "26.05 Amosis II: Greek-alias + Egyptian-prenomen pair split "
         "(issue #150). Beckerath p192 (scan-108-left) prints `Amosis "
-        "II. (Amasis, Chnem-ib-rê)` — Amasis is the Greek alias, "
-        "Chnem-ib-rê the prenomen. Pre-#150 state had name=`Amosis II. "
-        "(Amasis)` + titulary=`Chnem-ib-rê` only — half-split. Realign "
-        "to kind=`mixed` per the 15.04 precedent: name=`Amosis II.`, "
-        "titulary=`Amasis, Chnem-ib-rê`, kind=`mixed`. PR closing #150 "
-        "verified against book p192. [P2]"
+        "II. (Amasis, Chnem-ib-rê)` — Amasis is the Greek/Manethonic "
+        "alias, Chnem-ib-rê the Egyptian prenomen. Pre-#150 state had "
+        "name=`Amosis II. (Amasis)` + titulary=`Chnem-ib-rê` only — "
+        "half-split. Realign to kind=`mixed` per the 15.04 precedent: "
+        "name=`Amosis II.`, titulary=`Amasis, Chnem-ib-rê`, kind=`mixed`. "
+        "PR closing #150 verified against book p192. [P1]"
     ),
     "29.02": (
-        "29.02 Achoris: Greek-alias + Egyptian-prenomen pair split "
+        "29.02 Achoris: Egyptian-nomen + Egyptian-prenomen pair split "
         "(issue #150). Beckerath p192 (scan-108-left) prints `Achoris "
-        "(Hagor, Chnem-maat-rê)` — Hagor is the Egyptian-style alias, "
-        "Chnem-maat-rê the prenomen. Pre-#150 state had name=`Achoris "
-        "(Hagor)` + titulary=`Chnem-maat-rê` only — half-split. Realign "
-        "to kind=`mixed` per the 15.04 precedent: name=`Achoris`, "
-        "titulary=`Hagor, Chnem-maat-rê`, kind=`mixed`. PR closing #150 "
-        "verified against book p192. [P2]"
+        "(Hagor, Chnem-maat-rê)` — Hagor is Beckerath's rendering of the "
+        "Egyptian nomen Ḥgr (the king's actual birth name; `Achoris` is "
+        "the Greek/Manethonic display form), Chnem-maat-rê the Egyptian "
+        "prenomen. Pre-#150 state had name=`Achoris (Hagor)` + titulary="
+        "`Chnem-maat-rê` only — half-split. Realign to kind=`mixed` per "
+        "the 15.04 precedent: name=`Achoris`, titulary=`Hagor, Chnem-"
+        "maat-rê`, kind=`mixed`. PR closing #150 verified against book "
+        "p192. [P1]"
     ),
     "06.04": (
         "06.04 Nemti-em-saf I.: scan-106-left prints `(Methusuphis, "
