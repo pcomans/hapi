@@ -520,20 +520,29 @@ def test_dyn4_etwa_propagation_locked() -> None:
 
 def test_late_period_adjacent_half_split_sweep() -> None:
     """Issue #150 — Late Period rows on book p192 (scan-108-left) adjacent
-    to the Dyn 29-30 cohort that exhibit the same Greek-alias + Egyptian-
-    prenomen pair pattern as 15.04 / 29.03 / 30.01-03. Egyptologist
+    to the Dyn 29-30 cohort that exhibit a half-split state. Egyptologist
     printed-source review on PR #148 retro flagged 4 rows; PR closing
     #150 verified each directly against the printed PDF on book p192.
 
-    - 28.01 Amyrtaios — single Greek alias `(Amen-ir-di-su)` in parens
-      → name=bare, titulary=alias, kind=`nomen` (Old Kingdom + Dyn 21
-      single-alias cohort).
-    - 26.02 Nekaw — `(Nekôs/Nechaô, Uhem-ib-rê)`: slash-compound + prenomen
-      → name=bare, titulary=full compound, kind=`mixed`.
-    - 26.05 Amosis II. — `(Amasis, Chnem-ib-rê)`: Greek-alias + prenomen
-      → name=bare, titulary=full compound, kind=`mixed`.
-    - 29.02 Achoris — `(Hagor, Chnem-maat-rê)`: Greek-alias + prenomen
-      → name=bare, titulary=full compound, kind=`mixed`.
+    NB: rows in this cohort have INVERSE-DIRECTION linguistic semantics
+    vs the Old Kingdom + Dyn 21 single-alias cohort. The discriminator's
+    structural shape (single alias → `nomen`; alias-pair → `mixed`)
+    still applies; only the LANGUAGE of each side flips. See the same
+    NB block in fix_rows.py.
+
+    - 28.01 Amyrtaios — single Egyptian nomen `(Amen-ir-di-su)` in
+      parens (Amyrtaios is the Greek/Manethonic display form). Apply
+      the SINGLE-alias rule structurally: name=Greek display lemma,
+      titulary=Egyptian nomen, kind=`nomen`.
+    - 26.02 Nekaw — `(Nekôs/Nechaô, Uhem-ib-rê)`: TWO Greek transcriptions
+      (Manetho's Νεχώς vs Herodotus's Νεκώς) + Egyptian prenomen. `Nekaw`
+      itself is Egyptian. → name=bare, titulary=full compound, kind=`mixed`.
+    - 26.05 Amosis II. — `(Amasis, Chnem-ib-rê)`: Greek/Manethonic-alias
+      + Egyptian-prenomen → name=bare, titulary=full compound, kind=`mixed`.
+    - 29.02 Achoris — `(Hagor, Chnem-maat-rê)`: Egyptian-nomen `Hagor`
+      (Beckerath's rendering of Egyptian Ḥgr; `Achoris` is the Greek
+      display form) + Egyptian-prenomen → name=bare, titulary=full
+      compound, kind=`mixed`.
     """
     expected = {
         "28.01": ("Amyrtaios", "Amen-ir-di-su", "nomen"),
