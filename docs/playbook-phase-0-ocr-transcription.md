@@ -385,7 +385,7 @@ Use surgical `fix_rows.py` overrides on the first-run agent JSONL instead. Befor
 
 Post-PR #155 (Kitchen) is canonical; Ryholt PR #157 / Beckerath PR #146 / Porter-Moss PR #151 / Leprohon PR #128 are all aligned. When scaffolding a new source's merge.py, copy from `pipeline/pipeline/authority/sources/kitchen-tipe/merge.py` and adapt these source-specific pieces:
 
-1. Primary-ID symbol throughout: `kitchen_id` → `<source>_id`. The `_majority` parameter is `kid` → renamed to match.
+1. Primary-ID symbol throughout: the row-key field name is `kitchen_id` → `<source>_id` (e.g. `beckerath_id`, `ryholt_id`, `tomb_id`). The `_majority` parameter (`kid` in Kitchen) is a short abbreviation conventionally renamed to match the source's primary-ID short form (`bid` in Beckerath, `rid` in Ryholt, `tid` in PM, `lid` in Leprohon) — internal-only naming, but matching the source's other functions makes diffs across the family cleaner. Keyword-only signature is required regardless of name (constitutional rule 10).
 2. `_sort_key` for the source's ID scheme.
 3. `DEFAULT_AGENT_DIR = SOURCE_DIR / "raw"`.
 
