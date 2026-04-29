@@ -82,7 +82,68 @@ def _load(p: Path) -> dict[str, dict]:
     return rows
 
 
-SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown"})
+SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})
+
+
+# === TIE_BREAK_OVERRIDES =====================================================
+#
+# Authoritative resolutions for (kitchen_id, field) tuples where the three
+# extraction agents tie (1/1/1 across three agents, or 1/1 when one agent
+# missed a row). Loaded from ``tie-break-overrides.json`` (alongside this
+# file). Each entry's key is ``"<kitchen_id>|<field>"`` (JSON keys must be
+# strings; the loader splits back to a tuple). Each value is
+# ``{"value": ..., "rationale": "..."}``.
+#
+# ``rationale`` MUST cite the source page (Kitchen TIPE 3rd ed. 1996 printed
+# Tables 1/3/4 page or physical PDF page) and the basis for the resolution.
+#
+# When ``_majority`` hits a tie with no override, it RAISES — option (a)
+# enforcement: data is sacred, fail loudly. Mirrors the Beckerath PR #146 /
+# Leprohon PR #128 / Porter-Moss PR #151 canonical pattern.
+_OVERRIDES_PATH = SOURCE_DIR / "tie-break-overrides.json"
+
+
+def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
+    if not _OVERRIDES_PATH.exists():
+        return {}
+    raw = json.loads(_OVERRIDES_PATH.read_text(encoding="utf-8"))
+    out: dict[tuple[str, str], dict[str, object]] = {}
+    for k, v in raw.items():
+        if "|" not in k:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} missing '|' "
+                f"separator (expected '<kitchen_id>|<field>')"
+            )
+        kid, field = k.split("|", 1)
+        if not kid or not field:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} has empty kitchen_id "
+                f"or field after splitting on '|' (expected "
+                f"'<kitchen_id>|<field>' with both halves non-empty)"
+            )
+        # Validate value shape per Gemini PR #155 round-1: every entry MUST
+        # be a dict with `value` and `rationale` keys. A malformed entry
+        # (e.g. a bare string mistakenly written instead of a dict) would
+        # fail downstream at `override["value"]` lookup with an opaque
+        # KeyError; raise loudly here with the offending key + actual
+        # shape so the override-file author sees the problem at load time.
+        if not isinstance(v, dict):
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value must be a dict "
+                f"with 'value' and 'rationale' keys; got {type(v).__name__}: {v!r}"
+            )
+        missing = {"value", "rationale"} - set(v.keys())
+        if missing:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value is missing "
+                f"required key(s) {sorted(missing)} (expected dict with "
+                f"'value' and 'rationale'); got: {v!r}"
+            )
+        out[(kid, field)] = v
+    return out
+
+
+TIE_BREAK_OVERRIDES: dict[tuple[str, str], dict[str, object]] = _load_overrides()
 
 
 def _normalise_value(v: object) -> object:
@@ -101,26 +162,103 @@ def _normalise_value(v: object) -> object:
     return v
 
 
-def _majority(values: list) -> tuple[object, int]:
+def _deep_normalise(v: object) -> object:
+    """Recursively apply sentinel-null normalisation across dicts and lists.
+
+    Kitchen rows have a `source_citation` dict and a `concurrent_with_kings`
+    list field. Per-field majority comparing whole list/dict objects must
+    normalise children too — e.g. an agent emitting `{"page": "-"}` vs
+    `{"page": null}` must not register as a tie.
+    """
+    if isinstance(v, list):
+        return [_deep_normalise(item) for item in v]
+    if isinstance(v, dict):
+        return {k: _deep_normalise(val) for k, val in v.items()}
+    return _normalise_value(v)
+
+
+def _normalise_for_merge(row: dict) -> dict:
+    """Apply pre-merge canonicalisations that should NOT be silent first-seen-
+    pick at vote time. Currently a stub — Kitchen has no encoding-style
+    normalisation candidates analogous to Leprohon's MdC → IFAO map.
+
+    Extension point. If a future re-extraction surfaces spurious ties from
+    encoding-style differences (e.g. `c.` vs `ca.` date prefixes, hedge-
+    marker variance), normalise them here BEFORE the per-field counter
+    sees the values.
+
+    Returns a new dict; does not mutate the input.
+    """
+    if not isinstance(row, dict):
+        return row
+    return dict(row)
+
+
+def _majority(values: list, *, kid: str, field: str) -> tuple[object, int]:
     """Return (chosen_value, count_of_agreers) from a list of per-agent values.
 
-    Caller invariant: `values` is non-empty (the call site in `main()`
-    only calls this with a per-field list drawn from `present`, where
-    `len(present) >= 2`). Per constitutional rule 2, no silent fallbacks.
-    """
-    normalised = [_normalise_value(v) for v in values]
+    Values are deep-normalised first so that sentinel nulls in nested dicts
+    or lists do not force spurious disagreements.
 
-    def key(v):
+    Tie handling (option (a) enforcement, issue #136):
+      - Clear majority (top count > second count): use it.
+      - Tie at the top (top count == second count):
+          1. Look up ``(kid, field)`` in TIE_BREAK_OVERRIDES → use override.
+          2. Otherwise → raise. Data is sacred. Fail loudly.
+
+    Kitchen's flat-scalar schema (with one list field `concurrent_with_kings`
+    and one dict field `source_citation`) is treated as IDENTIFIER throughout
+    — no `_classify_tie` / `_resolve_prose_tie` step. Same rationale as PR
+    #146 (Beckerath) and PR #151 (PM): heuristic prose / list-union policies
+    without scholarly grounding violate constitutional rule 6. Tied list /
+    scalar fields go through the override path with a citation.
+
+    `kid` and `field` are keyword-only required arguments per
+    constitutional rule 10 (no backwards compatibility).
+    """
+    normalised = [_deep_normalise(v) for v in values]
+
+    def key(v: object) -> str:
         return json.dumps(v, ensure_ascii=False, sort_keys=True)
 
     counts = Counter(key(v) for v in normalised)
-    top_key, top_count = counts.most_common(1)[0]
-    for v in normalised:
-        if key(v) == top_key:
-            return v, top_count
-    # Unreachable: top_key was generated from `normalised`, so the loop
-    # above must find a match. Raise rather than return None silently.
-    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
+    most = counts.most_common()
+    top_key, top_count = most[0]
+
+    is_tie = len(most) >= 2 and most[0][1] == most[1][1]
+
+    if not is_tie:
+        for v in normalised:
+            if key(v) == top_key:
+                return v, top_count
+        raise RuntimeError(
+            f"_majority loop failed to find top_key {top_key!r} in {normalised!r}"
+        )
+
+    # ---- Tie path. ----
+
+    override = TIE_BREAK_OVERRIDES.get((kid, field))
+    if override is not None:
+        # Pass override value through `_deep_normalise` for parity with
+        # majority-vote values (Gemini PR #155 round-2). If a future
+        # override entry encodes `"-"` or another sentinel-null in its
+        # `value`, this collapses it to None just like an agent emission
+        # would — keeps the "value space" consistent regardless of
+        # resolution path. Override values are normally non-null
+        # citation-grounded strings, but the normalisation is cheap and
+        # closes the consistency gap loud-vs-silent.
+        return _deep_normalise(override["value"]), top_count
+
+    candidates = [
+        f"  candidate {i+1} (count={cnt}): {k}"
+        for i, (k, cnt) in enumerate(most)
+    ]
+    raise ValueError(
+        f"Unresolved IDENTIFIER tie at ({kid!r}, {field!r}). "
+        f"Add an entry to tie-break-overrides.json (key '{kid}|{field}') "
+        f"with a cited rationale, or extend the agents' extractions until "
+        f"a majority emerges. Candidates:\n" + "\n".join(candidates)
+    )
 
 
 _KID_RE = re.compile(r"^(?P<prefix>[0-9]+[A-Za-z]*)\.(?P<seq>\d+)$")
@@ -187,12 +325,18 @@ def main(agent_dir: Path) -> None:
                 f"singleton before merging."
             )
 
-        all_fields = set().union(*[v.keys() for _, v in present])
+        # Apply pre-merge canonicalisations (currently a stub for Kitchen;
+        # see _normalise_for_merge docstring).
+        present = [(t, _normalise_for_merge(v)) for t, v in present]
+
+        # Sort field iteration so the disagreement report is deterministic
+        # across re-runs (issue #142).
+        all_fields = sorted(set().union(*[v.keys() for _, v in present]))
         merged: dict = {}
         row_disagreements: list[str] = []
         for field in all_fields:
             values = [v.get(field) for _, v in present]
-            chosen, count = _majority(values)
+            chosen, count = _majority(values, kid=kid, field=field)
             merged[field] = chosen
             if count < len(present):
                 row_disagreements.append(
