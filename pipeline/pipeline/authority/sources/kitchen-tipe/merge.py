@@ -239,7 +239,15 @@ def _majority(values: list, *, kid: str, field: str) -> tuple[object, int]:
 
     override = TIE_BREAK_OVERRIDES.get((kid, field))
     if override is not None:
-        return override["value"], top_count
+        # Pass override value through `_deep_normalise` for parity with
+        # majority-vote values (Gemini PR #155 round-2). If a future
+        # override entry encodes `"-"` or another sentinel-null in its
+        # `value`, this collapses it to None just like an agent emission
+        # would — keeps the "value space" consistent regardless of
+        # resolution path. Override values are normally non-null
+        # citation-grounded strings, but the normalisation is cheap and
+        # closes the consistency gap loud-vs-silent.
+        return _deep_normalise(override["value"]), top_count
 
     candidates = [
         f"  candidate {i+1} (count={cnt}): {k}"

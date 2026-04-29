@@ -180,6 +180,27 @@ def test_load_overrides_rejects_non_dict_value(merge_module, tmp_path):
         merge_module._OVERRIDES_PATH = orig
 
 
+def test_override_value_passes_through_deep_normalise(merge_module):
+    """Per Gemini PR #155 round-2 — override values are passed through
+    `_deep_normalise` for parity with majority-vote values. If a future
+    override `value` encodes a sentinel-null string (`-`, `none`, etc.),
+    it collapses to None just like an agent emission would.
+    """
+    key = ("test.99", "prenomen")
+    merge_module.TIE_BREAK_OVERRIDES[key] = {
+        "value": "-",
+        "rationale": "test fixture (sentinel-null override)",
+    }
+    try:
+        values = ["alpha", "beta", "gamma"]
+        chosen, _ = merge_module._majority(
+            values, kid="test.99", field="prenomen"
+        )
+        assert chosen is None, f"expected sentinel-null override to collapse to None, got {chosen!r}"
+    finally:
+        del merge_module.TIE_BREAK_OVERRIDES[key]
+
+
 def test_load_overrides_rejects_missing_value_key(merge_module, tmp_path):
     """Per Gemini PR #155 round-1 — every override dict MUST carry the
     `value` key. Missing key would KeyError opaquely at merge time."""
