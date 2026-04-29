@@ -93,7 +93,7 @@ def _load(p: Path) -> dict[str, dict]:
     return rows
 
 
-SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown"})
+SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})
 
 
 # === TIE_BREAK_OVERRIDES =====================================================
@@ -126,10 +126,16 @@ def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
     for k, v in raw.items():
         if "|" not in k:
             raise ValueError(
-                f"merge.py: tie-break-overrides.json key {k!r} missing '|' "
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} missing '|' "
                 f"separator (expected '<beckerath_id>|<field>')"
             )
         bid, field = k.split("|", 1)
+        if not bid or not field:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} has empty bid or field "
+                f"after splitting on '|' (expected '<beckerath_id>|<field>' "
+                f"with both halves non-empty)"
+            )
         out[(bid, field)] = v
     return out
 

@@ -246,8 +246,26 @@ def test_dyn29_dyn30_name_full_compound_pinned(reconciled):
 
 def test_overrides_json_keys_well_formed(merge_module):
     """Every key in tie-break-overrides.json parses as `<bid>|<field>`
-    and every value carries a non-empty rationale citing a printed
-    page or scan reference."""
+    and every value carries a non-empty rationale with a strict citation.
+
+    Tightened from a substring check ("page", "printed") to anchored
+    regex on the actual citation conventions: `scan-NNN-(left|right)`,
+    `book p<digits>`, `Anhang [AB]`, `PDF p<digits>`, or the canonical
+    edition string. A future loose rationale ("the page was printed")
+    no longer slips past — only structured printed-source references
+    pass. (Code-reviewer P2-1 on PR #146.)
+    """
+    import re
+
+    citation_pattern = re.compile(
+        r"scan-\d{3}-(?:left|right)"           # scan-NNN-{left,right}
+        r"|book\s+p\d+"                          # book p<digits>
+        r"|PDF\s+p\d+"                           # PDF p<digits>
+        r"|Anhang\s+[AB]"                        # Anhang A | Anhang B
+        r"|Supplement\s+zu\s+A"                  # Supplement zu A
+        r"|MÄS\s+46",                            # canonical edition
+        re.IGNORECASE,
+    )
     for (bid, field), entry in merge_module.TIE_BREAK_OVERRIDES.items():
         assert bid, f"empty bid in key ({bid!r}, {field!r})"
         assert field, f"empty field in key ({bid!r}, {field!r})"
@@ -257,9 +275,46 @@ def test_overrides_json_keys_well_formed(merge_module):
             f"rationale for ({bid!r}, {field!r}) too short to carry a "
             f"citation: {rationale!r}"
         )
-        # Soft check: rationale should reference scan / book page / printed
-        # source. If a future override skips citation, this catches it.
-        assert any(
-            tok in rationale.lower()
-            for tok in ("scan-", "book p", "printed", "anhang", "supplement", "page")
-        ), f"rationale for ({bid!r}, {field!r}) lacks any printed-source citation: {rationale!r}"
+        assert citation_pattern.search(rationale), (
+            f"rationale for ({bid!r}, {field!r}) lacks a structured printed-"
+            f"source citation matching scan-NNN-{{left,right}} / book p<digits> "
+            f"/ PDF p<digits> / Anhang [AB] / Supplement zu A / MÄS 46. "
+            f"Got: {rationale!r}"
+        )
+
+
+def test_load_overrides_rejects_empty_bid(merge_module, tmp_path):
+    """`<empty>|name` must raise — silent dead overrides hide bugs.
+    (Code-reviewer P1.1 on PR #146.)"""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"|name": {"value": "x", "rationale": "test fixture for empty bid"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="empty bid or field"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
+    """`03.06|<empty>` must raise — silent dead overrides hide bugs.
+    (Code-reviewer P1.1 on PR #146.)"""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"03.06|": {"value": "x", "rationale": "test fixture for empty field"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="empty bid or field"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_sentinel_null_strings_includes_null_for_leprohon_parity(merge_module):
+    """`"null"` is a recognised sentinel-null on Leprohon's side.
+    Beckerath agents transcribing the literal string `"null"` for an
+    absent cell must collapse to None too — otherwise a `(None, "null")`
+    pair registers as a tie. (Code-reviewer P1.3 on PR #146.)
+    """
+    assert "null" in merge_module.SENTINEL_NULL_STRINGS
