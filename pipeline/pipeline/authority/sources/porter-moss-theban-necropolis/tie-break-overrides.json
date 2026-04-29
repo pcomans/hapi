@@ -1,0 +1,46 @@
+{
+  "KV36|notes_from_pm": {
+    "value": "Standard-bearer, Child of the nursery. Temp. Hatshepsut. Excavated by Loret.",
+    "rationale": "PM I.2 p.556 (KV36 Mahirper). Agents split 1/1/1 on `notes_from_pm`: A=longest with `Excavated by Loret`, B=truncated drops the Loret clause, C=truncated + Ḥatshepsut diacritic variant. Pin agent A's longest verbatim form (matches PM p.556 printed completeness). The Hatshepsut → Ḥatshepsut diacritic correction is applied post-merge by fix_rows.py KV36 entry per the PM postprocessor's underdot policy; ties are resolved at merge time, diacritics at fix_rows time."
+  },
+  "KV39|notes_from_pm": {
+    "value": "Uninscribed tomb, attributed to Amenophis I by Weigall in Ann. Serv. xi (1911), pp. 174-5 [12], and id. A Guide to the Antiquities of Upper Egypt, pp. 163-4, but this is not supported by any inscriptional evidence.",
+    "rationale": "PM I.2 p.559 (KV39). Agents split 1/1/1 on `notes_from_pm`: A=longest with full Weigall citation chain + 'not supported by any inscriptional evidence' qualifier, B=truncated to bare Ann. Serv. citation, C=same as B without trailing period. Pin agent A's longest verbatim form (most complete extraction of PM's printed bibliography apparatus + the load-bearing 'not supported' hedge that downstream consumers need)."
+  },
+  "KV42|notes_from_pm": {
+    "value": "Attribution uncertain (?).",
+    "rationale": "PM I.2 p.559 (KV42 Tuthmosis II). Agents split 1/1/1: A=`Attribution uncertain (?).` (with terminal period), B=null (agent dropped the uncertainty marker), C=`Attribution uncertain (?)` (no terminal period). Pin agent A's value with terminal period — fix_rows.py KV42 entry then rewrites to `(?). Excavated by Loret` per PM p.559 prints `42. TUTHMOSIS II (?)` headword convention; the override keeps merge output stable, fix_rows handles the canonical rewrite."
+  },
+  "QV47|notes_from_pm": {
+    "value": "daughter of Seḳenenreʿ-Taʿa and Sit-ḍḥout. Dyn. XVII.",
+    "rationale": "PM I.2 p.755 (QV47 ʿAhmosi). Agents split 1/1/1 on `notes_from_pm`: A=Sit-ḍḥout no Bibl, B=Sit-ḍḥout with `(Bibl. i, 1st ed. p. 49.)`, C=Sit-ḏḥout (different ḏ vs ḍ diacritic) with Bibl. Pin agent A's bare-without-Bibl form — the Bibl reference is preserved in adjacent rows' citation fields, not in notes_from_pm, per PM extraction prompt's separation-of-concerns rule. Diacritic ḍ vs ḏ is OCR/transcription drift on Beckerath-style underdot consonants."
+  },
+  "QV74|notes_from_pm": {
+    "value": "Great King's mother and King's wife. (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.) Wife (?) of Ramesses IV; mother of Ramesses V; daughter of Ramesses IV.",
+    "rationale": "PM I.2 p.767 (QV74 Tentopet). Agents split 1/1/1 on `notes_from_pm`: A=full citation parenthetical mid-text + Ramesses IV/V genealogy, B=Wife/mother prose then citation appended at end, C=truncated drops the genealogy. Pin agent A's structure (citation embedded inline matching PM's printed prose flow); fix_rows.py QV74 entry then layers the `(per PM p.767 footnote 1)` editorial annotation."
+  },
+  "SWV-HatshepsutSouth|notes_from_pm": {
+    "value": "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort.",
+    "rationale": "PM I.2 p.591 (SWV-HatshepsutSouth). Agents split 1/1/1: A=bare cross-ref + bare Sarcophagus mention, B=adds `South Tomb of Ḥatshepsut.` headline + `quartzite` material, C=A's structure + `quartzite` material. Pin agent A's bare form — the `South Tomb of Ḥatshepsut.` headline is generated downstream from `valley` + `tomb_id`, and the `quartzite` material detail is layered by fix_rows.py SWV-HatshepsutSouth entry (PM p.591 prints quartzite + Cairo Mus. Ent. number that fix_rows expands)."
+  },
+  "DAN-AhmosiHenutempet|notes_from_pm": {
+    "value": "Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa). Coffin possibly from here.",
+    "rationale": "PM I.2 p.604 (DAN-AhmosiHenutempet). Agents split 1/1/1: A=ʿAhhotp + Seqenenreʿ + Coffin clause, B=ʿAhhotp + Seqenenreʿ no Coffin clause, C=ʿAḥḥotp + Seḳenenreʿ diacritic-rich variant + Coffin clause. Pin agent A's longest form with the load-bearing `Coffin possibly from here` provenance hedge; the underdot diacritics on ʿAḥḥotp / Seḳenenreʿ are post-merge corrections layered by fix_rows.py per the PM postprocessor's underdot policy."
+  },
+  "DAN-AhmosiNefertere|notes_from_pm": {
+    "value": "Tomb of Queen ʿAhmosi Nefertere (probably).",
+    "rationale": "PM I.2 p.599 (DAN-AhmosiNefertere). Agents split 1/1/1 on `notes_from_pm`: A=bare attribution headline only, B=bare Carter/Winlock/Černý attribution chain (NO headline), C=full headline + abbreviated Carter chain. Pin agent A's bare headline — the Carter / Winlock / Černý attribution chain is extended post-merge by fix_rows.py DAN-AhmosiNefertere entry per PM p.599 printed prose."
+  },
+  "DAN-AntefSekhemreHeruhirmaet|occupant_name": {
+    "value": "Antef (Sekhemreʿ-Heruhirmaʿet)",
+    "rationale": "PM I.2 p.603 (DAN-AntefSekhemreHeruhirmaet). Agents split 1/1/1 on `occupant_name`: A=`Antef (Sekhemreʿ-Heruhirmaʿet)`, B=`Antef (Sekhemreʿ-Heruḥirmaʿet)` (with ḥ underdot variant), C=`Antef` (bare, no parenthetical — agent dropped the disambiguator). Pin agent A's verbatim form with the parenthetical preserved; the Heruhirmaʿet → Heruḥirmaʿet diacritic correction is layered by fix_rows.py per the PM underdot policy. Bare `Antef` is wrong — without the parenthetical Sekhemreʿ-Heruhirmaʿet, this row collides with multiple other Antefs in PM's Dyn XVII clusters."
+  },
+  "DAN-Aqhor|occupant_name": {
+    "value": "ʿAq-hor",
+    "rationale": "PM I.2 p.605 (DAN-Aqhor; PM headword printed as `ʿAḲ-ḤOR`). Agents split 1/1/1: A=`ʿAq-hor` (no underdot, lowercase 'h'), B=`ʿAq-Hor` (no underdot, capital 'H'), C=`ʿAḳ-hor` (underdot ḳ). Pin agent A's `ʿAq-hor` — the underdot ḳ correction (matching PM headword `ʿAḲ-ḤOR`) is layered by fix_rows.py DAN-Aqhor entry, which also handles the tomb_id rename from the historical `DAN-Ahhor` form to the canonical `DAN-Aqhor`. Override matches pre-fix-rows merge output that fix_rows expects to mutate."
+  },
+  "DAN-MentuhotpIWifeOfDjhuti|notes_from_pm": {
+    "value": "Wife of King Djhuti.",
+    "rationale": "PM I.2 p.604 (DAN-MentuhotpIWifeOfDjhuti). Agents split 1/1/1: A=`Djhuti`, B=`Djehuty` (vowel-extended Anglicised form), C=`Djḥuti` (underdot ḥ variant). Pin agent A's `Djhuti` matching the canonical PM tomb_id form (CHUNK7_RENAMES: `DAN-MentuhotpIWifeOfDjehuti` → `DAN-MentuhotpIWifeOfDjhuti` per PM p.604 headword `MENTUHOTP I, WIFE OF, ḌḤUTI`). The underdot Ḍḥuti correction is layered by fix_rows.py per the PM postprocessor's underdot policy. Override matches the canonical bare form fix_rows expects."
+  }
+}

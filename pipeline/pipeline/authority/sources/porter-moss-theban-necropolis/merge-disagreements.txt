@@ -2,8 +2,8 @@ KV13 (Bay):
   notes_from_pm: a="Chancellor. Temp. Merneptah-Siptah." | b="Chancellor. Temp. Merneptaḥ-Siptaḥ." | c="Chancellor. Temp. Merneptah-Siptah."  → chose "Chancellor. Temp. Merneptah-Siptah."
 
 KV14 (Tausert):
-  occupant_role: a="King" | b="Queen" | c="King"  → chose "King"
   notes_from_pm: a="wife of Sethos II. Usurped by Setnakht." | b="wife of Sethos II. Usurped by Setnakht" | c="wife of Sethos II. Usurped by Setnakht."  → chose "wife of Sethos II. Usurped by Setnakht."
+  occupant_role: a="King" | b="Queen" | c="King"  → chose "King"
 
 KV18 (Ramesses X):
   notes_from_pm: a="(formerly XI)" | b="formerly XI" | c="(formerly XI)"  → chose "(formerly XI)"
@@ -69,8 +69,8 @@ DAN-Ahhotep (ʿAhhotp):
   notes_from_pm: a="Wife of King Seqenenreʿ-Taʿa. Found by Mariette in 1859." | b="Wife of King Seqenenreʿ-Taʿa. Found by Mariette in 1859." | c="Wife of King Seḳenenreʿ-Taʿa. Found by Mariette in 1859."  → chose "Wife of King Seqenenreʿ-Taʿa. Found by Mariette in 1859."
 
 DAN-AhmosiHenutempet (ʿAhmosi Henutempet):
-  occupant_role: a="Princess" | b="Royal Family" | c="Royal Family"  → chose "Royal Family"
   notes_from_pm: a="Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa). Coffin possibly from here." | b="Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa)." | c="Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa). Coffin possibly from here."  → chose "Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa). Coffin possibly from here."
+  occupant_role: a="Princess" | b="Royal Family" | c="Royal Family"  → chose "Royal Family"
 
 DAN-AhmosiNefertere (ʿAhmosi Nefertere):
   notes_from_pm: a="Tomb of Queen ʿAhmosi Nefertere (probably)." | b="(probably). Attributed to Amenophis I by Carter, followed by Winlock and Cerny; Cerny later revised his opinion." | c="Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter."  → chose "Tomb of Queen ʿAhmosi Nefertere (probably)."
