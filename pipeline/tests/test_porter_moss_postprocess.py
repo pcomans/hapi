@@ -101,6 +101,39 @@ def test_inline_ayin_does_not_fire_without_left_letter() -> None:
     assert pp.process_chunk("</thing>") == "</thing>"
 
 
+def test_inline_ayin_fires_after_phase1_underdot_h() -> None:
+    """Phase-2 lookbehind admits Phase-1 output ``Ḥ`` / ``ḥ`` (Unicode word
+    class) so a ``<`` immediately after the substituted underdot-H also
+    converts to ayin. Defends against the latent class where chunk text
+    placed `<` adjacent to the J:I/I:I/I;I/l:I bigram."""
+    # Synthetic: ``J:I<arakhti`` → Phase 1 → ``Ḥ<arakhti`` → Phase 2 →
+    # ``Ḥʿarakhti`` (a literal sequence the agent could read).
+    assert pp.process_chunk("J:I<arakhti") == "Ḥʿarakhti"
+
+
+def test_inline_ayin_simple_token() -> None:
+    """Smallest possible ayin token: bare ``Re<`` between word boundaries."""
+    assert pp.process_chunk("Re<") == "Reʿ"
+
+
+def test_word_initial_ayin() -> None:
+    """``<`` at the start of an Egyptian transliteration token (`<Ahhotp`,
+    `<Ankhef`, `<Aqmosi`) is also an ayin glyph. Lookahead anchor admits
+    word-initial position. All chunk-text occurrences of ``<[A-Za-z]`` are
+    Egyptian transliteration — no HTML/math/citation false positives."""
+    assert pp.process_chunk("<Ahhotp") == "ʿAhhotp"
+    assert pp.process_chunk("<Ankhefenamiin") == "ʿAnkhefenamiin"
+    assert pp.process_chunk("<Aqmosi") == "ʿAqmosi"
+
+
+def test_ayin_does_not_fire_on_digit_lookbehind() -> None:
+    """Lookbehind explicitly excludes digits — chunk text contains
+    digit-cluster citation noise like ``pp. 22<)-47`` where ``<`` is a
+    misread digit, not an ayin. Firing there would corrupt page numbers."""
+    assert pp.process_chunk("pp. 22<)-47") == "pp. 22<)-47"
+    assert pp.process_chunk("(195<)") == "(195<)"
+
+
 # === Phase 3: whitelisted token-exact rewrites ==============================
 
 
@@ -175,6 +208,22 @@ def test_roman_numeral_through_multiple_kings_in_one_line() -> None:
     assert pp.process_chunk("Amenophis Ill and Tuthmosis Il") == (
         "Amenophis III and Tuthmosis II"
     )
+
+
+def test_roman_numeral_all_caps_pm_headword() -> None:
+    """PM headwords are typeset in all caps; the publisher OCR renders the
+    Roman three as multi-token ``I Il`` (cap-I + space + cap-I + lower-l).
+    The rule must fire on the all-caps form too. KV22 is the canonical
+    case — `22. AMENOPHIS I Il` → `22. AMENOPHIS III`."""
+    assert pp.process_chunk("22. AMENOPHIS I Il") == "22. AMENOPHIS III"
+    assert pp.process_chunk("AMENOPHIS Ill") == "AMENOPHIS III"
+    assert pp.process_chunk("RAMESSES 11") == "RAMESSES II"
+    assert pp.process_chunk("TUTHMOSIS Il") == "TUTHMOSIS II"
+
+
+def test_empty_input_passes_through() -> None:
+    """Empty string input yields empty string output (degenerate base case)."""
+    assert pp.process_chunk("") == ""
 
 
 # === Idempotence ============================================================

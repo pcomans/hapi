@@ -1,4 +1,4 @@
-"""Porter-Moss Vol I (Theban Necropolis) — Unicode-fixup post-processor.
+r"""Porter-Moss Vol I (Theban Necropolis) — Unicode-fixup post-processor.
 
 Runs AFTER the pypdf text-layer dump produces ``raw/chunk-*.txt`` and BEFORE
 the 3-subagent extraction reads it. The Griffith Institute's publisher OCR is
@@ -52,6 +52,13 @@ Plus two narrower fixes:
   ``5I109`` and years like ``I922`` use the SAME character class as the
   Roman numeral suffix but must NOT be rewritten. The king-name anchor is
   the only reliable signal that the trailing token is a regnal numeral.
+
+Phase ordering matters as well as phase-internal ordering. Phase 2 (inline
+ayin) anchors on a word character to its left; Phase 1's substitution product
+``Ḥ``/``ḥ`` is the immediately-preceding character in some inputs (e.g.
+``Re<-l:Iarakhti`` becomes ``Reʿ-Ḥ<arakhti`` mid-pass), so Phase 2's
+lookbehind uses ``\w`` (Unicode word class) rather than ``[A-Za-z]`` to admit
+the underdot-H. Running phases out of order would leave dangling ``<``s.
 
 Idempotence: every rule's right-hand side does not contain the rule's left-
 hand side, so re-running the post-processor on its own output is a no-op.
@@ -121,7 +128,19 @@ _SUBSTRING_FIXES: list[tuple[str, str]] = [
 # letter immediately before it is replaced; the right side is unconstrained
 # because punctuation, spaces, hyphens, and following letters are all
 # legitimate ayin contexts.
-_AYIN_RE = re.compile(r"(?<=[A-Za-z])<")
+# Two anchors so ``<`` fires both as a word-internal/trailing ayin (`Re<`,
+# `Ma<et`) AND as a word-initial ayin (`<Ahhotp`, `<Ankhef...`, `<Aqmosi`).
+# Lookbehind admits ASCII letters AND the Phase-1 substitution products
+# ``Ḥ``/``ḥ``/``ḍ`` so a ``<`` immediately after a substituted underdot-H
+# also fires (defensive — e.g. ``Re<-l:Iarakhti`` would mid-pass produce
+# ``Reʿ-Ḥ<arakhti`` if any chunk variant placed `<` after the underdot-H).
+# ``\w`` is rejected because it admits digits and the chunk text contains
+# digit-cluster noise like ``pp. 22<)-47`` where ``<`` is a misread digit,
+# not an ayin — firing there would corrupt page-citation pages. Lookahead
+# is ASCII-letter-only — verified safe by ``grep -E '<[A-Za-z]'`` over all
+# raw chunks: every hit is Egyptian transliteration (`<a`, `<A`, `<Ankh*`,
+# `<Anen`, `<Aqmosi`, etc.) — no HTML/math/citation false positives.
+_AYIN_RE = re.compile(r"(?<=[A-Za-zḤḥḍ])<|<(?=[A-Za-z])")
 
 # --- Phase 3: whitelisted token-exact substitutions -------------------------
 # Tokens whose trailing ``c`` is the ayin glyph rendered as a letter ``c``
@@ -171,21 +190,34 @@ _KING_NAMES: tuple[str, ...] = (
     "Nectanebo",
     "Ptolemy",
 )
+# `re.IGNORECASE` covers both Title-Case body prose (`Amenophis Ill`) and
+# the all-caps PM headword form (`22. AMENOPHIS I Il`); the multi-token
+# `I\s+Il` alternative captures the headword shape where PM typesets the
+# Roman three as `I` (a separate capital) followed by `Il` (cap-I + l).
 _ROMAN_FIX_RE = re.compile(
     r"\b(" + "|".join(re.escape(name) for name in _KING_NAMES)
-    + r")(\s+)(III|II|Ill|Il|11)\b"
+    + r")(\s+)(I\s+Il|Ill|III|Il|II|11)\b",
+    re.IGNORECASE,
 )
+# Lookup keyed on the lowercase form of the captured numeral. ``re.IGNORECASE``
+# matches the king-name AND the numeral case-insensitively, so the captured
+# group can be ``Ill`` or ``ILL`` or ``ill``; lower-fold + whitespace-collapse
+# normalises both axes before the dict lookup. The map's RHS is the canonical
+# Roman III/II spelling regardless of input case.
 _ROMAN_NORMALIZE: dict[str, str] = {
-    "III": "III",
-    "II": "II",
-    "Ill": "III",
-    "Il": "II",
+    "i il": "III",
+    "ill": "III",
+    "iii": "III",
+    "il": "II",
+    "ii": "II",
     "11": "II",
 }
 
 
 def _roman_sub(m: "re.Match[str]") -> str:
-    return f"{m.group(1)}{m.group(2)}{_ROMAN_NORMALIZE[m.group(3)]}"
+    # Lower-fold + whitespace-collapse so ``I  Il`` and ``i il`` both map.
+    key = " ".join(m.group(3).lower().split())
+    return f"{m.group(1)}{m.group(2)}{_ROMAN_NORMALIZE[key]}"
 
 
 def process_chunk(text: str) -> str:

@@ -122,14 +122,13 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
 #    headword clause (period-space separator, chunk-2 KV14 precedent).
 #
 # Previously also corrected KV22 and KV36 occupant_name. The postprocessor
-# (PR #140 / #132) now normalises `AMENOPHIS I Il` → `AMENOPHIS III` (king-
-# name-anchored Roman-numeral fix) and `MAI;IIRPER` → `MAḤIRPER` (`I;I` →
-# `Ḥ` substitution) at chunk-text level before agents read it, so the
-# 3-agent merge produces the correct value unanimously and these two
-# overrides became no-ops. The post-merge audit (compare merge-only
-# reconciled.jsonl against fix_rows desired values) confirmed this
-# empirically — see PR #140's audit output. Re-running these as overrides
-# would not change the row, so they are dropped.
+# (PR #140 / #132) now handles both at chunk-text level: KV36's
+# `MAI;IIRPER` → `MAḤIRPER` is a direct Phase-1 substring substitution
+# (`I;I` → `Ḥ`); KV22's `AMENOPHIS I Il` → `AMENOPHIS III` is the king-
+# name-anchored Roman-numeral fix's all-caps multi-token branch (matches
+# under `re.IGNORECASE` with the `I\s+Il` alternative). Both overrides
+# became no-ops in the post-merge audit because the 3 agents now read the
+# canonical form unanimously. Dropped.
 CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "KV22",
