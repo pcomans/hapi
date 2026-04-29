@@ -205,6 +205,22 @@ def test_load_overrides_rejects_missing_value_or_rationale(merge_module, tmp_pat
             merge_module._OVERRIDES_PATH = orig
 
 
+def test_load_overrides_rejects_non_dict_root(merge_module, tmp_path):
+    """Per Gemini PR #157 round-1 — top-level JSON must be a dict.
+    A list / null / string at the root previously raised AttributeError
+    at `.items()`; now raises ValueError with the file path."""
+    for bad_root in ([], "string-at-root", 42):
+        bad = tmp_path / "tie-break-overrides.json"
+        bad.write_text(json.dumps(bad_root))
+        orig = merge_module._OVERRIDES_PATH
+        merge_module._OVERRIDES_PATH = bad
+        try:
+            with pytest.raises(ValueError, match="top-level JSON must be a dict"):
+                merge_module._load_overrides()
+        finally:
+            merge_module._OVERRIDES_PATH = orig
+
+
 def test_overrides_file_starts_empty(merge_module):
     """Ryholt ships with NO overrides because raw/agent-*.jsonl files
     aren't on this disk — re-running merge would raise on uncovered ties.

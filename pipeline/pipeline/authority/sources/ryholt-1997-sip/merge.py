@@ -42,7 +42,11 @@ from collections import Counter
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
-DEFAULT_AGENT_DIR = Path("/tmp/claude-501/ryholt")
+# Co-located with the source dir per the Phase-0 playbook (matches every
+# other Phase-0 source's convention). Was previously pinned to
+# `/tmp/claude-501/ryholt` (pre-existing pre-portability artifact);
+# corrected per code-reviewer P2.2 on PR #157.
+DEFAULT_AGENT_DIR = SOURCE_DIR / "raw"
 OUT = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
@@ -108,6 +112,14 @@ def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
     if not _OVERRIDES_PATH.exists():
         return {}
     raw = json.loads(_OVERRIDES_PATH.read_text(encoding="utf-8"))
+    # Top-level shape check (Gemini PR #157 round-1). A list / null / string
+    # at the JSON root would otherwise raise an opaque `AttributeError` at
+    # `.items()` rather than a labelled ValueError pointing at the file.
+    if not isinstance(raw, dict):
+        raise ValueError(
+            f"merge.py: {_OVERRIDES_PATH} top-level JSON must be a dict; "
+            f"got {type(raw).__name__}"
+        )
     out: dict[tuple[str, str], dict[str, object]] = {}
     for k, v in raw.items():
         if "|" not in k:
