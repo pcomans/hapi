@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -212,7 +213,6 @@ def test_overrides_json_keys_well_formed(merge_module):
     PR #146 (PM I.2 page references match the Beckerath book p<digits>
     convention; PM also uses scan-style references in fix_rows.py
     rationale prose)."""
-    import re
 
     citation_pattern = re.compile(
         r"PM\s+I\.\d"                    # PM I.2 / PM I.1
