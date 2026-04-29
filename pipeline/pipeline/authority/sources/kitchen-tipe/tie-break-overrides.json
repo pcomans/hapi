@@ -1,0 +1,18 @@
+{
+  "21.03|concurrent_with_kings": {
+    "value": ["21H.04", "21H.05", "21H.06", "21H.07", "21H.08"],
+    "rationale": "Kitchen TIPE Table 1 (PDF pp 240-243), Dyn 21 Tanite king Psusennes I. Agents split 1/1/1 on `concurrent_with_kings` (the per-row co-regency list): A=5-element list (Pinudjem I `21H.04` + Masaharta `21H.05` + Djed-Khons-ef-ankh `21H.06` + Menkheperre `21H.07` + Smendes II `21H.08`), B=2-element list (`21H.04`, `21H.07` — drops the intervening HPAs), C=3-element list. Pin agent A's most-inclusive list. NB: this override is functionally a no-op — fix_rows.py `_compute_concurrency` deterministically RECOMPUTES `concurrent_with_kings` for every Dyn-21 row from start_bce/end_bce interval-overlap on the published reign endpoints; the merge value here is overwritten downstream. The override exists solely to give the tie-break enforcer a documented decision."
+  },
+  "21H.01|notes_from_kitchen": {
+    "value": "hp",
+    "rationale": "Kitchen TIPE Table 1 (PDF pp 240-243), Dyn 21 Theban HPA Herihor. Agents split 1/1/1: A=`hp` (the High Priest marker Kitchen uses for Pinudjem I), B=`in S` (Kitchen's `in S(outh)` parenthetical), C=null. Pin agent A's `hp` value as the merge-stage tie-break. NB: this override is functionally a no-op — fix_rows.py SPOT_CORRECTIONS for 21H.01 sets `notes_from_kitchen` to null post-merge per egyptologist finding (the `hp` marker Kitchen uses on Pinudjem I `21H.04` does NOT appear on Herihor in Table 1). The merge value here is overwritten downstream."
+  },
+  "21H.06|concurrent_with_kings": {
+    "value": ["21.03"],
+    "rationale": "Kitchen TIPE Table 1 (PDF pp 240-243), Dyn 21 HPA Djed-Khons-ef-ankh. Agents split 1/1/1: A=`[21.03]` (Psusennes I), B=`[21.01]` (Smendes), C=`[]` (empty). Pin agent A's value. NB: this override is functionally a no-op — fix_rows.py `_compute_concurrency` deterministically recomputes the list from start_bce/end_bce interval overlap. Note Kitchen's typo for this row (1046–1056 reversal) is annotated in `notes_from_kitchen` via fix_rows.py SPOT_CORRECTIONS."
+  },
+  "21H.08|concurrent_with_kings": {
+    "value": ["21.03", "21.07"],
+    "rationale": "Kitchen TIPE Table 1 (PDF pp 240-243), Dyn 21 HPA Smendes II. Agents split 1/1/1: A=`[21.03, 21.07]` (Psusennes I + Siamun), B=`[21.04]` (Amenemope), C=`[21.03, 21.04]`. Pin agent A's value. NB: this override is functionally a no-op — fix_rows.py `_compute_concurrency` deterministically recomputes from start_bce/end_bce interval overlap."
+  }
+}
