@@ -233,15 +233,22 @@ def test_19_08_te_wosret_name_pinned(reconciled):
     assert r["name"] == "Kgin.Te-wosret"
 
 
-def test_dyn29_dyn30_name_full_compound_pinned(reconciled):
-    """Dyn 29-30 Late Period rows — 1/1/1 ties on `name`. Override
-    pins agent A's full compound form pending egyptologist printed-
-    source review (the existing reconciled.jsonl carries this value;
-    the rationale flags follow-up review for the 15.04-style split)."""
-    assert _row(reconciled, "29.03")["name"] == "Psamuthis (Pe-sche[re-n-]mut, User-rê)"
-    assert _row(reconciled, "30.01")["name"] == "Nektanebês (Necht-nebef, Cheper-ka-rê)"
-    assert _row(reconciled, "30.02")["name"] == "Teôs (Djed-hor, Iri-maat-en-rê)"
-    assert _row(reconciled, "30.03")["name"] == "Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)"
+def test_dyn29_dyn30_name_post_fix_rows_split(reconciled):
+    """Dyn 29-30 Late Period rows — 1/1/1 ties on `name` resolved by the
+    tie-break override (pinning agent A's full compound to match
+    Beckerath's verbatim print) AND THEN by the fix_rows.py 15.04-style
+    split (issue #147) which realigns to the canonical kind=`mixed`
+    pattern: name=bare Greek lemma, titulary=full inner compound.
+
+    This test pins the post-fix_rows (final reconciled.jsonl) state.
+    See `test_sources_beckerath_1997_chronologie.py::
+    test_dyn29_dyn30_greek_egyptian_pair_split` for the full split-
+    pattern assertion (name + titulary + kind together).
+    """
+    assert _row(reconciled, "29.03")["name"] == "Psamuthis"
+    assert _row(reconciled, "30.01")["name"] == "Nektanebês"
+    assert _row(reconciled, "30.02")["name"] == "Teôs"
+    assert _row(reconciled, "30.03")["name"] == "Nektanebôs"
 
 
 def test_overrides_json_keys_well_formed(merge_module):

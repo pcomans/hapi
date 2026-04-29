@@ -278,6 +278,45 @@ OVERRIDES: dict[str, dict] = {
         "egyptian_titulary_kind": "nomen",
     },
 
+    # ── Dyn 29-30 Greek-alias + Egyptian-prenomen pair split (scan-108-left) ─
+    # Beckerath book p192 prints these four Late Period rows with the SAME
+    # typography as the verified-precedent 15.04 Chajan / 26.04 Apries / 06.04
+    # Nemti-em-saf I.: `<Greek-name> (<Egyptian-nomen>, <Egyptian-prenomen>)`.
+    # The 3-agent merge produces an inconsistent half-split state — `name`
+    # carries the full compound while `egyptian_titulary` holds only the
+    # prenomen with `egyptian_titulary_kind="prenomen"`. That breaks downstream
+    # alias matching: searching for `Necht-nebef` against egyptian_titulary
+    # would NOT find Nektanebês because titulary holds only `Cheper-ka-rê`.
+    #
+    # Apply the canonical split (name=bare Greek lemma; titulary=full inner
+    # compound; kind="mixed") matching 15.04. Egyptologist printed-source
+    # review on PR #146 verified the discriminator applies to all four rows
+    # against PDF p108-left. Tracking issue #147; landed in this PR.
+    #
+    # 29.03 Psamuthis is preceded by `Gegenkönig` in print; that prefix stays
+    # in `notes_from_beckerath` (already set by the 3-agent merge); only the
+    # name-vs-titulary split is the editorial pass here.
+    "29.03": {
+        "name": "Psamuthis",
+        "egyptian_titulary": "Pe-sche[re-n-]mut, User-rê",
+        "egyptian_titulary_kind": "mixed",
+    },
+    "30.01": {
+        "name": "Nektanebês",
+        "egyptian_titulary": "Necht-nebef, Cheper-ka-rê",
+        "egyptian_titulary_kind": "mixed",
+    },
+    "30.02": {
+        "name": "Teôs",
+        "egyptian_titulary": "Djed-hor, Iri-maat-en-rê",
+        "egyptian_titulary_kind": "mixed",
+    },
+    "30.03": {
+        "name": "Nektanebôs",
+        "egyptian_titulary": "Necht-har-ehbojet, Senedjem-ib-rê",
+        "egyptian_titulary_kind": "mixed",
+    },
+
     # ── 06.04 Nemti-em-saf I. titulary OCR drift (scan-106-left) ──────────
     # PDF book p188 prints `Nemti-em-saf I. (Methusuphis, Mer-en-rê)`.
     # The OCR pass transcribed `Mer-en-ptah` — almost certainly an LLM
@@ -475,6 +514,52 @@ OVERRIDE_LOG: dict[str, str] = {
     "06.06": "06.06 Nemti-em-saf II.: Greek-alias-in-parens split (Menthesuphis → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
     "21.04": "21.04 Amen-em-opet: Greek-alias-in-parens split (Amenophthis → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
     "21.05": "21.05 Osochor: Greek-alias-in-parens split (Osorkon → titulary/nomen). See _GREEK_ALIAS_NOTE. [P1]",
+    "29.03": (
+        "29.03 Psamuthis: Greek-alias + Egyptian-prenomen pair split (issue "
+        "#147). Beckerath p192 (scan-108-left) prints `Gegenkönig Psamuthis "
+        "(Pe-sche[re-n-]mut, User-rê)` — Pe-sche[re-n-]mut is the Egyptian "
+        "nomen, User-rê the prenomen. The merge produced the half-split "
+        "state name=full compound, egyptian_titulary=`User-rê` only, "
+        "kind=`prenomen`. Realign to the kind=`mixed` pattern matching the "
+        "15.04 Chajan / 26.04 Apries / 06.04 Nemti-em-saf I. precedent: "
+        "name=`Psamuthis`, titulary=`Pe-sche[re-n-]mut, User-rê`, kind="
+        "`mixed`. Egyptologist printed-source review on PR #146 verified "
+        "the discriminator applies. [P1]"
+    ),
+    "30.01": (
+        "30.01 Nektanebês: Greek-alias + Egyptian-prenomen pair split (issue "
+        "#147). Beckerath p192 (scan-108-left) prints `Nektanebês "
+        "(Necht-nebef, Cheper-ka-rê)` — Necht-nebef is the Egyptian nomen, "
+        "Cheper-ka-rê the prenomen. The merge produced the half-split state "
+        "name=full compound, egyptian_titulary=`Cheper-ka-rê` only, "
+        "kind=`prenomen`. Realign to kind=`mixed` per the 15.04 precedent: "
+        "name=`Nektanebês`, titulary=`Necht-nebef, Cheper-ka-rê`, kind="
+        "`mixed`. Egyptologist printed-source review on PR #146 verified "
+        "the discriminator applies. [P1]"
+    ),
+    "30.02": (
+        "30.02 Teôs: Greek-alias + Egyptian-prenomen pair split (issue "
+        "#147). Beckerath p192 (scan-108-left) prints `Teôs (Djed-hor, "
+        "Iri-maat-en-rê)` — Djed-hor is the Egyptian nomen, Iri-maat-en-rê "
+        "the prenomen. The merge produced the half-split state name=full "
+        "compound, egyptian_titulary=`Iri-maat-en-rê` only, kind=`prenomen`. "
+        "Realign to kind=`mixed` per the 15.04 precedent: name=`Teôs`, "
+        "titulary=`Djed-hor, Iri-maat-en-rê`, kind=`mixed`. Egyptologist "
+        "printed-source review on PR #146 verified the discriminator "
+        "applies. [P1]"
+    ),
+    "30.03": (
+        "30.03 Nektanebôs: Greek-alias + Egyptian-prenomen pair split "
+        "(issue #147). Beckerath p192 (scan-108-left) prints `Nektanebôs "
+        "(Necht-har-ehbojet, Senedjem-ib-rê)` — Necht-har-ehbojet is the "
+        "Egyptian nomen, Senedjem-ib-rê the prenomen. The merge produced "
+        "the half-split state name=full compound, egyptian_titulary="
+        "`Senedjem-ib-rê` only, kind=`prenomen`. Realign to kind=`mixed` "
+        "per the 15.04 precedent: name=`Nektanebôs`, titulary="
+        "`Necht-har-ehbojet, Senedjem-ib-rê`, kind=`mixed`. Egyptologist "
+        "printed-source review on PR #146 verified the discriminator "
+        "applies. [P1]"
+    ),
     "06.04": (
         "06.04 Nemti-em-saf I.: scan-106-left prints `(Methusuphis, "
         "Mer-en-rê)` but the OCR pass emitted `Mer-en-ptah` — an LLM "

@@ -481,6 +481,40 @@ def test_dyn4_etwa_propagation_locked() -> None:
         assert r["end_approximate"] is True, kid
 
 
+def test_dyn29_dyn30_greek_egyptian_pair_split() -> None:
+    """Issue #147 — four Late Period rows on book p192 (scan-108-left) print
+    with the SAME `<Greek-name> (<Egyptian-nomen>, <Egyptian-prenomen>)`
+    typography as the verified-precedent 15.04 Chajan / 26.04 Apries / 06.04
+    Nemti-em-saf I. The 3-agent merge produces an inconsistent half-split
+    state (name=full compound, egyptian_titulary=prenomen-only,
+    kind=`prenomen`); fix_rows.py realigns to the canonical kind=`mixed`
+    pattern (name=bare Greek lemma, titulary=full inner compound).
+
+    Egyptologist printed-source review on PR #146 verified the discriminator
+    applies to all four rows. The pre-#147 state had `Necht-nebef`
+    unfindable on Nektanebês because titulary held only `Cheper-ka-rê`.
+    """
+    expected = {
+        "29.03": ("Psamuthis", "Pe-sche[re-n-]mut, User-rê"),
+        "30.01": ("Nektanebês", "Necht-nebef, Cheper-ka-rê"),
+        "30.02": ("Teôs", "Djed-hor, Iri-maat-en-rê"),
+        "30.03": ("Nektanebôs", "Necht-har-ehbojet, Senedjem-ib-rê"),
+    }
+    for bid, (name, titulary) in expected.items():
+        r = _row(bid)
+        assert r["name"] == name, (bid, r["name"])
+        assert r["egyptian_titulary"] == titulary, (bid, r["egyptian_titulary"])
+        assert r["egyptian_titulary_kind"] == "mixed", (bid, r["egyptian_titulary_kind"])
+
+
+def test_29_03_psamuthis_gegenkoenig_note_preserved() -> None:
+    """29.03 is preceded by `Gegenkönig` in print on book p192. The split
+    in #147 only realigns name vs titulary; the German prefix stays in
+    notes_from_beckerath as set by the 3-agent merge."""
+    r = _row("29.03")
+    assert r["notes_from_beckerath"] == "Gegenkönig"
+
+
 def test_chajan_dyn15_end_date_locked() -> None:
     """Beckerath prints a brace bracket on book p189 (scan-106-right) spanning
     Bêôn / Apachnas / Chajan with shared range 1648/1645–1590/1587. Chajan
