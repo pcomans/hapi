@@ -30,9 +30,24 @@ RECONCILED = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
 
-# Chunk-1 corrections from the egyptologist-reviewer pass on PR #66.
+# Chunk-1 corrections from the egyptologist-reviewer pass on PR #66, plus
+# one verbatim-preserve trailing-period restoration after the post-
+# postprocessor rerun on PR #140.
 # Each entry: (tomb_id, field, new_value, rationale).
-CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = []
+CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "KV10",
+        "notes_from_pm",
+        "Inaccessible after Corridor B.",
+        "PM p.517 headword prints `Inaccessible after Corridor B.` with a "
+        "trailing period (chunk-1 line 870). Post-postprocessor agents "
+        "dropped the period; restore via override per the README's "
+        "notes_from_pm verbatim-preserve policy and to match the "
+        "punctuation handling on KV14/KV19/KV22/KV23/KV43/KV45 etc. "
+        "Gemini round-4 review (PR #140) flagged the punctuation "
+        "inconsistency.",
+    ),
+]
 
 
 # Chunk-2 (KV11–KV20) corrections. The prompt was rewritten post-PR-#68
@@ -136,11 +151,13 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Excavated by Davis, and by Carnarvon and Carter.",
         "PM p.547 headword excavator clause `Excavated by Davis, and by "
         "Carnarvon and Carter, see CARTER and MACE...` — same shape as "
-        "KV23/KV43/KV45/KV48 excavator clauses. The post-postprocessor "
-        "rerun's three agents all dropped this `Excavated by ...` tail "
-        "from notes_from_pm even though the postprocessor surfaced it "
-        "cleanly. Restore via override (egyptologist-reviewer flagged "
-        "as R1 in PR #140 review).",
+        "KV23/KV43/KV45 excavator clauses. (KV35/KV47/KV48 do NOT print "
+        "explicit `Excavated by` clauses — Loret/Davis/Carter are cited "
+        "via publication titles only — so no override is needed there.) "
+        "The post-postprocessor rerun's three agents all dropped this "
+        "`Excavated by ...` tail from notes_from_pm even though the "
+        "postprocessor surfaced it cleanly. Restore via override "
+        "(egyptologist-reviewer flagged as R1 in PR #140 review).",
     ),
     (
         "KV23",

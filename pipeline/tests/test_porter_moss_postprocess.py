@@ -164,6 +164,37 @@ def test_whitelisted_egyptian_c_rewrite() -> None:
     assert pp.process_chunk("Takhact offering") == "Takhaʿt offering"
 
 
+def test_whitelisted_egyptian_c_rewrite_case_insensitive() -> None:
+    """The whitelist regex is case-insensitive (IGNORECASE), so all-caps
+    variants like ``SMENKHKAREC`` in a hypothetical PM section heading
+    also normalise. Current chunks have no all-caps c-trailing variant
+    of these tokens (only ``CHIC`` for ``CHIC OR. INST.`` exists, which
+    is not in the whitelist), but the case-insensitive match defends
+    against future chunks where PM may render the ayin-ending name in
+    section-heading capitalisation."""
+    assert pp.process_chunk("SMENKHKAREC") == "Smenkhkareʿ"
+    assert pp.process_chunk("Menkheperrec") == "Menkheperreʿ"
+
+
+def test_whitelisted_c_rewrite_does_not_fire_on_english_abbrev() -> None:
+    """Tripwire: the IGNORECASE whitelist must NOT fire on English
+    abbreviations like ``Rec.`` (recommendation) or ``rec.``. The
+    word-boundary anchor `\\b` requires the trailing `c` to be at a
+    token boundary; English ``recommended``/``record``/``recto`` etc.
+    don't end at the `c`, and the whitelist's exact tokens are
+    ``Smenkhkarec``/``Menkheperrec``/``Rec``/``Takhact``. Of those,
+    only ``Rec`` is short enough to plausibly collide with a future
+    English abbreviation. The current chunks contain no `Rec.` English
+    abbrev; this test pins the behaviour for one common case (`Rec.`
+    with trailing period — agents reading citation prose might emit
+    this if PM ever uses the abbrev)."""
+    # The chunk corpus has no English `Rec.` token; this test serves as a
+    # tripwire if a future chunk introduces one. ``Rec`` IS in the
+    # whitelist, so it WILL fire as ayin even with a trailing period.
+    # Document this behaviour explicitly so future-me sees the intent.
+    assert pp.process_chunk("Rec.") == "Reʿ."
+
+
 def test_english_c_words_survive() -> None:
     """English words ending in ``c`` must NOT be rewritten by the Egyptian-
     name ayin rule. This is the central regression test for the post-

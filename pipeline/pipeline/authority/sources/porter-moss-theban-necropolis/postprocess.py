@@ -163,8 +163,14 @@ _WORD_FIXES: dict[str, str] = {
     "Takhact": "Takhaʿt",
 }
 _WORD_FIXES_RE = re.compile(
-    r"\b(" + "|".join(re.escape(s) for s in _WORD_FIXES) + r")\b"
+    r"\b(" + "|".join(re.escape(s) for s in _WORD_FIXES) + r")\b",
+    re.IGNORECASE,
 )
+# Lookup is case-insensitive on the matched token; the dict keys are stored
+# in their canonical Title-Case form, but lower-folding both sides handles
+# any all-caps variant a future chunk may surface (e.g. ``SMENKHKAREC`` in
+# a PM section heading) and any lower-case variant in body prose.
+_WORD_FIXES_LOWER: dict[str, str] = {k.lower(): v for k, v in _WORD_FIXES.items()}
 
 # --- Phase 4: king-name-anchored Roman numerals -----------------------------
 # The Griffith Institute text layer confuses ``I``, ``1``, and ``l`` in both
@@ -238,7 +244,7 @@ def process_chunk(text: str) -> str:
     # Phase 3: whitelisted token-exact rewrites (post-Phase-1-and-2 forms).
     # Single combined-regex pass; one scan over the text, mapping each match
     # to its canonical form via the dict.
-    out = _WORD_FIXES_RE.sub(lambda m: _WORD_FIXES[m.group(1)], out)
+    out = _WORD_FIXES_RE.sub(lambda m: _WORD_FIXES_LOWER[m.group(1).lower()], out)
     # Phase 4: king-name-anchored Roman numerals
     out = _ROMAN_FIX_RE.sub(_roman_sub, out)
     return out

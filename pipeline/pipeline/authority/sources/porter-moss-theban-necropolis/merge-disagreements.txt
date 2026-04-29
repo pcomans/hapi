@@ -2,8 +2,8 @@ KV13 (Bay):
   notes_from_pm: a="Chancellor. Temp. Merneptah-Siptah." | b="Chancellor. Temp. Merneptaḥ-Siptaḥ." | c="Chancellor. Temp. Merneptah-Siptah."  → chose "Chancellor. Temp. Merneptah-Siptah."
 
 KV14 (Tausert):
-  occupant_role: a="King" | b="Queen" | c="King"  → chose "King"
   notes_from_pm: a="wife of Sethos II. Usurped by Setnakht." | b="wife of Sethos II. Usurped by Setnakht" | c="wife of Sethos II. Usurped by Setnakht."  → chose "wife of Sethos II. Usurped by Setnakht."
+  occupant_role: a="King" | b="Queen" | c="King"  → chose "King"
 
 KV18 (Ramesses X):
   notes_from_pm: a="(formerly XI)" | b="formerly XI" | c="(formerly XI)"  → chose "(formerly XI)"
@@ -69,8 +69,8 @@ DAN-Ahhotep (ʿAhhotp):
   notes_from_pm: a="Wife of King Seqenenreʿ-Taʿa. Found by Mariette in 1859." | b="Wife of King Seqenenreʿ-Taʿa. Found by Mariette in 1859." | c="Wife of King Seḳenenreʿ-Taʿa. Found by Mariette in 1859."  → chose "Wife of King Seqenenreʿ-Taʿa. Found by Mariette in 1859."
 
 DAN-AhmosiHenutempet (ʿAhmosi Henutempet):
-  occupant_role: a="Princess" | b="Royal Family" | c="Royal Family"  → chose "Royal Family"
   notes_from_pm: a="Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa). Coffin possibly from here." | b="Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa)." | c="Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa). Coffin possibly from here."  → chose "Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa). Coffin possibly from here."
+  occupant_role: a="Princess" | b="Royal Family" | c="Royal Family"  → chose "Royal Family"
 
 DAN-AhmosiNefertere (ʿAhmosi Nefertere):
   notes_from_pm: a="Tomb of Queen ʿAhmosi Nefertere (probably)." | b="(probably). Attributed to Amenophis I by Carter, followed by Winlock and Cerny; Cerny later revised his opinion." | c="Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter."  → chose "Tomb of Queen ʿAhmosi Nefertere (probably)."
@@ -86,15 +86,15 @@ DAN-AntefSehertaui (Antef (Sehertaui)):
   occupant_name: a="Antef (Sehertaui)" | b="Antef (Sehertaui)" | c="Antef"  → chose "Antef (Sehertaui)"
 
 DAN-AntefSekhemreHeruhirmaet (Antef (Sekhemreʿ-Heruhirmaʿet)):
-  occupant_alt_names: a=["Sekhemreʿ-Heruhirmaʿet"] | b=["Sekhemreʿ-Heruḥirmaʿet"] | c=["Sekhemreʿ-Heruḥirmaʿet"]  → chose ["Sekhemreʿ-Heruḥirmaʿet"]
   occupant_name: a="Antef (Sekhemreʿ-Heruhirmaʿet)" | b="Antef (Sekhemreʿ-Heruḥirmaʿet)" | c="Antef"  → chose "Antef (Sekhemreʿ-Heruhirmaʿet)"
+  occupant_alt_names: a=["Sekhemreʿ-Heruhirmaʿet"] | b=["Sekhemreʿ-Heruḥirmaʿet"] | c=["Sekhemreʿ-Heruḥirmaʿet"]  → chose ["Sekhemreʿ-Heruḥirmaʿet"]
 
 DAN-AntefSekhemreWepmaet (Antef (Sekhemreʿ-Wepmaʿet)):
   occupant_name: a="Antef (Sekhemreʿ-Wepmaʿet)" | b="Antef (Sekhemreʿ-Wepmaʿet)" | c="Antef"  → chose "Antef (Sekhemreʿ-Wepmaʿet)"
 
 DAN-AntefWahankh (Antef (Wahankh)):
-  occupant_alt_names: a=["Wahankh"] | b=["Wahʿankh"] | c=["Wahʿankh"]  → chose ["Wahʿankh"]
   occupant_name: a="Antef (Wahankh)" | b="Antef (Wahankh)" | c="Antef"  → chose "Antef (Wahankh)"
+  occupant_alt_names: a=["Wahankh"] | b=["Wahʿankh"] | c=["Wahʿankh"]  → chose ["Wahʿankh"]
 
 DAN-Aqhor (ʿAq-hor):
   occupant_name: a="ʿAq-hor" | b="ʿAq-Hor" | c="ʿAḳ-hor"  → chose "ʿAq-hor"
@@ -106,8 +106,8 @@ DAN-MentuhotpIWifeOfDjhuti (Queen Mentuhotp I):
   notes_from_pm: a="Wife of King Djhuti." | b="Wife of King Djehuty." | c="Wife of King Djḥuti."  → chose "Wife of King Djhuti."
 
 DAN-MentuhotpSankhibtaui (Mentuhotp-Sʿankhibtaui):
-  occupant_alt_names: a=[] | b=["Sʿankhibtaui"] | c=[]  → chose []
   occupant_name: a="Mentuhotp-S'ankhibtaui" | b="Mentuhotp-Sʿankhibtaui" | c="Mentuhotp-Sʿankhibtaui"  → chose "Mentuhotp-Sʿankhibtaui"
+  occupant_alt_names: a=[] | b=["Sʿankhibtaui"] | c=[]  → chose []
 
 DAN-SebkemsafSekhemreShedtaui (Sebkemsaf II (Sekhemreʿ-Shedtaui)):
   occupant_name: a="Sebkemsaf II (Sekhemreʿ-Shedtaui)" | b="Sebkemsaf II (Sekhemreʿ-Shedtaui)" | c="Sebkemsaf II"  → chose "Sebkemsaf II (Sekhemreʿ-Shedtaui)"
@@ -122,7 +122,7 @@ signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
 Per-chunk correction counts:
-- Chunk 1: 0 correction(s) defined in CHUNK1_CORRECTIONS.
+- Chunk 1: 1 correction(s) defined in CHUNK1_CORRECTIONS.
 - Chunk 2: 5 correction(s) defined in CHUNK2_CORRECTIONS.
 - Chunk 3: 8 correction(s) defined in CHUNK3_CORRECTIONS.
 - Chunk 4: 2 correction(s) defined in CHUNK4_CORRECTIONS.
@@ -137,6 +137,9 @@ Tomb-id renames:
 - DAN-MentuhotpIWifeOfDjehuti → DAN-MentuhotpIWifeOfDjhuti (already renamed; no-op this run)
 
 Field corrections:
+- KV10: notes_from_pm corrected this run (PM p.517 headword prints `Inaccessible after Corridor B.` with a trailing period (chunk-1 line 870). Post-postprocessor agents dropped the period; restore via override per the README's notes_from_pm verbatim-preserve policy and to match the punctuation handling on KV14/KV19/KV22/KV23/KV43/KV45 etc. Gemini round-4 review (PR #140) flagged the punctuation inconsistency.)
+    was: "Inaccessible after Corridor B"
+    now: "Inaccessible after Corridor B."
 - KV12: occupant_role corrected this run (prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
     was: null
     now: "Unknown"
@@ -152,7 +155,7 @@ Field corrections:
 - KV20: occupant_name corrected this run (Strip underdot-H (Ḥ → H) per README's matchable-name-field diacritic-stripping convention. Pre-postprocessor (PR #140), the publisher OCR's variant cap-Ḥ glyphs (`I:I` in `I:Iatshepsut`) led the agents to emit plain `Hatshepsut` after their own case-aware normalisation; post-postprocessor the agents see canonical Unicode `Ḥ` and one or more carry the diacritic into occupant_name despite the README rule. Align here.)
     was: "Ḥatshepsut"
     now: "Hatshepsut"
-- KV22: notes_from_pm corrected this run (PM p.547 headword excavator clause `Excavated by Davis, and by Carnarvon and Carter, see CARTER and MACE...` — same shape as KV23/KV43/KV45/KV48 excavator clauses. The post-postprocessor rerun's three agents all dropped this `Excavated by ...` tail from notes_from_pm even though the postprocessor surfaced it cleanly. Restore via override (egyptologist-reviewer flagged as R1 in PR #140 review).)
+- KV22: notes_from_pm corrected this run (PM p.547 headword excavator clause `Excavated by Davis, and by Carnarvon and Carter, see CARTER and MACE...` — same shape as KV23/KV43/KV45 excavator clauses. (KV35/KV47/KV48 do NOT print explicit `Excavated by` clauses — Loret/Davis/Carter are cited via publication titles only — so no override is needed there.) The post-postprocessor rerun's three agents all dropped this `Excavated by ...` tail from notes_from_pm even though the postprocessor surfaced it cleanly. Restore via override (egyptologist-reviewer flagged as R1 in PR #140 review).)
     was: null
     now: "Excavated by Davis, and by Carnarvon and Carter."
 - KV23: notes_from_pm corrected this run (PM p.550 headword excavator clause `Excavated by Belzoni, see id. Narrative of the Researches ... in Egypt and Nubia, pp. 123-4.` — same systemic dropout as KV22. Egyptologist-reviewer flagged as R2 in PR #140 review.)
