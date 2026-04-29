@@ -130,19 +130,19 @@ _SUBSTRING_FIXES: list[tuple[str, str]] = [
 # legitimate ayin contexts.
 # Two anchors so ``<`` fires both as a word-internal/trailing ayin (`Re<`,
 # `Ma<et`) AND as a word-initial ayin (`<Ahhotp`, `<Ankhef...`, `<Aqmosi`).
-# Both anchors admit ASCII letters AND the Phase-1 substitution products
-# ``Ḥ``/``ḥ``/``ḍ`` (kept symmetric so neither side silently misses a
-# Phase-1 output): a ``<`` between an underdot-H and a vowel fires from
-# the lookbehind (`Reʿ-Ḥ<arakhti`); a ``<`` immediately before an
-# underdot consonant (e.g. a future chunk `<Ḥtp`) fires from the
-# lookahead. ``\w`` is rejected because it admits digits and chunk text
-# contains digit-cluster noise like ``pp. 22<)-47`` where ``<`` is a
-# misread digit, not an ayin — firing there would corrupt page-citation
+# Both anchors admit ASCII letters AND the Egyptological transliteration
+# consonants this source uses or this postprocessor produces:
+# ``Ḥ``/``ḥ`` (Phase-1 product), ``ḍ``/``Ḍ`` (Phase-1 product, plus
+# possible Sit-ḍḥ shape), ``ḳ``/``Ḳ`` (chunk-text content for names like
+# ``Seḳenenreʿ``). Symmetric so neither side silently misses a glyph the
+# other admits. ``\w`` is rejected because it admits digits and chunk
+# text contains digit-cluster noise like ``pp. 22<)-47`` where ``<`` is
+# a misread digit, not an ayin — firing there would corrupt page-citation
 # pages. Verified safe by ``grep -hoE '<[A-Za-z]'`` over all raw chunks:
 # every word-initial hit is Egyptian transliteration (`<a`, `<A`,
 # `<Ankh*`, `<Anen`, `<Aqmosi`, etc.) — no HTML/math/citation false
 # positives.
-_AYIN_RE = re.compile(r"(?<=[A-Za-zḤḥḍ])<|<(?=[A-Za-zḤḥḍ])")
+_AYIN_RE = re.compile(r"(?<=[A-Za-zḤḥḍḌḳḲ])<|<(?=[A-Za-zḤḥḍḌḳḲ])")
 
 # --- Phase 3: whitelisted token-exact substitutions -------------------------
 # Tokens whose trailing ``c`` is the ayin glyph rendered as a letter ``c``

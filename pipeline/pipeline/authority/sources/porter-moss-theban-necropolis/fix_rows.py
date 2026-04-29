@@ -385,24 +385,52 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
     # Strip the parenthetical so the joinable form matches the pharaoh.se
     # `Antef` entries. The prenomen survives in `occupant_alt_names`.
     # Egyptologist-reviewer flagged as R6 in PR #140 review.
-    ("DAN-AntefSehertaui", "occupant_name", "Antef",
-     "Strip parenthetical prenomen `(Sehertaui)`; alt_names retains it. "
-     "R6 in egyptologist-reviewer PR #140 review."),
-    ("DAN-AntefWahankh", "occupant_name", "Antef",
-     "Strip parenthetical prenomen `(Wahankh)`; alt_names retains it."),
-    ("DAN-AntefNubkheperre", "occupant_name", "Antef",
-     "Strip parenthetical prenomen `(Nubkheperreʿ)`; alt_names retains it."),
-    ("DAN-AntefSekhemreHeruhirmaet", "occupant_name", "Antef",
-     "Strip parenthetical prenomen `(Sekhemreʿ-Heruhirmaʿet)`; alt_names "
-     "retains it."),
-    ("DAN-AntefSekhemreWepmaet", "occupant_name", "Antef",
-     "Strip parenthetical prenomen `(Sekhemreʿ-Wepmaʿet)`; alt_names "
-     "retains it."),
-    ("DAN-KamosiWazkheperre", "occupant_name", "Kamosi",
-     "Strip parenthetical prenomen `(Wazkheperreʿ)`; alt_names retains it."),
-    ("DAN-SebkemsafSekhemreShedtaui", "occupant_name", "Sebkemsaf II",
-     "Strip parenthetical prenomen `(Sekhemreʿ-Shedtaui)`; alt_names "
-     "retains it."),
+    (
+        "DAN-AntefSehertaui",
+        "occupant_name",
+        "Antef",
+        "Strip parenthetical prenomen `(Sehertaui)`; alt_names retains it. "
+        "R6 in egyptologist-reviewer PR #140 review.",
+    ),
+    (
+        "DAN-AntefWahankh",
+        "occupant_name",
+        "Antef",
+        "Strip parenthetical prenomen `(Wahankh)`; alt_names retains it.",
+    ),
+    (
+        "DAN-AntefNubkheperre",
+        "occupant_name",
+        "Antef",
+        "Strip parenthetical prenomen `(Nubkheperreʿ)`; alt_names retains it.",
+    ),
+    (
+        "DAN-AntefSekhemreHeruhirmaet",
+        "occupant_name",
+        "Antef",
+        "Strip parenthetical prenomen `(Sekhemreʿ-Heruhirmaʿet)`; alt_names "
+        "retains it.",
+    ),
+    (
+        "DAN-AntefSekhemreWepmaet",
+        "occupant_name",
+        "Antef",
+        "Strip parenthetical prenomen `(Sekhemreʿ-Wepmaʿet)`; alt_names "
+        "retains it.",
+    ),
+    (
+        "DAN-KamosiWazkheperre",
+        "occupant_name",
+        "Kamosi",
+        "Strip parenthetical prenomen `(Wazkheperreʿ)`; alt_names retains it.",
+    ),
+    (
+        "DAN-SebkemsafSekhemreShedtaui",
+        "occupant_name",
+        "Sebkemsaf II",
+        "Strip parenthetical prenomen `(Sekhemreʿ-Shedtaui)`; alt_names "
+        "retains it.",
+    ),
     # Post-postprocessor rerun: three rows had their `notes_from_pm` ḥ/ḳ
     # diacritics stripped despite the README's verbatim-preserve policy
     # for that field. The agents now correctly strip ḥ in `occupant_name`
@@ -532,10 +560,14 @@ CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "notes_from_pm",
         "daughter of Seḳenenreʿ-Taʿa and Sit-ḍḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)",
         "PM p.755 prints the mother's name as 'Sit-ḍḥout' (ḍ = d with "
-        "underdot, not plain d and not g). The text-layer OCR renders 'ḍḥ' "
-        "as 'gḥ' — a character-level misread. Egyptologist-reviewer P2 "
-        "finding: restore PM-verbatim Unicode spelling with `ḍ` (U+1E0D, "
-        "Latin small letter d with dot below) to match PM's typography.",
+        "underdot, not plain d and not g). The text-layer OCR renders the "
+        "ḍḥ digraph as 'gQ.' (drops the underdot-D entirely and renders "
+        "the ḥ as `Q` + period) — this exact source token `Sit-gQ.out` is "
+        "the one place this bigram appears in any chunk, and the "
+        "postprocessor's `(\"Sit-gQ.out\", \"Sit-ḍḥout\")` substring "
+        "substitution normalises it. The override here exists only as the "
+        "egyptologist-reviewer's PM-verbatim sentence-restoration "
+        "(complete clause + bibliographic ribbon tail).",
     ),
     (
         "QV74",

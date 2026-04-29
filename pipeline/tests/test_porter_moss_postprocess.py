@@ -128,13 +128,20 @@ def test_word_initial_ayin() -> None:
 
 def test_word_initial_ayin_admits_phase1_underdot() -> None:
     """The lookahead is symmetric with the lookbehind — both admit Phase-1
-    substitution products (`Ḥ`/`ḥ`/`ḍ`) so that a future chunk shape with
-    ``<`` immediately before an underdot consonant (e.g. a hypothetical
+    substitution products (`Ḥ`/`ḥ`/`ḍ`/`Ḍ`) AND chunk-text transliteration
+    consonants (`ḳ`/`Ḳ`) so that a future chunk shape with ``<``
+    immediately before an underdot consonant (e.g. a hypothetical
     ``<Ḥtp`` if PM ever transliterates the king's name with leading
-    ayin + underdot-H) does not silently survive untranslated. Synthetic
-    test: ``<Ḥtp`` should fire as ``ʿḤtp``."""
+    ayin + underdot-H, or ``<ḳ...``) does not silently survive
+    untranslated. Synthetic tests cover both Phase-1-product and
+    chunk-text-content classes."""
     assert pp.process_chunk("<Ḥtp") == "ʿḤtp"
     assert pp.process_chunk("<ḥtp") == "ʿḥtp"
+    # Chunk-text-content: `Seḳenenreʿ-Taʿa` style — ḳ adjacency.
+    assert pp.process_chunk("Seḳ<") == "Seḳʿ"
+    assert pp.process_chunk("<ḳ") == "ʿḳ"
+    # Capital underdot-D variant (Ḍ): rare but admits for symmetry.
+    assert pp.process_chunk("Ḍ<") == "Ḍʿ"
 
 
 def test_ayin_does_not_fire_on_digit_lookbehind() -> None:
