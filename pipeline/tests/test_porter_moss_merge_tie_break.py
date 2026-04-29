@@ -277,6 +277,90 @@ def test_dan_antef_sekhemre_occupant_name_pinned(reconciled):
     assert r["occupant_name"] == "Antef"
 
 
+def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
+    """Issue #152 (egyptologist PR #151 review methodology recommendation):
+    every tie-break override row × field gets a curated post-fix_rows.py
+    final-form pin. Catches drift in EITHER file (overrides or fix_rows.py)
+    silently changing the result.
+
+    The dependency between `tie-break-overrides.json` and `fix_rows.py` is
+    a multi-file convention — the override pins a pre-fix-rows merge value;
+    fix_rows.py may then layer underdot diacritics, restore Bibl. ribbons,
+    or strip parenthetical disambiguators. This test pins the FINAL state
+    of every override-touched row × field per the printed Beckerath /
+    PM extraction prompt + scholarly conventions.
+
+    Maintenance: when adding a new tie-break override OR a new fix_rows
+    correction touching an override-pinned row × field, update the
+    `EXPECTED` dict here to match the new final form. The test FAILS LOUDLY
+    rather than silently regressing.
+
+    Constitutional rule 3 (deterministic enforcement over convention) —
+    converts the documented override→fix_rows convention into a CI gate.
+    """
+    EXPECTED: dict[tuple[str, str], object] = {
+        # 9 overrides where fix_rows.py mutates post-merge:
+        ("KV36", "notes_from_pm"):
+            "Standard-bearer, Child of the nursery. Temp. Ḥatshepsut. Excavated by Loret.",
+        ("KV42", "notes_from_pm"):
+            "(?). Excavated by Loret",
+        ("QV47", "notes_from_pm"):
+            "daughter of Seḳenenreʿ-Taʿa and Sit-ḏḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)",
+        ("SWV-HatshepsutSouth", "notes_from_pm"):
+            "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite, in Cairo Mus. Ent. 47032.",
+        ("DAN-AhmosiHenutempet", "notes_from_pm"):
+            "Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa).",
+        ("DAN-AhmosiNefertere", "notes_from_pm"):
+            "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by "
+            "Carter, later equated by Černý with 'House of Amenophis of the Garden'.",
+        ("DAN-AntefSekhemreHeruhirmaet", "occupant_name"):
+            "Antef",
+        ("DAN-Aqhor", "occupant_name"):
+            "ʿAḳ-hor",
+        ("DAN-MentuhotpIWifeOfDjhuti", "notes_from_pm"):
+            "Wife of King Ḏḥuti. Found in tomb by Passalacqua.",
+        # 2 overrides where reconciled.jsonl == override value verbatim
+        # (fix_rows.py does NOT mutate):
+        ("KV39", "notes_from_pm"):
+            "Uninscribed tomb, attributed to Amenophis I by Weigall in Ann. Serv. xi "
+            "(1911), pp. 174-5 [12], and id. A Guide to the Antiquities of Upper "
+            "Egypt, pp. 163-4, but this is not supported by any inscriptional "
+            "evidence, and does not correspond with the position given in the Abbott "
+            "Papyrus (cf. Peet, The Great Tomb-Robberies of the Twentieth Egyptian "
+            "Dynasty, pp. 37-8). See also the tomb of Queen ʿAhmosi Nefertere, "
+            "infra, p. 599.",
+        ("QV74", "notes_from_pm"):
+            "Great King's mother and King's wife. "
+            "(CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)",
+    }
+    # Sanity: EXPECTED covers every override.
+    override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
+    expected_keys = set(EXPECTED.keys())
+    missing = override_keys - expected_keys
+    stale = expected_keys - override_keys
+    assert not missing, (
+        f"EXPECTED is missing post-fix-rows pins for these tie-break "
+        f"overrides: {sorted(missing)}. When adding a new override entry, "
+        f"add a matching final-state pin here."
+    )
+    assert not stale, (
+        f"EXPECTED has stale pins for tie-break overrides that no longer "
+        f"exist: {sorted(stale)}. When removing an override entry, drop "
+        f"the matching pin here."
+    )
+    # Per-row final-state assertion.
+    for (tid, field), expected_value in EXPECTED.items():
+        row = _row(reconciled, tid)
+        actual = row.get(field)
+        assert actual == expected_value, (
+            f"Override-touched row × field ({tid!r}, {field!r}) has post-"
+            f"fix_rows.py value {actual!r} but EXPECTED {expected_value!r}. "
+            f"Either tie-break-overrides.json or fix_rows.py changed the "
+            f"resolution path; update EXPECTED to match the new final form "
+            f"(after verifying against the printed PM source)."
+        )
+
+
 def test_overrides_json_keys_well_formed(merge_module):
     """Every key parses as `<tid>|<field>` and every rationale carries a
     structured printed-source citation. Same regex pattern as Beckerath
