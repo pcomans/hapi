@@ -291,6 +291,63 @@ def test_majority_requires_lid_and_field(merge_module):
         merge_module._majority(["a", "b", "c"], field="display_name")
 
 
+def test_load_overrides_rejects_empty_lid(merge_module, tmp_path):
+    """Per #154 parity — `<empty>|field` must raise."""
+    import json
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"|display_name": {"value": "x", "rationale": "test"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="empty leprohon_id or field"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
+    """Per #154 parity — `lid|<empty>` must raise."""
+    import json
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"leprohon-1.01|": {"value": "x", "rationale": "test"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="empty leprohon_id or field"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_non_dict_value(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 + #154 parity from Kitchen."""
+    import json
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"leprohon-1.01|display_name": "Menes"}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="must be a dict"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_missing_value_or_rationale(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 + #154 parity from Kitchen."""
+    import json
+    for incomplete in [{"rationale": "no value"}, {"value": "no rationale"}]:
+        bad = tmp_path / "tie-break-overrides.json"
+        bad.write_text(json.dumps({"leprohon-1.01|display_name": incomplete}))
+        orig = merge_module._OVERRIDES_PATH
+        merge_module._OVERRIDES_PATH = bad
+        try:
+            with pytest.raises(ValueError, match="missing required key"):
+                merge_module._load_overrides()
+        finally:
+            merge_module._OVERRIDES_PATH = orig
+
+
 def test_majority_tie_prose_resolves_to_shortest(merge_module):
     """1/1/1 with only source_note differing → deterministic shortest-wins.
     Shorter source_notes are typically closer-to-source (less editorial

@@ -121,7 +121,7 @@ _OVERRIDES_PATH = SOURCE_DIR / "tie-break-overrides.json"
 def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
     if not _OVERRIDES_PATH.exists():
         return {}
-    raw = json.loads(_OVERRIDES_PATH.read_text())
+    raw = json.loads(_OVERRIDES_PATH.read_text(encoding="utf-8"))
     out: dict[tuple[str, str], dict[str, object]] = {}
     for k, v in raw.items():
         if "|" not in k:
@@ -135,6 +135,19 @@ def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
                 f"merge.py: {_OVERRIDES_PATH} key {k!r} has empty bid or field "
                 f"after splitting on '|' (expected '<beckerath_id>|<field>' "
                 f"with both halves non-empty)"
+            )
+        # Validate value shape per Gemini PR #155 round-1 (parity from Kitchen).
+        if not isinstance(v, dict):
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value must be a dict "
+                f"with 'value' and 'rationale' keys; got {type(v).__name__}: {v!r}"
+            )
+        missing = {"value", "rationale"} - set(v.keys())
+        if missing:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value is missing "
+                f"required key(s) {sorted(missing)} (expected dict with "
+                f"'value' and 'rationale'); got: {v!r}"
             )
         out[(bid, field)] = v
     return out

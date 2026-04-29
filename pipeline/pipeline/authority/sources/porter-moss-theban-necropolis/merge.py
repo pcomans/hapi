@@ -196,6 +196,19 @@ def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
                 f"after splitting on '|' (expected '<tomb_id>|<field>' "
                 f"with both halves non-empty)"
             )
+        # Validate value shape per Gemini PR #155 round-1 (parity from Kitchen).
+        if not isinstance(v, dict):
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value must be a dict "
+                f"with 'value' and 'rationale' keys; got {type(v).__name__}: {v!r}"
+            )
+        missing = {"value", "rationale"} - set(v.keys())
+        if missing:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value is missing "
+                f"required key(s) {sorted(missing)} (expected dict with "
+                f"'value' and 'rationale'); got: {v!r}"
+            )
         out[(tid, field)] = v
     return out
 

@@ -384,6 +384,43 @@ def test_dyn3_brace_bracket_shared_range() -> None:
     assert "Sôuphis, Mesochris (03.05)" in ahu["editorial_notes"]
 
 
+def test_compound_parenthetical_negative_class_stays_in_name() -> None:
+    """Negative-class pin for the compound-parenthetical discriminator
+    documented in fix_rows.py `_GREEK_ALIAS_NOTE` (issue #149 — follow-up
+    from PR #148 retroactive code-review).
+
+    Two distinct typographic patterns share the shape `<Name> (<inner>)`:
+
+    - **POSITIVE class** (Greek-alias + Egyptian-prenomen pair) → split:
+      `name = bare Greek lemma`, `egyptian_titulary = full inner compound`,
+      `egyptian_titulary_kind = "mixed"`. Examples: 06.04 Nemti-em-saf I.,
+      15.04 Chajan, 26.04 Apries, 29.03 Psamuthis, 30.01 Nektanebês,
+      30.02 Teôs, 30.03 Nektanebôs.
+    - **NEGATIVE class** (compound is two name-form variants of a SINGLE
+      concept) → keeps the compound INLINE in `name` with
+      `egyptian_titulary = null`. Examples: 03.05 `Sôuphis, Mesochris`
+      (two Greek transcriptions of the same king); 03.06 `Ahu (Huni,
+      Aches)` (Egyptian + Greek nomen variants — the bracketed compound
+      stays inline).
+
+    The positive class has explicit test pins (e.g.
+    `test_dyn29_dyn30_greek_egyptian_pair_split`,
+    `test_taharqo_mixed_titulary`); the negative class was implicitly
+    enforced via the absence of a fix_rows.py entry, with no direct
+    invariant test. If a future fix_rows.py edit mistakenly applies the
+    discriminator to 03.05 / 03.06, no test would fail — silent
+    regression risk. This test pins the negative class against drift.
+    """
+    for bid, expected_name in [
+        ("03.05", "Sôuphis, Mesochris"),
+        ("03.06", "Ahu (Huni, Aches)"),
+    ]:
+        r = _row(bid)
+        assert r["name"] == expected_name, (bid, r["name"])
+        assert r["egyptian_titulary"] is None, (bid, r["egyptian_titulary"])
+        assert r["egyptian_titulary_kind"] is None, (bid, r["egyptian_titulary_kind"])
+
+
 def test_te_wosret_coregent_row_extracted() -> None:
     """19.08 Kgin. Te-wosret: Beckerath chains her on Si-ptah's row as
     `Si-ptah und Kgin. Te-wosret (Thuoris)`. The Co-regent queen prompt
