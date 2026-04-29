@@ -260,9 +260,11 @@ def _majority(values: list, *, bid: str, field: str) -> tuple[object, int]:
     # 1. Explicit override.
     override = TIE_BREAK_OVERRIDES.get((bid, field))
     if override is not None:
-        # Override carries the resolved value; treat as if it had top_count
-        # agreers (it's an authoritative reviewer-set value).
-        return override["value"], top_count
+        # Pass override value through `_deep_normalise` for parity with
+        # majority-vote values (Gemini PR #155 round-2). If a future
+        # override entry encodes a sentinel-null in its `value`, this
+        # collapses it to None just like an agent emission would.
+        return _deep_normalise(override["value"]), top_count
 
     # 2. Tie with no override → raise. Build a diagnostic that names every
     # distinct value so the agent adding the override has the candidates in

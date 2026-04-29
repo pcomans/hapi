@@ -527,9 +527,12 @@ def _majority(values: list, *, lid: str, field: str) -> tuple[object, int]:
     # 1. Explicit override.
     override = TIE_BREAK_OVERRIDES.get((lid, field))
     if override is not None:
-        # Override carries the resolved value; treat as if it had top_count
-        # agreers (it's an authoritative human/arbiter-set value).
-        return override["value"], top_count
+        # Pass override value through `_deep_normalise` for parity with
+        # majority-vote values (Gemini PR #155 round-2). If a future
+        # override entry encodes a sentinel-null in its `value` (or in a
+        # nested name-list dict's source_note / attested_in), this
+        # collapses it to None just like an agent emission would.
+        return _deep_normalise(override["value"]), top_count
 
     # 2. Prose-only tie → deterministic rule.
     kind = _classify_tie(field, normalised)

@@ -319,6 +319,23 @@ def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
         merge_module._OVERRIDES_PATH = orig
 
 
+def test_override_value_passes_through_deep_normalise(merge_module):
+    """Per Gemini PR #155 round-2 + #154 parity from Kitchen."""
+    key = ("test.99", "display_name")
+    merge_module.TIE_BREAK_OVERRIDES[key] = {
+        "value": "-",
+        "rationale": "test fixture (sentinel-null override)",
+    }
+    try:
+        values = ["alpha", "beta", "gamma"]
+        chosen, _ = merge_module._majority(
+            values, lid="test.99", field="display_name"
+        )
+        assert chosen is None
+    finally:
+        del merge_module.TIE_BREAK_OVERRIDES[key]
+
+
 def test_load_overrides_rejects_non_dict_value(merge_module, tmp_path):
     """Per Gemini PR #155 round-1 + #154 parity from Kitchen."""
     import json
