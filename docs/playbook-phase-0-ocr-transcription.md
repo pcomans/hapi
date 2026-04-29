@@ -168,7 +168,7 @@ Two test files per source:
 - `_majority` unanimous / clear majority / 1/1 partial-row / 1/1/1 tie / sentinel-null collapse / keyword-only `<id>`/`field` signature.
 - Override resolution paths: 1/1/1 tie + override → override value; 1/1 tie + override → override value; tie without override → raise with diagnostic listing every candidate.
 - Override-loader schema validation: top-level dict, `|` separator present, both halves non-empty, value is dict, value carries `value` + `rationale` keys.
-- `SENTINEL_NULL_STRINGS` includes `"null"` (Leprohon parity per PR #146 P1.3).
+- `SENTINEL_NULL_STRINGS` includes `"null"` (parity with Leprohon's set; the `"null"` entry was added across the family by Beckerath PR #146's P1.3 finding).
 - Override `value` passes through `_deep_normalise` (Gemini PR #155 round-2 parity).
 - On-disk pin tests: for every `tie-break-overrides.json` entry, assert reconciled.jsonl carries the resolved value (catches silent regression if someone removes an override).
 - A meta-test `test_post_fix_rows_pipeline_determinism` (per PR #161, closes the constitutional rule 3 gap on the override → fix_rows multi-file convention): pin the FINAL post-fix-rows reconciled.jsonl value for every tie-break override row × field with coverage sanity-checks.
@@ -391,11 +391,11 @@ Post-PR #155 (Kitchen) is canonical; Ryholt PR #157 / Beckerath PR #146 / Porter
 
 Keep verbatim (source-agnostic):
 
-- `SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})` — the `"null"` entry is parity with Leprohon (PR #146 P1.3); a `(None, "null")` pair must collapse to a single vote.
+- `SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})` — parity with Leprohon's set; the `"null"` entry was added family-wide by Beckerath PR #146's P1.3 finding so a `(None, "null")` pair collapses to a single vote.
 - `_normalise_value` + `_deep_normalise` — sentinel-null collapse, recursive across dicts and lists so a `{"page": "-"}` vs `{"page": null}` agent diff doesn't register as a tie.
 - `_normalise_for_merge` — pre-merge canonicalisation hook. Default is a stub returning a shallow copy. Leprohon implements MdC → IFAO transliteration normalisation here for translit sub-fields; other sources currently have no normalisation candidates but the hook is the extension point if a future re-extraction surfaces encoding-style ties.
 - `_load_overrides` — JSON loader with strict validation: `isinstance(raw, dict)` at root, `|` separator in every key, both halves non-empty, every value is a dict carrying `value` + `rationale` keys. UTF-8 encoding on `read_text` (override values can carry Egyptian diacritics).
-- `_majority` signature and body — keyword-only `<id>`/`field` (constitutional rule 10: no Optional fallback for "legacy callers"); returns the tuple `(chosen_value, top_count)` (the count is used by the disagreement-report writer); deep-normalise input; tie detection via `len(most) >= 2 and most[0][1] == most[1][1]`; lookup `TIE_BREAK_OVERRIDES.get((id, field))` on tie; if hit, return `(_deep_normalise(override["value"]), top_count)` (Gemini PR #155 round-2 parity for the value); if miss, raise with diagnostic listing every distinct candidate.
+- `_majority` signature and body — keyword-only `<id>`/`field` (constitutional rule 10: no Optional fallback for "legacy callers"); returns the tuple `(chosen_value, top_count)` (the count is used by the disagreement-report writer); deep-normalise input; tie detection via `len(most) >= 2 and most[0][1] == most[1][1]`; lookup `TIE_BREAK_OVERRIDES.get((<id>, field))` on tie; if hit, return `(_deep_normalise(override["value"]), top_count)` (Gemini PR #155 round-2 parity for the value); if miss, raise with diagnostic listing every distinct candidate.
 - `main()` loop: the per-row loop sorts `all_fields` (incidental fix to issue #142 — deterministic merge-disagreements.txt across re-runs) and passes `<id>=<id>, field=field` to `_majority`. Apply `_normalise_for_merge` to each agent's row before the per-field loop.
 
 The override file `tie-break-overrides.json` ships empty `{}` initially. Each tie that surfaces during the first merge run gets:
