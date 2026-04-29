@@ -76,8 +76,8 @@ DAN-AhmosiNefertere (ʿAhmosi Nefertere):
   notes_from_pm: a="Tomb of Queen ʿAhmosi Nefertere (probably)." | b="(probably). Attributed to Amenophis I by Carter, followed by Winlock and Cerny; Cerny later revised his opinion." | c="Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter."  → chose "Tomb of Queen ʿAhmosi Nefertere (probably)."
 
 DAN-AhmosiSonOfSeqenenre (ʿAhmosi):
-  occupant_name: a="ʿAhmosi" | b="ʿAhmosi, eldest son of King Seqenenreʿ-Taʿa" | c="ʿAhmosi"  → chose "ʿAhmosi"
   notes_from_pm: a="Eldest son of King Seqenenreʿ-Taʿa and ʿAhhotp." | b="Eldest son of King Seqenenreʿ-Taʿa and ʿAhhotp." | c="Eldest son of King Seḳenenreʿ-Taʿa and ʿAḥḥotp."  → chose "Eldest son of King Seqenenreʿ-Taʿa and ʿAhhotp."
+  occupant_name: a="ʿAhmosi" | b="ʿAhmosi, eldest son of King Seqenenreʿ-Taʿa" | c="ʿAhmosi"  → chose "ʿAhmosi"
 
 DAN-AntefNubkheperre (Antef (Nubkheperreʿ)):
   occupant_name: a="Antef (Nubkheperreʿ)" | b="Antef (Nubkheperreʿ)" | c="Antef"  → chose "Antef (Nubkheperreʿ)"
@@ -86,15 +86,15 @@ DAN-AntefSehertaui (Antef (Sehertaui)):
   occupant_name: a="Antef (Sehertaui)" | b="Antef (Sehertaui)" | c="Antef"  → chose "Antef (Sehertaui)"
 
 DAN-AntefSekhemreHeruhirmaet (Antef (Sekhemreʿ-Heruhirmaʿet)):
-  occupant_name: a="Antef (Sekhemreʿ-Heruhirmaʿet)" | b="Antef (Sekhemreʿ-Heruḥirmaʿet)" | c="Antef"  → chose "Antef (Sekhemreʿ-Heruhirmaʿet)"
   occupant_alt_names: a=["Sekhemreʿ-Heruhirmaʿet"] | b=["Sekhemreʿ-Heruḥirmaʿet"] | c=["Sekhemreʿ-Heruḥirmaʿet"]  → chose ["Sekhemreʿ-Heruḥirmaʿet"]
+  occupant_name: a="Antef (Sekhemreʿ-Heruhirmaʿet)" | b="Antef (Sekhemreʿ-Heruḥirmaʿet)" | c="Antef"  → chose "Antef (Sekhemreʿ-Heruhirmaʿet)"
 
 DAN-AntefSekhemreWepmaet (Antef (Sekhemreʿ-Wepmaʿet)):
   occupant_name: a="Antef (Sekhemreʿ-Wepmaʿet)" | b="Antef (Sekhemreʿ-Wepmaʿet)" | c="Antef"  → chose "Antef (Sekhemreʿ-Wepmaʿet)"
 
 DAN-AntefWahankh (Antef (Wahankh)):
-  occupant_name: a="Antef (Wahankh)" | b="Antef (Wahankh)" | c="Antef"  → chose "Antef (Wahankh)"
   occupant_alt_names: a=["Wahankh"] | b=["Wahʿankh"] | c=["Wahʿankh"]  → chose ["Wahʿankh"]
+  occupant_name: a="Antef (Wahankh)" | b="Antef (Wahankh)" | c="Antef"  → chose "Antef (Wahankh)"
 
 DAN-Aqhor (ʿAq-hor):
   occupant_name: a="ʿAq-hor" | b="ʿAq-Hor" | c="ʿAḳ-hor"  → chose "ʿAq-hor"
@@ -106,12 +106,12 @@ DAN-MentuhotpIWifeOfDjhuti (Queen Mentuhotp I):
   notes_from_pm: a="Wife of King Djhuti." | b="Wife of King Djehuty." | c="Wife of King Djḥuti."  → chose "Wife of King Djhuti."
 
 DAN-MentuhotpSankhibtaui (Mentuhotp-Sʿankhibtaui):
-  occupant_name: a="Mentuhotp-S'ankhibtaui" | b="Mentuhotp-Sʿankhibtaui" | c="Mentuhotp-Sʿankhibtaui"  → chose "Mentuhotp-Sʿankhibtaui"
   occupant_alt_names: a=[] | b=["Sʿankhibtaui"] | c=[]  → chose []
+  occupant_name: a="Mentuhotp-S'ankhibtaui" | b="Mentuhotp-Sʿankhibtaui" | c="Mentuhotp-Sʿankhibtaui"  → chose "Mentuhotp-Sʿankhibtaui"
 
 DAN-SebkemsafSekhemreShedtaui (Sebkemsaf II (Sekhemreʿ-Shedtaui)):
-  occupant_name: a="Sebkemsaf II (Sekhemreʿ-Shedtaui)" | b="Sebkemsaf II (Sekhemreʿ-Shedtaui)" | c="Sebkemsaf II"  → chose "Sebkemsaf II (Sekhemreʿ-Shedtaui)"
   notes_from_pm: a=null | b=null | c="Pyramid behind Theb. tb. 24, perhaps belonging to this tomb."  → chose null
+  occupant_name: a="Sebkemsaf II (Sekhemreʿ-Shedtaui)" | b="Sebkemsaf II (Sekhemreʿ-Shedtaui)" | c="Sebkemsaf II"  → chose "Sebkemsaf II (Sekhemreʿ-Shedtaui)"
 
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
@@ -122,12 +122,12 @@ signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
 Per-chunk correction counts:
-- Chunk 1: 1 correction(s) defined in CHUNK1_CORRECTIONS.
+- Chunk 1: 2 correction(s) defined in CHUNK1_CORRECTIONS.
 - Chunk 2: 5 correction(s) defined in CHUNK2_CORRECTIONS.
-- Chunk 3: 8 correction(s) defined in CHUNK3_CORRECTIONS.
+- Chunk 3: 10 correction(s) defined in CHUNK3_CORRECTIONS.
 - Chunk 4: 2 correction(s) defined in CHUNK4_CORRECTIONS.
 - Chunk 5: 0 correction(s) defined in CHUNK5_CORRECTIONS.
-- Chunk 7: 20 correction(s) defined in CHUNK7_CORRECTIONS.
+- Chunk 7: 21 correction(s) defined in CHUNK7_CORRECTIONS.
 - Chunk 8: 6 correction(s) defined in CHUNK8_CORRECTIONS.
 
 Tomb-id renames:
@@ -140,12 +140,15 @@ Field corrections:
 - KV10: notes_from_pm corrected this run (PM p.517 headword prints `Inaccessible after Corridor B.` with a trailing period (chunk-1 line 870). Post-postprocessor agents dropped the period; restore via override per the README's notes_from_pm verbatim-preserve policy and to match the punctuation handling on KV14/KV19/KV22/KV23/KV43/KV45 etc. Gemini round-4 review (PR #140) flagged the punctuation inconsistency.)
     was: "Inaccessible after Corridor B"
     now: "Inaccessible after Corridor B."
+- KV9: occupant_alt_names corrected this run (PM p.511 prints TWO classical-traveller aliases: `'Tomb of Metempsychosis', or 'Tomb of Memnon'`. The post-postprocessor merge captured only `["Memnon"]` — dropped the Metempsychosis alias entirely AND stripped the `Tomb of` prefix from the Memnon form. KV11's parallel `Bruce's tomb` keeps the full PM-printed form; consistency requires KV9 do the same. Egyptologist-reviewer printed-source pass on PM I.2 PDF (2026-04-29 KV1-14 sweep) flagged as R1.)
+    was: ["Memnon"]
+    now: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV12: occupant_role corrected this run (prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
     was: null
     now: "Unknown"
-- KV13: notes_from_pm corrected this run (strip 'Chancellor.' (already encoded as occupant_role=Official) and normalise 'ḥ' → 'h' to match chunk-1's no-underdot convention (Merneptah in KV8 is rendered without underdot).)
+- KV13: notes_from_pm corrected this run (Strip 'Chancellor.' prefix (already encoded as occupant_role=Official). Preserve PM's underdot-Ḥ in the verbatim-preserve `notes_from_pm` field — earlier override incorrectly applied the strip-ḥ rule (which is for occupant_name only, the matchable-name field) to notes. Egyptologist-reviewer printed-source pass on PM I.2 PDF (2026-04-29 KV1-14 sweep) flagged as R2: PM p.527 prints `Temp. Merneptaḥ-Siptaḥ` with both ḥ underdots; this aligns with the chunk-7 sibling overrides for DAN-Ahhotep / DAN-AhmosiHenutempet / DAN-AhmosiSonOfSeqenenre that already preserve underdots in notes_from_pm.)
     was: "Chancellor. Temp. Merneptah-Siptah."
-    now: "Temp. Merneptah-Siptah"
+    now: "Temp. Merneptaḥ-Siptaḥ"
 - KV18: notes_from_pm corrected this run (strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
     was: "(formerly XI)"
     now: "formerly XI"
@@ -173,12 +176,18 @@ Field corrections:
 - KV42: notes_from_pm corrected this run (PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own attribution-uncertainty marker. Keep occupant_name structured as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes (no paraphrase, per rule 1 PM-verbatim policy). Preserve the existing 'Excavated by Loret' headword clause; join with '. ' per chunk-2 KV14.)
     was: "Attribution uncertain (?)."
     now: "(?). Excavated by Loret"
+- KV36: notes_from_pm corrected this run (PM p.556 prints `Temp. Ḥatshepsut.` with underdot-Ḥ in body text (the strip-ḥ rule applies to occupant_name only — the matchable-name field — NOT to notes_from_pm, which is verbatim-preserve). The post-postprocessor merge produced plain `Hatshepsut` in this notes field; restore the underdot. Direct R7 parallel to the DAN-Ahhotep / DAN-AhmosiHenutempet / DAN-AhmosiSonOfSeqenenre fix_rows entries that already restore ḥ/ḳ in their notes fields. Egyptologist-reviewer printed-source pass on PM I.2 PDF (post-merge, 2026-04-29) flagged this as R-NEW-1.)
+    was: "Standard-bearer, Child of the nursery. Temp. Hatshepsut. Excavated by Loret."
+    now: "Standard-bearer, Child of the nursery. Temp. Ḥatshepsut. Excavated by Loret."
 - KV43: notes_from_pm corrected this run (PM p.559 headword excavator clause for KV43 (Tuthmosis IV) — same systemic R1/R2 dropout: post-postprocessor agents lost the `Excavated by ...` tail. Egyptologist-reviewer flagged as R1/R2/R4 sibling.)
     was: null
     now: "Excavated by Davis."
-- KV45: notes_from_pm corrected this run (PM p.562 headword tail `Excavated by Davis and Carter.` (chunk-3 lines 565-568) was dropped by post-postprocessor agents on rerun — same R1/R2 systemic loss. Restore the merged-value body and append the dropped tail. (The `;` separator after Dyn. XVIII is retained from the merged value; PM uses `,` but the egyptologist-reviewer marked this as a mild paraphrase.))
+- KV46: notes_from_pm corrected this run (PM p.562 prints a single declarative sentence: `YUIA ..., Divine father, and THUIU ..., Chief of the harîm of Amūn, parents of Queen Teye.` — circumflex-î in `harîm`, macron-ū in `Amūn`. The post-postprocessor merge restructured it into a `Yuia: ... ; Thuiu: ... ;` agent-list with prefixes AND dropped both diacritics. Restore PM-verbatim by dropping the `Yuia:` / `Thuiu:` prefixes (those duplicate occupant_name='Yuia and Thuiu') and keeping only the role-clauses joined by `, and`. Egyptologist-reviewer printed-source pass flagged as R-NEW-3.)
+    was: "Yuia: Divine father; Thuiu: Chief of the harim of Amun; parents of Queen Teye."
+    now: "Divine father, and Chief of the harîm of Amūn, parents of Queen Teye."
+- KV45: notes_from_pm corrected this run (PM p.562 headword reads `Overseer of the Fields of Amūn, Dyn. XVIII, re-used by MERENKHONS, Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). Excavated by Davis and Carter.` Two regressions to address: (1) the `Excavated by Davis and Carter.` tail was dropped by post-postprocessor agents (R1/R2 systemic loss); (2) PM prints `Amūn` (twice) with macron-ū AND uses `,` (not `;`) after `Dyn. XVIII`. The merged-value body had stripped both macrons and substituted `;` for `,`. Egyptologist-reviewer printed-source pass on PM I.2 PDF (post-merge, 2026-04-29) flagged macron-loss as R-NEW-2 and self-acknowledged the `;`-vs-`,` paraphrase; restoring all three at once for full PM-verbatim alignment.)
     was: "Overseer of the Fields of Amun, Dyn. XVIII; re-used by Merenkhons, Doorkeeper of the House of Amun, Dyn. XXII (name from scarab)."
-    now: "Overseer of the Fields of Amun, Dyn. XVIII; re-used by Merenkhons, Doorkeeper of the House of Amun, Dyn. XXII (name from scarab). Excavated by Davis and Carter."
+    now: "Overseer of the Fields of Amūn, Dyn. XVIII, re-used by Merenkhons, Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). Excavated by Davis and Carter."
 - KV55: notes_from_pm corrected this run (The text-layer OCR for chunk 4 drops PM's macron-e and renders the ayin as `c` (`Smenkhkarec`); agents carried that through to the reconciled notes. Egyptologist-reviewer pre-merge pass on PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both the macron and the trailing ayin, and confirmed the sentence-final period closes PM's sentence. notes_from_pm is verbatim-preserve against PM's printed text (not against the OCR text layer) — restore both diacritics.)
     was: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkare."
     now: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
@@ -239,6 +248,9 @@ Field corrections:
 - DAN-AntefNubkheperre: notes_from_pm corrected this run (Restore the dropped pyramid cross-ref `Pyramid, see HAY MSS. 29816.` from PM p.602 headword tail. Egyptologist-reviewer R10 in PR #140 review.)
     was: "Found by Mariette in 1860."
     now: "Found by Mariette in 1860. Pyramid, see Hay MSS. 29816."
+- DAN-Neferhotep: notes_from_pm corrected this run (PM p.604 prints `Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13.` — circumflex-î in `Harîm`, macron-ē in `Nubkheperrēʿ`. The post-postprocessor merge stripped both diacritics. Restore per the verbatim-preserve policy on notes_from_pm. Egyptologist-reviewer printed-source pass flagged as R-NEW-4.)
+    was: "Scribe of the Great Harim, probably temp. Antef (Nubkheperreʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13."
+    now: "Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13."
 - DAN-SebkemsafSekhemreShedtaui: notes_from_pm corrected this run (Same R9/R10 systemic clause-loss: post-postprocessor agents dropped the pyramid cross-ref from PM p.604 headword tail. Restore.)
     was: null
     now: "Pyramid behind Theb. tb. 24, perhaps belonging to this tomb."

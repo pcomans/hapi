@@ -47,6 +47,19 @@ CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Gemini round-4 review (PR #140) flagged the punctuation "
         "inconsistency.",
     ),
+    (
+        "KV9",
+        "occupant_alt_names",
+        ["Tomb of Metempsychosis", "Tomb of Memnon"],
+        "PM p.511 prints TWO classical-traveller aliases: "
+        "`'Tomb of Metempsychosis', or 'Tomb of Memnon'`. The post-"
+        "postprocessor merge captured only `[\"Memnon\"]` — dropped the "
+        "Metempsychosis alias entirely AND stripped the `Tomb of` prefix "
+        "from the Memnon form. KV11's parallel `Bruce's tomb` keeps the "
+        "full PM-printed form; consistency requires KV9 do the same. "
+        "Egyptologist-reviewer printed-source pass on PM I.2 PDF "
+        "(2026-04-29 KV1-14 sweep) flagged as R1.",
+    ),
 ]
 
 
@@ -84,10 +97,18 @@ CHUNK2_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "KV13",
         "notes_from_pm",
-        "Temp. Merneptah-Siptah",
-        "strip 'Chancellor.' (already encoded as occupant_role=Official) "
-        "and normalise 'ḥ' → 'h' to match chunk-1's no-underdot "
-        "convention (Merneptah in KV8 is rendered without underdot).",
+        "Temp. Merneptaḥ-Siptaḥ",
+        "Strip 'Chancellor.' prefix (already encoded as "
+        "occupant_role=Official). Preserve PM's underdot-Ḥ in the "
+        "verbatim-preserve `notes_from_pm` field — earlier override "
+        "incorrectly applied the strip-ḥ rule (which is for "
+        "occupant_name only, the matchable-name field) to notes. "
+        "Egyptologist-reviewer printed-source pass on PM I.2 PDF "
+        "(2026-04-29 KV1-14 sweep) flagged as R2: PM p.527 prints "
+        "`Temp. Merneptaḥ-Siptaḥ` with both ḥ underdots; this aligns "
+        "with the chunk-7 sibling overrides for DAN-Ahhotep / "
+        "DAN-AhmosiHenutempet / DAN-AhmosiSonOfSeqenenre that already "
+        "preserve underdots in notes_from_pm.",
     ),
     (
         "KV18",
@@ -212,6 +233,22 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "per chunk-2 KV14.",
     ),
     (
+        "KV36",
+        "notes_from_pm",
+        "Standard-bearer, Child of the nursery. Temp. Ḥatshepsut. "
+        "Excavated by Loret.",
+        "PM p.556 prints `Temp. Ḥatshepsut.` with underdot-Ḥ in body "
+        "text (the strip-ḥ rule applies to occupant_name only — the "
+        "matchable-name field — NOT to notes_from_pm, which is "
+        "verbatim-preserve). The post-postprocessor merge produced "
+        "plain `Hatshepsut` in this notes field; restore the underdot. "
+        "Direct R7 parallel to the DAN-Ahhotep / DAN-AhmosiHenutempet / "
+        "DAN-AhmosiSonOfSeqenenre fix_rows entries that already restore "
+        "ḥ/ḳ in their notes fields. Egyptologist-reviewer printed-source "
+        "pass on PM I.2 PDF (post-merge, 2026-04-29) flagged this as "
+        "R-NEW-1.",
+    ),
+    (
         "KV43",
         "notes_from_pm",
         "Excavated by Davis.",
@@ -221,17 +258,37 @@ CHUNK3_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "R1/R2/R4 sibling.",
     ),
     (
+        "KV46",
+        "notes_from_pm",
+        "Divine father, and Chief of the harîm of Amūn, parents of Queen Teye.",
+        "PM p.562 prints a single declarative sentence: `YUIA ..., Divine "
+        "father, and THUIU ..., Chief of the harîm of Amūn, parents of "
+        "Queen Teye.` — circumflex-î in `harîm`, macron-ū in `Amūn`. The "
+        "post-postprocessor merge restructured it into a `Yuia: ... ; "
+        "Thuiu: ... ;` agent-list with prefixes AND dropped both "
+        "diacritics. Restore PM-verbatim by dropping the `Yuia:` / "
+        "`Thuiu:` prefixes (those duplicate occupant_name='Yuia and "
+        "Thuiu') and keeping only the role-clauses joined by `, and`. "
+        "Egyptologist-reviewer printed-source pass flagged as R-NEW-3.",
+    ),
+    (
         "KV45",
         "notes_from_pm",
-        "Overseer of the Fields of Amun, Dyn. XVIII; re-used by Merenkhons, "
-        "Doorkeeper of the House of Amun, Dyn. XXII (name from scarab). "
+        "Overseer of the Fields of Amūn, Dyn. XVIII, re-used by Merenkhons, "
+        "Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). "
         "Excavated by Davis and Carter.",
-        "PM p.562 headword tail `Excavated by Davis and Carter.` (chunk-3 "
-        "lines 565-568) was dropped by post-postprocessor agents on "
-        "rerun — same R1/R2 systemic loss. Restore the merged-value body "
-        "and append the dropped tail. (The `;` separator after Dyn. XVIII "
-        "is retained from the merged value; PM uses `,` but the "
-        "egyptologist-reviewer marked this as a mild paraphrase.)",
+        "PM p.562 headword reads `Overseer of the Fields of Amūn, Dyn. "
+        "XVIII, re-used by MERENKHONS, Doorkeeper of the House of Amūn, "
+        "Dyn. XXII (name from scarab). Excavated by Davis and Carter.` "
+        "Two regressions to address: (1) the `Excavated by Davis and "
+        "Carter.` tail was dropped by post-postprocessor agents (R1/R2 "
+        "systemic loss); (2) PM prints `Amūn` (twice) with macron-ū AND "
+        "uses `,` (not `;`) after `Dyn. XVIII`. The merged-value body had "
+        "stripped both macrons and substituted `;` for `,`. Egyptologist-"
+        "reviewer printed-source pass on PM I.2 PDF (post-merge, "
+        "2026-04-29) flagged macron-loss as R-NEW-2 and self-acknowledged "
+        "the `;`-vs-`,` paraphrase; restoring all three at once for full "
+        "PM-verbatim alignment.",
     ),
 ]
 
@@ -512,6 +569,20 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Restore the dropped pyramid cross-ref `Pyramid, see HAY MSS. "
         "29816.` from PM p.602 headword tail. Egyptologist-reviewer R10 "
         "in PR #140 review.",
+    ),
+    (
+        "DAN-Neferhotep",
+        "notes_from_pm",
+        "Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). "
+        "Rock-tomb, uninscribed. Found by Mariette in 1860, probably "
+        "near Theb. tb. 13.",
+        "PM p.604 prints `Scribe of the Great Harîm, probably temp. "
+        "Antef (Nubkheperrēʿ). Rock-tomb, uninscribed. Found by Mariette "
+        "in 1860, probably near Theb. tb. 13.` — circumflex-î in "
+        "`Harîm`, macron-ē in `Nubkheperrēʿ`. The post-postprocessor "
+        "merge stripped both diacritics. Restore per the verbatim-"
+        "preserve policy on notes_from_pm. Egyptologist-reviewer "
+        "printed-source pass flagged as R-NEW-4.",
     ),
     (
         "DAN-SebkemsafSekhemreShedtaui",
