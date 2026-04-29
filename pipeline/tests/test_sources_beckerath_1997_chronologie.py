@@ -518,6 +518,36 @@ def test_dyn4_etwa_propagation_locked() -> None:
         assert r["end_approximate"] is True, kid
 
 
+def test_late_period_adjacent_half_split_sweep() -> None:
+    """Issue #150 — Late Period rows on book p192 (scan-108-left) adjacent
+    to the Dyn 29-30 cohort that exhibit the same Greek-alias + Egyptian-
+    prenomen pair pattern as 15.04 / 29.03 / 30.01-03. Egyptologist
+    printed-source review on PR #148 retro flagged 4 rows; PR closing
+    #150 verified each directly against the printed PDF on book p192.
+
+    - 28.01 Amyrtaios — single Greek alias `(Amen-ir-di-su)` in parens
+      → name=bare, titulary=alias, kind=`nomen` (Old Kingdom + Dyn 21
+      single-alias cohort).
+    - 26.02 Nekaw — `(Nekôs/Nechaô, Uhem-ib-rê)`: slash-compound + prenomen
+      → name=bare, titulary=full compound, kind=`mixed`.
+    - 26.05 Amosis II. — `(Amasis, Chnem-ib-rê)`: Greek-alias + prenomen
+      → name=bare, titulary=full compound, kind=`mixed`.
+    - 29.02 Achoris — `(Hagor, Chnem-maat-rê)`: Greek-alias + prenomen
+      → name=bare, titulary=full compound, kind=`mixed`.
+    """
+    expected = {
+        "28.01": ("Amyrtaios", "Amen-ir-di-su", "nomen"),
+        "26.02": ("Nekaw", "Nekôs/Nechaô, Uhem-ib-rê", "mixed"),
+        "26.05": ("Amosis II.", "Amasis, Chnem-ib-rê", "mixed"),
+        "29.02": ("Achoris", "Hagor, Chnem-maat-rê", "mixed"),
+    }
+    for bid, (name, titulary, kind) in expected.items():
+        r = _row(bid)
+        assert r["name"] == name, (bid, r["name"])
+        assert r["egyptian_titulary"] == titulary, (bid, r["egyptian_titulary"])
+        assert r["egyptian_titulary_kind"] == kind, (bid, r["egyptian_titulary_kind"])
+
+
 def test_dyn29_dyn30_greek_egyptian_pair_split() -> None:
     """Issue #147 — four Late Period rows on book p192 (scan-108-left) print
     with the SAME `<Greek-name> (<Egyptian-nomen>, <Egyptian-prenomen>)`
@@ -607,16 +637,25 @@ def test_sethos_ii_prenomen_supplement_locked() -> None:
 
 def test_necho_ii_prenomen_locked() -> None:
     """Beckerath prints `Nekaw (Nekôs/Nechaô, Uhem-ib-rê)` on book p192
-    (scan-108-left) — the parenthetical Egyptian titulary is `Uhem-ib-rê`.
-    The pre-OCR-redo branch had a fix_rows.py override forcing
-    `Wahem-ib-rê` based on a hieroglyphic-transliteration argument (Egyptian
-    Wḥm-ib-rꜥ → Wahem-ib-rê), but Beckerath's printed text says Uhem.
-    Per the constitutional rule "data is sacred", follow what Beckerath
-    actually prints; override removed.
+    (scan-108-left) — the parenthetical contains TWO Greek alternatives
+    `Nekôs/Nechaô` separated by `/` followed by the Egyptian prenomen
+    `Uhem-ib-rê` after a comma. The pre-OCR-redo branch had a fix_rows.py
+    override forcing `Wahem-ib-rê` based on a hieroglyphic-transliteration
+    argument (Egyptian Wḥm-ib-rꜥ → Wahem-ib-rê), but Beckerath's printed
+    text says Uhem. Per the constitutional rule "data is sacred", follow
+    what Beckerath actually prints.
+
+    Updated 2026-04-29 by issue #150 fix_rows.py split: name realigned
+    from full compound `Nekaw (Nekôs/Nechaô)` to bare `Nekaw`, with the
+    full inner compound (including the Uhem-ib-rê prenomen) moved into
+    egyptian_titulary, kind=`mixed`. Prenomen `Uhem-ib-rê` now appears
+    embedded in the compound titulary string, not as a standalone
+    titulary value.
     """
     r = _row("26.02")
-    assert "Nek" in r["name"]
-    assert r["egyptian_titulary"] == "Uhem-ib-rê"
+    assert r["name"] == "Nekaw"
+    assert "Uhem-ib-rê" in r["egyptian_titulary"]
+    assert r["egyptian_titulary"] == "Nekôs/Nechaô, Uhem-ib-rê"
 
 
 def test_chabbasch_dyn31_locked() -> None:
