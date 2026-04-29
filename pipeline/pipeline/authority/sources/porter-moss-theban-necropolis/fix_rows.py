@@ -402,15 +402,20 @@ CHUNK7_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "DAN-MentuhotpIWifeOfDjhuti",
         "notes_from_pm",
-        "Wife of King Ḍḥuti. Found in tomb by Passalacqua.",
-        "Egyptologist-reviewer P1 finding on PR #100 (reviewer-notes-chunk7.md "
-        "line 20): PM p.604 prints `wife of King Ḍḥuti` with both underdot-D "
-        "and underdot-H, but the text-layer OCR rendered `Ql_J.uti` as "
-        "`Djhuti` (no diacritics) and the agents carried that through. "
-        "Restore the PM-verbatim diacritics per the `notes_from_pm` "
-        "verbatim-preserve policy. tomb_id renamed to "
-        "`DAN-MentuhotpIWifeOfDjhuti` via CHUNK7_RENAMES for descriptor "
-        "consistency with the PM-faithful spelling convention.",
+        "Wife of King Ḏḥuti. Found in tomb by Passalacqua.",
+        "PM p.604 prints sentence-form `QUEEN MENTUḤOTP¹, wife of King Ḏḥuti` "
+        "where `Ḏ` is d with bar/macron — the standard Egyptological "
+        "transliteration of the d-emphatic, same character as in `Ḏḥwty`/Thoth "
+        "(NOT `Ḍ` d-with-underdot, which is a different consonant in "
+        "Semitic transliteration). The earlier P1 finding on PR #100 caught "
+        "the OCR `Ql_J.uti` → `Djhuti` diacritic loss but installed the "
+        "WRONG underdot consonant `Ḍ`; egyptologist printed-source review "
+        "on PR #151 corrected `Ḍ` → `Ḏ` after direct PDF read of p.604. "
+        "Wrong-consonant risk: `Ḍḥuti` would never match against TLA / "
+        "Trismegistos / museum data using `Ḏḥuti`. tomb_id "
+        "`DAN-MentuhotpIWifeOfDjhuti` (descriptor) intentionally retains "
+        "ASCII `Djhuti` for filename safety; the PM-verbatim consonant `Ḏ` "
+        "lives in `notes_from_pm`.",
     ),
     (
         "DAN-AhmosiNefertere",
@@ -646,27 +651,35 @@ CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "QV47",
         "notes_from_pm",
-        "daughter of Seḳenenreʿ-Taʿa and Sit-ḍḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)",
-        "PM p.755 prints the mother's name as 'Sit-ḍḥout' (ḍ = d with "
-        "underdot, not plain d and not g). The text-layer OCR renders the "
-        "ḍḥ digraph as 'gQ.' (drops the underdot-D entirely and renders "
-        "the ḥ as `Q` + period) — this exact source token `Sit-gQ.out` is "
-        "the one place this bigram appears in any chunk, and the "
-        "postprocessor's `(\"Sit-gQ.out\", \"Sit-ḍḥout\")` substring "
-        "substitution normalises it. The override here exists only as the "
-        "egyptologist-reviewer's PM-verbatim sentence-restoration "
-        "(complete clause + bibliographic ribbon tail).",
+        "daughter of Seḳenenreʿ-Taʿa and Sit-ḏḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)",
+        "PM p.755 prints the mother's name as 'Sit-ḏḥout' with `ḏ` (d with "
+        "bar/macron — the standard Egyptological transliteration of the "
+        "d-emphatic, same character used for the deity Ḏḥuti/Thoth `Ḏḥwty`). "
+        "Egyptologist printed-source review on PR #151 corrected this from "
+        "the previous `ḍ` (d with underdot) — different consonants representing "
+        "different sounds in standard Erman/Grapow/Hannig transliteration. "
+        "The text-layer OCR renders the ḏḥ digraph as 'gQ.' (drops the bar-D "
+        "entirely and renders the ḥ as `Q` + period) — this exact source token "
+        "`Sit-gQ.out` is the one place this bigram appears in any chunk, and "
+        "the postprocessor's substring substitution normalises it. The "
+        "override here is the egyptologist-reviewer's PM-verbatim sentence-"
+        "restoration (complete clause + bibliographic ribbon tail).",
     ),
     (
         "QV74",
         "notes_from_pm",
-        "Great King's mother and King's wife. Wife(?) of Ramesses IV; mother of Ramesses V; "
-        "daughter of Ramesses IV (per PM p.767 footnote 1). (CHAMPOLLION, No. 15, L. D. Text, "
-        "No. 2, HAY, No. 7.)",
-        "PM p.767 footnote 1 carries three hedged filiation facts (Gauthier, "
-        "Černý, Seele) that the headword-only extraction dropped. Egyptologist-"
-        "reviewer P2: restore the footnote kinship hedges since they are the "
-        "only filiation info PM gives for Tentopet.",
+        "Great King's mother and King's wife. (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)",
+        "PM p.767 main text prints `74. QUEEN TENTŌPET [cartouche], Great "
+        "King's mother and King's wife.¹ (CHAMPOLLION, No. 15, L. D. Text, "
+        "No. 2, HAY, No. 7.) Plan, p. 760.` (verbatim). The earlier override "
+        "synthesized main-text + footnote 1 (Gauthier/Černý/Seele Ramesses-IV/V "
+        "genealogy) into a prose blob that did not appear verbatim in PM — a "
+        "rule-1 (provenance) violation. Egyptologist printed-source review "
+        "on PR #151 corrected this to PM-main-text-verbatim only. The "
+        "footnote 1 genealogy + per-citation chain is dropped from "
+        "`notes_from_pm` here; the schema currently has no `notes_footnote` / "
+        "`notes_genealogy` field, so the genealogy is tracked for restoration "
+        "via follow-up issue (schema split).",
     ),
     # Gemini round-3 finding on PR #101 originally added 5 occupant_name
     # ḥ-strip overrides here (QV42, QV43, QV46, QV47, QV55) to align chunk 8

@@ -1111,11 +1111,20 @@ def test_chunk3_kv39_uninscribed_unknown_with_attribution_note() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
+    # Extended on PR #151 by egyptologist printed-source review of PM p.559:
+    # the previous truncated form dropped the load-bearing Abbott Papyrus +
+    # Peet citation chain (independent reason to doubt the Amenophis I
+    # attribution) AND the `infra, p. 599` cross-reference linking KV39 to
+    # DAN-AhmosiNefertere. Restored to PM-verbatim full paragraph.
     assert r["notes_from_pm"] == (
         "Uninscribed tomb, attributed to Amenophis I by Weigall in Ann. "
         "Serv. xi (1911), pp. 174-5 [12], and id. A Guide to the "
         "Antiquities of Upper Egypt, pp. 163-4, but this is not "
-        "supported by any inscriptional evidence."
+        "supported by any inscriptional evidence, and does not "
+        "correspond with the position given in the Abbott Papyrus "
+        "(cf. Peet, The Great Tomb-Robberies of the Twentieth Egyptian "
+        "Dynasty, pp. 37-8). See also the tomb of Queen ʿAhmosi "
+        "Nefertere, infra, p. 599."
     )
     assert r["source_citation"] == {
         "page": 559,
@@ -1798,13 +1807,13 @@ def test_chunk7_notes_from_pm() -> None:
             "Found by Mariette in 1857. For pyramid, possibly of Kamosi, "
             "see infra, p. 620."
         ),
-        # fix_rows.py CHUNK7_CORRECTIONS restored PM's underdot diacritics
-        # (`Ḍḥuti` with underdot-D + underdot-H) after egyptologist-reviewer
-        # flagged the text-layer OCR loss. This assertion pins the
-        # reviewer-inserted characters per rule 5 + the
-        # `feedback_fix_rows_unattributed_restoration` memory.
+        # fix_rows.py CHUNK7_CORRECTIONS restores PM's diacritics on the
+        # Egyptian d-emphatic in `Ḏḥuti` (d-bar — same character as in
+        # `Ḏḥwty`/Thoth). The earlier value used `Ḍḥuti` (d-underdot, a
+        # different consonant in Semitic transliteration) — corrected on
+        # PR #151 by egyptologist printed-source review of PM p.604.
         "DAN-MentuhotpIWifeOfDjhuti": (
-            "Wife of King Ḍḥuti. Found in tomb by Passalacqua."
+            "Wife of King Ḏḥuti. Found in tomb by Passalacqua."
         ),
         "DAN-MentuhotpSankhibtaui": "Unfinished.",
         "DAN-Neferhotep": (
@@ -1987,33 +1996,51 @@ def test_chunk8_notes_from_pm_royal_kinship() -> None:
 def test_chunk8_reviewer_inserted_characters_pinned() -> None:
     """Every reviewer-inserted character in `CHUNK8_CORRECTIONS` must be
     pinned by a test substring assertion — rule 5 + the
-    `feedback_fix_rows_unattributed_restoration` memory. Retrospective
-    chunk-8 code-reviewer P2 finding: QV47 `Sit-ḍḥout` (ḍ restored vs OCR's
-    `gḥ`) and the QV74 Tentopet footnote restoration were both applied by
-    fix_rows.py but not pinned by a test — silent regression risk.
+    `feedback_fix_rows_unattributed_restoration` memory.
+
+    QV47 + QV74 corrections updated 2026-04-29 by egyptologist printed-
+    source review on PR #151:
+    - QV47: PM p.755 prints `Sit-ḏḥout` with `ḏ` (d-bar, the standard
+      Egyptological d-emphatic, same character as in `Ḏḥwty`/Thoth) —
+      NOT `ḍ` (d-underdot used in Semitic transliteration). Earlier
+      fix_rows.py used the wrong consonant; corrected directly.
+    - QV74: PM p.767 main text + footnote 1 are SEPARATE prose blocks.
+      Earlier fix_rows.py synthesized them into a single `notes_from_pm`
+      blob — rule-1 (provenance) violation since the synthesized prose
+      doesn't appear verbatim in PM. Corrected to PM-main-text-verbatim
+      only; the footnote 1 genealogy + per-citation chain is tracked
+      for restoration via follow-up issue (schema split for
+      `notes_footnote` / `notes_genealogy` field).
     """
-    # QV47: PM p.755 prints underdot-d in `Sit-ḍḥout`; the text-layer OCR
-    # rendered `ḍḥ` as `gḥ`. fix_rows.py restored `ḍ` via CHUNK8_CORRECTIONS.
     qv47_notes = _row("QV47")["notes_from_pm"]
-    assert "Sit-ḍḥout" in qv47_notes, (
-        f"QV47 expected reviewer-restored 'Sit-ḍḥout'; got {qv47_notes!r}"
+    assert "Sit-ḏḥout" in qv47_notes, (
+        f"QV47 expected egyptologist-corrected 'Sit-ḏḥout' (d-bar); got {qv47_notes!r}"
+    )
+    assert "Sit-ḍḥout" not in qv47_notes, (
+        f"QV47 must not carry the pre-#151 wrong-consonant 'Sit-ḍḥout' (d-underdot); got {qv47_notes!r}"
     )
     assert "Sit-gḥout" not in qv47_notes, (
         f"QV47 must not carry the pre-fix OCR form; got {qv47_notes!r}"
     )
-    # QV74 Tentopet: PM p.767 footnote 1 carries 3 hedged filiation facts
-    # (Gauthier/Černý/Seele) that the headword-only extraction dropped.
-    # fix_rows.py CHUNK8_CORRECTIONS restored them with "per PM p.767
-    # footnote 1" citation.
     qv74_notes = _row("QV74")["notes_from_pm"]
+    # PM-main-text-verbatim: matches `74. QUEEN TENTŌPET ... Great King's
+    # mother and King's wife.¹ (CHAMPOLLION, No. 15, L. D. Text, No. 2,
+    # HAY, No. 7.)` exactly (modulo the macron and the cartouche, which
+    # belong elsewhere).
+    assert qv74_notes == (
+        "Great King's mother and King's wife. "
+        "(CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"
+    ), f"QV74 expected PM-main-text-verbatim; got {qv74_notes!r}"
+    # The synthesized footnote prose must NOT appear in notes_from_pm
+    # (rule-1 provenance violation). Tracked for schema-split follow-up.
     for substr in (
         "Wife(?) of Ramesses IV",
         "mother of Ramesses V",
         "daughter of Ramesses IV",
         "per PM p.767 footnote 1",
     ):
-        assert substr in qv74_notes, (
-            f"QV74 expected reviewer-restored {substr!r}; got {qv74_notes!r}"
+        assert substr not in qv74_notes, (
+            f"QV74 must not carry pre-#151 synthesized footnote prose {substr!r}; got {qv74_notes!r}"
         )
 
 

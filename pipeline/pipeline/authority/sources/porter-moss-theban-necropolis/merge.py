@@ -272,12 +272,25 @@ def _majority(values: list, *, tid: str, field: str) -> tuple[object, int]:
 
     PM's flat-scalar schema (with two list fields and one dict field) is
     treated as IDENTIFIER throughout — no `_classify_tie` / `_resolve_prose
-    _tie` step. `notes_from_pm` is short verbatim cell text; `occupant_alt
-    _names` and `shared_with_tombs` are list-of-string fields where a
-    deterministic union policy could be argued for, but per constitutional
-    rule 6 (heuristics without scholarly grounding produce data without
-    provenance), tied list fields go through the override path with a
-    citation. Mirrors the Beckerath PR #146 design choice.
+    _tie` step like Leprohon's nested name-list schema needs. The omission
+    is INTENTIONAL: PM does not have name-list-of-dicts where a sub-field
+    classifier (transliteration vs source_note) makes sense. PM's
+    `notes_from_pm` is a short verbatim cell-text scalar; resolving it
+    deterministically by "longest wins" or similar would be a heuristic
+    without scholarly grounding (constitutional rule 6 distinguishes
+    "deterministic-with-documented-policy" from "heuristic that mostly
+    works"). Same rationale applies to the list fields `occupant_alt_names`
+    and `shared_with_tombs` — a "union all agents' citations" policy could
+    be argued for as additive, but per `feedback_egyptologist_diff_requires
+    _printed_source.md` the egyptologist already validates these against
+    the printed PDF; an automatic union risks burying agent hallucinations
+    that the printed-source diff would catch. So tied list fields go
+    through the override path with a citation just like scalars.
+
+    Mirrors the Beckerath PR #146 design choice (advisor-validated for
+    that PR; same shape applies here). If a future schema addition has
+    nested name-list-of-dicts, this is the function to extend with a
+    Leprohon-style classifier.
 
     `tid` and `field` are keyword-only required arguments. Constitutional
     rule 10 (no backwards compatibility): no Optional fallback, no silent
