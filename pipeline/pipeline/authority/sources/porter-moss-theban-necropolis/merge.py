@@ -156,7 +156,51 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
     return combined
 
 
-SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown"})
+SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})
+
+
+# === TIE_BREAK_OVERRIDES =====================================================
+#
+# Authoritative resolutions for (tomb_id, field) tuples where the three
+# extraction agents tie (1/1/1 across three agents, or 1/1 when one agent
+# missed a row). Loaded from ``tie-break-overrides.json`` (alongside this
+# file). Each entry's key is ``"<tomb_id>|<field>"`` (JSON keys must be
+# strings; the loader splits back to a tuple). Each value is
+# ``{"value": ..., "rationale": "..."}``.
+#
+# ``rationale`` MUST cite the source page (Porter & Moss I.2 printed page or
+# physical PDF page) and the basis for the resolution.
+#
+# When ``_majority`` hits a tie with no override, it RAISES — option (a)
+# enforcement: data is sacred, fail loudly. The merge is broken until every
+# uncovered tie has an entry here. This is intentional. Mirrors the
+# Beckerath PR #146 / Leprohon PR #128 canonical pattern.
+_OVERRIDES_PATH = SOURCE_DIR / "tie-break-overrides.json"
+
+
+def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
+    if not _OVERRIDES_PATH.exists():
+        return {}
+    raw = json.loads(_OVERRIDES_PATH.read_text(encoding="utf-8"))
+    out: dict[tuple[str, str], dict[str, object]] = {}
+    for k, v in raw.items():
+        if "|" not in k:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} missing '|' "
+                f"separator (expected '<tomb_id>|<field>')"
+            )
+        tid, field = k.split("|", 1)
+        if not tid or not field:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} has empty tomb_id or field "
+                f"after splitting on '|' (expected '<tomb_id>|<field>' "
+                f"with both halves non-empty)"
+            )
+        out[(tid, field)] = v
+    return out
+
+
+TIE_BREAK_OVERRIDES: dict[tuple[str, str], dict[str, object]] = _load_overrides()
 
 
 def _normalise_value(v: object) -> object:
@@ -175,21 +219,124 @@ def _normalise_value(v: object) -> object:
     return v
 
 
-def _majority(values: list) -> tuple[object, int]:
-    """Return (chosen_value, count_of_agreers) from a list of per-agent values."""
-    normalised = [_normalise_value(v) for v in values]
+def _deep_normalise(v: object) -> object:
+    """Recursively apply sentinel-null normalisation across dicts and lists.
 
-    def key(v):
+    PM rows have a `source_citation` dict and `occupant_alt_names` /
+    `shared_with_tombs` list fields. Per-field majority comparing whole
+    list/dict objects must normalise children too — e.g. an agent emitting
+    `{"page": "-"}` vs `{"page": null}` for the same source citation must
+    not register as a tie.
+    """
+    if isinstance(v, list):
+        return [_deep_normalise(item) for item in v]
+    if isinstance(v, dict):
+        return {k: _deep_normalise(val) for k, val in v.items()}
+    return _normalise_value(v)
+
+
+def _normalise_for_merge(row: dict) -> dict:
+    """Apply pre-merge canonicalisations that should NOT be silent first-seen-
+    pick at vote time. Currently a stub — PM has no encoding-style
+    normalisation candidates analogous to Leprohon's MdC → IFAO map (no
+    `transliteration` sub-fields in the PM canonical schema).
+
+    Extension point. If a future re-extraction surfaces spurious ties from
+    encoding-style differences (e.g. diacritic variance on Greek occupant
+    names, hyphen-vs-en-dash in date ranges), normalise them here BEFORE
+    the per-field counter sees the values, so the override table doesn't
+    accumulate entries that are pure encoding-diffs rather than real
+    scholarly disagreements.
+
+    Returns a new dict; does not mutate the input.
+    """
+    if not isinstance(row, dict):
+        return row
+    return dict(row)
+
+
+def _majority(values: list, *, tid: str, field: str) -> tuple[object, int]:
+    """Return (chosen_value, count_of_agreers) from a list of per-agent values.
+
+    Values are deep-normalised first so that sentinel nulls in nested dicts
+    or lists do not force spurious disagreements. JSON serialisation with
+    sorted keys is the equality key — handles nested dicts (`source_citation`)
+    and list fields (`occupant_alt_names`, `shared_with_tombs`) correctly
+    by value.
+
+    Tie handling (option (a) enforcement, issue #145):
+      - Clear majority (top count > second count): use it.
+      - Tie at the top (top count == second count):
+          1. Look up ``(tid, field)`` in TIE_BREAK_OVERRIDES → use override.
+          2. Otherwise → raise. Data is sacred. Fail loudly.
+
+    PM's flat-scalar schema (with two list fields and one dict field) is
+    treated as IDENTIFIER throughout — no `_classify_tie` / `_resolve_prose
+    _tie` step like Leprohon's nested name-list schema needs. The omission
+    is INTENTIONAL: PM does not have name-list-of-dicts where a sub-field
+    classifier (transliteration vs source_note) makes sense. PM's
+    `notes_from_pm` is a short verbatim cell-text scalar; resolving it
+    deterministically by "longest wins" or similar would be a heuristic
+    without scholarly grounding (constitutional rule 6 distinguishes
+    "deterministic-with-documented-policy" from "heuristic that mostly
+    works"). Same rationale applies to the list fields `occupant_alt_names`
+    and `shared_with_tombs` — a "union all agents' citations" policy could
+    be argued for as additive, but per `feedback_egyptologist_diff_requires
+    _printed_source.md` the egyptologist already validates these against
+    the printed PDF; an automatic union risks burying agent hallucinations
+    that the printed-source diff would catch. So tied list fields go
+    through the override path with a citation just like scalars.
+
+    Mirrors the Beckerath PR #146 design choice (advisor-validated for
+    that PR; same shape applies here). If a future schema addition has
+    nested name-list-of-dicts, this is the function to extend with a
+    Leprohon-style classifier.
+
+    `tid` and `field` are keyword-only required arguments. Constitutional
+    rule 10 (no backwards compatibility): no Optional fallback, no silent
+    first-seen path for "legacy callers".
+    """
+    normalised = [_deep_normalise(v) for v in values]
+
+    def key(v: object) -> str:
         return json.dumps(v, ensure_ascii=False, sort_keys=True)
 
     counts = Counter(key(v) for v in normalised)
-    top_key, top_count = counts.most_common(1)[0]
-    for v in normalised:
-        if key(v) == top_key:
-            return v, top_count
-    # Unreachable: top_key was generated from `normalised`, so the loop
-    # above must find a match. Raise rather than return None silently.
-    raise RuntimeError(f"_majority loop failed to find top_key {top_key!r} in {normalised!r}")
+    most = counts.most_common()
+    top_key, top_count = most[0]
+
+    # Detect tie at the top. If only one distinct value (unanimous) or the
+    # second distinct value has strictly fewer counts, no tie.
+    is_tie = len(most) >= 2 and most[0][1] == most[1][1]
+
+    if not is_tie:
+        for v in normalised:
+            if key(v) == top_key:
+                return v, top_count
+        raise RuntimeError(
+            f"_majority loop failed to find top_key {top_key!r} in {normalised!r}"
+        )
+
+    # ---- Tie path. ----
+
+    # 1. Explicit override.
+    override = TIE_BREAK_OVERRIDES.get((tid, field))
+    if override is not None:
+        return override["value"], top_count
+
+    # 2. Tie with no override → raise. Build a diagnostic that names every
+    # distinct value so the agent adding the override has the candidates
+    # in front of it.
+    candidates = [
+        f"  candidate {i+1} (count={cnt}): {k}"
+        for i, (k, cnt) in enumerate(most)
+    ]
+    raise ValueError(
+        f"Unresolved IDENTIFIER tie at ({tid!r}, {field!r}). "
+        f"Add an entry to tie-break-overrides.json (key '{tid}|{field}') "
+        f"with a cited rationale, or extend the agents' extractions until "
+        f"a majority emerges. Candidates:\n" + "\n".join(candidates)
+    )
 
 
 def main(agent_dir: Path) -> None:
@@ -226,12 +373,18 @@ def main(agent_dir: Path) -> None:
                 f"that missed this row, or hand-resolve before merging."
             )
 
-        all_fields = set().union(*[v.keys() for _, v in present])
+        # Apply pre-merge canonicalisations (currently a stub for PM;
+        # see _normalise_for_merge docstring).
+        present = [(t, _normalise_for_merge(v)) for t, v in present]
+
+        # Sort field iteration so the disagreement report is deterministic
+        # across re-runs (issue #142 — same incidental fix as Beckerath PR #146).
+        all_fields = sorted(set().union(*[v.keys() for _, v in present]))
         merged: dict = {}
         row_disagreements: list[str] = []
         for field in all_fields:
             values = [v.get(field) for _, v in present]
-            chosen, count = _majority(values)
+            chosen, count = _majority(values, tid=tid, field=field)
             merged[field] = chosen
             if count < len(present):
                 row_disagreements.append(
