@@ -181,7 +181,7 @@ _OVERRIDES_PATH = SOURCE_DIR / "tie-break-overrides.json"
 def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
     if not _OVERRIDES_PATH.exists():
         return {}
-    raw = json.loads(_OVERRIDES_PATH.read_text())
+    raw = json.loads(_OVERRIDES_PATH.read_text(encoding="utf-8"))
     out: dict[tuple[str, str], dict[str, object]] = {}
     for k, v in raw.items():
         if "|" not in k:
