@@ -196,6 +196,19 @@ def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
                 f"after splitting on '|' (expected '<tomb_id>|<field>' "
                 f"with both halves non-empty)"
             )
+        # Validate value shape per Gemini PR #155 round-1 (parity from Kitchen).
+        if not isinstance(v, dict):
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value must be a dict "
+                f"with 'value' and 'rationale' keys; got {type(v).__name__}: {v!r}"
+            )
+        missing = {"value", "rationale"} - set(v.keys())
+        if missing:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value is missing "
+                f"required key(s) {sorted(missing)} (expected dict with "
+                f"'value' and 'rationale'); got: {v!r}"
+            )
         out[(tid, field)] = v
     return out
 
@@ -322,7 +335,11 @@ def _majority(values: list, *, tid: str, field: str) -> tuple[object, int]:
     # 1. Explicit override.
     override = TIE_BREAK_OVERRIDES.get((tid, field))
     if override is not None:
-        return override["value"], top_count
+        # Pass override value through `_deep_normalise` for parity with
+        # majority-vote values (Gemini PR #155 round-2). PM lists like
+        # `occupant_alt_names` and the `source_citation` dict normalise
+        # children too — sentinel-null in a nested cell collapses to None.
+        return _deep_normalise(override["value"]), top_count
 
     # 2. Tie with no override → raise. Build a diagnostic that names every
     # distinct value so the agent adding the override has the candidates

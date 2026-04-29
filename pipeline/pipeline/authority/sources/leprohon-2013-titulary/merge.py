@@ -232,15 +232,37 @@ _OVERRIDES_PATH = SOURCE_DIR / "tie-break-overrides.json"
 def _load_overrides() -> dict[tuple[str, str], dict[str, object]]:
     if not _OVERRIDES_PATH.exists():
         return {}
-    raw = json.loads(_OVERRIDES_PATH.read_text())
+    raw = json.loads(_OVERRIDES_PATH.read_text(encoding="utf-8"))
     out: dict[tuple[str, str], dict[str, object]] = {}
     for k, v in raw.items():
         if "|" not in k:
             raise ValueError(
-                f"merge.py: tie-break-overrides.json key {k!r} missing '|' "
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} missing '|' "
                 f"separator (expected '<leprohon_id>|<field>')"
             )
         lid, field = k.split("|", 1)
+        # Both-halves-non-empty check + value shape validation, parity
+        # with the Beckerath / PM / Kitchen loaders. Catches malformed
+        # entries (`|name`, `leprohon-21.02|`, bare-string values,
+        # missing rationale) at load time rather than at merge time.
+        if not lid or not field:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} has empty leprohon_id "
+                f"or field after splitting on '|' (expected "
+                f"'<leprohon_id>|<field>' with both halves non-empty)"
+            )
+        if not isinstance(v, dict):
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value must be a dict "
+                f"with 'value' and 'rationale' keys; got {type(v).__name__}: {v!r}"
+            )
+        missing = {"value", "rationale"} - set(v.keys())
+        if missing:
+            raise ValueError(
+                f"merge.py: {_OVERRIDES_PATH} key {k!r} value is missing "
+                f"required key(s) {sorted(missing)} (expected dict with "
+                f"'value' and 'rationale'); got: {v!r}"
+            )
         out[(lid, field)] = v
     return out
 
@@ -505,9 +527,12 @@ def _majority(values: list, *, lid: str, field: str) -> tuple[object, int]:
     # 1. Explicit override.
     override = TIE_BREAK_OVERRIDES.get((lid, field))
     if override is not None:
-        # Override carries the resolved value; treat as if it had top_count
-        # agreers (it's an authoritative human/arbiter-set value).
-        return override["value"], top_count
+        # Pass override value through `_deep_normalise` for parity with
+        # majority-vote values (Gemini PR #155 round-2). If a future
+        # override entry encodes a sentinel-null in its `value` (or in a
+        # nested name-list dict's source_note / attested_in), this
+        # collapses it to None just like an agent emission would.
+        return _deep_normalise(override["value"]), top_count
 
     # 2. Prose-only tie → deterministic rule.
     kind = _classify_tie(field, normalised)

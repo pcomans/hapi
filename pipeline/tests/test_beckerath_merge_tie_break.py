@@ -318,6 +318,65 @@ def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
         merge_module._OVERRIDES_PATH = orig
 
 
+def test_override_value_passes_through_deep_normalise(merge_module):
+    """Per Gemini PR #155 round-2 (parity from Kitchen). A sentinel-null
+    encoded in an override `value` collapses to None at merge time."""
+    key = ("test.99", "egyptian_titulary")
+    merge_module.TIE_BREAK_OVERRIDES[key] = {
+        "value": "-",
+        "rationale": "test fixture (sentinel-null override)",
+    }
+    try:
+        values = ["alpha", "beta", "gamma"]
+        chosen, _ = merge_module._majority(
+            values, bid="test.99", field="egyptian_titulary"
+        )
+        assert chosen is None
+    finally:
+        del merge_module.TIE_BREAK_OVERRIDES[key]
+
+
+def test_load_overrides_rejects_non_dict_value(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 (parity from Kitchen). Bare-string
+    value would silently fail at merge-time `override['value']` lookup."""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"03.06|name": "Ahu (Huni, Aches)"}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="must be a dict"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_missing_value_key(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 (parity from Kitchen)."""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"03.06|name": {"rationale": "missing value key"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="missing required key"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_missing_rationale_key(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 (parity from Kitchen). Citation is
+    load-bearing per constitutional rule 6."""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"03.06|name": {"value": "Ahu (Huni, Aches)"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="missing required key"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
 def test_sentinel_null_strings_includes_null_for_leprohon_parity(merge_module):
     """`"null"` is a recognised sentinel-null on Leprohon's side.
     Beckerath agents transcribing the literal string `"null"` for an

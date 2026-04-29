@@ -291,6 +291,80 @@ def test_majority_requires_lid_and_field(merge_module):
         merge_module._majority(["a", "b", "c"], field="display_name")
 
 
+def test_load_overrides_rejects_empty_lid(merge_module, tmp_path):
+    """Per #154 parity — `<empty>|field` must raise."""
+    import json
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"|display_name": {"value": "x", "rationale": "test"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="empty leprohon_id or field"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
+    """Per #154 parity — `lid|<empty>` must raise."""
+    import json
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"leprohon-1.01|": {"value": "x", "rationale": "test"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="empty leprohon_id or field"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_override_value_passes_through_deep_normalise(merge_module):
+    """Per Gemini PR #155 round-2 + #154 parity from Kitchen."""
+    key = ("test.99", "display_name")
+    merge_module.TIE_BREAK_OVERRIDES[key] = {
+        "value": "-",
+        "rationale": "test fixture (sentinel-null override)",
+    }
+    try:
+        values = ["alpha", "beta", "gamma"]
+        chosen, _ = merge_module._majority(
+            values, lid="test.99", field="display_name"
+        )
+        assert chosen is None
+    finally:
+        del merge_module.TIE_BREAK_OVERRIDES[key]
+
+
+def test_load_overrides_rejects_non_dict_value(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 + #154 parity from Kitchen."""
+    import json
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"leprohon-1.01|display_name": "Menes"}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="must be a dict"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_missing_value_or_rationale(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 + #154 parity from Kitchen."""
+    import json
+    for incomplete in [{"rationale": "no value"}, {"value": "no rationale"}]:
+        bad = tmp_path / "tie-break-overrides.json"
+        bad.write_text(json.dumps({"leprohon-1.01|display_name": incomplete}))
+        orig = merge_module._OVERRIDES_PATH
+        merge_module._OVERRIDES_PATH = bad
+        try:
+            with pytest.raises(ValueError, match="missing required key"):
+                merge_module._load_overrides()
+        finally:
+            merge_module._OVERRIDES_PATH = orig
+
+
 def test_majority_tie_prose_resolves_to_shortest(merge_module):
     """1/1/1 with only source_note differing → deterministic shortest-wins.
     Shorter source_notes are typically closer-to-source (less editorial
@@ -458,3 +532,67 @@ def test_majority_tie_scalar_raises(merge_module):
             values, lid="leprohon-scalar.99", field="display_name"
         )
     assert "Unresolved SCALAR tie" in str(exc.value)
+
+
+# === overrides file — schema validation parity (#154 / code-reviewer P2) ===
+
+def test_load_overrides_rejects_keys_without_separator(merge_module, tmp_path):
+    """Per #154 parity (code-reviewer P2-2 on PR #156). Beckerath, PM,
+    and Kitchen all have this test; Leprohon was missing it. Behaviour
+    parity already exists in code; this test locks it."""
+    import json
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"badkey": {"value": 1, "rationale": "test fixture"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="missing '|' separator"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_overrides_json_keys_well_formed(merge_module):
+    """Per #154 parity (code-reviewer P2-1 on PR #156). Constitutional
+    rule 3: every override rationale on Leprohon's largest-on-project
+    override table must carry a structured printed-source citation —
+    not just live as documented prose. Beckerath and PM have this
+    enforcement; Leprohon was missing it. Locks the convention before
+    a future override drifts.
+
+    Citation tokens: `Leprohon`, `chunk-pNNN`, `physical-NNN`, `printed-NNN`,
+    `p. NNN`, `pp. NNN-NNN`, `Chapter N`, or the 3-arbiter blind-re-extraction
+    note. Rationale is required to mention at least one printed-source
+    anchor.
+    """
+    import re
+    citation_pattern = re.compile(
+        r"chunk-p\d+"                       # chunk-pNNN-pNNN-pypdf.md
+        r"|chunk[-\s]+\d+"                  # chunk-7 / chunk 7 (rule-pointer)
+        r"|physical[-\s]+\d+"               # physical pNNN
+        r"|printed[-\s]+\d+"                # printed pNNN
+        r"|p\.\s*\d+"                       # p. NNN / pp. NNN-NNN
+        r"|page\s+\d+"                      # page NNN
+        r"|Chapter\s+[IVX]+"                # Chapter <roman>
+        r"|Leprohon"                        # canonical author cite
+        r"|3-arbiter"                       # blind-re-extraction sweep marker
+        r"|blind\s+re-extraction"
+        r"|PR\s+#\d+",                      # cited canonical PR finding
+        re.IGNORECASE,
+    )
+    for (lid, field), entry in merge_module.TIE_BREAK_OVERRIDES.items():
+        assert lid, f"empty lid in key ({lid!r}, {field!r})"
+        assert field, f"empty field in key ({lid!r}, {field!r})"
+        assert "rationale" in entry, f"override ({lid!r}, {field!r}) missing rationale"
+        rationale = entry["rationale"]
+        assert isinstance(rationale, str) and len(rationale) >= 20, (
+            f"rationale for ({lid!r}, {field!r}) too short to carry a "
+            f"citation: {rationale!r}"
+        )
+        assert citation_pattern.search(rationale), (
+            f"rationale for ({lid!r}, {field!r}) lacks a structured "
+            f"printed-source citation matching one of: chunk-p<digits>, "
+            f"physical-<digits>, printed-<digits>, p. <digits>, "
+            f"page <digits>, Chapter <roman>, Leprohon, or "
+            f"`3-arbiter / blind re-extraction`. Got: {rationale!r}"
+        )

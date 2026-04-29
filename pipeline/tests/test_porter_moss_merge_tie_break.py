@@ -173,6 +173,62 @@ def test_load_overrides_rejects_empty_field(merge_module, tmp_path):
         merge_module._OVERRIDES_PATH = orig
 
 
+def test_override_value_passes_through_deep_normalise(merge_module):
+    """Per Gemini PR #155 round-2 (parity from Kitchen)."""
+    key = ("test.99", "discoverer")
+    merge_module.TIE_BREAK_OVERRIDES[key] = {
+        "value": "-",
+        "rationale": "test fixture (sentinel-null override)",
+    }
+    try:
+        values = ["alpha", "beta", "gamma"]
+        chosen, _ = merge_module._majority(
+            values, tid="test.99", field="discoverer"
+        )
+        assert chosen is None
+    finally:
+        del merge_module.TIE_BREAK_OVERRIDES[key]
+
+
+def test_load_overrides_rejects_non_dict_value(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 (parity from Kitchen)."""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"KV1|occupant_name": "Ramesses VII"}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="must be a dict"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_missing_value_key(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 (parity from Kitchen)."""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"KV1|occupant_name": {"rationale": "missing value key"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="missing required key"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
+def test_load_overrides_rejects_missing_rationale_key(merge_module, tmp_path):
+    """Per Gemini PR #155 round-1 (parity from Kitchen)."""
+    bad = tmp_path / "tie-break-overrides.json"
+    bad.write_text(json.dumps({"KV1|occupant_name": {"value": "Ramesses VII"}}))
+    orig = merge_module._OVERRIDES_PATH
+    merge_module._OVERRIDES_PATH = bad
+    try:
+        with pytest.raises(ValueError, match="missing required key"):
+            merge_module._load_overrides()
+    finally:
+        merge_module._OVERRIDES_PATH = orig
+
+
 # === reconciled.jsonl pins for current overrides =======================
 
 @pytest.fixture(scope="module")
