@@ -362,11 +362,39 @@ SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
     + SEIZERS_CORRECTIONS
 )
 
+_OVERRIDES_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
+
+# Guard against a rationale string ever containing the marker text — the
+# in-place strip in main() does `existing_diff.find(_OVERRIDES_MARKER)`,
+# which would silently truncate inside a rationale instead of at the
+# section boundary. Caught at module-load so a future correction that
+# (innocently) quotes the marker fails loud rather than producing a
+# half-stripped audit log.
+for _, _, _, _, _rationale in SPOT_CORRECTIONS:
+    if _OVERRIDES_MARKER in _rationale:
+        raise ValueError(
+            f"SPOT_CORRECTION rationale contains the LLM-APPLIED OVERRIDES "
+            f"marker substring; the in-place strip in main() would mis-truncate. "
+            f"Quote the marker differently or escape it. Offending rationale: "
+            f"{_rationale[:120]!r}..."
+        )
+del _rationale
+
 
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
 
+    # The log must describe the *state* of reconciled.jsonl, not the *delta*
+    # from the previous run. On a second run every `old_val == new_val`, so a
+    # delta-style log would incorrectly report "no overrides applied" while
+    # the file on disk reflects all the applied overrides. Instead: always
+    # log every SPOT_CORRECTION entry, showing the rationale and the current
+    # value. `applied_count` tracks how many rows actually changed this run
+    # for the terminal "Applied N overrides" line (0 on a re-run is
+    # correct — nothing changed — but the disk log still describes the
+    # complete override set). Mirrors Baud's fix_rows.py.
     override_log: list[str] = []
+    applied_count = 0
     for dh_id, sub_period, field, new_val, rationale in SPOT_CORRECTIONS:
         row = next(
             (r for r in rows if r["dh_id"] == dh_id and r["sub_period"] == sub_period),
@@ -377,14 +405,20 @@ def main() -> None:
                 f"No row with (dh_id, sub_period)=({dh_id!r}, {sub_period!r})"
             )
         old_val = row.get(field)
-        if old_val == new_val:
-            continue
-        override_log.append(
-            f"- {dh_id} [{sub_period}]: {field} corrected ({rationale})\n"
-            f"    was: {json.dumps(old_val, ensure_ascii=False)}\n"
-            f"    now: {json.dumps(new_val, ensure_ascii=False)}"
-        )
-        row[field] = new_val
+        header = f"- {dh_id} [{sub_period}]: {field} corrected ({rationale})"
+        if old_val != new_val:
+            applied_count += 1
+            override_log.append(
+                f"{header}\n"
+                f"    was: {json.dumps(old_val, ensure_ascii=False)}\n"
+                f"    now: {json.dumps(new_val, ensure_ascii=False)}"
+            )
+            row[field] = new_val
+        else:
+            override_log.append(
+                f"{header}\n"
+                f"    value: {json.dumps(new_val, ensure_ascii=False)}"
+            )
 
     RECONCILED.write_text(
         "\n".join(
@@ -394,10 +428,18 @@ def main() -> None:
     )
 
     existing_diff = DIFF.read_text()
-    marker = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
-    if marker in existing_diff:
-        head, _, _ = existing_diff.partition(f"\n\n{marker}")
-        existing_diff = head
+    marker = _OVERRIDES_MARKER
+    # Strip the previous LLM-APPLIED OVERRIDES section in-place so the
+    # rewritten section replaces (not duplicates) it. Use the bare marker
+    # as the split point rather than `\n\n{marker}` — the latter would
+    # silently fail to match and produce a duplicate section if the file
+    # were ever manually edited to use a different whitespace separator.
+    # The module-load guard above asserts no SPOT_CORRECTION rationale
+    # contains the marker substring, so the first match here is always
+    # the section boundary, never an embedded mention inside a rationale.
+    idx = existing_diff.find(marker)
+    if idx != -1:
+        existing_diff = existing_diff[:idx].rstrip()
     body = (
         "\n".join(override_log)
         if override_log
@@ -417,7 +459,7 @@ def main() -> None:
     )
     DIFF.write_text(appended)
 
-    print(f"Applied {len(override_log)} override(s).")
+    print(f"Applied {applied_count} override(s) this run ({len(override_log)} total in log).")
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
     print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
 
