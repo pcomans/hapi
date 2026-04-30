@@ -362,6 +362,24 @@ SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
     + SEIZERS_CORRECTIONS
 )
 
+_OVERRIDES_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
+
+# Guard against a rationale string ever containing the marker text — the
+# in-place strip in main() does `existing_diff.find(_OVERRIDES_MARKER)`,
+# which would silently truncate inside a rationale instead of at the
+# section boundary. Caught at module-load so a future correction that
+# (innocently) quotes the marker fails loud rather than producing a
+# half-stripped audit log.
+for _, _, _, _, _rationale in SPOT_CORRECTIONS:
+    if _OVERRIDES_MARKER in _rationale:
+        raise ValueError(
+            f"SPOT_CORRECTION rationale contains the LLM-APPLIED OVERRIDES "
+            f"marker substring; the in-place strip in main() would mis-truncate. "
+            f"Quote the marker differently or escape it. Offending rationale: "
+            f"{_rationale[:120]!r}..."
+        )
+del _rationale
+
 
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
@@ -387,17 +405,18 @@ def main() -> None:
                 f"No row with (dh_id, sub_period)=({dh_id!r}, {sub_period!r})"
             )
         old_val = row.get(field)
+        header = f"- {dh_id} [{sub_period}]: {field} corrected ({rationale})"
         if old_val != new_val:
             applied_count += 1
             override_log.append(
-                f"- {dh_id} [{sub_period}]: {field} corrected ({rationale})\n"
+                f"{header}\n"
                 f"    was: {json.dumps(old_val, ensure_ascii=False)}\n"
                 f"    now: {json.dumps(new_val, ensure_ascii=False)}"
             )
             row[field] = new_val
         else:
             override_log.append(
-                f"- {dh_id} [{sub_period}]: {field} corrected ({rationale})\n"
+                f"{header}\n"
                 f"    value: {json.dumps(new_val, ensure_ascii=False)}"
             )
 
@@ -409,12 +428,15 @@ def main() -> None:
     )
 
     existing_diff = DIFF.read_text()
-    marker = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
+    marker = _OVERRIDES_MARKER
     # Strip the previous LLM-APPLIED OVERRIDES section in-place so the
     # rewritten section replaces (not duplicates) it. Use the bare marker
     # as the split point rather than `\n\n{marker}` — the latter would
     # silently fail to match and produce a duplicate section if the file
     # were ever manually edited to use a different whitespace separator.
+    # The module-load guard above asserts no SPOT_CORRECTION rationale
+    # contains the marker substring, so the first match here is always
+    # the section boundary, never an embedded mention inside a rationale.
     idx = existing_diff.find(marker)
     if idx != -1:
         existing_diff = existing_diff[:idx].rstrip()

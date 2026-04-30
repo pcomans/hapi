@@ -6,6 +6,7 @@ Per rule 5: every populated field on a fixture row is asserted.
 from __future__ import annotations
 
 import json
+import re
 from functools import lru_cache
 from pathlib import Path
 
@@ -8736,6 +8737,9 @@ DIFF_FILE = SOURCE_DIR / "merge-disagreements.txt"
 LLM_OVERRIDE_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
 
 
+_ROW_HEADER_RE = re.compile(r".+\(.+\):$")
+
+
 def _disagreement_blocks() -> list[list[str]]:
     """Return the per-row disagreement-field-line lists from the
     pre-LLM-OVERRIDES portion of merge-disagreements.txt.
@@ -8744,6 +8748,11 @@ def _disagreement_blocks() -> list[list[str]]:
     header (e.g. `Henttawy Q (Henttawy Q):`). Blocks with a single
     field line are still returned (the sortedness invariant on those
     blocks is trivial but cheap).
+
+    Raises on a non-indented, non-blank line that doesn't match the
+    canonical row-header shape — a malformed boundary would silently
+    skip the affected block under a permissive parser, and the
+    sortedness invariant would pass vacuously on whatever survived.
     """
     pre, _, _ = DIFF_FILE.read_text().partition(LLM_OVERRIDE_MARKER)
     blocks: list[list[str]] = []
@@ -8751,14 +8760,14 @@ def _disagreement_blocks() -> list[list[str]]:
     for line in pre.splitlines():
         if line.startswith("  "):
             current.append(line)
-        elif line.strip():
-            if current:
-                blocks.append(current)
-                current = []
-        else:
-            if current:
-                blocks.append(current)
-                current = []
+            continue
+        if current:
+            blocks.append(current)
+            current = []
+        if line.strip() and not _ROW_HEADER_RE.match(line):
+            raise AssertionError(
+                f"unexpected non-indented line in merge-disagreements.txt: {line!r}"
+            )
     if current:
         blocks.append(current)
     return blocks
@@ -8778,7 +8787,11 @@ def test_merge_disagreements_field_lines_are_sorted_within_each_row() -> None:
         "the sortedness invariant"
     )
     for block in multi_field_blocks:
-        field_names = [line.lstrip()[: line.lstrip().index(":")] for line in block]
+        # `merge.py` emits each field line as `  <field>: <values>...`
+        # so split on the first `: ` (colon-space) which only matches
+        # the field-name terminator. Bare `.index(":")` would silently
+        # extract a value substring if a value ever contained `:`.
+        field_names = [line.lstrip().split(": ", 1)[0] for line in block]
         assert field_names == sorted(field_names), (
             f"disagreement-field lines not sorted within block: {field_names}"
         )
@@ -8792,6 +8805,12 @@ def test_llm_applied_overrides_section_describes_every_spot_correction() -> None
     corrections are already applied silently turns the on-disk audit
     trail into "No overrides applied", lying about whether overrides
     are present.
+
+    Each entry's per-row header (`- {dh_id} [{sub_period}]: {field}
+    corrected`) must be followed by either `value:` (already-applied)
+    or `was:` (run-applied) — pinning both halves of the audit shape
+    so a regression that emits only headers without the trailing
+    detail line would still fail loud.
     """
     import importlib.util
 
@@ -8811,7 +8830,18 @@ def test_llm_applied_overrides_section_describes_every_spot_correction() -> None
     )
     for dh_id, sub_period, field, _new_val, _rationale in mod.SPOT_CORRECTIONS:
         header = f"- {dh_id} [{sub_period}]: {field} corrected"
-        assert header in override_section, (
+        idx = override_section.find(header)
+        assert idx != -1, (
             f"missing audit entry for {(dh_id, sub_period, field)} — "
             f"the on-disk log no longer describes the full SPOT_CORRECTIONS set"
+        )
+        # The block following the header must carry either `value:`
+        # (already-applied) or `was:` (run-applied) — header alone
+        # would mean the per-entry detail line was silently dropped.
+        tail_lines = override_section[idx:].splitlines()[1:6]
+        assert any(
+            line.lstrip().startswith(("value:", "was:")) for line in tail_lines
+        ), (
+            f"audit entry for {(dh_id, sub_period, field)} has no "
+            f"value:/was: detail line — header without body is a regression"
         )
