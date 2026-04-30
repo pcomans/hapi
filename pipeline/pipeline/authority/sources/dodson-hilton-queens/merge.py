@@ -234,6 +234,20 @@ def main(agent_dir: Path) -> None:
     dh_id_counts = Counter(dh for dh, _ in all_keys_unsorted)
     duplicated_dh_ids = {dh for dh, n in dh_id_counts.items() if n > 1}
 
+    # Schema uniformity: every row in reconciled.jsonl must carry every
+    # field that ANY agent produced on ANY row, and the per-row field
+    # iteration must be sorted so `merge-disagreements.txt` is byte-stable
+    # across runs. The old `set().union(*[v.keys() for _, v in present])`
+    # pattern (computed inside the row loop, unsorted) had two failure
+    # modes — it let a field that one agent omitted on one row vanish
+    # from the merged output for that row, and it iterated set-order so
+    # the audit log diffed noisily on every regenerate. Computing the
+    # field set once across the full agent output and sorting it closes
+    # both. Mirrors the Baud / Kitchen / Beckerath / etc. shape.
+    all_fields = sorted(
+        set().union(*[set(row.keys()) for a in agents.values() for row in a.values()])
+    )
+
     final: list[dict] = []
     report: list[str] = []
 
@@ -252,7 +266,6 @@ def main(agent_dir: Path) -> None:
                 f"that missed this row, or hand-resolve before merging."
             )
 
-        all_fields = set().union(*[v.keys() for _, v in present])
         merged: dict = {}
         row_disagreements: list[str] = []
         for field in all_fields:

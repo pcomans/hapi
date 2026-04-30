@@ -8725,3 +8725,93 @@ def test_founders_wadjetefni_full_row() -> None:
         'notes': 'Named on a diorite vessel from below the Step Pyramid.',
         'source_citation': CITATION_FOUNDERS,
     })
+
+
+# ---------------------------------------------------------------------------
+# Audit-trail invariants on merge-disagreements.txt
+# ---------------------------------------------------------------------------
+
+
+DIFF_FILE = SOURCE_DIR / "merge-disagreements.txt"
+LLM_OVERRIDE_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
+
+
+def _disagreement_blocks() -> list[list[str]]:
+    """Return the per-row disagreement-field-line lists from the
+    pre-LLM-OVERRIDES portion of merge-disagreements.txt.
+
+    Each block is the consecutive `  <field>: ...` lines under a row
+    header (e.g. `Henttawy Q (Henttawy Q):`). Blocks with a single
+    field line are still returned (the sortedness invariant on those
+    blocks is trivial but cheap).
+    """
+    pre, _, _ = DIFF_FILE.read_text().partition(LLM_OVERRIDE_MARKER)
+    blocks: list[list[str]] = []
+    current: list[str] = []
+    for line in pre.splitlines():
+        if line.startswith("  "):
+            current.append(line)
+        elif line.strip():
+            if current:
+                blocks.append(current)
+                current = []
+        else:
+            if current:
+                blocks.append(current)
+                current = []
+    if current:
+        blocks.append(current)
+    return blocks
+
+
+def test_merge_disagreements_field_lines_are_sorted_within_each_row() -> None:
+    """Per `merge.py`'s sorted `all_fields` iteration (issue #142):
+    within each row's disagreement block, the field lines must be
+    alphabetically ordered. Iterating an unsorted set produces a noisy
+    diff every time merge.py regenerates the audit log even when the
+    underlying disagreements are unchanged.
+    """
+    blocks = _disagreement_blocks()
+    multi_field_blocks = [b for b in blocks if len(b) >= 2]
+    assert multi_field_blocks, (
+        "expected at least one multi-field disagreement block to exercise "
+        "the sortedness invariant"
+    )
+    for block in multi_field_blocks:
+        field_names = [line.lstrip()[: line.lstrip().index(":")] for line in block]
+        assert field_names == sorted(field_names), (
+            f"disagreement-field lines not sorted within block: {field_names}"
+        )
+
+
+def test_llm_applied_overrides_section_describes_every_spot_correction() -> None:
+    """Per `fix_rows.py`'s state-not-delta log (issue #54 bug 2): the
+    LLM-APPLIED OVERRIDES section must describe every entry in
+    `SPOT_CORRECTIONS` — not just the entries that this run mutated.
+    A delta-style log breaks idempotence: re-running fix_rows.py after
+    corrections are already applied silently turns the on-disk audit
+    trail into "No overrides applied", lying about whether overrides
+    are present.
+    """
+    import importlib.util
+
+    fix_rows_path = SOURCE_DIR / "fix_rows.py"
+    spec = importlib.util.spec_from_file_location("dh_fix_rows", fix_rows_path)
+    assert spec is not None and spec.loader is not None
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    text = DIFF_FILE.read_text()
+    _, _, override_section = text.partition(LLM_OVERRIDE_MARKER)
+    assert override_section, "merge-disagreements.txt is missing the LLM-APPLIED OVERRIDES section"
+    assert "No overrides applied." not in override_section, (
+        "LLM-APPLIED OVERRIDES section reports 'No overrides applied' even "
+        "though SPOT_CORRECTIONS is non-empty — the delta-style log bug "
+        "from issue #54 has regressed."
+    )
+    for dh_id, sub_period, field, _new_val, _rationale in mod.SPOT_CORRECTIONS:
+        header = f"- {dh_id} [{sub_period}]: {field} corrected"
+        assert header in override_section, (
+            f"missing audit entry for {(dh_id, sub_period, field)} — "
+            f"the on-disk log no longer describes the full SPOT_CORRECTIONS set"
+        )
