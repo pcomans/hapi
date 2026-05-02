@@ -1,5 +1,15 @@
 # Extraction prompt — Porter & Moss Vol I.2 (Theban Necropolis), Chunk 7
 
+> **Schema update — PR A (2026-05-02).** Two new fields were added to the canonical row, and `occupant_alt_names` semantics were narrowed:
+>
+> - **`occupant_alt_names`** is now ONLY for alternate name forms of the SAME PERSON (prenomens; throne-name vs birth-name; transliteration variants). Tomb-nicknames (`Belzoni's tomb`, `Tomb of Memnon`, `Bruce's tomb`, etc.) DO NOT belong here — they go in `tomb_aliases`.
+> - **`tomb_aliases: list[str]`** is the new field for popular names of the *tomb itself* (19th-c. surveyor designations, classical mis-attributions, local Arabic names).
+> - **`co_occupants: list[{name, role, alt_names}]`** is the new field for joint burials — a tomb shared by multiple people. The headword (PM's first-listed person) goes in `occupant_name` / `occupant_role` / `occupant_alt_names`; the additional people go in `co_occupants` with per-person role.
+> - **`is_joint_burial: bool`** (PR #169 round-2) flags coordinate burials where PM does NOT mark a principal occupant — the headword is a serialisation artifact, not a primacy claim. Default `false`. Set `true` when PM lists multiple occupants coordinately (e.g. SWV-ThreePrincesses: PM I.2 p.591 prints `MENHET, MERTI, AND MENWI` as a coordinate triple). Leave `false` when PM marks one occupant as syntactic subject (e.g. KV46: PM I.2 p.562 prints `YUIA ..., Divine father, AND THUIU ...` — Yuia leads). Phase-A consumers MUST treat `occupant_name` and `co_occupants[*].name` as a coordinate union for join purposes when this flag is `true`.
+>
+> The body of this prompt is preserved as historical record from the original extraction; the schema example below has been updated to show the new fields. If you re-run an agent against this prompt, follow the updated schema, not the body's older `occupant_alt_names` directives that conflated tomb-names with person-names.
+
+
 You are one of three independent extraction subagents. Read the text-layer chunk file at `pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p132-p148.txt` and produce a JSONL file with one structured row per named royal tomb / near-royal tomb in §§ II and III.A / III.C / III.D of PM I.2. The other two agents see the same prompt and same chunk; `merge.py` majority-votes.
 
 This is the first chunk of this source that covers sections **without numbered tomb-id conventions** (no KV/QV/TT numbers). The schema is unchanged; `tomb_id` becomes a descriptor-based stable identifier per the rules below.
@@ -78,6 +88,9 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
   "valley": "...",
   "occupant_name": "...",
   "occupant_alt_names": [...],
+  "tomb_aliases": [...],
+  "co_occupants": [],
+  "is_joint_burial": false,
   "occupant_role": "...",
   "dynasty": null,
   "sub_period": null,

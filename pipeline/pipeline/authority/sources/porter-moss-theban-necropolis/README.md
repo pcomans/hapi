@@ -42,8 +42,11 @@ The chunk-1 extract example below shows what a typical KV row looks like AFTER P
   "tomb_id": "KV9",
   "valley": "Valley of the Kings",
   "occupant_name": "Ramesses VI",
-  "occupant_alt_names": ["Memnon"],
+  "occupant_alt_names": [],
   "occupant_role": "King",
+  "tomb_aliases": ["Tomb of Metempsychosis", "Tomb of Memnon"],
+  "co_occupants": [],
+  "is_joint_burial": false,
   "dynasty": null,
   "sub_period": null,
   "date_bce_approx_start": null,
@@ -70,7 +73,10 @@ This split lets downstream joins against pharaoh.se / Beckerath work on a normal
 - `tomb_id` — `KV<n>`, `QV<n>`, `TT<n>`. Letter-suffix variants (`KV5a`) are reproduced verbatim.
 - `valley` — Coarse sub-area: `"Valley of the Kings"`, `"Valley of the Queens"`, `"Dra' Abu el-Naga"`, `"Deir el-Bahri"`, `"Asasif"`, `"Sheikh Abd el-Qurna"`, `"Khokha"`, `"Qurnet Mura'i"`, `"Deir el-Medina"`, `"Ramesseum"`, `"Medinet Habu"`. The valley a tomb belongs to is structural in PM (each numbered tomb sits within a section / sub-section).
 - `occupant_name` — Conventional English form of the king's / queen's / official's name. Drawn verbatim from PM's headword (e.g. `Sethos I`, `Ramesses IV`, `Tut'ankhamun`). PM uses `Sethos` not `Seti`; preserved as-is, the name authority handles cross-resolution to `Seti I`.
-- `occupant_alt_names` — Other names PM prints in the headword block, typically as a `('Tomb of X', or 'Tomb of Y'. ...)` parenthetical with classical-period aliases inside the quotes. KV9's `Memnon` (PM headword: `'Tomb of Memnon'`) is the chunk-1 example. The alias is captured even though the surface form is `Tomb of Memnon` — the alias attaches to the occupant per the museum-catalog convention "from the Tomb of Memnon" = "from KV9". Empty list `[]` when PM gives no parenthetical alt-name.
+- `occupant_alt_names` — Alternate name forms of the SAME PERSON named in `occupant_name`: prenomens (e.g. chunk-7's `["Wadjkheperreʿ"]` for Kamose), throne-name vs birth-name pairs, transliteration variants. PR A audit-fix (2026-05-02) narrowed this field's semantics — tomb-nicknames are NO LONGER allowed here (they belong in `tomb_aliases`). Empty list `[]` for the common case where PM gives no per-person alt-name.
+- `tomb_aliases` — Popular names of the *tomb itself* (not its occupant): 19th-c. surveyor designations (`Belzoni's tomb`, `Bruce's tomb`), classical mis-attributions (`Tomb of Memnon` for KV9 was assumed by early travellers to belong to Memnon, not Ramesses VI), and local Arabic names cited in PM's headword bibliographic ribbon (`Eesa` for KV23 Ay, after Wilkinson's local-Arabic `W. -2 ("Eesa")`). Empty list `[]` for the common case where PM gives no popular tomb-name.
+- `co_occupants` — Additional people buried in the same tomb (joint burials). Each entry is `{"name": str, "role": str, "alt_names": list[str]}`. The headword (PM's first-listed person) stays in the row-level `occupant_name` / `occupant_role` / `occupant_alt_names`; secondary occupants go here with per-person role. Examples: KV46 has `co_occupants=[{"name": "Thuiu", "role": "Official", "alt_names": []}]` (Yuia is the headword); SWV-ThreePrincesses has Merti and Menwi as co_occupants (Menhet headword). Empty list `[]` for the common single-occupant case.
+- `is_joint_burial` — Boolean flag (default `false`) for coordinate burials where PM does NOT mark a principal occupant. Set `true` when PM lists multiple occupants coordinately (e.g. SWV-ThreePrincesses: PM I.2 p.591 prints `MENHET, MERTI, AND MENWI` as a coordinate triple — the headword choice is a serialisation artifact, not a primacy claim). Leave `false` when PM marks one occupant as syntactic subject (e.g. KV46: PM I.2 p.562 prints `YUIA ..., Divine father, AND THUIU ...` — Yuia leads). Phase-A consumers MUST treat `occupant_name` and `co_occupants[*].name` as a coordinate union for join purposes when this flag is `true` — otherwise museum records catalogued under non-headword names (Met canopic jars 26.8.42a-c for Merti, 26.8.43a-c for Menwi) silently merge onto the headword's authority record.
 - `occupant_role` — Controlled vocabulary: `King`, `Queen`, `Royal Family`, `Vizier`, `Official`, `High Priest`, `Princess`, `Prince`, `Unknown`. KV almost always `King`, QV almost always `Queen`/`Princess`, TT mostly `Vizier` / `Official` / `High Priest`. PM does not always state the role bare; controlled-vocab assignment is a Phase A enrichment in advisory mode.
 - `dynasty` — Roman-numeral dynasty as a STRING (`"18"`, `"19"`, `"20"`, `"XVIII"` etc. — final form normalised to Arabic numerals). PM does not always state dynasty in the headword; this is filled by reference to the king authority (pharaoh.se, Beckerath) downstream.
 - `sub_period` — Optional finer chronological label (`"First Intermediate Period"`, `"Amarna"`, `"Saite"`). Null for most rows.

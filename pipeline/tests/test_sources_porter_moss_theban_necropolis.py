@@ -289,6 +289,16 @@ def test_required_fields_present_on_every_row() -> None:
         "shared_with_tombs",
         "notes_from_pm",
         "source_citation",
+        # PR A (audit-fix, 2026-05-02): added so tomb-nicknames and joint
+        # occupants get their own honest schema slot. `occupant_alt_names`
+        # is now exclusively for SAME-PERSON name variants (e.g. prenomens).
+        "tomb_aliases",
+        "co_occupants",
+        # PR A round-2 (PR #169 egyptologist P1, 2026-05-02): explicit
+        # flag for joint coordinate burials with no PM-marked principal
+        # (SWV-ThreePrincesses); see test_is_joint_burial_flag_paired_
+        # with_co_occupants for the contract.
+        "is_joint_burial",
     }
     for r in _rows():
         missing = required - r.keys()
@@ -318,6 +328,225 @@ def test_valley_constraint() -> None:
     }
     for r in _rows():
         assert r["valley"] in valid, (r["tomb_id"], r["valley"])
+
+
+# ---------------------------------------------------------------------------
+# PR A audit-fix structural tests (2026-05-02): enforce the corrected schema
+# semantics so future chunks cannot reintroduce the `occupant_alt_names`
+# misuse the audit migrated away from. Each test is mechanical (CLAUDE.md
+# rule 3) — no human review needed to catch a regression.
+# ---------------------------------------------------------------------------
+
+
+def test_no_compound_occupant_name() -> None:
+    """`occupant_name` carries ONE person (the headword). Joint occupants
+    go in `co_occupants` (PR A audit-fix). The `' and '` / `', and '` /
+    `' & '` joiners that PM used in the few multi-occupant headwords (KV46
+    Yuia+Thuiu, SWV Three Princesses Menhet+Merti+Menwi) are forbidden in
+    `occupant_name` going forward.
+    """
+    forbidden = (" and ", ", and ", " & ", " + ")
+    for r in _rows():
+        n = r.get("occupant_name") or ""
+        for joiner in forbidden:
+            assert joiner not in n, (
+                f"{r['tomb_id']}: occupant_name {n!r} contains {joiner!r} "
+                f"— joint occupants must go in `co_occupants`."
+            )
+
+
+def test_occupant_alt_names_are_person_variants_not_tomb_nicknames() -> None:
+    """`occupant_alt_names` is for SAME-PERSON name variants only (prenomens
+    like the chunk-7 DAN-Antef rows; throne-name vs birth-name pairs;
+    transliteration variants). Tomb-nicknames (`Belzoni's tomb`, `Tomb of
+    Memnon`, `Bruce's tomb`, etc.) belong in the new `tomb_aliases` field
+    (PR A audit-fix migration).
+
+    Mechanical heuristic: any string matching `Tomb of …`, `…'s tomb`,
+    `the …'s tomb`, or `the Tomb of …` is a tomb-name shape. Regex widened
+    on PR #169 round-2 (Gemini round-1) to catch multi-word possessives
+    (`The Great King's tomb`) and `(The )?Tomb of …` prefixes. Round-3
+    (Gemini round-2) replaced the `'s tomb$` end-anchor with `'s tomb\\b`
+    so trailing punctuation (`Belzoni's tomb.`) doesn't slip through.
+    """
+    nickname_re = re.compile(
+        r"(?i)^(?:(?:the\s+)?tomb of\b|.*'s tomb\b)"
+    )
+    for r in _rows():
+        for alt in r.get("occupant_alt_names") or []:
+            assert not nickname_re.search(alt), (
+                f"{r['tomb_id']}: occupant_alt_names contains tomb-nickname "
+                f"{alt!r} — should be in `tomb_aliases` instead."
+            )
+
+
+def test_co_occupants_each_have_name_and_role() -> None:
+    """Every entry in `co_occupants` is a `{name, role, alt_names}` dict —
+    EXACTLY those three keys, non-empty name + role, list-shape alt_names.
+    Joint-occupant rows lose their per-person role information if either
+    field is null — and the whole point of the PR A migration was to
+    recover that information.
+
+    Round-2 tighten (PR #169 Gemini + code-reviewer P2-1, P2-2, P2-5):
+    - exact key-set (no extra keys silently passed through),
+    - role validated against the controlled vocab (free-text role drift
+      forbidden — same enforcement as the row-level `occupant_role`),
+    - empty-string guard on `name` and on each `alt_names` entry.
+    """
+    co_role_vocab = _occupant_role_controlled_vocab()
+    expected_keys = {"name", "role", "alt_names"}
+    for r in _rows():
+        for i, co in enumerate(r.get("co_occupants") or []):
+            assert isinstance(co, dict), (r["tomb_id"], i, co)
+            assert set(co.keys()) == expected_keys, (
+                r["tomb_id"], i, "co_occupant key-set must be exactly "
+                f"{sorted(expected_keys)}, got {sorted(co.keys())}: {co}"
+            )
+            name = co["name"]
+            assert isinstance(name, str) and name, (
+                r["tomb_id"], i, "co_occupant name must be a non-empty string", co
+            )
+            role = co["role"]
+            assert role in co_role_vocab, (
+                r["tomb_id"], i,
+                f"co_occupant role {role!r} not in controlled vocab "
+                f"{sorted(co_role_vocab)}: {co}",
+            )
+            alt_names = co["alt_names"]
+            assert isinstance(alt_names, list), (
+                r["tomb_id"], i, "co_occupant alt_names must be a list", co
+            )
+            for j, alt in enumerate(alt_names):
+                assert isinstance(alt, str) and alt, (
+                    r["tomb_id"], i, j,
+                    f"co_occupant alt_names[{j}] must be a non-empty string: {alt!r}",
+                )
+
+
+def test_tomb_aliases_is_list_of_strings() -> None:
+    """`tomb_aliases` carries strings (tomb popular names / surveyor
+    designations). Empty list is the default. Never null.
+    """
+    for r in _rows():
+        ta = r.get("tomb_aliases")
+        assert isinstance(ta, list), (r["tomb_id"], ta)
+        for item in ta:
+            assert isinstance(item, str) and item, (r["tomb_id"], item)
+
+
+def test_is_joint_burial_flag_paired_with_co_occupants() -> None:
+    """`is_joint_burial: bool` (PR A round-2, egyptologist P1) signals
+    coordinate burials with no PM-marked principal — downstream Phase-A
+    consumers must treat `occupant_name` and `co_occupants[*].name` as a
+    coordinate union for join purposes when this flag is True.
+
+    Mechanical contract:
+    - Every row carries the field as a bool (default False).
+    - A row with `is_joint_burial=True` MUST have at least one co_occupant
+      (a single-occupant row cannot be a "joint" burial).
+    - A row with `co_occupants` non-empty MAY be either True (coordinate,
+      no primacy) or False (subordinate, headword is the principal).
+      Both shapes are intentional — KV46 is False because PM marks Yuia
+      as the syntactic subject; SWV-ThreePrincesses is True because PM
+      lists the three coordinately. The two-row test below pins the
+      current state explicitly.
+    """
+    seen_joint = []
+    for r in _rows():
+        flag = r.get("is_joint_burial")
+        assert isinstance(flag, bool), (r["tomb_id"], flag, type(flag).__name__)
+        if flag:
+            assert (r.get("co_occupants") or []), (
+                r["tomb_id"],
+                f"is_joint_burial=True but co_occupants is empty — "
+                f"a single-occupant tomb cannot be a joint burial.",
+            )
+            seen_joint.append(r["tomb_id"])
+    # SWV-ThreePrincesses is the only joint-coordinate burial in the
+    # current corpus. KV46 is intentionally False (asymmetric).
+    assert seen_joint == ["SWV-ThreePrincesses"], seen_joint
+
+
+def test_swv_three_princesses_per_person_role_propagation() -> None:
+    """SWV-ThreePrincesses (PR #169 code-reviewer P2-4 + scope-enforcer
+    requirement): the migration's choice to propagate the prior aggregate
+    `Royal Family` label across all three per-person roles is a NEW per-
+    person claim relative to the pre-PR-A single-row aggregate. Pin it as
+    an assertion (not just a fix_rows rationale string) so future schema
+    refinement that downgrades any single occupant to a different role is
+    forced to update this test deliberately.
+
+    Per-person refinement (likely to `Queen` after Lilyquist 2003) is
+    deferred to a future chunk-7 re-extraction PR; that PR will replace
+    this assertion when the egyptologist signs off on the per-person call.
+    """
+    r = _row("SWV-ThreePrincesses")
+    assert r["occupant_role"] == "Royal Family"
+    assert r["co_occupants"] == [
+        {"name": "Merti", "role": "Royal Family", "alt_names": []},
+        {"name": "Menwi", "role": "Royal Family", "alt_names": []},
+    ]
+    assert r["is_joint_burial"] is True
+
+
+def test_occupant_role_controlled_vocab_covers_co_occupants() -> None:
+    """Controlled vocab applies to `co_occupants[*].role` too (PR #169
+    code-reviewer P2-2). Sibling enforcement to the row-level
+    `occupant_role` controlled-vocab test — the whole point of PR A's
+    `co_occupants` field is that per-occupant role becomes structured
+    data; the vocabulary must apply there or free-text role drift defeats
+    the structuring.
+
+    `test_co_occupants_each_have_name_and_role` already enforces this on
+    every row; this test is a focused regression-pin so a future relaxation
+    of either test surfaces here.
+    """
+    vocab = _occupant_role_controlled_vocab()
+    for r in _rows():
+        for co in r.get("co_occupants") or []:
+            assert co["role"] in vocab, (r["tomb_id"], co)
+
+
+def _occupant_role_controlled_vocab() -> set[str]:
+    """Single source of truth for the `occupant_role` / `co_occupants[*].role`
+    controlled vocabulary. Mirrors the README field-semantics list.
+    """
+    return {
+        "King",
+        "Queen",
+        "Royal Family",
+        "Vizier",
+        "Official",
+        "High Priest",
+        "Princess",
+        "Prince",
+        "Unknown",
+    }
+
+
+def test_all_prompts_mention_new_pr_a_fields() -> None:
+    """Every PM extraction prompt mentions `tomb_aliases` AND `co_occupants`
+    AND `is_joint_burial` (PR #169 code-reviewer P2-3). Future chunks copy
+    from these prompts; if a chunk-9+ prompt is written by copying chunk-1's
+    pre-PR-A body without the new schema header, agents emit no values for
+    the new fields, `SCHEMA_FIELD_DEFAULTS` silently fills `[]`/`False`,
+    and a tomb that genuinely has tomb-nicknames or joint occupants
+    suffers data loss with no failing test (the `[]` row passes every
+    other structural test).
+
+    This is the rule-3 "deterministic enforcement over markdown convention"
+    case — the prompt-update discipline must be a CI check.
+    """
+    prompt_files = sorted(SOURCE_DIR.glob("prompt*.md"))
+    assert prompt_files, "no prompt*.md files found"
+    for prompt in prompt_files:
+        text = prompt.read_text()
+        for field in ("tomb_aliases", "co_occupants", "is_joint_burial"):
+            assert field in text, (
+                f"{prompt.name}: prompt does not mention `{field}` — "
+                f"agents using this prompt will not emit the field, and "
+                f"SCHEMA_FIELD_DEFAULTS will silently fill the default."
+            )
 
 
 def test_kv_rows_have_kv_tomb_id() -> None:
@@ -543,17 +772,20 @@ def test_chunk1_kv3_flagship_full_row() -> None:
     }
 
 
-def test_chunk1_kv9_ramesses_vi_notes_and_alias() -> None:
+def test_chunk1_kv9_ramesses_vi_notes_and_aliases() -> None:
     """KV9 exercises `notes_from_pm` (the cross-line clause about Ramesses V's
-    doorway usurpation) and `occupant_alt_names` (the two classical aliases
-    from PM's `'Tomb of Metempsychosis', or 'Tomb of Memnon'` parenthetical).
-    Asserts every field per rule 5.
+    doorway usurpation) and `tomb_aliases` (the two 19th-c. classical-traveller
+    nicknames from PM's `'Tomb of Metempsychosis', or 'Tomb of Memnon'`
+    parenthetical — TOMB-names, not occupant alt-names; migrated from
+    `occupant_alt_names` in PR A audit-fix). Asserts every field per rule 5.
     """
     r = _row("KV9")
     assert r["tomb_id"] == "KV9"
     assert r["valley"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses VI"
-    assert r["occupant_alt_names"] == ["Tomb of Metempsychosis", "Tomb of Memnon"]
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == ["Tomb of Metempsychosis", "Tomb of Memnon"]
+    assert r["co_occupants"] == []
     assert r["occupant_role"] == "King"
     assert r["dynasty"] is None
     assert r["sub_period"] is None
@@ -564,7 +796,7 @@ def test_chunk1_kv9_ramesses_vi_notes_and_alias() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "doorways in outer part usurped from Ramesses V"
+    assert r["notes_from_pm"] == "doorways in outer part usurped from Ramesses V."
     assert r["source_citation"] == {
         "page": 511,
         "edition": EDITION_PM_I2,
@@ -671,16 +903,19 @@ def test_chunk2_shared_with_tombs() -> None:
 
 def test_chunk2_kv11_ramesses_iii_full_row() -> None:
     """KV11 (Ramesses III) flagship row — exercises cross-chunk back-
-    reference to KV3, classical aliases (`Bruce's tomb`, `the Harper's tomb`)
-    from PM's headword parenthetical, and headword-at-page-tail extraction
-    (KV11's headword sits at the bottom of physical p.60 / printed 518).
-    Asserts every field per CLAUDE.md rule 5.
+    reference to KV3, tomb-nicknames (`Bruce's tomb`, `the Harper's tomb`)
+    from PM's headword parenthetical (TOMB-names — migrated from the older
+    `occupant_alt_names` slot to `tomb_aliases` in PR A audit-fix), and
+    headword-at-page-tail extraction (KV11's headword sits at the bottom of
+    physical p.60 / printed 518). Asserts every field per CLAUDE.md rule 5.
     """
     r = _row("KV11")
     assert r["tomb_id"] == "KV11"
     assert r["valley"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses III"
-    assert r["occupant_alt_names"] == ["Bruce's tomb", "the Harper's tomb"]
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == ["Bruce's tomb", "the Harper's tomb"]
+    assert r["co_occupants"] == []
     assert r["occupant_role"] == "King"
     assert r["dynasty"] is None
     assert r["sub_period"] is None
@@ -787,17 +1022,21 @@ def test_chunk2_kv14_tausert_usurpation_note() -> None:
 
 
 def test_chunk2_kv17_sethos_i_belzoni_alias() -> None:
-    """KV17 (Sethos I) — exercises the `Belzoni's tomb` classical alias
-    from PM's headword single-quote parenthetical. PM's spelling
-    `Sethos I` is preserved verbatim (the ruler authority bridges to
-    the modern `Seti I` convention in Phase A; the extract stays
-    faithful to PM). Asserts every field per rule 5.
+    """KV17 (Sethos I) — exercises the `Belzoni's tomb` 19th-c. nickname
+    from PM's headword single-quote parenthetical (a TOMB-name after the
+    1817 discoverer Giovanni Battista Belzoni, NOT an occupant alt-name;
+    migrated from `occupant_alt_names` to `tomb_aliases` in PR A audit-
+    fix). PM's spelling `Sethos I` is preserved verbatim (the ruler
+    authority bridges to the modern `Seti I` convention in Phase A; the
+    extract stays faithful to PM). Asserts every field per rule 5.
     """
     r = _row("KV17")
     assert r["tomb_id"] == "KV17"
     assert r["valley"] == "Valley of the Kings"
     assert r["occupant_name"] == "Sethos I"
-    assert r["occupant_alt_names"] == ["Belzoni's tomb"]
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == ["Belzoni's tomb"]
+    assert r["co_occupants"] == []
     assert r["occupant_role"] == "King"
     assert r["dynasty"] is None
     assert r["sub_period"] is None
@@ -998,15 +1237,21 @@ def test_chunk3_kv22_amenophis_iii_west_valley() -> None:
 
 
 def test_chunk3_kv23_ay_classical_aliases() -> None:
-    """KV23 (Ay) — two classical-traveller nicknames (`Eesa` by Wilkinson,
-    `Schai` by Prisse / Nestor L'Hôte) captured in `occupant_alt_names`.
-    Also in the West Valley. Asserts every field per rule 5.
+    """KV23 (Ay) — two 19th-c. surveyor tomb-names (`Eesa`, the local
+    Arabic name cited by Wilkinson as 'W. -2 ("Eesa")'; `Schai`, the
+    Prisse / Nestor L'Hôte designation for the same tomb). Both are
+    TOMB-names from West-Valley survey traditions, NOT alternate names of
+    the king Ay. Migrated from `occupant_alt_names` to `tomb_aliases` in
+    PR A audit-fix. Tomb is also in the West Valley. Asserts every field
+    per rule 5.
     """
     r = _row("KV23")
     assert r["tomb_id"] == "KV23"
     assert r["valley"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ay"
-    assert r["occupant_alt_names"] == ["Eesa", "Schai"]
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == ["Eesa", "Schai"]
+    assert r["co_occupants"] == []
     assert r["occupant_role"] == "King"
     assert r["dynasty"] is None
     assert r["sub_period"] is None
@@ -1279,17 +1524,28 @@ def test_chunk3_kv45_userhet_re_used() -> None:
 
 def test_chunk3_kv46_yuia_and_thuiu_multi_occupant() -> None:
     """KV46 — multi-occupant tomb (Yuia + Thuiu, parents of Queen Teye).
-    Exercises the multi-occupant row pattern: `occupant_name` joined with
-    `" and "`, `occupant_role = "Royal Family"` (they are royal in-laws),
-    biographical+relational prose captured in `notes_from_pm`. Asserts
-    every field per rule 5.
+    Exercises the post-PR-A `co_occupants` pattern: headword `occupant_name`
+    is `Yuia` (PM lists him first, with the title `Divine father`), the
+    second occupant `Thuiu` (`Chief of the harîm of Amūn`) lives in
+    `co_occupants`. Per-occupant role replaces the prior aggregate
+    `Royal Family` label — both are non-royal court officials (parents-in-
+    law of Amenhotep III). Biographical prose stays in `notes_from_pm`.
+    Asserts every field per rule 5.
     """
     r = _row("KV46")
     assert r["tomb_id"] == "KV46"
     assert r["valley"] == "Valley of the Kings"
-    assert r["occupant_name"] == "Yuia and Thuiu"
+    assert r["occupant_name"] == "Yuia"
     assert r["occupant_alt_names"] == []
-    assert r["occupant_role"] == "Royal Family"
+    assert r["occupant_role"] == "Official"
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == [
+        {
+            "name": "Thuiu",
+            "role": "Official",
+            "alt_names": [],
+        }
+    ]
     assert r["dynasty"] is None
     assert r["sub_period"] is None
     assert r["date_bce_approx_start"] is None
@@ -1706,7 +1962,10 @@ def test_chunk7_occupant_names_and_alt_names() -> None:
     expected_name = {
         "SWV-HatshepsutSouth": "Hatshepsut",
         "SWV-Neferure": "Neferureʿ",
-        "SWV-ThreePrincesses": "Menhet, Merti, and Menwi",
+        # PR A audit-fix (2026-05-02): `occupant_name` carries the PM
+        # headword (Menhet, listed first); Merti and Menwi live in
+        # `co_occupants` (asserted in test_chunk7_co_occupants).
+        "SWV-ThreePrincesses": "Menhet",
         "DAN-AntefSehertaui": "Antef",
         "DAN-AntefWahankh": "Antef",
         "DAN-MentuhotpSankhibtaui": "Mentuhotp-Sʿankhibtaui",
@@ -1741,6 +2000,27 @@ def test_chunk7_occupant_names_and_alt_names() -> None:
     # Every other row: empty alt_names.
     for tid in CHUNK7_TOMB_IDS - expected_alt.keys():
         assert _row(tid)["occupant_alt_names"] == [], tid
+
+
+def test_chunk7_co_occupants() -> None:
+    """SWV-ThreePrincesses (Menhet, Merti, Menwi — three foreign wives of
+    Tuthmosis III, Wadi Qubbanet el-Qirud burial) is a joint-occupant row
+    after the PR A audit-fix. Headword `occupant_name` = Menhet (PM lists
+    her first); the other two live in `co_occupants`. Per-occupant role
+    preserves the prior aggregate `Royal Family` label across all three —
+    refining per-person roles is a follow-up after the egyptologist
+    reviewer revisits with the new schema.
+    """
+    r = _row("SWV-ThreePrincesses")
+    assert r["occupant_name"] == "Menhet"
+    assert r["occupant_role"] == "Royal Family"
+    assert r["co_occupants"] == [
+        {"name": "Merti", "role": "Royal Family", "alt_names": []},
+        {"name": "Menwi", "role": "Royal Family", "alt_names": []},
+    ]
+    # Every other chunk-7 row has empty co_occupants.
+    for tid in CHUNK7_TOMB_IDS - {"SWV-ThreePrincesses"}:
+        assert _row(tid)["co_occupants"] == [], tid
 
 
 def test_chunk7_source_citation_pages() -> None:
@@ -2093,14 +2373,19 @@ def _import_fix_rows():
 
 def test_all_corrections_includes_every_chunk_list() -> None:
     """fix_rows.py's `ALL_CORRECTIONS` aggregates every `CHUNK*_CORRECTIONS`
-    list. Dropping a chunk's corrections list silently destroys its audit
-    trail — this test fails loud if a chunk is added without being included.
+    list AND the source-wide audit-fix list (`AUDIT_FIX_CORRECTIONS`).
+    Dropping any of them silently destroys the audit trail — this test fails
+    loud if either list is added without being aggregated.
 
     Uses natural-numeric sort on the chunk suffix (NOT lexicographic sort)
     so the test stays correct at chunk 10+. Gemini code-review on PR #71
     flagged that the prior lex-sort would mis-order `CHUNK10` before
     `CHUNK2`, invalidating the equality assertion against a numerically-
     ordered `ALL_CORRECTIONS`.
+
+    `AUDIT_FIX_CORRECTIONS` (PR A, 2026-05-02) is appended after the chunk
+    lists since it is structurally different — a one-shot source-wide
+    schema migration, not a chunk-specific reviewer pass.
     """
     fix_rows = _import_fix_rows()
     chunk_re = re.compile(r"^CHUNK(\d+)_CORRECTIONS$")
@@ -2108,10 +2393,13 @@ def test_all_corrections_includes_every_chunk_list() -> None:
         (attr for attr in dir(fix_rows) if chunk_re.match(attr)),
         key=lambda attr: int(chunk_re.match(attr).group(1)),
     )
-    expected = [getattr(fix_rows, a) for a in chunk_attrs]
+    expected = [getattr(fix_rows, a) for a in chunk_attrs] + [
+        fix_rows.AUDIT_FIX_CORRECTIONS,
+    ]
     assert fix_rows.ALL_CORRECTIONS == expected, (
-        f"ALL_CORRECTIONS missing one of the per-chunk lists. "
-        f"Found chunk attrs: {chunk_attrs}"
+        f"ALL_CORRECTIONS missing one of the correction lists. "
+        f"Found chunk attrs: {chunk_attrs}; expected trailing entry "
+        f"AUDIT_FIX_CORRECTIONS."
     )
 
 
@@ -2139,3 +2427,59 @@ def test_all_renames_includes_every_chunk_dict() -> None:
         f"ALL_RENAMES missing one of the per-chunk dicts. "
         f"Found chunk attrs: {chunk_attrs}"
     )
+
+
+def test_fix_rows_main_idempotent() -> None:
+    """`fix_rows.main()` is idempotent: a second call produces byte-identical
+    `reconciled.jsonl` and `merge-disagreements.txt` to a first call (PR
+    #169 code-reviewer P1-1).
+
+    Three idempotence claims live in `fix_rows.py` docstrings/comments:
+    the field-add pass (`SCHEMA_FIELD_DEFAULTS`), the override pass
+    (`SPOT_CORRECTIONS`), and the diff-section append-or-replace logic.
+    Per CLAUDE.md rule 3 (deterministic enforcement over convention), an
+    idempotence claim that lives only in a docstring is a suggestion, not
+    a guarantee — the next refactor of `main()` (e.g. someone changes the
+    field-add pass to use `setdefault` plus a logger that always appends)
+    silently regresses on disk. A single round-trip byte-equality test
+    catches all three regressions.
+
+    Idempotence in this codebase means `f(f(x)) == f(x)` — the output is
+    stable from the second run onward, not necessarily on the first run
+    after a state transition. So the test calls main() to reach steady
+    state, snapshots, then calls again and compares. The pre-existing
+    on-disk state (which may include "corrected this run" log lines from
+    a recent commit-time run) is restored after the test so the working
+    tree stays clean.
+    """
+    fix_rows = _import_fix_rows()
+    reconciled = SOURCE_DIR / "reconciled.jsonl"
+    diff = SOURCE_DIR / "merge-disagreements.txt"
+
+    pre_reconciled = reconciled.read_bytes()
+    pre_diff = diff.read_bytes()
+    try:
+        # First run: reach steady state regardless of what was on disk
+        # at test-entry (which may have transitional log lines).
+        fix_rows.main()
+        snap_reconciled = reconciled.read_bytes()
+        snap_diff = diff.read_bytes()
+        # Second run: must be byte-identical (the idempotence contract).
+        fix_rows.main()
+        new_reconciled = reconciled.read_bytes()
+        new_diff = diff.read_bytes()
+        assert new_reconciled == snap_reconciled, (
+            "fix_rows.main() is NOT idempotent on reconciled.jsonl — second "
+            "call produced a different byte-string from the first."
+        )
+        assert new_diff == snap_diff, (
+            "fix_rows.main() is NOT idempotent on merge-disagreements.txt — "
+            "second call produced a different byte-string from the first. "
+            "The LLM-APPLIED OVERRIDES section's append-or-replace logic "
+            "must produce identical output across re-runs."
+        )
+    finally:
+        # Restore the original on-disk state so the working tree stays
+        # clean even if the test fails.
+        reconciled.write_bytes(pre_reconciled)
+        diff.write_bytes(pre_diff)

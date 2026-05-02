@@ -21,6 +21,7 @@ section in merge-disagreements.txt.
 
 from __future__ import annotations
 
+import copy
 import json
 import re
 from pathlib import Path
@@ -47,19 +48,11 @@ CHUNK1_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Gemini round-4 review (PR #140) flagged the punctuation "
         "inconsistency.",
     ),
-    (
-        "KV9",
-        "occupant_alt_names",
-        ["Tomb of Metempsychosis", "Tomb of Memnon"],
-        "PM p.511 prints TWO classical-traveller aliases: "
-        "`'Tomb of Metempsychosis', or 'Tomb of Memnon'`. The post-"
-        "postprocessor merge captured only `[\"Memnon\"]` — dropped the "
-        "Metempsychosis alias entirely AND stripped the `Tomb of` prefix "
-        "from the Memnon form. KV11's parallel `Bruce's tomb` keeps the "
-        "full PM-printed form; consistency requires KV9 do the same. "
-        "Egyptologist-reviewer printed-source pass on PM I.2 PDF "
-        "(2026-04-29 KV1-14 sweep) flagged as R1.",
-    ),
+    # KV9 occupant_alt_names correction superseded by AUDIT_FIX_CORRECTIONS
+    # (PR A, 2026-05-02): the two strings 'Tomb of Metempsychosis' /
+    # 'Tomb of Memnon' are TOMB-nicknames, not alternate-names of the
+    # occupant Ramesses VI. Migrated to the new `tomb_aliases` field; this
+    # row's `occupant_alt_names` is now `[]`.
 ]
 
 
@@ -697,6 +690,245 @@ CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK8_RENAMES: dict[str, str] = {}
 
 
+# === Audit-fix migration (issue: occupant_alt_names misuse) ==================
+#
+# Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
+#
+# Shape A — tomb nicknames stuffed in `occupant_alt_names` (which is meant
+# for alternate name forms of the SAME PERSON, e.g. throne-name vs personal-
+# name). Affected rows (4): KV9, KV11, KV17, KV23. The strings are aliases
+# of the TOMB (Belzoni's tomb, Bruce's tomb, local Arabic surveyor names),
+# not of its occupant.
+#
+# Shape B — joint occupants compounded into a single `occupant_name` string
+# with `" and "` / `", and "` (KV46 Yuia+Thuiu, SWV Three Princesses Menhet
+# +Merti+Menwi). The compound string is unjoinable against any king/person
+# authority and the per-occupant role is lost in the aggregate "Royal
+# Family" label.
+#
+# Fix:
+#   - Add `tomb_aliases: list[str]` field for tomb nicknames.
+#   - Add `co_occupants: list[{name, role, alt_names}]` field for additional
+#     people buried in the same tomb. Headword stays as the row-level
+#     `occupant_name` / `occupant_role` / `occupant_alt_names` triplet.
+#   - Migrate existing rows via SCHEMA_FIELD_DEFAULTS (adds the missing
+#     fields with `[]` defaults) + AUDIT_FIX_CORRECTIONS (moves values from
+#     `occupant_alt_names`/`occupant_name` to the correct fields).
+#
+# `occupant_alt_names` retains its honest meaning post-fix: ONLY alternate
+# readings of the SAME person's name (prenomens like the chunk-7 DAN-Antef
+# rows; transliteration variants; throne-name vs birth-name pairs).
+SCHEMA_FIELD_DEFAULTS: dict[str, object] = {
+    "tomb_aliases": [],
+    "co_occupants": [],
+    # PR A round-2 (egyptologist P1): explicit flag for joint coordinate
+    # burials where PM does NOT mark a principal occupant. Default False
+    # — the ordinary case is one tomb, one occupant (or one headword +
+    # subordinate co-occupants). When True, downstream consumers MUST
+    # treat `occupant_name` and `co_occupants[*].name` as a coordinate
+    # union for join purposes — the headword is a serialisation artifact,
+    # not a primacy claim. SWV-ThreePrincesses is the canonical case
+    # (PM lists Menhet/Merti/Menwi coordinately at p.591); KV46 is NOT
+    # (PM's syntactic-coordinate construction at p.562 marks Yuia as the
+    # subject — `YUIA ..., Divine father, AND THUIU ...`).
+    "is_joint_burial": False,
+}
+
+
+AUDIT_FIX_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    # ---- Shape A: tomb nicknames moved from occupant_alt_names → tomb_aliases.
+    (
+        "KV9",
+        "tomb_aliases",
+        ["Tomb of Metempsychosis", "Tomb of Memnon"],
+        "Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb "
+        "of Memnon' are 19th-c. classical-traveller nicknames for the TOMB "
+        "(Ramesses VI's KV9 was misidentified as Memnon's by early "
+        "European travellers), not alternate names of the occupant. "
+        "Migrated from occupant_alt_names to the new tomb_aliases field. "
+        "PM I.2 p.511 prints these in the headword parenthetical "
+        "`('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.",
+    ),
+    (
+        "KV9",
+        "occupant_alt_names",
+        [],
+        "Audit-fix (PR A): cleared after migrating tomb-nicknames to "
+        "tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` "
+        "(printed in PM as a hieroglyphic cartouche only, not as a "
+        "transcribed English variant) lives in pharaoh.se's authority "
+        "record, not in this row's `occupant_alt_names`. PR A round-2 "
+        "egyptologist clarification: empty list is correct here for "
+        "what PM prints in transcribed form.",
+    ),
+    (
+        "KV9",
+        "notes_from_pm",
+        "doorways in outer part usurped from Ramesses V.",
+        "PR A round-2 (egyptologist P2): restore the trailing period to "
+        "match PM I.2 p.511's sentence-final punctuation and the fix_rows "
+        "policy already applied to KV10 (`Inaccessible after Corridor B.`). "
+        "Pre-PR-A this row read without the period; one-character "
+        "punctuation drift relative to PM's printed text.",
+    ),
+    (
+        "KV11",
+        "tomb_aliases",
+        ["Bruce's tomb", "the Harper's tomb"],
+        "Audit-fix (PR A): 'Bruce's tomb' (after James Bruce, who entered "
+        "it 1768) and 'the Harper's tomb' (after the famous painted "
+        "harpist scene) are 19th-c. nicknames for the TOMB, not for "
+        "Ramesses III. Migrated to tomb_aliases. PM I.2 p.518 headword.",
+    ),
+    (
+        "KV11",
+        "occupant_alt_names",
+        [],
+        "Audit-fix (PR A): cleared after migrating tomb-nicknames to "
+        "tomb_aliases.",
+    ),
+    (
+        "KV17",
+        "tomb_aliases",
+        ["Belzoni's tomb"],
+        "Audit-fix (PR A): 'Belzoni's tomb' refers to Giovanni Battista "
+        "Belzoni, the tomb's 1817 discoverer — a TOMB-name, not an "
+        "alternate name of Sethos I. Migrated to tomb_aliases. PM I.2 "
+        "p.535 headword.",
+    ),
+    (
+        "KV17",
+        "occupant_alt_names",
+        [],
+        "Audit-fix (PR A): cleared after migrating tomb-nicknames to "
+        "tomb_aliases.",
+    ),
+    (
+        "KV23",
+        "tomb_aliases",
+        ["Eesa", "Schai"],
+        "Audit-fix (PR A): 'Eesa' is the local Arabic name for Ay's "
+        "tomb cited by Wilkinson in his West-Valley topography ('W. -2 "
+        "(\"Eesa\")'); 'Schai' is the Prisse / Nestor L'Hôte surveyor "
+        "designation for the same tomb. Both are TOMB-names from "
+        "19th-c. survey traditions, not alternate names of the king Ay. "
+        "Migrated to tomb_aliases. PM I.2 p.550 headword bibliographic "
+        "ribbon.",
+    ),
+    (
+        "KV23",
+        "occupant_alt_names",
+        [],
+        "Audit-fix (PR A): cleared after migrating tomb-nicknames to "
+        "tomb_aliases.",
+    ),
+    # ---- Shape B: joint occupants split into headword + co_occupants.
+    (
+        "KV46",
+        "occupant_name",
+        "Yuia",
+        "Audit-fix (PR A): split compound 'Yuia and Thuiu' into headword + "
+        "co_occupants. PM I.2 p.562 lists Yuia first ('YUIA ..., Divine "
+        "father, and THUIU ...'), so Yuia is the headword. Thuiu moves "
+        "to co_occupants below.",
+    ),
+    (
+        "KV46",
+        "occupant_role",
+        "Official",
+        "Audit-fix (PR A): per-person role replaces the aggregate 'Royal "
+        "Family' label. Yuia's title in PM is 'Divine father' (it-ntr) — "
+        "the standard Egyptian honorific given to the non-royal father "
+        "of a king's wife (here Queen Teye, wife of Amenhotep III). This "
+        "is a court title for a non-royal in-law, not a royal-family "
+        "designation. Role = 'Official'.",
+    ),
+    (
+        "KV46",
+        "co_occupants",
+        [
+            {
+                "name": "Thuiu",
+                "role": "Official",
+                "alt_names": [],
+            }
+        ],
+        "Audit-fix (PR A): Thuiu is the second occupant (wife of Yuia, "
+        "mother of Queen Teye). PM I.2 p.562 gives her title as 'Chief of "
+        "the harîm of Amūn', a religious-administrative court office for "
+        "a non-royal. Role = 'Official' (parallel to Yuia). No alternate "
+        "names attested in PM headword.",
+    ),
+    (
+        "KV46",
+        "is_joint_burial",
+        False,
+        "PR A round-2 (egyptologist P1): NOT a joint coordinate burial. "
+        "PM I.2 p.562 prints `YUIA ..., Divine father, AND THUIU ..., "
+        "Chief of the harîm of Amūn, parents of Queen Teye.` The "
+        "syntactic-coordinate construction marks Yuia as the subject + "
+        "principal occupant; museum jewellery from this tomb is "
+        "conventionally catalogued as 'from the tomb of Yuya and Thuyu' "
+        "with Yuya leading. Headword Yuia + co_occupant Thuiu correctly "
+        "reflects the asymmetry; no joint-burial flag needed.",
+    ),
+    (
+        "SWV-ThreePrincesses",
+        "occupant_name",
+        "Menhet",
+        "Audit-fix (PR A): split compound 'Menhet, Merti, and Menwi' into "
+        "headword + co_occupants. PM I.2 p.591 lists Menhet first; she "
+        "becomes the headword, the other two move to co_occupants.",
+    ),
+    (
+        "SWV-ThreePrincesses",
+        "co_occupants",
+        [
+            {
+                "name": "Merti",
+                "role": "Royal Family",
+                "alt_names": [],
+            },
+            {
+                "name": "Menwi",
+                "role": "Royal Family",
+                "alt_names": [],
+            },
+        ],
+        "Audit-fix (PR A): Merti and Menwi are the second and third "
+        "occupants. The conventional scholarly identification is that all "
+        "three were minor wives of Tuthmosis III (the Wadi Qubbanet "
+        "el-Qirud burial); whether 'wife' / 'queen' / 'princess' is the "
+        "correct per-person role is a scholarly call beyond this audit-"
+        "fix's scope. Preserved the existing 'Royal Family' aggregate "
+        "label across all three; refining per-person roles is a follow-"
+        "up for the egyptologist-reviewer once chunk 7 is re-extracted "
+        "with the new schema.",
+    ),
+    (
+        "SWV-ThreePrincesses",
+        "is_joint_burial",
+        True,
+        "PR A round-2 (egyptologist P1): TRUE — joint coordinate burial. "
+        "PM I.2 p.591 prints `TOMB OF THREE PRINCESSES, MENHET ..., "
+        "MERTI ..., AND MENWI ...` — three names listed coordinately on "
+        "a single line, with no syntactic primacy marker (compare KV46's "
+        "subject-coordinate construction). The choice of Menhet as "
+        "headword is a serialisation convention (PM lists her first, "
+        "Met catalogues canopic jars 26.8.41a-c first), NOT a primacy "
+        "claim. Setting `is_joint_burial=True` signals to downstream "
+        "Phase-A that `occupant_name` and `co_occupants[*].name` form a "
+        "coordinate union for join purposes — Met canopic jars "
+        "26.8.42a-c (Merti) and 26.8.43a-c (Menwi) must NOT be silently "
+        "merged onto Menhet's authority record because the row-level "
+        "headword is Menhet. Per Lilyquist 2003, *The Tomb of Three "
+        "Foreign Wives of Thutmose III*, all three were minor Syrian / "
+        "Levantine wives of Tuthmosis III; their non-Egyptian names + "
+        "individual canopic-jar sets confirm no hierarchical primacy.",
+    ),
+]
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -709,6 +941,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK5_CORRECTIONS,
     CHUNK7_CORRECTIONS,
     CHUNK8_CORRECTIONS,
+    AUDIT_FIX_CORRECTIONS,
 ]
 
 # `ALL_RENAMES` aggregates per-chunk `CHUNK<N>_RENAMES` dicts (only chunk 7
@@ -803,6 +1036,36 @@ def main() -> None:
     sort_key = _import_merge_sort_key()
     rows = sorted(by_id.values(), key=lambda r: sort_key(r["tomb_id"]))
 
+    # Schema field-add pass.
+    #
+    # Existing rows lack the `tomb_aliases` and `co_occupants` fields
+    # introduced by PR A — the agent prompts were written before those
+    # fields existed, so the 3-agent merge never emitted them. Add the
+    # fields with their default values (empty lists) before SPOT_CORRECTIONS
+    # runs, so the audit-fix corrections can populate them on the affected
+    # rows without KeyError.
+    #
+    # Idempotent: rows already carrying the field are not overwritten.
+    # `copy.deepcopy` defends against any future default that is a mutable
+    # nested structure being aliased across rows.
+    field_add_log: list[str] = []
+    for field, default in SCHEMA_FIELD_DEFAULTS.items():
+        added_for_rows: list[str] = []
+        for r in rows:
+            if field not in r:
+                r[field] = copy.deepcopy(default)
+                added_for_rows.append(r["tomb_id"])
+        if added_for_rows:
+            field_add_log.append(
+                f"- {field}: added with default {json.dumps(default, ensure_ascii=False)} "
+                f"to {len(added_for_rows)} row(s) "
+                f"(first/last: {added_for_rows[0]}, {added_for_rows[-1]})"
+            )
+        else:
+            field_add_log.append(
+                f"- {field}: present on every row already (no-op this run)"
+            )
+
     # Spot corrections.
     #
     # The log must describe the *state* of reconciled.jsonl, not the *delta*
@@ -847,6 +1110,8 @@ def main() -> None:
     body_sections: list[str] = []
     if rename_log:
         body_sections.append("Tomb-id renames:\n" + "\n".join(rename_log))
+    if field_add_log:
+        body_sections.append("Schema field additions:\n" + "\n".join(field_add_log))
     if override_log:
         body_sections.append("Field corrections:\n" + "\n".join(override_log))
     body = "\n\n".join(body_sections) if body_sections else (
