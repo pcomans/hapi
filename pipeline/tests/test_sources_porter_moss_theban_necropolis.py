@@ -308,9 +308,11 @@ def test_required_fields_present_on_every_row() -> None:
 def test_theban_area_constraint() -> None:
     """`theban_area` belongs to a known controlled vocabulary.
 
-    Forward-compatible: extend the allowlist as future chunks add
-    Dra' Abu el-Naga, Deir el-Bahri, Asasif, Sheikh Abd el-Qurna,
-    Khokha, Qurnet Mura'i, Deir el-Medina, Ramesseum, Medinet Habu.
+    Currently populated values across chunks 1–8: Valley of the Kings,
+    Valley of the Queens, South-West Valleys, Dra' Abu el-Naga. Forward-
+    compatible: extend the allowlist as future chunks add Deir el-Bahri,
+    Asasif, Sheikh Abd el-Qurna, Khokha, Qurnet Mura'i, Deir el-Medina,
+    Ramesseum, Medinet Habu (PM I.1 Appendix-D Theban sub-site list).
     """
     valid = {
         "Valley of the Kings",
@@ -865,7 +867,7 @@ def test_chunk2_page_range() -> None:
 
 
 def test_chunk2_all_rows_in_valley_of_kings_no_dynasty_or_dates() -> None:
-    """Every chunk-2 row has valley=VoK and null dynasty/dates/discoverer —
+    """Every chunk-2 row has theban_area=VoK and null dynasty/dates/discoverer —
     same extraction-stage discipline as chunk 1.
     """
     for tid in CHUNK2_TOMB_IDS:
@@ -1163,8 +1165,8 @@ def test_chunk3_page_range() -> None:
         assert r["source_citation"]["section"] == "I.A"
 
 
-def test_chunk3_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
-    """Every chunk-3 row has valley=VoK and null dynasty/dates/discoverer —
+def test_chunk3_all_rows_in_valley_of_kings_no_dynasty_or_dates() -> None:
+    """Every chunk-3 row has theban_area=VoK and null dynasty/dates/discoverer —
     same extraction-stage discipline as chunks 1 and 2.
 
     `is_unfinished` and `shared_with_tombs` are pinned per-row in the
@@ -1581,8 +1583,8 @@ def test_chunk4_page_range() -> None:
         assert r["source_citation"]["section"] == "I.A"
 
 
-def test_chunk4_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
-    """Every chunk-4 row has valley=VoK and null dynasty/dates/discoverer."""
+def test_chunk4_all_rows_in_valley_of_kings_no_dynasty_or_dates() -> None:
+    """Every chunk-4 row has theban_area=VoK and null dynasty/dates/discoverer."""
     for tid in CHUNK4_TOMB_IDS:
         r = _row(tid)
         assert r["theban_area"] == "Valley of the Kings"
