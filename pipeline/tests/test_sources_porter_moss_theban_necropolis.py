@@ -566,10 +566,15 @@ def test_all_prompts_mention_new_pr_a_fields() -> None:
         # using "valley" as an English word — e.g. describing PM's
         # section structure — is fine; we test the JSON field-key form
         # specifically by requiring the quotes.)
-        for legacy in ('"valley"', "'valley'"):
+        for legacy in (
+            '"valley"',     # standard JSON key
+            "'valley'",     # single-quoted variant (Gemini round-2)
+            "`valley`",     # markdown backtick reference (Gemini round-3)
+            "### valley",   # markdown section header (Gemini round-3)
+        ):
             assert legacy not in text, (
                 f"{prompt.name}: prompt still references the obsolete "
-                f"JSON field key `{legacy}` — rename to `\"theban_area\"` "
+                f"JSON field key `{legacy}` — rename to `theban_area` "
                 f"(PR #170)."
             )
 
