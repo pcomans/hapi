@@ -528,13 +528,17 @@ def _occupant_role_controlled_vocab() -> set[str]:
 
 def test_all_prompts_mention_new_pr_a_fields() -> None:
     """Every PM extraction prompt mentions `tomb_aliases` AND `co_occupants`
-    AND `is_joint_burial` (PR #169 code-reviewer P2-3). Future chunks copy
-    from these prompts; if a chunk-9+ prompt is written by copying chunk-1's
-    pre-PR-A body without the new schema header, agents emit no values for
-    the new fields, `SCHEMA_FIELD_DEFAULTS` silently fills `[]`/`False`,
-    and a tomb that genuinely has tomb-nicknames or joint occupants
-    suffers data loss with no failing test (the `[]` row passes every
-    other structural test).
+    AND `is_joint_burial` AND `theban_area` (PR #169 code-reviewer P2-3 +
+    PR #170 code-reviewer P2-2). Conversely, no prompt mentions the
+    obsolete `"valley"` JSON key — the field was renamed in PR #170 and
+    a stale prompt template would silently produce data under the wrong
+    key, which `merge.py`'s field-union would carry through.
+
+    Future chunks copy from these prompts; if a chunk-9+ prompt is written
+    by copying chunk-1's pre-PR-A body without the new schema header,
+    agents emit no values for the new fields and `SCHEMA_FIELD_DEFAULTS`
+    silently fills `[]`/`False` — a tomb that genuinely has tomb-
+    nicknames or joint occupants suffers data loss with no failing test.
 
     This is the rule-3 "deterministic enforcement over markdown convention"
     case — the prompt-update discipline must be a CI check.
@@ -543,12 +547,48 @@ def test_all_prompts_mention_new_pr_a_fields() -> None:
     assert prompt_files, "no prompt*.md files found"
     for prompt in prompt_files:
         text = prompt.read_text()
-        for field in ("tomb_aliases", "co_occupants", "is_joint_burial"):
+        for field in (
+            "tomb_aliases",
+            "co_occupants",
+            "is_joint_burial",
+            "theban_area",
+        ):
             assert field in text, (
                 f"{prompt.name}: prompt does not mention `{field}` — "
                 f"agents using this prompt will not emit the field, and "
                 f"SCHEMA_FIELD_DEFAULTS will silently fill the default."
             )
+        # No prompt may carry the obsolete `"valley"` JSON key — that field
+        # was renamed to `theban_area` in PR #170. Stale templates would
+        # produce data under the wrong key and the merge would propagate
+        # it. (Body text using "valley" as an English word — e.g.
+        # describing PM's section structure — is fine; we test the JSON
+        # field-key form specifically.)
+        assert '"valley"' not in text, (
+            f"{prompt.name}: prompt still references the obsolete JSON "
+            f'field key `"valley"` — rename to `"theban_area"` (PR #170).'
+        )
+
+
+def test_no_legacy_valley_field_key_in_reconciled() -> None:
+    """No row in `reconciled.jsonl` carries the obsolete `valley` field
+    key after the PR #170 rename (PR #170 code-reviewer P2-1).
+
+    `raw/agent-*.jsonl` files are gitignored, but `merge.py` is field-
+    name-agnostic — it picks fields from the union of agent emissions.
+    If a stale agent re-runs against an unmigrated chunk-7+ prompt and
+    emits `"valley"`, a re-merge would silently regenerate the obsolete
+    key on disk. This test catches that drift mechanically.
+
+    Belt-and-braces against `test_all_prompts_mention_new_pr_a_fields`'s
+    upstream check on the prompt files themselves.
+    """
+    for r in _rows():
+        assert "valley" not in r, (
+            f"{r['tomb_id']}: row carries the obsolete `valley` field key "
+            f"— rename to `theban_area` (PR #170). Most likely cause: a "
+            f"stale agent JSONL was re-merged."
+        )
 
 
 def test_kv_rows_have_kv_tomb_id() -> None:
