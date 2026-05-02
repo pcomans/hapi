@@ -47,7 +47,7 @@ Every row MUST have these keys; use `null` for unknown values.
 ```json
 {
   "tomb_id": "KV<N>",
-  "valley": "Valley of the Kings",
+  "theban_area": "Valley of the Kings",
   "occupant_name": "...",
   "occupant_alt_names": [...],
   "tomb_aliases": [...],
@@ -74,7 +74,7 @@ Every row MUST have these keys; use `null` for unknown values.
 
 `KV<N>`. Normalise `6z.` → `62.`, or whatever the text layer emitted back to the Arabic tomb number.
 
-### `valley`
+### `theban_area`
 
 Always `"Valley of the Kings"`.
 

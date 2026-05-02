@@ -67,7 +67,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 ```json
 {
   "tomb_id": "KV<N>",
-  "valley": "Valley of the Kings",
+  "theban_area": "Valley of the Kings",
   "occupant_name": "...",
   "occupant_alt_names": [...],
   "tomb_aliases": [...],
@@ -94,7 +94,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 
 `KV<N>` where `<N>` is the Arabic-numeral tomb number recovered from the heading line. Normalise any Roman-via-`I` rendering back to Arabic (`II` → `11`, `I2` → `12`, `I 3` → `13`, `I4` → `14`, `I8` → `18`). Expected range: KV11–KV20 (10 rows). If you find a KV21 headword, re-check — the chunk description says KV21 is absent.
 
-### `valley`
+### `theban_area`
 
 Always exactly `"Valley of the Kings"` for this chunk (PM I.2 § I.A is "Valley of the Kings — A. Tombs").
 

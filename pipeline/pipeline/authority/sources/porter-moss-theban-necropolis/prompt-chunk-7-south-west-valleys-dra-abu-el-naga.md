@@ -85,7 +85,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 ```json
 {
   "tomb_id": "...",
-  "valley": "...",
+  "theban_area": "...",
   "occupant_name": "...",
   "occupant_alt_names": [...],
   "tomb_aliases": [...],
@@ -139,7 +139,7 @@ And **OCCUPANT-DESCRIPTOR** is a compact identifier:
 
 **Single-multi-occupant tombs:** `Tomb of Three Princesses, Menhet, Menui, Merti` is ONE tomb with three occupants. Emit ONE row with `occupant_name: "Menhet, Menui, and Merti"` (comma-joined, PM's order, `and` before the last), `occupant_role: "Royal Family"`, and `notes_from_pm` preserving any PM qualifier ("wives of Tuthmosis III" etc.).
 
-## `valley`
+## `theban_area`
 
 - `"South-West Valleys"` for § II.A, § II.B rows.
 - `"Dra' Abu el-Naga"` for § III.A, § III.C, § III.D rows. Use ASCII apostrophe (not Unicode ʻ) per the chunk-1 convention.

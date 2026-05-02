@@ -52,7 +52,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 ```json
 {
   "tomb_id": "KV<N>",
-  "valley": "Valley of the Kings",
+  "theban_area": "Valley of the Kings",
   "occupant_name": "...",
   "occupant_alt_names": [...],
   "tomb_aliases": [...],
@@ -79,7 +79,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 
 `KV<N>` where `<N>` is the Arabic tomb number from the heading line. Expected set: {47, 48, 55, 56, 57}.
 
-### `valley`
+### `theban_area`
 
 Always `"Valley of the Kings"`.
 
