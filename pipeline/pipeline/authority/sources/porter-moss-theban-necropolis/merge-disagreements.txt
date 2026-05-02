@@ -122,7 +122,7 @@ signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
 Per-chunk correction counts:
-- Chunk 1: 2 correction(s) defined in CHUNK1_CORRECTIONS.
+- Chunk 1: 1 correction(s) defined in CHUNK1_CORRECTIONS.
 - Chunk 2: 5 correction(s) defined in CHUNK2_CORRECTIONS.
 - Chunk 3: 10 correction(s) defined in CHUNK3_CORRECTIONS.
 - Chunk 4: 2 correction(s) defined in CHUNK4_CORRECTIONS.
@@ -136,141 +136,124 @@ Tomb-id renames:
 - DAN-KamoseWadjkheperre → DAN-KamosiWazkheperre (already renamed; no-op this run)
 - DAN-MentuhotpIWifeOfDjehuti → DAN-MentuhotpIWifeOfDjhuti (already renamed; no-op this run)
 
+Schema field additions:
+- tomb_aliases: present on every row already (no-op this run)
+- co_occupants: present on every row already (no-op this run)
+
 Field corrections:
-- KV10: notes_from_pm corrected this run (PM p.517 headword prints `Inaccessible after Corridor B.` with a trailing period (chunk-1 line 870). Post-postprocessor agents dropped the period; restore via override per the README's notes_from_pm verbatim-preserve policy and to match the punctuation handling on KV14/KV19/KV22/KV23/KV43/KV45 etc. Gemini round-4 review (PR #140) flagged the punctuation inconsistency.)
-    was: "Inaccessible after Corridor B"
-    now: "Inaccessible after Corridor B."
-- KV9: occupant_alt_names corrected this run (PM p.511 prints TWO classical-traveller aliases: `'Tomb of Metempsychosis', or 'Tomb of Memnon'`. The post-postprocessor merge captured only `["Memnon"]` — dropped the Metempsychosis alias entirely AND stripped the `Tomb of` prefix from the Memnon form. KV11's parallel `Bruce's tomb` keeps the full PM-printed form; consistency requires KV9 do the same. Egyptologist-reviewer printed-source pass on PM I.2 PDF (2026-04-29 KV1-14 sweep) flagged as R1.)
-    was: ["Memnon"]
-    now: ["Tomb of Metempsychosis", "Tomb of Memnon"]
-- KV12: occupant_role corrected this run (prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
-    was: null
-    now: "Unknown"
-- KV13: notes_from_pm corrected this run (Strip 'Chancellor.' prefix (already encoded as occupant_role=Official). Preserve PM's underdot-Ḥ in the verbatim-preserve `notes_from_pm` field — earlier override incorrectly applied the strip-ḥ rule (which is for occupant_name only, the matchable-name field) to notes. Egyptologist-reviewer printed-source pass on PM I.2 PDF (2026-04-29 KV1-14 sweep) flagged as R2: PM p.527 prints `Temp. Merneptaḥ-Siptaḥ` with both ḥ underdots; this aligns with the chunk-7 sibling overrides for DAN-Ahhotep / DAN-AhmosiHenutempet / DAN-AhmosiSonOfSeqenenre that already preserve underdots in notes_from_pm.)
-    was: "Chancellor. Temp. Merneptah-Siptah."
-    now: "Temp. Merneptaḥ-Siptaḥ."
-- KV18: notes_from_pm corrected this run (strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
-    was: "(formerly XI)"
-    now: "formerly XI"
-- KV19: occupant_name corrected this run (PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
-    was: "Raʿmeses-Mentuḥirkhopshef"
-    now: "Raʿmeses-Mentuhirkhopshef"
-- KV20: occupant_name corrected this run (Strip underdot-H (Ḥ → H) per README's matchable-name-field diacritic-stripping convention. Pre-postprocessor (PR #140), the publisher OCR's variant cap-Ḥ glyphs (`I:I` in `I:Iatshepsut`) led the agents to emit plain `Hatshepsut` after their own case-aware normalisation; post-postprocessor the agents see canonical Unicode `Ḥ` and one or more carry the diacritic into occupant_name despite the README rule. Align here.)
-    was: "Ḥatshepsut"
-    now: "Hatshepsut"
-- KV22: notes_from_pm corrected this run (PM p.547 headword excavator clause `Excavated by Davis, and by Carnarvon and Carter, see CARTER and MACE...` — same shape as KV23/KV43/KV45 excavator clauses. (KV35/KV47/KV48 do NOT print explicit `Excavated by` clauses — Loret/Davis/Carter are cited via publication titles only — so no override is needed there.) The post-postprocessor rerun's three agents all dropped this `Excavated by ...` tail from notes_from_pm even though the postprocessor surfaced it cleanly. Restore via override (egyptologist-reviewer flagged as R1 in PR #140 review).)
-    was: null
-    now: "Excavated by Davis, and by Carnarvon and Carter."
-- KV23: notes_from_pm corrected this run (PM p.550 headword excavator clause `Excavated by Belzoni, see id. Narrative of the Researches ... in Egypt and Nubia, pp. 123-4.` — same systemic dropout as KV22. Egyptologist-reviewer flagged as R2 in PR #140 review.)
-    was: null
-    now: "Excavated by Belzoni."
-- KV38: notes_from_pm corrected this run (PM p.557 headword excavator clause `Excavated by Loret, see DAVIS, &c., The Tomb of Hatshopsttu, p. xiv...` (chunk-3 line 393) — same R1/R2 systemic loss as KV22/KV23/KV43/KV45. The egyptologist-reviewer's spot-check missed this one but the shape is identical: headword bibliographic-ribbon excavator clause that the post-postprocessor agents stripped.)
-    was: null
-    now: "Excavated by Loret."
-- KV34: notes_from_pm corrected this run (PM p.551 headword prints `34. [1st ed. 24] TUTHMOSIS III`. The postprocessor normalises `[Ist|rst|xst ed.` → `[1st ed.` at chunk-text level, so the agents now see the canonical form, but all three still drop the bracketed cross-ref entirely from notes_from_pm — they treat it as a section reference rather than headword content. Restore the PM-verbatim `1st ed. 24` string. Parallel in shape to chunk-1 KV4 'formerly XII' and chunk-2 KV18 'formerly XI'.)
-    was: null
-    now: "1st ed. 24"
-- KV39: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.559 prints 'Uninscribed tomb, attributed to Amenophis I by Weigall...'; agents emitted null despite the rule.)
-    was: null
-    now: "Unknown"
-- KV42: notes_from_pm corrected this run (PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own attribution-uncertainty marker. Keep occupant_name structured as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes (no paraphrase, per rule 1 PM-verbatim policy). Preserve the existing 'Excavated by Loret' headword clause; join with '. ' per chunk-2 KV14.)
-    was: "Attribution uncertain (?)."
-    now: "(?). Excavated by Loret"
-- KV36: notes_from_pm corrected this run (PM p.556 prints `Temp. Ḥatshepsut.` with underdot-Ḥ in body text (the strip-ḥ rule applies to occupant_name only — the matchable-name field — NOT to notes_from_pm, which is verbatim-preserve). The post-postprocessor merge produced plain `Hatshepsut` in this notes field; restore the underdot. Direct R7 parallel to the DAN-Ahhotep / DAN-AhmosiHenutempet / DAN-AhmosiSonOfSeqenenre fix_rows entries that already restore ḥ/ḳ in their notes fields. Egyptologist-reviewer printed-source pass on PM I.2 PDF (post-merge, 2026-04-29) flagged this as R-NEW-1.)
-    was: "Standard-bearer, Child of the nursery. Temp. Hatshepsut. Excavated by Loret."
-    now: "Standard-bearer, Child of the nursery. Temp. Ḥatshepsut. Excavated by Loret."
-- KV43: notes_from_pm corrected this run (PM p.559 headword excavator clause for KV43 (Tuthmosis IV) — same systemic R1/R2 dropout: post-postprocessor agents lost the `Excavated by ...` tail. Egyptologist-reviewer flagged as R1/R2/R4 sibling.)
-    was: null
-    now: "Excavated by Davis."
-- KV46: notes_from_pm corrected this run (PM p.562 prints a single declarative sentence: `YUIA ..., Divine father, and THUIU ..., Chief of the harîm of Amūn, parents of Queen Teye.` — circumflex-î in `harîm`, macron-ū in `Amūn`. The post-postprocessor merge restructured it into a `Yuia: ... ; Thuiu: ... ;` agent-list with prefixes AND dropped both diacritics. Restore PM-verbatim by dropping the `Yuia:` / `Thuiu:` prefixes (those duplicate occupant_name='Yuia and Thuiu') and keeping only the role-clauses joined by `, and`. Egyptologist-reviewer printed-source pass flagged as R-NEW-3.)
-    was: "Yuia: Divine father; Thuiu: Chief of the harim of Amun; parents of Queen Teye."
-    now: "Divine father, and Chief of the harîm of Amūn, parents of Queen Teye."
-- KV45: notes_from_pm corrected this run (PM p.562 headword reads `Overseer of the Fields of Amūn, Dyn. XVIII, re-used by MERENKHONS, Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). Excavated by Davis and Carter.` Two regressions to address: (1) the `Excavated by Davis and Carter.` tail was dropped by post-postprocessor agents (R1/R2 systemic loss); (2) PM prints `Amūn` (twice) with macron-ū AND uses `,` (not `;`) after `Dyn. XVIII`. The merged-value body had stripped both macrons and substituted `;` for `,`. Egyptologist-reviewer printed-source pass on PM I.2 PDF (post-merge, 2026-04-29) flagged macron-loss as R-NEW-2 and self-acknowledged the `;`-vs-`,` paraphrase; restoring all three at once for full PM-verbatim alignment.)
-    was: "Overseer of the Fields of Amun, Dyn. XVIII; re-used by Merenkhons, Doorkeeper of the House of Amun, Dyn. XXII (name from scarab)."
-    now: "Overseer of the Fields of Amūn, Dyn. XVIII, re-used by Merenkhons, Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). Excavated by Davis and Carter."
-- KV55: notes_from_pm corrected this run (The text-layer OCR for chunk 4 drops PM's macron-e and renders the ayin as `c` (`Smenkhkarec`); agents carried that through to the reconciled notes. Egyptologist-reviewer pre-merge pass on PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both the macron and the trailing ayin, and confirmed the sentence-final period closes PM's sentence. notes_from_pm is verbatim-preserve against PM's printed text (not against the OCR text layer) — restore both diacritics.)
-    was: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkare."
-    now: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
-- KV56: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)
-    was: null
-    now: "Unknown"
-- DAN-Aqhor: occupant_name corrected this run (PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES. Underdot-H stripped to plain `h` per README's matchable-name-field convention (Gemini round-3 sweep on PR #101). ḳ (underdot-K) preserved as a distinguishing radical.)
-    was: "ʿAq-hor"
-    now: "ʿAḳ-hor"
-- DAN-Aqhor: occupant_role corrected this run (`Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
-    was: "Royal Family"
-    now: "Official"
-- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm corrected this run (PM p.604 prints sentence-form `QUEEN MENTUḤOTP¹, wife of King Ḏḥuti` where `Ḏ` is d with bar/macron — the standard Egyptological transliteration of the d-emphatic, same character as in `Ḏḥwty`/Thoth (NOT `Ḍ` d-with-underdot, which is a different consonant in Semitic transliteration). The earlier P1 finding on PR #100 caught the OCR `Ql_J.uti` → `Djhuti` diacritic loss but installed the WRONG underdot consonant `Ḍ`; egyptologist printed-source review on PR #151 corrected `Ḍ` → `Ḏ` after direct PDF read of p.604. Wrong-consonant risk: `Ḍḥuti` would never match against TLA / Trismegistos / museum data using `Ḏḥuti`. tomb_id `DAN-MentuhotpIWifeOfDjhuti` (descriptor) intentionally retains ASCII `Djhuti` for filename safety; the PM-verbatim consonant `Ḏ` lives in `notes_from_pm`.)
-    was: "Wife of King Djhuti."
-    now: "Wife of King Ḏḥuti. Found in tomb by Passalacqua."
-- DAN-AhmosiNefertere: notes_from_pm corrected this run (Egyptologist-reviewer P2 finding on PR #100 (reviewer-notes-chunk7.md): PM p.599-600 §III.C headword spells out the Carter attribution history in detail ('attributed to Amenophis I by Carter; Černý equates with House of Amenophis of the Garden'); the pre-review note dropped the Černý follow-up. Restore verbatim per the reviewer's citation of the full attribution-history clause. tomb_id renamed via CHUNK7_RENAMES.)
-    was: "Tomb of Queen ʿAhmosi Nefertere (probably)."
-    now: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with 'House of Amenophis of the Garden'."
-- DAN-MentuhotpIWifeOfDjhuti: occupant_name corrected this run (Agents preserve PM's `Queen` prefix from the headword (`QUEEN MENTUHOTP I, wife of King Ḍḥuti`); the project-wide convention is to encode the title in `occupant_role` and keep `occupant_name` as the bare regnal name. Strip the prefix here.)
-    was: "Queen Mentuhotp I"
-    now: "Mentuhotp I"
-- DAN-AntefSehertaui: occupant_name corrected this run (Strip parenthetical prenomen `(Sehertaui)`; alt_names retains it. R6 in egyptologist-reviewer PR #140 review.)
-    was: "Antef (Sehertaui)"
-    now: "Antef"
-- DAN-AntefWahankh: occupant_name corrected this run (Strip parenthetical prenomen `(Wahankh)`; alt_names retains it.)
-    was: "Antef (Wahankh)"
-    now: "Antef"
-- DAN-AntefNubkheperre: occupant_name corrected this run (Strip parenthetical prenomen `(Nubkheperreʿ)`; alt_names retains it.)
-    was: "Antef (Nubkheperreʿ)"
-    now: "Antef"
-- DAN-AntefSekhemreHeruhirmaet: occupant_name corrected this run (Strip parenthetical prenomen `(Sekhemreʿ-Heruhirmaʿet)`; alt_names retains it.)
-    was: "Antef (Sekhemreʿ-Heruhirmaʿet)"
-    now: "Antef"
-- DAN-AntefSekhemreWepmaet: occupant_name corrected this run (Strip parenthetical prenomen `(Sekhemreʿ-Wepmaʿet)`; alt_names retains it.)
-    was: "Antef (Sekhemreʿ-Wepmaʿet)"
-    now: "Antef"
-- DAN-KamosiWazkheperre: occupant_name corrected this run (Strip parenthetical prenomen `(Wazkheperreʿ)`; alt_names retains it.)
-    was: "Kamosi (Wazkheperreʿ)"
-    now: "Kamosi"
-- DAN-SebkemsafSekhemreShedtaui: occupant_name corrected this run (Strip parenthetical prenomen `(Sekhemreʿ-Shedtaui)`; alt_names retains it.)
-    was: "Sebkemsaf II (Sekhemreʿ-Shedtaui)"
-    now: "Sebkemsaf II"
-- DAN-Ahhotep: notes_from_pm corrected this run (Restore underdot-K (ḳ) in `Seḳenenreʿ-Taʿa` per README's notes_from_pm verbatim-preserve policy. PM p.600 prints Seḳenenreʿ-Taʿa with the underdot.)
-    was: "Wife of King Seqenenreʿ-Taʿa. Found by Mariette in 1859."
-    now: "Wife of King Seḳenenreʿ-Taʿa. Found by Mariette in 1859."
-- DAN-AhmosiHenutempet: notes_from_pm corrected this run (Restore underdot-H (ḥ) in `ʿAḥḥotp` and underdot-K (ḳ) in `Seḳenenreʿ-Taʿa` per README's notes_from_pm verbatim-preserve policy. PM p.605 prints both underdots in headword. Drop the `Coffin possibly from here.` tail the post-postprocessor agents added — that comes from the find-list line below the headword (`Coffin, possibly from here, formerly in possession of Castellari`) which is body content, not headword.)
-    was: "Daughter of ʿAhhotp (wife of King Seqenenreʿ-Taʿa). Coffin possibly from here."
-    now: "Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa)."
-- DAN-AhmosiSonOfSeqenenre: notes_from_pm corrected this run (Restore underdot-K and underdot-H per README's notes_from_pm verbatim-preserve policy.)
-    was: "Eldest son of King Seqenenreʿ-Taʿa and ʿAhhotp."
-    now: "Eldest son of King Seḳenenreʿ-Taʿa and ʿAḥḥotp."
-- DAN-AhmosiHenutempet: occupant_role corrected this run (Daughter of a queen-consort; standard Egyptological convention is `Princess` for daughters of kings. The OLD merged value was `Princess`; post-postprocessor agents picked `Royal Family` (more generic). Egyptologist-reviewer R8 in PR #140 review.)
-    was: "Royal Family"
-    now: "Princess"
-- DAN-KamosiWazkheperre: notes_from_pm corrected this run (Restore the dropped pyramid cross-ref `For pyramid, possibly of Kamosi, see infra, p. 620.` from PM p.600 headword tail. Egyptologist-reviewer R9 in PR #140 review.)
-    was: "Found by Mariette in 1857."
-    now: "Found by Mariette in 1857. For pyramid, possibly of Kamosi, see infra, p. 620."
-- DAN-AntefNubkheperre: notes_from_pm corrected this run (Restore the dropped pyramid cross-ref `Pyramid, see HAY MSS. 29816.` from PM p.602 headword tail. Egyptologist-reviewer R10 in PR #140 review.)
-    was: "Found by Mariette in 1860."
-    now: "Found by Mariette in 1860. Pyramid, see Hay MSS. 29816."
-- DAN-Neferhotep: notes_from_pm corrected this run (PM p.604 prints `Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13.` — circumflex-î in `Harîm`, macron-ē in `Nubkheperrēʿ`. The post-postprocessor merge stripped both diacritics. Restore per the verbatim-preserve policy on notes_from_pm. Egyptologist-reviewer printed-source pass flagged as R-NEW-4.)
-    was: "Scribe of the Great Harim, probably temp. Antef (Nubkheperreʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13."
-    now: "Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13."
-- DAN-SebkemsafSekhemreShedtaui: notes_from_pm corrected this run (Same R9/R10 systemic clause-loss: post-postprocessor agents dropped the pyramid cross-ref from PM p.604 headword tail. Restore.)
-    was: null
-    now: "Pyramid behind Theb. tb. 24, perhaps belonging to this tomb."
-- SWV-HatshepsutSouth: notes_from_pm corrected this run (Restore the `, quartzite, in Cairo Mus. Ent. 47032` object-cite tail from PM p.591 headword. Egyptologist-reviewer R5 in PR #140 review.)
-    was: "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
-    now: "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite, in Cairo Mus. Ent. 47032."
-- QV36: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A PRINCESS, no name.')
-    was: null
-    now: "Unknown"
-- QV40: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A QUEEN, cartouche blank.')
-    was: null
-    now: "Unknown"
-- QV73: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.767 headword is 'A PRINCESS, no name. Dyn. XX.')
-    was: null
-    now: "Unknown"
-- QV75: occupant_role corrected this run (prompt rule 1: role='Unknown' when occupant_name is null. PM p.768 headword is 'A QUEEN, no name.')
-    was: null
-    now: "Unknown"
-- QV47: notes_from_pm corrected this run (PM p.755 prints the mother's name as 'Sit-ḏḥout' with `ḏ` (d with bar/macron — the standard Egyptological transliteration of the d-emphatic, same character used for the deity Ḏḥuti/Thoth `Ḏḥwty`). Egyptologist printed-source review on PR #151 corrected this from the previous `ḍ` (d with underdot) — different consonants representing different sounds in standard Erman/Grapow/Hannig transliteration. The text-layer OCR renders the ḏḥ digraph as 'gQ.' (drops the bar-D entirely and renders the ḥ as `Q` + period) — this exact source token `Sit-gQ.out` is the one place this bigram appears in any chunk, and the postprocessor's substring substitution normalises it. The override here is the egyptologist-reviewer's PM-verbatim sentence-restoration (complete clause + bibliographic ribbon tail).)
-    was: "daughter of Seḳenenreʿ-Taʿa and Sit-ḏḥout. Dyn. XVII."
-    now: "daughter of Seḳenenreʿ-Taʿa and Sit-ḏḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
+- KV10: notes_from_pm already matches override (no-op this run; PM p.517 headword prints `Inaccessible after Corridor B.` with a trailing period (chunk-1 line 870). Post-postprocessor agents dropped the period; restore via override per the README's notes_from_pm verbatim-preserve policy and to match the punctuation handling on KV14/KV19/KV22/KV23/KV43/KV45 etc. Gemini round-4 review (PR #140) flagged the punctuation inconsistency.)
+    value: "Inaccessible after Corridor B."
+- KV12: occupant_role already matches override (no-op this run; prompt rule 1 says role='Unknown' when occupant_name is null; PM p.527 headword is 'UNINSCRIBED' and all three agents still emit null despite the rule.)
+    value: "Unknown"
+- KV13: notes_from_pm already matches override (no-op this run; Strip 'Chancellor.' prefix (already encoded as occupant_role=Official). Preserve PM's underdot-Ḥ in the verbatim-preserve `notes_from_pm` field — earlier override incorrectly applied the strip-ḥ rule (which is for occupant_name only, the matchable-name field) to notes. Egyptologist-reviewer printed-source pass on PM I.2 PDF (2026-04-29 KV1-14 sweep) flagged as R2: PM p.527 prints `Temp. Merneptaḥ-Siptaḥ` with both ḥ underdots; this aligns with the chunk-7 sibling overrides for DAN-Ahhotep / DAN-AhmosiHenutempet / DAN-AhmosiSonOfSeqenenre that already preserve underdots in notes_from_pm.)
+    value: "Temp. Merneptaḥ-Siptaḥ."
+- KV18: notes_from_pm already matches override (no-op this run; strip parentheses to match chunk-1's KV4 pattern ('formerly XII' without parens).)
+    value: "formerly XI"
+- KV19: occupant_name already matches override (no-op this run; PM p.546 headword prints MENTUHIRKHOPSHEF with plain H (no underdot glyph in the text layer); agents over-normalised to Mentuḥirkhopshef. Align with chunk-1's no-underdot convention.)
+    value: "Raʿmeses-Mentuhirkhopshef"
+- KV20: occupant_name already matches override (no-op this run; Strip underdot-H (Ḥ → H) per README's matchable-name-field diacritic-stripping convention. Pre-postprocessor (PR #140), the publisher OCR's variant cap-Ḥ glyphs (`I:I` in `I:Iatshepsut`) led the agents to emit plain `Hatshepsut` after their own case-aware normalisation; post-postprocessor the agents see canonical Unicode `Ḥ` and one or more carry the diacritic into occupant_name despite the README rule. Align here.)
+    value: "Hatshepsut"
+- KV22: notes_from_pm already matches override (no-op this run; PM p.547 headword excavator clause `Excavated by Davis, and by Carnarvon and Carter, see CARTER and MACE...` — same shape as KV23/KV43/KV45 excavator clauses. (KV35/KV47/KV48 do NOT print explicit `Excavated by` clauses — Loret/Davis/Carter are cited via publication titles only — so no override is needed there.) The post-postprocessor rerun's three agents all dropped this `Excavated by ...` tail from notes_from_pm even though the postprocessor surfaced it cleanly. Restore via override (egyptologist-reviewer flagged as R1 in PR #140 review).)
+    value: "Excavated by Davis, and by Carnarvon and Carter."
+- KV23: notes_from_pm already matches override (no-op this run; PM p.550 headword excavator clause `Excavated by Belzoni, see id. Narrative of the Researches ... in Egypt and Nubia, pp. 123-4.` — same systemic dropout as KV22. Egyptologist-reviewer flagged as R2 in PR #140 review.)
+    value: "Excavated by Belzoni."
+- KV38: notes_from_pm already matches override (no-op this run; PM p.557 headword excavator clause `Excavated by Loret, see DAVIS, &c., The Tomb of Hatshopsttu, p. xiv...` (chunk-3 line 393) — same R1/R2 systemic loss as KV22/KV23/KV43/KV45. The egyptologist-reviewer's spot-check missed this one but the shape is identical: headword bibliographic-ribbon excavator clause that the post-postprocessor agents stripped.)
+    value: "Excavated by Loret."
+- KV34: notes_from_pm already matches override (no-op this run; PM p.551 headword prints `34. [1st ed. 24] TUTHMOSIS III`. The postprocessor normalises `[Ist|rst|xst ed.` → `[1st ed.` at chunk-text level, so the agents now see the canonical form, but all three still drop the bracketed cross-ref entirely from notes_from_pm — they treat it as a section reference rather than headword content. Restore the PM-verbatim `1st ed. 24` string. Parallel in shape to chunk-1 KV4 'formerly XII' and chunk-2 KV18 'formerly XI'.)
+    value: "1st ed. 24"
+- KV39: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.559 prints 'Uninscribed tomb, attributed to Amenophis I by Weigall...'; agents emitted null despite the rule.)
+    value: "Unknown"
+- KV42: notes_from_pm already matches override (no-op this run; PM p.559 prints 'TUTHMOSIS II (?)' — the `(?)` is PM's own attribution-uncertainty marker. Keep occupant_name structured as 'Tuthmosis II'; record PM's `(?)` glyph verbatim in notes (no paraphrase, per rule 1 PM-verbatim policy). Preserve the existing 'Excavated by Loret' headword clause; join with '. ' per chunk-2 KV14.)
+    value: "(?). Excavated by Loret"
+- KV36: notes_from_pm already matches override (no-op this run; PM p.556 prints `Temp. Ḥatshepsut.` with underdot-Ḥ in body text (the strip-ḥ rule applies to occupant_name only — the matchable-name field — NOT to notes_from_pm, which is verbatim-preserve). The post-postprocessor merge produced plain `Hatshepsut` in this notes field; restore the underdot. Direct R7 parallel to the DAN-Ahhotep / DAN-AhmosiHenutempet / DAN-AhmosiSonOfSeqenenre fix_rows entries that already restore ḥ/ḳ in their notes fields. Egyptologist-reviewer printed-source pass on PM I.2 PDF (post-merge, 2026-04-29) flagged this as R-NEW-1.)
+    value: "Standard-bearer, Child of the nursery. Temp. Ḥatshepsut. Excavated by Loret."
+- KV43: notes_from_pm already matches override (no-op this run; PM p.559 headword excavator clause for KV43 (Tuthmosis IV) — same systemic R1/R2 dropout: post-postprocessor agents lost the `Excavated by ...` tail. Egyptologist-reviewer flagged as R1/R2/R4 sibling.)
+    value: "Excavated by Davis."
+- KV46: notes_from_pm already matches override (no-op this run; PM p.562 prints a single declarative sentence: `YUIA ..., Divine father, and THUIU ..., Chief of the harîm of Amūn, parents of Queen Teye.` — circumflex-î in `harîm`, macron-ū in `Amūn`. The post-postprocessor merge restructured it into a `Yuia: ... ; Thuiu: ... ;` agent-list with prefixes AND dropped both diacritics. Restore PM-verbatim by dropping the `Yuia:` / `Thuiu:` prefixes (those duplicate occupant_name='Yuia and Thuiu') and keeping only the role-clauses joined by `, and`. Egyptologist-reviewer printed-source pass flagged as R-NEW-3.)
+    value: "Divine father, and Chief of the harîm of Amūn, parents of Queen Teye."
+- KV45: notes_from_pm already matches override (no-op this run; PM p.562 headword reads `Overseer of the Fields of Amūn, Dyn. XVIII, re-used by MERENKHONS, Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). Excavated by Davis and Carter.` Two regressions to address: (1) the `Excavated by Davis and Carter.` tail was dropped by post-postprocessor agents (R1/R2 systemic loss); (2) PM prints `Amūn` (twice) with macron-ū AND uses `,` (not `;`) after `Dyn. XVIII`. The merged-value body had stripped both macrons and substituted `;` for `,`. Egyptologist-reviewer printed-source pass on PM I.2 PDF (post-merge, 2026-04-29) flagged macron-loss as R-NEW-2 and self-acknowledged the `;`-vs-`,` paraphrase; restoring all three at once for full PM-verbatim alignment.)
+    value: "Overseer of the Fields of Amūn, Dyn. XVIII, re-used by Merenkhons, Doorkeeper of the House of Amūn, Dyn. XXII (name from scarab). Excavated by Davis and Carter."
+- KV55: notes_from_pm already matches override (no-op this run; The text-layer OCR for chunk 4 drops PM's macron-e and renders the ayin as `c` (`Smenkhkarec`); agents carried that through to the reconciled notes. Egyptologist-reviewer pre-merge pass on PR #70 verified PM p.565 itself prints `Smenkhkarēʿ` with both the macron and the trailing ayin, and confirmed the sentence-final period closes PM's sentence. notes_from_pm is verbatim-preserve against PM's printed text (not against the OCR text layer) — restore both diacritics.)
+    value: "Probably Amenophis IV, formerly attributed to Queen Teye or to Smenkhkarēʿ."
+- KV56: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.567 headword is the bare `'Gold Tomb', uninscribed.` with no attribution; same fix pattern as chunk-2 KV12 and chunk-3 KV39.)
+    value: "Unknown"
+- DAN-Aqhor: occupant_name already matches override (no-op this run; PM p.605 headword is `ʿAḲ-ḤOR` (*rḫ-nswt* 'king's acquaintance' compound), not `ʿAḥḥor`. Egyptologist-reviewer flagged agents' misread; tomb_id renamed to `DAN-Aqhor` via CHUNK7_RENAMES. Underdot-H stripped to plain `h` per README's matchable-name-field convention (Gemini round-3 sweep on PR #101). ḳ (underdot-K) preserved as a distinguishing radical.)
+    value: "ʿAḳ-hor"
+- DAN-Aqhor: occupant_role already matches override (no-op this run; `Royal acquaintance` (*rḫ-nsw*) is a minor courtier title, not a royal-family affiliation. Downgrade role from 'Royal Family' to 'Official' per egyptologist-reviewer P1 finding.)
+    value: "Official"
+- DAN-MentuhotpIWifeOfDjhuti: notes_from_pm already matches override (no-op this run; PM p.604 prints sentence-form `QUEEN MENTUḤOTP¹, wife of King Ḏḥuti` where `Ḏ` is d with bar/macron — the standard Egyptological transliteration of the d-emphatic, same character as in `Ḏḥwty`/Thoth (NOT `Ḍ` d-with-underdot, which is a different consonant in Semitic transliteration). The earlier P1 finding on PR #100 caught the OCR `Ql_J.uti` → `Djhuti` diacritic loss but installed the WRONG underdot consonant `Ḍ`; egyptologist printed-source review on PR #151 corrected `Ḍ` → `Ḏ` after direct PDF read of p.604. Wrong-consonant risk: `Ḍḥuti` would never match against TLA / Trismegistos / museum data using `Ḏḥuti`. tomb_id `DAN-MentuhotpIWifeOfDjhuti` (descriptor) intentionally retains ASCII `Djhuti` for filename safety; the PM-verbatim consonant `Ḏ` lives in `notes_from_pm`.)
+    value: "Wife of King Ḏḥuti. Found in tomb by Passalacqua."
+- DAN-AhmosiNefertere: notes_from_pm already matches override (no-op this run; Egyptologist-reviewer P2 finding on PR #100 (reviewer-notes-chunk7.md): PM p.599-600 §III.C headword spells out the Carter attribution history in detail ('attributed to Amenophis I by Carter; Černý equates with House of Amenophis of the Garden'); the pre-review note dropped the Černý follow-up. Restore verbatim per the reviewer's citation of the full attribution-history clause. tomb_id renamed via CHUNK7_RENAMES.)
+    value: "Tomb of Queen ʿAḥmosi Nefertere (probably). Attributed to Amenophis I by Carter, later equated by Černý with 'House of Amenophis of the Garden'."
+- DAN-MentuhotpIWifeOfDjhuti: occupant_name already matches override (no-op this run; Agents preserve PM's `Queen` prefix from the headword (`QUEEN MENTUHOTP I, wife of King Ḍḥuti`); the project-wide convention is to encode the title in `occupant_role` and keep `occupant_name` as the bare regnal name. Strip the prefix here.)
+    value: "Mentuhotp I"
+- DAN-AntefSehertaui: occupant_name already matches override (no-op this run; Strip parenthetical prenomen `(Sehertaui)`; alt_names retains it. R6 in egyptologist-reviewer PR #140 review.)
+    value: "Antef"
+- DAN-AntefWahankh: occupant_name already matches override (no-op this run; Strip parenthetical prenomen `(Wahankh)`; alt_names retains it.)
+    value: "Antef"
+- DAN-AntefNubkheperre: occupant_name already matches override (no-op this run; Strip parenthetical prenomen `(Nubkheperreʿ)`; alt_names retains it.)
+    value: "Antef"
+- DAN-AntefSekhemreHeruhirmaet: occupant_name already matches override (no-op this run; Strip parenthetical prenomen `(Sekhemreʿ-Heruhirmaʿet)`; alt_names retains it.)
+    value: "Antef"
+- DAN-AntefSekhemreWepmaet: occupant_name already matches override (no-op this run; Strip parenthetical prenomen `(Sekhemreʿ-Wepmaʿet)`; alt_names retains it.)
+    value: "Antef"
+- DAN-KamosiWazkheperre: occupant_name already matches override (no-op this run; Strip parenthetical prenomen `(Wazkheperreʿ)`; alt_names retains it.)
+    value: "Kamosi"
+- DAN-SebkemsafSekhemreShedtaui: occupant_name already matches override (no-op this run; Strip parenthetical prenomen `(Sekhemreʿ-Shedtaui)`; alt_names retains it.)
+    value: "Sebkemsaf II"
+- DAN-Ahhotep: notes_from_pm already matches override (no-op this run; Restore underdot-K (ḳ) in `Seḳenenreʿ-Taʿa` per README's notes_from_pm verbatim-preserve policy. PM p.600 prints Seḳenenreʿ-Taʿa with the underdot.)
+    value: "Wife of King Seḳenenreʿ-Taʿa. Found by Mariette in 1859."
+- DAN-AhmosiHenutempet: notes_from_pm already matches override (no-op this run; Restore underdot-H (ḥ) in `ʿAḥḥotp` and underdot-K (ḳ) in `Seḳenenreʿ-Taʿa` per README's notes_from_pm verbatim-preserve policy. PM p.605 prints both underdots in headword. Drop the `Coffin possibly from here.` tail the post-postprocessor agents added — that comes from the find-list line below the headword (`Coffin, possibly from here, formerly in possession of Castellari`) which is body content, not headword.)
+    value: "Daughter of ʿAḥḥotp (wife of King Seḳenenreʿ-Taʿa)."
+- DAN-AhmosiSonOfSeqenenre: notes_from_pm already matches override (no-op this run; Restore underdot-K and underdot-H per README's notes_from_pm verbatim-preserve policy.)
+    value: "Eldest son of King Seḳenenreʿ-Taʿa and ʿAḥḥotp."
+- DAN-AhmosiHenutempet: occupant_role already matches override (no-op this run; Daughter of a queen-consort; standard Egyptological convention is `Princess` for daughters of kings. The OLD merged value was `Princess`; post-postprocessor agents picked `Royal Family` (more generic). Egyptologist-reviewer R8 in PR #140 review.)
+    value: "Princess"
+- DAN-KamosiWazkheperre: notes_from_pm already matches override (no-op this run; Restore the dropped pyramid cross-ref `For pyramid, possibly of Kamosi, see infra, p. 620.` from PM p.600 headword tail. Egyptologist-reviewer R9 in PR #140 review.)
+    value: "Found by Mariette in 1857. For pyramid, possibly of Kamosi, see infra, p. 620."
+- DAN-AntefNubkheperre: notes_from_pm already matches override (no-op this run; Restore the dropped pyramid cross-ref `Pyramid, see HAY MSS. 29816.` from PM p.602 headword tail. Egyptologist-reviewer R10 in PR #140 review.)
+    value: "Found by Mariette in 1860. Pyramid, see Hay MSS. 29816."
+- DAN-Neferhotep: notes_from_pm already matches override (no-op this run; PM p.604 prints `Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13.` — circumflex-î in `Harîm`, macron-ē in `Nubkheperrēʿ`. The post-postprocessor merge stripped both diacritics. Restore per the verbatim-preserve policy on notes_from_pm. Egyptologist-reviewer printed-source pass flagged as R-NEW-4.)
+    value: "Scribe of the Great Harîm, probably temp. Antef (Nubkheperrēʿ). Rock-tomb, uninscribed. Found by Mariette in 1860, probably near Theb. tb. 13."
+- DAN-SebkemsafSekhemreShedtaui: notes_from_pm already matches override (no-op this run; Same R9/R10 systemic clause-loss: post-postprocessor agents dropped the pyramid cross-ref from PM p.604 headword tail. Restore.)
+    value: "Pyramid behind Theb. tb. 24, perhaps belonging to this tomb."
+- SWV-HatshepsutSouth: notes_from_pm already matches override (no-op this run; Restore the `, quartzite, in Cairo Mus. Ent. 47032` object-cite tail from PM p.591 headword. Egyptologist-reviewer R5 in PR #140 review.)
+    value: "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite, in Cairo Mus. Ent. 47032."
+- QV36: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A PRINCESS, no name.')
+    value: "Unknown"
+- QV40: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.751 headword is 'A QUEEN, cartouche blank.')
+    value: "Unknown"
+- QV73: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.767 headword is 'A PRINCESS, no name. Dyn. XX.')
+    value: "Unknown"
+- QV75: occupant_role already matches override (no-op this run; prompt rule 1: role='Unknown' when occupant_name is null. PM p.768 headword is 'A QUEEN, no name.')
+    value: "Unknown"
+- QV47: notes_from_pm already matches override (no-op this run; PM p.755 prints the mother's name as 'Sit-ḏḥout' with `ḏ` (d with bar/macron — the standard Egyptological transliteration of the d-emphatic, same character used for the deity Ḏḥuti/Thoth `Ḏḥwty`). Egyptologist printed-source review on PR #151 corrected this from the previous `ḍ` (d with underdot) — different consonants representing different sounds in standard Erman/Grapow/Hannig transliteration. The text-layer OCR renders the ḏḥ digraph as 'gQ.' (drops the bar-D entirely and renders the ḥ as `Q` + period) — this exact source token `Sit-gQ.out` is the one place this bigram appears in any chunk, and the postprocessor's substring substitution normalises it. The override here is the egyptologist-reviewer's PM-verbatim sentence-restoration (complete clause + bibliographic ribbon tail).)
+    value: "daughter of Seḳenenreʿ-Taʿa and Sit-ḏḥout. Dyn. XVII. (Bibl. i, 1st ed. p. 49.)"
 - QV74: notes_from_pm already matches override (no-op this run; PM p.767 main text prints `74. QUEEN TENTŌPET [cartouche], Great King's mother and King's wife.¹ (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.) Plan, p. 760.` (verbatim). The earlier override synthesized main-text + footnote 1 (Gauthier/Černý/Seele Ramesses-IV/V genealogy) into a prose blob that did not appear verbatim in PM — a rule-1 (provenance) violation. Egyptologist printed-source review on PR #151 corrected this to PM-main-text-verbatim only. The footnote 1 genealogy + per-citation chain is dropped from `notes_from_pm` here; the schema currently has no `notes_footnote` / `notes_genealogy` field, so the genealogy is tracked for restoration via follow-up issue (schema split).)
     value: "Great King's mother and King's wife. (CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)"
+- KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
+    value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
+- KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI has no genuine alternate-name variant in PM's headword (no prenomen parenthetical; the variant Greek form 'Ramesses' is the standard PM uses).)
+    value: []
+- KV11: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): 'Bruce's tomb' (after James Bruce, who entered it 1768) and 'the Harper's tomb' (after the famous painted harpist scene) are 19th-c. nicknames for the TOMB, not for Ramesses III. Migrated to tomb_aliases. PM I.2 p.518 headword.)
+    value: ["Bruce's tomb", "the Harper's tomb"]
+- KV11: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases.)
+    value: []
+- KV17: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): 'Belzoni's tomb' refers to Giovanni Battista Belzoni, the tomb's 1817 discoverer — a TOMB-name, not an alternate name of Sethos I. Migrated to tomb_aliases. PM I.2 p.535 headword.)
+    value: ["Belzoni's tomb"]
+- KV17: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases.)
+    value: []
+- KV23: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): 'Eesa' is the local Arabic name for Ay's tomb cited by Wilkinson in his West-Valley topography ('W. -2 ("Eesa")'); 'Schai' is the Prisse / Nestor L'Hôte surveyor designation for the same tomb. Both are TOMB-names from 19th-c. survey traditions, not alternate names of the king Ay. Migrated to tomb_aliases. PM I.2 p.550 headword bibliographic ribbon.)
+    value: ["Eesa", "Schai"]
+- KV23: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases.)
+    value: []
+- KV46: occupant_name already matches override (no-op this run; Audit-fix (PR A): split compound 'Yuia and Thuiu' into headword + co_occupants. PM I.2 p.562 lists Yuia first ('YUIA ..., Divine father, and THUIU ...'), so Yuia is the headword. Thuiu moves to co_occupants below.)
+    value: "Yuia"
+- KV46: occupant_role already matches override (no-op this run; Audit-fix (PR A): per-person role replaces the aggregate 'Royal Family' label. Yuia's title in PM is 'Divine father' (it-ntr) — the standard Egyptian honorific given to the non-royal father of a king's wife (here Queen Teye, wife of Amenhotep III). This is a court title for a non-royal in-law, not a royal-family designation. Role = 'Official'.)
+    value: "Official"
+- KV46: co_occupants already matches override (no-op this run; Audit-fix (PR A): Thuiu is the second occupant (wife of Yuia, mother of Queen Teye). PM I.2 p.562 gives her title as 'Chief of the harîm of Amūn', a religious-administrative court office for a non-royal. Role = 'Official' (parallel to Yuia). No alternate names attested in PM headword.)
+    value: [{"name": "Thuiu", "role": "Official", "alt_names": []}]
+- SWV-ThreePrincesses: occupant_name already matches override (no-op this run; Audit-fix (PR A): split compound 'Menhet, Merti, and Menwi' into headword + co_occupants. PM I.2 p.591 lists Menhet first; she becomes the headword, the other two move to co_occupants.)
+    value: "Menhet"
+- SWV-ThreePrincesses: co_occupants already matches override (no-op this run; Audit-fix (PR A): Merti and Menwi are the second and third occupants. The conventional scholarly identification is that all three were minor wives of Tuthmosis III (the Wadi Qubbanet el-Qirud burial); whether 'wife' / 'queen' / 'princess' is the correct per-person role is a scholarly call beyond this audit-fix's scope. Preserved the existing 'Royal Family' aggregate label across all three; refining per-person roles is a follow-up for the egyptologist-reviewer once chunk 7 is re-extracted with the new schema.)
+    value: [{"name": "Merti", "role": "Royal Family", "alt_names": []}, {"name": "Menwi", "role": "Royal Family", "alt_names": []}]

@@ -1,5 +1,14 @@
 # Extraction prompt — Porter & Moss Vol I.2 (Theban Necropolis), Chunk 8
 
+> **Schema update — PR A (2026-05-02).** Two new fields were added to the canonical row, and `occupant_alt_names` semantics were narrowed:
+>
+> - **`occupant_alt_names`** is now ONLY for alternate name forms of the SAME PERSON (prenomens; throne-name vs birth-name; transliteration variants). Tomb-nicknames (`Belzoni's tomb`, `Tomb of Memnon`, `Bruce's tomb`, etc.) DO NOT belong here — they go in `tomb_aliases`.
+> - **`tomb_aliases: list[str]`** is the new field for popular names of the *tomb itself* (19th-c. surveyor designations, classical mis-attributions, local Arabic names).
+> - **`co_occupants: list[{name, role, alt_names}]`** is the new field for joint burials — a tomb shared by multiple people. The headword (PM's first-listed person) goes in `occupant_name` / `occupant_role` / `occupant_alt_names`; the additional people go in `co_occupants` with per-person role.
+>
+> The body of this prompt is preserved as historical record from the original extraction; the schema example below has been updated to show the new fields. If you re-run an agent against this prompt, follow the updated schema, not the body's older `occupant_alt_names` directives that conflated tomb-names with person-names.
+
+
 You are one of three independent extraction subagents. Read the text-layer chunk file at `pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p292-p314.txt` and produce a JSONL file with one structured row per numbered tomb in PM I.2 § X.A "Valley of the Queens — Numbered tombs". The other two agents see the same prompt and the same chunk; their outputs are majority-voted by `merge.py`.
 
 This chunk uses the **existing numbered-tomb schema** (QV-prefixed ids like `KV1` for Valley of the Kings). No new schema innovation — it's the QV analogue of chunk 1's KV coverage.
@@ -58,6 +67,8 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
   "valley": "Valley of the Queens",
   "occupant_name": "...",
   "occupant_alt_names": [...],
+  "tomb_aliases": [...],
+  "co_occupants": [],
   "occupant_role": "...",
   "dynasty": null,
   "sub_period": null,
