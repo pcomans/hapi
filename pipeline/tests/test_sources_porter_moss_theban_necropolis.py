@@ -294,6 +294,11 @@ def test_required_fields_present_on_every_row() -> None:
         # is now exclusively for SAME-PERSON name variants (e.g. prenomens).
         "tomb_aliases",
         "co_occupants",
+        # PR A round-2 (PR #169 egyptologist P1, 2026-05-02): explicit
+        # flag for joint coordinate burials with no PM-marked principal
+        # (SWV-ThreePrincesses); see test_is_joint_burial_flag_paired_
+        # with_co_occupants for the contract.
+        "is_joint_burial",
     }
     for r in _rows():
         missing = required - r.keys()
@@ -357,11 +362,13 @@ def test_occupant_alt_names_are_person_variants_not_tomb_nicknames() -> None:
     Memnon`, `Bruce's tomb`, etc.) belong in the new `tomb_aliases` field
     (PR A audit-fix migration).
 
-    Mechanical heuristic: any string matching `Tomb of …`, `…'s tomb`, or
-    `the …'s tomb` is a tomb-name shape.
+    Mechanical heuristic: any string matching `Tomb of …`, `…'s tomb`,
+    `the …'s tomb`, or `the Tomb of …` is a tomb-name shape. Regex widened
+    on PR #169 round-2 (Gemini round-1) to catch multi-word possessives
+    (`The Great King's tomb`) and `(The )?Tomb of …` prefixes.
     """
     nickname_re = re.compile(
-        r"(?i)^(?:tomb of\b|the\s+\S+'s tomb$|\S+'s tomb$)"
+        r"(?i)^(?:(?:the\s+)?tomb of\b|.*'s tomb$)"
     )
     for r in _rows():
         for alt in r.get("occupant_alt_names") or []:
@@ -372,21 +379,46 @@ def test_occupant_alt_names_are_person_variants_not_tomb_nicknames() -> None:
 
 
 def test_co_occupants_each_have_name_and_role() -> None:
-    """Every entry in `co_occupants` is a `{name, role, alt_names}` dict
-    with non-null name + role. Joint-occupant rows lose their per-person
-    role information if either field is null — and the whole point of the
-    PR A migration was to recover that information.
+    """Every entry in `co_occupants` is a `{name, role, alt_names}` dict —
+    EXACTLY those three keys, non-empty name + role, list-shape alt_names.
+    Joint-occupant rows lose their per-person role information if either
+    field is null — and the whole point of the PR A migration was to
+    recover that information.
+
+    Round-2 tighten (PR #169 Gemini + code-reviewer P2-1, P2-2, P2-5):
+    - exact key-set (no extra keys silently passed through),
+    - role validated against the controlled vocab (free-text role drift
+      forbidden — same enforcement as the row-level `occupant_role`),
+    - empty-string guard on `name` and on each `alt_names` entry.
     """
+    co_role_vocab = _occupant_role_controlled_vocab()
+    expected_keys = {"name", "role", "alt_names"}
     for r in _rows():
         for i, co in enumerate(r.get("co_occupants") or []):
             assert isinstance(co, dict), (r["tomb_id"], i, co)
-            assert co.get("name"), (r["tomb_id"], i, "missing name", co)
-            assert co.get("role"), (r["tomb_id"], i, "missing role", co)
-            # alt_names must be a list (possibly empty); never null —
-            # parallel to the row-level `occupant_alt_names`.
-            assert isinstance(co.get("alt_names"), list), (
-                r["tomb_id"], i, "alt_names not a list", co
+            assert set(co.keys()) == expected_keys, (
+                r["tomb_id"], i, "co_occupant key-set must be exactly "
+                f"{sorted(expected_keys)}, got {sorted(co.keys())}: {co}"
             )
+            name = co["name"]
+            assert isinstance(name, str) and name, (
+                r["tomb_id"], i, "co_occupant name must be a non-empty string", co
+            )
+            role = co["role"]
+            assert role in co_role_vocab, (
+                r["tomb_id"], i,
+                f"co_occupant role {role!r} not in controlled vocab "
+                f"{sorted(co_role_vocab)}: {co}",
+            )
+            alt_names = co["alt_names"]
+            assert isinstance(alt_names, list), (
+                r["tomb_id"], i, "co_occupant alt_names must be a list", co
+            )
+            for j, alt in enumerate(alt_names):
+                assert isinstance(alt, str) and alt, (
+                    r["tomb_id"], i, j,
+                    f"co_occupant alt_names[{j}] must be a non-empty string: {alt!r}",
+                )
 
 
 def test_tomb_aliases_is_list_of_strings() -> None:
@@ -398,6 +430,121 @@ def test_tomb_aliases_is_list_of_strings() -> None:
         assert isinstance(ta, list), (r["tomb_id"], ta)
         for item in ta:
             assert isinstance(item, str) and item, (r["tomb_id"], item)
+
+
+def test_is_joint_burial_flag_paired_with_co_occupants() -> None:
+    """`is_joint_burial: bool` (PR A round-2, egyptologist P1) signals
+    coordinate burials with no PM-marked principal — downstream Phase-A
+    consumers must treat `occupant_name` and `co_occupants[*].name` as a
+    coordinate union for join purposes when this flag is True.
+
+    Mechanical contract:
+    - Every row carries the field as a bool (default False).
+    - A row with `is_joint_burial=True` MUST have at least one co_occupant
+      (a single-occupant row cannot be a "joint" burial).
+    - A row with `co_occupants` non-empty MAY be either True (coordinate,
+      no primacy) or False (subordinate, headword is the principal).
+      Both shapes are intentional — KV46 is False because PM marks Yuia
+      as the syntactic subject; SWV-ThreePrincesses is True because PM
+      lists the three coordinately. The two-row test below pins the
+      current state explicitly.
+    """
+    seen_joint = []
+    for r in _rows():
+        flag = r.get("is_joint_burial")
+        assert isinstance(flag, bool), (r["tomb_id"], flag, type(flag).__name__)
+        if flag:
+            assert (r.get("co_occupants") or []), (
+                r["tomb_id"],
+                f"is_joint_burial=True but co_occupants is empty — "
+                f"a single-occupant tomb cannot be a joint burial.",
+            )
+            seen_joint.append(r["tomb_id"])
+    # SWV-ThreePrincesses is the only joint-coordinate burial in the
+    # current corpus. KV46 is intentionally False (asymmetric).
+    assert seen_joint == ["SWV-ThreePrincesses"], seen_joint
+
+
+def test_swv_three_princesses_per_person_role_propagation() -> None:
+    """SWV-ThreePrincesses (PR #169 code-reviewer P2-4 + scope-enforcer
+    requirement): the migration's choice to propagate the prior aggregate
+    `Royal Family` label across all three per-person roles is a NEW per-
+    person claim relative to the pre-PR-A single-row aggregate. Pin it as
+    an assertion (not just a fix_rows rationale string) so future schema
+    refinement that downgrades any single occupant to a different role is
+    forced to update this test deliberately.
+
+    Per-person refinement (likely to `Queen` after Lilyquist 2003) is
+    deferred to a future chunk-7 re-extraction PR; that PR will replace
+    this assertion when the egyptologist signs off on the per-person call.
+    """
+    r = _row("SWV-ThreePrincesses")
+    assert r["occupant_role"] == "Royal Family"
+    assert r["co_occupants"] == [
+        {"name": "Merti", "role": "Royal Family", "alt_names": []},
+        {"name": "Menwi", "role": "Royal Family", "alt_names": []},
+    ]
+    assert r["is_joint_burial"] is True
+
+
+def test_occupant_role_controlled_vocab_covers_co_occupants() -> None:
+    """Controlled vocab applies to `co_occupants[*].role` too (PR #169
+    code-reviewer P2-2). Sibling enforcement to the row-level
+    `occupant_role` controlled-vocab test — the whole point of PR A's
+    `co_occupants` field is that per-occupant role becomes structured
+    data; the vocabulary must apply there or free-text role drift defeats
+    the structuring.
+
+    `test_co_occupants_each_have_name_and_role` already enforces this on
+    every row; this test is a focused regression-pin so a future relaxation
+    of either test surfaces here.
+    """
+    vocab = _occupant_role_controlled_vocab()
+    for r in _rows():
+        for co in r.get("co_occupants") or []:
+            assert co["role"] in vocab, (r["tomb_id"], co)
+
+
+def _occupant_role_controlled_vocab() -> set[str]:
+    """Single source of truth for the `occupant_role` / `co_occupants[*].role`
+    controlled vocabulary. Mirrors the README field-semantics list.
+    """
+    return {
+        "King",
+        "Queen",
+        "Royal Family",
+        "Vizier",
+        "Official",
+        "High Priest",
+        "Princess",
+        "Prince",
+        "Unknown",
+    }
+
+
+def test_all_prompts_mention_new_pr_a_fields() -> None:
+    """Every PM extraction prompt mentions `tomb_aliases` AND `co_occupants`
+    AND `is_joint_burial` (PR #169 code-reviewer P2-3). Future chunks copy
+    from these prompts; if a chunk-9+ prompt is written by copying chunk-1's
+    pre-PR-A body without the new schema header, agents emit no values for
+    the new fields, `SCHEMA_FIELD_DEFAULTS` silently fills `[]`/`False`,
+    and a tomb that genuinely has tomb-nicknames or joint occupants
+    suffers data loss with no failing test (the `[]` row passes every
+    other structural test).
+
+    This is the rule-3 "deterministic enforcement over markdown convention"
+    case — the prompt-update discipline must be a CI check.
+    """
+    prompt_files = sorted(SOURCE_DIR.glob("prompt*.md"))
+    assert prompt_files, "no prompt*.md files found"
+    for prompt in prompt_files:
+        text = prompt.read_text()
+        for field in ("tomb_aliases", "co_occupants", "is_joint_burial"):
+            assert field in text, (
+                f"{prompt.name}: prompt does not mention `{field}` — "
+                f"agents using this prompt will not emit the field, and "
+                f"SCHEMA_FIELD_DEFAULTS will silently fill the default."
+            )
 
 
 def test_kv_rows_have_kv_tomb_id() -> None:
@@ -647,7 +794,7 @@ def test_chunk1_kv9_ramesses_vi_notes_and_aliases() -> None:
     assert r["discoverer"] is None
     assert r["is_unfinished"] is False
     assert r["shared_with_tombs"] == []
-    assert r["notes_from_pm"] == "doorways in outer part usurped from Ramesses V"
+    assert r["notes_from_pm"] == "doorways in outer part usurped from Ramesses V."
     assert r["source_citation"] == {
         "page": 511,
         "edition": EDITION_PM_I2,
@@ -2278,3 +2425,59 @@ def test_all_renames_includes_every_chunk_dict() -> None:
         f"ALL_RENAMES missing one of the per-chunk dicts. "
         f"Found chunk attrs: {chunk_attrs}"
     )
+
+
+def test_fix_rows_main_idempotent() -> None:
+    """`fix_rows.main()` is idempotent: a second call produces byte-identical
+    `reconciled.jsonl` and `merge-disagreements.txt` to a first call (PR
+    #169 code-reviewer P1-1).
+
+    Three idempotence claims live in `fix_rows.py` docstrings/comments:
+    the field-add pass (`SCHEMA_FIELD_DEFAULTS`), the override pass
+    (`SPOT_CORRECTIONS`), and the diff-section append-or-replace logic.
+    Per CLAUDE.md rule 3 (deterministic enforcement over convention), an
+    idempotence claim that lives only in a docstring is a suggestion, not
+    a guarantee — the next refactor of `main()` (e.g. someone changes the
+    field-add pass to use `setdefault` plus a logger that always appends)
+    silently regresses on disk. A single round-trip byte-equality test
+    catches all three regressions.
+
+    Idempotence in this codebase means `f(f(x)) == f(x)` — the output is
+    stable from the second run onward, not necessarily on the first run
+    after a state transition. So the test calls main() to reach steady
+    state, snapshots, then calls again and compares. The pre-existing
+    on-disk state (which may include "corrected this run" log lines from
+    a recent commit-time run) is restored after the test so the working
+    tree stays clean.
+    """
+    fix_rows = _import_fix_rows()
+    reconciled = SOURCE_DIR / "reconciled.jsonl"
+    diff = SOURCE_DIR / "merge-disagreements.txt"
+
+    pre_reconciled = reconciled.read_bytes()
+    pre_diff = diff.read_bytes()
+    try:
+        # First run: reach steady state regardless of what was on disk
+        # at test-entry (which may have transitional log lines).
+        fix_rows.main()
+        snap_reconciled = reconciled.read_bytes()
+        snap_diff = diff.read_bytes()
+        # Second run: must be byte-identical (the idempotence contract).
+        fix_rows.main()
+        new_reconciled = reconciled.read_bytes()
+        new_diff = diff.read_bytes()
+        assert new_reconciled == snap_reconciled, (
+            "fix_rows.main() is NOT idempotent on reconciled.jsonl — second "
+            "call produced a different byte-string from the first."
+        )
+        assert new_diff == snap_diff, (
+            "fix_rows.main() is NOT idempotent on merge-disagreements.txt — "
+            "second call produced a different byte-string from the first. "
+            "The LLM-APPLIED OVERRIDES section's append-or-replace logic "
+            "must produce identical output across re-runs."
+        )
+    finally:
+        # Restore the original on-disk state so the working tree stays
+        # clean even if the test fails.
+        reconciled.write_bytes(pre_reconciled)
+        diff.write_bytes(pre_diff)

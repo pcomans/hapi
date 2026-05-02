@@ -721,6 +721,17 @@ CHUNK8_RENAMES: dict[str, str] = {}
 SCHEMA_FIELD_DEFAULTS: dict[str, object] = {
     "tomb_aliases": [],
     "co_occupants": [],
+    # PR A round-2 (egyptologist P1): explicit flag for joint coordinate
+    # burials where PM does NOT mark a principal occupant. Default False
+    # — the ordinary case is one tomb, one occupant (or one headword +
+    # subordinate co-occupants). When True, downstream consumers MUST
+    # treat `occupant_name` and `co_occupants[*].name` as a coordinate
+    # union for join purposes — the headword is a serialisation artifact,
+    # not a primacy claim. SWV-ThreePrincesses is the canonical case
+    # (PM lists Menhet/Merti/Menwi coordinately at p.591); KV46 is NOT
+    # (PM's syntactic-coordinate construction at p.562 marks Yuia as the
+    # subject — `YUIA ..., Divine father, AND THUIU ...`).
+    "is_joint_burial": False,
 }
 
 
@@ -743,9 +754,22 @@ AUDIT_FIX_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "occupant_alt_names",
         [],
         "Audit-fix (PR A): cleared after migrating tomb-nicknames to "
-        "tomb_aliases. Ramesses VI has no genuine alternate-name variant "
-        "in PM's headword (no prenomen parenthetical; the variant Greek "
-        "form 'Ramesses' is the standard PM uses).",
+        "tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` "
+        "(printed in PM as a hieroglyphic cartouche only, not as a "
+        "transcribed English variant) lives in pharaoh.se's authority "
+        "record, not in this row's `occupant_alt_names`. PR A round-2 "
+        "egyptologist clarification: empty list is correct here for "
+        "what PM prints in transcribed form.",
+    ),
+    (
+        "KV9",
+        "notes_from_pm",
+        "doorways in outer part usurped from Ramesses V.",
+        "PR A round-2 (egyptologist P2): restore the trailing period to "
+        "match PM I.2 p.511's sentence-final punctuation and the fix_rows "
+        "policy already applied to KV10 (`Inaccessible after Corridor B.`). "
+        "Pre-PR-A this row read without the period; one-character "
+        "punctuation drift relative to PM's printed text.",
     ),
     (
         "KV11",
@@ -836,6 +860,19 @@ AUDIT_FIX_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "names attested in PM headword.",
     ),
     (
+        "KV46",
+        "is_joint_burial",
+        False,
+        "PR A round-2 (egyptologist P1): NOT a joint coordinate burial. "
+        "PM I.2 p.562 prints `YUIA ..., Divine father, AND THUIU ..., "
+        "Chief of the harîm of Amūn, parents of Queen Teye.` The "
+        "syntactic-coordinate construction marks Yuia as the subject + "
+        "principal occupant; museum jewellery from this tomb is "
+        "conventionally catalogued as 'from the tomb of Yuya and Thuyu' "
+        "with Yuya leading. Headword Yuia + co_occupant Thuiu correctly "
+        "reflects the asymmetry; no joint-burial flag needed.",
+    ),
+    (
         "SWV-ThreePrincesses",
         "occupant_name",
         "Menhet",
@@ -867,6 +904,27 @@ AUDIT_FIX_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "label across all three; refining per-person roles is a follow-"
         "up for the egyptologist-reviewer once chunk 7 is re-extracted "
         "with the new schema.",
+    ),
+    (
+        "SWV-ThreePrincesses",
+        "is_joint_burial",
+        True,
+        "PR A round-2 (egyptologist P1): TRUE — joint coordinate burial. "
+        "PM I.2 p.591 prints `TOMB OF THREE PRINCESSES, MENHET ..., "
+        "MERTI ..., AND MENWI ...` — three names listed coordinately on "
+        "a single line, with no syntactic primacy marker (compare KV46's "
+        "subject-coordinate construction). The choice of Menhet as "
+        "headword is a serialisation convention (PM lists her first, "
+        "Met catalogues canopic jars 26.8.41a-c first), NOT a primacy "
+        "claim. Setting `is_joint_burial=True` signals to downstream "
+        "Phase-A that `occupant_name` and `co_occupants[*].name` form a "
+        "coordinate union for join purposes — Met canopic jars "
+        "26.8.42a-c (Merti) and 26.8.43a-c (Menwi) must NOT be silently "
+        "merged onto Menhet's authority record because the row-level "
+        "headword is Menhet. Per Lilyquist 2003, *The Tomb of Three "
+        "Foreign Wives of Thutmose III*, all three were minor Syrian / "
+        "Levantine wives of Tuthmosis III; their non-Egyptian names + "
+        "individual canopic-jar sets confirm no hierarchical primacy.",
     ),
 ]
 
