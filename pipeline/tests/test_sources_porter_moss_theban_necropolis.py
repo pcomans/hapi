@@ -365,10 +365,12 @@ def test_occupant_alt_names_are_person_variants_not_tomb_nicknames() -> None:
     Mechanical heuristic: any string matching `Tomb of …`, `…'s tomb`,
     `the …'s tomb`, or `the Tomb of …` is a tomb-name shape. Regex widened
     on PR #169 round-2 (Gemini round-1) to catch multi-word possessives
-    (`The Great King's tomb`) and `(The )?Tomb of …` prefixes.
+    (`The Great King's tomb`) and `(The )?Tomb of …` prefixes. Round-3
+    (Gemini round-2) replaced the `'s tomb$` end-anchor with `'s tomb\\b`
+    so trailing punctuation (`Belzoni's tomb.`) doesn't slip through.
     """
     nickname_re = re.compile(
-        r"(?i)^(?:(?:the\s+)?tomb of\b|.*'s tomb$)"
+        r"(?i)^(?:(?:the\s+)?tomb of\b|.*'s tomb\b)"
     )
     for r in _rows():
         for alt in r.get("occupant_alt_names") or []:
