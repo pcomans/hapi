@@ -39,7 +39,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 ```json
 {
   "tomb_id": "KV9",
-  "valley": "Valley of the Kings",
+  "theban_area": "Valley of the Kings",
   "occupant_name": "Ramesses VI",
   "occupant_alt_names": [],
   "tomb_aliases": ["Tomb of Metempsychosis", "Tomb of Memnon"],
@@ -68,7 +68,7 @@ Every field is extracted from PM's HEADWORD BLOCK, never from the body prose. Th
 
 `KV<N>` where `<N>` is the Arabic-numeral tomb number. PM's text-layer renders the leading `1.` of Tomb 1 as `I.` (Roman one) due to font OCR; treat it as Arabic 1. The chunk contains tomb numbers 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 in order. If you find more than 10 distinct tomb numbers, you have over-matched (probably grabbed numbered scene refs `1, King...` as if they were tomb headers).
 
-### `valley`
+### `theban_area`
 
 Always exactly the string `"Valley of the Kings"` for this chunk. (PM I.2 § I.A is "Valley of the Kings — A. Tombs".)
 

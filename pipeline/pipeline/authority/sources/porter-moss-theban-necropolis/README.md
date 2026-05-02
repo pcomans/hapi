@@ -1,6 +1,6 @@
 # Porter & Moss — Topographical Bibliography Vol I (Theban Necropolis)
 
-Authority extract of named tombs in the Theban necropolis: occupant, dynasty, valley sub-area. Source for tomb-attributed provenances at Thebes (KV / QV / TT / Dra' Abu el-Naga / Deir el-Bahri / Asasif / Sheikh Abd el-Qurna / etc.).
+Authority extract of named tombs in the Theban necropolis: occupant, dynasty, Theban area (valley / sub-site classification per PM I.1 Appendix D). Source for tomb-attributed provenances at Thebes (KV / QV / TT / Dra' Abu el-Naga / Deir el-Bahri / Asasif / Sheikh Abd el-Qurna / etc.).
 
 ## Citation
 
@@ -33,14 +33,14 @@ Per the playbook's derived-extract default (`docs/playbook-phase-0-ocr-transcrip
 
 ## Schema
 
-One row per tomb. All fields except `tomb_id`, `valley`, and `source_citation` are nullable (per CLAUDE.md rule 4 — sparse rows are valid).
+One row per tomb. All fields except `tomb_id`, `theban_area`, and `source_citation` are nullable (per CLAUDE.md rule 4 — sparse rows are valid).
 
 The chunk-1 extract example below shows what a typical KV row looks like AFTER PM-headword extraction but BEFORE Phase A king-authority enrichment fills `dynasty` and BCE dates. Per CLAUDE.md rule 7 and rule 1, those fields stay null at this stage — they don't appear in PM headwords and we don't supply them from "what the model knows" or from a hardcoded prompt table. The fields are reserved in the schema so the Phase A enrichment writes to a known shape.
 
 ```json
 {
   "tomb_id": "KV9",
-  "valley": "Valley of the Kings",
+  "theban_area": "Valley of the Kings",
   "occupant_name": "Ramesses VI",
   "occupant_alt_names": [],
   "occupant_role": "King",
@@ -71,7 +71,8 @@ This split lets downstream joins against pharaoh.se / Beckerath work on a normal
 
 **Field semantics:**
 - `tomb_id` — `KV<n>`, `QV<n>`, `TT<n>`. Letter-suffix variants (`KV5a`) are reproduced verbatim.
-- `valley` — Coarse sub-area: `"Valley of the Kings"`, `"Valley of the Queens"`, `"Dra' Abu el-Naga"`, `"Deir el-Bahri"`, `"Asasif"`, `"Sheikh Abd el-Qurna"`, `"Khokha"`, `"Qurnet Mura'i"`, `"Deir el-Medina"`, `"Ramesseum"`, `"Medinet Habu"`. The valley a tomb belongs to is structural in PM (each numbered tomb sits within a section / sub-section).
+- `theban_area` — Coarse Theban sub-area / valley / cemetery name: `"Valley of the Kings"`, `"Valley of the Queens"`, `"South-West Valleys"`, `"Dra' Abu el-Naga"`, `"Deir el-Bahri"`, `"Asasif"`, `"Sheikh Abd el-Qurna"`, `"Khokha"`, `"Qurnet Mura'i"`, `"Deir el-Medina"`, `"Ramesseum"`, `"Medinet Habu"`.
+  The Theban area a tomb belongs to is structural in PM (each numbered tomb sits within a section / sub-section); for PM I.1 numbered tombs the canonical classification is the Appendix-D Theban sub-site list (the field was renamed from `valley` → `theban_area` because PM I.1 sub-sites like Deir el-Medina are not literally valleys).
 - `occupant_name` — Conventional English form of the king's / queen's / official's name. Drawn verbatim from PM's headword (e.g. `Sethos I`, `Ramesses IV`, `Tut'ankhamun`). PM uses `Sethos` not `Seti`; preserved as-is, the name authority handles cross-resolution to `Seti I`.
 - `occupant_alt_names` — Alternate name forms of the SAME PERSON named in `occupant_name`: prenomens (e.g. chunk-7's `["Wadjkheperreʿ"]` for Kamose), throne-name vs birth-name pairs, transliteration variants. PR A audit-fix (2026-05-02) narrowed this field's semantics — tomb-nicknames are NO LONGER allowed here (they belong in `tomb_aliases`). Empty list `[]` for the common case where PM gives no per-person alt-name.
 - `tomb_aliases` — Popular names of the *tomb itself* (not its occupant): 19th-c. surveyor designations (`Belzoni's tomb`, `Bruce's tomb`), classical mis-attributions (`Tomb of Memnon` for KV9 was assumed by early travellers to belong to Memnon, not Ramesses VI), and local Arabic names cited in PM's headword bibliographic ribbon (`Eesa` for KV23 Ay, after Wilkinson's local-Arabic `W. -2 ("Eesa")`). Empty list `[]` for the common case where PM gives no popular tomb-name.

@@ -274,7 +274,7 @@ def test_required_fields_present_on_every_row() -> None:
     """
     required = {
         "tomb_id",
-        "valley",
+        "theban_area",
         "occupant_name",
         "occupant_alt_names",
         "occupant_role",
@@ -305,12 +305,14 @@ def test_required_fields_present_on_every_row() -> None:
         assert not missing, (r["tomb_id"], sorted(missing))
 
 
-def test_valley_constraint() -> None:
-    """`valley` belongs to a known controlled vocabulary.
+def test_theban_area_constraint() -> None:
+    """`theban_area` belongs to a known controlled vocabulary.
 
-    Forward-compatible: extend the allowlist as future chunks add
-    Dra' Abu el-Naga, Deir el-Bahri, Asasif, Sheikh Abd el-Qurna,
-    Khokha, Qurnet Mura'i, Deir el-Medina, Ramesseum, Medinet Habu.
+    Currently populated values across chunks 1–8: Valley of the Kings,
+    Valley of the Queens, South-West Valleys, Dra' Abu el-Naga. Forward-
+    compatible: extend the allowlist as future chunks add Deir el-Bahri,
+    Asasif, Sheikh Abd el-Qurna, Khokha, Qurnet Mura'i, Deir el-Medina,
+    Ramesseum, Medinet Habu (PM I.1 Appendix-D Theban sub-site list).
     """
     valid = {
         "Valley of the Kings",
@@ -327,7 +329,7 @@ def test_valley_constraint() -> None:
         "Medinet Habu",
     }
     for r in _rows():
-        assert r["valley"] in valid, (r["tomb_id"], r["valley"])
+        assert r["theban_area"] in valid, (r["tomb_id"], r["theban_area"])
 
 
 # ---------------------------------------------------------------------------
@@ -526,13 +528,17 @@ def _occupant_role_controlled_vocab() -> set[str]:
 
 def test_all_prompts_mention_new_pr_a_fields() -> None:
     """Every PM extraction prompt mentions `tomb_aliases` AND `co_occupants`
-    AND `is_joint_burial` (PR #169 code-reviewer P2-3). Future chunks copy
-    from these prompts; if a chunk-9+ prompt is written by copying chunk-1's
-    pre-PR-A body without the new schema header, agents emit no values for
-    the new fields, `SCHEMA_FIELD_DEFAULTS` silently fills `[]`/`False`,
-    and a tomb that genuinely has tomb-nicknames or joint occupants
-    suffers data loss with no failing test (the `[]` row passes every
-    other structural test).
+    AND `is_joint_burial` AND `theban_area` (PR #169 code-reviewer P2-3 +
+    PR #170 code-reviewer P2-2). Conversely, no prompt mentions the
+    obsolete `"valley"` JSON key — the field was renamed in PR #170 and
+    a stale prompt template would silently produce data under the wrong
+    key, which `merge.py`'s field-union would carry through.
+
+    Future chunks copy from these prompts; if a chunk-9+ prompt is written
+    by copying chunk-1's pre-PR-A body without the new schema header,
+    agents emit no values for the new fields and `SCHEMA_FIELD_DEFAULTS`
+    silently fills `[]`/`False` — a tomb that genuinely has tomb-
+    nicknames or joint occupants suffers data loss with no failing test.
 
     This is the rule-3 "deterministic enforcement over markdown convention"
     case — the prompt-update discipline must be a CI check.
@@ -541,20 +547,65 @@ def test_all_prompts_mention_new_pr_a_fields() -> None:
     assert prompt_files, "no prompt*.md files found"
     for prompt in prompt_files:
         text = prompt.read_text()
-        for field in ("tomb_aliases", "co_occupants", "is_joint_burial"):
+        for field in (
+            "tomb_aliases",
+            "co_occupants",
+            "is_joint_burial",
+            "theban_area",
+        ):
             assert field in text, (
                 f"{prompt.name}: prompt does not mention `{field}` — "
                 f"agents using this prompt will not emit the field, and "
                 f"SCHEMA_FIELD_DEFAULTS will silently fill the default."
             )
+        # No prompt may carry the obsolete `valley` JSON key — that field
+        # was renamed to `theban_area` in PR #170. Stale templates would
+        # produce data under the wrong key and the merge would propagate
+        # it. Check both standard JSON (`"valley"`) and the single-quote
+        # form (`'valley'`) per Gemini round-2 suggestion. (Body text
+        # using "valley" as an English word — e.g. describing PM's
+        # section structure — is fine; we test the JSON field-key form
+        # specifically by requiring the quotes.)
+        for legacy in (
+            '"valley"',     # standard JSON key
+            "'valley'",     # single-quoted variant (Gemini round-2)
+            "`valley`",     # markdown backtick reference (Gemini round-3)
+            "### valley",   # markdown section header (Gemini round-3)
+        ):
+            assert legacy not in text, (
+                f"{prompt.name}: prompt still references the obsolete "
+                f"JSON field key `{legacy}` — rename to `theban_area` "
+                f"(PR #170)."
+            )
+
+
+def test_no_legacy_valley_field_key_in_reconciled() -> None:
+    """No row in `reconciled.jsonl` carries the obsolete `valley` field
+    key after the PR #170 rename (PR #170 code-reviewer P2-1).
+
+    `raw/agent-*.jsonl` files are gitignored, but `merge.py` is field-
+    name-agnostic — it picks fields from the union of agent emissions.
+    If a stale agent re-runs against an unmigrated chunk-7+ prompt and
+    emits `"valley"`, a re-merge would silently regenerate the obsolete
+    key on disk. This test catches that drift mechanically.
+
+    Belt-and-braces against `test_all_prompts_mention_new_pr_a_fields`'s
+    upstream check on the prompt files themselves.
+    """
+    for r in _rows():
+        assert "valley" not in r, (
+            f"{r['tomb_id']}: row carries the obsolete `valley` field key "
+            f"— rename to `theban_area` (PR #170). Most likely cause: a "
+            f"stale agent JSONL was re-merged."
+        )
 
 
 def test_kv_rows_have_kv_tomb_id() -> None:
-    """`tomb_id` prefix matches the `valley` value."""
+    """`tomb_id` prefix matches the `theban_area` value."""
     for r in _rows():
-        if r["valley"] == "Valley of the Kings":
+        if r["theban_area"] == "Valley of the Kings":
             assert r["tomb_id"].startswith("KV"), r
-        if r["valley"] == "Valley of the Queens":
+        if r["theban_area"] == "Valley of the Queens":
             assert r["tomb_id"].startswith("QV"), r
 
 
@@ -670,12 +721,12 @@ def test_occupant_role_controlled_vocab() -> None:
 
 
 def test_chunk1_all_rows_kv_kings_no_dynasty_or_dates() -> None:
-    """KV1–KV10 are all kings — `valley` and `occupant_role` are uniform.
+    """KV1–KV10 are all kings — `theban_area` and `occupant_role` are uniform.
     Dynasty + BCE dates are null at this stage (Phase A enrichment).
     """
     for tid in CHUNK1_TOMB_IDS:
         r = _row(tid)
-        assert r["valley"] == "Valley of the Kings"
+        assert r["theban_area"] == "Valley of the Kings"
         assert r["occupant_role"] == "King"
         assert r["dynasty"] is None
         assert r["sub_period"] is None
@@ -723,7 +774,7 @@ def test_chunk1_kv1_minimal_row() -> None:
     """
     r = _row("KV1")
     assert r["tomb_id"] == "KV1"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses VII"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -751,7 +802,7 @@ def test_chunk1_kv3_flagship_full_row() -> None:
     """
     r = _row("KV3")
     assert r["tomb_id"] == "KV3"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses III"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -781,7 +832,7 @@ def test_chunk1_kv9_ramesses_vi_notes_and_aliases() -> None:
     """
     r = _row("KV9")
     assert r["tomb_id"] == "KV9"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses VI"
     assert r["occupant_alt_names"] == []
     assert r["tomb_aliases"] == ["Tomb of Metempsychosis", "Tomb of Memnon"]
@@ -824,7 +875,7 @@ def test_chunk1_two_ramesses_ii_tombs() -> None:
     kv7 = _row("KV7")
     for r in (kv5, kv7):
         assert r["occupant_name"] == "Ramesses II"
-        assert r["valley"] == "Valley of the Kings"
+        assert r["theban_area"] == "Valley of the Kings"
         assert r["occupant_role"] == "King"
     assert kv5["is_unfinished"] is True
     assert kv7["is_unfinished"] is False
@@ -864,13 +915,13 @@ def test_chunk2_page_range() -> None:
         assert r["source_citation"]["section"] == "I.A"
 
 
-def test_chunk2_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
-    """Every chunk-2 row has valley=VoK and null dynasty/dates/discoverer —
+def test_chunk2_all_rows_in_valley_of_kings_no_dynasty_or_dates() -> None:
+    """Every chunk-2 row has theban_area=VoK and null dynasty/dates/discoverer —
     same extraction-stage discipline as chunk 1.
     """
     for tid in CHUNK2_TOMB_IDS:
         r = _row(tid)
-        assert r["valley"] == "Valley of the Kings"
+        assert r["theban_area"] == "Valley of the Kings"
         assert r["dynasty"] is None
         assert r["sub_period"] is None
         assert r["date_bce_approx_start"] is None
@@ -911,7 +962,7 @@ def test_chunk2_kv11_ramesses_iii_full_row() -> None:
     """
     r = _row("KV11")
     assert r["tomb_id"] == "KV11"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses III"
     assert r["occupant_alt_names"] == []
     assert r["tomb_aliases"] == ["Bruce's tomb", "the Harper's tomb"]
@@ -941,7 +992,7 @@ def test_chunk2_kv12_uninscribed() -> None:
     """
     r = _row("KV12")
     assert r["tomb_id"] == "KV12"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] is None
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Unknown"
@@ -971,7 +1022,7 @@ def test_chunk2_kv13_bay_chancellor() -> None:
     """
     r = _row("KV13")
     assert r["tomb_id"] == "KV13"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Bay"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
@@ -1000,7 +1051,7 @@ def test_chunk2_kv14_tausert_usurpation_note() -> None:
     """
     r = _row("KV14")
     assert r["tomb_id"] == "KV14"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Tausert"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1032,7 +1083,7 @@ def test_chunk2_kv17_sethos_i_belzoni_alias() -> None:
     """
     r = _row("KV17")
     assert r["tomb_id"] == "KV17"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Sethos I"
     assert r["occupant_alt_names"] == []
     assert r["tomb_aliases"] == ["Belzoni's tomb"]
@@ -1063,7 +1114,7 @@ def test_chunk2_kv18_ramesses_x_unfinished() -> None:
     """
     r = _row("KV18")
     assert r["tomb_id"] == "KV18"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ramesses X"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1096,7 +1147,7 @@ def test_chunk2_kv19_prince_ramesses_mentuherkhepshef() -> None:
     """
     r = _row("KV19")
     assert r["tomb_id"] == "KV19"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Raʿmeses-Mentuhirkhopshef"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Prince"
@@ -1125,7 +1176,7 @@ def test_chunk2_kv20_hatshepsut_king() -> None:
     """
     r = _row("KV20")
     assert r["tomb_id"] == "KV20"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Hatshepsut"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1163,8 +1214,8 @@ def test_chunk3_page_range() -> None:
         assert r["source_citation"]["section"] == "I.A"
 
 
-def test_chunk3_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
-    """Every chunk-3 row has valley=VoK and null dynasty/dates/discoverer —
+def test_chunk3_all_rows_in_valley_of_kings_no_dynasty_or_dates() -> None:
+    """Every chunk-3 row has theban_area=VoK and null dynasty/dates/discoverer —
     same extraction-stage discipline as chunks 1 and 2.
 
     `is_unfinished` and `shared_with_tombs` are pinned per-row in the
@@ -1175,7 +1226,7 @@ def test_chunk3_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
     """
     for tid in CHUNK3_TOMB_IDS:
         r = _row(tid)
-        assert r["valley"] == "Valley of the Kings"
+        assert r["theban_area"] == "Valley of the Kings"
         assert r["dynasty"] is None
         assert r["sub_period"] is None
         assert r["date_bce_approx_start"] is None
@@ -1215,7 +1266,7 @@ def test_chunk3_kv22_amenophis_iii_west_valley() -> None:
     """
     r = _row("KV22")
     assert r["tomb_id"] == "KV22"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Amenophis III"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1247,7 +1298,7 @@ def test_chunk3_kv23_ay_classical_aliases() -> None:
     """
     r = _row("KV23")
     assert r["tomb_id"] == "KV23"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Ay"
     assert r["occupant_alt_names"] == []
     assert r["tomb_aliases"] == ["Eesa", "Schai"]
@@ -1278,7 +1329,7 @@ def test_chunk3_kv34_tuthmosis_iii_first_edition_note() -> None:
     """
     r = _row("KV34")
     assert r["tomb_id"] == "KV34"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Tuthmosis III"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1310,7 +1361,7 @@ def test_chunk3_kv36_mahirper_official() -> None:
     """
     r = _row("KV36")
     assert r["tomb_id"] == "KV36"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Mahirper"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
@@ -1343,7 +1394,7 @@ def test_chunk3_kv39_uninscribed_unknown_with_attribution_note() -> None:
     """
     r = _row("KV39")
     assert r["tomb_id"] == "KV39"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] is None
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Unknown"
@@ -1387,7 +1438,7 @@ def test_chunk3_kv42_tuthmosis_ii_attribution_uncertain() -> None:
     """
     r = _row("KV42")
     assert r["tomb_id"] == "KV42"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Tuthmosis II"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1415,7 +1466,7 @@ def test_chunk3_kv35_amenophis_ii() -> None:
     """
     r = _row("KV35")
     assert r["tomb_id"] == "KV35"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Amenophis II"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1442,7 +1493,7 @@ def test_chunk3_kv38_tuthmosis_i() -> None:
     """
     r = _row("KV38")
     assert r["tomb_id"] == "KV38"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Tuthmosis I"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1469,7 +1520,7 @@ def test_chunk3_kv43_tuthmosis_iv() -> None:
     """
     r = _row("KV43")
     assert r["tomb_id"] == "KV43"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Tuthmosis IV"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1497,7 +1548,7 @@ def test_chunk3_kv45_userhet_re_used() -> None:
     """
     r = _row("KV45")
     assert r["tomb_id"] == "KV45"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Userhet"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
@@ -1534,7 +1585,7 @@ def test_chunk3_kv46_yuia_and_thuiu_multi_occupant() -> None:
     """
     r = _row("KV46")
     assert r["tomb_id"] == "KV46"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Yuia"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
@@ -1581,11 +1632,11 @@ def test_chunk4_page_range() -> None:
         assert r["source_citation"]["section"] == "I.A"
 
 
-def test_chunk4_all_rows_valley_of_kings_no_dynasty_or_dates() -> None:
-    """Every chunk-4 row has valley=VoK and null dynasty/dates/discoverer."""
+def test_chunk4_all_rows_in_valley_of_kings_no_dynasty_or_dates() -> None:
+    """Every chunk-4 row has theban_area=VoK and null dynasty/dates/discoverer."""
     for tid in CHUNK4_TOMB_IDS:
         r = _row(tid)
-        assert r["valley"] == "Valley of the Kings"
+        assert r["theban_area"] == "Valley of the Kings"
         assert r["dynasty"] is None
         assert r["sub_period"] is None
         assert r["date_bce_approx_start"] is None
@@ -1614,7 +1665,7 @@ def test_chunk4_kv47_merneptah_siptah() -> None:
     """
     r = _row("KV47")
     assert r["tomb_id"] == "KV47"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Merneptah-Siptah"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1643,7 +1694,7 @@ def test_chunk4_kv48_amenemopet_vizier() -> None:
     """
     r = _row("KV48")
     assert r["tomb_id"] == "KV48"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Amenemopet"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Vizier"
@@ -1677,7 +1728,7 @@ def test_chunk4_kv55_amenophis_iv_hedged_attribution() -> None:
     """
     r = _row("KV55")
     assert r["tomb_id"] == "KV55"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Amenophis IV"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1709,7 +1760,7 @@ def test_chunk4_kv56_gold_tomb_uninscribed() -> None:
     """
     r = _row("KV56")
     assert r["tomb_id"] == "KV56"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] is None
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Unknown"
@@ -1736,7 +1787,7 @@ def test_chunk4_kv57_haremhab() -> None:
     """
     r = _row("KV57")
     assert r["tomb_id"] == "KV57"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Haremhab"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1779,7 +1830,7 @@ def test_chunk5_kv62_tutankhamun_full_row() -> None:
     """
     r = _row("KV62")
     assert r["tomb_id"] == "KV62"
-    assert r["valley"] == "Valley of the Kings"
+    assert r["theban_area"] == "Valley of the Kings"
     assert r["occupant_name"] == "Tutʿankhamun"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "King"
@@ -1890,9 +1941,9 @@ def test_chunk7_valleys() -> None:
     """§ II rows → `South-West Valleys`; § III rows → `Dra' Abu el-Naga`."""
     swv_ids = {"SWV-HatshepsutSouth", "SWV-Neferure", "SWV-ThreePrincesses"}
     for tid in swv_ids:
-        assert _row(tid)["valley"] == "South-West Valleys", tid
+        assert _row(tid)["theban_area"] == "South-West Valleys", tid
     for tid in CHUNK7_TOMB_IDS - swv_ids:
-        assert _row(tid)["valley"] == "Dra' Abu el-Naga", tid
+        assert _row(tid)["theban_area"] == "Dra' Abu el-Naga", tid
 
 
 def test_chunk7_pm_sections() -> None:
@@ -2126,11 +2177,11 @@ def test_chunk8_uniform_null_phase_a_fields() -> None:
     (`dynasty`, `sub_period`, `date_bce_approx_start`, `date_bce_approx_end`,
     `discovery_year`, `discoverer`). `source_citation.edition` is PM I.2.
     `source_citation.section` is exactly "X.A".
-    `valley` is "Valley of the Queens".
+    `theban_area` is "Valley of the Queens".
     """
     for tid in CHUNK8_TOMB_IDS:
         r = _row(tid)
-        assert r["valley"] == "Valley of the Queens", tid
+        assert r["theban_area"] == "Valley of the Queens", tid
         assert r["source_citation"]["edition"] == EDITION_PM_I2
         assert r["source_citation"]["section"] == "X.A", tid
         assert r["dynasty"] is None
