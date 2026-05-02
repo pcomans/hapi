@@ -558,16 +558,20 @@ def test_all_prompts_mention_new_pr_a_fields() -> None:
                 f"agents using this prompt will not emit the field, and "
                 f"SCHEMA_FIELD_DEFAULTS will silently fill the default."
             )
-        # No prompt may carry the obsolete `"valley"` JSON key — that field
+        # No prompt may carry the obsolete `valley` JSON key — that field
         # was renamed to `theban_area` in PR #170. Stale templates would
         # produce data under the wrong key and the merge would propagate
-        # it. (Body text using "valley" as an English word — e.g.
-        # describing PM's section structure — is fine; we test the JSON
-        # field-key form specifically.)
-        assert '"valley"' not in text, (
-            f"{prompt.name}: prompt still references the obsolete JSON "
-            f'field key `"valley"` — rename to `"theban_area"` (PR #170).'
-        )
+        # it. Check both standard JSON (`"valley"`) and the single-quote
+        # form (`'valley'`) per Gemini round-2 suggestion. (Body text
+        # using "valley" as an English word — e.g. describing PM's
+        # section structure — is fine; we test the JSON field-key form
+        # specifically by requiring the quotes.)
+        for legacy in ('"valley"', "'valley'"):
+            assert legacy not in text, (
+                f"{prompt.name}: prompt still references the obsolete "
+                f"JSON field key `{legacy}` — rename to `\"theban_area\"` "
+                f"(PR #170)."
+            )
 
 
 def test_no_legacy_valley_field_key_in_reconciled() -> None:
