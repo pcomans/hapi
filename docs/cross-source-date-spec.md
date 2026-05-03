@@ -171,6 +171,8 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
 
 **Sources without a slash range** (HKW, Kitchen, Ryholt, Shaw, PM) set `_older == _younger` to the single value. **Null endpoints** set both to null and populate `null_endpoints_reason`.
 
+**Year 0 — astronomical-vs-historical convention.** This spec uses ASTRONOMICAL year numbering (ISO 8601-ish): `1 BCE = 0`, `2 BCE = -1`, `N BCE = -(N - 1)`, `1 CE = 1`, `N CE = N`. Rationale: integer arithmetic across the BCE/CE boundary (`end - start`) returns the correct year-count without an off-by-one correction. Sources that use the historical convention (1 BCE = -1, no year 0) MUST be normalised by the canonicalisation helper before storage in the canonical envelope. **Current state:** every numeric source in HAPI uses the historical convention (`-3032` means 3032 BCE; no year 0). The canonicalisation helper for v0 will ADD 1 to negative values to map historical → astronomical (`-3032` historical = `-3031` astronomical = 3032 BCE with year 0 = 1 BCE). Verify per-source on first integration.
+
 ```jsonc
 {
   // === Era handling ===
@@ -180,28 +182,14 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
   // convention (matches Shaw OHAE post-#181).
 
   // === Numeric bounds (canonical names) ===
-  "start_year_older":   -3032,     // older endpoint of the start range
-  "start_year_younger": -2982,     // younger endpoint of the start range
-  "end_year_older":     -3000,     // older endpoint of the end range
-  "end_year_younger":   -2950,     // younger endpoint of the end range
-
-  // === Year 0 / astronomical-vs-historical convention ===
-  // This spec uses ASTRONOMICAL year numbering (ISO 8601-ish):
-  //   1 BCE = 0
-  //   2 BCE = -1
-  //   N BCE = -(N - 1)
-  //   1 CE  = 1
-  //   N CE  = N
-  // Rationale: integer arithmetic across the BCE/CE boundary
-  // (`end - start`) returns the correct year-count without an
-  // off-by-one correction. Sources that use the historical convention
-  // (1 BCE = -1, no year 0) MUST be normalised by the
-  // canonicalisation helper before storage in the canonical envelope.
-  // CURRENT STATE: every numeric source in HAPI uses the historical
-  // convention (`-3032` means 3032 BCE; no year 0). The canonicalisation
-  // helper for v0 will ADD 1 to negative values to map historical →
-  // astronomical (-3032 historical = -3031 astronomical = 3032 BCE
-  // with year 0 = 1 BCE). Verify per-source on first integration.
+  // Values are in ASTRONOMICAL year numbering (see Year 0 section
+  // below). Beckerath's verbatim `start_bce_high=-3032` (historical)
+  // canonicalises to `-3031` here. Phase A consumers reading off the
+  // canonicalisation helper see the astronomical values directly.
+  "start_year_older":   -3031,     // older endpoint of the start range
+  "start_year_younger": -2981,     // younger endpoint of the start range
+  "end_year_older":     -2999,     // older endpoint of the end range
+  "end_year_younger":   -2949,     // younger endpoint of the end range
 
   // === Qualifier handling ===
   "start_approximate": true,       // per-bound bool — true when source marks
@@ -246,7 +234,9 @@ The source itself flags whether the named ruler / person is historically atteste
   // Sources mapping into this field:
   // - existence_uncertain (Beckerath, post-#179)        → doubtful when True
   // - existence_doubtful (Kitchen, post-#180)           → doubtful when True
-  // - name_uncertain (HKW, post-#176)                   → doubtful when True
+  // - name_uncertain (HKW, post-#176)                   → see #2 below — semantically
+  //   maps to attribution_certainty=uncertain, NOT existence (HKW's flag means
+  //   "uncertain WHICH name belongs in this slot", not "the king didn't exist")
 }
 ```
 
@@ -262,11 +252,16 @@ The source flags how confident it is that a particular entity (tomb, monument, a
   // Sources mapping into this field:
   // - attribution_certainty (Porter-Moss, post-#182) — already in
   //   this exact 3-state enum; canonical reference shape.
-  // - is_uncertain_attribution (Ryholt, post-#177) — Ryholt's flag
-  //   is per-row attribution-uncertainty (which dynasty does the king
-  //   belong to). Maps to attribution_certainty=uncertain when True.
-  //   NOTE: distinct from Ryholt's `is_unattributed` (the row has no
-  //   dynasty assignment at all — see #3 below).
+  // - is_uncertain_attribution (Ryholt, post-#177) — per-row
+  //   attribution-uncertainty (which dynasty does the king belong to).
+  //   Maps to attribution_certainty=uncertain when True. NOTE:
+  //   distinct from Ryholt's `is_unattributed` (no dynasty at all —
+  //   see #3 below).
+  // - name_uncertain (HKW, post-#176) — uncertainty between candidate
+  //   names for a chronological slot whose existence is NOT doubted.
+  //   Per Gemini PR #195 round-4: this is a name-attribution flag,
+  //   not an existence flag. Maps to attribution_certainty=uncertain
+  //   when True.
 }
 ```
 
@@ -291,7 +286,7 @@ These three field families are orthogonal. A row can be `existence_certainty=dou
 
 ## Mismatches against the canonical spec
 
-| Source | BCE field name | Slash range? | Qualifier shape | Era handling | Existence-uncertainty field | Largest gap |
+| Source | BCE field name | Slash range? | Qualifier shape | Era handling | Uncertainty field(s) | Largest gap |
 |---|---|---|---|---|---|---|
 | Beckerath | `start_bce_high/_low + end_bce_high/_low` | yes | per-bound bool | BCE-only | `existence_uncertain` | naming + slash |
 | HKW | `start_year + end_year` | no | per-bound 3-state + row-level rollup | BCE-only | `name_uncertain` | naming + plus-years |
@@ -304,7 +299,7 @@ These three field families are orthogonal. A row can be `existence_certainty=dou
 **Common mismatches**:
 - **6 BCE field naming conventions across 7 numeric sources.** No two agree.
 - **3 qualifier shapes**: per-bound bool (Beckerath, HKW), row-level bool (Kitchen), row-level enum (Shaw, Ryholt).
-- **5 existence-uncertainty field names** with overlapping semantics; only PM's is a 3-state enum.
+- **5 uncertainty-related field names** with overlapping semantics across two distinct axes (existence vs attribution); only PM's `attribution_certainty` is already a 3-state enum.
 
 ---
 
