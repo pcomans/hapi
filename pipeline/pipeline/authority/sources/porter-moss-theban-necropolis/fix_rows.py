@@ -25,6 +25,7 @@ import copy
 import json
 import re
 from pathlib import Path
+from typing import Callable
 
 SOURCE_DIR = Path(__file__).parent
 RECONCILED = SOURCE_DIR / "reconciled.jsonl"
@@ -1032,7 +1033,8 @@ def _detect_attribution_certainty(notes: str | None) -> str:
 # Data-driven migration table: (field_name, deriver). Each deriver
 # takes `notes` (str | None) and returns the derived value. Adding a
 # new typed flag is a one-tuple change. Per Gemini round-3.
-_ISSUE_182_DERIVATIONS: list[tuple[str, callable]] = [
+_Deriver = Callable[[str | None], bool | str]
+_ISSUE_182_DERIVATIONS: list[tuple[str, _Deriver]] = [
     ("is_uninscribed", lambda notes: bool(notes and _UNINSCRIBED_RE.search(notes))),
     ("is_usurped", lambda notes: bool(notes and _USURPED_RE.search(notes))),
     ("attribution_certainty", _detect_attribution_certainty),
