@@ -1051,8 +1051,11 @@ def _apply_issue_182_migrations(rows: list[dict]) -> list[str]:
             new_val = deriver(notes)
             if row[field] != new_val:
                 row[field] = new_val
+                # Use json.dumps for log-line consistency with the
+                # rest of the file (booleans render as `true` not
+                # `True`, strings as `"x"` not `'x'`). Per Gemini round-5.
                 log.append(
-                    f"- {tid}: {field} → {new_val!r} "
+                    f"- {tid}: {field} → {json.dumps(new_val, ensure_ascii=False)} "
                     f"(issue #182 derivation from notes_from_pm)"
                 )
     return log
