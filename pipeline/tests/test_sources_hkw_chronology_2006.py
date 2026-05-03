@@ -160,14 +160,19 @@ def test_no_slash_display_outside_alt_names_migrations() -> None:
     """Issue #176 Shape A+B: slash-separated displays (`X/Y`) are only
     allowed if the corresponding alt_name has been migrated. Post-fix,
     every slash-display from the original corpus has had its second name
-    moved to alt_names — there should be no remaining `X/Y` displays.
+    moved to alt_names — there should be no remaining slashes in display.
+
+    PR #188 Gemini round-1: the prior `\\w/\\w` regex missed Egyptian
+    names ending in apostrophe followed by slash (e.g.
+    `Smenkhkare'/Nefernefruaten` — apostrophe is not `\\w`). Switched
+    to a more robust check: strip parenthetical hedges first
+    (parentheses are reserved for `(?)` hedges), then assert no `/`
+    remains anywhere in display.
     """
     for r in _rows():
         d = r.get("display") or ""
-        # Permit slash inside parens (e.g. transliteration apostrophes
-        # don't use slash) — but a bare `/` between letters is the
-        # multi-name signal.
-        assert not re.search(r"\w/\w", d), (
+        d_stripped = re.sub(r"\(.*?\)", "", d)
+        assert "/" not in d_stripped, (
             f"{r.get('display')!r}: slash in display; should be split into "
             f"`display` + `alt_names` via SLASH_ROW_MIGRATIONS."
         )
