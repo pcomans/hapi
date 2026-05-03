@@ -167,6 +167,10 @@ These sources don't carry numeric BCE fields; their date semantics live in `dyna
 
 Phase A consumers MUST normalise per-source dates into a canonical envelope before cross-source comparison. The spec below is the target shape. Per-source migration toward it is tracked separately (see "Migration plan" below).
 
+**Suffix convention:** `_older` and `_younger` are deliberately chosen over `_high`/`_low` because BCE numerics invert the usual ordering — the "older" date is numerically the SMALLER value (`-3032` is older than `-2982`). Calling the older value `_high` is the opposite of the standard programming convention where `_high` means max. The temporal-semantic suffix `_older` matches the meaning regardless of sign. Per Gemini PR #195 round-1.
+
+**Sources without a slash range** (HKW, Kitchen, Ryholt, Shaw, PM) set `_older == _younger` to the single value. **Null endpoints** set both to null and populate `null_endpoints_reason`.
+
 ```jsonc
 {
   // === Era handling ===
@@ -176,19 +180,10 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
   // convention (matches Shaw OHAE post-#181).
 
   // === Numeric bounds (canonical names) ===
-  // Suffix convention: `_older` (numerically smaller for BCE — more
-  // negative) and `_younger` (numerically larger for BCE — less
-  // negative or positive for CE). Avoids the `_high`/`_low` ambiguity
-  // (in BCE the "older" date is numerically the SMALLER value;
-  // calling it `_high` is the opposite of the standard programming
-  // convention where `_high` means max). Per Gemini round-1 P2.
   "start_year_older":   -3032,     // older endpoint of the start range
   "start_year_younger": -2982,     // younger endpoint of the start range
   "end_year_older":     -3000,     // older endpoint of the end range
   "end_year_younger":   -2950,     // younger endpoint of the end range
-  // For sources without a slash range (HKW, Kitchen, Ryholt, Shaw,
-  // PM): set `_older == _younger` to the single value. For null
-  // endpoints: set both null and populate `null_endpoints_reason`.
 
   // === Year 0 / astronomical-vs-historical convention ===
   // This spec uses ASTRONOMICAL year numbering (ISO 8601-ish):
