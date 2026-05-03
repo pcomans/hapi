@@ -142,57 +142,50 @@ Code subagent pass against the source PDF. No human scholar has
 signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
+Schema backfills:
+- is_group_entry: state pinned to GROUP_ENTRY_DH_IDS:
+    [...]18A–H [The Amarna Interlude]: True
+    [...]18K–N [The Amarna Interlude]: True
+    (all 463 other rows: False)
+
+Field corrections:
 - Tiaa A [The Power and the Glory]: notes corrected (Gemini OCR dropped the article "a" in "including a number of usurpations" and left a stray colon after "including". The PDF (p. 140 col 2, Tiaa A entry) reads with the article; `notes` is a verbatim-quotation field so the reviewer's correction is applied rather than preserving the OCR artifact.)
-    was: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including: number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
-    now: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including a number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
+    value: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including a number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
 - [...]18A–H [The Amarna Interlude]: notes corrected (Majority-voted notes retained an editorial tail ('Group entry covering multiple daughters.') added by agent-a that is not in D&H's prose on p. 157. `notes` is a verbatim-quotation field; the tail is stripped.)
-    was: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters."
-    now: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."
+    value: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."
 - [...]18K–N [The Amarna Interlude]: notes corrected (Majority-voted notes retained the same 'Group entry covering multiple daughters.' editorial tail added by agent-a. Stripped for verbatim fidelity to D&H p. 157.)
-    was: "Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters."
-    now: "Daughters of Anen; depicted with their siblings in tomb TT120."
+    value: "Daughters of Anen; depicted with their siblings in tomb TT120."
 - Tey [The Amarna Interlude]: notes corrected (Majority-voted notes retained agent-a's editorial tail 'D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules.' That is meta-commentary about the extraction, not D&H prose. Stripped. The KGW deduplication itself is correct (see roles field).)
-    was: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules."
-    now: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min."
+    value: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min."
 - Thutmose B [The Amarna Interlude]: alt_names corrected (Two of three agents included 'Thutmose Q (conceivably identical)' as an alt_name, but `alt_names` is reserved for alternate forms of the same individual's name (e.g. 'Ankhesenpaaten' → 'Ankhesenamun'). Thutmose Q is a distinct Brief Lives entry that D&H flags as conceivably the same person; that cross-reference belongs in `notes` (where it is already preserved) not `alt_names`.)
-    was: ["Thutmose Q (conceivably identical)"]
-    now: []
+    value: []
 - Tutankhuaten [The Amarna Interlude]: alt_names corrected (All three agents split the D&H compact-notation 'TUTANKHATEN/AMUN' literally to ['TUTANKHATEN', 'AMUN'], but the slash is D&H's shorthand for the successive regnal names Tutankhaten → Tutankhamun (the 'Tutankh-' prefix is dropped before /AMUN for typographic economy, as with other of D&H's name-change slashes). Expanded to the canonical pair.)
-    was: ["TUTANKHATEN", "AMUN"]
-    now: ["Tutankhaten", "Tutankhamun"]
+    value: ["Tutankhaten", "Tutankhamun"]
 - Amenhotep E [The Amarna Interlude]: alt_names corrected (Agents preserved D&H's BOLD-CAPITALS rendering (used by D&H for kings' regnal names) as ALLCAPS strings ['AMENHOTEP IV', 'AKHENATEN']. Museum catalogues and downstream authority matching use titlecase ('Akhenaten', 'Amenhotep IV'); normalising to titlecase is consistent with the Tutankhuaten correction above and with titlecase alt_names already present on Ankhesenpaaten, Nefertiti, Horemheb, and Meryetaten-tasherit. D&H's typographic emphasis is a formatting signal, not a canonical-name choice.)
-    was: ["AMENHOTEP IV", "AKHENATEN"]
-    now: ["Amenhotep IV", "Akhenaten"]
+    value: ["Amenhotep IV", "Akhenaten"]
 - Meryetaten [The Amarna Interlude]: alt_names corrected (Same allcaps-vs-titlecase normalisation as Amenhotep E: agents preserved D&H's BOLD-CAPITALS rendering of the regnal name **NEFERNEFERUATEN** as 'NEFERNEFERUATEN'. Titlecase matches museum-catalogue spelling and the rest of the source's alt_names.)
-    was: ["NEFERNEFERUATEN"]
-    now: ["Neferneferuaten"]
+    value: ["Neferneferuaten"]
 - Ankhesenpaaten [The Amarna Interlude]: spouse_names corrected (Agents rendered the Ay-marriage hedge as 'Ay (brief marriage)', dropping D&H's explicit 'perhaps' from the phrase 'a ring in Berlin that joins her cartouche with that of King Ay, perhaps indicating a brief marriage' (p. 154). The hedge belongs on the existence of the marriage, not its duration; preserved verbatim in the parenthetical.)
-    was: ["Tutankhamun", "Ay (brief marriage)"]
-    now: ["Tutankhamun", "Ay (perhaps, brief marriage)"]
+    value: ["Tutankhamun", "Ay (perhaps, brief marriage)"]
 - Khaemwaset C [The House of Ramesses]: children_names corrected (Chunk-2 sanctioned cross-entry-inference pattern: Khaemwaset C's own entry (p. 171) names no children, while three separate Brief Lives entries in the same sub-section explicitly name him as father — Hori A (p. 171, 'Probably a grandson of Ramesses II and son of Khaemwaset C'), Isetneferet C House-row (p. 171, 'daughter of Khaemwaset C'), Ramesses C House-row (p. 173, 'Dedicator at Memphis of a statue of his father, Khaemwaset C'). Agent-b captured all three; the majority voted [] and lost the symmetry. Same mechanism as the Shuttarna II → Gilukhipa and Tushratta → Tadukhipa inferences sanctioned in the Amarna chunk README.)
-    was: []
-    now: ["Hori A", "Isetneferet C", "Ramesses C"]
+    value: ["Hori A", "Isetneferet C", "Ramesses C"]
 - Iset D Ta-Hemdjert [The Decline of the Ramessides]: children_names corrected (Chunk-2 sanctioned cross-entry-inference pattern: Iset D Ta-Hemdjert's own entry (p. 192) names only her granddaughter Iset E, but both Amenhirkopshef C (p. 192, 'Son of Ramesses III and Iset D') and Ramesses C Decline-row (p. 194, 'Son of Ramesses III and Iset D') explicitly name her as mother. D&H uses the short form 'Iset D' in the children's entries and the long compound 'Iset D Ta-Hemdjert' as her own dh_id — same individual. Without this inference the family tree is asymmetric. Populating children here matches the chunk-2 precedent (the mother's and grandmother's entries both point to Iset E's eventual appointment) and brings the row in line with the granddaughter mention already in `notes`.)
-    was: []
-    now: ["Amenhirkopshef C", "Ramesses C"]
+    value: ["Amenhirkopshef C", "Ramesses C"]
 - Hori A [The House of Ramesses]: father_name corrected (D&H p. 171 reads 'Probably a grandson of Ramesses II and son of Khaemwaset C.' Standard English coordination scopes 'probably' over the whole nominal phrase — both the grandson claim and the son-of-Khaemwaset-C claim share the hedge. The extraction agents stripped the hedge from `father_name`; restored verbatim to match the chunks-1-2 hedge-preservation convention ('Yuya (probable)' on Mutemwia etc.). The paired cross-entry inference on Khaemwaset C keeps `children_names = ['Hori A', ...]` bare per the README's hedge-handling rule (hedges live on the child-row's `father_name`, not on the parent's `children_names` list).)
-    was: "Khaemwaset C"
-    now: "Khaemwaset C (probable)"
+    value: "Khaemwaset C (probable)"
 - Shepsetipet [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; known from a stela found near tomb S3477 at Saqqara …' — the chunk-default `dynasty: 1` from D&H's Ch-1-joint-dynasties section placement contradicts the row's own evidence. Refined to 2 here.)
-    was: 1
-    now: 2
+    value: 2
 - Sitba [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; buried in Helwan tomb 1241 H9.' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 2.)
-    was: 1
-    now: 2
+    value: 2
 - Syhefernerer [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; buried in Saqqara tomb S2146E …' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 2.)
-    was: 1
-    now: 2
+    value: 2
 - Redji [The Founders]: dynasty corrected (Notes prose explicitly ends with 'dated stylistically to the 3rd Dynasty.' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 3.)
-    was: 1
-    now: 3
+    value: 3
 - Ameny A [Seizers of the Two Lands]: alt_names corrected (Ameny A's prose explicitly states 'later king as AMENEMHAT II' (D&H's BOLD-CAPITALS convention for a regnal-name reference). Earlier D&H chunks consistently populate `alt_names` with the titlecase regnal form when an individual has a later-king reference — precedents include `Paramessu` (alt_names: 'Ramesses I'), `Ramesses A` (alt_names: 'Ramesses II'), `Amenhotep E` (alt_names: 'Amenhotep IV', 'Akhenaten'), and `Sobkhotep C` which the Kings and Commoners chunk later applied the same rule to ('later co-regent and king as SOBKHOTEP IV'). Seizers extraction missed the rule. Surfaced by Codex review on 2026-04-19 retrospective pass; fix restores cross-chunk-consistent aliasing so Phase-A matcher can hit Ameny A via either his D&H dh_id or his pharaoh.se canonical-name `Amenemhat II`.)
-    was: []
-    now: ["Amenemhat II"]
+    value: ["Amenemhat II"]
 - Didit [Seizers of the Two Lands]: mother_name corrected (Didit's Brief Life ends with `mother of Neferet Q`; `Sithathor Q`'s Brief Life in the same sub-section's Unplaced block opens `Mother of Didit, named on the funerary stela of Neferet Q in Munich.` The cross-entry-inference rule D&H adopted in chunk 2 Amarna (Gilukhipa / Shuttarna II pair) and chunk 3 Ramesside (Hattusilis III / Pudukhepa pair, and others) symmetrises kinship: a parent-named-as-X-in-child's-notes populates `father_name`/`mother_name` on the child's row, and the reciprocal `children_names` on the parent's row. Seizers extraction applied the symmetry on child→parent (Didit's entry names Neferet Q as child → Neferet Q's row must have mother_name `Didit` — which it does) but missed the other symmetry edge: parent→child. `Sithathor Q` is a mother in her own entry but `Didit`'s row has `mother_name: null`. Surfaced by Codex review on 2026-04-19 retrospective pass; fix restores intra-chunk kinship symmetry.)
-    was: null
-    now: "Sithathor Q"
+    value: "Sithathor Q"
+- Sitre A [The House of Ramesses]: alt_names corrected (Issue #175: clear `alt_names = ['Tia Q']` per the Thutmose B precedent (already in this fix_rows.py). D&H's notes prose for this row reads `She may previously have borne the name Tia (Q).` — a hedged identity hint, NOT a confirmed alt_name. `alt_names` is reserved for alternate forms of the same individual's verified name (e.g. `Ankhesenpaaten` → `Ankhesenamun`). The cross-reference to Tia (Q) is already preserved in `notes` so no information is lost; clearing `alt_names` brings this row in line with the Thutmose B / Thutmose Q correction also in this file.)
+    value: []
+- Thutmose B [The Amarna Interlude]: roles corrected (Issue #175: fix `OPULE` typo (1 row) → `MULE` (8 rows in corpus). `OPULE` is not a documented D&H role token; `MULE` (Master / Overseer of the Lord's Estate) is the intended code. The `KNOWN_ROLE_TOKENS` allowlist + `test_role_tokens_in_known_vocab` closure test added in this PR catch this class of typo going forward.)
+    value: ["EKSon", "HPM", "SPP", "MULE"]
