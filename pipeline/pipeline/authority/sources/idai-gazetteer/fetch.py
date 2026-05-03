@@ -261,8 +261,15 @@ def _extract_coordinates(pref_location) -> list | None:
             return None
     else:
         return None
+    # Guard against partial-null pairs like [null, 25.7] — iDAI hasn't
+    # been observed emitting these, but the cost of the check is one line
+    # and the cost of letting `[null, 25.7]` through is a downstream
+    # numeric-comparison crash on the bbox test (PR #184 code-reviewer P2-1).
+    lon, lat = coords
+    if not (isinstance(lon, (int, float)) and isinstance(lat, (int, float))):
+        return None
     # Treat [0, 0] as missing — see docstring.
-    if coords[0] == 0.0 and coords[1] == 0.0:
+    if lon == 0.0 and lat == 0.0:
         return None
     return coords
 
@@ -295,14 +302,14 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
     # key without checking — the `parent_id` value is still a valid iDAI
     # reference (resolves at gazetteer.dainst.org/place/NNNN), just not
     # within this file.
-    kept_gaz_ids: set[str] = set()
-    for record in records:
-        types = record.get("types", [])
-        gaz_id = record["gazId"]
-        is_supplementary = gaz_id in ADDITIONAL_GAZ_ID_SET
-        if not is_supplementary and not set(types) & SITE_TYPES:
-            continue
-        kept_gaz_ids.add(str(gaz_id))
+    #
+    # Filter mirrors the second pass exactly: keep iff supplementary OR
+    # types intersect SITE_TYPES. gazId is already an API-typed string.
+    kept_gaz_ids: set[str] = {
+        r["gazId"] for r in records
+        if r["gazId"] in ADDITIONAL_GAZ_ID_SET
+        or (set(r.get("types", [])) & SITE_TYPES)
+    }
 
     for record in records:
         types = record.get("types", [])
