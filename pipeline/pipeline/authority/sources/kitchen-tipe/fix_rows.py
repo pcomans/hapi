@@ -121,6 +121,170 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# === Issue #180 schema-audit additions =======================================
+#
+# Strict-all-3-P1 per #176/#177/#178/#179 policy. Adds typed flags to
+# disambiguate the multiple semantics overloaded onto null fields and
+# in-string sentinels in Kitchen's TIPE Tables 1/3/4.
+
+import copy
+import re
+
+SCHEMA_FIELD_DEFAULTS_180: dict[str, object] = {
+    # Shape D — disambiguate the multiple meanings of `null` on these fields.
+    # `*_is_kitchen_unknown=True` means Kitchen explicitly prints `[Prenomen
+    # unknown]` / `[Length unknown]` (a positive assertion that the king
+    # exists but the value isn't recorded). False means the table layout
+    # doesn't include this column for this row (e.g. HPA list omits prenomen).
+    "prenomen_is_kitchen_unknown": False,
+    # Shape H — kitchen_id substream letter (`H` HPA, `E` Sais-Bubastis-East,
+    # `P` Persian/proto-Saite, `None` main-line dynasty).
+    "substream": None,
+    # Shape J — typed flags for structural variants the audit flagged.
+    # `is_co_regent_only`: row is a co-regent slot only (e.g. 21H.05
+    # Masaharta is HPA but co-regent under Pinudjem I, not a sole ruler).
+    "is_co_regent_only": False,
+    # `existence_doubtful`: Kitchen marks the king's existence as
+    # uncertain via `?` / `??` / quote-glyphs in `name`.
+    "existence_doubtful": False,
+    # `same_person_as`: kitchen_id of the row this row's king is
+    # ALSO catalogued as. Pinudjem I appears at 21H.03 (HPA) and
+    # 21H.04 (king-titulature) — same person, two table rows.
+    "same_person_as": None,
+    # Shape J — `corrected_end_bce`: Kitchen's printed `end_bce` is a
+    # typographic reversal on 21H.06; the corrected interval lives here.
+    # None on every other row.
+    "corrected_end_bce": None,
+    # Shape I — typed list for two-prenomen rows (25.03 Piankhy adopts
+    # Sneferre after initially using Usimare). `prenomens` replaces the
+    # legacy `prenomen` scalar's comma-joined form. Empty list when
+    # only one prenomen exists; in that case the scalar `prenomen` is
+    # the source of truth.
+    "prenomens": [],
+}
+
+# Same-person pairs Kitchen catalogues twice. Only Pinudjem I in the
+# current TIPE extract; the audit notes the convention but no other
+# rows.
+_SAME_PERSON_PAIRS: dict[str, str] = {
+    "21H.03": "21H.04",  # Pinudjem I (HPA capacity) ↔ Pinudjem I (king titulature)
+    "21H.04": "21H.03",
+}
+
+# Co-regent-only rows per Kitchen's TIPE narrative (Table 3).
+_CO_REGENT_ONLY_KITCHEN_IDS = {
+    "21H.05",  # Masaharta — HPA co-regent under Pinudjem I
+    "21H.06",  # Djed-Khons-ef-ankh — short-lived HPA co-regent
+}
+
+# 25.03 Piankhy temporal prenomen sequence: Kitchen's `Usimare, then
+# Sneferre` decomposes to the typed list with `when` markers.
+_PIANKHY_PRENOMENS = [
+    {"name": "Usimare", "when": "initial"},
+    {"name": "Sneferre", "when": "later"},
+]
+
+# 21H.06 — Kitchen prints `1046–1056` with a 1-year length; the printed
+# `1056` is a typographic reversal of `1045` (predecessor Masaharta ends
+# 1046, successor Menkheperre starts 1045). Move this from a hardcoded
+# Python constant + notes_from_kitchen prose to a typed `corrected_end_bce`
+# field. Per audit Shape J P1.
+_CORRECTED_END_BCE: dict[str, int] = {
+    "21H.06": -1045,
+}
+
+
+_KITCHEN_ID_SUBSTREAM_RE = re.compile(r"^\d+([A-Z])\.")
+
+
+def _detect_substream(kitchen_id: str) -> str | None:
+    m = _KITCHEN_ID_SUBSTREAM_RE.match(kitchen_id)
+    return m.group(1) if m else None
+
+
+# Existence-uncertainty markers Kitchen prints in `name`:
+#   - trailing `?` or `??` (`Pimay (the later king??)`, `Two further governors?`)
+#   - single-quote-wrapped Greek lemmas (`'Ammeris'`, `Psusennes 'III'`)
+_NAME_QUESTION_RE = re.compile(r"\?+\s*\)?\s*$")
+_NAME_QUOTE_GLYPH_RE = re.compile(r"'[^']+'")
+
+
+def _detect_existence_doubtful(name: str) -> bool:
+    if not name:
+        return False
+    if _NAME_QUESTION_RE.search(name):
+        return True
+    # A whole-word quote-glyph like `'Ammeris'` is an existence hedge;
+    # an inline-quoted disambiguator like `Psusennes 'III'` is a
+    # numeral-glyph variation, not existence-doubtful. Use heuristic:
+    # if the entire name (modulo whitespace) is wrapped in single
+    # quotes, treat as doubtful.
+    return name.strip().startswith("'") and name.strip().endswith("'")
+
+
+def _backfill_180_schema(rows: list[dict]) -> list[str]:
+    log: list[str] = []
+    for row in rows:
+        added = []
+        for f, default in SCHEMA_FIELD_DEFAULTS_180.items():
+            if f not in row:
+                row[f] = copy.deepcopy(default)
+                added.append(f)
+        if added:
+            log.append(f"  {row['kitchen_id']}: backfilled {sorted(added)!r}")
+    return log
+
+
+def _apply_180_migrations(rows: list[dict]) -> list[str]:
+    log: list[str] = []
+    for row in rows:
+        kid = row["kitchen_id"]
+
+        # Substream letter
+        new_sub = _detect_substream(kid)
+        if row["substream"] != new_sub:
+            row["substream"] = new_sub
+            log.append(f"  {kid}: substream → {new_sub!r}")
+
+        # prenomen_is_kitchen_unknown — explicit `[Prenomen unknown]`
+        new_unk = (row.get("prenomen") == "[Prenomen unknown]")
+        if row["prenomen_is_kitchen_unknown"] != new_unk:
+            row["prenomen_is_kitchen_unknown"] = new_unk
+            log.append(f"  {kid}: prenomen_is_kitchen_unknown → {new_unk}")
+
+        # is_co_regent_only
+        new_cr = (kid in _CO_REGENT_ONLY_KITCHEN_IDS)
+        if row["is_co_regent_only"] != new_cr:
+            row["is_co_regent_only"] = new_cr
+            log.append(f"  {kid}: is_co_regent_only → {new_cr}")
+
+        # existence_doubtful from `name`
+        new_ed = _detect_existence_doubtful(row.get("name") or "")
+        if row["existence_doubtful"] != new_ed:
+            row["existence_doubtful"] = new_ed
+            log.append(f"  {kid}: existence_doubtful → {new_ed}")
+
+        # same_person_as
+        new_sp = _SAME_PERSON_PAIRS.get(kid)
+        if row["same_person_as"] != new_sp:
+            row["same_person_as"] = new_sp
+            log.append(f"  {kid}: same_person_as → {new_sp!r}")
+
+        # corrected_end_bce
+        new_corr = _CORRECTED_END_BCE.get(kid)
+        if row["corrected_end_bce"] != new_corr:
+            row["corrected_end_bce"] = new_corr
+            log.append(f"  {kid}: corrected_end_bce → {new_corr!r}")
+
+        # prenomens list — only populate for Piankhy two-prenomen row
+        if kid == "25.03":
+            if row["prenomens"] != _PIANKHY_PRENOMENS:
+                row["prenomens"] = copy.deepcopy(_PIANKHY_PRENOMENS)
+                log.append(f"  {kid}: prenomens → 2 entries")
+
+    return log
+
+
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
 
@@ -155,6 +319,12 @@ def main() -> None:
         )
         row[field] = new_val
 
+    # 3. Issue #180 schema-audit: typed flags + list-promote scalar pair.
+    schema_log = _backfill_180_schema(rows)
+    schema_log += _apply_180_migrations(rows)
+    if schema_log:
+        override_log.extend(schema_log)
+
     RECONCILED.write_text(
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows
@@ -184,8 +354,11 @@ def main() -> None:
     DIFF.write_text(appended)
 
     print(f"Applied {len(override_log)} override(s).")
-    print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
-    print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
+    # Print paths relative to the source dir's parent (not deep-rooted)
+    # so the script works when copied into a tmp dir for idempotence
+    # tests. Per the Beckerath #179 CI fix.
+    print(f"Updated {RECONCILED.relative_to(SOURCE_DIR.parent)}")
+    print(f"Updated {DIFF.relative_to(SOURCE_DIR.parent)}")
 
 
 if __name__ == "__main__":
