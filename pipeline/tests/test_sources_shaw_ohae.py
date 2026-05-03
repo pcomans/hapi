@@ -143,3 +143,133 @@ def test_roman_period_row_crosses_bce_ce_boundary() -> None:
     assert row["date_qualifier"] is None
     assert row["sub_periods"] == []
     assert row["source_citation"] == {"page": 414, "edition": EDITION}
+
+
+# ── Closure tests (#181) — typed flags + parser-consistency ──────────
+
+_REQUIRED_181_KEYS = ("date_precision", "is_composite", "crosses_bce_ce")
+_DATE_PRECISION_VOCAB = {"geological", "regnal_approximate", "regnal_precise"}
+
+
+def test_181_every_row_has_typed_flags() -> None:
+    """Every row carries all 3 typed fields introduced in #181."""
+    for r in _rows():
+        for key in _REQUIRED_181_KEYS:
+            assert key in r, (r.get("chapter_number"), key)
+
+
+def test_181_date_precision_in_vocab() -> None:
+    """date_precision ∈ {geological, regnal_approximate, regnal_precise}."""
+    for r in _rows():
+        assert r["date_precision"] in _DATE_PRECISION_VOCAB, (
+            r["chapter_number"], r["date_precision"]
+        )
+
+
+def test_181_regnal_precise_canonical_set() -> None:
+    """Chapters where Shaw drops the `c.` qualifier — the date endpoints
+    are precise, not approximate. Pinned 2026-05-03: ch 12 Third
+    Intermediate Period, ch 13 Late Period, ch 14 Ptolemaic Period,
+    ch 15 Roman Period. Per egyptologist + code-reviewer P2-1 — the
+    initial draft never assigned `regnal_precise` to any row."""
+    expected = {12, 13, 14, 15}
+    actual = {
+        r["chapter_number"] for r in _rows()
+        if r["date_precision"] == "regnal_precise"
+    }
+    assert actual == expected, sorted(actual)
+
+
+def test_181_palaeolithic_is_geological() -> None:
+    """Ch 2 Prehistory (`-700000 → -4000`) is the only `geological`-precision
+    row. Phase A consumers must check this flag before doing arithmetic
+    on date_range_start_bce — `-700000` is a rounded order-of-magnitude
+    figure, not a precise BCE year."""
+    geological = [r for r in _rows() if r["date_precision"] == "geological"]
+    assert len(geological) == 1
+    r = geological[0]
+    assert r["chapter_number"] == 2
+    assert r["date_range_start_bce"] == -700000
+
+
+def test_181_composite_chapters_canonical_set() -> None:
+    """Composite chapters (ch_title spans more than one Egyptological
+    period). Pinned 2026-05-03: ch 10 `Amarna Period and the Later
+    New Kingdom`."""
+    expected = {10}
+    actual = {r["chapter_number"] for r in _rows() if r["is_composite"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_181_crosses_bce_ce_canonical_set() -> None:
+    """Only ch 15 Roman Period (30 bc → ad 395) crosses BCE/CE.
+    `date_range_end_bce=395` is positive — without this flag, downstream
+    arithmetic silently treats it as a BCE year."""
+    expected = {15}
+    actual = {r["chapter_number"] for r in _rows() if r["crosses_bce_ce"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_181_date_qualifier_in_vocab() -> None:
+    """Shape F P2: `date_qualifier ∈ {"c.", None}` controlled vocab."""
+    for r in _rows():
+        assert r["date_qualifier"] in (None, "c."), (
+            r["chapter_number"], r["date_qualifier"]
+        )
+
+
+def test_181_chapter_title_endpoints_match_typed_dates() -> None:
+    """Shape B parser-consistency: the date range printed in the
+    chapter_title parenthetical must match the typed date_range_*
+    fields. E.g. `(c.2686-2160 bc)` ↔ `(start=-2686, end=-2160)`.
+    Roman ch 15 is the special bce/ce-crossing case: `(30 bc-ad 395)`
+    ↔ `(start=-30, end=395)`."""
+    import re
+    bce_pat = re.compile(r"\((?:c\.\s*)?([\d,]+)\s*-\s*([\d,]+)\s*bc\)")
+    bce_ce_pat = re.compile(r"\(\s*(\d+)\s*bc\s*-\s*ad\s*(\d+)\s*\)")
+    for r in _rows():
+        title = r["chapter_title"]
+        if r["crosses_bce_ce"]:
+            m = bce_ce_pat.search(title)
+            assert m, (r["chapter_number"], title)
+            assert int(m.group(1)) == -r["date_range_start_bce"], r["chapter_number"]
+            assert int(m.group(2)) == r["date_range_end_bce"], r["chapter_number"]
+        else:
+            m = bce_pat.search(title)
+            assert m, (r["chapter_number"], title)
+            start = int(m.group(1).replace(",", ""))
+            end = int(m.group(2).replace(",", ""))
+            assert -start == r["date_range_start_bce"], r["chapter_number"]
+            assert -end == r["date_range_end_bce"], r["chapter_number"]
+
+
+def test_181_fix_rows_is_file_level_idempotent() -> None:
+    """Run fix_rows.py twice in a temporary copy; assert byte-equality."""
+    import shutil
+    import subprocess
+    import sys
+    import tempfile
+    src_dir = (
+        Path(__file__).parent.parent
+        / "pipeline"
+        / "authority"
+        / "sources"
+        / "shaw-ohae-2000"
+    )
+    with tempfile.TemporaryDirectory() as tmp_str:
+        tmp = Path(tmp_str) / "src"
+        shutil.copytree(src_dir, tmp)
+        for _ in range(2):
+            subprocess.run(
+                [sys.executable, str(tmp / "fix_rows.py")],
+                check=True,
+                capture_output=True,
+            )
+        run1 = (tmp / "reconciled.jsonl").read_bytes()
+        subprocess.run(
+            [sys.executable, str(tmp / "fix_rows.py")],
+            check=True,
+            capture_output=True,
+        )
+        run2 = (tmp / "reconciled.jsonl").read_bytes()
+        assert run1 == run2
