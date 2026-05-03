@@ -434,6 +434,14 @@ GROUP_ENTRY_DH_IDS: set[tuple[str, str]] = {
 # introduces a new role token, after verifying the token is D&H's
 # (not a typo).
 #
+# Membership semantics: presence in this set means "verified in the
+# corpus; will not fail the closure test". A trailing `# ?` comment
+# means "the semantic decoding of this token (what role it actually
+# names) is uncertain pending Phase A" — NOT that the token's
+# membership in the closure is in doubt. The closure test is the
+# source of truth for membership; the comments are documentation of
+# decoding status (Phase A work).
+#
 # Compiled from the corpus (74 distinct tokens minus the OPULE typo
 # this PR fixes), grouped by category for human-readable maintenance.
 KNOWN_ROLE_TOKENS: set[str] = {
@@ -540,9 +548,10 @@ def backfill_is_group_entry(rows: list[dict]) -> list[str]:
     """Issue #175 (Shape J): every row carries `is_group_entry: bool`,
     True iff the (dh_id, sub_period) is in `GROUP_ENTRY_DH_IDS`.
 
-    Idempotent. Schema-shape pass before SPOT_CORRECTIONS. Constitutional
-    rule 4: schema shape uniform across all rows so consumers don't
-    branch on present-vs-absent.
+    **Mutates `rows` in place** AND returns log lines for downstream
+    audit-log writing. Idempotent. Schema-shape pass before SPOT_CORRECTIONS.
+    Constitutional rule 4: schema shape uniform across all rows so
+    consumers don't branch on present-vs-absent.
     """
     log_lines: list[str] = []
     for row in rows:
