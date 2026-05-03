@@ -1029,37 +1029,30 @@ def _detect_attribution_certainty(notes: str | None) -> str:
     return "attested"
 
 
+# Data-driven migration table: (field_name, deriver). Each deriver
+# takes `notes` (str | None) and returns the derived value. Adding a
+# new typed flag is a one-tuple change. Per Gemini round-3.
+_ISSUE_182_DERIVATIONS: list[tuple[str, callable]] = [
+    ("is_uninscribed", lambda notes: bool(notes and _UNINSCRIBED_RE.search(notes))),
+    ("is_usurped", lambda notes: bool(notes and _USURPED_RE.search(notes))),
+    ("attribution_certainty", _detect_attribution_certainty),
+]
+
+
 def _apply_issue_182_migrations(rows: list[dict]) -> list[str]:
     """Per-row schema-audit migrations for issue #182. Idempotent."""
     log: list[str] = []
     for row in rows:
         tid = row["tomb_id"]
         notes = row.get("notes_from_pm")
-
-        new_uninscribed = bool(notes and _UNINSCRIBED_RE.search(notes))
-        if row["is_uninscribed"] != new_uninscribed:
-            row["is_uninscribed"] = new_uninscribed
-            log.append(
-                f"- {tid}: is_uninscribed → {new_uninscribed} "
-                f"(issue #182 derivation from notes_from_pm)"
-            )
-
-        new_usurped = bool(notes and _USURPED_RE.search(notes))
-        if row["is_usurped"] != new_usurped:
-            row["is_usurped"] = new_usurped
-            log.append(
-                f"- {tid}: is_usurped → {new_usurped} "
-                f"(issue #182 derivation from notes_from_pm)"
-            )
-
-        new_cert = _detect_attribution_certainty(notes)
-        if row["attribution_certainty"] != new_cert:
-            row["attribution_certainty"] = new_cert
-            log.append(
-                f"- {tid}: attribution_certainty → {new_cert!r} "
-                f"(issue #182 derivation from notes_from_pm)"
-            )
-
+        for field, deriver in _ISSUE_182_DERIVATIONS:
+            new_val = deriver(notes)
+            if row[field] != new_val:
+                row[field] = new_val
+                log.append(
+                    f"- {tid}: {field} → {new_val!r} "
+                    f"(issue #182 derivation from notes_from_pm)"
+                )
     return log
 
 
