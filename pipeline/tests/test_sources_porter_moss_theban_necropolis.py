@@ -112,6 +112,12 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
     "QV47", "QV51", "QV52", "QV53", "QV55", "QV60", "QV66", "QV68",
     "QV71", "QV73", "QV74", "QV75",
 })
+# Chunk-9 (PM I.1 § I — TT1-TT10 Deir el-Medina core). FIRST chunk drawn
+# from PM I.1; previous chunks 1-8 came from PM I.2. Every TT number in
+# TT1..TT10 is present in PM I.1 § I — no gaps in this decade. 10 rows.
+CHUNK9_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(1, 11)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -120,6 +126,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK5_TOMB_IDS
     | CHUNK7_TOMB_IDS
     | CHUNK8_TOMB_IDS
+    | CHUNK9_TOMB_IDS
 )
 
 
@@ -464,9 +471,18 @@ def test_is_joint_burial_flag_paired_with_co_occupants() -> None:
                 f"a single-occupant tomb cannot be a joint burial.",
             )
             seen_joint.append(r["tomb_id"])
-    # SWV-ThreePrincesses is the only joint-coordinate burial in the
-    # current corpus. KV46 is intentionally False (asymmetric).
-    assert seen_joint == ["SWV-ThreePrincesses"], seen_joint
+    # Joint-coordinate burials in the current corpus, sorted by tomb_id
+    # via the merge sort key (TT10 sorts before SWV-ThreePrincesses
+    # because the TT prefix has rank 2 and SWV has rank 3 in
+    # `merge.VALLEY_ORDER`):
+    # - SWV-ThreePrincesses (chunk-7): PM p.591 lists Menhet/Merti/Menwi
+    #   coordinately as `MENHET, MERTI, AND MENWI`.
+    # - TT10 (chunk-9): PM p.19 lists Penbuy + Kasa coordinately as
+    #   `PENBUY ... and KASA, Servants in the Place of Truth` — bare
+    #   conjunction, plural role applies to both.
+    # KV46 is intentionally False (asymmetric `YUIA ..., AND THUIU` —
+    # Yuia leads). TT6 is also False (`X and son Y` — hierarchical).
+    assert seen_joint == ["TT10", "SWV-ThreePrincesses"], seen_joint
 
 
 def test_swv_three_princesses_per_person_role_propagation() -> None:
@@ -2403,6 +2419,240 @@ def test_chunk8_notes_from_pm_remaining_rows() -> None:
         notes = _row(tid)["notes_from_pm"]
         assert notes is not None, f"{tid} expected notes_from_pm, got None"
         assert substr in notes, f"{tid}: expected {substr!r} in {notes!r}"
+
+
+# ---------------------------------------------------------------------------
+# Chunk 9 (PM I.1 § I — TT1-TT10 Deir el-Medina core)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk9_uniform_null_phase_a_fields() -> None:
+    """Every chunk-9 row carries null for Phase-A-enrichment fields
+    (`dynasty`, `sub_period`, `date_bce_approx_start`, `date_bce_approx_end`,
+    `discovery_year`, `discoverer`, `location_sub_area`).
+    `source_citation.edition` is `PM I.1 2nd ed. 1960` (NOT the chunks 1-8
+    `PM I.2 2nd ed. 1964` — chunk 9 is the first PM I.1 chunk).
+    `source_citation.section` is exactly "I" (PM I.1 § I has no sub-letter
+    for this range).
+    `theban_area` is "Deir el-Medina" for every TT1-TT10 row (workmen's
+    tombs at Deir el-Medina; sub-site shifts to Dra' Abu el-Naga at TT11+).
+    `is_unfinished` is `false` for every row (PM I.1 prints no `Unfinished`
+    flag in TT1-TT10).
+    """
+    for tid in CHUNK9_TOMB_IDS:
+        r = _row(tid)
+        assert r["theban_area"] == "Deir el-Medina", tid
+        assert r["source_citation"]["edition"] == EDITION_PM_I1, tid
+        assert r["source_citation"]["section"] == "I", tid
+        assert r["dynasty"] is None, tid
+        assert r["sub_period"] is None, tid
+        assert r["date_bce_approx_start"] is None, tid
+        assert r["date_bce_approx_end"] is None, tid
+        assert r["discovery_year"] is None, tid
+        assert r["discoverer"] is None, tid
+        assert r["location_sub_area"] is None, tid
+        assert r["is_unfinished"] is False, tid
+
+
+def test_chunk9_all_rows_official_role() -> None:
+    """All 10 TT1-TT10 occupants are Deir el-Medina workmen / scribes /
+    foremen / chiseller / Chief in the Great Place — controlled-vocab
+    flattens to `"Official"` for every row. The verbatim title clause
+    (`Servant in the Place of Truth`, `Foremen in the Place of Truth`,
+    `Chiseller of Amun in the Place of Truth`, `Scribe in the Place of
+    Truth`, `Chief in the Great Place`) lives in `notes_from_pm`.
+    """
+    for tid in CHUNK9_TOMB_IDS:
+        assert _row(tid)["occupant_role"] == "Official", (
+            tid, _row(tid)["occupant_role"]
+        )
+
+
+def test_chunk9_occupant_names() -> None:
+    """PM-faithful occupant_name per the README's diacritic policy
+    (strip Ḥ on matchable field, preserve ayin, preserve underdot-Ḳ).
+    `Raʿmose`/`Amenmose` use the project-wide -osi → -ose Anglicisation
+    for downstream museum-data matching (Met / Brooklyn / TLA all use
+    `Ramose`); chunk 9 retains the convention even though chunk 7
+    preserved PM's `-osi` ending on `Kamosi`.
+    """
+    expected = {
+        "TT1": "Sennezem",
+        "TT2": "Khaʿbekhnet",
+        "TT3": "Peshedu",
+        "TT4": "Ḳen",
+        "TT5": "Neferʿabet",
+        "TT6": "Neferhotep",
+        "TT7": "Raʿmose",
+        "TT8": "Khaʿ",
+        "TT9": "Amenmose",
+        "TT10": "Penbuy",
+    }
+    for tid, name in expected.items():
+        assert _row(tid)["occupant_name"] == name, (
+            tid, _row(tid)["occupant_name"]
+        )
+
+
+def test_chunk9_source_citation_pages() -> None:
+    """Printed page numbers per TT tomb (PM I.1 § I, printed pp.1-19,
+    physical pp.19-37). Verified directly against the PDF in the
+    chunk-9 egyptologist-reviewer pass.
+    """
+    expected_page = {
+        "TT1": 1, "TT2": 6, "TT3": 9, "TT4": 11, "TT5": 12,
+        "TT6": 14, "TT7": 15, "TT8": 16, "TT9": 18, "TT10": 19,
+    }
+    for tid, page in expected_page.items():
+        actual = _row(tid)["source_citation"]["page"]
+        assert actual == page, (tid, actual, page)
+
+
+def test_chunk9_shared_with_tombs() -> None:
+    """PM headwords' `(Also owner of tomb N.)` / `(Perhaps also owner of
+    tomb N.)` / `(also owner of tombs N and M)` cross-references parse
+    to `shared_with_tombs`. Three rows in scope; the rest empty.
+    """
+    expected = {
+        "TT1": [],
+        "TT2": [],
+        "TT3": ["TT326"],
+        "TT4": ["TT337"],   # PM "(Perhaps also owner of tomb 337.)"
+        "TT5": [],
+        "TT6": [],
+        "TT7": ["TT212", "TT250"],  # PM "(also owner of tombs 212 and 250)"
+        "TT8": [],
+        "TT9": [],
+        "TT10": [],
+    }
+    for tid, swt in expected.items():
+        actual = _row(tid)["shared_with_tombs"]
+        assert sorted(actual) == sorted(swt), (tid, actual, swt)
+
+
+def test_chunk9_joint_burial_classification() -> None:
+    """The TT1-TT10 range contains two multi-occupant headwords:
+
+    - **TT6 (NEFERḤŌTEP and son NEBNŪFER, Foremen…)** is HIERARCHICAL.
+      PM uses `X and son Y` — Neferhotep is the parent, syntactic head;
+      Nebnufer is structurally subordinate. `is_joint_burial=false`,
+      `co_occupants=[{name: "Nebnufer", role: "Official", alt_names: []}]`.
+      Same shape as KV46 (`YUIA …, Divine father, AND THUIU …`).
+
+    - **TT10 (PENBUY and KASA, Servants in the Place of Truth)** is
+      COORDINATE. PM uses bare conjunction with plural role-clause; no
+      syntactic primacy. `is_joint_burial=true`,
+      `co_occupants=[{name: "Kasa", role: "Official", alt_names: []}]`.
+      Same shape as SWV-ThreePrincesses (`MENHET, MERTI, AND MENWI`).
+
+    The other 8 TT1-TT10 rows are single-occupant.
+    """
+    # TT6: hierarchical
+    tt6 = _row("TT6")
+    assert tt6["occupant_name"] == "Neferhotep"
+    assert tt6["is_joint_burial"] is False
+    assert tt6["co_occupants"] == [
+        {"name": "Nebnufer", "role": "Official", "alt_names": []}
+    ]
+
+    # TT10: coordinate
+    tt10 = _row("TT10")
+    assert tt10["occupant_name"] == "Penbuy"
+    assert tt10["is_joint_burial"] is True
+    assert tt10["co_occupants"] == [
+        {"name": "Kasa", "role": "Official", "alt_names": []}
+    ]
+
+    # Other 8 rows: single-occupant
+    for tid in CHUNK9_TOMB_IDS - {"TT6", "TT10"}:
+        r = _row(tid)
+        assert r["co_occupants"] == [], (tid, r["co_occupants"])
+        assert r["is_joint_burial"] is False, (tid, r["is_joint_burial"])
+
+
+def test_chunk9_notes_from_pm_pinned_substrings() -> None:
+    """Per-row `notes_from_pm` substring assertions. Every chunk-9 row
+    has a populated `notes_from_pm` (PM I.1 headwords are dense — every
+    row carries family clauses + role title + regnal/dynastic dating).
+    Pinned substrings reflect the egyptologist-corrected forms after
+    the chunk-9 reviewer pass: macrons preserved per chunk-3/7
+    precedent, false underdots dropped where PM does not print one.
+    """
+    expected = {
+        "TT1": "Servant in the Place of Truth. Dyn. XIX.",
+        "TT2": "(L. D. Text, No. 107.) Parents, Sennezem (tomb 1)",
+        "TT3": "Parents, Menna and Huy. Wife, Nezemtbehdet.",
+        "TT4": "Chiseller of Amūn in the Place of Truth.",
+        "TT5": "Parents, Neferronpet and Mahi. Wife, Taēsi.",
+        "TT6": "Wife (of Neferḥōtep), Iymau; (of Nebnūfer), Iy.",
+        "TT7": "Parents, Amenemḥab and Kakaia. Wife, Mutemwia.",
+        "TT8": "Chief in the Great Place.",
+        "TT9": "Wife, Tent-hōm.",
+        "TT10": "Wives (of Penbuy), Amentetusert and Irnūfer; (of Kasa), Bukhaʿnef.",
+    }
+    for tid, substr in expected.items():
+        notes = _row(tid)["notes_from_pm"]
+        assert notes is not None, f"{tid} expected notes_from_pm, got None"
+        assert substr in notes, f"{tid}: expected {substr!r} in {notes!r}"
+
+
+def test_chunk9_no_redundant_double_period_after_biblio_paren() -> None:
+    """`CHUNK9_CORRECTIONS` strips a redundant `.).` double-period that
+    the merge majority introduced when two of three agents stitched the
+    bibliographic close-paren with a paragraph-separator period. PM I.1
+    prints `(L. D. Text, No. N.) <Next sentence>` with NO period after
+    the close-paren (verified by egyptologist printed-source review on
+    pp. 6, 14, 15, 16, 19 of the PDF).
+    """
+    for tid in CHUNK9_TOMB_IDS:
+        notes = _row(tid)["notes_from_pm"]
+        assert notes is None or ".)." not in notes, (
+            f"{tid}: redundant `.).` double-period after biblio close-paren "
+            f"slipped past CHUNK9_CORRECTIONS; got {notes!r}"
+        )
+
+
+def test_chunk9_tt2_attribution_certainty_overridden_to_attested() -> None:
+    """TT2 `notes_from_pm` carries `Wives, Saḥte and (probably) Esi.`
+    The context-free `_detect_attribution_certainty` regex fires on the
+    `(probably)` token and would derive `attribution_certainty="probable"`,
+    BUT PM's hedge applies to the wife identification (Esi), not to
+    Khaʿbekhnet's primary occupant attribution. The per-row
+    `DERIVER_OVERRIDES` mechanism in `fix_rows.py` pins TT2 back to
+    `"attested"` post-derivation. This test asserts the override is
+    actually winning — if a future refactor of `_apply_issue_182_migrations`
+    silently reverts the override order, this test catches it.
+    """
+    tt2 = _row("TT2")
+    assert tt2["attribution_certainty"] == "attested", (
+        f"TT2 must carry `attribution_certainty='attested'` despite the "
+        f"`(probably)` hedge in `notes_from_pm` (the hedge applies to wife "
+        f"Esi, not Khaʿbekhnet); got {tt2['attribution_certainty']!r}. "
+        f"Verify that DERIVER_OVERRIDES in fix_rows.py is being applied "
+        f"AFTER the regex pass."
+    )
+    # Also verify the (probably) token is still in notes — the override
+    # must NOT silently strip the verbatim PM hedge.
+    assert "(probably)" in (tt2["notes_from_pm"] or ""), (
+        "TT2 notes_from_pm must preserve PM's verbatim `(probably)` "
+        "hedge; the deriver override must not strip the source text."
+    )
+
+
+def test_chunk9_postprocess_j_period_i_normalisation() -> None:
+    """`postprocess.py` Phase-1 substitution `J.I → Ḥ` (added in chunk 9
+    for the single TT6 site `NEFERJ.IOTEP`) must produce `Neferhotep`
+    in the row's `occupant_name` after the README's strip-Ḥ rule.
+    Mechanical assertion that the postprocess + strip-Ḥ chain works.
+    """
+    tt6 = _row("TT6")
+    # occupant_name is the matchable field — strip-Ḥ applies.
+    assert tt6["occupant_name"] == "Neferhotep", tt6["occupant_name"]
+    # notes_from_pm is verbatim-preserve — Ḥ stays. Verify the underdot
+    # is preserved on `Neferḥōtep` and `Ḥaremḥab` in the wife-clause.
+    notes = tt6["notes_from_pm"]
+    assert "Ḥaremḥab" in notes, notes
+    assert "Neferḥōtep" in notes, notes
 
 
 # ---------------------------------------------------------------------------

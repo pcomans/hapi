@@ -63,6 +63,17 @@ def test_capital_h_underdot_mid_word() -> None:
     assert pp.process_chunk("Re<-l:Iarakhti") == "Reʿ-Ḥarakhti"
 
 
+def test_capital_h_underdot_pm_i1_period_variant() -> None:
+    """``J.I`` is a PM-I.1-specific variant for capital ``Ḥ`` (single observed
+    site ``NEFERJ.IOTEP`` in chunk 9 / TT6). The bigram does not appear in
+    normal English prose in this source — verified by grep over all
+    raw/chunk-*.txt before adding the rule."""
+    assert pp.process_chunk("NEFERJ.IOTEP") == "NEFERḤOTEP"
+    assert pp.process_chunk("6. NEFERJ.IOTEP and son NEBNUFER") == (
+        "6. NEFERḤOTEP and son NEBNUFER"
+    )
+
+
 def test_sit_dhout_special_case() -> None:
     """QV47's mother-of field reads ``Sit-ḍḥout`` in PM; the publisher OCR
     mangles it to ``Sit-gQ.out``. Single-token whitelist replacement."""

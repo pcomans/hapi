@@ -691,6 +691,116 @@ CHUNK8_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK8_RENAMES: dict[str, str] = {}
 
 
+# Chunk-9 (PM I.1 § I — TT1-TT10 Deir el-Medina core). FIRST chunk drawn
+# from PM I.1; previous chunks 1-8 came from PM I.2. Merge picked the
+# `.).` redundant-double-period form on TT2/TT6/TT7/TT8/TT10 because two of
+# three agents stitched the bibliographic close-paren `(L. D. Text, No. N.)`
+# onto the next sentence's leading word with a paragraph-separator period in
+# between — but PM I.1 prints `(L. D. Text, No. N.) <Next sentence>` with no
+# period after the close-paren (verified at physical pp.19, 24, 32, 34, 37 of
+# `proprietary/books/Porter & Moss - PM I Theban Necropolis.pdf`). Strip the
+# redundant period to match PM's printed punctuation. TT4 already lands
+# clean via `tie-break-overrides.json` so no entry needed for that row.
+CHUNK9_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT2",
+        "notes_from_pm",
+        "Servant in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 107.) Parents, Sennezem (tomb 1) and Iyneferti. Wives, Saḥte and (probably) Esi.",
+        "Strip redundant `.).` double-period to PM-faithful `.)` form. PM "
+        "I.1 p.6 (TT2) prints `(L. D. Text, No. 107.) Parents, …` with no "
+        "period after the bibliographic close-paren; merge majority "
+        "stitched the paragraph break with an extra period.",
+    ),
+    (
+        "TT3",
+        "notes_from_pm",
+        "Servant in the Place of Truth on the west of Thebes. Ramesside. Parents, Menna and Huy. Wife, Nezemtbehdet.",
+        "Drop false underdots inserted by extraction agents. PM I.1 p.9 (TT3 "
+        "Peshedu) prints `Huy` (plain h, no underdot) and `Nezemtbehdet` "
+        "(plain h, no underdot). Egyptologist printed-source review (chunk-9 "
+        "PR) verified directly against the PDF. The README's notes_from_pm "
+        "verbatim-preserve policy applies in both directions: drop the "
+        "underdot when PM does not print one, preserve when it does.",
+    ),
+    (
+        "TT4",
+        "notes_from_pm",
+        "Chiseller of Amūn in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 106.) Parents, Thonūfer, Chiseller of Amūn in the Khenu, and Maʿetnefert. Wives, Nefertere and Ḥenutmehyt.",
+        "Three corrections applied per egyptologist printed-source review "
+        "(chunk-9 PR): (a) drop medial false underdot in `Ḥenutmeḥyt` → "
+        "`Ḥenutmehyt` — PM I.1 p.11 prints only the LEADING capital-Ḥ underdot, "
+        "the medial `h` carries no underdot. (b) Restore macrons on `Amūn` "
+        "(both occurrences) — PM prints `Amūn` with macron-u; matches the "
+        "chunk-3/7 macron-preserve precedent (KV45/KV46/DAN-Neferhotep all "
+        "preserve macrons in notes). (c) Restore macron on `Thonūfer` — same "
+        "rationale. The earlier tie-break-overrides.json TT4 entry's claim "
+        "that 'macrons dropped per project-wide convention' was empirically "
+        "wrong vs the chunk-3/7 precedent; superseded by this CHUNK9_CORRECTIONS "
+        "entry.",
+    ),
+    (
+        "TT5",
+        "notes_from_pm",
+        "Servant in the Place of Truth on the west of Thebes. Ramesside. Parents, Neferronpet and Mahi. Wife, Taēsi.",
+        "Drop false underdot on `Maḥi` → `Mahi`; PM I.1 p.12 (TT5 Neferʿabet) "
+        "prints `Mahi` (plain h, no underdot — egyptologist verified directly "
+        "against the PDF). Restore macron on `Taēsi` — PM prints `Taēsi` with "
+        "macron-e per the chunk-3/7 macron-preserve precedent.",
+    ),
+    (
+        "TT6",
+        "notes_from_pm",
+        "Foremen in the Place of Truth. Temp. Ḥaremḥab to Ramesses II. (L. D. Text, No. 101.) Wife (of Neferḥōtep), Iymau; (of Nebnūfer), Iy.",
+        "Two corrections: (a) Strip redundant `.).` double-period to PM-faithful "
+        "`.)` form; PM I.1 p.14 prints `(L. D. Text, No. 101.) Wife …` with "
+        "single period inside parens. (b) Restore macrons on `Neferḥōtep` and "
+        "`Nebnūfer` per chunk-3/7 macron-preserve precedent — PM prints both "
+        "with macron-ō / macron-ū respectively. The strip-Ḥ rule applies to "
+        "`occupant_name` (matchable field) only; `notes_from_pm` is verbatim-"
+        "preserve, so both the Ḥ underdot and the macron stay.",
+    ),
+    (
+        "TT7",
+        "notes_from_pm",
+        "Scribe in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 99.) Parents, Amenemḥab and Kakaia. Wife, Mutemwia.",
+        "Strip redundant `.).` double-period to PM-faithful `.)` form. "
+        "Same pattern as TT2 fix; PM I.1 p.15 prints `(L. D. Text, No. 99.) "
+        "Parents …` with single period inside parens.",
+    ),
+    (
+        "TT8",
+        "notes_from_pm",
+        "Chief in the Great Place. Temp. Amenophis II, Tuthmosis IV, and Amenophis III. (L. D. Text, No. 96.) Wife, Meryt.",
+        "Strip redundant `.).` double-period to PM-faithful `.)` form. "
+        "Same pattern as TT2 fix; PM I.1 p.16 prints `(L. D. Text, No. 96.) "
+        "Wife …` with single period inside parens.",
+    ),
+    (
+        "TT9",
+        "notes_from_pm",
+        "Servant in the Place of Truth, Charmer of scorpions. Ramesside. Wife, Tent-hōm.",
+        "Drop false underdot on `Tent-ḥōm` → `Tent-hōm`. PM I.1 p.18 (TT9 "
+        "Amenmose) prints `Tent-hōm` with plain h + macron-o (egyptologist "
+        "verified directly against the PDF). The macron is correct; the "
+        "underdot was inserted by extraction agents over-applying the "
+        "strip-Ḥ-restore rule. Macron-o preserved per chunk-3/7 precedent.",
+    ),
+    (
+        "TT10",
+        "notes_from_pm",
+        "Servants in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 97.) Father (of Penbuy), Iri. Wives (of Penbuy), Amentetusert and Irnūfer; (of Kasa), Bukhaʿnef.",
+        "Two corrections: (a) Strip redundant `.).` double-period to PM-"
+        "faithful `.)` form; PM I.1 p.19 prints `(L. D. Text, No. 97.) "
+        "Father …` with single period inside parens. (b) Restore macron on "
+        "`Irnūfer` per chunk-3/7 macron-preserve precedent — PM prints "
+        "`Irnūfer` with macron-u.",
+    ),
+]
+
+
+CHUNK9_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -719,6 +829,23 @@ CHUNK8_RENAMES: dict[str, str] = {}
 # `occupant_alt_names` retains its honest meaning post-fix: ONLY alternate
 # readings of the SAME person's name (prenomens like the chunk-7 DAN-Antef
 # rows; transliteration variants; throne-name vs birth-name pairs).
+# `valley` → `theban_area` field rename (PR #170, 2026-05-02). The rename
+# was a pure key change applied to `reconciled.jsonl` directly + every
+# prompt + every test, but the per-chunk agent JSONLs were NOT updated
+# (they remain the stable record of each round of agent extraction).
+# Re-running `merge.py` therefore regenerates rows with the OLD `valley`
+# key — restoring the old field name. This migration runs in `main()`
+# before `SPOT_CORRECTIONS` to rename the key on every row that still
+# carries it. Idempotent: a row that already has `theban_area` is
+# untouched. Per CLAUDE.md rule 3 (deterministic-enforcement-over-
+# convention), the rename's "convention" of "always edit reconciled.jsonl
+# directly when renaming a key" needs a code-level enforcement so re-
+# merge doesn't silently regress.
+LEGACY_FIELD_RENAMES: dict[str, str] = {
+    "valley": "theban_area",
+}
+
+
 SCHEMA_FIELD_DEFAULTS: dict[str, object] = {
     "tomb_aliases": [],
     "co_occupants": [],
@@ -959,6 +1086,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK5_CORRECTIONS,
     CHUNK7_CORRECTIONS,
     CHUNK8_CORRECTIONS,
+    CHUNK9_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -969,6 +1097,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
 ALL_RENAMES: dict[str, str] = {
     **CHUNK7_RENAMES,
     **CHUNK8_RENAMES,
+    **CHUNK9_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -1041,8 +1170,53 @@ _ISSUE_182_DERIVATIONS: list[tuple[str, _Deriver]] = [
 ]
 
 
+# Per-row deriver overrides for cases where the regex-based deriver fires
+# on a hedge token that PM applies to a SECONDARY clause (a wife / parent /
+# child / sibling identification) rather than to the PRIMARY occupant
+# attribution. The deriver scans `notes_from_pm` with a context-free regex,
+# so it cannot distinguish `(probably) Esi` (qualifying the second wife
+# in TT2's headword) from `Probably Hatshepsut II` (qualifying the
+# headword's primary attribution).
+#
+# Each entry (tomb_id, field, value, rationale) overrides the deriver's
+# output AFTER the regex pass runs; the rationale must cite the PM page
+# and the structural reason the deriver's regex output is incorrect for
+# that row. Idempotent: a second run finds the field already at the
+# pinned value.
+#
+# Format mirrors `SPOT_CORRECTIONS` so a future schema/audit pass can
+# treat the same shape uniformly. Apply only to rows whose primary
+# attribution is fully attested per PM but whose `notes_from_pm`
+# contains a hedge in a clearly-secondary clause; do NOT use this to
+# soften an attribution PM genuinely hedges.
+DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
+    (
+        "TT2",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. "
+        "Temp. Ramesses II.` — the primary attribution to Khaʿbekhnet is fully "
+        "attested. The `(probably)` token in `notes_from_pm` qualifies the "
+        "identification of his SECOND WIFE Esi (`Wives, Saḥte ... and (probably) "
+        "Esi`), not the headword. The `_detect_attribution_certainty` regex is "
+        "context-free and fires on any `(probably)` in notes — which is correct "
+        "for primary-attribution hedges (e.g. KV55 `Probably Amenophis IV...`) "
+        "but wrong for intra-note secondary-clause hedges. Egyptologist printed-"
+        "source review on PR (chunk 9) flagged.",
+    ),
+]
+
+
 def _apply_issue_182_migrations(rows: list[dict]) -> list[str]:
-    """Per-row schema-audit migrations for issue #182. Idempotent."""
+    """Per-row schema-audit migrations for issue #182. Idempotent.
+
+    Runs the regex-based derivers first, then applies `DERIVER_OVERRIDES`
+    for rows where the deriver's context-free regex fires on a
+    secondary-clause hedge that PM does not apply to the primary occupant
+    attribution. The override pass is logged distinctly from the deriver
+    pass so the audit trail makes the override-vs-derivation distinction
+    explicit.
+    """
     log: list[str] = []
     for row in rows:
         tid = row["tomb_id"]
@@ -1058,6 +1232,27 @@ def _apply_issue_182_migrations(rows: list[dict]) -> list[str]:
                     f"- {tid}: {field} → {json.dumps(new_val, ensure_ascii=False)} "
                     f"(issue #182 derivation from notes_from_pm)"
                 )
+    # Per-row deriver overrides (apply AFTER the regex pass so the
+    # override wins). Logged as "deriver override" so the audit trail
+    # distinguishes context-free derivation from per-row overrides.
+    by_id = {r["tomb_id"]: r for r in rows}
+    for tomb_id, field, new_val, rationale in DERIVER_OVERRIDES:
+        row = by_id.get(tomb_id)
+        if row is None:
+            raise KeyError(
+                f"DERIVER_OVERRIDES references unknown tomb_id {tomb_id!r}"
+            )
+        if row[field] != new_val:
+            row[field] = new_val
+            log.append(
+                f"- {tomb_id}: {field} → {json.dumps(new_val, ensure_ascii=False)} "
+                f"(deriver override; {rationale[:80]}...)"
+            )
+        else:
+            log.append(
+                f"- {tomb_id}: {field} already matches deriver override "
+                f"(no-op this run; {rationale[:80]}...)"
+            )
     return log
 
 
@@ -1080,6 +1275,50 @@ def _import_merge_sort_key():
 
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+
+    # Legacy field-key migration: PR #170 renamed `valley` → `theban_area`
+    # by editing reconciled.jsonl directly (the per-chunk agent JSONLs
+    # were not touched — they remain the stable record of each round of
+    # agent extraction). Re-running `merge.py` therefore regenerates rows
+    # with the OLD `valley` key. This migration enforces the rename on
+    # every load so the convention can no longer silently regress on a
+    # re-merge. Idempotent: a row that already has `theban_area` and no
+    # `valley` is unchanged. Logged distinctly from the typed-flag
+    # derivation pass and the SPOT_CORRECTIONS pass.
+    legacy_rename_log: list[str] = []
+    legacy_renamed_count = 0
+    for old_key, new_key in LEGACY_FIELD_RENAMES.items():
+        per_key_renamed: list[str] = []
+        for row in rows:
+            if old_key in row:
+                if new_key in row:
+                    # Both keys present — old PR #170 row + a stray
+                    # legacy `valley` re-introduced by re-merge. Prefer
+                    # the new key's value (the canonical post-#170
+                    # state) and drop the legacy key.
+                    if row[old_key] != row[new_key]:
+                        raise ValueError(
+                            f"row {row.get('tomb_id')!r} carries both "
+                            f"{old_key!r}={row[old_key]!r} and "
+                            f"{new_key!r}={row[new_key]!r} with different "
+                            f"values; resolve before merging."
+                        )
+                    del row[old_key]
+                else:
+                    row[new_key] = row.pop(old_key)
+                per_key_renamed.append(row["tomb_id"])
+        legacy_renamed_count += len(per_key_renamed)
+        if per_key_renamed:
+            legacy_rename_log.append(
+                f"- {old_key} → {new_key}: renamed on {len(per_key_renamed)} "
+                f"row(s) (first/last: {per_key_renamed[0]}, "
+                f"{per_key_renamed[-1]})"
+            )
+        else:
+            legacy_rename_log.append(
+                f"- {old_key} → {new_key}: no-op this run "
+                f"(every row already uses {new_key!r})"
+            )
 
     # Renames first: some reviewer-flagged corrections involve renaming a
     # descriptor tomb_id to match PM's printed name (e.g. `DAN-Ahhor` →
@@ -1211,6 +1450,11 @@ def main() -> None:
     if idx != -1:
         existing_diff = existing_diff[:idx].rstrip()
     body_sections: list[str] = []
+    if legacy_rename_log:
+        body_sections.append(
+            "Legacy field-key renames (post-#170 reconcile):\n"
+            + "\n".join(legacy_rename_log)
+        )
     if rename_log:
         body_sections.append("Tomb-id renames:\n" + "\n".join(rename_log))
     if field_add_log:

@@ -106,6 +106,15 @@ _SUBSTRING_FIXES: list[tuple[str, str]] = [
     ("I;I", "Ḥ"),
     ("l:I", "Ḥ"),
     ("I:J", "Ḥ"),
+    # ``J.I`` (J + period + I) is a sixth variant observed in PM I.1's text
+    # layer (PM I.2 chunks 1–8 never produced this form). Single observed
+    # site is ``NEFERJ.IOTEP`` in chunk 9 (TT6 headword); the bigram does
+    # not appear in normal English prose in this source — verified by
+    # grep over all raw/chunk-*.txt before adding this rule. Kept here
+    # alongside the other Ḥ substitutes so PM I.1 chunks see the same
+    # canonical form as PM I.2 chunks. Same idempotence property: the RHS
+    # ``Ḥ`` does not contain the LHS ``J.I``.
+    ("J.I", "Ḥ"),
     # Underdot ḍ + ḥ digraph. Single high-impact case is QV47's mother-of
     # field, ``Sit-ḍḥout``; the publisher OCR drops the underdot-D entirely
     # and renders the ḥ as ``Q.``. The exact source token ``Sit-gQ.out``
