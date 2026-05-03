@@ -63,6 +63,16 @@ No other chapter banner or opening chronology section in Shaw states sub-period 
 - CE years are positive integers (`395` = AD 395).
 - `date_qualifier` carries the book's hedge: `"c."` for chapters whose banner uses `c.` (chapters 2–10), `null` for the four chapters (Third Intermediate, Late, Ptolemaic, Roman) whose banners give unqualified dates.
 
+## Issue #181 schema additions (2026-05-03 audit-fix)
+
+The audit-fix adds 3 typed flags to disambiguate semantic edge cases on the BCE date fields. Every row carries every field after `fix_rows.py` runs (closure-tested by `test_181_every_row_has_typed_flags`). Note that Shaw OHAE has no merge.py / multi-agent reconciliation — the source is a single-transcriber extract, so `fix_rows.py` exists only to apply the typed-flag backfill in an idempotent script-driven way (rather than hand-editing reconciled.jsonl).
+
+- **`date_precision: str`** — enum `{geological, regnal_approximate, regnal_precise}`. Only ch 2 Prehistory carries `geological` (its `date_range_start_bce=-700000` is a rounded order-of-magnitude figure, NOT a precise BCE year). Phase A consumers MUST check this flag before doing arithmetic on `date_range_start_bce` — without it, the Palaeolithic row silently corrupts any cross-chapter date math. The escalation from P2 to P1 in the audit was driven by exactly this risk. Closure-tested for vocab + the canonical 1-row geological set.
+- **`is_composite: bool`** — True for chapters whose `chapter_title` spans more than one Egyptological period. Pinned set: `{10}` (Ch 10 "The Amarna Period and the Later New Kingdom" stitches Amarna with post-Amarna 18-20 Dyn).
+- **`crosses_bce_ce: bool`** — True for chapters whose date range crosses the BCE/CE boundary. Pinned set: `{15}` (Ch 15 Roman Period: `30 bc – ad 395`, encoded as `start=-30, end=+395`). Without this flag, downstream arithmetic on `date_range_end_bce=395` is silently wrong (the +395 represents 395 CE, not 395 BCE).
+
+Plus a parser-consistency closure test (`test_181_chapter_title_endpoints_match_typed_dates`) that verifies the date range printed in `chapter_title` matches the typed date_range_* fields per the README's documented sign convention.
+
 ## Rights
 
 OUP, in copyright. This extract contains **factual data** — period names, chapter numbers, BCE date ranges, author attributions, and page numbers — which are not copyrightable. The Naqada I/II BCE boundaries on the chapter 3 row come from Midant-Reynes (pp. 42-43); those numeric intervals are recorded as facts (with page citations) in `chapter-banners.txt` and in the `sub_periods` field, not as verbatim prose. No chapter-body sentences are reproduced. Per handoff rule 4, the book PDF itself is not committed; the scan lives at `proprietary/books/Shaw 2000 - Oxford History of Ancient Egypt.pdf` outside the public repo and is pinned by SHA-256 above.
