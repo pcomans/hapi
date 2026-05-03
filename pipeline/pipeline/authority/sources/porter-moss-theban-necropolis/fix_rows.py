@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re as _re_182
 import re
 from pathlib import Path
 
@@ -732,6 +733,23 @@ SCHEMA_FIELD_DEFAULTS: dict[str, object] = {
     # (PM's syntactic-coordinate construction at p.562 marks Yuia as the
     # subject — `YUIA ..., Divine father, AND THUIU ...`).
     "is_joint_burial": False,
+    # === Issue #182 schema-audit additions (Tier 3, all P2) ============
+    # Shape J P2: typed flags that PM marks via prose annotations on
+    # `notes_from_pm` rather than as structured fields. Each flag is
+    # mechanically derivable from a stable PM convention.
+    #
+    # `is_uninscribed`: PM literally writes "uninscribed" on the row.
+    # Pinned canonical set in the migration code below.
+    "is_uninscribed": False,
+    # `is_usurped`: PM literally writes "usurped" / "usurpation" on the
+    # row. Pinned canonical set: KV9 (doorways usurped from Ramesses V)
+    # + KV14 (usurped by Setnakht).
+    "is_usurped": False,
+    # `attribution_certainty`: enum {"attested", "probable", "uncertain"}
+    # — derived from PM's hedge tokens ("Probably", "(probably)",
+    # "tentatively", "uncertain", "perhaps", "attributed to") in
+    # `notes_from_pm`. Default "attested".
+    "attribution_certainty": "attested",
 }
 
 
@@ -973,6 +991,74 @@ for _tomb_id, _field, _, _ in SPOT_CORRECTIONS:
 del _seen
 
 
+# === Issue #182 schema-audit derivation (Tier 3 P2) ==========================
+# Mechanically detect typed flags from PM's prose markers in
+# `notes_from_pm`. Pure derivation — no asserted facts beyond what PM
+# verbatim records. Idempotent.
+
+_UNINSCRIBED_RE = _re_182.compile(r"\buninscribed\b", _re_182.IGNORECASE)
+_USURPED_RE = _re_182.compile(r"\busurp(?:ed|ation)\b", _re_182.IGNORECASE)
+
+# Hedge tokens for `attribution_certainty`. Order matters: more-uncertain
+# tokens win on compound markers ("perhaps Probably" → "uncertain").
+_ATTRIBUTION_HEDGE_PATTERNS = [
+    ("uncertain", _re_182.compile(r"\buncertain\b", _re_182.IGNORECASE)),
+    ("uncertain", _re_182.compile(r"\bperhaps\b", _re_182.IGNORECASE)),
+    ("uncertain", _re_182.compile(r"\bpossibly\b", _re_182.IGNORECASE)),
+    ("uncertain", _re_182.compile(r"\btentatively\b", _re_182.IGNORECASE)),
+    ("probable", _re_182.compile(r"\bprobably\b|\(probably\)", _re_182.IGNORECASE)),
+    ("probable", _re_182.compile(r"\battributed to\b", _re_182.IGNORECASE)),
+]
+
+
+def _detect_attribution_certainty(notes: str | None) -> str:
+    """Return enum value derived from PM's hedge tokens.
+
+    Default is `attested`. Stronger uncertainty wins over weaker — if
+    both `uncertain` and `probable` markers appear, `uncertain` wins.
+    """
+    if not notes:
+        return "attested"
+    for enum_val, pat in _ATTRIBUTION_HEDGE_PATTERNS:
+        if pat.search(notes):
+            return enum_val
+    return "attested"
+
+
+def _apply_issue_182_migrations(rows: list[dict]) -> list[str]:
+    """Per-row schema-audit migrations for issue #182. Idempotent."""
+    log: list[str] = []
+    for row in rows:
+        tid = row["tomb_id"]
+        notes = row.get("notes_from_pm")
+
+        new_uninscribed = bool(notes and _UNINSCRIBED_RE.search(notes))
+        if row["is_uninscribed"] != new_uninscribed:
+            row["is_uninscribed"] = new_uninscribed
+            log.append(
+                f"- {tid}: is_uninscribed → {new_uninscribed} "
+                f"(issue #182 derivation from notes_from_pm)"
+            )
+
+        new_usurped = bool(notes and _USURPED_RE.search(notes))
+        if row["is_usurped"] != new_usurped:
+            row["is_usurped"] = new_usurped
+            log.append(
+                f"- {tid}: is_usurped → {new_usurped} "
+                f"(issue #182 derivation from notes_from_pm)"
+            )
+
+        new_cert = _detect_attribution_certainty(notes)
+        if row["attribution_certainty"] != new_cert:
+            row["attribution_certainty"] = new_cert
+            log.append(
+                f"- {tid}: attribution_certainty → {new_cert!r} "
+                f"(issue #182 derivation from notes_from_pm)"
+            )
+
+    return log
+
+
 def _import_merge_sort_key():
     """Import `_sort_key` from sibling `merge.py` to re-order rows after renames.
 
@@ -1094,6 +1180,13 @@ def main() -> None:
                 f"- {tomb_id}: {field} already matches override (no-op this run; {rationale})\n"
                 f"    value: {json.dumps(new_val, ensure_ascii=False)}"
             )
+
+    # Issue #182 schema-audit pass: derive typed flags from
+    # `notes_from_pm`. Pure derivation — no asserted facts beyond
+    # what PM verbatim records. Idempotent.
+    schema_182_log = _apply_issue_182_migrations(rows)
+    if schema_182_log:
+        override_log.extend(schema_182_log)
 
     RECONCILED.write_text(
         "\n".join(

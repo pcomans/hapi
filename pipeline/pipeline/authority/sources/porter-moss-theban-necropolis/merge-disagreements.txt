@@ -140,6 +140,9 @@ Schema field additions:
 - tomb_aliases: present on every row already (no-op this run)
 - co_occupants: present on every row already (no-op this run)
 - is_joint_burial: present on every row already (no-op this run)
+- is_uninscribed: present on every row already (no-op this run)
+- is_usurped: present on every row already (no-op this run)
+- attribution_certainty: present on every row already (no-op this run)
 
 Field corrections:
 - KV10: notes_from_pm already matches override (no-op this run; PM p.517 headword prints `Inaccessible after Corridor B.` with a trailing period (chunk-1 line 870). Post-postprocessor agents dropped the period; restore via override per the README's notes_from_pm verbatim-preserve policy and to match the punctuation handling on KV14/KV19/KV22/KV23/KV43/KV45 etc. Gemini round-4 review (PR #140) flagged the punctuation inconsistency.)
