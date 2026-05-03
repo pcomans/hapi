@@ -147,6 +147,27 @@ All rows share a discriminator `kind` field:
   period header
 - `page` — integer page number in the PDF excerpt (490, 491, 492,
   493, 494, or 495 for IV.2; 496, 497, 498 for IV.3)
-- `note` — free text for anything the schema can't capture (joint
-  rulers, co-regencies, multi-ruler dynasty 14 lines like
-  `"Swadjtu, Ined, Hori, Dedumose"`)
+- `note` — free text for anything the schema can't capture (transcription provenance, OCR-correction documentation, scholarly hedges from Hendrickx Ch 2). After the issue #176 audit-fix, structured facts that previously lived in `note` (coregencies, rival claimants, per-bound `ca.` qualifiers, multi-ruler aggregations) are now in their own typed fields below; `note` is reserved for actually-prose information.
+
+### Issue #176 schema additions (2026-05-03)
+
+The audit-fix introduced these typed fields. Every row carries every field after `fix_rows.py` runs:
+
+- `alt_names: list[str]` — alternate name forms of the SAME person. Used for transliteration variants (`'Adj-ib`/`Anedjib`), regnal-name changes (`Amenhotep IV`/`Akhenaten`), and parenthetical Horus-name extractions from prior `note` prose (`Djoser` ↔ `Netjery-khet`). NOT used for cross-person aggregation (see `rulers`).
+- `rulers: list[{name, prenomen, alternative_reading, alt_names}]` — per-person entries when HKW packs N rulers into one chronological slot because the order is unknown (5 rows: e.g. `Sobekhotep VIII, Nebiriau, Rahotep, Sobekemzaf I & II, Bebiankh` for SIP-era; `Osorkon III, Takelot III` for Dyn 23 UE; etc.). **HKW DIVERGES from the corpus convention of one row per person** to preserve HKW's "we don't know the order" semantic. Phase-A consumers must iterate `rulers[]` for HKW-specifically.
+- `is_multi_ruler_entry: bool` — `True` iff `rulers` is non-empty (5 rows). Reciprocal contract enforced by `test_is_multi_ruler_entry_iff_rulers_non_empty`.
+- `name_uncertain: bool` — HKW's name-uncertainty hedge (one ruler, two candidate names — currently `Smenkhkare'`/`Nefernefruaten` under prenomen `'Ankhkheprure'` per HKW p.493). Distinct from regnal-name change.
+- `is_coregency: bool` + `coregency_with: list[str]` — typed coregency facts (Senwosret I ↔ Amenemhet I, Thutmose III ↔ Hatshepsut, Teos ↔ Nectanebo I). Reciprocal-link contract enforced by `test_coregency_pair_consistency`.
+- `is_rival_claimant: bool` + `rival_claimant_of: str | None` — Amenmesses ↔ Sety II (asymmetric: only the less-attested claimant carries the flag).
+- `start_year_approximate: bool` + `end_year_approximate: bool` — per-bound approximate flags (e.g. HKW prints `986–ca. 968` for Siamun: only end is approximate). Replaces the row-level `approximate` flag's coarse semantics; row-level `approximate` is preserved as the OR of the two for backwards compatibility.
+- `dynasty_branch: str | None` — `"UE"` / `"LE"` for the 2 Dyn-23 dynasty rows. Replaces the convention of disambiguating two `Dyn. 23` rows by parenthetical-text-in-label.
+- `null_dates_reason: str | None` — typed reason when start_year/end_year are null (e.g. `"HKW prints '2900–?+25' — end year unknown per HKW source."`). Migrated for rows where the audit specifically flagged the `?`-to-null reconciliation.
+
+### Display-name non-uniqueness (issue #176 Shape G — documented characteristic)
+
+`display` is NOT unique on its own:
+- `Ini` appears in two different dynasties (5 + 13), with different prenomens (`Neuserre'` vs `Merhetepre'`).
+- `Ta'o` appears twice in the SAME Dyn 17, with different prenomens (`Senakhtenre'` vs `Seqenenre'`).
+- `Number 23` (Dyn 23) appears as two dynasty rows with different `dynasty_branch` (UE vs LE).
+
+Use `(display, dynasty, prenomen)` as the disambiguating composite key; never join on `display` alone. `test_no_compound_display_in_ini_or_tao_dups` pins these explicitly.
