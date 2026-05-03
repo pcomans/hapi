@@ -309,7 +309,7 @@ The per-source schema-audit PRs (#175–#182) typed each source's existing date 
 
 ### Option A: Phase-A canonical-date helper (recommended for v0)
 
-Build a `pipeline.authority.dates.canonicalize(row, source)` helper that maps each source's verbatim date fields into the canonical envelope at consumer-read time. No schema changes required; Phase A code works against the canonical envelope. Downside: every consumer call pays a small canonicalisation cost; field-name drift across sources persists in the on-disk JSONL.
+Build a `pipeline.authority.dates.canonicalize_date(row, source)` helper that maps each source's verbatim date fields into the canonical envelope at consumer-read time. No schema changes required; Phase A code works against the canonical envelope. Downside: every consumer call pays a small canonicalisation cost; field-name drift across sources persists in the on-disk JSONL.
 
 **Advantages**:
 - Zero risk to existing per-source tests / closure assertions
