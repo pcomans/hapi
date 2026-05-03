@@ -185,60 +185,81 @@ def apply_deterministic_passes(rows: list[dict]) -> list[str]:
         if row["date_attestation"] != new_date_att:
             row["date_attestation"] = new_date_att
             log_lines.append(f"  {row['ryholt_id']}: date_attestation → {new_date_att!r}")
+        # Bi-directional sync (PR #189 round-2 Gemini): with markers
+        # preserved in strings, both flags are deterministic functions
+        # of the row's name-field contents. If a marker is added or
+        # removed from the source, the flag follows.
+        new_uncertain = _has_uncertainty_marker(row)
+        if row["is_uncertain_attribution"] != new_uncertain:
+            row["is_uncertain_attribution"] = new_uncertain
+            log_lines.append(f"  {row['ryholt_id']}: is_uncertain_attribution → {new_uncertain}")
+        new_lacunose = _has_lacuna_marker(row)
+        if row["is_lacunose"] != new_lacunose:
+            row["is_lacunose"] = new_lacunose
+            log_lines.append(f"  {row['ryholt_id']}: is_lacunose → {new_lacunose}")
     return log_lines
 
 
 # === In-string glyph migrations =============================================
 #
-# Strip `(?)`, `(syllabic)`, `(I)/(II)/(III)` from name strings;
-# promote each to its typed flag. Lacuna `[...]` markers are KEPT
-# in the name string (they show position of missing characters)
-# but the row also gets `is_lacunose=True`.
+# Strip `(syllabic)`, `(I)/(II)/(III)` from name strings; promote each
+# to its typed flag. `(?)` and `[...]` markers are KEPT in the name
+# string (PR #189 round-2 — preserve for re-derivability) and the
+# corresponding flag is derived bi-directionally in
+# `apply_deterministic_passes`.
+
+# All name + transliteration fields scanned for uncertainty / lacuna
+# markers. Used by both apply_glyph_migrations (var.-splitting,
+# homonym-stripping) and apply_deterministic_passes (bi-directional
+# flag derivation for is_uncertain_attribution + is_lacunose).
+NAME_FIELDS = (
+    "nomen",
+    "prenomen",
+    "nomen_transliterated",
+    "prenomen_transliterated",
+    "horus_name_transliterated",
+    "nebty_name_transliterated",
+    "golden_horus_name_transliterated",
+)
 
 _PAREN_QUESTION_RE = re.compile(r"\s*\(\?\)\s*$")
 _PAREN_SYLLABIC_RE = re.compile(r"\s*\(syllabic\)\s*$")
 _PAREN_ROMAN_RE = re.compile(r"\s*\(([IVX]+)\)\s*$")
 _VAR_SPLIT_RE = re.compile(r",\s*var\.\s*")
 _LACUNA_RE = re.compile(r"\[\.\.+\]")
+_PAREN_Q_ANY_RE = re.compile(r"\([^)]*\?\)|\(\.\.+\?\)")
+_BARE_TRAILING_Q_RE = re.compile(r"\s\?\s*$")
 _ROMAN_TO_INT = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10}
+
+
+def _has_uncertainty_marker(row: dict) -> bool:
+    for f in NAME_FIELDS:
+        v = row.get(f) or ""
+        if _PAREN_Q_ANY_RE.search(v) or _BARE_TRAILING_Q_RE.search(v):
+            return True
+    return False
+
+
+def _has_lacuna_marker(row: dict) -> bool:
+    for f in NAME_FIELDS:
+        v = row.get(f) or ""
+        if _LACUNA_RE.search(v):
+            return True
+    return False
 
 
 def apply_glyph_migrations(rows: list[dict]) -> list[str]:
     """Strip in-string uncertainty / syllabic / homonym glyphs from
     name fields; promote each to its typed flag. Idempotent."""
     log_lines: list[str] = []
-    # PR #189 round-2 (code-reviewer P1.1): switched from STRIP-and-flag
-    # to FLAG-ONLY for `(?)` markers. Stripping made the migration non-
-    # round-trippable (post-strip data couldn't re-derive the flag);
-    # FLAG-ONLY preserves the source trigger so re-derivation always
-    # works. Matches the existing `is_lacunose` and `is_syllabic_nomen`
-    # treatment (keep marker, set flag).
-    NAME_FIELDS = (
-        "nomen",
-        "prenomen",
-        "nomen_transliterated",
-        "prenomen_transliterated",
-        "horus_name_transliterated",
-        "nebty_name_transliterated",
-        "golden_horus_name_transliterated",
-    )
-    # Patterns for `(?)` (parenthesized), `(..?)` / `(...?)` (lacuna
-    # uncertainty), AND bare trailing `?` in transliteration fields
-    # (e.g. 14.g `'ya-k-ꜥ-r-b ?'`).
-    _PAREN_Q_ANY_RE = re.compile(r"\([^)]*\?\)|\(\.\.+\?\)")
-    _BARE_TRAILING_Q_RE = re.compile(r"\s\?\s*$")
+    # `is_uncertain_attribution` and `is_lacunose` flags are derived
+    # bi-directionally in `apply_deterministic_passes` from the
+    # preserved-in-string markers (PR #189 round-2). This function
+    # only handles the strip-and-promote migrations:
+    # `(syllabic)`, `(I)/(II)/(III)`, `, var. <alt>`.
 
     for row in rows:
         rid = row["ryholt_id"]
-        for f in NAME_FIELDS:
-            v = row.get(f) or ""
-            if _PAREN_Q_ANY_RE.search(v) or _BARE_TRAILING_Q_RE.search(v):
-                if not row["is_uncertain_attribution"]:
-                    row["is_uncertain_attribution"] = True
-                    log_lines.append(
-                        f"  {rid}: detected uncertainty marker in {f}; is_uncertain_attribution=True"
-                    )
-                break
         # `(syllabic)` (or `(syllabic?)`, `(syllabic)⁽¹⁾`, `(syllabic),
         # not preceded by ...`) in nomen_transliterated → is_syllabic_nomen.
         # Set the flag whenever any `(syllabic` substring occurs;
@@ -273,19 +294,9 @@ def apply_glyph_migrations(rows: list[dict]) -> list[str]:
             if variant and variant not in row["nomen_transliterated_variants"]:
                 row["nomen_transliterated_variants"] = sorted({*row["nomen_transliterated_variants"], variant})
                 log_lines.append(f"  {rid}: split `var.` from nomen_transliterated; variants={row['nomen_transliterated_variants']}")
-        # `[...]` lacuna → is_lacunose flag (keep marker in string)
-        is_lac = any(
-            _LACUNA_RE.search(row.get(f) or "")
-            for f in (
-                "nomen", "nomen_transliterated",
-                "prenomen", "prenomen_transliterated",
-                "horus_name_transliterated", "nebty_name_transliterated",
-                "golden_horus_name_transliterated",
-            )
-        )
-        if is_lac and not row["is_lacunose"]:
-            row["is_lacunose"] = True
-            log_lines.append(f"  {rid}: contains [...] lacuna; is_lacunose=True")
+        # `is_lacunose` flag derivation moved to `apply_deterministic
+        # _passes` (PR #189 round-2 — bi-directional sync uses
+        # `_has_lacuna_marker` helper that iterates `NAME_FIELDS`).
     return log_lines
 
 
