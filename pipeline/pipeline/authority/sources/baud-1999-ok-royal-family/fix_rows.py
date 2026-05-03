@@ -1091,6 +1091,11 @@ del _seen, _baud_id, _field, _key
 # decision (.claude/revise-priors/resolved/1777791674-baud-178-...md).
 # Strict-all-4-P1 per #176/#177 policy.
 
+# Defaults applied first by `_backfill_178_schema`; `_apply_178_migrations`
+# then overrides per-row for rows in the canonical sets below
+# (LOST_NAME_BAUD_IDS, COLLECTIVE_MONUMENT_BAUD_IDS, etc.). The default
+# values here describe the no-marker case (most rows are attested persons
+# with no joint/collective/lost marker).
 SCHEMA_FIELD_DEFAULTS_178: dict[str, object] = {
     # Family 1 — joint/collective/lost typed flags (Shape J)
     "is_joint_entry": False,
@@ -1116,26 +1121,41 @@ SCHEMA_FIELD_DEFAULTS_178: dict[str, object] = {
 # Lost-name / tentative / anonymous canonical sets, per audit's row-level
 # enumeration. Update deliberately when new chunks add rows.
 LOST_NAME_BAUD_IDS = {
+    # Headword "Nom perdu" or "Nom(s) perdu(s)" — name once attested but
+    # damaged in the source (distinct from `anonymous` = never inscribed).
+    # baud-266 was previously here but Baud's headword reads "Anonyme,
+    # sceau de Rêkhaef" — moved to ANONYMOUS_BAUD_IDS per egyptologist P1-2.
     "baud-258", "baud-260", "baud-262", "baud-263", "baud-264",
-    "baud-269", "baud-270", "baud-271", "baud-272", "baud-274",
-    "baud-277", "baud-282",
+    "baud-269", "baud-270", "baud-271", "baud-272",
+    "baud-273",  # "Nom(s) perdu(s), fils de Niouserrê" — egyptologist P1-3
+    "baud-274", "baud-277", "baud-282",
 }
 TENTATIVE_NAME_BAUD_IDS = {
     "baud-259", "baud-261", "baud-275",
 }
 ANONYMOUS_BAUD_IDS = {
-    # Anonymous PERSON on a relief at Sinai — entry_kind stays "person",
-    # only name_status is anonymous.
+    # Anonymous PERSONS (entry_kind stays "person") — Baud's headword names
+    # an unnamed person, not a monument:
     "baud-256",  # "Représentation anonyme, expedition leader, Sinaï"
-    # Anonymous queen-COMPLEX (monument-as-occupant) — entry_kind is
-    # collective_monument AND name_status is anonymous.
-    "baud-279",  # "Complexe de reine de Pépi Ier"
+    "baud-280",  # "Reine anonyme de Pépi Iᵉʳ, citée dans la biographie d'Wnj"
+    # baud-266: "Anonyme, sceau de Rêkhaef" — institutional seal, never named
+    # (NOT "Nom perdu" — distinct from lost). Egyptologist P1-2.
+    "baud-266",
+    # Anonymous monument-as-occupant rows (also in COLLECTIVE_MONUMENT_BAUD_IDS):
+    "baud-265",  # "Statues «de reine», temple bas de Rêkhaef"
+    "baud-268",  # "Couple royal anonyme, temple bas de Menkaouré"
+    "baud-276",  # "Complexe anonyme, au nord de celui de Djedkarê" (P1-4)
+    "baud-279",  # "Complexe de reine de Pépi Iᵉʳ"
+    "baud-281",  # "Représentations de reine(s) ... très partiellement préservées et anonymes"
 }
 COLLECTIVE_MONUMENT_BAUD_IDS = {
     "baud-257",  # "Complexes G I-a, b et c" — three pyramidal complexes
+    "baud-265",  # "Statues «de reine»" — anonymous queen statues
     "baud-267",  # "Complexes G III-a, b et c"
-    "baud-276",  # anonymous queen complex at Saqqara-Sud
-    "baud-279",  # anonymous queen complex at Saqqara-Sud (also anonymous)
+    "baud-268",  # "Couple royal anonyme" — two anepigraphic statues
+    "baud-276",  # "Complexe anonyme" at Saqqara-Sud (also anonymous)
+    "baud-279",  # "Complexe de reine de Pépi Iᵉʳ" (also anonymous)
+    "baud-281",  # "Représentations de reine(s)" — collective representations
 }
 JOINT_ENTRY_BAUD_IDS = {
     "baud-209",  # "Snj* et Zzj*"
@@ -1146,13 +1166,20 @@ ATTRIBUTION_PENDING_BAUD_IDS = {
 
 
 # Hedge-token → confidence enum mapping (lowercase substring match
-# in name string). Order matters: more-specific tokens first.
+# in name string). Order matters: STRONGEST hedge wins on compound
+# tokens. Real data: baud-139 / baud-156 have `(?) (per Baud)` —
+# the `(?)` (uncertain) outranks the `(per Baud)` provenance marker
+# because the uncertainty is the load-bearing claim.
 _HEDGE_TOKEN_TO_CONFIDENCE = [
+    ("(?)", "uncertain"),
     ("(probable)", "probable"),
     ("(per baud)", "per_baud"),
-    ("(?)", "uncertain"),
 ]
-_BAUD_ID_REF_RE = re.compile(r"\[(\d+[a-z]?)\]")
+# `[N]` cross-reference. Permits whitespace and uppercase suffix variants
+# (`[60 a]`, `[60A]`) as defensive normalisation against typesetting
+# variation across volumes — the captured group is downcased + stripped
+# to canonical `baud-Na` form. Per scope-enforcer Rule-2 hardening.
+_BAUD_ID_REF_RE = re.compile(r"\[(\d+\s*[a-zA-Z]?)\]")
 
 
 def _extract_confidence_and_baud_id(name_str: str | None) -> tuple[str | None, str | None]:
@@ -1169,7 +1196,9 @@ def _extract_confidence_and_baud_id(name_str: str | None) -> tuple[str | None, s
     baud_id = None
     m = _BAUD_ID_REF_RE.search(name_str)
     if m:
-        baud_id = f"baud-{m.group(1)}"
+        # Normalise `60 a` / `60A` → `60a` (canonical `baud-Na` form).
+        normalised = re.sub(r"\s+", "", m.group(1)).lower()
+        baud_id = f"baud-{normalised}"
     return confidence, baud_id
 
 
@@ -1180,10 +1209,11 @@ _MONUMENT_DOC_RE = re.compile(r"(\d+)\s*:\s*([^;]+)")
 # terminator (`,`, `;`, `)`, EOL) so we don't match person references
 # like "à Mr.s-ꜥnḫ III [76]" (where the `.` is an Egyptological
 # suffix-pronoun marker, not a sentence boundary). Extracts a single
-# trailing place.
+# trailing place. `\w` is Unicode-aware so accented French chars are
+# already covered.
 _DOC_PLACE_RE = re.compile(
     r"\b(?:à|découvert\s+à)\s+"
-    r"([A-ZÀ-ÝŒÆ][\wéèàÉÈÀ-]+(?:[ -][A-ZÀ-ÝŒÆ][\wéèàÉÈÀ-]+)*)"
+    r"([A-ZÀ-ÝŒÆ][\w-]+(?:[ -][A-ZÀ-ÝŒÆ][\w-]+)*)"
     r"(?=\s*[,;)]|\s*$)"
 )
 
@@ -1191,7 +1221,15 @@ _DOC_PLACE_RE = re.compile(
 def _extract_doc_locality(monument_text: str, default: str | None) -> str | None:
     """If the monument text contains an explicit `à <Place>` token whose
     place is NOT already in the row-level `default` localisation, return
-    the extracted place. Otherwise return `default`."""
+    the extracted place. Otherwise return `default`.
+
+    Asymmetric on substring containment (more-specific wins): if `default`
+    is `"Saqqara-Sud"` and the doc says `"à Saqqara"`, the row-level wins
+    (Saqqara ⊂ Saqqara-Sud). If `default` is `"Saqqara"` and the doc says
+    `"à Saqqara-Sud"`, the doc-level wins. This is intentional — Baud's
+    row-level localisation is typically the most-specific designation
+    available; the per-doc extractor only overrides when it adds new
+    locality information."""
     matches = _DOC_PLACE_RE.findall(monument_text)
     if matches:
         place = matches[-1]
@@ -1232,7 +1270,11 @@ def _parse_monuments(monument_str: str | None, localisation_str: str | None) -> 
     ]
 
 
-_PM_REFS_SPLIT_RE = re.compile(r"\s*[;]\s*|\s+et\s+")
+# Split pm_ref on `;` or ` et ` — but only treat ` et ` as a separator
+# when followed by a digit, so `"PM 200 et fig. 12"`-style French
+# annotation does NOT mis-split into `["PM 200", "fig. 12"]`. Per
+# scope-enforcer Rule-2 hardening.
+_PM_REFS_SPLIT_RE = re.compile(r"\s*[;]\s*|\s+et\s+(?=\d)")
 _PM_PREFIX_RE = re.compile(r"^PM\b", re.IGNORECASE)
 
 
@@ -1293,10 +1335,18 @@ def _apply_178_migrations(rows: list[dict]) -> list[str]:
             row["entry_kind"] = new_kind
             log_lines.append(f"  {bid}: entry_kind → {new_kind!r}")
 
-        if bid in LOST_NAME_BAUD_IDS:
-            new_status = "lost"
-        elif bid in TENTATIVE_NAME_BAUD_IDS:
+        # name_status precedence on overlap: `lost` > `tentative` > `anonymous`
+        # > `attested`. baud-275's headword "Nom perdu*, dit «Ptḥ-mr-zt.f»"
+        # is technically both lost (Nom perdu) AND tentative (the «...»
+        # reading is hedged); we resolve to `tentative` because TENTATIVE
+        # entries are not in LOST_NAME_BAUD_IDS by construction (curator
+        # decision: the hedged reading is the load-bearing claim about
+        # what we know about this person, not the missing nature of the
+        # original).
+        if bid in TENTATIVE_NAME_BAUD_IDS:
             new_status = "tentative"
+        elif bid in LOST_NAME_BAUD_IDS:
+            new_status = "lost"
         elif bid in ANONYMOUS_BAUD_IDS:
             new_status = "anonymous"
         else:
@@ -1318,9 +1368,13 @@ def _apply_178_migrations(rows: list[dict]) -> list[str]:
                 row["co_holders"] = expected_co_holders
                 log_lines.append(f"  {bid}: co_holders set (Snj + Zzj)")
 
-        # candidate_baud_ids for baud-39
+        # candidate_baud_ids for baud-39 — Baud's headword reads
+        # "ꜥnḫ.s-n-Mrjj-Rꜥ (var. -Ppjj) Iʳᵉ, II, ou autre (attribution
+        # incertaine)". The "ou autre" + DIVERS option (c) explicitly
+        # propose ꜥnḫ.s-n-Ppjj III (= baud-36) as a third candidate.
+        # Egyptologist P1-5.
         if bid == "baud-39":
-            expected = ["baud-37", "baud-38"]
+            expected = ["baud-36", "baud-37", "baud-38"]
             if row["candidate_baud_ids"] != expected:
                 row["candidate_baud_ids"] = expected
                 log_lines.append(f"  {bid}: candidate_baud_ids → {expected!r}")

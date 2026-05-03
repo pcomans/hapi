@@ -309,6 +309,24 @@ def test_ihetihotep_baud_3_full_populated_row() -> None:
         "pdf_pages": "11-49",
         "edition": "IFAO 1999 vol. 2",
     }
+    # Issue #178 typed fields — full Rule-5 anchor coverage
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "attested"
+    assert r["candidate_baud_ids"] == []
+    assert r["pm_refs"] == ["PM 200-201"]
+    assert r["monuments"] == [{
+        "document_id": 1,
+        "monument": "Mastaba G 7650",
+        "localisation": "nécropole orientale de Gîza",
+    }]
+    assert r["father_baud_id"] is None
+    assert r["father_confidence"] is None
+    assert r["mother_baud_id"] is None
+    assert r["mother_confidence"] is None
+    assert r["spouse_baud_ids"] == [None]
+    assert r["children_baud_ids"] == []
 
 
 def test_ankhesenmeryre_i_baud_37_full_populated_row() -> None:
@@ -357,6 +375,24 @@ def test_ankhesenmeryre_i_baud_37_full_populated_row() -> None:
         "pdf_pages": "11-49",
         "edition": "IFAO 1999 vol. 2",
     }
+    # Issue #178 typed fields — full Rule-5 anchor coverage
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "attested"
+    assert r["candidate_baud_ids"] == []
+    assert r["pm_refs"] == ["PM V, p. 95"]
+    assert r["monuments"] == [{
+        "document_id": 1,
+        "monument": "Stèle (ou pilier ?) du vizir Ḏꜥw",
+        "localisation": "Abydos",
+    }]
+    assert r["father_baud_id"] is None
+    assert r["father_confidence"] is None
+    assert r["mother_baud_id"] is None
+    assert r["mother_confidence"] is None
+    assert r["spouse_baud_ids"] == [None]
+    assert r["children_baud_ids"] == [None]
 
 
 def test_baud_26_grandchild_not_listed_as_child() -> None:
@@ -554,6 +590,24 @@ def test_ptahshepses_baud_68_flagship_row() -> None:
         "pdf_pages": "49-82",
         "edition": "IFAO 1999 vol. 2",
     }
+    # Issue #178 typed fields — full Rule-5 anchor coverage
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "attested"
+    assert r["candidate_baud_ids"] == []
+    assert r["pm_refs"] == ["PM 464"]
+    assert r["monuments"] == [{
+        "document_id": 1,
+        "monument": "Mastaba C 1 (nᵒ 48), secteur au nord de la pyramide à degrés, Saqqara",
+        "localisation": "Saqqara",
+    }]
+    assert r["father_baud_id"] is None
+    assert r["father_confidence"] is None
+    assert r["mother_baud_id"] is None
+    assert r["mother_confidence"] is None
+    assert r["spouse_baud_ids"] == [None]
+    assert r["children_baud_ids"] == []
 
 
 def test_baud_60a_sub_entry_shape() -> None:
@@ -792,6 +846,24 @@ def test_baud_29_full_row_after_sweep() -> None:
     assert r["sub_period"] is None
     assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"]
     assert r["tomb"] is None
+    # Issue #178 typed fields — full Rule-5 anchor coverage
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "attested"
+    assert r["candidate_baud_ids"] == []
+    assert r["pm_refs"] == ["PM 684"]
+    assert r["monuments"] == [{
+        "document_id": 1,
+        "monument": "Table d'offrandes découverte près du mastaba M 15",
+        "localisation": "Saqqara-Sud",
+    }]
+    assert r["father_baud_id"] is None
+    assert r["father_confidence"] is None
+    assert r["mother_baud_id"] is None
+    assert r["mother_confidence"] is None
+    assert r["spouse_baud_ids"] == []
+    assert r["children_baud_ids"] == []
 
 
 def test_baud_30_full_row_after_sweep() -> None:
@@ -826,6 +898,24 @@ def test_baud_30_full_row_after_sweep() -> None:
     assert r["sub_period"] is None
     assert r["titles_from_baud"] == ["jrj-pꜥt", "zꜣ nswt smsw"]
     assert r["tomb"] is None
+    # Issue #178 typed fields — full Rule-5 anchor coverage
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "attested"
+    assert r["candidate_baud_ids"] == []
+    assert r["pm_refs"] == ["PM 683"]
+    assert r["monuments"] == [{
+        "document_id": 1,
+        "monument": "Obélisque découvert à proximité du mastaba M 13",
+        "localisation": "Saqqara-Sud",
+    }]
+    assert r["father_baud_id"] is None
+    assert r["father_confidence"] is None
+    assert r["mother_baud_id"] is None
+    assert r["mother_confidence"] is None
+    assert r["spouse_baud_ids"] == []
+    assert r["children_baud_ids"] == []
 
 
 def test_baud_57_full_row_after_sweep() -> None:
@@ -884,6 +974,24 @@ def test_baud_57_full_row_after_sweep() -> None:
         "nb jmꜣḫ ḫr jt.f",
     ]
     assert r["tomb"] is None
+    # Issue #178 typed fields — full Rule-5 anchor coverage
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "attested"
+    assert r["candidate_baud_ids"] == []
+    assert r["pm_refs"] == ["PM 3"]
+    assert r["monuments"] == [{
+        "document_id": 1,
+        "monument": "Socle de statue accroupie, découvert dans le temple funéraire de Rêdjedef à Abou Rawash",
+        "localisation": "Abou Rawash",
+    }]
+    assert r["father_baud_id"] is None
+    assert r["father_confidence"] is None
+    assert r["mother_baud_id"] is None
+    assert r["mother_confidence"] is None
+    assert r["spouse_baud_ids"] == []
+    assert r["children_baud_ids"] == []
 
 
 def test_baud_126_full_row_after_sweep() -> None:
@@ -925,6 +1033,24 @@ def test_baud_126_full_row_after_sweep() -> None:
     assert r["sub_period"] is None
     assert r["titles_from_baud"] == ["zꜣt nswt nt ẖt.f"]
     assert r["tomb"] is None
+    # Issue #178 typed fields — full Rule-5 anchor coverage
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "attested"
+    assert r["candidate_baud_ids"] == []
+    assert r["pm_refs"] == ["PM 619-622"]
+    assert r["monuments"] == [{
+        "document_id": 1,
+        "monument": "Représentée dans le mastaba de son époux Mḥw [89], nécropole d'Ounas, Saqqara",
+        "localisation": "nécropole d'Ounas, Saqqara",
+    }]
+    assert r["father_baud_id"] is None
+    assert r["father_confidence"] is None
+    assert r["mother_baud_id"] is None
+    assert r["mother_confidence"] is None
+    assert r["spouse_baud_ids"] == [None]
+    assert r["children_baud_ids"] == [None]
 
 
 def test_baud_89_notes_pointer_to_kahetep_filiation() -> None:
@@ -1134,14 +1260,20 @@ def test_178_baud_209_joint_entry_canonical() -> None:
 def test_178_baud_39_attribution_pending_canonical() -> None:
     r = _row("baud-39")
     assert r["entry_kind"] == "attribution_pending"
-    assert r["candidate_baud_ids"] == ["baud-37", "baud-38"]
+    # Per egyptologist P1-5: Baud's headword "Iʳᵉ, II, ou autre"
+    # plus DIVERS option (c) propose ꜥnḫ.s-n-Ppjj III (= baud-36) as
+    # a third candidate beyond the two ꜥnḫ.s-n-Mrjj-Rꜥ instances.
+    assert r["candidate_baud_ids"] == ["baud-36", "baud-37", "baud-38"]
 
 
 def test_178_collective_monument_canonical_set() -> None:
     """Anchor: rows whose entry_kind is collective_monument exactly match the
     audit-documented monument-as-occupant set. baud-256 is NOT in this set
     — it is an anonymous person on a Sinai relief, not a monument."""
-    expected = {"baud-257", "baud-267", "baud-276", "baud-279"}
+    expected = {
+        "baud-257", "baud-265", "baud-267", "baud-268",
+        "baud-276", "baud-279", "baud-281",
+    }
     actual = {r["baud_id"] for r in _rows() if r["entry_kind"] == "collective_monument"}
     assert actual == expected, f"collective_monument set drift: {actual ^ expected}"
 
@@ -1170,8 +1302,8 @@ def test_178_lost_name_canonical_set() -> None:
     """Anchor: lost-name rows exactly match the audit-documented set."""
     expected = {
         "baud-258", "baud-260", "baud-262", "baud-263", "baud-264",
-        "baud-269", "baud-270", "baud-271", "baud-272", "baud-274",
-        "baud-277", "baud-282",
+        "baud-269", "baud-270", "baud-271", "baud-272", "baud-273",
+        "baud-274", "baud-277", "baud-282",
     }
     actual = {r["baud_id"] for r in _rows() if r["name_status"] == "lost"}
     assert actual == expected, f"lost-name set drift: {actual ^ expected}"
@@ -1195,3 +1327,186 @@ def test_178_father_confidence_extracts_hedge_token() -> None:
             f"{r['baud_id']}: father_confidence=per_baud but father_name "
             f"{r['father_name']!r} lacks the marker"
         )
+
+
+# Round-trip closure tests: typed companion fields are mechanically derivable
+# from raw name strings. A regression in fix_rows.py that breaks the round-trip
+# (or a hand-edit to reconciled.jsonl that desyncs the companion fields) must
+# fail loud here. Per Rule 3.
+
+import importlib.util as _imp_util
+
+
+@lru_cache(maxsize=1)
+def _fix_rows_module():
+    path = (
+        Path(__file__).parent.parent
+        / "pipeline"
+        / "authority"
+        / "sources"
+        / "baud-1999-ok-royal-family"
+        / "fix_rows.py"
+    )
+    spec = _imp_util.spec_from_file_location("baud_fix_rows", path)
+    mod = _imp_util.module_from_spec(spec)
+    assert spec.loader
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_178_father_mother_companions_roundtrip() -> None:
+    """Every (parent_name, parent_confidence, parent_baud_id) triple is
+    re-derivable by `_extract_confidence_and_baud_id(parent_name)`."""
+    extract = _fix_rows_module()._extract_confidence_and_baud_id
+    for r in _rows():
+        for parent in ("father", "mother"):
+            name = r[f"{parent}_name"]
+            expected_conf, expected_bid = extract(name)
+            assert r[f"{parent}_confidence"] == expected_conf, (
+                f"{r['baud_id']} {parent}: name={name!r} confidence "
+                f"stored={r[f'{parent}_confidence']!r} != derived={expected_conf!r}"
+            )
+            assert r[f"{parent}_baud_id"] == expected_bid, (
+                f"{r['baud_id']} {parent}: name={name!r} baud_id "
+                f"stored={r[f'{parent}_baud_id']!r} != derived={expected_bid!r}"
+            )
+
+
+def test_178_spouse_children_baud_ids_roundtrip() -> None:
+    """Per-element: `spouse_baud_ids[i]` equals
+    `_extract_confidence_and_baud_id(spouse_names[i])[1]`. Same for children."""
+    extract = _fix_rows_module()._extract_confidence_and_baud_id
+    for r in _rows():
+        for names_field, ids_field in (
+            ("spouse_names", "spouse_baud_ids"),
+            ("children_names", "children_baud_ids"),
+        ):
+            names = r.get(names_field) or []
+            ids = r[ids_field]
+            assert len(ids) == len(names), (
+                f"{r['baud_id']}: {ids_field} length {len(ids)} != "
+                f"{names_field} length {len(names)}"
+            )
+            for i, name in enumerate(names):
+                _, expected_bid = extract(name)
+                assert ids[i] == expected_bid, (
+                    f"{r['baud_id']} {ids_field}[{i}]: name={name!r} "
+                    f"stored={ids[i]!r} != derived={expected_bid!r}"
+                )
+
+
+def test_178_pm_refs_emptiness_matches_pm_ref() -> None:
+    """`pm_refs == []` iff `pm_ref` is None. Catches a regression where
+    `_parse_pm_refs` returns `[""]` on empty input."""
+    for r in _rows():
+        if r.get("pm_ref") is None:
+            assert r["pm_refs"] == [], (
+                f"{r['baud_id']}: pm_ref is None but pm_refs={r['pm_refs']!r}"
+            )
+        else:
+            assert r["pm_refs"], (
+                f"{r['baud_id']}: pm_ref={r['pm_ref']!r} but pm_refs is empty"
+            )
+
+
+def test_178_tentative_canonical_set() -> None:
+    """Anchor: tentative-name rows exactly match the audit-documented set."""
+    expected = {"baud-259", "baud-261", "baud-275"}
+    actual = {r["baud_id"] for r in _rows() if r["name_status"] == "tentative"}
+    assert actual == expected, f"tentative-name set drift: {actual ^ expected}"
+
+
+def test_178_anonymous_canonical_set() -> None:
+    """Anchor: anonymous rows exactly match the audit-documented set
+    (post-PDF-verified per egyptologist P1-1, P1-2, P1-4)."""
+    expected = {
+        "baud-256",  # "Représentation anonyme" Sinai
+        "baud-265",  # "Statues «de reine»"
+        "baud-266",  # "Anonyme, sceau de Rêkhaef"
+        "baud-268",  # "Couple royal anonyme"
+        "baud-276",  # "Complexe anonyme" Saqqara-Sud
+        "baud-279",  # "Complexe de reine de Pépi Iᵉʳ"
+        "baud-280",  # "Reine anonyme de Pépi Iᵉʳ" cited in Weni's biography
+        "baud-281",  # "Représentations de reine(s)" temple of Pepi II
+    }
+    actual = {r["baud_id"] for r in _rows() if r["name_status"] == "anonymous"}
+    assert actual == expected, f"anonymous set drift: {actual ^ expected}"
+
+
+def test_178_joint_persons_canonical_set() -> None:
+    """Anchor: joint_persons rows exactly match the audit-documented set."""
+    expected = {"baud-209"}
+    actual = {r["baud_id"] for r in _rows() if r["entry_kind"] == "joint_persons"}
+    assert actual == expected, f"joint_persons set drift: {actual ^ expected}"
+
+
+def test_178_attribution_pending_canonical_set() -> None:
+    """Anchor: attribution_pending rows exactly match the audit-documented set."""
+    expected = {"baud-39"}
+    actual = {r["baud_id"] for r in _rows() if r["entry_kind"] == "attribution_pending"}
+    assert actual == expected, f"attribution_pending set drift: {actual ^ expected}"
+
+
+def test_178_baud_279_dual_classification() -> None:
+    """baud-279 is the only row that is BOTH `collective_monument` AND
+    `name_status=anonymous`. The migration code (the canonical-set dispatch)
+    explicitly relies on this dual classification: collective wins for
+    entry_kind, anonymous wins for name_status. Pin both."""
+    r = _row("baud-279")
+    assert r["entry_kind"] == "collective_monument"
+    assert r["name_status"] == "anonymous"
+
+
+def test_178_baud_259_tentative_full_anchor() -> None:
+    """Tentative-branch full-row anchor for the typed fields introduced
+    by issue #178. baud-259 is one of the 3 tentative-name rows."""
+    r = _row("baud-259")
+    assert r["name_status"] == "tentative"
+    assert r["entry_kind"] == "person"
+    assert r["is_joint_entry"] is False
+    assert r["co_holders"] == []
+    assert r["candidate_baud_ids"] == []
+
+
+def test_178_compound_hedge_strongest_wins() -> None:
+    """When a name carries multiple hedge tokens (e.g. baud-139's
+    `(?) (per Baud)`), `(?)` (uncertain) outranks `(per Baud)` because
+    the uncertainty is the load-bearing claim."""
+    r = _row("baud-139")
+    assert "(?)" in r["mother_name"]
+    assert "per Baud" in r["mother_name"]
+    assert r["mother_confidence"] == "uncertain", (
+        f"baud-139 mother_name={r['mother_name']!r} should resolve to "
+        f"uncertain (not per_baud)"
+    )
+
+
+def test_178_extract_confidence_compound_policy_locked() -> None:
+    """Lock the documented hedge-token precedence: STRONGEST hedge wins
+    on compound tokens (P3-2). Direct unit test of the helper —
+    independent of which rows happen to currently exhibit compounds."""
+    extract = _fix_rows_module()._extract_confidence_and_baud_id
+    assert extract("X (?) (per Baud)") == ("uncertain", None)
+    assert extract("X (per Baud) (?)") == ("uncertain", None)
+    assert extract("X (probable) (?)") == ("uncertain", None)
+    assert extract("X (probable)") == ("probable", None)
+    assert extract("X (per Baud)") == ("per_baud", None)
+    assert extract("X") == (None, None)
+    # baud_id extraction including whitespace + uppercase variants
+    # (Rule-2 hardening per egyptologist P2.3).
+    assert extract("X [37]") == (None, "baud-37")
+    assert extract("X [60a]") == (None, "baud-60a")
+    assert extract("X [60 a]") == (None, "baud-60a")
+    assert extract("X [60A]") == (None, "baud-60a")
+
+
+def test_178_pm_refs_does_not_split_french_annotation() -> None:
+    """`PM 200 et fig. 12`-style French annotation must NOT split on `et`
+    (Rule-2 hardening per egyptologist P2.4 — `et` is only a separator
+    when followed by a digit)."""
+    parse = _fix_rows_module()._parse_pm_refs
+    assert parse("PM 200 et fig. 12") == ["PM 200 et fig. 12"]
+    assert parse("PM 407 et 414") == ["PM 407", "PM 414"]
+    assert parse("PM 139-140; PM 139") == ["PM 139-140", "PM 139"]
+    assert parse(None) == []
+    assert parse("") == []
