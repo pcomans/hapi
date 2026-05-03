@@ -514,7 +514,19 @@ def main() -> None:
     )
     print(f"Backfilled {len(backfill_log)} row-fields; applied "
           f"{len(migration_log)} per-row corrections this run.")
-    print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
+    # Walk up to find the repo root (marker: `.git` directory) for a
+    # stable relative-path display, replacing the brittle
+    # `RECONCILED.parents[4]` index. PR #188 Gemini round-2.
+    repo_root = RECONCILED
+    for _ in range(10):
+        repo_root = repo_root.parent
+        if (repo_root / ".git").exists():
+            break
+    try:
+        rel = RECONCILED.relative_to(repo_root)
+    except ValueError:
+        rel = RECONCILED  # absolute fallback if .git not found
+    print(f"Updated {rel}")
 
 
 if __name__ == "__main__":

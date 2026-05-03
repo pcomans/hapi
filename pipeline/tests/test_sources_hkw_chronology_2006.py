@@ -14,6 +14,7 @@ time on this source. The test set below enforces the new typed schema:
 
 from __future__ import annotations
 
+import copy
 import importlib.util
 import json
 import re
@@ -31,10 +32,18 @@ JSONL = SOURCE_DIR / "reconciled.jsonl"
 
 
 @lru_cache(maxsize=1)
-def _rows() -> tuple[dict, ...]:
+def _rows_raw() -> tuple[dict, ...]:
     return tuple(
         json.loads(line) for line in JSONL.read_text().splitlines() if line.strip()
     )
+
+
+def _rows() -> tuple[dict, ...]:
+    """Return a fresh deepcopy of the row tuple per call so tests
+    can't accidentally mutate cached data and affect later tests.
+    PR #188 Gemini round-2.
+    """
+    return tuple(copy.deepcopy(r) for r in _rows_raw())
 
 
 @lru_cache(maxsize=1)
