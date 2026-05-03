@@ -176,13 +176,36 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
   // convention (matches Shaw OHAE post-#181).
 
   // === Numeric bounds (canonical names) ===
-  "start_year_high":  -3032,       // older / more negative endpoint of start range
-  "start_year_low":   -2982,       // younger / less negative endpoint of start range
-  "end_year_high":    -3000,       // older endpoint of end range
-  "end_year_low":     -2950,       // younger endpoint of end range
+  // Suffix convention: `_older` (numerically smaller for BCE — more
+  // negative) and `_younger` (numerically larger for BCE — less
+  // negative or positive for CE). Avoids the `_high`/`_low` ambiguity
+  // (in BCE the "older" date is numerically the SMALLER value;
+  // calling it `_high` is the opposite of the standard programming
+  // convention where `_high` means max). Per Gemini round-1 P2.
+  "start_year_older":   -3032,     // older endpoint of the start range
+  "start_year_younger": -2982,     // younger endpoint of the start range
+  "end_year_older":     -3000,     // older endpoint of the end range
+  "end_year_younger":   -2950,     // younger endpoint of the end range
   // For sources without a slash range (HKW, Kitchen, Ryholt, Shaw,
-  // PM): set `_high == _low` to the single value. For null endpoints:
-  // set both null and populate `null_endpoints_reason`.
+  // PM): set `_older == _younger` to the single value. For null
+  // endpoints: set both null and populate `null_endpoints_reason`.
+
+  // === Year 0 / astronomical-vs-historical convention ===
+  // This spec uses ASTRONOMICAL year numbering (ISO 8601-ish):
+  //   1 BCE = 0
+  //   2 BCE = -1
+  //   N BCE = -(N - 1)
+  //   1 CE  = 1
+  //   N CE  = N
+  // Rationale: integer arithmetic across the BCE/CE boundary
+  // (`end - start`) returns the correct year-count without an
+  // off-by-one correction. Sources that use the historical convention
+  // (1 BCE = -1, no year 0) MUST be normalised by the
+  // canonicalisation helper before storage in the canonical envelope.
+  // CURRENT STATE: every numeric source in HAPI uses the historical
+  // convention (`-3032` means 3032 BCE). The canonicalisation helper
+  // for v0 will subtract 1 from negative values to map historical →
+  // astronomical. Verify per-source on first integration.
 
   // === Qualifier handling ===
   "start_approximate": true,       // per-bound bool — true when source marks
@@ -211,24 +234,62 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
 }
 ```
 
-### Existence-uncertainty (separate field family)
+### Uncertainty (TWO separate field families — do not conflate)
 
-Existence-uncertainty is **distinct from date-qualifier uncertainty** and lives in its own field family. Canonical:
+Per Gemini round-1 finding: an earlier draft of this spec proposed a single `existence_certainty` enum that conflated three distinct semantic axes. **They are NOT the same** and must be tracked in separate fields by Phase A consumers.
+
+#### 1. Ruler / person existence-uncertainty
+
+The source itself flags whether the named ruler / person is historically attested or doubted. Lives on the same row that carries the named ruler.
 
 ```jsonc
 {
   "existence_certainty": "attested"
-  // enum: attested | doubtful | unattributed
+  // enum: attested | doubtful
   //
-  // Sources currently using different field names:
+  // Sources mapping into this field:
   // - existence_uncertain (Beckerath, post-#179)        → doubtful when True
   // - existence_doubtful (Kitchen, post-#180)           → doubtful when True
-  // - is_uncertain_attribution (Ryholt, post-#177)      → doubtful when True
-  // - attribution_certainty (Porter-Moss, post-#182)    → already 3-state enum,
-  //                                                       map probable/uncertain → doubtful
   // - name_uncertain (HKW, post-#176)                   → doubtful when True
 }
 ```
+
+#### 2. Attribution-certainty (entity → ruler)
+
+The source flags how confident it is that a particular entity (tomb, monument, attestation) belongs to a particular ruler. The ruler's existence is independent of the attribution. Lives on the entity row.
+
+```jsonc
+{
+  "attribution_certainty": "attested"
+  // enum: attested | probable | uncertain
+  //
+  // Sources mapping into this field:
+  // - attribution_certainty (Porter-Moss, post-#182) — already in
+  //   this exact 3-state enum; canonical reference shape.
+  // - is_uncertain_attribution (Ryholt, post-#177) — Ryholt's flag
+  //   is per-row attribution-uncertainty (which dynasty does the king
+  //   belong to). Maps to attribution_certainty=uncertain when True.
+  //   NOTE: distinct from Ryholt's `is_unattributed` (the row has no
+  //   dynasty assignment at all — see #3 below).
+}
+```
+
+#### 3. Unattributed (no ruler claim at all)
+
+The source records data (a name, a tomb, a fragment) without claiming who/where it belongs to. This is a third axis — an unattributed row may have neither an existence-certainty nor an attribution-certainty value because there's no candidate ruler to evaluate.
+
+```jsonc
+{
+  "is_unattributed": false
+  // bool. True when the source records the entity but assigns no ruler.
+  //
+  // Sources mapping into this field:
+  // - is_unattributed (Ryholt, post-#177) — N/P/H/D/G prefix rows
+  //   that record nomen/prenomen/etc. without dynasty assignment.
+}
+```
+
+These three field families are orthogonal. A row can be `existence_certainty=doubtful` AND `attribution_certainty=probable` AND `is_unattributed=false` simultaneously (e.g. Beckerath flags the king's existence as doubtful, but Phase A tentatively attributes a tomb to him, and the tomb-row points at this king as the candidate). The single-enum draft conflated them and would have lost semantic detail on every cross-source map.
 
 ---
 
