@@ -146,6 +146,15 @@ def _row(dh_id: str, sub_period: str | None = None) -> dict:
 def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) -> None:
     """Assert full-row equality per rule 5. Every schema field must be
     present in `expected`; the row must match key-for-key, value-for-value.
+
+    `is_group_entry` (issue #175 / PR #186) is special-cased with a
+    default of `False`: the typed flag is uniform-False on 463/465
+    rows, so requiring 463 fixtures to explicitly write
+    `"is_group_entry": False` is high-noise / low-signal noise.
+    Fixtures for the 2 known True rows (`[...]18A–H`, `[...]18K–N`)
+    MUST explicitly assert `True` — Rule 5 is satisfied for the
+    informative case, and the default still flows through `schema_fields`
+    so the row is checked against the actual on-disk value.
     """
     row = _row(dh_id, sub_period=sub_period)
     schema_fields = {
@@ -153,7 +162,10 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
         "spouse_names", "father_name", "mother_name", "children_names",
         "dynasty", "sub_period", "unplaced",
         "notes", "source_citation",
+        "is_group_entry",
     }
+    expected = dict(expected)
+    expected.setdefault("is_group_entry", False)
     missing = schema_fields - expected.keys()
     assert not missing, f"{dh_id}: test fixture missing schema field(s) {missing}"
     extra = expected.keys() - schema_fields
@@ -1030,6 +1042,9 @@ def test_amarna_18a_h_full_row() -> None:
         "name": '[...]18A–H',
         "alt_names": [],
         "roles": [],
+        # Issue #175: en-dash range covers up to 8 daughters A–H of
+        # Amenhotep III. One of two True-flagged group entries.
+        "is_group_entry": True,
         "sex": 'female',
         "spouse_names": [],
         "father_name": 'Amenhotep III',
@@ -1071,6 +1086,9 @@ def test_amarna_18k_n_full_row() -> None:
         "name": '[...]18K–N',
         "alt_names": [],
         "roles": [],
+        # Issue #175: en-dash range covers 4 daughters K–N of Anen.
+        # Second of two True-flagged group entries.
+        "is_group_entry": True,
         "sex": 'female',
         "spouse_names": [],
         "father_name": 'Anen',
