@@ -18,20 +18,32 @@
 set -u
 
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+# `printf %s` (rather than `echo`) is robust against inputs that begin
+# with `-` or contain backslash escapes that some echo implementations
+# interpret. PR #187 Gemini round-2.
+COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 
 # Match the four blocking command shapes. Each has both the
 # `command-with-args` form (` ` suffix) AND the bare-command form
 # (no suffix) so commands like `git commit` (no args) don't bypass.
 # PR #187 Gemini round-1 caught the missing bare forms on `git commit`
 # and `gh pr merge`.
+#
+# The raw `gh api .../pulls` clause was DROPPED in round-2: it was
+# over-blocking safe comment/review POSTs (`/pulls/N/comments`,
+# `/pulls/N/reviews`), missing the PR-merge PUT (`/pulls/N/merge`),
+# and brittle on `--method POST` / `-XPOST` variants. MVP scope is
+# charitable-agent — `gh pr create|merge` is the documented path;
+# raw-API bypass is out of scope for the MVP and would need its own
+# tighter design (matching `POST /repos/{owner}/{repo}/pulls$` for
+# create + `PUT .../pulls/N/merge` for merge, while explicitly
+# allowlisting comment/review POSTs).
 BLOCKED=0
 case "$COMMAND" in
   *"git push "*|*"git push"|\
   *"git commit "*|*"git commit"|\
   *"gh pr create "*|*"gh pr create"|\
-  *"gh pr merge "*|*"gh pr merge"|\
-  *"gh api"*"-X POST"*"/pulls"*)
+  *"gh pr merge "*|*"gh pr merge")
     BLOCKED=1
     ;;
 esac
