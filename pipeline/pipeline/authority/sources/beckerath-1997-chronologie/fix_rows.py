@@ -865,9 +865,11 @@ def _split_titulary(value: str | None, kind: str | None, bid: str = "?") -> list
 def _extract_name_variants(name: str) -> tuple[str, list[str]]:
     """Strip parens content from `name`, return (canonical_name, variants).
     Bare-paren names (`"(Schoschenq IIIa.)"`) are left untouched — they
-    are uncertainty markers, handled separately. `(?)` uncertainty
-    markers are stripped from the canonical name without becoming
-    variants (handled by `_detect_existence_uncertain` instead).
+    are uncertainty markers, handled separately. A *trailing* `(?)`
+    uncertainty marker is stripped from the canonical name without
+    becoming a variant (handled by `_detect_existence_uncertain`
+    instead). Mid-string `(?)` markers do not occur in the current
+    Beckerath corpus, so the strip is anchored to end-of-string.
 
     Handles multi-paren names (`"Name (var1) (var2)"`) by extracting
     every paren group's content into variants and stripping all of them
@@ -907,7 +909,7 @@ def _detect_existence_uncertain(name: str) -> bool:
     )
 
 
-def _detect_anti_king(name: str, notes: str | None) -> bool:
+def _detect_anti_king(notes: str | None) -> bool:
     """Anti-king detection — only via explicit `Gegenkönig` (NOT plural
     `Gegenkönige`) in notes_from_beckerath. Parens-wrapped names like
     22.07 `(Schoschenq IIIa.)` are existence-uncertainty markers, not
@@ -942,7 +944,7 @@ def _apply_179_migrations(rows: list[dict]) -> list[str]:
             log.append(f"  {bid}: is_dynasty_marker → {new_dyn}")
 
         # is_anti_king
-        new_anti = _detect_anti_king(name, row.get("notes_from_beckerath"))
+        new_anti = _detect_anti_king(row.get("notes_from_beckerath"))
         if row["is_anti_king"] != new_anti:
             row["is_anti_king"] = new_anti
             log.append(f"  {bid}: is_anti_king → {new_anti}")
