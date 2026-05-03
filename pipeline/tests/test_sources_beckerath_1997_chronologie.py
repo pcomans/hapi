@@ -1137,6 +1137,7 @@ def test_179_fix_rows_is_file_level_idempotent() -> None:
     """
     import shutil
     import subprocess
+    import sys
     import tempfile
     src_dir = (
         Path(__file__).parent.parent
@@ -1150,7 +1151,7 @@ def test_179_fix_rows_is_file_level_idempotent() -> None:
         shutil.copytree(src_dir, tmp)
         for _ in range(2):
             subprocess.run(
-                ["python3", str(tmp / "fix_rows.py")],
+                [sys.executable, str(tmp / "fix_rows.py")],
                 check=True,
                 capture_output=True,
             )
@@ -1159,7 +1160,7 @@ def test_179_fix_rows_is_file_level_idempotent() -> None:
         # "second-run guard" — reconciled is already in fully-migrated
         # form, so a re-run must be a no-op at the byte level).
         subprocess.run(
-            ["python3", str(tmp / "fix_rows.py")],
+            [sys.executable, str(tmp / "fix_rows.py")],
             check=True,
             capture_output=True,
         )
