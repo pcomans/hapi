@@ -1223,6 +1223,11 @@ def apply_corrections() -> list[str]:
     # clean, fully-keyed rows.
     log_lines.extend(backfill_name_list_fields(rows))
     log_lines.extend(backfill_stage_suffix(rows))
+    # `backfill_notes` MUST run before SPOT_CORRECTIONS — the
+    # `NOTES_RESTORATIONS` block uses `_set_by_path(row, "notes", ...)`
+    # which assumes the key already exists on the row. Backfill order
+    # vs the other backfill_* passes is independent (they touch
+    # disjoint fields).
     log_lines.extend(backfill_notes(rows))
     log_lines.extend(strip_debug_leakage(rows))
     log_lines.extend(normalize_translit_mdc(rows))

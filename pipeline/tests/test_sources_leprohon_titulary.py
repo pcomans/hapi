@@ -508,6 +508,33 @@ def test_notes_field_present_on_every_row() -> None:
         )
 
 
+def test_only_six_rows_have_non_null_notes() -> None:
+    """Issue #174 cardinality pin (PR #185 code-reviewer P3-2): exactly
+    6 rows carry non-null `notes` after the restoration pass. This guards
+    against (a) a future SPOT_CORRECTIONS entry accidentally setting
+    `notes` on the wrong row, and (b) a future re-extraction silently
+    populating notes elsewhere without an audit-trail entry.
+
+    When new `notes` values are legitimately added (e.g. a future
+    extraction that does emit row-level prose), update this test
+    deliberately.
+    """
+    rows = _rows()
+    nonnull_ids = {r["leprohon_id"] for r in rows if r["notes"] is not None}
+    expected = {
+        "leprohon-27.05",
+        "leprohon-27.06",
+        "leprohon-27.07",
+        "leprohon-29.04",
+        "leprohon-31.01",
+        "leprohon-31.02",
+    }
+    assert nonnull_ids == expected, (
+        f"non-null notes set drift: extra={sorted(nonnull_ids - expected)}, "
+        f"missing={sorted(expected - nonnull_ids)}"
+    )
+
+
 def test_late_period_notes_restored_from_agent_b() -> None:
     """Issue #174: the 6 Late-Period rows where agent-b emitted row-level
     prose ("Kings X, Y, and Z are not known from Egyptian hieroglyphic
