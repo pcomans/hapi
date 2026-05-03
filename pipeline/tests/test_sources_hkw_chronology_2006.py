@@ -34,7 +34,9 @@ JSONL = SOURCE_DIR / "reconciled.jsonl"
 @lru_cache(maxsize=1)
 def _rows_raw() -> tuple[dict, ...]:
     return tuple(
-        json.loads(line) for line in JSONL.read_text().splitlines() if line.strip()
+        json.loads(line)
+        for line in JSONL.read_text(encoding="utf-8").splitlines()
+        if line.strip()
     )
 
 

@@ -505,12 +505,16 @@ def apply_migrations(rows: list[dict]) -> list[str]:
 
 
 def main() -> None:
-    rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+    rows = [
+        json.loads(line)
+        for line in RECONCILED.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     backfill_log = backfill_schema_fields(rows)
     migration_log = apply_migrations(rows)
     RECONCILED.write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows)
-        + "\n"
+        "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
+        encoding="utf-8",
     )
     print(f"Backfilled {len(backfill_log)} row-fields; applied "
           f"{len(migration_log)} per-row corrections this run.")
