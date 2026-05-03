@@ -38,6 +38,24 @@ PAGE_LIMIT = 100
 # provenance string, so they are harmless.
 SITE_TYPES = {"archaeological-site", "archaeological-area", "landform"}
 
+
+# Closure of every iDAI type that may appear in `reconciled.jsonl` after the
+# filter + supplementary additions. SITE_TYPES are the explicitly-filtered
+# values; the rest enter via supplementary IDs (Fayum, Nubian sites) which
+# bypass the type filter for museum-provenance reasons. The audit (issue #172)
+# found 9 distinct types in the corpus vs 3 documented — this allowlist closes
+# the Rule-3 enforcement gap. Multi-typed records contribute multiple types.
+# Update this set if a new supplementary ID legitimately introduces another
+# type; the closure test will fail loudly otherwise.
+KNOWN_TYPES = SITE_TYPES | {
+    "populated-place",       # Fayum (al-Fayyūm), other supplementary towns
+    "building-institution",  # rare; e.g. specific structures
+    "island",                # rare; landform variants
+    "administrative-unit",   # supplementary regional refs
+    "hydrography",           # rare; landform variants
+    "landcover",             # rare; landform variants
+}
+
 # Supplementary gazIds that the (ancestors:2042786 + type filter) search misses
 # but which are regularly referenced in Egyptian museum catalog data.
 # Each entry: (gazId, display, reason)
@@ -225,16 +243,28 @@ def _extract_coordinates(pref_location) -> list | None:
     The API returns prefLocation in two forms:
       - A dict: {"coordinates": [lon, lat], "confidence": N, ...}
       - A list directly: [lon, lat]  (observed on some records)
+
+    iDAI returns `[0.0, 0.0]` as a placeholder for "no coordinates" on
+    several gebel (mountain) records (e.g. Gebel Abu-Fôda, Gebel el-Rus,
+    Gebel Scheich el-Haridi, Gebel el-Silsile, Gebel el-Teir, Gebel
+    el-Akhḍar). [0, 0] is a real point in the Atlantic Ocean off the
+    coast of Africa — clearly not a valid Egyptian site location. Treat
+    as missing per issue #172 (Shape D silent-default fix).
     """
     if pref_location is None:
         return None
     if isinstance(pref_location, list) and len(pref_location) == 2:
-        return pref_location
-    if isinstance(pref_location, dict):
+        coords = pref_location
+    elif isinstance(pref_location, dict):
         coords = pref_location.get("coordinates")
-        if coords and isinstance(coords, list) and len(coords) == 2:
-            return coords
-    return None
+        if not (coords and isinstance(coords, list) and len(coords) == 2):
+            return None
+    else:
+        return None
+    # Treat [0, 0] as missing — see docstring.
+    if coords[0] == 0.0 and coords[1] == 0.0:
+        return None
+    return coords
 
 
 def reconcile(records: list[dict]) -> tuple[list[dict], int]:
@@ -256,6 +286,24 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
     reconciled = [source_block]
     raw_total = len(records)
 
+    # First pass: collect every kept gazId so we can compute `parent_in_file`
+    # in a second pass. The audit (issue #172) found 566/1000 rows have
+    # `parent_id` pointing OUTSIDE the file (parents are typically
+    # `administrative-unit` ancestors that the type filter excluded). The
+    # `parent_in_file: bool` flag makes that distinction explicit so
+    # downstream consumers don't treat `parent_id` as an internal foreign
+    # key without checking — the `parent_id` value is still a valid iDAI
+    # reference (resolves at gazetteer.dainst.org/place/NNNN), just not
+    # within this file.
+    kept_gaz_ids: set[str] = set()
+    for record in records:
+        types = record.get("types", [])
+        gaz_id = record["gazId"]
+        is_supplementary = gaz_id in ADDITIONAL_GAZ_ID_SET
+        if not is_supplementary and not set(types) & SITE_TYPES:
+            continue
+        kept_gaz_ids.add(str(gaz_id))
+
     for record in records:
         types = record.get("types", [])
         gaz_id = record["gazId"]
@@ -271,21 +319,35 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
         # display name
         display = record["prefName"]["title"]
 
-        # alt_labels: all names[].title, deduped, excluding display
+        # alt_labels: all names[].title, deduped, excluding display.
+        # Empty case is `[]`, not `None`, per audit (issue #172) Shape I —
+        # both `alt_labels` and `cross_refs.other` are list-shaped, so they
+        # use the same empty sentinel.
         seen_labels: set[str] = {display}
-        alt_labels_list = []
+        alt_labels: list[str] = []
         for name_entry in record.get("names", []):
             title = name_entry.get("title")
             if title and title not in seen_labels:
-                alt_labels_list.append(title)
+                alt_labels.append(title)
                 seen_labels.add(title)
-        alt_labels = alt_labels_list if alt_labels_list else None
 
         # coordinates: GeoJSON [lon, lat] order
         coordinates = _extract_coordinates(record.get("prefLocation"))
 
         # parent_id
         parent_id = _extract_parent_id(record.get("parent"))
+
+        # parent_in_file: true iff parent_id resolves to a row in this same
+        # reconciled.jsonl. False when parent_id is a valid iDAI reference
+        # (e.g. an administrative-unit ancestor) that the type filter
+        # excluded from this file. Null when there is no parent_id.
+        if parent_id is None:
+            parent_in_file = None
+        else:
+            # parent_id has the form "idai:NNNN"; strip the prefix to compare
+            # against the gazId-string set built in the first pass.
+            parent_gaz_id = parent_id.split(":", 1)[1]
+            parent_in_file = parent_gaz_id in kept_gaz_ids
 
         # cross_refs
         cross_refs = _extract_cross_refs(record.get("identifiers", []))
@@ -298,6 +360,8 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
             "coordinates": coordinates,
             "types": types,
             "parent_id": parent_id,
+            "parent_in_file": parent_in_file,
+            "is_supplementary": is_supplementary,
             "cross_refs": cross_refs,
         })
 
@@ -323,19 +387,20 @@ def print_stats(reconciled: list[dict], raw_total: int) -> None:
         return
 
     with_coords = sum(1 for r in site_rows if r["coordinates"] is not None)
-    with_alts = sum(1 for r in site_rows if r["alt_labels"] is not None)
+    with_alts = sum(1 for r in site_rows if r["alt_labels"])
     with_geonames = sum(1 for r in site_rows if r["cross_refs"]["geonames"] is not None)
     with_parent = sum(1 for r in site_rows if r["parent_id"] is not None)
-    supplementary_count = sum(
-        1 for r in site_rows
-        if r["id"].split(":", 1)[1] in ADDITIONAL_GAZ_ID_SET
-    )
+    parent_in_file_count = sum(1 for r in site_rows if r.get("parent_in_file") is True)
+    parent_external_count = sum(1 for r in site_rows if r.get("parent_in_file") is False)
+    supplementary_count = sum(1 for r in site_rows if r.get("is_supplementary"))
 
     print(f"\nStats ({filtered} filtered / {raw_total} total):")
     print(f"  With coordinates:   {with_coords} ({100 * with_coords // filtered}%)")
     print(f"  With alt_labels:    {with_alts} ({100 * with_alts // filtered}%)")
     print(f"  With geonames ref:  {with_geonames} ({100 * with_geonames // filtered}%)")
     print(f"  With parent:        {with_parent} ({100 * with_parent // filtered}%)")
+    print(f"    parent_in_file:   {parent_in_file_count} (parent row resolves to another row here)")
+    print(f"    parent external:  {parent_external_count} (parent_id is a valid iDAI ref outside this file)")
     print(f"  Supplementary additions:  {supplementary_count} (outside Egypt tree or non-standard types)")
 
 

@@ -85,6 +85,8 @@ Example: Deir el-Bahari `[32.60771, 25.73783]` — longitude first, latitude sec
   "coordinates": [32.60771, 25.73783],
   "types": ["archaeological-site"],
   "parent_id": "idai:2105638",
+  "parent_in_file": true,
+  "is_supplementary": false,
   "cross_refs": {
     "geonames": "361834",
     "pleiades": null,
@@ -99,17 +101,19 @@ Example: Deir el-Bahari `[32.60771, 25.73783]` — longitude first, latitude sec
 
 | Field | Source |
 |---|---|
-| `id` | `"idai:" + gazId` |
-| `display` | `prefName.title` |
-| `alt_labels` | All `names[].title` values, deduped, excluding `display`. Includes all languages (Arabic, German, French, ancient Egyptian transliterations, Coptic, etc.). `null` if none. |
-| `coordinates` | `prefLocation.coordinates` — GeoJSON `[lon, lat]`. `null` if absent. |
-| `types` | `types` array verbatim from API |
-| `parent_id` | `"idai:" + <gazId>` extracted from the `parent` URL string (e.g. `"https://gazetteer.dainst.org/place/2042858"` → `"idai:2042858"`), else `null` |
+| `id` | `"idai:" + gazId`. **Unique join key** — use this, not `display`, for cross-source joins. |
+| `display` | `prefName.title`. **NOT unique** — 10 distinct names appear on multiple rows (e.g. `Qasr el-Banât` × 3, `Geheset` × 2 — different real places that happen to share a name). Phase-A consumers must disambiguate via `id`. |
+| `alt_labels` | All `names[].title` values, deduped, excluding `display`. Includes all languages (Arabic, German, French, ancient Egyptian transliterations, Coptic, etc.). `[]` if none (uses empty-list sentinel, not `null` — issue #172 Shape I fix). |
+| `coordinates` | `prefLocation.coordinates` — GeoJSON `[lon, lat]`. `null` if absent. iDAI's `[0.0, 0.0]` placeholder (used on a handful of gebel records — Gebel Abu-Fôda, Gebel el-Rus, Gebel Scheich el-Haridi, Gebel el-Silsile, Gebel el-Teir) is treated as `null` per issue #172 Shape D fix; `[0, 0]` is a real point in the Atlantic Ocean off Africa, clearly not a valid Egyptian site. |
+| `types` | `types` array verbatim from API. The closure of every type that may appear is `KNOWN_TYPES` in `fetch.py`: the three `SITE_TYPES` (`archaeological-site`, `archaeological-area`, `landform`) plus six values that enter via supplementary IDs and multi-typed records (`populated-place`, `building-institution`, `island`, `administrative-unit`, `hydrography`, `landcover`). Enforced by `test_all_types_are_in_known_vocab`. |
+| `parent_id` | `"idai:" + <gazId>` extracted from the `parent` URL string (e.g. `"https://gazetteer.dainst.org/place/2042858"` → `"idai:2042858"`), else `null`. **NOT a guaranteed in-file foreign key** — see `parent_in_file`. |
+| `parent_in_file` | `true` iff `parent_id` resolves to another row in this file. `false` iff `parent_id` is a valid iDAI reference (e.g. an `administrative-unit` ancestor) that the type filter excluded. `null` iff `parent_id` is `null`. **566/1000 rows currently have `parent_in_file=false`** (the type filter excludes most administrative-unit ancestors). Phase-A consumers must respect this flag — treating `parent_id` as an unconditional internal FK will silently fail on more than half the rows. Issue #172 Shape G fix. |
+| `is_supplementary` | `true` iff the row's gazId is in `ADDITIONAL_GAZ_IDS` (Fayum region + Nubian sites — the 16 entries listed in "Supplementary additions" above). These rows bypass the type filter and may carry types outside `SITE_TYPES`. Issue #172 Shape J fix; replaces the prior `importlib`-reload pattern in tests. |
 | `cross_refs.geonames` | From `identifiers[context="geonames"].value` |
 | `cross_refs.pleiades` | From `identifiers[context="pleiades"].value` |
 | `cross_refs.gnd` | From `identifiers[context="GND-ID"].value` (context comparison is lowercased, so `"gnd-id"` / `"gnd"` both match) |
 | `cross_refs.dai-arachne` | From `identifiers[context="dai-arachne"].value` |
-| `cross_refs.other` | All other identifiers as `{context, value}` objects |
+| `cross_refs.other` | All other identifiers as `{context, value}` objects. `[]` if none. |
 
 ## Re-fetch instructions
 
