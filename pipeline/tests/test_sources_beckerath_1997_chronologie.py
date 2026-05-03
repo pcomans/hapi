@@ -1207,3 +1207,5 @@ def test_179_extract_name_variants_handles_multi_paren() -> None:
     )
     # Bare-paren names stay verbatim
     assert extract("(Schoschenq IIIa.)") == ("(Schoschenq IIIa.)", [])
+    # No-whitespace paren must not merge adjacent words (Gemini round-6 HIGH).
+    assert extract("Foo(bar)Baz") == ("Foo Baz", ["bar"])

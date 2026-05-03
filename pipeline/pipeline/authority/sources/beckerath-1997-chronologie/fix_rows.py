@@ -888,7 +888,12 @@ def _extract_name_variants(name: str) -> tuple[str, list[str]]:
         variants.extend(
             v.strip() for v in _VARIANT_SPLIT_RE.split(inner) if v.strip()
         )
-    canonical = _NAME_VARIANT_PAREN_RE.sub("", canonical).strip()
+    # Replace each `(...)` with a single space (not empty) so a paren
+    # without surrounding whitespace doesn't merge adjacent words —
+    # e.g. hypothetical `"Foo(bar)Baz"` → `"Foo Baz"` (not `"FooBaz"`).
+    # Then collapse runs of whitespace to a single space. Per Gemini
+    # round-6 HIGH.
+    canonical = _NAME_VARIANT_PAREN_RE.sub(" ", canonical).strip()
     canonical = re.sub(r"\s+", " ", canonical)
     return canonical, variants
 
