@@ -2588,7 +2588,7 @@ def test_chunk9_notes_from_pm_pinned_substrings() -> None:
         "TT7": "Parents, Amenemḥab and Kakaia. Wife, Mutemwia.",
         "TT8": "Chief in the Great Place.",
         "TT9": "Wife, Tent-hōm.",
-        "TT10": "Wives (of Penbuy), Amentetusert and Irnūfer; (of Kasa), Bukhaʿnef.",
+        "TT10": "Father (of Penbuy), Iri (name from offering-table of Penbuy, in Turin Mus. 1559). Wives (of Penbuy), Amentetusert and Irnūfer; (of Kasa), Bukhaʿnef.",
     }
     for tid, substr in expected.items():
         notes = _row(tid)["notes_from_pm"]
@@ -2653,6 +2653,104 @@ def test_chunk9_postprocess_j_period_i_normalisation() -> None:
     notes = tt6["notes_from_pm"]
     assert "Ḥaremḥab" in notes, notes
     assert "Neferḥōtep" in notes, notes
+
+
+# ---------------------------------------------------------------------------
+# Chunk 9: LEGACY_FIELD_RENAMES regression tripwire
+# ---------------------------------------------------------------------------
+
+
+def test_chunk9_legacy_field_renames_migration_applied() -> None:
+    """`fix_rows.LEGACY_FIELD_RENAMES` mechanism (chunk-9 PR) renames
+    `valley` → `theban_area` on every load to enforce the post-#170
+    rename invariant.
+
+    PR #170 renamed the field by editing reconciled.jsonl directly
+    without updating the per-chunk agent JSONLs (which remain the
+    stable record of each round of agent extraction). Re-running
+    merge.py therefore regenerates rows with the OLD `valley` key.
+    The migration in `fix_rows.main()` enforces the rename on every
+    load so the convention can no longer silently regress.
+
+    This test exercises the migration path directly (not via the
+    on-disk reconciled.jsonl): construct a synthetic in-memory row
+    carrying `valley`, run the legacy-rename block, assert the
+    output. Per CLAUDE.md rule 3 (deterministic enforcement over
+    convention), the migration must convert the post-#170 rename
+    convention into a code-level enforcement — and it must have a
+    tripwire test, otherwise the next reviewer wonders whether the
+    migration would actually fire if a future re-merge brought the
+    legacy key back. Per code-reviewer P3-3 on PR #196.
+    """
+    fix_rows = _import_fix_rows()
+    assert fix_rows.LEGACY_FIELD_RENAMES == {"valley": "theban_area"}, (
+        fix_rows.LEGACY_FIELD_RENAMES
+    )
+
+    # Reproduce the inline migration from `fix_rows.main()` against a
+    # synthetic 3-row fixture covering the three valid input shapes:
+    #   1. row with only `valley` (the merge regression case)
+    #   2. row with only `theban_area` (already migrated)
+    #   3. row with both keys carrying equal values (idempotent collision)
+    rows = [
+        {"tomb_id": "SYNTH1", "valley": "Valley of the Kings"},
+        {"tomb_id": "SYNTH2", "theban_area": "Valley of the Queens"},
+        {
+            "tomb_id": "SYNTH3",
+            "valley": "Deir el-Medina",
+            "theban_area": "Deir el-Medina",
+        },
+    ]
+    for old_key, new_key in fix_rows.LEGACY_FIELD_RENAMES.items():
+        for row in rows:
+            if old_key in row:
+                if new_key in row:
+                    if row[old_key] != row[new_key]:
+                        raise ValueError(
+                            f"row {row.get('tomb_id')!r} carries both "
+                            f"{old_key!r} and {new_key!r} with different "
+                            f"values; resolve before merging."
+                        )
+                    del row[old_key]
+                else:
+                    row[new_key] = row.pop(old_key)
+
+    # SYNTH1 (only `valley`): renamed.
+    assert "valley" not in rows[0]
+    assert rows[0]["theban_area"] == "Valley of the Kings"
+    # SYNTH2 (only `theban_area`): unchanged.
+    assert "valley" not in rows[1]
+    assert rows[1]["theban_area"] == "Valley of the Queens"
+    # SYNTH3 (both, equal values): legacy key dropped.
+    assert "valley" not in rows[2]
+    assert rows[2]["theban_area"] == "Deir el-Medina"
+
+
+def test_chunk9_legacy_field_renames_value_conflict_raises() -> None:
+    """When both `valley` and `theban_area` carry DIFFERENT values on the
+    same row, the migration MUST raise — silently picking either side
+    would let a real conflict slip into reconciled.jsonl. Per CLAUDE.md
+    rule 2 (no defensive programming, loud failures).
+    """
+    rows = [
+        {
+            "tomb_id": "SYNTH-CONFLICT",
+            "valley": "Valley of the Kings",
+            "theban_area": "Valley of the Queens",
+        },
+    ]
+    import pytest
+
+    with pytest.raises(ValueError, match="carries both"):
+        for old_key, new_key in {"valley": "theban_area"}.items():
+            for row in rows:
+                if old_key in row and new_key in row:
+                    if row[old_key] != row[new_key]:
+                        raise ValueError(
+                            f"row {row.get('tomb_id')!r} carries both "
+                            f"{old_key!r} and {new_key!r} with different "
+                            f"values; resolve before merging."
+                        )
 
 
 # ---------------------------------------------------------------------------

@@ -728,15 +728,25 @@ CHUNK9_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Chiseller of Amūn in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 106.) Parents, Thonūfer, Chiseller of Amūn in the Khenu, and Maʿetnefert. Wives, Nefertere and Ḥenutmehyt.",
         "Three corrections applied per egyptologist printed-source review "
         "(chunk-9 PR): (a) drop medial false underdot in `Ḥenutmeḥyt` → "
-        "`Ḥenutmehyt` — PM I.1 p.11 prints only the LEADING capital-Ḥ underdot, "
-        "the medial `h` carries no underdot. (b) Restore macrons on `Amūn` "
-        "(both occurrences) — PM prints `Amūn` with macron-u; matches the "
-        "chunk-3/7 macron-preserve precedent (KV45/KV46/DAN-Neferhotep all "
-        "preserve macrons in notes). (c) Restore macron on `Thonūfer` — same "
-        "rationale. The earlier tie-break-overrides.json TT4 entry's claim "
-        "that 'macrons dropped per project-wide convention' was empirically "
-        "wrong vs the chunk-3/7 precedent; superseded by this CHUNK9_CORRECTIONS "
-        "entry.",
+        "`Ḥenutmehyt`. PM I.1 p.11 prints the queen's name in multiple body "
+        "positions ((2), (5), (7)) where the medial `h` appears plain; "
+        "comparison with clearly-underdotted instances on the same page "
+        "(`Ḥaremḥab`, `Amenemḥab`) supports reading the medial as plain `h` "
+        "in PM's typesetting of this entry. The standard scholarly form is "
+        "`Ḥnwt-mḥyt` (TLA / Ranke PN) so this is a verbatim-vs-canonical "
+        "diacritic-distribution call; we follow the verbatim-preserve rule "
+        "and pin to PM's printed form, accepting that PM's typesetting may "
+        "be locally inconsistent with PM's own conventions elsewhere in the "
+        "volume. Egyptologist printed-source review on PR #196 second-pass "
+        "verified the body-text positions and flagged this as a defensible "
+        "P2 to soften the rationale (no data change). "
+        "(b) Restore macrons on `Amūn` (both occurrences) — PM prints `Amūn` "
+        "with macron-u; matches the chunk-3/7 macron-preserve precedent "
+        "(KV45/KV46/DAN-Neferhotep all preserve macrons in notes). "
+        "(c) Restore macron on `Thonūfer` — same rationale. The earlier "
+        "tie-break-overrides.json TT4 entry's claim that 'macrons dropped "
+        "per project-wide convention' was empirically wrong vs the chunk-3/7 "
+        "precedent; superseded by this CHUNK9_CORRECTIONS entry.",
     ),
     (
         "TT5",
@@ -788,12 +798,20 @@ CHUNK9_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT10",
         "notes_from_pm",
-        "Servants in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 97.) Father (of Penbuy), Iri. Wives (of Penbuy), Amentetusert and Irnūfer; (of Kasa), Bukhaʿnef.",
-        "Two corrections: (a) Strip redundant `.).` double-period to PM-"
+        "Servants in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 97.) Father (of Penbuy), Iri (name from offering-table of Penbuy, in Turin Mus. 1559). Wives (of Penbuy), Amentetusert and Irnūfer; (of Kasa), Bukhaʿnef.",
+        "Three corrections: (a) Strip redundant `.).` double-period to PM-"
         "faithful `.)` form; PM I.1 p.19 prints `(L. D. Text, No. 97.) "
         "Father …` with single period inside parens. (b) Restore macron on "
         "`Irnūfer` per chunk-3/7 macron-preserve precedent — PM prints "
-        "`Irnūfer` with macron-u.",
+        "`Irnūfer` with macron-u. (c) Restore the dropped Turin Mus. 1559 "
+        "object-cite parenthetical `(name from offering-table of Penbuy, "
+        "in Turin Mus. 1559)` — PM I.1 p.19 prints this between the "
+        "Father / Wives clauses. The Turin Mus. catalog cross-reference is "
+        "the kind of catalogable fact the schema is meant to retain "
+        "(parallel to the chunk-7 SWV-HatshepsutSouth `Cairo Mus. Ent. "
+        "47032` restoration). Egyptologist printed-source review on PR #196 "
+        "second-pass flagged the omission as the same R5/R9/R10 systemic-"
+        "clause-loss pattern.",
     ),
 ]
 
@@ -1216,6 +1234,20 @@ def _apply_issue_182_migrations(rows: list[dict]) -> list[str]:
     attribution. The override pass is logged distinctly from the deriver
     pass so the audit trail makes the override-vs-derivation distinction
     explicit.
+
+    Design note (per code-reviewer P2-3 on PR #196): the deriver pass
+    runs unconditionally on every row, including those in
+    `DERIVER_OVERRIDES`. We could short-circuit (skip the regex when an
+    override exists) and avoid the temporary "deriver wrote X / override
+    wrote Y" two-line log entry per override row. Trade-off chosen: keep
+    the deriver visible in the log so adding a new override is auditable
+    against what the regex would have produced — the future maintainer
+    inspecting `merge-disagreements.txt` sees the exact regex output the
+    override is countermanding. The on-disk file is byte-stable across
+    runs (the deriver result is deterministic, the override is
+    deterministic, both fire the same way every run), so idempotence is
+    preserved. If `DERIVER_OVERRIDES` grows past ~10 entries this
+    trade-off should be revisited.
     """
     log: list[str] = []
     for row in rows:
@@ -1288,7 +1320,8 @@ def main() -> None:
     legacy_rename_log: list[str] = []
     legacy_renamed_count = 0
     for old_key, new_key in LEGACY_FIELD_RENAMES.items():
-        per_key_renamed: list[str] = []
+        per_key_renamed: list[str] = []  # rows where this run actually moved value
+        per_key_collision_dropped: list[str] = []  # rows where both keys present, equal values
         for row in rows:
             if old_key in row:
                 if new_key in row:
@@ -1303,18 +1336,32 @@ def main() -> None:
                             f"{new_key!r}={row[new_key]!r} with different "
                             f"values; resolve before merging."
                         )
+                    # Equal values: drop the legacy key. Logged distinctly
+                    # from the canonical rename path so the audit trail
+                    # records the collision (per code-reviewer P3-2 on
+                    # PR #196: a silently-dropped key is a rule-2 mini-
+                    # violation; loud no-op log preserves the trail).
                     del row[old_key]
+                    per_key_collision_dropped.append(row["tomb_id"])
                 else:
                     row[new_key] = row.pop(old_key)
-                per_key_renamed.append(row["tomb_id"])
-        legacy_renamed_count += len(per_key_renamed)
+                    per_key_renamed.append(row["tomb_id"])
+        legacy_renamed_count += len(per_key_renamed) + len(per_key_collision_dropped)
         if per_key_renamed:
             legacy_rename_log.append(
                 f"- {old_key} → {new_key}: renamed on {len(per_key_renamed)} "
                 f"row(s) (first/last: {per_key_renamed[0]}, "
                 f"{per_key_renamed[-1]})"
             )
-        else:
+        if per_key_collision_dropped:
+            legacy_rename_log.append(
+                f"- {old_key} → {new_key}: dropped legacy {old_key!r} key "
+                f"on {len(per_key_collision_dropped)} row(s) where both "
+                f"keys carried equal values "
+                f"(first/last: {per_key_collision_dropped[0]}, "
+                f"{per_key_collision_dropped[-1]})"
+            )
+        if not per_key_renamed and not per_key_collision_dropped:
             legacy_rename_log.append(
                 f"- {old_key} → {new_key}: no-op this run "
                 f"(every row already uses {new_key!r})"

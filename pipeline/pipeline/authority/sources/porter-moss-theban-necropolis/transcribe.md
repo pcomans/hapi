@@ -109,6 +109,25 @@ Predictable artifacts in the Griffith text layer that the extraction prompt must
 - **`sox` for `501`, `sos` for `505`** etc. (page numbers in running headers OCRed as letter forms). The structured `source_citation.page` is parsed from the start-of-tomb context, not from running headers, so this typically doesn't bite. Cross-check during reviewer pass.
 - **Printed-page numbers in the running header sometimes float off-line** (lithographic margin drift). When `prompt.md` asks the agent to attribute a tomb to a page, the agent should use the `Plan, p. N` reference inside the tomb's headword OR the running-header page number from the first body page after the tomb number, not the running header on the tomb-number line itself.
 
+### Bigram-uniqueness audit for new postprocess substrings
+
+When `postprocess.py` adds a new context-free substring substitution in `_SUBSTRING_FIXES`, the new substring's left-hand side must not appear in normal English prose anywhere in the source or future source PDFs. The rule's docstring claims "verified by grep over raw/chunk-*.txt", but the `raw/*.txt` files are gitignored (CLAUDE.md rule 1, rights policy) so a CI test can't enforce the claim. The audit is therefore a **manual grep procedure** every time a new substring is added:
+
+```bash
+# From the repo root, verify the bigram (or substring) does not appear
+# anywhere in any raw chunk text file. The grep should print no hits;
+# any hit is a potential false-positive site that must be inspected
+# before adding the rule.
+cd pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/
+grep -E '<NEW-SUBSTRING-PATTERN>' raw/chunk-*.txt
+```
+
+Examples of past audits:
+- `J.I` (added in chunk-9 PR for capital underdot-Ḥ in the PM-I.1 text-layer): single hit `NEFERJ.IOTEP` in `raw/chunk-p18-p40.txt` (TT6's headword); no other occurrences across all chunks. The bigram-uniqueness claim holds.
+- `J:I`, `I:I`, `I;I`, `l:I`, `I:J` (the original five Ḥ-substitutes from chunks 1-3): all verified by the same grep procedure when added.
+
+The `tests/test_porter_moss_postprocess.py::test_capital_h_underdot_j_period_i_does_not_misfire_on_synthetic_text` covers the substitution-shape invariant against synthetic fixtures (sentence-end author initials, lowercase-`l` Pushkin Mus. citations, lowercase-`j` Egyptian-suffix transliteration). The test does NOT exercise the `raw/` files. The structural limit is documented in CLAUDE.md rule 9 (generated-file convention) and rule 1 (rights policy). When a new substitution rule is added, run the manual grep AND extend the synthetic-fixture test to cover any new collision shapes.
+
 ## Reproducibility
 
 To re-extract the chunk-1 text layer:

@@ -55,10 +55,10 @@ If your headword scan returns a number outside this range, RE-CHECK the chunk fi
 
 PM I.1's Griffith Institute scan has noisier OCR than PM I.2. The `postprocess.py` table normalises the patterns shared across the volume; PM-I.1-specific patterns that don't yet have postprocess rules are listed here so all three agents read them the same way.
 
-- **`J.I` (J + period + I)** in an all-caps name context renders for capital underdot-Ḥ (`Ḥ`). Example expected in this chunk: `NEFERJ.IOTEP` → `NEFERḤOTEP` → after the README's strip-Ḥ rule for `occupant_name` → `Neferhotep`. The bigram `J.I` does not appear in normal English prose in this source — verify by grep before extending the rule.
-- **Open-paren `(` adjacent to a letter then a space-cartouche** (i.e. `<LETTER>( <cartouche-char>`) renders for the ayin glyph `ʿ` at the END of a name. Example: `KHA( ~. Chief in the Great Place.` → headword name is `KHAʿ` → `Khaʿ` (ayin preserved per README's matchable-name policy — same convention as chunk-7's `Khaʿemweset` / `ʿAḳ-hor`). Do NOT fire this rule on parenthetical phrases like `(Also owner of tomb 326.)` — they have a closing `)` and surrounding prose, no cartouche-glyph context.
-- **`I>.` (I + > + period)** at name start in an all-caps context renders for capital underdot-Ḳ (`Ḳ`). Example: `I>.EN` → `ḲEN` → `Ḳen` (underdot-K **preserved** in `occupant_name` per README). Same policy as chunk-7's `ʿAḳ-hor`.
-- **Trailing-`c`-as-ayin** in token-exact occupant-name forms: `RAcMosi` → `Raʿmose`. The trailing `c` substitutes for `ʿ` (ayin) in roughly 5% of ayin occurrences (per `postprocess.py`'s § 3). The token `RAcMosi`/`Racmosi` is not in the postprocessor's whitelist so you see it in raw form here.
+- **`J.I` (J + period + I) inside an all-caps name token** renders for capital underdot-Ḥ (`Ḥ`). The bigram `J.I` does not appear in normal English prose in this source — verified by `grep -E 'J\.I' raw/chunk-*.txt` before this prompt was written. After the postprocess.py update added in this PR, this pattern is normalised to `Ḥ` automatically — but be alert in case a chunk-text token slipped through with PM-I.1-shaped noise the postprocessor didn't catch. The README's strip-Ḥ rule then applies to `occupant_name` (matchable field).
+- **Open-paren `(` adjacent to a letter then a cartouche-glyph context** (i.e. `<LETTER>(<space-then-cartouche-char>`) renders for the ayin glyph `ʿ` at the END of a name. The agent applies: ayin preserved in `occupant_name` per the README's matchable-name policy (chunk-7's `Khaʿemweset` and `ʿAḳ-hor` are the convention). Do NOT fire this rule on prose-parenthetical phrases like `(Also owner of tomb <N>.)` or `(L. D. Text, No. <N>.)` — they have a closing `)` and surrounding sentence prose, no cartouche-glyph context.
+- **`I>.` (I + `>` + period) at the START of an all-caps name token** renders for capital underdot-Ḳ (`Ḳ`). Underdot-K is **preserved** in `occupant_name` per the README (chunk-7's `ʿAḳ-hor` is the convention).
+- **Trailing-`c`-as-ayin** inside an all-caps name token like `RAcMOSI` (where `c` substitutes for the ayin `ʿ`). The publisher OCR renders the ayin inconsistently — both `<` (handled by Phase-2 of `postprocess.py`) and `c` (handled by Phase-3's whitelist) appear in the same chunk. PM-I.1-specific tokens that aren't in the Phase-3 whitelist appear in this chunk's raw form; restore the ayin per the README convention. English `c`-trailing tokens (`Cairo`, `Asiatic`, `Photographic`) are NOT subject to this rule and survive untouched.
 
 The `postprocess.py` table already runs against this chunk file; you'll see `Ḥ`, `ʿ`, `Ḳ`, `Ḍ`, `ḳ`, `ʿ` in body prose where the publisher noise has been reduced to canonical Unicode. The four noise classes above are residual cases not yet whitelisted in the postprocessor.
 
@@ -101,16 +101,16 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 
 ### `theban_area`
 
-`"Deir el-Medina"` for every row in this chunk's TT1–TT10 range — every headword in scope explicitly declares `Deir el-Medina.` on the line immediately below the title clause. The literal string MUST be `"Deir el-Medina"` (em-dashes / hyphens render consistently as ASCII hyphen post-postprocess). If a row's headword does NOT print `Deir el-Medina`, RE-CHECK the section assignment — the TT11+ rows shift sub-site (TT11 is Dra' Abu el-Naga) and would land in a future chunk, not this one.
+The PM I.1 § I "Numbered Tombs" headwords each declare a Theban sub-site on the line immediately below the title clause — extract that string verbatim per row. The TT1–TT10 range falls within a single sub-site cluster per PM's Appendix-D classification (re-read Appendix D + the chunk to confirm the canonical string and pin the literal value across all 10 rows). Use ASCII hyphen for rendering (em-dashes / hyphens normalise post-postprocess). If a row's headword declares a DIFFERENT sub-site than the rest, that is a re-check signal — the TT11+ chunks shift sub-site, and a row that doesn't fit the expected sub-site is either out-of-range or worth a closer read of the headword.
 
 ### `occupant_name`
 
 **PM-verbatim, conventional-English form, titlecase.** Extract the NAME token from the heading line after applying the README's diacritic policy and the noise rules above.
 
 Per README (`occupant_name` is the matchable name field for Phase-A authority joining):
-- Strip underdot-Ḥ (`Ḥ` / `ḥ`) → plain `H` / `h` (`NEFERḤOTEP` → `Neferhotep`, `RAḤMOSE` → `Rahmose`). Underdot-Ḥ is the ONLY scholarly diacritic stripped from `occupant_name`.
-- Preserve ayin (`ʿ`) where PM prints it as a distinguishing radical (`KHAʿBEKHNET` → `Khaʿbekhnet`; `RAʿMOSE` → `Raʿmose`; `KHAʿ` → `Khaʿ`; `NEFERʿABET` → `Neferʿabet`).
-- Preserve underdot-Ḳ (`Ḳ` / `ḳ`) (`ḲEN` → `Ḳen`).
+- Strip underdot-Ḥ (`Ḥ` / `ḥ`) → plain `H` / `h`. Underdot-Ḥ is the ONLY scholarly diacritic stripped from `occupant_name` — same convention as chunk-8 (e.g. `IMḤOTEP` → `Imhotep`).
+- Preserve ayin (`ʿ`) where PM prints it as a distinguishing radical — same convention as chunk-7 / chunk-8 (e.g. `KHAʿEMWESET` → `Khaʿemweset`).
+- Preserve underdot-Ḳ (`Ḳ` / `ḳ`) — same convention as chunk-7 (`ʿAḲ-ḤOR` → `ʿAḳ-hor` retains the ḳ).
 - Drop cartouche garbage (the text-layer noise after the name token).
 
 Honorific prefixes that PM uses to introduce role (e.g. an all-caps `KING`, `PRINCE`, `QUEEN`, `VIZIER` before the name) — strip from `occupant_name`, capture in `occupant_role`. Most TT1–TT10 headwords do not lead with such a prefix; the role is given by the title clause AFTER the name (see `occupant_role` rules).
@@ -129,29 +129,26 @@ Popular names of the tomb itself (19th-c. surveyor designations, classical alias
 
 ### `co_occupants` and `is_joint_burial`
 
-Both fields apply ONLY when PM's headword names more than one person buried in the tomb.
+Both fields apply ONLY when PM's headword names more than one person buried in the tomb. Apply the structural rule mechanically per headword; do not pre-count which rows in this range will hit which branch — read the chunk and let the rule fire.
 
-The TT1–TT10 range contains two such headwords. The pattern distinction is structural:
-
-- `<NAME-A> … and son <NAME-B>` — **hierarchical** (NAME-A is the parent, syntactic head). NAME-B goes in `co_occupants` with per-person role; `is_joint_burial = false`. Same shape as KV46 `YUIA …, AND THUIU` (Yuia leads). Wife / son / daughter clauses lower in the headword (`Father, …`, `Wife, …`) describe family but those people are NOT buried in the tomb — they go in `notes_from_pm`, not `co_occupants`.
+- `<NAME-A> … and son <NAME-B>` (or `…and daughter <NAME-B>`, etc.) — **hierarchical** (NAME-A is the parent, syntactic head). NAME-B goes in `co_occupants` with per-person role; `is_joint_burial = false`. Same shape as KV46 `YUIA …, AND THUIU` (Yuia leads). Wife / son / daughter clauses lower in the headword (`Father, …`, `Wife, …`) describe family but those people are NOT buried in the tomb — they go in `notes_from_pm`, not `co_occupants`.
 - `<NAME-A> … and <NAME-B>, <PLURAL-ROLE>` — **coordinate** (no syntactic primacy; PM lists them as a coordinate pair, the plural role applies to both). `is_joint_burial = true`. NAME-B goes in `co_occupants` with the same role as NAME-A. Same shape as SWV-ThreePrincesses (`MENHET, MERTI, AND MENWI`).
+- Single-occupant headword (no `and <NAME-B>`): `co_occupants: []`, `is_joint_burial: false`.
 
-The role assigned to each `co_occupants[]` entry follows the same controlled-vocabulary mapping as `occupant_role` (see below) — `"Official"` for a workman / scribe / chiseller / foreman, etc. Per-person `alt_names: []` is the common case; populate only if PM gives a parenthesised alternative form for that specific person.
-
-Default for the eight non-joint TT rows: `co_occupants: []`, `is_joint_burial: false`.
+The role assigned to each `co_occupants[]` entry follows the same controlled-vocabulary mapping as `occupant_role` (see below). Per-person `alt_names: []` is the common case; populate only if PM gives a parenthesised alternative form for that specific person.
 
 ### `occupant_role`
 
 Controlled vocabulary: `"King"`, `"Queen"`, `"Royal Family"`, `"Vizier"`, `"Official"`, `"High Priest"`, `"Princess"`, `"Prince"`, `"Unknown"`.
 
 Assignment rules:
-1. If `occupant_name` is null (cartouche-blank / uninscribed): role `"Unknown"`. None of the TT1–TT10 headwords are uninscribed.
-2. If the headword title clause names a controlled-vocab role explicitly (e.g. `Vizier`): use it.
-3. Default for TT1–TT10: most occupants are Deir el-Medina workmen / scribes / foremen / chisellers — controlled-vocab assignment is **`"Official"`** (same convention as chunk-7's DAN-Neferhotep "Scribe of the Great Harim" → role `"Official"`). The verbatim title (`Servant in the Place of Truth`, `Chiseller of Amun in the Place of Truth`, `Foremen in the Place of Truth`, `Chief in the Great Place`, `Scribe in the Place of Truth`) goes in `notes_from_pm`.
+1. If `occupant_name` is null (cartouche-blank / uninscribed): role `"Unknown"`.
+2. If the headword title clause names a controlled-vocab role explicitly (e.g. `Vizier`, `Princess`, `King`): use it.
+3. Otherwise the controlled-vocab assignment for non-royal occupational titles (workman / scribe / chiseller / foreman / priest / official) flattens to **`"Official"`** — same convention as chunk-7's DAN-Neferhotep ("Scribe of the Great Harim" → role `"Official"`). The verbatim role title PM prints in the headword title-clause (e.g. `<Title> in the Place of Truth`, `Chiseller of <Deity> in the <Workshop>`, `Chief in the <Workshop>`, `Scribe in the <Workshop>`) goes in `notes_from_pm` — extract it from the chunk, do NOT use any examples this prompt may once have enumerated as a substitute for reading the source.
 
 ### `dynasty`, `sub_period`, `date_bce_approx_start`, `date_bce_approx_end`
 
-**All `null`** for every row at this extraction stage. Phase A enrichment fills these from the king authority. Do NOT supply from outside knowledge or from PM's `Temp. Ramesses II.` / `Dyn. XIX.` clauses — those go in `notes_from_pm` verbatim.
+**All `null`** for every row at this extraction stage. Phase A enrichment fills these from the king authority. Do NOT supply from outside knowledge or from PM's `Temp. <King>` / `Dyn. <Numeral>` clauses — those go in `notes_from_pm` verbatim.
 
 ### `location_sub_area`
 
@@ -177,13 +174,14 @@ Numbered TT-cross-refs only — do not list `(belonging to (4))`, `(tomb 7)` mid
 
 ### `notes_from_pm`
 
-A short verbatim prose fragment from the headword block that doesn't fit a structured field. **Verbatim-preserve against PM's printed text** — preserve PM's diacritics including `ḥ`, `ʿ`, `ḳ`, `ḍ` (do NOT apply the strip-ḥ rule here; that rule is for `occupant_name` only). Capture, joined by `". "`:
+A short verbatim prose fragment from the headword block that doesn't fit a structured field. **Verbatim-preserve against PM's printed text** — preserve PM's diacritics including `ḥ`, `ʿ`, `ḳ`, `ḍ`, and PM's vowel macrons (`ē`, `ō`, `ū`) where the printed page carries them (do NOT apply the strip-ḥ rule here; that rule is for `occupant_name` only). Capture each of the following clause types from the headword as PM prints them, joined by `". "`:
 
-- **Verbatim title clause** (the role description that follows the name): `Servant in the Place of Truth on the west of Thebes`, `Chiseller of Amun in the Place of Truth`, `Chief in the Great Place`, `Foremen in the Place of Truth`, `Scribe in the Place of Truth`, `Charmer of scorpions`, `Overseer of works`. Capture verbatim — these encode the more specific occupational role that the controlled-vocab `"Official"` flattens.
-- **Regnal / dynasty clauses:** `Dyn. XIX.`, `Ramesside.`, `Temp. Ramesses II.`, `Temp. Amenophis II, Tuthmosis IV, and Amenophis III.`, `Temp. Ḥarem(ḥ)ab to Ramesses II.`. Preserve PM's wording verbatim including any underdot-Ḥ that publisher OCR has degraded; restore what PM actually prints.
-- **Family clauses on the lines below the title:** `Father, <Name>`, `Mother, <Name>`, `Wife, <Name>`, `Wives (of <X>), <Name>; (of <Y>), <Name>`, `Parents, <Name> and <Name>`. These name family members who are NOT buried in the tomb (so do NOT use `co_occupants` for them). The names go in `notes_from_pm` only if PM prints them in the headword block — which it does for most TT1–TT10 rows. Use the convention `Wife, <Name>.` (singular) or `Wives, <Name> and <Name>.` (plural) to mirror PM. Strip the cartouche garbage but keep the name and role-relation.
-- **Cross-numbering parentheticals:** `(L. D. Text, No. 96.)`, `(L. D. Text, No. 107.)`, `(CHAMPOLLION, No. N)`. Preserve where PM prints them as headword cross-numbering.
-- **Hedge tokens for PRIMARY attribution:** `(probably)`, `(?)` printed against the occupant's NAME or against the occupant's identification — preserve verbatim. These feed the Tier-3 `attribution_certainty` derivation. Examples of primary-attribution hedges: PM printing `… (probably) …` or `Probably <Name>` against the headword name itself, or `(?)` immediately after the occupant's role/identity clause.
+- **Verbatim role-title clause** (the title description that follows the name) — this is the more specific occupational role that the controlled-vocab `"Official"` flattens; preserve PM's exact wording.
+- **Regnal / dynasty clauses** (`Dyn. <Numeral>.`, `<Period>.`, `Temp. <King>.`, `Temp. <King-A> to <King-B>.`). Preserve PM's wording verbatim including any underdot-Ḥ or macron that publisher OCR has degraded; restore what PM actually prints. Same convention as chunks 1–8 (e.g. KV13 `Temp. Merneptaḥ-Siptaḥ.` preserves the underdot).
+- **Family clauses on the lines below the title** (`Father, <Name>`, `Mother, <Name>`, `Wife, <Name>`, `Wives (of <X>), <Name>; (of <Y>), <Name>`, `Parents, <Name> and <Name>`). These name family members who are NOT buried in the tomb (so do NOT use `co_occupants` for them). Use the convention `Wife, <Name>.` (singular) or `Wives, <Name> and <Name>.` (plural) to mirror PM. Strip the cartouche garbage but keep the name and role-relation.
+- **Object-cite parentheticals** (`(name from offering-table of <Person>, in <Museum> <Cat-No.>)`). Preserve where PM prints them — these are exactly the catalog cross-references the schema retains. Same shape as chunk-7 SWV-HatshepsutSouth's `Cairo Mus. Ent. 47032` clause.
+- **Cross-numbering parentheticals** (`(L. D. Text, No. <N>.)`, `(CHAMPOLLION, No. <N>.)`). Preserve where PM prints them as headword cross-numbering.
+- **Hedge tokens for PRIMARY attribution** (`(probably)`, `(?)`) when printed against the occupant's NAME or identification — preserve verbatim. These feed the Tier-3 `attribution_certainty` derivation. Primary-attribution hedges are e.g. PM printing `Probably <Name>` against the headword name itself, or `(?)` immediately after the occupant's identity clause (chunk-3 KV42 / chunk-8 QV60 are the canonical patterns).
 
 Drop entirely from `notes_from_pm`:
 - `Plan, p. N`, `Map VII, …` plan-marker references.
@@ -204,7 +202,7 @@ Object with three fixed keys:
 
 These three fields are **emit defaults at extraction time** — `false`, `false`, `"attested"`. The `fix_rows.py` `_apply_issue_182_migrations` deriver runs post-merge and overwrites them deterministically from regex matches against `notes_from_pm`. Do NOT pre-derive them in your output; emit the defaults so the deriver's run produces a clean idempotent log entry.
 
-(Background, FYI only: the deriver flips `is_uninscribed=true` on `\buninscribed\b`, `is_usurped=true` on `\busurp(?:ed|ation)\b`, and sets `attribution_certainty` to `"uncertain"` on `\b(uncertain|perhaps|possibly|tentatively)\b|\(\?\)`, `"probable"` on `\bprobably\b|\(probably\)|\battributed to\b`. The `Perhaps also owner of tomb N` phrasing in TT4's headword DOES fire the `\bperhaps\b` rule — that's expected, the hedge applies to the cross-tomb attribution, and `attribution_certainty="uncertain"` is the correct downstream consequence.)
+(Background, FYI only: the deriver flips `is_uninscribed=true` on `\buninscribed\b`, `is_usurped=true` on `\busurp(?:ed|ation)\b`, and sets `attribution_certainty` to `"uncertain"` on `\b(uncertain|perhaps|possibly|tentatively)\b|\(\?\)`, `"probable"` on `\bprobably\b|\(probably\)|\battributed to\b`. **Because the `notes_from_pm` exclusion rule above strips `(Perhaps also owner of tomb N.)` cross-tomb-ownership parentheticals from the field, the secondary-attribution hedge on those rows never reaches the deriver — the `attribution_certainty` for such rows stays at the default `"attested"`, which is the correct downstream consequence.** Primary-attribution hedges that ARE captured in `notes_from_pm` per the rules above (e.g. a `(probably)` qualifying the occupant's identity clause) DO fire the regex and are the cases where `"probable"` / `"uncertain"` is the correct downstream value.)
 
 ## Structural gotchas to watch
 
@@ -216,17 +214,17 @@ These three fields are **emit defaults at extraction time** — `false`, `false`
 
 ## Pitfall summary (read LAST before running)
 
-1. **10 rows expected**: TT1, TT2, TT3, TT4, TT5, TT6, TT7, TT8, TT9, TT10. Every number in TT1..TT10 is present in PM I.1 § I.
+1. **10 rows expected** (every TT number in TT1..TT10 has a headword in PM I.1 § I — no gaps in this decade). The expected-tomb-id-set is a STRUCTURAL invariant the prompt declares; per-row content is what you extract from the chunk file.
 2. **PM I.1 offset is +18**, not +458. `printed = physical − 18`. Use the `===== PRINTED PAGE M =====` marker for `source_citation.page`.
 3. **`section: "I"`**, NOT `"I.A"` (PM I.1 § I has no sub-section letter for the TT1–TT10 range).
 4. **`edition: "PM I.1 2nd ed. 1960"`**, not the chunk-1–8 `"PM I.2 2nd ed. 1964"`.
-5. **`theban_area: "Deir el-Medina"`** for all 10 rows (Deir el-Medina workmen).
-6. **Two joint burials in this range** (rows where the headword names two people). One is hierarchical (`X and son Y`), one is coordinate (`X and Y, plural-role`). Apply the `is_joint_burial` rule from the schema preamble.
-7. **`occupant_role: "Official"`** for the entire range — Deir el-Medina workmen, foremen, scribes, chisellers all map to the controlled-vocab `"Official"`. The verbatim title clause (`Servant in the Place of Truth`, etc.) goes in `notes_from_pm`.
+5. **`theban_area`** is the headword's structural sub-site classification — every row in this range's section sits under PM I.1 § I's Appendix-D sub-site assignment. Read the chunk and use what PM declares per row.
+6. **`is_joint_burial` / `co_occupants`** apply only when the headword names more than one person. Apply the `<X> and son <Y>` (hierarchical, `is_joint_burial=false`) vs `<X> and <Y>, <plural-role>` (coordinate, `is_joint_burial=true`) rule from the schema preamble. Single-occupant rows: empty `co_occupants` and `is_joint_burial=false`.
+7. **`occupant_role`** assignment per the rules above (controlled-vocab `"Official"` is the typical flattening for non-royal occupational titles). The verbatim role-title clause that PM prints goes in `notes_from_pm`.
 8. **`dynasty` / `sub_period` / `date_bce_*` / `location_sub_area` / `discovery_year` / `discoverer`** all `null` for every row.
 9. **PM I.1 noise residuals**: `J.I` → `Ḥ`, `( <space-cartouche>` → `ʿ`, `I>.` → `Ḳ`, `c` (token-final in known transliterations) → `ʿ`. Apply per the README's `occupant_name` diacritic policy.
 10. **Tier-3 typed flags** emit defaults (`false`/`false`/`"attested"`); the `fix_rows.py` deriver overwrites post-merge.
-11. **`shared_with_tombs`** captures numbered TT cross-references including `Also owner of tomb N` / `Perhaps also owner of tomb N` phrasings.
+11. **`shared_with_tombs`** captures numbered TT cross-references including `Also owner of tomb <N>` / `Perhaps also owner of tomb <N>` phrasings.
 
 ## Report back
 
@@ -234,6 +232,6 @@ After writing the JSONL, output a one-paragraph report with:
 - Row count (should be 10) and the complete list of TT tomb_ids you emitted in sort order.
 - Any row where you're unsure about a field, with the field name and your best-guess value.
 - Any unexpected text-layer noise that this prompt doesn't already flag.
-- Whether you treated TT6 and TT10 as joint or hierarchical (and which `is_joint_burial` value you set on each).
+- For any multi-occupant headwords you found in the chunk, which classification (hierarchical vs coordinate) you applied and the structural reason (which conjunction shape PM printed).
 
 Stay under 200 words.
