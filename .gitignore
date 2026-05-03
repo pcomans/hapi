@@ -21,6 +21,14 @@ out/
 
 # Claude Code
 .claude/settings.local.json
+.claude/worktrees/
+
+# revise-priors markers — runtime artifacts written by agents to halt
+# the workflow until a load-bearing assumption is reviewed by the user.
+# Markers themselves are workflow-local; only the resolved/ audit trail
+# is committed (and even that lives behind .gitkeep — actual resolved
+# markers can be committed if useful for incident-history archaeology).
+.claude/revise-priors/*.md
 
 # OS
 .DS_Store
