@@ -75,63 +75,58 @@ def test_capital_h_underdot_pm_i1_period_variant() -> None:
 
 
 def test_capital_h_underdot_j_period_i_does_not_misfire_on_synthetic_text() -> None:
-    """The ``J.I → Ḥ`` rule's "bigram does not appear in normal English
-    prose" claim must hold against shapes the rule could plausibly hit
-    incorrectly. Code-reviewer P2-2 on PR #196: the rationale-text claim
-    "verified by grep" is markdown, not enforcement; this test pins the
-    invariant against synthetic fixtures that mimic the chunk-text shapes
-    the rule could collide with.
+    """The ``J.I → Ḥ`` rule (Phase 1.5, regex-anchored) must fire ONLY when
+    surrounded by capital letters on both sides — i.e. inside an all-caps
+    name token. It must NOT fire in bibliography text where ``J.I.``
+    represents author initials, journal acronyms, or catalog prefixes.
 
-    The synthetic fixtures cover the bigram-collision risk surface:
+    Codex review on PR #196 round 3 caught that an unconstrained
+    substring rule would corrupt legitimate `J.I.` initials. The earlier
+    version of this test pinned the corrupting behaviour as
+    "documented boundary" — that was wrong; the rule SHOULD have been
+    constrained, and now is. The synthetic fixtures below pin the four
+    boundary shapes the rule must NOT misfire on:
 
-    1. **Sentence-end + author initial**: PM bibliographic ribbons stack
-       sentences and author cites like ``... fig. 1. J. SMITH ...`` —
-       a period after a digit followed by space + capital-J + period
-       + capital-I IS NOT the J.I bigram (whitespace separates them).
-    2. **Catalog numbers**: shapes like ``J.I.A. 47032`` (some museum
-       inventory prefixes) — a J + period + I + period IS NOT J.I-as-Ḥ
-       (the trailing period after the I disambiguates), but our rule
-       fires on ``J.I`` regardless of what follows. Confirm this is a
-       real risk surface so a future raw-text-layer check can reject
-       inputs containing such tokens.
-    3. **Pushkin Mus. style citation**: the shape ``l.I.a`` (with
-       leading lowercase l) appears in chunk-9 raw text as a Pushkin
-       Museum sub-catalog reference (`l.I.a. 1920`); the rule's `J.I`
-       LHS does not collide with `l.I` (capital-L vs lowercase-l vs
-       J).
-    4. **Egyptian transliteration with dot**: shapes like ``rdj.I``
-       (verb + 1sg suffix) — `J.I` (capital-J + dot + capital-I) does
-       NOT collide with `j.I` (lowercase-j); the rule is case-sensitive
-       on both sides.
+    1. Sentence-end + author initial (`fig. 1. J. SMITH`).
+    2. Bibliography acronym / catalog prefix (`J.I.A.`, `J.I. inventory`).
+    3. Pushkin-Mus. lowercase-l sub-catalog reference (`l.I.a`).
+    4. Egyptological lowercase-j suffix transliteration (`rdj.I`).
+
+    Plus the positive case: an all-caps in-name occurrence (the
+    `NEFERJ.IOTEP` shape from PM I.1 TT6) DOES fire.
 
     The actual bigram-uniqueness check on real chunk text is a manual
     `grep -E 'J\\.I' raw/chunk-*.txt` (raw chunks are gitignored and
     cannot be tested in CI per CLAUDE.md rule 9). This test pins the
     SHAPE invariants the manual grep would otherwise drift away from.
     """
-    # Case 1: sentence-end + author initial — must NOT fire (whitespace
-    # between sentences and the author initial is required).
+    # Negative case 1: sentence-end + author initial — must NOT fire
+    # (whitespace between `1.` and `J`, and `.` after `I`).
     assert pp.process_chunk("fig. 1. J. SMITH, p. 47") == (
         "fig. 1. J. SMITH, p. 47"
     )
-    # Case 2: catalog-number with trailing period — fires correctly on
-    # the J.I bigram (J + period + I), even though a trailing period
-    # follows. The substitution is greedy/leftmost, which is the
-    # documented behaviour. This pins the rule's exact boundary —
-    # downstream test_capital_h_underdot_pm_i1_period_variant covers
-    # the in-name use; this case pins the not-in-name boundary for
-    # auditability. Per CLAUDE.md rule 3, the substitution's trigger
-    # boundary must be visible to a future maintainer.
-    assert pp.process_chunk("J.I. inventory") == "Ḥ. inventory"
-    # Case 3: Pushkin-Mus. l.I.a citation form must NOT fire (lowercase
-    # `l` does not match the rule's capital `J`).
+    # Negative case 2: bibliography catalog prefix — must NOT fire (`.`
+    # after `I` is not a capital letter, so the right-anchor lookahead
+    # fails). This is the case Codex caught: the unconstrained rule
+    # corrupted `J.I. inventory` → `Ḥ. inventory`; the constrained
+    # rule preserves it.
+    assert pp.process_chunk("J.I. inventory") == "J.I. inventory"
+    assert pp.process_chunk("see J.I.A. 47032") == "see J.I.A. 47032"
+    # Negative case 3: Pushkin-Mus. lowercase-l sub-catalog reference
+    # — must NOT fire (lowercase `l` not in the left-anchor's `[A-Z]`).
     assert pp.process_chunk("Pushkin Mus. l.I.a. 1920") == (
         "Pushkin Mus. l.I.a. 1920"
     )
-    # Case 4: lowercase-j + dot + capital-I (Egyptological-suffix
-    # transliteration shape) must NOT fire — rule is case-sensitive on
-    # both sides of the dot.
+    # Negative case 4: Egyptological lowercase-j suffix — must NOT
+    # fire (lowercase `j` not in the left-anchor's `[A-Z]`).
     assert pp.process_chunk("rdj.I p. 47") == "rdj.I p. 47"
+    # Positive case: in-name occurrence — DOES fire because both
+    # left-context (`R`) and right-context (`O`) are capital letters.
+    # This is the chunk-9 TT6 NEFERJ.IOTEP case, plus a synthetic
+    # mid-string variant to confirm the regex doesn't depend on
+    # word-boundary semantics.
+    assert pp.process_chunk("XJ.IY") == "XḤY"
+    assert pp.process_chunk("ABCJ.IDEF") == "ABCḤDEF"
 
 
 def test_sit_dhout_special_case() -> None:

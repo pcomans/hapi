@@ -106,15 +106,16 @@ _SUBSTRING_FIXES: list[tuple[str, str]] = [
     ("I;I", "Ḥ"),
     ("l:I", "Ḥ"),
     ("I:J", "Ḥ"),
-    # ``J.I`` (J + period + I) is a sixth variant observed in PM I.1's text
-    # layer (PM I.2 chunks 1–8 never produced this form). Single observed
-    # site is ``NEFERJ.IOTEP`` in chunk 9 (TT6 headword); the bigram does
-    # not appear in normal English prose in this source — verified by
-    # grep over all raw/chunk-*.txt before adding this rule. Kept here
-    # alongside the other Ḥ substitutes so PM I.1 chunks see the same
-    # canonical form as PM I.2 chunks. Same idempotence property: the RHS
-    # ``Ḥ`` does not contain the LHS ``J.I``.
-    ("J.I", "Ḥ"),
+    # NOTE: ``J.I`` (J + period + I) is a sixth variant observed in PM I.1's
+    # text layer (PM I.2 chunks 1–8 never produced this form). Codex review
+    # on PR #196 round 3 caught that an unconstrained substring rule would
+    # corrupt legitimate `J.I.` initials/inventory prefixes (`J.I.A.`,
+    # `J. I. Smith`, etc.) in bibliography text — the unique-bigram-in-this-
+    # source claim only holds for the in-name position, not the
+    # bibliographic-initials position. The rule is therefore implemented
+    # below as a regex (`_PM_I1_J_PERIOD_I_RE`) anchored to all-caps-letter
+    # context on BOTH sides — fires only inside an all-caps name token like
+    # ``NEFERJ.IOTEP`` and not on ``J.I. inventory``.
     # Underdot ḍ + ḥ digraph. Single high-impact case is QV47's mother-of
     # field, ``Sit-ḍḥout``; the publisher OCR drops the underdot-D entirely
     # and renders the ḥ as ``Q.``. The exact source token ``Sit-gQ.out``
@@ -152,6 +153,27 @@ _SUBSTRING_FIXES: list[tuple[str, str]] = [
 # `<Ankh*`, `<Anen`, `<Aqmosi`, etc.) — no HTML/math/citation false
 # positives.
 _AYIN_RE = re.compile(r"(?<=[A-Za-zḤḥḍḌḳḲ])<|<(?=[A-Za-zḤḥḍḌḳḲ])")
+
+# --- Phase 1.5: PM-I.1-specific underdot-Ḥ in all-caps name context ----------
+# ``J.I`` (J + period + I) is the PM-I.1 publisher-OCR substitute for capital
+# underdot Ḥ when it appears mid-name in an all-caps tomb headword (single
+# observed site in this volume: ``NEFERJ.IOTEP`` at TT6 / PM I.1 p.14). Unlike
+# the J:I/I:I/I;I/l:I/I:J substring forms in Phase 1, the J.I bigram DOES
+# appear in normal English prose in this source — bibliography sections use
+# `J.I.A.` (Journal of Indo-Aryan...) and personal initials like
+# `J. I. Smith` or `J.I.` in catalog references. An unconstrained substring
+# substitution would corrupt those. Codex review on PR #196 round 3 caught
+# this (the synthetic test in test_porter_moss_postprocess.py originally
+# pinned the corrupting behaviour as "documented boundary"; corrected here).
+#
+# The regex anchors to all-caps-letter context on BOTH sides so the
+# substitution fires inside an all-caps name token (`...R J.I O...`) but not
+# in bibliography (`J.I. inventory` — `.` after `I`, not capital), Egyptian
+# transliteration suffix (`rdj.I p` — lowercase `j` before, no caps boundary),
+# or Pushkin-Mus.-style sub-catalog references (`l.I.a` — lowercase `l` and
+# lowercase `a` so neither anchor fires). Idempotence holds: the RHS `Ḥ`
+# does not contain `J.I`.
+_PM_I1_J_PERIOD_I_RE = re.compile(r"(?<=[A-Z])J\.I(?=[A-Z])")
 
 # --- Phase 3: whitelisted token-exact substitutions -------------------------
 # Tokens whose trailing ``c`` is the ayin glyph rendered as a letter ``c``
@@ -248,6 +270,12 @@ def process_chunk(text: str) -> str:
     # Phase 1: substring fixes
     for src, dst in _SUBSTRING_FIXES:
         out = out.replace(src, dst)
+    # Phase 1.5: PM-I.1-specific J.I → Ḥ in all-caps name context.
+    # Regex-anchored (not a Phase-1 substring rule) because the J.I bigram
+    # appears in normal English bibliography prose (`J.I. inventory`,
+    # `J.I.A.`, etc.); unconstrained substring substitution would corrupt
+    # those. See _PM_I1_J_PERIOD_I_RE docstring.
+    out = _PM_I1_J_PERIOD_I_RE.sub("Ḥ", out)
     # Phase 2: inline ayin
     out = _AYIN_RE.sub("ʿ", out)
     # Phase 3: whitelisted token-exact rewrites (post-Phase-1-and-2 forms).
