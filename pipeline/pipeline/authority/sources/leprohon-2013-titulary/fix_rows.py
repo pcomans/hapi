@@ -1112,7 +1112,7 @@ def backfill_notes(rows: list[dict]) -> list[str]:
     Two-part fix:
     1. This backfill — every row now carries `notes: <str|None>` so the
        schema shape is uniform across all 395 rows.
-    2. `NOTES_RESTORATIONS` (immediately below) — restore the 6 lost
+    2. `NOTES_RESTORATIONS` (defined above) — restore the 6 lost
        prose values from agent-b's extraction.
 
     Constitutional rule 4 (single source of truth) + rule 6 (data is
