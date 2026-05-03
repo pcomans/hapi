@@ -4,3 +4,4 @@
 - [Leprohon chunk-review recurring patterns](project_leprohon_chunk_review_patterns.md) — OCR-artefact leakage into anglicised/translation, silent translation fabrication, MdC in anglicised, missing old-reading aliases
 - [Beckerath 1997 Chronologie pre-ingest review](project_beckerath_1997_chronologie_review.md) — 6 P1 schema/scope errors before OCR starts; horus_name rename, Dyn 15/16 misclassification, phantom 24S prefix, page-fold ambiguity
 - [Beckerath 1997 final sweep findings](project_beckerath_1997_final_sweep.md) — P1/P2 errors surviving all prior passes: Achoris truncated titulary, Hat-schepsut notes residue, Si-ptah prenomen conflict, two kind= misclassifications
+- [HKW 2006 chronology review patterns](project_hkw_chronology_review_patterns.md) — recurring rationale-as-provenance issues: name-type mislabeling (Khephren `Ra'kha'ef` is birth name not Horus), slash-row sub-shapes (variant vs contraction vs hedge), coregency-reciprocal framing

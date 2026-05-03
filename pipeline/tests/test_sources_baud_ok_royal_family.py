@@ -1014,3 +1014,184 @@ def test_tomb_designation_shape_when_populated() -> None:
         t = r["tomb"]
         assert t.strip() == t, f"{r['baud_id']}: tomb has leading/trailing whitespace: {t!r}"
         assert len(t) > 0, f"{r['baud_id']}: empty tomb string"
+
+
+# =============================================================================
+# Issue #178 schema-audit closure tests
+# =============================================================================
+#
+# Per the strict-all-P1 policy (#176/#177): every typed field exists on every
+# row, every enum is bounded, every cross-ref resolves to an existing baud_id.
+
+ISSUE_178_NEW_FIELDS = (
+    "is_joint_entry",
+    "co_holders",
+    "entry_kind",
+    "name_status",
+    "candidate_baud_ids",
+    "pm_refs",
+    "monuments",
+    "father_baud_id",
+    "father_confidence",
+    "mother_baud_id",
+    "mother_confidence",
+    "spouse_baud_ids",
+    "children_baud_ids",
+)
+ENTRY_KIND_VOCAB = {"person", "joint_persons", "collective_monument", "attribution_pending"}
+NAME_STATUS_VOCAB = {"attested", "lost", "tentative", "anonymous"}
+CONFIDENCE_VOCAB = {None, "probable", "per_baud", "uncertain"}
+
+
+def test_178_every_row_has_every_new_field() -> None:
+    """Closure: every issue-#178 typed field is present on every row."""
+    for r in _rows():
+        missing = [f for f in ISSUE_178_NEW_FIELDS if f not in r]
+        assert not missing, f"{r['baud_id']}: missing fields {missing!r}"
+
+
+def test_178_entry_kind_is_in_vocab() -> None:
+    for r in _rows():
+        assert r["entry_kind"] in ENTRY_KIND_VOCAB, (
+            f"{r['baud_id']}: entry_kind={r['entry_kind']!r} not in vocab"
+        )
+
+
+def test_178_name_status_is_in_vocab() -> None:
+    for r in _rows():
+        assert r["name_status"] in NAME_STATUS_VOCAB, (
+            f"{r['baud_id']}: name_status={r['name_status']!r} not in vocab"
+        )
+
+
+def test_178_confidence_enums_bounded() -> None:
+    for r in _rows():
+        for f in ("father_confidence", "mother_confidence"):
+            assert r[f] in CONFIDENCE_VOCAB, (
+                f"{r['baud_id']}: {f}={r[f]!r} not in vocab"
+            )
+
+
+def test_178_pm_refs_is_list_of_str() -> None:
+    for r in _rows():
+        assert isinstance(r["pm_refs"], list), f"{r['baud_id']}: pm_refs not list"
+        for ref in r["pm_refs"]:
+            assert isinstance(ref, str) and ref.strip() == ref and ref, (
+                f"{r['baud_id']}: pm_refs entry {ref!r} malformed"
+            )
+
+
+def test_178_monuments_is_structured_list() -> None:
+    for r in _rows():
+        assert isinstance(r["monuments"], list)
+        for m in r["monuments"]:
+            assert set(m.keys()) == {"document_id", "monument", "localisation"}, (
+                f"{r['baud_id']}: monuments entry has unexpected keys {set(m.keys())!r}"
+            )
+            assert isinstance(m["document_id"], int)
+            assert isinstance(m["monument"], str) and m["monument"]
+
+
+def test_178_baud_id_cross_refs_resolve() -> None:
+    """Every father_baud_id / mother_baud_id / spouse / children / candidate /
+    co_holders id must point to a row that exists."""
+    all_ids = {r["baud_id"] for r in _rows()}
+    for r in _rows():
+        for f in ("father_baud_id", "mother_baud_id"):
+            v = r[f]
+            if v is not None:
+                assert v in all_ids, f"{r['baud_id']}: {f}={v!r} unresolved"
+        for f in ("spouse_baud_ids", "children_baud_ids", "candidate_baud_ids"):
+            for v in r[f]:
+                if v is not None:
+                    assert v in all_ids, f"{r['baud_id']}: {f} entry {v!r} unresolved"
+
+
+def test_178_joint_entry_has_co_holders() -> None:
+    """If is_joint_entry is True, co_holders must have ≥ 2 entries and
+    entry_kind must be joint_persons."""
+    for r in _rows():
+        if r["is_joint_entry"]:
+            assert len(r["co_holders"]) >= 2, (
+                f"{r['baud_id']}: joint entry has <2 co_holders"
+            )
+            assert r["entry_kind"] == "joint_persons", (
+                f"{r['baud_id']}: joint entry has entry_kind={r['entry_kind']!r}"
+            )
+
+
+def test_178_baud_209_joint_entry_canonical() -> None:
+    """Anchor: baud-209 is the documented Snj + Zzj joint entry."""
+    r = _row("baud-209")
+    assert r["is_joint_entry"] is True
+    assert r["entry_kind"] == "joint_persons"
+    assert r["co_holders"] == [
+        {"name": "Snj", "service_personnel": True},
+        {"name": "Zzj", "service_personnel": True},
+    ]
+
+
+def test_178_baud_39_attribution_pending_canonical() -> None:
+    r = _row("baud-39")
+    assert r["entry_kind"] == "attribution_pending"
+    assert r["candidate_baud_ids"] == ["baud-37", "baud-38"]
+
+
+def test_178_collective_monument_canonical_set() -> None:
+    """Anchor: rows whose entry_kind is collective_monument exactly match the
+    audit-documented monument-as-occupant set. baud-256 is NOT in this set
+    — it is an anonymous person on a Sinai relief, not a monument."""
+    expected = {"baud-257", "baud-267", "baud-276", "baud-279"}
+    actual = {r["baud_id"] for r in _rows() if r["entry_kind"] == "collective_monument"}
+    assert actual == expected, f"collective_monument set drift: {actual ^ expected}"
+
+
+def test_178_baud_256_is_anonymous_person_not_monument() -> None:
+    """baud-256 = "Représentation anonyme, expedition leader, Sinaï" is an
+    anonymous PERSON on a relief, not a monument-as-occupant. Regression
+    against the initial draft that mis-routed it to collective_monument."""
+    r = _row("baud-256")
+    assert r["entry_kind"] == "person"
+    assert r["name_status"] == "anonymous"
+
+
+def test_178_per_document_localisation_extracted() -> None:
+    """Anchor: baud-22 doc 2 says "à Héliopolis" — per-document localisation
+    overrides the row's "Saqqara" default. Regression against the initial
+    draft that copied the row-level localisation to all documents."""
+    r = _row("baud-22")
+    assert r["localisation"] == "Saqqara"
+    docs = {m["document_id"]: m for m in r["monuments"]}
+    assert docs[1]["localisation"] == "Saqqara"
+    assert docs[2]["localisation"] == "Héliopolis", docs[2]
+
+
+def test_178_lost_name_canonical_set() -> None:
+    """Anchor: lost-name rows exactly match the audit-documented set."""
+    expected = {
+        "baud-258", "baud-260", "baud-262", "baud-263", "baud-264",
+        "baud-269", "baud-270", "baud-271", "baud-272", "baud-274",
+        "baud-277", "baud-282",
+    }
+    actual = {r["baud_id"] for r in _rows() if r["name_status"] == "lost"}
+    assert actual == expected, f"lost-name set drift: {actual ^ expected}"
+
+
+def test_178_pm_refs_pm_prefix_continuation_restored() -> None:
+    """`PM 407 et 414` must split to ['PM 407', 'PM 414'] — the elided
+    PM prefix on the continuation token is restored."""
+    r = _row("baud-22")
+    assert "PM 407 et 414" == r["pm_ref"]
+    assert r["pm_refs"] == ["PM 407", "PM 414"], r["pm_refs"]
+
+
+def test_178_father_confidence_extracts_hedge_token() -> None:
+    """Per-row sanity: every father_confidence value matches its hedge token."""
+    candidates = [r for r in _rows() if r["father_confidence"] == "per_baud"]
+    assert candidates, "no per_baud-hedged father rows found"
+    for r in candidates:
+        assert r["father_name"] is not None
+        assert "per baud" in r["father_name"].lower(), (
+            f"{r['baud_id']}: father_confidence=per_baud but father_name "
+            f"{r['father_name']!r} lacks the marker"
+        )

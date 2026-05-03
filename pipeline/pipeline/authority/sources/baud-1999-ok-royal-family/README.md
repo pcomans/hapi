@@ -104,6 +104,22 @@ This is stricter than the loose prosopographic convention, which often treats co
 
 The conjunction rule is enforced both at correction time (in `fix_rows.py` chunk-2/4/5/7 + sweep-2026 rationales) and at test time (the universal invariant test).
 
+## Issue #178 schema additions (2026-05-02 audit-fix)
+
+The schema-audit fix added the following typed fields. Every row carries every field after `fix_rows.py` runs (closure-tested by `test_178_every_row_has_every_new_field`):
+
+- `is_joint_entry: bool` — True for the rare headword that catalogues two persons under one number (Shape J). Currently only `baud-209` ("Snj* et Zzj*"). The two service-personnel names live in `co_holders: list[{name, service_personnel}]` so consumers don't have to parse the headword.
+- `entry_kind: str` — typed enum `{"person", "joint_persons", "collective_monument", "attribution_pending"}`. Replaces the convention of inferring kind from `is_collective_monument` (since dropped) and from "is the headword 'Nom perdu'?" (now a `name_status` flag).
+- `name_status: str` — typed enum `{"attested", "lost", "tentative", "anonymous"}`. `lost` covers the 12 "Nom perdu" rows where Baud catalogues an attested kinship slot whose name is missing in the source; `tentative` covers 3 rows where Baud explicitly hedges the name; `anonymous` covers the 2 monument-as-occupant rows where the queen is unnamed.
+- `candidate_baud_ids: list[str]` — for `attribution_pending` rows, the list of plausible baud_ids the row might equal. Currently only `baud-39` (= ["baud-37", "baud-38"]).
+- `pm_refs: list[str]` — split from `pm_ref` on `;` and ` et ` separators. Baud's French convention elides the "PM" prefix on `et`-continuation tokens (`PM 407 et 414` ≡ `[PM 407, PM 414]`); the elided prefix is restored in the typed list.
+- `monuments: list[{document_id, monument, localisation}]` — structured per-document split of Baud's `1: ...; 2: ...` numbered-document enumeration. Single-monument rows produce a 1-entry list with `document_id=1`. Per-document `localisation` is filled with the row's single `localisation` value (Phase-A enrichment splits per-document sites where Baud's prose distinguishes them).
+- `father_baud_id`, `mother_baud_id: str | None` — typed cross-reference companion to `father_name`/`mother_name`. Populated when Baud's name string ends in `[N]` (e.g. `"Pépi I [37]"` → `baud_id = "baud-37"`).
+- `father_confidence`, `mother_confidence: str | None` — enum `{None, "attested", "probable", "per_baud", "uncertain"}`. Derived from the hedge token in the name string (`(probable)`, `(per Baud)`, `(?)`). The hedge token is **kept** in the name string so the field remains re-derivable and conventional readers see the source's wording.
+- `spouse_baud_ids`, `children_baud_ids: list[str | None]` — list-parallels to `spouse_names`/`children_names`. Element `i` is the resolved baud_id for `spouse_names[i]` (None if no `[N]` cross-reference is present in the name string).
+
+The companion-field design (`<field>_confidence` enum + raw-name preservation) is preferred over restructuring the name field into a dict because it matches the Phase-0 corpus convention of preserving Baud's verbatim wording for hedge audit trails.
+
 ## Rights
 
 IFAO, 1999, in copyright. Per ADR-017 and the Phase-0 playbook's rights policy, this extract contains only **factual data** — names, kinship relations, Baud's verbatim title lists, monument/tomb/PM references, attested dynasty or reign dates, and (optionally) short hedge fragments from Baud's prose. The source PDF is not committed (lives in `proprietary/books/`, gitignored). Per-agent extraction JSONL under `raw/` is gitignored. **No verbatim OCR of Baud's prose is committed** — prosopographical paragraphs are explicitly the unsafe-to-commit category per the playbook, so extractors Read the sub-PDF directly and write only structured JSONL. `notes_from_baud` carries at most a 2-sentence fragment when a hedge is load-bearing.

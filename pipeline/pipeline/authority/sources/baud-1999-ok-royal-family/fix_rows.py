@@ -34,7 +34,9 @@ the three LLMs disagreed, and should not be regenerated post-normalization.
 
 from __future__ import annotations
 
+import copy
 import json
+import re
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
@@ -1083,8 +1085,289 @@ for _baud_id, _field, _, _ in SPOT_CORRECTIONS:
 del _seen, _baud_id, _field, _key
 
 
+# === Issue #178 schema-audit additions =======================================
+#
+# All 4 P1 from the audit + Family-2 minimal hedge-typing per user
+# decision (.claude/revise-priors/resolved/1777791674-baud-178-...md).
+# Strict-all-4-P1 per #176/#177 policy.
+
+SCHEMA_FIELD_DEFAULTS_178: dict[str, object] = {
+    # Family 1 — joint/collective/lost typed flags (Shape J)
+    "is_joint_entry": False,
+    "co_holders": [],          # list[{name, service_personnel}]
+    "entry_kind": "person",    # enum: person | joint_persons | collective_monument | attribution_pending
+    "name_status": "attested", # enum: attested | lost | tentative | anonymous
+    "candidate_baud_ids": [],  # list[str] for attribution_pending entries
+    # Family 1 — pm_refs list (Shape B + I)
+    "pm_refs": [],             # list[str], parallel to legacy `pm_ref` scalar
+    # Family 1 — monuments structured list (Shape B + I, user picked y)
+    "monuments": [],           # list[{document_id, monument, localisation}]
+    # Family 2 minimal — companion fields for parent/spouse/children
+    # (Shape E + H + I; user picked option b)
+    "father_baud_id": None,
+    "father_confidence": None,    # enum: attested | probable | per_baud | uncertain
+    "mother_baud_id": None,
+    "mother_confidence": None,
+    "spouse_baud_ids": [],        # list[str | None] parallel to spouse_names
+    "children_baud_ids": [],      # list[str | None] parallel to children_names
+}
+
+
+# Lost-name / tentative / anonymous canonical sets, per audit's row-level
+# enumeration. Update deliberately when new chunks add rows.
+LOST_NAME_BAUD_IDS = {
+    "baud-258", "baud-260", "baud-262", "baud-263", "baud-264",
+    "baud-269", "baud-270", "baud-271", "baud-272", "baud-274",
+    "baud-277", "baud-282",
+}
+TENTATIVE_NAME_BAUD_IDS = {
+    "baud-259", "baud-261", "baud-275",
+}
+ANONYMOUS_BAUD_IDS = {
+    # Anonymous PERSON on a relief at Sinai — entry_kind stays "person",
+    # only name_status is anonymous.
+    "baud-256",  # "Représentation anonyme, expedition leader, Sinaï"
+    # Anonymous queen-COMPLEX (monument-as-occupant) — entry_kind is
+    # collective_monument AND name_status is anonymous.
+    "baud-279",  # "Complexe de reine de Pépi Ier"
+}
+COLLECTIVE_MONUMENT_BAUD_IDS = {
+    "baud-257",  # "Complexes G I-a, b et c" — three pyramidal complexes
+    "baud-267",  # "Complexes G III-a, b et c"
+    "baud-276",  # anonymous queen complex at Saqqara-Sud
+    "baud-279",  # anonymous queen complex at Saqqara-Sud (also anonymous)
+}
+JOINT_ENTRY_BAUD_IDS = {
+    "baud-209",  # "Snj* et Zzj*"
+}
+ATTRIBUTION_PENDING_BAUD_IDS = {
+    "baud-39",  # "ꜥnḫ.s-n-Mrjj-Rꜥ ... Iʳᵉ, II, ou autre (attribution incertaine)"
+}
+
+
+# Hedge-token → confidence enum mapping (lowercase substring match
+# in name string). Order matters: more-specific tokens first.
+_HEDGE_TOKEN_TO_CONFIDENCE = [
+    ("(probable)", "probable"),
+    ("(per baud)", "per_baud"),
+    ("(?)", "uncertain"),
+]
+_BAUD_ID_REF_RE = re.compile(r"\[(\d+[a-z]?)\]")
+
+
+def _extract_confidence_and_baud_id(name_str: str | None) -> tuple[str | None, str | None]:
+    """Parse a single name string to extract confidence enum + cross-ref
+    baud_id. Returns (confidence, baud_id), either may be None.
+    """
+    if not name_str:
+        return None, None
+    confidence = None
+    for token, enum_val in _HEDGE_TOKEN_TO_CONFIDENCE:
+        if token.lower() in name_str.lower():
+            confidence = enum_val
+            break
+    baud_id = None
+    m = _BAUD_ID_REF_RE.search(name_str)
+    if m:
+        baud_id = f"baud-{m.group(1)}"
+    return confidence, baud_id
+
+
+_MONUMENT_DOC_RE = re.compile(r"(\d+)\s*:\s*([^;]+)")
+# Per-document locality token in Baud's French prose: `à <Place>` or
+# `découvert à <Place>`. Conservative — must be capitalised + multi-char
+# to avoid matching `à un` / `à la`. Place must be followed by a clause
+# terminator (`,`, `;`, `)`, EOL) so we don't match person references
+# like "à Mr.s-ꜥnḫ III [76]" (where the `.` is an Egyptological
+# suffix-pronoun marker, not a sentence boundary). Extracts a single
+# trailing place.
+_DOC_PLACE_RE = re.compile(
+    r"\b(?:à|découvert\s+à)\s+"
+    r"([A-ZÀ-ÝŒÆ][\wéèàÉÈÀ-]+(?:[ -][A-ZÀ-ÝŒÆ][\wéèàÉÈÀ-]+)*)"
+    r"(?=\s*[,;)]|\s*$)"
+)
+
+
+def _extract_doc_locality(monument_text: str, default: str | None) -> str | None:
+    """If the monument text contains an explicit `à <Place>` token whose
+    place is NOT already in the row-level `default` localisation, return
+    the extracted place. Otherwise return `default`."""
+    matches = _DOC_PLACE_RE.findall(monument_text)
+    if matches:
+        place = matches[-1]
+        if not default or place not in default:
+            return place
+    return default
+
+
+def _parse_monuments(monument_str: str | None, localisation_str: str | None) -> list[dict]:
+    """Parse `1: ...; 2: ...` numbered-document enumeration into structured
+    list. For single-monument rows, returns a 1-entry list with
+    document_id=1.
+
+    Per-document localisation: defaults to the row-level `localisation`,
+    but when a document's monument text contains an explicit `à <Place>`
+    token referring to a different site (e.g. baud-22 doc 2 "à Héliopolis"
+    while row.localisation = "Saqqara"), the extracted place wins.
+    """
+    if not monument_str:
+        return []
+    matches = _MONUMENT_DOC_RE.findall(monument_str)
+    if matches:
+        return [
+            {
+                "document_id": int(doc_id),
+                "monument": text.strip(),
+                "localisation": _extract_doc_locality(text, localisation_str),
+            }
+            for doc_id, text in matches
+        ]
+    # Single-monument row
+    return [
+        {
+            "document_id": 1,
+            "monument": monument_str,
+            "localisation": localisation_str,
+        }
+    ]
+
+
+_PM_REFS_SPLIT_RE = re.compile(r"\s*[;]\s*|\s+et\s+")
+_PM_PREFIX_RE = re.compile(r"^PM\b", re.IGNORECASE)
+
+
+def _parse_pm_refs(pm_ref: str | None) -> list[str]:
+    """Split `pm_ref` on `;` and ` et ` separators.
+
+    Baud's French convention elides the "PM" prefix on continuation
+    references after `et`: e.g. "PM 407 et 414" means "PM 407 and PM 414",
+    not "PM 407 and pure-numeric 414". Restore the elided prefix on any
+    continuation token whose head ref had it.
+    """
+    if not pm_ref:
+        return []
+    parts = [p.strip() for p in _PM_REFS_SPLIT_RE.split(pm_ref) if p.strip()]
+    if parts and _PM_PREFIX_RE.match(parts[0]):
+        parts = [parts[0]] + [
+            (p if _PM_PREFIX_RE.match(p) else f"PM {p}") for p in parts[1:]
+        ]
+    return parts
+
+
+def _backfill_178_schema(rows: list[dict]) -> list[str]:
+    """Idempotent backfill of issue #178 typed fields. Defaults applied
+    first; per-row migrations override."""
+    log_lines: list[str] = []
+    for row in rows:
+        added: list[str] = []
+        for field, default in SCHEMA_FIELD_DEFAULTS_178.items():
+            if field not in row:
+                row[field] = copy.deepcopy(default)
+                added.append(field)
+        if added:
+            log_lines.append(f"  {row['baud_id']}: backfilled {sorted(added)!r}")
+    return log_lines
+
+
+def _apply_178_migrations(rows: list[dict]) -> list[str]:
+    """Per-row schema-audit migrations — idempotent."""
+    log_lines: list[str] = []
+    for row in rows:
+        bid = row["baud_id"]
+
+        # entry_kind / name_status from canonical sets. Note:
+        # ANONYMOUS_BAUD_IDS overlaps with COLLECTIVE_MONUMENT_BAUD_IDS
+        # for monument-as-occupant rows (baud-279); the collective set
+        # takes precedence so the monument shape wins. baud-256 is an
+        # anonymous PERSON on a relief, not a monument, so it is NOT in
+        # COLLECTIVE_MONUMENT_BAUD_IDS — it falls through to "person".
+        if bid in JOINT_ENTRY_BAUD_IDS:
+            new_kind = "joint_persons"
+        elif bid in COLLECTIVE_MONUMENT_BAUD_IDS:
+            new_kind = "collective_monument"
+        elif bid in ATTRIBUTION_PENDING_BAUD_IDS:
+            new_kind = "attribution_pending"
+        else:
+            new_kind = "person"
+        if row["entry_kind"] != new_kind:
+            row["entry_kind"] = new_kind
+            log_lines.append(f"  {bid}: entry_kind → {new_kind!r}")
+
+        if bid in LOST_NAME_BAUD_IDS:
+            new_status = "lost"
+        elif bid in TENTATIVE_NAME_BAUD_IDS:
+            new_status = "tentative"
+        elif bid in ANONYMOUS_BAUD_IDS:
+            new_status = "anonymous"
+        else:
+            new_status = "attested"
+        if row["name_status"] != new_status:
+            row["name_status"] = new_status
+            log_lines.append(f"  {bid}: name_status → {new_status!r}")
+
+        # is_joint_entry + co_holders for baud-209
+        if bid == "baud-209":
+            if not row["is_joint_entry"]:
+                row["is_joint_entry"] = True
+                log_lines.append(f"  {bid}: is_joint_entry → True")
+            expected_co_holders = [
+                {"name": "Snj", "service_personnel": True},
+                {"name": "Zzj", "service_personnel": True},
+            ]
+            if row["co_holders"] != expected_co_holders:
+                row["co_holders"] = expected_co_holders
+                log_lines.append(f"  {bid}: co_holders set (Snj + Zzj)")
+
+        # candidate_baud_ids for baud-39
+        if bid == "baud-39":
+            expected = ["baud-37", "baud-38"]
+            if row["candidate_baud_ids"] != expected:
+                row["candidate_baud_ids"] = expected
+                log_lines.append(f"  {bid}: candidate_baud_ids → {expected!r}")
+
+        # pm_refs derived from legacy pm_ref scalar
+        new_pm_refs = _parse_pm_refs(row.get("pm_ref"))
+        if row["pm_refs"] != new_pm_refs:
+            row["pm_refs"] = new_pm_refs
+            log_lines.append(f"  {bid}: pm_refs → {new_pm_refs!r}")
+
+        # monuments structured list
+        new_monuments = _parse_monuments(row.get("monument"), row.get("localisation"))
+        if row["monuments"] != new_monuments:
+            row["monuments"] = new_monuments
+            log_lines.append(f"  {bid}: monuments → {len(new_monuments)} entries")
+
+        # Family 2 minimal: confidence + baud_id companion fields
+        for parent_field in ("father_name", "mother_name"):
+            confidence, baud_id_ref = _extract_confidence_and_baud_id(row.get(parent_field))
+            target_conf = parent_field.replace("_name", "_confidence")
+            target_bid = parent_field.replace("_name", "_baud_id")
+            if row[target_conf] != confidence:
+                row[target_conf] = confidence
+                log_lines.append(f"  {bid}: {target_conf} → {confidence!r}")
+            if row[target_bid] != baud_id_ref:
+                row[target_bid] = baud_id_ref
+                log_lines.append(f"  {bid}: {target_bid} → {baud_id_ref!r}")
+
+        # Family 2 minimal: spouse + children list parallels
+        for list_field, target_list in (
+            ("spouse_names", "spouse_baud_ids"),
+            ("children_names", "children_baud_ids"),
+        ):
+            names = row.get(list_field) or []
+            new_ids: list[str | None] = []
+            for n in names:
+                _, bid_ref = _extract_confidence_and_baud_id(n)
+                new_ids.append(bid_ref)
+            if row[target_list] != new_ids:
+                row[target_list] = new_ids
+                log_lines.append(f"  {bid}: {target_list} → {new_ids!r}")
+
+    return log_lines
+
+
 def main() -> None:
-    rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+    rows = [json.loads(line) for line in RECONCILED.read_text(encoding="utf-8").splitlines() if line.strip()]
 
     # Pass 1: deterministic transliteration normalization across every row.
     rows = [_normalise_transliteration(r) for r in rows]
@@ -1124,11 +1407,18 @@ def main() -> None:
                 f"    value: {json.dumps(new_val, ensure_ascii=False)}"
             )
 
+    # Pass 3: issue #178 schema-audit backfill + per-row migrations.
+    # Idempotent — re-runs after manual edits restore the typed fields
+    # without touching SPOT_CORRECTIONS-set values.
+    schema_log = _backfill_178_schema(rows)
+    schema_log += _apply_178_migrations(rows)
+
     RECONCILED.write_text(
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows
         )
-        + "\n"
+        + "\n",
+        encoding="utf-8",
     )
 
     existing_diff = DIFF.read_text()
@@ -1162,6 +1452,12 @@ def main() -> None:
     DIFF.write_text(appended)
 
     print(f"Applied {applied_count} override(s) this run ({len(override_log)} total in log).")
+    print(f"Issue #178 schema-audit pass: {len(schema_log)} field changes")
+    if schema_log:
+        for line in schema_log[:20]:
+            print(line)
+        if len(schema_log) > 20:
+            print(f"  ... and {len(schema_log) - 20} more")
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
     print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
 
