@@ -27,21 +27,14 @@ Run:
 
 from __future__ import annotations
 
+import copy
 import json
+import re
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
 RECONCILED = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
-
-
-# kitchen_id → interval [start_bce, end_bce] used for deterministic overlap
-# computation. Keyed copy of rows' start_bce / end_bce EXCEPT for Djed-Khons-
-# ef-ankh, where Kitchen's printed "1046–1056" is a typographic reversal
-# (length is 1 y; predecessor Masaharta ends 1046, successor Menkheperre
-# starts 1045). For concurrency math we use the corrected interval; the
-# `end_bce` field remains verbatim -1056 (with a notes_from_kitchen flag).
-DKF_INTERVAL = (-1046, -1045)
 
 
 def _compute_concurrency(rows: list[dict]) -> dict[str, list[str]]:
@@ -57,15 +50,18 @@ def _compute_concurrency(rows: list[dict]) -> dict[str, list[str]]:
     first three HPAs.
     """
     def interval(r: dict) -> tuple[int, int]:
-        if r["kitchen_id"] == "21H.06":
-            return DKF_INTERVAL
-        s, e = r["start_bce"], r["end_bce"]
+        # Use `corrected_end_bce` (typed field) when present — the only
+        # row currently affected is 21H.06 where Kitchen's printed
+        # `end_bce=-1056` is a typographic reversal of -1045. Keep the
+        # raw `end_bce` verbatim per Rule 6; the typed correction is
+        # the single source of truth for downstream interval math.
+        s = r["start_bce"]
+        e = r.get("corrected_end_bce") or r["end_bce"]
         if s >= e:
             raise ValueError(
                 f"{r['kitchen_id']}: start_bce {s} not strictly earlier than "
-                f"end_bce {e}. Dyn-21 rows must have ordered intervals "
-                f"(any Kitchen-typo exceptions must be hard-coded at the top "
-                f"of this file, like DKF_INTERVAL for 21H.06)."
+                f"effective end {e}. Dyn-21 rows must have ordered intervals "
+                f"(any Kitchen-typo exceptions must populate corrected_end_bce)."
             )
         return (s, e)
 
@@ -127,9 +123,6 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # disambiguate the multiple semantics overloaded onto null fields and
 # in-string sentinels in Kitchen's TIPE Tables 1/3/4.
 
-import copy
-import re
-
 SCHEMA_FIELD_DEFAULTS_180: dict[str, object] = {
     # Shape D — disambiguate the multiple meanings of `null` on these fields.
     # `*_is_kitchen_unknown=True` means Kitchen explicitly prints `[Prenomen
@@ -163,17 +156,31 @@ SCHEMA_FIELD_DEFAULTS_180: dict[str, object] = {
     "prenomens": [],
 }
 
-# Same-person pairs Kitchen catalogues twice. Only Pinudjem I in the
-# current TIPE extract; the audit notes the convention but no other
-# rows.
-_SAME_PERSON_PAIRS: dict[str, str] = {
-    "21H.03": "21H.04",  # Pinudjem I (HPA capacity) ↔ Pinudjem I (king titulature)
-    "21H.04": "21H.03",
-}
+# Same-person pairs Kitchen catalogues twice. Listed as one-direction
+# tuples; the migration code derives the symmetric mapping.
+# - Pinudjem I: HPA capacity ↔ king titulature (Table 3)
+# - Tefnakht I: Chief of Mā ↔ king (Table 4 prints "(c. 13 y; then, kg)"
+#   on 24E.04 explicitly chaining to 24.01). Per egyptologist P1-3.
+_SAME_PERSON_ONEWAY_PAIRS: list[tuple[str, str]] = [
+    ("21H.03", "21H.04"),
+    ("24E.04", "24.01"),
+]
+_SAME_PERSON_PAIRS: dict[str, str] = {}
+for _a, _b in _SAME_PERSON_ONEWAY_PAIRS:
+    _SAME_PERSON_PAIRS[_a] = _b
+    _SAME_PERSON_PAIRS[_b] = _a
 
-# Co-regent-only rows per Kitchen's TIPE narrative (Table 3).
-_CO_REGENT_ONLY_KITCHEN_IDS = {
-    "21H.05",  # Masaharta — HPA co-regent under Pinudjem I
+# `is_co_regent_only` is derived from TWO sources:
+#  (a) `notes_from_kitchen` containing Kitchen's literal "co-rgt only"
+#      annotation — currently 22.03 Shoshenq II + 22.06 Harsiese (per
+#      egyptologist P1-1, both Table 3 cells carry the marker)
+#  (b) the hardcoded scholarly-judgment additions below for HPA
+#      co-regents Kitchen flags via narrative discussion rather than a
+#      table-cell annotation: 21H.05 Masaharta + 21H.06 Djed-Khons-ef-ankh
+# Pinned set (closure-tested): {21H.05, 21H.06, 22.03, 22.06}.
+_CO_REGENT_ONLY_NOTE_RE = re.compile(r"\bco-rgt\s+only\b", re.IGNORECASE)
+_CO_REGENT_SCHOLARLY_OVERRIDES = {
+    "21H.05",  # Masaharta — HPA co-regent under Pinudjem I (TIPE narrative)
     "21H.06",  # Djed-Khons-ef-ankh — short-lived HPA co-regent
 }
 
@@ -202,24 +209,30 @@ def _detect_substream(kitchen_id: str) -> str | None:
     return m.group(1) if m else None
 
 
-# Existence-uncertainty markers Kitchen prints in `name`:
-#   - trailing `?` or `??` (`Pimay (the later king??)`, `Two further governors?`)
-#   - single-quote-wrapped Greek lemmas (`'Ammeris'`, `Psusennes 'III'`)
+# Existence-uncertainty markers Kitchen prints. Sources per row:
+#   - trailing `?` or `??` on `name` (24E.01 `Pimay (the later king??)`,
+#     24E.02 `Two further governors?`)
+#   - single-quote-wrap on entire `name` (24P.01 `'Ammeris'`)
+#   - literal `existence, doubtful` annotation in `notes_from_kitchen`
+#     (23.08 Shoshenq VI, per egyptologist P1-2)
 _NAME_QUESTION_RE = re.compile(r"\?+\s*\)?\s*$")
-_NAME_QUOTE_GLYPH_RE = re.compile(r"'[^']+'")
+_NOTES_DOUBTFUL_RE = re.compile(r"\bexistence,?\s+doubtful\b", re.IGNORECASE)
 
 
-def _detect_existence_doubtful(name: str) -> bool:
-    if not name:
-        return False
-    if _NAME_QUESTION_RE.search(name):
+def _detect_existence_doubtful(name: str, notes: str | None) -> bool:
+    if name and _NAME_QUESTION_RE.search(name):
         return True
     # A whole-word quote-glyph like `'Ammeris'` is an existence hedge;
     # an inline-quoted disambiguator like `Psusennes 'III'` is a
     # numeral-glyph variation, not existence-doubtful. Use heuristic:
     # if the entire name (modulo whitespace) is wrapped in single
     # quotes, treat as doubtful.
-    return name.strip().startswith("'") and name.strip().endswith("'")
+    if name and name.strip().startswith("'") and name.strip().endswith("'"):
+        return True
+    # Literal Kitchen annotation in notes (23.08 Shoshenq VI).
+    if notes and _NOTES_DOUBTFUL_RE.search(notes):
+        return True
+    return False
 
 
 def _backfill_180_schema(rows: list[dict]) -> list[str]:
@@ -252,14 +265,20 @@ def _apply_180_migrations(rows: list[dict]) -> list[str]:
             row["prenomen_is_kitchen_unknown"] = new_unk
             log.append(f"  {kid}: prenomen_is_kitchen_unknown → {new_unk}")
 
-        # is_co_regent_only
-        new_cr = (kid in _CO_REGENT_ONLY_KITCHEN_IDS)
+        # is_co_regent_only — union of regex-detected (literal "co-rgt only"
+        # in notes) + scholarly overrides (narrative-discussed co-regents
+        # whose table cell lacks the marker).
+        notes = row.get("notes_from_kitchen")
+        new_cr = bool(
+            (notes and _CO_REGENT_ONLY_NOTE_RE.search(notes))
+            or kid in _CO_REGENT_SCHOLARLY_OVERRIDES
+        )
         if row["is_co_regent_only"] != new_cr:
             row["is_co_regent_only"] = new_cr
             log.append(f"  {kid}: is_co_regent_only → {new_cr}")
 
-        # existence_doubtful from `name`
-        new_ed = _detect_existence_doubtful(row.get("name") or "")
+        # existence_doubtful from `name` OR `notes_from_kitchen`
+        new_ed = _detect_existence_doubtful(row.get("name") or "", notes)
         if row["existence_doubtful"] != new_ed:
             row["existence_doubtful"] = new_ed
             log.append(f"  {kid}: existence_doubtful → {new_ed}")
@@ -290,6 +309,14 @@ def main() -> None:
 
     override_log: list[str] = []
 
+    # 0. Schema-audit pass FIRST — must run before concurrency so that
+    # `_compute_concurrency` can read `corrected_end_bce` (single source
+    # of truth for the 21H.06 typo correction). Per code-reviewer P1.
+    schema_log = _backfill_180_schema(rows)
+    schema_log += _apply_180_migrations(rows)
+    if schema_log:
+        override_log.extend(schema_log)
+
     # 1. Deterministic Dyn-21 concurrency recomputation.
     new_conc = _compute_concurrency(rows)
     for r in rows:
@@ -318,12 +345,6 @@ def main() -> None:
             f"{json.dumps(new_val, ensure_ascii=False)} ({rationale})"
         )
         row[field] = new_val
-
-    # 3. Issue #180 schema-audit: typed flags + list-promote scalar pair.
-    schema_log = _backfill_180_schema(rows)
-    schema_log += _apply_180_migrations(rows)
-    if schema_log:
-        override_log.extend(schema_log)
 
     RECONCILED.write_text(
         "\n".join(

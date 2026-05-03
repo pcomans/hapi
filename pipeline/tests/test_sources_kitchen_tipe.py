@@ -385,21 +385,42 @@ def test_180_prenomen_is_kitchen_unknown_canonical_set() -> None:
 
 
 def test_180_co_regent_only_canonical_set() -> None:
-    """21H.05 Masaharta + 21H.06 Djed-Khons-ef-ankh — both HPA co-regents
-    under Pinudjem I per Kitchen's TIPE Table 3 narrative."""
-    expected = {"21H.05", "21H.06"}
+    """Co-regent-only rows from two sources:
+      (a) literal "co-rgt only" in `notes_from_kitchen`: 22.03 Shoshenq II
+          + 22.06 Harsiese (per egyptologist P1-1 — both Table 3 cells
+          carry the marker)
+      (b) scholarly-judgment overrides for HPA narrative co-regents:
+          21H.05 Masaharta + 21H.06 Djed-Khons-ef-ankh
+    Total 4 rows."""
+    expected = {"21H.05", "21H.06", "22.03", "22.06"}
     actual = {r["kitchen_id"] for r in _rows() if r["is_co_regent_only"]}
     assert actual == expected, sorted(actual)
 
 
 def test_180_existence_doubtful_canonical_set() -> None:
-    """Rows where Kitchen marks the king's existence as uncertain via
-    `?` / `??` / quote-glyph wrap on the name. Pinned 2026-05-03:
-    24E.01 Pimay (the later king??), 24E.02 Two further governors?,
-    24P.01 'Ammeris'."""
-    expected = {"24E.01", "24E.02", "24P.01"}
+    """Rows where Kitchen marks the king's existence as uncertain. Two
+    detection sources:
+      - `?` / `??` / quote-wrap on `name`: 24E.01, 24E.02, 24P.01
+      - literal `existence, doubtful` in `notes_from_kitchen`:
+        23.08 Shoshenq VI (per egyptologist P1-2 — `(c. 5 y??); existence,
+        doubtful` is the most explicit marker in the corpus)"""
+    expected = {"23.08", "24E.01", "24E.02", "24P.01"}
     actual = {r["kitchen_id"] for r in _rows() if r["existence_doubtful"]}
     assert actual == expected, sorted(actual)
+
+
+def test_180_same_person_canonical_set() -> None:
+    """Same-person pairs Kitchen catalogues twice. Pinned 2026-05-03:
+      - 21H.03 ↔ 21H.04 (Pinudjem I HPA capacity ↔ king titulature)
+      - 24E.04 ↔ 24.01 (Tefnakht I Chief of Mā ↔ king; Kitchen's
+        "(c. 13 y; then, kg)" chain on 24E.04 explicitly links them,
+        per egyptologist P1-3)"""
+    expected = {
+        "21H.03": "21H.04", "21H.04": "21H.03",
+        "24E.04": "24.01", "24.01": "24E.04",
+    }
+    actual = {r["kitchen_id"]: r["same_person_as"] for r in _rows() if r["same_person_as"]}
+    assert actual == expected, sorted(actual.items())
 
 
 def test_180_same_person_pairs_are_symmetric() -> None:
