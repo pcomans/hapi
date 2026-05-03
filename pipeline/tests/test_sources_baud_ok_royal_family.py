@@ -1500,6 +1500,21 @@ def test_178_extract_confidence_compound_policy_locked() -> None:
     assert extract("X [60A]") == (None, "baud-60a")
 
 
+def test_178_monuments_preserves_internal_semicolons() -> None:
+    """baud-131 doc 1 contains internal `;` between sub-items
+    (`a: G 7060, ...; b: G 7070, ...`). The doc-split regex must only
+    treat `;` as a separator when followed by `<digit>:` — internal
+    semicolons inside a single document's text must not split.
+    Per Gemini round-2 P2."""
+    r = _row("baud-131")
+    docs = {m["document_id"]: m for m in r["monuments"]}
+    assert 1 in docs and 2 in docs
+    # Doc 1 must include both `a:` and `b:` sub-items
+    assert "a: G 7060" in docs[1]["monument"]
+    assert "b: G 7070" in docs[1]["monument"]
+    assert docs[2]["monument"].startswith("Propriétaire du mastaba G 7050")
+
+
 def test_178_pm_refs_does_not_split_french_annotation() -> None:
     """`PM 200 et fig. 12`-style French annotation must NOT split on `et`
     (Rule-2 hardening per egyptologist P2.4 — `et` is only a separator

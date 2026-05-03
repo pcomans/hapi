@@ -1110,7 +1110,7 @@ SCHEMA_FIELD_DEFAULTS_178: dict[str, object] = {
     # Family 2 minimal — companion fields for parent/spouse/children
     # (Shape E + H + I; user picked option b)
     "father_baud_id": None,
-    "father_confidence": None,    # enum: attested | probable | per_baud | uncertain
+    "father_confidence": None,    # enum: None (unhedged) | probable | per_baud | uncertain
     "mother_baud_id": None,
     "mother_confidence": None,
     "spouse_baud_ids": [],        # list[str | None] parallel to spouse_names
@@ -1202,7 +1202,13 @@ def _extract_confidence_and_baud_id(name_str: str | None) -> tuple[str | None, s
     return confidence, baud_id
 
 
-_MONUMENT_DOC_RE = re.compile(r"(\d+)\s*:\s*([^;]+)")
+# Numbered-document enumeration: `1: ... ; 2: ... ; 3: ...`. The `;` is
+# only a doc separator when followed by `<digits>:` — internal semicolons
+# inside a single document's text (e.g. baud-131 doc 1 has `a: G 7060,
+# ...; b: G 7070, ...`) must not split. Per Gemini round-2 P2.
+_MONUMENT_DOC_RE = re.compile(
+    r"(?:^|;\s*)(\d+)\s*:\s*(.*?)(?=\s*;\s*\d+\s*:|$)"
+)
 # Per-document locality token in Baud's French prose: `à <Place>` or
 # `découvert à <Place>`. Conservative — must be capitalised + multi-char
 # to avoid matching `à un` / `à la`. Place must be followed by a clause
@@ -1335,7 +1341,7 @@ def _apply_178_migrations(rows: list[dict]) -> list[str]:
             row["entry_kind"] = new_kind
             log_lines.append(f"  {bid}: entry_kind → {new_kind!r}")
 
-        # name_status precedence on overlap: `lost` > `tentative` > `anonymous`
+        # name_status precedence on overlap: `tentative` > `lost` > `anonymous`
         # > `attested`. baud-275's headword "Nom perdu*, dit «Ptḥ-mr-zt.f»"
         # is technically both lost (Nom perdu) AND tentative (the «...»
         # reading is hedged); we resolve to `tentative` because TENTATIVE
