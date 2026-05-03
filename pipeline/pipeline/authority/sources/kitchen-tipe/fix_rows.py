@@ -233,7 +233,8 @@ def _detect_existence_doubtful(name: str, notes: str | None) -> bool:
     # numeral-glyph variation, not existence-doubtful. Use heuristic:
     # if the entire name (modulo whitespace) is wrapped in single
     # quotes, treat as doubtful.
-    if name and name.strip().startswith("'") and name.strip().endswith("'"):
+    stripped = name.strip() if name else ""
+    if stripped.startswith("'") and stripped.endswith("'"):
         return True
     # Literal Kitchen annotation in notes (23.08 Shoshenq VI).
     if notes and _NOTES_DOUBTFUL_RE.search(notes):
