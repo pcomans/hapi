@@ -166,6 +166,20 @@ def test_181_date_precision_in_vocab() -> None:
         )
 
 
+def test_181_regnal_precise_canonical_set() -> None:
+    """Chapters where Shaw drops the `c.` qualifier — the date endpoints
+    are precise, not approximate. Pinned 2026-05-03: ch 12 Third
+    Intermediate Period, ch 13 Late Period, ch 14 Ptolemaic Period,
+    ch 15 Roman Period. Per egyptologist + code-reviewer P2-1 — the
+    initial draft never assigned `regnal_precise` to any row."""
+    expected = {12, 13, 14, 15}
+    actual = {
+        r["chapter_number"] for r in _rows()
+        if r["date_precision"] == "regnal_precise"
+    }
+    assert actual == expected, sorted(actual)
+
+
 def test_181_palaeolithic_is_geological() -> None:
     """Ch 2 Prehistory (`-700000 → -4000`) is the only `geological`-precision
     row. Phase A consumers must check this flag before doing arithmetic
@@ -211,7 +225,7 @@ def test_181_chapter_title_endpoints_match_typed_dates() -> None:
     Roman ch 15 is the special bce/ce-crossing case: `(30 bc-ad 395)`
     ↔ `(start=-30, end=395)`."""
     import re
-    bce_pat = re.compile(r"\(c?\.?(?:c\.)?\s*([\d,]+)\s*-\s*([\d,]+)\s*bc\)")
+    bce_pat = re.compile(r"\((?:c\.\s*)?([\d,]+)\s*-\s*([\d,]+)\s*bc\)")
     bce_ce_pat = re.compile(r"\(\s*(\d+)\s*bc\s*-\s*ad\s*(\d+)\s*\)")
     for r in _rows():
         title = r["chapter_title"]

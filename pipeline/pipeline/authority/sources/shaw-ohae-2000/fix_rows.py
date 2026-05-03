@@ -59,28 +59,49 @@ _COMPOSITE_CHAPTERS = {
 }
 
 # Per audit: ch 2 Palaeolithic is the only geologically-dated chapter.
-# Detection: `date_range_start_bce <= -100000` is the cleanest signal
-# (no Egyptological chronology spans pre-Holocene).
-_GEOLOGICAL_THRESHOLD_BCE = -100_000
+# Use `chapter_number == 2` (not a numeric BCE threshold) — Shaw's
+# README "Known gaps" anticipates a future Lower/Middle Palaeolithic
+# transcription with `start ≈ -50000`, which a `start <= -100000`
+# threshold would silently misclassify as `regnal_approximate`. Per
+# code-reviewer P2-3.
+_GEOLOGICAL_CHAPTERS = {2}
 
 
-def _detect_date_precision(start: int | None, end: int | None) -> str:
-    """Mechanical classification of date precision."""
-    if start is None or end is None:
-        return "regnal_approximate"
-    if start <= _GEOLOGICAL_THRESHOLD_BCE:
+def _detect_date_precision(
+    chapter_number: int, date_qualifier: str | None
+) -> str:
+    """Mechanical classification of date precision per chapter:
+    - `geological`: ch 2 Prehistory only (rounded order-of-magnitude
+      figure for `date_range_start_bce`).
+    - `regnal_precise`: chapters with no `c.` qualifier on the banner
+      (Ch 12-15 — Third Intermediate, Late, Ptolemaic, Roman; Shaw
+      drops the hedge).
+    - `regnal_approximate`: everything else (`c.`-qualified ruler-era
+      dates, ±decade-precision).
+    Per egyptologist P2-1 + code-reviewer P2-1 — `regnal_precise` was
+    dead vocab in the initial draft because no row was ever assigned it.
+    """
+    if chapter_number in _GEOLOGICAL_CHAPTERS:
         return "geological"
+    if date_qualifier is None:
+        return "regnal_precise"
     return "regnal_approximate"
 
 
-def _detect_crosses_bce_ce(start: int | None, end: int | None) -> bool:
+def _detect_crosses_bce_ce(start: int, end: int) -> bool:
     """True if start_bce is negative (BCE) and end_bce is positive (CE).
     The Roman Period ch 15 prints `30 bc-ad 395` and is encoded as
-    `(start=-30, end=+395)` — the only such row in Shaw OHAE."""
-    return (
-        start is not None and end is not None
-        and start < 0 and end > 0
-    )
+    `(start=-30, end=+395)` — the only such row in Shaw OHAE.
+
+    Raises ValueError on missing endpoints. Per code-reviewer P2-2 —
+    silently falling back to False would hide a real data gap.
+    """
+    if start is None or end is None:
+        raise ValueError(
+            f"_detect_crosses_bce_ce requires both endpoints; got "
+            f"start={start!r}, end={end!r}"
+        )
+    return start < 0 and end > 0
 
 
 def _backfill_181_schema(rows: list[dict]) -> list[str]:
@@ -99,11 +120,12 @@ def _backfill_181_schema(rows: list[dict]) -> list[str]:
 def _apply_181_migrations(rows: list[dict]) -> list[str]:
     log: list[str] = []
     for row in rows:
-        ch = row.get("chapter_number")
-        s = row.get("date_range_start_bce")
-        e = row.get("date_range_end_bce")
+        ch = row["chapter_number"]
+        s = row["date_range_start_bce"]
+        e = row["date_range_end_bce"]
+        qual = row["date_qualifier"]
 
-        new_dp = _detect_date_precision(s, e)
+        new_dp = _detect_date_precision(ch, qual)
         if row["date_precision"] != new_dp:
             row["date_precision"] = new_dp
             log.append(f"  ch {ch}: date_precision → {new_dp!r}")
@@ -122,11 +144,16 @@ def _apply_181_migrations(rows: list[dict]) -> list[str]:
 
 
 def main() -> None:
-    rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+    rows = [
+        json.loads(line)
+        for line in RECONCILED.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
     log = _backfill_181_schema(rows)
     log += _apply_181_migrations(rows)
     RECONCILED.write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n"
+        "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
+        encoding="utf-8",
     )
     print(f"Issue #181 schema pass: {len(log)} field changes")
     for line in log[:20]:
