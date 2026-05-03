@@ -106,10 +106,16 @@ _PREFIX_TO_ATTESTATION_CLASS = {
     "H": "horus_only",
     "Nb": "nebty_only",
     "G": "golden_horus_only",
-    "D": "djed_only",  # 1 row; Ryholt doesn't enumerate this in the README
-                       # but the prefix `D` exists in the corpus (likely a
-                       # Djed-pillar variant per Ryholt's catalogue convention).
-                       # Phase-A consumer may want to treat as `unknown`.
+    # PR #189 Gemini round-1 (high): I initially mapped `D` to
+    # `djed_only` based on speculation. Gemini correctly identified
+    # that `D` is Ryholt's prefix for the **Nebty (Two Ladies) name**
+    # — verified against the actual `D.1` row in reconciled.jsonl
+    # which carries data in `nebty_name_transliterated`, not in any
+    # Djed-pillar field. README (Ryholt source dir) line 21 documents
+    # `D:` lines as Nebty in the catalogue. So `D` and `Nb` both map
+    # to `nebty_only` (Ryholt uses both prefix forms for the same
+    # name-type).
+    "D": "nebty_only",
     "Abyd": "abydos",
 }
 
@@ -201,9 +207,30 @@ def apply_glyph_migrations(rows: list[dict]) -> list[str]:
     """Strip in-string uncertainty / syllabic / homonym glyphs from
     name fields; promote each to its typed flag. Idempotent."""
     log_lines: list[str] = []
+    # PR #189 Gemini round-1 (high): widened uncertainty detection
+    # to ALL name + transliteration fields, not just nomen/prenomen.
+    # Rows like 13.17 / 13.53 / 14.32 / 16.5 carry `(?)` in
+    # transliteration fields and would have escaped the prior
+    # nomen/prenomen-only check.
+    NAME_FIELDS = (
+        "nomen",
+        "prenomen",
+        "nomen_transliterated",
+        "prenomen_transliterated",
+        "horus_name_transliterated",
+        "nebty_name_transliterated",
+        "golden_horus_name_transliterated",
+    )
+    # Also widened pattern: `(?)` (parenthesized) plus `(..?)` /
+    # `(...?)` (lacuna-with-uncertainty) anywhere in the field.
+    # The trailing-only `_PAREN_QUESTION_RE` is kept for the
+    # cleanly-trailing nomen/prenomen case so we strip there;
+    # other positions only set the flag.
+    _ANY_QUESTION_RE = re.compile(r"\([^)]*\?\)|\(\.\.+\?\)")
+
     for row in rows:
         rid = row["ryholt_id"]
-        # `(?)` in nomen / prenomen → is_uncertain_attribution
+        # `(?)` in nomen / prenomen → strip + set is_uncertain_attribution
         for f in ("nomen", "prenomen"):
             v = row.get(f)
             if v and _PAREN_QUESTION_RE.search(v):
@@ -211,6 +238,18 @@ def apply_glyph_migrations(rows: list[dict]) -> list[str]:
                 if not row["is_uncertain_attribution"]:
                     row["is_uncertain_attribution"] = True
                     log_lines.append(f"  {rid}: stripped `(?)` from {f}; is_uncertain_attribution=True")
+        # `(?)` / `(..?)` anywhere in any name field → flag only.
+        # Don't strip in non-trailing positions (would corrupt the
+        # surrounding glyph context, e.g. `Hor(..?)` is one
+        # character with embedded uncertainty marker, not a
+        # trailing glyph to strip).
+        if not row["is_uncertain_attribution"]:
+            for f in NAME_FIELDS:
+                v = row.get(f) or ""
+                if _ANY_QUESTION_RE.search(v):
+                    row["is_uncertain_attribution"] = True
+                    log_lines.append(f"  {rid}: detected `(?)`/`(..?)` in {f}; is_uncertain_attribution=True")
+                    break
         # `(syllabic)` (or `(syllabic?)`, `(syllabic)⁽¹⁾`, `(syllabic),
         # not preceded by ...`) in nomen_transliterated → is_syllabic_nomen.
         # Set the flag whenever any `(syllabic` substring occurs;

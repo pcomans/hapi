@@ -296,7 +296,10 @@ def test_attestation_class_matches_ryholt_id_prefix() -> None:
         "H": "horus_only",
         "Nb": "nebty_only",
         "G": "golden_horus_only",
-        "D": "djed_only",
+        # Per PR #189 Gemini round-1: `D` is Ryholt's prefix for
+        # the Nebty (Two Ladies) name (see README), so D and Nb
+        # both map to nebty_only.
+        "D": "nebty_only",
         "Abyd": "abydos",
     }
     import re
@@ -359,8 +362,17 @@ def test_date_attestation_matches_date_nulls() -> None:
 
 
 def test_uncertain_attribution_canonical_set() -> None:
-    """Issue #177: pin the 3 known uncertain-attribution rows."""
-    expected = {"14.g", "17.7", "Abyd.15"}
+    """Issue #177: pin the known uncertain-attribution rows.
+
+    PR #189 Gemini round-1 widened detection to ALL name + transliteration
+    fields (not just nomen/prenomen) and to embedded-uncertainty patterns
+    `(?)` / `(..?)` / `(...?)`. The audit's original 3-row count missed
+    4 rows where the `(?)` glyph appears in transliteration fields or
+    embedded inside lacuna markers (13.17 ḥrw-ꜥꜣ (?), 13.53 Hor(..?),
+    14.32 Hapu(...?), 16.5 ḥr-nṯr.w (?) ⁽¹⁾). Updated to the wider
+    7-row set.
+    """
+    expected = {"13.17", "13.53", "14.32", "14.g", "16.5", "17.7", "Abyd.15"}
     actual = {r["ryholt_id"] for r in _rows() if r["is_uncertain_attribution"]}
     assert actual == expected, (sorted(actual - expected), sorted(expected - actual))
 
