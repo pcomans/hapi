@@ -495,6 +495,74 @@ NAME_ENTRY_FIELDS = frozenset(
 )
 
 
+def test_notes_field_present_on_every_row() -> None:
+    """Issue #174: every row carries a `notes` top-level field with type
+    `str | None`. Backfilled by `fix_rows.backfill_notes` across all
+    rows so the schema shape is uniform. Pre-fix, only 6/395 rows had
+    the key (all None) — a constitutional rule 4 violation.
+    """
+    for r in _rows():
+        assert "notes" in r, f"{r['leprohon_id']}: missing notes key"
+        assert r["notes"] is None or isinstance(r["notes"], str), (
+            f"{r['leprohon_id']}: notes={r['notes']!r} not str|None"
+        )
+
+
+def test_only_six_rows_have_non_null_notes() -> None:
+    """Issue #174 cardinality pin (PR #185 code-reviewer P3-2): exactly
+    6 rows carry non-null `notes` after the restoration pass. This guards
+    against (a) a future SPOT_CORRECTIONS entry accidentally setting
+    `notes` on the wrong row, and (b) a future re-extraction silently
+    populating notes elsewhere without an audit-trail entry.
+
+    When new `notes` values are legitimately added (e.g. a future
+    extraction that does emit row-level prose), update this test
+    deliberately.
+    """
+    rows = _rows()
+    nonnull_ids = {r["leprohon_id"] for r in rows if r["notes"] is not None}
+    expected = {
+        "leprohon-27.05",
+        "leprohon-27.06",
+        "leprohon-27.07",
+        "leprohon-29.04",
+        "leprohon-31.01",
+        "leprohon-31.02",
+    }
+    assert nonnull_ids == expected, (
+        f"non-null notes set drift: extra={sorted(nonnull_ids - expected)}, "
+        f"missing={sorted(expected - nonnull_ids)}"
+    )
+
+
+def test_late_period_notes_restored_from_agent_b() -> None:
+    """Issue #174: the 6 Late-Period rows where agent-b emitted row-level
+    prose ("Kings X, Y, and Z are not known from Egyptian hieroglyphic
+    texts.") must carry the restored prose. Pre-fix, `merge.py`'s
+    majority-vote on `notes` produced None because the other two agents
+    didn't extract — silent loss.
+
+    Per CLAUDE.md rule 6 (data is sacred), agent-b's reading is part of
+    the authority extract; the silent-loss-on-tie failure had no
+    documented rule backing it. Restored verbatim from
+    `raw/agent-b-late-period.jsonl`.
+    """
+    by_id = {r["leprohon_id"]: r for r in _rows()}
+    expected = {
+        "leprohon-27.05": "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts.",
+        "leprohon-27.06": "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts.",
+        "leprohon-27.07": "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts.",
+        "leprohon-29.04": "King Nepherites II is not known from hieroglyphic sources.",
+        "leprohon-31.01": "Kings Artaxerxes III and Arses are not known from hieroglyphic sources.",
+        "leprohon-31.02": "Kings Artaxerxes III and Arses are not known from hieroglyphic sources.",
+    }
+    for lid, prose in expected.items():
+        assert lid in by_id, f"{lid} missing from reconciled.jsonl"
+        assert by_id[lid]["notes"] == prose, (
+            f"{lid}: notes={by_id[lid]['notes']!r}, expected {prose!r}"
+        )
+
+
 def test_name_list_fields_present_on_every_row() -> None:
     """Rule 4 (single source of truth): every row carries every name-type
     field with `[]` default when empty, so downstream consumers don't need
