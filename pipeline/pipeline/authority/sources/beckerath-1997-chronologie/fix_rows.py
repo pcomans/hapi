@@ -771,7 +771,7 @@ SCHEMA_FIELD_DEFAULTS_179: dict[str, object] = {
     "egyptian_titularies": [],   # list[{name, kind, when}] replaces scalar
     "name_variants": [],         # list[str] from `(...)` in `name`
     "is_dynasty_marker": False,  # row catalogues a dynasty header, not a king
-    "is_anti_king": False,       # Beckerath's Gegenkönig + parens-wrapped
+    "is_anti_king": False,       # Beckerath's `Gegenkönig` (singular) in notes
     "existence_uncertain": False,  # `(?)` / `„...“` quotes / `? <name>` markers
 }
 
