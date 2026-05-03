@@ -142,6 +142,12 @@ Code subagent pass against the source PDF. No human scholar has
 signed off on this extract yet — per ADR-017 step 6, the extract is
 provisional until that happens.
 
+Schema backfills:
+- is_group_entry: state pinned to GROUP_ENTRY_DH_IDS:
+    [...]18A–H [The Amarna Interlude]: True
+    [...]18K–N [The Amarna Interlude]: True
+    (all 463 other rows: False)
+
 Field corrections:
 - Tiaa A [The Power and the Glory]: notes corrected (Gemini OCR dropped the article "a" in "including a number of usurpations" and left a stray colon after "including". The PDF (p. 140 col 2, Tiaa A entry) reads with the article; `notes` is a verbatim-quotation field so the reviewer's correction is applied rather than preserving the OCR artifact.)
     value: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including a number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."

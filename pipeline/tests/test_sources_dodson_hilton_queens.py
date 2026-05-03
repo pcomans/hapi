@@ -98,6 +98,22 @@ def _rows() -> tuple[dict, ...]:
     return tuple(json.loads(line) for line in JSONL.read_text().splitlines() if line.strip())
 
 
+@lru_cache(maxsize=1)
+def _fix_rows_module():
+    """Path-load `fix_rows.py` as a module (the source dir has a hyphen
+    so `importlib.import_module` doesn't work). lru_cached so multiple
+    tests share one load. Refactored from per-test importlib boilerplate
+    on PR #186 Gemini round-1.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "dh_fix_rows", SOURCE_DIR / "fix_rows.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def _row(dh_id: str, sub_period: str | None = None) -> dict:
     """Return the unique row matching `dh_id` (+ optional `sub_period`).
 
@@ -485,15 +501,7 @@ def test_role_tokens_in_known_vocab() -> None:
     update `KNOWN_ROLE_TOKENS` in `fix_rows.py` after verifying the
     token is D&H's, not a typo.
     """
-    import importlib.util
-    spec = importlib.util.spec_from_file_location(
-        "dh_fix_rows",
-        SOURCE_DIR / "fix_rows.py",
-    )
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    known = mod.KNOWN_ROLE_TOKENS
-
+    known = _fix_rows_module().KNOWN_ROLE_TOKENS
     for r in _rows():
         for role in r.get("roles", []):
             assert role in known, (
@@ -534,7 +542,7 @@ def test_is_group_entry_present_on_every_row() -> None:
 def test_is_group_entry_matches_canonical_set() -> None:
     """Issue #175 (Shape J): `is_group_entry=True` iff the row's
     (dh_id, sub_period) is in `GROUP_ENTRY_DH_IDS`. The two known
-    group entries are `[...]18A-H` and `[...]18K-N` (en-dash range
+    group entries are `[...]18A–H` and `[...]18K–N` (en-dash range
     notation in D&H — letter-range covers multiple individuals in
     a single Brief Lives entry).
 
@@ -542,14 +550,7 @@ def test_is_group_entry_matches_canonical_set() -> None:
     in `fix_rows.py`; this test fails otherwise so the decision is
     explicit, not silent.
     """
-    import importlib.util
-    spec = importlib.util.spec_from_file_location(
-        "dh_fix_rows",
-        SOURCE_DIR / "fix_rows.py",
-    )
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    canonical = mod.GROUP_ENTRY_DH_IDS
+    canonical = _fix_rows_module().GROUP_ENTRY_DH_IDS
 
     actual_true = {
         (r["dh_id"], r["sub_period"]) for r in _rows()

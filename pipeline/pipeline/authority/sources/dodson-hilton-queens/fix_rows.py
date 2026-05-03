@@ -631,15 +631,35 @@ def main() -> None:
     idx = existing_diff.find(marker)
     if idx != -1:
         existing_diff = existing_diff[:idx].rstrip()
-    body_sections: list[str] = []
+    # State-not-delta logging for the schema-backfill section too. The
+    # `backfill_log` returned by `backfill_is_group_entry` only records
+    # delta (rows that needed backfilling) — on a second run it's
+    # empty, so the audit trail of WHICH rows carry is_group_entry=True
+    # would be lost. Build a stable state summary instead, listing the
+    # canonical (dh_id, sub_period) pairs from GROUP_ENTRY_DH_IDS.
+    # PR #186 Gemini round-1 caught the instability.
+    backfill_state_lines = [
+        "- is_group_entry: state pinned to GROUP_ENTRY_DH_IDS:",
+    ] + [
+        f"    {dh_id} [{sub_period}]: True"
+        for dh_id, sub_period in sorted(GROUP_ENTRY_DH_IDS)
+    ] + [
+        f"    (all {sum(1 for r in rows if not r['is_group_entry'])} "
+        f"other rows: False)",
+    ]
     if backfill_log:
-        body_sections.append("Schema backfills:\n" + "\n".join(backfill_log))
-    if override_log:
-        body_sections.append("Field corrections:\n" + "\n".join(override_log))
-    body = "\n\n".join(body_sections) if body_sections else (
-        "- No overrides applied. The reviewer pass produced no "
-        "actionable corrections on `reconciled.jsonl` for this chunk."
-    )
+        backfill_state_lines.append("  This-run delta:")
+        backfill_state_lines.extend(f"  {line}" for line in backfill_log)
+
+    body_sections: list[str] = [
+        "Schema backfills:\n" + "\n".join(backfill_state_lines),
+        # `override_log` always has at least one entry per SPOT_CORRECTION
+        # (each entry emits either a "was/now" or "value" line), so no
+        # empty-fallback branch is needed. PR #186 Gemini round-1 flagged
+        # the previous fallback as dead code.
+        "Field corrections:\n" + "\n".join(override_log),
+    ]
+    body = "\n\n".join(body_sections)
     appended = (
         f"{existing_diff.rstrip()}\n\n"
         f"{marker}\n"
