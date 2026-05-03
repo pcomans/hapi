@@ -212,9 +212,11 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
   "corrected_end_year":   null,    // typed source-correction (Kitchen 21H.06)
   "minimum_duration_years": null,  // numeric "at least N years" constraint
                                    // when the source records a +N convention
-                                   // with a null endpoint (HKW's `2900–?+25`
-                                   // → start_year_*=−2900, end_year_*=null,
-                                   // minimum_duration_years=25). Phase A
+                                   // with a null endpoint. HKW's `2900–?+25`
+                                   // canonicalises to start_year_*=-2899
+                                   // (astronomical for 2900 BCE per the
+                                   // Year 0 rule above), end_year_*=null,
+                                   // minimum_duration_years=25. Phase A
                                    // interval arithmetic uses this to compute
                                    // a lower bound for the duration even
                                    // when the end is unknown.
