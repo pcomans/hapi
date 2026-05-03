@@ -9,6 +9,7 @@ Baud, M. (1999) *Famille royale et pouvoir sous l'Ancien Empire égyptien*. Bibl
 - **Edition used:** first edition, 1999, vol. 2 *Corpus*.
 - **Retrieved:** local scan, 2026-04-14.
 - **PDF SHA-256 (vol. 2):** `8768536a13fb5428d8ec7fbd96263d028aabb557a5411e7f796cad99ed6881cb`.
+- **On-disk path (gitignored):** `proprietary/books/Baud 1999 - Famille royale AE vol 2.pdf` (vol. 1 lives next to it under the parallel name).
 
 ## Scope
 
@@ -103,6 +104,22 @@ This is stricter than the loose prosopographic convention, which often treats co
 **Matching consequence.** A row whose holder is catalogued by a downstream museum as "king's eldest son of his body of King X" but whose Baud titulary lists `smsw` and `nj ẖt.f` only as separate titles will *not* carry the `roles` term. The `titles_from_baud` field still contains both Egyptian titles verbatim, so a Phase-A matcher that wants the looser reading can recover it from there. Curators reading an empty `roles` field should consult `titles_from_baud` before concluding "Baud doesn't attest the kinship at all."
 
 The conjunction rule is enforced both at correction time (in `fix_rows.py` chunk-2/4/5/7 + sweep-2026 rationales) and at test time (the universal invariant test).
+
+## Issue #178 schema additions (2026-05-02 audit-fix)
+
+The schema-audit fix added the following typed fields. Every row carries every field after `fix_rows.py` runs (closure-tested by `test_178_every_row_has_every_new_field`):
+
+- `is_joint_entry: bool` — True for the rare headword that catalogues two persons under one number (Shape J). As of the 2026-05-02 audit, exactly one row qualifies: `baud-209` ("Snj* et Zzj*"). The two service-personnel names live in `co_holders: list[{name, service_personnel}]` so consumers don't have to parse the headword. Authoritative count is `test_178_joint_persons_canonical_set`.
+- `entry_kind: str` — typed enum `{"person", "joint_persons", "collective_monument", "attribution_pending"}`. Replaces the convention of inferring kind from `is_collective_monument` (since dropped) and from "is the headword 'Nom perdu'?" (now a `name_status` flag).
+- `name_status: str` — typed enum `{"attested", "lost", "tentative", "anonymous"}`. `lost` = Baud's headword "Nom perdu" / "Nom(s) perdu(s)" — name once attested but damaged. `anonymous` = Baud's headword "Anonyme" / "anonyme" or unnamed queens cited only by relation — name never inscribed. The lost/anonymous distinction is load-bearing; consumers must not collapse them. `tentative` = Baud explicitly hedges the headword reading (e.g. "Nom perdu, dit «Ptḥ-mr-zt.f»"). Authoritative counts: `test_178_lost_name_canonical_set` (13 rows), `test_178_anonymous_canonical_set` (8 rows), `test_178_tentative_canonical_set` (3 rows).
+- `candidate_baud_ids: list[str]` — for `attribution_pending` rows, the list of plausible baud_ids the row might equal. As of the 2026-05-02 audit, exactly one row: `baud-39` (= `["baud-36", "baud-37", "baud-38"]`, per Baud's "Iʳᵉ, II, ou autre" headword + DIVERS option (c)). Authoritative count is `test_178_attribution_pending_canonical_set`.
+- `pm_refs: list[str]` — split from `pm_ref` on `;` and ` et ` separators. Baud's French convention elides the "PM" prefix on `et`-continuation tokens (`PM 407 et 414` ≡ `[PM 407, PM 414]`); the elided prefix is restored in the typed list.
+- `monuments: list[{document_id, monument, localisation}]` — structured per-document split of Baud's `1: ...; 2: ...` numbered-document enumeration. Single-monument rows produce a 1-entry list with `document_id=1`. Per-document `localisation` defaults to the row's single `localisation`, but is overridden by the per-doc `à <Place>` extractor when Baud's prose distinguishes per-document sites (e.g. baud-22 doc 2 = Héliopolis vs row-level Saqqara, baud-85 doc 3 = Byblos). The extractor only catches the `à <Place>` preposition with a clause-terminus lookahead; Baud's other locality prepositions (`de`, `dans`, `du temple ... de`) fall back to the row-level value, so phase-A site reconciliation still has work to do for full per-document coverage.
+- `father_baud_id`, `mother_baud_id: str | None` — typed cross-reference companion to `father_name`/`mother_name`. Populated when Baud's name string ends in `[N]` (e.g. `"Pépi I [37]"` → `baud_id = "baud-37"`).
+- `father_confidence`, `mother_confidence: str | None` — enum `{None, "attested", "probable", "per_baud", "uncertain"}`. Derived from the hedge token in the name string (`(probable)`, `(per Baud)`, `(?)`). The hedge token is **kept** in the name string so the field remains re-derivable and conventional readers see the source's wording.
+- `spouse_baud_ids`, `children_baud_ids: list[str | None]` — list-parallels to `spouse_names`/`children_names`. Element `i` is the resolved baud_id for `spouse_names[i]` (None if no `[N]` cross-reference is present in the name string).
+
+The companion-field design (`<field>_confidence` enum + raw-name preservation) is preferred over restructuring the name field into a dict because it matches the Phase-0 corpus convention of preserving Baud's verbatim wording for hedge audit trails.
 
 ## Rights
 
