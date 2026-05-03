@@ -756,6 +756,216 @@ _GREEK_ALIAS_NOTE = (
 )
 
 
+# === Issue #179 schema-audit additions =======================================
+#
+# Strict-all-2-P1 per #176/#177/#178 policy. Replaces scalar
+# `egyptian_titulary` + `egyptian_titulary_kind` with
+# `egyptian_titularies: list[{name, kind, when}]`; promotes paren
+# birth-name variants to `name_variants: list[str]`; adds typed flags
+# for dynasty markers, anti-kings, and existence uncertainty.
+
+import copy
+import re
+
+SCHEMA_FIELD_DEFAULTS_179: dict[str, object] = {
+    "egyptian_titularies": [],   # list[{name, kind, when}] replaces scalar
+    "name_variants": [],         # list[str] from `(...)` in `name`
+    "is_dynasty_marker": False,  # row catalogues a dynasty header, not a king
+    "is_anti_king": False,       # Beckerath's Gegenkönig + parens-wrapped
+    "existence_uncertain": False,  # `(?)` / `„...“` quotes / `? <name>` markers
+}
+
+# Rows whose `name` is a dynasty header ("0. Dynastie", "13. Dynastie", etc.)
+# rather than a person. Mechanically detected by the `\d+\. Dynastie` pattern.
+_DYNASTY_MARKER_RE = re.compile(r"^\d+(?:\./\d+)?\.\s+Dynastie$")
+
+# Rows where Beckerath flags the king as anti-king (Gegenkönig) — either
+# in a parens-wrapped name OR via `Gegenkönig` token in notes_from_beckerath.
+_ANTI_KING_NOTE_RE = re.compile(r"\bGegenkönig", re.IGNORECASE)
+
+# Existence-uncertainty markers Beckerath uses on the `name` field:
+#   - bare-paren wrapping ("(Schoschenq IIIa.)")
+#   - trailing "(?)" ("„Psammûs“ (?)")
+#   - leading "? " ("? „Hu-djefa“")
+#   - German quotation marks "„...“" alone (treated as flagged-uncertain)
+_BARE_PAREN_NAME_RE = re.compile(r"^\(.+\)$")
+_LEADING_QUESTION_RE = re.compile(r"^\?\s+")
+_TRAILING_PAREN_QUESTION_RE = re.compile(r"\(\?\)\s*$")
+_GERMAN_QUOTES_RE = re.compile(r"„.+“")
+
+# Paren extraction for `name_variants`: strict — only matches when the
+# paren immediately follows a non-space char and contains a name-like
+# token (no digit-only ordinals like "I.", "II."). 22.07 "(Schoschenq
+# IIIa.)" is a bare-paren name handled by uncertainty detection above,
+# not a variant.
+_NAME_VARIANT_PAREN_RE = re.compile(r"\s*\(([^()]+?)\)")
+# Inside the paren, split on `,` to capture multi-variant cases like
+# 19.01 "Ramses (Ra-mes-su, griech. Ramessês) I." → variants
+# ["Ra-mes-su", "griech. Ramessês"].
+_VARIANT_SPLIT_RE = re.compile(r"\s*,\s*")
+# Roman-numeral / Greek-numeral name suffix (e.g. "I.", "II.", "IIa.")
+# we keep at the end of the canonical `name` after stripping the paren.
+_NAME_SUFFIX_RE = re.compile(r"\s*[IVX]+a?\.\s*$")
+
+
+# 03.02 Djoser is the lone "mixed" row whose two halves are nomen +
+# horus_name (not nomen + prenomen). The `mixed` enum collapses 3+
+# distinct compound shapes per the audit; this is the only one that
+# isn't nomen+prenomen, so it gets a per-row override rather than a
+# heuristic. Egyptologist verifiable: PDF p. 51, "Hor Netri-chet" is
+# the Horus name "ḥr nṯrj-ẖt".
+_MIXED_TITULARY_OVERRIDES: dict[str, list[dict]] = {
+    "03.02": [
+        {"name": "Tosorthros", "kind": "nomen", "when": None},
+        {"name": "Hor Netri-chet", "kind": "horus_name", "when": None},
+    ],
+}
+
+# 19.07 Si-ptah's `prenomen` packs two temporal throne-names. Convert
+# to two list entries with `when` populated.
+_PRENOMEN_TEMPORAL_OVERRIDES: dict[str, list[dict]] = {
+    "19.07": [
+        {"name": "Secha-en-rê mer-amun", "kind": "prenomen", "when": "anfangs"},
+        {"name": "Ach-en-rê sotep-en-rê", "kind": "prenomen", "when": "später"},
+    ],
+}
+
+
+def _split_titulary(value: str | None, kind: str | None) -> list[dict]:
+    """Convert legacy scalar `egyptian_titulary` + `kind` to the typed
+    list shape. Handles slash-separated alternatives (within a kind) and
+    `mixed`-kind comma-separated nomen+prenomen pairs.
+    """
+    if not value:
+        return []
+    if kind == "mixed":
+        # `<nomen>, <prenomen>` (default for mixed). 03.02 is overridden
+        # at the call site for the rare nomen+horus_name shape.
+        parts = [p.strip() for p in value.split(",") if p.strip()]
+        if len(parts) != 2:
+            raise ValueError(
+                f"mixed titulary {value!r} did not split cleanly into "
+                f"two parts (got {parts!r}); add explicit override or "
+                f"adjust splitter"
+            )
+        nomen_str, prenomen_str = parts
+        out: list[dict] = []
+        for n in nomen_str.split("/"):
+            out.append({"name": n.strip(), "kind": "nomen", "when": None})
+        for p in prenomen_str.split("/"):
+            out.append({"name": p.strip(), "kind": "prenomen", "when": None})
+        return out
+    # Single-kind value — slash splits to alternatives.
+    return [
+        {"name": piece.strip(), "kind": kind, "when": None}
+        for piece in value.split("/")
+        if piece.strip()
+    ]
+
+
+def _extract_name_variants(name: str) -> tuple[str, list[str]]:
+    """Strip parens content from `name`, return (canonical_name, variants).
+    Bare-paren names (`"(Schoschenq IIIa.)"`) are left untouched — they
+    are uncertainty markers, handled separately. `(?)` uncertainty
+    markers are stripped from the canonical name without becoming
+    variants (handled by `_detect_existence_uncertain` instead).
+    """
+    if _BARE_PAREN_NAME_RE.match(name):
+        return name, []
+    # First strip uncertainty `(?)` so it doesn't pollute name_variants.
+    canonical = _TRAILING_PAREN_QUESTION_RE.sub("", name).strip()
+    m = _NAME_VARIANT_PAREN_RE.search(canonical)
+    if not m:
+        return canonical, []
+    inner = m.group(1)
+    variants = [v.strip() for v in _VARIANT_SPLIT_RE.split(inner) if v.strip()]
+    canonical = (canonical[:m.start()] + canonical[m.end():]).strip()
+    canonical = re.sub(r"\s+", " ", canonical)
+    return canonical, variants
+
+
+def _detect_existence_uncertain(name: str) -> bool:
+    return bool(
+        _BARE_PAREN_NAME_RE.match(name)
+        or _LEADING_QUESTION_RE.match(name)
+        or _TRAILING_PAREN_QUESTION_RE.search(name)
+        or _GERMAN_QUOTES_RE.search(name)
+    )
+
+
+def _detect_anti_king(name: str, notes: str | None) -> bool:
+    if notes and _ANTI_KING_NOTE_RE.search(notes):
+        return True
+    # 22.07 `(Schoschenq IIIa.)` is the canonical anti-king row that
+    # Beckerath wraps in parens. Detect parens-wrapped name strings here.
+    return bool(_BARE_PAREN_NAME_RE.match(name))
+
+
+def _backfill_179_schema(rows: list[dict]) -> list[str]:
+    log: list[str] = []
+    for row in rows:
+        added = []
+        for f, default in SCHEMA_FIELD_DEFAULTS_179.items():
+            if f not in row:
+                row[f] = copy.deepcopy(default)
+                added.append(f)
+        if added:
+            log.append(f"  {row['beckerath_id']}: backfilled {sorted(added)!r}")
+    return log
+
+
+def _apply_179_migrations(rows: list[dict]) -> list[str]:
+    log: list[str] = []
+    for row in rows:
+        bid = row["beckerath_id"]
+        name = row.get("name") or ""
+
+        # is_dynasty_marker
+        new_dyn = bool(_DYNASTY_MARKER_RE.match(name))
+        if row["is_dynasty_marker"] != new_dyn:
+            row["is_dynasty_marker"] = new_dyn
+            log.append(f"  {bid}: is_dynasty_marker → {new_dyn}")
+
+        # is_anti_king
+        new_anti = _detect_anti_king(name, row.get("notes_from_beckerath"))
+        if row["is_anti_king"] != new_anti:
+            row["is_anti_king"] = new_anti
+            log.append(f"  {bid}: is_anti_king → {new_anti}")
+
+        # existence_uncertain
+        new_unc = _detect_existence_uncertain(name)
+        if row["existence_uncertain"] != new_unc:
+            row["existence_uncertain"] = new_unc
+            log.append(f"  {bid}: existence_uncertain → {new_unc}")
+
+        # name_variants — promote `(...)` content
+        new_name, variants = _extract_name_variants(name)
+        if row["name_variants"] != variants:
+            row["name_variants"] = variants
+            log.append(f"  {bid}: name_variants → {variants!r}")
+        if new_name != name:
+            row["name"] = new_name
+            log.append(f"  {bid}: name → {new_name!r}")
+
+        # egyptian_titularies — list-promote scalar pair, with overrides
+        if bid in _MIXED_TITULARY_OVERRIDES:
+            new_tit = _MIXED_TITULARY_OVERRIDES[bid]
+        elif bid in _PRENOMEN_TEMPORAL_OVERRIDES:
+            # 19.07 — prenomen field carries the temporal pair; the
+            # scalar egyptian_titulary stays empty.
+            new_tit = _PRENOMEN_TEMPORAL_OVERRIDES[bid]
+        else:
+            new_tit = _split_titulary(
+                row.get("egyptian_titulary"),
+                row.get("egyptian_titulary_kind"),
+            )
+        if row["egyptian_titularies"] != new_tit:
+            row["egyptian_titularies"] = new_tit
+            log.append(f"  {bid}: egyptian_titularies → {len(new_tit)} entries")
+
+    return log
+
+
 def _apply_schoschenq_spelling_fix(rows: list[dict]) -> list[str]:
     """Replace 'Schoscheng' → 'Schoschenq' on `name` and `prenomen` fields.
 
@@ -848,6 +1058,18 @@ def main() -> None:
     # and downstream consumers can rely on the field's presence.
     for row in rows:
         row.setdefault("editorial_notes", None)
+
+    # Issue #179 schema-audit pass: typed flags + list-promote scalar pair.
+    # The legacy `egyptian_titulary` + `_kind` scalars are KEPT alongside
+    # the new `egyptian_titularies` list — they are the read-side source-
+    # of-truth that the schema-audit pass derives from, so dropping them
+    # would make subsequent fix_rows.py runs read None and silently
+    # destroy the typed data. The README marks them as derivative
+    # ingest artifacts; consumers must use `egyptian_titularies`.
+    schema_log = _backfill_179_schema(rows)
+    schema_log += _apply_179_migrations(rows)
+    if schema_log:
+        applied.extend(schema_log)
 
     RECONCILED.write_text(
         "\n".join(

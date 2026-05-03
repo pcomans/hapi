@@ -1,6 +1,16 @@
 """Structural value-assertion tests for Beckerath 1997 Chronologie source extract.
 
 Per rule 5: every populated field on a sampled fixture row is asserted.
+
+Migrated 2026-05-03 (issue #179): the legacy scalar fields
+`egyptian_titulary` (str | None) + `egyptian_titulary_kind` (str | None)
+have been superseded by the typed list `egyptian_titularies:
+list[{name, kind, when}]` plus typed flags (`name_variants`,
+`is_dynasty_marker`, `is_anti_king`, `existence_uncertain`). The legacy
+scalars are KEPT on every row alongside the new list as derivative
+ingest artifacts so re-runs of fix_rows.py remain idempotent — but
+canonical assertions target the typed list, not the scalar. See the
+test_179_* closure tests at the bottom for the new-shape invariants.
 """
 
 from __future__ import annotations
@@ -34,7 +44,15 @@ EXPECTED_PERIODS = {
     "Spätzeit",
 }
 
-EXPECTED_TITULARY_KINDS = {None, "horus_name", "prenomen", "nomen", "mixed"}
+# Closed enum for `egyptian_titularies[*].kind` (post-#179). Mirrors
+# the documented vocabulary in fix_rows.py.
+EXPECTED_TITULARY_KIND_VALUES = {
+    "nomen",
+    "prenomen",
+    "horus_name",
+    "nebty_name",
+    "golden_horus_name",
+}
 
 
 @lru_cache(maxsize=1)
@@ -47,6 +65,20 @@ def _row(beckerath_id: str) -> dict:
     if len(hits) != 1:
         raise AssertionError(f"expected 1 row for {beckerath_id}, got {len(hits)}")
     return hits[0]
+
+
+def _titularies(beckerath_id: str) -> list[dict]:
+    return _row(beckerath_id)["egyptian_titularies"]
+
+
+def _titularies_combined(beckerath_id: str) -> str | None:
+    """Derive the legacy combined-string form from the typed list, for
+    backwards-readable assertions on rows that historically asserted the
+    scalar `egyptian_titulary` value. Returns None on empty list."""
+    entries = _titularies(beckerath_id)
+    if not entries:
+        return None
+    return ", ".join(e["name"] for e in entries)
 
 
 def test_row_count() -> None:
@@ -109,14 +141,20 @@ def test_period_is_one_of_nine() -> None:
         assert r["period"] in EXPECTED_PERIODS, (r["beckerath_id"], r["period"])
 
 
-def test_egyptian_titulary_kind_is_one_of_five() -> None:
-    """`egyptian_titulary_kind` is null whenever `egyptian_titulary` is null,
-    and otherwise one of horus_name / prenomen / nomen / mixed.
+def test_egyptian_titularies_kinds_in_closed_vocabulary() -> None:
+    """Every entry in `egyptian_titularies[*].kind` is in the canonical
+    5-value vocabulary. Replaces the pre-#179
+    `test_egyptian_titulary_kind_is_one_of_five` which asserted on the
+    legacy scalar — the legacy scalar's vocabulary (`mixed`) is now
+    decomposed into the per-entry typed kinds, so `mixed` is no longer a
+    valid kind on the typed list.
     """
     for r in _rows():
-        assert r["egyptian_titulary_kind"] in EXPECTED_TITULARY_KINDS, r
-        if r["egyptian_titulary"] is None:
-            assert r["egyptian_titulary_kind"] is None, r
+        for entry in r["egyptian_titularies"]:
+            assert entry["kind"] in EXPECTED_TITULARY_KIND_VALUES, (
+                r["beckerath_id"],
+                entry,
+            )
 
 
 def test_bce_endpoints_obey_high_ge_older_convention() -> None:
@@ -182,8 +220,7 @@ def test_dyn0_anchor_full_row() -> None:
     assert r["sub_line"] is None
     assert r["sequence_in_dynasty"] == 1
     assert r["name"] == "0. Dynastie"
-    assert r["egyptian_titulary"] is None
-    assert r["egyptian_titulary_kind"] is None
+    assert r["egyptian_titularies"] == []
     assert r["prenomen"] is None
     assert r["start_bce_high"] is None
     assert r["start_bce_low"] is None
@@ -205,8 +242,9 @@ def test_menes_full_row() -> None:
     assert r["sub_line"] is None
     assert r["sequence_in_dynasty"] == 1
     assert r["name"] == "Menes"
-    assert r["egyptian_titulary"] == "Hor Aha"
-    assert r["egyptian_titulary_kind"] == "horus_name"
+    assert r["egyptian_titularies"] == [
+        {"kind": "horus_name", "name": "Hor Aha", "when": None}
+    ]
     assert r["prenomen"] is None
     assert r["start_bce_high"] == -3032
     assert r["start_bce_low"] == -2982
@@ -224,11 +262,17 @@ def test_amenophis_i_dyn18_identity_correction_locked() -> None:
     redo branch had this misidentified as `An-jotef I.` (Hor Neb-cheper-rê) due
     to column-drift OCR; the split-page OCR now extracts the correct form
     directly (no fix_rows.py override needed).
+
+    Migrated #179: parens-form `Amenophis (Amen-hotpe) I.` → stripped
+    canonical `name="Amenophis I."` plus `name_variants=["Amen-hotpe"]`.
+    The prenomen now lives in the typed `egyptian_titularies` list.
     """
     r = _row("18.02")
-    assert r["name"] == "Amenophis (Amen-hotpe) I."
-    assert r["egyptian_titulary"] == "Djeser-ka-rê"
-    assert r["egyptian_titulary_kind"] == "prenomen"
+    assert r["name"] == "Amenophis I."
+    assert r["name_variants"] == ["Amen-hotpe"]
+    assert r["egyptian_titularies"] == [
+        {"kind": "prenomen", "name": "Djeser-ka-rê", "when": None}
+    ]
     assert r["start_bce_high"] == -1525
     assert r["end_bce_high"] == -1504
     assert r["period"] == "Neues Reich"
@@ -360,6 +404,14 @@ def test_dyn3_brace_bracket_shared_range() -> None:
     plus the `beckerath_id` in parens (per the field contract in
     fix_rows.py) so downstream consumers can grep-resolve sister rows
     without name-form fuzziness.
+
+    Migrated #179: 03.06 cross-row reference text is updated to reflect
+    that `Ahu (Huni, Aches)` is now stored as `name="Ahu"` with the
+    bracketed compound extracted into `name_variants=["Huni", "Aches"]`
+    — the cross-references in editorial_notes were authored at fix_rows
+    time using the OLD parens-inline form, so the literal substring
+    `Ahu (Huni, Aches) (03.06)` still appears in editorial_notes (the
+    cross-ref text was committed to those strings before #179 split).
     """
     cha_bai = _row("03.04")
     souphis = _row("03.05")
@@ -384,41 +436,41 @@ def test_dyn3_brace_bracket_shared_range() -> None:
     assert "Sôuphis, Mesochris (03.05)" in ahu["editorial_notes"]
 
 
-def test_compound_parenthetical_negative_class_stays_in_name() -> None:
-    """Negative-class pin for the compound-parenthetical discriminator
-    documented in fix_rows.py `_GREEK_ALIAS_NOTE` (issue #149 — follow-up
-    from PR #148 retroactive code-review).
+def test_compound_parenthetical_negative_class_post_179() -> None:
+    """**Updated #179** — the negative-class discriminator from fix_rows.py
+    `_GREEK_ALIAS_NOTE` (issue #149 follow-up) split asymmetrically when
+    the typed-list extractor landed:
 
-    Two distinct typographic patterns share the shape `<Name> (<inner>)`:
+    - **03.05 `Sôuphis, Mesochris`** (no parens) — keeps the comma-
+      compound INLINE in `name`, no name_variants extraction, empty
+      `egyptian_titularies`. Unchanged by #179 (no parens to extract
+      from).
+    - **03.06 `Ahu (Huni, Aches)`** — now decomposed: `name="Ahu"` (bare
+      Egyptian nomen), with the bracketed two-Greek-variant compound
+      extracted into `name_variants=["Huni", "Aches"]` per the #179
+      paren-extraction rule. `egyptian_titularies=[]` (the inner
+      compound is a name-form variant pair, NOT a titulary entry).
 
-    - **POSITIVE class** (Greek-alias + Egyptian-prenomen pair) → split:
-      `name = bare Greek lemma`, `egyptian_titulary = full inner compound`,
-      `egyptian_titulary_kind = "mixed"`. Examples: 06.04 Nemti-em-saf I.,
-      15.04 Chajan, 26.04 Apries, 29.03 Psamuthis, 30.01 Nektanebês,
-      30.02 Teôs, 30.03 Nektanebôs.
-    - **NEGATIVE class** (compound is two name-form variants of a SINGLE
-      concept) → keeps the compound INLINE in `name` with
-      `egyptian_titulary = null`. Examples: 03.05 `Sôuphis, Mesochris`
-      (two Greek transcriptions of the same king); 03.06 `Ahu (Huni,
-      Aches)` (Egyptian + Greek nomen variants — the bracketed compound
-      stays inline).
+    The test retains its regression-tripwire purpose against
+    fix_rows.py drift on these two rows — only the asserted shape of
+    03.06 has migrated. The pre-#179 form (compound inline in `name`,
+    egyptian_titulary=None, egyptian_titulary_kind=None) is no longer
+    valid on the typed list.
 
-    The positive class has explicit test pins (e.g.
-    `test_dyn29_dyn30_greek_egyptian_pair_split`,
-    `test_taharqo_mixed_titulary`); the negative class was implicitly
-    enforced via the absence of a fix_rows.py entry, with no direct
-    invariant test. If a future fix_rows.py edit mistakenly applies the
-    discriminator to 03.05 / 03.06, no test would fail — silent
-    regression risk. This test pins the negative class against drift.
+    The positive class (Greek-alias + Egyptian-prenomen pair) continues
+    to be exercised by `test_dyn29_dyn30_greek_egyptian_pair_split` and
+    `test_taharqo_mixed_titulary` against the typed list shape.
     """
-    for bid, expected_name in [
-        ("03.05", "Sôuphis, Mesochris"),
-        ("03.06", "Ahu (Huni, Aches)"),
-    ]:
-        r = _row(bid)
-        assert r["name"] == expected_name, (bid, r["name"])
-        assert r["egyptian_titulary"] is None, (bid, r["egyptian_titulary"])
-        assert r["egyptian_titulary_kind"] is None, (bid, r["egyptian_titulary_kind"])
+    # 03.05 — comma-compound no-parens form stays inline.
+    r0305 = _row("03.05")
+    assert r0305["name"] == "Sôuphis, Mesochris"
+    assert r0305["name_variants"] == []
+    assert r0305["egyptian_titularies"] == []
+    # 03.06 — paren-compound is decomposed into name + name_variants.
+    r0306 = _row("03.06")
+    assert r0306["name"] == "Ahu"
+    assert r0306["name_variants"] == ["Huni", "Aches"]
+    assert r0306["egyptian_titularies"] == []
 
 
 def test_te_wosret_coregent_row_extracted() -> None:
@@ -437,8 +489,9 @@ def test_te_wosret_coregent_row_extracted() -> None:
     # Kgin. spacing is standardised to no-space across all 5 queen rows
     # (matches the printed PDF's typography on scan-107-left).
     assert r["name"] == "Kgin.Te-wosret"
-    assert r["egyptian_titulary"] == "Thuoris"
-    assert r["egyptian_titulary_kind"] == "nomen"
+    assert r["egyptian_titularies"] == [
+        {"kind": "nomen", "name": "Thuoris", "when": None}
+    ]
     # German verbatim co-regency annotation (the Co-regent queen rule
     # mandates "Mitregentin von <king>"), NOT English editorial prose.
     assert r["notes_from_beckerath"] == "Mitregentin von Si-ptah"
@@ -460,27 +513,37 @@ def test_editorial_notes_field_present_on_every_row() -> None:
 
 def test_taharqo_mixed_titulary() -> None:
     """Beckerath gives Taharqo's parenthetical as `Tarakos, Chu-nefertem-rê`
-    — a comma-separated nomen+prenomen pair. The mixed-kind label captures
-    that.
+    — a comma-separated nomen+prenomen pair. Per the typed list (#179),
+    this decomposes into two entries: `Tarakos` (nomen) and
+    `Chu-nefertem-rê` (prenomen). The legacy scalar kind=`mixed` was the
+    pre-typed-list compound label; it is no longer canonical.
     """
     r = _row("25.05")
     assert r["name"] == "Taharqo"
-    assert r["egyptian_titulary"] == "Tarakos, Chu-nefertem-rê"
-    assert r["egyptian_titulary_kind"] == "mixed"
+    assert r["egyptian_titularies"] == [
+        {"kind": "nomen", "name": "Tarakos", "when": None},
+        {"kind": "prenomen", "name": "Chu-nefertem-rê", "when": None},
+    ]
 
 
 def test_psamtik_i_dyn26_full_row() -> None:
     """Late Period flagship: prenomen `Wah-ib-rê` is the parenthetical; both
     approximate flags false (Beckerath gives bare numbers); Spätzeit period.
     Beckerath spells the name `Psametik (Psammêtichos) I.` on book p192
-    (scan-108-left)."""
+    (scan-108-left).
+
+    Migrated #179: `Psametik (Psammêtichos) I.` is decomposed into bare
+    `name="Psametik I."` plus `name_variants=["Psammêtichos"]`.
+    """
     r = _row("26.01")
     assert r["dynasty"] == 26
     assert r["sub_line"] is None
     assert r["sequence_in_dynasty"] == 1
-    assert "Psametik" in r["name"]
-    assert r["egyptian_titulary"] == "Wah-ib-rê"
-    assert r["egyptian_titulary_kind"] == "prenomen"
+    assert r["name"] == "Psametik I."
+    assert r["name_variants"] == ["Psammêtichos"]
+    assert r["egyptian_titularies"] == [
+        {"kind": "prenomen", "name": "Wah-ib-rê", "when": None}
+    ]
     assert r["start_bce_high"] == -664
     assert r["end_bce_high"] == -610
     assert r["start_approximate"] is False
@@ -536,25 +599,51 @@ def test_late_period_adjacent_half_split_sweep() -> None:
       titulary=Egyptian nomen, kind=`nomen`.
     - 26.02 Nekaw — `(Nekôs/Nechaô, Uhem-ib-rê)`: TWO Greek transcriptions
       (Manetho's Νεχώς vs Herodotus's Νεκώς) + Egyptian prenomen. `Nekaw`
-      itself is Egyptian. → name=bare, titulary=full compound, kind=`mixed`.
+      itself is Egyptian. → typed list: nomen Nekôs + nomen Nechaô +
+      prenomen Uhem-ib-rê (three entries).
     - 26.05 Amosis II. — `(Amasis, Chnem-ib-rê)`: Greek/Manethonic-alias
-      + Egyptian-prenomen → name=bare, titulary=full compound, kind=`mixed`.
+      + Egyptian-prenomen → typed list: nomen Amasis + prenomen
+      Chnem-ib-rê.
     - 29.02 Achoris — `(Hagor, Chnem-maat-rê)`: Egyptian-nomen `Hagor`
       (Beckerath's rendering of Egyptian Ḥgr; `Achoris` is the Greek
-      display form) + Egyptian-prenomen → name=bare, titulary=full
-      compound, kind=`mixed`.
+      display form) + Egyptian-prenomen → typed list: nomen Hagor +
+      prenomen Chnem-maat-rê.
+
+    Migrated #179: assertions target the typed `egyptian_titularies`
+    list rather than the legacy scalar pair.
     """
     expected = {
-        "28.01": ("Amyrtaios", "Amen-ir-di-su", "nomen"),
-        "26.02": ("Nekaw", "Nekôs/Nechaô, Uhem-ib-rê", "mixed"),
-        "26.05": ("Amosis II.", "Amasis, Chnem-ib-rê", "mixed"),
-        "29.02": ("Achoris", "Hagor, Chnem-maat-rê", "mixed"),
+        "28.01": (
+            "Amyrtaios",
+            [{"kind": "nomen", "name": "Amen-ir-di-su", "when": None}],
+        ),
+        "26.02": (
+            "Nekaw",
+            [
+                {"kind": "nomen", "name": "Nekôs", "when": None},
+                {"kind": "nomen", "name": "Nechaô", "when": None},
+                {"kind": "prenomen", "name": "Uhem-ib-rê", "when": None},
+            ],
+        ),
+        "26.05": (
+            "Amosis II.",
+            [
+                {"kind": "nomen", "name": "Amasis", "when": None},
+                {"kind": "prenomen", "name": "Chnem-ib-rê", "when": None},
+            ],
+        ),
+        "29.02": (
+            "Achoris",
+            [
+                {"kind": "nomen", "name": "Hagor", "when": None},
+                {"kind": "prenomen", "name": "Chnem-maat-rê", "when": None},
+            ],
+        ),
     }
-    for bid, (name, titulary, kind) in expected.items():
+    for bid, (name, titularies) in expected.items():
         r = _row(bid)
         assert r["name"] == name, (bid, r["name"])
-        assert r["egyptian_titulary"] == titulary, (bid, r["egyptian_titulary"])
-        assert r["egyptian_titulary_kind"] == kind, (bid, r["egyptian_titulary_kind"])
+        assert r["egyptian_titularies"] == titularies, (bid, r["egyptian_titularies"])
 
 
 def test_dyn29_dyn30_greek_egyptian_pair_split() -> None:
@@ -562,25 +651,29 @@ def test_dyn29_dyn30_greek_egyptian_pair_split() -> None:
     with the SAME `<Greek-name> (<Egyptian-nomen>, <Egyptian-prenomen>)`
     typography as the verified-precedent 15.04 Chajan / 26.04 Apries / 06.04
     Nemti-em-saf I. The 3-agent merge produces an inconsistent half-split
-    state (name=full compound, egyptian_titulary=prenomen-only,
-    kind=`prenomen`); fix_rows.py realigns to the canonical kind=`mixed`
-    pattern (name=bare Greek lemma, titulary=full inner compound).
+    state; fix_rows.py realigns to the canonical typed-list shape (name=bare
+    Greek lemma, two typed-list entries: nomen + prenomen).
 
     Egyptologist printed-source review on PR #146 verified the discriminator
     applies to all four rows. The pre-#147 state had `Necht-nebef`
     unfindable on Nektanebês because titulary held only `Cheper-ka-rê`.
+
+    Migrated #179: assertions target the typed `egyptian_titularies` list
+    rather than the legacy scalar pair.
     """
     expected = {
-        "29.03": ("Psamuthis", "Pe-sche[re-n-]mut, User-rê"),
-        "30.01": ("Nektanebês", "Necht-nebef, Cheper-ka-rê"),
-        "30.02": ("Teôs", "Djed-hor, Iri-maat-en-rê"),
-        "30.03": ("Nektanebôs", "Necht-har-ehbojet, Senedjem-ib-rê"),
+        "29.03": ("Psamuthis", "Pe-sche[re-n-]mut", "User-rê"),
+        "30.01": ("Nektanebês", "Necht-nebef", "Cheper-ka-rê"),
+        "30.02": ("Teôs", "Djed-hor", "Iri-maat-en-rê"),
+        "30.03": ("Nektanebôs", "Necht-har-ehbojet", "Senedjem-ib-rê"),
     }
-    for bid, (name, titulary) in expected.items():
+    for bid, (name, nomen, prenomen) in expected.items():
         r = _row(bid)
         assert r["name"] == name, (bid, r["name"])
-        assert r["egyptian_titulary"] == titulary, (bid, r["egyptian_titulary"])
-        assert r["egyptian_titulary_kind"] == "mixed", (bid, r["egyptian_titulary_kind"])
+        assert r["egyptian_titularies"] == [
+            {"kind": "nomen", "name": nomen, "when": None},
+            {"kind": "prenomen", "name": prenomen, "when": None},
+        ], (bid, r["egyptian_titularies"])
 
 
 def test_29_03_psamuthis_gegenkoenig_note_preserved() -> None:
@@ -654,17 +747,19 @@ def test_necho_ii_prenomen_locked() -> None:
     text says Uhem. Per the constitutional rule "data is sacred", follow
     what Beckerath actually prints.
 
-    Updated 2026-04-29 by issue #150 fix_rows.py split: name realigned
-    from full compound `Nekaw (Nekôs/Nechaô)` to bare `Nekaw`, with the
-    full inner compound (including the Uhem-ib-rê prenomen) moved into
-    egyptian_titulary, kind=`mixed`. Prenomen `Uhem-ib-rê` now appears
-    embedded in the compound titulary string, not as a standalone
-    titulary value.
+    Migrated #179: typed list now decomposes the compound into 3 entries
+    (nomen Nekôs + nomen Nechaô + prenomen Uhem-ib-rê). The legacy
+    scalar `egyptian_titulary == "Nekôs/Nechaô, Uhem-ib-rê"` is retained
+    as a derivative artifact (covered by test_179_legacy_scalars_still_present).
     """
     r = _row("26.02")
     assert r["name"] == "Nekaw"
-    assert "Uhem-ib-rê" in r["egyptian_titulary"]
-    assert r["egyptian_titulary"] == "Nekôs/Nechaô, Uhem-ib-rê"
+    titularies = r["egyptian_titularies"]
+    # Uhem-ib-rê must be findable as a typed prenomen entry.
+    prenomen_entries = [e for e in titularies if e["kind"] == "prenomen"]
+    assert prenomen_entries == [
+        {"kind": "prenomen", "name": "Uhem-ib-rê", "when": None}
+    ], titularies
 
 
 def test_chabbasch_dyn31_locked() -> None:
@@ -680,20 +775,28 @@ def test_chabbasch_dyn31_locked() -> None:
     """
     r = _row("31.04")
     assert r["name"] == "Chababasch"
-    assert r["egyptian_titulary"] == "Senen-sotep-en-ptah"
-    assert r["egyptian_titulary_kind"] == "prenomen"
+    assert r["egyptian_titularies"] == [
+        {"kind": "prenomen", "name": "Senen-sotep-en-ptah", "when": None}
+    ]
 
 
 def test_schoschenq_spelling_systematic() -> None:
     """`fix_rows.py` runs a systematic Schoscheng→Schoschenq fix because
     OCR mis-read q→g on every occurrence in Dyn 22. No row may contain
     `Schoscheng`; every Schoschenq row must spell it correctly.
+
+    Migrated #179: include scanning the typed list entries' `name` field
+    in addition to the legacy scalar pair (which is still present).
     """
     for r in _rows():
         for field in ("name", "prenomen", "egyptian_titulary", "notes_from_beckerath"):
             v = r.get(field)
             if isinstance(v, str):
                 assert "Schoscheng" not in v, (r["beckerath_id"], field, v)
+        for entry in r["egyptian_titularies"]:
+            assert "Schoscheng" not in entry["name"], (r["beckerath_id"], entry)
+        for variant in r["name_variants"]:
+            assert "Schoscheng" not in variant, (r["beckerath_id"], variant)
     # Spot-check that the Dyn 22 Schoschenq rows are present and spelled correctly.
     assert _row("22.01")["name"] == "Schoschenq I."
 
@@ -792,37 +895,39 @@ def test_akhenaten_prenomen_typo_fixed() -> None:
     """
     r = _row("18.10")
     assert "Ach-en-aten" in r["name"]
-    assert r["egyptian_titulary"] == "Nefer-cheprurê wa-en-rê"
+    assert r["egyptian_titularies"] == [
+        {"kind": "prenomen", "name": "Nefer-cheprurê wa-en-rê", "when": None}
+    ]
 
 
-def test_compound_titulary_implies_mixed_kind() -> None:
-    """**Methodology invariant** — when Beckerath prints a compound
-    parenthetical containing a comma (e.g. `(Hagor, Chnem-maat-rê)`,
-    `(Tarakos, Chu-nefertem-rê)`, `(Wah-ib-rê, Haa-ib-rê)`), the
-    `egyptian_titulary_kind` must be `"mixed"`. This is enforceable as a
-    pure derivation from the parenthetical text — no content judgement
-    needed — and catches the compound-titulary truncation class flagged
-    by the egyptologist post-merge sweep (issue #115). Two-component
-    parentheticals where the agents disagreed which half to extract
-    historically slipped through the disagreement-log reviewer because
-    the agents AGREED on a wrong/partial value.
+def test_compound_titulary_decomposes_into_typed_entries() -> None:
+    """**Methodology invariant (post-#179)** — when Beckerath prints a
+    compound parenthetical containing a comma (e.g. `(Hagor, Chnem-maat-rê)`,
+    `(Tarakos, Chu-nefertem-rê)`, `(Wah-ib-rê, Haa-ib-rê)`), the typed
+    `egyptian_titularies` list must contain MULTIPLE entries (one per
+    comma-separated component), each with its own `kind` (typically
+    nomen + prenomen).
 
-    Carve-out: Beckerath also writes Greek-disambiguator alternates with
-    a comma (e.g. `(Nikku, Nechao II.)` in Supplement zu A). Those are
-    name-form variants, not nomen+prenomen compounds. The current data
-    does not contain any such carve-out case, so this test asserts the
-    strict comma → mixed rule. If a future re-extraction surfaces a
-    true name-variant carve-out, refine the test rather than relax the
-    invariant — the test failure will document the case.
+    Replaces the pre-#179 `test_compound_titulary_implies_mixed_kind`
+    which asserted on the legacy scalar `kind=mixed`. The legacy scalar
+    is still emitted (with `kind=mixed`) but the typed list — which is
+    canonical — must show a real decomposition. Catches the compound-
+    titulary truncation class flagged by the egyptologist post-merge
+    sweep (issue #115): if a future fix_rows edit silently emits a
+    single-entry titularies list when the legacy scalar contains a
+    comma, this test fires.
     """
     for r in _rows():
         tit = r.get("egyptian_titulary")
-        if isinstance(tit, str) and "," in tit:
-            assert r["egyptian_titulary_kind"] == "mixed", (
-                r["beckerath_id"],
-                tit,
-                r["egyptian_titulary_kind"],
-            )
+        if not (isinstance(tit, str) and "," in tit):
+            continue
+        # Legacy scalar shows a comma-compound → typed list must have
+        # multiple entries (the compound has been decomposed).
+        assert len(r["egyptian_titularies"]) >= 2, (
+            r["beckerath_id"],
+            tit,
+            r["egyptian_titularies"],
+        )
 
 
 # test_no_editorial_prefixes_in_notes_extended — DELETED 2026-04-25 per
@@ -830,3 +935,189 @@ def test_compound_titulary_implies_mixed_kind() -> None:
 # been merged into `test_notes_have_no_editorial_prose` above so we have
 # one test, one inventory, one source of truth for editorial-prose
 # detection in `notes_from_beckerath`.
+
+
+# ── Closure tests (#179) — typed-list shape and flag invariants ──────────
+# These pin the new typed fields (`egyptian_titularies`, `name_variants`,
+# `is_dynasty_marker`, `is_anti_king`, `existence_uncertain`) added by
+# the #179 migration. Each canonical-set test pins the EXACT set of
+# beckerath_ids carrying a flag so silent additions/removals fire.
+
+_REQUIRED_TYPED_KEYS = (
+    "egyptian_titularies",
+    "name_variants",
+    "is_dynasty_marker",
+    "is_anti_king",
+    "existence_uncertain",
+)
+
+
+def test_179_every_row_has_typed_flags() -> None:
+    """Every row carries all 5 typed fields introduced in #179. Locks the
+    fix_rows.py setdefault pass for the new shape so a row missing the
+    flag (rather than carrying a False default) fires loud."""
+    for r in _rows():
+        for key in _REQUIRED_TYPED_KEYS:
+            assert key in r, (r["beckerath_id"], key)
+
+
+def test_179_egyptian_titularies_kind_in_vocab() -> None:
+    """Every typed-list entry's `kind` is one of the 5 canonical
+    titulary kinds. Stricter than the legacy scalar enum (which had
+    `mixed` as a 5th value) — `mixed` was a compound-label artifact and
+    is invalid on the typed list. Covers nomen, prenomen, horus_name,
+    nebty_name, golden_horus_name."""
+    for r in _rows():
+        for entry in r["egyptian_titularies"]:
+            assert entry["kind"] in EXPECTED_TITULARY_KIND_VALUES, (
+                r["beckerath_id"],
+                entry,
+            )
+
+
+def test_179_egyptian_titularies_shape() -> None:
+    """Every typed-list entry has exactly the 3 keys {name, kind, when}.
+    `name` is a non-empty str; `kind` is a str (vocabulary checked
+    separately); `when` is str or None. Locks the schema shape so a
+    drift to {name, kind} (missing `when`) or extra keys fires loud."""
+    for r in _rows():
+        for entry in r["egyptian_titularies"]:
+            assert set(entry.keys()) == {"name", "kind", "when"}, (
+                r["beckerath_id"],
+                entry,
+            )
+            assert isinstance(entry["name"], str) and entry["name"], (
+                r["beckerath_id"],
+                entry,
+            )
+            assert isinstance(entry["kind"], str), (r["beckerath_id"], entry)
+            assert entry["when"] is None or isinstance(entry["when"], str), (
+                r["beckerath_id"],
+                entry,
+            )
+
+
+def test_179_dynasty_markers_canonical_set() -> None:
+    """Exact set of beckerath_ids whose `is_dynasty_marker==True`.
+    Beckerath's marker rows (dynasty-only, no individual king):
+    Dyn 0, 7, 8, 9/10 (combined), 13, 14, 16 (Hyksos-Vasallen header),
+    17 (in Theben). The 9/10 combined row is keyed at 09.01."""
+    expected = {"00.01", "07.01", "08.01", "09.01", "13.01", "14.01", "16.01", "17.01"}
+    actual = {r["beckerath_id"] for r in _rows() if r["is_dynasty_marker"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_179_anti_king_canonical_set() -> None:
+    """Exact set of beckerath_ids whose `is_anti_king==True`. Probe pinned
+    2026-05-03: 02.09 / 02.10 (Dyn 2 short-reign Gegenkönige), 11.07
+    (Dyn 11 Mont-su-em-saf), 22.07 (Schoschenq IIIa.), 29.03 (Psamuthis,
+    Gegenkönig), 31.04 (Chababasch, Ägypt. Gegenkönig)."""
+    expected = {"02.09", "02.10", "11.07", "22.07", "29.03", "31.04"}
+    actual = {r["beckerath_id"] for r in _rows() if r["is_anti_king"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_179_existence_uncertain_canonical_set() -> None:
+    """Exact set of beckerath_ids whose `existence_uncertain==True`. Probe
+    pinned 2026-05-03: 02.08 (Dyn 2 hedge), 22.07 (Schoschenq IIIa. —
+    Beckerath parenthesises the entire name), 23.04 (Dyn 23 hedge)."""
+    expected = {"02.08", "22.07", "23.04"}
+    actual = {r["beckerath_id"] for r in _rows() if r["existence_uncertain"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_179_03_02_djoser_horus_name_split() -> None:
+    """Anchor: 03.02 Djoser must carry both a nomen Tosorthros AND a
+    horus_name Hor Netri-chet on the typed list. This was the audit's
+    headline mixed-shape correction — pre-#179 the horus_name was
+    silently lost when the legacy scalar collapsed the pair into a
+    single comma-compound under kind=`mixed`."""
+    titularies = _titularies("03.02")
+    kinds = {e["kind"]: e["name"] for e in titularies}
+    assert kinds.get("nomen") == "Tosorthros", titularies
+    assert kinds.get("horus_name") == "Hor Netri-chet", titularies
+
+
+def test_179_19_07_siptah_temporal_prenomen() -> None:
+    """Anchor: 19.07 Si-ptah carries TWO prenomen entries with German
+    temporal markers. Beckerath's `anfangs Secha-en-rê mer-amun, später
+    Ach-en-rê sotep-en-rê` (a within-reign throne-name change) decomposes
+    to the typed list as two entries with `when` populated."""
+    titularies = _titularies("19.07")
+    prenomen_entries = [e for e in titularies if e["kind"] == "prenomen"]
+    assert len(prenomen_entries) == 2, titularies
+    whens = {e["when"] for e in prenomen_entries}
+    assert whens == {"anfangs", "später"}, prenomen_entries
+
+
+def test_179_15_05_apophis_slash_alternatives() -> None:
+    """Anchor: 15.05 Apophis carries TWO prenomen entries — Beckerath's
+    `A-qen-en-rê/A-user-rê` slash-alternative form decomposes to two
+    typed-list entries (both prenomen, no `when` qualifier)."""
+    titularies = _titularies("15.05")
+    assert titularies == [
+        {"kind": "prenomen", "name": "A-qen-en-rê", "when": None},
+        {"kind": "prenomen", "name": "A-user-rê", "when": None},
+    ], titularies
+
+
+def test_179_26_02_mixed_with_slash() -> None:
+    """Anchor: 26.02 Nekaw carries 3 entries — two Greek-nomen alternates
+    (Nekôs / Nechaô) split on `/`, plus the Egyptian prenomen Uhem-ib-rê
+    after the comma. The combined slash+comma form is the most complex
+    shape the typed-list extractor handles in this source."""
+    titularies = _titularies("26.02")
+    assert titularies == [
+        {"kind": "nomen", "name": "Nekôs", "when": None},
+        {"kind": "nomen", "name": "Nechaô", "when": None},
+        {"kind": "prenomen", "name": "Uhem-ib-rê", "when": None},
+    ], titularies
+
+
+def test_179_22_07_anti_king_canonical() -> None:
+    """Anchor: 22.07 Schoschenq IIIa. — Beckerath parenthesises the entire
+    name as an existence-hedge marker. Per the bare-paren rule, the
+    `name` keeps the parens (not stripped). Both `is_anti_king` and
+    `existence_uncertain` are True; the typed-list `egyptian_titularies`
+    is empty (the prenomen Hedj-cheper-rê sotep-en-rê lives on the
+    `prenomen` field, not the typed list, because Beckerath gave it as
+    a Supplement-zu-A entry rather than an inline parenthetical)."""
+    r = _row("22.07")
+    assert r["name"] == "(Schoschenq IIIa.)"
+    assert r["is_anti_king"] is True
+    assert r["existence_uncertain"] is True
+    assert r["egyptian_titularies"] == []
+
+
+def test_179_18_02_amenophis_paren_extracted() -> None:
+    """Anchor: 18.02 Amenophis I. — the parens-form `Amenophis (Amen-hotpe)
+    I.` is decomposed into bare canonical `name="Amenophis I."` plus
+    `name_variants=["Amen-hotpe"]` per the #179 paren-extraction rule."""
+    r = _row("18.02")
+    assert r["name"] == "Amenophis I."
+    assert r["name_variants"] == ["Amen-hotpe"]
+
+
+def test_179_19_01_ramses_multi_variant() -> None:
+    """Anchor: 19.01 Ramses I. — multi-variant parens form. Beckerath
+    prints `Ramses (Ra-mes-su, griech. Ramessês) I.`. The comma-separated
+    inner compound decomposes to TWO `name_variants` entries (the
+    Egyptian transliteration AND the Greek-prefixed alternative). Pins
+    that the variant extractor honours intra-paren commas."""
+    r = _row("19.01")
+    assert r["name"] == "Ramses I."
+    assert r["name_variants"] == ["Ra-mes-su", "griech. Ramessês"]
+
+
+def test_179_legacy_scalars_still_present() -> None:
+    """The legacy scalar fields `egyptian_titulary` and
+    `egyptian_titulary_kind` are KEPT on every row alongside the typed
+    list. They are derivative ingest artifacts (consumers must use the
+    typed list, but the scalars stay so `fix_rows.py` re-runs are
+    idempotent — re-reading and re-emitting a row with the legacy
+    keys present must not change the row). This test pins their
+    continued presence; if a future schema cleanup decides to drop the
+    legacy scalars, this test is the deletion checkpoint."""
+    for r in _rows():
+        assert "egyptian_titulary" in r, r["beckerath_id"]
+        assert "egyptian_titulary_kind" in r, r["beckerath_id"]

@@ -492,3 +492,329 @@ P2 = style / audit context only.
 - 30.02 Teôs: Greek-alias + Egyptian-prenomen pair split (issue #147). Beckerath p192 (scan-108-left) prints `Teôs (Djed-hor, Iri-maat-en-rê)` — Djed-hor is the Egyptian nomen, Iri-maat-en-rê the prenomen. The merge produced the half-split state name=full compound, egyptian_titulary=`Iri-maat-en-rê` only, kind=`prenomen`. Realign to kind=`mixed` per the 15.04 precedent: name=`Teôs`, titulary=`Djed-hor, Iri-maat-en-rê`, kind=`mixed`. Egyptologist printed-source review on PR #146 verified the discriminator applies. [P1]
 - 30.03 Nektanebôs: Greek-alias + Egyptian-prenomen pair split (issue #147). Beckerath p192 (scan-108-left) prints `Nektanebôs (Necht-har-ehbojet, Senedjem-ib-rê)` — Necht-har-ehbojet is the Egyptian nomen, Senedjem-ib-rê the prenomen. The merge produced the half-split state name=full compound, egyptian_titulary=`Senedjem-ib-rê` only, kind=`prenomen`. Realign to kind=`mixed` per the 15.04 precedent: name=`Nektanebôs`, titulary=`Necht-har-ehbojet, Senedjem-ib-rê`, kind=`mixed`. Egyptologist printed-source review on PR #146 verified the discriminator applies. [P1]
 - 31.04 Chababasch: scan-108-left prints `Chababasch (Senen-sotep-en-ptah)` under the `Ägypt. Gegenkönig:` sub-block. The agents folded the parenthetical into name; standard pattern elsewhere strips it. Also corrects kind to prenomen — the suffix `-sotep-en-X` is throne-name morphology throughout Beckerath. [P2]
+-   00.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   01.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.09: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   02.10: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   03.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   03.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   03.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   03.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   03.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   03.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   04.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   05.09: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   06.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   06.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   06.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   06.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   06.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   06.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   06.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   07.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   08.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   09.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   11.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   11.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   11.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   11.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   11.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   11.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   11.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   12.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   13.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   14.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   15.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   15.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   15.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   15.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   15.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   15.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   16.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   17.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.09: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.10: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.11: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.12: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.13: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.14: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   18.15: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   19.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.09: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   20.10: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   21.09: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.08: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.09: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.10: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.11: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.12: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.13: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.14: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.15: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.16: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.17: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   22.18: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   23.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   23.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   23.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   23.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   24.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   24.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   25.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   25.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   25.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   25.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   25.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   25.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   26.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   26.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   26.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   26.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   26.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   26.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   27.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   27.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   27.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   27.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   27.05: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   27.06: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   27.07: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   28.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   29.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   29.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   29.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   29.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   30.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   30.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   30.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   31.01: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   31.02: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   31.03: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   31.04: backfilled ['egyptian_titularies', 'existence_uncertain', 'is_anti_king', 'is_dynasty_marker', 'name_variants']
+-   00.01: is_dynasty_marker → True
+-   01.01: egyptian_titularies → 1 entries
+-   01.02: egyptian_titularies → 1 entries
+-   01.03: egyptian_titularies → 1 entries
+-   01.04: egyptian_titularies → 1 entries
+-   01.05: egyptian_titularies → 1 entries
+-   01.06: egyptian_titularies → 1 entries
+-   01.07: egyptian_titularies → 1 entries
+-   01.08: egyptian_titularies → 1 entries
+-   02.01: egyptian_titularies → 1 entries
+-   02.02: egyptian_titularies → 1 entries
+-   02.03: egyptian_titularies → 1 entries
+-   02.04: egyptian_titularies → 1 entries
+-   02.05: egyptian_titularies → 1 entries
+-   02.06: egyptian_titularies → 1 entries
+-   02.07: egyptian_titularies → 1 entries
+-   02.08: existence_uncertain → True
+-   02.09: is_anti_king → True
+-   02.10: is_anti_king → True
+-   03.01: egyptian_titularies → 1 entries
+-   03.02: egyptian_titularies → 2 entries
+-   03.03: egyptian_titularies → 1 entries
+-   03.06: name_variants → ['Huni', 'Aches']
+-   03.06: name → 'Ahu'
+-   04.01: egyptian_titularies → 1 entries
+-   04.02: egyptian_titularies → 1 entries
+-   04.04: egyptian_titularies → 1 entries
+-   04.06: egyptian_titularies → 1 entries
+-   04.07: egyptian_titularies → 1 entries
+-   05.01: egyptian_titularies → 1 entries
+-   05.02: egyptian_titularies → 1 entries
+-   05.03: egyptian_titularies → 1 entries
+-   05.04: egyptian_titularies → 1 entries
+-   05.05: egyptian_titularies → 1 entries
+-   05.06: egyptian_titularies → 1 entries
+-   05.07: egyptian_titularies → 1 entries
+-   05.08: egyptian_titularies → 1 entries
+-   05.09: egyptian_titularies → 1 entries
+-   06.01: egyptian_titularies → 1 entries
+-   06.03: egyptian_titularies → 2 entries
+-   06.04: egyptian_titularies → 2 entries
+-   06.05: egyptian_titularies → 2 entries
+-   06.06: egyptian_titularies → 1 entries
+-   06.07: egyptian_titularies → 1 entries
+-   07.01: is_dynasty_marker → True
+-   08.01: is_dynasty_marker → True
+-   09.01: is_dynasty_marker → True
+-   11.02: egyptian_titularies → 1 entries
+-   11.03: egyptian_titularies → 1 entries
+-   11.04: egyptian_titularies → 1 entries
+-   11.05: egyptian_titularies → 1 entries
+-   11.06: egyptian_titularies → 1 entries
+-   11.07: is_anti_king → True
+-   11.07: egyptian_titularies → 1 entries
+-   12.01: name_variants → ['Amen-em-hat']
+-   12.01: name → 'Ammenemes I.'
+-   12.01: egyptian_titularies → 1 entries
+-   12.02: name_variants → ['Se-n-wosret']
+-   12.02: name → 'Sesostris I.'
+-   12.02: egyptian_titularies → 1 entries
+-   12.03: egyptian_titularies → 1 entries
+-   12.04: egyptian_titularies → 1 entries
+-   12.05: egyptian_titularies → 1 entries
+-   12.06: egyptian_titularies → 1 entries
+-   12.07: egyptian_titularies → 1 entries
+-   12.08: egyptian_titularies → 2 entries
+-   13.01: is_dynasty_marker → True
+-   14.01: is_dynasty_marker → True
+-   15.02: name_variants → ['Bnón']
+-   15.02: name → 'Bêôn'
+-   15.03: name_variants → ['Pachnan']
+-   15.03: name → 'Apachnas'
+-   15.04: egyptian_titularies → 2 entries
+-   15.05: egyptian_titularies → 2 entries
+-   16.01: is_dynasty_marker → True
+-   17.01: is_dynasty_marker → True
+-   18.01: name_variants → ['Ah-mose']
+-   18.01: name → 'Amosis I.'
+-   18.01: egyptian_titularies → 1 entries
+-   18.02: name_variants → ['Amen-hotpe']
+-   18.02: name → 'Amenophis I.'
+-   18.02: egyptian_titularies → 1 entries
+-   18.03: name_variants → ['Dhut-mose']
+-   18.03: name → 'Tuthmosis I.'
+-   18.03: egyptian_titularies → 1 entries
+-   18.04: egyptian_titularies → 1 entries
+-   18.05: egyptian_titularies → 1 entries
+-   18.06: egyptian_titularies → 1 entries
+-   18.07: egyptian_titularies → 1 entries
+-   18.08: egyptian_titularies → 1 entries
+-   18.09: egyptian_titularies → 1 entries
+-   18.10: egyptian_titularies → 1 entries
+-   18.11: egyptian_titularies → 1 entries
+-   18.12: egyptian_titularies → 1 entries
+-   18.13: egyptian_titularies → 1 entries
+-   18.14: egyptian_titularies → 1 entries
+-   18.15: egyptian_titularies → 1 entries
+-   19.01: name_variants → ['Ra-mes-su', 'griech. Ramessês']
+-   19.01: name → 'Ramses I.'
+-   19.02: name_variants → ['Setoy']
+-   19.02: name → 'Sethôs I.'
+-   19.07: egyptian_titularies → 2 entries
+-   19.08: egyptian_titularies → 1 entries
+-   21.01: name_variants → ['Nes-bi-neb-dedet']
+-   21.01: name → 'Smendes'
+-   21.01: egyptian_titularies → 1 entries
+-   21.02: egyptian_titularies → 1 entries
+-   21.03: name_variants → ['Pe-sib-cha-en-nêwet']
+-   21.03: name → 'Psusennes I.'
+-   21.04: egyptian_titularies → 1 entries
+-   21.05: egyptian_titularies → 1 entries
+-   22.01: egyptian_titularies → 1 entries
+-   22.02: name_variants → ['Osorthon']
+-   22.02: name → 'Osorkon I.'
+-   22.02: egyptian_titularies → 1 entries
+-   22.03: name_variants → ['Takelothis']
+-   22.03: name → 'Takelot I.'
+-   22.03: egyptian_titularies → 1 entries
+-   22.07: is_anti_king → True
+-   22.07: existence_uncertain → True
+-   22.12: name_variants → ['Pe-di-bastet']
+-   22.12: name → 'Petubastis I.'
+-   23.04: existence_uncertain → True
+-   23.04: name → '„Psammûs“'
+-   24.02: egyptian_titularies → 2 entries
+-   25.02: egyptian_titularies → 2 entries
+-   25.03: egyptian_titularies → 2 entries
+-   25.04: egyptian_titularies → 2 entries
+-   25.05: egyptian_titularies → 2 entries
+-   25.06: egyptian_titularies → 1 entries
+-   26.01: name_variants → ['Psammêtichos']
+-   26.01: name → 'Psametik I.'
+-   26.01: egyptian_titularies → 1 entries
+-   26.02: egyptian_titularies → 3 entries
+-   26.03: egyptian_titularies → 1 entries
+-   26.04: egyptian_titularies → 2 entries
+-   26.05: egyptian_titularies → 2 entries
+-   26.06: egyptian_titularies → 1 entries
+-   28.01: egyptian_titularies → 1 entries
+-   29.01: name_variants → ['Nef-aw-rud']
+-   29.01: name → 'Nepherites I.'
+-   29.01: egyptian_titularies → 1 entries
+-   29.02: egyptian_titularies → 2 entries
+-   29.03: is_anti_king → True
+-   29.03: egyptian_titularies → 2 entries
+-   30.01: egyptian_titularies → 2 entries
+-   30.02: egyptian_titularies → 2 entries
+-   30.03: egyptian_titularies → 2 entries
+-   31.02: name_variants → ['Aroges']
+-   31.02: name → 'Arses'
+-   31.04: is_anti_king → True
+-   31.04: egyptian_titularies → 1 entries
