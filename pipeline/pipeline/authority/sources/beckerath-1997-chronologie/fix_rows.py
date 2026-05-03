@@ -868,17 +868,27 @@ def _extract_name_variants(name: str) -> tuple[str, list[str]]:
     are uncertainty markers, handled separately. `(?)` uncertainty
     markers are stripped from the canonical name without becoming
     variants (handled by `_detect_existence_uncertain` instead).
+
+    Handles multi-paren names (`"Name (var1) (var2)"`) by extracting
+    every paren group's content into variants and stripping all of them
+    from the canonical name. The current Beckerath corpus has no
+    multi-paren names but the extractor is structured to handle them
+    silently if a future re-extraction surfaces one. Per Gemini round-3.
     """
     if _BARE_PAREN_NAME_RE.match(name):
         return name, []
     # First strip uncertainty `(?)` so it doesn't pollute name_variants.
     canonical = _TRAILING_PAREN_QUESTION_RE.sub("", name).strip()
-    m = _NAME_VARIANT_PAREN_RE.search(canonical)
-    if not m:
+    matches = list(_NAME_VARIANT_PAREN_RE.finditer(canonical))
+    if not matches:
         return canonical, []
-    inner = m.group(1)
-    variants = [v.strip() for v in _VARIANT_SPLIT_RE.split(inner) if v.strip()]
-    canonical = (canonical[:m.start()] + canonical[m.end():]).strip()
+    variants: list[str] = []
+    for m in matches:
+        inner = m.group(1)
+        variants.extend(
+            v.strip() for v in _VARIANT_SPLIT_RE.split(inner) if v.strip()
+        )
+    canonical = _NAME_VARIANT_PAREN_RE.sub("", canonical).strip()
     canonical = re.sub(r"\s+", " ", canonical)
     return canonical, variants
 

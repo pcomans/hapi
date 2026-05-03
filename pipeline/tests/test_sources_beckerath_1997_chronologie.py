@@ -1172,3 +1172,37 @@ def test_179_fix_rows_is_file_level_idempotent() -> None:
             "stripped from `name` make `_extract_name_variants` return [], "
             "wiping the typed `name_variants`)."
         )
+
+
+def test_179_extract_name_variants_handles_multi_paren() -> None:
+    """Defensive test for `_extract_name_variants`: a hypothetical
+    `"Name (var1) (var2)"` correctly extracts BOTH paren groups into
+    `name_variants`. The current Beckerath corpus has no multi-paren
+    names but the extractor is structured to handle them silently. Per
+    Gemini round-3 P2.
+    """
+    import importlib.util as _imp_util
+    src = (
+        Path(__file__).parent.parent
+        / "pipeline"
+        / "authority"
+        / "sources"
+        / "beckerath-1997-chronologie"
+        / "fix_rows.py"
+    )
+    spec = _imp_util.spec_from_file_location("beckerath_fix_rows", src)
+    mod = _imp_util.module_from_spec(spec)
+    assert spec.loader
+    spec.loader.exec_module(mod)
+    extract = mod._extract_name_variants
+    assert extract("Hypothetical (varA) (varB) I.") == (
+        "Hypothetical I.",
+        ["varA", "varB"],
+    )
+    # Comma-multi-variant inside one paren still works
+    assert extract("Ramses (Ra-mes-su, griech. Ramessês) I.") == (
+        "Ramses I.",
+        ["Ra-mes-su", "griech. Ramessês"],
+    )
+    # Bare-paren names stay verbatim
+    assert extract("(Schoschenq IIIa.)") == ("(Schoschenq IIIa.)", [])
