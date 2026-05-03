@@ -703,6 +703,20 @@ CHUNK8_RENAMES: dict[str, str] = {}
 # clean via `tie-break-overrides.json` so no entry needed for that row.
 CHUNK9_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
+        "TT1",
+        "notes_from_pm",
+        "Servant in the Place of Truth. Dyn. XIX. Father, Khaʿbekhnet (name on fragment, BRUYÈRE, Rapport (1927), fig. 34 [4]). Wife, Iyneferti.",
+        "Restore the dropped object-cite parenthetical `(name on fragment, "
+        "BRUYÈRE, Rapport (1927), fig. 34 [4])` that PM I.1 p.1 prints "
+        "between the Father / Wife clauses. Same systemic R5/R9/R10 "
+        "clause-loss pattern as TT10's Turin Mus. 1559 restoration and "
+        "the chunk-7 SWV-HatshepsutSouth `Cairo Mus. Ent. 47032` "
+        "restoration: object-level provenance cross-references are "
+        "exactly the catalogable facts the schema is meant to retain. "
+        "Egyptologist printed-source review on PR #196 third pass "
+        "flagged the omission (see reviewer-notes-chunk9.md).",
+    ),
+    (
         "TT2",
         "notes_from_pm",
         "Servant in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 107.) Parents, Sennezem (tomb 1) and Iyneferti. Wives, Saḥte and (probably) Esi.",
@@ -751,11 +765,21 @@ CHUNK9_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT5",
         "notes_from_pm",
-        "Servant in the Place of Truth on the west of Thebes. Ramesside. Parents, Neferronpet and Mahi. Wife, Taēsi.",
-        "Drop false underdot on `Maḥi` → `Mahi`; PM I.1 p.12 (TT5 Neferʿabet) "
-        "prints `Mahi` (plain h, no underdot — egyptologist verified directly "
-        "against the PDF). Restore macron on `Taēsi` — PM prints `Taēsi` with "
-        "macron-e per the chunk-3/7 macron-preserve precedent.",
+        "Servant in the Place of Truth on the west of Thebes. Ramesside. Parents, Neferronpet and Mahi (name on stela in Brit. Mus. 150, see infra, p. 14). Wife, Taēsi.",
+        "Three corrections per egyptologist printed-source review (chunk-9 "
+        "PR): (a) drop false underdot on `Maḥi` → `Mahi`; PM I.1 p.12 "
+        "prints `Mahi` (plain h, no underdot). (b) Restore macron on "
+        "`Taēsi` — PM prints `Taēsi` with macron-e per the chunk-3/7 "
+        "macron-preserve precedent. (c) Restore the dropped object-cite "
+        "parenthetical `(name on stela in Brit. Mus. 150, see infra, "
+        "p. 14)` that PM I.1 p.12 prints between the Parents and Wife "
+        "clauses. Brit. Mus. 150 is a major British Museum object — "
+        "exactly the catalog-level cross-reference Hapi needs for "
+        "cross-museum reunification of Deir el-Medina material. Same "
+        "systemic R5/R9/R10 pattern as TT1's BRUYÈRE 1927 fragment cite "
+        "and TT10's Turin Mus. 1559 cite. Egyptologist printed-source "
+        "review on PR #196 third pass flagged the omission "
+        "(see reviewer-notes-chunk9.md).",
     ),
     (
         "TT6",
@@ -784,6 +808,39 @@ CHUNK9_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Strip redundant `.).` double-period to PM-faithful `.)` form. "
         "Same pattern as TT2 fix; PM I.1 p.16 prints `(L. D. Text, No. 96.) "
         "Wife …` with single period inside parens.",
+    ),
+    (
+        "TT7",
+        "occupant_name",
+        "Raʿmosi",
+        "PM I.1 p.15 prints `7. RAʿMOSI [cartouche]` — titlecase form "
+        "is `Raʿmosi`. The merge-output `Raʿmose` silently anglicized "
+        "PM's `-osi` ending to `-ose`, a rule-1 (work-like-a-scholar) "
+        "provenance violation in the matchable-name field. Compounded "
+        "by wrong-person collision risk: `Raʿmose` is the name of the "
+        "famous Vizier of Amenhotep IV in TT55 — a different historical "
+        "person from this Deir el-Medina scribe. PM's `RAʿMOSI` (TT7 "
+        "scribe) vs `RAʿMOSE` (TT55 vizier) distinction is the volume's "
+        "deliberate disambiguation; preserving it in `occupant_name` is "
+        "exactly what the matchable-field convention is for. Cross-"
+        "volume corroboration: chunk-7's `DAN-AhmosiHenutempet` / "
+        "`DAN-AhmosiSonOfSeqenenre` rows preserve PM's `-osi` ending "
+        "verbatim — it is PM's editorial convention, not a typesetting "
+        "accident. Egyptologist printed-source review on PR #196 third "
+        "pass flagged as P1 merge-blocker.",
+    ),
+    (
+        "TT9",
+        "occupant_name",
+        "Amenmosi",
+        "PM I.1 p.18 prints `9. AMENMOSI [cartouche]` — titlecase form "
+        "is `Amenmosi`. Same rule-1 violation as TT7's `Raʿmose` → "
+        "`Raʿmosi` correction; same `-osi` → `-ose` Anglicization axis. "
+        "PM consistently uses the Greek-style `-osi` transcription for "
+        "the whole `iʿḥ-msi.w` / `Jmn-msi.w` name family across the "
+        "volume — chunk-7's `Ahmosi`-family rows preserve the convention. "
+        "Egyptologist printed-source review on PR #196 third pass "
+        "flagged as P1 merge-blocker.",
     ),
     (
         "TT9",

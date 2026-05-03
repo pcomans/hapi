@@ -115,6 +115,51 @@ The other 8 TT1–TT10 rows are single-occupant.
 
 ---
 
-## Verdict
+## Verdict (passes 1 + 2)
 
 Both passes: ship it. All P2 findings applied (6 from Pass 1 via `CHUNK9_CORRECTIONS` + 1 via `DERIVER_OVERRIDES`; 2 from Pass 2 — TT4 rationale soften + TT10 Turin Mus. cross-ref restoration — applied via `CHUNK9_CORRECTIONS` rationale text + value update).
+
+---
+
+## Pass 3 — Findings against the post-Pass-2 state
+
+Fresh-eyes re-reading. Two passes already verified pages 1, 6, 9, 11, 12, 14, 15, 16, 18, 19; the third pass turns up 4 substantive findings the earlier passes missed.
+
+### TT9 — `occupant_name` should be `Amenmosi` not `Amenmose` — P1 (merge-blocker)
+
+PM I.1 p.18 prints `9. AMENMOSI`. The pre-Pass-3 row carried `occupant_name="Amenmose"` — silent Anglicization to a more common modern spelling. This is a rule-1 (work-like-a-scholar) provenance violation in the matchable name field. Cross-volume corroboration: chunk-7's `DAN-AhmosiHenutempet` / `DAN-AhmosiSonOfSeqenenre` rows preserve PM's `-osi` ending verbatim — it is PM's volume-wide editorial convention, not a typesetting accident.
+
+**Fix applied via CHUNK9_CORRECTIONS:** `TT9.occupant_name = "Amenmosi"`.
+
+### TT7 — `occupant_name` should be `Raʿmosi` not `Raʿmose` — P1 (merge-blocker)
+
+PM I.1 p.15 prints `7. RAʿMOSI`. Same `-osi` → `-ose` Anglicization as TT9, but compounded by **wrong-person collision risk**: `Raʿmose` is the name of the famous Vizier of Amenhotep IV in TT55 — a completely different historical person from this Deir el-Medina scribe. PM itself reserves `RAʿMOSI` for the TT7 scribe and uses `RAʿMOSE` (plain `e`) for the TT55 vizier; preserving PM's distinction in `occupant_name` is exactly what the matchable-field convention is for.
+
+**Fix applied via CHUNK9_CORRECTIONS:** `TT7.occupant_name = "Raʿmosi"`.
+
+### TT1 — missing object-cite parenthetical for the BRUYÈRE 1927 fragment — P2
+
+PM I.1 p.1 prints `Father, Khaʿbekhnet [cartouche] (name on fragment, BRUYÈRE, Rapport (1927), fig. 34 [4]).` The pre-Pass-3 row dropped the entire parenthetical. Same systemic R5/R9/R10 clause-loss pattern as TT10's Turin Mus. 1559 restoration: object-level provenance cross-references are exactly the catalogable facts the schema is meant to retain.
+
+**Fix applied via CHUNK9_CORRECTIONS:** TT1 `notes_from_pm` updated to `"Servant in the Place of Truth. Dyn. XIX. Father, Khaʿbekhnet (name on fragment, BRUYÈRE, Rapport (1927), fig. 34 [4]). Wife, Iyneferti."`.
+
+### TT5 — missing Brit. Mus. 150 stela object-cite — P2
+
+PM I.1 p.12 prints `Parents, Neferronpet ... and Mahi ... (name on stela in Brit. Mus. 150, see infra, p. 14).` The pre-Pass-3 row dropped the entire parenthetical. Notably, the Pass-1 reviewer note quotes this exact PM clause when describing TT5's headword (line 35) — the reviewer saw the clause but the correction was never written. Brit. Mus. 150 is a major British Museum object — exactly the catalog-level cross-reference Hapi needs for cross-museum reunification of Deir el-Medina material.
+
+**Fix applied via CHUNK9_CORRECTIONS:** TT5 `notes_from_pm` extended to `"Servant in the Place of Truth on the west of Thebes. Ramesside. Parents, Neferronpet and Mahi (name on stela in Brit. Mus. 150, see infra, p. 14). Wife, Taēsi."`.
+
+## Pass 3 — P3 confirmations (no action needed)
+
+- TT1 `Sennezem` vs modern `Sennedjem`: row correctly preserves PM verbatim. Phase-A authority alias coverage concern, out of chunk-9 scope.
+- TT2 `(see supra, p. 5)` cross-ref: dropped from notes; within-volume back-reference (to TT1 Esi-as-wife mention), not a museum-object cite. Defensible as out of scope.
+- `occupant_role="Official"` for all 10 rows: verified — workmen, scribes, foremen, chief, chiseller all flatten to `"Official"` per the prompt's controlled-vocab rule. TT8 `Chief in the Great Place` is the head artisan, NOT a priest; `"High Priest"` would be wrong.
+- `is_joint_burial` and `co_occupants` for TT6 (hierarchical) vs TT10 (coordinate): re-confirmed.
+- `shared_with_tombs` for TT3 / TT4 / TT7: re-confirmed; no other TT1-TT10 row has a missed cross-reference.
+- `source_citation.page` spot-checked on TT1, TT4, TT8, TT10: all correct.
+- `DERIVER_OVERRIDES` mechanism on TT2: re-confirmed (`(probably)` qualifies wife Esi, not Khaʿbekhnet).
+- Diacritic spot-check across all 10 rows: all macrons, underdots, ayin preserved correctly post-Pass-2.
+
+## Verdict (Pass 3)
+
+After applying the 4 Pass-3 fixes (2 P1 + 2 P2), **ship it.** The matchable-name field on TT7 and TT9 now traces to PM verbatim; the object-cite parentheticals on TT1 and TT5 close the systemic clause-loss gap that Pass 2 first surfaced on TT10.

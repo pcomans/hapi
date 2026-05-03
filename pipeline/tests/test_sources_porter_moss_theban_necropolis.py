@@ -2483,9 +2483,15 @@ def test_chunk9_occupant_names() -> None:
         "TT4": "Ḳen",
         "TT5": "Neferʿabet",
         "TT6": "Neferhotep",
-        "TT7": "Raʿmose",
+        # PM I.1 p.15 prints `RAʿMOSI` not `Raʿmose` — chunk-9 third-pass
+        # P1: PM's volume-wide `-osi` editorial convention preserved per
+        # rule-1 (provenance) AND to disambiguate from TT55's RAʿMOSE
+        # (Vizier of Amenhotep IV — different historical person).
+        "TT7": "Raʿmosi",
         "TT8": "Khaʿ",
-        "TT9": "Amenmose",
+        # PM I.1 p.18 prints `AMENMOSI` — same `-osi` preservation rule
+        # as TT7. Chunk-9 third-pass P1.
+        "TT9": "Amenmosi",
         "TT10": "Penbuy",
     }
     for tid, name in expected.items():
@@ -2579,11 +2585,11 @@ def test_chunk9_notes_from_pm_pinned_substrings() -> None:
     precedent, false underdots dropped where PM does not print one.
     """
     expected = {
-        "TT1": "Servant in the Place of Truth. Dyn. XIX.",
+        "TT1": "Father, Khaʿbekhnet (name on fragment, BRUYÈRE, Rapport (1927), fig. 34 [4]).",
         "TT2": "(L. D. Text, No. 107.) Parents, Sennezem (tomb 1)",
         "TT3": "Parents, Menna and Huy. Wife, Nezemtbehdet.",
         "TT4": "Chiseller of Amūn in the Place of Truth.",
-        "TT5": "Parents, Neferronpet and Mahi. Wife, Taēsi.",
+        "TT5": "Parents, Neferronpet and Mahi (name on stela in Brit. Mus. 150, see infra, p. 14). Wife, Taēsi.",
         "TT6": "Wife (of Neferḥōtep), Iymau; (of Nebnūfer), Iy.",
         "TT7": "Parents, Amenemḥab and Kakaia. Wife, Mutemwia.",
         "TT8": "Chief in the Great Place.",
