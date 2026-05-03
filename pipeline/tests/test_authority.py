@@ -527,6 +527,22 @@ def idai_rows():
     return load_jsonl(IDAI_DIR / "reconciled.jsonl")
 
 
+@pytest.fixture(scope="module")
+def idai_fetch_module():
+    """Path-load `fetch.py` as a module (the source dir has a hyphen so
+    `importlib.import_module` doesn't work). Module-scoped — tests share
+    one load. Replaces the per-test-method `importlib` boilerplate
+    (PR #184 Gemini round-1).
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "idai_fetch", IDAI_DIR / "fetch.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 class TestIdaiGazetteerIntegrity:
 
     def test_source_block_is_first_line(self, idai_rows):
@@ -567,30 +583,225 @@ class TestIdaiGazetteerIntegrity:
                 continue
             assert row.get("display"), f"Row {i} ({row.get('id')}): missing display name"
 
-    def test_all_types_are_filtered(self, idai_rows):
-        # Load ADDITIONAL_GAZ_IDS from the fetch module (path-loaded because
-        # the idai-gazetteer directory has a hyphen in its name).
-        import importlib.util
-        spec = importlib.util.spec_from_file_location(
-            "idai_fetch",
-            IDAI_DIR / "fetch.py",
-        )
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        supplementary_ids = {f"idai:{gid}" for gid, _, _ in mod.ADDITIONAL_GAZ_IDS}
+    def test_all_types_are_filtered(self, idai_rows, idai_fetch_module):
+        """Non-supplementary rows must carry at least one SITE_TYPES value.
 
-        valid = {"archaeological-site", "archaeological-area", "landform"}
+        Issue #172 (PR for that): replaced `importlib`-reload of fetch.py
+        with the typed `is_supplementary: bool` flag on each row, so this
+        test no longer needs to know fetch.py's internals at row level.
+        Uses the source-of-truth `SITE_TYPES` constant via the
+        `idai_fetch_module` fixture (PR #184 Gemini round-1).
+        """
+        valid = idai_fetch_module.SITE_TYPES
         for i, row in enumerate(idai_rows, 1):
             if "_source" in row:
                 continue
             # Supplementary additions legitimately bypass the type filter — they
             # are curated-by-ID for museum-provenance coverage (Fayum region,
-            # Nubian sites outside the Egypt ancestor tree). See ADDITIONAL_GAZ_IDS.
-            if row["id"] in supplementary_ids:
+            # Nubian sites outside the Egypt ancestor tree).
+            if row.get("is_supplementary"):
                 continue
             types = set(row.get("types", []))
             assert types & valid, (
                 f"Row {i} ({row.get('display')}): no valid type in {types!r}"
+            )
+
+    def test_all_types_are_in_known_vocab(self, idai_rows, idai_fetch_module):
+        """Closure: every type appearing in any row must be in the documented
+        KNOWN_TYPES allowlist (issue #172, Shape F).
+
+        The audit found 9 distinct types in the corpus vs the 3 documented
+        site-types — the extra 6 (`populated-place`, `building-institution`,
+        `island`, `administrative-unit`, `hydrography`, `landcover`) enter
+        via supplementary IDs (Fayum, Nubian sites) and via multi-typed
+        records. Documenting and enforcing the closure keeps a future iDAI
+        type addition from silently slipping through.
+        """
+        known = idai_fetch_module.KNOWN_TYPES
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            for t in row.get("types", []):
+                assert t in known, (
+                    f"Row {i} ({row.get('display')}): type {t!r} not in "
+                    f"KNOWN_TYPES {sorted(known)}. Either iDAI added a new "
+                    f"type or a new supplementary ID introduced one — update "
+                    f"KNOWN_TYPES in fetch.py if legitimate."
+                )
+
+    def test_is_supplementary_flag_matches_additional_gaz_ids(self, idai_rows, idai_fetch_module):
+        """`is_supplementary: bool` (issue #172, Shape J) is True iff the
+        row's gazId is in `ADDITIONAL_GAZ_IDS`. Replaces the prior
+        importlib-reload pattern.
+        """
+        expected = {
+            f"idai:{gid}" for gid, _, _ in idai_fetch_module.ADDITIONAL_GAZ_IDS
+        }
+        actual = {
+            r["id"] for r in idai_rows
+            if "_source" not in r and r.get("is_supplementary")
+        }
+        assert actual == expected, (
+            f"is_supplementary set {sorted(actual - expected)} not in "
+            f"ADDITIONAL_GAZ_IDS, or missing {sorted(expected - actual)}"
+        )
+
+    def test_parent_in_file_flag_consistent_with_parent_id(self, idai_rows):
+        """`parent_in_file: bool | None` (issue #172, Shape G) must be True
+        iff `parent_id` resolves to another row in this file, False if it
+        is a valid iDAI reference outside the file (e.g. the
+        administrative-unit ancestor was filtered out), and None iff
+        `parent_id` is None.
+
+        566/1000 rows currently have `parent_in_file=False`. Phase-A
+        consumers must respect this flag rather than treating `parent_id`
+        as an unconditional internal foreign key.
+        """
+        all_ids = {r["id"] for r in idai_rows if "_source" not in r}
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            pid = row.get("parent_id")
+            flag = row.get("parent_in_file")
+            if pid is None:
+                assert flag is None, (
+                    f"Row {i} ({row['id']}): parent_id is None but "
+                    f"parent_in_file is {flag!r} (expected None)"
+                )
+            else:
+                expected = pid in all_ids
+                assert flag is expected, (
+                    f"Row {i} ({row['id']}): parent_id={pid} but "
+                    f"parent_in_file={flag!r} (expected {expected})"
+                )
+
+    def test_alt_labels_uses_empty_list_not_none(self, idai_rows):
+        """`alt_labels` is `[]` for empty, never `None` (issue #172, Shape
+        I). Sentinel matches `cross_refs.other` which already used `[]`.
+        """
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            alt = row.get("alt_labels")
+            assert isinstance(alt, list), (
+                f"Row {i} ({row['id']}): alt_labels is {alt!r}; "
+                f"expected list (use [] for empty, not None)"
+            )
+
+    def test_zero_zero_placeholder_coords_dropped(self, idai_rows):
+        """Positive value-assertion (PR #184 code-reviewer P2): the named
+        gebel rows that iDAI returned with `[0.0, 0.0]` coords now
+        carry `coordinates: None` after the `_extract_coordinates` fix.
+
+        These five rows were observed during the PR #184 audit. iDAI
+        returned `[0.0, 0.0]` as a placeholder for "no coordinates" on
+        them; treating it as a real point would put them in the Atlantic
+        Ocean off Africa.
+        """
+        zero_zero_gebels = {
+            "idai:2751195",  # Gebel Abu-Fôda
+            "idai:2751301",  # Gebel el-Rus
+            "idai:2751303",  # Gebel Scheich el-Haridi
+            "idai:2751304",  # Gebel el-Silsile
+            "idai:2751305",  # Gebel el-Teir
+        }
+        by_id = {r["id"]: r for r in idai_rows if "_source" not in r}
+        for gid in zero_zero_gebels:
+            assert gid in by_id, f"{gid} no longer in reconciled.jsonl"
+            assert by_id[gid]["coordinates"] is None, (
+                f"{gid} ({by_id[gid]['display']!r}): expected "
+                f"coordinates=None (was [0,0] in iDAI), got "
+                f"{by_id[gid]['coordinates']!r}"
+            )
+
+    def test_parent_in_file_true_exists(self, idai_rows):
+        """Positive value-assertion (PR #184 code-reviewer P2): at least
+        one row carries `parent_in_file=True` (the in-file FK case must
+        actually fire, not just the False/None branches).
+
+        Audit found 434/1000 rows have `parent_in_file=True`.
+        """
+        true_count = sum(
+            1 for r in idai_rows
+            if "_source" not in r and r.get("parent_in_file") is True
+        )
+        assert true_count > 0, (
+            f"No rows with parent_in_file=True — the in-file FK branch "
+            f"never fires; either the data is wrong or the flag logic is."
+        )
+        # Sanity-pin a known case: Karnak → Thebes (idai:2042921), which
+        # IS in the file. Both are canary sites, so the chain is stable.
+        karnak = next(r for r in idai_rows if r.get("id") == "idai:2178702")
+        assert karnak["parent_id"] == "idai:2042921", (
+            f"Karnak parent_id={karnak['parent_id']!r} (expected idai:2042921 = Thebes)"
+        )
+        assert karnak["parent_in_file"] is True, (
+            f"Karnak parent_in_file={karnak['parent_in_file']!r} "
+            f"(expected True; Thebes idai:2042921 should be in this file)"
+        )
+
+    def test_is_supplementary_true_for_named_nubian_site(self, idai_rows):
+        """Positive value-assertion (PR #184 code-reviewer P2): named
+        Nubian sites carry `is_supplementary=True`.
+
+        Tests Buhen and Kerma specifically — both are documented in
+        ADDITIONAL_GAZ_IDS as Nubian sites that the Egypt-tree search
+        misses.
+        """
+        named_supplementary = {
+            "idai:2751172": "Buhen",
+            "idai:2751351": "Kerma",
+            "idai:2293921": "Meroë",
+            "idai:2042846": "al-Fayyūm",
+        }
+        by_id = {r["id"]: r for r in idai_rows if "_source" not in r}
+        for gid, name in named_supplementary.items():
+            assert gid in by_id, f"{name} ({gid}) missing from reconciled.jsonl"
+            assert by_id[gid].get("is_supplementary") is True, (
+                f"{name} ({gid}): expected is_supplementary=True, got "
+                f"{by_id[gid].get('is_supplementary')!r}"
+            )
+
+    def test_coordinates_within_egypt_bounding_box(self, idai_rows):
+        """Coordinate-axis swap detection (issue #172, Shape E).
+
+        iDAI returns coords as `[lon, lat]` (GeoJSON order). A swap to
+        `[lat, lon]` would silently corrupt every map render. The existing
+        `test_coordinates_are_valid` only bounds-checks `-180 ≤ lon ≤ 180`
+        and `-90 ≤ lat ≤ 90`, which doesn't catch a swap because both
+        dimensions overlap on lon in [-90, 90].
+
+        Egypt + the Nubian supplementary sites span roughly:
+          lon (longitude, x): 24°E to 37°E
+          lat (latitude, y): 16°N to 32°N
+        A swap would put the latitude value into the longitude slot,
+        landing in [16, 32] — still valid lon bounds — and the longitude
+        value into the latitude slot, landing in [24, 37] — also valid
+        lat bounds. So the swap WOULD pass the bounds check while the
+        per-row in-Egypt assertion fails. Use a tight per-row bbox to
+        catch it.
+
+        Generous margins to accommodate Nubian sites (Meroë lat ~17°N) and
+        future Sinai additions (lon up to ~35°E).
+        """
+        EGYPT_BBOX_LON = (24.0, 37.0)
+        EGYPT_BBOX_LAT = (16.0, 33.5)  # 33.5 accommodates iDAI's Wadi Bili coord
+        for i, row in enumerate(idai_rows, 1):
+            if "_source" in row:
+                continue
+            coords = row.get("coordinates")
+            if coords is None:
+                continue
+            lon, lat = coords
+            assert EGYPT_BBOX_LON[0] <= lon <= EGYPT_BBOX_LON[1], (
+                f"Row {i} ({row['id']} {row['display']!r}): lon={lon} "
+                f"outside Egypt bbox {EGYPT_BBOX_LON} — possible "
+                f"[lon, lat] vs [lat, lon] axis swap?"
+            )
+            assert EGYPT_BBOX_LAT[0] <= lat <= EGYPT_BBOX_LAT[1], (
+                f"Row {i} ({row['id']} {row['display']!r}): lat={lat} "
+                f"outside Egypt bbox {EGYPT_BBOX_LAT} — possible "
+                f"[lon, lat] vs [lat, lon] axis swap?"
             )
 
     def test_canary_sites_present(self, idai_rows):
