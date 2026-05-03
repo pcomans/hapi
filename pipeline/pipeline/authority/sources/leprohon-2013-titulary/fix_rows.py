@@ -887,6 +887,68 @@ MACEDONIAN_PTOLEMAIC_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
 ]
 
+# Issue #174 fix (PR for that). The 6 row-level prose notes that agent-b
+# emitted on Late-Period rows but `merge.py` majority-voted to None
+# because the other two agents didn't extract them. Restored verbatim
+# from `raw/agent-b-late-period.jsonl` per CLAUDE.md rule 6 (data is
+# sacred — agent-b's reading of these rows is part of the authority
+# extract; the silent-loss-on-tie failure had no documented rule
+# backing it).
+#
+# Three of the six prose strings are SHARED across multiple kings
+# because Leprohon's printed footnote covers the whole grouping
+# ("Kings X, Y, and Z are not known from Egyptian hieroglyphic texts.").
+# Agent-b correctly emitted the same string on each affected king's
+# row.
+NOTES_RESTORATIONS: list[tuple[str, str, object, str]] = [
+    (
+        "leprohon-27.05",
+        "notes",
+        "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts.",
+        "Issue #174: restore agent-b prose lost to majority-vote on tie. "
+        "Source: raw/agent-b-late-period.jsonl.",
+    ),
+    (
+        "leprohon-27.06",
+        "notes",
+        "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts.",
+        "Issue #174: restore agent-b prose lost to majority-vote on tie. "
+        "Source: raw/agent-b-late-period.jsonl.",
+    ),
+    (
+        "leprohon-27.07",
+        "notes",
+        "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts.",
+        "Issue #174: restore agent-b prose lost to majority-vote on tie. "
+        "Source: raw/agent-b-late-period.jsonl.",
+    ),
+    (
+        "leprohon-29.04",
+        "notes",
+        "King Nepherites II is not known from hieroglyphic sources.",
+        "Issue #174: restore agent-b prose lost to majority-vote on tie. "
+        "Source: raw/agent-b-late-period.jsonl. Display name in this row "
+        "is `Nefaarudu II`; agent-b wrote `Nepherites II` in the prose "
+        "(both are Leprohon-printed forms — Nefaarud is the Egyptian "
+        "transcription, Nepherites the Greek). Preserved verbatim.",
+    ),
+    (
+        "leprohon-31.01",
+        "notes",
+        "Kings Artaxerxes III and Arses are not known from hieroglyphic sources.",
+        "Issue #174: restore agent-b prose lost to majority-vote on tie. "
+        "Source: raw/agent-b-late-period.jsonl.",
+    ),
+    (
+        "leprohon-31.02",
+        "notes",
+        "Kings Artaxerxes III and Arses are not known from hieroglyphic sources.",
+        "Issue #174: restore agent-b prose lost to majority-vote on tie. "
+        "Source: raw/agent-b-late-period.jsonl.",
+    ),
+]
+
+
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
@@ -899,6 +961,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *TIP_EARLY_CORRECTIONS,
     *TIP_LATE_CORRECTIONS,
     *MACEDONIAN_PTOLEMAIC_CORRECTIONS,
+    *NOTES_RESTORATIONS,
 ]
 
 
@@ -1034,6 +1097,40 @@ def normalize_translit_mdc(rows: list[dict]) -> list[str]:
     return log_lines
 
 
+def backfill_notes(rows: list[dict]) -> list[str]:
+    """Ensure every row has the `notes` top-level field, defaulting `None`.
+
+    Issue #174 fix (PR for that). Pre-fix: only 6/395 rows had the
+    `notes` key, all with value `None`. The 6 rows are agent-b-emitted
+    Late-Period rows where the agent recorded a row-level prose note
+    ("Kings Xerxes II, Darius II, and Artaxerxes II are not known from
+    Egyptian hieroglyphic texts.") that the other two agents did not
+    extract — `merge.py`'s majority-vote on `notes` produced `None`,
+    and the prose was silently lost from `reconciled.jsonl` (it still
+    lives in `raw/agent-b-late-period.jsonl`).
+
+    Two-part fix:
+    1. This backfill — every row now carries `notes: <str|None>` so the
+       schema shape is uniform across all 395 rows.
+    2. `NOTES_RESTORATIONS` (immediately below) — restore the 6 lost
+       prose values from agent-b's extraction.
+
+    Constitutional rule 4 (single source of truth) + rule 6 (data is
+    sacred): the `notes` prose is part of the authority extract; the
+    earlier majority-vote-to-None failure had no documented rule
+    backing it (just "two agents didn't extract" — silent ambiguity
+    resolution).
+    """
+    log_lines: list[str] = []
+    for row in rows:
+        if "notes" not in row:
+            row["notes"] = None
+            log_lines.append(
+                f"  {row['leprohon_id']}: backfilled notes=None"
+            )
+    return log_lines
+
+
 def backfill_stage_suffix(rows: list[dict]) -> list[str]:
     """Ensure every row has the `stage_suffix` top-level field.
 
@@ -1126,6 +1223,7 @@ def apply_corrections() -> list[str]:
     # clean, fully-keyed rows.
     log_lines.extend(backfill_name_list_fields(rows))
     log_lines.extend(backfill_stage_suffix(rows))
+    log_lines.extend(backfill_notes(rows))
     log_lines.extend(strip_debug_leakage(rows))
     log_lines.extend(normalize_translit_mdc(rows))
 

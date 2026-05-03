@@ -3738,240 +3738,10 @@ leprohon-33.17 (Ptolemy XV Caesarion):
     c: [{"anglicised": "iwa (en) pa netjer nety nehem, setep en ptah, ir maat ra, sekhem en imen", "attested_in": [], "is_variant": false, "source_note": "Two Ladies and Golden Horus names: none attested.", "translation": "Heir (of) the god-who-rescues, chosen by Ptah, who has accomplished the Maat of Re, the image of Amun", "transliteration": "iwꜥ (n) pꜣ nṯr nty nḥm stp n ptḥ ir mꜣꜥt rꜥ sḫm n imn", "variant_index": 1}]
     → chose: [{"anglicised": "iwa (en) pa netjer nety nehem, setep en ptah, ir maat ra, sekhem en imen", "attested_in": [], "is_variant": false, "source_note": "Two Ladies and Golden Horus names: none attested.", "translation": "Heir (of) the god-who-rescues, chosen by Ptah, who has accomplished the Maat of Re, the image of Amun", "transliteration": "iwꜥ (n) pꜣ nṯr nty nḥm stp n ptḥ ir mꜣꜥt rꜥ sḫm n imn", "variant_index": 1}]
 
+
+
+
 === LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED ===
-  leprohon-0.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.10: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.11: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.12: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-1.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2a.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-2a.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-3a.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-4.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-5.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-6.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.09: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.10: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.11: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.12: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.13: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.14: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.15: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.16: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8.17: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.01: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.02: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.03: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.04: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.05: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.06: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.07: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-8a.08: backfilled missing name-list fields ['later_horus_names'] as []
-  leprohon-0.01: backfilled stage_suffix=None
-  leprohon-0.02: backfilled stage_suffix=None
-  leprohon-0.03: backfilled stage_suffix=None
-  leprohon-0.04: backfilled stage_suffix=None
-  leprohon-0.05: backfilled stage_suffix=None
-  leprohon-0.06: backfilled stage_suffix=None
-  leprohon-0.07: backfilled stage_suffix=None
-  leprohon-0.08: backfilled stage_suffix=None
-  leprohon-0.09: backfilled stage_suffix=None
-  leprohon-0.10: backfilled stage_suffix=None
-  leprohon-0.11: backfilled stage_suffix=None
-  leprohon-0.12: backfilled stage_suffix=None
-  leprohon-1.01: backfilled stage_suffix=None
-  leprohon-1.02: backfilled stage_suffix=None
-  leprohon-1.03: backfilled stage_suffix=None
-  leprohon-1.04: backfilled stage_suffix=None
-  leprohon-1.05: backfilled stage_suffix=None
-  leprohon-1.06: backfilled stage_suffix=None
-  leprohon-1.07: backfilled stage_suffix=None
-  leprohon-2.01: backfilled stage_suffix=None
-  leprohon-2.02: backfilled stage_suffix=None
-  leprohon-2.03: backfilled stage_suffix=None
-  leprohon-2.04: backfilled stage_suffix=None
-  leprohon-2.05: backfilled stage_suffix=None
-  leprohon-2.06: backfilled stage_suffix=None
-  leprohon-2.07: backfilled stage_suffix=None
-  leprohon-2.08: backfilled stage_suffix=None
-  leprohon-2.09: backfilled stage_suffix=None
-  leprohon-2a.01: backfilled stage_suffix=None
-  leprohon-2a.02: backfilled stage_suffix=None
-  leprohon-3.01: backfilled stage_suffix=None
-  leprohon-3.02: backfilled stage_suffix=None
-  leprohon-3.03: backfilled stage_suffix=None
-  leprohon-3.04: backfilled stage_suffix=None
-  leprohon-3.05: backfilled stage_suffix=None
-  leprohon-3a.01: backfilled stage_suffix=None
-  leprohon-3a.02: backfilled stage_suffix=None
-  leprohon-3a.03: backfilled stage_suffix=None
-  leprohon-3a.04: backfilled stage_suffix=None
-  leprohon-4.01: backfilled stage_suffix=None
-  leprohon-4.02: backfilled stage_suffix=None
-  leprohon-4.03: backfilled stage_suffix=None
-  leprohon-4.04: backfilled stage_suffix=None
-  leprohon-4.05: backfilled stage_suffix=None
-  leprohon-4.06: backfilled stage_suffix=None
-  leprohon-4.07: backfilled stage_suffix=None
-  leprohon-5.01: backfilled stage_suffix=None
-  leprohon-5.02: backfilled stage_suffix=None
-  leprohon-5.03: backfilled stage_suffix=None
-  leprohon-5.04: backfilled stage_suffix=None
-  leprohon-5.05: backfilled stage_suffix=None
-  leprohon-5.06: backfilled stage_suffix=None
-  leprohon-5.07: backfilled stage_suffix=None
-  leprohon-5.08: backfilled stage_suffix=None
-  leprohon-5.09: backfilled stage_suffix=None
-  leprohon-6.01: backfilled stage_suffix=None
-  leprohon-6.02: backfilled stage_suffix=None
-  leprohon-6.03: backfilled stage_suffix=None
-  leprohon-6.04: backfilled stage_suffix=None
-  leprohon-6.05: backfilled stage_suffix=None
-  leprohon-6.06: backfilled stage_suffix=None
-  leprohon-6.07: backfilled stage_suffix=None
-  leprohon-8.01: backfilled stage_suffix=None
-  leprohon-8.02: backfilled stage_suffix=None
-  leprohon-8.03: backfilled stage_suffix=None
-  leprohon-8.04: backfilled stage_suffix=None
-  leprohon-8.05: backfilled stage_suffix=None
-  leprohon-8.06: backfilled stage_suffix=None
-  leprohon-8.07: backfilled stage_suffix=None
-  leprohon-8.08: backfilled stage_suffix=None
-  leprohon-8.09: backfilled stage_suffix=None
-  leprohon-8.10: backfilled stage_suffix=None
-  leprohon-8.11: backfilled stage_suffix=None
-  leprohon-8.12: backfilled stage_suffix=None
-  leprohon-8.13: backfilled stage_suffix=None
-  leprohon-8.14: backfilled stage_suffix=None
-  leprohon-8.15: backfilled stage_suffix=None
-  leprohon-8.16: backfilled stage_suffix=None
-  leprohon-8.17: backfilled stage_suffix=None
-  leprohon-8a.01: backfilled stage_suffix=None
-  leprohon-8a.02: backfilled stage_suffix=None
-  leprohon-8a.03: backfilled stage_suffix=None
-  leprohon-8a.04: backfilled stage_suffix=None
-  leprohon-8a.05: backfilled stage_suffix=None
-  leprohon-8a.06: backfilled stage_suffix=None
-  leprohon-8a.07: backfilled stage_suffix=None
-  leprohon-8a.08: backfilled stage_suffix=None
-  leprohon-9-10a.01: backfilled stage_suffix=None
-  leprohon-9-10a.02: backfilled stage_suffix=None
-  leprohon-9-10a.03: backfilled stage_suffix=None
-  leprohon-9-10a.04: backfilled stage_suffix=None
-  leprohon-9-10a.05: backfilled stage_suffix=None
-  leprohon-9-10a.06: backfilled stage_suffix=None
-  leprohon-9-10a.07: backfilled stage_suffix=None
-  leprohon-9-10a.08: backfilled stage_suffix=None
-  leprohon-9-10a.09: backfilled stage_suffix=None
-  leprohon-9-10b.01: backfilled stage_suffix=None
-  leprohon-9-10b.02: backfilled stage_suffix=None
-  leprohon-9-10b.03: backfilled stage_suffix=None
-  leprohon-9-10b.04: backfilled stage_suffix=None
-  leprohon-9-10b.05: backfilled stage_suffix=None
-  leprohon-9-10b.06: backfilled stage_suffix=None
-  leprohon-11a.01: backfilled stage_suffix=None
-  leprohon-11a.02: backfilled stage_suffix=None
-  leprohon-11a.03: backfilled stage_suffix=None
-  leprohon-11a.04: backfilled stage_suffix=None
-  leprohon-0.08 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='hꜣty-<ḥr>', pypdf='ḥꜣty-<ḥr>'"
-    after:  null
-  leprohon-1.05 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Gauthier 1907, 9–11; von Beckerath 1999, 40–41. The first sign has also been read ꜥnḏ, giving the name ꜥnḏ-ib (anedj-ib, or Anedjib); see Wb I, 208. Kaplony (1972, col. 63, n. 1) renders as \"Brave of heart,\" lit. \"fat-hearted\"; for ꜥḏ, see Kahl 2002, 96–100. OCR vs pypdf transliteration disagreement: OCR='ꜥd-ib', pypdf='ꜥḏ-ib'"
-    after:  "Gauthier 1907, 9–11; von Beckerath 1999, 40–41. The first sign has also been read ꜥnḏ, giving the name ꜥnḏ-ib (anedj-ib, or Anedjib); see Wb I, 208. Kaplony (1972, col. 63, n. 1) renders as \"Brave of heart,\" lit. \"fat-hearted\"; for ꜥḏ, see Kahl 2002, 96–100"
-  leprohon-1.05 / throne_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "The name is preceded by the expression swty-bity, \"He of the sedge and the bee.\" For the adjective biꜣi, see Kahl 2002, 137–38. OCR vs pypdf transliteration disagreement: OCR='mr(y) p biꜣꜣ', pypdf='mr(y) p biꜣi'"
-    after:  "The name is preceded by the expression swty-bity, \"He of the sedge and the bee.\" For the adjective biꜣi, see Kahl 2002, 137–38"
-  leprohon-1.06 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Gauthier 1907, 11–14; von Beckerath 1999, 40–41. OCR vs pypdf transliteration disagreement: OCR='smr ḫt', pypdf='smr ẖt'"
-    after:  "Gauthier 1907, 11–14; von Beckerath 1999, 40–41"
-  leprohon-1.07 / horus_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif. OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'"
-    after:  "Gauthier 1907, 14–15, 32; von Beckerath 1999, 40–41. Cf. the Smiting King motif"
-  leprohon-1.07 / nebty_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='kꜣ-ꜥ', pypdf='ḳꜣ-ꜥ'"
-    after:  null
-  leprohon-1.07 / later_cartouche_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='kbḥ', pypdf='ḳbḥ'"
-    after:  null
-  leprohon-2.07 / seth_names.0.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "Von Beckerath 1999, 44–45. Less likely, \"The dwelling place of their will.\" OCR vs pypdf transliteration disagreement: OCR='stḫ pr(w) ib.sn', pypdf='stẖ pr(w) ib.sn'"
-    after:  "Von Beckerath 1999, 44–45. Less likely, \"The dwelling place of their will.\""
-  leprohon-2.08 / nebty_names.1.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='ḫꜥ sḫmy nbw ḫt.sn', pypdf='ḫꜥ sḫmy nbw ẖt.sn'."
-    after:  null
-  leprohon-2.08 / later_cartouche_names.1.source_note:
-    stripped OCR-vs-pypdf debug tail
-    before: "OCR vs pypdf transliteration disagreement: OCR='bhy/bhty', pypdf='bby/bbty'"
-    after:  null
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
     rationale: Leprohon p. 22 fn. 12 opens with 'Gauthier 1907, 1–3, 17–19'; OCR misread as '4–5', pypdf had it correctly. Egyptologist-reviewer 2026-04-20 confirmed against the PDF.
@@ -4176,3 +3946,21 @@ leprohon-33.17 (Ptolemy XV Caesarion):
   leprohon-32.03 / horus_names.0.source_note:
     new value: "Gauthier 1916, 207–11; von Beckerath 1999, 232–33."
     rationale: Trim pipeline-internal denoising commentary out of source_note (belongs in transcribe.md chunk log, not the per-row scholarly footnote field). Egyptologist-reviewer P2.
+  leprohon-27.05 / notes:
+    new value: "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts."
+    rationale: Issue #174: restore agent-b prose lost to majority-vote on tie. Source: raw/agent-b-late-period.jsonl.
+  leprohon-27.06 / notes:
+    new value: "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts."
+    rationale: Issue #174: restore agent-b prose lost to majority-vote on tie. Source: raw/agent-b-late-period.jsonl.
+  leprohon-27.07 / notes:
+    new value: "Kings Xerxes II, Darius II, and Artaxerxes II are not known from Egyptian hieroglyphic texts."
+    rationale: Issue #174: restore agent-b prose lost to majority-vote on tie. Source: raw/agent-b-late-period.jsonl.
+  leprohon-29.04 / notes:
+    new value: "King Nepherites II is not known from hieroglyphic sources."
+    rationale: Issue #174: restore agent-b prose lost to majority-vote on tie. Source: raw/agent-b-late-period.jsonl. Display name in this row is `Nefaarudu II`; agent-b wrote `Nepherites II` in the prose (both are Leprohon-printed forms — Nefaarud is the Egyptian transcription, Nepherites the Greek). Preserved verbatim.
+  leprohon-31.01 / notes:
+    new value: "Kings Artaxerxes III and Arses are not known from hieroglyphic sources."
+    rationale: Issue #174: restore agent-b prose lost to majority-vote on tie. Source: raw/agent-b-late-period.jsonl.
+  leprohon-31.02 / notes:
+    new value: "Kings Artaxerxes III and Arses are not known from hieroglyphic sources."
+    rationale: Issue #174: restore agent-b prose lost to majority-vote on tie. Source: raw/agent-b-late-period.jsonl.
