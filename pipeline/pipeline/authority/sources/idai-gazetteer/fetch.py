@@ -305,14 +305,18 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
     #
     # Filter mirrors the second pass exactly: keep iff supplementary OR
     # types intersect SITE_TYPES. gazId is already an API-typed string.
+    # `r.get("X") or []` handles both missing-key AND explicit-null returns
+    # from the iDAI API. `r.get("X", [])` would only handle missing-key —
+    # an explicit `null` would slip through and crash `set(None)`. Same
+    # pattern applied to `types`, `names`, `identifiers` below.
     kept_gaz_ids: set[str] = {
         r["gazId"] for r in records
         if r["gazId"] in ADDITIONAL_GAZ_ID_SET
-        or (set(r.get("types", [])) & SITE_TYPES)
+        or (set(r.get("types") or []) & SITE_TYPES)
     }
 
     for record in records:
-        types = record.get("types", [])
+        types = record.get("types") or []
         gaz_id = record["gazId"]
 
         # Supplementary IDs bypass the type filter (they are explicitly curated
@@ -332,7 +336,7 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
         # use the same empty sentinel.
         seen_labels: set[str] = {display}
         alt_labels: list[str] = []
-        for name_entry in record.get("names", []):
+        for name_entry in record.get("names") or []:
             title = name_entry.get("title")
             if title and title not in seen_labels:
                 alt_labels.append(title)
@@ -357,7 +361,7 @@ def reconcile(records: list[dict]) -> tuple[list[dict], int]:
             parent_in_file = parent_gaz_id in kept_gaz_ids
 
         # cross_refs
-        cross_refs = _extract_cross_refs(record.get("identifiers", []))
+        cross_refs = _extract_cross_refs(record.get("identifiers") or [])
 
         reconciled.append({
             "kind": "site",
