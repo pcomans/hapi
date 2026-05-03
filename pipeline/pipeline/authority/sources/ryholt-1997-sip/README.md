@@ -82,6 +82,25 @@ Physical pages **336-416** (81 pages, 17 chunks). This spans File 1 / Catalogue 
 - `polity` ∈ {`"Memphite"` (Dyn 13), `"Avaris"` (Dyn 14), `"Avaris (Hyksos)"` (Dyn 15), `"Theban"` (Dyns 16, 17), `"Abydos"` (Abydos Dynasty), `null` (unattributed)}.
 - `concurrent_with` is a list of dynasty-number strings per Ryholt's Table 1 (Chronological/Geographical Arrangement): 13 → ["14"]; 14 → ["13", "15"]; 15 → ["16", "17", "Abydos"]; 16 → ["15", "17"]; 17 → ["15", "16"]; Abydos → ["15", "16"]; unattributed → [].
 
+### Issue #177 schema additions (2026-05-03 audit-fix, PR #189)
+
+The audit-fix introduced these typed fields. Every row carries every field after `fix_rows.py` runs (closure-tested by `test_every_row_has_every_schema_field`):
+
+- `dynasty_label: str | None` — `"13" .. "17"` for numbered dynasties, `"Abydos"` for Abyd rows, `None` for truly-unattributed N/P/H/D/G rows. Replaces the convention of inferring dynasty class from `dynasty is None` + ryholt_id-prefix scrutiny.
+- `attestation_class: str` — typed enum from the ryholt_id prefix. `"king"` for numbered-dynasty rows; `"abydos"` for Abyd; `"nomen_only"` / `"prenomen_only"` / `"horus_only"` / `"nebty_only"` / `"golden_horus_only"` / `"djed_only"` for the unattributed N/P/H/Nb/G/D rows. Closure-tested by `test_attestation_class_matches_ryholt_id_prefix`.
+- `is_unattributed: bool` — True iff prefix is N/P/H/Nb/D/G (23 rows).
+- `is_abydos_dynasty: bool` — True iff prefix is `Abyd` (8 rows).
+- `is_uncertain_attribution: bool` — True for `(?)` / `(..?)` / `(...?)` uncertainty markers and bare trailing `?` in any name field (7 rows: 13.17, 13.53, 14.32, 14.g, 16.5, 17.7, Abyd.15). The marker is **KEPT** in the name string (preserved for re-derivability — PR #189 round-2 design change); the typed flag is the queryable surface.
+- `is_lacunose: bool` — True for any row whose name fields contain `[...]` lacuna markers (~37 rows). Marker is KEPT in the name string (it shows position of missing characters); the flag is the typed query surface.
+- `is_syllabic_nomen: bool` — True for nomen-transliterated rows in Ryholt's syllabic orthography (24 rows). Trailing `(syllabic)` is stripped where it cleanly trails; non-trailing forms (`(syllabic)⁽¹⁾`, `(syllabic), not preceded by *sꜣ-rꜥ`, `(syllabic?)`) are kept verbatim because stripping would lose the qualifier.
+- `homonym_index: int | None` — Roman-numeral homonym disambiguator (4 rows: Sewadjkare I/III, Awibre II, Sankhibre II). Replaces the in-string `(I)/(II)/(III)` glyph in `nomen`; consumers querying for "all Sewadjkare kings" should join on `nomen` alone, then disambiguate via `homonym_index`.
+- `date_attestation: str` — enum of `"both" | "start_only" | "end_only" | "none"`. Replaces the silent-null convention where `(start=None, end=None)` could mean "no date" OR "Ryholt couldn't reconcile single-cell entry to a range."
+- `nomen_transliterated_variants: list[str]` — split from `, var. <alt>` in `nomen_transliterated` (3 rows: 13.22, 14.2, 14.4). Empty list when none.
+
+### Display-name non-uniqueness (Shape G — documented characteristic)
+
+`nomen` is NOT unique across the corpus — homonymous kings exist within and across dynasties. Use `(ryholt_id)` as the unique join key; for cross-source joins (pharaoh.se, Beckerath), use `(nomen, dynasty, homonym_index)` as the disambiguating composite key. The 23 unattributed N/P/H/D/G rows in particular will collide with Old Kingdom homonyms on a naive `nomen` join — Phase-A consumers must check `is_unattributed` and `dynasty_label` before treating the row as a king-record match.
+
 ## Rights
 
 CNI Publications / Museum Tusculanum Press, in copyright. This extract contains only **factual data** — king names, regnal years, attestation locations, dynasty numbers, date ranges. Ryholt's scholarly argumentation and prose analysis are not reproduced. Per handoff rule 4 and ADR-017, the source PDF is not committed; per-page OCR markdown in `raw/` consists of transcribed data plus bibliographic references (both factual), with no chapter-body prose from Ryholt's main Parts II–V.
