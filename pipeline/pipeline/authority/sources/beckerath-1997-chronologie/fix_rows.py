@@ -779,9 +779,12 @@ SCHEMA_FIELD_DEFAULTS_179: dict[str, object] = {
 # rather than a person. Mechanically detected by the `\d+\. Dynastie` pattern.
 _DYNASTY_MARKER_RE = re.compile(r"^\d+(?:\./\d+)?\.\s+Dynastie$")
 
-# Rows where Beckerath flags the king as anti-king (Gegenkönig) — either
-# in a parens-wrapped name OR via `Gegenkönig` token in notes_from_beckerath.
-_ANTI_KING_NOTE_RE = re.compile(r"\bGegenkönig", re.IGNORECASE)
+# Rows where Beckerath flags the king as anti-king (Gegenkönig) via the
+# `Gegenkönig` token in notes_from_beckerath. The negative lookahead `(?!e)`
+# excludes the plural `Gegenkönige` ("had anti-kings besides him") which
+# appears on 11.07 Ment-hotpe IV — he is the legitimate king, not an
+# anti-king. Per egyptologist + code-reviewer P1.
+_ANTI_KING_NOTE_RE = re.compile(r"\bGegenkönig\b(?!e)", re.IGNORECASE)
 
 # Existence-uncertainty markers Beckerath uses on the `name` field:
 #   - bare-paren wrapping ("(Schoschenq IIIa.)")
@@ -803,11 +806,6 @@ _NAME_VARIANT_PAREN_RE = re.compile(r"\s*\(([^()]+?)\)")
 # 19.01 "Ramses (Ra-mes-su, griech. Ramessês) I." → variants
 # ["Ra-mes-su", "griech. Ramessês"].
 _VARIANT_SPLIT_RE = re.compile(r"\s*,\s*")
-# Roman-numeral / Greek-numeral name suffix (e.g. "I.", "II.", "IIa.")
-# we keep at the end of the canonical `name` after stripping the paren.
-_NAME_SUFFIX_RE = re.compile(r"\s*[IVX]+a?\.\s*$")
-
-
 # 03.02 Djoser is the lone "mixed" row whose two halves are nomen +
 # horus_name (not nomen + prenomen). The `mixed` enum collapses 3+
 # distinct compound shapes per the audit; this is the only one that
@@ -894,11 +892,12 @@ def _detect_existence_uncertain(name: str) -> bool:
 
 
 def _detect_anti_king(name: str, notes: str | None) -> bool:
-    if notes and _ANTI_KING_NOTE_RE.search(notes):
-        return True
-    # 22.07 `(Schoschenq IIIa.)` is the canonical anti-king row that
-    # Beckerath wraps in parens. Detect parens-wrapped name strings here.
-    return bool(_BARE_PAREN_NAME_RE.match(name))
+    """Anti-king detection — only via explicit `Gegenkönig` (NOT plural
+    `Gegenkönige`) in notes_from_beckerath. Parens-wrapped names like
+    22.07 `(Schoschenq IIIa.)` are existence-uncertainty markers, not
+    anti-king markers — the audit explicitly puts 22.07 in
+    `existence_uncertain`, not in is_anti_king. Per egyptologist P1-3."""
+    return bool(notes and _ANTI_KING_NOTE_RE.search(notes))
 
 
 def _backfill_179_schema(rows: list[dict]) -> list[str]:
@@ -938,14 +937,19 @@ def _apply_179_migrations(rows: list[dict]) -> list[str]:
             row["existence_uncertain"] = new_unc
             log.append(f"  {bid}: existence_uncertain → {new_unc}")
 
-        # name_variants — promote `(...)` content
-        new_name, variants = _extract_name_variants(name)
-        if row["name_variants"] != variants:
-            row["name_variants"] = variants
-            log.append(f"  {bid}: name_variants → {variants!r}")
-        if new_name != name:
-            row["name"] = new_name
-            log.append(f"  {bid}: name → {new_name!r}")
+        # name_variants — promote `(...)` content. IDEMPOTENT GUARD:
+        # only run the extractor when the name still has parens. Once
+        # name_variants is populated and the parens are stripped from
+        # name, subsequent runs see no parens and would otherwise wipe
+        # the typed variants. Per code-reviewer P1-1.
+        if "(" in name and ")" in name:
+            new_name, variants = _extract_name_variants(name)
+            if row["name_variants"] != variants:
+                row["name_variants"] = variants
+                log.append(f"  {bid}: name_variants → {variants!r}")
+            if new_name != name:
+                row["name"] = new_name
+                log.append(f"  {bid}: name → {new_name!r}")
 
         # egyptian_titularies — list-promote scalar pair, with overrides
         if bid in _MIXED_TITULARY_OVERRIDES:

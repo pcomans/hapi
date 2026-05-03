@@ -71,16 +71,6 @@ def _titularies(beckerath_id: str) -> list[dict]:
     return _row(beckerath_id)["egyptian_titularies"]
 
 
-def _titularies_combined(beckerath_id: str) -> str | None:
-    """Derive the legacy combined-string form from the typed list, for
-    backwards-readable assertions on rows that historically asserted the
-    scalar `egyptian_titulary` value. Returns None on empty list."""
-    entries = _titularies(beckerath_id)
-    if not entries:
-        return None
-    return ", ".join(e["name"] for e in entries)
-
-
 def test_row_count() -> None:
     """The Übersicht extracts to 174 rows: every dynasty 0..31 named king
     plus dynasty-only marker rows for 7, 8, 9/10, 13, 14, 16, 17 (Beckerath
@@ -1009,10 +999,20 @@ def test_179_dynasty_markers_canonical_set() -> None:
 
 def test_179_anti_king_canonical_set() -> None:
     """Exact set of beckerath_ids whose `is_anti_king==True`. Probe pinned
-    2026-05-03: 02.09 / 02.10 (Dyn 2 short-reign Gegenkönige), 11.07
-    (Dyn 11 Mont-su-em-saf), 22.07 (Schoschenq IIIa.), 29.03 (Psamuthis,
-    Gegenkönig), 31.04 (Chababasch, Ägypt. Gegenkönig)."""
-    expected = {"02.09", "02.10", "11.07", "22.07", "29.03", "31.04"}
+    2026-05-03: 02.09 / 02.10 (Dyn 2 Seth Per-ib-sen + Hor-Seth Cha-sechemui
+    sharing Beckerath's "Gegenkönig der 3 vorigen" annotation), 29.03
+    (Psamuthis, Gegenkönig), 31.04 (Chababasch, Ägypt. Gegenkönig).
+
+    11.07 Ment-hotpe IV. is NOT included — his note "und Gegenkönige"
+    (plural) means he had anti-kings besides him, not that he is one.
+    The detection regex uses negative lookahead `(?!e)` to exclude the
+    plural form. Per egyptologist + code-reviewer P1.
+
+    22.07 (Schoschenq IIIa.) is NOT included — Beckerath's parens-wrap
+    is an existence-uncertainty marker, not an anti-king marker. Per
+    audit, 22.07 belongs only in `existence_uncertain`. Per egyptologist
+    P1-3."""
+    expected = {"02.09", "02.10", "29.03", "31.04"}
     actual = {r["beckerath_id"] for r in _rows() if r["is_anti_king"]}
     assert actual == expected, sorted(actual)
 
@@ -1074,17 +1074,19 @@ def test_179_26_02_mixed_with_slash() -> None:
     ], titularies
 
 
-def test_179_22_07_anti_king_canonical() -> None:
+def test_179_22_07_existence_uncertain_anchor() -> None:
     """Anchor: 22.07 Schoschenq IIIa. — Beckerath parenthesises the entire
     name as an existence-hedge marker. Per the bare-paren rule, the
-    `name` keeps the parens (not stripped). Both `is_anti_king` and
-    `existence_uncertain` are True; the typed-list `egyptian_titularies`
-    is empty (the prenomen Hedj-cheper-rê sotep-en-rê lives on the
+    `name` keeps the parens (not stripped). `existence_uncertain` is
+    True; `is_anti_king` is FALSE — the parens-wrap is an existence
+    marker, not an anti-king marker (per egyptologist P1-3 + audit
+    Shape J classification). The typed-list `egyptian_titularies` is
+    empty (the prenomen Hedj-cheper-rê sotep-en-rê lives on the
     `prenomen` field, not the typed list, because Beckerath gave it as
     a Supplement-zu-A entry rather than an inline parenthetical)."""
     r = _row("22.07")
     assert r["name"] == "(Schoschenq IIIa.)"
-    assert r["is_anti_king"] is True
+    assert r["is_anti_king"] is False
     assert r["existence_uncertain"] is True
     assert r["egyptian_titularies"] == []
 
@@ -1121,3 +1123,52 @@ def test_179_legacy_scalars_still_present() -> None:
     for r in _rows():
         assert "egyptian_titulary" in r, r["beckerath_id"]
         assert "egyptian_titulary_kind" in r, r["beckerath_id"]
+
+
+def test_179_fix_rows_is_file_level_idempotent() -> None:
+    """Regression for code-reviewer P1-1 (round 1): early `_extract_name_variants`
+    unconditionally overwrote `name_variants` on each run, so once the parens
+    were stripped from `name`, the variants were silently wiped. This test
+    runs `fix_rows.py` twice in a temporary copy and asserts byte-equality
+    of the output JSONL.
+
+    Per Rule 3 (deterministic enforcement): a passing claim of "idempotent"
+    must be backed by a test that actually does the round-trip.
+    """
+    import shutil
+    import subprocess
+    import tempfile
+    src_dir = (
+        Path(__file__).parent.parent
+        / "pipeline"
+        / "authority"
+        / "sources"
+        / "beckerath-1997-chronologie"
+    )
+    with tempfile.TemporaryDirectory() as tmp_str:
+        tmp = Path(tmp_str) / "src"
+        shutil.copytree(src_dir, tmp)
+        for _ in range(2):
+            subprocess.run(
+                ["python3", str(tmp / "fix_rows.py")],
+                check=True,
+                capture_output=True,
+            )
+        run1 = (tmp / "reconciled.jsonl").read_bytes()
+        # Run a third time and compare to the second run's output (the
+        # "second-run guard" — reconciled is already in fully-migrated
+        # form, so a re-run must be a no-op at the byte level).
+        subprocess.run(
+            ["python3", str(tmp / "fix_rows.py")],
+            check=True,
+            capture_output=True,
+        )
+        run2 = (tmp / "reconciled.jsonl").read_bytes()
+        assert run1 == run2, (
+            "fix_rows.py is NOT byte-idempotent — re-running on a "
+            "fully-migrated reconciled.jsonl produced different bytes. "
+            "Likely cause: a migration unconditionally overwrites a typed "
+            "field that the source-of-truth no longer carries (e.g. parens "
+            "stripped from `name` make `_extract_name_variants` return [], "
+            "wiping the typed `name_variants`)."
+        )
