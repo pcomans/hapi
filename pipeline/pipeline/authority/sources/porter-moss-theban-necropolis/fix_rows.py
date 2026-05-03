@@ -23,7 +23,6 @@ from __future__ import annotations
 
 import copy
 import json
-import re as _re_182
 import re
 from pathlib import Path
 
@@ -996,18 +995,20 @@ del _seen
 # `notes_from_pm`. Pure derivation — no asserted facts beyond what PM
 # verbatim records. Idempotent.
 
-_UNINSCRIBED_RE = _re_182.compile(r"\buninscribed\b", _re_182.IGNORECASE)
-_USURPED_RE = _re_182.compile(r"\busurp(?:ed|ation)\b", _re_182.IGNORECASE)
+_UNINSCRIBED_RE = re.compile(r"\buninscribed\b", re.IGNORECASE)
+_USURPED_RE = re.compile(r"\busurp(?:ed|ation)\b", re.IGNORECASE)
 
 # Hedge tokens for `attribution_certainty`. Order matters: more-uncertain
-# tokens win on compound markers ("perhaps Probably" → "uncertain").
+# enums win on compound markers ("perhaps Probably" → "uncertain"). One
+# combined regex per enum keeps `_detect_attribution_certainty` to two
+# `search` calls instead of six.
 _ATTRIBUTION_HEDGE_PATTERNS = [
-    ("uncertain", _re_182.compile(r"\buncertain\b", _re_182.IGNORECASE)),
-    ("uncertain", _re_182.compile(r"\bperhaps\b", _re_182.IGNORECASE)),
-    ("uncertain", _re_182.compile(r"\bpossibly\b", _re_182.IGNORECASE)),
-    ("uncertain", _re_182.compile(r"\btentatively\b", _re_182.IGNORECASE)),
-    ("probable", _re_182.compile(r"\bprobably\b|\(probably\)", _re_182.IGNORECASE)),
-    ("probable", _re_182.compile(r"\battributed to\b", _re_182.IGNORECASE)),
+    ("uncertain", re.compile(
+        r"\b(?:uncertain|perhaps|possibly|tentatively)\b", re.IGNORECASE
+    )),
+    ("probable", re.compile(
+        r"\bprobably\b|\(probably\)|\battributed to\b", re.IGNORECASE
+    )),
 ]
 
 
