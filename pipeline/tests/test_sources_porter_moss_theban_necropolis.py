@@ -2577,8 +2577,17 @@ def test_182_usurped_canonical_set() -> None:
 
 def test_182_uncertain_attribution_canonical_set() -> None:
     """Rows where PM uses strong-uncertainty hedge tokens (uncertain,
-    perhaps, possibly, tentatively). Pinned 2026-05-03: 2 rows."""
-    expected = {"DAN-KamosiWazkheperre", "DAN-SebkemsafSekhemreShedtaui"}
+    perhaps, possibly, tentatively) OR PM's `(?)` glyph. Pinned
+    2026-05-03: 5 rows. Per Gemini round-2 — `(?)` is PM's standard
+    attribution-uncertainty marker (KV42 + QV60 notes start with
+    `(?)`, QV33 carries `Dyn. XX(?)`)."""
+    expected = {
+        "DAN-KamosiWazkheperre",
+        "DAN-SebkemsafSekhemreShedtaui",
+        "KV42",
+        "QV33",
+        "QV60",
+    }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
 

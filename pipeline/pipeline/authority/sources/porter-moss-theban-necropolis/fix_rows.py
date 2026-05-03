@@ -1002,9 +1002,12 @@ _USURPED_RE = re.compile(r"\busurp(?:ed|ation)\b", re.IGNORECASE)
 # enums win on compound markers ("perhaps Probably" → "uncertain"). One
 # combined regex per enum keeps `_detect_attribution_certainty` to two
 # `search` calls instead of six.
+# `(?)` is PM's standard attribution-uncertainty glyph (KV42 notes start
+# with `(?). Excavated by Loret`, QV60 notes start with `(?). daughter
+# of Ramesses II.`). Per Gemini round-2 finding.
 _ATTRIBUTION_HEDGE_PATTERNS = [
     ("uncertain", re.compile(
-        r"\b(?:uncertain|perhaps|possibly|tentatively)\b", re.IGNORECASE
+        r"\b(?:uncertain|perhaps|possibly|tentatively)\b|\(\?\)", re.IGNORECASE
     )),
     ("probable", re.compile(
         r"\bprobably\b|\(probably\)|\battributed to\b", re.IGNORECASE
@@ -1188,6 +1191,14 @@ def main() -> None:
     schema_182_log = _apply_issue_182_migrations(rows)
     if schema_182_log:
         override_log.extend(schema_182_log)
+    else:
+        # Always log the no-op line so the audit trail across runs is
+        # consistent (mirrors the field_add_log / rename_log pattern).
+        # Per Gemini round-2 finding.
+        override_log.append(
+            "- issue #182 schema-audit pass: 0 changes this run "
+            "(reconciled.jsonl already reflects all derived typed flags)"
+        )
 
     RECONCILED.write_text(
         "\n".join(

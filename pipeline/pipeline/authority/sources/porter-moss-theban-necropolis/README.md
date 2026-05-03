@@ -137,7 +137,7 @@ The audit-fix adds 3 typed flags derived from PM's prose markers in `notes_from_
 
 - **`is_uninscribed: bool`** — True when PM literally writes "uninscribed" in `notes_from_pm`. Pinned set: `{KV39, KV56, DAN-Neferhotep}`. Phase A consumers must check this flag before treating `occupant_name` as PM-attested vs scholarly attribution.
 - **`is_usurped: bool`** — True when PM writes `usurp(ed|ation)` in `notes_from_pm`. Pinned set: `{KV9, KV14}`. KV9's doorways were usurped from Ramesses V; KV14 was usurped by Setnakht from Sethos II's wife Tausret.
-- **`attribution_certainty: str`** — enum `{attested, probable, uncertain}`. Derived from PM's hedge tokens (`Probably`, `(probably)`, `attributed to`, `tentatively`, `perhaps`, `possibly`, `uncertain`). Stronger uncertainty wins on compound markers. Counts: 66 attested, 7 probable, 2 uncertain.
+- **`attribution_certainty: str`** — enum `{attested, probable, uncertain}`. Derived from PM's hedge tokens (`Probably`, `(probably)`, `attributed to`, `tentatively`, `perhaps`, `possibly`, `uncertain`) AND PM's standard `(?)` attribution-uncertainty glyph (KV42, QV60, QV33). Stronger uncertainty wins on compound markers. Counts: 63 attested, 7 probable, 5 uncertain.
 
 Note: this is a Tier-3 (no-P1) audit fix. Bundles deferred per the audit:
 - Shape C `notes_from_pm` extraction (filiation, occupational title, regnal-period markers) — large undertaking; defer to per-fact-type follow-ups
