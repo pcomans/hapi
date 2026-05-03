@@ -243,15 +243,32 @@ def test_every_row_has_every_schema_field() -> None:
             assert field in r, (r["ryholt_id"], field)
 
 
-def test_no_uncertainty_glyphs_in_name_fields() -> None:
-    """Issue #177 Shape J: `(?)` was migrated out of nomen / prenomen
-    to typed `is_uncertain_attribution`. Closure: no name field still
-    contains `(?)` after fix_rows.
+def test_uncertainty_marker_implies_typed_flag() -> None:
+    """Issue #177 / PR #189 round-2: switched from STRIP-and-flag to
+    FLAG-ONLY for uncertainty markers (preserves source trigger for
+    re-derivability). Closure: every row with a `(?)` / `(..?)` / bare
+    trailing `?` marker in any name field MUST also have
+    `is_uncertain_attribution=True`. The marker is preserved in the
+    string for provenance; the typed flag is the queryable surface.
     """
+    import re
+    paren_q = re.compile(r"\([^)]*\?\)|\(\.\.+\?\)")
+    bare_q = re.compile(r"\s\?\s*$")
+    name_fields = (
+        "nomen", "prenomen",
+        "nomen_transliterated", "prenomen_transliterated",
+        "horus_name_transliterated", "nebty_name_transliterated",
+        "golden_horus_name_transliterated",
+    )
     for r in _rows():
-        for f in ("nomen", "prenomen"):
+        for f in name_fields:
             v = r.get(f) or ""
-            assert "(?)" not in v, (r["ryholt_id"], f, v)
+            if paren_q.search(v) or bare_q.search(v):
+                assert r["is_uncertain_attribution"], (
+                    r["ryholt_id"], f,
+                    f"{v!r} has uncertainty marker but is_uncertain_attribution=False",
+                )
+                break
 
 
 def test_no_trailing_syllabic_paren_in_nomen_transliterated() -> None:

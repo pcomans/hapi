@@ -207,11 +207,12 @@ def apply_glyph_migrations(rows: list[dict]) -> list[str]:
     """Strip in-string uncertainty / syllabic / homonym glyphs from
     name fields; promote each to its typed flag. Idempotent."""
     log_lines: list[str] = []
-    # PR #189 Gemini round-1 (high): widened uncertainty detection
-    # to ALL name + transliteration fields, not just nomen/prenomen.
-    # Rows like 13.17 / 13.53 / 14.32 / 16.5 carry `(?)` in
-    # transliteration fields and would have escaped the prior
-    # nomen/prenomen-only check.
+    # PR #189 round-2 (code-reviewer P1.1): switched from STRIP-and-flag
+    # to FLAG-ONLY for `(?)` markers. Stripping made the migration non-
+    # round-trippable (post-strip data couldn't re-derive the flag);
+    # FLAG-ONLY preserves the source trigger so re-derivation always
+    # works. Matches the existing `is_lacunose` and `is_syllabic_nomen`
+    # treatment (keep marker, set flag).
     NAME_FIELDS = (
         "nomen",
         "prenomen",
@@ -221,35 +222,23 @@ def apply_glyph_migrations(rows: list[dict]) -> list[str]:
         "nebty_name_transliterated",
         "golden_horus_name_transliterated",
     )
-    # Also widened pattern: `(?)` (parenthesized) plus `(..?)` /
-    # `(...?)` (lacuna-with-uncertainty) anywhere in the field.
-    # The trailing-only `_PAREN_QUESTION_RE` is kept for the
-    # cleanly-trailing nomen/prenomen case so we strip there;
-    # other positions only set the flag.
-    _ANY_QUESTION_RE = re.compile(r"\([^)]*\?\)|\(\.\.+\?\)")
+    # Patterns for `(?)` (parenthesized), `(..?)` / `(...?)` (lacuna
+    # uncertainty), AND bare trailing `?` in transliteration fields
+    # (e.g. 14.g `'ya-k-ꜥ-r-b ?'`).
+    _PAREN_Q_ANY_RE = re.compile(r"\([^)]*\?\)|\(\.\.+\?\)")
+    _BARE_TRAILING_Q_RE = re.compile(r"\s\?\s*$")
 
     for row in rows:
         rid = row["ryholt_id"]
-        # `(?)` in nomen / prenomen → strip + set is_uncertain_attribution
-        for f in ("nomen", "prenomen"):
-            v = row.get(f)
-            if v and _PAREN_QUESTION_RE.search(v):
-                row[f] = _PAREN_QUESTION_RE.sub("", v)
+        for f in NAME_FIELDS:
+            v = row.get(f) or ""
+            if _PAREN_Q_ANY_RE.search(v) or _BARE_TRAILING_Q_RE.search(v):
                 if not row["is_uncertain_attribution"]:
                     row["is_uncertain_attribution"] = True
-                    log_lines.append(f"  {rid}: stripped `(?)` from {f}; is_uncertain_attribution=True")
-        # `(?)` / `(..?)` anywhere in any name field → flag only.
-        # Don't strip in non-trailing positions (would corrupt the
-        # surrounding glyph context, e.g. `Hor(..?)` is one
-        # character with embedded uncertainty marker, not a
-        # trailing glyph to strip).
-        if not row["is_uncertain_attribution"]:
-            for f in NAME_FIELDS:
-                v = row.get(f) or ""
-                if _ANY_QUESTION_RE.search(v):
-                    row["is_uncertain_attribution"] = True
-                    log_lines.append(f"  {rid}: detected `(?)`/`(..?)` in {f}; is_uncertain_attribution=True")
-                    break
+                    log_lines.append(
+                        f"  {rid}: detected uncertainty marker in {f}; is_uncertain_attribution=True"
+                    )
+                break
         # `(syllabic)` (or `(syllabic?)`, `(syllabic)⁽¹⁾`, `(syllabic),
         # not preceded by ...`) in nomen_transliterated → is_syllabic_nomen.
         # Set the flag whenever any `(syllabic` substring occurs;
@@ -300,6 +289,34 @@ def apply_glyph_migrations(rows: list[dict]) -> list[str]:
     return log_lines
 
 
+def restore_stripped_markers(rows: list[dict]) -> list[str]:
+    """Restore `(?)` markers that an earlier (now-removed) version of
+    apply_glyph_migrations stripped from nomen on 3 rows. PR #189
+    round-2 (code-reviewer P1.1): the new flag-only design preserves
+    markers for re-derivability; this restoration brings the prior-
+    stripped data into the new convention.
+
+    Idempotent: only sets the marker if it's currently absent.
+    """
+    log_lines: list[str] = []
+    for rid, expected_nomen in [
+        ("17.7", "Siamun (?)"),
+        ("Abyd.15", "[...]hebre (?)"),
+        ("14.g", "Ya-k-ꜥ-r-b (?)"),
+    ]:
+        for row in rows:
+            if row["ryholt_id"] == rid:
+                if "(?)" not in (row.get("nomen") or ""):
+                    row["nomen"] = expected_nomen
+                    log_lines.append(
+                        f"  {rid}: restored `(?)` marker to nomen "
+                        f"(stripped by prior fix_rows version; new flag-only "
+                        f"design preserves markers for re-derivability)"
+                    )
+                break
+    return log_lines
+
+
 def main() -> None:
     rows = [
         json.loads(line)
@@ -307,15 +324,17 @@ def main() -> None:
         if line.strip()
     ]
     backfill_log = backfill_schema_fields(rows)
+    restore_log = restore_stripped_markers(rows)
     glyph_log = apply_glyph_migrations(rows)
     deterministic_log = apply_deterministic_passes(rows)
     RECONCILED.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
         encoding="utf-8",
     )
-    total = len(backfill_log) + len(glyph_log) + len(deterministic_log)
+    total = len(backfill_log) + len(restore_log) + len(glyph_log) + len(deterministic_log)
     print(
         f"Backfilled {len(backfill_log)} fields; "
+        f"restored {len(restore_log)} stripped markers; "
         f"applied {len(glyph_log)} glyph migrations + "
         f"{len(deterministic_log)} deterministic passes "
         f"({total} log lines this run)."
