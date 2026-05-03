@@ -473,6 +473,113 @@ def test_sex_inference_covers_every_row() -> None:
         assert r["sex"] in ("male", "female"), r
 
 
+def test_role_tokens_in_known_vocab() -> None:
+    """Issue #175: every `roles` token in any row appears in
+    `KNOWN_ROLE_TOKENS`. Closure direction (the existing
+    `test_role_code_set_spans_the_known_codes` checks the OTHER
+    direction — that known codes ARE present in the corpus). Catches
+    typos like `OPULE` (was shipping until this PR) and silent
+    free-text drift.
+
+    When a new chunk introduces a legitimate new D&H role token,
+    update `KNOWN_ROLE_TOKENS` in `fix_rows.py` after verifying the
+    token is D&H's, not a typo.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "dh_fix_rows",
+        SOURCE_DIR / "fix_rows.py",
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    known = mod.KNOWN_ROLE_TOKENS
+
+    for r in _rows():
+        for role in r.get("roles", []):
+            assert role in known, (
+                f"{r['dh_id']} [{r['sub_period']}]: role token "
+                f"{role!r} not in KNOWN_ROLE_TOKENS. Either a typo "
+                f"or a new D&H code — verify against the source PDF "
+                f"and update fix_rows.py if legitimate."
+            )
+
+
+def test_no_opule_typo() -> None:
+    """Issue #175: the OPULE typo was shipping on 1 row (Thutmose B)
+    where MULE was intended (8 rows in corpus). Pin that no row carries
+    the typo going forward — both as a regression guard and as
+    documentation of the historical bug.
+    """
+    for r in _rows():
+        assert "OPULE" not in r.get("roles", []), (
+            f"{r['dh_id']} [{r['sub_period']}]: roles contains 'OPULE' "
+            f"typo (issue #175). Should be 'MULE'."
+        )
+
+
+def test_is_group_entry_present_on_every_row() -> None:
+    """Issue #175 (Shape J): every row carries `is_group_entry: bool`.
+    Schema-shape invariant backfilled by `fix_rows.backfill_is_group_entry`.
+    """
+    for r in _rows():
+        assert "is_group_entry" in r, (
+            f"{r['dh_id']} [{r['sub_period']}]: missing is_group_entry key"
+        )
+        assert isinstance(r["is_group_entry"], bool), (
+            f"{r['dh_id']} [{r['sub_period']}]: is_group_entry "
+            f"{r['is_group_entry']!r} is not a bool"
+        )
+
+
+def test_is_group_entry_matches_canonical_set() -> None:
+    """Issue #175 (Shape J): `is_group_entry=True` iff the row's
+    (dh_id, sub_period) is in `GROUP_ENTRY_DH_IDS`. The two known
+    group entries are `[...]18A-H` and `[...]18K-N` (en-dash range
+    notation in D&H — letter-range covers multiple individuals in
+    a single Brief Lives entry).
+
+    A new chunk adding a group entry must extend `GROUP_ENTRY_DH_IDS`
+    in `fix_rows.py`; this test fails otherwise so the decision is
+    explicit, not silent.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "dh_fix_rows",
+        SOURCE_DIR / "fix_rows.py",
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    canonical = mod.GROUP_ENTRY_DH_IDS
+
+    actual_true = {
+        (r["dh_id"], r["sub_period"]) for r in _rows()
+        if r.get("is_group_entry")
+    }
+    assert actual_true == canonical, (
+        f"is_group_entry=True set drift: extra="
+        f"{sorted(actual_true - canonical)}, missing="
+        f"{sorted(canonical - actual_true)}"
+    )
+
+
+def test_sitre_a_alt_names_cleared() -> None:
+    """Issue #175 regression-pin: Sitre A's `alt_names = ['Tia Q']`
+    was cleared per the Thutmose B precedent (D&H's prose 'She may
+    previously have borne the name Tia (Q).' is a hedged identity
+    hint preserved in `notes`, not a confirmed alt_name).
+    """
+    sitre = next(
+        (r for r in _rows() if r["dh_id"] == "Sitre A"),
+        None,
+    )
+    assert sitre is not None, "Sitre A missing from reconciled.jsonl"
+    assert sitre["alt_names"] == [], (
+        f"Sitre A alt_names={sitre['alt_names']!r}, expected [] per "
+        f"the Thutmose B precedent (cross-row identity hint belongs "
+        f"in `notes`, not `alt_names`)."
+    )
+
+
 def test_role_code_set_spans_the_known_codes() -> None:
     """Every known D&H code asserted-present across the three chunks."""
     all_codes: set[str] = set()
@@ -1709,7 +1816,7 @@ def test_amarna_thutmose_b_full_row() -> None:
         "dh_id": 'Thutmose B',
         "name": 'Thutmose B',
         "alt_names": [],
-        "roles": ['EKSon', 'HPM', 'SPP', 'OPULE'],
+        "roles": ['EKSon', 'HPM', 'SPP', 'MULE'],
         "sex": 'male',
         "spouse_names": [],
         "father_name": 'Amenhotep III',
@@ -3894,7 +4001,10 @@ def test_sitre_a_house_full_row() -> None:
     _assert_full_row("Sitre A", {
         "dh_id": "Sitre A",
         "name": "Sitre A",
-        "alt_names": ["Tia Q"],
+        # Issue #175: alt_names cleared per Thutmose B precedent — D&H's
+        # `She may previously have borne the name Tia (Q)` is a hedged
+        # identity hint preserved in `notes`, not a confirmed alt_name.
+        "alt_names": [],
         "roles": ["GW", "KGW", "L2L", "GM", "KM", "MULE"],
         "sex": "female",
         "spouse_names": ["Ramesses I"],

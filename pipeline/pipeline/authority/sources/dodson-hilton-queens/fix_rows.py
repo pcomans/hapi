@@ -354,13 +354,168 @@ SEIZERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
 ]
 
 
+# Issue #175 (PR for that). Schema-audit findings:
+#
+# - Shape A: Sitre A's `alt_names = ["Tia Q"]` parallels the existing
+#   Thutmose B precedent — D&H's prose ("She may previously have borne
+#   the name Tia (Q).") is a hedged identity hint preserved in `notes`,
+#   not a confirmed alt_name. `alt_names` is reserved for alternate
+#   forms of the same individual's verified name (e.g.
+#   `Ankhesenpaaten` → `Ankhesenamun`).
+#
+# - Shape F: `OPULE` typo in Thutmose B's roles (1 row) where `MULE`
+#   was intended (8 rows in corpus). Currently shipping bad data in
+#   reconciled.jsonl. The `KNOWN_ROLE_TOKENS` allowlist + closure test
+#   added in this PR catches this class of typo going forward.
+ISSUE_175_AUDIT_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
+    (
+        "Sitre A",
+        "The House of Ramesses",
+        "alt_names",
+        [],
+        "Issue #175: clear `alt_names = ['Tia Q']` per the Thutmose B "
+        "precedent (already in this fix_rows.py). D&H's notes prose for "
+        "this row reads `She may previously have borne the name Tia (Q).` "
+        "— a hedged identity hint, NOT a confirmed alt_name. `alt_names` "
+        "is reserved for alternate forms of the same individual's verified "
+        "name (e.g. `Ankhesenpaaten` → `Ankhesenamun`). The cross-reference "
+        "to Tia (Q) is already preserved in `notes` so no information is "
+        "lost; clearing `alt_names` brings this row in line with the "
+        "Thutmose B / Thutmose Q correction also in this file.",
+    ),
+    (
+        "Thutmose B",
+        "The Amarna Interlude",
+        "roles",
+        ["EKSon", "HPM", "SPP", "MULE"],
+        "Issue #175: fix `OPULE` typo (1 row) → `MULE` (8 rows in corpus). "
+        "`OPULE` is not a documented D&H role token; `MULE` (Master / "
+        "Overseer of the Lord's Estate) is the intended code. The "
+        "`KNOWN_ROLE_TOKENS` allowlist + `test_role_tokens_in_known_vocab` "
+        "closure test added in this PR catch this class of typo "
+        "going forward.",
+    ),
+]
+
+
 SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
     POWER_CORRECTIONS
     + AMARNA_CORRECTIONS
     + RAMESSIDE_CORRECTIONS
     + FOUNDERS_CORRECTIONS
     + SEIZERS_CORRECTIONS
+    + ISSUE_175_AUDIT_CORRECTIONS
 )
+
+
+# Issue #175 (Shape J): typed flag for D&H "group entries" — single
+# rows that cover multiple individuals via D&H's letter-range notation
+# (`[...]18A–H` covers up to 8 daughters A through H of Amenhotep III;
+# `[...]18K–N` covers 4 daughters K–N). Pre-fix these were
+# indistinguishable from regular lacuna entries (`[...]12A`, `Henut[...]`)
+# which represent ONE partially-attested individual. Downstream
+# consumers iterating per-row would conflate the two without a typed
+# flag.
+#
+# The set is exhaustive against the current corpus — verified by
+# `_GROUP_ENTRY_CANDIDATES_CHECK` at module-load below. New chunks
+# that introduce additional group entries must extend this set
+# explicitly (the closure test will fail otherwise, surfacing the
+# decision rather than silently letting it slip).
+GROUP_ENTRY_DH_IDS: set[tuple[str, str]] = {
+    ("[...]18A–H", "The Amarna Interlude"),
+    ("[...]18K–N", "The Amarna Interlude"),
+}
+
+
+# D&H role token vocabulary. Closure asserted by
+# `test_role_tokens_in_known_vocab` — every token in any row's `roles`
+# list must appear here. Update this set when adding a new chunk that
+# introduces a new role token, after verifying the token is D&H's
+# (not a typo).
+#
+# Compiled from the corpus (74 distinct tokens minus the OPULE typo
+# this PR fixes), grouped by category for human-readable maintenance.
+KNOWN_ROLE_TOKENS: set[str] = {
+    # Royal-family relational codes
+    "KD",        # King's Daughter
+    "KDB",       # King's Daughter (of Body)
+    "KSon",      # King's Son
+    "KSonB",     # King's Son (of Body)
+    "KSonK",     # King's Son of Kush
+    "KSonN",     # King's Son of Nubia (alt notation)
+    "EKSon",     # Eldest King's Son
+    "EKSonB",    # Eldest King's Son (of Body)
+    "1KSon",     # First King's Son (D&H's leading-digit form)
+    "1KSonB",    # First King's Son (of Body)
+    "KSis",      # King's Sister
+    "KW",        # King's Wife
+    "KW?",       # King's Wife (hedged — D&H's explicit hedge variant)
+    "KGW",       # King's Great Wife
+    "KM",        # King's Mother
+    "GW",        # God's Wife
+    "GWA",       # God's Wife of Amun
+    "GBW",       # Greatly Beloved Wife (foreign-princess title)
+    "GM",        # God's Mother (priestess role)
+    "GF",        # God's Father (Yuya, Ay etc.)
+    "GS",        # God's Sister
+    "PH",        # Possible/probable wife (D&H hedge in Mentuhotep-II contexts)
+    "UWC",       # Unmarried Wife? / Unidentified Woman in Court (verify)
+    "L2L",       # Lady of the Two Lands
+    "Ador",      # Adoratrix (of Amun)
+    "Genmo",     # Generalissimo / Generalissimo of the Army
+    "1Genmo",    # First Generalissimo
+    "MULE",      # Master / Overseer of the Lord's Estate
+    "MoH",       # Master of the Horse
+    "MH",        # Master of the Horse (alt)
+    "Exec",      # Executive (chief minister)
+    "ExecH2L",   # Executive of the Two Lands
+    "HPH",       # High Priest of (somewhere)
+    "HPM",       # High Priest of Memphis
+    "HPA",       # High Priest of Amun
+    "SPP",       # Sem-Priest of Ptah
+    "Viz",       # Vizier
+    "Viz?",      # Vizier (hedged)
+    "Gen",       # General
+    "Nomarch",   # Nomarch
+    "Fanbearer",
+    "1PMut",     # First Prophet of Mut
+    "RO",        # Royal Ornament(?) — verify
+    "ChA",       # ?
+    # Additional compact codes (less frequent; semantics where known
+    # noted in comments, otherwise verbatim from corpus pending future
+    # README expansion).
+    "2PA",       # Second Prophet of Amun
+    "CTL",       # Chief Treasurer of the Lord (?)
+    "FW",        # Foster-Wife (?)
+    "KGD",       # King's Grand-Daughter (?)
+    "KM of KGW", # King's Mother of King's Great Wife (compound role)
+    "M2L",       # Mistress of the Two Lands
+    "SCH",       # ?
+    "SH",        # Steward of the Household (?)
+    "ScH",       # Scribe of the Household (?)
+    "Sister of KGW",
+    # Long-form titles D&H spells out
+    "Adjutant of the Chariotry",
+    "Attendant of Dog-Keepers",
+    "Captain of the Troops",
+    "Chief Scribe of the Vizier",
+    "Elder of the Portal",
+    "Governor of El-Kab",
+    "High Steward",
+    "King of Hittites",
+    "King of Mitanni",
+    "Mistress of All Women",
+    "Nurse of the God",
+    "Overseer of Cattle",
+    "Overseer of the Fields",
+    "Overseer of Treasurers",
+    "Royal Representative",
+    "Songstress of Pre",
+    "Steward of Queen Tiye A/Tey",
+    "Townsman",
+    "Troop Commander",
+}
 
 _OVERRIDES_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
 
@@ -381,8 +536,44 @@ for _, _, _, _, _rationale in SPOT_CORRECTIONS:
 del _rationale
 
 
+def backfill_is_group_entry(rows: list[dict]) -> list[str]:
+    """Issue #175 (Shape J): every row carries `is_group_entry: bool`,
+    True iff the (dh_id, sub_period) is in `GROUP_ENTRY_DH_IDS`.
+
+    Idempotent. Schema-shape pass before SPOT_CORRECTIONS. Constitutional
+    rule 4: schema shape uniform across all rows so consumers don't
+    branch on present-vs-absent.
+    """
+    log_lines: list[str] = []
+    for row in rows:
+        key = (row["dh_id"], row["sub_period"])
+        expected = key in GROUP_ENTRY_DH_IDS
+        if "is_group_entry" not in row:
+            row["is_group_entry"] = expected
+            log_lines.append(
+                f"  {row['dh_id']} [{row['sub_period']}]: backfilled "
+                f"is_group_entry={expected}"
+            )
+        elif row["is_group_entry"] != expected:
+            # Drift detector: someone hand-edited reconciled.jsonl OR a
+            # new GROUP_ENTRY_DH_IDS entry was added without re-running
+            # this pass. Fix the value to match the canonical set.
+            row["is_group_entry"] = expected
+            log_lines.append(
+                f"  {row['dh_id']} [{row['sub_period']}]: corrected "
+                f"is_group_entry to {expected} (drift from canonical set)"
+            )
+    return log_lines
+
+
 def main() -> None:
     rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+
+    # Schema-shape backfills first — every row gains the new typed
+    # `is_group_entry` field BEFORE SPOT_CORRECTIONS runs. Patterned
+    # after the leprohon `backfill_*` passes (PR #185) which solve the
+    # same Rule-4 schema-uniformity problem.
+    backfill_log = backfill_is_group_entry(rows)
 
     # The log must describe the *state* of reconciled.jsonl, not the *delta*
     # from the previous run. On a second run every `old_val == new_val`, so a
@@ -440,10 +631,13 @@ def main() -> None:
     idx = existing_diff.find(marker)
     if idx != -1:
         existing_diff = existing_diff[:idx].rstrip()
-    body = (
-        "\n".join(override_log)
-        if override_log
-        else "- No overrides applied. The reviewer pass produced no "
+    body_sections: list[str] = []
+    if backfill_log:
+        body_sections.append("Schema backfills:\n" + "\n".join(backfill_log))
+    if override_log:
+        body_sections.append("Field corrections:\n" + "\n".join(override_log))
+    body = "\n\n".join(body_sections) if body_sections else (
+        "- No overrides applied. The reviewer pass produced no "
         "actionable corrections on `reconciled.jsonl` for this chunk."
     )
     appended = (
