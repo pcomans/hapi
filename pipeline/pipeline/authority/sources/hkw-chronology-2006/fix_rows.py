@@ -145,25 +145,43 @@ SLASH_ROW_MIGRATIONS = [
         "_locator": ("ruler", None, "Ra'djedef/Djedefre'", None),
         "display": "Ra'djedef",
         "alt_names": ["Djedefre'"],
-        "_rationale": "Cat 1 split: HKW prints '{display}' as a transliteration-variant pair; first-listed kept as `display` per HKW order.",
+        # Pre-fix `note` said "Display contains slash-separated name
+        # variants" — accurate before this PR migrated the slash out;
+        # now stale. Clear (PR #188 code-reviewer P2-1).
+        "note": None,
+        "_rationale": "Cat 1 split: HKW prints '{display}' as a transliteration-variant pair; first-listed kept as `display` per HKW order. Pre-fix slash-explanation note cleared (PR #188 code-reviewer P2-1).",
     },
     {
         "_locator": ("ruler", None, "Ra'neferef/Neferefre'", None),
         "display": "Ra'neferef",
         "alt_names": ["Neferefre'"],
+        # Existing note "Single-year reign; PDF shows just '2404'" is
+        # legitimate transcription provenance, kept.
         "_rationale": "Cat 1 split: HKW prints '{display}' as a transliteration-variant pair; first-listed kept as `display` per HKW order.",
     },
     {
         "_locator": ("ruler", None, "Tut'ankhaten/amun", None),
         "display": "Tut'ankhaten",
-        "alt_names": ["Tut'ankhamun"],
-        "_rationale": "Cat 1 split: HKW prints '{display}' as a regnal-name-change pair (Aten → Amun after Year 4); first-listed kept as `display` per HKW order. Both names refer to the same king Tutankhamun.",
+        # Per egyptologist PR #188 P2: HKW's `Tut'ankhaten/amun` is a
+        # printer's contraction (shared `Tut'ankh-` stem + two endings),
+        # not a slash-pair. Keep the canonical post-Amarna form
+        # `Tut'ankhamun` AND preserve the verbatim contracted form for
+        # source-string traceability — Phase-A consumers searching
+        # `tut'ankhaten/amun` against this source should match.
+        "alt_names": ["Tut'ankhamun", "Tut'ankhaten/amun"],
+        "_rationale": "Cat 1 split: HKW prints '{display}' as a printer's contraction (shared `Tut'ankh-` stem + two endings: `-aten`/`-amun`), encoding the regnal-name change after Year 4. First-listed kept as `display` per HKW order. Both `Tut'ankhamun` (post-Amarna) and the verbatim contracted form `Tut'ankhaten/amun` are in alt_names — the latter for source-string-match traceability per egyptologist PR #188 P2.",
     },
     {
         "_locator": ("ruler", None, "Piye/Pi'ankhy", None),
         "display": "Piye",
         "alt_names": ["Pi'ankhy"],
-        "_rationale": "Cat 1 split: HKW prints '{display}' as a transliteration-variant pair; first-listed kept as `display` per HKW order.",
+        # Pre-fix `note` said "PDF prints 'Piye/Pi'ankhy' — slash-separated
+        # name variants; no prenomen listed in PDF" — slash-explanation
+        # is now stale post-migration; the no-prenomen part is preserved
+        # in `null_dates_reason` style as a separate concern (prenomen
+        # is null, no need for explanatory note).
+        "note": None,
+        "_rationale": "Cat 1 split: HKW prints '{display}' as a transliteration-variant pair; first-listed kept as `display` per HKW order. Pre-fix slash-explanation note cleared (PR #188 code-reviewer P2-1).",
     },
     # Cat 2 — same-person regnal-name change OR HKW's hedge:
     {
@@ -177,7 +195,7 @@ SLASH_ROW_MIGRATIONS = [
         "display": "Smenkhkare'",
         "alt_names": ["Nefernefruaten"],
         "name_uncertain": True,
-        "_rationale": "Cat 2 split with name_uncertain=True: HKW p.493 verified — the chronological slot 1336-1334 under prenomen `'Ankhkheprure'` could be either Smenkhkare or Nefernefruaten per HKW's own hedge. (NB: L118 has a SEPARATE `Nefernefruaten` row for 1334-? under different prenomen `'Ankhetkheprure'` — that's a distinct ruler, not a duplicate.)",
+        "_rationale": "Cat 2 split with name_uncertain=True: HKW p.493 table presents the chronological slot 1336-1334 under prenomen `'Ankhkheprure'` as `Smenkhkare'/Nefernefruaten`. Per egyptologist PR #188 P2, HKW's prose at p.477 leans toward Smenkhkare for `'Ankhkheprure'`; the table-level slash records the candidates and the typed `name_uncertain=True` records that scholarship is divided. (NB: L118 has a SEPARATE `Nefernefruaten` row for 1334-? under different prenomen `'Ankhetkheprure'` — that's a distinct ruler, not a duplicate.)",
     },
 ]
 
@@ -241,22 +259,40 @@ MULTI_RULER_MIGRATIONS = [
 ]
 
 
-# Parenthetical-Horus-name extractions: HKW prints e.g. "Djoser (Netjery-khet)"
-# where the parenthetical is an alternative Horus name, not a Greek form.
-# The note field already documents this; the alt name moves to `alt_names`
-# and the note is cleared (data now typed).
-HORUS_NAME_MIGRATIONS = [
+# Parenthetical-name extractions: HKW prints e.g. "Djoser (Netjery-khet)"
+# and "Khephren (Ra'kha'ef)" where the parenthetical is an alternative
+# name. The note field used to document these as "alternative Horus
+# names" — egyptologist review on PR #188 corrected this:
+#
+# - Djoser's `Netjery-khet` IS in fact Djoser's Horus name historically,
+#   but HKW's table doesn't label it as such. Same parenthetical
+#   pattern as `Khufu (Cheops)` and `Menkaure (Mycerinus)` which are
+#   GREEK forms, so don't claim "Horus name" without HKW labelling.
+# - Khephren's `Ra'kha'ef` is the BIRTH name (the modern English form
+#   `Khafre` derives from it). Khephren's actual Horus name is *Userib*,
+#   per Beckerath HÄKN. The original note's "Horus name" claim was
+#   wrong.
+#
+# Both data values stay (they ARE alternate names of the same person),
+# but the rationale strings are corrected to "parenthetical alternative
+# name" without naming the name-type. `alternative_reading` is also
+# nulled here (Djoser+Khephren had duplicate values across `alt_names`
+# AND `alternative_reading` — caught by code-reviewer PR #188 P1-1
+# Rule-4 violation; canonical home is `alt_names` per the audit-fix).
+PARENTHETICAL_NAME_MIGRATIONS = [
     {
         "_locator": ("ruler", 3, "Djoser", None),
         "alt_names": ["Netjery-khet"],
+        "alternative_reading": None,
         "note": None,
-        "_rationale": "HKW p. note documents 'Djoser (Netjery-khet)' parenthetical as an alternative Horus name. Migrated to `alt_names`; note cleared (information now typed).",
+        "_rationale": "HKW prints 'Djoser (Netjery-khet)' parenthetical as an alternative name (HKW's table doesn't label it Horus / Greek / birth — name-type unstated). Migrated to `alt_names`; note cleared; `alternative_reading` nulled to avoid Rule-4 duplication. The earlier 'Horus name' claim was unverified against HKW's table; egyptologist review on PR #188 confirmed Netjerikhet IS Djoser's Horus name historically but HKW doesn't say so.",
     },
     {
         "_locator": ("ruler", 4, "Khephren", None),
         "alt_names": ["Ra'kha'ef"],
+        "alternative_reading": None,
         "note": None,
-        "_rationale": "HKW note documents 'Khephren (Ra'kha'ef)' parenthetical as an alternative name. Migrated to `alt_names`; note cleared.",
+        "_rationale": "HKW prints 'Khephren (Ra'kha'ef)' parenthetical as an alternative name. `Ra'kha'ef` is the BIRTH name (the modern English form `Khafre` derives from it); Khephren's actual Horus name is *Userib* per Beckerath HÄKN. The earlier 'alternative Horus name' claim was wrong — egyptologist review on PR #188 caught this. Migrated to `alt_names`; note cleared; `alternative_reading` nulled (Rule-4 dedup).",
     },
 ]
 
@@ -390,7 +426,7 @@ NULL_DATES_MIGRATIONS = [
 ALL_MIGRATIONS: list[list[dict]] = [
     SLASH_ROW_MIGRATIONS,
     MULTI_RULER_MIGRATIONS,
-    HORUS_NAME_MIGRATIONS,
+    PARENTHETICAL_NAME_MIGRATIONS,
     COREGENCY_MIGRATIONS,
     RIVAL_CLAIMANT_MIGRATIONS,
     PER_BOUND_APPROX_MIGRATIONS,

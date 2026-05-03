@@ -85,13 +85,13 @@ each round.
 - **Dyns. 16 and 17 combined header.** HKW prints a single bold header
   "Dyns. 16 and 17" covering both dynasties. The reconciled file
   labels the dynasty row with `number: 16` and splits the rulers
-  between `dynasty: 16` (Sobekemhotep VIII et al., a multi-ruler
+  between `dynasty: 16` (Sobekhotep VIII et al., a multi-ruler
   line) and `dynasty: 17` (Inyotef, two Ta'os, Kamose)
 - **Dyn. 23 (UE) vs Dyn. 23 (LE).** Two separate dynasty headers
   both numbered 23 — one for Upper Egypt, one for Lower Egypt. Both
   kept with `number: 23` and distinguished by `label`
 - **Multi-ruler rows** (`"Swadjtu, Ined, Hori, Dedumose"`,
-  `"Sobekemhotep VIII, Nebiriau, Rahotep, Sobekemzaf I & II, Bebiankh"`,
+  `"Sobekhotep VIII, Nebiriau, Rahotep, Sobekemzaf I & II, Bebiankh"`,
   `"Shoshenq IV, Rudamun, Iny"`, `"Petubaste II (?), Osorkon IV"`) are
   kept as single JSONL rows matching the PDF layout. The final
   `rulers.json` authority file will almost certainly want them

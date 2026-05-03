@@ -76,6 +76,33 @@ def test_kind_in_known_vocab() -> None:
         assert r["kind"] in KIND_VOCAB, (r.get("display"), r["kind"])
 
 
+def test_alt_names_disjoint_from_alternative_reading() -> None:
+    """Issue #176 / PR #188 code-reviewer P2-3: Rule 4 (single source of
+    truth). A name should live in exactly one of `alt_names` (the typed
+    SAME-PERSON variant list introduced by issue #176) or
+    `alternative_reading` (the legacy square-bracket field). Caught a
+    real Rule-4 violation on Djoser + Khephren in the initial
+    implementation: both `alt_names` and `alternative_reading` carried
+    the same string. Closure test prevents the regression.
+
+    Going forward, `alt_names` is canonical for SAME-PERSON name
+    variants; `alternative_reading` is preserved for backwards
+    compatibility on rows where the original transcription populated
+    it from HKW's square-bracket notation but should be migrated to
+    `alt_names` in a future pass.
+    """
+    for r in _rows():
+        alt_names_set = set(r.get("alt_names") or [])
+        alt_reading = r.get("alternative_reading")
+        if alt_reading and alt_reading in alt_names_set:
+            raise AssertionError(
+                f"{r.get('display')!r}: '{alt_reading}' appears in BOTH "
+                f"alt_names AND alternative_reading (Rule-4 single-source "
+                f"violation). Migrate to alt_names only and null "
+                f"alternative_reading."
+            )
+
+
 def test_alt_names_is_list_of_strings() -> None:
     """Issue #176 Shape I: `alt_names` is `list[str]`, never `None`.
     Empty list is the absent-data sentinel.
@@ -357,10 +384,37 @@ def test_pin_petubaste_uncertain_in_multi_ruler() -> None:
     assert petubaste["alt_names"] == ["Petubaste II (?)"]
 
 
-def test_pin_djoser_horus_name_migrated() -> None:
+def test_pin_djoser_parenthetical_name_migrated() -> None:
+    """Djoser (Netjery-khet) parenthetical migrated to alt_names.
+    `alternative_reading` nulled per PR #188 P1-1 (Rule-4 dedup)."""
     r = _row("Djoser", dynasty=3)
     assert "Netjery-khet" in r["alt_names"]
+    assert r["alternative_reading"] is None  # nulled to avoid alt_names dup
     assert r["note"] is None  # Note cleared after migration
+
+
+def test_pin_khephren_parenthetical_name_migrated() -> None:
+    """Khephren (Ra'kha'ef) — `Ra'kha'ef` is the BIRTH name, not a Horus
+    name (egyptologist PR #188 P1 corrected the original misclassification).
+    Both `alternative_reading` and `note` nulled (Rule-4 dedup + stale-
+    note cleanup).
+    """
+    r = _row("Khephren", dynasty=4)
+    assert "Ra'kha'ef" in r["alt_names"]
+    assert r["alternative_reading"] is None
+    assert r["note"] is None
+
+
+def test_pin_tutankhaten_verbatim_contraction_in_alt_names() -> None:
+    """Per egyptologist PR #188 P2: HKW's `Tut'ankhaten/amun` is a
+    printer's contraction. Both the canonical post-Amarna form
+    `Tut'ankhamun` AND the verbatim contracted form `Tut'ankhaten/amun`
+    should be in alt_names (the latter for source-string-match
+    traceability).
+    """
+    r = _row("Tut'ankhaten", dynasty=18)
+    assert "Tut'ankhamun" in r["alt_names"]
+    assert "Tut'ankhaten/amun" in r["alt_names"]
 
 
 def test_pin_thutmose_iii_coregency() -> None:

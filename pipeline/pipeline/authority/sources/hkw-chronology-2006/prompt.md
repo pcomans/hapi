@@ -34,12 +34,23 @@ Column 1 for ruler rows contains:
 - An **alternative reading in square brackets** (e.g.
   "Piankhi [Piye]")
 - Some rulers have a slash-separated list (e.g.
-  "Ra'djedef/Djedefre"). Treat the whole string as the `display`
-  field and leave `prenomen` null unless part of the string is
-  italicized
+  "Ra'djedef/Djedefre"). **Issue #176 schema update** (PR #188): the
+  initial extraction may emit the slash-display as-is, but the
+  post-extraction `fix_rows.py` migrates these to `display` (first-
+  listed) + `alt_names` (second-listed). For re-extractions emit the
+  whole string as the `display` field (matching the original
+  transcription); the migration handles the split. Leave `prenomen`
+  null unless part of the string is italicized.
 - Multi-ruler combined lines (e.g. "Swadjtu, Ined, Hori, Dedumose" in
   Dyn. 13) are a single row with the comma-separated list as
-  `display` and a `note` explaining
+  `display`. **Issue #176 schema update** (PR #188): post-extraction
+  `fix_rows.py` migrates the compound string to a `rulers: list[{name,
+  prenomen, alternative_reading, alt_names}]` field with
+  `is_multi_ruler_entry=True`. The initial extraction does NOT need to
+  populate `rulers` — emit only the verbatim compound `display` and
+  let the migration handle the typed structuring. New compound rows
+  must be added to `MULTI_RULER_MIGRATIONS` in `fix_rows.py`
+  explicitly (the closure test fails otherwise).
 
 ## Column 3 (dates)
 
