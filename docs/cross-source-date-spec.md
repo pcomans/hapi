@@ -210,11 +210,24 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
 
   "null_endpoints_reason": null,   // populated when both _older and _younger are null
   "corrected_end_year":   null,    // typed source-correction (Kitchen 21H.06)
+  "minimum_duration_years": null,  // numeric "at least N years" constraint
+                                   // when the source records a +N convention
+                                   // with a null endpoint (HKW's `2900–?+25`
+                                   // → start_year_*=−2900, end_year_*=null,
+                                   // minimum_duration_years=25). Phase A
+                                   // interval arithmetic uses this to compute
+                                   // a lower bound for the duration even
+                                   // when the end is unknown.
 
   // === Crosswalk-to-source ===
-  "source_qualifier_token": "c.",  // verbatim qualifier glyph from source
+  // Per-bound qualifier tokens — Beckerath supports asymmetric per-bound
+  // forms like `vor 1000 – nach 950`. Singular `source_qualifier_token`
+  // would lose half the information for these rows. Per Gemini PR #195
+  // round-6.
+  "start_qualifier_token": "ca.",  // verbatim glyph from source on start
                                    // (`"c."` Shaw, `"ca."` Beckerath/Kitchen,
-                                   // `"ungefähr"` Beckerath, etc.)
+                                   // `"vor"` / `"ungefähr"` Beckerath, etc.)
+  "end_qualifier_token":   "ca."   // verbatim glyph from source on end
 }
 ```
 
@@ -280,7 +293,7 @@ The source records data (a name, a tomb, a fragment) without claiming who/where 
 }
 ```
 
-These three field families are orthogonal. A row can be `existence_certainty=doubtful` AND `attribution_certainty=probable` AND `is_unattributed=false` simultaneously (e.g. Beckerath flags the king's existence as doubtful, but Phase A tentatively attributes a tomb to him, and the tomb-row points at this king as the candidate). The single-enum draft conflated them and would have lost semantic detail on every cross-source map.
+These three field families are orthogonal. A Phase-A AGGREGATE record (built from multiple source types — e.g. Beckerath for the king-list + Porter-Moss for the tomb catalogue) can carry `existence_certainty=doubtful` (sourced from Beckerath: the king's existence is debated) AND `attribution_certainty=probable` (sourced from PM: the tomb is probably his) AND `is_unattributed=false` (the row has a candidate ruler). The single-enum draft conflated them and would have lost semantic detail on every cross-source map. **Within a single source extract**, you typically see only one of the three; the orthogonality matters at the Phase-A aggregation step.
 
 ---
 
