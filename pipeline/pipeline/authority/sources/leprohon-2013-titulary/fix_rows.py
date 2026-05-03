@@ -1223,11 +1223,14 @@ def apply_corrections() -> list[str]:
     # clean, fully-keyed rows.
     log_lines.extend(backfill_name_list_fields(rows))
     log_lines.extend(backfill_stage_suffix(rows))
-    # `backfill_notes` MUST run before SPOT_CORRECTIONS — the
-    # `NOTES_RESTORATIONS` block uses `_set_by_path(row, "notes", ...)`
-    # which assumes the key already exists on the row. Backfill order
-    # vs the other backfill_* passes is independent (they touch
-    # disjoint fields).
+    # `backfill_notes` runs before SPOT_CORRECTIONS for Rule-4 schema
+    # uniformity: every row has the `notes` key with `None` default
+    # BEFORE `NOTES_RESTORATIONS` overrides 6 of them. Without the
+    # backfill, `_set_by_path` would still work (top-level dict
+    # assignment creates the key), but the other 389 rows would carry
+    # no `notes` key at all — schema inhomogeneity, the exact bug
+    # issue #174 fixes. Backfill order vs the other backfill_* passes
+    # is independent (they touch disjoint fields).
     log_lines.extend(backfill_notes(rows))
     log_lines.extend(strip_debug_leakage(rows))
     log_lines.extend(normalize_translit_mdc(rows))
