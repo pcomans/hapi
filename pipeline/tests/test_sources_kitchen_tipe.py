@@ -332,3 +332,175 @@ def test_tefnakht_i_appears_twice() -> None:
     assert king["polity"] == "Sais"
     assert early["approximate"] is True
     assert king["approximate"] is False
+
+
+# ── Closure tests (#180) — typed flags, list-promote, idempotence ──────
+
+_REQUIRED_180_KEYS = (
+    "substream",
+    "prenomen_is_kitchen_unknown",
+    "is_co_regent_only",
+    "existence_doubtful",
+    "same_person_as",
+    "corrected_end_bce",
+    "prenomens",
+)
+
+
+def test_180_every_row_has_typed_flags() -> None:
+    """Every row carries all 7 typed fields introduced in #180."""
+    for r in _rows():
+        for key in _REQUIRED_180_KEYS:
+            assert key in r, (r["kitchen_id"], key)
+
+
+def test_180_substream_derives_from_kitchen_id() -> None:
+    """Substream letter ∈ {H, E, P} OR None (main-line). Mechanical
+    derivation from kitchen_id — every row's substream matches the
+    letter (if any) immediately after the dynasty number."""
+    import re
+    pat = re.compile(r"^\d+([A-Z]?)\.")
+    for r in _rows():
+        m = pat.match(r["kitchen_id"])
+        expected = m.group(1) or None
+        assert r["substream"] == expected, (r["kitchen_id"], r["substream"], expected)
+
+
+def test_180_substream_distribution() -> None:
+    """Pin the exact substream distribution for the current TIPE extract:
+    42 main-line, 10 H (HPA), 4 E (Sais-Bubastis-East), 4 P (Persian /
+    proto-Saite). Total 60 rows."""
+    from collections import Counter
+    counts = Counter(r["substream"] for r in _rows())
+    assert counts == {None: 42, "H": 10, "E": 4, "P": 4}, counts
+
+
+def test_180_prenomen_is_kitchen_unknown_canonical_set() -> None:
+    """Exactly 2 rows where Kitchen prints `[Prenomen unknown]`: 22.04
+    Takeloth I and 23.07 Iuput II. Every other null prenomen is a
+    table-layout omission, not a Kitchen-asserted unknown."""
+    expected = {"22.04", "23.07"}
+    actual = {r["kitchen_id"] for r in _rows() if r["prenomen_is_kitchen_unknown"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_180_co_regent_only_canonical_set() -> None:
+    """Co-regent-only rows from two sources:
+      (a) literal "co-rgt only" in `notes_from_kitchen`: 22.03 Shoshenq II
+          + 22.06 Harsiese (per egyptologist P1-1 — both Table 3 cells
+          carry the marker)
+      (b) scholarly-judgment overrides for HPA narrative co-regents:
+          21H.05 Masaharta + 21H.06 Djed-Khons-ef-ankh
+    Total 4 rows."""
+    expected = {"21H.05", "21H.06", "22.03", "22.06"}
+    actual = {r["kitchen_id"] for r in _rows() if r["is_co_regent_only"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_180_existence_doubtful_canonical_set() -> None:
+    """Rows where Kitchen marks the king's existence as uncertain. Two
+    detection sources:
+      - `?` / `??` / quote-wrap on `name`: 24E.01, 24E.02, 24P.01
+      - literal `existence, doubtful` in `notes_from_kitchen`:
+        23.08 Shoshenq VI (per egyptologist P1-2 — `(c. 5 y??); existence,
+        doubtful` is the most explicit marker in the corpus)"""
+    expected = {"23.08", "24E.01", "24E.02", "24P.01"}
+    actual = {r["kitchen_id"] for r in _rows() if r["existence_doubtful"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_180_same_person_canonical_set() -> None:
+    """Same-person pairs Kitchen catalogues twice. Pinned 2026-05-03:
+      - 21H.03 ↔ 21H.04 (Pinudjem I HPA capacity ↔ king titulature)
+      - 24E.04 ↔ 24.01 (Tefnakht I Chief of Mā ↔ king; Kitchen's
+        "(c. 13 y; then, kg)" chain on 24E.04 explicitly links them,
+        per egyptologist P1-3)"""
+    expected = {
+        "21H.03": "21H.04", "21H.04": "21H.03",
+        "24E.04": "24.01", "24.01": "24E.04",
+    }
+    actual = {r["kitchen_id"]: r["same_person_as"] for r in _rows() if r["same_person_as"]}
+    assert actual == expected, sorted(actual.items())
+
+
+def test_180_same_person_pairs_are_symmetric() -> None:
+    """Pinudjem I is at 21H.03 (HPA) AND 21H.04 (king titulature).
+    The same_person_as field must be symmetric: each row points at the
+    other."""
+    by_id = {r["kitchen_id"]: r for r in _rows()}
+    for r in _rows():
+        partner = r["same_person_as"]
+        if partner is None:
+            continue
+        assert partner in by_id, (r["kitchen_id"], partner)
+        assert by_id[partner]["same_person_as"] == r["kitchen_id"], (
+            r["kitchen_id"], partner,
+        )
+
+
+def test_180_21H_06_corrected_end_bce_pinned() -> None:
+    """21H.06 Djed-Khons-ef-ankh: Kitchen's printed `end_bce=-1056` is
+    a typographic reversal; the corrected value is `-1045` (predecessor
+    Masaharta ends 1046, successor Menkheperre starts 1045, length 1y).
+    The typed `corrected_end_bce` field replaces the hardcoded
+    DKF_INTERVAL Python constant + notes-prose explanation."""
+    r = _row("21H.06")
+    assert r["end_bce"] == -1056  # verbatim
+    assert r["corrected_end_bce"] == -1045  # the typed correction
+
+
+def test_180_25_03_piankhy_two_prenomens() -> None:
+    """25.03 Piankhy: Kitchen's `Usimare, then Sneferre` decomposes to
+    a typed prenomens list with `when` markers. The legacy `prenomen`
+    scalar still carries the comma-string for backwards compat."""
+    r = _row("25.03")
+    assert r["prenomens"] == [
+        {"name": "Usimare", "when": "initial"},
+        {"name": "Sneferre", "when": "later"},
+    ]
+
+
+def test_180_corrected_end_bce_only_for_known_typo() -> None:
+    """Only 21H.06 has a corrected_end_bce. Every other row must carry
+    None — silent additions of further `corrected_end_bce` overrides
+    must be deliberate and tracked here."""
+    for r in _rows():
+        if r["kitchen_id"] == "21H.06":
+            continue
+        assert r["corrected_end_bce"] is None, (r["kitchen_id"], r["corrected_end_bce"])
+
+
+def test_180_fix_rows_is_file_level_idempotent() -> None:
+    """Run fix_rows.py twice in a temporary copy and assert byte-equality
+    of the output JSONL. Per the Beckerath #179 regression pattern."""
+    import shutil
+    import subprocess
+    import sys
+    import tempfile
+    src_dir = (
+        Path(__file__).parent.parent
+        / "pipeline"
+        / "authority"
+        / "sources"
+        / "kitchen-tipe"
+    )
+    with tempfile.TemporaryDirectory() as tmp_str:
+        tmp = Path(tmp_str) / "src"
+        shutil.copytree(src_dir, tmp)
+        for _ in range(2):
+            subprocess.run(
+                [sys.executable, str(tmp / "fix_rows.py")],
+                check=True,
+                capture_output=True,
+            )
+        run1 = (tmp / "reconciled.jsonl").read_bytes()
+        subprocess.run(
+            [sys.executable, str(tmp / "fix_rows.py")],
+            check=True,
+            capture_output=True,
+        )
+        run2 = (tmp / "reconciled.jsonl").read_bytes()
+        assert run1 == run2, (
+            "fix_rows.py is NOT byte-idempotent — re-running on a "
+            "fully-migrated reconciled.jsonl produced different bytes."
+        )

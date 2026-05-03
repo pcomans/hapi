@@ -60,12 +60,4 @@ against the source PDF. No human scholar has signed off on this
 extract yet — per ADR-017 step 6, the extract is provisional until
 that happens.
 
-- 21.01: concurrent_with_kings ["21H.01", "21H.02", "21H.03", "21H.04", "21H.05"] → ["21H.03", "21H.04", "21H.05", "21H.06", "21H.07"] (deterministic interval-overlap recomputation from start_bce/end_bce)
-- 21.03: concurrent_with_kings ["21H.04", "21H.05", "21H.06", "21H.07", "21H.08"] → ["21H.04", "21H.07", "21H.08"] (deterministic interval-overlap recomputation from start_bce/end_bce)
-- 21H.01: concurrent_with_kings ["20.01", "21.01"] → ["20.01"] (deterministic interval-overlap recomputation from start_bce/end_bce)
-- 21H.02: concurrent_with_kings ["20.01", "21.01"] → ["20.01"] (deterministic interval-overlap recomputation from start_bce/end_bce)
-- 21H.06: concurrent_with_kings ["21.03"] → ["21.01"] (deterministic interval-overlap recomputation from start_bce/end_bce)
-- 21H.07: concurrent_with_kings ["21.02", "21.03", "21.04"] → ["21.01", "21.02", "21.03", "21.04"] (deterministic interval-overlap recomputation from start_bce/end_bce)
-- 21H.08: concurrent_with_kings ["21.03", "21.07"] → ["21.03", "21.04"] (deterministic interval-overlap recomputation from start_bce/end_bce)
-- 21H.01: notes_from_kitchen "hp" → null (Table 1 shows "Herihor in S (6 y)" — the "hp" marker Kitchen uses to disambiguate Pinudjem I hp vs Pinudjem I 'kg' does not appear on Herihor. Majority vote picked "hp" from a confused agent.)
-- 21H.06: notes_from_kitchen null → "Kitchen prints the date range as '1046–1056' with a 1 y length; predecessor Masaharta ends 1046 and successor Menkheperre starts 1045, so the printed 1056 is a typographic reversal and the true end is 1045. end_bce preserved verbatim as -1056; concurrency computed against the corrected interval." (Annotate Kitchen's 1046–1056 typo explicitly so downstream consumers don't silently compute a -11 year reign from the BCE endpoints.)
+
