@@ -105,18 +105,24 @@ def test_sakir_har_15_3_no_prenomen() -> None:
     assert r["polity"] == "Avaris (Hyksos)"
 
 
-def test_dyn14_homonym_disambiguators_preserved() -> None:
+def test_dyn14_homonym_disambiguators_typed() -> None:
     """Ryholt uses Roman-numeral suffixes in File 1 to distinguish kings
     with the same anglicised prenomen across dynasties (13.11 Sewadjkare
-    vs 14.11 Sewadjkare III, etc.). The `nomen` field keeps those
-    suffixes so the authority layer can't collide cross-dynasty homonyms.
+    vs 14.11 Sewadjkare III, etc.). Issue #177 PR #189 audit-fix:
+    moved from in-string `(III)` glyph in `nomen` to typed
+    `homonym_index` integer field. `nomen` now carries the bare name;
+    consumers querying for "all Sewadjkare kings" should join on
+    nomen alone, then disambiguate via homonym_index when present.
     """
-    for rid, expected in [
-        ("14.11", "Sewadjkare (III)"),
-        ("14.17", "Awibre (II)"),
-        ("14.24", "Sankhibre (II)"),
+    for rid, expected_nomen, expected_index in [
+        ("13.11", "Sewadjkare", 1),
+        ("14.11", "Sewadjkare", 3),
+        ("14.17", "Awibre", 2),
+        ("14.24", "Sankhibre", 2),
     ]:
-        assert _row(rid)["nomen"] == expected, rid
+        r = _row(rid)
+        assert r["nomen"] == expected_nomen, (rid, r["nomen"])
+        assert r["homonym_index"] == expected_index, (rid, r["homonym_index"])
 
 
 def test_abydos_dynasty_rows_have_polity() -> None:
@@ -209,3 +215,165 @@ def test_polity_matches_dynasty() -> None:
                 assert r["polity"] is None, r
         else:
             assert r["polity"] == expected[r["dynasty"]], r
+
+
+# ---------------------------------------------------------------------------
+# Issue #177 PR #189 — schema-audit-fix tests for the new typed fields
+# ---------------------------------------------------------------------------
+
+
+import importlib.util
+
+
+def _fix_rows_module():
+    spec = importlib.util.spec_from_file_location(
+        "ryholt_fix_rows", SOURCE_DIR / "fix_rows.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_every_row_has_every_schema_field() -> None:
+    """Issue #177: every row carries every key in SCHEMA_FIELD_DEFAULTS
+    after fix_rows runs."""
+    defaults = _fix_rows_module().SCHEMA_FIELD_DEFAULTS
+    for r in _rows():
+        for field in defaults:
+            assert field in r, (r["ryholt_id"], field)
+
+
+def test_no_uncertainty_glyphs_in_name_fields() -> None:
+    """Issue #177 Shape J: `(?)` was migrated out of nomen / prenomen
+    to typed `is_uncertain_attribution`. Closure: no name field still
+    contains `(?)` after fix_rows.
+    """
+    for r in _rows():
+        for f in ("nomen", "prenomen"):
+            v = r.get(f) or ""
+            assert "(?)" not in v, (r["ryholt_id"], f, v)
+
+
+def test_no_trailing_syllabic_paren_in_nomen_transliterated() -> None:
+    """Issue #177 Shape J: `(syllabic)` trailing form was stripped from
+    nomen_transliterated; the typed `is_syllabic_nomen` flag carries the
+    information. Non-trailing forms (with footnote suffixes or trailing
+    prose like `(syllabic), not preceded by *sꜣ-rꜥ`) are kept verbatim
+    because stripping them loses the qualifier; the flag still fires.
+    """
+    import re
+    trailing_re = re.compile(r"\(syllabic\)\s*$")
+    for r in _rows():
+        nt = r.get("nomen_transliterated") or ""
+        assert not trailing_re.search(nt), (r["ryholt_id"], nt)
+
+
+def test_no_homonym_glyph_in_nomen() -> None:
+    """Issue #177 Shape J: `(I)/(II)/(III)` Roman-numeral homonym
+    glyphs were migrated out of nomen to typed `homonym_index`."""
+    import re
+    paren_roman_re = re.compile(r"\(([IVX]+)\)\s*$")
+    for r in _rows():
+        n = r.get("nomen") or ""
+        assert not paren_roman_re.search(n), (r["ryholt_id"], n)
+
+
+def test_no_var_in_nomen_transliterated() -> None:
+    """Issue #177 Shape I: `, var. <alt>` was migrated out of
+    nomen_transliterated to typed `nomen_transliterated_variants`."""
+    for r in _rows():
+        nt = r.get("nomen_transliterated") or ""
+        assert ", var." not in nt, (r["ryholt_id"], nt)
+
+
+def test_attestation_class_matches_ryholt_id_prefix() -> None:
+    """Issue #177 Shape A+H: `attestation_class` is a deterministic
+    function of the ryholt_id prefix.
+    """
+    expected_map = {
+        "N": "nomen_only",
+        "P": "prenomen_only",
+        "H": "horus_only",
+        "Nb": "nebty_only",
+        "G": "golden_horus_only",
+        "D": "djed_only",
+        "Abyd": "abydos",
+    }
+    import re
+    for r in _rows():
+        m = re.match(r"^([A-Za-z]+)\.", r["ryholt_id"])
+        if m:
+            expected = expected_map.get(m.group(1), "unknown")
+        else:
+            expected = "king"
+        assert r["attestation_class"] == expected, (r["ryholt_id"], r["attestation_class"], expected)
+
+
+def test_dynasty_label_matches_dynasty_or_prefix() -> None:
+    """Issue #177 Shape A: dynasty_label is `str(dynasty)` for numbered
+    dynasties, `"Abydos"` for Abyd rows, None for unattributed."""
+    import re
+    for r in _rows():
+        if r["dynasty"]:
+            assert r["dynasty_label"] == str(r["dynasty"]), r
+        else:
+            m = re.match(r"^([A-Za-z]+)\.", r["ryholt_id"])
+            prefix = m.group(1) if m else None
+            if prefix == "Abyd":
+                assert r["dynasty_label"] == "Abydos", r
+            else:
+                assert r["dynasty_label"] is None, r
+
+
+def test_is_unattributed_matches_prefix() -> None:
+    """Issue #177 Shape J: is_unattributed=True iff prefix is N/P/H/Nb/D/G."""
+    import re
+    for r in _rows():
+        m = re.match(r"^([A-Za-z]+)\.", r["ryholt_id"])
+        prefix = m.group(1) if m else None
+        expected = prefix in {"N", "P", "H", "Nb", "D", "G"}
+        assert r["is_unattributed"] == expected, (r["ryholt_id"], r["is_unattributed"], expected)
+
+
+def test_is_abydos_dynasty_matches_prefix() -> None:
+    """Issue #177 Shape J: is_abydos_dynasty=True iff prefix is `Abyd`."""
+    for r in _rows():
+        expected = r["ryholt_id"].startswith("Abyd.")
+        assert r["is_abydos_dynasty"] == expected, (r["ryholt_id"], r["is_abydos_dynasty"], expected)
+
+
+def test_date_attestation_matches_date_nulls() -> None:
+    """Issue #177 Shape D: date_attestation enum reflects the actual
+    date-bound null pattern."""
+    for r in _rows():
+        s, e = r["date_bce_start"], r["date_bce_end"]
+        if s is not None and e is not None:
+            expected = "both"
+        elif s is not None:
+            expected = "start_only"
+        elif e is not None:
+            expected = "end_only"
+        else:
+            expected = "none"
+        assert r["date_attestation"] == expected, (r["ryholt_id"], r["date_attestation"], expected)
+
+
+def test_uncertain_attribution_canonical_set() -> None:
+    """Issue #177: pin the 3 known uncertain-attribution rows."""
+    expected = {"14.g", "17.7", "Abyd.15"}
+    actual = {r["ryholt_id"] for r in _rows() if r["is_uncertain_attribution"]}
+    assert actual == expected, (sorted(actual - expected), sorted(expected - actual))
+
+
+def test_homonym_index_canonical_set() -> None:
+    """Issue #177: pin the 4 known homonym-index rows."""
+    expected = {("13.11", 1), ("14.11", 3), ("14.17", 2), ("14.24", 2)}
+    actual = {(r["ryholt_id"], r["homonym_index"]) for r in _rows() if r["homonym_index"]}
+    assert actual == expected, (sorted(actual - expected), sorted(expected - actual))
+
+
+def test_nomen_transliterated_variants_canonical_set() -> None:
+    """Issue #177: pin the 3 known var.-bearing rows."""
+    expected_rids = {"13.22", "14.2", "14.4"}
+    actual_rids = {r["ryholt_id"] for r in _rows() if r["nomen_transliterated_variants"]}
+    assert actual_rids == expected_rids, (sorted(actual_rids - expected_rids), sorted(expected_rids - actual_rids))
