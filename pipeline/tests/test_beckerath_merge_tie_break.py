@@ -212,9 +212,14 @@ def test_03_06_brace_bracket_dates_pinned(reconciled):
     assert r["start_bce_low"] == -2613
     assert r["end_bce_high"] == -2639
     assert r["end_bce_low"] == -2589
-    assert r["name"] == "Ahu (Huni, Aches)"
+    # Post-#179 schema-audit: parens are extracted into name_variants;
+    # the canonical `name` is the bare lemma. Legacy scalars retained as
+    # ingest artifacts (kept None for this row).
+    assert r["name"] == "Ahu"
+    assert r["name_variants"] == ["Huni", "Aches"]
     assert r["egyptian_titulary"] is None
     assert r["egyptian_titulary_kind"] is None
+    assert r["egyptian_titularies"] == []
 
 
 def test_15_04_chajan_name_pinned(reconciled):
