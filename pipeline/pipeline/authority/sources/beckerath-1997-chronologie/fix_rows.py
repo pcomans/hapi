@@ -829,10 +829,11 @@ _PRENOMEN_TEMPORAL_OVERRIDES: dict[str, list[dict]] = {
 }
 
 
-def _split_titulary(value: str | None, kind: str | None) -> list[dict]:
+def _split_titulary(value: str | None, kind: str | None, bid: str = "?") -> list[dict]:
     """Convert legacy scalar `egyptian_titulary` + `kind` to the typed
     list shape. Handles slash-separated alternatives (within a kind) and
-    `mixed`-kind comma-separated nomen+prenomen pairs.
+    `mixed`-kind comma-separated nomen+prenomen pairs. `bid` (the
+    beckerath_id) is included in error messages for debugging.
     """
     if not value:
         return []
@@ -842,9 +843,9 @@ def _split_titulary(value: str | None, kind: str | None) -> list[dict]:
         parts = [p.strip() for p in value.split(",") if p.strip()]
         if len(parts) != 2:
             raise ValueError(
-                f"mixed titulary {value!r} did not split cleanly into "
-                f"two parts (got {parts!r}); add explicit override or "
-                f"adjust splitter"
+                f"mixed titulary {value!r} for {bid!r} did not split "
+                f"cleanly into two parts (got {parts!r}); add explicit "
+                f"override or adjust splitter"
             )
         nomen_str, prenomen_str = parts
         out: list[dict] = []
@@ -962,6 +963,7 @@ def _apply_179_migrations(rows: list[dict]) -> list[str]:
             new_tit = _split_titulary(
                 row.get("egyptian_titulary"),
                 row.get("egyptian_titulary_kind"),
+                bid,
             )
         if row["egyptian_titularies"] != new_tit:
             row["egyptian_titularies"] = new_tit
