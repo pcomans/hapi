@@ -1140,8 +1140,13 @@ def main() -> None:
         f"Applied {len(applied)} override(s) across {len(OVERRIDES)} row(s); "
         f"{actually_mutated_count} field-value mutation(s) on this run."
     )
-    print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
-    print(f"Updated {DIFF.relative_to(DIFF.parents[4])}")
+    # Print paths relative to the source directory's parent (the
+    # `sources/` dir) so the log line is short. Don't assume the script
+    # lives at any specific depth from a project root — the test harness
+    # copies the source dir into a tmp path and runs fix_rows.py there
+    # to verify idempotence; assuming a 4-deep ancestor breaks that.
+    print(f"Updated {RECONCILED.relative_to(SOURCE_DIR.parent)}")
+    print(f"Updated {DIFF.relative_to(SOURCE_DIR.parent)}")
 
 
 if __name__ == "__main__":
