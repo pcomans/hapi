@@ -56,7 +56,10 @@ def _compute_concurrency(rows: list[dict]) -> dict[str, list[str]]:
         # raw `end_bce` verbatim per Rule 6; the typed correction is
         # the single source of truth for downstream interval math.
         s = r["start_bce"]
-        e = r.get("corrected_end_bce") or r["end_bce"]
+        # Explicit `is not None` (not `or`) — `0` is a valid BCE year in
+        # principle, even though Kitchen's TIPE only spans negative ranges.
+        corr = r.get("corrected_end_bce")
+        e = corr if corr is not None else r["end_bce"]
         if s >= e:
             raise ValueError(
                 f"{r['kitchen_id']}: start_bce {s} not strictly earlier than "
@@ -124,11 +127,14 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # in-string sentinels in Kitchen's TIPE Tables 1/3/4.
 
 SCHEMA_FIELD_DEFAULTS_180: dict[str, object] = {
-    # Shape D — disambiguate the multiple meanings of `null` on these fields.
-    # `*_is_kitchen_unknown=True` means Kitchen explicitly prints `[Prenomen
-    # unknown]` / `[Length unknown]` (a positive assertion that the king
-    # exists but the value isn't recorded). False means the table layout
-    # doesn't include this column for this row (e.g. HPA list omits prenomen).
+    # Shape D — disambiguate the multiple meanings of `null` on the
+    # `prenomen` field. `True` means Kitchen explicitly prints
+    # `[Prenomen unknown]` (a positive assertion that the king exists
+    # but the value isn't recorded). `False` means the table layout
+    # doesn't include this column for this row (e.g. HPA list omits
+    # prenomen). The analogous `[Length unknown]` sentinel does not
+    # appear in the current TIPE extract; if it surfaces in a future
+    # re-extraction, add a parallel `length_is_kitchen_unknown` flag.
     "prenomen_is_kitchen_unknown": False,
     # Shape H — kitchen_id substream letter (`H` HPA, `E` Sais-Bubastis-East,
     # `P` Persian/proto-Saite, `None` main-line dynasty).
