@@ -131,6 +131,19 @@ This source lands across multiple PRs (Dodson-Hilton pattern). Per the playbook 
 
 Per-chunk prompt files: `prompt.md` (chunk 1), `prompt-<chunk>.md` (chunks 2+). Per-chunk agent JSONLs: `raw/agent-{a,b,c}.jsonl` (chunk 1), `raw/agent-{a,b,c}-<chunk>.jsonl` (chunks 2+).
 
+## Issue #182 schema additions (2026-05-03 audit-fix, Tier 3)
+
+The audit-fix adds 3 typed flags derived from PM's prose markers in `notes_from_pm`. Pure derivation — no asserted facts beyond what PM verbatim records. Closure-tested for canonical sets.
+
+- **`is_uninscribed: bool`** — True when PM literally writes "uninscribed" in `notes_from_pm`. Pinned set: `{KV39, KV56, DAN-Neferhotep}`. Phase A consumers must check this flag before treating `occupant_name` as PM-attested vs scholarly attribution.
+- **`is_usurped: bool`** — True when PM writes `usurp(ed|ation)` in `notes_from_pm`. Pinned set: `{KV9, KV14}`. KV9's doorways were usurped from Ramesses V; KV14 was usurped by Setnakht from Sethos II's wife Tausret.
+- **`attribution_certainty: str`** — enum `{attested, probable, uncertain}`. Derived from PM's hedge tokens (`Probably`, `(probably)`, `attributed to`, `tentatively`, `perhaps`, `possibly`, `uncertain`) AND PM's standard `(?)` attribution-uncertainty glyph (KV42, QV60, QV33). Stronger uncertainty wins on compound markers. Counts: 63 attested, 7 probable, 5 uncertain.
+
+Note: this is a Tier-3 (no-P1) audit fix. Bundles deferred per the audit:
+- Shape C `notes_from_pm` extraction (filiation, occupational title, regnal-period markers) — large undertaking; defer to per-fact-type follow-ups
+- Shape E `shared_with_tombs` 3-relation split + `occupant_alt_names` join-key disambiguation — needs scoped design
+- Shape G `occupant_name` ambiguity (KV5+KV7 both "Ramesses II", etc.) — needs Phase-A authority cross-reference
+
 ## Known gaps
 
 - **King → BCE date lookup.** This source extracts the headword (occupant name); the BCE date fields stay null until the king authority (pharaoh.se) is reconciled in Phase A. Holding rows null is consistent with constitutional rule 4 (sparse rows are valid) and rule 7 (authority lookup, not hard-coded names in extracts).

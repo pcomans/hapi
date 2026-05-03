@@ -2534,3 +2534,70 @@ def test_fix_rows_main_idempotent() -> None:
         # clean even if the test fails.
         reconciled.write_bytes(pre_reconciled)
         diff.write_bytes(pre_diff)
+
+
+# ── Closure tests (#182) — typed flags from notes_from_pm derivation ───
+
+_REQUIRED_182_KEYS = ("is_uninscribed", "is_usurped", "attribution_certainty")
+_ATTRIBUTION_VOCAB = {"attested", "probable", "uncertain"}
+
+
+def test_182_every_row_has_typed_flags() -> None:
+    """Every row carries all 3 typed fields introduced in #182."""
+    for r in _rows():
+        for key in _REQUIRED_182_KEYS:
+            assert key in r, (r["tomb_id"], key)
+
+
+def test_182_attribution_certainty_in_vocab() -> None:
+    """attribution_certainty ∈ {attested, probable, uncertain}."""
+    for r in _rows():
+        assert r["attribution_certainty"] in _ATTRIBUTION_VOCAB, (
+            r["tomb_id"], r["attribution_certainty"]
+        )
+
+
+def test_182_uninscribed_canonical_set() -> None:
+    """Rows where PM literally writes "uninscribed" in notes_from_pm.
+    Pinned 2026-05-03: KV39 ('Uninscribed tomb...'), KV56 ("'Gold tomb',
+    uninscribed."), DAN-Neferhotep ('Rock-tomb, uninscribed')."""
+    expected = {"KV39", "KV56", "DAN-Neferhotep"}
+    actual = {r["tomb_id"] for r in _rows() if r["is_uninscribed"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_182_usurped_canonical_set() -> None:
+    """Rows where PM writes "usurp(ed|ation)" in notes_from_pm.
+    Pinned 2026-05-03: KV9 (doorways usurped from Ramesses V), KV14
+    (usurped by Setnakht)."""
+    expected = {"KV9", "KV14"}
+    actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
+    assert actual == expected, sorted(actual)
+
+
+def test_182_uncertain_attribution_canonical_set() -> None:
+    """Rows where PM uses strong-uncertainty hedge tokens (uncertain,
+    perhaps, possibly, tentatively) OR PM's `(?)` glyph. Pinned
+    2026-05-03: 5 rows. Per Gemini round-2 — `(?)` is PM's standard
+    attribution-uncertainty marker (KV42 + QV60 notes start with
+    `(?)`, QV33 carries `Dyn. XX(?)`)."""
+    expected = {
+        "DAN-KamosiWazkheperre",
+        "DAN-SebkemsafSekhemreShedtaui",
+        "KV42",
+        "QV33",
+        "QV60",
+    }
+    actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
+    assert actual == expected, sorted(actual)
+
+
+def test_182_probable_attribution_canonical_set() -> None:
+    """Rows where PM writes "Probably" or "attributed to" in notes_from_pm.
+    Pinned 2026-05-03: 7 rows."""
+    expected = {
+        "DAN-AhmosiNefertere", "DAN-AntefSekhemreHeruhirmaet",
+        "DAN-Neferhotep", "KV39", "KV55", "QV46", "SWV-Neferure",
+    }
+    actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "probable"}
+    assert actual == expected, sorted(actual)
