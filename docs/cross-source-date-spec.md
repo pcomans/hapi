@@ -203,9 +203,10 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
   // (1 BCE = -1, no year 0) MUST be normalised by the
   // canonicalisation helper before storage in the canonical envelope.
   // CURRENT STATE: every numeric source in HAPI uses the historical
-  // convention (`-3032` means 3032 BCE). The canonicalisation helper
-  // for v0 will subtract 1 from negative values to map historical →
-  // astronomical. Verify per-source on first integration.
+  // convention (`-3032` means 3032 BCE; no year 0). The canonicalisation
+  // helper for v0 will ADD 1 to negative values to map historical →
+  // astronomical (-3032 historical = -3031 astronomical = 3032 BCE
+  // with year 0 = 1 BCE). Verify per-source on first integration.
 
   // === Qualifier handling ===
   "start_approximate": true,       // per-bound bool — true when source marks
@@ -224,7 +225,7 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
   // - null-only: row carries no numeric date; consumer must use
   //   `dynasty` / `sub_period` for ordering
 
-  "null_endpoints_reason": null,   // populated when both _high and _low are null
+  "null_endpoints_reason": null,   // populated when both _older and _younger are null
   "corrected_end_year":   null,    // typed source-correction (Kitchen 21H.06)
 
   // === Crosswalk-to-source ===
