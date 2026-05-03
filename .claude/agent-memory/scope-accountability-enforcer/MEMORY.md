@@ -2,3 +2,6 @@
 - [Deferral-legitimacy checklist](feedback_deferral_checklist.md) — Two conditions a "follow-up PR" deferral must meet to be legitimate
 - [Red-flag phrases in main-agent responses](feedback_red_flag_phrases.md) — Language patterns that signal an illegitimate punt
 - [Rule-vs-flag consistency audits](feedback_rule_vs_flag_consistency.md) — Tighten-rule vs demote-flags: decide by the rule's stated rationale, not its enumerated categories
+- [editorial_notes in-scope rule](feedback_editorial_notes_in_scope.md) — Single-row note additions stay in chunk PR even when reviewer cites downstream museum-matching as motivation
+- [Subsumed-finding partial-punt check](feedback_subsumed_findings_partial_punt.md) — "Subsumed by accepting X" claims hide a partial punt when X covers majority but not edge cases
+- [Diff-already-touches-line scope promotion](feedback_diff_already_touches_line.md) — Reviewer's "track in follow-up" is workflow deference; if the diff edits the line carrying the error, fix it now (Rule 12)

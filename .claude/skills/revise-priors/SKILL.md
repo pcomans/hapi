@@ -36,7 +36,7 @@ When you (the agent) need to invoke this from inside your work, use the `Skill` 
 
 ## How to write the marker
 
-When invoked, write a file at the path the args dictate (or a default if not). The structure:
+When invoked, write a file at `.claude/revise-priors/<unix-timestamp>-<short-slug>.md` (the slug derived from the one-line summary args; lowercase, hyphen-separated, ≤6 words). The structure:
 
 ```markdown
 # Revise priors: <one-line summary>

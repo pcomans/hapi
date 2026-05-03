@@ -20,14 +20,17 @@ set -u
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 
-# Match the four blocking command shapes. Anchored on word boundaries
-# so `git pushed-something-else` doesn't match.
+# Match the four blocking command shapes. Each has both the
+# `command-with-args` form (` ` suffix) AND the bare-command form
+# (no suffix) so commands like `git commit` (no args) don't bypass.
+# PR #187 Gemini round-1 caught the missing bare forms on `git commit`
+# and `gh pr merge`.
 BLOCKED=0
 case "$COMMAND" in
   *"git push "*|*"git push"|\
-  *"git commit "*|*"git commit -"*|\
+  *"git commit "*|*"git commit"|\
   *"gh pr create "*|*"gh pr create"|\
-  *"gh pr merge "*|\
+  *"gh pr merge "*|*"gh pr merge"|\
   *"gh api"*"-X POST"*"/pulls"*)
     BLOCKED=1
     ;;
@@ -61,7 +64,8 @@ for m in "${markers[@]}"; do
 done
 
 echo "Resolution paths (human only — do not auto-resolve):" >&2
-echo "  - Dismiss (agent concern unfounded): rm $m" >&2
-echo "  - Resolve (prior revised in code/docs): mv $m .claude/revise-priors/resolved/" >&2
+echo "  - Dismiss (agent concern unfounded): rm <file>" >&2
+echo "  - Resolve (prior revised in code/docs): mv <file> .claude/revise-priors/resolved/" >&2
+echo "(replace <file> with the specific marker path printed above)" >&2
 
 exit 2
