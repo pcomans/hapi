@@ -1,7 +1,7 @@
 ---
 name: "prompt-auditor"
 description: "Use this agent BEFORE spawning the 3-agent extraction triplet on any new Phase-0 chunk prompt. Audits `prompt-chunk-*.md` for per-row answer leaks, verbatim-source-string leaks, and internal contradictions — the rule-1/7 regression class that `feedback_phase0_prompt_no_answers.md` exists to prevent. Catches the leak before the 3 agents run on a leaky prompt."
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob
 model: sonnet
 color: yellow
 memory: project
@@ -42,7 +42,7 @@ The parent will tell you the chunk number and source. Read:
 
 ## Output
 
-Write findings to `/tmp/prompt-audit-<source>-chunk<N>.md`. For each P1, give the line number and a 1-2-sentence rewrite suggestion (rule-based replacement). The parent will apply the rewrites before spawning extraction agents.
+Write findings to `pipeline/pipeline/authority/sources/<source>/raw/prompt-audit-chunk<N>.md` (the source's `raw/` directory is already gitignored, and the working-directory path avoids the `/tmp/claude*` sandbox restriction documented in `docs/playbook-phase-0-ocr-transcription.md` step 4). For each P1, give the line number and a 1-2-sentence rewrite suggestion (rule-based replacement). The parent will apply the rewrites before spawning extraction agents.
 
 If the prompt is clean, "no leaks, prompt is rule-based" in one line is the right answer.
 
