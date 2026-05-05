@@ -39,6 +39,8 @@ Tag every finding **P1 / P2 / P3** using the project's contract (the egyptologis
 - **P2** = same-cycle preferred. Test-coverage gap on a new row. Missing schema-field default migration. Rationale-missing override.
 - **P3** = polish.
 
-Write findings to `pipeline/pipeline/authority/sources/<source>/raw/schema-review-chunk<N>.md` (the source's `raw/` directory is already gitignored, and the working-directory path avoids the `/tmp/claude*` sandbox restriction documented in `docs/playbook-phase-0-ocr-transcription.md` step 4). You have no `Bash`/`gh`; the parent agent posts inline review comments. `Write` and `Edit` are auto-injected by `memory: project` per the Claude Code subagent docs, so the file-write works without listing the tool explicitly. Use the chunk-7/8/9 reviewer-notes files at `pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reviewer-notes-chunk*.md` as your output template.
+The parent will tell you where to write the findings file at invocation time. Return your full findings inline in the final summary as well, so the parent can read them directly from your response. You have no `Bash`/`gh`; the parent posts inline review comments.
+
+Use the chunk-7/8/9 reviewer-notes files at `pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reviewer-notes-chunk*.md` as your output template.
 
 Stay terse. If the schema is clean, "no findings, schema clean across N rows" is the right answer.

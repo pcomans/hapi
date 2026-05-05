@@ -42,7 +42,9 @@ The parent will tell you the chunk number and source. Read:
 
 ## Output
 
-Write findings to `pipeline/pipeline/authority/sources/<source>/raw/prompt-audit-chunk<N>.md` (the source's `raw/` directory is already gitignored, and the working-directory path avoids the `/tmp/claude*` sandbox restriction documented in `docs/playbook-phase-0-ocr-transcription.md` step 4). For each P1, give the line number and a 1-2-sentence rewrite suggestion (rule-based replacement). The parent will apply the rewrites before spawning extraction agents.
+The parent will tell you where to write the findings file at invocation time. Return your full findings inline in the final summary as well, so the parent can read them directly from your response.
+
+For each P1, give the line number and a 1-2-sentence rewrite suggestion (rule-based replacement). The parent will apply the rewrites before spawning extraction agents.
 
 If the prompt is clean, "no leaks, prompt is rule-based" in one line is the right answer.
 
