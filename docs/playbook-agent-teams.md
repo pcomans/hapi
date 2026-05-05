@@ -59,6 +59,33 @@ Notes on parameters (same `key: value` JSON shape as above):
 - **`"mode": "bypassPermissions"`** inherits from the lead's permission mode regardless; per-teammate modes can't be set at spawn time.
 - **`"subagent_type": "general-purpose"`** gets the widest tool surface on paper (`Tools: *`) but still loses the `Agent` tool (see hard limit above). Custom `.claude/agents/` definitions honour their `tools` allowlist for teammates, but `skills` and `mcpServers` frontmatter fields are NOT applied when a subagent definition runs as a teammate.
 
+## Pre-built teammate-ready agent definitions
+
+The repo ships several `.claude/agents/<name>.md` definitions with `memory: project` that work both as Task-spawned subagents and as agent-team teammates (the agent-teams docs say *"the teammate honors that definition's `tools` allowlist and `model`, and the definition's body is appended to the teammate's system prompt as additional instructions"* — `skills` and `mcpServers` frontmatter fields are NOT applied when used as a teammate).
+
+| Definition | Role | Typical use |
+|---|---|---|
+| `code-reviewer` | CLAUDE.md-rules compliance review | Review reviewer for any non-trivial PR. |
+| `egyptologist-reviewer` | PM-faithfulness against printed source | Phase-0 source PRs; needs PDF on disk. |
+| `scope-accountability-enforcer` | Audit planned PR replies for improper deferrals | Run once per review-feedback batch before posting replies. |
+| `reconciliation-agent` | Drive `merge.py` + `fix_rows.py` end-to-end on a chunk | Phase-0 chunk reconciliation; reports disagreements + idempotence. |
+| `schema-reviewer` | Mechanical structural-fitness gate over `reconciled.jsonl` | Phase-0 source PRs; complements code-reviewer + egyptologist with non-overlapping scope. |
+| `prompt-auditor` | Phase-0 extraction prompt audit (rule-1/7 leak detection) | Run BEFORE spawning the 3-agent extraction triplet on a new chunk prompt. |
+
+Reference any of these by name in a teammate spawn:
+
+```
+Agent({
+  "subagent_type": "schema-reviewer",
+  "team_name": "phase-0-batch-<date>",
+  "name": "schema-<source>",
+  "prompt": "<task-specific brief; teammate doesn't inherit lead conversation history>",
+  "run_in_background": true
+})
+```
+
+Custom one-off agents that don't fit any of these slots: spawn `general-purpose` and pass the role-specific instructions in the prompt.
+
 ## Workaround for nested parallelism: lead-spawns-on-behalf
 
 When a teammate's task genuinely needs ADR-017-style parallel subagents:
@@ -76,6 +103,44 @@ This preserves:
 
 Cost: lead context grows with each spawn round; keep briefs terse.
 
+## SendMessage schema (beyond the shutdown handshake)
+
+The shutdown handshake is the only message shape covered above. Other messages use the same outer envelope (`{"to": "<teammate-name>", "message": {...}}`) with the inner `message` carrying free-form content. The teammate sees the inner `message` as a user-turn and replies in normal Claude Code conversation form (no enforced reply schema for non-shutdown messages).
+
+Two canonical exchanges from the lead-spawns-on-behalf workaround:
+
+**Lead → teammate task handoff:**
+```
+SendMessage({
+  "to": "phase-0-<source>",
+  "message": {
+    "type": "task_handoff",
+    "subject": "subagent outputs ready",
+    "files": [
+      "pipeline/.../sources/<source>/raw/agent-a-chunk<N>.jsonl",
+      "pipeline/.../sources/<source>/raw/agent-b-chunk<N>.jsonl",
+      "pipeline/.../sources/<source>/raw/agent-c-chunk<N>.jsonl"
+    ],
+    "next_step": "run merge.py + fix_rows.py, report disagreements"
+  }
+})
+```
+
+**Teammate → lead status / blocker:**
+```
+SendMessage({
+  "to": "lead",
+  "message": {
+    "type": "status",
+    "task_id": "<task-id>",
+    "summary": "extraction prepared; need 3 parallel general-purpose subagents",
+    "request": "spawn agents A/B/C with prompt at <path>, output to raw/agent-{a,b,c}-chunk<N>.jsonl"
+  }
+})
+```
+
+The `type` field is convention only (the schema is free-form) but typing each message lets the recipient route it. Established conventions in this repo: `task_handoff`, `status`, `blocker`, `shutdown_request` (required schema), `shutdown_response` (required schema). The lead does not need to poll — the mailbox delivers messages as user-turns automatically.
+
 ## Shutdown and cleanup
 
 Strict order:
@@ -89,6 +154,68 @@ Strict order:
 **Never `rm -rf` a path that contains the lead session's working directory.** The primary working directory may itself be a worktree like `.claude/worktrees/<something>`. If the lead session's own cwd gets removed mid-cleanup, the `Bash` tool becomes unusable (every command errors `Working directory ... no longer exists`) and the only recovery is to exit and restart Claude Code from a valid directory. Before any recursive delete of `.claude/worktrees/`, confirm the lead's cwd is OUTSIDE that tree.
 
 The 2026-04-16 session lost its shell to exactly this. `git worktree remove -f` each worktree individually; do not recursively delete the parent.
+
+## Worked example: 3-teammate Phase-0 batch
+
+End-to-end walkthrough for the most common pattern — three independent Phase-0 sources, each owned by a teammate. Each step is what the lead actually executes.
+
+**1. Spawn the team:**
+```
+TeamCreate({
+  "team_name": "phase-0-batch-2026-05-04",
+  "agent_type": "team-lead",
+  "description": "Phase-0 ingestion: Source A, Source B, Source C"
+})
+```
+
+**2. Create one task per source on the shared task list:**
+```
+TaskCreate({"subject": "Phase-0 ingest: Source A", "description": "<one-line scope>"})
+TaskCreate({"subject": "Phase-0 ingest: Source B", "description": "<one-line scope>"})
+TaskCreate({"subject": "Phase-0 ingest: Source C", "description": "<one-line scope>"})
+```
+
+**3. Spawn one teammate per task (parallel — single message, three Agent calls):**
+```
+Agent({"subagent_type": "general-purpose", "team_name": "phase-0-batch-2026-05-04",
+       "name": "phase-0-source-a", "run_in_background": true,
+       "prompt": "<self-contained brief: source name, target pages, scaffold per playbook step 1>"})
+Agent({...same shape, name: "phase-0-source-b"...})
+Agent({...same shape, name: "phase-0-source-c"...})
+```
+
+**4. Teammates each scaffold + OCR + write extraction prompt; commit on per-source branch.**
+
+**5. Each teammate hits the lead-spawns-on-behalf step (3-agent extraction needs nested parallelism, which teammates can't do):**
+```
+[teammate → lead]
+SendMessage({"to": "lead", "message": {
+  "type": "status", "task_id": "<id>",
+  "summary": "extraction prepared; need 3 parallel general-purpose subagents",
+  "request": "spawn agents A/B/C with prompt at <path>, output to raw/agent-{a,b,c}-chunk<N>.jsonl"
+}})
+```
+
+**6. Lead spawns the 3 subagents (plain `Agent`, no `team_name`), waits, then notifies the teammate:**
+```
+SendMessage({"to": "phase-0-source-a", "message": {
+  "type": "task_handoff", "subject": "subagent outputs ready",
+  "files": ["...agent-a-chunkN.jsonl", "...agent-b-chunkN.jsonl", "...agent-c-chunkN.jsonl"],
+  "next_step": "run merge.py + fix_rows.py, then reviewer passes"
+}})
+```
+
+**7. Teammate runs reconciliation (the new `reconciliation-agent` definition is appropriate for this step but cannot be spawned from inside a teammate; teammate runs `merge.py` + `fix_rows.py` itself), then reviewer passes (also via lead-on-behalf), then opens PR.**
+
+**8. Lead monitors the task list. When all three tasks are completed and PRs are open:**
+```
+SendMessage({"to": "phase-0-source-a", "message": {"type": "shutdown_request"}})  // ×3
+[wait for shutdown_response from each]
+TeamDelete()
+git worktree list  // verify no orphans
+```
+
+**Total round-trip:** 3 sources × ~2 hours each, parallel, ~2 hours wall-clock for the lead (vs ~6 hours sequential). Token cost ≈ 3× a single source — see [agent team token costs](https://code.claude.com/docs/en/costs#agent-team-token-costs).
 
 ## Other notes
 
