@@ -10,6 +10,19 @@ Egyptian artifacts are scattered across hundreds of museums worldwide, each with
 - **Web app** (TypeScript / Next.js): `web/` — search, browse, filter, and map view over the indexed data, organized by origin site so users can virtually reunify artifacts that were once together
 - **Schema ownership**: Pipeline and web tables live in the same Postgres database but in separate schemas: `catalog.*` (owned by Alembic/SQLAlchemy) and `web.*` (owned by Drizzle). The web app reads `catalog.*` via `drizzle-kit introspect` and manages its own `web.*` tables independently. See ADR-011. These schemas must stay in sync — the pipeline defines the canonical data model and the web app generates its TypeScript types from it, so a schema change in SQLAlchemy that isn't followed by Drizzle introspection will cause type errors or data mismatches.
 
+## Required harness configuration
+
+This repo's workflow assumes the Claude Code agent-teams feature is **enabled**. Several of the project subagents under `.claude/agents/` (and the orchestration patterns in `docs/playbook-agent-teams.md` + `docs/playbook-phase-0-ocr-transcription.md`) rely on it. Set:
+
+```json
+// ~/.claude/settings.json
+{
+  "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" }
+}
+```
+
+or export `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in your shell. Agent teams are experimental and disabled by default per [the Claude Code docs](https://code.claude.com/docs/en/agent-teams); without this flag the `SendMessage` tool, the shared task list, and teammate-to-teammate messaging all fail silently. The Phase-0 multi-pass review workflow degrades to sequential subagent calls when the flag is off — slower and loses the cross-teammate communication that catches the highest-impact findings (chunk-9 PR #196 evidence).
+
 ## Key commands
 
 ```bash
