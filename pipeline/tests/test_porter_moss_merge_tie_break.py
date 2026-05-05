@@ -319,6 +319,13 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "ʿAḳ-hor",
         ("DAN-MentuhotpIWifeOfDjhuti", "notes_from_pm"):
             "Wife of King Ḏḥuti. Found in tomb by Passalacqua.",
+        ("TT4", "notes_from_pm"):
+            # Tie-break pinned a pre-fix-rows form; CHUNK9_CORRECTIONS then
+            # restored Amūn macrons + Thonūfer macron + dropped the medial
+            # underdot in `Ḥenutmehyt` (egyptologist printed-source review).
+            "Chiseller of Amūn in the Place of Truth. Temp. Ramesses II. "
+            "(L. D. Text, No. 106.) Parents, Thonūfer, Chiseller of Amūn in "
+            "the Khenu, and Maʿetnefert. Wives, Nefertere and Ḥenutmehyt.",
         # 2 overrides where reconciled.jsonl == override value verbatim
         # (fix_rows.py does NOT mutate):
         ("KV39", "notes_from_pm"):
