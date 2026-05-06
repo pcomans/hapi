@@ -80,6 +80,12 @@ For multi-chunk targets (e.g. Ryholt's 81 pages), spawn one subagent per 5-physi
 
 **Main-session OCR as a sanctioned exception.** The playbook's default is a subagent OCR pass, but when (a) the OCR subagent hits content filtering and (b) the main session can Read the PDF pages itself and produce faithful verbatim prose, main-session OCR is acceptable. This was the chunk-2 path on Dodson-Hilton (PR #38). Record the deviation in `transcribe.md` so the audit trail reflects what actually ran — do not pretend a subagent produced it.
 
+## Step 3.5 — audit the prompt before extraction runs
+
+Before launching the 3-agent triplet, run the **`prompt-auditor`** subagent (`.claude/agents/prompt-auditor.md`) against the chunk's `prompt-chunk-*.md`. The auditor catches per-row answer leaks, verbatim-source-string leaks, and internal contradictions — the rule-1/7 regression class that has historically taken 1-2 review rounds to surface (PR #66 / #68 / #70 / #196). Catching it pre-extraction means the 3 agents run on a clean, rule-based prompt.
+
+If the auditor finds P1 leaks, rewrite the prompt before proceeding to step 4. P2 / P3 findings can be deferred but flag them in the PR body.
+
 ## Step 4 — three parallel extraction subagents
 
 Launch three `general-purpose` Claude Code subagents in parallel, each with the prompt at `<source_dir>/prompt.md`. Each writes JSONL to a distinct file:
@@ -98,6 +104,8 @@ Your launch-prompt per agent should include:
 - A one-sentence report format: row count + any anomalies. Under 80 words.
 
 ## Step 5 — deterministic merge
+
+You can either run the merge yourself (the canonical path described below), or delegate to the **`reconciliation-agent`** subagent (`.claude/agents/reconciliation-agent.md`) to drive the `merge.py` + `fix_rows.py` pipeline end-to-end and return a tight summary. The agent is useful when the per-tomb tie output would otherwise flood the parent's context (chunk-9 PR #196 spent ~30% of orchestration on disagreement-classification that the agent could have handled). The agent does not make scholarly calls — those still come back to the parent for the egyptologist pass.
 
 ```
 cd pipeline && uv run python pipeline/authority/sources/<source>/merge.py
@@ -119,6 +127,14 @@ When the merge runs cleanly, every reconciled value traces to either (a) genuine
 Review the disagreements file visually. A few non-tied disagreements are normal (typographic drift). Many disagreements on the same field across many rows indicates a prompt ambiguity — fix `prompt.md` and re-run the extraction before proceeding.
 
 ## Step 6 — LLM reviewer pass
+
+For Phase-0 PRs, run three reviewer subagents in parallel:
+
+- **`schema-reviewer`** (`.claude/agents/schema-reviewer.md`) — mechanical structural-fitness gate (required keys, controlled vocab, derived-flag consistency, joint-burial pairing). Catches schema-shape issues before the egyptologist + code-reviewer get loaded in. Read-only, fast.
+- **`code-reviewer`** — CLAUDE.md-rules compliance.
+- **`egyptologist-reviewer`** — PM-faithfulness against the printed source.
+
+The three agents see different framings and catch non-overlapping classes of issues; running in parallel cuts the review-round count.
 
 Spawn the `egyptologist-reviewer` Claude Code subagent with:
 - The reconciled JSONL path.
