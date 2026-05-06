@@ -18,7 +18,7 @@ Your audit catches this BEFORE the 3 extraction agents run.
 The parent will tell you the chunk number and source. Read:
 
 - The prompt file (`prompt-chunk-*.md` or `prompt.md` for chunk 1).
-- The chunk's raw text dump (`raw/chunk-p<start>-p<end>.txt`) — gitignored, but present locally for the parent's session.
+- The chunk's raw text dump in `raw/` — `chunk-p<start>-p<end>.{txt,md}` (extension varies by source: `.txt` for sources using pypdf text-layer extraction, `.md` for sources using the OCR subagent path per `docs/playbook-phase-0-ocr-transcription.md` step 3). Gitignored, but present locally for the parent's session — find via `Glob`.
 - The schema reference in the source's `README.md`.
 - One or two earlier chunks' prompts in the same source for the rule-based discipline pattern (e.g. `prompt-chunk-2-*.md`, `prompt-chunk-7-*.md`, `prompt-chunk-8-*.md` for PM Theban Necropolis).
 
@@ -42,9 +42,7 @@ The parent will tell you the chunk number and source. Read:
 
 ## Output
 
-The parent will tell you where to write the findings file at invocation time. Return your full findings inline in the final summary as well, so the parent can read them directly from your response.
-
-For each P1, give the line number and a 1-2-sentence rewrite suggestion (rule-based replacement). The parent will apply the rewrites before spawning extraction agents.
+Return your full findings inline in the final summary. For each P1, give the line number and a 1-2-sentence rewrite suggestion (rule-based replacement). The parent will apply the rewrites before spawning extraction agents (and may commit your findings as a `reviewer-notes-*.md` audit artifact if it judges the audit-trail useful — that's the parent's call, not yours to write).
 
 If the prompt is clean, "no leaks, prompt is rule-based" in one line is the right answer.
 
