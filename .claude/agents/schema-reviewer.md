@@ -13,7 +13,7 @@ The source schema is documented in each source's `README.md` (look for the "Sche
 
 ## What to check
 
-Read the diff (`git diff main` against the changed files), then read the source's `reconciled.jsonl` rows that the PR adds or modifies. Look for:
+The parent will tell you which rows to focus on (typically "the rows this PR adds" — a tomb-id range, an entry-id set, or "the chunk-N rows"). Read those rows from the source's `reconciled.jsonl`. Look for:
 
 1. **Required-key presence.** Every row has every key in the schema, even when null/empty (CLAUDE.md rule 4 — sparse rows are valid, but the KEY must be present so downstream code can `.get()` without conditionals). Flag rows missing keys.
 2. **Controlled-vocab compliance.** Fields like `occupant_role`, `attribution_certainty`, `theban_area` (in PM Theban-Necropolis) have a fixed enum. Flag any value outside the enum.
