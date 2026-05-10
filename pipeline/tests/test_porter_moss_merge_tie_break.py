@@ -535,6 +535,31 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Captain of troops of the police on the west of Thebes. "
             "Temp. Tuthmosis IV to Amenophis III. (CHAMPOLLION, No. 9 bis, "
             "L. D. Text, No. 63, HAY, No. 22.) Wives, Sensenbut and Tiy.",
+        # Chunk 18 (TT91–TT100) — 3 tie-break overrides on notes_from_pm.
+        # All pinned to agent A: macron-Ū on `Amūn` per PM body-prose
+        # verbatim policy + ayin-before-a `wʿab-priest` per the TT14 /
+        # TT68 / TT79 precedent. TT95 also resolves the structural
+        # decision to put TT84 in shared_with_tombs (A+B win 2/1 over C)
+        # and drop the `(See also usurpation in tomb 84.)` parenthetical
+        # from notes (prevents the Tier-3 `is_usurped` regex from
+        # spuriously firing on TT95, which is Mery's primary tomb).
+        # TT95/TT97/TT100 pass through fix_rows unchanged on this field
+        # (post-fix-rows value matches the pinned merge-time value).
+        ("TT95", "notes_from_pm"):
+            "First prophet of Amūn. (See also usurpation in tomb 84.) "
+            "Temp. Amenophis II. (CHAMPOLLION, No. 14, L. D. Text, "
+            "No. 70, HAY, No. 14.) Parents, Nebpeḥtireʿ, First prophet "
+            "of Min of Koptos, and Ḥunay(t), Chief nurse of the Lord of "
+            "the Two Lands (name from tomb 84). Wife, Dey.",
+        ("TT97", "notes_from_pm"):
+            "First prophet of Amūn. Temp. Amenophis II (?). Father, "
+            "Ḏḥutiḥotp, wʿab-priest, Overseer of sandal-makers of the "
+            "Temple of Amūn.",
+        ("TT100", "notes_from_pm"):
+            "Governor of the town and Vizier. Temp. Tuthmosis III to "
+            "Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, "
+            "WILKINSON, No. 35.) Parents, Neferweben, [Vizier], "
+            "wʿab-priest of Amūn, and Bet. Wife, Meryt.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

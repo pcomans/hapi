@@ -213,6 +213,26 @@ CHUNK16_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK17_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(81, 91)}
 )
+# Chunk-18 (PM I.1 § I — TT91-TT100, Sh. ʿAbd el-Qurna). All 10 TT
+# numbers present. Anonymous occupant TT91 (no NAME-IN-CAPS in PM
+# headword — third such anonymous variant after chunk-14 TT58 + chunk-
+# 15 TT70). One Vizier TT100 Rekhmirēʿ (Governor of the town and
+# Vizier — major Theban tomb spanning 9 printed pages). Two High Priests
+# (TT95 Mery, TT97 Amenemhet — both First prophet of Amūn, major cult
+# flatten). Two within-chunk Sennufer rows (TT96 + TT99 — distinct
+# individuals per chunk-10 TT17 / chunk-17 TT90 within-source-name-
+# collision precedent). One alt-name TT94 Raʿmosi/ʿAmy. TT95 Mery is
+# the USURPER of TT84 (chunk-17 cross-reference); shared_with_tombs=
+# ["TT84"] captures the structural cross-ref per `See also Tomb N`
+# pattern; the parenthetical is dropped from notes_from_pm to avoid
+# the deriver firing `is_usurped=true` on TT95 (Mery's primary tomb,
+# not the usurped party). Three CHUNK18_CORRECTIONS (TT91 role pin
+# per Unknown sentinel-null artifact; TT93 Ḳenamūn macron-Ū per PDF
+# p.190; TT100 Rekhmirēʿ macron-Ē per PDF p.206). Three DERIVER_
+# OVERRIDES (TT94/TT97/TT98 regnal `(?)` hedge → attested).
+CHUNK18_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(91, 101)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -230,6 +250,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS
     | CHUNK17_TOMB_IDS
+    | CHUNK18_TOMB_IDS
 )
 
 
@@ -4671,6 +4692,173 @@ def test_chunk17_tt89_amenmosi_unanimous() -> None:
         "Steward in the Southern City. Temp. Amenophis III."
     )
     assert r["source_citation"]["page"] == 181
+
+
+def test_chunk18_all_rows_present() -> None:
+    """All 10 TT91-TT100 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK18_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        _row(tid)
+
+
+def test_chunk18_all_rows_homogeneous_sub_site() -> None:
+    for tid in CHUNK18_TOMB_IDS:
+        assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna"
+
+
+def test_chunk18_all_rows_edition_pm_i1() -> None:
+    for tid in CHUNK18_TOMB_IDS:
+        assert _row(tid)["source_citation"]["edition"] == "PM I.1 2nd ed. 1960"
+
+
+def test_chunk18_pages_in_range() -> None:
+    for tid in CHUNK18_TOMB_IDS:
+        p = _row(tid)["source_citation"]["page"]
+        assert 185 <= p <= 215, f"{tid} page {p} outside [185, 215]"
+
+
+def test_chunk18_role_distribution() -> None:
+    """TT91 = Unknown (anonymous); TT95 + TT97 = High Priest (First prophet
+    of Amūn); TT100 = Vizier (Governor of the town and Vizier); TT98 =
+    Official (Third prophet → minor-cult flatten); rest = Official."""
+    expected = {
+        "TT91": "Unknown", "TT92": "Official", "TT93": "Official",
+        "TT94": "Official", "TT95": "High Priest", "TT96": "Official",
+        "TT97": "High Priest", "TT98": "Official", "TT99": "Official",
+        "TT100": "Vizier",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK18_TOMB_IDS}
+    assert actual == expected
+
+
+def test_chunk18_attribution_distribution() -> None:
+    """All chunk-18 rows are attested. TT94/TT97/TT98 carry `Temp. <King>
+    (?)` regnal-date hedges that the Tier-3 deriver would spuriously fire
+    on; DERIVER_OVERRIDES pin them back to attested per the chunk-9 TT2
+    precedent (regnal-date hedge ≠ occupant-identification hedge)."""
+    for tid in CHUNK18_TOMB_IDS:
+        assert _row(tid)["attribution_certainty"] == "attested", tid
+
+
+def test_chunk18_tt91_anonymous_unknown_role() -> None:
+    """TT91 — anonymous original occupant (PM headword opens
+    `91. Captain of the troops ... , Overseer of horses.` with no
+    NAME-IN-CAPS), Sh. ʿAbd el-Qurna, p.185. Per the chunk-8 + chunk-14
+    TT58 + chunk-15 TT70 anonymous-occupant pairing invariant: when
+    occupant_name is null, occupant_role must be 'Unknown'.
+    CHUNK18_CORRECTIONS pins role='Unknown' to repair the merge.py
+    sentinel-null artifact (line 159: 'unknown' is in the sentinel
+    set)."""
+    r = _row("TT91")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["co_occupants"] == []
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 185
+    assert "Captain of the troops" in r["notes_from_pm"]
+
+
+def test_chunk18_tt93_kenamun_macron_restored() -> None:
+    """TT93 Ḳenamūn — Chief steward of the King, p.190. PM headword
+    `93. ḲENAMŪN` (capital Ḳ + capital macron-Ū). All 3 agents kept the
+    Ḳ; A+B converged on `Ḳenamun` (macron stripped per the no-pre-derive
+    rule), C extracted wrong `Hen-Amūn`. CHUNK18_CORRECTIONS restores
+    macron-Ū per direct PDF visual at p.190."""
+    r = _row("TT93")
+    assert r["occupant_name"] == "Ḳenamūn"
+    assert "Ḳ" in r["occupant_name"]  # underdot-Ḳ preserved
+    assert "ū" in r["occupant_name"]  # macron-Ū restored
+    assert r["source_citation"]["page"] == 190
+
+
+def test_chunk18_tt94_ramosi_alt_amy() -> None:
+    """TT94 Raʿmosi — First royal herald, alt-name ʿAmy, p.194.
+    `Temp. Amenophis II (?)` regnal hedge → DERIVER_OVERRIDE pins
+    attribution_certainty=attested."""
+    r = _row("TT94")
+    assert r["occupant_name"] == "Raʿmosi"
+    assert "ʿ" in r["occupant_name"]  # ayin between R and m
+    assert r["occupant_alt_names"] == ["ʿAmy"]
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 194
+
+
+def test_chunk18_tt95_mery_high_priest_usurper_of_tt84() -> None:
+    """TT95 Mery — First prophet of Amūn (= High Priest), p.195. Mery
+    is the USURPER of TT84 (chunk-17 cross-reference). PM prints
+    `(See also usurpation in tomb 84.)` in the headword. Per the
+    chunk-9 `See also Tomb N` pattern, TT84 is captured in
+    shared_with_tombs as a structural cross-ref. The `(See also
+    usurpation...)` parenthetical is DROPPED from notes_from_pm to
+    prevent the Tier-3 `is_usurped` regex from firing on TT95
+    (Mery's primary tomb, not the usurped party)."""
+    r = _row("TT95")
+    assert r["occupant_name"] == "Mery"
+    assert r["occupant_role"] == "High Priest"
+    # `(See also usurpation in tomb 84.)` is an EVENT cross-reference,
+    # NOT an ownership relation — does NOT belong in shared_with_tombs.
+    # CHUNK18_CORRECTIONS overrides the A+B 2/1 majority `["TT84"]` to
+    # [] for structural correctness + symmetry-test compliance.
+    assert r["shared_with_tombs"] == []
+    # The verbatim parenthetical is preserved in notes_from_pm; the
+    # Tier-3 `is_usurped` deriver fires on `usurpation`; DERIVER_OVERRIDES
+    # pins TT95 is_usurped=false (Mery is usurper of TT84, not usurped here).
+    assert r["is_usurped"] is False
+    assert "(See also usurpation in tomb 84.)" in r["notes_from_pm"]
+    assert "First prophet of Amūn" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 195
+
+
+def test_chunk18_tt96_tt99_sennufer_collision() -> None:
+    """TT96 + TT99 are both Sennufer — distinct individuals, distinct
+    rows per the within-source NAME collision precedent (chunk-10 TT17 /
+    chunk-15 + chunk-17 TT90 NEBAMŪN). TT96 = Mayor of the Southern
+    City (Amenophis II); TT99 = Overseer of the seal, Overseer of the
+    gold-land of Amūn (Tuthmosis III)."""
+    tt96 = _row("TT96")
+    tt99 = _row("TT99")
+    assert tt96["occupant_name"] == "Sennufer"
+    assert tt99["occupant_name"] == "Sennufer"
+    assert tt96["tomb_id"] != tt99["tomb_id"]
+    assert "Mayor of the Southern City" in tt96["notes_from_pm"]
+    assert "Overseer of the seal" in tt99["notes_from_pm"]
+    assert tt96["source_citation"]["page"] == 197
+    assert tt99["source_citation"]["page"] == 204
+
+
+def test_chunk18_tt98_kaemheribsen_inaccessible_third_prophet() -> None:
+    """TT98 Kaemheribsen — Third prophet of Amūn (NOT High Priest:
+    only First prophet flattens to High Priest per the major-deity
+    rule; Third prophet falls through to Official), p.204. PM prints
+    `(Inaccessible.)` parenthetical on the sub-site line — preserved
+    verbatim in notes_from_pm per the chunk-12 TT47 tomb-state-marker
+    precedent. `Temp. Tuthmosis III to Amenophis II (?)` regnal-tail
+    hedge → DERIVER_OVERRIDE pins attested."""
+    r = _row("TT98")
+    assert r["occupant_name"] == "Kaemheribsen"
+    assert r["occupant_role"] == "Official"
+    assert "(Inaccessible.)" in r["notes_from_pm"]
+    assert "Third prophet of Amūn" in r["notes_from_pm"]
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 204
+
+
+def test_chunk18_tt100_rekhmire_vizier_macron_restored() -> None:
+    """TT100 Rekhmirēʿ — Governor of the town and Vizier, p.206. Major
+    Theban tomb (Rekhmire's tomb spans 9 printed pages). PM headword
+    `100. REKHMIRĒʿ` (capital macron-Ē + ayin). All 3 agents kept the
+    ayin, stripped the macron per the no-pre-derive rule.
+    CHUNK18_CORRECTIONS restores macron-Ē per direct PDF visual at
+    p.206. Vizier-precedence: title clause `Governor of the town and
+    Vizier` → role 'Vizier' (per chunk-12 TT60 / chunk-15 TT61+TT66 /
+    chunk-17 TT83 precedent)."""
+    r = _row("TT100")
+    assert r["occupant_name"] == "Rekhmirēʿ"
+    assert "ē" in r["occupant_name"]  # macron-Ē restored
+    assert "ʿ" in r["occupant_name"]  # ayin
+    assert r["occupant_role"] == "Vizier"
+    assert "Governor of the town and Vizier" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 206
 
 
 def test_chunk17_tt90_nebamun_macron_restored_third_collision() -> None:
