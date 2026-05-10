@@ -1133,10 +1133,13 @@ CHUNK13_RENAMES: dict[str, str] = {}
 
 
 # Chunk-14 (TT51–TT60, Sh. ʿAbd el-Qurna). Reviewer-identified corrections
-# will be populated here after the egyptologist-reviewer pass on this chunk's
-# PR. The empty list is retained so `test_all_corrections_includes_every_chunk
-# _list` continues to enforce ALL_CORRECTIONS aggregation (same pattern as
-# CHUNK5_CORRECTIONS and all subsequent empty-scaffold chunks).
+# for this chunk: 4 capital-macron restorations on `occupant_name`
+# (TT51/TT53/TT56/TT57 — same `-emḤĒt` OCR class as chunk-12 TT34
+# `MENTUEMḤĒT`), 1 macron restoration in TT58 `notes_from_pm`
+# (`Amenemonet` → `Amenemōnet`), and 1 controlled-vocab pairing fix on
+# TT58 `occupant_role` (`null` → `"Unknown"` per the chunk-8 KV12/QV36/
+# QV40 null-name pairing invariant). ALL_CORRECTIONS aggregation is
+# enforced by `test_all_corrections_includes_every_chunk_list`.
 CHUNK14_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT51",
