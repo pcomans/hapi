@@ -952,10 +952,14 @@ CHUNK11_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "PM I.1 p.43 (physical p.61) prints `Parents, Ḥarsiēsi` (macron-ē). "
         "Text-layer OCR dropped the macron-ē. Verbatim-preserve per README "
         "notes_from_pm policy. Same macron-ē class as TT26 above. Per "
-        "Gemini Code Assist PR #199 round 1, also dropped the redundant "
-        "`ʿAsâsîf.` sub-site token that the merge had emitted into notes "
-        "(sub-site is already captured in `theban_area`; sibling chunk-11 "
-        "rows TT25 and TT26 do not repeat the sub-site in notes). "
+        "Gemini Code Assist PR #199 round 1, also dropped a redundant "
+        "`ʿAsâsîf.` sub-site token that this CHUNK11_CORRECTIONS entry "
+        "previously included (the sub-site is captured in `theban_area`; "
+        "sibling chunk-11 rows TT25 and TT26 do not repeat the sub-site "
+        "in notes). The redundant token was authored into the correction "
+        "value here, not emitted by the merge — per merge-disagreements "
+        "TT27 line 118 none of agents a/b/c produced the token; the "
+        "merge majority value is `(Inaccessible.) Parents,` directly. "
         "Egyptologist printed-source review (this PR).",
     ),
     (
@@ -965,12 +969,16 @@ CHUNK11_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "PM I.1 p.45 (physical p.63) prints `Parents, [ʿAḥmosi] Ḥumay (tomb "
         "224) and Nub.` — the character after the opening bracket is the "
         "ayin ʿ, not a `C`. The tie-break override pins agent B's bracket-"
-        "and-name-root form `[Aḥmosi]` (best majority candidate; ayin "
-        "dropped) at merge time per the KV36 principle (ties at merge, "
-        "diacritics at fix_rows). This CHUNK11_CORRECTIONS entry layers "
-        "the PM-faithful ayin restoration post-merge. Per Gemini Code "
-        "Assist PR #199 round 1 (separation-of-concerns refactor); "
-        "egyptologist printed-source review (this PR) verified PM p.45.",
+        "and-name-root form `[Aḥmosi]` (best candidate; minority — agents "
+        "A and C both produced `[Caḥmosi]`, mis-reading the ayin as a "
+        "leading C; agent B alone got the bracket + name-root + "
+        "punctuation right, only the leading ayin missing) at merge time "
+        "per the KV36 principle (ties at merge, diacritics at fix_rows). "
+        "This CHUNK11_CORRECTIONS entry layers the PM-faithful ayin "
+        "restoration post-merge. Per Gemini Code Assist PR #199 round 1 "
+        "(separation-of-concerns refactor) and round 2 (majority/minority "
+        "wording correction); egyptologist printed-source review (this "
+        "PR) verified PM p.45.",
     ),
     (
         "TT29",

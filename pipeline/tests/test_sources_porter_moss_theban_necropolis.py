@@ -2928,6 +2928,17 @@ def test_chunk11_occupant_names() -> None:
             tid, _row(tid)["occupant_name"]
         )
 
+    # TT23 `occupant_alt_names=["To"]` — PM's `THAY, also called To`
+    # headword phrasing produces a single-element alt-names list.
+    # Asserted here (not in `test_chunk11_tt29_vizier_role_and_kv_cross_
+    # valley` which only covers TT29) per Gemini Code Assist PR #199
+    # round 2 coverage-gap finding.
+    assert _row("TT23")["occupant_alt_names"] == ["To"], (
+        f"TT23 must carry `occupant_alt_names=['To']` per PM's "
+        f"`THAY, also called To` headword phrasing; got "
+        f"{_row('TT23')['occupant_alt_names']!r}"
+    )
+
 
 def test_chunk11_source_citation_pages() -> None:
     """Printed page numbers per TT tomb (PM I.1 § I, printed pp.35-46,
@@ -3041,11 +3052,10 @@ def test_chunk11_notes_from_pm_pinned_substrings() -> None:
     - TT27 `(Inaccessible.)` state-marker.
     - TT29 full Vizier title clause.
 
-    NOTE: alt-names (`To` for TT23, `Pairi` for TT29) live in the
-    `occupant_alt_names` field — asserted by `test_chunk11_tt29_vizier_role_
-    and_kv_cross_valley` (TT29) and the chunk-11 docstring of
-    `test_chunk11_no_multi_occupant` (TT23 — implicit via the rule).
-    Per Gemini Code Assist PR #199 round 1 docstring-accuracy correction.
+    Alt-names (a SEPARATE field, `occupant_alt_names`) are asserted by
+    `test_chunk11_occupant_names` (TT23 `["To"]`) and `test_chunk11_tt29_
+    vizier_role_and_kv_cross_valley` (TT29 `["Pairi"]`). Per Gemini Code
+    Assist PR #199 round 1 + round 2 docstring-accuracy corrections.
     """
     expected: list[tuple[str, str, str]] = [
         ("TT21", "Scribe, Steward of Tuthmosis I.", "role + regnal"),
