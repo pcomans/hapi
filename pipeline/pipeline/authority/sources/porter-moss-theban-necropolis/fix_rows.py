@@ -1306,15 +1306,14 @@ CHUNK15_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK15_RENAMES: dict[str, str] = {}
 
 
-# Chunk-16 (TT71–TT80) corrections. Scaffold is empty pending egyptologist-
-# reviewer pass on the printed PDF. Known deferred items:
-#   - TT79 `notes_from_pm`: ayin restoration `wab-priest` → `wʿab-priest`
-#     per TT14/TT68 precedent (PM text-layer bar-a = ayin ʿ; merge pinned
-#     agent A's stripped form; fix_rows layers the restoration post-merge).
-#   - TT80 `occupant_name`: capital macron-Ū restoration on `Ḏhutnufer`
-#     (all 3 agents agree on stripped form; PM headword prints `ḎḤUTNŪFER`
-#     per the standard OCR macron-drop class; egyptologist to verify PDF).
-# ALL_CORRECTIONS aggregation is enforced by
+# Chunk-16 (TT71–TT80) corrections. Egyptologist-reviewer pass applied
+# 6 PDF-verified corrections: 3 capital-macron restorations on
+# `occupant_name` (TT72 `Reʿ` → `Rēʿ`, TT77 `Ptahemhet` → `Ptahemhēt`,
+# TT80 `Ḏhutnufer` → `Ḏhutnūfer`), 1 macron restoration in
+# `notes_from_pm` (TT78 `Esi` → `Ēsi`), and 2 ayin restorations in
+# `notes_from_pm` (TT77 `Raḥuy` → `Raʿḥuy`, TT79 `wab-priest` →
+# `wʿab-priest` per TT14/TT68 precedent). All cite direct PM PDF
+# visual checks. ALL_CORRECTIONS aggregation is enforced by
 # `test_all_corrections_includes_every_chunk_list`.
 CHUNK16_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
@@ -1335,7 +1334,7 @@ CHUNK16_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Ptahemhēt",
         "PM I.1 p.150 / physical PDF p.168. Egyptologist confirms PM "
         "prints headword `PTAḤEMḤĒT` with multi-Ḥ + capital macron-Ē "
-        "(same `-emḤĒt` cluster as chunk-12 TT34 `MENTUEMḤĒT` / chunk-14 "
+        "(same `-emḤĒT` cluster as chunk-12 TT34 `MENTUEMḤĒT` / chunk-14 "
         "TT51 `USERḤĒT` / chunk-14 TT53 `AMENEMḤĒT`). Strip both Ḥ-"
         "underdots per policy; preserve macron-Ē → `Ptahemhēt`.",
     ),
@@ -2052,7 +2051,7 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT79",
         "attribution_certainty",
         "attested",
-        "PM I.1 p.156 prints `79. MENKHEPER (or MENKHEPERRAṢONB) ..., "
+        "PM I.1 p.156 prints `79. MENKHEPER (or MENKHEPERRAʿSONB) ..., "
         "Overseer of the granary of the Lord of the Two Lands, wʿab-"
         "priest in the Mortuary Temple of Tuthmosis III. Temp. Tuthmosis "
         "III to Amenophis II (?).` The `(?)` qualifies the regnal-range "
