@@ -487,6 +487,54 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Overseer of the treasury, Royal scribe. Temp. Amenophis II. "
             "(CHAMPOLLION, No. 6, L. D. Text, No. 59, HAY, No. 21.) "
             "Wife, Takhaʿt.",
+        # Chunk 17 (TT81–TT90) — 8 tie-break overrides, all on notes_from_pm.
+        # All pinned to agent A at merge time: clean punctuation (no
+        # double-period after close-paren), no headword-prefix duplication.
+        # CHUNK17_CORRECTIONS layers post-merge fixes on TT81 (PM-faithful
+        # bracket-prefix `[1st ed. Anena], ` + Queen-Ahhotep doubled-ḥ
+        # `ʿAḥotp` → `ʿAḥḥotp`) and TT84 (small-caps→Title-case `MERY` →
+        # `Mery` per TT51/TT57/TT58/TT60 chunk-12-and-14 precedent).
+        # TT82/TT83/TT85/TT87/TT88/TT90 pass through fix_rows unchanged
+        # on the notes_from_pm field (post-fix-rows value matches the
+        # tie-break override's pinned merge-time value verbatim).
+        ("TT81", "notes_from_pm"):
+            "[1st ed. Anena], Overseer of the granary of Amūn. Temp. "
+            "Amenophis I to Tuthmosis III. (CHAMPOLLION, No. 5, "
+            "WILKINSON, No. 14, HAY, No. 8.) Parents, Ineni, Judge, and "
+            "Sit-ḏhout. Wife, ʿAḥḥotp, called Thuiu.",
+        ("TT82", "notes_from_pm"):
+            "Scribe, Counter of the grain of Amūn, Steward of the Vizier. "
+            "Temp. Tuthmosis III. (L. D. Text, No. 56, HAY, No. 16.) "
+            "Parents, Ḏhutmosi, Overseer of lands, and Antef. "
+            "Wife, Beketamūn.",
+        ("TT83", "notes_from_pm"):
+            "Governor of the town and Vizier. Early temp. Tuthmosis III. "
+            "(L. D. Text, No. 41, WILKINSON, No. 64.) "
+            "Wife, Taʿamethu (name in tomb 131).",
+        ("TT84", "notes_from_pm"):
+            "First royal herald, Overseer of the gate, temp. Tuthmosis "
+            "III. Partly usurped by Mery (tomb 95), temp. Amenophis II. "
+            "(CHAMPOLLION, No. 11, L. D. Text, No. 71, WILKINSON, No. "
+            "31, HAY, No. 19.) Parents (of Amunezeḥ), Siḏhout, Judge, "
+            "and Resi. Wife (of Amunezeḥ), Ḥenutnefert.",
+        ("TT85", "notes_from_pm"):
+            "Lieutenant-commander of soldiers. Temp. Tuthmosis III to "
+            "Amenophis II. (CHAMPOLLION, No. 12, HAY, No. 20.) "
+            "Mother, Tetires. Wife, Baki, Chief royal nurse.",
+        ("TT87", "notes_from_pm"):
+            "Overseer of the granaries of Upper and Lower Egypt, Overseer "
+            "of horses of the Lord of the Two Lands, Royal scribe. Temp. "
+            "Tuthmosis III. (HAY, No. 17.) Father, Sen-ḏhout.",
+        ("TT88", "notes_from_pm"):
+            "Lieutenant of the King, Standard-bearer of the Lord of the "
+            "Two Lands. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, "
+            "No. 8, L. D. Text, No. 61.) Wife, Neit, Chief royal nurse, "
+            "Governess of the god.",
+        ("TT90", "notes_from_pm"):
+            "Standard-bearer of (the sacred bark called) 'Beloved-of-Amūn', "
+            "Captain of troops of the police on the west of Thebes. "
+            "Temp. Tuthmosis IV to Amenophis III. (CHAMPOLLION, No. 9 bis, "
+            "L. D. Text, No. 63, HAY, No. 22.) Wives, Sensenbut and Tiy.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
