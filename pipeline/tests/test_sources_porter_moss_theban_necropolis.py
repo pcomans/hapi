@@ -3065,8 +3065,11 @@ def test_chunk11_notes_from_pm_pinned_substrings() -> None:
         ("TT24", "Steward of the royal wife Nebtu.", "role"),
         ("TT25", "First prophet of Khons.", "role + minor cult"),
         ("TT26", "Overseer of the treasury in the Ramesseum", "role"),
-        # PM p.43 prints `Wife, Meryēsi` (n + macron-ē). Egyptologist-
-        # flagged macron-drop fixed via CHUNK11_CORRECTIONS.
+        # PM p.43 prints `Wife, Meryēsi` (macron-ē). Egyptologist-
+        # flagged macron-drop fixed via CHUNK11_CORRECTIONS. (The `n +`
+        # qualifier in the prior version was a copy-paste leftover from
+        # chunk-10 TT16's rn→rm fix; TT26's only OCR issue is the macron
+        # drop, no n→m involved. Per Gemini PR #199 round 3.)
         ("TT26", "Wife, Meryēsi.", "wife macron-ē correction"),
         ("TT27", "(Inaccessible.)", "state-marker"),
         # PM p.43 prints `Parents, Ḥarsiēsi` (macron-ē). Egyptologist-
