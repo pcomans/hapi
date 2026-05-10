@@ -1217,6 +1217,81 @@ CHUNK14_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK14_RENAMES: dict[str, str] = {}
 
 
+# Chunk-15 (TT61–TT70) corrections. Empty scaffold — egyptologist-reviewer pass
+# pending. Register here so `test_all_corrections_includes_every_chunk_list`
+# keeps the audit trail intact and future corrections have a home without
+# requiring a scaffold PR (chunk-13 P2 lesson: always register the scaffold
+# even when empty so the next chunk doesn't repeat the missing-scaffold issue).
+CHUNK15_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT65",
+        "occupant_name",
+        "Nebamūn",
+        "PM I.1 p.129 / physical PDF p.147. Direct PDF visual check (parent "
+        "agent, this PR) confirms PM prints headword `NEBAMŪN` with capital "
+        "macron-Ū. pypdf text-layer drops capital macrons in CAPS headwords "
+        "(same OCR class as chunk-11 TT29 `AMENEMŌPET`, chunk-12 TT34 "
+        "`MENTUEMḤĒT`/TT39 `PUIMRĒʿ`, chunk-13 TT41 `AMENEMŌPET`, chunk-14 "
+        "TT51 `USERḤĒT`). Restore macron-Ū per PM-faithful policy. Within-"
+        "source NAME collision with chunk-10 TT17 `Nebamūn` (already on "
+        "disk with macron) — same name, different individual; both rows "
+        "now consistent on the macron.",
+    ),
+    (
+        "TT65",
+        "notes_from_pm",
+        "Scribe of the royal accounts (?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Aichesi' of Prisse.) Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha.",
+        "PM I.1 p.129 / physical PDF p.147 (TT65 Nebamūn). Two corrections "
+        "layered onto the tie-break-pinned form: (1) restore space before "
+        "`(?)` in `accounts (?)` matching the parallel `temp. Ḥatshepsut "
+        "(?)` form in the same entry and the broader PM printing standard "
+        "(also TT62 `Tuthmosis III (?)`, TT69 `Tuthmosis IV (?)`); (2) "
+        "correct OCR misread `'Alchesi'` → `'Aichesi'` (PM prints `Ai`, "
+        "not `Al` — direct PDF visual check this PR; all 3 agents read "
+        "the OCR `Al` cluster as `Al` but PDF clearly shows `Ai`).",
+    ),
+    (
+        "TT65",
+        "tomb_aliases",
+        ["Aichesi"],
+        "PM I.1 p.129 / physical PDF p.147. PM's headword body "
+        "parenthetical `'Aichesi' of Prisse` is a 19th-c. tomb-nickname "
+        "(Prisse d'Avennes' designation), structurally analogous to TT55 "
+        "`'Stuart's Tomb'` (chunk-14 precedent) and the chunk-7 traveller-"
+        "designation pattern. Promote to tomb_aliases per the established "
+        "convention; the verbatim parenthetical stays in notes_from_pm "
+        "for verbatim-preserve compliance.",
+    ),
+    (
+        "TT68",
+        "occupant_name",
+        "[Per?]enkhmūn",
+        "PM I.1 p.133 / physical PDF p.151. Direct PDF visual check (parent "
+        "agent, this PR) confirms PM prints headword `[PER?]ENKHMŪN` with "
+        "capital macron-Ū. Same OCR macron-drop class as TT65 / chunk-12 "
+        "TT34 etc. Preserve editorial brackets `[Per?]` per the bracketed-"
+        "name-fragment rule; restore macron-Ū on the surviving tail.",
+    ),
+    (
+        "TT70",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.139 / physical PDF p.157. Headword `70. Usurped by "
+        "AMENMOSI ...` — anonymous original occupant (the headword opens "
+        "directly with `Usurped by` with no primary name). Per the "
+        "controlled-vocab pairing invariant established by chunk-8 KV12/"
+        "KV39/KV56/QV36/QV40/QV73/QV75 and re-affirmed by chunk-14 TT58: "
+        "null `occupant_name` MUST co-occur with `occupant_role=\"Unknown\"`. "
+        "All 3 agents emitted `null` for occupant_role despite the "
+        "prompt's explicit pairing rule (same agent-emission gap as "
+        "chunk-14 TT58). This correction enforces the invariant.",
+    ),
+]
+
+
+CHUNK15_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1508,6 +1583,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK12_CORRECTIONS,
     CHUNK13_CORRECTIONS,
     CHUNK14_CORRECTIONS,
+    CHUNK15_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1524,6 +1600,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK12_RENAMES,
     **CHUNK13_RENAMES,
     **CHUNK14_RENAMES,
+    **CHUNK15_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -1791,6 +1868,62 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "Sculptor of Amun. Same regnal-range tail pattern as chunk-10 "
         "TT12/TT19/TT20 and chunk-13 TT41/TT43/TT46. Per chunk-9 TT2 "
         "precedent.",
+    ),
+    # Chunk-15 attribution_certainty overrides. Same TT2-precedent chain:
+    # PM's `(?)` qualifies the regnal-date claim, NOT the primary occupant's
+    # identification. TT62, TT65, and TT69 all have unhedged headword
+    # attributions; only the temporal qualifier carries the hedge.
+    (
+        "TT62",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.125 prints `62. AMENEMWASKHET ..., Overseer of the "
+        "Cabinet. Temp. Tuthmosis III(?).` The `(?)` qualifies the regnal "
+        "date (Tuthmosis III), not Amenemwaskhet's identification as "
+        "Overseer of the Cabinet. Same regnal-date hedge class as chunk-10 "
+        "TT12/TT19/TT20, chunk-13 TT43, chunk-14 TT52. Per chunk-9 TT2 "
+        "precedent that attribution_certainty encodes occupant-identity "
+        "certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT65",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.129 prints `65. NEBAMŪN ..., Scribe of the royal "
+        "accounts(?), Overseer of the granary, temp. Ḥatshepsut (?). "
+        "Usurped by Imiseba ...` The `(?)` qualifies the regnal date "
+        "(Ḥatshepsut), not Nebamun's identification as Scribe/Overseer. "
+        "The usurpation by Imiseba (temp. Ramesses IX) is fully attested. "
+        "Same regnal-date hedge class as chunk-10 TT12/TT19/TT20, chunk-13 "
+        "TT41/TT43, chunk-14 TT52. Per chunk-9 TT2 precedent.",
+    ),
+    (
+        "TT69",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.134 prints `69. MENNA ..., Scribe of the fields of the "
+        "Lord of the Two Lands of Upper and Lower Egypt. Temp. Tuthmosis "
+        "IV(?).` The `(?)` qualifies the regnal date (Tuthmosis IV), not "
+        "Menna's identification as Scribe of the fields. Same regnal-date "
+        "hedge class as chunk-10 TT12/TT20, chunk-14 TT52. Per chunk-9 TT2 "
+        "precedent that attribution_certainty encodes occupant-identity "
+        "certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT70",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.139 prints `70. Usurped by AMENMOSI ..., Overseer of "
+        "sandal-makers(?) of the estate of Amūn ...`. The `(?)` qualifies "
+        "the USURPER's title (`sandal-makers(?)` — Amenmosi's title is "
+        "uncertain), NOT the primary occupant's identification. The "
+        "primary occupant is intentionally null (anonymous original "
+        "occupant; see CHUNK15_CORRECTIONS pairing fix). The "
+        "attribution_certainty field encodes occupant-identity certainty "
+        "per the chunk-9 TT2 precedent — and there is no occupant "
+        "identity to hedge. Flip from deriver-fired `uncertain` back to "
+        "`attested`. Same usurper-clause hedge class as chunk-11 TT22 "
+        "(Wah usurped by Mery[amūn], regnal hedge on usurper's date).",
     ),
 ]
 

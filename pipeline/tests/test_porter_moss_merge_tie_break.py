@@ -437,6 +437,28 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Prophetess of Ḥatḥor. Temp. Sesostris I. "
             "(L. D. Text, No. 42.) Wife (of Antefoḳer), Sitsisobk. "
             "Mother (of Sent), Dui.",
+        # Chunk 15 (TT61–TT70) — 2 tie-break overrides:
+        # TT65 notes_from_pm: override pinned agent A's mid-sentence citation
+        # form (per chunk-12 citation-clause precedent); CHUNK15_CORRECTIONS
+        # layers two post-merge fixes: (a) `accounts(?)` → `accounts (?)`
+        # spacing and (b) `'Alchesi'` → `'Aichesi'` (PDF-verified OCR
+        # misread; PM prints `Ai` not `Al`).
+        # TT68 notes_from_pm: override pinned agent A's `wʿab-priest` ayin
+        # position (per TT14 precedent); no fix_rows correction — final form
+        # matches the override verbatim.
+        ("TT65", "notes_from_pm"):
+            "Scribe of the royal accounts (?) in the Presence, Overseer of the "
+            "granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the "
+            "altar, Head of the temple-scribes of the estate of Amūn, temp. "
+            "Ramesses IX. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, "
+            "No. 1, 'Aichesi' of Prisse.) Parents, Amenḥotp, Head of scribes "
+            "of the Temple of Amen-reʿ in Karnak, and Mutemmeres. "
+            "Wife, Te(n)tpapersetha.",
+        ("TT68", "notes_from_pm"):
+            "wʿab-priest of Amūn of Karnak, and of Mut of Asher, Dyn. XX. "
+            "Usurped by Espaneferḥor, Head of the temple-scribes of the estate "
+            "of Amūn, temp. Siamūn. Father (of Espaneferḥor), Iufenamūn. "
+            "Wife (of Espaneferḥor), Tabekenmut, Singer of the ... of Mut.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
