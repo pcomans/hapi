@@ -3837,7 +3837,7 @@ def test_chunk13_tt41_amenemopet() -> None:
     assert r["source_citation"]["page"] == 78
     assert "(CHAMPOLLION, No. 35.)" in r["notes_from_pm"]
     # Spurious-double-period correction landed (was `35.).` post-merge):
-    assert "35.).` " not in r["notes_from_pm"]
+    assert "35.)." not in r["notes_from_pm"]
     assert "35.) Parents," in r["notes_from_pm"]
 
 
@@ -3879,7 +3879,7 @@ def test_chunk13_tt47_inaccessible() -> None:
     assert r["occupant_name"] == "Userhet"
     assert r["source_citation"]["page"] == 87
     assert "(Inaccessible.)" in r["notes_from_pm"]
-    assert "(Inaccessible.).` " not in r["notes_from_pm"]
+    assert "(Inaccessible.)." not in r["notes_from_pm"]
     # Single period inside the close-paren only, then a fresh `Parents,`:
     assert "(Inaccessible.) Parents," in r["notes_from_pm"]
 
@@ -3926,9 +3926,9 @@ def test_chunk13_double_period_strip() -> None:
     """
     for tid in ("TT41", "TT47", "TT49"):
         notes = _row(tid)["notes_from_pm"]
-        # No `).<space>` followed by spurious `.` either:
-        assert ").) " not in notes, (tid, notes)
+        # No spurious second period after the citation close-paren:
         assert ".)." not in notes, (tid, notes)
+        assert "). ." not in notes, (tid, notes)
 
 
 def test_chunk13_pages_in_range() -> None:

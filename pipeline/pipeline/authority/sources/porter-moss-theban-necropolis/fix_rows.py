@@ -1083,7 +1083,7 @@ CHUNK13_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "headword; `Amūn` body prose on the same page confirms PM's "
         "diacritic-preservation policy). pypdf text-layer drops capital "
         "macrons in CAPS headwords (same OCR class as chunk-11 TT29 "
-        "`MENTUEMḤĒT`, chunk-12 TT33 `PEDAMENŌPET`, chunk-12 TT34 "
+        "`AMENEMŌPET`, chunk-12 TT33 `PEDAMENŌPET`, chunk-12 TT34 "
         "`MENTUEMḤĒT`, chunk-12 TT39 `PUIMRĒʿ`). Restore Ō macron per "
         "the PM-faithful diacritic policy (preserve vowel macrons in "
         "occupant_name).",
@@ -1614,9 +1614,10 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
     # title token, NOT the primary occupant's identification. The deriver
     # fires context-free on any `(?)` in notes; per the established
     # precedent, attribution_certainty encodes occupant-identity certainty,
-    # not regnal-date certainty. The four chunk-13 overrides below all flip
-    # the deriver's `uncertain` back to the egyptologist-confirmed
-    # `attested` for the primary occupant.
+    # not regnal-date certainty. The five chunk-13 overrides below all flip
+    # the deriver's `uncertain` (or `probable` for TT49's `Probably temp.
+    # Ay`) back to the egyptologist-confirmed `attested` for the primary
+    # occupant.
     (
         "TT41",
         "attribution_certainty",
