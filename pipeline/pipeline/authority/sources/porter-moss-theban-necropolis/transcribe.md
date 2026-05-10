@@ -59,7 +59,8 @@ Multi-chunk source. Each chunk is its own PR; this file's "Chunks" section is up
 | 8 | PM I.2 § X.A Valley of the Queens — 20 numbered QV tombs (QV33–QV75 sparse) | p.751–768 | p.292–313 | landed | #?? |
 | 9 | PM I.1 § I "Numbered Tombs" — TT1–TT10 Deir el-Medina core (10 rows) | p.1–19 | p.19–37 | landed | #196 |
 | 10 | PM I.1 § I "Numbered Tombs" — TT11–TT20 Dra' Abu el-Naga (10 rows) | p.21–37 | p.39–55 | landed | #198 |
-| 11 | PM I.1 § I "Numbered Tombs" — TT21–TT30 (heterogeneous: Sh. ʿAbd el-Qurna / Dra' Abu el-Naga / ʿAsâsîf, 10 rows) | p.35–46 | p.53–68 | in-progress | (this PR) |
+| 11 | PM I.1 § I "Numbered Tombs" — TT21–TT30 (heterogeneous: Sh. ʿAbd el-Qurna / Dra' Abu el-Naga / ʿAsâsîf, 10 rows) | p.35–46 | p.53–68 | landed | #199 |
+| 12 | PM I.1 § I "Numbered Tombs" — TT31–TT40 (heterogeneous: Sh. ʿAbd el-Qurna / Khokha / ʿAsâsîf / Dra' Abu el-Naga / Qurnet Muraʿi, 10 rows) | p.47–78 | p.65–96 | in-progress | (this PR) |
 
 The physical-to-printed offset for PM I.2 is **+458** (printed = physical + 458 / physical = printed − 458). Verified at chunk-1's first and last printed pages, at chunk-2 boundaries, and at chunk-3 boundaries — no part-boundary drift within the KV1–KV46 span. Foldout plates (Plan II at the start of § I; the shared plan p.528 for KV11–KV14 Finds; the plan p.548 for KV20/22/23/38; the plan p.552 for KV34/35/42) and figure pages occupy intervening physical pages; the chunk ranges each cross a floor-plan page but the offset is stable across KV headwords.
 
