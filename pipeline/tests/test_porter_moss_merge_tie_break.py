@@ -339,6 +339,16 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("QV74", "notes_from_pm"):
             "Great King's mother and King's wife. "
             "(CHAMPOLLION, No. 15, L. D. Text, No. 2, HAY, No. 7.)",
+        # Chunk 10 (PR — TT11–TT20) — 2 PDF-cited tie-break overrides on
+        # cosmetic/typographic 1/1/1 ties (capitalisation + ayin presence).
+        # Neither row has a CHUNK10_CORRECTIONS entry on notes_from_pm so
+        # the override value is the final reconciled.jsonl value.
+        ("TT12", "notes_from_pm"):
+            "Overseer of the granary of the King's wife and King's mother "
+            "ʿAḥḥotp. Temp. Amosis to Amenophis I (?). (CHAMPOLLION, No. 51, "
+            "L. D. Text, No. 2.) Mother, ʿAḥmosi.",
+        ("TT14", "notes_from_pm"):
+            "wʿab-priest of 'Amenophis, the favourite of Amūn'. Ramesside.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
