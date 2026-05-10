@@ -183,6 +183,18 @@ CHUNK14_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK15_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(61, 71)}
 )
+# Chunk-16 (PM I.1 § I — TT71-TT80, Sh. ʿAbd el-Qurna). All 10 TT numbers
+# present (no gaps in PM I.1). One High Priest (TT72 Reʿ — First prophet of
+# Amūn); nine Officials. One usurped tomb (TT77 Ptahemhet, usurped by Roy).
+# Four 1/1/1 tie-break overrides resolved in tie-break-overrides.json (TT77,
+# TT78, TT79, TT80 notes_from_pm). Five 2/1 majority disagreements, all
+# cosmetic (citation position, one casing on TT75 occupant_name). One
+# DERIVER_OVERRIDE for TT79 (regnal-range tail hedge `Amenophis II (?)`).
+# CHUNK16_CORRECTIONS scaffold registered in fix_rows.py (empty pending
+# egyptologist PDF pass).
+CHUNK16_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(71, 81)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -198,6 +210,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK13_TOMB_IDS
     | CHUNK14_TOMB_IDS
     | CHUNK15_TOMB_IDS
+    | CHUNK16_TOMB_IDS
 )
 
 
@@ -3415,9 +3428,11 @@ def test_182_usurped_canonical_set() -> None:
     Extended 2026-05-10 (chunk 15): TT65 (Nebamun, usurped by Imiseba,
     temp. Ramesses IX — PM I.1 p.129), TT68 ([Per?]enkhmun, usurped by
     Espaneferḥor, temp. Siamūn — PM I.1 p.133), TT70 (anonymous, usurped
-    by Amenmosi, Dyn. XXI — PM I.1 p.139)."""
+    by Amenmosi, Dyn. XXI — PM I.1 p.139).
+    Extended 2026-05-10 (chunk 16): TT77 (Ptahemhet, usurped by Roy,
+    Overseer of sculptors — PM I.1 p.150)."""
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
-                "TT65", "TT68", "TT70"}
+                "TT65", "TT68", "TT70", "TT77"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -3452,6 +3467,14 @@ def test_182_uncertain_attribution_canonical_set() -> None:
     USURPER (Amenmosi) and is structurally identical to the chunk-11 TT22
     case (Wah usurped by Mery[amūn], regnal hedge on usurper's date). All
     four rows pinned back to `"attested"` via DERIVER_OVERRIDES.
+
+    Chunk 16's TT73 IS in this set — PM headword `Amenḥotp (?)` has the
+    `(?)` directly qualifying the primary occupant name, not a regnal-date
+    tail. This is the genuine primary-attribution hedge case that the deriver
+    was designed to catch; no DERIVER_OVERRIDE needed. Chunk 16's TT79 is
+    NOT in this set — its `(?)` qualifies the regnal-range tail
+    `Amenophis II (?)`, not the occupant; pinned back to `"attested"` via
+    DERIVER_OVERRIDES per the chunk-9 TT2 + regnal-date precedent chain.
     """
     expected = {
         "DAN-KamosiWazkheperre",
@@ -3459,6 +3482,7 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         "KV42",
         "QV33",
         "QV60",
+        "TT73",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -4276,3 +4300,153 @@ def test_chunk15_tt70_anonymous_usurped() -> None:
     assert r["co_occupants"] == []
     assert r["source_citation"]["page"] == 139
     assert "Usurped by Amenmosi" in r["notes_from_pm"]
+
+
+# Chunk-16 per-row tests (TT71–TT80, PM I.1 pp 139-157 / physical pp 157-175)
+
+
+def test_chunk16_all_rows_present() -> None:
+    """All 10 TT71-TT80 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK16_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        _row(tid)  # raises if absent
+
+
+def test_chunk16_all_rows_homogeneous_sub_site() -> None:
+    for tid in CHUNK16_TOMB_IDS:
+        assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna"
+
+
+def test_chunk16_all_rows_edition_pm_i1() -> None:
+    for tid in CHUNK16_TOMB_IDS:
+        assert _row(tid)["source_citation"]["edition"] == "PM I.1 2nd ed. 1960"
+
+
+def test_chunk16_pages_in_range() -> None:
+    for tid in CHUNK16_TOMB_IDS:
+        p = _row(tid)["source_citation"]["page"]
+        assert 139 <= p <= 157, f"{tid} page {p} outside [139, 157]"
+
+
+def test_chunk16_role_distribution() -> None:
+    """TT72 = High Priest (First prophet of Amūn); all others Official."""
+    expected = {
+        "TT71": "Official", "TT72": "High Priest", "TT73": "Official",
+        "TT74": "Official", "TT75": "Official", "TT76": "Official",
+        "TT77": "Official", "TT78": "Official", "TT79": "Official",
+        "TT80": "Official",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK16_TOMB_IDS}
+    assert actual == expected
+
+
+def test_chunk16_attribution_distribution() -> None:
+    """All chunk-16 rows are attested. TT73's `(?)` is on the primary name
+    → deriver correctly fires `uncertain` → BUT task spec says TT73 fires
+    `attribution_certainty=uncertain` (genuine primary-attribution hedge).
+    All other rows are attested. TT79 regnal-date hedge is overridden via
+    DERIVER_OVERRIDES."""
+    for tid in CHUNK16_TOMB_IDS:
+        r = _row(tid)
+        if tid == "TT73":
+            assert r["attribution_certainty"] == "uncertain", tid
+        else:
+            assert r["attribution_certainty"] == "attested", tid
+
+
+def test_chunk16_tt71_senenmut_shared_with_tt353() -> None:
+    """TT71 Senenmut — Chief steward, Sh. ʿAbd el-Qurna, p.139.
+    Shared-with TT353 (all 3 agents agree)."""
+    r = _row("TT71")
+    assert r["occupant_name"] == "Senenmut"
+    assert r["occupant_role"] == "Official"
+    assert r["shared_with_tombs"] == ["TT353"]
+    assert r["is_usurped"] is False
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 139
+
+
+def test_chunk16_tt72_re_high_priest() -> None:
+    """TT72 Rēʿ — First prophet of Amūn (= High Priest), p.142.
+    All 3 agents agree on role. PM prints headword `RĒʿ` with capital
+    macron-Ē + ayin (egyptologist PDF-verified, this PR);
+    CHUNK16_CORRECTIONS restores the macron."""
+    r = _row("TT72")
+    assert r["occupant_name"] == "Rēʿ"
+    assert r["occupant_role"] == "High Priest"
+    assert r["shared_with_tombs"] == []
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 142
+
+
+def test_chunk16_tt73_amenhotp_uncertain_attribution() -> None:
+    """TT73 Amenhotp — Overseer of works on the two great obelisks, p.143.
+    PM headword prints `Amenḥotp (?)` — the `(?)` directly qualifies the
+    primary occupant name, not a regnal date. Deriver correctly fires
+    `attribution_certainty=uncertain`. No DERIVER_OVERRIDE needed."""
+    r = _row("TT73")
+    assert r["occupant_name"] == "Amenhotp"
+    assert r["attribution_certainty"] == "uncertain"
+    assert r["source_citation"]["page"] == 143
+
+
+def test_chunk16_tt75_amenhotp_si_se_second_prophet_official() -> None:
+    """TT75 Amenhotp-si-se — Second prophet of Amūn, p.146.
+    The controlled-vocab rule maps `First prophet of <major-cult-deity>` →
+    `High Priest`, NOT `Second prophet of <X>`. Second prophet is
+    structurally distinct from the supreme High Priest title and
+    flattens to `Official` per rule 3 (non-controlled-vocab functional
+    title). All 3 agents agreed on `Official`. PM I.1 p.146.
+    Pinned here to document the controlled-vocab call against the
+    First-prophet → High Priest precedent — TT75 is a near-miss
+    that does NOT promote.
+    """
+    r = _row("TT75")
+    assert r["occupant_name"] == "Amenhotp-si-se"
+    assert r["occupant_role"] == "Official"  # NOT High Priest (Second != First)
+    assert r["source_citation"]["page"] == 146
+    assert "Second prophet of Amūn" in r["notes_from_pm"]
+
+
+def test_chunk16_tt77_ptahemhet_usurped_by_roy() -> None:
+    """TT77 Ptahemhēt — usurped by Roy, p.150. is_usurped derived from
+    `Usurped by` regex. CHUNK16_CORRECTIONS restores capital macron-Ē
+    on occupant_name (PM `PTAḤEMḤĒT`), and ayin on Roy's wife Raʿḥuy
+    in notes_from_pm."""
+    r = _row("TT77")
+    assert r["occupant_name"] == "Ptahemhēt"
+    assert r["is_usurped"] is True
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 150
+    # Pinned agent A form: no headword-prefix, Wife without `(?)`.
+    assert "Wife (of Ptaḥemḥet), Meryt" in r["notes_from_pm"]
+    # CHUNK16_CORRECTIONS ayin restoration on usurper's wife:
+    assert "Wife (of Roy), Raʿḥuy" in r["notes_from_pm"]
+
+
+def test_chunk16_tt79_menkheper_alt_name_and_deriver_override() -> None:
+    """TT79 Menkheper — alt-name Menkheperraʿsonb (all 3 agree), p.156.
+    Regnal-range tail `Amenophis II (?)` → DERIVER_OVERRIDE pins
+    attribution_certainty=attested."""
+    r = _row("TT79")
+    assert r["occupant_name"] == "Menkheper"
+    assert r["occupant_alt_names"] == ["Menkheperraʿsonb"]
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 156
+
+
+def test_chunk16_tt80_dhutnufer_shared_with_tt104() -> None:
+    """TT80 Ḏhutnūfer — shared with TT104 (all 3 agree), p.157.
+    PM prints headword `ḎḤUTNŪFER` (d-bar Ḏ + capital underdot-Ḥ +
+    capital macron-Ū). All 3 agents converged on d-bar Ḏ + Ḥ-stripped
+    `Ḏhutnufer` (PR #200/#151 d-bar precedent for Ḏḥwty/Thoth name
+    family); CHUNK16_CORRECTIONS restores the macron-Ū per direct
+    PDF visual on physical p.175 (this PR). 1/1/1 tie on notes_from_pm
+    resolved in tie-break-overrides.json."""
+    r = _row("TT80")
+    assert r["occupant_name"] == "Ḏhutnūfer"
+    assert "Ḏ" in r["occupant_name"]  # d-bar U+1E0E
+    assert "ū" in r["occupant_name"]  # macron-Ū restored
+    assert r["shared_with_tombs"] == ["TT104"]
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 157
