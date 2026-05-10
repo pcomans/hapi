@@ -160,6 +160,16 @@ CHUNK12_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK13_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(41, 51)}
 )
+# Chunk-14 (PM I.1 § I — TT51-TT60, Sh. ʿAbd el-Qurna). All 10 TT numbers
+# present (no gaps in PM I.1). Two Viziers (TT55 Raʿmosi, TT60 Antefoḳer);
+# one anonymous tomb (TT58 — usurped by Amenḥotp + son Amenemonet, Dyn XX);
+# one co-occupant entry (TT60 mother Sent). Five 1/1/1 tie-break overrides
+# resolved in tie-break-overrides.json (TT53/TT54/TT57/TT58/TT60
+# notes_from_pm). CHUNK14_CORRECTIONS scaffold registered in fix_rows.py;
+# reviewer-pass corrections will populate it on the follow-up PR.
+CHUNK14_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(51, 61)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -173,6 +183,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK11_TOMB_IDS
     | CHUNK12_TOMB_IDS
     | CHUNK13_TOMB_IDS
+    | CHUNK14_TOMB_IDS
 )
 
 
@@ -3379,12 +3390,15 @@ def test_182_uninscribed_canonical_set() -> None:
 
 def test_182_usurped_canonical_set() -> None:
     """Rows where PM writes "usurp(ed|ation)" in notes_from_pm.
-    Pinned 2026-05-09: KV9 (doorways usurped from Ramesses V), KV14
-    (usurped by Setnakht), TT22 (Wah, partly usurped by Mery[amūn],
+    Pinned 2026-05-09 (chunks 1-13): KV9 (doorways usurped from Ramesses V),
+    KV14 (usurped by Setnakht), TT22 (Wah, partly usurped by Mery[amūn],
     Eldest son of the King — chunk 11), TT45 (Ḏhout, usurped by
     Ḏḥutemḥab, Head of the makers of fine linen of the estate of
-    Amūn — chunk 13)."""
-    expected = {"KV9", "KV14", "TT22", "TT45"}
+    Amūn — chunk 13).
+    Extended 2026-05-10 (chunk 14): TT54 (Huy, usurped by Kenro, wab-priest,
+    early Dyn. XIX — PM I.1 p.104), TT58 (anonymous, usurped by Amenḥotp +
+    son Amenemonet, Dyn. XX — PM I.1 p.119)."""
+    expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -3403,6 +3417,11 @@ def test_182_uncertain_attribution_canonical_set() -> None:
     certainty; those four rows are pinned back to `"attested"` via
     `DERIVER_OVERRIDES` in `fix_rows.py`. Egyptologist printed-source
     review (chunk-10 PR) cited the rule.
+
+    Chunk 14's TT52 and TT54 are likewise NOT in this set — both have
+    `(?)` qualifying only the regnal-date tail (Tuthmosis IV for TT52,
+    Amenophis III for TT54), not the primary occupant. Pinned back to
+    `"attested"` via DERIVER_OVERRIDES per the same TT2 precedent chain.
     """
     expected = {
         "DAN-KamosiWazkheperre",
@@ -3937,3 +3956,154 @@ def test_chunk13_pages_in_range() -> None:
     for tid in CHUNK13_TOMB_IDS:
         page = _row(tid)["source_citation"]["page"]
         assert 78 <= page <= 95, (tid, page)
+
+
+# ---------------------------------------------------------------------------
+# Chunk-14 per-row tests (TT51–TT60, PM I.1 pp 97-121 / physical pp 115-141)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk14_all_rows_present() -> None:
+    """All 10 TT51-TT60 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK14_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        r = _row(tid)
+        assert r["tomb_id"] == tid
+
+
+def test_chunk14_all_rows_homogeneous_sub_site() -> None:
+    """Every chunk-14 row has theban_area="Sh. ʿAbd el-Qurna" — first
+    PM-I.1 decade with single-sub-site homogeneity."""
+    for tid in CHUNK14_TOMB_IDS:
+        r = _row(tid)
+        assert r["theban_area"] == "Sh. ʿAbd el-Qurna", (tid, r["theban_area"])
+
+
+def test_chunk14_all_rows_edition_pm_i1() -> None:
+    """All chunk-14 rows cite PM I.1 2nd ed. 1960, section I."""
+    for tid in CHUNK14_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid, r["source_citation"]["edition"]
+        )
+        assert r["source_citation"]["section"] == "I", (
+            tid, r["source_citation"]["section"]
+        )
+
+
+def test_chunk14_pages_in_range() -> None:
+    """All chunk-14 source_citation.page values fall in 97-121."""
+    for tid in CHUNK14_TOMB_IDS:
+        page = _row(tid)["source_citation"]["page"]
+        assert 97 <= page <= 121, (tid, page)
+
+
+def test_chunk14_all_rows_null_dynasty_dates_discoverer() -> None:
+    """Chunk-14 has no dynasty, date, or discoverer fields."""
+    for tid in CHUNK14_TOMB_IDS:
+        r = _row(tid)
+        assert r["dynasty"] is None, (tid, r["dynasty"])
+        assert r["sub_period"] is None, (tid, r["sub_period"])
+        assert r["date_bce_approx_start"] is None, (tid, r["date_bce_approx_start"])
+        assert r["date_bce_approx_end"] is None, (tid, r["date_bce_approx_end"])
+        assert r["discovery_year"] is None, (tid, r["discovery_year"])
+        assert r["discoverer"] is None, (tid, r["discoverer"])
+
+
+def test_chunk14_attribution_distribution() -> None:
+    """Per-row attribution_certainty after DERIVER_OVERRIDES — TT52 and TT54
+    have regnal `(?)` hedges that DERIVER_OVERRIDES pins back to attested.
+    All other rows lack any hedge and stay attested by default."""
+    for tid in CHUNK14_TOMB_IDS:
+        r = _row(tid)
+        assert r["attribution_certainty"] == "attested", (
+            tid, r["attribution_certainty"]
+        )
+
+
+def test_chunk14_role_distribution() -> None:
+    """TT55 + TT60 = Vizier, TT58 = Unknown (anonymous), all others Official."""
+    expected = {
+        "TT51": "Official", "TT52": "Official", "TT53": "Official",
+        "TT54": "Official", "TT55": "Vizier",   "TT56": "Official",
+        "TT57": "Official", "TT58": "Unknown",  "TT59": "Official",
+        "TT60": "Vizier",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK14_TOMB_IDS}
+    assert actual == expected, sorted(
+        (tid, actual[tid]) for tid in actual if actual[tid] != expected[tid]
+    )
+
+
+def test_chunk14_tt51_userhet_macron() -> None:
+    """TT51 — Userhēt, called Neferhabef, First prophet of the royal ka of
+    Tuthmosis I, Sh. ʿAbd el-Qurna, p.97. PM prints `USERḤĒT` (capital
+    underdot-Ḥ + capital macron-Ē — direct PDF visual on physical p.115).
+    Strip Ḥ-underdot per policy; preserve macron-Ē → `Userhēt`. The macron
+    restoration is layered by CHUNK14_CORRECTIONS.
+    """
+    r = _row("TT51")
+    assert r["occupant_name"] == "Userhēt"
+    assert r["occupant_alt_names"] == ["Neferhabef"]
+    assert r["occupant_role"] == "Official"
+    assert r["source_citation"]["page"] == 97
+    assert "ē" in r["occupant_name"]
+
+
+def test_chunk14_tt55_vizier_stuart() -> None:
+    """TT55 — Raʿmosi (Vizier), Sh. ʿAbd el-Qurna, p.105. Vizier-precedence
+    rule (the headword title clause names `Governor of the town and Vizier`).
+    PM prints the parenthetical `('Stuart's Tomb.')` after the sub-site —
+    captured in tomb_aliases.
+    """
+    r = _row("TT55")
+    assert r["occupant_name"] == "Raʿmosi"
+    assert r["occupant_role"] == "Vizier"
+    assert r["tomb_aliases"] == ["Stuart's Tomb"]
+    assert r["source_citation"]["page"] == 105
+    # Verbatim Vizier title preserved in notes:
+    assert "Vizier" in r["notes_from_pm"]
+
+
+def test_chunk14_tt58_anonymous_usurped() -> None:
+    """TT58 — anonymous original occupant (`Name unknown` headword), usurped
+    by Amenḥotp + son Amenemōnet, Dyn. XX. Per the chunk-8 KV12/QV36/QV40
+    null-name precedent: occupant_name=null + occupant_role="Unknown".
+    is_usurped derived from `Usurped by` regex.
+    """
+    r = _row("TT58")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["is_usurped"] is True
+    assert r["co_occupants"] == []  # usurpers do NOT go in co_occupants
+    assert r["source_citation"]["page"] == 119
+    # Both usurper-name occurrences carry restored macron-Ō (CHUNK14_CORRECTIONS):
+    assert "Amenemōnet" in r["notes_from_pm"]
+    assert "Amenemonet" not in r["notes_from_pm"]  # no unmaccroned form
+
+
+def test_chunk14_tt60_vizier_mother_co_occupant() -> None:
+    """TT60 — Antefoḳer (Vizier), with mother Sent in co_occupants
+    (hierarchical: `<NAME-A>, ..., and mother, SENT, Prophetess of Ḥatḥor.`).
+    Sent's role flattens to Official (Hathor is not the Amun cult that
+    triggers the High Priest controlled-vocab match).
+    """
+    r = _row("TT60")
+    assert r["occupant_name"] == "Antefoḳer"
+    assert r["occupant_role"] == "Vizier"
+    assert r["is_joint_burial"] is False  # hierarchical, not coordinate
+    assert len(r["co_occupants"]) == 1
+    co = r["co_occupants"][0]
+    assert co["name"] == "Sent"
+    assert co["role"] == "Official"
+    assert r["source_citation"]["page"] == 121
+
+
+def test_chunk14_tt54_tt58_usurpation() -> None:
+    """Chunk-14 has 2 usurpation rows: TT54 (Ḥuy usurped by Kenro) and TT58
+    (anonymous, usurped by Amenḥotp + Amenemōnet). Both carry is_usurped=true
+    via the Tier-3 deriver."""
+    for tid in ("TT54", "TT58"):
+        r = _row(tid)
+        assert r["is_usurped"] is True, (tid, r["is_usurped"])
+        assert "surp" in r["notes_from_pm"], (tid, r["notes_from_pm"])

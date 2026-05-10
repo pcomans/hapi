@@ -409,6 +409,34 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Viceroy of Kush, Governor of the South Lands. "
             "Temp. Amenophis IV to Tutʿankhamūn. "
             "(CHAMPOLLION, A, L. D. Text, No. 110.) Mother, Wenḥo.",
+        # Chunk 14 (TT51–TT60) — 5 tie-break overrides on cosmetic
+        # `notes_from_pm` punctuation/diacritic 1/1/1 ties. Pinned values
+        # are the post-fix_rows state — TT58 reflects the CHUNK14_CORRECTIONS
+        # `Amenemonet` → `Amenemōnet` macron restoration applied after merge.
+        ("TT53", "notes_from_pm"):
+            "Agent of Amūn. Temp. Tuthmosis III. "
+            "(CHAMPOLLION, No. 16 bis, L. D. Text, No. 78.) "
+            "Parents, Yotefnūfer, Agent of Amūn, and Tetiemnūter. "
+            "Wife, Sebknakht.",
+        ("TT54", "notes_from_pm"):
+            "Sculptor of Amūn, temp. Tuthmosis IV to Amenophis III(?). "
+            "Usurped by Kenro, wab-priest, Head of the magazine of Khons, "
+            "early Dyn. XIX. Wife (of Ḥuy), Taenheruensi, "
+            "(of Kenro), Tarenenu, Chief of the harim of Amūn.",
+        ("TT57", "notes_from_pm"):
+            "Royal scribe, Overseer of the granaries of Upper and Lower Egypt. "
+            "Temp. Amenophis III. (L. D. Text, No. 80.) Wife, Tiyi.",
+        ("TT58", "notes_from_pm"):
+            "Name unknown, temp. Amenophis III. Usurped by Amenḥotp, "
+            "Overseer of the prophets of Amūn, and his son Amenemōnet, "
+            "Temple-scribe of the Temple of Ramesses 'Beloved like Amūn', "
+            "Dyn. XX. (L. D. Text, No. 43.) "
+            "Wife (of Amenemōnet), Ḥenutʿanensu.",
+        ("TT60", "notes_from_pm"):
+            "Governor of the town and Vizier, and mother, Sent, "
+            "Prophetess of Ḥatḥor. Temp. Sesostris I. "
+            "(L. D. Text, No. 42.) Wife (of Antefoḳer), Sitsisobk. "
+            "Mother (of Sent), Dui.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

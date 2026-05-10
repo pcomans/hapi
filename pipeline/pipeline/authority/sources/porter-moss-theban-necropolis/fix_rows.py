@@ -1132,6 +1132,88 @@ CHUNK13_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK13_RENAMES: dict[str, str] = {}
 
 
+# Chunk-14 (TT51–TT60, Sh. ʿAbd el-Qurna). Reviewer-identified corrections
+# will be populated here after the egyptologist-reviewer pass on this chunk's
+# PR. The empty list is retained so `test_all_corrections_includes_every_chunk
+# _list` continues to enforce ALL_CORRECTIONS aggregation (same pattern as
+# CHUNK5_CORRECTIONS and all subsequent empty-scaffold chunks).
+CHUNK14_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT51",
+        "occupant_name",
+        "Userhēt",
+        "PM I.1 p.97 / physical PDF p.115. Direct PDF visual check (parent "
+        "agent, this PR) confirms PM prints headword `USERḤĒT` with capital "
+        "underdot-Ḥ + capital macron-Ē. pypdf text-layer drops capital "
+        "macrons in CAPS headwords (same OCR class as chunk-11 TT29 "
+        "`AMENEMŌPET`, chunk-12 TT34 `MENTUEMḤĒT`/TT39 `PUIMRĒʿ`, chunk-13 "
+        "TT41 `AMENEMŌPET`). Strip Ḥ-underdot per PM-faithful policy; "
+        "preserve macron-Ē → `Userhēt`. Note: chunk-13 TT47 has the same "
+        "name and is likely also affected (egyptologist sweep flag — "
+        "tracked separately, out of scope this PR).",
+    ),
+    (
+        "TT53",
+        "occupant_name",
+        "Amenemhēt",
+        "PM I.1 p.102 / physical PDF p.120. Direct PDF visual check "
+        "confirms PM prints headword `AMENEMḤĒT` with capital underdot-Ḥ "
+        "+ capital macron-Ē — same OCR class as TT51, parallel to "
+        "chunk-12 TT34 `MENTUEMḤĒT` → `Mentuemhēt`. Strip Ḥ-underdot, "
+        "preserve macron-Ē → `Amenemhēt`.",
+    ),
+    (
+        "TT56",
+        "occupant_name",
+        "Userhēt",
+        "PM I.1 p.111 / physical PDF p.129. Direct PDF visual check "
+        "confirms PM prints headword `USERḤĒT` (same name as TT51, "
+        "different individual — within-source NAME collision: "
+        "different sub-period, different role-detail). Same "
+        "macron-restoration class.",
+    ),
+    (
+        "TT57",
+        "occupant_name",
+        "Khaʿemhēt",
+        "PM I.1 p.113 / physical PDF p.131. Direct PDF visual check "
+        "confirms PM prints headword `KHAʿEMḤĒT` with ayin (`ʿ`) + "
+        "capital underdot-Ḥ + capital macron-Ē. Strip Ḥ-underdot, "
+        "preserve ayin and macron-Ē → `Khaʿemhēt`. Same OCR class as "
+        "TT51/TT53/TT56.",
+    ),
+    (
+        "TT58",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.119 / physical PDF p.137. Headword `58. Name unknown, "
+        "temp. Amenophis III. Usurped by AMENḤOTP ...` — anonymous "
+        "original occupant. Per the chunk-8 KV12/KV39/KV56/QV36/QV40/"
+        "QV73/QV75 precedent, null `occupant_name` MUST co-occur with "
+        "`occupant_role=\"Unknown\"` (controlled-vocab pairing invariant). "
+        "All 3 agents emitted `null` for occupant_role — agent reports "
+        "claimed `Unknown` but the JSONL output had `null`. This "
+        "correction enforces the pairing invariant.",
+    ),
+    (
+        "TT58",
+        "notes_from_pm",
+        "Name unknown, temp. Amenophis III. Usurped by Amenḥotp, Overseer of the prophets of Amūn, and his son Amenemōnet, Temple-scribe of the Temple of Ramesses 'Beloved like Amūn', Dyn. XX. (L. D. Text, No. 43.) Wife (of Amenemōnet), Ḥenutʿanensu.",
+        "PM I.1 p.119 / physical PDF p.137. Direct PDF visual check "
+        "confirms PM prints `Amenemōnet` with macron-Ō (visible in body "
+        "prose where lowercase macrons are preserved by pypdf). Reconciled "
+        "value carried `Amenemonet` (no macron) — same `pet`/`net` "
+        "macron-restoration class as chunk-11 TT29 `Amenemōpet`, chunk-12 "
+        "TT33 `Pedamenōpet`. Restore macron-Ō at both occurrences in "
+        "notes_from_pm (the usurper-son name + the wife-disambiguation "
+        "parenthetical) per the verbatim-preserve policy.",
+    ),
+]
+
+
+CHUNK14_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1422,6 +1504,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK11_CORRECTIONS,
     CHUNK12_CORRECTIONS,
     CHUNK13_CORRECTIONS,
+    CHUNK14_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1437,6 +1520,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK11_RENAMES,
     **CHUNK12_RENAMES,
     **CHUNK13_RENAMES,
+    **CHUNK14_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -1679,6 +1763,31 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "chunk-11 TT22 + chunk-13 TT41/TT43/TT45/TT46 precedent that "
         "attribution_certainty encodes occupant-identity certainty, "
         "not regnal-date certainty.",
+    ),
+    # Chunk-14 attribution_certainty overrides. Same TT2-precedent chain:
+    # PM's `(?)` qualifies the regnal-date claim, NOT the primary occupant's
+    # identification. Both TT52 and TT54 have unhedged headword attributions;
+    # only the temporal qualifier carries the hedge.
+    (
+        "TT52",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.99 prints `52. NAKHT ..., Scribe, Astronomer of Amūn. "
+        "Temp. Tuthmosis IV(?).` The `(?)` qualifies the regnal date "
+        "(Tuthmosis IV), not Nakht's identification as Scribe/Astronomer "
+        "of Amūn. Same regnal-date hedge class as chunk-10 TT12/TT19/TT20 "
+        "and chunk-13 TT41/TT43/TT46. Per chunk-9 TT2 precedent.",
+    ),
+    (
+        "TT54",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.104 prints `54. ḤUY ..., Sculptor of Amun, temp. "
+        "Tuthmosis IV to Amenophis III(?).` The `(?)` qualifies the "
+        "regnal-range tail (Amenophis III), not Huy's identification as "
+        "Sculptor of Amun. Same regnal-range tail pattern as chunk-10 "
+        "TT12/TT19/TT20 and chunk-13 TT41/TT43/TT46. Per chunk-9 TT2 "
+        "precedent.",
     ),
 ]
 
