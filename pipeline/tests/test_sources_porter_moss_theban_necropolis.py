@@ -145,6 +145,21 @@ CHUNK11_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK12_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(31, 41)}
 )
+# Chunk-13 (PM I.1 § I — TT41-TT50, 10 rows). Heterogeneous across
+# 2 sub-sites: `Sh. ʿAbd el-Qurna` (TT41-46, TT50) and `Khokha`
+# (TT47-49). One usurpation (TT45 — Ḏhout original, Ḏḥutemḥab usurper);
+# two `called <ALT>` alt-name patterns (TT41 Amenemōpet/Ipy, TT48
+# Amenemḥet/Surero); one tomb-state marker (TT47 `(Inaccessible.)`);
+# one within-decade NAME collision (TT49 + TT50 both `Neferhotep`,
+# distinct individuals). TT45 `Ḏhout` extends the d-bar Ḏ (U+1E0E)
+# precedent established by chunk-12 PR #200 TT32 `Ḏhutmosi` to PM I.1.
+# CHUNK13_CORRECTIONS layers 4 PDF-cited corrections (1 capital macron
+# + 3 spurious double-period strips); DERIVER_OVERRIDES adds 5 entries
+# for regnal/usurper-clause hedges (TT41/TT43/TT45/TT46/TT49) per the
+# chunk-9 TT2 occupant-vs-regnal certainty distinction.
+CHUNK13_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(41, 51)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -157,6 +172,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK10_TOMB_IDS
     | CHUNK11_TOMB_IDS
     | CHUNK12_TOMB_IDS
+    | CHUNK13_TOMB_IDS
 )
 
 
@@ -3365,8 +3381,10 @@ def test_182_usurped_canonical_set() -> None:
     """Rows where PM writes "usurp(ed|ation)" in notes_from_pm.
     Pinned 2026-05-09: KV9 (doorways usurped from Ramesses V), KV14
     (usurped by Setnakht), TT22 (Wah, partly usurped by Mery[amūn],
-    Eldest son of the King — chunk 11)."""
-    expected = {"KV9", "KV14", "TT22"}
+    Eldest son of the King — chunk 11), TT45 (Ḏhout, usurped by
+    Ḏḥutemḥab, Head of the makers of fine linen of the estate of
+    Amūn — chunk 13)."""
+    expected = {"KV9", "KV14", "TT22", "TT45"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -3717,3 +3735,205 @@ def test_chunk12_tt40_amenhotp() -> None:
         "(CHAMPOLLION, A, L. D. Text, No. 110.) Mother, Wenḥo."
     )
     assert r["source_citation"]["page"] == 75
+
+
+# ---------------------------------------------------------------------------
+# Chunk-13 per-row tests (TT41–TT50, PM I.1 pp 78-95 / physical pp 96-115)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk13_all_rows_present() -> None:
+    """All 10 TT41-TT50 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK13_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        r = _row(tid)
+        assert r["tomb_id"] == tid
+
+
+def test_chunk13_all_rows_null_dynasty_dates_discoverer() -> None:
+    """Chunk-13 has no dynasty, date, or discoverer fields — PM I.1 does not
+    structure dates or excavation records in the private-tomb section."""
+    for tid in CHUNK13_TOMB_IDS:
+        r = _row(tid)
+        assert r["dynasty"] is None, (tid, r["dynasty"])
+        assert r["sub_period"] is None, (tid, r["sub_period"])
+        assert r["date_bce_approx_start"] is None, (tid, r["date_bce_approx_start"])
+        assert r["date_bce_approx_end"] is None, (tid, r["date_bce_approx_end"])
+        assert r["discovery_year"] is None, (tid, r["discovery_year"])
+        assert r["discoverer"] is None, (tid, r["discoverer"])
+
+
+def test_chunk13_all_rows_edition_pm_i1() -> None:
+    """All chunk-13 rows cite PM I.1 2nd ed. 1960, section I."""
+    for tid in CHUNK13_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid, r["source_citation"]["edition"]
+        )
+        assert r["source_citation"]["section"] == "I", (
+            tid, r["source_citation"]["section"]
+        )
+
+
+def test_chunk13_all_rows_attribution_attested() -> None:
+    """All chunk-13 rows have attribution_certainty="attested" after the
+    DERIVER_OVERRIDES pass. The deriver fires `uncertain` on `(?)` and
+    `probable` on `Probably` regnal-/usurper-clause hedges; per the
+    chunk-9 TT2 + chunk-10 cluster + chunk-11 TT22 precedent, those
+    hedges qualify the regnal date or usurper, NOT the primary occupant
+    identification, so DERIVER_OVERRIDES flips them back to `attested`.
+    Five chunk-13 rows have such overrides: TT41, TT43, TT45, TT46, TT49.
+    """
+    for tid in CHUNK13_TOMB_IDS:
+        r = _row(tid)
+        assert r["attribution_certainty"] == "attested", (
+            tid, r["attribution_certainty"]
+        )
+
+
+def test_chunk13_all_rows_official_role() -> None:
+    """All chunk-13 rows flatten to occupant_role="Official" — no royal
+    family / Vizier / High Priest in this decade. Verbatim role-title
+    clauses are preserved in notes_from_pm regardless."""
+    for tid in CHUNK13_TOMB_IDS:
+        r = _row(tid)
+        assert r["occupant_role"] == "Official", (tid, r["occupant_role"])
+
+
+def test_chunk13_theban_area_distribution() -> None:
+    """Chunk-13 spreads across 2 PM-faithful sub-sites: 7× Sh. ʿAbd el-Qurna
+    (TT41-46, TT50) and 3× Khokha (TT47-49). Set-equality pin guards
+    against any sub-site silently shifting under a future re-merge /
+    fix_rows pass.
+    """
+    expected: dict[str, set[str]] = {
+        "Sh. ʿAbd el-Qurna": {"TT41", "TT42", "TT43", "TT44", "TT45", "TT46", "TT50"},
+        "Khokha": {"TT47", "TT48", "TT49"},
+    }
+    actual: dict[str, set[str]] = {}
+    for tid in CHUNK13_TOMB_IDS:
+        ta = _row(tid)["theban_area"]
+        actual.setdefault(ta, set()).add(tid)
+    assert actual == expected, sorted(actual.items())
+
+
+def test_chunk13_tt41_amenemopet() -> None:
+    """TT41 — Amenemōpet (called Ipy), Chief steward of Amūn, Sh. ʿAbd el-Qurna, p.78.
+    PM prints headword `AMENEMŌPET` with capital macron-Ō (direct PDF visual
+    check, physical p.96). pypdf text-layer drops capital macrons;
+    CHUNK13_CORRECTIONS restores. Same OCR class as chunk-12 TT33/TT34.
+    The (?) on Sethos I qualifies the regnal-range tail, not the occupant —
+    DERIVER_OVERRIDES pins attribution_certainty=attested.
+    """
+    r = _row("TT41")
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["occupant_name"] == "Amenemōpet"
+    assert r["occupant_alt_names"] == ["Ipy"]
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["co_occupants"] == []
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 78
+    assert "(CHAMPOLLION, No. 35.)" in r["notes_from_pm"]
+    # Spurious-double-period correction landed (was `35.).` post-merge):
+    assert "35.)." not in r["notes_from_pm"]
+    assert "35.) Parents," in r["notes_from_pm"]
+
+
+def test_chunk13_tt45_dhout_usurped() -> None:
+    """TT45 — Ḏhout (d-bar Ḏ U+1E0E, the Egyptological d-emphatic in
+    `Ḏḥwty`/Thoth name family), Sh. ʿAbd el-Qurna, p.85. Original occupant
+    Ḏhout, usurped by Ḏḥutemḥab. is_usurped=true derived from the
+    `Usurped by` regex; attribution_certainty=attested per
+    DERIVER_OVERRIDES (the two `(?)` hedges in notes both qualify the
+    USURPER's clause — title hedge `fine linen(?)` and regnal hedge
+    `Ramesses II (?)` — neither qualifies Ḏhout's primary attribution).
+    Extends the d-bar precedent established by chunk-12 PR #200 TT32
+    `Ḏhutmosi` to PM I.1.
+    """
+    r = _row("TT45")
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["occupant_name"] == "Ḏhout"
+    assert "Ḏ" in r["occupant_name"]  # d-bar U+1E0E
+    assert "Ḍ" not in r["occupant_name"]  # NOT d-underdot U+1E0C
+    assert r["occupant_role"] == "Official"
+    assert r["co_occupants"] == []  # usurper does NOT go in co_occupants
+    assert r["is_usurped"] is True  # deriver fires on `Usurped by`
+    assert r["attribution_certainty"] == "attested"  # DERIVER_OVERRIDES
+    assert r["source_citation"]["page"] == 85
+    # Usurper's name + title preserved verbatim in notes:
+    assert "Ḏḥutemḥab" in r["notes_from_pm"]
+    assert "Usurped by" in r["notes_from_pm"]
+
+
+def test_chunk13_tt47_inaccessible() -> None:
+    """TT47 — Userhet, Khokha, p.87. Headword carries the `(Inaccessible.)`
+    tomb-state-marker parenthetical preserved verbatim in notes_from_pm
+    (chunk-12 precedent — no schema field for tomb state). The
+    spurious-double-period after `(Inaccessible.)` is corrected via
+    CHUNK13_CORRECTIONS.
+    """
+    r = _row("TT47")
+    assert r["theban_area"] == "Khokha"
+    assert r["occupant_name"] == "Userhet"
+    assert r["source_citation"]["page"] == 87
+    assert "(Inaccessible.)" in r["notes_from_pm"]
+    assert "(Inaccessible.)." not in r["notes_from_pm"]
+    # Single period inside the close-paren only, then a fresh `Parents,`:
+    assert "(Inaccessible.) Parents," in r["notes_from_pm"]
+
+
+def test_chunk13_tt48_alt_name_surero() -> None:
+    """TT48 — Amenemhet (called Surero), Khokha, p.87. The `called X`
+    pattern captures the alt-name in occupant_alt_names."""
+    r = _row("TT48")
+    assert r["theban_area"] == "Khokha"
+    assert r["occupant_name"] == "Amenemhet"
+    assert r["occupant_alt_names"] == ["Surero"]
+    assert r["occupant_role"] == "Official"
+    assert r["source_citation"]["page"] == 87
+
+
+def test_chunk13_tt49_tt50_neferhotep_collision() -> None:
+    """TT49 + TT50 both have `occupant_name="Neferhotep"` — distinct
+    individuals, different sub-sites, different roles, different regnal
+    periods. The schema row-key is tomb_id, not name; the chunk-13 prompt
+    explicitly warns against collapsing such collisions. The within-decade
+    name collision is structural, not an extraction error.
+    """
+    r49 = _row("TT49")
+    r50 = _row("TT50")
+    assert r49["occupant_name"] == "Neferhotep"
+    assert r50["occupant_name"] == "Neferhotep"
+    # Distinct sub-sites:
+    assert r49["theban_area"] == "Khokha"
+    assert r50["theban_area"] == "Sh. ʿAbd el-Qurna"
+    # Distinct regnal periods:
+    assert "Probably temp. Ay" in r49["notes_from_pm"]
+    assert "Temp. Ḥaremḥab" in r50["notes_from_pm"]
+    # TT49 attribution_certainty=attested per DERIVER_OVERRIDES (Probably
+    # qualifies the regnal date, not Neferhotep's identification):
+    assert r49["attribution_certainty"] == "attested"
+    assert r50["attribution_certainty"] == "attested"
+
+
+def test_chunk13_double_period_strip() -> None:
+    """CHUNK13_CORRECTIONS strips the spurious double-period after a
+    citation close-paren on TT41/TT47/TT49 — the `).` → `) ` class that
+    went 2/1 the wrong way at reconciliation (rather than 1/1/1 like
+    chunk 12). Pin the post-correction state.
+    """
+    for tid in ("TT41", "TT47", "TT49"):
+        notes = _row(tid)["notes_from_pm"]
+        # No spurious second period after the citation close-paren:
+        assert ".)." not in notes, (tid, notes)
+        assert "). ." not in notes, (tid, notes)
+
+
+def test_chunk13_pages_in_range() -> None:
+    """All chunk-13 source_citation.page values fall in 78-95 (the
+    printed-page range for TT41-TT50)."""
+    for tid in CHUNK13_TOMB_IDS:
+        page = _row(tid)["source_citation"]["page"]
+        assert 78 <= page <= 95, (tid, page)

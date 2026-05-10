@@ -154,6 +154,35 @@ TT39 (Puimreʿ):
 TT40 (Amenhotp):
   notes_from_pm: a="called Ḥuy, Viceroy of Kush, Governor of the South Lands. Temp. Amenophis IV to Tutʿankhamūn. (CHAMPOLLION, A, L. D. Text, No. 110.). Mother, Wenḥo." | b="Viceroy of Kush, Governor of the South Lands. Temp. Amenophis IV to Tutʿankhamūn. (CHAMPOLLION, A, L. D. Text, No. 110.) Mother, Wenḥo." | c="Viceroy of Kush, Governor of the South Lands. Temp. Amenophis IV to Tutʿankhamūn. Mother, Wenḥo. (CHAMPOLLION, A, L. D. Text, No. 110.)"  → chose "Viceroy of Kush, Governor of the South Lands. Temp. Amenophis IV to Tutʿankhamūn. (CHAMPOLLION, A, L. D. Text, No. 110.) Mother, Wenḥo."
 
+TT41 (Amenemopet):
+  notes_from_pm: a="Chief steward of Amūn in the Southern City. Temp. Ramesses I to Sethos I(?). (CHAMPOLLION, No. 35.). Parents, Nefertiu, Judge, and Iny, Songstress of the Theban Triad. Wife, Nezem(t)." | b="Chief steward of Amūn in the Southern City. Temp. Ramesses I to Sethos I(?). (CHAMPOLLION, No. 35.) Parents, Nefertiu, Judge, and Iny, Songstress of the Theban Triad. Wife, Nezem(t)." | c="Chief steward of Amūn in the Southern City. Temp. Ramesses I to Sethos I(?). (CHAMPOLLION, No. 35.). Parents, Nefertiu, Judge, and Iny, Songstress of the Theban Triad. Wife, Nezem(t)."  → chose "Chief steward of Amūn in the Southern City. Temp. Ramesses I to Sethos I(?). (CHAMPOLLION, No. 35.). Parents, Nefertiu, Judge, and Iny, Songstress of the Theban Triad. Wife, Nezem(t)."
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 79, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 78, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 78, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 78, "section": "I"}
+
+TT42 (Amenmosi):
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 79, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 82, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 82, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 82, "section": "I"}
+
+TT43 (Neferronpet):
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 81, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 83, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 83, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 83, "section": "I"}
+
+TT44 (Amenemhab):
+  notes_from_pm: a="waʿb-priest-in-front of Amūn. Ramesside. Father, Ḥori, waʿb-priest of Amun. Wife, Isumut." | b="wab-priest-in-front of Amūn. Ramesside. Father, Ḥori, wab-priest of Amūn. Wife, Isumut." | c="wab-priest-in-front of Amūn. Ramesside. Father, Ḥori, wab-priest of Amūn. Wife, Isumut."  → chose "wab-priest-in-front of Amūn. Ramesside. Father, Ḥori, wab-priest of Amūn. Wife, Isumut."
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 82, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 84, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 84, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 84, "section": "I"}
+
+TT45 (Ḏhout):
+  notes_from_pm: a="Steward of the First prophet of Amūn, Mery (tomb 95), temp. Amenophis II. Usurped by Ḏḥutemḥab, Head of the makers of fine linen(?) of the estate of Amūn, temp. Ramesses II (?). Mother (of Ḏḥout), Ḏḥout. Parents (of Ḏḥutemḥab), Unnūfer, Head of weavers of the Temple of Amūn, and Ḥsi. Wife (of Ḏḥutemḥab), Bek-khons, Songstress of the Theban Triad." | b="Steward of the First prophet of Amūn, Mery (tomb 95), temp. Amenophis II. Usurped by Ḏḥutemḥab, Head of the makers of fine linen(?) of the estate of Amūn, temp. Ramesses II (?). Mother (of Ḏḥout), Ḏḥout. Parents (of Ḏḥutemḥab), Unnūfer, Head of weavers of the Temple of Amūn, and Esi. Wife (of Ḏḥutemḥab), Bek-khons, Songstress of the Theban Triad." | c="Steward of the First prophet of Amūn, Mery (tomb 95), temp. Amenophis II. Usurped by Ḏḥutemḥab, Head of the makers of fine linen(?) of the estate of Amūn, temp. Ramesses II (?). Mother (of Ḏḥout), Ḏḥout. Parents (of Ḏḥutemḥab), Unnūfer, Head of weavers of the Temple of Amūn, and Ḥsi. Wife (of Ḏḥutemḥab), Bek-khons, Songstress of the Theban Triad."  → chose "Steward of the First prophet of Amūn, Mery (tomb 95), temp. Amenophis II. Usurped by Ḏḥutemḥab, Head of the makers of fine linen(?) of the estate of Amūn, temp. Ramesses II (?). Mother (of Ḏḥout), Ḏḥout. Parents (of Ḏḥutemḥab), Unnūfer, Head of weavers of the Temple of Amūn, and Ḥsi. Wife (of Ḏḥutemḥab), Bek-khons, Songstress of the Theban Triad."
+
+TT46 (Raʿmosi):
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 87, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 86, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 86, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 86, "section": "I"}
+
+TT47 (Userhet):
+  notes_from_pm: a="Overseer of the royal harim. Temp. Amenophis III. (Inaccessible.). Parents, Neḥ, Judge, and Senenu. Wife, Maiay." | b="Overseer of the royal harim. Temp. Amenophis III. (Inaccessible.) Parents, Neḥ, Judge, and Senenu. Wife, Maiay." | c="Overseer of the royal harim. Temp. Amenophis III. (Inaccessible.). Parents, Neḥ, Judge, and Senenu. Wife, Maiay."  → chose "Overseer of the royal harim. Temp. Amenophis III. (Inaccessible.). Parents, Neḥ, Judge, and Senenu. Wife, Maiay."
+
+TT48 (Amenemhet):
+  occupant_name: a="Amenemhet" | b="Amenemhat" | c="Amenemhet"  → chose "Amenemhet"
+
+TT49 (Neferhotep):
+  notes_from_pm: a="Chief scribe of Amūn. Probably temp. Ay. (CHAMPOLLION, No. 53, HAY, No. 11.). Parents, Neby, Servant of Amūn, and Iuy. Wife, Merytreʿ." | b="Chief scribe of Amūn. Probably temp. Ay. (CHAMPOLLION, No. 53, HAY, No. 11.) Parents, Neby, Servant of Amūn, and Iuy. Wife, Merytreʿ." | c="Chief scribe of Amūn. Probably temp. Ay. (CHAMPOLLION, No. 53, HAY, No. 11.). Parents, Neby, Servant of Amūn, and Iuy. Wife, Merytreʿ."  → chose "Chief scribe of Amūn. Probably temp. Ay. (CHAMPOLLION, No. 53, HAY, No. 11.). Parents, Neby, Servant of Amūn, and Iuy. Wife, Merytreʿ."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -228,6 +257,7 @@ Per-chunk correction counts:
 - Chunk 10: 4 correction(s) defined in CHUNK10_CORRECTIONS.
 - Chunk 11: 4 correction(s) defined in CHUNK11_CORRECTIONS.
 - Chunk 12: 5 correction(s) defined in CHUNK12_CORRECTIONS.
+- Chunk 13: 4 correction(s) defined in CHUNK13_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -377,9 +407,8 @@ Field corrections:
     value: "Governor of the town, Vizier. Temp. Amenophis II. (HAY, No. 15.) Parents, [ʿAḥmosi] Ḥumay (tomb 224) and Nub. Wife, Wertmaʿetef."
 - TT29: occupant_name already matches override (no-op this run; PM I.1 p.45 (physical p.63) prints the headword `29. AMENEMŌPET` with capital macron-Ō. README's occupant_name policy preserves vowel macrons (ū, ō, ē, ā); only underdot-Ḥ is stripped. Same chunk-7 `Wahʿankh` / chunk-10 TT17 `Nebamūn` macron-preserve precedent. Sibling row TT24 `Nebamūn` (chunk 11) restored the macron correctly; TT29 was a parallel agent miss. Egyptologist printed-source review (this PR).)
     value: "Amenemōpet"
-- TT32: occupant_name corrected this run (PM I.1 p.49 / physical PDF p.67. The d-emphatic in this name family (`Thutmose` < Egyptian `Ḏḥwty-msj` < `Ḏḥwty`/Thoth) is the standard Egyptological d-bar `Ḏ` (U+1E0E), NOT d-underdot `Ḍ` (U+1E0C, a different consonant used in some Semitic transliteration systems). PR #151 (egyptologist printed-source review) explicitly verified this on PM I.2 p.604 (`Ḏḥuti` for DAN-MentuhotpIWifeOfDjhuti) and PM I.2 p.755 (`Sit-ḏḥout` for QV47), correcting earlier `Ḍ` extractions to `Ḏ` after direct PDF read. Agent B's `Ḏhutmosi` (d-bar) was the egyptologically correct form; agents A (`Thutmosi`, no diacritic) and C (`Hutmosi`, dropped consonant) were both wrong. Tie-break pins agent A's PDF-closest stripped-diacritic form for merge auditability; this CHUNK12_CORRECTIONS entry layers the post-merge diacritic restoration to the egyptologically-canonical `Ḏhutmosi`. Wrong-consonant risk: a row keyed on `Ḍhutmosi` would never match against TLA / Trismegistos / museum data using the d-bar form.)
-    was: "Ḍhutmosi"
-    now: "Ḏhutmosi"
+- TT32: occupant_name already matches override (no-op this run; PM I.1 p.49 / physical PDF p.67. The d-emphatic in this name family (`Thutmose` < Egyptian `Ḏḥwty-msj` < `Ḏḥwty`/Thoth) is the standard Egyptological d-bar `Ḏ` (U+1E0E), NOT d-underdot `Ḍ` (U+1E0C, a different consonant used in some Semitic transliteration systems). PR #151 (egyptologist printed-source review) explicitly verified this on PM I.2 p.604 (`Ḏḥuti` for DAN-MentuhotpIWifeOfDjhuti) and PM I.2 p.755 (`Sit-ḏḥout` for QV47), correcting earlier `Ḍ` extractions to `Ḏ` after direct PDF read. Agent B's `Ḏhutmosi` (d-bar) was the egyptologically correct form; agents A (`Thutmosi`, no diacritic) and C (`Hutmosi`, dropped consonant) were both wrong. Tie-break pins agent A's PDF-closest stripped-diacritic form for merge auditability; this CHUNK12_CORRECTIONS entry layers the post-merge diacritic restoration to the egyptologically-canonical `Ḏhutmosi`. Wrong-consonant risk: a row keyed on `Ḍhutmosi` would never match against TLA / Trismegistos / museum data using the d-bar form.)
+    value: "Ḏhutmosi"
 - TT33: occupant_name already matches override (no-op this run; PM I.1 p.50 / physical PDF p.68. Direct PDF visual check of headword: PM prints `PEDAMENŌPET` (capital macron-Ō). pypdf text-layer drops capital macrons (same class as chunk-11 TT29 `Amenemōpet` restoration). The macron is visible in the PDF page image but not in the extracted text layer.)
     value: "Pedamenōpet"
 - TT33: source_citation already matches override (no-op this run; PM I.1 p.50 / physical PDF p.68. Direct PDF visual check (parent agent, this PR) confirms TT33's headword `33. PEDAMENŌPET` is on printed p.50 (the page-number `50` is visible at the top-left of physical p.68), NOT p.49 (where TT32's body text continues). Agents A and C both gave page=49 (likely conflated with TT32's spillover); agent B gave 50 (correct). The merge majority vote (2-1) chose the wrong page; the egyptologist subagent missed it because the named PDF was not at the path it was given. This CHUNK12_CORRECTIONS entry layers the post-merge page fix.)
@@ -388,6 +417,14 @@ Field corrections:
     value: "Mentuemhēt"
 - TT39: occupant_name already matches override (no-op this run; PM I.1 p.71 / physical PDF p.89. Direct PDF visual check of headword: PM prints `PUIMRĒʿ` (capital macron-Ē + ayin). pypdf text-layer drops the capital macron-Ē (same class as TT33/TT34). The ayin (U+02BF) was correctly extracted by the agents.)
     value: "Puimrēʿ"
+- TT41: occupant_name already matches override (no-op this run; PM I.1 p.78 / physical PDF p.96. Direct PDF visual check (parent agent, this PR) confirms PM prints headword `AMENEMŌPET` with capital macron-Ō on the second O (visible in the rendered headword; `Amūn` body prose on the same page confirms PM's diacritic-preservation policy). pypdf text-layer drops capital macrons in CAPS headwords (same OCR class as chunk-11 TT29 `MENTUEMḤĒT`, chunk-12 TT33 `PEDAMENŌPET`, chunk-12 TT34 `MENTUEMḤĒT`, chunk-12 TT39 `PUIMRĒʿ`). Restore Ō macron per the PM-faithful diacritic policy (preserve vowel macrons in occupant_name).)
+    value: "Amenemōpet"
+- TT41: notes_from_pm already matches override (no-op this run; PM I.1 p.78 / physical PDF p.96. Direct PDF visual check confirms PM prints `(CHAMPOLLION, No. 35.)` with a single period inside the close-paren only; the next field `Parents,` begins fresh on the next line. Reconciled value carried a spurious double period `(CHAMPOLLION, No. 35.).` from a 2/1 reconciliation (agents A and C both made the same OCR-introduced error; agent B was correct). Same class as chunk-12 TT26/TT31/TT33/TT35/TT36/TT37/TT39/TT40 double-period strip; this chunk-13 case differs only in that the wrong form went 2/1 (instead of 1/1/1) at reconciliation, requiring a CHUNK13_CORRECTIONS entry rather than a tie-break override.)
+    value: "Chief steward of Amūn in the Southern City. Temp. Ramesses I to Sethos I(?). (CHAMPOLLION, No. 35.) Parents, Nefertiu, Judge, and Iny, Songstress of the Theban Triad. Wife, Nezem(t)."
+- TT47: notes_from_pm already matches override (no-op this run; PM I.1 p.87 / physical PDF p.105. Direct PDF visual check confirms PM prints `(Inaccessible.)` with a single period inside the close-paren only — a tomb-state-marker parenthetical on its own line, with the next field starting fresh. Reconciled value carried spurious double period `(Inaccessible.).` from a 2/1 reconciliation (same OCR-introduced class as TT41 / TT49 in this chunk). Strip the spurious period.)
+    value: "Overseer of the royal harim. Temp. Amenophis III. (Inaccessible.) Parents, Neḥ, Judge, and Senenu. Wife, Maiay."
+- TT49: notes_from_pm already matches override (no-op this run; PM I.1 p.91 / physical PDF p.109. Direct PDF visual check confirms PM prints `(CHAMPOLLION, No. 53, HAY, No. 11.)` with a single period inside the close-paren only. Reconciled value carried spurious double period (same class as TT41, TT47). Strip the spurious period.)
+    value: "Chief scribe of Amūn. Probably temp. Ay. (CHAMPOLLION, No. 53, HAY, No. 11.) Parents, Neby, Servant of Amūn, and Iuy. Wife, Merytreʿ."
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -426,9 +463,18 @@ Field corrections:
 - TT19: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT20: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT22: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT41: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT43: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT45: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT46: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
 - TT19: attribution_certainty → "attested" (deriver override; PM I.1 p.32 prints `19. AMENMOSI ..., First prophet of 'Amenophis of the Forecou...)
 - TT20: attribution_certainty → "attested" (deriver override; PM I.1 p.34 prints `20. MENTUḤIRKHOPSHEF ..., Fan-bearer, Mayor of Aphroditopoli...)
 - TT22: attribution_certainty → "attested" (deriver override; PM I.1 p.37 prints `22. WAḤ ..., Royal butler. Partly usurped by Mery[amūn], Eld...)
+- TT41: attribution_certainty → "attested" (deriver override; PM I.1 p.78 prints `41. AMENEMŌPET ..., Chief steward of Amūn in the Southern Ci...)
+- TT43: attribution_certainty → "attested" (deriver override; PM I.1 p.83 prints `43. NEFERRONPET ..., Overseer of the kitchen of the Lord of ...)
+- TT45: attribution_certainty → "attested" (deriver override; PM I.1 p.85 prints `45. ḎḤOUT ..., Steward of the First prophet of Amūn, Mery (t...)
+- TT46: attribution_certainty → "attested" (deriver override; PM I.1 p.86 prints `46. RAʿMOSI ..., Steward, Overseer of the granaries of Upper...)
+- TT49: attribution_certainty → "attested" (deriver override; PM I.1 p.91 prints `49. NEFERḤOTEP ..., Chief scribe of Amūn. Probably temp. Ay....)
