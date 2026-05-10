@@ -132,6 +132,19 @@ CHUNK10_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK11_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(21, 31)}
 )
+# Chunk-12 (PM I.1 § I — TT31-TT40). Introduces two new theban_area values:
+# `Khokha` (TT32, TT39) and `Qurnet Muraʿi` (TT40). TT35 is in
+# `Dra' Abu el-Naga` — first TT-numbered tomb outside Sh. ʿAbd el-Qurna or
+# ʿAsâsîf in the I.1 section. TT32 occupant_name = `Thutmosi` pre-fix_rows;
+# the diacritic restoration to `Ḏhutmosi` (d-bar Ḏ, U+1E0E — the standard
+# Egyptological transliteration of the d-emphatic in `Ḏḥwty`/Thoth and
+# its derived names; PR #151 verified `Ḏ` not `Ḍ` for sibling names
+# `Ḏḥuti` and `Sit-ḏḥout` after direct PM PDF read) is applied by
+# CHUNK12_CORRECTIONS in fix_rows.py. 10 rows, every TT31..TT40
+# present (no gaps in PM I.1).
+CHUNK12_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(31, 41)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -143,6 +156,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK9_TOMB_IDS
     | CHUNK10_TOMB_IDS
     | CHUNK11_TOMB_IDS
+    | CHUNK12_TOMB_IDS
 )
 
 
@@ -340,15 +354,16 @@ def test_theban_area_constraint() -> None:
     - chunk 11 (TT21–TT30): `Sh. ʿAbd el-Qurna`, `Dra' Abu el-Naga`,
       `ʿAsâsîf` — PM-faithful forms with `Sh.` abbreviation, ayin
       U+02BF on `ʿAbd` / `ʿAsâsîf`, circumflexes preserved on `ʿAsâsîf`.
+    - chunk 12 (TT31–TT40): `Khokha` (TT32, TT39), `Qurnet Muraʿi` (TT40)
+      — ayin U+02BF in `Muraʿi` per PM I.1's printed romanisation.
 
     Forward-compatible placeholders for future chunks (Deir el-Bahri,
-    Khokha, Qurnet Mura'i, Ramesseum, Medinet Habu) are added as each
-    chunk lands with the actual PM-printed form. Per CLAUDE.md rule 5
-    (tests assert values, not absence of errors) and rule 2 (no
-    silent fallbacks), pre-emptive English-transliteration placeholders
-    are NOT included — they would let an agent's mis-rendering through
-    silently. Each form here matches a value actually populated in
-    `reconciled.jsonl`.
+    Ramesseum, Medinet Habu) are added as each chunk lands with the actual
+    PM-printed form. Per CLAUDE.md rule 5 (tests assert values, not absence
+    of errors) and rule 2 (no silent fallbacks), pre-emptive
+    English-transliteration placeholders are NOT included — they would let
+    an agent's mis-rendering through silently. Each form here matches a
+    value actually populated in `reconciled.jsonl`.
     """
     valid = {
         "Valley of the Kings",
@@ -358,6 +373,8 @@ def test_theban_area_constraint() -> None:
         "Deir el-Medina",
         "Sh. ʿAbd el-Qurna",
         "ʿAsâsîf",
+        "Khokha",
+        "Qurnet Muraʿi",
     }
     for r in _rows():
         assert r["theban_area"] in valid, (r["tomb_id"], r["theban_area"])
@@ -3389,3 +3406,314 @@ def test_182_probable_attribution_canonical_set() -> None:
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "probable"}
     assert actual == expected, sorted(actual)
+
+
+# ---------------------------------------------------------------------------
+# Chunk-12 per-row tests (TT31–TT40, PM I.1 pp 47-78 / physical pp 65-96)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk12_all_rows_present() -> None:
+    """All 10 TT31-TT40 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK12_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        r = _row(tid)  # raises if not found
+        assert r["tomb_id"] == tid
+
+
+def test_chunk12_all_rows_null_dynasty_dates_discoverer() -> None:
+    """Chunk-12 has no dynasty, date, or discoverer fields — PM I.1 does not
+    structure dates or excavation records in the private-tomb section."""
+    for tid in CHUNK12_TOMB_IDS:
+        r = _row(tid)
+        assert r["dynasty"] is None, (tid, r["dynasty"])
+        assert r["sub_period"] is None, (tid, r["sub_period"])
+        assert r["date_bce_approx_start"] is None, (tid, r["date_bce_approx_start"])
+        assert r["date_bce_approx_end"] is None, (tid, r["date_bce_approx_end"])
+        assert r["discovery_year"] is None, (tid, r["discovery_year"])
+        assert r["discoverer"] is None, (tid, r["discoverer"])
+
+
+def test_chunk12_all_rows_edition_pm_i1() -> None:
+    """All chunk-12 rows cite PM I.1 2nd ed. 1960, section I."""
+    for tid in CHUNK12_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid, r["source_citation"]["edition"]
+        )
+        assert r["source_citation"]["section"] == "I", (
+            tid, r["source_citation"]["section"]
+        )
+
+
+def test_chunk12_all_rows_no_flags() -> None:
+    """No chunk-12 tomb is uninscribed, usurped, unfinished, or joint burial."""
+    for tid in CHUNK12_TOMB_IDS:
+        r = _row(tid)
+        assert r["is_uninscribed"] is False, (tid, "is_uninscribed")
+        assert r["is_usurped"] is False, (tid, "is_usurped")
+        assert r["is_unfinished"] is False, (tid, "is_unfinished")
+        assert r["is_joint_burial"] is False, (tid, "is_joint_burial")
+        assert r["attribution_certainty"] == "attested", (tid, r["attribution_certainty"])
+
+
+def test_chunk12_theban_area_distribution() -> None:
+    """Chunk-12 spreads across 5 PM-faithful sub-sites: 2× Sh. ʿAbd el-Qurna,
+    2× Khokha, 3× ʿAsâsîf, 2× Dra' Abu el-Naga, 1× Qurnet Muraʿi.
+    Set-equality pin guards against any sub-site silently shifting under
+    a future re-merge / fix_rows pass.
+    """
+    expected: dict[str, set[str]] = {
+        "Sh. ʿAbd el-Qurna": {"TT31", "TT38"},
+        "Khokha": {"TT32", "TT39"},
+        "ʿAsâsîf": {"TT33", "TT34", "TT36", "TT37"},
+        "Dra' Abu el-Naga": {"TT35"},
+        "Qurnet Muraʿi": {"TT40"},
+    }
+    actual: dict[str, set[str]] = {}
+    for tid in CHUNK12_TOMB_IDS:
+        ta = _row(tid)["theban_area"]
+        actual.setdefault(ta, set()).add(tid)
+    assert actual == expected, sorted(actual.items())
+
+
+def test_chunk12_qurnet_murai_canonical_codepoint() -> None:
+    """`Qurnet Muraʿi` (TT40, first occurrence) uses ayin U+02BF (MODIFIER
+    LETTER LEFT HALF RING) — NOT apostrophe (U+0027) or right-single-quote
+    (U+2019). Pins the canonical codepoint so a future copy/paste through a
+    smart-quote-substituting editor cannot silently mangle the sub-site name.
+    """
+    ta = _row("TT40")["theban_area"]
+    assert ta == "Qurnet Muraʿi"
+    assert "ʿ" in ta, repr(ta)  # ayin
+    assert "'" not in ta, repr(ta)  # no ASCII apostrophe
+    assert "’" not in ta, repr(ta)  # no right-single-quote
+
+
+def test_chunk12_tt31_khons() -> None:
+    """TT31 — Khons, First prophet of Menkheperreʿ, Sh. ʿAbd el-Qurna, p.47."""
+    r = _row("TT31")
+    assert r["tomb_id"] == "TT31"
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["occupant_name"] == "Khons"
+    assert r["occupant_alt_names"] == ["To"]
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "First prophet of Menkheperreʿ (Tuthmosis III). Temp. Ramesses II. "
+        "(L. D. Text, No. 51.) Parents, Neferḥotep, First prophet of Amenophis II, "
+        "and Tausert, Songstress of Monthu. Wives, Ruia and Mutia or May."
+    )
+    assert r["source_citation"]["page"] == 47
+
+
+def test_chunk12_tt32_thutmosi() -> None:
+    """TT32 — Ḏhutmosi, Chief steward of Amūn, Khokha, p.49.
+    The d-emphatic in this name family (`Thutmose` < Egyptian `Ḏḥwty-msj`
+    < `Ḏḥwty`/Thoth) is d-bar `Ḏ` (U+1E0E), the standard Egyptological
+    transliteration of the d-emphatic — NOT d-underdot `Ḍ` (U+1E0C, a
+    different consonant in some Semitic systems). PR #151 verified `Ḏ`
+    not `Ḍ` for sibling names `Ḏḥuti` (PM I.2 p.604) and `Sit-ḏḥout`
+    (PM I.2 p.755) after direct PM PDF read. Tie-break pins agent A's
+    `Thutmosi` (PDF-closest stripped-diacritic form); CHUNK12_CORRECTIONS
+    layers the post-merge `Ḏhutmosi` restoration. Wrong-consonant risk:
+    `Ḍhutmosi` would never match TLA/Trismegistos data using `Ḏḥwty`-
+    derived forms.
+    """
+    r = _row("TT32")
+    assert r["tomb_id"] == "TT32"
+    assert r["theban_area"] == "Khokha"
+    assert r["occupant_name"] == "Ḏhutmosi"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Chief steward of Amūn, Overseer of the granaries of Upper and Lower Egypt. "
+        "Temp. Ramesses II. Wife, Esi."
+    )
+    assert r["source_citation"]["page"] == 49
+
+
+def test_chunk12_tt33_pedamenopet() -> None:
+    """TT33 — Pedamenōpet, Prophet / Chief lector, ʿAsâsîf, p.50.
+    PM prints the headword `PEDAMENŌPET` with capital macron-Ō (direct PDF visual
+    check, physical p.68). pypdf text-layer drops capital macrons; CHUNK12_CORRECTIONS
+    restores it (same class as chunk-11 TT29 `Amenemōpet`).
+    """
+    r = _row("TT33")
+    assert r["tomb_id"] == "TT33"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["occupant_name"] == "Pedamenōpet"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Prophet, Chief lector. Saite. (L. D. Text, No. 20.) "
+        "Mother, Namenkhesi, Sistrum-player of Amūn. Wife, Tedi."
+    )
+    assert r["source_citation"]["page"] == 50
+
+
+def test_chunk12_tt34_mentuemhet() -> None:
+    """TT34 — Mentuemhēt, Fourth prophet of Amūn, ʿAsâsîf, p.56.
+    PM prints the headword `MENTUEMḤĒT` with capital underdot-Ḥ + capital macron-Ē
+    (direct PDF visual check, physical p.74). Strip Ḥ-underdot per policy; restore
+    macron via CHUNK12_CORRECTIONS.
+    """
+    r = _row("TT34")
+    assert r["tomb_id"] == "TT34"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["occupant_name"] == "Mentuemhēt"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Fourth prophet of Amūn in Thebes. Temp. Taharqa and Psammetikhos I. "
+        "Parents, Espṭaḥ, Prophet of Amūn, Mayor of the City, and Esenkhebi. "
+        "Wives, Uzarenes, Sistrum-player of Amen-Reʿ (name in tomb), "
+        "Eskhons and Shepetenmut (names from cones)."
+    )
+    assert r["source_citation"]["page"] == 56
+
+
+def test_chunk12_tt35_bekenkhons() -> None:
+    """TT35 — Bekenkhons, First prophet of Amūn (High Priest role), Dra' Abu el-Naga, p.61."""
+    r = _row("TT35")
+    assert r["tomb_id"] == "TT35"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["occupant_name"] == "Bekenkhons"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "High Priest"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "First prophet of Amūn. Temp. Ramesses II. "
+        "(CHAMPOLLION, No. 45, L. D. Text, Nos. 10, 11.) "
+        "Parents, Roma, First and second prophet of Amūn, and Roma, Singer of Amūn. "
+        "Wife, Mertesger, Chief of the harim of Amūn."
+    )
+    assert r["source_citation"]["page"] == 61
+
+
+def test_chunk12_tt36_ibi() -> None:
+    """TT36 — Ibi, Chief steward of the divine adoratress, ʿAsâsîf, p.63."""
+    r = _row("TT36")
+    assert r["tomb_id"] == "TT36"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["occupant_name"] == "Ibi"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Chief steward of the divine adoratress. Temp. Psammetikhos I. "
+        "(CHAMPOLLION, No. 56, L. D. Text, No. 25.) "
+        "Parents, ʿAnkh-ḥor, Divine father, and De-ubasteiri, variant Teiri. "
+        "Wife, Shepenernute (name in tomb 196)."
+    )
+    assert r["source_citation"]["page"] == 63
+
+
+def test_chunk12_tt37_harua() -> None:
+    """TT37 — Harua, Chief steward of god's wife Amenardais I, ʿAsâsîf, p.68."""
+    r = _row("TT37")
+    assert r["tomb_id"] == "TT37"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["occupant_name"] == "Harua"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Chief steward of the god's wife Amenardais I. Saite. "
+        "(CHAMPOLLION, No. 54, L. D. Text, No. 23.) "
+        "Parents, Pedemut, Scribe, and Estawert "
+        "(names from statues, in Berlin Mus. 8163, see infra, p. 69, "
+        "and Cairo Mus. Ent. 36711)."
+    )
+    assert r["source_citation"]["page"] == 68
+
+
+def test_chunk12_tt38_zeserkaraasonb() -> None:
+    """TT38 — Zeserkaraʿsonb, Scribe, Sh. ʿAbd el-Qurna, p.69."""
+    r = _row("TT38")
+    assert r["tomb_id"] == "TT38"
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["occupant_name"] == "Zeserkaraʿsonb"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Scribe, Counter of the grain in the granary of divine offerings of Amūn. "
+        "Temp. Tuthmosis IV. Wife, Wazronpet."
+    )
+    assert r["source_citation"]["page"] == 69
+
+
+def test_chunk12_tt39_puimre() -> None:
+    """TT39 — Puimrēʿ, Second prophet of Amūn, Khokha, p.71.
+    PM prints the headword `PUIMRĒʿ` with capital macron-Ē + ayin (direct PDF visual
+    check, physical p.89). pypdf text-layer drops the macron; CHUNK12_CORRECTIONS
+    restores it.
+    """
+    r = _row("TT39")
+    assert r["tomb_id"] == "TT39"
+    assert r["theban_area"] == "Khokha"
+    assert r["occupant_name"] == "Puimrēʿ"
+    assert r["occupant_alt_names"] == []
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Second prophet of Amūn. Temp. Tuthmosis III. "
+        "(L. D. Text, No. 18.) Parents, Puia and Neferi. "
+        "Wives, Tanefert and Sensonb."
+    )
+    assert r["source_citation"]["page"] == 71
+
+
+def test_chunk12_tt40_amenhotp() -> None:
+    """TT40 — Amenhotp (called Huy), Viceroy of Kush, Qurnet Muraʿi, p.75.
+    The epithet `called Ḥuy` is NOT in notes_from_pm (it lives in
+    occupant_alt_names). TT40 introduces `Qurnet Muraʿi` as the first
+    occurrence of that theban_area value in reconciled.jsonl.
+    """
+    r = _row("TT40")
+    assert r["tomb_id"] == "TT40"
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["occupant_name"] == "Amenhotp"
+    assert r["occupant_alt_names"] == ["Huy"]
+    assert r["occupant_role"] == "Official"
+    assert r["location_sub_area"] is None
+    assert r["shared_with_tombs"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Viceroy of Kush, Governor of the South Lands. "
+        "Temp. Amenophis IV to Tutʿankhamūn. "
+        "(CHAMPOLLION, A, L. D. Text, No. 110.) Mother, Wenḥo."
+    )
+    assert r["source_citation"]["page"] == 75

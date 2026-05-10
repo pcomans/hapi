@@ -363,6 +363,52 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Governor of the town, Vizier. Temp. Amenophis II. (HAY, "
             "No. 15.) Parents, [ʿAḥmosi] Ḥumay (tomb 224) and Nub. Wife, "
             "Wertmaʿetef.",
+        # Chunk 12 (TT31–TT40) — 8 tie-break overrides all on cosmetic/
+        # typographic 1/1/1 ties (citation-clause placement + double-period)
+        # following the TT26 precedent. The TT32 occupant_name override pins
+        # `Thutmosi` (agent A's PDF-closest stripped-diacritic form);
+        # CHUNK12_CORRECTIONS layers the post-merge `Ḏhutmosi` (d-bar Ḏ)
+        # restoration per the PR #151 precedent (egyptologist verified
+        # the d-emphatic in `Ḏḥwty`/Thoth and its derived names is `Ḏ`
+        # not `Ḍ` after direct PM PDF read of p.604 and p.755). All other
+        # chunk-12 entries pass through fix_rows.py unchanged
+        # (CHUNK12_CORRECTIONS otherwise covers only the macron-
+        # restoration corrections on TT33/TT34/TT39 `occupant_name` and
+        # the TT33 `source_citation.page` 49→50 fix).
+        ("TT31", "notes_from_pm"):
+            "First prophet of Menkheperreʿ (Tuthmosis III). Temp. Ramesses II. "
+            "(L. D. Text, No. 51.) Parents, Neferḥotep, First prophet of "
+            "Amenophis II, and Tausert, Songstress of Monthu. Wives, Ruia and "
+            "Mutia or May.",
+        ("TT32", "occupant_name"):
+            "Ḏhutmosi",
+        ("TT33", "notes_from_pm"):
+            "Prophet, Chief lector. Saite. (L. D. Text, No. 20.) "
+            "Mother, Namenkhesi, Sistrum-player of Amūn. Wife, Tedi.",
+        ("TT35", "notes_from_pm"):
+            "First prophet of Amūn. Temp. Ramesses II. "
+            "(CHAMPOLLION, No. 45, L. D. Text, Nos. 10, 11.) "
+            "Parents, Roma, First and second prophet of Amūn, and Roma, "
+            "Singer of Amūn. Wife, Mertesger, Chief of the harim of Amūn.",
+        ("TT36", "notes_from_pm"):
+            "Chief steward of the divine adoratress. Temp. Psammetikhos I. "
+            "(CHAMPOLLION, No. 56, L. D. Text, No. 25.) "
+            "Parents, ʿAnkh-ḥor, Divine father, and De-ubasteiri, variant Teiri. "
+            "Wife, Shepenernute (name in tomb 196).",
+        ("TT37", "notes_from_pm"):
+            "Chief steward of the god's wife Amenardais I. Saite. "
+            "(CHAMPOLLION, No. 54, L. D. Text, No. 23.) "
+            "Parents, Pedemut, Scribe, and Estawert "
+            "(names from statues, in Berlin Mus. 8163, see infra, p. 69, "
+            "and Cairo Mus. Ent. 36711).",
+        ("TT39", "notes_from_pm"):
+            "Second prophet of Amūn. Temp. Tuthmosis III. "
+            "(L. D. Text, No. 18.) Parents, Puia and Neferi. "
+            "Wives, Tanefert and Sensonb.",
+        ("TT40", "notes_from_pm"):
+            "Viceroy of Kush, Governor of the South Lands. "
+            "Temp. Amenophis IV to Tutʿankhamūn. "
+            "(CHAMPOLLION, A, L. D. Text, No. 110.) Mother, Wenḥo.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

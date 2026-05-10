@@ -62,5 +62,37 @@
   "TT4|notes_from_pm": {
     "rationale": "PM I.1 p.11 (TT4 Ḳen). Agents split 1/1/1 on text-layer-noise variants for the parent name (`Thoniifer` vs `Thonufer`) and on whether to add a redundant trailing period after the bibliographic close-paren. Pin a stable post-merge form so the merge step has a deterministic answer for the tie; egyptologist printed-source corrections (macron restoration on `Amūn` ×2 + `Thonūfer`, plus the medial-underdot drop on `Ḥenutmeḥyt` → `Ḥenutmehyt`) are layered post-merge by `CHUNK9_CORRECTIONS` in `fix_rows.py`. The pinned-merge value here corresponds to the chunk-9 PR's first-pass merge output before the egyptologist's printed-source review; the final on-disk value comes from CHUNK9_CORRECTIONS, which the per-row test asserts. Keeping merge-time and fix_rows-time overrides separate maintains the audit-trail boundary (merge resolves agent ties; fix_rows applies reviewer-cited PM-faithful corrections).",
     "value": "Chiseller of Amun in the Place of Truth. Temp. Ramesses II. (L. D. Text, No. 106.) Parents, Thonufer, Chiseller of Amun in the Khenu, and Maʿetnefert. Wives, Nefertere and Ḥenutmeḥyt."
+  },
+  "TT31|notes_from_pm": {
+    "rationale": "PM I.1 p.47 / physical PDF p.65 (TT31 Khons). Agents split 1/1/1: A=spurious double-period `(L. D. Text, No. 51.). Parents,` (period inside and outside the close-paren); B=clean `(L. D. Text, No. 51.) Parents,` (no extra period); C=citation moved to sentence-end `... Wives, Ruia and Mutia or May. (L. D. Text, No. 51.)`. PM prints the bibliographic parenthetical mid-sentence, closing with a single period inside the paren — no second period follows before `Parents`. Same pattern as TT26 (p.43) where agent B's clean form was also pinned. Pin agent B.",
+    "value": "First prophet of Menkheperreʿ (Tuthmosis III). Temp. Ramesses II. (L. D. Text, No. 51.) Parents, Neferḥotep, First prophet of Amenophis II, and Tausert, Songstress of Monthu. Wives, Ruia and Mutia or May."
+  },
+  "TT32|occupant_name": {
+    "rationale": "PM I.1 p.49 / physical PDF p.67 (TT32). Agents split 1/1/1: A=`Thutmosi` (no diacritic); B=`Ḏhutmosi` (d-bar Ḏ — egyptologically correct, the standard transliteration of the d-emphatic in `Ḏḥwty`/Thoth and its derived names); C=`Hutmosi` (prefix consonant dropped). pypdf text-layer renders `{>l;IUTMOSI` (the OCR signature for capital d-emphatic + capital underdot-Ḥ). Pin agent A's `Thutmosi` as the PDF-closest stripped-diacritic form so the merge step has a deterministic answer; CHUNK12_CORRECTIONS in fix_rows.py layers the post-merge restoration to `Ḏhutmosi` (d-bar) per the PR #151 precedent (egyptologist verified `Ḏ` not `Ḍ` for `Ḏḥuti`/`Sit-ḏḥout` after direct PDF read of PM I.2 p.604 and p.755). The d-bar is the standard Egyptological transliteration of the d-emphatic; the underdot is a different consonant used in some Semitic systems and would never match TLA/Trismegistos/museum data using `Ḏḥwty`-derived forms.",
+    "value": "Thutmosi"
+  },
+  "TT33|notes_from_pm": {
+    "rationale": "PM I.1 p.49 / physical PDF p.67 (TT33 Pedamenopet). Agents split 1/1/1: A=spurious double-period `(L. D. Text, No. 20.). Mother,`; B=clean `(L. D. Text, No. 20.) Mother,`; C=citation moved to sentence-end. PM prints the bibliographic parenthetical mid-sentence with a single period — same pattern as TT26 (p.43) and TT31 (p.47). Pin agent B.",
+    "value": "Prophet, Chief lector. Saite. (L. D. Text, No. 20.) Mother, Namenkhesi, Sistrum-player of Amūn. Wife, Tedi."
+  },
+  "TT35|notes_from_pm": {
+    "rationale": "PM I.1 p.61 / physical PDF p.79 (TT35 Bekenkhons). Agents split 1/1/1: A=spurious double-period `(CHAMPOLLION, No. 45, L. D. Text, Nos. 10, 11.). Parents,`; B=clean `(CHAMPOLLION, No. 45, L. D. Text, Nos. 10, 11.) Parents,`; C=citation moved to sentence-end. PM prints the bibliographic parenthetical mid-sentence — no second period after the close-paren before `Parents`. Same pattern as TT26/TT31/TT33. Pin agent B.",
+    "value": "First prophet of Amūn. Temp. Ramesses II. (CHAMPOLLION, No. 45, L. D. Text, Nos. 10, 11.) Parents, Roma, First and second prophet of Amūn, and Roma, Singer of Amūn. Wife, Mertesger, Chief of the harim of Amūn."
+  },
+  "TT36|notes_from_pm": {
+    "rationale": "PM I.1 p.63 / physical PDF p.81 (TT36 Ibi). Agents split 1/1/1: A=spurious double-period `(CHAMPOLLION, No. 56, L. D. Text, No. 25.). Parents,`; B=clean `(CHAMPOLLION, No. 56, L. D. Text, No. 25.) Parents,`; C=citation moved to sentence-end. PM prints the bibliographic parenthetical mid-sentence — same pattern as TT26/TT31/TT33/TT35. Pin agent B.",
+    "value": "Chief steward of the divine adoratress. Temp. Psammetikhos I. (CHAMPOLLION, No. 56, L. D. Text, No. 25.) Parents, ʿAnkh-ḥor, Divine father, and De-ubasteiri, variant Teiri. Wife, Shepenernute (name in tomb 196)."
+  },
+  "TT37|notes_from_pm": {
+    "rationale": "PM I.1 p.68 / physical PDF p.86 (TT37 Harua). Agents split 1/1/1: A=spurious double-period `(CHAMPOLLION, No. 54, L. D. Text, No. 23.). Parents,`; B=clean `(CHAMPOLLION, No. 54, L. D. Text, No. 23.) Parents,`; C=citation moved to sentence-end. PM prints the bibliographic parenthetical mid-sentence — same pattern as TT26/TT31/TT33/TT35/TT36. Pin agent B.",
+    "value": "Chief steward of the god's wife Amenardais I. Saite. (CHAMPOLLION, No. 54, L. D. Text, No. 23.) Parents, Pedemut, Scribe, and Estawert (names from statues, in Berlin Mus. 8163, see infra, p. 69, and Cairo Mus. Ent. 36711)."
+  },
+  "TT39|notes_from_pm": {
+    "rationale": "PM I.1 p.71 / physical PDF p.89 (TT39 Puimreʿ). Agents split 1/1/1: A=spurious double-period `(L. D. Text, No. 18.). Parents,`; B=clean `(L. D. Text, No. 18.) Parents,`; C=citation moved to sentence-end. PM prints the bibliographic parenthetical mid-sentence — same pattern as TT26/TT31/TT33/TT35/TT36/TT37. Pin agent B.",
+    "value": "Second prophet of Amūn. Temp. Tuthmosis III. (L. D. Text, No. 18.) Parents, Puia and Neferi. Wives, Tanefert and Sensonb."
+  },
+  "TT40|notes_from_pm": {
+    "rationale": "PM I.1 p.75 / physical PDF p.93 (TT40 Amenhotp, called Ḥuy). Agents split 1/1/1: A=`called Ḥuy, Viceroy...` + spurious double-period `(CHAMPOLLION, A, L. D. Text, No. 110.). Mother,`; B=`Viceroy...` + clean `(CHAMPOLLION, A, L. D. Text, No. 110.) Mother,`; C=`Viceroy...` + citation moved to sentence-end. Content split on `called Ḥuy,`: agents B and C agree the epithet does not belong in `notes_from_pm` — it is already encoded in `occupant_alt_names: [\"Huy\"]`. PM's headword construction `AMENḤOTP, called HUY` places the epithet as part of the name entry; the alt_names field captures it. Dropping it from notes avoids duplication. Pin agent B (content correct, punctuation correct — same TT26 precedent as the other six chunk-12 notes ties).",
+    "value": "Viceroy of Kush, Governor of the South Lands. Temp. Amenophis IV to Tutʿankhamūn. (CHAMPOLLION, A, L. D. Text, No. 110.) Mother, Wenḥo."
   }
 }

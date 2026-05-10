@@ -998,6 +998,80 @@ CHUNK11_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK11_RENAMES: dict[str, str] = {}
 
 
+CHUNK12_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT32",
+        "occupant_name",
+        "Ḏhutmosi",
+        "PM I.1 p.49 / physical PDF p.67. The d-emphatic in this name "
+        "family (`Thutmose` < Egyptian `Ḏḥwty-msj` < `Ḏḥwty`/Thoth) is "
+        "the standard Egyptological d-bar `Ḏ` (U+1E0E), NOT d-underdot "
+        "`Ḍ` (U+1E0C, a different consonant used in some Semitic "
+        "transliteration systems). PR #151 (egyptologist printed-source "
+        "review) explicitly verified this on PM I.2 p.604 (`Ḏḥuti` for "
+        "DAN-MentuhotpIWifeOfDjhuti) and PM I.2 p.755 (`Sit-ḏḥout` for "
+        "QV47), correcting earlier `Ḍ` extractions to `Ḏ` after direct "
+        "PDF read. Agent B's `Ḏhutmosi` (d-bar) was the egyptologically "
+        "correct form; agents A (`Thutmosi`, no diacritic) and C "
+        "(`Hutmosi`, dropped consonant) were both wrong. Tie-break pins "
+        "agent A's PDF-closest stripped-diacritic form for merge "
+        "auditability; this CHUNK12_CORRECTIONS entry layers the post-"
+        "merge diacritic restoration to the egyptologically-canonical "
+        "`Ḏhutmosi`. Wrong-consonant risk: a row keyed on `Ḍhutmosi` "
+        "would never match against TLA / Trismegistos / museum data "
+        "using the d-bar form.",
+    ),
+    (
+        "TT33",
+        "occupant_name",
+        "Pedamenōpet",
+        "PM I.1 p.50 / physical PDF p.68. Direct PDF visual check of "
+        "headword: PM prints `PEDAMENŌPET` (capital macron-Ō). pypdf "
+        "text-layer drops capital macrons (same class as chunk-11 TT29 "
+        "`Amenemōpet` restoration). The macron is visible in the PDF "
+        "page image but not in the extracted text layer.",
+    ),
+    (
+        "TT33",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "section": "I", "page": 50},
+        "PM I.1 p.50 / physical PDF p.68. Direct PDF visual check (parent "
+        "agent, this PR) confirms TT33's headword `33. PEDAMENŌPET` is on "
+        "printed p.50 (the page-number `50` is visible at the top-left of "
+        "physical p.68), NOT p.49 (where TT32's body text continues). "
+        "Agents A and C both gave page=49 (likely conflated with TT32's "
+        "spillover); agent B gave 50 (correct). The merge majority vote "
+        "(2-1) chose the wrong page; the egyptologist subagent missed it "
+        "because the named PDF was not at the path it was given. This "
+        "CHUNK12_CORRECTIONS entry layers the post-merge page fix.",
+    ),
+    (
+        "TT34",
+        "occupant_name",
+        "Mentuemhēt",
+        "PM I.1 p.56 / physical PDF p.74. Direct PDF visual check of "
+        "headword: PM prints `MENTUEMḤĒT` (capital underdot-Ḥ + capital "
+        "macron-Ē). pypdf text-layer captures the Ḥ residual but drops "
+        "the Ē macron (same class as TT33). Per PM-faithful diacritic "
+        "policy (strip underdot-Ḥ from occupant_name; preserve macrons), "
+        "the canonical form is `Mentuemhēt`.",
+    ),
+    (
+        "TT39",
+        "occupant_name",
+        "Puimrēʿ",
+        "PM I.1 p.71 / physical PDF p.89. Direct PDF visual check of "
+        "headword: PM prints `PUIMRĒʿ` (capital macron-Ē + ayin). "
+        "pypdf text-layer drops the capital macron-Ē (same class as "
+        "TT33/TT34). The ayin (U+02BF) was correctly extracted by the "
+        "agents.",
+    ),
+]
+
+
+CHUNK12_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1286,6 +1360,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK9_CORRECTIONS,
     CHUNK10_CORRECTIONS,
     CHUNK11_CORRECTIONS,
+    CHUNK12_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1299,6 +1374,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK9_RENAMES,
     **CHUNK10_RENAMES,
     **CHUNK11_RENAMES,
+    **CHUNK12_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
