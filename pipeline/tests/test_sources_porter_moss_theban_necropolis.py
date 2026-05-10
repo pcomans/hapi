@@ -124,6 +124,14 @@ CHUNK9_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK10_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(11, 21)}
 )
+# Chunk-11 (PM I.1 § I — TT21-TT30). FIRST chunk with heterogeneous
+# `theban_area`: TT21/22/23/29/30 = Sh. ʿAbd el-Qurna; TT24 = Dra' Abu el-
+# Naga; TT25/26/27/28 = ʿAsâsîf. Also introduces TT22 usurpation (Tier-3
+# `is_usurped=true`), TT29 cross-valley `shared_with_tombs=["KV48"]`, and
+# TT29 first non-Official controlled-vocab role (Vizier).
+CHUNK11_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(21, 31)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -134,6 +142,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK8_TOMB_IDS
     | CHUNK9_TOMB_IDS
     | CHUNK10_TOMB_IDS
+    | CHUNK11_TOMB_IDS
 )
 
 
@@ -322,25 +331,33 @@ def test_required_fields_present_on_every_row() -> None:
 def test_theban_area_constraint() -> None:
     """`theban_area` belongs to a known controlled vocabulary.
 
-    Currently populated values across chunks 1–8: Valley of the Kings,
-    Valley of the Queens, South-West Valleys, Dra' Abu el-Naga. Forward-
-    compatible: extend the allowlist as future chunks add Deir el-Bahri,
-    Asasif, Sheikh Abd el-Qurna, Khokha, Qurnet Mura'i, Deir el-Medina,
-    Ramesseum, Medinet Habu (PM I.1 Appendix-D Theban sub-site list).
+    Forms in use:
+    - chunks 1–6 (KV): `Valley of the Kings`
+    - chunk 7 (DAN/SWV): `Dra' Abu el-Naga`, `South-West Valleys`
+    - chunk 8 (QV): `Valley of the Queens`
+    - chunk 9 (TT1–TT10): `Deir el-Medina`
+    - chunk 10 (TT11–TT20): `Dra' Abu el-Naga`
+    - chunk 11 (TT21–TT30): `Sh. ʿAbd el-Qurna`, `Dra' Abu el-Naga`,
+      `ʿAsâsîf` — PM-faithful forms with `Sh.` abbreviation, ayin
+      U+02BF on `ʿAbd` / `ʿAsâsîf`, circumflexes preserved on `ʿAsâsîf`.
+
+    Forward-compatible placeholders for future chunks (Deir el-Bahri,
+    Khokha, Qurnet Mura'i, Ramesseum, Medinet Habu) are added as each
+    chunk lands with the actual PM-printed form. Per CLAUDE.md rule 5
+    (tests assert values, not absence of errors) and rule 2 (no
+    silent fallbacks), pre-emptive English-transliteration placeholders
+    are NOT included — they would let an agent's mis-rendering through
+    silently. Each form here matches a value actually populated in
+    `reconciled.jsonl`.
     """
     valid = {
         "Valley of the Kings",
         "Valley of the Queens",
         "South-West Valleys",
         "Dra' Abu el-Naga",
-        "Deir el-Bahri",
-        "Asasif",
-        "Sheikh Abd el-Qurna",
-        "Khokha",
-        "Qurnet Mura'i",
         "Deir el-Medina",
-        "Ramesseum",
-        "Medinet Habu",
+        "Sh. ʿAbd el-Qurna",
+        "ʿAsâsîf",
     }
     for r in _rows():
         assert r["theban_area"] in valid, (r["tomb_id"], r["theban_area"])
@@ -2828,6 +2845,247 @@ def test_chunk10_tt11_underdot_d_preserved() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Chunk 11: PM I.1 § I — TT21–TT30 (heterogeneous theban_area + usurpation +
+# cross-valley shared_with_tombs + first non-Official controlled-vocab role)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk11_uniform_phase_a_null_fields() -> None:
+    """Every chunk-11 row carries null for Phase-A-enrichment fields and
+    `source_citation.edition="PM I.1 2nd ed. 1960"`, `section="I"`,
+    `is_unfinished=false`. `theban_area` is per-row (heterogeneous —
+    see test_chunk11_theban_area_per_row below).
+    """
+    for tid in CHUNK11_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == EDITION_PM_I1, tid
+        assert r["source_citation"]["section"] == "I", tid
+        assert r["dynasty"] is None, tid
+        assert r["sub_period"] is None, tid
+        assert r["date_bce_approx_start"] is None, tid
+        assert r["date_bce_approx_end"] is None, tid
+        assert r["discovery_year"] is None, tid
+        assert r["discoverer"] is None, tid
+        assert r["location_sub_area"] is None, tid
+        assert r["is_unfinished"] is False, tid
+
+
+def test_chunk11_theban_area_per_row() -> None:
+    """First chunk with heterogeneous `theban_area` (chunks 9-10 were
+    uniform single sub-site). Per PM I.1 p.35-46 headword sub-site
+    declarations: TT21/22/23/29/30 at Sh. ʿAbd el-Qurna, TT24 at Dra'
+    Abu el-Naga (carrying over from chunk 10's range), TT25/26/27/28
+    at ʿAsâsîf. PM-faithful diacritics: U+02BF MODIFIER LETTER LEFT
+    HALF RING for ayin in `ʿAbd` / `ʿAsâsîf`; ASCII apostrophe in
+    `Dra'`; circumflexes `â` / `î` preserved on ʿAsâsîf; abbreviated
+    `Sh.` (period preserved) on Sheikh ʿAbd el-Qurna.
+    """
+    expected = {
+        "TT21": "Sh. ʿAbd el-Qurna",
+        "TT22": "Sh. ʿAbd el-Qurna",
+        "TT23": "Sh. ʿAbd el-Qurna",
+        "TT24": "Dra' Abu el-Naga",
+        "TT25": "ʿAsâsîf",
+        "TT26": "ʿAsâsîf",
+        "TT27": "ʿAsâsîf",
+        "TT28": "ʿAsâsîf",
+        "TT29": "Sh. ʿAbd el-Qurna",
+        "TT30": "Sh. ʿAbd el-Qurna",
+    }
+    for tid, area in expected.items():
+        actual = _row(tid)["theban_area"]
+        assert actual == area, (tid, actual, area)
+
+
+def test_chunk11_occupant_names() -> None:
+    """PM-faithful occupant_name per the README's diacritic policy.
+    chunk-11 highlights:
+    - TT22 `Wah` — strip-Ḥ from PM `WAḤ` (ay-Ḥ residual `WAFJ.` in OCR).
+    - TT24 `Nebamūn` — distinct individual from chunk-10's TT17 Nebamūn;
+      macron-ū restored from OCR `NEBAMUN` per chunk-10 TT17 precedent.
+    - TT27 `Sheshonḳ` — underdot-Ḳ preserved (README rule covers
+      underdot-Ḥ ONLY).
+    - TT29 `Amenemopet` — chunks-1-10 strip-Ḥ + ayin-preserve rules.
+    """
+    expected = {
+        "TT21": "User",
+        "TT22": "Wah",
+        "TT23": "Thay",
+        "TT24": "Nebamūn",
+        "TT25": "Amenemhab",
+        "TT26": "Khnememhab",
+        "TT27": "Sheshonḳ",
+        "TT28": "Hori",
+        # PM I.1 p.45 prints `29. AMENEMŌPET` with capital macron-Ō.
+        # README's occupant_name policy preserves vowel macrons; only
+        # underdot-Ḥ is stripped. Egyptologist printed-source review
+        # (chunk-11 PR) restored from agent-extracted `Amenemopet`.
+        "TT29": "Amenemōpet",
+        "TT30": "Khensmosi",
+    }
+    for tid, name in expected.items():
+        assert _row(tid)["occupant_name"] == name, (
+            tid, _row(tid)["occupant_name"]
+        )
+
+    # TT23 `occupant_alt_names=["To"]` — PM's `THAY, also called To`
+    # headword phrasing produces a single-element alt-names list.
+    # Asserted here (not in `test_chunk11_tt29_vizier_role_and_kv_cross_
+    # valley` which only covers TT29) per Gemini Code Assist PR #199
+    # round 2 coverage-gap finding.
+    assert _row("TT23")["occupant_alt_names"] == ["To"], (
+        f"TT23 must carry `occupant_alt_names=['To']` per PM's "
+        f"`THAY, also called To` headword phrasing; got "
+        f"{_row('TT23')['occupant_alt_names']!r}"
+    )
+
+
+def test_chunk11_source_citation_pages() -> None:
+    """Printed page numbers per TT tomb (PM I.1 § I, printed pp.35-46,
+    physical pp.53-64). PM I.1 offset: physical = printed + 18.
+    """
+    expected_page = {
+        "TT21": 35, "TT22": 37, "TT23": 38, "TT24": 41, "TT25": 42,
+        "TT26": 43, "TT27": 43, "TT28": 45, "TT29": 45, "TT30": 46,
+    }
+    for tid, page in expected_page.items():
+        actual = _row(tid)["source_citation"]["page"]
+        assert actual == page, (tid, actual, page)
+
+
+def test_chunk11_no_multi_occupant() -> None:
+    """The TT21-TT30 range contains zero multi-occupant headwords. TT22's
+    `Partly usurped by Mery[amūn]` is structurally distinct from co-
+    burial — usurpation goes in `notes_from_pm` only, with the Tier-3
+    `is_usurped` deriver firing on the regex; the usurper is NOT a
+    `co_occupant`. All 10 rows are single-occupant.
+    """
+    for tid in CHUNK11_TOMB_IDS:
+        r = _row(tid)
+        assert r["co_occupants"] == [], (tid, r["co_occupants"])
+        assert r["is_joint_burial"] is False, (tid, r["is_joint_burial"])
+
+
+def test_chunk11_tt22_usurpation_flag_set() -> None:
+    """TT22 Wah's headword reads `Partly usurped by Mery[amūn], Eldest
+    son of the King.`. The Tier-3 `is_usurped` deriver fires on the
+    `usurp` regex match in `notes_from_pm`. Original occupant Wah
+    stays as `occupant_name`; usurper preserved verbatim in notes.
+    Per CLAUDE.md rule 3, this is an executable invariant on the
+    Tier-3 derivation chain — if a future refactor of
+    `_apply_issue_182_migrations` silently reverts the usurp regex,
+    this test catches it.
+    """
+    tt22 = _row("TT22")
+    assert tt22["is_usurped"] is True, (
+        f"TT22 must carry `is_usurped=true` (deriver fires on `usurp` "
+        f"regex match in notes); got {tt22['is_usurped']}"
+    )
+    # And the verbatim usurpation clause must still be in notes.
+    assert "usurped" in (tt22["notes_from_pm"] or ""), (
+        f"TT22 notes_from_pm must preserve PM's verbatim usurpation "
+        f"clause; got notes={tt22['notes_from_pm']!r}"
+    )
+    # Mery[amūn] (with macron) must be preserved in notes.
+    assert "Mery[amūn]" in (tt22["notes_from_pm"] or ""), (
+        f"TT22 notes_from_pm must preserve the usurper name `Mery[amūn]` "
+        f"with its macron-ū (chunk-10 TT17 macron-preserve precedent); "
+        f"got notes={tt22['notes_from_pm']!r}"
+    )
+
+
+def test_chunk11_tt29_vizier_role_and_kv_cross_valley() -> None:
+    """TT29 Amenemopet (called Pairi) — first chunk-9-to-11 row with a
+    non-Official controlled-vocab role. PM headword reads `Governor of
+    the town, Vizier.` — Vizier-precedence rule 4 applies: `Vizier`
+    is in the controlled vocab, so it wins over the non-Vizier
+    functional title; verbatim full title clause preserved in notes.
+
+    Also first chunk-9-to-11 row with a CROSS-VALLEY `shared_with_tombs`
+    reference. PM headword's `(Also owner of tomb 48 in the Valley of
+    the Kings.)` parenthetical names the OTHER VALLEY explicitly,
+    which by the chunk-11 prompt rule produces `KV<N>` (not `TT<N>`)
+    in the field.
+
+    Also first chunk-9-to-11 row with `occupant_alt_names` populated
+    via PM's `called <X>` headword phrasing.
+    """
+    tt29 = _row("TT29")
+    assert tt29["occupant_role"] == "Vizier", (
+        f"TT29 must carry `occupant_role='Vizier'` per Vizier-precedence "
+        f"rule 4; got {tt29['occupant_role']!r}"
+    )
+    assert tt29["shared_with_tombs"] == ["KV48"], (
+        f"TT29 must carry `shared_with_tombs=['KV48']` per the chunk-11 "
+        f"cross-valley rule (PM's `Valley of the Kings` qualifier); "
+        f"got {tt29['shared_with_tombs']!r}"
+    )
+    assert tt29["occupant_alt_names"] == ["Pairi"], (
+        f"TT29 must carry `occupant_alt_names=['Pairi']` per PM's "
+        f"`AMENEMOPET, called PAIRI` headword phrasing; got "
+        f"{tt29['occupant_alt_names']!r}"
+    )
+    # And the verbatim full title clause must be in notes.
+    assert "Governor of the town, Vizier" in (tt29["notes_from_pm"] or ""), (
+        f"TT29 notes_from_pm must preserve the verbatim full title "
+        f"clause `Governor of the town, Vizier` even though `Vizier` "
+        f"is the controlled-vocab role; got notes={tt29['notes_from_pm']!r}"
+    )
+
+
+def test_chunk11_tt27_sheshonk_underdot_k_preserved() -> None:
+    """TT27 Sheshonḳ — README's strip rule covers underdot-Ḥ ONLY;
+    underdot-Ḳ is preserved (chunk-7 / chunk-9 precedent). PM headword
+    `27. SHESHONḲ ...`. Egyptologist printed-source review (chunk-11)
+    confirmed.
+    """
+    assert _row("TT27")["occupant_name"] == "Sheshonḳ"
+    # Underdot-Ḳ explicitly at character position -1.
+    assert _row("TT27")["occupant_name"][-1] == "ḳ"
+
+
+def test_chunk11_notes_from_pm_pinned_substrings() -> None:
+    """Per-row `notes_from_pm` substring assertions. Chunk-11 highlights
+    asserted by THIS test (verbatim PM clauses preserved in `notes_from_pm`):
+    - TT22 usurpation clause + Tuthmosis III(?) regnal hedge.
+    - TT26 + TT27 wife / parent macron-ē restorations.
+    - TT27 `(Inaccessible.)` state-marker.
+    - TT29 full Vizier title clause.
+
+    Alt-names (a SEPARATE field, `occupant_alt_names`) are asserted by
+    `test_chunk11_occupant_names` (TT23 `["To"]`) and `test_chunk11_tt29_
+    vizier_role_and_kv_cross_valley` (TT29 `["Pairi"]`). Per Gemini Code
+    Assist PR #199 round 1 + round 2 docstring-accuracy corrections.
+    """
+    expected: list[tuple[str, str, str]] = [
+        ("TT21", "Scribe, Steward of Tuthmosis I.", "role + regnal"),
+        ("TT22", "Partly usurped by Mery[amūn]", "usurpation clause"),
+        ("TT22", "Eldest son of the King", "usurper role"),
+        ("TT23", "Royal scribe of the dispatches of the Lord of the Two Lands.", "role"),
+        ("TT24", "Steward of the royal wife Nebtu.", "role"),
+        ("TT25", "First prophet of Khons.", "role + minor cult"),
+        ("TT26", "Overseer of the treasury in the Ramesseum", "role"),
+        # PM p.43 prints `Wife, Meryēsi` (macron-ē). Egyptologist-
+        # flagged macron-drop fixed via CHUNK11_CORRECTIONS. (The `n +`
+        # qualifier in the prior version was a copy-paste leftover from
+        # chunk-10 TT16's rn→rm fix; TT26's only OCR issue is the macron
+        # drop, no n→m involved. Per Gemini PR #199 round 3.)
+        ("TT26", "Wife, Meryēsi.", "wife macron-ē correction"),
+        ("TT27", "(Inaccessible.)", "state-marker"),
+        # PM p.43 prints `Parents, Ḥarsiēsi` (macron-ē). Egyptologist-
+        # flagged macron-drop fixed via CHUNK11_CORRECTIONS.
+        ("TT27", "Ḥarsiēsi", "parent macron-ē correction"),
+        ("TT28", "Officer of the estate of Amūn.", "role"),
+        ("TT29", "Governor of the town, Vizier.", "Vizier full title clause"),
+        ("TT30", "Scribe of the treasury of the estate of Amūn.", "role"),
+    ]
+    for tid, substr, label in expected:
+        notes = _row(tid)["notes_from_pm"]
+        assert notes is not None, f"{tid} ({label}) expected notes, got None"
+        assert substr in notes, f"{tid} ({label}): expected {substr!r} in {notes!r}"
+
+
+# ---------------------------------------------------------------------------
 # Chunk 9: LEGACY_FIELD_RENAMES regression tripwire
 # ---------------------------------------------------------------------------
 
@@ -3088,9 +3346,10 @@ def test_182_uninscribed_canonical_set() -> None:
 
 def test_182_usurped_canonical_set() -> None:
     """Rows where PM writes "usurp(ed|ation)" in notes_from_pm.
-    Pinned 2026-05-03: KV9 (doorways usurped from Ramesses V), KV14
-    (usurped by Setnakht)."""
-    expected = {"KV9", "KV14"}
+    Pinned 2026-05-09: KV9 (doorways usurped from Ramesses V), KV14
+    (usurped by Setnakht), TT22 (Wah, partly usurped by Mery[amūn],
+    Eldest son of the King — chunk 11)."""
+    expected = {"KV9", "KV14", "TT22"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
