@@ -1407,6 +1407,107 @@ CHUNK16_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK16_RENAMES: dict[str, str] = {}
 
 
+CHUNK17_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT81",
+        "notes_from_pm",
+        (
+            "[1st ed. Anena], Overseer of the granary of Amūn. Temp. "
+            "Amenophis I to Tuthmosis III. (CHAMPOLLION, No. 5, "
+            "WILKINSON, No. 14, HAY, No. 8.) Parents, Ineni, Judge, and "
+            "Sit-ḏḥout. Wife, ʿAḥḥotp, called Thuiu."
+        ),
+        "PM I.1 p.159 / physical PDF p.177 (TT81 Ineni). Direct PDF "
+        "visual check (parent agent, this PR) confirms two PM-faithful "
+        "details that the merge tie-break value (pinned agent A) lacks: "
+        "(1) `[1st ed. Anena], ` belongs at the start of notes_from_pm — "
+        "PM prints `81. INENI ⟨hieroglyphs⟩ [1st ed. Anena], Overseer of "
+        "the granary of Amūn` with the bracket inline with the headword "
+        "BEFORE the role. (2) `ʿAḥotp` (single ḥ — agent A's form) → "
+        "`ʿAḥḥotp` (doubled ḥ — PM-faithful for Queen Ahhotep). The "
+        "doubled-ḥ form matches the chunk-12 TT12 override precedent "
+        "(Queen ʿAḥḥotp, mother of Ahmosi I). Tie-break-overrides.json "
+        "pinned the cleanest-punctuation form at merge time; fix_rows "
+        "layers the bracket-prefix + diacritic post-merge per the "
+        "merge/fix_rows separation-of-concerns convention.",
+    ),
+    (
+        "TT82",
+        "occupant_name",
+        "Amenemhēt",
+        "PM I.1 p.163 / physical PDF p.181 (TT82). Direct PDF visual "
+        "check confirms PM prints headword `82. AMENEMḤĒT` with capital "
+        "macron-Ē (and underdot-Ḥ which we strip per occupant_name "
+        "policy). Same macron-Ē OCR drop class as chunk-12 TT34 "
+        "`MENTUEMḤĒT` / chunk-14 TT51 `USERḤĒT` / chunk-14 TT53 + "
+        "chunk-16 TT77 `AMENEMḤĒT` / `PTAḤEMḤĒT`. Restore macron-Ē → "
+        "`Amenemhēt` (Ḥ underdot stripped per occupant_name policy).",
+    ),
+    (
+        "TT84",
+        "notes_from_pm",
+        (
+            "First royal herald, Overseer of the gate, temp. Tuthmosis "
+            "III. Partly usurped by Mery (tomb 95), temp. Amenophis II. "
+            "(CHAMPOLLION, No. 11, L. D. Text, No. 71, WILKINSON, No. "
+            "31, HAY, No. 19.) Parents (of Amunezeḥ), Siḏḥout, Judge, "
+            "and Resi. Wife (of Amunezeḥ), Ḥenutnefert."
+        ),
+        "PM I.1 p.167 / physical PDF p.185 (TT84 Amunezeḥ). The merge "
+        "tie-break pinned agent A's form which preserved PM's small-"
+        "caps `MERY` for the usurper's name in body prose. Per the "
+        "TT51/TT57/TT58/TT60 chunk-12-and-14 precedent, body-prose "
+        "small-caps are text-layer artefacts of PM's typographic "
+        "convention and are normalised to Title-case `Mery` in "
+        "notes_from_pm. Same pattern as TT58 (`AMENḤOTP`/`AMENEMONET` "
+        "→ `Amenḥotp`/`Amenemonet`) and TT60 (`ANTEFOḲER`/`SENT` → "
+        "`Antefoḳer`/`Sent`). Fix_rows applies the prose-style "
+        "normalisation post-merge per the merge/fix_rows separation-"
+        "of-concerns convention.",
+    ),
+    (
+        "TT86",
+        "notes_from_pm",
+        (
+            "First prophet of Amūn. Temp. Tuthmosis III. Parents, "
+            "Amenemḥēt and Taōnet, King's nurse."
+        ),
+        "PM I.1 p.175 / physical PDF p.193 (TT86 Menkheperraʿsonb). "
+        "Direct PDF visual check confirms PM prints `Parents, "
+        "Amenemḥēt and Taōnet ⟨hieroglyphs⟩, King's nurse.` with two "
+        "macrons in body prose: capital macron-Ē on `Amenemḥēt` (same "
+        "OCR drop class as the TT82 occupant_name correction in this "
+        "chunk + the chunk-12-onward `-emḤĒT` cluster) and capital "
+        "macron-Ō on `Taōnet` (same class as chunk-15 TT74 `TENTŌPET`-"
+        "family macron-Ō restorations). The body-prose `Amenemḥēt` "
+        "RETAINS the underdot-Ḥ per the verbatim-preserve policy for "
+        "notes_from_pm (different from the occupant_name policy which "
+        "strips Ḥ underdot — TT82 in this chunk strips, TT86 notes "
+        "preserves; both are correct per their respective policies).",
+    ),
+    (
+        "TT90",
+        "occupant_name",
+        "Nebamūn",
+        "PM I.1 p.183 / physical PDF p.201 (TT90 Nebamun). Direct PDF "
+        "visual check confirms PM prints headword `90. NEBAMŪN` with "
+        "capital macron-Ū. Same OCR macron-drop class as chunk-15 TT65 "
+        "`NEBAMŪN` (the within-source NAME collision precedent — "
+        "Nebamūn appears at least 3× in PM I.1: TT17, TT65, TT90). "
+        "Agents A+C kept the prompt-rule-compliant stripped form "
+        "`Nebamun` (per the no-pre-derive-macrons-from-outside-"
+        "knowledge rule); agent B violated the rule by pre-deriving "
+        "`Nebamūn`. Merge resolved 2/1 to `Nebamun` per the prompt-"
+        "rule-compliant majority; fix_rows layers the macron "
+        "restoration post-merge per the egyptologist-cited PM "
+        "headword form.",
+    ),
+]
+
+
+CHUNK17_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1700,6 +1801,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK14_CORRECTIONS,
     CHUNK15_CORRECTIONS,
     CHUNK16_CORRECTIONS,
+    CHUNK17_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1718,6 +1820,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK14_RENAMES,
     **CHUNK15_RENAMES,
     **CHUNK16_RENAMES,
+    **CHUNK17_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [

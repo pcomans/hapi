@@ -195,6 +195,24 @@ CHUNK15_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK16_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(71, 81)}
 )
+# Chunk-17 (PM I.1 § I — TT81-TT90, Sh. ʿAbd el-Qurna). All 10 TT numbers
+# present. One Vizier (TT83 ʿAmethu, called ʿAhmosi); one High Priest
+# (TT86 Menkheperraʿsonb, First prophet of Amūn, also owner of TT112);
+# eight Officials. One partly-usurped tomb (TT84 Amunezeḥ, partly usurped
+# by Mery of TT95). Seven 1/1/1 tie-break overrides resolved in
+# tie-break-overrides.json (TT81, TT82, TT83, TT84, TT85, TT87, TT88,
+# TT90 notes_from_pm). Several 2/1 majority page-number disagreements
+# (TT82 p.163, TT87 p.178, TT90 p.183 — agents off-by-one but majority
+# resolved). CHUNK17_CORRECTIONS in fix_rows.py: 5 entries (TT81 notes
+# bracket-prefix + ʿAḥḥotp doubled-ḥ; TT82 occupant_name macron-Ē
+# restoration; TT84 notes MERY → Mery Title-case normalisation; TT86
+# notes Amenemḥēt + Taōnet macron restorations; TT90 occupant_name
+# `Nebamun` → `Nebamūn` macron-Ū restoration per chunk-15 TT65 NEBAMŪN
+# precedent — Nebamūn is the third within-source NAME collision in
+# PM I.1 after TT17 + TT65). No DERIVER_OVERRIDES needed.
+CHUNK17_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(81, 91)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -211,6 +229,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK14_TOMB_IDS
     | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS
+    | CHUNK17_TOMB_IDS
 )
 
 
@@ -3430,9 +3449,11 @@ def test_182_usurped_canonical_set() -> None:
     Espaneferḥor, temp. Siamūn — PM I.1 p.133), TT70 (anonymous, usurped
     by Amenmosi, Dyn. XXI — PM I.1 p.139).
     Extended 2026-05-10 (chunk 16): TT77 (Ptahemhet, usurped by Roy,
-    Overseer of sculptors — PM I.1 p.150)."""
+    Overseer of sculptors — PM I.1 p.150).
+    Extended 2026-05-10 (chunk 17): TT84 (Amunezeḥ, partly usurped by Mery
+    of TT95, temp. Amenophis II — PM I.1 p.167)."""
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
-                "TT65", "TT68", "TT70", "TT77"}
+                "TT65", "TT68", "TT70", "TT77", "TT84"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -4450,3 +4471,189 @@ def test_chunk16_tt80_dhutnufer_shared_with_tt104() -> None:
     assert r["shared_with_tombs"] == ["TT104"]
     assert r["attribution_certainty"] == "attested"
     assert r["source_citation"]["page"] == 157
+
+
+# Chunk-17 per-row tests (TT81–TT90, PM I.1 pp 159-183 / physical pp 177-201)
+
+
+def test_chunk17_all_rows_present() -> None:
+    """All 10 TT81-TT90 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK17_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        _row(tid)  # raises if absent
+
+
+def test_chunk17_all_rows_homogeneous_sub_site() -> None:
+    for tid in CHUNK17_TOMB_IDS:
+        assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna"
+
+
+def test_chunk17_all_rows_edition_pm_i1() -> None:
+    for tid in CHUNK17_TOMB_IDS:
+        assert _row(tid)["source_citation"]["edition"] == "PM I.1 2nd ed. 1960"
+
+
+def test_chunk17_pages_in_range() -> None:
+    for tid in CHUNK17_TOMB_IDS:
+        p = _row(tid)["source_citation"]["page"]
+        assert 159 <= p <= 183, f"{tid} page {p} outside [159, 183]"
+
+
+def test_chunk17_role_distribution() -> None:
+    """TT83 = Vizier (Governor of the town and Vizier); TT86 = High Priest
+    (First prophet of Amūn, also owner of TT112); all others Official."""
+    expected = {
+        "TT81": "Official", "TT82": "Official", "TT83": "Vizier",
+        "TT84": "Official", "TT85": "Official", "TT86": "High Priest",
+        "TT87": "Official", "TT88": "Official", "TT89": "Official",
+        "TT90": "Official",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK17_TOMB_IDS}
+    assert actual == expected
+
+
+def test_chunk17_attribution_distribution() -> None:
+    """All chunk-17 rows are attested. No `(?)` hedges on primary
+    attributions in PM body prose for TT81-TT90."""
+    for tid in CHUNK17_TOMB_IDS:
+        assert _row(tid)["attribution_certainty"] == "attested", tid
+
+
+def test_chunk17_tt81_ineni_bracket_prefix_and_doubled_h() -> None:
+    """TT81 Ineni — Overseer of the granary of Amūn, Sh. ʿAbd el-Qurna,
+    p.159. PM headword reads `81. INENI ⟨hieroglyphs⟩ [1st ed. Anena],
+    Overseer of the granary of Amūn`. CHUNK17_CORRECTIONS prepends
+    `[1st ed. Anena], ` to notes_from_pm (printed-faithful position) and
+    restores `ʿAḥotp` → `ʿAḥḥotp` for Queen Ahhotep (doubled-ḥ form
+    matches chunk-12 TT12 override precedent for the same queen).
+    1/1/1 tie on notes_from_pm resolved in tie-break-overrides.json."""
+    r = _row("TT81")
+    assert r["occupant_name"] == "Ineni"
+    assert r["occupant_role"] == "Official"
+    assert r["notes_from_pm"].startswith("[1st ed. Anena], ")
+    assert "ʿAḥḥotp" in r["notes_from_pm"]  # doubled-ḥ for Queen Ahhotep
+    assert "Sit-ḏḥout" in r["notes_from_pm"]  # Thoth-family ḏḥ
+    assert r["source_citation"]["page"] == 159
+
+
+def test_chunk17_tt82_amenemhet_macron_restored() -> None:
+    """TT82 Amenemhēt — Scribe, Steward of the Vizier (NOT Vizier per
+    Vizier-precedence: he SERVES the vizier, not IS one), p.163.
+    CHUNK17_CORRECTIONS restores macron-Ē on occupant_name (PM headword
+    `82. AMENEMḤĒT`). 1/1/1 tie on notes_from_pm resolved in
+    tie-break-overrides.json (clean punctuation pin)."""
+    r = _row("TT82")
+    assert r["occupant_name"] == "Amenemhēt"
+    assert "ē" in r["occupant_name"]  # macron-Ē restored
+    assert r["occupant_role"] == "Official"  # Steward-of-Vizier, NOT Vizier
+    assert "Steward of the Vizier" in r["notes_from_pm"]
+    assert "Ḏhutmosi" in r["notes_from_pm"]  # d-bar Ḏ Thoth-family
+    assert r["source_citation"]["page"] == 163
+
+
+def test_chunk17_tt83_amethu_vizier_alt_name() -> None:
+    """TT83 ʿAmethu — Governor of the town and Vizier, alt-name ʿAhmosi
+    (PM headword: `83. ʿAMETHU ⟨h⟩, called ʿAḤMOSI ⟨h⟩, Governor of the
+    town and Vizier. Early temp. Tuthmosis III.`), p.167. 1/1/1 tie on
+    notes_from_pm resolved (no `called ʿAḥmosi` prefix — already in
+    occupant_alt_names per the TT40/TT57/TT58/TT60/TT77/TT78/TT79/TT80
+    chunk-12-and-16 cluster precedent)."""
+    r = _row("TT83")
+    assert r["occupant_name"] == "ʿAmethu"
+    assert r["occupant_role"] == "Vizier"
+    assert r["occupant_alt_names"] == ["ʿAhmosi"]
+    assert "called ʿAḥmosi" not in r["notes_from_pm"]  # not duplicated
+    assert "Vizier" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 167
+
+
+def test_chunk17_tt84_amunezeh_partly_usurped_mery_titlecase() -> None:
+    """TT84 Amunezeḥ — partly usurped by MERY (TT95), p.167.
+    CHUNK17_CORRECTIONS normalises `MERY` → `Mery` Title-case in body
+    prose (per TT51/TT57/TT58/TT60 chunk-12-and-14 small-caps→Title-case
+    precedent). is_usurped derived from `Partly usurped by` regex."""
+    r = _row("TT84")
+    assert r["occupant_name"] == "Amunezeh"
+    assert r["is_usurped"] is True
+    assert "Partly usurped by Mery" in r["notes_from_pm"]
+    assert "MERY" not in r["notes_from_pm"]  # normalised to Title-case
+    assert "Siḏḥout" in r["notes_from_pm"]  # Thoth-family ḏḥ
+    assert r["source_citation"]["page"] == 167
+
+
+def test_chunk17_tt85_amenemhab_alt_mahu() -> None:
+    """TT85 Amenemhab — Lieutenant-commander of soldiers, alt-name Mahu
+    (PM headword: `85. AMENEMḤAB ⟨h⟩, called MAḤU ⟨h⟩`), p.170. 1/1/1
+    tie on notes_from_pm resolved (no `called Maḥu, ` prefix — already
+    in occupant_alt_names)."""
+    r = _row("TT85")
+    assert r["occupant_name"] == "Amenemhab"
+    assert r["occupant_alt_names"] == ["Mahu"]
+    assert "called Maḥu" not in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 170
+
+
+def test_chunk17_tt86_menkheperrasonb_high_priest_shared_tt112() -> None:
+    """TT86 Menkheperraʿsonb — First prophet of Amūn (= High Priest),
+    also owner of TT112 (shared_with_tombs), p.175. CHUNK17_CORRECTIONS
+    restores body-prose macrons: `Amenemḥet` → `Amenemḥēt` and `Taonet`
+    → `Taōnet` (PM body-prose verbatim policy retains Ḥ underdot in
+    notes, unlike occupant_name policy which strips)."""
+    r = _row("TT86")
+    assert r["occupant_name"] == "Menkheperraʿsonb"
+    assert "ʿ" in r["occupant_name"]  # ayin between ra and sonb
+    assert r["occupant_role"] == "High Priest"
+    assert r["shared_with_tombs"] == ["TT112"]
+    assert "Amenemḥēt" in r["notes_from_pm"]  # body-prose retains Ḥ underdot
+    assert "Taōnet" in r["notes_from_pm"]  # macron-Ō restored
+    assert r["source_citation"]["page"] == 175
+
+
+def test_chunk17_tt87_minnakht_father_sen_dhout() -> None:
+    """TT87 Minnakht — Overseer of the granaries of Upper and Lower
+    Egypt, p.178. Father Sen-ḏḥout (Thoth-family d-bar Ḏ + ḥ — same
+    name family as TT2 Sit-ḏḥout / TT82 Ḏhutmosi / TT84 Siḏḥout in this
+    chunk). 1/1/1 tie on notes_from_pm resolved (clean punctuation +
+    correct diacritics pin)."""
+    r = _row("TT87")
+    assert r["occupant_name"] == "Minnakht"
+    assert "Sen-ḏḥout" in r["notes_from_pm"]  # d-bar Ḏ Thoth-family
+    assert r["source_citation"]["page"] == 178
+
+
+def test_chunk17_tt88_pehsukher_alt_thenenu() -> None:
+    """TT88 Pehsukher — Lieutenant of the King, alt-name Thenenu (PM
+    headword: `88. PEHSUKHER ⟨h⟩, called THENENU ⟨h⟩`), p.179. 1/1/1
+    tie on notes_from_pm resolved (no `called Thenenu, ` prefix —
+    already in occupant_alt_names)."""
+    r = _row("TT88")
+    assert r["occupant_name"] == "Pehsukher"
+    assert r["occupant_alt_names"] == ["Thenenu"]
+    assert "called Thenenu" not in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 179
+
+
+def test_chunk17_tt89_amenmosi_unanimous() -> None:
+    """TT89 Amenmosi — Steward in the Southern City, p.181. All three
+    agents agreed unanimously on every field (no tie-break entry,
+    no fix_rows correction needed)."""
+    r = _row("TT89")
+    assert r["occupant_name"] == "Amenmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["source_citation"]["page"] == 181
+
+
+def test_chunk17_tt90_nebamun_macron_restored_third_collision() -> None:
+    """TT90 Nebamūn — Standard-bearer of the sacred bark 'Beloved-of-
+    Amūn', Captain of troops of the police on the west of Thebes, p.183.
+    Third within-source NAME collision in PM I.1 (after TT17 + TT65
+    Nebamūn). CHUNK17_CORRECTIONS restores macron-Ū on occupant_name
+    (PM headword `90. NEBAMŪN`). 2/1 majority on raw merge (`Nebamun`
+    from agents A+C, prompt-rule-compliant; agent B violated the
+    no-pre-derive-macrons rule by emitting `Nebamūn` directly)."""
+    r = _row("TT90")
+    assert r["occupant_name"] == "Nebamūn"
+    assert "ū" in r["occupant_name"]  # macron-Ū restored
+    assert "'Beloved-of-Amūn'" in r["notes_from_pm"]  # ASCII straight quotes
+    assert r["source_citation"]["page"] == 183
