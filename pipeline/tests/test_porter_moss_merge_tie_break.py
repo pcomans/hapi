@@ -349,6 +349,20 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "L. D. Text, No. 2.) Mother, ʿAḥmosi.",
         ("TT14", "notes_from_pm"):
             "wʿab-priest of 'Amenophis, the favourite of Amūn'. Ramesside.",
+        # Chunk 11 (TT21–TT30) — 2 PDF-cited tie-break overrides on
+        # cosmetic/typographic 1/1/1 ties (macron-drop / ayin-drop /
+        # double-period). TT26's note also lands a CHUNK11_CORRECTIONS
+        # entry restoring the wife `Meryēsi` macron-ē; the post-fix-rows
+        # pin reflects that restored form. TT29's note is the override
+        # value verbatim (no CHUNK11_CORRECTIONS on TT29 notes; the
+        # CHUNK11_CORRECTIONS entry for TT29 targets occupant_name).
+        ("TT26", "notes_from_pm"):
+            "Overseer of the treasury in the Ramesseum in the estate of "
+            "Amūn. Temp. Ramesses II. (L. D. Text, No. 29.) Wife, Meryēsi.",
+        ("TT29", "notes_from_pm"):
+            "Governor of the town, Vizier. Temp. Amenophis II. (HAY, "
+            "No. 15.) Parents, [ʿAḥmosi] Ḥumay (tomb 224) and Nub. Wife, "
+            "Wertmaʿetef.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

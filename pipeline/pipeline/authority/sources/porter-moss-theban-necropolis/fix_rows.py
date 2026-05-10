@@ -927,6 +927,47 @@ CHUNK10_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK10_RENAMES: dict[str, str] = {}
 
 
+# Chunk-11 corrections — egyptologist-reviewer pass (this PR), all PDF-cited
+# against `proprietary/books/Porter & Moss - PM I Theban Necropolis.pdf`.
+# PM I.1 offset: physical = printed + 18.
+CHUNK11_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT26",
+        "notes_from_pm",
+        "Overseer of the treasury in the Ramesseum in the estate of Amūn. Temp. Ramesses II. (L. D. Text, No. 29.) Wife, Meryēsi.",
+        "PM I.1 p.43 (physical p.61) prints `Wife, Meryēsi` (n + macron-ē). "
+        "Text-layer OCR dropped the macron-ē. Verbatim-preserve per README "
+        "notes_from_pm policy. Same chunk-9 KV55 / chunk-10 TT16 macron-"
+        "preserve precedent for wife / family-clause name fragments. "
+        "Egyptologist printed-source review (this PR).",
+    ),
+    (
+        "TT27",
+        "notes_from_pm",
+        "Chief steward of the divine adoratress ʿAnkhnesneferebreʿ. Temp. Apries and Amasis. ʿAsâsîf. (Inaccessible.) Parents, Ḥarsiēsi, Chamberlain of the divine adoratress, and Tahibet (from cone).",
+        "PM I.1 p.43 (physical p.61) prints `Parents, Ḥarsiēsi` (macron-ē). "
+        "Text-layer OCR dropped the macron-ē. Verbatim-preserve per README "
+        "notes_from_pm policy. Same macron-ē class as TT26 above. "
+        "Egyptologist printed-source review (this PR).",
+    ),
+    (
+        "TT29",
+        "occupant_name",
+        "Amenemōpet",
+        "PM I.1 p.45 (physical p.63) prints the headword `29. AMENEMŌPET` "
+        "with capital macron-Ō. README's occupant_name policy preserves "
+        "vowel macrons (ū, ō, ē, ā); only underdot-Ḥ is stripped. "
+        "Same chunk-7 `Wahʿankh` / chunk-10 TT17 `Nebamūn` macron-preserve "
+        "precedent. Sibling row TT24 `Nebamūn` (chunk 11) restored the "
+        "macron correctly; TT29 was a parallel agent miss. Egyptologist "
+        "printed-source review (this PR).",
+    ),
+]
+
+
+CHUNK11_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1214,6 +1255,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK8_CORRECTIONS,
     CHUNK9_CORRECTIONS,
     CHUNK10_CORRECTIONS,
+    CHUNK11_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1226,6 +1268,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK8_RENAMES,
     **CHUNK9_RENAMES,
     **CHUNK10_RENAMES,
+    **CHUNK11_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -1378,6 +1421,24 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "of Aphroditopolis. Temp. Tuthmosis III (?).` The `(?)` qualifies "
         "the regnal date, not Mentuhirkhopshef's identification. Per "
         "chunk-9 TT2 precedent.",
+    ),
+    # Chunk-11 attribution_certainty override — egyptologist-reviewer pass
+    # (this PR). Same rationale as the chunk-10 cluster: PM's `(?)` glyph
+    # qualifies the regnal date of the USURPER (Mery[amūn]), not Wah's
+    # primary occupant identification. The original occupant Wah is fully
+    # attested; only the usurpation timing under Tuthmosis III carries
+    # the hedge.
+    (
+        "TT22",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.37 prints `22. WAḤ ..., Royal butler. Partly usurped by "
+        "Mery[amūn], Eldest son of the King. Temp. Tuthmosis III(?).` The "
+        "`(?)` qualifies the regnal date of the USURPER (Mery[amūn]), not "
+        "Wah's identification as the original occupant. Wah's primary "
+        "attribution is unhedged. Per chunk-9 TT2 + chunk-10 TT12/TT17/"
+        "TT19/TT20 precedent that attribution_certainty encodes occupant-"
+        "identity certainty, not regnal-date certainty.",
     ),
 ]
 
