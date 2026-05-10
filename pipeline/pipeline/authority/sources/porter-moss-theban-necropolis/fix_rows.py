@@ -1072,6 +1072,66 @@ CHUNK12_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK12_RENAMES: dict[str, str] = {}
 
 
+CHUNK13_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT41",
+        "occupant_name",
+        "Amenemōpet",
+        "PM I.1 p.78 / physical PDF p.96. Direct PDF visual check (parent "
+        "agent, this PR) confirms PM prints headword `AMENEMŌPET` with "
+        "capital macron-Ō on the second O (visible in the rendered "
+        "headword; `Amūn` body prose on the same page confirms PM's "
+        "diacritic-preservation policy). pypdf text-layer drops capital "
+        "macrons in CAPS headwords (same OCR class as chunk-11 TT29 "
+        "`MENTUEMḤĒT`, chunk-12 TT33 `PEDAMENŌPET`, chunk-12 TT34 "
+        "`MENTUEMḤĒT`, chunk-12 TT39 `PUIMRĒʿ`). Restore Ō macron per "
+        "the PM-faithful diacritic policy (preserve vowel macrons in "
+        "occupant_name).",
+    ),
+    (
+        "TT41",
+        "notes_from_pm",
+        "Chief steward of Amūn in the Southern City. Temp. Ramesses I to Sethos I(?). (CHAMPOLLION, No. 35.) Parents, Nefertiu, Judge, and Iny, Songstress of the Theban Triad. Wife, Nezem(t).",
+        "PM I.1 p.78 / physical PDF p.96. Direct PDF visual check confirms "
+        "PM prints `(CHAMPOLLION, No. 35.)` with a single period inside "
+        "the close-paren only; the next field `Parents,` begins fresh on "
+        "the next line. Reconciled value carried a spurious double period "
+        "`(CHAMPOLLION, No. 35.).` from a 2/1 reconciliation (agents A "
+        "and C both made the same OCR-introduced error; agent B was "
+        "correct). Same class as chunk-12 TT26/TT31/TT33/TT35/TT36/TT37/"
+        "TT39/TT40 double-period strip; this chunk-13 case differs only "
+        "in that the wrong form went 2/1 (instead of 1/1/1) at "
+        "reconciliation, requiring a CHUNK13_CORRECTIONS entry rather "
+        "than a tie-break override.",
+    ),
+    (
+        "TT47",
+        "notes_from_pm",
+        "Overseer of the royal harim. Temp. Amenophis III. (Inaccessible.) Parents, Neḥ, Judge, and Senenu. Wife, Maiay.",
+        "PM I.1 p.87 / physical PDF p.105. Direct PDF visual check "
+        "confirms PM prints `(Inaccessible.)` with a single period inside "
+        "the close-paren only — a tomb-state-marker parenthetical on its "
+        "own line, with the next field starting fresh. Reconciled value "
+        "carried spurious double period `(Inaccessible.).` from a 2/1 "
+        "reconciliation (same OCR-introduced class as TT41 / TT49 in "
+        "this chunk). Strip the spurious period.",
+    ),
+    (
+        "TT49",
+        "notes_from_pm",
+        "Chief scribe of Amūn. Probably temp. Ay. (CHAMPOLLION, No. 53, HAY, No. 11.) Parents, Neby, Servant of Amūn, and Iuy. Wife, Merytreʿ.",
+        "PM I.1 p.91 / physical PDF p.109. Direct PDF visual check "
+        "confirms PM prints `(CHAMPOLLION, No. 53, HAY, No. 11.)` with "
+        "a single period inside the close-paren only. Reconciled value "
+        "carried spurious double period (same class as TT41, TT47). "
+        "Strip the spurious period.",
+    ),
+]
+
+
+CHUNK13_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1361,6 +1421,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK10_CORRECTIONS,
     CHUNK11_CORRECTIONS,
     CHUNK12_CORRECTIONS,
+    CHUNK13_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1375,6 +1436,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK10_RENAMES,
     **CHUNK11_RENAMES,
     **CHUNK12_RENAMES,
+    **CHUNK13_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -1545,6 +1607,77 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "attribution is unhedged. Per chunk-9 TT2 + chunk-10 TT12/TT17/"
         "TT19/TT20 precedent that attribution_certainty encodes occupant-"
         "identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-13 attribution_certainty overrides — egyptologist + code-reviewer
+    # pass (this PR). Same chunk-9-TT2 / chunk-10-cluster / chunk-11-TT22
+    # precedent: PM's `(?)` glyph qualifies a regnal-date or a usurper-
+    # title token, NOT the primary occupant's identification. The deriver
+    # fires context-free on any `(?)` in notes; per the established
+    # precedent, attribution_certainty encodes occupant-identity certainty,
+    # not regnal-date certainty. The four chunk-13 overrides below all flip
+    # the deriver's `uncertain` back to the egyptologist-confirmed
+    # `attested` for the primary occupant.
+    (
+        "TT41",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.78 prints `41. AMENEMŌPET ..., Chief steward of Amūn "
+        "in the Southern City. Temp. Ramesses I to Sethos I(?).` The "
+        "`(?)` qualifies the regnal-range tail (Sethos I), not "
+        "Amenemōpet's identification. Per chunk-9 TT2 + chunk-10 TT19 "
+        "precedent (regnal-range tail hedge).",
+    ),
+    (
+        "TT43",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.83 prints `43. NEFERRONPET ..., Overseer of the "
+        "kitchen of the Lord of the Two Lands. Temp. Amenophis II(?).` "
+        "The `(?)` qualifies the regnal date (Amenophis II), not "
+        "Neferronpet's identification. Per chunk-9 TT2 + chunk-10 TT12/"
+        "TT19 precedent.",
+    ),
+    (
+        "TT45",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.85 prints `45. ḎḤOUT ..., Steward of the First "
+        "prophet of Amūn, Mery (tomb 95), temp. Amenophis II. Usurped "
+        "by Ḏḥutemḥab, Head of the makers of fine linen(?) of the "
+        "estate of Amūn, temp. Ramesses II (?).` Two `(?)` hedges, "
+        "BOTH on the usurper's clause: `fine linen(?)` qualifies the "
+        "USURPER's title (Ḏḥutemḥab), `Ramesses II (?)` qualifies the "
+        "USURPER's regnal date. Neither qualifies Ḏhout's primary "
+        "attribution as the original occupant — Ḏhout is unhedged "
+        "with the title `Steward of the First prophet of Amūn, Mery, "
+        "temp. Amenophis II`. Same usurper-clause structure as "
+        "chunk-11 TT22 (Wah usurped by Mery[amūn]); same override "
+        "rationale.",
+    ),
+    (
+        "TT46",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.86 prints `46. RAʿMOSI ..., Steward, Overseer of "
+        "the granaries of Upper and Lower Egypt. Temp. Amenophis III "
+        "(?).` The `(?)` qualifies the regnal date (Amenophis III), "
+        "not Raʿmosi's identification. Per chunk-9 TT2 + chunk-10 "
+        "TT20 precedent (regnal-date hedge).",
+    ),
+    (
+        "TT49",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.91 prints `49. NEFERḤOTEP ..., Chief scribe of Amūn. "
+        "Probably temp. Ay.` The `Probably` adverb qualifies the regnal "
+        "date (temp. Ay), not Neferhotep's identification — Neferhotep "
+        "is unhedged with the title `Chief scribe of Amūn`. The deriver "
+        "fires `attribution_certainty=\"probable\"` on any `\\bprobably\\b` "
+        "match in notes (context-free); this override flips back to "
+        "`attested` per the chunk-9 TT2 + chunk-10 TT12/TT17/TT19/TT20 + "
+        "chunk-11 TT22 + chunk-13 TT41/TT43/TT45/TT46 precedent that "
+        "attribution_certainty encodes occupant-identity certainty, "
+        "not regnal-date certainty.",
     ),
 ]
 
