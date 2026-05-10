@@ -548,8 +548,8 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT95", "notes_from_pm"):
             "First prophet of Amūn. (See also usurpation in tomb 84.) "
             "Temp. Amenophis II. (CHAMPOLLION, No. 14, L. D. Text, "
-            "No. 70, HAY, No. 14.) Parents, Nebpeḥtireʿ, First prophet "
-            "of Min of Koptos, and Ḥunay(t), Chief nurse of the Lord of "
+            "No. 70, HAY, No. 14.) Parents, Nebpehtireʿ, First prophet "
+            "of Min of Koptos, and Hunay(t), Chief nurse of the Lord of "
             "the Two Lands (name from tomb 84). Wife, Dey.",
         ("TT97", "notes_from_pm"):
             "First prophet of Amūn. Temp. Amenophis II (?). Father, "

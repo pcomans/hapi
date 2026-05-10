@@ -222,14 +222,21 @@ CHUNK17_TOMB_IDS: frozenset[str] = frozenset(
 # flatten). Two within-chunk Sennufer rows (TT96 + TT99 — distinct
 # individuals per chunk-10 TT17 / chunk-17 TT90 within-source-name-
 # collision precedent). One alt-name TT94 Raʿmosi/ʿAmy. TT95 Mery is
-# the USURPER of TT84 (chunk-17 cross-reference); shared_with_tombs=
-# ["TT84"] captures the structural cross-ref per `See also Tomb N`
-# pattern; the parenthetical is dropped from notes_from_pm to avoid
-# the deriver firing `is_usurped=true` on TT95 (Mery's primary tomb,
-# not the usurped party). Three CHUNK18_CORRECTIONS (TT91 role pin
-# per Unknown sentinel-null artifact; TT93 Ḳenamūn macron-Ū per PDF
-# p.190; TT100 Rekhmirēʿ macron-Ē per PDF p.206). Three DERIVER_
-# OVERRIDES (TT94/TT97/TT98 regnal `(?)` hedge → attested).
+# the USURPER of TT84 (chunk-17 cross-reference); PM's `(See also
+# usurpation in tomb 84.)` parenthetical is preserved verbatim in
+# notes_from_pm but shared_with_tombs=[] (overridden from agent A+B
+# 2/1 majority via CHUNK18_CORRECTIONS): the cross-ref is an EVENT
+# reference, not an OWNERSHIP relation, so it doesn't match the
+# chunk-9 `See also Tomb N` ownership-pattern documented for
+# shared_with_tombs. is_usurped is pinned to false via
+# DERIVER_OVERRIDES (Mery is usurper of TT84, not usurped at TT95).
+# Six CHUNK18_CORRECTIONS (TT91 role pin per Unknown sentinel-null
+# artifact at merge.py:159; TT93 occupant_name `Ḳenamūn` macron-Ū
+# per PDF p.190; TT93 notes mother `Amenemōpet` macron-Ō per PDF
+# p.190; TT95 shared_with_tombs override to []; TT97 occupant_name
+# `Amenemhēt` macron-Ē per PDF p.203; TT100 Rekhmirēʿ macron-Ē per
+# PDF p.206). Four DERIVER_OVERRIDES (TT95 is_usurped=false;
+# TT94/TT97/TT98 regnal `(?)` hedge → attested).
 CHUNK18_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(91, 101)}
 )
@@ -4786,12 +4793,16 @@ def test_chunk18_tt94_ramosi_alt_amy() -> None:
 def test_chunk18_tt95_mery_high_priest_usurper_of_tt84() -> None:
     """TT95 Mery — First prophet of Amūn (= High Priest), p.195. Mery
     is the USURPER of TT84 (chunk-17 cross-reference). PM prints
-    `(See also usurpation in tomb 84.)` in the headword. Per the
-    chunk-9 `See also Tomb N` pattern, TT84 is captured in
-    shared_with_tombs as a structural cross-ref. The `(See also
-    usurpation...)` parenthetical is DROPPED from notes_from_pm to
-    prevent the Tier-3 `is_usurped` regex from firing on TT95
-    (Mery's primary tomb, not the usurped party)."""
+    `(See also usurpation in tomb 84.)` in the headword. This is an
+    EVENT cross-reference, NOT an OWNERSHIP relation, so it does NOT
+    match the chunk-9 `See also Tomb N` pattern documented for
+    `shared_with_tombs`. CHUNK18_CORRECTIONS overrides the A+B 2/1
+    majority `shared_with_tombs=["TT84"]` to `[]` for structural
+    correctness + within-section symmetry-test compliance. The
+    parenthetical is preserved verbatim in `notes_from_pm`; the
+    Tier-3 `is_usurped` regex would fire on `usurpation` so
+    DERIVER_OVERRIDES pins `is_usurped=false` (Mery is usurper of
+    TT84, not usurped at TT95)."""
     r = _row("TT95")
     assert r["occupant_name"] == "Mery"
     assert r["occupant_role"] == "High Priest"

@@ -1573,6 +1573,62 @@ CHUNK18_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "the `Partly usurped by MERY (tomb 95)` event reference).",
     ),
     (
+        "TT97",
+        "occupant_name",
+        "Amenemhēt",
+        "PM I.1 p.203 / physical PDF p.221 (TT97). Direct PDF visual "
+        "check (parent agent, this PR — flagged by Gemini Code Assist "
+        "round 1) confirms PM prints headword `97. AMENEMḤĒT` with "
+        "capital macron-Ē. All 3 agents converged on `Amenemhet` "
+        "(stripped Ḥ-underdot per occupant_name policy + macron-Ē "
+        "stripped per the no-pre-derive-macrons rule). Same OCR "
+        "capital-macron-drop class as chunk-11 TT29 `AMENEMŌPET`, "
+        "chunk-12 TT34 `MENTUEMḤĒT`, chunk-14 TT51 `USERḤĒT`, "
+        "chunk-14 TT53 + chunk-16 TT77 `AMENEMḤĒT`/`PTAḤEMḤĒT`, "
+        "chunk-17 TT82 `AMENEMḤĒT`. Restore macron-Ē → `Amenemhēt` "
+        "(Ḥ underdot stripped per occupant_name policy).",
+    ),
+    (
+        "TT93",
+        "notes_from_pm",
+        (
+            "Chief steward of the King. Temp. Amenophis II. (CHAMPOLLION, "
+            "No. 8 quater, L. D. Text, No. 68, WILKINSON, No. 33, HAY, "
+            "No. 18.) Mother, Amenemōpet, Royal nurse. Wife, Tadedetes."
+        ),
+        "PM I.1 p.190 / physical PDF p.208 (TT93 Ḳenamūn body prose). "
+        "Direct PDF visual check (parent agent, this PR — flagged by "
+        "Gemini Code Assist round 1) confirms PM prints `Mother, "
+        "Amenemōpet ⟨hg⟩, Royal nurse.` with capital macron-Ō on the "
+        "mother's name. All 3 agents converged on `Amenemopet` "
+        "(macron-Ō stripped). Same OCR capital-macron-drop class as "
+        "chunk-11 TT29 occupant_name `AMENEMŌPET` (the same name "
+        "family) and chunk-15 TT74 `TENTŌPET`. Restore body-prose "
+        "macron-Ō per the verbatim-preserve policy for notes_from_pm "
+        "(different from occupant_name policy which strips Ḥ-underdot "
+        "but preserves macrons; here the macron-Ō is restored as "
+        "PM-verbatim).",
+    ),
+    (
+        "TT99",
+        "notes_from_pm",
+        (
+            "Overseer of the seal, Overseer of the gold-land of Amūn. "
+            "Temp. Tuthmosis III. Mother, Sit-ḏhout. Wife, Taimau."
+        ),
+        "PM I.1 p.204 / physical PDF p.222 (TT99 Sennufer body prose). "
+        "Direct PDF visual check (parent agent, this PR — flagged by "
+        "egyptologist-reviewer subagent) confirms PM prints `Mother, "
+        "Sit-ḏhout ⟨hg⟩.` with d-bar Ḏ + plain h (no ḥ-underdot). "
+        "All 3 agents converged on `Sit-ḏḥout` (over-applied ḥ-underdot "
+        "from outside-PM precedent). Same per-page-PDF verification "
+        "issue as chunk-17 PR #208 fixes for TT81 / TT84 / TT87 "
+        "Sit-ḏhout / Siḏhout / Sen-ḏhout (issue #209 pattern, now "
+        "recurring in chunk 18). Drop the ḥ-underdot; keep the d-bar "
+        "Ḏ per the chunk-12 TT32 PR #200 same-volume Thoth-derived "
+        "name family precedent (PM I.1 p.49 headword `ḎHUTMOSI`).",
+    ),
+    (
         "TT100",
         "occupant_name",
         "Rekhmirēʿ",
