@@ -1217,11 +1217,17 @@ CHUNK14_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK14_RENAMES: dict[str, str] = {}
 
 
-# Chunk-15 (TT61–TT70) corrections. Empty scaffold — egyptologist-reviewer pass
-# pending. Register here so `test_all_corrections_includes_every_chunk_list`
-# keeps the audit trail intact and future corrections have a home without
-# requiring a scaffold PR (chunk-13 P2 lesson: always register the scaffold
-# even when empty so the next chunk doesn't repeat the missing-scaffold issue).
+# Chunk-15 (TT61–TT70) corrections. Reviewer-identified: 5 corrections
+# layered post-merge — TT65 occupant_name macron restoration (`Nebamun` →
+# `Nebamūn`, PDF-verified capital macron-Ū drop, same OCR class as chunk-12
+# TT34); TT65 notes_from_pm (spacing fix `accounts (?)` + PDF-corrected
+# OCR misread `'Aichesi'` for the Prisse d'Avennes 19th-c. nickname);
+# TT65 tomb_aliases (`["Aichesi"]` per the chunk-7/14 'Stuart's Tomb'
+# precedent); TT68 occupant_name macron restoration (`[Per?]enkhmun` →
+# `[Per?]enkhmūn`, same OCR class); TT70 controlled-vocab pairing fix
+# (anonymous occupant_role `null` → `"Unknown"` per the chunk-8 + chunk-14
+# TT58 invariant). ALL_CORRECTIONS aggregation enforced by
+# `test_all_corrections_includes_every_chunk_list`.
 CHUNK15_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT65",
@@ -1240,7 +1246,15 @@ CHUNK15_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT65",
         "notes_from_pm",
-        "Scribe of the royal accounts (?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Aichesi' of Prisse.) Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha.",
+        (
+            "Scribe of the royal accounts (?) in the Presence, Overseer "
+            "of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, "
+            "Head of the altar, Head of the temple-scribes of the estate "
+            "of Amūn, temp. Ramesses IX. (CHAMPOLLION, No. 60, L. D. "
+            "Text, No. 40, WILKINSON, No. 1, 'Aichesi' of Prisse.) "
+            "Parents, Amenḥotp, Head of scribes of the Temple of "
+            "Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha."
+        ),
         "PM I.1 p.129 / physical PDF p.147 (TT65 Nebamūn). Two corrections "
         "layered onto the tie-break-pinned form: (1) restore space before "
         "`(?)` in `accounts (?)` matching the parallel `temp. Ḥatshepsut "
