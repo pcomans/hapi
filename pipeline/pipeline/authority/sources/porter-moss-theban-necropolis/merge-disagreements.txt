@@ -209,6 +209,37 @@ TT59 (Ḳen):
 TT60 (Antefoḳer):
   notes_from_pm: a="ANTEFOḲER, Governor of the town and Vizier, and mother, SENT, Prophetess of Ḥatḥor. Temp. Sesostris I. (L. D. Text, No. 42.) Wife (of Antefoḳer), Sitsisobk. Mother (of Sent), Dui." | b="Governor of the town and Vizier, and mother, Sent, Prophetess of Ḥatḥor. Temp. Sesostris I. (L. D. Text, No. 42.) Wife (of Antefoḳer), Sitsisobk. Mother (of Sent), Dui." | c="Governor of the town and Vizier, and mother, Sent, Prophetess of Ḥatḥor. Temp. Sesostris I. (L. D. Text, No. 42.). Wife (of Antefoḳer), Sitsisobk. Mother (of Sent), Dui."  → chose "Governor of the town and Vizier, and mother, Sent, Prophetess of Ḥatḥor. Temp. Sesostris I. (L. D. Text, No. 42.) Wife (of Antefoḳer), Sitsisobk. Mother (of Sent), Dui."
 
+TT61 (User):
+  notes_from_pm: a="Governor of the town and Vizier. Temp. Tuthmosis III. (L. D. Text, No. 44.) Parents, ʿAmethu (tomb 83) and Taʿamethu. Wife, Thuiu." | b="Governor of the town and Vizier. Temp. Tuthmosis III. Parents, ʿAmethu (tomb 83) and Taʿamethu. Wife, Thuiu. (L. D. Text, No. 44.)" | c="Governor of the town and Vizier. Temp. Tuthmosis III. Parents, ʿAmethu (tomb 83) and Taʿamethu. Wife, Thuiu. (L. D. Text, No. 44.)"  → chose "Governor of the town and Vizier. Temp. Tuthmosis III. Parents, ʿAmethu (tomb 83) and Taʿamethu. Wife, Thuiu. (L. D. Text, No. 44.)"
+
+TT62 (Amenemwaskhet):
+  notes_from_pm: a="Overseer of the Cabinet. Temp. Tuthmosis III(?)." | b="Overseer of the Cabinet. Temp. Tuthmosis III (?)." | c="Overseer of the Cabinet. Temp. Tuthmosis III (?)."  → chose "Overseer of the Cabinet. Temp. Tuthmosis III (?)."
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 125, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 125, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 124, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 125, "section": "I"}
+
+TT63 (Sebkhotp):
+  notes_from_pm: a="Mayor of the Southern Lake and the Lake of Sobk. Temp. Tuthmosis IV. (L. D. Text, No. 48.) Father, Min, Overseer of the seal. Wife, Meryt, Nurse of the King's daughter Tiʿa, Chief of the harim of Sobk of Shedty." | b="Mayor of the Southern Lake and the Lake of Sobk. Temp. Tuthmosis IV. Father, Min, Overseer of the seal. Wife, Meryt, Nurse of the King's daughter Tiʿa, Chief of the harim of Sobk of Shedty. (L. D. Text, No. 48.)" | c="Mayor of the Southern Lake and the Lake of Sobk. Temp. Tuthmosis IV. Father, Min, Overseer of the seal. Wife, Meryt, Nurse of the King's daughter Tiʿa, Chief of the harim of Sobk of Shedty. (L. D. Text, No. 48.)"  → chose "Mayor of the Southern Lake and the Lake of Sobk. Temp. Tuthmosis IV. Father, Min, Overseer of the seal. Wife, Meryt, Nurse of the King's daughter Tiʿa, Chief of the harim of Sobk of Shedty. (L. D. Text, No. 48.)"
+
+TT64 (Heḳerneheh):
+  notes_from_pm: a="Nurse of the King's son Amenḥotp. Temp. Tuthmosis IV. (L. D. Text, No. 47.) Father, Ḥeḳreshu, Tutor of the King's son." | b="Nurse of the King's son Amenḥotp. Temp. Tuthmosis IV. Father, Ḥeḳreshu, Tutor of the King's son. (L. D. Text, No. 47.)" | c="Nurse of the King's son Amenḥotp. Temp. Tuthmosis IV. Father, Ḥeḳreshu, Tutor of the King's son. (L. D. Text, No. 47.)"  → chose "Nurse of the King's son Amenḥotp. Temp. Tuthmosis IV. Father, Ḥeḳreshu, Tutor of the King's son. (L. D. Text, No. 47.)"
+  occupant_name: a="Heḳerneheh" | b="Heṭerneheh" | c="Heḳerneheh"  → chose "Heḳerneheh"
+
+TT65 (Nebamun):
+  notes_from_pm: a="Scribe of the royal accounts(?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Alchesi' of Prisse.) Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha." | b="Scribe of the royal accounts (?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mut-emmeres. Wife, Te(n)tpapersetha. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Alchesi' of Prisse.)" | c="Scribe of the royal accounts (?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Alchesi' of Prisse.)"  → chose "Scribe of the royal accounts(?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Alchesi' of Prisse.) Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha."
+  occupant_name: a="Nebamun" | b="Nebamūn" | c="Nebamun"  → chose "Nebamun"
+  tomb_aliases: a=[] | b=[] | c=["Alchesi"]  → chose []
+
+TT67 (Hepusonb):
+  notes_from_pm: a="First prophet of Amūn. Temp. Ḥatshepsut. (L. D. Text, No. 50.) Parents, Ḥepu, Third lector of Amūn, and ʿAḥḥotp, Royal concubine. Wife, Amenḥotp (name from Silsila, L. D. iii. 28 [4 b])." | b="First prophet of Amūn. Temp. Ḥatshepsut. Parents, Ḥepu, Third lector of Amūn, and ʿAḥḥotp, Royal concubine. Wife, Amenḥotp (name from Silsila, L. D. iii. 28 [4 b]). (L. D. Text, No. 50.)" | c="First prophet of Amūn. Temp. Ḥatshepsut. Parents, Ḥepu, Third lector of Amūn, and ʿAḥḥotp, Royal concubine. Wife, Amenḥotp (name from Silsila, L. D. iii. 28 [4 b]). (L. D. Text, No. 50.)"  → chose "First prophet of Amūn. Temp. Ḥatshepsut. Parents, Ḥepu, Third lector of Amūn, and ʿAḥḥotp, Royal concubine. Wife, Amenḥotp (name from Silsila, L. D. iii. 28 [4 b]). (L. D. Text, No. 50.)"
+
+TT68 ([Per?]enkhmun):
+  notes_from_pm: a="wʿab-priest of Amūn of Karnak, and of Mut of Asher, Dyn. XX. Usurped by Espaneferḥor, Head of the temple-scribes of the estate of Amūn, temp. Siamūn. Father (of Espaneferḥor), Iufenamūn. Wife (of Espaneferḥor), Tabekenmut, Singer of the ... of Mut." | b="wab-priest of Amūn of Karnak, and of Mut of Asher, Dyn. XX. Usurped by Espaneferḥor, Head of the temple-scribes of the estate of Amūn, temp. Siamūn. Father (of Espaneferḥor), Iufenamūn. Wife (of Espaneferḥor), Tabekenmut, Singer of the ... of Mut." | c="waʿb-priest of Amūn of Karnak, and of Mut of Asher, Dyn. XX. Usurped by Espaneferḥor, Head of the temple-scribes of the estate of Amūn, temp. Siamūn. Father (of Espaneferḥor), Iufenamūn. Wife (of Espaneferḥor), Tabekenmut, Singer of the ... of Mut."  → chose "wʿab-priest of Amūn of Karnak, and of Mut of Asher, Dyn. XX. Usurped by Espaneferḥor, Head of the temple-scribes of the estate of Amūn, temp. Siamūn. Father (of Espaneferḥor), Iufenamūn. Wife (of Espaneferḥor), Tabekenmut, Singer of the ... of Mut."
+
+TT69 (Menna):
+  notes_from_pm: a="Scribe of the fields of the Lord of the Two Lands of Upper and Lower Egypt. Temp. Tuthmosis IV(?). Wife, Ḥenuttaui." | b="Scribe of the fields of the Lord of the Two Lands of Upper and Lower Egypt. Temp. Tuthmosis IV (?). Wife, Ḥenuttaui." | c="Scribe of the fields of the Lord of the Two Lands of Upper and Lower Egypt. Temp. Tuthmosis IV (?). Wife, Ḥenuttaui."  → chose "Scribe of the fields of the Lord of the Two Lands of Upper and Lower Egypt. Temp. Tuthmosis IV (?). Wife, Ḥenuttaui."
+
+TT70 (None):
+  notes_from_pm: a="Usurped by Amenmosi, Overseer of sandal-makers(?) of the estate of Amūn. Dyn. XXI. Father, Suʿawiamūn, same title. Wife, Kefenu." | b="Usurped by Amenmosi, Overseer of sandal-makers (?) of the estate of Amūn. Dyn. XXI. Father, Suʿawiamūn, same title. Wife, Kefenu." | c="Usurped by Amenmosi, Overseer of sandal-makers (?) of the estate of Amūn. Dyn. XXI. Father, Suʿawiamūn, same title. Wife, Kefenu."  → chose "Usurped by Amenmosi, Overseer of sandal-makers (?) of the estate of Amūn. Dyn. XXI. Father, Suʿawiamūn, same title. Wife, Kefenu."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -285,6 +316,7 @@ Per-chunk correction counts:
 - Chunk 12: 5 correction(s) defined in CHUNK12_CORRECTIONS.
 - Chunk 13: 4 correction(s) defined in CHUNK13_CORRECTIONS.
 - Chunk 14: 6 correction(s) defined in CHUNK14_CORRECTIONS.
+- Chunk 15: 5 correction(s) defined in CHUNK15_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -460,11 +492,25 @@ Field corrections:
     value: "Userhēt"
 - TT57: occupant_name already matches override (no-op this run; PM I.1 p.113 / physical PDF p.131. Direct PDF visual check confirms PM prints headword `KHAʿEMḤĒT` with ayin (`ʿ`) + capital underdot-Ḥ + capital macron-Ē. Strip Ḥ-underdot, preserve ayin and macron-Ē → `Khaʿemhēt`. Same OCR class as TT51/TT53/TT56.)
     value: "Khaʿemhēt"
-- TT58: occupant_role corrected this run (PM I.1 p.119 / physical PDF p.137. Headword `58. Name unknown, temp. Amenophis III. Usurped by AMENḤOTP ...` — anonymous original occupant. Per the chunk-8 KV12/KV39/KV56/QV36/QV40/QV73/QV75 precedent, null `occupant_name` MUST co-occur with `occupant_role="Unknown"` (controlled-vocab pairing invariant). All 3 agents emitted `null` for occupant_role — agent reports claimed `Unknown` but the JSONL output had `null`. This correction enforces the pairing invariant.)
-    was: null
-    now: "Unknown"
+- TT58: occupant_role already matches override (no-op this run; PM I.1 p.119 / physical PDF p.137. Headword `58. Name unknown, temp. Amenophis III. Usurped by AMENḤOTP ...` — anonymous original occupant. Per the chunk-8 KV12/KV39/KV56/QV36/QV40/QV73/QV75 precedent, null `occupant_name` MUST co-occur with `occupant_role="Unknown"` (controlled-vocab pairing invariant). All 3 agents emitted `null` for occupant_role — agent reports claimed `Unknown` but the JSONL output had `null`. This correction enforces the pairing invariant.)
+    value: "Unknown"
 - TT58: notes_from_pm already matches override (no-op this run; PM I.1 p.119 / physical PDF p.137. Direct PDF visual check confirms PM prints `Amenemōnet` with macron-Ō (visible in body prose where lowercase macrons are preserved by pypdf). Reconciled value carried `Amenemonet` (no macron) — same `pet`/`net` macron-restoration class as chunk-11 TT29 `Amenemōpet`, chunk-12 TT33 `Pedamenōpet`. Restore macron-Ō at both occurrences in notes_from_pm (the usurper-son name + the wife-disambiguation parenthetical) per the verbatim-preserve policy.)
     value: "Name unknown, temp. Amenophis III. Usurped by Amenḥotp, Overseer of the prophets of Amūn, and his son Amenemōnet, Temple-scribe of the Temple of Ramesses 'Beloved like Amūn', Dyn. XX. (L. D. Text, No. 43.) Wife (of Amenemōnet), Ḥenutʿanensu."
+- TT65: occupant_name corrected this run (PM I.1 p.129 / physical PDF p.147. Direct PDF visual check (parent agent, this PR) confirms PM prints headword `NEBAMŪN` with capital macron-Ū. pypdf text-layer drops capital macrons in CAPS headwords (same OCR class as chunk-11 TT29 `AMENEMŌPET`, chunk-12 TT34 `MENTUEMḤĒT`/TT39 `PUIMRĒʿ`, chunk-13 TT41 `AMENEMŌPET`, chunk-14 TT51 `USERḤĒT`). Restore macron-Ū per PM-faithful policy. Within-source NAME collision with chunk-10 TT17 `Nebamūn` (already on disk with macron) — same name, different individual; both rows now consistent on the macron.)
+    was: "Nebamun"
+    now: "Nebamūn"
+- TT65: notes_from_pm corrected this run (PM I.1 p.129 / physical PDF p.147 (TT65 Nebamūn). Two corrections layered onto the tie-break-pinned form: (1) restore space before `(?)` in `accounts (?)` matching the parallel `temp. Ḥatshepsut (?)` form in the same entry and the broader PM printing standard (also TT62 `Tuthmosis III (?)`, TT69 `Tuthmosis IV (?)`); (2) correct OCR misread `'Alchesi'` → `'Aichesi'` (PM prints `Ai`, not `Al` — direct PDF visual check this PR; all 3 agents read the OCR `Al` cluster as `Al` but PDF clearly shows `Ai`).)
+    was: "Scribe of the royal accounts (?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Alchesi' of Prisse.) Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha."
+    now: "Scribe of the royal accounts (?) in the Presence, Overseer of the granary, temp. Ḥatshepsut (?). Usurped by Imiseba, Head of the altar, Head of the temple-scribes of the estate of Amūn, temp. Ramesses IX. (CHAMPOLLION, No. 60, L. D. Text, No. 40, WILKINSON, No. 1, 'Aichesi' of Prisse.) Parents, Amenḥotp, Head of scribes of the Temple of Amen-reʿ in Karnak, and Mutemmeres. Wife, Te(n)tpapersetha."
+- TT65: tomb_aliases corrected this run (PM I.1 p.129 / physical PDF p.147. PM's headword body parenthetical `'Aichesi' of Prisse` is a 19th-c. tomb-nickname (Prisse d'Avennes' designation), structurally analogous to TT55 `'Stuart's Tomb'` (chunk-14 precedent) and the chunk-7 traveller-designation pattern. Promote to tomb_aliases per the established convention; the verbatim parenthetical stays in notes_from_pm for verbatim-preserve compliance.)
+    was: []
+    now: ["Aichesi"]
+- TT68: occupant_name corrected this run (PM I.1 p.133 / physical PDF p.151. Direct PDF visual check (parent agent, this PR) confirms PM prints headword `[PER?]ENKHMŪN` with capital macron-Ū. Same OCR macron-drop class as TT65 / chunk-12 TT34 etc. Preserve editorial brackets `[Per?]` per the bracketed-name-fragment rule; restore macron-Ū on the surviving tail.)
+    was: "[Per?]enkhmun"
+    now: "[Per?]enkhmūn"
+- TT70: occupant_role corrected this run (PM I.1 p.139 / physical PDF p.157. Headword `70. Usurped by AMENMOSI ...` — anonymous original occupant (the headword opens directly with `Usurped by` with no primary name). Per the controlled-vocab pairing invariant established by chunk-8 KV12/KV39/KV56/QV36/QV40/QV73/QV75 and re-affirmed by chunk-14 TT58: null `occupant_name` MUST co-occur with `occupant_role="Unknown"`. All 3 agents emitted `null` for occupant_role despite the prompt's explicit pairing rule (same agent-emission gap as chunk-14 TT58). This correction enforces the invariant.)
+    was: null
+    now: "Unknown"
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -510,6 +556,9 @@ Field corrections:
 - TT49: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - TT52: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT54: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT62: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT65: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT69: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -523,3 +572,7 @@ Field corrections:
 - TT49: attribution_certainty → "attested" (deriver override; PM I.1 p.91 prints `49. NEFERḤOTEP ..., Chief scribe of Amūn. Probably temp. Ay....)
 - TT52: attribution_certainty → "attested" (deriver override; PM I.1 p.99 prints `52. NAKHT ..., Scribe, Astronomer of Amūn. Temp. Tuthmosis I...)
 - TT54: attribution_certainty → "attested" (deriver override; PM I.1 p.104 prints `54. ḤUY ..., Sculptor of Amun, temp. Tuthmosis IV to Amenop...)
+- TT62: attribution_certainty → "attested" (deriver override; PM I.1 p.125 prints `62. AMENEMWASKHET ..., Overseer of the Cabinet. Temp. Tuthm...)
+- TT65: attribution_certainty → "attested" (deriver override; PM I.1 p.129 prints `65. NEBAMŪN ..., Scribe of the royal accounts(?), Overseer ...)
+- TT69: attribution_certainty → "attested" (deriver override; PM I.1 p.134 prints `69. MENNA ..., Scribe of the fields of the Lord of the Two ...)
+- TT70: attribution_certainty → "attested" (deriver override; PM I.1 p.139 prints `70. Usurped by AMENMOSI ..., Overseer of sandal-makers(?) o...)
