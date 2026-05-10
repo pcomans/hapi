@@ -1002,16 +1002,24 @@ CHUNK12_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT32",
         "occupant_name",
-        "Ḍhutmosi",
-        "PM I.1 p.49 / physical PDF p.67. Direct PDF visual check of headword: "
-        "PM prints `ḌḤUTMOSI` (capital underdot-Ḍ + capital underdot-Ḥ). "
-        "Per the PM-faithful diacritic policy (strip underdot-Ḥ from "
-        "occupant_name; preserve underdot-Ḍ), the canonical occupant_name "
-        "is `Ḍhutmosi`. Same convention as chunk-10 TT11 `Ḍhout` "
-        "(verified by direct PDF visual on physical p.39 — printed p.21 "
-        "headword `ḌHOUT` with the same underdot-D as p.49). Agent-A "
-        "tie-break pin (`Thutmosi`) was the PDF-closest agent form; "
-        "this CHUNK12_CORRECTIONS entry layers the diacritic restoration.",
+        "Ḏhutmosi",
+        "PM I.1 p.49 / physical PDF p.67. The d-emphatic in this name "
+        "family (`Thutmose` < Egyptian `Ḏḥwty-msj` < `Ḏḥwty`/Thoth) is "
+        "the standard Egyptological d-bar `Ḏ` (U+1E0E), NOT d-underdot "
+        "`Ḍ` (U+1E0C, a different consonant used in some Semitic "
+        "transliteration systems). PR #151 (egyptologist printed-source "
+        "review) explicitly verified this on PM I.2 p.604 (`Ḏḥuti` for "
+        "DAN-MentuhotpIWifeOfDjhuti) and PM I.2 p.755 (`Sit-ḏḥout` for "
+        "QV47), correcting earlier `Ḍ` extractions to `Ḏ` after direct "
+        "PDF read. Agent B's `Ḏhutmosi` (d-bar) was the egyptologically "
+        "correct form; agents A (`Thutmosi`, no diacritic) and C "
+        "(`Hutmosi`, dropped consonant) were both wrong. Tie-break pins "
+        "agent A's PDF-closest stripped-diacritic form for merge "
+        "auditability; this CHUNK12_CORRECTIONS entry layers the post-"
+        "merge diacritic restoration to the egyptologically-canonical "
+        "`Ḏhutmosi`. Wrong-consonant risk: a row keyed on `Ḍhutmosi` "
+        "would never match against TLA / Trismegistos / museum data "
+        "using the d-bar form.",
     ),
     (
         "TT33",

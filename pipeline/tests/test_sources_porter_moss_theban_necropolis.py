@@ -136,8 +136,12 @@ CHUNK11_TOMB_IDS: frozenset[str] = frozenset(
 # `Khokha` (TT32, TT39) and `Qurnet Muraʿi` (TT40). TT35 is in
 # `Dra' Abu el-Naga` — first TT-numbered tomb outside Sh. ʿAbd el-Qurna or
 # ʿAsâsîf in the I.1 section. TT32 occupant_name = `Thutmosi` pre-fix_rows;
-# the diacritic restoration to `Ḏhutmosi` is applied by CHUNK12_CORRECTIONS
-# in a follow-up step. 10 rows, every TT31..TT40 present (no gaps in PM I.1).
+# the diacritic restoration to `Ḏhutmosi` (d-bar Ḏ, U+1E0E — the standard
+# Egyptological transliteration of the d-emphatic in `Ḏḥwty`/Thoth and
+# its derived names; PR #151 verified `Ḏ` not `Ḍ` for sibling names
+# `Ḏḥuti` and `Sit-ḏḥout` after direct PM PDF read) is applied by
+# CHUNK12_CORRECTIONS in fix_rows.py. 10 rows, every TT31..TT40
+# present (no gaps in PM I.1).
 CHUNK12_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(31, 41)}
 )
@@ -3507,17 +3511,22 @@ def test_chunk12_tt31_khons() -> None:
 
 
 def test_chunk12_tt32_thutmosi() -> None:
-    """TT32 — Ḍhutmosi, Chief steward of Amūn, Khokha, p.49.
-    PM prints the headword `ḌḤUTMOSI` (capital underdot-Ḍ + capital underdot-Ḥ —
-    direct PDF visual check, physical p.67); per the PM-faithful diacritic policy
-    the occupant_name strips Ḥ-underdot and preserves the underdot-Ḍ. Tie-break
-    pins agent A's `Thutmosi` (PDF-closest) and CHUNK12_CORRECTIONS layers the
-    diacritic restoration. Same convention as chunk-10 TT11 `Ḍhout`.
+    """TT32 — Ḏhutmosi, Chief steward of Amūn, Khokha, p.49.
+    The d-emphatic in this name family (`Thutmose` < Egyptian `Ḏḥwty-msj`
+    < `Ḏḥwty`/Thoth) is d-bar `Ḏ` (U+1E0E), the standard Egyptological
+    transliteration of the d-emphatic — NOT d-underdot `Ḍ` (U+1E0C, a
+    different consonant in some Semitic systems). PR #151 verified `Ḏ`
+    not `Ḍ` for sibling names `Ḏḥuti` (PM I.2 p.604) and `Sit-ḏḥout`
+    (PM I.2 p.755) after direct PM PDF read. Tie-break pins agent A's
+    `Thutmosi` (PDF-closest stripped-diacritic form); CHUNK12_CORRECTIONS
+    layers the post-merge `Ḏhutmosi` restoration. Wrong-consonant risk:
+    `Ḍhutmosi` would never match TLA/Trismegistos data using `Ḏḥwty`-
+    derived forms.
     """
     r = _row("TT32")
     assert r["tomb_id"] == "TT32"
     assert r["theban_area"] == "Khokha"
-    assert r["occupant_name"] == "Ḍhutmosi"
+    assert r["occupant_name"] == "Ḏhutmosi"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
     assert r["location_sub_area"] is None

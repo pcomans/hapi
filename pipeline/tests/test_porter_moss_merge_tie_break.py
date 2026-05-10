@@ -366,21 +366,22 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         # Chunk 12 (TT31–TT40) — 8 tie-break overrides all on cosmetic/
         # typographic 1/1/1 ties (citation-clause placement + double-period)
         # following the TT26 precedent. The TT32 occupant_name override pins
-        # `Thutmosi` (agent A's PDF-closest form); CHUNK12_CORRECTIONS layers
-        # the post-merge `Ḍhutmosi` diacritic restoration (PM prints
-        # `ḌḤUTMOSI` per direct PDF visual on physical p.67 — strip Ḥ
-        # underdot per policy, preserve Ḍ underdot per chunk-10 TT11
-        # `Ḍhout` precedent). All other chunk-12 entries pass through
-        # fix_rows.py unchanged (CHUNK12_CORRECTIONS otherwise covers
-        # only the macron-restoration corrections on TT33/TT34/TT39
-        # `occupant_name` and the TT33 `source_citation.page` 49→50 fix).
+        # `Thutmosi` (agent A's PDF-closest stripped-diacritic form);
+        # CHUNK12_CORRECTIONS layers the post-merge `Ḏhutmosi` (d-bar Ḏ)
+        # restoration per the PR #151 precedent (egyptologist verified
+        # the d-emphatic in `Ḏḥwty`/Thoth and its derived names is `Ḏ`
+        # not `Ḍ` after direct PM PDF read of p.604 and p.755). All other
+        # chunk-12 entries pass through fix_rows.py unchanged
+        # (CHUNK12_CORRECTIONS otherwise covers only the macron-
+        # restoration corrections on TT33/TT34/TT39 `occupant_name` and
+        # the TT33 `source_citation.page` 49→50 fix).
         ("TT31", "notes_from_pm"):
             "First prophet of Menkheperreʿ (Tuthmosis III). Temp. Ramesses II. "
             "(L. D. Text, No. 51.) Parents, Neferḥotep, First prophet of "
             "Amenophis II, and Tausert, Songstress of Monthu. Wives, Ruia and "
             "Mutia or May.",
         ("TT32", "occupant_name"):
-            "Ḍhutmosi",
+            "Ḏhutmosi",
         ("TT33", "notes_from_pm"):
             "Prophet, Chief lector. Saite. (L. D. Text, No. 20.) "
             "Mother, Namenkhesi, Sistrum-player of Amūn. Wife, Tedi.",
