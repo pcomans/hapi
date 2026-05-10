@@ -1610,25 +1610,6 @@ CHUNK18_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "PM-verbatim).",
     ),
     (
-        "TT99",
-        "notes_from_pm",
-        (
-            "Overseer of the seal, Overseer of the gold-land of Amūn. "
-            "Temp. Tuthmosis III. Mother, Sit-ḏhout. Wife, Taimau."
-        ),
-        "PM I.1 p.204 / physical PDF p.222 (TT99 Sennufer body prose). "
-        "Direct PDF visual check (parent agent, this PR — flagged by "
-        "egyptologist-reviewer subagent) confirms PM prints `Mother, "
-        "Sit-ḏhout ⟨hg⟩.` with d-bar Ḏ + plain h (no ḥ-underdot). "
-        "All 3 agents converged on `Sit-ḏḥout` (over-applied ḥ-underdot "
-        "from outside-PM precedent). Same per-page-PDF verification "
-        "issue as chunk-17 PR #208 fixes for TT81 / TT84 / TT87 "
-        "Sit-ḏhout / Siḏhout / Sen-ḏhout (issue #209 pattern, now "
-        "recurring in chunk 18). Drop the ḥ-underdot; keep the d-bar "
-        "Ḏ per the chunk-12 TT32 PR #200 same-volume Thoth-derived "
-        "name family precedent (PM I.1 p.49 headword `ḎHUTMOSI`).",
-    ),
-    (
         "TT100",
         "occupant_name",
         "Rekhmirēʿ",
