@@ -118,6 +118,12 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
 CHUNK9_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(1, 11)}
 )
+# Chunk-10 (PM I.1 § I — TT11-TT20 Dra' Abu el-Naga). Second chunk drawn from
+# PM I.1; theban_area shifts from Deir el-Medina (chunk 9) to Dra' Abu el-Naga.
+# Every TT number in TT11..TT20 is present in PM I.1 § I — no gaps. 10 rows.
+CHUNK10_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(11, 21)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -127,6 +133,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK7_TOMB_IDS
     | CHUNK8_TOMB_IDS
     | CHUNK9_TOMB_IDS
+    | CHUNK10_TOMB_IDS
 )
 
 
@@ -2662,6 +2669,165 @@ def test_chunk9_postprocess_j_period_i_normalisation() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Chunk 10: PM I.1 § I — TT11-TT20 Dra' Abu el-Naga
+# ---------------------------------------------------------------------------
+
+
+def test_chunk10_uniform_null_phase_a_fields() -> None:
+    """Every chunk-10 row carries null for Phase-A-enrichment fields and
+    `theban_area="Dra' Abu el-Naga"` (sub-site shifts from chunk-9's
+    `Deir el-Medina`). `source_citation.edition` is `PM I.1 2nd ed. 1960`,
+    `source_citation.section` is `"I"`, `is_unfinished` is `false` for
+    every row (PM I.1 prints no `Unfinished` flag in TT11-TT20).
+    """
+    for tid in CHUNK10_TOMB_IDS:
+        r = _row(tid)
+        assert r["theban_area"] == "Dra' Abu el-Naga", tid
+        assert r["source_citation"]["edition"] == EDITION_PM_I1, tid
+        assert r["source_citation"]["section"] == "I", tid
+        assert r["dynasty"] is None, tid
+        assert r["sub_period"] is None, tid
+        assert r["date_bce_approx_start"] is None, tid
+        assert r["date_bce_approx_end"] is None, tid
+        assert r["discovery_year"] is None, tid
+        assert r["discoverer"] is None, tid
+        assert r["location_sub_area"] is None, tid
+        assert r["is_unfinished"] is False, tid
+
+
+def test_chunk10_all_rows_official_role() -> None:
+    """All 10 TT11-TT20 occupants flatten to controlled-vocab `"Official"`.
+    PM headwords carry varied non-royal occupational titles (Overseer of
+    the treasury, Head of brazier-bearers, waʿb-priest, King's son + Mayor,
+    Prophet of Amenophis of the Forecourt, Scribe and physician of the
+    King, Chief servant who weighs silver and gold, First prophet, Fan-
+    bearer / Mayor of Aphroditopolis) — none are in the controlled-vocab
+    enum, so per chunk-7/9 convention they flatten to `"Official"` with
+    the verbatim title clause preserved in `notes_from_pm`.
+    """
+    for tid in CHUNK10_TOMB_IDS:
+        assert _row(tid)["occupant_role"] == "Official", (
+            tid, _row(tid)["occupant_role"]
+        )
+
+
+def test_chunk10_occupant_names() -> None:
+    """PM-faithful occupant_name per the README's diacritic policy.
+    chunk-10 introduces underdot-Ḍ in TT11 (`Ḍhout`) — the strip rule
+    on `occupant_name` covers underdot-Ḥ ONLY, so underdot-Ḍ is preserved
+    same as underdot-Ḳ (chunk-7 / chunk-9 precedent). Other names in the
+    range carry no scholarly diacritics in the matchable form (Ḥ-strip
+    fires on ḤRAY, ḤUY, PANEḤESI, MENTUḤIRKHOPSHEF; underdot-Ḥ in body
+    prose like notes_from_pm is preserved per the verbatim-preserve rule).
+    """
+    expected = {
+        "TT11": "Ḍhout",
+        "TT12": "Hray",
+        "TT13": "Shuroy",
+        "TT14": "Huy",
+        "TT15": "Tetiky",
+        "TT16": "Panehesi",
+        # PM I.1 p.29 prints `17. NEBAMŪN` (capital macron-ū). README's
+        # occupant_name policy preserves vowel macrons; only underdot-Ḥ is
+        # stripped. Egyptologist printed-source review (this PR).
+        "TT17": "Nebamūn",
+        "TT18": "Baki",
+        "TT19": "Amenmosi",
+        "TT20": "Mentuhirkhopshef",
+    }
+    for tid, name in expected.items():
+        assert _row(tid)["occupant_name"] == name, (
+            tid, _row(tid)["occupant_name"]
+        )
+
+
+def test_chunk10_source_citation_pages() -> None:
+    """Printed page numbers per TT tomb (PM I.1 § I, printed pp.21-37,
+    physical pp.39-55). Verified against the PDF in the chunk-10
+    egyptologist-reviewer pass. PM I.1 offset: physical = printed + 18.
+    """
+    expected_page = {
+        "TT11": 21, "TT12": 24, "TT13": 25, "TT14": 26, "TT15": 26,
+        "TT16": 28, "TT17": 29, "TT18": 32, "TT19": 32, "TT20": 34,
+    }
+    for tid, page in expected_page.items():
+        actual = _row(tid)["source_citation"]["page"]
+        assert actual == page, (tid, actual, page)
+
+
+def test_chunk10_no_multi_occupant_or_shared_tombs() -> None:
+    """The TT11-TT20 range contains zero multi-occupant headwords and zero
+    headword-level `shared_with_tombs` cross-references (verified against
+    the PDF). Every PM headword in this range names exactly one buried
+    occupant; `Wife,` / `Mother,` / `Father,` / `Parents,` clauses describe
+    family who are NOT buried in the tomb (notes_from_pm captures them).
+    The Wreszinski misnumbering footnote at TT17 body p.29 (`For WRESZ.,
+    Atlas, i. 126 ... see tomb 100 (19)`) is dropped per the prompt's
+    Wreszinski-footnote rule.
+    """
+    for tid in CHUNK10_TOMB_IDS:
+        r = _row(tid)
+        assert r["co_occupants"] == [], (tid, r["co_occupants"])
+        assert r["is_joint_burial"] is False, (tid, r["is_joint_burial"])
+        assert r["shared_with_tombs"] == [], (tid, r["shared_with_tombs"])
+
+
+def test_chunk10_notes_from_pm_pinned_substrings() -> None:
+    """Per-row `notes_from_pm` substring assertions. PM I.1 headwords are
+    dense — every chunk-10 row has populated notes carrying the verbatim
+    role-title clause + regnal/dynastic dating + family clauses + (where
+    PM prints them) `(L. D. Text, No. N.)` / `(CHAMPOLLION, No. N, ...)`
+    cross-numbering parentheticals. Pinned substrings reflect the merge
+    output post-tie-break-overrides (TT12 and TT14 had cosmetic ties on
+    capitalisation / punctuation, both PDF-resolved) and post-fix_rows
+    deriver pass.
+    """
+    # List of (tomb_id, expected substring, label) — multiple substrings per
+    # row are allowed; each substring is asserted independently.
+    expected: list[tuple[str, str, str]] = [
+        ("TT11", "Overseer of the treasury, Overseer of works.", "role-title"),
+        ("TT12", "(CHAMPOLLION, No. 51, L. D. Text, No. 2.) Mother", "tie-break-resolved cross-ref"),
+        ("TT13", "Head of brazier-bearers of Amūn. Ramesside.", "role + period"),
+        ("TT14", "wʿab-priest of 'Amenophis, the favourite of Amūn'. Ramesside.", "tie-break-resolved role"),
+        # PM p.26 prints `Fayûm` with circumflex (verbatim-preserve per
+        # README); egyptologist printed-source review (this PR).
+        ("TT15", "Fayûm", "circumflex preserved"),
+        ("TT16", "Prophet of 'Amenophis of the Forecourt'.", "role"),
+        # PM p.28 wife `Ternūte` (n + macron-ū) — egyptologist-flagged
+        # rn→rm OCR misread fixed in CHUNK10_CORRECTIONS.
+        ("TT16", "Wife, Ternūte.", "wife n+macron-ū correction"),
+        ("TT17", "Scribe and physician of the King. Temp. Amenophis II (?).", "role + regnal hedge"),
+        # PM p.29 wife fragment `Ta . . . nūfer` (n + macron-ū) — egyptologist-
+        # flagged n→m OCR misread fixed in CHUNK10_CORRECTIONS.
+        ("TT17", "Wife, Ta...nūfer.", "wife n+macron-ū correction"),
+        ("TT18", "Chief servant who weighs the silver and gold of the estate of Amūn.", "role"),
+        ("TT19", "First prophet of 'Amenophis of the Forecourt'.", "role"),
+        ("TT20", "Fan-bearer, Mayor of Aphroditopolis. Temp. Tuthmosis III (?).", "role + regnal hedge"),
+    ]
+    for tid, substr, label in expected:
+        notes = _row(tid)["notes_from_pm"]
+        assert notes is not None, f"{tid} ({label}) expected notes_from_pm, got None"
+        assert substr in notes, f"{tid} ({label}): expected {substr!r} in {notes!r}"
+
+
+def test_chunk10_tt11_underdot_d_preserved() -> None:
+    """TT11 `Ḍhout` — first chunk to surface underdot-Ḍ (`Ḍ`) at the
+    start of an `occupant_name` token. The README's strip rule covers
+    underdot-Ḥ ONLY; underdot-Ḍ is preserved (same posture as underdot-Ḳ).
+    The publisher OCR rendered the original `ḌH` headword as `:[>Ḥ`-style
+    noise; the prompt's `:[>` → `Ḍ` rule restores the canonical character
+    and the strip-Ḥ rule then fires on the following `H`.
+
+    This is a deterministic enforcement of the README invariant: if a
+    future refactor extends the strip rule to underdot-Ḍ, this test
+    catches the regression on TT11. Per CLAUDE.md rule 3.
+    """
+    assert _row("TT11")["occupant_name"] == "Ḍhout"
+    # And the underdot must literally appear at character zero.
+    assert _row("TT11")["occupant_name"][0] == "Ḍ"
+
+
+# ---------------------------------------------------------------------------
 # Chunk 9: LEGACY_FIELD_RENAMES regression tripwire
 # ---------------------------------------------------------------------------
 
@@ -2931,10 +3097,19 @@ def test_182_usurped_canonical_set() -> None:
 
 def test_182_uncertain_attribution_canonical_set() -> None:
     """Rows where PM uses strong-uncertainty hedge tokens (uncertain,
-    perhaps, possibly, tentatively) OR PM's `(?)` glyph. Pinned
-    2026-05-03: 5 rows. Per Gemini round-2 — `(?)` is PM's standard
-    attribution-uncertainty marker (KV42 + QV60 notes start with
-    `(?)`, QV33 carries `Dyn. XX(?)`)."""
+    perhaps, possibly, tentatively) OR PM's `(?)` glyph qualifying the
+    PRIMARY OCCUPANT identification. Pinned 2026-05-03: 5 rows. Per
+    Gemini round-2 — `(?)` is PM's standard attribution-uncertainty
+    marker (KV42 + QV60 notes start with `(?)`, QV33 carries `Dyn. XX(?)`).
+
+    Chunk 10's TT12 / TT17 / TT19 / TT20 are NOT in this set — their
+    `(?)` glyphs qualify the regnal-date claim (or in TT17 also a
+    parent's identification), NOT the primary occupant. Per the chunk-9
+    TT2 precedent, attribution_certainty encodes occupant-identity
+    certainty; those four rows are pinned back to `"attested"` via
+    `DERIVER_OVERRIDES` in `fix_rows.py`. Egyptologist printed-source
+    review (chunk-10 PR) cited the rule.
+    """
     expected = {
         "DAN-KamosiWazkheperre",
         "DAN-SebkemsafSekhemreShedtaui",

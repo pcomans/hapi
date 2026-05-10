@@ -876,6 +876,57 @@ CHUNK9_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK9_RENAMES: dict[str, str] = {}
 
 
+# Chunk-10 corrections — egyptologist-reviewer pass (this PR), all PDF-cited
+# against `proprietary/books/Porter & Moss - PM I Theban Necropolis.pdf`.
+# PM I.1 offset: physical = printed + 18.
+CHUNK10_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT15",
+        "notes_from_pm",
+        "King's son, Mayor in the Southern City. Early Dyn. XVIII. Parents, Raḥotp, Overseer of the harim of the Lake (i.e. Fayûm), and Sensonb. Wife, Senbi.",
+        "PM I.1 p.26 (physical p.44) prints `Fayûm` (circumflex û). "
+        "Verbatim-preserve per README notes_from_pm policy. Text-layer "
+        "extraction dropped the circumflex; egyptologist printed-source "
+        "review (this PR) restored.",
+    ),
+    (
+        "TT16",
+        "notes_from_pm",
+        "Prophet of 'Amenophis of the Forecourt'. Temp. Ramesses II. Wife, Ternūte.",
+        "PM I.1 p.28 (physical p.46) prints `Wife, Ternūte` (n + macron-ū). "
+        "Text-layer OCR misread as `Termite` (rn → rm ligature error + "
+        "macron drop), fabricating a non-Egyptian woman's name. "
+        "Verbatim-preserve per README notes_from_pm policy; same wrong-"
+        "person-class risk as the chunk-9 TT3 false-underdot fixes. "
+        "Egyptologist printed-source review (this PR).",
+    ),
+    (
+        "TT17",
+        "notes_from_pm",
+        "Scribe and physician of the King. Temp. Amenophis II (?). Parents, Nebseny, Judge, and Amenḥotp (?). Wife, Ta...nūfer.",
+        "PM I.1 p.29 (physical p.47) prints `Wife, Ta . . . nūfer` (n + "
+        "macron-ū, with a printed lacuna `. . .` between `Ta` and `nūfer`). "
+        "Text-layer OCR misread the `n` as `m` (same OCR class as TT16's "
+        "Ternūte/Termite). Verbatim-preserve per README notes_from_pm "
+        "policy. Egyptologist printed-source review (this PR).",
+    ),
+    (
+        "TT17",
+        "occupant_name",
+        "Nebamūn",
+        "PM I.1 p.29 (physical p.47) prints the headword `17. NEBAMŪN` "
+        "with capital macron-ū. README's occupant_name policy preserves "
+        "vowel macrons (ū, ō, ē, ā); only underdot-Ḥ is stripped. "
+        "Chunk-7 `Wahʿankh` / `Sekhemreʿ-Wepmaʿet` set the macron-"
+        "preserve precedent for occupant_name. Egyptologist printed-"
+        "source review (this PR).",
+    ),
+]
+
+
+CHUNK10_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1162,6 +1213,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK7_CORRECTIONS,
     CHUNK8_CORRECTIONS,
     CHUNK9_CORRECTIONS,
+    CHUNK10_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1173,6 +1225,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK7_RENAMES,
     **CHUNK8_RENAMES,
     **CHUNK9_RENAMES,
+    **CHUNK10_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -1278,6 +1331,53 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "for primary-attribution hedges (e.g. KV55 `Probably Amenophis IV...`) "
         "but wrong for intra-note secondary-clause hedges. Egyptologist printed-"
         "source review on PR (chunk 9) flagged.",
+    ),
+    # Chunk-10 attribution_certainty overrides — egyptologist-reviewer pass
+    # (this PR). Same TT2-precedent rationale: PM's `(?)` glyph in notes_from_pm
+    # qualifies the regnal-date (or in TT17 also a parent's identification),
+    # NOT the primary occupant identification. The deriver fires context-free
+    # on any `(?)` in notes; per the chunk-9 TT2 precedent, attribution_certainty
+    # encodes occupant-identity certainty, not regnal-date certainty. All four
+    # PM headwords name the occupant unhedged with the occupational title
+    # unhedged.
+    (
+        "TT12",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the "
+        "King's wife and King's mother ʿAḥḥotp. Temp. Amosis to Amenophis I "
+        "(?).` The `(?)` qualifies the regnal-range tail (Amenophis I), not "
+        "Hray's identification. Per chunk-9 TT2 precedent.",
+    ),
+    (
+        "TT17",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the "
+        "King. Temp. Amenophis II (?). ... Parents, Nebseny, Judge, and "
+        "Amenḥotp (?).` Both `(?)` qualify (a) the regnal date and (b) the "
+        "second parent's identification (Amenḥotp; per PM's `Parents, "
+        "<Father>, <Title>, and <Mother>` convention this is the mother). "
+        "Neither hedge qualifies Nebamun's identification. Per chunk-9 TT2 "
+        "precedent.",
+    ),
+    (
+        "TT19",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.32 prints `19. AMENMOSI ..., First prophet of 'Amenophis "
+        "of the Forecourt'. Temp. Ramesses I to Sethos I (?).` The `(?)` "
+        "qualifies the regnal-range tail (Sethos I), not Amenmosi's "
+        "identification. Per chunk-9 TT2 precedent.",
+    ),
+    (
+        "TT20",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.34 prints `20. MENTUḤIRKHOPSHEF ..., Fan-bearer, Mayor "
+        "of Aphroditopolis. Temp. Tuthmosis III (?).` The `(?)` qualifies "
+        "the regnal date, not Mentuhirkhopshef's identification. Per "
+        "chunk-9 TT2 precedent.",
     ),
 ]
 
