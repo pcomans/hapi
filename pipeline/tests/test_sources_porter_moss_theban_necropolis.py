@@ -4597,6 +4597,11 @@ def test_chunk17_tt85_amenemhab_alt_mahu() -> None:
     assert r["occupant_name"] == "Amenemhab"
     assert r["occupant_alt_names"] == ["Mahu"]
     assert "called Maḥu" not in r["notes_from_pm"]
+    assert r["notes_from_pm"] == (
+        "Lieutenant-commander of soldiers. Temp. Tuthmosis III to "
+        "Amenophis II. (CHAMPOLLION, No. 12, HAY, No. 20.) Mother, "
+        "Tetires. Wife, Baki, Chief royal nurse."
+    )
     assert r["source_citation"]["page"] == 170
 
 
@@ -4627,7 +4632,11 @@ def test_chunk17_tt87_minnakht_father_sen_dhout() -> None:
     assert r["occupant_name"] == "Minnakht"
     # Father name `Sen-ḏhout` — d-bar Ḏ (Thoth-family) + plain h per direct PDF
     # visual at p.178 (no ḥ-underdot — egyptologist-flagged correction).
-    assert "Sen-ḏhout" in r["notes_from_pm"]
+    assert r["notes_from_pm"] == (
+        "Overseer of the granaries of Upper and Lower Egypt, Overseer "
+        "of horses of the Lord of the Two Lands, Royal scribe. Temp. "
+        "Tuthmosis III. (HAY, No. 17.) Father, Sen-ḏhout."
+    )
     assert "Sen-ḏḥout" not in r["notes_from_pm"]  # negative: ḥ-underdot dropped
     assert r["source_citation"]["page"] == 178
 
@@ -4641,6 +4650,12 @@ def test_chunk17_tt88_pehsukher_alt_thenenu() -> None:
     assert r["occupant_name"] == "Pehsukher"
     assert r["occupant_alt_names"] == ["Thenenu"]
     assert "called Thenenu" not in r["notes_from_pm"]
+    assert r["notes_from_pm"] == (
+        "Lieutenant of the King, Standard-bearer of the Lord of the "
+        "Two Lands. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, "
+        "No. 8, L. D. Text, No. 61.) Wife, Neit, Chief royal nurse, "
+        "Governess of the god."
+    )
     assert r["source_citation"]["page"] == 179
 
 
@@ -4652,6 +4667,9 @@ def test_chunk17_tt89_amenmosi_unanimous() -> None:
     assert r["occupant_name"] == "Amenmosi"
     assert r["occupant_role"] == "Official"
     assert r["attribution_certainty"] == "attested"
+    assert r["notes_from_pm"] == (
+        "Steward in the Southern City. Temp. Amenophis III."
+    )
     assert r["source_citation"]["page"] == 181
 
 
