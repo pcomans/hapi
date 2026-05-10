@@ -4531,8 +4531,12 @@ def test_chunk17_tt81_ineni_bracket_prefix_and_doubled_h() -> None:
     assert r["occupant_name"] == "Ineni"
     assert r["occupant_role"] == "Official"
     assert r["notes_from_pm"].startswith("[1st ed. Anena], ")
-    assert "ʿAḥḥotp" in r["notes_from_pm"]  # doubled-ḥ for Queen Ahhotep
-    assert "Sit-ḏḥout" in r["notes_from_pm"]  # Thoth-family ḏḥ
+    assert "ʿAḥḥotp" in r["notes_from_pm"]  # doubled-ḥ for Queen Ahhotep (PM p.159)
+    # Parent name `Sit-ḏhout` — d-bar Ḏ (Thoth-family) + plain h (no ḥ-underdot
+    # per direct PDF visual at p.159; the chunk-9 PM-I.2 `Sit-ḏḥout` precedent
+    # for QV47 does NOT transfer to PM I.1 body prose). Egyptologist-flagged.
+    assert "Sit-ḏhout" in r["notes_from_pm"]
+    assert "ḥout" not in r["notes_from_pm"]  # negative: no ḥ-underdot leaked through
     assert r["source_citation"]["page"] == 159
 
 
@@ -4577,7 +4581,10 @@ def test_chunk17_tt84_amunezeh_partly_usurped_mery_titlecase() -> None:
     assert r["is_usurped"] is True
     assert "Partly usurped by Mery" in r["notes_from_pm"]
     assert "MERY" not in r["notes_from_pm"]  # normalised to Title-case
-    assert "Siḏḥout" in r["notes_from_pm"]  # Thoth-family ḏḥ
+    # Parent name `Siḏhout` — d-bar Ḏ (Thoth-family) + plain h per direct PDF
+    # visual at p.167 (no ḥ-underdot — egyptologist-flagged correction).
+    assert "Siḏhout" in r["notes_from_pm"]
+    assert "Siḏḥout" not in r["notes_from_pm"]  # negative: ḥ-underdot dropped
     assert r["source_citation"]["page"] == 167
 
 
@@ -4611,13 +4618,17 @@ def test_chunk17_tt86_menkheperrasonb_high_priest_shared_tt112() -> None:
 
 def test_chunk17_tt87_minnakht_father_sen_dhout() -> None:
     """TT87 Minnakht — Overseer of the granaries of Upper and Lower
-    Egypt, p.178. Father Sen-ḏḥout (Thoth-family d-bar Ḏ + ḥ — same
-    name family as TT2 Sit-ḏḥout / TT82 Ḏhutmosi / TT84 Siḏḥout in this
-    chunk). 1/1/1 tie on notes_from_pm resolved (clean punctuation +
-    correct diacritics pin)."""
+    Egypt, p.178. Father Sen-ḏhout (Thoth-family d-bar Ḏ + plain h per
+    direct PDF visual at p.178; the chunk-9/PM-I.2 `Sit-ḏḥout` precedent
+    does NOT transfer to PM I.1 body prose). 1/1/1 tie on notes_from_pm
+    resolved (clean punctuation pin) + per-row PDF correction on the
+    parent-name diacritic."""
     r = _row("TT87")
     assert r["occupant_name"] == "Minnakht"
-    assert "Sen-ḏḥout" in r["notes_from_pm"]  # d-bar Ḏ Thoth-family
+    # Father name `Sen-ḏhout` — d-bar Ḏ (Thoth-family) + plain h per direct PDF
+    # visual at p.178 (no ḥ-underdot — egyptologist-flagged correction).
+    assert "Sen-ḏhout" in r["notes_from_pm"]
+    assert "Sen-ḏḥout" not in r["notes_from_pm"]  # negative: ḥ-underdot dropped
     assert r["source_citation"]["page"] == 178
 
 

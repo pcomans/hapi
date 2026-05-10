@@ -487,7 +487,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Overseer of the treasury, Royal scribe. Temp. Amenophis II. "
             "(CHAMPOLLION, No. 6, L. D. Text, No. 59, HAY, No. 21.) "
             "Wife, Takhaʿt.",
-        # Chunk 17 (TT81–TT90) — 7 tie-break overrides, all on notes_from_pm.
+        # Chunk 17 (TT81–TT90) — 8 tie-break overrides, all on notes_from_pm.
         # All pinned to agent A at merge time: clean punctuation (no
         # double-period after close-paren), no headword-prefix duplication.
         # CHUNK17_CORRECTIONS layers post-merge fixes on TT81 (PM-faithful
@@ -501,7 +501,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "[1st ed. Anena], Overseer of the granary of Amūn. Temp. "
             "Amenophis I to Tuthmosis III. (CHAMPOLLION, No. 5, "
             "WILKINSON, No. 14, HAY, No. 8.) Parents, Ineni, Judge, and "
-            "Sit-ḏḥout. Wife, ʿAḥḥotp, called Thuiu.",
+            "Sit-ḏhout. Wife, ʿAḥḥotp, called Thuiu.",
         ("TT82", "notes_from_pm"):
             "Scribe, Counter of the grain of Amūn, Steward of the Vizier. "
             "Temp. Tuthmosis III. (L. D. Text, No. 56, HAY, No. 16.) "
@@ -515,7 +515,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "First royal herald, Overseer of the gate, temp. Tuthmosis "
             "III. Partly usurped by Mery (tomb 95), temp. Amenophis II. "
             "(CHAMPOLLION, No. 11, L. D. Text, No. 71, WILKINSON, No. "
-            "31, HAY, No. 19.) Parents (of Amunezeḥ), Siḏḥout, Judge, "
+            "31, HAY, No. 19.) Parents (of Amunezeḥ), Siḏhout, Judge, "
             "and Resi. Wife (of Amunezeḥ), Ḥenutnefert.",
         ("TT85", "notes_from_pm"):
             "Lieutenant-commander of soldiers. Temp. Tuthmosis III to "
@@ -524,7 +524,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT87", "notes_from_pm"):
             "Overseer of the granaries of Upper and Lower Egypt, Overseer "
             "of horses of the Lord of the Two Lands, Royal scribe. Temp. "
-            "Tuthmosis III. (HAY, No. 17.) Father, Sen-ḏḥout.",
+            "Tuthmosis III. (HAY, No. 17.) Father, Sen-ḏhout.",
         ("TT88", "notes_from_pm"):
             "Lieutenant of the King, Standard-bearer of the Lord of the "
             "Two Lands. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, "
