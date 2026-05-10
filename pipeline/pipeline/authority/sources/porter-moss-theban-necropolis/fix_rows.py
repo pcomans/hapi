@@ -935,20 +935,42 @@ CHUNK11_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "TT26",
         "notes_from_pm",
         "Overseer of the treasury in the Ramesseum in the estate of Amūn. Temp. Ramesses II. (L. D. Text, No. 29.) Wife, Meryēsi.",
-        "PM I.1 p.43 (physical p.61) prints `Wife, Meryēsi` (n + macron-ē). "
+        "PM I.1 p.43 (physical p.61) prints `Wife, Meryēsi` (macron-ē). "
         "Text-layer OCR dropped the macron-ē. Verbatim-preserve per README "
         "notes_from_pm policy. Same chunk-9 KV55 / chunk-10 TT16 macron-"
         "preserve precedent for wife / family-clause name fragments. "
-        "Egyptologist printed-source review (this PR).",
+        "Egyptologist printed-source review (this PR). Per Gemini Code "
+        "Assist PR #199 round 1, the rationale was originally `(n + macron-"
+        "ē)` — the `n +` was a copy-paste leftover from chunk-10 TT16's "
+        "`Termite → Ternūte` rn→rm OCR fix; TT26's only OCR issue is the "
+        "macron drop, no n→m involved.",
     ),
     (
         "TT27",
         "notes_from_pm",
-        "Chief steward of the divine adoratress ʿAnkhnesneferebreʿ. Temp. Apries and Amasis. ʿAsâsîf. (Inaccessible.) Parents, Ḥarsiēsi, Chamberlain of the divine adoratress, and Tahibet (from cone).",
+        "Chief steward of the divine adoratress ʿAnkhnesneferebreʿ. Temp. Apries and Amasis. (Inaccessible.) Parents, Ḥarsiēsi, Chamberlain of the divine adoratress, and Tahibet (from cone).",
         "PM I.1 p.43 (physical p.61) prints `Parents, Ḥarsiēsi` (macron-ē). "
         "Text-layer OCR dropped the macron-ē. Verbatim-preserve per README "
-        "notes_from_pm policy. Same macron-ē class as TT26 above. "
+        "notes_from_pm policy. Same macron-ē class as TT26 above. Per "
+        "Gemini Code Assist PR #199 round 1, also dropped the redundant "
+        "`ʿAsâsîf.` sub-site token that the merge had emitted into notes "
+        "(sub-site is already captured in `theban_area`; sibling chunk-11 "
+        "rows TT25 and TT26 do not repeat the sub-site in notes). "
         "Egyptologist printed-source review (this PR).",
+    ),
+    (
+        "TT29",
+        "notes_from_pm",
+        "Governor of the town, Vizier. Temp. Amenophis II. (HAY, No. 15.) Parents, [ʿAḥmosi] Ḥumay (tomb 224) and Nub. Wife, Wertmaʿetef.",
+        "PM I.1 p.45 (physical p.63) prints `Parents, [ʿAḥmosi] Ḥumay (tomb "
+        "224) and Nub.` — the character after the opening bracket is the "
+        "ayin ʿ, not a `C`. The tie-break override pins agent B's bracket-"
+        "and-name-root form `[Aḥmosi]` (best majority candidate; ayin "
+        "dropped) at merge time per the KV36 principle (ties at merge, "
+        "diacritics at fix_rows). This CHUNK11_CORRECTIONS entry layers "
+        "the PM-faithful ayin restoration post-merge. Per Gemini Code "
+        "Assist PR #199 round 1 (separation-of-concerns refactor); "
+        "egyptologist printed-source review (this PR) verified PM p.45.",
     ),
     (
         "TT29",

@@ -3034,11 +3034,18 @@ def test_chunk11_tt27_sheshonk_underdot_k_preserved() -> None:
 
 
 def test_chunk11_notes_from_pm_pinned_substrings() -> None:
-    """Per-row `notes_from_pm` substring assertions. Chunk-11 highlights:
+    """Per-row `notes_from_pm` substring assertions. Chunk-11 highlights
+    asserted by THIS test (verbatim PM clauses preserved in `notes_from_pm`):
     - TT22 usurpation clause + Tuthmosis III(?) regnal hedge.
-    - TT23 alt-name `also called To`.
+    - TT26 + TT27 wife / parent macron-ē restorations.
     - TT27 `(Inaccessible.)` state-marker.
-    - TT29 full Vizier title clause + Pairi alt-name + parents.
+    - TT29 full Vizier title clause.
+
+    NOTE: alt-names (`To` for TT23, `Pairi` for TT29) live in the
+    `occupant_alt_names` field — asserted by `test_chunk11_tt29_vizier_role_
+    and_kv_cross_valley` (TT29) and the chunk-11 docstring of
+    `test_chunk11_no_multi_occupant` (TT23 — implicit via the rule).
+    Per Gemini Code Assist PR #199 round 1 docstring-accuracy correction.
     """
     expected: list[tuple[str, str, str]] = [
         ("TT21", "Scribe, Steward of Tuthmosis I.", "role + regnal"),
