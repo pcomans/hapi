@@ -300,6 +300,38 @@ TT90 (Nebamun):
   occupant_name: a="Nebamun" | b="Nebamūn" | c="Nebamun"  → chose "Nebamun"
   source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 182, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 183, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 183, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 183, "section": "I"}
 
+TT91 (None):
+  notes_from_pm: a="Captain of the troops ... , Overseer of horses. Temp. Tuthmosis IV to Amenophis III. (CHAMPOLLION, No. 8 ter, L. D. Text, No. 65, HAY, No. 13.)" | b="Captain of the troops ..., Overseer of horses. Temp. Tuthmosis IV to Amenophis III. (CHAMPOLLION, No. 8 ter, L. D. Text, No. 65, HAY, No. 13.)" | c="Captain of the troops ... , Overseer of horses. Temp. Tuthmosis IV to Amenophis III. (CHAMPOLLION, No. 8 ter, L. D. Text, No. 65, HAY, No. 13.)"  → chose "Captain of the troops ... , Overseer of horses. Temp. Tuthmosis IV to Amenophis III. (CHAMPOLLION, No. 8 ter, L. D. Text, No. 65, HAY, No. 13.)"
+
+TT92 (Suemnut):
+  notes_from_pm: a="Royal butler clean of hands. Temp. Amenophis II. (L. D. Text, No. 67.) Parents, Iamnūfer, Mayor of Neferusi, and Meryt, Songstress of Thoth. Wife, Ḥat." | b="Royal butler clean of hands. Temp. Amenophis II. (L. D. Text, No. 67.) Parents, Iamnufer, Mayor of Neferusi, and Meryt, Songstress of Thoth. Wife, Ḥat." | c="Royal butler clean of hands. Temp. Amenophis II. (L. D. Text, No. 67.) Parents, Iamnūfer, Mayor of Neferusi, and Meryt, Songstress of Thoth. Wife, Ḥat."  → chose "Royal butler clean of hands. Temp. Amenophis II. (L. D. Text, No. 67.) Parents, Iamnūfer, Mayor of Neferusi, and Meryt, Songstress of Thoth. Wife, Ḥat."
+
+TT93 (Ḳenamun):
+  occupant_name: a="Ḳenamun" | b="Ḳenamun" | c="Hen-Amūn"  → chose "Ḳenamun"
+
+TT94 (Raʿmosi):
+  notes_from_pm: a="called ʿAmy, First royal herald, Fan-bearer on the right of the King. Temp. Amenophis II (?). Mother, Sent." | b="called ʿAmy, First royal herald, Fan-bearer on the right of the King. Temp. Amenophis II (?). Mother, Sent." | c="First royal herald, Fan-bearer on the right of the King. Temp. Amenophis II (?). Mother, Sent."  → chose "called ʿAmy, First royal herald, Fan-bearer on the right of the King. Temp. Amenophis II (?). Mother, Sent."
+
+TT95 (Mery):
+  notes_from_pm: a="First prophet of Amūn. Temp. Amenophis II. (CHAMPOLLION, No. 14, L. D. Text, No. 70, HAY, No. 14.) Parents, Nebpeḥtireʿ, First prophet of Min of Koptos, and Ḥunay(t), Chief nurse of the Lord of the Two Lands (name from tomb 84). Wife, Dey." | b="First prophet of Amun. Temp. Amenophis II. (CHAMPOLLION, No. 14, L. D. Text, No. 70, HAY, No. 14.) Parents, Nebpeḥtireʿ, First prophet of Min of Koptos, and Ḥunay(t), Chief nurse of the Lord of the Two Lands (name from tomb 84). Wife, Dey." | c="First prophet of Amūn. (See also usurpation in tomb 84.) Temp. Amenophis II. (CHAMPOLLION, No. 14, L. D. Text, No. 70, HAY, No. 14.) Parents, Nebpeḥtireʿ, First prophet of Min of Koptos, and Ḥunay(t), Chief nurse of the Lord of the Two Lands (name from tomb 84). Wife, Dey."  → chose "First prophet of Amūn. (See also usurpation in tomb 84.) Temp. Amenophis II. (CHAMPOLLION, No. 14, L. D. Text, No. 70, HAY, No. 14.) Parents, Nebpeḥtireʿ, First prophet of Min of Koptos, and Ḥunay(t), Chief nurse of the Lord of the Two Lands (name from tomb 84). Wife, Dey."
+  shared_with_tombs: a=["TT84"] | b=["TT84"] | c=[]  → chose ["TT84"]
+
+TT96 (Sennufer):
+  notes_from_pm: a="Mayor of the Southern City. Temp. Amenophis II. (CHAMPOLLION, No. 13, WILKINSON, No. 34, HAY, No. 12.) Parents, [ʿAḥmosi] Ḥumay (tomb 224) and Nub. Wives, Sentnay and Sentnefert, Royal nurses, and Meryt." | b="Mayor of the Southern City. Temp. Amenophis II. (CHAMPOLLION, No. 13, WILKINSON, No. 34, HAY, No. 12.) Parents, [ʿAḥmosi] Ḥumay (tomb 224) and Nub. Wives, Sentnay and Sentnefert, Royal nurses, and Meryt." | c="Mayor of the Southern City. Temp. Amenophis II. (CHAMPOLLION, No. 13, WILKINSON, No. 34, HAY, No. 12.) Parents, [Caḥmosi] Ḥumay (tomb 224) and Nub. Wives, Sentnay and Sentnefert, Royal nurses, and Meryt."  → chose "Mayor of the Southern City. Temp. Amenophis II. (CHAMPOLLION, No. 13, WILKINSON, No. 34, HAY, No. 12.) Parents, [ʿAḥmosi] Ḥumay (tomb 224) and Nub. Wives, Sentnay and Sentnefert, Royal nurses, and Meryt."
+
+TT97 (Amenemhet):
+  notes_from_pm: a="First prophet of Amūn. Temp. Amenophis II (?). Father, Ḏḥutiḥotp, wʿab-priest, Overseer of sandal-makers of the Temple of Amūn." | b="First prophet of Amun. Temp. Amenophis II (?). Father, Ḏḥutiḥotp, waʿb-priest, Overseer of sandal-makers of the Temple of Amun." | c="First prophet of Amūn. Temp. Amenophis II (?). Father, Ḏḥutiḥotp, waʿb-priest, Overseer of sandal-makers of the Temple of Amūn."  → chose "First prophet of Amūn. Temp. Amenophis II (?). Father, Ḏḥutiḥotp, wʿab-priest, Overseer of sandal-makers of the Temple of Amūn."
+
+TT98 (Kaemheribsen):
+  notes_from_pm: a="Third prophet of Amūn. Temp. Tuthmosis III to Amenophis II (?). (CHAMPOLLION, No. 9, L. D. Text, No. 69.) (Inaccessible.) Mother, a Chief nurse of the Lord of the Two Lands. Wife, Ḥenuttaui." | b="Third prophet of Amun. Temp. Tuthmosis III to Amenophis II (?). (CHAMPOLLION, No. 9, L. D. Text, No. 69.) (Inaccessible.) Mother, a Chief nurse of the Lord of the Two Lands. Wife, Ḥenuttaui." | c="Third prophet of Amūn. Temp. Tuthmosis III to Amenophis II (?). (CHAMPOLLION, No. 9, L. D. Text, No. 69.) (Inaccessible.) Mother, a Chief nurse of the Lord of the Two Lands. Wife, Ḥenuttaui."  → chose "Third prophet of Amūn. Temp. Tuthmosis III to Amenophis II (?). (CHAMPOLLION, No. 9, L. D. Text, No. 69.) (Inaccessible.) Mother, a Chief nurse of the Lord of the Two Lands. Wife, Ḥenuttaui."
+  occupant_role: a="High Priest" | b="Official" | c="Official"  → chose "Official"
+
+TT99 (Sennufer):
+  notes_from_pm: a="Overseer of the seal, Overseer of the gold-land of Amūn. Temp. Tuthmosis III. Mother, Sit-ḏḥout. Wife, Taimau." | b="Overseer of the seal, Overseer of the gold-land of Amun. Temp. Tuthmosis III. Mother, Sit-ḏḥout. Wife, Taimau." | c="Overseer of the seal, Overseer of the gold-land of Amūn. Temp. Tuthmosis III. Mother, Sit-ḏḥout. Wife, Taimau."  → chose "Overseer of the seal, Overseer of the gold-land of Amūn. Temp. Tuthmosis III. Mother, Sit-ḏḥout. Wife, Taimau."
+
+TT100 (Rekhmireʿ):
+  notes_from_pm: a="Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], wʿab-priest of Amūn, and Bet. Wife, Meryt." | b="Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], waʿb-priest of Amun, and Bet. Wife, Meryt." | c="Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], waʿb-priest of Amūn, and Bet. Wife, Meryt."  → chose "Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], wʿab-priest of Amūn, and Bet. Wife, Meryt."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -379,6 +411,7 @@ Per-chunk correction counts:
 - Chunk 15: 5 correction(s) defined in CHUNK15_CORRECTIONS.
 - Chunk 16: 6 correction(s) defined in CHUNK16_CORRECTIONS.
 - Chunk 17: 5 correction(s) defined in CHUNK17_CORRECTIONS.
+- Chunk 18: 6 correction(s) defined in CHUNK18_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: renamed on 75 row(s) (first/last: KV1, DAN-SebkemsafSekhemreShedtaui)
@@ -685,6 +718,24 @@ Field corrections:
 - TT90: occupant_name corrected this run (PM I.1 p.183 / physical PDF p.201 (TT90 Nebamun). Direct PDF visual check confirms PM prints headword `90. NEBAMŪN` with capital macron-Ū. Same OCR macron-drop class as chunk-15 TT65 `NEBAMŪN` (the within-source NAME collision precedent — Nebamūn appears at least 3× in PM I.1: TT17, TT65, TT90). Agents A+C kept the prompt-rule-compliant stripped form `Nebamun` (per the no-pre-derive-macrons-from-outside-knowledge rule); agent B violated the rule by pre-deriving `Nebamūn`. Merge resolved 2/1 to `Nebamun` per the prompt-rule-compliant majority; fix_rows layers the macron restoration post-merge per the egyptologist-cited PM headword form.)
     was: "Nebamun"
     now: "Nebamūn"
+- TT91: occupant_role corrected this run (PM I.1 p.185 / physical PDF p.203 (TT91 anonymous occupant). PM headword reads `91. Captain of the troops ..., Overseer of horses. Temp. Tuthmosis IV to Amenophis III.` — no NAME-IN-CAPS token. All 3 agents emitted `occupant_name=null` + `occupant_role="Unknown"`. Merge.py sentinel-null normalisation (SENTINEL_NULL_STRINGS at merge.py:159) coerced the literal string `"Unknown"` to JSON `null` because it is in the sentinel set. Pin `"Unknown"` post-merge per the chunk-8 + chunk-14 TT58 + chunk-15 TT70 anonymous-occupant pairing invariant: when occupant_name is null, occupant_role must be "Unknown" (controlled-vocab pairing rule).)
+    was: null
+    now: "Unknown"
+- TT93: occupant_name corrected this run (PM I.1 p.190 / physical PDF p.208 (TT93). Direct PDF visual check (parent agent, this PR) confirms PM prints headword `93. ḲENAMŪN` with capital underdot-Ḳ + capital macron-Ū. Agents A+B converged on `Ḳenamun` (Ḳ correct, macron-Ū stripped per the no-pre-derive-macrons rule); agent C extracted the wrong name `Hen-Amūn` (mis-decoded the OCR `~` cluster as `H` instead of `Ḳ`). Merge resolved 2/1 to `Ḳenamun` per the prompt-rule-compliant majority; fix_rows layers the macron-Ū restoration post-merge per the OCR capital-macron-drop precedent (chunk-11 TT29 `AMENEMŌPET` / chunk-12 TT34 `MENTUEMḤĒT` / chunk-15 TT65 `NEBAMŪN` / chunk-16 TT72 `RĒʿ` / chunk-17 TT90 `NEBAMŪN`).)
+    was: "Ḳenamun"
+    now: "Ḳenamūn"
+- TT95: shared_with_tombs corrected this run (PM I.1 p.195 / physical PDF p.213 (TT95 Mery — USURPER of TT84). Agents A+B (2/1 majority) emitted `shared_with_tombs=["TT84"]` reading PM's `(See also usurpation in tomb 84.)` parenthetical as a chunk-9 `See also Tomb N` ownership cross-ref. This is structurally wrong: PM's phrasing is `See also usurpation in tomb N` (an EVENT cross-reference), NOT `See also Tomb N` (an ownership cross-reference). The chunk-9-onward `shared_with_tombs` rule documents only ownership-flavoured patterns (`See also Tomb N`, `Also owner of tomb N`). Override the merge majority to [] post-merge: the cross-ref is structurally captured by the verbatim parenthetical preserved in `notes_from_pm` (see tie-break-overrides.json TT95|notes_from_pm). Without this override, the within-section symmetry test `test_shared_with_tombs_symmetry_within_chunk` fails because TT84 has no back-ref to TT95 (and shouldn't — TT84's headword doesn't print a `See also Tomb 95` ownership reference, only the `Partly usurped by MERY (tomb 95)` event reference).)
+    was: ["TT84"]
+    now: []
+- TT97: occupant_name corrected this run (PM I.1 p.203 / physical PDF p.221 (TT97). Direct PDF visual check (parent agent, this PR — flagged by Gemini Code Assist round 1) confirms PM prints headword `97. AMENEMḤĒT` with capital macron-Ē. All 3 agents converged on `Amenemhet` (stripped Ḥ-underdot per occupant_name policy + macron-Ē stripped per the no-pre-derive-macrons rule). Same OCR capital-macron-drop class as chunk-11 TT29 `AMENEMŌPET`, chunk-12 TT34 `MENTUEMḤĒT`, chunk-14 TT51 `USERḤĒT`, chunk-14 TT53 + chunk-16 TT77 `AMENEMḤĒT`/`PTAḤEMḤĒT`, chunk-17 TT82 `AMENEMḤĒT`. Restore macron-Ē → `Amenemhēt` (Ḥ underdot stripped per occupant_name policy).)
+    was: "Amenemhet"
+    now: "Amenemhēt"
+- TT93: notes_from_pm corrected this run (PM I.1 p.190 / physical PDF p.208 (TT93 Ḳenamūn body prose). Direct PDF visual check (parent agent, this PR — flagged by Gemini Code Assist round 1) confirms PM prints `Mother, Amenemōpet ⟨hg⟩, Royal nurse.` with capital macron-Ō on the mother's name. All 3 agents converged on `Amenemopet` (macron-Ō stripped). Same OCR capital-macron-drop class as chunk-11 TT29 occupant_name `AMENEMŌPET` (the same name family) and chunk-15 TT74 `TENTŌPET`. Restore body-prose macron-Ō per the verbatim-preserve policy for notes_from_pm (different from occupant_name policy which strips Ḥ-underdot but preserves macrons; here the macron-Ō is restored as PM-verbatim).)
+    was: "Chief steward of the King. Temp. Amenophis II. (CHAMPOLLION, No. 8 quater, L. D. Text, No. 68, WILKINSON, No. 33, HAY, No. 18.) Mother, Amenemopet, Royal nurse. Wife, Tadedetes."
+    now: "Chief steward of the King. Temp. Amenophis II. (CHAMPOLLION, No. 8 quater, L. D. Text, No. 68, WILKINSON, No. 33, HAY, No. 18.) Mother, Amenemōpet, Royal nurse. Wife, Tadedetes."
+- TT100: occupant_name corrected this run (PM I.1 p.206 / physical PDF p.224 (TT100, Governor of the town and Vizier — major Theban tomb spanning 9 printed pages). Direct PDF visual check (parent agent, this PR) confirms PM prints headword `100. REKHMIRĒʿ` with capital macron-Ē + ayin (U+02BF). All 3 agents converged on `Rekhmireʿ` (ayin correct, macron-Ē stripped per the no-pre-derive-macrons rule). Fix_rows layers the macron-Ē restoration post-merge per the OCR capital-macron-drop precedent (chunk-11 TT29 `AMENEMŌPET` etc., chunk-16 TT72 `RĒʿ` for the same Reʿ-name family).)
+    was: "Rekhmireʿ"
+    now: "Rekhmirēʿ"
 - KV9: tomb_aliases corrected this run (Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     was: []
     now: ["Tomb of Metempsychosis", "Tomb of Memnon"]
@@ -770,6 +821,10 @@ Field corrections:
 - TT77: is_usurped → true (issue #182 derivation from notes_from_pm)
 - TT79: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT84: is_usurped → true (issue #182 derivation from notes_from_pm)
+- TT94: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT95: is_usurped → true (issue #182 derivation from notes_from_pm)
+- TT97: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT98: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - SWV-Neferure: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - DAN-AhmosiNefertere: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - DAN-AntefSekhemreHeruhirmaet: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
@@ -795,3 +850,7 @@ Field corrections:
 - TT69: attribution_certainty → "attested" (deriver override; PM I.1 p.134 prints `69. MENNA ..., Scribe of the fields of the Lord of the Two ...)
 - TT70: attribution_certainty → "attested" (deriver override; PM I.1 p.139 prints `70. Usurped by AMENMOSI ..., Overseer of sandal-makers(?) o...)
 - TT79: attribution_certainty → "attested" (deriver override; PM I.1 p.156 prints `79. MENKHEPER (or MENKHEPERRAʿSONB) ..., Overseer of the gr...)
+- TT95: is_usurped → false (deriver override; PM I.1 p.195 prints `95. MERY ..., First prophet of Amūn. (See also usurpation i...)
+- TT94: attribution_certainty → "attested" (deriver override; PM I.1 p.194 prints `94. RAʿMOSI ..., called ʿAMY ..., First royal herald, Fan-b...)
+- TT97: attribution_certainty → "attested" (deriver override; PM I.1 p.203 prints `97. AMENEMḤET ..., First prophet of Amūn. Temp. Amenophis I...)
+- TT98: attribution_certainty → "attested" (deriver override; PM I.1 p.204 prints `98. KAEMḤERIBSEN ..., Third prophet of Amūn. Temp. Tuthmosi...)

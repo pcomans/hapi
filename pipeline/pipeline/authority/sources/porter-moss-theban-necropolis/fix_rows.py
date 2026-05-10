@@ -1515,6 +1515,121 @@ CHUNK17_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK17_RENAMES: dict[str, str] = {}
 
 
+CHUNK18_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT91",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.185 / physical PDF p.203 (TT91 anonymous occupant). PM "
+        "headword reads `91. Captain of the troops ..., Overseer of "
+        "horses. Temp. Tuthmosis IV to Amenophis III.` — no NAME-IN-CAPS "
+        "token. All 3 agents emitted `occupant_name=null` + "
+        "`occupant_role=\"Unknown\"`. Merge.py sentinel-null normalisation "
+        "(SENTINEL_NULL_STRINGS at merge.py:159) coerced the literal "
+        "string `\"Unknown\"` to JSON `null` because it is in the "
+        "sentinel set. Pin `\"Unknown\"` post-merge per the chunk-8 + "
+        "chunk-14 TT58 + chunk-15 TT70 anonymous-occupant pairing "
+        "invariant: when occupant_name is null, occupant_role must be "
+        "\"Unknown\" (controlled-vocab pairing rule).",
+    ),
+    (
+        "TT93",
+        "occupant_name",
+        "Ḳenamūn",
+        "PM I.1 p.190 / physical PDF p.208 (TT93). Direct PDF visual "
+        "check (parent agent, this PR) confirms PM prints headword "
+        "`93. ḲENAMŪN` with capital underdot-Ḳ + capital macron-Ū. "
+        "Agents A+B converged on `Ḳenamun` (Ḳ correct, macron-Ū "
+        "stripped per the no-pre-derive-macrons rule); agent C "
+        "extracted the wrong name `Hen-Amūn` (mis-decoded the OCR `~` "
+        "cluster as `H` instead of `Ḳ`). Merge resolved 2/1 to "
+        "`Ḳenamun` per the prompt-rule-compliant majority; fix_rows "
+        "layers the macron-Ū restoration post-merge per the OCR "
+        "capital-macron-drop precedent (chunk-11 TT29 `AMENEMŌPET` / "
+        "chunk-12 TT34 `MENTUEMḤĒT` / chunk-15 TT65 `NEBAMŪN` / "
+        "chunk-16 TT72 `RĒʿ` / chunk-17 TT90 `NEBAMŪN`).",
+    ),
+    (
+        "TT95",
+        "shared_with_tombs",
+        [],
+        "PM I.1 p.195 / physical PDF p.213 (TT95 Mery — USURPER of "
+        "TT84). Agents A+B (2/1 majority) emitted "
+        "`shared_with_tombs=[\"TT84\"]` reading PM's `(See also "
+        "usurpation in tomb 84.)` parenthetical as a chunk-9 `See "
+        "also Tomb N` ownership cross-ref. This is structurally wrong: "
+        "PM's phrasing is `See also usurpation in tomb N` (an EVENT "
+        "cross-reference), NOT `See also Tomb N` (an ownership cross-"
+        "reference). The chunk-9-onward `shared_with_tombs` rule "
+        "documents only ownership-flavoured patterns (`See also Tomb "
+        "N`, `Also owner of tomb N`). Override the merge majority to "
+        "[] post-merge: the cross-ref is structurally captured by the "
+        "verbatim parenthetical preserved in `notes_from_pm` (see "
+        "tie-break-overrides.json TT95|notes_from_pm). Without this "
+        "override, the within-section symmetry test "
+        "`test_shared_with_tombs_symmetry_within_chunk` fails because "
+        "TT84 has no back-ref to TT95 (and shouldn't — TT84's headword "
+        "doesn't print a `See also Tomb 95` ownership reference, only "
+        "the `Partly usurped by MERY (tomb 95)` event reference).",
+    ),
+    (
+        "TT97",
+        "occupant_name",
+        "Amenemhēt",
+        "PM I.1 p.203 / physical PDF p.221 (TT97). Direct PDF visual "
+        "check (parent agent, this PR — flagged by Gemini Code Assist "
+        "round 1) confirms PM prints headword `97. AMENEMḤĒT` with "
+        "capital macron-Ē. All 3 agents converged on `Amenemhet` "
+        "(stripped Ḥ-underdot per occupant_name policy + macron-Ē "
+        "stripped per the no-pre-derive-macrons rule). Same OCR "
+        "capital-macron-drop class as chunk-11 TT29 `AMENEMŌPET`, "
+        "chunk-12 TT34 `MENTUEMḤĒT`, chunk-14 TT51 `USERḤĒT`, "
+        "chunk-14 TT53 + chunk-16 TT77 `AMENEMḤĒT`/`PTAḤEMḤĒT`, "
+        "chunk-17 TT82 `AMENEMḤĒT`. Restore macron-Ē → `Amenemhēt` "
+        "(Ḥ underdot stripped per occupant_name policy).",
+    ),
+    (
+        "TT93",
+        "notes_from_pm",
+        (
+            "Chief steward of the King. Temp. Amenophis II. (CHAMPOLLION, "
+            "No. 8 quater, L. D. Text, No. 68, WILKINSON, No. 33, HAY, "
+            "No. 18.) Mother, Amenemōpet, Royal nurse. Wife, Tadedetes."
+        ),
+        "PM I.1 p.190 / physical PDF p.208 (TT93 Ḳenamūn body prose). "
+        "Direct PDF visual check (parent agent, this PR — flagged by "
+        "Gemini Code Assist round 1) confirms PM prints `Mother, "
+        "Amenemōpet ⟨hg⟩, Royal nurse.` with capital macron-Ō on the "
+        "mother's name. All 3 agents converged on `Amenemopet` "
+        "(macron-Ō stripped). Same OCR capital-macron-drop class as "
+        "chunk-11 TT29 occupant_name `AMENEMŌPET` (the same name "
+        "family) and chunk-15 TT74 `TENTŌPET`. Restore body-prose "
+        "macron-Ō per the verbatim-preserve policy for notes_from_pm "
+        "(different from occupant_name policy which strips Ḥ-underdot "
+        "but preserves macrons; here the macron-Ō is restored as "
+        "PM-verbatim).",
+    ),
+    (
+        "TT100",
+        "occupant_name",
+        "Rekhmirēʿ",
+        "PM I.1 p.206 / physical PDF p.224 (TT100, Governor of the "
+        "town and Vizier — major Theban tomb spanning 9 printed "
+        "pages). Direct PDF visual check (parent agent, this PR) "
+        "confirms PM prints headword `100. REKHMIRĒʿ` with capital "
+        "macron-Ē + ayin (U+02BF). All 3 agents converged on "
+        "`Rekhmireʿ` (ayin correct, macron-Ē stripped per the no-pre-"
+        "derive-macrons rule). Fix_rows layers the macron-Ē "
+        "restoration post-merge per the OCR capital-macron-drop "
+        "precedent (chunk-11 TT29 `AMENEMŌPET` etc., chunk-16 TT72 "
+        "`RĒʿ` for the same Reʿ-name family).",
+    ),
+]
+
+
+CHUNK18_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1809,6 +1924,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK15_CORRECTIONS,
     CHUNK16_CORRECTIONS,
     CHUNK17_CORRECTIONS,
+    CHUNK18_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1828,6 +1944,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK15_RENAMES,
     **CHUNK16_RENAMES,
     **CHUNK17_RENAMES,
+    **CHUNK18_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -2171,6 +2288,65 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT52/TT54, chunk-15 TT62/TT65/TT69. Per chunk-9 TT2 precedent "
         "that attribution_certainty encodes occupant-identity certainty, "
         "not regnal-date certainty.",
+    ),
+    # Chunk-18 is_usurped override (TT95 Mery). Mery is the USURPER of
+    # TT84 (PM `(See also usurpation in tomb 84.)` in TT95's headword);
+    # he is NOT the usurped party of TT95, which is his own primary
+    # tomb. The Tier-3 deriver fires `is_usurped=true` on the `usurp`
+    # regex match in `notes_from_pm` (the parenthetical is preserved
+    # verbatim per the chunk-9-onward rule). Override post-merge per
+    # the same merge-resolves-ties / fix_rows-applies-corrections
+    # boundary used for chunk-9 TT2 attribution_certainty.
+    (
+        "TT95",
+        "is_usurped",
+        False,
+        "PM I.1 p.195 prints `95. MERY ..., First prophet of Amūn. "
+        "(See also usurpation in tomb 84.)` Mery is the USURPER of "
+        "TT84 (Amunezeḥ — chunk-17 TT84 row carries `Partly usurped by "
+        "MERY`), NOT the usurped party at TT95. The `is_usurped` "
+        "regex `\\busurp(?:ed|ation)\\b` fires on the `usurpation` "
+        "token in TT95's preserved parenthetical. Override to "
+        "`is_usurped=false` per the structural distinction: TT95 is "
+        "Mery's primary tomb, the cross-reference points to his "
+        "later usurpation of TT84 (a different tomb). Same chunk-9 "
+        "TT2 precedent class — Tier-3 regex fires context-free; "
+        "egyptologist-cited override pins the correct value.",
+    ),
+    # Chunk-18 attribution_certainty overrides. Same regnal-range hedge class
+    # as chunks 10, 13, 14, 15, 16 above. PM's `Temp. <King> (?)` qualifies
+    # the dating, not the occupant's identification — all three rows have
+    # unhedged primary attribution to a named occupant with named title.
+    (
+        "TT94",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.194 prints `94. RAʿMOSI ..., called ʿAMY ..., First "
+        "royal herald, Fan-bearer on the right of the King. Temp. "
+        "Amenophis II (?).` The `(?)` qualifies the regnal-date "
+        "(Amenophis II), not the occupant identification. Per chunk-9 "
+        "TT2 precedent.",
+    ),
+    (
+        "TT97",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.203 prints `97. AMENEMḤET ..., First prophet of "
+        "Amūn. Temp. Amenophis II (?).` The `(?)` qualifies the "
+        "regnal-date (Amenophis II), not the occupant identification. "
+        "Per chunk-9 TT2 precedent.",
+    ),
+    (
+        "TT98",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.204 prints `98. KAEMḤERIBSEN ..., Third prophet of "
+        "Amūn. Temp. Tuthmosis III to Amenophis II (?).` The `(?)` "
+        "qualifies the regnal-range tail (Amenophis II), not the "
+        "occupant identification. Per chunk-9 TT2 precedent. Note: "
+        "the `(Inaccessible.)` parenthetical on the sub-site line is "
+        "preserved verbatim in `notes_from_pm` per the chunk-12 TT47 "
+        "tomb-state-marker precedent — does not affect this override.",
     ),
 ]
 
