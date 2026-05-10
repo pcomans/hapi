@@ -1355,8 +1355,11 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "attested",
         "PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the "
         "King. Temp. Amenophis II (?). ... Parents, Nebseny, Judge, and "
-        "Amenḥotp (?).` Both `(?)` qualify the regnal date and the father's "
-        "identification, not Nebamun. Per chunk-9 TT2 precedent.",
+        "Amenḥotp (?).` Both `(?)` qualify (a) the regnal date and (b) the "
+        "second parent's identification (Amenḥotp; per PM's `Parents, "
+        "<Father>, <Title>, and <Mother>` convention this is the mother). "
+        "Neither hedge qualifies Nebamun's identification. Per chunk-9 TT2 "
+        "precedent.",
     ),
     (
         "TT19",
