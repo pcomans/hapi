@@ -459,6 +459,34 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Usurped by Espaneferḥor, Head of the temple-scribes of the estate "
             "of Amūn, temp. Siamūn. Father (of Espaneferḥor), Iufenamūn. "
             "Wife (of Espaneferḥor), Tabekenmut, Singer of the ... of Mut.",
+        # Chunk 16 (TT71–TT80) — 4 tie-break overrides, all on notes_from_pm.
+        # All pinned to agent A at merge time: no headword-prefix,
+        # mid-sentence citation (per chunk-12 citation-clause precedent).
+        # CHUNK16_CORRECTIONS layers post-merge fixes on TT77/TT78/TT79
+        # (egyptologist PDF-verified): TT77 ayin restoration on
+        # `Raʿḥuy` (was `Raḥuy`); TT78 macron-Ē restoration on
+        # `Ēsi` (was `Esi`); TT79 ayin restoration on `wʿab-priest`
+        # (was `wab-priest`, per TT14/TT68 precedent). TT80
+        # passes through fix_rows unchanged on this field.
+        ("TT77", "notes_from_pm"):
+            "Child of the nursery, Overseer of works in the Temple of Amūn, "
+            "Standard-bearer of the Lord of the Two Lands. Usurped by Roy, "
+            "Overseer of sculptors of the Lord of the Two Lands. Temp. "
+            "Tuthmosis IV. (CHAMPOLLION, No. 8 bis, L. D. Text, No. 62.) "
+            "Wife (of Ptaḥemḥet), Meryt. Wife (of Roy), Raʿḥuy.",
+        ("TT78", "notes_from_pm"):
+            "Royal scribe, Scribe of recruits. Temp. Tuthmosis III to "
+            "Amenophis III. (CHAMPOLLION, No. 4, L. D. Text, No. 57, "
+            "WILKINSON, No. 16, HAY, No. 23.) Mother, Ēsi. Wife, Ithuy.",
+        ("TT79", "notes_from_pm"):
+            "Overseer of the granary of the Lord of the Two Lands, wʿab-priest "
+            "in the Mortuary Temple of Tuthmosis III. Temp. Tuthmosis III to "
+            "Amenophis II (?). (CHAMPOLLION, No. 7, L. D. Text, No. 60.) "
+            "Father, Minnakht (tomb 87).",
+        ("TT80", "notes_from_pm"):
+            "Overseer of the treasury, Royal scribe. Temp. Amenophis II. "
+            "(CHAMPOLLION, No. 6, L. D. Text, No. 59, HAY, No. 21.) "
+            "Wife, Takhaʿt.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

@@ -1306,6 +1306,108 @@ CHUNK15_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK15_RENAMES: dict[str, str] = {}
 
 
+# Chunk-16 (TT71–TT80) corrections. Scaffold is empty pending egyptologist-
+# reviewer pass on the printed PDF. Known deferred items:
+#   - TT79 `notes_from_pm`: ayin restoration `wab-priest` → `wʿab-priest`
+#     per TT14/TT68 precedent (PM text-layer bar-a = ayin ʿ; merge pinned
+#     agent A's stripped form; fix_rows layers the restoration post-merge).
+#   - TT80 `occupant_name`: capital macron-Ū restoration on `Ḏhutnufer`
+#     (all 3 agents agree on stripped form; PM headword prints `ḎḤUTNŪFER`
+#     per the standard OCR macron-drop class; egyptologist to verify PDF).
+# ALL_CORRECTIONS aggregation is enforced by
+# `test_all_corrections_includes_every_chunk_list`.
+CHUNK16_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT72",
+        "occupant_name",
+        "Rēʿ",
+        "PM I.1 p.142 / physical PDF p.160. Egyptologist printed-source "
+        "review (this PR) confirms PM prints headword `RĒʿ` with capital "
+        "macron-Ē + ayin. Same OCR macron-drop class as chunk-11 TT29 "
+        "`AMENEMŌPET`, chunk-12 TT34 `MENTUEMḤĒT`, chunk-14 TT51 "
+        "`USERḤĒT`, chunk-15 TT65 `NEBAMŪN`. Restore macron-Ē; preserve "
+        "ayin (U+02BF). The deity name `Reʿ` (sun god) takes capital "
+        "macron in PM-faithful transliteration.",
+    ),
+    (
+        "TT77",
+        "occupant_name",
+        "Ptahemhēt",
+        "PM I.1 p.150 / physical PDF p.168. Egyptologist confirms PM "
+        "prints headword `PTAḤEMḤĒT` with multi-Ḥ + capital macron-Ē "
+        "(same `-emḤĒt` cluster as chunk-12 TT34 `MENTUEMḤĒT` / chunk-14 "
+        "TT51 `USERḤĒT` / chunk-14 TT53 `AMENEMḤĒT`). Strip both Ḥ-"
+        "underdots per policy; preserve macron-Ē → `Ptahemhēt`.",
+    ),
+    (
+        "TT78",
+        "notes_from_pm",
+        (
+            "Royal scribe, Scribe of recruits. Temp. Tuthmosis III to "
+            "Amenophis III. (CHAMPOLLION, No. 4, L. D. Text, No. 57, "
+            "WILKINSON, No. 16, HAY, No. 23.) Mother, Ēsi. Wife, Ithuy."
+        ),
+        "PM I.1 p.152 / physical PDF p.170. Egyptologist confirms PM "
+        "prints mother's name `Ēsi` with capital macron-Ē in body prose "
+        "(lowercase macrons preserved by pypdf — but the OCR for this "
+        "page also dropped it). Restore macron-Ē in notes_from_pm per "
+        "the verbatim-preserve policy and the same OCR class as "
+        "chunk-9 TT5 `Taēsi`.",
+    ),
+    (
+        "TT77",
+        "notes_from_pm",
+        (
+            "Child of the nursery, Overseer of works in the Temple of "
+            "Amūn, Standard-bearer of the Lord of the Two Lands. Usurped "
+            "by Roy, Overseer of sculptors of the Lord of the Two Lands. "
+            "Temp. Tuthmosis IV. (CHAMPOLLION, No. 8 bis, L. D. Text, "
+            "No. 62.) Wife (of Ptaḥemḥet), Meryt. Wife (of Roy), Raʿḥuy."
+        ),
+        "PM I.1 p.150 / physical PDF p.168. Egyptologist confirms PM "
+        "prints Roy's wife's name `Raʿḥuy` with ayin (U+02BF) — same "
+        "OCR drop class as chunk-9 / chunk-10 ayin restorations. The "
+        "OCR text-layer rendered `Raḥuy` (no ayin); restore per the "
+        "verbatim-preserve policy.",
+    ),
+    (
+        "TT79",
+        "notes_from_pm",
+        (
+            "Overseer of the granary of the Lord of the Two Lands, "
+            "wʿab-priest in the Mortuary Temple of Tuthmosis III. "
+            "Temp. Tuthmosis III to Amenophis II (?). (CHAMPOLLION, "
+            "No. 7, L. D. Text, No. 60.) Father, Minnakht (tomb 87)."
+        ),
+        "PM I.1 p.156 / physical PDF p.174. Egyptologist confirms PM "
+        "prints `wʿab-priest` with ayin (U+02BF) before the `a` — same "
+        "TT14 (PM I.1 p.26) / TT68 (PM I.1 p.133) `wʿab-priest` "
+        "precedent already established in tie-break-overrides.json. "
+        "The chunk-16 merge pinned agent A's stripped form (no ayin); "
+        "fix_rows layers the ayin restoration post-merge per the "
+        "merge/fix_rows separation-of-concerns convention.",
+    ),
+    (
+        "TT80",
+        "occupant_name",
+        "Ḏhutnūfer",
+        "PM I.1 p.157 / physical PDF p.175. Direct PDF visual check "
+        "(parent agent, this PR) confirms PM prints headword `ḎḤUTNŪFER` "
+        "with capital d-bar Ḏ (Thoth/Djehuty name family) + capital "
+        "underdot-Ḥ + capital macron-Ū. All 3 agents converged on the "
+        "d-bar Ḏ + Ḥ-stripped form `Ḏhutnufer` (correct per the "
+        "PR #200 / #151 d-bar precedent for the Ḏḥwty-family); the "
+        "macron-Ū drop is the same OCR class as chunk-12 TT34 "
+        "`MENTUEMḤĒT` / chunk-14 TT51 `USERḤĒT` / chunk-15 TT65 "
+        "`NEBAMŪN` / chunk-15 TT68 `[PER?]ENKHMŪN`. Restore macron-Ū "
+        "→ `Ḏhutnūfer`.",
+    ),
+]
+
+
+CHUNK16_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1598,6 +1700,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK13_CORRECTIONS,
     CHUNK14_CORRECTIONS,
     CHUNK15_CORRECTIONS,
+    CHUNK16_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1615,6 +1718,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK13_RENAMES,
     **CHUNK14_RENAMES,
     **CHUNK15_RENAMES,
+    **CHUNK16_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -1938,6 +2042,26 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "identity to hedge. Flip from deriver-fired `uncertain` back to "
         "`attested`. Same usurper-clause hedge class as chunk-11 TT22 "
         "(Wah usurped by Mery[amūn], regnal hedge on usurper's date).",
+    ),
+    # Chunk-16 attribution_certainty override. Same TT2-precedent chain:
+    # PM's `(?)` qualifies the regnal-date range, NOT the primary occupant's
+    # identification. TT79's headword names Menkheper unhedged with his
+    # occupational titles; only the temporal qualifier `Amenophis II (?)`
+    # carries the hedge.
+    (
+        "TT79",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.156 prints `79. MENKHEPER (or MENKHEPERRAṢONB) ..., "
+        "Overseer of the granary of the Lord of the Two Lands, wʿab-"
+        "priest in the Mortuary Temple of Tuthmosis III. Temp. Tuthmosis "
+        "III to Amenophis II (?).` The `(?)` qualifies the regnal-range "
+        "tail (Amenophis II), not Menkheper's identification as Overseer "
+        "of the granary / wʿab-priest. Same regnal-range tail hedge class "
+        "as chunk-10 TT12/TT19/TT20, chunk-13 TT41/TT43/TT46, chunk-14 "
+        "TT52/TT54, chunk-15 TT62/TT65/TT69. Per chunk-9 TT2 precedent "
+        "that attribution_certainty encodes occupant-identity certainty, "
+        "not regnal-date certainty.",
     ),
 ]
 
