@@ -30,7 +30,7 @@ Assess the following, citing specific examples from the data:
 Before flagging a diacritic on a Phase-0 authority extraction (`pipeline/pipeline/authority/sources/<source>/`) as wrong — whether claiming a printed character should be added, dropped, or changed (`ḥ` vs `h`, `ḏ` vs `d`, `ē` vs `e`, etc.) — you **must first grep the OCR text-layer, and if the text-layer doesn't settle it, render the disputed line at high DPI**. This is non-negotiable because confident PDF-visual claims at low resolution have overridden correct OCR-derived data multiple times:
 
 1. **PR #83 Leprohon chunk 1 (2026-04-20)** — flagged `smr ẖt` as wanting `smr ḫt`. PDF text layer was `Xt` (= ẖ in MdC). The "correction" introduced a regression.
-2. **PR #210 Porter-Moss chunk 18 (2026-05-10)** — flagged `Nebpeḥtireʿ` / `Ḥunay(t)` as wanting plain h, no underdot. The OCR text-layer in `raw/chunk-p203-p233.txt` already contained the capital `Ḥ` glyph in `Ḥunay(t)` directly (pypdf-readable, no decoding needed) and a `Q.` bigram in `Nebpe*tireʿ` that `postprocess.py` recognises in the PM-I.1-specific `Sit-gQ.out → Sit-ḍḥout` rule. The high-DPI crop confirmed both underdots visually at 5x zoom. The "correction" had to be reverted.
+2. **PR #210 Porter-Moss chunk 18 (2026-05-10)** — flagged `Nebpeḥtireʿ` / `Ḥunay(t)` as wanting plain h, no underdot. The OCR text-layer in `raw/chunk-p203-p233.txt:475` already contained the capital `Ḥ` glyph in `Ḥunay(t)` directly (pypdf-readable, no decoding needed) — that alone refuted the "PM doesn't print underdots" claim. The `NebpeQ.tireʿ` neighbour token uses the same `Q.` → `ḥ` publisher-OCR substitute that `postprocess.py` documents for `Sit-gQ.out`, though that specific substring rule does not fire on `Nebpe…` (the agents recognised the pattern from prompt context, not from an automatic postprocess transform). The high-DPI crop confirmed both underdots visually at 5x zoom. The "correction" had to be reverted.
 3. **Chunk-17 near-miss (2026-05-10, the same day)** — issue #209 was filed claiming `Sit-ḏhout` / `Siḏhout` / `Sen-ḏhout` (chunk-17 TT81/TT84/TT87) had the same regression because OCR shows `Sit-g~out` etc. The high-DPI crop step in this protocol caught the error: PM actually prints those names with d-bar Ḏ + plain h, no ḥ-underdot. The OCR `g~` is residual hieroglyph noise, not in `postprocess.py`'s substitution table at all (only `Sit-gQ.out → Sit-ḍḥout` is — and that fires on `Q.`, not `~`). The egyptologist subagent had been right; the proposed revert would have introduced a new regression. **This is the protocol working as designed.**
 
 Common root cause across all three: **a diacritic claim was made from a single noisy signal (low-res visual, or pattern-matched OCR substring) without cross-checking the other**. The fix is to require both signals to agree before tagging P1.
@@ -40,11 +40,11 @@ Common root cause across all three: **a diacritic claim was made from a single n
 **Subagent steps (you run these):**
 
 1. **Locate the chunk file.** For Phase-0 sources, raw chunk text lives at `pipeline/pipeline/authority/sources/<source>/raw/chunk-*.txt` (gitignored but on disk for the active branch). Identify which chunk file covers the disputed row's printed page.
-2. **Grep for the disputed token.** Search the chunk file for the surrounding context (use absolute path, e.g. `grep -n 'Nebpe\|unay' pipeline/pipeline/authority/sources/<source>/raw/chunk-p203-p233.txt`). To decode OCR noise, **read the source's `postprocess.py` directly** — that file is the single source of truth for which OCR bigrams map to which Egyptological characters, and inline tables here drift out of sync (Gemini caught one such drift on this very PR). Do not invent decode rules from pattern resemblance: if a bigram isn't in `postprocess.py`'s `_SUBSTRING_FIXES` / regex list, it has no documented decoding and the agents would have left it as raw noise.
+2. **Grep for the disputed token.** Search the chunk file for the surrounding context (use full path from the repository root, e.g. `grep -n 'Nebpe\|unay' pipeline/pipeline/authority/sources/<source>/raw/chunk-p203-p233.txt`). To decode OCR noise, **read the source's `postprocess.py` directly** — that file is the single source of truth for which OCR bigrams map to which Egyptological characters; inline pattern tables in agent prompts drift out of sync with the code. Do not invent decode rules from pattern resemblance: if a bigram isn't in `postprocess.py`'s `_SUBSTRING_FIXES` / regex list, it has no documented decoding and the agents would have left it as raw noise.
 3. **Decide based on OCR + postprocess.py:**
-   - **If the OCR text-layer carries the diacritic the agents extracted AND the bigram has a documented decoding in `postprocess.py`,** the OCR settles it. Do NOT flag — pypdf reads embedded glyph codes deterministically, so if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`.
-   - **If the OCR text-layer is unambiguously opposite to the agents' extraction via a documented `postprocess.py` rule,** that's a legitimate **P1**. Cite the grep result + line number and the postprocess rule.
-   - **Otherwise** (OCR is ambiguous, the bigram has no documented decoding, or you have a low-resolution visual suspicion you cannot confirm from text alone), **emit a `P2-PENDING-CROP` finding** in the structured form below. Do NOT tag P1 from the subagent without a confirmed crop — the parent agent will run the verification and promote.
+   - **If the OCR text-layer carries the diacritic the agents extracted** — either as a direct Unicode glyph (`Ḥ`, `ḏ`, `ē`) or via a bigram with a documented decoding in `postprocess.py` (`J:I → Ḥ`, etc.) — the OCR settles it. Do NOT flag. pypdf reads embedded glyph codes deterministically, so if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`.
+   - **If the OCR text-layer is unambiguously opposite to the agents' extraction** — either as a direct Unicode glyph or via a documented `postprocess.py` rule — that's a legitimate **P1**. Cite the grep result + line number (and the postprocess rule, if applicable).
+   - **Otherwise** (OCR is ambiguous, the bigram has no documented decoding and no direct glyph, or you have a low-resolution visual suspicion you cannot confirm from text alone), **emit a `P2-PENDING-CROP` finding** in the structured form below. Do NOT tag P1 from the subagent without a confirmed crop — the parent agent will run the verification and promote.
 
 **P2-PENDING-CROP handoff block** (paste verbatim into the finding; the parent agent's promotion script greps for this fenced block):
 
@@ -53,7 +53,7 @@ Common root cause across all three: **a diacritic claim was made from a single n
 finding_id: <F1, F2, ... unique within this review>
 source_pdf: proprietary/books/<book>.pdf
 printed_page: <N>
-physical_page_index_estimate: <N + observed offset; agent may guess from chunk file's printed-page header>
+physical_page_doc_index_estimate: <0-based index for fitz.doc[N] — typically (printed_page + observed_offset - 1). Used directly: `page = doc[<this_value>]`.>
 search_token: <a short, unique-on-page token to feed page.search_for(); e.g. "Nebpe" or "Resi"; pick a neighbour token if the disputed token itself contains OCR noise>
 current_value: <what reconciled.jsonl currently has at this field>
 proposed_value: <subagent's suggested correction>
@@ -69,9 +69,9 @@ rationale: <one-sentence summary of why steps 1-3 left this ambiguous>
    import fitz, os
    os.makedirs('/tmp/claude', exist_ok=True)
    doc = fitz.open('proprietary/books/<book>.pdf')
-   page = doc[<physical_page_index_estimate>]
+   page = doc[<physical_page_doc_index_estimate>]  # 0-based fitz index, used directly
    rects = page.search_for('<search_token>')
-   assert rects, f"token not found on page {page.number}; try a different search_token from the pending-crop block or adjust physical_page_index_estimate"
+   assert rects, f"token not found on page {page.number}; try a different search_token from the pending-crop block or adjust physical_page_doc_index_estimate"
    r = rects[0]
    # x0/x1 below are PM I.1's text-column margins (column ~60..460pt). For other sources,
    # derive from page.rect or page.get_text("blocks")[0] rather than copying these numbers.
