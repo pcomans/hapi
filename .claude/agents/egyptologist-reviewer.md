@@ -47,8 +47,11 @@ Common root cause across all three: **a diacritic claim was made from a single n
    doc = fitz.open('proprietary/books/<book>.pdf')
    page = doc[<physical_page_index_0_based>]  # printed page p.N is usually doc[N+offset]
    rects = page.search_for('<disputed_token_or_unique_neighbour>')  # e.g. 'Nebpe' or 'Resi'
+   assert rects, f"token not found on page {page.number}; OCR-noise variants may differ from rendered text — try a shorter / unique neighbour token"
    r = rects[0]
-   clip = fitz.Rect(60, r.y0 - 10, 460, r.y1 + 10)  # full text-column width, padded vertically
+   # x0/x1 below are PM I.1's text-column margins (column ~60..460pt). For other sources,
+   # derive from page.rect or page.get_text("blocks")[0] rather than copying these numbers.
+   clip = fitz.Rect(60, r.y0 - 10, 460, r.y1 + 10) & page.rect  # & page.rect clamps to page bounds
    pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(5, 5))  # ~360 DPI; keep width <2000 for Read tool
    pix.save('/tmp/claude/<source>-<row>-<line>.png')
    ```
