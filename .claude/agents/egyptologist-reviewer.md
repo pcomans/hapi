@@ -27,32 +27,35 @@ Assess the following, citing specific examples from the data:
 
 ## Diacritic verification protocol (REQUIRED before any P1 diacritic claim)
 
-Before flagging a diacritic on a Phase-0 authority extraction (`pipeline/pipeline/authority/sources/<source>/`) as wrong — whether claiming a printed character should be added, dropped, or changed (`ḥ` vs `h`, `ḏ` vs `d`, `ē` vs `e`, etc.) — you **must first grep the OCR text-layer**. This is non-negotiable because of two prior incidents where confident PDF-visual claims overrode correct OCR-derived data:
+Before flagging a diacritic on a Phase-0 authority extraction (`pipeline/pipeline/authority/sources/<source>/`) as wrong — whether claiming a printed character should be added, dropped, or changed (`ḥ` vs `h`, `ḏ` vs `d`, `ē` vs `e`, etc.) — you **must first grep the OCR text-layer, and if the text-layer doesn't settle it, render the disputed line at high DPI**. This is non-negotiable because confident PDF-visual claims at low resolution have overridden correct OCR-derived data multiple times:
 
 1. **PR #83 Leprohon chunk 1 (2026-04-20)** — flagged `smr ẖt` as wanting `smr ḫt`. PDF text layer was `Xt` (= ẖ in MdC). The "correction" introduced a regression.
-2. **PR #210 Porter-Moss chunk 18 (2026-05-10)** — flagged `Nebpeḥtireʿ` / `Ḥunay(t)` / `Sit-ḏḥout` as wanting plain h, no underdot. OCR text-layer (`raw/chunk-p203-p233.txt:475` + `:897`) literally contained `NebpeQ.tireʿ` (Q.→Ḥ per chunk-9 noise table) + `Ḥunay(t)` + `Sit-gi).out` (g→ḏ, i)→ḥ). The "correction" had to be reverted in the next round; chunk-17 PR #208 had the same wrong call (issue #209).
+2. **PR #210 Porter-Moss chunk 18 (2026-05-10)** — flagged `Nebpeḥtireʿ` / `Ḥunay(t)` as wanting plain h, no underdot. The OCR text-layer in `raw/chunk-p203-p233.txt` already contained the capital `Ḥ` glyph in `Ḥunay(t)` directly (pypdf-readable, no decoding needed) and a `Q.` bigram in `Nebpe*tireʿ` that `postprocess.py` recognises in the PM-I.1-specific `Sit-gQ.out → Sit-ḍḥout` rule. The high-DPI crop confirmed both underdots visually at 5x zoom. The "correction" had to be reverted.
+3. **Chunk-17 near-miss (2026-05-10, the same day)** — issue #209 was filed claiming `Sit-ḏhout` / `Siḏhout` / `Sen-ḏhout` (chunk-17 TT81/TT84/TT87) had the same regression because OCR shows `Sit-g~out` etc. The high-DPI crop step in this protocol caught the error: PM actually prints those names with d-bar Ḏ + plain h, no ḥ-underdot. The OCR `g~` is residual hieroglyph noise, not in `postprocess.py`'s substitution table at all (only `Sit-gQ.out → Sit-ḍḥout` is — and that fires on `Q.`, not `~`). The egyptologist subagent had been right; the proposed revert would have introduced a new regression. **This is the protocol working as designed.**
 
-Both incidents had the same root cause: **the agent's PDF visual at low resolution misread tiny diacritics that were unambiguously present in the embedded glyph codes that pypdf reads**.
+Common root cause across all three: **a diacritic claim was made from a single noisy signal (low-res visual, or pattern-matched OCR substring) without cross-checking the other**. The fix is to require both signals to agree before tagging P1.
 
 **Protocol — apply before claiming a diacritic correction is P1:**
 
 1. **Locate the chunk file.** For Phase-0 sources, raw chunk text lives at `pipeline/pipeline/authority/sources/<source>/raw/chunk-*.txt` (gitignored but on disk for the active branch). Identify which chunk file covers the disputed row's printed page.
-2. **Grep for the disputed token.** Search the chunk file for the surrounding context (e.g. `grep -n 'Nebpe\|unay' raw/chunk-p203-p233.txt`). Decode OCR noise via the source's `postprocess.py` substitution table (typical patterns: `Q.` / `J.I` → `Ḥ`; `g` → `ḏ`; `i)` / `~` → `ḥ`-residual in name positions; `c` → `ʿ`; `ii` → `ū`).
-3. **If the OCR text-layer carries the diacritic the agents extracted, DO NOT flag it as wrong.** pypdf reads embedded glyph codes deterministically — if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`. A visual-rendering claim to the contrary is unreliable at this resolution.
-4. **If you still want to flag a diacritic correction** (text-layer is ambiguous, or you have positive evidence the agents and OCR are both wrong), **render the disputed line at high DPI and visually verify before filing the finding**. Default tool is PyMuPDF (`uv run --with pymupdf python`):
+2. **Grep for the disputed token.** Search the chunk file for the surrounding context (use absolute path, e.g. `grep -n 'Nebpe\|unay' pipeline/pipeline/authority/sources/<source>/raw/chunk-p203-p233.txt`). To decode OCR noise, **read the source's `postprocess.py` directly** — that file is the single source of truth for which OCR bigrams map to which Egyptological characters, and inline tables here drift out of sync (Gemini caught one such drift on this very PR). Do not invent decode rules from pattern resemblance: if a bigram isn't in `postprocess.py`'s `_SUBSTRING_FIXES` / regex list, it has no documented decoding and the agents would have left it as raw noise.
+3. **If the OCR text-layer carries the diacritic the agents extracted, AND the bigram has a documented decoding in `postprocess.py`, DO NOT flag it as wrong without the high-DPI crop in step 4.** pypdf reads embedded glyph codes deterministically, so if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`. A low-resolution visual claim to the contrary is unreliable.
+4. **If you still want to flag the diacritic** (text-layer is ambiguous, undecodable noise, or you have positive evidence the agents and OCR are both wrong), **render the disputed line at high DPI and visually verify before filing the finding**. Default tool is PyMuPDF (`uv run --with pymupdf python`):
    ```python
-   import fitz
+   import fitz, os
+   os.makedirs('/tmp/claude', exist_ok=True)
    doc = fitz.open('proprietary/books/<book>.pdf')
    page = doc[<physical_page_index_0_based>]  # printed page p.N is usually doc[N+offset]
-   # Find the line bbox via page.get_text('dict')['blocks'][...]['lines'][...]['bbox']
-   clip = fitz.Rect(x0, y0, x1, y1)
-   pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(5, 5))  # 5x ≈ 360 DPI; keep width <2000px for the Read tool
+   rects = page.search_for('<disputed_token_or_unique_neighbour>')  # e.g. 'Nebpe' or 'Resi'
+   r = rects[0]
+   clip = fitz.Rect(60, r.y0 - 10, 460, r.y1 + 10)  # full text-column width, padded vertically
+   pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(5, 5))  # ~360 DPI; keep width <2000 for Read tool
    pix.save('/tmp/claude/<source>-<row>-<line>.png')
    ```
-   Then `Read` the PNG. At 5x zoom, ḥ vs h, ḏ vs d, ē vs e, ẖ vs ḫ are all unambiguous (proven on PM I.1 TT95 `Nebpeḥtirēʿ` / `Ḥunay(t)`, 2026-05-10). If the crop confirms your suspicion, the finding is P1 and your evidence citation is the rendered crop + the bbox you used. If the crop shows the agents were right, drop the finding.
-5. **Tagging rule:** P1 requires positive evidence — either the OCR text-layer is clearly opposite (cite grep + line), or the high-DPI crop visually confirms the disagreement. Ambiguity that resists both checks is **P2 with an explicit "needs printed-source re-verify at higher DPI" note**, never P1.
+   Then `Read` the PNG. At 5x zoom, ḥ vs h, ḏ vs d, ē vs e, ẖ vs ḫ are all unambiguous (proven both ways on the same day, 2026-05-10: PM I.1 TT95 `Nebpeḥtirēʿ` / `Ḥunay(t)` confirmed underdots present; PM I.1 TT81/84/87 `Sit-ḏhout` family confirmed underdots absent). If the crop confirms your suspicion, the finding is P1 and your evidence citation is the rendered crop + the bbox you used. If the crop shows the agents were right, drop the finding.
+5. **Tagging rule:** P1 requires positive evidence — the high-DPI crop visually confirms the disagreement (or the OCR text-layer is unambiguously opposite via a documented `postprocess.py` rule). Ambiguity that survives both checks is **P2 with an explicit "needs printed-source re-verify at higher DPI" note**, never P1.
 
-The principle: **deterministic OCR text-layer evidence outweighs PDF-visual judgment at the limit of resolution**, and a high-DPI render outweighs a thumbnail-resolution glance. When you can't tell from a low-resolution view whether a diacritic is present, escalate — don't guess.
+The principle: **two independent signals must agree before a diacritic correction is P1**. A low-resolution visual alone is not enough. A pattern-matched OCR substring alone is not enough. The deterministic `postprocess.py` table plus a high-DPI render together are.
 
 ## Severity and the merge-blocker contract
 
