@@ -35,30 +35,54 @@ Before flagging a diacritic on a Phase-0 authority extraction (`pipeline/pipelin
 
 Common root cause across all three: **a diacritic claim was made from a single noisy signal (low-res visual, or pattern-matched OCR substring) without cross-checking the other**. The fix is to require both signals to agree before tagging P1.
 
-**Protocol — apply before claiming a diacritic correction is P1:**
+**Protocol — split between subagent (this reviewer) and parent agent.** The subagent runs steps 1-3 with `Read` + `Grep` only. The high-DPI crop step requires Bash to invoke PyMuPDF, which is not in this subagent's toolset; that work is performed by the parent agent on receipt of a structured handoff (step 4). The parent's promotion rule is in step 5.
+
+**Subagent steps (you run these):**
 
 1. **Locate the chunk file.** For Phase-0 sources, raw chunk text lives at `pipeline/pipeline/authority/sources/<source>/raw/chunk-*.txt` (gitignored but on disk for the active branch). Identify which chunk file covers the disputed row's printed page.
 2. **Grep for the disputed token.** Search the chunk file for the surrounding context (use absolute path, e.g. `grep -n 'Nebpe\|unay' pipeline/pipeline/authority/sources/<source>/raw/chunk-p203-p233.txt`). To decode OCR noise, **read the source's `postprocess.py` directly** — that file is the single source of truth for which OCR bigrams map to which Egyptological characters, and inline tables here drift out of sync (Gemini caught one such drift on this very PR). Do not invent decode rules from pattern resemblance: if a bigram isn't in `postprocess.py`'s `_SUBSTRING_FIXES` / regex list, it has no documented decoding and the agents would have left it as raw noise.
-3. **If the OCR text-layer carries the diacritic the agents extracted, AND the bigram has a documented decoding in `postprocess.py`, DO NOT flag it as wrong without the high-DPI crop in step 4.** pypdf reads embedded glyph codes deterministically, so if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`. A low-resolution visual claim to the contrary is unreliable.
-4. **If you still want to flag the diacritic** (text-layer is ambiguous, undecodable noise, or you have positive evidence the agents and OCR are both wrong), **render the disputed line at high DPI and visually verify before filing the finding**. Default tool is PyMuPDF (`uv run --with pymupdf python`):
+3. **Decide based on OCR + postprocess.py:**
+   - **If the OCR text-layer carries the diacritic the agents extracted AND the bigram has a documented decoding in `postprocess.py`,** the OCR settles it. Do NOT flag — pypdf reads embedded glyph codes deterministically, so if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`.
+   - **If the OCR text-layer is unambiguously opposite to the agents' extraction via a documented `postprocess.py` rule,** that's a legitimate **P1**. Cite the grep result + line number and the postprocess rule.
+   - **Otherwise** (OCR is ambiguous, the bigram has no documented decoding, or you have a low-resolution visual suspicion you cannot confirm from text alone), **emit a `P2-PENDING-CROP` finding** in the structured form below. Do NOT tag P1 from the subagent without a confirmed crop — the parent agent will run the verification and promote.
+
+**P2-PENDING-CROP handoff block** (paste verbatim into the finding; the parent agent's promotion script greps for this fenced block):
+
+````
+```pending-crop
+finding_id: <F1, F2, ... unique within this review>
+source_pdf: proprietary/books/<book>.pdf
+printed_page: <N>
+physical_page_index_estimate: <N + observed offset; agent may guess from chunk file's printed-page header>
+search_token: <a short, unique-on-page token to feed page.search_for(); e.g. "Nebpe" or "Resi"; pick a neighbour token if the disputed token itself contains OCR noise>
+current_value: <what reconciled.jsonl currently has at this field>
+proposed_value: <subagent's suggested correction>
+expected_glyph_at_position: <which character to inspect, e.g. "ḥ vs h after 'Nebpe'", "ḏ vs d in 'Sit-…hout'">
+rationale: <one-sentence summary of why steps 1-3 left this ambiguous>
+```
+````
+
+**Parent-agent steps (NOT for the subagent — the parent runs these on receipt of a `P2-PENDING-CROP` block):**
+
+4. **Render and verify.** For each `pending-crop` block in the subagent's review, run:
    ```python
    import fitz, os
    os.makedirs('/tmp/claude', exist_ok=True)
    doc = fitz.open('proprietary/books/<book>.pdf')
-   page = doc[<physical_page_index_0_based>]  # printed page p.N is usually doc[N+offset]
-   rects = page.search_for('<disputed_token_or_unique_neighbour>')  # e.g. 'Nebpe' or 'Resi'
-   assert rects, f"token not found on page {page.number}; OCR-noise variants may differ from rendered text — try a shorter / unique neighbour token"
+   page = doc[<physical_page_index_estimate>]
+   rects = page.search_for('<search_token>')
+   assert rects, f"token not found on page {page.number}; try a different search_token from the pending-crop block or adjust physical_page_index_estimate"
    r = rects[0]
    # x0/x1 below are PM I.1's text-column margins (column ~60..460pt). For other sources,
    # derive from page.rect or page.get_text("blocks")[0] rather than copying these numbers.
    clip = fitz.Rect(60, r.y0 - 10, 460, r.y1 + 10) & page.rect  # & page.rect clamps to page bounds
    pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(5, 5))  # ~360 DPI; keep width <2000 for Read tool
-   pix.save('/tmp/claude/<source>-<row>-<line>.png')
+   pix.save(f'/tmp/claude/<source>-<finding_id>.png')
    ```
-   Then `Read` the PNG. At 5x zoom, ḥ vs h, ḏ vs d, ē vs e, ẖ vs ḫ are all unambiguous (proven both ways on the same day, 2026-05-10: PM I.1 TT95 `Nebpeḥtirēʿ` / `Ḥunay(t)` confirmed underdots present; PM I.1 TT81/84/87 `Sit-ḏhout` family confirmed underdots absent). If the crop confirms your suspicion, the finding is P1 and your evidence citation is the rendered crop + the bbox you used. If the crop shows the agents were right, drop the finding.
-5. **Tagging rule:** P1 requires positive evidence — the high-DPI crop visually confirms the disagreement (or the OCR text-layer is unambiguously opposite via a documented `postprocess.py` rule). Ambiguity that survives both checks is **P2 with an explicit "needs printed-source re-verify at higher DPI" note**, never P1.
+   Then `Read` the PNG. At 5x zoom, ḥ vs h, ḏ vs d, ē vs e, ẖ vs ḫ are all unambiguous (proven both ways on 2026-05-10: PM I.1 TT95 `Nebpeḥtirēʿ` / `Ḥunay(t)` confirmed underdots present; PM I.1 TT81/84/87 `Sit-ḏhout` family confirmed underdots absent).
+5. **Promote or drop.** If the crop confirms the subagent's `proposed_value`, **promote the finding to P1** and apply the fix in this PR. If the crop shows the agents were right, **drop the finding** and post a reply on the subagent's review thread citing the crop + the resolution. Never merge a PR with un-resolved `P2-PENDING-CROP` blocks — the parent agent must explicitly close each one.
 
-The principle: **two independent signals must agree before a diacritic correction is P1**. A low-resolution visual alone is not enough. A pattern-matched OCR substring alone is not enough. The deterministic `postprocess.py` table plus a high-DPI render together are.
+The principle: **two independent signals must agree before a diacritic correction is P1**. A low-resolution visual alone is not enough. A pattern-matched OCR substring alone is not enough. The deterministic `postprocess.py` table plus a high-DPI render together are. The split between subagent (text-layer evidence) and parent (rendered-pixel evidence) preserves the subagent's read-only-ish scoping while keeping the verification deterministic.
 
 ## Severity and the merge-blocker contract
 
