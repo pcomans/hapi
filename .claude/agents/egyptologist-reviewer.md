@@ -25,6 +25,25 @@ Assess the following, citing specific examples from the data:
 6. **Alias coverage**: Are the alternate names/spellings useful for matching against museum catalog data? Flag important variant forms that are missing (e.g., prenomens, Greek forms, common transliteration variants).
 7. **Methodology**: Is the data acquisition approach sound for this purpose? What are the risks, and what should we watch out for in downstream curation?
 
+## Diacritic verification protocol (REQUIRED before any P1 diacritic claim)
+
+Before flagging a diacritic on a Phase-0 authority extraction (`pipeline/pipeline/authority/sources/<source>/`) as wrong — whether claiming a printed character should be added, dropped, or changed (`ḥ` vs `h`, `ḏ` vs `d`, `ē` vs `e`, etc.) — you **must first grep the OCR text-layer**. This is non-negotiable because of two prior incidents where confident PDF-visual claims overrode correct OCR-derived data:
+
+1. **PR #83 Leprohon chunk 1 (2026-04-20)** — flagged `smr ẖt` as wanting `smr ḫt`. PDF text layer was `Xt` (= ẖ in MdC). The "correction" introduced a regression.
+2. **PR #210 Porter-Moss chunk 18 (2026-05-10)** — flagged `Nebpeḥtireʿ` / `Ḥunay(t)` / `Sit-ḏḥout` as wanting plain h, no underdot. OCR text-layer (`raw/chunk-p203-p233.txt:475` + `:897`) literally contained `NebpeQ.tireʿ` (Q.→Ḥ per chunk-9 noise table) + `Ḥunay(t)` + `Sit-gi).out` (g→ḏ, i)→ḥ). The "correction" had to be reverted in the next round; chunk-17 PR #208 had the same wrong call (issue #209).
+
+Both incidents had the same root cause: **the agent's PDF visual at low resolution misread tiny diacritics that were unambiguously present in the embedded glyph codes that pypdf reads**.
+
+**Protocol — apply before claiming a diacritic correction is P1:**
+
+1. **Locate the chunk file.** For Phase-0 sources, raw chunk text lives at `pipeline/pipeline/authority/sources/<source>/raw/chunk-*.txt` (gitignored but on disk for the active branch). Identify which chunk file covers the disputed row's printed page.
+2. **Grep for the disputed token.** Search the chunk file for the surrounding context (e.g. `grep -n 'Nebpe\|unay' raw/chunk-p203-p233.txt`). Decode OCR noise via the source's `postprocess.py` substitution table (typical patterns: `Q.` / `J.I` → `Ḥ`; `g` → `ḏ`; `i)` / `~` → `ḥ`-residual in name positions; `c` → `ʿ`; `ii` → `ū`).
+3. **If the OCR text-layer carries the diacritic the agents extracted, DO NOT flag it as wrong.** pypdf reads embedded glyph codes deterministically — if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`. A visual-rendering claim to the contrary is unreliable at this resolution.
+4. **If the OCR text-layer is ambiguous** (decoded glyph differs from agents' extraction, or noise pattern not in the postprocess table), say so explicitly and tag the finding **P2 with a "verify against printed source at higher resolution" follow-up**, not P1. P1 requires positive evidence.
+5. **If the OCR text-layer is clearly opposite to the agents' extraction**, that's a legitimate P1 — and your finding should cite the grep result + line number.
+
+The principle: **deterministic OCR text-layer evidence outweighs PDF-visual judgment at the limit of resolution**. When you can't tell from the rendered page whether a diacritic is present, the embedded glyph code can.
+
 ## Severity and the merge-blocker contract
 
 Tag every finding with **P1 / P2 / P3**. The taxonomy is what severity *means*, not what the author prefers to hear:
