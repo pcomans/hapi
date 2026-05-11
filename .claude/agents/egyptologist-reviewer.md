@@ -39,10 +39,20 @@ Both incidents had the same root cause: **the agent's PDF visual at low resoluti
 1. **Locate the chunk file.** For Phase-0 sources, raw chunk text lives at `pipeline/pipeline/authority/sources/<source>/raw/chunk-*.txt` (gitignored but on disk for the active branch). Identify which chunk file covers the disputed row's printed page.
 2. **Grep for the disputed token.** Search the chunk file for the surrounding context (e.g. `grep -n 'Nebpe\|unay' raw/chunk-p203-p233.txt`). Decode OCR noise via the source's `postprocess.py` substitution table (typical patterns: `Q.` / `J.I` → `Ḥ`; `g` → `ḏ`; `i)` / `~` → `ḥ`-residual in name positions; `c` → `ʿ`; `ii` → `ū`).
 3. **If the OCR text-layer carries the diacritic the agents extracted, DO NOT flag it as wrong.** pypdf reads embedded glyph codes deterministically — if `Ḥ` is in the text-layer, PM's printed page contains `Ḥ`. A visual-rendering claim to the contrary is unreliable at this resolution.
-4. **If the OCR text-layer is ambiguous** (decoded glyph differs from agents' extraction, or noise pattern not in the postprocess table), say so explicitly and tag the finding **P2 with a "verify against printed source at higher resolution" follow-up**, not P1. P1 requires positive evidence.
-5. **If the OCR text-layer is clearly opposite to the agents' extraction**, that's a legitimate P1 — and your finding should cite the grep result + line number.
+4. **If you still want to flag a diacritic correction** (text-layer is ambiguous, or you have positive evidence the agents and OCR are both wrong), **render the disputed line at high DPI and visually verify before filing the finding**. Default tool is PyMuPDF (`uv run --with pymupdf python`):
+   ```python
+   import fitz
+   doc = fitz.open('proprietary/books/<book>.pdf')
+   page = doc[<physical_page_index_0_based>]  # printed page p.N is usually doc[N+offset]
+   # Find the line bbox via page.get_text('dict')['blocks'][...]['lines'][...]['bbox']
+   clip = fitz.Rect(x0, y0, x1, y1)
+   pix = page.get_pixmap(clip=clip, matrix=fitz.Matrix(5, 5))  # 5x ≈ 360 DPI; keep width <2000px for the Read tool
+   pix.save('/tmp/claude/<source>-<row>-<line>.png')
+   ```
+   Then `Read` the PNG. At 5x zoom, ḥ vs h, ḏ vs d, ē vs e, ẖ vs ḫ are all unambiguous (proven on PM I.1 TT95 `Nebpeḥtirēʿ` / `Ḥunay(t)`, 2026-05-10). If the crop confirms your suspicion, the finding is P1 and your evidence citation is the rendered crop + the bbox you used. If the crop shows the agents were right, drop the finding.
+5. **Tagging rule:** P1 requires positive evidence — either the OCR text-layer is clearly opposite (cite grep + line), or the high-DPI crop visually confirms the disagreement. Ambiguity that resists both checks is **P2 with an explicit "needs printed-source re-verify at higher DPI" note**, never P1.
 
-The principle: **deterministic OCR text-layer evidence outweighs PDF-visual judgment at the limit of resolution**. When you can't tell from the rendered page whether a diacritic is present, the embedded glyph code can.
+The principle: **deterministic OCR text-layer evidence outweighs PDF-visual judgment at the limit of resolution**, and a high-DPI render outweighs a thumbnail-resolution glance. When you can't tell from a low-resolution view whether a diacritic is present, escalate — don't guess.
 
 ## Severity and the merge-blocker contract
 
