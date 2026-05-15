@@ -41,7 +41,12 @@ out/
 # thin-copyright derivatives. If this repo is ever made public,
 # files at pipeline/pipeline/authority/sources/*/reconciled.jsonl
 # must be scrubbed first.
-proprietary/
+#
+# `proprietary/` itself is a git submodule pointing at the private
+# pcomans/hapi-proprietary repo (PDFs tracked via Git LFS). The
+# submodule gitlink + .gitmodules ARE committed; the submodule's
+# own working-tree files are managed by the submodule and are not
+# tracked from this repo's perspective.
 
 # OCR'd chunks of scan-only scholarly sources contain the source's own
 # prose (introductions, section commentary) verbatim — copyrighted

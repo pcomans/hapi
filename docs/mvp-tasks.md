@@ -100,6 +100,9 @@ The work is sequential by authority — dynasties first as the smallest, most co
 
 Acquire raw reference data per ADR-012 into `pipeline/pipeline/authority/sources/`. The operational protocol lives in [`docs/playbook-phase-0-ocr-transcription.md`](playbook-phase-0-ocr-transcription.md) — most recent iteration adds **Step 11.5 risk-driven automated checks** (PR #41) so reviewer-flagged failure-mode categories become deterministic checks in each source's diff script rather than per-row human to-dos. These can run in parallel:
 
+**Copyrighted source PDFs live in a private submodule.** `proprietary/` is a Git submodule pointing at the private `pcomans/hapi-proprietary` repo (PDFs tracked via Git LFS — see that repo's README). After a fresh clone of hapi, run `git submodule update --init proprietary` (and `brew install git-lfs && git lfs install` if not already installed) to populate the PDFs at `proprietary/books/*.pdf` — the paths cited throughout this document and in every source's `transcribe.md`. Even if hapi is made public, the submodule remote stays private; the gitlink alone is committed here.
+
+
 **PR hygiene hooks (infrastructure, constitutional rule 3 enforcement).**
 `.claude/hooks/` contains deterministic guards that convert the project's
 memory-only policies into CI-level failures so the agent can't silently skip
