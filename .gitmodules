@@ -1,3 +1,3 @@
 [submodule "proprietary"]
 	path = proprietary
-	url = https://github.com/pcomans/hapi-proprietary.git
+	url = ../hapi-proprietary.git
