@@ -251,25 +251,38 @@ def test_load_overrides_rejects_missing_rationale_key(merge_module, tmp_path):
 
 # === current overrides set (chunk-2 G7000x notes_from_pm 1/1/1 tie) =====
 
-def test_tie_break_overrides_contains_chunk2_g7000x(merge_module):
-    """Chunk 1 merged cleanly with no overrides; chunk 2 introduced exactly
-    one 1/1/1 tie on `G7000x|notes_from_pm` (PM III.1 § B. EAST FIELD opener,
-    where each of the three agents truncated the headword block at a
-    different sentence boundary). The override picks the longest faithful
-    capture — the cutoff lands before the first `REISNER and SMITH,`
-    bibliographic-ribbon line — with a cited rationale.
+def test_tie_break_overrides_contains_documented_chunks(merge_module):
+    """Documented 1/1/1 ties with printed-source citations:
+
+    - Chunk 2: `G7000x|notes_from_pm` (B. EAST FIELD opener, agents
+      truncated the headword block at three sentence boundaries; override
+      picks the longest faithful capture).
+    - Chunk 3: `LG84|occupant_alt_names` (PAKAP good name WEHEBREc-EMAKHET,
+      pypdf-`c` raised-ayin normalisation — three agents produced three
+      variants; override picks U+02BF + lowercase-post-hyphen to match
+      chunk-1's Menkaureʿ convention).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
-    silent resolution.
+    silent resolution. This test fails loud when a new chunk adds an
+    override — forcing the author to document the addition here too.
     """
     overrides = merge_module.TIE_BREAK_OVERRIDES
-    assert set(overrides.keys()) == {("G7000x", "notes_from_pm")}
-    entry = overrides[("G7000x", "notes_from_pm")]
-    assert "PM III.1" in entry["rationale"]
-    assert "p.179" in entry["rationale"]
-    assert entry["value"].startswith("TOMB OF HETEPHERES [I]")
-    assert entry["value"].endswith("(1925-7).")
+    assert set(overrides.keys()) == {
+        ("G7000x", "notes_from_pm"),
+        ("LG84", "occupant_alt_names"),
+    }
+
+    g7000x = overrides[("G7000x", "notes_from_pm")]
+    assert "PM III.1" in g7000x["rationale"]
+    assert "p.179" in g7000x["rationale"]
+    assert g7000x["value"].startswith("TOMB OF HETEPHERES [I]")
+    assert g7000x["value"].endswith("(1925-7).")
+
+    lg84 = overrides[("LG84", "occupant_alt_names")]
+    assert "PM III.1" in lg84["rationale"]
+    assert "p.290" in lg84["rationale"]
+    assert lg84["value"] == ["Wehebreʿ-emakhet"]
 
 
 # === SENTINEL_NULL_STRINGS divergence tripwires ==========================

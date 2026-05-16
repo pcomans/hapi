@@ -53,10 +53,21 @@ G7140 (Khufukhaef I):
 G7150 (Khufukhaef II):
   notes_from_pm: a="KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba." | b="KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba." | c="KHUFUKHAaEF [11] Greatest .of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba."  → chose "KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba."
 
+LG84 (Pakap):
+  occupant_alt_names: a=["Wehebrec-Emakhet"] | b=["Wehebrec-emakhet"] | c=["Wehebreʿ-emakhet"]  → chose ["Wehebreʿ-emakhet"]
+  tomb_aliases: a=["Campbell's Tomb"] | b=["Campbell's Tomb"] | c=[]  → chose ["Campbell's Tomb"]
+
+LG97 (Harsiesi):
+  notes_from_pm: a="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin." | b="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" | c="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"  → chose "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
 OCR-drift fixes (Roman-numeral restore in notes_from_pm):
+  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
+  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
+  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
+  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
   G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
 
 Reviewer-cited row corrections:

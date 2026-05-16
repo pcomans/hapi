@@ -11,6 +11,13 @@ Chunk 2 covers the Gîza Cemetery G 7000 East Field royal-family mastaba
 cluster (Hetepheres I G7000x, Kawab G7120, Khufukhaef I G7140, etc.).
 13 rows from PM III.1 § III "NECROPOLIS — B. EAST FIELD",
 physical pp.176–187 / printed pp.179–190.
+
+Chunk 3 covers the Gîza Central Field — LG 100 Khentkaus I "Sarcophagus-
+shaped Tomb" (Old Kingdom queen-mother at the IV/V transition) plus the
+adjacent Saite (Dyn XXVI) LG-numbered tombs including the joint burial of
+Commander ʿAhmosi + Queen Nekhtubasterau (LG 83, wife of Amasis) and the
+priest-pair Harsiesi + Harwoz (LG 97). 5 rows from PM III.1 § III "E.
+CENTRAL FIELD", physical pp.285–289 / printed pp.288–292.
 """
 
 from __future__ import annotations
@@ -51,7 +58,18 @@ CHUNK2_TOMB_IDS: frozenset[str] = frozenset({
     "G7150",                                      # Khufukhaef II
 })
 
-EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS
+# Chunk 3: Gîza Central Field — LG 100 Khentkaus I + Saite Dyn-XXVI cluster.
+# Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — E. CENTRAL FIELD,
+# physical pp.285–289 / printed pp.288–292.
+CHUNK3_TOMB_IDS: frozenset[str] = frozenset({
+    "LG100",   # SARCOPHAGUS-SHAPED TOMB OF Khentkaus I (Dyn IV/V queen-mother)
+    "LG81",    # bare-headword Saite Dyn-XXVI (OCR-drift "LG 8 I" → "LG81")
+    "LG83",    # joint: ʿAhmosi + Queen Nekhtubasterau (wife of Amasis)
+    "LG84",    # Pakap (good name Wehebreʿ-emakhet)
+    "LG97",    # joint: Harsiesi + Harwoz, both wnrw-priests
+})
+
+EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
 
 
 @lru_cache(maxsize=1)
@@ -82,10 +100,10 @@ def test_tomb_id_is_unique() -> None:
     assert len(ids) == len(set(ids))
 
 
-# Reisner G-number form: prefix `G`, 1+ digits, optional lowercase letter OR
-# trailing capital X (Reisner's `G7000X` convention). The PM-Memphis chunk 1
-# only emits the `G<num>` / `G<num><lower>` shapes; the capital-X tail is
-# pre-registered for chunk 3+ (Cemetery G 7000X Hetepheres).
+# Numbered tomb-ID form: 1+ uppercase prefix letters, 1+ digits, optional
+# lowercase/uppercase suffix letter. Accepts:
+# - Reisner G-numbers (G1, G1a, G7000X) from chunks 1 + 2
+# - Lepsius LG-numbers (LG81, LG83, LG100) from chunk 3
 _TOMB_ID_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-zA-Z]?)$")
 
 
@@ -211,24 +229,28 @@ def test_source_citation_shape() -> None:
 
 
 def test_source_citation_section_matches_chunk() -> None:
-    """Chunk 1 rows cite `section: "I"` (§ I. PYRAMIDS). Chunk 2 rows cite
-    `section: "III"` (§ III. NECROPOLIS, sub-letter B. EAST FIELD is implicit
-    in `cemetery: "G 7000"`)."""
+    """Chunk 1 rows cite `section: "I"` (§ I. PYRAMIDS). Chunks 2 and 3 cite
+    `section: "III"` (§ III. NECROPOLIS — chunk 2's B. EAST FIELD and chunk
+    3's E. CENTRAL FIELD are both within § III)."""
     for row in _rows():
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
             assert row["source_citation"]["section"] == "I", row
         elif row["tomb_id"] in CHUNK2_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK3_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_page_in_expected_range() -> None:
-    """Printed page ranges: chunk 1 = 11–35, chunk 2 = 179–190."""
+    """Printed page ranges: chunk 1 = 11–35, chunk 2 = 179–190, chunk 3 = 288–292."""
     for row in _rows():
         page = row["source_citation"]["page"]
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
             assert 11 <= page <= 35, f"{row['tomb_id']} page {page} outside chunk-1 [11, 35]"
         elif row["tomb_id"] in CHUNK2_TOMB_IDS:
             assert 179 <= page <= 190, f"{row['tomb_id']} page {page} outside chunk-2 [179, 190]"
+        elif row["tomb_id"] in CHUNK3_TOMB_IDS:
+            assert 288 <= page <= 292, f"{row['tomb_id']} page {page} outside chunk-3 [288, 292]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -242,23 +264,28 @@ def test_bce_dates_null_at_extraction_stage() -> None:
         assert row["date_bce_approx_end"] is None, row
 
 
-def test_cemetery_null_for_chunk1_and_g7000_for_chunk2() -> None:
+def test_cemetery_by_chunk() -> None:
     """Chunk 1 (pyramid-complex rows) carries `cemetery: null` — the pyramid
     IS its own complex. Chunk 2 (East Field mastabas) carries
-    `cemetery: "G 7000"` per PM's `CEMETERY G 7000` banner on printed p.182."""
+    `cemetery: "G 7000"` per PM's `CEMETERY G 7000` banner on printed p.182.
+    Chunk 3 (Central Field) carries `cemetery: "Central Field"` per PM's
+    § III. E. CENTRAL FIELD section header."""
     for row in _rows():
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
             assert row["cemetery"] is None, row
         elif row["tomb_id"] in CHUNK2_TOMB_IDS:
             assert row["cemetery"] == "G 7000", row
+        elif row["tomb_id"] in CHUNK3_TOMB_IDS:
+            assert row["cemetery"] == "Central Field", row
 
 
 def test_dynasty_assignments() -> None:
     """Chunk 1 (all three pyramid complexes) is Dyn. IV → `"4"`.
     Chunk 2 spans Dyn. IV (royal-family core), Dyn. V (later officials),
     and Dyn. VI (Pepy I priestly clientele on G7101, G7102).
-    Bare-headword shafts G7112 / G7142 carry `dynasty: null` (PM gives
-    no dating line).
+    Chunk 3 spans Dyn. IV/V (LG 100 Khentkaus) and Dyn. XXVI (the Saite
+    LG 81/83/84/97 cluster). Bare-headword shafts G7112 / G7142 carry
+    `dynasty: null` (PM gives no dating line).
     """
     for row in _rows():
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
@@ -267,6 +294,8 @@ def test_dynasty_assignments() -> None:
             assert row["dynasty"] is None, row
         elif row["tomb_id"] in CHUNK2_TOMB_IDS:
             assert row["dynasty"] in {"4", "5", "6"}, row
+        elif row["tomb_id"] in CHUNK3_TOMB_IDS:
+            assert row["dynasty"] in {"4", "26"}, row
 
 
 # === content / value assertions =============================================
@@ -668,6 +697,113 @@ def test_chunk2_g7150_khufukhaef_ii_late_dynasty_v() -> None:
     assert row["occupant_role"] == "Official"
     assert row["dynasty"] == "5"
     assert row["attribution_certainty"] == "attested"
+
+
+# === chunk-3 content / value assertions =====================================
+
+
+def test_chunk3_lg100_khentkaus_full_row() -> None:
+    """LG 100 — Sarcophagus-shaped Tomb of Khentkaus I, the famous queen-
+    mother who closes PM's Old Kingdom Central Field section (End of Dyn IV
+    or early Dyn V). PM's footnote 1 carries her titulary `Mother of the
+    two Kings of Upper and Lower Egypt, Daughter of the God, etc.` which
+    the chunk-3 prompt rolls into `notes_from_pm` as PM treats it as
+    inseparable from the LG 100 attribution.
+    """
+    row = _by_id("LG100")
+    assert row["tomb_id"] == "LG100"
+    assert row["occupant_name"] == "Khentkaus I"
+    assert row["occupant_role"] == "Queen"
+    assert row["dynasty"] == "4"  # transition phrasing uses start dynasty
+    assert row["sub_period"] is None
+    assert row["cemetery"] == "Central Field"
+    assert row["attribution_certainty"] == "attested"
+    assert row["is_joint_burial"] is False
+    assert row["co_occupants"] == []
+    assert row["source_citation"] == {"page": 288, "edition": EDITION_PM_III_1, "section": "III"}
+
+
+def test_chunk3_lg83_joint_burial_ahmosi_and_queen_nekhtubasterau() -> None:
+    """LG 83 — Saite (Dyn XXVI) joint burial of Commander ʿAhmosi and his
+    mother, Queen Nekhtubasterau, who was the wife of pharaoh Amasis.
+    The joint-burial schema: primary occupant in `occupant_name`, secondary
+    in `co_occupants`, `is_joint_burial: true`. PM's headword carries the
+    `wife of Amasis` parenthetical attesting the queen-mother attribution.
+    """
+    row = _by_id("LG83")
+    assert row["is_joint_burial"] is True
+    assert row["dynasty"] == "26"
+    assert row["sub_period"] == "Saite"
+    assert "Nekhtubasterau" in row["co_occupants"]
+    assert row["occupant_name"] == "ʿAhmosi"
+    assert row["occupant_role"] == "Official"  # primary is a Commander, not a King's-son
+    assert "Amasis" in row["notes_from_pm"]
+
+
+def test_chunk3_lg97_joint_burial_wnrw_priests() -> None:
+    """LG 97 — joint burial of two `wnrw`-priests, Harsiesi and Harwoz
+    (Dyn XXVI). Both held the same priestly title; one row with the
+    secondary in `co_occupants`.
+    """
+    row = _by_id("LG97")
+    assert row["is_joint_burial"] is True
+    assert row["dynasty"] == "26"
+    assert row["sub_period"] == "Saite"
+    assert row["occupant_role"] == "Official"
+    assert row["occupant_name"] == "Harsiesi"
+    assert "Harwoz" in row["co_occupants"]
+
+
+def test_chunk3_lg84_pakap_alt_name_wahibre_em_akhet() -> None:
+    """LG 84 — Saite Overseer of scribes Pakap, who carries the PM-printed
+    `good name WEHEBREc-EMAKHET` (Wahibre/Apries throne-name compound,
+    \"in the horizon\"). The `good name` token routes the secondary name
+    into `occupant_alt_names`. The pypdf raised-ayin glyph `c` is
+    normalised to U+02BF ayin in the canonical form, matching chunk-1's
+    `Menkaureʿ` convention. Tie-break override pin (1/1/1 on the three
+    agents' normalisation variants).
+    """
+    row = _by_id("LG84")
+    assert row["occupant_name"] == "Pakap"
+    assert row["occupant_alt_names"] == ["Wehebreʿ-emakhet"]
+    assert row["dynasty"] == "26"
+    assert row["sub_period"] == "Saite"
+    assert row["occupant_role"] == "Official"
+
+
+def test_chunk3_lg81_bare_headword_saite_unknown() -> None:
+    """LG 81 — bare-headword Saite tomb (PM gives the LG number, dynasty,
+    plan position, but NO occupant name in the headword). Mirrors the
+    chunk-2 G 7112 / G 7142 bare-headword pattern.
+
+    Regression-pin for two things:
+    1. The `merge.SENTINEL_NULL_STRINGS` divergence (omitting `"unknown"`)
+       still works on chunk-3 Lepsius-number rows, not just chunk-2 Reisner.
+    2. The LG-number OCR-drift normalisation: pypdf rendered the PM
+       printed `LG 81` as `LG 8 I` (Arabic 1 → Roman I); the prompt's
+       normalisation rule restores it to `tomb_id: "LG81"`.
+    """
+    row = _by_id("LG81")
+    assert row["occupant_name"] is None
+    assert row["occupant_role"] == "Unknown"
+    assert row["attribution_certainty"] == "uncertain"
+    assert row["dynasty"] == "26"
+    assert row["sub_period"] == "Saite"
+
+
+def test_chunk3_no_sub_period_for_old_kingdom_rows() -> None:
+    """Only Dyn-XXVI rows carry `sub_period: "Saite"`. The LG 100 Dyn-IV/V
+    transition row has `sub_period: null` — there is no chunk-3 sub-period
+    refinement for Old Kingdom rows.
+    """
+    for row in _rows():
+        if row["tomb_id"] == "LG100":
+            assert row["sub_period"] is None, row
+        elif row["tomb_id"] in CHUNK3_TOMB_IDS - {"LG100"}:
+            assert row["sub_period"] == "Saite", row
+
+
+# === existing chunk-2 content tests ========================================
 
 
 def test_chunk2_dyn_vi_overseer_priests_of_pepy_i() -> None:

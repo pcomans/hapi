@@ -48,6 +48,10 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 # (Mariette `D`/`C`/`S`, Lepsius `LS`), Dahshûr letters, etc.
 AREA_ORDER: dict[str, int] = {
     "G": 0,    # Reisner Gîza (G1, G1a, G2, G3, G7000X, etc.)
+    "LG": 1,  # Lepsius Grab (LG 81, LG 83, LG 93, LG 97, LG 100, etc.) —
+              # Saite + Old-Kingdom-Central-Field tombs from chunk 3.
+              # Sorts AFTER Reisner G-numbered tombs within Gîza so the
+              # reconciled.jsonl groups by prefix family then numeric.
     # Future chunks extend this dict AS THEY LAND their first row;
     # `tests/…::test_prefix_vocabulary_consistent` pins this dict against the
     # test regex so the two stay in sync.
