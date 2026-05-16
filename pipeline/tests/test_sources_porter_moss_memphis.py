@@ -441,6 +441,51 @@ def test_fix_rows_is_idempotent_on_substantive_input(tmp_path, monkeypatch) -> N
     assert after_run_2_diff.startswith("G3a (None):\n"), after_run_2_diff
 
 
+def test_fix_rows_skips_noop_corrections(tmp_path, monkeypatch) -> None:
+    """When a `CHUNK<N>_CORRECTIONS` entry's target value already matches the
+    row's current value, fix_rows.py must not record a `X → X` no-op in
+    the audit trail. Gemini round-2 PR #217.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "pm_memphis_fix_rows_noop",
+        SOURCE_DIR / "fix_rows.py",
+    )
+    assert spec is not None and spec.loader is not None
+    fix_rows = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fix_rows)
+
+    fake_reconciled = tmp_path / "reconciled.jsonl"
+    fake_diff = tmp_path / "merge-disagreements.txt"
+    fake_reconciled.write_text(
+        json.dumps({"tomb_id": "G2", "occupant_name": "Khephren"}, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    fake_diff.write_text("baseline diff\n", encoding="utf-8")
+
+    monkeypatch.setattr(fix_rows, "RECONCILED", fake_reconciled)
+    monkeypatch.setattr(fix_rows, "DIFF", fake_diff)
+    monkeypatch.setattr(
+        fix_rows,
+        "CHUNK1_CORRECTIONS",
+        {("G2", "occupant_name"): {"value": "Khephren", "rationale": "PM III.1 p.25"}},
+    )
+
+    fix_rows.main()
+    after_reconciled = fake_reconciled.read_text(encoding="utf-8")
+    after_diff = fake_diff.read_text(encoding="utf-8")
+
+    # Reconciled stays semantically identical.
+    assert json.loads(after_reconciled.strip()) == {
+        "tomb_id": "G2",
+        "occupant_name": "Khephren",
+    }
+    # No audit-trail section appended because the correction was a no-op.
+    assert "LLM-APPLIED OVERRIDES" not in after_diff
+    assert after_diff == "baseline diff\n"
+
+
 def test_notes_from_pm_carries_pm_faithful_roman_numerals() -> None:
     """`fix_rows.py` rewrites text-layer `G 11` / `G 111` → `G II` / `G III`
     to match what PM III prints (verified against the PDF by the egyptologist-

@@ -87,6 +87,11 @@ def main() -> None:
         for (override_tid, field), spec in CHUNK1_CORRECTIONS.items():
             if override_tid == tid:
                 previous = row.get(field)
+                # Skip no-op corrections (value already matches) so the audit
+                # trail in `merge-disagreements.txt` does not accrue
+                # misleading `X → X` entries on subsequent runs.
+                if previous == spec["value"]:
+                    continue
                 row[field] = spec["value"]
                 overrides_applied.append((tid, field, previous, spec["value"]))
 
