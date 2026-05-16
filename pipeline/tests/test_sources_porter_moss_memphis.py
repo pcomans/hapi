@@ -69,7 +69,7 @@ def test_tomb_id_is_unique() -> None:
 # trailing capital X (Reisner's `G7000X` convention). The PM-Memphis chunk 1
 # only emits the `G<num>` / `G<num><lower>` shapes; the capital-X tail is
 # pre-registered for chunk 3+ (Cemetery G 7000X Hetepheres).
-_TOMB_ID_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-z]|[A-Z])?$")
+_TOMB_ID_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-zA-Z]?)$")
 
 
 def test_tomb_id_shape() -> None:
@@ -78,12 +78,15 @@ def test_tomb_id_shape() -> None:
 
 
 def test_prefix_vocabulary_consistent() -> None:
-    """`merge.AREA_ORDER` keys must equal the prefix set this test recognises.
+    """`merge.AREA_ORDER` keys must equal the prefix set this test recognises
+    AND the prefix set actually present in `reconciled.jsonl`.
 
     Mirrors `porter-moss-theban-necropolis` precedent — keeping the merge
     sort-order dict and the test regex in lockstep ensures a chunk that
     introduces a new prefix (e.g. `D` for Mariette-Saqqara, `LS` for Lepsius)
-    cannot land without extending both pieces of machinery.
+    cannot land without extending both pieces of machinery. Tightened from
+    subset to equality per PR #217 code-reviewer P2 — a stale entry in
+    `AREA_ORDER` that no row uses should also surface.
     """
     spec = importlib.util.spec_from_file_location(
         "merge_pm_memphis",
@@ -93,17 +96,42 @@ def test_prefix_vocabulary_consistent() -> None:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
 
+    # Derive prefixes from the JSONL itself, not from a hand-maintained
+    # constant — the only source of truth is what's committed.
     prefixes_in_data = set()
-    for tid in EXPECTED_TOMB_IDS:
-        m = _TOMB_ID_RE.match(tid)
-        assert m is not None
+    for row in _rows():
+        m = _TOMB_ID_RE.match(row["tomb_id"])
+        assert m is not None, row["tomb_id"]
         prefixes_in_data.add(m.group("prefix"))
 
     declared_prefixes = set(module.AREA_ORDER.keys())
-    assert prefixes_in_data <= declared_prefixes, (
+    assert prefixes_in_data == declared_prefixes, (
         f"reconciled.jsonl uses prefixes {sorted(prefixes_in_data)} but "
-        f"merge.AREA_ORDER declares {sorted(declared_prefixes)}"
+        f"merge.AREA_ORDER declares {sorted(declared_prefixes)} — must be "
+        f"identical sets, not subset"
     )
+
+
+def test_tomb_id_regex_accepts_reisner_extension_form() -> None:
+    """Reisner's `G7000X` (Hetepheres I shaft tomb, future chunks) — the
+    trailing capital X is the published convention and the regex must
+    accept it. Pre-PR-#217 the suffix group was `[a-z]?|[A-Z]?` which
+    matched correctly but read non-idiomatically; the post-fix regex
+    `[a-zA-Z]?` should preserve acceptance."""
+    m = _TOMB_ID_RE.match("G7000X")
+    assert m is not None
+    assert m.group("prefix") == "G"
+    assert m.group("num") == "7000"
+    assert m.group("suffix") == "X"
+
+
+def test_tomb_id_regex_rejects_two_suffix_letters() -> None:
+    """`G1aB` is malformed — Reisner uses exactly one suffix character
+    (lowercase for subsidiary pyramids, uppercase X for extensions).
+    Regression-pin for the `[a-zA-Z]?` quantifier ('?' = zero or one,
+    not '*' = zero or more)."""
+    assert _TOMB_ID_RE.match("G1aB") is None
+    assert _TOMB_ID_RE.match("G1ab") is None
 
 
 # === required-field + controlled-vocab tests ================================
@@ -255,26 +283,77 @@ def test_chunk1_g1c_henutsen_attribution() -> None:
     correctly, overriding the prompt's incorrect "PM 1974 names no subsidiary
     occupants" structural claim per CLAUDE.md rule 1. Verified by the
     egyptologist-reviewer pass against the printed source.
+
+    Full-row equality per PR #217 code-reviewer P2 (Henutsen is the
+    flagship row from the egyptologist pass; deserves the same coverage
+    as G1).
     """
     row = _by_id("G1c")
-    assert row["occupant_name"] == "Henutsen"
-    assert row["occupant_role"] == "Queen"
-    assert row["attribution_certainty"] == "probable"
-    assert "Attributed to Henutsen" in row["notes_from_pm"]
+    assert row == {
+        "tomb_id": "G1c",
+        "memphite_area": "Giza",
+        "occupant_name": "Henutsen",
+        "occupant_alt_names": [],
+        "tomb_aliases": [],
+        "co_occupants": [],
+        "is_joint_burial": False,
+        "occupant_role": "Queen",
+        "dynasty": "4",
+        "sub_period": None,
+        "date_bce_approx_start": None,
+        "date_bce_approx_end": None,
+        "cemetery": None,
+        "discovery_year": None,
+        "discoverer": None,
+        "is_unfinished": False,
+        "is_uninscribed": False,
+        "is_usurped": False,
+        "attribution_certainty": "probable",
+        "shared_with_tombs": [],
+        "notes_from_pm": "South Subsidiary Pyramid. Lepsius, VII; Perring and Vyse, 9 of Giza; Reisner, G I-c. Attributed to Henutsen (wife of Khufu).",
+        "source_citation": {"page": 16, "edition": EDITION_PM_III_1, "section": "I"},
+    }
 
 
-def test_chunk1_g3a_fourth_pyramid_alias() -> None:
-    """G3a East Subsidiary Pyramid carries PM's `sometimes called Fourth Pyramid.`
-    clause; `Fourth Pyramid` enters `tomb_aliases`."""
+def test_chunk1_g3a_fourth_pyramid_full_row() -> None:
+    """G3a East Subsidiary Pyramid — second edge-case row from the
+    egyptologist pass, full-row equality per PR #217 code-reviewer P2.
+    PM's `sometimes called Fourth Pyramid.` clause populates `tomb_aliases`."""
     row = _by_id("G3a")
-    assert "Fourth Pyramid" in row["tomb_aliases"]
+    assert row == {
+        "tomb_id": "G3a",
+        "memphite_area": "Giza",
+        "occupant_name": None,
+        "occupant_alt_names": [],
+        "tomb_aliases": ["Fourth Pyramid"],
+        "co_occupants": [],
+        "is_joint_burial": False,
+        "occupant_role": "Queen",
+        "dynasty": "4",
+        "sub_period": None,
+        "date_bce_approx_start": None,
+        "date_bce_approx_end": None,
+        "cemetery": None,
+        "discovery_year": None,
+        "discoverer": None,
+        "is_unfinished": False,
+        "is_uninscribed": False,
+        "is_usurped": False,
+        "attribution_certainty": "uncertain",
+        "shared_with_tombs": [],
+        "notes_from_pm": "East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G III-a; sometimes called Fourth Pyramid.",
+        "source_citation": {"page": 34, "edition": EDITION_PM_III_1, "section": "I"},
+    }
 
 
 def test_chunk1_subsidiary_pyramids_are_queens() -> None:
     """The seven subsidiary pyramid rows (G<num><letter>) all have role
     `Queen` per PM's convention for subsidiary pyramids in a king's pyramid
     complex."""
-    subsidiary_ids = {tid for tid in CHUNK1_TOMB_IDS if not _TOMB_ID_RE.match(tid).group("suffix") in (None, "")}
+    subsidiary_ids = {
+        tid for tid in CHUNK1_TOMB_IDS
+        if _TOMB_ID_RE.match(tid).group("suffix") not in (None, "")
+    }
     assert subsidiary_ids == {"G1a", "G1b", "G1c", "G2a", "G3a", "G3b", "G3c"}
     for tid in subsidiary_ids:
         row = _by_id(tid)
@@ -296,6 +375,70 @@ def test_chunk1_anonymous_subsidiary_pyramids_are_uncertain() -> None:
 
 
 # === regression tests against fix_rows.py OCR-drift correction ==============
+
+
+def test_fix_rows_is_idempotent_on_substantive_input(tmp_path, monkeypatch) -> None:
+    """`fix_rows.py` must be byte-identical across consecutive runs even
+    when there is OCR-drift to apply (not just empirically because
+    `CHUNK1_CORRECTIONS` is empty). Constitutional rule 2 + playbook
+    idempotence guard. Code-reviewer P1 on PR #217.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "pm_memphis_fix_rows",
+        SOURCE_DIR / "fix_rows.py",
+    )
+    assert spec is not None and spec.loader is not None
+    fix_rows = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fix_rows)
+
+    # Pre-fix-state fixture: two rows, one with the `G 11`/`G 111` OCR drift
+    # that fix_rows.py should normalise, plus a pre-existing audit-trail
+    # section the guard must strip before re-appending.
+    pre_reconciled = (
+        json.dumps({"tomb_id": "G2", "notes_from_pm": "Reisner, G 11"}, sort_keys=True)
+        + "\n"
+        + json.dumps({"tomb_id": "G3", "notes_from_pm": "Reisner, G 111"}, sort_keys=True)
+        + "\n"
+    )
+    pre_diff = (
+        "G3a (None):\n  notes_from_pm: a=\"x\" | b=\"y\" | c=\"x\"  → chose \"x\"\n"
+    )
+
+    fake_reconciled = tmp_path / "reconciled.jsonl"
+    fake_diff = tmp_path / "merge-disagreements.txt"
+    fake_reconciled.write_text(pre_reconciled, encoding="utf-8")
+    fake_diff.write_text(pre_diff, encoding="utf-8")
+
+    monkeypatch.setattr(fix_rows, "RECONCILED", fake_reconciled)
+    monkeypatch.setattr(fix_rows, "DIFF", fake_diff)
+
+    fix_rows.main()
+    after_run_1_reconciled = fake_reconciled.read_text(encoding="utf-8")
+    after_run_1_diff = fake_diff.read_text(encoding="utf-8")
+
+    # Sanity: run 1 actually applied substantive fixes (otherwise the
+    # idempotence assertion below would pass vacuously).
+    assert "Reisner, G II" in after_run_1_reconciled
+    assert "Reisner, G III" in after_run_1_reconciled
+    assert "LLM-APPLIED OVERRIDES" in after_run_1_diff
+
+    fix_rows.main()
+    after_run_2_reconciled = fake_reconciled.read_text(encoding="utf-8")
+    after_run_2_diff = fake_diff.read_text(encoding="utf-8")
+
+    assert after_run_1_reconciled == after_run_2_reconciled, (
+        "fix_rows.py is not idempotent on reconciled.jsonl"
+    )
+    assert after_run_1_diff == after_run_2_diff, (
+        "fix_rows.py is not idempotent on merge-disagreements.txt — the "
+        "audit-trail section must be stripped before re-appending."
+    )
+    # The pre-existing audit-trail prefix in the merge-disagreements fixture
+    # is preserved across both runs (only the auto-appended section after
+    # the marker is rewritten).
+    assert after_run_2_diff.startswith("G3a (None):\n"), after_run_2_diff
 
 
 def test_notes_from_pm_carries_pm_faithful_roman_numerals() -> None:

@@ -32,6 +32,13 @@ SOURCE_DIR = Path(__file__).parent
 RECONCILED = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
+# Marker that delimits the auto-appended audit-trail section in
+# `merge-disagreements.txt`. Re-running fix_rows.py strips any existing
+# section that begins at this marker before re-appending, so the file
+# remains byte-identical across consecutive runs (constitutional rule 2
+# + playbook idempotence guard).
+_AUDIT_MARKER = "\nLLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED\n"
+
 
 # Source-wide OCR-drift fixes applied to `notes_from_pm`.
 # Ordered LONGEST-MATCH FIRST so that `G 111` is rewritten before any
@@ -64,7 +71,7 @@ def _apply_ocr_fixes(notes: str | None) -> str | None:
 
 
 def main() -> None:
-    rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+    rows = [json.loads(line) for line in RECONCILED.read_text(encoding="utf-8").splitlines() if line.strip()]
 
     ocr_applied: list[tuple[str, str]] = []
     overrides_applied: list[tuple[str, str, object, object]] = []
@@ -84,13 +91,19 @@ def main() -> None:
                 overrides_applied.append((tid, field, previous, spec["value"]))
 
     RECONCILED.write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n"
+        "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
+        encoding="utf-8",
     )
 
     if ocr_applied or overrides_applied:
-        existing = DIFF.read_text() if DIFF.exists() else ""
+        existing = DIFF.read_text(encoding="utf-8") if DIFF.exists() else ""
+        # Strip any prior auto-appended audit-trail section so the merge
+        # diff stays byte-identical across consecutive `fix_rows.py` runs.
+        marker_idx = existing.find(_AUDIT_MARKER)
+        if marker_idx >= 0:
+            existing = existing[:marker_idx]
         annotations: list[str] = []
-        annotations.append("\nLLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED\n")
+        annotations.append(_AUDIT_MARKER)
         annotations.append("============================================\n")
         if ocr_applied:
             annotations.append("\nOCR-drift fixes (Roman-numeral restore in notes_from_pm):\n")
@@ -103,7 +116,7 @@ def main() -> None:
                     f"  {tid}.{field}: {json.dumps(before, ensure_ascii=False)} "
                     f"→ {json.dumps(after, ensure_ascii=False)}\n"
                 )
-        DIFF.write_text(existing + "".join(annotations))
+        DIFF.write_text(existing + "".join(annotations), encoding="utf-8")
 
     print(f"Rows: {len(rows)}")
     print(f"OCR-drift fixes applied: {len(ocr_applied)}")

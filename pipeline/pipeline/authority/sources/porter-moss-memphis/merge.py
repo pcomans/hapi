@@ -62,10 +62,12 @@ MALFORMED_TOMB_RANK = 999_999
 
 # Numbered-tomb form: `G1`, `G1a`, `G7000X`, etc.
 # Prefix is one or more capitals; number is one or more digits; suffix is
-# zero or more lowercase OR a single uppercase letter (Reisner's `G7000X`
-# trailing capital X is "extension"). This regex is permissive on the
-# uppercase-suffix path to accept that one Reisner convention.
-_TOMB_NUM_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-z]?|[A-Z]?)$")
+# zero or one alphabetical character — lowercase letters for the typical
+# subsidiary-pyramid form (`G1a`, `G3c`) and uppercase letter for Reisner's
+# `G7000X` "extension" convention. `[a-zA-Z]?` is the consolidated form
+# (Gemini PR #217 medium); the empty-string default keeps `_sort_key`'s
+# tuple ordering deterministic.
+_TOMB_NUM_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-zA-Z]?)$")
 # Descriptor-tomb form: `GIZA-SphinxTemple`, `SAQ-PyramidUnas` — reserved
 # for follow-up chunks where a named PM feature has no number.
 _TOMB_DESC_RE = re.compile(r"^(?P<prefix>[A-Z]+)-(?P<desc>[A-Za-z][A-Za-z0-9]*)$")
@@ -98,7 +100,7 @@ def _load(p: Path) -> dict[str, dict]:
     """Load a single agent's JSONL. Raises on duplicate tomb_id within a file."""
     rows: dict[str, dict] = {}
     seen_line: dict[str, int] = {}
-    for line_no, line in enumerate(p.read_text().splitlines(), start=1):
+    for line_no, line in enumerate(p.read_text(encoding="utf-8").splitlines(), start=1):
         s = line.strip()
         if not s:
             continue
@@ -332,9 +334,13 @@ def main(agent_dir: Path) -> None:
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in final
         )
-        + "\n"
+        + "\n",
+        encoding="utf-8",
     )
-    DIFF.write_text("\n".join(report) if report else "No field-level disagreements.\n")
+    DIFF.write_text(
+        "\n".join(report) if report else "No field-level disagreements.\n",
+        encoding="utf-8",
+    )
 
     print("Agents: " + ", ".join(f"{t}={len(a)}" for t, a in agents.items()))
     print(f"Merged rows: {len(final)}")
