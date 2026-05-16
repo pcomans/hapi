@@ -174,11 +174,12 @@ def test_tomb_id_regex_rejects_two_suffix_letters() -> None:
 
 _REQUIRED_KEYS = frozenset({
     "tomb_id", "memphite_area", "occupant_name", "occupant_alt_names",
-    "tomb_aliases", "co_occupants", "is_joint_burial", "occupant_role",
-    "dynasty", "sub_period", "date_bce_approx_start", "date_bce_approx_end",
-    "cemetery", "discovery_year", "discoverer", "is_unfinished",
-    "is_uninscribed", "is_usurped", "attribution_certainty",
-    "shared_with_tombs", "notes_from_pm", "source_citation",
+    "tomb_aliases", "co_occupants", "co_occupant_roles", "is_joint_burial",
+    "occupant_role", "dynasty", "sub_period", "date_bce_approx_start",
+    "date_bce_approx_end", "cemetery", "discovery_year", "discoverer",
+    "is_unfinished", "is_uninscribed", "is_usurped",
+    "attribution_certainty", "shared_with_tombs", "notes_from_pm",
+    "source_citation",
 })
 
 
@@ -310,6 +311,7 @@ def test_chunk1_g1_khufu() -> None:
         "occupant_alt_names": [],
         "tomb_aliases": ["Great Pyramid", "First Pyramid"],
         "co_occupants": [],
+        "co_occupant_roles": [],
         "is_joint_burial": False,
         "occupant_role": "King",
         "dynasty": "4",
@@ -370,6 +372,7 @@ def test_chunk1_g1c_henutsen_attribution() -> None:
         "occupant_alt_names": [],
         "tomb_aliases": [],
         "co_occupants": [],
+        "co_occupant_roles": [],
         "is_joint_burial": False,
         "occupant_role": "Queen",
         "dynasty": "4",
@@ -401,6 +404,7 @@ def test_chunk1_g3a_fourth_pyramid_full_row() -> None:
         "occupant_alt_names": [],
         "tomb_aliases": ["Fourth Pyramid"],
         "co_occupants": [],
+        "co_occupant_roles": [],
         "is_joint_burial": False,
         "occupant_role": "Queen",
         "dynasty": "4",
@@ -550,12 +554,19 @@ def test_fix_rows_skips_noop_corrections(tmp_path, monkeypatch) -> None:
     after_reconciled = fake_reconciled.read_text(encoding="utf-8")
     after_diff = fake_diff.read_text(encoding="utf-8")
 
-    # Reconciled stays semantically identical.
+    # Reconciled stays semantically identical EXCEPT for the
+    # schema-uniformity backfill of `co_occupant_roles: []` (every row
+    # carries this field after `_ensure_co_occupant_roles_default`; it's
+    # a uniformity guarantee, not a correction).
     assert json.loads(after_reconciled.strip()) == {
         "tomb_id": "G2",
         "occupant_name": "Khephren",
+        "co_occupant_roles": [],
     }
     # No audit-trail section appended because the correction was a no-op.
+    # The `co_occupant_roles` backfill is NOT recorded in the audit trail
+    # because it's a default value being filled in, not an LLM-applied
+    # override of an existing value.
     assert "LLM-APPLIED OVERRIDES" not in after_diff
     assert after_diff == "baseline diff\n"
 
@@ -595,6 +606,7 @@ def test_chunk2_g7000x_hetepheres_i_full_row() -> None:
         "occupant_alt_names": [],
         "tomb_aliases": [],
         "co_occupants": [],
+        "co_occupant_roles": [],
         "is_joint_burial": False,
         "occupant_role": "Queen",
         "dynasty": "4",
@@ -726,15 +738,20 @@ def test_chunk3_lg100_khentkaus_full_row() -> None:
 def test_chunk3_lg83_joint_burial_ahmosi_and_queen_nekhtubasterau() -> None:
     """LG 83 — Saite (Dyn XXVI) joint burial of Commander ʿAhmosi and his
     mother, Queen Nekhtubasterau, who was the wife of pharaoh Amasis.
-    The joint-burial schema: primary occupant in `occupant_name`, secondary
-    in `co_occupants`, `is_joint_burial: true`. PM's headword carries the
-    `wife of Amasis` parenthetical attesting the queen-mother attribution.
+    The joint-burial schema: primary occupant in `occupant_name`,
+    secondary in `co_occupants` (name) + `co_occupant_roles` (typed
+    role), `is_joint_burial: true`. The `co_occupant_roles` parallel
+    array preserves the queen attribution so Phase-A queries for
+    "queens of Amasis" can surface LG 83 even though its primary
+    occupant is a Commander (egyptologist-reviewer P1 finding,
+    fix_rows.py CHUNK3_CORRECTIONS with PM III.1 p.289 citation).
     """
     row = _by_id("LG83")
     assert row["is_joint_burial"] is True
     assert row["dynasty"] == "26"
     assert row["sub_period"] == "Saite"
-    assert "Nekhtubasterau" in row["co_occupants"]
+    assert row["co_occupants"] == ["Nekhtubasterau"]
+    assert row["co_occupant_roles"] == ["Queen"]
     assert row["occupant_name"] == "ʿAhmosi"
     assert row["occupant_role"] == "Official"  # primary is a Commander, not a King's-son
     assert "Amasis" in row["notes_from_pm"]
@@ -742,8 +759,10 @@ def test_chunk3_lg83_joint_burial_ahmosi_and_queen_nekhtubasterau() -> None:
 
 def test_chunk3_lg97_joint_burial_wnrw_priests() -> None:
     """LG 97 — joint burial of two `wnrw`-priests, Harsiesi and Harwoz
-    (Dyn XXVI). Both held the same priestly title; one row with the
-    secondary in `co_occupants`.
+    (Dyn XXVI). PM's `both <shared title>` phrasing types BOTH occupants
+    with the same priestly role; the secondary inherits the same
+    `Official` role as the primary. `co_occupant_roles` parallel array
+    preserves the symmetric typing.
     """
     row = _by_id("LG97")
     assert row["is_joint_burial"] is True
@@ -751,7 +770,8 @@ def test_chunk3_lg97_joint_burial_wnrw_priests() -> None:
     assert row["sub_period"] == "Saite"
     assert row["occupant_role"] == "Official"
     assert row["occupant_name"] == "Harsiesi"
-    assert "Harwoz" in row["co_occupants"]
+    assert row["co_occupants"] == ["Harwoz"]
+    assert row["co_occupant_roles"] == ["Official"]
 
 
 def test_chunk3_lg84_pakap_alt_name_wahibre_em_akhet() -> None:
@@ -789,6 +809,20 @@ def test_chunk3_lg81_bare_headword_saite_unknown() -> None:
     assert row["attribution_certainty"] == "uncertain"
     assert row["dynasty"] == "26"
     assert row["sub_period"] == "Saite"
+
+
+def test_co_occupant_roles_order_coupled_with_co_occupants() -> None:
+    """`co_occupant_roles` is a parallel array order-coupled with
+    `co_occupants`. Length invariant: when `co_occupants` is empty,
+    `co_occupant_roles` is empty. When `co_occupants` has N entries,
+    `co_occupant_roles` MUST also have N entries (each indexed pair is
+    `(name_at_i, role_at_i)`).
+
+    Schema-invariant test: catches any future row whose roles list drops
+    or duplicates entries vs the names list.
+    """
+    for row in _rows():
+        assert len(row["co_occupant_roles"]) == len(row["co_occupants"]), row
 
 
 def test_chunk3_no_sub_period_for_old_kingdom_rows() -> None:

@@ -39,6 +39,7 @@ Every row MUST have these 21 keys; use `null` (not omitted, not empty string) fo
   "occupant_alt_names": [...],
   "tomb_aliases": [],
   "co_occupants": [...],
+  "co_occupant_roles": [...],
   "is_joint_burial": false | true,
   "occupant_role": "King" | "Queen" | "Prince" | "Princess" | "Vizier" | "High Priest" | "Official" | "Royal Family" | "Unknown",
   "dynasty": "4" | "5" | "26" | null,
@@ -155,6 +156,7 @@ For trailing raised-ayin in an ALL-CAPS name, replace with `ʿ` (U+02BF). Apply 
   - `<NAME1> ..., and his mother Queen <NAME2> (wife of <king>)` — the secondary occupant (the queen-mother) goes in `co_occupants`.
   - `<NAME1> and <NAME2> both <shared title>` — the secondary occupant goes in `co_occupants`.
   Empty `[]` for single-occupant rows.
+- **`co_occupant_roles`** — Parallel array order-coupled with `co_occupants`. Each entry types the role of the secondary occupant at the same index, using the same controlled vocabulary as `occupant_role`. For the `<NAME1> ..., and his mother Queen <NAME2>` shape, the secondary's role is `"Queen"` (PM's explicit `Queen <NAME>` token + `wife of <king>` parenthetical both type her as a queen). For the `<NAME1> and <NAME2> both <shared title>` shape, the secondary inherits the SAME role as the primary (symmetric typing). Empty `[]` for single-occupant rows; the length of `co_occupant_roles` MUST equal the length of `co_occupants`.
 - **`is_joint_burial`** — `true` when `co_occupants` is non-empty (the LG number names a single tomb with two named occupants). `false` for single-occupant rows.
 - **`shared_with_tombs`** — Empty `[]` for all chunk-3 rows. No twin-mastaba architectural links in this chunk's range.
 - **`notes_from_pm`** — Verbatim short prose from PM's headword block: the LG-number title line + dating line + role-qualification parentheticals + any explicit relation lines (`Husband, X.`, `Wife, Y.`, `Mother, Z.`, `Parents, A and B`, `Father, W.`). PM-faithful preservation (keep PM's punctuation, capitalisation, including raised-ayin OCR artifacts and bracket regnal numbers — `KHENTKAUS [I]` stays `KHENTKAUS [I]` in notes). For LG 100, include the footnote-1 line `Mother of the two Kings of Upper and Lower Egypt, Daughter of the God, etc.` as a final sentence (PM presents this as titulary inseparable from the LG 100 attribution). Trim trailing whitespace. For bare-LG-number rows like LG 81 with no headword content beyond the number + dynasty, set `notes_from_pm` to just the bare LG-line + dynasty.

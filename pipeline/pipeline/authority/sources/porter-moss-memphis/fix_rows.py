@@ -86,6 +86,47 @@ CHUNK2_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
 }
 
+# Chunk-3 corrections from the egyptologist-reviewer pass (PR #220 / PM
+# III.1 printed pp.288-292). The Saite joint-burial rows (LG 83, LG 97)
+# need typed roles for their co-occupants — PM explicitly types Queen
+# Nekhtubasterau (LG 83) and pairs Harsiesi + Harwoz as both wnrw-priests
+# (LG 97). Currently `co_occupants` is `list[str]` (names only) and the
+# co-occupant's role is lost. Solution: a parallel `co_occupant_roles`
+# field. Order-coupled with `co_occupants`. The schema addition matters
+# for downstream Phase-A queen-of-Amasis queries, which must surface
+# LG 83 as a Queen tomb even though its primary occupant is a Commander.
+CHUNK3_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("LG83", "co_occupant_roles"): {
+        "value": ["Queen"],
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 2nd ed. 1974 "
+            "printed p.289: PM's joint-burial headword reads `LG 83. "
+            "aAHMOSI Commander of the army, and his mother Queen "
+            "NEKHTUBASTERAU (wife of Amasis). Dyn. XXVI.`. The secondary "
+            "occupant carries an explicit `Queen <NAME>` token AND a "
+            "`wife of <king>` parenthetical — both attributes that PM "
+            "types as primary-source facts about her. Without a parallel "
+            "`co_occupant_roles` list, this typed role is lost into "
+            "prose, and Phase-A queries for 'queens of Amasis' will not "
+            "surface LG 83. Adds `co_occupant_roles: [\"Queen\"]` so "
+            "downstream enrichment can route Nekhtubasterau as a Queen "
+            "without losing the joint-burial-with-son-ʿAhmosi context."
+        ),
+    },
+    ("LG97", "co_occupant_roles"): {
+        "value": ["Official"],
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 2nd ed. 1974 "
+            "printed p.291: PM's joint-burial headword reads `LG 97. "
+            "HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI.`. The "
+            "`both <shared title>` phrasing types BOTH occupants with the "
+            "same priestly role; the secondary (Harwoz) inherits the same "
+            "`Official` role as the primary (Harsiesi). Parallel "
+            "`co_occupant_roles` array preserves the symmetric typing."
+        ),
+    },
+}
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -93,7 +134,22 @@ CHUNK2_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK2_CORRECTIONS,
+    CHUNK3_CORRECTIONS,
 ]
+
+# Schema-uniformity backfill: every reconciled row carries
+# `co_occupant_roles: list[str]` (default `[]` for single-occupant rows
+# and rows whose co-occupants are not typed by PM). Rows in
+# `CHUNK<N>_CORRECTIONS` that set this key override the default.
+def _ensure_co_occupant_roles_default(row: dict) -> bool:
+    """Backfill `co_occupant_roles: []` on rows that don't already have
+    the field. Idempotent — re-running on a row that already has the
+    field is a no-op. Returns True if the row was modified.
+    """
+    if "co_occupant_roles" not in row:
+        row["co_occupant_roles"] = []
+        return True
+    return False
 
 
 def _apply_chunk2_notes_ocr_fixes(notes: str | None, tid: str) -> str | None:
@@ -131,6 +187,12 @@ def main() -> None:
 
     for row in rows:
         tid = row["tomb_id"]
+        # Schema-uniformity backfill: ensure every row carries
+        # `co_occupant_roles: []` before the per-chunk correction loop runs
+        # (so that `CHUNK3_CORRECTIONS`'s `co_occupant_roles` overrides
+        # treat the default as `[]`, not as absent).
+        _ensure_co_occupant_roles_default(row)
+
         original_notes = row.get("notes_from_pm")
         fixed_notes = _apply_ocr_fixes(original_notes)
         fixed_notes = _apply_chunk2_notes_ocr_fixes(fixed_notes, tid)
