@@ -64,3 +64,18 @@ Chunk-2 design choices:
 - The G 7000X Hetepheres I headword opens with a `1/1/1` tie on `notes_from_pm` (three agents truncated the headword block at three different sentence boundaries). Resolved via `tie-break-overrides.json` with a printed-source citation (PM III.1 p.179).
 
 Chunk file text-layer SHA-256 pin: `886973b5663e748f282bb6147cc36d88e98f1f7fb43cda8ab46304cebeb4aa69`.
+
+## Chunk 3 scope
+
+Physical pp.285–289 / printed pp.288–292: Gîza Central Field — LG 100 Khentkaus I (the "Sarcophagus-shaped Tomb", End of Dyn IV or early Dyn V queen-mother) closing § III. E. CENTRAL FIELD Old-Kingdom block, then the Saite (Dyn XXVI) LG-numbered cluster: LG 81 (bare-headword anonymous, OCR-drift `LG 8 I` form), LG 83 (joint burial — Commander ʿAhmosi + his mother Queen Nekhtubasterau, wife of Amasis), LG 84 (Pakap, good name Wehebreʿ-emakhet), LG 97 (joint burial — Harsiesi + Harwoz, both wnrw-priests). 5 rows total.
+
+Chunk-3 design choices:
+- First LG-prefix tomb_id rows (Lepsius "Grab" numbering). Extends `merge.AREA_ORDER` with `"LG": 1` (sorts after Reisner G but within the same Gîza memphite_area).
+- First joint-burial rows: `co_occupants` non-empty + `is_joint_burial: true`. LG 83 and LG 97 establish the schema for shared-tomb cases.
+- First `sub_period` non-null rows: Saite-era Dyn XXVI carries `sub_period: "Saite"`. Old Kingdom rows in this chunk (LG 100) keep `sub_period: null`.
+- First `cemetery: "Central Field"` rows (chunk-1 was `null` for pyramid-complexes; chunk-2 was `"G 7000"` for East Field).
+- New OCR-drift rule for Saite raised-ayin: pypdf renders PM's Late-Period raised-ayin glyph as a literal `c` (in contrast to the chunks 1-2 raised-`a` for Old Kingdom names). LG 84's `WEHEBREc-EMAKHET` → `Wehebreʿ-emakhet` after U+02BF normalisation. A 1/1/1 tie on the three agents' variants resolved via `tie-break-overrides.json` with a cited PM III.1 p.290 rationale.
+- LG-number OCR drift: pypdf renders `LG 81` as `LG 8 I` (Arabic 1 → Roman I with inserted space). The chunk-3 prompt's normalisation rule re-reads the Roman-block as Arabic.
+- Out-of-scope no-LG-number tombs (THAIHARPATA, PEDUBASTE, PTAHARDAIS): each Saite-era tomb without a Lepsius / Reisner / Mariette identifier. Deferred to a follow-up chunk with the descriptor-tomb-id scheme (e.g. `CF-Thaiharpata`).
+
+Chunk file text-layer SHA-256 pin: `83c4c224ca022c9e62a5563d1535a35e7ff3240d80cab6b5769306678abda8e7`.
