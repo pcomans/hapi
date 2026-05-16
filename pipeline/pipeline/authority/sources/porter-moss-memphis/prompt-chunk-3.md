@@ -105,12 +105,14 @@ Pre-extraction scan of the chunk file: 5 LG-numbered headwords are present (one 
 
 PM prints Egyptological raised-ayin (ʿ) as a superscript lowercase-`a` glyph; pypdf renders this as a regular inline lowercase `a`. In ALL-CAPS PM headword names, a lowercase `a` surrounded by uppercase letters is the raised-ayin's pypdf rendering — not a "real" letter `a`.
 
-**Normalisation rule for `occupant_name`:** when extracting an occupant name from an ALL-CAPS PM headword, drop any **interior** lowercase `a` that sits immediately adjacent to uppercase letters on both sides. Then title-case the result (first letter upper, rest lower). Preserve PM-printed form verbatim in `notes_from_pm`.
+**Normalisation rules for raised-ayin in `occupant_name`:** PM's typeset raised-ayin glyph is rendered by pypdf as a literal lowercase letter — `a` for Old Kingdom names (chunks 1-2 precedent) and `c` for Late-Period / Saite throne-name compounds (this chunk). Apply ALL of:
 
-Rule application (showing the rule's behaviour, NOT a target answer table — verify each against the chunk file):
-- An ALL-CAPS name of the form `XAaY` (where `X` and `Y` are uppercase) drops the interior `a` → `XAY` → title `Xay`.
+1. **Interior raised-ayin** — an ALL-CAPS name of the form `XAaY` or `XEcY` (uppercase, lowercase `a`/`c`, uppercase) drops the interior lowercase character. Examples (rule-form, NOT row-callouts): `XAaY` → `XAY` → title `Xay`; `XEcY` → `XEY` → title `Xey`.
+2. **Leading raised-ayin** — an ALL-CAPS name of the form `aXY...` or `cXY...` (lowercase letter at position 0, uppercase from position 1) replaces the leading lowercase with U+02BF ayin. Title-case applies AFTER. So `aXYZ` → `ʿXyz` (first uppercase becomes title-case letter, ayin precedes).
+3. **Trailing raised-ayin** — an ALL-CAPS name with a lowercase `a`/`c` at the END (after uppercase letters) replaces with U+02BF ayin. So `XYZa` → `Xyzʿ`; `XYZc` → `Xyzʿ` (both Old Kingdom and Saite forms produce the same canonical ayin).
+4. **Hyphen-adjacent raised-ayin in compounds** — for compound throne-name forms like `XYZc-EMAKHET`, the `c` immediately before the hyphen is the raised-ayin of the FIRST element; replace with U+02BF and lowercase the post-hyphen element (it's a locative, not a proper name). So `XYZc-ABCD` → `Xyzʿ-abcd`.
 
-For trailing raised-ayin in an ALL-CAPS name, replace with `ʿ` (U+02BF). Apply this rule if encountered; do not assume it is absent.
+Title-case the result (first letter upper, rest lower; ayin character does NOT count as a letter for title-casing purposes). Preserve PM-printed form verbatim in `notes_from_pm`.
 
 **LG-number OCR drift:** when pypdf renders an LG-number with a separating space + Roman digit (e.g. `LG 8 I`, `LG 1 II`), this is the Griffith-Institute scan's drift where an Arabic numeral `1` mis-OCRs as Roman `I` with an inserted space. Normalisation rule: a headword token of the literal form `LG <digits> <I[I]*>` (digits followed by space-then-Roman-I-block) is the Lepsius number with the Roman-block re-read as Arabic. Apply this rule whenever such a form appears in the chunk's LG headwords. Preserve PM-printed verbatim form in `notes_from_pm`.
 

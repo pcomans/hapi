@@ -125,6 +125,25 @@ CHUNK3_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "`co_occupant_roles` array preserves the symmetric typing."
         ),
     },
+    ("LG97", "notes_from_pm"): {
+        "value": "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn.",
+        "rationale": (
+            "Egyptologist-reviewer pass F5 + Gemini PR #220 round-1 inline "
+            "comment id=3253276720 (both reviewers converged on the same "
+            "finding). PM III.1 2nd ed. 1974 printed p.291 prints the "
+            "parental relation as `Mother, Tentamūn.` (with a trailing "
+            "period and a macron over the `u`). Two issues with the "
+            "majority-voted notes value: (1) pypdf rendered the macron-u "
+            "as the digraph `ii`, producing `Tentamiin` (analogous OCR "
+            "drift to chunks 1-2 raised-ayin `a` / `c` patterns); (2) "
+            "the trailing period was dropped because pypdf concatenated "
+            "the next sub-heading `Names and titles from ushabtis.` "
+            "onto the same line as `Mother, Tentamūn`, and the agents "
+            "(correctly) stopped extraction at the sub-heading boundary "
+            "but lost the headword's terminal period. Restoration: "
+            "`Tentamiin` → `Tentamūn` + trailing period."
+        ),
+    },
 }
 
 # Registry of all per-chunk correction dicts. New chunks add their

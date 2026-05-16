@@ -64,5 +64,4 @@ LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
 Reviewer-cited row corrections:
-  LG83.co_occupant_roles: [] → ["Queen"]
-  LG97.co_occupant_roles: [] → ["Official"]
+  LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
