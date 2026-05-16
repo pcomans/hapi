@@ -1005,13 +1005,15 @@ def test_chunk4_no_jay_kakare_ibi_row() -> None:
     """PM III.2 § I has a `J. PYRAMID OF KAKAREʿ IBI` entry on physical
     p.65 (Dyn VIII transitional king) that falls between letters I and
     K in the section lettering. Chunk 4 explicitly excludes this row per
-    the prompt's OUT-OF-SCOPE rule (Dyn V/VI only). Regression-pin: no
-    row with `SAQ-Kakare`* or `SAQ-Ibi`* should be in reconciled.jsonl.
+    the prompt's OUT-OF-SCOPE rule (Dyn V/VI only). Regression-pin
+    scoped to CHUNK4_TOMB_IDS so a future chunk that legitimately
+    adds the Kakareʿ Ibi row (Dyn VIII proper, with its own tomb_id
+    descriptor) is NOT blocked by this assertion (Codex PR #222
+    round-1 finding).
     """
-    ids = {row["tomb_id"] for row in _rows()}
-    for tid in ids:
-        assert "Kakare" not in tid, f"chunk-4 should not emit {tid} (Dyn VIII out of scope)"
-        assert "Ibi" not in tid, f"chunk-4 should not emit {tid} (Dyn VIII out of scope)"
+    for tid in CHUNK4_TOMB_IDS:
+        assert "Kakare" not in tid, f"chunk-4 should not include {tid} (Dyn VIII out of scope)"
+        assert "Ibi" not in tid, f"chunk-4 should not include {tid} (Dyn VIII out of scope)"
 
 
 # === existing chunk-2 content tests ========================================
