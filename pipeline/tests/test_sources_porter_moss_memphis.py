@@ -948,6 +948,19 @@ def test_chunk4_wife_of_isesi_anonymous_uncertain() -> None:
     assert row["dynasty"] == "5"
 
 
+def test_chunk4_iput_ii_page_is_432_not_431() -> None:
+    """SAQ-IputII source_citation.page = 432, NOT 431. Gemini PR #222
+    round-1 caught a 2/1 majority error: agents A and C reported page
+    431 (one too low), Agent B reported 432 (correct). The IPUT II
+    headword appears on physical p.72 of the chunk file; PM III.2's
+    `printed = physical + 360` offset gives printed p.432. Override the
+    majority via fix_rows.py CHUNK4_CORRECTIONS. Regression-pin guards
+    against any future merge run silently reverting to 431.
+    """
+    row = _by_id("SAQ-IputII")
+    assert row["source_citation"]["page"] == 432, row
+
+
 def test_chunk4_pepy_ii_three_queens_dyn_vi() -> None:
     """Pepy II had three named queens with their own pyramid-enclosures
     at Saqqâra — Neit, Iput II (queen-of-three-kings), and Wezebten.

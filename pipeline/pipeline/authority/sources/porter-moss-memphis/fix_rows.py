@@ -168,6 +168,23 @@ CHUNK4_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "F1 finding."
         ),
     },
+    ("SAQ-IputII", "source_citation"): {
+        "value": {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"},
+        "rationale": (
+            "Gemini PR #222 round-1 caught a 2/1 majority that happened to be "
+            "wrong: agents A and C reported `page: 431`, agent B reported "
+            "`page: 432`. The IPUT II headword `PYRAMID-ENCLOSURE OF IPUT [II]¹` "
+            "appears on physical p.72 of the chunk file. The PM III.2 printed-vs-"
+            "physical offset is `printed = physical + 360`, so physical p.72 = "
+            "printed p.432. Agent B's reported page (432) is correct; A and C "
+            "are off by one (likely confused by the prior right-page running "
+            "header `Pyramid-complex of Pepy II 431` on physical p.71). Override "
+            "the majority with the cited correct page. The `SAQ-IputII|"
+            "notes_from_pm` tie-break-overrides.json rationale already states "
+            "`printed p.432 (physical p.72)`; this fix aligns source_citation "
+            "with the documented page reference."
+        ),
+    },
 }
 
 # Registry of all per-chunk correction dicts. New chunks add their

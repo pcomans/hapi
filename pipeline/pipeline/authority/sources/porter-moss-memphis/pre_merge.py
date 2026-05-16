@@ -129,8 +129,12 @@ def apply_corrections(agent_dir: Path) -> dict[str, int]:
                 patched += 1
         if patched:
             temp_path = jsonl_path.with_suffix(jsonl_path.suffix + ".tmp")
+            # `sort_keys=True` mirrors the extraction-prompt instruction
+            # (`json.dumps(..., sort_keys=True, ensure_ascii=False)`); ensures
+            # byte-deterministic re-writes on re-runs. Per Gemini PR #222
+            # round-1 inline review.
             temp_path.write_text(
-                "\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n",
+                "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
                 encoding="utf-8",
             )
             os.replace(temp_path, jsonl_path)
