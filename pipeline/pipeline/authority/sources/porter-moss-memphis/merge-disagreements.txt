@@ -57,7 +57,7 @@ LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
 OCR-drift fixes (Roman-numeral restore in notes_from_pm):
-  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
-  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
-  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
-  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
+  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
+
+Reviewer-cited row corrections:
+  G7102.occupant_name: "Iou" → "Idu"

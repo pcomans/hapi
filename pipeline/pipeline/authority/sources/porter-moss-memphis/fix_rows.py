@@ -60,6 +60,56 @@ _NOTES_OCR_FIXES: list[tuple[str, str]] = [
 # chunk 1 — egyptologist pass cleared with no row-specific P1 findings.
 CHUNK1_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
 
+# Chunk-2 corrections from the egyptologist-reviewer pass on the printed PM
+# III.1 source (2026-05-15). The pypdf text-layer extraction renders some
+# letters ambiguously — most notably `D` and `O` are visually similar in
+# PM's printed all-caps headwords, and pypdf chose `O` for the `D` in `IDU`.
+# The egyptologist verified against the rendered PDF page that the printed
+# headword unambiguously reads `IDU`, and the corroborating footnote on
+# printed p.184 (`Textual evidence also permits Meryrēᶜnūfer Kar to be son
+# of Idu (tomb G 7102)`) — itself already correctly OCR'd in PM's body
+# prose — confirms the name. `Iou` is not a standard Egyptian PN; `Idu` is
+# the form used by Simpson, *Mastabas of the Western Cemetery I* (1980)
+# and Dodson-Hilton. Two corrections needed:
+#   1. `occupant_name`: "Iou" → "Idu" (the actual prosopographic identity)
+#   2. `notes_from_pm`: rewrite the headword-block "IOU" to "IDU" so the
+#      stored verbatim form matches what PM actually prints (the OCR
+#      misread is not PM-faithful).
+CHUNK2_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("G7102", "occupant_name"): {
+        "value": "Idu",
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 2nd ed. 1974 "
+            "printed p.185: PM's all-caps headword unambiguously reads "
+            "`G 7102. IDU`. pypdf text-layer misread D→O producing `IOU`, "
+            "which all three extraction agents inherited and majority-voted. "
+            "Corroborated by the already-correctly-OCR'd footnote on "
+            "printed p.184 (`Textual evidence also permits Meryrēᶜnūfer "
+            "Kar to be son of Idu (tomb G 7102)`) and by Simpson, *Mastabas "
+            "of the Western Cemetery I* (1980), where the occupant is "
+            "named Idu throughout. `Iou` is not a standard Egyptian PN."
+        ),
+    },
+}
+
+
+def _apply_chunk2_notes_ocr_fixes(notes: str | None, tid: str) -> str | None:
+    """Per-row OCR fixes inside `notes_from_pm` that are scoped to a single
+    chunk-2 row. Separate from the source-wide `_NOTES_OCR_FIXES` table
+    because these substitutions are narrow enough that the global table
+    would carry risk of misfiring on a future chunk.
+
+    Currently: G7102 — rewrite the all-caps `IOU` (pypdf D→O misread) to
+    `IDU` so the stored verbatim notes match what PM printed. The
+    `notes_from_pm` stored form was `"IOU Tenant of the Pyramid of Pepy
+    I, ..."`; rewrite the leading token only.
+    """
+    if notes is None:
+        return None
+    if tid == "G7102" and notes.startswith("IOU "):
+        return "IDU " + notes[len("IOU "):]
+    return notes
+
 
 def _apply_ocr_fixes(notes: str | None) -> str | None:
     if notes is None:
@@ -80,20 +130,22 @@ def main() -> None:
         tid = row["tomb_id"]
         original_notes = row.get("notes_from_pm")
         fixed_notes = _apply_ocr_fixes(original_notes)
+        fixed_notes = _apply_chunk2_notes_ocr_fixes(fixed_notes, tid)
         if fixed_notes != original_notes:
             row["notes_from_pm"] = fixed_notes
             ocr_applied.append((tid, original_notes or ""))
 
-        for (override_tid, field), spec in CHUNK1_CORRECTIONS.items():
-            if override_tid == tid:
-                previous = row.get(field)
-                # Skip no-op corrections (value already matches) so the audit
-                # trail in `merge-disagreements.txt` does not accrue
-                # misleading `X → X` entries on subsequent runs.
-                if previous == spec["value"]:
-                    continue
-                row[field] = spec["value"]
-                overrides_applied.append((tid, field, previous, spec["value"]))
+        for corrections in (CHUNK1_CORRECTIONS, CHUNK2_CORRECTIONS):
+            for (override_tid, field), spec in corrections.items():
+                if override_tid == tid:
+                    previous = row.get(field)
+                    # Skip no-op corrections (value already matches) so the audit
+                    # trail in `merge-disagreements.txt` does not accrue
+                    # misleading `X → X` entries on subsequent runs.
+                    if previous == spec["value"]:
+                        continue
+                    row[field] = spec["value"]
+                    overrides_applied.append((tid, field, previous, spec["value"]))
 
     RECONCILED.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",

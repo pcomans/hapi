@@ -671,7 +671,7 @@ def test_chunk2_g7150_khufukhaef_ii_late_dynasty_v() -> None:
 
 
 def test_chunk2_dyn_vi_overseer_priests_of_pepy_i() -> None:
-    """G 7101 Meryreanufer and G 7102 Iou are Pepy I-period (Dyn VI)
+    """G 7101 Meryreanufer and G 7102 Idu are Pepy I-period (Dyn VI)
     officials buried in the Khufu-era East Field cemetery — late
     intrusions tied to the Pyramid-of-Pepy-I priestly establishment.
     """
@@ -680,3 +680,27 @@ def test_chunk2_dyn_vi_overseer_priests_of_pepy_i() -> None:
         assert row["dynasty"] == "6", row
         assert row["occupant_role"] == "Official", row
         assert row["attribution_certainty"] == "attested", row
+
+
+def test_chunk2_g7102_is_idu_not_iou() -> None:
+    """G 7102 occupant_name is `"Idu"`, NOT `"Iou"`.
+
+    The pypdf text-layer extraction misread PM's printed `IDU` headword as
+    `IOU` (D→O confusion in the all-caps font). All three extraction
+    agents inherited the misread and majority-voted `Iou`. The
+    egyptologist-reviewer pass verified against the rendered PM III.1
+    printed p.185 — the headword unambiguously reads `IDU`. The
+    `fix_rows.py` `CHUNK2_CORRECTIONS` table applies the correction with a
+    cited rationale (PM III.1 p.185 + Simpson 1980 + the corroborating
+    p.184 footnote `Textual evidence also permits Meryrēᶜnūfer Kar to be
+    son of Idu (tomb G 7102)`).
+
+    Regression-pin: if a future merge run or refactor reverts this back to
+    `Iou`, this test fails loud — a P1-finding from the egyptologist pass
+    must not silently regress.
+    """
+    row = _by_id("G7102")
+    assert row["occupant_name"] == "Idu", row
+    # The verbatim headword form in notes_from_pm also gets the D restored:
+    assert row["notes_from_pm"].startswith("IDU "), row
+    assert "IOU" not in (row["notes_from_pm"] or ""), row
