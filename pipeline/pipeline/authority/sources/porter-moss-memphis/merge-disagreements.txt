@@ -1,0 +1,26 @@
+G1a (None):
+  notes_from_pm: a="North Subsidiary Pyramid. Lepsius, V; Perring and Vyse, 7 of Giza; Reisner, G I-a. With boat-pit at south side." | b="North Subsidiary Pyramid. Lepsius, V; Perring and Vyse, 7 of Giza; Reisner, G I-a." | c="North Subsidiary Pyramid. Lepsius, V; Perring and Vyse, 7 of Giza; Reisner, G I-a."  → chose "North Subsidiary Pyramid. Lepsius, V; Perring and Vyse, 7 of Giza; Reisner, G I-a."
+
+G1b (None):
+  notes_from_pm: a="Middle Subsidiary Pyramid. Lepsius, VI; Perring and Vyse, 8 of Giza; Reisner, G I-b. With boat-pit at south-west corner." | b="Middle Subsidiary Pyramid. Lepsius, VI; Perring and Vyse, 8 of Giza; Reisner, G I-b." | c="Middle Subsidiary Pyramid. Lepsius, VI; Perring and Vyse, 8 of Giza; Reisner, G I-b."  → chose "Middle Subsidiary Pyramid. Lepsius, VI; Perring and Vyse, 8 of Giza; Reisner, G I-b."
+
+G2a (None):
+  notes_from_pm: a="SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a." | b="SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a." | c="SUBSIDIARY PYRAMID WITH 'SERDAB'. Reisner, G 11-a."  → chose "SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a."
+
+G3a (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 33, "section": "I"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"}
+
+G3b (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 33, "section": "I"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"}
+
+G3c (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"}
+
+LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
+============================================
+
+OCR-drift fixes (Roman-numeral restore in notes_from_pm):
+  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
+  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
+  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
+  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
