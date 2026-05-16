@@ -52,6 +52,13 @@ AREA_ORDER: dict[str, int] = {
               # Saite + Old-Kingdom-Central-Field tombs from chunk 3.
               # Sorts AFTER Reisner G-numbered tombs within Gîza so the
               # reconciled.jsonl groups by prefix family then numeric.
+    "SAQ": 2,  # Saqqâra descriptor-form (SAQ-Unis, SAQ-PepyI, SAQ-PepyII,
+               # SAQ-Neit, SAQ-IputII, SAQ-Wezebten, etc.) — PM III.2 § I.
+               # PYRAMIDS chunk 4. These pyramids lack a uniform Reisner-style
+               # number scheme; Saqqâra-specific descriptor IDs synthesise
+               # `SAQ-<KingOrQueenName>` from the section-heading royal name.
+               # Sorts after both Reisner and Lepsius forms; pyramids are
+               # Memphite but live in their own geographic sub-area.
     # Future chunks extend this dict AS THEY LAND their first row;
     # `tests/…::test_prefix_vocabulary_consistent` pins this dict against the
     # test regex so the two stay in sync.

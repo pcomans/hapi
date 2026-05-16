@@ -254,13 +254,14 @@ def test_load_overrides_rejects_missing_rationale_key(merge_module, tmp_path):
 def test_tie_break_overrides_contains_documented_chunks(merge_module):
     """Documented 1/1/1 ties with printed-source citations:
 
-    - Chunk 2: `G7000x|notes_from_pm` (B. EAST FIELD opener, agents
-      truncated the headword block at three sentence boundaries; override
-      picks the longest faithful capture).
-    - Chunk 3: `LG84|occupant_alt_names` (PAKAP good name WEHEBREc-EMAKHET,
-      pypdf-`c` raised-ayin normalisation — three agents produced three
-      variants; override picks U+02BF + lowercase-post-hyphen to match
-      chunk-1's Menkaureʿ convention).
+    - Chunk 2: `G7000x|notes_from_pm` (B. EAST FIELD opener; three
+      agents truncated the headword block at three sentence boundaries).
+    - Chunk 3: `LG84|occupant_alt_names` (PAKAP good name WEHEBREc-EMAKHET;
+      three agents produced three raised-ayin variants).
+    - Chunk 4: `SAQ-IputII|notes_from_pm`, `SAQ-Neit|notes_from_pm`,
+      `SAQ-MerenreI|notes_from_pm` (three Saqqâra queen-enclosure /
+      Dyn-VI-king rows where agents disagreed on period-before-PYRAMID
+      and raised-ayin normalisation in the verbatim headword block).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -271,6 +272,9 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
     assert set(overrides.keys()) == {
         ("G7000x", "notes_from_pm"),
         ("LG84", "occupant_alt_names"),
+        ("SAQ-IputII", "notes_from_pm"),
+        ("SAQ-Neit", "notes_from_pm"),
+        ("SAQ-MerenreI", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
@@ -283,6 +287,15 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
     assert "PM III.1" in lg84["rationale"]
     assert "p.290" in lg84["rationale"]
     assert lg84["value"] == ["Wehebreʿ-emakhet"]
+
+    for chunk4_key in [
+        ("SAQ-IputII", "notes_from_pm"),
+        ("SAQ-Neit", "notes_from_pm"),
+        ("SAQ-MerenreI", "notes_from_pm"),
+    ]:
+        entry = overrides[chunk4_key]
+        assert "PM III.2" in entry["rationale"], chunk4_key
+        assert isinstance(entry["value"], str), chunk4_key
 
 
 # === SENTINEL_NULL_STRINGS divergence tripwires ==========================

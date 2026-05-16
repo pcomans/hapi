@@ -1,0 +1,13 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-4 (PM III.2 Saqqâra). Each key is '<agent_tag>|<wrong_tomb_id>'; each value is {canonical_tomb_id, canonical_occupant_name, rationale}. Per the Dodson-Hilton-queens PR #218 precedent: corrections are committed (audit trail), pre_merge.py is the deterministic applier, and the canonical tomb_id traces to a documented printed-source rationale.",
+  "b|SAQ-Iput": {
+    "canonical_tomb_id": "SAQ-IputII",
+    "canonical_occupant_name": "Iput II",
+    "rationale": "PM III.2 2nd ed. 1978/1981 printed p.432 (physical p.72) headword reads `PYRAMID-ENCLOSURE OF IPUT [II]¹` (with regnal-number bracket `[II]` and footnote-marker `¹`). pypdf text-layer rendered the headword as `PYRAMID-ENCLOSURE OF IPUT Il1` — the `[II]` bracket-plus-footnote-marker rendered as the four-character glyph sequence `Il1` (lowercase-l, lowercase-l, digit-1) which Agent B mis-read as the bare name `Iput` (dropping the regnal number entirely). Agents A and C correctly applied the bracket-regnal-number rule from the chunk-4 prompt and emitted `SAQ-IputII` / occupant_name `Iput II`. The canonical Egyptological form is `Iput II` — she is Pepy II's queen (the chunk-4 footnote-1 line on physical p.71 reads `King's daughter (of Pepy I), King's wife (of Merenreʿ I and Pepy II)`). Singleton-rejection in merge.py flagged `SAQ-Iput` as a 1/3-only row; this correction routes Agent B's mis-OCR'd version back into the canonical 3/3 majority."
+  },
+  "b|SAQ-MerenrʿI": {
+    "canonical_tomb_id": "SAQ-MerenreI",
+    "canonical_occupant_name": "Merenrʿ I",
+    "rationale": "Agent B used a U+02BF raised-ayin character (`ʿ`) inside the tomb_id descriptor (`SAQ-MerenrʿI`), while agents A and C used the ASCII form (`SAQ-MerenreI`). The tomb_id is a MACHINE-READABLE identifier: per chunk-1 precedent, tomb_ids stay ASCII-only (e.g. `G3` for Menkaureʿ — the king's `occupant_name` is `Menkaureʿ` with U+02BF, but the tomb_id is `G3` ASCII). For consistency, the chunk-4 SAQ-prefix descriptor form ALSO stays ASCII (`SAQ-MerenreI`, NOT `SAQ-MerenrʿI`); the U+02BF ayin lives in `occupant_name` (`Merenrʿ I`) but not in `tomb_id`. This correction normalises Agent B's tomb_id descriptor to ASCII while preserving B's occupant_name value (which agents B and C agree on at 2/1)."
+  }
+}
