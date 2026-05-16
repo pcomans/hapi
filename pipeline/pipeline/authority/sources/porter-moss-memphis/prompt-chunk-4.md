@@ -103,7 +103,7 @@ The Griffith-Institute scan of PM III.2 has heavy text-layer noise that pypdf re
 **Roman/Arabic + diacritic mis-OCR in headword content:** pypdf renders some PM characters with drift. Known patterns:
 - `}EQUIER` / `}EQUIER` is a pypdf rendering of `JÉQUIER` (the French Egyptologist who excavated Saqqâra's queen pyramids). Drop bibliographic references entirely from `notes_from_pm` (body-prose citations, not headword fields).
 - `J>:.<NAME>c <NAME>` — pypdf rendering of a Dyn VIII king-name with raised-c ayin. Out of scope per chunk-4 boundaries (Dyn VIII excluded).
-- A headword name containing `£c` (e.g. `XYZ£c I`) is mis-OCR of `É` with combining marks. Normalisation: replace `£c` with `ʿ` (U+02BF) and apply the raised-ayin rules below.
+- A headword name containing `£c` (e.g. `XYZ£c I`) is mis-OCR of a macron-Ē-plus-raised-ayin glyph cluster (PM uses `MERENRĒʿ`-style names where the macron-Ē is the `E` vowel of the `Re` element). Normalisation: replace `£c` with `eʿ` (lowercase `e` + U+02BF ayin). The underlying `Ē` vowel is restored as lowercase `e` after title-casing; the raised-ayin becomes U+02BF. Do NOT use the bare `£c → ʿ` rule (which drops the vowel and produces non-standard forms like `Merenrʿ`). Then apply the raised-ayin rules below if any further raised-ayin glyphs remain.
 
 **Raised-ayin normalisation (carry-over from chunks 1-3):**
 - Interior raised-ayin (`XAaY` / `XEcY` in ALL-CAPS) drops the inner lowercase letter; title-case after.

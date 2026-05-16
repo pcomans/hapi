@@ -68,7 +68,7 @@ SAQ-Isesi (Isesi):
   notes_from_pm: a="H. PYRAMID-COMPLEX OF ISESI. Dyn. V. PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf." | b="H. PYRAMID-COMPLEX OF ISESI. Dyn. V. PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf." | c="H. PYRAMID-COMPLEX OF ISESI. Dyn. V PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf."  → chose "H. PYRAMID-COMPLEX OF ISESI. Dyn. V. PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf."
 
 SAQ-MerenreI (Merenrʿ I):
-  notes_from_pm: a="I. PYRAMID-COMPLEX OF MERENREʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | b="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | c="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."  → chose "I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."
+  notes_from_pm: a="I. PYRAMID-COMPLEX OF MERENREʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | b="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | c="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."  → chose "I. PYRAMID-COMPLEX OF MERENREʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."
   occupant_name: a="Merenre I" | b="Merenrʿ I" | c="Merenrʿ I"  → chose "Merenrʿ I"
 
 SAQ-Neit (Neit):
@@ -102,3 +102,4 @@ Reviewer-cited row corrections:
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
   LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
+  SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"

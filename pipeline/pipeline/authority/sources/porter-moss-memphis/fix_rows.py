@@ -146,6 +146,30 @@ CHUNK3_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
 }
 
+# Chunk-4 corrections from the egyptologist-reviewer pass (PR #222 / PM
+# III.2 Saqqâra Dyn V/VI pyramids).
+CHUNK4_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("SAQ-MerenreI", "occupant_name"): {
+        "value": "Merenreʿ I",
+        "rationale": (
+            "Egyptologist-reviewer pass F1 against PM III.2 2nd ed. 1978/1981 "
+            "printed p.425 (physical p.65): PM prints `MERENRĒʿ I` (macron-ē + "
+            "raised-ayin). pypdf rendered the macron-ē-plus-raised-ayin glyph "
+            "cluster as the 2-character sequence `£c`, where `£` represents "
+            "the underlying `Ē` (or `É` with combining marks) and `c` "
+            "represents the raised-ayin. The chunk-4 prompt's rule "
+            "`£c → ʿ` correctly converts the raised-ayin glyph but DROPS the "
+            "underlying vowel — producing the non-standard form `Merenrʿ I`. "
+            "The conventional Egyptological transcription is `Merenreʿ I` "
+            "(mer-en-Reʿ, \"Beloved of Re\") with the `e` vowel of the `Re` "
+            "element preserved. Parallel to chunk-1's `Menkaureʿ` (PM "
+            "`MENKAUREa` → drop the raised-`a` glyph, keep the `e` vowel that "
+            "precedes it). Restoration: `Merenrʿ I` → `Merenreʿ I`. Egyptologist "
+            "F1 finding."
+        ),
+    },
+}
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -154,6 +178,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK1_CORRECTIONS,
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
+    CHUNK4_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

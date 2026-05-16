@@ -968,21 +968,22 @@ def test_chunk4_pepy_ii_three_queens_dyn_vi() -> None:
     assert _by_id("SAQ-IputII")["occupant_name"] == "Iput II"
 
 
-def test_chunk4_merenre_i_majority_form_kept() -> None:
-    """Merenrʿ I (mer-en-Reʿ, "Beloved of Re") — Dyn VI king between Pepy I
-    and Pepy II. The strict-rule OCR normalisation `MERENR£c I` → `Merenrʿ I`
-    is the 2/1 majority among extraction agents (B and C strict-apply the
-    `£c → ʿ` chunk-4 prompt rule; Agent A restored the conventional `E`
-    producing `Merenreʿ I`). The merge resolves to the majority. The
-    tie-break-overrides entry on `notes_from_pm` aligns the verbatim form
-    with the majority occupant_name. Egyptologist-reviewer pass may flag
-    the `Merenreʿ I` (with E) form as the conventional Egyptological
-    transcription — if so, a CHUNK4_CORRECTIONS entry in fix_rows.py would
-    apply the post-merge canonicalisation.
+def test_chunk4_merenre_i_egyptological_form() -> None:
+    """Merenreʿ I (mer-en-Reʿ, "Beloved of Re") — Dyn VI king between Pepy I
+    and Pepy II. PM III.2 prints `MERENRĒʿ I` (macron-ē + raised-ayin) on
+    printed p.425; pypdf rendered the macron-ē-plus-ayin cluster as `£c`.
+    The conventional Egyptological transcription is `Merenreʿ I` with the
+    `e` vowel of the `Re` element preserved (parallel to chunk-1's
+    `Menkaureʿ`). Egyptologist-reviewer F1 P1 caught the strict-rule
+    majority dropping the vowel; fix_rows.py CHUNK4_CORRECTIONS restores
+    the conventional form. Tie-break override on `notes_from_pm` aligns
+    the verbatim form `MERENREʿ I` so both fields stay internally
+    consistent.
     """
     row = _by_id("SAQ-MerenreI")
     assert row["tomb_id"] == "SAQ-MerenreI"  # ASCII descriptor, no U+02BF in tomb_id
-    assert row["occupant_name"] == "Merenrʿ I"  # current strict-rule majority
+    assert row["occupant_name"] == "Merenreʿ I"  # conventional form with E vowel
+    assert "MERENREʿ I" in row["notes_from_pm"]
     assert row["dynasty"] == "6"
     assert row["source_citation"]["page"] == 425
 
