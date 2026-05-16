@@ -18,6 +18,14 @@ adjacent Saite (Dyn XXVI) LG-numbered tombs including the joint burial of
 Commander ʿAhmosi + Queen Nekhtubasterau (LG 83, wife of Amasis) and the
 priest-pair Harsiesi + Harwoz (LG 97). 5 rows from PM III.1 § III "E.
 CENTRAL FIELD", physical pp.285–289 / printed pp.288–292.
+
+Chunk 4 is the FIRST chunk drawn from PM Vol III.2 (Saqqâra-Dahshûr,
+ed. Málek, 1978/1981) — covering the back half of PM III.2 § I.
+PYRAMIDS Saqqâra: 5 Dyn V/VI royal kings (Unis, Pepy I, Isesi, Merenrʿ I,
+Pepy II) + 4 queens (anonymous Wife-of-Isesi + Pepy II's three queens
+Neit, Iput II, Wezebten). 9 rows from physical pp.61–72 / printed
+pp.421–432. First `memphite_area: "Saqqara"` rows, first `SAQ-`
+descriptor-form tomb_ids, first PM III.2 edition citation.
 """
 
 from __future__ import annotations
@@ -38,6 +46,7 @@ SOURCE_DIR = (
 JSONL = SOURCE_DIR / "reconciled.jsonl"
 
 EDITION_PM_III_1 = "PM III.1 2nd ed. 1974"
+EDITION_PM_III_2 = "PM III.2 2nd ed. 1978/1981"
 
 
 CHUNK1_TOMB_IDS: frozenset[str] = frozenset({
@@ -69,7 +78,18 @@ CHUNK3_TOMB_IDS: frozenset[str] = frozenset({
     "LG97",    # joint: Harsiesi + Harwoz, both wnrw-priests
 })
 
-EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
+# Chunk 4: Saqqâra § I. PYRAMIDS back half — Dyn V/VI royal kings + queens.
+# Source: PM III.2 2nd ed. 1978/1981, § I. PYRAMIDS F-K,
+# physical pp.61–72 / printed pp.421–432.
+CHUNK4_TOMB_IDS: frozenset[str] = frozenset({
+    "SAQ-Unis", "SAQ-PepyI", "SAQ-Isesi", "SAQ-MerenreI", "SAQ-PepyII",  # 5 kings
+    "SAQ-WifeOfIsesi",                                                    # anon queen
+    "SAQ-Neit", "SAQ-IputII", "SAQ-Wezebten",                             # 3 named queens (Pepy II)
+})
+
+EXPECTED_TOMB_IDS: frozenset[str] = (
+    CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
+)
 
 
 @lru_cache(maxsize=1)
@@ -106,10 +126,25 @@ def test_tomb_id_is_unique() -> None:
 # - Lepsius LG-numbers (LG81, LG83, LG100) from chunk 3
 _TOMB_ID_RE = re.compile(r"^(?P<prefix>[A-Z]+)(?P<num>\d+)(?P<suffix>[a-zA-Z]?)$")
 
+# Descriptor tomb-ID form: 1+ uppercase prefix letters, hyphen, then a
+# camel-case descriptor (e.g. `SAQ-Unis`, `SAQ-PepyII`, `SAQ-WifeOfIsesi`).
+# Used when PM has no consistent numeric tomb-ID scheme — Saqqâra pyramids
+# are identified by king-name + Lepsius Roman numeral in PM-prose, but no
+# uniform numeric ID. Chunks 4+ use this form for Saqqâra rows.
+_TOMB_ID_DESC_RE = re.compile(r"^(?P<prefix>[A-Z]+)-(?P<desc>[A-Za-z][A-Za-z0-9]*)$")
+
+
+def _match_tomb_id(tid: str):
+    """Return the regex match object for either tomb_id form, or None."""
+    return _TOMB_ID_RE.match(tid) or _TOMB_ID_DESC_RE.match(tid)
+
 
 def test_tomb_id_shape() -> None:
+    """Every committed tomb_id must match EITHER the numbered form
+    (`<PREFIX><digits><suffix?>`) OR the descriptor form
+    (`<PREFIX>-<CamelCaseDescriptor>`)."""
     for tid in EXPECTED_TOMB_IDS:
-        assert _TOMB_ID_RE.match(tid), tid
+        assert _match_tomb_id(tid), tid
 
 
 def test_prefix_vocabulary_consistent() -> None:
@@ -135,7 +170,7 @@ def test_prefix_vocabulary_consistent() -> None:
     # constant — the only source of truth is what's committed.
     prefixes_in_data = set()
     for row in _rows():
-        m = _TOMB_ID_RE.match(row["tomb_id"])
+        m = _match_tomb_id(row["tomb_id"])
         assert m is not None, row["tomb_id"]
         prefixes_in_data.add(m.group("prefix"))
 
@@ -210,14 +245,19 @@ def test_attribution_certainty_controlled_vocab() -> None:
         assert row["attribution_certainty"] in _VALID_CERTAINTY, row
 
 
-def test_memphite_area_is_giza_in_chunk1() -> None:
-    """All chunk-1 rows are PYRAMID-FIELD OF GÎZA. Future chunks extend the
-    Memphite-area vocabulary (Saqqara, Abusir, Dahshur, …)."""
+_VALID_MEMPHITE_AREAS = frozenset({"Giza", "Saqqara"})
+
+
+def test_memphite_area_controlled_vocab() -> None:
+    """Chunks 1-3 are all PYRAMID-FIELD OF GÎZA. Chunk 4 introduces
+    `Saqqara` (PM III.2 § I. PYRAMIDS). Future chunks will extend with
+    `Abusir`, `Dahshur`, `Lisht`, `Meidum`."""
     for row in _rows():
-        assert row["memphite_area"] == "Giza", row
+        assert row["memphite_area"] in _VALID_MEMPHITE_AREAS, row
 
 
 _VALID_SECTIONS = frozenset({"I", "III"})
+_VALID_EDITIONS = frozenset({EDITION_PM_III_1, EDITION_PM_III_2})
 
 
 def test_source_citation_shape() -> None:
@@ -225,14 +265,15 @@ def test_source_citation_shape() -> None:
         cit = row["source_citation"]
         assert set(cit.keys()) == {"page", "edition", "section"}, cit
         assert isinstance(cit["page"], int), cit
-        assert cit["edition"] == EDITION_PM_III_1, cit
+        assert cit["edition"] in _VALID_EDITIONS, cit
         assert cit["section"] in _VALID_SECTIONS, cit
 
 
 def test_source_citation_section_matches_chunk() -> None:
-    """Chunk 1 rows cite `section: "I"` (§ I. PYRAMIDS). Chunks 2 and 3 cite
-    `section: "III"` (§ III. NECROPOLIS — chunk 2's B. EAST FIELD and chunk
-    3's E. CENTRAL FIELD are both within § III)."""
+    """Chunk 1 + chunk 4 rows cite `section: "I"` (PM III.1's § I. PYRAMIDS
+    and PM III.2's § I. PYRAMIDS respectively — different volumes but both
+    under their volume's § I). Chunks 2 and 3 cite `section: "III"` (PM
+    III.1's § III. NECROPOLIS — B. EAST FIELD and E. CENTRAL FIELD)."""
     for row in _rows():
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
             assert row["source_citation"]["section"] == "I", row
@@ -240,10 +281,22 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK3_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS:
+            assert row["source_citation"]["section"] == "I", row
+
+
+def test_source_citation_edition_matches_chunk() -> None:
+    """Chunks 1-3 cite PM III.1; chunk 4 cites PM III.2."""
+    for row in _rows():
+        if row["tomb_id"] in CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS:
+            assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS:
+            assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
 def test_source_citation_page_in_expected_range() -> None:
-    """Printed page ranges: chunk 1 = 11–35, chunk 2 = 179–190, chunk 3 = 288–292."""
+    """Printed page ranges: chunk 1 = 11–35, chunk 2 = 179–190,
+    chunk 3 = 288–292, chunk 4 = 421–432."""
     for row in _rows():
         page = row["source_citation"]["page"]
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
@@ -252,6 +305,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 179 <= page <= 190, f"{row['tomb_id']} page {page} outside chunk-2 [179, 190]"
         elif row["tomb_id"] in CHUNK3_TOMB_IDS:
             assert 288 <= page <= 292, f"{row['tomb_id']} page {page} outside chunk-3 [288, 292]"
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS:
+            assert 421 <= page <= 432, f"{row['tomb_id']} page {page} outside chunk-4 [421, 432]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -266,11 +321,10 @@ def test_bce_dates_null_at_extraction_stage() -> None:
 
 
 def test_cemetery_by_chunk() -> None:
-    """Chunk 1 (pyramid-complex rows) carries `cemetery: null` — the pyramid
-    IS its own complex. Chunk 2 (East Field mastabas) carries
+    """Chunk 1 + chunk 4 (pyramid-complex rows) carry `cemetery: null` —
+    the pyramid IS its own complex. Chunk 2 (East Field mastabas) carries
     `cemetery: "G 7000"` per PM's `CEMETERY G 7000` banner on printed p.182.
-    Chunk 3 (Central Field) carries `cemetery: "Central Field"` per PM's
-    § III. E. CENTRAL FIELD section header."""
+    Chunk 3 (Central Field) carries `cemetery: "Central Field"`."""
     for row in _rows():
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
             assert row["cemetery"] is None, row
@@ -278,6 +332,8 @@ def test_cemetery_by_chunk() -> None:
             assert row["cemetery"] == "G 7000", row
         elif row["tomb_id"] in CHUNK3_TOMB_IDS:
             assert row["cemetery"] == "Central Field", row
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS:
+            assert row["cemetery"] is None, row
 
 
 def test_dynasty_assignments() -> None:
@@ -285,8 +341,9 @@ def test_dynasty_assignments() -> None:
     Chunk 2 spans Dyn. IV (royal-family core), Dyn. V (later officials),
     and Dyn. VI (Pepy I priestly clientele on G7101, G7102).
     Chunk 3 spans Dyn. IV/V (LG 100 Khentkaus) and Dyn. XXVI (the Saite
-    LG 81/83/84/97 cluster). Bare-headword shafts G7112 / G7142 carry
-    `dynasty: null` (PM gives no dating line).
+    LG 81/83/84/97 cluster). Chunk 4 spans Dyn. V (Unis, Isesi + Wife)
+    and Dyn. VI (Pepy I, Merenrʿ I, Pepy II + 3 queens). Bare-headword
+    shafts G7112 / G7142 carry `dynasty: null` (PM gives no dating line).
     """
     for row in _rows():
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
@@ -297,6 +354,8 @@ def test_dynasty_assignments() -> None:
             assert row["dynasty"] in {"4", "5", "6"}, row
         elif row["tomb_id"] in CHUNK3_TOMB_IDS:
             assert row["dynasty"] in {"4", "26"}, row
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS:
+            assert row["dynasty"] in {"5", "6"}, row
 
 
 # === content / value assertions =============================================
@@ -430,7 +489,7 @@ def test_chunk1_subsidiary_pyramids_are_queens() -> None:
     complex."""
     subsidiary_ids = {
         tid for tid in CHUNK1_TOMB_IDS
-        if _TOMB_ID_RE.match(tid).group("suffix") not in (None, "")
+        if _TOMB_ID_RE.match(tid) and _TOMB_ID_RE.match(tid).group("suffix") not in (None, "")
     }
     assert subsidiary_ids == {"G1a", "G1b", "G1c", "G2a", "G3a", "G3b", "G3c"}
     for tid in subsidiary_ids:
@@ -835,6 +894,110 @@ def test_chunk3_no_sub_period_for_old_kingdom_rows() -> None:
             assert row["sub_period"] is None, row
         elif row["tomb_id"] in CHUNK3_TOMB_IDS - {"LG100"}:
             assert row["sub_period"] == "Saite", row
+
+
+# === chunk-4 content / value assertions (PM III.2 Saqqâra) ===================
+
+
+def test_chunk4_five_royal_kings_attested() -> None:
+    """Chunk 4's 5 royal Dyn V/VI kings (Unis, Pepy I, Isesi, Merenrʿ I,
+    Pepy II) all have role=King + attribution=attested per PM's section
+    headings `<LETTER>. PYRAMID-COMPLEX OF <KING>`. memphite_area="Saqqara".
+    """
+    expected_kings = {"SAQ-Unis", "SAQ-PepyI", "SAQ-Isesi", "SAQ-MerenreI", "SAQ-PepyII"}
+    for tid in expected_kings:
+        row = _by_id(tid)
+        assert row["occupant_role"] == "King", row
+        assert row["attribution_certainty"] == "attested", row
+        assert row["memphite_area"] == "Saqqara", row
+        assert row["occupant_name"] is not None, row
+
+
+def test_chunk4_unis_last_king_dyn_v() -> None:
+    """Unis closes Dyn V (last king before the Dyn VI transition).
+    Source citation = printed p.421 (PM III.2 § I. F)."""
+    row = _by_id("SAQ-Unis")
+    assert row["occupant_name"] == "Unis"
+    assert row["dynasty"] == "5"
+    assert row["source_citation"]["page"] == 421
+    assert row["source_citation"]["edition"] == EDITION_PM_III_2
+
+
+def test_chunk4_isesi_haram_el_shawwaf_alias() -> None:
+    """Isesi (Djedkare-Isesi) — the Saqqâra pyramid PM identifies with
+    the Arabic popular-name `Haram el-Shawwaf` ("Pyramid of the Seer"
+    or "Sentinel Pyramid"). PM's headword block has the alias clause
+    after the `Lepsius, XXXVII; Perring and Vyse, 6;` identification
+    line."""
+    row = _by_id("SAQ-Isesi")
+    assert row["occupant_name"] == "Isesi"
+    assert row["dynasty"] == "5"
+    assert "Haram el-Shawwaf" in row["tomb_aliases"]
+
+
+def test_chunk4_wife_of_isesi_anonymous_uncertain() -> None:
+    """The Dyn V anonymous queen-enclosure `PYRAMID-ENCLOSURE PROBABLY
+    OF WIFE OF ISESI` on PM III.2 printed p.424 emits a row with
+    occupant_name=null + role=Queen + attribution=uncertain
+    (PM's `Probably` hedge token).
+    """
+    row = _by_id("SAQ-WifeOfIsesi")
+    assert row["occupant_name"] is None
+    assert row["occupant_role"] == "Queen"
+    assert row["attribution_certainty"] == "uncertain"
+    assert row["dynasty"] == "5"
+
+
+def test_chunk4_pepy_ii_three_queens_dyn_vi() -> None:
+    """Pepy II had three named queens with their own pyramid-enclosures
+    at Saqqâra — Neit, Iput II (queen-of-three-kings), and Wezebten.
+    All three are Dyn VI Queens with attested attribution. PM III.2's
+    `IPUT [II]` headword carries pypdf-OCR drift `IPUT Il1` which the
+    chunk-4 prompt's bracket-regnal rule + pre_merge tomb_id correction
+    routes back to canonical `SAQ-IputII` / `Iput II`.
+    """
+    queens = {"SAQ-Neit", "SAQ-IputII", "SAQ-Wezebten"}
+    for tid in queens:
+        row = _by_id(tid)
+        assert row["occupant_role"] == "Queen", row
+        assert row["attribution_certainty"] == "attested", row
+        assert row["dynasty"] == "6", row
+        assert row["memphite_area"] == "Saqqara", row
+    # Iput II's name carries the regnal numeral (recovered from pypdf
+    # `Il1` glyph-cluster via the chunk-4 pre_merge tomb_id correction)
+    assert _by_id("SAQ-IputII")["occupant_name"] == "Iput II"
+
+
+def test_chunk4_merenre_i_majority_form_kept() -> None:
+    """Merenrʿ I (mer-en-Reʿ, "Beloved of Re") — Dyn VI king between Pepy I
+    and Pepy II. The strict-rule OCR normalisation `MERENR£c I` → `Merenrʿ I`
+    is the 2/1 majority among extraction agents (B and C strict-apply the
+    `£c → ʿ` chunk-4 prompt rule; Agent A restored the conventional `E`
+    producing `Merenreʿ I`). The merge resolves to the majority. The
+    tie-break-overrides entry on `notes_from_pm` aligns the verbatim form
+    with the majority occupant_name. Egyptologist-reviewer pass may flag
+    the `Merenreʿ I` (with E) form as the conventional Egyptological
+    transcription — if so, a CHUNK4_CORRECTIONS entry in fix_rows.py would
+    apply the post-merge canonicalisation.
+    """
+    row = _by_id("SAQ-MerenreI")
+    assert row["tomb_id"] == "SAQ-MerenreI"  # ASCII descriptor, no U+02BF in tomb_id
+    assert row["occupant_name"] == "Merenrʿ I"  # current strict-rule majority
+    assert row["dynasty"] == "6"
+    assert row["source_citation"]["page"] == 425
+
+
+def test_chunk4_no_jay_kakare_ibi_row() -> None:
+    """PM III.2 § I has a `J. PYRAMID OF KAKAREʿ IBI` entry on physical
+    p.65 (Dyn VIII transitional king) that falls between letters I and
+    K in the section lettering. Chunk 4 explicitly excludes this row per
+    the prompt's OUT-OF-SCOPE rule (Dyn V/VI only). Regression-pin: no
+    row with `SAQ-Kakare`* or `SAQ-Ibi`* should be in reconciled.jsonl.
+    """
+    ids = {row["tomb_id"] for row in _rows()}
+    for tid in ids:
+        assert "Kakare" not in tid, f"chunk-4 should not emit {tid} (Dyn VIII out of scope)"
+        assert "Ibi" not in tid, f"chunk-4 should not emit {tid} (Dyn VIII out of scope)"
 
 
 # === existing chunk-2 content tests ========================================

@@ -79,3 +79,20 @@ Chunk-3 design choices:
 - Out-of-scope no-LG-number tombs (THAIHARPATA, PEDUBASTE, PTAHARDAIS): each Saite-era tomb without a Lepsius / Reisner / Mariette identifier. Deferred to a follow-up chunk with the descriptor-tomb-id scheme (e.g. `CF-Thaiharpata`).
 
 Chunk file text-layer SHA-256 pin: `83c4c224ca022c9e62a5563d1535a35e7ff3240d80cab6b5769306678abda8e7`.
+
+## Chunk 4 scope (FIRST PM III.2 chunk)
+
+Physical pp.61–72 / printed pp.421–432 of PM III.2 (Saqqâra-Dahshûr): the back half of § I. PYRAMIDS at Saqqâra — the Dyn V/VI royal pyramid-complexes from F. Unis (Dyn V's last king) through K. Pepy II (Dyn VI's longest-reigning king), plus Pepy II's three queens' pyramid-enclosures (Neit, Iput II, Wezebten) and the anonymous Wife-of-Isesi queen-enclosure under H. 9 rows total: 5 kings + 4 queens.
+
+Chunk-4 design choices:
+- First chunk drawn from PM Vol III.2 (not III.1). Introduces `edition: "PM III.2 2nd ed. 1978/1981"` alongside chunks 1-3's `PM III.1 2nd ed. 1974`.
+- First `memphite_area: "Saqqara"` rows (chunks 1-3 were all `Giza`).
+- First `SAQ-`-prefix descriptor-form `tomb_id`s (machine-readable identifiers in `SAQ-<DescriptorName>` shape, e.g. `SAQ-Unis`, `SAQ-PepyII`, `SAQ-WifeOfIsesi`). Saqqâra pyramids lack a uniform Reisner-style or Lepsius-style numeric ID — the descriptor synthesises from the section's named royal occupant.
+- `tomb_id` descriptors stay ASCII-only (no U+02BF ayin in identifiers — `SAQ-MerenreI`, NOT `SAQ-MerenrʿI`). The U+02BF ayin lives in `occupant_name` (`Merenrʿ I` per the 2/1 majority strict-rule normalisation; egyptologist-reviewer may post-process to the conventional `Merenreʿ I` form via fix_rows.py CHUNK4_CORRECTIONS).
+- Extends `merge.AREA_ORDER` with `"SAQ": 2` (sorts after Reisner `G` and Lepsius `LG` numbered forms).
+- New `pre_merge.py` mechanism for PM Memphis (cloned from D&H queens PR #218 precedent): `tomb_id_corrections-<chunk>.json` files apply OCR-drift tomb_id fixes BEFORE merge so a singleton-rejected mis-OCR'd row routes back into the canonical majority. Chunk-4 uses this for Agent B's `IPUT [II]¹` → `IPUT Il1` → `IPUT` mis-OCR and for Agent B's U+02BF-in-descriptor non-conformance on `MerenreI`.
+- New `tomb_aliases` content: Saqqâra pyramids carry Arabic popular-names appended to their Lepsius identification line (e.g. Isesi's `Haram el-Shawwaf` — "the Sentinel Pyramid"). Extracted into `tomb_aliases` per the chunk-4 prompt's alias rule.
+- Three new `tie-break-overrides.json` entries for chunk-4 1/1/1 ties on `notes_from_pm` (SAQ-IputII, SAQ-Neit, SAQ-MerenreI — agents disagreed on period-before-PYRAMID sentence-boundary preservation + raised-ayin normalisation).
+- Out-of-scope `J. PYRAMID OF KAKAREʿ IBI` (Dyn VIII transitional king on printed p.426) — explicitly excluded from chunk 4 per the prompt's OUT-OF-SCOPE rule. Regression-pin in `test_chunk4_no_jay_kakare_ibi_row` guards against accidental inclusion.
+
+Chunk file text-layer SHA-256 pin: `7c2a4a712c4419eb2b479c2f0e07a7ee350ad68989af2a08dbc17a16678916e3`.

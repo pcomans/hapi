@@ -60,8 +60,45 @@ LG84 (Pakap):
 LG97 (Harsiesi):
   notes_from_pm: a="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin." | b="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" | c="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"  → chose "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"
 
+SAQ-IputII (Iput II):
+  notes_from_pm: a="PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI." | b="PYRAMID-ENCLOSURE OF IPUT. Dyn. VI" | c="PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI PYRAMID."  → chose "PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI."
+  source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 432, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"}
+
+SAQ-Isesi (Isesi):
+  notes_from_pm: a="H. PYRAMID-COMPLEX OF ISESI. Dyn. V. PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf." | b="H. PYRAMID-COMPLEX OF ISESI. Dyn. V. PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf." | c="H. PYRAMID-COMPLEX OF ISESI. Dyn. V PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf."  → chose "H. PYRAMID-COMPLEX OF ISESI. Dyn. V. PYRAMID. Lepsius, XXXVII; Perring and Vyse, 6; Haram el-Shawwaf."
+
+SAQ-MerenreI (Merenrʿ I):
+  notes_from_pm: a="I. PYRAMID-COMPLEX OF MERENREʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | b="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | c="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."  → chose "I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."
+  occupant_name: a="Merenre I" | b="Merenrʿ I" | c="Merenrʿ I"  → chose "Merenrʿ I"
+
+SAQ-Neit (Neit):
+  notes_from_pm: a="PYRAMID-ENCLOSURE OF NEIT. Dyn. VI." | b="PYRAMID-ENCLOSURE OF NEIT. Dyn. VI" | c="PYRAMID-ENCLOSURE OF NEIT. Dyn. VI PYRAMID."  → chose "PYRAMID-ENCLOSURE OF NEIT. Dyn. VI."
+  source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 430, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"}
+
+SAQ-PepyI (Pepy I):
+  notes_from_pm: a="G. PYRAMID-COMPLEX OF PEPY I. Dyn. VI. PYRAMID. Lepsius, XXXVI; Perring and Vyse, 5." | b="G. PYRAMID-COMPLEX OF PEPY I. Dyn. VI. PYRAMID. Lepsius, XXXVI; Perring and Vyse, 5." | c="G. PYRAMID-COMPLEX OF PEPY I. Dyn. VI PYRAMID. Lepsius, XXXVI; Perring and Vyse, 5."  → chose "G. PYRAMID-COMPLEX OF PEPY I. Dyn. VI. PYRAMID. Lepsius, XXXVI; Perring and Vyse, 5."
+
+SAQ-PepyII (Pepy II):
+  notes_from_pm: a="K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI. PYRAMID. Lepsius, XLI; Perring and Vyse, 9." | b="K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI. PYRAMID. Lepsius, XLI; Perring and Vyse, 9." | c="K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI PYRAMID. Lepsius, XLI; Perring and Vyse, 9."  → chose "K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI. PYRAMID. Lepsius, XLI; Perring and Vyse, 9."
+
+SAQ-Wezebten (Wezebten):
+  notes_from_pm: a="PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI." | b="PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI" | c="PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI"  → chose "PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI"
+
+SAQ-WifeOfIsesi (None):
+  notes_from_pm: a="PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V. PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7." | b="PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V. PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7." | c="PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7."  → chose "PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V. PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7."
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
+OCR-drift fixes (Roman-numeral restore in notes_from_pm):
+  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
+  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
+  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
+  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
+  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
+
 Reviewer-cited row corrections:
+  G7102.occupant_name: "Iou" → "Idu"
+  LG83.co_occupant_roles: [] → ["Queen"]
+  LG97.co_occupant_roles: [] → ["Official"]
   LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
