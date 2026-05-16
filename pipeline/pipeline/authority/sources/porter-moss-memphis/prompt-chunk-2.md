@@ -134,7 +134,7 @@ For trailing raised-ayin in an ALL-CAPS name (lowercase `a` at the end of an oth
   - `"High Priest"` — PM headword's first role token is `High Priest of <god>`. Not expected in chunk 2.
   - `"Official"` — PM headword names occupant with administrative title(s) (`Treasurer`, `Overseer`, `Inspector`, `Tenant`, `Royal acquaintance`, `Greatest of the Ten of Upper Egypt`, `Steward`, `Scribe`, etc.) and NO `King's son/daughter` token. This is the catch-all for non-royal officials.
   - `"Royal Family"` — reserve for rare cases where PM marks the occupant as related to the king but not as `King's son/daughter` (e.g. `Father of king`, `Cousin of king`) — NOT expected in chunk 2.
-  - `"Unknown"` — when the headword line is bare (no name, no title) — applies to `G 7112.` and `G 7142.` style rows.
+  - `"Unknown"` — when the headword consists of a bare Reisner-number line with no occupant name and no role token (and no `Probably` / `attributed to` hedge that names an attribution candidate). Bare-Reisner-number rows are valid: PM lists the Reisner number with a period and the headword block then steps directly into a `Superstructure...` or `Stone-built mastaba...` description without naming an occupant.
 - **`dynasty`** — Derived from PM's `Dyn. <Roman>` or `Temp. <king>` line in the headword block. Apply this resolver:
   - Literal `Dyn. IV` → `"4"`; `Dyn. V` → `"5"`; `Dyn. VI` → `"6"`.
   - `Temp. Khufu`, `Temp. Khephren`, `Temp. Menkaureʿ` → `"4"` (all three are Dyn. IV kings; this is PM's standard chronological vocabulary).
@@ -148,7 +148,7 @@ For trailing raised-ayin in an ALL-CAPS name (lowercase `a` at the end of an oth
 - **`cemetery`** — `"G 7000"` for all rows in this chunk (the CEMETERY G 7000 banner on physical p.179 sets the cemetery designation for the entire B. EAST FIELD section; G 7000X belongs to this cemetery too even though its description precedes the banner).
 - **`discovery_year`** / **`discoverer`** — `null` for all rows (PM's `Reisner Excavation. Harvard-Boston Expedition (1924-31)` covers the whole cemetery and is reproduced in `notes_from_pm` for individual rows where the headword block carries it; we do NOT extract per-row discovery years in this chunk).
 - **`is_unfinished`** — `false` unless PM headword literally says `Unfinished` or `unfinished`.
-- **`is_uninscribed`** — `false` unless PM headword literally says `uninscribed` or `No inscriptions found`. (Note: `G 7050. Probably NEFERTKAU` has PM body-prose `No inscriptions found.` which qualifies for `true` if it falls within the headword block — verify against the chunk file.)
+- **`is_uninscribed`** — `false` unless PM headword block literally says `uninscribed` or `No inscriptions found`. The `No inscriptions found.` clause sometimes sits inside the headword block (between the Reisner-number title line and the first `Plan` / `Plans` / `Cairo Mus.` / `REISNER and SMITH,` boundary) on rows where PM had no inscribed material to catalog. When it falls within that block, `is_uninscribed: true`; when it appears later in body-prose listings, `false`. Read each row's headword block to decide.
 - **`is_usurped`** — `false` unless PM headword literally says `usurp(ed|ation)`.
 - **`attribution_certainty`** — Hedge-token derivation from PM's headword line:
   - `"attested"` when PM names an occupant in the headword without hedge tokens. (A headword of the form `G NNNN. ALLCAPSNAME <Title>...` with no qualifier is attested.)

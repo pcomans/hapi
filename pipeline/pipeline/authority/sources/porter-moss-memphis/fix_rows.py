@@ -56,25 +56,20 @@ _NOTES_OCR_FIXES: list[tuple[str, str]] = [
 
 
 # Per-chunk reviewer-cited corrections.
-# Format: `{(tomb_id, field): {"value": ..., "rationale": "..."}}`. Empty for
-# chunk 1 — egyptologist pass cleared with no row-specific P1 findings.
+# Format: `{(tomb_id, field): {"value": ..., "rationale": "..."}}`.
+# `CHUNK<N>_CORRECTIONS` is per-chunk; a dict is empty when the
+# egyptologist pass clears that chunk with no row-specific P1 findings
+# (chunk 1 case).
 CHUNK1_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
 
 # Chunk-2 corrections from the egyptologist-reviewer pass on the printed PM
-# III.1 source (2026-05-15). The pypdf text-layer extraction renders some
-# letters ambiguously — most notably `D` and `O` are visually similar in
-# PM's printed all-caps headwords, and pypdf chose `O` for the `D` in `IDU`.
-# The egyptologist verified against the rendered PDF page that the printed
-# headword unambiguously reads `IDU`, and the corroborating footnote on
-# printed p.184 (`Textual evidence also permits Meryrēᶜnūfer Kar to be son
-# of Idu (tomb G 7102)`) — itself already correctly OCR'd in PM's body
-# prose — confirms the name. `Iou` is not a standard Egyptian PN; `Idu` is
-# the form used by Simpson, *Mastabas of the Western Cemetery I* (1980)
-# and Dodson-Hilton. Two corrections needed:
-#   1. `occupant_name`: "Iou" → "Idu" (the actual prosopographic identity)
-#   2. `notes_from_pm`: rewrite the headword-block "IOU" to "IDU" so the
-#      stored verbatim form matches what PM actually prints (the OCR
-#      misread is not PM-faithful).
+# III.1 source (2026-05-15). The pypdf text-layer renders `D` and `O`
+# ambiguously in PM's all-caps headwords; pypdf chose `O` for the `D` in
+# `IDU`. Two corrections needed:
+#   1. `occupant_name`: "Iou" → "Idu"
+#   2. `notes_from_pm`: rewrite the verbatim "IOU" token to "IDU" so the
+#      stored headword form matches what PM prints (the OCR misread is
+#      not PM-faithful).
 CHUNK2_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     ("G7102", "occupant_name"): {
         "value": "Idu",
@@ -86,11 +81,19 @@ CHUNK2_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Corroborated by the already-correctly-OCR'd footnote on "
             "printed p.184 (`Textual evidence also permits Meryrēᶜnūfer "
             "Kar to be son of Idu (tomb G 7102)`) and by Simpson, *Mastabas "
-            "of the Western Cemetery I* (1980), where the occupant is "
-            "named Idu throughout. `Iou` is not a standard Egyptian PN."
+            "of the Western Cemetery I* (1980)."
         ),
     },
 }
+
+# Registry of all per-chunk correction dicts. New chunks add their
+# `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
+# `main`'s correction loop iterates this list rather than hardcoding the
+# tuple inline. Gemini PR #219 round-1 medium-priority finding.
+_ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
+    CHUNK1_CORRECTIONS,
+    CHUNK2_CORRECTIONS,
+]
 
 
 def _apply_chunk2_notes_ocr_fixes(notes: str | None, tid: str) -> str | None:
@@ -135,7 +138,7 @@ def main() -> None:
             row["notes_from_pm"] = fixed_notes
             ocr_applied.append((tid, original_notes or ""))
 
-        for corrections in (CHUNK1_CORRECTIONS, CHUNK2_CORRECTIONS):
+        for corrections in _ALL_CHUNK_CORRECTIONS:
             for (override_tid, field), spec in corrections.items():
                 if override_tid == tid:
                     previous = row.get(field)
