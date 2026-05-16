@@ -9116,3 +9116,86 @@ def test_okp_shoshenq_b_full_row() -> None:
         "notes": "Nephew of Osorkon the Elder, and later king as SHOSHENQ I. Dedicated a statue to his father, Nimlot A, at Abydos, in which he indicates a close relationship with the then-king, unnamed but probably Siamun. He seems to have ruled Upper Egypt for at least two years before becoming acknowledged king – to judge from an entry in the Karnak Priestly Annals, which is dated to his second year but only gives his title as Chieftain.",
         "source_citation": CITATION_OKP,
     })
+
+
+# ===========================================================================
+# pre_merge.py chunk-scoping (Gemini PR #218 round-2)
+# ===========================================================================
+
+
+def test_pre_merge_corrections_are_chunk_scoped(tmp_path, monkeypatch) -> None:
+    """`apply_corrections` must only apply `dh_id_corrections-<chunk>.json`
+    corrections to `agent-<tag>-<chunk>.jsonl` files where the chunk
+    identifier matches. A future chunk that happens to share a wrong-
+    spelling string with OKP must NOT silently inherit OKP's correction.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "pm_pre_merge",
+        Path(__file__).parent.parent / "pipeline" / "authority" / "sources" / "dodson-hilton-queens" / "pre_merge.py",
+    )
+    assert spec is not None and spec.loader is not None
+    pre_merge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pre_merge)
+
+    # Two-chunk fixture: chunk A has corrections, chunk B has the same
+    # wrong-spelling string but no corrections file. Expected: chunk A row
+    # patched, chunk B row left untouched.
+    fake_source = tmp_path / "source"
+    fake_source.mkdir()
+    fake_agent_dir = tmp_path / "raw"
+    fake_agent_dir.mkdir()
+
+    # Corrections file for chunk A only.
+    (fake_source / "dh_id_corrections-chunka.json").write_text(
+        json.dumps({"a|Mutnodjmet": {"canonical_dh_id": "Mutnodjmet B", "rationale": "test fixture"}}),
+        encoding="utf-8",
+    )
+
+    chunka_path = fake_agent_dir / "agent-a-chunka.jsonl"
+    chunkb_path = fake_agent_dir / "agent-a-chunkb.jsonl"
+    chunka_path.write_text(
+        json.dumps({"dh_id": "Mutnodjmet", "name": "Mutnodjmet", "other": "x"}) + "\n",
+        encoding="utf-8",
+    )
+    chunkb_path.write_text(
+        json.dumps({"dh_id": "Mutnodjmet", "name": "Mutnodjmet", "other": "y"}) + "\n",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(pre_merge, "SOURCE_DIR", fake_source)
+
+    counts = pre_merge.apply_corrections(fake_agent_dir)
+
+    chunka_rows = [json.loads(l) for l in chunka_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+    chunkb_rows = [json.loads(l) for l in chunkb_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+
+    assert chunka_rows[0]["dh_id"] == "Mutnodjmet B", chunka_rows
+    assert chunkb_rows[0]["dh_id"] == "Mutnodjmet", chunkb_rows
+    assert counts[chunka_path.name] == 1
+    assert counts[chunkb_path.name] == 0
+
+
+def test_pre_merge_parse_agent_filename() -> None:
+    """`_parse_agent_filename` extracts (tag, chunk) from suffix-bearing
+    JSONL stems and rejects malformed forms."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "pm_pre_merge_parse",
+        Path(__file__).parent.parent / "pipeline" / "authority" / "sources" / "dodson-hilton-queens" / "pre_merge.py",
+    )
+    assert spec is not None and spec.loader is not None
+    pre_merge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pre_merge)
+
+    assert pre_merge._parse_agent_filename("agent-a-ofkingsandpriests") == ("a", "ofkingsandpriests")
+    assert pre_merge._parse_agent_filename("agent-b-power") == ("b", "power")
+    assert pre_merge._parse_agent_filename("agent-c-chunk-with-dashes") == ("c", "chunk-with-dashes")
+    # Bare single-chunk legacy form — no chunk suffix.
+    assert pre_merge._parse_agent_filename("agent-a") is None
+    # Wrong prefix.
+    assert pre_merge._parse_agent_filename("merge-a-chunkfoo") is None
+    # Empty tag.
+    assert pre_merge._parse_agent_filename("agent--chunk") is None

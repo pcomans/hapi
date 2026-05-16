@@ -41,26 +41,37 @@ SOURCE_DIR = Path(__file__).parent
 DEFAULT_AGENT_DIR = SOURCE_DIR / "raw"
 
 
-def _load_corrections() -> dict[tuple[str, str], dict[str, str]]:
-    """Load all `dh_id_corrections-*.json` files in the source dir.
+def _load_corrections() -> dict[str, dict[tuple[str, str], dict[str, str]]]:
+    """Load `dh_id_corrections-<chunk>.json` files keyed by chunk name.
 
-    Each file is keyed by `'<agent_tag>|<wrong_dh_id>'` -> {
-        canonical_dh_id: str, rationale: str
-    }. Loader merges across all chunk files; duplicate keys across files
-    raise loudly (each chunk's corrections are disjoint).
+    Returns `{chunk_name: {(agent_tag, wrong_dh_id): {canonical_dh_id, rationale}}}`.
+    The chunk name is parsed from the filename suffix (e.g.
+    `dh_id_corrections-ofkingsandpriests.json` → chunk `ofkingsandpriests`).
 
-    Top-level keys starting with `_` (e.g. `_doc`) are loader directives and
-    skipped.
+    Per-chunk scoping (Gemini PR #218 round-2) ensures corrections do NOT
+    cross-apply: if a future chunk happens to share a wrong-spelling string
+    with this chunk, only the matching chunk's corrections fire on that
+    chunk's agent files.
+
+    Each correction is keyed by `'<agent_tag>|<wrong_dh_id>'` inside the
+    file. Top-level keys starting with `_` (e.g. `_doc`) are loader
+    directives and skipped.
     """
-    merged: dict[tuple[str, str], dict[str, str]] = {}
-    source_of: dict[tuple[str, str], Path] = {}
+    by_chunk: dict[str, dict[tuple[str, str], dict[str, str]]] = {}
     for json_path in sorted(SOURCE_DIR.glob("dh_id_corrections-*.json")):
+        chunk = json_path.stem.removeprefix("dh_id_corrections-")
+        if not chunk or chunk == json_path.stem:
+            raise ValueError(
+                f"pre_merge: cannot parse chunk name from {json_path.name!r}; "
+                f"expected `dh_id_corrections-<chunk>.json`"
+            )
         raw = json.loads(json_path.read_text(encoding="utf-8"))
         if not isinstance(raw, dict):
             raise ValueError(
                 f"pre_merge: {json_path} top-level must be a dict; "
                 f"got {type(raw).__name__}"
             )
+        chunk_corrections: dict[tuple[str, str], dict[str, str]] = {}
         for key, value in raw.items():
             if key.startswith("_"):
                 continue
@@ -80,37 +91,52 @@ def _load_corrections() -> dict[tuple[str, str], dict[str, str]]:
                     f"pre_merge: {json_path} key {key!r} value must be a dict "
                     f"with 'canonical_dh_id' and 'rationale' keys"
                 )
-            tuple_key = (tag, wrong)
-            if tuple_key in merged:
-                raise ValueError(
-                    f"pre_merge: duplicate correction key {key!r} in {json_path} "
-                    f"(also in {source_of[tuple_key]})"
-                )
-            merged[tuple_key] = value
-            source_of[tuple_key] = json_path
-    return merged
+            chunk_corrections[(tag, wrong)] = value
+        by_chunk[chunk] = chunk_corrections
+    return by_chunk
+
+
+def _parse_agent_filename(stem: str) -> tuple[str, str] | None:
+    """Parse `agent-<tag>-<chunk>` from a JSONL stem.
+
+    Returns `(tag, chunk)` or `None` for malformed / unsuffixed filenames.
+    Bare `agent-<tag>.jsonl` (single-chunk legacy form) returns None and is
+    skipped — those files have no per-chunk corrections file.
+    """
+    parts = stem.split("-", 2)
+    if len(parts) < 3 or parts[0] != "agent":
+        return None
+    tag, chunk = parts[1], parts[2]
+    if not tag or not chunk:
+        return None
+    return tag, chunk
 
 
 def apply_corrections(agent_dir: Path) -> dict[str, int]:
-    """Apply corrections to each `agent-<tag>-<chunk>.jsonl` file in agent_dir.
+    """Apply chunk-scoped corrections to each `agent-<tag>-<chunk>.jsonl`.
 
-    Returns a per-agent count of patches applied.
+    Only corrections from `dh_id_corrections-<chunk>.json` apply to
+    `agent-<tag>-<chunk>.jsonl` — the chunk identifier must match. Returns
+    a per-agent count of patches applied.
     """
-    corrections = _load_corrections()
+    by_chunk = _load_corrections()
     counts: dict[str, int] = {}
     for jsonl_path in sorted(agent_dir.glob("agent-*.jsonl")):
-        name = jsonl_path.stem  # 'agent-a-ofkingsandpriests'
-        parts = name.split("-", 2)
-        if len(parts) < 2 or parts[0] != "agent":
+        parsed = _parse_agent_filename(jsonl_path.stem)
+        if parsed is None:
             continue
-        tag = parts[1]
+        tag, chunk = parsed
+        chunk_corrections = by_chunk.get(chunk)
+        if chunk_corrections is None:
+            counts[jsonl_path.name] = 0
+            continue
         rows = [json.loads(line) for line in jsonl_path.read_text(encoding="utf-8").splitlines() if line.strip()]
         patched = 0
         for row in rows:
             key = (tag, row["dh_id"])
-            if key in corrections:
-                row["dh_id"] = corrections[key]["canonical_dh_id"]
-                row["name"] = corrections[key]["canonical_dh_id"]
+            if key in chunk_corrections:
+                row["dh_id"] = chunk_corrections[key]["canonical_dh_id"]
+                row["name"] = chunk_corrections[key]["canonical_dh_id"]
                 patched += 1
         if patched:
             jsonl_path.write_text(
