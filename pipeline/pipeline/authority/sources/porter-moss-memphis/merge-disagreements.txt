@@ -16,11 +16,48 @@ G3b (None):
 G3c (None):
   source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"}
 
+G7000x (Hetepheres I):
+  notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
+
+G7050 (Nefertkau):
+  occupant_role: a="Princess" | b="Royal Family" | c="Princess"  → chose "Princess"
+
+G7060 (Nefermaet):
+  notes_from_pm: a="NEFERMAaET King's son, Hereditary prince, Overlord of Nekheb, etc. (Vizier of Khephren.) Temp. Khufu to Khephren. Mother, Nefertkau (tomb, probably, G 7050). Stone-built mastaba. LG 57." | b="NEFERMAaET King's son, Hereditary prince, Overlord of Nekheb, etc. (Vizier of Khephren.) Temp. Khufu to Khephren. Mother, Nefertkau (tomb, probably, G 7050). Stone-built mastaba. LG 57." | c="NEFERMAaET King’s son, Hereditary prince, Overlord of Nekheb, etc. (Vizier of Khephren.) Temp. Khufu to Khephren. Mother, Nefertkau (tomb, probably, G 7050). Stone-built mastaba. LG 57."  → chose "NEFERMAaET King's son, Hereditary prince, Overlord of Nekheb, etc. (Vizier of Khephren.) Temp. Khufu to Khephren. Mother, Nefertkau (tomb, probably, G 7050). Stone-built mastaba. LG 57."
+  tomb_aliases: a=["LG 57"] | b=[] | c=["LG 57"]  → chose ["LG 57"]
+
+G7070 (Snefrukhaef):
+  tomb_aliases: a=["LG 56"] | b=[] | c=["LG 56"]  → chose ["LG 56"]
+
+G7101 (Meryrenufer):
+  notes_from_pm: a="MERYREaNUFER good name qAR Overseer of the Pyramid-towns of Khufu and Menkaurea, Inspector of waab-priests of the Pyramid of Khephren, Tenant of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Wife, Gefi, Prophetess of Hathor, etc. Stone-built mastaba." | b="MERYREaNUFER good name qAR Overseer of the Pyramid-towns of Khufu and Menkaurea, Inspector of waab-priests of the Pyramid of Khephren, Tenant of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Wife, Gefi, Prophetess of Hathor, etc. Stone-built mastaba." | c="MERYREaNUFER¹ good name qAR Overseer of the Pyramid-towns of Khufu and Menkaurea, Inspector of waab-priests of the Pyramid of Khephren, Tenant of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Wife, Gefi, Prophetess of Hathor, etc. Stone-built mastaba."  → chose "MERYREaNUFER good name qAR Overseer of the Pyramid-towns of Khufu and Menkaurea, Inspector of waab-priests of the Pyramid of Khephren, Tenant of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Wife, Gefi, Prophetess of Hathor, etc. Stone-built mastaba."
+  occupant_name: a="Meryrenufer" | b="Meryreʿnufer" | c="Meryrenufer"  → chose "Meryrenufer"
+
+G7102 (Iou):
+  notes_from_pm: a="IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba." | b="IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba." | c="IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of waab-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba."  → chose "IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba."
+  occupant_name: a="Iou" | b="Iou" | c="Idu"  → chose "Iou"
+
+G7110 (Hetepheres II):
+  notes_from_pm: a="G 7110+7120. KAWAaB King's eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Father of Hetepheres [11], Khufu. Stone-built twin-mastaba. See also tomb G 7350." | b="G 7110+7120. KAWAaB King's eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Father of Hetepheres [11], Khufu. Stone-built twin-mastaba. See also tomb G 7350." | c="KAWAaB King’s eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Father of Hetepheres [11], Khufu. Stone-built twin-mastaba. G 7110. Hetepheres [11]."  → chose "G 7110+7120. KAWAaB King's eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Father of Hetepheres [11], Khufu. Stone-built twin-mastaba. See also tomb G 7350."
+
+G7120 (Kawab):
+  notes_from_pm: a="G 7110+7120. KAWAaB King's eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Parents of Kawaab, Khufu and Mertiotes [I] (eldest son). Stone-built twin-mastaba. See also tomb G 7350." | b="G 7110+7120. KAWAaB King's eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Parents of Kawaab, Khufu and Mertiotes [I] (eldest son). Stone-built twin-mastaba. See also tomb G 7350." | c="KAWAaB King’s eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Parents of Kawaab, Khufu and Mertiotes [I] (eldest son). Stone-built twin-mastaba. G 7120. Kawaab."  → chose "G 7110+7120. KAWAaB King's eldest son of his body, Hereditary prince, Chief lector-priest, etc., and wife HETEPHERES [11] (later, wife of King Raazedef). Temp. Khufu. Parents of Kawaab, Khufu and Mertiotes [I] (eldest son). Stone-built twin-mastaba. See also tomb G 7350."
+  occupant_name: a="Kawab" | b="Kawaʿb" | c="Kawab"  → chose "Kawab"
+
+G7130 (Nefertkau):
+  notes_from_pm: a="G 7130+7140. KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Stone-built twin-mastaba." | b="G 7130+7140. KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Stone-built twin-mastaba." | c="KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier¹ (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Parents of Khufukhaaef [I], Khufu and probably Henutsen. Stone-built twin-mastaba. G 7130. Nefertkau."  → chose "G 7130+7140. KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Stone-built twin-mastaba."
+
+G7140 (Khufukhaef I):
+  notes_from_pm: a="G 7130+7140. KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Parents of Khufukhaaef [I], Khufu and probably Henutsen. Stone-built twin-mastaba." | b="G 7130+7140. KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Parents of Khufukhaaef [I], Khufu and probably Henutsen. Stone-built twin-mastaba." | c="KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier¹ (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Parents of Khufukhaaef [I], Khufu and probably Henutsen. Stone-built twin-mastaba. G 7140. Khufukhaaef [I]."  → chose "G 7130+7140. KHUFUKHAaEF [I] King's son of his body, Chief Justice and Vizier (probably of Khufu), etc., and wife NEFERTKAU. Temp. Khufu to end of Dyn. IV. Parents of Khufukhaaef [I], Khufu and probably Henutsen. Stone-built twin-mastaba."
+
+G7150 (Khufukhaef II):
+  notes_from_pm: a="KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba." | b="KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba." | c="KHUFUKHAaEF [11] Greatest .of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba."  → chose "KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba."
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
 OCR-drift fixes (Roman-numeral restore in notes_from_pm):
-  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
-  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
-  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
-  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
+  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
+
+Reviewer-cited row corrections:
+  G7102.occupant_name: "Iou" → "Idu"

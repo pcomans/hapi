@@ -249,13 +249,97 @@ def test_load_overrides_rejects_missing_rationale_key(merge_module, tmp_path):
         merge_module._OVERRIDES_PATH = orig
 
 
-# === currently-empty overrides file =====================================
+# === current overrides set (chunk-2 G7000x notes_from_pm 1/1/1 tie) =====
 
-def test_chunk1_tie_break_overrides_is_empty(merge_module):
-    """Chunk 1 merged cleanly with all ties resolved by real 2/1 majorities;
-    `tie-break-overrides.json` MUST stay empty until a future chunk
-    introduces a documented tie."""
-    assert merge_module.TIE_BREAK_OVERRIDES == {}
+def test_tie_break_overrides_contains_chunk2_g7000x(merge_module):
+    """Chunk 1 merged cleanly with no overrides; chunk 2 introduced exactly
+    one 1/1/1 tie on `G7000x|notes_from_pm` (PM III.1 § B. EAST FIELD opener,
+    where each of the three agents truncated the headword block at a
+    different sentence boundary). The override picks the longest faithful
+    capture — the cutoff lands before the first `REISNER and SMITH,`
+    bibliographic-ribbon line — with a cited rationale.
+
+    Constitutional rule 2: every tie-break has a documented printed-source
+    citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
+    silent resolution.
+    """
+    overrides = merge_module.TIE_BREAK_OVERRIDES
+    assert set(overrides.keys()) == {("G7000x", "notes_from_pm")}
+    entry = overrides[("G7000x", "notes_from_pm")]
+    assert "PM III.1" in entry["rationale"]
+    assert "p.179" in entry["rationale"]
+    assert entry["value"].startswith("TOMB OF HETEPHERES [I]")
+    assert entry["value"].endswith("(1925-7).")
+
+
+# === SENTINEL_NULL_STRINGS divergence tripwires ==========================
+#
+# Per Gemini PR #219 round-1 medium-priority finding (merge.py:153) and the
+# scope-accountability-enforcer's follow-up: the deliberate divergence from
+# the Theban-source `SENTINEL_NULL_STRINGS` (omitting `"unknown"`) creates a
+# new latent foot-gun — if agents emit case-variant `"Unknown"` vs
+# `"unknown"`, the merge no longer silently collapses them. These tests
+# pin the contract that:
+#   1. `_normalise_value` returns the literal string for ANY case-variant
+#      of `Unknown` (no silent collapse to None).
+#   2. A case-mixed `_majority` call raises (1/1/1) or picks the literal
+#      majority (2/1) — both behaviours surface the issue at merge time
+#      OR at schema-validation time, never silently drop the row.
+# If a future edit re-adds `"unknown"` to `SENTINEL_NULL_STRINGS`, every
+# assertion below flips, and the loud test failure points the future-author
+# at the scope-accountability rationale documented in `merge.py:145-152`.
+
+
+def test_unknown_literal_survives_normalisation(merge_module):
+    """`merge._normalise_value` MUST return the literal string for any
+    case-variant of "Unknown". Per the Memphis SENTINEL_NULL_STRINGS
+    divergence, `"unknown"` is no longer a null sentinel — it survives
+    as its literal string and is then either matched (majority vote) or
+    rejected (downstream schema test `test_occupant_role_controlled_vocab`).
+    """
+    assert merge_module._normalise_value("Unknown") == "Unknown"
+    assert merge_module._normalise_value("unknown") == "unknown"
+    assert merge_module._normalise_value("UNKNOWN") == "UNKNOWN"
+    # Sanity: actual null sentinels still collapse to None.
+    assert merge_module._normalise_value("none") is None
+    assert merge_module._normalise_value("—") is None
+    assert merge_module._normalise_value("n/a") is None
+
+
+def test_case_mixed_unknown_does_not_silently_collapse(merge_module):
+    """A 1/1/1 case-mixed disagreement on `occupant_role` (each agent emits
+    a different case-variant of "Unknown") MUST raise an unresolved-tie
+    ValueError. This forces an explicit `tie-break-overrides.json` entry
+    with a cited rationale — no silent first-seen pick.
+
+    Without the SENTINEL_NULL_STRINGS divergence, this scenario would
+    have silently collapsed all three values to None (the Theban
+    behaviour); with the divergence, the literal strings survive and
+    `_majority` does the right thing — fails loud.
+    """
+    with pytest.raises(ValueError, match="IDENTIFIER tie"):
+        merge_module._majority(
+            ["Unknown", "unknown", "UNKNOWN"],
+            tid="TESTROW",
+            field="occupant_role",
+        )
+
+
+def test_case_mixed_unknown_2_1_split_picks_literal_majority(merge_module):
+    """A 2/1 case-mixed split picks the literal majority — `"Unknown"`
+    wins over `"unknown"` because the two `"Unknown"` votes match
+    exactly. The literal then either passes the downstream
+    controlled-vocab schema test (if it's "Unknown") or fails loud
+    (if a future scenario picks "unknown"). Either path is loud
+    enough to surface case-mixing as a real issue.
+    """
+    chosen, count = merge_module._majority(
+        ["Unknown", "Unknown", "unknown"],
+        tid="TESTROW",
+        field="occupant_role",
+    )
+    assert chosen == "Unknown"
+    assert count == 2
 
 
 def test_overrides_json_keys_well_formed(merge_module):

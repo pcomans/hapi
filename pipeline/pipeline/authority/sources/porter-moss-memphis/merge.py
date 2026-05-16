@@ -142,7 +142,26 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
     return combined
 
 
-SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})
+# NOTE: "unknown" is intentionally NOT a sentinel-null string here. The PM
+# Memphis schema treats "Unknown" as a valid controlled-vocab value for
+# `occupant_role` (used for bare-headword Reisner-number rows where PM lists
+# the Reisner-number with no occupant). Collapsing "Unknown" → None would
+# drop legitimate role attributions and break the schema's enum contract.
+# Diverges from the Theban-source merge.py here on purpose; if a real
+# null-sentinel-string appears in a future chunk, add it to this frozenset
+# without re-adding "unknown".
+#
+# DETERMINISTIC GUARDRAILS for this divergence:
+#  - `tests/test_sources_porter_moss_memphis.py::test_chunk2_bare_headword_rows_are_unknown_and_uncertain`
+#    pins the downstream behavioural contract on reconciled.jsonl.
+#  - `tests/test_porter_moss_memphis_merge_tie_break.py::test_unknown_literal_survives_normalisation`
+#    pins the upstream `_normalise_value` contract.
+#  - `tests/test_porter_moss_memphis_merge_tie_break.py::test_case_mixed_unknown_does_not_silently_collapse`
+#    pins the 2/1 and 1/1/1 case-mixed merge behaviour (Gemini PR #219
+#    round-1 scope-accountability follow-up).
+#  If a future chunk author re-adds "unknown" to this frozenset, all three
+#  tests above fire — they are the loud-failure tripwire.
+SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "null"})
 
 
 # === TIE_BREAK_OVERRIDES =====================================================

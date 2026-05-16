@@ -56,9 +56,62 @@ _NOTES_OCR_FIXES: list[tuple[str, str]] = [
 
 
 # Per-chunk reviewer-cited corrections.
-# Format: `{(tomb_id, field): {"value": ..., "rationale": "..."}}`. Empty for
-# chunk 1 — egyptologist pass cleared with no row-specific P1 findings.
+# Format: `{(tomb_id, field): {"value": ..., "rationale": "..."}}`.
+# `CHUNK<N>_CORRECTIONS` is per-chunk; a dict is empty when the
+# egyptologist pass clears that chunk with no row-specific P1 findings
+# (chunk 1 case).
 CHUNK1_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+# Chunk-2 corrections from the egyptologist-reviewer pass on the printed PM
+# III.1 source (2026-05-15). The pypdf text-layer renders `D` and `O`
+# ambiguously in PM's all-caps headwords; pypdf chose `O` for the `D` in
+# `IDU`. Two corrections needed:
+#   1. `occupant_name`: "Iou" → "Idu"
+#   2. `notes_from_pm`: rewrite the verbatim "IOU" token to "IDU" so the
+#      stored headword form matches what PM prints (the OCR misread is
+#      not PM-faithful).
+CHUNK2_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("G7102", "occupant_name"): {
+        "value": "Idu",
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 2nd ed. 1974 "
+            "printed p.185: PM's all-caps headword unambiguously reads "
+            "`G 7102. IDU`. pypdf text-layer misread D→O producing `IOU`, "
+            "which all three extraction agents inherited and majority-voted. "
+            "Corroborated by the already-correctly-OCR'd footnote on "
+            "printed p.184 (`Textual evidence also permits Meryrēᶜnūfer "
+            "Kar to be son of Idu (tomb G 7102)`) and by Simpson, *Mastabas "
+            "of the Western Cemetery I* (1980)."
+        ),
+    },
+}
+
+# Registry of all per-chunk correction dicts. New chunks add their
+# `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
+# `main`'s correction loop iterates this list rather than hardcoding the
+# tuple inline. Gemini PR #219 round-1 medium-priority finding.
+_ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
+    CHUNK1_CORRECTIONS,
+    CHUNK2_CORRECTIONS,
+]
+
+
+def _apply_chunk2_notes_ocr_fixes(notes: str | None, tid: str) -> str | None:
+    """Per-row OCR fixes inside `notes_from_pm` that are scoped to a single
+    chunk-2 row. Separate from the source-wide `_NOTES_OCR_FIXES` table
+    because these substitutions are narrow enough that the global table
+    would carry risk of misfiring on a future chunk.
+
+    Currently: G7102 — rewrite the all-caps `IOU` (pypdf D→O misread) to
+    `IDU` so the stored verbatim notes match what PM printed. The
+    `notes_from_pm` stored form was `"IOU Tenant of the Pyramid of Pepy
+    I, ..."`; rewrite the leading token only.
+    """
+    if notes is None:
+        return None
+    if tid == "G7102" and notes.startswith("IOU "):
+        return "IDU " + notes[len("IOU "):]
+    return notes
 
 
 def _apply_ocr_fixes(notes: str | None) -> str | None:
@@ -80,20 +133,22 @@ def main() -> None:
         tid = row["tomb_id"]
         original_notes = row.get("notes_from_pm")
         fixed_notes = _apply_ocr_fixes(original_notes)
+        fixed_notes = _apply_chunk2_notes_ocr_fixes(fixed_notes, tid)
         if fixed_notes != original_notes:
             row["notes_from_pm"] = fixed_notes
             ocr_applied.append((tid, original_notes or ""))
 
-        for (override_tid, field), spec in CHUNK1_CORRECTIONS.items():
-            if override_tid == tid:
-                previous = row.get(field)
-                # Skip no-op corrections (value already matches) so the audit
-                # trail in `merge-disagreements.txt` does not accrue
-                # misleading `X → X` entries on subsequent runs.
-                if previous == spec["value"]:
-                    continue
-                row[field] = spec["value"]
-                overrides_applied.append((tid, field, previous, spec["value"]))
+        for corrections in _ALL_CHUNK_CORRECTIONS:
+            for (override_tid, field), spec in corrections.items():
+                if override_tid == tid:
+                    previous = row.get(field)
+                    # Skip no-op corrections (value already matches) so the audit
+                    # trail in `merge-disagreements.txt` does not accrue
+                    # misleading `X → X` entries on subsequent runs.
+                    if previous == spec["value"]:
+                        continue
+                    row[field] = spec["value"]
+                    overrides_applied.append((tid, field, previous, spec["value"]))
 
     RECONCILED.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
