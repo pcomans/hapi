@@ -249,13 +249,27 @@ def test_load_overrides_rejects_missing_rationale_key(merge_module, tmp_path):
         merge_module._OVERRIDES_PATH = orig
 
 
-# === currently-empty overrides file =====================================
+# === current overrides set (chunk-2 G7000x notes_from_pm 1/1/1 tie) =====
 
-def test_chunk1_tie_break_overrides_is_empty(merge_module):
-    """Chunk 1 merged cleanly with all ties resolved by real 2/1 majorities;
-    `tie-break-overrides.json` MUST stay empty until a future chunk
-    introduces a documented tie."""
-    assert merge_module.TIE_BREAK_OVERRIDES == {}
+def test_tie_break_overrides_contains_chunk2_g7000x(merge_module):
+    """Chunk 1 merged cleanly with no overrides; chunk 2 introduced exactly
+    one 1/1/1 tie on `G7000x|notes_from_pm` (PM III.1 § B. EAST FIELD opener,
+    where each of the three agents truncated the headword block at a
+    different sentence boundary). The override picks the longest faithful
+    capture — the cutoff lands before the first `REISNER and SMITH,`
+    bibliographic-ribbon line — with a cited rationale.
+
+    Constitutional rule 2: every tie-break has a documented printed-source
+    citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
+    silent resolution.
+    """
+    overrides = merge_module.TIE_BREAK_OVERRIDES
+    assert set(overrides.keys()) == {("G7000x", "notes_from_pm")}
+    entry = overrides[("G7000x", "notes_from_pm")]
+    assert "PM III.1" in entry["rationale"]
+    assert "p.179" in entry["rationale"]
+    assert entry["value"].startswith("TOMB OF HETEPHERES [I]")
+    assert entry["value"].endswith("(1925-7).")
 
 
 def test_overrides_json_keys_well_formed(merge_module):

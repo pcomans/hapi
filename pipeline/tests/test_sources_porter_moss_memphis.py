@@ -6,6 +6,11 @@ asserted, not just the field the test class is "themed" around.
 Chunk 1 covers the three Gîza pyramid complexes (Khufu G1, Khephren G2,
 Menkaureʿ G3) and their attested queens' subsidiary pyramids. 10 rows total
 from PM III.1 § I "PYRAMIDS", physical pp.8–32 / printed pp.11–35.
+
+Chunk 2 covers the Gîza Cemetery G 7000 East Field royal-family mastaba
+cluster (Hetepheres I G7000x, Kawab G7120, Khufukhaef I G7140, etc.).
+13 rows from PM III.1 § III "NECROPOLIS — B. EAST FIELD",
+physical pp.176–187 / printed pp.179–190.
 """
 
 from __future__ import annotations
@@ -34,7 +39,19 @@ CHUNK1_TOMB_IDS: frozenset[str] = frozenset({
     "G3", "G3a", "G3b", "G3c",
 })
 
-EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS
+# Chunk 2: Cemetery G 7000 East Field royal-family mastaba cluster.
+# Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — B. EAST FIELD,
+# physical pp.176–187 / printed pp.179–190.
+CHUNK2_TOMB_IDS: frozenset[str] = frozenset({
+    "G7000x",                                     # Hetepheres I shaft tomb
+    "G7050", "G7060", "G7070", "G7101", "G7102",  # singles
+    "G7110", "G7120",                             # twin Hetepheres II / Kawab
+    "G7130", "G7140",                             # twin Nefertkau / Khufukhaef I
+    "G7112", "G7142",                             # bare-headword shafts
+    "G7150",                                      # Khufukhaef II
+})
+
+EXPECTED_TOMB_IDS: frozenset[str] = CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS
 
 
 @lru_cache(maxsize=1)
@@ -181,20 +198,37 @@ def test_memphite_area_is_giza_in_chunk1() -> None:
         assert row["memphite_area"] == "Giza", row
 
 
+_VALID_SECTIONS = frozenset({"I", "III"})
+
+
 def test_source_citation_shape() -> None:
     for row in _rows():
         cit = row["source_citation"]
         assert set(cit.keys()) == {"page", "edition", "section"}, cit
         assert isinstance(cit["page"], int), cit
         assert cit["edition"] == EDITION_PM_III_1, cit
-        assert cit["section"] == "I", cit
+        assert cit["section"] in _VALID_SECTIONS, cit
 
 
-def test_source_citation_page_in_chunk1_range() -> None:
-    """Printed page range for chunk 1 is 11–35 (PM III.1 § I PYRAMIDS)."""
+def test_source_citation_section_matches_chunk() -> None:
+    """Chunk 1 rows cite `section: "I"` (§ I. PYRAMIDS). Chunk 2 rows cite
+    `section: "III"` (§ III. NECROPOLIS, sub-letter B. EAST FIELD is implicit
+    in `cemetery: "G 7000"`)."""
+    for row in _rows():
+        if row["tomb_id"] in CHUNK1_TOMB_IDS:
+            assert row["source_citation"]["section"] == "I", row
+        elif row["tomb_id"] in CHUNK2_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
+
+
+def test_source_citation_page_in_expected_range() -> None:
+    """Printed page ranges: chunk 1 = 11–35, chunk 2 = 179–190."""
     for row in _rows():
         page = row["source_citation"]["page"]
-        assert 11 <= page <= 35, f"{row['tomb_id']} page {page} outside [11, 35]"
+        if row["tomb_id"] in CHUNK1_TOMB_IDS:
+            assert 11 <= page <= 35, f"{row['tomb_id']} page {page} outside chunk-1 [11, 35]"
+        elif row["tomb_id"] in CHUNK2_TOMB_IDS:
+            assert 179 <= page <= 190, f"{row['tomb_id']} page {page} outside chunk-2 [179, 190]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -208,20 +242,31 @@ def test_bce_dates_null_at_extraction_stage() -> None:
         assert row["date_bce_approx_end"] is None, row
 
 
-def test_cemetery_null_for_pyramid_complex_chunk() -> None:
-    """Chunk 1 is the three pyramid complexes themselves — the pyramid IS
-    its own complex. Cemetery designation belongs to surrounding mastabas,
-    which will land in chunk 2+."""
+def test_cemetery_null_for_chunk1_and_g7000_for_chunk2() -> None:
+    """Chunk 1 (pyramid-complex rows) carries `cemetery: null` — the pyramid
+    IS its own complex. Chunk 2 (East Field mastabas) carries
+    `cemetery: "G 7000"` per PM's `CEMETERY G 7000` banner on printed p.182."""
     for row in _rows():
-        assert row["cemetery"] is None, row
+        if row["tomb_id"] in CHUNK1_TOMB_IDS:
+            assert row["cemetery"] is None, row
+        elif row["tomb_id"] in CHUNK2_TOMB_IDS:
+            assert row["cemetery"] == "G 7000", row
 
 
-def test_dynasty_is_four_for_chunk1() -> None:
-    """PM III.1 prints `Dyn. IV` under every chunk-1 pyramid-complex section
-    heading (Khufu, Khephren, Menkaureʿ all Dyn IV). Roman→Arabic
-    normalisation gives `"4"`."""
+def test_dynasty_assignments() -> None:
+    """Chunk 1 (all three pyramid complexes) is Dyn. IV → `"4"`.
+    Chunk 2 spans Dyn. IV (royal-family core), Dyn. V (later officials),
+    and Dyn. VI (Pepy I priestly clientele on G7101, G7102).
+    Bare-headword shafts G7112 / G7142 carry `dynasty: null` (PM gives
+    no dating line).
+    """
     for row in _rows():
-        assert row["dynasty"] == "4", row
+        if row["tomb_id"] in CHUNK1_TOMB_IDS:
+            assert row["dynasty"] == "4", row
+        elif row["tomb_id"] in {"G7112", "G7142"}:
+            assert row["dynasty"] is None, row
+        elif row["tomb_id"] in CHUNK2_TOMB_IDS:
+            assert row["dynasty"] in {"4", "5", "6"}, row
 
 
 # === content / value assertions =============================================
@@ -501,3 +546,137 @@ def test_notes_from_pm_carries_pm_faithful_roman_numerals() -> None:
             assert "Reisner, G II" in notes, row
         if row["tomb_id"] in {"G3", "G3a", "G3b", "G3c"}:
             assert "Reisner, G III" in notes, row
+
+
+# === chunk-2 content / value assertions =====================================
+
+
+def test_chunk2_g7000x_hetepheres_i_full_row() -> None:
+    """G 7000X — Hetepheres I shaft tomb (Khufu's mother). PM III.1 § III B.
+    EAST FIELD opens with this row on printed p.179. The `1/1/1` tie on
+    `notes_from_pm` is broken via `tie-break-overrides.json` with a cited
+    rationale (longest faithful capture of the headword block stops before
+    the first `REISNER and SMITH,` bibliographic-ribbon line).
+    """
+    row = _by_id("G7000x")
+    assert row == {
+        "tomb_id": "G7000x",
+        "memphite_area": "Giza",
+        "occupant_name": "Hetepheres I",
+        "occupant_alt_names": [],
+        "tomb_aliases": [],
+        "co_occupants": [],
+        "is_joint_burial": False,
+        "occupant_role": "Queen",
+        "dynasty": "4",
+        "sub_period": None,
+        "date_bce_approx_start": None,
+        "date_bce_approx_end": None,
+        "cemetery": "G 7000",
+        "discovery_year": None,
+        "discoverer": None,
+        "is_unfinished": False,
+        "is_uninscribed": False,
+        "is_usurped": False,
+        "attribution_certainty": "attested",
+        "shared_with_tombs": [],
+        "notes_from_pm": (
+            "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. "
+            "No superstructure. Re-burial, transferred from unidentified tomb "
+            "probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition "
+            "(1925-7)."
+        ),
+        "source_citation": {"page": 179, "edition": EDITION_PM_III_1, "section": "III"},
+    }
+
+
+def test_chunk2_twin_mastaba_pairing_g7110_g7120() -> None:
+    """G 7110 (Hetepheres II) + G 7120 (Kawab) are twin mastabas in PM's
+    compound `G 7110+7120` headword. Each emits its own row with the OTHER
+    Reisner number in `shared_with_tombs`. PM lists Kawab as the primary
+    occupant (King's eldest son of Khufu); Hetepheres II is his wife (later
+    queen via remarriage to King Ra-djedef).
+    """
+    g7110 = _by_id("G7110")
+    g7120 = _by_id("G7120")
+    assert g7110["occupant_name"] == "Hetepheres II"
+    assert g7110["occupant_role"] == "Queen"
+    assert g7110["shared_with_tombs"] == ["G7120"]
+    assert g7120["occupant_name"] == "Kawab"
+    assert g7120["occupant_role"] == "Prince"
+    assert g7120["shared_with_tombs"] == ["G7110"]
+    # Architectural link, NOT a joint burial.
+    assert g7110["is_joint_burial"] is False
+    assert g7120["is_joint_burial"] is False
+
+
+def test_chunk2_twin_mastaba_pairing_g7130_g7140() -> None:
+    """G 7130 (Nefertkau) + G 7140 (Khufukhaef I, King's son and Vizier) —
+    second twin-mastaba pair in chunk 2.
+    """
+    g7130 = _by_id("G7130")
+    g7140 = _by_id("G7140")
+    assert g7130["occupant_name"] == "Nefertkau"
+    assert g7130["shared_with_tombs"] == ["G7140"]
+    assert g7140["occupant_name"] == "Khufukhaef I"
+    assert g7140["occupant_role"] == "Prince"
+    assert g7140["shared_with_tombs"] == ["G7130"]
+
+
+def test_chunk2_bare_headword_rows_are_unknown_and_uncertain() -> None:
+    """G 7112 and G 7142 are PM-printed bare Reisner-number headwords with
+    no occupant name. They emit rows with `occupant_name: null`,
+    `occupant_role: "Unknown"`, and `attribution_certainty: "uncertain"`.
+
+    Regression-pin for the `merge.SENTINEL_NULL_STRINGS` divergence: PM
+    Memphis treats `"Unknown"` as a legitimate controlled-vocab value, NOT
+    as a sentinel-null string (unlike the Theban-source merge.py). If a
+    future edit re-adds `"unknown"` to that frozenset, these rows would
+    collapse `occupant_role` to `None` and break this test.
+    """
+    for tid in ("G7112", "G7142"):
+        row = _by_id(tid)
+        assert row["occupant_name"] is None, row
+        assert row["occupant_role"] == "Unknown", row
+        assert row["attribution_certainty"] == "uncertain", row
+        assert row["dynasty"] is None, row
+        assert row["notes_from_pm"] is None, row
+
+
+def test_chunk2_g7060_nefermaet_lg_cross_reference() -> None:
+    """G 7060 Nefermaet (King's son, Vizier of Khephren). PM cites the
+    Lepsius cross-number `LG 57` in the headword body — extracted into
+    `tomb_aliases` for cross-reference to other catalogs that index by
+    Lepsius's earlier numbering.
+    """
+    row = _by_id("G7060")
+    assert row["occupant_name"] == "Nefermaet"
+    assert row["occupant_role"] == "Prince"
+    assert "LG 57" in row["tomb_aliases"]
+    assert row["dynasty"] == "4"
+    assert row["attribution_certainty"] == "attested"
+
+
+def test_chunk2_g7150_khufukhaef_ii_late_dynasty_v() -> None:
+    """G 7150 Khufukhaef II — PM dates `Temp. Neuserrea` (Neuserre, Dyn V).
+    Despite carrying the name of a Dyn-IV royal (Khufukhaef I = G 7140's
+    occupant), the [II] regnal-style numbering is for a later official
+    whose role is non-royal (`Greatest of the Ten of Upper Egypt`).
+    """
+    row = _by_id("G7150")
+    assert row["occupant_name"] == "Khufukhaef II"
+    assert row["occupant_role"] == "Official"
+    assert row["dynasty"] == "5"
+    assert row["attribution_certainty"] == "attested"
+
+
+def test_chunk2_dyn_vi_overseer_priests_of_pepy_i() -> None:
+    """G 7101 Meryreanufer and G 7102 Iou are Pepy I-period (Dyn VI)
+    officials buried in the Khufu-era East Field cemetery — late
+    intrusions tied to the Pyramid-of-Pepy-I priestly establishment.
+    """
+    for tid in ("G7101", "G7102"):
+        row = _by_id(tid)
+        assert row["dynasty"] == "6", row
+        assert row["occupant_role"] == "Official", row
+        assert row["attribution_certainty"] == "attested", row

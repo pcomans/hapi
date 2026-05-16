@@ -1,1 +1,6 @@
-{}
+{
+  "G7000x|notes_from_pm": {
+    "value": "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7).",
+    "rationale": "1/1/1 tie on chunk-2 G 7000X headword block depth. PM III.1 2nd ed. 1974 printed p.179 (physical p.176) opens § B. EAST FIELD with `G 7000X. TOMB OF HETEPHERES [I]¹ / Temp. Khufu / Husband, Snefru. Son, Khufu. / No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. / Reisner Excavation. Harvard-Boston Expedition (1925-7). / REISNER and SMITH, Giza Necropolis, ii ...`. Per the chunk-2 prompt's headword-block rule, the block extends until the first bibliographic ribbon line (`REISNER and SMITH, ...`). Agent A's transcription is the longest faithful capture of this block (drops only the trailing `¹` footnote marker per the chunk-2 prompt's footnote-stripping rule); agents B and C each truncated short. Selecting A's content as the most PM-faithful capture of the full headword block."
+  }
+}

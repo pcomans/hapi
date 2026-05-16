@@ -142,7 +142,15 @@ def _load_agent_chunks(agent_dir: Path, tag: str) -> dict[str, dict]:
     return combined
 
 
-SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "unknown", "null"})
+# NOTE: "unknown" is intentionally NOT a sentinel-null string here. The PM
+# Memphis schema treats "Unknown" as a valid controlled-vocab value for
+# `occupant_role` (used for bare-headword Reisner-number rows where PM lists
+# the Reisner-number with no occupant). Collapsing "Unknown" → None would
+# drop legitimate role attributions and break the schema's enum contract.
+# Diverges from the Theban-source merge.py here on purpose; if a real
+# null-sentinel-string appears in a future chunk, add it to this frozenset
+# without re-adding "unknown".
+SENTINEL_NULL_STRINGS = frozenset({"none", "-", "—", "n/a", "na", "null"})
 
 
 # === TIE_BREAK_OVERRIDES =====================================================
