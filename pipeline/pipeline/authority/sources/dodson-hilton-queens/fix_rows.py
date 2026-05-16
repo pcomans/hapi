@@ -308,6 +308,45 @@ FOUNDERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
 # the retrospective Codex review on PR #77 (run 2026-04-19 under the
 # `feedback_codex_review_every_pr` discipline established after the
 # session wrap; the initial PR #77 merge predated that discipline).
+# D&H's role-parenthetical mini-grammar — Of Kings and Priests case-notes.
+#
+# Code-reviewer (PR #218) raised a fair concern that this chunk's two P1
+# corrections treat colon-bearing role tokens asymmetrically:
+#
+#  - Maatkare A had `["KDB", "Ador", "GWA: prenomen Mutemhat"]`. The
+#    colon-bearing third element was SPLIT to bare `["KDB", "Ador",
+#    "GWA"]` + `alt_names: ["Mutemhat"]`.
+#  - Henttawy Q had relation-tokens `Daughter of: KGW` and `Mother of:
+#    KGW, HPA & Genmo` (also colon-bearing). These were KEPT as single
+#    role-tokens in the restored role list.
+#
+# Why the asymmetry is correct (not arbitrary): D&H's role-parenthetical
+# uses the colon in two distinct grammatical roles —
+#
+#  (a) ROLE-ANNOTATION colon. `GWA: prenomen Mutemhat` means "the GWA
+#      title, whose cartouche-prenomen reads Mutemhat." The colon
+#      introduces an ASIDE about how the role's cartouche-name is
+#      written. The role itself is `GWA`; `Mutemhat` is an alt-name for
+#      the same individual under a different title-context. Splitting
+#      correctly recovers a clean role-code (matchable against
+#      `KNOWN_ROLE_TOKENS`) plus an alt-name (matchable against
+#      `alt_names` glossary).
+#
+#  (b) ROLE-PARAMETER colon. `Daughter of: KGW` means "Daughter-of-X
+#      where X = a King's Great Wife." The colon introduces the PARAMETER
+#      of a parameterised kinship-role. The whole `Daughter of: KGW` is a
+#      single semantic unit (a role with its target) that Phase A's
+#      `enrich_rulers` / `enrich_individuals` pipeline can interpret
+#      directly. Splitting this would lose the parameter binding.
+#
+# Same colon character, different grammatical roles in D&H's mini-grammar.
+# The egyptologist-reviewer pass (PR #218 review) verified both readings
+# against the printed source: Maatkare A's annotation form on p.206, and
+# Henttawy Q's parameter form on p.205.
+#
+# `KNOWN_ROLE_TOKENS` accepts both kinds — bare role codes (`GWA`) AND
+# parameter-bearing relation roles (`Daughter of: KGW`, `Mother of: KGW,
+# HPA & Genmo`). Phase A owns the decoding of which kind a token is.
 OFKINGSANDPRIESTS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
     (
         "Henttawy Q",

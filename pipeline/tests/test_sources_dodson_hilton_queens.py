@@ -9001,3 +9001,118 @@ def test_llm_applied_overrides_section_describes_every_spot_correction() -> None
             f"audit entry for {(dh_id, sub_period, field)} has no "
             f"value:/was: detail line — header without body is a regression"
         )
+
+
+# ===========================================================================
+# Of Kings and Priests (Dyn 21) full-row content tests — PR #218
+# ===========================================================================
+# Anchor the 5 flagship rows + the 2 P1-corrected rows so a future revert of
+# either the `OFKINGSANDPRIESTS_CORRECTIONS` in fix_rows.py OR the
+# `dh_id_corrections-ofkingsandpriests.json` pre-merge layer fails loud.
+
+
+def test_okp_henttawy_q_full_row() -> None:
+    """P1 correction anchor: relation-token roles + clean prose notes."""
+    _assert_full_row("Henttawy Q", {
+        "dh_id": "Henttawy Q",
+        "name": "Henttawy Q",
+        "alt_names": ["Duahathor-Henttawy"],
+        "roles": ["KD", "KW", "KM", "L2L", "M2L", "Daughter of: KGW", "1ChHA", "Mother of: KGW, HPA & Genmo"],
+        "sex": "female",
+        "spouse_names": ["Pinudjem I"],
+        "father_name": "Ramesses XI",
+        "mother_name": None,
+        "children_names": ["Pasebkhanut I", "Maatkare A", "Masaharta B", "Djedkhonsiufankh I", "Menkheperre B"],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum.",
+        "source_citation": CITATION_OKP,
+    }, sub_period=SUB_PERIOD_OKP)
+
+
+def test_okp_maatkare_a_full_row() -> None:
+    """P1 correction anchor: GWA: prenomen-Mutemhat colon-annotation split."""
+    _assert_full_row("Maatkare A", {
+        "dh_id": "Maatkare A",
+        "name": "Maatkare A",
+        "alt_names": ["Mutemhat"],
+        "roles": ["KDB", "Ador", "GWA"],
+        "sex": "female",
+        "spouse_names": [],
+        "father_name": "Pinudjem I",
+        "mother_name": "Henttawy Q",
+        "children_names": [],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Daughter of Pinudjem I and Henttawy Q. Depicted early in life in a graffito in Luxor temple, as God's Wife of Amun on the façade of the Khonsu temple at Karnak and by a statue in Marseilles. Her mummy, coffins, papyrus and shabtis were found in tomb TT320; Maatkare's body was accompanied in its coffin by the mummy of her pet baboon.",
+        "source_citation": CITATION_OKP,
+    })
+
+
+def test_okp_pinudjem_i_full_row() -> None:
+    """Pinudjem I OKP — full Brief Life (contrasts with the stub
+    `(see next section)` row in Decline of the Ramessides).
+    """
+    _assert_full_row("Pinudjem I", {
+        "dh_id": "Pinudjem I",
+        "name": "Pinudjem I",
+        "alt_names": [],
+        "roles": ["Viz", "HPA", "Genmo"],
+        "sex": "male",
+        "spouse_names": [],
+        "father_name": "Piankh",
+        "mother_name": None,
+        "children_names": [],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Son of Piankh. As High Priest he added inscriptions to the Karnak Khonsu temple and the small temple at Medinet Habu. However, a statuette (Cairo, from Karnak) shows him with High Priestly titles but wearing royal garb, and in one case a representation was altered back to showing him in priestly garb, as if to hint at some hesitation on Pinudjem's part. From at least year 16 of Nesibanebdjedet I he took full pharaonic titles as well.",
+        "source_citation": CITATION_OKP,
+    }, sub_period=SUB_PERIOD_OKP)
+
+
+def test_okp_nesikhonsu_a_full_row() -> None:
+    """Nesikhonsu A — TT320 cache burial cohort (year 5 Siamun). Pins the
+    new `1ChHA` and `KSonK` role tokens added to KNOWN_ROLE_TOKENS.
+    """
+    _assert_full_row("Nesikhonsu A", {
+        "dh_id": "Nesikhonsu A",
+        "name": "Nesikhonsu A",
+        "alt_names": [],
+        "roles": ["1ChHA", "KSonK"],
+        "sex": "female",
+        "spouse_names": ["Pinudjem II"],
+        "father_name": None,
+        "mother_name": None,
+        "children_names": ["Nesitanebetashru A"],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Wife of Pinudjem II; known from her burial in tomb TT320, which took place in year 5 of Siamun according to an inscription at the tomb entrance, and which employed coffins originally made for Isetemkheb D. Nesikhonsu's burial included a religious decree, written on a wooden board, that was to ensure her well-being in the next world – and to prevent her doing harm to her husband and children from there. This suggests that family problems may have existed around the time of her death. Nesikhonsu is also named on the funerary papyrus of her daughter, Nesitanebetashru A.",
+        "source_citation": CITATION_OKP,
+    })
+
+
+def test_okp_shoshenq_b_full_row() -> None:
+    """Shoshenq B — Libyan-chief nephew-of-Osorkon-the-Elder who became
+    SHOSHENQ I (founder of Dyn 22). Anchors the `ChMa` (Chief of the Ma)
+    role and the alt_names titlecase-from-BOLD-CAPITALS rule.
+    """
+    _assert_full_row("Shoshenq B", {
+        "dh_id": "Shoshenq B",
+        "name": "Shoshenq B",
+        "alt_names": ["Shoshenq I"],
+        "roles": ["ChMa"],
+        "sex": "male",
+        "spouse_names": [],
+        "father_name": None,
+        "mother_name": None,
+        "children_names": [],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Nephew of Osorkon the Elder, and later king as SHOSHENQ I. Dedicated a statue to his father, Nimlot A, at Abydos, in which he indicates a close relationship with the then-king, unnamed but probably Siamun. He seems to have ruled Upper Egypt for at least two years before becoming acknowledged king – to judge from an entry in the Karnak Priestly Annals, which is dated to his second year but only gives his title as Chieftain.",
+        "source_citation": CITATION_OKP,
+    })

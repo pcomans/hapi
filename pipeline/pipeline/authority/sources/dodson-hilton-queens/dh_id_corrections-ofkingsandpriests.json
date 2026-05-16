@@ -1,0 +1,98 @@
+{
+  "_doc": [
+    "Source-verified dh_id corrections applied to the three extraction agents'",
+    "raw JSONL output for the Of Kings and Priests chunk (PR #218 — D&H Ch 4",
+    "sub-section 1, Dyn 21 Brief Lives, printed pp.205-209 / physical pp.190-194).",
+    "",
+    "The OKP chunk uses the direct-PDF-Read method deviation (3 extraction",
+    "agents call `Read(file_path='raw/source-p190-p194.pdf', pages='1-5')`",
+    "instead of consuming an intermediate OCR'd `chunk-*.md` file produced by",
+    "a Gemini OCR subagent — see `prompt-ofkingsandpriests.md` § 'Method",
+    "deviation'). The Read tool's PDF renderer is deterministic, but the three",
+    "agents independently produced a small number of OCR-drift mismatches on",
+    "the `dh_id` field — specifically suffix-drop on Mutnodjmet B (B + C),",
+    "trailing-t-drop on Rudament(?) (C only), and J-prefix-drop / I-middle-drop",
+    "on the lacuna-ID cluster at the chunk tail (mixed across agents).",
+    "",
+    "These would have raised the 3-agent merge's singleton-rejection on the",
+    "dh_id field (constitutional rule 2 — `_load_agent_chunks` requires every",
+    "row to appear in >=2 agents at the same composite key). The corrections",
+    "below resolve the OCR-drift to the source-verified canonical spelling.",
+    "Each correction was verified by direct main-session `Read` of the printed",
+    "source page, with the egyptologist-reviewer pass also confirming the",
+    "lacuna-ID J-prefix and It-middle readings against printed p.209.",
+    "",
+    "This JSON is the committed audit trail. The actual application is",
+    "currently inline (the main agent rewrote each agent's `raw/agent-*-",
+    "ofkingsandpriests.jsonl` before re-running `merge.py`). Future direct-",
+    "PDF-Read chunks should build a `pre_merge.py` step that applies a",
+    "structured corrections file like this one automatically — tracked as a",
+    "follow-up to the dodson-hilton-queens source under issue #215. For",
+    "this chunk the gitignored agent JSONLs carry the post-correction state;",
+    "`reconciled.jsonl` is reproducible from this corrections file plus a",
+    "fresh agent re-run (correcting the drift back to canonical form).",
+    "",
+    "Correction shape: each entry is keyed by '<agent_tag>|<wrong_dh_id>'.",
+    "Value is {'canonical_dh_id': str, 'rationale': str (citing source page)}."
+  ],
+  "b|Mutnodjmet": {
+    "canonical_dh_id": "Mutnodjmet B",
+    "rationale": "Agent B dropped the 'B' suffix on the headword. Printed p.207 (sub-PDF page 3) clearly prints 'Mutnodjmet B (KDB; KSis; KGW; L2L; 2PA Tanis)' as a single bold-italic headword with the disambiguating letter B. Agent A and the egyptologist-reviewer pre-fix sub-PDF read both confirm the suffix."
+  },
+  "c|Mutnodjmet": {
+    "canonical_dh_id": "Mutnodjmet B",
+    "rationale": "Same as b|Mutnodjmet — agent C dropped the same suffix."
+  },
+  "c|Rudamen(?)": {
+    "canonical_dh_id": "Rudament(?)",
+    "rationale": "Agent C dropped the trailing 't' (printed source p.209 = sub-PDF page 5 reads 'Rudament(?)' with the question-mark hedge). Agents A and B both extracted 'Rudament(?)' correctly; 2/1 majority + source verification both favour 'Rudament(?)'."
+  },
+  "b|[...]amenweret": {
+    "canonical_dh_id": "[...]Jamenweret",
+    "rationale": "Agent B dropped the J-prefix on the post-lacuna readable portion. Printed p.209 (sub-PDF page 5) right column clearly prints '[...]Jamenweret' with J-prefix; the egyptologist-reviewer pass against the printed page confirmed J on every entry in the lacuna cluster."
+  },
+  "c|[...]amenweret": {
+    "canonical_dh_id": "[...]Jamenweret",
+    "rationale": "Same as b|[...]amenweret — agent C dropped the same J-prefix."
+  },
+  "b|[...]anm": {
+    "canonical_dh_id": "[...]Janm",
+    "rationale": "Agent B dropped the J-prefix on '[...]Janm' (KSonB). Verified against printed p.209."
+  },
+  "c|[...]anm": {
+    "canonical_dh_id": "[...]Janm",
+    "rationale": "Same as b|[...]anm — agent C dropped the same J-prefix."
+  },
+  "b|[...]emkheb": {
+    "canonical_dh_id": "[...]Jemkheb",
+    "rationale": "Agent B dropped the J-prefix on '[...]Jemkheb' (KSonB). Verified against printed p.209."
+  },
+  "c|[...]emkheb": {
+    "canonical_dh_id": "[...]Jemkheb",
+    "rationale": "Same as b|[...]emkheb — agent C dropped the same J-prefix."
+  },
+  "a|[...]memsunay": {
+    "canonical_dh_id": "[...]Jmemsunay",
+    "rationale": "All three agents dropped the J-prefix on '[...]Jmemsunay' (KSonB). The egyptologist-reviewer pass against printed p.209 surfaced the J-prefix on every entry in the lacuna cluster including this one; correction applied to all three agents for source fidelity."
+  },
+  "b|[...]memsunay": {
+    "canonical_dh_id": "[...]Jmemsunay",
+    "rationale": "Same as a|[...]memsunay — agent B dropped the same J-prefix."
+  },
+  "c|[...]memsunay": {
+    "canonical_dh_id": "[...]Jmemsunay",
+    "rationale": "Same as a|[...]memsunay — agent C dropped the same J-prefix."
+  },
+  "a|[...]t[...] (KSonB)": {
+    "canonical_dh_id": "[...]It[...]",
+    "rationale": "Agent A had two problems on this row: (1) dropped the 'I' from '[...]It[...]' (printed p.209 shows 'It' between the brackets) and (2) embedded the role parenthetical '(KSonB)' inside the dh_id string. Both corrected to source-verified canonical '[...]It[...]' (with 'I'); the role 'KSonB' remains correctly populated in the row's 'roles' field per the verbatim-role rule."
+  },
+  "b|[...]t[...]": {
+    "canonical_dh_id": "[...]It[...]",
+    "rationale": "Agent B dropped the 'I' from the middle of '[...]It[...]'. Verified against printed p.209."
+  },
+  "c|[...]t[...]": {
+    "canonical_dh_id": "[...]It[...]",
+    "rationale": "Same as b|[...]t[...] — agent C dropped the same 'I'."
+  }
+}
