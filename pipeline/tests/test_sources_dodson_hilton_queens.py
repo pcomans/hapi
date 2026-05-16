@@ -93,6 +93,17 @@ SUB_PERIOD_KC = "Kings and Commoners"
 CITATION_KC = {"pdf_pages": PDF_PAGES_KC, "edition": EDITION}
 
 
+# Chunk 8 — Of Kings and Priests (chapter 4, 21st Dynasty Brief Lives).
+# Printed pp.205-209 / physical PDF pp.190-194 (offset +15). The first
+# chunk drawn from chapter 4 *The 3rd Intermediate Period*. 84 rows. No
+# Unplaced sub-block. Multiple 21st-Dyn individuals (Henttawy Q,
+# Pinudjem I, Tentamun B) appear here AND as stub-cross-references in
+# Decline of the Ramessides — cross-section-duplicate set is extended.
+PDF_PAGES_OKP = "190-194"
+SUB_PERIOD_OKP = "Of Kings and Priests"
+CITATION_OKP = {"pdf_pages": PDF_PAGES_OKP, "edition": EDITION}
+
+
 @lru_cache(maxsize=1)
 def _rows() -> tuple[dict, ...]:
     return tuple(json.loads(line) for line in JSONL.read_text().splitlines() if line.strip())
@@ -182,8 +193,8 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 
 
 def test_row_count() -> None:
-    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) = 465 rows total."""
-    assert len(_rows()) == 465, len(_rows())
+    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) + Of Kings and Priests (84) = 549 rows total."""
+    assert len(_rows()) == 549, len(_rows())
 
 
 def test_row_counts_per_chunk() -> None:
@@ -201,6 +212,8 @@ def test_row_counts_per_chunk() -> None:
     - Kings and Commoners: 108 (91 placed + 17 Unplaced; Dyn 13, SIP start)
     - The Founders: 26 (15 placed + 11 Unplaced; Dyn 1/2/3 Early
       Dynastic — the smallest D&H chunk).
+    - Of Kings and Priests: 84 (no Unplaced; Dyn 21 — first chunk drawn
+      from chapter 4 The 3rd Intermediate Period).
     """
     by_period: dict[str, int] = {}
     for r in _rows():
@@ -215,6 +228,7 @@ def test_row_counts_per_chunk() -> None:
         SUB_PERIOD_SEIZERS: 48,
         SUB_PERIOD_KC: 108,
         SUB_PERIOD_FOUNDERS: 26,
+        SUB_PERIOD_OKP: 84,
     }, by_period
 
 
@@ -236,6 +250,14 @@ CROSS_SECTION_DUPLICATE_IDS = {
     # individual, two sub_periods. First cross-section duplicate that
     # spans dynasties rather than sharing the same chapter.
     "Hetepti": {SUB_PERIOD_SEIZERS, SUB_PERIOD_KC},
+    # Of-Kings-and-Priests (Dyn 21) chunk introduces 3 cross-dynasty
+    # duplicates that span chapters 3-4: each has a stub `(see next
+    # section)` cross-reference in the Decline of the Ramessides Brief
+    # Lives (Dyn 20) AND a full Brief Life in Of Kings and Priests
+    # (Dyn 21). Same convention as the Hetepti Seizers↔KC case.
+    "Henttawy Q": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
+    "Pinudjem I": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
+    "Tentamun B": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
 }
 
 
@@ -305,6 +327,7 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_SEIZERS: CITATION_SEIZERS,
         SUB_PERIOD_KC: CITATION_KC,
         SUB_PERIOD_FOUNDERS: CITATION_FOUNDERS,
+        SUB_PERIOD_OKP: CITATION_OKP,
     }
     for r in _rows():
         sub_period = r["sub_period"]
@@ -334,6 +357,7 @@ def test_dynasty_per_chunk() -> None:
         SUB_PERIOD_SEIZERS: {12},
         SUB_PERIOD_KC: {13},
         SUB_PERIOD_FOUNDERS: {1, 2, 3},
+        SUB_PERIOD_OKP: {21},
     }
     for r in _rows():
         assert r["dynasty"] in expected_dynasty[r["sub_period"]], r
@@ -458,6 +482,9 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
       letter-prefixed).
     - Power chunk contributes 1 unplaced lacuna (`[...]pentepkau`).
     - Kings and Commoners chunk contributes 1 unplaced lacuna (`[...]djeb`).
+    - Of Kings and Priests chunk contributes 11 placed lacunae
+      (`[...]Jamenweret`, `[...]Janm`, `[...]Jemkheb`, `[...]Jmemsunay`,
+      `[...]It[...]`, `[...]21A`–`[...]21F`; no Unplaced sub-block).
 
     Composite-key detail: `Ramesses C` under House sorts adjacent to
     `Ramesses C` under Decline via the `sub_period` tiebreaker.
@@ -466,8 +493,8 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     lacuna_prefixes = ("[", "–")
 
     placed = [r for r in rows if not r["unplaced"]]
-    # 465 - 46 unplaced = 419 placed.
-    assert len(placed) == 419, len(placed)
+    # 549 - 46 unplaced = 503 placed (OKP has no Unplaced sub-block).
+    assert len(placed) == 503, len(placed)
 
     # All lacuna-prefixed placed rows must be at the tail of the placed
     # block. Count them and assert no lacuna-prefixed row appears before
@@ -4593,7 +4620,7 @@ def test_henttawy_q_decline_full_row() -> None:
         "unplaced": False,
         "notes": "Probable daughter of Ramesses XI (see next section).",
         "source_citation": CITATION_DECLINE,
-    })
+    }, sub_period=SUB_PERIOD_DECLINE)
 
 def test_henutwati_decline_full_row() -> None:
     _assert_full_row("Henutwati", {
@@ -4863,7 +4890,7 @@ def test_pinudjem_i_decline_full_row() -> None:
         "unplaced": False,
         "notes": "Probable son-in-law of Ramesses XI (see next section).",
         "source_citation": CITATION_DECLINE,
-    })
+    }, sub_period=SUB_PERIOD_DECLINE)
 
 def test_prehirwenemef_b_decline_full_row() -> None:
     _assert_full_row("Prehirwenemef B", {
@@ -5007,7 +5034,7 @@ def test_tentamun_b_decline_full_row() -> None:
         "unplaced": False,
         "notes": "Probable daughter of Ramesses XI and wife of Nesibanebdjedet I (see next section).",
         "source_citation": CITATION_DECLINE,
-    })
+    }, sub_period=SUB_PERIOD_DECLINE)
 
 def test_tiye_b_mereniset_decline_full_row() -> None:
     _assert_full_row("Tiye B Mereniset", {
@@ -8974,3 +9001,201 @@ def test_llm_applied_overrides_section_describes_every_spot_correction() -> None
             f"audit entry for {(dh_id, sub_period, field)} has no "
             f"value:/was: detail line — header without body is a regression"
         )
+
+
+# ===========================================================================
+# Of Kings and Priests (Dyn 21) full-row content tests — PR #218
+# ===========================================================================
+# Anchor the 5 flagship rows + the 2 P1-corrected rows so a future revert of
+# either the `OFKINGSANDPRIESTS_CORRECTIONS` in fix_rows.py OR the
+# `dh_id_corrections-ofkingsandpriests.json` pre-merge layer fails loud.
+
+
+def test_okp_henttawy_q_full_row() -> None:
+    """P1 correction anchor: relation-token roles + clean prose notes."""
+    _assert_full_row("Henttawy Q", {
+        "dh_id": "Henttawy Q",
+        "name": "Henttawy Q",
+        "alt_names": ["Duahathor-Henttawy"],
+        "roles": ["KD", "KW", "KM", "L2L", "M2L", "Daughter of: KGW", "1ChHA", "Mother of: KGW, HPA & Genmo"],
+        "sex": "female",
+        "spouse_names": ["Pinudjem I"],
+        "father_name": "Ramesses XI",
+        "mother_name": None,
+        "children_names": ["Pasebkhanut I", "Maatkare A", "Masaharta B", "Djedkhonsiufankh I", "Menkheperre B"],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum.",
+        "source_citation": CITATION_OKP,
+    }, sub_period=SUB_PERIOD_OKP)
+
+
+def test_okp_maatkare_a_full_row() -> None:
+    """P1 correction anchor: GWA: prenomen-Mutemhat colon-annotation split."""
+    _assert_full_row("Maatkare A", {
+        "dh_id": "Maatkare A",
+        "name": "Maatkare A",
+        "alt_names": ["Mutemhat"],
+        "roles": ["KDB", "Ador", "GWA"],
+        "sex": "female",
+        "spouse_names": [],
+        "father_name": "Pinudjem I",
+        "mother_name": "Henttawy Q",
+        "children_names": [],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Daughter of Pinudjem I and Henttawy Q. Depicted early in life in a graffito in Luxor temple, as God's Wife of Amun on the façade of the Khonsu temple at Karnak and by a statue in Marseilles. Her mummy, coffins, papyrus and shabtis were found in tomb TT320; Maatkare's body was accompanied in its coffin by the mummy of her pet baboon.",
+        "source_citation": CITATION_OKP,
+    })
+
+
+def test_okp_pinudjem_i_full_row() -> None:
+    """Pinudjem I OKP — full Brief Life (contrasts with the stub
+    `(see next section)` row in Decline of the Ramessides).
+    """
+    _assert_full_row("Pinudjem I", {
+        "dh_id": "Pinudjem I",
+        "name": "Pinudjem I",
+        "alt_names": [],
+        "roles": ["Viz", "HPA", "Genmo"],
+        "sex": "male",
+        "spouse_names": [],
+        "father_name": "Piankh",
+        "mother_name": None,
+        "children_names": [],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Son of Piankh. As High Priest he added inscriptions to the Karnak Khonsu temple and the small temple at Medinet Habu. However, a statuette (Cairo, from Karnak) shows him with High Priestly titles but wearing royal garb, and in one case a representation was altered back to showing him in priestly garb, as if to hint at some hesitation on Pinudjem's part. From at least year 16 of Nesibanebdjedet I he took full pharaonic titles as well.",
+        "source_citation": CITATION_OKP,
+    }, sub_period=SUB_PERIOD_OKP)
+
+
+def test_okp_nesikhonsu_a_full_row() -> None:
+    """Nesikhonsu A — TT320 cache burial cohort (year 5 Siamun). Pins the
+    new `1ChHA` and `KSonK` role tokens added to KNOWN_ROLE_TOKENS.
+    """
+    _assert_full_row("Nesikhonsu A", {
+        "dh_id": "Nesikhonsu A",
+        "name": "Nesikhonsu A",
+        "alt_names": [],
+        "roles": ["1ChHA", "KSonK"],
+        "sex": "female",
+        "spouse_names": ["Pinudjem II"],
+        "father_name": None,
+        "mother_name": None,
+        "children_names": ["Nesitanebetashru A"],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Wife of Pinudjem II; known from her burial in tomb TT320, which took place in year 5 of Siamun according to an inscription at the tomb entrance, and which employed coffins originally made for Isetemkheb D. Nesikhonsu's burial included a religious decree, written on a wooden board, that was to ensure her well-being in the next world – and to prevent her doing harm to her husband and children from there. This suggests that family problems may have existed around the time of her death. Nesikhonsu is also named on the funerary papyrus of her daughter, Nesitanebetashru A.",
+        "source_citation": CITATION_OKP,
+    })
+
+
+def test_okp_shoshenq_b_full_row() -> None:
+    """Shoshenq B — Libyan-chief nephew-of-Osorkon-the-Elder who became
+    SHOSHENQ I (founder of Dyn 22). Anchors the `ChMa` (Chief of the Ma)
+    role and the alt_names titlecase-from-BOLD-CAPITALS rule.
+    """
+    _assert_full_row("Shoshenq B", {
+        "dh_id": "Shoshenq B",
+        "name": "Shoshenq B",
+        "alt_names": ["Shoshenq I"],
+        "roles": ["ChMa"],
+        "sex": "male",
+        "spouse_names": [],
+        "father_name": None,
+        "mother_name": None,
+        "children_names": [],
+        "dynasty": 21,
+        "sub_period": SUB_PERIOD_OKP,
+        "unplaced": False,
+        "notes": "Nephew of Osorkon the Elder, and later king as SHOSHENQ I. Dedicated a statue to his father, Nimlot A, at Abydos, in which he indicates a close relationship with the then-king, unnamed but probably Siamun. He seems to have ruled Upper Egypt for at least two years before becoming acknowledged king – to judge from an entry in the Karnak Priestly Annals, which is dated to his second year but only gives his title as Chieftain.",
+        "source_citation": CITATION_OKP,
+    })
+
+
+# ===========================================================================
+# pre_merge.py chunk-scoping (Gemini PR #218 round-2)
+# ===========================================================================
+
+
+def test_pre_merge_corrections_are_chunk_scoped(tmp_path, monkeypatch) -> None:
+    """`apply_corrections` must only apply `dh_id_corrections-<chunk>.json`
+    corrections to `agent-<tag>-<chunk>.jsonl` files where the chunk
+    identifier matches. A future chunk that happens to share a wrong-
+    spelling string with OKP must NOT silently inherit OKP's correction.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "pm_pre_merge",
+        Path(__file__).parent.parent / "pipeline" / "authority" / "sources" / "dodson-hilton-queens" / "pre_merge.py",
+    )
+    assert spec is not None and spec.loader is not None
+    pre_merge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pre_merge)
+
+    # Two-chunk fixture: chunk A has corrections, chunk B has the same
+    # wrong-spelling string but no corrections file. Expected: chunk A row
+    # patched, chunk B row left untouched.
+    fake_source = tmp_path / "source"
+    fake_source.mkdir()
+    fake_agent_dir = tmp_path / "raw"
+    fake_agent_dir.mkdir()
+
+    # Corrections file for chunk A only.
+    (fake_source / "dh_id_corrections-chunka.json").write_text(
+        json.dumps({"a|Mutnodjmet": {"canonical_dh_id": "Mutnodjmet B", "rationale": "test fixture"}}),
+        encoding="utf-8",
+    )
+
+    chunka_path = fake_agent_dir / "agent-a-chunka.jsonl"
+    chunkb_path = fake_agent_dir / "agent-a-chunkb.jsonl"
+    chunka_path.write_text(
+        json.dumps({"dh_id": "Mutnodjmet", "name": "Mutnodjmet", "other": "x"}) + "\n",
+        encoding="utf-8",
+    )
+    chunkb_path.write_text(
+        json.dumps({"dh_id": "Mutnodjmet", "name": "Mutnodjmet", "other": "y"}) + "\n",
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(pre_merge, "SOURCE_DIR", fake_source)
+
+    counts = pre_merge.apply_corrections(fake_agent_dir)
+
+    chunka_rows = [json.loads(l) for l in chunka_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+    chunkb_rows = [json.loads(l) for l in chunkb_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+
+    assert chunka_rows[0]["dh_id"] == "Mutnodjmet B", chunka_rows
+    assert chunkb_rows[0]["dh_id"] == "Mutnodjmet", chunkb_rows
+    assert counts[chunka_path.name] == 1
+    assert counts[chunkb_path.name] == 0
+
+
+def test_pre_merge_parse_agent_filename() -> None:
+    """`_parse_agent_filename` extracts (tag, chunk) from suffix-bearing
+    JSONL stems and rejects malformed forms."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "pm_pre_merge_parse",
+        Path(__file__).parent.parent / "pipeline" / "authority" / "sources" / "dodson-hilton-queens" / "pre_merge.py",
+    )
+    assert spec is not None and spec.loader is not None
+    pre_merge = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(pre_merge)
+
+    assert pre_merge._parse_agent_filename("agent-a-ofkingsandpriests") == ("a", "ofkingsandpriests")
+    assert pre_merge._parse_agent_filename("agent-b-power") == ("b", "power")
+    assert pre_merge._parse_agent_filename("agent-c-chunk-with-dashes") == ("c", "chunk-with-dashes")
+    # Bare single-chunk legacy form — no chunk suffix.
+    assert pre_merge._parse_agent_filename("agent-a") is None
+    # Wrong prefix.
+    assert pre_merge._parse_agent_filename("merge-a-chunkfoo") is None
+    # Empty tag.
+    assert pre_merge._parse_agent_filename("agent--chunk") is None
