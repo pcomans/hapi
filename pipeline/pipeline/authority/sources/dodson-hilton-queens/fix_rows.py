@@ -308,6 +308,49 @@ FOUNDERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
 # the retrospective Codex review on PR #77 (run 2026-04-19 under the
 # `feedback_codex_review_every_pr` discipline established after the
 # session wrap; the initial PR #77 merge predated that discipline).
+OFKINGSANDPRIESTS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
+    (
+        "Henttawy Q",
+        "Of Kings and Priests",
+        "roles",
+        ["KD", "KW", "KM", "L2L", "M2L", "Daughter of: KGW", "1ChHA", "Mother of: KGW, HPA & Genmo"],
+        "Egyptologist printed-source verification (p.205 right column): D&H's "
+        "role-parenthetical for Henttawy Q reads `(KD; KW; KM; L2L; M2L; "
+        "Daughter of: KGW; 1ChHA; Mother of: KGW, HPA & Genmo)`. Majority-"
+        "voted roles dropped `1ChHA` and the two relation-tokens entirely; "
+        "merged notes silently absorbed the relation-tokens as prose. "
+        "Restoring the full role list per D&H's printed parenthetical "
+        "(relation-tokens are D&H's annotation of kinship roles; Phase A "
+        "owns the role-code glossary including these).",
+    ),
+    (
+        "Henttawy Q",
+        "Of Kings and Priests",
+        "notes",
+        "Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum.",
+        "Companion to the roles correction above. Strip the leading sentence "
+        "`Daughter of: KGW; Mother of: KGW, HPA & Genmo.` that all three "
+        "agents absorbed into notes — that text is the role-parenthetical "
+        "content, not D&H's prose. The true prose paragraph begins at "
+        "`Wife of Pinudjem I, mother of Pasebkhanut I...`.",
+    ),
+    (
+        "Maatkare A",
+        "Of Kings and Priests",
+        "roles",
+        ["KDB", "Ador", "GWA"],
+        "Egyptologist printed-source verification (p.206): D&H's role-"
+        "parenthetical for Maatkare A reads `(KDB; Ador; GWA: prenomen "
+        "Mutemhat)`. The colon-bearing `GWA: prenomen Mutemhat` token is "
+        "an annotation of the GWA cartouche's prenomen reading, not a "
+        "role-code itself. Split into bare `GWA` (the role) plus alt_names "
+        "`Mutemhat` (already preserved). No other row carries a colon-"
+        "bearing role token; this would break downstream role-vocabulary "
+        "matching.",
+    ),
+]
+
+
 SEIZERS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
     (
         "Ameny A",
@@ -404,6 +447,7 @@ SPOT_CORRECTIONS: list[tuple[str, str, str, object, str]] = (
     + RAMESSIDE_CORRECTIONS
     + FOUNDERS_CORRECTIONS
     + SEIZERS_CORRECTIONS
+    + OFKINGSANDPRIESTS_CORRECTIONS
     + ISSUE_175_AUDIT_CORRECTIONS
 )
 
@@ -523,6 +567,27 @@ KNOWN_ROLE_TOKENS: set[str] = {
     "Steward of Queen Tiye A/Tey",
     "Townsman",
     "Troop Commander",
+    # Of Kings and Priests (Dyn 21) — chapter-4 chunk-1 additions.
+    "1ChHA",                     # First Chief of the Harem of Amun
+    "2PA Tanis",                 # Second Prophet of Amun at Tanis
+    "3PA",                       # Third Prophet of Amun
+    "4PA",                       # Fourth Prophet of Amun
+    "AL",                        # ?  — Tanite-royal title (Pasebkhanut II, Pasebkhanut A, Piankh)
+    "ChH Mentu",                 # Chief of the Harem of Mentu
+    "ChH Min",                   # Chief of the Harem of Min
+    "ChHA",                      # Chief of the Harem of Amun
+    "ChHA–1st phyle",            # Chief of the Harem of Amun (1st phyle)
+    "ChHA–4th phyle",            # Chief of the Harem of Amun (4th phyle)
+    "ChMa",                      # Chief of the Ma (Libyan tribal chiefship)
+    "Daughter of: KGW",          # D&H relation-token in role parenthetical (Henttawy Q)
+    "Flautist of Mut",
+    "GFAmun",                    # God's Father of Amun
+    "High Steward of Amun",
+    "Mother of: KGW, HPA & Genmo",  # D&H relation-token in role parenthetical (Henttawy Q)
+    "PA",                        # Prophet of Amun (bare; Hori C — distinct from 2PA/3PA/4PA)
+    "PMut",                      # Priest of Mut (Ankhefenmut B)
+    "PSeth",                     # Priest of Seth (Hori C)
+    "Sem-Priest at Medinet Habu",
 }
 
 _OVERRIDES_MARKER = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"

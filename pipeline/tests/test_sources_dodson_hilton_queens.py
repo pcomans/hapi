@@ -93,6 +93,17 @@ SUB_PERIOD_KC = "Kings and Commoners"
 CITATION_KC = {"pdf_pages": PDF_PAGES_KC, "edition": EDITION}
 
 
+# Chunk 8 — Of Kings and Priests (chapter 4, 21st Dynasty Brief Lives).
+# Printed pp.205-209 / physical PDF pp.190-194 (offset +15). The first
+# chunk drawn from chapter 4 *The 3rd Intermediate Period*. 84 rows. No
+# Unplaced sub-block. Multiple 21st-Dyn individuals (Henttawy Q,
+# Pinudjem I, Tentamun B) appear here AND as stub-cross-references in
+# Decline of the Ramessides — cross-section-duplicate set is extended.
+PDF_PAGES_OKP = "190-194"
+SUB_PERIOD_OKP = "Of Kings and Priests"
+CITATION_OKP = {"pdf_pages": PDF_PAGES_OKP, "edition": EDITION}
+
+
 @lru_cache(maxsize=1)
 def _rows() -> tuple[dict, ...]:
     return tuple(json.loads(line) for line in JSONL.read_text().splitlines() if line.strip())
@@ -182,8 +193,8 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 
 
 def test_row_count() -> None:
-    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) = 465 rows total."""
-    assert len(_rows()) == 465, len(_rows())
+    """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) + Of Kings and Priests (84) = 549 rows total."""
+    assert len(_rows()) == 549, len(_rows())
 
 
 def test_row_counts_per_chunk() -> None:
@@ -201,6 +212,8 @@ def test_row_counts_per_chunk() -> None:
     - Kings and Commoners: 108 (91 placed + 17 Unplaced; Dyn 13, SIP start)
     - The Founders: 26 (15 placed + 11 Unplaced; Dyn 1/2/3 Early
       Dynastic — the smallest D&H chunk).
+    - Of Kings and Priests: 84 (no Unplaced; Dyn 21 — first chunk drawn
+      from chapter 4 The 3rd Intermediate Period).
     """
     by_period: dict[str, int] = {}
     for r in _rows():
@@ -215,6 +228,7 @@ def test_row_counts_per_chunk() -> None:
         SUB_PERIOD_SEIZERS: 48,
         SUB_PERIOD_KC: 108,
         SUB_PERIOD_FOUNDERS: 26,
+        SUB_PERIOD_OKP: 84,
     }, by_period
 
 
@@ -236,6 +250,14 @@ CROSS_SECTION_DUPLICATE_IDS = {
     # individual, two sub_periods. First cross-section duplicate that
     # spans dynasties rather than sharing the same chapter.
     "Hetepti": {SUB_PERIOD_SEIZERS, SUB_PERIOD_KC},
+    # Of-Kings-and-Priests (Dyn 21) chunk introduces 3 cross-dynasty
+    # duplicates that span chapters 3-4: each has a stub `(see next
+    # section)` cross-reference in the Decline of the Ramessides Brief
+    # Lives (Dyn 20) AND a full Brief Life in Of Kings and Priests
+    # (Dyn 21). Same convention as the Hetepti Seizers↔KC case.
+    "Henttawy Q": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
+    "Pinudjem I": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
+    "Tentamun B": {SUB_PERIOD_DECLINE, SUB_PERIOD_OKP},
 }
 
 
@@ -305,6 +327,7 @@ def test_every_row_has_complete_citation() -> None:
         SUB_PERIOD_SEIZERS: CITATION_SEIZERS,
         SUB_PERIOD_KC: CITATION_KC,
         SUB_PERIOD_FOUNDERS: CITATION_FOUNDERS,
+        SUB_PERIOD_OKP: CITATION_OKP,
     }
     for r in _rows():
         sub_period = r["sub_period"]
@@ -334,6 +357,7 @@ def test_dynasty_per_chunk() -> None:
         SUB_PERIOD_SEIZERS: {12},
         SUB_PERIOD_KC: {13},
         SUB_PERIOD_FOUNDERS: {1, 2, 3},
+        SUB_PERIOD_OKP: {21},
     }
     for r in _rows():
         assert r["dynasty"] in expected_dynasty[r["sub_period"]], r
@@ -458,6 +482,9 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
       letter-prefixed).
     - Power chunk contributes 1 unplaced lacuna (`[...]pentepkau`).
     - Kings and Commoners chunk contributes 1 unplaced lacuna (`[...]djeb`).
+    - Of Kings and Priests chunk contributes 11 placed lacunae
+      (`[...]Jamenweret`, `[...]Janm`, `[...]Jemkheb`, `[...]Jmemsunay`,
+      `[...]It[...]`, `[...]21A`–`[...]21F`; no Unplaced sub-block).
 
     Composite-key detail: `Ramesses C` under House sorts adjacent to
     `Ramesses C` under Decline via the `sub_period` tiebreaker.
@@ -466,8 +493,8 @@ def test_lacuna_prefixed_ids_sort_last_within_each_bin() -> None:
     lacuna_prefixes = ("[", "–")
 
     placed = [r for r in rows if not r["unplaced"]]
-    # 465 - 46 unplaced = 419 placed.
-    assert len(placed) == 419, len(placed)
+    # 549 - 46 unplaced = 503 placed (OKP has no Unplaced sub-block).
+    assert len(placed) == 503, len(placed)
 
     # All lacuna-prefixed placed rows must be at the tail of the placed
     # block. Count them and assert no lacuna-prefixed row appears before
@@ -4593,7 +4620,7 @@ def test_henttawy_q_decline_full_row() -> None:
         "unplaced": False,
         "notes": "Probable daughter of Ramesses XI (see next section).",
         "source_citation": CITATION_DECLINE,
-    })
+    }, sub_period=SUB_PERIOD_DECLINE)
 
 def test_henutwati_decline_full_row() -> None:
     _assert_full_row("Henutwati", {
@@ -4863,7 +4890,7 @@ def test_pinudjem_i_decline_full_row() -> None:
         "unplaced": False,
         "notes": "Probable son-in-law of Ramesses XI (see next section).",
         "source_citation": CITATION_DECLINE,
-    })
+    }, sub_period=SUB_PERIOD_DECLINE)
 
 def test_prehirwenemef_b_decline_full_row() -> None:
     _assert_full_row("Prehirwenemef B", {
@@ -5007,7 +5034,7 @@ def test_tentamun_b_decline_full_row() -> None:
         "unplaced": False,
         "notes": "Probable daughter of Ramesses XI and wife of Nesibanebdjedet I (see next section).",
         "source_citation": CITATION_DECLINE,
-    })
+    }, sub_period=SUB_PERIOD_DECLINE)
 
 def test_tiye_b_mereniset_decline_full_row() -> None:
     _assert_full_row("Tiye B Mereniset", {
