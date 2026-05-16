@@ -34,7 +34,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import sys
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).parent
@@ -139,10 +138,16 @@ def apply_corrections(agent_dir: Path) -> dict[str, int]:
                 row["name"] = chunk_corrections[key]["canonical_dh_id"]
                 patched += 1
         if patched:
-            jsonl_path.write_text(
+            # Atomic write-and-replace: stage to a sibling `.tmp` file and
+            # then `os.replace()` so an interrupted run cannot leave the
+            # agent JSONL in a corrupted or empty state (Gemini PR #218
+            # round-3).
+            temp_path = jsonl_path.with_suffix(jsonl_path.suffix + ".tmp")
+            temp_path.write_text(
                 "\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n",
                 encoding="utf-8",
             )
+            os.replace(temp_path, jsonl_path)
         counts[jsonl_path.name] = patched
     return counts
 
