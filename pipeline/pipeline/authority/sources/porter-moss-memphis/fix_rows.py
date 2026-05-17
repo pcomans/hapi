@@ -497,6 +497,229 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
 }
 
+# Per-chunk reviewer corrections for chunk 8 (Gîza West Field Cemetery
+# en Echelon G 2300 + G 2400 + Cemetery G 2500). Combined feedback from
+# Gemini Code Assist PR #227 round 1 (3 medium) + egyptologist-reviewer
+# (4 P1, 4 P2) + code-reviewer (3 P2, 2 P3) on commit ac9085fe.
+CHUNK8_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Egyptologist P1-1: PM headword on G 2407 is bare-suffix, but the
+    # body sub-heading immediately below the headword (line 435 of the
+    # chunk file) reads "Statues. Late Dyn. V. Found in débris of shaft
+    # D." Per chunk-6 G 1314 body-recovery precedent, body-attested
+    # dating dating IS captured on dynasty; certainty stays uncertain.
+    ("G2407", "dynasty"): {
+        "value": "5",
+        "rationale": (
+            "Egyptologist PR #227 P1-1: G 2407 PM headword is bare-"
+            "suffix `G 2407.`, but body sub-heading `Statues. Late "
+            "Dyn. V.` on the next printed line documents tomb owner's "
+            "Late Dyn. V dating. Per chunk-6 G 1314 precedent, body-"
+            "attested dating recovered into `dynasty`."
+        ),
+    },
+    ("G2407", "notes_from_pm"): {
+        "value": "Late Dyn. V. Statues found in débris of shaft D.",
+        "rationale": "Companion to dynasty fix: capture body-attested dating in notes.",
+    },
+    # Egyptologist P1-2: same body-recovery pattern for G 2501.
+    ("G2501", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Egyptologist PR #227 P1-2: G 2501 PM headword is bare-"
+            "suffix `G 2501.`, but body line reads `Head and legs of "
+            "statuette, Dyn. VI, found in front of mastaba` (printed "
+            "p.95). Body-attested Dyn. VI captured into `dynasty`."
+        ),
+    },
+    ("G2501", "notes_from_pm"): {
+        "value": "Dyn. VI. Statuette found in front of mastaba.",
+        "rationale": "Companion to dynasty fix.",
+    },
+    # Egyptologist P2-4 + body-recovery consistency: G 2335 body reads
+    # `wood, Dyn. V, from burial chamber of shaft A` — same recovery
+    # pattern as G 2407/G 2501.
+    ("G2335", "dynasty"): {
+        "value": "5",
+        "rationale": (
+            "Egyptologist PR #227 P2-4: G 2335 body sub-heading "
+            "`Male statuette ... wood, Dyn. V, from burial chamber of "
+            "shaft A` body-attests Dyn. V. Burial-chamber context = "
+            "strong attribution to tomb owner."
+        ),
+    },
+    ("G2335", "notes_from_pm"): {
+        "value": "Dyn. V. Wood statuettes from burial chamber of shaft A.",
+        "rationale": "Companion to dynasty fix.",
+    },
+    # Egyptologist P2-4: G 2336 body has `Three female statuettes, wood,
+    # Dyn. V-VI, from serdab` (line 38 of chunk file). Range tail rule
+    # → Dyn. VI = "6". Also captures body-attested name Khuwiptah from
+    # relief-fragment (line 37) per scope-accountability-enforcer
+    # required action: body-prose attestation must be structurally
+    # captured, not punted.
+    ("G2336", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Egyptologist PR #227 P2-4: G 2336 body reads "
+            "`Three female statuettes, wood, Dyn. V-VI, from serdab` "
+            "(serdab = inner statue chamber → strong tomb-owner "
+            "attribution). Range tail rule → `6`."
+        ),
+    },
+    ("G2336", "occupant_name"): {
+        "value": "Khuwiptah",
+        "rationale": (
+            "Scope-accountability-enforcer required action on PR #227 "
+            "E-P2-3: G 2336 body line `Relief-fragment, Khuwiptah and "
+            "text, in Boston Mus. 13.4344.` names Khuwiptah as the "
+            "relief-attested occupant. Body-recovery follows chunk-6 "
+            "G 1314 Khaʿkareʿ precedent (architrave-attested name "
+            "promoted to occupant_name with attribution_certainty: "
+            "uncertain since the relief-fragment context is weaker "
+            "than the Khaʿkareʿ double-statue inscription). Theneny "
+            "(false-door found BETWEEN G 2337 and G 2371 per PM "
+            "explicit clause) is NOT this tomb's owner; mentioned in "
+            "notes_from_pm only."
+        ),
+    },
+    ("G2336", "occupant_role"): {
+        "value": "Official",
+        "rationale": "Khuwiptah body-recovery default role per chunk-6 G 1314 precedent.",
+    },
+    ("G2336", "notes_from_pm"): {
+        "value": (
+            "Relief-fragment with Khuwiptah and text. Three female "
+            "statuettes, wood, Dyn. V-VI, from serdab. False-door of "
+            "Theneny Inspector of ka-servants, etc., Dyn. VI, found "
+            "between tombs G 2337 and G 2371."
+        ),
+        "rationale": "Body-prose recovery: Khuwiptah relief + Theneny adjacent false-door.",
+    },
+    # Egyptologist P1-3: Hathor → Ḥathor underdot in co_occupant_roles.
+    # PM prints Ḥ with underdot at p.87 (G 2378) and p.94 (G 2430).
+    ("G2378", "co_occupant_roles"): {
+        "value": ["Wife, King's daughter of his body, Prophetess of Ḥathor"],
+        "rationale": (
+            "Egyptologist PR #227 P1-3: PM prints Hathor with underdot-"
+            "Ḥ (cobra-house-of-Horus root); chunk-8 already preserves "
+            "underdot on Meḥi, Meḥu, Maʿet, Meryptaḥʿankh — Hathor "
+            "asymmetry was an oversight. Verified against PM PDF p.87."
+        ),
+    },
+    ("G2430", "co_occupant_roles"): {
+        "value": ["Wife, Prophetess of Ḥathor in all her places"],
+        "rationale": (
+            "Egyptologist PR #227 P1-3: same Ḥathor underdot fix "
+            "(verified PM PDF p.94)."
+        ),
+    },
+    # Gemini G2 + Egyptologist scope: wife clauses missing from
+    # G2370/G2378/G2430 notes. Per chunk-8 design rule (transcribe.md
+    # §"Wife-attestation in body prose preserved when adjacent to
+    # headword"), wife clauses adjacent to the headword are preserved
+    # verbatim — chunk-8 currently applies this rule via override on
+    # G 2423 only. Generalize: apply consistently across G 2370,
+    # G 2378, G 2430 where PM prints `Wife, <NAME> <Title cluster>`
+    # immediately after the dating marker.
+    ("G2370", "notes_from_pm"): {
+        "value": (
+            "Chief Justice and Vizier, King's architect and builder in "
+            "the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG "
+            "10.) Wife, Thefi Royal acquaintance. Stone-built mastaba. "
+            "LG 27."
+        ),
+        "rationale": (
+            "Gemini PR #227 medium #2: chunk-8 design rule preserves "
+            "wife-attestation clauses adjacent to headword (G 2423 "
+            "precedent). G 2370's `Wife, Thefi Royal acquaintance.` "
+            "clause restored to notes for cross-chunk consistency."
+        ),
+    },
+    ("G2378", "notes_from_pm"): {
+        "value": (
+            "Chief Justice and Vizier, King's architect and builder in "
+            "the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti "
+            "and Thefi (tomb G 2370). Wife, Khentkaus King's daughter "
+            "of his body, Prophetess of Ḥathor. Stone-built mastaba. "
+            "LG 26."
+        ),
+        "rationale": (
+            "Gemini PR #227 medium #2: same wife-clause restoration "
+            "(Khentkaus, King's daughter of his body)."
+        ),
+    },
+    ("G2430", "notes_from_pm"): {
+        "value": (
+            "Overseer of tenants of the Great House, Director of the "
+            "Palace, Secretary of his Lord, etc. Early Dyn. VI. Wife, "
+            "Khaʿmerernebti Prophetess of Ḥathor in all her places, "
+            "etc. Stone-built mastaba. LG 25."
+        ),
+        "rationale": (
+            "Gemini PR #227 medium #2: same wife-clause restoration "
+            "(Khaʿmerernebti, Prophetess of Ḥathor)."
+        ),
+    },
+    # Egyptologist P2-1 + Gemini-aligned: add `Senedjemib` modern
+    # spelling to occupant_alt_names for the two Senedjemib viziers.
+    # Boston MFA / Met / current Egyptological lit predominantly use
+    # the modern spelling; preserve PM-verbatim `Senezemib` in
+    # occupant_name and add `Senedjemib` as a secondary alias alongside
+    # the PM `good name` form.
+    ("G2370", "occupant_alt_names"): {
+        "value": ["Inti", "Senedjemib"],
+        "rationale": (
+            "Egyptologist PR #227 P2-1: Senedjemib is the modern "
+            "spelling used by Boston MFA + Met catalogs + current "
+            "Egyptological literature; preserve PM-verbatim `Senezemib`"
+            " as primary, add `Senedjemib` as alias for cross-museum "
+            "matching at Phase A. `Inti` (PM 'good name') stays."
+        ),
+    },
+    ("G2378", "occupant_alt_names"): {
+        "value": ["Meḥi", "Senedjemib"],
+        "rationale": "Same Senedjemib modern-spelling alias as G 2370.",
+    },
+    # Gemini G3 + Code-reviewer P2-1 — underdot-Ḥ on occupant names
+    # where the underlying Egyptian root carries underdot-Ḥ.
+    ("G2352", "occupant_name"): {
+        "value": "Ḥagi",
+        "rationale": (
+            "Gemini PR #227 medium #3: PM-verbatim transliteration "
+            "Ḥagi (Egyptian root `ḥgy`); chunk-8 was inconsistent — "
+            "Meḥu/Meḥi/Ptaḥ already underdot-Ḥ, but Hagi/Akhetmehu/"
+            "Hetepniptah/ʿAnkhirptah missed it. Source-wide ḥ "
+            "convention applied here for consistency."
+        ),
+    },
+    ("G2375", "occupant_name"): {
+        "value": "Akhetmeḥu",
+        "rationale": (
+            "Gemini PR #227 medium #3 + Code-reviewer PR #227 P2-1: "
+            "underdot-ḥ on the *mḥw* root. Test docstring already "
+            "wrote `Akhetmeḥu` — data corrected to match the docstring "
+            "convention."
+        ),
+    },
+    ("G2375a", "occupant_name"): {
+        "value": "ʿAnkhirptaḥ",
+        "rationale": (
+            "Gemini PR #227 medium #3: underdot-ḥ on the *ptḥ* "
+            "theophoric root (`ʿnḫ-ir-ptḥ` = 'Ptaḥ-makes-life'). "
+            "Parallel to G 2381/G 2387 Meryptaḥʿankh."
+        ),
+    },
+    ("G2430", "occupant_name"): {
+        "value": "Ḥetepniptaḥ",
+        "rationale": (
+            "Gemini PR #227 medium #3: underdot-ḥ on BOTH the *ḥtp* "
+            "root (initial) and *ptḥ* root (terminal) — `ḥtp-nî-ptḥ` "
+            "= 'Ptaḥ-is-merciful-to-me'."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -508,6 +731,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
     CHUNK6_CORRECTIONS,
+    CHUNK8_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
