@@ -1284,6 +1284,263 @@ CHUNK13_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-14 (Cemetery G 4000, Hemiunu cluster — halves 14a + 14b).
+# Round-1 Gemini fixes: 8 OCR-drift + diacritic normalisations on
+# Ḥathor / Meḥi / Neferiḥy / Iʿanesut / sm-priest / wrt-ḥts / waʿbt
+# tokens — pypdf misread underdot-Ḥ as cap-H, raised-ayin as `a`, etc.
+CHUNK14_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # G 4351 notes — `Hathor` → `Ḥathor` underdot consistency. The
+    # G4351|co_occupant_roles tie-break override already uses Ḥathor;
+    # notes was left without underdot by agent-majority.
+    ("G4351", "notes_from_pm"): {
+        "value": (
+            "Overseer of the department of tenants of the Great House, "
+            "Overseer of the Two Houses of Weapons, Prophet of Khufu, "
+            "etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of "
+            "Ḥathor Mistress-of-the-Sycamore in all her places, etc."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `Hathor` → `Ḥathor` underdot "
+            "per chunks 8/9 source-wide convention. Matches the "
+            "G4351|co_occupant_roles tie-break override which already "
+            "uses Ḥathor; intra-row consistency fix."
+        ),
+    },
+    # G 4411 notes — `ma-priest` → `sm-priest` OCR drift. PM prints
+    # Egyptian *sm*-priest (mortuary priest); pypdf misread leading `s`
+    # as space.
+    ("G4411", "notes_from_pm"): {
+        "value": (
+            "Lector-priest, sm-priest of Anubis, Prophet of Horus qmA-a, "
+            "etc. Middle Dyn. V or later."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `ma-priest` is pypdf OCR "
+            "drift on PM's `sm-priest` (Egyptian *sm*-priest, mortuary "
+            "priest). Cross-references chunk-14 G4240 SNEFRUSONB which "
+            "correctly renders `sem-priest` in PM."
+        ),
+    },
+    # G 4442 notes — `MeHi` → `Meḥi` (capital-H pypdf rendering of PM's
+    # underdot-Ḥ glyph on the ḥ-root *mḥi*, chunk-8 G2378 SENEZEMIB MEḤI
+    # precedent).
+    ("G4442", "notes_from_pm"): {
+        "value": (
+            "Steward, Scribe of (a) the granary, (b) the Treasury, (c) "
+            "a phyle of the endowment of Meḥi (probably Senezemib, tomb "
+            "G 2378). Dyn. VI or later."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `MeHi` cap-H is pypdf "
+            "rendering of PM's underdot-Ḥ on the ḥ-root *mḥi*. "
+            "Cross-reference to G 2378 Senezemib Meḥi (chunk-8) — same "
+            "person — confirms the underdot normalisation. Apply chunks "
+            "8/9 source-wide Meḥ underdot convention."
+        ),
+    },
+    # G 4513 occupant_name — `Neferihy` → `Neferiḥy` (underdot-Ḥ on the
+    # ḥ-root *iḥy* per the chunk-13/14 prompt's ḥ-root rule).
+    ("G4513", "occupant_name"): {
+        "value": "Neferiḥy",
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `Neferihy` missing the "
+            "underdot on the ḥ-root *iḥy*. Per chunk-14 prompt's "
+            "underdot-Ḥ rule and chunks 8/9 source-wide convention, "
+            "name normalises to `Neferiḥy`. Agent C correctly emitted "
+            "this form in the disagreement log; agent-majority dropped "
+            "the underdot."
+        ),
+    },
+    # G 4520 co_occupants — `Iaunesut` → `Iʿanesut` (raised-ayin glyph
+    # at start, pypdf rendered as `a` per source-wide convention).
+    ("G4520", "co_occupants"): {
+        "value": ["Iʿanesut", "Iupu", "Zefatka"],
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `Iaunesut` start-of-name `a` "
+            "is pypdf OCR drift on PM's raised-ayin glyph (Egyptian "
+            "*iʿ-n-swt* — `iʿa-` is the verb cluster, raised-a/ayin per "
+            "source-wide raised-ayin → U+02BF convention). Fix to "
+            "`Iʿanesut`."
+        ),
+    },
+    ("G4520", "notes_from_pm"): {
+        "value": (
+            "Tenant of the Great House, Overseer of singers of the Great "
+            "House, Overseer of flutists, etc. Temp. Userkaf (Reisner "
+            "and Smith) or late Dyn. V (Baer). Parents, Iʿanesut and "
+            "Iupu both Tenants. Wife, Zefatka Royal acquaintance."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-1 medium: paired with G4520 "
+            "co_occupants — same `Iaunesut` → `Iʿanesut` raised-ayin "
+            "fix in notes for intra-row consistency."
+        ),
+    },
+    # G 4630 notes — `sma-priest` → `sm-priest` OCR drift (parallel to
+    # G 4411 fix; PM prints *sm*-priest, pypdf misread the trailing
+    # space).
+    ("G4630", "notes_from_pm"): {
+        "value": (
+            "Chief lector-priest, Scribe of divine books, sm-priest of "
+            "Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `sma-priest` is pypdf OCR "
+            "drift on PM's `sm-priest` (same fix class as G 4411 "
+            "`ma-priest`)."
+        ),
+    },
+    # G 4712 notes — `wrt Hts` → `wrt-ḥts` (Egyptian *wrt-ḥts* `Great
+    # one of the Hts-staff`, an OK royal-women title). pypdf renders
+    # the hyphenless cap-H form; add hyphen + underdot-Ḥ.
+    ("G4712", "notes_from_pm"): {
+        "value": (
+            "Seer of Horus and Seth, wrt-ḥts (woman). Probably first "
+            "half of Dyn. V."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `wrt Hts` is pypdf OCR "
+            "drift on PM's `wrt-ḥts` (Egyptian *wrt-ḥts* — OK royal-"
+            "women title `Great One of the Hts-staff`). Apply hyphen + "
+            "underdot-Ḥ per source-wide convention. Also drop mastaba "
+            "body trailer (`Stone-built mastaba.`) per chunks 9-13 "
+            "convention."
+        ),
+    },
+    # G 4811 notes — `warbt` → `waʿbt` OCR drift. PM prints `waʿbt`
+    # (the *wʿb*-institution); pypdf misread the raised-ayin as `r`.
+    # Parallel to source-wide `waab` → `waʿb` convention applied to
+    # title clusters.
+    ("G4811", "notes_from_pm"): {
+        "value": (
+            "Overseer of the waʿbt, Overseer of craftsmen of the Great "
+            "House, Overseer of works of the King. Late Dyn. V or "
+            "Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-1 medium: `warbt` is pypdf OCR drift "
+            "on PM's `waʿbt` (Egyptian *wʿbt* — the institutional "
+            "waʿb-office/embalming-place). Apply source-wide ayin "
+            "convention. Also drop mastaba body trailer (`Stone-built "
+            "mastaba.`) + excavator history (`Excavated by "
+            "Schiaparelli.`) per chunks 9-13 convention."
+        ),
+    },
+    # G 4811 is_joint_burial — per source-wide convention is_joint_burial
+    # = true only when the headword names MULTIPLE OCCUPANTS (chunk-8 G
+    # 2415 Weri/Meti, chunk-11 D4/D32/D203, chunk-13 JKE-Nikaukhnum,
+    # etc.). PM `G 4811 + 4812. aANKHIRPTAH ...` names ONE occupant
+    # (Ankhirptah) on a structurally-twin mastaba (two adjacent Reisner
+    # numbers merged). Structural jointness is captured in tomb_aliases
+    # `["G 4812"]`; is_joint_burial should be false (parallel to chunk-
+    # 11 D80/80A twin-letter form which already uses is_joint_burial =
+    # false + aliases).
+    ("G4811", "is_joint_burial"): {
+        "value": False,
+        "rationale": (
+            "Gemini PR #233 round-2 medium: is_joint_burial denotes "
+            "multiple OCCUPANTS, not multiple tomb numbers. PM G 4811 + "
+            "4812 names a single occupant (ʿAnkhirptaḥ); structural "
+            "jointness is in tomb_aliases. Aligns with chunk-11 D80/80A "
+            "twin-letter precedent (is_joint_burial: false + aliases)."
+        ),
+    },
+    # G 4240 — chunk-14 prompt and chunk-14 G4411 fix call for `sm-priest`
+    # normalisation but G 4240 SNEFRUSONB has `sem-priest` (a PM-print or
+    # OCR expansion). Per source-wide consistency rule, normalise to
+    # `sm-priest`.
+    ("G4240", "notes_from_pm"): {
+        "value": (
+            "King's son of his body, sm-priest, Boundary official of "
+            "Dep, etc. Middle Dyn. IV to early Dyn. V."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-2 medium: normalise `sem-priest` → "
+            "`sm-priest` per the chunk-14 prompt rule and parallel to "
+            "the G 4411 / G 4630 ma-priest fixes. Egyptian *sm*-priest "
+            "is the canonical form; PM `sem-` is an OCR expansion that "
+            "should be reduced to the bare *sm* form for source-wide "
+            "consistency."
+        ),
+    },
+    # Drop mastaba body trailers + Junker section codes (Vn / VIs /
+    # VIIIss / etc.) + LG cross-references from notes per chunks 9-13
+    # `mastaba body trailer dropped` convention. Same for chunks 6-14
+    # `LG <N>` body-prose cross-references which were preserved in
+    # tomb_aliases (where appropriate) but should not duplicate in notes.
+    ("G4560", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. Vn of Junker.`) per chunks 9-13 convention.",
+    },
+    ("G4611", "notes_from_pm"): {
+        "value": (
+            "Secretary of the Toilet-house, Keeper of oils of the Great "
+            "House, Boundary official of (the district) 'Star of Horus "
+            "Foremost of Heaven', etc. End of Dyn. V or later."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. LG 50.`) per chunks 9-13 convention.",
+    },
+    ("G4620", "notes_from_pm"): {
+        "value": "Scribe of the royal documents. Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4631", "notes_from_pm"): {
+        "value": "Prophetess of Ḥathor and Neith, etc. Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Brick-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4640", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4646", "notes_from_pm"): {
+        "value": (
+            "Overseer of the department of tenants of the Great House, "
+            "Companion of the house, etc. Late Dyn. VI."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4650", "notes_from_pm"): {
+        "value": "King's daughter of his body. Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIs of Junker.`) per chunks 9-13 convention.",
+    },
+    ("G4660", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4714", "notes_from_pm"): {
+        "value": "King's daughter of his body. Probably first half of Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. LG 48.`) per chunks 9-13 convention.",
+    },
+    ("G4721", "notes_from_pm"): {
+        "value": "Probably end of Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4750", "notes_from_pm"): {
+        "value": (
+            "Overseer of all works of the King, Overseer of the Two "
+            "Treasuries, Overseer of the royal granaries, etc. Temp. "
+            "Menkaureʿ."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIIs of Junker.`) per chunks 9-13 convention. Also normalise `Menkaurea` (pypdf raised-a OCR) → `Menkaureʿ` per chunk-1 source-wide ayin convention.",
+    },
+    ("G4840", "notes_from_pm"): {
+        "value": (
+            "King's daughter of his body, Prophetess of Neith North-of-"
+            "the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or "
+            "late Dyn. IV."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIIIss of Junker.`) per chunks 9-13 convention.",
+    },
+    ("G4860", "notes_from_pm"): {
+        "value": (
+            "Scribe of divine books, Lector-priest. Middle or late "
+            "Dyn. IV."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIIIn of Junker.`) + drop NAME UNKNOWN placeholder (already null in occupant_name) per chunk-13 JKE-AnonCompanion Shape-5 convention.",
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1302,6 +1559,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK11_CORRECTIONS,
     CHUNK12_CORRECTIONS,
     CHUNK13_CORRECTIONS,
+    CHUNK14_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
