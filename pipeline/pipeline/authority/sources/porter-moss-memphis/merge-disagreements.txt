@@ -580,3 +580,7 @@ Reviewer-cited row corrections:
   D203.notes_from_pm: "Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI." → "Nufer Overseer of barbers, etc., and Itisen Overseer of the tAw of the Great Bark. Late Dyn. V or Dyn. VI."
   D215.co_occupants: ["ʿAnkh-Ḥatḥor"] → ["ʿAnkh-Ḥathor"]
   D215.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]
+  JKE-AnonCompanion.notes_from_pm: "NAME UNKNOWN, Companion (smr N.N. of Junker). Dyn. VI." → "Companion (smr N.N. of Junker). Dyn. VI."
+  JKE-Iuf.co_occupant_roles: ["Wife, mitrt"] → ["Wife, mitrt, etc."]
+  JKE-Nikaukhnum.notes_from_pm: "NIKAUKHNUM and NEFERESRIS Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI." → "and Neferesris Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI."
+  JKE-Nikaukhnum.co_occupant_roles: ["Royal acquaintance"] → ["Royal acquaintance (probably woman)"]

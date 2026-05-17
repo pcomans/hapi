@@ -1005,8 +1005,71 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 
 
 # Chunk-13 (Junker Cemetery East, named OK tombs).
-# Starts empty; egyptologist-reviewer + Gemini-review adds entries.
-CHUNK13_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+# Round-1 Gemini fixes: drop primary occupant name from notes (rule per
+# chunk-11 prompt) on joint twins + anonymous tombs; restore parenthetical
+# (probably woman) on JKE-Nikaukhnum joint co-occupant role; restore , etc.
+# marker on JKE-Iuf wife role.
+CHUNK13_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # JKE-Nikaukhnum (Shape-4 joint with Neferesris) — agent-majority kept
+    # the full PM headword `NIKAUKHNUM and NEFERESRIS Royal acquaintance
+    # (probably woman). Late Dyn. V or early Dyn. VI.` verbatim in notes,
+    # but per the chunk-11 D32 precedent (joint-twin notes drop the PRIMARY
+    # occupant name but keep the `and <co-occupant>` clause), the leading
+    # `NIKAUKHNUM and ` should be dropped. Also restore the `(probably
+    # woman)` parenthetical on co_occupant_roles which the agents trimmed.
+    ("JKE-Nikaukhnum", "notes_from_pm"): {
+        "value": (
+            "and Neferesris Royal acquaintance (probably woman). Late Dyn. V or "
+            "early Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #232 round-1 medium: per chunk-11 D32 + D4 "
+            "Shape-4 joint-twin convention, drop PRIMARY occupant name "
+            "(NIKAUKHNUM) from notes; keep `and <co-occupant>` joint "
+            "clause. Title-case Neferesris."
+        ),
+    },
+    ("JKE-Nikaukhnum", "co_occupant_roles"): {
+        "value": ["Royal acquaintance (probably woman)"],
+        "rationale": (
+            "Gemini PR #232 round-1 medium: restore the `(probably "
+            "woman)` parenthetical that PM prints in the headword block "
+            "as Junker's editorial annotation about Neferesris's likely "
+            "gender. Agent-majority trimmed to bare `Royal acquaintance` "
+            "losing this PM-faithful detail."
+        ),
+    },
+    # JKE-Iuf wife role — agent-majority dropped the `, etc.` marker that
+    # PM prints (`Wife, Meri mjtrt, etc.`). Restore per chunks 9/10/11
+    # convention preserving PM's `, etc.` marker (indicates additional
+    # title elements PM elided).
+    ("JKE-Iuf", "co_occupant_roles"): {
+        "value": ["Wife, mitrt, etc."],
+        "rationale": (
+            "Gemini PR #232 round-1 medium: restore `, etc.` marker on "
+            "the wife's title cluster. PM prints `Wife, Meri mjtrt, etc.` "
+            "with the `, etc.` indicating additional elided titles. Other "
+            "chunk-13 rows like JKE-Meruka + JKE-Sensen preserve the "
+            "marker; JKE-Iuf agent-majority trimmed it inconsistently."
+        ),
+    },
+    # JKE-AnonCompanion (Shape-5 anonymous `NAME UNKNOWN, ...`) — agent-
+    # majority kept `NAME UNKNOWN,` placeholder in notes. Per chunk-11
+    # STN-Nu precedent for anonymous tombs (and the source-wide rule
+    # `Occupant name dropped (already in occupant_name)` — occupant_name
+    # is already null, so the placeholder is redundant), drop the
+    # `NAME UNKNOWN,` prefix from notes.
+    ("JKE-AnonCompanion", "notes_from_pm"): {
+        "value": "Companion (smr N.N. of Junker). Dyn. VI.",
+        "rationale": (
+            "Gemini PR #232 round-1 medium: drop `NAME UNKNOWN,` "
+            "placeholder from notes per chunk-11 STN-Nu Shape-5 anonymous "
+            "convention. occupant_name is already null; the placeholder "
+            "is redundant in notes. Keep PM's `smr N.N. of Junker` "
+            "editorial annotation verbatim."
+        ),
+    },
+}
 
 
 # Chunk-11 (Steindorff Cemetery D-numbered + STN- interstitials, halves 11a+11b).
