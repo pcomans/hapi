@@ -1156,6 +1156,134 @@ CHUNK11_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-12 (Saqqâra § I.L-N royal complexes — Shepseskaf, Userkareʿ
+# Khenzer, anonymous Dyn XIII southern enclosure). No row-level
+# corrections were needed beyond the SAQ-Shepseskaf|tomb_aliases
+# tie-break override that lives in tie-break-overrides.json. Kept here
+# as an empty placeholder per chunks 1/7 + Gemini PR #232 round-4
+# registry-completeness convention.
+CHUNK12_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
+# Chunk-13 (Junker Cemetery East, named OK tombs).
+# Round-1 Gemini fixes: drop primary occupant name from notes (rule per
+# chunk-11 prompt) on joint twins + anonymous tombs; restore parenthetical
+# (probably woman) on JKE-Nikaukhnum joint co-occupant role; restore , etc.
+# marker on JKE-Iuf wife role.
+# Round-3 Gemini fixes: correct `ha-servants` → `ka-servants` OCR drift
+# (Egyptian *ḥm-kꜣ* "ka-servant") on JKE-User + JKE-Weri; promote
+# JKE-Meruka to High Priest per the chunk-13 prompt rule for male
+# `Prophet of <divinity>` headwords (Khufu).
+CHUNK13_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # JKE-Nikaukhnum (Shape-4 joint with Neferesris) — agent-majority kept
+    # the full PM headword `NIKAUKHNUM and NEFERESRIS Royal acquaintance
+    # (probably woman). Late Dyn. V or early Dyn. VI.` verbatim in notes,
+    # but per the chunk-11 D32 precedent (joint-twin notes drop the PRIMARY
+    # occupant name but keep the `and <co-occupant>` clause), the leading
+    # `NIKAUKHNUM and ` should be dropped. Also restore the `(probably
+    # woman)` parenthetical on co_occupant_roles which the agents trimmed.
+    ("JKE-Nikaukhnum", "notes_from_pm"): {
+        "value": (
+            "Royal acquaintance, and Neferesris Royal acquaintance "
+            "(probably woman). Late Dyn. V or early Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #232 round-1+4 medium: per chunk-11 D32 + D4 "
+            "Shape-4 joint-twin convention, drop PRIMARY occupant name "
+            "(NIKAUKHNUM) from notes; keep `and <co-occupant>` joint "
+            "clause. Round-4 refinement: PM prints `NIKAUKHNUM and "
+            "NEFERESRIS Royal acquaintance (probably woman)` where the "
+            "shared title `Royal acquaintance` applies to BOTH occupants "
+            "(the `(probably woman)` parenthetical is Junker's editorial "
+            "annotation on Neferesris specifically). Re-prefix the title "
+            "after dropping the primary name to preserve PM's "
+            "title-applies-to-both reading."
+        ),
+    },
+    ("JKE-Nikaukhnum", "co_occupant_roles"): {
+        "value": ["Royal acquaintance (probably woman)"],
+        "rationale": (
+            "Gemini PR #232 round-1 medium: restore the `(probably "
+            "woman)` parenthetical that PM prints in the headword block "
+            "as Junker's editorial annotation about Neferesris's likely "
+            "gender. Agent-majority trimmed to bare `Royal acquaintance` "
+            "losing this PM-faithful detail."
+        ),
+    },
+    # JKE-Iuf wife role — agent-majority dropped the `, etc.` marker that
+    # PM prints (`Wife, Meri mjtrt, etc.`). Restore per chunks 9/10/11
+    # convention preserving PM's `, etc.` marker (indicates additional
+    # title elements PM elided).
+    ("JKE-Iuf", "co_occupant_roles"): {
+        "value": ["Wife, mitrt, etc."],
+        "rationale": (
+            "Gemini PR #232 round-1 medium: restore `, etc.` marker on "
+            "the wife's title cluster. PM prints `Wife, Meri mjtrt, etc.` "
+            "with the `, etc.` indicating additional elided titles. Other "
+            "chunk-13 rows like JKE-Meruka + JKE-Sensen preserve the "
+            "marker; JKE-Iuf agent-majority trimmed it inconsistently."
+        ),
+    },
+    # JKE-AnonCompanion (Shape-5 anonymous `NAME UNKNOWN, ...`) — agent-
+    # majority kept `NAME UNKNOWN,` placeholder in notes. Per chunk-11
+    # STN-Nu precedent for anonymous tombs (and the source-wide rule
+    # `Occupant name dropped (already in occupant_name)` — occupant_name
+    # is already null, so the placeholder is redundant), drop the
+    # `NAME UNKNOWN,` prefix from notes.
+    ("JKE-AnonCompanion", "notes_from_pm"): {
+        "value": "Companion (smr N.N. of Junker). Dyn. VI.",
+        "rationale": (
+            "Gemini PR #232 round-1 medium: drop `NAME UNKNOWN,` "
+            "placeholder from notes per chunk-11 STN-Nu Shape-5 anonymous "
+            "convention. occupant_name is already null; the placeholder "
+            "is redundant in notes. Keep PM's `smr N.N. of Junker` "
+            "editorial annotation verbatim."
+        ),
+    },
+    # JKE-Meruka role — PM prints `MERUKA Elder of the Hall, King's
+    # waab-priest, Prophet of Khufu, etc. Dyn. VI.` Per chunk-13 prompt
+    # rule for male `Prophet of <divinity>` headwords, role classifies as
+    # `High Priest` (parallel to chunks 1-12's High Priest convention).
+    ("JKE-Meruka", "occupant_role"): {
+        "value": "High Priest",
+        "rationale": (
+            "Gemini PR #232 round-3 medium: PM `MERUKA ... Prophet of "
+            "Khufu, etc.` — per the chunk-13 prompt's `High Priest of "
+            "any divinity` rule (controlled-vocab line in field-by-field "
+            "rules), male `Prophet of <divinity>` cluster maps to "
+            "`High Priest` not `Official`."
+        ),
+    },
+    # JKE-User notes_from_pm — pypdf OCR drift `ha-servants` → Egyptian
+    # *ḥm-kꜣ* `ka-servants`. PM's print is `ka-servants` (egyptological
+    # convention); pypdf misread `k` as `h` for some chunk-13 instances
+    # (chunk-13's JKE-Khnemu has `ka-servant` rendered correctly,
+    # confirming the typographic intent).
+    ("JKE-User", "notes_from_pm"): {
+        "value": (
+            "Overseer of ka-servants, etc. Late Dyn. V. Mother, Henutsen."
+        ),
+        "rationale": (
+            "Gemini PR #232 round-3 medium: `ha-servants` is pypdf OCR "
+            "drift on PM's `ka-servants` (Egyptian *ḥm-kꜣ*). PM's print "
+            "is consistent — JKE-Khnemu in the same chunk renders "
+            "`ka-servant` correctly; only User + Weri were misread."
+        ),
+    },
+    # JKE-Weri notes_from_pm — same `ha-servants` → `ka-servants` OCR fix.
+    ("JKE-Weri", "notes_from_pm"): {
+        "value": (
+            "Inspector of ka-servants, One belonging to the Great Estate, "
+            "Scribe of the Treasury, etc. Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #232 round-3 medium: same `ha-servants` → "
+            "`ka-servants` (Egyptian *ḥm-kꜣ*) OCR fix as JKE-User."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1172,6 +1300,8 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK9_CORRECTIONS,
     CHUNK10_CORRECTIONS,
     CHUNK11_CORRECTIONS,
+    CHUNK12_CORRECTIONS,
+    CHUNK13_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

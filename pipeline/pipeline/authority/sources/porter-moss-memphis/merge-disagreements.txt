@@ -480,6 +480,19 @@ D221 (Iti):
   notes_from_pm: a="Probably Dyn. V-VI. Exact position unknown." | b="Probably Dyn. V-VI." | c="Probably Dyn. V-VI."  → chose "Probably Dyn. V-VI."
   occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
 
+JKE-Meruka (Meruka):
+  co_occupant_roles: a=["Father, Elder of the Hall", "Wife, Royal acquaintance"] | b=["Father, Elder of the Hall, etc.", "Wife, Royal acquaintance"] | c=["Father, Elder of the Hall, etc.", "Wife, Royal acquaintance"]  → chose ["Father, Elder of the Hall, etc.", "Wife, Royal acquaintance"]
+
+JKE-NiankhHathor (Niʿankh-Ḥathor):
+  notes_from_pm: a="Prophetess of Hathor Mistress-of-the-Deserts, etc. Late Old Kingdom." | b="Prophetess of Ḥathor Mistress-of-the-Deserts, etc. Late Old Kingdom." | c="Prophetess of Ḥathor Mistress-of-the-Deserts, etc. Late Old Kingdom."  → chose "Prophetess of Ḥathor Mistress-of-the-Deserts, etc. Late Old Kingdom."
+
+JKE-Nikaukhnum (Nikaukhnum):
+  co_occupant_roles: a=["Royal acquaintance (probably woman)"] | b=["Royal acquaintance"] | c=["Royal acquaintance"]  → chose ["Royal acquaintance"]
+
+JKE-Sensen (Sensen):
+  co_occupant_roles: a=["Wife, Prophetess of Hathor"] | b=["Wife, Prophetess of Ḥathor, etc."] | c=["Wife, Prophetess of Ḥathor, etc."]  → chose ["Wife, Prophetess of Ḥathor, etc."]
+  notes_from_pm: a="Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Hathor, etc." | b="Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Ḥathor, etc." | c="Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Ḥathor, etc."  → chose "Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Ḥathor, etc."
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
@@ -567,3 +580,10 @@ Reviewer-cited row corrections:
   D203.notes_from_pm: "Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI." → "Nufer Overseer of barbers, etc., and Itisen Overseer of the tAw of the Great Bark. Late Dyn. V or Dyn. VI."
   D215.co_occupants: ["ʿAnkh-Ḥatḥor"] → ["ʿAnkh-Ḥathor"]
   D215.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]
+  JKE-AnonCompanion.notes_from_pm: "NAME UNKNOWN, Companion (smr N.N. of Junker). Dyn. VI." → "Companion (smr N.N. of Junker). Dyn. VI."
+  JKE-Iuf.co_occupant_roles: ["Wife, mitrt"] → ["Wife, mitrt, etc."]
+  JKE-Meruka.occupant_role: "Official" → "High Priest"
+  JKE-Nikaukhnum.notes_from_pm: "NIKAUKHNUM and NEFERESRIS Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI." → "Royal acquaintance, and Neferesris Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI."
+  JKE-Nikaukhnum.co_occupant_roles: ["Royal acquaintance"] → ["Royal acquaintance (probably woman)"]
+  JKE-User.notes_from_pm: "Overseer of ha-servants, etc. Late Dyn. V. Mother, Henutsen." → "Overseer of ka-servants, etc. Late Dyn. V. Mother, Henutsen."
+  JKE-Weri.notes_from_pm: "Inspector of ha-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI." → "Inspector of ka-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI."
