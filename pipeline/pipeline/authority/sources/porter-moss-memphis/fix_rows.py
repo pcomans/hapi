@@ -1843,6 +1843,14 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-16 (CEMETERY G 6000, Hemiunu-adjacent). Reserved for reviewer-
+# pass corrections; currently empty — the agent-majority merge produced
+# only four 2/1 disagreements (notes_from_pm on G 6020 + G 6030,
+# source_citation on G 6037 + G 6042), all cleanly resolvable by
+# majority vote without tie-break overrides or reviewer corrections.
+CHUNK16_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1863,6 +1871,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK13_CORRECTIONS,
     CHUNK14_CORRECTIONS,
     CHUNK15_CORRECTIONS,
+    CHUNK16_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
