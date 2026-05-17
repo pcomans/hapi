@@ -208,6 +208,30 @@ CHUNK12_TOMB_IDS: frozenset[str] = frozenset({
     "SAQ-DynXIIIAnon",
 })
 
+# Chunk 11 (halves 11a + 11b): Gîza § III.A West Field STEINDORFF CEMETERY
+# (Steindorff Excavation, University of Leipzig + Pelizaeus Expedition
+# 1903-7). Source: PM III.1 2nd ed. 1974, physical pp.105–114 /
+# printed pp.108–117. 44 rows: 40 D-numbered tombs (Steindorff's own
+# field numbering — chunk-11 discovery via revise-priors check that
+# corrected chunk-10 prompt's misattribution of D-numbers as Mariette's
+# Saqqâra prefix) + 4 STN- descriptor-form interstitial named tombs
+# (Wemtetka, Ibir, Nu, Iri) without a D-number. Split into halves 11a
+# (D.I–D.38 + 2 interstitials, 17 rows) and 11b (D.39/40–D.221 + 2
+# interstitials, 27 rows) after the original full chunk failed across 6
+# subagent attempts (3 sonnet stalls + 3 opus socket errors).
+CHUNK11_TOMB_IDS: frozenset[str] = frozenset({
+    # Chunk 11a (17 rows): D.I → D.38 + STN-Wemtetka + STN-Ibir
+    "D1", "D4", "D9", "D12", "D14", "D15", "D15B", "D19", "D20",
+    "D23", "D29", "D30", "D32", "D37", "D38",
+    "STN-Wemtetka", "STN-Ibir",
+    # Chunk 11b (27 rows): D.39/40 → D.221 + STN-Nu + STN-Iri
+    "D39", "D42", "D44", "D51", "D56", "D59", "D61",
+    "D80", "D82", "D100", "D106", "D116", "D117",
+    "D200", "D201", "D202", "D203", "D205", "D207", "D208",
+    "D211", "D213", "D215", "D220", "D221",
+    "STN-Nu", "STN-Iri",
+})
+
 
 # Chunk 10: Gîza § III.A West Field JUNKER CEMETERY (WEST) named-tomb
 # cluster (Junker Excavation 1926-7). Source: PM III.1 2nd ed. 1974,
@@ -251,7 +275,7 @@ CHUNK9_TOMB_IDS: frozenset[str] = frozenset({
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
-    | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK12_TOMB_IDS
+    | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
 )
 
 
@@ -459,6 +483,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK10_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK11_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             assert row["source_citation"]["section"] == "I", row
 
@@ -469,7 +495,7 @@ def test_source_citation_edition_matches_chunk() -> None:
         if row["tomb_id"] in (
             CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
             | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
-            | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS
+            | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS:
@@ -502,6 +528,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 95 <= page <= 99, f"{row['tomb_id']} page {page} outside chunk-9 [95, 99]"
         elif row["tomb_id"] in CHUNK10_TOMB_IDS:
             assert 100 <= page <= 108, f"{row['tomb_id']} page {page} outside chunk-10 [100, 108]"
+        elif row["tomb_id"] in CHUNK11_TOMB_IDS:
+            assert 108 <= page <= 117, f"{row['tomb_id']} page {page} outside chunk-11 [108, 117]"
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             assert 433 <= page <= 436, f"{row['tomb_id']} page {page} outside chunk-12 [433, 436]"
 
@@ -560,6 +588,11 @@ def test_cemetery_by_chunk() -> None:
             # cemetery name `"Junker West"` (parallel to chunk-3's
             # `"Central Field"` descriptor convention).
             assert row["cemetery"] == "Junker West", row
+        elif row["tomb_id"] in CHUNK11_TOMB_IDS:
+            # Chunk 11 (halves 11a + 11b): single STEINDORFF CEMETERY
+            # banner — descriptor cemetery name `"Steindorff"` (parallel
+            # to chunk-10's `"Junker West"` descriptor).
+            assert row["cemetery"] == "Steindorff", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -619,6 +652,14 @@ def test_dynasty_assignments() -> None:
             # Dyn VI). One row carries `Dyn. V.` explicitly (KHESEF II
             # Recruit), so the allowed set is {"5", "6"}.
             assert row["dynasty"] in {"5", "6"}, row
+        elif row["tomb_id"] in CHUNK11_TOMB_IDS:
+            # Steindorff Cemetery is dominated by `Dyn. V-VI.` (range
+            # tail → "6") and `Dyn. V.` / `Dyn. VI.` headwords. Some
+            # bare-numeric Shape-2 entries carry `dynasty: null` when
+            # PM gives no headword dating (D.I has only body-prose
+            # dating; D.38 has only hedged findspot attribution). The
+            # allowed set is {"5", "6", None}.
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.
@@ -2145,3 +2186,103 @@ def test_chunk12_dyn_xiii_anonymous() -> None:
     assert row["occupant_role"] == "Unknown"
     assert row["dynasty"] == "13"
     assert row["attribution_certainty"] == "uncertain"
+
+
+# === chunk 11 content tests =================================================
+
+
+def test_chunk11_row_count_44() -> None:
+    """Chunks 11a + 11b together emit exactly 44 rows under the
+    STEINDORFF CEMETERY banner: 40 D-numbered tombs (D.I → D.221) +
+    4 STN- descriptor interstitials (Wemtetka, Ibir, Nu, Iri)."""
+    ch11 = [r for r in _rows() if r["tomb_id"] in CHUNK11_TOMB_IDS]
+    assert len(ch11) == 44
+
+
+def test_chunk11_d1_bare_numeric_shape2() -> None:
+    """D.I is a Shape-2 bare-numeric headword (Roman one → Arabic 1).
+    No occupant name, body-prose dating only → null notes per the
+    Shape-2 pure-numeric rule."""
+    row = _by_id("D1")
+    assert row["occupant_name"] is None
+    assert row["occupant_role"] == "Unknown"
+    assert row["attribution_certainty"] == "uncertain"
+    assert row["notes_from_pm"] is None
+
+
+def test_chunk11_d15_khufu_truncation() -> None:
+    """D.15 KHUFU (private person, not the king) — PM prints headword
+    with ellipsis (`. . .`) marking name truncation. Per chunk-11
+    prompt rule, occupant_name captures the pre-ellipsis stem; the
+    truncation is flagged in notes."""
+    row = _by_id("D15")
+    assert row["occupant_name"] == "Khufu"
+    assert ". . ." in row["notes_from_pm"]
+    assert "truncated" in row["notes_from_pm"].lower()
+
+
+def test_chunk11_d4_shape4_joint_washptah_khenu() -> None:
+    """D.4 WASHPTAH + KHENU — Shape-4 joint-named twin headword. ONE
+    row with is_joint_burial = true; second occupant in co_occupants
+    with role-string in co_occupant_roles."""
+    row = _by_id("D4")
+    assert row["is_joint_burial"] is True
+    assert "Khenu" in row["co_occupants"]
+
+
+def test_chunk11_d37_reherka_triple_diacritic() -> None:
+    """D.37 RAaHERKA — Re-deity-compound + ḥ-root name combining
+    macron-Ē (chunk-4/8/10 Re-deity convention), ayin (U+02BF), and
+    underdot-Ḥ (chunk-8/9 ḥ-root convention). Canonical egyptological
+    form: `Rēʿḥerka`."""
+    row = _by_id("D37")
+    assert row["occupant_name"] == "Rēʿḥerka"
+
+
+def test_chunk11_d117_three_co_occupants() -> None:
+    """D.117 WEHEMKA — three co-occupants in PM order: father Iti,
+    mother Zefatsen, wife Ḥetepibes (called Ipi). Gendered Father /
+    Mother / Wife roles preserved from PM's per-parent title clusters."""
+    row = _by_id("D117")
+    assert row["co_occupants"] == ["Iti", "Zefatsen", "Ḥetepibes called Ipi"]
+    assert len(row["co_occupants"]) == len(row["co_occupant_roles"])
+    roles = row["co_occupant_roles"]
+    assert roles[0].startswith("Father,")
+    assert roles[1].startswith("Mother,")
+    assert roles[2].startswith("Wife,")
+
+
+def test_chunk11_stn_interstitials_use_descriptor_form() -> None:
+    """4 STN- descriptor-form interstitial tombs without a D-number:
+    Wemtetka (woman), Ibir (truncated name), Nu (uncertain), Iri (joint
+    with Sebani). Parallel to chunk-10's JKR- and chunk-4's SAQ-
+    descriptor conventions."""
+    stn = {r["tomb_id"] for r in _rows() if r["tomb_id"].startswith("STN-")}
+    assert stn == {"STN-Wemtetka", "STN-Ibir", "STN-Nu", "STN-Iri"}
+
+
+def test_chunk11_stn_iri_joint_with_sebani() -> None:
+    """STN-Iri — joint-named twin headword `IRI and SEBANI` with no
+    D-number → STN- descriptor form. Co-occupant role falls back to
+    `Unknown` controlled-vocab since PM gives no title cluster."""
+    row = _by_id("STN-Iri")
+    assert row["is_joint_burial"] is True
+    assert "Sebani" in row["co_occupants"]
+    assert row["co_occupant_roles"] == ["Unknown"]
+
+
+def test_chunk11_d39_twin_number_form() -> None:
+    """D.39/40 ZASHA — twin-number form per the chunk-11 prompt's
+    `D<NUM1>/<NUM2>` rule. tomb_id takes the first number; second number
+    lands in tomb_aliases as the PM-verbatim `D <NUM2>` form (with space)."""
+    row = _by_id("D39")
+    assert row["occupant_name"] == "Zasha"
+    assert "D 40" in row["tomb_aliases"]
+
+
+def test_chunk11_d80_twin_letter_form() -> None:
+    """D.80/80 A — twin-letter form. tomb_id `D80`; tomb_aliases include
+    `D 80A` (PM-verbatim with space) plus the Lepsius cross-reference
+    `LG 22` if present."""
+    row = _by_id("D80")
+    assert "D 80A" in row["tomb_aliases"] or "D 80 A" in row["tomb_aliases"]

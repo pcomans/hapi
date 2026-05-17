@@ -378,6 +378,108 @@ JKR-SonbI (Sonb I):
 S4040 (None):
   source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 107, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}
 
+STN-Ibir (Ibir):
+  notes_from_pm: a="IBIR . . . (name truncated in PM), Inspector of waʿb-priests of the Pyramid of Khufu, Secretary. Dyn. VI." | b="IBIR . . . Inspector of waʿb-priests of the Pyramid of Khufu, Secretary. Dyn. VI. Stone-built mastaba west of tomb G 4000. Excavated by Junker. Position not marked on plan. (Occupant name truncated in PM with ellipsis.)" | c="IBIR . . . Inspector of waʿb-priests of the Pyramid of Khufu, Secretary. Dyn. VI. Stone-built mastaba west of tomb G 4000."  → chose "IBIR . . . Inspector of waʿb-priests of the Pyramid of Khufu, Secretary. Dyn. VI. (Name truncated in PM.)"
+
+STN-Iri (Iri):
+  co_occupant_roles: a=["Unknown"] | b=["Joint occupant"] | c=["Co-occupant"]  → chose ["Unknown"]
+  notes_from_pm: a="Iri and Sebani. Probably Dyn. V-VI. Exact position unknown." | b="Iri and Sebani. Probably Dyn. V-VI. Exact position unknown." | c="IRI and SEBANI. Probably Dyn. V-VI. Exact position unknown."  → chose "Iri and Sebani. Probably Dyn. V-VI. Exact position unknown."
+  occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
+
+STN-Nu (Nu):
+  notes_from_pm: a="(woman). Dyn. V-VI. Exact position unknown. Stone-built mastaba. Cf. text left of doorway of tomb D. 117." | b="Nu (?) (woman). Dyn. V-VI. Exact position unknown. Cf. text left of doorway of tomb D. 117." | c="Nu (?) (woman). Dyn. V-VI. Exact position uncertain."  → chose "(woman). Dyn. V-VI. Cf. text left of doorway of tomb D. 117."
+  occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
+
+STN-Wemtetka (Wemtetka):
+  notes_from_pm: a="Royal acquaintance (woman). Dyn. V-VI." | b="Royal acquaintance (woman). Dyn. V-VI. Stone-built mastaba east of tomb D. 20. Excavated by Junker." | c="Royal acquaintance (woman). Dyn. V-VI. Stone-built mastaba east of tomb D. 20."  → chose "Royal acquaintance (woman). Dyn. V-VI."
+
+D1 (None):
+  dynasty: a=null | b="6" | c="6"  → chose "6"
+  notes_from_pm: a=null | b="Dyn. V-VI. Head of female statue in Leipzig Mus. Inv. 2499." | c="Dyn. V-VI."  → chose null
+
+D4 (Washptaḥ):
+  notes_from_pm: a="WASHPTAH Inspector of prophets of Hathor, etc., and KHENU Royal acquaintance. Dyn. V-VI." | b="Inspector of prophets of Ḥathor, etc., and Khenu Royal acquaintance. Dyn. V-VI." | c="Inspector of prophets of Hathor, etc., and Khenu Royal acquaintance. Dyn. V-VI."  → chose "Inspector of prophets of Ḥathor, etc., and Khenu Royal acquaintance. Dyn. V-VI."
+  occupant_name: a="Washptaḥ" | b="Washptah" | c="Washptaḥ"  → chose "Washptaḥ"
+
+D9 (Raʿḥotp):
+  notes_from_pm: a="Dyn. V-VI." | b="Dyn. V-VI. Name from offering-table." | c="Dyn. V-VI. Name from offering-table."  → chose "Dyn. V-VI. Name from offering-table."
+  occupant_name: a="Raʿḥotp" | b="Rēʿhotp" | c="Raʿḥotp"  → chose "Raʿḥotp"
+
+D12 (Kheriḥet):
+  notes_from_pm: a="Dyn. V. Wife, Ruzka" | b="Dyn. V. Wife, Ruzka." | c="Dyn. V. Wife, Ruzka."  → chose "Dyn. V. Wife, Ruzka."
+  occupant_name: a="Kheriḥet" | b="Kherihet" | c="Kheriḥet"  → chose "Kheriḥet"
+
+D14 (Irkaptaḥ):
+  occupant_name: a="Irkaptaḥ" | b="Irkaptah" | c="Irkaptaḥ"  → chose "Irkaptaḥ"
+
+D15 (Khufu):
+  notes_from_pm: a="KHUFU . . . (name truncated in PM), King's waʿb-priest. Dyn. V-VI." | b="KHUFU . . ., King's waʿb-priest. Dyn. V-VI. Name from drum. (Occupant name truncated in PM with ellipsis.)" | c="KHUFU . . ., King's waʿb-priest. Dyn. V-VI. (Name truncated in PM.)"  → chose "KHUFU . . ., King's waʿb-priest. Dyn. V-VI. (Name truncated in PM.)"
+
+D23 (Raʿshepses):
+  notes_from_pm: a="King's waʿb-priest. Dyn. V. Wife, Pepi" | b="King's waʿb-priest. Dyn. V. Wife, Pepi." | c="King's waʿb-priest. Dyn. V. Wife, Pepi."  → chose "King's waʿb-priest. Dyn. V. Wife, Pepi."
+  occupant_name: a="Raʿshepses" | b="Rēʿshepses" | c="Raʿshepses"  → chose "Raʿshepses"
+
+D32 (Memi):
+  co_occupant_roles: a=["King's waʿb-priest, etc."] | b=["King's waʿb-priest"] | c=["King's waʿb-priest, etc."]  → chose ["King's waʿb-priest, etc."]
+  co_occupants: a=["Neferḥerenptaḥ"] | b=["Neferherenptah"] | c=["Neferḥerenptaḥ"]  → chose ["Neferḥerenptaḥ"]
+  notes_from_pm: a="MEMI King's waʿb-priest, and NEFERHERENPTAH King's waʿb-priest, etc. Dyn. V." | b="King's waʿb-priest, and Neferherenptah King's waʿb-priest, etc. Dyn. V." | c="King's waʿb-priest, and Neferḥerenptaḥ King's waʿb-priest, etc. Dyn. V."  → chose "King's waʿb-priest, and Neferḥerenptaḥ King's waʿb-priest, etc. Dyn. V."
+
+D37 (Rēʿḥerka):
+  occupant_name: a="Raʿherka" | b="Rēʿherka" | c="Raʿḥerka"  → chose "Rēʿḥerka"
+
+D38 (None):
+  dynasty: a=null | b="5" | c=null  → chose null
+  notes_from_pm: a=null | b="Reserve-head, Dyn. IV or V, found in 1905, probably from here, in Cairo Mus. Ent. 47838." | c=null  → chose null
+
+D59 (Nesutnufer):
+  notes_from_pm: a="ka-servant. Dyn. V-VI. Wife, Sent." | b="Ka-servant. Dyn. V-VI. Wife, Sent." | c="Ka-servant. Dyn. V-VI. Wife, Sent."  → chose "Ka-servant. Dyn. V-VI. Wife, Sent."
+
+D61 (Irkaptaḥ):
+  occupant_name: a="Irkaptaḥ" | b="Irkaptah" | c="Irkaptaḥ"  → chose "Irkaptaḥ"
+
+D82 (Iḥy):
+  occupant_name: a="Iḥy" | b="Ihy" | c="Iḥy"  → chose "Iḥy"
+
+D116 (Seshemu):
+  co_occupant_roles: a=["Wife"] | b=["Wife, mjtrt"] | c=["Wife"]  → chose ["Wife"]
+  co_occupants: a=["Nefert mjtrt"] | b=["Nefert"] | c=["Nefert mjtrt"]  → chose ["Nefert mjtrt"]
+
+D117 (Weḥemka):
+  co_occupant_roles: a=["Wife, Royal acquaintance (called Ipi)", "Parent, Strong-of-voice of the archives", "Parent, Royal acquaintance"] | b=["Father, Strong-of-voice of the archives", "Mother, Royal acquaintance", "Wife, Royal acquaintance"] | c=["Wife, Royal acquaintance"]  → chose ["Father, Strong-of-voice of the archives", "Mother, Royal acquaintance", "Wife, Royal acquaintance"]
+  co_occupants: a=["Hetepibes", "Iti", "Zefatsen"] | b=["Iti", "Zefatsen", "Hetepibes called Ipi"] | c=["Ḥetepibes"]  → chose ["Iti", "Zefatsen", "Ḥetepibes called Ipi"]
+  notes_from_pm: a="Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Hetepibes called Ipi Royal acquaintance." | b="Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Hetepibes called Ipi Royal acquaintance." | c="Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents: Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Ḥetepibes called Ipi Royal acquaintance."  → chose "Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Hetepibes called Ipi Royal acquaintance."
+  occupant_name: a="Wehemka" | b="Weḥemka" | c="Weḥemka"  → chose "Weḥemka"
+
+D201 (Senenu):
+  co_occupant_roles: a=["Son, Judge and Inspector of scribes, Secretary of judgement (called Ineb)"] | b=["Son, Judge and Inspector of scribes, Secretary of judgement"] | c=["Son, Judge and Inspector of scribes, Secretary of judgement"]  → chose ["Son, Judge and Inspector of scribes, Secretary of judgement"]
+  co_occupants: a=["ʿAnkhemthenent"] | b=["ʿAnkhemthenent called Ineb"] | c=["ʿAnkhemthenent"]  → chose ["ʿAnkhemthenent"]
+
+D202 (Niʿankh-Khufu):
+  occupant_name: a="Niʿankh-Khufu" | b="Niʿankh-Khufu" | c="Niʿankh-khufu"  → chose "Niʿankh-Khufu"
+  occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
+
+D203 (Nufer):
+  co_occupant_roles: a=["Overseer of the tAw of the Great Bark"] | b=["Joint occupant, Overseer of the TAw of the Great Bark"] | c=["Co-occupant, Overseer of the TAw of the Great Bark"]  → chose ["Overseer of the tAw of the Great Bark"]
+  notes_from_pm: a="Nufer Overseer of barbers, etc., and Itisen Overseer of the tAw of the Great Bark. Late Dyn. V or Dyn. VI." | b="Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI." | c="Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI."  → chose "Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI."
+
+D205 (Iyni):
+  occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
+
+D207 (Ty):
+  notes_from_pm: a="(also Q Q), Overseer of the is-chamber of the waabt, Inspector of craftsmen, etc. Dyn. V-VI." | b="Ty (also Q Q), Overseer of the is-chamber of the waʿbt, Inspector of craftsmen, etc. Dyn. V-VI." | c="TY (also Q Q), Overseer of the is-chamber of the waabt, Inspector of craftsmen, etc. Dyn. V-VI."  → chose "Ty (also Q Q), Overseer of the is-chamber of the waʿbt, Inspector of craftsmen, etc. Dyn. V-VI."
+  occupant_alt_names: a=[] | b=["Q Q"] | c=[]  → chose []
+
+D208 (Neferiḥy):
+  occupant_name: a="Neferiḥy" | b="Neferihy" | c="Neferiḥy"  → chose "Neferiḥy"
+
+D215 (Imḥotep):
+  co_occupants: a=["ʿAnkh-Ḥatḥor"] | b=["ʿAnkh-Ḥatḥor Mitrt"] | c=["ʿAnkh-Ḥatḥor"]  → chose ["ʿAnkh-Ḥatḥor"]
+  notes_from_pm: a="Assistant leather-worker, etc. Middle Dyn. V. Wife, ʿAnkh-Ḥatḥor." | b="Assistant leather-worker, etc. Middle Dyn. V. Wife, ʿAnkh-Ḥatḥor Mitrt." | c="Assistant leather-worker, etc. Middle Dyn. V. Wife, ʿAnkh-Ḥatḥor mjtrt."  → chose "Assistant leather-worker, etc. Middle Dyn. V. Wife, ʿAnkh-Ḥathor mitrt."
+
+D221 (Iti):
+  notes_from_pm: a="Probably Dyn. V-VI. Exact position unknown." | b="Probably Dyn. V-VI." | c="Probably Dyn. V-VI."  → chose "Probably Dyn. V-VI."
+  occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
@@ -455,3 +557,13 @@ Reviewer-cited row corrections:
   JKR-Sinufer.co_occupant_roles: ["Royal acquaintance"] → ["Wife, Royal acquaintance"]
   JKR-Sinufer.notes_from_pm: "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-hathor Royal acquaintance." → "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-ḥathor Royal acquaintance."
   JKR-SonbI.co_occupant_roles: ["Prophetess of Hathor and Neith, etc."] → ["Wife, Prophetess of Ḥathor and Neith, etc."]
+  D9.occupant_name: "Raʿḥotp" → "Rēʿḥotp"
+  D23.occupant_name: "Raʿshepses" → "Rēʿshepses"
+  D39.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 109, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 111, "section": "III"}
+  D116.co_occupants: ["Nefert mjtrt"] → ["Nefert"]
+  D116.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]
+  D116.notes_from_pm: "Overseer of the crew of rowers. Dyn. V-VI. Wife, Nefert mjtrt." → "Overseer of the crew of rowers. Dyn. V-VI. Wife, Nefert mitrt."
+  D117.notes_from_pm: "Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Hetepibes called Ipi Royal acquaintance." → "Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Ḥetepibes called Ipi Royal acquaintance."
+  D203.notes_from_pm: "Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI." → "Nufer Overseer of barbers, etc., and Itisen Overseer of the tAw of the Great Bark. Late Dyn. V or Dyn. VI."
+  D215.co_occupants: ["ʿAnkh-Ḥatḥor"] → ["ʿAnkh-Ḥathor"]
+  D215.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]

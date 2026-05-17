@@ -205,3 +205,25 @@ Chunk-12 design choices:
 - 1 tie-break-overrides.json entry for chunk-12 1/1/1 tie: `SAQ-Shepseskaf|tomb_aliases`.
 
 Chunk file text-layer SHA-256 pin: `b790446628175210e0eb115ba2e51ecf19983465ce9b266b21a4fe8369ca8b57`.
+
+## Chunk 11 scope (West Field STEINDORFF CEMETERY, halves 11a + 11b)
+
+Physical pp.105–114 / printed pp.108–117 of PM III.1: § III. NECROPOLIS — A. WEST FIELD continuation, STEINDORFF CEMETERY banner (Steindorff Excavation, University of Leipzig + Pelizaeus Expedition 1903-7). 44 rows: 40 D-numbered tombs (Steindorff's own field numbering) + 4 STN- descriptor-form interstitial named tombs (Wemtetka, Ibir, Nu, Iri) without a D-number.
+
+**Split into halves 11a + 11b** after the original full chunk-11 extraction failed across 6 subagent attempts (3 sonnet stalls + 3 opus socket errors). 11a covers D.I → D.38 + STN-Wemtetka + STN-Ibir (17 rows, physical pp.105–108); 11b covers D.39/40 → D.221 + STN-Nu + STN-Iri (27 rows, physical pp.108–114). Each half ran its own 3-agent extraction + merge cycle; tie-break-overrides and CHUNK11_CORRECTIONS accept both halves.
+
+Chunk-11 design choices:
+- **NEW D-number tomb_id convention** (`D1`, `D4`, `D15B`, `D39`, `D80`, ...). PM's `D. <NUM>` is Steindorff's own field numbering for the Leipzig+Pelizaeus excavation, NOT Mariette's Saqqâra D-prefix. This was a `/revise-priors` discovery — chunk-10's prompt had wrongly classified D-numbers as Mariette cross-references; the revise-priors marker file forced a prompt revision before extraction.
+- **STN- descriptor form** for interstitial named tombs without a D-number (parallel to chunk-10's JKR- and chunk-4's SAQ- conventions): `STN-Wemtetka`, `STN-Ibir`, `STN-Nu`, `STN-Iri`. Only 4 interstitials in this chunk.
+- **Cemetery descriptor `"Steindorff"`** (parallel to chunk-3's `"Central Field"` and chunk-10's `"Junker West"`). Single banner covers all 44 rows.
+- **D.I (Roman one) normalised to D1 (Arabic).** Per chunk-11 prompt rule for the rare Roman-one opening form.
+- **D.39/40 twin-number form.** Headword `D. 39/40.` emits ONE row with `tomb_id: D39` + `tomb_aliases: ["D 40"]` (PM-verbatim with space).
+- **D.80/80 A twin-letter form.** Headword `D. 80/80 A.` emits ONE row with `tomb_id: D80` + `tomb_aliases: ["D 80A", "LG 22"]` (the Lepsius cross-reference lands as a separate alias).
+- **D.15 ellipsis name truncation.** PM `D. 15. KHUFU . . ., King's waʿb-priest.` (private person, not the king). The chunk-11 prompt rule captures `Khufu` as occupant_name and notes the truncation. Same pattern applies to STN-Ibir.
+- **D.37 RAaHERKA triple-diacritic.** Re-deity-compound (macron-Ē + ayin per chunks 4/8/10) + ḥ-root middle element (underdot-Ḥ per chunks 8/9). Canonical egyptological form `Rēʿḥerka`.
+- **D.117 WEHEMKA three-co-occupant block.** Largest chunk-11 co-occupant cluster: father Iti + mother Zefatsen + wife Ḥetepibes called Ipi. Gendered Father/Mother/Wife role-prefixes preserved from PM's per-parent title clusters.
+- **Joint-named twin headwords (Shape 4).** D.4 (Washptah + Khenu), D.32 (Memi + Neferḥerenptaḥ), D.203 (Nufer + Itisen), STN-Iri (Iri + Sebani). All emit ONE row with `is_joint_burial: true`.
+- **D.207 TY (also Q Q) OCR drift.** The `Q Q` is pypdf's rendering of PM's two hieroglyphic alt-name signs (not text-layer-resolvable). Kept verbatim in notes_from_pm with `Ty` title-cased for readability.
+- 14 tie-break-overrides.json entries for chunk-11 1/1/1 ties: `D1|notes_from_pm`, `D4|notes_from_pm`, `D15|notes_from_pm`, `D32|notes_from_pm`, `D37|occupant_name`, `STN-Ibir|notes_from_pm`, `STN-Wemtetka|notes_from_pm`, `D117|co_occupants`, `D117|co_occupant_roles`, `D203|co_occupant_roles`, `D207|notes_from_pm`, `D215|notes_from_pm`, `STN-Iri|co_occupant_roles`, `STN-Nu|notes_from_pm`. `CHUNK11_CORRECTIONS` starts empty; egyptologist-reviewer adds entries on the review pass.
+
+Chunk-11a file text-layer SHA-256 pin: derived from `chunk-11-p105-p114-steindorff.txt` (full Steindorff extract) split at line 109 (D.38/D.39/40 boundary).

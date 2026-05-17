@@ -1004,6 +1004,158 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-11 (Steindorff Cemetery D-numbered + STN- interstitials, halves 11a+11b).
+# Round-1 Gemini fixes apply the project-wide Re-deity + ḥ-root diacritic
+# conventions consistently to chunk-11 names that the agent-majority left
+# under-normalised; also moves mitrt title out of co_occupants name field
+# into co_occupant_roles per chunks 9/10 precedent.
+CHUNK11_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # D.9 RAaHOTP — Re-deity-compound theonymic name. Apply macron-Ē + ayin
+    # + underdot-Ḥ per chunk-11 D37 precedent (`Rēʿḥerka`). Egyptian name
+    # *rꜥ-ḥtp* (\"Re is content\") — Ra IS the deity here.
+    ("D9", "occupant_name"): {
+        "value": "Rēʿḥotp",
+        "rationale": (
+            "Gemini PR #231 round-1 medium: Re-deity-compound theonymic "
+            "name requires source-wide macron-Ē + ayin + underdot-Ḥ per "
+            "chunk-11 D37 `Rēʿḥerka` precedent and chunks 4/8/10 "
+            "convention (Merenrēʿ I, Saḥurēʿ, Neuserrēʿ). Agent-majority "
+            "wrote `Raʿḥotp` (ayin only, no macron). Fix to `Rēʿḥotp`."
+        ),
+    },
+    # D.23 RAaSHEPSES — same Re-deity-compound rule. Stem `shepses` has no
+    # ḥ-root, so no underdot here.
+    ("D23", "occupant_name"): {
+        "value": "Rēʿshepses",
+        "rationale": (
+            "Gemini PR #231 round-1 medium: Re-deity-compound theonymic "
+            "name requires macron-Ē + ayin per chunks 4/8/10 convention "
+            "and chunk-11 D37 `Rēʿḥerka` precedent. Agent-majority wrote "
+            "`Raʿshepses` (ayin only, no macron). Fix to `Rēʿshepses`. No "
+            "underdot-Ḥ since `shepses` has no ḥ-root."
+        ),
+    },
+    # D.116 SESHEMU — agents put the wife title `mjtrt` inside the
+    # co_occupants name field. Move to co_occupant_roles per chunks 9/10
+    # `Wife, mitrt` convention. Also normalise mjtrt→mitrt in notes.
+    ("D116", "co_occupants"): {
+        "value": ["Nefert"],
+        "rationale": (
+            "Gemini PR #231 round-1 medium: Egyptian female title `mitrt` "
+            "belongs in co_occupant_roles, not in the occupant-name field. "
+            "Agent-majority emitted `[\"Nefert mjtrt\"]` mixing title into "
+            "name. Per chunk-9 G 3050 + chunk-10 JKR-Ankh convention, name "
+            "and title separate: co_occupants `[\"Nefert\"]`, "
+            "co_occupant_roles `[\"Wife, mitrt\"]`."
+        ),
+    },
+    ("D116", "co_occupant_roles"): {
+        "value": ["Wife, mitrt"],
+        "rationale": (
+            "Gemini PR #231 round-1 medium: paired with D116 co_occupants "
+            "correction. Per chunk-9 G 3050 + chunk-10 JKR-Ankh `Wife, "
+            "mitrt` convention. Agent-majority emitted no role (length-"
+            "coupled with the title-in-name miscapture)."
+        ),
+    },
+    ("D116", "notes_from_pm"): {
+        "value": "Overseer of the crew of rowers. Dyn. V-VI. Wife, Nefert mitrt.",
+        "rationale": (
+            "Gemini PR #231 round-1 medium: source-wide `mjtrt`→`mitrt` "
+            "typography normalisation per chunk-9 G 3050 + G 3035 + "
+            "chunk-10 JKR-Ankh `mitrt` convention. Agent-majority preserved "
+            "PM-verbatim `mjtrt` in notes; fix to standardised `mitrt`."
+        ),
+    },
+    # D.117 WEHEMKA notes_from_pm — agent-majority left `Hetepibes` without
+    # underdot-Ḥ; the D117|co_occupants tie-break override already uses
+    # `Ḥetepibes`. Apply the underdot consistently in notes too.
+    ("D117", "notes_from_pm"): {
+        "value": (
+            "Scribe of the archives and of recruits, Steward, etc. Early "
+            "Dyn. V. Parents, Iti Strong-of-voice of the archives, and "
+            "Zefatsen Royal acquaintance. Wife, Ḥetepibes called Ipi "
+            "Royal acquaintance."
+        ),
+        "rationale": (
+            "Gemini PR #231 round-1 medium: underdot-Ḥ on the ḥ-root "
+            "`Ḥetepibes` per the D117|co_occupants tie-break override "
+            "convention. Agent-majority wrote `Hetepibes` without "
+            "underdot, creating intra-row inconsistency with the "
+            "co_occupants override that mandated underdot per source-"
+            "wide ḥ-root convention (chunk-8 PR #227 P1-3 + chunk-9 "
+            "G 3008 / G 3093 Ḥathor precedent)."
+        ),
+    },
+    # D.203 NUFER+ITISEN joint twin notes_from_pm — agent-majority "TAw"
+    # capitalisation does not match the D203|co_occupant_roles tie-break
+    # override which uses "tAw" (PM's italic transliteration of Egyptian
+    # *tꜣw* / sailor-crew).
+    ("D203", "notes_from_pm"): {
+        "value": (
+            "Nufer Overseer of barbers, etc., and Itisen Overseer of the "
+            "tAw of the Great Bark. Late Dyn. V or Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #231 round-1 medium: `tAw` capitalisation must "
+            "match the D203|co_occupant_roles tie-break override which "
+            "selected lowercase-t form. Agent-majority wrote `TAw` (cap T) "
+            "in notes; fix to `tAw` (lowercase t) for intra-row "
+            "consistency."
+        ),
+    },
+    # D.215 IMHOTEP — co_occupants wife name also needs source-wide
+    # `Ḥathor` single-underdot normalisation per the D215|notes_from_pm
+    # override fix (`Ḥatḥor` double-underdot → `Ḥathor` single-underdot).
+    # Follows from the same rule Gemini flagged on the override; applies
+    # rule consistently to all D215 fields.
+    ("D215", "co_occupants"): {
+        "value": ["ʿAnkh-Ḥathor"],
+        "rationale": (
+            "Gemini PR #231 round-1 medium (rule-consistency extension): "
+            "the same `Ḥatḥor` → `Ḥathor` single-underdot fix Gemini "
+            "flagged on D215|notes_from_pm override applies to "
+            "co_occupants where the agent-majority `ʿAnkh-Ḥatḥor` carries "
+            "the same double-underdot mistake. Per chunks 8/9 source-wide "
+            "Ḥathor convention (single underdot on the initial ḥ, no "
+            "underdot on the medial t)."
+        ),
+    },
+    # D.215 co_occupant_roles — title `mitrt` is in notes_from_pm but missing
+    # from the role field. Add per chunks 9/10 `Wife, mitrt` convention.
+    ("D215", "co_occupant_roles"): {
+        "value": ["Wife, mitrt"],
+        "rationale": (
+            "Gemini PR #231 round-2 medium: title `mitrt` is in "
+            "notes_from_pm but the role field was just `[\"Wife\"]` "
+            "(dropping the title). Per chunk-9 G 3050 + chunk-10 JKR-Ankh "
+            "+ chunk-11 D116 `Wife, mitrt` convention, the title belongs in "
+            "co_occupant_roles. Same rule that Gemini flagged on D116 "
+            "applies here."
+        ),
+    },
+    # D.39/40 ZASHA page number — agent-majority assigned page 109 because
+    # the chunk-11b raw file's split point dropped the preceding
+    # `=== PHYS PAGE 108 ===` marker, leaving D.39/40 without an immediate
+    # page-marker antecedent; agents fell back to the misleading
+    # `West Field 109` header preserved from the chunk-11 banner head.
+    # PM III.1 2nd ed. 1974 places `D. 39/40` on physical p.108 = printed
+    # p.111 (verified against the PDF: physical p.108 has `West Field 111`
+    # running header followed by D.37, D.38, and D.39/40 headwords).
+    ("D39", "source_citation"): {
+        "value": {"edition": "PM III.1 2nd ed. 1974", "page": 111, "section": "III"},
+        "rationale": (
+            "Gemini PR #231 round-2 medium: page 109 → 111. Verified "
+            "against PM III.1 2nd ed. 1974 PDF physical p.108 (running "
+            "header `West Field 111`) which carries D.37 + D.38 + D.39/40 "
+            "headwords. Agent error caused by chunk-11b split dropping the "
+            "preceding `=== PHYS PAGE 108 ===` marker, leaving agents to "
+            "fall back on the misleading `West Field 109` banner header."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1019,6 +1171,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK8_CORRECTIONS,
     CHUNK9_CORRECTIONS,
     CHUNK10_CORRECTIONS,
+    CHUNK11_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
