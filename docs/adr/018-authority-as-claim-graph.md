@@ -35,7 +35,7 @@ Node-type mapping from Hapi labels to CIDOC classes:
 |-------------------------|--------------------------------|-------|
 | `:Ruler`                | E21 Person                     | one node per source row, each treated as a **competing E21 identity hypothesis** about a real historical person. CRM 7.1.3's E21 scope note permits multiple instances when identity across sources is doubtful; that is exactly the situation here. `:Ruler` nodes are person-claims, not source-record proxies — `hapi:same_entity_as` claims resolve them into clusters as evidence accumulates. No canonical Person is materialised at load time. |
 | `:Site`                 | E27 Site                       | physical archaeological place |
-| `:Dynasty`              | E4 Period                      | the Manethonic historiographic period bucket — a chronological band, not a ruling family/house and not a contemporary social institution. Membership is via `hapi:in_dynastic_period` (chronological). Family-lineage and ruling-house modeling are out of scope here; if they become needed, they get their own predicate(s) targeting `:E74 Group`. |
+| `:Dynasty`              | E4 Period                      | the Egyptological dynastic period bucket — a chronological band, not a ruling family/house and not a contemporary social institution. Numbered dynasties 1–31 derive from Manetho's tradition; Dynasty 0 is a 20th-century scholarly periodisation grouping pre-unification kings (Narmer-precursors). Both are covered here as Egyptological constructs. Membership is via `hapi:in_dynastic_period` (chronological). Family-lineage and ruling-house modeling are out of scope; if needed they get their own predicate(s) targeting `:E74 Group`. |
 | `:Statement`            | E13 Attribute Assignment       | each claim is its own E13 |
 | `:Person`               | E21 Person                     | a scholar or human curator (the actor of an E13) |
 | `:Group`                | E74 Group                      | curatorial bodies, learned societies |
@@ -122,7 +122,7 @@ Consequences of fail-loud: rulers added by a future source-loader before a curat
 
 ### Schema sketch
 
-Every claim is an E13 Statement. Edge cardinality depends on claim type. Human-documentary claims (the common case) carry all five canonical edges below. Matcher-derived claims replace `P14_carried_out_by` with `hapi:derived_by` and may lack `P70i_is_documented_in` until a reviewer attaches a documentary anchor. Claims whose source publication can't yet be page-cited may also lack `P70i`. The `P140` / `P141` / `P177` triad is the only universally-required spine; the remaining edges are claim-type-conditional, as the "Required" column shows.
+Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human-documentary claims always carry all five canonical edges**: P140 (subject), P141 (value), P177 (predicate type), P14 (actor), and P70i (documentary source). Page-level citation (`cited_page`, `cited_pdf_page`) is *optional metadata* on the P70i edge — the page may be unknown — but the P70i edge itself to the publication-level `:E31 Document` is required. A human-attested claim without a documentary anchor would be an undocumented scholarly claim, which principle 1 forbids. **Matcher-derived claims** replace `P14_carried_out_by` with `hapi:derived_by → :MatcherRun` and may lack `P70i_is_documented_in` until a reviewer attaches a documentary anchor — matcher provenance is algorithmic, not documentary, so the documentary edge appears only when a human curator stamps one on. The `P140` / `P141` / `P177` triad is the universally-required spine for all claims; the `P14`-vs-`hapi:derived_by` choice and the optional-on-matcher P70i are the only points of variation.
 
 | # | Edge                                  | Target type         | Required |
 |---|---------------------------------------|---------------------|----------|
@@ -295,7 +295,7 @@ The trade hinges on whether artifacts move into the graph (architecturally clean
 
 The graph reshapes Stage 2 of the matching algorithm. Today: fuzzy string distance over all aliases, with Haiku triage for context. With this model: **constraint-narrow the candidate set via graph queries, then match name against the narrowed set.**
 
-Consider an artifact carrying "Thutmose, KV43, Dynasty 18." Among the four Dynasty 18 Thutmoses (I, II, III, IV), KV43 is securely the tomb Thutmose IV commissioned and was originally buried in. A query against `hapi:original_burial = KV43 AND hapi:dynasty = 18` collapses the candidate set to one before name matching runs.
+Consider an artifact carrying "Thutmose, KV43, Dynasty 18." Among the four Dynasty 18 Thutmoses (I, II, III, IV), KV43 is securely the tomb Thutmose IV commissioned and was originally buried in. A query against `hapi:original_burial_in = KV43 AND hapi:in_dynastic_period = Dynasty 18` collapses the candidate set to one before name matching runs.
 
 The example also illustrates why tomb references demand careful predicate granularity. "Tomb" is not one relationship: it is at least three, each of which can disagree.
 
