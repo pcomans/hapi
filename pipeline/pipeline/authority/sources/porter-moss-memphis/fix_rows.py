@@ -337,6 +337,26 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "high-priority finding."
         ),
     },
+    ("G1221", "attribution_certainty"): {
+        "value": "uncertain",
+        "rationale": (
+            "Gemini PR #225 round-3 finding (medium): the prompt's "
+            "attribution_certainty rule says `(?)` → `\"uncertain\"`, "
+            "`Probably`/`Perhaps` → `\"probable\"`. PM's G 1221 headword "
+            "carries BOTH hedges: `SHAD (?), Royal acquaintance. Probably "
+            "Dyn. V.` — the `(?)` after the name is uncertainty about the "
+            "NAME reading (occupant-identification level), and `Probably` "
+            "before `Dyn. V` is uncertainty about the DATING. The agents "
+            "majority-voted `probable` on attribution_certainty (2/1 on "
+            "interpreting `Probably Dyn. V.` as the operative hedge), but "
+            "the `(?)` after the name is the more conservative hedge for "
+            "the occupant-identification axis that attribution_certainty "
+            "measures. Per the prompt's literal rule, the conservative "
+            "`(?)` should win. Restoration: `\"probable\"` → "
+            "`\"uncertain\"`. The dating uncertainty (`Probably Dyn. V.`) "
+            "remains documented in `notes_from_pm`."
+        ),
+    },
     ("G1221", "notes_from_pm"): {
         "value": "Royal acquaintance. Probably Dyn. V.",
         "rationale": (

@@ -126,12 +126,12 @@ CHUNK5_TOMB_IDS: frozenset[str] = frozenset({
 # bare-suffix). Cemetery banners: G 1000, G 1100, G 1200, G 1300,
 # G 1400, G 1500, G 1600, G 1900.
 CHUNK6_TOMB_IDS: frozenset[str] = frozenset({
-    # G 1000 cemetery (13 rows)
+    # G 1000 cemetery (14 rows)
     "G1008", "G1011", "G1012", "G1020", "G1021", "G1026", "G1029",
     "G1032", "G1036", "G1039", "G1040", "G1047", "G1061", "G1062",
-    # G 1100 cemetery (7 rows)
+    # G 1100 cemetery (8 rows)
     "G1104", "G1105", "G1109", "G1111", "G1151", "G1152", "G1157", "G1171",
-    # G 1200 cemetery (16 rows)
+    # G 1200 cemetery (17 rows)
     "G1201", "G1203", "G1204", "G1205", "G1206", "G1207", "G1208",
     "G1213", "G1214", "G1221", "G1223", "G1225", "G1226", "G1227",
     "G1231", "G1234", "G1235",
@@ -1400,13 +1400,16 @@ def test_chunk6_g1221_shad_notes_drop_name_and_hedge() -> None:
     Egyptologist F3 finding (P1) recommends dropping the name AND the
     hedge from `notes_from_pm` entirely — the name reading already
     lives in `occupant_name: \"Shad\"` and the doubt is already in
-    `attribution_certainty: \"probable\"`. Including a second copy in
-    notes risks downstream consumers double-counting the hedge. Test
-    asserts the cleaned notes form per the reviewer's recommended
-    output. Gemini PR #225 round-1 medium-priority finding."""
+    `attribution_certainty: \"uncertain\"`. Per the prompt's literal
+    rule mapping `(?)` → `uncertain` (Gemini PR #225 round-3 medium
+    finding), attribution_certainty is `uncertain`, not `probable` —
+    the `(?)` after the name is the conservative hedge on
+    occupant-identification, while the `Probably` before Dyn. V. only
+    speaks to dating. Including a second copy of the name + hedge in
+    notes risks downstream consumers double-counting the hedge."""
     row = _by_id("G1221")
     assert row["occupant_name"] == "Shad"
-    assert row["attribution_certainty"] == "probable"
+    assert row["attribution_certainty"] == "uncertain"
     assert row["notes_from_pm"] == "Royal acquaintance. Probably Dyn. V."
     assert "Shad" not in row["notes_from_pm"]
     assert "(?)" not in row["notes_from_pm"]

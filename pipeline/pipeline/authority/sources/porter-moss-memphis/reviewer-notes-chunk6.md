@@ -30,7 +30,7 @@ PM: `NUFER, Royal acquaintance (woman). Temp. Khufu or later.` `Royal acquaintan
 
 PM's printed headword for all three: just `MES-SA. Late Dyn. IV...` / `MES-SA. Late Dyn. V.` / `AKHTIHOTP. Middle Dyn. V or later.` — **no title cluster at all**. Per the prompt convention (a named occupant with no titles defaults to `Official`, not `Unknown`), these three need to be `Official`. `Unknown` is reserved for unnamed occupants (cf. correctly-tagged G 1011, G 1021 with no name AND no title). Same downstream-matching cost as P1-2: the Berkeley Hetepi/Renpetnefert statues (G 1020) are Berkeley-catalog-attested.
 
-### P2-3. G 1314 `dynasty: "5"` but occupant_name null — KhaʿkareʿKHA‘KARE‘ architrave is the *identifier* of the tomb owner
+### P2-3. G 1314 `dynasty: "5"` but occupant_name null — Khaʿkareʿ architrave is the *identifier* of the tomb owner
 
 PM p. 61: `G 1314. Second half of Dyn. V. Architrave with figure of Kha‘kare‘ repeated nine times.` The architrave names Khaʿkareʿ (continued on p. 62: `Double-statue, Kha‘kare‘, Hairdresser of the Great House...`). Row 53 has `occupant_name: null` — the name and title are on the next printed page, which the chunker presumably split mid-entry. Recover: `occupant_name: "Khaʿkareʿ"`, `occupant_role: "Official"`, notes from p. 62 prose.
 
