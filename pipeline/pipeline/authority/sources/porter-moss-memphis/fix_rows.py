@@ -1704,7 +1704,7 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Gemini PR #234 round-5 medium: dynasty backfill from "
             "body-attested `Lintel of 'Yetty', Dyn. IV-V, in Boston "
             "Mus. 21.957.` Per chunks 6/8 body-attestation rule + "
-            "range-tail rule (Dyn. IV-V → `\"5\"`, start of range). "
+            "range-tail rule (Dyn. IV-V → `\"5\"`, range tail). "
             "Agent-majority left dynasty `null`. Note: the existing "
             "G5232|notes_from_pm tie-break override keeps notes "
             "`null` (lintel-find body-prose is not headword content) "
@@ -1756,7 +1756,7 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Gemini PR #234 round-1 medium: paired with G 5340 "
             "co_occupants. PM gives no title for the possible parents; "
             "use bare hedged `Parent (possibly)` per chunk-14 G 4761 "
-            "convention. Sub-mastaba occupant Khufudinefʿankh's title "
+            "convention. Sub-mastaba occupant Khufudinef-ʿankh's title "
             "cluster preserved verbatim."
         ),
     },
@@ -1832,7 +1832,7 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
         ),
         "rationale": (
             "Gemini PR #234 round-1 medium: drop `Good name FETEKTA.` "
-            "placeholder from notes per chunks-3/8 / chunk-15a G 5550 "
+            "placeholder from notes per chunks-3/8 / chunk-15b G 5550 "
             "`good name <ALT>` convention (alt-name lives in "
             "occupant_alt_names). Also `waab-priests` → `waʿb-priests` "
             "per source-wide ayin convention. Drop `Stone-built "
