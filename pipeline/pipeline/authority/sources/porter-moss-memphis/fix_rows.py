@@ -847,6 +847,160 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "with the tie-break override on JKR-Ithu|co_occupant_roles."
         ),
     },
+    # Gemini PR #229 review-1 medium: mjtrt → mitrt normalisation in
+    # JKR-Ankh notes (was `mjtrt`, but co_occupant_roles override
+    # already standardised on `mitrt`; this aligns notes to match).
+    ("JKR-Ankh", "notes_from_pm"): {
+        "value": "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt.",
+        "rationale": (
+            "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
+            "p.100 prints `mjtrt` in the typographic variant; "
+            "chunk-9 G 3050 + chunk-10 JKR-Ankh|co_occupant_roles "
+            "tie-break override standardise on `mitrt`. Notes string "
+            "aligned for source-wide consistency."
+        ),
+    },
+    # Gemini PR #229 review-1 medium: `Dyn VI.` missing period (should
+    # be `Dyn. VI.`). 2/1 agent majority on the truncated form.
+    ("JKR-KhesefI", "notes_from_pm"): {
+        "value": "Recruit. Dyn. VI.",
+        "rationale": (
+            "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
+            "p.104 prints `Dyn. VI.` (period before VI); 2/1 agent "
+            "majority dropped the period. Restored."
+        ),
+    },
+    # Gemini PR #229 review-1 medium: cross-ref to `Meni [I]` should
+    # drop the brackets per the chunk-10 bracketed-regnal rule applied
+    # to JKR-SonbI Sentiotes I + JKR-MeniI / JKR-MeniII tomb_ids.
+    ("JKR-MeniII", "notes_from_pm"): {
+        "value": (
+            "Elder of the house. Late Dyn. VI. Possibly same as Meni I. "
+            "Wife, Merutnes."
+        ),
+        "rationale": (
+            "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
+            "p.104 cross-reference `Meni [I]` — bracketed Roman "
+            "regnal normalisation per chunk-10 prompt rule (drop "
+            "brackets, append Roman with space). Consistent with "
+            "JKR-SonbI's Sentiotes I treatment."
+        ),
+    },
+    # Gemini PR #229 review-1 medium: Hathor → Ḥathor underdot
+    # (chunk-8 PR #227 P1-3 + chunk-9 source-wide Ḥathor convention).
+    ("JKR-Menib", "notes_from_pm"): {
+        "value": "Prophetess of Ḥathor, etc. Late Old Kingdom.",
+        "rationale": (
+            "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
+            "p.103 prints Ḥathor with underdot-Ḥ; agents' 2/1 majority "
+            "dropped the diacritic. Restored per source-wide chunk-8 "
+            "PR #227 P1-3 + chunk-9 G 3008/G 3093 conventions."
+        ),
+    },
+    # Gemini PR #229 review-1 medium: mjtrt → mitrt in JKR-Nebtpezu
+    # notes (same as JKR-Ankh fix).
+    ("JKR-Nebtpezu", "notes_from_pm"): {
+        "value": "mitrt (woman). Late Old Kingdom.",
+        "rationale": (
+            "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
+            "p.103 prints `mjtrt` in typographic variant; chunk-9/10 "
+            "convention standardises on `mitrt`. Aligned."
+        ),
+    },
+    # Gemini PR #229 review-1 medium: JKR-Sinekhen co_occupants name
+    # missing ayin (was `Maakherui`); notes_from_pm tie-break already
+    # has `Maʿkherui`. Align co_occupants.
+    ("JKR-Sinekhen", "co_occupants"): {
+        "value": ["Maʿkherui"],
+        "rationale": (
+            "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
+            "p.105 prints `Maʿkherui` with raised-ayin; agents' 2/1 "
+            "majority left raw OCR `Maakherui`. notes_from_pm tie-"
+            "break already restored the ayin; aligning co_occupants."
+        ),
+    },
+    ("JKR-Sinekhen", "co_occupant_roles"): {
+        "value": ["Wife, Female steward, etc."],
+        "rationale": (
+            "Gemini PR #229 review-2 high: add `Wife,` prefix per "
+            "chunk-8/9/10 wife-clause convention (parallel to "
+            "JKR-Ankh `Wife, mitrt`, chunk-9 G 3008 `Wife, Prophetess "
+            "of Ḥathor...`)."
+        ),
+    },
+    # Gemini PR #229 review-1 medium: JKR-Sinufer ʿAnkh-hathor wife
+    # name missing underdot-Ḥ on `hathor` element. PM prints with
+    # underdot; restore to `ʿAnkh-ḥathor`.
+    ("JKR-Sinufer", "co_occupants"): {
+        "value": ["ʿAnkh-ḥathor"],
+        "rationale": (
+            "Gemini PR #229 review-1 medium: wife's name `ʿAnkh-"
+            "hathor` (=`ʿnḫ-ḥwt-ḥr` Egyptian `Hathor-lives`) carries "
+            "the underdot-Ḥ on the *ḥwt-ḥr* root; PM III.1 prints "
+            "this verbatim. Restored."
+        ),
+    },
+    ("JKR-Sinufer", "co_occupant_roles"): {
+        "value": ["Wife, Royal acquaintance"],
+        "rationale": (
+            "Gemini PR #229 review-2 high: add `Wife,` prefix per "
+            "chunk-8/9/10 convention."
+        ),
+    },
+    ("JKR-Sinufer", "notes_from_pm"): {
+        "value": (
+            "Inspector of tenants of the Great House, etc. Dyn. VI. "
+            "Wife, ʿAnkh-ḥathor Royal acquaintance."
+        ),
+        "rationale": (
+            "Gemini PR #229 review-1 medium: notes ḥathor underdot "
+            "alignment with co_occupants fix."
+        ),
+    },
+    # Gemini PR #229 review-2 HIGH: JKR-Inpuhotp 3-co-occupant bug.
+    # notes_from_pm tie-break override already captures `Parents,
+    # Ither ... and Sabt Royal acquaintance. Wife, Senezem.` but
+    # co_occupants/co_occupant_roles reduced to 1 (wife only) and
+    # role was incorrectly tagged `Royal acquaintance` (one of the
+    # parents' role, not the wife's). Expand to 3 entries.
+    ("JKR-Inpuhotp", "co_occupants"): {
+        "value": ["Ither", "Sabt", "Senezem"],
+        "rationale": (
+            "Gemini PR #229 review-2 HIGH: PM III.1 2nd ed. 1974 "
+            "p.107 (physical p.104) prints Inpuhotp's headword block "
+            "with THREE co-occupants — Parents Ither (Prophet of "
+            "Neuserrēʿ, etc.) and Sabt (Royal acquaintance), plus "
+            "Wife Senezem. notes_from_pm tie-break override already "
+            "captured the parents-and-wife clause verbatim; this "
+            "correction expands co_occupants from 1 (wife only) to "
+            "all 3 occupants in PM headword-block order. Parallel "
+            "to JKR-Ithu chunk-10 reviewer fix."
+        ),
+    },
+    ("JKR-Inpuhotp", "co_occupant_roles"): {
+        "value": [
+            "Parent, Prophet of Neuserrēʿ, etc.",
+            "Parent, Royal acquaintance",
+            "Wife",
+        ],
+        "rationale": (
+            "Gemini PR #229 review-2 HIGH: paired with co_occupants "
+            "expansion. PM prints Wife Senezem without a title "
+            "cluster — use plain `Wife` per chunk-8 G 2415 + "
+            "chunk-10 JKR-Iiu / JKR-MeniII precedent. Parents tagged "
+            "`Parent, <title cluster>` per chunk-10 JKR-Ithu pattern."
+        ),
+    },
+    # Gemini PR #229 review-2 high: JKR-SonbI co_occupant_roles add
+    # `Wife,` prefix + restore Ḥathor underdot.
+    ("JKR-SonbI", "co_occupant_roles"): {
+        "value": ["Wife, Prophetess of Ḥathor and Neith, etc."],
+        "rationale": (
+            "Gemini PR #229 review-2 high: add `Wife,` prefix per "
+            "chunk-8/9/10 wife-clause convention + restore Ḥathor "
+            "underdot per chunk-8 PR #227 P1-3 source-wide rule."
+        ),
+    },
 }
 
 

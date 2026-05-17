@@ -430,4 +430,17 @@ Reviewer-cited row corrections:
   SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. ¹ King's wife (of Teti)."
   SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
   SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]
+  JKR-Ankh.notes_from_pm: "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." → "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt."
+  JKR-Inpuhotp.co_occupants: ["Senezem"] → ["Ither", "Sabt", "Senezem"]
+  JKR-Inpuhotp.co_occupant_roles: ["Royal acquaintance"] → ["Parent, Prophet of Neuserrēʿ, etc.", "Parent, Royal acquaintance", "Wife"]
   JKR-Ithu.co_occupants: ["Intkaes"] → ["Iaʿib", "Khaut I", "Intkaes"]
+  JKR-KhesefI.notes_from_pm: "Recruit. Dyn VI." → "Recruit. Dyn. VI."
+  JKR-MeniII.notes_from_pm: "Elder of the house. Late Dyn. VI. Possibly same as Meni [I]. Wife, Merutnes." → "Elder of the house. Late Dyn. VI. Possibly same as Meni I. Wife, Merutnes."
+  JKR-Menib.notes_from_pm: "Prophetess of Hathor, etc. Late Old Kingdom." → "Prophetess of Ḥathor, etc. Late Old Kingdom."
+  JKR-Nebtpezu.notes_from_pm: "mjtrt (woman). Late Old Kingdom." → "mitrt (woman). Late Old Kingdom."
+  JKR-Sinekhen.co_occupants: ["Maakherui"] → ["Maʿkherui"]
+  JKR-Sinekhen.co_occupant_roles: ["Female steward, etc."] → ["Wife, Female steward, etc."]
+  JKR-Sinufer.co_occupants: ["ʿAnkh-hathor"] → ["ʿAnkh-ḥathor"]
+  JKR-Sinufer.co_occupant_roles: ["Royal acquaintance"] → ["Wife, Royal acquaintance"]
+  JKR-Sinufer.notes_from_pm: "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-hathor Royal acquaintance." → "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-ḥathor Royal acquaintance."
+  JKR-SonbI.co_occupant_roles: ["Prophetess of Hathor and Neith, etc."] → ["Wife, Prophetess of Ḥathor and Neith, etc."]
