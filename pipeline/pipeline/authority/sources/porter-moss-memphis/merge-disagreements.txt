@@ -408,6 +408,18 @@ G5560 (Kakherptaḥ):
   source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 166, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 165, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 166, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 166, "section": "III"}
   sub_period: a=null | b=null | c="Early Dyn. VI"  → chose null
 
+G6020 (Iymery):
+  notes_from_pm: a="Prophet of Khufu, Steward of the Great Estate, Scribe of the archives, etc. Temp. Neuserrēʿ or later. Father, Shepseskaf-ʿankh (tomb G 6040). Wife, Nikauḥathor Royal acquaintance, etc." | b="Prophet of Khufu, Steward of the Great Estate, Scribe of the archives, etc. Temp. Neuserrēʿ or later. Father, Shepseskaf-ʿankh (tomb G 6040). Wife, Nikauḥathor Royal acquaintance, etc." | c="Prophet of Khufu, Steward of the Great Estate, Scribe of the archives, etc. Temp. Neuserrēʿ or later. Father, Shepseskaf-ʿankh (tomb G 6040). Wife, Nikauḥathor Royal acquaintance."  → chose "Prophet of Khufu, Steward of the Great Estate, Scribe of the archives, etc. Temp. Neuserrēʿ or later. Father, Shepseskaf-ʿankh (tomb G 6040). Wife, Nikauḥathor Royal acquaintance, etc."
+
+G6030 (It I):
+  notes_from_pm: a="Overseer of singing in the Great House, Prophet of Rēʿ and Ḥathor in the Sun-temple of Neferirkarēʿ, Prophet of Neferirkarēʿ, Saḥurēʿ, and Neuserrēʿ, etc. Middle Dyn. V. Wife, Usertka Royal acquaintance (daughter of Shepseskaf-ʿankh, tomb G 6040)." | b="Overseer of singing in the Great House, Prophet of Rēʿ and Ḥathor in the Sun-temple of Neferirkarēʿ, Prophet of Neferirkarēʿ, Saḥurēʿ, and Neuserrēʿ, etc. Middle Dyn. V. Wife, Usertka Royal acquaintance (daughter of Shepseskaf-ʿankh, tomb G 6040)." | c="Overseer of singing in the Great House, Prophet of Rēʿ and Hathor in the Sun-temple of Neferirkarēʿ, Prophet of Neferirkarēʿ, Saḥurēʿ, and Neuserrēʿ, etc. Middle Dyn. V. Wife, Usertka Royal acquaintance (daughter of Shepseskaf-ʿankh, tomb G 6040)."  → chose "Overseer of singing in the Great House, Prophet of Rēʿ and Ḥathor in the Sun-temple of Neferirkarēʿ, Prophet of Neferirkarēʿ, Saḥurēʿ, and Neuserrēʿ, etc. Middle Dyn. V. Wife, Usertka Royal acquaintance (daughter of Shepseskaf-ʿankh, tomb G 6040)."
+
+G6037 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 174, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 174, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 174, "section": "III"}
+
+G6042 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 178, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"}
+
 G7000x (Hetepheres I):
   notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
 

@@ -300,6 +300,22 @@ CHUNK15_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 16: Gîza § III.A West Field continuation — CEMETERY G 6000
+# (Hemiunu-adjacent; Reisner Excavation, Harvard-Boston Expedition).
+# Source: PM III.1 2nd ed. 1974, physical pp.166-179 / printed pp.169-
+# 182. 8 rows: 3 Shape-1 named-primary (G 6010 Neferbauptaḥ, G 6020
+# Iymery, G 6040 Shepseskaf-ʿankh) + 1 Shape-3 bracketed-Roman (G 6030
+# It [I]) + 4 Shape-2 bare-numeric (G 6012, G 6014, G 6037, G 6042).
+# Three-generation family cluster: G 6040 Shepseskaf-ʿankh (grandfather)
+# → G 6020 Iymery (father) → G 6010 Neferbauptaḥ (son), with the
+# Shape-3 G 6030 It [I] linked into the same clan via wife Usertka
+# (daughter of Shepseskaf-ʿankh).
+CHUNK16_TOMB_IDS: frozenset[str] = frozenset({
+    "G6010", "G6012", "G6014", "G6020", "G6030", "G6037", "G6040",
+    "G6042",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -347,6 +363,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
     | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
+    | CHUNK16_TOMB_IDS
 )
 
 
@@ -564,6 +581,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK15_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK16_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -574,6 +593,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
             | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS
             | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
+            | CHUNK16_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS:
@@ -616,6 +636,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 122 <= page <= 141, f"{row['tomb_id']} page {page} outside chunk-14 [122, 141]"
         elif row["tomb_id"] in CHUNK15_TOMB_IDS:
             assert 141 <= page <= 168, f"{row['tomb_id']} page {page} outside chunk-15 [141, 168]"
+        elif row["tomb_id"] in CHUNK16_TOMB_IDS:
+            assert 169 <= page <= 182, f"{row['tomb_id']} page {page} outside chunk-16 [169, 182]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -693,6 +715,10 @@ def test_cemetery_by_chunk() -> None:
             # `cemetery: "Cemetery en Echelon South"` (descriptor form
             # parallel to chunk-13's `"Junker East"`).
             assert row["cemetery"] == "Cemetery en Echelon South", row
+        elif row["tomb_id"] in CHUNK16_TOMB_IDS:
+            # Chunk 16: single CEMETERY G 6000 cluster (Hemiunu-
+            # adjacent). All 8 rows carry `cemetery: "G 6000"`.
+            assert row["cemetery"] == "G 6000", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -784,8 +810,16 @@ def test_dynasty_assignments() -> None:
             # incl. G 4940/G 5080/G 5170 Seshemnufer dynasty; G 5150
             # Seshethotp = Early Dyn V), Dyn VI (the G 5550 Idu [I]
             # Vizier; G 5290 Hetepniptah etc.). Some Shape-2 bare-
-            # numeric rows take dynasty null (G 5221, G 5232, G 5245).
+            # numeric rows take dynasty null (G 5221, G 5245).
             assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK16_TOMB_IDS:
+            # Cemetery G 6000 cluster: G 6010/G 6020/G 6030/G 6040 Dyn V
+            # (Temp. Neferirkarēʿ / Neuserrēʿ / Middle Dyn. V family
+            # cluster) + G 6037 Dyn. V-VI (range-tail → "6"). Bare-
+            # numeric G 6012/G 6014/G 6042 carry `dynasty: null` (PM
+            # gives no dating clue on the headword or in adjacent body-
+            # prose).
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.

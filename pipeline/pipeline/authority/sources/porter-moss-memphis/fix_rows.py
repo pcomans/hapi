@@ -1843,6 +1843,67 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-16 (CEMETERY G 6000, Hemiunu-adjacent). Round-1 Gemini PR #237
+# fixes: wife-clause `, etc.` marker (G 6020) + two source_citation
+# page offsets that the agent-majority voted off-by-one (G 6037) /
+# off-by-three (G 6042) against the prompt's stated boundary rule
+# `printed = physical + 3`.
+CHUNK16_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # G 6020 co_occupant_roles — restore the `, etc.` marker dropped
+    # by agents on the wife title cluster. PM-printed wife clause is
+    # `Wife, Nikauhathor Royal acquaintance, etc.` (split mid-word by
+    # pypdf hyphenation on phys p.167 — `acquain-` line break, then
+    # `tance, etc.` reappears after ~10 lines of bibliographic body-
+    # prose on the same page). Per chunks 9-15 convention (G 3008,
+    # G 3093, G 4351, G 4561, G 4710, G 4970, G 5150, G 5170, G 5340
+    # all preserve `, etc.` in role strings when PM prints it).
+    ("G6020", "co_occupant_roles"): {
+        "value": ["Father", "Wife, Royal acquaintance, etc."],
+        "rationale": (
+            "Gemini PR #237 round-1 medium: restore `, etc.` marker "
+            "on wife title cluster per source-wide convention. PM "
+            "literal: `Wife, Nikauhathor Royal acquaintance, etc.` "
+            "Agents dropped the trailing `etc.` despite preserving "
+            "it in notes_from_pm."
+        ),
+    },
+    # G 6037 source_citation — agents voted page 174 (2/1) but the
+    # prompt boundary rule is `printed = physical + 3`. G 6037 is on
+    # physical p.172 → printed p.175 (agent C was correct).
+    ("G6037", "source_citation"): {
+        "value": {
+            "edition": "PM III.1 2nd ed. 1974",
+            "page": 175,
+            "section": "III",
+        },
+        "rationale": (
+            "Gemini PR #237 round-1 medium: page-offset correction. "
+            "G 6037 is on physical p.172; per the prompt's "
+            "`printed = physical + 3` boundary rule, printed page is "
+            "175 (not 174). Two agents voted 174 incorrectly; agent "
+            "C voted 175 correctly."
+        ),
+    },
+    # G 6042 source_citation — agents voted page 175 (2/1) but that
+    # is the PHYSICAL page; the printed page per offset rule is 178.
+    ("G6042", "source_citation"): {
+        "value": {
+            "edition": "PM III.1 2nd ed. 1974",
+            "page": 178,
+            "section": "III",
+        },
+        "rationale": (
+            "Gemini PR #237 round-1 medium: page-offset correction. "
+            "G 6042 is on physical p.175; per the prompt's "
+            "`printed = physical + 3` boundary rule, printed page is "
+            "178 (not 175). Two agents voted 175 — the physical "
+            "page number, not the printed page. Agent C voted 178 "
+            "correctly."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1863,6 +1924,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK13_CORRECTIONS,
     CHUNK14_CORRECTIONS,
     CHUNK15_CORRECTIONS,
+    CHUNK16_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
