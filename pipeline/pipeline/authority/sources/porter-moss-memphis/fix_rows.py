@@ -284,6 +284,118 @@ CHUNK5_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
 }
 
+# Chunk-6 corrections (PM III.1 § III.A West Field cemeteries G 1000–G
+# 1900, Junker excavations). Findings from the printed-source
+# egyptologist-reviewer pass against PM III.1 pp.49–65.
+CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("G1607", "is_unfinished"): {
+        "value": False,
+        "rationale": (
+            "Egyptologist-reviewer printed-source pass against PM III.1 "
+            "p.65 (physical p.62): the `unfinished` token appears in PM's "
+            "body prose `Rock-cut tomb, unfinished.` AFTER the headword "
+            "block, not within the headword. The chunk-6 prompt's "
+            "`is_unfinished` rule fires only on headword-block "
+            "`unfinished` (parallel to chunk-5 SAQ-Sekhemkhet where PM's "
+            "`STEP PYRAMID. Unfinished.` IS the sub-heading). Agent A's "
+            "extraction over-fired the deriver on body content. "
+            "Restoration: `is_unfinished: true` → `false`. Egyptologist "
+            "F1 finding (P1)."
+        ),
+    },
+    ("G1234", "occupant_name"): {
+        "value": "ʿAnkh-haf",
+        "rationale": (
+            "Egyptologist-reviewer printed-source pass against PM III.1 "
+            "p.60 (physical p.57): PM prints `aANKH-HAF` (raised-ayin + "
+            "all-caps + hyphen). Agent normalisation to U+02BF on the "
+            "leading ayin produced `ʿAnkh-Haf` with title-cased `Haf` "
+            "post-hyphen — but the standard Egyptological + museum-"
+            "conventional Anglicisation lowercases the post-hyphen "
+            "element (`ʿAnkh-haf`). This is *the* famous Old Kingdom "
+            "official (MFA 27.442 reserve head); Boston/Met catalogues "
+            "print `Ankh-haf` / `Ankhhaf`. Phase-A name-authority "
+            "matching against museum records depends on the lowercase-"
+            "haf form. Restoration: `ʿAnkh-Haf` → `ʿAnkh-haf`. Parallel "
+            "to chunk-3 LG 84's `Wehebreʿ-emakhet` (lowercase post-"
+            "hyphen for the `m-akhet` locative element). Egyptologist "
+            "F2 finding (P1)."
+        ),
+    },
+    ("G1221", "notes_from_pm"): {
+        "value": "Shad (?), Royal acquaintance. Probably Dyn. V.",
+        "rationale": (
+            "Egyptologist-reviewer printed-source pass against PM III.1 "
+            "p.59 (physical p.56): PM prints `G 1221. SHAD (?) Royal "
+            "acquaintance. Probably Dyn. V.` with ONE `(?)` hedge, not "
+            "two. The pypdf text-layer extraction stuttered the `(?)` "
+            "token (line 432 of chunk-6 text file reads `SHAD (?) (?)`); "
+            "agents A inherited the stutter. The tie-break-overrides.json "
+            "G1221 entry that resolved the 1/1/1 tie selected agent A's "
+            "stuttered form before the egyptologist pass surfaced the "
+            "OCR error. Restoration: drop the duplicate `(?)`. "
+            "Egyptologist F3 finding (P1)."
+        ),
+    },
+    ("G1207", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 p.58 (physical "
+            "p.55): NUFER's title cluster is `Royal acquaintance (woman)` "
+            "— a non-royal honorific (rḫt-nswt) attested for elite "
+            "non-royals, NOT a royal-family descent indicator. The "
+            "chunk-6 prompt's role-derivation rule mistakenly mapped "
+            "`Royal acquaintance (woman)` to `Royal Family`; corrected "
+            "to `Official` per the honorific's actual meaning. "
+            "Egyptologist F5 finding (P2)."
+        ),
+    },
+    ("G1227", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 p.59 (physical "
+            "p.56): SETHIHEKNET's title cluster `Royal acquaintance "
+            "(woman)` is the same non-royal honorific as G1207's. Same "
+            "correction. Egyptologist F5 finding (P2)."
+        ),
+    },
+    ("G1020", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 p.53 (physical "
+            "p.50): MES-SA's headword carries a named occupant with no "
+            "explicit title cluster (just dating `Late Dyn. IV or first "
+            "half of Dyn. V.`). The chunk-6 prompt's role-derivation "
+            "rule has no entry for `named occupant, no title` and "
+            "defaulted to `Unknown` — but `Unknown` is reserved for "
+            "Shape-2 bare-suffix headwords (no name AT ALL). A named "
+            "Old-Kingdom non-royal mastaba occupant defaults to "
+            "`Official` per Old-Kingdom Memphite necropolis "
+            "demographics. Egyptologist F6 finding (P2)."
+        ),
+    },
+    ("G1104", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 p.55 (physical "
+            "p.52): MES-SA's headword (different individual from G1020 "
+            "MES-SA, same conventional name) is parallel to G1020 — "
+            "named occupant, no title cluster, dating only. Default to "
+            "`Official` per the same rule. Egyptologist F6 finding (P2)."
+        ),
+    },
+    ("G1204", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Egyptologist-reviewer pass against PM III.1 p.57 (physical "
+            "p.54): AKHTIHOTP's headword (Middle Dyn. V or later) "
+            "carries a named occupant with no explicit title cluster. "
+            "Default to `Official` per the same rule. Egyptologist F6 "
+            "finding (P2)."
+        ),
+    },
+}
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -294,6 +406,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
+    CHUNK6_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

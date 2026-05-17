@@ -37,6 +37,18 @@ parenthetical-alias pattern (Neterikhet ↔ Zoser); first Shape-3
 anonymous structure with `occupant_name: null` AND `dynasty: "3"`
 (distinct from chunk-4 anonymous-queen pattern which had a known
 dynasty inherited from the king's complex).
+
+Chunk 6 opens the West Field (PM III.1 § III. NECROPOLIS — A. WEST
+FIELD), Junker-excavated low-thousands cemeteries G 1000 / G 1100 /
+G 1200 / G 1300 / G 1400 / G 1500 / G 1600 / G 1900. 54 rows from
+physical pp.46–62 / printed pp.49–65: 30 Shape-1 named-primary rows +
+24 Shape-2 bare-suffix (anonymous shaft) rows. Dense mix of named
+Dyn-IV-to-VI Old Kingdom officials (Shepseskafʿankh, Wepemnefert,
+ʿAnkh-haf, Hetepib, etc.) and uninscribed shafts. First chunk to
+introduce: Shape-3 compound twin-mastaba headwords in the West Field
+(G 1452+1453 ZADUWAʿ shared); underdot-Ḥ glyph normalisation for
+non-royal names (Meḥyt in G1201); the `Royal acquaintance (woman)`
+non-royal-honorific role rule (egyptologist F5/F6 corrections).
 """
 
 from __future__ import annotations
@@ -108,9 +120,33 @@ CHUNK5_TOMB_IDS: frozenset[str] = frozenset({
     "SAQ-GreatEnclosure",                                           # anon Shape-3
 })
 
+# Chunk 6: Gîza § III.A West Field Junker cemeteries G 1000–G 1900.
+# Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — A. WEST FIELD,
+# physical pp.46–62 / printed pp.49–65. 54 rows (30 named primary + 24
+# bare-suffix). Cemetery banners: G 1000, G 1100, G 1200, G 1300,
+# G 1400, G 1500, G 1600, G 1900.
+CHUNK6_TOMB_IDS: frozenset[str] = frozenset({
+    # G 1000 cemetery (13 rows)
+    "G1008", "G1011", "G1012", "G1020", "G1021", "G1026", "G1029",
+    "G1032", "G1036", "G1039", "G1040", "G1047", "G1061", "G1062",
+    # G 1100 cemetery (7 rows)
+    "G1104", "G1105", "G1109", "G1111", "G1151", "G1152", "G1157", "G1171",
+    # G 1200 cemetery (16 rows)
+    "G1201", "G1203", "G1204", "G1205", "G1206", "G1207", "G1208",
+    "G1213", "G1214", "G1221", "G1223", "G1225", "G1226", "G1227",
+    "G1231", "G1234", "G1235",
+    # G 1300 cemetery (5 rows)
+    "G1301", "G1309", "G1313", "G1314", "G1351",
+    # G 1400 / G 1500 / G 1600 / G 1900 (small clusters at chunk tail)
+    "G1402", "G1452", "G1453", "G1457", "G1461",
+    "G1501",
+    "G1607", "G1608", "G1673",
+    "G1903",
+})
+
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
-    | CHUNK5_TOMB_IDS
+    | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS
 )
 
 
@@ -308,12 +344,14 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "I", row
         elif row["tomb_id"] in CHUNK5_TOMB_IDS:
             assert row["source_citation"]["section"] == "I", row
+        elif row["tomb_id"] in CHUNK6_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
-    """Chunks 1-3 cite PM III.1; chunks 4 and 5 cite PM III.2."""
+    """Chunks 1-3 and 6 cite PM III.1; chunks 4 and 5 cite PM III.2."""
     for row in _rows():
-        if row["tomb_id"] in CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS:
+        if row["tomb_id"] in CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK6_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
@@ -321,7 +359,8 @@ def test_source_citation_edition_matches_chunk() -> None:
 
 def test_source_citation_page_in_expected_range() -> None:
     """Printed page ranges: chunk 1 = 11–35, chunk 2 = 179–190,
-    chunk 3 = 288–292, chunk 4 = 421–432, chunk 5 = 393–417."""
+    chunk 3 = 288–292, chunk 4 = 421–432, chunk 5 = 393–417,
+    chunk 6 = 49–65."""
     for row in _rows():
         page = row["source_citation"]["page"]
         if row["tomb_id"] in CHUNK1_TOMB_IDS:
@@ -334,6 +373,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 421 <= page <= 432, f"{row['tomb_id']} page {page} outside chunk-4 [421, 432]"
         elif row["tomb_id"] in CHUNK5_TOMB_IDS:
             assert 393 <= page <= 417, f"{row['tomb_id']} page {page} outside chunk-5 [393, 417]"
+        elif row["tomb_id"] in CHUNK6_TOMB_IDS:
+            assert 49 <= page <= 65, f"{row['tomb_id']} page {page} outside chunk-6 [49, 65]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -363,6 +404,14 @@ def test_cemetery_by_chunk() -> None:
             assert row["cemetery"] is None, row
         elif row["tomb_id"] in CHUNK5_TOMB_IDS:
             assert row["cemetery"] is None, row
+        elif row["tomb_id"] in CHUNK6_TOMB_IDS:
+            # Each chunk-6 row inherits the PM CEMETERY banner above it.
+            # 8 banners: G 1000 / G 1100 / G 1200 / G 1300 / G 1400 /
+            # G 1500 / G 1600 / G 1900.
+            assert row["cemetery"] in {
+                "G 1000", "G 1100", "G 1200", "G 1300",
+                "G 1400", "G 1500", "G 1600", "G 1900",
+            }, row
 
 
 def test_dynasty_assignments() -> None:
@@ -390,6 +439,13 @@ def test_dynasty_assignments() -> None:
             assert row["dynasty"] in {"5", "6"}, row
         elif row["tomb_id"] in CHUNK5_TOMB_IDS:
             assert row["dynasty"] in {"3", "5", "6"}, row
+        elif row["tomb_id"] in CHUNK6_TOMB_IDS:
+            # West Field Old Kingdom mastabas span Dyn IV (Temp. Khufu /
+            # Khephren burials, the earliest core), Dyn V (largest
+            # cohort: middle/late OK officials), Dyn VI (priestly
+            # intrusions). Bare-suffix Shape-2 shafts with no PM dating
+            # marker carry `dynasty: null`.
+            assert row["dynasty"] in {"4", "5", "6", None}, row
 
 
 # === content / value assertions =============================================
@@ -1280,3 +1336,130 @@ def test_chunk5_first_dyn_iii_rows_in_source() -> None:
     assert dyn_iii_rows == {
         "SAQ-Neterikhet", "SAQ-Sekhemkhet", "SAQ-GreatEnclosure",
     }, dyn_iii_rows
+
+
+# === chunk-6 content tests (West Field Junker cemeteries G 1000-1900) =======
+
+
+def test_chunk6_row_count_54() -> None:
+    """Chunk 6 yields exactly 54 rows: 30 Shape-1 named primary + 24
+    Shape-2 bare-suffix anonymous shafts."""
+    assert len(CHUNK6_TOMB_IDS) == 54
+
+
+def test_chunk6_cemetery_distribution() -> None:
+    """8 cemetery banners observed in chunk 6: G 1000, G 1100, G 1200,
+    G 1300, G 1400, G 1500, G 1600, G 1900. Verify each cemetery has
+    at least one row attributed to it."""
+    cemeteries_in_chunk = {
+        row["cemetery"] for row in _rows()
+        if row["tomb_id"] in CHUNK6_TOMB_IDS
+    }
+    assert cemeteries_in_chunk == {
+        "G 1000", "G 1100", "G 1200", "G 1300",
+        "G 1400", "G 1500", "G 1600", "G 1900",
+    }, cemeteries_in_chunk
+
+
+def test_chunk6_ankh_haf_g1234_egyptologist_form() -> None:
+    """G 1234 ʿAnkh-haf — distinct from the famous Dyn-IV ʿAnkh-haf
+    (Khufu's half-brother at G 7510 East Field, future chunk; MFA
+    27.442 reserve head). PM dates G 1234's ʿAnkh-haf as `Late Dyn. V
+    or Dyn. VI.`. The merge picks the more-specific tail of PM's
+    range (`Dyn. VI`) per the chunk-6 prompt's dynasty-range rule.
+    Egyptologist F2 finding (P1) corrected the title-cased `ʿAnkh-Haf`
+    to the museum-conventional lowercase-haf form `ʿAnkh-haf` (parallel
+    to chunk-3 LG 84's `Wehebreʿ-emakhet` lowercase post-hyphen
+    locative element). Phase-A name-authority matching against
+    Boston/Met records requires the lowercase form regardless of
+    which ʿAnkh-haf is at the tomb."""
+    row = _by_id("G1234")
+    assert row["occupant_name"] == "ʿAnkh-haf"
+    assert row["dynasty"] == "6"
+    assert row["cemetery"] == "G 1200"
+    assert row["source_citation"]["page"] == 60
+
+
+def test_chunk6_g1607_not_unfinished() -> None:
+    """G 1607 Iʿan's `unfinished` token appears in PM's body prose
+    (`Rock-cut tomb, unfinished.`) AFTER the headword block. The
+    chunk-6 prompt's `is_unfinished` rule fires only on headword-block
+    `unfinished` (parallel to chunk-5 SAQ-Sekhemkhet where PM's
+    `STEP PYRAMID. Unfinished.` IS the sub-heading). Agent A
+    over-fired the deriver on body content; CHUNK6_CORRECTIONS reverts
+    `is_unfinished` to false. Egyptologist F1 finding (P1)."""
+    row = _by_id("G1607")
+    assert row["is_unfinished"] is False
+    assert row["occupant_name"] == "Iʿan"
+
+
+def test_chunk6_g1221_shad_single_hedge() -> None:
+    """G 1221 SHAD's PM headword carries ONE `(?)` hedge, not two. The
+    pypdf text-layer extraction stuttered the hedge token (the chunk-6
+    raw file line 432 reads `SHAD (?) (?)`); agents inherited the
+    stutter. Egyptologist F3 finding (P1) restored single `(?)` from
+    the printed-source verification."""
+    row = _by_id("G1221")
+    assert row["occupant_name"] == "Shad"
+    assert "Shad (?), Royal acquaintance" in row["notes_from_pm"]
+    assert "(?) (?)" not in row["notes_from_pm"]
+
+
+def test_chunk6_g1452_g1453_compound_twin() -> None:
+    """G 1452+1453 ZADUWAʿ is chunk 6's only compound twin-mastaba
+    headword (parallel to chunk 2's G 7110+7120 KAWAaB precedent).
+    Emits two rows sharing the compound's occupant name, each with
+    `shared_with_tombs` cross-referencing the twin half."""
+    g1452 = _by_id("G1452")
+    g1453 = _by_id("G1453")
+    # Both should have the same occupant name (PM doesn't separately
+    # identify the two halves)
+    assert g1452["occupant_name"] is not None
+    assert g1453["occupant_name"] is not None
+    # Cross-reference each twin half
+    assert "G1453" in g1452["shared_with_tombs"]
+    assert "G1452" in g1453["shared_with_tombs"]
+    # Both Dyn IV/V West Field per PM
+    assert g1452["cemetery"] == "G 1400"
+    assert g1453["cemetery"] == "G 1400"
+
+
+def test_chunk6_g1201_mehyt_underdot_h() -> None:
+    """G 1201 WEPEMNEFERT's notes carry the goddess-name Meḥyt (the
+    cobra-goddess of Thinis) with underdot-Ḥ. PM prints the underdot
+    glyph; pypdf renders it as mid-word uppercase `H` (`MeHyt`).
+    Three-agent 1/1/1 tie resolved via tie-break-overrides.json with
+    PM-faithful Egyptological normalisation to `Meḥyt`."""
+    row = _by_id("G1201")
+    assert row["occupant_name"] == "Wepemnefert"
+    assert "Meḥyt" in row["notes_from_pm"]
+    assert "MeHyt" not in row["notes_from_pm"]
+    assert "Mehyt" not in row["notes_from_pm"].replace("Meḥyt", "")
+
+
+def test_chunk6_named_no_title_default_official() -> None:
+    """Chunk-6 prompt's role-derivation rule mapped `named occupant
+    with no title cluster` to `Unknown` by default — but `Unknown`
+    is reserved for Shape-2 bare-suffix headwords (no name at all). A
+    named Old-Kingdom mastaba occupant with no title cluster (just
+    dating, e.g. `G 1020. MES-SA Late Dyn. IV or first half of Dyn.
+    V.`) defaults to `Official` per Old-Kingdom Memphite necropolis
+    demographics. Egyptologist F6 finding (P2) applied to G1020,
+    G1104, G1204."""
+    for tid in ("G1020", "G1104", "G1204"):
+        row = _by_id(tid)
+        assert row["occupant_name"] is not None
+        assert row["occupant_role"] == "Official", row
+
+
+def test_chunk6_royal_acquaintance_woman_is_official() -> None:
+    """`Royal acquaintance (woman)` (rḫt-nswt) is a non-royal
+    honorific attested for elite non-royals, NOT a royal-family
+    descent indicator. The chunk-6 prompt's role-derivation rule
+    mistakenly mapped it to `Royal Family`; CHUNK6_CORRECTIONS
+    corrected G1207 NUFER and G1227 SETHIHEKNET to `Official`.
+    Egyptologist F5 finding (P2)."""
+    for tid in ("G1207", "G1227"):
+        row = _by_id(tid)
+        assert row["occupant_role"] == "Official", row
+        assert row["occupant_name"] is not None
