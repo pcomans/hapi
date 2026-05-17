@@ -112,3 +112,23 @@ Chunk-5 design choices:
 - The chunk-5 prompt is **self-contained** per the chunk-9 P1 #3 / chunk-11 PR-#196 precedent — full schema preamble inlined, no "re-read chunk N" cross-references.
 
 Chunk file text-layer SHA-256 pin: `a30dfe883a9f31051cb20b19c0bdb6133b931cc02e98a283bae91c1cad0556a1`.
+
+## Chunk 6 scope (FIRST PM III.1 § III.A West Field chunk)
+
+Physical pp.46–62 / printed pp.49–65 of PM III.1: § III. NECROPOLIS — A. WEST FIELD opener and the Junker-excavated low-thousands cemeteries G 1000 / G 1100 / G 1200 / G 1300 / G 1400 / G 1500 / G 1600 / G 1900. 54 rows total: 30 Shape-1 named-primary rows + 24 Shape-2 bare-suffix (anonymous shaft) rows. Dense mix of Dyn IV-VI Old Kingdom officials.
+
+Chunk-6 design choices:
+- First chunk to open the West Field (chunks 1-3 covered § I PYRAMIDS Giza + § III.B East Field G 7000 + § III.E Central Field Saite; chunks 4-5 covered PM III.2 Saqqâra § I PYRAMIDS).
+- Shape-2 bare-suffix rule formalised: PM rows like `G 1011. Dyn. V.` (dating only) and `G 1021.` (purely numeric stub) both emit one row with `occupant_name: null`, `occupant_role: "Unknown"`, `attribution_certainty: "uncertain"`. The dating marker, when present, goes to `dynasty`; the rest goes to `notes_from_pm`.
+- First Shape-3 compound twin-mastaba in the West Field: `G 1452+1453. ZADUWAʿ` emits two rows (G1452 and G1453) sharing the compound's occupant-name token, each with `shared_with_tombs` cross-reference. Parallel to chunk-2's G 7110+7120 KAWAaB precedent.
+- First underdot-Ḥ glyph normalisation for non-royal names: PM prints Meḥyt (the cobra-goddess of Thinis) with underdot-Ḥ in G 1201 WEPEMNEFERT's headword. pypdf renders the underdot glyph as mid-word uppercase `H` (`MeHyt`). Three-agent 1/1/1 tie resolved via `tie-break-overrides.json` with PM-faithful Egyptological normalisation. Parallel to chunk-3's LG 84 `Wehebreʿ-emakhet` raised-ayin normalisation.
+- Egyptologist-reviewer printed-source pass against PM III.1 PDF surfaced 3 P1 findings + 3 P2 findings, all captured in `fix_rows.py` `CHUNK6_CORRECTIONS`:
+  - (P1 F1) G 1607 Iʿan `is_unfinished: true` reverted to `false`: PM's `unfinished` token appears in body prose (`Rock-cut tomb, unfinished.`), NOT in the headword block. Agent A's deriver over-fired on body content.
+  - (P1 F2) G 1234 occupant_name `ʿAnkh-Haf` → `ʿAnkh-haf`: museum-conventional lowercase-haf form (parallel to chunk-3 LG 84's `Wehebreʿ-emakhet` lowercase post-hyphen locative element). Critical for Phase-A matching against Boston/Met records.
+  - (P1 F3) G 1221 SHAD notes_from_pm `Shad (?) (?)` → `Shad (?)`: pypdf text-layer stuttered the hedge token (line 432 of chunk-6 text file); PM prints `(?)` once.
+  - (P2 F5) G 1207 NUFER + G 1227 SETHIHEKNET `occupant_role: Royal Family` → `Official`: `Royal acquaintance (woman)` (rḫt-nswt) is a non-royal honorific, not a royal-family descent indicator.
+  - (P2 F6) G 1020 + G 1104 MES-SA + G 1204 AKHTIHOTP `occupant_role: Unknown` → `Official`: named occupants with no title cluster default to `Official` (the chunk-6 prompt's role-derivation rule had no `named-no-title` entry; Unknown is reserved for Shape-2 bare-suffix).
+- New `tie-break-overrides.json` entries for chunk-6 1/1/1 ties: G1151 (KEDNUFER colon vs semicolon + ayin form), G1201 (Meḥyt underdot-Ḥ), G1221 (SHAD double-hedge stutter).
+- Three 2/1 ties on notes_from_pm dropped to 0 disagreements after fix_rows reviewer corrections.
+
+Chunk file text-layer SHA-256 pin: `de6da4216c0653448bf1cf06787cc736ce7d102eab85e88417bb6389865c1416`.

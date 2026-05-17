@@ -16,6 +16,44 @@ G3b (None):
 G3c (None):
   source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 34, "section": "I"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 35, "section": "I"}
 
+G1012 (Sedaug):
+  notes_from_pm: a="Overseer of sculptors, King's waab-priest, Prophet of Sahureʿ and of the Pyramid of Sahureʿ. Prophet of Reʿ in the Sun-temple of Userkaf, etc. Middle Dyn. V to Dyn. VI." | b="Overseer of sculptors, King's waab-priest, Prophet of Sahureʿ and of the Pyramid of Sahureʿ. Prophet of Reʿ in the Sun-temple of Userkaf, etc. Middle Dyn. V to Dyn. VI." | c="Overseer of sculptors, King's wad-priest, Prophet of Sahurea and of the Pyramid of Sahurea. Prophet of Rea in the Sun-temple of Userkaf, etc. Middle Dyn. V to Dyn. VI."  → chose "Overseer of sculptors, King's waab-priest, Prophet of Sahureʿ and of the Pyramid of Sahureʿ. Prophet of Reʿ in the Sun-temple of Userkaf, etc. Middle Dyn. V to Dyn. VI."
+
+G1026 (Ma):
+  notes_from_pm: a="Director of King's waab-priests, Inspector of tenants, etc. Dyn. V-VI." | b="Director of King's waab-priests, Inspector of tenants, etc. Dyn. V-VI." | c="Director of King's wad-priests, Inspector of tenants, etc. Dyn. V-VI."  → chose "Director of King's waab-priests, Inspector of tenants, etc. Dyn. V-VI."
+
+G1029 (Sekhemka):
+  notes_from_pm: a="Prophet of Reʿ in the Sun-temple of Neuserreʿ, Overseer of the department of tenants of the Great House, Prophet of Khufu, etc. End of Dyn. V or Dyn. VI." | b="Prophet of Reʿ in the Sun-temple of Neuserreʿ, Overseer of the department of tenants of the Great House, Prophet of Khufu, etc. End of Dyn. V or Dyn. VI." | c="Prophet of Rea in the Sun-temple of Neuserrea, Overseer of the department of tenants of the Great House, Prophet of Khufu, etc. End of Dyn. V or Dyn. VI."  → chose "Prophet of Reʿ in the Sun-temple of Neuserreʿ, Overseer of the department of tenants of the Great House, Prophet of Khufu, etc. End of Dyn. V or Dyn. VI."
+
+G1032 (Hetepib):
+  notes_from_pm: a="Inspector of craftsmen of the waabt, Overseer of the ten, etc. Dyn. VI." | b="Inspector of craftsmen of the waabt, Overseer of the ten, etc. Dyn. VI." | c="Inspector of craftsmen of the warbt, Overseer of the ten, etc. Dyn. VI."  → chose "Inspector of craftsmen of the waabt, Overseer of the ten, etc. Dyn. VI."
+
+G1047 (Niʿankhmin):
+  notes_from_pm: a="Prophet of the Pyramids of Menkauhor and Neuserreʿ, Overseer of the new settlements, etc. Dyn. VI." | b="Prophet of the Pyramids of Menkauhor and Neuserreʿ, Overseer of the new settlements, etc. Dyn. VI." | c="Prophet of the Pyramids of Menkauhor and Neuserrea, Overseer of the new settlements, etc. Dyn. VI."  → chose "Prophet of the Pyramids of Menkauhor and Neuserreʿ, Overseer of the new settlements, etc. Dyn. VI."
+
+G1151 (Kednufer):
+  notes_from_pm: a="Overseer of the department of tenants of the Great House, Prophet of Khufu: Prophet of Reʿ in the Sun-temple of Neuserreʿ, etc. End of Dyn. V or later." | b="Overseer of the department of tenants of the Great House, Prophet of Khufu; Prophet of Reʿ in the Sun-temple of Neuserreʿ, etc. End of Dyn. V or later." | c="Overseer of the department of tenants of the Great House, Prophet of Khufu: Prophet of Rea in the Sun-temple of Neuserrea, etc. End of Dyn. V or later."  → chose "Overseer of the department of tenants of the Great House, Prophet of Khufu: Prophet of Reʿ in the Sun-temple of Neuserreʿ, etc. End of Dyn. V or later."
+
+G1171 (Kaemthenent):
+  notes_from_pm: a="King's waab-priest. Dyn. V-VI." | b="King's waab-priest. Dyn. V-VI." | c="King's wad-priest. Dyn. V-VI."  → chose "King's waab-priest. Dyn. V-VI."
+
+G1201 (Wepemnefert):
+  notes_from_pm: a="King's son, Prophet of Heqet, heka-priest of Meḥyt, etc. Temp. Khufu." | b="King's son, Prophet of Heqet, heka-priest of Mehyt, etc. Temp. Khufu." | c="King's son, Prophet of Heqet, heka-priest of MeHyt, etc. Temp. Khufu."  → chose "King's son, Prophet of Heqet, heka-priest of Meḥyt, etc. Temp. Khufu."
+
+G1221 (Shad):
+  attribution_certainty: a="probable" | b="probable" | c="uncertain"  → chose "probable"
+  notes_from_pm: a="Shad (?) (?), Royal acquaintance. Probably Dyn. V." | b="Royal acquaintance. Probably Dyn. V." | c="(?) (?), Royal acquaintance. Probably Dyn. V."  → chose "Shad (?) (?), Royal acquaintance. Probably Dyn. V."
+  occupant_name: a="Shad" | b="Shad (?)" | c="Shad"  → chose "Shad"
+
+G1226 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 60, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 59, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 60, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 60, "section": "III"}
+
+G1607 (Iʿan):
+  attribution_certainty: a="uncertain" | b="probable" | c="uncertain"  → chose "uncertain"
+
+G1608 (Senenu):
+  attribution_certainty: a="uncertain" | b="probable" | c="uncertain"  → chose "uncertain"
+
 G7000x (Hetepheres I):
   notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
 
@@ -105,22 +143,12 @@ SAQ-WifeOfIsesi (None):
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
-OCR-drift fixes (Roman-numeral restore in notes_from_pm):
-  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
-  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
-  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
-  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
-  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
-
 Reviewer-cited row corrections:
-  G7102.occupant_name: "Iou" → "Idu"
-  LG83.co_occupant_roles: [] → ["Queen"]
-  LG97.co_occupant_roles: [] → ["Official"]
-  LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
-  SAQ-IputI.occupant_name: "Iput I" → "Iput"
-  SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
-  SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
-  SAQ-IputII.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} → {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"}
-  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. ¹ King's wife (of Teti)."
-  SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
-  SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]
+  G1020.occupant_role: "Unknown" → "Official"
+  G1104.occupant_role: "Unknown" → "Official"
+  G1204.occupant_role: "Unknown" → "Official"
+  G1207.occupant_role: "Royal Family" → "Official"
+  G1221.notes_from_pm: "Shad (?) (?), Royal acquaintance. Probably Dyn. V." → "Shad (?), Royal acquaintance. Probably Dyn. V."
+  G1227.occupant_role: "Royal Family" → "Official"
+  G1234.occupant_name: "ʿAnkh-Haf" → "ʿAnkh-haf"
+  G1607.is_unfinished: true → false
