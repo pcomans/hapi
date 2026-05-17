@@ -287,6 +287,127 @@ G4811 (ʿAnkhirptaḥ):
 G4813 (None):
   dynasty: a="6" | b="5" | c="6"  → chose "6"
 
+G4911 (ʿAnkhtef):
+  notes_from_pm: a="King's waʿb-priest, Prophet of Khufu, etc. Dyn. V-VI. Wife, Zefat." | b="King's waʿb-priest, Prophet of Khufu, etc. Dyn. V–VI. Wife, Zefat." | c="King's waab-priest, Prophet of Khufu, etc. Dyn. V-VI. Wife, Zefat. Mastaba excavated by Schiaparelli."  → chose "King's waʿb-priest, Prophet of Khufu, etc. Dyn. V-VI. Wife, Zefat."
+
+G4920 (Thenti):
+  occupant_name: a="Thenti" | b="Thenti" | c="Thent I"  → chose "Thenti"
+
+G4940 (Seshemnufer I):
+  notes_from_pm: a="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper Prophet of Heket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarea. Wife, Amenzefas Royal acquaintance." | b="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkārēʿ. Wife, Amenzefas Royal acquaintance." | c="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Heket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance."  → chose "Royal chamberlain, One belonging to the estate 'Mansion of Ḥar-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance."
+  occupant_name: a="Seshemnufer I" | b="Seshemnufer I" | c="Sheshemnufer I"  → chose "Seshemnufer I"
+
+G4970 (Nesutnufer):
+  co_occupant_roles: a=["Wife, Prophetess of Hathor and Neith, etc."] | b=["Wife, Prophetess of Ḥathor and Neith, etc. (called Khent)"] | c=["Wife, Prophetess of Ḥathor and Neith, etc."]  → chose ["Wife, Prophetess of Ḥathor and Neith, etc."]
+  co_occupants: a=["Khentetka called Khent"] | b=["Khentetka"] | c=["Khentetka"]  → chose ["Khentetka"]
+  notes_from_pm: a="Overseer of strongholds of the Heliopolitan-East nome, Leader of the land of the Thinite and Aphroditopolite nomes, Prophet of the statue (of Khephren), etc. Early or middle Dyn. V. Wife, Khentetka called Khent Prophetess of Hathor and Neith, etc." | b="Overseer of strongholds of the Heliopolitan-East nome, Leader of the land of the Thinite and Aphroditopolite nomes, Prophet of the statue (of Khephren), etc. Early or middle Dyn. V. Wife, Khentetka called Khent, Prophetess of Ḥathor and Neith, etc." | c="Overseer of strongholds of the Heliopolitan-East nome, Leader of the land of the Thinite and Aphroditopolite nomes, Prophet of the statue (of Khephren), etc. Early or middle Dyn. V. Wife, Khentetka called Khent, Prophetess of Ḥathor and Neith, etc."  → chose "Overseer of strongholds of the Heliopolitan-East nome, Leader of the land of the Thinite and Aphroditopolite nomes, Prophet of the statue (of Khephren), etc. Early or middle Dyn. V. Wife, Khentetka called Khent, Prophetess of Ḥathor and Neith, etc."
+
+G5032 (Redenes):
+  notes_from_pm: a="King's waʿb-priest, Scribe. Dyn. VI. Wife, Mertiotes." | b="King's waʿb-priest, Scribe. Dyn. VI. Wife, Mertiotes." | c="King's waab-priest, Scribe. Dyn. VI. Wife, Mertiotes."  → chose "King's waʿb-priest, Scribe. Dyn. VI. Wife, Mertiotes."
+
+G5080 (Seshemnufer II):
+  occupant_name: a="Seshemnufer II" | b="Seshemnufer II" | c="Sheshemnufer II"  → chose "Seshemnufer II"
+
+G5110 (Duaenrēʿ):
+  co_occupant_roles: a=["Parent (probably), King", "Parent (probably), Queen"] | b=["Father (probably), King", "Mother (probably), Queen"] | c=["Parent (probably), King", "Parent (probably), Queen"]  → chose ["Parent (probably), King", "Parent (probably), Queen"]
+  co_occupants: a=["Khephren", "Meresaankh III"] | b=["Khephren", "Meresaankh III"] | c=["Khephren", "Meresʿankh III"]  → chose ["Khephren", "Meresaankh III"]
+  notes_from_pm: a="Vizier of Menkaurea. Temp. Khephren to Menkaurea. Parents, Khephren and Meresaankh [III]." | b="Vizier of Menkaurēʿ. Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresaankh III." | c="(Vizier of Menkaurēʿ.) Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresʿankh [III]."  → chose "(Vizier of Menkaurēʿ.) Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresʿankh III."
+
+G5150 (Seshethotp):
+  co_occupant_roles: a=["Wife, Prophetess of Neith and Hathor, etc."] | b=["Wife, Prophetess of Neith and Ḥathor, etc."] | c=["Wife, Prophetess of Neith and Ḥathor, etc."]  → chose ["Wife, Prophetess of Neith and Ḥathor, etc."]
+  notes_from_pm: a="called Heti. King's son of his body, Overseer of all works of the King, Greatest of the Ten of Upper Egypt, etc. Early Dyn. V. Wife, Mertiotes Prophetess of Neith and Hathor, etc." | b="Called Heti. King's son of his body, Overseer of all works of the King, Greatest of the Ten of Upper Egypt, etc. Early Dyn. V. Wife, Mertiotes, Prophetess of Neith and Ḥathor, etc." | c="called Heti. King's son of his body, Overseer of all works of the King, Greatest of the Ten of Upper Egypt, etc. Early Dyn. V. Wife, Mertiotes, Prophetess of Neith and Ḥathor, etc."  → chose "King's son of his body, Overseer of all works of the King, Greatest of the Ten of Upper Egypt, etc. Early Dyn. V. Wife, Mertiotes Prophetess of Neith and Ḥathor, etc."
+
+G5170 (Seshemnufer III):
+  co_occupant_roles: a=["Parent, Official", "Parent, Royal acquaintance", "Wife, King's daughter, Prophetess of Hathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."] | b=["Father, Official (tomb G5080)", "Mother (tomb G5080)", "Wife, King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."] | c=["Parent, Official", "Parent", "Wife, King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."]  → chose ["Father", "Mother", "Wife, King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."]
+  co_occupants: a=["Seshemnufer II", "Henutsen", "Hetepheres"] | b=["Seshemnufer II", "Henutsen", "Ḥetep-ḥeres"] | c=["Sheshemnufer II", "Henutsen", "Ḥetepheres"]  → chose ["Seshemnufer II", "Henutsen", "Ḥetepheres"]
+  notes_from_pm: a="King's son of his body, Chief Justice and Vizier, etc. Temp. Isesi (early). Parents, Seshemnufer [II] and Henutsen (tomb G 5080). Wife, Hetepheres King's daughter, Prophetess of Hathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc." | b="King's son of his body, Chief Justice and Vizier, etc. Temp. Isesi (early). Parents, Seshemnufer II and Henutsen (tomb G 5080). Wife, Ḥetep-ḥeres, King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc." | c="King's son of his body, Chief Justice and Vizier, etc. Temp. Isesi (early). Parents, Sheshemnufer [II] and Henutsen (tomb G 5080). Wife, Ḥetepheres, King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."  → chose "King's son of his body, Chief Justice and Vizier, etc. Temp. Isesi (early). Parents, Seshemnufer II and Henutsen (tomb G 5080). Wife, Ḥetepheres King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."
+  occupant_name: a="Seshemnufer III" | b="Seshemnufer III" | c="Sheshemnufer III"  → chose "Seshemnufer III"
+  shared_with_tombs: a=[] | b=[] | c=["G5080"]  → chose []
+
+G5190 (None):
+  dynasty: a=null | b=null | c="6"  → chose null
+  notes_from_pm: a=null | b=null | c="Dyn. VI (from relief-fragments)."  → chose null
+
+G5210 (Khemtnu):
+  dynasty: a="4" | b="5" | c="5"  → chose "5"
+  notes_from_pm: a="King's waʿb-priest, Prophet of Khufu, Steward of Kawaab, [Ḥetep]ḥeres [II] and Meresaankh [III], etc. Temp. Khufu to end of Dyn. IV or early Dyn. V." | b="King's waʿb-priest, Prophet of Khufu, Steward of Kawaab, Ḥetepḥeres II and Meresaankh III, etc. Temp. Khufu to end of Dyn. IV or early Dyn. V." | c="King's waʿb-priest, Prophet of Khufu, Steward of Kawaʿab, [Ḥetep]ḥeres [II] and Meresʿankh [III], etc. Temp. Khufu to end of Dyn. IV or early Dyn. V."  → chose "King's waʿb-priest, Prophet of Khufu, Steward of Kawaʿab, Ḥetepḥeres II and Meresʿankh III, etc. Temp. Khufu to end of Dyn. IV or early Dyn. V."
+
+G5221 (None):
+  dynasty: a="6" | b=null | c="6"  → chose "6"
+  notes_from_pm: a="Part of lintel of Memi Royal chamberlain of the Great House, etc., Dyn. V-VI." | b=null | c="Dyn. V-VI (from lintel of Memi Royal chamberlain of the Great House)."  → chose null
+
+G5230 (Babaf):
+  co_occupant_roles: a=["Father (probably), Vizier"] | b=["Father (probably), Vizier (tomb G5110)"] | c=["Father (probably), Vizier"]  → chose ["Father (probably), Vizier"]
+  notes_from_pm: a="(sometimes called Khnembaf). Hereditary prince, Companion, Overseer of all works of the King, etc. (Probably Vizier of Shepseskaf.) End of Dyn. IV to early Dyn. V. Father (probably), Duaenrēʿ (tomb G 5110)." | b="Sometimes called Khnembaf. Hereditary prince, Companion, Overseer of all works of the King, etc. Probably Vizier of Shepseskaf. End of Dyn. IV to early Dyn. V. Father (probably), Duaenrēʿ (tomb G 5110)." | c="(sometimes called Khnembaf). Hereditary prince, Companion, Overseer of all works of the King, etc. (Probably Vizier of Shepseskaf.) End of Dyn. IV to early Dyn. V. Father (probably), Duaenrēʿ (tomb G 5110)."  → chose "(sometimes called Khnembaf). Hereditary prince, Companion, Overseer of all works of the King, etc. (Probably Vizier of Shepseskaf.) End of Dyn. IV to early Dyn. V. Father (probably), Duaenrēʿ (tomb G 5110)."
+  shared_with_tombs: a=[] | b=[] | c=["G5110"]  → chose []
+
+G5232 (None):
+  notes_from_pm: a="Dyn. IV-V. Lintel of 'Yetty', Dyn. IV-V, in Boston Mus. 21.957." | b="Lintel of 'Yetty', Dyn. IV-V, in Boston Mus. 21.957." | c="Lintel of 'Yetty', Dyn. IV–V, in Boston Mus. 21.957."  → chose null
+
+G5270 (Rēʿwer I):
+  sub_period: a=null | b=null | c="Middle Dyn. V"  → chose null
+
+G5280 (Pehenptaḥ):
+  sub_period: a=null | b=null | c="Middle Dyn. V"  → chose null
+
+G5290 (Ḥetepniptaḥ):
+  dynasty: a=null | b=null | c="5"  → chose null
+  notes_from_pm: a="Middle Dyn. V or later." | b="Middle Dyn. V or later." | c="Middle Dyn. V or later. No titles recorded in PM headword."  → chose "Middle Dyn. V or later."
+  occupant_role: a="Official" | b="Official" | c="Unknown"  → chose "Official"
+  sub_period: a=null | b=null | c="Middle Dyn. V or later"  → chose null
+
+G5332 (None):
+  notes_from_pm: a="Dyn. V-VI. Stone-built mastaba. Probably LG 39." | b="Dyn. V-VI. Stone-built mastaba. Probably LG 39." | c="Dyn. V–VI. Stone-built mastaba. Probably LG 39."  → chose "Dyn. V-VI. Stone-built mastaba. Probably LG 39."
+  sub_period: a=null | b=null | c="Dyn. V–VI"  → chose null
+  tomb_aliases: a=["LG 39"] | b=["LG 39"] | c=["LG 39 (probable)"]  → chose ["LG 39"]
+
+G5340 (Kaseuza):
+  co_occupant_roles: a=["Official"] | b=[] | c=[]  → chose []
+  co_occupants: a=["Khufudinefʿankh"] | b=[] | c=[]  → chose []
+  is_joint_burial: a=true | b=false | c=false  → chose false
+  notes_from_pm: a="Overseer of commissions, Director of interpreters, Herdsman of the White Bull, etc. Middle Dyn. V. Parents (possibly), Kanufer and Shepsetkau (tomb G 2150). Stone-built mastaba. LG 37. Sub-mastaba: Khufudinefʿankh Overseer of the department of tenants of the Great House, etc. Dyn. V-VI, brick-built mastaba." | b="Overseer of commissions, Director of interpreters, Herdsman of the White Bull, etc. Middle Dyn. V. Parents (possibly), Kanufer and Shepsetkau (tomb G 2150). Stone-built mastaba. LG 37." | c="Overseer of commissions, Director of interpreters, Herdsman of the White Bull, etc. Middle Dyn. V. Parents (possibly), Kanufer and Shepsetkau (tomb G 2150). Stone-built mastaba. LG 37."  → chose "Overseer of commissions, Director of interpreters, Herdsman of the White Bull, etc. Middle Dyn. V. Parents (possibly), Kanufer and Shepsetkau (tomb G 2150). Stone-built mastaba. LG 37."
+  sub_period: a=null | b=null | c="Middle Dyn. V"  → chose null
+
+G5350 (None):
+  attribution_certainty: a="attested" | b="uncertain" | c="uncertain"  → chose "uncertain"
+  co_occupant_roles: a=["Official", "Official", "Official"] | b=[] | c=[]  → chose []
+  co_occupants: a=["Kanufer", "Setka", "Ptahḥotp"] | b=[] | c=[]  → chose []
+  is_joint_burial: a=true | b=false | c=false  → chose false
+  notes_from_pm: a="Dyn. V-VI. Stone-built mastaba. Occupants: Kanufer Judge and Boundary official, Overseer of scribes. Late Old Kingdom; Setka Judge and Overseer of scribes of the secret judgement of the Great Court, and son Ptahḥotp Judge and Overseer of scribes, Dyn. VI." | b="Dyn. V-VI. Stone-built mastaba." | c="Dyn. V–VI. Stone-built mastaba. Contains ointment-slabs from shaft S 846."  → chose "Dyn. V-VI."
+  sub_period: a=null | b=null | c="Dyn. V–VI"  → chose null
+
+G5370 (Zaty):
+  sub_period: a=null | b=null | c="Temp. Neferirkarea or later"  → chose null
+
+G5470 (Rēʿwer II):
+  sub_period: a=null | b=null | c="Late Dyn. V"  → chose null
+
+G5480 (Ḥeti):
+  notes_from_pm: a="Judge and Overseer of scribes, etc. Late Dyn. V or Dyn. VI. Mother (probably), Meresaankh (on statue of Khenut). Stone-built mastaba. LG 29." | b="Judge and Overseer of scribes, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba. LG 29." | c="Judge and Overseer of scribes, etc. Late Dyn. V or Dyn. VI. Mother (probably), Meresaankh. Stone-built mastaba. LG 29."  → chose "Judge and Overseer of scribes, etc. Late Dyn. V or Dyn. VI. Mother (probably), Meresʿankh (on statue of Khenut)."
+  sub_period: a=null | b=null | c="Late Dyn. V or Dyn. VI"  → chose null
+
+G5482 (None):
+  notes_from_pm: a="Fragment with names of Ptaḥiufni King's waab-priest, Inspector of ka-servants, etc., and wife Hemtrea Dyn. V-VI, probably from here." | b="Fragment with names of Ptahiufni King's waab-priest, Inspector of ka-servants, etc., and wife Hemtrea, Dyn. V-VI, probably from here." | c="Fragment with names of PtaHiufni King's waab-priest, Inspector of ka-servants, etc., and wife Hemtrea, Dyn. V–VI, probably from here."  → chose "Fragment with names of Ptaḥiufni King's waʿb-priest, Inspector of ka-servants, etc., and wife Hemtrea, Dyn. V-VI, probably from here."
+  sub_period: a=null | b=null | c="Dyn. V–VI"  → chose null
+
+G5520 (Sʿankhenptaḥ):
+  occupant_role: a="Official" | b="Official" | c="Unknown"  → chose "Official"
+  sub_period: a=null | b=null | c="Late Dyn. V or Dyn. VI"  → chose null
+
+G5550 (Nufer):
+  co_occupant_roles: a=["Official"] | b=[] | c=[]  → chose []
+  co_occupants: a=["Idu II"] | b=[] | c=[]  → chose []
+  is_joint_burial: a=true | b=false | c=false  → chose false
+  notes_from_pm: a="Chief Justice and Vizier, etc. Early Dyn. VI. Wife, Hemtrea Prophetess of Neith Opener-of-the-Ways. Stone-built mastaba. LG 38 equation with G 5550 noted as incorrect by PM footnote. Also sub-occupant Idu [II] Inspector of scribes of the royal documents, Royal chamberlain of the Great House, Overseer of the House of Cedar, etc. Dyn. VI." | b="Good name IDU [I]. Chief Justice and Vizier, etc. Early Dyn. VI. Wife, Hemtrea Prophetess of Neith Opener-of-the-Ways." | c="Good name IDU [I]. Chief Justice and Vizier, etc. Early Dyn. VI. Wife, Hemtrea Prophetess of Neith Opener-of-the-Ways. Stone-built mastaba."  → chose "Chief Justice and Vizier, etc. Early Dyn. VI. Wife, Hemtrea Prophetess of Neith Opener-of-the-Ways."
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 165, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 164, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 165, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 165, "section": "III"}
+  sub_period: a=null | b=null | c="Early Dyn. VI"  → chose null
+
+G5560 (Kakherptaḥ):
+  notes_from_pm: a="Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35." | b="Good name FETEKTA. Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35." | c="Good name FETEKTA. Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35."  → chose "Good name FETEKTA. Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35."
+  occupant_alt_names: a=["Feteḳta"] | b=["Feteḳta"] | c=["Fetekta"]  → chose ["Feteḳta"]
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 166, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 165, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 166, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 166, "section": "III"}
+  sub_period: a=null | b=null | c="Early Dyn. VI"  → chose null
+
 G7000x (Hetepheres I):
   notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
 
@@ -649,6 +770,29 @@ Reviewer-cited row corrections:
   G4811.is_joint_burial: true → false
   G4840.notes_from_pm: "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV. Stone-built mastaba. VIIIss of Junker." → "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV."
   G4860.notes_from_pm: "Scribe of divine books, Lector-priest. Middle or late Dyn. IV. Stone-built mastaba. VIIIn of Junker." → "Scribe of divine books, Lector-priest. Middle or late Dyn. IV."
+  G4941.occupant_name: "Ptahiufni" → "Ptaḥiufni"
+  G4941.notes_from_pm: "Tenant of the Pyramid of Pepy I, Carpenter of the Great Dockyard, Honoured by Harzedef, etc. Dyn. VI." → "Tenant of the Pyramid of Pepy I, Carpenter of the Great Dockyard, Honoured by Ḥarzedef, etc. Dyn. VI."
+  G4970.co_occupants: ["Khentetka"] → ["Khentetka called Khent"]
+  G5110.co_occupants: ["Khephren", "Meresaankh III"] → ["Khephren", "Meresʿankh III"]
+  G5110.co_occupant_roles: ["Parent (probably), King", "Parent (probably), Queen"] → ["Father", "Mother"]
+  G5150.occupant_name: "Seshethotp" → "Seshetḥotp"
+  G5190.dynasty: null → "6"
+  G5232.dynasty: null → "5"
+  G5270.co_occupants: [] → ["Seshemnufer I", "Amenzefas"]
+  G5270.co_occupant_roles: [] → ["Father (probably)", "Mother (probably)"]
+  G5280.co_occupants: [] → ["Seshemnufer I", "Amenzefas"]
+  G5280.co_occupant_roles: [] → ["Father", "Mother"]
+  G5290.dynasty: null → "5"
+  G5332.dynasty: null → "6"
+  G5340.co_occupants: [] → ["Kanufer", "Shepsetkau", "Khufudinef-ʿankh"]
+  G5340.co_occupant_roles: [] → ["Parent (possibly)", "Parent (possibly)", "Overseer of the department of tenants of the Great House, etc."]
+  G5350.dynasty: null → "6"
+  G5480.dynasty: null → "6"
+  G5482.dynasty: null → "6"
+  G5520.dynasty: null → "6"
+  G5550.co_occupants: [] → ["Hemtrea"]
+  G5550.co_occupant_roles: [] → ["Wife, Prophetess of Neith Opener-of-the-Ways"]
+  G5560.notes_from_pm: "Good name FETEKTA. Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35." → "Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waʿb-priests of the Pyramid of Khufu, etc. Early Dyn. VI."
   G7102.occupant_name: "Iou" → "Idu"
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
