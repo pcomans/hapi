@@ -59,6 +59,17 @@ AREA_ORDER: dict[str, int] = {
                # `SAQ-<KingOrQueenName>` from the section-heading royal name.
                # Sorts after both Reisner and Lepsius forms; pyramids are
                # Memphite but live in their own geographic sub-area.
+    "JKR": 3,  # Junker (Cemetery West / Cemetery East) descriptor-form
+               # (JKR-Irty, JKR-Sonb1, JKR-Inpuhotp, etc.) — PM III.1
+               # § III.A West Field Junker-excavated NAMED mastabas
+               # (chunk 10). PM gives no Reisner G-number for these
+               # tombs; the headword IS the occupant's all-caps name.
+               # Synthesise `JKR-<TitleCaseName>` from the headword.
+    "S": 4,    # Steindorff S-numbers (S 4040, S 4399, S 4419, etc.) —
+               # PM III.1 § III.A West Field Steindorff-excavated
+               # tombs (chunk 10 + future Steindorff cemetery chunk).
+               # PM prints `S <NUM>` or `S <NUM1>/<NUM2>` for twin-
+               # numbered tombs.
     # Future chunks extend this dict AS THEY LAND their first row;
     # `tests/…::test_prefix_vocabulary_consistent` pins this dict against the
     # test regex so the two stay in sync.

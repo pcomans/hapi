@@ -293,11 +293,154 @@ SAQ-Wezebten (Wezebten):
 SAQ-WifeOfIsesi (None):
   notes_from_pm: a="PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V. PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7." | b="PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V. PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7." | c="PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7."  → chose "PYRAMID-ENCLOSURE PROBABLY OF WIFE OF ISESI. Dyn. V. PYRAMID. Lepsius, XXVIII; Perring and Vyse, 7."
 
+JKR-Ankh (ʿAnkh):
+  co_occupant_roles: a=["mjtrt"] | b=["Wife, mitrt"] | c=["mitrt"]  → chose ["Wife, mitrt"]
+  notes_from_pm: a="ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." | b="ʾtw-official. Late Old Kingdom. Wife, Nefertka mitrt." | c="ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt."  → chose "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt."
+
+JKR-Ankhmare (ʿAnkhmaʿrēʿ):
+  notes_from_pm: a="King's waʿb-priest. Dyn. VI." | b="King’s waʿb-priest. Dyn. VI." | c="King's waʿb-priest. Dyn. VI."  → chose "King's waʿb-priest. Dyn. VI."
+
+JKR-Ankhu (ʿAnkhu):
+  notes_from_pm: a="Tutor of the King's sons, Overseer of weavers of the Great House. Late Old Kingdom." | b="Tutor of the King’s sons, Overseer of weavers of the Great House. Late Old Kingdom." | c="Tutor of the King's sons, Overseer of weavers of the Great House. Late Old Kingdom."  → chose "Tutor of the King's sons, Overseer of weavers of the Great House. Late Old Kingdom."
+
+JKR-Hebi (Ḥebi):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 107, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}
+
+JKR-Iiu (Iiu):
+  co_occupant_roles: a=[""] | b=["Wife"] | c=[]  → chose ["Wife"]
+  notes_from_pm: a="Overlord of linen (sšrw), etc. Dyn. VI. Wife, Tepemnefert." | b="Overlord of linen (sSrw), etc. Dyn. VI. Wife, Tepemnefert." | c="Overlord of linen (sSrw), etc. Dyn. VI. Wife, Tepemnefert"  → chose "Overlord of linen (sšrw), etc. Dyn. VI. Wife, Tepemnefert."
+
+JKR-Inpuhotp (Inpuḥotp):
+  co_occupant_roles: a=["Royal acquaintance"] | b=["Parent, Prophet of Neuserreʿ, etc.", "Parent, Royal acquaintance", "Wife"] | c=["Royal acquaintance"]  → chose ["Royal acquaintance"]
+  co_occupants: a=["Senezem"] | b=["Ither", "Sabt", "Senezem"] | c=["Senezem"]  → chose ["Senezem"]
+  notes_from_pm: a="Prophet of the shrine of Anubis in Aphroditopolis, Prophet of Sahurēʿ and Neuserrēʿ, Prophet of Rēʿ in the Sun-temple of Neuserrēʿ, etc. Dyn. VI. Parents, Ither Prophet of Neuserrēʿ, etc., and Sabt Royal acquaintance. Wife, Senezem." | b="Prophet of the shrine of Anubis in Aphroditopolis, Prophet of Saḥureʿ and Neuserreʿ, Prophet of Reʿ in the Sun-temple of Neuserreʿ, etc. Dyn. VI. Parents, Ither Prophet of Neuserreʿ, etc., and Sabt Royal acquaintance. Wife, Senezem." | c="Prophet of the shrine of Anubis in Aphroditopolis, Prophet of Sahurēʿ and Neuserrēʿ, Prophet of Rēʿ in the Sun-temple of Neuserrēʿ, etc. Dyn. VI. Parents, Ither Prophet of Neuserrēʿ, etc., and Sabt Royal acquaintance. Wife, Senezem"  → chose "Prophet of the shrine of Anubis in Aphroditopolis, Prophet of Saḥurēʿ and Neuserrēʿ, Prophet of Rēʿ in the Sun-temple of Neuserrēʿ, etc. Dyn. VI. Parents, Ither Prophet of Neuserrēʿ, etc., and Sabt Royal acquaintance. Wife, Senezem."
+
+JKR-Irty (Irty):
+  co_occupant_roles: a=["mjtrt"] | b=["Wife, mitrt"] | c=[]  → chose ["Wife, mitrt"]
+  co_occupants: a=["Ishpet"] | b=["Ishpet"] | c=[]  → chose ["Ishpet"]
+  notes_from_pm: a="Recruit, Overseer of draughts-players of the crews, etc. Late Old Kingdom. Wife, Ishpet mjtrt." | b="Recruit, Overseer of draughts-players of the crews, etc. Late Old Kingdom. Wife, Ishpet mitrt." | c="Recruit, Overseer of draughts-players of the crews, etc. Late Old Kingdom. Wife, Ishpet mitrt."  → chose "Recruit, Overseer of draughts-players of the crews, etc. Late Old Kingdom. Wife, Ishpet mitrt."
+
+JKR-Ithu (Ithu):
+  co_occupant_roles: a=["mjtrt"] | b=["Parent (probably), Scribe", "Parent (probably), mitrt", "Wife, mitrt"] | c=["mitrt"]  → chose ["Parent (probably), Scribe", "Parent (probably), mitrt", "Wife, mitrt"]
+  co_occupants: a=["Intkaes"] | b=["Iaaib", "Khaut", "Intkaes"] | c=["Intkaes"]  → chose ["Intkaes"]
+  notes_from_pm: a="King's waʿb-priest. Dyn. VI. Parents (probably), Iʿaib Scribe, and Khaut (I) mjtrt. Wife, Intkaes mjtrt." | b="King’s waʿb-priest. Dyn. VI. Parents (probably), Iaaib Scribe, and Khaut mitrt. Wife, Intkaes mitrt." | c="King's waʿb-priest. Dyn. VI. Parents (probably), Iaʿib Scribe, and Khaut (I) mitrt. Wife, Intkaes mitrt."  → chose "King's waʿb-priest. Dyn. VI. Parents (probably), Iaʿib Scribe, and Khaut (I) mitrt. Wife, Intkaes mitrt."
+
+JKR-KhesefI (Khesef I):
+  notes_from_pm: a="Recruit. Dyn. VI." | b="Recruit. Dyn VI." | c="Recruit. Dyn VI."  → chose "Recruit. Dyn VI."
+
+JKR-KhnemhotpII (Khnemḥotp II):
+  notes_from_pm: a="Overseer of ka-servants, Director of King's waʿb-priests, Prophet of Khufu, etc. Dyn. VI." | b="Overseer of ka-servants, Director of King’s waʿb-priests, Prophet of Khufu, etc. Dyn. VI." | c="Overseer of ka-servants, Director of King's waʿb-priests, Prophet of Khufu, etc. Dyn. VI."  → chose "Overseer of ka-servants, Director of King's waʿb-priests, Prophet of Khufu, etc. Dyn. VI."
+
+JKR-MeniII (Meni II):
+  attribution_certainty: a="probable" | b="attested" | c="attested"  → chose "attested"
+  co_occupant_roles: a=[""] | b=["Wife"] | c=[]  → chose ["Wife"]
+  notes_from_pm: a="Elder of the house. Late Dyn. VI. Possibly same as Meni [I]. Wife, Merutnes." | b="Elder of the house. Late Dyn. VI. Possibly same as Meni [I]. Wife, Merutnes." | c="Elder of the house. Late Dyn. VI. Possibly same as Meni [I]. Wife, Merutnes"  → chose "Elder of the house. Late Dyn. VI. Possibly same as Meni [I]. Wife, Merutnes."
+  shared_with_tombs: a=["JKR-MeniI"] | b=[] | c=[]  → chose []
+
+JKR-Menib (Menib):
+  notes_from_pm: a="Prophetess of Hathor, etc. Late Old Kingdom." | b="Prophetess of Ḥathor, etc. Late Old Kingdom." | c="Prophetess of Hathor, etc. Late Old Kingdom."  → chose "Prophetess of Hathor, etc. Late Old Kingdom."
+
+JKR-Nebtpezu (Nebtpezu):
+  notes_from_pm: a="mjtrt (woman). Late Old Kingdom." | b="mitrt (woman). Late Old Kingdom." | c="mjtrt (woman). Late Old Kingdom."  → chose "mjtrt (woman). Late Old Kingdom."
+
+JKR-PtahshepsesII (Ptaḥshepses II):
+  occupant_name: a="Ptahshepses II" | b="Ptaḥshepses II" | c="Ptaḥshepses II"  → chose "Ptaḥshepses II"
+
+JKR-Shetui (Shetui):
+  notes_from_pm: a="King's waʿb-priest, Inspector of scribes of the granary, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI." | b="King’s waʿb-priest, Inspector of scribes of the granary, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI." | c="King's waʿb-priest, Inspector of scribes of the granary, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI."  → chose "King's waʿb-priest, Inspector of scribes of the granary, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI."
+
+JKR-Sinekhen (Sinekhen):
+  co_occupant_roles: a=["Female steward, etc."] | b=["Wife, Female steward, etc."] | c=["Female steward, etc."]  → chose ["Female steward, etc."]
+  co_occupants: a=["Maʿkherui"] | b=["Maakherui"] | c=["Maakherui"]  → chose ["Maakherui"]
+  notes_from_pm: a="ʾtw-official, etc. Dyn. VI. Wife, Maʿkherui Female steward, etc." | b="@-official, etc. Dyn. VI. Wife, Maakherui Female steward, etc." | c="ʾtw-official, etc. Dyn. VI. Wife, Maakherui Female steward, etc."  → chose "ʾtw-official, etc. Dyn. VI. Wife, Maʿkherui Female steward, etc."
+
+JKR-Sinufer (Sinufer):
+  co_occupant_roles: a=["Royal acquaintance"] | b=["Wife, Royal acquaintance"] | c=["Royal acquaintance"]  → chose ["Royal acquaintance"]
+  co_occupants: a=["ʿAnkh-ḥathor"] | b=["ʿAnkh-hathor"] | c=["ʿAnkh-hathor"]  → chose ["ʿAnkh-hathor"]
+  notes_from_pm: a="Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-ḥathor Royal acquaintance." | b="Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-hathor Royal acquaintance." | c="Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-hathor Royal acquaintance."  → chose "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-hathor Royal acquaintance."
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 107, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}
+
+JKR-SonbI (Sonb I):
+  co_occupant_roles: a=["Prophetess of Hathor and Neith, etc."] | b=["Wife, Prophetess of Hathor and Neith, etc."] | c=["Prophetess of Hathor and Neith, etc."]  → chose ["Prophetess of Hathor and Neith, etc."]
+  notes_from_pm: a="Director of dwarfs in charge of dressing, Tutor of the King's sons, Prophet of Khufu and Raʿzedef, etc. (dwarf). Middle Dyn. VI or later. Wife, Sentiotes [I, Prophetess of Hathor and Neith, etc." | b="Director of dwarfs in charge of dressing, Tutor of the King’s sons, Prophet of Khufu and Raʿzedef, etc. (dwarf). Middle Dyn. VI or later. Wife, Sentiotes [I] Prophetess of Ḥathor and Neith, etc." | c="Director of dwarfs in charge of dressing, Tutor of the King's sons, Prophet of Khufu and Raʿzedef, etc. (dwarf). Middle Dyn. VI or later. Wife, Sentiotes [I], Prophetess of Hathor and Neith, etc."  → chose "Director of dwarfs in charge of dressing, Tutor of the King's sons, Prophet of Khufu and Raʿzedef, etc. (dwarf). Middle Dyn. VI or later. Wife, Sentiotes I Prophetess of Ḥathor and Neith, etc."
+
+S4040 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 107, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 108, "section": "III"}
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
+OCR-drift fixes (Roman-numeral restore in notes_from_pm):
+  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
+  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
+  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
+  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
+  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
+
 Reviewer-cited row corrections:
+  G1020.occupant_role: "Unknown" → "Official"
+  G1104.occupant_role: "Unknown" → "Official"
+  G1204.occupant_role: "Unknown" → "Official"
+  G1207.occupant_role: "Royal Family" → "Official"
+  G1221.attribution_certainty: "probable" → "uncertain"
+  G1221.notes_from_pm: "Shad (?) (?), Royal acquaintance. Probably Dyn. V." → "Royal acquaintance. Probably Dyn. V."
+  G1227.occupant_role: "Royal Family" → "Official"
+  G1234.occupant_name: "ʿAnkh-Haf" → "ʿAnkh-haf"
+  G1234.occupant_alt_names: [] → ["Ankhhaf", "Ankh-haf"]
+  G1314.occupant_name: null → "Khaʿkareʿ"
+  G1314.occupant_role: "Unknown" → "Official"
+  G1314.attribution_certainty: "uncertain" → "probable"
+  G1314.notes_from_pm: "Second half of Dyn. V." → "Second half of Dyn. V. Architrave with figure of Khaʿkareʿ repeated nine times. Double-statue, Khaʿkareʿ, Hairdresser of the Great House."
+  G1607.is_unfinished: true → false
+  G2335.dynasty: null → "5"
+  G2335.notes_from_pm: null → "Dyn. V. Wood statuettes from burial chamber of shaft A."
+  G2336.dynasty: null → "6"
+  G2336.occupant_name: null → "Khuwiptah"
+  G2336.occupant_role: "Unknown" → "Official"
+  G2336.notes_from_pm: null → "Relief-fragment with Khuwiptah and text. Three female statuettes, wood, Dyn. V-VI, from serdab. False-door of Theneny Inspector of ka-servants, etc., Dyn. VI, found between tombs G 2337 and G 2371."
+  G2352.occupant_name: "Hagi" → "Ḥagi"
+  G2370.notes_from_pm: "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Stone-built mastaba. LG 27." → "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Wife, Thefi Royal acquaintance. Stone-built mastaba. LG 27."
+  G2370.occupant_alt_names: ["Inti"] → ["Inti", "Senedjemib"]
+  G2375.occupant_name: "Akhetmehu" → "Akhetmeḥu"
+  G2375a.occupant_name: "ʿAnkhirptah" → "ʿAnkhirptaḥ"
+  G2378.co_occupant_roles: ["Wife, King's daughter of his body, Prophetess of Hathor"] → ["Wife, King's daughter of his body, Prophetess of Ḥathor"]
+  G2378.notes_from_pm: "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26." → "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Wife, Khentkaus King's daughter of his body, Prophetess of Ḥathor. Stone-built mastaba. LG 26."
+  G2378.occupant_alt_names: ["Meḥi"] → ["Meḥi", "Senedjemib"]
+  G2407.dynasty: null → "5"
+  G2407.notes_from_pm: null → "Late Dyn. V. Statues found in débris of shaft D."
+  G2430.co_occupant_roles: ["Wife, Prophetess of Hathor in all her places"] → ["Wife, Prophetess of Ḥathor in all her places"]
+  G2430.notes_from_pm: "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25." → "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Wife, Khaʿmerernebti Prophetess of Ḥathor in all her places, etc. Stone-built mastaba. LG 25."
+  G2430.occupant_name: "Hetepniptah" → "Ḥetepniptaḥ"
+  G2501.dynasty: null → "6"
+  G2501.notes_from_pm: null → "Dyn. VI. Statuette found in front of mastaba."
   G3035.co_occupant_roles: ["Wife, mjtrt"] → ["Wife, mitrt"]
   G3035.notes_from_pm: "Judge and Scribe. Dyn. VI. Wife, Nefert mjtrt." → "Judge and Scribe. Dyn. VI. Wife, Nefert mitrt."
+  G3086.notes_from_pm: "Prophet of Khufu, Raʿzedef, and Khephren, waab-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance." → "Prophet of Khufu, Raʿzedef, and Khephren, waʿb-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance."
+  G3086.shared_with_tombs: [] → ["G3098"]
   G3097.occupant_name: "Neferhi" → "Neferḥi"
   G3098.shared_with_tombs: [] → ["G3086"]
+  G7102.occupant_name: "Iou" → "Idu"
+  LG83.co_occupant_roles: [] → ["Queen"]
+  LG97.co_occupant_roles: [] → ["Official"]
+  LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
+  SAQ-IputI.occupant_name: "Iput I" → "Iput"
+  SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
+  SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
+  SAQ-IputII.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} → {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"}
+  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. ¹ King's wife (of Teti)."
+  SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
+  SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]
+  JKR-Ankh.notes_from_pm: "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." → "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt."
+  JKR-Inpuhotp.co_occupants: ["Senezem"] → ["Ither", "Sabt", "Senezem"]
+  JKR-Inpuhotp.co_occupant_roles: ["Royal acquaintance"] → ["Parent, Prophet of Neuserrēʿ, etc.", "Parent, Royal acquaintance", "Wife"]
+  JKR-Ithu.co_occupants: ["Intkaes"] → ["Iaʿib", "Khaut I", "Intkaes"]
+  JKR-KhesefI.notes_from_pm: "Recruit. Dyn VI." → "Recruit. Dyn. VI."
+  JKR-MeniII.notes_from_pm: "Elder of the house. Late Dyn. VI. Possibly same as Meni [I]. Wife, Merutnes." → "Elder of the house. Late Dyn. VI. Possibly same as Meni I. Wife, Merutnes."
+  JKR-Menib.notes_from_pm: "Prophetess of Hathor, etc. Late Old Kingdom." → "Prophetess of Ḥathor, etc. Late Old Kingdom."
+  JKR-Nebtpezu.notes_from_pm: "mjtrt (woman). Late Old Kingdom." → "mitrt (woman). Late Old Kingdom."
+  JKR-Sinekhen.co_occupants: ["Maakherui"] → ["Maʿkherui"]
+  JKR-Sinekhen.co_occupant_roles: ["Female steward, etc."] → ["Wife, Female steward, etc."]
+  JKR-Sinufer.co_occupants: ["ʿAnkh-hathor"] → ["ʿAnkh-ḥathor"]
+  JKR-Sinufer.co_occupant_roles: ["Royal acquaintance"] → ["Wife, Royal acquaintance"]
+  JKR-Sinufer.notes_from_pm: "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-hathor Royal acquaintance." → "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-ḥathor Royal acquaintance."
+  JKR-SonbI.co_occupant_roles: ["Prophetess of Hathor and Neith, etc."] → ["Wife, Prophetess of Ḥathor and Neith, etc."]
