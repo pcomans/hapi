@@ -315,6 +315,16 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       three-co-occupant parent-pair-plus-wife block, `mitrt`
       typography, controlled-vocab fallback for unknown joint-twin
       role, and PM cross-reference preservation).
+    - Chunk 14 (halves 14a+14b): `G4351|co_occupant_roles`,
+      `G4520|occupant_name`, `G4561|co_occupant_roles`,
+      `G4561|notes_from_pm`, `G4630|co_occupant_roles`,
+      `G4630|notes_from_pm`, `G4651|co_occupant_roles`,
+      `G4651|notes_from_pm`, `G4710|co_occupant_roles`,
+      `G4710|notes_from_pm`, `G4761|co_occupants`,
+      `G4761|co_occupant_roles` (Cemetery G 4000 — Imisetkai
+      Ḥathor-titled wife, Khufu-ʿAnkh hyphenated theophoric, four
+      Wife-<Hathor/Neith>-clause rows in the second half, G 4761
+      Nufer [I] three-co-occupant Probably-parent-pair-plus-wife).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -381,6 +391,26 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("D215", "notes_from_pm"),
         ("STN-Iri", "co_occupant_roles"),
         ("STN-Nu", "notes_from_pm"),
+        # Chunk 14 (halves 14a + 14b): Cemetery G 4000 (Hemiunu cluster
+        # — Reisner Excavation). 12 ties resolved: G4351 + G4520 in 14a
+        # (Imisetkai wife title cluster preservation, Khufu-ʿAnkh
+        # hyphenation convention), G4561 / G4630 / G4651 / G4710 wife-
+        # clause roles + notes pattern (Wife, <title> form + Ḥathor
+        # underdot + waʿb normalisation + drop mastaba trailer), G4761
+        # Nufer [I] three-co-occupant block (Probably-parent-pair + wife
+        # parallel to chunk-11 D117).
+        ("G4351", "co_occupant_roles"),
+        ("G4520", "occupant_name"),
+        ("G4561", "co_occupant_roles"),
+        ("G4561", "notes_from_pm"),
+        ("G4630", "co_occupant_roles"),
+        ("G4630", "notes_from_pm"),
+        ("G4651", "co_occupant_roles"),
+        ("G4651", "notes_from_pm"),
+        ("G4710", "co_occupant_roles"),
+        ("G4710", "notes_from_pm"),
+        ("G4761", "co_occupants"),
+        ("G4761", "co_occupant_roles"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

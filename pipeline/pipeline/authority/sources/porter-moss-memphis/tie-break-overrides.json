@@ -197,5 +197,53 @@
   "STN-Nu|notes_from_pm": {
     "value": "(woman). Dyn. V-VI. Cf. text left of doorway of tomb D. 117.",
     "rationale": "1/1/1 tie on chunk-11b STN-Nu interstitial uncertain-attribution tomb. PM III.1 2nd ed. 1974 printed p.114 (physical p.111) prints `Nu (?) (woman). Dyn. V-VI.` followed by body trailer `Stone-built mastaba. Excavated by Junker. Cf. text left of doorway of tomb D. I 17.` Per chunk-11 prompt rules: drop occupant name (Nu is in occupant_name), drop mastaba-type body trailer, KEEP cross-references (`Cf. text...`). Three agent variants: (A) keeps mastaba trailer + cross-ref (partially rule-violating); (B) drops mastaba but adds synthesised `Exact position unknown.` (not in PM source); (C) drops cross-ref entirely (loses a spec-required element). Selecting synthesised form: drop name + drop mastaba trailer + drop synthesised position note + keep cross-ref (with pypdf `D. I 17` normalised to `D. 117`)."
+  },
+  "G4351|co_occupant_roles": {
+    "value": ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, etc."],
+    "rationale": "1/1/1 tie on chunk-14a G 4351 IMISETKAI wife role. PM III.1 2nd ed. 1974 printed p.126 (physical p.123) prints `Wife, Khuitbauinu (?) (?), Prophetess of Hathor Mistress-of-the-Sycamore in all her places, etc.` Three agent variants on the wife title cluster: (A) full PM-faithful with Ḥathor underdot + `, etc.` (preserves PM-verbatim form); (B) `Wife, Prophetess of Hathor` (truncated + no underdot); (C) `Wife, Prophetess of Hathor Mistress-of-the-Sycamore` (no underdot + truncated `, etc.`). Selecting A — most PM-faithful with the chunks 8/9 source-wide Ḥathor underdot convention and chunks 9-11 `, etc.` marker preservation rule applied."
+  },
+  "G4520|occupant_name": {
+    "value": "Khufu-ʿAnkh",
+    "rationale": "1/1/1 tie on chunk-14a G 4520 KHUFUaANKH occupant name. PM III.1 2nd ed. 1974 printed p.129 (physical p.126) prints the theophoric `KHUFUaANKH` (raised-a ayin between KHUFU and ANKH). Three agent variants: (A) `Khufuʿankh` (no hyphen, lowercase a in ankh — concatenated); (B) `Khufu-ʿAnkh` (hyphenated + capital A on the ʿAnkh element per chunk-9 G3050 ʿANKH / chunk-11 D215 ʿAnkh-Ḥathor precedent); (C) `Khufu-ʿankh` (hyphenated but lowercase a). Selecting B — matches the chunk-11 D215 hyphenated-theophoric convention (`ʿAnkh-Ḥathor`) where each element of a compound is capitalised."
+  },
+  "G4561|co_occupant_roles": {
+    "value": ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc."],
+    "rationale": "1/1/1 tie on chunk-14b G 4561 KAEMaANKH wife role. PM III.1 2nd ed. 1974 printed p.131 (physical p.128) prints `Wife, Theset Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc.` (chunk-9 G3050/G3093 Ḥathor+Neith twin-title pattern repeated here). Three agent variants: (A) full `Wife, <title>` form with Ḥathor underdot and `, etc.` (PM-faithful); (B) `[]` (dropped wife entirely); (C) `Prophetess of Ḥathor ... etc.` (dropped `Wife,` prefix). Selecting A per chunks 9-11/13 `Wife, <title>` convention."
+  },
+  "G4561|notes_from_pm": {
+    "value": "Inspector of administrators of the Treasury, King's waʿb-priest, Inspector of prophets, etc. Dyn. VI. Wife, Theset Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc.",
+    "rationale": "1/1/1 tie on chunk-14b G 4561 KAEMaANKH notes. PM III.1 2nd ed. 1974 printed p.131 (physical p.128). Three agent variants: (A) ASCII-quote + Ḥathor underdot + full wife clause; (B) curly-quote (U+2019) + Ḥathor underdot + full wife clause; (C) ASCII-quote + Stone-built mastaba body trailer (rule-violating: should drop mastaba). Selecting synthesised form: ASCII straight quote per chunks 1-13 convention + Ḥathor underdot + full wife clause preserved + waab→waʿb per source-wide ayin convention + mastaba body trailer dropped."
+  },
+  "G4630|co_occupant_roles": {
+    "value": ["Wife, Royal acquaintance"],
+    "rationale": "1/1/1 tie on chunk-14b G 4630 MEDUNUFER wife role. PM III.1 2nd ed. 1974 printed p.133 (physical p.130) prints `Wife, Nubka Royal acquaintance.` Three agent variants: (A) `[\"Wife, Royal acquaintance\"]` (PM-faithful with `Wife,` prefix per chunks 9-11/13 convention); (B) `[]` (dropped wife entirely); (C) `[\"Royal acquaintance\"]` (dropped `Wife,` prefix). Selecting A."
+  },
+  "G4630|notes_from_pm": {
+    "value": "Chief lector-priest, Scribe of divine books, sma-priest of Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance.",
+    "rationale": "1/1/1 tie on chunk-14b G 4630 MEDUNUFER notes. PM III.1 2nd ed. 1974 printed p.133 (physical p.130). Three agent variants: (A) full title cluster + dating + wife clause + mastaba trailer + Schiaparelli excavator note (rule-violating: should drop mastaba trailer and excavator history); (B) truncated title `sma-priest [title continues]` + mastaba (incomplete); (C) full title cluster + dating + mastaba + Schiaparelli (drops wife — rule-violating per wife-clause preservation rule). Selecting synthesised form: full title cluster + dating + wife clause + drop mastaba body trailer + drop excavator history (Schiaparelli excavator note is body-prose context per chunk-1 discovery_year/discoverer null convention)."
+  },
+  "G4651|co_occupant_roles": {
+    "value": ["Wife, Royal acquaintance"],
+    "rationale": "1/1/1 tie on chunk-14b G 4651 KAPUNESUT (called KAI) wife role. PM III.1 2nd ed. 1974 printed p.135 (physical p.132) prints `Wife, Khuitka Royal acquaintance.` Same wife-clause preservation pattern as G4630. Three agent variants parallel to G4630: (A) `Wife, Royal acquaintance` (PM-faithful); (B) `[]`; (C) `Royal acquaintance`. Selecting A."
+  },
+  "G4651|notes_from_pm": {
+    "value": "Overseer of ka-servants, Overseer of the houses of the King's children, Judge and Scribe of the crews, etc. Early to middle Dyn. V. Wife, Khuitka Royal acquaintance.",
+    "rationale": "1/1/1 tie on chunk-14b G 4651 KAPUNESUT called KAI notes. PM III.1 2nd ed. 1974 printed p.135 (physical p.132). PM headword: `G 4651. KAPUNESUT called KAI Overseer of ka-servants ...`. The `called KAI` is the alt-name idiom (chunks 9/11 `called <ALT>` precedent — alt-name goes in `occupant_alt_names: [\"Kai\"]`). Three agent variants: (A) drops `Called Kai` from notes (correct: alt-name lives in occupant_alt_names, not in notes); (B) keeps `Called Kai.` in notes; (C) keeps `Called Kai.` + drops wife clause + adds mastaba trailer (rule-violating). Selecting A — drops the alt-name from notes (kept in occupant_alt_names) per the chunks-9/11 `called <ALT>` convention; preserves full title cluster + wife clause; drops mastaba trailer."
+  },
+  "G4710|co_occupant_roles": {
+    "value": ["Wife, Prophetess of Ḥathor North-of-the-Wall, etc."],
+    "rationale": "1/1/1 tie on chunk-14b G 4710 SETHU wife role. PM III.1 2nd ed. 1974 printed p.135 (physical p.132) prints `Wife, Nubhotp Prophetess of Ḥathor North-of-the-Wall, etc.` Same wife-clause + Ḥathor underdot pattern as G4561. Three agent variants: (A) `Wife, Prophetess of Ḥathor North-of-the-Wall, etc.` (PM-faithful); (B) `[]`; (C) `Prophetess of Ḥathor North-of-the-Wall, etc.` (no `Wife,` prefix). Selecting A per chunks 9-11/13 convention."
+  },
+  "G4710|notes_from_pm": {
+    "value": "Director of the Palace, Secretary of the Toilet-house, Master of the largesse in the Mansion of Life, etc. Dyn. V. Wife, Nubhotp Prophetess of Ḥathor North-of-the-Wall, etc.",
+    "rationale": "1/1/1 tie on chunk-14b G 4710 SETHU notes. PM III.1 2nd ed. 1974 printed p.135 (physical p.132). Three agent variants: (A) full title cluster + dating + wife clause + Ḥathor underdot (PM-faithful); (B) full title cluster + dating + wife clause WITHOUT Ḥathor underdot (Hathor flat); (C) full title cluster + dating + Stone-built mastaba body trailer + LG 49 alias (drops wife — rule-violating). Selecting A — preserves wife clause per chunks 9-11/13 convention + Ḥathor underdot per chunks 8/9 + drops mastaba body trailer + LG 49 alias would belong in tomb_aliases if kept, but PM prints it as a body-prose mastaba descriptor not a headword cross-reference, so dropping per source-wide policy."
+  },
+  "G4761|co_occupants": {
+    "value": ["Kakhent", "Thetit", "Hetepmaaet"],
+    "rationale": "1/1/1 tie on chunk-14b G 4761 NUFER [I] co_occupants. PM III.1 2nd ed. 1974 printed p.137 (physical p.134) prints `Probably parents, Kakhent ... and Thetit ... Royal acquaintances. Wife, Hetepmaaet Royal acquaintance.` Three agent variants: (A) all three co-occupants (PM-order parents-first + wife per chunk-11 D117 precedent); (B) `[]` (dropped all); (C) only wife `[Hetepmaaet]` (dropped parents). Selecting A per chunk-11 D117 three-co-occupant parent-pair-plus-wife convention."
+  },
+  "G4761|co_occupant_roles": {
+    "value": ["Parent (probably), Royal acquaintance", "Parent (probably), Royal acquaintance", "Wife, Royal acquaintance"],
+    "rationale": "1/1/1 tie on chunk-14b G 4761 NUFER [I] co_occupant_roles. PM III.1 2nd ed. 1974 printed p.137 (physical p.134). Length-coupled with co_occupants. PM hedges `Probably parents` (uncertain attribution of Kakhent + Thetit as Nufer's parents); per source-wide hedge-token convention, role gets `Parent (probably)` prefix (analogue to chunk-11 D117 gendered `Father, ...` / `Mother, ...` but PM does not gender these — both are `Royal acquaintance`). Three agent variants: (A) all three roles with hedged Parent prefix (PM-faithful); (B) `[]`; (C) only wife `Royal acquaintance`. Selecting A — preserves PM's `probably` hedge and pairs each co-occupant with their PM-printed title."
   }
 }

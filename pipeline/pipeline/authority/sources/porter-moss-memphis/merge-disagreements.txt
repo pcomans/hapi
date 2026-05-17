@@ -207,6 +207,86 @@ G3098 (Iymerery):
   notes_from_pm: a="With annexe. (a) Iymerery waab-priest of the King's mother, Inspector of waab-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferhetpes-wer (woman), King's adorner, etc. Dyn. VI. Father, Duareʿ King's son of his body. North-east annexe." | b="with annexe. (a) waab-priest of the King's mother, Inspector of waab-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferḥetpes-Wer (woman), King's adorner, etc. Dyn. VI. Father, Duareʿ King's son of his body. North-east annexe." | c="with annexe. Mastaba with stone filling lined with bricks. (a) Iymerery waʿb-priest of the King's mother, Inspector of waʿb-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferḥetpes-Wer (woman), King's adorner, etc. Dyn. VI. Father, Duarea King's son of his body. North-east annexe."  → chose "with annexe. (a) Iymerery waʿb-priest of the King's mother, Inspector of waʿb-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferḥetpes-Wer (woman), King's adorner, etc. Dyn. VI. Father, Duareʿ King's son of his body. North-east annexe."
   shared_with_tombs: a=[] | b=["G3086"] | c=[]  → chose []
 
+G4121 (ʿAnkhemrēʿ):
+  dynasty: a="6" | b="5" | c="6"  → chose "6"
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 123, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 122, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 123, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 123, "section": "III"}
+
+G4160 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 124, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 125, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 124, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 124, "section": "III"}
+
+G4351 (Imisetkai):
+  co_occupant_roles: a=["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, etc."] | b=["Wife, Prophetess of Hathor"] | c=["Wife, Prophetess of Hathor Mistress-of-the-Sycamore"]  → chose ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, etc."]
+  notes_from_pm: a="Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, etc." | b="Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Hathor Mistress-of-the-Sycamore in all her places, etc." | c="Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Hathor Mistress-of-the-Sycamore in all her places, etc."  → chose "Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Hathor Mistress-of-the-Sycamore in all her places, etc."
+
+G4410 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 127, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 128, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 127, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 127, "section": "III"}
+
+G4411 (Sekhemka):
+  notes_from_pm: a="Lector-priest, ma-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later." | b="Lector-priest, waʿb-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later." | c="Lector-priest, ma-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later."  → chose "Lector-priest, ma-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later."
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 127, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 128, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 127, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 127, "section": "III"}
+
+G4420 (Tetu):
+  dynasty: a="6" | b="5" | c="6"  → chose "6"
+
+G4440 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 128, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 129, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 128, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 128, "section": "III"}
+
+G4461 (Kapuptaḥ):
+  co_occupant_roles: a=["Wife, mjtrt"] | b=["Wife, mjtrt"] | c=["Wife"]  → chose ["Wife, mjtrt"]
+  co_occupants: a=["Ipep"] | b=["Ipep"] | c=["Ipep mjtrt"]  → chose ["Ipep"]
+
+G4513 (Neferihy):
+  occupant_name: a="Neferihy" | b="Neferihy" | c="Neferiḥy"  → chose "Neferihy"
+
+G4520 (Khufu-ʿAnkh):
+  co_occupant_roles: a=["Parent, Tenant", "Parent, Tenant", "Wife, Royal acquaintance"] | b=["Father, Tenant", "Mother, Tenant", "Wife, Royal acquaintance"] | c=["Parent, Tenant", "Parent, Tenant", "Wife, Royal acquaintance"]  → chose ["Parent, Tenant", "Parent, Tenant", "Wife, Royal acquaintance"]
+  occupant_name: a="Khufuʿankh" | b="Khufu-ʿAnkh" | c="Khufu-ʿankh"  → chose "Khufu-ʿAnkh"
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 129, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 130, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 129, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 129, "section": "III"}
+
+G4561 (Kaemʿankh):
+  co_occupant_roles: a=["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc."] | b=[] | c=["Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc."]  → chose ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc."]
+  co_occupants: a=["Theset"] | b=[] | c=["Theset"]  → chose ["Theset"]
+  notes_from_pm: a="Inspector of administrators of the Treasury, King's waab-priest, Inspector of prophets, etc. Dyn. VI. Wife, Theset Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc. Stone-built mastaba." | b="Inspector of administrators of the Treasury, King’s waab-priest, Inspector of prophets, etc. Dyn. VI. Wife, Theset Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc. Stone-built mastaba." | c="Inspector of administrators of the Treasury, King's waab-priest, Inspector of prophets, etc. Dyn. VI. Stone-built mastaba."  → chose "Inspector of administrators of the Treasury, King's waʿb-priest, Inspector of prophets, etc. Dyn. VI. Wife, Theset Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, and of Neith Opener-of-the-Ways, etc."
+
+G4630 (Medunufer):
+  co_occupant_roles: a=["Wife, Royal acquaintance"] | b=[] | c=["Royal acquaintance"]  → chose ["Wife, Royal acquaintance"]
+  co_occupants: a=["Nubka"] | b=[] | c=["Nubka"]  → chose ["Nubka"]
+  dynasty: a="5" | b=null | c="5"  → chose "5"
+  notes_from_pm: a="Chief lector-priest, Scribe of divine books, sma-priest of Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance. Stone-built mastaba. Partly excavated by Schiaparelli." | b="Chief lector-priest, Scribe of divine books, sma-priest [title continues]. Stone-built mastaba. Partly excavated by Schiaparelli." | c="Chief lector-priest, Scribe of divine books, sma-priest of Anubis, etc. Dyn. V. Stone-built mastaba. Partly excavated by Schiaparelli."  → chose "Chief lector-priest, Scribe of divine books, sma-priest of Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance."
+
+G4651 (Kapunesut):
+  co_occupant_roles: a=["Wife, Royal acquaintance"] | b=[] | c=["Royal acquaintance"]  → chose ["Wife, Royal acquaintance"]
+  co_occupants: a=["Khuitka"] | b=[] | c=["Khuitka"]  → chose ["Khuitka"]
+  notes_from_pm: a="Overseer of ka-servants, Overseer of the houses of the King's children, Judge and Scribe of the crews, etc. Early to middle Dyn. V. Wife, Khuitka Royal acquaintance. Stone-built mastaba." | b="Called Kai. Overseer of ka-servants, Overseer of the houses of the King's children, Judge and Scribe of the crews, etc. Early to middle Dyn. V. Wife, Khuitka Royal acquaintance. Stone-built mastaba." | c="Called Kai. Overseer of ka-servants, Overseer of the houses of the King's children, Judge and Scribe of the crews, etc. Early to middle Dyn. V. Stone-built mastaba."  → chose "Overseer of ka-servants, Overseer of the houses of the King's children, Judge and Scribe of the crews, etc. Early to middle Dyn. V. Wife, Khuitka Royal acquaintance."
+
+G4710 (Sethu):
+  co_occupant_roles: a=["Wife, Prophetess of Ḥathor North-of-the-Wall, etc."] | b=[] | c=["Prophetess of Ḥathor North-of-the-Wall, etc."]  → chose ["Wife, Prophetess of Ḥathor North-of-the-Wall, etc."]
+  co_occupants: a=["Nubhotp"] | b=[] | c=["Nubhotp"]  → chose ["Nubhotp"]
+  notes_from_pm: a="Director of the Palace, Secretary of the Toilet-house, Master of the largesse in the Mansion of Life, etc. Dyn. V. Wife, Nubhotp Prophetess of Ḥathor North-of-the-Wall, etc. Stone-built mastaba. LG 49." | b="Director of the Palace, Secretary of the Toilet-house, Master of the largesse in the Mansion of Life, etc. Dyn. V. Wife, Nubhotp Prophetess of Hathor North-of-the-Wall, etc. Stone-built mastaba. LG 49." | c="Director of the Palace, Secretary of the Toilet-house, Master of the largesse in the Mansion of Life, etc. Dyn. V. Stone-built mastaba. LG 49."  → chose "Director of the Palace, Secretary of the Toilet-house, Master of the largesse in the Mansion of Life, etc. Dyn. V. Wife, Nubhotp Prophetess of Ḥathor North-of-the-Wall, etc."
+
+G4712 (Nimaʿethap):
+  attribution_certainty: a="probable" | b="attested" | c="probable"  → chose "probable"
+
+G4714 (Neferḥetpes):
+  attribution_certainty: a="probable" | b="attested" | c="probable"  → chose "probable"
+
+G4715 (None):
+  notes_from_pm: a=null | b="Sealing with names of SaHurea(?) and Neuserrea, from shaft B." | c=null  → chose null
+
+G4761 (Nufer I):
+  co_occupant_roles: a=["Parent (probably), Royal acquaintance", "Parent (probably), Royal acquaintance", "Wife, Royal acquaintance"] | b=[] | c=["Royal acquaintance"]  → chose ["Parent (probably), Royal acquaintance", "Parent (probably), Royal acquaintance", "Wife, Royal acquaintance"]
+  co_occupants: a=["Kakhent", "Thetit", "Hetepmaaet"] | b=[] | c=["Hetepmaaet"]  → chose ["Kakhent", "Thetit", "Hetepmaaet"]
+  dynasty: a="6" | b="5" | c="6"  → chose "6"
+  notes_from_pm: a="Prophet of Horus mDdw (Khufu), mDd-r-nbty (nebty-name of Khufu), and Khufu, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI. Parents (probably), Kakhent and Thetit both Royal acquaintances. Wife, Hetepmaaet Royal acquaintance. Stone-built mastaba." | b="Prophet of Horus mDdw (Khufu), mDd-r-nbty (nebty-name of Khufu), and Khufu, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI. Parents (probably), Kakhent and Thetit both Royal acquaintances. Wife, Hetepmaaet Royal acquaintance. Stone-built mastaba." | c="Prophet of Horus mḏdw (Khufu), mḏd-r-nbty (nebty-name of Khufu), and Khufu, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI. Parents (probably), Kakhent and Thetit both Royal acquaintances. Stone-built mastaba."  → chose "Prophet of Horus mDdw (Khufu), mDd-r-nbty (nebty-name of Khufu), and Khufu, Overseer of ka-servants, etc. End of Dyn. V or Dyn. VI. Parents (probably), Kakhent and Thetit both Royal acquaintances. Wife, Hetepmaaet Royal acquaintance. Stone-built mastaba."
+
+G4811 (ʿAnkhirptaḥ):
+  dynasty: a="6" | b="5" | c="6"  → chose "6"
+  is_unfinished: a=false | b=false | c=true  → chose false
+  notes_from_pm: a="Overseer of the warbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI. Stone-built mastaba. Excavated by Schiaparelli." | b="Overseer of the warbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI. Stone-built mastaba. Excavated by Schiaparelli." | c="Overseer of the warbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI. Stone-built mastaba. Excavated by Schiaparelli. Chapel decoration unfinished (preliminary sketches)."  → chose "Overseer of the warbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI. Stone-built mastaba. Excavated by Schiaparelli."
+
+G4813 (None):
+  dynasty: a="6" | b="5" | c="6"  → chose "6"
+
 G7000x (Hetepheres I):
   notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
 

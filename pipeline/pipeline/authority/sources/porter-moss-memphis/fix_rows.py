@@ -1284,6 +1284,11 @@ CHUNK13_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-14 (Cemetery G 4000, Hemiunu cluster — halves 14a + 14b).
+# Starts empty; egyptologist-reviewer + Gemini-review adds entries.
+CHUNK14_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1302,6 +1307,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK11_CORRECTIONS,
     CHUNK12_CORRECTIONS,
     CHUNK13_CORRECTIONS,
+    CHUNK14_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
