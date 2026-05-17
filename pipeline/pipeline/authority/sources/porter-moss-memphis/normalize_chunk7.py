@@ -41,13 +41,14 @@ for tag in "abc":
         )
         m = name_pattern.match(notes)
         if m and m.end() > 0:
-            stripped = notes[m.end():]
-            if stripped and stripped != notes:
-                r["notes_from_pm"] = stripped
+            stripped = notes[m.end():].strip()
+            if stripped != notes:
+                # Empty stripped → None (convention for empty notes).
+                r["notes_from_pm"] = stripped or None
                 changed += 1
                 if len(corrections) < 15:
                     corrections.append(
-                        (tag, r["tomb_id"], notes[:60], stripped[:60])
+                        (tag, r["tomb_id"], notes[:60], (stripped or "<None>")[:60])
                     )
     p.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows)
