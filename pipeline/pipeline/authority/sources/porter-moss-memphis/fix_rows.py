@@ -1120,6 +1120,38 @@ CHUNK11_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "underdot on the medial t)."
         ),
     },
+    # D.215 co_occupant_roles — title `mitrt` is in notes_from_pm but missing
+    # from the role field. Add per chunks 9/10 `Wife, mitrt` convention.
+    ("D215", "co_occupant_roles"): {
+        "value": ["Wife, mitrt"],
+        "rationale": (
+            "Gemini PR #231 round-2 medium: title `mitrt` is in "
+            "notes_from_pm but the role field was just `[\"Wife\"]` "
+            "(dropping the title). Per chunk-9 G 3050 + chunk-10 JKR-Ankh "
+            "+ chunk-11 D116 `Wife, mitrt` convention, the title belongs in "
+            "co_occupant_roles. Same rule that Gemini flagged on D116 "
+            "applies here."
+        ),
+    },
+    # D.39/40 ZASHA page number — agent-majority assigned page 109 because
+    # the chunk-11b raw file's split point dropped the preceding
+    # `=== PHYS PAGE 108 ===` marker, leaving D.39/40 without an immediate
+    # page-marker antecedent; agents fell back to the misleading
+    # `West Field 109` header preserved from the chunk-11 banner head.
+    # PM III.1 2nd ed. 1974 places `D. 39/40` on physical p.108 = printed
+    # p.111 (verified against the PDF: physical p.108 has `West Field 111`
+    # running header followed by D.37, D.38, and D.39/40 headwords).
+    ("D39", "source_citation"): {
+        "value": {"edition": "PM III.1 2nd ed. 1974", "page": 111, "section": "III"},
+        "rationale": (
+            "Gemini PR #231 round-2 medium: page 109 → 111. Verified "
+            "against PM III.1 2nd ed. 1974 PDF physical p.108 (running "
+            "header `West Field 111`) which carries D.37 + D.38 + D.39/40 "
+            "headwords. Agent error caused by chunk-11b split dropping the "
+            "preceding `=== PHYS PAGE 108 ===` marker, leaving agents to "
+            "fall back on the misleading `West Field 109` banner header."
+        ),
+    },
 }
 
 

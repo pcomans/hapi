@@ -559,9 +559,11 @@ Reviewer-cited row corrections:
   JKR-SonbI.co_occupant_roles: ["Prophetess of Hathor and Neith, etc."] → ["Wife, Prophetess of Ḥathor and Neith, etc."]
   D9.occupant_name: "Raʿḥotp" → "Rēʿḥotp"
   D23.occupant_name: "Raʿshepses" → "Rēʿshepses"
+  D39.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 109, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 111, "section": "III"}
   D116.co_occupants: ["Nefert mjtrt"] → ["Nefert"]
   D116.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]
   D116.notes_from_pm: "Overseer of the crew of rowers. Dyn. V-VI. Wife, Nefert mjtrt." → "Overseer of the crew of rowers. Dyn. V-VI. Wife, Nefert mitrt."
   D117.notes_from_pm: "Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Hetepibes called Ipi Royal acquaintance." → "Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Ḥetepibes called Ipi Royal acquaintance."
   D203.notes_from_pm: "Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI." → "Nufer Overseer of barbers, etc., and Itisen Overseer of the tAw of the Great Bark. Late Dyn. V or Dyn. VI."
   D215.co_occupants: ["ʿAnkh-Ḥatḥor"] → ["ʿAnkh-Ḥathor"]
+  D215.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]
