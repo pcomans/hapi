@@ -54,6 +54,59 @@ G1607 (Iʿan):
 G1608 (Senenu):
   attribution_certainty: a="uncertain" | b="probable" | c="uncertain"  → chose "uncertain"
 
+G2000 (None):
+  tomb_aliases: a=["LG 23"] | b=["LG 23"] | c=[]  → chose ["LG 23"]
+
+G2001 (Thetu):
+  notes_from_pm: a="Overseer of the Pyramid-town of Khufu, Inspector of waab-priests of the Pyramid of Khufu, Royal chamberlain of the Great House, etc. Dyn. V-VI." | b="Overseer of the Pyramid-town of Khufu, Inspector of waab-priests of the Pyramid of Khufu, Royal chamberlain of the Great House, etc. Dyn. V-VI." | c="Overseer of the Pyramid-town of Khufu, Inspector of wad-priests of the Pyramid of Khufu, Royal chamberlain of the Great House, etc. Dyn. V-VI."  → chose "Overseer of the Pyramid-town of Khufu, Inspector of waab-priests of the Pyramid of Khufu, Royal chamberlain of the Great House, etc. Dyn. V-VI."
+
+G2004 (Ptah-khenu):
+  occupant_name: a="Ptah-Khenu" | b="Ptah-khenu" | c="Ptah-khenu"  → chose "Ptah-khenu"
+
+G2033 (Irenreʿ):
+  occupant_name: a="Irenreʿa" | b="Irenreʿ" | c="Irenreʿ"  → chose "Irenreʿ"
+
+G2041 (Senenuka):
+  notes_from_pm: a="Overseer of the Pyramid-town of Khufu, Director of King's waab-priests, Boundary official of a settlement, etc. Early Dyn. V." | b="Overseer of the Pyramid-town of Khufu, Director of King's waab-priests, Boundary official of a settlement, etc. Early Dyn. V." | c="Overseer of the Pyramid-town of Khufu, Director of King's wad-priests, Boundary official of a settlement, etc. Early Dyn. V."  → chose "Overseer of the Pyramid-town of Khufu, Director of King's waab-priests, Boundary official of a settlement, etc. Early Dyn. V."
+
+G2091 (ʿKapi):
+  occupant_name: a="ʿKapi" | b="ʿKapi" | c="Kapi"  → chose "ʿKapi"
+
+G2092 (Nimaʿetreʿ):
+  occupant_name: a="Nimaʿetreʿa" | b="Nimaʿetreʿ" | c="Nimaʿetreʿ"  → chose "Nimaʿetreʿ"
+
+G2093 (Nimaʿetreʿ):
+  occupant_name: a="Nimaʿetreʿa" | b="Nimaʿetreʿ" | c="Nimaʿetreʿ"  → chose "Nimaʿetreʿ"
+
+G2100a (Merib):
+  notes_from_pm: a="King's son of his body, Greatest of the seers in On, Treasurer of the God in the ba-neteru, bar-neteru, neb-rekhyt, and dua-tawy boats, etc. Temp. Menkaurea or Shepseskaf (Reisner) or early Dyn. V (Junker). [PM headword: G 2100-I-annexe]" | b="King's son of his body, Greatest of the seers in On, Treasurer of the God in the ba-neteru, bar-neteru, neb-rekhyt, and dua-tawy boats, etc. Temp. Menkaureʿ or Shepseskaf (Reisner) or early Dyn. V (Junker). [PM headword: G 2100-I-annexe]" | c="King's son of his body, Greatest of the seers in On, Treasurer of the God in the ba-neteru, bar-neteru, neb-rekhyt, and dua-tawy boats, etc. Temp. Menkaurea or Shepseskaf (Reisner) or early Dyn. V (Junker). Stone-built mastaba. LG 24. [PM headword: G 2100-I-annexe]"  → chose "King's son of his body, Greatest of the seers in On, Treasurer of the God in the ba-neteru, bar-neteru, neb-rekhyt, and dua-tawy boats, etc. Temp. Menkaureʿ or Shepseskaf (Reisner) or early Dyn. V (Junker)."
+  tomb_aliases: a=["LG 24"] | b=["LG 24"] | c=[]  → chose ["LG 24"]
+
+G2101 (Nensezerkai I):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 71, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 71, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 72, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 71, "section": "III"}
+
+G2132 (None):
+  attribution_certainty: a="uncertain" | b="uncertain" | c="attested"  → chose "uncertain"
+  dynasty: a=null | b=null | c="5"  → chose null
+  notes_from_pm: a=null | b=null | c="Overseer of ka-servants, etc. End of Dyn. V or later."  → chose null
+  occupant_name: a=null | b=null | c="Kedfy"  → chose null
+  occupant_role: a="Unknown" | b="Unknown" | c="Official"  → chose "Unknown"
+
+G2136 (Kahif):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 76, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 75, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 76, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 76, "section": "III"}
+
+G2156 (Kanenesut II):
+  notes_from_pm: a="Greatest of the Ten of Upper Egypt, Prophet of Khufu and Maaet, Secretary of his Lord, etc. Middle Dyn. V." | b="Greatest of the Ten of Upper Egypt, Prophet of Khufu and Maʿet, Secretary of his Lord, etc. Middle Dyn. V." | c="Greatest of the Ten of Upper Egypt, Prophet of Khufu and Maaet, Secretary of his Lord, etc. Middle Dyn. V."  → chose "Greatest of the Ten of Upper Egypt, Prophet of Khufu and Maaet, Secretary of his Lord, etc. Middle Dyn. V."
+
+G2156b (Redenes):
+  notes_from_pm: a="Dyn. VI. Mastaba south of tomb G 2220. There is another G 2156 east of G 2155 (see p. 79)." | b="Dyn. VI. Mastaba south of tomb G 2220. There is another G 2156 east of G 2155." | c="Dyn. VI. Mastaba south of tomb G 2220."  → chose "Dyn. VI. Mastaba south of tomb G 2220. There is another G 2156 east of G 2155 (see p. 79)."
+
+G2184 (Akhmerutnesut):
+  notes_from_pm: a="Overseer of the department of tenants of the Great House, King's waab-priest, etc. End of Dyn. V or Dyn. VI." | b="Overseer of the department of tenants of the Great House, King's waab-priest, etc. End of Dyn. V or Dyn. VI." | c="Overseer of the department of tenants of the Great House, King's wad-priest, etc. End of Dyn. V or Dyn. VI."  → chose "Overseer of the department of tenants of the Great House, King's waab-priest, etc. End of Dyn. V or Dyn. VI."
+
+G2197 (Penmeru):
+  notes_from_pm: a="King's waab-priest, Prophet of Menkaurea, Overseer of ka-servants, etc. End of Dyn. V." | b="King's waab-priest, Prophet of Menkaureʿ, Overseer of ka-servants, etc. End of Dyn. V." | c="King's waab-priest, Prophet of Menkaurea, Overseer of ka-servants, etc. End of Dyn. V."  → chose "King's waab-priest, Prophet of Menkaurea, Overseer of ka-servants, etc. End of Dyn. V."
+
 G7000x (Hetepheres I):
   notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
 
@@ -143,12 +196,36 @@ SAQ-WifeOfIsesi (None):
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
+OCR-drift fixes (Roman-numeral restore in notes_from_pm):
+  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
+  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
+  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
+  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
+  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
+
 Reviewer-cited row corrections:
   G1020.occupant_role: "Unknown" → "Official"
   G1104.occupant_role: "Unknown" → "Official"
   G1204.occupant_role: "Unknown" → "Official"
   G1207.occupant_role: "Royal Family" → "Official"
-  G1221.notes_from_pm: "Shad (?) (?), Royal acquaintance. Probably Dyn. V." → "Shad (?), Royal acquaintance. Probably Dyn. V."
+  G1221.attribution_certainty: "probable" → "uncertain"
+  G1221.notes_from_pm: "Shad (?) (?), Royal acquaintance. Probably Dyn. V." → "Royal acquaintance. Probably Dyn. V."
   G1227.occupant_role: "Royal Family" → "Official"
   G1234.occupant_name: "ʿAnkh-Haf" → "ʿAnkh-haf"
+  G1234.occupant_alt_names: [] → ["Ankhhaf", "Ankh-haf"]
+  G1314.occupant_name: null → "Khaʿkareʿ"
+  G1314.occupant_role: "Unknown" → "Official"
+  G1314.attribution_certainty: "uncertain" → "probable"
+  G1314.notes_from_pm: "Second half of Dyn. V." → "Second half of Dyn. V. Architrave with figure of Khaʿkareʿ repeated nine times. Double-statue, Khaʿkareʿ, Hairdresser of the Great House."
   G1607.is_unfinished: true → false
+  G7102.occupant_name: "Iou" → "Idu"
+  LG83.co_occupant_roles: [] → ["Queen"]
+  LG97.co_occupant_roles: [] → ["Official"]
+  LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
+  SAQ-IputI.occupant_name: "Iput I" → "Iput"
+  SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
+  SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
+  SAQ-IputII.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} → {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"}
+  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. ¹ King's wife (of Teti)."
+  SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
+  SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]

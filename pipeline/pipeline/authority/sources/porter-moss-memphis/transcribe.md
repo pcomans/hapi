@@ -132,3 +132,16 @@ Chunk-6 design choices:
 - Three 2/1 ties on notes_from_pm dropped to 0 disagreements after fix_rows reviewer corrections.
 
 Chunk file text-layer SHA-256 pin: `de6da4216c0653448bf1cf06787cc736ce7d102eab85e88417bb6389865c1416`.
+
+## Chunk 7 scope (West Field G 2000 + G 2100 + Mastaba G 2220)
+
+Physical pp.63–80 / printed pp.66–83 of PM III.1: § III. NECROPOLIS — A. WEST FIELD continuation. Two cemetery banners + the eponymous Mastaba G 2220 cluster. 46 rows total: mix of Shape-1 named-primary, Shape-2 bare-suffix, Shape-3 compound-twin (G 2092+2093 NIMAʿETREʿ).
+
+Chunk-7 design choices:
+- **Duplicate `G 2156` disambiguation.** PM uses the Reisner number `G 2156` for TWO distinct mastabas — Kanenesut II (east of G 2155, p.79) and Redenes (south of G 2220, p.80). PM cross-references the second occurrence with `There is another G 2156 east of G 2155 (see p. 79).` All three extraction agents detected the duplicate and emitted two rows with the same `tomb_id`. A chunk-7 pre-merge dedup pass (`normalize_chunk7.py`) renames the second-occurrence row to `tomb_id: "G2156b"` (lowercase-letter suffix per the existing regex convention) while preserving the cross-reference in `notes_from_pm`. This is the first PM-source duplicate-Reisner-number case in this source; sets the convention for future cases.
+- **G 2100-I-annexe → `tomb_id: "G2100a"`.** PM prints `G 2100-I-annexe.` for Merib's annexe to G 2100 (King's son of Khufu, Greatest of the seers in On). The "I-annexe" annotation is descriptor information not numeric, but the lowercase-letter suffix `a` per the existing tomb_id regex preserves the parent-G-2100 relationship while keeping the row distinct. The "I-annexe" detail itself lives verbatim in `notes_from_pm`.
+- **`normalize_chunk7.py` script** strips occupant-name prefixes from `notes_from_pm` for Shape-1 named rows. The chunk-7 prompt's "verbatim from PM headword block" rule was interpreted by agents as "keep the name in notes", but the chunks 1-6 convention drops the name (lives in `occupant_name`). The normalisation aligns chunk 7 with the source-wide convention. Committed for reproducibility (rerun-on-fresh-extraction = same result).
+- Three tie-break-overrides.json entries for chunk-7 1/1/1 ties: `G2100a|notes_from_pm` (raised-ayin normalisation in `Menkaureʿ`), `G2156b|notes_from_pm` (cross-reference clause preservation). The `G2001|notes_from_pm` tie originally added in this chunk was retired after the name-prefix normalisation collapsed it to a unanimous form.
+- Compound twin `G 2092+2093` NIMAʿETREʿ produces two rows with `shared_with_tombs` cross-refs (parallel to chunks 2 + 6 precedents).
+
+Chunk file text-layer SHA-256 pin: `c200f8771307e263e6b9c5d24ecf0788ca8ce3a173e7734ef9018f77c2cea7f4`.

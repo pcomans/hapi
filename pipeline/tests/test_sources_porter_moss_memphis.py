@@ -120,6 +120,30 @@ CHUNK5_TOMB_IDS: frozenset[str] = frozenset({
     "SAQ-GreatEnclosure",                                           # anon Shape-3
 })
 
+# Chunk 7: Gîza § III.A West Field Cemetery G 2000 + G 2100 + Mastaba G 2220.
+# Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — A. WEST FIELD continuation,
+# physical pp.63–80 / printed pp.66–83. 46 rows total.
+# - Cemetery G 2000 (23 rows): G 2000 through G 2099, mix of named-primary and
+#   bare-suffix shafts. Includes the G 2092+2093 NIMAʿETREʿ compound twin.
+# - Cemetery G 2100 + Mastaba G 2220 (23 rows): G 2100Iannexe (Merib annexe to
+#   G 2100) + G 2101 NENSEZERKAI I (Princess) + G 2110 NUFER + … + G 2155 +
+#   G 2156 Kanenesut II + G 2156b Redenes (PM's second G 2156 — disambiguated
+#   via pre_merge G2156→G2156b rename) + G 2175-G 2197 + G 2220 (eponymous).
+CHUNK7_TOMB_IDS: frozenset[str] = frozenset({
+    # G 2000 cemetery (23 rows)
+    "G2000", "G2001", "G2002", "G2004", "G2009", "G2011",
+    "G2021", "G2032", "G2033", "G2035", "G2036", "G2037", "G2037b",
+    "G2041", "G2061", "G2070", "G2088", "G2089",
+    "G2091", "G2092", "G2093", "G2097", "G2099",
+    # G 2100 cemetery + Mastaba G 2220 (23 rows)
+    "G2100a", "G2101", "G2110", "G2113", "G2120",
+    "G2130", "G2132", "G2135", "G2136", "G2140", "G2150",
+    "G2155", "G2156", "G2156b",
+    "G2175", "G2178", "G2184", "G2185", "G2188",
+    "G2191", "G2196", "G2197",
+    "G2220",
+})
+
 # Chunk 6: Gîza § III.A West Field Junker cemeteries G 1000–G 1900.
 # Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — A. WEST FIELD,
 # physical pp.46–62 / printed pp.49–65. 54 rows (30 named primary + 24
@@ -146,7 +170,7 @@ CHUNK6_TOMB_IDS: frozenset[str] = frozenset({
 
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
-    | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS
+    | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS
 )
 
 
@@ -346,12 +370,17 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "I", row
         elif row["tomb_id"] in CHUNK6_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK7_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
-    """Chunks 1-3 and 6 cite PM III.1; chunks 4 and 5 cite PM III.2."""
+    """Chunks 1-3, 6, 7 cite PM III.1; chunks 4 and 5 cite PM III.2."""
     for row in _rows():
-        if row["tomb_id"] in CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK6_TOMB_IDS:
+        if row["tomb_id"] in (
+            CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
+            | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS
+        ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
@@ -375,6 +404,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 393 <= page <= 417, f"{row['tomb_id']} page {page} outside chunk-5 [393, 417]"
         elif row["tomb_id"] in CHUNK6_TOMB_IDS:
             assert 49 <= page <= 65, f"{row['tomb_id']} page {page} outside chunk-6 [49, 65]"
+        elif row["tomb_id"] in CHUNK7_TOMB_IDS:
+            assert 66 <= page <= 83, f"{row['tomb_id']} page {page} outside chunk-7 [66, 83]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -412,6 +443,10 @@ def test_cemetery_by_chunk() -> None:
                 "G 1000", "G 1100", "G 1200", "G 1300",
                 "G 1400", "G 1500", "G 1600", "G 1900",
             }, row
+        elif row["tomb_id"] in CHUNK7_TOMB_IDS:
+            # Chunk 7: 2 cemetery banners. CEMETERY G 2000 + CEMETERY
+            # G 2100 AND MASTABA G 2220.
+            assert row["cemetery"] in {"G 2000", "G 2100"}, row
 
 
 def test_dynasty_assignments() -> None:
@@ -445,6 +480,10 @@ def test_dynasty_assignments() -> None:
             # cohort: middle/late OK officials), Dyn VI (priestly
             # intrusions). Bare-suffix Shape-2 shafts with no PM dating
             # marker carry `dynasty: null`.
+            assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK7_TOMB_IDS:
+            # Same Old-Kingdom range as chunk 6 (Dyn IV-VI + null for
+            # undated bare-suffix shafts).
             assert row["dynasty"] in {"4", "5", "6", None}, row
 
 
