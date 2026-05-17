@@ -87,7 +87,7 @@ Do NOT emit rows for:
 
 ## Expected row count
 
-Pre-extraction structural scan: 4 Shape-1 named (G 6010, G 6020, G 6030, G 6040) + 4 Shape-2 bare-numeric (G 6012, G 6014, G 6037, G 6042). **Total expected: 8 rows (acceptable band 6–10).** If your final count is below 6 or above 12, re-read the chunk file — you've either missed Shape-2 bare-numeric subsidiaries (commonly missed) or emitted out-of-scope body-prose statues / sub-features.
+Pre-extraction structural scan: 3 Shape-1 named-primary (G 6010, G 6020, G 6040) + 1 Shape-3 bracketed-Roman (G 6030 IT [I]) + 4 Shape-2 bare-numeric (G 6012, G 6014, G 6037, G 6042). **Total expected: 8 rows (acceptable band 6–10).** If your final count is below 6 or above 12, re-read the chunk file — you've either missed Shape-2 bare-numeric subsidiaries (commonly missed) or emitted out-of-scope body-prose statues / sub-features.
 
 ## PM III.1 text-layer noise (chunk-16-relevant)
 

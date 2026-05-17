@@ -1851,9 +1851,10 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 CHUNK16_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # G 6020 co_occupant_roles — restore the `, etc.` marker dropped
     # by agents on the wife title cluster. PM-printed wife clause is
-    # `Wife, Nikauhathor Royal acquaintance, etc.` (split mid-word
-    # across pages by pypdf — `acquain-` on phys p.167 + `tance, etc.`
-    # on phys p.167 bottom). Per chunks 9-15 convention (G 3008,
+    # `Wife, Nikauhathor Royal acquaintance, etc.` (split mid-word by
+    # pypdf hyphenation on phys p.167 — `acquain-` line break, then
+    # `tance, etc.` reappears after ~10 lines of bibliographic body-
+    # prose on the same page). Per chunks 9-15 convention (G 3008,
     # G 3093, G 4351, G 4561, G 4710, G 4970, G 5150, G 5170, G 5340
     # all preserve `, etc.` in role strings when PM prints it).
     ("G6020", "co_occupant_roles"): {
