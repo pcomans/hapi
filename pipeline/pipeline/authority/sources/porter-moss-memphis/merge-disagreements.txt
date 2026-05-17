@@ -770,6 +770,19 @@ Reviewer-cited row corrections:
   G4811.is_joint_burial: true → false
   G4840.notes_from_pm: "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV. Stone-built mastaba. VIIIss of Junker." → "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV."
   G4860.notes_from_pm: "Scribe of divine books, Lector-priest. Middle or late Dyn. IV. Stone-built mastaba. VIIIn of Junker." → "Scribe of divine books, Lector-priest. Middle or late Dyn. IV."
+  G4970.co_occupants: ["Khentetka"] → ["Khentetka called Khent"]
+  G5110.co_occupants: ["Khephren", "Meresaankh III"] → ["Khephren", "Meresʿankh III"]
+  G5290.dynasty: null → "5"
+  G5332.dynasty: null → "6"
+  G5340.co_occupants: [] → ["Kanufer", "Shepsetkau", "Khufudinefʿankh"]
+  G5340.co_occupant_roles: [] → ["Parent (possibly)", "Parent (possibly)", "Overseer of the department of tenants of the Great House, etc."]
+  G5350.dynasty: null → "6"
+  G5480.dynasty: null → "6"
+  G5482.dynasty: null → "6"
+  G5520.dynasty: null → "6"
+  G5550.co_occupants: [] → ["Hemtrea"]
+  G5550.co_occupant_roles: [] → ["Wife, Prophetess of Neith Opener-of-the-Ways"]
+  G5560.notes_from_pm: "Good name FETEKTA. Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35." → "Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waʿb-priests of the Pyramid of Khufu, etc. Early Dyn. VI."
   G7102.occupant_name: "Iou" → "Idu"
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]

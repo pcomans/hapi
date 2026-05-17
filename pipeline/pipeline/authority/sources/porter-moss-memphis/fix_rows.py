@@ -1542,8 +1542,164 @@ CHUNK14_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 
 
 # Chunk-15 (Cemetery en Echelon South Part, halves 15a + 15b).
-# Starts empty; egyptologist-reviewer + Gemini-review adds entries.
-CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+# Round-1 Gemini fixes: dynasty backfill for 5 bare-numeric Shape-2 rows
+# whose dating clue was in body-prose (G 5290/5332/5350/5480/5482/5520),
+# co_occupants extraction for parents + wife clauses left empty by
+# agent-majority (G 4970/5110/5340/5550), notes alt-name cleanup
+# (G 5560), and Meresaankh raised-a ayin (G 5110 co_occupants).
+CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # G 4970 co_occupants — wife clause `Khentetka called Khent` from
+    # notes was reduced to just `Khentetka` in co_occupants. Per chunk-
+    # 11 D117 `Ḥetepibes called Ipi` alt-name preservation precedent,
+    # preserve the full `called <ALT>` name form in co_occupants.
+    ("G4970", "co_occupants"): {
+        "value": ["Khentetka called Khent"],
+        "rationale": (
+            "Gemini PR #234 round-1 medium: preserve `called Khent` "
+            "alt-name in co_occupants per chunk-11 D117 `Ḥetepibes "
+            "called Ipi` precedent. Agent-majority dropped the alt-"
+            "name."
+        ),
+    },
+    # G 5110 co_occupants — apply Meresʿankh raised-a ayin per chunk-1
+    # source-wide convention. The tie-break override on notes already
+    # uses `Meresʿankh III`; intra-row consistency fix.
+    ("G5110", "co_occupants"): {
+        "value": ["Khephren", "Meresʿankh III"],
+        "rationale": (
+            "Gemini PR #234 round-1 medium: apply Meresʿankh raised-a "
+            "ayin per chunk-1 source-wide convention. Notes "
+            "tie-break override already uses `Meresʿankh III`; "
+            "agent-majority left the co_occupants without ayin."
+        ),
+    },
+    # G 5290 dynasty backfill — `Middle Dyn. V or later.` per chunks
+    # 9-14 range-tail rule → `"5"`.
+    ("G5290", "dynasty"): {
+        "value": "5",
+        "rationale": (
+            "Gemini PR #234 round-1 medium: dynasty backfill from "
+            "body-attested `Middle Dyn. V or later.` Per chunks 6/8 "
+            "body-attestation rule + range-tail rule, → `\"5\"`."
+        ),
+    },
+    # G 5332 dynasty backfill — `Dyn. V-VI.` range-tail → `"6"`.
+    ("G5332", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Gemini PR #234 round-1 medium: dynasty backfill from "
+            "body-attested `Dyn. V-VI.` Per chunks 6/8 body-"
+            "attestation rule + range-tail rule, → `\"6\"`."
+        ),
+    },
+    # G 5340 co_occupants — extract parents + sub-mastaba occupant from
+    # body-prose clauses per chunk-14 G 4761 + chunk-11 D117 precedents.
+    ("G5340", "co_occupants"): {
+        "value": ["Kanufer", "Shepsetkau", "Khufudinefʿankh"],
+        "rationale": (
+            "Gemini PR #234 round-1 medium: extract parents (Kanufer, "
+            "Shepsetkau) + sub-mastaba occupant (Khufudinefʿankh) per "
+            "chunk-14 G 4761 + chunk-11 D117 precedents. PM hedges "
+            "`Parents (possibly)` so role gets `Parent (possibly)` "
+            "prefix per chunk-14 G 4761 convention. Apply Khufudinef-"
+            "ʿankh raised-a ayin per source-wide convention."
+        ),
+    },
+    ("G5340", "co_occupant_roles"): {
+        "value": [
+            "Parent (possibly)",
+            "Parent (possibly)",
+            "Overseer of the department of tenants of the Great House, etc.",
+        ],
+        "rationale": (
+            "Gemini PR #234 round-1 medium: paired with G 5340 "
+            "co_occupants. PM gives no title for the possible parents; "
+            "use bare hedged `Parent (possibly)` per chunk-14 G 4761 "
+            "convention. Sub-mastaba occupant Khufudinefʿankh's title "
+            "cluster preserved verbatim."
+        ),
+    },
+    # G 5350 dynasty backfill — `Dyn. V-VI.` (already in notes via "
+    # override) → `"6"`.
+    ("G5350", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Gemini PR #234 round-1 medium: dynasty backfill from "
+            "body-attested `Dyn. V-VI.` (already in notes via the "
+            "G5350|notes_from_pm tie-break override). Range-tail → "
+            "`\"6\"`."
+        ),
+    },
+    # G 5480 dynasty backfill — `Late Dyn. V or Dyn. VI.` → `"6"`.
+    ("G5480", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Gemini PR #234 round-1 medium: dynasty backfill from "
+            "headword-attested `Late Dyn. V or Dyn. VI.` Range-tail "
+            "→ `\"6\"`."
+        ),
+    },
+    # G 5482 dynasty backfill — `Dyn. V-VI` body-attested → `"6"`.
+    ("G5482", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Gemini PR #234 round-1 medium: dynasty backfill from "
+            "body-attested `Dyn. V-VI` (Shape-2 bare-numeric body-"
+            "attestation; tie-break override rationale explicitly "
+            "called out the dynasty would be `\"6\"`). Range-tail → "
+            "`\"6\"`."
+        ),
+    },
+    # G 5520 dynasty backfill — `Late Dyn. V or Dyn. VI.` → `"6"`.
+    ("G5520", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Gemini PR #234 round-1 medium: dynasty backfill from "
+            "body-attested `Late Dyn. V or Dyn. VI.` Range-tail → "
+            "`\"6\"`."
+        ),
+    },
+    # G 5550 co_occupants — extract wife from headword wife clause per
+    # chunks 9-14 convention. Agent-majority left co_occupants empty.
+    ("G5550", "co_occupants"): {
+        "value": ["Hemtrea"],
+        "rationale": (
+            "Gemini PR #234 round-1 medium: extract wife `Hemtrea` "
+            "per chunks 9-14 wife-clause preservation convention. "
+            "Agent-majority left co_occupants empty despite PM "
+            "headword `Wife, Hemtrea Prophetess of Neith Opener-"
+            "of-the-Ways.`"
+        ),
+    },
+    ("G5550", "co_occupant_roles"): {
+        "value": ["Wife, Prophetess of Neith Opener-of-the-Ways"],
+        "rationale": (
+            "Gemini PR #234 round-1 medium: paired with G 5550 "
+            "co_occupants. `Wife, <title>` form per chunks 9-14 "
+            "convention."
+        ),
+    },
+    # G 5560 notes — drop `Good name FETEKTA.` placeholder from notes
+    # (alt-name lives in occupant_alt_names per chunks-3/8/15a G 5550
+    # convention). Also normalise `waab` → `waʿb`.
+    ("G5560", "notes_from_pm"): {
+        "value": (
+            "Overseer of the Memphite and Letopolite nomes, Overseer "
+            "of the new settlements of the Pyramid of Isesi, Inspector "
+            "of waʿb-priests of the Pyramid of Khufu, etc. Early "
+            "Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #234 round-1 medium: drop `Good name FETEKTA.` "
+            "placeholder from notes per chunks-3/8 / chunk-15a G 5550 "
+            "`good name <ALT>` convention (alt-name lives in "
+            "occupant_alt_names). Also `waab-priests` → `waʿb-priests` "
+            "per source-wide ayin convention. Drop `Stone-built "
+            "mastaba. LG 35.` body trailer per chunks 9-14 convention "
+            "(LG 35 already in tomb_aliases)."
+        ),
+    },
+}
 
 
 # Registry of all per-chunk correction dicts. New chunks add their
