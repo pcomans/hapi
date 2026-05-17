@@ -197,6 +197,28 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
     "G2501",
 })
 
+# Chunk 10: Gîza § III.A West Field JUNKER CEMETERY (WEST) named-tomb
+# cluster (Junker Excavation 1926-7). Source: PM III.1 2nd ed. 1974,
+# physical pp.97–104 / printed pp.100–107. 30 rows: 18 Shape-1 named-
+# primary + 5 Shape-2 S-numbered (Steindorff-style) + 7 Shape-3
+# bracketed-Roman-regnal named (Sonb I, Khesef I/II, Khnemhotp II,
+# Ptahshepses II, Meni I/II). First chunk to use the JKR descriptor
+# tomb_id convention (parallel to chunk-4's SAQ convention) and the
+# Steindorff S-number form. Cemetery field uses descriptor `"Junker
+# West"` (parallel to chunk-3's `"Central Field"`).
+CHUNK10_TOMB_IDS: frozenset[str] = frozenset({
+    "JKR-Ankh", "JKR-Ankhmare", "JKR-Ankhu",
+    "JKR-Demeg", "JKR-Hebi", "JKR-Hetepkhnemt",
+    "JKR-Iiu", "JKR-Inpuhotp", "JKR-Irty", "JKR-Ithu",
+    "JKR-Iyherkherui", "JKR-KhesefI", "JKR-KhesefII",
+    "JKR-KhnemhotpII", "JKR-MeniI", "JKR-MeniII",
+    "JKR-Menib", "JKR-Menisutiotnesut", "JKR-Mesheth",
+    "JKR-Nebtpezu", "JKR-PtahshepsesII", "JKR-Shetui",
+    "JKR-Sinekhen", "JKR-Sinufer", "JKR-SonbI",
+    "S4040", "S4233", "S4248", "S4399", "S4419",
+})
+
+
 # Chunk 9: Gîza § III.A West Field Cemetery G 3000 (Fisher Minor Cemetery).
 # Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — A. WEST FIELD continuation,
 # physical pp.92–96 / printed pp.95–99. 14 rows: 13 Shape-1 named-primary +
@@ -217,7 +239,7 @@ CHUNK9_TOMB_IDS: frozenset[str] = frozenset({
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
-    | CHUNK9_TOMB_IDS
+    | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS
 )
 
 
@@ -423,15 +445,17 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK9_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK10_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
-    """Chunks 1-3, 6, 7, 8, 9 cite PM III.1; chunks 4 and 5 cite PM III.2."""
+    """Chunks 1-3, 6, 7, 8, 9, 10 cite PM III.1; chunks 4 and 5 cite PM III.2."""
     for row in _rows():
         if row["tomb_id"] in (
             CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
             | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
-            | CHUNK9_TOMB_IDS
+            | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS:
@@ -462,6 +486,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 83 <= page <= 95, f"{row['tomb_id']} page {page} outside chunk-8 [83, 95]"
         elif row["tomb_id"] in CHUNK9_TOMB_IDS:
             assert 95 <= page <= 99, f"{row['tomb_id']} page {page} outside chunk-9 [95, 99]"
+        elif row["tomb_id"] in CHUNK10_TOMB_IDS:
+            assert 100 <= page <= 108, f"{row['tomb_id']} page {page} outside chunk-10 [100, 108]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -513,6 +539,11 @@ def test_cemetery_by_chunk() -> None:
             # Chunk 9: single CEMETERY G 3000 banner (Fisher's "Minor
             # Cemetery", Penn Coxe Expedition 1915).
             assert row["cemetery"] == "G 3000", row
+        elif row["tomb_id"] in CHUNK10_TOMB_IDS:
+            # Chunk 10: single JUNKER CEMETERY (WEST) banner — descriptor
+            # cemetery name `"Junker West"` (parallel to chunk-3's
+            # `"Central Field"` descriptor convention).
+            assert row["cemetery"] == "Junker West", row
 
 
 def test_dynasty_assignments() -> None:
@@ -562,6 +593,12 @@ def test_dynasty_assignments() -> None:
             # suffix Shape-2) explicitly carries `Dyn. VI.` in its
             # dating-only headword so dynasty = "6", not null.
             assert row["dynasty"] == "6", row
+        elif row["tomb_id"] in CHUNK10_TOMB_IDS:
+            # Junker West is dominated by `Dyn. VI.` and `Late Old
+            # Kingdom.` headwords (per chunk-10 prompt rule Late OK →
+            # Dyn VI). One row carries `Dyn. V.` explicitly (KHESEF II
+            # Recruit), so the allowed set is {"5", "6"}.
+            assert row["dynasty"] in {"5", "6"}, row
 
 
 # === content / value assertions =============================================
@@ -1964,3 +2001,78 @@ def test_chunk9_all_named_rows_dyn_vi() -> None:
     chunk-9 rows are dynasty "6"."""
     for tid in CHUNK9_TOMB_IDS:
         assert _by_id(tid)["dynasty"] == "6", tid
+
+
+# === chunk 10 content tests =================================================
+
+
+def test_chunk10_row_count_30() -> None:
+    """Chunk 10 emits 30 rows under PM's JUNKER CEMETERY (WEST) banner:
+    25 named tombs (18 Shape-1 named-primary + 7 Shape-3 bracketed-Roman-
+    regnal) + 5 S-numbered (Shape-2 Steindorff-style)."""
+    chunk10 = [r for r in _rows() if r["tomb_id"] in CHUNK10_TOMB_IDS]
+    assert len(chunk10) == 30
+
+
+def test_chunk10_introduces_jkr_descriptor_prefix() -> None:
+    """First chunk to use JKR descriptor tomb_id (parallel to chunk-4
+    SAQ convention)."""
+    jkr_rows = [r for r in _rows() if r["tomb_id"].startswith("JKR-")]
+    assert len(jkr_rows) == 25
+
+
+def test_chunk10_introduces_s_steindorff_prefix() -> None:
+    """First chunk to use Steindorff S-number form for Shape-2 bare-
+    headword tombs."""
+    s_rows = [r for r in _rows() if r["tomb_id"].startswith("S") and r["tomb_id"][1:].isdigit()]
+    assert len(s_rows) == 5
+    for r in s_rows:
+        assert r["occupant_name"] is None
+        assert r["occupant_role"] == "Unknown"
+        assert r["attribution_certainty"] == "uncertain"
+
+
+def test_chunk10_jkr_ithu_three_co_occupants() -> None:
+    """JKR-Ithu has THREE co-occupants in PM's headword block: parents
+    (probably) Iaʿib (Scribe) + Khaut I (mitrt) + wife Intkaes (mitrt).
+    Tie-break override + fix_rows correction restore the full 3-entry
+    co_occupants + co_occupant_roles vs agents' wife-only majority."""
+    row = _by_id("JKR-Ithu")
+    assert row["occupant_name"] == "Ithu"
+    assert row["co_occupants"] == ["Iaʿib", "Khaut I", "Intkaes"]
+    assert row["co_occupant_roles"] == [
+        "Parent (probably), Scribe",
+        "Parent (probably), mitrt",
+        "Wife, mitrt",
+    ]
+
+
+def test_chunk10_jkr_sonbi_bracketed_roman_regnal() -> None:
+    """JKR-SonbI: PM `SONB [I` (full name) — bracketed Roman regnal
+    disambiguator dropped from occupant_name and tomb_id per chunk-10
+    Shape-3 rule. Wife Sentiotes I Prophetess of Ḥathor (underdot-Ḥ)."""
+    row = _by_id("JKR-SonbI")
+    assert row["occupant_name"] == "Sonb I"
+    assert row["occupant_role"] == "Official"
+    assert "Sentiotes I" in row["notes_from_pm"]
+    assert "Ḥathor" in row["notes_from_pm"]
+
+
+def test_chunk10_jkr_inpuhotp_multi_diacritic_re_compounds() -> None:
+    """JKR-Inpuhotp headword carries three Re-deity-compound royal
+    names: Saḥurēʿ, Neuserrēʿ, Rēʿ. Macron-Ē + ayin everywhere, plus
+    underdot-Ḥ on the *sḥ* root of Saḥurēʿ."""
+    row = _by_id("JKR-Inpuhotp")
+    notes = row["notes_from_pm"]
+    assert "Saḥurēʿ" in notes
+    assert "Neuserrēʿ" in notes
+    assert "Rēʿ" in notes
+
+
+def test_chunk10_steindorff_s_numbers_present() -> None:
+    """Five S-numbered tombs: S 4040, S 4233/4283, S 4248/4321, S 4399/
+    4507, S 4419. Twin-number form preserves the second number in
+    tomb_aliases."""
+    expected_first = {"S4040", "S4233", "S4248", "S4399", "S4419"}
+    actual = {r["tomb_id"] for r in _rows() if r["tomb_id"].startswith("S") and r["tomb_id"][1:].isdigit()}
+    assert actual == expected_first

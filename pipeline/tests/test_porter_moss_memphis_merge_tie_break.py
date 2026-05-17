@@ -289,6 +289,16 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       trailer + body-mastaba-line inclusion. G 3098 is the chunk-9
       annexe-pair compound carrying both Iymerery and Neferḥetpes-Wer
       in one row).
+    - Chunk 10: `JKR-Ankh|co_occupant_roles`,
+      `JKR-Irty|co_occupant_roles`,
+      `JKR-Ithu|co_occupant_roles`, `JKR-Ithu|notes_from_pm`,
+      `JKR-Iiu|co_occupant_roles`, `JKR-Iiu|notes_from_pm`,
+      `JKR-MeniII|co_occupant_roles`, `JKR-Inpuhotp|notes_from_pm`,
+      `JKR-Sinekhen|notes_from_pm`, `JKR-SonbI|notes_from_pm` (Junker
+      West named-tomb cluster — wife-clause `mitrt`/`mjtrt` typography
+      normalisation, ʾtw-aleph + `@` OCR drift, Saḥurēʿ/Neuserrēʿ/Rēʿ
+      macron-Ē + ayin compounding, Sentiotes I bracketed Roman regnal,
+      and the three-co-occupant Ithu parent-pair-plus-wife block).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -321,6 +331,16 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G3093", "co_occupant_roles"),
         ("G3098", "notes_from_pm"),
         ("G3098", "co_occupant_roles"),
+        ("JKR-Ankh", "co_occupant_roles"),
+        ("JKR-Irty", "co_occupant_roles"),
+        ("JKR-Ithu", "co_occupant_roles"),
+        ("JKR-Ithu", "notes_from_pm"),
+        ("JKR-Iiu", "co_occupant_roles"),
+        ("JKR-Iiu", "notes_from_pm"),
+        ("JKR-MeniII", "co_occupant_roles"),
+        ("JKR-Inpuhotp", "notes_from_pm"),
+        ("JKR-Sinekhen", "notes_from_pm"),
+        ("JKR-SonbI", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

@@ -825,6 +825,31 @@ CHUNK9_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Per-chunk reviewer corrections for chunk 10 (Gîza West Field JUNKER
+# CEMETERY (WEST) named-tomb cluster). Adds the JKR-Ithu co_occupants
+# expansion to keep length-coupling with the 3-entry co_occupant_roles
+# override; tie-break-overrides.json carries the structured tie
+# resolutions but cannot extend a non-tied field, so fix_rows.py is
+# the right channel for the co_occupants expansion (chunks 6/8/9
+# precedent for body-recovery reviewer corrections).
+CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("JKR-Ithu", "co_occupants"): {
+        "value": ["Iaʿib", "Khaut I", "Intkaes"],
+        "rationale": (
+            "Chunk-10 reviewer pass: PM III.1 2nd ed. 1974 p.103 prints "
+            "Ithu's headword block with THREE co-occupants — Parents "
+            "(probably) Iaʿib (Scribe) + Khaut I (mitrt) + Wife Intkaes "
+            "(mitrt). All three agents reduced co_occupants to only "
+            "the wife (`[\"Intkaes\"]`); the tie-break-override on "
+            "co_occupant_roles expanded to 3 entries (parents+wife). "
+            "This correction keeps the length-coupling invariant "
+            "satisfied by expanding co_occupants to match — paired "
+            "with the tie-break override on JKR-Ithu|co_occupant_roles."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -839,6 +864,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK7_CORRECTIONS,
     CHUNK8_CORRECTIONS,
     CHUNK9_CORRECTIONS,
+    CHUNK10_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
