@@ -625,15 +625,30 @@ Reviewer-cited row corrections:
   G3086.shared_with_tombs: [] → ["G3098"]
   G3097.occupant_name: "Neferhi" → "Neferḥi"
   G3098.shared_with_tombs: [] → ["G3086"]
+  G4240.notes_from_pm: "King's son of his body, sem-priest, Boundary official of Dep, etc. Middle Dyn. IV to early Dyn. V." → "King's son of his body, sm-priest, Boundary official of Dep, etc. Middle Dyn. IV to early Dyn. V."
   G4351.notes_from_pm: "Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Hathor Mistress-of-the-Sycamore in all her places, etc." → "Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, etc."
   G4411.notes_from_pm: "Lector-priest, ma-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later." → "Lector-priest, sm-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later."
   G4442.notes_from_pm: "Steward, Scribe of (a) the granary, (b) the Treasury, (c) a phyle of the endowment of MeHi (probably Senezemib, tomb G 2378). Dyn. VI or later." → "Steward, Scribe of (a) the granary, (b) the Treasury, (c) a phyle of the endowment of Meḥi (probably Senezemib, tomb G 2378). Dyn. VI or later."
   G4513.occupant_name: "Neferihy" → "Neferiḥy"
   G4520.co_occupants: ["Iaunesut", "Iupu", "Zefatka"] → ["Iʿanesut", "Iupu", "Zefatka"]
   G4520.notes_from_pm: "Tenant of the Great House, Overseer of singers of the Great House, Overseer of flutists, etc. Temp. Userkaf (Reisner and Smith) or late Dyn. V (Baer). Parents, Iaunesut and Iupu both Tenants. Wife, Zefatka Royal acquaintance." → "Tenant of the Great House, Overseer of singers of the Great House, Overseer of flutists, etc. Temp. Userkaf (Reisner and Smith) or late Dyn. V (Baer). Parents, Iʿanesut and Iupu both Tenants. Wife, Zefatka Royal acquaintance."
+  G4560.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba. Vn of Junker." → "Middle or late Dyn. IV."
+  G4611.notes_from_pm: "Secretary of the Toilet-house, Keeper of oils of the Great House, Boundary official of (the district) 'Star of Horus Foremost of Heaven', etc. End of Dyn. V or later. Stone-built mastaba. LG 50." → "Secretary of the Toilet-house, Keeper of oils of the Great House, Boundary official of (the district) 'Star of Horus Foremost of Heaven', etc. End of Dyn. V or later."
+  G4620.notes_from_pm: "Scribe of the royal documents. Dyn. V. Stone-built mastaba." → "Scribe of the royal documents. Dyn. V."
   G4630.notes_from_pm: "Chief lector-priest, Scribe of divine books, sma-priest of Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance." → "Chief lector-priest, Scribe of divine books, sm-priest of Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance."
+  G4631.notes_from_pm: "Prophetess of Ḥathor and Neith, etc. Dyn. V. Brick-built mastaba." → "Prophetess of Ḥathor and Neith, etc. Dyn. V."
+  G4640.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
+  G4646.notes_from_pm: "Overseer of the department of tenants of the Great House, Companion of the house, etc. Late Dyn. VI. Stone-built mastaba." → "Overseer of the department of tenants of the Great House, Companion of the house, etc. Late Dyn. VI."
+  G4650.notes_from_pm: "King's daughter of his body. Middle or late Dyn. IV. Stone-built mastaba. VIs of Junker." → "King's daughter of his body. Middle or late Dyn. IV."
+  G4660.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
   G4712.notes_from_pm: "Seer of Horus and Seth, wrt Hts (woman). Probably first half of Dyn. V. Stone-built mastaba." → "Seer of Horus and Seth, wrt-ḥts (woman). Probably first half of Dyn. V."
+  G4714.notes_from_pm: "King's daughter of his body. Probably first half of Dyn. V. Stone-built mastaba. LG 48." → "King's daughter of his body. Probably first half of Dyn. V."
+  G4721.notes_from_pm: "Probably end of Dyn. V. Stone-built mastaba." → "Probably end of Dyn. V."
+  G4750.notes_from_pm: "Overseer of all works of the King, Overseer of the Two Treasuries, Overseer of the royal granaries, etc. Temp. Menkaurea. Stone-built mastaba. VIIs of Junker." → "Overseer of all works of the King, Overseer of the Two Treasuries, Overseer of the royal granaries, etc. Temp. Menkaureʿ."
   G4811.notes_from_pm: "Overseer of the warbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI. Stone-built mastaba. Excavated by Schiaparelli." → "Overseer of the waʿbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI."
+  G4811.is_joint_burial: true → false
+  G4840.notes_from_pm: "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV. Stone-built mastaba. VIIIss of Junker." → "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV."
+  G4860.notes_from_pm: "Scribe of divine books, Lector-priest. Middle or late Dyn. IV. Stone-built mastaba. VIIIn of Junker." → "Scribe of divine books, Lector-priest. Middle or late Dyn. IV."
   G7102.occupant_name: "Iou" → "Idu"
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]

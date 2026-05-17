@@ -64,7 +64,7 @@ One JSON object per line. Sort rows by `tomb_id` string-ascending. Use `json.dum
 Reisner G-numbered cemetery. PM prints `G <NUM>` headwords. tomb_id format `G<NUM>` (drop the space). Examples:
 - PM `G 4000.` → `G4000`
 - PM `G 4351.` → `G4351` (pypdf may render as `G 435 I` — normalise trailing Roman `I` back to Arabic `1`)
-- PM `G 4811 + 4812.` (joint mastaba) → `tomb_id: G4811`, `tomb_aliases: ["G 4812"]`, `is_joint_burial: true` (chunk-14b case; listed here for shape reference)
+- PM `G 4811 + 4812.` (structurally joint mastaba — TWO adjacent Reisner numbers, ONE named occupant) → `tomb_id: G4811`, `tomb_aliases: ["G 4812"]`, `is_joint_burial: false` (chunk-14b case; listed here for shape reference). Note: `is_joint_burial` denotes multiple OCCUPANTS (people), not multiple tomb numbers; structural jointness is captured in `tomb_aliases` (parallel to chunk-11 D80/80A twin-letter precedent).
 
 ## How to identify a row
 

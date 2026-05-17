@@ -61,7 +61,7 @@ One JSON object per line. Sort rows by `tomb_id` string-ascending. Use `json.dum
 
 ## tomb_id convention
 
-Same as chunk 14a. PM prints `G <NUM>` headwords; tomb_id `G<NUM>` (drop space). Joint twin `G <NUM1> + <NUM2>` → tomb_id = first number; second number lands in `tomb_aliases` (e.g., `G 4811 + 4812` → `tomb_id: G4811`, `tomb_aliases: ["G 4812"]`, `is_joint_burial: true`).
+Same as chunk 14a. PM prints `G <NUM>` headwords; tomb_id `G<NUM>` (drop space). Structurally-joint mastaba `G <NUM1> + <NUM2>` (two adjacent Reisner numbers, ONE named occupant) → tomb_id = first number; second number lands in `tomb_aliases`; `is_joint_burial: false` (per source-wide convention: joint = multiple OCCUPANTS, not multiple tomb numbers). Example: `G 4811 + 4812. aANKHIRPTAH ...` → `tomb_id: G4811`, `tomb_aliases: ["G 4812"]`, `is_joint_burial: false` (parallel to chunk-11 D80/80A precedent).
 
 ## How to identify a row
 
@@ -71,9 +71,9 @@ Five shapes (identical to chunk 14a):
 
 **Shape 2 — Bare-numeric headword.** `G <NUM>. <Dating>.` (no occupant name).
 
-**Shape 3 — Bracketed Roman regnal.** `G <NUM>. <NAME [I]> ...` — drop brackets, append Roman. Examples in chunk 14b: `G 4761. NUFER [I]`, `G 4940. SESHEMNUFER [I]`.
+**Shape 3 — Bracketed Roman regnal.** `G <NUM>. <NAME [I]> ...` — drop brackets, append Roman. Example in chunk 14b: `G 4761. NUFER [I]`. (G 4940 SESHEMNUFER [I] is chunk-15 territory, OUT OF SCOPE here.)
 
-**Shape 4 — Joint-named twin headword.** `G <NUM1> + <NUM2>. <NAME1> ...` — emit ONE row, `is_joint_burial: true`. Example: `G 4811 + 4812. aANKHIRPTAH ...`.
+**Shape 4 — Structurally-joint mastaba.** `G <NUM1> + <NUM2>. <NAME1> ...` — emit ONE row, `is_joint_burial: false` if NAME1 is the only occupant (structural jointness is captured via `tomb_aliases`); set `is_joint_burial: true` ONLY if the headword names TWO occupants in an `and`-joined pattern. Example: `G 4811 + 4812. aANKHIRPTAH ...` names one occupant → `is_joint_burial: false`.
 
 **Shape 5 — Anonymous "NAME UNKNOWN, <descriptor>" headword.** PM gives no occupant name. Example: `G 4860. NAME UNKNOWN, Scribe of divine books, Lector-priest.`
 
@@ -89,7 +89,7 @@ Five shapes (identical to chunk 14a):
 
 ## Expected row count
 
-Pre-extraction structural scan: PM prints ~22–26 Reisner-numbered headwords in physical pp.128–138 from G 4560 through G 4860. Mix of Shape-1 named-primary, Shape-2 bare-numeric (G 4560, G 4640, G 4660, G 4715, G 4721, G 4733, G 4813, G 4817), Shape-3 bracketed Roman (G 4761 NUFER [I], G 4940 SESHEMNUFER [I] — though G 4940 is chunk-15, NOT chunk-14b; SESHEMNUFER [I] applies to chunk-15 only), Shape-4 joint (G 4811 + 4812), and Shape-5 anonymous (G 4860). **Total expected: ~22–26 rows (acceptable band 20–30).** If your final count is below 18 or above 32, re-read the chunk file.
+Pre-extraction structural scan: PM prints ~22–26 Reisner-numbered headwords in physical pp.128–138 from G 4560 through G 4860. Mix of Shape-1 named-primary, Shape-2 bare-numeric (G 4560, G 4640, G 4660, G 4715, G 4721, G 4733, G 4813, G 4817), Shape-3 bracketed Roman (G 4761 NUFER [I]), Shape-4 structurally-joint mastaba (G 4811 + 4812), and Shape-5 anonymous (G 4860). **Total expected: ~22–26 rows (acceptable band 20–30).** If your final count is below 18 or above 32, re-read the chunk file.
 
 ## PM III.1 text-layer noise (chunk-14-relevant)
 

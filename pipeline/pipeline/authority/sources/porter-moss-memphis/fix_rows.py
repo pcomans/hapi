@@ -1426,6 +1426,118 @@ CHUNK14_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Schiaparelli.`) per chunks 9-13 convention."
         ),
     },
+    # G 4811 is_joint_burial — per source-wide convention is_joint_burial
+    # = true only when the headword names MULTIPLE OCCUPANTS (chunk-8 G
+    # 2415 Weri/Meti, chunk-11 D4/D32/D203, chunk-13 JKE-Nikaukhnum,
+    # etc.). PM `G 4811 + 4812. aANKHIRPTAH ...` names ONE occupant
+    # (Ankhirptah) on a structurally-twin mastaba (two adjacent Reisner
+    # numbers merged). Structural jointness is captured in tomb_aliases
+    # `["G 4812"]`; is_joint_burial should be false (parallel to chunk-
+    # 11 D80/80A twin-letter form which already uses is_joint_burial =
+    # false + aliases).
+    ("G4811", "is_joint_burial"): {
+        "value": False,
+        "rationale": (
+            "Gemini PR #233 round-2 medium: is_joint_burial denotes "
+            "multiple OCCUPANTS, not multiple tomb numbers. PM G 4811 + "
+            "4812 names a single occupant (ʿAnkhirptaḥ); structural "
+            "jointness is in tomb_aliases. Aligns with chunk-11 D80/80A "
+            "twin-letter precedent (is_joint_burial: false + aliases)."
+        ),
+    },
+    # G 4240 — chunk-14 prompt and chunk-14 G4411 fix call for `sm-priest`
+    # normalisation but G 4240 SNEFRUSONB has `sem-priest` (a PM-print or
+    # OCR expansion). Per source-wide consistency rule, normalise to
+    # `sm-priest`.
+    ("G4240", "notes_from_pm"): {
+        "value": (
+            "King's son of his body, sm-priest, Boundary official of "
+            "Dep, etc. Middle Dyn. IV to early Dyn. V."
+        ),
+        "rationale": (
+            "Gemini PR #233 round-2 medium: normalise `sem-priest` → "
+            "`sm-priest` per the chunk-14 prompt rule and parallel to "
+            "the G 4411 / G 4630 ma-priest fixes. Egyptian *sm*-priest "
+            "is the canonical form; PM `sem-` is an OCR expansion that "
+            "should be reduced to the bare *sm* form for source-wide "
+            "consistency."
+        ),
+    },
+    # Drop mastaba body trailers + Junker section codes (Vn / VIs /
+    # VIIIss / etc.) + LG cross-references from notes per chunks 9-13
+    # `mastaba body trailer dropped` convention. Same for chunks 6-14
+    # `LG <N>` body-prose cross-references which were preserved in
+    # tomb_aliases (where appropriate) but should not duplicate in notes.
+    ("G4560", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. Vn of Junker.`) per chunks 9-13 convention.",
+    },
+    ("G4611", "notes_from_pm"): {
+        "value": (
+            "Secretary of the Toilet-house, Keeper of oils of the Great "
+            "House, Boundary official of (the district) 'Star of Horus "
+            "Foremost of Heaven', etc. End of Dyn. V or later."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. LG 50.`) per chunks 9-13 convention.",
+    },
+    ("G4620", "notes_from_pm"): {
+        "value": "Scribe of the royal documents. Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4631", "notes_from_pm"): {
+        "value": "Prophetess of Ḥathor and Neith, etc. Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Brick-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4640", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4646", "notes_from_pm"): {
+        "value": (
+            "Overseer of the department of tenants of the Great House, "
+            "Companion of the house, etc. Late Dyn. VI."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4650", "notes_from_pm"): {
+        "value": "King's daughter of his body. Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIs of Junker.`) per chunks 9-13 convention.",
+    },
+    ("G4660", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4714", "notes_from_pm"): {
+        "value": "King's daughter of his body. Probably first half of Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. LG 48.`) per chunks 9-13 convention.",
+    },
+    ("G4721", "notes_from_pm"): {
+        "value": "Probably end of Dyn. V.",
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba.`) per chunks 9-13 convention.",
+    },
+    ("G4750", "notes_from_pm"): {
+        "value": (
+            "Overseer of all works of the King, Overseer of the Two "
+            "Treasuries, Overseer of the royal granaries, etc. Temp. "
+            "Menkaureʿ."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIIs of Junker.`) per chunks 9-13 convention. Also normalise `Menkaurea` (pypdf raised-a OCR) → `Menkaureʿ` per chunk-1 source-wide ayin convention.",
+    },
+    ("G4840", "notes_from_pm"): {
+        "value": (
+            "King's daughter of his body, Prophetess of Neith North-of-"
+            "the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or "
+            "late Dyn. IV."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIIIss of Junker.`) per chunks 9-13 convention.",
+    },
+    ("G4860", "notes_from_pm"): {
+        "value": (
+            "Scribe of divine books, Lector-priest. Middle or late "
+            "Dyn. IV."
+        ),
+        "rationale": "Gemini PR #233 round-2 medium: drop mastaba body trailer (`Stone-built mastaba. VIIIn of Junker.`) + drop NAME UNKNOWN placeholder (already null in occupant_name) per chunk-13 JKE-AnonCompanion Shape-5 convention.",
+    },
 }
 
 
