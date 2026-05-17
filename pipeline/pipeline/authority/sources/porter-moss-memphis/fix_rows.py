@@ -187,6 +187,103 @@ CHUNK4_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
 }
 
+# Chunk-5 corrections (PM III.2 § I.A–E Saqqâra front-half pyramid
+# complexes: Teti+Iput-I+Khuit, Userkaf, Neterikhet/Zoser, Sekhemkhet,
+# Great Enclosure). Findings from the printed-source egyptologist-reviewer
+# pass against PM III.2 pp.393–417.
+CHUNK5_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("SAQ-IputI", "occupant_name"): {
+        "value": "Iput",
+        "rationale": (
+            "Egyptologist-reviewer printed-source pass against PM III.2 "
+            "p.396: PM prints `PYRAMID-ENCLOSURE OF IPUT¹` (bare IPUT with "
+            "footnote anchor `¹` keyed to `1 King's wife (of Teti), "
+            "King's mother (of Pepy I).` at the bottom of the same page). "
+            "The agents' converged extraction `Iput I` interpolates the "
+            "regnal numeral `I` from Egyptological convention — but PM "
+            "itself does NOT print `[I]` on this heading. Contrast with "
+            "chunk-4's SAQ-IputII row where PM explicitly prints `IPUT "
+            "[II]¹` with the bracket-regnal. The chunk-4 [II] bracket is "
+            "PM's editorial regnal disambiguation; chunk-5's bare IPUT "
+            "(without bracket) is PM's faithful headword form. Per rule 1 "
+            "(work like a scholar — every fact traces to a documented "
+            "source), `occupant_name` must match PM's printed form. The "
+            "museum-side disambiguating form `Iput I` is preserved in "
+            "`occupant_alt_names` for Phase-A matching coverage. "
+            "Restoration: `Iput I` → `Iput`."
+        ),
+    },
+    ("SAQ-IputI", "occupant_alt_names"): {
+        "value": ["Iput I"],
+        "rationale": (
+            "Companion fix to the SAQ-IputI `occupant_name` correction. "
+            "`Iput I` is the museum-conventional disambiguating form "
+            "(distinguishing Teti's queen-consort from Pepy II's queen "
+            "Iput II covered in chunk 4). Phase-A name-authority matching "
+            "needs this alias because museum records will say `Iput I` "
+            "even though PM's headword is bare `IPUT`. Egyptologist "
+            "F1 finding."
+        ),
+    },
+    ("SAQ-IputI", "notes_from_pm"): {
+        "value": (
+            "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. "
+            "¹ [King's daughter of his] body, King's wife (of Teti), "
+            "King's mother (of Pepy I)."
+        ),
+        "rationale": (
+            "Egyptologist-reviewer second-pass printed-source verification "
+            "against PM III.2 p.396: the full footnote text is "
+            "`¹ [King's daughter of his] body, King's wife (of Teti), "
+            "King's mother (of Pepy I).` — three titles, with the first "
+            "(`King's daughter of his body`, restoring the lost original "
+            "title `sꜣt-nsw-n(t)-ẖt.f`) in editorial brackets per PM's "
+            "convention for restored text. First-pass review F3 fix "
+            "captured only the last two titles (`King's wife (of Teti), "
+            "King's mother (of Pepy I).`) — a rule-1 fidelity loss that "
+            "would lead Phase-A consumers to wrongly conclude PM prints "
+            "only two titles. Second-pass fix restores PM's bracketed "
+            "first clause. Verbatim form (no `(Footnote: ...)` editorial "
+            "wrapper) per the README's `notes_from_pm` convention; the "
+            "`¹` superscript marker is PM's own footnote-anchor character "
+            "and stays as PM's contextual signal that this clause is "
+            "footnote prose rather than the headline-block continuation."
+        ),
+    },
+    ("SAQ-Khuit", "notes_from_pm"): {
+        "value": (
+            "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. "
+            "¹ King's wife (of Teti)."
+        ),
+        "rationale": (
+            "Egyptologist-reviewer printed-source pass against PM III.2 "
+            "p.397: PM prints `PYRAMID-ENCLOSURE OF KHUIT¹` with footnote "
+            "anchor `¹` keyed to `¹ King's wife (of Teti).` at the bottom "
+            "of the same page. Parallel to the SAQ-IputI fix above. The "
+            "footnote text supports the `occupant_role: \"Queen\"` "
+            "classification and Teti's spouse identification — both "
+            "Phase-A-relevant facts that need a documented PM trace. "
+            "Restoration: append PM's verbatim footnote text (with PM's "
+            "own `¹` anchor) to the headword condensation, no "
+            "editorial `(Footnote: ...)` wrapper. Egyptologist F3 finding."
+        ),
+    },
+    ("SAQ-Neterikhet", "occupant_alt_names"): {
+        "value": ["Zoser", "Djoser"],
+        "rationale": (
+            "Egyptologist-reviewer printed-source pass against PM III.2 "
+            "p.399: PM prints `STEP PYRAMID ENCLOSURE OF NETERIKHET "
+            "(Zoser)` — the parenthetical `Zoser` is PM's printed alias "
+            "(post-OK reception of the king's birth-name). Modern museum "
+            "records (Met, Brooklyn, Harvard, BM) overwhelmingly use the "
+            "spelling `Djoser` rather than PM's `Zoser`. Adding `Djoser` "
+            "as a second alt_name gives Phase-A name-authority matching "
+            "the museum-conventional spelling without altering PM's "
+            "printed primary form. Egyptologist F4 finding (P2)."
+        ),
+    },
+}
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -196,6 +293,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK2_CORRECTIONS,
     CHUNK3_CORRECTIONS,
     CHUNK4_CORRECTIONS,
+    CHUNK5_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
