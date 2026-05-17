@@ -457,6 +457,169 @@ G7140 (Khufukhaef I):
 G7150 (Khufukhaef II):
   notes_from_pm: a="KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba." | b="KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba." | c="KHUFUKHAaEF [11] Greatest .of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba."  → chose "KHUFUKHAaEF [11] Greatest of the Ten of Upper Egypt, Belonging to the foremost seat, Secretary of his Lord. Temp. Neuserrea. Stone-built mastaba."
 
+G7152 (Sekhemʿankhptaḥ):
+  co_occupant_roles: a=[] | b=[] | c=["King's daughter of his body"]  → chose []
+  co_occupants: a=[] | b=[] | c=["Bunufer"]  → chose []
+  dynasty: a=null | b="6" | c="6"  → chose "6"
+  notes_from_pm: a="SEKHEMʿANKHPTAH Chief Justice and Vizier, etc. Chapel right of doorway has false-door of Bunufer King's daughter of his body." | b="Chief Justice and Vizier, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba. Chapel right of doorway has false-door of Bunufer King's daughter of his body." | c="Chief Justice and Vizier, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba. Right of doorway, false-door of Bunufer King's daughter of his body."  → chose "Chief Justice and Vizier, etc. Late Dyn. V or Dyn. VI."
+
+G7210 (Ḥarzedef):
+  co_occupant_roles: a=["Wife"] | b=["Father", "Mother (probably)"] | c=["Father", "Mother, probably"]  → chose ["Father", "Mother (probably)"]
+  co_occupants: a=["Wife"] | b=["Khufu", "Mertiotes I"] | c=["Khufu", "Mertiotes I"]  → chose ["Khufu", "Mertiotes I"]
+  notes_from_pm: a="ḤARZEDEF King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]. Stone-built twin-mastaba." | b="King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]. Stone-built twin-mastaba." | c="King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]. Stone-built twin-mastaba."  → chose "King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]. Stone-built twin-mastaba."
+
+G7211 (Kaemʿankh):
+  notes_from_pm: a="KAEMʿANKH Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba." | b="Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba." | c="Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba."  → chose "Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba."
+
+G7220 (None):
+  dynasty: a=null | b="4" | c=null  → chose null
+  notes_from_pm: a="Body-prose subsidiary of joint mastaba G 7210+7220 (Ḥarzedef). West wall false-door of deceased; name and titles on drum. Sarcophagus (unfinished) of Ḥarzedef, red granite, in Cairo Mus. Ent. 54938, from Shaft G 7220A." | b="Body-prose subsidiary of joint twin G 7210+7220 (Ḥarzedef). West wall false-door of deceased with name and titles on drum; Shaft G 7220A with two rooms; sarcophagus (unfinished) of Ḥarzedef, red granite, in Cairo Mus. Ent. 54938." | c="Body-prose subsidiary of joint twin G 7210+7220 (Ḥarzedef). West wall false-door of deceased; offering-bringers on jambs; Shaft G 7220A with two rooms; sarcophagus (unfinished) of Harzedef, red granite, in Cairo Mus. Ent. 54938."  → chose null
+
+G7244 (Khuenptaḥ):
+  attribution_certainty: a="attested" | b="uncertain" | c="attested"  → chose "attested"
+  co_occupant_roles: a=["Mother", "Wife"] | b=[] | c=["Mother", "Wife"]  → chose ["Mother", "Wife"]
+  co_occupants: a=["Intkaes [I]", "Khenut"] | b=[] | c=["Intkaes I", "Khenut"]  → chose ["Intkaes I", "Khenut"]
+  notes_from_pm: a="G 7244-6. Dyn. V. Composite stone-built mastaba. Chapel of G 7244: Khuenptaḥ, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut." | b="G 7244-6. Dyn. V. Composite stone-built mastaba. Body-prose subsection G 7244: Chapel of Khuenptaḥ, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut." | c="G 7244-6. Dyn. V. Composite stone-built mastaba. G 7244 Chapel. Khuenptah, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut."  → chose null
+  occupant_name: a="Khuenptaḥ" | b=null | c="Khuenptaḥ"  → chose "Khuenptaḥ"
+  occupant_role: a="Official" | b="Unknown" | c="Official"  → chose "Official"
+
+G7248 (None):
+  notes_from_pm: a="False-door of Mesthu ka-servant, and wife Nubḥotp, Dyn. V-VI, from shaft A, in Boston Mus. 27.1117." | b="False-door of Mesthu ka-servant, and wife Nubḥotp. Dyn. V-VI, from shaft A, in Boston Mus. 27.1117." | c="False-door of Mesthu ka-servant, and wife Nubhotp, Dyn. V-VI, from shaft A, in Boston Mus. 27.1117."  → chose "False-door of Mesthu ka-servant, and wife Nubḥotp, Dyn. V-VI, from shaft A, in Boston Mus. 27.1117."
+
+G7249 (Menib):
+  notes_from_pm: a="MENIB Dyn. IV-V. Stone-built mastaba. Box-sealing with Horus-name of Neuserrēʿ from shaft A." | b="Dyn. IV-V. Stone-built mastaba. West wall: between two false-doors, offering-list with deceased at table and funerary priests; right end of wall, deceased standing. Box-sealing with Horus-name of Neuserrēʿ from shaft A." | c="Dyn. IV-V. Stone-built mastaba. West wall: between two false-doors, offering-list with deceased at table and funerary priests; right end of wall, deceased standing. Box-sealing with Horus-name of Neuserrēʿ, from shaft A."  → chose "Dyn. IV-V. Box-sealing with Horus-name of Neuserrēʿ, from shaft A."
+  occupant_role: a="Unknown" | b="Official" | c="Unknown"  → chose "Unknown"
+
+G7330 (None):
+  notes_from_pm: a="G 7330+7340. Middle or late Dyn. IV. Stone-built twin-mastaba. Sarcophagus (uninscribed) with panther-skin in relief on lid and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934." | b="Middle or late Dyn. IV. Stone-built twin-mastaba. Sarcophagus (uninscribed) with panther-skin in relief on lid, and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934." | c="Middle or late Dyn. IV. Stone-built twin-mastaba. Sarcophagus (uninscribed) with panther-skin in relief on lid, and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934."  → chose "Middle or late Dyn. IV. Stone-built twin-mastaba. Sarcophagus (uninscribed) with panther-skin in relief on lid, and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934."
+
+G7350 (Ḥetepḥeres II):
+  co_occupant_roles: a=["Husband", "Husband"] | b=["Husband", "Husband, King (later)"] | c=["Husband", "Husband, King"]  → chose ["Husband", "Husband, King (later)"]
+  co_occupants: a=["Kawaab", "Raʿzedef"] | b=["Kawaab", "Rēʿzedef"] | c=["Kawaab", "Raʿzedef"]  → chose ["Kawaab", "Raʿzedef"]
+  notes_from_pm: a="ḤETEPḤERES [II] (?). End of Dyn. IV. Husbands, Kawaab (tomb G 7120) and later King Raʿzedef. Stone-built mastaba. See also tomb G 7110. Block with heads of Ḥetepḥeres [II] (?) and Meresʿankh [III] (?), in Cairo Mus. Ent. 54939." | b="End of Dyn. IV. Husbands, Kawaab (tomb G 7120) and later King Rēʿzedef. Stone-built mastaba. See also tomb G 7110. Block with heads of Ḥetepḥeres [II] (?) and Meresʿankh [III] (?), in Cairo Mus. Ent. 54939." | c="End of Dyn. IV. Husbands, Kawaab (tomb G 7120) and later King Raʿzedef. Stone-built mastaba. See also tomb G 7110."  → chose "End of Dyn. IV. Husbands, Kawaab (tomb G 7120) and later King Raʿzedef. See also tomb G 7110."
+
+G7391 (Iteti):
+  notes_from_pm: a="ITETI Inspector of waʿb-priests of the Pyramid of Khephren, Inspector of the Great House, etc. Late Dyn. V. Wife, Sentʿankh Royal acquaintance. Stone-built mastaba." | b="Inspector of waʿb-priests of the Pyramid of Khephren, Inspector of the Great House, etc. Late Dyn. V. Wife, Sentʿankh Royal acquaintance. Stone-built mastaba." | c="Inspector of wʿḏ-priests of the Pyramid of Khephren, Inspector of the Great House, etc. Late Dyn. V. Wife, Sentʿankh Royal acquaintance. Stone-built mastaba."  → chose "Inspector of waʿb-priests of the Pyramid of Khephren, Inspector of the Great House, etc. Late Dyn. V. Wife, Sentʿankh Royal acquaintance."
+
+G7410 (Meresʿankh II):
+  co_occupant_roles: a=["Probably King's son"] | b=["Father", "Mother (probably)"] | c=["Father", "Mother, probably", "Brother, King's son, probably"]  → chose ["Father", "Mother (probably)"]
+  co_occupants: a=["Ḥarbaf"] | b=["Khufu", "Mertiotes I"] | c=["Khufu", "Mertiotes I", "Ḥarbaf"]  → chose ["Khufu", "Mertiotes I"]
+  notes_from_pm: a="MERESʿANKH [II] King's daughter of his body, King's wife, etc., and probably ḤARBAF King's son. Temp. Khufu to early Dyn. V. Parents of Meresʿankh [II], Khufu and probably Mertiotes [I]. Father of Ḥarbaf, probably Khufu. Stone-built twin-mastaba." | b="King's daughter of his body, King's wife, etc. Temp. Khufu to early Dyn. V. Parents of Meresʿankh [II], Khufu and probably Mertiotes [I]. Stone-built twin-mastaba. Joint headword also names probably Ḥarbaf (tomb G 7420). Chapel body for G 7410: relief-fragments deceased punted in boat (Boston Mus. 33.720); sarcophagus of Meresʿankh [II] in Boston Mus. 27.441 from Shaft G 7410B." | c="King's daughter of his body, King's wife, etc., and probably Ḥarbaf King's son. Temp. Khufu to early Dyn. V. Parents of Meresʿankh [II], Khufu and probably Mertiotes [I]. Father of Ḥarbaf, probably Khufu. Stone-built twin-mastaba."  → chose "King's daughter of his body, King's wife, etc., and probably Ḥarbaf King's son. Temp. Khufu to early Dyn. V. Parents of Meresʿankh [II], Khufu and probably Mertiotes [I]. Father of Ḥarbaf, probably Khufu."
+
+G7411 (Kaemthenent):
+  co_occupants: a=["Hatḥornufer"] | b=["Ḥatḥornufer"] | c=["Ḥatḥornufer"]  → chose ["Ḥatḥornufer"]
+  notes_from_pm: a="KAEMTHENENT Dyn. V. Wife, Hatḥornufer. Stone-built mastaba." | b="Dyn. V. Stone-built mastaba. Wife, Ḥatḥornufer." | c="Dyn. V. Stone-built mastaba. Wife, Ḥatḥornufer."  → chose "Dyn. V. Stone-built mastaba. Wife, Ḥatḥornufer."
+  occupant_role: a="Unknown" | b="Official" | c="Unknown"  → chose "Unknown"
+
+G7420 (None):
+  attribution_certainty: a="uncertain" | b="uncertain" | c="probable"  → chose "uncertain"
+  dynasty: a=null | b="5" | c=null  → chose null
+  notes_from_pm: a="Body-prose subsidiary of joint mastaba G 7410+7420 (probably Ḥarbaf). Chapel: relief-fragments with estates in Boston Mus. Sarcophagus of Ḥarbaf, red granite, probably from here, in Cairo Mus. 1788. Small nude female statuette, wood, Dyn. VI, intrusive, from Shaft G 7420B." | b="Probably Ḥarbaf King's son. Father of Ḥarbaf, probably Khufu. Body-prose subsidiary of joint twin G 7410+7420. Chapel: relief-fragments with estates, in Boston Mus. Shaft G 7420A; sarcophagus of Ḥarbaf, red granite, probably from here, in Cairo Mus. 1788." | c="Body-prose subsidiary of joint twin G 7410+7420. Probably Ḥarbaf. Chapel relief-fragments with estates, in Boston Mus. Shaft G 7420A. Sarcophagus of Ḥarbaf, red granite, probably from here, in Cairo Mus. 1788. Shaft G 7420B, small nude female statuette, wood, Dyn. VI, intrusive."  → chose null
+  occupant_name: a=null | b=null | c="Ḥarbaf"  → chose null
+  occupant_role: a="Unknown" | b="Unknown" | c="Prince"  → chose "Unknown"
+
+G7430 (Minkhaʿef):
+  co_occupant_roles: a=[] | b=["Father", "Mother (possibly)"] | c=["Father", "Mother, possibly"]  → chose ["Father", "Mother (possibly)"]
+  co_occupants: a=[] | b=["Khufu", "Henutsen"] | c=["Khufu", "Henutsen"]  → chose ["Khufu", "Henutsen"]
+  notes_from_pm: a="MINKHAʿEF King's son of his body, Chief Justice and Vizier (of Khephren), etc. Temp. Khufu to Khephren. Parents, Khufu and possibly Henutsen. Stone-built twin-mastaba. G 7430 is LG 61." | b="King's son of his body, Chief Justice and Vizier (of Khephren), etc. Temp. Khufu to Khephren. Parents, Khufu and possibly Henutsen. Stone-built twin-mastaba. G 7430 is LG 61. Body-prose G 7430: north subsidiary niche with text and date; drum of entrance doorway with name and titles; Shaft G 7430A with two rooms; sarcophagus with palace-façade decoration in Cairo Mus. Ent. 48852." | c="King's son of his body, Chief Justice and Vizier (of Khephren), etc. Temp. Khufu to Khephren. Parents, Khufu and possibly Henutsen. Stone-built twin-mastaba. G 7430 is LG 61."  → chose "King's son of his body, Chief Justice and Vizier (of Khephren), etc. Temp. Khufu to Khephren. Parents, Khufu and possibly Henutsen."
+
+G7510 (ʿAnkh-ḥaf):
+  co_occupant_roles: a=["Wife"] | b=["Father", "Wife"] | c=["Father", "Wife, eldest daughter of Ḥetepḥeres [I] (tomb G 7000X) and Snefru"]  → chose ["Father", "Wife"]
+  co_occupants: a=["Ḥetepḥeres"] | b=["Snefru", "Ḥetepḥeres"] | c=["Snefru", "Ḥetepḥeres"]  → chose ["Snefru", "Ḥetepḥeres"]
+  notes_from_pm: a="ʿANKH-ḤAF (Vizier of Khephren.) Temp. Khephren. Parents, Snefru and a minor Queen. Wife, Ḥetepḥeres (eldest daughter of Ḥetepḥeres [I] (tomb G 7000X) and Snefru). Stone-built mastaba. No burial place for wife." | b="(Vizier of Khephren.) Temp. Khephren. Parents, Snefru and a minor Queen. Wife, Ḥetepḥeres (eldest daughter of Ḥetepḥeres [I] (tomb G 7000X) and Snefru). Stone-built mastaba. No burial place for wife. Bust of deceased in Boston Mus. 27.442." | c="(Vizier of Khephren.) Temp. Khephren. Parents, Snefru and a minor Queen. Wife, Ḥetepḥeres (eldest daughter of Ḥetepḥeres [I] (tomb G 7000X) and Snefru). Stone-built mastaba. No burial place for wife."  → chose "(Vizier of Khephren.) Temp. Khephren. Parents, Snefru and a minor Queen. Wife, Ḥetepḥeres (eldest daughter of Ḥetepḥeres [I] (tomb G 7000X) and Snefru). No burial place for wife."
+
+G7530 (Meresʿankh III):
+  co_occupant_roles: a=["Father", "Mother", "Husband"] | b=["Father", "Mother", "Husband, King"] | c=["Father", "Mother", "Husband, King"]  → chose ["Father", "Mother", "Husband, King"]
+  notes_from_pm: a="MERESʿANKH [III] King's daughter of his body, etc. Temp. Khufu to Shepseskaf. Parents, Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350). Husband, Khephren. Stone-built twin-mastaba. Some relief-fragments in Boston Mus." | b="King's daughter of his body, etc. Temp. Khufu to Shepseskaf. Parents, Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350). Husband, Khephren. Stone-built twin-mastaba. Some relief-fragments in Boston Mus. Chapel rock-cut under north part of east face of mastaba, decoration unfinished. Body-prose G 7530: extensive chapel programme in Rooms I-III including doorway with lintel, registers of boats/sculptors/sarcophagus-making, mother and small girl, deceased with son Khenterka and Nebemakhet (tombs LG 12 and 86), pillars with sons Neuserrēʿ-ʿankh and Dua(en)rēʿ (tomb G 5110); Shaft G 7530A sarcophagus presented by mother, black granite, Cairo Mus. Ent. 54935." | c="King's daughter of his body, etc. Temp. Khufu to Shepseskaf. Parents, Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350). Husband, Khephren. Stone-built twin-mastaba."  → chose "King's daughter of his body, etc. Temp. Khufu to Shepseskaf. Parents, Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350). Husband, Khephren."
+  occupant_role: a="Princess" | b="Queen" | c="Queen"  → chose "Queen"
+
+G7540 (None):
+  notes_from_pm: a="Body-prose subsidiary of joint mastaba G 7530+7540 (Meresʿankh III). Chapel north wall: four women attendants and dwarf from destroyed scene. North subsidiary niche left of entrance doorway to Chapel G 7530: remains of text with dates." | b="Body-prose subsidiary of joint twin G 7530+7540 (Meresʿankh III). Chapel: north wall, four women attendants and dwarf from destroyed scene. North subsidiary niche left of entrance doorway to Chapel G 7530, remains of text with dates. Statues in Boston Museum: mother and deceased standing (30.1456); deceased standing dedicated by son Nebemakhet (30.1457); head of deceased from statue-group (30.1461). Servant statuettes including squatting woman sifting flour (30.1458), butcher (30.1462), female brewer (Exped. No. 27-5-6)." | c="Body-prose subsidiary of joint twin G 7530+7540. Chapel, north wall: four women attendants and dwarf from destroyed scene. North subsidiary niche left of entrance doorway to Chapel G 7530. Statues in Boston Museum: mother and deceased standing (No. 30.1456); deceased standing dedicated by son Nebemakhet (No. 30.1457); head of deceased from statue-group, from shaft O of tomb G 7521 (No. 30.1461); servant statuettes."  → chose null
+
+G7550 (Duaenḥor):
+  co_occupant_roles: a=["Father, probably", "Mother, probably"] | b=["Father", "Mother"] | c=["Father (probably)", "Mother (probably)"]  → chose ["Father (probably)", "Mother (probably)"]
+  notes_from_pm: a="King's son of his body, Companion of his father. Temp. Khufu to Menkaurēʿ. Parents, probably Kawaab (tomb G 7120) and Hetepheres [II] (tombs G 7110, 7350)." | b="King's son of his body, Companion of his father. Temp. Khufu to Menkaurea. Parents, probably Kawaab (tomb G 7120) and Hetepheres [II] (tombs G 7110, 7350). LG 58." | c="King's son of his body, Companion of his father. Temp. Khufu to Menkaurēʿ. Parents, probably Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350)."  → chose "King's son of his body, Companion of his father. Temp. Khufu to Menkaurēʿ. Parents, probably Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350)."
+  occupant_name: a="Duaenḥor" | b="Duaenḥor" | c="Duaenhor"  → chose "Duaenḥor"
+
+G7632 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 200, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 200, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 201, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 200, "section": "III"}
+
+G7650 (Akhtiḥotp):
+  co_occupant_roles: a=["Wife, King's daughter of his body, Prophetess of Khufu, Hathor, and Neith, etc."] | b=["Wife, King's daughter of his body, Prophetess of Khufu, Hathor, and Neith, etc."] | c=["Wife, King's daughter of his body, Prophetess of Khufu, Ḥathor, and Neith, etc."]  → chose ["Wife, King's daughter of his body, Prophetess of Khufu, Hathor, and Neith, etc."]
+  co_occupants: a=["Mertiōtes"] | b=["Mertiotes"] | c=["Mertiotes"]  → chose ["Mertiotes"]
+  notes_from_pm: a="Prophet of Khufu, Sole companion, Director of the Palace, etc., and wife Mertiōtes King's daughter of his body, Prophetess of Khufu, Hathor, and Neith, etc. Temp. Khufu to Khephren. Parents of Mertiotes, probably Khufu and Mertiotes [I]." | b="Prophet of Khufu, Sole companion, Director of the Palace, etc., and wife MERTIOTES, King's daughter of his body, Prophetess of Khufu, Hathor, and Neith, etc. Temp. Khufu to Khephren. Parents of Mertiotes, probably Khufu and Mertiotes [I]." | c="Prophet of Khufu, Sole companion, Director of the Palace, etc., and wife Mertiotes, King's daughter of his body, Prophetess of Khufu, Ḥathor, and Neith, etc. Temp. Khufu to Khephren. Parents of Mertiotes, probably Khufu and Mertiotes [I]."  → chose "Prophet of Khufu, Sole companion, Director of the Palace, etc., and wife Mertiotes, King's daughter of his body, Prophetess of Khufu, Ḥathor, and Neith, etc. Temp. Khufu to Khephren. Parents of Mertiotes, probably Khufu and Mertiotes [I]."
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 200, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 201, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 200, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 200, "section": "III"}
+
+G7652 (None):
+  dynasty: a="5" | b="5" | c=null  → chose "5"
+
+G7660 (Kaemsekhem):
+  notes_from_pm: a="King's son, Director of the Palace, etc. Late Dyn. IV. Parents, Kawaab (tomb G 7120) and Hetepheres [II] (tombs G 7110, 7350)." | b="King's son, Director of the Palace, etc. Late Dyn. IV. Parents, Kawaab (tomb G 7120) and Hetepheres [II] (tombs G 7110, 7350). LG 59." | c="King's son, Director of the Palace, etc. Late Dyn. IV. Parents, Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350)."  → chose "King's son, Director of the Palace, etc. Late Dyn. IV. Parents, Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350)."
+
+G7690 (None):
+  dynasty: a=null | b="5" | c=null  → chose null
+  notes_from_pm: a="Relief-fragment of Iui A Old Kingdom, in Boston Mus. 30.206." | b="Relief-fragment of Iui A Old Kingdom, in Boston Mus. 30.206. Itisen Overseer of ka-servants. Dyn. V. Iby Judge and Scribe, etc. Dyn. V. Siensnefru Director of the s-chamber, etc. Dyn. V." | c="Relief-fragment of Iui A, Old Kingdom, in Boston Mus. 30.206."  → chose "Relief-fragment of Iui A Old Kingdom, in Boston Mus. 30.206."
+
+G7721 (Kakherptaḥ):
+  notes_from_pm: a="Supervisor of the police, etc. Dyn. V." | b="Supervisor of the police, etc. Dyn. V. Rock-cut tomb." | c="Supervisor of the police, etc. Dyn. V. Rock-cut tomb."  → chose "Supervisor of the police, etc. Dyn. V. Rock-cut tomb."
+
+G7757 (None):
+  notes_from_pm: a="Anthropoid sarcophagus of Kheperrēʿ, basalt, Ptolemaic, from shaft A, room X, in Boston Mus. 30.834." | b="Anthropoid sarcophagus of Kheperrēʿ basalt, Ptolemaic, from shaft A, room X, in Boston Mus. 30.834." | c="Anthropoid sarcophagus of Kheperrēʿ, basalt, Ptolemaic, from shaft A, room X, in Boston Mus. 30.834."  → chose "Anthropoid sarcophagus of Kheperrēʿ, basalt, Ptolemaic, from shaft A, room X, in Boston Mus. 30.834."
+
+G7760 (Minzedef):
+  co_occupant_roles: a=["Father, possibly", "Mother, possibly", "Wife"] | b=["Father", "Mother", "Wife"] | c=["Father (possibly)", "Mother (possibly)", "Wife"]  → chose ["Father (possibly)", "Mother (possibly)", "Wife"]
+  co_occupants: a=["Kawaab", "Ḥetepḥeres II", "Khufuʿankh"] | b=["Kawaab", "Ḥetepḥeres II", "Khufu-ʿankh"] | c=["Kawaab (possibly)", "Ḥetepḥeres II (possibly)", "Khufuʿankh"]  → chose ["Kawaab", "Ḥetepḥeres II", "Khufuʿankh"]
+  notes_from_pm: a="King's son of his body, Hereditary prince, Treasurer of the King of Lower Egypt, etc. Temp. Khufu to Menkaurēʿ. Parents (possibly), Kawaab (tomb G 7120) and Hetepheres [II] (tombs G 7110, 7350). Wife, Khufuʿankh." | b="King's son of his body, Hereditary prince, Treasurer of the King of Lower Egypt, etc. Temp. Khufu to Menkaurea. Parents (possibly), Kawaab (tomb G 7120) and Hetepheres [II] (tombs G 7110, 7350). Wife, Khufuaankh. LG 60." | c="King's son of his body, Hereditary prince, Treasurer of the King of Lower Egypt, etc. Temp. Khufu to Menkaurēʿ. Parents (possibly), Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350). Wife, Khufuʿankh."  → chose "King's son of his body, Hereditary prince, Treasurer of the King of Lower Egypt, etc. Temp. Khufu to Menkaurēʿ. Parents (possibly), Kawaab (tomb G 7120) and Ḥetepḥeres [II] (tombs G 7110, 7350). Wife, Khufuʿankh."
+
+G7803 (None):
+  notes_from_pm: a="Probably Dyn. V-VI. Rock-cut tomb. Masons' graffiti with dates on walls." | b="Probably Dyn. V-VI. Rock-cut tomb." | c="Probably Dyn. V-VI. Rock-cut tomb. Masons' graffiti with dates on walls."  → chose "Probably Dyn. V-VI. Rock-cut tomb. Masons' graffiti with dates on walls."
+
+G7809 (None):
+  notes_from_pm: a="Upper part of male statuette, probably seated, Dyn V, found outside shaft A, in Boston Mus. 27.1323. False-door of Reti Overseer of ka-servants, granite, Dyn. V, from shaft D, in Boston Mus. 27.1128." | b="Upper part of male statuette, probably seated, Dyn. V, found outside shaft A, in Boston Mus. 27.1323. False-door of Reti Overseer of ka-servants, granite, Dyn. V, from shaft D, in Boston Mus. 27.1128." | c="Upper part of male statuette, probably seated, Dyn. V, found outside shaft A, in Boston Mus. 27.1323. False-door of Reti, Overseer of ka-servants, granite, Dyn. V, from shaft D, in Boston Mus. 27.1128."  → chose "Upper part of male statuette, probably seated, Dyn. V, found outside shaft A, in Boston Mus. 27.1323. False-door of Reti Overseer of ka-servants, granite, Dyn. V, from shaft D, in Boston Mus. 27.1128."
+
+G7810 (Zaty):
+  co_occupant_roles: a=["Mother, possibly"] | b=["Mother"] | c=["Mother (possibly)"]  → chose ["Mother (possibly)"]
+  co_occupants: a=["Meresʿankh II"] | b=["Meresʿankh II"] | c=["Meresʿankh II (possibly)"]  → chose ["Meresʿankh II"]
+  discoverer: a="Service des Antiquités" | b=null | c=null  → chose null
+  discovery_year: a=1923 | b=null | c=null  → chose null
+  dynasty: a="4" | b="5" | c="5"  → chose "5"
+  notes_from_pm: a="King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresʿankh [II] (tomb G 7410). Stone-built mastaba. Excavated by Service des Antiquités in 1923." | b="King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresaankh [II] (tomb G 7410). Stone-built mastaba. Excavated by Service des Antiquités in 1923." | c="King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresʿankh [II] (tomb G 7410). Stone-built mastaba. Excavated by Service des Antiquités in 1923."  → chose "King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresʿankh [II] (tomb G 7410). Stone-built mastaba. Excavated by Service des Antiquités in 1923."
+
+G7814 (Kaʿaper):
+  notes_from_pm: a="Overseer of the Two Treasuries, Overseer of works, etc. Dyn. V-VI." | b="Overseer of the Two Treasuries, Overseer of works, etc. Dyn. V-VI. Rock-cut tomb." | c="Overseer of the Two Treasuries, Overseer of works, etc. Dyn. V-VI. Rock-cut tomb."  → chose "Overseer of the Two Treasuries, Overseer of works, etc. Dyn. V-VI. Rock-cut tomb."
+
+G7815 (Ḥepennebti):
+  notes_from_pm: a="Prophetess of Hathor and Neith, etc. Dyn. V-VI." | b="Prophetess of Hathor and Neith, etc. Dyn. V-VI. Rock-cut tomb." | c="Prophetess of Ḥathor and Neith, etc. Dyn. V-VI. Rock-cut tomb."  → chose "Prophetess of Ḥathor and Neith, etc. Dyn. V-VI. Rock-cut tomb."
+
+G7820 (Iynefer):
+  co_occupant_roles: a=["Wife"] | b=["Wife", "Mother of Nefertkau"] | c=["Wife"]  → chose ["Wife"]
+  co_occupants: a=["Nefertkau"] | b=["Nefertkau", "Meresʿankh II"] | c=["Nefertkau"]  → chose ["Nefertkau"]
+  dynasty: a="4" | b="5" | c="5"  → chose "5"
+  notes_from_pm: a="Iynefer . . . and wife Nefertkau. End of Dyn. IV or early Dyn. V. Mother of Nefertkau (possibly), Meresʿankh [II] (tomb G 7410)." | b="Iynefer . . . and wife Nefertkau. End of Dyn. IV or early Dyn. V. Mother of Nefertkau (possibly), Meresaankh [II] (tomb G 7410). Stone-built mastaba." | c="Iynefer . . . and wife Nefertkau. End of Dyn. IV or early Dyn. V. Mother of Nefertkau (possibly), Meresʿankh [II] (tomb G 7410). Stone-built mastaba."  → chose "Iynefer . . . and wife Nefertkau. End of Dyn. IV or early Dyn. V. Mother of Nefertkau (possibly), Meresʿankh [II] (tomb G 7410)."
+  occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
+
+G7821 (Neferseshemptaḥ):
+  notes_from_pm: a="Steward of the Great Estate, etc. Dyn. V-VI." | b="Steward of the Great Estate, etc. Dyn. V-VI. Rock-cut tomb." | c="Steward of the Great Estate, etc. Dyn. V-VI. Rock-cut tomb."  → chose "Steward of the Great Estate, etc. Dyn. V-VI. Rock-cut tomb."
+
+G7822 (Mesu):
+  notes_from_pm: a="Director of vine-dressers, etc. Dyn. V-VI." | b="Director of vine-dressers, etc. Dyn. V-VI. Rock-cut tomb." | c="Director of vine-dressers, etc. Dyn. V-VI. Rock-cut tomb."  → chose "Director of vine-dressers, etc. Dyn. V-VI. Rock-cut tomb."
+
+G7836 (Nebtyḥerkaus):
+  notes_from_pm: a="Prophetess of Hathor Mistress-of-the-Sycamore, etc. Dyn. V." | b="Prophetess of Hathor Mistress-of-the-Sycamore, etc. Dyn. V. Rock-cut tomb." | c="Prophetess of Ḥathor Mistress-of-the-Sycamore, etc. Dyn. V. Rock-cut tomb."  → chose "Prophetess of Ḥathor Mistress-of-the-Sycamore, etc. Dyn. V. Rock-cut tomb."
+
+G7837 (ʿAnkh-maʿrēʿ):
+  attribution_certainty: a="attested" | b="probable" | c="probable"  → chose "probable"
+  occupant_role: a="Official" | b="Official" | c="Unknown"  → chose "Official"
+
+G7946 (Nefu):
+  co_occupant_roles: a=["Wife, etc."] | b=["Wife, mjtrt, etc."] | c=["Wife, mjtrt, etc."]  → chose ["Wife, mjtrt, etc."]
+  notes_from_pm: a="Inspector of administrators of the Treasury, etc. Dyn. V-VI. Wife, Khnemt-sethu, etc." | b="Inspector of administrators of the Treasury, etc. Dyn. V-VI. Wife, Khnemt-sethu mjtrt, etc." | c="Inspector of administrators of the Treasury, etc. Dyn. V-VI. Wife, Khnemt-sethu mjtrt, etc."  → chose "Inspector of administrators of the Treasury, etc. Dyn. V-VI. Wife, Khnemt-sethu mjtrt, etc."
+
+G7948 (Rēʿkhaʿef-ʿankh):
+  co_occupant_roles: a=["Wife, Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."] | b=["Wife, Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."] | c=["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."]  → chose ["Wife, Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."]
+  co_occupants: a=["Nikahor"] | b=["Nikaḥor"] | c=["Nikahor"]  → chose ["Nikahor"]
+  notes_from_pm: a="Companion of the Great House, Inspector of waab-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikahor Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. 'Tomb of Numbers'." | b="Companion of the Great House, Inspector of waab-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikahor Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. LG 75. 'Tomb of Numbers'." | c="Companion of the Great House, Inspector of waab-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikahor, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. 'Tomb of Numbers'."  → chose "Companion of the Great House, Inspector of waʿb-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikahor Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. 'Tomb of Numbers'."
+
 LG84 (Pakap):
   occupant_alt_names: a=["Wehebrec-Emakhet"] | b=["Wehebrec-emakhet"] | c=["Wehebreʿ-emakhet"]  → chose ["Wehebreʿ-emakhet"]
   tomb_aliases: a=["Campbell's Tomb"] | b=["Campbell's Tomb"] | c=[]  → chose ["Campbell's Tomb"]
@@ -805,6 +968,9 @@ Reviewer-cited row corrections:
   G5550.co_occupants: [] → ["Hemtrea"]
   G5550.co_occupant_roles: [] → ["Wife, Prophetess of Neith Opener-of-the-Ways"]
   G5560.notes_from_pm: "Good name FETEKTA. Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35." → "Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waʿb-priests of the Pyramid of Khufu, etc. Early Dyn. VI."
+  G6020.co_occupant_roles: ["Father", "Wife, Royal acquaintance"] → ["Father", "Wife, Royal acquaintance, etc."]
+  G6037.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 174, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"}
+  G6042.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 178, "section": "III"}
   G7102.occupant_name: "Iou" → "Idu"
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
