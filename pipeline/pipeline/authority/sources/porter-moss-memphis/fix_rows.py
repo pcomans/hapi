@@ -1607,6 +1607,75 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "agent-majority left the co_occupants without ayin."
         ),
     },
+    # G 5110 co_occupant_roles — drop the agent-majority `(probably)`
+    # hedge (PM prints `Parents,` not `Parents (probably),`) and use
+    # bare gendered `Father` / `Mother` per chunk-15 G 5170 precedent
+    # (no title cluster in PM → no inferred title; PM-faithfulness
+    # wins over enrich-time domain inference).
+    ("G5110", "co_occupant_roles"): {
+        "value": ["Father", "Mother"],
+        "rationale": (
+            "Gemini PR #234 round-4 medium: agents 2/3 majority-voted "
+            "`Parent (probably), King/Queen`, but PM literal is "
+            "`Parents, Khephren and Meresʿankh III.` (no hedge, no "
+            "occupational title cluster). Drop the `(probably)` hedge "
+            "and the inferred King/Queen titles; use bare gendered "
+            "`Father` / `Mother` per G 5170 precedent (no title "
+            "cluster in PM → bare gendered, parallel to D117 with "
+            "titles)."
+        ),
+    },
+    # G 5270 + G 5280 co_occupants — extract parents from body-prose
+    # clauses per chunk-15 G 5170 / chunk-14 G 4761 precedents.
+    # PM gives no occupational title cluster for these parents → bare
+    # gendered Father/Mother (G 5170 precedent). G 5270 PM hedges
+    # `Parents (probably),` → hedged form; G 5280 PM no hedge.
+    # Note: G 5280 PM literal is `Seshemnafer [I]` (variant 'a' vs G
+    # 5270's `Seshemnufer [I]`) — both cross-reference (tomb G 4940)
+    # so PM treats them as the same person. Use canonical
+    # `Seshemnufer I` (G 4940 occupant_name) for both rows to enable
+    # downstream enrich-time matching.
+    ("G5270", "co_occupants"): {
+        "value": ["Seshemnufer I", "Amenzefas"],
+        "rationale": (
+            "Gemini PR #234 round-4 medium: extract parents from "
+            "body-prose `Parents (probably), Seshemnufer [I] and "
+            "Amenzefas (tomb G 4940).` Agent-majority left "
+            "co_occupants empty. Canonical `Seshemnufer I` per G "
+            "4940 tie-break override."
+        ),
+    },
+    ("G5270", "co_occupant_roles"): {
+        "value": ["Father (probably)", "Mother (probably)"],
+        "rationale": (
+            "Gemini PR #234 round-4 medium: paired with G 5270 "
+            "co_occupants. PM hedges `Parents (probably),` → "
+            "`Father (probably)` / `Mother (probably)` per G 5170 "
+            "gendered-no-title + chunk-14 G 4761 hedged-parent "
+            "precedents."
+        ),
+    },
+    ("G5280", "co_occupants"): {
+        "value": ["Seshemnufer I", "Amenzefas"],
+        "rationale": (
+            "Gemini PR #234 round-4 medium: extract parents from "
+            "body-prose `Parents, Seshemnafer [I] and Amenzefas "
+            "(tomb G 4940).` Agent-majority left co_occupants empty. "
+            "PM-literal `Seshemnafer` is an orthographic variation "
+            "(both G 5270 and G 5280 cross-reference tomb G 4940 → "
+            "PM treats them as same person); use canonical "
+            "`Seshemnufer I` for enrich-time matching."
+        ),
+    },
+    ("G5280", "co_occupant_roles"): {
+        "value": ["Father", "Mother"],
+        "rationale": (
+            "Gemini PR #234 round-4 medium: paired with G 5280 "
+            "co_occupants. PM does NOT hedge here (only G 5270 has "
+            "`Probably`) → bare gendered `Father` / `Mother` per "
+            "G 5170 precedent."
+        ),
+    },
     # G 5290 dynasty backfill — `Middle Dyn. V or later.` per chunks
     # 9-14 range-tail rule → `"5"`.
     ("G5290", "dynasty"): {
