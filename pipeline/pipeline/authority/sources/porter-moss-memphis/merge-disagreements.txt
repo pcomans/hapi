@@ -776,6 +776,8 @@ Reviewer-cited row corrections:
   G5110.co_occupants: ["Khephren", "Meresaankh III"] → ["Khephren", "Meresʿankh III"]
   G5110.co_occupant_roles: ["Parent (probably), King", "Parent (probably), Queen"] → ["Father", "Mother"]
   G5150.occupant_name: "Seshethotp" → "Seshetḥotp"
+  G5190.dynasty: null → "6"
+  G5232.dynasty: null → "5"
   G5270.co_occupants: [] → ["Seshemnufer I", "Amenzefas"]
   G5270.co_occupant_roles: [] → ["Father (probably)", "Mother (probably)"]
   G5280.co_occupants: [] → ["Seshemnufer I", "Amenzefas"]

@@ -1546,7 +1546,7 @@ CHUNK14_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # whose dating clue was in body-prose (G 5290/5332/5350/5480/5482/5520),
 # co_occupants extraction for parents + wife clauses left empty by
 # agent-majority (G 4970/5110/5340/5550), notes alt-name cleanup
-# (G 5560), and Meresaankh raised-a ayin (G 5110 co_occupants).
+# (G 5560), and Meresʿankh raised-a ayin (G 5110 co_occupants).
 CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # G 4941 occupant_name + notes — apply Ptaḥ and Ḥar underdot-Ḥ per
     # source-wide ḥ-root convention. Gemini PR #234 round-2 medium.
@@ -1674,6 +1674,42 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "co_occupants. PM does NOT hedge here (only G 5270 has "
             "`Probably`) → bare gendered `Father` / `Mother` per "
             "G 5170 precedent."
+        ),
+    },
+    # G 5190 dynasty backfill — body-prose `Relief-fragments, two
+    # women and two columns of text, Dyn. VI, in Boston Mus. 13.4343.`
+    # Per chunks 6/8 body-attestation rule → `"6"`. The Dyn. VI dating
+    # belongs to the relief-fragments excavated from G 5190's shaft;
+    # dates the tomb's occupancy. Gemini PR #234 round-5 medium.
+    ("G5190", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "Gemini PR #234 round-5 medium: dynasty backfill from "
+            "body-attested `Relief-fragments, ..., Dyn. VI, in Boston "
+            "Mus. 13.4343.` Per chunks 6/8 body-attestation rule, "
+            "object-found-at-shaft dating dates the tomb → `\"6\"`. "
+            "Agent-majority left dynasty `null` because the dating "
+            "clue was in body-prose adjacent to the bare-numeric "
+            "headword `G 5190.`"
+        ),
+    },
+    # G 5232 dynasty backfill — body-prose `Lintel of 'Yetty', Dyn.
+    # IV-V, in Boston Mus. 21.957.` Per chunks 6/8 body-attestation +
+    # range-tail rule → `"5"`. The lintel was found at G 5232's shaft;
+    # dates the tomb's occupancy period. Gemini PR #234 round-5
+    # medium.
+    ("G5232", "dynasty"): {
+        "value": "5",
+        "rationale": (
+            "Gemini PR #234 round-5 medium: dynasty backfill from "
+            "body-attested `Lintel of 'Yetty', Dyn. IV-V, in Boston "
+            "Mus. 21.957.` Per chunks 6/8 body-attestation rule + "
+            "range-tail rule (Dyn. IV-V → `\"5\"`, start of range). "
+            "Agent-majority left dynasty `null`. Note: the existing "
+            "G5232|notes_from_pm tie-break override keeps notes "
+            "`null` (lintel-find body-prose is not headword content) "
+            "but dynasty is a separate field — dating clue from "
+            "lintel-find dates the tomb's occupancy."
         ),
     },
     # G 5290 dynasty backfill — `Middle Dyn. V or later.` per chunks
