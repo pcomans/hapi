@@ -35,7 +35,7 @@ Node-type mapping from Hapi labels to CIDOC classes:
 |-------------------------|--------------------------------|-------|
 | `:Ruler`                | E21 Person                     | one node per source row, each treated as a **competing E21 identity hypothesis** about a real historical person. CRM 7.1.3's E21 scope note permits multiple instances when identity across sources is doubtful; that is exactly the situation here. `:Ruler` nodes are person-claims, not source-record proxies — `hapi:same_entity_as` claims resolve them into clusters as evidence accumulates. No canonical Person is materialised at load time. |
 | `:Site`                 | E27 Site                       | physical archaeological place |
-| `:Dynasty`              | E4 Period                      | with begin/end E52 Time-Span; membership claims point here |
+| `:Dynasty`              | E4 Period                      | the Manethonic historiographic period bucket — a chronological band, not a ruling family/house and not a contemporary social institution. Membership is via `hapi:in_dynastic_period` (chronological). Family-lineage and ruling-house modeling are out of scope here; if they become needed, they get their own predicate(s) targeting `:E74 Group`. |
 | `:Statement`            | E13 Attribute Assignment       | each claim is its own E13 |
 | `:Person`               | E21 Person                     | a scholar or human curator (the actor of an E13) |
 | `:Group`                | E74 Group                      | curatorial bodies, learned societies |
@@ -53,8 +53,8 @@ Edges use CIDOC property identifiers as primary, with `hapi:` namespace for rela
 | `P140_assigned_attribute_to`          | P140                         | E13    | E1    | The subject of the claim (the Ruler the fact is about) |
 | `P141_assigned`                       | P141                         | E13    | E1    | The value of the claim (always an E1 entity, never a literal) |
 | `P177_assigned_property_of_type`      | P177                         | E13    | E55   | The predicate type (which kind of property this E13 assigns) |
-| `P14_carried_out_by`                  | P14                          | E13    | E39   | The actor who performed the assignment |
-| `P70i_is_documented_in`               | P70 (inverse)                | E13    | E31   | The document where the assignment is recorded; carries `cited_page`, `cited_pdf_page` as edge properties |
+| `P14_carried_out_by`                  | P14                          | E7 (attaches to E13 by inheritance, since E13 IS-A E7) | E39   | The actor who performed the assignment |
+| `P70i_is_documented_in`               | P70 (inverse)                | E1 (attaches to E13 by inheritance, since E13 IS-A E1) | E31   | The document where the assignment is recorded; carries `cited_page`, `cited_pdf_page` as edge properties |
 
 **Declared deviations from strict CRM 7.1.3.** These are conscious choices, not oversights; each is justified, contained, and carries a documented round-trip mapping to strict CRM/RDF. They are listed here so the rest of the ADR can use them without re-explaining. Anything else in the model that violates the spec without being listed here is a bug — there is no "minor deviation" or "soft issue" category.
 
@@ -63,7 +63,7 @@ Edges use CIDOC property identifiers as primary, with `hapi:` namespace for rela
 3. **Hapi-namespace predicates where CRM has no clean fit.** Predicates like `hapi:same_entity_as`, `hapi:buried_in`, `hapi:shares_tomb_with`, `hapi:derived_by` live in a `hapi:` namespace. Each entry in the predicate registry (E55 Type) carries a `crm_nearest` field pointing at the nearest CIDOC property for interop documentation, when one exists.
 4. **Time-Span boundary literals stored directly on the `:E52 Time-Span` node.** The conceptual CRM 7.1.3 model declares P81 ongoing throughout and P82 at some time within with domain E52 and range **E61 Time Primitive**; it does not declare conceptual P81a / P81b / P82a / P82b. Those four are introduced *only* by the RDFS implementation as automatically-generated refinements that emit `rdfs:Literal` (see the RDFS preamble's encoding rules). The property-graph encoding stores year boundaries as signed integers directly on the `:TimeSpan:E52` node (e.g. `begin_of_the_begin: -2375`, `end_of_the_end: -2345`) together with an explicit `calendar` property (e.g. `'astronomical_year'`) that pins the year-numbering convention. Round-trip mapping has two stages: (a) at the conceptual level, the literals serialise into one or more E61 Time Primitive value-entities linked to the E52 via P81 / P82; (b) at the RDFS-implementation level, the same literals serialise into the implementation's P81a / P81b / P82a / P82b literal refinements. The exact lexical form (XML Schema 1.1 expanded-year notation vs ISO 8601 extended astronomical-year form vs other) is **a Hapi convention**, pinned in the loader specification — CRM does not mandate one, especially for BCE years where the three conventions disagree.
 5. **Citation-evidence properties (`cited_page`, `cited_pdf_page`) carried on the `P70i_is_documented_in` edge itself.** Strict CRM 7.1.3 has no `.1` sub-property of P70 for page-level citation; the edge-property idiom is a Hapi compactness choice. Round-trip mapping at strict-RDF export — every property's domain and range stays satisfied:
-   - For each distinct (publication, page) pair, materialise the page as its own `:E31 Document` (e.g. `:E31 Document {id: 'leprohon_2013_p115'}`). E31 is still the typing — a page is still a Document.
+   - For each distinct (publication, page) pair, materialise the **page-level documentary content** as its own `:E31 Document` (e.g. `:E31 Document {id: 'leprohon_2013_p115'}`). The physical printed page is not itself an E31 (a printed sheet of paper is closer to E22 Human-Made Object); what we are naming as an E31 is the propositional/documentary content carried at that page location, in the same sense that the publication-level `:E31` names the publication's documentary content, not its physical binding. The distinction matters for the museum-side layer where physical objects and their carried information are separately typed.
    - Bind the page-level `:E31` to its parent publication via `P148i_is_component_of → :E31 Document {id: 'leprohon_2013'}`. P148 has domain and range E89 Propositional Object; E31 IS-A E73 IS-A E89, so both endpoints conform by subsumption.
    - Identify the page-level `:E31` via `P1_is_identified_by → :E42 Identifier {value: 'p. 115'}`. P1 has domain E1 and range E41; E42 IS-A E41, so the range conforms by subsumption.
    - Rewrite the original `(:Statement:E13) -[:P70i_is_documented_in]-> (:E31 Document {publication})` to point at the page-level `:E31` instead of the publication-level one. **P70i's range stays E31** — no rerouting through E73/E33 is required.
@@ -90,7 +90,7 @@ Edges use CIDOC property identifiers as primary, with `hapi:` namespace for rela
    - A name claim like "Narmer's Horus name is 'nar mer'" assigns an `:E41 Appellation` value entity that carries the literal as a property accessed via `P190_has_symbolic_content`.
    - A reign-date claim assigns an `:E52 Time-Span` value entity that carries boundary literals on the node. Conceptual CRM models the span via P81 ongoing throughout / P82 at some time within (both E52 → E61 Time Primitive); the property-graph stores the boundaries directly, exporting to the RDFS-implementation refinements P81a / P81b / P82a / P82b at strict-RDF time (see deviation #4).
    - A numeric measurement assigns an `:E54 Dimension` carrying `P90_has_value` and `P91_has_unit`.
-   - An entity-identity claim like "Narmer belongs to Dynasty 0" assigns the Dynasty (`:E4 Period`) node directly.
+   - An entity-period claim like "Narmer is dated to Dynasty 0" assigns the Dynasty (`:E4 Period`) node directly via `hapi:in_dynastic_period`.
 
    The property-graph encoding inlines the CIDOC-property values (`symbolic_content`, `value`, `begin`, `end`) as properties of the value-entity node, rather than as separate string-literal nodes. The value-entity layer is what makes graph traversal uniform: "show me every claim that touches Dynasty 0" traverses through `P141_assigned`; "show me every appellation containing 'wnis'" indexes through `:E41 Appellation` nodes regardless of which Statement assigned them.
 
@@ -122,7 +122,7 @@ Consequences of fail-loud: rulers added by a future source-loader before a curat
 
 ### Schema sketch
 
-Every claim is an E13 Statement carrying exactly five canonical CIDOC edges (with at most one additional `hapi:derived_by` edge for matcher-attributed claims):
+Every claim is an E13 Statement. Edge cardinality depends on claim type. Human-documentary claims (the common case) carry all five canonical edges below. Matcher-derived claims replace `P14_carried_out_by` with `hapi:derived_by` and may lack `P70i_is_documented_in` until a reviewer attaches a documentary anchor. Claims whose source publication can't yet be page-cited may also lack `P70i`. The `P140` / `P141` / `P177` triad is the only universally-required spine; the remaining edges are claim-type-conditional, as the "Required" column shows.
 
 | # | Edge                                  | Target type         | Required |
 |---|---------------------------------------|---------------------|----------|
@@ -152,11 +152,13 @@ Every claim is an E13 Statement carrying exactly five canonical CIDOC edges (wit
         cited_pdf_page: 142
    }]->                                (:Document:E31 {id: 'leprohon_2013'})
 
-// (2) An entity-valued claim — dynasty membership. Value is the Dynasty (E4 Period) node directly.
+// (2) An entity-valued claim — assigning Unas to the historiographic period bucket "Dynasty 5".
+//     Value is the :Dynasty (E4 Period) node directly. Not a family-membership claim; see Dynasty in
+//     the node-type table.
 (:Statement:E13)
   -[:P140_assigned_attribute_to]->    (:Ruler {leprohon::leprohon-5.07})
   -[:P141_assigned]->                  (:Dynasty:E4_Period {number: 5})
-  -[:P177_assigned_property_of_type]-> (:Type:E55 {id: 'hapi:belongs_to_dynasty'})
+  -[:P177_assigned_property_of_type]-> (:Type:E55 {id: 'hapi:in_dynastic_period'})
   -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_rj'})
   -[:P70i_is_documented_in]->          (:Document:E31 {id: 'leprohon_2013'})
 
@@ -255,7 +257,7 @@ The registry is the authoritative vocabulary for the claim graph. Each entry is 
 | `label`               | string                     | human-readable name for review queues and UI |
 | `definition`          | string                     | one-paragraph definition of what the predicate means and when it applies |
 | `subject_class`       | CIDOC E-class or set       | e.g. `E21 Person` for `hapi:reign_period`; `E27 Site` for `hapi:located_in` |
-| `value_class`         | CIDOC E-class or set       | e.g. `E41 Appellation` for `hapi:horus_name`; `E4 Period` for `hapi:belongs_to_dynasty`; `E21 Person` for `hapi:same_entity_as` |
+| `value_class`         | CIDOC E-class or set       | e.g. `E41 Appellation` for `hapi:horus_name`; `E4 Period` for `hapi:in_dynastic_period`; `E21 Person` for `hapi:same_entity_as` |
 | `value_cardinality`   | `single` \| `multi`        | whether a subject can have one or many active claims of this predicate |
 | `crm_nearest`         | CIDOC P-number \| `null`   | nearest CIDOC property for interop documentation; `null` if no clean fit |
 | `is_symmetric`        | bool                       | whether the predicate is symmetric (e.g. `hapi:same_entity_as` is) |
@@ -267,7 +269,7 @@ Adding a new predicate is an INSERT into this registry preceded by a review agai
 
 - **Storage technology** — Postgres (with relational encoding of the graph, or with the Apache AGE extension) and Neo4j (self-hosted Community or Aura managed) are the two viable candidates. A separate ADR will resolve this based on the pilot evidence accumulated under this model. Until then, the conceptual model is binding; the storage substrate is open.
 - **The relational vs property-graph encoding of E13.** Whether Statements are tables with FK columns or first-class graph nodes follows from the storage choice. Both encodings preserve the CIDOC mapping above; specifying the encoding before the storage ADR pre-decides storage.
-- **Per-predicate resolution policies beyond `hapi:display_name`** — the *default* is fail-loud (principle 7); the *first concrete policy* is committed above for `hapi:display_name`. Additional per-predicate rules (which document wins for `hapi:reign_start_bce`, `hapi:belongs_to_dynasty`, etc.) accumulate in the policy registry as downstream consumers demand them. The registry's exact location and review process is a follow-up ADR.
+- **Per-predicate resolution policies beyond `hapi:display_name`** — the *default* is fail-loud (principle 7); the *first concrete policy* is committed above for `hapi:display_name`. Additional per-predicate rules (which document wins for `hapi:reign_start_bce`, `hapi:in_dynastic_period`, etc.) accumulate in the policy registry as downstream consumers demand them. The registry's exact location and review process is a follow-up ADR.
 - **Phase C feedback cadence** — when an approved fuzzy match in the review queue produces a new alias, when does the alias get added as a claim? Per-approval, batched, or blocked until a Phase B pass completes? Tracked in #221.
 
 ## Storage candidates (deferred)
@@ -308,7 +310,7 @@ A follow-up ADR will revise ADR-009 to specify the constraint-narrowed algorithm
 ## Consequences
 
 - **Phase 0 output shape changes.** Sources still produce `reconciled.jsonl`, but the downstream loader emits per-source E13 Statements, not collapsed per-entity rows. The 3-agent extraction step's job is unchanged (faithful capture of the source); per-row resolution still follows the Rule-2 decision tree (unanimity / majority / `tie-break-overrides.json` / documented policy) — the loader trusts whatever the existing pipeline emits and never re-resolves at the graph layer.
-- **Reconciliation semantics change.** "Reconciliation" no longer means "pick one value across sources"; it means "load all sources' claims into the graph and let the resolution policy (per-predicate, per-consumer) decide what to surface." The current `tie-break-overrides.json` becomes Statement-level reviewer rationale with citation metadata, joined to the Statements it justifies.
+- **Reconciliation semantics change.** "Reconciliation" no longer means "pick one value across sources"; it means "load all sources' claims into the graph and let the resolution policy (per-predicate, per-consumer) decide what to surface." The current `tie-break-overrides.json` becomes **pipeline QA provenance**, not scholarly citation evidence. Tie-break overrides justify *extraction arbitration* (which of the 3 agents' readings of the source was correct), not the source publication's historical claim itself; they sit in a separate QA-provenance layer attached to the loader event or extraction step that produced the Statement, queryable as "how was this Statement produced" rather than "who attested to this Statement." A Statement's scholarly citation chain remains P14 → scholar + P70i → publication; QA provenance lives alongside, never inside, that chain.
 - **Disagreements become first-class artifacts.** The UI can honestly show "1353–1336 BCE (Leprohon 2013) / 1352–1335 BCE (Dodson-Hilton 2010)" instead of pretending certainty it doesn't have. Authority disagreements appear in search snippets, hover cards, and the artifact detail page.
 - **Cross-source identity becomes data, not a structural primitive.** Adding a new source (Hornung, Kitchen, Ryholt) does not require re-curation of existing entities. It adds per-source nodes that get linked to existing nodes via `hapi:same_entity_as` Statements — automated (matcher-attributed) where confident, queued for human review (curator-attributed when approved) otherwise. A canonical-person view, if needed, can be derived from `same_entity_as` clusters as a materialized view; the source of truth remains the per-source nodes plus their identity claims.
 - **The predicate registry becomes the vocabulary contract.** Any new relationship type proposed by an agent, a Phase 0 chunk, or a contributor must be reviewed against the registry. The CI check is FK-enforced at the DB layer; convention is not enough.
