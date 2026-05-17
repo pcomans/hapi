@@ -118,7 +118,7 @@ Pre-extraction structural scan: PM prints ~13 Shape-1 named-primary tombs + 1 Sh
 
 **Raised-ayin in occupant names.** Replace mid-name or leading raised-`a`/`c`/`'` glyphs with `ʿ` (U+02BF) and title-case. ASCII-only in `tomb_id` descriptor (JKE-`<Name>` drops ayin).
 
-**Underdot-Ḥ glyph.** Apply on `ḥ`-root names per source-wide convention (precedent names from prior chunks: Ḥathor, Meḥu, Meḥyt, Snefruḥotp, Meryptaḥ, Neferḥetpes, Neferḥi, Akhetmeḥu, Ḥetepniptaḥ, ʿAnkhirptaḥ, ʿAnkh-Ḥathor, Weḥemka, Kheriḥet, Irkaptaḥ, Washptaḥ, Imḥotep, Neferḥerenptaḥ). For this chunk, `NIaANKH-HATHOR` carries underdot-Ḥ on the `Ḥathor` root → `Niʿankh-Ḥathor`; `NepeHkau` (text-layer cap-H is the underdot marker) → `Nepeḥkau`.
+**Underdot-Ḥ glyph.** Apply on `ḥ`-root names per source-wide convention (precedent names from prior chunks: Ḥathor, Meḥu, Meḥyt, Snefruḥotp, Meryptaḥ, Neferḥetpes, Neferḥi, Akhetmeḥu, Ḥetepniptaḥ, ʿAnkhirptaḥ, ʿAnkh-Ḥathor, Weḥemka, Kheriḥet, Irkaptaḥ, Washptaḥ, Imḥotep, Neferḥerenptaḥ). For this chunk, `NIaANKH-HATHOR` carries underdot-Ḥ on the `Ḥathor` root → `Niʿankh-Ḥathor`. NB: `NepeHkau` appears in the chunk text only as a body-prose object mention (double-statue findspot south of tombs G 2015 and 2015b, NOT a tomb headword) — it would normalise to `Nepeḥkau` IF you ever emit it, but it is out of scope for this chunk; do not emit a row for it.
 
 **Macron-Ē on Re-deity-compound names.** Per chunks 4/8/10/11 precedent (Merenrēʿ I, Meryrēʿ-Meryptaḥʿankh, Saḥurēʿ, Neuserrēʿ, Rēʿ, Rēʿḥerka, Rēʿḥotp, Rēʿshepses). Unlikely to occur in this chunk, but apply if present.
 
