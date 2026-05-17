@@ -2121,9 +2121,11 @@ def test_chunk10_introduces_jkr_descriptor_prefix() -> None:
     assert len(jkr_rows) == 25
 
 
-def test_chunk10_introduces_s_steindorff_prefix() -> None:
-    """First chunk to use Steindorff S-number form for Shape-2 bare-
-    headword tombs. Chunk 13 adds one more (S 2411 inside Junker East)."""
+def test_s_steindorff_prefix_rows_are_correct_shape() -> None:
+    """Steindorff S-number tombs (Shape-2 bare-headword) are present
+    across chunks 10 (Junker West, 5 rows) and 13 (Junker East,
+    S 2411). All carry Shape-2 invariants: null occupant_name, Unknown
+    role, uncertain attribution."""
     s_rows = [r for r in _rows() if r["tomb_id"].startswith("S") and r["tomb_id"][1:].isdigit()]
     assert len(s_rows) == 6  # chunk 10 contributes 5, chunk 13 adds S2411
     for r in s_rows:
@@ -2169,7 +2171,7 @@ def test_chunk10_jkr_inpuhotp_multi_diacritic_re_compounds() -> None:
     assert "Rēʿ" in notes
 
 
-def test_chunk10_steindorff_s_numbers_present() -> None:
+def test_all_s_steindorff_numbers_are_present() -> None:
     """Six S-numbered tombs across chunks 10 and 13:
     - Chunk 10 (Junker West): S 4040, S 4233/4283, S 4248/4321,
       S 4399/4507, S 4419 (twin-number form preserves the second number
