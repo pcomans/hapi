@@ -115,7 +115,7 @@ Same conventions as chunk 14a — raised-ayin → U+02BF, underdot-Ḥ on ḥ-ro
 
 **`wrt Hts` drift.** Normalise to `wrt-ḥts` (Egyptian *wrt-ḥts*, OK royal-women title `Great One of the Hts-staff`; pypdf renders without hyphen + cap-H instead of underdot-Ḥ).
 
-**`G 4811 + 4812` joint twin.** tomb_id `G4811`; tomb_aliases `["G 4812"]`; is_joint_burial `true`.
+**`G 4811 + 4812` structural twin.** tomb_id `G4811`; tomb_aliases `["G 4812"]`; is_joint_burial `false` (PM names a single occupant `aANKHIRPTAH` on a structurally-twin mastaba; per source-wide convention `is_joint_burial = true` denotes multiple OCCUPANTS, not multiple tomb numbers — parallel to chunk-11 D80/80A precedent).
 
 ## Field-by-field rules
 
@@ -126,7 +126,7 @@ Same as chunk 14a:
 - **`occupant_alt_names`** — From `<NAME> good name <ALT>` or `<NAME> called <ALT>` idioms (e.g., `G 4651. KAPUNESUT called KAI` → `occupant_name: Kapunesut`, `occupant_alt_names: ["Kai"]`).
 - **`tomb_aliases`** — Second number of joint twin only.
 - **`co_occupants`** / **`co_occupant_roles`** — Length-coupled.
-- **`is_joint_burial`** — `true` only for G 4811 + 4812.
+- **`is_joint_burial`** — `false` for all rows in this chunk. G 4811 + 4812 names a single occupant on a structurally-twin mastaba; structural jointness is captured in `tomb_aliases`, NOT `is_joint_burial`. If any chunk-14b row turned out to have an `and`-joined two-occupant headword (none expected), that row alone would carry `is_joint_burial: true`.
 - **`occupant_role`** — `"Vizier"`, `"High Priest"`, `"Prince"` (`King's son`), `"Princess"` (`King's daughter`), else `"Official"` for named-non-royal. Bare-numeric Shape-2 → `"Unknown"`. Anonymous Shape-5 (`NAME UNKNOWN, Scribe ...`) → `"Official"` (title cluster determines, not the lack of name).
 - **`dynasty`** — Roman→Arabic. Standard tokens. `null` only when PM gives no dating.
 - **`cemetery`** — `"G 4000"` for every row.

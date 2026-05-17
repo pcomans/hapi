@@ -76,7 +76,7 @@ Five shapes:
 
 **Shape 3 — Bracketed Roman regnal.** `G <NUM>. <NAME [I]> <Title cluster>.` — drop brackets, append Roman.
 
-**Shape 4 — Joint-named twin headword.** `G <NUM1> + <NUM2>. <NAME1> ...` or `G <NUM>. <NAME1> and <NAME2> ...` — emit ONE row, `is_joint_burial: true`.
+**Shape 4 — Joint-named twin headword.** `G <NUM>. <NAME1> and <NAME2> ...` (two named occupants) — emit ONE row, `is_joint_burial: true`. (NOTE: the structural `G <NUM1> + <NUM2>` form with a SINGLE named occupant is `is_joint_burial: false` per the chunk-11 D80/80A precedent — see `tomb_id convention` section above.)
 
 **Shape 5 — Anonymous "NAME UNKNOWN, <descriptor>" headword.** PM gives no occupant name. `occupant_name: null`, `attribution_certainty: "uncertain"`.
 
@@ -126,7 +126,7 @@ Pre-extraction structural scan: PM prints ~22–26 Reisner-numbered headwords in
 - **`tomb_aliases`** — Empty for chunk-14a rows (joint twin G 4811 + 4812 is chunk 14b).
 - **`co_occupants`** — Wife, parents, joint-named twins.
 - **`co_occupant_roles`** — Length-coupled. `"Wife, <title>"`, `"Father, <title>"` form.
-- **`is_joint_burial`** — `true` only for Shape-4 joint twins (none expected in chunk 14a; chunk 14b has G 4811 + 4812).
+- **`is_joint_burial`** — `false` for all rows in this chunk (no joint-named two-occupant headwords expected in chunk 14a; G 4811 + 4812 in chunk 14b is a STRUCTURAL twin with a single named occupant → `is_joint_burial: false` per the chunk-11 D80/80A precedent).
 - **`occupant_role`** — Controlled vocab. `"Vizier"` for `Chief Justice and Vizier` (G 4000 HEMYUNU). `"Prince"` for `King's son`. `"Princess"` for `King's daughter`. `"High Priest"` of any divinity. Most named-non-royal → `"Official"`. Bare-numeric Shape-2 → `"Unknown"`.
 - **`dynasty`** — Roman→Arabic. `Dyn. IV` → `"4"`, `Dyn. V` → `"5"`, `Dyn. VI` → `"6"`. `Middle or late Dyn. IV` → `"4"`. `Late Dyn. IV or Dyn. V` → `"5"` (range tail). `Temp. Khufu` → `"4"`. `Temp. Khephren or later` → `"4"`. `Temp. Userkaf or later` → `"5"`. `null` only when PM gives no dating clue.
 - **`sub_period`** / **`date_bce_*`** — `null`.
