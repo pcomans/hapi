@@ -70,6 +70,18 @@ AREA_ORDER: dict[str, int] = {
                # tombs (chunk 10 + future Steindorff cemetery chunk).
                # PM prints `S <NUM>` or `S <NUM1>/<NUM2>` for twin-
                # numbered tombs.
+    "STN": 5,  # Steindorff descriptor-form for the interstitial
+               # named Steindorff Cemetery tombs that lack a
+               # D-number (chunk 11). Parallel to JKR-/SAQ-
+               # convention. Only ~3 rows per chunk-11 (WEMTETKA,
+               # IBIR, etc.).
+    "D": 6,    # Steindorff/Daressy D-numbers (D1, D4, D9, D14, D61,
+               # D80A, etc.) — the PRIMARY identifier scheme for
+               # the Steindorff Cemetery section of PM III.1 § III.A.
+               # PM prints `D. <NUM>.` or `D. <NUM><letter>.` or
+               # `D. <NUM1>/<NUM2>.`. Discovered via PR #229 / chunk-
+               # 11 revise-priors finding: the chunk-10 attribution
+               # of D-numbers as Mariette cross-references was wrong.
     # Future chunks extend this dict AS THEY LAND their first row;
     # `tests/…::test_prefix_vocabulary_consistent` pins this dict against the
     # test regex so the two stay in sync.
