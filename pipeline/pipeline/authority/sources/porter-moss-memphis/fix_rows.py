@@ -1548,6 +1548,40 @@ CHUNK14_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # agent-majority (G 4970/5110/5340/5550), notes alt-name cleanup
 # (G 5560), and Meresaankh raised-a ayin (G 5110 co_occupants).
 CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # G 4941 occupant_name + notes — apply Ptaḥ and Ḥar underdot-Ḥ per
+    # source-wide ḥ-root convention. Gemini PR #234 round-2 medium.
+    ("G4941", "occupant_name"): {
+        "value": "Ptaḥiufni",
+        "rationale": (
+            "Gemini PR #234 round-2 medium: apply Ptaḥ underdot-Ḥ "
+            "(ḥ-root *ptḥ*) per source-wide convention. Parallel to "
+            "Pehenptaḥ, Kakherptaḥ in this chunk. Agent-majority left "
+            "the occupant_name without underdot."
+        ),
+    },
+    ("G4941", "notes_from_pm"): {
+        "value": (
+            "Tenant of the Pyramid of Pepy I, Carpenter of the Great "
+            "Dockyard, Honoured by Ḥarzedef, etc. Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #234 round-2 medium: apply Ḥar underdot-Ḥ "
+            "(ḥ-root *ḥr-ḏd.f*) per source-wide convention. Parallel "
+            "to Ḥathor / Ḥeket in tie-break overrides. Agent-majority "
+            "left the notes without underdot."
+        ),
+    },
+    # G 5150 occupant_name — apply ḥotp underdot-Ḥ per source-wide
+    # ḥ-root convention. Gemini PR #234 round-2 medium.
+    ("G5150", "occupant_name"): {
+        "value": "Seshetḥotp",
+        "rationale": (
+            "Gemini PR #234 round-2 medium: apply ḥotp underdot-Ḥ "
+            "(ḥ-root *ḥtp*) per source-wide convention. Parallel to "
+            "Imḥotep / Ḥetepheres. Agent-majority left the "
+            "occupant_name without underdot."
+        ),
+    },
     # G 4970 co_occupants — wife clause `Khentetka called Khent` from
     # notes was reduced to just `Khentetka` in co_occupants. Per chunk-
     # 11 D117 `Ḥetepibes called Ipi` alt-name preservation precedent,
@@ -1595,14 +1629,16 @@ CHUNK15_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # G 5340 co_occupants — extract parents + sub-mastaba occupant from
     # body-prose clauses per chunk-14 G 4761 + chunk-11 D117 precedents.
     ("G5340", "co_occupants"): {
-        "value": ["Kanufer", "Shepsetkau", "Khufudinefʿankh"],
+        "value": ["Kanufer", "Shepsetkau", "Khufudinef-ʿankh"],
         "rationale": (
             "Gemini PR #234 round-1 medium: extract parents (Kanufer, "
-            "Shepsetkau) + sub-mastaba occupant (Khufudinefʿankh) per "
+            "Shepsetkau) + sub-mastaba occupant (Khufudinef-ʿankh) per "
             "chunk-14 G 4761 + chunk-11 D117 precedents. PM hedges "
             "`Parents (possibly)` so role gets `Parent (possibly)` "
             "prefix per chunk-14 G 4761 convention. Apply Khufudinef-"
-            "ʿankh raised-a ayin per source-wide convention."
+            "ʿankh raised-a ayin per source-wide convention. Round-2 "
+            "follow-up: hyphenate `-ʿankh` per theophoric-ankh "
+            "hyphenation convention (parallel to Khufu-ʿAnkh)."
         ),
     },
     ("G5340", "co_occupant_roles"): {

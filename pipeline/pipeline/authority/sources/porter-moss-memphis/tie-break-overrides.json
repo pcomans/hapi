@@ -251,16 +251,16 @@
     "rationale": "1/1/1 tie on chunk-15a G 4911 ʿAnkhtef notes. PM III.1 2nd ed. 1974 printed p.141 (physical p.138). Variants differ on ASCII hyphen vs en-dash + waab/waʿb + mastaba trailer. Synthesised: ASCII hyphen `V-VI` per chunks 1-14 convention, `waʿb` per source-wide ayin convention, drop `Mastaba excavated by Schiaparelli.` body trailer per chunks 9-14 convention."
   },
   "G4940|notes_from_pm": {
-    "value": "Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance.",
-    "rationale": "1/1/1 tie on chunk-15a G 4940 Seshemnufer [I] notes. PM III.1 2nd ed. 1974 printed p.142 (physical p.139). Apply Ḥeket underdot (ḥ-root *ḥkt*) per chunks 8/9 Ḥathor convention; apply Saḥurēʿ + Neferirkarēʿ macron-Ē per chunks 4/8/10/11/13/14 Re-deity-compound convention. Variant B was correct on Ḥeket + Neferirkārēʿ but over-marked the latter as dual-macron — single macron on the trailing Re is the chunk-1 source-wide form (Neferirkarēʿ). Drop bracket on the `[I]` regnal since it lives in occupant_name not notes."
+    "value": "Royal chamberlain, One belonging to the estate 'Mansion of Ḥar-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance.",
+    "rationale": "1/1/1 tie on chunk-15a G 4940 Seshemnufer [I] notes. PM III.1 2nd ed. 1974 printed p.142 (physical p.139). Apply Ḥeket underdot (ḥ-root *ḥkt*) per chunks 8/9 Ḥathor convention; apply Ḥar-kheper underdot (ḥ-root *ḥr*) per same convention (Gemini PR #234 round-2 medium); apply Saḥurēʿ + Neferirkarēʿ macron-Ē per chunks 4/8/10/11/13/14 Re-deity-compound convention. Variant B was correct on Ḥeket + Neferirkārēʿ but over-marked the latter as dual-macron — single macron on the trailing Re is the chunk-1 source-wide form (Neferirkarēʿ). Drop bracket on the `[I]` regnal since it lives in occupant_name not notes."
   },
   "G4970|co_occupant_roles": {
     "value": ["Wife, Prophetess of Ḥathor and Neith, etc."],
     "rationale": "1/1/1 tie on chunk-15a G 4970 Nesutnufer wife role. PM III.1 2nd ed. 1974 printed p.142 (physical p.139) prints `Wife, Khentetka called Khent Prophetess of Hathor and Neith, etc.` Apply Ḥathor underdot per chunks 8/9 convention. The `called Khent` alt-name belongs in co_occupants name field (`Khentetka called Khent`) per chunk-11 D117 / chunk-13 alt-name idiom, NOT in the role string. Selecting variant C (Ḥathor underdot + clean role string)."
   },
   "G5110|notes_from_pm": {
-    "value": "(Vizier of Menkaureʿ.) Temp. Khephren to Menkaureʿ. Parents, Khephren and Meresʿankh III.",
-    "rationale": "1/1/1 tie on chunk-15a G 5110 Duaenrēʿ notes. PM III.1 2nd ed. 1974 printed p.148 (physical p.145). Apply Menkaureʿ ayin per chunk-1 source-wide convention (PM `MENKAUREa` → `Menkaureʿ`); apply Meresʿankh raised-a ayin; drop brackets on `Meresaankh [III]` per chunks-7 convention (the regnal Roman appended without brackets, with space: `Meresʿankh III`). Synthesised form preserves PM-faithful Vizier-of-Menkaureʿ parenthetical from variant C + dropped brackets per chunks-7."
+    "value": "(Vizier of Menkaurēʿ.) Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresʿankh III.",
+    "rationale": "1/1/1 tie on chunk-15a G 5110 Duaenrēʿ notes. PM III.1 2nd ed. 1974 printed p.148 (physical p.145). Apply Menkaurēʿ ayin + macron-Ē per chunk-1 source-wide convention (Re-deity compound, parallel to Duaenrēʿ / Saḥurēʿ / Neferirkarēʿ; Gemini PR #234 round-2 medium); apply Meresʿankh raised-a ayin; drop brackets on `Meresaankh [III]` per chunks-7 convention (the regnal Roman appended without brackets, with space: `Meresʿankh III`). Synthesised form preserves PM-faithful Vizier-of-Menkaurēʿ parenthetical from variant C + dropped brackets per chunks-7."
   },
   "G5150|notes_from_pm": {
     "value": "King's son of his body, Overseer of all works of the King, Greatest of the Ten of Upper Egypt, etc. Early Dyn. V. Wife, Mertiotes Prophetess of Neith and Ḥathor, etc.",

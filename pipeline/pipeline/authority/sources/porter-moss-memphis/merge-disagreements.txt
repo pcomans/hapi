@@ -294,7 +294,7 @@ G4920 (Thenti):
   occupant_name: a="Thenti" | b="Thenti" | c="Thent I"  → chose "Thenti"
 
 G4940 (Seshemnufer I):
-  notes_from_pm: a="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper Prophet of Heket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarea. Wife, Amenzefas Royal acquaintance." | b="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkārēʿ. Wife, Amenzefas Royal acquaintance." | c="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Heket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance."  → chose "Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance."
+  notes_from_pm: a="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper Prophet of Heket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarea. Wife, Amenzefas Royal acquaintance." | b="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkārēʿ. Wife, Amenzefas Royal acquaintance." | c="Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Heket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance."  → chose "Royal chamberlain, One belonging to the estate 'Mansion of Ḥar-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance."
   occupant_name: a="Seshemnufer I" | b="Seshemnufer I" | c="Sheshemnufer I"  → chose "Seshemnufer I"
 
 G4970 (Nesutnufer):
@@ -311,7 +311,7 @@ G5080 (Seshemnufer II):
 G5110 (Duaenrēʿ):
   co_occupant_roles: a=["Parent (probably), King", "Parent (probably), Queen"] | b=["Father (probably), King", "Mother (probably), Queen"] | c=["Parent (probably), King", "Parent (probably), Queen"]  → chose ["Parent (probably), King", "Parent (probably), Queen"]
   co_occupants: a=["Khephren", "Meresaankh III"] | b=["Khephren", "Meresaankh III"] | c=["Khephren", "Meresʿankh III"]  → chose ["Khephren", "Meresaankh III"]
-  notes_from_pm: a="Vizier of Menkaurea. Temp. Khephren to Menkaurea. Parents, Khephren and Meresaankh [III]." | b="Vizier of Menkaurēʿ. Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresaankh III." | c="(Vizier of Menkaurēʿ.) Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresʿankh [III]."  → chose "(Vizier of Menkaureʿ.) Temp. Khephren to Menkaureʿ. Parents, Khephren and Meresʿankh III."
+  notes_from_pm: a="Vizier of Menkaurea. Temp. Khephren to Menkaurea. Parents, Khephren and Meresaankh [III]." | b="Vizier of Menkaurēʿ. Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresaankh III." | c="(Vizier of Menkaurēʿ.) Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresʿankh [III]."  → chose "(Vizier of Menkaurēʿ.) Temp. Khephren to Menkaurēʿ. Parents, Khephren and Meresʿankh III."
 
 G5150 (Seshethotp):
   co_occupant_roles: a=["Wife, Prophetess of Neith and Hathor, etc."] | b=["Wife, Prophetess of Neith and Ḥathor, etc."] | c=["Wife, Prophetess of Neith and Ḥathor, etc."]  → chose ["Wife, Prophetess of Neith and Ḥathor, etc."]
@@ -770,11 +770,14 @@ Reviewer-cited row corrections:
   G4811.is_joint_burial: true → false
   G4840.notes_from_pm: "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV. Stone-built mastaba. VIIIss of Junker." → "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV."
   G4860.notes_from_pm: "Scribe of divine books, Lector-priest. Middle or late Dyn. IV. Stone-built mastaba. VIIIn of Junker." → "Scribe of divine books, Lector-priest. Middle or late Dyn. IV."
+  G4941.occupant_name: "Ptahiufni" → "Ptaḥiufni"
+  G4941.notes_from_pm: "Tenant of the Pyramid of Pepy I, Carpenter of the Great Dockyard, Honoured by Harzedef, etc. Dyn. VI." → "Tenant of the Pyramid of Pepy I, Carpenter of the Great Dockyard, Honoured by Ḥarzedef, etc. Dyn. VI."
   G4970.co_occupants: ["Khentetka"] → ["Khentetka called Khent"]
   G5110.co_occupants: ["Khephren", "Meresaankh III"] → ["Khephren", "Meresʿankh III"]
+  G5150.occupant_name: "Seshethotp" → "Seshetḥotp"
   G5290.dynasty: null → "5"
   G5332.dynasty: null → "6"
-  G5340.co_occupants: [] → ["Kanufer", "Shepsetkau", "Khufudinefʿankh"]
+  G5340.co_occupants: [] → ["Kanufer", "Shepsetkau", "Khufudinef-ʿankh"]
   G5340.co_occupant_roles: [] → ["Parent (possibly)", "Parent (possibly)", "Overseer of the department of tenants of the Great House, etc."]
   G5350.dynasty: null → "6"
   G5480.dynasty: null → "6"
