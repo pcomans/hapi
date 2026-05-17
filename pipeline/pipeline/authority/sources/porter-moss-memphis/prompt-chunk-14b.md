@@ -109,6 +109,12 @@ Same conventions as chunk 14a — raised-ayin → U+02BF, underdot-Ḥ on ḥ-ro
 
 **`HatHor` rendering.** pypdf renders PM's underdot-Ḥ Hathor as `HatHor` (capital T from PM's cap-H underdot glyph). Normalise to `Ḥathor`.
 
+**`ma-priest` / `sma-priest` drift.** Normalise to `sm-priest` (PM-printed Egyptian *sm*-priest, mortuary priest; pypdf may misread the leading `s` as a space).
+
+**`warbt` / `waabt` drift.** Normalise to `waʿbt` (Egyptian *wʿbt*, the waʿbt-institution / embalming-place).
+
+**`wrt Hts` drift.** Normalise to `wrt-ḥts` (Egyptian *wrt-ḥts*, OK royal-women title `Great One of the Hts-staff`; pypdf renders without hyphen + cap-H instead of underdot-Ḥ).
+
 **`G 4811 + 4812` joint twin.** tomb_id `G4811`; tomb_aliases `["G 4812"]`; is_joint_burial `true`.
 
 ## Field-by-field rules

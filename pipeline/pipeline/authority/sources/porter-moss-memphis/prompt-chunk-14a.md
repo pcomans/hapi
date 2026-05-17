@@ -105,7 +105,11 @@ Pre-extraction structural scan: PM prints ~22–26 Reisner-numbered headwords in
 
 **`aANKH-` raised-ayin.** PM prints leading `aANKH-` → `ʿAnkh-` after normalisation. Example: `aANKHEMREa` (G 4121) → `ʿAnkhemrēʿ` (raised-a ayin at start AND end; the trailing -REa is Re-deity → macron-Ē + ayin).
 
-**`waab-priest` / `wad-priest` drift.** Source-wide ayin-normalisation: raw OCR `waab` or `wad` → `waʿb`.
+**`waab-priest` / `wad-priest` / `ma-priest` / `sma-priest` drift.** Source-wide ayin-normalisation: raw OCR `waab` or `wad` → `waʿb`. Also normalise `ma-priest` / `sma-priest` → `sm-priest` (PM-printed Egyptian *sm*-priest, mortuary priest; pypdf may misread the leading `s` as a space).
+
+**`warbt` / `waabt` drift.** pypdf may render PM's *wʿbt* (the waʿbt-institution / embalming-place) as `warbt` or `waabt`. Normalise to `waʿbt`.
+
+**`wrt Hts` drift.** PM prints Egyptian *wrt-ḥts* (`Great One of the Hts-staff`, an OK royal-women title) with hyphen + underdot-Ḥ. pypdf renders as `wrt Hts`; normalise to `wrt-ḥts`.
 
 **`G 4351` + `IMISETKAI` OCR drift.** pypdf may render `G 4351` as `G 435 I` and the occupant name `IMISETKAI` as `I M I SET KA I` (broken with spaces). Normalise the Roman `I` back to Arabic `1` in tomb_id; restore unspaced occupant name.
 
