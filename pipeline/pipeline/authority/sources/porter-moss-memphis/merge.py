@@ -89,6 +89,8 @@ AREA_ORDER: dict[str, int] = {
                # (Junker West) convention. Synthesise
                # `JKE-<TitleCaseName>` from the all-caps headword
                # since PM gives no Reisner G-number for these tombs.
+    # NB: chunk 15 (Cemetery en Echelon South) re-uses Reisner G-numbers
+    # (G 4911-G 5560) so no new prefix is needed there.
     # Future chunks extend this dict AS THEY LAND their first row;
     # `tests/…::test_prefix_vocabulary_consistent` pins this dict against the
     # test regex so the two stay in sync.

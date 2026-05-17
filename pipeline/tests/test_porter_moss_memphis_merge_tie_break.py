@@ -315,6 +315,19 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       three-co-occupant parent-pair-plus-wife block, `mitrt`
       typography, controlled-vocab fallback for unknown joint-twin
       role, and PM cross-reference preservation).
+    - Chunk 15 (halves 15a+15b): `G4911|notes_from_pm`,
+      `G4940|notes_from_pm`, `G4970|co_occupant_roles`,
+      `G5110|notes_from_pm`, `G5150|notes_from_pm`,
+      `G5170|co_occupants`, `G5170|co_occupant_roles`,
+      `G5170|notes_from_pm`, `G5210|notes_from_pm`,
+      `G5221|notes_from_pm`, `G5232|notes_from_pm`,
+      `G5350|notes_from_pm`, `G5480|notes_from_pm`,
+      `G5482|notes_from_pm`, `G5550|notes_from_pm` (Cemetery en
+      Echelon South — wife-clause Ḥathor + Ḥeket underdot,
+      Re-deity macron normalisation, bracketed-Roman drop, alt-name
+      idiom handling, Shape-2 bare-numeric null normalisation,
+      Schiaparelli excavator-history drop).
+
     - Chunk 14 (halves 14a+14b): `G4351|co_occupant_roles`,
       `G4520|occupant_name`, `G4561|co_occupant_roles`,
       `G4561|notes_from_pm`, `G4630|co_occupant_roles`,
@@ -411,6 +424,34 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G4710", "notes_from_pm"),
         ("G4761", "co_occupants"),
         ("G4761", "co_occupant_roles"),
+        # Chunk 15 (halves 15a + 15b): Cemetery en Echelon South Part
+        # (Reisner + Junker Excavations). 16 ties resolved across
+        # the two halves: wife-clause Ḥathor + Ḥeket underdot
+        # (G4940/G4970/G5170), Re-deity-compound macron (Saḥurēʿ /
+        # Neferirkarēʿ / Menkaureʿ / Meresʿankh / Kawaʿab /
+        # Ḥetepḥeres II), bracketed-Roman drop (G5110 / G5170 / G5210
+        # per chunks-7 convention), `called <ALT>` alt-name drop from
+        # notes (G5150 chunk-14 G4651 precedent), three-co-occupant
+        # parent-pair-plus-wife block (G5170 parallel to chunk-11
+        # D117), bare-numeric pseudo-headword null normalisation
+        # (G5221/G5232/G5350 per chunk-11 D1 convention) + body-
+        # attested Shape-2 keep (G5482), and Schiaparelli excavator-
+        # history drop (G4911/G5550).
+        ("G4911", "notes_from_pm"),
+        ("G4940", "notes_from_pm"),
+        ("G4970", "co_occupant_roles"),
+        ("G5110", "notes_from_pm"),
+        ("G5150", "notes_from_pm"),
+        ("G5170", "co_occupants"),
+        ("G5170", "co_occupant_roles"),
+        ("G5170", "notes_from_pm"),
+        ("G5210", "notes_from_pm"),
+        ("G5221", "notes_from_pm"),
+        ("G5232", "notes_from_pm"),
+        ("G5350", "notes_from_pm"),
+        ("G5480", "notes_from_pm"),
+        ("G5482", "notes_from_pm"),
+        ("G5550", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

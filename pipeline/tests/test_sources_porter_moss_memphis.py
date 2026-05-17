@@ -272,6 +272,34 @@ CHUNK9_TOMB_IDS: frozenset[str] = frozenset({
     "G3097", "G3098",
 })
 
+# Chunk 15 (halves 15a + 15b): Gîza § III.A West Field continuation —
+# CEMETERY EN ECHELON. SOUTH PART banner (Reisner + Junker Excavations,
+# Harvard-Boston + Akademie/Pelizaeus + Univ. Leipzig Expeditions; some
+# tombs earlier by Schiaparelli for Turin and by Steindorff for Sieglin).
+# Source: PM III.1 2nd ed. 1974, physical pp.138–165 / printed pp.141–168.
+# 32 rows: ~22 Shape-1 named-primary + ~6 Shape-2 bare-numeric + ~4
+# Shape-3 bracketed-Roman (G 4940 Seshemnufer [I], G 5080 Seshemnufer
+# [II], G 5170 Seshemnufer [III], G 5270 Rēʿwer [I], G 5470 Rēʿwer [II]).
+# Highlights: G 5110 Duaenrēʿ (Vizier of Menkaureʿ, son of Khephren and
+# Meresʿankh III); G 5170 Seshemnufer [III] (Chief Justice and Vizier
+# under Isesi, son of Vizier Seshemnufer [II] of G 5080, wife Ḥetepheres
+# King's daughter); G 5210 Khemtnu (Steward of Kawaʿab, Ḥetepḥeres II
+# and Meresʿankh III); G 5550 Nufer good name Idu [I] (Chief Justice
+# and Vizier, Early Dyn. VI). Split into halves 15a (G 4911–G 5230, 16
+# rows) and 15b (G 5232–G 5560, 16 rows) preemptively parallel to
+# chunks-11/14 halving pattern.
+CHUNK15_TOMB_IDS: frozenset[str] = frozenset({
+    # 15a (16 rows): G 4911 → G 5230
+    "G4911", "G4920", "G4940", "G4941", "G4970", "G5030", "G5032",
+    "G5040", "G5080", "G5110", "G5150", "G5170", "G5190", "G5210",
+    "G5221", "G5230",
+    # 15b (16 rows): G 5232 → G 5560
+    "G5232", "G5245", "G5270", "G5280", "G5290", "G5330", "G5332",
+    "G5340", "G5350", "G5370", "G5470", "G5480", "G5482", "G5520",
+    "G5550", "G5560",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -318,7 +346,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
     | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
-    | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS
+    | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
 )
 
 
@@ -534,6 +562,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK14_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK15_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -543,7 +573,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
             | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
             | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS
-            | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS
+            | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS:
@@ -584,6 +614,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 118 <= page <= 121, f"{row['tomb_id']} page {page} outside chunk-13 [118, 121]"
         elif row["tomb_id"] in CHUNK14_TOMB_IDS:
             assert 122 <= page <= 141, f"{row['tomb_id']} page {page} outside chunk-14 [122, 141]"
+        elif row["tomb_id"] in CHUNK15_TOMB_IDS:
+            assert 141 <= page <= 168, f"{row['tomb_id']} page {page} outside chunk-15 [141, 168]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -655,6 +687,12 @@ def test_cemetery_by_chunk() -> None:
             # banner (Reisner Excavation). All rows carry
             # `cemetery: "G 4000"`.
             assert row["cemetery"] == "G 4000", row
+        elif row["tomb_id"] in CHUNK15_TOMB_IDS:
+            # Chunk 15 (halves 15a + 15b): single CEMETERY EN ECHELON.
+            # SOUTH PART banner. All rows carry
+            # `cemetery: "Cemetery en Echelon South"` (descriptor form
+            # parallel to chunk-13's `"Junker East"`).
+            assert row["cemetery"] == "Cemetery en Echelon South", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -738,6 +776,15 @@ def test_dynasty_assignments() -> None:
             # and is captured as `dynasty: null` (parallel to chunks 6
             # bare-suffix Shape-2 null-dynasty rule when PM dating is
             # not in scope).
+            assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK15_TOMB_IDS:
+            # Cemetery en Echelon South spans Dyn IV (G 5110 Duaenrēʿ
+            # = Khephren's son, Vizier; G 5210 Khemtnu = Steward of
+            # Kawaʿab + Khufu-era), Dyn V (most named-primary rows
+            # incl. G 4940/G 5080/G 5170 Seshemnufer dynasty; G 5150
+            # Seshethotp = Early Dyn V), Dyn VI (the G 5550 Idu [I]
+            # Vizier; G 5290 Hetepniptah etc.). Some Shape-2 bare-
+            # numeric rows take dynasty null (G 5221, G 5232, G 5245).
             assert row["dynasty"] in {"4", "5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and

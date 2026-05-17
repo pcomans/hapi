@@ -245,5 +245,65 @@
   "G4761|co_occupant_roles": {
     "value": ["Parent (probably), Royal acquaintance", "Parent (probably), Royal acquaintance", "Wife, Royal acquaintance"],
     "rationale": "1/1/1 tie on chunk-14b G 4761 NUFER [I] co_occupant_roles. PM III.1 2nd ed. 1974 printed p.137 (physical p.134). Length-coupled with co_occupants. PM hedges `Probably parents` (uncertain attribution of Kakhent + Thetit as Nufer's parents); per source-wide hedge-token convention, role gets `Parent (probably)` prefix (analogue to chunk-11 D117 gendered `Father, ...` / `Mother, ...` but PM does not gender these — both are `Royal acquaintance`). Three agent variants: (A) all three roles with hedged Parent prefix (PM-faithful); (B) `[]`; (C) only wife `Royal acquaintance`. Selecting A — preserves PM's `probably` hedge and pairs each co-occupant with their PM-printed title."
+  },
+  "G4911|notes_from_pm": {
+    "value": "King's waʿb-priest, Prophet of Khufu, etc. Dyn. V-VI. Wife, Zefat.",
+    "rationale": "1/1/1 tie on chunk-15a G 4911 ʿAnkhtef notes. PM III.1 2nd ed. 1974 printed p.141 (physical p.138). Variants differ on ASCII hyphen vs en-dash + waab/waʿb + mastaba trailer. Synthesised: ASCII hyphen `V-VI` per chunks 1-14 convention, `waʿb` per source-wide ayin convention, drop `Mastaba excavated by Schiaparelli.` body trailer per chunks 9-14 convention."
+  },
+  "G4940|notes_from_pm": {
+    "value": "Royal chamberlain, One belonging to the estate 'Mansion of Har-kheper', Prophet of Ḥeket, Judge and Boundary official, etc. Temp. Saḥurēʿ or Neferirkarēʿ. Wife, Amenzefas Royal acquaintance.",
+    "rationale": "1/1/1 tie on chunk-15a G 4940 Seshemnufer [I] notes. PM III.1 2nd ed. 1974 printed p.142 (physical p.139). Apply Ḥeket underdot (ḥ-root *ḥkt*) per chunks 8/9 Ḥathor convention; apply Saḥurēʿ + Neferirkarēʿ macron-Ē per chunks 4/8/10/11/13/14 Re-deity-compound convention. Variant B was correct on Ḥeket + Neferirkārēʿ but over-marked the latter as dual-macron — single macron on the trailing Re is the chunk-1 source-wide form (Neferirkarēʿ). Drop bracket on the `[I]` regnal since it lives in occupant_name not notes."
+  },
+  "G4970|co_occupant_roles": {
+    "value": ["Wife, Prophetess of Ḥathor and Neith, etc."],
+    "rationale": "1/1/1 tie on chunk-15a G 4970 Nesutnufer wife role. PM III.1 2nd ed. 1974 printed p.142 (physical p.139) prints `Wife, Khentetka called Khent Prophetess of Hathor and Neith, etc.` Apply Ḥathor underdot per chunks 8/9 convention. The `called Khent` alt-name belongs in co_occupants name field (`Khentetka called Khent`) per chunk-11 D117 / chunk-13 alt-name idiom, NOT in the role string. Selecting variant C (Ḥathor underdot + clean role string)."
+  },
+  "G5110|notes_from_pm": {
+    "value": "(Vizier of Menkaureʿ.) Temp. Khephren to Menkaureʿ. Parents, Khephren and Meresʿankh III.",
+    "rationale": "1/1/1 tie on chunk-15a G 5110 Duaenrēʿ notes. PM III.1 2nd ed. 1974 printed p.148 (physical p.145). Apply Menkaureʿ ayin per chunk-1 source-wide convention (PM `MENKAUREa` → `Menkaureʿ`); apply Meresʿankh raised-a ayin; drop brackets on `Meresaankh [III]` per chunks-7 convention (the regnal Roman appended without brackets, with space: `Meresʿankh III`). Synthesised form preserves PM-faithful Vizier-of-Menkaureʿ parenthetical from variant C + dropped brackets per chunks-7."
+  },
+  "G5150|notes_from_pm": {
+    "value": "King's son of his body, Overseer of all works of the King, Greatest of the Ten of Upper Egypt, etc. Early Dyn. V. Wife, Mertiotes Prophetess of Neith and Ḥathor, etc.",
+    "rationale": "1/1/1 tie on chunk-15a G 5150 Seshethotp called Heti notes. PM III.1 2nd ed. 1974 printed p.149 (physical p.146). Per chunk-14 G 4651 KAPUNESUT called KAI convention, `called <ALT>` alt-name lives in occupant_alt_names, NOT in notes — drop `Called Heti.` / `called Heti.` from notes. Apply Ḥathor underdot per chunks 8/9 convention. Drop comma after Mertiotes (PM does not print one in the wife clause)."
+  },
+  "G5170|co_occupants": {
+    "value": ["Seshemnufer II", "Henutsen", "Ḥetepheres"],
+    "rationale": "1/1/1 tie on chunk-15a G 5170 Seshemnufer [III] co_occupants. PM III.1 2nd ed. 1974 printed p.153 (physical p.150). Three co-occupants: father Seshemnufer [II] (drop brackets per chunks-7) + mother Henutsen + wife Ḥetepheres (underdot-Ḥ on initial ḥ-root per chunks 8/9; PM-printed `Hetepheres` cap-H is the underdot glyph)."
+  },
+  "G5170|co_occupant_roles": {
+    "value": ["Father", "Mother", "Wife, King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."],
+    "rationale": "1/1/1 tie on chunk-15a G 5170 Seshemnufer [III] co_occupant_roles. PM III.1 2nd ed. 1974 printed p.153 (physical p.150). PM gives no title cluster for the parents at G 5170's headword (just names + cross-ref to G 5080); use bare gendered `Father` / `Mother` parallel to chunk-11 D117 convention. Wife title cluster preserved verbatim with Ḥathor underdot per chunks 8/9. Variant B's `(tomb G5080)` parenthetical mid-role is redundant — the cross-ref lives in notes."
+  },
+  "G5170|notes_from_pm": {
+    "value": "King's son of his body, Chief Justice and Vizier, etc. Temp. Isesi (early). Parents, Seshemnufer II and Henutsen (tomb G 5080). Wife, Ḥetepheres King's daughter, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc.",
+    "rationale": "1/1/1 tie on chunk-15a G 5170 Seshemnufer [III] notes. PM III.1 2nd ed. 1974 printed p.153 (physical p.150). Drop brackets on Roman regnal in `Seshemnufer [II]` per chunks-7 convention; apply Ḥathor + Ḥetepheres underdot; preserve PM-verbatim `(tomb G 5080)` cross-ref clause and wife title cluster."
+  },
+  "G5210|notes_from_pm": {
+    "value": "King's waʿb-priest, Prophet of Khufu, Steward of Kawaʿab, Ḥetepḥeres II and Meresʿankh III, etc. Temp. Khufu to end of Dyn. IV or early Dyn. V.",
+    "rationale": "1/1/1 tie on chunk-15a G 5210 Khemtnu notes. PM III.1 2nd ed. 1974 printed p.155 (physical p.152). Drop brackets on Roman regnals (`[II]`, `[III]`) per chunks-7 convention; apply Ḥetepḥeres double-underdot (both ḥ-roots) and Meresʿankh raised-a ayin per source-wide convention; apply Kawaʿab raised-a ayin (PM `KAWAaB` → `Kawaʿab`)."
+  },
+  "G5221|notes_from_pm": {
+    "value": null,
+    "rationale": "1/1/1 tie on chunk-15a G 5221 bare-numeric pseudo-headword. PM III.1 2nd ed. 1974 printed p.155 (physical p.152) prints `G 5221,` (with comma, no dating on headword) followed by body-prose `Part of lintel of Memi Royal chamberlain of the Great House, etc., Dyn. V-VI, in Boston Mus. 21.959.` Per chunk-11 D1 Shape-2 bare-numeric convention with no headword dating → `notes_from_pm: null`. Dynasty from body-prose `Dyn. V-VI.` (range tail → `6`) captured in dynasty field. Variant B (null) is rule-compliant."
+  },
+  "G5232|notes_from_pm": {
+    "value": null,
+    "rationale": "1/1/1 tie on chunk-15b G 5232 bare-numeric pseudo-headword. PM III.1 2nd ed. 1974 printed p.157 (physical p.154) prints `G 5232.` (bare, no headword dating) followed by body-prose `Lintel of 'Yetty', Dyn. IV-V, in Boston Mus. 21.957.` Per chunk-11 D1 Shape-2 bare-numeric convention → `notes_from_pm: null`. The body-prose Yetty lintel reference is a Boston-museum find-spot, not headword content; dynasty captured separately from body dating."
+  },
+  "G5350|notes_from_pm": {
+    "value": "Dyn. V-VI.",
+    "rationale": "1/1/1 tie on chunk-15b G 5350 bare-numeric headword. PM III.1 2nd ed. 1974 printed p.160 (physical p.157) prints `G 5350. Dyn. V-VI.` (Shape-2 bare-numeric with dating ON headword line). Per chunk-11 prompt rule: `for Shape-2 bare-numeric, only the dating marker`. Drop body-prose `Stone-built mastaba.` trailer + Ointment-slab / S 846/847 cross-references per chunks 9-14 mastaba-drop convention."
+  },
+  "G5480|notes_from_pm": {
+    "value": "Judge and Overseer of scribes, etc. Late Dyn. V or Dyn. VI. Mother (probably), Meresʿankh (on statue of Khenut).",
+    "rationale": "1/1/1 tie on chunk-15b G 5480 Heti notes. PM III.1 2nd ed. 1974 printed p.163 (physical p.160). PM prints `Mother (probably), Meresaankh (on statue of Khenut, see p. 164).` Apply Meresʿankh raised-a ayin per source-wide convention; drop the embedded `see p. 164` cross-ref-to-cross-ref (PM-internal page reference, not relevant to extracted data). Drop `Stone-built mastaba. LG 29.` body trailer per chunks 9-14 convention."
+  },
+  "G5482|notes_from_pm": {
+    "value": "Fragment with names of Ptaḥiufni King's waʿb-priest, Inspector of ka-servants, etc., and wife Hemtrea, Dyn. V-VI, probably from here.",
+    "rationale": "1/1/1 tie on chunk-15b G 5482 bare-numeric pseudo-headword. PM III.1 2nd ed. 1974 printed p.164 (physical p.161). PM prints `G 5482.` (bare) followed by body-prose `Fragment with names of PtaHiufni ...` Apply Ptaḥiufni underdot-Ḥ (pypdf cap-H on the ptḥ root) + waab→waʿb per source-wide conventions + ASCII hyphen `V-VI`. Although Shape-2 bare-numeric would normally take null notes, the body-prose `Fragment with names of <occupant>` clause is the de facto headword content here (no separate headword block) — keep as notes per the PM-faithful Shape-2 body-attestation policy used in chunks 6/8 bare-suffix dating recovery."
+  },
+  "G5550|notes_from_pm": {
+    "value": "Chief Justice and Vizier, etc. Early Dyn. VI. Wife, Hemtrea Prophetess of Neith Opener-of-the-Ways.",
+    "rationale": "1/1/1 tie on chunk-15b G 5550 Nufer good name Idu [I] notes. PM III.1 2nd ed. 1974 printed p.165 (physical p.162). Per chunks-3/8 `good name <ALT>` convention, alt-name `Idu I` lives in occupant_alt_names — drop `Good name IDU [I].` from notes. Drop `Stone-built mastaba.` body trailer + LG 38 footnote per chunks 9-14 convention."
   }
 }
