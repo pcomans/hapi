@@ -107,6 +107,55 @@ G2184 (Akhmerutnesut):
 G2197 (Penmeru):
   notes_from_pm: a="King's waab-priest, Prophet of Menkaurea, Overseer of ka-servants, etc. End of Dyn. V." | b="King's waab-priest, Prophet of Menkaureʿ, Overseer of ka-servants, etc. End of Dyn. V." | c="King's waab-priest, Prophet of Menkaurea, Overseer of ka-servants, etc. End of Dyn. V."  → chose "King's waab-priest, Prophet of Menkaurea, Overseer of ka-servants, etc. End of Dyn. V."
 
+G2347a (None):
+  notes_from_pm: a="G 2347a." | b="G 2347a. Shaft C." | c=null  → chose null
+
+G2370 (Senezemib):
+  co_occupant_roles: a=["Wife, Royal acquaintance"] | b=["Wife, Royal acquaintance"] | c=["Wife"]  → chose ["Wife, Royal acquaintance"]
+  notes_from_pm: a="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Wife, Thefi Royal acquaintance. Stone-built mastaba. LG 27." | b="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Stone-built mastaba. LG 27." | c="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Stone-built mastaba. LG 27."  → chose "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Stone-built mastaba. LG 27."
+  shared_with_tombs: a=[] | b=["LG 10"] | c=["LG 10"]  → chose ["LG 10"]
+
+G2374 (Khnementi):
+  notes_from_pm: a="Early Dyn. VI. Parents, Senezemib Inti and Thefi (from tomb G 2370). Stone-built mastaba." | b="Early Dyn. VI. Parents, Senezemib Inti and Thefi (from tomb G 2370). Stone-built mastaba." | c="With shaft G 2385A. Early Dyn. VI. Parents, Senezemib Inti and Thefi (from tomb G 2370). Stone-built mastaba."  → chose "Early Dyn. VI. Parents, Senezemib Inti and Thefi (from tomb G 2370). Stone-built mastaba."
+
+G2375 (Akhetmehu):
+  notes_from_pm: a="Judge and Elder of the Hall, Overseer of the House of Weapons. Temp. Merenreʿ I or Pepy II. Stone-built mastaba with exterior brick-built court." | b="Judge and Elder of the Hall, Overseer of the House of Weapons. Temp. Merenrea I or Pepy II. Stone-built mastaba with exterior brick-built court." | c="Judge and Elder of the Hall, Overseer of the House of Weapons. Temp. Merenreʿ I or Pepy II. Stone-built mastaba with exterior brick-built court."  → chose "Judge and Elder of the Hall, Overseer of the House of Weapons. Temp. Merenreʿ I or Pepy II. Stone-built mastaba with exterior brick-built court."
+  occupant_name: a="Akhetmeḥu" | b="Akhetmehu" | c="Akhetmehu"  → chose "Akhetmehu"
+
+G2378 (Senezemib):
+  co_occupant_roles: a=["Wife, King's daughter of his body, Prophetess of Hathor"] | b=["Wife, King's daughter of his body, Prophetess of Hathor"] | c=["Wife"]  → chose ["Wife, King's daughter of his body, Prophetess of Hathor"]
+  notes_from_pm: a="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Wife, Khentkaus King's daughter of his body, Prophetess of Hathor . . . Stone-built mastaba. LG 26." | b="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26." | c="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26."  → chose "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26."
+
+G2381 (Meryreʿ-Meryptaḥʿankh):
+  notes_from_pm: a="Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenreʿ I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed." | b="Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenrea I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed." | c="With shaft G 2382A. Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenreʿ I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed."  → chose "Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenreʿ I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed."
+  occupant_name: a="Meryreʿ-Meryptahʿankh" | b="Meryreʿ-meryptaḥʿankh" | c="Meryreʿ-Meryptaḥʿankh"  → chose "Meryreʿ-Meryptaḥʿankh"
+
+G2385 (None):
+  notes_from_pm: a="Dyn. VI. Stone-built mastaba. Almost completely destroyed. 'North-eastern Mastaba'." | b="Dyn. VI. Stone-built mastaba. Almost completely destroyed. 'North-eastern Mastaba'." | c="Dyn. VI."  → chose "Dyn. VI. Stone-built mastaba. Almost completely destroyed. 'North-eastern Mastaba'."
+
+G2387 (Pepy-Meryptaḥʿankh):
+  occupant_name: a="Pepy-Meryptahʿankh" | b="Pepy-meryptaḥʿankh" | c="Pepy-Meryptaḥʿankh"  → chose "Pepy-Meryptaḥʿankh"
+
+G2391 (None):
+  notes_from_pm: a="Dyn. VI. 'Tomb of Funerary Priests of Senezemib Family.'" | b="Dyn. VI. 'Tomb of Funerary Priests of Senezemib Family.'" | c="Dyn. VI."  → chose "Dyn. VI. 'Tomb of Funerary Priests of Senezemib Family.'"
+
+G2407 (None):
+  source_citation: a={"edition": "PM III.1 2nd ed. 1974", "page": 92, "section": "III"} | b={"edition": "PM III.1 2nd ed. 1974", "page": 93, "section": "III"} | c={"edition": "PM III.1 2nd ed. 1974", "page": 92, "section": "III"}  → chose {"edition": "PM III.1 2nd ed. 1974", "page": 92, "section": "III"}
+
+G2415 (Weri):
+  notes_from_pm: a="And wife Meti. Late Dyn. V. Stone-built mastaba." | b="and wife Meti. Late Dyn. V. Stone-built mastaba." | c="and wife. Late Dyn. V. Stone-built mastaba."  → chose "and wife Meti. Late Dyn. V. Stone-built mastaba."
+
+G2420 (Nezemu):
+  notes_from_pm: a="Tenant of the Great House, Inspector of waab-priests. Late Dyn. V." | b="Tenant of the Great House, Inspector of waab-priests. Late Dyn. V." | c="Tenant of the Great House, Inspector of waʿab-priests. Late Dyn. V."  → chose "Tenant of the Great House, Inspector of waab-priests. Late Dyn. V."
+
+G2423 (Meḥu):
+  notes_from_pm: a="Judge and Elder of the Hall, Secretary of every secret judgement of the Great Court, Prophet of Maʿet, etc. Dyn. V-VI. Wife, Khenit. Stone-built mastaba." | b="Judge and Elder of the Hall, Secretary of every secret judgement of the Great Court, Prophet of Maaet, etc. Dyn. V-VI. Stone-built mastaba." | c="Judge and Elder of the Hall, Secretary of every secret judgement of the Great Court, Prophet of Maʿet, etc. Dyn. V-VI. Stone-built mastaba."  → chose "Judge and Elder of the Hall, Secretary of every secret judgement of the Great Court, Prophet of Maʿet, etc. Dyn. V-VI. Wife, Khenit. Stone-built mastaba."
+
+G2430 (Hetepniptah):
+  co_occupant_roles: a=["Wife, Prophetess of Hathor in all her places"] | b=["Wife, Prophetess of Hathor in all her places"] | c=["Wife"]  → chose ["Wife, Prophetess of Hathor in all her places"]
+  co_occupants: a=["Khaʿmerernebti"] | b=["Khaamerernebti"] | c=["Khaʿmerernebti"]  → chose ["Khaʿmerernebti"]
+  notes_from_pm: a="Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Wife, Khaʿmerernebti Prophetess of Hathor in all her places, etc. Stone-built mastaba. LG 25." | b="Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25." | c="Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25."  → chose "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25."
+
 G7000x (Hetepheres I):
   notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
 

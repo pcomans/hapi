@@ -168,9 +168,38 @@ CHUNK6_TOMB_IDS: frozenset[str] = frozenset({
     "G1903",
 })
 
+# Chunk 8: Gîza § III.A West Field Cemetery G 2300 + G 2400 + G 2500.
+# Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — A. WEST FIELD continuation,
+# physical pp.80–92 / printed pp.83–95. 33 rows total under three Reisner
+# cemetery banners:
+# - CEMETERY EN ECHELON. NORTH PART WITH MASTABAS G 2300 AND 2400 (22 rows
+#   in the G 2300 cluster + 10 rows in the G 2400 cluster)
+# - CEMETERY G 2500 (1 row: G 2501)
+# Includes dense Dyn V–VI named-official material with "good name" alias
+# pattern (Senezemib Inti / Senezemib Mehi / Meryreʿ-Meryptaḥʿankh Nekhebu /
+# Akhetmeḥu / ʿAnkhirptah etc.), one joint-burial headword (G 2415 Weri +
+# wife Meti), and one wife-attestation in body prose (G 2423 Meḥu +
+# wife Khenit). 6 tie-break-overrides resolve 1/1/1 ties on G2347a (bare-
+# suffix Shape-2), G2381 (notes + occupant_name underdot-Ḥ),
+# G2387 (occupant_name underdot-Ḥ), G2415 (notes lowercase `and`),
+# G2423 (notes ayin + wife clause).
+CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
+    # CEMETERY EN ECHELON. G 2300 cluster (22 rows)
+    "G2332", "G2335", "G2336", "G2347", "G2347a",
+    "G2352", "G2353", "G2359", "G2361", "G2362",
+    "G2366", "G2370", "G2374", "G2375", "G2375a",
+    "G2378", "G2379", "G2381", "G2384", "G2385",
+    "G2387", "G2391",
+    # CEMETERY EN ECHELON. G 2400 cluster (10 rows)
+    "G2407", "G2415", "G2418", "G2420", "G2422",
+    "G2423", "G2427", "G2430", "G2450", "G2475",
+    # CEMETERY G 2500 (1 row)
+    "G2501",
+})
+
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
-    | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS
+    | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
 )
 
 
@@ -372,14 +401,16 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK7_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK8_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
-    """Chunks 1-3, 6, 7 cite PM III.1; chunks 4 and 5 cite PM III.2."""
+    """Chunks 1-3, 6, 7, 8 cite PM III.1; chunks 4 and 5 cite PM III.2."""
     for row in _rows():
         if row["tomb_id"] in (
             CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
-            | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS
+            | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS:
@@ -406,6 +437,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 49 <= page <= 65, f"{row['tomb_id']} page {page} outside chunk-6 [49, 65]"
         elif row["tomb_id"] in CHUNK7_TOMB_IDS:
             assert 66 <= page <= 83, f"{row['tomb_id']} page {page} outside chunk-7 [66, 83]"
+        elif row["tomb_id"] in CHUNK8_TOMB_IDS:
+            assert 83 <= page <= 95, f"{row['tomb_id']} page {page} outside chunk-8 [83, 95]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -447,6 +480,12 @@ def test_cemetery_by_chunk() -> None:
             # Chunk 7: 2 cemetery banners. CEMETERY G 2000 + CEMETERY
             # G 2100 AND MASTABA G 2220.
             assert row["cemetery"] in {"G 2000", "G 2100"}, row
+        elif row["tomb_id"] in CHUNK8_TOMB_IDS:
+            # Chunk 8: 3 sub-cemeteries under 2 PM banners. CEMETERY EN
+            # ECHELON. NORTH PART WITH MASTABAS G 2300 AND 2400 splits
+            # into G 2300 + G 2400 by Reisner-number range; CEMETERY
+            # G 2500 is the third banner.
+            assert row["cemetery"] in {"G 2300", "G 2400", "G 2500"}, row
 
 
 def test_dynasty_assignments() -> None:
@@ -485,6 +524,11 @@ def test_dynasty_assignments() -> None:
             # Same Old-Kingdom range as chunk 6 (Dyn IV-VI + null for
             # undated bare-suffix shafts).
             assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK8_TOMB_IDS:
+            # Cemetery en Echelon is dominated by Dyn V-VI named
+            # officials (Senezemib clan etc.). Bare-suffix shafts with
+            # no PM dating marker (G2347a) carry `dynasty: null`.
+            assert row["dynasty"] in {"5", "6", None}, row
 
 
 # === content / value assertions =============================================
@@ -1533,3 +1577,127 @@ def test_chunk6_g1314_khakare_body_recovery() -> None:
     assert row["dynasty"] == "5"
     assert "Khaʿkareʿ" in row["notes_from_pm"]
     assert "Hairdresser of the Great House" in row["notes_from_pm"]
+
+
+# === chunk 8 content tests ==================================================
+
+
+def test_chunk8_row_count_33() -> None:
+    """Chunk 8 emits 33 rows under PM's Cemetery en Echelon banner
+    (G 2300 + G 2400 sub-clusters) plus Cemetery G 2500's single row."""
+    chunk8 = [r for r in _rows() if r["tomb_id"] in CHUNK8_TOMB_IDS]
+    assert len(chunk8) == 33
+
+
+def test_chunk8_cemetery_distribution() -> None:
+    """22 G 2300 + 10 G 2400 + 1 G 2500."""
+    by_cem: dict[str, int] = {}
+    for r in _rows():
+        if r["tomb_id"] in CHUNK8_TOMB_IDS:
+            by_cem[r["cemetery"]] = by_cem.get(r["cemetery"], 0) + 1
+    assert by_cem == {"G 2300": 22, "G 2400": 10, "G 2500": 1}
+
+
+def test_chunk8_senezemib_inti_g2370() -> None:
+    """G 2370 SENEZEMIB good name INTI Chief Justice and Vizier. Temp.
+    Isesi. The "good name" idiom (Egyptian *rn nfr*) puts the primary
+    name in `occupant_name` and the alt in `occupant_alt_names`."""
+    row = _by_id("G2370")
+    assert row["occupant_name"] == "Senezemib"
+    assert row["occupant_alt_names"] == ["Inti"]
+    assert row["occupant_role"] == "Vizier"
+    assert row["dynasty"] == "5"
+    assert row["attribution_certainty"] == "attested"
+
+
+def test_chunk8_senezemib_mehi_g2378_underdot_h() -> None:
+    """G 2378 SENEZEMIB good name MEHI Chief Justice and Vizier. Temp.
+    Unis. Underdot-Ḥ restored on Meḥi (Egyptological transliteration
+    convention; pypdf may render `MEHI` flat)."""
+    row = _by_id("G2378")
+    assert row["occupant_name"] == "Senezemib"
+    assert row["occupant_alt_names"] == ["Meḥi"]
+    assert row["occupant_role"] == "Vizier"
+    assert row["dynasty"] == "5"
+
+
+def test_chunk8_meryre_meryptahankh_g2381_underdot_h_post_hyphen_cap() -> None:
+    """G 2381 MERYREʿ-MERYPTAḤʿANKH good name NEKHEBU — compound
+    theophoric occupant_name with TWO raised-ayin glyphs plus underdot-Ḥ
+    on the *ptḥ* root. Tie-break override picks C's form
+    `Meryreʿ-Meryptaḥʿankh` (capital post-hyphen `M`, underdot-Ḥ)
+    over A's no-underdot and B's lowercase variants."""
+    row = _by_id("G2381")
+    assert row["occupant_name"] == "Meryreʿ-Meryptaḥʿankh"
+    assert row["occupant_alt_names"] == ["Nekhebu"]
+    assert "Temp. Pepy I or Merenreʿ I" in row["notes_from_pm"]
+    # Structural shaft-attachment prefix `with shaft G 2382A.` MUST be
+    # dropped from notes (chunks 6-7 convention).
+    assert "with shaft" not in row["notes_from_pm"].lower()
+
+
+def test_chunk8_pepy_meryptahankh_g2387_same_pattern() -> None:
+    """G 2387 PEPY-MERYPTAḤʿANKH — same post-hyphen-capital + underdot-Ḥ
+    pattern as G 2381 (egyptological consistency)."""
+    row = _by_id("G2387")
+    assert row["occupant_name"] == "Pepy-Meryptaḥʿankh"
+    assert row["dynasty"] == "6"
+
+
+def test_chunk8_g2415_weri_meti_joint_burial() -> None:
+    """G 2415 WERI and wife METI. The 'and wife' coordinate naming in
+    the headword itself triggers `is_joint_burial: true` AND populates
+    `co_occupants` with the wife. Tie-break override on notes picks the
+    lowercase `and wife Meti.` continuation form."""
+    row = _by_id("G2415")
+    assert row["occupant_name"] == "Weri"
+    assert row["co_occupants"] == ["Meti"]
+    assert row["co_occupant_roles"] == ["Wife"]
+    assert row["is_joint_burial"] is True
+    assert row["notes_from_pm"].startswith("and wife Meti.")
+
+
+def test_chunk8_g2423_mehu_maet_underdot_and_ayin() -> None:
+    """G 2423 MEḤU, Judge and Elder of the Hall ... Prophet of Maʿet.
+    Combines underdot-Ḥ on occupant name (Meḥu) and ayin normalisation
+    in the goddess name (Maʿet, from PM's `Maaet` raw OCR). Wife
+    `Khenit` from body prose is captured as co-occupant + retained in
+    notes verbatim per the tie-break override."""
+    row = _by_id("G2423")
+    assert row["occupant_name"] == "Meḥu"
+    assert row["co_occupants"] == ["Khenit"]
+    assert "Prophet of Maʿet" in row["notes_from_pm"]
+    assert "Wife, Khenit" in row["notes_from_pm"]
+
+
+def test_chunk8_g2347a_bare_suffix_null_notes() -> None:
+    """G 2347a is a bare-suffix Shape-2 letter-suffix headword (PM
+    prints `G 2347a.` with NO occupant name, no title cluster, no
+    dating marker — only the sub-feature heading `Shaft C.` follows).
+    Per chunk-8 prompt Shape-2 rule: pure-suffix bare-headword with no
+    dating marker → `notes_from_pm: null` (selected via tie-break
+    override over the two agents who incorrectly captured the tomb_id
+    or the sub-feature heading)."""
+    row = _by_id("G2347a")
+    assert row["occupant_name"] is None
+    assert row["occupant_role"] == "Unknown"
+    assert row["attribution_certainty"] == "uncertain"
+    assert row["notes_from_pm"] is None
+
+
+def test_chunk8_g2430_lg_alias_captured() -> None:
+    """G 2430 HETEPNIPTAH carries an `LG 25` Lepsius cross-reference
+    in the body — captured as `tomb_aliases: ["LG 25"]` per the
+    chunk-8 prompt's LG-cross-reference rule."""
+    row = _by_id("G2430")
+    assert row["occupant_name"] == "Hetepniptah"
+    assert "LG 25" in row["notes_from_pm"]
+
+
+def test_chunk8_g2501_lone_cemetery_g2500_bare_suffix() -> None:
+    """CEMETERY G 2500 contributes a single bare-suffix row.
+    `cemetery: "G 2500"`, no occupant, no dating marker."""
+    row = _by_id("G2501")
+    assert row["cemetery"] == "G 2500"
+    assert row["occupant_name"] is None
+    assert row["occupant_role"] == "Unknown"

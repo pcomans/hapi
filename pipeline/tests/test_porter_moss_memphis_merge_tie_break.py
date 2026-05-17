@@ -270,6 +270,15 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       G 2100 annexe with raised-ayin normalisation in `Menkaureʿ`, and
       the second G 2156 = Redenes mastaba with cross-reference clause
       preservation).
+    - Chunk 8: `G2347a|notes_from_pm`, `G2381|notes_from_pm`,
+      `G2381|occupant_name`, `G2387|occupant_name`,
+      `G2415|notes_from_pm`, `G2423|notes_from_pm` (six Cemetery en
+      Echelon rows: G 2347a bare-suffix Shape-2 null-notes normalisation;
+      G 2381 + G 2387 underdot-Ḥ + post-hyphen capitalisation on the
+      compound theophoric `Meryptaḥʿankh`; G 2415 lowercase-`and`
+      conjunction preservation on Weri/Meti joint-burial headword;
+      G 2423 raised-`a` → ayin in `Maʿet` + wife-clause preservation
+      for Meḥu/Khenit).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -288,6 +297,12 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G1221", "notes_from_pm"),
         ("G2100a", "notes_from_pm"),
         ("G2156b", "notes_from_pm"),
+        ("G2347a", "notes_from_pm"),
+        ("G2381", "notes_from_pm"),
+        ("G2381", "occupant_name"),
+        ("G2387", "occupant_name"),
+        ("G2415", "notes_from_pm"),
+        ("G2423", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
