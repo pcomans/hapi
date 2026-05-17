@@ -1880,10 +1880,20 @@ def test_chunk9_g3050_ankh_ka_servant_leading_ayin() -> None:
 def test_chunk9_g3086_ruz_prophet_of_three_kings() -> None:
     """G 3086 Ruz Prophet of Khufu, Raʿzedef, and Khephren — Dyn-IV
     royal-cult triad. Egyptological ayin restored on Raʿzedef (PM
-    prints `Raazedef`)."""
+    prints `Raazedef`) AND on `waʿb-priest` per chunks 1-8 source-
+    wide convention (Gemini PR #228 medium #1 + code-reviewer P1.1
+    fix). `shared_with_tombs` captures parent-tomb G 3098 from the
+    explicit `(tomb G 3098)` cross-reference in notes (Gemini PR
+    #228 medium #1 + code-reviewer P1.2 fix). Wife `Mest` Royal
+    acquaintance preserved verbatim."""
     row = _by_id("G3086")
     assert row["occupant_name"] == "Ruz"
-    assert "Raʿzedef" in row["notes_from_pm"] or "Raʿdjedef" in row["notes_from_pm"]
+    assert "Raʿzedef" in row["notes_from_pm"]
+    assert "waʿb-priest" in row["notes_from_pm"]
+    assert "waab" not in row["notes_from_pm"]
+    assert row["shared_with_tombs"] == ["G3098"]
+    assert row["co_occupants"] == ["Mest"]
+    assert row["co_occupant_roles"] == ["Wife, Royal acquaintance"]
 
 
 def test_chunk9_g3098_annexe_pair_single_row() -> None:
@@ -1896,14 +1906,53 @@ def test_chunk9_g3098_annexe_pair_single_row() -> None:
     egyptologically-faithful elements across the three agents."""
     row = _by_id("G3098")
     assert row["occupant_name"] == "Iymerery"
-    assert "with annexe." in row["notes_from_pm"]
-    assert "Iymerery" in row["notes_from_pm"]
-    assert "Neferḥetpes-Wer" in row["notes_from_pm"]
-    assert "Duareʿ" in row["notes_from_pm"]
-    assert "Personet" in row["co_occupants"]
-    # Annexe occupant captured as co-occupant or in notes; verify the
-    # annexe-position phrase reaches notes_from_pm at minimum.
-    assert "annexe" in row["notes_from_pm"].lower()
+    assert row["occupant_role"] == "Official"
+    assert row["dynasty"] == "6"
+    assert row["cemetery"] == "G 3000"
+    assert row["attribution_certainty"] == "attested"
+    # Both occupants captured in co_occupants list (wife + annexe burial).
+    assert row["co_occupants"] == ["Personet", "Neferḥetpes-Wer"]
+    assert row["co_occupant_roles"] == [
+        "Wife, Royal acquaintance",
+        "King's adorner, etc. (woman, north-east annexe). Father, Duareʿ King's son of his body.",
+    ]
+    # Reciprocal cross-reference to G 3086 Ruz (son) restored per
+    # code-reviewer PR #228 P1.2 fix.
+    assert row["shared_with_tombs"] == ["G3086"]
+    # Notes preserve the full annexe-pair headword block.
+    notes = row["notes_from_pm"]
+    assert "with annexe." in notes
+    assert "Iymerery waʿb-priest of the King's mother" in notes
+    assert "Inspector of waʿb-priests" in notes
+    assert "Wife, Personet Royal acquaintance." in notes
+    assert "Neferḥetpes-Wer (woman)" in notes
+    assert "King's adorner" in notes
+    assert "Father, Duareʿ King's son of his body." in notes
+    assert "North-east annexe." in notes
+    # Mastaba-type body trailer dropped per chunks 6-7 convention.
+    assert "Mastaba with stone filling" not in notes
+
+
+def test_chunk9_g3035_thenti_mitrt_wife_title() -> None:
+    """G 3035 THENTI Judge and Scribe. Wife Nefert carries the `mitrt`
+    title (PM publisher-typography variance `mjtrt`/`mitrt` normalised
+    to `mitrt` per chunk-9 G 3050 convention; Gemini PR #228 medium
+    #2 + egyptologist P3 fix)."""
+    row = _by_id("G3035")
+    assert row["occupant_name"] == "Thenti"
+    assert row["co_occupants"] == ["Nefert"]
+    assert row["co_occupant_roles"] == ["Wife, mitrt"]
+    assert "mjtrt" not in row["notes_from_pm"]
+    assert "mitrt" in row["notes_from_pm"]
+
+
+def test_chunk9_g3097_neferhi_underdot_h() -> None:
+    """G 3097 NEFERḤI King's adorner and Keeper of unguents. Egyptologist
+    PR #228 F1 P1 fix: intra-chunk consistency — same `nfr-ḥ` root as
+    G 3098(b) Neferḥetpes-Wer (which carries underdot-Ḥ); OCR caps
+    strips diacritics, so the reviewer pass restored the underdot."""
+    row = _by_id("G3097")
+    assert row["occupant_name"] == "Neferḥi"
 
 
 def test_chunk9_all_named_rows_dyn_vi() -> None:
