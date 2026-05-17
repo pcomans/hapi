@@ -27,7 +27,7 @@ The authority layer is modeled as a **source-attributed claim graph** following 
 
 ### CIDOC CRM alignment
 
-This ADR commits to **CIDOC CRM version 7.1.3**. The authoritative model definition is the release at https://cidoc-crm.org/Version/version-7.1.3. The machine-readable RDFS implementation derived from that release is vendored in-repo at `pipeline/pipeline/authority/spec/cidoc_crm_v7.1.3.rdf` (see the README in that directory). All class and property identifiers (E-numbers and P-numbers) used in this document refer to that version. A subsequent CRM revision will trigger a follow-up ADR that documents migration deltas and replaces the vendored RDF in the same commit; the version is pinned, not floating.
+This ADR commits to **CIDOC CRM version 7.1.3**. The authoritative release page is https://cidoc-crm.org/Version/version-7.1.3; the class-and-property declarations page from that release is vendored in-repo at `pipeline/pipeline/authority/spec/cidoc_crm_v7.1.3.html` (see the README in that directory). All class and property identifiers (E-numbers and P-numbers) used in this document refer to that version. A subsequent CRM revision will trigger a follow-up ADR that documents migration deltas and replaces the vendored file in the same commit; the version is pinned, not floating.
 
 Node-type mapping from Hapi labels to CIDOC classes:
 
