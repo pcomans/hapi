@@ -25,17 +25,21 @@ Section: "Declared deviations from strict CRM 7.1.3" (now five entries as of c.f
    - Round-trip mapping: at strict-RDF export, each `hapi:` predicate maps either to its `crm_nearest` (lossy) or to a named extension property (lossless if the receiving system speaks the extension).
    - Assessment (2026-05-17): Real deviation, properly contained.
 
-4. **P82a/P82b values stored as inlined signed integer years rather than `xsd:dateTime` literals.**
-   - Rationale: Strict CRM 7.1.3 (per the RDFS) declares P82a/P82b with range `rdfs:Literal` (effectively `xsd:dateTime`). The property-graph encoding stores year boundaries as signed integers on the `:TimeSpan:E52` node together with a `calendar` field.
-   - Containment: limited to `:TimeSpan:E52` nodes; the rest of the model uses P82a/P82b conceptually but does not store other date forms in the graph.
-   - Round-trip mapping: each integer N expands to xsd:dateTime `<N>-01-01T00:00:00Z` (begin-of-year for P82a) or `<N>-12-31T23:59:59Z` (end-of-year for P82b).
-   - Assessment (2026-05-17): Newly declared; previously a soft issue under the old taxonomy. Now properly declared per the no-soft-issues rule.
+4. **P82a/P82b values stored as inlined signed integer years.**
+   - Rationale: The RDFS at https://cidoc-crm.org/rdfs/7.1.3/CIDOC_CRM_v7.1.3.rdf declares P82a/P82b with range `rdfs:Literal` (encoding rule 3 collapses the conceptual E61 Time Primitive to `rdfs:Literal`). The RDFS imposes no specific lexical form. The property-graph encoding stores year boundaries as signed integers on the `:TimeSpan:E52` node together with an explicit `calendar` field.
+   - Containment: limited to `:TimeSpan:E52` nodes.
+   - Round-trip mapping: each `(integer, calendar)` pair serialises to a string `rdfs:Literal` in a Hapi-defined lexical form pinned by the loader specification. **This is a Hapi convention layered on CRM's `rdfs:Literal` range, NOT a CRM-mandated form.** BCE-year serialisation in particular is delicate (XML Schema 1.1 expanded-year, ISO 8601 astronomical, `xsd:dateTime` all differ on negative years); the loader pins one explicitly.
+   - Assessment (2026-05-17): Corrected this revision. Previously claimed `xsd:dateTime` round-trip as if it were CRM-standard — that claim was overconfident. The RDFS only requires `rdfs:Literal`; the lexical form is Hapi-defined.
 
 5. **Citation properties (`cited_page`, `cited_pdf_page`) on the `P70i_is_documented_in` edge.**
-   - Rationale: Strict CRM 7.1.3 has no `.1` sub-property of P70 for page citations. Strictly conformant encoding requires reifying each cited passage as an E73 Information Object with an E42 Identifier for the page; that adds an intermediate node per citation.
-   - Containment: limited to the `P70i_is_documented_in` edge; no other property in the model is sub-typed with `.1` properties.
-   - Round-trip mapping: each citation-bearing edge expands at export time into an intermediate `:E73 Information Object` carrying `cited_page`/`cited_pdf_page` as `:E42 Identifier` references, with the E13 → E31 link routed through the E73.
-   - Assessment (2026-05-17): Newly declared; previously a soft issue under the old taxonomy. Now properly declared per the no-soft-issues rule.
+   - Rationale: Strict CRM 7.1.3 has no `.1` sub-property of P70 for page citations. The edge-property idiom is a Hapi compactness choice.
+   - Containment: limited to the `P70i_is_documented_in` edge.
+   - Round-trip mapping (every property's domain/range satisfied):
+     - For each distinct (publication, page) pair, materialise the page as its own `:E31 Document` (e.g. `leprohon_2013_p115`).
+     - Bind page-level E31 to publication-level E31 via `P148i_is_component_of` (P148 domain and range are E89 Propositional Object; E31 IS-A E73 IS-A E89, so both ends valid by subsumption).
+     - Identify the page-level E31 via `P1_is_identified_by → :E42 Identifier {value: 'p. 115'}` (P1 domain E1, range E41; E42 IS-A E41 by subsumption).
+     - Rewrite the original E13 → P70i → publication-level E31 to point at the page-level E31 instead. **P70i's range stays E31 throughout** — no rerouting through E73/E33 is required.
+   - Assessment (2026-05-17): Corrected this revision. Previously the mapping said "route the E13 → E31 link through an intermediate E73," which would have broken P70i's E31 range constraint. Sub-E31 component pattern keeps P70i's range satisfied at every step.
 
 ## Implicit deviation noted but not separately listed in ADR-018
 
