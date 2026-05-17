@@ -252,7 +252,7 @@ CHUNK5_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
     ("SAQ-Khuit", "notes_from_pm"): {
         "value": (
-            "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI "
+            "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. "
             "¹ King's wife (of Teti)."
         ),
         "rationale": (

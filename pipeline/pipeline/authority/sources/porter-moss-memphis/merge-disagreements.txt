@@ -121,6 +121,6 @@ Reviewer-cited row corrections:
   SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
   SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
   SAQ-IputII.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} → {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"}
-  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI ¹ King's wife (of Teti)."
+  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. ¹ King's wife (of Teti)."
   SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
   SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]
