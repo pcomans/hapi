@@ -105,9 +105,22 @@ SAQ-WifeOfIsesi (None):
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
+OCR-drift fixes (Roman-numeral restore in notes_from_pm):
+  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
+  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
+  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
+  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
+  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
+
 Reviewer-cited row corrections:
+  G7102.occupant_name: "Iou" → "Idu"
+  LG83.co_occupant_roles: [] → ["Queen"]
+  LG97.co_occupant_roles: [] → ["Official"]
+  LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
   SAQ-IputI.occupant_name: "Iput I" → "Iput"
   SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
-  SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. (Footnote: King's wife (of Teti), King's mother (of Pepy I).)"
-  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI (Footnote: King's wife (of Teti).)"
+  SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
+  SAQ-IputII.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} → {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"}
+  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI ¹ King's wife (of Teti)."
+  SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
   SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]

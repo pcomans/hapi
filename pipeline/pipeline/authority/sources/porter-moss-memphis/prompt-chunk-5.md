@@ -83,7 +83,7 @@ This chunk's row-emitting patterns are THREE shapes:
 **OUT OF SCOPE for rows in this chunk** — do NOT emit rows for:
 - Front-matter intro: `PYRAMID-FIELD OF $AQQARA / Maps XLI, XLII / Plan, POCOCKE…` block on physical p.33 (it lists references for the whole Saqqâra pyramid-field, not a single tomb).
 - Mortuary Temple, Valley Temple, Causeway, North Enclosure Wall, South Tomb sub-features under each complex — these are sub-architecture, not separate tombs.
-- F. PYRAMID-COMPLEX OF UNIS section heading at the bottom of physical p.57 and everything after — chunk 4 territory.
+- The section heading that follows E. at the bottom of physical p.57 (PM's next lettered section, opening with `F. PYRAMID-COMPLEX OF ...`) and everything after — that section is chunk-4 territory.
 - Body content: pyramid-text catalogues, sarcophagus-find lists, scene catalogues, masons-graffiti lists, statue inventories — these are body items under each pyramid, not headword rows.
 - Footnote markers like `1 King's wife (of Teti).` — these are body footnotes attached to the queen-enclosure heading; informative but not a row.
 
@@ -110,7 +110,7 @@ The Griffith-Institute scan of PM III.2 has heavy text-layer noise that pypdf re
 - `ENCLOS URE` → `ENCLOSURE`.
 - A section heading may wrap across two text-layer lines when followed by a hieroglyph block — treat the two lines as one heading.
 
-**Regnal numbers:** When PM prints a regnal `I` next to a queen's all-caps name, pypdf may render the cluster as `<NAME>1 I` (an Arabic `1` followed by a space and Roman `I` — OCR artifact). Treat the regnal as `I` (Roman one). The `<NAME>1 I` pattern collapses in `occupant_name` to `<Name> I` (title-cased name + single space + Roman regnal).
+**Regnal numbers — DO NOT INTERPOLATE.** PM is faithful about printing regnal numerals when they exist: a king or queen with an editorially-disambiguated regnal will appear as `<NAME> [I]`, `<NAME> [II]`, etc., with the bracketed Roman explicit in the section heading. When the section heading prints a bare `<NAME>` (no bracket), `occupant_name` must stay bare too. Do NOT add a regnal `I` because the section is in a context where another individual of the same name exists elsewhere in PM — that disambiguation is Phase-A name-authority work, not Phase-0 extraction. OCR caveat: pypdf often renders a footnote-anchor superscript digit AND adjacent running-header characters as a noise cluster (e.g. `<NAME>1 I`, `<NAME>¹`, `<NAME>! I`). Such clusters are footnote anchors + extraction noise, NOT regnal numbers. Drop them from `occupant_name`; the bare title-cased name is the correct value.
 
 **Dynasty rendering:** PM prints dynasties in Roman; OCR variants seen in this chunk:
 - `Dyn. VI` (clean) → `"6"`

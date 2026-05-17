@@ -1142,18 +1142,65 @@ def test_chunk5_teti_two_queens_iput_and_khuit() -> None:
 
 
 def test_chunk5_iput_and_khuit_footnotes_preserved() -> None:
-    """Egyptologist-reviewer P1 fixes (F1 + F3) restored PM's
-    section-heading footnotes (`King's wife (of Teti), King's mother
-    (of Pepy I).` for Iput; `King's wife (of Teti).` for Khuit) to
-    `notes_from_pm`. These footnotes are the sole prosopographic
-    justification for the `occupant_role: "Queen"` classification and
-    for the Teti-spouse identification — both Phase-A-relevant facts
-    that need a documented PM trace per constitutional rule 1."""
+    """Egyptologist-reviewer P1 fixes (F1 + F3 + F-NEW-1) restored PM's
+    section-heading footnotes verbatim to `notes_from_pm`. For Iput,
+    PM prints three titles on p.396: `[King's daughter of his] body,
+    King's wife (of Teti), King's mother (of Pepy I).` — the first
+    title in editorial brackets per PM's convention for restored text.
+    For Khuit, PM prints one title on p.397: `King's wife (of Teti).`
+    Both footnotes carry PM's `¹` anchor as the contextual marker that
+    the clause is footnote prose rather than headline continuation.
+    These footnotes are the sole prosopographic justification for the
+    `occupant_role: "Queen"` classification and for the Teti-spouse
+    identification — both Phase-A-relevant facts that need a
+    documented PM trace per constitutional rule 1."""
     iput = _by_id("SAQ-IputI")["notes_from_pm"]
+    assert "[King's daughter of his] body" in iput
     assert "King's wife (of Teti)" in iput
     assert "King's mother (of Pepy I)" in iput
     khuit = _by_id("SAQ-Khuit")["notes_from_pm"]
     assert "King's wife (of Teti)" in khuit
+
+
+def test_chunk5_iput_full_row_equality() -> None:
+    """Flagship row equality assertion per CLAUDE.md rule 5 and the
+    chunk-1 G1 / G2 / G3 precedent. SAQ-IputI is chunk 5's flagship
+    row: 3 of 5 CHUNK5_CORRECTIONS target it, including the
+    interpolated-regnal fix (F1, P1), the footnote restoration (F3,
+    P1), and the bracketed-first-clause restoration (F-NEW-1, P1).
+    Full-row equality regression-pins all those corrections so a
+    future merge can't silently revert any of them.
+    """
+    row = _by_id("SAQ-IputI")
+    assert row == {
+        "tomb_id": "SAQ-IputI",
+        "memphite_area": "Saqqara",
+        "occupant_name": "Iput",
+        "occupant_alt_names": ["Iput I"],
+        "tomb_aliases": [],
+        "co_occupants": [],
+        "co_occupant_roles": [],
+        "is_joint_burial": False,
+        "occupant_role": "Queen",
+        "dynasty": "6",
+        "sub_period": None,
+        "date_bce_approx_start": None,
+        "date_bce_approx_end": None,
+        "cemetery": None,
+        "discovery_year": None,
+        "discoverer": None,
+        "is_unfinished": False,
+        "is_uninscribed": False,
+        "is_usurped": False,
+        "attribution_certainty": "attested",
+        "shared_with_tombs": [],
+        "notes_from_pm": (
+            "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. "
+            "¹ [King's daughter of his] body, King's wife (of Teti), "
+            "King's mother (of Pepy I)."
+        ),
+        "source_citation": {"page": 396, "edition": EDITION_PM_III_2, "section": "I"},
+    }
 
 
 def test_chunk5_neterikhet_zoser_djoser_aliases() -> None:

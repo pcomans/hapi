@@ -228,41 +228,44 @@ CHUNK5_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     ("SAQ-IputI", "notes_from_pm"): {
         "value": (
             "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. "
-            "(Footnote: King's wife (of Teti), King's mother (of Pepy I).)"
+            "¹ [King's daughter of his] body, King's wife (of Teti), "
+            "King's mother (of Pepy I)."
         ),
         "rationale": (
-            "Egyptologist-reviewer printed-source pass against PM III.2 "
-            "p.396: the section-heading footnote `¹ King's wife (of Teti), "
-            "King's mother (of Pepy I).` (printed at the bottom of "
-            "p.396) is the sole prosopographic justification for "
-            "`occupant_role: \"Queen\"` and for the conventional `Iput I` "
-            "disambiguation. Per rule 1, footnote text supporting role "
-            "classification must be captured in `notes_from_pm` so the "
-            "row's role-derivation traces to a documented PM source. The "
-            "agents dropped the footnote per the chunk-5 prompt's "
-            "`footnote anchors are body content` rule, which was too "
-            "strict for prosopographic footnotes. Restoration: append "
-            "parenthetical footnote clause to the headword condensation. "
-            "Also drops the interpolated `IPUT I` from the verbatim form "
-            "to keep `notes_from_pm` faithful to PM's bare `IPUT` "
-            "headword."
+            "Egyptologist-reviewer second-pass printed-source verification "
+            "against PM III.2 p.396: the full footnote text is "
+            "`¹ [King's daughter of his] body, King's wife (of Teti), "
+            "King's mother (of Pepy I).` — three titles, with the first "
+            "(`King's daughter of his body`, restoring the lost original "
+            "title `sꜣt-nsw-n(t)-ẖt.f`) in editorial brackets per PM's "
+            "convention for restored text. First-pass review F3 fix "
+            "captured only the last two titles (`King's wife (of Teti), "
+            "King's mother (of Pepy I).`) — a rule-1 fidelity loss that "
+            "would lead Phase-A consumers to wrongly conclude PM prints "
+            "only two titles. Second-pass fix restores PM's bracketed "
+            "first clause. Verbatim form (no `(Footnote: ...)` editorial "
+            "wrapper) per the README's `notes_from_pm` convention; the "
+            "`¹` superscript marker is PM's own footnote-anchor character "
+            "and stays as PM's contextual signal that this clause is "
+            "footnote prose rather than the headline-block continuation."
         ),
     },
     ("SAQ-Khuit", "notes_from_pm"): {
         "value": (
             "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI "
-            "(Footnote: King's wife (of Teti).)"
+            "¹ King's wife (of Teti)."
         ),
         "rationale": (
             "Egyptologist-reviewer printed-source pass against PM III.2 "
             "p.397: PM prints `PYRAMID-ENCLOSURE OF KHUIT¹` with footnote "
-            "anchor `¹` keyed to `1 King's wife (of Teti).` at the bottom "
+            "anchor `¹` keyed to `¹ King's wife (of Teti).` at the bottom "
             "of the same page. Parallel to the SAQ-IputI fix above. The "
             "footnote text supports the `occupant_role: \"Queen\"` "
             "classification and Teti's spouse identification — both "
             "Phase-A-relevant facts that need a documented PM trace. "
-            "Restoration: append parenthetical footnote clause to the "
-            "headword condensation. Egyptologist F3 finding."
+            "Restoration: append PM's verbatim footnote text (with PM's "
+            "own `¹` anchor) to the headword condensation, no "
+            "editorial `(Footnote: ...)` wrapper. Egyptologist F3 finding."
         ),
     },
     ("SAQ-Neterikhet", "occupant_alt_names"): {
