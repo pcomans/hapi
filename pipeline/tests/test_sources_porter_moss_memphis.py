@@ -1601,34 +1601,90 @@ def test_chunk8_cemetery_distribution() -> None:
 def test_chunk8_senezemib_inti_g2370() -> None:
     """G 2370 SENEZEMIB good name INTI Chief Justice and Vizier. Temp.
     Isesi. The "good name" idiom (Egyptian *rn nfr*) puts the primary
-    name in `occupant_name` and the alt in `occupant_alt_names`."""
+    name in `occupant_name` and the alt in `occupant_alt_names`.
+    Full-row equality per code-reviewer PR #227 P2-2 — G 2370 populates
+    co_occupants/co_occupant_roles, wife clause in notes, and modern-
+    spelling `Senedjemib` alias that the original 5-field spot-check
+    missed."""
     row = _by_id("G2370")
-    assert row["occupant_name"] == "Senezemib"
-    assert row["occupant_alt_names"] == ["Inti"]
-    assert row["occupant_role"] == "Vizier"
-    assert row["dynasty"] == "5"
-    assert row["attribution_certainty"] == "attested"
+    assert row == {
+        "tomb_id": "G2370",
+        "memphite_area": "Giza",
+        "occupant_name": "Senezemib",
+        "occupant_alt_names": ["Inti", "Senedjemib"],
+        "tomb_aliases": ["LG 27"],
+        "co_occupants": ["Thefi"],
+        "co_occupant_roles": ["Wife, Royal acquaintance"],
+        "is_joint_burial": False,
+        "occupant_role": "Vizier",
+        "dynasty": "5",
+        "sub_period": None,
+        "date_bce_approx_start": None,
+        "date_bce_approx_end": None,
+        "cemetery": "G 2300",
+        "discovery_year": None,
+        "discoverer": None,
+        "is_unfinished": False,
+        "is_uninscribed": False,
+        "is_usurped": False,
+        "attribution_certainty": "attested",
+        "shared_with_tombs": ["LG 10"],
+        "notes_from_pm": (
+            "Chief Justice and Vizier, King's architect and builder in "
+            "the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG "
+            "10.) Wife, Thefi Royal acquaintance. Stone-built mastaba. "
+            "LG 27."
+        ),
+        "source_citation": {"page": 85, "edition": EDITION_PM_III_1, "section": "III"},
+    }
 
 
 def test_chunk8_senezemib_mehi_g2378_underdot_h() -> None:
     """G 2378 SENEZEMIB good name MEHI Chief Justice and Vizier. Temp.
-    Unis. Underdot-Ḥ restored on Meḥi (Egyptological transliteration
-    convention; pypdf may render `MEHI` flat)."""
+    Unis. Underdot-Ḥ restored on Meḥi (occupant alt name) AND on
+    Ḥathor (wife's title cluster). Full-row equality per code-reviewer
+    PR #227 P2-2."""
     row = _by_id("G2378")
-    assert row["occupant_name"] == "Senezemib"
-    assert row["occupant_alt_names"] == ["Meḥi"]
-    assert row["occupant_role"] == "Vizier"
-    assert row["dynasty"] == "5"
+    assert row == {
+        "tomb_id": "G2378",
+        "memphite_area": "Giza",
+        "occupant_name": "Senezemib",
+        "occupant_alt_names": ["Meḥi", "Senedjemib"],
+        "tomb_aliases": ["LG 26"],
+        "co_occupants": ["Khentkaus"],
+        "co_occupant_roles": ["Wife, King's daughter of his body, Prophetess of Ḥathor"],
+        "is_joint_burial": False,
+        "occupant_role": "Vizier",
+        "dynasty": "5",
+        "sub_period": None,
+        "date_bce_approx_start": None,
+        "date_bce_approx_end": None,
+        "cemetery": "G 2300",
+        "discovery_year": None,
+        "discoverer": None,
+        "is_unfinished": False,
+        "is_uninscribed": False,
+        "is_usurped": False,
+        "attribution_certainty": "attested",
+        "shared_with_tombs": [],
+        "notes_from_pm": (
+            "Chief Justice and Vizier, King's architect and builder in "
+            "the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti "
+            "and Thefi (tomb G 2370). Wife, Khentkaus King's daughter "
+            "of his body, Prophetess of Ḥathor. Stone-built mastaba. "
+            "LG 26."
+        ),
+        "source_citation": {"page": 87, "edition": EDITION_PM_III_1, "section": "III"},
+    }
 
 
-def test_chunk8_meryre_meryptahankh_g2381_underdot_h_post_hyphen_cap() -> None:
-    """G 2381 MERYREʿ-MERYPTAḤʿANKH good name NEKHEBU — compound
-    theophoric occupant_name with TWO raised-ayin glyphs plus underdot-Ḥ
-    on the *ptḥ* root. Tie-break override picks C's form
-    `Meryreʿ-Meryptaḥʿankh` (capital post-hyphen `M`, underdot-Ḥ)
-    over A's no-underdot and B's lowercase variants."""
+def test_chunk8_meryre_meryptahankh_g2381_macron_underdot_post_hyphen_cap() -> None:
+    """G 2381 MERYRĒʿ-MERYPTAḤʿANKH good name NEKHEBU — compound
+    theophoric occupant_name with macron-Ē on the Re sun-god root +
+    TWO raised-ayin glyphs + underdot-Ḥ on the *ptḥ* root. Egyptologist
+    PR #227 P1-4 restored the macron-Ē after round-1 review."""
     row = _by_id("G2381")
-    assert row["occupant_name"] == "Meryreʿ-Meryptaḥʿankh"
+    assert row["occupant_name"] == "Meryrēʿ-Meryptaḥʿankh"
     assert row["occupant_alt_names"] == ["Nekhebu"]
     assert "Temp. Pepy I or Merenreʿ I" in row["notes_from_pm"]
     # Structural shaft-attachment prefix `with shaft G 2382A.` MUST be
@@ -1686,17 +1742,54 @@ def test_chunk8_g2347a_bare_suffix_null_notes() -> None:
 
 
 def test_chunk8_g2430_lg_alias_captured() -> None:
-    """G 2430 HETEPNIPTAH carries an `LG 25` Lepsius cross-reference
-    in the body — captured as `tomb_aliases: ["LG 25"]` per the
-    chunk-8 prompt's LG-cross-reference rule."""
+    """G 2430 ḤETEPNIPTAḤ carries an `LG 25` Lepsius cross-reference
+    in the body — captured in notes per the chunk-8 prompt's LG-cross-
+    reference rule. Occupant name carries underdot-Ḥ on BOTH the *ḥtp*
+    initial root AND the *ptḥ* terminal theophoric root."""
     row = _by_id("G2430")
-    assert row["occupant_name"] == "Hetepniptah"
+    assert row["occupant_name"] == "Ḥetepniptaḥ"
     assert "LG 25" in row["notes_from_pm"]
+    assert "Wife, Khaʿmerernebti" in row["notes_from_pm"]
+    assert row["co_occupant_roles"] == ["Wife, Prophetess of Ḥathor in all her places"]
+
+
+def test_chunk8_g2336_khuwiptah_body_recovery() -> None:
+    """G 2336 PM headword is bare-suffix `G 2336.` but body contains
+    `Relief-fragment, Khuwiptah and text` (line 37 of chunk file).
+    Scope-accountability-enforcer required action on PR #227 E-P2-3:
+    body-attested name promoted to `occupant_name` (parallel to chunk-6
+    G 1314 Khaʿkareʿ precedent). Theneny's false-door found BETWEEN
+    G 2337 and G 2371 (per PM explicit clause) is NOT G 2336's owner —
+    mentioned in notes only."""
+    row = _by_id("G2336")
+    assert row["occupant_name"] == "Khuwiptah"
+    assert row["occupant_role"] == "Official"
+    assert row["dynasty"] == "6"
+    assert "Khuwiptah" in row["notes_from_pm"]
+    assert "Theneny" in row["notes_from_pm"]
+    assert "between tombs G 2337 and G 2371" in row["notes_from_pm"]
+
+
+def test_chunk8_body_attested_dating_recovered() -> None:
+    """Body-attested dating recovery on bare-suffix Shape-2 rows where
+    PM's headword has no dating marker but body sub-headings document
+    statue-dating from in-tomb context (burial chamber / serdab / shaft
+    débris) → strong attribution to tomb owner. Chunk-6 G 1314
+    precedent. Applies to chunk-8 G 2335 (Dyn. V), G 2336 (Dyn. V-VI →
+    range tail → 6), G 2407 (Late Dyn. V), G 2501 (Dyn. VI)."""
+    for tid, expected_dyn in [
+        ("G2335", "5"),
+        ("G2336", "6"),
+        ("G2407", "5"),
+        ("G2501", "6"),
+    ]:
+        row = _by_id(tid)
+        assert row["dynasty"] == expected_dyn, f"{tid}: {row['dynasty']!r} != {expected_dyn!r}"
 
 
 def test_chunk8_g2501_lone_cemetery_g2500_bare_suffix() -> None:
     """CEMETERY G 2500 contributes a single bare-suffix row.
-    `cemetery: "G 2500"`, no occupant, no dating marker."""
+    `cemetery: "G 2500"`, no occupant, dating recovered from body."""
     row = _by_id("G2501")
     assert row["cemetery"] == "G 2500"
     assert row["occupant_name"] is None

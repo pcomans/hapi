@@ -126,9 +126,9 @@ G2378 (Senezemib):
   co_occupant_roles: a=["Wife, King's daughter of his body, Prophetess of Hathor"] | b=["Wife, King's daughter of his body, Prophetess of Hathor"] | c=["Wife"]  → chose ["Wife, King's daughter of his body, Prophetess of Hathor"]
   notes_from_pm: a="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Wife, Khentkaus King's daughter of his body, Prophetess of Hathor . . . Stone-built mastaba. LG 26." | b="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26." | c="Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26."  → chose "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26."
 
-G2381 (Meryreʿ-Meryptaḥʿankh):
+G2381 (Meryrēʿ-Meryptaḥʿankh):
   notes_from_pm: a="Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenreʿ I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed." | b="Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenrea I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed." | c="With shaft G 2382A. Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenreʿ I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed."  → chose "Overseer of all works of the King, King's architect and builder in the Two Houses, Overseer of the royal commissions of the Pyramid of Pepy I, etc. Temp. Pepy I or Merenreʿ I. Father (possibly), Khnementi (tomb G 2374). Stone-built mastaba. Almost completely destroyed."
-  occupant_name: a="Meryreʿ-Meryptahʿankh" | b="Meryreʿ-meryptaḥʿankh" | c="Meryreʿ-Meryptaḥʿankh"  → chose "Meryreʿ-Meryptaḥʿankh"
+  occupant_name: a="Meryreʿ-Meryptahʿankh" | b="Meryreʿ-meryptaḥʿankh" | c="Meryreʿ-Meryptaḥʿankh"  → chose "Meryrēʿ-Meryptaḥʿankh"
 
 G2385 (None):
   notes_from_pm: a="Dyn. VI. Stone-built mastaba. Almost completely destroyed. 'North-eastern Mastaba'." | b="Dyn. VI. Stone-built mastaba. Almost completely destroyed. 'North-eastern Mastaba'." | c="Dyn. VI."  → chose "Dyn. VI. Stone-built mastaba. Almost completely destroyed. 'North-eastern Mastaba'."
@@ -267,6 +267,27 @@ Reviewer-cited row corrections:
   G1314.attribution_certainty: "uncertain" → "probable"
   G1314.notes_from_pm: "Second half of Dyn. V." → "Second half of Dyn. V. Architrave with figure of Khaʿkareʿ repeated nine times. Double-statue, Khaʿkareʿ, Hairdresser of the Great House."
   G1607.is_unfinished: true → false
+  G2335.dynasty: null → "5"
+  G2335.notes_from_pm: null → "Dyn. V. Wood statuettes from burial chamber of shaft A."
+  G2336.dynasty: null → "6"
+  G2336.occupant_name: null → "Khuwiptah"
+  G2336.occupant_role: "Unknown" → "Official"
+  G2336.notes_from_pm: null → "Relief-fragment with Khuwiptah and text. Three female statuettes, wood, Dyn. V-VI, from serdab. False-door of Theneny Inspector of ka-servants, etc., Dyn. VI, found between tombs G 2337 and G 2371."
+  G2352.occupant_name: "Hagi" → "Ḥagi"
+  G2370.notes_from_pm: "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Stone-built mastaba. LG 27." → "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Wife, Thefi Royal acquaintance. Stone-built mastaba. LG 27."
+  G2370.occupant_alt_names: ["Inti"] → ["Inti", "Senedjemib"]
+  G2375.occupant_name: "Akhetmehu" → "Akhetmeḥu"
+  G2375a.occupant_name: "ʿAnkhirptah" → "ʿAnkhirptaḥ"
+  G2378.co_occupant_roles: ["Wife, King's daughter of his body, Prophetess of Hathor"] → ["Wife, King's daughter of his body, Prophetess of Ḥathor"]
+  G2378.notes_from_pm: "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26." → "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Wife, Khentkaus King's daughter of his body, Prophetess of Ḥathor. Stone-built mastaba. LG 26."
+  G2378.occupant_alt_names: ["Meḥi"] → ["Meḥi", "Senedjemib"]
+  G2407.dynasty: null → "5"
+  G2407.notes_from_pm: null → "Late Dyn. V. Statues found in débris of shaft D."
+  G2430.co_occupant_roles: ["Wife, Prophetess of Hathor in all her places"] → ["Wife, Prophetess of Ḥathor in all her places"]
+  G2430.notes_from_pm: "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25." → "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Wife, Khaʿmerernebti Prophetess of Ḥathor in all her places, etc. Stone-built mastaba. LG 25."
+  G2430.occupant_name: "Hetepniptah" → "Ḥetepniptaḥ"
+  G2501.dynasty: null → "6"
+  G2501.notes_from_pm: null → "Dyn. VI. Statuette found in front of mastaba."
   G7102.occupant_name: "Iou" → "Idu"
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
