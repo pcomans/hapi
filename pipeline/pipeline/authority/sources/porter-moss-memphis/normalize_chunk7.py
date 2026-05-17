@@ -13,11 +13,9 @@ import pathlib
 import re
 
 corrections = []
+RAW_DIR = pathlib.Path(__file__).parent / "raw"
 for tag in "abc":
-    p = pathlib.Path(
-        f"/Users/philipp/code/hapi/pipeline/pipeline/authority/sources/"
-        f"porter-moss-memphis/raw/agent-{tag}-chunk7.jsonl"
-    )
+    p = RAW_DIR / f"agent-{tag}-chunk7.jsonl"
     rows = [json.loads(line) for line in p.read_text().splitlines() if line.strip()]
     changed = 0
     for r in rows:
