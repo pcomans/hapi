@@ -37,7 +37,25 @@ The authority layer is modeled as a **source-attributed claim graph** following 
 
 6. **Identity across sources is itself a claim — no canonical Person at load time.** Each source's row is stored as its own per-source entity node (`:Ruler`, `:Site`, etc.), keyed by source + source-row-id. Cross-source co-reference ("Leprohon's row for Unas is the same person as Beckerath's row for Unas") is modeled as a Statement with predicate `hapi:same_entity_as`, `P141_assigned` pointing at the other entity, and a provenance edge attributing the claim — `P14_carried_out_by` for a human curator decision, `hapi:derived_by` for an automated matcher. **The loader makes no identity commitments.** Identity is data the matching pipeline produces over time, with full provenance. A canonical-person view can be derived later from `same_entity_as` clusters if query ergonomics demand it (see Consequences); the storage layer is per-source records, not collapsed persons.
 
-7. **Resolution policy is per-predicate, fail-loud by default.** When a downstream consumer (UI, search index, enrich asset) needs a single value and the graph carries competing claims, a per-predicate resolution rule decides which to surface (e.g. "for `reign_start_bce`, Beckerath > Hornung > Leprohon"; "for `display_name`, prefer the curator-decision Source"). If no rule is committed for a predicate, the query **fails loud** — the consumer must specify a rule or accept the full claim set. This aligns with Rule 2: no silent arbitrary picks; every resolution traces to a documented policy.
+7. **Resolution policy is per-predicate, fail-loud by default.** When a downstream consumer (UI, search index, enrich asset) needs a single value and the graph carries competing claims, a per-predicate resolution rule decides which to surface (e.g. "for `reign_start_bce`, Beckerath > Hornung > Leprohon"; "for `hapi:display_name`, prefer the most recent curator-decision Source"). If no rule is committed for a predicate, the query **fails loud** — the consumer must specify a rule or accept the full claim set. This aligns with Rule 2: no silent arbitrary picks; every resolution traces to a documented policy.
+
+### Display name migration — first concrete application of the resolution policy
+
+The canonical display name (ADR-016 "Conventional English Display Form" — "Khufu" not "Cheops", "Amenhotep III" not "Amenophis III") is the first per-predicate resolution policy committed to the registry. It also serves as the template for future per-predicate policies.
+
+**Model.** Source publications' display-name claims and the curator's canonical choice use the **same predicate** `hapi:display_name`; they are differentiated by their attribution. Leprohon's "Amenhotep III" is a Statement `P14_carried_out_by → :Source {id: 'leprohon_2013', type: 'publication'}`. The curator's canonical "Amenhotep III" is a Statement `P14_carried_out_by → :Source {id: 'hapi_display_names_2026_05', type: 'curator_decision'}`. Predicates describe what the claim is about; Sources describe who said it — keeping the canonical-vs-source-original distinction in the Source rather than the predicate preserves the uniform claim model.
+
+**Source granularity.** Curatorial decisions are batched by date: one `:Source {type: 'curator_decision'}` per dated decision batch (`hapi_display_names_2026_05`, `hapi_display_names_2027_q1`, …). When a spelling is revised, a new Source is created and the old claim stays attached to its original Source as audit trail.
+
+**Resolution rule for `hapi:display_name`**:
+1. Prefer the most recent `:Source {type: 'curator_decision'}` Statement (by `decided_at` on the Source)
+2. Else: **fail loud** — no fallback to publication Sources
+
+Consequences of fail-loud: rulers added by a future source-loader before a curator reviews them are unrenderable until the curator decision arrives. This is intentional — the gap surfaces in the review queue immediately, rather than hiding behind a placeholder.
+
+**Migration.** Initial load: every row in the current `pipeline/pipeline/authority/rulers.json` produces one Statement with `predicate: hapi:display_name`, value: the Anglicised form, attributed to `:Source {id: 'hapi_display_names_2026_05', type: 'curator_decision'}`. The rationale for the canonical forms (Anglophone scholarship convention, Met API observed forms) is captured by reference to ADR-016 rather than duplicated.
+
+**Effect on ADR-016.** ADR-016 is partially superseded: the storage shape (`rulers.json` flat file with one display name per ruler) is replaced by the claim-graph form. The spelling list lives on as the migration seed for the initial curator-decision Source. ADR-016's substantive content (which spelling to prefer for each ruler, and why) remains the authoritative reference cited by the curator-decision Source.
 
 ### Schema sketch
 
@@ -91,8 +109,7 @@ Predicates form a committed registry (`pipeline/pipeline/authority/predicates.js
 ### What this does not decide
 
 - **Storage technology** — Postgres (with relational encoding of the graph, or with the Apache AGE extension) and Neo4j (self-hosted Community or Aura managed) are the two viable candidates. A separate ADR will resolve this based on the pilot evidence accumulated under this model. Until then, the conceptual model is binding; the storage substrate is open.
-- **Migration of ADR-016 (Conventional English Display Form)** — ADR-016 currently mandates a single canonical display name per ruler in `rulers.json`. In the claim-graph model that file doesn't exist; per-source `display_name` Statements live as data. Where the canonical English form lives (curator-decision Source, derived rule, or pure UI-side rendering) is a follow-up decision that will likely supersede part of ADR-016.
-- **Per-predicate resolution policies** — the *default* is fail-loud (principle 7). The *committed* per-predicate rules (which Source wins for `reign_start_bce`, etc.) are a registry that grows alongside the graph; a follow-up ADR will define the registry's location and review process.
+- **Per-predicate resolution policies beyond `hapi:display_name`** — the *default* is fail-loud (principle 7); the *first concrete policy* is committed above for `hapi:display_name`. Additional per-predicate rules (which Source wins for `hapi:reign_start_bce`, `hapi:belongs_to_dynasty`, etc.) accumulate in the policy registry as downstream consumers demand them. The registry's exact location and review process is a follow-up ADR.
 - **Phase C feedback cadence** — when an approved fuzzy match in the review queue produces a new alias, when does the alias get added as a claim? Per-approval, batched, or blocked until a Phase B pass completes? Tracked in #221.
 
 ## Storage candidates (deferred)
