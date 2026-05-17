@@ -15,7 +15,7 @@ Fair-use scholarly extraction for a private research repository, supervised by a
 - Book: Porter, B. & Moss, R.L.B. *Topographical Bibliography of Ancient Egyptian Hieroglyphic Texts, Reliefs, and Paintings. Volume III: Memphis. Part I. Abû Rawâsh to Abûsîr.* 2nd edition, revised and augmented by Jaromír Málek. Oxford: Clarendon Press (1974).
 - Section: **PYRAMID-FIELD OF GÎZA — III. NECROPOLIS — A. WEST FIELD** continuation, `JUNKER CEMETERY (WEST)` (Akademie der Wissenschaften in Wien + Pelizaeus-Museum Hildesheim + University of Leipzig Expedition, 1926-7).
 - PM III.1 offset for this chunk: **printed = physical + 3** (verify in-chunk via the right-page running header `West Field <N>`).
-- The chunk file covers physical pp.97–104 / printed pp.100–107. Per-page markers `=== PHYS PAGE N ===` precede each page's text-layer dump.
+- The chunk file covers physical pp.97–105 / printed pp.100–108. Per-page markers `=== PHYS PAGE N ===` precede each page's text-layer dump.
 - **Top boundary:** the chunk file opens with `JUNKER CEMETERY (WEST)` banner on physical p.97 (the file was pre-trimmed before this banner; nothing above it).
 - **Bottom boundary:** the chunk file ends just before the `STEINDORFF CEMETERY` banner (chunk-11 territory).
 - Text layer: extracted by `pypdf` from the Griffith Institute's distributed PDF.
@@ -99,7 +99,7 @@ Do NOT emit rows for:
 
 ## Expected row count
 
-Pre-extraction structural scan: ~20 named tombs (Shape 1/3) + 5 S-numbered tombs (Shape 2) under the JUNKER CEMETERY (WEST) banner. **Total expected: 22–28 rows.** If your final count is below 18 or above 35, re-read the chunk file — you've either missed tombs or emitted out-of-scope sub-features (the largest named-headword block in this cluster spans 3+ printed pages of chapel-decoration sub-features and is ONE row — do not sub-split it).
+Pre-extraction structural scan: ~25 named tombs (Shape 1/3) + 5 S-numbered tombs (Shape 2) under the JUNKER CEMETERY (WEST) banner. **Total expected: ~30 rows (acceptable band 26–34).** If your final count is below 25 or above 35, re-read the chunk file — you've either missed tombs or emitted out-of-scope sub-features (the largest named-headword block in this cluster spans 3+ printed pages of chapel-decoration sub-features and is ONE row — do not sub-split it).
 
 ## PM III.1 text-layer noise (chunk-10-relevant)
 

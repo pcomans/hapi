@@ -199,7 +199,7 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
 
 # Chunk 10: Gîza § III.A West Field JUNKER CEMETERY (WEST) named-tomb
 # cluster (Junker Excavation 1926-7). Source: PM III.1 2nd ed. 1974,
-# physical pp.97–104 / printed pp.100–107. 30 rows: 18 Shape-1 named-
+# physical pp.97–105 / printed pp.100–108. 30 rows: 18 Shape-1 named-
 # primary + 5 Shape-2 S-numbered (Steindorff-style) + 7 Shape-3
 # bracketed-Roman-regnal named (Sonb I, Khesef I/II, Khnemhotp II,
 # Ptahshepses II, Meni I/II). First chunk to use the JKR descriptor
