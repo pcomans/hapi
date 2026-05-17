@@ -436,10 +436,10 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     ("G1314", "occupant_name"): {
         "value": "Khaʿkareʿ",
         "rationale": (
-            "Egyptologist F-P2-3 finding: PM III.1 p.61 (physical p.61) "
+            "Egyptologist F-P2-3 finding: PM III.1 p.61 (physical p.58) "
             "prints `G 1314. Second half of Dyn. V.` as a bare-suffix "
             "headword, but the body content on the next printed page "
-            "(p.62 / physical p.62) identifies the tomb owner: "
+            "(p.62 / physical p.59) identifies the tomb owner: "
             "`Architrave with figure of Khaʿkareʿ repeated nine times.` "
             "+ `Double-statue, Khaʿkareʿ, Hairdresser of the Great "
             "House`. The architrave + statue are inscribed-attestation "
