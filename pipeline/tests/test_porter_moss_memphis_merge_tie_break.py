@@ -279,6 +279,16 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       conjunction preservation on Weri/Meti joint-burial headword;
       G 2423 raised-`a` → ayin in `Maʿet` + wife-clause preservation
       for Meḥu/Khenit).
+    - Chunk 9: `G3008|notes_from_pm`, `G3008|co_occupant_roles`,
+      `G3050|notes_from_pm`, `G3050|co_occupant_roles`,
+      `G3093|notes_from_pm`, `G3093|co_occupant_roles`,
+      `G3098|notes_from_pm`, `G3098|co_occupant_roles` (Fisher Minor
+      Cemetery wife-clause structure: each of four named occupants has
+      a wife/co-occupant whose role string and notes triggered 1/1/1
+      ties across the agents, mostly on Ḥathor underdot + `etc.`
+      trailer + body-mastaba-line inclusion. G 3098 is the chunk-9
+      annexe-pair compound carrying both Iymerery and Neferḥetpes-Wer
+      in one row).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -303,6 +313,14 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G2387", "occupant_name"),
         ("G2415", "notes_from_pm"),
         ("G2423", "notes_from_pm"),
+        ("G3008", "notes_from_pm"),
+        ("G3008", "co_occupant_roles"),
+        ("G3050", "notes_from_pm"),
+        ("G3050", "co_occupant_roles"),
+        ("G3093", "notes_from_pm"),
+        ("G3093", "co_occupant_roles"),
+        ("G3098", "notes_from_pm"),
+        ("G3098", "co_occupant_roles"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

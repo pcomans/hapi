@@ -497,6 +497,16 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
 }
 
+# Per-chunk reviewer corrections for chunk 7 (Gîza West Field Cemetery
+# G 2000 + G 2100 + Mastaba G 2220). Intentionally empty — chunk-7
+# normalisation was handled by a separate one-time pre-merge script
+# (`normalize_chunk7.py`) that stripped occupant-name prefixes from
+# notes_from_pm. No reviewer-cited row-level corrections were required
+# after that normalisation. Kept here as an empty placeholder per
+# Gemini PR #228 round-2 medium for registry completeness.
+CHUNK7_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Per-chunk reviewer corrections for chunk 8 (Gîza West Field Cemetery
 # en Echelon G 2300 + G 2400 + Cemetery G 2500). Combined feedback from
 # Gemini Code Assist PR #227 round 1 (3 medium) + egyptologist-reviewer
@@ -720,6 +730,101 @@ CHUNK8_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Per-chunk reviewer corrections for chunk 9 (Gîza West Field Cemetery
+# G 3000, Fisher's "Minor Cemetery"). Gemini PR #228 round-1 medium #1
+# flagged G 3086 RUZ row.
+CHUNK9_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("G3086", "notes_from_pm"): {
+        "value": (
+            "Prophet of Khufu, Raʿzedef, and Khephren, waʿb-priest of "
+            "the King's mother, Supervisor of the police, etc. Dyn. "
+            "VI. Parents, Iymerery and Personet (tomb G 3098). Wife, "
+            "Mest Royal acquaintance."
+        ),
+        "rationale": (
+            "Gemini PR #228 medium #1: G 3086 RUZ headword notes — "
+            "agents reached 2/1 majority on `waab-priest` (text-layer "
+            "raw) so merge.py picked that form, but it violates the "
+            "source-wide raised-`a` → U+02BF ayin normalisation "
+            "convention applied uniformly across G 3008 / G 3093 / "
+            "G 3098 waʿb-priest renderings (PM III.1 p.98). Reviewer "
+            "correction: rewrite `waab-priest` → `waʿb-priest`."
+        ),
+    },
+    ("G3086", "shared_with_tombs"): {
+        "value": ["G3098"],
+        "rationale": (
+            "Gemini PR #228 medium #1 + code-reviewer PR #228 P1.2: "
+            "G 3086 RUZ notes_from_pm contains the explicit cross-"
+            "reference `Parents, Iymerery and Personet (tomb G 3098).` "
+            "Per the chunk-9 prompt field-rule for `shared_with_tombs` "
+            "(chunks 6–8 convention), an explicit cross-tomb reference "
+            "is captured structurally. Ruz is the son of G 3098's "
+            "primary occupant Iymerery — bidirectional family link "
+            "(paired with the G3098 → G3086 entry below)."
+        ),
+    },
+    ("G3098", "shared_with_tombs"): {
+        "value": ["G3086"],
+        "rationale": (
+            "Code-reviewer PR #228 P1.2: G 3098 IYMERERY body contains "
+            "the explicit cross-reference `Drum of deceased and wife, "
+            "dedicated by son Ruz (tomb G 3086)` (PM III.1 printed "
+            "p.99). Per the chunk-9 prompt field-rule for "
+            "`shared_with_tombs`, an explicit cross-tomb reference is "
+            "captured structurally. This is the reciprocal link to "
+            "G 3086 → G 3098 (parent–son relationship). Agents A+C "
+            "missed it; agent B captured it; A+C silently won "
+            "majority — reviewer correction restores."
+        ),
+    },
+    # Egyptologist F1 P1 finding: G 3097 occupant Neferhi must use
+    # underdot-ḥ for chunk-internal consistency with G 3098 (b)
+    # Neferḥetpes-Wer (same `nfr-ḥy/ḥtp` root family). PM III.1 p.99
+    # uses underdot-Ḥ throughout this chunk on names with the ḥ
+    # phoneme (Snefruḥotp, Ḥathor, Meḥu etc. — egyptologist
+    # verified). Both G 3097 + G 3098(b) names share the same root,
+    # so they must resolve to the same form. Selecting Neferḥi.
+    ("G3097", "occupant_name"): {
+        "value": "Neferḥi",
+        "rationale": (
+            "Egyptologist PR #228 F1 P1: intra-chunk inconsistency "
+            "G 3097 `Neferhi` vs G 3098 `Neferḥetpes-Wer` for the "
+            "same `nfr-ḥ` root family. PM III.1 p.99 typesetting "
+            "uses underdot-Ḥ on this root. OCR strips diacritics in "
+            "all-caps (PM prints `NEFERHI` and `NEFERHETPES-WER` in "
+            "caps), so the text layer couldn't settle the question. "
+            "Reviewer correction: Neferhi → Neferḥi for source-wide "
+            "consistency."
+        ),
+    },
+    # Egyptologist P3 nit: G 3035 wife title `mjtrt` (text-layer raw,
+    # 2/1 agent majority) should normalise to `mitrt` matching the
+    # G 3050 G3050|co_occupant_roles tie-break override convention.
+    # PM publisher typography uses `i`/`j` interchangeably for the
+    # *i* phoneme in OK female titles; `mitrt` is the form used in
+    # G 3050 (PM III.1 p.98 verbatim), so chunk-9 normalises uniformly.
+    ("G3035", "co_occupant_roles"): {
+        "value": ["Wife, mitrt"],
+        "rationale": (
+            "Egyptologist PR #228 P3: G 3035 wife title `mjtrt` "
+            "normalised to `mitrt` matching G 3050 (PM III.1 p.98) "
+            "tie-break override. PM publisher typography variance "
+            "between `mjtrt`/`mitrt` is OCR-level noise; standardise "
+            "on `mitrt` for source-wide consistency."
+        ),
+    },
+    ("G3035", "notes_from_pm"): {
+        "value": "Judge and Scribe. Dyn. VI. Wife, Nefert mitrt.",
+        "rationale": (
+            "Egyptologist PR #228 P3: companion to the "
+            "co_occupant_roles fix — notes_from_pm also normalised "
+            "`mjtrt` → `mitrt`."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -731,7 +836,9 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
     CHUNK6_CORRECTIONS,
+    CHUNK7_CORRECTIONS,
     CHUNK8_CORRECTIONS,
+    CHUNK9_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
