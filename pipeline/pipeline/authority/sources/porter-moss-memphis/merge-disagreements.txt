@@ -156,6 +156,57 @@ G2430 (Hetepniptah):
   co_occupants: a=["Khaʿmerernebti"] | b=["Khaamerernebti"] | c=["Khaʿmerernebti"]  → chose ["Khaʿmerernebti"]
   notes_from_pm: a="Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Wife, Khaʿmerernebti Prophetess of Hathor in all her places, etc. Stone-built mastaba. LG 25." | b="Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25." | c="Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25."  → chose "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25."
 
+G3004 (Khufumerneteru):
+  notes_from_pm: a="Overseer of the ten of the boat, etc. Dyn. VI." | b="Overseer of the ten of the boat, etc. Dyn. VI." | c="Overseer of the ten of the boat, etc. Dyn. VI. Brick-built mastaba."  → chose "Overseer of the ten of the boat, etc. Dyn. VI."
+
+G3008 (Snefruḥotp):
+  co_occupant_roles: a=["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."] | b=["Wife, Prophetess of Hathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."] | c=["Wife, called Inti, Prophetess of Hathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways"]  → chose ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."]
+  co_occupants: a=["Khenut"] | b=["Khenut called Inti"] | c=["Khenut"]  → chose ["Khenut"]
+  notes_from_pm: a="Inspector of wad-priests of the Pyramid of Snefru, Greatest of the Ten of Upper Egypt, etc. Dyn. VI. Wife, Khenut called Inti Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc." | b="Inspector of wad-priests of the Pyramid of Snefru, Greatest of the Ten of Upper Egypt, etc. Dyn. VI. Wife, Khenut called Inti Prophetess of Hathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc." | c="Inspector of waʿb-priests of the Pyramid of Snefru, Greatest of the Ten of Upper Egypt, etc. Dyn. VI. Wife, Khenut called Inti Prophetess of Hathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc. Stone-built mastaba lined with bricks."  → chose "Inspector of waʿb-priests of the Pyramid of Snefru, Greatest of the Ten of Upper Egypt, etc. Dyn. VI. Wife, Khenut called Inti Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."
+
+G3015 (None):
+  notes_from_pm: a="Dyn. VI." | b="Dyn. VI." | c="Dyn. VI. Stone-built mastaba."  → chose "Dyn. VI."
+
+G3020 (Semerka):
+  notes_from_pm: a="Royal acquaintance, Prophet of Khnem-khufu, etc. Dyn. VI." | b="Royal acquaintance, Prophet of Khnem-khufu, etc. Dyn. VI." | c="Royal acquaintance, Prophet of Khnem-khufu, etc. Dyn. VI. Stone-built mastaba."  → chose "Royal acquaintance, Prophet of Khnem-khufu, etc. Dyn. VI."
+
+G3033 (Sabef):
+  notes_from_pm: a="ka-servant. Dyn. VI." | b="ka-servant. Dyn. VI." | c="ka-servant. Dyn. VI. Brick-built mastaba with stone débris filling."  → chose "ka-servant. Dyn. VI."
+
+G3035 (Thenti):
+  co_occupant_roles: a=["Wife, mjtrt"] | b=["Wife, mjtrt"] | c=["Wife"]  → chose ["Wife, mjtrt"]
+  notes_from_pm: a="Judge and Scribe. Dyn. VI. Wife, Nefert mjtrt." | b="Judge and Scribe. Dyn. VI. Wife, Nefert mjtrt." | c="Judge and Scribe. Dyn. VI. Wife, Nefert mjtrt. Brick-built mastaba with stone débris filling."  → chose "Judge and Scribe. Dyn. VI. Wife, Nefert mjtrt."
+
+G3050 (ʿAnkh):
+  co_occupant_roles: a=["Wife, mjtrt"] | b=["Wife, mitrt"] | c=["Wife"]  → chose ["Wife, mitrt"]
+  notes_from_pm: a="ka-servant. Dyn. VI. Wife, Kednefert mjtrt." | b="ka-servant. Dyn. VI. Wife, Kednefert mitrt." | c="ka-servant. Dyn. VI. Wife, Kednefert mitrt. Brick-built mastaba with probably stone filling."  → chose "ka-servant. Dyn. VI. Wife, Kednefert mitrt."
+
+G3082 (Senka):
+  notes_from_pm: a="Overseer of washermen. Dyn. VI." | b="Overseer of washermen. Dyn. VI." | c="Overseer of washermen. Dyn. VI. Stone-built mastaba."  → chose "Overseer of washermen. Dyn. VI."
+
+G3086 (Ruz):
+  notes_from_pm: a="Prophet of Khufu, Raʿzedef, and Khephren, waab-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance." | b="Prophet of Khufu, Raʿzedef, and Khephren, waab-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance." | c="Prophet of Khufu, Raʿdjedef, and Khephren, waʿb-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance. Brick-built mastaba."  → chose "Prophet of Khufu, Raʿzedef, and Khephren, waab-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance."
+  shared_with_tombs: a=[] | b=["G3098"] | c=[]  → chose []
+
+G3093 (Mededi):
+  co_occupant_roles: a=["Wife, Prophetess of Neith Opener-of-the-Ways, and of Ḥathor Mistress-of-the-Sycamore, etc."] | b=["Wife, Prophetess of Neith Opener-of-the-Ways, and of Hathor Mistress-of-the-Sycamore, etc."] | c=["Wife, Prophetess of Neith Opener-of-the-Ways, and of Hathor Mistress-of-the-Sycamore"]  → chose ["Wife, Prophetess of Neith Opener-of-the-Ways, and of Ḥathor Mistress-of-the-Sycamore, etc."]
+  notes_from_pm: a="Supervisor of directors of the expedition, etc. Dyn. VI. Wife, Khnemt Prophetess of Neith Opener-of-the-Ways, and of Ḥathor Mistress-of-the-Sycamore, etc." | b="Supervisor of directors of the expedition, etc. Dyn. VI. Wife, Khnemt Prophetess of Neith Opener-of-the-Ways, and of Hathor Mistress-of-the-Sycamore, etc." | c="Supervisor of directors of the expedition, etc. Dyn. VI. Wife, Khnemt Prophetess of Neith Opener-of-the-Ways, and of Hathor Mistress-of-the-Sycamore, etc. Mastaba with stone filling lined with bricks."  → chose "Supervisor of directors of the expedition, etc. Dyn. VI. Wife, Khnemt Prophetess of Neith Opener-of-the-Ways, and of Ḥathor Mistress-of-the-Sycamore, etc."
+
+G3094 (Khetu):
+  notes_from_pm: a="Overseer of the Treasury, etc. Dyn. VI." | b="Overseer of the Treasury, etc. Dyn. VI." | c="Overseer of the Treasury, etc. Dyn. VI. Mastaba with stone filling lined with bricks."  → chose "Overseer of the Treasury, etc. Dyn. VI."
+
+G3096 (Nezsu):
+  notes_from_pm: a="Supervisor. Dyn. VI." | b="Supervisor. Dyn. VI." | c="Supervisor. Dyn. VI. Brick-built mastaba."  → chose "Supervisor. Dyn. VI."
+
+G3097 (Neferhi):
+  notes_from_pm: a="King's adorner and Keeper of unguents, etc. Dyn. VI." | b="King's adorner and Keeper of unguents, etc. Dyn. VI." | c="King's adorner and Keeper of unguents, etc. Dyn. VI. Mastaba with stone filling lined with bricks."  → chose "King's adorner and Keeper of unguents, etc. Dyn. VI."
+
+G3098 (Iymerery):
+  co_occupant_roles: a=["Wife, Royal acquaintance", "King's adorner, etc. (north-east annexe; woman); Father, Duareʿ King's son of his body"] | b=["Wife, Royal acquaintance", "(woman), King's adorner, etc. Dyn. VI. Father, Duareʿ King's son of his body. North-east annexe."] | c=["Wife, Royal acquaintance", "King's adorner, etc. (in north-east annexe); Father, Duarea King's son of his body"]  → chose ["Wife, Royal acquaintance", "King's adorner, etc. (woman, north-east annexe). Father, Duareʿ King's son of his body."]
+  co_occupants: a=["Personet", "Neferhetpes-wer"] | b=["Personet", "Neferḥetpes-Wer"] | c=["Personet", "Neferḥetpes-Wer"]  → chose ["Personet", "Neferḥetpes-Wer"]
+  notes_from_pm: a="With annexe. (a) Iymerery waab-priest of the King's mother, Inspector of waab-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferhetpes-wer (woman), King's adorner, etc. Dyn. VI. Father, Duareʿ King's son of his body. North-east annexe." | b="with annexe. (a) waab-priest of the King's mother, Inspector of waab-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferḥetpes-Wer (woman), King's adorner, etc. Dyn. VI. Father, Duareʿ King's son of his body. North-east annexe." | c="with annexe. Mastaba with stone filling lined with bricks. (a) Iymerery waʿb-priest of the King's mother, Inspector of waʿb-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferḥetpes-Wer (woman), King's adorner, etc. Dyn. VI. Father, Duarea King's son of his body. North-east annexe."  → chose "with annexe. (a) Iymerery waʿb-priest of the King's mother, Inspector of waʿb-priests, Overseer of the dockyard, etc. Dyn. VI. Wife, Personet Royal acquaintance. (b) Neferḥetpes-Wer (woman), King's adorner, etc. Dyn. VI. Father, Duareʿ King's son of his body. North-east annexe."
+  shared_with_tombs: a=[] | b=["G3086"] | c=[]  → chose []
+
 G7000x (Hetepheres I):
   notes_from_pm: a="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)." | b="TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr." | c="TOMB OF HETEPHERES [I]¹ Temp. Khufu. Husband, Snefru. Son, Khufu."  → chose "TOMB OF HETEPHERES [I]. Temp. Khufu. Husband, Snefru. Son, Khufu. No superstructure. Re-burial, transferred from unidentified tomb probably at Dahshûr. Reisner Excavation. Harvard-Boston Expedition (1925-7)."
 

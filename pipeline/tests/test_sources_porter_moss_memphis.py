@@ -197,9 +197,26 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
     "G2501",
 })
 
+# Chunk 9: Gîza § III.A West Field Cemetery G 3000 (Fisher Minor Cemetery).
+# Source: PM III.1 2nd ed. 1974, § III. NECROPOLIS — A. WEST FIELD continuation,
+# physical pp.92–96 / printed pp.95–99. 14 rows: 13 Shape-1 named-primary +
+# 1 Shape-2 bare-suffix (G 3015). The "Minor Cemetery" was excavated by
+# Clarence S. Fisher for the Penn Eckley B. Coxe Jr. Expedition (1915).
+# 6 tie-break-overrides resolve 1/1/1 ties on G 3008 (Snefruḥotp + wife
+# Khenut called Inti, role and notes), G 3050 (ʿAnkh ka-servant + wife
+# Kednefert mitrt, role and notes), G 3093 (Mededi + wife Khnemt with
+# Neith/Ḥathor titles, role and notes), G 3098 (Iymerery + annexe
+# occupant Neferḥetpes-Wer + father Duareʿ, role and notes).
+CHUNK9_TOMB_IDS: frozenset[str] = frozenset({
+    "G3004", "G3008", "G3015", "G3020", "G3033", "G3035",
+    "G3050", "G3082", "G3086", "G3093", "G3094", "G3096",
+    "G3097", "G3098",
+})
+
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
+    | CHUNK9_TOMB_IDS
 )
 
 
@@ -403,14 +420,17 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK8_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK9_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
-    """Chunks 1-3, 6, 7, 8 cite PM III.1; chunks 4 and 5 cite PM III.2."""
+    """Chunks 1-3, 6, 7, 8, 9 cite PM III.1; chunks 4 and 5 cite PM III.2."""
     for row in _rows():
         if row["tomb_id"] in (
             CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
             | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
+            | CHUNK9_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS:
@@ -439,6 +459,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 66 <= page <= 83, f"{row['tomb_id']} page {page} outside chunk-7 [66, 83]"
         elif row["tomb_id"] in CHUNK8_TOMB_IDS:
             assert 83 <= page <= 95, f"{row['tomb_id']} page {page} outside chunk-8 [83, 95]"
+        elif row["tomb_id"] in CHUNK9_TOMB_IDS:
+            assert 95 <= page <= 99, f"{row['tomb_id']} page {page} outside chunk-9 [95, 99]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -486,6 +508,10 @@ def test_cemetery_by_chunk() -> None:
             # into G 2300 + G 2400 by Reisner-number range; CEMETERY
             # G 2500 is the third banner.
             assert row["cemetery"] in {"G 2300", "G 2400", "G 2500"}, row
+        elif row["tomb_id"] in CHUNK9_TOMB_IDS:
+            # Chunk 9: single CEMETERY G 3000 banner (Fisher's "Minor
+            # Cemetery", Penn Coxe Expedition 1915).
+            assert row["cemetery"] == "G 3000", row
 
 
 def test_dynasty_assignments() -> None:
@@ -529,6 +555,12 @@ def test_dynasty_assignments() -> None:
             # officials (Senezemib clan etc.). Bare-suffix shafts with
             # no PM dating marker (G2347a) carry `dynasty: null`.
             assert row["dynasty"] in {"5", "6", None}, row
+        elif row["tomb_id"] in CHUNK9_TOMB_IDS:
+            # Fisher Minor Cemetery is almost entirely Dyn VI (most
+            # headwords explicitly print `Dyn. VI.`). G 3015 (bare-
+            # suffix Shape-2) explicitly carries `Dyn. VI.` in its
+            # dating-only headword so dynasty = "6", not null.
+            assert row["dynasty"] == "6", row
 
 
 # === content / value assertions =============================================
@@ -1794,3 +1826,92 @@ def test_chunk8_g2501_lone_cemetery_g2500_bare_suffix() -> None:
     assert row["cemetery"] == "G 2500"
     assert row["occupant_name"] is None
     assert row["occupant_role"] == "Unknown"
+
+
+# === chunk 9 content tests ==================================================
+
+
+def test_chunk9_row_count_14() -> None:
+    """Chunk 9 emits 14 rows under PM's CEMETERY G 3000 (Fisher's
+    Minor Cemetery) banner — 13 Shape-1 named-primary + 1 Shape-2
+    bare-suffix (G 3015 dating-only headword)."""
+    chunk9 = [r for r in _rows() if r["tomb_id"] in CHUNK9_TOMB_IDS]
+    assert len(chunk9) == 14
+
+
+def test_chunk9_g3008_snefruhotp_wife_khenut_called_inti() -> None:
+    """G 3008 SNEFRUḤOTP Inspector of waʿb-priests of the Pyramid of
+    Snefru. Wife Khenut (beautiful name Inti) is Prophetess of Ḥathor
+    and Neith. Tie-break override on notes preserves the full wife
+    clause + ayin-normalised `waʿb-priests` + underdot-Ḥathor."""
+    row = _by_id("G3008")
+    assert row["occupant_name"] == "Snefruḥotp"
+    assert row["co_occupants"] == ["Khenut"]
+    assert row["co_occupant_roles"] == [
+        "Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Neith Opener-of-the-Ways, etc."
+    ]
+    assert row["dynasty"] == "6"
+    assert "waʿb-priests" in row["notes_from_pm"]
+    assert "Khenut called Inti" in row["notes_from_pm"]
+    assert "Ḥathor" in row["notes_from_pm"]
+
+
+def test_chunk9_g3015_bare_suffix_dyn_vi() -> None:
+    """G 3015. Dyn. VI. — Shape-2 bare-suffix with dating-only
+    headword. Dynasty extracted from the marker, occupant null."""
+    row = _by_id("G3015")
+    assert row["occupant_name"] is None
+    assert row["occupant_role"] == "Unknown"
+    assert row["attribution_certainty"] == "uncertain"
+    assert row["dynasty"] == "6"
+
+
+def test_chunk9_g3050_ankh_ka_servant_leading_ayin() -> None:
+    """G 3050 ʿANKH ka-servant. Leading raised-`a` normalised to U+02BF
+    ayin (chunks 1-8 source-wide convention). Wife Kednefert carries
+    the OK female title `mitrt` preserved PM-verbatim."""
+    row = _by_id("G3050")
+    assert row["occupant_name"] == "ʿAnkh"
+    assert row["co_occupants"] == ["Kednefert"]
+    assert row["co_occupant_roles"] == ["Wife, mitrt"]
+    assert row["dynasty"] == "6"
+
+
+def test_chunk9_g3086_ruz_prophet_of_three_kings() -> None:
+    """G 3086 Ruz Prophet of Khufu, Raʿzedef, and Khephren — Dyn-IV
+    royal-cult triad. Egyptological ayin restored on Raʿzedef (PM
+    prints `Raazedef`)."""
+    row = _by_id("G3086")
+    assert row["occupant_name"] == "Ruz"
+    assert "Raʿzedef" in row["notes_from_pm"] or "Raʿdjedef" in row["notes_from_pm"]
+
+
+def test_chunk9_g3098_annexe_pair_single_row() -> None:
+    """G 3098 `with annexe.` is a chunk-9 single-row annexe-pair (per
+    prompt rule, distinct from chunk-7's separately-headworded
+    G 2100-I-annexe). One row holds both occupants: (a) Iymerery
+    waʿb-priest, (b) Neferḥetpes-Wer (woman) King's adorner in the
+    north-east annexe, daughter of Duareʿ King's son of his body.
+    Tie-break overrides on notes + co_occupant_roles synthesise the
+    egyptologically-faithful elements across the three agents."""
+    row = _by_id("G3098")
+    assert row["occupant_name"] == "Iymerery"
+    assert "with annexe." in row["notes_from_pm"]
+    assert "Iymerery" in row["notes_from_pm"]
+    assert "Neferḥetpes-Wer" in row["notes_from_pm"]
+    assert "Duareʿ" in row["notes_from_pm"]
+    assert "Personet" in row["co_occupants"]
+    # Annexe occupant captured as co-occupant or in notes; verify the
+    # annexe-position phrase reaches notes_from_pm at minimum.
+    assert "annexe" in row["notes_from_pm"].lower()
+
+
+def test_chunk9_all_named_rows_dyn_vi() -> None:
+    """Fisher Minor Cemetery is essentially a Dyn-VI assemblage —
+    every named row's headword carries `Dyn. VI.` (some via `Temp.
+    Khufu and Raʿzedef and Khephren` cross-reference for G 3086, but
+    the dating tail still resolves to Dyn IV → no wait, G 3086 is
+    later; checked by data). Verify all 14 chunk-9 rows are dynasty
+    "6"."""
+    for tid in CHUNK9_TOMB_IDS:
+        assert _by_id(tid)["dynasty"] == "6", tid
