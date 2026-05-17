@@ -9,13 +9,13 @@ The authority layer (rulers, dynasties, periods, sites, and their interrelations
 
 Four problems with the current shape have surfaced as the layer approaches completion:
 
-1. **Reconciliation silently picks winners across sources.** When Leprohon and Dodson-Hilton disagree on a reign date, one is dropped. The Phase 0 reconciliation step produces a single "winning" value, baked into one entity per ruler. This violates Rule 2 (no silent arbitrary picks) at the cross-source layer: the resolution rule isn't documented as deterministic. It is also bad scholarship — Egyptological disagreement is normal content to expose, not vandalism to resolve.
+1. **The naive path to a consolidated authority silently picks winners across sources.** Phase 0 reconciliation today is per-source: each `reconciled.jsonl` resolves *intra-source* agent disagreement per Rule 2 (unanimity, majority, explicit override in `tie-break-overrides.json`, or documented deterministic policy). The cross-source consolidation step does not exist yet. The straightforward implementation — load all the `reconciled.jsonl` files, key by ruler, collapse to one row per ruler — would force a choice when Leprohon and Dodson-Hilton disagree on a reign date. One would be dropped, silently, with no Rule-2 path: no agent vote applies across sources; no override file exists at the cross-source layer; no deterministic resolution policy is committed. This ADR specifies the consolidated layer precisely so that collapse never happens. It is also bad scholarship to begin with — Egyptological disagreement is normal content to expose, not vandalism to resolve.
 
 2. **Domain relationships aren't first-class.** Co-regency, succession, "buried in," "shares tomb with," dynastic family — these are graph-shaped facts squashed into flat fields (`ruler_ids: []` arrays for joint reigns) or implicit conventions. Adding a new relationship type requires a schema change.
 
 3. **Provenance is implicit.** Each authority file traces to a source as a whole, but individual *facts* don't carry per-claim citations. The reviewer-cited rationale in `tie-break-overrides.json` (1,847 lines for Leprohon alone) sits structurally disconnected from the reconciled rows it justifies.
 
-4. **The matching pipeline (Phase B) needs richer queries against authority.** ADR-009's Stage 2 fuzzy fallback is "Haiku triage with artifact context" without specifying a mechanism. Constraint-narrowed matching — "find rulers buried in KV34 in Dynasty 18" against an unknown name — requires structured graph queries that flat JSON can't serve cheaply.
+4. **The matching pipeline (Phase B) needs richer queries against authority.** ADR-009's Stage 2 fuzzy fallback is "Haiku triage with artifact context" without specifying a mechanism. Constraint-narrowed matching — "find Dynasty 18 rulers whose original burial is KV43" against an unknown name — requires structured graph queries that flat JSON can't serve cheaply. It also requires the authority layer to encode different tomb relationships (owner, original burial, secondary cache) as distinct predicates rather than a single ambiguous `buried_in`.
 
 A pilot load of Leprohon (395 rows) + Beckerath (174 rows, 166 non-marker) into Neo4j Aura (May 2026) confirmed qualitatively that exact name overlap across sources is sparse — single-digit counts under naive lowercase match, low double-digit counts under light punctuation/diacritic normalisation, with the exact number depending sensitively on the normalisation choice. Leprohon's English forms ("Amenhotep III", "Thutmose III") and Beckerath's German forms ("Amenophis III.", "Tuthmosis III.") name the same rulers differently. Cross-source identity is a substantive scholarly claim, not a string-equality coincidence.
 
@@ -68,15 +68,15 @@ Edges use CIDOC property identifiers as primary, with `hapi:` namespace for rela
    - **The actor who performed the attribute assignment** — an E39 Actor (E21 Person for an individual scholar or curator; E74 Group for a curatorial body or society). Attached via `P14_carried_out_by`.
    - **The documentary source where the claim is recorded** — an E31 Document (a publication, an authority release, a curator-decision record). Attached via `P70i_is_documented_in`, with page citations carried as properties of that edge.
 
-   For a Leprohon claim, the actor is the scholar Jean-Pierre Pâté Leprohon (`:E21 Person`) and the document is the 2013 book (`:E31 Document`). A publication is not itself an actor in CIDOC — E39 Actor requires capacity for intentional action — so publication nodes are documents, never actors.
+   For a Leprohon claim, the actor is the scholar Ronald J. Leprohon (`:E21 Person`) and the document is the 2013 book *The Great Name: Ancient Egyptian Royal Titulary* (`:E31 Document`). A publication is not itself an actor in CIDOC — E39 Actor requires capacity for intentional action — so publication nodes are documents, never actors.
 
    Automated processes — matchers, alias-expanders, derivation rules — are `:Matcher` nodes attributed via a Hapi-namespaced `hapi:derived_by` edge. This is a **declared deviation from CRM 7.1.3**: CIDOC has no clean E39 subclass for software agents, and Hapi deliberately encodes the trust difference at the edge type. A Statement reached via `P14_carried_out_by → :E21 Person | :E74 Group` carries human-scholarly weight; one reached via `hapi:derived_by → :Matcher` carries computational-derivation weight. UI, search index, and review workflows can filter by edge type without parsing a `type` property.
 
 2. **Cross-source disagreements are preserved.** When Leprohon claims reign-start −1390 and Dodson-Hilton claims −1391 for the same ruler, two Statements with the same predicate and different values coexist, each tracing to its source. Reconciliation does not pick a winner at the data layer. The resolution policy (which one a downstream consumer sees) is per-predicate and lives outside the graph — see principle 7.
 
-3. **Per-agent disagreements are extraction artifacts, not data.** The 3-arbiter blind-extraction process is a quality gate on faithfulness to the source. If agents disagree, the source-chunk is iterated (re-extract, re-prompt, human page read) until convergence. Agent-level structure must never appear in the graph — it is pipeline scaffolding.
+3. **Per-agent disagreements are extraction artifacts, not data.** The 3-arbiter blind-extraction process is a quality gate on faithfulness to the source. Per CLAUDE.md Rule 2, agent disagreement resolves to exactly one of: (a) unanimity, (b) a real majority (>50%), (c) an explicit per-row override committed in the source's `tie-break-overrides.json` with cited rationale, or (d) a deterministic policy documented in code or the source's README. Anything else fails loud — not all disagreements naturally converge, which is exactly why `tie-break-overrides.json` exists per source. Whichever resolution applies, what loads as an E13 Statement is the *resolved* value, attributed to the publication (`P14_carried_out_by` → the scholar; `P70i_is_documented_in` → the publication). Agent-level structure never appears in the graph — it is pipeline scaffolding.
 
-4. **Open schema, enforced registry.** Predicates and relationship types are *data*, not DDL. Adding `hapi:shares_tomb_with` is an INSERT into the predicate registry, not a migration. The registry is the verify-before-create enforcement point: every Statement's `predicate` is FK-validated against it (Rule 3 — deterministic enforcement over convention). No agent or contributor invents a predicate; a new one is proposed against the registry, reviewed for overlap with existing predicates, and added once.
+4. **Open schema, enforced registry.** Predicates and relationship types are *data*, not DDL. Adding `hapi:shares_tomb_with` is an INSERT into the predicate registry, not a migration. The registry materialises the `:E55 Type` catalogue that every E13's `P177_assigned_property_of_type` edge points at, and is the verify-before-create enforcement point: an E13 whose `P177` target does not resolve to a registered `:E55 Type` fails the load (Rule 3 — deterministic enforcement over convention). No agent or contributor invents a predicate; a new one is proposed against the registry, reviewed for overlap with existing predicates, and added once.
 
 5. **All Statement values are E1 CRM Entity references; literals live on value-bearing entities.** `P141_assigned` has range E1 CRM Entity in CRM 7.1.3 — literals are not E1. The Hapi model is faithful to this:
    - A name claim like "Narmer's Horus name is 'nar mer'" assigns an `:E41 Appellation` value entity that carries the literal as a property accessed via `P190_has_symbolic_content`.
@@ -95,7 +95,7 @@ Edges use CIDOC property identifiers as primary, with `hapi:` namespace for rela
 The canonical display name (ADR-016 "Conventional English Display Form" — "Khufu" not "Cheops", "Amenhotep III" not "Amenophis III") is the first per-predicate resolution policy committed to the registry. It also serves as the template for future per-predicate policies.
 
 **Model.** All display-name claims — Leprohon's "Amenhotep III", Beckerath's "Amenophis III.", and the curator's canonical choice — share the **same predicate type** (`:E55 Type {id: 'hapi:display_name'}` linked via P177). They are differentiated by their actor + document:
-- Leprohon's claim: `P14 → :E21 Person {id: 'leprohon_jp'}` and `P70i → :E31 Document {id: 'leprohon_2013'}`.
+- Leprohon's claim: `P14 → :E21 Person {id: 'leprohon_rj'}` and `P70i → :E31 Document {id: 'leprohon_2013'}`.
 - Curator claim: `P14 → :E74 Group {id: 'hapi_curatorial'}` and `P70i → :E31 Document {id: 'hapi_display_names_2026_05', kind: 'curator_decision_batch'}`.
 
 Predicates describe *what* the claim is about; the actor + document describe *who said it where* — keeping the canonical-vs-source-original distinction in provenance rather than predicate preserves the uniform claim model.
@@ -138,7 +138,7 @@ Every claim is an E13 Statement carrying exactly five canonical CIDOC edges (wit
                                            appellation_kind: 'horus_name'
                                        })
   -[:P177_assigned_property_of_type]-> (:Type:E55 {id: 'hapi:horus_name'})
-  -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_jp'})
+  -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_rj'})
   -[:P70i_is_documented_in {
         cited_page: 115,
         cited_pdf_page: 142
@@ -149,7 +149,7 @@ Every claim is an E13 Statement carrying exactly five canonical CIDOC edges (wit
   -[:P140_assigned_attribute_to]->    (:Ruler {leprohon::leprohon-5.07})
   -[:P141_assigned]->                  (:Dynasty:E4_Period {number: 5})
   -[:P177_assigned_property_of_type]-> (:Type:E55 {id: 'hapi:belongs_to_dynasty'})
-  -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_jp'})
+  -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_rj'})
   -[:P70i_is_documented_in]->          (:Document:E31 {id: 'leprohon_2013'})
 
 // (3) A reign-date claim. Value is an E52 Time-Span (begin/end via P82a/P82b inlined as props).
@@ -161,18 +161,34 @@ Every claim is an E13 Statement carrying exactly five canonical CIDOC edges (wit
                                            calendar: 'astronomical_year'
                                        })
   -[:P177_assigned_property_of_type]-> (:Type:E55 {id: 'hapi:reign_period'})
-  -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_jp'})
+  -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_rj'})
   -[:P70i_is_documented_in]->          (:Document:E31 {id: 'leprohon_2013'})
 
-// (4) A cross-source identity claim attributed to a matcher (declared deviation —
-//     no P14 to an E39 Actor; hapi:derived_by points at a :Matcher node instead).
+// (4) A cross-source identity claim attributed to a matcher RUN (declared deviation —
+//     no P14 to an E39 Actor; hapi:derived_by points at the :MatcherRun that produced
+//     this Statement, which references the algorithm-level :Matcher catalogue entry).
+//     Confidence is a property of the Statement; the run carries the reproducibility
+//     metadata (input commit, parameter hash, timestamp, reviewer status) so any
+//     score can be regenerated or rejected.
 (:Statement:E13 {confidence: 0.94})
   -[:P140_assigned_attribute_to]->    (:Ruler {leprohon::leprohon-5.07})
   -[:P141_assigned]->                  (:Ruler {beckerath::05.07})
   -[:P177_assigned_property_of_type]-> (:Type:E55 {id: 'hapi:same_entity_as'})
-  -[:hapi:derived_by]->                (:Matcher {id: 'normalized_name_v1',
-                                                  version: '0.1.0',
-                                                  method: 'name+dynasty'})
+  -[:hapi:derived_by]->                (:MatcherRun {
+                                           run_id:               'matcher_run_2026_05_17T14_22Z',
+                                           matcher_id:           'normalized_name_v1',
+                                           matcher_version:      '0.1.0',
+                                           input_dataset_commit: 'a8f3e9d...',
+                                           parameters_hash:      'sha256:7c4...',
+                                           started_at:           '2026-05-17T14:22:31Z',
+                                           completed_at:         '2026-05-17T14:24:08Z',
+                                           reviewer_status:      'pending'
+                                                                  // pending | approved | rejected | superseded
+                                       })
+                                           -[:hapi:uses_matcher]-> (:Matcher {id: 'normalized_name_v1',
+                                                                              version: '0.1.0',
+                                                                              algorithm: 'lowercase+strip_diacritics+token_match',
+                                                                              hyperparameters_json: '{"min_dynasty_match": true}'})
 
 // (5) Curator-decision display name. Actor is the curatorial Group; document is the dated decision batch.
 (:Statement:E13)
@@ -194,15 +210,24 @@ Every claim is an E13 Statement carrying exactly five canonical CIDOC edges (wit
 (:Site:E27          {id})
 
 // Actor and document catalogues
-(:Person:E21   {id: 'leprohon_jp',        full_name: 'Jean-Pierre Pâté Leprohon'})
+(:Person:E21   {id: 'leprohon_rj',        full_name: 'Ronald J. Leprohon'})
 (:Group:E74    {id: 'hapi_curatorial',    name: 'Hapi curatorial body'})
 (:Document:E31 {id: 'leprohon_2013',      kind: 'publication', citation, year, language})
 (:Document:E31 {id: 'hapi_display_names_2026_05',
                 kind: 'curator_decision_batch',
                 decided_at, rationale, supersedes})
 
-// Matcher catalogue (Hapi-only; outside CRM)
-(:Matcher {id, version, algorithm, hyperparameters_json})
+// Matcher catalogue and run records (Hapi-only; outside CRM)
+//   :Matcher    — the algorithm definition (what code, what version, what hyperparameters)
+//   :MatcherRun — a specific execution that produced one or more Statements (when, on what
+//                 input commit, with what parameter hash, current reviewer status)
+// Every confidence/score on a derived Statement is reproducible by replaying the
+// MatcherRun against its input_dataset_commit with its parameters_hash.
+(:Matcher    {id, version, algorithm, hyperparameters_json})
+(:MatcherRun {run_id, matcher_id, matcher_version,
+              input_dataset_commit, parameters_hash,
+              started_at, completed_at,
+              reviewer_status, reviewer_id, reviewed_at})
 ```
 
 Page-level citation lives as properties on the `P70i_is_documented_in` edge, not on the P14 edge — P14 attributes the *act* of assignment to its agent and has no slot for evidence pointers; P70i is the natural CIDOC home for "this assignment is recorded in this document at this page."
@@ -255,18 +280,28 @@ The trade hinges on whether artifacts move into the graph (architecturally clean
 
 ## Implications for matching (ADR-009)
 
-The graph reshapes Stage 2 of the matching algorithm. Today: fuzzy string distance over all aliases, with Haiku triage for context. With this model: **constraint-narrow the candidate set via graph queries, then match name against the narrowed set.** For an artifact carrying "Amenhotep, KV35, Dynasty 18," the graph answers "rulers where `buried_in = KV35 AND dynasty = 18`" — KV35 is securely Amenhotep II's tomb, so the four Dynasty-18 Amenhoteps (I through IV) collapse to a single candidate before name matching runs. The Haiku step becomes a fallback for genuinely ambiguous cases (overlapping co-regencies, post-burial usurpations) rather than the primary disambiguation mechanism.
+The graph reshapes Stage 2 of the matching algorithm. Today: fuzzy string distance over all aliases, with Haiku triage for context. With this model: **constraint-narrow the candidate set via graph queries, then match name against the narrowed set.**
+
+Consider an artifact carrying "Thutmose, KV43, Dynasty 18." Among the four Dynasty 18 Thutmoses (I, II, III, IV), KV43 is securely the tomb Thutmose IV commissioned and was originally buried in. A query against `hapi:original_burial = KV43 AND hapi:dynasty = 18` collapses the candidate set to one before name matching runs.
+
+The example also illustrates why tomb references demand careful predicate granularity. "Tomb" is not one relationship: it is at least three, each of which can disagree.
+
+- `hapi:tomb_owner` — the ruler the tomb was commissioned for. Stable across cache reburials.
+- `hapi:original_burial_in` — the ruler whose body was first interred there. Usually but not always the same as the owner.
+- `hapi:cache_context_at` — the location of a *secondary* burial, typically the Dynasty 21 priestly reburials at KV35 (Amenhotep II's tomb, used as a cache for many other Dynasty 18 and 19 royals) and TT320/DB320 (the Deir el-Bahari royal cache).
+
+A naive `hapi:buried_in` predicate that conflates these three loses information and produces wrong matches: a stela of Ramesses I found in the KV35 cache is not evidence that Ramesses I owned, was originally buried in, or has any primary association with KV35 — it was moved there ~400 years after his death. The open schema accommodates the distinction natively; rigorous matching demands it. The Haiku step becomes a fallback for genuinely ambiguous cases (overlapping co-regencies, post-burial usurpations, ambiguous cache attributions), not the primary disambiguation mechanism.
 
 A follow-up ADR will revise ADR-009 to specify the constraint-narrowed algorithm in detail once storage tech is decided.
 
 ## Consequences
 
-- **Phase 0 output shape changes.** Sources still produce `reconciled.jsonl`, but the downstream loader emits per-source Statements, not reconciled per-entity rows. The 3-agent extraction step's job is unchanged (faithful capture of the source); the convergence rate becomes a quality gate — rows where agents diverge are flagged for re-extraction, not silently tie-broken.
+- **Phase 0 output shape changes.** Sources still produce `reconciled.jsonl`, but the downstream loader emits per-source E13 Statements, not collapsed per-entity rows. The 3-agent extraction step's job is unchanged (faithful capture of the source); per-row resolution still follows the Rule-2 decision tree (unanimity / majority / `tie-break-overrides.json` / documented policy) — the loader trusts whatever the existing pipeline emits and never re-resolves at the graph layer.
 - **Reconciliation semantics change.** "Reconciliation" no longer means "pick one value across sources"; it means "load all sources' claims into the graph and let the resolution policy (per-predicate, per-consumer) decide what to surface." The current `tie-break-overrides.json` becomes Statement-level reviewer rationale with citation metadata, joined to the Statements it justifies.
 - **Disagreements become first-class artifacts.** The UI can honestly show "1353–1336 BCE (Leprohon 2013) / 1352–1335 BCE (Dodson-Hilton 2010)" instead of pretending certainty it doesn't have. Authority disagreements appear in search snippets, hover cards, and the artifact detail page.
 - **Cross-source identity becomes data, not a structural primitive.** Adding a new source (Hornung, Kitchen, Ryholt) does not require re-curation of existing entities. It adds per-source nodes that get linked to existing nodes via `hapi:same_entity_as` Statements — automated (matcher-attributed) where confident, queued for human review (curator-attributed when approved) otherwise. A canonical-person view, if needed, can be derived from `same_entity_as` clusters as a materialized view; the source of truth remains the per-source nodes plus their identity claims.
 - **The predicate registry becomes the vocabulary contract.** Any new relationship type proposed by an agent, a Phase 0 chunk, or a contributor must be reviewed against the registry. The CI check is FK-enforced at the DB layer; convention is not enough.
-- **Citation network becomes queryable.** The 793 citation tokens currently buried as text inside Leprohon's `source_note` fields (referencing Beckerath 1999, Gauthier 1907, Wilkinson 2000, etc.) become REFERENCES edges from Statements to Citation nodes, queryable as "claims about Akhenaten that cite Wilkinson" or "what does Leprohon cite that we have no authority data for."
-- **`attested_in` becomes the bridge to artifacts.** The 658 attestation entries currently nested inside name qualifiers become explicit edges from Name Statements to Inscription / Artifact nodes, linking the authority layer to the museum layer at the data level.
+- **Citation network becomes queryable.** Citation tokens currently buried as text inside Leprohon's `source_note` fields (referencing Beckerath 1999, Gauthier 1907, Wilkinson 2000, etc.) become explicit edges from Statements to Citation nodes, queryable as "claims about Akhenaten that cite Wilkinson" or "what does Leprohon cite that we have no authority data for." (Specific counts intentionally omitted: a reproducible script for inventorying citation tokens and attestation entries across sources is a Proposed → Accepted prerequisite alongside the cross-source overlap pilot.)
+- **`attested_in` becomes the bridge to artifacts.** Attestation entries currently nested inside Leprohon name qualifiers become explicit edges from Name Statements to Inscription / Artifact nodes, linking the authority layer to the museum layer at the data level.
 - **Temporal phases gain structure without canonicalisation.** Leprohon's split of Akhenaten into "Amenhotep IV (Regnal Years 1 to 5)" + "Akhenaten (Regnal Years 5 to 17)" produces two per-source `:Ruler` nodes (two rows in Leprohon, two nodes in the graph). They are linked by a `hapi:same_entity_as` Statement attributed to the source itself — Leprohon's text explicitly identifies the two as a single ruler at different naming phases. Each `:Ruler` carries its own `hapi:reign_period` Statement covering the relevant regnal years. Beckerath's single "Amenophis IV. Ach-en-aten" row becomes a third per-source `:Ruler` node, linked to either of the Leprohon nodes via a separate cross-source `hapi:same_entity_as` Statement (curator-attributed once reviewed; matcher-attributed in the interim). No canonical Person is materialised at load time; the "same person, different naming period" structure is data, not schema.
 - **The storage decision is the gating follow-up.** Until ADR-019 (or the storage ADR, whatever number it lands at) is resolved, no production graph build can start. A Phase 0 → graph loader can be sketched against either substrate.
