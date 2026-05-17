@@ -266,6 +266,10 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       `G1221|notes_from_pm` (three West Field G 1000-1200 rows where
       agents disagreed on colon-vs-semicolon punctuation, underdot-Ḥ
       glyph normalisation for Meḥyt, and `(?)` hedge handling for SHAD).
+    - Chunk 7: `G2100a|notes_from_pm`, `G2156b|notes_from_pm` (Merib's
+      G 2100 annexe with raised-ayin normalisation in `Menkaureʿ`, and
+      the second G 2156 = Redenes mastaba with cross-reference clause
+      preservation).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -282,6 +286,8 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G1151", "notes_from_pm"),
         ("G1201", "notes_from_pm"),
         ("G1221", "notes_from_pm"),
+        ("G2100a", "notes_from_pm"),
+        ("G2156b", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
