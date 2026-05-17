@@ -202,11 +202,12 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
 # physical pp.92–96 / printed pp.95–99. 14 rows: 13 Shape-1 named-primary +
 # 1 Shape-2 bare-suffix (G 3015). The "Minor Cemetery" was excavated by
 # Clarence S. Fisher for the Penn Eckley B. Coxe Jr. Expedition (1915).
-# 6 tie-break-overrides resolve 1/1/1 ties on G 3008 (Snefruḥotp + wife
+# 8 tie-break-overrides resolve 1/1/1 ties on G 3008 (Snefruḥotp + wife
 # Khenut called Inti, role and notes), G 3050 (ʿAnkh ka-servant + wife
 # Kednefert mitrt, role and notes), G 3093 (Mededi + wife Khnemt with
 # Neith/Ḥathor titles, role and notes), G 3098 (Iymerery + annexe
-# occupant Neferḥetpes-Wer + father Duareʿ, role and notes).
+# occupant Neferḥetpes-Wer + father Duareʿ, role and notes). Two
+# fields per row × four rows = eight overrides total.
 CHUNK9_TOMB_IDS: frozenset[str] = frozenset({
     "G3004", "G3008", "G3015", "G3020", "G3033", "G3035",
     "G3050", "G3082", "G3086", "G3093", "G3094", "G3096",
@@ -1957,10 +1958,9 @@ def test_chunk9_g3097_neferhi_underdot_h() -> None:
 
 def test_chunk9_all_named_rows_dyn_vi() -> None:
     """Fisher Minor Cemetery is essentially a Dyn-VI assemblage —
-    every named row's headword carries `Dyn. VI.` (some via `Temp.
-    Khufu and Raʿzedef and Khephren` cross-reference for G 3086, but
-    the dating tail still resolves to Dyn IV → no wait, G 3086 is
-    later; checked by data). Verify all 14 chunk-9 rows are dynasty
-    "6"."""
+    every named row's headword carries `Dyn. VI.` (G 3086 mentions
+    Dyn-IV kings Khufu/Raʿzedef/Khephren in a cultic-priesthood
+    context, but the priest's own burial is Dyn VI). Verify all 14
+    chunk-9 rows are dynasty "6"."""
     for tid in CHUNK9_TOMB_IDS:
         assert _by_id(tid)["dynasty"] == "6", tid
