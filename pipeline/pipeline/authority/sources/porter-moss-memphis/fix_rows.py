@@ -312,29 +312,48 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "leading ayin produced `ʿAnkh-Haf` with title-cased `Haf` "
             "post-hyphen — but the standard Egyptological + museum-"
             "conventional Anglicisation lowercases the post-hyphen "
-            "element (`ʿAnkh-haf`). This is *the* famous Old Kingdom "
-            "official (MFA 27.442 reserve head); Boston/Met catalogues "
-            "print `Ankh-haf` / `Ankhhaf`. Phase-A name-authority "
+            "element (`ʿAnkh-haf`). Boston/Met catalogues print "
+            "`Ankh-haf` / `Ankhhaf`. Phase-A name-authority "
             "matching against museum records depends on the lowercase-"
             "haf form. Restoration: `ʿAnkh-Haf` → `ʿAnkh-haf`. Parallel "
             "to chunk-3 LG 84's `Wehebreʿ-emakhet` (lowercase post-"
             "hyphen for the `m-akhet` locative element). Egyptologist "
-            "F2 finding (P1)."
+            "F2 finding (P1). (Note: this is NOT the Dyn-IV Khufu-half-"
+            "brother ʿAnkh-haf — that one is at G 7510 East Field, "
+            "future chunk; PM dates G 1234 as `Late Dyn. V or Dyn. VI`.)"
+        ),
+    },
+    ("G1234", "occupant_alt_names"): {
+        "value": ["Ankhhaf", "Ankh-haf"],
+        "rationale": (
+            "Egyptologist F2 finding (P1) — companion to the "
+            "`occupant_name` correction. Phase-A name-authority matching "
+            "against museum records needs both the dehyphenated form "
+            "`Ankhhaf` and the non-ayin lower-cased form `Ankh-haf`, "
+            "since museum catalogues use both interchangeably (Boston "
+            "MFA, Brooklyn, Met) for any ʿAnkh-haf row. The `ʿAnkh-haf` "
+            "U+02BF form stays as `occupant_name`; the ASCII alt forms "
+            "fall in `occupant_alt_names`. Gemini PR #225 round-1 "
+            "high-priority finding."
         ),
     },
     ("G1221", "notes_from_pm"): {
-        "value": "Shad (?), Royal acquaintance. Probably Dyn. V.",
+        "value": "Royal acquaintance. Probably Dyn. V.",
         "rationale": (
             "Egyptologist-reviewer printed-source pass against PM III.1 "
-            "p.59 (physical p.56): PM prints `G 1221. SHAD (?) Royal "
-            "acquaintance. Probably Dyn. V.` with ONE `(?)` hedge, not "
-            "two. The pypdf text-layer extraction stuttered the `(?)` "
-            "token (line 432 of chunk-6 text file reads `SHAD (?) (?)`); "
-            "agents A inherited the stutter. The tie-break-overrides.json "
-            "G1221 entry that resolved the 1/1/1 tie selected agent A's "
-            "stuttered form before the egyptologist pass surfaced the "
-            "OCR error. Restoration: drop the duplicate `(?)`. "
-            "Egyptologist F3 finding (P1)."
+            "p.59 (physical p.56): PM prints `G 1221. SHAD (?), Royal "
+            "acquaintance. Probably Dyn. V.` with ONE `(?)` hedge. The "
+            "pypdf text-layer extraction stuttered the hedge (chunk-6 "
+            "text file line 432 reads `SHAD (?) (?)`). Per reviewer "
+            "F3 finding (P1) the name and hedge are removed from "
+            "`notes_from_pm` entirely — the name reading is already in "
+            "`occupant_name: \"Shad\"` and the doubt is already captured "
+            "in `attribution_certainty: \"probable\"`. Including a "
+            "second copy in the notes risks downstream consumers "
+            "double-counting the hedge. Restoration: drop the name + "
+            "hedge from notes (matches reviewer's recommended form). "
+            "Gemini PR #225 round-1 medium-priority finding aligned "
+            "this fix with the reviewer's recommended form."
         ),
     },
     ("G1207", "occupant_role"): {
@@ -392,6 +411,65 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "carries a named occupant with no explicit title cluster. "
             "Default to `Official` per the same rule. Egyptologist F6 "
             "finding (P2)."
+        ),
+    },
+    ("G1314", "occupant_name"): {
+        "value": "Khaʿkareʿ",
+        "rationale": (
+            "Egyptologist F-P2-3 finding: PM III.1 p.61 (physical p.61) "
+            "prints `G 1314. Second half of Dyn. V.` as a bare-suffix "
+            "headword, but the body content on the next printed page "
+            "(p.62 / physical p.62) identifies the tomb owner: "
+            "`Architrave with figure of Khaʿkareʿ repeated nine times.` "
+            "+ `Double-statue, Khaʿkareʿ, Hairdresser of the Great "
+            "House`. The architrave + statue are inscribed-attestation "
+            "identifications of the tomb owner — Phase-A consumers need "
+            "this for museum-matching. The agents correctly applied the "
+            "chunk-6 headword-only rule (occupant_name: null) which is "
+            "strictly faithful but loses the body-attested name. "
+            "Restoration recovers `Khaʿkareʿ` from the body. PM's "
+            "raised-ayin clusters in `Khaakarea` normalise to U+02BF on "
+            "both occurrences. Gemini PR #225 round-1 medium-priority "
+            "finding aligned this fix with the reviewer's recommended "
+            "recovery."
+        ),
+    },
+    ("G1314", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Egyptologist F-P2-3 companion: PM's body-attested title "
+            "cluster for Khaʿkareʿ on physical p.62 is `Hairdresser of "
+            "the Great House` (jr-šn pr-ꜥꜣ) — a non-royal court-officer "
+            "title. Maps to `Official` per the chunk-6 role-derivation "
+            "rule. Updated from agents' bare-suffix-default `Unknown`."
+        ),
+    },
+    ("G1314", "attribution_certainty"): {
+        "value": "probable",
+        "rationale": (
+            "Egyptologist F-P2-3 companion: the body-attested "
+            "identification (architrave + double-statue) is strong "
+            "inscriptional evidence but it is NOT a PM-headword "
+            "identification — PM prints a bare-suffix headword for "
+            "G 1314. The body inscriptions are PM-published; the "
+            "identification is well-supported but is one inferential "
+            "step removed from a headword-level attribution. "
+            "Conservatively rate as `probable` rather than `attested` "
+            "(reserve `attested` for headword-attestation cases)."
+        ),
+    },
+    ("G1314", "notes_from_pm"): {
+        "value": (
+            "Second half of Dyn. V. Architrave with figure of Khaʿkareʿ "
+            "repeated nine times. Double-statue, Khaʿkareʿ, Hairdresser "
+            "of the Great House."
+        ),
+        "rationale": (
+            "Egyptologist F-P2-3 companion: extends the bare-suffix "
+            "headword's `Second half of Dyn. V.` with the body-attested "
+            "identifications (architrave inscription + double-statue "
+            "label) per the reviewer's recommendation. Documents the "
+            "trace from PM's body text for Phase-A consumers."
         ),
     },
 }

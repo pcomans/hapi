@@ -1362,22 +1362,23 @@ def test_chunk6_cemetery_distribution() -> None:
 
 
 def test_chunk6_ankh_haf_g1234_egyptologist_form() -> None:
-    """G 1234 ʿAnkh-haf — distinct from the famous Dyn-IV ʿAnkh-haf
-    (Khufu's half-brother at G 7510 East Field, future chunk; MFA
-    27.442 reserve head). PM dates G 1234's ʿAnkh-haf as `Late Dyn. V
-    or Dyn. VI.`. The merge picks the more-specific tail of PM's
-    range (`Dyn. VI`) per the chunk-6 prompt's dynasty-range rule.
-    Egyptologist F2 finding (P1) corrected the title-cased `ʿAnkh-Haf`
-    to the museum-conventional lowercase-haf form `ʿAnkh-haf` (parallel
-    to chunk-3 LG 84's `Wehebreʿ-emakhet` lowercase post-hyphen
-    locative element). Phase-A name-authority matching against
-    Boston/Met records requires the lowercase form regardless of
-    which ʿAnkh-haf is at the tomb."""
+    """G 1234 ʿAnkh-haf. PM dates as `Late Dyn. V or Dyn. VI.`; the
+    chunk-6 dynasty-range rule picks the more-specific tail (`Dyn.
+    VI`). Egyptologist F2 finding (P1) corrected the title-cased
+    `ʿAnkh-Haf` to the museum-conventional lowercase-haf form
+    `ʿAnkh-haf` (parallel to chunk-3 LG 84's `Wehebreʿ-emakhet`
+    lowercase post-hyphen locative element). Companion fix populates
+    `occupant_alt_names` with the ASCII forms `Ankhhaf` and `Ankh-haf`
+    (Boston MFA / Brooklyn / Met catalogue spellings) for Phase-A
+    name-authority matching against museum records. Gemini PR #225
+    round-1 high-priority finding aligned the alt_names with the
+    reviewer's recommended P1-2 alias list."""
     row = _by_id("G1234")
     assert row["occupant_name"] == "ʿAnkh-haf"
     assert row["dynasty"] == "6"
     assert row["cemetery"] == "G 1200"
     assert row["source_citation"]["page"] == 60
+    assert row["occupant_alt_names"] == ["Ankhhaf", "Ankh-haf"]
 
 
 def test_chunk6_g1607_not_unfinished() -> None:
@@ -1393,16 +1394,22 @@ def test_chunk6_g1607_not_unfinished() -> None:
     assert row["occupant_name"] == "Iʿan"
 
 
-def test_chunk6_g1221_shad_single_hedge() -> None:
-    """G 1221 SHAD's PM headword carries ONE `(?)` hedge, not two. The
-    pypdf text-layer extraction stuttered the hedge token (the chunk-6
-    raw file line 432 reads `SHAD (?) (?)`); agents inherited the
-    stutter. Egyptologist F3 finding (P1) restored single `(?)` from
-    the printed-source verification."""
+def test_chunk6_g1221_shad_notes_drop_name_and_hedge() -> None:
+    """G 1221 SHAD's PM headword carries the name + one `(?)` hedge in
+    the headline plus the title cluster `Royal acquaintance.`.
+    Egyptologist F3 finding (P1) recommends dropping the name AND the
+    hedge from `notes_from_pm` entirely — the name reading already
+    lives in `occupant_name: \"Shad\"` and the doubt is already in
+    `attribution_certainty: \"probable\"`. Including a second copy in
+    notes risks downstream consumers double-counting the hedge. Test
+    asserts the cleaned notes form per the reviewer's recommended
+    output. Gemini PR #225 round-1 medium-priority finding."""
     row = _by_id("G1221")
     assert row["occupant_name"] == "Shad"
-    assert "Shad (?), Royal acquaintance" in row["notes_from_pm"]
-    assert "(?) (?)" not in row["notes_from_pm"]
+    assert row["attribution_certainty"] == "probable"
+    assert row["notes_from_pm"] == "Royal acquaintance. Probably Dyn. V."
+    assert "Shad" not in row["notes_from_pm"]
+    assert "(?)" not in row["notes_from_pm"]
 
 
 def test_chunk6_g1452_g1453_compound_twin() -> None:
@@ -1456,10 +1463,31 @@ def test_chunk6_royal_acquaintance_woman_is_official() -> None:
     """`Royal acquaintance (woman)` (rḫt-nswt) is a non-royal
     honorific attested for elite non-royals, NOT a royal-family
     descent indicator. The chunk-6 prompt's role-derivation rule
-    mistakenly mapped it to `Royal Family`; CHUNK6_CORRECTIONS
-    corrected G1207 NUFER and G1227 SETHIHEKNET to `Official`.
-    Egyptologist F5 finding (P2)."""
+    initially mistakenly mapped it to `Royal Family`; CHUNK6_CORRECTIONS
+    corrected G1207 NUFER and G1227 SETHIHEKNET to `Official`, and the
+    prompt rule itself was tightened (Gemini PR #225 round-1
+    medium-priority finding) so future extractions produce `Official`
+    directly. Egyptologist F5 finding (P2)."""
     for tid in ("G1207", "G1227"):
         row = _by_id(tid)
         assert row["occupant_role"] == "Official", row
         assert row["occupant_name"] is not None
+
+
+def test_chunk6_g1314_khakare_body_recovery() -> None:
+    """G 1314 PM headword is bare-suffix (`Second half of Dyn. V.`)
+    but the body content on the next printed page (p.62) identifies
+    the tomb owner via inscribed architrave + double-statue:
+    `Khaʿkareʿ, Hairdresser of the Great House`. Reviewer F-P2-3
+    finding promoted the body-attested identification to
+    `occupant_name`, `occupant_role: Official` (Hairdresser → court
+    officer), `attribution_certainty: probable` (body-attestation is
+    strong but not headword). Reviewer's recommended recovery; Gemini
+    PR #225 round-1 medium-priority finding aligned with this."""
+    row = _by_id("G1314")
+    assert row["occupant_name"] == "Khaʿkareʿ"
+    assert row["occupant_role"] == "Official"
+    assert row["attribution_certainty"] == "probable"
+    assert row["dynasty"] == "5"
+    assert "Khaʿkareʿ" in row["notes_from_pm"]
+    assert "Hairdresser of the Great House" in row["notes_from_pm"]

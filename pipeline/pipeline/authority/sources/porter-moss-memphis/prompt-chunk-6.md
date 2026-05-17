@@ -131,10 +131,11 @@ All produce a Shape 2 row: `occupant_name: null`, `occupant_role: "Unknown"`, `a
 - **`occupant_role`** — Controlled vocabulary derived from the title cluster in the headword. Mapping:
   - Title cluster includes `Vizier`, `Chief Justice and Vizier` → `"Vizier"`
   - Title cluster includes `King's son`, `Eldest son of the King`, `King's son of his body` → `"Prince"` (for named-male royals)
-  - Title cluster includes `King's daughter`, `Royal acquaintance (woman)` → `"Princess"` (female royal); `"Royal acquaintance (woman)"` alone — without King's-daughter — defaults to `"Royal Family"` for non-king-descent royal-adjacent women
+  - Title cluster includes `King's daughter` → `"Princess"` (female royal directly descended from a king)
   - Title cluster includes `Hereditary prince` AND `Overlord of <place>` → `"Royal Family"` (administrator-prince hybrid, see chunk-2 precedent G 7060 NEFERMAaET)
-  - Title cluster includes `Prophet`, `Inspector`, `Overseer`, `Judge`, `Tenant`, `Director`, `Strong-of-voice`, `Royal acquaintance` (male), `Supervisor`, `Book-keeper`, `Secretary`, `Craftsman`, `wad-priest`, `waab-priest` → `"Official"`
+  - Title cluster includes `Prophet`, `Inspector`, `Overseer`, `Judge`, `Tenant`, `Director`, `Strong-of-voice`, `Royal acquaintance` (male), `Royal acquaintance (woman)`, `Supervisor`, `Book-keeper`, `Secretary`, `Craftsman`, `wad-priest`, `waab-priest` → `"Official"`. **NB: `Royal acquaintance (woman)` (the Egyptological *rḫt-nswt*) is a non-royal honorific court title held by elite women — NOT a royal-family descent indicator. Map to `Official`, NOT `Royal Family` or `Princess`.**
   - Title cluster includes `High Priest` of any divinity → `"High Priest"`
+  - **Named occupant with NO title cluster** (e.g. `G NNNN. <NAME>. <dating only>`) → `"Official"` (the most common Old-Kingdom Memphite non-royal role). `Unknown` is reserved for Shape-2 bare-suffix headwords (no name AT ALL).
   - Bare-suffix Shape-2 headwords (no name, no title cluster) → `"Unknown"`
 - **`dynasty`** — Roman→Arabic from PM's `Dyn. <Roman>` token in the headword block. `"4"` for `Dyn. IV`, `"5"` for `Dyn. V`, `"6"` for `Dyn. VI`. For range tokens (`Dyn. V-VI`, `Dyn. IV-V`), use the more specific tail (e.g. `V-VI` → `"6"`). For temporal markers without a dynasty number (`Temp. Khufu`, `Temp. Khephren`, `Middle Dyn. V`), still derive the dynasty number from PM's context (`Temp. Khufu` implies `"4"`). `null` ONLY when PM's headword carries no dating clue.
 - **`sub_period`** — `null` for all chunk 6 rows.
