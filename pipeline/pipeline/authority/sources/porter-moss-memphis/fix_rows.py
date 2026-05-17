@@ -1083,7 +1083,8 @@ CHUNK11_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "convention. Agent-majority wrote `Hetepibes` without "
             "underdot, creating intra-row inconsistency with the "
             "co_occupants override that mandated underdot per source-"
-            "wide ḥ-root convention (chunk-8 G 2415 Ḥathor precedent)."
+            "wide ḥ-root convention (chunk-8 PR #227 P1-3 + chunk-9 "
+            "G 3008 / G 3093 Ḥathor precedent)."
         ),
     },
     # D.203 NUFER+ITISEN joint twin notes_from_pm — agent-majority "TAw"
