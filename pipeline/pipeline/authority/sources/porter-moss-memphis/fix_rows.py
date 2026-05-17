@@ -1156,6 +1156,15 @@ CHUNK11_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-12 (Saqqâra § I.L-N royal complexes — Shepseskaf, Userkareʿ
+# Khenzer, anonymous Dyn XIII southern enclosure). No row-level
+# corrections were needed beyond the SAQ-Shepseskaf|tomb_aliases
+# tie-break override that lives in tie-break-overrides.json. Kept here
+# as an empty placeholder per chunks 1/7 + Gemini PR #232 round-4
+# registry-completeness convention.
+CHUNK12_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Chunk-13 (Junker Cemetery East, named OK tombs).
 # Round-1 Gemini fixes: drop primary occupant name from notes (rule per
 # chunk-11 prompt) on joint twins + anonymous tombs; restore parenthetical
@@ -1175,14 +1184,20 @@ CHUNK13_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # woman)` parenthetical on co_occupant_roles which the agents trimmed.
     ("JKE-Nikaukhnum", "notes_from_pm"): {
         "value": (
-            "and Neferesris Royal acquaintance (probably woman). Late Dyn. V or "
-            "early Dyn. VI."
+            "Royal acquaintance, and Neferesris Royal acquaintance "
+            "(probably woman). Late Dyn. V or early Dyn. VI."
         ),
         "rationale": (
-            "Gemini PR #232 round-1 medium: per chunk-11 D32 + D4 "
+            "Gemini PR #232 round-1+4 medium: per chunk-11 D32 + D4 "
             "Shape-4 joint-twin convention, drop PRIMARY occupant name "
             "(NIKAUKHNUM) from notes; keep `and <co-occupant>` joint "
-            "clause. Title-case Neferesris."
+            "clause. Round-4 refinement: PM prints `NIKAUKHNUM and "
+            "NEFERESRIS Royal acquaintance (probably woman)` where the "
+            "shared title `Royal acquaintance` applies to BOTH occupants "
+            "(the `(probably woman)` parenthetical is Junker's editorial "
+            "annotation on Neferesris specifically). Re-prefix the title "
+            "after dropping the primary name to preserve PM's "
+            "title-applies-to-both reading."
         ),
     },
     ("JKE-Nikaukhnum", "co_occupant_roles"): {
@@ -1285,6 +1300,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK9_CORRECTIONS,
     CHUNK10_CORRECTIONS,
     CHUNK11_CORRECTIONS,
+    CHUNK12_CORRECTIONS,
     CHUNK13_CORRECTIONS,
 ]
 

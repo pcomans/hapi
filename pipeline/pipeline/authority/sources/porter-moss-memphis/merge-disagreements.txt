@@ -583,7 +583,7 @@ Reviewer-cited row corrections:
   JKE-AnonCompanion.notes_from_pm: "NAME UNKNOWN, Companion (smr N.N. of Junker). Dyn. VI." → "Companion (smr N.N. of Junker). Dyn. VI."
   JKE-Iuf.co_occupant_roles: ["Wife, mitrt"] → ["Wife, mitrt, etc."]
   JKE-Meruka.occupant_role: "Official" → "High Priest"
-  JKE-Nikaukhnum.notes_from_pm: "NIKAUKHNUM and NEFERESRIS Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI." → "and Neferesris Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI."
+  JKE-Nikaukhnum.notes_from_pm: "NIKAUKHNUM and NEFERESRIS Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI." → "Royal acquaintance, and Neferesris Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI."
   JKE-Nikaukhnum.co_occupant_roles: ["Royal acquaintance"] → ["Royal acquaintance (probably woman)"]
   JKE-User.notes_from_pm: "Overseer of ha-servants, etc. Late Dyn. V. Mother, Henutsen." → "Overseer of ka-servants, etc. Late Dyn. V. Mother, Henutsen."
   JKE-Weri.notes_from_pm: "Inspector of ha-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI." → "Inspector of ka-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI."
