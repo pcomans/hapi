@@ -302,6 +302,19 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       normalisation, ʾtw-aleph + `@` OCR drift, Saḥurēʿ/Neuserrēʿ/Rēʿ
       macron-Ē + ayin compounding, Sentiotes I bracketed Roman regnal,
       and the three-co-occupant Ithu parent-pair-plus-wife block).
+    - Chunk 11 (halves 11a+11b): `D1|notes_from_pm`, `D4|notes_from_pm`,
+      `D15|notes_from_pm`, `D32|notes_from_pm`, `D37|occupant_name`,
+      `STN-Ibir|notes_from_pm`, `STN-Wemtetka|notes_from_pm`,
+      `D117|co_occupants`, `D117|co_occupant_roles`,
+      `D203|co_occupant_roles`, `D207|notes_from_pm`,
+      `D215|notes_from_pm`, `STN-Iri|co_occupant_roles`,
+      `STN-Nu|notes_from_pm` (Steindorff Cemetery D-numbered + STN-
+      interstitials — Shape-2 bare-numeric null normalisation,
+      ellipsis-truncation ID notes, Shape-4 joint-twin notes,
+      Re-deity-compound + ḥ-root `Rēʿḥerka` triple-diacritic,
+      three-co-occupant parent-pair-plus-wife block, `mitrt`
+      typography, controlled-vocab fallback for unknown joint-twin
+      role, and PM cross-reference preservation).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -345,6 +358,29 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("JKR-Inpuhotp", "notes_from_pm"),
         ("JKR-Sinekhen", "notes_from_pm"),
         ("JKR-SonbI", "notes_from_pm"),
+        # Chunk 11 (halves 11a + 11b): Steindorff Cemetery D-numbered + STN-
+        # interstitial tombs. 14 ties resolved across the two halves. Shape-2
+        # bare-numeric D.I + ellipsis truncation D.15/STN-Ibir, Shape-4 joint
+        # twins D.4/D.32/D.203 dropping primary occupant name from notes,
+        # Re-deity-compound + ḥ-root name D.37 (`Rēʿḥerka` with macron-Ē +
+        # ayin + underdot-Ḥ), D.117 three-co-occupant parent-pair-plus-wife
+        # block with gendered Father/Mother roles, D.215 wife clause `mitrt`
+        # typography normalisation, STN-Iri unknown-role joint twin
+        # (controlled-vocab fallback), STN-Nu cross-reference preservation.
+        ("D1", "notes_from_pm"),
+        ("D4", "notes_from_pm"),
+        ("D15", "notes_from_pm"),
+        ("D32", "notes_from_pm"),
+        ("D37", "occupant_name"),
+        ("STN-Ibir", "notes_from_pm"),
+        ("STN-Wemtetka", "notes_from_pm"),
+        ("D117", "co_occupants"),
+        ("D117", "co_occupant_roles"),
+        ("D203", "co_occupant_roles"),
+        ("D207", "notes_from_pm"),
+        ("D215", "notes_from_pm"),
+        ("STN-Iri", "co_occupant_roles"),
+        ("STN-Nu", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

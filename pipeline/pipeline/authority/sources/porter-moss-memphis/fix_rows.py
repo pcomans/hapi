@@ -1004,6 +1004,11 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-11 (Steindorff Cemetery D-numbered + STN- interstitials, halves 11a+11b).
+# Starts empty; egyptologist-reviewer adds entries.
+CHUNK11_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1019,6 +1024,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK8_CORRECTIONS,
     CHUNK9_CORRECTIONS,
     CHUNK10_CORRECTIONS,
+    CHUNK11_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

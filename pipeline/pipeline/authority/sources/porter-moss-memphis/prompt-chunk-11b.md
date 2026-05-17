@@ -1,8 +1,8 @@
-# Extraction prompt — Porter & Moss Vol III.1 (Memphis), Chunk 11
+# Extraction prompt — Porter & Moss Vol III.1 (Memphis), Chunk 11b
 
-> **Eleventh chunk drawn from PM Vol III** — sixth Gîza West Field chunk. Covers PM's `STEINDORFF CEMETERY` (Georg Steindorff Excavation, University of Leipzig + Pelizaeus Expedition 1903-7). Physical pp.105–114 / printed pp.108–117. **D-numbered tombs are PRIMARY** in this chunk: PM prints `D. <NUM>. <NAME IN CAPS> <Title cluster>. <Dating>.` as the standard headword form, with `D. <NUM>` being Steindorff's own field numbering (NOT Mariette's Saqqâra D-prefix). Junker Cemetery (East) is OUT OF SCOPE — moves to chunk 12. This prompt is **self-contained**.
+> **Chunk 11b (second half of Steindorff Cemetery)** — covers `STEINDORFF CEMETERY` D-numbered tombs D.39/40 through D.221. Physical pp.108–114 / printed pp.111–117. Chunk 11a covered D.I → D.38. Split into halves after a 6-agent infrastructure failure on the full 40-row chunk. **D-numbered tombs are PRIMARY** here: PM prints `D. <NUM>. <NAME IN CAPS> <Title cluster>. <Dating>.` as the standard headword form, with `D. <NUM>` being Steindorff's own field numbering (NOT Mariette's Saqqâra D-prefix). Junker Cemetery (East) is OUT OF SCOPE — moves to a later chunk.
 
-You are one of three independent extraction subagents. Read the text-layer chunk file at `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/chunk-11-p105-p114-steindorff.txt` and produce a JSONL file with one structured row per **PM-headworded mastaba** in the Steindorff Cemetery cluster. The other two agents see the same prompt and the same chunk; their outputs are majority-voted by `merge.py`.
+You are one of three independent extraction subagents. Read the text-layer chunk file at `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/chunk-11b-p108-p114-steindorff-D39-D221.txt` and produce a JSONL file with one structured row per **PM-headworded mastaba** in the Steindorff Cemetery cluster, D.39/40 through D.221. The other two agents see the same prompt and the same chunk; their outputs are majority-voted by `merge.py`.
 
 **Prompt discipline (per CLAUDE.md rules 1 and 7):** field-extraction RULES only; no per-row answers.
 
@@ -23,9 +23,9 @@ Fair-use scholarly extraction for a private research repository, supervised by a
 ## Output
 
 Write to **EXACTLY ONE** of:
-- `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/agent-a-chunk11.jsonl`
-- `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/agent-b-chunk11.jsonl`
-- `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/agent-c-chunk11.jsonl`
+- `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/agent-a-chunk11b.jsonl`
+- `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/agent-b-chunk11b.jsonl`
+- `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/agent-c-chunk11b.jsonl`
 
 One JSON object per line. Sort rows by `tomb_id` string-ascending. Use `json.dumps(..., sort_keys=True, ensure_ascii=False)` for deterministic output.
 
@@ -108,7 +108,7 @@ Do NOT emit rows for:
 
 ## Expected row count
 
-Pre-extraction structural scan: PM prints ~32 named D-numbered tombs + ~8 bare D-numbered headwords + ~3 interstitial named tombs without a D-number under the STEINDORFF CEMETERY banner. **Total expected: ~45 rows (acceptable band 40–55).** If your final count is below 35 or above 60, re-read the chunk file — you've either missed tombs or emitted out-of-scope body items / chapel sub-features.
+Pre-extraction structural scan for chunk 11b (D.39/40 → D.221): PM prints ~22–24 D-numbered headworded entries; one is a twin-number Shape (D.39/40), one is a twin-letter Shape (D.80/80 A), a few are Shape-2 bare-numeric (D.44, D.56, D.100, D.106, D.202, D.205). **Total expected: ~22–26 rows (acceptable band 20–30).** If your final count is below 18 or above 32, re-read the chunk file — you've either missed tombs or emitted out-of-scope body items / chapel sub-features.
 
 ## PM III.1 text-layer noise (chunk-11-relevant)
 
@@ -161,7 +161,7 @@ Pre-extraction structural scan: PM prints ~32 named D-numbered tombs + ~8 bare D
 After writing the JSONL file, return ONE LINE in this format:
 
 ```
-agent-<X>-chunk11: <count> rows; <shape1>/<shape2>/<shape3>/<shape4>/<shape5> split; <anomalies or "none">
+agent-<X>-chunk11b: <count> rows; <shape1>/<shape2>/<shape3>/<shape4>/<shape5> split; <anomalies or "none">
 ```
 
 Where `<shape1>` = D-numbered named primary, `<shape2>` = bare D-numbered, `<shape3>` = bracketed-Roman-regnal D-numbered, `<shape4>` = joint-named twin D-numbered, `<shape5>` = STN- descriptor interstitial. Under 100 words.
