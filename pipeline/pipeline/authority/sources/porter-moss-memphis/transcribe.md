@@ -96,3 +96,19 @@ Chunk-4 design choices:
 - Out-of-scope `J. PYRAMID OF KAKAREʿ IBI` (Dyn VIII transitional king on printed p.426) — explicitly excluded from chunk 4 per the prompt's OUT-OF-SCOPE rule. Regression-pin in `test_chunk4_no_jay_kakare_ibi_row` guards against accidental inclusion.
 
 Chunk file text-layer SHA-256 pin: `7c2a4a712c4419eb2b479c2f0e07a7ee350ad68989af2a08dbc17a16678916e3`.
+
+## Chunk 5 scope (FRONT half of PM III.2 § I. PYRAMIDS)
+
+Physical pp.33–57 / printed pp.393–417 of PM III.2 (Saqqâra-Dahshûr): the FRONT half of § I. PYRAMIDS at Saqqâra — sections A through E that chunk 4 left open. A. Teti (Dyn VI founder) + 2 queens (Iput, Khuit) + B. Userkaf (Dyn V founder) + C. Step Pyramid Enclosure of Neterikhet/Zoser (Dyn III) + D. Step Pyramid Enclosure of Sekhemkhet (Dyn III, unfinished) + E. anonymous 'Great Enclosure' (Probably Dyn III). 7 rows total: 4 kings + 2 queens + 1 unknown.
+
+Chunk-5 design choices:
+- Closes the front half of PM III.2 § I. PYRAMIDS pair-wise with chunk 4 (which did F-K). Combined chunks 4+5 give complete coverage of the Saqqâra royal-pyramid corpus excluding L–N (Shepseskaf Dyn IV, Userkareʿ Khenzer Dyn XIII, anonymous Dyn XIII — deferred to a follow-up chunk).
+- First Dyn III rows in this source. Three rows carry `dynasty: "3"`: SAQ-Neterikhet (PM `Dyn. III`), SAQ-Sekhemkhet (PM `Dyn. III`), SAQ-GreatEnclosure (PM `Probably Dyn. III` → `dynasty: "3"` + `attribution_certainty: "uncertain"`).
+- First Shape-3 anonymous row in PM Memphis: SAQ-GreatEnclosure has `occupant_name: null`, `occupant_role: "Unknown"`, `attribution_certainty: "uncertain"`. Distinct from chunk-4's `SAQ-WifeOfIsesi` (also `null` name but Shape-2 queen-enclosure under a known king's complex with role inferred as Queen). The Great Enclosure stands alone with no parent king's complex, hence `Unknown` role.
+- First parenthetical-alias pattern: PM § I.C heads as `STEP PYRAMID ENCLOSURE OF NETERIKHET (Zoser)` — the parenthetical Zoser is captured in `occupant_alt_names`. Egyptologist-reviewer F4 finding added `Djoser` (museum-conventional spelling) as a second alt_name.
+- First Step Pyramid sub-heading form (`STEP PYRAMID.` vs the `PYRAMID.` of chunks 1, 2, 4). Sections C and D use the Dyn III Step Pyramid heading variant; the chunk-5 prompt's Shape-1b rule handles both.
+- First `is_unfinished: true` row in PM Memphis: SAQ-Sekhemkhet's `STEP PYRAMID. Unfinished.` sub-heading literally carries PM's `Unfinished` token.
+- Egyptologist-reviewer printed-source pass against PM III.2 PDF surfaced three findings: (P1 F1) SAQ-IputI `occupant_name` corrected from interpolated `Iput I` to PM-faithful `Iput` with `Iput I` moved to `occupant_alt_names` — PM prints bare `IPUT¹` with footnote, NOT bracket-regnal like chunk-4's `IPUT [II]¹`; (P1 F3) SAQ-Khuit `notes_from_pm` extended to include the PM-printed footnote `King's wife (of Teti).` — the sole prosopographic justification for the Queen role classification; (P2 F4) SAQ-Neterikhet `occupant_alt_names` extended with `Djoser` for museum-Phase-A matching. All three captured in `fix_rows.py` `CHUNK5_CORRECTIONS`.
+- The chunk-5 prompt is **self-contained** per the chunk-9 P1 #3 / chunk-11 PR-#196 precedent — full schema preamble inlined, no "re-read chunk N" cross-references.
+
+Chunk file text-layer SHA-256 pin: `a30dfe883a9f31051cb20b19c0bdb6133b931cc02e98a283bae91c1cad0556a1`.
