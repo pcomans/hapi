@@ -289,6 +289,9 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       trailer + body-mastaba-line inclusion. G 3098 is the chunk-9
       annexe-pair compound carrying both Iymerery and Neferḥetpes-Wer
       in one row).
+    - Chunk 12: `SAQ-Shepseskaf|tomb_aliases` (PM's `Mastabet Faraʿun`
+      typographic variant normalised to the canonical `Mastabat el-
+      Faraʿun` transliteration form used in museum catalogs).
     - Chunk 10: `JKR-Ankh|co_occupant_roles`,
       `JKR-Irty|co_occupant_roles`,
       `JKR-Ithu|co_occupant_roles`, `JKR-Ithu|notes_from_pm`,
@@ -331,6 +334,7 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G3093", "co_occupant_roles"),
         ("G3098", "notes_from_pm"),
         ("G3098", "co_occupant_roles"),
+        ("SAQ-Shepseskaf", "tomb_aliases"),
         ("JKR-Ankh", "co_occupant_roles"),
         ("JKR-Irty", "co_occupant_roles"),
         ("JKR-Ithu", "co_occupant_roles"),

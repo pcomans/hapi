@@ -197,6 +197,18 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
     "G2501",
 })
 
+# Chunk 12: Saqqâra § I.L-N royal complexes. PM III.2 2nd ed. 1978/1981,
+# physical pp.73–76 / printed pp.433–436. 3 rows: SAQ-Shepseskaf (Dyn IV
+# Mastabat el-Faraʿun), SAQ-UserkareKhenzer (Dyn XIII), SAQ-DynXIIIAnon
+# (anonymous Dyn XIII southern pyramid-enclosure). Closes the back-half
+# of PM III.2 § I PYRAMIDS that chunks 4 + 5 left open.
+CHUNK12_TOMB_IDS: frozenset[str] = frozenset({
+    "SAQ-Shepseskaf",
+    "SAQ-UserkareKhenzer",
+    "SAQ-DynXIIIAnon",
+})
+
+
 # Chunk 10: Gîza § III.A West Field JUNKER CEMETERY (WEST) named-tomb
 # cluster (Junker Excavation 1926-7). Source: PM III.1 2nd ed. 1974,
 # physical pp.97–105 / printed pp.100–108. 30 rows: 18 Shape-1 named-
@@ -239,7 +251,7 @@ CHUNK9_TOMB_IDS: frozenset[str] = frozenset({
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
-    | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS
+    | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK12_TOMB_IDS
 )
 
 
@@ -447,10 +459,12 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK10_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK12_TOMB_IDS:
+            assert row["source_citation"]["section"] == "I", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
-    """Chunks 1-3, 6, 7, 8, 9, 10 cite PM III.1; chunks 4 and 5 cite PM III.2."""
+    """Chunks 1-3, 6, 7, 8, 9, 10 cite PM III.1; chunks 4, 5, 12 cite PM III.2."""
     for row in _rows():
         if row["tomb_id"] in (
             CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS
@@ -458,7 +472,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -488,6 +502,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 95 <= page <= 99, f"{row['tomb_id']} page {page} outside chunk-9 [95, 99]"
         elif row["tomb_id"] in CHUNK10_TOMB_IDS:
             assert 100 <= page <= 108, f"{row['tomb_id']} page {page} outside chunk-10 [100, 108]"
+        elif row["tomb_id"] in CHUNK12_TOMB_IDS:
+            assert 433 <= page <= 436, f"{row['tomb_id']} page {page} outside chunk-12 [433, 436]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -544,6 +560,10 @@ def test_cemetery_by_chunk() -> None:
             # cemetery name `"Junker West"` (parallel to chunk-3's
             # `"Central Field"` descriptor convention).
             assert row["cemetery"] == "Junker West", row
+        elif row["tomb_id"] in CHUNK12_TOMB_IDS:
+            # Royal pyramid complexes — the complex IS its own cemetery.
+            # Parallel to chunks 4 + 5 null-cemetery convention.
+            assert row["cemetery"] is None, row
 
 
 def test_dynasty_assignments() -> None:
@@ -599,6 +619,10 @@ def test_dynasty_assignments() -> None:
             # Dyn VI). One row carries `Dyn. V.` explicitly (KHESEF II
             # Recruit), so the allowed set is {"5", "6"}.
             assert row["dynasty"] in {"5", "6"}, row
+        elif row["tomb_id"] in CHUNK12_TOMB_IDS:
+            # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
+            # § I.N anonymous = Dyn XIII.
+            assert row["dynasty"] in {"4", "13"}, row
 
 
 # === content / value assertions =============================================
@@ -2076,3 +2100,48 @@ def test_chunk10_steindorff_s_numbers_present() -> None:
     expected_first = {"S4040", "S4233", "S4248", "S4399", "S4419"}
     actual = {r["tomb_id"] for r in _rows() if r["tomb_id"].startswith("S") and r["tomb_id"][1:].isdigit()}
     assert actual == expected_first
+
+
+# === chunk 12 content tests =================================================
+
+
+def test_chunk12_row_count_3() -> None:
+    """Chunk 12 emits exactly 3 rows for PM III.2 § I.L-N royal
+    complexes: SAQ-Shepseskaf (Dyn IV), SAQ-UserkareKhenzer (Dyn XIII),
+    SAQ-DynXIIIAnon (anonymous Dyn XIII)."""
+    ch12 = [r for r in _rows() if r["tomb_id"] in CHUNK12_TOMB_IDS]
+    assert len(ch12) == 3
+
+
+def test_chunk12_shepseskaf_dyn_iv_mastabat_el_faraun() -> None:
+    """§ I.L Shepseskaf's tomb — the famous sarcophagus-shaped Mastabat
+    el-Faraʿun ('Bench of the Pharaoh'). Dyn IV royal but built as a
+    mastaba not a pyramid (unique Dyn-IV royal-burial form)."""
+    row = _by_id("SAQ-Shepseskaf")
+    assert row["occupant_name"] == "Shepseskaf"
+    assert row["occupant_role"] == "King"
+    assert row["dynasty"] == "4"
+    assert row["attribution_certainty"] == "attested"
+    assert "Mastabat el-Faraʿun" in row["tomb_aliases"]
+
+
+def test_chunk12_userkare_khenzer_dyn_xiii() -> None:
+    """§ I.M Pyramid-enclosure of Userkareʿ Khenzer, Dyn XIII king.
+    Ayin restored per source-wide raised-`<`/`r` → U+02BF convention."""
+    row = _by_id("SAQ-UserkareKhenzer")
+    assert "Userkareʿ" in row["occupant_name"]
+    assert "Khenzer" in row["occupant_name"]
+    assert row["occupant_role"] == "King"
+    assert row["dynasty"] == "13"
+
+
+def test_chunk12_dyn_xiii_anonymous() -> None:
+    """§ I.N Pyramid-enclosure of Dynasty XIII (anonymous, southern).
+    No occupant name → Unknown role + uncertain attribution.
+    Parallel to chunk-5's SAQ-GreatEnclosure anonymous Dyn-III
+    convention."""
+    row = _by_id("SAQ-DynXIIIAnon")
+    assert row["occupant_name"] is None
+    assert row["occupant_role"] == "Unknown"
+    assert row["dynasty"] == "13"
+    assert row["attribution_certainty"] == "uncertain"

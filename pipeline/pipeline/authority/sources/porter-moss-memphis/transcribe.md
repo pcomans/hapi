@@ -191,3 +191,17 @@ Chunk-10 design choices:
 - 10 tie-break-overrides.json entries for chunk-10 1/1/1 ties: `JKR-Ankh|co_occupant_roles`, `JKR-Irty|co_occupant_roles`, `JKR-Ithu|co_occupant_roles`, `JKR-Ithu|notes_from_pm`, `JKR-Iiu|co_occupant_roles`, `JKR-Iiu|notes_from_pm`, `JKR-MeniII|co_occupant_roles`, `JKR-Inpuhotp|notes_from_pm`, `JKR-Sinekhen|notes_from_pm`, `JKR-SonbI|notes_from_pm`. Plus 14 row-level reviewer corrections in `fix_rows.py` `CHUNK10_CORRECTIONS` covering: the JKR-Ithu co_occupants 3-entry expansion (length-coupling with the tie-break role override); the JKR-Inpuhotp 3-co-occupant bug fix (parents Ither + Sabt + wife Senezem); and Gemini PR #229 round-1 medium/high consistency fixes (mjtrt→mitrt normalisation, Ḥathor / ʿAnkh-ḥathor underdot restoration, bracket-regnal drop on cross-references, missing-period restoration, Maʿkherui ayin alignment, `Wife,` prefix consistency on SonbI / Sinekhen / Sinufer co_occupant_roles).
 
 Chunk file text-layer SHA-256 pin: `d8f9807ac323cc0b8dfb2fb98d4223f82fee9d4936506005ec50ee40ba53610a`.
+
+## Chunk 12 scope (Saqqâra § I.L-N royal complexes)
+
+Physical pp.73–76 / printed pp.433–436 of PM III.2: § I. PYRAMIDS sections L, M, N. 3 rows: SAQ-Shepseskaf + SAQ-UserkareKhenzer + SAQ-DynXIIIAnon. Closes the back-half of PM III.2 § I that chunks 4 (F–K) and 5 (A–E) left open.
+
+Chunk-12 design choices:
+- **First chunk to emit `dynasty: "13"`** — Dyn XIII (Second Intermediate Period) for Userkareʿ Khenzer + the anonymous southern Dyn-XIII pyramid-enclosure. Distinct from chunk-5's anonymous Dyn-III Great Enclosure.
+- **Mastabat el-Faraʿun alias normalisation.** PM prints `Mastabet Faraʿun` (typographic variant); chunk-12 normalises to the canonical `Mastabat el-Faraʿun` transliteration form used in museum catalogs and modern Egyptological literature (tie-break override on `SAQ-Shepseskaf|tomb_aliases`).
+- **Userkareʿ Khenzer ayin.** PM prints `USERKARE< KHENZER` (text-layer renders raised-ayin glyph as `<`); normalise to `Userkareʿ Khenzer` per source-wide raised-ayin → U+02BF convention.
+- **Anonymous Dyn XIII section N** descriptor synthesised as `SAQ-DynXIIIAnon` (PM gives no qualifying adjective in the headword block). Parallel to chunk-5's `SAQ-GreatEnclosure` anonymous-structure descriptor.
+- **Lepsius Roman numerals without LG-number.** PM cites the Lepsius monument-list Roman numerals (`Lepsius, XLIII`, `Lepsius, XLIV`, `Lepsius, XLVI`) for these royal complexes but without modern LG Grab-numbers. Per chunk-12 prompt rule, keep these in `notes_from_pm` verbatim (not as `tomb_aliases` entries; those reserve for clean LG numbers).
+- 1 tie-break-overrides.json entry for chunk-12 1/1/1 tie: `SAQ-Shepseskaf|tomb_aliases`.
+
+Chunk file text-layer SHA-256 pin: `b790446628175210e0eb115ba2e51ecf19983465ce9b266b21a4fe8369ca8b57`.

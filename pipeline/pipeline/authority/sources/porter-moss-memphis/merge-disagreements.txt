@@ -251,6 +251,9 @@ LG84 (Pakap):
 LG97 (Harsiesi):
   notes_from_pm: a="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin." | b="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" | c="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"  → chose "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"
 
+SAQ-DynXIIIAnon (None):
+  tomb_aliases: a=[] | b=["LG XLVI"] | c=[]  → chose []
+
 SAQ-IputI (Iput I):
   notes_from_pm: a="PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." | b="PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." | c="PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI PYRAMID."  → chose "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID."
 
@@ -281,11 +284,19 @@ SAQ-PepyII (Pepy II):
 SAQ-Sekhemkhet (Sekhemkhet):
   notes_from_pm: a="D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III. STEP PYRAMID. Unfinished." | b="D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III. STEP PYRAMID. Unfinished." | c="D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III STEP PYRAMID. Unfinished."  → chose "D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III. STEP PYRAMID. Unfinished."
 
+SAQ-Shepseskaf (Shepseskaf):
+  notes_from_pm: a="L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mastabet Faraʿun." | b="L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mashtabet Faraʿun." | c="L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mastabet Faraʿun."  → chose "L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mastabet Faraʿun."
+  tomb_aliases: a=["Mastabet Faraʿun"] | b=["LG XLIII", "Mastabat el-Faraʿun"] | c=["Mastabat el-Faraʿun"]  → chose ["Mastabat el-Faraʿun"]
+
 SAQ-Teti (Teti):
   notes_from_pm: a="A. PYRAMID-COMPLEX OF TETI. Dyn. VI. PYRAMID. Lepsius, XXX; Perring and Vyse, 1." | b="A. PYRAMID-COMPLEX OF TETI. Dyn. VI. PYRAMID. Lepsius, XXX; Perring and Vyse, 1." | c="A. PYRAMID-COMPLEX OF TETI. Dyn. VI PYRAMID. Lepsius, XXX; Perring and Vyse, 1."  → chose "A. PYRAMID-COMPLEX OF TETI. Dyn. VI. PYRAMID. Lepsius, XXX; Perring and Vyse, 1."
 
 SAQ-Userkaf (Userkaf):
   notes_from_pm: a="B. PYRAMID-COMPLEX OF USERKAF. Dyn. V. PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish." | b="B. PYRAMID-COMPLEX OF USERKAF. Dyn. V. PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish." | c="B. PYRAMID-COMPLEX OF USERKAF. Dyn. V PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish."  → chose "B. PYRAMID-COMPLEX OF USERKAF. Dyn. V. PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish."
+
+SAQ-UserkareKhenzer (Userkareʿ Khenzer):
+  source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 434, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 433, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 434, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 434, "section": "I"}
+  tomb_aliases: a=[] | b=["LG XLIV"] | c=[]  → chose []
 
 SAQ-Wezebten (Wezebten):
   notes_from_pm: a="PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI." | b="PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI" | c="PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI"  → chose "PYRAMID-ENCLOSURE OF WEZEBTEN. Dyn. VI"
