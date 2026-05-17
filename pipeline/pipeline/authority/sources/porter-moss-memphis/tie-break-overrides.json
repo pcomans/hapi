@@ -87,7 +87,7 @@
   },
   "JKR-Inpuhotp|notes_from_pm": {
     "value": "Prophet of the shrine of Anubis in Aphroditopolis, Prophet of Saḥurēʿ and Neuserrēʿ, Prophet of Rēʿ in the Sun-temple of Neuserrēʿ, etc. Dyn. VI. Parents, Ither Prophet of Neuserrēʿ, etc., and Sabt Royal acquaintance. Wife, Senezem.",
-    "rationale": "1/1/1 tie on chunk-10 JKR-Inpuhotp (PM `INPUHOTP Prophet of the shrine of Anubis in Aphroditopolis`) notes. PM III.1 2nd ed. 1974 printed p.107 (physical p.104). The headword contains MULTIPLE Re-deity-compound royal names (Sahurēʿ, Neuserrēʿ, Rēʿ) where PM applies macron-Ē + ayin per the egyptological convention (parallel to chunk-4 Merenrēʿ I + chunk-8 Meryrēʿ). Sahurēʿ ALSO carries underdot-Ḥ on the *sḥ* root → `Saḥurēʿ` (egyptologically canonical form combining both diacritics). Three agent variants: (A) macron-Ē + ayin + final period, (B) underdot-Ḥ on Sahure + ayin BUT no macron + final period, (C) macron-Ē + ayin + no final period. Synthesised form: macron-Ē + ayin everywhere + underdot-Ḥ on Saḥurēʿ specifically + sentence-final period preserved. Combines the egyptologically-faithful elements of A and B."
+    "rationale": "1/1/1 tie on chunk-10 JKR-Inpuhotp (PM `INPUHOTP Prophet of the shrine of Anubis in Aphroditopolis`) notes. PM III.1 2nd ed. 1974 printed p.106 (physical p.103). The headword contains MULTIPLE Re-deity-compound royal names (Sahurēʿ, Neuserrēʿ, Rēʿ) where PM applies macron-Ē + ayin per the egyptological convention (parallel to chunk-4 Merenrēʿ I + chunk-8 Meryrēʿ). Sahurēʿ ALSO carries underdot-Ḥ on the *sḥ* root → `Saḥurēʿ` (egyptologically canonical form combining both diacritics). Three agent variants: (A) macron-Ē + ayin + final period, (B) underdot-Ḥ on Sahure + ayin BUT no macron + final period, (C) macron-Ē + ayin + no final period. Synthesised form: macron-Ē + ayin everywhere + underdot-Ḥ on Saḥurēʿ specifically + sentence-final period preserved. Combines the egyptologically-faithful elements of A and B."
   },
   "JKR-SonbI|notes_from_pm": {
     "value": "Director of dwarfs in charge of dressing, Tutor of the King's sons, Prophet of Khufu and Raʿzedef, etc. (dwarf). Middle Dyn. VI or later. Wife, Sentiotes I Prophetess of Ḥathor and Neith, etc.",
@@ -95,11 +95,11 @@
   },
   "JKR-Sinekhen|notes_from_pm": {
     "value": "ʾtw-official, etc. Dyn. VI. Wife, Maʿkherui Female steward, etc.",
-    "rationale": "1/1/1 tie on chunk-10 JKR-Sinekhen notes. PM III.1 2nd ed. 1974 printed p.105 (physical p.102) prints the OK title `ʾtw-official` (Egyptian *ʾtw*, transliterated with ʾ aleph); pypdf renders as `@`. PM also prints wife `Maʿkherui` with raised-ayin glyph; pypdf renders as `Maakherui`. Three agent variants: (A) ʾtw + Maʿkherui (both diacritics normalised), (B) @ + Maakherui (both raw OCR), (C) ʾtw + Maakherui (mixed). Selecting A — egyptologically-faithful in both elements per source-wide convention."
+    "rationale": "1/1/1 tie on chunk-10 JKR-Sinekhen notes. PM III.1 2nd ed. 1974 printed p.103 (physical p.100) prints the OK title `ʾtw-official` (Egyptian *ʾtw*, transliterated with ʾ aleph); pypdf renders as `@`. PM also prints wife `Maʿkherui` with raised-ayin glyph; pypdf renders as `Maakherui`. Three agent variants: (A) ʾtw + Maʿkherui (both diacritics normalised), (B) @ + Maakherui (both raw OCR), (C) ʾtw + Maakherui (mixed). Selecting A — egyptologically-faithful in both elements per source-wide convention."
   },
   "JKR-MeniII|co_occupant_roles": {
     "value": ["Wife"],
-    "rationale": "1/1/1 tie on chunk-10 JKR-MeniII (PM `MENI [II]`) wife role. PM III.1 2nd ed. 1974 printed p.106 (physical p.103). Same `Wife` (no title cluster) pattern as JKR-Iiu — selecting `[\"Wife\"]` per chunk-8 G 2415 + chunk-10 JKR-Iiu precedent for wives without explicit title."
+    "rationale": "1/1/1 tie on chunk-10 JKR-MeniII (PM `MENI [II]`) wife role. PM III.1 2nd ed. 1974 printed p.107 (physical p.104). Same `Wife` (no title cluster) pattern as JKR-Iiu — selecting `[\"Wife\"]` per chunk-8 G 2415 + chunk-10 JKR-Iiu precedent for wives without explicit title."
   },
   "JKR-Iiu|notes_from_pm": {
     "value": "Overlord of linen (sšrw), etc. Dyn. VI. Wife, Tepemnefert.",

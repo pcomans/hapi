@@ -866,7 +866,7 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
         "value": "Recruit. Dyn. VI.",
         "rationale": (
             "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
-            "p.104 prints `Dyn. VI.` (period before VI); 2/1 agent "
+            "p.106 prints `Dyn. VI.` (period before VI); 2/1 agent "
             "majority dropped the period. Restored."
         ),
     },
@@ -880,7 +880,7 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
         ),
         "rationale": (
             "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
-            "p.104 cross-reference `Meni [I]` — bracketed Roman "
+            "p.107 cross-reference `Meni [I]` — bracketed Roman "
             "regnal normalisation per chunk-10 prompt rule (drop "
             "brackets, append Roman with space). Consistent with "
             "JKR-SonbI's Sentiotes I treatment."
@@ -892,7 +892,7 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
         "value": "Prophetess of Ḥathor, etc. Late Old Kingdom.",
         "rationale": (
             "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
-            "p.103 prints Ḥathor with underdot-Ḥ; agents' 2/1 majority "
+            "p.104 prints Ḥathor with underdot-Ḥ; agents' 2/1 majority "
             "dropped the diacritic. Restored per source-wide chunk-8 "
             "PR #227 P1-3 + chunk-9 G 3008/G 3093 conventions."
         ),
@@ -903,7 +903,7 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
         "value": "mitrt (woman). Late Old Kingdom.",
         "rationale": (
             "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
-            "p.103 prints `mjtrt` in typographic variant; chunk-9/10 "
+            "p.104 prints `mjtrt` in typographic variant; chunk-9/10 "
             "convention standardises on `mitrt`. Aligned."
         ),
     },
@@ -914,7 +914,7 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
         "value": ["Maʿkherui"],
         "rationale": (
             "Gemini PR #229 review-1 medium: PM III.1 2nd ed. 1974 "
-            "p.105 prints `Maʿkherui` with raised-ayin; agents' 2/1 "
+            "p.103 prints `Maʿkherui` with raised-ayin; agents' 2/1 "
             "majority left raw OCR `Maakherui`. notes_from_pm tie-"
             "break already restored the ayin; aligning co_occupants."
         ),
@@ -967,7 +967,7 @@ CHUNK10_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
         "value": ["Ither", "Sabt", "Senezem"],
         "rationale": (
             "Gemini PR #229 review-2 HIGH: PM III.1 2nd ed. 1974 "
-            "p.107 (physical p.104) prints Inpuhotp's headword block "
+            "p.106 (physical p.103) prints Inpuhotp's headword block "
             "with THREE co-occupants — Parents Ither (Prophet of "
             "Neuserrēʿ, etc.) and Sabt (Royal acquaintance), plus "
             "Wife Senezem. notes_from_pm tie-break override already "
