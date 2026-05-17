@@ -12,11 +12,11 @@ PM's headword block for G 1607 is `I‘AN, Overseer of the House of weaving wome
 
 ### P1-2. G 1234 occupant_name `ʿAnkh-Haf` should be `ʿAnkh-haf` (printed p. 60)
 
-PM prints `‘ANKH-HAF` in small caps; the Anglicising convention used elsewhere in this same chunk is lowercase-after-hyphen (cf. G 1227 `Sethiheknet` not `Sethi-Heknet`; G 1225 `Nefertyabt`; chunk-5 conventions). This is **the famous ʿAnkh-haf** (vizier under Khafre, MFA 27.442 reserve head — one of the most-catalogued Old Kingdom officials in Western collections, present in Boston/Brooklyn/Met cross-references). Capitalised `Haf` will miss museum-catalog matches that overwhelmingly print `Ankh-haf` / `Ankhhaf` / `ʿnḫ-ḥʾf`. Wrong-person matching risk is concrete. Normalise to `ʿAnkh-haf` and add aliases `["Ankhhaf", "Ankh-haf"]` to `occupant_alt_names`.
+PM prints `‘ANKH-HAF` in small caps; the Anglicising convention used elsewhere in this same chunk is lowercase-after-hyphen (cf. G 1227 `Sethiheknet` not `Sethi-Heknet`; G 1225 `Nefertyabt`; chunk-5 conventions). NOTE: G 1234's ʿAnkh-haf is a different individual from the famous Dyn-IV vizier ʿAnkh-haf at G 7510 East Field (MFA 27.442 reserve head) — PM dates G 1234 as `Late Dyn. V or Dyn. VI`. The Anglicisation argument stands regardless: the lowercase-haf form matches museum-catalog conventions (`Ankh-haf` / `Ankhhaf` / `ʿnḫ-ḥʾf`) for any ʿAnkh-haf row, including this later namesake. Normalise to `ʿAnkh-haf` and add aliases `["Ankhhaf", "Ankh-haf"]` to `occupant_alt_names`.
 
 ### P1-3. G 1221 `notes_from_pm` contains OCR-artifact stutter (printed p. 59)
 
-Row 42 notes_from_pm: `"Shad (?) (?), Royal acquaintance. Probably Dyn. V."` — PM prints `SHAD (?)` once, followed by the hieroglyph block, then `Royal acquaintance.` The agents pulled `(?)` twice. Rule-1 / rule-6 (reconciled data is sacred): a value not in the source. Fix: `"Royal acquaintance. Probably Dyn. V."` — leave the headword `(?)` reflected only in `attribution_certainty: probable`, which is already correctly set.
+Row 42 notes_from_pm: `"Shad (?) (?), Royal acquaintance. Probably Dyn. V."` — PM prints `SHAD (?)` once, followed by the hieroglyph block, then `Royal acquaintance.` The agents pulled `(?)` twice. Rule-1 / rule-6 (reconciled data is sacred): a value not in the source. Fix: `"Royal acquaintance. Probably Dyn. V."` — leave the headword `(?)` reflected only in `attribution_certainty`, which per the prompt rule maps `(?)` → `uncertain` (the `(?)` hedge is on the name reading, not the dating).
 
 ---
 

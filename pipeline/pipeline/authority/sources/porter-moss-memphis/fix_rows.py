@@ -368,12 +368,15 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "F3 finding (P1) the name and hedge are removed from "
             "`notes_from_pm` entirely — the name reading is already in "
             "`occupant_name: \"Shad\"` and the doubt is already captured "
-            "in `attribution_certainty: \"probable\"`. Including a "
-            "second copy in the notes risks downstream consumers "
-            "double-counting the hedge. Restoration: drop the name + "
-            "hedge from notes (matches reviewer's recommended form). "
-            "Gemini PR #225 round-1 medium-priority finding aligned "
-            "this fix with the reviewer's recommended form."
+            "in `attribution_certainty: \"uncertain\"` (per the prompt's "
+            "`(?)` → `uncertain` rule; see the G1221 attribution_certainty "
+            "entry above for the round-3 correction from `probable` to "
+            "`uncertain`). Including a second copy in the notes risks "
+            "downstream consumers double-counting the hedge. "
+            "Restoration: drop the name + hedge from notes (matches "
+            "reviewer's recommended form). Gemini PR #225 round-1 "
+            "medium-priority finding aligned this fix with the "
+            "reviewer's recommended form."
         ),
     },
     ("G1207", "occupant_role"): {
