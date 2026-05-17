@@ -33,7 +33,7 @@ Node-type mapping from Hapi labels to CIDOC classes:
 
 | Hapi label              | CIDOC class                    | Notes |
 |-------------------------|--------------------------------|-------|
-| `:Ruler`                | E21 Person                     | one node per source row; no canonical Person at load time |
+| `:Ruler`                | E21 Person                     | one node per source row, each treated as a **competing E21 identity hypothesis** about a real historical person. CRM 7.1.3's E21 scope note permits multiple instances when identity across sources is doubtful; that is exactly the situation here. `:Ruler` nodes are person-claims, not source-record proxies — `hapi:same_entity_as` claims resolve them into clusters as evidence accumulates. No canonical Person is materialised at load time. |
 | `:Site`                 | E27 Site                       | physical archaeological place |
 | `:Dynasty`              | E4 Period                      | with begin/end E52 Time-Span; membership claims point here |
 | `:Statement`            | E13 Attribute Assignment       | each claim is its own E13 |
@@ -41,7 +41,7 @@ Node-type mapping from Hapi labels to CIDOC classes:
 | `:Group`                | E74 Group                      | curatorial bodies, learned societies |
 | `:Document`             | E31 Document                   | publications, decision-batch records, authority releases |
 | `:Appellation`          | E41 Appellation                | name-shaped value entity; literal accessed via P190 |
-| `:TimeSpan`             | E52 Time-Span                  | date-shaped value entity; P82a/P82b for begin/end |
+| `:TimeSpan`             | E52 Time-Span                  | date-shaped value entity. Conceptual CRM uses P81 / P82 (range E61 Time Primitive); the RDFS implementation refines them to P81a / P81b / P82a / P82b with `rdfs:Literal` range. The property-graph stores boundary literals on the node; exports use the RDFS refinements. See deviation #4. |
 | `:Dimension`            | E54 Dimension                  | numeric measurement; P90/P91 |
 | `:Type`                 | E55 Type                       | the predicate registry; targets of P177 |
 | `:Matcher`              | *(non-CRM — declared deviation)* | software agents; see deviations below |
@@ -61,7 +61,7 @@ Edges use CIDOC property identifiers as primary, with `hapi:` namespace for rela
 1. **`:Matcher` is not E39 Actor.** CRM has no clean class for software agents (CRMdig's D7 Digital Machine Event is an extension, not core). Automated-derivation provenance attaches via the Hapi-namespaced `hapi:derived_by` edge directly, not via P14. The trust signal lives in the edge type so consumers can filter without parsing actor properties.
 2. **Property-graph inlining of value-entity literals.** Strict CRM stores literals on value entities via P190 (E41 → E62 String), P90 (E54 → E60 Number), etc. The property-graph encoding inlines these as direct properties on the value-entity node (`:E41 Appellation {symbolic_content: 'wnis'}`). The mapping is mechanical and round-trippable to a strict CRM/RDF export.
 3. **Hapi-namespace predicates where CRM has no clean fit.** Predicates like `hapi:same_entity_as`, `hapi:buried_in`, `hapi:shares_tomb_with`, `hapi:derived_by` live in a `hapi:` namespace. Each entry in the predicate registry (E55 Type) carries a `crm_nearest` field pointing at the nearest CIDOC property for interop documentation, when one exists.
-4. **P82a/P82b values stored as inlined signed integer years.** Strict CRM 7.1.3 declares P82a_begin_of_the_begin and P82b_end_of_the_end with conceptual range E61 Time Primitive, encoded as `rdfs:Literal` in the RDFS by encoding rule 3 (https://cidoc-crm.org/rdfs/7.1.3/CIDOC_CRM_v7.1.3.rdf). The RDFS imposes no specific lexical form — `rdfs:Literal` is the only syntactic constraint. The property-graph encoding stores year boundaries as signed integers on the `:TimeSpan:E52` node (e.g. `begin_of_the_begin: -2375`) together with an explicit `calendar` property (e.g. `'astronomical_year'`) that pins the year-numbering convention. Round-trip mapping at strict-RDF export: each `(integer, calendar)` pair serialises to a string `rdfs:Literal` in a Hapi-defined lexical form pinned by the loader specification — a Hapi convention layered on top of CRM's `rdfs:Literal` range, not a CRM-mandated form. (BCE-year serialisation in particular is delicate: XML Schema 1.1 expanded-year notation, ISO 8601 extended astronomical-year form, and `xsd:dateTime` all differ on negative years; the loader pins one explicitly.)
+4. **Time-Span boundary literals stored directly on the `:E52 Time-Span` node.** The conceptual CRM 7.1.3 model declares P81 ongoing throughout and P82 at some time within with domain E52 and range **E61 Time Primitive**; it does not declare conceptual P81a / P81b / P82a / P82b. Those four are introduced *only* by the RDFS implementation as automatically-generated refinements that emit `rdfs:Literal` (see the RDFS preamble's encoding rules). The property-graph encoding stores year boundaries as signed integers directly on the `:TimeSpan:E52` node (e.g. `begin_of_the_begin: -2375`, `end_of_the_end: -2345`) together with an explicit `calendar` property (e.g. `'astronomical_year'`) that pins the year-numbering convention. Round-trip mapping has two stages: (a) at the conceptual level, the literals serialise into one or more E61 Time Primitive value-entities linked to the E52 via P81 / P82; (b) at the RDFS-implementation level, the same literals serialise into the implementation's P81a / P81b / P82a / P82b literal refinements. The exact lexical form (XML Schema 1.1 expanded-year notation vs ISO 8601 extended astronomical-year form vs other) is **a Hapi convention**, pinned in the loader specification — CRM does not mandate one, especially for BCE years where the three conventions disagree.
 5. **Citation-evidence properties (`cited_page`, `cited_pdf_page`) carried on the `P70i_is_documented_in` edge itself.** Strict CRM 7.1.3 has no `.1` sub-property of P70 for page-level citation; the edge-property idiom is a Hapi compactness choice. Round-trip mapping at strict-RDF export — every property's domain and range stays satisfied:
    - For each distinct (publication, page) pair, materialise the page as its own `:E31 Document` (e.g. `:E31 Document {id: 'leprohon_2013_p115'}`). E31 is still the typing — a page is still a Document.
    - Bind the page-level `:E31` to its parent publication via `P148i_is_component_of → :E31 Document {id: 'leprohon_2013'}`. P148 has domain and range E89 Propositional Object; E31 IS-A E73 IS-A E89, so both endpoints conform by subsumption.
@@ -88,7 +88,7 @@ Edges use CIDOC property identifiers as primary, with `hapi:` namespace for rela
 
 5. **All Statement values are E1 CRM Entity references; literals live on value-bearing entities.** `P141_assigned` has range E1 CRM Entity in CRM 7.1.3 — literals are not E1. The Hapi model is faithful to this:
    - A name claim like "Narmer's Horus name is 'nar mer'" assigns an `:E41 Appellation` value entity that carries the literal as a property accessed via `P190_has_symbolic_content`.
-   - A reign-date claim assigns an `:E52 Time-Span` value entity carrying `P82a_begin_of_the_begin` / `P82b_end_of_the_end` properties.
+   - A reign-date claim assigns an `:E52 Time-Span` value entity that carries boundary literals on the node. Conceptual CRM models the span via P81 ongoing throughout / P82 at some time within (both E52 → E61 Time Primitive); the property-graph stores the boundaries directly, exporting to the RDFS-implementation refinements P81a / P81b / P82a / P82b at strict-RDF time (see deviation #4).
    - A numeric measurement assigns an `:E54 Dimension` carrying `P90_has_value` and `P91_has_unit`.
    - An entity-identity claim like "Narmer belongs to Dynasty 0" assigns the Dynasty (`:E4 Period`) node directly.
 
@@ -110,9 +110,9 @@ Predicates describe *what* the claim is about; the actor + document describe *wh
 
 **Document granularity.** Curatorial decisions are batched by date: one `:E31 Document {kind: 'curator_decision_batch'}` per batch (`hapi_display_names_2026_05`, `hapi_display_names_2027_q1`, …), each carrying a `decided_at` timestamp and a free-text `rationale`. When a spelling is revised, a new Document is created and the old claim stays attached to its original Document as audit trail.
 
-**Resolution rule for `hapi:display_name`**:
-1. Prefer the Statement whose `P70i_is_documented_in` document has `kind = 'curator_decision_batch'` and the most recent `decided_at`.
-2. Else: **fail loud** — no fallback to publication-documented Statements.
+**Resolution rule for `hapi:display_name`** — both clauses must hold; checking only the document or only the actor is under-specified:
+1. Prefer the Statement whose `P14_carried_out_by` is the curatorial Group `:E74 {id: 'hapi_curatorial'}` **AND** whose `P70i_is_documented_in` document has `kind = 'curator_decision_batch'`. Among matching Statements, pick the one whose document has the most recent `decided_at`.
+2. Else: **fail loud** — no fallback to publication-documented Statements, no fallback to other actors documented in a curator-decision batch, no fallback to the curatorial Group attaching to a non-curator-decision document.
 
 Consequences of fail-loud: rulers added by a future source-loader before a curator reviews them are unrenderable until the curator decision arrives. This is intentional — the gap surfaces in the review queue immediately, rather than hiding behind a placeholder.
 
@@ -160,7 +160,10 @@ Every claim is an E13 Statement carrying exactly five canonical CIDOC edges (wit
   -[:P14_carried_out_by]->             (:Person:E21 {id: 'leprohon_rj'})
   -[:P70i_is_documented_in]->          (:Document:E31 {id: 'leprohon_2013'})
 
-// (3) A reign-date claim. Value is an E52 Time-Span (begin/end via P82a/P82b inlined as props).
+// (3) A reign-date claim. Value is an E52 Time-Span with boundary literals inlined on the node.
+//     Conceptual CRM models the span via P81/P82 (E52 → E61 Time Primitive); the RDFS
+//     implementation exposes P81a/P81b/P82a/P82b as literal refinements. The property-graph
+//     stores boundaries directly; export pipelines emit one or the other form. See deviation #4.
 (:Statement:E13)
   -[:P140_assigned_attribute_to]->    (:Ruler {leprohon::leprohon-5.07})
   -[:P141_assigned]->                  (:TimeSpan:E52 {
