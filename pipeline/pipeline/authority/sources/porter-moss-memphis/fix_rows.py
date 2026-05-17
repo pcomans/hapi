@@ -497,6 +497,16 @@ CHUNK6_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     },
 }
 
+# Per-chunk reviewer corrections for chunk 7 (Gîza West Field Cemetery
+# G 2000 + G 2100 + Mastaba G 2220). Intentionally empty — chunk-7
+# normalisation was handled by a separate one-time pre-merge script
+# (`normalize_chunk7.py`) that stripped occupant-name prefixes from
+# notes_from_pm. No reviewer-cited row-level corrections were required
+# after that normalisation. Kept here as an empty placeholder per
+# Gemini PR #228 round-2 medium for registry completeness.
+CHUNK7_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Per-chunk reviewer corrections for chunk 8 (Gîza West Field Cemetery
 # en Echelon G 2300 + G 2400 + Cemetery G 2500). Combined feedback from
 # Gemini Code Assist PR #227 round 1 (3 medium) + egyptologist-reviewer
@@ -826,6 +836,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK4_CORRECTIONS,
     CHUNK5_CORRECTIONS,
     CHUNK6_CORRECTIONS,
+    CHUNK7_CORRECTIONS,
     CHUNK8_CORRECTIONS,
     CHUNK9_CORRECTIONS,
 ]
