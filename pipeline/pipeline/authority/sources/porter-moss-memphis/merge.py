@@ -82,6 +82,13 @@ AREA_ORDER: dict[str, int] = {
                # `D. <NUM1>/<NUM2>.`. Discovered via PR #229 / chunk-
                # 11 revise-priors finding: the chunk-10 attribution
                # of D-numbers as Mariette cross-references was wrong.
+    "JKE": 7,  # Junker Cemetery (East) descriptor-form (JKE-Sensen,
+               # JKE-Meruka, JKE-Iuf, etc.) — PM III.1 § III.A West
+               # Field Junker-excavated NAMED mastabas of the EAST
+               # banner (chunk 13). Parallel to chunk-10's JKR-
+               # (Junker West) convention. Synthesise
+               # `JKE-<TitleCaseName>` from the all-caps headword
+               # since PM gives no Reisner G-number for these tombs.
     # Future chunks extend this dict AS THEY LAND their first row;
     # `tests/…::test_prefix_vocabulary_consistent` pins this dict against the
     # test regex so the two stay in sync.

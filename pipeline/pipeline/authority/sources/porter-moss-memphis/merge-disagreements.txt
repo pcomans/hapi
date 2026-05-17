@@ -480,6 +480,19 @@ D221 (Iti):
   notes_from_pm: a="Probably Dyn. V-VI. Exact position unknown." | b="Probably Dyn. V-VI." | c="Probably Dyn. V-VI."  → chose "Probably Dyn. V-VI."
   occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose "Unknown"
 
+JKE-Meruka (Meruka):
+  co_occupant_roles: a=["Father, Elder of the Hall", "Wife, Royal acquaintance"] | b=["Father, Elder of the Hall, etc.", "Wife, Royal acquaintance"] | c=["Father, Elder of the Hall, etc.", "Wife, Royal acquaintance"]  → chose ["Father, Elder of the Hall, etc.", "Wife, Royal acquaintance"]
+
+JKE-NiankhHathor (Niʿankh-Ḥathor):
+  notes_from_pm: a="Prophetess of Hathor Mistress-of-the-Deserts, etc. Late Old Kingdom." | b="Prophetess of Ḥathor Mistress-of-the-Deserts, etc. Late Old Kingdom." | c="Prophetess of Ḥathor Mistress-of-the-Deserts, etc. Late Old Kingdom."  → chose "Prophetess of Ḥathor Mistress-of-the-Deserts, etc. Late Old Kingdom."
+
+JKE-Nikaukhnum (Nikaukhnum):
+  co_occupant_roles: a=["Royal acquaintance (probably woman)"] | b=["Royal acquaintance"] | c=["Royal acquaintance"]  → chose ["Royal acquaintance"]
+
+JKE-Sensen (Sensen):
+  co_occupant_roles: a=["Wife, Prophetess of Hathor"] | b=["Wife, Prophetess of Ḥathor, etc."] | c=["Wife, Prophetess of Ḥathor, etc."]  → chose ["Wife, Prophetess of Ḥathor, etc."]
+  notes_from_pm: a="Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Hathor, etc." | b="Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Ḥathor, etc." | c="Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Ḥathor, etc."  → chose "Overseer of the js-chamber. Late Old Kingdom. Wife, Pepi Prophetess of Ḥathor, etc."
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
