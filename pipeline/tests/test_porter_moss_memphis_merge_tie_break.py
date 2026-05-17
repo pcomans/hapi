@@ -262,6 +262,10 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       `SAQ-MerenreI|notes_from_pm` (three Saqqâra queen-enclosure /
       Dyn-VI-king rows where agents disagreed on period-before-PYRAMID
       and raised-ayin normalisation in the verbatim headword block).
+    - Chunk 6: `G1151|notes_from_pm`, `G1201|notes_from_pm`,
+      `G1221|notes_from_pm` (three West Field G 1000-1200 rows where
+      agents disagreed on colon-vs-semicolon punctuation, underdot-Ḥ
+      glyph normalisation for Meḥyt, and `(?)` hedge handling for SHAD).
 
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
@@ -275,6 +279,9 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-IputII", "notes_from_pm"),
         ("SAQ-Neit", "notes_from_pm"),
         ("SAQ-MerenreI", "notes_from_pm"),
+        ("G1151", "notes_from_pm"),
+        ("G1201", "notes_from_pm"),
+        ("G1221", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
