@@ -547,6 +547,18 @@ CHUNK24_TOMB_IDS: frozenset[str] = frozenset({
 # UNIS-ḤAISHTEF (out of OK + 1st-Int-Period scope). 32+
 # tie-break overrides for the dense headword-vs-body-prose
 # notes_from_pm differences.
+CHUNK27A_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.A NORTH OF THE STEP PYRAMID, sub-section `OLD KINGDOM
+    # TOMBS NOS. I-88 OF MARIETTE` (front half). Physical pp.88-108 /
+    # printed pp.448-468. 58 rows covering Mariette Nos. 1-59 (No. 17
+    # absent from PM — Mariette gap). Introduces NEW `MAR<N>` prefix for
+    # the Mariette numbered Saqqâra OK mastaba series — primary citation
+    # form (`No. 6 [C 15]. TY ...`); bracketed letter-code goes into
+    # `tomb_aliases`. Ti's tomb (No. 60 [D 22]) deferred to chunk-27b.
+    f"MAR{n}" for n in range(1, 60) if n != 17
+})
+
+
 CHUNK26_TOMB_IDS: frozenset[str] = frozenset({
     "SAQ-AkhtihotpLouvre", "SAQ-AkhtihotpSekhmet", "SAQ-Ankhirptah",
     "SAQ-Bebi", "SAQ-Hetep", "SAQ-Irenkaptah", "SAQ-Irukaptah",
@@ -624,6 +636,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
+    | CHUNK27A_TOMB_IDS
 )
 
 
@@ -863,6 +876,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK26_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK27A_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -877,7 +892,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -939,6 +954,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 609 <= page <= 632, f"{row['tomb_id']} page {page} outside chunk-25 [609, 632]"
         elif row["tomb_id"] in CHUNK26_TOMB_IDS:
             assert 633 <= page <= 654, f"{row['tomb_id']} page {page} outside chunk-26 [633, 654]"
+        elif row["tomb_id"] in CHUNK27A_TOMB_IDS:
+            assert 448 <= page <= 468, f"{row['tomb_id']} page {page} outside chunk-27a [448, 468]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1076,6 +1093,11 @@ def test_cemetery_by_chunk() -> None:
             # Chunk 26: § II.F AROUND THE PYRAMID-COMPLEX OF UNIS
             # continuation (phys pp.273-294 / printed pp.633-654).
             assert row["cemetery"] == "Around the Pyramid-complex of Unis", row
+        elif row["tomb_id"] in CHUNK27A_TOMB_IDS:
+            # Chunk 27a: § II.A NORTH OF THE STEP PYRAMID, Mariette OK
+            # tombs Nos. 1-59 (front half). Cemetery descriptor
+            # `"North of the Step Pyramid"`.
+            assert row["cemetery"] == "North of the Step Pyramid", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1266,6 +1288,15 @@ def test_dynasty_assignments() -> None:
             # Dyn V or early Dyn VI for Shepsipuptah / Ptaḥḥotp
             # Iyniʿankh.
             assert row["dynasty"] in {"5", "6", None}, row
+        elif row["tomb_id"] in CHUNK27A_TOMB_IDS:
+            # Chunk 27a § II.A North of the Step Pyramid, Mariette OK
+            # tombs Nos. 1-59. Dyn III to early Dyn IV (No. 5
+            # Khaʿbausokar), Dyn IV (No. 36 Kaʿaper Late Dyn IV or
+            # early Dyn V), Dyn V (most rows), Dyn VI (No. 23
+            # Sednas, No. 43 Inti, etc.). All rows are OK only —
+            # Late Period / Saite intrusions are absent from § II.A's
+            # OK sub-section.
+            assert row["dynasty"] in {"3", "4", "5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.

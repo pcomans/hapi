@@ -118,6 +118,12 @@ AREA_ORDER: dict[str, int] = {
     "SAQH": 14, # Petrie+Murray Saqqâra H-numbered mastabas (SAQH1
                 # Nisusert) — same publication, parallel H-series
                 # (chunk 25 § II.E continuation).
+    "MAR": 15,  # Mariette numbered Saqqâra OK mastabas Nos. 1-88
+                # (chunk 27 § II.A North of the Step Pyramid). PM
+                # prints the Mariette sequential number as the primary
+                # citation (`No. 6 [C 15]. TY ...`); the bracketed
+                # letter-code goes in `tomb_aliases`. tomb_id form:
+                # `MAR<N>`, e.g. `MAR6` for Ti.
     # NB: chunks 15 + 17 (Cemetery en Echelon South + G 7000 East Field
     # remainder) re-use Reisner G-numbers (G 4911-G 5560 + G 7152-G 7948)
     # so no new prefix is needed there. Chunks 16 (Cemetery G 6000) and
