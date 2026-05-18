@@ -2124,6 +2124,32 @@ CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "(PM-faithful, *kꜣ-servant*)."
         ),
     },
+    # LG72 NEBU `Greatest of the craftsmen of the King` is the title
+    # wr-ḫrp-ḥmwt = High Priest of Ptah at Memphis. Per Egyptological
+    # convention, this is a High Priest role, not a generic Official.
+    # Gemini PR #240 round-1 medium 3255796565.
+    ("LG72", "occupant_role"): {
+        "value": "High Priest",
+        "rationale": (
+            "Gemini PR #240 round-1 medium: `Greatest of the "
+            "craftsmen` (wr-ḫrp-ḥmwt) is the High Priest of Ptah "
+            "title at Memphis per Egyptological convention. Promote "
+            "from `Official` → `High Priest`. Per controlled-vocab "
+            "`High Priest of any divinity` rule."
+        ),
+    },
+    # LG74 DENDENU is the second of two Dendenus in this chunk — LG73
+    # is also DENDENU. Per chunks-7/11/14 convention of disambiguating
+    # same-name occupants with appended regnal numerals, the second
+    # Dendenu should be `Dendenu II`. Gemini PR #240 round-1 medium.
+    ("LG74", "occupant_name"): {
+        "value": "Dendenu II",
+        "rationale": (
+            "Gemini PR #240 round-1 medium: disambiguate from LG73 "
+            "Dendenu using appended Roman numeral, per chunks-7/11/14 "
+            "homonymous-occupant convention."
+        ),
+    },
 }
 
 
