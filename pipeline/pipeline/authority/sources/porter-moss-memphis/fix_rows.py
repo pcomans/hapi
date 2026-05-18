@@ -1904,6 +1904,101 @@ CHUNK16_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-17 (CEMETERY G 7000 East Field remainder). Gemini PR #238
+# round-2 finding: 7 rows with `Stone-built mastaba.` / `Stone-built
+# twin-mastaba.` body trailers left in notes_from_pm (prompt rule
+# violated by 2/1 agent-majority for rows where ties weren't raised),
+# G 7244 missing its title "Keeper of the legs of the Great House",
+# and G 7810 retaining an excavator-history line that should be dropped.
+CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("G7210", "notes_from_pm"): {
+        "value": (
+            "King's son of his body, Count, Keeper of Nekhen, etc., "
+            "and his wife. Temp. Khufu to late Dyn. IV. Parents, "
+            "Khufu and probably Mertiotes [I]."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built twin-"
+            "mastaba.` body trailer per prompt rule (line 124)."
+        ),
+    },
+    ("G7211", "notes_from_pm"): {
+        "value": (
+            "Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet "
+            "of the Pyramid of Menkauhor, Inspector of administrators "
+            "of the Treasury, etc. Late Dyn. V or Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer per prompt rule."
+        ),
+    },
+    ("G7244", "notes_from_pm"): {
+        "value": "Keeper of the legs of the Great House.",
+        "rationale": (
+            "Gemini PR #238 round-2 medium: restore the substantive "
+            "title cluster `Keeper of the legs of the Great House.` "
+            "that I had incorrectly null'd in the tie-break override. "
+            "Per chunks 9-16 convention, title clusters are kept in "
+            "notes_from_pm even when the headword is otherwise minimal."
+        ),
+    },
+    ("G7330", "notes_from_pm"): {
+        "value": (
+            "Middle or late Dyn. IV. Sarcophagus (uninscribed) with "
+            "panther-skin in relief on lid, and palace-façade "
+            "decoration, from shaft of G 7340, in Cairo Mus. Ent. "
+            "54934."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built twin-"
+            "mastaba.` body trailer per prompt rule. Keep dating + "
+            "the sarcophagus body-prose finding (unique archaeological "
+            "data, parallel to G 7220/G 7420/G 7540 restoration in "
+            "round-1)."
+        ),
+    },
+    ("G7411", "notes_from_pm"): {
+        "value": "Dyn. V. Wife, Ḥatḥornufer.",
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer between dating and wife clause "
+            "(pypdf flow-disorder placed the trailer mid-block); "
+            "preserve dating + wife clause per chunks 9-16 convention."
+        ),
+    },
+    ("G7560", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer per prompt rule. Headword has "
+            "only dating clue; no title cluster."
+        ),
+    },
+    ("G7750", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer per prompt rule. Headword has "
+            "only dating clue; no title cluster."
+        ),
+    },
+    ("G7810", "notes_from_pm"): {
+        "value": (
+            "King's son of his body, Overseer of the expedition. "
+            "End of Dyn. IV or early Dyn. V. Mother (possibly), "
+            "Meresʿankh [II] (tomb G 7410)."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba. Excavated by Service des Antiquités in 1923.` "
+            "body trailer + excavator-history line per prompt rule. "
+            "Keep title cluster + dating + parent clause."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1925,6 +2020,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK14_CORRECTIONS,
     CHUNK15_CORRECTIONS,
     CHUNK16_CORRECTIONS,
+    CHUNK17_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

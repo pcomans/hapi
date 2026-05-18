@@ -972,6 +972,14 @@ Reviewer-cited row corrections:
   G6037.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 174, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"}
   G6042.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 178, "section": "III"}
   G7102.occupant_name: "Iou" → "Idu"
+  G7210.notes_from_pm: "King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]. Stone-built twin-mastaba." → "King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]."
+  G7211.notes_from_pm: "Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba." → "Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI."
+  G7244.notes_from_pm: null → "Keeper of the legs of the Great House."
+  G7330.notes_from_pm: "Middle or late Dyn. IV. Stone-built twin-mastaba. Sarcophagus (uninscribed) with panther-skin in relief on lid, and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934." → "Middle or late Dyn. IV. Sarcophagus (uninscribed) with panther-skin in relief on lid, and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934."
+  G7411.notes_from_pm: "Dyn. V. Stone-built mastaba. Wife, Ḥatḥornufer." → "Dyn. V. Wife, Ḥatḥornufer."
+  G7560.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
+  G7750.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
+  G7810.notes_from_pm: "King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresʿankh [II] (tomb G 7410). Stone-built mastaba. Excavated by Service des Antiquités in 1923." → "King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresʿankh [II] (tomb G 7410)."
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
   LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
