@@ -2084,6 +2084,28 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
 # Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
 # correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK24_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 24 — § II.E (a) WEST OF THE STEP PYRAMID OK.
+    #
+    # F1 (drop hedged alias from SAQ-ThefuPtahhotp occupant_alt_names):
+    # Codex P2 review on PR #246. PM headword for the second THEFU
+    # tomb is `THEFU (probably also Ptaḥḥotp), Royal Chamberlain.`
+    # — the `probably also` qualifier makes the Ptaḥḥotp alias
+    # HEDGED, not asserted. Per source-wide convention (chunks 8-23
+    # `good name <ALT>` is asserted; `probably also <ALT>` is
+    # hedged), hedged aliases stay in notes_from_pm ONLY, not in
+    # occupant_alt_names. The tie-break rationale for
+    # SAQ-ThefuPtahhotp|notes_from_pm said this explicitly but
+    # all three agents emitted `"Ptaḥḥotp"` as an occupant_alt_names
+    # entry, so a tie-break override doesn't fire (3/3 unanimous).
+    # Drop the alias here.
+    ("SAQ-ThefuPtahhotp", "occupant_alt_names"): {
+        "value": [],
+        "rationale": "PM III.2 chunk-24 § II.E (a). PM headword `THEFU (probably also Ptaḥḥotp)` — `probably also` is a HEDGED alias, not an asserted alt-name. Per source-wide convention (chunks 8-23: asserted `good name` aliases live in occupant_alt_names; hedged aliases live in notes only), drop the hedged Ptaḥḥotp from occupant_alt_names. Codex P2 review on PR #246.",
+    },
+}
+
+
 CHUNK23_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 23 — § II.C EAST OF THE STEP PYRAMID.
     #
@@ -2230,6 +2252,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK18_CORRECTIONS,
     CHUNK22_CORRECTIONS,
     CHUNK23_CORRECTIONS,
+    CHUNK24_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

@@ -654,6 +654,15 @@ LG84 (Pakap):
 LG97 (Harsiesi):
   notes_from_pm: a="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin." | b="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" | c="LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"  → chose "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin"
 
+SAQ-AkhtihotpIpiUzau (Akhtiḥotp Ipi-uzau):
+  notes_from_pm: a="Judge and Overseer of scribes, etc. Dyn. VI. Map LVIII. Wooden statuette of deceased. Fragments of seated statue of deceased. Architrave-fragment of Merut, Prophetess of Neith, etc., Dyn. VI." | b="Judge and Overseer of scribes, etc. Dyn. VI." | c="Judge and Overseer of scribes, etc. Dyn. VI. Map LVIII. Wooden statuette of deceased; fragments of seated statue. Architrave-fragment of Merut, Prophetess of Neith, etc., Dyn. VI."  → chose "Judge and Overseer of scribes, etc. Dyn. VI."
+  occupant_name: a="Akhtiḥotp Ipi-uzau" | b="Akhtiḥotp Ipi-uzau" | c="Akhtiḥotp Ipi-uza"  → chose "Akhtiḥotp Ipi-uzau"
+
+SAQ-AnkhiInthi (ʿAnkhi Inthi):
+  notes_from_pm: a="Prophet of the Pyramids of Unis and Teti, Metal-worker of the Great House, etc. End of Dyn. VI. Map LVIII." | b="Prophet of the Pyramids of Unis and Teti, Metal-worker of the Great House, etc. End of Dyn. VI." | c="Prophet of the Pyramids of Unis and Teti, Metalworker of the Great House, etc. End of Dyn. VI. Map LVIII."  → chose "Prophet of the Pyramids of Unis and Teti, Metal-worker of the Great House, etc. End of Dyn. VI."
+  occupant_alt_names: a=[] | b=["Inthi"] | c=[]  → chose []
+  occupant_name: a="ʿAnkhi Inthi" | b="ʿAnkhi" | c="ʿAnkhi-inthi"  → chose "ʿAnkhi Inthi"
+
 SAQ-DoubleTombUserkaf (None):
   notes_from_pm: a="Anonymous double tomb above Mortuary Temple of Userkaf, including tombs farther east in face of cliff. Late Dyn. XXVI or early Dyn. XXVII. North tomb of Neferebrēʿ-sineit (Royal chamberlain, etc., son of Merib and Shepenubaste). South tomb of Weḥebrēʿ-men (Treasurer of the King of Lower Egypt, etc., son of Taʿa)." | b="Double tomb above mortuary temple of Userkaf, including tombs farther east in face of cliff. Late Dyn. XXVI or early Dyn. XXVII. (a) North tomb: Neferebrēʿ-sineit, Royal chamberlain, etc., son of Merib and Shepenubaste. (b) South tomb: Weḥebrēʿ-men, Treasurer of the King of Lower Egypt, etc., son of Taʿa (mother)." | c="Double tomb above Mortuary Temple of Userkaf. Late Dyn. XXVI or early Dyn. XXVII. Map LVIII. Vaulted tombs at bottom of shaft: (a) North tomb, Neferebrēʿ-sineit, Royal chamberlain, son of Merib and Shepenubaste; (b) South tomb, Weḥebrēʿ-men, Treasurer of the King of Lower Egypt, son of Taʿa (mother). Surface finds, probably all Dyn. XXVI."  → chose "Double tomb above Mortuary Temple of Userkaf, including tombs farther east in face of cliff. Late Dyn. XXVI or early Dyn. XXVII. (a) North tomb, Neferebrēʿ-sineit, Royal chamberlain, son of Merib and Shepenubaste. (b) South tomb, Weḥebrēʿ-men, Treasurer of the King of Lower Egypt, son of Taʿa (mother)."
 
@@ -674,6 +683,9 @@ SAQ-MerenreI (Merenrʿ I):
   notes_from_pm: a="I. PYRAMID-COMPLEX OF MERENREʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | b="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8." | c="I. PYRAMID-COMPLEX OF MERENRʿ I. Dyn. VI PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."  → chose "I. PYRAMID-COMPLEX OF MERENREʿ I. Dyn. VI. PYRAMID. Lepsius, XXXIX; Perring and Vyse, 8."
   occupant_name: a="Merenre I" | b="Merenrʿ I" | c="Merenrʿ I"  → chose "Merenrʿ I"
 
+SAQ-Mereri (Mereri):
+  notes_from_pm: a="Chief Justice and Vizier, etc. Late Dyn. VI. Map LVIII. Two obelisks with name and titles. False-door. Lower part of deceased at table, with offering-bringers below, on north wall of offering-room. Remains of wooden statuette, from serdab. Offering-table of Khuy, Inspector of tenants of the Great House, Dyn. V-VI. Burial chamber walls with offerings, granaries, ox, six chests, offering-list. Sarcophagus with representations of vessels with ointments." | b="Chief Justice and Vizier, etc. Late Dyn. VI." | c="Chief Justice and Vizier, etc. Late Dyn. VI. Map LVIII. Two obelisks with name and titles; false-door; offering-room and burial chamber scenes; sarcophagus."  → chose "Chief Justice and Vizier, etc. Late Dyn. VI."
+
 SAQ-Neit (Neit):
   notes_from_pm: a="PYRAMID-ENCLOSURE OF NEIT. Dyn. VI." | b="PYRAMID-ENCLOSURE OF NEIT. Dyn. VI" | c="PYRAMID-ENCLOSURE OF NEIT. Dyn. VI PYRAMID."  → chose "PYRAMID-ENCLOSURE OF NEIT. Dyn. VI."
   source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 430, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"}
@@ -687,6 +699,19 @@ SAQ-PepyI (Pepy I):
 SAQ-PepyII (Pepy II):
   notes_from_pm: a="K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI. PYRAMID. Lepsius, XLI; Perring and Vyse, 9." | b="K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI. PYRAMID. Lepsius, XLI; Perring and Vyse, 9." | c="K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI PYRAMID. Lepsius, XLI; Perring and Vyse, 9."  → chose "K. PYRAMID-COMPLEX OF PEPY II. Dyn. VI. PYRAMID. Lepsius, XLI; Perring and Vyse, 9."
 
+SAQ-PtahhotpIyni (Ptaḥḥotp Iyni):
+  notes_from_pm: a="Overseer of scribes of the Great Court, etc. End of Dyn. V or Dyn. VI. Map LVIII. Lintel of doorway." | b="Overseer of scribes of the Great Court, etc. End of Dyn. V or Dyn. VI." | c="Overseer of scribes of the Great Court, etc. End of Dyn. V or Dyn. VI. Map LVIII. Lintel of doorway."  → chose "Overseer of scribes of the Great Court, etc. End of Dyn. V or Dyn. VI. Map LVIII. Lintel of doorway."
+
+SAQ-PtahhotpIyniankh (Ptaḥḥotp Iyniʿankh):
+  dynasty: a="6" | b="6" | c="5"  → chose "6"
+  notes_from_pm: a="Judge and Overseer of scribes, Prophet of Saḥurēʿ, etc. End of Dyn. V or early Dyn. VI. Map LVIII. Plan LX. Chapel mostly painted decoration only; two wooden statuettes and fragments of others. Passage and offering-room with scenes of men driving rams, offering-bringers, boatmen jousting, cooking, fish, milking, sledge-dragging, musicians and dancers, wine; false-door with basalt offering-table embedded in limestone slab and inscribed limestone bench. Inscribed sarcophagus and inscribed ointment-slab in burial chamber." | b="Judge and Overseer of scribes, Prophet of Saḥurēʿ, etc. End of Dyn. V or early Dyn. VI." | c="Judge and Overseer of scribes, Prophet of Saḥurēʿ, etc. End of Dyn. V or early Dyn. VI. Map LVIII. Plan LX. Chapel with painted decoration; passage and offering-room scenes; inscribed sarcophagus."  → chose "Judge and Overseer of scribes, Prophet of Saḥurēʿ, etc. End of Dyn. V or early Dyn. VI."
+  occupant_name: a="Ptaḥḥotp Iyni-ʿankh" | b="Ptaḥḥotp Iyniʿankh" | c="Ptaḥḥotp Iyniʿankh"  → chose "Ptaḥḥotp Iyniʿankh"
+
+SAQ-Sekhemka (Sekhemka):
+  co_occupant_roles: a=[] | b=["Wife"] | c=["Wife"]  → chose ["Wife"]
+  co_occupants: a=[] | b=["Khentkaus"] | c=["Khentkaus"]  → chose ["Khentkaus"]
+  notes_from_pm: a="Prophet of [Rēʿ] and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of Sed, Neuserrēʿ, and [Neferir]karēʿ, etc. Temp. Neuserrēʿ or later. North-west of D 62. Wife, Khentkaus, Royal acquaintance. Architrave with offering-text on façade. Offering-room: false-door flanked by deceased seated, dog under chair, five registers with sons, daughters, officials, offering-bringers, butchers." | b="Prophet of [Rēʿ] and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of Sed, Neuserrēʿ, and [Neferir]karēʿ, etc. Temp. Neuserrēʿ or later. North-west of D 62. Wife, Khentkaus, Royal acquaintance." | c="Prophet of [Rēʿ] and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of Sed, Neuserrēʿ, and [Neferir]karēʿ, etc. Temp. Neuserrēʿ or later. North-west of D 62. Wife, Khentkaus, Royal acquaintance."  → chose "Prophet of [Rēʿ] and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of Sed, Neuserrēʿ, and [Neferir]karēʿ, etc. Temp. Neuserrēʿ or later. North-west of D 62. Wife, Khentkaus, Royal acquaintance."
+
 SAQ-Sekhemkhet (Sekhemkhet):
   notes_from_pm: a="D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III. STEP PYRAMID. Unfinished." | b="D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III. STEP PYRAMID. Unfinished." | c="D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III STEP PYRAMID. Unfinished."  → chose "D. STEP PYRAMID ENCLOSURE OF SEKHEMKHET. Dyn. III. STEP PYRAMID. Unfinished."
 
@@ -694,8 +719,22 @@ SAQ-Shepseskaf (Shepseskaf):
   notes_from_pm: a="L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mastabet Faraʿun." | b="L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mashtabet Faraʿun." | c="L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mastabet Faraʿun."  → chose "L. BURIAL-COMPLEX OF SHEPSESKAF. Dyn. IV. SARCOPHAGUS-SHAPED TOMB. Lepsius, XLIII; Mariette, D 66; Mastabet Faraʿun."
   tomb_aliases: a=["Mastabet Faraʿun"] | b=["LG XLIII", "Mastabat el-Faraʿun"] | c=["Mastabat el-Faraʿun"]  → chose ["Mastabat el-Faraʿun"]
 
+SAQ-Shepsipuptah (Shepsipuptaḥ):
+  co_occupant_roles: a=[] | b=[] | c=["Son (probable)", "Daughter-in-law"]  → chose []
+  co_occupants: a=[] | b=[] | c=["Thetui", "Theset"]  → chose []
+  dynasty: a="6" | b="6" | c="5"  → chose "6"
+  notes_from_pm: a="Elder of the Hall of the Pyramid of Zadkarēʿ (Isesi), ka-servant of Ptaḥḥotp [I]. End of Dyn. V or Dyn. VI. North of tomb of Mereri. Lintel of false-door. Associated false-doors of Thetui, Elder of the dockyard, probably son, fragmentary upper part; and Theset, Prophetess of Ḥatḥor, etc., wife of Thetui." | b="Elder of the Hall of the Pyramid of Zadkarēʿ (Isesi), ka-servant of Ptaḥḥotp I. End of Dyn. V or Dyn. VI. North of tomb of Mereri." | c="Elder of the Hall of the Pyramid of Zadkarēʿ (Isesi), ka-servant of Ptaḥḥotp [I]. End of Dyn. V or Dyn. VI. North of tomb of Mereri. Lintel of false-door. Probable son Thetui, Elder of the dockyard; wife of Thetui, Theset, Prophetess of Ḥatḥor."  → chose "Elder of the Hall of the Pyramid of Zadkarēʿ (Isesi), ka-servant of Ptaḥḥotp [I]. End of Dyn. V or Dyn. VI. North of tomb of Mereri."
+
 SAQ-Teti (Teti):
   notes_from_pm: a="A. PYRAMID-COMPLEX OF TETI. Dyn. VI. PYRAMID. Lepsius, XXX; Perring and Vyse, 1." | b="A. PYRAMID-COMPLEX OF TETI. Dyn. VI. PYRAMID. Lepsius, XXX; Perring and Vyse, 1." | c="A. PYRAMID-COMPLEX OF TETI. Dyn. VI PYRAMID. Lepsius, XXX; Perring and Vyse, 1."  → chose "A. PYRAMID-COMPLEX OF TETI. Dyn. VI. PYRAMID. Lepsius, XXX; Perring and Vyse, 1."
+
+SAQ-Thefu (Thefu):
+  notes_from_pm: a="Lector-priest, etc. End of Dyn. V or Dyn. VI. Map LVIII. Two wooden statues, incomplete. Rectangular wooden coffin of deceased, fragments." | b="Lector-priest, etc. End of Dyn. V or Dyn. VI." | c="Lector-priest, etc. End of Dyn. V or Dyn. VI. Map LVIII. Two wooden statues, incomplete. Rectangular wooden coffin of deceased, fragments."  → chose "Lector-priest, etc. End of Dyn. V or Dyn. VI. Map LVIII. Two wooden statues, incomplete. Rectangular wooden coffin of deceased, fragments."
+
+SAQ-ThefuPtahhotp (Thefu):
+  co_occupant_roles: a=[] | b=[] | c=["Father (probably)"]  → chose []
+  co_occupants: a=[] | b=[] | c=["Akhtiḥotp"]  → chose []
+  notes_from_pm: a="Probably also Ptaḥḥotp, Royal Chamberlain. End of Dyn. V. Map LVIII. Father (probably), Akhtiḥotp (tomb D 64,a). Pillared Hall: east wall with [deceased] and registers of dancers and men dragging large jars; south wall with offering-bringers, men carrying large chest, men in canoes (including fishing with small net). Offering-room: bottom part of south false-door. Probably intrusive blocks. Offering-table of Ptaḥ[ḥotp] Thefu, alabaster, perhaps from here, in Cairo Mus. CG 1332." | b="(probably also Ptaḥḥotp), Royal Chamberlain. End of Dyn. V. Father (probably), Akhtiḥotp (tomb D 64,a)." | c="Royal Chamberlain. End of Dyn. V. Map LVIII. Father (probably), Akhtiḥotp (tomb D 64,a). Pillared Hall and Offering-room scenes. Offering-table of Ptaḥ[ḥotp] Thefu, alabaster, perhaps from here, in Cairo Mus. CG 1332. Probably also called Ptaḥḥotp."  → chose "(probably also Ptaḥḥotp), Royal Chamberlain. End of Dyn. V. Father (probably), Akhtiḥotp (tomb D 64,a)."
 
 SAQ-Userkaf (Userkaf):
   notes_from_pm: a="B. PYRAMID-COMPLEX OF USERKAF. Dyn. V. PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish." | b="B. PYRAMID-COMPLEX OF USERKAF. Dyn. V. PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish." | c="B. PYRAMID-COMPLEX OF USERKAF. Dyn. V PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish."  → chose "B. PYRAMID-COMPLEX OF USERKAF. Dyn. V. PYRAMID. Lepsius, XXXI; Perring and Vyse, 2; el-Haram el-Makharbish."
@@ -1045,6 +1084,42 @@ SAQD55 (Neferirtnef):
 SAQD56 (Nimaʿetsed):
   notes_from_pm: a="Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of the Pyramids of Neferirkarēʿ, Raʿneferef, and Neuserrēʿ, etc. Temp. Neuserrēʿ or later." | b="Prophet of Rēʿ and Ḥathor in the Sun-temple of Neferirkarēʿ, Prophet of the Pyramids of Neferirkarēʿ, Raʿneferef, and Neuserrēʿ, etc. Temp. Neuserrēʿ or later." | c="Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of the Pyramids of Neferirkarēʿ, Raʿneferef, and Neuserrēʿ, etc. Temp. Neuserrēʿ or later."  → chose "Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of the Pyramids of Neferirkarēʿ, Raʿneferef, and Neuserrēʿ, etc. Temp. Neuserrēʿ or later."
 
+SAQD59 (Duaḥap):
+  notes_from_pm: a="Prophet of Rēʿ in the Sun-temples of Neferirkarēʿ and Neuserrēʿ, Prophet of the Pyramid of Neuserrēʿ, etc. Dyn. VI. Façade with lintel, drum, and right jamb showing deceased and son. South wall of offering-room: deceased with wife spearing fish, at table, with offering-bringers and butchers below. North wall: deceased fowling with throw-stick, agricultural scenes." | b="Prophet of Rēʿ in the Sun-temples of Neferirkarēʿ and Neuserrēʿ, Prophet of the Pyramid of Neuserrēʿ, etc. Dyn. VI." | c="Prophet of Rēʿ in the Sun-temples of Neferirkarēʿ and Neuserrēʿ, Prophet of the Pyramid of Neuserrēʿ, etc. Dyn. VI."  → chose "Prophet of Rēʿ in the Sun-temples of Neferirkarēʿ and Neuserrēʿ, Prophet of the Pyramid of Neuserrēʿ, etc. Dyn. VI."
+
+SAQD60 (Ḥetepḥerakhti):
+  co_occupant_roles: a=[] | b=[] | c=["Son"]  → chose []
+  co_occupants: a=[] | b=[] | c=["Niʿankh-ptaḥ"]  → chose []
+  notes_from_pm: a="Judge and Elder of the Hall, Prophet of the Sun-temple of Neuserrēʿ, wʿb-priest of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later. Plan LIX. Chapel in Leyden Mus. F.1904/3.1. Son Niʿankh-ptaḥ, Judge and Scribe, appears on jambs holding hoopoe." | b="Judge and Elder of the Hall, Prophet of the Sun-temple of Neuserrēʿ, wʿb-priest of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later." | c="Judge and Elder of the Hall, Prophet of the Sun-temple of Neuserrēʿ, wab-priest of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later. Plan LIX. Chapel in Leyden Mus. F.1904/3.1. Son Niʿankh-ptaḥ, Judge and Scribe."  → chose "Judge and Elder of the Hall, Prophet of the Sun-temple of Neuserrēʿ, waʿb-priest of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later."
+
+SAQD61 (Duaenrēʿ):
+  co_occupant_roles: a=[] | b=["Wife"] | c=["Wife"]  → chose ["Wife"]
+  co_occupants: a=[] | b=["Thentet"] | c=["Thentet"]  → chose ["Thentet"]
+  notes_from_pm: a="Overseer of scribes of the land in the Two Houses, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Middle Dyn. V or later. Wife, Thentet, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Hall: titles and name of wife from marsh scene; south pillar with offering-text. Offering-room with offering-bringers and men bringing animals; false-door, lower part; panel in Cairo Mus. CG 1511." | b="Overseer of scribes of the land in the Two Houses, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Middle Dyn. V or later. Wife, Thentet, Prophetess of Ḥatḥor Mistress of the Sycamore, etc." | c="Overseer of scribes of the land in the Two Houses, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Middle Dyn. V or later. Wife, Thentet, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. False-door panel in Cairo Mus. CG 1511."  → chose "Overseer of scribes of the land in the Two Houses, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Middle Dyn. V or later. Wife, Thentet, Prophetess of Ḥathor Mistress of the Sycamore, etc."
+
+SAQD62 (Ptaḥḥotp I):
+  notes_from_pm: a="Chief Justice and Vizier, etc. Temp. Isesi. Plan LX. Forecourt, vestibule, pillared hall, painted chamber (1st ed. III, B of Mariette, A of Murray), offering-room (1st ed. IV, A of Mariette, C of Murray) with false-door, scenes of offering-bringers, donkeys threshing, fowling with clap-net, son Akhtiḥotp (tomb D 64,a) as scribe presenting list, estates. Father of Akhtiḥotp." | b="Chief Justice and Vizier, etc. Temp. Isesi." | c="Chief Justice and Vizier, etc. Temp. Isesi. Plan LX."  → chose "Chief Justice and Vizier, etc. Temp. Isesi."
+
+SAQD63 (Iteti ʿAnkhiris):
+  notes_from_pm: a="Elder of the is-chamber in the Two Houses, Overseer of the Palace (rḫt), etc. Dyn. VI. Offering-room: false-door, with statue at back of niche and offering-list on inner jambs, in Cairo Mus. CG 57190. Statues of deceased (seated, CG 45; standing, CG 47) in Cairo Museum, from south room." | b="Elder of the is-chamber in the Two Houses, Overseer of the Palace (ʿḥt), etc. Dyn. VI." | c="Elder of the is-chamber in the Two Houses, Overseer of the Palace (ʿḥ), etc. Dyn. VI. False-door in Cairo Mus. CG 57190. Seated statue CG 45, standing statue CG 47."  → chose "Elder of the is-chamber in the Two Houses, Overseer of the Palace (ʿḥ), etc. Dyn. VI."
+
+SAQD64a (Akhtiḥotp):
+  co_occupant_roles: a=[] | b=[] | c=["Father", "Son"]  → chose []
+  co_occupants: a=[] | b=[] | c=["Ptaḥḥotp I", "Ptaḥḥotp II"]  → chose []
+  notes_from_pm: a="Sub-banner (a) of D 64 MASTABA-COMPLEX. Plan LX. Chief Justice and Vizier, Overseer of the Pyramid-towns and Inspector of prophets of the Pyramids of Neuserrēʿ, Menkauḥor and Zadkarēʿ, etc. Temp. Isesi to Unis. Father, Ptaḥḥotp [I] (tomb D 62). Corridor with boats, hunting scenes, estates; deceased with eldest son Ptaḥḥotp [II] as child in scenes of netting fowl, harvest. Offering-room with deceased at table, offering-list, registers of offering-bringers; false-door (top missing)." | b="Chief Justice and Vizier, Overseer of the Pyramid-towns and Inspector of prophets of the Pyramids of Neuserrēʿ, Menkauḥor and Zadkarēʿ, etc. Temp. Isesi to Unis. Father, Ptaḥḥotp I (tomb D 62)." | c="Chief Justice and Vizier, Overseer of the Pyramid-towns and Inspector of prophets of the Pyramids of Neuserrēʿ, Menkauḥor and Zadkarēʿ, etc. Temp. Isesi to Unis. Father, Ptaḥḥotp [I] (tomb D 62). Sub-banner (a) within D 64 mastaba-complex shared with son Ptaḥḥotp [II]."  → chose "Chief Justice and Vizier, Overseer of the Pyramid-towns and Inspector of prophets of the Pyramids of Neuserrēʿ, Menkauḥor and Zadkarēʿ, etc. Temp. Isesi to Unis. Father, Ptaḥḥotp [I] (tomb D 62)."
+
+SAQD64b (Ptaḥḥotp II):
+  co_occupant_roles: a=[] | b=[] | c=["Father", "Son"]  → chose []
+  co_occupants: a=[] | b=[] | c=["Akhtiḥotp", "Ptaḥḥotp III"]  → chose []
+  notes_from_pm: a="Sub-banner (b) of D 64 MASTABA-COMPLEX. Plan LX. Chief Justice and Vizier (on the sarcophagus only), Inspector of prophets of the Pyramids of Menkauḥor and Isesi, Inspector of wʿb-priests of the Pyramid of Neuserrēʿ, etc. Temp. Isesi to Unis. Father, Akhtiḥotp (D 64,a). Offering-room: famous scenes including deceased with son Ptaḥḥotp [III] as child and Kaseshem behind, papyrus harvest, boys playing games, vintage, hunt in desert, building papyrus canoes, boatmen jousting, with Niʿankh-ptaḥ feasting; deceased with son Akhtiḥotp as child, wrestlers, cattle, fowl; false-doors. Inscribed sarcophagus in burial chamber. Many intrusive finds including false-doors of Khnemʿankhu Pepy, Sefekhu, etc." | b="Chief Justice and Vizier (on the sarcophagus only), Inspector of prophets of the Pyramids of Menkauḥor and Isesi, Inspector of wʿb-priests of the Pyramid of Neuserrēʿ, etc. Temp. Isesi to Unis. Father, Akhtiḥotp (see preceding tomb)." | c="Chief Justice and Vizier (on the sarcophagus only), Inspector of prophets of the Pyramids of Menkauḥor and Isesi, Inspector of wab-priests of the Pyramid of Neuserrēʿ, etc. Temp. Isesi to Unis. Father, Akhtiḥotp (see preceding tomb). Eldest son of Akhtiḥotp; iconic mastaba with Davies and Paget-Pirie publications. Inscribed sarcophagus."  → chose "Chief Justice and Vizier (on the sarcophagus only), Inspector of prophets of the Pyramids of Menkauḥor and Isesi, Inspector of waʿb-priests of the Pyramid of Neuserrēʿ, etc. Temp. Isesi to Unis. Father, Akhtiḥotp (tomb D 64,a)."
+  occupant_alt_names: a=["Thefi"] | b=["Thefi"] | c=[]  → chose ["Thefi"]
+  occupant_name: a="Ptaḥḥotp II" | b="Ptaḥḥotp II" | c="Ptaḥḥotp II Thefi"  → chose "Ptaḥḥotp II"
+
+SAQD65 (Ḥemet-rēʿ Ḥemi):
+  notes_from_pm: a="King's daughter of his body (of Unis), Prophetess of the mert-temple of Teti, etc. Early Dyn. VI. Map LVIII. False-door. Sarcophagus. Lintel with offering-text of Thesemu, 'Brother of the endowment' of Ptaḥḥotp (probably II), etc., and wife Raʿkher, with children, found in shaft." | b="King's daughter of his body (of Unis), Prophetess of the mert-temple of Teti, etc. Early Dyn. VI." | c="King's daughter of his body (of Unis), Prophetess of the mert-temple of Teti, etc. Early Dyn. VI. False-door and sarcophagus. Lintel with offering-text of Thesemu, 'Brother of the endowment' of Ptaḥḥotp (probably II), and wife Raʿkher with children, found in shaft."  → chose "King's daughter of his body (of Unis), Prophetess of the mert-temple of Teti, etc. Early Dyn. VI."
+  occupant_alt_names: a=[] | b=["Ḥemi"] | c=[]  → chose []
+  occupant_name: a="Ḥemet-rēʿ Ḥemi" | b="Ḥemtrēʿ" | c="Ḥemet-rēʿ Ḥemi"  → chose "Ḥemet-rēʿ Ḥemi"
+
 SAQF1 (Niʿankhrēʿ):
   co_occupant_roles: a=["Wife"] | b=["Wife"] | c=["Wife; Royal acquaintance."]  → chose ["Wife"]
   notes_from_pm: a="Overseer of King's adorners, Inspector of King's hairdressers, Overseer of gold of the magazines in the Two Houses, etc. Dyn. V. Wife, Ḥepetka, Royal acquaintance." | b="Overseer of King's adorners, Inspector of King's hairdressers, Overseer of gold of the magazines in the Two Houses, etc. Dyn. V. Wife, Ḥepetka, Royal acquaintance." | c="Overseer of King's adorners, Inspector of King's hairdressers, Overseer of gold of the magazines in the Two Houses, etc. Dyn. V."  → chose "Overseer of King's adorners, Inspector of King's hairdressers, Overseer of gold of the magazines in the Two Houses, etc. Dyn. V. Wife, Ḥepetka, Royal acquaintance."
@@ -1052,6 +1127,18 @@ SAQF1 (Niʿankhrēʿ):
 SAQF3 (Minnufer):
   co_occupant_roles: a=["Wife"] | b=["Wife"] | c=["Wife; mitrt."]  → chose ["Wife"]
   notes_from_pm: a="Elder of the house. Dyn. V-VI. Wife, Ḥerḥerʿankh, mitrt." | b="Elder of the house. Dyn. V-VI. Wife, Ḥerḥerʿankh, mitrt." | c="Elder of the house. Dyn. V-VI."  → chose "Elder of the house. Dyn. V-VI. Wife, Ḥerḥerʿankh, mitrt."
+
+SAQE8 (Seshemnufer Ḥeba):
+  notes_from_pm: a="Prophet of the Pyramids of Menkauḥor and Zadkarēʿ (Isesi), Royal chamberlain, etc. Temp. Isesi or later. False-door, top missing (probably not in Cairo Mus. as in 1st ed.). Blocks with estates, with various dealers some time ago." | b="Prophet of the Pyramids of Menkauḥor and Zadkarēʿ (Isesi), Royal chamberlain, etc. Temp. Isesi or later." | c="Prophet of the Pyramids of Menkauḥor and Zadkarēʿ (Isesi), Royal chamberlain, etc. Temp. Isesi or later. False-door, top missing. Blocks with estates dispersed among dealers and collections."  → chose "Prophet of the Pyramids of Menkauḥor and Zadkarēʿ (Isesi), Royal chamberlain, etc. Temp. Isesi or later."
+  occupant_alt_names: a=[] | b=["Ḥeba"] | c=[]  → chose []
+  occupant_name: a="Seshemnufer Ḥeba" | b="Seshemnufer" | c="Seshemnufer Ḥeba"  → chose "Seshemnufer Ḥeba"
+
+SAQE9 (Pepyzedi):
+  co_occupant_roles: a=[] | b=["Wife"] | c=["Wife"]  → chose ["Wife"]
+  co_occupants: a=[] | b=["Methut"] | c=["Methut"]  → chose ["Methut"]
+  notes_from_pm: a="Overseer of scribes, Royal chamberlain, Overseer of commissions. Dyn. VI. Wife, Methut, Prophetess of Ḥatḥor, etc. Scenes in inner room: deceased fishing, fowling, and being carried in palanquin, and offering-bringers." | b="Overseer of scribes, Royal chamberlain, Overseer of commissions. Dyn. VI. Wife, Methut, Prophetess of Ḥatḥor, etc." | c="Overseer of scribes, Royal chamberlain, Overseer of commissions. Dyn. VI. Wife, Methut, Prophetess of Ḥatḥor, etc."  → chose "Overseer of scribes, Royal chamberlain, Overseer of commissions. Dyn. VI. Wife, Methut, Prophetess of Ḥatḥor, etc."
+  occupant_alt_names: a=["Meryrēʿ-zedi Zadi"] | b=["Meryrēʿ-zedi", "Zadi"] | c=["Pepyzedi", "Zedi"]  → chose ["Meryrēʿ-zedi", "Zadi"]
+  occupant_name: a="Pepyzedi Zadi" | b="Pepyzedi" | c="Meryrēʿ-zedi"  → chose "Pepyzedi"
 
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================

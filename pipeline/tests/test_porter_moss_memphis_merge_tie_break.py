@@ -392,6 +392,14 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       cross-references). All resolved to the minimal headword-block-
       only form per source-wide convention (chunks 19, 20).
 
+    - Chunk 24 (§ II.E (a) WEST OF THE STEP PYRAMID OK):
+      17 ties resolved. Mostly notes_from_pm headword-block-only
+      form (drop body-prose object catalogs + cartographic refs)
+      per source-wide convention. Plus SAQ-AnkhiInthi compound-name
+      occupant_name form `ʿAnkhi Inthi` (space-separated, parallel
+      to chunks 21/22 SHEMA/MERU constructions). SAQE9 `or` idiom:
+      primary `Pepyzedi`, alts `["Meryrēʿ-zedi", "Zadi"]`.
+
     - Chunk 23 (§ II.C EAST OF THE STEP PYRAMID, Petrie+Murray
       D-cluster + Saite LS intrusions): `LS23|notes_from_pm`,
       `LS24|notes_from_pm`, `SAQ-DoubleTombUserkaf|notes_from_pm`,
@@ -664,6 +672,31 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQD47", "notes_from_pm"),
         ("SAQD49", "notes_from_pm"),
         ("SAQD55", "notes_from_pm"),
+        # Chunk 24 (§ II.E (a) WEST OF STEP PYRAMID OK): 13 ties
+        # mostly on notes_from_pm where agents differed on inclusion
+        # of body-prose object catalogs / museum citations / chapel
+        # sub-feature decoration descriptions. All resolved to the
+        # minimal headword-block-only form per source-wide convention
+        # (chunks 19-23). Plus SAQE9 Pepyzedi/Meryrēʿ-zedi/Zadi `or`
+        # idiom occupant_name+occupant_alt_names resolution + SAQ-
+        # AnkhiInthi compound-name occupant_name form.
+        ("SAQ-AkhtihotpIpiUzau", "notes_from_pm"),
+        ("SAQ-AnkhiInthi", "notes_from_pm"),
+        ("SAQ-AnkhiInthi", "occupant_name"),
+        ("SAQ-Mereri", "notes_from_pm"),
+        ("SAQ-PtahhotpIyniankh", "notes_from_pm"),
+        ("SAQ-Shepsipuptah", "notes_from_pm"),
+        ("SAQ-ThefuPtahhotp", "notes_from_pm"),
+        ("SAQD60", "notes_from_pm"),
+        ("SAQD61", "notes_from_pm"),
+        ("SAQD62", "notes_from_pm"),
+        ("SAQD63", "notes_from_pm"),
+        ("SAQD64a", "notes_from_pm"),
+        ("SAQD64b", "notes_from_pm"),
+        ("SAQD65", "notes_from_pm"),
+        ("SAQE8", "notes_from_pm"),
+        ("SAQE9", "occupant_alt_names"),
+        ("SAQE9", "occupant_name"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

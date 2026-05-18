@@ -506,6 +506,30 @@ CHUNK23_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 24: Saqqâra § II.E WEST OF THE STEP PYRAMID, (a) OLD
+# KINGDOM portion. Source: PM III.2 2nd ed. 1978/1981, physical
+# pp.233–248 / printed pp.593–608. 19 rows headlined by the
+# famous **Ptaḥḥotp [I]** (SAQD62) + **Akhtiḥotp + Ptaḥḥotp [II]**
+# mastaba-complex (SAQD64a + SAQD64b sub-banner-letter form) +
+# **Ḥetepḥerakhti D 60** (SAQD60) + Petrie+Murray cluster
+# D 59/61/63/65 + the introduced NEW `SAQE<N>` prefix for the
+# E-series (SAQE8 Seshemnufer Ḥeba + SAQE9 Pepyzedi/Meryrēʿ-zedi
+# /Zadi) + 9 bare-named tombs without D/E numbers (SAQ-Sekhemka,
+# SAQ-Thefu, SAQ-ThefuPtahhotp disambiguated 2nd Thefu probably-
+# also-Ptaḥḥotp, SAQ-AkhtihotpIpiUzau, SAQ-PtahhotpIyni,
+# SAQ-PtahhotpIyniankh, SAQ-Mereri, SAQ-Shepsipuptah,
+# SAQ-AnkhiInthi). New `cemetery: "West of the Step Pyramid"`
+# descriptor.
+CHUNK24_TOMB_IDS: frozenset[str] = frozenset({
+    "SAQ-AkhtihotpIpiUzau", "SAQ-AnkhiInthi", "SAQ-Mereri",
+    "SAQ-PtahhotpIyni", "SAQ-PtahhotpIyniankh", "SAQ-Sekhemka",
+    "SAQ-Shepsipuptah", "SAQ-Thefu", "SAQ-ThefuPtahhotp",
+    "SAQD59", "SAQD60", "SAQD61", "SAQD62", "SAQD63",
+    "SAQD64a", "SAQD64b", "SAQD65",
+    "SAQE8", "SAQE9",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -555,6 +579,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
+    | CHUNK24_TOMB_IDS
 )
 
 
@@ -788,6 +813,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK23_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK24_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -802,7 +829,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -858,6 +885,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 541 <= page <= 560, f"{row['tomb_id']} page {page} outside chunk-22 [541, 560]"
         elif row["tomb_id"] in CHUNK23_TOMB_IDS:
             assert 575 <= page <= 592, f"{row['tomb_id']} page {page} outside chunk-23 [575, 592]"
+        elif row["tomb_id"] in CHUNK24_TOMB_IDS:
+            assert 593 <= page <= 608, f"{row['tomb_id']} page {page} outside chunk-24 [593, 608]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -979,6 +1008,11 @@ def test_cemetery_by_chunk() -> None:
             # Junker West / Steindorff and chunks 20-22's Teti
             # Pyramid Cemetery descriptor conventions).
             assert row["cemetery"] == "East of the Step Pyramid", row
+        elif row["tomb_id"] in CHUNK24_TOMB_IDS:
+            # Chunk 24: § II.E (a) WEST OF THE STEP PYRAMID
+            # OLD KINGDOM portion. New cemetery descriptor
+            # `"West of the Step Pyramid"`.
+            assert row["cemetery"] == "West of the Step Pyramid", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1140,6 +1174,16 @@ def test_dynasty_assignments() -> None:
             # `Dyn. V or later` → `"6"` per range-tail (NOT MK as
             # chunk-23 prompt's wrong special-case said).
             assert row["dynasty"] in {"5", "6", "26", None}, row
+        elif row["tomb_id"] in CHUNK24_TOMB_IDS:
+            # Chunk 24 § II.E (a) OLD KINGDOM portion: Dyn V (Temp.
+            # Isesi for Ptaḥḥotp [I] SAQD62, Temp. Isesi-to-Unis for
+            # Akhtiḥotp + Ptaḥḥotp [II] SAQD64a/b, Temp. Neuserrēʿ
+            # for Ḥetepḥerakhti SAQD60), Dyn V tail or Dyn VI (E 9
+            # Pepyzedi Dyn VI, SAQD61 Middle Dyn V, etc.), Dyn VI
+            # (Mereri Late Dyn VI, AkhtihotpIpiUzau Dyn VI), End of
+            # Dyn V or early Dyn VI for Shepsipuptah / Ptaḥḥotp
+            # Iyniʿankh.
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.
