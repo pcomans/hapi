@@ -530,6 +530,39 @@ CHUNK24_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 25: Saqqâra § II.E WEST OF THE STEP PYRAMID continuation
+# + § II.F (or sub-banner E.b) AROUND THE PYRAMID-COMPLEX OF UNIS
+# opening. Source: PM III.2 2nd ed. 1978/1981, physical pp.249–272
+# / printed pp.609–632. 38 rows. Introduces NEW `SAQH<N>` prefix
+# (Petrie+Murray H-series) for SAQH1 NISUSERT. Famous tombs:
+# Princess Khentkaus (King's eldest daughter, SAQ-Khentkaus),
+# Princess Seshseshet Idut (King's daughter of body, usurped from
+# Vizier Iḥy, SAQ-SeshseshetIdut), Mehu, Nebkauḥor (Vizier, son
+# of Unis, usurped from Akhtiḥotp Ḥemi), Iynefert (Vizier),
+# Mery-Isesi (Inspector mastaba). Cemetery boundary at phys p.253
+# (PM `F. AROUND THE PYRAMID-COMPLEX OF UNIS` sub-banner) splits
+# rows between `"West of the Step Pyramid"` and `"Around the
+# Pyramid-complex of Unis"` cemeteries. EXCLUDES Ptolemaic Tomb
+# A/B + Late Period Shaft + anonymous TOMB A/B + Middle Kingdom
+# UNIS-ḤAISHTEF (out of OK + 1st-Int-Period scope). 32+
+# tie-break overrides for the dense headword-vs-body-prose
+# notes_from_pm differences.
+CHUNK25_TOMB_IDS: frozenset[str] = frozenset({
+    "SAQ-AkhtihotpIpi", "SAQ-Ankhi", "SAQ-AnkhiIthi",
+    "SAQ-BiaIrery", "SAQ-HerimeruMerery", "SAQ-Iarti",
+    "SAQ-IshethiThethi", "SAQ-Isi", "SAQ-Iy", "SAQ-Iyenhor",
+    "SAQ-Iynefert", "SAQ-Kairer", "SAQ-Khentkaus", "SAQ-Khenu",
+    "SAQ-Khenut", "SAQ-Mehu", "SAQ-MeryIsesi", "SAQ-Mitri",
+    "SAQ-Nebkauhor", "SAQ-Nebt", "SAQ-NeferkhuuPtahThethi",
+    "SAQ-Neferseshemptah", "SAQ-Nengem", "SAQ-NiankhPepyNiankhMeryre",
+    "SAQ-NiankhPtah", "SAQ-Niankhba", "SAQ-Pehnufer", "SAQ-Pernezu",
+    "SAQ-PtahshepsesImpy", "SAQ-SebkemkhentSebeky",
+    "SAQ-Seshemnufer", "SAQ-SeshseshetIdut", "SAQ-Snefruhotp",
+    "SAQ-Unisankh", "SAQ-Zaati",
+    "SAQE14", "SAQE15", "SAQH1",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -579,7 +612,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
-    | CHUNK24_TOMB_IDS
+    | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS
 )
 
 
@@ -815,6 +848,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK24_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK25_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -829,7 +864,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -887,6 +922,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 575 <= page <= 592, f"{row['tomb_id']} page {page} outside chunk-23 [575, 592]"
         elif row["tomb_id"] in CHUNK24_TOMB_IDS:
             assert 593 <= page <= 608, f"{row['tomb_id']} page {page} outside chunk-24 [593, 608]"
+        elif row["tomb_id"] in CHUNK25_TOMB_IDS:
+            assert 609 <= page <= 632, f"{row['tomb_id']} page {page} outside chunk-25 [609, 632]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1013,6 +1050,13 @@ def test_cemetery_by_chunk() -> None:
             # OLD KINGDOM portion. New cemetery descriptor
             # `"West of the Step Pyramid"`.
             assert row["cemetery"] == "West of the Step Pyramid", row
+        elif row["tomb_id"] in CHUNK25_TOMB_IDS:
+            # Chunk 25: § II.E continuation + § II.F (sub-banner
+            # `AROUND THE PYRAMID-COMPLEX OF UNIS` starts phys p.253
+            # / printed p.613). Mixed cemetery: rows on phys
+            # pp.249-252 = `"West of the Step Pyramid"`, rows on
+            # phys p.253+ = `"Around the Pyramid-complex of Unis"`.
+            assert row["cemetery"] in {"West of the Step Pyramid", "Around the Pyramid-complex of Unis"}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1174,6 +1218,17 @@ def test_dynasty_assignments() -> None:
             # `Dyn. V or later` → `"6"` per range-tail (NOT MK as
             # chunk-23 prompt's wrong special-case said).
             assert row["dynasty"] in {"5", "6", "26", None}, row
+        elif row["tomb_id"] in CHUNK25_TOMB_IDS:
+            # Chunk 25 § II.E continuation + Around-Pyramid-of-Unis:
+            # mix of Dyn V (E 14 Nezemib, E 15 Ity Duareʿ, Ankhi
+            # Ithi end-of-Dyn-V, SAQ-Khenu, etc.), Dyn VI (Princess
+            # Khentkaus, Princess Seshseshet Idut Unis-daughter
+            # usurped from Vizier Iḥy, Vizier Nebkauḥor, Vizier
+            # Iynefert, Akhtihotp Ipi Temp. Merenrēʿ I, Pernezu
+            # Dyn VI, etc.). One row (Zaʿati Probably Dyn VI). All
+            # rows OK or 1st Int Period; Middle Kingdom Unis-Ḥaishtef
+            # explicitly excluded.
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK24_TOMB_IDS:
             # Chunk 24 § II.E (a) OLD KINGDOM portion: Dyn V (Temp.
             # Isesi for Ptaḥḥotp [I] SAQD62, Temp. Isesi-to-Unis for
