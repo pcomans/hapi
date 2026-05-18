@@ -392,6 +392,15 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       cross-references). All resolved to the minimal headword-block-
       only form per source-wide convention (chunks 19, 20).
 
+    - Chunk 25 (§ II.E continuation + AROUND THE PYRAMID-COMPLEX
+      OF UNIS opening): 33 ties on notes_from_pm only. All resolved
+      to the minimal headword-block-only form per source-wide
+      convention (chunks 19-24) — agents differed widely on body-
+      prose / sub-feature / cartographic / museum-citation
+      inclusion. The dense cohort here (38 rows, mostly bare-named
+      SAQ-<Name> tombs in the Unis cluster) made notes_from_pm
+      the primary tie surface.
+
     - Chunk 24 (§ II.E (a) WEST OF THE STEP PYRAMID OK):
       17 ties resolved. Mostly notes_from_pm headword-block-only
       form (drop body-prose object catalogs + cartographic refs)
@@ -697,6 +706,44 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQE8", "notes_from_pm"),
         ("SAQE9", "occupant_alt_names"),
         ("SAQE9", "occupant_name"),
+        # Chunk 25 (§ II.E continuation + AROUND THE PYRAMID-COMPLEX
+        # OF UNIS opening): 33 ties on notes_from_pm. All resolved
+        # to the minimal headword-only form per source-wide convention
+        # (chunks 19-24) — agents differed widely on body-prose / sub-
+        # feature / cartographic / museum-citation inclusion.
+        ("SAQ-AkhtihotpIpi", "notes_from_pm"),
+        ("SAQ-AnkhiIthi", "notes_from_pm"),
+        ("SAQ-HerimeruMerery", "notes_from_pm"),
+        ("SAQ-Iarti", "notes_from_pm"),
+        ("SAQ-IshethiThethi", "notes_from_pm"),
+        ("SAQ-Isi", "notes_from_pm"),
+        ("SAQ-Iy", "notes_from_pm"),
+        ("SAQ-Iyenhor", "notes_from_pm"),
+        ("SAQ-Iynefert", "notes_from_pm"),
+        ("SAQ-Kairer", "notes_from_pm"),
+        ("SAQ-Khenu", "notes_from_pm"),
+        ("SAQ-Khenut", "notes_from_pm"),
+        ("SAQ-Mehu", "notes_from_pm"),
+        ("SAQ-MeryIsesi", "notes_from_pm"),
+        ("SAQ-Mitri", "notes_from_pm"),
+        ("SAQ-Nebkauhor", "notes_from_pm"),
+        ("SAQ-Nebt", "notes_from_pm"),
+        ("SAQ-NeferkhuuPtahThethi", "notes_from_pm"),
+        ("SAQ-Neferseshemptah", "notes_from_pm"),
+        ("SAQ-Nengem", "notes_from_pm"),
+        ("SAQ-NiankhPepyNiankhMeryre", "notes_from_pm"),
+        ("SAQ-NiankhPtah", "notes_from_pm"),
+        ("SAQ-Niankhba", "notes_from_pm"),
+        ("SAQ-Pernezu", "notes_from_pm"),
+        ("SAQ-PtahshepsesImpy", "notes_from_pm"),
+        ("SAQ-SebkemkhentSebeky", "notes_from_pm"),
+        ("SAQ-Seshemnufer", "notes_from_pm"),
+        ("SAQ-SeshseshetIdut", "notes_from_pm"),
+        ("SAQ-Unisankh", "notes_from_pm"),
+        ("SAQ-Zaati", "notes_from_pm"),
+        ("SAQE14", "notes_from_pm"),
+        ("SAQE15", "notes_from_pm"),
+        ("SAQH1", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
