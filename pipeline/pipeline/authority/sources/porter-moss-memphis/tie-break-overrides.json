@@ -25,11 +25,11 @@
   },
   "TPC-Kaemhest|notes_from_pm": {
     "value": "King's architect and builder, etc. Probably early Dyn. VI. Father, Senefʿankh, King's architect and builder. Wife, Thenenet.",
-    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 541 (chunk-22). PM headword reads `KAEMḤEST, King's architect and builder, etc. Probably early Dyn. VI. Map LII. Plan LVII. Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` Agents A and C invented a `Brother Kapunesut` not present in the headword block (likely conflated from body-prose sub-feature decoration of a different page). Agent B's minimal form excludes the family clauses entirely. Selecting the PM-faithful form that includes Father + Wife clauses (per chunks 8-21 co-occupant convention) but drops the hallucinated Brother and the cartographic `Map LII. Plan LVII.` references."
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 542 (chunk-22). PM headword reads `KAEMḤEST, King's architect and builder, etc. Probably early Dyn. VI. Map LII. Plan LVII. Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` Agents A and C invented a `Brother Kapunesut` not present in the headword block (likely conflated from body-prose sub-feature decoration of a different page). Agent B's minimal form excludes the family clauses entirely. Selecting the PM-faithful form that includes Father + Wife clauses (per chunks 8-21 co-occupant convention) but drops the hallucinated Brother and the cartographic `Map LII. Plan LVII.` references."
   },
   "TPC-Kaemhest|co_occupant_roles": {
     "value": ["Father, King's architect and builder", "Wife"],
-    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 541 (chunk-22). PM prints `Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` — TWO co-occupants only, no brother. Agent A and Agent C both invented a `Brother` role that PM does NOT print in the headword block. Selecting Agent B's two-entry form per source-wide title-cluster convention (chunks 8-21) and PM-faithful headword reading."
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 542 (chunk-22). PM prints `Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` — TWO co-occupants only, no brother. Agent A and Agent C both invented a `Brother` role that PM does NOT print in the headword block. Selecting Agent B's two-entry form per source-wide title-cluster convention (chunks 8-21) and PM-faithful headword reading."
   },
   "TPC-Meryteti|notes_from_pm": {
     "value": "C. Son Meryteti, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka mastaba.",

@@ -2090,7 +2090,7 @@ CHUNK22_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # F1 (drop hallucinated co-occupant `Kapunesut` on TPC-Kaemhest):
     # Two of three agents (A + C) emitted a third co-occupant
     # `Kapunesut` not present in PM's printed headword block on
-    # printed p. 541 (PM literal: `KAEMḤEST, King's architect and
+    # printed p. 542 (PM literal: `KAEMḤEST, King's architect and
     # builder, etc. Probably early Dyn. VI. Map LII. Plan LVII.
     # Father, Senefʿankh, King's architect and builder. Wife,
     # Thenenet.`). The third name is body-prose decoration from a
@@ -2099,7 +2099,7 @@ CHUNK22_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # pair only. Agent B's two-entry form is correct.
     ("TPC-Kaemhest", "co_occupants"): {
         "value": ["Senefʿankh", "Thenenet"],
-        "rationale": "PM III.2 printed p. 541; agents A+C hallucinated `Kapunesut` not in PM headword block (`Father, Senefʿankh, King's architect and builder. Wife, Thenenet.`). Restore PM-faithful two-entry pair per Constitutional Rule 1.",
+        "rationale": "PM III.2 printed p. 542; agents A+C hallucinated `Kapunesut` not in PM headword block (`Father, Senefʿankh, King's architect and builder. Wife, Thenenet.`). Restore PM-faithful two-entry pair per Constitutional Rule 1.",
     },
 }
 
