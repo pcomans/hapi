@@ -392,6 +392,25 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       cross-references). All resolved to the minimal headword-block-
       only form per source-wide convention (chunks 19, 20).
 
+    - Chunk 22 (post-Mereruka cluster + RAʿwer + Shema joint):
+      `TPC-Kaemhest|co_occupant_roles`,
+      `TPC-Kaemhest|notes_from_pm`,
+      `TPC-Kaemsenu|co_occupant_roles`,
+      `TPC-Kaemsenu|notes_from_pm`, `TPC-Rawer|notes_from_pm`,
+      `TPC-Shema|co_occupant_roles`, `TPC-Shema|co_occupants`,
+      `TPC-Shema|notes_from_pm`. Eight ties on the four most-
+      documented headwords. TPC-Kaemḥest: agents A+C invented a
+      `Brother` not in PM headword; agent B's two-entry Father/Wife
+      form selected. TPC-Kaemsenu: Re-deity compound diacritics
+      (Saḥurēʿ/Neuserrēʿ/Neferirkarēʿ/Rēʿ) + waʿb-priest ayin
+      normalisation. TPC-Rawer: `(erased)` damnatio memoriae name-
+      state + topographic anchor `Mortuary Temple Area, East and
+      south-east of the Pyramid`. TPC-Shema: unusual
+      `SHEMA (father and son) and IPISENBES (woman)` joint headword
+      — primary Shema (father), co_occupants=["Shema (son)",
+      "Ipisenbes"], co_occupant_roles=["Son (homonymous)",
+      "Co-owner (woman)"].
+
     - Chunk 14 (halves 14a+14b): `G4351|co_occupant_roles`,
       `G4520|occupant_name`, `G4561|co_occupant_roles`,
       `G4561|notes_from_pm`, `G4630|co_occupant_roles`,
@@ -597,6 +616,25 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("TPC-Ipiankhu", "notes_from_pm"),
         ("TPC-Mereruka", "notes_from_pm"),
         ("TPC-Meryteti", "notes_from_pm"),
+        # Chunk 22 (post-Mereruka cluster): 7 ties on the four most-
+        # documented headwords. Kaemḥest + Kaemsenu have long
+        # Father/Wife title-cluster co-occupant clauses where agents
+        # disagreed on title-cluster preservation. The third hallu-
+        # cinated Kapunesut co-occupant on Kaemḥest is NOT resolved
+        # here (it had 2/3 majority for the 3-entry form, not a tie);
+        # `fix_rows.CHUNK22_CORRECTIONS` restores the PM-faithful
+        # two-entry pair post-merge. RAʿwer `(erased)` headword +
+        # topographic anchor formatting differed. SHEMA joint-headword
+        # (`SHEMA (father and son) and IPISENBES (woman)`) split
+        # notes_from_pm three ways on alt-occupant rendering.
+        ("TPC-Kaemhest", "co_occupant_roles"),
+        ("TPC-Kaemhest", "notes_from_pm"),
+        ("TPC-Kaemsenu", "co_occupant_roles"),
+        ("TPC-Kaemsenu", "notes_from_pm"),
+        ("TPC-Rawer", "notes_from_pm"),
+        ("TPC-Shema", "co_occupant_roles"),
+        ("TPC-Shema", "co_occupants"),
+        ("TPC-Shema", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

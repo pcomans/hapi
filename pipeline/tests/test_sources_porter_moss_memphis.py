@@ -461,6 +461,24 @@ CHUNK21_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 22: Saqqâra § II.B AROUND TETI PYRAMID continuation. Source:
+# PM III.2 2nd ed. 1978/1981, physical pp.181–200 / printed pp.541–
+# 560. 7 rows headlined by Kaemsenu + Kaemḥest (Dyn V/early-VI
+# priestly clientele, dense Father/Wife co-occupant clauses) +
+# Peḥernufer (Prophet of Reʿ in Sun-temple of Userkaf) + the
+# Shape-5 erased-name famous mastaba RAʿWER (Chief Justice and
+# Vizier, name destroyed on monument, Probably late Dyn VI) +
+# Shape-4 joint-headword SHEMA (father and son) + IPISENBES
+# (woman) + 2 Firth+Gunn HMK./Burial-No. small rows (Mut-Ḥetepi,
+# Seneny). The chunk file deliberately INCLUDES the MIDDLE KINGDOM
+# FINDS sub-banner page range but explicitly EXCLUDES MK-dated
+# rows (out of OK + 1st Int. Period scope for this chunk).
+CHUNK22_TOMB_IDS: frozenset[str] = frozenset({
+    "TPC-Kaemhest", "TPC-Kaemsenu", "TPC-MutHetepi", "TPC-Pehernufer",
+    "TPC-Rawer", "TPC-Seneny", "TPC-Shema",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -509,7 +527,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
-    | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS
+    | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS
 )
 
 
@@ -739,6 +757,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK21_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK22_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -753,7 +773,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -805,6 +825,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 508 <= page <= 524, f"{row['tomb_id']} page {page} outside chunk-20 [508, 524]"
         elif row["tomb_id"] in CHUNK21_TOMB_IDS:
             assert 525 <= page <= 540, f"{row['tomb_id']} page {page} outside chunk-21 [525, 540]"
+        elif row["tomb_id"] in CHUNK22_TOMB_IDS:
+            assert 541 <= page <= 560, f"{row['tomb_id']} page {page} outside chunk-22 [541, 560]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -912,6 +934,12 @@ def test_cemetery_by_chunk() -> None:
             # Chunk 21: § II.B AROUND TETI PYRAMID continuation —
             # Mereruka mega-block + immediate followers. Same banner
             # as chunk 20.
+            assert row["cemetery"] == "Teti Pyramid Cemetery", row
+        elif row["tomb_id"] in CHUNK22_TOMB_IDS:
+            # Chunk 22: § II.B AROUND TETI PYRAMID continuation —
+            # post-Mereruka cluster (RAʿwer, Kaemsenu, Kaemḥest,
+            # Peḥernufer, Shema, plus 2 Firth+Gunn HMK./Burial-No.
+            # small rows). Same banner as chunks 20-21.
             assert row["cemetery"] == "Teti Pyramid Cemetery", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
@@ -1055,6 +1083,14 @@ def test_dynasty_assignments() -> None:
             # `Late Dyn. VI or 1st Int. Period` / `End of Dyn. VI or
             # 1st Int. Period` (dynasty "6" per range-tail convention).
             assert row["dynasty"] in {"6", None}, row
+        elif row["tomb_id"] in CHUNK22_TOMB_IDS:
+            # Chunk 22: post-Mereruka cluster — Dyn V/VI priestly
+            # clientele (Kaemsenu Dyn VI, Kaemḥest Probably early Dyn
+            # VI, Peḥernufer Dyn V or VI, RAʿwer Probably late Dyn VI)
+            # + Shape-4 joint Shema (Dyn VI or 1st Int. Period →
+            # dynasty "6" per range-tail) + 2 Firth+Gunn HMK./Burial-
+            # No. small rows (1st Int. Period or null).
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.
