@@ -1,4 +1,36 @@
 {
+  "TPC-Shema|notes_from_pm": {
+    "value": "Shema (father and son) and Ipisenbes (woman). Dyn. VI or 1st Int. Period. South of the Temple.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 558 (chunk-22). PM literal headword: `SHEMA (father and son) and IPISENBES (woman). Dyn. VI or 1st Int. Period. South of the Temple.` Per source-wide convention occupant_name is dropped from notes, BUT in this unusual `(father and son)` homonymous joint-headword case, dropping `Shema` would lose the disambiguation between the father-Shema (primary occupant) and son-Shema (co-occupant). Selecting form 1 which preserves the full PM-literal headword. Drop sub-feature trailers (`(a) Fragments of side-pieces...`)."
+  },
+  "TPC-Shema|co_occupants": {
+    "value": ["Shema (son)", "Ipisenbes"],
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 558 (chunk-22). Paired with TPC-Shema|co_occupant_roles. PM `SHEMA (father and son) and IPISENBES (woman)` — homonymous father+son SHEMA pair plus IPISENBES co-owner. Father SHEMA is the primary occupant (tomb_id `TPC-Shema`), and the SAME-NAME son (disambiguated as `Shema (son)`) + the woman IPISENBES are captured as co_occupants per joint-headword convention (chunks 2/11/19). Selecting agent B's two-entry form."
+  },
+  "TPC-Shema|co_occupant_roles": {
+    "value": ["Son (homonymous)", "Co-owner (woman)"],
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 558 (chunk-22). PM prints `SHEMA (father and son) and IPISENBES (woman). Dyn. VI or 1st Int. Period.` — joint headword with father SHEMA as primary + son SHEMA (homonymous, hence the `(father and son)` PM clarification) + IPISENBES (woman) as third party. Per joint-headword convention (chunks 2/11/19), one row with all co-occupants captured. Co_occupants list: [`Shema (son)`, `Ipisenbes`]. Co_occupant_roles preserves both the `homonymous` qualifier (so the homonymy is recoverable) and the `(woman)` gender qualifier from PM."
+  },
+  "TPC-Rawer|notes_from_pm": {
+    "value": "(erased), Chief Justice and Vizier, etc. Probably late Dyn. VI. East and south-east of the Pyramid — Mortuary Temple Area.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 558 (chunk-22 RAʿwer mastaba). PM headword has `(erased)` name-state annotation + Chief Justice and Vizier title cluster + `Probably late Dyn. VI` dating + topographic anchor `East and south-east of the Pyramid — Mortuary Temple Area`. Selecting form 1 + the more PM-faithful topographic anchor phrasing, dropping cartographic `Map LI.` reference (per chunks 19-21 convention) and dropping sub-feature trailers `Two false-doors; seated headless statue...` (those are body-prose object catalogue, not headword)."
+  },
+  "TPC-Kaemsenu|notes_from_pm": {
+    "value": "waʿb-priest of Saḥurēʿ, waʿb-priest of the Pyramid of Neuserrēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Dyn. VI. Father, Seḥotpu, waʿb-priest of the Pyramid of Saḥurēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Wife, Irt-nub, Prophetess of Ḥathor, etc.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 541 (chunk-22). PM headword + family clauses; all Re-deity compounds get macron-Ē + ayin (Saḥurēʿ, Neuserrēʿ, Neferirkarēʿ, Rēʿ — chunks 4/8/10/11/14/15 convention); `waab` / `wad` / `warb` / `wʿb` text-layer-noise OCR forms normalized to `waʿb-priest` (chunk-9 G 3008 + chunk-11 D.117 + chunk-17 G 7391 convention); `Ḥathor` single-underdot per source convention (44 occurrences vs 6 double-underdot). Drop cartographic `Map LII.` reference. Source citation: PM headword block on phys p.181 / printed p.541, family clauses on next line, Firth+Gunn 1926 publication reference dropped (museum-citation line)."
+  },
+  "TPC-Kaemsenu|co_occupant_roles": {
+    "value": ["Father, waʿb-priest of the Pyramid of Saḥurēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc.", "Wife, Prophetess of Ḥathor, etc."],
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 541 (chunk-22). PM prints `Father, Seḥotpu, waʿb-priest of the Pyramid of Saḥurēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Wife, Irt-nub, Prophetess of Ḥathor, etc.` Per source-wide title-cluster convention (chunks 8-21), role strings preserve the full priestly title cluster after `Father, ` / `Wife, `. Selecting candidate 2's structured form with diacritics normalised: Saḥurēʿ (underdot-Ḥ + macron-Ē + ayin on Re-compound), Neferirkarēʿ (macron-Ē + ayin), Rēʿ (macron-Ē + ayin), Ḥathor (single underdot per source convention — 44 occurrences vs 6 for the double-underdot Ḥatḥor variant)."
+  },
+  "TPC-Kaemhest|notes_from_pm": {
+    "value": "King's architect and builder, etc. Probably early Dyn. VI. Father, Senefʿankh, King's architect and builder. Wife, Thenenet.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 542 (chunk-22). PM headword reads `KAEMḤEST, King's architect and builder, etc. Probably early Dyn. VI. Map LII. Plan LVII. Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` Agents A and C invented a `Brother Kapunesut` not present in the headword block (likely conflated from body-prose sub-feature decoration of a different page). Agent B's minimal form excludes the family clauses entirely. Selecting the PM-faithful form that includes Father + Wife clauses (per chunks 8-21 co-occupant convention) but drops the hallucinated Brother and the cartographic `Map LII. Plan LVII.` references."
+  },
+  "TPC-Kaemhest|co_occupant_roles": {
+    "value": ["Father, King's architect and builder", "Wife"],
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 542 (chunk-22). PM prints `Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` — TWO co-occupants only, no brother. Agent A and Agent C both invented a `Brother` role that PM does NOT print in the headword block. Selecting Agent B's two-entry form per source-wide title-cluster convention (chunks 8-21) and PM-faithful headword reading."
+  },
   "TPC-Meryteti|notes_from_pm": {
     "value": "C. Son Meryteti, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka mastaba.",
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 536 (chunk-21 Mereruka sub-banner C). PM prints `C. Son MERYTETI MERI, Chief Justice and Vizier, ...`. Per source-wide `good name` alt-name convention (chunks 8, 20), Meri is captured in occupant_alt_names (NOT in notes_from_pm). Three agents differ on alt-name placement; selecting form 1 (no alt-name in notes) to match the convention. Preserve sub-banner C structural anchor and Temp. Pepy I dating."

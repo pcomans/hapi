@@ -2084,6 +2084,26 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
 # Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
 # correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK22_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 22 — § II.B AROUND TETI PYRAMID continuation.
+    #
+    # F1 (drop hallucinated co-occupant `Kapunesut` on TPC-Kaemhest):
+    # Two of three agents (A + C) emitted a third co-occupant
+    # `Kapunesut` not present in PM's printed headword block on
+    # printed p. 542 (PM literal: `KAEMḤEST, King's architect and
+    # builder, etc. Probably early Dyn. VI. Map LII. Plan LVII.
+    # Father, Senefʿankh, King's architect and builder. Wife,
+    # Thenenet.`). The third name is body-prose decoration from a
+    # later sub-feature page conflated into the headword block.
+    # Constitutional Rule 1 — restore PM-faithful Father + Wife
+    # pair only. Agent B's two-entry form is correct.
+    ("TPC-Kaemhest", "co_occupants"): {
+        "value": ["Senefʿankh", "Thenenet"],
+        "rationale": "PM III.2 printed p. 542; agents A+C hallucinated `Kapunesut` not in PM headword block (`Father, Senefʿankh, King's architect and builder. Wife, Thenenet.`). Restore PM-faithful two-entry pair per Constitutional Rule 1.",
+    },
+}
+
+
 CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     ("LG73", "co_occupants"): {
         "value": ["Neferḥetpes"],
@@ -2190,6 +2210,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK16_CORRECTIONS,
     CHUNK17_CORRECTIONS,
     CHUNK18_CORRECTIONS,
+    CHUNK22_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

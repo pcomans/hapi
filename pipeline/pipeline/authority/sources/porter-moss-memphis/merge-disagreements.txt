@@ -929,6 +929,16 @@ TPC-Ipiankhu (Ipiʿankhu):
 TPC-Ipihirsesenbef (Ipiḥirsesenbef):
   occupant_alt_names: a=["Ipi"] | b=[] | c=[]  → chose []
 
+TPC-Kaemhest (Kaemḥest):
+  co_occupant_roles: a=["Father", "Wife", "Brother"] | b=["Father, King's architect and builder", "Wife"] | c=["Father — King's architect and builder", "Wife", "Brother — King's architect and builder"]  → chose ["Father, King's architect and builder", "Wife"]
+  co_occupants: a=["Senefʿankh", "Thenenet", "Kapunesut"] | b=["Senefʿankh", "Thenenet"] | c=["Senefʿankh", "Thenenet", "Kapunesut"]  → chose ["Senefʿankh", "Thenenet", "Kapunesut"]
+  notes_from_pm: a="King's architect and builder, etc. Probably early Dyn. VI. Father, Senefʿankh, King's architect and builder. Wife, Thenenet. Brother Kapunesut, King's architect and builder." | b="King's architect and builder, etc. Probably early Dyn. VI. Map LII. Plan LVII." | c="King's architect and builder, etc. Probably early Dyn. VI. Father, Senefʿankh, King's architect and builder. Wife, Thenenet. Brother Kapunesut, King's architect and builder. South Chapel and Central Chapel; Pillared Room with painted decoration including siege of fortified settlement."  → chose "King's architect and builder, etc. Probably early Dyn. VI. Father, Senefʿankh, King's architect and builder. Wife, Thenenet."
+
+TPC-Kaemsenu (Kaemsenu):
+  co_occupant_roles: a=["Father", "Wife"] | b=["Father, waʿb-priest of the Pyramid of Saḥure, Prophet of Reʿ in the Sun-temple of Neferirkare, etc.", "Wife, Prophetess of Ḥatḥor, etc."] | c=["Father — wʿb-priest of the Pyramid of Sahurēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ", "Wife — Prophetess of Ḥathor", "Son (co-dedicator of Seḥotpu's false-door)"]  → chose ["Father, waʿb-priest of the Pyramid of Saḥurēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc.", "Wife, Prophetess of Ḥathor, etc."]
+  co_occupants: a=["Seḥotpu", "Irt-nub"] | b=["Seḥotpu", "Irt-nub"] | c=["Seḥotpu", "Irt-nub", "Washptaḥ"]  → chose ["Seḥotpu", "Irt-nub"]
+  notes_from_pm: a="warb-priest of Saḥureʿ, warb-priest of the Pyramid of Neuserreʿ, Prophet of Reʿ in the Sun-temple of Neferirkareʿ, etc. Dyn. VI. Father, Seḥotpu, warb-priest of the Pyramid of Saḥureʿ, Prophet of Reʿ in the Sun-temple of Neferirkareʿ, etc. Wife, Irt-nub, Prophetess of Ḥathor, etc." | b="waʿb-priest of Saḥure, waʿb-priest of the Pyramid of Neuserre, Prophet of Reʿ in the Sun-temple of Neferirkare, etc. Dyn. VI. Map LII." | c="wʿb-priest of Sahurēʿ, wʿb-priest of the Pyramid of Neuserrēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Dyn. VI. Father, Seḥotpu, wʿb-priest of the Pyramid of Sahurēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ. Wife, Irt-nub, Prophetess of Ḥathor. Chapel of Kaemsenu with doorway, east, south and west walls (painted decoration); Chapel of Seḥotpu with false-door dedicated by sons Kaemsenu and Washptaḥ. Map LII."  → chose "waʿb-priest of Saḥurēʿ, waʿb-priest of the Pyramid of Neuserrēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Dyn. VI. Father, Seḥotpu, waʿb-priest of the Pyramid of Saḥurēʿ, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Wife, Irt-nub, Prophetess of Ḥathor, etc."
+
 TPC-KhenuIIThem (Khenu II Them):
   occupant_alt_names: a=[] | b=[] | c=["Them"]  → chose []
 
@@ -946,11 +956,30 @@ TPC-Mereruka (Mereruka):
 TPC-Meryteti (Meryteti):
   notes_from_pm: a="C. Son Meryteti, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka mastaba." | b="C. Son Meryteti, also called Meri. Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Chapel sub-banner C within Mereruka's mastaba." | c="C. Son Meryteti Meri, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka's mastaba."  → chose "C. Son Meryteti, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka mastaba."
 
+TPC-MutHetepi (Mut-Ḥetepi):
+  notes_from_pm: a="HMK. 159. (woman). 1st Int. Period." | b="HMK. 159. (woman). 1st Int. Period." | c="HMK. 159. (woman). 1st Int. Period. Burial Chamber. Rectangular wooden coffin, incomplete; two model rowing-boats, wood; model kitchen, wood."  → chose "HMK. 159. (woman). 1st Int. Period."
+  occupant_name: a="Mut-Ḥetepi" | b="Mut-Ḥetepi" | c="Mut-ḥetepi"  → chose "Mut-Ḥetepi"
+
 TPC-Neferseshemre (Neferseshemreʿ):
   notes_from_pm: a="Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI. Wife, Semdet." | b="Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI." | c="Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI."  → chose "Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI."
 
+TPC-Pehernufer (Peḥernufer):
+  notes_from_pm: a="Prophet of Reʿ in the Sun-temple of Userkaf, etc. Dyn. V or VI. West of tb. of Mereruka." | b="Prophet of Reʿ in the Sun-temple of Userkaf, etc. Dyn. V or VI. West of tb. of Mereruka." | c="Prophet of Rēʿ in the Sun-temple of Userkaf, etc. Dyn. V or VI. West of tomb of Mereruka. False-door."  → chose "Prophet of Reʿ in the Sun-temple of Userkaf, etc. Dyn. V or VI. West of tb. of Mereruka."
+
 TPC-Ptahshepses (Ptaḥshepses):
   notes_from_pm: a="Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Wife, Seshseshet Sheshti, King's daughter of his body. Covered by tomb S 2735." | b="Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Covered by tomb S 2735." | c="Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Covered by tomb S 2735."  → chose "Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Covered by tomb S 2735."
+
+TPC-Rawer (Raʿwer):
+  notes_from_pm: a="(erased), Chief Justice and Vizier, etc. Probably late Dyn. VI. Mortuary Temple Area, East and South-East of the Pyramid." | b="(erased), Chief Justice and Vizier, etc. Probably late Dyn. VI. Map LI." | c="(erased), Chief Justice and Vizier, etc. Probably late Dyn. VI. Map LI. East and south-east of the Pyramid — Mortuary Temple Area. Two false-doors; seated headless statue of deceased, and lower part of another, both granite; texts of various fragments found nearby."  → chose "(erased), Chief Justice and Vizier, etc. Probably late Dyn. VI. East and south-east of the Pyramid — Mortuary Temple Area."
+
+TPC-Seneny (Seneny):
+  notes_from_pm: a="HMK. 40. Judge and Keeper of Nekhen, etc. 1st Int. Period." | b="HMK. 40. Judge and Keeper of Nekhen, etc. 1st Int. Period." | c="HMK. 40. Judge and Keeper of Nekhen, etc. 1st Int. Period. Wooden rectangular coffins, fragments (inner and outer); fragment of canopic-box."  → chose "HMK. 40. Judge and Keeper of Nekhen, etc. 1st Int. Period."
+
+TPC-Shema (Shema):
+  co_occupant_roles: a=["Unknown"] | b=["Son", "Co-owner (woman)"] | c=["Son (homonymous)"]  → chose ["Son (homonymous)", "Co-owner (woman)"]
+  co_occupants: a=["Ipisenbes"] | b=["Shema (son)", "Ipisenbes"] | c=["Shema"]  → chose ["Shema (son)", "Ipisenbes"]
+  is_joint_burial: a=true | b=false | c=false  → chose false
+  notes_from_pm: a="Shema (father and son) and Ipisenbes (woman). Dyn. VI or 1st Int. Period. South of the Temple." | b="(father and son) and Ipisenbes (woman). Dyn. VI or 1st Int. Period. South of the Temple." | c="(father and son). Dyn. VI or 1st Int. Period. South of the Temple. (a) Fragments of side-pieces of Shema (father), with Shema (son) offering goose to [deceased] on the right one. (b) Lower part and fragments of false-door of Shema (son), with deceased and wife and offering-bringers on right side-piece. Headword groups Shema-father, Shema-son, and Ipisenbes (woman) together under one PM heading; Ipisenbes split to her own row."  → chose "Shema (father and son) and Ipisenbes (woman). Dyn. VI or 1st Int. Period. South of the Temple."
 
 TPC-Sitinteti (Sitinteti):
   notes_from_pm: a="Prophetess of Ḥatḥor, King's sole adorner. End of Dyn. VI or 1st Int. Period." | b="Prophetess of Ḥathor, King's sole adorner. End of Dyn. VI or 1st Int. Period. Burial chamber was usurping shaft within Ipiʿankhu family-tomb." | c="Prophetess of Ḥatḥor, King's sole adorner. End of Dyn. VI or 1st Int. Period."  → chose "Prophetess of Ḥatḥor, King's sole adorner. End of Dyn. VI or 1st Int. Period."
@@ -1128,3 +1157,4 @@ Reviewer-cited row corrections:
   JKE-Nikaukhnum.co_occupant_roles: ["Royal acquaintance"] → ["Royal acquaintance (probably woman)"]
   JKE-User.notes_from_pm: "Overseer of ha-servants, etc. Late Dyn. V. Mother, Henutsen." → "Overseer of ka-servants, etc. Late Dyn. V. Mother, Henutsen."
   JKE-Weri.notes_from_pm: "Inspector of ha-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI." → "Inspector of ka-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI."
+  TPC-Kaemhest.co_occupants: ["Senefʿankh", "Thenenet", "Kapunesut"] → ["Senefʿankh", "Thenenet"]
