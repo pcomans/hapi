@@ -437,6 +437,30 @@ CHUNK20_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 21: Saqqâra § II.B AROUND TETI PYRAMID continuation — Mereruka
+# mega-block + immediate followers. Source: PM III.2 2nd ed.
+# 1978/1981, physical pp.165–180 / printed pp.525–540. 17 rows
+# headlined by the Mereruka mastaba (most-decorated OK private tomb,
+# 32+ rooms, 80+ scene numbers) plus son Meryteti's chapel
+# (sub-banner C within Mereruka's mastaba) plus immediate-cluster
+# Vizier-level tombs (Kanenebfui Khenu I, Khenu II Them, Thethu) and
+# the Firth+Gunn 1926 Late-Dyn-VI / 1st-Int-Period cluster of small
+# named tombs published under HMK./Burial-No. plot numbering
+# (Duauḥotp, Ḥerimeru, Sitinteti, Ipiʿankhu family-tomb, Khuit-khnum,
+# Ptaḥemḥet, Nebi, Sethu, Tha, Ipiḥirsesenbef, Gemniemḥet, Ipi).
+# Wife Waʿtetkhet-hor Seshseshet is captured as co_occupant of
+# Mereruka (NOT a separate row). Meryteti emits its own row because
+# PM gives it sub-banner C with full Chief-Justice-and-Vizier
+# headword + shared_with_tombs cross-ref to Mereruka.
+CHUNK21_TOMB_IDS: frozenset[str] = frozenset({
+    "TPC-Duauhotp", "TPC-Gemniemhet", "TPC-Herimeru", "TPC-Ipi",
+    "TPC-Ipiankhu", "TPC-Ipihirsesenbef", "TPC-KanenebfuiKhenuI",
+    "TPC-KhenuIIThem", "TPC-KhuitKhnum", "TPC-Mereruka",
+    "TPC-Meryteti", "TPC-Nebi", "TPC-Ptahemhet", "TPC-Sethu",
+    "TPC-Sitinteti", "TPC-Tha", "TPC-Thethu",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -485,7 +509,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
-    | CHUNK20_TOMB_IDS
+    | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS
 )
 
 
@@ -713,6 +737,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK20_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK21_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -727,7 +753,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -777,6 +803,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 214 <= page <= 229, f"{row['tomb_id']} page {page} outside chunk-19 [214, 229]"
         elif row["tomb_id"] in CHUNK20_TOMB_IDS:
             assert 508 <= page <= 524, f"{row['tomb_id']} page {page} outside chunk-20 [508, 524]"
+        elif row["tomb_id"] in CHUNK21_TOMB_IDS:
+            assert 525 <= page <= 540, f"{row['tomb_id']} page {page} outside chunk-21 [525, 540]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -879,6 +907,11 @@ def test_cemetery_by_chunk() -> None:
             # `cemetery: "Teti Pyramid Cemetery"` (descriptor form
             # parallel to chunks 3/10/11's `"Central Field"` /
             # `"Junker West"` / `"Steindorff"` cemetery descriptors).
+            assert row["cemetery"] == "Teti Pyramid Cemetery", row
+        elif row["tomb_id"] in CHUNK21_TOMB_IDS:
+            # Chunk 21: § II.B AROUND TETI PYRAMID continuation —
+            # Mereruka mega-block + immediate followers. Same banner
+            # as chunk 20.
             assert row["cemetery"] == "Teti Pyramid Cemetery", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
@@ -1012,6 +1045,15 @@ def test_dynasty_assignments() -> None:
             # and is NOT equivalent to a single Roman-numbered dynasty;
             # tie-break override documents this — see
             # `tie-break-overrides.json` `TPC-GemniUser|dynasty`).
+            assert row["dynasty"] in {"6", None}, row
+        elif row["tomb_id"] in CHUNK21_TOMB_IDS:
+            # Chunk 21 Mereruka mega-block + Firth+Gunn 1926 cluster.
+            # Mereruka, Meryteti, Kanenebfui, Khenu II Them, Thethu →
+            # Dyn VI (`Temp. Teti` / `Temp. Pepy I` / `Late Dyn. VI`).
+            # The Firth+Gunn HMK./Burial-No. small-mastaba rows span
+            # `1st Int. Period` (dynasty null + sub_period set) and
+            # `Late Dyn. VI or 1st Int. Period` / `End of Dyn. VI or
+            # 1st Int. Period` (dynasty "6" per range-tail convention).
             assert row["dynasty"] in {"6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and

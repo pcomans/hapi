@@ -909,6 +909,9 @@ TPC-Desi (Desi):
   co_occupants: a=["(name lost)"] | b=["Wife (name lost)"]  → chose ["(name lost)"]
   notes_from_pm: a="Noble of the King, Companion of the house. Dyn. VI. Wife (name lost), Prophetess of Ḥatḥor Mistress of the Sycamore." | b="Noble of the King, Companion of the house. Dyn. VI."  → chose "Noble of the King, Companion of the house. Dyn. VI. Wife (name lost), Prophetess of Ḥatḥor Mistress of the Sycamore."
 
+TPC-Duauhotp (Duauḥotp):
+  notes_from_pm: a="HMK. 37. Noblewoman of the King, etc. 1st Int. Period." | b="HMK. 37. Noblewoman of the King, etc. 1st Int. Period. False-door shared with Sit-gemni, Prophetess of Ḥathor." | c="HMK. 37. Noblewoman of the King, etc. 1st Int. Period."  → chose "HMK. 37. Noblewoman of the King, etc. 1st Int. Period."
+
 TPC-GemniUser (Gemni-user):
   dynasty: a=null | b="6"  → chose null
   notes_from_pm: a="Royal chamberlain, Scribe. 1st Int. Period. Wife, Sitḥaʿib. Near north-east corner of tomb of Kagemni. Not marked on map." | b="Royal chamberlain, Scribe. 1st Int. Period. Near north-east corner of tomb of Kagemni. Not marked on map."  → chose "Royal chamberlain, Scribe. 1st Int. Period. Wife, Sitḥaʿib. Near north-east corner of tomb of Kagemni. Not marked on map."
@@ -917,15 +920,43 @@ TPC-GemniUser (Gemni-user):
 TPC-Inti (Inti):
   notes_from_pm: a="King's eldest daughter of his body (of Teti). Temp. Pepy I or later. South-east of tomb of Khentka Ikhekhi (see below). Position not marked on map." | b="King's eldest daughter of his body (of Teti). Temp. Pepy I or later. South-east of tomb of Khentka Ikhekhi (see below). Position not marked on map." | c="King's eldest daughter of his body (of Teti). Temp. Pepy I or later. South-east of tomb of Khentka Ikhekhi. Position not marked on map."  → chose "King's eldest daughter of his body (of Teti). Temp. Pepy I or later. South-east of tomb of Khentka Ikhekhi (see below). Position not marked on map."
 
+TPC-Ipiankhu (Ipiʿankhu):
+  co_occupant_roles: a=["Steward"] | b=[] | c=[]  → chose []
+  co_occupants: a=["Ipiʿankhu Ipi"] | b=[] | c=[]  → chose []
+  notes_from_pm: a="HMK. 26. Family-tomb of Ipiʿankhu. 1st Int. Period. Monuments of Ipiʿankhu Ipi, Steward." | b="HMK. 26. Family-tomb of Ipiʿankhu. 1st Int. Period. Monuments of Ipiʿankhu Ipi, Steward; also monuments of another Ipiʿankhu, Scribe of the expedition. Burial chamber's shaft was later usurped by Sitinteti." | c="HMK. 26. Family-tomb of Ipiʿankhu. 1st Int. Period. Monuments of Ipiʿankhu Ipi, Steward. Monuments of Ipiʿankhu, various titles, perhaps connected with this tomb. Burial chamber: usurping shaft of Sitinteti (cross-reference)."  → chose "HMK. 26. Family-tomb of Ipiʿankhu. 1st Int. Period. Monuments of Ipiʿankhu Ipi, Steward."
+  occupant_alt_names: a=[] | b=["Ipi"] | c=[]  → chose []
+
+TPC-Ipihirsesenbef (Ipiḥirsesenbef):
+  occupant_alt_names: a=["Ipi"] | b=[] | c=[]  → chose []
+
+TPC-KhenuIIThem (Khenu II Them):
+  occupant_alt_names: a=[] | b=[] | c=["Them"]  → chose []
+
+TPC-KhuitKhnum (Khuit-khnum):
+  notes_from_pm: a="HMK. 6. (woman). 1st Int. Period." | b="HMK. 6. Woman. 1st Int. Period." | c="HMK. 6. (woman). 1st Int. Period."  → chose "HMK. 6. (woman). 1st Int. Period."
+  occupant_name: a="Khuit-Khnum" | b="Khuit-khnum" | c="Khuit-khnum"  → chose "Khuit-khnum"
+
 TPC-Mereri (Mereri):
   co_occupant_roles: a=["Wife, Prophetess of Ḥatḥor, etc."] | b=["Wife, Prophetess of Ḥatḥor, etc."] | c=["Wife, Prophetess of Ḥathor, etc."]  → chose ["Wife, Prophetess of Ḥatḥor, etc."]
   notes_from_pm: a="Count, Overseer of the department of tenants of the Great House, etc. Middle Dyn. VI. Wife, Iny, Prophetess of Ḥatḥor, etc." | b="Count, Overseer of the department of tenants of the Great House, etc. Middle Dyn. VI." | c="Count, Overseer of the department of tenants of the Great House, etc. Middle Dyn. VI."  → chose "Count, Overseer of the department of tenants of the Great House, etc. Middle Dyn. VI."
+
+TPC-Mereruka (Mereruka):
+  notes_from_pm: a="Chief Justice and Vizier, Inspector of prophets and tenants of the Pyramid of Teti, etc. Temp. Teti. Wife, Waʿtetkhet-hor Seshseshet, King's eldest daughter of his body, etc. Mother, Nezetempet, Royal acquaintance." | b="Chief Justice and Vizier, Inspector of prophets and tenants of the Pyramid of Teti, etc. Temp. Teti. Also called Meri. Wife, Waʿtetkhet-hor Seshseshet, King's eldest daughter of his body, etc. Mother, Nezetempet, Royal acquaintance. Sub-banner A. MERERUKA (chapel)." | c="Chief Justice and Vizier, Inspector of prophets and tenants of the Pyramid of Teti, etc. Temp. Teti. Wife, Waʿtetkhet-hor Seshseshet, King's eldest daughter of his body, etc. Mother, Nezetempet, Royal acquaintance. A. Mereruka. B. Wife Waʿtetkhet-hor (sub-banner within mastaba)."  → chose "Chief Justice and Vizier, Inspector of prophets and tenants of the Pyramid of Teti, etc. Temp. Teti. Wife, Waʿtetkhet-hor Seshseshet, King's eldest daughter of his body, etc. Mother, Nezetempet, Royal acquaintance."
+
+TPC-Meryteti (Meryteti):
+  notes_from_pm: a="C. Son Meryteti, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka mastaba." | b="C. Son Meryteti, also called Meri. Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Chapel sub-banner C within Mereruka's mastaba." | c="C. Son Meryteti Meri, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka's mastaba."  → chose "C. Son Meryteti, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka mastaba."
 
 TPC-Neferseshemre (Neferseshemreʿ):
   notes_from_pm: a="Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI. Wife, Semdet." | b="Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI." | c="Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI."  → chose "Chief Justice and Vizier, Inspector of prophets of the Pyramid of Teti, etc. Early Dyn. VI."
 
 TPC-Ptahshepses (Ptaḥshepses):
   notes_from_pm: a="Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Wife, Seshseshet Sheshti, King's daughter of his body. Covered by tomb S 2735." | b="Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Covered by tomb S 2735." | c="Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Covered by tomb S 2735."  → chose "Count, Inspector of prophets of the Pyramid of Teti, etc. Middle Dyn. VI or later. Covered by tomb S 2735."
+
+TPC-Sitinteti (Sitinteti):
+  notes_from_pm: a="Prophetess of Ḥatḥor, King's sole adorner. End of Dyn. VI or 1st Int. Period." | b="Prophetess of Ḥathor, King's sole adorner. End of Dyn. VI or 1st Int. Period. Burial chamber was usurping shaft within Ipiʿankhu family-tomb." | c="Prophetess of Ḥatḥor, King's sole adorner. End of Dyn. VI or 1st Int. Period."  → chose "Prophetess of Ḥatḥor, King's sole adorner. End of Dyn. VI or 1st Int. Period."
+
+TPC-Thethu (Thethu):
+  notes_from_pm: a="Chief Justice and Vizier, Tenant and Inspector of prophets of the Pyramid of Pepy I, etc. Probably late Dyn. VI." | b="Chief Justice and Vizier, Tenant and Inspector of prophets of the Pyramid of Pepy I, etc. Probably late Dyn. VI. Intrusive burial — False-door of Imḥotep, Lector-priest, 1st Int. Period, found in tomb." | c="Chief Justice and Vizier, Tenant and Inspector of prophets of the Pyramid of Pepy I, etc. Probably late Dyn. VI."  → chose "Chief Justice and Vizier, Tenant and Inspector of prophets of the Pyramid of Pepy I, etc. Probably late Dyn. VI."
 
 TPC-Uzahateti (Uzaḥateti):
   notes_from_pm: a="Inspector of prophets of the Pyramid-town of Teti, Tenant of the Pyramid of Teti, etc. Early Dyn. VI. Wife, Seshseshet Sheshti, King's daughter of his body." | b="Inspector of prophets of the Pyramid-town of Teti, Tenant of the Pyramid of Teti, etc. Early Dyn. VI." | c="Inspector of prophets of the Pyramid-town of Teti, Tenant of the Pyramid of Teti, etc. Early Dyn. VI."  → chose "Inspector of prophets of the Pyramid-town of Teti, Tenant of the Pyramid of Teti, etc. Early Dyn. VI."

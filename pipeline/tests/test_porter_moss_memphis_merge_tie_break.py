@@ -383,6 +383,15 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       Constitutional Rule 1; hyphenated compound-name form
       `Gemni-user` per source-wide hyphenated-compound convention.
 
+    - Chunk 21 (Mereruka mega-block + Firth+Gunn 1926 cluster):
+      `TPC-Ipiankhu|notes_from_pm`, `TPC-Mereruka|notes_from_pm`,
+      `TPC-Meryteti|notes_from_pm`. Three notes_from_pm 1/1/1 ties
+      on the most-decorated tombs in the chunk where agents
+      differed on how much body-prose to roll into the headword-block
+      summary (sub-banner letters, alt-names, sub-feature trailers,
+      cross-references). All resolved to the minimal headword-block-
+      only form per source-wide convention (chunks 19, 20).
+
     - Chunk 14 (halves 14a+14b): `G4351|co_occupant_roles`,
       `G4520|occupant_name`, `G4561|co_occupant_roles`,
       `G4561|notes_from_pm`, `G4630|co_occupant_roles`,
@@ -577,6 +586,17 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("TPC-GemniUser", "dynasty"),
         ("TPC-GemniUser", "notes_from_pm"),
         ("TPC-GemniUser", "occupant_name"),
+        # Chunk 21 (Mereruka mega-block + Firth+Gunn 1926 cluster):
+        # Three notes_from_pm 1/1/1 ties on the most-decorated tombs
+        # in the chunk (Mereruka, Meryteti, Ipiankhu family-tomb)
+        # where agents differed on how much body-prose to roll into
+        # the headword-block summary. All resolved to the minimal
+        # headword-block-only form per source-wide convention
+        # (chunks 19, 20) — drop sub-banner letters / alt-name /
+        # sub-feature trailers.
+        ("TPC-Ipiankhu", "notes_from_pm"),
+        ("TPC-Mereruka", "notes_from_pm"),
+        ("TPC-Meryteti", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
