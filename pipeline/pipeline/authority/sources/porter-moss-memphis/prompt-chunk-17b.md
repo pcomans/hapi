@@ -60,7 +60,7 @@ Pre-extraction structural scan: ~15 Shape-1 named-primary (G 7550 DUAENHOR, G 76
 Same noise classes as chunk-17a. Key examples for this chunk:
 - `aANKH-HAF` analogues: `aANKHMAaREa` → `ʿAnkh-maʿrēʿ` (Re-deity compound trailing, double ayin, macron-Ē on -rēʿ).
 - `KAaAPER` → `Kaʿaper` (ayin only).
-- `RAaKHAaEFaANKH` → `Rēʿkhaʿef-ʿankh` (Re-compound + theophoric-ankh hyphenation per chunks 8/14/15 convention: `Khufu-ʿAnkh`, `Khufudinef-ʿankh`).
+- `RAaKHAaEFaANKH` → `Raʿkhaʿef-ʿankh` (theophoric-ankh hyphenation per chunks 8/14/15 convention: `Khufu-ʿAnkh`, `Khufudinef-ʿankh`). NB: OCR `RAa` (uppercase R + uppercase A + raised-a) yields `Raʿ` only — no macron-ē. The macron-Ē applies to `REa` (uppercase R + uppercase E + raised-a) OCR forms (cf. `DUAENREa` → `Duaenrēʿ`, `MENKAUREa` → `Menkaurēʿ`); `RAa` and `REa` are distinct OCR signatures.
 - `NEBTYHERKAUS` → `Nebtyḥerkaus` (ḥ-root *ḥr*).
 - `HEPENNEBTI` → `Ḥepennebti` (ḥ-root *ḥp*).
 - `AKHTIHOTP` → `Akhtiḥotp` (ḥ-root *ḥtp*).

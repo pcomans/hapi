@@ -2007,6 +2007,22 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "underdot-ḥ per source-wide convention."
         ),
     },
+    # G 7948 occupant_name OCR-vowel correction. PM OCR is `RAa-` not
+    # `REa-` for this name; per Gemini PR #238 round-5 (3255742120) +
+    # the G 7350 Raʿzedef precedent, `RAa` → `Raʿ` with NO macron-ē
+    # (macron-Ē reserved for `REa` OCR forms like `DUAENREa` →
+    # `Duaenrēʿ`, `MENKAUREa` → `Menkaurēʿ`). Agent-majority extracted
+    # `Rēʿkhaʿef-ʿankh` (incorrect macron); chunk-17b prompt example
+    # was also wrong (fixed in same round-5 commit).
+    ("G7948", "occupant_name"): {
+        "value": "Raʿkhaʿef-ʿankh",
+        "rationale": (
+            "Gemini PR #238 round-5 medium 3255742120: OCR `RAa-` "
+            "yields `Raʿ-` only (no macron-Ē). Source-wide rule: "
+            "macron-Ē applies to `REa-` OCR signature, not `RAa-`. "
+            "G 7350 Raʿzedef precedent."
+        ),
+    },
     ("G7330", "notes_from_pm"): {
         "value": (
             "Middle or late Dyn. IV. Sarcophagus (uninscribed) with "

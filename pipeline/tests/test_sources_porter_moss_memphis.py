@@ -333,7 +333,7 @@ CHUNK17_TOMB_IDS: frozenset[str] = frozenset({
     "G7248",    # (no name) — false-door of Mesthu + Nubḥotp fragment
     "G7249",    # Menib — box-sealing with Horus-name of Neuserrēʿ
     "G7330",    # (no name) — uninscribed twin-mastaba G7330+7340
-    "G7350",    # Ḥetepḥeres II — two husbands (Kawaab + Rāʿzedef later king)
+    "G7350",    # Ḥetepḥeres II — two husbands (Kawaab + Raʿzedef later king)
     "G7391",    # Iteti — Inspector of waʿb-priests of Pyramid of Khephren
     "G7410",    # Meresʿankh II — King's daughter, joint-twin G7410+7420
     "G7411",    # Kaemthenent — Dyn. V
@@ -377,7 +377,7 @@ CHUNK17_TOMB_IDS: frozenset[str] = frozenset({
     "G7851",    # Wermeru — rock-cut, Dyn. V-VI
     "G7911",    # (no name) — statuette head fragment
     "G7946",    # Nefu — Inspector of administrators of the Treasury
-    "G7948",    # Rēʿkhaʿef-ʿankh — Companion of the Great House; 'Tomb of Numbers'
+    "G7948",    # Raʿkhaʿef-ʿankh — Companion of the Great House; 'Tomb of Numbers'
 })
 
 

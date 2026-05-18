@@ -479,7 +479,7 @@ G7244 (Khuenptaḥ):
   attribution_certainty: a="attested" | b="uncertain" | c="attested"  → chose "attested"
   co_occupant_roles: a=["Mother", "Wife"] | b=[] | c=["Mother", "Wife"]  → chose ["Mother", "Wife"]
   co_occupants: a=["Intkaes [I]", "Khenut"] | b=[] | c=["Intkaes I", "Khenut"]  → chose ["Intkaes I", "Khenut"]
-  notes_from_pm: a="G 7244-6. Dyn. V. Composite stone-built mastaba. Chapel of G 7244: Khuenptaḥ, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut." | b="G 7244-6. Dyn. V. Composite stone-built mastaba. Body-prose subsection G 7244: Chapel of Khuenptaḥ, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut." | c="G 7244-6. Dyn. V. Composite stone-built mastaba. G 7244 Chapel. Khuenptah, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut."  → chose "Keeper of the legs of the Great House."
+  notes_from_pm: a="G 7244-6. Dyn. V. Composite stone-built mastaba. Chapel of G 7244: Khuenptaḥ, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut." | b="G 7244-6. Dyn. V. Composite stone-built mastaba. Body-prose subsection G 7244: Chapel of Khuenptaḥ, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut." | c="G 7244-6. Dyn. V. Composite stone-built mastaba. G 7244 Chapel. Khuenptah, Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut."  → chose "Keeper of the legs of the Great House. Mother, Intkaes [I]. Wife, Khenut."
   occupant_name: a="Khuenptaḥ" | b=null | c="Khuenptaḥ"  → chose "Khuenptaḥ"
   occupant_role: a="Official" | b="Unknown" | c="Official"  → chose "Official"
 
@@ -986,6 +986,7 @@ Reviewer-cited row corrections:
   G7851.occupant_role: "Unknown" → "Official"
   G7948.co_occupants: ["Nikahor"] → ["Nikaḥor"]
   G7948.co_occupant_roles: ["Wife, Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."] → ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."]
+  G7948.occupant_name: "Rēʿkhaʿef-ʿankh" → "Raʿkhaʿef-ʿankh"
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
   LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
