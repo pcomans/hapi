@@ -363,6 +363,13 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       G 7820 joint headword `Meresʿankh` ayin + body-trailer drop,
       G 7948 `waab` → `waʿb` + LG code drop + `Ḥathor` underdot).
 
+    - Chunk 19 (east-trailing + Cemetery G I S + Quarry Cemetery):
+      `LG10|notes_from_pm`, `LG10|occupant_alt_names`,
+      `LG10|occupant_name`, `LG10|occupant_role` — LG 10 SENEZEMIB INTI
+      row dropped by Agent B (9 rows); agents A+C (11 rows each) carried
+      it, requiring four-field tie-break with Vizier role per the
+      `G 2370` cross-reference in PM body prose.
+
     - Chunk 14 (halves 14a+14b): `G4351|co_occupant_roles`,
       `G4520|occupant_name`, `G4561|co_occupant_roles`,
       `G4561|notes_from_pm`, `G4630|co_occupant_roles`,
@@ -531,6 +538,16 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G7820", "notes_from_pm"),
         ("G7836", "notes_from_pm"),
         ("G7948", "notes_from_pm"),
+        # Chunk 19 (east-trailing + Cemetery G I S + Quarry Cemetery):
+        # LG 10 SENEZEMIB INTI four-field tie-break — Agent B (9 rows) missed
+        # the LG 10 SENEZEMIB row that agents A+C (11 rows each) caught.
+        # Required overrides on `notes_from_pm`, `occupant_alt_names` ["Inti"],
+        # `occupant_name` "Senezemib", and `occupant_role` "Vizier" (same
+        # person as G 2370 cross-reference per PM body prose).
+        ("LG10", "notes_from_pm"),
+        ("LG10", "occupant_alt_names"),
+        ("LG10", "occupant_name"),
+        ("LG10", "occupant_role"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

@@ -1,4 +1,20 @@
 {
+  "LG10|notes_from_pm": {
+    "value": "Temp. Isesi. (Also owner of tomb G 2370.)",
+    "rationale": "PM III.1 2nd ed. 1974, printed p. 229 (chunk-19 east-trailing). Agent B did not emit LG10; agents A+C disagree on notes content. A keeps `Good name Inti.` in notes prefix; C drops it. Per chunks-8 G 2378 / chunk-15 G 5550 convention, `good name <ALT>` idiom yields `occupant_alt_names: [\"Inti\"]` (alt-name lives there, not in notes). Selecting C's form to keep notes PM-faithful and avoid duplicate capture of the alt-name."
+  },
+  "LG10|occupant_alt_names": {
+    "value": ["Inti"],
+    "rationale": "PM III.1 2nd ed. 1974, printed p. 229. Paired with LG10|notes_from_pm. PM `LG 10. SENEZEMIB INTI good name Inti` per chunks-8 G 2378 convention: alt-name lives in occupant_alt_names. Selecting non-empty form."
+  },
+  "LG10|occupant_name": {
+    "value": "Senezemib",
+    "rationale": "PM III.1 2nd ed. 1974, printed p. 229. Paired with LG10|occupant_alt_names. Per chunks-8 G 2378 convention, occupant_name carries the formal name only; the `good name` alt-name lives in occupant_alt_names. Selecting `Senezemib` (formal) form."
+  },
+  "LG10|occupant_role": {
+    "value": "Vizier",
+    "rationale": "PM III.1 2nd ed. 1974, printed p. 229. LG 10 SENEZEMIB INTI is the same person as G 2370 Senezemib (chunk 8, PM cross-reference `(Also owner of tomb G 2370.)` confirms identity). G 2370 occupant_role = `Vizier` (Chief Justice and Vizier under Isesi). Propagate `Vizier` to the secondary tomb LG 10."
+  },
   "G7244|co_occupants": {
     "value": ["Intkaes I", "Khenut"],
     "rationale": "1/1/1 tie on chunk-17a G 7244 co_occupants. PM III.1 2nd ed. 1974 printed p.192 (physical p.189). Two agents include the parents `Intkaes [I]` and `Khenut`; one drops brackets per chunks-7 convention (no brackets in canonical form). Selecting the bracket-dropped form `Intkaes I`. Agent 2 voted empty `[]` (over-conservative).",
