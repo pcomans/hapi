@@ -1975,6 +1975,38 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "G 7837 convention."
         ),
     },
+    # Underdot-Ḥ on Ḥathor + Nikaḥor diacritics (Gemini PR #238 round-4
+    # medium 3255722720/22/24). Agent-majority dropped the underdot on
+    # `Hathor` in roles for both rows; G 7948 also dropped underdot on
+    # `Nikahor` in co_occupants. Source-wide ḥ-root convention applies.
+    ("G7650", "co_occupant_roles"): {
+        "value": [
+            "Wife, King's daughter of his body, Prophetess of Khufu, Ḥathor, and Neith, etc."
+        ],
+        "rationale": (
+            "Gemini PR #238 round-4 medium 3255722722: apply Ḥathor "
+            "underdot-ḥ per source-wide ḥ-root convention. Agent-"
+            "majority left `Hathor` in roles despite `Ḥathor` in "
+            "notes_from_pm (intra-row inconsistency fix)."
+        ),
+    },
+    ("G7948", "co_occupants"): {
+        "value": ["Nikaḥor"],
+        "rationale": (
+            "Gemini PR #238 round-4 medium 3255722724: apply Nikaḥor "
+            "underdot-ḥ (ḥ-root *ḥr*, parallel to Ḥor / Duaenḥor) "
+            "per source-wide convention."
+        ),
+    },
+    ("G7948", "co_occupant_roles"): {
+        "value": [
+            "Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."
+        ],
+        "rationale": (
+            "Gemini PR #238 round-4 medium 3255722724: apply Ḥathor "
+            "underdot-ḥ per source-wide convention."
+        ),
+    },
     ("G7330", "notes_from_pm"): {
         "value": (
             "Middle or late Dyn. IV. Sarcophagus (uninscribed) with "
