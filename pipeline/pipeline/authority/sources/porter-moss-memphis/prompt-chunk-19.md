@@ -92,7 +92,7 @@ Do NOT emit rows for:
 
 ## Expected row count
 
-Pre-extraction structural scan: 3 EAST FIELD rock-cut descriptor tombs (KAWEHEM, INKAF, NEFERKA) + 3 CEMETERY G I S LG-named (LG 53, LG 54, LG 55) + 3 QUARRY CEMETERY LG (LG 11, LG 12, LG 13). **Total expected: ~9 rows (acceptable band 7–12).** If your count falls outside that band, re-read the chunk file — you've either missed an LG-numbered tomb or emitted an anonymous-rock-cut body sub-feature out of scope.
+Pre-extraction structural scan: **4 EAST FIELD** rock-cut descriptor tombs (KAWEHEM, INKAF, NEFERKA, ITHER — the prompt-auditor verifies every Shape-1 descriptor headword in the chunk file is named here) + 3 CEMETERY G I S LG-named (LG 53, LG 54, LG 55) + **4 QUARRY CEMETERY LG** (LG 10, LG 11, LG 12, LG 13). **Total expected: 11 rows (acceptable band 9–13).** If your count falls outside that band, re-read the chunk file — you've either missed an LG-numbered tomb or emitted an anonymous-rock-cut body sub-feature out of scope.
 
 ## PM III.1 text-layer noise (chunk-19-relevant)
 
