@@ -834,6 +834,45 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("MAR57", "notes_from_pm"),
         ("MAR58", "co_occupant_roles"),
         ("MAR58", "notes_from_pm"),
+        # Chunk 27b (§ II.A NORTH OF THE STEP PYRAMID, Mariette OK
+        # tombs Nos. 60-88 back half — Ti's mega-block + remainder):
+        # 25 ties, all notes_from_pm batch-resolved with shortest-
+        # candidate-wins (title cluster + dating + wife clause + Re-
+        # deity macron-Ē compounds + single-underdot Ḥathor per
+        # source-wide convention chunks 8-27a). MAR60 TY mega-block
+        # follows chunk-21 Mereruka precedent (headword block only,
+        # drop 30+ sub-room scene catalog). Agent B consistently
+        # omitted macron-Ē on Re-compounds throughout — overrides
+        # all selected macron-Ē forms (Saḥurēʿ, Neuserrēʿ, Neferirkarēʿ,
+        # Rēʿneferef) per source-wide OCR vowel rule (capital R+E =
+        # macron). Cosmetic capitalisation drift on agent A (TepemʿAnkh,
+        # MeresʿAnkh) normalised to source-wide lowercase-after-ayin
+        # convention.
+        ("MAR60", "notes_from_pm"),
+        ("MAR61", "notes_from_pm"),
+        ("MAR62", "notes_from_pm"),
+        ("MAR63", "notes_from_pm"),
+        ("MAR64", "notes_from_pm"),
+        ("MAR65", "notes_from_pm"),
+        ("MAR66", "notes_from_pm"),
+        ("MAR67", "notes_from_pm"),
+        ("MAR68", "notes_from_pm"),
+        ("MAR69", "notes_from_pm"),
+        ("MAR70", "notes_from_pm"),
+        ("MAR71", "notes_from_pm"),
+        ("MAR73", "notes_from_pm"),
+        ("MAR74", "notes_from_pm"),
+        ("MAR75", "notes_from_pm"),
+        ("MAR76", "notes_from_pm"),
+        ("MAR78", "notes_from_pm"),
+        ("MAR79", "notes_from_pm"),
+        ("MAR80", "notes_from_pm"),
+        ("MAR81", "notes_from_pm"),
+        ("MAR82", "notes_from_pm"),
+        ("MAR83", "notes_from_pm"),
+        ("MAR84", "notes_from_pm"),
+        ("MAR85", "notes_from_pm"),
+        ("MAR88", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
