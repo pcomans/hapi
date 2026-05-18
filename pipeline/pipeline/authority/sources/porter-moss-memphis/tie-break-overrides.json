@@ -1,4 +1,24 @@
 {
+  "TPC-GemniUser|occupant_name": {
+    "value": "Gemni-user",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 517 (chunk-20). PM headword `GEM NI usER` (text-layer renders pypdf space-insertion in `GEM NI`). The name is the Egyptian compound `gmni-wsr` (gmni + wsr = `Gemni` + `User`/`Wser`, with `wsr` = `powerful`). Per source-wide hyphenated-compound convention (chunks 6 `ʿAnkh-haf`, 8 `Pepy-Meryptaḥʿankh`, 12 `Userkareʿ Khenzer`), normalise as `Gemni-user` with hyphen. Selecting B's hyphenated form over A's unhyphenated `Gemniwser`."
+  },
+  "TPC-GemniUser|notes_from_pm": {
+    "value": "Royal chamberlain, Scribe. 1st Int. Period. Wife, Sitḥaʿib. Near north-east corner of tomb of Kagemni. Not marked on map.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 517 (chunk-20). Paired with TPC-GemniUser|dynasty. Per source-wide convention (chunks 8-19), wife clauses appear verbatim in notes_from_pm alongside co_occupants. Selecting A's form which preserves the `Wife, Sitḥaʿib.` clause and the `Near north-east corner of tomb of Kagemni.` topographic anchor."
+  },
+  "TPC-GemniUser|dynasty": {
+    "value": null,
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 517 (chunk-20). PM prints `GEM NI usER, Royal chamberlain, Scribe. 1st Int. Period.` — 1st Int. Period spans Dyn 7–10 and is NOT equivalent to Dyn VI. Per source-wide convention (chunks 1-19 dynasty mapping), `1st Int. Period` headword dating yields `dynasty: null` because no single Roman-numbered dynasty can be attributed; the period-level marker may later live in `sub_period`. Agent C did not emit TPC-GemniUser; agents A+B disagree on whether to coerce 1st Int. Period to Dyn-VI tail. Selecting null per scholar-rigor (Constitutional Rule 1)."
+  },
+  "TPC-Desi|notes_from_pm": {
+    "value": "Noble of the King, Companion of the house. Dyn. VI. Wife (name lost), Prophetess of Ḥatḥor Mistress of the Sycamore.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 520 (chunk-20 Drioton-1943 cluster). Paired with TPC-Desi|co_occupants. Per source-wide convention (chunks 8-19), wife clauses appear in BOTH co_occupants/co_occupant_roles AND verbatim in notes_from_pm. Selecting A's form which preserves the `Wife (name lost), Prophetess of Ḥatḥor Mistress of the Sycamore.` clause from the headword block."
+  },
+  "TPC-Desi|co_occupants": {
+    "value": ["(name lost)"],
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 520 (chunk-20 Drioton-1943 cluster). PM prints `Wife (name lost), Prophetess of Ḥathor Mistress of the Sycamore.` — the `(name lost)` is PM's literal placeholder for the unnamed wife. Per source-wide convention (chunk-19 NAME LOST handling), the placeholder goes into co_occupants while the role (`Wife, Prophetess of Ḥathor Mistress of the Sycamore`) goes into co_occupant_roles. Agent C did not emit TPC-Desi; agents A+B disagree on whether to keep the `Wife` prefix in the name field. Selecting A's form `(name lost)` to avoid duplicating the role token in both fields."
+  },
   "LG10|notes_from_pm": {
     "value": "Temp. Isesi. (Also owner of tomb G 2370.)",
     "rationale": "PM III.1 2nd ed. 1974, printed p. 229 (chunk-19 east-trailing). Agent B did not emit LG10; agents A+C disagree on notes content. A keeps `Good name Inti.` in notes prefix; C drops it. Per chunks-8 G 2378 / chunk-15 G 5550 convention, `good name <ALT>` idiom yields `occupant_alt_names: [\"Inti\"]` (alt-name lives there, not in notes). Selecting C's form to keep notes PM-faithful and avoid duplicate capture of the alt-name."
