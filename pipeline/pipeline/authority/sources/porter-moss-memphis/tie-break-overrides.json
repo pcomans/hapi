@@ -541,6 +541,14 @@
     "rationale": "PM III.2 chunk-25 § II.E. Minimal headword-only form per source-wide convention (chunks 19-24); drop sub-feature `False-door.` trailer.",
     "value": "Inspector of prophets of the ḥa-temple of Pepy I, Prophet of the Pyramid of Merenrēʿ I, etc. Temp. Merenrēʿ I or later. North of tomb of Neferkhuu-ptaḥ."
   },
+  "SAQ-AkhtihotpLouvre|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-AkhtihotpLouvre.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Secretary of the Toilet-house, Prophet of Khnum in all his places, Prophet of Ḥeka, etc. Dyn. V or early Dyn. VI. Chapel in Louvre, E.10958 ('Mastaba du Louvre')."
+  },
+  "SAQ-AkhtihotpSekhmet|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-AkhtihotpSekhmet.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Director of warb-priests of Sekhmet of the Great House, Prophet of Buto, etc. Dyn. V-VI. (Also referenced as Ptah-Hetep.)"
+  },
   "SAQ-AnkhiInthi|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, chunk-24 § II.E (a). All three agents converge on title cluster + dating but differ on (a) `Map LVIII.` cartographic reference (drop per chunks 19-23) and (b) `Metal-worker` vs `Metalworker` hyphenation. Per source-wide convention prefer hyphenated form `Metal-worker` (preserves the `mr.t`-craftsman compound).",
     "value": "Prophet of the Pyramids of Unis and Teti, Metal-worker of the Great House, etc. End of Dyn. VI."
@@ -553,6 +561,14 @@
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-AnkhiIthi.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Overseer of the warbt, etc. Dyn. V."
   },
+  "SAQ-Ankhirptah|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Ankhirptah.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥatḥor, etc."
+  },
+  "SAQ-Bebi|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Bebi.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Dyn. V. (Also referenced as Ibi.)"
+  },
   "SAQ-DoubleTombUserkaf|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 582 (chunk-23 § II.C Saite intrusion above Userkaf Mortuary Temple). PM prints anonymous DOUBLE TOMB descriptor headword + (a)/(b) sub-occupant blocks naming Neferebrēʿ-sineit (north tomb) + Weḥebrēʿ-men (south tomb). All three agents capture the same content but differ on prose style (em-dash vs comma, parenthetical-position annotations, cartographic Map LVIII inclusion). Selecting form 2's (a)/(b)-prefixed structure as it preserves the PM tomb-pair labelling while dropping the cartographic reference. Diacritics normalised: macron-Ē + ayin on Re-compound names (Neferebrēʿ, Weḥebrēʿ); underdot-Ḥ on `wḥb-rʿ` root.",
     "value": "Double tomb above Mortuary Temple of Userkaf, including tombs farther east in face of cliff. Late Dyn. XXVI or early Dyn. XXVII. (a) North tomb, Neferebrēʿ-sineit, Royal chamberlain, son of Merib and Shepenubaste. (b) South tomb, Weḥebrēʿ-men, Treasurer of the King of Lower Egypt, son of Taʿa (mother)."
@@ -561,6 +577,10 @@
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-HerimeruMerery.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Prophet and tenant of the Pyramid of Unis, etc. End of Dyn. VI. Wife, Wazkaus, Prophetess of Ḥatḥor in all her places, and of Neith, etc."
   },
+  "SAQ-Hetep|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Hetep.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Director of the Broad Hall, Inspector of prophets of Ḥatḥor of the mert-temple, etc. End of Dyn. V or later."
+  },
   "SAQ-Iarti|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Iarti.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Inspector of prophets of the Pyramid of Unis, Overseer of tenants of the Great House, etc. Middle Dyn. VI or later. Father, probably Iy."
@@ -568,6 +588,18 @@
   "SAQ-IputII|notes_from_pm": {
     "rationale": "1/1/1 tie on chunk-4 SAQ-IputII headword block. PM III.2 2nd ed. 1978/1981 printed p.432 (physical p.72) prints `PYRAMID-ENCLOSURE OF IPUT [II]¹` (regnal-number bracket + footnote marker) on a line followed by `Dyn. VI` on the next line. pypdf concatenated the lines and rendered `[II]¹` as `Il1`. Three agent forms: `PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI.` (Agent A; regnal-number normalised + sentence-final period), `PYRAMID-ENCLOSURE OF IPUT. Dyn. VI` (Agent B; missed the regnal number entirely and missed the period), `PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI PYRAMID.` (Agent C; correct regnal + concatenated the next sub-heading `PYRAMID.` from the body block). Agent A is the most PM-faithful: regnal number rendered correctly per the chunk-4 bracket-regnal rule + sentence-final period preserved + headword block correctly bounded at the `Dyn. VI.` line (does NOT spill into the body's `PYRAMID.` sub-heading).",
     "value": "PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI."
+  },
+  "SAQ-Irenkaptah|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Irenkaptah.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Master butcher of the Great House, Overseer of beef fat, etc. Middle to late Dyn. V. Wife, Khenut, Prophetess of Ḥatḥor."
+  },
+  "SAQ-Irukaptah|attribution_certainty": {
+    "rationale": "PM III.2 chunk-26 § II.F. PM headword dating `Early Dyn. V (Altenmüller) or Dyn. VI` — contested scholarly dating with explicit `(Altenmüller)` attribution + `or Dyn. VI` alternative. Per source-wide convention (chunks 6/14/17 `Probably <Dyn X>` → probable), the explicit alternative-dating qualifier maps to attribution_certainty=probable.",
+    "value": "probable"
+  },
+  "SAQ-Irukaptah|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F. Minimal headword form per source-wide convention; preserve PM's contested dating + Akhet-Hetep alt-reference; `warb` → `waʿb` OCR normalisation per chunks 9/11/17; drop cartographic refs.",
+    "value": "Master butcher of the Great House, King's waʿb-priest, etc. Early Dyn. V (Altenmüller) or Dyn. VI. (Also referenced as Akhet-Hetep.)"
   },
   "SAQ-IshethiThethi|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-IshethiThethi.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
@@ -581,6 +613,10 @@
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Iyenhor.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Lector-priest of the mit-bark of Horus and the sḥt-bark of Horus, etc. End of Dyn. VI. Wife, Theset, Royal acquaintance."
   },
+  "SAQ-Iyka|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Iyka.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "King's warb-priest, Chief of the Great Estate, etc. Dyn. V. Under the Causeway. Exact position unknown. Wife, Iymert, Prophetess of Ḥatḥor Mistress of the Sycamore, etc."
+  },
   "SAQ-Iynefert|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Iynefert.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Chief Justice and Vizier. Dyn. VI."
@@ -588,6 +624,10 @@
   "SAQ-Iy|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Iy.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Tenant of the Pyramid of Pepy I, Companion of the house, Noble of the King. Temp. Pepy I or later. Father, Niʿankh-pepy."
+  },
+  "SAQ-Kaiankh|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Kaiankh.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Butcher of the Great House, etc. Dyn. V."
   },
   "SAQ-Kairer|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Kairer.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
@@ -629,9 +669,17 @@
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Nebt.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Twin-mastaba (b). King's wife (of Unis), Companion of Horus, etc. Temp. Unis."
   },
+  "SAQ-Neferherenptah|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Neferherenptah.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Overseer of hairdressers of the Great House, etc. Dyn. V. Son, Ptaḥshepses, Judge and Overseer of scribes."
+  },
   "SAQ-NeferkhuuPtahThethi|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-NeferkhuuPtahThethi.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Count, Chief of an estate of the Pyramid of Pepy I, etc. Temp. Pepy I or later."
+  },
+  "SAQ-NeferseshemptahSekhentiu|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-NeferseshemptahSekhentiu.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Neferseshemptaḥ, Overseer of metal-workers, and Sekhentiu, Overseer of gold-workers. Late Dyn. V."
   },
   "SAQ-Neferseshemptah|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Neferseshemptah.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
@@ -645,6 +693,10 @@
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Nengem.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Royal chamberlain, Inspector of scribes of sacrificial cattle. Dyn. VI. East of last tomb."
   },
+  "SAQ-NiankhKhnum|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F — the famous joint twin Niʿankh-khnum + Khnemḥotp mastaba. Form 1 with single-underdot Ḥathor per source convention; preserve both joint occupants + both wives clause; drop cartographic refs + sub-feature object catalog.",
+    "value": "Niʿankh-khnum and Khnemḥotp, both Prophets of Rēʿ in the Sun-temple of Neuserrēʿ, Overseers of manicurists of the Great House, etc. Probably temp. Neuserrēʿ or Menkauḥor. Wife of Niʿankh-khnum, Khentkaus, Prophetess of Ḥathor Mistress of the Sycamore, etc.; of Khnemḥotp, Khenut, same title."
+  },
   "SAQ-NiankhPepyNiankhMeryre|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E. Minimal headword form per source-wide convention; alt-name lives in occupant_alt_names not notes; drop cartographic refs + sub-feature catalog. Wife `Ḳedi` per PM (Ḳ underdot form).",
     "value": "Overseer of commissions of tenants of the Pyramid of Pepy I, etc. End of Dyn. VI. (Usurped tomb.) Wife, Ḳedi."
@@ -657,6 +709,24 @@
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Niankhba.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Chief Justice and Vizier, etc. Dyn. VI."
   },
+  "SAQ-Niankhre|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Niankhre.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Royal acquaintance of the Great House, Secretary of Neferirkarēʿ. Dyn. V."
+  },
+  "SAQ-Nikauptah|co_occupant_roles": {
+    "rationale": "PM III.2 chunk-26 § II.F. PM literal `NIKAUPTAḤ and SIMERY. Dyn. VI.` — joint headword, no title cluster given. Per source-wide convention (chunks 19-22 joint-twin/family-tomb), default non-royal co-occupant role is `Official`. Drop `Unknown` (reserved for anonymous Shape-5) and `Joint occupant` (not in controlled vocab).",
+    "value": [
+      "Official"
+    ]
+  },
+  "SAQ-Nikauptah|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F. Minimal headword form; drop cartographic ref + body-prose Ḥynes lintel cross-reference.",
+    "value": "Nikauptaḥ and Simery. Dyn. VI."
+  },
+  "SAQ-Nufer|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F. Headword + family clauses (father Kaḥa + 2 wives) per chunks 8-25 convention. `warb` → `waʿb` ayin normalisation; Ḥathor single-underdot per source convention. Drop occupant name `Nufer` from notes (lives in occupant_name); drop cartographic refs + body-prose object catalog (false-doors of brothers etc.).",
+    "value": "Inspector of the waʿbt, Director of singers, etc., and his father Kaḥa, Director of singers, Prophet of Mert of Upper Egypt, etc. Middle to late Dyn. V. Wife of Nufer, Khons, Royal acquaintance. Wife of Kaḥa and mother of Nufer, Mertiotes, Prophetess of Ḥathor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc."
+  },
   "SAQ-Pernezu|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Pernezu.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "[Overseer] of scribes of the crews, Scribe of enrolment of the crew of the boat, [Overseer] of the expedition, etc. Dyn. VI. Position unknown. Wife, Niʿankh-ḥatḥor, Royal acquaintance."
@@ -668,6 +738,14 @@
   "SAQ-PtahshepsesImpy|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-PtahshepsesImpy.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Dyn. VI."
+  },
+  "SAQ-Ptahshepses|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Ptahshepses.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "King's son, Hereditary prince. End of Dyn. V. In the Valley Temple."
+  },
+  "SAQ-Rakhuf|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Rakhuf.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Royal chamberlain, Overseer of the Great Court. Dyn. VI."
   },
   "SAQ-SebkemkhentSebeky|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-SebkemkhentSebeky.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
@@ -758,6 +836,10 @@
   "SAQE15|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQE15.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Prophet of the mert-temple of Menkauḥor, etc. Temp. Menkauḥor or later."
+  },
+  "SAQE17|notes_from_pm": {
+    "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQE17.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
+    "value": "Royal chamberlain, Prophet of the Pyramids of Isesi and Unis, Prophet of Ḥeḳet and of Ḥatḥor Mistress of Dendera, etc. Late Dyn. VI."
   },
   "SAQE8|notes_from_pm": {
     "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form.",

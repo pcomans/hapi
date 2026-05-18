@@ -547,6 +547,17 @@ CHUNK24_TOMB_IDS: frozenset[str] = frozenset({
 # UNIS-ḤAISHTEF (out of OK + 1st-Int-Period scope). 32+
 # tie-break overrides for the dense headword-vs-body-prose
 # notes_from_pm differences.
+CHUNK26_TOMB_IDS: frozenset[str] = frozenset({
+    "SAQ-AkhtihotpLouvre", "SAQ-AkhtihotpSekhmet", "SAQ-Ankhirptah",
+    "SAQ-Bebi", "SAQ-Hetep", "SAQ-Irenkaptah", "SAQ-Irukaptah",
+    "SAQ-Iyka", "SAQ-Kaiankh", "SAQ-Methethi", "SAQ-Neferherenptah",
+    "SAQ-NeferseshemptahSekhentiu", "SAQ-NiankhKhnum", "SAQ-Niankhre",
+    "SAQ-Nikauptah", "SAQ-Nufer", "SAQ-Ptahshepses", "SAQ-Rakhuf",
+    "SAQE17",
+})
+
+
+# Chunk 25 below — left as-is from earlier commits.
 CHUNK25_TOMB_IDS: frozenset[str] = frozenset({
     "SAQ-AkhtihotpIpi", "SAQ-Ankhi", "SAQ-AnkhiIthi",
     "SAQ-BiaIrery", "SAQ-HerimeruMerery", "SAQ-Iarti",
@@ -612,7 +623,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
-    | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS
+    | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
 )
 
 
@@ -850,6 +861,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK25_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK26_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -864,7 +877,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -924,6 +937,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 593 <= page <= 608, f"{row['tomb_id']} page {page} outside chunk-24 [593, 608]"
         elif row["tomb_id"] in CHUNK25_TOMB_IDS:
             assert 609 <= page <= 632, f"{row['tomb_id']} page {page} outside chunk-25 [609, 632]"
+        elif row["tomb_id"] in CHUNK26_TOMB_IDS:
+            assert 633 <= page <= 654, f"{row['tomb_id']} page {page} outside chunk-26 [633, 654]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1057,6 +1072,10 @@ def test_cemetery_by_chunk() -> None:
             # pp.249-252 = `"West of the Step Pyramid"`, rows on
             # phys p.253+ = `"Around the Pyramid-complex of Unis"`.
             assert row["cemetery"] in {"West of the Step Pyramid", "Around the Pyramid-complex of Unis"}, row
+        elif row["tomb_id"] in CHUNK26_TOMB_IDS:
+            # Chunk 26: § II.F AROUND THE PYRAMID-COMPLEX OF UNIS
+            # continuation (phys pp.273-294 / printed pp.633-654).
+            assert row["cemetery"] == "Around the Pyramid-complex of Unis", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1218,6 +1237,14 @@ def test_dynasty_assignments() -> None:
             # `Dyn. V or later` → `"6"` per range-tail (NOT MK as
             # chunk-23 prompt's wrong special-case said).
             assert row["dynasty"] in {"5", "6", "26", None}, row
+        elif row["tomb_id"] in CHUNK26_TOMB_IDS:
+            # Chunk 26 § II.F continuation: Dyn V (Late Dyn V joint
+            # Nikauptaḥ+Simery, Middle-to-late Dyn V Nufer+Kaḥa
+            # family-tomb, Probably Neuserrēʿ/Menkauḥor joint
+            # Niʿankh-khnum+Khnemḥotp twin mastaba, etc.) + Dyn VI
+            # rows + Early-Dyn-V-or-Dyn-VI contested Irukaptaḥ
+            # (Altenmüller dating).
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK25_TOMB_IDS:
             # Chunk 25 § II.E continuation + Around-Pyramid-of-Unis:
             # mix of Dyn V (E 14 Nezemib, E 15 Ity Duareʿ, Ankhi
