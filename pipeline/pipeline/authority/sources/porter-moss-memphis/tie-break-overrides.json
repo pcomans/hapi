@@ -1,4 +1,16 @@
 {
+  "TPC-Meryteti|notes_from_pm": {
+    "value": "C. Son Meryteti, Chief Justice and Vizier, King's eldest son of his body, Inspector of prophets of the Pyramid of Pepy I, etc. Temp. Pepy I or later. Sub-banner C within Mereruka mastaba.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 536 (chunk-21 Mereruka sub-banner C). PM prints `C. Son MERYTETI MERI, Chief Justice and Vizier, ...`. Per source-wide `good name` alt-name convention (chunks 8, 20), Meri is captured in occupant_alt_names (NOT in notes_from_pm). Three agents differ on alt-name placement; selecting form 1 (no alt-name in notes) to match the convention. Preserve sub-banner C structural anchor and Temp. Pepy I dating."
+  },
+  "TPC-Mereruka|notes_from_pm": {
+    "value": "Chief Justice and Vizier, Inspector of prophets and tenants of the Pyramid of Teti, etc. Temp. Teti. Wife, Waʿtetkhet-hor Seshseshet, King's eldest daughter of his body, etc. Mother, Nezetempet, Royal acquaintance.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 525 (chunk-21 Mereruka mega-block headword). All three agents converged on the title cluster + dating + wife + mother clause but differ on whether to include sub-banner annotations (`A. MERERUKA`, `B. Wife ...`) or alt-name `Also called Meri`. Per source-wide convention (chunks 19, 20), notes_from_pm captures the HEADWORD BLOCK only — drop sub-banner letters (they're structural anchors for sub-feature rooms, not headword prose) and drop alt-name (lives in occupant_alt_names). Selecting agent A's minimal form: title cluster + Temp. Teti + wife clause + mother clause."
+  },
+  "TPC-Ipiankhu|notes_from_pm": {
+    "value": "HMK. 26. Family-tomb of Ipiʿankhu. 1st Int. Period. Monuments of Ipiʿankhu Ipi, Steward.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 540 (chunk-21 Firth+Gunn HMK cluster). All three agents extracted TPC-Ipiankhu but differ on how much body-prose to roll into notes_from_pm. Per source-wide convention (chunks 19, 20), notes_from_pm captures the HEADWORD BLOCK only — `HMK. <N>. Family-tomb of <Name>. <Dating>.` + first body-prose `Monuments of ...` clause attached to the headword. Drop sub-features `Monuments of another Ipiʿankhu, various titles. Perhaps connected with this tomb.` (which is its own paragraph-level qualifier) and `Burial chamber. Usurping shaft of Sitinteti.` (room sub-feature with cross-reference). Selecting agent A's minimal form."
+  },
   "TPC-GemniUser|occupant_name": {
     "value": "Gemni-user",
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 517 (chunk-20). PM headword `GEM NI usER` (text-layer renders pypdf space-insertion in `GEM NI`). The name is the Egyptian compound `gmni-wsr` (gmni + wsr = `Gemni` + `User`/`Wser`, with `wsr` = `powerful`). Per source-wide hyphenated-compound convention (chunks 6 `ʿAnkh-haf`, 8 `Pepy-Meryptaḥʿankh`, 12 `Userkareʿ Khenzer`), normalise as `Gemni-user` with hyphen. Selecting B's hyphenated form over A's unhyphenated `Gemniwser`."
