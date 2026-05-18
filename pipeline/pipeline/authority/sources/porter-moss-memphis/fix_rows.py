@@ -2084,6 +2084,44 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
 # Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
 # correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK25_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 25 — § II.E / AROUND THE PYRAMID-COMPLEX OF UNIS.
+    #
+    # F1 (populate co_occupants/co_occupant_roles for wife/parent
+    # clauses preserved in notes_from_pm): Codex P2 review on PR
+    # #247. Several chunk-25 rows have explicit wife / father /
+    # mother clauses in notes_from_pm but empty co_occupants and
+    # co_occupant_roles arrays. Per source-wide convention (chunks
+    # 8-24), wife/parent body-prose clauses get BOTH preserved in
+    # notes AND captured in the structured co_occupant columns.
+    # The 3-agent voting majoritied to empty arrays despite the
+    # notes content (likely a mass-agent oversight on this dense
+    # chunk's headword blocks).
+    ("SAQ-BiaIrery", "co_occupants"): {"value": ["Idut"], "rationale": "PM III.2 chunk-25 § II.F. Wife clause in notes; populate per chunks-8-24 convention."},
+    ("SAQ-BiaIrery", "co_occupant_roles"): {"value": ["Wife, Prophetess of Ḥathor"], "rationale": "Paired with SAQ-BiaIrery|co_occupants; Ḥathor single-underdot per source convention."},
+    ("SAQ-HerimeruMerery", "co_occupants"): {"value": ["Wazkaus"], "rationale": "PM III.2 chunk-25 § II.F. Wife clause in notes."},
+    ("SAQ-HerimeruMerery", "co_occupant_roles"): {"value": ["Wife, Prophetess of Ḥathor in all her places, and of Neith, etc."], "rationale": "Paired."},
+    ("SAQ-Iarti", "co_occupants"): {"value": ["Iy"], "rationale": "PM III.2 chunk-25 § II.F. Father clause `Father, probably Iy.` — Father captured (probably-hedge in roles)."},
+    ("SAQ-Iarti", "co_occupant_roles"): {"value": ["Father (probably)"], "rationale": "Paired; probably-hedge inline in role string per chunks 8-24 convention."},
+    ("SAQ-Iy", "co_occupants"): {"value": ["Niʿankh-pepy"], "rationale": "PM III.2 chunk-25 § II.F. Father clause."},
+    ("SAQ-Iy", "co_occupant_roles"): {"value": ["Father"], "rationale": "Paired."},
+    ("SAQ-Iyenhor", "co_occupants"): {"value": ["Theset"], "rationale": "PM III.2 chunk-25 § II.F. Wife clause."},
+    ("SAQ-Iyenhor", "co_occupant_roles"): {"value": ["Wife, Royal acquaintance"], "rationale": "Paired."},
+    ("SAQ-Mitri", "co_occupants"): {"value": ["...menkaureʿ..."], "rationale": "PM III.2 chunk-25 § II.F. Wife clause with PM literal ellipsis-truncated name."},
+    ("SAQ-Mitri", "co_occupant_roles"): {"value": ["Wife, Prophetess of Ḥathor Mistress of the Sycamore, etc."], "rationale": "Paired."},
+    ("SAQ-NiankhPepyNiankhMeryre", "co_occupants"): {"value": ["Ḳedi"], "rationale": "PM III.2 chunk-25 § II.F. Wife clause."},
+    ("SAQ-NiankhPepyNiankhMeryre", "co_occupant_roles"): {"value": ["Wife"], "rationale": "Paired."},
+    ("SAQ-Pernezu", "co_occupants"): {"value": ["Niʿankh-ḥathor"], "rationale": "PM III.2 chunk-25 § II.F. Wife clause."},
+    ("SAQ-Pernezu", "co_occupant_roles"): {"value": ["Wife, Royal acquaintance"], "rationale": "Paired; Ḥathor single-underdot per source convention."},
+    ("SAQ-Seshemnufer", "co_occupants"): {"value": ["Ḳerfet"], "rationale": "PM III.2 chunk-25 § II.F. Wife clause."},
+    ("SAQ-Seshemnufer", "co_occupant_roles"): {"value": ["Wife, Royal acquaintance"], "rationale": "Paired."},
+    ("SAQE14", "co_occupants"): {"value": ["Nefert"], "rationale": "PM III.2 chunk-25 § II.E. Wife clause."},
+    ("SAQE14", "co_occupant_roles"): {"value": ["Wife"], "rationale": "Paired."},
+    ("SAQH1", "co_occupants"): {"value": ["Nefertentes", "Mesti", "Inneferḥathor"], "rationale": "PM III.2 chunk-25 § II.E. Mother + two Wives clause: `Mother, Nefertentes. Wives, Mesti and Inneferḥatḥor.` per PM literal; Inneferḥatḥor → Inneferḥathor (single-underdot per source convention)."},
+    ("SAQH1", "co_occupant_roles"): {"value": ["Mother", "Wife", "Wife"], "rationale": "Paired."},
+}
+
+
 CHUNK24_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 24 — § II.E (a) WEST OF THE STEP PYRAMID OK.
     #
@@ -2253,6 +2291,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK22_CORRECTIONS,
     CHUNK23_CORRECTIONS,
     CHUNK24_CORRECTIONS,
+    CHUNK25_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
