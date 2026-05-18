@@ -2150,6 +2150,20 @@ CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "homonymous-occupant convention."
         ),
     },
+    # LG73 paired with LG74 disambiguation: when LG74 becomes
+    # `Dendenu II`, LG73 should be `Dendenu I` per chunks-11 Seshemnufer
+    # convention (all members of a homonymous sequence get explicit
+    # regnal numerals, not just the second). Gemini PR #240 round-2.
+    ("LG73", "occupant_name"): {
+        "value": "Dendenu I",
+        "rationale": (
+            "Gemini PR #240 round-2 medium 3255806314: paired with "
+            "LG74 Dendenu II disambiguation. Per chunks-11 Seshemnufer "
+            "[I]/[II]/[III] convention, all members of a homonymous "
+            "sequence get explicit Roman numerals — not just the "
+            "second."
+        ),
+    },
 }
 
 
