@@ -43,6 +43,74 @@
     "value": "King's son of his body, Count in Nekhen, Prophet of Nekhbet, etc. Dyn. V or later. Chapel also contains a north false-door of Nefertememsaf (Secretary of Upper and Lower Egypt, Prophet of Neith, Director of the dšrt-bark of Nemti, etc.), Middle Kingdom.",
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 576 (chunk-23 § II.C). PM headword for SETHU = `Dyn. V or later` — NOT Middle Kingdom. The chunk-23 prompt's wrong `Middle Kingdom` special-case mis-attributed the dating: the MK phrase actually applies to a secondary north false-door of NEFERTEMEMSAF re-using SETHU's chapel, NOT SETHU himself. Candidate 1 form correctly separates the two: SETHU primary headword `Dyn. V or later` + chapel-also-contains parenthetical for the MK re-use false-door of Nefertememsaf. Selecting candidate 1."
   },
+  "SAQE9|occupant_name": {
+    "value": "Pepyzedi",
+    "rationale": "PM III.2 chunk-24 § II.E (a). PM literal `E 9. PEPYZEDI (or MERYREʿ-ZEDI) ZADI` — primary is Pepyzedi (first-position name preceding the `(or X)` alt-name parenthetical). Single-token form per source-wide convention (multi-token alt-names move to occupant_alt_names)."
+  },
+  "SAQE9|occupant_alt_names": {
+    "value": ["Meryrēʿ-zedi", "Zadi"],
+    "rationale": "PM III.2 chunk-24 § II.E (a). PM literal `E 9. PEPYZEDI (or MERYREʿ-ZEDI) ZADI` — Pepyzedi is the primary (per `(or X)` idiom convention from chunks 20-22), Meryrēʿ-zedi is the parenthetical alt, Zadi is yet another trailing alt. Two-entry form matches PM's two alt-name slots. Diacritics: macron-Ē + ayin on Re-compound Meryrēʿ; Zadi (not Zedi) per PM literal final letter."
+  },
+  "SAQE8|notes_from_pm": {
+    "value": "Prophet of the Pyramids of Menkauḥor and Zadkarēʿ (Isesi), Royal chamberlain, etc. Temp. Isesi or later.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form."
+  },
+  "SAQD65|notes_from_pm": {
+    "value": "King's daughter of his body (of Unis), Prophetess of the mert-temple of Teti, etc. Early Dyn. VI.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form per source-wide convention; drop sub-feature catalog (false-door, sarcophagus, Thesemu lintel)."
+  },
+  "SAQD64b|notes_from_pm": {
+    "value": "Chief Justice and Vizier (on the sarcophagus only), Inspector of prophets of the Pyramids of Menkauḥor and Isesi, Inspector of waʿb-priests of the Pyramid of Neuserrēʿ, etc. Temp. Isesi to Unis. Father, Akhtiḥotp (tomb D 64,a).",
+    "rationale": "PM III.2 chunk-24 § II.E (a) — sub-banner (b) of D 64 mastaba-complex, the famous PTAḤḤOTP [II]. Headword + father cross-ref. `waʿb-priest` ayin normalisation. Father reference normalised to `(tomb D 64,a)` form (matching SAQD64a notes) instead of `(see preceding tomb)`. Drop chapel sub-feature catalog (famous offering-room scenes, sarcophagus, intrusive finds) per source-wide notes convention."
+  },
+  "SAQD64a|notes_from_pm": {
+    "value": "Chief Justice and Vizier, Overseer of the Pyramid-towns and Inspector of prophets of the Pyramids of Neuserrēʿ, Menkauḥor and Zadkarēʿ, etc. Temp. Isesi to Unis. Father, Ptaḥḥotp [I] (tomb D 62).",
+    "rationale": "PM III.2 chunk-24 § II.E (a) — sub-banner (a) of D 64 mastaba-complex, AKHTIḤOTP. Headword + father cross-ref form per source-wide convention. Bracketed regnal `Ptaḥḥotp [I]` preserved in notes for disambiguation (descriptor SAQD64a drops brackets). Drop chapel/corridor sub-feature catalog + cartographic Plan LX ref. Son Ptaḥḥotp [II] cross-ref captured via shared_with_tombs (not in notes)."
+  },
+  "SAQD63|notes_from_pm": {
+    "value": "Elder of the is-chamber in the Two Houses, Overseer of the Palace (ʿḥ), etc. Dyn. VI.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form per source-wide convention. `ʿḥ` (palace-determinative hieroglyph) parenthetical retained per chunks 17-19 in-headword-glyph-cluster convention; drop sub-feature catalog (false-door + statues)."
+  },
+  "SAQD62|notes_from_pm": {
+    "value": "Chief Justice and Vizier, etc. Temp. Isesi.",
+    "rationale": "PM III.2 chunk-24 § II.E (a) — the famous Ptaḥḥotp [I] mastaba. Minimal headword-only form per source-wide convention; drop chapel/room sub-feature catalog + cartographic refs. Son Akhtiḥotp gets its own row (SAQD64a) so cross-ref captured via shared_with_tombs (not in notes)."
+  },
+  "SAQD61|notes_from_pm": {
+    "value": "Overseer of scribes of the land in the Two Houses, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Middle Dyn. V or later. Wife, Thentet, Prophetess of Ḥathor Mistress of the Sycamore, etc.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Headword + wife clause per chunks 8-23 convention; drop sub-feature catalog and museum-citation. Ḥathor single-underdot per source convention."
+  },
+  "SAQD60|notes_from_pm": {
+    "value": "Judge and Elder of the Hall, Prophet of the Sun-temple of Neuserrēʿ, waʿb-priest of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form per source-wide convention. `waʿb-priest` normalised ayin (text-layer `wab` / `wʿb` agent variants) per chunks 9/11/17 convention. Drop museum-citation (`Chapel in Leyden Mus. F.1904/3.1.`) and son clause."
+  },
+  "SAQ-ThefuPtahhotp|notes_from_pm": {
+    "value": "(probably also Ptaḥḥotp), Royal Chamberlain. End of Dyn. V. Father (probably), Akhtiḥotp (tomb D 64,a).",
+    "rationale": "PM III.2 chunk-24 § II.E (a). PM headword block disambiguates `THEFU` (probably also called Ptaḥḥotp) from the other `THEFU` on phys p.598 (Lector-priest). Selecting candidate 2's minimal headword-block-only form preserving the `(probably also Ptaḥḥotp)` alt-name annotation in notes (NOT in occupant_alt_names since PM hedges with `probably`) + father cross-ref `Akhtiḥotp (tomb D 64,a)`. Drop body-prose object catalog (Pillared Hall scenes, offering-table Cairo CG 1332)."
+  },
+  "SAQ-Shepsipuptah|notes_from_pm": {
+    "value": "Elder of the Hall of the Pyramid of Zadkarēʿ (Isesi), ka-servant of Ptaḥḥotp [I]. End of Dyn. V or Dyn. VI. North of tomb of Mereri.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form per source-wide convention; drop sub-feature object catalog (false-door of Thetui + wife Theset) which is body-prose material; preserve `Ptaḥḥotp [I]` bracketed Roman regnal per source-wide convention (NOT drop brackets in notes — these stay in notes for disambiguation; only descriptor drops brackets)."
+  },
+  "SAQ-PtahhotpIyniankh|notes_from_pm": {
+    "value": "Judge and Overseer of scribes, Prophet of Saḥurēʿ, etc. End of Dyn. V or early Dyn. VI.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form per source-wide convention; drop chapel decoration sub-feature catalog + Map/Plan refs."
+  },
+  "SAQ-Mereri|notes_from_pm": {
+    "value": "Chief Justice and Vizier, etc. Late Dyn. VI.",
+    "rationale": "PM III.2 chunk-24 § II.E (a). Minimal headword-only form per source-wide convention (chunks 19-23); drop body-prose object catalog (obelisks, false-door, statuette, offering-table of Khuy, burial chamber scenes, sarcophagus)."
+  },
+  "SAQ-AnkhiInthi|occupant_name": {
+    "value": "ʿAnkhi Inthi",
+    "rationale": "PM III.2 2nd ed. 1978/1981, chunk-24 § II.E (a). PM prints `ʿANKHI INTHI` as a compound name. Three agents differ on rendering: candidate 1 space-separated `ʿAnkhi Inthi`, candidate 2 first-name-only `ʿAnkhi`, candidate 3 hyphenated `ʿAnkhi-inthi`. Selecting candidate 1's space-separated form since this is a `X also-called-Y` style compound (Inthi is the personal-name alt), parallel to chunk-21 `SHEMA (father and son)` and chunk-22 `MERU TETISONB` constructions which all space-separate. Inthi is captured separately in occupant_alt_names by the agents (where merge succeeds 3/3)."
+  },
+  "SAQ-AnkhiInthi|notes_from_pm": {
+    "value": "Prophet of the Pyramids of Unis and Teti, Metal-worker of the Great House, etc. End of Dyn. VI.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, chunk-24 § II.E (a). All three agents converge on title cluster + dating but differ on (a) `Map LVIII.` cartographic reference (drop per chunks 19-23) and (b) `Metal-worker` vs `Metalworker` hyphenation. Per source-wide convention prefer hyphenated form `Metal-worker` (preserves the `mr.t`-craftsman compound)."
+  },
+  "SAQ-AkhtihotpIpiUzau|notes_from_pm": {
+    "value": "Judge and Overseer of scribes, etc. Dyn. VI.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, chunk-24 § II.E (a). All three agents converge on title cluster + Dyn. VI dating but differ on body-prose object catalog inclusion. Per source-wide convention (chunks 19-23), notes_from_pm captures the HEADWORD BLOCK only — drop sub-feature object catalog (`Wooden statuette of deceased; fragments of seated statue.`) and the Architrave-fragment-of-Merut secondary find. Selecting candidate 2's minimal headword form."
+  },
   "SAQD45|notes_from_pm": {
     "value": "Overseer of oils of the King's adorners, Overseer of the two is-chambers of the King's adorners of the Great House, etc. Temp. Saḥurēʿ. Wife, Khenut, Prophetess of Ḥathor, etc.",
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 575 (chunk-23 § II.C). Three agents differ only on (a) wife clause inclusion and (b) Ḥathor vs Ḥatḥor single-vs-double underdot. Selecting candidate 2's form which preserves the wife clause + uses single-underdot Ḥathor per source-wide convention (44 occurrences vs 6 for Ḥatḥor)."

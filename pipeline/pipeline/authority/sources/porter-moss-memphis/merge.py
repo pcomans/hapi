@@ -112,6 +112,9 @@ AREA_ORDER: dict[str, int] = {
                 # disambiguation requirement).
     "SAQF": 12, # Petrie+Murray Saqqâra F-numbered mastabas (SAQF1,
                 # SAQF3) — same publication, parallel F-series.
+    "SAQE": 13, # Petrie+Murray Saqqâra E-numbered mastabas (SAQE8
+                # Seshemnufer Ḥeba, SAQE9 Pepyzedi) — same
+                # publication, parallel E-series (chunk 24 § II.E).
     # NB: chunks 15 + 17 (Cemetery en Echelon South + G 7000 East Field
     # remainder) re-use Reisner G-numbers (G 4911-G 5560 + G 7152-G 7948)
     # so no new prefix is needed there. Chunks 16 (Cemetery G 6000) and
