@@ -1509,6 +1509,8 @@ Reviewer-cited row corrections:
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
   LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
+  SAQ-Ankhirptah.co_occupant_roles: ["Official"] → ["Wife, Prophetess of Ḥathor, etc."]
+  SAQ-Ankhirptah.notes_from_pm: "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥatḥor, etc." → "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥathor, etc."
   SAQ-BiaIrery.co_occupants: [] → ["Idut"]
   SAQ-BiaIrery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor"]
   SAQ-HerimeruMerery.co_occupants: [] → ["Wazkaus"]
@@ -1519,17 +1521,25 @@ Reviewer-cited row corrections:
   SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
   SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
   SAQ-IputII.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} → {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"}
+  SAQ-Irenkaptah.co_occupant_roles: ["Official"] → ["Wife, Prophetess of Ḥathor"]
+  SAQ-Irenkaptah.notes_from_pm: "Master butcher of the Great House, Overseer of beef fat, etc. Middle to late Dyn. V. Wife, Khenut, Prophetess of Ḥatḥor." → "Master butcher of the Great House, Overseer of beef fat, etc. Middle to late Dyn. V. Wife, Khenut, Prophetess of Ḥathor."
   SAQ-Iy.co_occupants: [] → ["Niʿankh-pepy"]
   SAQ-Iy.co_occupant_roles: [] → ["Father"]
   SAQ-Iyenhor.co_occupants: [] → ["Theset"]
   SAQ-Iyenhor.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
+  SAQ-Iyka.co_occupant_roles: ["Official"] → ["Wife, Prophetess of Ḥathor Mistress of the Sycamore, etc."]
+  SAQ-Iyka.notes_from_pm: "King's warb-priest, Chief of the Great Estate, etc. Dyn. V. Under the Causeway. Exact position unknown. Wife, Iymert, Prophetess of Ḥatḥor Mistress of the Sycamore, etc." → "King's waʿb-priest, Chief of the Great Estate, etc. Dyn. V. Under the Causeway. Exact position unknown. Wife, Iymert, Prophetess of Ḥathor Mistress of the Sycamore, etc."
   SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. ¹ King's wife (of Teti)."
   SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
+  SAQ-Methethi.co_occupant_roles: ["Official"] → ["Wife"]
   SAQ-Mitri.co_occupants: [] → ["...menkaureʿ..."]
   SAQ-Mitri.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor Mistress of the Sycamore, etc."]
+  SAQ-Neferherenptah.co_occupant_roles: ["Official"] → ["Son, Judge and Overseer of scribes"]
   SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]
+  SAQ-NiankhKhnum.co_occupant_roles: ["Official", "Official", "Official"] → ["Official", "Wife of Niʿankh-khnum, Prophetess of Ḥathor Mistress of the Sycamore, etc.", "Wife of Khnemḥotp, same title"]
   SAQ-NiankhPepyNiankhMeryre.co_occupants: [] → ["Ḳedi"]
   SAQ-NiankhPepyNiankhMeryre.co_occupant_roles: [] → ["Wife"]
+  SAQ-Nufer.co_occupant_roles: ["Official", "Official", "Official"] → ["Father, Director of singers, Prophet of Mert of Upper Egypt, etc.", "Wife, Royal acquaintance", "Mother, Prophetess of Ḥathor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc."]
   SAQ-Pernezu.co_occupants: [] → ["Niʿankh-ḥathor"]
   SAQ-Pernezu.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
   SAQ-Seshemnufer.co_occupants: [] → ["Ḳerfet"]

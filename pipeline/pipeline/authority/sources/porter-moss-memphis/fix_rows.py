@@ -2084,6 +2084,92 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
 # Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
 # correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK26_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 26 — § II.F AROUND THE PYRAMID-COMPLEX OF UNIS (tail).
+    #
+    # F1 (populate co_occupant_roles with relational + title for wife
+    # / son / father / mother clauses): Codex P2 review on PR #248
+    # (inline comment id=3256347113). Several chunk-26 rows record
+    # the co-occupant name (e.g., `co_occupants: ["Nebt"]`) but leave
+    # `co_occupant_roles: ["Official"]`, dropping the wife / son
+    # kinship typing that PM's headword block explicitly states.
+    # Per source-wide convention (chunks 8-25 + TPC-Kaemhest /
+    # SAQH1 / SAQ-BiaIrery precedent), kinship clauses populate the
+    # parallel `co_occupant_roles` array with `<Relation>, <title>`
+    # so downstream Phase-A queries (`wives of Dyn V officials`,
+    # `family-tomb networks`) can route on the relationship. The
+    # 3-agent vote majoritied to `Official` on these rows because
+    # the role-typing rule was not in the prompt's bare-named rubric
+    # for chunk 26 (carried forward from chunks 24-25); the rule is
+    # implicit in the source-wide convention. Same regression class
+    # as chunk-25 Codex P2 (#247) — fix post-merge here.
+    #
+    # Ḥathor spelling: source-wide convention is single-underdot
+    # `Ḥathor` per the 44-vs-6 majority count (prompt-chunk-26
+    # § "PM III.2 text-layer noise"). The chunk-26 agents emitted
+    # double-underdot `Ḥatḥor` in notes; the role strings use
+    # single-underdot `Ḥathor` per source convention. Intra-row
+    # consistency: also normalise the affected notes_from_pm fields
+    # to single-underdot, preserving everything else verbatim.
+    ("SAQ-Ankhirptah", "co_occupant_roles"): {
+        "value": ["Wife, Prophetess of Ḥathor, etc."],
+        "rationale": "PM III.2 chunk-26 § II.F. PM headword `Wife, Nebt, Prophetess of Ḥatḥor, etc.` — Wife relational role + title appended per TPC-Kaemhest / SAQ-BiaIrery convention. Ḥathor single-underdot per source-wide 44-vs-6 majority. Codex P2 review on PR #248.",
+    },
+    ("SAQ-Ankhirptah", "notes_from_pm"): {
+        "value": "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥathor, etc.",
+        "rationale": "Paired with SAQ-Ankhirptah|co_occupant_roles — Ḥatḥor → Ḥathor (single-underdot per source convention) for intra-row consistency.",
+    },
+    ("SAQ-Irenkaptah", "co_occupant_roles"): {
+        "value": ["Wife, Prophetess of Ḥathor"],
+        "rationale": "PM III.2 chunk-26 § II.F. PM headword `Wife, Khenut, Prophetess of Ḥatḥor.` — Wife + title. Ḥathor single-underdot per source convention. Codex P2 review on PR #248.",
+    },
+    ("SAQ-Irenkaptah", "notes_from_pm"): {
+        "value": "Master butcher of the Great House, Overseer of beef fat, etc. Middle to late Dyn. V. Wife, Khenut, Prophetess of Ḥathor.",
+        "rationale": "Paired — Ḥatḥor → Ḥathor for intra-row consistency.",
+    },
+    ("SAQ-Iyka", "co_occupant_roles"): {
+        "value": ["Wife, Prophetess of Ḥathor Mistress of the Sycamore, etc."],
+        "rationale": "PM III.2 chunk-26 § II.F. PM headword `Wife, Iymert, Prophetess of Ḥatḥor Mistress of the Sycamore, etc.` — Wife + title. Ḥathor single-underdot per source convention. Codex P2 review on PR #248.",
+    },
+    ("SAQ-Iyka", "notes_from_pm"): {
+        "value": "King's waʿb-priest, Chief of the Great Estate, etc. Dyn. V. Under the Causeway. Exact position unknown. Wife, Iymert, Prophetess of Ḥathor Mistress of the Sycamore, etc.",
+        "rationale": "Paired — Ḥatḥor → Ḥathor; also wnrb → waʿb correction (the OCR-degraded `warb` in the agent-majoritied notes is a known pypdf artefact for `waʿb` which uses U+02BF ayin per source-wide convention).",
+    },
+    ("SAQ-Methethi", "co_occupant_roles"): {
+        "value": ["Wife"],
+        "rationale": "PM III.2 chunk-26 § II.F. PM headword `Wife, Inti.` — bare Wife relational role, no title. Per SAQH1 precedent (`Mother`, `Wife`, `Wife` bare). Codex P2 review on PR #248.",
+    },
+    ("SAQ-Neferherenptah", "co_occupant_roles"): {
+        "value": ["Son, Judge and Overseer of scribes"],
+        "rationale": "PM III.2 chunk-26 § II.F. PM headword `Son, Ptaḥshepses, Judge and Overseer of scribes.` — Son relational role + title appended per TPC-Kaemhest convention. Codex P2 review on PR #248.",
+    },
+    ("SAQ-NiankhKhnum", "co_occupant_roles"): {
+        "value": [
+            "Official",
+            "Wife of Niʿankh-khnum, Prophetess of Ḥathor Mistress of the Sycamore, etc.",
+            "Wife of Khnemḥotp, same title",
+        ],
+        "rationale": "PM III.2 chunk-26 § II.F. Joint-burial mega-headword: `Niʿankh-khnum and Khnemḥotp, both Prophets of Rēʿ ... Wife of Niʿankh-khnum, Khentkaus, Prophetess of Ḥathor Mistress of the Sycamore, etc.; of Khnemḥotp, Khenut, same title.` Khnemḥotp shares the symmetric `both <title>` typing with primary (LG97 precedent: joint co-primary inherits `Official`). The two wives carry kinship-prefixed roles with their husband disambiguated. Codex P2 review on PR #248.",
+    },
+    ("SAQ-NiankhKhnum", "notes_from_pm"): {
+        "value": "Niʿankh-khnum and Khnemḥotp, both Prophets of Rēʿ in the Sun-temple of Neuserrēʿ, Overseers of manicurists of the Great House, etc. Probably temp. Neuserrēʿ or Menkauḥor. Wife of Niʿankh-khnum, Khentkaus, Prophetess of Ḥathor Mistress of the Sycamore, etc.; of Khnemḥotp, Khenut, same title.",
+        "rationale": "Paired — Ḥatḥor → Ḥathor for intra-row consistency with the new co_occupant_roles.",
+    },
+    ("SAQ-Nufer", "co_occupant_roles"): {
+        "value": [
+            "Father, Director of singers, Prophet of Mert of Upper Egypt, etc.",
+            "Wife, Royal acquaintance",
+            "Mother, Prophetess of Ḥathor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc.",
+        ],
+        "rationale": "PM III.2 chunk-26 § II.F. Family-tomb headword: `Nufer ... and his father Kaḥa, Director of singers, Prophet of Mert of Upper Egypt, etc. ... Wife of Nufer, Khons, Royal acquaintance. Wife of Kaḥa and mother of Nufer, Mertiotes, Prophetess of Ḥatḥor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc.` Kaḥa carries `Father, <title>` per TPC-Kaemhest precedent. Khons is Nufer's wife. Mertiotes is Kaḥa's wife AND Nufer's mother — captured under the primary-relation (Mother) prefix per chunk-25 SAQH1 / SAQ-Pernezu convention (kinship from primary occupant's perspective). Ḥathor single-underdot per source convention. Codex P2 review on PR #248.",
+    },
+    ("SAQ-Nufer", "notes_from_pm"): {
+        "value": "Inspector of the waʿbt, Director of singers, etc., and his father Kaḥa, Director of singers, Prophet of Mert of Upper Egypt, etc. Middle to late Dyn. V. Wife of Nufer, Khons, Royal acquaintance. Wife of Kaḥa and mother of Nufer, Mertiotes, Prophetess of Ḥathor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc.",
+        "rationale": "Paired — Ḥatḥor → Ḥathor for intra-row consistency.",
+    },
+}
+
+
 CHUNK25_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 25 — § II.E / AROUND THE PYRAMID-COMPLEX OF UNIS.
     #
@@ -2292,6 +2378,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK23_CORRECTIONS,
     CHUNK24_CORRECTIONS,
     CHUNK25_CORRECTIONS,
+    CHUNK26_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
