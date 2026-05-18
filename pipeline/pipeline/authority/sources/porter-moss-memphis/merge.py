@@ -103,6 +103,15 @@ AREA_ORDER: dict[str, int] = {
                # AROUND TETI PYRAMID Old-Kingdom named mastabas
                # without LS numbers (chunk 20). Parallel to JKR- /
                # JKE- / STN- / EF- descriptor conventions.
+    "SAQD": 11, # Petrie+Murray Saqqâra D-numbered mastabas (SAQD45 etc.)
+                # — PM III.2 § II.C EAST OF THE STEP PYRAMID (chunk 23).
+                # Distinct from chunk-11's `D<N>` for Steindorff Giza
+                # cemetery (the same D-number prefix refers to a
+                # completely different numbering scheme in Giza vs
+                # Saqqâra; chunk-11's transcribe.md anticipated this
+                # disambiguation requirement).
+    "SAQF": 12, # Petrie+Murray Saqqâra F-numbered mastabas (SAQF1,
+                # SAQF3) — same publication, parallel F-series.
     # NB: chunks 15 + 17 (Cemetery en Echelon South + G 7000 East Field
     # remainder) re-use Reisner G-numbers (G 4911-G 5560 + G 7152-G 7948)
     # so no new prefix is needed there. Chunks 16 (Cemetery G 6000) and
