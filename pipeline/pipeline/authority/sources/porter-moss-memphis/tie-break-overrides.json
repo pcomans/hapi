@@ -955,5 +955,207 @@
   "TPC-Shema|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 558 (chunk-22). PM literal headword: `SHEMA (father and son) and IPISENBES (woman). Dyn. VI or 1st Int. Period. South of the Temple.` Per source-wide convention occupant_name is dropped from notes, BUT in this unusual `(father and son)` homonymous joint-headword case, dropping `Shema` would lose the disambiguation between the father-Shema (primary occupant) and son-Shema (co-occupant). Selecting form 1 which preserves the full PM-literal headword. Drop sub-feature trailers (`(a) Fragments of side-pieces...`).",
     "value": "Shema (father and son) and Ipisenbes (woman). Dyn. VI or 1st Int. Period. South of the Temple."
+  },
+  "MAR3|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 449 (chunk-27a). Title + dating retained; object-catalog addendum (drum of doorway; false-door fragments in Copenhagen) dropped per source-wide convention chunks 8-26 (headword-minimal notes_from_pm). Candidate 2 is shortest-minimal.",
+    "value": "Inspector of treasurers of the Temple. Probably Dyn. V."
+  },
+  "MAR5|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 449 (chunk-27a). Candidate 1 uses wrong title abbreviation (mr); candidates 2 and 3 agree on correct (mḏḥ). Candidate 3 prepends occupant name (convention: drop) and includes full chapel+object-catalog addendum (drop per source-wide convention chunks 8-26). Candidate 2 is shortest-minimal with correct title abbreviation, title+wife+dating retained; chapel-description and object-catalog addenda dropped. Parenthesized (Tepes) in candidate 2 is minor variant; selecting candidate 2 as PM-faithful shortest-minimal.",
+    "value": "Overseer (mḏḥ) of Anubis foremost of the Sacred Land, Prophet of Seshet, etc., and wife Neferḥotep-Ḥatḥor (Tepes), Royal acquaintance. Middle Dyn. III to early Dyn. IV."
+  },
+  "MAR5|occupant_alt_names": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 449 (chunk-27a). PM headword is compound \"Khaʿbausokar Hethes\"; agent A correctly treats this as a single composite occupant_name with no separate alt_names. Agents B and C incorrectly split the compound, placing \"Hethes\"/\"Ḥethes\" in alt_names — this duplicates information already in the occupant_name. Selecting empty list per agent A; PM-faithful composite-name handling.",
+    "value": []
+  },
+  "MAR7|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 450 (chunk-27a). Candidates 1 and 3 agree on title text \"Prophet of Horus, etc.\" and differ only in their object-catalog addenda (drum+statue entries); those addenda are dropped per source-wide convention chunks 8-26. Candidate 2 alone adds \"Sm³-t³\" qualifier to Horus — not supported by the 2-agent majority on this title string; treating as agent over-read. Selecting title+dating minimal form from candidates 1/3 consensus.",
+    "value": "Overseer of scribes of the land in the Two Houses, Prophet of Horus, etc. Dyn. V."
+  },
+  "MAR8|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 450 (chunk-27a). Title + dating retained; object-catalog addendum (false-door / texts of false-door) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Overseer of the scribes of the land in the Two Houses of Upper and Lower Egypt, Director of scribes of petitions, etc. Middle Dyn. V or later."
+  },
+  "MAR10|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 450 (chunk-27a). Object-catalog addendum (false-door panel, Cairo CG 1729) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Overseer of sculptors, etc. Probably Dyn. V."
+  },
+  "MAR12|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 451 (chunk-27a). Title + dating + wife clause retained (per source-wide convention: wife/parent clauses are kept). Object-catalog addendum (stela with son; double-statue) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Overseer of the scribes of the land, etc. Probably Dyn. V. Wife, Thenteti, Prophetess of Ḥatḥor, etc."
+  },
+  "MAR14|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 451 (chunk-27a). Candidate 3 prepends occupant name (drop per convention) and includes object-catalog addendum (Brooklyn Museum, Vienna items). Candidate 2 drops the son clause; candidate 1 retains title + dating + wife clause + son clause — kinship clauses (wife, parent, named son) are retained per source-wide convention chunks 8-26. Candidate 1 is shortest-minimal with all family clauses preserved.",
+    "value": "wʿb-priest of the Pyramid of Isesi, Overseer of the Two Houses of Gold, Favourite metal-worker of the Great House, etc. Temp. Isesi. Wife, Khenut. Eldest son Mereruka, Metal-worker in the Two Houses."
+  },
+  "MAR15|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 452 (chunk-27a). Object-catalog addendum (false-door, Cairo JE 15139) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Master of the largesse in the Mansion of Life of Seshet, Overseer of all works of the King, etc. Dyn. IV or later."
+  },
+  "MAR18|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 453 (chunk-27a). Candidate 1 adds PM internal plan reference (\"Plan XLVII\") — publication apparatus, not substantive headword content; dropped per source-wide convention chunks 8-26. Candidate 3 includes large object-catalog addendum; also dropped. Candidate 2 is shortest-minimal with title + dating retained.",
+    "value": "Overseer of King's harim, Prophet of Bubastis and Khnum, etc. Early Dyn. IV."
+  },
+  "MAR20|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 453 (chunk-27a). Object-catalog addendum (Boston reliefs / plan reference) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Overseer of the Two Granaries, Director of scribes, etc. Middle Dyn. V or later."
+  },
+  "MAR22|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 454 (chunk-27a). Object-catalog addendum (Philadelphia chapel; scene descriptions) and PM plan reference dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Prophet of the Pyramid of Isesi, Overseer of the Treasury of the Residence, etc. Temp. Isesi or later."
+  },
+  "MAR23|occupant_name": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 456 (chunk-27a). Three-way OCR/reading dispute on initial consonant: Ḥ (pharyngeal h), Ḳ (emphatic k/q with underdot), S. \"Sednas\" is most likely a misread of Ḳ — underdot-k can drop to plain-S under poor OCR. Between Ḥednas and Ḳednas: PM extensively uses Ḳ for Egyptian emphatic-k names in this period; selecting Ḳednas as most PM-faithful. FLAGGED for egyptologist review against printed p. 456.",
+    "value": "Ḳednas"
+  },
+  "MAR24|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 456 (chunk-27a). Candidate 3 prepends occupant name (drop per convention) and includes large object-catalog. Candidate 1 includes museum object citations and biographical narrative (death account) — all object-catalog/narrative addenda dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal with title + dating retained.",
+    "value": "Chief Justice and Vizier, etc. Temp. Neferirkarēʿ."
+  },
+  "MAR26|co_occupant_roles": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 457 (chunk-27a). Parenthetical form \"(probable)\" (agents A, C) preferred over adverbial \"probably\" (agent B) — consistent with prior-chunk parenthetical convention. Candidate 3 adds \"Royal acquaintance\" to Mother role but this qualifier appears only in one agent; not supported by 2-agent majority. Selecting candidate 1: [\"Father (probable)\", \"Mother (probable)\"].",
+    "value": [
+      "Father (probable)",
+      "Mother (probable)"
+    ]
+  },
+  "MAR27|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 457 (chunk-27a). Wife clause retained; object-catalog addenda (false-door, Cairo statues) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Overseer of scribes of the crews. Dyn. V. Wife, Khenut, Royal acquaintance."
+  },
+  "MAR28|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 458 (chunk-27a). Object-catalog addendum (Cairo statue CG 205) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Inspector of scribes of the royal documents. Dyn. V."
+  },
+  "MAR29|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 458 (chunk-27a). Object-catalog addendum (Cairo granite scribe-statue CG 186) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Scribe of the royal documents. Dyn. V."
+  },
+  "MAR30|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 458 (chunk-27a). Wife clause retained. Statue-group note including son Shepsipuzad-nezes and cross-ref to tomb 31 is an object-catalog addendum (describes a specific monument, not a tomb co-occupant relationship); dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Judge and Elder of the Hall. Dyn. V. Wife, Nikauḥatḥor, Prophetess of Neith, etc."
+  },
+  "MAR31|co_occupant_roles": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 459 (chunk-27a). Mother Nikauḥatḥor holds title \"Prophetess of Neith\" (confirmed by MAR30 cross-reference and agents B+C majority). Agent A omits her title — less PM-faithful. Agent C adds Shepsi's title \"Judge and Elder of the Hall\" to Father role — only one agent includes it and it risks conflating Shepsipuzad's own title with his father's. Selecting agent B form: Father bare + Mother with title.",
+    "value": [
+      "Father",
+      "Mother, Prophetess of Neith"
+    ]
+  },
+  "MAR33|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 459 (chunk-27a). Object-catalog addendum (Cairo statue CG 96) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Scribe of the granary. Probably Dyn. V."
+  },
+  "MAR34|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 459 (chunk-27a). Object-catalog addendum (Cairo statue CG 29) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Steward. Dyn. V."
+  },
+  "MAR35|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 459-460 (chunk-27a). Mother clause retained. Object-catalog addenda (Louvre statues, Scribe du Louvre) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Judge and Boundary official. Early Dyn. V. Mother, Meseḥti, Royal acquaintance."
+  },
+  "MAR36|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 460 (chunk-27a). Object-catalog addenda (\"Sheikh el-Beled\" statues Cairo CG 33/34, false-door granite) dropped per source-wide convention chunks 8-26, even where monuments are well-known. Candidate 2 is shortest-minimal with title + dating retained.",
+    "value": "Chief lector-priest. Late Dyn. IV or early Dyn. V."
+  },
+  "MAR37|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 460 (chunk-27a). Candidate 3 prepends occupant name and includes large object-catalog. Candidate 2 truncates the topographic anchor to \"South chapel: Sabu\" losing the joint-complex cross-reference. Candidate 1 retains title + dating + topographic anchor identifying the joint complex structure (37-38) and northern-chapel companion (Ptaḥshepses [II] No. 38) — a structural note, not object-catalog. Per source-wide convention: topographic anchors are retained; object-catalog addenda dropped. Candidate 1 selected.",
+    "value": "Greatest of the Directors of craftsmen in the Two Houses on the day of the festival, Supervisor of prophets of the Pyramids of Unis and Teti, Prophet of Rēʿ in the Sun-temples of Userkaf, Neferirkarēʿ, Neuserrēʿ and Menkauḥor, etc. Temp. Teti. South chapel of joint tomb-complex Nos. 37-8 [E 1, 2 and H 3]; northern chapel is Ptaḥshepses [II] (No. 38)."
+  },
+  "MAR37|tomb_aliases": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 460 (chunk-27a). Joint complex 37-38 carries aliases E 1, E 2, H 3. MAR37 is the south chapel (Sabu); MAR38 is the north chapel (Ptaḥshepses [II]). Agents A and C split E 1 → MAR37, E 2 → MAR38; H 3 designates the overall joint complex (not specific to south chapel). Agent B dumps all three aliases on both entries — creates duplication. Selecting [\"E 1\"] for MAR37 (south chapel alias per A+C majority on this assignment) with H 3 excluded to avoid cross-entry duplication.",
+    "value": [
+      "E 1"
+    ]
+  },
+  "MAR38|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 461 (chunk-27a). Candidate 3 prepends chapel designation (drop per convention) and includes large object-catalog. Candidate 2 truncates topographic anchor to \"North chapel: Ptaḥshepses [II]\". Candidate 1 retains title + dating + wife clause + topographic anchor for north chapel of joint complex 37-38 including cross-ref to south chapel (Sabu Bebi No. 37) — structural note, not object-catalog. Selecting candidate 1 per topographic-anchor retention convention (see MAR37|notes_from_pm).",
+    "value": "Supervisor of prophets of the Pyramid of Teti, Prophet of the Pyramid of Unis, Greatest of the Directors of craftsmen in the Two Houses, etc. Temp. Teti or later. Wife, Inti, Prophetess of Ḥatḥor and Neith, etc. North chapel of joint tomb-complex Nos. 37-8 [E 1, 2 and H 3]; southern chapel is Sabu Bebi (No. 37)."
+  },
+  "MAR39|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 461 (chunk-27a). Object-catalog / scene addenda (doorway registers with son Ptaḥshepses) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "mḥnk of the King. Dyn. V-VI."
+  },
+  "MAR40|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 461 (chunk-27a). Wife clause retained. Object-catalog addenda (Cairo statues CG 18, 19, 53) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Greatest of the Directors of craftsmen on the day of the festival, etc. Early Dyn. V. Wife (probably), Ḥeknu, Royal acquaintance."
+  },
+  "MAR41|co_occupant_roles": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 462 (chunk-27a). Agent B incorrectly lists companion-tomb primary occupant Ptaḥḥotp (No. 42) as a co-occupant of MAR41 — cross-complex companion is not a co-occupant. Agent C drops all co-occupants. Agent A captures ʿAnkhkaus as \"Associated woman\" — PM mentions a woman in this tomb context (agent C notes fragment includes \"woman\"). Selecting agent A form. FLAGGED for egyptologist review: verify ʿAnkhkaus identity and role against printed p. 462.",
+    "value": [
+      "Associated woman"
+    ]
+  },
+  "MAR41|co_occupants": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 462 (chunk-27a). Paired with MAR41|co_occupant_roles. Agent B lists Ptaḥḥotp (companion-tomb No. 42 owner) — incorrect, cross-complex companion is not a co-occupant of MAR41. Agent C lists none. Agent A lists ʿAnkhkaus (woman mentioned in PM at this tomb). Selecting agent A. FLAGGED for egyptologist review (see MAR41|co_occupant_roles).",
+    "value": [
+      "ʿAnkhkaus"
+    ]
+  },
+  "MAR41|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 462 (chunk-27a). Candidate 2 over-truncates. Candidate 3 prepends chapel designation and adds object-catalog. Candidate 1 retains title + dating + topographic anchor (joint complex 41-42 aliases and cross-ref to Ptaḥḥotp No. 42) but also appends obelisk monument note (object-catalog); that addendum dropped. Value is candidate 1 minus obelisk sentence per source-wide convention chunks 8-26.",
+    "value": "Chief Justice and Vizier, etc. Middle Dyn. V or later. Joint tomb-complex Nos. 41-2 [C 6 and 7 and probably F 4] with Ptaḥḥotp (No. 42); South chapel is Ptaḥḥotp-desher."
+  },
+  "MAR42|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 462 (chunk-27a). Same joint-complex structure as MAR37-38 and MAR41. Candidate 3 prepends chapel designation and adds object-catalog. Candidate 2 over-truncates. Candidate 1 retains title + dating + topographic anchor for north chapel of joint complex 41-42 (cross-ref to Ptaḥḥotp-desher No. 41) but appends Cairo false-door citation (object-catalog); that addendum dropped per source-wide convention chunks 8-26.",
+    "value": "Chief Justice and Vizier, etc. Middle Dyn. V or later. Joint tomb-complex Nos. 41-2 [C 6 and 7 and probably F 4] with Ptaḥḥotp-desher (No. 41); North chapel is Ptaḥḥotp."
+  },
+  "MAR43|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 463 (chunk-27a). Object-catalog addenda (false-door parts, Munich cross-reference) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Real royal acquaintance (woman). Dyn. VI."
+  },
+  "MAR44|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 463 (chunk-27a). Object-catalog addenda (Cairo false-door, naked statue CG 143) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Greatest of the Directors of craftsmen on the day of the festival, etc. Dyn. V."
+  },
+  "MAR45|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 463 (chunk-27a). Object-catalog addendum (unfinished false-door, Cairo JE 15045) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "King's wʿb-priest, etc. Dyn. V-VI."
+  },
+  "MAR47|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 463 (chunk-27a). Candidate 3 prepends occupant name (drop per convention) and adds object-catalog. Candidate 1 adds Cairo catalog citations (false-door fragments, autobiographical text). Object-catalog addenda dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Greatest of the Directors of craftsmen in the Two Houses on the day of the festival, etc. Temp. Pepy I or later."
+  },
+  "MAR48|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 464 (chunk-27a). Wife clause retained (royal connection: King's eldest daughter). Object-catalog addendum (British Museum lintel/false-door 682) dropped per source-wide convention chunks 8-26. Candidate 3's editorial note '(H 14 cited incorrectly in PM.)' is agent commentary, not PM text — also dropped. Candidate 2 is shortest-minimal.",
+    "value": "Greatest of the Directors of craftsmen in the Two Houses, Prophet of Rēʿ in the Sun-temples of Userkaf, Saḥurēʿ, Neferirkarēʿ, and Neuserrēʿ, etc. Temp. Neuserrēʿ. Wife, Khaʿmaʿet, King's eldest daughter (probably of Userkaf)."
+  },
+  "MAR49|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 464 (chunk-27a). Object-catalog addenda (Cairo statues CG 54/77/81/28/207/83/111/112) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Judge and Inspector of book-keepers, Prophet of Ḥatḥor and Rēʿ, etc. Dyn. V."
+  },
+  "MAR50|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 464 (chunk-27a). Object-catalog addenda (Aberdeen lintel, Cairo headless statues) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Greatest of the Directors of craftsmen in the Two Houses on the day of the festival, etc. Probably middle Dyn. V."
+  },
+  "MAR51|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 465 (chunk-27a). Candidates 1 and 3 include a statue-group citation (Cairo CG 100) that names wife ʿAnkh-ḥas and son Washka — this is an object-catalog entry describing a specific monument, not a headword family clause. Dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Inspector of singers to the flute, King's wʿb-priest, etc. Dyn. V or later."
+  },
+  "MAR52|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 465 (chunk-27a). Father clause retained. Candidates 1 and 2 differ on name diacritic: 'Minnufer' vs 'Minnüfer'. PM transliteration does not use German-style umlauts (ü); standard Egyptological form is 'Minnufer' without umlaut. Candidate 3 adds object-catalog addendum (false-door, Cairo CG 1336); dropped per source-wide convention chunks 8-26. Selecting candidate 1 (PM-faithful no-umlaut form, no catalog addendum).",
+    "value": "Overseer of all craftsmen, etc. Late Dyn. V or later. Father, Minnufer, Overseer of the House of Weaving Women of the Residence."
+  },
+  "MAR53|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 465 (chunk-27a). Object-catalog addendum (Cairo false-door pieces CG 1464-5, 1694) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Director of scribes of petitions, etc. Dyn. V-VI."
+  },
+  "MAR54|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 465-466 (chunk-27a). Wife clause retained. Object-catalog addenda (Louvre statues, Copenhagen basin) dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Overseer of scribes of the land in the Two Houses, Director of scribes of the house of the master of the largesse, etc. End of Dyn. V or later. Wife, Iti, Royal acquaintance."
+  },
+  "MAR57|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 467 (chunk-27a). Object-catalog addenda (Boston reliefs, Cairo statues) and PM plan reference dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal.",
+    "value": "Prophet of Rēʿ in the Sun-temples of Userkaf, Neferirkarēʿ, and Neuserrēʿ, Prophet of Khephren and Saḥurēʿ, wʿb-priest of the Pyramids of Saḥurēʿ and Neuserrēʿ, etc. Temp. Neuserrēʿ or later."
+  },
+  "MAR58|co_occupant_roles": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 467 (chunk-27a). Agent C drops all co-occupants. Agents A and B both identify Snefrunufer [II] as a possible son. Agent B appends son's title in the role field — title is that of the companion, not a standard role qualifier; excluded to avoid conflation. Parenthetical form '(possible)' consistent with prior-chunk convention (e.g., MAR26). Selecting agent A form.",
+    "value": [
+      "Son (possible)"
+    ]
+  },
+  "MAR58|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 467-468 (chunk-27a). Topographic anchor 'A of de Morgan' retained. Kinship note naming possible son Snefrunufer [II] with cross-ref to tomb No. 59 retained per convention. Candidate 1 adds scene-description addendum (walls, offering-bringers). Candidate 3 adds false-door catalog citation. Both addenda dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal with all substantive elements.",
+    "value": "Supervisor of prophets of the Pyramid of Zadkarēʿ, Overseer of singers of the Great House, wʿb-priest of the Pyramid of Menkauḥor. End of Dyn. V or Dyn. VI. A of de Morgan. Sons (including possibly Snefrunufer [II], tomb No. 59 [E 7])."
   }
 }

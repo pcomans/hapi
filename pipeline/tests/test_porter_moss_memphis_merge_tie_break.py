@@ -774,6 +774,66 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-Ptahshepses", "notes_from_pm"),
         ("SAQ-Rakhuf", "notes_from_pm"),
         ("SAQE17", "notes_from_pm"),
+        # Chunk 27a (§ II.A NORTH OF THE STEP PYRAMID, Mariette OK
+        # tombs Nos. 1-59): 47 ties resolved. Predominantly notes_from_pm
+        # batch-resolved with shortest-candidate-wins (title cluster +
+        # dating + family clause + topographic anchor; drop body-prose
+        # object catalogs / museum citations / chapel sub-feature
+        # decoration descriptions). Plus MAR5 occupant_alt_names
+        # (Khaʿbausokar Hethes compound retained in occupant_name),
+        # MAR23 occupant_name (OCR-degraded leading consonant Ṣ/Ḳ/Ḥ
+        # — verified against MARIETTE, Mastabas p.392), MAR26 / MAR31
+        # / MAR41 / MAR58 co_occupant_roles (wife-clause role typing),
+        # MAR37 tomb_aliases (joint twin H 3/E 1 disambiguation),
+        # MAR41 co_occupants (Agent B hallucinated Ptaḥḥotp; corrected
+        # to ʿAnkhkaus per PM headword).
+        ("MAR3", "notes_from_pm"),
+        ("MAR5", "notes_from_pm"),
+        ("MAR5", "occupant_alt_names"),
+        ("MAR7", "notes_from_pm"),
+        ("MAR8", "notes_from_pm"),
+        ("MAR10", "notes_from_pm"),
+        ("MAR12", "notes_from_pm"),
+        ("MAR14", "notes_from_pm"),
+        ("MAR15", "notes_from_pm"),
+        ("MAR18", "notes_from_pm"),
+        ("MAR20", "notes_from_pm"),
+        ("MAR22", "notes_from_pm"),
+        ("MAR23", "occupant_name"),
+        ("MAR24", "notes_from_pm"),
+        ("MAR26", "co_occupant_roles"),
+        ("MAR27", "notes_from_pm"),
+        ("MAR28", "notes_from_pm"),
+        ("MAR29", "notes_from_pm"),
+        ("MAR30", "notes_from_pm"),
+        ("MAR31", "co_occupant_roles"),
+        ("MAR33", "notes_from_pm"),
+        ("MAR34", "notes_from_pm"),
+        ("MAR35", "notes_from_pm"),
+        ("MAR36", "notes_from_pm"),
+        ("MAR37", "notes_from_pm"),
+        ("MAR37", "tomb_aliases"),
+        ("MAR38", "notes_from_pm"),
+        ("MAR39", "notes_from_pm"),
+        ("MAR40", "notes_from_pm"),
+        ("MAR41", "co_occupant_roles"),
+        ("MAR41", "co_occupants"),
+        ("MAR41", "notes_from_pm"),
+        ("MAR42", "notes_from_pm"),
+        ("MAR43", "notes_from_pm"),
+        ("MAR44", "notes_from_pm"),
+        ("MAR45", "notes_from_pm"),
+        ("MAR47", "notes_from_pm"),
+        ("MAR48", "notes_from_pm"),
+        ("MAR49", "notes_from_pm"),
+        ("MAR50", "notes_from_pm"),
+        ("MAR51", "notes_from_pm"),
+        ("MAR52", "notes_from_pm"),
+        ("MAR53", "notes_from_pm"),
+        ("MAR54", "notes_from_pm"),
+        ("MAR57", "notes_from_pm"),
+        ("MAR58", "co_occupant_roles"),
+        ("MAR58", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
