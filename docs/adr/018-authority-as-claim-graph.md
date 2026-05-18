@@ -79,6 +79,10 @@ These are the `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations that connect
 
 ```turtle
 # Hapi extension manifest (excerpt; full file at pipeline/pipeline/authority/hapi_extension.rdf)
+# Every Hapi-namespaced class and predicate referenced anywhere in this ADR MUST appear in that
+# file, with either a sound subClassOf/subPropertyOf declaration or an explicit free-standing
+# declaration (with comment) when no CRM superclass/superproperty fits. Unmanifested terms are
+# rejected by the cidoc-crm-validator subagent.
 
 # Classes
 hapi:MatcherRun         rdfs:subClassOf  crmdig:D3_Formal_Derivation .
