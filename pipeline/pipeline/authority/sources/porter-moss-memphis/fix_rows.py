@@ -2079,6 +2079,54 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-18 (CEMETERY G 7000 LG-numbered terminal cluster). Pre-emptive
+# diacritic + capitalisation fixes for 2/1 agent-majority misses on the
+# underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
+# Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
+# correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("LG73", "co_occupants"): {
+        "value": ["Neferḥetpes"],
+        "rationale": (
+            "Pre-emptive: apply Neferḥetpes underdot-Ḥ (ḥ-root *ḥtp*) "
+            "per source-wide convention. Agent B voted with underdot "
+            "but was outvoted 2/1 by A+C."
+        ),
+    },
+    ("LG73", "notes_from_pm"): {
+        "value": "Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferḥetpes Royal acquaintance.",
+        "rationale": (
+            "Pre-emptive: paired with LG73 co_occupants — apply "
+            "Neferḥetpes underdot in notes too (intra-row consistency)."
+        ),
+    },
+    ("LG76", "occupant_name"): {
+        "value": "Khufuḥotp",
+        "rationale": (
+            "Pre-emptive: apply Khufuḥotp underdot-Ḥ (ḥ-root *ḥtp*) "
+            "per source-wide convention. Agent B voted with underdot."
+        ),
+    },
+    ("LG78", "co_occupants"): {
+        "value": ["Ḥetephernefert"],
+        "rationale": (
+            "Pre-emptive: apply Ḥetephernefert underdot-Ḥ (ḥ-root "
+            "*ḥtp*) per source-wide convention. Agent B voted with "
+            "underdot."
+        ),
+    },
+    ("LG78", "notes_from_pm"): {
+        "value": "ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Ḥetephernefert Royal acquaintance.",
+        "rationale": (
+            "Pre-emptive: paired with LG78 co_occupants — apply "
+            "Ḥetephernefert underdot in notes too. Also normalise "
+            "`ka-servant` lowercase per chunks 9-15 convention "
+            "(PM-faithful, *kꜣ-servant*)."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -2101,6 +2149,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK15_CORRECTIONS,
     CHUNK16_CORRECTIONS,
     CHUNK17_CORRECTIONS,
+    CHUNK18_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

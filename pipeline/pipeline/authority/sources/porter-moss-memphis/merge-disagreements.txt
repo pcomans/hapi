@@ -620,6 +620,23 @@ G7948 (Rēʿkhaʿef-ʿankh):
   co_occupants: a=["Nikahor"] | b=["Nikaḥor"] | c=["Nikahor"]  → chose ["Nikahor"]
   notes_from_pm: a="Companion of the Great House, Inspector of waab-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikahor Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. 'Tomb of Numbers'." | b="Companion of the Great House, Inspector of waab-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikahor Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. LG 75. 'Tomb of Numbers'." | c="Companion of the Great House, Inspector of waab-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikahor, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. 'Tomb of Numbers'."  → chose "Companion of the Great House, Inspector of waʿb-priests of the Pyramid of Khephren, etc. Dyn. V or later. Wife, Nikaḥor Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc. Rock-cut tomb. 'Tomb of Numbers'."
 
+LG65 (None):
+  notes_from_pm: a="NAME UNCERTAIN Elder of the house, etc. Dyn. V-VI." | b="Elder of the house, etc. Dyn. V-VI." | c="NAME UNCERTAIN Elder of the house, etc. Dyn. V-VI."  → chose "NAME UNCERTAIN Elder of the house, etc. Dyn. V-VI."
+
+LG73 (Dendenu):
+  co_occupants: a=["Neferhetpes"] | b=["Neferḥetpes"] | c=["Neferhetpes"]  → chose ["Neferhetpes"]
+  notes_from_pm: a="Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferhetpes Royal acquaintance." | b="Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferḥetpes Royal acquaintance." | c="Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferhetpes Royal acquaintance."  → chose "Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferhetpes Royal acquaintance."
+
+LG76 (Khufuhotp):
+  occupant_name: a="Khufuhotp" | b="Khufuḥotp" | c="Khufuhotp"  → chose "Khufuhotp"
+
+LG78 (Personb):
+  co_occupants: a=["Hetephernefert"] | b=["Ḥetephernefert"] | c=["Hetephernefert"]  → chose ["Hetephernefert"]
+  notes_from_pm: a="ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Hetephernefert Royal acquaintance." | b="Ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Ḥetephernefert Royal acquaintance." | c="ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Hetephernefert Royal acquaintance."  → chose "ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Hetephernefert Royal acquaintance."
+
+LG79 (Nefersefekh-ptaḥ):
+  co_occupant_roles: a=["Wife, mitrt"] | b=["Wife"] | c=["Wife, mitrt"]  → chose ["Wife, mitrt"]
+
 LG84 (Pakap):
   occupant_alt_names: a=["Wehebrec-Emakhet"] | b=["Wehebrec-emakhet"] | c=["Wehebreʿ-emakhet"]  → chose ["Wehebreʿ-emakhet"]
   tomb_aliases: a=["Campbell's Tomb"] | b=["Campbell's Tomb"] | c=[]  → chose ["Campbell's Tomb"]
@@ -987,6 +1004,11 @@ Reviewer-cited row corrections:
   G7948.co_occupants: ["Nikahor"] → ["Nikaḥor"]
   G7948.co_occupant_roles: ["Wife, Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."] → ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."]
   G7948.occupant_name: "Rēʿkhaʿef-ʿankh" → "Raʿkhaʿef-ʿankh"
+  LG73.co_occupants: ["Neferhetpes"] → ["Neferḥetpes"]
+  LG73.notes_from_pm: "Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferhetpes Royal acquaintance." → "Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferḥetpes Royal acquaintance."
+  LG76.occupant_name: "Khufuhotp" → "Khufuḥotp"
+  LG78.co_occupants: ["Hetephernefert"] → ["Ḥetephernefert"]
+  LG78.notes_from_pm: "ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Hetephernefert Royal acquaintance." → "ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Ḥetephernefert Royal acquaintance."
   LG83.co_occupant_roles: [] → ["Queen"]
   LG97.co_occupant_roles: [] → ["Official"]
   LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."

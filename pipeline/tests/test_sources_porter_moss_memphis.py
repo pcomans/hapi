@@ -381,6 +381,22 @@ CHUNK17_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 18: Gîza § III.B EAST FIELD terminal LG-numbered cluster — picks
+# up the immediate gap left by chunk 17b (LG-numbered tombs without
+# Reisner G-numbers, immediately after G 7948). Source: PM III.1 2nd ed.
+# 1974, physical pp.205–210 / printed pp.208–213. 17 rows:
+# 14 Shape-1 named-primary + 2 Shape-2 bare-numeric (LG 66, LG 71) +
+# 1 Shape-5 anonymous (LG 65 NAME UNCERTAIN). Uses the LG<N> tomb_id
+# convention (precedent: chunk 3 LG81/LG83/LG84/LG97/LG100). LG 75 is
+# already in reconciled as G 7948 with tomb_aliases=["LG 75"]; chunk 18
+# does NOT emit a separate LG75 row.
+CHUNK18_TOMB_IDS: frozenset[str] = frozenset({
+    "LG63", "LG64", "LG65", "LG66", "LG67", "LG68", "LG69", "LG70",
+    "LG71", "LG72", "LG73", "LG74", "LG76", "LG77", "LG78", "LG79",
+    "LG80",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -428,7 +444,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
     | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
-    | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS
+    | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS
 )
 
 
@@ -650,6 +666,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK17_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK18_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -660,7 +678,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
             | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS
             | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
-            | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS
+            | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS:
@@ -707,6 +725,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 169 <= page <= 182, f"{row['tomb_id']} page {page} outside chunk-16 [169, 182]"
         elif row["tomb_id"] in CHUNK17_TOMB_IDS:
             assert 191 <= page <= 207, f"{row['tomb_id']} page {page} outside chunk-17 [191, 207]"
+        elif row["tomb_id"] in CHUNK18_TOMB_IDS:
+            assert 208 <= page <= 213, f"{row['tomb_id']} page {page} outside chunk-18 [208, 213]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -791,6 +811,11 @@ def test_cemetery_by_chunk() -> None:
         elif row["tomb_id"] in CHUNK17_TOMB_IDS:
             # Chunk 17 (halves 17a + 17b): G 7000 East Field remainder.
             # All 52 rows carry `cemetery: "G 7000"`.
+            assert row["cemetery"] == "G 7000", row
+        elif row["tomb_id"] in CHUNK18_TOMB_IDS:
+            # Chunk 18: LG-numbered terminal cluster of CEMETERY G 7000
+            # East Field (LG 63-80 immediately after chunk 17b's G 7948).
+            # All 17 rows carry `cemetery: "G 7000"`.
             assert row["cemetery"] == "G 7000", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
@@ -901,6 +926,13 @@ def test_dynasty_assignments() -> None:
             # Body-prose sub-entries (G7220/G7420/G7540) + fragment
             # entries with no PM dating clue carry `dynasty: null`.
             assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK18_TOMB_IDS:
+            # CEMETERY G 7000 LG-numbered terminal cluster: mostly Dyn V
+            # and Dyn V-VI (range-tail → "6"). Most rows carry "5" or "6"
+            # explicit dating; LG 66 + LG 71 bare-numeric have body-prose
+            # dating "Dyn. V-VI" → "6". LG 65 NAME UNCERTAIN has explicit
+            # dating "Dyn. V-VI" → "6".
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.
