@@ -1397,7 +1397,7 @@ MAR4 (Khnemḥotp):
 MAR5 (Khaʿbausokar):
   co_occupants: a=["Neferḥotep-Ḥatḥor Tepes"] | b=["Neferḥotep-Ḥatḥor"] | c=["Neferḥotep-Ḥatḥor"]  → chose ["Neferḥotep-Ḥatḥor"]
   notes_from_pm: a="Overseer (mr) of Anubis foremost of the Sacred Land, Prophet of Seshet, etc., and wife Neferḥotep-Ḥatḥor Tepes, Royal acquaintance. Middle Dyn. III to early Dyn. IV. South chapel for Khaʿbausokar; North chapel for wife Neferḥotep-Ḥatḥor." | b="Overseer (mḏḥ) of Anubis foremost of the Sacred Land, Prophet of Seshet, etc., and wife Neferḥotep-Ḥatḥor (Tepes), Royal acquaintance. Middle Dyn. III to early Dyn. IV." | c="Khaʿbausokar Hethes, Overseer (mḏḥ) of Anubis foremost of the Sacred Land, Prophet of Seshet, etc., and wife Neferḥotep-Ḥatḥor Tepes, Royal acquaintance. Middle Dyn. III to early Dyn. IV. South chapel (Khaʿbausokar): niche, lintel, drum, back panel (Cairo CG 1385); lintel (Cairo JE 42002). North chapel (wife Neferḥotep-Ḥatḥor): niche, back panel, thicknesses (Cairo CG 1386, 1387); lintels and drums of wife."  → chose "Overseer (mḏḥ) of Anubis foremost of the Sacred Land, Prophet of Seshet, etc., and wife Neferḥotep-Ḥatḥor (Tepes), Royal acquaintance. Middle Dyn. III to early Dyn. IV."
-  occupant_alt_names: a=[] | b=["Ḥethes"] | c=["Hethes"]  → chose []
+  occupant_alt_names: a=[] | b=["Ḥethes"] | c=["Hethes"]  → chose ["Ḥethes"]
   occupant_name: a="Khaʿbausokar Hethes" | b="Khaʿbausokar" | c="Khaʿbausokar"  → chose "Khaʿbausokar"
 
 MAR6 (Ty):

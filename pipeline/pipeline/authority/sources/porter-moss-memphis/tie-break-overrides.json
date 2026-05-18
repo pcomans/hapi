@@ -965,8 +965,8 @@
     "value": "Overseer (mḏḥ) of Anubis foremost of the Sacred Land, Prophet of Seshet, etc., and wife Neferḥotep-Ḥatḥor (Tepes), Royal acquaintance. Middle Dyn. III to early Dyn. IV."
   },
   "MAR5|occupant_alt_names": {
-    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 449 (chunk-27a). PM headword is compound \"Khaʿbausokar Hethes\"; agent A correctly treats this as a single composite occupant_name with no separate alt_names. Agents B and C incorrectly split the compound, placing \"Hethes\"/\"Ḥethes\" in alt_names — this duplicates information already in the occupant_name. Selecting empty list per agent A; PM-faithful composite-name handling.",
-    "value": []
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 449 (chunk-27a). PM headword: `KHAʿBAUSOKAR ... ḤETHES`. The second all-caps name `Ḥethes` is the asserted good-name (Egyptian *rn nfr*) alt per source-wide convention chunks 8-25 (G 2378 Senezemib Meḥi, G 2381 Meryptaḥʿankh Nekhebu, JKR-Sonb I, etc.). Reconciled occupant_name = `Khaʿbausokar` (2/1 majority from agents B+C); occupant_alt_names = [`Ḥethes`] preserves PM's asserted alt with underdot-Ḥ on ḥ-root (single-underdot per source-wide 44-vs-6 majority). Codex P2 review on PR #249 (inline comment id=3256467739) flagged the earlier override (empty list, which assumed agent A's compound occupant_name survived merge) as data-integrity loss; updated to source-faithful alt-name preservation.",
+    "value": ["Ḥethes"]
   },
   "MAR7|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 450 (chunk-27a). Candidates 1 and 3 agree on title text \"Prophet of Horus, etc.\" and differ only in their object-catalog addenda (drum+statue entries); those addenda are dropped per source-wide convention chunks 8-26. Candidate 2 alone adds \"Sm³-t³\" qualifier to Horus — not supported by the 2-agent majority on this title string; treating as agent over-read. Selecting title+dating minimal form from candidates 1/3 consensus.",
