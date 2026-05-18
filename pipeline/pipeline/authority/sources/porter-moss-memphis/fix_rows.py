@@ -2079,6 +2079,94 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-18 (CEMETERY G 7000 LG-numbered terminal cluster). Pre-emptive
+# diacritic + capitalisation fixes for 2/1 agent-majority misses on the
+# underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
+# Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
+# correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("LG73", "co_occupants"): {
+        "value": ["Neferḥetpes"],
+        "rationale": (
+            "Pre-emptive: apply Neferḥetpes underdot-Ḥ (ḥ-root *ḥtp*) "
+            "per source-wide convention. Agent B voted with underdot "
+            "but was outvoted 2/1 by A+C."
+        ),
+    },
+    ("LG73", "notes_from_pm"): {
+        "value": "Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferḥetpes Royal acquaintance.",
+        "rationale": (
+            "Pre-emptive: paired with LG73 co_occupants — apply "
+            "Neferḥetpes underdot in notes too (intra-row consistency)."
+        ),
+    },
+    ("LG76", "occupant_name"): {
+        "value": "Khufuḥotp",
+        "rationale": (
+            "Pre-emptive: apply Khufuḥotp underdot-Ḥ (ḥ-root *ḥtp*) "
+            "per source-wide convention. Agent B voted with underdot."
+        ),
+    },
+    ("LG78", "co_occupants"): {
+        "value": ["Ḥetephernefert"],
+        "rationale": (
+            "Pre-emptive: apply Ḥetephernefert underdot-Ḥ (ḥ-root "
+            "*ḥtp*) per source-wide convention. Agent B voted with "
+            "underdot."
+        ),
+    },
+    ("LG78", "notes_from_pm"): {
+        "value": "ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Ḥetephernefert Royal acquaintance.",
+        "rationale": (
+            "Pre-emptive: paired with LG78 co_occupants — apply "
+            "Ḥetephernefert underdot in notes too. Also normalise "
+            "`ka-servant` lowercase per chunks 9-15 convention "
+            "(PM-faithful, *kꜣ-servant*)."
+        ),
+    },
+    # LG72 NEBU `Greatest of the craftsmen of the King` is the title
+    # wr-ḫrp-ḥmwt = High Priest of Ptah at Memphis. Per Egyptological
+    # convention, this is a High Priest role, not a generic Official.
+    # Gemini PR #240 round-1 medium 3255796565.
+    ("LG72", "occupant_role"): {
+        "value": "High Priest",
+        "rationale": (
+            "Gemini PR #240 round-1 medium: `Greatest of the "
+            "craftsmen` (wr-ḫrp-ḥmwt) is the High Priest of Ptah "
+            "title at Memphis per Egyptological convention. Promote "
+            "from `Official` → `High Priest`. Per controlled-vocab "
+            "`High Priest of any divinity` rule."
+        ),
+    },
+    # LG74 DENDENU is the second of two Dendenus in this chunk — LG73
+    # is also DENDENU. Per chunks-7/11/14 convention of disambiguating
+    # same-name occupants with appended regnal numerals, the second
+    # Dendenu should be `Dendenu II`. Gemini PR #240 round-1 medium.
+    ("LG74", "occupant_name"): {
+        "value": "Dendenu II",
+        "rationale": (
+            "Gemini PR #240 round-1 medium: disambiguate from LG73 "
+            "Dendenu using appended Roman numeral, per chunks-7/11/14 "
+            "homonymous-occupant convention."
+        ),
+    },
+    # LG73 paired with LG74 disambiguation: when LG74 becomes
+    # `Dendenu II`, LG73 should be `Dendenu I` per chunks-11 Seshemnufer
+    # convention (all members of a homonymous sequence get explicit
+    # regnal numerals, not just the second). Gemini PR #240 round-2.
+    ("LG73", "occupant_name"): {
+        "value": "Dendenu I",
+        "rationale": (
+            "Gemini PR #240 round-2 medium 3255806314: paired with "
+            "LG74 Dendenu II disambiguation. Per chunks-11 Seshemnufer "
+            "[I]/[II]/[III] convention, all members of a homonymous "
+            "sequence get explicit Roman numerals — not just the "
+            "second."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -2101,6 +2189,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK15_CORRECTIONS,
     CHUNK16_CORRECTIONS,
     CHUNK17_CORRECTIONS,
+    CHUNK18_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
