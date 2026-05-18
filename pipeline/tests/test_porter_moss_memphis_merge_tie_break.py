@@ -370,6 +370,19 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       it, requiring four-field tie-break with Vizier role per the
       `G 2370` cross-reference in PM body prose.
 
+    - Chunk 20 (Saqqâra § II.B AROUND TETI PYRAMID opener):
+      `TPC-Desi|co_occupants`, `TPC-Desi|notes_from_pm`,
+      `TPC-GemniUser|dynasty`, `TPC-GemniUser|notes_from_pm`,
+      `TPC-GemniUser|occupant_name`. Agent C followed the original
+      prompt's enumerated 8-row scope list and missed 7
+      Drioton/Ann.Serv.xliii Dyn-VI cluster rows that agents A+B both
+      extracted; the resulting 1/1/1 ties on the two Drioton singletons
+      land here. TPC-Desi `Wife (name lost)` PM-literal placeholder
+      convention preserved. TPC-GemniUser `1st Int. Period` dating
+      yields dynasty null (NOT coerced to Dyn-VI tail) per
+      Constitutional Rule 1; hyphenated compound-name form
+      `Gemni-user` per source-wide hyphenated-compound convention.
+
     - Chunk 14 (halves 14a+14b): `G4351|co_occupant_roles`,
       `G4520|occupant_name`, `G4561|co_occupant_roles`,
       `G4561|notes_from_pm`, `G4630|co_occupant_roles`,
@@ -548,6 +561,22 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("LG10", "occupant_alt_names"),
         ("LG10", "occupant_name"),
         ("LG10", "occupant_role"),
+        # Chunk 20 (Saqqâra § II.B AROUND TETI PYRAMID opener):
+        # Drioton/Ann.Serv.xliii Dyn-VI cluster. Agent C followed the
+        # original prompt's expected-count list (8 rows) and missed 7
+        # Drioton-cluster rows that agents A+B both extracted; that
+        # gave A/B 2-of-3 majority on most fields but produced 5
+        # singleton/two-way ties needing override:
+        #   - TPC-Desi: anonymous wife `Wife (name lost)` placeholder
+        #     convention (co_occupants + notes_from_pm pair).
+        #   - TPC-GemniUser: `1st Int. Period` dating → dynasty null
+        #     (NOT coerced to Dyn-VI tail), `Gemni-user` hyphenated
+        #     compound-name form, wife clause preservation in notes.
+        ("TPC-Desi", "co_occupants"),
+        ("TPC-Desi", "notes_from_pm"),
+        ("TPC-GemniUser", "dynasty"),
+        ("TPC-GemniUser", "notes_from_pm"),
+        ("TPC-GemniUser", "occupant_name"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

@@ -93,6 +93,16 @@ AREA_ORDER: dict[str, int] = {
                # EF-Ither, EF-Neferka) — PM III.1 § III.B trailing
                # rock-cut named tombs without LG / Reisner numbers
                # (chunk 19). Parallel to JKR-/JKE-/STN- convention.
+    "LS": 9,   # Lepsius Saqqara monument-list numbers (LS10 Kagemni
+               # Memi, etc.) — PM III.2 § II.B AROUND TETI PYRAMID
+               # opener (chunk 20). Parallel to LG (Lepsius Giza)
+               # convention but routed to a distinct prefix because
+               # the two numbering schemes are independent.
+    "TPC": 10, # Teti Pyramid Cemetery descriptor-form (TPC-Khentka,
+               # TPC-Kagemni, TPC-AnkhmaHor, etc.) — PM III.2 § II.B
+               # AROUND TETI PYRAMID Old-Kingdom named mastabas
+               # without LS numbers (chunk 20). Parallel to JKR- /
+               # JKE- / STN- / EF- descriptor conventions.
     # NB: chunks 15 + 17 (Cemetery en Echelon South + G 7000 East Field
     # remainder) re-use Reisner G-numbers (G 4911-G 5560 + G 7152-G 7948)
     # so no new prefix is needed there. Chunks 16 (Cemetery G 6000) and
