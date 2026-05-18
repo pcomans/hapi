@@ -2084,6 +2084,24 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
 # Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
 # correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK23_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 23 — § II.C EAST OF THE STEP PYRAMID.
+    #
+    # F1 (SAQD46 SETHU dynasty correction): the chunk-23 prompt's
+    # `Middle Kingdom` special-case for D 46 SETHU was wrong. PM
+    # headword reads `Dyn. V or later` — the MK phrasing applies
+    # to a SECONDARY north false-door of NEFERTEMEMSAF re-using
+    # SETHU's chapel, not SETHU himself. Per source-wide range-
+    # tail convention `Dyn. V or later` → "6". Agents B + C
+    # followed the prompt to `"12"` (2/1 majority), so a tie-break
+    # override doesn't fire — fix this post-merge.
+    ("SAQD46", "dynasty"): {
+        "value": "6",
+        "rationale": "PM III.2 printed p. 576; PM headword `Dyn. V or later` → \"6\" (range-tail). The chunk-23 prompt's Middle Kingdom special-case mis-attributed the dating to SETHU; the MK phrasing belongs to a secondary Nefertememsaf false-door re-using SETHU's chapel. Constitutional Rule 1: source-faithful.",
+    },
+}
+
+
 CHUNK22_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 22 — § II.B AROUND TETI PYRAMID continuation.
     #
@@ -2211,6 +2229,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK17_CORRECTIONS,
     CHUNK18_CORRECTIONS,
     CHUNK22_CORRECTIONS,
+    CHUNK23_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

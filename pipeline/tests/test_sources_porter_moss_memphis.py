@@ -479,6 +479,33 @@ CHUNK22_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 23: Saqqâra § II.C EAST OF THE STEP PYRAMID. Source: PM
+# III.2 2nd ed. 1978/1981, physical pp.215–232 / printed pp.575–
+# 592. 21 rows: 14 SAQD<N> Petrie+Murray Saqqâra D-numbered (D
+# 45–D 58, but NOT all numbers — D 47, D 56 etc. as PM presents
+# them — distinct from chunk-11's `D<N>` for Steindorff Giza
+# cemetery via the new `SAQD<N>` prefix in merge.py AREA_ORDER),
+# 2 SAQF<N> Petrie+Murray F-numbered (F 1, F 3), 4 LS<N> Lepsius
+# Saqqara numbers (LS 17 Manufer Dyn V/VI, LS 22 Iyzefa OK,
+# LS 23 Irʿaḥor + LS 24 Bekenrenef Saite-period vizier cluster
+# under Necho II / Apries / Psammetikhos I), 1 SAQ-DoubleTombUserkaf
+# (anonymous Saite intrusion above the Userkaf Mortuary Temple,
+# Late Dyn XXVI or early Dyn XXVII). The chunk-23 prompt's
+# `Middle Kingdom` special-case for D 46 SETHU was wrong: PM
+# headword reads `Dyn. V or later` (the MK phrasing belongs to a
+# secondary Nefertememsaf false-door RE-USING the Sethu chapel).
+# Tie-break overrides correct the dynasty to "6" and document
+# this conflict.
+CHUNK23_TOMB_IDS: frozenset[str] = frozenset({
+    "LS17", "LS22", "LS23", "LS24",
+    "SAQ-DoubleTombUserkaf",
+    "SAQD45", "SAQD46", "SAQD47", "SAQD48", "SAQD49",
+    "SAQD50", "SAQD51", "SAQD52", "SAQD53", "SAQD54",
+    "SAQD55", "SAQD56", "SAQD57", "SAQD58",
+    "SAQF1", "SAQF3",
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -527,7 +554,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
-    | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS
+    | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
 )
 
 
@@ -759,6 +786,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK22_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK23_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -773,7 +802,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -827,6 +856,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 525 <= page <= 540, f"{row['tomb_id']} page {page} outside chunk-21 [525, 540]"
         elif row["tomb_id"] in CHUNK22_TOMB_IDS:
             assert 541 <= page <= 560, f"{row['tomb_id']} page {page} outside chunk-22 [541, 560]"
+        elif row["tomb_id"] in CHUNK23_TOMB_IDS:
+            assert 575 <= page <= 592, f"{row['tomb_id']} page {page} outside chunk-23 [575, 592]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -941,6 +972,13 @@ def test_cemetery_by_chunk() -> None:
             # Peḥernufer, Shema, plus 2 Firth+Gunn HMK./Burial-No.
             # small rows). Same banner as chunks 20-21.
             assert row["cemetery"] == "Teti Pyramid Cemetery", row
+        elif row["tomb_id"] in CHUNK23_TOMB_IDS:
+            # Chunk 23: § II.C EAST OF THE STEP PYRAMID. New
+            # cemetery descriptor `"East of the Step Pyramid"`
+            # (parallel to chunks 3/10/11's Central Field /
+            # Junker West / Steindorff and chunks 20-22's Teti
+            # Pyramid Cemetery descriptor conventions).
+            assert row["cemetery"] == "East of the Step Pyramid", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1091,6 +1129,17 @@ def test_dynasty_assignments() -> None:
             # dynasty "6" per range-tail) + 2 Firth+Gunn HMK./Burial-
             # No. small rows (1st Int. Period or null).
             assert row["dynasty"] in {"5", "6", None}, row
+        elif row["tomb_id"] in CHUNK23_TOMB_IDS:
+            # Chunk 23: mixed cohort — Petrie+Murray Saqqâra D-cluster
+            # is predominantly Dyn V (Temp. Saḥurēʿ / Userkaf /
+            # Neferirkarēʿ / Neuserrēʿ / Menkauḥor / Raʿneferef), with
+            # one row at Dyn VI (D 57 Kapuinpu). The Saite intrusions
+            # LS 23 (Temp. Necho II to Apries), LS 24 (Temp.
+            # Psammetikhos I), and SAQ-DoubleTombUserkaf (Late Dyn
+            # XXVI or early Dyn XXVII) → dynasty `"26"`. D 46 SETHU
+            # `Dyn. V or later` → `"6"` per range-tail (NOT MK as
+            # chunk-23 prompt's wrong special-case said).
+            assert row["dynasty"] in {"5", "6", "26", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.

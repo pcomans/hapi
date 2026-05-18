@@ -392,6 +392,19 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       cross-references). All resolved to the minimal headword-block-
       only form per source-wide convention (chunks 19, 20).
 
+    - Chunk 23 (§ II.C EAST OF THE STEP PYRAMID, Petrie+Murray
+      D-cluster + Saite LS intrusions): `LS23|notes_from_pm`,
+      `LS24|notes_from_pm`, `SAQ-DoubleTombUserkaf|notes_from_pm`,
+      `SAQD45|notes_from_pm`, `SAQD46|dynasty`,
+      `SAQD46|notes_from_pm`, `SAQD47|notes_from_pm`,
+      `SAQD49|notes_from_pm`, `SAQD55|notes_from_pm`. 9 ties.
+      Mostly the Ḥathor-vs-Ḥatḥor diacritic + wife-clause-inclusion
+      pattern. SAQD46 SETHU dynasty correction documents the
+      chunk-23 prompt's wrong `Middle Kingdom` special-case (PM
+      headword actually reads `Dyn. V or later`; the MK phrasing
+      applied to a secondary Nefertememsaf false-door re-using
+      Sethu's chapel).
+
     - Chunk 22 (post-Mereruka cluster + RAʿwer + Shema joint):
       `TPC-Kaemhest|co_occupant_roles`,
       `TPC-Kaemhest|notes_from_pm`,
@@ -635,6 +648,22 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("TPC-Shema", "co_occupant_roles"),
         ("TPC-Shema", "co_occupants"),
         ("TPC-Shema", "notes_from_pm"),
+        # Chunk 23 (§ II.C EAST OF THE STEP PYRAMID): 9 ties, mostly
+        # Ḥathor-vs-Ḥatḥor single-vs-double-underdot diacritic +
+        # wife-clause inclusion + cartographic / museum-citation
+        # trailer rules. Plus SAQD46 SETHU dynasty correction (PM
+        # `Dyn. V or later` → `"6"`, NOT `"12"` Middle Kingdom — the
+        # prompt's wrong special-case mis-attributed the dating).
+        # Saite Dyn-XXVI rows LS 23 + LS 24 + SAQ-DoubleTombUserkaf
+        # body-prose preservation rules.
+        ("LS23", "notes_from_pm"),
+        ("LS24", "notes_from_pm"),
+        ("SAQ-DoubleTombUserkaf", "notes_from_pm"),
+        ("SAQD45", "notes_from_pm"),
+        ("SAQD46", "notes_from_pm"),
+        ("SAQD47", "notes_from_pm"),
+        ("SAQD49", "notes_from_pm"),
+        ("SAQD55", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

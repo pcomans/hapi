@@ -27,6 +27,38 @@
     "value": "King's architect and builder, etc. Probably early Dyn. VI. Father, Senefʿankh, King's architect and builder. Wife, Thenenet.",
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 542 (chunk-22). PM headword reads `KAEMḤEST, King's architect and builder, etc. Probably early Dyn. VI. Map LII. Plan LVII. Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` Agents A and C invented a `Brother Kapunesut` not present in the headword block (likely conflated from body-prose sub-feature decoration of a different page). Agent B's minimal form excludes the family clauses entirely. Selecting the PM-faithful form that includes Father + Wife clauses (per chunks 8-21 co-occupant convention) but drops the hallucinated Brother and the cartographic `Map LII. Plan LVII.` references."
   },
+  "SAQD55|notes_from_pm": {
+    "value": "Judge and Overseer of scribes, Prophet of Saḥurēʿ, Prophet of Rēʿ in the Sun-temples of Userkaf and Neferirkarēʿ, etc. Temp. Neferirkarēʿ or later. Wife, Wethesetkaus, Prophetess of Ḥathor Mistress of the Sycamore and Neith North of the Wall, etc.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 580 (chunk-23 § II.C). Single-underdot Ḥathor per source convention; preserve wife clause; drop museum-citation `Chapel in Brussels, Mus. Roy. E.2465.` (museum-reference per chunks 8-22 convention)."
+  },
+  "SAQD49|notes_from_pm": {
+    "value": "Inspector of waʿb-priests in the Sun-temple of Userkaf, Prophet of Ḥathor foremost of the Pyramid of Userkaf, Overseer of the nehet-sanctuary of the mert of Ḥathor, etc. Dyn. V. Wife, Khentetka, Prophetess of Ḥathor.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 579 (chunk-23 § II.C). Single-underdot Ḥathor per source convention; preserve wife clause per chunks 8-22 convention."
+  },
+  "SAQD47|notes_from_pm": {
+    "value": "Waʿb-priest of Rēʿ in the Sun-temple of Userkaf, Inspector of waʿb-priests of the Pyramid of Userkaf, waʿb-priest of the Pyramid of Saḥurēʿ, etc. Temp. Saḥurēʿ or later. Wife, Neferḥetpes, Prophetess of Neith North of the Wall and Ḥathor Mistress of the Sycamore, etc.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 577 (chunk-23 § II.C). Single-underdot Ḥathor per source convention (Ḥatḥor double-underdot is the minority form). Drops cartographic `Plan LIX.` reference. Re-deity compound diacritics: Rēʿ (macron-Ē + ayin), Saḥurēʿ (underdot-Ḥ + macron-Ē + ayin)."
+  },
+  "SAQD46|notes_from_pm": {
+    "value": "King's son of his body, Count in Nekhen, Prophet of Nekhbet, etc. Dyn. V or later. Chapel also contains a north false-door of Nefertememsaf (Secretary of Upper and Lower Egypt, Prophet of Neith, Director of the dšrt-bark of Nemti, etc.), Middle Kingdom.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 576 (chunk-23 § II.C). PM headword for SETHU = `Dyn. V or later` — NOT Middle Kingdom. The chunk-23 prompt's wrong `Middle Kingdom` special-case mis-attributed the dating: the MK phrase actually applies to a secondary north false-door of NEFERTEMEMSAF re-using SETHU's chapel, NOT SETHU himself. Candidate 1 form correctly separates the two: SETHU primary headword `Dyn. V or later` + chapel-also-contains parenthetical for the MK re-use false-door of Nefertememsaf. Selecting candidate 1."
+  },
+  "SAQD45|notes_from_pm": {
+    "value": "Overseer of oils of the King's adorners, Overseer of the two is-chambers of the King's adorners of the Great House, etc. Temp. Saḥurēʿ. Wife, Khenut, Prophetess of Ḥathor, etc.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 575 (chunk-23 § II.C). Three agents differ only on (a) wife clause inclusion and (b) Ḥathor vs Ḥatḥor single-vs-double underdot. Selecting candidate 2's form which preserves the wife clause + uses single-underdot Ḥathor per source-wide convention (44 occurrences vs 6 for Ḥatḥor)."
+  },
+  "LS24|notes_from_pm": {
+    "value": "Vizier, etc. Temp. Psammetikhos I. Parents, Pedeneit, Overseer of prophets, and Tageb. Rock-cut tomb. Excavated by Bresciani for the University of Pisa since 1974.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 583 (chunk-23 § II.C Saite vizier). PM headword block + parents clause + excavation history. Selecting candidate 2's form which preserves the Pedeneit title cluster, the rock-cut-tomb structural note (per chunks 17-19 retention convention), and the Bresciani+Pisa excavation history. Drops `Plan LIX.` cartographic ref (form 3). Parents clause format `<Father> (<title>) and <Mother>` normalised to `<Father>, <title>, and <Mother>` per source-wide title-cluster convention."
+  },
+  "LS23|notes_from_pm": {
+    "value": "Overseer of the antechamber, etc. Temp. Necho II to Apries. Parents, ʿAnkh-ḥor and Atemardais.",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 582 (chunk-23 § II.C Saite intrusion). PM `LS 23. IRʿAḤOR good name NEFEREBRĒʿ-NUFER, Overseer of the antechamber, etc. Temp. Necho II to Apries. Parents, ʿAnkh-ḥor and Atemardais.` Per source-wide `good name <ALT>` convention (chunks 8/19/20), alt-name `Neferebrēʿ-nufer` lives in occupant_alt_names — NOT in notes_from_pm. Selecting candidate 1's form which preserves parents clause but drops alt-name."
+  },
+  "SAQ-DoubleTombUserkaf|notes_from_pm": {
+    "value": "Double tomb above Mortuary Temple of Userkaf, including tombs farther east in face of cliff. Late Dyn. XXVI or early Dyn. XXVII. (a) North tomb, Neferebrēʿ-sineit, Royal chamberlain, son of Merib and Shepenubaste. (b) South tomb, Weḥebrēʿ-men, Treasurer of the King of Lower Egypt, son of Taʿa (mother).",
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 582 (chunk-23 § II.C Saite intrusion above Userkaf Mortuary Temple). PM prints anonymous DOUBLE TOMB descriptor headword + (a)/(b) sub-occupant blocks naming Neferebrēʿ-sineit (north tomb) + Weḥebrēʿ-men (south tomb). All three agents capture the same content but differ on prose style (em-dash vs comma, parenthetical-position annotations, cartographic Map LVIII inclusion). Selecting form 2's (a)/(b)-prefixed structure as it preserves the PM tomb-pair labelling while dropping the cartographic reference. Diacritics normalised: macron-Ē + ayin on Re-compound names (Neferebrēʿ, Weḥebrēʿ); underdot-Ḥ on `wḥb-rʿ` root."
+  },
   "TPC-Kaemhest|co_occupant_roles": {
     "value": ["Father, King's architect and builder", "Wife"],
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 542 (chunk-22). PM prints `Father, Senefʿankh, King's architect and builder. Wife, Thenenet.` — TWO co-occupants only, no brother. Agent A and Agent C both invented a `Brother` role that PM does NOT print in the headword block. Selecting Agent B's two-entry form per source-wide title-cluster convention (chunks 8-21) and PM-faithful headword reading."
