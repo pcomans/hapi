@@ -328,6 +328,41 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       idiom handling, Shape-2 bare-numeric null normalisation,
       Schiaparelli excavator-history drop).
 
+    - Chunk 17 (halves 17a+17b): `G7152|notes_from_pm`,
+      `G7210|co_occupant_roles`, `G7220|notes_from_pm`,
+      `G7244|co_occupants`, `G7244|notes_from_pm`,
+      `G7248|notes_from_pm`, `G7249|notes_from_pm`,
+      `G7350|co_occupant_roles`, `G7350|notes_from_pm`,
+      `G7391|notes_from_pm`, `G7410|co_occupant_roles`,
+      `G7410|co_occupants`, `G7410|notes_from_pm`,
+      `G7420|notes_from_pm`, `G7430|co_occupant_roles`,
+      `G7430|notes_from_pm`, `G7510|co_occupant_roles`,
+      `G7510|notes_from_pm`, `G7530|notes_from_pm`,
+      `G7540|notes_from_pm`, `G7550|co_occupant_roles`,
+      `G7550|notes_from_pm`, `G7650|notes_from_pm`,
+      `G7660|notes_from_pm`, `G7690|notes_from_pm`,
+      `G7760|co_occupant_roles`, `G7760|co_occupants`,
+      `G7760|notes_from_pm`, `G7809|notes_from_pm`,
+      `G7810|co_occupant_roles`, `G7815|notes_from_pm`,
+      `G7820|notes_from_pm`, `G7836|notes_from_pm`,
+      `G7948|notes_from_pm` (G 7000 East Field remainder — G 7152
+      dating-spillover drop, Ḥarzedef joint-twin parent hedges,
+      G 7220/G 7420/G 7540 body-prose-only sub-entry null convention,
+      composite-entry chapel sub-feature drops, G 7350 Ḥetepḥeres II
+      two-husband roles with `King (later)` parenthetical, G 7391
+      `wad` → `waʿb` OCR correction, G 7410+7420 Meresʿankh II
+      parent-pair vs twin-occupant co-occupant split, `(possibly)` and
+      `(probably)` parenthetical hedge forms on multiple entries,
+      G 7510 `No burial place for wife.` structural note retention,
+      G 7530+7540 joint-twin headword + null sub-entry, G 7550/G 7660
+      Ḥetepḥeres diacritics + Menkaurēʿ Re-compound, G 7650 Mertiotes
+      name normalisation + Ḥathor underdot, G 7690 bare artifact entry
+      OCR-faithful no-comma form, G 7760 three-co-occupant with
+      `Khufuʿankh` ayin no-hyphen, G 7809 `Dyn V` period restore,
+      G 7815/G 7836 Rock-cut-tomb retention + Ḥathor underdot,
+      G 7820 joint headword `Meresʿankh` ayin + body-trailer drop,
+      G 7948 `waab` → `waʿb` + LG code drop + `Ḥathor` underdot).
+
     - Chunk 14 (halves 14a+14b): `G4351|co_occupant_roles`,
       `G4520|occupant_name`, `G4561|co_occupant_roles`,
       `G4561|notes_from_pm`, `G4630|co_occupant_roles`,
@@ -452,6 +487,50 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("G5480", "notes_from_pm"),
         ("G5482", "notes_from_pm"),
         ("G5550", "notes_from_pm"),
+        # Chunk 17 (halves 17a + 17b): G 7000 East Field remainder.
+        # 34 ties resolved: G7152 dating-spillover drop (dynasty null),
+        # Ḥarzedef joint-twin parent hedges, G7220/G7420/G7540 body-prose
+        # sub-entry null convention, composite-entry chapel sub-feature
+        # drops, G7350 two-husband `King (later)` role, G7391 wad→waʿb,
+        # G7410 parent-pair co-occupant split, `(possibly)`/`(probably)`
+        # hedge parentheticals, G7510 structural note retention,
+        # G7530+7540 joint-twin, diacritics (Ḥetepḥeres/Menkaurēʿ/Ḥathor),
+        # G7760 three-co-occupant + Khufuʿankh ayin, G7809 period restore,
+        # Rock-cut-tomb retention, G7948 waab→waʿb + LG drop.
+        ("G7152", "notes_from_pm"),
+        ("G7210", "co_occupant_roles"),
+        ("G7220", "notes_from_pm"),
+        ("G7244", "co_occupants"),
+        ("G7244", "notes_from_pm"),
+        ("G7248", "notes_from_pm"),
+        ("G7249", "notes_from_pm"),
+        ("G7350", "co_occupant_roles"),
+        ("G7350", "notes_from_pm"),
+        ("G7391", "notes_from_pm"),
+        ("G7410", "co_occupant_roles"),
+        ("G7410", "co_occupants"),
+        ("G7410", "notes_from_pm"),
+        ("G7420", "notes_from_pm"),
+        ("G7430", "co_occupant_roles"),
+        ("G7430", "notes_from_pm"),
+        ("G7510", "co_occupant_roles"),
+        ("G7510", "notes_from_pm"),
+        ("G7530", "notes_from_pm"),
+        ("G7540", "notes_from_pm"),
+        ("G7550", "co_occupant_roles"),
+        ("G7550", "notes_from_pm"),
+        ("G7650", "notes_from_pm"),
+        ("G7660", "notes_from_pm"),
+        ("G7690", "notes_from_pm"),
+        ("G7760", "co_occupant_roles"),
+        ("G7760", "co_occupants"),
+        ("G7760", "notes_from_pm"),
+        ("G7809", "notes_from_pm"),
+        ("G7810", "co_occupant_roles"),
+        ("G7815", "notes_from_pm"),
+        ("G7820", "notes_from_pm"),
+        ("G7836", "notes_from_pm"),
+        ("G7948", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

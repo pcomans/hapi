@@ -316,6 +316,71 @@ CHUNK16_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 17 (halves 17a + 17b): Gîza § III.B East Field continuation —
+# G 7000 East Field remainder (G 7152 – G 7948, Reisner Excavation).
+# Source: PM III.1 2nd ed. 1974, physical pp.188–211 / printed pp.191–214.
+# 52 rows: named royal-family tombs (Ḥarzedef G7210, Ḥetepḥeres II G7350,
+# ʿAnkh-ḥaf G7510, Meresʿankh III G7530, etc.), bare-headword shaft entries,
+# body-prose sub-entries of joint twins (G7220/G7420/G7540), and fragment /
+# stray-find entries.
+CHUNK17_TOMB_IDS: frozenset[str] = frozenset({
+    # Named tombs (17a, pp.191–196)
+    "G7152",    # Sekhemʿankhptaḥ — Chief Justice and Vizier
+    "G7210",    # Ḥarzedef — King's son, joint-twin G7210+7220
+    "G7211",    # Kaemʿankh — Prophet of Rēʿ in Sun-temple of Menkauhor
+    "G7220",    # (no name) — body-prose sub-entry of G7210+7220
+    "G7244",    # Khuenptaḥ — Keeper of the legs of the Great House
+    "G7248",    # (no name) — false-door of Mesthu + Nubḥotp fragment
+    "G7249",    # Menib — box-sealing with Horus-name of Neuserrēʿ
+    "G7330",    # (no name) — uninscribed twin-mastaba G7330+7340
+    "G7350",    # Ḥetepḥeres II — two husbands (Kawaab + Raʿzedef later king)
+    "G7391",    # Iteti — Inspector of waʿb-priests of Pyramid of Khephren
+    "G7410",    # Meresʿankh II — King's daughter, joint-twin G7410+7420
+    "G7411",    # Kaemthenent — Dyn. V
+    "G7420",    # (no name) — body-prose sub-entry of G7410+7420 (probably Ḥarbaf)
+    "G7430",    # Minkhaʿef — Chief Justice and Vizier (of Khephren)
+    "G7450",    # (no name) — Union-of-Two-Lands seal fragment
+    "G7491",    # (no name) — mummy-mask from shaft B
+    # Named tombs (17b, pp.197–214)
+    "G7510",    # ʿAnkh-ḥaf — Vizier of Khephren; no burial place for wife
+    "G7524",    # (no name) — canopic-jars of Haremakhet
+    "G7530",    # Meresʿankh III — joint-twin G7530+7540 (rock-cut)
+    "G7540",    # (no name) — body-prose sub-entry of G7530+7540
+    "G7550",    # Duaenḥor — King's son, Companion of his father
+    "G7560",    # (no name) — stone-built mastaba (no occupant)
+    "G7632",    # (no name) — Imḥotep bronze statuette
+    "G7650",    # Akhtiḥotp — Prophet of Khufu + wife Mertiotes
+    "G7652",    # (no name) — Ptolemaic coffin + lintel fragment
+    "G7660",    # Kaemsekhem — King's son, Director of the Palace
+    "G7663",    # (no name) — Saḥurēʿ box-sealing
+    "G7671",    # (no name) — inscribed ointment-slab
+    "G7690",    # (no name) — relief-fragment of Iui A, Old Kingdom
+    "G7711a",   # Khnemzedef — King's son, Greatest of the Ten
+    "G7715",    # (no name) — Dyn. VI statuettes
+    "G7721",    # Kakherptaḥ — Supervisor of the police; rock-cut
+    "G7750",    # (no name) — stone-built mastaba (no occupant)
+    "G7757",    # (no name) — Kheperrēʿ anthropoid sarcophagus, Ptolemaic
+    "G7760",    # Minzedef — King's son, Treasurer of King of Lower Egypt
+    "G7772",    # (no name) — seated statuettes, Dyn. V
+    "G7788",    # (no name) — clay plaques with execration texts
+    "G7792",    # (no name) — Osiris statue fragment, Dyn. XXVI
+    "G7803",    # (no name) — rock-cut tomb, masons' graffiti
+    "G7809",    # (no name) — male statuette + false-door of Reti
+    "G7810",    # Zaty — King's son, Overseer of the expedition
+    "G7814",    # Kaʿaper — Overseer of Two Treasuries; rock-cut
+    "G7815",    # Ḥepennebti — Prophetess of Ḥathor and Neith; rock-cut
+    "G7820",    # Iynefer — joint entry with wife Nefertkau
+    "G7821",    # Neferseshemptaḥ — Steward of the Great Estate; rock-cut
+    "G7822",    # Mesu — Director of vine-dressers; rock-cut
+    "G7836",    # Nebtyḥerkaus — Prophetess of Ḥathor Mistress-of-the-Sycamore; rock-cut
+    "G7837",    # ʿAnkh-maʿrēʿ — rock-cut, enlarged by cutting
+    "G7851",    # Wermeru — rock-cut, Dyn. V-VI
+    "G7911",    # (no name) — statuette head fragment
+    "G7946",    # Nefu — Inspector of administrators of the Treasury
+    "G7948",    # Raʿkhaʿef-ʿankh — Companion of the Great House; 'Tomb of Numbers'
+})
+
+
 # Chunk 14 (halves 14a + 14b): Gîza § III.A West Field continuation —
 # CEMETERY G 4000 banner (Reisner Excavation, Harvard-Boston Expedition).
 # Source: PM III.1 2nd ed. 1974, physical pp.119–138 / printed pp.122–141.
@@ -363,7 +428,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
     | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS | CHUNK12_TOMB_IDS
     | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
-    | CHUNK16_TOMB_IDS
+    | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS
 )
 
 
@@ -583,6 +648,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "III", row
         elif row["tomb_id"] in CHUNK16_TOMB_IDS:
             assert row["source_citation"]["section"] == "III", row
+        elif row["tomb_id"] in CHUNK17_TOMB_IDS:
+            assert row["source_citation"]["section"] == "III", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -593,7 +660,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
             | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS
             | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
-            | CHUNK16_TOMB_IDS
+            | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS:
@@ -638,6 +705,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 141 <= page <= 168, f"{row['tomb_id']} page {page} outside chunk-15 [141, 168]"
         elif row["tomb_id"] in CHUNK16_TOMB_IDS:
             assert 169 <= page <= 182, f"{row['tomb_id']} page {page} outside chunk-16 [169, 182]"
+        elif row["tomb_id"] in CHUNK17_TOMB_IDS:
+            assert 191 <= page <= 207, f"{row['tomb_id']} page {page} outside chunk-17 [191, 207]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -719,6 +788,10 @@ def test_cemetery_by_chunk() -> None:
             # Chunk 16: single CEMETERY G 6000 cluster (Hemiunu-
             # adjacent). All 8 rows carry `cemetery: "G 6000"`.
             assert row["cemetery"] == "G 6000", row
+        elif row["tomb_id"] in CHUNK17_TOMB_IDS:
+            # Chunk 17 (halves 17a + 17b): G 7000 East Field remainder.
+            # All 52 rows carry `cemetery: "G 7000"`.
+            assert row["cemetery"] == "G 7000", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -820,6 +893,14 @@ def test_dynasty_assignments() -> None:
             # gives no dating clue on the headword or in adjacent body-
             # prose).
             assert row["dynasty"] in {"5", "6", None}, row
+        elif row["tomb_id"] in CHUNK17_TOMB_IDS:
+            # G 7000 East Field remainder spans Dyn IV (royal-family
+            # mastabas: Ḥarzedef G7210, Ḥetepḥeres II G7350, ʿAnkh-ḥaf
+            # G7510, Meresʿankh III G7530 etc.), Dyn V (officials and
+            # priestly clientele), Dyn VI (later priestly clientele).
+            # Body-prose sub-entries (G7220/G7420/G7540) + fragment
+            # entries with no PM dating clue carry `dynasty: null`.
+            assert row["dynasty"] in {"4", "5", "6", None}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.

@@ -1904,6 +1904,181 @@ CHUNK16_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-17 (CEMETERY G 7000 East Field remainder). Gemini PR #238
+# round-2 finding: 7 rows with `Stone-built mastaba.` / `Stone-built
+# twin-mastaba.` body trailers left in notes_from_pm (prompt rule
+# violated by 2/1 agent-majority for rows where ties weren't raised),
+# G 7244 missing its title "Keeper of the legs of the Great House",
+# and G 7810 retaining an excavator-history line that should be dropped.
+CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("G7210", "notes_from_pm"): {
+        "value": (
+            "King's son of his body, Count, Keeper of Nekhen, etc., "
+            "and his wife. Temp. Khufu to late Dyn. IV. Parents, "
+            "Khufu and probably Mertiotes [I]."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built twin-"
+            "mastaba.` body trailer per prompt rule (line 124)."
+        ),
+    },
+    ("G7211", "notes_from_pm"): {
+        "value": (
+            "Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet "
+            "of the Pyramid of Menkauhor, Inspector of administrators "
+            "of the Treasury, etc. Late Dyn. V or Dyn. VI."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer per prompt rule."
+        ),
+    },
+    # G 7244 title restoration was moved to tie-break-overrides.json
+    # (Gemini PR #238 round-3 medium 3255711454/60: keep the source of
+    # truth for tie-breaks in one place; manual fix_rows entry was
+    # redundant with the override).
+    # Occupant_role corrections: 4 named-mastaba owners had their role
+    # incorrectly merged to "Unknown" by agent-majority; per source-
+    # wide convention (G 7837 ʿAnkh-maʿrēʿ precedent), named tombs
+    # without specific royal/vizier/high-priest titles map to "Official".
+    ("G7249", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Menib) without title cluster → Official per "
+            "G 7837 ʿAnkh-maʿrēʿ source-wide convention. Agent-"
+            "majority voted `Unknown` because PM gives no title."
+        ),
+    },
+    ("G7411", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Kaemthenent) without title cluster → Official "
+            "per G 7837 convention."
+        ),
+    },
+    ("G7820", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Iynefer, multi-occupant joint burial with wife "
+            "Nefertkau) without title cluster → Official per G 7837 "
+            "convention."
+        ),
+    },
+    ("G7851", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Wermeru) without title cluster → Official per "
+            "G 7837 convention."
+        ),
+    },
+    # Underdot-Ḥ on Ḥathor + Nikaḥor diacritics (Gemini PR #238 round-4
+    # medium 3255722720/22/24). Agent-majority dropped the underdot on
+    # `Hathor` in roles for both rows; G 7948 also dropped underdot on
+    # `Nikahor` in co_occupants. Source-wide ḥ-root convention applies.
+    ("G7650", "co_occupant_roles"): {
+        "value": [
+            "Wife, King's daughter of his body, Prophetess of Khufu, Ḥathor, and Neith, etc."
+        ],
+        "rationale": (
+            "Gemini PR #238 round-4 medium 3255722722: apply Ḥathor "
+            "underdot-ḥ per source-wide ḥ-root convention. Agent-"
+            "majority left `Hathor` in roles despite `Ḥathor` in "
+            "notes_from_pm (intra-row inconsistency fix)."
+        ),
+    },
+    ("G7948", "co_occupants"): {
+        "value": ["Nikaḥor"],
+        "rationale": (
+            "Gemini PR #238 round-4 medium 3255722724: apply Nikaḥor "
+            "underdot-ḥ (ḥ-root *ḥr*, parallel to Ḥor / Duaenḥor) "
+            "per source-wide convention."
+        ),
+    },
+    ("G7948", "co_occupant_roles"): {
+        "value": [
+            "Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."
+        ],
+        "rationale": (
+            "Gemini PR #238 round-4 medium 3255722724: apply Ḥathor "
+            "underdot-ḥ per source-wide convention."
+        ),
+    },
+    # G 7948 occupant_name OCR-vowel correction. PM OCR is `RAa-` not
+    # `REa-` for this name; per Gemini PR #238 round-5 (3255742120) +
+    # the G 7350 Raʿzedef precedent, `RAa` → `Raʿ` with NO macron-ē
+    # (macron-Ē reserved for `REa` OCR forms like `DUAENREa` →
+    # `Duaenrēʿ`, `MENKAUREa` → `Menkaurēʿ`). Agent-majority extracted
+    # `Rēʿkhaʿef-ʿankh` (incorrect macron); chunk-17b prompt example
+    # was also wrong (fixed in same round-5 commit).
+    ("G7948", "occupant_name"): {
+        "value": "Raʿkhaʿef-ʿankh",
+        "rationale": (
+            "Gemini PR #238 round-5 medium 3255742120: OCR `RAa-` "
+            "yields `Raʿ-` only (no macron-Ē). Source-wide rule: "
+            "macron-Ē applies to `REa-` OCR signature, not `RAa-`. "
+            "G 7350 Raʿzedef precedent."
+        ),
+    },
+    ("G7330", "notes_from_pm"): {
+        "value": (
+            "Middle or late Dyn. IV. Sarcophagus (uninscribed) with "
+            "panther-skin in relief on lid, and palace-façade "
+            "decoration, from shaft of G 7340, in Cairo Mus. Ent. "
+            "54934."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built twin-"
+            "mastaba.` body trailer per prompt rule. Keep dating + "
+            "the sarcophagus body-prose finding (unique archaeological "
+            "data, parallel to G 7220/G 7420/G 7540 restoration in "
+            "round-1)."
+        ),
+    },
+    ("G7411", "notes_from_pm"): {
+        "value": "Dyn. V. Wife, Ḥatḥornufer.",
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer between dating and wife clause "
+            "(pypdf flow-disorder placed the trailer mid-block); "
+            "preserve dating + wife clause per chunks 9-16 convention."
+        ),
+    },
+    ("G7560", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer per prompt rule. Headword has "
+            "only dating clue; no title cluster."
+        ),
+    },
+    ("G7750", "notes_from_pm"): {
+        "value": "Middle or late Dyn. IV.",
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba.` body trailer per prompt rule. Headword has "
+            "only dating clue; no title cluster."
+        ),
+    },
+    ("G7810", "notes_from_pm"): {
+        "value": (
+            "King's son of his body, Overseer of the expedition. "
+            "End of Dyn. IV or early Dyn. V. Mother (possibly), "
+            "Meresʿankh [II] (tomb G 7410)."
+        ),
+        "rationale": (
+            "Gemini PR #238 round-2 medium: drop `Stone-built "
+            "mastaba. Excavated by Service des Antiquités in 1923.` "
+            "body trailer + excavator-history line per prompt rule. "
+            "Keep title cluster + dating + parent clause."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -1925,6 +2100,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK14_CORRECTIONS,
     CHUNK15_CORRECTIONS,
     CHUNK16_CORRECTIONS,
+    CHUNK17_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
