@@ -1157,5 +1157,105 @@
   "MAR58|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 467-468 (chunk-27a). Topographic anchor 'A of de Morgan' retained. Kinship note naming possible son Snefrunufer [II] with cross-ref to tomb No. 59 retained per convention. Candidate 1 adds scene-description addendum (walls, offering-bringers). Candidate 3 adds false-door catalog citation. Both addenda dropped per source-wide convention chunks 8-26. Candidate 2 is shortest-minimal with all substantive elements.",
     "value": "Supervisor of prophets of the Pyramid of Zadkarēʿ, Overseer of singers of the Great House, wʿb-priest of the Pyramid of Menkauḥor. End of Dyn. V or Dyn. VI. A of de Morgan. Sons (including possibly Snefrunufer [II], tomb No. 59 [E 7])."
+  },
+  "MAR60|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 468 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + wife clause, with correct macron-Ē Re-deity compounds (Neferirkarēʿ, Neuserrēʿ, Saḥurēʿ, Rēʿneferef) and single-underdot Ḥatḥor per source-wide 44-vs-6 majority. Candidates 2 and 3 append body-prose mega-block scene-catalog prose — dropped per chunk-21 Mereruka mega-block precedent and source-wide convention chunks 8-27a. Candidate 2 additionally uses hamza ayin (ʿ) without macron for Re-compounds — less PM-faithful. Selecting candidate 1.",
+    "value": "Overseer of the Pyramids of Neferirkarēʿ and Neuserrēʿ, and of the Sun-temples of Saḥurēʿ, Neferirkarēʿ, Rēʿneferef, and Neuserrēʿ, etc. Temp. Neuserrēʿ to end of Dyn. V. Wife, Neferḥetpes, Prophetess of Neith North of the Wall and of Ḥatḥor Mistress of the Sycamore, etc."
+  },
+  "MAR61|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 478 (chunk-27b). Candidates 2 and 3 append a statue object-catalog citation (Cairo CG 76) — dropped per source-wide convention chunks 8-27a (title cluster + dating only; object-catalog addenda excluded). Candidate 1 is shortest-minimal. Selecting candidate 1.",
+    "value": "Master of the largesse in the Mansion of Life, etc. Dyn. V or later."
+  },
+  "MAR62|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 479 (chunk-27b). Candidate 1 is shortest-minimal with correct macron-Ē Re-deity compounds (Neferirkarēʿ). Candidates 2 and 3 append extensive statue object-catalog lists (Cairo CG numbers) — dropped per source-wide convention chunks 8-27a. Candidate 2 also uses hamza ayin without macron for Neferirkareʿ — less PM-faithful. Selecting candidate 1.",
+    "value": "Overseer of the Treasury, Prophet of the Sun-temples of Userkaf and Neferirkarēʿ, etc. Temp. Neferirkarēʿ or later."
+  },
+  "MAR63|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 479 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating. Candidates 2 and 3 append object-catalog addenda (false-doors, offering-stands, Cairo CG and JE numbers, British Museum accession) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "Chief Justice and Vizier, etc. Middle Dyn. V or later."
+  },
+  "MAR64|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 479-480 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating. Candidates 2 and 3 append doorway object-catalog description (drum, lintel) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "King's wife, etc. Dyn. V or later."
+  },
+  "MAR65|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 480 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating. Candidates 2 and 3 are identical in content except capitalisation of 'sem-priest' and both append statue object-catalog (Cairo CG 51, 97, 214, possibly 164) — dropped per source-wide convention chunks 8-27a. Lowercase 'sem-priest' from candidate 1 retained (lowercase matches PM printed convention for this title). Selecting candidate 1.",
+    "value": "sem-priest, Director of the kilt, etc. Middle Dyn. V or later."
+  },
+  "MAR66|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 480 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating. Candidates 2 and 3 append extensive object-catalog addenda (false-door son citation, numerous statue CG numbers from Cairo plus Aberdeen, Athens, New York MMA) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "Inspector of scribes of the royal documents, etc. Dyn. V."
+  },
+  "MAR67|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 481 (chunk-27b). Candidate 1 is shortest-minimal with correct macron-Ē Re-deity compounds (Rēʿ, Neferirkarēʿ, Saḥurēʿ, Neuserrēʿ). Candidates 2 and 3 append object-catalog addenda (niche, false-door, offering-table Cairo CG citations) — dropped per source-wide convention chunks 8-27a. Candidate 2 also uses hamza without macron for Re-compounds — less PM-faithful. Selecting candidate 1.",
+    "value": "Prophet of Rēʿ in the Sun-temples of Userkaf and Neferirkarēʿ, Prophet of Saḥurēʿ and of the Pyramid of Neuserrēʿ, etc. Temp. Neuserrēʿ or later."
+  },
+  "MAR68|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 481 (chunk-27b). All three candidates share core content: title cluster + dating + son cross-reference (Sopduḥotp, tomb No. 69 [D 15]). Son cross-reference is a structural note retained per convention. Candidates 2 and 3 append Cairo CG 57126 accession for the false-door — object-catalog addendum dropped per source-wide convention chunks 8-27a. Candidate 1 is shortest-minimal. Selecting candidate 1.",
+    "value": "Overseer of all works of the King, etc. Dyn. V. False-door, with sons (including Sopduḥotp, tomb No. 69 [D 15])."
+  },
+  "MAR69|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 481-482 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + father cross-reference (structural note retained per convention). Candidates 2 and 3 append extensive chapel scene and object-catalog addenda (Turin and Cairo CG citations) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "Judge and Overseer of scribes, etc. Dyn. V or later. Father, Khaʿmererptaḥ (tomb No. 68 [C 4])."
+  },
+  "MAR70|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 482 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating. Candidate 2 appends object-catalog (Cairo JE 15160) plus agent-reasoning prose about occupant_role resolution — agent-reasoning prose is not PM text and must not appear in notes_from_pm. Candidate 3 also appends object-catalog (Cairo JE 15160) — dropped per source-wide convention chunks 8-27a. FLAGGED for egyptologist: MAR70 Khuit holds dual King's-daughter + King's-wife titles; occupant_role set to 'Queen' by agent B (most elevated final title) but agents A and C use 'King's wife' — egyptologist should verify printed p. 482. Selecting candidate 1.",
+    "value": "King's daughter, King's wife, etc. Late Dyn. V or Dyn. VI."
+  },
+  "MAR71|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 482 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + wife clause. Candidates 2 and 3 append false-door block object-catalog (Cairo CG 57136, 57138, 57140, 57141) — dropped per source-wide convention chunks 8-27a. Candidate 3 also hyphenates 'Ḥer-wer' — less PM-faithful than candidate 1's 'Ḥerwer'. Selecting candidate 1.",
+    "value": "Prophet of Khufu and Khnum foremost of Ḥerwer in all his places, Overseer of the expedition, etc. Middle Dyn. IV or later. Wife, Iynefert, Royal acquaintance."
+  },
+  "MAR73|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 483 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + wives clause with single-underdot Ḥatḥor. Candidates 2 and 3 append palace-façade false-door object-catalog (Cairo CG 1379) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "Judge and Overseer of scribes, etc. Probably early Dyn. V. Wives, Zefatsen and Ḥetepḥeres, Prophetesses of Ḥatḥor."
+  },
+  "MAR74|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 483 (chunk-27b). Candidate 1 is shortest-minimal with correct macron-Ē (Saḥurēʿ) and retains false-door topographic note 'presented by Saḥurēʿ' (royal gift = dating anchor). Candidate 2 uses hamza without macron and appends Cairo CG 1482 — less PM-faithful and adds object-catalog. Candidate 3 retains macron-Ē but appends Cairo CG 1482 — object-catalog dropped per source-wide convention chunks 8-27a. FLAGGED for egyptologist: MAR74 Niʿankh-Sekhmet holds title 'Greatest of the physicians of the Great House' — occupant_role classification as 'Official' vs possible High-Priest or Physician-in-Chief warranting specific role value. Selecting candidate 1.",
+    "value": "Greatest of the physicians of the Great House, etc. Temp. Saḥurēʿ. False-door, presented by Saḥurēʿ."
+  },
+  "MAR75|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 484 (chunk-27b). Candidate 1 is shortest-minimal: title cluster (with single-underdot Ḥatḥor) + dating. Candidates 2 and 3 append scene and object-catalog addenda (offering-room walls, false-door, subsidiary niche, Cairo CG 1509-10, statues CG 154, CG 162) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "Chief Justice and Vizier, Inspector of prophets of Ḥatḥor of the mert-temple of Unis, etc. End of Dyn. V or Dyn. VI."
+  },
+  "MAR76|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 484-485 (chunk-27b). Candidate 1 is shortest-minimal with correct macron-Ē Re-deity compounds (Menkaurēʿ, Saḥurēʿ) and lowercase 'wʿb'. Candidates 2 and 3 append chapel scene and object-catalog addenda (false-doors Cairo CG 1417, 1415, CG 1564; dispersed blocks in European collections) — dropped per source-wide convention chunks 8-27a. Candidate 2 also uses hamza without macron — less PM-faithful. FLAGGED for egyptologist: MAR76 tomb alias — agents split between '[D n]' (OCR-degraded) and '[D 11]'; egyptologist should confirm correct letter-code against printed p. 484. Selecting candidate 1.",
+    "value": "wʿb-priest of the Pyramids of Snefru, Khephren, Menkaurēʿ, Userkaf, and Saḥurēʿ, Prophet of Khufu and Menkaurēʿ, and of the Sun-temple of Userkaf, etc. Middle Dyn. V. Wife, Nubḥotp Bebi, Prophetess of Ḥatḥor and Neith, etc."
+  },
+  "MAR78|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 485-486 (chunk-27b). ANOMALY: task brief states No. 78 is a PM gap (no headword), but all three agents produced a populated row — parent agent should verify whether PM III.2 pp. 485-486 carries a No. 78 headword or not. Proceeding with shortest-minimal candidate 1 (title cluster + dating + wife clause) per source-wide convention. Candidates 2 and 3 append chapel object-catalog (Chicago Field Museum A.24450, Rooms II-IV scene descriptions) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "Overseer of all works of the King, Director of scribes of petitions, etc. Temp. Menkauḥor to Isesi. Wife, Khenut, King's adorner, 'Sister of the endowment'."
+  },
+  "MAR79|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 486 (chunk-27b). Candidate 1 is shortest-minimal with correct macron-Ē (Neuserrēʿ). Candidates 2 and 3 append extensive chapel and object-catalog addenda (Cairo CG 1370, Copenhagen Ny Carlsberg Glyptotek Æ.I.N.1271, scene registers, Cairo CG 1534, 1734) — dropped per source-wide convention chunks 8-27a. Candidate 2 also uses hamza without macron — less PM-faithful. Selecting candidate 1.",
+    "value": "Secretary of the Toilet-house, Prophet of the Pyramid of Neuserrēʿ, etc. Late Dyn. V."
+  },
+  "MAR80|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 487 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + usurpation note (original owner Neferirtnes) + chapel topographic anchor (New York MMA 08.201.1 — institution citation retained as topographic anchor per convention for relocated chapels). Candidate 2 appends scene-catalog addenda and inserts agent-reasoning prose about PM attribution hedge — agent-reasoning not PM text, excluded. Candidate 3 also appends scene-catalog addenda. FLAGGED for egyptologist: MAR80 Reʿemka usurpation from Neferirtnes — is_usurped flag should be true; verify agents' split on this flag and confirm against printed p. 487. Selecting candidate 1.",
+    "value": "King's eldest son of his body (probably of Isesi), Chief lector-priest, etc. End of Dyn. V. Usurped from Neferirtnes, Judge and Inspector of scribes, etc. Chapel in New York, M.M.A. 08.201.1."
+  },
+  "MAR81|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 487 (chunk-27b). Candidate 1 is shortest-minimal: title + dating. Candidates 2 and 3 append statuette object-catalog (Cairo CG 108) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "Sole companion. Dyn. V."
+  },
+  "MAR82|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 487-488 (chunk-27b). Candidate 1 is shortest-minimal: title + dating. Candidates 2 and 3 append chapel scene-catalog addenda (south wall painted registers with musicians/dancers, west wall false-door) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "King's wife (perhaps of Isesi), etc. End of Dyn. V."
+  },
+  "MAR83|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 488 (chunk-27b). SUBSTANTIVE DISAGREEMENT on transliteration of cloth title: agent A 'sḥt' (U+1E25), agent B 'siꜣt' (U+A723), agent C 'sḫt' (U+1E2B). FLAGGED for egyptologist review against printed p. 488 — three different Egyptian consonants are represented. Candidate 1 is shortest-minimal without object-catalog; selecting for now with 'sḥt'. Candidates 2 and 3 append chapel scene and statue object-catalog (Cairo CG 102, CG 171) — dropped per source-wide convention chunks 8-27a.",
+    "value": "Overseer of linen (ssrw) and of fringed cloth (sḥt) of the King, etc. Late Dyn. V or Dyn. VI."
+  },
+  "MAR84|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 488 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + wife clause. Candidates 2 and 3 append object-catalog and scene addenda (Cairo Temp. accession numbers, portico architrave/pillars autobiographical text, outer hall descriptions) — dropped per source-wide convention chunks 8-27a. The cross-reference to Raʿshepses (tomb LS 16) is a structural note but appears inside an object-catalog sentence in all appendage forms — excluded with the rest of the catalog per convention (the tomb_id cross-reference information is not lost as it belongs in the structural data, not in notes). Selecting candidate 1.",
+    "value": "King's son, Overseer of the expedition, etc. Temp. Isesi. Wife, Khenut, Royal acquaintance."
+  },
+  "MAR85|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 488-489 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating. Candidates 2 and 3 append scene-catalog addenda (portico architrave, false-door) — dropped per source-wide convention chunks 8-27a. Selecting candidate 1.",
+    "value": "King's son, Overseer of all works of the King, Overseer of the expedition, etc. End of Dyn. V."
+  },
+  "MAR88|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 489 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + wife clause. Candidates 2 and 3 append false-door and statue object-catalog (Cairo CG 1392, CG 64, CG 48) — dropped per source-wide convention chunks 8-27a. Candidate 3 uses en-dash ('V–VI'); candidate 1 uses hyphen ('V-VI') — hyphen retained per prior-chunk convention. Selecting candidate 1.",
+    "value": "Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance."
   }
 }
