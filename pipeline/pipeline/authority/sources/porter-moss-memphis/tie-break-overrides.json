@@ -130,8 +130,8 @@
     "rationale": "1/1/1 tie on chunk-17a G 7248 notes_from_pm. PM III.1 2nd ed. 1974 printed p.192 (physical p.189). Raw OCR (chunk-17a-p188-p196): `False-door of Mesthu ka-servant, and wife Nubhotp Dyn. V-VI, from shaft A, in Boston Mus. 27.1117.` — no punctuation between `Nubhotp` and `Dyn.` in OCR. Three agents split: A+B use underdot-ḥ `Nubḥotp` (correct per ḥ-roots convention); C uses plain `h`. A uses comma before `Dyn.` (PM inline-date convention); B uses period (creates orphan sentence). Selecting A: diacritics applied (ḥ-roots rule), comma before `Dyn.` consistent with PM punctuation pattern."
   },
   "G7244|notes_from_pm": {
-    "value": null,
-    "rationale": "1/1/1 tie on chunk-17a G 7244 notes_from_pm. PM III.1 2nd ed. 1974 printed p.192 (physical p.189). G 7244 is a sub-entry of composite G 7244-6. All three agents include the composite context header `G 7244-6. Dyn. V. Composite stone-built mastaba.` (body trailer), `Chapel.`/`G 7244 Chapel` sub-feature header, the occupant name (already in occupant_name), and the title cluster. Per chunks 9-16 conventions: drop occupant_name from notes, drop chapel/room sub-features, drop `Stone-built mastaba.` body trailers. After stripping all these, no substantive content remains. The Mother/Wife co-occupant clauses are already captured in co_occupants + co_occupant_roles. Resolving to null."
+    "value": "Keeper of the legs of the Great House.",
+    "rationale": "1/1/1 tie on chunk-17a G 7244 notes_from_pm. PM III.1 2nd ed. 1974 printed p.192 (physical p.189). G 7244 is a sub-entry of composite G 7244-6. Per chunks 9-16 convention, title clusters are kept in notes_from_pm even when the headword is otherwise minimal. Restoring the substantive title cluster `Keeper of the legs of the Great House.` while dropping the composite header (`G 7244-6. Dyn. V. Composite stone-built mastaba.`), sub-feature headings (`Chapel.`/`G 7244 Chapel`), and occupant name (already in occupant_name). Gemini PR #238 round-2/3 review (3255703917 + 3255711454)."
   },
   "G7152|notes_from_pm": {
     "value": "Chief Justice and Vizier, etc. Late Dyn. V or Dyn. VI.",

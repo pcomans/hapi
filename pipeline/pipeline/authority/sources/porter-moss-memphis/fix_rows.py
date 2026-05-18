@@ -1933,14 +1933,46 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "mastaba.` body trailer per prompt rule."
         ),
     },
-    ("G7244", "notes_from_pm"): {
-        "value": "Keeper of the legs of the Great House.",
+    # G 7244 title restoration was moved to tie-break-overrides.json
+    # (Gemini PR #238 round-3 medium 3255711454/60: keep the source of
+    # truth for tie-breaks in one place; manual fix_rows entry was
+    # redundant with the override).
+    # Occupant_role corrections: 4 named-mastaba owners had their role
+    # incorrectly merged to "Unknown" by agent-majority; per source-
+    # wide convention (G 7837 ʿAnkh-maʿrēʿ precedent), named tombs
+    # without specific royal/vizier/high-priest titles map to "Official".
+    ("G7249", "occupant_role"): {
+        "value": "Official",
         "rationale": (
-            "Gemini PR #238 round-2 medium: restore the substantive "
-            "title cluster `Keeper of the legs of the Great House.` "
-            "that I had incorrectly null'd in the tie-break override. "
-            "Per chunks 9-16 convention, title clusters are kept in "
-            "notes_from_pm even when the headword is otherwise minimal."
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Menib) without title cluster → Official per "
+            "G 7837 ʿAnkh-maʿrēʿ source-wide convention. Agent-"
+            "majority voted `Unknown` because PM gives no title."
+        ),
+    },
+    ("G7411", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Kaemthenent) without title cluster → Official "
+            "per G 7837 convention."
+        ),
+    },
+    ("G7820", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Iynefer, multi-occupant joint burial with wife "
+            "Nefertkau) without title cluster → Official per G 7837 "
+            "convention."
+        ),
+    },
+    ("G7851", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Gemini PR #238 round-3 medium 3255711462: named tomb "
+            "owner (Wermeru) without title cluster → Official per "
+            "G 7837 convention."
         ),
     },
     ("G7330", "notes_from_pm"): {
