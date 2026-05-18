@@ -744,6 +744,36 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQE14", "notes_from_pm"),
         ("SAQE15", "notes_from_pm"),
         ("SAQH1", "notes_from_pm"),
+        # Chunk 26 (§ II.F AROUND THE PYRAMID-COMPLEX OF UNIS
+        # continuation): 18 ties resolved. 14 notes_from_pm batch-
+        # resolved with shortest-candidate-wins (all 1/1/1 ties on
+        # body-prose / cartographic / sub-feature inclusion).
+        # Famous joint twin Niʿankh-khnum + Khnemḥotp mastaba notes
+        # preserves both occupants + both wives; Nufer family-tomb
+        # preserves father Kaḥa + 2 wives + 2 brothers' family
+        # structure. SAQ-Irukaptah attribution_certainty=probable
+        # per contested `Early Dyn. V (Altenmüller) or Dyn. VI`
+        # dating; SAQ-Nikauptah joint headword + Simery role.
+        ("SAQ-AkhtihotpLouvre", "notes_from_pm"),
+        ("SAQ-AkhtihotpSekhmet", "notes_from_pm"),
+        ("SAQ-Ankhirptah", "notes_from_pm"),
+        ("SAQ-Bebi", "notes_from_pm"),
+        ("SAQ-Hetep", "notes_from_pm"),
+        ("SAQ-Irenkaptah", "notes_from_pm"),
+        ("SAQ-Irukaptah", "attribution_certainty"),
+        ("SAQ-Irukaptah", "notes_from_pm"),
+        ("SAQ-Iyka", "notes_from_pm"),
+        ("SAQ-Kaiankh", "notes_from_pm"),
+        ("SAQ-Neferherenptah", "notes_from_pm"),
+        ("SAQ-NeferseshemptahSekhentiu", "notes_from_pm"),
+        ("SAQ-NiankhKhnum", "notes_from_pm"),
+        ("SAQ-Niankhre", "notes_from_pm"),
+        ("SAQ-Nikauptah", "co_occupant_roles"),
+        ("SAQ-Nikauptah", "notes_from_pm"),
+        ("SAQ-Nufer", "notes_from_pm"),
+        ("SAQ-Ptahshepses", "notes_from_pm"),
+        ("SAQ-Rakhuf", "notes_from_pm"),
+        ("SAQE17", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
