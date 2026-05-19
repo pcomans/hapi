@@ -2126,6 +2126,110 @@ CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+CHUNK30_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 30 — § II.J TOMBS OF POSITION UNKNOWN (a) OLD KINGDOM.
+    #
+    # F1 (populate son Ḥetep co_occupant on MAR-C25 KAEMREḤU):
+    # Gemini P2 review on PR #253 (inline comment id=3269579355).
+    # PM III.2 p.694 KAEMREḤU headword block has `Lintel dedicated
+    # by son Ḥetep, Judge and Inspector of scribes.` — agents all
+    # captured this in notes_from_pm but left co_occupants empty.
+    # Per source-wide convention chunks 8-29 (family clauses MUST
+    # populate BOTH notes AND co_occupants/co_occupant_roles), add
+    # son Ḥetep with kinship-prefixed role.
+    ("MAR-C25", "co_occupants"): {
+        "value": ["Ḥetep"],
+        "rationale": (
+            "PM III.2 printed p. 694; PM C 25 KAEMREḤU headword: "
+            "`Lintel dedicated by son Ḥetep, Judge and Inspector "
+            "of scribes.` Family clause must populate co_occupants "
+            "per chunks 8-29 convention. Gemini PR #253 review "
+            "(id=3269579355) flagged the empty co_occupants as "
+            "inconsistent with the notes_from_pm content."
+        ),
+    },
+    ("MAR-C25", "co_occupant_roles"): {
+        "value": ["Son, Judge and Inspector of scribes"],
+        "rationale": (
+            "PM III.2 printed p. 694; paired with MAR-C25|co_occupants. "
+            "Kinship role `Son` + title per chunks 8-29 source-wide "
+            "convention (<Relation>, <title> form)."
+        ),
+    },
+    # F2 (macron-Ē + transliteration consistency on round-2 Gemini
+    # feedback — PR #253 round-2 inline comments). Five sibling
+    # macron / transliteration issues that the round-1 fix missed
+    # by only targeting the specific rows Gemini called out. The
+    # pattern is the same as round-1: agents A had macron forms, C
+    # had ayin-only or ḫ-variant; tie-break selected C; need to
+    # restore A's macron / ḥ rendering for intra-row + source-wide
+    # convention consistency.
+    ("SAQ-Inpukha", "co_occupants"): {
+        "value": ["Niʿankhrēʿ", "Ḥepetka"],
+        "rationale": (
+            "PM III.2 printed p.691; Gemini PR #253 round-2 review "
+            "(id=3269617055). co_occupants Niʿankhrēʿ macron-Ē "
+            "restored for intra-row consistency with notes_from_pm "
+            "(which already has the macron form per round-1 fix). "
+            "2/3 majority chose ayin-only; this post-merge "
+            "correction restores macron per source-wide convention "
+            "chunks 19-29."
+        ),
+    },
+    ("SAQ-Werirniptah", "notes_from_pm"): {
+        "value": (
+            "WERIRNIPTAḤ, Prophet of Rēʿ and Ḥatḥor in the "
+            "Sun-temple of Neferirkarēʿ, Judge and Overseer of "
+            "scribes, etc. Temp. Neferirkarēʿ or later. Plan LXVI. "
+            "Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. "
+            "Mus. 718."
+        ),
+        "rationale": (
+            "PM III.2 printed p.699; Gemini PR #253 round-2 review "
+            "(id=3269617072). Switch to agent A's macron forms "
+            "(Rēʿ, Neferirkarēʿ) preserving C's structure (CAPS "
+            "prefix + Plan LXVI + Chapel. + museum). Same pattern "
+            "as round-1 macron restoration on SAQ-Gegi/SAQ-Inpukha/"
+            "etc. — round-1 missed SAQ-Werirniptah."
+        ),
+    },
+    ("MAR-D67", "notes_from_pm"): {
+        "value": (
+            "Supervisor of prophets of the Sun-temple and Pyramid "
+            "of Neuserrēʿ, Prophet of the Sun-temple of Neferirkarēʿ, "
+            "etc. Temp. Neuserrēʿ or later."
+        ),
+        "rationale": (
+            "PM III.2 printed p.691; Gemini PR #253 round-2 review "
+            "(id=3269617077). Switch from B's ayin-only royal "
+            "names to macron-Ē forms (Neuserrēʿ, Neferirkarēʿ) "
+            "per source-wide chunks 19-29 convention. Preserves "
+            "B's no-prefix structure (MAR-letter-coded rows drop "
+            "the bracketed letter-code from notes per chunk-28 "
+            "convention)."
+        ),
+    },
+    ("SAQ-Shepses", "notes_from_pm"): {
+        "value": (
+            "SHEPSES, Overseer of the Great Estate, Overseer of "
+            "hairdressers of the Great House, etc. Probably Dyn. "
+            "VI. Wife (probably), Nefertemʿaḥ, Prophetess of "
+            "Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6."
+        ),
+        "rationale": (
+            "PM III.2 printed p.698; Gemini PR #253 round-2 review "
+            "(id=3269617069). Wife's name transliteration "
+            "consistency: co_occupants tie-break selected `ḥ` "
+            "(emphatic h) per agent B; notes had `ḫ` (velar "
+            "fricative) per agent A. Internal inconsistency "
+            "within the same row. Correction: notes_from_pm uses "
+            "B's `Nefertemʿaḥ` ḥ-form for intra-row consistency. "
+            "Preserves A's CAPS prefix + topographic anchor."
+        ),
+    },
+}
+
+
 CHUNK29_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 29 — § II.H + § II.I AROUND PYRAMIDS OF PEPY I /
     # MERENRĒʿ I / ISESI / IBI / PEPY II.
@@ -2460,6 +2564,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK26_CORRECTIONS,
     CHUNK28_CORRECTIONS,
     CHUNK29_CORRECTIONS,
+    CHUNK30_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

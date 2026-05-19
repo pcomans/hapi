@@ -583,6 +583,32 @@ CHUNK28_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+CHUNK30_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.J TOMBS OF POSITION UNKNOWN (a) OLD KINGDOM
+    # (printed pp.689-699, phys pp.329-339). 31 rows closing PM
+    # III.2's Old-Kingdom MVP coverage. Includes a small pre-§II.J
+    # cluster: SAQ-Iri (under "Near Pyramid of Userkareʿ Khenzer"
+    # topographic anchor, cemetery `Around Pyramid-enclosure of
+    # Userkareʿ Khenzer`) + MAR-D67/D68/D69/E16 (under "EXACT
+    # POSITION UNKNOWN" sub-banner, cemetery `Tombs of position
+    # unknown`). Plus 5 Mariette letter-coded MAR-B/C tombs from
+    # § II.J (a) MARIETTE and 21 SAQ-<Name> bare-named OK
+    # officials. SAQ-IrukaptahGranary disambiguates from chunk-26
+    # SAQ-Irukaptah; SAQ-SankhenptahPtahshepses disambiguates from
+    # chunk-26 SAQ-Sankhenptah; SAQ-NikaureJudge and
+    # SAQ-NikaureOverseerOfWorks disambiguate two PM Nikaurēʿ
+    # homonyms on adjacent pages.
+    "MAR-B8", "MAR-B14", "MAR-C12", "MAR-C25", "MAR-C27",
+    "MAR-D67", "MAR-D68", "MAR-D69", "MAR-E16",
+    "SAQ-Gegi", "SAQ-Inpukha", "SAQ-Iri", "SAQ-IrukaptahGranary",
+    "SAQ-Iry", "SAQ-Iti", "SAQ-Kaemthenent", "SAQ-Kahersetef",
+    "SAQ-Kapuptah", "SAQ-Katep", "SAQ-MaruBebi", "SAQ-Niankhnesut",
+    "SAQ-Nikare", "SAQ-NikaureJudge", "SAQ-NikaureOverseerOfWorks",
+    "SAQ-SankhenptahPtahshepses", "SAQ-Senimen", "SAQ-Sethu",
+    "SAQ-Shepses", "SAQ-Tepemankh", "SAQ-Thau", "SAQ-Werirniptah",
+})
+
+
 CHUNK29_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.H AROUND PYRAMIDS OF PEPY I, MERENRĒʿ I, ISESI +
     # § II.I AROUND PYRAMIDS OF IBI AND PEPY II + MASTABET FARAʿUN.
@@ -708,7 +734,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
     | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
-    | CHUNK29_TOMB_IDS
+    | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS
 )
 
 
@@ -956,6 +982,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK29_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK30_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -970,7 +998,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS | CHUNK29_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -1040,6 +1068,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 490 <= page <= 507, f"{row['tomb_id']} page {page} outside chunk-28 [490, 507]"
         elif row["tomb_id"] in CHUNK29_TOMB_IDS:
             assert 671 <= page <= 688, f"{row['tomb_id']} page {page} outside chunk-29 [671, 688]"
+        elif row["tomb_id"] in CHUNK30_TOMB_IDS:
+            assert 689 <= page <= 699, f"{row['tomb_id']} page {page} outside chunk-30 [689, 699]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1199,6 +1229,15 @@ def test_cemetery_by_chunk() -> None:
             assert row["cemetery"] in {
                 "Around Pyramids of Pepy I, Merenrēʿ I, and Isesi",
                 "Around Pyramids of Ibi and Pepy II",
+            }, row
+        elif row["tomb_id"] in CHUNK30_TOMB_IDS:
+            # Chunk 30: § II.J + small pre-§II.J cluster. Most rows
+            # use `Tombs of position unknown`; SAQ-Iri alone uses
+            # `Around Pyramid-enclosure of Userkareʿ Khenzer` per
+            # its pre-§II.J topographic anchor.
+            assert row["cemetery"] in {
+                "Tombs of position unknown",
+                "Around Pyramid-enclosure of Userkareʿ Khenzer",
             }, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
@@ -1405,6 +1444,13 @@ def test_dynasty_assignments() -> None:
             # to end of Dyn V; MAR71 Thenti Middle Dyn IV or later
             # (range-tail → "4"); most rows Dyn V; MAR82 Meresʿankh
             # perhaps Isesi → Dyn V. All OK only.
+            assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK30_TOMB_IDS:
+            # Chunk 30 § II.J Tombs of position unknown OK + pre-§II.J
+            # cluster: Dyn IV (SAQ-Iry "4"), Dyn V (most rows), Dyn VI
+            # (SAQ-Iri Late OK, MAR-B14 Late Dyn V or Dyn VI, etc.).
+            # All OK; post-OK sub-banners (Middle Kingdom / 1st Int /
+            # Late Period) deliberately excluded.
             assert row["dynasty"] in {"4", "5", "6", None}, row
         elif row["tomb_id"] in CHUNK29_TOMB_IDS:
             # Chunk 29 § II.H + § II.I: Late OK officials around the
