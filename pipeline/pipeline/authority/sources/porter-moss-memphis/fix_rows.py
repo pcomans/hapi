@@ -2126,6 +2126,38 @@ CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+CHUNK29_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 29 — § II.H + § II.I AROUND PYRAMIDS OF PEPY I /
+    # MERENRĒʿ I / ISESI / IBI / PEPY II.
+    #
+    # F1 (drop hallucinated Ḥeneni co-occupant on SAQ-Washiptah):
+    # Agents B+C 2/1 majority emitted `co_occupants: ["Ḥeneni"]`
+    # but PM's M.IV WASHIPTAḤ entry on p.681 describes only a
+    # re-used false-door of ʿAnkhnespepy (Prophetess of Ḥatḥor) — there is no
+    # Ḥeneni in Washiptaḥ's tomb. Likely confusion with chunk-29
+    # SAQ-IbiHeneni joint headword (different tomb). Per
+    # Constitutional Rule 1 (PM-faithful), drop the hallucinated
+    # co-occupant. The reconciliation-agent already overrode
+    # co_occupant_roles to `[]` via tie-break; this correction
+    # restores co_occupants to `[]` for length-coupling consistency
+    # with co_occupant_roles.
+    ("SAQ-Washiptah", "co_occupants"): {
+        "value": [],
+        "rationale": (
+            "PM III.2 printed p. 681; PM M.IV WASHIPTAḤ headword "
+            "describes only a re-used false-door of ʿAnkhnespepy "
+            "(Prophetess of Ḥatḥor) — no Ḥeneni is named in this tomb. "
+            "Agents B+C 2/1 majority hallucinated Ḥeneni "
+            "(likely confusion with chunk-29 SAQ-IbiHeneni joint "
+            "headword). Constitutional Rule 1: drop hallucinated "
+            "co-occupant to maintain PM faithfulness. Paired with "
+            "tie-break SAQ-Washiptah|co_occupant_roles=[] for "
+            "length-coupling consistency."
+        ),
+    },
+}
+
+
 CHUNK26_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 26 — § II.F AROUND THE PYRAMID-COMPLEX OF UNIS (tail).
     #
@@ -2427,6 +2459,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK25_CORRECTIONS,
     CHUNK26_CORRECTIONS,
     CHUNK28_CORRECTIONS,
+    CHUNK29_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
