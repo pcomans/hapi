@@ -559,6 +559,30 @@ CHUNK27A_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+CHUNK28_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.A NORTH OF THE STEP PYRAMID, trailing sub-sections.
+    # Physical pp.130-147 / printed pp.490-507. 27 rows split across two
+    # sub-banners:
+    #   `OTHER NUMBERED OLD KINGDOM TOMBS` — (a) MARIETTE letter-coded
+    #   (6 MAR-<letter><num>, distinct from chunk-27a/b's MAR<N>
+    #   Nos. 1-88 series), (b) LEPSIUS (4 LS-numbered), (c) QUIBELL
+    #   (1 SAQ-Perneb bare-named).
+    #   `UNNUMBERED EARLY DYNASTIC AND OLD KINGDOM TOMBS` — (a) POSITION
+    #   KNOWN + (b) POSITION UNKNOWN (16 SAQ-<Name> bare-named OK
+    #   officials + 1 anonymous Shape-5 SAQ-AnonNearNo39).
+    # Closes § II.A's Old-Kingdom coverage. Late Period / Ptolemaic /
+    # Roman + Finds sub-banners on phys pp.143-147 deliberately excluded
+    # per MVP OK scope (chunks 22 / 25 / 26 post-OK deferral convention).
+    "LS5", "LS6", "LS14", "LS16",
+    "MAR-B2", "MAR-B3", "MAR-B7", "MAR-B15", "MAR-D70", "MAR-H12",
+    "SAQ-Akhtia", "SAQ-AnonNearNo39", "SAQ-AnonS920", "SAQ-Harwer",
+    "SAQ-Heknunebti", "SAQ-Hemakhti", "SAQ-KaaperJudge", "SAQ-Kaemhest",
+    "SAQ-Mery", "SAQ-Nekhensu", "SAQ-Nikauhor", "SAQ-NuferCraftsman",
+    "SAQ-Pehernufer", "SAQ-Perneb", "SAQ-Ptahmakheru",
+    "SAQ-PtahshepsesIDirectorOfCraftsmen", "SAQ-TetiNeferheres",
+})
+
+
 CHUNK27B_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.A NORTH OF THE STEP PYRAMID, sub-section `OLD KINGDOM
     # TOMBS NOS. I-88 OF MARIETTE` (back half). Physical pp.108-129 /
@@ -653,7 +677,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS | CHUNK19_TOMB_IDS
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
-    | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS
+    | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
 )
 
 
@@ -897,6 +921,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK27B_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK28_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -911,7 +937,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -977,6 +1003,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 448 <= page <= 468, f"{row['tomb_id']} page {page} outside chunk-27a [448, 468]"
         elif row["tomb_id"] in CHUNK27B_TOMB_IDS:
             assert 468 <= page <= 489, f"{row['tomb_id']} page {page} outside chunk-27b [468, 489]"
+        elif row["tomb_id"] in CHUNK28_TOMB_IDS:
+            assert 490 <= page <= 507, f"{row['tomb_id']} page {page} outside chunk-28 [490, 507]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1123,6 +1151,11 @@ def test_cemetery_by_chunk() -> None:
             # Chunk 27b: § II.A NORTH OF THE STEP PYRAMID, Mariette OK
             # tombs Nos. 60-88 (back half — Ti's mega-block + remainder).
             # Same cemetery descriptor as chunk 27a.
+            assert row["cemetery"] == "North of the Step Pyramid", row
+        elif row["tomb_id"] in CHUNK28_TOMB_IDS:
+            # Chunk 28: § II.A NORTH OF THE STEP PYRAMID trailing sub-
+            # sections (Other numbered OK tombs + Unnumbered OK tombs).
+            # Same cemetery descriptor as chunks 27a/b.
             assert row["cemetery"] == "North of the Step Pyramid", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
@@ -1330,6 +1363,19 @@ def test_dynasty_assignments() -> None:
             # (range-tail → "4"); most rows Dyn V; MAR82 Meresʿankh
             # perhaps Isesi → Dyn V. All OK only.
             assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK28_TOMB_IDS:
+            # Chunk 28 § II.A trailing sub-sections: Dyn IV (MAR-B2
+            # Ḥetepḥeres, MAR-B3 Shery, MAR-B7 Sethu [II], plus the
+            # TETI+NEFERḤERES joint twin `Late Dyn. III or early
+            # Dyn. IV` → "4" range-tail per source-wide convention),
+            # Dyn IV-V (KAEMḤEST), Dyn V (most bare-named officials),
+            # Dyn V-VI (MAR-H12 Khuit, SAQ-PtahshepsesI). Late
+            # Period / Saite intrusions explicitly excluded (post-OK
+            # out of MVP scope). Per Gemini PR #251 round-3 feedback,
+            # `"3"` removed from the allowed set since no chunk-28
+            # row carries dynasty "3" (the late-Dyn-III range-tail
+            # collapses to "4").
+            assert row["dynasty"] in {"4", "5", "6"}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.

@@ -966,7 +966,9 @@
   },
   "MAR5|occupant_alt_names": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 449 (chunk-27a). PM headword: `KHAʿBAUSOKAR ... ḤETHES`. The second all-caps name `Ḥethes` is the asserted good-name (Egyptian *rn nfr*) alt per source-wide convention chunks 8-25 (G 2378 Senezemib Meḥi, G 2381 Meryptaḥʿankh Nekhebu, JKR-Sonb I, etc.). Reconciled occupant_name = `Khaʿbausokar` (2/1 majority from agents B+C); occupant_alt_names = [`Ḥethes`] preserves PM's asserted alt with underdot-Ḥ on ḥ-root (single-underdot per source-wide 44-vs-6 majority). Codex P2 review on PR #249 (inline comment id=3256467739) flagged the earlier override (empty list, which assumed agent A's compound occupant_name survived merge) as data-integrity loss; updated to source-faithful alt-name preservation.",
-    "value": ["Ḥethes"]
+    "value": [
+      "Ḥethes"
+    ]
   },
   "MAR7|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 450 (chunk-27a). Candidates 1 and 3 agree on title text \"Prophet of Horus, etc.\" and differ only in their object-catalog addenda (drum+statue entries); those addenda are dropped per source-wide convention chunks 8-26. Candidate 2 alone adds \"Sm³-t³\" qualifier to Horus — not supported by the 2-agent majority on this title string; treating as agent over-read. Selecting title+dating minimal form from candidates 1/3 consensus.",
@@ -1257,5 +1259,99 @@
   "MAR88|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 489 (chunk-27b). Candidate 1 is shortest-minimal: title cluster + dating + wife clause. Candidates 2 and 3 append false-door and statue object-catalog (Cairo CG 1392, CG 64, CG 48) — dropped per source-wide convention chunks 8-27a. Candidate 3 uses en-dash ('V–VI'); candidate 1 uses hyphen ('V-VI') — hyphen retained per prior-chunk convention. Selecting candidate 1.",
     "value": "Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance."
+  },
+  "LS14|notes_from_pm": {
+    "value": "Overseer of the Treasury, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Middle Dyn. V or later. Wife, Nubka, Royal acquaintance.",
+    "rationale": "PM III.2 printed p. 494; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'LS 14. KAIEMḤESED,' headword-prefix — dropped per convention. Candidate B uses bare Reʿ/Neferirkareʿ (no macron). Candidate C uses PM-faithful macron Rēʿ/Neferirkarēʿ and omits the headword prefix. Selecting C: no headword + macron form."
+  },
+  "LS5|notes_from_pm": {
+    "value": "Treasurer of the God in the two boats, Overseer of the expedition, Prophet of Rēʿ in the Sun-temple of Neferirkarēʿ, etc. Middle Dyn. V or later. Wife, Mertiotes, Prophetess of Ḥatḥor Mistress of the Sycamore, etc.",
+    "rationale": "PM III.2 printed p. 492; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'LS 5. SESHEMU,' headword-prefix — dropped per convention. Candidate B uses bare Reʿ/Neferirkareʿ (no macron). Candidate C uses PM-faithful macron Rēʿ/Neferirkarēʿ and omits headword. Selecting C."
+  },
+  "LS6|notes_from_pm": {
+    "value": "Chief of various Great Estates (mainly in the Delta), Chief of a funerary estate of Snefru in the Letopolite nome, Director of waʿb-priests, etc. Early Dyn. IV. Plan XLIX. Parents, Inpuemʿankh, Judge and Scribe, and Nebsent.",
+    "rationale": "PM III.2 printed p. 493; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'LS 6. METHEN,' headword-prefix — dropped. Candidate A and B both render 'nome' as 'name' (OCR error). Candidate B renders waʿb as 'warb' (OCR error). Candidate C correctly reads 'nome' and 'waʿb'. Selecting C: no headword + correct 'nome' + correct waʿb."
+  },
+  "MAR-B15|notes_from_pm": {
+    "value": "Overseer of the granary, etc. Middle Dyn. V or later. Lower part of false-door.",
+    "rationale": "PM III.2 printed p. 491; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'B 15. WERKAPTAḤ,' headword-prefix (dropped) but retains topographic anchor 'Lower part of false-door.' Candidate B includes 'MARIETTE, Mastabas, p. 108, with plan of chapel.' museum citation (dropped per convention) but also retains anchor. Candidate C is shortest but drops the topographic anchor entirely. Constructed value: title + dating + topographic anchor, no headword, no Mariette citation."
+  },
+  "MAR-B2|notes_from_pm": {
+    "value": "Prophetess of Neith, Ḥatḥor Mistress of the Sycamore, and Khufu, etc. Dyn. IV. False-door.",
+    "rationale": "PM III.2 printed p. 490; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'B 2. ḤETEPḤERES,' headword-prefix (dropped). Candidates A and B both include Mariette Mastabas pp. 90-1 citation (dropped per convention). 'False-door' is a topographic anchor — retained. Candidate C drops 'False-door' entirely. Constructed value: title + dating + topographic anchor, no headword, no Mariette citation."
+  },
+  "MAR-B3|co_occupant_roles": {
+    "value": [
+      "Wife (almost certainly), mitrt"
+    ],
+    "rationale": "PM III.2 printed p. 490; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Agent A uses 'rḫt-nsw' (royal acquaintance) which appears to be an OCR confusion with 'mitrt' (a different title). Agents B and C agree on 'mitrt' (B drops it for brevity; C renders as 'Wife, mitrt' without uncertainty qualifier). The uncertainty qualifier '(almost certainly)' is present in all three agents' notes_from_pm and should be preserved. Constructed: 'Wife (almost certainly), mitrt' — uncertainty qualifier from PM + correct title from agents B/C."
+  },
+  "MAR-B3|notes_from_pm": {
+    "value": "Overseer of waʿb-priests of Peribsen, and ḥa-servants of Send, in the Necropolis, etc. Dyn. IV. Wife (almost certainly), Khentetka, mitrt.",
+    "rationale": "PM III.2 printed p. 490; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'B 3. SHERY,' headword-prefix (dropped) and uses 'rḫt-nsw' (likely OCR error for 'mitrt') and 'ka-servants' (should be 'ḥa-servants'). Candidate B drops headword but renders waʿb as 'warb' and ḥa as 'ha' (OCR errors). Candidate C: no headword, correct 'waʿb' and 'ḥa-servants' and 'mitrt'. Selecting C."
+  },
+  "MAR-B7|co_occupants": {
+    "value": [
+      "Ḥatḥormnefer"
+    ],
+    "rationale": "PM III.2 printed p. 490; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. SUBSTANTIVE DISAGREEMENT — three agents give three readings of the wife's name: A 'Ḥatḥormḥer' (Ḥer suffix), B 'Ḥatḥormnufer' (mnufer), C 'Ḥatḥormnefer' (mnefer). FLAGGED for egyptologist review against printed p. 490. Selecting C 'Ḥatḥormnefer' as interim: Ḥatḥor-m-nefer is the standard onomastic pattern (Ḥatḥor + preposition m + adjective nefer); 'mnufer' is a plausible variant; 'Ḥatḥormḥer' (different root) is potentially an OCR error. Egyptologist should verify."
+  },
+  "MAR-B7|notes_from_pm": {
+    "value": "Judge and Overseer of scribes, etc. Dyn. IV(?). Wife, Ḥatḥormnefer.",
+    "rationale": "PM III.2 printed p. 490; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'B 7. SETHU [II],' headword-prefix (dropped) and uses contested name 'Ḥatḥormḥer'. Candidate B drops headword but includes 'MARIETTE, Mastabas, pp. 97-8, with plan of chapel.' museum citation (dropped per convention). Candidate C is shortest-minimal: no headword, no citation, uses 'Ḥatḥormnefer' (per co_occupants override MAR-B7|co_occupants). Selecting C with wife name consistent with co_occupants override."
+  },
+  "MAR-D70|notes_from_pm": {
+    "value": "Chief Justice and Vizier, Inspector of waʿb-priests in the Pyramid of Userkaf, etc. Middle Dyn. V or later. Wife, Ḥetepḥeres. Plan XLIX.",
+    "rationale": "PM III.2 printed p. 491; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'D 70 [LS 15]. PEḤNUIKA,' headword-prefix (dropped). Candidate B drops headword but renders waʿb as 'warb' (OCR error). Candidate C: no headword, correct 'waʿb'. Selecting C."
+  },
+  "MAR-H12|notes_from_pm": {
+    "value": "King's sole adorner (woman). Dyn. V-VI. False-door, in Cairo Mus. CG 1448.",
+    "rationale": "PM III.2 printed p. 492; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'H 12. KHUIT,' headword-prefix (dropped) but retains 'False-door, in Cairo Mus. CG 1448.' (topographic anchor + current-location). Candidate B: no headword, retains the false-door anchor but appends 'Drum.' (additional object-type addendum, dropped per convention). Candidate C: no headword, drops all. Constructed value: title + dating + false-door topographic anchor, no headword, no 'Drum.'."
+  },
+  "SAQ-AnonNearNo39|notes_from_pm": {
+    "value": "NAME UNKNOWN. Early Dyn. V. Near No. 39 [C 16]. Statues including 'Cairo Scribe' (Cairo Mus. CG 36) and man seated (Cairo Mus. CG 35).",
+    "rationale": "PM III.2 printed p. 499; source-wide convention chunks 8-27b; chunk-28. Pre-merge agent-jsonl normalisation (documented in reconciliation-agent report): agent B emitted `SAQ-AnonNearNo39EarlyDynV` with a redundant dating suffix in the tomb_id; the reconciliation agent normalised B's tomb_id to `SAQ-AnonNearNo39` to match A+C's convention BEFORE merge ran. POST-normalisation, all three agents contribute a notes_from_pm candidate and the 1/1/1 tie surfaces in the merge-disagreements log. Candidates A and C differ in formatting (A: 'in Cairo Mus. CG 36, and man seated in Cairo Mus. CG 35'; C: parenthetical '(Cairo Mus. CG 36) and man seated (Cairo Mus. CG 35)') and B has a third minor-variant. The museum accession numbers are minimal content for this anonymous tomb (no name, no title — the statues ARE the identification). Selecting C: parenthetical style is cleaner and marginally shorter. Gemini P2 review on PR #251 (inline comment id=3260369833) flagged the earlier rationale wording as contradicting the post-normalisation merge-disagreements log; updated to acknowledge the pre-merge tomb_id normalisation step."
+  },
+  "SAQ-Harwer|notes_from_pm": {
+    "value": "Judge and Inspector of scribes. Dyn. V-VI. Name and title from lintel.",
+    "rationale": "PM III.2 printed p. 497; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'S 912. ḤARWER,' headword-prefix (dropped). 'Name and title from lintel.' is a source-attribution note identifying how the occupant is known — minimal content, retained. Candidate B: no headword, includes source attribution. Candidate C: no headword, drops source attribution. Selecting B."
+  },
+  "SAQ-Heknunebti|notes_from_pm": {
+    "value": "King's daughter, King's sole adorner, etc. Probably Dyn. V.",
+    "rationale": "PM III.2 printed p. 497; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'S 909. ḤEKNUNEBTI,' headword-prefix (dropped). Candidate B drops headword but appends 'Block, deceased seated, in Cairo Mus. JE 45239.' (museum-object citation, dropped per convention). Candidate C: no headword, no museum citation — title + dating only. Selecting C."
+  },
+  "SAQ-Hemakhti|notes_from_pm": {
+    "value": "Royal chamberlain. Dyn. V-VI. Name and title from drum of south false-door.",
+    "rationale": "PM III.2 printed p. 497; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'S 911. ḤEMAKHTI,' headword-prefix (dropped). Candidates A and B both include 'MARIETTE, Mastabas, p. 457 [H 14].' Mariette citation (dropped per convention). 'Name and title from drum of south false-door' is a source-attribution note (kept). Candidate C: no headword, drops all including source attribution. Constructed: title + dating + source attribution, no headword, no Mariette citation."
+  },
+  "SAQ-Nekhensu|notes_from_pm": {
+    "value": "Lector-priest, Tenant of the Pyramid of Teti, etc. Dyn. VI.",
+    "rationale": "PM III.2 printed p. 496; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'S 906. NEKHENSU,' headword-prefix (dropped). Candidates A and B both include 'South false-door, in Cairo Mus. JE 39865.' — a museum-location citation for the object (dropped per convention). Candidate C: no headword, no museum citation — title + dating only. Selecting C."
+  },
+  "SAQ-Nikauhor|notes_from_pm": {
+    "value": "Prophet of Rēʿ in the Sun-temple of Userkaf, Prophet of Userkaf, etc. Probably late Dyn. V. Wife, Sekhemḥatḥor, Prophetess of Ḥatḥor Mistress of the Sycamore and Neith North of her Wall, etc.",
+    "rationale": "PM III.2 printed p. 498; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'S 915. NIKAUḤOR,' headword-prefix (dropped) and uses PM-faithful macron Rēʿ/Neferirkarēʿ. Candidate B: no headword, bare Reʿ/Neferirkareʿ (no macron). Candidate C: no headword, macron Rēʿ. Selecting C."
+  },
+  "SAQ-NuferCraftsman|co_occupant_roles": {
+    "value": [
+      "Wife (probably), mitrt"
+    ],
+    "rationale": "PM III.2 printed p. 502; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. The co_occupants field has a 2/1 majority of ['My'] (not ['My', 'Iywat']), so the roles list must contain exactly one entry for wife My. Agent A renders the title as 'rḫt-nsw' (royal acquaintance) — appears to be an OCR conflation with a more common title; agents B and C agree on 'mitrt'. Agent B drops the title entirely. Agent C adds a second entry for 'Iywat, Butcher of the slaughterhouse' — dropped because co_occupants majority excludes Iywat. Selecting ['Wife (probably), mitrt']: uncertainty qualifier from PM + correct title per agents B/C."
+  },
+  "SAQ-NuferCraftsman|notes_from_pm": {
+    "value": "Craftsman. Dyn. IV or later. Wife (probably), My, mitrt. Position unknown.",
+    "rationale": "PM III.2 printed p. 502; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'NUFER,' headword-prefix (dropped) and uses 'rḫt-nsw' (per co_occupant_roles override: 'mitrt' preferred) and appends 'Parts of two false-doors with names of deceased, wife, and Iywat...' body-prose addendum (dropped per convention). Candidate B: no headword, 'mitrt', drops false-door addendum, retains 'Position unknown.' (topographic anchor). Candidate C: no headword, 'mitrt', retains both false-door body and position. Selecting B: title + dating + wife clause with mitrt + topographic anchor, no body addendum."
+  },
+  "SAQ-Pehernufer|notes_from_pm": {
+    "value": "Overseer of all works of the King, Chief of the estate of Meresʿankh, Prophet of Thoth, Sopt, Ḥeḳet, etc. Temp. Snefru or Khufu. Plan L. Excavated by Nestor l'Hôte before 1840. Position unknown.",
+    "rationale": "PM III.2 printed p. 502; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'PEḤERNUFER,' headword-prefix (dropped) and is otherwise correct. Candidate B: no headword but introduces two OCR errors: 'Mereresʿankh' (doubled 're') and 'Ḥeẓet' (z for ḳ). Candidate C: no headword, correct 'Meresʿankh' and 'Ḥeḳet'. Selecting C."
+  },
+  "SAQ-Ptahmakheru|notes_from_pm": {
+    "value": "Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of Rēʿ in the Sun-temple of Neuserrēʿ, etc. End of Dyn. V or later. False-door.",
+    "rationale": "PM III.2 printed p. 498; source-wide convention chunks 8-27b; chunk-28. Pre-merge agent-jsonl normalisation (documented in reconciliation-agent report): agent A emitted `SAQ-Ptahmackheru` (OCR-degraded `ck` digraph in the name); the reconciliation agent normalised A's tomb_id to `SAQ-Ptahmakheru` to match B+C's convention BEFORE merge ran. POST-normalisation, all three agents contribute a notes_from_pm candidate. Agent B: PM-faithful topographic anchor 'False-door.' but bare Reʿ/Neferirkareʿ (no macron). Agent C: macron Rēʿ/Neferirkarēʿ per source-wide convention, but drops 'False-door.' topographic anchor. Constructed value: macron form per agent C + 'False-door.' topographic anchor per agent B. Gemini P2 review on PR #251 (inline comment id=3260369837) flagged the earlier rationale wording as contradicting the post-normalisation merge-disagreements log; updated to acknowledge the pre-merge tomb_id normalisation step."
+  },
+  "SAQ-PtahshepsesIDirectorOfCraftsmen|notes_from_pm": {
+    "value": "Greatest of the Directors of craftsmen, Prophet of Ptaḥ and Sokari, etc. Dyn. VI. South of Nos. 37-8 [E 1, 2 and H 3].",
+    "rationale": "PM III.2 printed p. 499; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'PTAḤSHEPSES [I],' headword-prefix (dropped) but otherwise matches C. Candidate B: no headword but appends 'Chapel, painted decoration.' body-prose addendum (dropped per convention). Candidate C: no headword, no addendum — title + dating + topographic anchor only. Selecting C."
   }
 }

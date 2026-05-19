@@ -873,6 +873,35 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("MAR84", "notes_from_pm"),
         ("MAR85", "notes_from_pm"),
         ("MAR88", "notes_from_pm"),
+        # Chunk 28 (§ II.A NORTH OF THE STEP PYRAMID trailing sub-
+        # sections: Other Numbered OK Tombs + Unnumbered OK Tombs):
+        # 22 ties. Predominantly notes_from_pm batch-resolved with
+        # shortest-minimal convention (drop Mariette/museum citation
+        # addenda; retain title+dating+wife+topographic anchor). Plus
+        # MAR-B3 / MAR-B7 / SAQ-NuferCraftsman co_occupants /
+        # co_occupant_roles (wife-clause typing).
+        ("LS5", "notes_from_pm"),
+        ("LS6", "notes_from_pm"),
+        ("LS14", "notes_from_pm"),
+        ("MAR-B2", "notes_from_pm"),
+        ("MAR-B3", "co_occupant_roles"),
+        ("MAR-B3", "notes_from_pm"),
+        ("MAR-B7", "co_occupants"),
+        ("MAR-B7", "notes_from_pm"),
+        ("MAR-B15", "notes_from_pm"),
+        ("MAR-D70", "notes_from_pm"),
+        ("MAR-H12", "notes_from_pm"),
+        ("SAQ-AnonNearNo39", "notes_from_pm"),
+        ("SAQ-Harwer", "notes_from_pm"),
+        ("SAQ-Heknunebti", "notes_from_pm"),
+        ("SAQ-Hemakhti", "notes_from_pm"),
+        ("SAQ-Nekhensu", "notes_from_pm"),
+        ("SAQ-Nikauhor", "notes_from_pm"),
+        ("SAQ-NuferCraftsman", "co_occupant_roles"),
+        ("SAQ-NuferCraftsman", "notes_from_pm"),
+        ("SAQ-Pehernufer", "notes_from_pm"),
+        ("SAQ-Ptahmakheru", "notes_from_pm"),
+        ("SAQ-PtahshepsesIDirectorOfCraftsmen", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
