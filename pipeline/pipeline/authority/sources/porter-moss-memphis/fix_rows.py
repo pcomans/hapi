@@ -2156,6 +2156,77 @@ CHUNK30_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "convention (<Relation>, <title> form)."
         ),
     },
+    # F2 (macron-Ē + transliteration consistency on round-2 Gemini
+    # feedback — PR #253 round-2 inline comments). Five sibling
+    # macron / transliteration issues that the round-1 fix missed
+    # by only targeting the specific rows Gemini called out. The
+    # pattern is the same as round-1: agents A had macron forms, C
+    # had ayin-only or ḫ-variant; tie-break selected C; need to
+    # restore A's macron / ḥ rendering for intra-row + source-wide
+    # convention consistency.
+    ("SAQ-Inpukha", "co_occupants"): {
+        "value": ["Niʿankhrēʿ", "Ḥepetka"],
+        "rationale": (
+            "PM III.2 printed p.691; Gemini PR #253 round-2 review "
+            "(id=3269617055). co_occupants Niʿankhrēʿ macron-Ē "
+            "restored for intra-row consistency with notes_from_pm "
+            "(which already has the macron form per round-1 fix). "
+            "2/3 majority chose ayin-only; this post-merge "
+            "correction restores macron per source-wide convention "
+            "chunks 19-29."
+        ),
+    },
+    ("SAQ-Werirniptah", "notes_from_pm"): {
+        "value": (
+            "WERIRNIPTAḤ, Prophet of Rēʿ and Ḥatḥor in the "
+            "Sun-temple of Neferirkarēʿ, Judge and Overseer of "
+            "scribes, etc. Temp. Neferirkarēʿ or later. Plan LXVI. "
+            "Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. "
+            "Mus. 718."
+        ),
+        "rationale": (
+            "PM III.2 printed p.699; Gemini PR #253 round-2 review "
+            "(id=3269617072). Switch to agent A's macron forms "
+            "(Rēʿ, Neferirkarēʿ) preserving C's structure (CAPS "
+            "prefix + Plan LXVI + Chapel. + museum). Same pattern "
+            "as round-1 macron restoration on SAQ-Gegi/SAQ-Inpukha/"
+            "etc. — round-1 missed SAQ-Werirniptah."
+        ),
+    },
+    ("MAR-D67", "notes_from_pm"): {
+        "value": (
+            "Supervisor of prophets of the Sun-temple and Pyramid "
+            "of Neuserrēʿ, Prophet of the Sun-temple of Neferirkarēʿ, "
+            "etc. Temp. Neuserrēʿ or later."
+        ),
+        "rationale": (
+            "PM III.2 printed p.691; Gemini PR #253 round-2 review "
+            "(id=3269617077). Switch from B's ayin-only royal "
+            "names to macron-Ē forms (Neuserrēʿ, Neferirkarēʿ) "
+            "per source-wide chunks 19-29 convention. Preserves "
+            "B's no-prefix structure (MAR-letter-coded rows drop "
+            "the bracketed letter-code from notes per chunk-28 "
+            "convention)."
+        ),
+    },
+    ("SAQ-Shepses", "notes_from_pm"): {
+        "value": (
+            "SHEPSES, Overseer of the Great Estate, Overseer of "
+            "hairdressers of the Great House, etc. Probably Dyn. "
+            "VI. Wife (probably), Nefertemʿaḥ, Prophetess of "
+            "Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6."
+        ),
+        "rationale": (
+            "PM III.2 printed p.698; Gemini PR #253 round-2 review "
+            "(id=3269617069). Wife's name transliteration "
+            "consistency: co_occupants tie-break selected `ḥ` "
+            "(emphatic h) per agent B; notes had `ḫ` (velar "
+            "fricative) per agent A. Internal inconsistency "
+            "within the same row. Correction: notes_from_pm uses "
+            "B's `Nefertemʿaḥ` ḥ-form for intra-row consistency. "
+            "Preserves A's CAPS prefix + topographic anchor."
+        ),
+    },
 }
 
 

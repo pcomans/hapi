@@ -1137,7 +1137,7 @@ SAQ-Sankhenptah (Sʿankhenptaḥ):
   notes_from_pm: a="East and north-east of Pyramid of Isesi. Director of the washing of hands, Director of the msktt and mʿnḏt barks. Dyn. VI. Map LXVII [1]. Offering-list and texts on three walls, Maspero, Trois années de fouilles, in Mém. Miss. i, pp. 205-7 [9]." | b="East and north-east of Pyramid of Isesi. SʿANKHENPTAḤ, Director of the washing of hands, Director of the msktt and mʿnḏt barks. Dyn. VI. Map LXVII [1]. Offering-list and texts on three walls." | c="East and north-east of Pyramid of Isesi. SʿANKHENPTAḤ, Director of the washing of hands, Director of the msktt and mrnḫt barks. Dyn. VI. Offering-list and texts on three walls."  → chose "East and north-east of Pyramid of Isesi. SʿANKHENPTAḤ, Director of the washing of hands, Director of the msktt and mʿnḏt barks. Dyn. VI. Map LXVII [1]. Offering-list and texts on three walls."
 
 SAQ-SankhenptahPtahshepses (Sʿankhenptaḥ):
-  co_occupant_roles: a=["Joint occupant"] | b=[] | c=["Joint occupant, Director of nsd-mns metal-workers of the Great House"]  → chose ["Joint occupant"]
+  co_occupant_roles: a=["Joint occupant"] | b=[] | c=["Joint occupant, Director of nsd-mns metal-workers of the Great House"]  → chose ["Joint occupant, Director of nsd-ms metal-workers of the Great House"]
   co_occupants: a=["Ptaḥshepses"] | b=[] | c=["Ptaḥshepses"]  → chose ["Ptaḥshepses"]
   is_joint_burial: a=true | b=false | c=true  → chose true
   notes_from_pm: a="SʿANKHENPTAḤ — PTAḤSHEPSES, Director of nsd-ms metal-workers of the Great House. Dyn. VI." | b="SʿANKHENPTAḤ — PTAḤSHEPSES, Director of nsd-mš metal-workers of the Great House. Dyn. VI." | c="SʿANKHENPTAḤ - PTAḤSHEPSES, Director of nsd-mns metal-workers of the Great House. Dyn. VI."  → chose "SʿANKHENPTAḤ — PTAḤSHEPSES, Director of nsd-ms metal-workers of the Great House. Dyn. VI."
@@ -2245,6 +2245,7 @@ Reviewer-cited row corrections:
   SAQ-HerimeruMerery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor in all her places, and of Neith, etc."]
   SAQ-Iarti.co_occupants: [] → ["Iy"]
   SAQ-Iarti.co_occupant_roles: [] → ["Father (probably)"]
+  SAQ-Inpukha.co_occupants: ["Niʿankhreʿ", "Ḥepetka"] → ["Niʿankhrēʿ", "Ḥepetka"]
   SAQ-IputI.occupant_name: "Iput I" → "Iput"
   SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
   SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
@@ -2272,9 +2273,11 @@ Reviewer-cited row corrections:
   SAQ-Pernezu.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
   SAQ-Seshemnufer.co_occupants: [] → ["Ḳerfet"]
   SAQ-Seshemnufer.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
+  SAQ-Shepses.notes_from_pm: "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḫ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6." → "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḥ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6."
   SAQ-TetiNeferheres.notes_from_pm: "Teti and Neferḥeres, Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown." → "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown."
   SAQ-ThefuPtahhotp.occupant_alt_names: ["Ptaḥḥotp"] → []
   SAQ-Washiptah.co_occupants: ["Ḥeneni"] → []
+  SAQ-Werirniptah.notes_from_pm: "WERIRNIPTAḤ, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, Judge and Overseer of scribes, etc. Temp. Neferirkareʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718." → "WERIRNIPTAḤ, Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Judge and Overseer of scribes, etc. Temp. Neferirkarēʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718."
   JKR-Ankh.notes_from_pm: "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." → "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt."
   JKR-Inpuhotp.co_occupants: ["Senezem"] → ["Ither", "Sabt", "Senezem"]
   JKR-Inpuhotp.co_occupant_roles: ["Royal acquaintance"] → ["Parent, Prophet of Neuserrēʿ, etc.", "Parent, Royal acquaintance", "Wife"]
@@ -2314,3 +2317,4 @@ Reviewer-cited row corrections:
   SAQH1.co_occupant_roles: [] → ["Mother", "Wife", "Wife"]
   MAR-C25.co_occupants: [] → ["Ḥetep"]
   MAR-C25.co_occupant_roles: [] → ["Son, Judge and Inspector of scribes"]
+  MAR-D67.notes_from_pm: "Supervisor of prophets of the Sun-temple and Pyramid of Neuserreʿ, Prophet of the Sun-temple of Neferirkareʿ, etc. Temp. Neuserreʿ or later." → "Supervisor of prophets of the Sun-temple and Pyramid of Neuserrēʿ, Prophet of the Sun-temple of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later."

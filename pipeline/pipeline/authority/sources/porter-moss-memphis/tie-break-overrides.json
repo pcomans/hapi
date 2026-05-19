@@ -1640,9 +1640,9 @@
   },
   "SAQ-SankhenptahPtahshepses|co_occupant_roles": {
     "value": [
-      "Joint occupant"
+      "Joint occupant, Director of nsd-ms metal-workers of the Great House"
     ],
-    "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A: ['Joint occupant']. B: [] (empty). C: ['Joint occupant, Director of nsd-mns metal-workers of the Great House'] (conflates role with title). The co_occupant_roles field should contain the role descriptor only; the title belongs in notes_from_pm. A's 'Joint occupant' is the minimal correct role label. B loses the joint-burial relationship. C conflates role and title. Selecting A."
+    "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A: ['Joint occupant']. B: [] (empty). C: ['Joint occupant, Director of nsd-mns metal-workers of the Great House'] (conflates role with title). Per source-wide chunks 8-29 + MAR-C25 / SAQ-Nufer / TPC-Kaemhest precedents, co_occupant_roles MUST follow `<Relation>, <title>` form. Selecting C's emission (correcting `nsd-mns` typo to `nsd-ms` per PM source: the headword reads `nsd-ms metal-workers`). Gemini PR #253 round-2 review (id=3269617061) flagged the earlier A-selection as inconsistent with the MAR-C25 round-1 fix's role-with-title format."
   },
   "SAQ-Shepses|co_occupants": {
     "value": [
