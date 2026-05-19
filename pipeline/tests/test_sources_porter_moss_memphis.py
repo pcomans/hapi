@@ -559,6 +559,30 @@ CHUNK27A_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+CHUNK28_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.A NORTH OF THE STEP PYRAMID, trailing sub-sections.
+    # Physical pp.130-147 / printed pp.490-507. 27 rows split across two
+    # sub-banners:
+    #   `OTHER NUMBERED OLD KINGDOM TOMBS` — (a) MARIETTE letter-coded
+    #   (6 MAR-<letter><num>, distinct from chunk-27a/b's MAR<N>
+    #   Nos. 1-88 series), (b) LEPSIUS (4 LS-numbered), (c) QUIBELL
+    #   (1 SAQ-Perneb bare-named).
+    #   `UNNUMBERED EARLY DYNASTIC AND OLD KINGDOM TOMBS` — (a) POSITION
+    #   KNOWN + (b) POSITION UNKNOWN (16 SAQ-<Name> bare-named OK
+    #   officials + 1 anonymous Shape-5 SAQ-AnonNearNo39).
+    # Closes § II.A's Old-Kingdom coverage. Late Period / Ptolemaic /
+    # Roman + Finds sub-banners on phys pp.143-147 deliberately excluded
+    # per MVP OK scope (chunks 22 / 25 / 26 post-OK deferral convention).
+    "LS5", "LS6", "LS14", "LS16",
+    "MAR-B2", "MAR-B3", "MAR-B7", "MAR-B15", "MAR-D70", "MAR-H12",
+    "SAQ-Akhtia", "SAQ-AnonNearNo39", "SAQ-AnonS920", "SAQ-Harwer",
+    "SAQ-Heknunebti", "SAQ-Hemakhti", "SAQ-KaaperJudge", "SAQ-Kaemhest",
+    "SAQ-Mery", "SAQ-Nekhensu", "SAQ-Nikauhor", "SAQ-NuferCraftsman",
+    "SAQ-Pehernufer", "SAQ-Perneb", "SAQ-Ptahmakheru",
+    "SAQ-PtahshepsesIDirectorOfCraftsmen", "SAQ-TetiNeferheres",
+})
+
+
 CHUNK29_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.H AROUND PYRAMIDS OF PEPY I, MERENRĒʿ I, ISESI +
     # § II.I AROUND PYRAMIDS OF IBI AND PEPY II + MASTABET FARAʿUN.
@@ -586,30 +610,6 @@ CHUNK29_TOMB_IDS: frozenset[str] = frozenset({
     "SAQ-Sankhenptah", "SAQ-Sebkhotp", "SAQ-Seni", "SAQ-SetibtiBebi",
     "SAQ-Shemai", "SAQ-Shenay", "SAQ-Shey", "SAQ-TetiMXV",
     "SAQ-Washiptah",
-})
-
-
-CHUNK28_TOMB_IDS: frozenset[str] = frozenset({
-    # PM III.2 § II.A NORTH OF THE STEP PYRAMID, trailing sub-sections.
-    # Physical pp.130-147 / printed pp.490-507. 27 rows split across two
-    # sub-banners:
-    #   `OTHER NUMBERED OLD KINGDOM TOMBS` — (a) MARIETTE letter-coded
-    #   (6 MAR-<letter><num>, distinct from chunk-27a/b's MAR<N>
-    #   Nos. 1-88 series), (b) LEPSIUS (4 LS-numbered), (c) QUIBELL
-    #   (1 SAQ-Perneb bare-named).
-    #   `UNNUMBERED EARLY DYNASTIC AND OLD KINGDOM TOMBS` — (a) POSITION
-    #   KNOWN + (b) POSITION UNKNOWN (16 SAQ-<Name> bare-named OK
-    #   officials + 1 anonymous Shape-5 SAQ-AnonNearNo39).
-    # Closes § II.A's Old-Kingdom coverage. Late Period / Ptolemaic /
-    # Roman + Finds sub-banners on phys pp.143-147 deliberately excluded
-    # per MVP OK scope (chunks 22 / 25 / 26 post-OK deferral convention).
-    "LS5", "LS6", "LS14", "LS16",
-    "MAR-B2", "MAR-B3", "MAR-B7", "MAR-B15", "MAR-D70", "MAR-H12",
-    "SAQ-Akhtia", "SAQ-AnonNearNo39", "SAQ-AnonS920", "SAQ-Harwer",
-    "SAQ-Heknunebti", "SAQ-Hemakhti", "SAQ-KaaperJudge", "SAQ-Kaemhest",
-    "SAQ-Mery", "SAQ-Nekhensu", "SAQ-Nikauhor", "SAQ-NuferCraftsman",
-    "SAQ-Pehernufer", "SAQ-Perneb", "SAQ-Ptahmakheru",
-    "SAQ-PtahshepsesIDirectorOfCraftsmen", "SAQ-TetiNeferheres",
 })
 
 
