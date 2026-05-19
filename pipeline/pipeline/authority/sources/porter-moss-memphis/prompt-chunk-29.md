@@ -84,7 +84,8 @@ Rule-driven; ~15–30 rows expected (band 12–35). The chunk spans 18 dense pag
 
 ## Dating mappings
 
-- `Temp. Pepy I/Merenrēʿ I/Isesi/Pepy II` → `"6"` (all Dyn VI kings except Isesi who is end Dyn V → `"5"`).
+- `Temp. Isesi` → `"5"` (end of Dyn V).
+- `Temp. Pepy I`, `Temp. Merenrēʿ I`, `Temp. Pepy II` → `"6"`.
 - `Probably Dyn. VI` → `"6"` + `attribution_certainty: "probable"`.
 - `Late Dyn. V or Dyn. VI` → `"6"` (range-tail).
 - `End of Dyn. VI` / `Late Dyn. VI` → `"6"`.
