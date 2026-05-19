@@ -2084,6 +2084,25 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
 # Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
 # correct underdot but was outvoted. Fix per source-wide convention.
+CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 28 — § II.A trailing OK sub-sections.
+    #
+    # F1 (strip redundant headword prefix on SAQ-TetiNeferheres
+    # notes_from_pm): Gemini P2 review on PR #251 (inline comment
+    # id=3260369832). The Shape-4 joint-twin row carries the
+    # PM-literal headword `Teti and Neferḥeres, ` as a prefix in
+    # notes_from_pm, but those two names are already captured in
+    # `occupant_name` and `co_occupants`. Per source-wide
+    # convention (chunks 8-27b: notes_from_pm strips the leading
+    # headword name to avoid duplicating structured-column
+    # content), drop the `Teti and Neferḥeres, ` prefix.
+    ("SAQ-TetiNeferheres", "notes_from_pm"): {
+        "value": "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown.",
+        "rationale": "PM III.2 printed p. 503; Gemini P2 review on PR #251. Strip redundant `Teti and Neferḥeres, ` headword prefix from notes_from_pm — those names live in occupant_name + co_occupants per source-wide convention chunks 8-27b. The 2/1 majority retained the prefix; this correction fires post-merge.",
+    },
+}
+
+
 CHUNK26_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 26 — § II.F AROUND THE PYRAMID-COMPLEX OF UNIS (tail).
     #
@@ -2379,6 +2398,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK24_CORRECTIONS,
     CHUNK25_CORRECTIONS,
     CHUNK26_CORRECTIONS,
+    CHUNK28_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

@@ -1988,6 +1988,7 @@ Reviewer-cited row corrections:
   SAQ-Pernezu.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
   SAQ-Seshemnufer.co_occupants: [] → ["Ḳerfet"]
   SAQ-Seshemnufer.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
+  SAQ-TetiNeferheres.notes_from_pm: "Teti and Neferḥeres, Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown." → "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown."
   SAQ-ThefuPtahhotp.occupant_alt_names: ["Ptaḥḥotp"] → []
   JKR-Ankh.notes_from_pm: "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." → "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt."
   JKR-Inpuhotp.co_occupants: ["Senezem"] → ["Ither", "Sabt", "Senezem"]
