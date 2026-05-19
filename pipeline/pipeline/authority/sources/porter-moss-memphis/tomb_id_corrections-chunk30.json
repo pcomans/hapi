@@ -1,0 +1,68 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-30 (PM III.2 § II.J TOMBS OF POSITION UNKNOWN (a) OLD KINGDOM + small pre-§II.J cluster, printed pp.689-699, phys pp.329-339). Two classes of divergence appear across the three extraction agents: (1) Agent B encoded diacritics into tomb_id descriptors (e.g. SAQ-Inpukhaʿ, SAQ-Kapuptaḥ, SAQ-Kaḥersetef, SAQ-Nikarʿe, etc.) in violation of the ASCII-only SAQ-<TitleCaseName> tomb_id convention established across chunks 22/25/26/28/29; (2) Agent A appended a body-prose descriptor ('Panopolite') into SAQ-IriPanopolite rather than using the bare CAPS headword 'IRI'; (3) Agent A used the bare SAQ-Sankhenptah form (colliding with existing chunk-26 SAQ-Sankhenptah, page 672) for the joint-twin official on p.698, instead of the disambiguated SAQ-SankhenptahPtahshepses form that C used; (4) Agent C used SAQ-NikaureWorks as a shortened form of the Overseer-of-Works Nikaurēʿ (p.697) where A used the full SAQ-NikaureOverseerOfWorks and B used SAQ-NikaurʿeOverseerOfWorks — canonical form is SAQ-NikaureOverseerOfWorks (A's ASCII form). In all cases the canonical form is SAQ-<TitleCaseName> without diacritics, without body-prose suffixes, without cross-chunk collisions. Per pre_merge.py convention: each correction cites PM III.2 2nd ed. 1978/1981 printed page and rationale.",
+  "a|SAQ-IriPanopolite": {
+    "canonical_tomb_id": "SAQ-Iri",
+    "canonical_occupant_name": "Iri",
+    "rationale": "Agent A appended 'Panopolite' from the body-prose title 'Great overlord of the Panopolite nome' into the tomb_id, producing SAQ-IriPanopolite. PM III.2 printed p.689 headword reads 'IRI'. Per SAQ-<TitleCaseName> convention (chunks 22/25/26/28/29), the descriptor is the CAPS headword rendered as TitleCase only — body-prose attributes belong in notes_from_pm, not the tomb_id. Agents B and C both emitted SAQ-Iri (2/3 canonical form)."
+  },
+  "a|SAQ-Sankhenptah": {
+    "canonical_tomb_id": "SAQ-SankhenptahPtahshepses",
+    "canonical_occupant_name": "Sʿankhenptaḥ",
+    "rationale": "Agent A emitted SAQ-Sankhenptah for the chunk-30 joint-twin official SʿANKHENPTAḤ — PTAḤSHEPSES (PM III.2 printed p.698). However SAQ-Sankhenptah is already occupied in reconciled.jsonl by a different official (Director of the washing of hands, p.672, chunk-26). Cross-chunk ID collision. The canonical disambiguated form is SAQ-SankhenptahPtahshepses — the 'Ptahshepses' suffix is the co-name component of the joint headword 'SʿANKHENPTAḤ — PTAḤSHEPSES', uniquely identifying this joint-twin official on p.698 and not colliding with the p.672 single-occupant SAQ-Sankhenptah. Agent C emitted SAQ-SankhenptahPtahshepses (canonical ASCII form); agent B emitted SAQ-SʿankhenptaḥPtaḥshepses (diacritic form, normalised separately below)."
+  },
+  "b|SAQ-Inpukhaʿ": {
+    "canonical_tomb_id": "SAQ-Inpukha",
+    "canonical_occupant_name": "Inpukhaʿ",
+    "rationale": "Agent B encoded the ʿayin diacritic from the occupant name into the tomb_id, producing SAQ-Inpukhaʿ. PM III.2 printed p.691 headword reads 'INPUKHAʿ'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only title-cased letters; diacritics belong in occupant_name, not the tomb_id. Agents A and C both emitted SAQ-Inpukha (2/3 canonical ASCII form)."
+  },
+  "b|SAQ-Kapuptaḥ": {
+    "canonical_tomb_id": "SAQ-Kapuptah",
+    "canonical_occupant_name": "Kapuptaḥ",
+    "rationale": "Agent B encoded the ḥ diacritic from the occupant name into the tomb_id, producing SAQ-Kapuptaḥ. PM III.2 printed p.693 headword reads 'KAPUPTAḤ'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only; diacritics belong in occupant_name. Agents A and C both emitted SAQ-Kapuptah (2/3 canonical ASCII form)."
+  },
+  "b|SAQ-Kaḥersetef": {
+    "canonical_tomb_id": "SAQ-Kahersetef",
+    "canonical_occupant_name": "Kaḥersetef",
+    "rationale": "Agent B encoded the ḥ diacritic into the tomb_id, producing SAQ-Kaḥersetef. PM III.2 printed p.693 headword reads 'KAḤERSETEF'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agents A and C both emitted SAQ-Kahersetef (2/3 canonical ASCII form)."
+  },
+  "b|SAQ-Nikarʿe": {
+    "canonical_tomb_id": "SAQ-Nikare",
+    "canonical_occupant_name": "Nikarēʿ",
+    "rationale": "Agent B encoded the ʿayin diacritic into the tomb_id, producing SAQ-Nikarʿe. PM III.2 printed p.696 headword reads 'NIKARĒʿ'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agents A and C both emitted SAQ-Nikare (2/3 canonical ASCII form)."
+  },
+  "b|SAQ-NikaurʿeJudge": {
+    "canonical_tomb_id": "SAQ-NikaureJudge",
+    "canonical_occupant_name": "Nikaurēʿ",
+    "rationale": "Agent B encoded the ʿayin diacritic into the tomb_id, producing SAQ-NikaurʿeJudge. PM III.2 printed p.697 headword reads 'NIKAURĒʿ' (Judge and Inspector of book-keepers). Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agents A and C both emitted SAQ-NikaureJudge (2/3 canonical ASCII form)."
+  },
+  "b|SAQ-NikaurʿeOverseerOfWorks": {
+    "canonical_tomb_id": "SAQ-NikaureOverseerOfWorks",
+    "canonical_occupant_name": "Nikaurēʿ",
+    "rationale": "Agent B encoded the ʿayin diacritic into the tomb_id, producing SAQ-NikaurʿeOverseerOfWorks. PM III.2 printed p.697 headword reads 'NIKAURĒʿ' (Overseer of works of the King). Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agent A emitted SAQ-NikaureOverseerOfWorks (canonical ASCII form); agent C emitted SAQ-NikaureWorks (shortened, corrected separately below)."
+  },
+  "b|SAQ-Niʿankhnesut": {
+    "canonical_tomb_id": "SAQ-Niankhnesut",
+    "canonical_occupant_name": "Niʿankhnesut",
+    "rationale": "Agent B encoded the ʿayin diacritic into the tomb_id, producing SAQ-Niʿankhnesut. PM III.2 printed p.694 headword reads 'NIʿANKHNESUT'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agents A and C both emitted SAQ-Niankhnesut (2/3 canonical ASCII form)."
+  },
+  "b|SAQ-SʿankhenptaḥPtaḥshepses": {
+    "canonical_tomb_id": "SAQ-SankhenptahPtahshepses",
+    "canonical_occupant_name": "Sʿankhenptaḥ",
+    "rationale": "Agent B encoded diacritics (ʿayin + ḥ) into the tomb_id, producing SAQ-SʿankhenptaḥPtaḥshepses. PM III.2 printed p.698 headword reads 'SʿANKHENPTAḤ — PTAḤSHEPSES'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agent C emitted SAQ-SankhenptahPtahshepses (2/3 canonical ASCII form, once Agent A's collision is resolved via a|SAQ-Sankhenptah correction above)."
+  },
+  "b|SAQ-Tepemʿankh": {
+    "canonical_tomb_id": "SAQ-Tepemankh",
+    "canonical_occupant_name": "Tepemʿankh",
+    "rationale": "Agent B encoded the ʿayin diacritic into the tomb_id, producing SAQ-Tepemʿankh. PM III.2 printed p.698 headword reads 'TEPEMʿANKH'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agents A and C both emitted SAQ-Tepemankh (2/3 canonical ASCII form)."
+  },
+  "b|SAQ-Werirniptaḥ": {
+    "canonical_tomb_id": "SAQ-Werirniptah",
+    "canonical_occupant_name": "Werirniptaḥ",
+    "rationale": "Agent B encoded the ḥ diacritic into the tomb_id, producing SAQ-Werirniptaḥ. PM III.2 printed p.699 headword reads 'WERIRNIPTAḤʿ'. Per SAQ-<TitleCaseName> convention, tomb_id descriptors use ASCII-only. Agents A and C both emitted SAQ-Werirniptah (2/3 canonical ASCII form)."
+  },
+  "c|SAQ-NikaureWorks": {
+    "canonical_tomb_id": "SAQ-NikaureOverseerOfWorks",
+    "canonical_occupant_name": "Nikaurēʿ",
+    "rationale": "Agent C shortened the disambiguation suffix, producing SAQ-NikaureWorks instead of the full SAQ-NikaureOverseerOfWorks. PM III.2 printed p.697 headword reads 'NIKAURĒʿ, Overseer of works of the King'. Per SAQ-<TitleCaseName> disambiguation convention (chunks 22/25/26/28/29), the suffix should reflect the occupant's primary title role in full; shortened forms are non-canonical because they can be ambiguous. Agent A emitted SAQ-NikaureOverseerOfWorks (canonical form); agent B emitted SAQ-NikaurʿeOverseerOfWorks (normalised to canonical ASCII form via b|SAQ-NikaurʿeOverseerOfWorks entry above)."
+  }
+}

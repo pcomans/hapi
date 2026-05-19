@@ -955,6 +955,47 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-TetiMXV", "notes_from_pm"),
         ("SAQ-Washiptah", "co_occupant_roles"),
         ("SAQ-Washiptah", "notes_from_pm"),
+        # Chunk 30 (§ II.J TOMBS OF POSITION UNKNOWN (a) OLD
+        # KINGDOM + pre-§II.J small cluster): 29 tie-break overrides
+        # resolved. High agent consensus (all three emitted 31 rows
+        # with consistent 9 MAR-letter-coded / 22 SAQ- split). Main
+        # disagreement surface was notes_from_pm CAPS-prefix
+        # presence (B always drops, A+C retain) + macron-Ē vs
+        # ayin-only renderings of royal names. Plus three non-notes
+        # ties: SAQ-Nikare co_occupants (Re-compound macron),
+        # SAQ-SankhenptahPtahshepses co_occupant_roles (joint twin
+        # role typing), SAQ-Shepses co_occupants (Nefertemʿaḥ
+        # rendering). Per Constitutional Rule 2 NO SYNTHESIS, all
+        # values are strict subsets of an agent emission.
+        ("MAR-B8", "notes_from_pm"),
+        ("MAR-B14", "notes_from_pm"),
+        ("MAR-C12", "notes_from_pm"),
+        ("MAR-C25", "notes_from_pm"),
+        ("MAR-C27", "notes_from_pm"),
+        ("MAR-D67", "notes_from_pm"),
+        ("MAR-D68", "notes_from_pm"),
+        ("MAR-D69", "notes_from_pm"),
+        ("MAR-E16", "notes_from_pm"),
+        ("SAQ-Gegi", "notes_from_pm"),
+        ("SAQ-Inpukha", "notes_from_pm"),
+        ("SAQ-Iri", "notes_from_pm"),
+        ("SAQ-IrukaptahGranary", "notes_from_pm"),
+        ("SAQ-Iti", "notes_from_pm"),
+        ("SAQ-Kaemthenent", "notes_from_pm"),
+        ("SAQ-Kapuptah", "notes_from_pm"),
+        ("SAQ-Katep", "notes_from_pm"),
+        ("SAQ-MaruBebi", "notes_from_pm"),
+        ("SAQ-Niankhnesut", "notes_from_pm"),
+        ("SAQ-Nikare", "co_occupants"),
+        ("SAQ-Nikare", "notes_from_pm"),
+        ("SAQ-NikaureJudge", "notes_from_pm"),
+        ("SAQ-NikaureOverseerOfWorks", "notes_from_pm"),
+        ("SAQ-SankhenptahPtahshepses", "co_occupant_roles"),
+        ("SAQ-SankhenptahPtahshepses", "notes_from_pm"),
+        ("SAQ-Sethu", "notes_from_pm"),
+        ("SAQ-Shepses", "co_occupants"),
+        ("SAQ-Shepses", "notes_from_pm"),
+        ("SAQ-Werirniptah", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

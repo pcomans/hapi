@@ -1367,7 +1367,11 @@
     "rationale": "PM III.2 printed p.675; chunk-29; 1/1 tie (C absent). Paired with dynasty override above. ʿAnkhnespepy's tomb dates to Dyn VI (wife of Pepy II); sub_period=null is correct. Agent A's sub_period='1st Int. Period' conflates the queen's own date with that of her son's reign. Selecting B: sub_period=null."
   },
   "SAQ-Ankhnespepy|source_citation": {
-    "value": {"edition": "PM III.2 2nd ed. 1978/1981", "page": 675, "section": "II"},
+    "value": {
+      "edition": "PM III.2 2nd ed. 1978/1981",
+      "page": 675,
+      "section": "II"
+    },
     "rationale": "PM III.2 printed p.675 vs p.676; chunk-29; 1/1 tie (C absent). Agent B cites p.675; agent A cites p.676. The ʿAnkhnespepy headword appears in PM III.2 § II.I (Around Pyramids of Ibi and Pepy II, specifically in the Iput II enclosure sub-banner). PM's Iput II enclosure entries run on pp.675-676; B's p.675 is where the Iput II entries begin. Without access to the printed source for direct verification, B's page citation is preferred as it aligns with B's more source-faithful notes form (CAPS name, correct wording). Flagged for egyptologist verification against printed p.675."
   },
   "SAQ-Ankhnespepy|notes_from_pm": {
@@ -1395,11 +1399,17 @@
     "rationale": "PM III.2 printed p.679; chunk-29; 1/1/1 tie. Agents B and C include CAPS ḤARSHEF-SHEMA; A omits. B and C are nearly identical in content (both include same description); selecting B as canonical form per source-wide convention. The double-underdot form 'Ḥarshef-Shema' (occupant_name field) vs 'ḤARSHEF-SHEMA' in notes — both ḥ-roots get underdot per source-wide convention."
   },
   "SAQ-IartiMerenreI|co_occupants": {
-    "value": ["Merti", "Merenrēʿ-sonb"],
+    "value": [
+      "Merti",
+      "Merenrēʿ-sonb"
+    ],
     "rationale": "PM III.2 printed p.674; chunk-29; 1/1/1 tie. PM headword block: 'Wife, Merti, King's sole adorner, etc.' + 'Lintel with deceased (twice), wife and son Merenrēʿ-sonb, Lector-priest.' The son Merenrēʿ-sonb is named on the chapel lintel and is legitimately a named co-occupant (depicted with the deceased). Khnemti (agent C) is described as facing the group 'with Khnemti (text concerning his appointment as ḥa-servant)' — Khnemti is referenced in an appointment-text, NOT as a tomb co-occupant. Agent A captures only Merti (wife); agent B captures Merti + Merenrēʿ-sonb (son on lintel); agent C over-extends to Khnemti. Selecting B: wife + son from chapel lintel."
   },
   "SAQ-IartiMerenreI|co_occupant_roles": {
-    "value": ["Wife, King's sole adorner, etc.", "Son, Lector-priest"],
+    "value": [
+      "Wife, King's sole adorner, etc.",
+      "Son, Lector-priest"
+    ],
     "rationale": "PM III.2 printed p.674; chunk-29; 1/1/1 tie. Length-coupled with co_occupants override above. Agent A: wife only. Agent B: wife + son (correct pair). Agent C: wife + son + Khnemti as 'Ha-servant' (over-extended). Selecting B's two-element list, paired with co_occupants ['Merti', 'Merenrēʿ-sonb']."
   },
   "SAQ-IartiMerenreI|notes_from_pm": {
@@ -1443,7 +1453,10 @@
     "rationale": "PM III.2 printed p.683; chunk-29; 1/1/1 tie. Agent B: CAPS KHUBAWY (without alias notation); agent C: CAPS KHUBAWY (also written variant) (with alias comment). Agent A: title-case with variant glyph form. Selecting B: CAPS name, standard form, shorter than C. The alias notation in C ('also written variant') is a body-prose interpretive note, not a verbatim PM headword clause."
   },
   "SAQ-Mehi|co_occupant_roles": {
-    "value": ["Subsidiary burial chamber (a), Prophetess of Ḥatḥor, etc.", "Subsidiary burial chamber (b), Prophetess of Ḥatḥor, etc."],
+    "value": [
+      "Subsidiary burial chamber (a), Prophetess of Ḥatḥor, etc.",
+      "Subsidiary burial chamber (b), Prophetess of Ḥatḥor, etc."
+    ],
     "rationale": "PM III.2 printed p.678; chunk-29; 1/1/1 tie. PM text: 'Subsidiary burial chambers: (a) Neit, Prophetess of Ḥatḥor, etc. — texts of wooden coffin; (b) Shemait, Prophetess of Ḥatḥor, etc. — lintel and jambs of doorway...' Three candidates: (A) empty [] (drops co-occupants); (B) ['Subsidiary burial chamber, Prophetess of Ḥatḥor, etc.', 'Subsidiary burial chamber, Prophetess of Ḥatḥor, etc.'] (correct sub-letter prefix but omits (a)/(b) disambiguation); (C) ['Prophetess of Ḥatḥor, etc.; subsidiary burial chamber (a), texts...', 'Prophetess of Ḥatḥor, etc.; subsidiary burial chamber (b)...'] (correct (a)/(b) letter + over-extended with object descriptions). Constructing: 'Subsidiary burial chamber (a), Prophetess of Ḥatḥor, etc.' + 'Subsidiary burial chamber (b), Prophetess of Ḥatḥor, etc.' — preserves PM's sub-letter designation (a/b), sub-chamber prefix, title, and `, etc.` per source-wide convention. Both Neit and Shemait have the same title cluster 'Prophetess of Ḥatḥor, etc.' with underdot-Ḥ per source-wide convention. Synthesis of B (prefix structure) and C (sub-letter disambiguation)."
   },
   "SAQ-Mehi|notes_from_pm": {
@@ -1513,5 +1526,128 @@
   "SAQ-Washiptah|notes_from_pm": {
     "value": "East of Pyramid of Pepy II. M.IV. WASHIPTAḤ, Overseer of the Two Cool Chambers of the Great House, etc. End of Dyn. VI. Fragment of re-used false-door of ʿAnkhnespepy, Prophetess of Ḥatḥor, Dyn. VI.",
     "rationale": "PM III.2 printed p.681; chunk-29; 1/1/1 tie. Candidates: (A) drops CAPS WASHIPTAḤ + appends `Burial chamber:` body-prose with object catalog (coffin, dish JE 49857, etc.) + subsidiary-burial Ḥeneni clause; (B) CAPS WASHIPTAḤ + same body trailer; (C) CAPS WASHIPTAḤ + alt parenthetical-Dyn-VI rendering. Selecting strict subset of agent B's emission: CAPS headword + title cluster + dating + the `Fragment of re-used false-door of ʿAnkhnespepy, Prophetess of Ḥatḥor, Dyn. VI.` clause (B-verbatim — preserves the noteworthy re-used-false-door anomaly per chunks 8-28 family-clause inclusion rule). Body-prose burial-chamber object catalog + subsidiary-burial Ḥeneni clause stripped per source-wide shortest-minimal convention. Gemini PR #252 review sweep-flagged the earlier value: it (a) called ʿAnkhnespepy `Princess` instead of agents' `Prophetess of Ḥatḥor` (synthesis introducing data not in candidates), (b) duplicated WASHIPTAḤ's own title `Overseer of the Two Cool Chambers of the Great House, etc.` onto ʿAnkhnespepy (also synthesized). Restored to B-verbatim. The hallucinated Ḥeneni co_occupant flagged in chunk-29 also stems from B+C interpreting the `Subsidiary burial chamber: Ḥeneni` body-prose as a co-occupant; this is handled separately via CHUNK29_CORRECTIONS dropping co_occupants/co_occupant_roles."
+  },
+  "MAR-B14|notes_from_pm": {
+    "value": "Inspector of scribes of the house of the master of the largesse, etc. Late Dyn. V or Dyn. VI. Wife (no name) and daughter Duatnub, Prophetess of Ḥatḥor, etc.",
+    "rationale": "PM III.2 printed p.690; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. Agent A prepends CAPS AKHI name but retains statue-group body-prose (Cairo Mus. CG 44). Agent C prepends 'B 14. AKHI,' letter-code + CAPS prefix (non-canonical for MAR rows per chunk-28). Agent B drops prefix, retains family clause (wife + daughter Duatnub) without the statue-group object detail. Per chunk-28 MAR notes_from_pm convention (B2/B3/B7/B15/D70/H12 precedents), CAPS name and letter-code prefix are dropped from notes_from_pm. B retains the essential family clause. Selecting B."
+  },
+  "MAR-B8|notes_from_pm": {
+    "value": "Overseer of craftsmen, Prophet of Ptaḥ and Sokari, etc. Middle Dyn. V or later.",
+    "rationale": "PM III.2 printed p.689; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. Agent A prepends CAPS KHUENPTAḤ; C prepends 'B 8. KHUENPTAḤ,' letter-code + CAPS; B drops prefix. Content identical across all three minus prefix. Per chunk-28 MAR convention, prefix dropped. Selecting B."
+  },
+  "MAR-C12|notes_from_pm": {
+    "value": "King's adorner, Overseer of sculptors, etc. Middle Dyn. V or later. Wife, Thentet, Royal acquaintance.",
+    "rationale": "PM III.2 printed p.690; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. Agent A prepends CAPS RAʿḤOTP; C prepends 'C 12. RAʿḤOTP,' letter-code + CAPS; B drops prefix. Content otherwise identical including family clause. Per chunk-28 MAR convention, prefix dropped. Selecting B."
+  },
+  "MAR-C25|notes_from_pm": {
+    "value": "KAEMREḤU, Overseer of butchers of the slaughterhouses of the Great House, etc. Middle Dyn. V or later. Lintel dedicated by son Ḥetep, Judge and Inspector of scribes.",
+    "rationale": "PM III.2 printed p.690; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. Agent C prepends 'C 25. KAEMREḤU,' + adds 'Doorway lintel with offering-texts,' body-prose before son reference. Agent B drops prefix AND drops the son Ḥetep family clause entirely. Agent A prepends only CAPS KAEMREḤU (no letter-code) and retains son Ḥetep family clause without architectural body-prose. The son Ḥetep family clause has scholarly value and should be retained per shortest-minimal (retain family clauses). B's omission makes B inferior. Selecting A — CAPS prefix minor violation vs losing the son reference."
+  },
+  "MAR-C27|notes_from_pm": {
+    "value": "KAIḤAP, Overseer of ḥa-servants, Judge and Inspector of scribes, etc. Dyn. V. Name also as Kaiḥap-wer.",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. Agent C prepends 'C 27. KAIḤAP,' + adds 'Ointment-slab gives name as Kaiḥap-wer' (body-prose object reference). Agent B drops prefix AND drops the alt-name reference. Agent A prepends CAPS KAIḤAP (no letter-code) and retains alt-name 'Name also as Kaiḥap-wer' without body-prose slab reference. Alt-name is a scholarly cross-reference; B's omission makes B inferior. Selecting A — retains alt-name without body-prose object reference."
+  },
+  "MAR-D67|notes_from_pm": {
+    "value": "Supervisor of prophets of the Sun-temple and Pyramid of Neuserreʿ, Prophet of the Sun-temple of Neferirkareʿ, etc. Temp. Neuserreʿ or later.",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. Agent A prepends CAPS NEKHT-SAS + macron forms (Neuserrēʿ, Neferirkarēʿ); C prepends 'D 67. NEKHT-SAS,' letter-code + CAPS, ayin-only royal names; B drops prefix, ayin-only royal names. B and C share ayin-only rendering; B canonical per chunk-28 (no prefix). Selecting B."
+  },
+  "MAR-D68|notes_from_pm": {
+    "value": "(woman). Dyn. V-VI.",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A prepends CAPS KHNEMT; C prepends 'D 68. KHNEMT,' letter-code + CAPS; B drops prefix. Content identical minus prefix. Per chunk-28 MAR convention, prefix dropped. Selecting B."
+  },
+  "MAR-D69|notes_from_pm": {
+    "value": "Dyn. VI or 1st Int. Period.",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A prepends CAPS SHEDABD; C prepends 'D 69. SHEDABD,' letter-code + CAPS; B drops prefix. Content identical minus prefix. Per chunk-28 MAR convention, prefix dropped. Selecting B."
+  },
+  "MAR-E16|notes_from_pm": {
+    "value": "Chief Justice and Vizier, Inspector of prophets of the mert-temple of Pepy I, etc. End of Dyn. VI or 1st Int. Period.",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A prepends CAPS SESI; C prepends 'E 16. SESI,' letter-code + CAPS; B drops prefix. Content identical minus prefix. Per chunk-28 MAR convention, prefix dropped. Selecting B."
+  },
+  "SAQ-Gegi|notes_from_pm": {
+    "value": "GEGI, Inspector of prophets of the Pyramid of Merenreʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)",
+    "rationale": "PM III.2 printed p.690; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS GEGI prefix (non-canonical for SAQ rows). A and C both retain CAPS GEGI; differ only in A's macron 'Merenrēʿ' vs C's ayin-only 'Merenreʿ'. C is a strict substring of A minus the macron; full scholarly content preserved. Selecting C — CAPS prefix, ayin-only Merenreʿ consistent with majority rendering in this chunk."
+  },
+  "SAQ-Inpukha|notes_from_pm": {
+    "value": "INPUKHAʿ, Overseer of King's adorners of the Great House, etc. Dyn. V. Parents, Niʿankhreʿ and Ḥepetka (tomb F 1).",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS INPUKHAʿ prefix. A and C both retain CAPS prefix; differ only in A's macron 'Niʿankhrēʿ' vs C's ayin-only 'Niʿankhreʿ' in parent name. Content otherwise identical. Selecting C — CAPS prefix, ayin-only rendering."
+  },
+  "SAQ-Iri|notes_from_pm": {
+    "value": "IRI, Great overlord of the Panopolite nome, Lector-priest, etc. End of Dyn. VI or 1st Int. Period. Position not marked on map. About 18 metres north-east of the Pyramid.",
+    "rationale": "PM III.2 printed p.689; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS IRI prefix. A and C both retain CAPS IRI; C appends 'Burial chamber with painted decoration on brick-built walls.' (body-prose room description — dropped per shortest-minimal). A retains topographic anchor without burial-chamber prose. Selecting A — CAPS prefix, topographic anchor, no body-prose room description."
+  },
+  "SAQ-IrukaptahGranary|notes_from_pm": {
+    "value": "IRUKAPTAḤ, Overseer of the granary, Scribe of the royal documents of the granary, Prophet of Reʿ, etc. Late Dyn. V. Berlin (East) Museum. Formerly in Clot Bey Collection.",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS IRUKAPTAḤ prefix and museum references. A and C both retain CAPS prefix + museum references; differ only in A's macron 'Rēʿ' vs C's ayin-only 'Reʿ'. Museum references ('Berlin (East) Museum. Formerly in Clot Bey Collection.') are object-provenance anchors retained per SAQ convention. Selecting C — CAPS prefix, ayin-only Reʿ, museum references retained."
+  },
+  "SAQ-Iti|notes_from_pm": {
+    "value": "ITI, King's wʿb-priest, Judge and Scribe, etc. Dyn. V.",
+    "rationale": "PM III.2 printed p.692; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS ITI prefix and uses 'waʿb-priest' spelling. C adds 'West wall of chapel: two false-doors with estates on jambs and offering-list between them.' (body-prose room description — dropped per shortest-minimal). A retains CAPS prefix, wʿb spelling, no body-prose. Selecting A."
+  },
+  "SAQ-Kaemthenent|notes_from_pm": {
+    "value": "KAEMTHENENT, Judge and Master of the largesse, etc. Dyn. V. Mother, Ḥenutsen, Royal acquaintance. Wife (of deceased rather than of Wetka), Mertiotes. False-door with wife and Wetka, Judge and Elder of the dockyard, on jambs.",
+    "rationale": "PM III.2 printed p.692; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS prefix and simplifies Wetka reference (loses false-door anchor). C has 'False-door, with wife and Wetka,' (comma after door). A has 'False-door with wife and Wetka,' (no comma). False-door reference here is a family-clause anchor naming Wetka's co-presence, not pure body-prose. A and C content nearly identical; A is slightly more minimal. Selecting A."
+  },
+  "SAQ-Kapuptah|notes_from_pm": {
+    "value": "KAPUPTAḤ, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, Prophet of the Pyramid of Zadkareʿ (Isesi), etc. Temp. Isesi or later.",
+    "rationale": "PM III.2 printed p.693; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS KAPUPTAḤ prefix. A and C retain CAPS prefix; differ only in A's macron forms vs C's ayin-only forms. Content otherwise identical. Selecting C — CAPS prefix, ayin-only rendering consistent with majority."
+  },
+  "SAQ-Katep|notes_from_pm": {
+    "value": "KATEP, Overseer of works of the King, Director of King's wʿb-priests, Boundary official (rḏ-tȝš) of the northern settlement, Prophet of Khufu, etc. Probably Dyn. V. Parents (possibly), Katep and Tepemnefert (tomb, Bibl. iii.2 52). Wife (probably) Ḥetepḥeres, Royal acquaintance. Perhaps from here (or Giza).",
+    "rationale": "PM III.2 printed p.692; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS KATEP prefix and uses 'rs-tȝš' for boundary-official transliteration (different hieroglyphic rendering). A uses 'rḏ' (truncated). C uses 'rḏ-tȝš' (full). Family clauses identical across all three. CAPS prefix canonical for SAQ rows. C has CAPS + full transliteration + family clauses. Selecting C."
+  },
+  "SAQ-MaruBebi|notes_from_pm": {
+    "value": "MARU BEBI, Overseer of tenants of the Great House, Scribe of a boat's side, Honoured by Merenreʿ I, etc. Dyn. VI. Burial chamber. In Brussels, Mus. Roy. E.2243.",
+    "rationale": "PM III.2 printed p.693; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B uses 'MARU BEBI.' (full-stop after name, non-canonical comma-vs-period) and drops museum reference. A has 'Merenrēʿ I' (macron) + museum reference. C has 'Merenreʿ I' (ayin-only) + museum reference + 'Burial chamber.' anchor. Museum reference retained per SAQ convention for scattered-object citations. Selecting C — comma separator, ayin-only Merenreʿ, museum reference, burial chamber anchor."
+  },
+  "SAQ-Niankhnesut|notes_from_pm": {
+    "value": "NIʿANKHNESUT, Count, Overlord of Nekheb, Director of ḥaḥau-boats, etc. Early Dyn. VI. Blocks. Many formerly in Hirsch Colln.",
+    "rationale": "PM III.2 printed p.694; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIʿANKHNESUT prefix and uses 'ḳaḳau-boats'. A uses 'ḫaḫau-boats'. C uses 'ḥaḥau-boats'. All three differ on boat-type transliteration. A and C both retain Hirsch Collection reference; B drops it. C's ḥaḥau rendering is the standard Egyptological form for this vessel type. Selecting C — CAPS prefix, ḥaḥau rendering, Hirsch Collection reference retained."
+  },
+  "SAQ-Nikare|notes_from_pm": {
+    "value": "NIKARĒʿ, Inspector of scribes of the granary, Prophet of Rēʿ in the Sun-temple of Neuserrēʿ, etc. Temp. Neuserrēʿ or later. Wife, Nikaunub, Royal acquaintance. Son ʿAnkhmaʿrēʿ, Overseer of the granary.",
+    "rationale": "PM III.2 printed p.696; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKARĒʿ prefix. A and C retain CAPS prefix; C adds 'Right jamb of false-door with deceased and' before son reference (body-prose architectural detail — dropped per shortest-minimal). A retains family clause (son ʿAnkhmaʿrēʿ) without architectural body-prose; macron forms retained. Selecting A — CAPS prefix, macron royal names, family clause without architectural body-prose."
+  },
+  "SAQ-NikaureJudge|notes_from_pm": {
+    "value": "NIKAURĒʿ, Judge and Inspector of book-keepers, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, etc. Temp. Neferirkareʿ or later. Mother (from blocks with offering-list), Renpetnefert. Wife (from false-doors), Iḥat, Prophetess of Ḥatḥor, etc.",
+    "rationale": "PM III.2 printed p.697; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKAURĒʿ prefix. A and C identical except A macron forms (Rēʿ, Neferirkarēʿ) vs C ayin-only. Family clause identical. Selecting C — CAPS prefix, ayin-only rendering."
+  },
+  "SAQ-NikaureOverseerOfWorks|notes_from_pm": {
+    "value": "NIKAURĒʿ, Overseer of works of the King, Prophet of the Pyramid of Zadkareʿ (Isesi). Temp. Isesi or later.",
+    "rationale": "PM III.2 printed p.697; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKAURĒʿ prefix. A and C identical except A macron 'Zadkarēʿ' vs C 'Zadkareʿ'. Selecting C — CAPS prefix, ayin-only rendering."
+  },
+  "SAQ-SankhenptahPtahshepses|notes_from_pm": {
+    "value": "SʿANKHENPTAḤ — PTAḤSHEPSES, Director of nsd-ms metal-workers of the Great House. Dyn. VI.",
+    "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. All three retain CAPS joint-name prefix. Differ only in hieroglyphic term: A 'nsd-ms', B 'nsd-mš', C 'nsd-mns'. OCR ambiguity on Egyptian transliteration. A 'nsd-ms' is shortest per shortest-minimal. A also uses em-dash separator (matching B); C uses hyphen-minus. Selecting A."
+  },
+  "SAQ-Sethu|notes_from_pm": {
+    "value": "SETHU, Greatest of the directors of craftsmen, etc. Probably Dyn. V.",
+    "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS SETHU prefix. C adds 'Double-statue, deceased seated, with wife kneeling.' (body-prose object description — dropped per shortest-minimal). A retains CAPS SETHU, no body-prose. Selecting A."
+  },
+  "SAQ-Shepses|notes_from_pm": {
+    "value": "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḫ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6.",
+    "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS SHEPSES prefix and spells wife 'Nefertemʿaḥ'. A retains CAPS prefix, spells 'Nefertemʿaḫ' (kh variant). C retains CAPS prefix, spells 'Nefertemʿa' (truncated — OCR drop of final consonant). Wife name ending: A=ḫ (velar fricative), B=ḥ (emphatic h), C=a (truncated). Cannot synthesize; must pick one agent's emission. CAPS prefix required for SAQ; only A and C have it. C's wife name is truncated. Selecting A — CAPS prefix, ḫ rendering accepted as valid variant over C's truncation."
+  },
+  "SAQ-Werirniptah|notes_from_pm": {
+    "value": "WERIRNIPTAḤ, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, Judge and Overseer of scribes, etc. Temp. Neferirkareʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718.",
+    "rationale": "PM III.2 printed p.699; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS WERIRNIPTAḤ prefix; B and C both include 'Plan LXVI.' (cartographic reference, 2/3 majority for retention). A drops Plan LXVI and uses 'Chapel in Brit. Mus. 718.' (inline). B and C both have 'Chapel. In Brit. Mus. 718.' (separate sentences). CAPS prefix canonical for SAQ rows. C has CAPS prefix + Plan LXVI + wife + museum in B/C form. Selecting C."
+  },
+  "SAQ-Nikare|co_occupants": {
+    "value": [
+      "Nikaunub",
+      "ʿAnkhmaʿrēʿ"
+    ],
+    "rationale": "PM III.2 printed p.696; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A: ['Nikaunub', 'ʿAnkhmaʿrēʿ'] (macron+ʿ). B: ['Nikaunub', 'ʿAnkhmaʿre'] (no macron, no final ʿ). C: ['Nikaunub', 'ʿAnkhmaʿreʿ'] (no macron, final ʿ). The son ʿAnkhmaʿrēʿ shares the -rēʿ (Sun-god Rēʿ) terminal element. A's macron form is the most complete Egyptological rendering. Selecting A."
+  },
+  "SAQ-SankhenptahPtahshepses|co_occupant_roles": {
+    "value": [
+      "Joint occupant"
+    ],
+    "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A: ['Joint occupant']. B: [] (empty). C: ['Joint occupant, Director of nsd-mns metal-workers of the Great House'] (conflates role with title). The co_occupant_roles field should contain the role descriptor only; the title belongs in notes_from_pm. A's 'Joint occupant' is the minimal correct role label. B loses the joint-burial relationship. C conflates role and title. Selecting A."
+  },
+  "SAQ-Shepses|co_occupants": {
+    "value": [
+      "Nefertemʿaḥ"
+    ],
+    "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie on wife's name spelling. A: ['Nefertemʿaḫ'] (kh variant). B: ['Nefertemʿaḥ'] (h-dot). C: ['Nefertemʿa'] (truncated — OCR drop). B's ḥ is the standard Egyptological rendering for this terminal element; C is truncated (error). Although B drops CAPS prefix in notes_from_pm, B's co_occupants list value is the best rendering of this name. Selecting B."
   }
 }
