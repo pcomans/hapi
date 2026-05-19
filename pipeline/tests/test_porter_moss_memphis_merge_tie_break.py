@@ -902,6 +902,59 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-Pehernufer", "notes_from_pm"),
         ("SAQ-Ptahmakheru", "notes_from_pm"),
         ("SAQ-PtahshepsesIDirectorOfCraftsmen", "notes_from_pm"),
+        # Chunk 29 (§ II.H + § II.I AROUND PYRAMIDS OF PEPY I /
+        # MERENRĒʿ I / ISESI / IBI / PEPY II): 40 ties resolved.
+        # High agent variance from Jéquier's N./M. numbered cluster
+        # (Pepy II cemetery 1933-1940 excavations) — Agent A: 45
+        # rows; Agent B: 35 (conservative, dropped 9 anonymous
+        # Shape-5 N./M. numbered tombs without named occupants);
+        # Agent C: 43 rows with broader Shape-5 emission. Per
+        # Constitutional Rule 2, 17 rows dropped pre-merge (9
+        # A-anonymous + 8 C-only named) — no silent first-seen-pick
+        # on 1/0/0 agent-presence ties. Remaining 36 rows reconciled
+        # via notes_from_pm shortest-minimal + dynasty/source_citation
+        # majority + SAQ-Ankhnespepy queen + Royal Family contested
+        # disambiguators.
+        ("SAQ-Ankhnebef", "notes_from_pm"),
+        ("SAQ-Ankhnespepy", "dynasty"),
+        ("SAQ-Ankhnespepy", "notes_from_pm"),
+        ("SAQ-Ankhnespepy", "source_citation"),
+        ("SAQ-Ankhnespepy", "sub_period"),
+        ("SAQ-Anu", "notes_from_pm"),
+        ("SAQ-Biti", "notes_from_pm"),
+        ("SAQ-DegemMerypepy", "notes_from_pm"),
+        ("SAQ-Deshri", "notes_from_pm"),
+        ("SAQ-HarshefShema", "notes_from_pm"),
+        ("SAQ-IartiMerenreI", "co_occupant_roles"),
+        ("SAQ-IartiMerenreI", "co_occupants"),
+        ("SAQ-IartiMerenreI", "notes_from_pm"),
+        ("SAQ-IbiHeneni", "notes_from_pm"),
+        ("SAQ-Ihy", "notes_from_pm"),
+        ("SAQ-ImameryreImapepy", "notes_from_pm"),
+        ("SAQ-IniTepemkau", "notes_from_pm"),
+        ("SAQ-Ipi", "notes_from_pm"),
+        ("SAQ-ItiKhentkaus", "notes_from_pm"),
+        ("SAQ-KhabaukhnumBiu", "notes_from_pm"),
+        ("SAQ-Khnemu", "notes_from_pm"),
+        ("SAQ-Khubawy", "notes_from_pm"),
+        ("SAQ-Mehi", "co_occupant_roles"),
+        ("SAQ-Mehi", "notes_from_pm"),
+        ("SAQ-Nebu", "notes_from_pm"),
+        ("SAQ-NeferkareNakhtKhetuiHetep", "notes_from_pm"),
+        ("SAQ-NihebsedNeferkare", "notes_from_pm"),
+        ("SAQ-Nipepy", "notes_from_pm"),
+        ("SAQ-PepyankhSethu", "notes_from_pm"),
+        ("SAQ-RaherkaIpi", "notes_from_pm"),
+        ("SAQ-Sankhenptah", "notes_from_pm"),
+        ("SAQ-Sebkhotp", "notes_from_pm"),
+        ("SAQ-Seni", "notes_from_pm"),
+        ("SAQ-SetibtiBebi", "notes_from_pm"),
+        ("SAQ-Shemai", "notes_from_pm"),
+        ("SAQ-Shenay", "notes_from_pm"),
+        ("SAQ-Shey", "notes_from_pm"),
+        ("SAQ-TetiMXV", "notes_from_pm"),
+        ("SAQ-Washiptah", "co_occupant_roles"),
+        ("SAQ-Washiptah", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

@@ -559,6 +559,36 @@ CHUNK27A_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+CHUNK29_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.H AROUND PYRAMIDS OF PEPY I, MERENRĒʿ I, ISESI +
+    # § II.I AROUND PYRAMIDS OF IBI AND PEPY II + MASTABET FARAʿUN.
+    # Physical pp.311-328 / printed pp.671-688. 36 rows (11 § II.H +
+    # 25 § II.I). Late OK officials clustered around the late-Dyn-V
+    # and Dyn-VI royal pyramids of South Saqqâra: priestly clientele
+    # of Pepy I/Merenrēʿ I/Isesi (§ II.H), then Ibi (Dyn VIII
+    # transitional), Pepy II, and Jéquier's 1933-1940 N./M.
+    # numbered tomb clusters. SAQ-IartiMerenreI and SAQ-TetiMXV
+    # disambiguators avoid cross-chunk collisions with chunk-25
+    # SAQ-Iarti (Unis pyramid priest) and chunk-5 SAQ-Teti (King
+    # Teti). 17 Jéquier numbered tombs dropped (9 anonymous Shape-5
+    # via Agent A + 8 Agent C-only named) per Constitutional Rule 2
+    # (no silent first-seen-pick on agent-presence disagreement;
+    # deferred to Agent B's conservative scope).
+    "SAQ-Ankhnebef", "SAQ-Ankhnespepy", "SAQ-Anu", "SAQ-Biti",
+    "SAQ-DegemMerypepy", "SAQ-Deshri", "SAQ-HarshefShema",
+    "SAQ-IartiMerenreI", "SAQ-IbiHeneni", "SAQ-Ihy",
+    "SAQ-ImameryreImapepy", "SAQ-IniTepemkau", "SAQ-Ipi",
+    "SAQ-ItiKhentkaus", "SAQ-KhabaukhnumBiu", "SAQ-Khnemu",
+    "SAQ-Khubawy", "SAQ-Mehi", "SAQ-Nebu",
+    "SAQ-NeferkareNakhtKhetuiHetep", "SAQ-Neferkhu",
+    "SAQ-Nemtiemzeref", "SAQ-NihebsedNeferkare", "SAQ-Nipepy",
+    "SAQ-PepyankhSethu", "SAQ-PtahankhuIti", "SAQ-RaherkaIpi",
+    "SAQ-Sankhenptah", "SAQ-Sebkhotp", "SAQ-Seni", "SAQ-SetibtiBebi",
+    "SAQ-Shemai", "SAQ-Shenay", "SAQ-Shey", "SAQ-TetiMXV",
+    "SAQ-Washiptah",
+})
+
+
 CHUNK28_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.A NORTH OF THE STEP PYRAMID, trailing sub-sections.
     # Physical pp.130-147 / printed pp.490-507. 27 rows split across two
@@ -678,6 +708,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
     | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
+    | CHUNK29_TOMB_IDS
 )
 
 
@@ -923,6 +954,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK28_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK29_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -937,7 +970,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS | CHUNK29_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -1005,6 +1038,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 468 <= page <= 489, f"{row['tomb_id']} page {page} outside chunk-27b [468, 489]"
         elif row["tomb_id"] in CHUNK28_TOMB_IDS:
             assert 490 <= page <= 507, f"{row['tomb_id']} page {page} outside chunk-28 [490, 507]"
+        elif row["tomb_id"] in CHUNK29_TOMB_IDS:
+            assert 671 <= page <= 688, f"{row['tomb_id']} page {page} outside chunk-29 [671, 688]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1157,6 +1192,14 @@ def test_cemetery_by_chunk() -> None:
             # sections (Other numbered OK tombs + Unnumbered OK tombs).
             # Same cemetery descriptor as chunks 27a/b.
             assert row["cemetery"] == "North of the Step Pyramid", row
+        elif row["tomb_id"] in CHUNK29_TOMB_IDS:
+            # Chunk 29: § II.H + § II.I. Two cemetery descriptors split
+            # by sub-banner — Pepy I/Merenrēʿ I/Isesi block vs Ibi/Pepy
+            # II block.
+            assert row["cemetery"] in {
+                "Around Pyramids of Pepy I, Merenrēʿ I, and Isesi",
+                "Around Pyramids of Ibi and Pepy II",
+            }, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1363,6 +1406,13 @@ def test_dynasty_assignments() -> None:
             # (range-tail → "4"); most rows Dyn V; MAR82 Meresʿankh
             # perhaps Isesi → Dyn V. All OK only.
             assert row["dynasty"] in {"4", "5", "6", None}, row
+        elif row["tomb_id"] in CHUNK29_TOMB_IDS:
+            # Chunk 29 § II.H + § II.I: Late OK officials around the
+            # Pepy I / Merenrēʿ I / Isesi / Ibi / Pepy II pyramids.
+            # Predominantly Dyn V tail and Dyn VI; some 1st Int.
+            # Period sub_period rows (Ankhnespepy queen, Neferkhu);
+            # range-tail `End of Dyn. VI or 1st Int. Period` → "6".
+            assert row["dynasty"] in {"5", "6", None}, row
         elif row["tomb_id"] in CHUNK28_TOMB_IDS:
             # Chunk 28 § II.A trailing sub-sections: Dyn IV (MAR-B2
             # Ḥetepḥeres, MAR-B3 Shery, MAR-B7 Sethu [II], plus the
