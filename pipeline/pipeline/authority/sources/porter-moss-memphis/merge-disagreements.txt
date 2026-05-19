@@ -1957,6 +1957,7 @@ Reviewer-cited row corrections:
   SAQ-Ankhirptah.notes_from_pm: "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥatḥor, etc." → "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥathor, etc."
   SAQ-BiaIrery.co_occupants: [] → ["Idut"]
   SAQ-BiaIrery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor"]
+  SAQ-Hemakhti.tomb_aliases: ["S 911"] → ["H 14", "S 911"]
   SAQ-HerimeruMerery.co_occupants: [] → ["Wazkaus"]
   SAQ-HerimeruMerery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor in all her places, and of Neith, etc."]
   SAQ-Iarti.co_occupants: [] → ["Iy"]

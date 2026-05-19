@@ -2079,11 +2079,6 @@ CHUNK17_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
-# Chunk-18 (CEMETERY G 7000 LG-numbered terminal cluster). Pre-emptive
-# diacritic + capitalisation fixes for 2/1 agent-majority misses on the
-# underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
-# Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
-# correct underdot but was outvoted. Fix per source-wide convention.
 CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 28 — § II.A trailing OK sub-sections.
     #
@@ -2099,6 +2094,20 @@ CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     ("SAQ-TetiNeferheres", "notes_from_pm"): {
         "value": "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown.",
         "rationale": "PM III.2 printed p. 503; Gemini P2 review on PR #251. Strip redundant `Teti and Neferḥeres, ` headword prefix from notes_from_pm — those names live in occupant_name + co_occupants per source-wide convention chunks 8-27b. The 2/1 majority retained the prefix; this correction fires post-merge.",
+    },
+    # F2 (restore missing Mariette letter-code [H 14] tomb_alias on
+    # SAQ-Hemakhti): Gemini P2 review on PR #251 (inline comment
+    # id=3269120298). PM headword on p.497 reads `S 911. ḤEMAKHTI ...
+    # [H 14]` with both an S-number (Petrie/Quibell) and a Mariette
+    # letter-code cross-reference. Agent C correctly emitted both
+    # aliases `["H 14", "S 911"]`; agents A+B emitted only `["S 911"]`,
+    # outvoting C 2/1. Per chunk-28 prompt rule (`Compound bracketed
+    # cross-references go into tomb_aliases`) the H 14 alias must be
+    # restored. CHUNK28_CORRECTIONS overrides post-merge since no
+    # tie-break fires on a 2/1 majority.
+    ("SAQ-Hemakhti", "tomb_aliases"): {
+        "value": ["H 14", "S 911"],
+        "rationale": "PM III.2 printed p. 497; chunk-28 prompt rule (bracketed cross-references go in tomb_aliases). Agent C had both aliases; A+B 2/1 majority dropped H 14. Gemini P2 review on PR #251 (inline comment id=3269120298) flagged the missing alias. Restored both per source-faithful capture.",
     },
 }
 
@@ -2287,6 +2296,11 @@ CHUNK22_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk-18 (CEMETERY G 7000 LG-numbered terminal cluster). Pre-emptive
+# diacritic + capitalisation fixes for 2/1 agent-majority misses on the
+# underdot-Ḥ ḥ-root convention. Agents A+C voted no underdot on
+# Neferḥetpes / Khufuḥotp / Ḥetephernefert (ḥ-roots); agent B voted
+# correct underdot but was outvoted. Fix per source-wide convention.
 CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     ("LG73", "co_occupants"): {
         "value": ["Neferḥetpes"],
