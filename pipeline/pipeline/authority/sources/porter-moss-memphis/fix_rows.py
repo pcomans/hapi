@@ -2093,7 +2093,14 @@ CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # content), drop the `Teti and Neferḥeres, ` prefix.
     ("SAQ-TetiNeferheres", "notes_from_pm"): {
         "value": "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown.",
-        "rationale": "PM III.2 printed p. 503; Gemini P2 review on PR #251. Strip redundant `Teti and Neferḥeres, ` headword prefix from notes_from_pm — those names live in occupant_name + co_occupants per source-wide convention chunks 8-27b. The 2/1 majority retained the prefix; this correction fires post-merge.",
+        "rationale": (
+            "PM III.2 printed p. 503; Gemini P2 review on PR #251. "
+            "Strip redundant `Teti and Neferḥeres, ` headword prefix "
+            "from notes_from_pm — those names live in occupant_name "
+            "+ co_occupants per source-wide convention chunks 8-27b. "
+            "The 2/1 majority retained the prefix; this correction "
+            "fires post-merge."
+        ),
     },
     # F2 (restore missing Mariette letter-code [H 14] tomb_alias on
     # SAQ-Hemakhti): Gemini P2 review on PR #251 (inline comment
@@ -2107,7 +2114,14 @@ CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # tie-break fires on a 2/1 majority.
     ("SAQ-Hemakhti", "tomb_aliases"): {
         "value": ["H 14", "S 911"],
-        "rationale": "PM III.2 printed p. 497; chunk-28 prompt rule (bracketed cross-references go in tomb_aliases). Agent C had both aliases; A+B 2/1 majority dropped H 14. Gemini P2 review on PR #251 (inline comment id=3269120298) flagged the missing alias. Restored both per source-faithful capture.",
+        "rationale": (
+            "PM III.2 printed p. 497; chunk-28 prompt rule "
+            "(bracketed cross-references go in tomb_aliases). Agent "
+            "C had both aliases; A+B 2/1 majority dropped H 14. "
+            "Gemini P2 review on PR #251 (inline comment "
+            "id=3269120298) flagged the missing alias. Restored both "
+            "per source-faithful capture."
+        ),
     },
 }
 

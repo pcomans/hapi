@@ -1364,14 +1364,18 @@ def test_dynasty_assignments() -> None:
             # perhaps Isesi → Dyn V. All OK only.
             assert row["dynasty"] in {"4", "5", "6", None}, row
         elif row["tomb_id"] in CHUNK28_TOMB_IDS:
-            # Chunk 28 § II.A trailing sub-sections: Dyn III (TETI +
-            # NEFERḤERES `Late Dyn. III or early Dyn. IV` joint twin
-            # → "4" range-tail), Dyn IV (MAR-B2 Ḥetepḥeres, MAR-B3
-            # Shery), Dyn IV-V (KAEMḤEST), Dyn V (most bare-named
-            # officials), Dyn V-VI (MAR-H12 Khuit, SAQ-PtahshepsesI).
-            # Late Period / Saite intrusions explicitly excluded
-            # (post-OK out of MVP scope).
-            assert row["dynasty"] in {"3", "4", "5", "6", None}, row
+            # Chunk 28 § II.A trailing sub-sections: Dyn IV (MAR-B2
+            # Ḥetepḥeres, MAR-B3 Shery, MAR-B7 Sethu [II], plus the
+            # TETI+NEFERḤERES joint twin `Late Dyn. III or early
+            # Dyn. IV` → "4" range-tail per source-wide convention),
+            # Dyn IV-V (KAEMḤEST), Dyn V (most bare-named officials),
+            # Dyn V-VI (MAR-H12 Khuit, SAQ-PtahshepsesI). Late
+            # Period / Saite intrusions explicitly excluded (post-OK
+            # out of MVP scope). Per Gemini PR #251 round-3 feedback,
+            # `"3"` removed from the allowed set since no chunk-28
+            # row carries dynasty "3" (the late-Dyn-III range-tail
+            # collapses to "4").
+            assert row["dynasty"] in {"4", "5", "6"}, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.
