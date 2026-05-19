@@ -2126,6 +2126,39 @@ CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+CHUNK30_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 30 — § II.J TOMBS OF POSITION UNKNOWN (a) OLD KINGDOM.
+    #
+    # F1 (populate son Ḥetep co_occupant on MAR-C25 KAEMREḤU):
+    # Gemini P2 review on PR #253 (inline comment id=3269579355).
+    # PM III.2 p.694 KAEMREḤU headword block has `Lintel dedicated
+    # by son Ḥetep, Judge and Inspector of scribes.` — agents all
+    # captured this in notes_from_pm but left co_occupants empty.
+    # Per source-wide convention chunks 8-29 (family clauses MUST
+    # populate BOTH notes AND co_occupants/co_occupant_roles), add
+    # son Ḥetep with kinship-prefixed role.
+    ("MAR-C25", "co_occupants"): {
+        "value": ["Ḥetep"],
+        "rationale": (
+            "PM III.2 printed p. 694; PM C 25 KAEMREḤU headword: "
+            "`Lintel dedicated by son Ḥetep, Judge and Inspector "
+            "of scribes.` Family clause must populate co_occupants "
+            "per chunks 8-29 convention. Gemini PR #253 review "
+            "(id=3269579355) flagged the empty co_occupants as "
+            "inconsistent with the notes_from_pm content."
+        ),
+    },
+    ("MAR-C25", "co_occupant_roles"): {
+        "value": ["Son, Judge and Inspector of scribes"],
+        "rationale": (
+            "PM III.2 printed p. 694; paired with MAR-C25|co_occupants. "
+            "Kinship role `Son` + title per chunks 8-29 source-wide "
+            "convention (<Relation>, <title> form)."
+        ),
+    },
+}
+
+
 CHUNK29_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 29 — § II.H + § II.I AROUND PYRAMIDS OF PEPY I /
     # MERENRĒʿ I / ISESI / IBI / PEPY II.
@@ -2460,6 +2493,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK26_CORRECTIONS,
     CHUNK28_CORRECTIONS,
     CHUNK29_CORRECTIONS,
+    CHUNK30_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

@@ -1564,20 +1564,20 @@
     "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A prepends CAPS SESI; C prepends 'E 16. SESI,' letter-code + CAPS; B drops prefix. Content identical minus prefix. Per chunk-28 MAR convention, prefix dropped. Selecting B."
   },
   "SAQ-Gegi|notes_from_pm": {
-    "value": "GEGI, Inspector of prophets of the Pyramid of Merenreʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)",
-    "rationale": "PM III.2 printed p.690; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS GEGI prefix (non-canonical for SAQ rows). A and C both retain CAPS GEGI; differ only in A's macron 'Merenrēʿ' vs C's ayin-only 'Merenreʿ'. C is a strict substring of A minus the macron; full scholarly content preserved. Selecting C — CAPS prefix, ayin-only Merenreʿ consistent with majority rendering in this chunk."
+    "value": "GEGI, Inspector of prophets of the Pyramid of Merenrēʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)",
+    "rationale": "PM III.2 printed p.690; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS GEGI prefix. A has macron 'Merenrēʿ', C has ayin-only 'Merenreʿ'. Per chunk-30 prompt + source-wide chunks 19-29 macron-Ē convention (Rēʿ, Merenrēʿ, Saḥurēʿ, Neuserrēʿ, Neferirkarēʿ), selecting A's macron form. Gemini PR #253 review (id=3269579291) flagged the earlier C-selection as contradicting the macron-Ē convention."
   },
   "SAQ-Inpukha|notes_from_pm": {
-    "value": "INPUKHAʿ, Overseer of King's adorners of the Great House, etc. Dyn. V. Parents, Niʿankhreʿ and Ḥepetka (tomb F 1).",
-    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS INPUKHAʿ prefix. A and C both retain CAPS prefix; differ only in A's macron 'Niʿankhrēʿ' vs C's ayin-only 'Niʿankhreʿ' in parent name. Content otherwise identical. Selecting C — CAPS prefix, ayin-only rendering."
+    "value": "INPUKHAʿ, Overseer of King's adorners of the Great House, etc. Dyn. V. Parents, Niʿankhrēʿ and Ḥepetka (tomb F 1).",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS INPUKHAʿ prefix. A has macron 'Niʿankhrēʿ', C ayin-only 'Niʿankhreʿ'. Selecting A per macron-Ē convention chunks 19-29. Gemini PR #253 review (id=3269579313)."
   },
   "SAQ-Iri|notes_from_pm": {
     "value": "IRI, Great overlord of the Panopolite nome, Lector-priest, etc. End of Dyn. VI or 1st Int. Period. Position not marked on map. About 18 metres north-east of the Pyramid.",
     "rationale": "PM III.2 printed p.689; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS IRI prefix. A and C both retain CAPS IRI; C appends 'Burial chamber with painted decoration on brick-built walls.' (body-prose room description — dropped per shortest-minimal). A retains topographic anchor without burial-chamber prose. Selecting A — CAPS prefix, topographic anchor, no body-prose room description."
   },
   "SAQ-IrukaptahGranary|notes_from_pm": {
-    "value": "IRUKAPTAḤ, Overseer of the granary, Scribe of the royal documents of the granary, Prophet of Reʿ, etc. Late Dyn. V. Berlin (East) Museum. Formerly in Clot Bey Collection.",
-    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS IRUKAPTAḤ prefix and museum references. A and C both retain CAPS prefix + museum references; differ only in A's macron 'Rēʿ' vs C's ayin-only 'Reʿ'. Museum references ('Berlin (East) Museum. Formerly in Clot Bey Collection.') are object-provenance anchors retained per SAQ convention. Selecting C — CAPS prefix, ayin-only Reʿ, museum references retained."
+    "value": "IRUKAPTAḤ, Overseer of the granary, Scribe of the royal documents of the granary, Prophet of Rēʿ, etc. Late Dyn. V. Berlin (East) Museum. Formerly in Clot Bey Collection.",
+    "rationale": "PM III.2 printed p.691; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS IRUKAPTAḤ prefix. A has macron 'Rēʿ', C ayin-only 'Reʿ'. Selecting A per macron-Ē convention chunks 19-29. Gemini PR #253 review (id=3269579320)."
   },
   "SAQ-Iti|notes_from_pm": {
     "value": "ITI, King's wʿb-priest, Judge and Scribe, etc. Dyn. V.",
@@ -1588,16 +1588,16 @@
     "rationale": "PM III.2 printed p.692; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS prefix and simplifies Wetka reference (loses false-door anchor). C has 'False-door, with wife and Wetka,' (comma after door). A has 'False-door with wife and Wetka,' (no comma). False-door reference here is a family-clause anchor naming Wetka's co-presence, not pure body-prose. A and C content nearly identical; A is slightly more minimal. Selecting A."
   },
   "SAQ-Kapuptah|notes_from_pm": {
-    "value": "KAPUPTAḤ, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, Prophet of the Pyramid of Zadkareʿ (Isesi), etc. Temp. Isesi or later.",
-    "rationale": "PM III.2 printed p.693; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS KAPUPTAḤ prefix. A and C retain CAPS prefix; differ only in A's macron forms vs C's ayin-only forms. Content otherwise identical. Selecting C — CAPS prefix, ayin-only rendering consistent with majority."
+    "value": "KAPUPTAḤ, Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of the Pyramid of Zadkarēʿ (Isesi), etc. Temp. Isesi or later.",
+    "rationale": "PM III.2 printed p.693; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS KAPUPTAḤ prefix. A has macron forms (Rēʿ, Neferirkarēʿ, Zadkarēʿ), C ayin-only. Selecting A per macron-Ē convention chunks 19-29. Gemini PR #253 review (id=3269579327)."
   },
   "SAQ-Katep|notes_from_pm": {
     "value": "KATEP, Overseer of works of the King, Director of King's wʿb-priests, Boundary official (rḏ-tȝš) of the northern settlement, Prophet of Khufu, etc. Probably Dyn. V. Parents (possibly), Katep and Tepemnefert (tomb, Bibl. iii.2 52). Wife (probably) Ḥetepḥeres, Royal acquaintance. Perhaps from here (or Giza).",
     "rationale": "PM III.2 printed p.692; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS KATEP prefix and uses 'rs-tȝš' for boundary-official transliteration (different hieroglyphic rendering). A uses 'rḏ' (truncated). C uses 'rḏ-tȝš' (full). Family clauses identical across all three. CAPS prefix canonical for SAQ rows. C has CAPS + full transliteration + family clauses. Selecting C."
   },
   "SAQ-MaruBebi|notes_from_pm": {
-    "value": "MARU BEBI, Overseer of tenants of the Great House, Scribe of a boat's side, Honoured by Merenreʿ I, etc. Dyn. VI. Burial chamber. In Brussels, Mus. Roy. E.2243.",
-    "rationale": "PM III.2 printed p.693; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B uses 'MARU BEBI.' (full-stop after name, non-canonical comma-vs-period) and drops museum reference. A has 'Merenrēʿ I' (macron) + museum reference. C has 'Merenreʿ I' (ayin-only) + museum reference + 'Burial chamber.' anchor. Museum reference retained per SAQ convention for scattered-object citations. Selecting C — comma separator, ayin-only Merenreʿ, museum reference, burial chamber anchor."
+    "value": "MARU BEBI, Overseer of tenants of the Great House, Scribe of a boat's side, Honoured by Merenrēʿ I, etc. Dyn. VI. Burial chamber. In Brussels, Mus. Roy. E.2243.",
+    "rationale": "PM III.2 printed p.693; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B uses '.' separator and drops museum reference. A has macron 'Merenrēʿ I', C ayin-only 'Merenreʿ I'. Selecting A's macron rendering per macron-Ē convention chunks 19-29, with C's 'Burial chamber.' anchor + museum reference retained per SAQ scattered-object convention. Gemini PR #253 review (id=3269579335)."
   },
   "SAQ-Niankhnesut|notes_from_pm": {
     "value": "NIʿANKHNESUT, Count, Overlord of Nekheb, Director of ḥaḥau-boats, etc. Early Dyn. VI. Blocks. Many formerly in Hirsch Colln.",
@@ -1608,12 +1608,12 @@
     "rationale": "PM III.2 printed p.696; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKARĒʿ prefix. A and C retain CAPS prefix; C adds 'Right jamb of false-door with deceased and' before son reference (body-prose architectural detail — dropped per shortest-minimal). A retains family clause (son ʿAnkhmaʿrēʿ) without architectural body-prose; macron forms retained. Selecting A — CAPS prefix, macron royal names, family clause without architectural body-prose."
   },
   "SAQ-NikaureJudge|notes_from_pm": {
-    "value": "NIKAURĒʿ, Judge and Inspector of book-keepers, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, etc. Temp. Neferirkareʿ or later. Mother (from blocks with offering-list), Renpetnefert. Wife (from false-doors), Iḥat, Prophetess of Ḥatḥor, etc.",
-    "rationale": "PM III.2 printed p.697; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKAURĒʿ prefix. A and C identical except A macron forms (Rēʿ, Neferirkarēʿ) vs C ayin-only. Family clause identical. Selecting C — CAPS prefix, ayin-only rendering."
+    "value": "NIKAURĒʿ, Judge and Inspector of book-keepers, Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, etc. Temp. Neferirkarēʿ or later. Mother (from blocks with offering-list), Renpetnefert. Wife (from false-doors), Iḥat, Prophetess of Ḥatḥor, etc.",
+    "rationale": "PM III.2 printed p.697; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKAURĒʿ prefix. A has macron forms (Rēʿ, Neferirkarēʿ), C ayin-only. Selecting A per macron-Ē convention chunks 19-29. Gemini PR #253 review (id=3269579341)."
   },
   "SAQ-NikaureOverseerOfWorks|notes_from_pm": {
-    "value": "NIKAURĒʿ, Overseer of works of the King, Prophet of the Pyramid of Zadkareʿ (Isesi). Temp. Isesi or later.",
-    "rationale": "PM III.2 printed p.697; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKAURĒʿ prefix. A and C identical except A macron 'Zadkarēʿ' vs C 'Zadkareʿ'. Selecting C — CAPS prefix, ayin-only rendering."
+    "value": "NIKAURĒʿ, Overseer of works of the King, Prophet of the Pyramid of Zadkarēʿ (Isesi). Temp. Isesi or later.",
+    "rationale": "PM III.2 printed p.697; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS NIKAURĒʿ prefix. A has macron 'Zadkarēʿ', C ayin-only 'Zadkareʿ'. Selecting A per macron-Ē convention chunks 19-29. Gemini PR #253 review (id=3269579347)."
   },
   "SAQ-SankhenptahPtahshepses|notes_from_pm": {
     "value": "SʿANKHENPTAḤ — PTAḤSHEPSES, Director of nsd-ms metal-workers of the Great House. Dyn. VI.",
