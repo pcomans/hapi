@@ -583,25 +583,6 @@ CHUNK28_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
-CHUNK31_TOMB_IDS: frozenset[str] = frozenset({
-    # PM III.2 § II.G BETWEEN THE MONASTERY OF APA JEREMIAS AND THE
-    # ENCLOSURE OF SEKHEMKHET (printed pp.653-670, phys pp.293-310).
-    # 12 rows: 10 NK + 2 LP. First NK chunk in this source per the
-    # 2026-05-19 all-dynastic scope expansion. NK cluster includes
-    # Haremhab's pre-king tomb (later King), Maya the Treasurer (LS 27,
-    # museum-partaged at Leiden + Berlin), Tia (Ramesses II's brother-in-law,
-    # Overseer of Treasury), Pay, Iurokhy (LS 25), Raʿia (LS 28), Harmin
-    # (LS 29), Merytyneit altered to Merytyaten (SAQH9, Atenist sub_period
-    # = Amarna), Parahotp (or Raʿhotp) Vizier, Tenry. LP cluster: Esdhout
-    # under Psammetikhos I, and the joint multi-burial Tomb of the
-    # Psammetheks and Khedebneit-yerboni [II] (Shape-4 joint twin,
-    # is_joint_burial=true, probably temp. Amasis).
-    "LS25", "LS27", "LS28", "LS29", "SAQH9",
-    "SAQ-Eshout", "SAQ-Haremhab", "SAQ-Parahotp", "SAQ-Pay",
-    "SAQ-Tenry", "SAQ-Tia", "SAQ-TombPsammetheks",
-})
-
-
 CHUNK30_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.J TOMBS OF POSITION UNKNOWN (a) OLD KINGDOM
     # (printed pp.689-699, phys pp.329-339). 31 rows closing PM
@@ -625,6 +606,25 @@ CHUNK30_TOMB_IDS: frozenset[str] = frozenset({
     "SAQ-Nikare", "SAQ-NikaureJudge", "SAQ-NikaureOverseerOfWorks",
     "SAQ-SankhenptahPtahshepses", "SAQ-Senimen", "SAQ-Sethu",
     "SAQ-Shepses", "SAQ-Tepemankh", "SAQ-Thau", "SAQ-Werirniptah",
+})
+
+
+CHUNK31_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.G BETWEEN THE MONASTERY OF APA JEREMIAS AND THE
+    # ENCLOSURE OF SEKHEMKHET (printed pp.653-670, phys pp.293-310).
+    # 12 rows: 10 NK + 2 LP. First NK chunk in this source per the
+    # 2026-05-19 all-dynastic scope expansion. NK cluster includes
+    # Haremhab's pre-king tomb (later King), Maya the Treasurer (LS 27,
+    # museum-partaged at Leiden + Berlin), Tia (Ramesses II's brother-in-law,
+    # Overseer of Treasury), Pay, Iurokhy (LS 25), Raʿia (LS 28), Harmin
+    # (LS 29), Merytyneit altered to Merytyaten (SAQH9, Atenist sub_period
+    # = Amarna), Parahotp (or Raʿhotp) Vizier, Tenry. LP cluster: Esdhout
+    # under Psammetikhos I, and the joint multi-burial Tomb of the
+    # Psammetheks and Khedebneit-yerboni [II] (Shape-4 joint twin,
+    # is_joint_burial=true, probably temp. Amasis).
+    "LS25", "LS27", "LS28", "LS29", "SAQH9",
+    "SAQ-Eshout", "SAQ-Haremhab", "SAQ-Parahotp", "SAQ-Pay",
+    "SAQ-Tenry", "SAQ-Tia", "SAQ-TombPsammetheks",
 })
 
 
