@@ -2806,6 +2806,17 @@ CHUNK33_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk 34 — Dahshûr § I.G/H/I + § II.A East of Northern Pyramid of Snefru
+# (PM III.2 printed pp.890-893, phys pp.530-533). No post-merge reviewer
+# corrections needed: merge.py produced clean output for all 13 rows.
+# The anonymous-mastaba rows (DAH-MorganN5/N7/S24) intentionally carry
+# `tomb_aliases: []` — the De Morgan number IS the tomb_id descriptor
+# component, not an alias; named-occupant rows carry their De Morgan
+# number in tomb_aliases per PM's numbering convention (e.g.
+# DAH-InSnefruIshtef → ["DE MORGAN 2"]).
+CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -2839,7 +2850,20 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK30_CORRECTIONS,
     CHUNK31_CORRECTIONS,
     CHUNK33_CORRECTIONS,
+    CHUNK34_CORRECTIONS,
 ]
+
+# Chunk-34 tomb_ids that carry a spurious top-level `section` key emitted
+# by agent C (duplicate of `source_citation.section`). fix_rows.py drops
+# this key so reconciled.jsonl passes the schema check. Defined at module
+# scope so the set is not re-created on every row iteration.
+_CHUNK34_TOMB_IDS_WITH_SPURIOUS_SECTION: frozenset[str] = frozenset({
+    "DAH-PyramidsGH", "DAH-AmenyQemau", "DAH-MorganN5", "DAH-MorganN7",
+    "DAH-Seshemnufer", "DAH-InSnefruIshtef", "DAH-Neferirtnes",
+    "DAH-NicankhSnefru", "DAH-NeferherSnefru", "DAH-Uza",
+    "DAH-MorganS24", "DAH-Qedshepses", "DAH-Kanufer",
+})
+
 
 # Schema-uniformity backfill: every reconciled row carries
 # `co_occupant_roles: list[str]` (default `[]` for single-occupant rows
@@ -2915,6 +2939,15 @@ def main() -> None:
                         continue
                     row[field] = spec["value"]
                     overrides_applied.append((tid, field, previous, spec["value"]))
+
+        # Chunk-34 agent C emitted a spurious top-level `section` key
+        # (duplicate of `source_citation.section`) on all 13 rows. The
+        # merge majority resolves it to `None` but keeps the key in the
+        # merged dict, failing the `test_required_fields_present_on_every_row`
+        # schema check. Drop it from all chunk-34 rows — `section` is
+        # never a valid top-level field; it lives only inside `source_citation`.
+        if tid in _CHUNK34_TOMB_IDS_WITH_SPURIOUS_SECTION:
+            row.pop("section", None)
 
     RECONCILED.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",

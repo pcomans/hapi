@@ -785,6 +785,27 @@ CHUNK33_TOMB_IDS: frozenset[str] = frozenset({
     "DAH-Amenemhet3",             # F. Pyramid-complex of Amenemhet III (Black Pyramid)
 })
 
+CHUNK34_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § I.G/H/I Dahshûr pyramid-field continuation + § II.A
+    # East of Northern Pyramid of Snefru. Physical pp.530-533 / printed
+    # pp.890-893. 13 rows: 3 § I rows (G+H Dyn-XIII anonymous pyramids,
+    # I Ameny-Ḳemau pyramid) + 10 § II.A mastabas. First
+    # `cemetery: "East of Northern Pyramid of Snefru"` rows.
+    "DAH-PyramidsGH",       # § I.G+H. Pyramids probably Dyn XIII (anonymous)
+    "DAH-AmenyQemau",       # § I.I. Pyramid of Ameny-Ḳemau, Dyn XIII, attested
+    "DAH-MorganN5",         # § II.A. Mastaba 5, prob. Dyn IV, anon
+    "DAH-MorganN7",         # § II.A. Mastaba-group 7, prob. Dyn V, anon
+    "DAH-Seshemnufer",      # § II.A. Seshemnufer, scribe, Dyn V-VI, attested
+    "DAH-InSnefruIshtef",   # § II.A. In-Snefru-Ishtef, inspector, Dyn V-VI, DE MORGAN 2
+    "DAH-Neferirtnes",      # § II.A. Neferirtnes, inspector, Dyn VI, DE MORGAN 7
+    "DAH-NicankhSnefru",    # § II.A. Nicankh-Snefru, judge, prob. Dyn VI, DE MORGAN 8
+    "DAH-NeferherSnefru",   # § II.A. Neferḥer-Snefru, prince, prob. Dyn V-VI, DE MORGAN 11
+    "DAH-Uza",              # § II.A. Uza, overseer, Dyn VI, DE MORGAN 12
+    "DAH-MorganS24",        # § II.A. Mastaba 24, prob. Dyn VI, anon
+    "DAH-Qedshepses",       # § II.A. Ḳedshepses, prince, prob. Dyn V+, DE MORGAN 27
+    "DAH-Kanufer",          # § II.A. Kanufer, prince, adv. Dyn IV+, DE MORGAN 28
+})
+
 
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
@@ -796,7 +817,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
     | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
     | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS
-    | CHUNK32_TOMB_IDS | CHUNK33_TOMB_IDS
+    | CHUNK32_TOMB_IDS | CHUNK33_TOMB_IDS | CHUNK34_TOMB_IDS
 )
 
 
@@ -1053,6 +1074,10 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK33_TOMB_IDS:
             assert row["source_citation"]["section"] == "I", row
+        elif row["tomb_id"] in CHUNK34_TOMB_IDS:
+            # § I rows (PyramidsGH, AmenyQemau) cite section "I";
+            # § II rows (all mastabas) cite section "II".
+            assert row["source_citation"]["section"] in {"I", "II"}, row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -1086,6 +1111,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK31_TOMB_IDS
             | CHUNK32_TOMB_IDS
             | CHUNK33_TOMB_IDS
+            | CHUNK34_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
@@ -1164,6 +1190,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 700 <= page <= 719, f"{row['tomb_id']} page {page} outside chunk-32 [700, 719]"
         elif row["tomb_id"] in CHUNK33_TOMB_IDS:
             assert 876 <= page <= 889, f"{row['tomb_id']} page {page} outside chunk-33 [876, 889]"
+        elif row["tomb_id"] in CHUNK34_TOMB_IDS:
+            assert 890 <= page <= 893, f"{row['tomb_id']} page {page} outside chunk-34 [890, 893]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1352,6 +1380,16 @@ def test_cemetery_by_chunk() -> None:
             # banner "PYRAMID-FIELD OF DAHSHUR" at phys p.516/printed
             # p.876. First occurrence of this cemetery value.
             assert row["cemetery"] == "Pyramid-field of Dahshur", row
+        elif row["tomb_id"] in CHUNK34_TOMB_IDS:
+            # Chunk 34: § I.G/H/I continuation (PyramidsGH, AmenyQemau)
+            # + § II.A East of Northern Pyramid of Snefru (11 mastabas).
+            # Two cemetery values: § I rows = "Pyramid-field of Dahshur";
+            # § II rows = "East of Northern Pyramid of Snefru" (first
+            # occurrence of this cemetery value).
+            assert row["cemetery"] in {
+                "Pyramid-field of Dahshur",
+                "East of Northern Pyramid of Snefru",
+            }, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -3491,4 +3529,377 @@ def test_chunk33_amenemhet3_black_pyramid() -> None:
         page=887,
         tomb_aliases=["Black Pyramid", "Lepsius LVIII"],
         notes_from_pm="Lepsius, LVIII; Black Pyramid.",
+    )
+
+
+# === Chunk 34 — Dahshûr § I.G/H/I + § II.A East of Northern Pyramid of Snefru =
+
+
+def test_chunk34_row_count_13() -> None:
+    """Chunk 34 (PM III.2 § I.G/H/I + § II.A East of Northern Pyramid of
+    Snefru, printed pp.890-893) emits exactly 13 rows: 2 anonymous § I
+    Dyn-XIII pyramids (G+H), 1 named § I pyramid (Ameny-Ḳemau), and 10
+    § II.A mastabas (MorganN5, MorganN7, Seshemnufer, InSnefruIshtef,
+    Neferirtnes, NicankhSnefru, NeferherSnefru, Uza, MorganS24,
+    Qedshepses, Kanufer)."""
+    ch34 = [r for r in _rows() if r["tomb_id"] in CHUNK34_TOMB_IDS]
+    assert len(ch34) == 13
+
+
+def test_chunk34_all_dahshur_memphite_area() -> None:
+    """All chunk-34 rows carry `memphite_area: 'Dahshur'`."""
+    for tid in CHUNK34_TOMB_IDS:
+        row = _by_id(tid)
+        assert row["memphite_area"] == "Dahshur", row
+
+
+def test_chunk34_cemetery_split() -> None:
+    """§ I rows carry `cemetery: 'Pyramid-field of Dahshur'`; § II.A rows
+    carry `cemetery: 'East of Northern Pyramid of Snefru'` (first occurrence
+    of this value — extends the cemetery controlled vocabulary)."""
+    pyramid_field_ids = {"DAH-PyramidsGH", "DAH-AmenyQemau"}
+    east_of_north_ids = CHUNK34_TOMB_IDS - pyramid_field_ids
+    for tid in pyramid_field_ids:
+        row = _by_id(tid)
+        assert row["cemetery"] == "Pyramid-field of Dahshur", row
+    for tid in east_of_north_ids:
+        row = _by_id(tid)
+        assert row["cemetery"] == "East of Northern Pyramid of Snefru", row
+
+
+def _assert_chunk34_full(
+    row: dict,
+    *,
+    tomb_id: str,
+    occupant_name: object,
+    occupant_role: str,
+    dynasty: object,
+    attribution_certainty: str,
+    page: int,
+    section: str,
+    tomb_aliases: list,
+    notes_from_pm: str,
+    cemetery: str,
+    co_occupants: list | None = None,
+    co_occupant_roles: list | None = None,
+) -> None:
+    """Full Rule-5 field assertions for chunk-34 rows (all 23 fields).
+
+    Defaults: no co-occupants, no shared tombs, no discovery metadata,
+    no date BCE, no sub-period. `co_occupants` and `co_occupant_roles`
+    default to [] but can be overridden for rows like DAH-Kanufer (Wife).
+    """
+    if co_occupants is None:
+        co_occupants = []
+    if co_occupant_roles is None:
+        co_occupant_roles = []
+    assert row["tomb_id"] == tomb_id
+    assert row["occupant_name"] == occupant_name
+    assert row["occupant_role"] == occupant_role
+    assert row["dynasty"] == dynasty
+    assert row["attribution_certainty"] == attribution_certainty
+    assert row["source_citation"]["section"] == section
+    assert row["source_citation"]["page"] == page
+    assert row["source_citation"]["edition"] == EDITION_PM_III_2
+    assert row["is_joint_burial"] is False
+    assert row["is_uninscribed"] is False
+    assert row["is_unfinished"] is False
+    assert row["is_usurped"] is False
+    assert row["co_occupants"] == co_occupants
+    assert row["co_occupant_roles"] == co_occupant_roles
+    assert row["shared_with_tombs"] == []
+    assert row["occupant_alt_names"] == []
+    assert row["date_bce_approx_start"] is None
+    assert row["date_bce_approx_end"] is None
+    assert row["discoverer"] is None
+    assert row["discovery_year"] is None
+    assert row["sub_period"] is None
+    assert row["memphite_area"] == "Dahshur"
+    assert row["cemetery"] == cemetery
+    assert row["tomb_aliases"] == tomb_aliases
+    assert row["notes_from_pm"] == notes_from_pm
+
+
+def test_chunk34_pyramids_gh() -> None:
+    """DAH-PyramidsGH — § I.G+H. Pyramids probably of Dynasty XIII (anon).
+    `attribution_certainty: 'probable'`, `occupant_name: null`, section I,
+    printed p.890."""
+    _assert_chunk34_full(
+        _by_id("DAH-PyramidsGH"),
+        tomb_id="DAH-PyramidsGH",
+        occupant_name=None,
+        occupant_role="King",
+        dynasty="13",
+        attribution_certainty="probable",
+        page=890,
+        section="I",
+        cemetery="Pyramid-field of Dahshur",
+        tomb_aliases=[],
+        notes_from_pm="Pyramids probably of Dynasty XIII. ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3].",
+    )
+
+
+def test_chunk34_ameny_qemau() -> None:
+    """DAH-AmenyQemau — § I.I. Pyramid of Ameny-Ḳemau, Dyn XIII, attested.
+    Printed p.890. tomb_id uses Q-form (ḳ→Q per 2/3 majority + source
+    underdot-ḳ glyph ASCII convention). occupant_name preserves PM's
+    underdot diacritic `Ameny-Ḳemau`."""
+    _assert_chunk34_full(
+        _by_id("DAH-AmenyQemau"),
+        tomb_id="DAH-AmenyQemau",
+        occupant_name="Ameny-Ḳemau",
+        occupant_role="King",
+        dynasty="13",
+        attribution_certainty="attested",
+        page=890,
+        section="I",
+        cemetery="Pyramid-field of Dahshur",
+        tomb_aliases=[],
+        notes_from_pm=(
+            "Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; "
+            "LECLANT in ib. N.S. 27 (1958), pp. 81-2; "
+            "ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174."
+        ),
+    )
+
+
+def test_chunk34_morgan_n5() -> None:
+    """DAH-MorganN5 — § II.A. Mastaba 5, probably Dyn IV, anonymous.
+    tomb_aliases: [] — De Morgan number encoded in tomb_id descriptor.
+    Printed p.890."""
+    _assert_chunk34_full(
+        _by_id("DAH-MorganN5"),
+        tomb_id="DAH-MorganN5",
+        occupant_name=None,
+        occupant_role="Unknown",
+        dynasty="4",
+        attribution_certainty="probable",
+        page=890,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=[],
+        notes_from_pm="Probably Dyn. IV. DE MORGAN, Dahchour, i, p. 9.",
+    )
+
+
+def test_chunk34_morgan_n7() -> None:
+    """DAH-MorganN7 — § II.A. Mastaba-group 7, probably Dyn V, anonymous.
+    tomb_aliases: [] — De Morgan number encoded in tomb_id descriptor.
+    Printed p.890."""
+    _assert_chunk34_full(
+        _by_id("DAH-MorganN7"),
+        tomb_id="DAH-MorganN7",
+        occupant_name=None,
+        occupant_role="Unknown",
+        dynasty="5",
+        attribution_certainty="probable",
+        page=890,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=[],
+        notes_from_pm=(
+            "Mastaba-group. Probably Dyn. V. DE MORGAN, Dahchour, i, pp. 11-13. "
+            "Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel "
+            "sa-njswt 'Konigssohn', pp. 150-1 [IV]."
+        ),
+    )
+
+
+def test_chunk34_seshemnufer() -> None:
+    """DAH-Seshemnufer — § II.A. Scribe of royal documents, Dyn V-VI,
+    attested. No De Morgan number in tomb_aliases (PM's number is
+    OCR-ambiguous, footnoted with asterisk by agent B; 2/3 majority = []).
+    Printed p.891."""
+    _assert_chunk34_full(
+        _by_id("DAH-Seshemnufer"),
+        tomb_id="DAH-Seshemnufer",
+        occupant_name="Seshemnufer",
+        occupant_role="Official",
+        dynasty=None,
+        attribution_certainty="attested",
+        page=891,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=[],
+        notes_from_pm=(
+            "Scribe of the royal documents in the presence. "
+            "2nd half of Dyn. V or Dyn. VI. DE MORGAN, Dahchour, ii, pp. 2-3."
+        ),
+    )
+
+
+def test_chunk34_in_snefru_ishtef() -> None:
+    """DAH-InSnefruIshtef — § II.A. Inspector of tenants, Dyn V-VI, attested.
+    tomb_aliases: [DE MORGAN 2]. Printed p.891."""
+    _assert_chunk34_full(
+        _by_id("DAH-InSnefruIshtef"),
+        tomb_id="DAH-InSnefruIshtef",
+        occupant_name="In-Snefru-Ishtef",
+        occupant_role="Official",
+        dynasty=None,
+        attribution_certainty="attested",
+        page=891,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=["DE MORGAN 2"],
+        notes_from_pm=(
+            "Inspector of tenants of the Great House, etc. Dyn. V-VI. "
+            "DE MORGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15."
+        ),
+    )
+
+
+def test_chunk34_neferirtnes() -> None:
+    """DAH-Neferirtnes — § II.A. Inspector of tenants, Dyn VI, attested.
+    tomb_aliases: [DE MORGAN 7]. Printed p.892."""
+    _assert_chunk34_full(
+        _by_id("DAH-Neferirtnes"),
+        tomb_id="DAH-Neferirtnes",
+        occupant_name="Neferirtnes",
+        occupant_role="Official",
+        dynasty="6",
+        attribution_certainty="attested",
+        page=892,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=["DE MORGAN 7"],
+        notes_from_pm=(
+            "Inspector of tenants of the Great House. Dyn. VI. "
+            "DE MORGAN, Dahchour, ii, pp. 10-11."
+        ),
+    )
+
+
+def test_chunk34_nicankh_snefru() -> None:
+    """DAH-NicankhSnefru — § II.A. Judge and inspector, prob. Dyn VI.
+    tomb_id uses c-form (NICANKH per source; k→c correction over A's k).
+    tomb_aliases: [DE MORGAN 8]. Printed p.892."""
+    _assert_chunk34_full(
+        _by_id("DAH-NicankhSnefru"),
+        tomb_id="DAH-NicankhSnefru",
+        occupant_name="Nicankh-Snefru",
+        occupant_role="Official",
+        dynasty="6",
+        attribution_certainty="probable",
+        page=892,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=["DE MORGAN 8"],
+        notes_from_pm=(
+            "Judge and Inspector of scribes, etc. Probably Dyn. VI. "
+            "DE MORGAN, Dahchour, ii, pp. 11-12."
+        ),
+    )
+
+
+def test_chunk34_neferher_snefru() -> None:
+    """DAH-NeferherSnefru — § II.A. King's son, prob. Dyn V or VI.
+    tomb_aliases: [DE MORGAN 11]. Printed p.892."""
+    _assert_chunk34_full(
+        _by_id("DAH-NeferherSnefru"),
+        tomb_id="DAH-NeferherSnefru",
+        occupant_name="Neferḥer-Snefru",
+        occupant_role="Prince",
+        dynasty=None,
+        attribution_certainty="probable",
+        page=892,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=["DE MORGAN 11"],
+        notes_from_pm="King's son. Probably Dyn. V or VI. DE MORGAN, Dahchour, ii, p. 14.",
+    )
+
+
+def test_chunk34_uza() -> None:
+    """DAH-Uza — § II.A. Overseer of interpreters, Dyn VI, attested.
+    tomb_aliases: [DE MORGAN 12]. Printed p.892."""
+    _assert_chunk34_full(
+        _by_id("DAH-Uza"),
+        tomb_id="DAH-Uza",
+        occupant_name="Uza",
+        occupant_role="Official",
+        dynasty="6",
+        attribution_certainty="attested",
+        page=892,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=["DE MORGAN 12"],
+        notes_from_pm=(
+            "Overseer of the department of tenants of the Great House, "
+            "Overseer of interpreters, etc. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 14-15."
+        ),
+    )
+
+
+def test_chunk34_morgan_s24() -> None:
+    """DAH-MorganS24 — § II.A. Mastaba 24, probably Dyn VI, anonymous.
+    tomb_aliases: [] — De Morgan number encoded in tomb_id descriptor.
+    Printed p.892."""
+    _assert_chunk34_full(
+        _by_id("DAH-MorganS24"),
+        tomb_id="DAH-MorganS24",
+        occupant_name=None,
+        occupant_role="Unknown",
+        dynasty="6",
+        attribution_certainty="probable",
+        page=892,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=[],
+        notes_from_pm="Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 18-21.",
+    )
+
+
+def test_chunk34_qedshepses() -> None:
+    """DAH-Qedshepses — § II.A. King's son of his body, prob. Dyn V+.
+    tomb_id uses Q-form (ḳ→Q per 2/3 majority). occupant_name preserves
+    PM's underdot diacritic `Ḳedshepses`. tomb_aliases: [DE MORGAN 27].
+    Printed p.893."""
+    _assert_chunk34_full(
+        _by_id("DAH-Qedshepses"),
+        tomb_id="DAH-Qedshepses",
+        occupant_name="Ḳedshepses",
+        occupant_role="Prince",
+        dynasty=None,
+        attribution_certainty="probable",
+        page=893,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=["DE MORGAN 27"],
+        notes_from_pm=(
+            "King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. "
+            "Dating as late Dyn. VI or 1st Int. Period, SCHMITZ, Untersuchungen zum Titel "
+            "S3-njswt 'Konigssohn', p. 149 [III]. DE MORGAN, Dahchour, ii, p. 22."
+        ),
+    )
+
+
+def test_chunk34_kanufer() -> None:
+    """DAH-Kanufer — § II.A. King's eldest son, advanced Dyn IV+, attested.
+    Co-occupant: wife Khunesu. Footnote `Also Chief Justice and Vizier, in
+    unclear context` → role=Prince (footnote-only Vizier per prompt rule).
+    tomb_aliases: [DE MORGAN 28]. Printed p.893.
+
+    Flagged for egyptologist: `attribution_certainty = attested` (1/1/1
+    tie resolved to C's `attested` — inscribed false-door + artifacts;
+    A's `uncertain` reflects dating hedge, not occupant attribution)."""
+    _assert_chunk34_full(
+        _by_id("DAH-Kanufer"),
+        tomb_id="DAH-Kanufer",
+        occupant_name="Kanufer",
+        occupant_role="Prince",
+        dynasty=None,
+        attribution_certainty="attested",
+        page=893,
+        section="II",
+        cemetery="East of Northern Pyramid of Snefru",
+        tomb_aliases=["DE MORGAN 28"],
+        co_occupants=["Khunesu"],
+        co_occupant_roles=["Wife"],
+        notes_from_pm=(
+            "King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. "
+            "Also Chief Justice and Vizier, in unclear context. Advanced Dyn. IV or later. "
+            "Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel "
+            "sa-njswt 'Konigssohn', pp. 145-9 [II]. Wife, Khunesu, King's adorner, etc."
+        ),
     )

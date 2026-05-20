@@ -1102,6 +1102,33 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("DAH-Amenemhet2", "notes_from_pm"),
         ("DAH-Amenemhet3", "notes_from_pm"),
         ("DAH-PyramidE", "notes_from_pm"),
+        # Chunk 34 (PM III.2 § I.G/H/I + § II.A East of Northern Pyramid of
+        # Snefru, printed pp.890-893 / phys pp.530-533): 6 ties resolved.
+        # DAH-AmenyQemau notes_from_pm: 3-way split on LECLANT citation
+        # presence (A has it) + "Pyramid of Ameny-Ḳemau." prefix (B only) +
+        # `[3]` footnote bracket (B+C). Selected A (strict-subset; has LECLANT
+        # + Dyn. XIII intro; 2/3 agree drops B's section-heading prefix).
+        # DAH-Kanufer attribution_certainty: 3-way split (A=uncertain,
+        # B=probable, C=attested). Selected C=attested (inscribed false-door +
+        # artifacts; A's `uncertain` conflates dating-hedge with occupant-
+        # attribution; flagged for egyptologist review).
+        # DAH-Kanufer notes_from_pm: B selected (includes footnote 1 verbatim
+        # `Also Chief Justice and Vizier, in unclear context.` + `[II]` + wife
+        # clause in source order).
+        # DAH-MorganN7 notes_from_pm: B selected (DE MORGAN + `[IV]` bracket,
+        # 2/3 majority; B's `sa-njswt` is cleaner than C's `S3-njSwt` OCR
+        # artefact).
+        # DAH-PyramidsGH notes_from_pm: B selected (adds "Pyramids probably of
+        # Dynasty XIII." descriptive prefix + `[3]` bracket; most complete +
+        # source-faithful).
+        # DAH-Qedshepses notes_from_pm: C selected (has both DE MORGAN ref +
+        # `[III]` bracket; most complete strict-subset).
+        ("DAH-AmenyQemau", "notes_from_pm"),
+        ("DAH-Kanufer", "attribution_certainty"),
+        ("DAH-Kanufer", "notes_from_pm"),
+        ("DAH-MorganN7", "notes_from_pm"),
+        ("DAH-PyramidsGH", "notes_from_pm"),
+        ("DAH-Qedshepses", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
