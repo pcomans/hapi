@@ -12,12 +12,12 @@ You are one of three independent extraction subagents. Read the text-layer chunk
 
 - **B. EAST OF THE SOUTHERN PYRAMID OF SNEFRU** — private OK mastabas east of Snefru's Bent Pyramid.
 - **C. NORTH OF THE ENCLOSURE OF SESOSTRIS III** — private MK mastabas north of Sesostris III's enclosure.
-- **D. SOUTH OF THE ENCLOSURE OF AMENEMḤET II** — private MK mastabas south of Amenemḥet II's enclosure.
+- **D. SOUTH OF THE ENCLOSURE OF AMENEMḤĒT II** — private MK mastabas south of Amenemḥēt II's enclosure.
 
 cemetery values (NEW for § II.B/C/D):
 - `"East of Southern Pyramid of Snefru"` (§ II.B)
 - `"North of Enclosure of Sesostris III"` (§ II.C)
-- `"South of Enclosure of Amenemḥet II"` (§ II.D)
+- `"South of Enclosure of Amenemḥēt II"` (§ II.D)
 
 memphite_area = `"Dahshur"` (continuing chunk 33+34). section = `"II"`.
 
@@ -65,7 +65,7 @@ Same shape grammar as chunk 34:
   "sub_period": null,
   "date_bce_approx_start": null,
   "date_bce_approx_end": null,
-  "cemetery": "East of Southern Pyramid of Snefru" | "North of Enclosure of Sesostris III" | "South of Enclosure of Amenemḥet II",
+  "cemetery": "East of Southern Pyramid of Snefru" | "North of Enclosure of Sesostris III" | "South of Enclosure of Amenemḥēt II",
   "discovery_year": null,
   "discoverer": null,
   "is_unfinished": false,
