@@ -810,11 +810,11 @@ CHUNK34_TOMB_IDS: frozenset[str] = frozenset({
 CHUNK35_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.B East of Southern Pyramid of Snefru
     # + § II.C North of Enclosure of Sesostris III
-    # + § II.D South of Enclosure of Amenemḥet II.
+    # + § II.D South of Enclosure of Amenemḥēt II.
     # Physical pp.534-538 / printed pp.894-898. 21 rows.
     # Three new cemetery values: "East of Southern Pyramid of Snefru"
     # (§ II.B, 8 rows), "North of Enclosure of Sesostris III"
-    # (§ II.C, 12 rows), "South of Enclosure of Amenemḥet II"
+    # (§ II.C, 12 rows), "South of Enclosure of Amenemḥēt II"
     # (§ II.D, 1 row). Continues the De Morgan Southern series
     # (MorganS6/S8/S11/S18/S19/S22/S25/S27/S28) after MorganS24
     # already committed in chunk-34 (East of Northern series).
@@ -822,22 +822,22 @@ CHUNK35_TOMB_IDS: frozenset[str] = frozenset({
     # (Vizier / Phyle) per chunk-30 NikaureJudge/NikaurePhyle
     # precedent.
     "DAH-Iynufer",          # § II.B. King's son, Early Dyn. IV, attested
-    "DAH-Duare",            # § II.B. Overseer of Pyramids of Snefru, Temp. Saḥurec+
+    "DAH-Duare",            # § II.B. Overseer of Pyramids of Snefru, Temp. Saḥurēʿ+
     "DAH-Kawezankhu",       # § II.B. Boundary official, Middle Dyn. V, attested
     "DAH-Nefermaat",        # § II.B. Overseer of phylai, Middle Dyn. V, attested
     "DAH-Ithi",             # § II.B. Overseer of dancers, Dyn. IV-V → "5", attested
     "DAH-Thenti",           # § II.B. Prophet of Snefru, Old Kingdom, attested
-    "DAH-KaemEd",           # § II.B. Prophet of Snefru(?), prob. Dyn. V — OCR-damaged name
+    "DAH-Kaemked",          # § II.B. Prophet of Snefru(?), prob. Dyn. V; printed PDF KAEMKED
     "DAH-Kares",            # § II.B. Prophet of Snefru, Old Kingdom, attested
     "DAH-KhnemhotpVizier",  # § II.C. Chief Justice and Vizier, prob. temp. Sesostris III
     "DAH-MorganS6",         # § II.C. Anon, Middle Kingdom, DE MORGAN 6
     "DAH-MorganS8",         # § II.C. Anon, Middle Kingdom, DE MORGAN 8
-    "DAH-Khentekhtaiemsaf", # § II.C. Embalmer, temp. Sesostris III+, DE MORGAN 11
+    "DAH-Khentekhtaiemsaf", # § II.C. Embalmer, temp. Sesostris III+ → Dyn 12, DE MORGAN 11
     "DAH-Sebkemhet",        # § II.C. Vizier, prob. temp. Sesostris III, DE MORGAN 17
     "DAH-MorganS18",        # § II.C. Anon, Hereditary prince, Temp. Sesostris III
     "DAH-MorganS19",        # § II.C. Anon, prob. late Dyn. XII, DE MORGAN 19
     "DAH-MorganS22",        # § II.C. Anon, Middle Kingdom, DE MORGAN 22
-    "DAH-Ipit",             # § II.C. Overseer of dept, 2nd half Dyn. XII, DE MORGAN 24
+    "DAH-Ipiti",            # § II.C. Overseer of dept, 2nd half Dyn. XII, DE MORGAN 24
     "DAH-KhnemhotpPhyle",   # § II.C. Regulator of phyle, Middle Kingdom, DE MORGAN 25
     "DAH-Neni",             # § II.C. Nubian woman, Middle Kingdom, DE MORGAN 27
     "DAH-NenMorganS28",     # § II.C. Partial name NEN..., Middle Kingdom, DE MORGAN 28
@@ -1435,12 +1435,12 @@ def test_cemetery_by_chunk() -> None:
         elif row["tomb_id"] in CHUNK35_TOMB_IDS:
             # Chunk 35: § II.B East of Southern Pyramid of Snefru (8 rows)
             # + § II.C North of Enclosure of Sesostris III (12 rows)
-            # + § II.D South of Enclosure of Amenemḥet II (1 row).
+            # + § II.D South of Enclosure of Amenemḥēt II (1 row).
             # Three new cemetery values introduced in this chunk.
             assert row["cemetery"] in {
                 "East of Southern Pyramid of Snefru",
                 "North of Enclosure of Sesostris III",
-                "South of Enclosure of Amenemḥet II",
+                "South of Enclosure of Amenemḥēt II",
             }, row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
@@ -1723,7 +1723,7 @@ def test_dynasty_assignments() -> None:
             # (Old Kingdom mastabas: Dyn IV, V, or null/Old Kingdom)
             # + § II.C North of Enclosure of Sesostris III
             # (Dyn XII Middle Kingdom, or null Middle Kingdom)
-            # + § II.D South of Enclosure of Amenemḥet II (Dyn XII).
+            # + § II.D South of Enclosure of Amenemḥēt II (Dyn XII).
             assert row["dynasty"] in {"4", "5", "12", None}, row
 
 
@@ -3991,7 +3991,7 @@ def test_chunk34_kanufer() -> None:
 # PM III.2 printed pp.894-898 (phys pp.534-538).
 # 21 rows: 8 × § II.B (East of Southern Pyramid of Snefru),
 #          12 × § II.C (North of Enclosure of Sesostris III),
-#           1 × § II.D (South of Enclosure of Amenemḥet II).
+#           1 × § II.D (South of Enclosure of Amenemḥēt II).
 # Three new cemetery values.
 
 
@@ -4007,10 +4007,10 @@ def test_chunk35_presence() -> None:
 def test_chunk35_cemetery_distribution() -> None:
     """Cemetery values split correctly across the three sub-sections."""
     east_south = {"DAH-Iynufer","DAH-Duare","DAH-Kawezankhu","DAH-Nefermaat",
-                  "DAH-Ithi","DAH-Thenti","DAH-KaemEd","DAH-Kares"}
+                  "DAH-Ithi","DAH-Thenti","DAH-Kaemked","DAH-Kares"}
     north_ses = {"DAH-KhnemhotpVizier","DAH-MorganS6","DAH-MorganS8",
                  "DAH-Khentekhtaiemsaf","DAH-Sebkemhet","DAH-MorganS18",
-                 "DAH-MorganS19","DAH-MorganS22","DAH-Ipit","DAH-KhnemhotpPhyle",
+                 "DAH-MorganS19","DAH-MorganS22","DAH-Ipiti","DAH-KhnemhotpPhyle",
                  "DAH-Neni","DAH-NenMorganS28"}
     south_am = {"DAH-Siesi"}
     for tid in east_south:
@@ -4018,7 +4018,7 @@ def test_chunk35_cemetery_distribution() -> None:
     for tid in north_ses:
         assert _by_id(tid)["cemetery"] == "North of Enclosure of Sesostris III", tid
     for tid in south_am:
-        assert _by_id(tid)["cemetery"] == "South of Enclosure of Amenemḥet II", tid
+        assert _by_id(tid)["cemetery"] == "South of Enclosure of Amenemḥēt II", tid
 
 
 def _assert_chunk35_full(
@@ -4096,16 +4096,18 @@ def test_chunk35_iynufer() -> None:
 
 
 def test_chunk35_duare() -> None:
-    """DAH-Duare — § II.B. Overseer of two Pyramids of Snefru, Temp. Sahḥurec+.
+    """DAH-Duare — § II.B. Overseer of two Pyramids of Snefru, Temp. Saḥurēʿ+.
     Wife Mertiotes (Royal acquaintance). co_occupant_roles=['Wife'] per PM structure:
     `Wife, Mertiotes, Royal acquaintance` — Wife is the relationship term;
-    Royal acquaintance is her title. Printed p.894."""
+    Royal acquaintance is her title. occupant_name `Duarēʿ` and notes
+    `Saḥurēʿ` preserve macron-ē per printed PDF (PR #261 round-2
+    egyptologist P1.5). Printed p.894."""
     _assert_chunk35_full(
         _by_id("DAH-Duare"),
         tomb_id="DAH-Duare",
-        occupant_name="Duareʿ",
+        occupant_name="Duarēʿ",
         occupant_role="Official",
-        dynasty=None,
+        dynasty="5",
         attribution_certainty="attested",
         page=894,
         section="II",
@@ -4115,7 +4117,7 @@ def test_chunk35_duare() -> None:
         co_occupant_roles=["Wife"],
         notes_from_pm=(
             "Overseer of the two Pyramids of Snefru, Prophet of Reʿ in the Sun-temple "
-            "of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥureʿ or "
+            "of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurēʿ or "
             "later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles "
             "[etc.] in Mem. Miss. i, pp. 190-1 [2], with plan."
         ),
@@ -4170,10 +4172,13 @@ def test_chunk35_nefermaat() -> None:
 
 def test_chunk35_ithi() -> None:
     """DAH-Ithi — § II.B. Overseer of chamber of dancers, Dyn. IV-V → "5".
-    Wife Wesen-ptaḥ(?) — PM source `Wesenptal;l(?)` decodes via documented
-    `l;l → ḥ` bigram to `Wesen-ptaḥ` (deity Ptaḥ); round-1 agent A's
-    `Wesenpḥaḥ(?)` reconstruction was a `ph` not-a-digraph error
-    corrected in PR #261 round-2 (egyptologist P1.1). Printed p.895."""
+    Wife Wesenptaḥ(?) — PM source `Wesenptal;l(?)` decodes via documented
+    `l;l → ḥ` bigram to `Wesenptaḥ` (deity Ptaḥ, one token, no internal
+    hyphen); round-1 agent A's `Wesenpḥaḥ(?)` reconstruction was a `ph`
+    not-a-digraph error corrected in PR #261 round-1 (code-reviewer +
+    egyptologist P1.1); round-2 (Gemini M-3276064121 + egyptologist P1.2)
+    removed the spurious internal hyphen and required the `(?)` hedge.
+    Printed p.895."""
     _assert_chunk35_full(
         _by_id("DAH-Ithi"),
         tomb_id="DAH-Ithi",
@@ -4185,10 +4190,10 @@ def test_chunk35_ithi() -> None:
         section="II",
         cemetery="East of Southern Pyramid of Snefru",
         tomb_aliases=[],
-        co_occupants=["Wesen-ptaḥ"],
+        co_occupants=["Wesenptaḥ(?)"],
         co_occupant_roles=["Wife"],
         notes_from_pm=(
-            "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesen-ptaḥ(?). "
+            "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenptaḥ(?). "
             "Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, "
             "Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and "
             "titles, LIEBLEIN, Dict. No. 1372."
@@ -4217,17 +4222,18 @@ def test_chunk35_thenti() -> None:
     )
 
 
-def test_chunk35_kaemedocr() -> None:
-    """DAH-KaemEd — § II.B. Prophet of Snefru(?), prob. Dyn. V. OCR-damaged name.
-    tomb_id preserves literal boundary chars (KaemEd). occupant_name='Kaem...ed'.
+def test_chunk35_kaemked() -> None:
+    """DAH-Kaemked — § II.B. Prophet of Snefru(?), prob. Dyn. V. Round-1 OCR was
+    damaged (`KAEM:[glyph]:ED` text-layer); round-2 (PR #261 egyptologist P1.6)
+    resolved the name via the printed PDF to `KAEMKED`, replacing the round-1
+    placeholder `Kaem...ed`. tomb_id renamed DAH-KaemEd → DAH-Kaemked.
     attribution_certainty="attested" per PR #261 egyptologist P2.3: PM's `(?)`
     qualifies the TITLE (Prophet of Snefru) not the attribution; dating hedge
-    `Probably Dyn. V` is on dating axis (orthogonal). The OCR-damaged middle
-    glyph is captured as a placeholder per Rule 2. Printed p.895."""
+    `Probably Dyn. V` is on dating axis (orthogonal). Printed p.895."""
     _assert_chunk35_full(
-        _by_id("DAH-KaemEd"),
-        tomb_id="DAH-KaemEd",
-        occupant_name="Kaem...ed",
+        _by_id("DAH-Kaemked"),
+        tomb_id="DAH-Kaemked",
+        occupant_name="Kaemked",
         occupant_role="Official",
         dynasty="5",
         attribution_certainty="attested",
@@ -4240,8 +4246,7 @@ def test_chunk35_kaemedocr() -> None:
             "Probably Dyn. V. Mother, Nefertnesut, King's daughter, Prophetess of Snefru "
             "and Hathor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), "
             "pp. 202-3 [III]; WILBOUR MSS. 2 G, 64 [upper]. Dating as late Old Kingdom, "
-            "SCHMITZ, Untersuchungen zum Titel sj-njswt 'Konigssohn', pp. 151-2 [V]. "
-            "OCR of name damaged: original text reads KAEM:[glyph]:ED."
+            "SCHMITZ, Untersuchungen zum Titel sj-njswt 'Konigssohn', pp. 151-2 [V]."
         ),
     )
 
@@ -4282,7 +4287,7 @@ def test_chunk35_khnemhotpvizier() -> None:
         occupant_name="Khnemḥotp",
         occupant_role="Vizier",
         dynasty="12",
-        attribution_certainty="probable",
+        attribution_certainty="attested",
         page=896,
         section="II",
         cemetery="North of Enclosure of Sesostris III",
@@ -4369,14 +4374,16 @@ def test_chunk35_khentekhtaiemsaf() -> None:
 
 def test_chunk35_sebkemhet() -> None:
     """DAH-Sebkemhet — § II.C. Chief Justice and Vizier, prob. temp.
-    Sesostris III. DE MORGAN 17. Printed p.897."""
+    Sesostris III. DE MORGAN 17. occupant_name `Sebkemḥēt` (macron-ē
+    + underdot-ḥ) per printed PDF (PR #261 round-2 egyptologist P1.3);
+    tomb_id is ASCII-stripped. Printed p.897."""
     _assert_chunk35_full(
         _by_id("DAH-Sebkemhet"),
         tomb_id="DAH-Sebkemhet",
-        occupant_name="Sebkemḥet",
+        occupant_name="Sebkemḥēt",
         occupant_role="Vizier",
         dynasty="12",
-        attribution_certainty="probable",
+        attribution_certainty="attested",
         page=897,
         section="II",
         cemetery="North of Enclosure of Sesostris III",
@@ -4391,12 +4398,15 @@ def test_chunk35_sebkemhet() -> None:
 
 def test_chunk35_morgans18() -> None:
     """DAH-MorganS18 — § II.C. Anonymous, Hereditary prince, Temp. Sesostris III.
-    DE MORGAN 18. Printed p.897."""
+    DE MORGAN 18. occupant_role `Official` (PR #261 round-2 egyptologist P1.7:
+    MK rpʿ ḥ3ty-ʿ is a generic high-official rank, not a king's-son marker;
+    SEBKEMḤĒT on the same page uses the same rank cluster + a Vizier office
+    title, classed as Vizier). Printed p.897."""
     _assert_chunk35_full(
         _by_id("DAH-MorganS18"),
         tomb_id="DAH-MorganS18",
         occupant_name=None,
-        occupant_role="Royal Family",
+        occupant_role="Official",
         dynasty="12",
         attribution_certainty="attested",
         page=897,
@@ -4452,13 +4462,16 @@ def test_chunk35_morgans22() -> None:
     )
 
 
-def test_chunk35_ipit() -> None:
-    """DAH-Ipit — § II.C. Overseer of dept, 2nd half Dyn. XII, attested.
-    DE MORGAN 24. Printed p.897."""
+def test_chunk35_ipiti() -> None:
+    """DAH-Ipiti — § II.C. Overseer of dept, 2nd half Dyn. XII, attested.
+    DE MORGAN 24. Printed p.897 item 24 reads IPITI (PR #261 round-2
+    egyptologist P1.1: final `-i` is part of the name, confirmed by
+    hieroglyphic transcription; risks conflation with 11th-Dyn queen Ipit
+    if left as `Ipit`). tomb_id renamed DAH-Ipit → DAH-Ipiti."""
     _assert_chunk35_full(
-        _by_id("DAH-Ipit"),
-        tomb_id="DAH-Ipit",
-        occupant_name="Ipit",
+        _by_id("DAH-Ipiti"),
+        tomb_id="DAH-Ipiti",
+        occupant_name="Ipiti",
         occupant_role="Official",
         dynasty="12",
         attribution_certainty="attested",
@@ -4467,7 +4480,7 @@ def test_chunk35_ipit() -> None:
         cemetery="North of Enclosure of Sesostris III",
         tomb_aliases=["DE MORGAN 24"],
         notes_from_pm=(
-            "24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. "
+            "24. IPITI, Overseer of the department, etc. 2nd half of Dyn. XII. "
             "DE MORGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with "
             "Khaʿkheperreʿ-sonb, Embalmer of the temple, before deceased, and uninscribed "
             "offering-table, in Cairo Mus. CG 1486."
@@ -4540,19 +4553,21 @@ def test_chunk35_nenmorgans28() -> None:
 
 def test_chunk35_siesi() -> None:
     """DAH-Siesi — § II.D. Overseer of seal, Dyn. XII, attested.
-    South of Enclosure of Amenemḥet II. tomb_aliases includes PM's
-    single-quoted 'Pyramid' LV of Lepsius (scare quotes preserved).
-    Printed p.898."""
+    South of Enclosure of Amenemḥēt II (macron-ē on Amenemḥēt per
+    printed PDF, PR #261 round-2 egyptologist P1.8). occupant_name
+    `Siēsi` (macron-ē per printed PDF P1.4); tomb_id ASCII-stripped.
+    tomb_aliases includes PM's single-quoted 'Pyramid' LV of Lepsius
+    (scare quotes preserved). Printed p.898."""
     _assert_chunk35_full(
         _by_id("DAH-Siesi"),
         tomb_id="DAH-Siesi",
-        occupant_name="Siesi",
+        occupant_name="Siēsi",
         occupant_role="Official",
         dynasty="12",
         attribution_certainty="attested",
         page=898,
         section="II",
-        cemetery="South of Enclosure of Amenemḥet II",
+        cemetery="South of Enclosure of Amenemḥēt II",
         tomb_aliases=["Lepsius LV", "'Pyramid' LV of Lepsius"],
         notes_from_pm=(
             "SIESI, Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. "

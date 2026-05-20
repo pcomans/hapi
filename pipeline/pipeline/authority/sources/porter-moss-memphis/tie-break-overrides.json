@@ -1858,27 +1858,27 @@
     "value": "Overseer of the two Pyramids of Snefru, Prophet of Rec in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurec or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 190-1 [2], with plan.",
     "rationale": "1/1/1 tie on chunk-35 DAH-Duare notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.534/printed p.894): `warb-priest` (source line 23 clearly shows r before b). Agent A matches source on `warb-priest`, includes [2] and `with plan`; B has `wab-priest` (drops r); C drops citation detail. A selected as source-closest."
   },
-  "DAH-Ipit|notes_from_pm": {
+  "DAH-Ipiti|notes_from_pm": {
     "value": "24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MoRGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khackheperrec-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486.",
-    "rationale": "1/1/1 tie on chunk-35 DAH-Ipit notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes stela detail (Khackheperrec-sonb, CG 1486) and fig. 77; B and C truncate. A is most complete."
+    "rationale": "1/1/1 tie on chunk-35 DAH-Ipiti notes_from_pm (tomb_id renamed from DAH-Ipit per PR #261 round-2 egyptologist P1.1: printed PDF p.897 item 24 reads IPITI). PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes stela detail (Khackheperrec-sonb, CG 1486) and fig. 77; B and C truncate. A is most complete. NOTE: the verbatim text-layer value here is later overridden in fix_rows.py CHUNK35_CORRECTIONS to apply (a) IPIT→IPITI per printed PDF, (b) raised-ayin normalization on Khackheperrec-sonb, and (c) DE MoRGAN→DE MORGAN OCR fix."
   },
   "DAH-Ithi|notes_from_pm": {
     "value": "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenphaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372.",
-    "rationale": "1/1/1 tie on chunk-35 DAH-Ithi notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): Agent A includes LIEBLEIN citation and family detail; B has different wife-name transcription and adds mitrt; C is abbreviated. A selected as most complete. Wife name OCR: source shows `Wesenptal;l(?)` — Agent A's Wesenphaḥ is closest reconstruction."
+    "rationale": "1/1/1 tie on chunk-35 DAH-Ithi notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): Agent A includes LIEBLEIN citation and family detail; B has different wife-name transcription and adds mitrt; C is abbreviated. A selected as most complete. Wife-name verbatim value here (Wesenphaḥ) is later overridden in fix_rows.py CHUNK35_CORRECTIONS to Wesenptaḥ(?) per PR #261 round-2 egyptologist P1.2 (printed PDF confirms Ptaḥ-theophoric, no internal hyphen)."
   },
   "DAH-Iynufer|notes_from_pm": {
     "value": "King's son, etc. Early Dyn. IV. BARSANTI in Ann. Serv. iii (1902), pp. 195-201 [I]; MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 159-90 [I].",
     "rationale": "1/1/1 tie on chunk-35 DAH-Iynufer notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.534/printed p.894): Both BARSANTI and MASPERO refs with [I] roman section marker. Agent A has both refs with roman [I]; B uses arabic [1] and em-dashes; C drops MASPERO. A is source-closest."
   },
-  "DAH-KaemEd|notes_from_pm": {
-    "value": "Prophet of Snefru(?), Secretary [of the King in] all his places, etc. Probably Dyn. V. Mother, Nefertnesut, King's daughter, Prophetess of Snefru and Hathor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), pp. 202-3 [III]; WILBOUR MSS. 2 G, 64 [upper]. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel sj-njswt 'Konigssohn', pp. 151-2 [V]. OCR of name damaged: original text reads KAEM:[glyph]:ED.",
-    "rationale": "1/1/1 tie on chunk-35 DAH-KaemEd notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): Agent A is most complete including WILBOUR and SCHMITZ refs and OCR-damage note; B and C truncate. A selected."
+  "DAH-Kaemked|notes_from_pm": {
+    "value": "Prophet of Snefru(?), Secretary [of the King in] all his places, etc. Probably Dyn. V. Mother, Nefertnesut, King's daughter, Prophetess of Snefru and Hathor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), pp. 202-3 [III]; WILBOUR MSS. 2 G, 64 [upper]. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel sj-njswt 'Konigssohn', pp. 151-2 [V].",
+    "rationale": "1/1/1 tie on chunk-35 DAH-Kaemked notes_from_pm (tomb_id renamed from DAH-KaemEd per PR #261 round-2 egyptologist P1.6: printed PDF p.895 § II.B clearly reads KAEMKED). PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): Agent A is most complete including WILBOUR and SCHMITZ refs; B and C truncate. A selected. OCR-damage tail (`KAEM:[glyph]:ED`) removed since the printed PDF resolves the name to KAEMKED."
   },
   "DAH-Kares|co_occupant_roles": {
     "value": [
-      "Wife, Prophetess of Hathor Mistress of the Sycamore"
+      "Wife"
     ],
-    "rationale": "1/1/1 tie on chunk-35 DAH-Kares co_occupant_roles. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): `Wife, Meresankh, Prophetess of Hathor Mistress of the Sycamore, etc.`. Following G3008/G4351 pattern `Wife, Prophetess of Hathor...`. Agent A chose [Official] (no warrant), B chose full priestly title (drops Wife), C chose [Wife] (drops title). Combined source-verbatim form."
+    "rationale": "1/1/1 tie on chunk-35 DAH-Kares co_occupant_roles. PM source (phys p.535/printed p.895): `Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc.`. Agent A chose [Official] (no warrant), B chose full priestly title (drops Wife), C chose [Wife]. Round-2 fix (PR #261 Gemini round-2 finding 3276144052): select agent C's `[\"Wife\"]` form per source-wide co_occupant_roles convention (DAH-Duare, DAH-Kanufer use relationship-only). The wife's additional title `Prophetess of Ḥatḥor Mistress of the Sycamore` lives in notes_from_pm where the full source clause is preserved. Strict-subset-of-agent-C-emission."
   },
   "DAH-Kares|notes_from_pm": {
     "value": "Prophet of Snefru, etc. Old Kingdom. Wife, Meresankh, Prophetess of Hathor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II].",
@@ -1895,8 +1895,8 @@
     "rationale": "1/1/1 tie on chunk-35 DAH-Khentekhtaiemsaf co_occupant_roles. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.536/printed p.896): `Wife, Sit-hathor` — no additional title given beyond Wife. Agent A chose [Official] (no source warrant), B chose [] (drops Wife role), C chose [Wife] (source-verbatim). C is correct per source."
   },
   "DAH-Khentekhtaiemsaf|notes_from_pm": {
-    "value": "11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-hathor. DE MoRGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049.",
-    "rationale": "1/1/1 tie on chunk-35 DAH-Khentekhtaiemsaf notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.536/printed p.896): Agent A includes canopic-chest (CG 4049) and full DE MORGAN detail with pls./figs.; B truncates; C is abbreviated. A is most complete."
+    "value": "11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049.",
+    "rationale": "Agent A verbatim with PR #261 round-2 intra-row consistency fix (Gemini 3276144042): the round-1 override drifted `Sit-ḥatḥor` to `Sit-hathor` (dropped underdots) while co_occupants correctly carried `Sit-ḥatḥor`. Restored to agent A's source-faithful form (A: `Sit-ḥatḥor`; B: `Sit-ḥaṯḥor` (ṯ error); C: `Sit-ḥatḥor`). Also normalized `DE MoRGAN → DE MORGAN`. Per Rule 6 (notes + co_occupants must agree on name spelling). PM source (phys p.536/printed p.896): Agent A includes canopic-chest (CG 4049) and full DE MORGAN detail with pls./figs.; B truncates; C is abbreviated. A is most complete."
   },
   "DAH-KhnemhotpPhyle|notes_from_pm": {
     "value": "25. KHNEMHOTP, Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. DE MoRGAN, Dahchour, i, p. 38. False-door, in Cairo Mus. CG 1478.",
