@@ -5,9 +5,9 @@
   xmlns:owl="http://www.w3.org/2002/07/owl#"
   xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
   xmlns:crmdig="http://www.cidoc-crm.org/extensions/crmdig/"
-  xml:base="https://hapi.example/extension/">
+  xml:base="https://github.com/pcomans/hapi/ns/extension#">
 
-  <owl:Ontology rdf:about="https://hapi.example/extension/">
+  <owl:Ontology rdf:about="https://github.com/pcomans/hapi/ns/extension#">
     <owl:versionInfo>Hapi CRM/CRMdig extension manifest, May 2026</owl:versionInfo>
     <rdfs:comment xml:lang="en">
       Hapi project's RDFS extensions on top of CIDOC CRM 7.1.3 + CRMdig 5.0.
@@ -85,7 +85,7 @@
 
   <rdf:Property rdf:about="in_dynastic_period">
     <rdfs:label xml:lang="en">in dynastic period</rdfs:label>
-    <rdfs:comment xml:lang="en">Assigns a Ruler (E21 Person) to a Dynasty (E4 Period) — chronological assignment, not family-membership. Closest CRM superproperty under review: P10_falls_within (E92 → E92) once Rulers are temporally-scoped via E12 Production / E67 Birth events. Pending Egyptological + CRM-modelling review.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Assigns a Ruler (E21 Person) to a Dynasty (E4 Period) — chronological assignment, not family-membership. No clean core-CRM superproperty identified in this pass. Naive candidates (e.g. P10_falls_within) require intermediate modelling decisions about how a Person relates to a Period in time — most plausibly via the Person's reign or birth as a separate temporal entity that falls within the Dynasty's Time-Span — and the right shape is a follow-up Egyptological + CRM-modelling decision rather than an immediate subsumption call. Free-standing for now.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="tomb_owner">
@@ -115,7 +115,7 @@
 
   <rdf:Property rdf:about="reign_period">
     <rdfs:label xml:lang="en">reign period</rdfs:label>
-    <rdfs:comment xml:lang="en">A Ruler's reign as an E52 Time-Span. Closest CRM superproperty under review: P4_has_time-span (E2 → E52), with the Ruler attached via an intermediate E11 Modification (the reign-event). Pending.</rdfs:comment>
+    <rdfs:comment xml:lang="en">A Ruler's reign as an E52 Time-Span. No clean core-CRM superproperty identified in this pass. The CIDOC-faithful approach materialises the reign itself as a separate temporal entity (likely E7 Activity or E4 Period — a reign is an extended action carried out by a ruler over a coherent period, not a modification of a physical thing), with that entity carrying P4_has_time-span to an E52. The right specific class is a follow-up modelling decision. Free-standing for now.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="horus_name">

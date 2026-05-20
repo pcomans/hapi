@@ -25,7 +25,7 @@ The authority layer is modeled as a **source-attributed claim graph** following 
 
 ### CIDOC alignment
 
-**Conformance target: CIDOC CRM 7.1.3 + CRMdig 5.0.** Both specifications, in their conceptual *and* official RDFS-encoding forms, are normative. The graph emits data that is valid under both specs to any conformant reader; Hapi-namespaced additions on top are silently ignored by strict readers.
+**Conformance target: CIDOC CRM 7.1.3 + CRMdig 5.0.** Both specifications, in their conceptual *and* official RDFS-encoding forms, are normative. The graph emits data that is valid under both specs to any conformant reader. A strict reader that has not loaded the Hapi extension manifest treats Hapi-namespaced triples as unrecognised URIs and does not reason on them (silent retention without interpretation). A reader that *has* loaded the manifest applies its `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations and interprets Hapi terms through their declared CRM/CRMdig parents. Both reader modes are valid; the graph data is identical in either case. See the Hapi extension manifest section below.
 
 Both specifications are vendored in-repo at `pipeline/pipeline/authority/spec/` (see the README in that directory):
 
@@ -75,14 +75,29 @@ Every E13 Statement carries a universally-required triad — P140 (subject), P14
 
 #### Hapi extension manifest
 
-These are the `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations that connect Hapi classes/predicates back to the CRM + CRMdig vocabularies. They are **not deviations** — they are the standard CIDOC extension idiom (every official extension, including CRMdig itself, uses the same `subClassOf` / `subPropertyOf` mechanism to relate to core CRM). Strict CIDOC readers running RDFS reasoning interpret Hapi terms through their declared parents.
+The `hapi:` prefix used throughout this ADR resolves to the namespace `https://github.com/pcomans/hapi/ns/extension#`. The full extension manifest — `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations and free-standing Hapi predicate declarations — is committed at `pipeline/pipeline/authority/hapi_extension.rdf`. The declarations are the standard CIDOC extension idiom (every official extension, including CRMdig itself, uses the same `subClassOf` / `subPropertyOf` mechanism to relate to core CRM). They are **not deviations**.
+
+**Two reader modes, two outcomes — clarified explicitly:**
+
+| Reader configuration | What happens to Hapi-namespaced triples |
+|---|---|
+| Strict CRM/CRMdig reader that has NOT loaded `hapi_extension.rdf` | Hapi terms are unrecognised URIs. The reader retains the triples but does not infer anything from them — IS-A propagation, subPropertyOf rewriting, and class-hierarchy queries that target CRM/CRMdig terms simply do not surface the Hapi-typed entities. Genuinely "silently ignored." |
+| Reader that has loaded `hapi_extension.rdf` (alongside the CRM and CRMdig RDFS files) | An RDFS reasoner applies the manifest's declarations. Every `hapi:MatcherRun` is now also typed as `crmdig:D3 Formal Derivation` (and transitively as E7 Activity, E1 CRM Entity, etc.); every `hapi:derived_by_run` edge is now also a `crm:P15_was_influenced_by` edge. Hapi terms become discoverable through CRM/CRMdig queries. Free-standing Hapi predicates (those without a declared `subPropertyOf`) remain opaque even with the manifest loaded — the manifest documents their existence but doesn't relate them to CRM vocabulary. |
+
+Both modes are valid. The graph data itself is identical in either case; what differs is the reader's interpretive layer. Hapi never relies on the manifest being loaded for correctness — but loading it unlocks the full interop story.
+
+Manifest excerpt (the full file is the citable contract):
 
 ```turtle
-# Hapi extension manifest (excerpt; full file at pipeline/pipeline/authority/hapi_extension.rdf)
-# Every Hapi-namespaced class and predicate referenced anywhere in this ADR MUST appear in that
-# file, with either a sound subClassOf/subPropertyOf declaration or an explicit free-standing
-# declaration (with comment) when no CRM superclass/superproperty fits. Unmanifested terms are
-# rejected by the cidoc-crm-validator subagent.
+# Hapi extension manifest excerpt — see pipeline/pipeline/authority/hapi_extension.rdf for the full file
+# Every Hapi-namespaced class and predicate referenced anywhere in this ADR MUST appear in that file,
+# with either a sound subClassOf/subPropertyOf declaration or an explicit free-standing declaration
+# (with comment) when no CRM superclass/superproperty fits. Unmanifested terms are rejected by the
+# cidoc-crm-validator subagent.
+
+@prefix hapi:    <https://github.com/pcomans/hapi/ns/extension#> .
+@prefix crm:     <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix crmdig:  <http://www.cidoc-crm.org/extensions/crmdig/> .
 
 # Classes
 hapi:MatcherRun         rdfs:subClassOf  crmdig:D3_Formal_Derivation .
@@ -90,10 +105,10 @@ hapi:MatcherAlgorithm   rdfs:subClassOf  crmdig:D14_Software         .
 hapi:SourceData         rdfs:subClassOf  crmdig:D1_Digital_Object    .
 
 # Properties — Hapi-namespaced for readability, declared as subproperties of real CRM/CRMdig properties
-hapi:derived_by_run     rdfs:subPropertyOf crm:P15_was_influenced_by  .  # E13 → D3
+hapi:derived_by_run     rdfs:subPropertyOf crm:P15_was_influenced_by  .  # E13 → hapi:MatcherRun
 ```
 
-Hapi predicates that *don't* have a clean CRM superproperty (e.g. `hapi:same_entity_as`, `hapi:in_dynastic_period`, `hapi:tomb_owner`) live as plain Hapi-namespaced predicates referenced from the predicate registry — strict readers see them as `:E55 Type` instances with unfamiliar identifiers and don't reason on them. The registry's `crm_nearest` field documents the closest CRM property for human reviewers, where one exists.
+Hapi predicates that don't have a clean CRM superproperty (`hapi:same_entity_as`, `hapi:in_dynastic_period`, `hapi:tomb_owner`, etc.) live in the manifest as plain `rdf:Property` declarations and as `:E55 Type` instances in the predicate registry. The registry's `crm_nearest` field documents the closest CRM property for human reviewers, where one exists. Tightening these to real `rdfs:subPropertyOf` declarations is a follow-up Egyptological + CRM-modelling cross-cut.
 
 #### Declared deviations from strict CRM + CRMdig
 
