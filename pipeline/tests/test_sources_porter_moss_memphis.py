@@ -3338,9 +3338,8 @@ def test_chunk33_all_pyramid_field_of_dahshur_cemetery() -> None:
         assert row["cemetery"] == "Pyramid-field of Dahshur", row
 
 
-def _assert_chunk33_full(row, *, occupant_name, dynasty, page,
+def _assert_chunk33_full(row, *, occupant_name, dynasty, page, tomb_aliases,
                          attribution_certainty="attested",
-                         tomb_aliases=None,
                          notes_from_pm=None,
                          occupant_role="King"):
     """Shared Rule-5 full-field assertions for chunk-33 royal-pyramid rows.
