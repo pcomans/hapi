@@ -606,7 +606,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "wʿab-priest over-the-secrets of the estate of Amūn, Prophet in the "
             "Temple of Tuthmosis IV. Temp. Ramesses VIII. "
             "(WILKINSON, No. 2, HAY, No. 10.) Father, Bekenamtūn, "
-            "wʿab-priest of Amun. Wife, Esi.",
+            "wʿab-priest of Amūn. Wife, Esi.",
         ("TT114", "notes_from_pm"):
             "Head of goldworkers of the estate of Amūn. Dyn. XX. "
             "Father, a wʿab-priest of Anubis.",

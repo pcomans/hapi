@@ -5207,7 +5207,7 @@ def test_chunk20_tt113_kynebu_waab_priest_bekenamtun() -> None:
     assert r["attribution_certainty"] == "attested"
     # ayin-before-a form with lowercase initial
     assert r["notes_from_pm"].startswith("wʿab-priest")
-    assert "wʿab-priest of Amun" in r["notes_from_pm"]
+    assert "wʿab-priest of Amūn" in r["notes_from_pm"]
     assert "Bekenamtūn" in r["notes_from_pm"]
     assert "Amūn" in r["notes_from_pm"]  # macron-Ū preserved
     assert "Wife, Esi" in r["notes_from_pm"]
