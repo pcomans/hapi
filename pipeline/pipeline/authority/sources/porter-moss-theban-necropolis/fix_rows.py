@@ -1655,6 +1655,28 @@ CHUNK19_CORRECTIONS: list[tuple[str, str, object, str]] = []
 CHUNK19_RENAMES: dict[str, str] = {}
 
 
+# Chunk-20: PM I.1 § I Numbered Tombs TT111-TT120 (Sh. ʿAbd el-Qurna).
+# No field-value corrections at merge time; 4 tie-break-overrides.json entries
+# resolved all 1/1/1 ties (TT112|notes_from_pm, TT113|notes_from_pm,
+# TT114|notes_from_pm, TT120|notes_from_pm). DERIVER_OVERRIDES below handle
+# TT116 + TT118 attribution_certainty over-fires (both regnal-date hedges).
+# Egyptologist review pending:
+#   TT114 occupant_role="Unknown" may be wrong — PM's headword prints a title
+#   (`Head of goldworkers of the estate of Amūn`) without a personal name.
+#   If PM convention marks this row as Official-with-lost-name (not Unknown),
+#   the role should be "Official". All 3 agents agreed on "Unknown" (transcribed
+#   the absence of a personal name as Unknown), but the title presence suggests
+#   the agents applied the Unknown rule too broadly. Pending egyptologist
+#   printed-source review before applying any correction.
+#   TT120 occupant_alt_names=["Mahu"] — "Mahu" is an external-catalogue name
+#   (Gardiner & Weigall), not a verified ancient alias. The alt_names field is
+#   designed for alternate ancient readings; whether a modern-catalogue label
+#   belongs here is an egyptologist judgment call.
+CHUNK20_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+CHUNK20_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1951,6 +1973,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK17_CORRECTIONS,
     CHUNK18_CORRECTIONS,
     CHUNK19_CORRECTIONS,
+    CHUNK20_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1972,6 +1995,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK17_RENAMES,
     **CHUNK18_RENAMES,
     **CHUNK19_RENAMES,
+    **CHUNK20_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -2404,6 +2428,35 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "hedge class as chunk-10 TT17 (`Amenḥotp (?)`). Per chunk-9 TT2 "
         "precedent that attribution_certainty encodes occupant-identity "
         "certainty, not secondary-clause family-name certainty.",
+    ),
+    # Chunk-20 attribution_certainty overrides. TT116 is an anonymous row
+    # where (?) qualifies the regnal-date range (Amenophis III), not the
+    # occupant identity (there is none to hedge — the occupant is unnamed).
+    # TT118 is a named occupant where (?) qualifies the regnal date only.
+    # Both follow the regnal-date-hedge class established by chunk-10 cluster
+    # (TT12/TT19/TT20) and extended through chunks 13–19.
+    (
+        "TT116",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.233 prints `116. Hereditary prince. Temp. Tuthmosis IV to "
+        "Amenophis III (?).` The `(?)` qualifies the regnal-range tail "
+        "(Amenophis III), not the occupant's identity — which is fully "
+        "attested as an unnamed hereditary prince of the stated period. "
+        "Same regnal-date hedge class as chunk-10 TT12/TT19/TT20, chunk-13 "
+        "TT41/TT43, chunk-14 TT52, chunk-15 TT69, chunk-17 TT94, chunk-18 "
+        "TT97/TT98. Per chunk-9 TT2 precedent that attribution_certainty "
+        "encodes occupant-identity certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT118",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.233 prints `118. AMENMOSI ..., Fan-bearer on the right of "
+        "the King. Temp. Amenophis III (?).` The `(?)` qualifies the regnal "
+        "date (Amenophis III), not Amenmosi's identification as Fan-bearer. "
+        "Same regnal-date hedge class as chunk-10 TT12/TT19/TT20 and the "
+        "TT116 same-chunk override above. Per chunk-9 TT2 precedent.",
     ),
 ]
 
