@@ -2248,6 +2248,33 @@ MAR85 (Isesiʿankh):
 MAR88 (Ḥuti):
   notes_from_pm: a="Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance." | b="Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance. Panel of false-door in Cairo Mus. CG 1392. Statues in Cairo Mus.: (a) deceased seated CG 64; (b) wife seated CG 48." | c="Inspector of scribes of the house of the master of the largesse, etc. Dyn. V–VI. Wife, Kitsen, Royal acquaintance. Panel of false-door (Cairo CG 1392). Statues in Cairo Mus.: (a) deceased seated (CG 64); (b) wife seated (CG 48)."  → chose "Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance."
 
+DAH-Amenemhet2 (Amenemḥet II):
+  notes_from_pm: a="Lepsius, LI, White Pyramid. PYRAMID-COMPLEX OF AMENEMḤET II (D)." | b="D. PYRAMID-COMPLEX OF AMENEMḤET II. PYRAMID. Lepsius, LI; White Pyramid." | c="Lepsius, LI; White Pyramid."  → chose "Lepsius, LI, White Pyramid."
+  tomb_aliases: a=["White Pyramid", "Lepsius LI"] | b=[] | c=[]  → chose []
+
+DAH-Amenemhet3 (Amenemḥet III):
+  notes_from_pm: a="Lepsius, LVIII; Black Pyramid. PYRAMID-COMPLEX OF AMENEMḤET III (F)." | b="F. PYRAMID-COMPLEX OF AMENEMḤET III. PYRAMID. Lepsius, LVIII; Black Pyramid." | c="Lepsius, LVIII; Black Pyramid."  → chose "Lepsius, LVIII; Black Pyramid."
+  tomb_aliases: a=["Black Pyramid", "Lepsius LVIII"] | b=[] | c=[]  → chose []
+
+DAH-PyramidE (None):
+  notes_from_pm: a="Lepsius, LIV. PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII (E)." | b="PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII. Lepsius, LIV." | c="Pyramid-enclosure probably of Dynasty XIII. Lepsius, LIV."  → chose "PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII. Lepsius, LIV."
+  tomb_aliases: a=["Lepsius LIV"] | b=[] | c=[]  → chose []
+
+DAH-Sesostris3 (Sesostris III):
+  notes_from_pm: a="Lepsius, XLVII. PYRAMID-COMPLEX OF SESOSTRIS III (C)." | b="Lepsius, XLVII." | c="Lepsius, XLVII."  → chose "Lepsius, XLVII."
+  tomb_aliases: a=["Lepsius XLVII"] | b=[] | c=[]  → chose []
+
+DAH-SnefruNorthernComplex (Snefru):
+  notes_from_pm: a="Lepsius, XLIX; Red Pyramid. Northern Complex of Snefru (A AND B. PYRAMID-COMPLEXES OF SNEFRU, A. NORTHERN COMPLEX)." | b="Northern Complex. PYRAMID. Lepsius, XLIX; Red Pyramid." | c="Northern Complex of Snefru. Pyramid of Snefru. Lepsius, XLIX; Red Pyramid."  → chose "Lepsius, XLIX; Red Pyramid."
+  occupant_alt_names: a=[] | b=["Snofru"] | c=[]  → chose []
+  tomb_aliases: a=["Red Pyramid", "Lepsius XLIX"] | b=[] | c=[]  → chose []
+
+DAH-SnefruSouthernComplex (Snefru):
+  notes_from_pm: a="Lepsius, LVI. Blunted, Bent, False, or Rhomboidal Pyramid. Southern Complex of Snefru (A AND B. PYRAMID-COMPLEXES OF SNEFRU, B. SOUTHERN COMPLEX)." | b="Southern Complex. PYRAMID. Lepsius, LVI; Blunted, Bent, False, or Rhomboidal Pyramid." | c="Southern Complex of Snefru. Pyramid of Snefru. Lepsius, LVI; Blunted, Bent, False, or Rhomboidal Pyramid."  → chose "Lepsius, LVI. Blunted, Bent, False, or Rhomboidal Pyramid."
+  occupant_alt_names: a=[] | b=["Snofru"] | c=[]  → chose []
+  source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 877, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}
+  tomb_aliases: a=["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"] | b=[] | c=[]  → chose []
+
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
@@ -2465,3 +2492,9 @@ Reviewer-cited row corrections:
   MAR-C25.co_occupants: [] → ["Ḥetep"]
   MAR-C25.co_occupant_roles: [] → ["Son, Judge and Inspector of scribes"]
   MAR-D67.notes_from_pm: "Supervisor of prophets of the Sun-temple and Pyramid of Neuserreʿ, Prophet of the Sun-temple of Neferirkareʿ, etc. Temp. Neuserreʿ or later." → "Supervisor of prophets of the Sun-temple and Pyramid of Neuserrēʿ, Prophet of the Sun-temple of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later."
+  DAH-Amenemhet2.tomb_aliases: [] → ["White Pyramid", "Lepsius LI"]
+  DAH-Amenemhet3.tomb_aliases: [] → ["Black Pyramid", "Lepsius LVIII"]
+  DAH-PyramidE.tomb_aliases: [] → ["Lepsius LIV"]
+  DAH-Sesostris3.tomb_aliases: [] → ["Lepsius XLVII"]
+  DAH-SnefruNorthernComplex.tomb_aliases: [] → ["Red Pyramid", "Lepsius XLIX"]
+  DAH-SnefruSouthernComplex.tomb_aliases: [] → ["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"]

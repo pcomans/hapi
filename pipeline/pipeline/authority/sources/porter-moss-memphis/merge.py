@@ -124,6 +124,14 @@ AREA_ORDER: dict[str, int] = {
                 # citation (`No. 6 [C 15]. TY ...`); the bracketed
                 # letter-code goes in `tomb_aliases`. tomb_id form:
                 # `MAR<N>`, e.g. `MAR6` for Ti.
+    "DAH": 16,  # Dahshûr descriptor-form (DAH-SnefruNorthernComplex,
+                # DAH-SnefruSouthernComplex, DAH-Sesostris3, etc.) —
+                # PM III.2 § I. PYRAMIDS Dahshûr section (chunk 33).
+                # PM's Dahshûr headings use section-letter + royal-name
+                # descriptors (A. NORTHERN COMPLEX, B. SOUTHERN COMPLEX,
+                # C. PYRAMID-COMPLEX OF SESOSTRIS III, etc.), so descriptor
+                # IDs synthesise `DAH-<Descriptor>` from the section
+                # heading. Sorts after all Saqqâra prefixes.
     # NB: chunks 15 + 17 (Cemetery en Echelon South + G 7000 East Field
     # remainder) re-use Reisner G-numbers (G 4911-G 5560 + G 7152-G 7948)
     # so no new prefix is needed there. Chunks 16 (Cemetery G 6000) and

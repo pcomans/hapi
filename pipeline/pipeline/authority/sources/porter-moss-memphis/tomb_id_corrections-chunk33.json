@@ -1,0 +1,23 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-33 (PM III.2 § I PYRAMIDS Dahshûr, A-F sections, printed pp.876-889, phys pp.516-529). Four agent-specific tomb_id variants corrected to canonical form before merge.py runs. Canonical form `DAH-SnefruNorthernComplex` / `DAH-SnefruSouthernComplex` is PM-source-faithful: PM III.2 phys p.516/printed p.876 header reads 'A. NORTHERN COMPLEX' and phys p.517/printed p.877 header reads 'B. SOUTHERN COMPLEX', making the long-form descriptor more faithful to PM's own section-heading vocabulary than the short `North`/`South` forms. Agents A and C both emitted the short `DAH-SnefruNorth` / `DAH-SnefruSouth`; Agent B emitted `DAH-SnefruNorthernComplex` / `DAH-SnefruSouthernComplex`. Canonical is the PM-header-faithful long form regardless of 2/3 majority on the short form.\n\nSummary of corrections:\n1. a|DAH-SnefruNorth: Agent A short-form; canonical DAH-SnefruNorthernComplex per PM header 'A. NORTHERN COMPLEX' (phys p.516/printed p.876).\n2. c|DAH-SnefruNorth: Agent C short-form; same rationale as (1).\n3. a|DAH-SnefruSouth: Agent A short-form; canonical DAH-SnefruSouthernComplex per PM header 'B. SOUTHERN COMPLEX' (phys p.517/printed p.877).\n4. c|DAH-SnefruSouth: Agent C short-form; same rationale as (3).",
+  "a|DAH-SnefruNorth": {
+    "canonical_tomb_id": "DAH-SnefruNorthernComplex",
+    "canonical_occupant_name": "Snefru",
+    "rationale": "Agent A used short-form tomb_id DAH-SnefruNorth. PM III.2 phys p.516/printed p.876 section header reads 'A. NORTHERN COMPLEX' (raw/chunk-33-p516-p529-dahshur-pyramids.txt line 34), making DAH-SnefruNorthernComplex the PM-source-faithful canonical form. Agent B emitted DAH-SnefruNorthernComplex. Canonical selected over the 2/3 short-form majority because source-fidelity to PM's printed section header takes precedence per Constitutional Rule 1."
+  },
+  "c|DAH-SnefruNorth": {
+    "canonical_tomb_id": "DAH-SnefruNorthernComplex",
+    "canonical_occupant_name": "Snefru",
+    "rationale": "Agent C used short-form tomb_id DAH-SnefruNorth. PM III.2 phys p.516/printed p.876 section header reads 'A. NORTHERN COMPLEX' (raw/chunk-33-p516-p529-dahshur-pyramids.txt line 34), making DAH-SnefruNorthernComplex the PM-source-faithful canonical form. Agent B emitted DAH-SnefruNorthernComplex. Canonical selected over the 2/3 short-form majority because source-fidelity to PM's printed section header takes precedence per Constitutional Rule 1."
+  },
+  "a|DAH-SnefruSouth": {
+    "canonical_tomb_id": "DAH-SnefruSouthernComplex",
+    "canonical_occupant_name": "Snefru",
+    "rationale": "Agent A used short-form tomb_id DAH-SnefruSouth. PM III.2 phys p.517/printed p.877 section header reads 'B. SOUTHERN COMPLEX' (raw/chunk-33-p516-p529-dahshur-pyramids.txt line 59), making DAH-SnefruSouthernComplex the PM-source-faithful canonical form. Agent B emitted DAH-SnefruSouthernComplex. Canonical selected over the 2/3 short-form majority because source-fidelity to PM's printed section header takes precedence per Constitutional Rule 1."
+  },
+  "c|DAH-SnefruSouth": {
+    "canonical_tomb_id": "DAH-SnefruSouthernComplex",
+    "canonical_occupant_name": "Snefru",
+    "rationale": "Agent C used short-form tomb_id DAH-SnefruSouth. PM III.2 phys p.517/printed p.877 section header reads 'B. SOUTHERN COMPLEX' (raw/chunk-33-p516-p529-dahshur-pyramids.txt line 59), making DAH-SnefruSouthernComplex the PM-source-faithful canonical form. Agent B emitted DAH-SnefruSouthernComplex. Canonical selected over the 2/3 short-form majority because source-fidelity to PM's printed section header takes precedence per Constitutional Rule 1."
+  }
+}

@@ -2720,6 +2720,92 @@ CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk 33 — Dahshûr § I PYRAMIDS (PR #258 / pending)
+# Restore tomb_aliases for the 5 named royal-pyramid rows + 1
+# anonymous Dyn-XIII pyramid-enclosure (DAH-PyramidE) where agent A
+# correctly captured PM's popular-name idiom + Lepsius numerals but
+# agents B + C emitted []. Per Constitutional Rule 1: PM source
+# text-layer (raw/chunk-33-p516-p529-dahshur-pyramids.txt) verbatim
+# contains these aliases — the 2/3 majority of [] is
+# majority-omission, not majority-correctness. Strict-subset-of-
+# agent-A-emission for each row.
+CHUNK33_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("DAH-SnefruNorthernComplex", "tomb_aliases"): {
+        "value": ["Red Pyramid", "Lepsius XLIX"],
+        "rationale": (
+            "PM III.2 printed p.876 (phys p.516) line 40 of raw/chunk-33-"
+            "p516-p529-dahshur-pyramids.txt: `PYRAMID. Lepsius, XLIX; "
+            "Red Pyramid.` Agent A correctly captured both the Lepsius "
+            "Roman numeral and the popular name. Agents B + C emitted "
+            "[]. Restoring A's verbatim emission (strict-subset-of-A) "
+            "per Rule 1: PM source supports both aliases directly."
+        ),
+    },
+    ("DAH-SnefruSouthernComplex", "tomb_aliases"): {
+        "value": [
+            "Bent Pyramid",
+            "Blunted Pyramid",
+            "False Pyramid",
+            "Rhomboidal Pyramid",
+            "Lepsius LVI",
+        ],
+        "rationale": (
+            "PM III.2 printed p.881 (phys p.521) line 319 of raw/chunk-33-"
+            "p516-p529-dahshur-pyramids.txt: `PYRAMID. Lepsius, LVI. "
+            "Blunted, Bent, False, or Rhomboidal Pyramid.` Agent A "
+            "captured all 4 popular names + Lepsius numeral; agents "
+            "B + C emitted []. Restoring A's verbatim emission per "
+            "Rule 1. The Snefru Southern Pyramid's 4 popular names are "
+            "canonical museum-record-match anchors (Bent Pyramid is "
+            "the universal modern name)."
+        ),
+    },
+    ("DAH-Sesostris3", "tomb_aliases"): {
+        "value": ["Lepsius XLVII"],
+        "rationale": (
+            "PM III.2 printed p.882 (phys p.522) `PYRAMID. Lepsius, "
+            "XLVII.` Agent A captured the Lepsius numeral; agents "
+            "B + C emitted []. Restoring per Rule 1: Lepsius numerals "
+            "are standard PM-source-attested aliases (Lepsius's 19th-"
+            "century pyramid-numbering scheme is still the canonical "
+            "cross-reference for Dahshûr pyramids)."
+        ),
+    },
+    ("DAH-Amenemhet2", "tomb_aliases"): {
+        "value": ["White Pyramid", "Lepsius LI"],
+        "rationale": (
+            "PM III.2 printed p.886 (phys p.526) line 584 of raw/chunk-33-"
+            "p516-p529-dahshur-pyramids.txt: `PYRAMID. Lepsius, LI, "
+            "White Pyramid.` Agent A captured both the popular name "
+            "and the Lepsius numeral; agents B + C emitted []. "
+            "Restoring A's verbatim emission per Rule 1."
+        ),
+    },
+    ("DAH-Amenemhet3", "tomb_aliases"): {
+        "value": ["Black Pyramid", "Lepsius LVIII"],
+        "rationale": (
+            "PM III.2 printed p.887 (phys p.527) line 674 of raw/chunk-33-"
+            "p516-p529-dahshur-pyramids.txt: `PYRAMID. Lepsius, LVIII; "
+            "Black Pyramid.` Agent A captured both the popular name "
+            "and the Lepsius numeral; agents B + C emitted []. The "
+            "Black Pyramid is the universal modern name for "
+            "Amenemḥet III's Dahshûr pyramid (his other pyramid is "
+            "at Hawara in the Fayyum — distinct site)."
+        ),
+    },
+    ("DAH-PyramidE", "tomb_aliases"): {
+        "value": ["Lepsius LIV"],
+        "rationale": (
+            "PM III.2 printed p.887 (phys p.527) `PYRAMID. Lepsius, "
+            "LIV.` (anonymous Dyn XIII pyramid-enclosure). Agent A "
+            "captured the Lepsius numeral; agents B + C emitted []. "
+            "Restoring per Rule 1 — Lepsius LIV is the standard "
+            "cross-reference for this otherwise-unidentified pyramid."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -2752,6 +2838,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK29_CORRECTIONS,
     CHUNK30_CORRECTIONS,
     CHUNK31_CORRECTIONS,
+    CHUNK33_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

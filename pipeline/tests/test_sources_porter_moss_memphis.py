@@ -768,6 +768,24 @@ CHUNK13_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+CHUNK33_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § I PYRAMIDS Dahshûr — sections A through F.
+    # Physical pp.516-529 / printed pp.876-889. 6 rows covering the
+    # Pyramid-field of Dahshur: Snefru's two pyramid-complexes (Northern
+    # = Red Pyramid, Dyn IV; Southern = Bent Pyramid, Dyn IV), Sesostris
+    # III (Dyn XII), a probable Dyn-XIII pyramid-enclosure (anon),
+    # Amenemhet II (Dyn XII, White Pyramid), and Amenemhet III (Dyn XII,
+    # Black Pyramid). First `memphite_area: "Dahshur"` rows; first
+    # `cemetery: "Pyramid-field of Dahshur"` rows; first `DAH-` prefix.
+    "DAH-SnefruNorthernComplex",  # A. Northern Complex (Red Pyramid)
+    "DAH-SnefruSouthernComplex",  # B. Southern Complex (Bent Pyramid)
+    "DAH-Sesostris3",             # C. Pyramid-complex of Sesostris III
+    "DAH-Amenemhet2",             # D. Pyramid-complex of Amenemhet II (White Pyramid)
+    "DAH-PyramidE",               # E. Pyramid-enclosure probably Dyn XIII (anon)
+    "DAH-Amenemhet3",             # F. Pyramid-complex of Amenemhet III (Black Pyramid)
+})
+
+
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
@@ -778,7 +796,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
     | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
     | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS
-    | CHUNK32_TOMB_IDS
+    | CHUNK32_TOMB_IDS | CHUNK33_TOMB_IDS
 )
 
 
@@ -935,14 +953,15 @@ def test_attribution_certainty_controlled_vocab() -> None:
         assert row["attribution_certainty"] in _VALID_CERTAINTY, row
 
 
-_VALID_MEMPHITE_AREAS = frozenset({"Giza", "Saqqara"})
+_VALID_MEMPHITE_AREAS = frozenset({"Giza", "Saqqara", "Dahshur"})
 
 
 def test_memphite_area_controlled_vocab() -> None:
     """Chunks 1-3 are all PYRAMID-FIELD OF GÎZA. Chunks 4 and 5 are
     PYRAMID-FIELD OF SAQQARA (PM III.2 § I. PYRAMIDS back and front
-    halves respectively). Future chunks will extend with `Abusir`,
-    `Dahshur`, `Lisht`, `Meidum`."""
+    halves respectively). Chunk 33 is PYRAMID-FIELD OF DAHSHUR (PM III.2
+    § I. PYRAMIDS Dahshûr sections A-F, printed pp.876-889). Future chunks
+    will extend with `Abusir`, `Lisht`, `Meidum`."""
     for row in _rows():
         assert row["memphite_area"] in _VALID_MEMPHITE_AREAS, row
 
@@ -1032,6 +1051,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK32_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK33_TOMB_IDS:
+            assert row["source_citation"]["section"] == "I", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -1064,6 +1085,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK30_TOMB_IDS
             | CHUNK31_TOMB_IDS
             | CHUNK32_TOMB_IDS
+            | CHUNK33_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
@@ -1140,6 +1162,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 653 <= page <= 670, f"{row['tomb_id']} page {page} outside chunk-31 [653, 670]"
         elif row["tomb_id"] in CHUNK32_TOMB_IDS:
             assert 700 <= page <= 719, f"{row['tomb_id']} page {page} outside chunk-32 [700, 719]"
+        elif row["tomb_id"] in CHUNK33_TOMB_IDS:
+            assert 876 <= page <= 889, f"{row['tomb_id']} page {page} outside chunk-33 [876, 889]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1322,6 +1346,12 @@ def test_cemetery_by_chunk() -> None:
             # All 30 rows carry `Tombs of position unknown` — the PM
             # section banner for this entire sub-section.
             assert row["cemetery"] == "Tombs of position unknown", row
+        elif row["tomb_id"] in CHUNK33_TOMB_IDS:
+            # Chunk 33: § I PYRAMIDS Dahshûr (A-F). All 6 rows carry
+            # `cemetery: "Pyramid-field of Dahshur"` — the PM section
+            # banner "PYRAMID-FIELD OF DAHSHUR" at phys p.516/printed
+            # p.876. First occurrence of this cemetery value.
+            assert row["cemetery"] == "Pyramid-field of Dahshur", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -3278,3 +3308,187 @@ def test_chunk13_weri_distinct_from_g2415() -> None:
     assert weri_jke["tomb_id"] != weri_g2415["tomb_id"]
     assert weri_jke["cemetery"] == "Junker East"
     assert weri_g2415["cemetery"] == "G 2400"
+
+
+# === chunk 33 content tests =================================================
+
+
+def test_chunk33_row_count_6() -> None:
+    """Chunk 33 (PM III.2 § I PYRAMIDS Dahshûr, A-F) emits exactly 6 rows:
+    Snefru Northern Complex (Red Pyramid), Snefru Southern Complex (Bent
+    Pyramid), Sesostris III, Amenemhet II (White Pyramid), anonymous
+    Dyn-XIII pyramid-enclosure (E), and Amenemhet III (Black Pyramid)."""
+    ch33 = [r for r in _rows() if r["tomb_id"] in CHUNK33_TOMB_IDS]
+    assert len(ch33) == 6
+
+
+def test_chunk33_all_dahshur_memphite_area() -> None:
+    """All chunk-33 rows carry `memphite_area: 'Dahshur'` — first occurrence
+    of this value; extends `_VALID_MEMPHITE_AREAS` from {Giza, Saqqara}."""
+    for tid in CHUNK33_TOMB_IDS:
+        row = _by_id(tid)
+        assert row["memphite_area"] == "Dahshur", row
+
+
+def test_chunk33_all_pyramid_field_of_dahshur_cemetery() -> None:
+    """All chunk-33 rows carry `cemetery: 'Pyramid-field of Dahshur'` per
+    the PM section banner 'PYRAMID-FIELD OF DAHSHUR' (printed p.876)."""
+    for tid in CHUNK33_TOMB_IDS:
+        row = _by_id(tid)
+        assert row["cemetery"] == "Pyramid-field of Dahshur", row
+
+
+def _assert_chunk33_full(row, *, occupant_name, dynasty, page, tomb_aliases,
+                         attribution_certainty="attested",
+                         notes_from_pm=None,
+                         occupant_role="King"):
+    """Shared Rule-5 full-field assertions for chunk-33 royal-pyramid rows.
+
+    Asserts ALL 23 populated fields (per code-reviewer PR #258 P1).
+    Defaults match the source-wide convention for Dahshûr royal pyramid
+    rows: no co-occupants, no shared tombs, no discovery metadata, etc.
+    The variant fields (`occupant_name`, `dynasty`, `page`,
+    `attribution_certainty`, `tomb_aliases`, `occupant_role`) are passed
+    explicitly so each per-row test pins its specific values.
+    """
+    assert row["occupant_name"] == occupant_name
+    assert row["occupant_role"] == occupant_role
+    assert row["dynasty"] == dynasty
+    assert row["attribution_certainty"] == attribution_certainty
+    assert row["source_citation"]["section"] == "I"
+    assert row["source_citation"]["page"] == page
+    assert row["source_citation"]["edition"] == EDITION_PM_III_2
+    assert row["is_joint_burial"] is False
+    assert row["is_uninscribed"] is False
+    assert row["is_unfinished"] is False
+    assert row["is_usurped"] is False
+    assert row["co_occupants"] == []
+    assert row["co_occupant_roles"] == []
+    assert row["shared_with_tombs"] == []
+    assert row["occupant_alt_names"] == []
+    assert row["date_bce_approx_start"] is None
+    assert row["date_bce_approx_end"] is None
+    assert row["discoverer"] is None
+    assert row["discovery_year"] is None
+    assert row["sub_period"] is None
+    assert row["memphite_area"] == "Dahshur"
+    assert row["cemetery"] == "Pyramid-field of Dahshur"
+    # Rule 3/5: tomb_aliases is the headline restoration of PR #258
+    # — every chunk-33 row asserts its full alias list per code-reviewer
+    # PR #258 P1 ("tomb_aliases restorations have zero deterministic
+    # enforcement"). Pinning the exact list catches any silent merge
+    # or fix_rows refactor that drops a Lepsius numeral or popular name.
+    assert row["tomb_aliases"] == tomb_aliases
+    # notes_from_pm pinned per Gemini PR #258 round-2 findings
+    # (3271221094 / 3271221121 / 3271221136 — synthesis + punctuation
+    # drift in chunk-33 tie-break overrides). Pinning the exact source-
+    # verbatim form catches any silent re-introduction of synthesized
+    # descriptors or punctuation normalisation.
+    if notes_from_pm is not None:
+        assert row["notes_from_pm"] == notes_from_pm
+
+
+def test_chunk33_snefru_northern_complex() -> None:
+    """DAH-SnefruNorthernComplex — A. NORTHERN COMPLEX (Red Pyramid),
+    Snefru, Dyn IV, attested, section I, printed p.876.
+
+    tomb_aliases pinned: [Red Pyramid, Lepsius XLIX] per PM source
+    line 40 `PYRAMID. Lepsius, XLIX; Red Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-SnefruNorthernComplex"),
+        occupant_name="Snefru",
+        dynasty="4",
+        page=876,
+        tomb_aliases=["Red Pyramid", "Lepsius XLIX"],
+        notes_from_pm="Lepsius, XLIX; Red Pyramid.",
+    )
+
+
+def test_chunk33_snefru_southern_complex() -> None:
+    """DAH-SnefruSouthernComplex — B. SOUTHERN COMPLEX (Bent Pyramid),
+    Snefru, Dyn IV, attested, printed p.881 (PYRAMID entry page).
+
+    tomb_aliases pinned: 4 popular names + Lepsius numeral per PM source
+    line 319 `PYRAMID. Lepsius, LVI. Blunted, Bent, False, or
+    Rhomboidal Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-SnefruSouthernComplex"),
+        occupant_name="Snefru",
+        dynasty="4",
+        page=881,
+        tomb_aliases=[
+            "Bent Pyramid",
+            "Blunted Pyramid",
+            "False Pyramid",
+            "Rhomboidal Pyramid",
+            "Lepsius LVI",
+        ],
+        notes_from_pm="Lepsius, LVI. Blunted, Bent, False, or Rhomboidal Pyramid.",
+    )
+
+
+def test_chunk33_sesostris3_pyramid() -> None:
+    """DAH-Sesostris3 — C. PYRAMID-COMPLEX OF SESOSTRIS III, Dyn XII,
+    attested, printed p.882.
+
+    tomb_aliases pinned: [Lepsius XLVII] per PM source (no popular
+    English name; only the Lepsius cross-reference)."""
+    _assert_chunk33_full(
+        _by_id("DAH-Sesostris3"),
+        occupant_name="Sesostris III",
+        dynasty="12",
+        page=882,
+        tomb_aliases=["Lepsius XLVII"],
+        notes_from_pm="Lepsius, XLVII.",
+    )
+
+
+def test_chunk33_pyramid_e_anonymous_dyn13() -> None:
+    """DAH-PyramidE — E. PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII.
+    Anonymous occupant (occupant_name null), attribution_certainty
+    'probable', dynasty '13'. Parallel to chunk-5 anonymous Dyn-III
+    structure pattern.
+
+    tomb_aliases pinned: [Lepsius LIV] per PM source — anonymous
+    pyramid has no popular name, only Lepsius numeral."""
+    _assert_chunk33_full(
+        _by_id("DAH-PyramidE"),
+        occupant_name=None,
+        dynasty="13",
+        page=887,
+        attribution_certainty="probable",
+        tomb_aliases=["Lepsius LIV"],
+        notes_from_pm="PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII. Lepsius, LIV.",
+    )
+
+
+def test_chunk33_amenemhet2_white_pyramid() -> None:
+    """DAH-Amenemhet2 — D. PYRAMID-COMPLEX OF AMENEMḤET II (White Pyramid),
+    Dyn XII, attested, printed p.886.
+
+    tomb_aliases pinned: [White Pyramid, Lepsius LI] per PM source
+    line 584 `PYRAMID. Lepsius, LI, White Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-Amenemhet2"),
+        occupant_name="Amenemḥet II",
+        dynasty="12",
+        page=886,
+        tomb_aliases=["White Pyramid", "Lepsius LI"],
+        notes_from_pm="Lepsius, LI, White Pyramid.",
+    )
+
+
+def test_chunk33_amenemhet3_black_pyramid() -> None:
+    """DAH-Amenemhet3 — F. PYRAMID-COMPLEX OF AMENEMḤET III (Black Pyramid),
+    Dyn XII, attested, printed p.887.
+
+    tomb_aliases pinned: [Black Pyramid, Lepsius LVIII] per PM source
+    line 674 `PYRAMID. Lepsius, LVIII; Black Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-Amenemhet3"),
+        occupant_name="Amenemḥet III",
+        dynasty="12",
+        page=887,
+        tomb_aliases=["Black Pyramid", "Lepsius LVIII"],
+        notes_from_pm="Lepsius, LVIII; Black Pyramid.",
+    )
