@@ -2323,6 +2323,7 @@ Reviewer-cited row corrections:
   SAQ-Tenry.co_occupant_roles: ["Father, Judge, Steward of Amun", "Wife"] → ["Father, Judge, Steward of Amūn", "Wife"]
   SAQ-TetiNeferheres.notes_from_pm: "Teti and Neferḥeres, Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown." → "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown."
   SAQ-ThefuPtahhotp.occupant_alt_names: ["Ptaḥḥotp"] → []
+  SAQ-TombPsammetheks.co_occupant_roles: ["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"] → ["Joint occupant, Overseer of scribes of the royal repast", "Joint occupant, King's daughter, King's wife"]
   SAQ-Washiptah.co_occupants: ["Ḥeneni"] → []
   SAQ-Werirniptah.notes_from_pm: "WERIRNIPTAḤ, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, Judge and Overseer of scribes, etc. Temp. Neferirkareʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718." → "WERIRNIPTAḤ, Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Judge and Overseer of scribes, etc. Temp. Neferirkarēʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718."
   JKR-Ankh.notes_from_pm: "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." → "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt."

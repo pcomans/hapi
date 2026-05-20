@@ -2324,6 +2324,42 @@ CHUNK31_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # with notes_from_pm. The `Pedeamūn` form is in the row's
     # own notes_from_pm string verbatim — strict-subset of an
     # agent emission for that row.
+    # F4 — post-merge correction for SAQ-TombPsammetheks
+    # co_occupant_roles parentage-clause leak. Per Gemini PR #255
+    # round-6 finding 3270707581: the chunk-31 prompt (line 157)
+    # specifies that parentage clauses (`son of <Mother>`) belong
+    # in notes_from_pm only, NOT in co_occupant_roles. Round-1
+    # tie-break override correctly selected agent B's bare form,
+    # but the round-3 pre_merge tomb_id normalization
+    # (SAQ-TombPsammetheksAndKhedebneit → SAQ-TombPsammetheks)
+    # caused agent C's WITH-parentage emission to join agent A,
+    # forming a 2/1 majority that bypassed the override (which
+    # only fires on 1/1/1 ties). Restore bare form per the
+    # prompt rule.
+    ("SAQ-TombPsammetheks", "co_occupant_roles"): {
+        "value": [
+            "Joint occupant, Overseer of scribes of the royal repast",
+            "Joint occupant, King's daughter, King's wife",
+        ],
+        "rationale": (
+            "PM III.2 printed p.669; Gemini PR #255 round-6 review "
+            "(id=3270707581). The chunk-31 prompt (line 157) "
+            "specifies: 'parentage clauses attached to a principal "
+            "occupant: the parent goes in co_occupants ONLY if PM "
+            "explicitly states the parent is independently buried "
+            "in the same tomb. Absent such a statement, parent "
+            "references stay in notes_from_pm only.' Agents A + C "
+            "inlined `son of Meramūn-tabes (mother)` into "
+            "Psammethek [B]'s role; agent B (correctly) dropped. "
+            "Round-1 tie-break override selected agent B's bare "
+            "form, but round-3 pre_merge tomb_id normalization "
+            "(C's `SAQ-TombPsammetheksAndKhedebneit` → canonical "
+            "`SAQ-TombPsammetheks`) caused C's WITH-parentage "
+            "value to join A as 2/1 majority, bypassing the "
+            "override. Strict-subset-of-agent-B-emission "
+            "verified (agent B never had the parentage clause)."
+        ),
+    },
     ("SAQ-Eshout", "co_occupants"): {
         "value": ["Pedeamūn", "Degenneit"],
         "rationale": (
