@@ -4097,11 +4097,12 @@ def test_chunk35_iynufer() -> None:
 
 def test_chunk35_duare() -> None:
     """DAH-Duare — § II.B. Overseer of two Pyramids of Snefru, Temp. Saḥurēʿ+.
-    Wife Mertiotes (Royal acquaintance). co_occupant_roles=['Wife'] per PM structure:
-    `Wife, Mertiotes, Royal acquaintance` — Wife is the relationship term;
-    Royal acquaintance is her title. occupant_name `Duarēʿ` and notes
-    `Saḥurēʿ` preserve macron-ē per printed PDF (PR #261 round-2
-    egyptologist P1.5). Printed p.894."""
+    Wife Mertiotes (Royal acquaintance) + eldest son ʿAnkhmaʿrēʿ (Overseer
+    of the southern Pyramid of Snefru). PM headword block + false-door
+    text both name the eldest son; PR #261 round-2 egyptologist P3 +
+    scope-accountability-enforcer absorption added him to co_occupants.
+    occupant_name `Duarēʿ` and notes `Saḥurēʿ` preserve macron-ē per
+    printed PDF (P1.5). Printed p.894."""
     _assert_chunk35_full(
         _by_id("DAH-Duare"),
         tomb_id="DAH-Duare",
@@ -4113,8 +4114,8 @@ def test_chunk35_duare() -> None:
         section="II",
         cemetery="East of Southern Pyramid of Snefru",
         tomb_aliases=[],
-        co_occupants=["Mertiotes"],
-        co_occupant_roles=["Wife"],
+        co_occupants=["Mertiotes", "ʿAnkhmaʿrēʿ"],
+        co_occupant_roles=["Wife", "Son"],
         notes_from_pm=(
             "Overseer of the two Pyramids of Snefru, Prophet of Reʿ in the Sun-temple "
             "of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurēʿ or "

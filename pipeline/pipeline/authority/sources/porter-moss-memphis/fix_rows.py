@@ -3030,6 +3030,32 @@ CHUNK35_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "via tomb_id_corrections-chunk35.json (a|b|c entries)."
         ),
     },
+    ("DAH-Duare", "co_occupants"): {
+        "value": ["Mertiotes", "ʿAnkhmaʿrēʿ"],
+        "rationale": (
+            "Round-1/2 merge captured the wife `Mertiotes` (Wife, Royal "
+            "acquaintance) but missed the eldest son named in the same "
+            "PM headword block. PR #261 round-2 egyptologist P3 noted "
+            "PM also names eldest son `ʿAnkhmaʿrēʿ` (Overseer of the "
+            "southern Pyramid of Snefru) in the printed PDF entry for "
+            "DUARĒʿ, currently dropped from co_occupants. Raw text-layer "
+            "(phys p.534 / printed p.894): `False-door of deceased and "
+            "eldest son <Ankhma<re<` — decode the 3 raised-ayin glyphs "
+            "as U+02BF per chunk-34 source-wide convention. Override "
+            "adds him with role `Son` per scope-accountability-enforcer "
+            "recommendation (P3 absorbed into the DAH-Duare round-2 "
+            "mutation since marginal cost is one CHUNK35_CORRECTIONS "
+            "pair)."
+        ),
+    },
+    ("DAH-Duare", "co_occupant_roles"): {
+        "value": ["Wife", "Son"],
+        "rationale": (
+            "Paired with DAH-Duare|co_occupants. PM headword block "
+            "(phys p.534 / printed p.894) names Wife = Mertiotes and "
+            "eldest son = ʿAnkhmaʿrēʿ. PR #261 round-2 egyptologist P3."
+        ),
+    },
     ("DAH-Duare", "occupant_name"): {
         "value": "Duarēʿ",
         "rationale": (

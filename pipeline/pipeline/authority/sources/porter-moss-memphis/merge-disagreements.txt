@@ -2423,6 +2423,5 @@ LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
 Reviewer-cited row corrections:
-  DAH-Duare.dynasty: null → "5"
-  DAH-KhnemhotpVizier.attribution_certainty: "probable" → "attested"
-  DAH-Sebkemhet.attribution_certainty: "probable" → "attested"
+  DAH-Duare.co_occupants: ["Mertiotes"] → ["Mertiotes", "ʿAnkhmaʿrēʿ"]
+  DAH-Duare.co_occupant_roles: ["Wife"] → ["Wife", "Son"]
