@@ -236,7 +236,7 @@ Background (FYI only): the deriver flips `is_uninscribed=true` on `\buninscribed
 
 ## Pitfall summary (read LAST before running)
 
-1. **approximately 10 rows expected — verify by reading the chunk; PM I.1 has occasional gaps in other decades. If you find fewer than 10 headwords, re-check for anonymous/untitled entries before concluding a gap exists.
+1. **approximately 10 rows expected** — verify by reading the chunk; PM I.1 has occasional gaps in other decades. If you find fewer than 10 headwords, re-check for anonymous/untitled entries before concluding a gap exists.
 2. **PM I.1 offset is +18** (printed = physical − 18). Use the `===== PRINTED PAGE M =====` marker for `source_citation.page`.
 3. **`section: "I"`**, **`edition: "PM I.1 2nd ed. 1960"`**.
 4. **`theban_area` is per-row.** Use the canonical sub-site list above; ASCII apostrophe in `Dra' Abu el-Naga`, U+02BF ayin in `ʿAsâsîf` / `Sh. ʿAbd el-Qurna` / `Qurnet Muraʿi`, circumflex preserved in `ʿAsâsîf`. Read each headword's sub-site line and assign per row.
