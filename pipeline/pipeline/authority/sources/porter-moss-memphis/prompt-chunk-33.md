@@ -1,6 +1,6 @@
 # Extraction prompt — Porter & Moss Vol III.2, Chunk 33
 
-> **Thirty-third chunk drawn from PM Vol III.2** — **Dahshûr § I. PYRAMIDS** (full section). PM III.2 physical pp.516–529 / printed pp.876–889. First Dahshûr chunk — covers the entire royal-pyramid section in one chunk (8 lettered sub-sections A–H + I). Per the 2026-05-19 all-dynastic scope expansion (mvp-tasks.md item 3), Dahshûr royal pyramid material is in scope. This prompt is **self-contained**.
+> **Thirty-third chunk drawn from PM Vol III.2** — **Dahshûr § I. PYRAMIDS, front half (sections A–F + E)**. PM III.2 physical pp.516–529 / printed pp.876–889. First Dahshûr chunk — covers the named royal pyramid-complexes for Snefru (A + B), Sesostris III (C), Amenemḥet II (D), anonymous Dyn-XIII (E), and Amenemḥet III (F). **Sections G + H + I deferred to chunk 34** (they fall on physical p.530 which is outside this chunk's page range). Per the 2026-05-19 all-dynastic scope expansion (mvp-tasks.md item 3), Dahshûr royal pyramid material is in scope. This prompt is **self-contained**.
 
 You are one of three independent extraction subagents. Read the text-layer chunk file at `pipeline/pipeline/authority/sources/porter-moss-memphis/raw/chunk-33-p516-p529-dahshur-pyramids.txt`.
 
@@ -10,19 +10,17 @@ You are one of three independent extraction subagents. Read the text-layer chunk
 
 ## Scope
 
-§ I. PYRAMIDS at Dahshûr — categorial sub-section index (PM lettered A through I):
+§ I. PYRAMIDS at Dahshûr — categorial sub-section index for THIS chunk (PM lettered A through F, including E):
 - **A.** Named Dyn IV royal pyramid-complex (northern)
 - **B.** Named Dyn IV royal pyramid-complex (southern)
 - **C.** Named Dyn XII royal pyramid-complex
 - **D.** Named Dyn XII royal pyramid-complex
 - **E.** Anonymous pyramid-enclosure ("PROBABLY OF DYNASTY XIII")
 - **F.** Named Dyn XII royal pyramid-complex
-- **G + H.** Anonymous pyramid(s) "PROBABLY OF DYNASTY XIII" (PM may treat as joint or separate)
-- **I.** Named Dyn XIII royal pyramid
 
 You will discover the named rulers, popular tomb-names, and the exact number of named queen-enclosures by reading the chunk text. The categorial index above is so you can confirm scope coverage, not a per-section answer key.
 
-Stop at the first heading of `§ II. — A. EAST OF THE NORTHERN PYRAMID OF SNEFRU` (next chunk).
+**Out of scope for chunk 33:** sections G, H, I (additional Dyn-XIII pyramid headers on physical p.530, beyond this chunk's p.516–529 range — deferred to chunk 34). Stop at end of chunk file.
 
 ## How to identify a row
 
@@ -117,10 +115,8 @@ Based on PM TOC structure for § I:
 - D: ≈ 1 main pyramid + possible queen-enclosure(s)
 - E: ≈ 1 anonymous pyramid
 - F: ≈ 1 main pyramid + possible queen-enclosure(s)
-- G + H: ≈ 1–2 anonymous pyramids (depending on whether PM treats the combined section as one entry or two)
-- I: ≈ 1 main pyramid
 
-Total calibration target: ≈ 8–15 rows depending on how many queen-enclosures each king's complex carries and how G+H is structured. If your final count diverges by more than ±4 from this calibration, re-read the chunk file and check whether you've accidentally included § II mastabas / queens-in-galleries (not their own enclosures) or missed a queen-enclosure under one of the king's complexes.
+Total calibration target: ≈ 5–10 rows depending on how many queen-enclosures each king's complex carries. (Empirically all 3 agents converged on 6 rows: 5 Shape-1 main pyramids + 1 Shape-3 anonymous, 0 Shape-2 queen-enclosures, because Dahshûr queens are in galleries / shafts within the kings' enclosures — § II material.) If your final count diverges by more than ±3 from this calibration, re-read the chunk file and check whether you've accidentally included § II mastabas / queens-in-galleries (not their own enclosures) or missed a queen-enclosure under one of the king's complexes.
 
 ## Constitutional Rule 1 — scholar-grade source-traced
 

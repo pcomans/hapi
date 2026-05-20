@@ -59,7 +59,7 @@ Tomb-ids must be unique across the source. The reconciled source (current ≈779
   "co_occupant_roles": [],
   "is_joint_burial": false,
   "occupant_role": "King" | "Queen" | "Royal Family" | "Vizier" | "High Priest" | "Princess" | "Prince" | "Official" | "Unknown",
-  "dynasty": "12" | "18" | "19" | "20" | "26" | "27" | "28" | "29" | "30" | "32" | "33" | null,
+  "dynasty": "11" | "12" | "13" | "18" | "19" | "20" | "26" | "27" | "28" | "29" | "30" | "32" | "33" | null,
   "sub_period": null | "Amarna" | "1st Int. Period",
   "date_bce_approx_start": null,
   "date_bce_approx_end": null,
