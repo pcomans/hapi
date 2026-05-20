@@ -1,0 +1,68 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-35 (PM III.2 § II.B East of Southern Pyramid of Snefru + § II.C North of Enclosure of Sesostris III + § II.D South of Enclosure of Amenemhet II, printed pp.894-898, phys pp.534-538). 13 entries correcting agent-specific tomb_id variants to canonical form before merge.py runs. Conventions: no internal hyphens, TitleCase, no-hyphen per source-wide chunk-33 convention.\n\nSummary:\n1. a|DAH-KawezAnkhu: Agent A used capitalised U-suffix; 2/3 majority (B+C) emitted DAH-Kawezankhu. Strip trailing capital U.\n2. a|DAH-Nefermaet: Agent A dropped macron vowel; 2/3 majority (B+C) emitted DAH-Nefermaat. Restore aa.\n3. a|DAH-MorganS28: Agent A used generic anonymous form; 2/3 majority (B+C) emitted DAH-NenMorganS28 anchoring partial name NEN. Source line 95 (phys p.538): `28. NEN ...`.\n4-5. b/c|DAH-KhnemihotpMorganS2 and b/c|DAH-KhnemihotpMorganS25: Agents B+C inserted spurious `i` (Khnemihotp) and used number-anchor form; agent A used role-anchor form DAH-KhnemhotpVizier / DAH-KhnemhotpPhyle per chunk-30 NikaureJudge/NikaurePhyle precedent (two individuals of same name disambiguated by role, not by De Morgan number which encodes into tomb_aliases).\n6-9. c|IpitMorganS24 / c|KhentekhtaiemsafMorganS11 / c|SebkemhetMorganS17 / c|NeniMorganS27: Agent C appended De Morgan numbers to tomb_ids that agents A+B left as short-form. 2/3 majority short-form (A+B). De Morgan numbers belong in tomb_aliases, not tomb_id.\n10-11. b/c|DAH-Kaemhed / c|DAH-Kaemsed: OCR source (phys p.535 line 95) reads `KAEM:£5:ED` — middle character corrupted. B guessed Kaemhed (inserted h), C guessed Kaemsed (inserted s). Neither has source warrant. Agent A preserved literal boundary characters: DAH-KaemEd. 1/1/1 tie broken by closest-match-to-source-OCR per Constitutional Rule 2 deterministic-policy (documented herein).",
+  "a|DAH-KawezAnkhu": {
+    "canonical_tomb_id": "DAH-Kawezankhu",
+    "canonical_occupant_name": "Kawezʿankhu",
+    "rationale": "Agent A used capitalised trailing U: DAH-KawezAnkhu. Canonical form DAH-Kawezankhu per 2/3 majority (agents B+C both emitted DAH-Kawezankhu). Source PM III.2 phys p.534 (printed p.894): `KAWEZcANKHU` — no internal word boundary after Kawez in tomb_id. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "a|DAH-Nefermaet": {
+    "canonical_tomb_id": "DAH-Nefermaat",
+    "canonical_occupant_name": "Nefermaʿet",
+    "rationale": "Agent A dropped one `a` vowel: DAH-Nefermaet. Canonical form DAH-Nefermaat per 2/3 majority (agents B+C both emitted DAH-Nefermaat). Source PM III.2 phys p.535 (printed p.895): `NEFERMAcET`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "a|DAH-MorganS28": {
+    "canonical_tomb_id": "DAH-NenMorganS28",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A used generic anonymous form DAH-MorganS28. Canonical form DAH-NenMorganS28 per 2/3 majority (agents B+C both emitted DAH-NenMorganS28). Source PM III.2 phys p.538 (printed p.898): `28. NEN ...` — partial name preserved in tomb_id anchor. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-KhnemihotpMorganS2": {
+    "canonical_tomb_id": "DAH-KhnemhotpVizier",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent B inserted spurious `i` (Khnemihotp) and used De Morgan number anchor: DAH-KhnemihotpMorganS2. Canonical form DAH-KhnemhotpVizier per agent A's role-anchor convention (chunk-30 NikaureJudge/NikaurePhyle precedent: two individuals sharing a name are disambiguated by role, not De Morgan number). Source PM III.2 phys p.536 (printed p.896): `2. KHNEMH.OTP, Chief Justice and Vizier`. De Morgan 2 encodes to tomb_aliases, not tomb_id. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-KhnemhotpMorganS2": {
+    "canonical_tomb_id": "DAH-KhnemhotpVizier",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent C used De Morgan number anchor: DAH-KhnemhotpMorganS2. Canonical form DAH-KhnemhotpVizier per agent A's role-anchor convention (chunk-30 NikaureJudge/NikaurePhyle precedent). Same rationale as b|DAH-KhnemihotpMorganS2. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-KhnemihotpMorganS25": {
+    "canonical_tomb_id": "DAH-KhnemhotpPhyle",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent B inserted spurious `i` (Khnemihotp) and used De Morgan number anchor: DAH-KhnemihotpMorganS25. Canonical form DAH-KhnemhotpPhyle per agent A's role-anchor convention. Source PM III.2 phys p.537 (printed p.897): `25. KHNEMH.OTP, Regulator of a phyle`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-KhnemhotpMorganS25": {
+    "canonical_tomb_id": "DAH-KhnemhotpPhyle",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent C used De Morgan number anchor: DAH-KhnemhotpMorganS25. Canonical form DAH-KhnemhotpPhyle per agent A's role-anchor convention. Same rationale as b|DAH-KhnemihotpMorganS25. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-IpitMorganS24": {
+    "canonical_tomb_id": "DAH-Ipit",
+    "canonical_occupant_name": "Ipit",
+    "rationale": "Agent C appended De Morgan number to tomb_id: DAH-IpitMorganS24. Canonical short form DAH-Ipit per 2/3 majority (agents A+B both emitted DAH-Ipit). De Morgan 24 encodes to tomb_aliases. Source PM III.2 phys p.537 (printed p.897): `24. IPIT`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-KhentekhtaiemsafMorganS11": {
+    "canonical_tomb_id": "DAH-Khentekhtaiemsaf",
+    "canonical_occupant_name": "Khentekhtaiemsaf",
+    "rationale": "Agent C appended De Morgan number: DAH-KhentekhtaiemsafMorganS11. Canonical short form DAH-Khentekhtaiemsaf per 2/3 majority (agents A+B both emitted DAH-Khentekhtaiemsaf). De Morgan 11 encodes to tomb_aliases. Source PM III.2 phys p.536 (printed p.896): `11. KHENTEKHTAIEMSAF`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-SebkemhetMorganS17": {
+    "canonical_tomb_id": "DAH-Sebkemhet",
+    "canonical_occupant_name": "Sebkemḥet",
+    "rationale": "Agent C appended De Morgan number: DAH-SebkemhetMorganS17. Canonical short form DAH-Sebkemhet per 2/3 majority (agents A+B both emitted DAH-Sebkemhet). De Morgan 17 encodes to tomb_aliases. Source PM III.2 phys p.537 (printed p.897): `17. SEBKEMH.ET`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-NeniMorganS27": {
+    "canonical_tomb_id": "DAH-Neni",
+    "canonical_occupant_name": "Neni",
+    "rationale": "Agent C appended De Morgan number: DAH-NeniMorganS27. Canonical short form DAH-Neni per 2/3 majority (agents A+B both emitted DAH-Neni). De Morgan 27 encodes to tomb_aliases. Source PM III.2 phys p.537 (printed p.897): `27. NENI`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-Kaemhed": {
+    "canonical_tomb_id": "DAH-KaemEd",
+    "canonical_occupant_name": "Kaem...ed",
+    "rationale": "Agent B guessed `Kaemhed` (inserted h) for OCR-corrupted middle character. Source PM III.2 phys p.535 (printed p.895) raw line: `KAEM:£5:ED` — middle character unrecoverable from OCR. Agent A preserved literal boundary letters (Kaem...ed / DAH-KaemEd), which is the closest-match-to-source-OCR form. 1/1/1 tie resolved to A's form per Constitutional Rule 2 deterministic-policy: neither B's `h` insertion nor C's `s` insertion has source warrant; A's form is the only one that does not fabricate a character. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-Kaemsed": {
+    "canonical_tomb_id": "DAH-KaemEd",
+    "canonical_occupant_name": "Kaem...ed",
+    "rationale": "Agent C guessed `Kaemsed` (inserted s) for OCR-corrupted middle character. Same rationale as b|DAH-Kaemhed above — A's form DAH-KaemEd preserves literal boundary characters without fabrication. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  }
+}

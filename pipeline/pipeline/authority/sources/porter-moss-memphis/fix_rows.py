@@ -2904,6 +2904,18 @@ CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk 35 — Dahshûr § II.B East of Southern Pyramid of Snefru
+# + § II.C North of Enclosure of Sesostris III
+# + § II.D South of Enclosure of Amenemḥet II
+# (PM III.2 printed pp.894-898, phys pp.534-538). 21 rows.
+# No post-merge dynasty corrections required: agents correctly
+# resolved "Dyn. IV-V" → "5" (later-bound convention), and all
+# "Dyn. XII" rows were unanimous. No OCR ayin corrections required:
+# no Niankh-* names appear in this chunk. No alias backfills required
+# beyond what the majority vote resolved.
+CHUNK35_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -2938,6 +2950,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK31_CORRECTIONS,
     CHUNK33_CORRECTIONS,
     CHUNK34_CORRECTIONS,
+    CHUNK35_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

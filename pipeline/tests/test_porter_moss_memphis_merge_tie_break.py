@@ -1129,6 +1129,45 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("DAH-MorganN7", "notes_from_pm"),
         ("DAH-PyramidsGH", "notes_from_pm"),
         ("DAH-Qedshepses", "notes_from_pm"),
+        # Chunk 35 (PM III.2 § II.B/C/D Dahshûr Southern + Sesostris III
+        # enclosure + Amenemḥet II enclosure, printed pp.894-898 / phys
+        # pp.534-538): 25 ties resolved (17 notes_from_pm + 3
+        # co_occupant_roles + 1 tomb_aliases + misc).
+        # notes_from_pm ties: all resolved to agent A's form (most
+        # complete: includes section numbers, full bibliographic detail,
+        # Canopic-chest CG refs, plan/section/figure refs, and for
+        # DAH-KaemEd the OCR-damage annotation). Strict-superset-of-C
+        # rule applied throughout.
+        # co_occupant_roles: DAH-Duare/Kares/Khentekhtaiemsaf — PM
+        # introduces co-occupant as `Wife, ...` so "Wife" is correct;
+        # A's "Official" mis-copies the main occupant's role.
+        # DAH-Siesi tomb_aliases: C's ["'Pyramid' LV of Lepsius"] chosen
+        # (single quotes preserved verbatim from PM source).
+        ("DAH-Duare", "co_occupant_roles"),
+        ("DAH-Duare", "notes_from_pm"),
+        ("DAH-Ipit", "notes_from_pm"),
+        ("DAH-Ithi", "notes_from_pm"),
+        ("DAH-Iynufer", "notes_from_pm"),
+        ("DAH-KaemEd", "notes_from_pm"),
+        ("DAH-Kares", "co_occupant_roles"),
+        ("DAH-Kares", "notes_from_pm"),
+        ("DAH-Kawezankhu", "notes_from_pm"),
+        ("DAH-Khentekhtaiemsaf", "co_occupant_roles"),
+        ("DAH-Khentekhtaiemsaf", "notes_from_pm"),
+        ("DAH-KhnemhotpPhyle", "notes_from_pm"),
+        ("DAH-KhnemhotpVizier", "notes_from_pm"),
+        ("DAH-MorganS18", "notes_from_pm"),
+        ("DAH-MorganS19", "notes_from_pm"),
+        ("DAH-MorganS22", "notes_from_pm"),
+        ("DAH-MorganS6", "notes_from_pm"),
+        ("DAH-MorganS8", "notes_from_pm"),
+        ("DAH-Nefermaat", "notes_from_pm"),
+        ("DAH-NenMorganS28", "notes_from_pm"),
+        ("DAH-Neni", "notes_from_pm"),
+        ("DAH-Sebkemhet", "notes_from_pm"),
+        ("DAH-Siesi", "notes_from_pm"),
+        ("DAH-Siesi", "tomb_aliases"),
+        ("DAH-Thenti", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
