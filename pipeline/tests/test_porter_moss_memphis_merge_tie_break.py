@@ -996,6 +996,35 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-Shepses", "co_occupants"),
         ("SAQ-Shepses", "notes_from_pm"),
         ("SAQ-Werirniptah", "notes_from_pm"),
+        # Chunk 31 (§ II.G BETWEEN THE MONASTERY OF APA JEREMIAS AND
+        # THE ENCLOSURE OF SEKHEMKHET — first NK/LP chunk per
+        # 2026-05-19 all-dynastic scope expansion): 12 tie-break
+        # overrides resolved. The (b) NEW KINGDOM headwords each
+        # caused notes_from_pm ties on the name-prefix-vs-bare-role
+        # divergence (agents A: bare role; B/C: prefixed occupant
+        # name) — per source-wide convention notes_from_pm starts
+        # with the role cluster, occupant_name lives in its own
+        # field. Plus SAQ-Tia co_occupant_roles tie on macron-Ū /
+        # 'etc.' verbatim preservation; LS27 MAYA tie on
+        # macron-Ū-vs-superscript-2-on-Bibl typography trade-off.
+        # The Shape-4 joint multi-burial SAQ-TombPsammetheks
+        # required 5 overrides (occupant_name + co_occupants +
+        # co_occupant_roles + source_citation + tomb_aliases) for
+        # the joint-twin-specific field shapes. Per Constitutional
+        # Rule 2 NO SYNTHESIS, all values verified strict-subset of
+        # an agent emission via check_synth_v2.py harness.
+        ("SAQ-Haremhab", "notes_from_pm"),
+        ("SAQ-Parahotp", "notes_from_pm"),
+        ("SAQ-Tenry", "notes_from_pm"),
+        ("SAQ-Tia", "co_occupant_roles"),
+        ("SAQ-Tia", "notes_from_pm"),
+        ("LS27", "notes_from_pm"),
+        ("SAQH9", "notes_from_pm"),
+        ("SAQ-TombPsammetheks", "co_occupant_roles"),
+        ("SAQ-TombPsammetheks", "co_occupants"),
+        ("SAQ-TombPsammetheks", "occupant_name"),
+        ("SAQ-TombPsammetheks", "source_citation"),
+        ("SAQ-TombPsammetheks", "tomb_aliases"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

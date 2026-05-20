@@ -609,6 +609,25 @@ CHUNK30_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+CHUNK31_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.G BETWEEN THE MONASTERY OF APA JEREMIAS AND THE
+    # ENCLOSURE OF SEKHEMKHET (printed pp.653-670, phys pp.293-310).
+    # 12 rows: 10 NK + 2 LP. First NK chunk in this source per the
+    # 2026-05-19 all-dynastic scope expansion. NK cluster includes
+    # Haremhab's pre-king tomb (later King), Maya the Treasurer (LS 27,
+    # museum-partaged at Leiden + Berlin), Tia (Ramesses II's brother-in-law,
+    # Overseer of Treasury), Pay, Iurokhy (LS 25), Raʿia (LS 28), Harmin
+    # (LS 29), Merytyneit altered to Merytyaten (SAQH9, Atenist sub_period
+    # = Amarna), Parahotp (or Raʿhotp) Vizier, Tenry. LP cluster: Eshout
+    # under Psammetikhos I, and the joint multi-burial Tomb of the
+    # Psammetheks and Khedebneit-yerboni [II] (Shape-4 joint twin,
+    # is_joint_burial=true, probably temp. Amasis).
+    "LS25", "LS27", "LS28", "LS29", "SAQH9",
+    "SAQ-Eshout", "SAQ-Haremhab", "SAQ-Parahotp", "SAQ-Pay",
+    "SAQ-Tenry", "SAQ-Tia", "SAQ-TombPsammetheks",
+})
+
+
 CHUNK29_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.H AROUND PYRAMIDS OF PEPY I, MERENRĒʿ I, ISESI +
     # § II.I AROUND PYRAMIDS OF IBI AND PEPY II + MASTABET FARAʿUN.
@@ -734,7 +753,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
     | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
-    | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS
+    | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS
 )
 
 
@@ -984,6 +1003,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK30_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK31_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -998,7 +1019,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS:
+        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS:
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -1070,6 +1091,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 671 <= page <= 688, f"{row['tomb_id']} page {page} outside chunk-29 [671, 688]"
         elif row["tomb_id"] in CHUNK30_TOMB_IDS:
             assert 689 <= page <= 699, f"{row['tomb_id']} page {page} outside chunk-30 [689, 699]"
+        elif row["tomb_id"] in CHUNK31_TOMB_IDS:
+            assert 653 <= page <= 670, f"{row['tomb_id']} page {page} outside chunk-31 [653, 670]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1239,6 +1262,14 @@ def test_cemetery_by_chunk() -> None:
                 "Tombs of position unknown",
                 "Around Pyramid-enclosure of Userkareʿ Khenzer",
             }, row
+        elif row["tomb_id"] in CHUNK31_TOMB_IDS:
+            # Chunk 31: § II.G BETWEEN THE MONASTERY OF APA JEREMIAS AND
+            # THE ENCLOSURE OF SEKHEMKHET. Single cemetery descriptor
+            # for the NK + LP cluster: "Between the Monastery and
+            # Sekhemkhet's Enclosure" (PM-faithful — note apostrophe
+            # form U+0027 in "Sekhemkhet's"). First NK chunk in this
+            # source per the 2026-05-19 all-dynastic scope expansion.
+            assert row["cemetery"] == "Between the Monastery and Sekhemkhet's Enclosure", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1476,6 +1507,18 @@ def test_dynasty_assignments() -> None:
             # § I.L Shepseskaf = Dyn IV; § I.M Userkareʿ Khenzer and
             # § I.N anonymous = Dyn XIII.
             assert row["dynasty"] in {"4", "13"}, row
+        elif row["tomb_id"] in CHUNK31_TOMB_IDS:
+            # Chunk 31 § II.G BETWEEN THE MONASTERY OF APA JEREMIAS AND
+            # THE ENCLOSURE OF SEKHEMKHET (NK + LP). NK cluster: Dyn
+            # XVIII (Haremhab Temp. Tutʿankhamūn or Ay; Maya Temp.
+            # Tutʿankhamūn-to-Ḥaremḥab range — late XVIII; Merytyneit
+            # Temp. Amenophis IV → Dyn XVIII Amarna with
+            # `sub_period: "Amarna"`); Dyn XIX (Tia/Pay/Tenry/Parahotp
+            # Temp. Ramesses II; Iurokhy/Raʿia/Harmin Dyn XIX). LP
+            # cluster: Dyn XXVI (Eshout Temp. Psammetikhos I; Tomb
+            # of Psammetheks probably temp. Amasis). First chunk in
+            # this source with non-OK dynasties.
+            assert row["dynasty"] in {"18", "19", "26"}, row
 
 
 # === content / value assertions =============================================

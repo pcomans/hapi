@@ -741,8 +741,15 @@ SAQ-DoubleTombUserkaf (None):
 SAQ-DynXIIIAnon (None):
   tomb_aliases: a=[] | b=["LG XLVI"] | c=[]  → chose []
 
+SAQ-Eshout (Eshout):
+  notes_from_pm: a="Overseer of royal scribes of the army of Upper and Lower Egypt, etc. Temp. Psammetikhos I. Map LXII. Parents, Pedeamūn and Degenneit(?)." | b="Esḥout, Overseer of royal scribes of the army of Upper and Lower Egypt, etc. Temp. Psammetikhos I. Map LXII. Parents, Pedeamūn and Degenneit(?)." | c="Overseer of royal scribes of the army of Upper and Lower Egypt, etc. Temp. Psammetikhos I. Map LXII. Parents, Pedeamūn and Degenneit(?)."  → chose "Overseer of royal scribes of the army of Upper and Lower Egypt, etc. Temp. Psammetikhos I. Map LXII. Parents, Pedeamūn and Degenneit(?)."
+  occupant_name: a="Esḥout" | b="Eshout" | c="Eshout"  → chose "Eshout"
+
 SAQ-Gegi (Gegi):
   notes_from_pm: a="GEGI, Inspector of prophets of the Pyramid of Merenrēʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)" | b="Inspector of prophets of the Pyramid of Merenreʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)" | c="GEGI, Inspector of prophets of the Pyramid of Merenreʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)"  → chose "GEGI, Inspector of prophets of the Pyramid of Merenrēʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)"
+
+SAQ-Haremhab (Haremhab):
+  notes_from_pm: a="General, Deputy of His Majesty in the whole land, Chief steward, etc. (Later King.) Temp. Tutʿankhamun or Ay. Map LXII. Accounts of excavation, mostly with plans, views, and some newly discovered scenes and statues, MARTIN in J.E.A. 62 (1976), pp. 5-13." | b="Ḥaremḥab, General, Deputy of His Majesty in the whole land, Chief steward, etc. (Later King.) Temp. Tutʿankhamun or Ay. Map LXII. Accounts of excavation, mostly with plans, views, and some newly discovered scenes and statues." | c="General, Deputy of His Majesty in the whole land, Chief steward, etc. (Later King.) Temp. Tutʿankhamūn or Ay. Map LXII. Accounts of excavation, mostly with plans, views, and some newly discovered scenes and statues, MARTIN in J.E.A. 62 (1976), pp. 5-13."  → chose "General, Deputy of His Majesty in the whole land, Chief steward, etc. (Later King.) Temp. Tutʿankhamūn or Ay. Map LXII. Accounts of excavation, mostly with plans, views, and some newly discovered scenes and statues, MARTIN in J.E.A. 62 (1976), pp. 5-13."
 
 SAQ-HarshefShema (Ḥarshef-shema):
   notes_from_pm: a="North-east of Pyramid of Pepy II. N.IX. King's eldest son, etc. End of Dyn. VI. North of the Pyramid. Position not marked on map. Name and titles from fragments of lintel, false-door, and offering-table." | b="North-east of Pyramid of Pepy II. N.IX. ḤARSHEF-SHEMA, King's eldest son, etc. End of Dyn. VI. North of the Pyramid. Position not marked on map. Name and titles from fragments of lintel, false-door, and offering-table." | c="North-east of Pyramid of Pepy II. N.IX. ḤARSHEF-SHEMA, King's eldest son, etc. End of Dyn. VI. North of the Pyramid; position not marked on map. Name and titles from fragments of lintel, false-door, and offering-table."  → chose "North-east of Pyramid of Pepy II. N.IX. ḤARSHEF-SHEMA, King's eldest son, etc. End of Dyn. VI. North of the Pyramid. Position not marked on map. Name and titles from fragments of lintel, false-door, and offering-table."
@@ -1070,6 +1077,13 @@ SAQ-NuferCraftsman (Nufer):
   co_occupants: a=["My"] | b=["My"] | c=["My", "Iywat"]  → chose ["My"]
   notes_from_pm: a="NUFER, Craftsman. Dyn. IV or later. Wife (probably), My, rḫt-nsw. Parts of two false-doors with names of deceased, wife, and Iywat, Butcher of the slaughterhouse. Position unknown." | b="Craftsman. Dyn. IV or later. Wife (probably), My, mitrt. Position unknown." | c="Craftsman. Dyn. IV or later. Wife (probably), My, mitrt. Parts of two false-doors with names of deceased, wife, and Iywat, Butcher of the slaughterhouse. Position unknown."  → chose "Craftsman. Dyn. IV or later. Wife (probably), My, mitrt. Position unknown."
 
+SAQ-Parahotp (Parahotp):
+  notes_from_pm: a="Governor of the town, Vizier, etc. Temp. Ramesses II. South-west of the Monastery of Apa Jeremias." | b="Paraḥotp (or Raʿḥotp), Governor of the town, Vizier, etc. Temp. Ramesses II. South-west of the Monastery of Apa Jeremias." | c="PARAḤOTP (or RAʿḤOTP), Governor of the town, Vizier, etc. Temp. Ramesses II. South-west of the Monastery of Apa Jeremias."  → chose "Governor of the town, Vizier, etc. Temp. Ramesses II. South-west of the Monastery of Apa Jeremias."
+  occupant_name: a="Paraḥotp" | b="Parahotp" | c="Parahotp"  → chose "Parahotp"
+
+SAQ-Pay (Pay):
+  co_occupants: a=["Amenemḥab"] | b=["Amenemhab"] | c=["Amenemhab"]  → chose ["Amenemhab"]
+
 SAQ-Pehernufer (Peḥernufer):
   discoverer: a="Nestor l'Hôte" | b=null | c="Nestor l'Hôte"  → chose "Nestor l'Hôte"
   discovery_year: a=null | b=null | c=1840  → chose null
@@ -1216,6 +1230,10 @@ SAQ-Snefruhotp (Snefruḥotp):
   notes_from_pm: a="Dyn. VI. East of last tomb." | b="Dyn. VI. East of last tomb." | c="Dyn. VI. East of last tomb. False-door."  → chose "Dyn. VI. East of last tomb."
   occupant_role: a="Unknown" | b="Official" | c="Official"  → chose "Official"
 
+SAQ-Tenry (Tenry):
+  co_occupant_roles: a=["Father, Judge, Steward of Amūn", "Wife"] | b=["Father, Judge, Steward of Amun", "Wife"] | c=["Father, Judge, Steward of Amun", "Wife"]  → chose ["Father, Judge, Steward of Amun", "Wife"]
+  notes_from_pm: a="Overseer of works on all monuments of the King, Royal scribe, etc. Temp. Ramesses II. Father, Paser, Judge, Steward of Amūn. Wife, Nashaʿyt (from stela Brit. Mus. 165, see infra). Exact position unknown." | b="Tenry, Overseer of works on all monuments of the King, Royal scribe, etc. Temp. Ramesses II. Father, Paser, Judge, Steward of Amūn. Wife, Nashaʿyt (from stela Brit. Mus. 165, see infra). Exact position unknown." | c="Overseer of works on all monuments of the King, Royal scribe, etc. Temp. Ramesses II. Father, Paser, Judge, Steward of Amūn. Wife, Nashaʿyt (from stela Brit. Mus. 165, see infra)."  → chose "Overseer of works on all monuments of the King, Royal scribe, etc. Temp. Ramesses II. Father, Paser, Judge, Steward of Amūn. Wife, Nashaʿyt (from stela Brit. Mus. 165, see infra). Exact position unknown."
+
 SAQ-Tepemankh (Tepemʿankh):
   notes_from_pm: a="TEPEMʿANKH, Overseer of the Two Canals of the Great House, Overseer of the department of tenants of the Great House, etc. End of Dyn. V or early Dyn. VI." | b="Overseer of the Two Canals of the Great House, Overseer of the department of tenants of the Great House, etc. End of Dyn. V or early Dyn. VI." | c="TEPEMʿANKH, Overseer of the Two Canals of the Great House, Overseer of the department of tenants of the Great House, etc. End of Dyn. V or early Dyn. VI."  → chose "TEPEMʿANKH, Overseer of the Two Canals of the Great House, Overseer of the department of tenants of the Great House, etc. End of Dyn. V or early Dyn. VI."
 
@@ -1239,6 +1257,17 @@ SAQ-ThefuPtahhotp (Thefu):
   co_occupant_roles: a=[] | b=[] | c=["Father (probably)"]  → chose []
   co_occupants: a=[] | b=[] | c=["Akhtiḥotp"]  → chose []
   notes_from_pm: a="Probably also Ptaḥḥotp, Royal Chamberlain. End of Dyn. V. Map LVIII. Father (probably), Akhtiḥotp (tomb D 64,a). Pillared Hall: east wall with [deceased] and registers of dancers and men dragging large jars; south wall with offering-bringers, men carrying large chest, men in canoes (including fishing with small net). Offering-room: bottom part of south false-door. Probably intrusive blocks. Offering-table of Ptaḥ[ḥotp] Thefu, alabaster, perhaps from here, in Cairo Mus. CG 1332." | b="(probably also Ptaḥḥotp), Royal Chamberlain. End of Dyn. V. Father (probably), Akhtiḥotp (tomb D 64,a)." | c="Royal Chamberlain. End of Dyn. V. Map LVIII. Father (probably), Akhtiḥotp (tomb D 64,a). Pillared Hall and Offering-room scenes. Offering-table of Ptaḥ[ḥotp] Thefu, alabaster, perhaps from here, in Cairo Mus. CG 1332. Probably also called Ptaḥḥotp."  → chose "(probably also Ptaḥḥotp), Royal Chamberlain. End of Dyn. V. Father (probably), Akhtiḥotp (tomb D 64,a)."
+
+SAQ-Tia (Tia):
+  co_occupant_roles: a=["Wife, King's noble sister, Songstress of Amūn Great-of-Victories, etc."] | b=["Wife, King's noble sister, Songstress of Amun Great-of-Victories"] | c=["Wife, King's noble sister, Songstress of Amun Great-of-Victories, etc."]  → chose ["Wife, King's noble sister, Songstress of Amūn Great-of-Victories, etc."]
+  notes_from_pm: a="Overseer of the Treasury in the Temple of Userma‘etre‘-setepenre‘ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII." | b="Tia, Overseer of the Treasury in the Temple of Userma'ʿetre'ʿ-setepenre'ʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII." | c="Overseer of the Treasury in the Temple of User-maʿetreʿ-setepenreʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII."  → chose "Overseer of the Treasury in the Temple of User-maʿetreʿ-setepenreʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII."
+
+SAQ-TombPsammetheks (Psammethek (A)):
+  co_occupant_roles: a=["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"] | b=["Joint occupant, Overseer of scribes of the royal repast", "Joint occupant, King's daughter, King's wife"] | c=["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"]  → chose ["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"]
+  co_occupants: a=["Psammethek (B)", "Khedebneit-yerboni [II]"] | b=["Psammethek", "Khedebneit-yerboni"] | c=["Psammethek", "Khedebneit-yerboni [II]"]  → chose ["Psammethek (B)", "Khedebneit-yerboni [II]"]
+  occupant_name: a="Psammethek (A)" | b="Psammethek" | c="Psammethek (A)"  → chose "Psammethek (A)"
+  source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 669, "section": "II"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 668, "section": "II"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 668, "section": "II"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 668, "section": "II"}
+  tomb_aliases: a=[] | b=["Tomb of the Psammetheks and Khedebneit-yerboni [II]"] | c=[]  → chose []
 
 SAQ-Unisankh (Unisʿankh):
   notes_from_pm: a="King's son, Overseer of Upper Egypt, etc. Temp. Unis." | b="King's son, Overseer of Upper Egypt, etc. Temp. Unis. Map LXI. Plan LXIII." | c="King's son, Overseer of Upper Egypt, etc. Temp. Unis. Map LXI. Plan LXIII. Chapel with blocks from inner part in Chicago, Field Mus. Nat. Hist. A. 24448."  → chose "King's son, Overseer of Upper Egypt, etc. Temp. Unis."
@@ -1498,6 +1527,18 @@ LS24 (Bekenrenef):
   co_occupants: a=[] | b=[] | c=["Pedeneit", "Tageb"]  → chose []
   notes_from_pm: a="Vizier, etc. Temp. Psammetikhos I. Parents, Pedeneit (Overseer of prophets) and Tageb. Rock-cut tomb, excavated by Bresciani for the University of Pisa since 1974." | b="Vizier, etc. Temp. Psammetikhos I. Parents, Pedeneit, Overseer of prophets, and Tageb. Rock-cut tomb. Excavated by Bresciani for the University of Pisa since 1974." | c="Vizier, etc. Temp. Psammetikhos I. Rock-cut tomb. Excavated by Bresciani for the University of Pisa since 1974. Plan LIX."  → chose "Vizier, etc. Temp. Psammetikhos I. Parents, Pedeneit, Overseer of prophets, and Tageb. Rock-cut tomb. Excavated by Bresciani for the University of Pisa since 1974."
 
+LS27 (Maya):
+  co_occupant_roles: a=["Father, Judge", "Mother, Songstress of Amūn", "Wife, Songstress of Amūn"] | b=["Father, Judge", "Mother, Songstress of Amun", "Wife, Songstress of Amun"] | c=["Father, Judge", "Mother, Songstress of Amun", "Wife, Songstress of Amun"]  → chose ["Father, Judge", "Mother, Songstress of Amun", "Wife, Songstress of Amun"]
+  notes_from_pm: a="Overseer of the Treasury, Fan-bearer on the right of the King, etc. Temp. Tutʿankhamun to Ḥaremḥab. Plan LXVI. Parents (probably), Iuy, Judge (from graffito in Roy. tb. 43, Bibl. i2. 560(4)) and Weret, Songstress of Amūn. Wife, Meryt, Songstress of Amūn." | b="Overseer of the Treasury, Fan-bearer on the right of the King, etc. Temp. Tutʿankhamun to Ḥaremḥab. Plan LXVI. Parents (probably), Iuy, Judge (from graffito in Roy. tb. 43, Bibl. i². 560(4)) and Weret, Songstress of Amun. Wife, Meryt, Songstress of Amun." | c="Overseer of the Treasury, Fan-bearer on the right of the King, etc. Temp. Tutʿankhamun to Ḥaremḥab. Plan LXVI. Parents (probably), Iuy, Judge (from graffito in Roy. tb. 43, Bibl. i2. 560(4)) and Weret, Songstress of Amun. Wife, Meryt, Songstress of Amun."  → chose "Overseer of the Treasury, Fan-bearer on the right of the King, etc. Temp. Tutʿankhamun to Ḥaremḥab. Plan LXVI. Parents (probably), Iuy, Judge (from graffito in Roy. tb. 43, Bibl. i2. 560(4)) and Weret, Songstress of Amūn. Wife, Meryt, Songstress of Amūn."
+
+LS28 (Raʿia):
+  co_occupant_roles: a=["Father, Overseer of the royal apartments of the King's wife, etc."] | b=["Father, Overseer of the royal apartments of the King's wife"] | c=["Father, Overseer of the royal apartments of the King's wife, etc."]  → chose ["Father, Overseer of the royal apartments of the King's wife, etc."]
+  occupant_name: a="Raia" | b="Raʿia" | c="Raʿia"  → chose "Raʿia"
+
+LS29 (Harmin):
+  co_occupant_roles: a=["Wife, Songstress of Isis, etc."] | b=["Wife, Songstress of Isis"] | c=["Wife, Songstress of Isis, etc."]  → chose ["Wife, Songstress of Isis, etc."]
+  notes_from_pm: a="Overseer of the royal apartments of the harim at Memphis, Real royal scribe beloved of him, etc. Temp. Sethos I. Wife, May, Songstress of Isis, etc." | b="Ḥarmin, Overseer of the royal apartments of the harim at Memphis, Real royal scribe beloved of him, etc. Temp. Sethos I. Wife, May, Songstress of Isis, etc." | c="Overseer of the royal apartments of the harim at Memphis, Real royal scribe beloved of him, etc. Temp. Sethos I. Wife, May, Songstress of Isis, etc."  → chose "Overseer of the royal apartments of the harim at Memphis, Real royal scribe beloved of him, etc. Temp. Sethos I. Wife, May, Songstress of Isis, etc."
+
 TPC-Desi (Desi):
   co_occupants: a=["(name lost)"] | b=["Wife (name lost)"]  → chose ["(name lost)"]
   notes_from_pm: a="Noble of the King, Companion of the house. Dyn. VI. Wife (name lost), Prophetess of Ḥatḥor Mistress of the Sycamore." | b="Noble of the King, Companion of the house. Dyn. VI."  → chose "Noble of the King, Companion of the house. Dyn. VI. Wife (name lost), Prophetess of Ḥatḥor Mistress of the Sycamore."
@@ -1699,6 +1740,9 @@ SAQH1 (Nisu-usert):
   dynasty: a="6" | b="5" | c="6"  → chose "6"
   notes_from_pm: a="Overseer of the ten craftsmen, Inspector of craftsmen of the warbt. Dyn. V-VI. Mother, Nefertentes. Wives, Mesti and Innefer-ḥatḥor." | b="Overseer of the ten craftsmen, Inspector of craftsmen of the warbt. Dyn. V-VI. Mother, Nefertentes. Wives, Mesti and Inneferḥatḥor." | c="Overseer of the ten craftsmen, Inspector of craftsmen of the warbt. Dyn. V–VI. Mother, Nefertentes. Wives, Mesti and Innefer-ḥatḥor. In Cairo Museum. Incomplete false-door, CG 1444; two blocks from side of niche, CG 1688, 1733."  → chose "Overseer of the ten craftsmen, Inspector of craftsmen of the warbt. Dyn. V-VI. Mother, Nefertentes. Wives, Mesti and Inneferḥatḥor."
   occupant_name: a="Nisusert" | b="Nisu-usert" | c="Nisu-usert"  → chose "Nisu-usert"
+
+SAQH9 (Merytyneit):
+  notes_from_pm: a="Steward of the Temple of the Aten. Temp. Amenophis IV. Exact position unknown." | b="Merytyneit (altered to Merytyaten), Steward of the Temple of the Aten. Temp. Amenophis IV. Exact position unknown." | c="MERYTYNEIT (altered to MERYTYATEN), Steward of the Temple of the Aten. Temp. Amenophis IV. Exact position unknown."  → chose "Steward of the Temple of the Aten. Temp. Amenophis IV. Exact position unknown."
 
 MAR-B14 (Akhi):
   co_occupant_roles: a=["Daughter, Prophetess of Ḥatḥor"] | b=["Wife", "Daughter, Prophetess of Ḥatḥor"] | c=["Daughter, Prophetess of Ḥatḥor"]  → chose ["Daughter, Prophetess of Ḥatḥor"]
@@ -2240,6 +2284,7 @@ Reviewer-cited row corrections:
   SAQ-Ankhirptah.notes_from_pm: "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥatḥor, etc." → "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥathor, etc."
   SAQ-BiaIrery.co_occupants: [] → ["Idut"]
   SAQ-BiaIrery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor"]
+  SAQ-Eshout.co_occupants: ["Pedeamun", "Degenneit"] → ["Pedeamūn", "Degenneit"]
   SAQ-Hemakhti.tomb_aliases: ["S 911"] → ["H 14", "S 911"]
   SAQ-HerimeruMerery.co_occupants: [] → ["Wazkaus"]
   SAQ-HerimeruMerery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor in all her places, and of Neith, etc."]
@@ -2269,13 +2314,16 @@ Reviewer-cited row corrections:
   SAQ-NiankhPepyNiankhMeryre.co_occupants: [] → ["Ḳedi"]
   SAQ-NiankhPepyNiankhMeryre.co_occupant_roles: [] → ["Wife"]
   SAQ-Nufer.co_occupant_roles: ["Official", "Official", "Official"] → ["Father, Director of singers, Prophet of Mert of Upper Egypt, etc.", "Wife, Royal acquaintance", "Mother, Prophetess of Ḥathor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc."]
+  SAQ-Pay.co_occupants: ["Amenemhab"] → ["Amenemḥab"]
   SAQ-Pernezu.co_occupants: [] → ["Niʿankh-ḥathor"]
   SAQ-Pernezu.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
   SAQ-Seshemnufer.co_occupants: [] → ["Ḳerfet"]
   SAQ-Seshemnufer.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
   SAQ-Shepses.notes_from_pm: "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḫ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6." → "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḥ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6."
+  SAQ-Tenry.co_occupant_roles: ["Father, Judge, Steward of Amun", "Wife"] → ["Father, Judge, Steward of Amūn", "Wife"]
   SAQ-TetiNeferheres.notes_from_pm: "Teti and Neferḥeres, Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown." → "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown."
   SAQ-ThefuPtahhotp.occupant_alt_names: ["Ptaḥḥotp"] → []
+  SAQ-TombPsammetheks.co_occupant_roles: ["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"] → ["Joint occupant, Overseer of scribes of the royal repast", "Joint occupant, King's daughter, King's wife"]
   SAQ-Washiptah.co_occupants: ["Ḥeneni"] → []
   SAQ-Werirniptah.notes_from_pm: "WERIRNIPTAḤ, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, Judge and Overseer of scribes, etc. Temp. Neferirkareʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718." → "WERIRNIPTAḤ, Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Judge and Overseer of scribes, etc. Temp. Neferirkarēʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718."
   JKR-Ankh.notes_from_pm: "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." → "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt."
@@ -2309,6 +2357,7 @@ Reviewer-cited row corrections:
   JKE-Nikaukhnum.co_occupant_roles: ["Royal acquaintance"] → ["Royal acquaintance (probably woman)"]
   JKE-User.notes_from_pm: "Overseer of ha-servants, etc. Late Dyn. V. Mother, Henutsen." → "Overseer of ka-servants, etc. Late Dyn. V. Mother, Henutsen."
   JKE-Weri.notes_from_pm: "Inspector of ha-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI." → "Inspector of ka-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI."
+  LS27.co_occupant_roles: ["Father, Judge", "Mother, Songstress of Amun", "Wife, Songstress of Amun"] → ["Father, Judge", "Mother, Songstress of Amūn", "Wife, Songstress of Amūn"]
   TPC-Kaemhest.co_occupants: ["Senefʿankh", "Thenenet", "Kapunesut"] → ["Senefʿankh", "Thenenet"]
   SAQD46.dynasty: "12" → "6"
   SAQE14.co_occupants: [] → ["Nefert"]
