@@ -4297,7 +4297,7 @@ def test_chunk35_khnemhotpvizier() -> None:
         tomb_aliases=["DE MORGAN 2"],
         notes_from_pm=(
             "2. KHNEMHOTP, Chief Justice and Vizier, etc. Probably temp. Sesostris III. "
-            "DE MoRGAN, Dahchour, i, pp. 18-23, with plan and section, figs. 20-1. "
+            "DE MORGAN, Dahchour, i, pp. 18-23, with plan and section, figs. 20-1. "
             "Canopic-chest, sandstone, in Cairo Mus. CG 4048."
         ),
     )
@@ -4318,7 +4318,7 @@ def test_chunk35_morgans6() -> None:
         cemetery="North of Enclosure of Sesostris III",
         tomb_aliases=["DE MORGAN 6"],
         notes_from_pm=(
-            "6. Middle Kingdom. DE MoRGAN, Dahchour, i, p. 25, with plan and sections, "
+            "6. Middle Kingdom. DE MORGAN, Dahchour, i, p. 25, with plan and sections, "
             "fig. 33. Offering-table of Temca, daughter of Sit-hathor (mother)."
         ),
     )
@@ -4340,7 +4340,7 @@ def test_chunk35_morgans8() -> None:
         tomb_aliases=["DE MORGAN 8"],
         notes_from_pm=(
             "8. NAME UNKNOWN. Middle Kingdom. Mother, Sit-hathor. "
-            "DE MoRGAN, Dahchour, i, pp. 25-6, with plan and section, fig. 37. "
+            "DE MORGAN, Dahchour, i, pp. 25-6, with plan and section, fig. 37. "
             "Fragment of false-door."
         ),
     )
@@ -4393,7 +4393,7 @@ def test_chunk35_sebkemhet() -> None:
         tomb_aliases=["DE MORGAN 17"],
         notes_from_pm=(
             "17. SEBKEMHET, Chief Justice and Vizier, etc. Probably temp. Sesostris III. "
-            "DE MoRGAN, Dahchour, i, pp. 31-3, with plan, section, etc., figs. 61-3; "
+            "DE MORGAN, Dahchour, i, pp. 31-3, with plan, section, etc., figs. 61-3; "
             "cf. SIMPSON in J.E.A. 43 (1957), pp. 26-9."
         ),
     )
@@ -4439,7 +4439,7 @@ def test_chunk35_morgans19() -> None:
         cemetery="North of Enclosure of Sesostris III",
         tomb_aliases=["DE MORGAN 19"],
         notes_from_pm=(
-            "19. Probably late Dyn. XII. DE MoRGAN, Dahchour, i, pp. 34-5, with plan "
+            "19. Probably late Dyn. XII. DE MORGAN, Dahchour, i, pp. 34-5, with plan "
             "and section, figs. 70-1. Fragments of squatting statuette, diorite or granite."
         ),
     )
@@ -4460,7 +4460,7 @@ def test_chunk35_morgans22() -> None:
         cemetery="North of Enclosure of Sesostris III",
         tomb_aliases=["DE MORGAN 22"],
         notes_from_pm=(
-            "22. Middle Kingdom. DE MoRGAN, Dahchour, i, pp. 35-6. Texts of wooden coffin."
+            "22. Middle Kingdom. DE MORGAN, Dahchour, i, pp. 35-6. Texts of wooden coffin."
         ),
     )
 
@@ -4508,7 +4508,7 @@ def test_chunk35_khnemhotpphyle() -> None:
         tomb_aliases=["DE MORGAN 25"],
         notes_from_pm=(
             "25. KHNEMHOTP, Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. "
-            "DE MoRGAN, Dahchour, i, p. 38. False-door, in Cairo Mus. CG 1478."
+            "DE MORGAN, Dahchour, i, p. 38. False-door, in Cairo Mus. CG 1478."
         ),
     )
 
@@ -4528,7 +4528,7 @@ def test_chunk35_neni() -> None:
         cemetery="North of Enclosure of Sesostris III",
         tomb_aliases=["DE MORGAN 27"],
         notes_from_pm=(
-            "27. NENI, Nubian (woman). Middle Kingdom. DE MoRGAN, Dahchour, i, pp. 38-9. "
+            "27. NENI, Nubian (woman). Middle Kingdom. DE MORGAN, Dahchour, i, pp. 38-9. "
             "Stela, in Cairo Mus. CG 1481."
         ),
     )
@@ -4549,7 +4549,7 @@ def test_chunk35_nenmorgans28() -> None:
         cemetery="North of Enclosure of Sesostris III",
         tomb_aliases=["DE MORGAN 28"],
         notes_from_pm=(
-            "28. NEN ... (woman). Middle Kingdom. DE MoRGAN, Dahchour, i, p. 40. Stela."
+            "28. NEN ... (woman). Middle Kingdom. DE MORGAN, Dahchour, i, p. 40. Stela."
         ),
     )
 
@@ -4574,6 +4574,6 @@ def test_chunk35_siesi() -> None:
         tomb_aliases=["Lepsius LV", "'Pyramid' LV of Lepsius"],
         notes_from_pm=(
             "SIESI, Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. "
-            "DE MoRGAN, Dahchour, ii, pp. 78-86."
+            "DE MORGAN, Dahchour, ii, pp. 78-86."
         ),
     )

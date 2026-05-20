@@ -1833,11 +1833,11 @@
     "value": "attested"
   },
   "DAH-Kanufer|notes_from_pm": {
-    "rationale": "1/1/1 tie on chunk-34 DAH-Kanufer notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.893 (phys p.533). Source body: `King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. 1 Advanced Dyn. IV or later. Wife, Khunesu ... King's adorner, etc. DE MoRGAN, Dahchour, ii, p. 23. Dating as end Dyn. VI to Dyn. VIII, ScHMITZ...pp. 145-9 [II].` Footnote 1: `Also Chief Justice and Vizier, in unclear context.` Agent A: omits footnote text, wrong ordering (Wife before biblio). Agent B: includes footnote `Also Chief Justice and Vizier, in unclear context.` verbatim, has `[II]`, has Wife clause. Agent C: includes `Also Chief Justice and Vizier.` (truncated, no `in unclear context`), has `[II]`, has DE MORGAN, drops Wife clause. B is most complete: has footnote verbatim + `[II]` + Wife clause in source order. Selecting B as strict-subset-of-agent-B emission. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt phys p.533.",
+    "rationale": "1/1/1 tie on chunk-34 DAH-Kanufer notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.893 (phys p.533). Source body: `King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. 1 Advanced Dyn. IV or later. Wife, Khunesu ... King's adorner, etc. DE MORGAN, Dahchour, ii, p. 23. Dating as end Dyn. VI to Dyn. VIII, ScHMITZ...pp. 145-9 [II].` Footnote 1: `Also Chief Justice and Vizier, in unclear context.` Agent A: omits footnote text, wrong ordering (Wife before biblio). Agent B: includes footnote `Also Chief Justice and Vizier, in unclear context.` verbatim, has `[II]`, has Wife clause. Agent C: includes `Also Chief Justice and Vizier.` (truncated, no `in unclear context`), has `[II]`, has DE MORGAN, drops Wife clause. B is most complete: has footnote verbatim + `[II]` + Wife clause in source order. Selecting B as strict-subset-of-agent-B emission. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt phys p.533.",
     "value": "King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Also Chief Justice and Vizier, in unclear context. Advanced Dyn. IV or later. Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 145-9 [II]. Wife, Khunesu, King's adorner, etc."
   },
   "DAH-MorganN7|notes_from_pm": {
-    "rationale": "1/1/1 tie on chunk-34 DAH-MorganN7 notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.890 (phys p.530). Source body: `Mastaba-group. Probably Dyn. V. DE MoRGAN, Dahchour, i, pp. 11-13. Dating as late Old Kingdom, ScHMITZ, Untersuchungen zum Titel SJ-njSwt 'Konigssohn', pp. 15o-l [IV].` Agent A: `DE MoRGAN` (OCR lowercase-o), omits `[IV]`. Agent B: `DE MORGAN`, has `[IV]`, uses `sa-njswt` (standard ASCII). Agent C: `DE MORGAN`, has `[IV]`, uses `S3-njSwt` (OCR artefact). Agents B and C agree on `DE MORGAN` (2/3) and `[IV]` (2/3); tie only on the Schmitz title transliteration form. B's `sa-njswt` is more readable ASCII; C's `S3` is an OCR artefact. Selecting B as the cleanest strict-subset-of-agent emission with majority-supported `DE MORGAN` + `[IV]`. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt phys p.530.",
+    "rationale": "1/1/1 tie on chunk-34 DAH-MorganN7 notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.890 (phys p.530). Source body: `Mastaba-group. Probably Dyn. V. DE MORGAN, Dahchour, i, pp. 11-13. Dating as late Old Kingdom, ScHMITZ, Untersuchungen zum Titel SJ-njSwt 'Konigssohn', pp. 15o-l [IV].` Agent A: `DE MORGAN` (OCR lowercase-o), omits `[IV]`. Agent B: `DE MORGAN`, has `[IV]`, uses `sa-njswt` (standard ASCII). Agent C: `DE MORGAN`, has `[IV]`, uses `S3-njSwt` (OCR artefact). Agents B and C agree on `DE MORGAN` (2/3) and `[IV]` (2/3); tie only on the Schmitz title transliteration form. B's `sa-njswt` is more readable ASCII; C's `S3` is an OCR artefact. Selecting B as the cleanest strict-subset-of-agent emission with majority-supported `DE MORGAN` + `[IV]`. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt phys p.530.",
     "value": "Mastaba-group. Probably Dyn. V. DE MORGAN, Dahchour, i, pp. 11-13. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 150-1 [IV]."
   },
   "DAH-PyramidsGH|notes_from_pm": {
@@ -1845,7 +1845,7 @@
     "value": "Pyramids probably of Dynasty XIII. ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]."
   },
   "DAH-Qedshepses|notes_from_pm": {
-    "rationale": "1/1/1 tie on chunk-34 DAH-Qedshepses notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.893 (phys p.533). Source body: `King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. DE MoRGAN, Dahchour, ii, p. 22. Dating as late Dyn. VI or rst Int. Period, ScHMITZ, Untersuchungen zum Titel s1-njswt 'Konigssohn', p. 149 [Ill].` Agent A: has `DE MoRGAN` (OCR) + no `[III]`, wrong ordering. Agent B: has `[III]` but drops DE MORGAN ref. Agent C: has both DE MORGAN ref + `[III]`. Agent C is most complete (both DE MORGAN ref and SCHMITZ `[III]`); `S3-njswt` is an OCR artefact for `s3-njswt` but acceptable as agent emission. Selecting C as strict-subset-of-agent-C emission. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt phys p.533.",
+    "rationale": "1/1/1 tie on chunk-34 DAH-Qedshepses notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.893 (phys p.533). Source body: `King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. DE MORGAN, Dahchour, ii, p. 22. Dating as late Dyn. VI or rst Int. Period, ScHMITZ, Untersuchungen zum Titel s1-njswt 'Konigssohn', p. 149 [Ill].` Agent A: has `DE MORGAN` (OCR) + no `[III]`, wrong ordering. Agent B: has `[III]` but drops DE MORGAN ref. Agent C: has both DE MORGAN ref + `[III]`. Agent C is most complete (both DE MORGAN ref and SCHMITZ `[III]`); `S3-njswt` is an OCR artefact for `s3-njswt` but acceptable as agent emission. Selecting C as strict-subset-of-agent-C emission. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt phys p.533.",
     "value": "King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. Dating as late Dyn. VI or 1st Int. Period, SCHMITZ, Untersuchungen zum Titel S3-njswt 'Konigssohn', p. 149 [III]. DE MORGAN, Dahchour, ii, p. 22."
   },
   "DAH-Duare|co_occupant_roles": {
@@ -1859,8 +1859,8 @@
     "rationale": "1/1/1 tie on chunk-35 DAH-Duare notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.534/printed p.894): `warb-priest` (source line 23 clearly shows r before b). Agent A matches source on `warb-priest`, includes [2] and `with plan`; B has `wab-priest` (drops r); C drops citation detail. A selected as source-closest."
   },
   "DAH-Ipiti|notes_from_pm": {
-    "value": "24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MoRGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khackheperrec-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486.",
-    "rationale": "1/1/1 tie on chunk-35 DAH-Ipiti notes_from_pm (tomb_id renamed from DAH-Ipit per PR #261 round-2 egyptologist P1.1: printed PDF p.897 item 24 reads IPITI). PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes stela detail (Khackheperrec-sonb, CG 1486) and fig. 77; B and C truncate. A is most complete. NOTE: the verbatim text-layer value here is later overridden in fix_rows.py CHUNK35_CORRECTIONS to apply (a) IPIT→IPITI per printed PDF, (b) raised-ayin normalization on Khackheperrec-sonb, and (c) DE MoRGAN→DE MORGAN OCR fix."
+    "value": "24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khackheperrec-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486.",
+    "rationale": "1/1/1 tie on chunk-35 DAH-Ipiti notes_from_pm (tomb_id renamed from DAH-Ipit per PR #261 round-2 egyptologist P1.1: printed PDF p.897 item 24 reads IPITI). PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes stela detail (Khackheperrec-sonb, CG 1486) and fig. 77; B and C truncate. A is most complete. NOTE: the verbatim text-layer value here is later overridden in fix_rows.py CHUNK35_CORRECTIONS to apply (a) IPIT→IPITI per printed PDF, (b) raised-ayin normalization on Khackheperrec-sonb, and (c) DE MORGAN→DE MORGAN OCR fix."
   },
   "DAH-Ithi|notes_from_pm": {
     "value": "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenphaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372.",
@@ -1881,8 +1881,8 @@
     "rationale": "1/1/1 tie on chunk-35 DAH-Kares co_occupant_roles. PM source (phys p.535/printed p.895): `Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc.`. Agent A chose [Official] (no warrant), B chose full priestly title (drops Wife), C chose [Wife]. Round-2 fix (PR #261 Gemini round-2 finding 3276144052): select agent C's `[\"Wife\"]` form per source-wide co_occupant_roles convention (DAH-Duare, DAH-Kanufer use relationship-only). The wife's additional title `Prophetess of Ḥatḥor Mistress of the Sycamore` lives in notes_from_pm where the full source clause is preserved. Strict-subset-of-agent-C-emission."
   },
   "DAH-Kares|notes_from_pm": {
-    "value": "Prophet of Snefru, etc. Old Kingdom. Wife, Meresankh, Prophetess of Hathor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II].",
-    "rationale": "1/1/1 tie on chunk-35 DAH-Kares notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): Agent A includes `Lower part of false-door` and [II] section marker; B omits `Lower part`; C omits `Lower part`. A is most complete."
+    "value": "Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II].",
+    "rationale": "Agent A verbatim. PM source (phys p.535/printed p.895): Agent A's emission includes ayin `Meresʿankh` + double-underdot `Ḥatḥor` + `Lower part of false-door` + [II] section marker. B + C drop `Lower part`. A is most complete + source-faithful on diacritics (chunk-34 ayin convention). Round-4 fix (PR #261 Gemini round-4 finding 3276265410): override value updated to match agent A's actual ayin/underdot diacritics; the fix_rows.py CHUNK35_CORRECTIONS entry that also targets this field stays as a defensive backstop."
   },
   "DAH-Kawezankhu|notes_from_pm": {
     "value": "Boundary official of a frontier district, Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. Parents, Nesutniifer (not mentioned here) and Khentetka Khent (Giza tb. G 4970). MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [3]; cf. FISCHER in J.A.O.S. 74 (1954), pp. 27-8.",
@@ -1896,14 +1896,14 @@
   },
   "DAH-Khentekhtaiemsaf|notes_from_pm": {
     "value": "11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049.",
-    "rationale": "Agent A verbatim with PR #261 round-2 intra-row consistency fix (Gemini 3276144042): the round-1 override drifted `Sit-ḥatḥor` to `Sit-hathor` (dropped underdots) while co_occupants correctly carried `Sit-ḥatḥor`. Restored to agent A's source-faithful form (A: `Sit-ḥatḥor`; B: `Sit-ḥaṯḥor` (ṯ error); C: `Sit-ḥatḥor`). Also normalized `DE MoRGAN → DE MORGAN`. Per Rule 6 (notes + co_occupants must agree on name spelling). PM source (phys p.536/printed p.896): Agent A includes canopic-chest (CG 4049) and full DE MORGAN detail with pls./figs.; B truncates; C is abbreviated. A is most complete."
+    "rationale": "Agent A verbatim with PR #261 round-2 intra-row consistency fix (Gemini 3276144042): the round-1 override drifted `Sit-ḥatḥor` to `Sit-hathor` (dropped underdots) while co_occupants correctly carried `Sit-ḥatḥor`. Restored to agent A's source-faithful form (A: `Sit-ḥatḥor`; B: `Sit-ḥaṯḥor` (ṯ error); C: `Sit-ḥatḥor`). Also normalized `DE MORGAN → DE MORGAN`. Per Rule 6 (notes + co_occupants must agree on name spelling). PM source (phys p.536/printed p.896): Agent A includes canopic-chest (CG 4049) and full DE MORGAN detail with pls./figs.; B truncates; C is abbreviated. A is most complete."
   },
   "DAH-KhnemhotpPhyle|notes_from_pm": {
-    "value": "25. KHNEMHOTP, Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. DE MoRGAN, Dahchour, i, p. 38. False-door, in Cairo Mus. CG 1478.",
+    "value": "25. KHNEMHOTP, Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. DE MORGAN, Dahchour, i, p. 38. False-door, in Cairo Mus. CG 1478.",
     "rationale": "1/1/1 tie on chunk-35 DAH-KhnemhotpPhyle notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes false-door CG 1478; B and C omit it. A is most complete."
   },
   "DAH-KhnemhotpVizier|notes_from_pm": {
-    "value": "2. KHNEMHOTP, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MoRGAN, Dahchour, i, pp. 18-23, with plan and section, figs. 20-1. Canopic-chest, sandstone, in Cairo Mus. CG 4048.",
+    "value": "2. KHNEMHOTP, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 18-23, with plan and section, figs. 20-1. Canopic-chest, sandstone, in Cairo Mus. CG 4048.",
     "rationale": "1/1/1 tie on chunk-35 DAH-KhnemhotpVizier notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.536/printed p.896): Agent A includes canopic-chest CG 4048 and figure detail; B and C truncate. A is most complete."
   },
   "DAH-MorganS18|notes_from_pm": {
@@ -1911,19 +1911,19 @@
     "rationale": "1/1/1 tie on chunk-35 DAH-MorganS18 notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes relief-fragment description; B and C omit it. A is most complete."
   },
   "DAH-MorganS19|notes_from_pm": {
-    "value": "19. Probably late Dyn. XII. DE MoRGAN, Dahchour, i, pp. 34-5, with plan and section, figs. 70-1. Fragments of squatting statuette, diorite or granite.",
+    "value": "19. Probably late Dyn. XII. DE MORGAN, Dahchour, i, pp. 34-5, with plan and section, figs. 70-1. Fragments of squatting statuette, diorite or granite.",
     "rationale": "1/1/1 tie on chunk-35 DAH-MorganS19 notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes statuette description and figure detail; B and C truncate. A is most complete."
   },
   "DAH-MorganS22|notes_from_pm": {
-    "value": "22. Middle Kingdom. DE MoRGAN, Dahchour, i, pp. 35-6. Texts of wooden coffin.",
+    "value": "22. Middle Kingdom. DE MORGAN, Dahchour, i, pp. 35-6. Texts of wooden coffin.",
     "rationale": "1/1/1 tie on chunk-35 DAH-MorganS22 notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes `Texts of wooden coffin`; B and C omit it. A is most complete."
   },
   "DAH-MorganS6|notes_from_pm": {
-    "value": "6. Middle Kingdom. DE MoRGAN, Dahchour, i, p. 25, with plan and sections, fig. 33. Offering-table of Temca, daughter of Sit-hathor (mother).",
+    "value": "6. Middle Kingdom. DE MORGAN, Dahchour, i, p. 25, with plan and sections, fig. 33. Offering-table of Temca, daughter of Sit-hathor (mother).",
     "rationale": "1/1/1 tie on chunk-35 DAH-MorganS6 notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.536/printed p.896): Agent A includes offering-table of Temca and figure detail; B and C omit it. A is most complete."
   },
   "DAH-MorganS8|notes_from_pm": {
-    "value": "8. NAME UNKNOWN. Middle Kingdom. Mother, Sit-hathor. DE MoRGAN, Dahchour, i, pp. 25-6, with plan and section, fig. 37. Fragment of false-door.",
+    "value": "8. NAME UNKNOWN. Middle Kingdom. Mother, Sit-hathor. DE MORGAN, Dahchour, i, pp. 25-6, with plan and section, fig. 37. Fragment of false-door.",
     "rationale": "1/1/1 tie on chunk-35 DAH-MorganS8 notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.536/printed p.896): Agent A includes `Fragment of false-door` and figure detail; B has different Sit-hathor rendering and omits detail; C is abbreviated. A is most complete."
   },
   "DAH-Nefermaat|notes_from_pm": {
@@ -1931,20 +1931,20 @@
     "rationale": "1/1/1 tie on chunk-35 DAH-Nefermaat notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): Agent A includes G 4970 cross-ref and FISCHER ref; B drops G 4970; C is abbreviated. A is most complete."
   },
   "DAH-NenMorganS28|notes_from_pm": {
-    "value": "28. NEN ... (woman). Middle Kingdom. DE MoRGAN, Dahchour, i, p. 40. Stela.",
+    "value": "28. NEN ... (woman). Middle Kingdom. DE MORGAN, Dahchour, i, p. 40. Stela.",
     "rationale": "1/1/1 tie on chunk-35 DAH-NenMorganS28 notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.538/printed p.898): `28. NEN ... (woman). Middle Kingdom. DE MORGAN, Dahchour, i, p. 40. Stela.` Agent A's form includes `Stela.` (source-faithful); B and C lack stela detail. Retaining Stela per source; stripping A's OCR meta-comment from notes body."
   },
   "DAH-Neni|notes_from_pm": {
-    "value": "27. NENI, Nubian (woman). Middle Kingdom. DE MoRGAN, Dahchour, i, pp. 38-9. Stela, in Cairo Mus. CG 1481.",
+    "value": "27. NENI, Nubian (woman). Middle Kingdom. DE MORGAN, Dahchour, i, pp. 38-9. Stela, in Cairo Mus. CG 1481.",
     "rationale": "1/1/1 tie on chunk-35 DAH-Neni notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes stela CG 1481; B and C omit it. A is most complete."
   },
   "DAH-Sebkemhet|notes_from_pm": {
-    "value": "17. SEBKEMHET, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MoRGAN, Dahchour, i, pp. 31-3, with plan, section, etc., figs. 61-3; cf. SIMPSON in J.E.A. 43 (1957), pp. 26-9.",
+    "value": "17. SEBKEMHET, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 31-3, with plan, section, etc., figs. 61-3; cf. SIMPSON in J.E.A. 43 (1957), pp. 26-9.",
     "rationale": "1/1/1 tie on chunk-35 DAH-Sebkemhet notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.537/printed p.897): Agent A includes SIMPSON cross-ref and figure details; B and C omit them. A is most complete."
   },
   "DAH-Siesi|notes_from_pm": {
-    "value": "SIESI, Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. DE MoRGAN, Dahchour, ii, pp. 78-86.",
-    "rationale": "1/1/1 tie on chunk-35 DAH-Siesi notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.538/printed p.898): `'Pyramid' LV of Lepsius.` Agent A includes headword SIESI, uses DE MoRGAN (PM mixed-case); B uses DE MORGAN (normalized) and em-dash; C drops headword. A is source-closest."
+    "value": "SIESI, Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. DE MORGAN, Dahchour, ii, pp. 78-86.",
+    "rationale": "1/1/1 tie on chunk-35 DAH-Siesi notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.538/printed p.898): `'Pyramid' LV of Lepsius.` Agent A includes headword SIESI, uses DE MORGAN (PM mixed-case); B uses DE MORGAN (normalized) and em-dash; C drops headword. A is source-closest."
   },
   "DAH-Siesi|tomb_aliases": {
     "value": [
