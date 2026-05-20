@@ -2904,6 +2904,332 @@ CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk 35 — Dahshûr § II.B East of Southern Pyramid of Snefru
+# + § II.C North of Enclosure of Sesostris III
+# + § II.D South of Enclosure of Amenemḥet II
+# (PM III.2 printed pp.894-898, phys pp.534-538). 21 rows.
+# Round-2 corrections post-reviewer (PR #261):
+# (P1.1 — Ithi) PM source "Wife, Wesen-ptaḥ(?)" was OCR-misread by
+#   agent A as "Wesenphaḥ" — `ph` is not a real Egyptian digraph; the
+#   correct decode of OCR `Wesenptal;l(?)` is `Wesen-ptaḥ(?)` (the
+#   deity Ptaḥ) via the documented `l;l → ḥ` bigram. Wife was also
+#   missing from co_occupants/co_occupant_roles.
+# (P1.2 — Kares) notes_from_pm `Meresankh` missing ayin vs co_occupants
+#   `Meresʿankh` — intra-row inconsistency. PM source `Meres<ankh` →
+#   `Meresʿankh` with U+02BF ayin (chunk-34 ayin convention).
+# (P1.3 — Siesi) tomb_aliases had only verbatim "'Pyramid' LV of
+#   Lepsius"; add canonical `Lepsius LV` form matching chunk-33/34
+#   precedent (Lepsius XLIX/LI/LIV/LVI/LVIII/XLVII) for downstream
+#   museum-catalog matching.
+# (P2.3 — Kaem...ed) attribution_certainty `probable` → `attested`.
+#   PM's `(?)` qualifies the TITLE (Prophet of Snefru) not the
+#   identification; the dynasty hedge `Probably Dyn. V` is on dating.
+# (P3 — ayin normalization) Duareʿ `Rec`/`Saḥurec` and Ipit
+#   `Khackheperrec-sonb` were OCR-literal; normalize to U+02BF ayin
+#   form per chunk-34 source-wide convention.
+CHUNK35_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("DAH-Ithi", "co_occupants"): {
+        "value": ["Wesenptaḥ(?)"],
+        "rationale": (
+            "PM III.2 phys p.535 (printed p.895) source-text headword "
+            "block: `ITHI ... Wife, Wesenptal;l(?)` where `l;l` is the "
+            "documented OCR bigram for underdot-ḥ (chunk-class convention). "
+            "Decode: `Wesenptaḥ(?)` — the deity Ptaḥ (no internal hyphen). "
+            "PR #261 round-1 reviewers (code-reviewer + egyptologist P1.1) "
+            "flagged that all 3 agents missed the wife in co_occupants/"
+            "co_occupant_roles. Round-2 reviewers (Gemini Code Assist "
+            "M-3276064121 + egyptologist P1.2) corrected the hyphenation "
+            "and required preservation of the PM `(?)` hedge — `Wesenptaḥ` "
+            "is one token (Ptaḥ-theophoric name) per the printed PDF."
+        ),
+    },
+    ("DAH-Ithi", "co_occupant_roles"): {
+        "value": ["Wife"],
+        "rationale": (
+            "Paired with DAH-Ithi|co_occupants fix above. PM headword "
+            "block explicitly says `Wife, Wesenptaḥ(?)` per phys p.535 "
+            "(printed p.895). Source-wide convention: a `Wife, <Name>` "
+            "clause in the headword block populates co_occupants + "
+            "co_occupant_roles=['Wife']."
+        ),
+    },
+    ("DAH-Ithi", "notes_from_pm"): {
+        "value": (
+            "Overseer of the chamber of dancers, etc. Dyn. IV-V. "
+            "Wife, Wesenptaḥ(?). Deceased and wife seated, with two "
+            "sons and two daughters. Texts, MASPERO, Trois annees de "
+            "fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names "
+            "and titles, LIEBLEIN, Dict. No. 1372."
+        ),
+        "rationale": (
+            "Round-1 tie-break override selected agent A's "
+            "`Wesenpḥaḥ(?)` reconstruction; PR #261 round-1 reviewers "
+            "found this is NOT a valid Egyptian-transliteration form "
+            "(`ph` is not a digraph; the underdot signals a separate "
+            "phoneme). Source OCR `Wesenptal;l(?)` decodes to "
+            "`Wesenptaḥ(?)` (deity Ptaḥ-name) per documented `l;l → ḥ` "
+            "bigram + plain `t`. Round-2 egyptologist verified against "
+            "the printed PDF and confirmed no internal hyphen (name is "
+            "one token Wesenptaḥ). PM III.2 phys p.535 (printed p.895)."
+        ),
+    },
+    ("DAH-Kares", "notes_from_pm"): {
+        "value": (
+            "Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, "
+            "Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Lower "
+            "part of false-door. Texts, BARSANTI in Ann. Serv. iii "
+            "(1902), pp. 201-2 [II]."
+        ),
+        "rationale": (
+            "Agent A verbatim. Round-1 tie-break override emitted "
+            "`Meresankh` missing ayin in notes_from_pm, but "
+            "co_occupants correctly used `Meresʿankh` (U+02BF ayin). "
+            "PM source `Meres<ankh` (phys p.535 / printed p.895) uses "
+            "raised-ayin per chunk-34 source-wide convention. Intra-"
+            "row consistency fix per Constitutional Rule 6 (notes + "
+            "co_occupants must agree on name spelling). Agent A had "
+            "both `Meresʿankh` ayin and `Ḥatḥor` double-underdot-Ḥ "
+            "correctly; round-2 selects agent A's full emission "
+            "verbatim. PR #261 egyptologist P1.2."
+        ),
+    },
+    ("DAH-Siesi", "tomb_aliases"): {
+        "value": ["Lepsius LV", "'Pyramid' LV of Lepsius"],
+        "rationale": (
+            "Round-1 tie-break override selected agent A's verbatim "
+            "`'Pyramid' LV of Lepsius` form. PR #261 egyptologist "
+            "P1.3: chunk-33/34 precedent (DAH-SnefruNorthernComplex "
+            "= Lepsius XLIX, DAH-SnefruSouthernComplex = Lepsius LVI, "
+            "DAH-PyramidE = Lepsius LIV, DAH-Sesostris3 = Lepsius "
+            "XLVII, DAH-Amenemhet2 = Lepsius LI, DAH-Amenemhet3 = "
+            "Lepsius LVIII) all use the bare canonical `Lepsius <N>` "
+            "form. SIESI is the only § II.D row in the entire Dahshûr "
+            "necropolis; downstream museum-catalog matching requires "
+            "the canonical form. Override adds `Lepsius LV` as the "
+            "primary alias while preserving the PM-source-verbatim "
+            "`'Pyramid' LV of Lepsius` as secondary alias."
+        ),
+    },
+    ("DAH-Kaemked", "attribution_certainty"): {
+        "value": "attested",
+        "rationale": (
+            "Round-1 emission `probable` reflected PM's `(?)` "
+            "qualifier on `Prophet of Snefru(?)` title-cluster + "
+            "the `Probably Dyn. V` dating hedge. Per source-wide "
+            "convention, `attribution_certainty` axis tracks the "
+            "TOMB → OCCUPANT attribution; the `(?)` here qualifies "
+            "the TITLE-INTERPRETATION (Prophet-of-Snefru classification) "
+            "not the tomb attribution itself. The false-door "
+            "inscription (BARSANTI in Ann. Serv. iii (1902)) is "
+            "unhedged. Dynasty hedge `Probably Dyn. V` is on dating "
+            "axis (orthogonal to attribution per chunk-34 P1.2 "
+            "convention). PM III.2 phys p.535 (printed p.895). "
+            "Egyptologist PR #261 P2.3. NOTE: round-2 (egyptologist "
+            "P1.6) resolved the OCR-damaged name via the printed PDF "
+            "as `KAEMKED`; tomb_id renamed DAH-KaemEd → DAH-Kaemked "
+            "via tomb_id_corrections-chunk35.json (a|b|c entries)."
+        ),
+    },
+    ("DAH-Duare", "co_occupants"): {
+        "value": ["Mertiotes", "ʿAnkhmaʿrēʿ"],
+        "rationale": (
+            "Round-1/2 merge captured the wife `Mertiotes` (Wife, Royal "
+            "acquaintance) but missed the eldest son named in the same "
+            "PM headword block. PR #261 round-2 egyptologist P3 noted "
+            "PM also names eldest son `ʿAnkhmaʿrēʿ` (Overseer of the "
+            "southern Pyramid of Snefru) in the printed PDF entry for "
+            "DUARĒʿ, currently dropped from co_occupants. Raw text-layer "
+            "(phys p.534 / printed p.894): `False-door of deceased and "
+            "eldest son <Ankhma<re<` — decode the 3 raised-ayin glyphs "
+            "as U+02BF per chunk-34 source-wide convention. Override "
+            "adds him with role `Son` per scope-accountability-enforcer "
+            "recommendation (P3 absorbed into the DAH-Duare round-2 "
+            "mutation since marginal cost is one CHUNK35_CORRECTIONS "
+            "pair)."
+        ),
+    },
+    ("DAH-Duare", "co_occupant_roles"): {
+        "value": ["Wife", "Son"],
+        "rationale": (
+            "Paired with DAH-Duare|co_occupants. PM headword block "
+            "(phys p.534 / printed p.894) names Wife = Mertiotes and "
+            "eldest son = ʿAnkhmaʿrēʿ. PR #261 round-2 egyptologist P3."
+        ),
+    },
+    ("DAH-Duare", "occupant_name"): {
+        "value": "Duarēʿ",
+        "rationale": (
+            "Round-1 merge: 3/3 agent unanimity on `Duareʿ` (no macron-"
+            "ē). PR #261 round-2 egyptologist P1.5 verified against the "
+            "printed PDF: PM III.2 printed p.894 § II.B headword prints "
+            "`DUARĒʿ` with macron-ē. OCR text-layer dropped the macron. "
+            "Override restores per Constitutional Rule 1 (printed PDF "
+            "authoritative over text-layer OCR). Diacritic stays in "
+            "occupant_name; tomb_id `DAH-Duare` is ASCII-stripped per "
+            "source-wide convention."
+        ),
+    },
+    ("DAH-Duare", "notes_from_pm"): {
+        "value": (
+            "Overseer of the two Pyramids of Snefru, Prophet of Reʿ in "
+            "the Sun-temple of Userkaf, warb-priest of the Pyramid of "
+            "Userkaf, etc. Temp. Saḥurēʿ or later. Wife, Mertiotes, "
+            "Royal acquaintance. MASPERO, Trois annees de fouilles "
+            "[etc.] in Mem. Miss. i, pp. 190-1 [2], with plan."
+        ),
+        "rationale": (
+            "Strict-subset-of-agent-A-emission with ayin + macron "
+            "normalizations: `Rec → Reʿ`; `Saḥurec → Saḥurēʿ` (PR #261 "
+            "round-2 egyptologist P1.5 verified printed PDF has macron-"
+            "ē on Saḥurēʿ — `Saḥurec` is pypdf rendering of both the "
+            "raised-ayin glyph as OCR `c` AND the dropped macron-ē). "
+            "All other tokens (Overseer of the two Pyramids of Snefru, "
+            "warb-priest, Mertiotes, MASPERO citation) are agent A "
+            "verbatim. Round-1 egyptologist P3.1 + P3.2; round-2 P1.5."
+        ),
+    },
+    ("DAH-Sebkemhet", "occupant_name"): {
+        "value": "Sebkemḥēt",
+        "rationale": (
+            "Round-1 merge: 3/3 agent unanimity on `Sebkemḥet` (no "
+            "macron-ē). PR #261 round-2 egyptologist P1.3 verified "
+            "against the printed PDF: PM III.2 printed p.897 § II.C "
+            "item 17 prints `SEBKEMḤĒT` with macron-ē (PM's standard "
+            "convention for the ḥ3t-component name). The OCR text-layer "
+            "dropped the macron; all 3 agents propagated the OCR loss. "
+            "Override restores the macron per Constitutional Rule 1 "
+            "(scholar-grade source-tracing — printed PDF is authoritative "
+            "over text-layer OCR). Diacritic stays in occupant_name; "
+            "tomb_id `DAH-Sebkemhet` is ASCII-stripped per source-wide "
+            "tomb_id convention."
+        ),
+    },
+    ("DAH-Siesi", "occupant_name"): {
+        "value": "Siēsi",
+        "rationale": (
+            "Round-1 merge: 3/3 agent unanimity on `Siesi` (no macron-ē). "
+            "PR #261 round-2 egyptologist P1.4 verified against the "
+            "printed PDF: PM III.2 printed p.898 § II.D banner prints "
+            "`SIĒSI` with macron. OCR text-layer dropped the macron. "
+            "Override restores per Constitutional Rule 1. Diacritic "
+            "stays in occupant_name; tomb_id `DAH-Siesi` is ASCII-"
+            "stripped."
+        ),
+    },
+    ("DAH-Siesi", "cemetery"): {
+        "value": "South of Enclosure of Amenemḥēt II",
+        "rationale": (
+            "Round-1 merge: cemetery string `South of Enclosure of "
+            "Amenemḥet II` (no macron-ē on Amenemḥēt). PR #261 round-2 "
+            "egyptologist P1.8 verified against the printed PDF: PM "
+            "III.2 printed p.898 § II.D sub-banner prints `Amenemḥēt II` "
+            "with macron-ē. OCR text-layer + chunk-35 prompt-cemetery-"
+            "allowlist both dropped the macron. Override restores per "
+            "Constitutional Rule 1. The cemetery is a controlled-vocab "
+            "string; the row will fail downstream strict-string facet "
+            "joins otherwise. Cross-source consistency with chunks "
+            "33/34 (DAH-Amenemhet2 occupant_name without macron) "
+            "deferred to follow-up issue per PR #261 egyptologist P2.4."
+        ),
+    },
+    ("DAH-MorganS18", "occupant_role"): {
+        "value": "Official",
+        "rationale": (
+            "Round-1 merge: 3/3 agent unanimity on `Royal Family` per "
+            "the prompt-rule `Hereditary-prince-class rank titles with "
+            "no specific office → Royal Family`. PR #261 round-2 "
+            "egyptologist P1.7 verified the printed PDF: PM gives only "
+            "`Hereditary prince, Count, etc.` (rpʿ ḥ3ty-ʿ) — a courtly "
+            "rank cluster PM applies to non-royal officials throughout "
+            "this MK volume. SEBKEMḤĒT on the same page is the local "
+            "comparator: also rpʿ ḥ3ty-ʿ in the rank cluster, classed "
+            "as a Vizier via the office title `Chief Justice and Vizier`. "
+            "MK rpʿ ḥ3ty-ʿ is a generic high-official rank, not a king's-"
+            "son marker. The prompt's Royal-Family rule was derived from "
+            "OK contexts; the MK-specific clarification belongs in a "
+            "follow-up amendment to the source-wide role-classification "
+            "rule. Constitutional Rule 1 defers to domain-expert PM-"
+            "faithfulness over the OK-context prompt heuristic for this "
+            "row."
+        ),
+    },
+    ("DAH-Khentekhtaiemsaf", "dynasty"): {
+        "value": "12",
+        "rationale": (
+            "PM source (phys p.536 / printed p.896): `11. KHENTEKHTAIEMSAF, "
+            "Embalmer. Temp. Sesostris III or later.` Per prompt-chunk-35.md "
+            "field-rule: `Temp. <King> where King is in a single dynasty → "
+            "that dynasty`. Sesostris III is Dyn XII. Agent B correctly "
+            "emitted `12`; agents A + C emitted `null` (2/3 majority lost). "
+            "Round-2 correction restores B's source-faithful reading. "
+            "PR #261 Gemini round 1 finding 3276064126 + 3276064140."
+        ),
+    },
+    ("DAH-Duare", "dynasty"): {
+        "value": "5",
+        "rationale": (
+            "PM source (phys p.534 / printed p.894): DUAREʿ, Overseer of "
+            "the two Pyramids of Snefru, Prophet of Reʿ in the Sun-temple "
+            "of Userkaf, ... Temp. Saḥureʿ or later. Per prompt-chunk-35.md "
+            "field-rule: `Temp. <King> where King is in a single dynasty → "
+            "that dynasty`. Saḥureʿ + Userkaf are both Dyn V kings — "
+            "DAH-Duareʿ's earliest dating is Dyn V. Same logic as "
+            "DAH-Khentekhtaiemsaf `Temp. Sesostris III or later` → `12`. "
+            "PR #261 Gemini round-2 finding 3276143995."
+        ),
+    },
+    ("DAH-KhnemhotpVizier", "attribution_certainty"): {
+        "value": "attested",
+        "rationale": (
+            "PM source (phys p.536 / printed p.896): `2. KHNEMHOTP, Chief "
+            "Justice and Vizier, etc. Probably temp. Sesostris III.` The "
+            "`Probably` qualifies the DATING (temp. Sesostris III) not the "
+            "occupant identification (KHNEMHOTP is unambiguously named + "
+            "title-clustered as Chief Justice and Vizier). Per orthogonal-"
+            "axes convention (chunk-34 DAH-Kanufer + chunk-35 DAH-KaemEd "
+            "precedent): `attribution_certainty` tracks tomb→occupant "
+            "attribution; PM dating hedges live separately. Round-2 fix: "
+            "`probable` → `attested`. PR #261 Gemini round-2 finding "
+            "3276144046."
+        ),
+    },
+    ("DAH-Sebkemhet", "attribution_certainty"): {
+        "value": "attested",
+        "rationale": (
+            "PM source (phys p.537 / printed p.897): `17. SEBKEMḤET, Chief "
+            "Justice and Vizier, etc. Probably temp. Sesostris III.` Same "
+            "orthogonality logic as DAH-KhnemhotpVizier: the `Probably` "
+            "qualifies the DATING not the occupant identification. SEBKEMḤET "
+            "is unambiguously named + role-clustered as Chief Justice and "
+            "Vizier. Round-2 fix: `probable` → `attested`. PR #261 Gemini "
+            "round-2 finding 3276144046."
+        ),
+    },
+    ("DAH-Ipiti", "notes_from_pm"): {
+        "value": (
+            "24. IPITI, Overseer of the department, etc. 2nd half of "
+            "Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, "
+            "fig. 77. Stela, with Khaʿkheperreʿ-sonb, Embalmer of the "
+            "temple, before deceased, and uninscribed offering-table, "
+            "in Cairo Mus. CG 1486."
+        ),
+        "rationale": (
+            "Strict-subset-of-agent-A-emission with three normalizations: "
+            "(1) `IPIT → IPITI` — round-2 egyptologist P1.1 verified "
+            "against printed PDF, headword reads IPITI (final `-i` is "
+            "part of the name, confirmed by hieroglyphic transcription); "
+            "tomb_id also renamed DAH-Ipit → DAH-Ipiti via "
+            "tomb_id_corrections-chunk35.json. (2) `Khackheperrec-sonb "
+            "→ Khaʿkheperreʿ-sonb` — OCR `c` raised-ayin → U+02BF "
+            "(chunk-34 convention). (3) `DE MoRGAN → DE MORGAN` — pypdf "
+            "renders MORGAN's `O` as lowercase `o`; correct PM source "
+            "spelling is ALL CAPS. All other tokens are agent A "
+            "verbatim. PR #261 round-1 egyptologist P3.3 + round-2 P1.1."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -2938,6 +3264,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK31_CORRECTIONS,
     CHUNK33_CORRECTIONS,
     CHUNK34_CORRECTIONS,
+    CHUNK35_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries

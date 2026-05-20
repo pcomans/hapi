@@ -2260,9 +2260,28 @@ DAH-AmenyQemau (Ameny-Ḳemau):
   notes_from_pm: a="Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; LECLANT in ib. N.S. 27 (1958), pp. 81-2; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174." | b="Pyramid of Ameny-Ḳemau. Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]." | c="Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]."  → chose "Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; LECLANT in ib. N.S. 27 (1958), pp. 81-2; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174."
   section: a=null | b=null | c="I"  → chose null
 
+DAH-Duare (Duareʿ):
+  co_occupant_roles: a=["Official"] | b=["Royal acquaintance"] | c=["Wife"]  → chose ["Wife"]
+  notes_from_pm: a="Overseer of the two Pyramids of Snefru, Prophet of Rec in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurec or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 190-1 [2], with plan." | b="Overseer of the two Pyramids of Snefru, Prophet of Reʿ in the Sun-temple of Userkaf, wab-priest of the Pyramid of Userkaf, etc. Temp. Saḥureʿ or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles in Mem. Miss. i, pp. 190–1 [2]." | c="Overseer of the two Pyramids of Snefru, Prophet of Rec in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Sahurec or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles in Mem. Miss. i, pp. 190-1."  → chose "Overseer of the two Pyramids of Snefru, Prophet of Rec in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurec or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 190-1 [2], with plan."
+  occupant_name: a="Duare" | b="Duareʿ" | c="Duareʿ"  → chose "Duareʿ"
+
 DAH-InSnefruIshtef (In-Snefru-Ishtef):
   notes_from_pm: a="Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MoRGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15." | b="Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MORGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15." | c="Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MORGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15."  → chose "Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MORGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15."
   section: a=null | b=null | c="II"  → chose null
+
+DAH-Ipiti (Ipiti):
+  notes_from_pm: a="24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MoRGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khackheperrec-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486." | b="DE MORGAN 24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, fig. 77." | c="No. 24. IPIT. Overseer of the department, etc. 2nd half of Dyn. XII. DE MORGAN, Dahchour, i, p. 37."  → chose "24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khackheperrec-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486."
+
+DAH-Ithi (Ithi):
+  co_occupant_roles: a=[] | b=[] | c=["Wife"]  → chose []
+  co_occupants: a=[] | b=[] | c=["Wesenptaḥ(?)"]  → chose []
+  notes_from_pm: a="Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenpḥaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372." | b="ITHI, Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenpṯaḥ(?), mitrt. MASPERO, Trois annees de fouilles in Mem. Miss. i, p. 191 [5]." | c="Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenptaḥ(?). MASPERO, Trois annees de fouilles in Mem. Miss. i, p. 191."  → chose "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenphaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372."
+
+DAH-Iynufer (Iynufer):
+  notes_from_pm: a="King's son, etc. Early Dyn. IV. BARSANTI in Ann. Serv. iii (1902), pp. 195-201 [I]; MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 159-90 [I]." | b="IYNUFER, King's son, etc. Early Dyn. IV. BARSANTI in Ann. Serv. iii (1902), pp. 195–201 [1]; MASPERO, Trois annees de fouilles in Mem. Miss. i, pp. 159–90 [1]." | c="King's son, etc. Early Dyn. IV. BARSANTI in Ann. Serv. iii (1902), pp. 195-201."  → chose "King's son, etc. Early Dyn. IV. BARSANTI in Ann. Serv. iii (1902), pp. 195-201 [I]; MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 159-90 [I]."
+
+DAH-Kaemked (Kaemked):
+  notes_from_pm: a="Prophet of Snefru(?), Secretary [of the King in] all his places, etc. Probably Dyn. V. Mother, Nefertnesut, King's daughter, Prophetess of Snefru and Ḥatḥor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), pp. 202-3 [III]; WILBOUR MSS. 2 G, 64 [upper]. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel sj-njswt 'Konigssohn', pp. 151-2 [V]. OCR of name damaged: original text reads KAEM:£5:ED." | b="KAEMḤED, Prophet of Snefru(?), Secretary [of the King in] all his places, etc. Probably Dyn. V. Mother, Nefertnesut, King's daughter, Prophetess of Snefru and Ḥatḥor Mistress of the Sycamore. BARSANTI in Ann. Serv. iii (1902), pp. 202–3 [III]." | c="Prophet of Snefru(?), Secretary [of the King in] all his places, etc. Probably Dyn. V. Mother, Nefertnesut, King's daughter, Prophetess of Snefru and Ḥatḥor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), pp. 202-3."  → chose "Prophet of Snefru(?), Secretary [of the King in] all his places, etc. Probably Dyn. V. Mother, Nefertnesut, King's daughter, Prophetess of Snefru and Hathor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), pp. 202-3 [III]; WILBOUR MSS. 2 G, 64 [upper]. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel sj-njswt 'Konigssohn', pp. 151-2 [V]."
 
 DAH-Kanufer (Kanufer):
   attribution_certainty: a="uncertain" | b="probable" | c="attested"  → chose "attested"
@@ -2270,6 +2289,26 @@ DAH-Kanufer (Kanufer):
   notes_from_pm: a="King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Advanced Dyn. IV or later. Wife, Khunesu, King's adorner, etc. DE MoRGAN, Dahchour, ii, p. 23. Dating as end Dyn. VI to Dyn. VIII, ScHMITZ, Untersuchungen zum Titel s1-njSwt 'Konigssohn', pp. 145-9." | b="King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Also Chief Justice and Vizier, in unclear context. Advanced Dyn. IV or later. Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 145-9 [II]. Wife, Khunesu, King's adorner, etc." | c="King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Also Chief Justice and Vizier. Advanced Dyn. IV or later. Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel S3-njSwt 'Konigssohn', pp. 145-9 [II]. DE MORGAN, Dahchour, ii, p. 23."  → chose "King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Also Chief Justice and Vizier, in unclear context. Advanced Dyn. IV or later. Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 145-9 [II]. Wife, Khunesu, King's adorner, etc."
   occupant_role: a="Prince" | b="Prince" | c="Vizier"  → chose "Prince"
   section: a=null | b=null | c="II"  → chose null
+
+DAH-Kares (Kares):
+  co_occupant_roles: a=["Official"] | b=["Prophetess of Ḥatḥor Mistress of the Sycamore"] | c=["Wife"]  → chose ["Wife"]
+  notes_from_pm: a="Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II]." | b="KARES, Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore. BARSANTI in Ann. Serv. iii (1902), pp. 201–2 [II]." | c="Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), pp. 201-2."  → chose "Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II]."
+
+DAH-Kawezankhu (Kawezʿankhu):
+  notes_from_pm: a="Boundary official of a frontier district, Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. Parents, Nesutniifer (not mentioned here) and Khentetka Khent (Giza tb. G 4970). MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [3]; cf. FISCHER in J.A.O.S. 74 (1954), pp. 27-8." | b="KAWEZʿANKHU, Boundary official of a frontier district, Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. Parents: Nesutniifer and Khentetka Khent (Giza tb. G 4970). MASPERO, Trois annees de fouilles in Mem. Miss. i, p. 191 [3]." | c="Boundary official of a frontier district, Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. MASPERO, Trois annees de fouilles in Mem. Miss. i, p. 191."  → chose "Boundary official of a frontier district, Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. Parents, Nesutniifer (not mentioned here) and Khentetka Khent (Giza tb. G 4970). MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [3]; cf. FISCHER in J.A.O.S. 74 (1954), pp. 27-8."
+
+DAH-Khentekhtaiemsaf (Khentekhtaiemsaf):
+  co_occupant_roles: a=["Official"] | b=[] | c=["Wife"]  → chose ["Wife"]
+  co_occupants: a=["Sit-ḥatḥor"] | b=[] | c=["Sit-ḥatḥor"]  → chose ["Sit-ḥatḥor"]
+  dynasty: a=null | b="12" | c=null  → chose null
+  notes_from_pm: a="11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MoRGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049." | b="DE MORGAN 11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥaṯḥor. DE MORGAN, Dahchour, i, pp. 27–30." | c="Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30."  → chose "11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049."
+
+DAH-KhnemhotpPhyle (Khnemḥotp):
+  attribution_certainty: a="attested" | b="probable" | c="attested"  → chose "attested"
+  notes_from_pm: a="25. KHNEMḤOTP, Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. DE MoRGAN, Dahchour, i, p. 38. False-door, in Cairo Mus. CG 1478." | b="DE MORGAN 25. KHNEMIḥOTP, Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. DE MORGAN, Dahchour, i, p. 38." | c="No. 25. KHNEMḤOTP. Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. DE MORGAN, Dahchour, i, p. 38."  → chose "25. KHNEMHOTP, Regulator of a phyle. Middle Kingdom. Mother(?), Mereryt. DE MORGAN, Dahchour, i, p. 38. False-door, in Cairo Mus. CG 1478."
+
+DAH-KhnemhotpVizier (Khnemḥotp):
+  notes_from_pm: a="2. KHNEMḤOTP, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MoRGAN, Dahchour, i, pp. 18-23, with plan and section, figs. 20-1. Canopic-chest, sandstone, in Cairo Mus. CG 4048." | b="DE MORGAN 2. KHNEMIḥOTP, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 18–23." | c="Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 18-23."  → chose "2. KHNEMHOTP, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 18-23, with plan and section, figs. 20-1. Canopic-chest, sandstone, in Cairo Mus. CG 4048."
 
 DAH-MorganN5 (None):
   notes_from_pm: a="Probably Dyn. IV. DE MoRGAN, Dahchour, i, p. 9." | b="Probably Dyn. IV. DE MORGAN, Dahchour, i, p. 9." | c="Probably Dyn. IV. DE MORGAN, Dahchour, i, p. 9."  → chose "Probably Dyn. IV. DE MORGAN, Dahchour, i, p. 9."
@@ -2281,10 +2320,32 @@ DAH-MorganN7 (None):
   section: a=null | b=null | c="II"  → chose null
   tomb_aliases: a=[] | b=[] | c=["DE MORGAN 7"]  → chose []
 
+DAH-MorganS18 (None):
+  notes_from_pm: a="18. NAME UNKNOWN, Hereditary prince, Count, etc. Temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 33-4. Relief-fragments with [deceased] at table, offering-bringers and butchers." | b="DE MORGAN 18. NAME UNKNOWN. Hereditary prince, Count, etc. Temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 33–4." | c="No. 18. NAME UNKNOWN. Hereditary prince, Count, etc. Temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 33-4."  → chose "18. NAME UNKNOWN, Hereditary prince, Count, etc. Temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 33-4. Relief-fragments with [deceased] at table, offering-bringers and butchers."
+  tomb_aliases: a=[] | b=["DE MORGAN 18"] | c=["DE MORGAN 18"]  → chose ["DE MORGAN 18"]
+
+DAH-MorganS19 (None):
+  notes_from_pm: a="19. Probably late Dyn. XII. DE MoRGAN, Dahchour, i, pp. 34-5, with plan and section, figs. 70-1. Fragments of squatting statuette, diorite or granite." | b="DE MORGAN 19. Probably late Dyn. XII. DE MORGAN, Dahchour, i, pp. 34–5." | c="No. 19. Probably late Dyn. XII. DE MORGAN, Dahchour, i, pp. 34-5."  → chose "19. Probably late Dyn. XII. DE MORGAN, Dahchour, i, pp. 34-5, with plan and section, figs. 70-1. Fragments of squatting statuette, diorite or granite."
+  tomb_aliases: a=[] | b=["DE MORGAN 19"] | c=["DE MORGAN 19"]  → chose ["DE MORGAN 19"]
+
+DAH-MorganS22 (None):
+  attribution_certainty: a="attested" | b="probable" | c="attested"  → chose "attested"
+  notes_from_pm: a="22. Middle Kingdom. DE MoRGAN, Dahchour, i, pp. 35-6. Texts of wooden coffin." | b="DE MORGAN 22. Middle Kingdom. DE MORGAN, Dahchour, i, pp. 35–6." | c="No. 22. Middle Kingdom. DE MORGAN, Dahchour, i, pp. 35-6."  → chose "22. Middle Kingdom. DE MORGAN, Dahchour, i, pp. 35-6. Texts of wooden coffin."
+  tomb_aliases: a=[] | b=["DE MORGAN 22"] | c=["DE MORGAN 22"]  → chose ["DE MORGAN 22"]
+
 DAH-MorganS24 (None):
   notes_from_pm: a="Probably Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 18-21." | b="Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 18-21." | c="Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 18-21."  → chose "Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 18-21."
   section: a=null | b=null | c="II"  → chose null
   tomb_aliases: a=[] | b=[] | c=["DE MORGAN 24"]  → chose []
+
+DAH-MorganS6 (None):
+  attribution_certainty: a="attested" | b="probable" | c="attested"  → chose "attested"
+  notes_from_pm: a="6. Middle Kingdom. DE MoRGAN, Dahchour, i, p. 25, with plan and sections, fig. 33. Offering-table of Temca, daughter of Sit-ḥatḥor (mother)." | b="DE MORGAN 6. Middle Kingdom. DE MORGAN, Dahchour, i, p. 25." | c="No. 6. Middle Kingdom. DE MORGAN, Dahchour, i, p. 25."  → chose "6. Middle Kingdom. DE MORGAN, Dahchour, i, p. 25, with plan and sections, fig. 33. Offering-table of Temca, daughter of Sit-hathor (mother)."
+  tomb_aliases: a=[] | b=["DE MORGAN 6"] | c=["DE MORGAN 6"]  → chose ["DE MORGAN 6"]
+
+DAH-MorganS8 (None):
+  notes_from_pm: a="8. NAME UNKNOWN. Middle Kingdom. Mother, Sit-ḥatḥor. DE MoRGAN, Dahchour, i, pp. 25-6, with plan and section, fig. 37. Fragment of false-door." | b="DE MORGAN 8. NAME UNKNOWN. Middle Kingdom. Mother, Sit-ḥaṯḥor. DE MORGAN, Dahchour, i, pp. 25–6." | c="No. 8. NAME UNKNOWN. Middle Kingdom. Mother, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 25-6."  → chose "8. NAME UNKNOWN. Middle Kingdom. Mother, Sit-hathor. DE MORGAN, Dahchour, i, pp. 25-6, with plan and section, fig. 37. Fragment of false-door."
+  tomb_aliases: a=[] | b=["DE MORGAN 8"] | c=["DE MORGAN 8"]  → chose ["DE MORGAN 8"]
 
 DAH-NeferherSnefru (Neferḥer-Snefru):
   notes_from_pm: a="King's son. Probably Dyn. V or VI. DE MoRGAN, Dahchour, ii, p. 14." | b="King's son. Probably Dyn. V or VI. DE MORGAN, Dahchour, ii, p. 14." | c="King's son. Probably Dyn. V or VI. DE MORGAN, Dahchour, ii, p. 14."  → chose "King's son. Probably Dyn. V or VI. DE MORGAN, Dahchour, ii, p. 14."
@@ -2293,6 +2354,18 @@ DAH-NeferherSnefru (Neferḥer-Snefru):
 DAH-Neferirtnes (Neferirtnes):
   notes_from_pm: a="Inspector of tenants of the Great House. Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 10-11." | b="Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11." | c="Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11."  → chose "Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11."
   section: a=null | b=null | c="II"  → chose null
+
+DAH-Nefermaat (Nefermaʿet):
+  notes_from_pm: a="Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. Parents, Nesutniifer and Khentetka Khent (Giza tb. G 4970). BARSANTI in Ann. Serv. iii (1902), pp. 203-4 [IV, V]; cf. FISCHER in J.A.O.S. 74 (1954), pp. 26-9." | b="NEFERMAʿET, Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. Parents: Nesutniifer and Khentetka Khent. BARSANTI in Ann. Serv. iii (1902), pp. 203–4 [IV, V]." | c="Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. BARSANTI in Ann. Serv. iii (1902), pp. 203-4."  → chose "Overseer of the phylai of Upper Egypt, etc. Middle Dyn. V. Parents, Nesutniifer and Khentetka Khent (Giza tb. G 4970). BARSANTI in Ann. Serv. iii (1902), pp. 203-4 [IV, V]; cf. FISCHER in J.A.O.S. 74 (1954), pp. 26-9."
+  occupant_name: a="Nefermaʿet" | b="Nefermāʿet" | c="Nefermaʿet"  → chose "Nefermaʿet"
+
+DAH-NenMorganS28 (Nen...):
+  notes_from_pm: a="28. NEN ... (woman). Middle Kingdom. PM name partially damaged/illegible in OCR: 'NEN ...' — full name unrecoverable from text-layer. DE MoRGAN, Dahchour, i, p. 40. Stela." | b="DE MORGAN 28. NEN... (woman). Middle Kingdom. DE MORGAN, Dahchour, i, p. 40." | c="No. 28. NEN... (woman). Middle Kingdom. DE MORGAN, Dahchour, i, p. 40."  → chose "28. NEN ... (woman). Middle Kingdom. DE MORGAN, Dahchour, i, p. 40. Stela."
+  occupant_name: a=null | b="Nen..." | c="Nen..."  → chose "Nen..."
+  tomb_aliases: a=[] | b=["DE MORGAN 28"] | c=["DE MORGAN 28"]  → chose ["DE MORGAN 28"]
+
+DAH-Neni (Neni):
+  notes_from_pm: a="27. NENI, Nubian (woman). Middle Kingdom. DE MoRGAN, Dahchour, i, pp. 38-9. Stela, in Cairo Mus. CG 1481." | b="DE MORGAN 27. NENI (woman). Nubian. Middle Kingdom. DE MORGAN, Dahchour, i, pp. 38–9." | c="No. 27. NENI. Nubian (woman). Middle Kingdom. DE MORGAN, Dahchour, i, pp. 38-9."  → chose "27. NENI, Nubian (woman). Middle Kingdom. DE MORGAN, Dahchour, i, pp. 38-9. Stela, in Cairo Mus. CG 1481."
 
 DAH-NiankhSnefru (Niʿankh-Snefru):
   notes_from_pm: a="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 11-12." | b="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12." | c="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12."  → chose "Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12."
@@ -2312,6 +2385,9 @@ DAH-Qedshepses (Ḳedshepses):
   occupant_name: a="Ḳedshepses" | b="Ḳedshepses" | c="Qedshepses"  → chose "Ḳedshepses"
   section: a=null | b=null | c="II"  → chose null
 
+DAH-Sebkemhet (Sebkemḥet):
+  notes_from_pm: a="17. SEBKEMḤET, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MoRGAN, Dahchour, i, pp. 31-3, with plan, section, etc., figs. 61-3; cf. SIMPSON in J.E.A. 43 (1957), pp. 26-9." | b="DE MORGAN 17. SEBKEMḥET, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 31–3." | c="No. 17. SEBKEMḤET. Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 31-3."  → chose "17. SEBKEMHET, Chief Justice and Vizier, etc. Probably temp. Sesostris III. DE MORGAN, Dahchour, i, pp. 31-3, with plan, section, etc., figs. 61-3; cf. SIMPSON in J.E.A. 43 (1957), pp. 26-9."
+
 DAH-Seshemnufer (Seshemnufer):
   notes_from_pm: a="Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 2-3." | b="Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MORGAN, Dahchour, ii, pp. 2-3." | c="Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MORGAN, Dahchour, ii, pp. 2-3."  → chose "Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MORGAN, Dahchour, ii, pp. 2-3."
   section: a=null | b=null | c="II"  → chose null
@@ -2320,6 +2396,10 @@ DAH-Seshemnufer (Seshemnufer):
 DAH-Sesostris3 (Sesostris III):
   notes_from_pm: a="Lepsius, XLVII. PYRAMID-COMPLEX OF SESOSTRIS III (C)." | b="Lepsius, XLVII." | c="Lepsius, XLVII."  → chose "Lepsius, XLVII."
   tomb_aliases: a=["Lepsius XLVII"] | b=[] | c=[]  → chose []
+
+DAH-Siesi (Siesi):
+  notes_from_pm: a="SIESI, Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. DE MoRGAN, Dahchour, ii, pp. 78-86." | b="SIESI, Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. DE MORGAN, Dahchour, ii, pp. 78–86." | c="Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. DE MORGAN, Dahchour, ii, pp. 78-86."  → chose "SIESI, Overseer of the seal, etc. Dyn. XII. 'Pyramid' LV of Lepsius. DE MORGAN, Dahchour, ii, pp. 78-86."
+  tomb_aliases: a=["Pyramid LV of Lepsius"] | b=[] | c=["'Pyramid' LV of Lepsius"]  → chose ["'Pyramid' LV of Lepsius"]
 
 DAH-SnefruNorthernComplex (Snefru):
   notes_from_pm: a="Lepsius, XLIX; Red Pyramid. Northern Complex of Snefru (A AND B. PYRAMID-COMPLEXES OF SNEFRU, A. NORTHERN COMPLEX)." | b="Northern Complex. PYRAMID. Lepsius, XLIX; Red Pyramid." | c="Northern Complex of Snefru. Pyramid of Snefru. Lepsius, XLIX; Red Pyramid."  → chose "Lepsius, XLIX; Red Pyramid."
@@ -2331,6 +2411,9 @@ DAH-SnefruSouthernComplex (Snefru):
   occupant_alt_names: a=[] | b=["Snofru"] | c=[]  → chose []
   source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 877, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}
   tomb_aliases: a=["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"] | b=[] | c=[]  → chose []
+
+DAH-Thenti (Thenti):
+  notes_from_pm: a="Prophet of Snefru, etc. Old Kingdom. Name and titles from lintel of doorway, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [6]." | b="THENTI, Prophet of Snefru, etc. Old Kingdom. MASPERO, Trois annees de fouilles in Mem. Miss. i, p. 191 [6]." | c="Prophet of Snefru, etc. Old Kingdom. MASPERO, Trois annees de fouilles in Mem. Miss. i, p. 191."  → chose "Prophet of Snefru, etc. Old Kingdom. Name and titles from lintel of doorway, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [6]."
 
 DAH-Uza (Uza):
   notes_from_pm: a="Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 14-15." | b="Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 14-15." | c="Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 14-15."  → chose "Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 14-15."
@@ -2556,11 +2639,29 @@ Reviewer-cited row corrections:
   DAH-Amenemhet2.tomb_aliases: [] → ["White Pyramid", "Lepsius LI"]
   DAH-Amenemhet3.tomb_aliases: [] → ["Black Pyramid", "Lepsius LVIII"]
   DAH-AmenyQemau.tomb_aliases: [] → ["Ameny-Kemau"]
+  DAH-Duare.co_occupants: ["Mertiotes"] → ["Mertiotes", "ʿAnkhmaʿrēʿ"]
+  DAH-Duare.co_occupant_roles: ["Wife"] → ["Wife", "Son"]
+  DAH-Duare.occupant_name: "Duareʿ" → "Duarēʿ"
+  DAH-Duare.notes_from_pm: "Overseer of the two Pyramids of Snefru, Prophet of Rec in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurec or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 190-1 [2], with plan." → "Overseer of the two Pyramids of Snefru, Prophet of Reʿ in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurēʿ or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 190-1 [2], with plan."
+  DAH-Duare.dynasty: null → "5"
   DAH-InSnefruIshtef.dynasty: null → "6"
+  DAH-Ipiti.notes_from_pm: "24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khackheperrec-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486." → "24. IPITI, Overseer of the department, etc. 2nd half of Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khaʿkheperreʿ-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486."
+  DAH-Ithi.co_occupants: [] → ["Wesenptaḥ(?)"]
+  DAH-Ithi.co_occupant_roles: [] → ["Wife"]
+  DAH-Ithi.notes_from_pm: "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenphaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372." → "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenptaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372."
+  DAH-Kaemked.attribution_certainty: "probable" → "attested"
+  DAH-Khentekhtaiemsaf.dynasty: null → "12"
+  DAH-KhnemhotpVizier.attribution_certainty: "probable" → "attested"
+  DAH-MorganS18.occupant_role: "Royal Family" → "Official"
   DAH-NeferherSnefru.dynasty: null → "6"
   DAH-PyramidE.tomb_aliases: [] → ["Lepsius LIV"]
   DAH-Qedshepses.tomb_aliases: ["DE MORGAN 27"] → ["DE MORGAN 27", "Kedshepses"]
+  DAH-Sebkemhet.occupant_name: "Sebkemḥet" → "Sebkemḥēt"
+  DAH-Sebkemhet.attribution_certainty: "probable" → "attested"
   DAH-Seshemnufer.dynasty: null → "6"
   DAH-Sesostris3.tomb_aliases: [] → ["Lepsius XLVII"]
+  DAH-Siesi.tomb_aliases: ["'Pyramid' LV of Lepsius"] → ["Lepsius LV", "'Pyramid' LV of Lepsius"]
+  DAH-Siesi.occupant_name: "Siesi" → "Siēsi"
+  DAH-Siesi.cemetery: "South of Enclosure of Amenemḥet II" → "South of Enclosure of Amenemḥēt II"
   DAH-SnefruNorthernComplex.tomb_aliases: [] → ["Red Pyramid", "Lepsius XLIX"]
   DAH-SnefruSouthernComplex.tomb_aliases: [] → ["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"]

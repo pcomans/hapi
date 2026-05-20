@@ -1,0 +1,98 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-35 (PM III.2 § II.B East of Southern Pyramid of Snefru + § II.C North of Enclosure of Sesostris III + § II.D South of Enclosure of Amenemḥēt II, printed pp.894-898, phys pp.534-538). 18 entries correcting agent-specific tomb_id variants to canonical form before merge.py runs. Conventions: no internal hyphens, TitleCase, no-hyphen per source-wide chunk-33 convention.\n\nSummary:\n1. a|DAH-KawezAnkhu: Agent A used capitalised U-suffix; 2/3 majority (B+C) emitted DAH-Kawezankhu. Strip trailing capital U.\n2. a|DAH-Nefermaet: Agent A dropped macron vowel; 2/3 majority (B+C) emitted DAH-Nefermaat. Restore aa.\n3. a|DAH-MorganS28: Agent A used generic anonymous form; 2/3 majority (B+C) emitted DAH-NenMorganS28 anchoring partial name NEN. Source line 95 (phys p.538): `28. NEN ...`.\n4-5. b/c|DAH-KhnemihotpMorganS2 and b/c|DAH-KhnemihotpMorganS25: Agents B+C inserted spurious `i` (Khnemihotp) and used number-anchor form; agent A used role-anchor form DAH-KhnemhotpVizier / DAH-KhnemhotpPhyle per chunk-30 NikaureJudge/NikaurePhyle precedent (two individuals of same name disambiguated by role, not by De Morgan number which encodes into tomb_aliases).\n6-9. c|IpitMorganS24 / c|KhentekhtaiemsafMorganS11 / c|SebkemhetMorganS17 / c|NeniMorganS27: Agent C appended De Morgan numbers to tomb_ids that agents A+B left as short-form. 2/3 majority short-form (A+B). De Morgan numbers belong in tomb_aliases, not tomb_id.\n10-12. Ipit → Ipiti (a|b|c|DAH-Ipit + c|DAH-IpitMorganS24 → DAH-Ipiti): PR #261 round-2 egyptologist P1.1 verified against the printed PDF (PM III.2 1978/1981, p.897 item 24): the headword IS `IPITI` (final `-i` is part of the name, confirmed by hieroglyphic transcription); the OCR text-layer dropped the trailing -i. Risks conflation with 11th-Dyn queen Ipit if left as `Ipit`. Canonical form DAH-Ipiti / occupant_name `Ipiti`.\n13-17. Kaemked OCR resolution (a|DAH-KaemEd + b|DAH-Kaemhed + c|DAH-Kaemsed + b|DAH-KaemEd + c|DAH-KaemEd → DAH-Kaemked): PR #261 round-2 egyptologist P1.6 verified against the printed PDF (p.895 § II.B): the headword clearly reads `KAEMKED` — the OCR `KAEM:£5:ED` is a pypdf mangling. B's `Kaemhed` (inserted h) and C's `Kaemsed` (inserted s) were OCR guesses without printed-source warrant; A's `KaemEd` preserved literal boundary characters as a placeholder. All three resolve to canonical DAH-Kaemked / occupant_name `Kaemked` via the authoritative printed source per Constitutional Rule 1 (work like a scholar). b|/c|DAH-KaemEd are second-pass entries catching the post-first-pass intermediate state.",
+  "a|DAH-KawezAnkhu": {
+    "canonical_tomb_id": "DAH-Kawezankhu",
+    "canonical_occupant_name": "Kawezʿankhu",
+    "rationale": "Agent A used capitalised trailing U: DAH-KawezAnkhu. Canonical form DAH-Kawezankhu per 2/3 majority (agents B+C both emitted DAH-Kawezankhu). Source PM III.2 phys p.534 (printed p.894): `KAWEZcANKHU` — no internal word boundary after Kawez in tomb_id. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "a|DAH-Nefermaet": {
+    "canonical_tomb_id": "DAH-Nefermaat",
+    "canonical_occupant_name": "Nefermaʿet",
+    "rationale": "Agent A dropped one `a` vowel: DAH-Nefermaet. Canonical form DAH-Nefermaat per 2/3 majority (agents B+C both emitted DAH-Nefermaat). Source PM III.2 phys p.535 (printed p.895): `NEFERMAcET`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "a|DAH-MorganS28": {
+    "canonical_tomb_id": "DAH-NenMorganS28",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A used generic anonymous form DAH-MorganS28. Canonical form DAH-NenMorganS28 per 2/3 majority (agents B+C both emitted DAH-NenMorganS28). Source PM III.2 phys p.538 (printed p.898): `28. NEN ...` — partial name preserved in tomb_id anchor. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-KhnemihotpMorganS2": {
+    "canonical_tomb_id": "DAH-KhnemhotpVizier",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent B inserted spurious `i` (Khnemihotp) and used De Morgan number anchor: DAH-KhnemihotpMorganS2. Canonical form DAH-KhnemhotpVizier per agent A's role-anchor convention (chunk-30 NikaureJudge/NikaurePhyle precedent: two individuals sharing a name are disambiguated by role, not De Morgan number). Source PM III.2 phys p.536 (printed p.896): `2. KHNEMH.OTP, Chief Justice and Vizier`. De Morgan 2 encodes to tomb_aliases, not tomb_id. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-KhnemhotpMorganS2": {
+    "canonical_tomb_id": "DAH-KhnemhotpVizier",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent C used De Morgan number anchor: DAH-KhnemhotpMorganS2. Canonical form DAH-KhnemhotpVizier per agent A's role-anchor convention (chunk-30 NikaureJudge/NikaurePhyle precedent). Same rationale as b|DAH-KhnemihotpMorganS2. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-KhnemihotpMorganS25": {
+    "canonical_tomb_id": "DAH-KhnemhotpPhyle",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent B inserted spurious `i` (Khnemihotp) and used De Morgan number anchor: DAH-KhnemihotpMorganS25. Canonical form DAH-KhnemhotpPhyle per agent A's role-anchor convention. Source PM III.2 phys p.537 (printed p.897): `25. KHNEMH.OTP, Regulator of a phyle`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-KhnemhotpMorganS25": {
+    "canonical_tomb_id": "DAH-KhnemhotpPhyle",
+    "canonical_occupant_name": "Khnemḥotp",
+    "rationale": "Agent C used De Morgan number anchor: DAH-KhnemhotpMorganS25. Canonical form DAH-KhnemhotpPhyle per agent A's role-anchor convention. Same rationale as b|DAH-KhnemihotpMorganS25. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "a|DAH-Ipit": {
+    "canonical_tomb_id": "DAH-Ipiti",
+    "canonical_occupant_name": "Ipiti",
+    "rationale": "Agent A read final consonant as missing: DAH-Ipit. Egyptologist-reviewer round 1 (PR #261) verified against the printed PDF (PM III.2 1978/1981, p.897 item 24): the headword IS `IPITI` (final `-i` is part of the name, confirmed by hieroglyphic transcription); the OCR text-layer dropped the trailing -i. Canonical form DAH-Ipiti. Risks conflation with 11th-Dyn queen Ipit if left as `Ipit`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-Ipit": {
+    "canonical_tomb_id": "DAH-Ipiti",
+    "canonical_occupant_name": "Ipiti",
+    "rationale": "Agent B read final consonant as missing: DAH-Ipit. Same rationale as a|DAH-Ipit above — printed PDF p.897 item 24 reads IPITI. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-IpitMorganS24": {
+    "canonical_tomb_id": "DAH-Ipiti",
+    "canonical_occupant_name": "Ipiti",
+    "rationale": "Agent C appended De Morgan number to tomb_id: DAH-IpitMorganS24. Canonical form DAH-Ipiti per egyptologist-reviewer correction (PR #261): printed PDF p.897 item 24 reads IPITI (final `-i` is part of the name, confirmed by hieroglyphic transcription). De Morgan 24 encodes to tomb_aliases. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-Ipit": {
+    "canonical_tomb_id": "DAH-Ipiti",
+    "canonical_occupant_name": "Ipiti",
+    "rationale": "Second-pass normalization: agent C's original DAH-IpitMorganS24 was routed to DAH-Ipit by an earlier pre_merge pass (the previous canonical short-form). PR #261 round-2 egyptologist correction renames the canonical short-form DAH-Ipit → DAH-Ipiti per printed-PDF reading (p.897 item 24 = IPITI). This second-pass entry catches C in its post-first-pass state."
+  },
+  "c|DAH-KhentekhtaiemsafMorganS11": {
+    "canonical_tomb_id": "DAH-Khentekhtaiemsaf",
+    "canonical_occupant_name": "Khentekhtaiemsaf",
+    "rationale": "Agent C appended De Morgan number: DAH-KhentekhtaiemsafMorganS11. Canonical short form DAH-Khentekhtaiemsaf per 2/3 majority (agents A+B both emitted DAH-Khentekhtaiemsaf). De Morgan 11 encodes to tomb_aliases. Source PM III.2 phys p.536 (printed p.896): `11. KHENTEKHTAIEMSAF`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-SebkemhetMorganS17": {
+    "canonical_tomb_id": "DAH-Sebkemhet",
+    "canonical_occupant_name": "Sebkemḥet",
+    "rationale": "Agent C appended De Morgan number: DAH-SebkemhetMorganS17. Canonical short form DAH-Sebkemhet per 2/3 majority (agents A+B both emitted DAH-Sebkemhet). De Morgan 17 encodes to tomb_aliases. Source PM III.2 phys p.537 (printed p.897): `17. SEBKEMH.ET`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-NeniMorganS27": {
+    "canonical_tomb_id": "DAH-Neni",
+    "canonical_occupant_name": "Neni",
+    "rationale": "Agent C appended De Morgan number: DAH-NeniMorganS27. Canonical short form DAH-Neni per 2/3 majority (agents A+B both emitted DAH-Neni). De Morgan 27 encodes to tomb_aliases. Source PM III.2 phys p.537 (printed p.897): `27. NENI`. chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "a|DAH-KaemEd": {
+    "canonical_tomb_id": "DAH-Kaemked",
+    "canonical_occupant_name": "Kaemked",
+    "rationale": "Agent A preserved OCR-mangled literal boundary characters: DAH-KaemEd / occupant_name `Kaem...ed`. Egyptologist-reviewer round 1 (PR #261) verified against the printed PDF (PM III.2 1978/1981, p.895 § II.B): the headword clearly reads `KAEMKED` — the `KAEM:£5:ED` is a pypdf OCR mangling of `KAEMKED`. Canonical form DAH-Kaemked / occupant_name `Kaemked`. Resolves the 1/1/1 OCR-tie cleanly via the authoritative printed source per Constitutional Rule 1 (work like a scholar). chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-Kaemhed": {
+    "canonical_tomb_id": "DAH-Kaemked",
+    "canonical_occupant_name": "Kaemked",
+    "rationale": "Agent B guessed `Kaemhed` (inserted h) for OCR-corrupted middle character. Printed PDF p.895 § II.B clearly reads `KAEMKED` (egyptologist-reviewer round 1, PR #261). chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "c|DAH-Kaemsed": {
+    "canonical_tomb_id": "DAH-Kaemked",
+    "canonical_occupant_name": "Kaemked",
+    "rationale": "Agent C guessed `Kaemsed` (inserted s) for OCR-corrupted middle character. Printed PDF p.895 § II.B clearly reads `KAEMKED` (egyptologist-reviewer round 1, PR #261). chunk-35 raw: chunk-35-p534-p538-dahshur-iib-c-d.txt."
+  },
+  "b|DAH-KaemEd": {
+    "canonical_tomb_id": "DAH-Kaemked",
+    "canonical_occupant_name": "Kaemked",
+    "rationale": "Second-pass normalization: agent B's original DAH-Kaemhed was routed to DAH-KaemEd by an earlier pre_merge pass (the previous canonical OCR-preserving form). PR #261 round-2 egyptologist correction renames DAH-KaemEd → DAH-Kaemked per printed-PDF reading (p.895 § II.B = KAEMKED). This second-pass entry catches B in its post-first-pass state."
+  },
+  "c|DAH-KaemEd": {
+    "canonical_tomb_id": "DAH-Kaemked",
+    "canonical_occupant_name": "Kaemked",
+    "rationale": "Second-pass normalization: agent C's original DAH-Kaemsed was routed to DAH-KaemEd by an earlier pre_merge pass. PR #261 round-2 egyptologist correction renames DAH-KaemEd → DAH-Kaemked per printed PDF. This second-pass entry catches C in its post-first-pass state."
+  }
+}
