@@ -102,40 +102,40 @@
        rule forbids. Free-standing is the honest classification.
 
        Different rigour levels exist in heritage practice. CRMarchaeo (the official
-       CIDOC archaeology extension) explicitly materialises excavation, stratigraphy,
-       and interment as first-class events with classes like A8 Stratigraphic Unit
-       and A9 Archaeological Excavation. Museum-catalog CIDOC implementations
-       generally use direct shortcuts when the use-case is "show me objects
-       associated with X" rather than "reconstruct the burial stratigraphy." Both
-       are valid CIDOC practice; the choice is project-dependent.
+       CIDOC archaeology extension at https://cidoc-crm.org/crmarchaeo/) explicitly
+       materialises excavation, stratigraphy, and interment as first-class events.
+       Museum-catalog CIDOC implementations generally use direct shortcuts when the
+       use-case is "show me objects associated with X" rather than "reconstruct the
+       burial stratigraphy." Both are valid CIDOC practice; the choice is project-
+       dependent. Our matching use-case is the former; we use the shortcuts.
 
-       Each predicate below has its own rigorous-model alternative (different per
-       predicate — tomb ownership is a commissioning/intended-use relationship,
-       original burial is a body/interment relationship, cache context is a
-       re-interment-event relationship). The model alternatives are noted on each
-       predicate. If a future use-case requires CRMarchaeo-style stratigraphic
-       querying, the richer model can be layered on top — the predicates here and
-       the rigorous chain can coexist.
+       Each of the four predicates below captures a structurally distinct relationship
+       (commissioning, primary burial, secondary cache reburial, joint burial) and
+       each would have its own rigorous-modelling shape in CRMarchaeo. We do not
+       attempt to summarise those rigorous shapes here — they are out of scope for
+       this manifest and best consulted in CRMarchaeo directly when archaeological-
+       rigour use-cases emerge. The Hapi predicates here and any future rigorous
+       chain can coexist.
   -->
 
   <rdf:Property rdf:about="#tomb_owner">
     <rdfs:label xml:lang="en">tomb owner</rdfs:label>
-    <rdfs:comment xml:lang="en">The Ruler the tomb was commissioned for (stable across cache reburials). A pragmatic Hapi-domain predicate, free-standing for the reasons in the block comment above. CIDOC-rigorous alternative for "commissioned for" semantics: an E12 Production / E65 Creation event for the tomb's construction, with the king as P14_carried_out_by (commissioner) or P14 with role-typing via P14.1_in_the_role_of, and P92_brought_into_existence linking the event to the resulting :E27 Site. Not body/burial — that's a different predicate (original_burial_in).</rdfs:comment>
+    <rdfs:comment xml:lang="en">The Ruler the tomb was commissioned for (stable across cache reburials). Distinct from original_burial_in (the ruler whose body was first interred) — a tomb may have an owner who is never interred there (Hatshepsut's KV20 partial occupancy, recut tombs). A pragmatic Hapi-domain predicate, free-standing for the reasons in the block comment above.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#original_burial_in">
     <rdfs:label xml:lang="en">original burial in</rdfs:label>
-    <rdfs:comment xml:lang="en">The Ruler whose body was first interred in this Site. A pragmatic Hapi-domain predicate, free-standing for the reasons in the block comment above. CIDOC-rigorous alternative: materialise an E5 Event (the interment) with P11_had_participant for the Ruler (or, more strictly, an E20 Biological Object representing the body) and P7_took_place_at for the location. CRMarchaeo's A4 Stratigraphic Genesis is the archaeology-specific refinement.</rdfs:comment>
+    <rdfs:comment xml:lang="en">The Ruler whose body was first interred in this Site. Distinct from tomb_owner (the ruler the tomb was commissioned for) and from cache_context_at (secondary re-burial). A pragmatic Hapi-domain predicate, free-standing for the reasons in the block comment above.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#cache_context_at">
     <rdfs:label xml:lang="en">cache context at</rdfs:label>
-    <rdfs:comment xml:lang="en">Records a secondary burial location (Dynasty 21 priestly reburials at KV35, TT320/DB320). A pragmatic Hapi-domain predicate, free-standing. Distinct from tomb_owner and original_burial_in. CIDOC-rigorous alternative: a second E5 Event (the re-interment) chained to the original interment via P9_consists_of / P134_continued or similar, with the cache Site as P7_took_place_at.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Records a secondary burial location (Dynasty 21 priestly reburials at KV35, TT320/DB320). Distinct from tomb_owner and original_burial_in. A pragmatic Hapi-domain predicate, free-standing.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#shares_tomb_with">
     <rdfs:label xml:lang="en">shares tomb with</rdfs:label>
-    <rdfs:comment xml:lang="en">Symmetric relation between two Rulers buried in the same Site. A pragmatic Hapi-domain predicate, free-standing. CIDOC-rigorous alternative would derive this from intersecting two interment-event chains rather than materialising it as a direct edge.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Symmetric relation between two Rulers buried in the same Site. A pragmatic Hapi-domain predicate, free-standing.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#display_name">
