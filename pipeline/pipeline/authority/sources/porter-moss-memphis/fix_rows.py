@@ -2126,6 +2126,60 @@ CHUNK28_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+CHUNK31_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    # Chunk 31 — § II.G BETWEEN THE MONASTERY OF APA JEREMIAS AND
+    # THE ENCLOSURE OF SEKHEMKHET (NK + LP).
+    #
+    # F1 (macron-Ū on Amūn — Gemini PR #255 round 2). Two rows
+    # (SAQ-Tenry, LS27 MAYA) had their notes_from_pm carrying the
+    # PM-faithful macron form `Amūn` (agent A) but their
+    # co_occupant_roles using the bare form `Amun` because the 2/1
+    # majority (agents B + C) systematically dropped the macron on
+    # the role-cluster strings. Same pattern as chunk-27b agent B
+    # macron-Ē drop and chunk-30 sibling-macron sweep. Per
+    # source-wide convention chunks 8/14/15/22/27b/29/30: macron-Ū
+    # on Amūn is preserved across all string fields for intra-row
+    # consistency (notes_from_pm + co_occupant_roles match) and
+    # cross-source Phase-A name-authority matching. Agent A's
+    # emission is the canonical form; this fix selects from agent
+    # A's verbatim emission, not synthesis.
+    ("SAQ-Tenry", "co_occupant_roles"): {
+        "value": ["Father, Judge, Steward of Amūn", "Wife"],
+        "rationale": (
+            "PM III.2 printed p.665; Gemini PR #255 round-2 review "
+            "(id=3270564704). co_occupant_roles macron-Ū on Amūn "
+            "restored for intra-row consistency with notes_from_pm "
+            "(which already has the macron form via agent A's "
+            "verbatim emission). 2/1 majority chose `Amun` "
+            "(agents B + C systematically dropped the macron); "
+            "this post-merge correction restores agent A's "
+            "PM-faithful `Amūn` per source-wide chunk-8/22/27b/29 "
+            "convention. Strict-subset-of-agent-A-emission "
+            "(NOT synthesis)."
+        ),
+    },
+    ("LS27", "co_occupant_roles"): {
+        "value": [
+            "Father, Judge",
+            "Mother, Songstress of Amūn",
+            "Wife, Songstress of Amūn",
+        ],
+        "rationale": (
+            "PM III.2 printed p.661; Gemini PR #255 round-2 review "
+            "(id=3270564711). LS27 MAYA co_occupant_roles macron-Ū "
+            "on Amūn restored for the two `Songstress of Amūn` "
+            "clauses (Mother and Wife). 2/1 majority (agents B + C) "
+            "dropped the macron; agent A preserved PM-faithful "
+            "`Amūn`. Source-wide convention chunks 8/22/27b/29 "
+            "requires macron preservation in co_occupant_roles "
+            "for intra-row consistency with notes_from_pm and "
+            "cross-source Phase-A name-authority matching. "
+            "Strict-subset-of-agent-A-emission (NOT synthesis)."
+        ),
+    },
+}
+
+
 CHUNK30_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     # Chunk 30 — § II.J TOMBS OF POSITION UNKNOWN (a) OLD KINGDOM.
     #
@@ -2565,6 +2619,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK28_CORRECTIONS,
     CHUNK29_CORRECTIONS,
     CHUNK30_CORRECTIONS,
+    CHUNK31_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
