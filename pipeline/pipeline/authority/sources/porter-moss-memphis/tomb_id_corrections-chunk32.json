@@ -1,0 +1,53 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-32 (PM III.2 § II.J TOMBS OF POSITION UNKNOWN: MIDDLE KINGDOM / NEW KINGDOM / LATE PERIOD, printed pp.700-719, phys pp.340-359). Ten agent-specific tomb_id variants corrected to canonical form before merge.py runs. All canonicals are determined by 2/3 majority or by direct source-header spelling in raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt. Sources cited as 'phys p.NNN' (physical PDF page) / 'printed p.NNN' (PM III.2 printed page number).\n\nSummary of corrections:\n1. a|SAQ-AmenhotypHuy: Agent A typo 'y' vs 'p' in 'Amenhotp'; source header reads AMENḤOTP ḤUY (phys p.341/printed p.701). B+C canonical SAQ-AmenhotpHuy is correct.\n2. a|SAQ-HenatKhnemebremen: Agent A over-qualified with second name 'Khnemebre-men'; source header is plain HENAT (phys p.358/printed p.718); B+C canonical SAQ-Henat is correct.\n3. a|SAQ-MeryptahDirectorOfCraftsmen: Agent A over-qualified with title; source header is plain MERYPTAḤ (phys p.345/printed p.705); B+C canonical SAQ-Meryptah is correct.\n4. c|SAQ-NiayChiefSteward: Agent C misread NIA header and over-qualified; source has two separate entries NIA (Chief Steward, phys p.346/printed p.706) and NIAY (Royal Scribe, phys p.346/printed p.706); A+B canonical SAQ-Nia is correct.\n5. c|SAQ-NiayRoyalScribe: Agent C over-qualified NIAY entry; A+B canonical SAQ-Niay is correct.\n6. a|SAQ-PsammethekLPUnknown: Agent A over-qualified with period; source header is PSAMMETHEK (double-m, phys p.358/printed p.718); canonical SAQ-Psammethek (double-m per source).\n7. b|SAQ-Psamethek: Agent B single-m typo; source header PSAMMETHEK confirms double-m (phys p.358/printed p.718); canonical SAQ-Psammethek.\n8. a|SAQ-Ptahmehet: Agent A OCR drift dropping medial 'm' from PTAḤEMḤET (phys p.350/printed p.710); B+C canonical SAQ-Ptahemhet is correct.\n9. c|SAQ-PtahmosAmenophisIII: Agent C used reign-period disambiguator for Director of Craftsmen entry; A+B canonical SAQ-PtahmosiDirectorOfCraftsmen is correct (per role-based disambiguator convention, phys p.351/printed p.711).\n10. c|SAQ-PtahmosRamessesII: Agent C used reign-period disambiguator for Chief Steward entry; A+B canonical SAQ-PtahmosiChiefSteward is correct (per role-based disambiguator convention, phys p.353/printed p.713).",
+  "a|SAQ-AmenhotypHuy": {
+    "canonical_tomb_id": "SAQ-AmenhotpHuy",
+    "canonical_occupant_name": "Amenhotp",
+    "rationale": "Agent A typo: 'Amenhotyp' with 'y' instead of 'p' (SAQ-AmenhotypHuy). Agents B and C both emitted SAQ-AmenhotpHuy (2/3 canonical). Source header reads AMENḤOTP ḤUY (phys p.341/printed p.701 of raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt), confirming 'Amenhotp' (no 'y')."
+  },
+  "a|SAQ-HenatKhnemebremen": {
+    "canonical_tomb_id": "SAQ-Henat",
+    "canonical_occupant_name": "Henat",
+    "rationale": "Agent A over-qualified tomb_id by appending second personal name 'Khnemebremen'. Source section header is plain HENAT (phys p.358/printed p.718 of raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt). The alternate name KHNEMEBRE'-MEN' is recorded in the occupant_alt_names field, not in the tomb_id descriptor. Agents B and C both emitted SAQ-Henat (2/3 canonical)."
+  },
+  "a|SAQ-MeryptahDirectorOfCraftsmen": {
+    "canonical_tomb_id": "SAQ-Meryptah",
+    "canonical_occupant_name": "Meryptah",
+    "rationale": "Agent A over-qualified tomb_id by appending occupational title. Source section header is plain MERYPTAḤ (phys p.345/printed p.705 of raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt). No homonymous SAQ-Meryptah exists in prior chunks (cross-chunk collision check: zero collisions). Agents B and C both emitted SAQ-Meryptah (2/3 canonical)."
+  },
+  "c|SAQ-NiayChiefSteward": {
+    "canonical_tomb_id": "SAQ-Nia",
+    "canonical_occupant_name": "Nia",
+    "rationale": "Agent C conflated the two separate NIA/NIAY section headers at phys p.346/printed p.706 (raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt) and over-qualified with title. Source has two distinct entries: NIA (Chief Steward temp. Amenophis III) and NIAY (Royal Scribe). The Chief Steward entry's canonical tomb_id is SAQ-Nia. Agents A and B both emitted SAQ-Nia for this row (2/3 canonical)."
+  },
+  "c|SAQ-NiayRoyalScribe": {
+    "canonical_tomb_id": "SAQ-Niay",
+    "canonical_occupant_name": "Niay",
+    "rationale": "Agent C over-qualified the NIAY section header at phys p.346/printed p.706 (raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt) by appending 'RoyalScribe'. Source header is plain NIAY. Agents A and B both emitted SAQ-Niay (2/3 canonical)."
+  },
+  "a|SAQ-PsammethekLPUnknown": {
+    "canonical_tomb_id": "SAQ-Psammethek",
+    "canonical_occupant_name": "Psammethek",
+    "rationale": "Agent A over-qualified tomb_id with 'LPUnknown' period marker. Source section header is PSAMMETHEK (double-m, phys p.358/printed p.718 of raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt). Canonical form SAQ-Psammethek (double-m) matches source spelling. Agent C also emitted SAQ-Psammethek (double-m correct); B emitted SAQ-Psamethek (single-m typo, corrected separately)."
+  },
+  "b|SAQ-Psamethek": {
+    "canonical_tomb_id": "SAQ-Psammethek",
+    "canonical_occupant_name": "Psammethek",
+    "rationale": "Agent B single-m typo: SAQ-Psamethek. Source section header is PSAMMETHEK (double-m, phys p.358/printed p.718 of raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt). Agent C emitted SAQ-Psammethek (double-m correct). This correction aligns the three agents on the canonical double-m form before merge.py majority-vote."
+  },
+  "a|SAQ-Ptahmehet": {
+    "canonical_tomb_id": "SAQ-Ptahemhet",
+    "canonical_occupant_name": "Ptahemhet",
+    "rationale": "Agent A OCR drift: SAQ-Ptahmehet drops the medial 'em' sequence from PTAḤEMḤET. Source section header is PTAḤEMḤET (phys p.350/printed p.710 of raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt), confirmed by ASCII transliteration as 'Ptahemhet'. Agents B and C both emitted SAQ-Ptahemhet (2/3 canonical)."
+  },
+  "c|SAQ-PtahmosAmenophisIII": {
+    "canonical_tomb_id": "SAQ-PtahmosiDirectorOfCraftsmen",
+    "canonical_occupant_name": "Ptahmosi",
+    "rationale": "Agent C used reign-period disambiguator (AmenophisIII) instead of role-based disambiguator. Source has two PTAḤMOSI entries: (1) Director of Craftsmen temp. Amenophis III (phys p.351/printed p.711) and (2) Chief Steward temp. Ramesses II (phys p.353/printed p.713). Role-based disambiguator convention (consistent with SAQ-PtahmosiChiefSteward also in this chunk) anchors on occupational role. Agents A and B both emitted SAQ-PtahmosiDirectorOfCraftsmen (2/3 canonical). Source: raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt."
+  },
+  "c|SAQ-PtahmosRamessesII": {
+    "canonical_tomb_id": "SAQ-PtahmosiChiefSteward",
+    "canonical_occupant_name": "Ptahmosi",
+    "rationale": "Agent C used reign-period disambiguator (RamessesII) instead of role-based disambiguator. Source second PTAḤMOSI entry: Chief Steward temp. Ramesses II (phys p.353/printed p.713). Role-based disambiguator convention anchors on occupational role, consistent with SAQ-PtahmosiDirectorOfCraftsmen. Agents A and B both emitted SAQ-PtahmosiChiefSteward (2/3 canonical). Source: raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt."
+  }
+}

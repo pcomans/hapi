@@ -628,6 +628,30 @@ CHUNK31_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+CHUNK32_TOMB_IDS: frozenset[str] = frozenset({
+    # PM III.2 § II.J TOMBS OF POSITION UNKNOWN: MIDDLE KINGDOM / NEW KINGDOM /
+    # LATE PERIOD (printed pp.700-719, phys pp.340-359). 30 rows spanning
+    # MK (Dyn XII: Sihathor "Early Middle Kingdom"), NK (Dyn XVIII: Amenemonet,
+    # AmenhotpHuy, Ipy, Merymery, Meryptah, Meryre, Patenemhab, Ptahemhet,
+    # PtahmosiDirectorOfCraftsmen, Wesi; Dyn XIX: Iyiry, Khaemweset, Neferronpet,
+    # Nia, Niay, Pahemneter, PtahmosiChiefSteward, RamesesEmperre, Roy,
+    # Sayempetref, Serbykhen, Pagerger; Dyn XX: Hori), and LP/Ptolemaic
+    # (Dyn XXVI: Henat, Thaibanebdedetimu; Dyn XXVII: Ankhefensekhmet,
+    # Psammethek; Dyn XXVIII-XXX/Ptolemaic `dynasty:33`: FamilyTombPedesi,
+    # Haremakhet). Cemetery: all rows carry `Tombs of position unknown`.
+    "SAQ-Amenemonet", "SAQ-AmenhotpHuy", "SAQ-Ankhefensekhmet",
+    "SAQ-FamilyTombPedesi", "SAQ-Haremakhet", "SAQ-Henat",
+    "SAQ-Hori", "SAQ-Ipy", "SAQ-Iyiry", "SAQ-Khaemweset",
+    "SAQ-Merymery", "SAQ-Meryptah", "SAQ-Meryre",
+    "SAQ-Neferronpet", "SAQ-Nia", "SAQ-Niay",
+    "SAQ-Pagerger", "SAQ-Pahemneter", "SAQ-Patenemhab",
+    "SAQ-Psammethek", "SAQ-Ptahemhet", "SAQ-PtahmosiChiefSteward",
+    "SAQ-PtahmosiDirectorOfCraftsmen", "SAQ-RamesesEmperre",
+    "SAQ-Roy", "SAQ-Sayempetref", "SAQ-Serbykhen",
+    "SAQ-Sihathor", "SAQ-Thaibanebdedetimu", "SAQ-Wesi",
+})
+
+
 CHUNK29_TOMB_IDS: frozenset[str] = frozenset({
     # PM III.2 § II.H AROUND PYRAMIDS OF PEPY I, MERENRĒʿ I, ISESI +
     # § II.I AROUND PYRAMIDS OF IBI AND PEPY II + MASTABET FARAʿUN.
@@ -754,6 +778,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS
     | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
     | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS
+    | CHUNK32_TOMB_IDS
 )
 
 
@@ -1005,6 +1030,8 @@ def test_source_citation_section_matches_chunk() -> None:
             assert row["source_citation"]["section"] == "II", row
         elif row["tomb_id"] in CHUNK31_TOMB_IDS:
             assert row["source_citation"]["section"] == "II", row
+        elif row["tomb_id"] in CHUNK32_TOMB_IDS:
+            assert row["source_citation"]["section"] == "II", row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -1019,7 +1046,25 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS:
+        elif row["tomb_id"] in (
+            CHUNK4_TOMB_IDS
+            | CHUNK5_TOMB_IDS
+            | CHUNK12_TOMB_IDS
+            | CHUNK20_TOMB_IDS
+            | CHUNK21_TOMB_IDS
+            | CHUNK22_TOMB_IDS
+            | CHUNK23_TOMB_IDS
+            | CHUNK24_TOMB_IDS
+            | CHUNK25_TOMB_IDS
+            | CHUNK26_TOMB_IDS
+            | CHUNK27A_TOMB_IDS
+            | CHUNK27B_TOMB_IDS
+            | CHUNK28_TOMB_IDS
+            | CHUNK29_TOMB_IDS
+            | CHUNK30_TOMB_IDS
+            | CHUNK31_TOMB_IDS
+            | CHUNK32_TOMB_IDS
+        ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 
@@ -1093,6 +1138,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 689 <= page <= 699, f"{row['tomb_id']} page {page} outside chunk-30 [689, 699]"
         elif row["tomb_id"] in CHUNK31_TOMB_IDS:
             assert 653 <= page <= 670, f"{row['tomb_id']} page {page} outside chunk-31 [653, 670]"
+        elif row["tomb_id"] in CHUNK32_TOMB_IDS:
+            assert 700 <= page <= 719, f"{row['tomb_id']} page {page} outside chunk-32 [700, 719]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -1270,6 +1317,11 @@ def test_cemetery_by_chunk() -> None:
             # form U+0027 in "Sekhemkhet's"). First NK chunk in this
             # source per the 2026-05-19 all-dynastic scope expansion.
             assert row["cemetery"] == "Between the Monastery and Sekhemkhet's Enclosure", row
+        elif row["tomb_id"] in CHUNK32_TOMB_IDS:
+            # Chunk 32: § II.J TOMBS OF POSITION UNKNOWN (MK/NK/LP).
+            # All 30 rows carry `Tombs of position unknown` — the PM
+            # section banner for this entire sub-section.
+            assert row["cemetery"] == "Tombs of position unknown", row
         elif row["tomb_id"] in CHUNK12_TOMB_IDS:
             # Royal pyramid complexes — the complex IS its own cemetery.
             # Parallel to chunks 4 + 5 null-cemetery convention.
@@ -1519,6 +1571,19 @@ def test_dynasty_assignments() -> None:
             # of Psammetheks probably temp. Amasis). First chunk in
             # this source with non-OK dynasties.
             assert row["dynasty"] in {"18", "19", "26"}, row
+        elif row["tomb_id"] in CHUNK32_TOMB_IDS:
+            # Chunk 32 § II.J TOMBS OF POSITION UNKNOWN (MK/NK/LP).
+            # MK: Dyn XII (SAQ-Sihathor "Early Middle Kingdom").
+            # NK: Dyn XVIII (AmenhotpHuy/Ipy/Merymery/Meryptah/Meryre/
+            #     Patenemhab/Ptahemhet/PtahmosiDirectorOfCraftsmen/
+            #     Wesi/Amenemonet); Dyn XIX (Iyiry/Khaemweset/Neferronpet/
+            #     Nia/Niay/Pahemneter/PtahmosiChiefSteward/RamesesEmperre/
+            #     Roy/Sayempetref/Serbykhen/Pagerger); Dyn XX (Hori).
+            # LP/Ptolemaic: Dyn XXVI (Henat/Thaibanebdedetimu);
+            #     Dyn XXVII (Ankhefensekhmet/Psammethek);
+            #     Dyn XXVIII-XXX or early Ptolemaic → `dynasty: "33"`
+            #     (FamilyTombPedesi/Haremakhet).
+            assert row["dynasty"] in {"12", "18", "19", "20", "26", "27", "33"}, row
 
 
 # === content / value assertions =============================================

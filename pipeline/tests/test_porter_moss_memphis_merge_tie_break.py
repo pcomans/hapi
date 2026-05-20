@@ -1025,6 +1025,64 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-TombPsammetheks", "occupant_name"),
         ("SAQ-TombPsammetheks", "source_citation"),
         ("SAQ-TombPsammetheks", "tomb_aliases"),
+        # Chunk 32 (§ II.J TOMBS OF POSITION UNKNOWN: MK/NK/LP,
+        # printed pp.700-719 / phys pp.340-359): 15 tie-break overrides
+        # resolved across 9 rows. Round-2 revisions (PR #256 round-2
+        # reviewer fixes for intra-row consistency) noted inline.
+        # Main disagreement surfaces:
+        #   - SAQ-Ankhefensekhmet: co_occupants + notes_from_pm (wife name
+        #     spelling). Round-1 mixed C+A across the two fields. Round-2
+        #     fix: both fields aligned to "Ḥatḥoremḥet" (A's notes-form
+        #     + OCR-decode-rule via prompt-documented `I:I → Ḥ` and
+        #     `l). → ḥ` substitutions; matches Egyptological convention
+        #     for goddess Ḥatḥor).
+        #   - SAQ-FamilyTombPedesi: three-field tie (co_occupants / roles /
+        #     notes); agent A wrongly put primary occupant Pedesi in
+        #     co_occupants; agent B dropped parents; agent C correct.
+        #   - SAQ-Henat: occupant_alt_names (Khnemebrēʿ-Menʿ form-tie;
+        #     3/3 agents emitted macron-ē — selected C's full form).
+        #   - SAQ-Ipy: co_occupant_roles (PM cross-reference "(tomb, see
+        #     supra)" preservation; agent C best match).
+        #   - SAQ-Meryre: co_occupant_roles (wife double-name "Beketamun
+        #     Bakt" handling). Round-1 picked A's "Wife, Bakt" which
+        #     leaked the alt-name into the role field (schema-overload).
+        #     Round-2 fix: C's "Wife (also known as Bakt)" preserving the
+        #     alt-name relation properly. co_occupants stays as
+        #     ["Beketamun"] (unanimous).
+        #   - SAQ-Neferronpet: co_occupants (parents + wife; agent A dropped
+        #     parents; agent C substituted ḥ for ḳ on Ḳafiriati — substantive
+        #     error; agent B correct with ḳ — verified via PDF crop p.706).
+        #   - SAQ-Patenemhab: co_occupant_roles (Mother(?) no-space form;
+        #     agent A matches source).
+        #   - SAQ-PtahmosiDirectorOfCraftsmen: co_occupants + notes_from_pm
+        #     (father's name Ḏḥwtmosi vs Ḏḥutmosi). Round-1 picked C for
+        #     co_occupants but A for notes — intra-row inconsistency.
+        #     Round-2 fix: both fields aligned to C's "Ḏḥwtmosi" (matches
+        #     PM's inline-cited Helck Urk. IV reference).
+        #   - SAQ-RamesesEmperre: co_occupants (Yupaʿa no-macron + Esi(?)
+        #     with question mark; agent A matches source).
+        #   - SAQ-Thaibanebdedetimu: co_occupant_roles + notes_from_pm
+        #     (father's epithet wp-n[?]rwy with illegible medial glyph).
+        #     Round-1 picked A's synthesized "wp-nḏrwy" for notes but C's
+        #     "wp-n-nrwy" for roles — intra-row inconsistency + Rule 1
+        #     synthesis. Round-2 fix: both fields aligned to C's
+        #     text-layer-literal "wp-n-nrwy" (Egyptological restoration
+        #     to "wp-nḏ.rwy" is a tracked follow-up).
+        ("SAQ-Ankhefensekhmet", "co_occupants"),
+        ("SAQ-Ankhefensekhmet", "notes_from_pm"),
+        ("SAQ-FamilyTombPedesi", "co_occupants"),
+        ("SAQ-FamilyTombPedesi", "co_occupant_roles"),
+        ("SAQ-FamilyTombPedesi", "notes_from_pm"),
+        ("SAQ-Henat", "occupant_alt_names"),
+        ("SAQ-Ipy", "co_occupant_roles"),
+        ("SAQ-Meryre", "co_occupant_roles"),
+        ("SAQ-Neferronpet", "co_occupants"),
+        ("SAQ-Patenemhab", "co_occupant_roles"),
+        ("SAQ-PtahmosiDirectorOfCraftsmen", "co_occupants"),
+        ("SAQ-PtahmosiDirectorOfCraftsmen", "notes_from_pm"),
+        ("SAQ-RamesesEmperre", "co_occupants"),
+        ("SAQ-Thaibanebdedetimu", "co_occupant_roles"),
+        ("SAQ-Thaibanebdedetimu", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
