@@ -1145,10 +1145,10 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         # (single quotes preserved verbatim from PM source).
         ("DAH-Duare", "co_occupant_roles"),
         ("DAH-Duare", "notes_from_pm"),
-        ("DAH-Ipit", "notes_from_pm"),
+        ("DAH-Ipiti", "notes_from_pm"),
         ("DAH-Ithi", "notes_from_pm"),
         ("DAH-Iynufer", "notes_from_pm"),
-        ("DAH-KaemEd", "notes_from_pm"),
+        ("DAH-Kaemked", "notes_from_pm"),
         ("DAH-Kares", "co_occupant_roles"),
         ("DAH-Kares", "notes_from_pm"),
         ("DAH-Kawezankhu", "notes_from_pm"),
