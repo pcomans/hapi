@@ -2311,19 +2311,6 @@ CHUNK31_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Strict-subset-of-agent-A-emission (NOT synthesis)."
         ),
     },
-    # F3 — intra-row consistency sweep follow-up per Gemini PR
-    # #255 round-4 finding 3270663669. SAQ-Eshout co_occupants
-    # had `Pedeamun` (no macron) while notes_from_pm preserved
-    # PM-faithful `Pedeamūn`. All three agents emitted the bare
-    # form in co_occupants (unanimous) — intra-row drift NOT
-    # caught by the round-2 agent-A-vs-B/C class sweep because
-    # no agent preserved the macron in co_occupants. Source-wide
-    # co_occupants diacritic-preservation convention (chunks
-    # 14/15/22/26/30 + CHUNK31 F2) requires macron-Ū on
-    # Amūn-compounds in co_occupants for intra-row consistency
-    # with notes_from_pm. The `Pedeamūn` form is in the row's
-    # own notes_from_pm string verbatim — strict-subset of an
-    # agent emission for that row.
     # F4 — post-merge correction for SAQ-TombPsammetheks
     # co_occupant_roles parentage-clause leak. Per Gemini PR #255
     # round-6 finding 3270707581: the chunk-31 prompt (line 157)
@@ -2360,6 +2347,52 @@ CHUNK31_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "verified (agent B never had the parentage clause)."
         ),
     },
+    # F5 — post-merge correction for SAQ-TombPsammetheks
+    # source_citation.page. Per Gemini PR #255 round-7 finding
+    # 3270726864: reconciled.jsonl shows page 668 but the
+    # tomb_id_corrections-chunk31.json + the tie-break-overrides
+    # rationale both indicate the headword is on PM III.2 printed
+    # p.669 (phys p.309). Same root cause as F4: round-3
+    # pre_merge tomb_id normalization caused agent C's source
+    # (page 668) to join agent B (page 668), forming a 2/1
+    # majority over agent A (page 669). merge.py's majority vote
+    # picked 668, bypassing the 669 tie-break override.
+    # Verified against PM source: phys p.309 carries the printed
+    # running header '669' and the 'TOMB OF THE PSAMMETHEKS AND
+    # KHEDEBNEIT-YERBONI [II]' headword opens at phys p.309 line 6.
+    ("SAQ-TombPsammetheks", "source_citation"): {
+        "value": {
+            "edition": "PM III.2 2nd ed. 1978/1981",
+            "page": 669,
+            "section": "II",
+        },
+        "rationale": (
+            "PM III.2 2nd ed. 1981 printed p.669 (phys p.309); "
+            "Gemini PR #255 round-7 review (id=3270726864). "
+            "Restored page 669 per direct PM source verification "
+            "(running header '669' on phys p.309 above the "
+            "'TOMB OF THE PSAMMETHEKS' headword). Root cause: "
+            "round-3 pre_merge tomb_id normalization caused "
+            "agent C's emission to join the cluster, shifting the "
+            "majority on source_citation.page from 1/1 (A 669, "
+            "B 668) to 2/1 (B + C 668) — merge.py picked 668 by "
+            "majority, bypassing the 669 tie-break override "
+            "(which only fires on 1/1/1 ties)."
+        ),
+    },
+    # F3 — intra-row consistency sweep follow-up per Gemini PR
+    # #255 round-4 finding 3270663669. SAQ-Eshout co_occupants
+    # had `Pedeamun` (no macron) while notes_from_pm preserved
+    # PM-faithful `Pedeamūn`. All three agents emitted the bare
+    # form in co_occupants (unanimous) — intra-row drift NOT
+    # caught by the round-2 agent-A-vs-B/C class sweep because
+    # no agent preserved the macron in co_occupants. Source-wide
+    # co_occupants diacritic-preservation convention (chunks
+    # 14/15/22/26/30 + CHUNK31 F2) requires macron-Ū on
+    # Amūn-compounds in co_occupants for intra-row consistency
+    # with notes_from_pm. The `Pedeamūn` form is in the row's
+    # own notes_from_pm string verbatim — strict-subset of an
+    # agent emission for that row.
     ("SAQ-Eshout", "co_occupants"): {
         "value": ["Pedeamūn", "Degenneit"],
         "rationale": (
