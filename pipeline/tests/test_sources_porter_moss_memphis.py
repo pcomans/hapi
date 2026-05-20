@@ -4255,8 +4255,10 @@ def test_chunk35_kaemked() -> None:
 def test_chunk35_kares() -> None:
     """DAH-Kares — § II.B. Prophet of Snefru, Old Kingdom, attested.
     Wife Meresʿankh, Prophetess of Hathor Mistress of the Sycamore.
-    co_occupant_roles=['Wife, Prophetess of Hathor Mistress of the Sycamore']
-    (tie-break: combined PM title following G3008/G4351 pattern). Printed p.895."""
+    co_occupant_roles=['Wife'] — relationship-only per source-wide
+    convention (DAH-Duare, DAH-Kanufer precedent). The wife's
+    additional Prophetess title remains in notes_from_pm. Updated
+    per PR #261 round-3 Gemini 3276144052. Printed p.895."""
     _assert_chunk35_full(
         _by_id("DAH-Kares"),
         tomb_id="DAH-Kares",
@@ -4269,7 +4271,7 @@ def test_chunk35_kares() -> None:
         cemetery="East of Southern Pyramid of Snefru",
         tomb_aliases=[],
         co_occupants=["Meresʿankh"],
-        co_occupant_roles=["Wife, Prophetess of Hathor Mistress of the Sycamore"],
+        co_occupant_roles=["Wife"],
         notes_from_pm=(
             "Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor "
             "Mistress of the Sycamore, etc. Lower part of false-door. "
@@ -4366,7 +4368,7 @@ def test_chunk35_khentekhtaiemsaf() -> None:
         co_occupant_roles=["Wife"],
         notes_from_pm=(
             "11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. "
-            "Mother(?), Sent. Wife, Sit-hathor. DE MoRGAN, Dahchour, i, pp. 27-30, "
+            "Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30, "
             "with plans, section, and views, pls. vi-ix, figs. 41-3. "
             "Canopic-chest, in Cairo Mus. CG 4049."
         ),

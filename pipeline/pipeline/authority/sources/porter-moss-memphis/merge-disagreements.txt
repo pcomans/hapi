@@ -2291,7 +2291,7 @@ DAH-Kanufer (Kanufer):
   section: a=null | b=null | c="II"  → chose null
 
 DAH-Kares (Kares):
-  co_occupant_roles: a=["Official"] | b=["Prophetess of Ḥatḥor Mistress of the Sycamore"] | c=["Wife"]  → chose ["Wife, Prophetess of Hathor Mistress of the Sycamore"]
+  co_occupant_roles: a=["Official"] | b=["Prophetess of Ḥatḥor Mistress of the Sycamore"] | c=["Wife"]  → chose ["Wife"]
   notes_from_pm: a="Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II]." | b="KARES, Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore. BARSANTI in Ann. Serv. iii (1902), pp. 201–2 [II]." | c="Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. BARSANTI in Ann. Serv. iii (1902), pp. 201-2."  → chose "Prophet of Snefru, etc. Old Kingdom. Wife, Meresankh, Prophetess of Hathor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II]."
 
 DAH-Kawezankhu (Kawezʿankhu):
@@ -2301,7 +2301,7 @@ DAH-Khentekhtaiemsaf (Khentekhtaiemsaf):
   co_occupant_roles: a=["Official"] | b=[] | c=["Wife"]  → chose ["Wife"]
   co_occupants: a=["Sit-ḥatḥor"] | b=[] | c=["Sit-ḥatḥor"]  → chose ["Sit-ḥatḥor"]
   dynasty: a=null | b="12" | c=null  → chose null
-  notes_from_pm: a="11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MoRGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049." | b="DE MORGAN 11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥaṯḥor. DE MORGAN, Dahchour, i, pp. 27–30." | c="Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30."  → chose "11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-hathor. DE MoRGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049."
+  notes_from_pm: a="11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MoRGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049." | b="DE MORGAN 11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥaṯḥor. DE MORGAN, Dahchour, i, pp. 27–30." | c="Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30."  → chose "11. KHENTEKHTAIEMSAF, Embalmer. Temp. Sesostris III or later. Mother(?), Sent. Wife, Sit-ḥatḥor. DE MORGAN, Dahchour, i, pp. 27-30, with plans, section, and views, pls. vi-ix, figs. 41-3. Canopic-chest, in Cairo Mus. CG 4049."
 
 DAH-KhnemhotpPhyle (Khnemḥotp):
   attribution_certainty: a="attested" | b="probable" | c="attested"  → chose "attested"
@@ -2422,6 +2422,247 @@ DAH-Uza (Uza):
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
 
+OCR-drift fixes (Roman-numeral restore in notes_from_pm):
+  G2: Lepsius, VIII; Perring and Vyse, 2 of Giza; Reisner, G 11; called Second Pyramid.
+  G2a: SUBSIDIARY PYRAMID WITH ‘SERDAB’. Reisner, G 11-a.
+  G3: Lepsius, IX; Perring and Vyse, 3 of Giza; Reisner, G 111; called Third Pyramid.
+  G3a: East Subsidiary Pyramid. Lepsius, XII; Perring and Vyse, 5 of Giza; Reisner, G 111-a; sometimes called Fourth Pyramid.
+  G7102: IOU Tenant of the Pyramid of Pepy I, Overseer of scribes of the meret, Inspector of wad-priests of the Pyramids of Khufu and Khephren, etc. Temp. Pepy I or later. Parents (possibly), Meryreanufer Kar and Gefi (tomb G 7101). Wife, Mertiotes. Stone-built mastaba.
+
 Reviewer-cited row corrections:
+  G1020.occupant_role: "Unknown" → "Official"
+  G1104.occupant_role: "Unknown" → "Official"
+  G1204.occupant_role: "Unknown" → "Official"
+  G1207.occupant_role: "Royal Family" → "Official"
+  G1221.attribution_certainty: "probable" → "uncertain"
+  G1221.notes_from_pm: "Shad (?) (?), Royal acquaintance. Probably Dyn. V." → "Royal acquaintance. Probably Dyn. V."
+  G1227.occupant_role: "Royal Family" → "Official"
+  G1234.occupant_name: "ʿAnkh-Haf" → "ʿAnkh-haf"
+  G1234.occupant_alt_names: [] → ["Ankhhaf", "Ankh-haf"]
+  G1314.occupant_name: null → "Khaʿkareʿ"
+  G1314.occupant_role: "Unknown" → "Official"
+  G1314.attribution_certainty: "uncertain" → "probable"
+  G1314.notes_from_pm: "Second half of Dyn. V." → "Second half of Dyn. V. Architrave with figure of Khaʿkareʿ repeated nine times. Double-statue, Khaʿkareʿ, Hairdresser of the Great House."
+  G1607.is_unfinished: true → false
+  G2335.dynasty: null → "5"
+  G2335.notes_from_pm: null → "Dyn. V. Wood statuettes from burial chamber of shaft A."
+  G2336.dynasty: null → "6"
+  G2336.occupant_name: null → "Khuwiptah"
+  G2336.occupant_role: "Unknown" → "Official"
+  G2336.notes_from_pm: null → "Relief-fragment with Khuwiptah and text. Three female statuettes, wood, Dyn. V-VI, from serdab. False-door of Theneny Inspector of ka-servants, etc., Dyn. VI, found between tombs G 2337 and G 2371."
+  G2352.occupant_name: "Hagi" → "Ḥagi"
+  G2370.notes_from_pm: "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Stone-built mastaba. LG 27." → "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Isesi. (Also owner of tomb LG 10.) Wife, Thefi Royal acquaintance. Stone-built mastaba. LG 27."
+  G2370.occupant_alt_names: ["Inti"] → ["Inti", "Senedjemib"]
+  G2375.occupant_name: "Akhetmehu" → "Akhetmeḥu"
+  G2375a.occupant_name: "ʿAnkhirptah" → "ʿAnkhirptaḥ"
+  G2378.co_occupant_roles: ["Wife, King's daughter of his body, Prophetess of Hathor"] → ["Wife, King's daughter of his body, Prophetess of Ḥathor"]
+  G2378.notes_from_pm: "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Stone-built mastaba. LG 26." → "Chief Justice and Vizier, King's architect and builder in the Two Houses, etc. Temp. Unis. Parents, Senezemib Inti and Thefi (tomb G 2370). Wife, Khentkaus King's daughter of his body, Prophetess of Ḥathor. Stone-built mastaba. LG 26."
+  G2378.occupant_alt_names: ["Meḥi"] → ["Meḥi", "Senedjemib"]
+  G2407.dynasty: null → "5"
+  G2407.notes_from_pm: null → "Late Dyn. V. Statues found in débris of shaft D."
+  G2430.co_occupant_roles: ["Wife, Prophetess of Hathor in all her places"] → ["Wife, Prophetess of Ḥathor in all her places"]
+  G2430.notes_from_pm: "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Stone-built mastaba. LG 25." → "Overseer of tenants of the Great House, Director of the Palace, Secretary of his Lord, etc. Early Dyn. VI. Wife, Khaʿmerernebti Prophetess of Ḥathor in all her places, etc. Stone-built mastaba. LG 25."
+  G2430.occupant_name: "Hetepniptah" → "Ḥetepniptaḥ"
+  G2501.dynasty: null → "6"
+  G2501.notes_from_pm: null → "Dyn. VI. Statuette found in front of mastaba."
+  G3035.co_occupant_roles: ["Wife, mjtrt"] → ["Wife, mitrt"]
+  G3035.notes_from_pm: "Judge and Scribe. Dyn. VI. Wife, Nefert mjtrt." → "Judge and Scribe. Dyn. VI. Wife, Nefert mitrt."
+  G3086.notes_from_pm: "Prophet of Khufu, Raʿzedef, and Khephren, waab-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance." → "Prophet of Khufu, Raʿzedef, and Khephren, waʿb-priest of the King's mother, Supervisor of the police, etc. Dyn. VI. Parents, Iymerery and Personet (tomb G 3098). Wife, Mest Royal acquaintance."
+  G3086.shared_with_tombs: [] → ["G3098"]
+  G3097.occupant_name: "Neferhi" → "Neferḥi"
+  G3098.shared_with_tombs: [] → ["G3086"]
+  G4240.notes_from_pm: "King's son of his body, sem-priest, Boundary official of Dep, etc. Middle Dyn. IV to early Dyn. V." → "King's son of his body, sm-priest, Boundary official of Dep, etc. Middle Dyn. IV to early Dyn. V."
+  G4351.notes_from_pm: "Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Hathor Mistress-of-the-Sycamore in all her places, etc." → "Overseer of the department of tenants of the Great House, Overseer of the Two Houses of Weapons, Prophet of Khufu, etc. 1st Int. Per. Wife, Khuitbauinu (?), Prophetess of Ḥathor Mistress-of-the-Sycamore in all her places, etc."
+  G4411.notes_from_pm: "Lector-priest, ma-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later." → "Lector-priest, sm-priest of Anubis, Prophet of Horus qmA-a, etc. Middle Dyn. V or later."
+  G4442.notes_from_pm: "Steward, Scribe of (a) the granary, (b) the Treasury, (c) a phyle of the endowment of MeHi (probably Senezemib, tomb G 2378). Dyn. VI or later." → "Steward, Scribe of (a) the granary, (b) the Treasury, (c) a phyle of the endowment of Meḥi (probably Senezemib, tomb G 2378). Dyn. VI or later."
+  G4513.occupant_name: "Neferihy" → "Neferiḥy"
+  G4520.co_occupants: ["Iaunesut", "Iupu", "Zefatka"] → ["Iʿanesut", "Iupu", "Zefatka"]
+  G4520.notes_from_pm: "Tenant of the Great House, Overseer of singers of the Great House, Overseer of flutists, etc. Temp. Userkaf (Reisner and Smith) or late Dyn. V (Baer). Parents, Iaunesut and Iupu both Tenants. Wife, Zefatka Royal acquaintance." → "Tenant of the Great House, Overseer of singers of the Great House, Overseer of flutists, etc. Temp. Userkaf (Reisner and Smith) or late Dyn. V (Baer). Parents, Iʿanesut and Iupu both Tenants. Wife, Zefatka Royal acquaintance."
+  G4560.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba. Vn of Junker." → "Middle or late Dyn. IV."
+  G4611.notes_from_pm: "Secretary of the Toilet-house, Keeper of oils of the Great House, Boundary official of (the district) 'Star of Horus Foremost of Heaven', etc. End of Dyn. V or later. Stone-built mastaba. LG 50." → "Secretary of the Toilet-house, Keeper of oils of the Great House, Boundary official of (the district) 'Star of Horus Foremost of Heaven', etc. End of Dyn. V or later."
+  G4620.notes_from_pm: "Scribe of the royal documents. Dyn. V. Stone-built mastaba." → "Scribe of the royal documents. Dyn. V."
+  G4630.notes_from_pm: "Chief lector-priest, Scribe of divine books, sma-priest of Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance." → "Chief lector-priest, Scribe of divine books, sm-priest of Anubis, etc. Dyn. V. Wife, Nubka Royal acquaintance."
+  G4631.notes_from_pm: "Prophetess of Ḥathor and Neith, etc. Dyn. V. Brick-built mastaba." → "Prophetess of Ḥathor and Neith, etc. Dyn. V."
+  G4640.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
+  G4646.notes_from_pm: "Overseer of the department of tenants of the Great House, Companion of the house, etc. Late Dyn. VI. Stone-built mastaba." → "Overseer of the department of tenants of the Great House, Companion of the house, etc. Late Dyn. VI."
+  G4650.notes_from_pm: "King's daughter of his body. Middle or late Dyn. IV. Stone-built mastaba. VIs of Junker." → "King's daughter of his body. Middle or late Dyn. IV."
+  G4660.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
+  G4712.notes_from_pm: "Seer of Horus and Seth, wrt Hts (woman). Probably first half of Dyn. V. Stone-built mastaba." → "Seer of Horus and Seth, wrt-ḥts (woman). Probably first half of Dyn. V."
+  G4714.notes_from_pm: "King's daughter of his body. Probably first half of Dyn. V. Stone-built mastaba. LG 48." → "King's daughter of his body. Probably first half of Dyn. V."
+  G4721.notes_from_pm: "Probably end of Dyn. V. Stone-built mastaba." → "Probably end of Dyn. V."
+  G4750.notes_from_pm: "Overseer of all works of the King, Overseer of the Two Treasuries, Overseer of the royal granaries, etc. Temp. Menkaurea. Stone-built mastaba. VIIs of Junker." → "Overseer of all works of the King, Overseer of the Two Treasuries, Overseer of the royal granaries, etc. Temp. Menkaureʿ."
+  G4811.notes_from_pm: "Overseer of the warbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI. Stone-built mastaba. Excavated by Schiaparelli." → "Overseer of the waʿbt, Overseer of craftsmen of the Great House, Overseer of works of the King. Late Dyn. V or Dyn. VI."
+  G4811.is_joint_burial: true → false
+  G4840.notes_from_pm: "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV. Stone-built mastaba. VIIIss of Junker." → "King's daughter of his body, Prophetess of Neith North-of-the-Wall and of Ḥathor Mistress-of-the-Sycamore. Middle or late Dyn. IV."
+  G4860.notes_from_pm: "Scribe of divine books, Lector-priest. Middle or late Dyn. IV. Stone-built mastaba. VIIIn of Junker." → "Scribe of divine books, Lector-priest. Middle or late Dyn. IV."
+  G4941.occupant_name: "Ptahiufni" → "Ptaḥiufni"
+  G4941.notes_from_pm: "Tenant of the Pyramid of Pepy I, Carpenter of the Great Dockyard, Honoured by Harzedef, etc. Dyn. VI." → "Tenant of the Pyramid of Pepy I, Carpenter of the Great Dockyard, Honoured by Ḥarzedef, etc. Dyn. VI."
+  G4970.co_occupants: ["Khentetka"] → ["Khentetka called Khent"]
+  G5110.co_occupants: ["Khephren", "Meresaankh III"] → ["Khephren", "Meresʿankh III"]
+  G5110.co_occupant_roles: ["Parent (probably), King", "Parent (probably), Queen"] → ["Father", "Mother"]
+  G5150.occupant_name: "Seshethotp" → "Seshetḥotp"
+  G5190.dynasty: null → "6"
+  G5232.dynasty: null → "5"
+  G5270.co_occupants: [] → ["Seshemnufer I", "Amenzefas"]
+  G5270.co_occupant_roles: [] → ["Father (probably)", "Mother (probably)"]
+  G5280.co_occupants: [] → ["Seshemnufer I", "Amenzefas"]
+  G5280.co_occupant_roles: [] → ["Father", "Mother"]
+  G5290.dynasty: null → "5"
+  G5332.dynasty: null → "6"
+  G5340.co_occupants: [] → ["Kanufer", "Shepsetkau", "Khufudinef-ʿankh"]
+  G5340.co_occupant_roles: [] → ["Parent (possibly)", "Parent (possibly)", "Overseer of the department of tenants of the Great House, etc."]
+  G5350.dynasty: null → "6"
+  G5480.dynasty: null → "6"
+  G5482.dynasty: null → "6"
+  G5520.dynasty: null → "6"
+  G5550.co_occupants: [] → ["Hemtrea"]
+  G5550.co_occupant_roles: [] → ["Wife, Prophetess of Neith Opener-of-the-Ways"]
+  G5560.notes_from_pm: "Good name FETEKTA. Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waab-priests of the Pyramid of Khufu, etc. Early Dyn. VI. Stone-built mastaba. LG 35." → "Overseer of the Memphite and Letopolite nomes, Overseer of the new settlements of the Pyramid of Isesi, Inspector of waʿb-priests of the Pyramid of Khufu, etc. Early Dyn. VI."
+  G6020.co_occupant_roles: ["Father", "Wife, Royal acquaintance"] → ["Father", "Wife, Royal acquaintance, etc."]
+  G6037.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 174, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"}
+  G6042.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 175, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 178, "section": "III"}
+  G7102.occupant_name: "Iou" → "Idu"
+  G7210.notes_from_pm: "King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]. Stone-built twin-mastaba." → "King's son of his body, Count, Keeper of Nekhen, etc., and his wife. Temp. Khufu to late Dyn. IV. Parents, Khufu and probably Mertiotes [I]."
+  G7211.notes_from_pm: "Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI. Stone-built mastaba." → "Prophet of Rēʿ in the Sun-temple of Menkauhor, Prophet of the Pyramid of Menkauhor, Inspector of administrators of the Treasury, etc. Late Dyn. V or Dyn. VI."
+  G7249.occupant_role: "Unknown" → "Official"
+  G7330.notes_from_pm: "Middle or late Dyn. IV. Stone-built twin-mastaba. Sarcophagus (uninscribed) with panther-skin in relief on lid, and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934." → "Middle or late Dyn. IV. Sarcophagus (uninscribed) with panther-skin in relief on lid, and palace-façade decoration, from shaft of G 7340, in Cairo Mus. Ent. 54934."
+  G7411.occupant_role: "Unknown" → "Official"
+  G7411.notes_from_pm: "Dyn. V. Stone-built mastaba. Wife, Ḥatḥornufer." → "Dyn. V. Wife, Ḥatḥornufer."
+  G7560.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
+  G7650.co_occupant_roles: ["Wife, King's daughter of his body, Prophetess of Khufu, Hathor, and Neith, etc."] → ["Wife, King's daughter of his body, Prophetess of Khufu, Ḥathor, and Neith, etc."]
+  G7750.notes_from_pm: "Middle or late Dyn. IV. Stone-built mastaba." → "Middle or late Dyn. IV."
+  G7810.notes_from_pm: "King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresʿankh [II] (tomb G 7410). Stone-built mastaba. Excavated by Service des Antiquités in 1923." → "King's son of his body, Overseer of the expedition. End of Dyn. IV or early Dyn. V. Mother (possibly), Meresʿankh [II] (tomb G 7410)."
+  G7820.occupant_role: "Unknown" → "Official"
+  G7851.occupant_role: "Unknown" → "Official"
+  G7948.co_occupants: ["Nikahor"] → ["Nikaḥor"]
+  G7948.co_occupant_roles: ["Wife, Prophetess of Hathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."] → ["Wife, Prophetess of Ḥathor Mistress-of-the-Sycamore and Mistress-of-Dendera, and of Neith Opener-of-the-Ways, etc."]
+  G7948.occupant_name: "Rēʿkhaʿef-ʿankh" → "Raʿkhaʿef-ʿankh"
+  LG72.occupant_role: "Official" → "High Priest"
+  LG73.co_occupants: ["Neferhetpes"] → ["Neferḥetpes"]
+  LG73.notes_from_pm: "Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferhetpes Royal acquaintance." → "Overseer of scribes of the crews, Scribe of the royal documents, Overseer of herds, etc. Dyn. V-VI. Wife, Neferḥetpes Royal acquaintance."
+  LG73.occupant_name: "Dendenu" → "Dendenu I"
+  LG74.occupant_name: "Dendenu" → "Dendenu II"
+  LG76.occupant_name: "Khufuhotp" → "Khufuḥotp"
+  LG78.co_occupants: ["Hetephernefert"] → ["Ḥetephernefert"]
+  LG78.notes_from_pm: "ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Hetephernefert Royal acquaintance." → "ka-servant, Steward. Middle Dyn. V or Dyn. VI. Wife, Ḥetephernefert Royal acquaintance."
+  LG83.co_occupant_roles: [] → ["Queen"]
+  LG97.co_occupant_roles: [] → ["Official"]
+  LG97.notes_from_pm: "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamiin" → "LG 97. HARSIESI and HARWOZ both wnrw-priests. Dyn. XXVI. Mother, Tentamūn."
+  SAQ-Ankhirptah.co_occupant_roles: ["Official"] → ["Wife, Prophetess of Ḥathor, etc."]
+  SAQ-Ankhirptah.notes_from_pm: "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥatḥor, etc." → "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥathor, etc."
+  SAQ-BiaIrery.co_occupants: [] → ["Idut"]
+  SAQ-BiaIrery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor"]
+  SAQ-Eshout.co_occupants: ["Pedeamun", "Degenneit"] → ["Pedeamūn", "Degenneit"]
+  SAQ-Hemakhti.tomb_aliases: ["S 911"] → ["H 14", "S 911"]
+  SAQ-HerimeruMerery.co_occupants: [] → ["Wazkaus"]
+  SAQ-HerimeruMerery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor in all her places, and of Neith, etc."]
+  SAQ-Iarti.co_occupants: [] → ["Iy"]
+  SAQ-Iarti.co_occupant_roles: [] → ["Father (probably)"]
+  SAQ-Inpukha.co_occupants: ["Niʿankhreʿ", "Ḥepetka"] → ["Niʿankhrēʿ", "Ḥepetka"]
+  SAQ-IputI.occupant_name: "Iput I" → "Iput"
+  SAQ-IputI.occupant_alt_names: [] → ["Iput I"]
+  SAQ-IputI.notes_from_pm: "PYRAMID-ENCLOSURE OF IPUT I. Dyn. VI. PYRAMID." → "PYRAMID-ENCLOSURE OF IPUT. Dyn. VI. PYRAMID. ¹ [King's daughter of his] body, King's wife (of Teti), King's mother (of Pepy I)."
+  SAQ-IputII.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 431, "section": "I"} → {"page": 432, "edition": "PM III.2 2nd ed. 1978/1981", "section": "I"}
+  SAQ-Irenkaptah.co_occupant_roles: ["Official"] → ["Wife, Prophetess of Ḥathor"]
+  SAQ-Irenkaptah.notes_from_pm: "Master butcher of the Great House, Overseer of beef fat, etc. Middle to late Dyn. V. Wife, Khenut, Prophetess of Ḥatḥor." → "Master butcher of the Great House, Overseer of beef fat, etc. Middle to late Dyn. V. Wife, Khenut, Prophetess of Ḥathor."
+  SAQ-Iy.co_occupants: [] → ["Niʿankh-pepy"]
+  SAQ-Iy.co_occupant_roles: [] → ["Father"]
+  SAQ-Iyenhor.co_occupants: [] → ["Theset"]
+  SAQ-Iyenhor.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
+  SAQ-Iyka.co_occupant_roles: ["Official"] → ["Wife, Prophetess of Ḥathor Mistress of the Sycamore, etc."]
+  SAQ-Iyka.notes_from_pm: "King's warb-priest, Chief of the Great Estate, etc. Dyn. V. Under the Causeway. Exact position unknown. Wife, Iymert, Prophetess of Ḥatḥor Mistress of the Sycamore, etc." → "King's waʿb-priest, Chief of the Great Estate, etc. Dyn. V. Under the Causeway. Exact position unknown. Wife, Iymert, Prophetess of Ḥathor Mistress of the Sycamore, etc."
+  SAQ-Khuit.notes_from_pm: "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI" → "PYRAMID-ENCLOSURE OF KHUIT. Dyn. VI. ¹ King's wife (of Teti)."
+  SAQ-MerenreI.occupant_name: "Merenrʿ I" → "Merenreʿ I"
+  SAQ-Methethi.co_occupant_roles: ["Official"] → ["Wife"]
+  SAQ-Mitri.co_occupants: [] → ["...menkaureʿ..."]
+  SAQ-Mitri.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor Mistress of the Sycamore, etc."]
+  SAQ-Neferherenptah.co_occupant_roles: ["Official"] → ["Son, Judge and Overseer of scribes"]
+  SAQ-Neterikhet.occupant_alt_names: ["Zoser"] → ["Zoser", "Djoser"]
+  SAQ-NiankhKhnum.co_occupant_roles: ["Official", "Official", "Official"] → ["Official", "Wife of Niʿankh-khnum, Prophetess of Ḥathor Mistress of the Sycamore, etc.", "Wife of Khnemḥotp, same title"]
+  SAQ-NiankhPepyNiankhMeryre.co_occupants: [] → ["Ḳedi"]
+  SAQ-NiankhPepyNiankhMeryre.co_occupant_roles: [] → ["Wife"]
+  SAQ-Nufer.co_occupant_roles: ["Official", "Official", "Official"] → ["Father, Director of singers, Prophet of Mert of Upper Egypt, etc.", "Wife, Royal acquaintance", "Mother, Prophetess of Ḥathor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc."]
+  SAQ-Pay.co_occupants: ["Amenemhab"] → ["Amenemḥab"]
+  SAQ-Pernezu.co_occupants: [] → ["Niʿankh-ḥathor"]
+  SAQ-Pernezu.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
+  SAQ-Seshemnufer.co_occupants: [] → ["Ḳerfet"]
+  SAQ-Seshemnufer.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
+  SAQ-Shepses.notes_from_pm: "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḫ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6." → "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḥ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6."
+  SAQ-Tenry.co_occupant_roles: ["Father, Judge, Steward of Amun", "Wife"] → ["Father, Judge, Steward of Amūn", "Wife"]
+  SAQ-TetiNeferheres.notes_from_pm: "Teti and Neferḥeres, Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown." → "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown."
+  SAQ-ThefuPtahhotp.occupant_alt_names: ["Ptaḥḥotp"] → []
+  SAQ-TombPsammetheks.co_occupant_roles: ["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"] → ["Joint occupant, Overseer of scribes of the royal repast", "Joint occupant, King's daughter, King's wife"]
+  SAQ-TombPsammetheks.source_citation: {"edition": "PM III.2 2nd ed. 1978/1981", "page": 668, "section": "II"} → {"edition": "PM III.2 2nd ed. 1978/1981", "page": 669, "section": "II"}
+  SAQ-Washiptah.co_occupants: ["Ḥeneni"] → []
+  SAQ-Werirniptah.notes_from_pm: "WERIRNIPTAḤ, Prophet of Reʿ and Ḥatḥor in the Sun-temple of Neferirkareʿ, Judge and Overseer of scribes, etc. Temp. Neferirkareʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718." → "WERIRNIPTAḤ, Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Judge and Overseer of scribes, etc. Temp. Neferirkarēʿ or later. Plan LXVI. Wife, Khentkaus, Royal acquaintance. Chapel. In Brit. Mus. 718."
+  JKR-Ankh.notes_from_pm: "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mjtrt." → "ʾtw-official. Late Old Kingdom. Wife, Nefertka, mitrt."
+  JKR-Inpuhotp.co_occupants: ["Senezem"] → ["Ither", "Sabt", "Senezem"]
+  JKR-Inpuhotp.co_occupant_roles: ["Royal acquaintance"] → ["Parent, Prophet of Neuserrēʿ, etc.", "Parent, Royal acquaintance", "Wife"]
+  JKR-Ithu.co_occupants: ["Intkaes"] → ["Iaʿib", "Khaut I", "Intkaes"]
+  JKR-KhesefI.notes_from_pm: "Recruit. Dyn VI." → "Recruit. Dyn. VI."
+  JKR-MeniII.notes_from_pm: "Elder of the house. Late Dyn. VI. Possibly same as Meni [I]. Wife, Merutnes." → "Elder of the house. Late Dyn. VI. Possibly same as Meni I. Wife, Merutnes."
+  JKR-Menib.notes_from_pm: "Prophetess of Hathor, etc. Late Old Kingdom." → "Prophetess of Ḥathor, etc. Late Old Kingdom."
+  JKR-Nebtpezu.notes_from_pm: "mjtrt (woman). Late Old Kingdom." → "mitrt (woman). Late Old Kingdom."
+  JKR-Sinekhen.co_occupants: ["Maakherui"] → ["Maʿkherui"]
+  JKR-Sinekhen.co_occupant_roles: ["Female steward, etc."] → ["Wife, Female steward, etc."]
+  JKR-Sinufer.co_occupants: ["ʿAnkh-hathor"] → ["ʿAnkh-ḥathor"]
+  JKR-Sinufer.co_occupant_roles: ["Royal acquaintance"] → ["Wife, Royal acquaintance"]
+  JKR-Sinufer.notes_from_pm: "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-hathor Royal acquaintance." → "Inspector of tenants of the Great House, etc. Dyn. VI. Wife, ʿAnkh-ḥathor Royal acquaintance."
+  JKR-SonbI.co_occupant_roles: ["Prophetess of Hathor and Neith, etc."] → ["Wife, Prophetess of Ḥathor and Neith, etc."]
+  D9.occupant_name: "Raʿḥotp" → "Rēʿḥotp"
+  D23.occupant_name: "Raʿshepses" → "Rēʿshepses"
+  D39.source_citation: {"edition": "PM III.1 2nd ed. 1974", "page": 109, "section": "III"} → {"edition": "PM III.1 2nd ed. 1974", "page": 111, "section": "III"}
+  D116.co_occupants: ["Nefert mjtrt"] → ["Nefert"]
+  D116.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]
+  D116.notes_from_pm: "Overseer of the crew of rowers. Dyn. V-VI. Wife, Nefert mjtrt." → "Overseer of the crew of rowers. Dyn. V-VI. Wife, Nefert mitrt."
+  D117.notes_from_pm: "Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Hetepibes called Ipi Royal acquaintance." → "Scribe of the archives and of recruits, Steward, etc. Early Dyn. V. Parents, Iti Strong-of-voice of the archives, and Zefatsen Royal acquaintance. Wife, Ḥetepibes called Ipi Royal acquaintance."
+  D203.notes_from_pm: "Nufer Overseer of barbers, etc., and Itisen Overseer of the TAw of the Great Bark. Late Dyn. V or Dyn. VI." → "Nufer Overseer of barbers, etc., and Itisen Overseer of the tAw of the Great Bark. Late Dyn. V or Dyn. VI."
+  D215.co_occupants: ["ʿAnkh-Ḥatḥor"] → ["ʿAnkh-Ḥathor"]
+  D215.co_occupant_roles: ["Wife"] → ["Wife, mitrt"]
+  JKE-AnonCompanion.notes_from_pm: "NAME UNKNOWN, Companion (smr N.N. of Junker). Dyn. VI." → "Companion (smr N.N. of Junker). Dyn. VI."
+  JKE-Iuf.co_occupant_roles: ["Wife, mitrt"] → ["Wife, mitrt, etc."]
+  JKE-Meruka.occupant_role: "Official" → "High Priest"
+  JKE-Nikaukhnum.notes_from_pm: "NIKAUKHNUM and NEFERESRIS Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI." → "Royal acquaintance, and Neferesris Royal acquaintance (probably woman). Late Dyn. V or early Dyn. VI."
+  JKE-Nikaukhnum.co_occupant_roles: ["Royal acquaintance"] → ["Royal acquaintance (probably woman)"]
+  JKE-User.notes_from_pm: "Overseer of ha-servants, etc. Late Dyn. V. Mother, Henutsen." → "Overseer of ka-servants, etc. Late Dyn. V. Mother, Henutsen."
+  JKE-Weri.notes_from_pm: "Inspector of ha-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI." → "Inspector of ka-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI."
+  LS27.co_occupant_roles: ["Father, Judge", "Mother, Songstress of Amun", "Wife, Songstress of Amun"] → ["Father, Judge", "Mother, Songstress of Amūn", "Wife, Songstress of Amūn"]
+  TPC-Kaemhest.co_occupants: ["Senefʿankh", "Thenenet", "Kapunesut"] → ["Senefʿankh", "Thenenet"]
+  SAQD46.dynasty: "12" → "6"
+  SAQE14.co_occupants: [] → ["Nefert"]
+  SAQE14.co_occupant_roles: [] → ["Wife"]
+  SAQH1.co_occupants: [] → ["Nefertentes", "Mesti", "Inneferḥathor"]
+  SAQH1.co_occupant_roles: [] → ["Mother", "Wife", "Wife"]
+  MAR-C25.co_occupants: [] → ["Ḥetep"]
+  MAR-C25.co_occupant_roles: [] → ["Son, Judge and Inspector of scribes"]
+  MAR-D67.notes_from_pm: "Supervisor of prophets of the Sun-temple and Pyramid of Neuserreʿ, Prophet of the Sun-temple of Neferirkareʿ, etc. Temp. Neuserreʿ or later." → "Supervisor of prophets of the Sun-temple and Pyramid of Neuserrēʿ, Prophet of the Sun-temple of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later."
+  DAH-Amenemhet2.tomb_aliases: [] → ["White Pyramid", "Lepsius LI"]
+  DAH-Amenemhet3.tomb_aliases: [] → ["Black Pyramid", "Lepsius LVIII"]
+  DAH-AmenyQemau.tomb_aliases: [] → ["Ameny-Kemau"]
   DAH-Duare.co_occupants: ["Mertiotes"] → ["Mertiotes", "ʿAnkhmaʿrēʿ"]
   DAH-Duare.co_occupant_roles: ["Wife"] → ["Wife", "Son"]
+  DAH-Duare.occupant_name: "Duareʿ" → "Duarēʿ"
+  DAH-Duare.notes_from_pm: "Overseer of the two Pyramids of Snefru, Prophet of Rec in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurec or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 190-1 [2], with plan." → "Overseer of the two Pyramids of Snefru, Prophet of Reʿ in the Sun-temple of Userkaf, warb-priest of the Pyramid of Userkaf, etc. Temp. Saḥurēʿ or later. Wife, Mertiotes, Royal acquaintance. MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, pp. 190-1 [2], with plan."
+  DAH-Duare.dynasty: null → "5"
+  DAH-InSnefruIshtef.dynasty: null → "6"
+  DAH-Ipiti.notes_from_pm: "24. IPIT, Overseer of the department, etc. 2nd half of Dyn. XII. DE MoRGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khackheperrec-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486." → "24. IPITI, Overseer of the department, etc. 2nd half of Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, fig. 77. Stela, with Khaʿkheperreʿ-sonb, Embalmer of the temple, before deceased, and uninscribed offering-table, in Cairo Mus. CG 1486."
+  DAH-Ithi.co_occupants: [] → ["Wesenptaḥ(?)"]
+  DAH-Ithi.co_occupant_roles: [] → ["Wife"]
+  DAH-Ithi.notes_from_pm: "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenphaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372." → "Overseer of the chamber of dancers, etc. Dyn. IV-V. Wife, Wesenptaḥ(?). Deceased and wife seated, with two sons and two daughters. Texts, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names and titles, LIEBLEIN, Dict. No. 1372."
+  DAH-Kaemked.attribution_certainty: "probable" → "attested"
+  DAH-Kares.notes_from_pm: "Prophet of Snefru, etc. Old Kingdom. Wife, Meresankh, Prophetess of Hathor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II]." → "Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Lower part of false-door. Texts, BARSANTI in Ann. Serv. iii (1902), pp. 201-2 [II]."
+  DAH-Khentekhtaiemsaf.dynasty: null → "12"
+  DAH-KhnemhotpVizier.attribution_certainty: "probable" → "attested"
+  DAH-MorganS18.occupant_role: "Royal Family" → "Official"
+  DAH-NeferherSnefru.dynasty: null → "6"
+  DAH-PyramidE.tomb_aliases: [] → ["Lepsius LIV"]
+  DAH-Qedshepses.tomb_aliases: ["DE MORGAN 27"] → ["DE MORGAN 27", "Kedshepses"]
+  DAH-Sebkemhet.occupant_name: "Sebkemḥet" → "Sebkemḥēt"
+  DAH-Sebkemhet.attribution_certainty: "probable" → "attested"
+  DAH-Seshemnufer.dynasty: null → "6"
+  DAH-Sesostris3.tomb_aliases: [] → ["Lepsius XLVII"]
+  DAH-Siesi.tomb_aliases: ["'Pyramid' LV of Lepsius"] → ["Lepsius LV", "'Pyramid' LV of Lepsius"]
+  DAH-Siesi.occupant_name: "Siesi" → "Siēsi"
+  DAH-Siesi.cemetery: "South of Enclosure of Amenemḥet II" → "South of Enclosure of Amenemḥēt II"
+  DAH-SnefruNorthernComplex.tomb_aliases: [] → ["Red Pyramid", "Lepsius XLIX"]
+  DAH-SnefruSouthernComplex.tomb_aliases: [] → ["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"]
