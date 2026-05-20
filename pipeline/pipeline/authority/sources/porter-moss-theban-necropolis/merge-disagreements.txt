@@ -332,6 +332,34 @@ TT99 (Sennufer):
 TT100 (Rekhmireʿ):
   notes_from_pm: a="Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], wʿab-priest of Amūn, and Bet. Wife, Meryt." | b="Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], waʿb-priest of Amun, and Bet. Wife, Meryt." | c="Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], waʿb-priest of Amūn, and Bet. Wife, Meryt."  → chose "Governor of the town and Vizier. Temp. Tuthmosis III to Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, WILKINSON, No. 35.) Parents, Neferweben, [Vizier], wʿab-priest of Amūn, and Bet. Wife, Meryt."
 
+TT101 (Thanuro):
+  notes_from_pm: a="Royal butler clean of hands. Temp. Amenophis II." | b="[Royal butler] clean of hands. Temp. Amenophis II." | c="[Royal butler] clean of hands. Temp. Amenophis II."  → chose "[Royal butler] clean of hands. Temp. Amenophis II."
+
+TT103 (Dagi):
+  notes_from_pm: a="Governor of the town and Vizier. End of Dyn. XI. (L. D. Text, No. 36.) Wife (or mother), Maʿetnemti." | b="Governor of the town and Vizier. End of Dyn. XI. Wife (or mother), Maʿetnemti. (L. D. Text, No. 36.)" | c="Governor of the town and Vizier. End of Dyn. XI. (L. D. Text, No. 36.) Wife (or mother), Maʿetnemti."  → chose "Governor of the town and Vizier. End of Dyn. XI. (L. D. Text, No. 36.) Wife (or mother), Maʿetnemti."
+
+TT104 ([Hutnufer]):
+  notes_from_pm: a="(See tomb 80.) Temp. Amenophis II." | b="Temp. Amenophis II. (See tomb 80.)" | c="Temp. Amenophis II."  → chose "(See tomb 80.) Temp. Amenophis II."
+  occupant_name: a="[H]utnufer" | b="[Hutnufer]" | c="[Hutnufer]"  → chose "[Hutnufer]"
+  occupant_role: a="Unknown" | b="Unknown" | c="Official"  → chose null
+
+TT105 (Khaʿemopet):
+  notes_from_pm: a="Prophet of the noble ram-sceptre of Amūri. Dyn. XIX. Wife, Amenemopet." | b="Prophet of the noble ram-sceptre of Amūn. Dyn. XIX. Wife, Amenemopet." | c="Prophet of the noble ram-sceptre of Amūn. Dyn. XIX. Wife, Amenemopet."  → chose "Prophet of the noble ram-sceptre of Amūn. Dyn. XIX. Wife, Amenemopet."
+  occupant_name: a="Khaʿemopet" | b="Khaʿemopet" | c="Khaemopet"  → chose "Khaʿemopet"
+
+TT106 (Paser):
+  notes_from_pm: a="Governor of the town and Vizier. Temp. Sethos I to Ramesses II. (CHAMPOLLION, No. 32, L. D. Text, No. 39, HAY, No. 7.) Parents, Nebneteru called Theri, Chief prophet of Amūn, and Merytreʿ, Chief of the harim of Amūn. Wife, Tiy, Chief of the harim of Amūn." | b="Governor of the town and Vizier. Temp. Sethos I to Ramesses II. Parents, Nebneteru called Theri, Chief prophet of Amūn, and Merytreʿ, Chief of the harim of Amūn. Wife, Tiy, Chief of the harim of Amūn. (CHAMPOLLION, No. 32, L. D. Text, No. 39, HAY, No. 7.)" | c="Governor of the town and Vizier. Temp. Sethos I to Ramesses II. (CHAMPOLLION, No. 32, L. D. Text, No. 39, HAY, No. 7.) Parents, Nebneteru called Theri, Chief prophet of Amūn, and Meytrerʿ, Chief of the harim of Amūn. Wife, Tiy, Chief of the harim of Amūn."  → chose "Governor of the town and Vizier. Temp. Sethos I to Ramesses II. (CHAMPOLLION, No. 32, L. D. Text, No. 39, HAY, No. 7.) Parents, Nebneteru called Theri, Chief prophet of Amūn, and Merytreʿ, Chief of the harim of Amūn. Wife, Tiy, Chief of the harim of Amūn."
+
+TT107 (Nefersekheru):
+  notes_from_pm: a="Royal scribe, Steward of the estate of Amenophis III 'Reʿ is brilliant'. Temp. Amenophis III. (CHAMPOLLION, No. 33, L. D. Text, No. 37.) Parents, Neby, Judge, and Hepu." | b="Royal scribe, Steward of the estate of Amenophis III 'Reʿ is brilliant'. Temp. Amenophis III. Parents, Neby, Judge, and Ḥepu. (CHAMPOLLION, No. 33, L. D. Text, No. 37.)" | c="Royal scribe, Steward of the estate of Amenophis III 'Reʿ is brilliant'. Temp. Amenophis III. (CHAMPOLLION, No. 33, L. D. Text, No. 37.) Parents, Neby, Judge, and Ḥepu."  → chose "Royal scribe, Steward of the estate of Amenophis III 'Reʿ is brilliant'. Temp. Amenophis III. (CHAMPOLLION, No. 33, L. D. Text, No. 37.) Parents, Neby, Judge, and Ḥepu."
+
+TT109 (Min):
+  notes_from_pm: a="Mayor of Thinis, Overseer of prophets of Onuris. Temp. Tuthmosis III. (CHAMPOLLION, No. 34.) Mother, Say." | b="Mayor of Thinis, Overseer of prophets of Onuris. Temp. Tuthmosis III. Mother, Say. (CHAMPOLLION, No. 34.)" | c="Mayor of Thinis, Overseer of prophets of Onuris. Temp. Tuthmosis III. (CHAMPOLLION, No. 34.) Mother, Say."  → chose "Mayor of Thinis, Overseer of prophets of Onuris. Temp. Tuthmosis III. (CHAMPOLLION, No. 34.) Mother, Say."
+
+TT110 (Ḏhout):
+  notes_from_pm: a="Royal butler, Royal herald. Temp. Ḥatshepsut to Tuthmosis III. Parents, Pesediri (?) and Keku. Wife, Baktḥ." | b="Royal butler, Royal herald. Temp. Ḥatshepsut to Tuthmosis III. Parents, Pesediri (?) and Keku. Wife, Baktḥ[or]." | c="Royal butler, Royal herald. Temp. Ḥatshepsut to Tuthmosis III. Parents, Pesediri (?) and Keku. Wife, Bakt."  → chose "Royal butler, Royal herald. Temp. Ḥatshepsut to Tuthmosis III. Parents, Pesediri (?) and Keku. Wife, Baktḥ."
+  occupant_name: a="Ḏhout" | b="Ḏhout" | c="Ḏhouti"  → chose "Ḏhout"
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -412,6 +440,7 @@ Per-chunk correction counts:
 - Chunk 16: 6 correction(s) defined in CHUNK16_CORRECTIONS.
 - Chunk 17: 5 correction(s) defined in CHUNK17_CORRECTIONS.
 - Chunk 18: 6 correction(s) defined in CHUNK18_CORRECTIONS.
+- Chunk 19: 0 correction(s) defined in CHUNK19_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: renamed on 75 row(s) (first/last: KV1, DAN-SebkemsafSekhemreShedtaui)
@@ -825,6 +854,8 @@ Field corrections:
 - TT95: is_usurped → true (issue #182 derivation from notes_from_pm)
 - TT97: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT98: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT108: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT110: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - SWV-Neferure: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - DAN-AhmosiNefertere: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - DAN-AntefSekhemreHeruhirmaet: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
@@ -854,3 +885,5 @@ Field corrections:
 - TT94: attribution_certainty → "attested" (deriver override; PM I.1 p.194 prints `94. RAʿMOSI ..., called ʿAMY ..., First royal herald, Fan-b...)
 - TT97: attribution_certainty → "attested" (deriver override; PM I.1 p.203 prints `97. AMENEMḤET ..., First prophet of Amūn. Temp. Amenophis I...)
 - TT98: attribution_certainty → "attested" (deriver override; PM I.1 p.204 prints `98. KAEMḤERIBSEN ..., Third prophet of Amūn. Temp. Tuthmosi...)
+- TT108: attribution_certainty → "attested" (deriver override; PM I.1 p.225 prints `108. NEBSENY ..., First prophet of Onuris. Temp. Tuthmosis ...)
+- TT110: attribution_certainty → "attested" (deriver override; PM I.1 p.227 prints `110. ḎHOUT ..., Royal butler, Royal herald. Temp. Ḥatshepsu...)

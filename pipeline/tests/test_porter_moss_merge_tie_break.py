@@ -560,6 +560,33 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Amenophis II. (CHAMPOLLION, No. 15, L. D. Text, No. 58, "
             "WILKINSON, No. 35.) Parents, Neferweben, [Vizier], "
             "wʿab-priest of Amūn, and Bet. Wife, Meryt.",
+        # Chunk 19 (TT101-TT110) — 4 tie-break overrides, all on notes_from_pm.
+        # TT104: cross-reference `(See tomb 80.)` precedes temporal clause per
+        #   PM I.1 p.217 printed order (agent A matched; B reversed; C dropped).
+        # TT106: mid-sentence citation before `Parents,` per PM I.1 p.219
+        #   printed convention; `Merytreʿ` (not `Meytrerʿ` OCR typo of agent C;
+        #   not end-sentence placement of agent B). Agent A pinned.
+        # TT107: mid-sentence citation + `Ḥepu` (underdot-ḥ) per PM I.1 p.224;
+        #   agent C form pinned (agent A had `Hepu` without diacritic; B had
+        #   end-sentence citation).
+        # TT110: `Baktḥ.` (with underdot-ḥ) per PM I.1 p.227; agent A pinned
+        #   (B added spurious `[or]` from hieroglyphic determinative; C stripped ḥ).
+        # All four pass through fix_rows unchanged on this field.
+        ("TT104", "notes_from_pm"):
+            "(See tomb 80.) Temp. Amenophis II.",
+        ("TT106", "notes_from_pm"):
+            "Governor of the town and Vizier. Temp. Sethos I to Ramesses II. "
+            "(CHAMPOLLION, No. 32, L. D. Text, No. 39, HAY, No. 7.) Parents, "
+            "Nebneteru called Theri, Chief prophet of Amūn, and Merytreʿ, "
+            "Chief of the harim of Amūn. Wife, Tiy, Chief of the harim of Amūn.",
+        ("TT107", "notes_from_pm"):
+            "Royal scribe, Steward of the estate of Amenophis III "
+            "'Reʿ is brilliant'. Temp. Amenophis III. "
+            "(CHAMPOLLION, No. 33, L. D. Text, No. 37.) Parents, Neby, Judge, "
+            "and Ḥepu.",
+        ("TT110", "notes_from_pm"):
+            "Royal butler, Royal herald. Temp. Ḥatshepsut to Tuthmosis III. "
+            "Parents, Pesediri (?) and Keku. Wife, Baktḥ.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
