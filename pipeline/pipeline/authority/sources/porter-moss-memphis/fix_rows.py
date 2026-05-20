@@ -2721,12 +2721,14 @@ CHUNK18_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 
 
 # Chunk 33 — Dahshûr § I PYRAMIDS (PR #258 / pending)
-# Restore tomb_aliases for the 5 royal-pyramid rows where agent A
-# correctly captured PM's popular-name idiom but agents B + C emitted
-# []. Per Constitutional Rule 1: PM source text-layer (raw/chunk-33-
-# p516-p529-dahshur-pyramids.txt) verbatim contains these aliases —
-# the 2/3 majority of [] is majority-omission, not majority-correctness.
-# Strict-subset-of-agent-A-emission for each row.
+# Restore tomb_aliases for the 5 named royal-pyramid rows + 1
+# anonymous Dyn-XIII pyramid-enclosure (DAH-PyramidE) where agent A
+# correctly captured PM's popular-name idiom + Lepsius numerals but
+# agents B + C emitted []. Per Constitutional Rule 1: PM source
+# text-layer (raw/chunk-33-p516-p529-dahshur-pyramids.txt) verbatim
+# contains these aliases — the 2/3 majority of [] is
+# majority-omission, not majority-correctness. Strict-subset-of-
+# agent-A-emission for each row.
 CHUNK33_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
     ("DAH-SnefruNorthernComplex", "tomb_aliases"): {
         "value": ["Red Pyramid", "Lepsius XLIX"],

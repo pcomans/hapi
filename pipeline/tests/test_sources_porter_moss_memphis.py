@@ -3338,16 +3338,26 @@ def test_chunk33_all_pyramid_field_of_dahshur_cemetery() -> None:
         assert row["cemetery"] == "Pyramid-field of Dahshur", row
 
 
-def test_chunk33_snefru_northern_complex() -> None:
-    """DAH-SnefruNorthernComplex — A. NORTHERN COMPLEX (Red Pyramid),
-    Snefru, Dyn IV, attested, section I, printed p.876."""
-    row = _by_id("DAH-SnefruNorthernComplex")
-    assert row["occupant_name"] == "Snefru"
-    assert row["occupant_role"] == "King"
-    assert row["dynasty"] == "4"
-    assert row["attribution_certainty"] == "attested"
+def _assert_chunk33_full(row, *, occupant_name, dynasty, page,
+                         attribution_certainty="attested",
+                         tomb_aliases=None,
+                         notes_from_pm=None,
+                         occupant_role="King"):
+    """Shared Rule-5 full-field assertions for chunk-33 royal-pyramid rows.
+
+    Asserts ALL 23 populated fields (per code-reviewer PR #258 P1).
+    Defaults match the source-wide convention for Dahshûr royal pyramid
+    rows: no co-occupants, no shared tombs, no discovery metadata, etc.
+    The variant fields (`occupant_name`, `dynasty`, `page`,
+    `attribution_certainty`, `tomb_aliases`, `occupant_role`) are passed
+    explicitly so each per-row test pins its specific values.
+    """
+    assert row["occupant_name"] == occupant_name
+    assert row["occupant_role"] == occupant_role
+    assert row["dynasty"] == dynasty
+    assert row["attribution_certainty"] == attribution_certainty
     assert row["source_citation"]["section"] == "I"
-    assert row["source_citation"]["page"] == 876
+    assert row["source_citation"]["page"] == page
     assert row["source_citation"]["edition"] == EDITION_PM_III_2
     assert row["is_joint_burial"] is False
     assert row["is_uninscribed"] is False
@@ -3364,72 +3374,122 @@ def test_chunk33_snefru_northern_complex() -> None:
     assert row["sub_period"] is None
     assert row["memphite_area"] == "Dahshur"
     assert row["cemetery"] == "Pyramid-field of Dahshur"
+    # Rule 3/5: tomb_aliases is the headline restoration of PR #258
+    # — every chunk-33 row asserts its full alias list per code-reviewer
+    # PR #258 P1 ("tomb_aliases restorations have zero deterministic
+    # enforcement"). Pinning the exact list catches any silent merge
+    # or fix_rows refactor that drops a Lepsius numeral or popular name.
+    assert row["tomb_aliases"] == tomb_aliases
+    # notes_from_pm pinned per Gemini PR #258 round-2 findings
+    # (3271221094 / 3271221121 / 3271221136 — synthesis + punctuation
+    # drift in chunk-33 tie-break overrides). Pinning the exact source-
+    # verbatim form catches any silent re-introduction of synthesized
+    # descriptors or punctuation normalisation.
+    if notes_from_pm is not None:
+        assert row["notes_from_pm"] == notes_from_pm
+
+
+def test_chunk33_snefru_northern_complex() -> None:
+    """DAH-SnefruNorthernComplex — A. NORTHERN COMPLEX (Red Pyramid),
+    Snefru, Dyn IV, attested, section I, printed p.876.
+
+    tomb_aliases pinned: [Red Pyramid, Lepsius XLIX] per PM source
+    line 40 `PYRAMID. Lepsius, XLIX; Red Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-SnefruNorthernComplex"),
+        occupant_name="Snefru",
+        dynasty="4",
+        page=876,
+        tomb_aliases=["Red Pyramid", "Lepsius XLIX"],
+        notes_from_pm="Lepsius, XLIX; Red Pyramid.",
+    )
 
 
 def test_chunk33_snefru_southern_complex() -> None:
     """DAH-SnefruSouthernComplex — B. SOUTHERN COMPLEX (Bent Pyramid),
-    Snefru, Dyn IV, attested, printed p.881 (PYRAMID entry page)."""
-    row = _by_id("DAH-SnefruSouthernComplex")
-    assert row["occupant_name"] == "Snefru"
-    assert row["occupant_role"] == "King"
-    assert row["dynasty"] == "4"
-    assert row["attribution_certainty"] == "attested"
-    assert row["source_citation"]["section"] == "I"
-    assert row["source_citation"]["page"] == 881
-    assert row["source_citation"]["edition"] == EDITION_PM_III_2
-    assert row["is_joint_burial"] is False
-    assert row["co_occupants"] == []
-    assert row["co_occupant_roles"] == []
-    assert row["occupant_alt_names"] == []
-    assert row["memphite_area"] == "Dahshur"
-    assert row["cemetery"] == "Pyramid-field of Dahshur"
+    Snefru, Dyn IV, attested, printed p.881 (PYRAMID entry page).
+
+    tomb_aliases pinned: 4 popular names + Lepsius numeral per PM source
+    line 319 `PYRAMID. Lepsius, LVI. Blunted, Bent, False, or
+    Rhomboidal Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-SnefruSouthernComplex"),
+        occupant_name="Snefru",
+        dynasty="4",
+        page=881,
+        tomb_aliases=[
+            "Bent Pyramid",
+            "Blunted Pyramid",
+            "False Pyramid",
+            "Rhomboidal Pyramid",
+            "Lepsius LVI",
+        ],
+        notes_from_pm="Lepsius, LVI. Blunted, Bent, False, or Rhomboidal Pyramid.",
+    )
+
+
+def test_chunk33_sesostris3_pyramid() -> None:
+    """DAH-Sesostris3 — C. PYRAMID-COMPLEX OF SESOSTRIS III, Dyn XII,
+    attested, printed p.882.
+
+    tomb_aliases pinned: [Lepsius XLVII] per PM source (no popular
+    English name; only the Lepsius cross-reference)."""
+    _assert_chunk33_full(
+        _by_id("DAH-Sesostris3"),
+        occupant_name="Sesostris III",
+        dynasty="12",
+        page=882,
+        tomb_aliases=["Lepsius XLVII"],
+        notes_from_pm="Lepsius, XLVII.",
+    )
 
 
 def test_chunk33_pyramid_e_anonymous_dyn13() -> None:
     """DAH-PyramidE — E. PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII.
     Anonymous occupant (occupant_name null), attribution_certainty
     'probable', dynasty '13'. Parallel to chunk-5 anonymous Dyn-III
-    structure pattern."""
-    row = _by_id("DAH-PyramidE")
-    assert row["occupant_name"] is None
-    assert row["occupant_role"] == "King"
-    assert row["dynasty"] == "13"
-    assert row["attribution_certainty"] == "probable"
-    assert row["source_citation"]["section"] == "I"
-    assert row["source_citation"]["page"] == 887
-    assert row["source_citation"]["edition"] == EDITION_PM_III_2
-    assert row["is_joint_burial"] is False
-    assert row["co_occupants"] == []
-    assert row["co_occupant_roles"] == []
-    assert row["memphite_area"] == "Dahshur"
-    assert row["cemetery"] == "Pyramid-field of Dahshur"
+    structure pattern.
+
+    tomb_aliases pinned: [Lepsius LIV] per PM source — anonymous
+    pyramid has no popular name, only Lepsius numeral."""
+    _assert_chunk33_full(
+        _by_id("DAH-PyramidE"),
+        occupant_name=None,
+        dynasty="13",
+        page=887,
+        attribution_certainty="probable",
+        tomb_aliases=["Lepsius LIV"],
+        notes_from_pm="PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII. Lepsius, LIV.",
+    )
 
 
 def test_chunk33_amenemhet2_white_pyramid() -> None:
     """DAH-Amenemhet2 — D. PYRAMID-COMPLEX OF AMENEMḤET II (White Pyramid),
-    Dyn XII, attested, printed p.886."""
-    row = _by_id("DAH-Amenemhet2")
-    assert row["occupant_name"] == "Amenemḥet II"
-    assert row["occupant_role"] == "King"
-    assert row["dynasty"] == "12"
-    assert row["attribution_certainty"] == "attested"
-    assert row["source_citation"]["page"] == 886
-    assert row["source_citation"]["section"] == "I"
-    assert row["source_citation"]["edition"] == EDITION_PM_III_2
-    assert row["memphite_area"] == "Dahshur"
-    assert row["cemetery"] == "Pyramid-field of Dahshur"
+    Dyn XII, attested, printed p.886.
+
+    tomb_aliases pinned: [White Pyramid, Lepsius LI] per PM source
+    line 584 `PYRAMID. Lepsius, LI, White Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-Amenemhet2"),
+        occupant_name="Amenemḥet II",
+        dynasty="12",
+        page=886,
+        tomb_aliases=["White Pyramid", "Lepsius LI"],
+        notes_from_pm="Lepsius, LI, White Pyramid.",
+    )
 
 
 def test_chunk33_amenemhet3_black_pyramid() -> None:
     """DAH-Amenemhet3 — F. PYRAMID-COMPLEX OF AMENEMḤET III (Black Pyramid),
-    Dyn XII, attested, printed p.887."""
-    row = _by_id("DAH-Amenemhet3")
-    assert row["occupant_name"] == "Amenemḥet III"
-    assert row["occupant_role"] == "King"
-    assert row["dynasty"] == "12"
-    assert row["attribution_certainty"] == "attested"
-    assert row["source_citation"]["page"] == 887
-    assert row["source_citation"]["section"] == "I"
-    assert row["source_citation"]["edition"] == EDITION_PM_III_2
-    assert row["memphite_area"] == "Dahshur"
-    assert row["cemetery"] == "Pyramid-field of Dahshur"
+    Dyn XII, attested, printed p.887.
+
+    tomb_aliases pinned: [Black Pyramid, Lepsius LVIII] per PM source
+    line 674 `PYRAMID. Lepsius, LVIII; Black Pyramid.`"""
+    _assert_chunk33_full(
+        _by_id("DAH-Amenemhet3"),
+        occupant_name="Amenemḥet III",
+        dynasty="12",
+        page=887,
+        tomb_aliases=["Black Pyramid", "Lepsius LVIII"],
+        notes_from_pm="Lepsius, LVIII; Black Pyramid.",
+    )

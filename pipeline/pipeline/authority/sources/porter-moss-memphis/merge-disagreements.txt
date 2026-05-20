@@ -2249,7 +2249,7 @@ MAR88 (Ḥuti):
   notes_from_pm: a="Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance." | b="Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance. Panel of false-door in Cairo Mus. CG 1392. Statues in Cairo Mus.: (a) deceased seated CG 64; (b) wife seated CG 48." | c="Inspector of scribes of the house of the master of the largesse, etc. Dyn. V–VI. Wife, Kitsen, Royal acquaintance. Panel of false-door (Cairo CG 1392). Statues in Cairo Mus.: (a) deceased seated (CG 64); (b) wife seated (CG 48)."  → chose "Inspector of scribes of the house of the master of the largesse, etc. Dyn. V-VI. Wife, Kitsen, Royal acquaintance."
 
 DAH-Amenemhet2 (Amenemḥet II):
-  notes_from_pm: a="Lepsius, LI, White Pyramid. PYRAMID-COMPLEX OF AMENEMḤET II (D)." | b="D. PYRAMID-COMPLEX OF AMENEMḤET II. PYRAMID. Lepsius, LI; White Pyramid." | c="Lepsius, LI; White Pyramid."  → chose "Lepsius, LI; White Pyramid."
+  notes_from_pm: a="Lepsius, LI, White Pyramid. PYRAMID-COMPLEX OF AMENEMḤET II (D)." | b="D. PYRAMID-COMPLEX OF AMENEMḤET II. PYRAMID. Lepsius, LI; White Pyramid." | c="Lepsius, LI; White Pyramid."  → chose "Lepsius, LI, White Pyramid."
   tomb_aliases: a=["White Pyramid", "Lepsius LI"] | b=[] | c=[]  → chose []
 
 DAH-Amenemhet3 (Amenemḥet III):
@@ -2265,12 +2265,12 @@ DAH-Sesostris3 (Sesostris III):
   tomb_aliases: a=["Lepsius XLVII"] | b=[] | c=[]  → chose []
 
 DAH-SnefruNorthernComplex (Snefru):
-  notes_from_pm: a="Lepsius, XLIX; Red Pyramid. Northern Complex of Snefru (A AND B. PYRAMID-COMPLEXES OF SNEFRU, A. NORTHERN COMPLEX)." | b="Northern Complex. PYRAMID. Lepsius, XLIX; Red Pyramid." | c="Northern Complex of Snefru. Pyramid of Snefru. Lepsius, XLIX; Red Pyramid."  → chose "Northern Complex of Snefru. Pyramid of Snefru. Lepsius, XLIX; Red Pyramid."
+  notes_from_pm: a="Lepsius, XLIX; Red Pyramid. Northern Complex of Snefru (A AND B. PYRAMID-COMPLEXES OF SNEFRU, A. NORTHERN COMPLEX)." | b="Northern Complex. PYRAMID. Lepsius, XLIX; Red Pyramid." | c="Northern Complex of Snefru. Pyramid of Snefru. Lepsius, XLIX; Red Pyramid."  → chose "Lepsius, XLIX; Red Pyramid."
   occupant_alt_names: a=[] | b=["Snofru"] | c=[]  → chose []
   tomb_aliases: a=["Red Pyramid", "Lepsius XLIX"] | b=[] | c=[]  → chose []
 
 DAH-SnefruSouthernComplex (Snefru):
-  notes_from_pm: a="Lepsius, LVI. Blunted, Bent, False, or Rhomboidal Pyramid. Southern Complex of Snefru (A AND B. PYRAMID-COMPLEXES OF SNEFRU, B. SOUTHERN COMPLEX)." | b="Southern Complex. PYRAMID. Lepsius, LVI; Blunted, Bent, False, or Rhomboidal Pyramid." | c="Southern Complex of Snefru. Pyramid of Snefru. Lepsius, LVI; Blunted, Bent, False, or Rhomboidal Pyramid."  → chose "Southern Complex of Snefru. Pyramid of Snefru. Lepsius, LVI; Blunted, Bent, False, or Rhomboidal Pyramid."
+  notes_from_pm: a="Lepsius, LVI. Blunted, Bent, False, or Rhomboidal Pyramid. Southern Complex of Snefru (A AND B. PYRAMID-COMPLEXES OF SNEFRU, B. SOUTHERN COMPLEX)." | b="Southern Complex. PYRAMID. Lepsius, LVI; Blunted, Bent, False, or Rhomboidal Pyramid." | c="Southern Complex of Snefru. Pyramid of Snefru. Lepsius, LVI; Blunted, Bent, False, or Rhomboidal Pyramid."  → chose "Lepsius, LVI. Blunted, Bent, False, or Rhomboidal Pyramid."
   occupant_alt_names: a=[] | b=["Snofru"] | c=[]  → chose []
   source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 877, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}
   tomb_aliases: a=["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"] | b=[] | c=[]  → chose []
