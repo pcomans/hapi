@@ -2908,12 +2908,177 @@ CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # + § II.C North of Enclosure of Sesostris III
 # + § II.D South of Enclosure of Amenemḥet II
 # (PM III.2 printed pp.894-898, phys pp.534-538). 21 rows.
-# No post-merge dynasty corrections required: agents correctly
-# resolved "Dyn. IV-V" → "5" (later-bound convention), and all
-# "Dyn. XII" rows were unanimous. No OCR ayin corrections required:
-# no Niankh-* names appear in this chunk. No alias backfills required
-# beyond what the majority vote resolved.
-CHUNK35_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {}
+# Round-2 corrections post-reviewer (PR #261):
+# (P1.1 — Ithi) PM source "Wife, Wesen-ptaḥ(?)" was OCR-misread by
+#   agent A as "Wesenphaḥ" — `ph` is not a real Egyptian digraph; the
+#   correct decode of OCR `Wesenptal;l(?)` is `Wesen-ptaḥ(?)` (the
+#   deity Ptaḥ) via the documented `l;l → ḥ` bigram. Wife was also
+#   missing from co_occupants/co_occupant_roles.
+# (P1.2 — Kares) notes_from_pm `Meresankh` missing ayin vs co_occupants
+#   `Meresʿankh` — intra-row inconsistency. PM source `Meres<ankh` →
+#   `Meresʿankh` with U+02BF ayin (chunk-34 ayin convention).
+# (P1.3 — Siesi) tomb_aliases had only verbatim "'Pyramid' LV of
+#   Lepsius"; add canonical `Lepsius LV` form matching chunk-33/34
+#   precedent (Lepsius XLIX/LI/LIV/LVI/LVIII/XLVII) for downstream
+#   museum-catalog matching.
+# (P2.3 — Kaem...ed) attribution_certainty `probable` → `attested`.
+#   PM's `(?)` qualifies the TITLE (Prophet of Snefru) not the
+#   identification; the dynasty hedge `Probably Dyn. V` is on dating.
+# (P3 — ayin normalization) Duareʿ `Rec`/`Saḥurec` and Ipit
+#   `Khackheperrec-sonb` were OCR-literal; normalize to U+02BF ayin
+#   form per chunk-34 source-wide convention.
+CHUNK35_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("DAH-Ithi", "co_occupants"): {
+        "value": ["Wesen-ptaḥ"],
+        "rationale": (
+            "PM III.2 phys p.535 (printed p.895) source-text headword "
+            "block: `ITHI ... Wife, Wesenptal;l(?)` where `l;l` is the "
+            "documented OCR bigram for underdot-ḥ (chunk-class convention). "
+            "Decode: `Wesen-ptaḥ(?)` — the deity Ptaḥ. PR #261 reviewers "
+            "(code-reviewer + egyptologist P1.1): all 3 agents missed "
+            "the wife in co_occupants/co_occupant_roles. Source-cited "
+            "fix adds her per Constitutional Rule 6 (notes preserve PM "
+            "source structure)."
+        ),
+    },
+    ("DAH-Ithi", "co_occupant_roles"): {
+        "value": ["Wife"],
+        "rationale": (
+            "Paired with DAH-Ithi|co_occupants fix above. PM headword "
+            "block explicitly says `Wife, Wesen-ptaḥ(?)` per phys p.535 "
+            "(printed p.895). Source-wide convention: a `Wife, <Name>` "
+            "clause in the headword block populates co_occupants + "
+            "co_occupant_roles=['Wife']."
+        ),
+    },
+    ("DAH-Ithi", "notes_from_pm"): {
+        "value": (
+            "Overseer of the chamber of dancers, etc. Dyn. IV-V. "
+            "Wife, Wesen-ptaḥ(?). Deceased and wife seated, with two "
+            "sons and two daughters. Texts, MASPERO, Trois annees de "
+            "fouilles [etc.] in Mem. Miss. i, p. 191 [5]; some names "
+            "and titles, LIEBLEIN, Dict. No. 1372."
+        ),
+        "rationale": (
+            "Round-1 tie-break override selected agent A's "
+            "`Wesenpḥaḥ(?)` reconstruction; PR #261 round-2 reviewer "
+            "found this is NOT a valid Egyptian-transliteration form "
+            "(`ph` is not a digraph; the underdot signals a separate "
+            "phoneme). Source OCR `Wesenptal;l(?)` decodes to "
+            "`Wesen-ptaḥ(?)` (deity Ptaḥ-name) per documented `l;l → ḥ` "
+            "bigram + plain `t`. Override replaces A's reconstruction "
+            "with source-line-verbatim decode. PM III.2 phys p.535 "
+            "(printed p.895). Code-reviewer + egyptologist P1.1."
+        ),
+    },
+    ("DAH-Kares", "notes_from_pm"): {
+        "value": (
+            "Prophet of Snefru, etc. Old Kingdom. Wife, Meresʿankh, "
+            "Prophetess of Ḥatḥor Mistress of the Sycamore, etc. Lower "
+            "part of false-door. Texts, BARSANTI in Ann. Serv. iii "
+            "(1902), pp. 201-2 [II]."
+        ),
+        "rationale": (
+            "Agent A verbatim. Round-1 tie-break override emitted "
+            "`Meresankh` missing ayin in notes_from_pm, but "
+            "co_occupants correctly used `Meresʿankh` (U+02BF ayin). "
+            "PM source `Meres<ankh` (phys p.535 / printed p.895) uses "
+            "raised-ayin per chunk-34 source-wide convention. Intra-"
+            "row consistency fix per Constitutional Rule 6 (notes + "
+            "co_occupants must agree on name spelling). Agent A had "
+            "both `Meresʿankh` ayin and `Ḥatḥor` double-underdot-Ḥ "
+            "correctly; round-2 selects agent A's full emission "
+            "verbatim. PR #261 egyptologist P1.2."
+        ),
+    },
+    ("DAH-Siesi", "tomb_aliases"): {
+        "value": ["Lepsius LV", "'Pyramid' LV of Lepsius"],
+        "rationale": (
+            "Round-1 tie-break override selected agent A's verbatim "
+            "`'Pyramid' LV of Lepsius` form. PR #261 egyptologist "
+            "P1.3: chunk-33/34 precedent (DAH-SnefruNorthernComplex "
+            "= Lepsius XLIX, DAH-SnefruSouthernComplex = Lepsius LVI, "
+            "DAH-PyramidE = Lepsius LIV, DAH-Sesostris3 = Lepsius "
+            "XLVII, DAH-Amenemhet2 = Lepsius LI, DAH-Amenemhet3 = "
+            "Lepsius LVIII) all use the bare canonical `Lepsius <N>` "
+            "form. SIESI is the only § II.D row in the entire Dahshûr "
+            "necropolis; downstream museum-catalog matching requires "
+            "the canonical form. Override adds `Lepsius LV` as the "
+            "primary alias while preserving the PM-source-verbatim "
+            "`'Pyramid' LV of Lepsius` as secondary alias."
+        ),
+    },
+    ("DAH-KaemEd", "attribution_certainty"): {
+        "value": "attested",
+        "rationale": (
+            "Round-1 emission `probable` reflected PM's `(?)` "
+            "qualifier on `Prophet of Snefru(?)` title-cluster + "
+            "the `Probably Dyn. V` dating hedge. Per source-wide "
+            "convention, `attribution_certainty` axis tracks the "
+            "TOMB → OCCUPANT attribution; the `(?)` here qualifies "
+            "the TITLE-INTERPRETATION (Prophet-of-Snefru classification) "
+            "not the tomb attribution itself. The false-door "
+            "inscription (BARSANTI in Ann. Serv. iii (1902)) is "
+            "unhedged. Dynasty hedge `Probably Dyn. V` is on dating "
+            "axis (orthogonal to attribution per chunk-34 P1.2 "
+            "convention). PM III.2 phys p.535 (printed p.895). "
+            "Egyptologist PR #261 P2.3. OCR-damaged middle of name "
+            "remains a known limitation (P2-PENDING-CROP attempted "
+            "but the 400 DPI render of phys p.535 = PDF p.535 didn't "
+            "definitively disambiguate Ḥ vs Q vs other middle glyph)."
+        ),
+    },
+    ("DAH-Duare", "notes_from_pm"): {
+        "value": (
+            "Overseer of the two Pyramids of Snefru, Prophet of Reʿ in "
+            "the Sun-temple of Userkaf, warb-priest of the Pyramid of "
+            "Userkaf, etc. Temp. Saḥureʿ or later. Wife, Mertiotes, "
+            "Royal acquaintance. MASPERO, Trois annees de fouilles "
+            "[etc.] in Mem. Miss. i, pp. 190-1 [2], with plan."
+        ),
+        "rationale": (
+            "Strict-subset-of-agent-A-emission with two narrow ayin "
+            "normalizations: `Rec → Reʿ` and `Saḥurec → Saḥureʿ` "
+            "(raised-ayin glyph rendered as OCR `c` by pypdf; "
+            "U+02BF MODIFIER LETTER HALF RING is the chunk-34 source-"
+            "wide ayin convention). All other tokens (Overseer of the "
+            "two Pyramids of Snefru, warb-priest, Mertiotes, MASPERO "
+            "citation) are agent A verbatim. Per PR #261 egyptologist "
+            "P3.1 + P3.2."
+        ),
+    },
+    ("DAH-Khentekhtaiemsaf", "dynasty"): {
+        "value": "12",
+        "rationale": (
+            "PM source (phys p.536 / printed p.896): `11. KHENTEKHTAIEMSAF, "
+            "Embalmer. Temp. Sesostris III or later.` Per prompt-chunk-35.md "
+            "field-rule: `Temp. <King> where King is in a single dynasty → "
+            "that dynasty`. Sesostris III is Dyn XII. Agent B correctly "
+            "emitted `12`; agents A + C emitted `null` (2/3 majority lost). "
+            "Round-2 correction restores B's source-faithful reading. "
+            "PR #261 Gemini round 1 finding 3276064126 + 3276064140."
+        ),
+    },
+    ("DAH-Ipit", "notes_from_pm"): {
+        "value": (
+            "24. IPIT, Overseer of the department, etc. 2nd half of "
+            "Dyn. XII. DE MORGAN, Dahchour, i, p. 37, with section, "
+            "fig. 77. Stela, with Khaʿkheperreʿ-sonb, Embalmer of the "
+            "temple, before deceased, and uninscribed offering-table, "
+            "in Cairo Mus. CG 1486."
+        ),
+        "rationale": (
+            "Strict-subset-of-agent-A-emission with two normalizations: "
+            "(1) `Khackheperrec-sonb → Khaʿkheperreʿ-sonb` — OCR `c` "
+            "raised-ayin → U+02BF (chunk-34 convention). (2) "
+            "`DE MoRGAN → DE MORGAN` — pypdf renders MORGAN's `R` as "
+            "lowercase `o` for the `O`; correct PM source spelling is "
+            "ALL CAPS. All other tokens (24. IPIT, Overseer of the "
+            "department, Stela, Cairo Mus. CG 1486) are agent A "
+            "verbatim. PR #261 egyptologist P3.3."
+        ),
+    },
+}
 
 
 # Registry of all per-chunk correction dicts. New chunks add their

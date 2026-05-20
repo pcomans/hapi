@@ -44,7 +44,7 @@ Same shape grammar as chunk 34:
 
 **For § II.C + § II.D named DE MORGAN-numbered tombs (Shape 1a):** `DAH-<TitleCaseAsciiName>` form. Capture the DE MORGAN number in `tomb_aliases` as `"DE MORGAN <N>"` (chunk-34 convention).
 
-**For § II.C + § II.D anonymous DE MORGAN-numbered tombs (Shape 5 / 5b):** `DAH-MorganN<num>` where the `N` series resumes from chunk-34's NORTHERN-PART numbering (chunk-34 used § II.A NORTHERN PART numbers, restarting at 1 for SOUTHERN PART). § II.C + § II.D continue the SOUTHERN PART numbering series. Use `DAH-MorganS<num>` (S = chunk-34's SOUTHERN PART convention; § II.C/D extend the same series since they are geographically adjacent and PM's numbering is continuous from § II.A SOUTHERN PART through § II.C through § II.D — verify by inspecting chunk text-layer page numbers).
+**For § II.C + § II.D anonymous DE MORGAN-numbered tombs (Shape 5 / 5b):** § II.C + § II.D continue the SOUTHERN PART numbering series. Use `DAH-MorganS<num>` (S = chunk-34's SOUTHERN PART convention; § II.C/D extend the same series since they are geographically adjacent and PM's numbering is continuous from § II.A SOUTHERN PART through § II.C through § II.D — verify by inspecting chunk text-layer page numbers).
 
 **Cross-chunk homonym discipline:** if any § II.B/C/D occupant-name collides with a prior `DAH-*` tomb_id (incl. chunk 33/34), append a disambiguator suffix (per chunk-30/31/32 precedent). If an occupant-name collides WITHIN this chunk, append a disambiguator (DE MORGAN-number anchor for Shape-1a, or topographic anchor). Shape-5b `NAME UNKNOWN` rows use the DE MORGAN number directly via the same `DAH-MorganS<N>` form as Shape-5 — the explicit-NAME-UNKNOWN flag is captured by `attribution_certainty: "attested"` + `occupant_name: null`.
 
