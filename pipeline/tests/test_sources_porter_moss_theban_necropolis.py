@@ -5025,6 +5025,75 @@ def test_chunk19_tt110_dhout_baktH_wife() -> None:
     assert r["source_citation"]["page"] == 227
 
 
+def test_chunk19_tt102_imhotep_royal_scribe_inaccessible() -> None:
+    """TT102 Imhotep — Royal scribe, Child of the nursery, Temp. Amenophis III, p.215.
+    occupant_name `Imhotep` plain-h per project's strip-Ḥ-from-occupant_name
+    convention (test_occupant_name_has_no_underdot_h enforced). PR #263
+    round-1 egyptologist P1 recommended `Imḥotep` with underdot per
+    Egyptological convention but DECLINED — project's matchable-name
+    convention strips underdot-Ḥ. Tomb state marker `(Inaccessible.)`
+    preserved in notes_from_pm per chunk-12 TT47 precedent."""
+    r = _row("TT102")
+    assert r["occupant_name"] == "Imhotep"  # plain h, NOT Imḥotep
+    assert "ḥ" not in r["occupant_name"]
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Royal scribe" in r["notes_from_pm"]
+    assert "Child of the nursery" in r["notes_from_pm"]
+    assert "Temp. Amenophis III" in r["notes_from_pm"]
+    assert "(Inaccessible.)" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 215
+
+
+def test_chunk19_tt105_khaemopet_dyn_xix() -> None:
+    """TT105 Khaʿemopet — Prophet of the noble ram-sceptre of Amūn, Dyn. XIX,
+    p.218. ayin (U+02BF) preserved in occupant_name from PM OCR `c`-glyph
+    decode. Wife Amenemopet captured as PM-named family in notes_from_pm."""
+    r = _row("TT105")
+    assert r["occupant_name"] == "Khaʿemopet"
+    assert "ʿ" in r["occupant_name"]  # raised-ayin U+02BF preserved
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Prophet of the noble ram-sceptre" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]  # macron-Ū preserved in body prose
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Wife, Amenemopet" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 218
+
+
+def test_chunk19_tt107_nefersekheru_royal_scribe_amenophis_iii() -> None:
+    """TT107 Nefersekheru — Royal scribe, Steward of the estate of Amenophis
+    III 'Reʿ is brilliant', Temp. Amenophis III, p.224. tie-break-overrides
+    entry pins agent C's mid-sentence citation form `(CHAMPOLLION, No. 33,
+    L. D. Text, No. 37.)` and the underdot-ḥ in `Ḥepu` (parent name).
+    Steward-of-the-estate role-cluster → `Official` (functional administrative
+    title, not Vizier-precedence-eligible)."""
+    r = _row("TT107")
+    assert r["occupant_name"] == "Nefersekheru"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Royal scribe" in r["notes_from_pm"]
+    assert "Steward of the estate of Amenophis III" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 33" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 224
+
+
+def test_chunk19_tt109_min_mayor_of_thinis() -> None:
+    """TT109 Min — Mayor of Thinis, Overseer of prophets of Onuris, Temp.
+    Tuthmosis III, p.226. Mother Say named in notes_from_pm.
+    `Mayor of <city>` + `Overseer of prophets of <deity>` is a functional-
+    title-cluster → `Official` per chunk-9 TT2 precedent."""
+    r = _row("TT109")
+    assert r["occupant_name"] == "Min"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Mayor of Thinis" in r["notes_from_pm"]
+    assert "Overseer of prophets of Onuris" in r["notes_from_pm"]
+    assert "Temp. Tuthmosis III" in r["notes_from_pm"]
+    assert "Mother, Say" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 226
+
+
 def test_chunk17_tt90_nebamun_macron_restored_third_collision() -> None:
     """TT90 Nebamūn — Standard-bearer of the sacred bark 'Beloved-of-
     Amūn', Captain of troops of the police on the west of Thebes, p.183.
