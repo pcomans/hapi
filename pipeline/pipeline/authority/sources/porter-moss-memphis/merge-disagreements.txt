@@ -1260,7 +1260,7 @@ SAQ-ThefuPtahhotp (Thefu):
 
 SAQ-Tia (Tia):
   co_occupant_roles: a=["Wife, King's noble sister, Songstress of Amūn Great-of-Victories, etc."] | b=["Wife, King's noble sister, Songstress of Amun Great-of-Victories"] | c=["Wife, King's noble sister, Songstress of Amun Great-of-Victories, etc."]  → chose ["Wife, King's noble sister, Songstress of Amūn Great-of-Victories, etc."]
-  notes_from_pm: a="Overseer of the Treasury in the Temple of Userma‘etre‘-setepenre‘ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII." | b="Tia, Overseer of the Treasury in the Temple of Userma'ʿetre'ʿ-setepenre'ʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII." | c="Overseer of the Treasury in the Temple of User-maʿetreʿ-setepenreʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII."  → chose "Overseer of the Treasury in the Temple of Userma‘etre‘-setepenre‘ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII."
+  notes_from_pm: a="Overseer of the Treasury in the Temple of Userma‘etre‘-setepenre‘ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII." | b="Tia, Overseer of the Treasury in the Temple of Userma'ʿetre'ʿ-setepenre'ʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII." | c="Overseer of the Treasury in the Temple of User-maʿetreʿ-setepenreʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII."  → chose "Overseer of the Treasury in the Temple of User-maʿetreʿ-setepenreʿ (Ramesses II) in the domain of Amūn, Fan-bearer on the right of the King, etc. Temp. Ramesses II. Wife, Tia, King's noble sister, Songstress of Amūn Great-of-Victories, etc. Position, see MARTIN in J.E.A. 62 (1976), p. 13 note 13. Map LXII."
 
 SAQ-TombPsammetheks (Psammethek (A)):
   co_occupant_roles: a=["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"] | b=["Joint occupant, Overseer of scribes of the royal repast", "Joint occupant, King's daughter, King's wife"] | c=["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"]  → chose ["Joint occupant, Overseer of scribes of the royal repast, son of Meramūn-tabes (mother)", "Joint occupant, King's daughter, King's wife"]
@@ -2284,6 +2284,7 @@ Reviewer-cited row corrections:
   SAQ-Ankhirptah.notes_from_pm: "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥatḥor, etc." → "Overseer of beef fat, etc. Dyn. V. Wife, Nebt, Prophetess of Ḥathor, etc."
   SAQ-BiaIrery.co_occupants: [] → ["Idut"]
   SAQ-BiaIrery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor"]
+  SAQ-Eshout.co_occupants: ["Pedeamun", "Degenneit"] → ["Pedeamūn", "Degenneit"]
   SAQ-Hemakhti.tomb_aliases: ["S 911"] → ["H 14", "S 911"]
   SAQ-HerimeruMerery.co_occupants: [] → ["Wazkaus"]
   SAQ-HerimeruMerery.co_occupant_roles: [] → ["Wife, Prophetess of Ḥathor in all her places, and of Neith, etc."]
@@ -2313,11 +2314,13 @@ Reviewer-cited row corrections:
   SAQ-NiankhPepyNiankhMeryre.co_occupants: [] → ["Ḳedi"]
   SAQ-NiankhPepyNiankhMeryre.co_occupant_roles: [] → ["Wife"]
   SAQ-Nufer.co_occupant_roles: ["Official", "Official", "Official"] → ["Father, Director of singers, Prophet of Mert of Upper Egypt, etc.", "Wife, Royal acquaintance", "Mother, Prophetess of Ḥathor Mistress of the Sycamore in all her beautiful places, and of Neith North of the Wall, etc."]
+  SAQ-Pay.co_occupants: ["Amenemhab"] → ["Amenemḥab"]
   SAQ-Pernezu.co_occupants: [] → ["Niʿankh-ḥathor"]
   SAQ-Pernezu.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
   SAQ-Seshemnufer.co_occupants: [] → ["Ḳerfet"]
   SAQ-Seshemnufer.co_occupant_roles: [] → ["Wife, Royal acquaintance"]
   SAQ-Shepses.notes_from_pm: "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḫ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6." → "SHEPSES, Overseer of the Great Estate, Overseer of hairdressers of the Great House, etc. Probably Dyn. VI. Wife (probably), Nefertemʿaḥ, Prophetess of Ḥatḥor in all her places, etc. From 'Abuṣir' 1945-6."
+  SAQ-Tenry.co_occupant_roles: ["Father, Judge, Steward of Amun", "Wife"] → ["Father, Judge, Steward of Amūn", "Wife"]
   SAQ-TetiNeferheres.notes_from_pm: "Teti and Neferḥeres, Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown." → "Scribes of the archives. Late Dyn. III or early Dyn. IV. Stela with both deceased at table. Position unknown."
   SAQ-ThefuPtahhotp.occupant_alt_names: ["Ptaḥḥotp"] → []
   SAQ-Washiptah.co_occupants: ["Ḥeneni"] → []
@@ -2353,6 +2356,7 @@ Reviewer-cited row corrections:
   JKE-Nikaukhnum.co_occupant_roles: ["Royal acquaintance"] → ["Royal acquaintance (probably woman)"]
   JKE-User.notes_from_pm: "Overseer of ha-servants, etc. Late Dyn. V. Mother, Henutsen." → "Overseer of ka-servants, etc. Late Dyn. V. Mother, Henutsen."
   JKE-Weri.notes_from_pm: "Inspector of ha-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI." → "Inspector of ka-servants, One belonging to the Great Estate, Scribe of the Treasury, etc. Dyn. VI."
+  LS27.co_occupant_roles: ["Father, Judge", "Mother, Songstress of Amun", "Wife, Songstress of Amun"] → ["Father, Judge", "Mother, Songstress of Amūn", "Wife, Songstress of Amūn"]
   TPC-Kaemhest.co_occupants: ["Senefʿankh", "Thenenet", "Kapunesut"] → ["Senefʿankh", "Thenenet"]
   SAQD46.dynasty: "12" → "6"
   SAQE14.co_occupants: [] → ["Nefert"]
