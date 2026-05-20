@@ -618,7 +618,7 @@ CHUNK31_TOMB_IDS: frozenset[str] = frozenset({
     # museum-partaged at Leiden + Berlin), Tia (Ramesses II's brother-in-law,
     # Overseer of Treasury), Pay, Iurokhy (LS 25), Raʿia (LS 28), Harmin
     # (LS 29), Merytyneit altered to Merytyaten (SAQH9, Atenist sub_period
-    # = Amarna), Parahotp (or Raʿhotp) Vizier, Tenry. LP cluster: Esdhout
+    # = Amarna), Parahotp (or Raʿhotp) Vizier, Tenry. LP cluster: Eshout
     # under Psammetikhos I, and the joint multi-burial Tomb of the
     # Psammetheks and Khedebneit-yerboni [II] (Shape-4 joint twin,
     # is_joint_burial=true, probably temp. Amasis).
@@ -1515,7 +1515,7 @@ def test_dynasty_assignments() -> None:
             # Temp. Amenophis IV → Dyn XVIII Amarna with
             # `sub_period: "Amarna"`); Dyn XIX (Tia/Pay/Tenry/Parahotp
             # Temp. Ramesses II; Iurokhy/Raʿia/Harmin Dyn XIX). LP
-            # cluster: Dyn XXVI (Esdhout Temp. Psammetikhos I; Tomb
+            # cluster: Dyn XXVI (Eshout Temp. Psammetikhos I; Tomb
             # of Psammetheks probably temp. Amasis). First chunk in
             # this source with non-OK dynasties.
             assert row["dynasty"] in {"18", "19", "26"}, row

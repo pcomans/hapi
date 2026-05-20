@@ -2311,6 +2311,39 @@ CHUNK31_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Strict-subset-of-agent-A-emission (NOT synthesis)."
         ),
     },
+    # F3 — intra-row consistency sweep follow-up per Gemini PR
+    # #255 round-4 finding 3270663669. SAQ-Eshout co_occupants
+    # had `Pedeamun` (no macron) while notes_from_pm preserved
+    # PM-faithful `Pedeamūn`. All three agents emitted the bare
+    # form in co_occupants (unanimous) — intra-row drift NOT
+    # caught by the round-2 agent-A-vs-B/C class sweep because
+    # no agent preserved the macron in co_occupants. Source-wide
+    # co_occupants diacritic-preservation convention (chunks
+    # 14/15/22/26/30 + CHUNK31 F2) requires macron-Ū on
+    # Amūn-compounds in co_occupants for intra-row consistency
+    # with notes_from_pm. The `Pedeamūn` form is in the row's
+    # own notes_from_pm string verbatim — strict-subset of an
+    # agent emission for that row.
+    ("SAQ-Eshout", "co_occupants"): {
+        "value": ["Pedeamūn", "Degenneit"],
+        "rationale": (
+            "PM III.2 printed p.668; Gemini PR #255 round-4 "
+            "review (id=3270663669). Intra-row inconsistency: "
+            "notes_from_pm has PM-faithful `Pedeamūn` (macron-Ū) "
+            "but co_occupants had bare `Pedeamun`. All three "
+            "agents emitted bare in co_occupants while preserving "
+            "macron in notes — unanimous-agent intra-row drift "
+            "NOT caught by the round-2 agent-A-vs-B/C class "
+            "sweep. Source-wide co_occupants diacritic-"
+            "preservation convention (chunks 14/15/22/26/30 + "
+            "CHUNK31 F2) requires macron-Ū on Amūn-compounds in "
+            "co_occupants for intra-row consistency. Restore "
+            "`Pedeamūn`; Degenneit unchanged (no diacritic to "
+            "preserve). The corrected value `Pedeamūn` is a "
+            "substring of the row's own notes_from_pm — "
+            "strict-subset-of-agent-emission verified."
+        ),
+    },
 }
 
 
