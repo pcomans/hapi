@@ -5,9 +5,9 @@
   xmlns:owl="http://www.w3.org/2002/07/owl#"
   xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
   xmlns:crmdig="http://www.cidoc-crm.org/extensions/crmdig/"
-  xml:base="https://github.com/pcomans/hapi/ns/extension#">
+  xml:base="https://pcomans.github.io/hapi-crm#">
 
-  <owl:Ontology rdf:about="https://github.com/pcomans/hapi/ns/extension#">
+  <owl:Ontology rdf:about="https://pcomans.github.io/hapi-crm#">
     <owl:versionInfo>Hapi CRM/CRMdig extension manifest, May 2026</owl:versionInfo>
     <rdfs:comment xml:lang="en">
       Hapi project's RDFS extensions on top of CIDOC CRM 7.1.3 + CRMdig 5.0.

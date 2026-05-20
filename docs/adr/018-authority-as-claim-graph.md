@@ -75,7 +75,7 @@ Every E13 Statement carries a universally-required triad — P140 (subject), P14
 
 #### Hapi extension manifest
 
-The `hapi:` prefix used throughout this ADR resolves to the namespace `https://github.com/pcomans/hapi/ns/extension#`. The full extension manifest — `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations and free-standing Hapi predicate declarations — is committed at `pipeline/pipeline/authority/hapi_extension.rdf`. The declarations are the standard CIDOC extension idiom (every official extension, including CRMdig itself, uses the same `subClassOf` / `subPropertyOf` mechanism to relate to core CRM). They are **not deviations**.
+The `hapi:` prefix used throughout this ADR resolves to the namespace `https://pcomans.github.io/hapi-crm#`. The full extension manifest — `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations and free-standing Hapi predicate declarations — is committed at `pipeline/pipeline/authority/hapi_extension.rdf`. The declarations are the standard CIDOC extension idiom (every official extension, including CRMdig itself, uses the same `subClassOf` / `subPropertyOf` mechanism to relate to core CRM). They are **not deviations**.
 
 **Two reader modes, two outcomes — clarified explicitly:**
 
@@ -95,7 +95,7 @@ Manifest excerpt (the full file is the citable contract):
 # (with comment) when no CRM superclass/superproperty fits. Unmanifested terms are rejected by the
 # cidoc-crm-validator subagent.
 
-@prefix hapi:    <https://github.com/pcomans/hapi/ns/extension#> .
+@prefix hapi:    <https://pcomans.github.io/hapi-crm#> .
 @prefix crm:     <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix crmdig:  <http://www.cidoc-crm.org/extensions/crmdig/> .
 
