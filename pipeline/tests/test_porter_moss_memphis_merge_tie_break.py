@@ -1026,7 +1026,7 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-TombPsammetheks", "source_citation"),
         ("SAQ-TombPsammetheks", "tomb_aliases"),
         # Chunk 32 (§ II.J TOMBS OF POSITION UNKNOWN: MK/NK/LP,
-        # printed pp.700-719 / phys pp.340-359): 14 tie-break overrides
+        # printed pp.700-719 / phys pp.340-359): 15 tie-break overrides
         # resolved across 9 rows. Main disagreement surfaces:
         #   - SAQ-Ankhefensekhmet: co_occupants (wife Ḥathoremḥet
         #     diacritic variant; agent A missed her entirely) + notes_from_pm

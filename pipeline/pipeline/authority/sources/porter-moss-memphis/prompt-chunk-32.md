@@ -205,9 +205,9 @@ For tie-break compatibility downstream: every value you emit should be a STRICT 
 
 Stop at the `K. OBJECTS FROM TOMBS` banner.
 
-A calibration self-check (not a hard rule): the chunk covers approximately:
+A calibration self-check (not a hard rule, revised 2026-05-19 after extraction; agents converged on 30 rows): the chunk covers approximately:
 - (b) MIDDLE KINGDOM: ≈ 1 named-tomb headword
-- (c) NEW KINGDOM: ≈ 12 named-tomb headwords
-- (d) LATE AND PTOLEMAIC PERIODS: ≈ 6 named-tomb headwords
+- (c) NEW KINGDOM: ≈ 23 named-tomb headwords (10 Dyn 18 + 12 Dyn 19 + 1 Dyn 20)
+- (d) LATE AND PTOLEMAIC PERIODS: ≈ 6 named-tomb headwords (2 Dyn 26 + 2 Dyn 27 + 2 Ptolemaic Dyn 33)
 
-Total calibration target: ≈ 19 rows. If your final count diverges by more than ±3 from this calibration, re-read the chunk file and check whether you've accidentally included FINDS-section partaged individuals or missed a sub-banner all-caps headword.
+Total calibration target: ≈ 30 rows. If your final count diverges by more than ±5 from this calibration, re-read the chunk file and check whether you've accidentally included FINDS-section partaged individuals or missed a sub-banner all-caps headword.
