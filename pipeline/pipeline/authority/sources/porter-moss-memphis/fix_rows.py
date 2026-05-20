@@ -2853,18 +2853,6 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK34_CORRECTIONS,
 ]
 
-# Chunk-34 tomb_ids that carry a spurious top-level `section` key emitted
-# by agent C (duplicate of `source_citation.section`). fix_rows.py drops
-# this key so reconciled.jsonl passes the schema check. Defined at module
-# scope so the set is not re-created on every row iteration.
-_CHUNK34_TOMB_IDS_WITH_SPURIOUS_SECTION: frozenset[str] = frozenset({
-    "DAH-PyramidsGH", "DAH-AmenyQemau", "DAH-MorganN5", "DAH-MorganN7",
-    "DAH-Seshemnufer", "DAH-InSnefruIshtef", "DAH-Neferirtnes",
-    "DAH-NicankhSnefru", "DAH-NeferherSnefru", "DAH-Uza",
-    "DAH-MorganS24", "DAH-Qedshepses", "DAH-Kanufer",
-})
-
-
 # Schema-uniformity backfill: every reconciled row carries
 # `co_occupant_roles: list[str]` (default `[]` for single-occupant rows
 # and rows whose co-occupants are not typed by PM). Rows in
@@ -2940,14 +2928,14 @@ def main() -> None:
                     row[field] = spec["value"]
                     overrides_applied.append((tid, field, previous, spec["value"]))
 
-        # Chunk-34 agent C emitted a spurious top-level `section` key
-        # (duplicate of `source_citation.section`) on all 13 rows. The
-        # merge majority resolves it to `None` but keeps the key in the
-        # merged dict, failing the `test_required_fields_present_on_every_row`
-        # schema check. Drop it from all chunk-34 rows — `section` is
-        # never a valid top-level field; it lives only inside `source_citation`.
-        if tid in _CHUNK34_TOMB_IDS_WITH_SPURIOUS_SECTION:
-            row.pop("section", None)
+        # `section` is never a valid top-level field; it lives only inside
+        # `source_citation.section`. Strip any agent-emitted spurious copy
+        # unconditionally. (Originally introduced for chunk-34 agent C, which
+        # duplicated `source_citation.section` at top level on all 13 rows;
+        # the unconditional pop handles this row + any future similar
+        # agent-emission slip without per-chunk maintenance. Gemini PR #259
+        # round-1 simplification.)
+        row.pop("section", None)
 
     RECONCILED.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
