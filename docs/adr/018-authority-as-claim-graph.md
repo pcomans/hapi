@@ -36,7 +36,9 @@ Both specifications are vendored in-repo at `pipeline/pipeline/authority/spec/` 
 
 For each, the HTML release is the semantic authority (scope notes, conceptual ranges); the RDFS encoding is the syntactic authority for what's actually emitted (`rdfs:domain`, `rdfs:range`, IS-A chains, including RDFS-only refinements like P82a/P82b that the conceptual document doesn't enumerate). They rarely disagree; when they do, the HTML wins on semantic intent and the RDFS wins on syntactic encoding. Pin moves are atomic — replacing a vendored file and bumping the pin happen in the same commit.
 
-**Why CRMdig.** The matcher provenance use-case (a piece of software runs against input data and produces output assertions) is exactly what CRMdig's D-class hierarchy was built for. Modelling matcher runs with core CRM alone forced either an awkward fit (treating software as `E74 Group`) or a real deviation (`:Matcher` as a non-CRM node). CRMdig has purpose-built classes (D3 Formal Derivation, D10 Software Execution, D14 Software, D1 Digital Object) that fit natively. Adopting CRMdig retires those workarounds.
+**Why CRMdig.** The matcher provenance use-case (a piece of software runs against input data and produces output assertions) is exactly what CRMdig's D-class hierarchy was built for. Modelling matcher runs with core CRM alone forced either an awkward fit (treating software as `E74 Group`) or a real deviation (`:Matcher` as a non-CRM node). CRMdig has purpose-built classes (D10 Software Execution, D14 Software, D1 Digital Object) that fit natively. Adopting CRMdig retires those workarounds.
+
+(CRMdig also has a tighter class, D3 Formal Derivation, for derivations that produce a "different form" of the same digital object — colour corrections, resizing, format conversions. We use D10 not D3 because a matcher producing identity assertions is not producing a "version of" the source data, it's producing different *information*. D10 Software Execution is the correct general parent.)
 
 #### Node-type mapping from Hapi labels to CRM / CRMdig classes
 
@@ -53,7 +55,7 @@ For each, the HTML release is the semantic authority (scope notes, conceptual ra
 | `:TimeSpan`             | E52 Time-Span                  | Date-shaped value entity. Conceptual CRM uses P81 / P82 (range E61 Time Primitive); the RDFS implementation refines them to P81a / P81b / P82a / P82b with `rdfs:Literal` range. The property-graph stores boundary literals on the node; exports use the RDFS refinements. See deviation #3. |
 | `:Dimension`            | E54 Dimension                  | Numeric measurement; P90 / P91. |
 | `:Type`                 | E55 Type                       | The predicate registry; targets of P177. |
-| `:MatcherRun`           | **D3 Formal Derivation** *(CRMdig)* | The specific execution of a matcher: deterministic algorithm runs over input data, producing derived output. IS-A chain: D3 ⊂ D10 Software Execution ⊂ D7 Digital Machine Event ⊂ E11 Modification & E65 Creation ⊂ E7 Activity. Carries run-reproducibility metadata as Hapi-namespaced properties (run_id, parameters_hash, reviewer_status, etc.). |
+| `:MatcherRun`           | **D10 Software Execution** *(CRMdig)* | The specific execution of a matcher: software ran over input data and produced output. IS-A chain: D10 ⊂ D7 Digital Machine Event ⊂ E11 Modification & E65 Creation ⊂ E7 Activity. (Not D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object; matcher output is different *information*, not a different form.) Carries run-reproducibility metadata as Hapi-namespaced properties (run_id, parameters_hash, reviewer_status, etc.). |
 | `:MatcherAlgorithm`     | **D14 Software** *(CRMdig)* | The matcher algorithm definition (e.g. `normalized_name_v1`): the code/procedure that gets executed. IS-A chain: D14 ⊂ D1 Digital Object ⊂ E73 Information Object. Long-lived; many `:MatcherRun` instances reference one `:MatcherAlgorithm`. |
 | `:SourceData`           | **D1 Digital Object** *(CRMdig)* | A reconciled.jsonl file (or other digital input) consumed by a matcher run. IS-A chain: D1 ⊂ E73 Information Object. |
 
@@ -68,10 +70,10 @@ Every E13 Statement carries a universally-required triad — P140 (subject), P14
 | `P177_assigned_property_of_type`      | core CRM      | E13    | E55   | Predicate type (which kind of property this E13 assigns). |
 | `P14_carried_out_by`                  | core CRM      | E7 (attaches to E13 by inheritance) | E39 | Human actor for human-attributed claims. |
 | `P70i_is_documented_in`               | core CRM      | E1 (attaches to E13 by inheritance) | E31 | Documentary anchor; carries `cited_page` / `cited_pdf_page` as edge properties. |
-| `hapi:derived_by_run`                 | Hapi extension (subPropertyOf P15_was_influenced_by) | E13 | D3 Formal Derivation | The matcher run that produced this assignment. |
-| `L21_used_as_derivation_source`       | CRMdig        | D3     | D1    | The source data file the matcher consumed. |
-| `L22_created_derivative`              | CRMdig        | D3     | D1    | The output data the matcher produced. |
-| `L23_used_software_or_firmware`       | CRMdig (inherited from D7) | D7 (attaches to D3 by inheritance) | D14 | The matcher algorithm. |
+| `hapi:derived_by_run`                 | Hapi extension (subPropertyOf P15_was_influenced_by) | E13 | D10 Software Execution | The matcher run that produced this assignment. |
+| `L10_had_input`                       | CRMdig        | D7 (attaches to D10 by inheritance) | D1 | The source data file the matcher consumed. |
+| `L11_had_output`                      | CRMdig        | D7 (attaches to D10 by inheritance) | D1 | The output data the matcher produced. |
+| `L23_used_software_or_firmware`       | CRMdig        | D7 (attaches to D10 by inheritance) | D14 | The matcher algorithm. |
 
 #### Hapi extension manifest
 
@@ -82,7 +84,7 @@ The `hapi:` prefix used throughout this ADR resolves to the namespace `https://p
 | Reader configuration | What happens to Hapi-namespaced triples |
 |---|---|
 | Strict CRM/CRMdig reader that has NOT loaded `hapi_extension.rdf` | Hapi terms are unrecognised URIs. The reader retains the triples but does not infer anything from them — IS-A propagation, subPropertyOf rewriting, and class-hierarchy queries that target CRM/CRMdig terms simply do not surface the Hapi-typed entities. Genuinely "silently ignored." |
-| Reader that has loaded `hapi_extension.rdf` (alongside the CRM and CRMdig RDFS files) | An RDFS reasoner applies the manifest's declarations. Every `hapi:MatcherRun` is now also typed as `crmdig:D3 Formal Derivation` (and transitively as E7 Activity, E1 CRM Entity, etc.); every `hapi:derived_by_run` edge is now also a `crm:P15_was_influenced_by` edge. Hapi terms become discoverable through CRM/CRMdig queries. Free-standing Hapi predicates (those without a declared `subPropertyOf`) remain opaque even with the manifest loaded — the manifest documents their existence but doesn't relate them to CRM vocabulary. |
+| Reader that has loaded `hapi_extension.rdf` (alongside the CRM and CRMdig RDFS files) | An RDFS reasoner applies the manifest's declarations. Every `hapi:MatcherRun` is now also typed as `crmdig:D10 Software Execution` (and transitively as D7 Digital Machine Event, E11 Modification / E65 Creation, E7 Activity, E1 CRM Entity); every `hapi:derived_by_run` edge is now also a `crm:P15_was_influenced_by` edge. Hapi terms become discoverable through CRM/CRMdig queries. Free-standing Hapi predicates (those without a declared `subPropertyOf`) remain opaque even with the manifest loaded — the manifest documents their existence but doesn't relate them to CRM vocabulary. |
 
 Both modes are valid. The graph data itself is identical in either case; what differs is the reader's interpretive layer. Hapi never relies on the manifest being loaded for correctness — but loading it unlocks the full interop story.
 
@@ -100,7 +102,7 @@ Manifest excerpt (the full file is the citable contract):
 @prefix crmdig:  <http://www.cidoc-crm.org/extensions/crmdig/> .
 
 # Classes
-hapi:MatcherRun         rdfs:subClassOf  crmdig:D3_Formal_Derivation .
+hapi:MatcherRun         rdfs:subClassOf  crmdig:D10_Software_Execution .
 hapi:MatcherAlgorithm   rdfs:subClassOf  crmdig:D14_Software         .
 hapi:SourceData         rdfs:subClassOf  crmdig:D1_Digital_Object    .
 
@@ -125,7 +127,7 @@ Conscious choices, each justified, contained, and with a documented round-trip m
 
    The mapping is mechanical; the loader specification owns it. One `:E31` node is added per distinct cited page (not per citation), giving bounded growth.
 
-(The previous version of this ADR also listed `:Matcher not E39 Actor` as a deviation. That deviation is **retired** by adopting CRMdig — matcher runs are now `:D3 Formal Derivation`, algorithms are `:D14 Software`, and the connection from E13 to the run is `hapi:derived_by_run rdfs:subPropertyOf P15_was_influenced_by`. None of these require a deviation.)
+(The previous version of this ADR also listed `:Matcher not E39 Actor` as a deviation. That deviation is **retired** by adopting CRMdig — matcher runs are now `:D10 Software Execution`, algorithms are `:D14 Software`, and the connection from E13 to the run is `hapi:derived_by_run rdfs:subPropertyOf P15_was_influenced_by`. None of these require a deviation.)
 
 ### Core principles
 
@@ -138,12 +140,12 @@ Conscious choices, each justified, contained, and with a documented round-trip m
      For a Leprohon claim, the actor is the scholar Ronald J. Leprohon (`:E21 Person`) and the document is the 2013 book *The Great Name: Ancient Egyptian Royal Titulary* (`:E31 Document`). A publication is not itself an actor in CIDOC — E39 Actor requires capacity for intentional action — so publication nodes are documents, never actors.
 
    - **Machine-derived** (matcher / alias-expander / derivation rule output). One CRMdig-typed chain:
-     - **The derivation run** that produced the Statement — a `:D3 Formal Derivation` (CRMdig 5.0). Attached via `hapi:derived_by_run` (declared `rdfs:subPropertyOf crm:P15_was_influenced_by` so strict CIDOC readers interpret it as "this E13 was influenced by this E7 Activity").
+     - **The derivation run** that produced the Statement — a `:D10 Software Execution` (CRMdig 5.0). Attached via `hapi:derived_by_run` (declared `rdfs:subPropertyOf crm:P15_was_influenced_by` so strict CIDOC readers that have loaded the Hapi extension manifest interpret it as "this E13 was influenced by this E7 Activity").
      - **The algorithm used** — a `:D14 Software` referenced from the run via `crmdig:L23_used_software_or_firmware`.
-     - **The source data consumed** — one or more `:D1 Digital Object` references via `crmdig:L21_used_as_derivation_source`.
-     - **The derived output data** — a `:D1 Digital Object` reference via `crmdig:L22_created_derivative`.
+     - **The source data consumed** — one or more `:D1 Digital Object` references via `crmdig:L10_had_input`.
+     - **The derived output data** — a `:D1 Digital Object` reference via `crmdig:L11_had_output`.
 
-     A hapi match is *not* a scholarly association: the difference between them is structural in CIDOC terms. Human claims carry `P14 → E39` (an actor attesting); matcher claims carry `hapi:derived_by_run → D3` (a derivation event that produced the claim). Strict readers can distinguish the two without knowing Hapi-specific vocabulary, via the presence vs absence of P14 and the IS-A type of the provenance target.
+     A hapi match is *not* a scholarly association: the difference between them is structural in CIDOC terms. Human claims carry `P14 → E39` (an actor attesting); matcher claims carry `hapi:derived_by_run → :MatcherRun` (a derivation event that produced the claim). The presence vs absence of P14 is directly observable from the data — even a strict reader without the Hapi extension manifest loaded can tell the two shapes apart at that structural level. What the strict-without-manifest reader cannot do is interpret the matcher-side semantics: `hapi:derived_by_run` is just an unknown predicate URI to them, and `:MatcherRun` is just an unknown class. A reader that loads the manifest gets full semantic interpretation through the declared `subPropertyOf` / `subClassOf` parents.
 
    Matcher claims may lack `P70i_is_documented_in` until a reviewer attaches a documentary anchor; matcher provenance is algorithmic, not documentary. Human claims always carry both P14 and P70i — page-level metadata on P70i is optional but the documentary anchor itself is required.
 
@@ -161,7 +163,7 @@ Conscious choices, each justified, contained, and with a documented round-trip m
 
    The property-graph encoding inlines the CIDOC-property values (`symbolic_content`, `value`, `begin`, `end`) as properties of the value-entity node, rather than as separate string-literal nodes. The value-entity layer is what makes graph traversal uniform: "show me every claim that touches Dynasty 0" traverses through `P141_assigned`; "show me every appellation containing 'wnis'" indexes through `:E41 Appellation` nodes regardless of which Statement assigned them.
 
-6. **Identity across sources is itself a claim — no canonical Person at load time.** Each source's row is stored as its own per-source entity node (`:Ruler`, `:Site`, etc.), keyed by source + source-row-id. Cross-source co-reference ("Leprohon's row for Unas is the same person as Beckerath's row for Unas") is modelled as a Statement with predicate `hapi:same_entity_as`, `P141_assigned` pointing at the other entity, and a provenance edge attributing the claim — `P14_carried_out_by` + `P70i_is_documented_in` for a human curator decision, `hapi:derived_by_run → :D3 Formal Derivation` for an automated matcher. **The loader makes no identity commitments.** Identity is data the matching pipeline produces over time, with full provenance. A canonical-person view can be derived later from `same_entity_as` clusters if query ergonomics demand it (see Consequences); the storage layer is per-source records, not collapsed persons.
+6. **Identity across sources is itself a claim — no canonical Person at load time.** Each source's row is stored as its own per-source entity node (`:Ruler`, `:Site`, etc.), keyed by source + source-row-id. Same-entity assertions ("Leprohon's row for Unas is the same person as Beckerath's row for Unas") are modelled as Statements with predicate `hapi:same_entity_as`, `P141_assigned` pointing at the other entity, and a provenance edge attributing the claim — `P14_carried_out_by` + `P70i_is_documented_in` for a human curator decision or a source-asserted identification, `hapi:derived_by_run → :D10 Software Execution` for an automated matcher. The mechanism is uniform across two distinct cases: (a) cross-source identity hypotheses (one source's Unas vs another's Unas — genuinely uncertain), and (b) intra-source phase aliasing (Leprohon's two rows for Akhenaten as Amenhotep IV + Akhenaten — same person across naming phases, source-asserted). The framing is "per-source-row + same-entity claims that link the cluster" in both cases; "identity hypothesis" is one motivation, "naming-phase aliasing" is another. **The loader makes no identity commitments.** Identity is data the matching pipeline produces over time, with full provenance. A canonical-person view can be derived later from `same_entity_as` clusters if query ergonomics demand it (see Consequences); the storage layer is per-source records, not collapsed persons.
 
 7. **Resolution policy is per-predicate, fail-loud by default.** When a downstream consumer (UI, search index, enrich asset) needs a single value and the graph carries competing claims, a per-predicate resolution rule decides which to surface (e.g. "for `reign_start_bce`, Beckerath > Hornung > Leprohon"; "for `hapi:display_name`, prefer the most recent curator-decision Source"). If no rule is committed for a predicate, the query **fails loud** — the consumer must specify a rule or accept the full claim set. This aligns with Rule 2: no silent arbitrary picks; every resolution traces to a documented policy.
 
@@ -197,7 +199,7 @@ Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human
 | 2 | `P141_assigned`                       | the value entity    | always (an E1 entity, never a literal) |
 | 3 | `P177_assigned_property_of_type`      | `:Type` (E55)       | always — the predicate type |
 | 4 | `P14_carried_out_by`                  | `:Person`/`:Group`  | for human-attributed claims |
-| 4'| `hapi:derived_by_run`                 | `:MatcherRun:D3`    | for matcher-attributed claims (Hapi extension; `rdfs:subPropertyOf crm:P15_was_influenced_by`). The `:MatcherRun` (CRMdig D3 Formal Derivation) carries run-reproducibility metadata and references its algorithm (`:MatcherAlgorithm:D14`) via `crmdig:L23_used_software_or_firmware`. |
+| 4'| `hapi:derived_by_run`                 | `:MatcherRun:D10`   | for matcher-attributed claims (Hapi extension; `rdfs:subPropertyOf crm:P15_was_influenced_by`). The `:MatcherRun` (CRMdig D10 Software Execution) carries run-reproducibility metadata and references its algorithm (`:MatcherAlgorithm:D14`) via `crmdig:L23_used_software_or_firmware`. |
 | 5 | `P70i_is_documented_in`               | `:Document`         | for claims with a documentary source; carries `cited_page`, `cited_pdf_page` as edge properties |
 
 ```
@@ -246,17 +248,21 @@ Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human
 
 // (4) A cross-source identity claim attributed to a matcher run.
 //     No P14 — matcher claims don't have a human actor. Instead:
-//       hapi:derived_by_run (rdfs:subPropertyOf P15_was_influenced_by) → :D3 Formal Derivation (the run)
-//       The D3 references its software (:D14) via L23, its inputs (:D1 source data) via L21,
-//       and its derived output (:D1) via L22. All CRMdig 5.0, all strict-conformant.
+//       hapi:derived_by_run (rdfs:subPropertyOf P15_was_influenced_by) → :D10 Software Execution (the run)
+//       The D10 references its software (:D14) via L23, its inputs (:D1 source data) via L10,
+//       and its derived output (:D1) via L11. All CRMdig 5.0, all strict-conformant.
+//     We use D10 Software Execution rather than the more specific D3 Formal Derivation — D3's
+//     scope is restricted to derivations producing a "different form" of the same digital object
+//     (colour corrections, resizing, format conversions). A matcher producing identity assertions
+//     is producing different information, not a different form. D10 is the correct general parent.
 //     Confidence is a Hapi property of the Statement; the run carries the reproducibility
 //     metadata (input commit, parameter hash, timestamp, reviewer status) so any score
-//     can be regenerated or rejected by replaying the D3 against its L21 sources.
+//     can be regenerated or rejected by replaying the D10 against its L10 sources.
 (:Statement:E13 {confidence: 0.94})
   -[:P140_assigned_attribute_to]->    (:Ruler {leprohon::leprohon-5.07})
   -[:P141_assigned]->                  (:Ruler {beckerath::05.07})
   -[:P177_assigned_property_of_type]-> (:Type:E55 {id: 'hapi:same_entity_as'})
-  -[:hapi:derived_by_run]->            (:MatcherRun:D3 {
+  -[:hapi:derived_by_run]->            (:MatcherRun:D10 {
                                            run_id:               'matcher_run_2026_05_17T14_22Z',
                                            input_dataset_commit: 'a8f3e9d...',
                                            parameters_hash:      'sha256:7c4...',
@@ -266,22 +272,22 @@ Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human
                                                                   // pending | approved | rejected | superseded
                                        })
 
-(:MatcherRun:D3 {matcher_run_2026_05_17T14_22Z})
+(:MatcherRun:D10 {matcher_run_2026_05_17T14_22Z})
   -[:L23_used_software_or_firmware]-> (:MatcherAlgorithm:D14 {
                                            id: 'normalized_name_v1',
                                            version: '0.1.0',
                                            algorithm: 'lowercase+strip_diacritics+token_match',
                                            hyperparameters_json: '{"min_dynasty_match": true}'
                                        })
-  -[:L21_used_as_derivation_source]-> (:SourceData:D1 {
+  -[:L10_had_input]->                  (:SourceData:D1 {
                                            path: 'leprohon-2013-titulary/reconciled.jsonl',
                                            git_commit: 'a8f3e9d...'
                                        })
-  -[:L21_used_as_derivation_source]-> (:SourceData:D1 {
+  -[:L10_had_input]->                  (:SourceData:D1 {
                                            path: 'beckerath-1997-chronologie/reconciled.jsonl',
                                            git_commit: 'a8f3e9d...'
                                        })
-  -[:L22_created_derivative]->        (:SourceData:D1 {
+  -[:L11_had_output]->                 (:SourceData:D1 {
                                            path: 'matcher_outputs/run_2026_05_17T14_22Z.jsonl'
                                        })
 
@@ -315,13 +321,16 @@ Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human
 // Matcher catalogue and run records (CRMdig classes with Hapi extension labels)
 //   :MatcherAlgorithm:D14_Software       — the algorithm definition (long-lived; many runs share one).
 //                                          IS-A chain: D14 ⊂ D1 ⊂ E73 Information Object.
-//   :MatcherRun:D3_Formal_Derivation     — a specific execution that produced one or more Statements.
-//                                          IS-A chain: D3 ⊂ D10 Software Execution ⊂ D7 Digital Machine Event
+//   :MatcherRun:D10_Software_Execution   — a specific execution that produced one or more Statements.
+//                                          IS-A chain: D10 ⊂ D7 Digital Machine Event
 //                                          ⊂ E11 Modification & E65 Creation ⊂ E7 Activity.
+//                                          (NOT D3 Formal Derivation — D3 is for "version-of"
+//                                          derivations like format conversions; matcher output is
+//                                          different information, not a different form.)
 //   :SourceData:D1_Digital_Object        — reconciled.jsonl files or other digital inputs/outputs.
 //                                          IS-A chain: D1 ⊂ E73 Information Object.
 // Every confidence/score on a derived Statement is reproducible by replaying the
-// MatcherRun (D3) against its L21 source files with its parameters_hash.
+// MatcherRun (D10) against its L10 input source files with its parameters_hash.
 (:MatcherAlgorithm:D14 {id, version, algorithm, hyperparameters_json})
 (:MatcherRun:D3        {run_id, input_dataset_commit, parameters_hash,
                         started_at, completed_at,
@@ -391,6 +400,8 @@ The example also illustrates why tomb references demand careful predicate granul
 
 A naive `hapi:buried_in` predicate that conflates these three loses information and produces wrong matches: a stela of Ramesses I found in the KV35 cache is not evidence that Ramesses I owned, was originally buried in, or has any primary association with KV35 — it was moved there ~400 years after his death. The open schema accommodates the distinction natively; rigorous matching demands it. The Haiku step becomes a fallback for genuinely ambiguous cases (overlapping co-regencies, post-burial usurpations, ambiguous cache attributions), not the primary disambiguation mechanism.
 
+**On the CIDOC-rigour of these predicates.** All four tomb predicates connect a `:Ruler` (E21 Person) directly to a `:Site` (E27 Site). Strictly CIDOC-rigorous modelling would route through an `:E20 Biological Object` (the body or mummy — CIDOC distinguishes the Person, who existed from birth to death, from their physical remains) and an interment event (E5 / E7) per burial fact, adding 3–4 intermediate nodes per ruler-site association. We deliberately don't: the matching use-case queries the Ruler-Site relationship directly, and the intermediate body/event chain would multiply graph weight for no downstream query win in this project. The predicates are documented as **deliberately lossy Hapi shortcuts** in the extension manifest. They have no declared `subPropertyOf`; strict CRM readers see them as opaque `hapi:`-namespaced edges and can interpret them however they choose. If a future use-case requires the rigorous chain (mummy-specific provenance, multi-stage burial events), it can be layered on top — the shortcuts and the rigorous chain coexist.
+
 A follow-up ADR will revise ADR-009 to specify the constraint-narrowed algorithm in detail once storage tech is decided.
 
 ## Consequences
@@ -398,7 +409,7 @@ A follow-up ADR will revise ADR-009 to specify the constraint-narrowed algorithm
 - **Phase 0 output shape changes.** Sources still produce `reconciled.jsonl`, but the downstream loader emits per-source E13 Statements, not collapsed per-entity rows. The 3-agent extraction step's job is unchanged (faithful capture of the source); per-row resolution still follows the Rule-2 decision tree (unanimity / majority / `tie-break-overrides.json` / documented policy) — the loader trusts whatever the existing pipeline emits and never re-resolves at the graph layer.
 - **Reconciliation semantics change.** "Reconciliation" no longer means "pick one value across sources"; it means "load all sources' claims into the graph and let the resolution policy (per-predicate, per-consumer) decide what to surface." The current `tie-break-overrides.json` becomes **pipeline QA provenance**, not scholarly citation evidence. Tie-break overrides justify *extraction arbitration* (which of the 3 agents' readings of the source was correct), not the source publication's historical claim itself; they sit in a separate QA-provenance layer attached to the loader event or extraction step that produced the Statement, queryable as "how was this Statement produced" rather than "who attested to this Statement." A Statement's scholarly citation chain remains P14 → scholar + P70i → publication; QA provenance lives alongside, never inside, that chain.
 - **Disagreements become first-class artifacts.** The UI can honestly show "1353–1336 BCE (Leprohon 2013) / 1352–1335 BCE (Dodson-Hilton 2010)" instead of pretending certainty it doesn't have. Authority disagreements appear in search snippets, hover cards, and the artifact detail page.
-- **Cross-source identity becomes data, not a structural primitive.** Adding a new source (Hornung, Kitchen, Ryholt) does not require re-curation of existing entities. It adds per-source nodes that get linked to existing nodes via `hapi:same_entity_as` Statements — derived from a `:D3 Formal Derivation` (matcher-derived, via `hapi:derived_by_run`) where confident, queued for human review (curator-attributed via P14 + P70i) otherwise. A canonical-person view, if needed, can be derived from `same_entity_as` clusters as a materialized view; the source of truth remains the per-source nodes plus their identity claims.
+- **Cross-source identity becomes data, not a structural primitive.** Adding a new source (Hornung, Kitchen, Ryholt) does not require re-curation of existing entities. It adds per-source nodes that get linked to existing nodes via `hapi:same_entity_as` Statements — derived from a `:D10 Software Execution` (matcher-derived, via `hapi:derived_by_run`) where confident, queued for human review (curator-attributed via P14 + P70i) otherwise. A canonical-person view, if needed, can be derived from `same_entity_as` clusters as a materialized view; the source of truth remains the per-source nodes plus their identity claims.
 - **The predicate registry becomes the vocabulary contract.** Any new relationship type proposed by an agent, a Phase 0 chunk, or a contributor must be reviewed against the registry. The CI check is FK-enforced at the DB layer; convention is not enough.
 - **Citation network becomes queryable.** Citation tokens currently buried as text inside Leprohon's `source_note` fields (referencing Beckerath 1999, Gauthier 1907, Wilkinson 2000, etc.) become explicit edges from Statements to Citation nodes, queryable as "claims about Akhenaten that cite Wilkinson" or "what does Leprohon cite that we have no authority data for."
 - **`attested_in` becomes the bridge to artifacts.** Attestation entries currently nested inside Leprohon name qualifiers become explicit edges from Name Statements to Inscription / Artifact nodes, linking the authority layer to the museum layer at the data level.

@@ -5,9 +5,9 @@
   xmlns:owl="http://www.w3.org/2002/07/owl#"
   xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
   xmlns:crmdig="http://www.cidoc-crm.org/extensions/crmdig/"
-  xml:base="https://pcomans.github.io/hapi-crm#">
+  xml:base="https://pcomans.github.io/hapi-crm">
 
-  <owl:Ontology rdf:about="https://pcomans.github.io/hapi-crm#">
+  <owl:Ontology rdf:about="https://pcomans.github.io/hapi-crm">
     <owl:versionInfo>Hapi CRM/CRMdig extension manifest, May 2026</owl:versionInfo>
     <rdfs:comment xml:lang="en">
       Hapi project's RDFS extensions on top of CIDOC CRM 7.1.3 + CRMdig 5.0.
@@ -29,34 +29,34 @@
        Classes: matcher provenance (CRMdig-typed)
        ============================================================ -->
 
-  <rdfs:Class rdf:about="MatcherRun">
+  <rdfs:Class rdf:about="#MatcherRun">
     <rdfs:label xml:lang="en">Matcher run</rdfs:label>
-    <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D3_Formal_Derivation"/>
-    <rdfs:comment xml:lang="en">A specific execution of a Hapi matcher: a deterministic algorithm running over source data and producing derived assertions. IS-A chain: hapi:MatcherRun ⊂ crmdig:D3 Formal Derivation ⊂ D10 Software Execution ⊂ D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. Carries run-reproducibility metadata (run_id, parameters_hash, reviewer_status, etc.) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D10_Software_Execution"/>
+    <rdfs:comment xml:lang="en">A specific execution of a Hapi matcher: a software program runs over source data as a single task, producing derived assertions. IS-A chain: hapi:MatcherRun ⊂ crmdig:D10 Software Execution ⊂ D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. NOT a D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object (colour corrections, resizing, format conversions); a matcher producing identity assertions does not fit that semantic. D10 is the correct general parent for "software ran and produced output." Carries run-reproducibility metadata (run_id, parameters_hash, reviewer_status, etc.) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional.</rdfs:comment>
   </rdfs:Class>
 
-  <rdfs:Class rdf:about="MatcherAlgorithm">
+  <rdfs:Class rdf:about="#MatcherAlgorithm">
     <rdfs:label xml:lang="en">Matcher algorithm</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D14_Software"/>
     <rdfs:comment xml:lang="en">The matcher algorithm definition (e.g. normalized_name_v1) — the code or procedure that gets executed. IS-A chain: hapi:MatcherAlgorithm ⊂ crmdig:D14 Software ⊂ D1 Digital Object ⊂ crm:E73 Information Object. Long-lived; many hapi:MatcherRun instances reference one hapi:MatcherAlgorithm via crmdig:L23_used_software_or_firmware.</rdfs:comment>
   </rdfs:Class>
 
-  <rdfs:Class rdf:about="SourceData">
+  <rdfs:Class rdf:about="#SourceData">
     <rdfs:label xml:lang="en">Source data file</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D1_Digital_Object"/>
-    <rdfs:comment xml:lang="en">A reconciled.jsonl file or other digital input/output of a matcher run. IS-A chain: hapi:SourceData ⊂ crmdig:D1 Digital Object ⊂ crm:E73 Information Object. Referenced from hapi:MatcherRun via crmdig:L21_used_as_derivation_source (inputs) and crmdig:L22_created_derivative (outputs).</rdfs:comment>
+    <rdfs:comment xml:lang="en">A reconciled.jsonl file or other digital input/output of a matcher run. IS-A chain: hapi:SourceData ⊂ crmdig:D1 Digital Object ⊂ crm:E73 Information Object. Referenced from hapi:MatcherRun via crmdig:L10_had_input (input data the matcher consumed) and crmdig:L11_had_output (output data the matcher produced). L10/L11 are D7-level properties inherited by D10; we deliberately do NOT use L21/L22 (D3-specific properties for "version-of" derivations).</rdfs:comment>
   </rdfs:Class>
 
   <!-- ============================================================
        Properties: matcher provenance
        ============================================================ -->
 
-  <rdf:Property rdf:about="derived_by_run">
+  <rdf:Property rdf:about="#derived_by_run">
     <rdfs:label xml:lang="en">derived by run</rdfs:label>
     <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E13_Attribute_Assignment"/>
-    <rdfs:range  rdf:resource="MatcherRun"/>
+    <rdfs:range  rdf:resource="#MatcherRun"/>
     <rdfs:subPropertyOf rdf:resource="http://www.cidoc-crm.org/cidoc-crm/P15_was_influenced_by"/>
-    <rdfs:comment xml:lang="en">Attaches an E13 Attribute Assignment to the hapi:MatcherRun (CRMdig D3 Formal Derivation) that produced it. Declared rdfs:subPropertyOf crm:P15_was_influenced_by — strict CIDOC readers interpret this as "the assignment was influenced by the derivation event." Hapi readers interpret it more specifically as "the assignment was produced by this matcher run." Domain (E13) is in P15's domain via E13 ⊂ E7. Range (hapi:MatcherRun) is in P15's range via hapi:MatcherRun ⊂ D3 ⊂ E1 (all chains in CRM/CRMdig RDFS).</rdfs:comment>
+    <rdfs:comment xml:lang="en">Attaches an E13 Attribute Assignment to the hapi:MatcherRun (CRMdig D10 Software Execution) that produced it. Declared rdfs:subPropertyOf crm:P15_was_influenced_by — strict CIDOC readers interpret this as "the assignment was influenced by the software-execution event." Hapi readers interpret it more specifically as "the assignment was produced by this matcher run." Domain (E13) is in P15's domain via E13 ⊂ E7. Range (hapi:MatcherRun) is in P15's range via hapi:MatcherRun ⊂ D10 ⊂ D7 ⊂ E11/E65 ⊂ E7 ⊂ ... ⊂ E1 (all chains in CRM/CRMdig RDFS).</rdfs:comment>
   </rdf:Property>
 
   <!-- ============================================================
@@ -78,47 +78,72 @@
        an Egyptological + CRM-modelling cross-cut and a follow-up to ADR-018.
        ============================================================ -->
 
-  <rdf:Property rdf:about="same_entity_as">
+  <rdf:Property rdf:about="#same_entity_as">
     <rdfs:label xml:lang="en">same entity as</rdfs:label>
     <rdfs:comment xml:lang="en">Asserts that two per-source entity nodes refer to the same real-world person/site/etc. Symmetric. No clean CRM superproperty in core 7.1.3 — CRMinf (Argumentation Model) extension may offer a tighter fit in future. Currently a free-standing Hapi property; strict readers see the triple but do not reason on it.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="in_dynastic_period">
+  <rdf:Property rdf:about="#in_dynastic_period">
     <rdfs:label xml:lang="en">in dynastic period</rdfs:label>
     <rdfs:comment xml:lang="en">Assigns a Ruler (E21 Person) to a Dynasty (E4 Period) — chronological assignment, not family-membership. No clean core-CRM superproperty identified in this pass. Naive candidates (e.g. P10_falls_within) require intermediate modelling decisions about how a Person relates to a Period in time — most plausibly via the Person's reign or birth as a separate temporal entity that falls within the Dynasty's Time-Span — and the right shape is a follow-up Egyptological + CRM-modelling decision rather than an immediate subsumption call. Free-standing for now.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="tomb_owner">
+  <!--
+       Burial predicates: deliberately lossy Hapi shortcuts.
+
+       The four predicates below (tomb_owner, original_burial_in, cache_context_at,
+       shares_tomb_with) connect a :Ruler (E21 Person) directly to a :Site (E27 Site).
+       Rigorous CRM modelling would route through an E20 Biological Object (the body
+       or mummy, distinct from the Person who existed from birth to death) and an
+       intermediate burial event (E5 Event or E7 Activity) — three to four extra
+       nodes per burial fact.
+
+       Hapi makes a different trade. The matching use-case (associating artifacts
+       with known burial associations) queries the Ruler-Site relationship directly;
+       intermediate body/event nodes would multiply graph weight for no downstream
+       query win in this project. These predicates are documented as Hapi-specific
+       shortcuts. Strict CRM readers see them as opaque hapi:-namespaced edges
+       (they have no declared subPropertyOf) and can interpret them however they
+       choose — typically as untyped "the Ruler has some kind of association with
+       this Site" with no further semantics.
+
+       If a future use-case requires the rigorous model (e.g. mummy-specific
+       provenance, multi-stage burial events), it can be layered on top:
+       materialise E20 Biological Object + burial events alongside the shortcuts.
+       The shortcuts and the rigorous chain coexist.
+  -->
+
+  <rdf:Property rdf:about="#tomb_owner">
     <rdfs:label xml:lang="en">tomb owner</rdfs:label>
-    <rdfs:comment xml:lang="en">The Ruler the tomb was commissioned for (stable across cache reburials). No clean CRM superproperty in core 7.1.3. Free-standing; semantic gap acknowledged.</rdfs:comment>
+    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. The Ruler the tomb was commissioned for (stable across cache reburials). Direct E21 Person → E27 Site connection; the rigorous CRM model would intermediate via an E20 Biological Object and a commissioning event. Hapi elides those for query directness.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="original_burial_in">
+  <rdf:Property rdf:about="#original_burial_in">
     <rdfs:label xml:lang="en">original burial in</rdfs:label>
-    <rdfs:comment xml:lang="en">The Ruler whose body was first interred in this Site. Closest CRM superproperty under review: P53_has_former_or_current_location (E18 → E53) once Rulers' bodies are modelled as E20 Biological Object instances. Pending.</rdfs:comment>
+    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. The Ruler whose body was first interred in this Site. Direct E21 Person → E27 Site connection; the rigorous CRM model would intermediate via an E20 Biological Object (the body — CIDOC distinguishes the Person from their body) and an interment event (E5 or E7). Hapi elides those for query directness.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="cache_context_at">
+  <rdf:Property rdf:about="#cache_context_at">
     <rdfs:label xml:lang="en">cache context at</rdfs:label>
-    <rdfs:comment xml:lang="en">Records a secondary burial location (Dynasty 21 priestly reburials at KV35, TT320/DB320). Distinct from tomb_owner and original_burial_in. No clean CRM superproperty; free-standing.</rdfs:comment>
+    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. Records a secondary burial location (Dynasty 21 priestly reburials at KV35, TT320/DB320). Distinct from tomb_owner and original_burial_in. The rigorous CRM model would intermediate via the body and a re-interment event. Hapi elides those for query directness.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="shares_tomb_with">
+  <rdf:Property rdf:about="#shares_tomb_with">
     <rdfs:label xml:lang="en">shares tomb with</rdfs:label>
-    <rdfs:comment xml:lang="en">Symmetric relation between two Rulers buried in the same Site. No clean CRM superproperty (CRM does not directly model joint burial). Free-standing.</rdfs:comment>
+    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. Symmetric relation between two Rulers buried in the same Site. The rigorous CRM model would derive this from intersecting two body/interment chains; Hapi materialises it as a direct edge for query directness.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="display_name">
+  <rdf:Property rdf:about="#display_name">
     <rdfs:label xml:lang="en">display name</rdfs:label>
     <rdfs:comment xml:lang="en">The canonical Anglicised display form for a Ruler (ADR-016). Closest CRM superproperty under review: P1_is_identified_by (E1 → E41 Appellation) with the value being an E41 Appellation node. Pending registry-loader implementation that materialises the E41 nodes.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="reign_period">
+  <rdf:Property rdf:about="#reign_period">
     <rdfs:label xml:lang="en">reign period</rdfs:label>
     <rdfs:comment xml:lang="en">A Ruler's reign as an E52 Time-Span. No clean core-CRM superproperty identified in this pass. The CIDOC-faithful approach materialises the reign itself as a separate temporal entity (likely E7 Activity or E4 Period — a reign is an extended action carried out by a ruler over a coherent period, not a modification of a physical thing), with that entity carrying P4_has_time-span to an E52. The right specific class is a follow-up modelling decision. Free-standing for now.</rdfs:comment>
   </rdf:Property>
 
-  <rdf:Property rdf:about="horus_name">
+  <rdf:Property rdf:about="#horus_name">
     <rdfs:label xml:lang="en">Horus name</rdfs:label>
     <rdfs:comment xml:lang="en">A Ruler's Horus titulary element. Closest CRM superproperty under review: P1_is_identified_by (E1 → E41), with the value being an E41 Appellation subclass typed for Horus-name semantics. Pending.</rdfs:comment>
   </rdf:Property>

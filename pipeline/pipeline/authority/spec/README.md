@@ -49,3 +49,11 @@ The HTML files reference external CSS, JS, and decorative diagrams. Browser rend
 ## Pin discipline
 
 Version pins set by ADR-018. To move to a new release: in the same commit, (a) update the ADR's version pins for whichever specifications change, (b) replace the corresponding vendored files with new-version counterparts, (c) update the source URLs and retrieval date above. Never leave a vendored spec out of sync with the ADR pin.
+
+## CRMsci import — carve-out
+
+CRMdig 5.0's RDFS file declares `owl:imports rdf:resource="http://www.cidoc-crm.org/extensions/crmsci/3.2/"` and uses CRMsci classes in a small number of places — specifically D11 Digital Measurement Event (`subClassOf S21_Measurement`) and a handful of measurement-related L-properties.
+
+**Hapi uses a CRMdig subset that does not touch CRMsci-dependent classes.** Our consumed classes (D1, D7, D10, D14) and properties (L10, L11, L23) have IS-A chains that go directly to core CRM (E73, E11, E65) without traversing any CRMsci class. We therefore do not vendor CRMsci 3.2.
+
+If a future Hapi feature requires CRMdig classes/properties that *do* depend on CRMsci (e.g. D11 for measurement events, or O24 for measurement provenance), the carve-out becomes invalid and CRMsci 3.2 must be vendored alongside the existing files. The `cidoc-crm-validator` subagent enforces this: any use of a CRMsci-dependent class/property when CRMsci is not vendored is a hard error.
