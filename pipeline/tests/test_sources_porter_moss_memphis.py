@@ -798,7 +798,7 @@ CHUNK34_TOMB_IDS: frozenset[str] = frozenset({
     "DAH-Seshemnufer",      # § II.A. Seshemnufer, scribe, Dyn V-VI, attested
     "DAH-InSnefruIshtef",   # § II.A. In-Snefru-Ishtef, inspector, Dyn V-VI, DE MORGAN 2
     "DAH-Neferirtnes",      # § II.A. Neferirtnes, inspector, Dyn VI, DE MORGAN 7
-    "DAH-NicankhSnefru",    # § II.A. Nicankh-Snefru, judge, prob. Dyn VI, DE MORGAN 8
+    "DAH-NiankhSnefru",     # § II.A. Niʿankh-Snefru, judge, prob. Dyn VI, DE MORGAN 8
     "DAH-NeferherSnefru",   # § II.A. Neferḥer-Snefru, prince, prob. Dyn V-VI, DE MORGAN 11
     "DAH-Uza",              # § II.A. Uza, overseer, Dyn VI, DE MORGAN 12
     "DAH-MorganS24",        # § II.A. Mastaba 24, prob. Dyn VI, anon
@@ -3540,7 +3540,7 @@ def test_chunk34_row_count_13() -> None:
     Snefru, printed pp.890-893) emits exactly 13 rows: 2 anonymous § I
     Dyn-XIII pyramids (G+H), 1 named § I pyramid (Ameny-Ḳemau), and 10
     § II.A mastabas (MorganN5, MorganN7, Seshemnufer, InSnefruIshtef,
-    Neferirtnes, NicankhSnefru, NeferherSnefru, Uza, MorganS24,
+    Neferirtnes, NiankhSnefru, NeferherSnefru, Uza, MorganS24,
     Qedshepses, Kanufer)."""
     ch34 = [r for r in _rows() if r["tomb_id"] in CHUNK34_TOMB_IDS]
     assert len(ch34) == 13
@@ -3772,16 +3772,17 @@ def test_chunk34_neferirtnes() -> None:
     )
 
 
-def test_chunk34_nicankh_snefru() -> None:
-    """DAH-NicankhSnefru — § II.A. Judge and inspector, prob. Dyn VI.
-    tomb_id keeps the ASCII-stripped c-form (per prompt's strip rule);
-    occupant_name uses the ayin form Niʿankh-Snefru per source-wide
-    SAQ-Niankh* convention (PM OCR `Nic` is raised-ayin U+02BF; PR #259
-    round-2 egyptologist P1.1 correction).
+def test_chunk34_niankh_snefru() -> None:
+    """DAH-NiankhSnefru — § II.A. Judge and inspector, prob. Dyn VI.
+    tomb_id strips ayin per source-wide SAQ-Niankh* convention (11 prior
+    rows all use Niankh-* no-c form in tomb_id with Niʿankh-* ayin form
+    in occupant_name). PM OCR literal `c` in `NicANKH` is pypdf's render
+    of the raised-ayin glyph (U+02BF), not a literal c. PR #259 round-2
+    egyptologist P1.1 + round-3 Gemini finding 3275684644.
     tomb_aliases: [DE MORGAN 8]. Printed p.892."""
     _assert_chunk34_full(
-        _by_id("DAH-NicankhSnefru"),
-        tomb_id="DAH-NicankhSnefru",
+        _by_id("DAH-NiankhSnefru"),
+        tomb_id="DAH-NiankhSnefru",
         occupant_name="Niʿankh-Snefru",
         occupant_role="Official",
         dynasty="6",

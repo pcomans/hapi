@@ -2294,7 +2294,7 @@ DAH-Neferirtnes (Neferirtnes):
   notes_from_pm: a="Inspector of tenants of the Great House. Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 10-11." | b="Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11." | c="Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11."  → chose "Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11."
   section: a=null | b=null | c="II"  → chose null
 
-DAH-NicankhSnefru (Nicankh-Snefru):
+DAH-NiankhSnefru (Niʿankh-Snefru):
   notes_from_pm: a="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 11-12." | b="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12." | c="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12."  → chose "Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12."
   section: a=null | b=null | c="II"  → chose null
 
@@ -2555,7 +2555,12 @@ Reviewer-cited row corrections:
   MAR-D67.notes_from_pm: "Supervisor of prophets of the Sun-temple and Pyramid of Neuserreʿ, Prophet of the Sun-temple of Neferirkareʿ, etc. Temp. Neuserreʿ or later." → "Supervisor of prophets of the Sun-temple and Pyramid of Neuserrēʿ, Prophet of the Sun-temple of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later."
   DAH-Amenemhet2.tomb_aliases: [] → ["White Pyramid", "Lepsius LI"]
   DAH-Amenemhet3.tomb_aliases: [] → ["Black Pyramid", "Lepsius LVIII"]
+  DAH-AmenyQemau.tomb_aliases: [] → ["Ameny-Kemau"]
+  DAH-InSnefruIshtef.dynasty: null → "6"
+  DAH-NeferherSnefru.dynasty: null → "6"
   DAH-PyramidE.tomb_aliases: [] → ["Lepsius LIV"]
+  DAH-Qedshepses.tomb_aliases: ["DE MORGAN 27"] → ["DE MORGAN 27", "Kedshepses"]
+  DAH-Seshemnufer.dynasty: null → "6"
   DAH-Sesostris3.tomb_aliases: [] → ["Lepsius XLVII"]
   DAH-SnefruNorthernComplex.tomb_aliases: [] → ["Red Pyramid", "Lepsius XLIX"]
   DAH-SnefruSouthernComplex.tomb_aliases: [] → ["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"]

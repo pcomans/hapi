@@ -2828,7 +2828,7 @@ CHUNK33_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 # component, not an alias; named-occupant rows carry their De Morgan
 # number in tomb_aliases per PM's numbering convention.
 CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
-    ("DAH-NicankhSnefru", "occupant_name"): {
+    ("DAH-NiankhSnefru", "occupant_name"): {
         "value": "Niʿankh-Snefru",
         "rationale": (
             "PM III.2 phys p.532 (printed p.892) source-text contains "
@@ -2836,9 +2836,14 @@ CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "as literal `c` by pypdf in the all-caps headword `NicANKH-"
             "SNEFRU`. Source-wide convention (unanimous, PM III.2): "
             "SAQ-NiankhKhnum / SAQ-NiankhPepyNiankhMeryre / SAQ-NiankhPtah "
-            "all use `Niʿankh-*` form (ayin). The 3/0 agent-unanimous "
-            "`Nicankh-*` emission is majority-OCR-literal, not majority-"
-            "correctness. Egyptologist PR #259 review P1.1 verified."
+            "all use `Niʿankh-*` form (ayin) in occupant_name and "
+            "`Niankh-*` (no c, ayin stripped) in tomb_id. The 3/0 agent-"
+            "unanimous `Nicankh-*` emission is majority-OCR-literal, not "
+            "majority-correctness. tomb_id corrected at pre_merge to "
+            "DAH-NiankhSnefru (ayin stripped per ASCII convention). "
+            "Egyptologist PR #259 P1.1 + Gemini PR #259 round-3 finding "
+            "3275684644 (tomb_id alignment with source-wide Niankh-* "
+            "convention)."
         ),
     },
     ("DAH-InSnefruIshtef", "dynasty"): {
