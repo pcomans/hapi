@@ -2871,6 +2871,31 @@ CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Egyptologist PR #259 review P1.2."
         ),
     },
+    ("DAH-AmenyQemau", "tomb_aliases"): {
+        "value": ["Ameny-Kemau"],
+        "rationale": (
+            "PM source uses underdot-ḳ (Gardiner N29) in the printed "
+            "headword `AMENY-ḲEMAU`. The chunk-34 tomb_id uses ASCII "
+            "`Q` (modern Egyptological / museum-catalog convention; "
+            "Met + Brooklyn list \"Ameny Qemau\"). The K-form is the "
+            "alternate strict-prompt-rule ASCII strip (ḳ → K). Adding "
+            "the K-form as a tomb_alias provides cross-source matching "
+            "for catalog records using either convention. Egyptologist "
+            "PR #259 review P2.1 (Q + K alias backfill)."
+        ),
+    },
+    ("DAH-Qedshepses", "tomb_aliases"): {
+        "value": ["DE MORGAN 27", "Kedshepses"],
+        "rationale": (
+            "PM source uses underdot-ḳ (Gardiner N29) in the printed "
+            "headword `ḲEDSHEPSES`. tomb_id uses ASCII `Q` (modern "
+            "Egyptological convention) plus DE MORGAN 27 (de Morgan's "
+            "1894/95 Dahshûr-excavation number). The K-form alternate "
+            "strict-prompt-rule ASCII strip is added as additional "
+            "alias for cross-source matching. Egyptologist PR #259 "
+            "review P2.1 (Q + K alias backfill)."
+        ),
+    },
 }
 
 

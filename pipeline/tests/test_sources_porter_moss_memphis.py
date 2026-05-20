@@ -3654,7 +3654,7 @@ def test_chunk34_ameny_qemau() -> None:
         page=890,
         section="I",
         cemetery="Pyramid-field of Dahshur",
-        tomb_aliases=[],
+        tomb_aliases=["Ameny-Kemau"],
         notes_from_pm=(
             "Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; "
             "LECLANT in ib. N.S. 27 (1958), pp. 81-2; "
@@ -3873,7 +3873,7 @@ def test_chunk34_qedshepses() -> None:
         page=893,
         section="II",
         cemetery="East of Northern Pyramid of Snefru",
-        tomb_aliases=["DE MORGAN 27"],
+        tomb_aliases=["DE MORGAN 27", "Kedshepses"],
         notes_from_pm=(
             "King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. "
             "Dating as late Dyn. VI or 1st Int. Period, SCHMITZ, Untersuchungen zum Titel "
