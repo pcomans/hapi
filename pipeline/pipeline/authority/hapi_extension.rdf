@@ -89,48 +89,53 @@
   </rdf:Property>
 
   <!--
-       Burial predicates: deliberately lossy Hapi shortcuts.
+       Burial predicates: pragmatic Hapi-domain extensions.
 
        The four predicates below (tomb_owner, original_burial_in, cache_context_at,
        shares_tomb_with) connect a :Ruler (E21 Person) directly to a :Site (E27 Site).
-       Rigorous CRM modelling would route through an E20 Biological Object (the body
-       or mummy, distinct from the Person who existed from birth to death) and an
-       intermediate burial event (E5 Event or E7 Activity) — three to four extra
-       nodes per burial fact.
+       This is genuinely a Hapi-domain extension, not a workaround: CIDOC core has
+       no clean superproperty whose domain accepts E18/E21 AND whose range accepts
+       E27 Site. The closest candidate, P53_has_former_or_current_location, has
+       domain E18 (which E21 satisfies via E21 ⊂ E20 ⊂ E19 ⊂ E18) but range E53
+       Place — and E27 Site is NOT IS-A E53 (E27 ⊂ E26 ⊂ E18). So a direct
+       subPropertyOf P53 would escape its range, which the "narrow not violate"
+       rule forbids. Free-standing is the honest classification.
 
-       Hapi makes a different trade. The matching use-case (associating artifacts
-       with known burial associations) queries the Ruler-Site relationship directly;
-       intermediate body/event nodes would multiply graph weight for no downstream
-       query win in this project. These predicates are documented as Hapi-specific
-       shortcuts. Strict CRM readers see them as opaque hapi:-namespaced edges
-       (they have no declared subPropertyOf) and can interpret them however they
-       choose — typically as untyped "the Ruler has some kind of association with
-       this Site" with no further semantics.
+       Different rigour levels exist in heritage practice. CRMarchaeo (the official
+       CIDOC archaeology extension) explicitly materialises excavation, stratigraphy,
+       and interment as first-class events with classes like A8 Stratigraphic Unit
+       and A9 Archaeological Excavation. Museum-catalog CIDOC implementations
+       generally use direct shortcuts when the use-case is "show me objects
+       associated with X" rather than "reconstruct the burial stratigraphy." Both
+       are valid CIDOC practice; the choice is project-dependent.
 
-       If a future use-case requires the rigorous model (e.g. mummy-specific
-       provenance, multi-stage burial events), it can be layered on top:
-       materialise E20 Biological Object + burial events alongside the shortcuts.
-       The shortcuts and the rigorous chain coexist.
+       Each predicate below has its own rigorous-model alternative (different per
+       predicate — tomb ownership is a commissioning/intended-use relationship,
+       original burial is a body/interment relationship, cache context is a
+       re-interment-event relationship). The model alternatives are noted on each
+       predicate. If a future use-case requires CRMarchaeo-style stratigraphic
+       querying, the richer model can be layered on top — the predicates here and
+       the rigorous chain can coexist.
   -->
 
   <rdf:Property rdf:about="#tomb_owner">
     <rdfs:label xml:lang="en">tomb owner</rdfs:label>
-    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. The Ruler the tomb was commissioned for (stable across cache reburials). Direct E21 Person → E27 Site connection; the rigorous CRM model would intermediate via an E20 Biological Object and a commissioning event. Hapi elides those for query directness.</rdfs:comment>
+    <rdfs:comment xml:lang="en">The Ruler the tomb was commissioned for (stable across cache reburials). A pragmatic Hapi-domain predicate, free-standing for the reasons in the block comment above. CIDOC-rigorous alternative for "commissioned for" semantics: an E12 Production / E65 Creation event for the tomb's construction, with the king as P14_carried_out_by (commissioner) or P14 with role-typing via P14.1_in_the_role_of, and P92_brought_into_existence linking the event to the resulting :E27 Site. Not body/burial — that's a different predicate (original_burial_in).</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#original_burial_in">
     <rdfs:label xml:lang="en">original burial in</rdfs:label>
-    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. The Ruler whose body was first interred in this Site. Direct E21 Person → E27 Site connection; the rigorous CRM model would intermediate via an E20 Biological Object (the body — CIDOC distinguishes the Person from their body) and an interment event (E5 or E7). Hapi elides those for query directness.</rdfs:comment>
+    <rdfs:comment xml:lang="en">The Ruler whose body was first interred in this Site. A pragmatic Hapi-domain predicate, free-standing for the reasons in the block comment above. CIDOC-rigorous alternative: materialise an E5 Event (the interment) with P11_had_participant for the Ruler (or, more strictly, an E20 Biological Object representing the body) and P7_took_place_at for the location. CRMarchaeo's A4 Stratigraphic Genesis is the archaeology-specific refinement.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#cache_context_at">
     <rdfs:label xml:lang="en">cache context at</rdfs:label>
-    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. Records a secondary burial location (Dynasty 21 priestly reburials at KV35, TT320/DB320). Distinct from tomb_owner and original_burial_in. The rigorous CRM model would intermediate via the body and a re-interment event. Hapi elides those for query directness.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Records a secondary burial location (Dynasty 21 priestly reburials at KV35, TT320/DB320). A pragmatic Hapi-domain predicate, free-standing. Distinct from tomb_owner and original_burial_in. CIDOC-rigorous alternative: a second E5 Event (the re-interment) chained to the original interment via P9_consists_of / P134_continued or similar, with the cache Site as P7_took_place_at.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#shares_tomb_with">
     <rdfs:label xml:lang="en">shares tomb with</rdfs:label>
-    <rdfs:comment xml:lang="en">DELIBERATELY LOSSY HAPI SHORTCUT. Symmetric relation between two Rulers buried in the same Site. The rigorous CRM model would derive this from intersecting two body/interment chains; Hapi materialises it as a direct edge for query directness.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Symmetric relation between two Rulers buried in the same Site. A pragmatic Hapi-domain predicate, free-standing. CIDOC-rigorous alternative would derive this from intersecting two interment-event chains rather than materialising it as a direct edge.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#display_name">
