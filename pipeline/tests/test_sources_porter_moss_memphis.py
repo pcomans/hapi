@@ -3706,16 +3706,17 @@ def test_chunk34_morgan_n7() -> None:
 
 
 def test_chunk34_seshemnufer() -> None:
-    """DAH-Seshemnufer — § II.A. Scribe of royal documents, Dyn V-VI,
-    attested. No De Morgan number in tomb_aliases (PM's number is
-    OCR-ambiguous, footnoted with asterisk by agent B; 2/3 majority = []).
-    Printed p.891."""
+    """DAH-Seshemnufer — § II.A. Scribe of royal documents, Dyn V or VI
+    → "6" per closed-range-→-later-bound source-wide convention (PR #259
+    round-2 egyptologist P1.2). No De Morgan number in tomb_aliases
+    (PM's number is OCR-ambiguous, footnoted with asterisk by agent B;
+    2/3 majority = []). Printed p.891."""
     _assert_chunk34_full(
         _by_id("DAH-Seshemnufer"),
         tomb_id="DAH-Seshemnufer",
         occupant_name="Seshemnufer",
         occupant_role="Official",
-        dynasty=None,
+        dynasty="6",
         attribution_certainty="attested",
         page=891,
         section="II",
@@ -3729,14 +3730,15 @@ def test_chunk34_seshemnufer() -> None:
 
 
 def test_chunk34_in_snefru_ishtef() -> None:
-    """DAH-InSnefruIshtef — § II.A. Inspector of tenants, Dyn V-VI, attested.
-    tomb_aliases: [DE MORGAN 2]. Printed p.891."""
+    """DAH-InSnefruIshtef — § II.A. Inspector of tenants, Dyn V-VI → "6"
+    per closed-range-→-later-bound source-wide convention (PR #259
+    round-2 egyptologist P1.2). tomb_aliases: [DE MORGAN 2]. Printed p.891."""
     _assert_chunk34_full(
         _by_id("DAH-InSnefruIshtef"),
         tomb_id="DAH-InSnefruIshtef",
         occupant_name="In-Snefru-Ishtef",
         occupant_role="Official",
-        dynasty=None,
+        dynasty="6",
         attribution_certainty="attested",
         page=891,
         section="II",
@@ -3772,12 +3774,15 @@ def test_chunk34_neferirtnes() -> None:
 
 def test_chunk34_nicankh_snefru() -> None:
     """DAH-NicankhSnefru — § II.A. Judge and inspector, prob. Dyn VI.
-    tomb_id uses c-form (NICANKH per source; k→c correction over A's k).
+    tomb_id keeps the ASCII-stripped c-form (per prompt's strip rule);
+    occupant_name uses the ayin form Niʿankh-Snefru per source-wide
+    SAQ-Niankh* convention (PM OCR `Nic` is raised-ayin U+02BF; PR #259
+    round-2 egyptologist P1.1 correction).
     tomb_aliases: [DE MORGAN 8]. Printed p.892."""
     _assert_chunk34_full(
         _by_id("DAH-NicankhSnefru"),
         tomb_id="DAH-NicankhSnefru",
-        occupant_name="Nicankh-Snefru",
+        occupant_name="Niʿankh-Snefru",
         occupant_role="Official",
         dynasty="6",
         attribution_certainty="probable",
@@ -3793,14 +3798,17 @@ def test_chunk34_nicankh_snefru() -> None:
 
 
 def test_chunk34_neferher_snefru() -> None:
-    """DAH-NeferherSnefru — § II.A. King's son, prob. Dyn V or VI.
-    tomb_aliases: [DE MORGAN 11]. Printed p.892."""
+    """DAH-NeferherSnefru — § II.A. King's son, prob. Dyn V or VI →
+    dynasty "6" per closed-range-→-later-bound source-wide convention
+    (PR #259 round-2 egyptologist P1.2). The "Probably" hedge is
+    captured by attribution_certainty="probable", orthogonal to
+    dynasty axis. tomb_aliases: [DE MORGAN 11]. Printed p.892."""
     _assert_chunk34_full(
         _by_id("DAH-NeferherSnefru"),
         tomb_id="DAH-NeferherSnefru",
         occupant_name="Neferḥer-Snefru",
         occupant_role="Prince",
-        dynasty=None,
+        dynasty="6",
         attribution_certainty="probable",
         page=892,
         section="II",
