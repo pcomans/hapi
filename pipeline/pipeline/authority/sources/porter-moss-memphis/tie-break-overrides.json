@@ -941,6 +941,16 @@
     "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-AkhtihotpSekhmet.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
     "value": "Director of warb-priests of Sekhmet of the Great House, Prophet of Buto, etc. Dyn. V-VI. (Also referenced as Ptah-Hetep.)"
   },
+  "SAQ-Ankhefensekhmet|co_occupants": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p.709 (phys p.349). Source OCR (raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt line 844): \"I:Iatl).oreml).et\" with the prompt-documented chunk-32 noise-class decodes `I:I → Ḥ` and `l). → ḥ` (cf. chunks 9-10 postprocess.py-promoted glyphs) — deterministic-with-policy decode yields \"Ḥatḥoremḥet\" with medial underdot-ḥ on both ḥ-roots, matching the well-attested Egyptological form Ḥatḥor-em-ḥet (\"Hathor is in front\", goddess Ḥatḥor with medial underdot-ḥ + ḥet noun-root). Agent A emitted [] for co_occupants (missed the wife as a row) but DOES emit \"Ḥatḥoremḥet\" verbatim in notes_from_pm (\"...Wife, Ḥatḥoremḥet.\"). Agent B emitted [\"Ḥaṯḥoremḥet\"] (ṯ substituted for th, a transliteration error). Agent C emitted [\"Ḥathoremḥet\"] (cosmetic-diacritic drop of medial underdot-ḥ). Round-1 override picked C's form, producing an intra-row inconsistency with notes_from_pm's A-derived \"Ḥatḥoremḥet\" (PR #256 round-2 code-reviewer P1.4 + egyptologist-reviewer F4). Round-2 fix: align co_occupants to A's notes-form \"Ḥatḥoremḥet\" — strict-subset-of-agent-A-emission via A's notes_from_pm string \"Ḥatḥoremḥet\" (PM-source-text-faithful per documented decode rule). Reviewer concurrence: egyptologist 2026-05-19 PR #256 F4 verified A's form against PM III.2 p.709 + Egyptological convention.",
+    "value": [
+      "Ḥatḥoremḥet"
+    ]
+  },
+  "SAQ-Ankhefensekhmet|notes_from_pm": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-Ankhefensekhmet notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.709 (phys p.349). Source: 'Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremlẉet.' Agent A: 'Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremḥet.' Agent B: '...Wife, Ḥaṯḥoremḥet.' Agent C: '...Wife, Ḥathoremḥet.' A has underdot-ḥ on both ḥ-roots in the wife name (closest to source), plus the correct occupation and dynasty. B has a ṯ substitution error. Selecting A as the agent emission that best matches source OCR for the wife name spelling.",
+    "value": "Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremḥet."
+  },
   "SAQ-AnkhiInthi|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, chunk-24 § II.E (a). All three agents converge on title cluster + dating but differ on (a) `Map LVIII.` cartographic reference (drop per chunks 19-23) and (b) `Metal-worker` vs `Metalworker` hyphenation. Per source-wide convention prefer hyphenated form `Metal-worker` (preserves the `mr.t`-craftsman compound).",
     "value": "Prophet of the Pyramids of Unis and Teti, Metal-worker of the Great House, etc. End of Dyn. VI."
@@ -1009,6 +1019,28 @@
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 582 (chunk-23 § II.C Saite intrusion above Userkaf Mortuary Temple). PM prints anonymous DOUBLE TOMB descriptor headword + (a)/(b) sub-occupant blocks naming Neferebrēʿ-sineit (north tomb) + Weḥebrēʿ-men (south tomb). All three agents capture the same content but differ on prose style (em-dash vs comma, parenthetical-position annotations, cartographic Map LVIII inclusion). Selecting form 2's (a)/(b)-prefixed structure as it preserves the PM tomb-pair labelling while dropping the cartographic reference. Diacritics normalised: macron-Ē + ayin on Re-compound names (Neferebrēʿ, Weḥebrēʿ); underdot-Ḥ on `wḥb-rʿ` root.",
     "value": "Double tomb above Mortuary Temple of Userkaf, including tombs farther east in face of cliff. Late Dyn. XXVI or early Dyn. XXVII. (a) North tomb, Neferebrēʿ-sineit, Royal chamberlain, son of Merib and Shepenubaste. (b) South tomb, Weḥebrēʿ-men, Treasurer of the King of Lower Egypt, son of Taʿa (mother)."
   },
+  "SAQ-FamilyTombPedesi|co_occupant_roles": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-FamilyTombPedesi co_occupant_roles, length-coupled with co_occupants override above. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source gives roles: Pashe(n)tiḥet = 'Commander of the army' (father of Pedesi); Neitiyti = 'Sistrum-player of Neith' (mother); Nekhtnebef = 'son of Pedesi, [both] First generals of His Majesty'; Herubaste = unnamed role. Agent A emitted 4 elements but includes Pedesi wrongly as first. Agent B emitted only 2 (Nekhtnebef + Herubaste). Agent C emitted ['Father, Commander of the army', 'Mother, Sistrum-player of Neith', 'Son, First general of His Majesty', 'Joint occupant'] — matches co_occupants override order (C) and provides gendered role prefixes consistent with source. Selecting C.",
+    "value": [
+      "Father, Commander of the army",
+      "Mother, Sistrum-player of Neith",
+      "Son, First general of His Majesty",
+      "Joint occupant"
+    ]
+  },
+  "SAQ-FamilyTombPedesi|co_occupants": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-FamilyTombPedesi co_occupants. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source: 'Sarcophagi. Pedesi [...] son of Pashe(n)tiḥet [...] and Neitiyti [...]. Nekhtnebef [...] son of Pedesi [...] and Herubaste.' The occupant is Pedesi; the co-occupants are his parents (Pashe(n)tiḥet, Neitiyti) and his son/Herubaste (Nekhtnebef, Herubaste). Agent A emitted ['Pedesi', 'Neitiyti', 'Nekhtnebef', 'Herubaste'] — wrongly includes the primary occupant Pedesi in co_occupants. Agent B emitted ['Nekhtnebef', 'Herubaste'] — drops parents. Agent C emitted ['Pashe(n)tiḥet', 'Neitiyti', 'Nekhtnebef', 'Herubaste'] — correctly includes parents and excludes the main occupant from co_occupants. Selecting C.",
+    "value": [
+      "Pashe(n)tiḥet",
+      "Neitiyti",
+      "Nekhtnebef",
+      "Herubaste"
+    ]
+  },
+  "SAQ-FamilyTombPedesi|notes_from_pm": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-FamilyTombPedesi notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Agent A emitted only 'Dyn. XXVIII-XXX or early Ptolemaic. Probably north-east of the Step Pyramid.' (truncated — drops sarcophagi detail). Agent B emitted the same prefix + 'Pedesi, First general [...] Nekhtnebef [...] and Herubaste.' Agent C emitted the same prefix + 'Sarcophagi: Pedesi [...]' (with 'Sarcophagi:' label from source). Source text uses 'Sarcophagi.' as a section label. C preserves 'Sarcophagi:' from the source layout; A drops it entirely. Selecting C as the fullest and most source-faithful emission.",
+    "value": "Dyn. XXVIII-XXX or early Ptolemaic. Probably north-east of the Step Pyramid. Sarcophagi: Pedesi, First general of His Majesty, son of Pashe(n)tiḥet, Commander of the army, and Neitiyti, Sistrum-player of Neith. Nekhtnebef, son of Pedesi, both First generals of His Majesty, and Herubaste."
+  },
   "SAQ-Gegi|notes_from_pm": {
     "rationale": "PM III.2 printed p.690; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. B drops CAPS GEGI prefix. A has macron 'Merenrēʿ', C has ayin-only 'Merenreʿ'. Per chunk-30 prompt + source-wide chunks 19-29 macron-Ē convention (Rēʿ, Merenrēʿ, Saḥurēʿ, Neuserrēʿ, Neferirkarēʿ), selecting A's macron form. Gemini PR #253 review (id=3269579291) flagged the earlier C-selection as contradicting the macron-Ē convention.",
     "value": "GEGI, Inspector of prophets of the Pyramid of Merenrēʿ I, Great overlord of the Thinite nome, Overseer of prophets of Onuris, etc. Dyn. VI. (Another tomb of probably same man at Nagʿ el-Deir, N.90.)"
@@ -1032,6 +1064,12 @@
   "SAQ-Hemakhti|notes_from_pm": {
     "rationale": "PM III.2 printed p. 497; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'S 911. ḤEMAKHTI,' headword-prefix (dropped). Candidates A and B both include 'MARIETTE, Mastabas, p. 457 [H 14].' Mariette citation (dropped per convention). 'Name and title from drum of south false-door' is a source-attribution note (kept). Candidate C: no headword, drops all including source attribution. Constructed: title + dating + source attribution, no headword, no Mariette citation.",
     "value": "Royal chamberlain. Dyn. V-VI. Name and title from drum of south false-door."
+  },
+  "SAQ-Henat|occupant_alt_names": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-Henat occupant_alt_names. PM III.2 2nd ed. 1978/1981, printed p.718 (phys p.358). Source headword: 'HENAT KHNEMEBRE<-MEN'' — OCR rendering of KHNEMEBREꜤ-MENʿ (two ʿayin marks). Agent A: ['Khnemebrēʿ-men'] (macron on ē, lowercase m, missing terminal ʿ). Agent B: ['Khnmbēreʿ-Menʿ'] (missing 'e' after Khn, has both ʿ marks, capital M, macron). Agent C: ['Khnemebrēʿ-Menʿ'] (full spelling, macron on ē, capital M, both ʿ marks). Source has no macrons in original Latin-script transliteration but the name structure KHNEMEBREꜤ-MENʿ is clearly two-part. C has the fullest spelling with both ʿ marks and the correct capital-M second element. Selecting C.",
+    "value": [
+      "Khnemebrēʿ-Menʿ"
+    ]
   },
   "SAQ-HerimeruMerery|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-HerimeruMerery.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
@@ -1090,6 +1128,12 @@
   "SAQ-IputII|notes_from_pm": {
     "rationale": "1/1/1 tie on chunk-4 SAQ-IputII headword block. PM III.2 2nd ed. 1978/1981 printed p.432 (physical p.72) prints `PYRAMID-ENCLOSURE OF IPUT [II]¹` (regnal-number bracket + footnote marker) on a line followed by `Dyn. VI` on the next line. pypdf concatenated the lines and rendered `[II]¹` as `Il1`. Three agent forms: `PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI.` (Agent A; regnal-number normalised + sentence-final period), `PYRAMID-ENCLOSURE OF IPUT. Dyn. VI` (Agent B; missed the regnal number entirely and missed the period), `PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI PYRAMID.` (Agent C; correct regnal + concatenated the next sub-heading `PYRAMID.` from the body block). Agent A is the most PM-faithful: regnal number rendered correctly per the chunk-4 bracket-regnal rule + sentence-final period preserved + headword block correctly bounded at the `Dyn. VI.` line (does NOT spill into the body's `PYRAMID.` sub-heading).",
     "value": "PYRAMID-ENCLOSURE OF IPUT II. Dyn. VI."
+  },
+  "SAQ-Ipy|co_occupant_roles": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-Ipy co_occupant_roles. PM III.2 2nd ed. 1978/1981, printed p.702 (phys p.342). Source verbatim: 'Father, Amenḥotp Ḥuy (tomb, see supra).' Agent A: 'Father, Chief steward in Memphis, etc.' (substituted the father's occupational title for the source's cross-reference parenthetical). Agent B: 'Father' (drops the cross-reference). Agent C: 'Father (tomb, see supra)' (preserves the source's parenthetical cross-reference '(tomb, see supra)' without the father's name, which belongs in co_occupants not co_occupant_roles). Selecting C — it preserves the source cross-reference text '(tomb, see supra)' that PM uses to point back to the AmenhotpHuy entry.",
+    "value": [
+      "Father (tomb, see supra)"
+    ]
   },
   "SAQ-Irenkaptah|notes_from_pm": {
     "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Irenkaptah.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
@@ -1214,6 +1258,12 @@
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-MeryIsesi.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Supervisor and Inspector of prophets of the Pyramid of Unis. Early Dyn. VI. Mastaba usurped from Seshemnufer."
   },
+  "SAQ-Meryre|co_occupant_roles": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p.705 (phys p.345). Source: \"Wife, Beketamun Bakt.\" — PM's canonical \"X Y\" double-name pattern (cf. other chunk-32 examples Amenḥotp Ḥuy, Henat KHNEMEBREʿ-MENʿ, Raʿmeses-Emperreʿ with alts Meryunu+Benithen) where the second token is a good-name / hypocoristic. Agent A emitted [\"Wife, Bakt\"] — silently dropped the primary name \"Beketamun\" and leaked the secondary \"Bakt\" into the role field. Agent B emitted [\"Wife\"] — dropped both name forms. Agent C emitted [\"Wife (also known as Bakt)\"] — preserves the \"X also Y\" alt-name relation as an editorial parenthetical (the only agent emission that does NOT leak a name into a role field). Round-1 override picked A, producing PR #256 round-2 P1: schema-overload teaching Phase-A that \"Bakt\" is a role-modifier (egyptologist F1 + code-reviewer P1 cluster). Round-2 fix: select C's emission — strict-subset-of-agent-C-emission. co_occupants stays as [\"Beketamun\"] (unanimous across all 3 agents). The wife's double-name \"Beketamun Bakt\" is preserved verbatim in notes_from_pm; the alt-name relation is now correctly encoded in the role string via C's \"(also known as Bakt)\" idiom. Schema-level follow-up: a structured `co_occupant_alt_names` field parallel to `occupant_alt_names` would represent this cleaner (egyptologist F1 recommendation, deferred to a schema-PR).",
+    "value": [
+      "Wife (also known as Bakt)"
+    ]
+  },
   "SAQ-Mitri|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-Mitri.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Boundary official, Prophet of Maʿet, etc. End of Dyn. V or early Dyn. VI. Wife, ...menkaureʿ..., Prophetess of Ḥatḥor Mistress of the Sycamore, etc."
@@ -1241,6 +1291,14 @@
   "SAQ-NeferkhuuPtahThethi|notes_from_pm": {
     "rationale": "PM III.2 chunk-25 § II.E / Around the Pyramid-complex of Unis. 1/1/1 tie on SAQ-NeferkhuuPtahThethi.notes_from_pm; agents differed on body-prose / cartographic / sub-feature catalog inclusion. Per source-wide convention (chunks 19-24), notes_from_pm captures headword-block prose only — selecting the shortest candidate (minimal headword-block form, body-prose trailers dropped).",
     "value": "Count, Chief of an estate of the Pyramid of Pepy I, etc. Temp. Pepy I or later."
+  },
+  "SAQ-Neferronpet|co_occupants": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-Neferronpet co_occupants. PM III.2 2nd ed. 1978/1981, printed p.706 (phys p.346). Source: 'Parents, Neferronpet and Ḳafiriati. Wife, Mut-pipu.' Agent A: ['Mut-pipu'] (drops parents entirely). Agent B: ['Neferronpet', 'Ḳafiriati', 'Mut-pipu'] (includes both parents + wife, matches source; uses ḳ for first phoneme of Ḳafiriati matching source). Agent C: ['Neferronpet', 'Ḥafiriati', 'Mut-pipu'] (substitutes ḥ for ḳ — a substantive phoneme divergence from source). Agent B matches source exactly on both content and the ḳ consonant. Selecting B. Note: C's ḥ/ḳ substitution on Ḳafiriati is a substantive error, not a cosmetic diacritic difference — flagged for egyptologist.",
+    "value": [
+      "Neferronpet",
+      "Ḳafiriati",
+      "Mut-pipu"
+    ]
   },
   "SAQ-NeferseshemptahSekhentiu|notes_from_pm": {
     "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-NeferseshemptahSekhentiu.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
@@ -1345,6 +1403,13 @@
     "rationale": "1/1/1 tie on chunk-31 SAQ-Parahotp notes_from_pm. PM III.2 2nd ed. 1981 printed p.664. Three candidates differed on whether to prepend the occupant_name into notes_from_pm. Agent A: bare role cluster (no name prefix). Agent B: lowercase 'Parahotp (or Rahotp), <role>'. Agent C: all-caps 'PARAHOTP (or RAHOTP), <role>'. Per source-wide convention (chunks 1-30 reconciled rows): notes_from_pm starts with the role cluster; the occupant_name is captured in the occupant_name field, not duplicated into notes. Selected agent A. Verified strict-subset-of-agent-emission per Constitutional Rule 2 NO SYNTHESIS (this string is exactly what agent A emitted).",
     "value": "Governor of the town, Vizier, etc. Temp. Ramesses II. South-west of the Monastery of Apa Jeremias."
   },
+  "SAQ-Patenemhab|co_occupant_roles": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-Patenemhab co_occupant_roles. PM III.2 2nd ed. 1978/1981, printed p.707 (phys p.347). Source: 'Mother(?), Merytptaḥ. Wife, Tipuy, Songstress of Amūn.' The '(?)' question-mark belongs inside the role string immediately after 'Mother', no space. Agent A: ['Mother(?)', 'Wife, Songstress of Amūn'] — matches source exactly with no space before '(?)'. Agent B: ['Mother', 'Wife, Songstress of Amūn'] — drops the '(?)' certainty marker. Agent C: ['Mother (?)', 'Wife, Songstress of Amūn'] — inserts a space before '(?)'. Source has no space between 'Mother' and '(?)'. Selecting A as the source-faithful form.",
+    "value": [
+      "Mother(?)",
+      "Wife, Songstress of Amūn"
+    ]
+  },
   "SAQ-Pehernufer|notes_from_pm": {
     "rationale": "PM III.2 printed p. 502; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'PEḤERNUFER,' headword-prefix (dropped) and is otherwise correct. Candidate B: no headword but introduces two OCR errors: 'Mereresʿankh' (doubled 're') and 'Ḥeẓet' (z for ḳ). Candidate C: no headword, correct 'Meresʿankh' and 'Ḥeḳet'. Selecting C.",
     "value": "Overseer of all works of the King, Chief of the estate of Meresʿankh, Prophet of Thoth, Sopt, Ḥeḳet, etc. Temp. Snefru or Khufu. Plan L. Excavated by Nestor l'Hôte before 1840. Position unknown."
@@ -1365,6 +1430,17 @@
     "rationale": "PM III.2 printed p. 498; source-wide convention chunks 8-27b; chunk-28. Pre-merge agent-jsonl normalisation (documented in reconciliation-agent report): agent A emitted `SAQ-Ptahmackheru` (OCR-degraded `ck` digraph in the name); the reconciliation agent normalised A's tomb_id to `SAQ-Ptahmakheru` to match B+C's convention BEFORE merge ran. POST-normalisation, all three agents contribute a notes_from_pm candidate. Agent B: PM-faithful topographic anchor 'False-door.' but bare Reʿ/Neferirkareʿ (no macron). Agent C: macron Rēʿ/Neferirkarēʿ per source-wide convention, but drops 'False-door.' topographic anchor. Constructed value: macron form per agent C + 'False-door.' topographic anchor per agent B. Gemini P2 review on PR #251 (inline comment id=3260369837) flagged the earlier rationale wording as contradicting the post-normalisation merge-disagreements log; updated to acknowledge the pre-merge tomb_id normalisation step.",
     "value": "Prophet of Rēʿ and Ḥatḥor in the Sun-temple of Neferirkarēʿ, Prophet of Rēʿ in the Sun-temple of Neuserrēʿ, etc. End of Dyn. V or later. False-door."
   },
+  "SAQ-PtahmosiDirectorOfCraftsmen|co_occupants": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-PtahmosiDirectorOfCraftsmen co_occupants. PM III.2 2nd ed. 1978/1981, printed p.711 (phys p.351). Source: 'Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi.' Agent A emitted [] (empty — dropped parents entirely). Agent B emitted ['Ḥntmosi', 'Tawi'] (corrupts Ḏḥutmosi to Ḥntmosi, dropping the leading Ḏḥ- prefix). Agent C emitted ['Ḏḥwtmosi', 'Tawi'] (preserves Ḏḥ- prefix but uses 'w' rather than 'u': Ḏḥwtmosi vs source Ḏḥutmosi). C's form is closest to source — it preserves the Ḏḥ- prefix that B dropped entirely. Selecting C. Cosmetic 'w'/'u' difference in Ḏḥwtmosi vs Ḏḥutmosi flagged for egyptologist review.",
+    "value": [
+      "Ḏḥwtmosi",
+      "Tawi"
+    ]
+  },
+  "SAQ-PtahmosiDirectorOfCraftsmen|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p.711 (phys p.351). Source OCR (raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt line 554): \"!)l;mtmosi\" — OCR-degraded leading characters with ambiguous medial vowel (u vs w). Agent A: \"Ḏḥutmosi\" (u). Agent B: \"Ḥntmosi\" (dropped Ḏ prefix entirely). Agent C: \"Ḏḥwtmosi\" (w). Round-1 override picked C's \"Ḏḥwtmosi\" form for co_occupants but A's \"Ḏḥutmosi\" form for notes_from_pm — produces intra-row spelling inconsistency for the SAME father (Rule 4 violation: same fact rendered two ways within one row). PR #256 round-2 P1 (egyptologist F2 + code-reviewer P1.3). Round-2 fix: align notes_from_pm to C's form \"Ḏḥwtmosi\" — strict-subset-of-agent-C-emission. Egyptologist concurrence (2026-05-19 F2): C's \"Ḏḥwtmosi\" is the well-attested Egyptological form for the 18th-dyn vizier `Ḏḥwt-msj.w` (\"Thoth-is-born\"; cf. Helck, Urk. IV — cited inline in this PM entry at line 560 \"HELCK, Urk. iv. I9Io-I2 [705]\"). The medial \"u\" in agent A's form is a vocalization not the consonantal biliteral 𓏏𓍱. The \"w\"/\"u\" question is a P2-PENDING-CROP for PM-printed-text final-verification but within-row consistency is decidable now.",
+    "value": "Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥwtmosi, Governor of the town, Vizier, etc., and Tawi."
+  },
   "SAQ-PtahshepsesIDirectorOfCraftsmen|notes_from_pm": {
     "rationale": "PM III.2 printed p. 499; source-wide convention chunks 8-27b; chunk-28. 1/1/1 tie. Candidate A prepends 'PTAḤSHEPSES [I],' headword-prefix (dropped) but otherwise matches C. Candidate B: no headword but appends 'Chapel, painted decoration.' body-prose addendum (dropped per convention). Candidate C: no headword, no addendum — title + dating + topographic anchor only. Selecting C.",
     "value": "Greatest of the Directors of craftsmen, Prophet of Ptaḥ and Sokari, etc. Dyn. VI. South of Nos. 37-8 [E 1, 2 and H 3]."
@@ -1384,6 +1460,13 @@
   "SAQ-Rakhuf|notes_from_pm": {
     "rationale": "PM III.2 chunk-26 § II.F (Around Pyramid-complex of Unis tail). 1/1/1 tie on SAQ-Rakhuf.notes_from_pm; agents differed on body-prose / cartographic / sub-feature inclusion. Per source-wide convention (chunks 19-25), select shortest candidate (minimal headword form).",
     "value": "Royal chamberlain, Overseer of the Great Court. Dyn. VI."
+  },
+  "SAQ-RamesesEmperre|co_occupants": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-RamesesEmperre co_occupants. PM III.2 2nd ed. 1978/1981, printed p.715 (phys p.355). Source: 'Father, Yupaʿa. Wife, Esi(?), Songstress of Amun.' Agent A: ['Yupaʿa', 'Esi(?)'] — matches source: Yupaʿa (no macron) and Esi(?) with question mark. Agent B: ['Yupaʿa', 'Esi'] — drops the '(?)' certainty qualifier on Esi. Agent C: ['Yupāʿa', 'Esi(?)'] — adds a macron on 'ā' in Yupāʿa not present in source. Agent A matches source on both names exactly. Selecting A.",
+    "value": [
+      "Yupaʿa",
+      "Esi(?)"
+    ]
   },
   "SAQ-SankhenptahPtahshepses|co_occupant_roles": {
     "rationale": "PM III.2 printed p.698; source-wide convention chunks 8-29; chunk-30. 1/1/1 tie. A: ['Joint occupant']. B: [] (empty). C: ['Joint occupant, Director of nsd-mns metal-workers of the Great House'] (conflates role with title). Per source-wide chunks 8-29 + MAR-C25 / SAQ-Nufer / TPC-Kaemhest precedents, co_occupant_roles MUST follow `<Relation>, <title>` form. Selecting C's emission (correcting `nsd-mns` typo to `nsd-ms` per PM source: the headword reads `nsd-ms metal-workers`). Gemini PR #253 round-2 review (id=3269617061) flagged the earlier A-selection as inconsistent with the MAR-C25 round-1 fix's role-with-title format.",
@@ -1466,6 +1549,17 @@
   "SAQ-TetiMXV|notes_from_pm": {
     "rationale": "PM III.2 printed p.684; chunk-29; 1/1/1 tie. Agents B and C both include CAPS TETI; A omits. B and C are identical in content; selecting B per source-wide CAPS-name convention. Note: this tomb_id was disambiguated as SAQ-TetiMXV (from SAQ-Teti cross-chunk collision with chunk-5 King Teti).",
     "value": "East of Pyramid of Pepy II. M.XV. TETI, King's eldest son, Chief Justice and Vizier, etc. Temp. Pepy II. Chapel: false-door and offering-table. Room at entrance to sloping shaft: obelisk-fragment with titles, Cairo Mus. JE 63404, and fragment of another; offering-table with name. Sloping shaft walls: titles of deceased written in ink. Antechamber and burial chamber walls: offering-texts and titles accompanying representations of vases."
+  },
+  "SAQ-Thaibanebdedetimu|co_occupant_roles": {
+    "rationale": "1/1/1 tie on chunk-32 SAQ-Thaibanebdedetimu co_occupant_roles, length-coupled with notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source: 'Parents, Es-ḥatmeḥit, wp-n~rwy, etc., and Takhuti' (OCR '~' is a hieroglyphic sign between 'wp-n' and 'rwy'). Agent A emitted [] (empty — dropped parents). Agent B emitted ['Father', 'Mother'] (no epithet on father). Agent C emitted ['Father, wp-n-nrwy, etc.', 'Mother'] (includes partial epithet with hyphenated 'wp-n-nrwy'). Source has wp-n[sign]rwy as Es-ḥatmeḥit's title; C's 'wp-n-nrwy, etc.' preserves the structure though the middle character is imprecise. Selecting C as it preserves the source epithet structure better than B's bare 'Father'.",
+    "value": [
+      "Father, wp-n-nrwy, etc.",
+      "Mother"
+    ]
+  },
+  "SAQ-Thaibanebdedetimu|notes_from_pm": {
+    "rationale": "PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source OCR (raw/chunk-32-p340-p359-position-unknown-mk-nk-lp.txt line 929): \"Es-}_latme}_lit ... wp-n~rwy\" — \"~\" is residual hieroglyph noise (cf. PM I.2 chunk-17 TT81/84/87 `Sit-g~out` precedent where `g~` turned out to be hieroglyphic noise). Agent A: \"wp-nḏrwy\" (synthesized ḏ for the illegible glyph — egyptologically plausible reading \"wp-nḏ.rwy\" \"he who separates the two countries\", an attested priestly epithet, but the ḏ is not in the text-layer). Agent B: dropped the epithet entirely. Agent C: \"wp-n-nrwy\" (hyphenated text-layer-faithful rendering preserving the ambiguity). Round-1 override picked A for notes_from_pm but C for co_occupant_roles — produces intra-row inconsistency on the SAME epithet (Rule 4 + Rule 1 — A synthesizes a character absent from text-layer). PR #256 round-2 P1 (egyptologist F3 + code-reviewer P1.2). Round-2 fix: align notes_from_pm to C's text-layer-literal \"wp-n-nrwy\" — strict-subset-of-agent-C-emission, no synthesis of the illegible medial glyph. The egyptologically-defensible \"wp-nḏrwy\" restoration is a P2-PENDING-CROP question (egyptologist F5c) — when PM-printed PDF is cropped and verified, a follow-up PR can promote both fields to the restored form if confirmed. Until then, text-layer literal is the Rule-1-compliant default.",
+    "value": "Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-n-nrwy, etc., and Takhuti."
   },
   "SAQ-ThefuPtahhotp|notes_from_pm": {
     "rationale": "PM III.2 chunk-24 § II.E (a). PM headword block disambiguates `THEFU` (probably also called Ptaḥḥotp) from the other `THEFU` on phys p.598 (Lector-priest). Selecting candidate 2's minimal headword-block-only form preserving the `(probably also Ptaḥḥotp)` alt-name annotation in notes (NOT in occupant_alt_names since PM hedges with `probably`) + father cross-ref `Akhtiḥotp (tomb D 64,a)`. Drop body-prose object catalog (Pillared Hall scenes, offering-table Cairo CG 1332).",
@@ -1709,65 +1803,5 @@
   "TPC-Shema|notes_from_pm": {
     "rationale": "PM III.2 2nd ed. 1978/1981, printed p. 558 (chunk-22). PM literal headword: `SHEMA (father and son) and IPISENBES (woman). Dyn. VI or 1st Int. Period. South of the Temple.` Per source-wide convention occupant_name is dropped from notes, BUT in this unusual `(father and son)` homonymous joint-headword case, dropping `Shema` would lose the disambiguation between the father-Shema (primary occupant) and son-Shema (co-occupant). Selecting form 1 which preserves the full PM-literal headword. Drop sub-feature trailers (`(a) Fragments of side-pieces...`).",
     "value": "Shema (father and son) and Ipisenbes (woman). Dyn. VI or 1st Int. Period. South of the Temple."
-  },
-  "SAQ-Ankhefensekhmet|co_occupants": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Ankhefensekhmet co_occupants. PM III.2 2nd ed. 1978/1981, printed p.709 (phys p.349). Source text: 'Wife, Ḥatḥoremlẉet'. Agent A emitted [] (empty — missed the wife entry entirely). Agent B emitted ['Ḥaṯḥoremḥet'] (ṯ substituted for th). Agent C emitted ['Ḥathoremḥet'] (plain th, no underdot-ḥ on 'hat'). Source OCR renders 'Ḥatḥoremlẉet': the initial Ḥ has underdot, the medial 'h' in '-ḥet' also has underdot per ḥ-root convention. Neither B (ṯ) nor C (no underdot) fully matches source; C is closer in letter sequence than B's ṯ substitution. Selecting C's form as the best available agent emission — the ṯ in B is a transliteration error not in source. A's empty list is excluded as the wife is explicitly attested. The cosmetic diacritic imprecision in C is noted for egyptologist review.",
-    "value": ["Ḥathoremḥet"]
-  },
-  "SAQ-Ankhefensekhmet|notes_from_pm": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Ankhefensekhmet notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.709 (phys p.349). Source: 'Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremlẉet.' Agent A: 'Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremḥet.' Agent B: '...Wife, Ḥaṯḥoremḥet.' Agent C: '...Wife, Ḥathoremḥet.' A has underdot-ḥ on both ḥ-roots in the wife name (closest to source), plus the correct occupation and dynasty. B has a ṯ substitution error. Selecting A as the agent emission that best matches source OCR for the wife name spelling.",
-    "value": "Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremḥet."
-  },
-  "SAQ-FamilyTombPedesi|co_occupants": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-FamilyTombPedesi co_occupants. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source: 'Sarcophagi. Pedesi [...] son of Pashe(n)tiḥet [...] and Neitiyti [...]. Nekhtnebef [...] son of Pedesi [...] and Herubaste.' The occupant is Pedesi; the co-occupants are his parents (Pashe(n)tiḥet, Neitiyti) and his son/Herubaste (Nekhtnebef, Herubaste). Agent A emitted ['Pedesi', 'Neitiyti', 'Nekhtnebef', 'Herubaste'] — wrongly includes the primary occupant Pedesi in co_occupants. Agent B emitted ['Nekhtnebef', 'Herubaste'] — drops parents. Agent C emitted ['Pashe(n)tiḥet', 'Neitiyti', 'Nekhtnebef', 'Herubaste'] — correctly includes parents and excludes the main occupant from co_occupants. Selecting C.",
-    "value": ["Pashe(n)tiḥet", "Neitiyti", "Nekhtnebef", "Herubaste"]
-  },
-  "SAQ-FamilyTombPedesi|co_occupant_roles": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-FamilyTombPedesi co_occupant_roles, length-coupled with co_occupants override above. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source gives roles: Pashe(n)tiḥet = 'Commander of the army' (father of Pedesi); Neitiyti = 'Sistrum-player of Neith' (mother); Nekhtnebef = 'son of Pedesi, [both] First generals of His Majesty'; Herubaste = unnamed role. Agent A emitted 4 elements but includes Pedesi wrongly as first. Agent B emitted only 2 (Nekhtnebef + Herubaste). Agent C emitted ['Father, Commander of the army', 'Mother, Sistrum-player of Neith', 'Son, First general of His Majesty', 'Joint occupant'] — matches co_occupants override order (C) and provides gendered role prefixes consistent with source. Selecting C.",
-    "value": ["Father, Commander of the army", "Mother, Sistrum-player of Neith", "Son, First general of His Majesty", "Joint occupant"]
-  },
-  "SAQ-FamilyTombPedesi|notes_from_pm": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-FamilyTombPedesi notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Agent A emitted only 'Dyn. XXVIII-XXX or early Ptolemaic. Probably north-east of the Step Pyramid.' (truncated — drops sarcophagi detail). Agent B emitted the same prefix + 'Pedesi, First general [...] Nekhtnebef [...] and Herubaste.' Agent C emitted the same prefix + 'Sarcophagi: Pedesi [...]' (with 'Sarcophagi:' label from source). Source text uses 'Sarcophagi.' as a section label. C preserves 'Sarcophagi:' from the source layout; A drops it entirely. Selecting C as the fullest and most source-faithful emission.",
-    "value": "Dyn. XXVIII-XXX or early Ptolemaic. Probably north-east of the Step Pyramid. Sarcophagi: Pedesi, First general of His Majesty, son of Pashe(n)tiḥet, Commander of the army, and Neitiyti, Sistrum-player of Neith. Nekhtnebef, son of Pedesi, both First generals of His Majesty, and Herubaste."
-  },
-  "SAQ-Henat|occupant_alt_names": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Henat occupant_alt_names. PM III.2 2nd ed. 1978/1981, printed p.718 (phys p.358). Source headword: 'HENAT KHNEMEBRE<-MEN'' — OCR rendering of KHNEMEBREꜤ-MENʿ (two ʿayin marks). Agent A: ['Khnemebrēʿ-men'] (macron on ē, lowercase m, missing terminal ʿ). Agent B: ['Khnmbēreʿ-Menʿ'] (missing 'e' after Khn, has both ʿ marks, capital M, macron). Agent C: ['Khnemebrēʿ-Menʿ'] (full spelling, macron on ē, capital M, both ʿ marks). Source has no macrons in original Latin-script transliteration but the name structure KHNEMEBREꜤ-MENʿ is clearly two-part. C has the fullest spelling with both ʿ marks and the correct capital-M second element. Selecting C.",
-    "value": ["Khnemebrēʿ-Menʿ"]
-  },
-  "SAQ-Ipy|co_occupant_roles": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Ipy co_occupant_roles. PM III.2 2nd ed. 1978/1981, printed p.702 (phys p.342). Source verbatim: 'Father, Amenḥotp Ḥuy (tomb, see supra).' Agent A: 'Father, Chief steward in Memphis, etc.' (substituted the father's occupational title for the source's cross-reference parenthetical). Agent B: 'Father' (drops the cross-reference). Agent C: 'Father (tomb, see supra)' (preserves the source's parenthetical cross-reference '(tomb, see supra)' without the father's name, which belongs in co_occupants not co_occupant_roles). Selecting C — it preserves the source cross-reference text '(tomb, see supra)' that PM uses to point back to the AmenhotpHuy entry.",
-    "value": ["Father (tomb, see supra)"]
-  },
-  "SAQ-Meryre|co_occupant_roles": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Meryre co_occupant_roles. PM III.2 2nd ed. 1978/1981, printed p.705 (phys p.345). Source: 'Wife, Beketamun Bakt.' Agent A: 'Wife, Bakt' (drops the first name, keeps only the second/alt name). Agent B: 'Wife' (drops both name forms). Agent C: 'Wife (also known as Bakt)' (paraphrases with editorial parenthetical not in source). Source gives 'Beketamun Bakt' as two names in apposition. Agent A is closest — it retains one name token (though the wrong one; 'Bakt' is the second name and 'Beketamun' is primary per PM listing order). Per strict-subset-of-agent-emission rule, selecting A as it preserves more content than B while avoiding C's invented editorial parenthetical. Egyptologist should verify whether 'Beketamun' or 'Bakt' is the primary name.",
-    "value": ["Wife, Bakt"]
-  },
-  "SAQ-Neferronpet|co_occupants": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Neferronpet co_occupants. PM III.2 2nd ed. 1978/1981, printed p.706 (phys p.346). Source: 'Parents, Neferronpet and Ḳafiriati. Wife, Mut-pipu.' Agent A: ['Mut-pipu'] (drops parents entirely). Agent B: ['Neferronpet', 'Ḳafiriati', 'Mut-pipu'] (includes both parents + wife, matches source; uses ḳ for first phoneme of Ḳafiriati matching source). Agent C: ['Neferronpet', 'Ḥafiriati', 'Mut-pipu'] (substitutes ḥ for ḳ — a substantive phoneme divergence from source). Agent B matches source exactly on both content and the ḳ consonant. Selecting B. Note: C's ḥ/ḳ substitution on Ḳafiriati is a substantive error, not a cosmetic diacritic difference — flagged for egyptologist.",
-    "value": ["Neferronpet", "Ḳafiriati", "Mut-pipu"]
-  },
-  "SAQ-Patenemhab|co_occupant_roles": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Patenemhab co_occupant_roles. PM III.2 2nd ed. 1978/1981, printed p.707 (phys p.347). Source: 'Mother(?), Merytptaḥ. Wife, Tipuy, Songstress of Amūn.' The '(?)' question-mark belongs inside the role string immediately after 'Mother', no space. Agent A: ['Mother(?)', 'Wife, Songstress of Amūn'] — matches source exactly with no space before '(?)'. Agent B: ['Mother', 'Wife, Songstress of Amūn'] — drops the '(?)' certainty marker. Agent C: ['Mother (?)', 'Wife, Songstress of Amūn'] — inserts a space before '(?)'. Source has no space between 'Mother' and '(?)'. Selecting A as the source-faithful form.",
-    "value": ["Mother(?)", "Wife, Songstress of Amūn"]
-  },
-  "SAQ-PtahmosiDirectorOfCraftsmen|co_occupants": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-PtahmosiDirectorOfCraftsmen co_occupants. PM III.2 2nd ed. 1978/1981, printed p.711 (phys p.351). Source: 'Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi.' Agent A emitted [] (empty — dropped parents entirely). Agent B emitted ['Ḥntmosi', 'Tawi'] (corrupts Ḏḥutmosi to Ḥntmosi, dropping the leading Ḏḥ- prefix). Agent C emitted ['Ḏḥwtmosi', 'Tawi'] (preserves Ḏḥ- prefix but uses 'w' rather than 'u': Ḏḥwtmosi vs source Ḏḥutmosi). C's form is closest to source — it preserves the Ḏḥ- prefix that B dropped entirely. Selecting C. Cosmetic 'w'/'u' difference in Ḏḥwtmosi vs Ḏḥutmosi flagged for egyptologist review.",
-    "value": ["Ḏḥwtmosi", "Tawi"]
-  },
-  "SAQ-PtahmosiDirectorOfCraftsmen|notes_from_pm": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-PtahmosiDirectorOfCraftsmen notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.711 (phys p.351). Source: 'Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi.' Agent A: '...Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi.' (correct Ḏḥutmosi spelling). Agent B: '...Parents, Ḥntmosi, Governor of the town, Vizier, etc., and Tawi.' (corrupted to Ḥntmosi). Agent C: '...Parents, Ḏḥwtmosi, Governor of the town, Vizier, etc., and Tawi.' (Ḏḥwtmosi — preserves Ḏḥ- prefix). Agent A's 'Ḏḥutmosi' is the closest to source. Selecting A.",
-    "value": "Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi."
-  },
-  "SAQ-RamesesEmperre|co_occupants": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-RamesesEmperre co_occupants. PM III.2 2nd ed. 1978/1981, printed p.715 (phys p.355). Source: 'Father, Yupaʿa. Wife, Esi(?), Songstress of Amun.' Agent A: ['Yupaʿa', 'Esi(?)'] — matches source: Yupaʿa (no macron) and Esi(?) with question mark. Agent B: ['Yupaʿa', 'Esi'] — drops the '(?)' certainty qualifier on Esi. Agent C: ['Yupāʿa', 'Esi(?)'] — adds a macron on 'ā' in Yupāʿa not present in source. Agent A matches source on both names exactly. Selecting A.",
-    "value": ["Yupaʿa", "Esi(?)"]
-  },
-  "SAQ-Thaibanebdedetimu|co_occupant_roles": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Thaibanebdedetimu co_occupant_roles, length-coupled with notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source: 'Parents, Es-ḥatmeḥit, wp-n~rwy, etc., and Takhuti' (OCR '~' is a hieroglyphic sign between 'wp-n' and 'rwy'). Agent A emitted [] (empty — dropped parents). Agent B emitted ['Father', 'Mother'] (no epithet on father). Agent C emitted ['Father, wp-n-nrwy, etc.', 'Mother'] (includes partial epithet with hyphenated 'wp-n-nrwy'). Source has wp-n[sign]rwy as Es-ḥatmeḥit's title; C's 'wp-n-nrwy, etc.' preserves the structure though the middle character is imprecise. Selecting C as it preserves the source epithet structure better than B's bare 'Father'.",
-    "value": ["Father, wp-n-nrwy, etc.", "Mother"]
-  },
-  "SAQ-Thaibanebdedetimu|notes_from_pm": {
-    "rationale": "1/1/1 tie on chunk-32 SAQ-Thaibanebdedetimu notes_from_pm. PM III.2 2nd ed. 1978/1981, printed p.719 (phys p.359). Source: 'Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-n~rwy, etc., and Takhuti.' Agent A: 'Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-nḏrwy, etc., and Takhuti.' (uses ḏ in wp-nḏrwy). Agent B: 'Dyn. XXVI. Parents, Es-ḥatmeḥit and Takhuti.' (drops the epithet wp-n~rwy entirely). Agent C: 'Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-n-nrwy, etc., and Takhuti.' (hyphenated wp-n-nrwy, drops ḏ). Source OCR has 'wp-n~rwy' where '~' is an illegible hieroglyphic sign. A's 'ḏ' is a plausible egyptological reading (wp-nḏrwy = 'he who separates the two countries', an attested epithet); C's hyphenated form without ḏ is less precise. Selecting A as the form that preserves the most egyptologically defensible reading of the epithet. Egyptologist should verify the correct reading of the medial sign.",
-    "value": "Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-nḏrwy, etc., and Takhuti."
   }
 }

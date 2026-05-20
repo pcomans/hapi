@@ -1046,7 +1046,25 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK19_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
-        elif row["tomb_id"] in CHUNK4_TOMB_IDS | CHUNK5_TOMB_IDS | CHUNK12_TOMB_IDS | CHUNK20_TOMB_IDS | CHUNK21_TOMB_IDS | CHUNK22_TOMB_IDS | CHUNK23_TOMB_IDS | CHUNK24_TOMB_IDS | CHUNK25_TOMB_IDS | CHUNK26_TOMB_IDS | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS | CHUNK32_TOMB_IDS:
+        elif row["tomb_id"] in (
+            CHUNK4_TOMB_IDS
+            | CHUNK5_TOMB_IDS
+            | CHUNK12_TOMB_IDS
+            | CHUNK20_TOMB_IDS
+            | CHUNK21_TOMB_IDS
+            | CHUNK22_TOMB_IDS
+            | CHUNK23_TOMB_IDS
+            | CHUNK24_TOMB_IDS
+            | CHUNK25_TOMB_IDS
+            | CHUNK26_TOMB_IDS
+            | CHUNK27A_TOMB_IDS
+            | CHUNK27B_TOMB_IDS
+            | CHUNK28_TOMB_IDS
+            | CHUNK29_TOMB_IDS
+            | CHUNK30_TOMB_IDS
+            | CHUNK31_TOMB_IDS
+            | CHUNK32_TOMB_IDS
+        ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_2, row
 
 

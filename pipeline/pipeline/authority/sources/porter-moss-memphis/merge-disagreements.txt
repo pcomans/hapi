@@ -688,7 +688,7 @@ SAQ-AmenhotpHuy (Amenhotp):
 
 SAQ-Ankhefensekhmet (ʿAnkhefensekhmet):
   co_occupant_roles: a=[] | b=["Wife"] | c=["Wife"]  → chose ["Wife"]
-  co_occupants: a=[] | b=["Ḥaṯḥoremḥet"] | c=["Ḥathoremḥet"]  → chose ["Ḥathoremḥet"]
+  co_occupants: a=[] | b=["Ḥaṯḥoremḥet"] | c=["Ḥathoremḥet"]  → chose ["Ḥatḥoremḥet"]
   notes_from_pm: a="Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremḥet." | b="Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥaṯḥoremḥet." | c="Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥathoremḥet."  → chose "Prophet of Sekhmet of the Acacia-tree and of Ptaḥ. Dynasty XXVII. Wife, Ḥatḥoremḥet."
 
 SAQ-Ankhi (ʿAnkhi):
@@ -1002,7 +1002,7 @@ SAQ-MeryIsesi (Mery-Isesi):
   notes_from_pm: a="Supervisor and Inspector of prophets of the Pyramid of Unis. Early Dyn. VI. Mastaba usurped from Seshemnufer." | b="Supervisor and Inspector of prophets of the Pyramid of Unis. Early Dyn. VI. Mastaba usurped from Seshemnufer. Map LXI. Plan LXIII." | c="Supervisor and Inspector of prophets of the Pyramid of Unis. Early Dyn. VI. Map LXI. Plan LXIII. Usurped mastaba of Seshemnufer. Room I with five estates; Room II with false-door."  → chose "Supervisor and Inspector of prophets of the Pyramid of Unis. Early Dyn. VI. Mastaba usurped from Seshemnufer."
 
 SAQ-Meryre (Meryreʿ):
-  co_occupant_roles: a=["Wife, Bakt"] | b=["Wife"] | c=["Wife (also known as Bakt)"]  → chose ["Wife, Bakt"]
+  co_occupant_roles: a=["Wife, Bakt"] | b=["Wife"] | c=["Wife (also known as Bakt)"]  → chose ["Wife (also known as Bakt)"]
   notes_from_pm: a="Steward, Overseer of nurses of the Good God, etc. Probably temp. Amenophis III. Wife, Beketamun (Bakt)." | b="Steward, Overseer of nurses of the Good God, etc. Probably temp. Amenophis III. Wife, Beketamun Bakt." | c="Steward, Overseer of nurses of the Good God, etc. Probably temp. Amenophis III. Wife, Beketamun Bakt."  → chose "Steward, Overseer of nurses of the Good God, etc. Probably temp. Amenophis III. Wife, Beketamun Bakt."
   occupant_name: a="Meryre'" | b="Meryreʿ" | c="Meryreʿ"  → chose "Meryreʿ"
 
@@ -1203,7 +1203,7 @@ SAQ-PtahmosiChiefSteward (Ptahmosi):
 SAQ-PtahmosiDirectorOfCraftsmen (Ptahmosi):
   co_occupant_roles: a=[] | b=["Father, Governor of the town, Vizier, etc.", "Mother"] | c=["Father, Governor of the town, Vizier, etc.", "Mother"]  → chose ["Father, Governor of the town, Vizier, etc.", "Mother"]
   co_occupants: a=[] | b=["Ḥntmosi", "Tawi"] | c=["Ḏḥwtmosi", "Tawi"]  → chose ["Ḏḥwtmosi", "Tawi"]
-  notes_from_pm: a="Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi." | b="Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḥntmosi, Governor of the town, Vizier, etc., and Tawi." | c="Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥwtmosi, Governor of the town, Vizier, etc., and Tawi."  → chose "Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi."
+  notes_from_pm: a="Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥutmosi, Governor of the town, Vizier, etc., and Tawi." | b="Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḥntmosi, Governor of the town, Vizier, etc., and Tawi." | c="Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥwtmosi, Governor of the town, Vizier, etc., and Tawi."  → chose "Greatest of the directors of craftsmen, etc. Temp. Amenophis III. Parents, Ḏḥwtmosi, Governor of the town, Vizier, etc., and Tawi."
 
 SAQ-Ptahshepses (Ptaḥshepses):
   notes_from_pm: a="King's son, Hereditary prince. End of Dyn. V. In the Valley Temple." | b="King's son, Hereditary prince. End of Dyn. V. In the Valley Temple. Sarcophagus, uninscribed, schist, found on pavement of terrace, in Cairo Mus. JE 87077. Gold belt with inlaid inscribed plaque, found on mummy, in Cairo Mus. JE 87078." | c="King's son, Hereditary prince. End of Dyn. V. In the Valley Temple. Uninscribed schist sarcophagus, found on pavement of terrace, in Cairo Mus. JE 87077. Gold belt with inlaid inscribed plaque, found on mummy, in Cairo Mus. JE 87078."  → chose "King's son, Hereditary prince. End of Dyn. V. In the Valley Temple."
@@ -1341,7 +1341,7 @@ SAQ-TetiNeferheres (Teti):
 SAQ-Thaibanebdedetimu (Thaibanebdedetimu):
   co_occupant_roles: a=[] | b=["Father", "Mother"] | c=["Father, wp-n-nrwy, etc.", "Mother"]  → chose ["Father, wp-n-nrwy, etc.", "Mother"]
   co_occupants: a=[] | b=["Es-ḥatmeḥit", "Takhuti"] | c=["Es-ḥatmeḥit", "Takhuti"]  → chose ["Es-ḥatmeḥit", "Takhuti"]
-  notes_from_pm: a="Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-nḏrwy, etc., and Takhuti." | b="Dyn. XXVI. Parents, Es-ḥatmeḥit and Takhuti." | c="Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-n-nrwy, etc., and Takhuti."  → chose "Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-nḏrwy, etc., and Takhuti."
+  notes_from_pm: a="Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-nḏrwy, etc., and Takhuti." | b="Dyn. XXVI. Parents, Es-ḥatmeḥit and Takhuti." | c="Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-n-nrwy, etc., and Takhuti."  → chose "Dyn. XXVI. Parents, Es-ḥatmeḥit, wp-n-nrwy, etc., and Takhuti."
   occupant_role: a="Unknown" | b="Unknown" | c="Official"  → chose "Unknown"
 
 SAQ-Thau (Thau):
