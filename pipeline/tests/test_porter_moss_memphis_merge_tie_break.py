@@ -1083,6 +1083,25 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-RamesesEmperre", "co_occupants"),
         ("SAQ-Thaibanebdedetimu", "co_occupant_roles"),
         ("SAQ-Thaibanebdedetimu", "notes_from_pm"),
+        # Chunk 33 (PM III.2 § I PYRAMIDS Dahshûr, sections A-F):
+        # 5 notes_from_pm ties resolved. All 6 rows are royal pyramid
+        # complexes with minimal headword entries (Lepsius citation +
+        # popular name only). notes_from_pm 1/1/1 ties arise because
+        # agents differed on: (A) whether to append the full section-
+        # letter parenthetical block; (B) whether to prepend the
+        # section-letter header prefix; (C) whether to include only the
+        # PYRAMID-entry-level minimal text. Sesostris III (DAH-Sesostris3)
+        # resolved 2/3 majority (B+C agreed on \"Lepsius, XLVII.\") —
+        # no override needed for that row. All 5 overrides select the
+        # most minimal PM-faithful form per source-wide shortest-minimal
+        # convention (chunks 19-32). DAH-PyramidE selects B's all-caps
+        # form matching PM's printed all-caps section header. Strict
+        # subset of agent emission verified for all 5 entries.
+        ("DAH-SnefruNorthernComplex", "notes_from_pm"),
+        ("DAH-SnefruSouthernComplex", "notes_from_pm"),
+        ("DAH-Amenemhet2", "notes_from_pm"),
+        ("DAH-Amenemhet3", "notes_from_pm"),
+        ("DAH-PyramidE", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
