@@ -2177,6 +2177,36 @@ CHUNK31_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
             "Strict-subset-of-agent-A-emission (NOT synthesis)."
         ),
     },
+    # F2 — class-defect sweep follow-up per scope-accountability-
+    # enforcer audit on PR #255 round 2. Gemini round 2 flagged 2
+    # rows with macron-Ū dropped on Amūn; sweep across all 12
+    # chunk-31 rows for the same class of defect (agent A
+    # preserved a diacritic that the 2/1 majority dropped) found
+    # one additional row not flagged by Gemini: SAQ-Pay co_occupants
+    # `Amenemhab` → `Amenemḥab` (underdot-Ḥ preservation per
+    # co_occupants source-wide convention; chunks 14/15/22/26/30
+    # all preserve underdot-Ḥ on co_occupant names like
+    # Ḥetepḥeres, Ḥeneni, Ḥathor). The 2/1 majority chose the
+    # stripped form; agent A's `Amenemḥab` matches PM notes
+    # (which already preserves the underdot via fix_rows ḥ-rule)
+    # and is the PM-faithful canonical form.
+    ("SAQ-Pay", "co_occupants"): {
+        "value": ["Amenemḥab"],
+        "rationale": (
+            "PM III.2 printed p.654; class-defect sweep follow-up "
+            "to Gemini PR #255 round-2 findings 3270564704 + "
+            "3270564711. Agent A: `Amenemḥab` (underdot-Ḥ "
+            "preserved per PM source `Amenem}:lab` text-layer "
+            "OCR). Agents B + C: stripped to `Amenemhab`. Per "
+            "source-wide co_occupants convention (chunks "
+            "14/15/22/26/30 — Ḥetepḥeres, Ḥeneni, Ḥathor, "
+            "Ḥepetka, Ḥetephernefert all preserve underdot-Ḥ "
+            "in co_occupants): the underdot-Ḥ MUST be preserved "
+            "in co_occupants for intra-row consistency with "
+            "notes_from_pm and cross-source Phase-A name matching. "
+            "Strict-subset-of-agent-A-emission (NOT synthesis)."
+        ),
+    },
 }
 
 
