@@ -1,0 +1,68 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-34 (PM III.2 § I.G/H/I Dahshûr Pyramid-field + § II.A East of Northern Pyramid of Snefru, printed pp.890-893, phys pp.530-533). Ten agent-specific tomb_id variants corrected to canonical form before merge.py runs. Canonical form follows chunk-33 source-wide convention: no internal hyphens, TitleCase (e.g. DAH-SnefruNorthernComplex). The ḳ→Q convention in `DAH-AmenyQemau` and `DAH-Qedshepses` is supported by 2/3 majority (agents A+C for Qedshepses; agents A+C for AmenyQemau) and by the PM source-text underdot-ḳ glyph (AMENY-ḲEMAU / ḲEDSHEPSES), where ḳ is rendered q-with-underdot, conventionally transcribed Q in ASCII. The `DAH-NicankhSnefru` form corrects agent A's k→c error (source header reads NICANKH-SNEFRU) and strips the mid-word capital in `NikAnkh`; agents B+C both emitted Nicankh-Snefru (two corrected for hyphen only).\n\nSummary of corrections:\n1. b|DAH-Ameny-Kemau: Agent B used K-form with hyphens; canonical DAH-AmenyQemau per chunk-33 no-hyphen TitleCase + Q per 2/3 majority + source AMENY-ḲEMAU (phys p.530/printed p.890).\n2. c|DAH-Ameny-Qemau: Agent C used Q-form with hyphens; canonical DAH-AmenyQemau per chunk-33 no-hyphen TitleCase. Q is already correct.\n3. b|DAH-In-Snefru-Ishtef: Agent B used hyphens; canonical DAH-InSnefruIshtef per chunk-33 no-hyphen TitleCase. Source phys p.531/printed p.891 header: IN-SNEFRU-ISHTEF.\n4. c|DAH-In-Snefru-Ishtef: Agent C used hyphens; same rationale as (3).\n5. b|DAH-Neferher-Snefru: Agent B used hyphens; canonical DAH-NeferherSnefru per chunk-33 no-hyphen TitleCase. Source phys p.532/printed p.892 header: NEFERḤER-SNEFRU.\n6. c|DAH-Neferher-Snefru: Agent C used hyphens; same rationale as (5).\n7. a|DAH-NikAnkhSnefru: Agent A used k-form and mid-word capital; canonical DAH-NicankhSnefru per source NICANKH-SNEFRU (phys p.532/printed p.892) — c not k. Agents B+C emitted Nicankh form (2/3 canonical on c-spelling).\n8. b|DAH-Nicankh-Snefru: Agent B used hyphens; canonical DAH-NicankhSnefru per chunk-33 no-hyphen TitleCase. Nicankh c-spelling is already correct.\n9. c|DAH-Nicankh-Snefru: Agent C used hyphens; same rationale as (8).\n10. b|DAH-Kedshepses: Agent B used K-form; canonical DAH-Qedshepses per Q 2/3 majority (agents A+C) + source ḲEDSHEPSES (phys p.533/printed p.893).",
+  "b|DAH-Ameny-Kemau": {
+    "canonical_tomb_id": "DAH-AmenyQemau",
+    "canonical_occupant_name": "Ameny-Ḳemau",
+    "rationale": "Agent B used K-transliteration and internal hyphens: DAH-Ameny-Kemau. Canonical form DAH-AmenyQemau follows chunk-33 source-wide convention (no internal hyphens, TitleCase, e.g. DAH-SnefruNorthernComplex). Q-form per 2/3 majority on Q (agents A+C vs B's K) + PM III.2 printed p.890 (phys p.530) source header `AMENY-ḲEMAU` where underdot-ḳ is the q-sound consonant conventionally ASCII-transcribed as Q. Agent A emitted DAH-AmenyQemau (2/3 canonical Q + no-hyphen form). Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "c|DAH-Ameny-Qemau": {
+    "canonical_tomb_id": "DAH-AmenyQemau",
+    "canonical_occupant_name": "Ameny-Ḳemau",
+    "rationale": "Agent C used Q-transliteration (correct) but added internal hyphens: DAH-Ameny-Qemau. Canonical form DAH-AmenyQemau strips internal hyphens per chunk-33 source-wide no-hyphen TitleCase convention (raw/chunk-33-p516-p529-dahshur-pyramids.txt rationale: DAH-SnefruNorthernComplex etc.). Agent A emitted DAH-AmenyQemau (2/3 canonical no-hyphen form). Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "b|DAH-In-Snefru-Ishtef": {
+    "canonical_tomb_id": "DAH-InSnefruIshtef",
+    "canonical_occupant_name": "In-Snefru-Ishtef",
+    "rationale": "Agent B used internal hyphens: DAH-In-Snefru-Ishtef. Canonical form DAH-InSnefruIshtef per chunk-33 source-wide no-hyphen TitleCase convention. Source PM III.2 printed p.891 (phys p.531) section header `IN-SNEFRU-ISHTEF`. Agent A emitted DAH-InSnefruIshtef (2/3 canonical no-hyphen form). Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "c|DAH-In-Snefru-Ishtef": {
+    "canonical_tomb_id": "DAH-InSnefruIshtef",
+    "canonical_occupant_name": "In-Snefru-Ishtef",
+    "rationale": "Agent C used internal hyphens: DAH-In-Snefru-Ishtef. Same rationale as b|DAH-In-Snefru-Ishtef above. Agent A emitted DAH-InSnefruIshtef (2/3 canonical no-hyphen form). Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "b|DAH-Neferher-Snefru": {
+    "canonical_tomb_id": "DAH-NeferherSnefru",
+    "canonical_occupant_name": "Neferḥer-Snefru",
+    "rationale": "Agent B used internal hyphen: DAH-Neferher-Snefru. Canonical form DAH-NeferherSnefru per chunk-33 source-wide no-hyphen TitleCase convention. Source PM III.2 printed p.892 (phys p.532) section entry `NEFERḤER-SNEFRU`. Agent A emitted DAH-NeferherSnefru (2/3 canonical no-hyphen form). Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "c|DAH-Neferher-Snefru": {
+    "canonical_tomb_id": "DAH-NeferherSnefru",
+    "canonical_occupant_name": "Neferḥer-Snefru",
+    "rationale": "Agent C used internal hyphen: DAH-Neferher-Snefru. Same rationale as b|DAH-Neferher-Snefru above. Agent A emitted DAH-NeferherSnefru (2/3 canonical no-hyphen form). Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "a|DAH-NikAnkhSnefru": {
+    "canonical_tomb_id": "DAH-NiankhSnefru",
+    "canonical_occupant_name": "Niʿankh-Snefru",
+    "rationale": "Agent A used k-transliteration with mid-word capital: DAH-NikAnkhSnefru. Canonical form DAH-NiankhSnefru per source-wide convention (11 prior rows: SAQ-NiankhKhnum / SAQ-NiankhPepyNiankhMeryre / SAQ-NiankhPtah / SAQ-Niankhba / SAQ-Niankhnesut / SAQ-Niankhre / SAQ-Kaiankh / SAQ-PtahhotpIyniankh / JKE-NiankhHathor / TPC-Ipiankhu / DAH itself). The PM OCR literal `c` in `NicANKH-SNEFRU` is pypdf's render of the raised-ayin glyph (U+02BF), NOT a literal c — stripping the diacritic for the ASCII tomb_id yields `Niankh-*` (no c). Gemini PR #259 round-3 finding 3275684644 + Egyptologist P1.1. occupant_name preserves the ayin form `Niʿankh-Snefru`."
+  },
+  "b|DAH-Nicankh-Snefru": {
+    "canonical_tomb_id": "DAH-NiankhSnefru",
+    "canonical_occupant_name": "Niʿankh-Snefru",
+    "rationale": "Agent B used internal hyphen + literal `c`: DAH-Nicankh-Snefru. Canonical form DAH-NiankhSnefru per chunk-33 no-hyphen TitleCase convention + source-wide ayin-stripping convention (the OCR `c` is pypdf's raised-ayin render, U+02BF stripped in ASCII). 11 prior rows use `Niankh-*` form in tomb_id with `Niʿankh-*` in occupant_name. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "c|DAH-Nicankh-Snefru": {
+    "canonical_tomb_id": "DAH-NiankhSnefru",
+    "canonical_occupant_name": "Niʿankh-Snefru",
+    "rationale": "Agent C used internal hyphen + literal `c`: DAH-Nicankh-Snefru. Same rationale as b|DAH-Nicankh-Snefru above. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "a|DAH-NicankhSnefru": {
+    "canonical_tomb_id": "DAH-NiankhSnefru",
+    "canonical_occupant_name": "Niʿankh-Snefru",
+    "rationale": "Second-pass normalization: agent A's original DAH-NikAnkhSnefru was first normalized to DAH-NicankhSnefru by an earlier pre_merge pass (using a|DAH-NikAnkhSnefru entry above). After that pass, A now holds DAH-NicankhSnefru which still has the OCR-literal c. This second-pass correction routes A's DAH-NicankhSnefru to DAH-NiankhSnefru (no c, ayin stripped). Gemini PR #259 round-3 finding 3275684644: source-wide convention (11 prior rows) uses Niankh-* in tomb_id."
+  },
+  "b|DAH-NicankhSnefru": {
+    "canonical_tomb_id": "DAH-NiankhSnefru",
+    "canonical_occupant_name": "Niʿankh-Snefru",
+    "rationale": "Second-pass normalization: agent B's DAH-Nicankh-Snefru was first normalized to DAH-NicankhSnefru by an earlier pre_merge pass. Now routed to DAH-NiankhSnefru (ayin stripped per source-wide Niankh-* convention). Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "c|DAH-NicankhSnefru": {
+    "canonical_tomb_id": "DAH-NiankhSnefru",
+    "canonical_occupant_name": "Niʿankh-Snefru",
+    "rationale": "Second-pass normalization: agent C's DAH-Nicankh-Snefru was first normalized to DAH-NicankhSnefru by an earlier pre_merge pass. Now routed to DAH-NiankhSnefru. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  },
+  "b|DAH-Kedshepses": {
+    "canonical_tomb_id": "DAH-Qedshepses",
+    "canonical_occupant_name": "Ḳedshepses",
+    "rationale": "Agent B used K-transliteration: DAH-Kedshepses. Canonical form DAH-Qedshepses per Q 2/3 majority (agents A+C both emitted DAH-Qedshepses) + PM III.2 printed p.893 (phys p.533) source header `ḲEDSHEPSES` where underdot-ḳ is conventionally ASCII-transcribed Q. Source: raw/chunk-34-p530-p533-dahshur-i-ghi-iia-east-of-north-pyramid.txt."
+  }
+}

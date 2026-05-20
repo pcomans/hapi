@@ -2256,9 +2256,66 @@ DAH-Amenemhet3 (Amenemḥet III):
   notes_from_pm: a="Lepsius, LVIII; Black Pyramid. PYRAMID-COMPLEX OF AMENEMḤET III (F)." | b="F. PYRAMID-COMPLEX OF AMENEMḤET III. PYRAMID. Lepsius, LVIII; Black Pyramid." | c="Lepsius, LVIII; Black Pyramid."  → chose "Lepsius, LVIII; Black Pyramid."
   tomb_aliases: a=["Black Pyramid", "Lepsius LVIII"] | b=[] | c=[]  → chose []
 
+DAH-AmenyQemau (Ameny-Ḳemau):
+  notes_from_pm: a="Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; LECLANT in ib. N.S. 27 (1958), pp. 81-2; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174." | b="Pyramid of Ameny-Ḳemau. Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]." | c="Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]."  → chose "Dyn. XIII. MARAGIOGLIO and RINALDI in Orientalia, N.S. 37 (1968), pp. 325-38; LECLANT in ib. N.S. 27 (1958), pp. 81-2; ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174."
+  section: a=null | b=null | c="I"  → chose null
+
+DAH-InSnefruIshtef (In-Snefru-Ishtef):
+  notes_from_pm: a="Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MoRGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15." | b="Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MORGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15." | c="Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MORGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15."  → chose "Inspector of tenants of the Great House, etc. Dyn. V-VI. DE MORGAN, Dahchour, ii, pp. 4-7. Date, BALCZ in A.Z. 67 (1931), pp. 9-15."
+  section: a=null | b=null | c="II"  → chose null
+
+DAH-Kanufer (Kanufer):
+  attribution_certainty: a="uncertain" | b="probable" | c="attested"  → chose "attested"
+  dynasty: a=null | b="4" | c=null  → chose null
+  notes_from_pm: a="King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Advanced Dyn. IV or later. Wife, Khunesu, King's adorner, etc. DE MoRGAN, Dahchour, ii, p. 23. Dating as end Dyn. VI to Dyn. VIII, ScHMITZ, Untersuchungen zum Titel s1-njSwt 'Konigssohn', pp. 145-9." | b="King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Also Chief Justice and Vizier, in unclear context. Advanced Dyn. IV or later. Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 145-9 [II]. Wife, Khunesu, King's adorner, etc." | c="King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Also Chief Justice and Vizier. Advanced Dyn. IV or later. Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel S3-njSwt 'Konigssohn', pp. 145-9 [II]. DE MORGAN, Dahchour, ii, p. 23."  → chose "King's eldest son of his body, Overseer of the Pyramid of Snefru, etc. Also Chief Justice and Vizier, in unclear context. Advanced Dyn. IV or later. Dating as end Dyn. VI to Dyn. VIII, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 145-9 [II]. Wife, Khunesu, King's adorner, etc."
+  occupant_role: a="Prince" | b="Prince" | c="Vizier"  → chose "Prince"
+  section: a=null | b=null | c="II"  → chose null
+
+DAH-MorganN5 (None):
+  notes_from_pm: a="Probably Dyn. IV. DE MoRGAN, Dahchour, i, p. 9." | b="Probably Dyn. IV. DE MORGAN, Dahchour, i, p. 9." | c="Probably Dyn. IV. DE MORGAN, Dahchour, i, p. 9."  → chose "Probably Dyn. IV. DE MORGAN, Dahchour, i, p. 9."
+  section: a=null | b=null | c="II"  → chose null
+  tomb_aliases: a=[] | b=[] | c=["DE MORGAN 5"]  → chose []
+
+DAH-MorganN7 (None):
+  notes_from_pm: a="Mastaba-group. Probably Dyn. V. DE MoRGAN, Dahchour, i, pp. 11-13. Dating as late Old Kingdom, ScHMITZ, Untersuchungen zum Titel s1-njSwt 'Konigssohn', pp. 150-1." | b="Mastaba-group. Probably Dyn. V. DE MORGAN, Dahchour, i, pp. 11-13. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 150-1 [IV]." | c="Mastaba-group. Probably Dyn. V. DE MORGAN, Dahchour, i, pp. 11-13. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel S3-njSwt 'Konigssohn', pp. 150-1 [IV]."  → chose "Mastaba-group. Probably Dyn. V. DE MORGAN, Dahchour, i, pp. 11-13. Dating as late Old Kingdom, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', pp. 150-1 [IV]."
+  section: a=null | b=null | c="II"  → chose null
+  tomb_aliases: a=[] | b=[] | c=["DE MORGAN 7"]  → chose []
+
+DAH-MorganS24 (None):
+  notes_from_pm: a="Probably Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 18-21." | b="Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 18-21." | c="Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 18-21."  → chose "Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 18-21."
+  section: a=null | b=null | c="II"  → chose null
+  tomb_aliases: a=[] | b=[] | c=["DE MORGAN 24"]  → chose []
+
+DAH-NeferherSnefru (Neferḥer-Snefru):
+  notes_from_pm: a="King's son. Probably Dyn. V or VI. DE MoRGAN, Dahchour, ii, p. 14." | b="King's son. Probably Dyn. V or VI. DE MORGAN, Dahchour, ii, p. 14." | c="King's son. Probably Dyn. V or VI. DE MORGAN, Dahchour, ii, p. 14."  → chose "King's son. Probably Dyn. V or VI. DE MORGAN, Dahchour, ii, p. 14."
+  section: a=null | b=null | c="II"  → chose null
+
+DAH-Neferirtnes (Neferirtnes):
+  notes_from_pm: a="Inspector of tenants of the Great House. Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 10-11." | b="Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11." | c="Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11."  → chose "Inspector of tenants of the Great House. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 10-11."
+  section: a=null | b=null | c="II"  → chose null
+
+DAH-NiankhSnefru (Niʿankh-Snefru):
+  notes_from_pm: a="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 11-12." | b="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12." | c="Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12."  → chose "Judge and Inspector of scribes, etc. Probably Dyn. VI. DE MORGAN, Dahchour, ii, pp. 11-12."
+  section: a=null | b=null | c="II"  → chose null
+
 DAH-PyramidE (None):
   notes_from_pm: a="Lepsius, LIV. PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII (E)." | b="PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII. Lepsius, LIV." | c="Pyramid-enclosure probably of Dynasty XIII. Lepsius, LIV."  → chose "PYRAMID-ENCLOSURE PROBABLY OF DYNASTY XIII. Lepsius, LIV."
   tomb_aliases: a=["Lepsius LIV"] | b=[] | c=[]  → chose []
+
+DAH-PyramidsGH (None):
+  notes_from_pm: a="Pyramids probably of Dynasty XIII. ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174." | b="Pyramids probably of Dynasty XIII. ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]." | c="ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]."  → chose "Pyramids probably of Dynasty XIII. ARNOLD and STADELMANN in Mitt. Kairo, 31 (1975), p. 174 [3]."
+  section: a=null | b=null | c="I"  → chose null
+
+DAH-Qedshepses (Ḳedshepses):
+  dynasty: a=null | b="5" | c=null  → chose null
+  notes_from_pm: a="King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. DE MoRGAN, Dahchour, ii, p. 22. Dating as late Dyn. VI or 1st Int. Period, ScHMITZ, Untersuchungen zum Titel s1-njswt 'Konigssohn', p. 149." | b="King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. Dating as late Dyn. VI or 1st Int. Period, SCHMITZ, Untersuchungen zum Titel sa-njswt 'Konigssohn', p. 149 [III]." | c="King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. Dating as late Dyn. VI or 1st Int. Period, SCHMITZ, Untersuchungen zum Titel S3-njswt 'Konigssohn', p. 149 [III]. DE MORGAN, Dahchour, ii, p. 22."  → chose "King's son of his body, Prophet of Snefru, etc. Probably Dyn. V or later. Dating as late Dyn. VI or 1st Int. Period, SCHMITZ, Untersuchungen zum Titel S3-njswt 'Konigssohn', p. 149 [III]. DE MORGAN, Dahchour, ii, p. 22."
+  occupant_name: a="Ḳedshepses" | b="Ḳedshepses" | c="Qedshepses"  → chose "Ḳedshepses"
+  section: a=null | b=null | c="II"  → chose null
+
+DAH-Seshemnufer (Seshemnufer):
+  notes_from_pm: a="Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 2-3." | b="Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MORGAN, Dahchour, ii, pp. 2-3." | c="Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MORGAN, Dahchour, ii, pp. 2-3."  → chose "Scribe of the royal documents in the presence. 2nd half of Dyn. V or Dyn. VI. DE MORGAN, Dahchour, ii, pp. 2-3."
+  section: a=null | b=null | c="II"  → chose null
+  tomb_aliases: a=[] | b=["DE MORGAN *"] | c=[]  → chose []
 
 DAH-Sesostris3 (Sesostris III):
   notes_from_pm: a="Lepsius, XLVII. PYRAMID-COMPLEX OF SESOSTRIS III (C)." | b="Lepsius, XLVII." | c="Lepsius, XLVII."  → chose "Lepsius, XLVII."
@@ -2274,6 +2331,10 @@ DAH-SnefruSouthernComplex (Snefru):
   occupant_alt_names: a=[] | b=["Snofru"] | c=[]  → chose []
   source_citation: a={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"} | b={"edition": "PM III.2 2nd ed. 1978/1981", "page": 877, "section": "I"} | c={"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}  → chose {"edition": "PM III.2 2nd ed. 1978/1981", "page": 881, "section": "I"}
   tomb_aliases: a=["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"] | b=[] | c=[]  → chose []
+
+DAH-Uza (Uza):
+  notes_from_pm: a="Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MoRGAN, Dahchour, ii, pp. 14-15." | b="Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 14-15." | c="Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 14-15."  → chose "Overseer of the department of tenants of the Great House, Overseer of interpreters, etc. Dyn. VI. DE MORGAN, Dahchour, ii, pp. 14-15."
+  section: a=null | b=null | c="II"  → chose null
 
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ============================================
@@ -2494,7 +2555,12 @@ Reviewer-cited row corrections:
   MAR-D67.notes_from_pm: "Supervisor of prophets of the Sun-temple and Pyramid of Neuserreʿ, Prophet of the Sun-temple of Neferirkareʿ, etc. Temp. Neuserreʿ or later." → "Supervisor of prophets of the Sun-temple and Pyramid of Neuserrēʿ, Prophet of the Sun-temple of Neferirkarēʿ, etc. Temp. Neuserrēʿ or later."
   DAH-Amenemhet2.tomb_aliases: [] → ["White Pyramid", "Lepsius LI"]
   DAH-Amenemhet3.tomb_aliases: [] → ["Black Pyramid", "Lepsius LVIII"]
+  DAH-AmenyQemau.tomb_aliases: [] → ["Ameny-Kemau"]
+  DAH-InSnefruIshtef.dynasty: null → "6"
+  DAH-NeferherSnefru.dynasty: null → "6"
   DAH-PyramidE.tomb_aliases: [] → ["Lepsius LIV"]
+  DAH-Qedshepses.tomb_aliases: ["DE MORGAN 27"] → ["DE MORGAN 27", "Kedshepses"]
+  DAH-Seshemnufer.dynasty: null → "6"
   DAH-Sesostris3.tomb_aliases: [] → ["Lepsius XLVII"]
   DAH-SnefruNorthernComplex.tomb_aliases: [] → ["Red Pyramid", "Lepsius XLIX"]
   DAH-SnefruSouthernComplex.tomb_aliases: [] → ["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"]

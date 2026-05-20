@@ -2806,6 +2806,104 @@ CHUNK33_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk 34 — Dahshûr § I.G/H/I + § II.A East of Northern Pyramid of Snefru
+# (PM III.2 printed pp.890-893, phys pp.530-533).
+# Two source-fidelity corrections after egyptologist-reviewer pass
+# (PR #259 round 2):
+# (1) DAH-NicankhSnefru: PM OCR `Nicankh-Snefru` is raised-ayin
+#     (U+02BF) rendered as literal `c` by pypdf; PM-faithful form is
+#     `Niʿankh-Snefru` per the existing SAQ-Niankh* convention (rows
+#     449/450/451 SAQ-NiankhKhnum / SAQ-NiankhPepyNiankhMeryre /
+#     SAQ-NiankhPtah all unanimous). The literal-c form silently
+#     bypasses the Niʿankh-* alias cluster, breaking authority
+#     resolution against museum-catalog `Niankh-*` / `Ny-Ankh-*` records.
+# (2) Three rows with PM `Dyn. V-VI` / `Dyn. V or VI` closed-range
+#     hedges had `dynasty: null` (3/0 unanimous agent emission).
+#     Source-wide precedent (G1026, G2001, G2196 Iasen, TPC-Pehernufer)
+#     resolves closed-bounded V-VI / V-or-VI ranges to the LATER bound
+#     (`"6"`). Open-ended hedges ("or later") stay null. Per Rule 3
+#     (deterministic enforcement of conventions across chunks).
+# The anonymous-mastaba rows (DAH-MorganN5/N7/S24) intentionally carry
+# `tomb_aliases: []` — the De Morgan number IS the tomb_id descriptor
+# component, not an alias; named-occupant rows carry their De Morgan
+# number in tomb_aliases per PM's numbering convention.
+CHUNK34_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("DAH-NiankhSnefru", "occupant_name"): {
+        "value": "Niʿankh-Snefru",
+        "rationale": (
+            "PM III.2 phys p.532 (printed p.892) source-text contains "
+            "raised-ayin glyph (U+02BF MODIFIER LETTER HALF RING) rendered "
+            "as literal `c` by pypdf in the all-caps headword `NicANKH-"
+            "SNEFRU`. Source-wide convention (unanimous, PM III.2): "
+            "SAQ-NiankhKhnum / SAQ-NiankhPepyNiankhMeryre / SAQ-NiankhPtah "
+            "all use `Niʿankh-*` form (ayin) in occupant_name and "
+            "`Niankh-*` (no c, ayin stripped) in tomb_id. The 3/0 agent-"
+            "unanimous `Nicankh-*` emission is majority-OCR-literal, not "
+            "majority-correctness. tomb_id corrected at pre_merge to "
+            "DAH-NiankhSnefru (ayin stripped per ASCII convention). "
+            "Egyptologist PR #259 P1.1 + Gemini PR #259 round-3 finding "
+            "3275684644 (tomb_id alignment with source-wide Niankh-* "
+            "convention)."
+        ),
+    },
+    ("DAH-InSnefruIshtef", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "PM III.2 phys p.531 (printed p.891) headword: `Dyn. V-VI` "
+            "(closed-bounded V-VI range). Source-wide precedent (G1026 / "
+            "G2001 / G2196 Iasen / TPC-Pehernufer): closed-range → later "
+            "bound `\"6\"`. 3/0 agent-unanimous `null` is silent convention "
+            "drift (Rule 3). Egyptologist PR #259 review P1.2."
+        ),
+    },
+    ("DAH-Seshemnufer", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "PM III.2 phys p.531 (printed p.891) headword: `2nd half of "
+            "Dyn. V or Dyn. VI` (closed-bounded V/VI range). Same "
+            "closed-range → later bound `\"6\"` convention as "
+            "DAH-InSnefruIshtef. Egyptologist PR #259 review P1.2."
+        ),
+    },
+    ("DAH-NeferherSnefru", "dynasty"): {
+        "value": "6",
+        "rationale": (
+            "PM III.2 phys p.532 (printed p.892) headword: `Probably "
+            "Dyn. V or VI` (closed-bounded V/VI range with `Probably` "
+            "hedge — the hedge axis is `attribution_certainty: "
+            "\"probable\"`, orthogonal to the dynasty axis). Same "
+            "closed-range → later bound `\"6\"` convention. "
+            "Egyptologist PR #259 review P1.2."
+        ),
+    },
+    ("DAH-AmenyQemau", "tomb_aliases"): {
+        "value": ["Ameny-Kemau"],
+        "rationale": (
+            "PM source uses underdot-ḳ (Gardiner N29) in the printed "
+            "headword `AMENY-ḲEMAU`. The chunk-34 tomb_id uses ASCII "
+            "`Q` (modern Egyptological / museum-catalog convention; "
+            "Met + Brooklyn list \"Ameny Qemau\"). The K-form is the "
+            "alternate strict-prompt-rule ASCII strip (ḳ → K). Adding "
+            "the K-form as a tomb_alias provides cross-source matching "
+            "for catalog records using either convention. Egyptologist "
+            "PR #259 review P2.1 (Q + K alias backfill)."
+        ),
+    },
+    ("DAH-Qedshepses", "tomb_aliases"): {
+        "value": ["DE MORGAN 27", "Kedshepses"],
+        "rationale": (
+            "PM source uses underdot-ḳ (Gardiner N29) in the printed "
+            "headword `ḲEDSHEPSES`. tomb_id uses ASCII `Q` (modern "
+            "Egyptological convention) plus DE MORGAN 27 (de Morgan's "
+            "1894/95 Dahshûr-excavation number). The K-form alternate "
+            "strict-prompt-rule ASCII strip is added as additional "
+            "alias for cross-source matching. Egyptologist PR #259 "
+            "review P2.1 (Q + K alias backfill)."
+        ),
+    },
+}
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -2839,6 +2937,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK30_CORRECTIONS,
     CHUNK31_CORRECTIONS,
     CHUNK33_CORRECTIONS,
+    CHUNK34_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
@@ -2915,6 +3014,15 @@ def main() -> None:
                         continue
                     row[field] = spec["value"]
                     overrides_applied.append((tid, field, previous, spec["value"]))
+
+        # `section` is never a valid top-level field; it lives only inside
+        # `source_citation.section`. Strip any agent-emitted spurious copy
+        # unconditionally. (Originally introduced for chunk-34 agent C, which
+        # duplicated `source_citation.section` at top level on all 13 rows;
+        # the unconditional pop handles this row + any future similar
+        # agent-emission slip without per-chunk maintenance. Gemini PR #259
+        # round-1 simplification.)
+        row.pop("section", None)
 
     RECONCILED.write_text(
         "\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows) + "\n",
