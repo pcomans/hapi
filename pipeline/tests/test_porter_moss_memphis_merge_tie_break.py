@@ -1025,6 +1025,49 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("SAQ-TombPsammetheks", "occupant_name"),
         ("SAQ-TombPsammetheks", "source_citation"),
         ("SAQ-TombPsammetheks", "tomb_aliases"),
+        # Chunk 32 (§ II.J TOMBS OF POSITION UNKNOWN: MK/NK/LP,
+        # printed pp.700-719 / phys pp.340-359): 14 tie-break overrides
+        # resolved across 9 rows. Main disagreement surfaces:
+        #   - SAQ-Ankhefensekhmet: co_occupants (wife Ḥathoremḥet
+        #     diacritic variant; agent A missed her entirely) + notes_from_pm
+        #     (wife name spelling; selecting agent A's Ḥatḥoremḥet form
+        #     for notes, C's form for co_occupants).
+        #   - SAQ-FamilyTombPedesi: three-field tie (co_occupants / roles /
+        #     notes); agent A wrongly put primary occupant Pedesi in
+        #     co_occupants; agent B dropped parents; agent C correct.
+        #   - SAQ-Henat: occupant_alt_names (Khnemebreʿ-Menʿ diacritic
+        #     variants; C has fullest form).
+        #   - SAQ-Ipy: co_occupant_roles (PM cross-reference "(tomb, see
+        #     supra)" preservation; agent C best match).
+        #   - SAQ-Meryre: co_occupant_roles (wife's alt-name "Bakt"
+        #     retention; agent A closest to source).
+        #   - SAQ-Neferronpet: co_occupants (parents + wife; agent A dropped
+        #     parents; agent C substituted ḥ for ḳ on Ḳafiriati — substantive
+        #     error; agent B correct with ḳ).
+        #   - SAQ-Patenemhab: co_occupant_roles (Mother(?) no-space form;
+        #     agent A matches source).
+        #   - SAQ-PtahmosiDirectorOfCraftsmen: co_occupants + notes (father's
+        #     name Ḏḥutmosi/Ḏḥwtmosi; agent A best notes form, agent C best
+        #     co_occupants form).
+        #   - SAQ-RamesesEmperre: co_occupants (Yupaʿa no-macron + Esi(?)
+        #     with question mark; agent A matches source).
+        #   - SAQ-Thaibanebdedetimu: co_occupant_roles + notes (father's
+        #     epithet wp-nḏrwy; agent A notes best, agent C roles best).
+        ("SAQ-Ankhefensekhmet", "co_occupants"),
+        ("SAQ-Ankhefensekhmet", "notes_from_pm"),
+        ("SAQ-FamilyTombPedesi", "co_occupants"),
+        ("SAQ-FamilyTombPedesi", "co_occupant_roles"),
+        ("SAQ-FamilyTombPedesi", "notes_from_pm"),
+        ("SAQ-Henat", "occupant_alt_names"),
+        ("SAQ-Ipy", "co_occupant_roles"),
+        ("SAQ-Meryre", "co_occupant_roles"),
+        ("SAQ-Neferronpet", "co_occupants"),
+        ("SAQ-Patenemhab", "co_occupant_roles"),
+        ("SAQ-PtahmosiDirectorOfCraftsmen", "co_occupants"),
+        ("SAQ-PtahmosiDirectorOfCraftsmen", "notes_from_pm"),
+        ("SAQ-RamesesEmperre", "co_occupants"),
+        ("SAQ-Thaibanebdedetimu", "co_occupant_roles"),
+        ("SAQ-Thaibanebdedetimu", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]
