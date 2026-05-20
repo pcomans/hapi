@@ -1630,6 +1630,21 @@ CHUNK18_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK18_RENAMES: dict[str, str] = {}
 
 
+# Chunk-19: PM I.1 § I Numbered Tombs TT101-TT110 (Sh. ʿAbd el-Qurna).
+# No field-value corrections at merge time; 4 tie-break-overrides.json entries
+# resolved all 1/1/1 ties (TT104|notes_from_pm, TT106|notes_from_pm,
+# TT107|notes_from_pm, TT110|notes_from_pm).  DERIVER_OVERRIDES above handle
+# TT108 + TT110 attribution_certainty over-fires (regnal-date and
+# family-name hedge classes respectively).
+# Egyptologist review pending for potential capital-macron restorations:
+#   TT101 THANURO → THANŪRO?  TT105 KHAʿEMOPET → KHAʿEMŌPET?
+#   TT107 NEFERSEKHERU → NEFERSEKHĒRU?
+# These are NOT applied here until PDF visual confirmation is obtained.
+CHUNK19_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+CHUNK19_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1925,6 +1940,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK16_CORRECTIONS,
     CHUNK17_CORRECTIONS,
     CHUNK18_CORRECTIONS,
+    CHUNK19_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -1945,6 +1961,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK16_RENAMES,
     **CHUNK17_RENAMES,
     **CHUNK18_RENAMES,
+    **CHUNK19_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -2317,6 +2334,37 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
     # as chunks 10, 13, 14, 15, 16 above. PM's `Temp. <King> (?)` qualifies
     # the dating, not the occupant's identification — all three rows have
     # unhedged primary attribution to a named occupant with named title.
+    #
+    # Chunk-19 attribution_certainty overrides. TT108 is a regnal-date hedge
+    # (same class as TT52/TT69 etc.); TT110 is a parent-identification hedge
+    # in a secondary clause (same class as TT17 Amenḥotp (?)).  Both occupants
+    # are named and titled without hedge in the PM headword itself.
+    (
+        "TT108",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.225 prints `108. NEBSENY ..., First prophet of Onuris. "
+        "Temp. Tuthmosis IV(?).` The `(?)` qualifies the regnal date "
+        "(Tuthmosis IV), not Nebseny's identification as First prophet of "
+        "Onuris. Same regnal-date hedge class as chunk-10 TT12/TT19/TT20, "
+        "chunk-13 TT43, chunk-14 TT52, chunk-15 TT69. Per chunk-9 TT2 "
+        "precedent that attribution_certainty encodes occupant-identity "
+        "certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT110",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.227 prints `110. ḎHOUT ..., Royal butler, Royal herald. "
+        "Temp. Ḥatshepsut to Tuthmosis III. Parents, Pesediri (?) and Keku.` "
+        "The `(?)` qualifies the identification of the PARENT Pesediri — a "
+        "secondary-clause family hedge, not the primary occupant attribution. "
+        "Ḏhout's identification as Royal butler / Royal herald temp. Ḥatshepsut "
+        "to Tuthmosis III is fully attested. Same family-name identification "
+        "hedge class as chunk-10 TT17 (`Amenḥotp (?)`). Per chunk-9 TT2 "
+        "precedent that attribution_certainty encodes occupant-identity "
+        "certainty, not secondary-clause family-name certainty.",
+    ),
     (
         "TT94",
         "attribution_certainty",

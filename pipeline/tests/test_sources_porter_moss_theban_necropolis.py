@@ -240,6 +240,14 @@ CHUNK17_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK18_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(91, 101)}
 )
+# Chunk-19: PM I.1 § I Numbered Tombs TT101-TT110 (Sh. ʿAbd el-Qurna).
+# 4 tie-break-overrides entries (TT104, TT106, TT107, TT110 notes_from_pm).
+# 2 DERIVER_OVERRIDES: TT108 regnal-date hedge, TT110 parent-name hedge.
+# TT103 + TT106 role = Vizier; TT104 role = None (no title in PM headword,
+# "Unknown" sentinel-null collapsed at merge).
+CHUNK19_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(101, 111)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -258,6 +266,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK16_TOMB_IDS
     | CHUNK17_TOMB_IDS
     | CHUNK18_TOMB_IDS
+    | CHUNK19_TOMB_IDS
 )
 
 
@@ -4870,6 +4879,150 @@ def test_chunk18_tt100_rekhmire_vizier_macron_restored() -> None:
     assert r["occupant_role"] == "Vizier"
     assert "Governor of the town and Vizier" in r["notes_from_pm"]
     assert r["source_citation"]["page"] == 206
+
+
+def test_chunk19_all_rows_present() -> None:
+    """All 10 TT101-TT110 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK19_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        _row(tid)
+
+
+def test_chunk19_all_rows_homogeneous_sub_site() -> None:
+    for tid in CHUNK19_TOMB_IDS:
+        assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna"
+
+
+def test_chunk19_all_rows_edition_pm_i1() -> None:
+    for tid in CHUNK19_TOMB_IDS:
+        assert _row(tid)["source_citation"]["edition"] == "PM I.1 2nd ed. 1960"
+
+
+def test_chunk19_pages_in_range() -> None:
+    for tid in CHUNK19_TOMB_IDS:
+        p = _row(tid)["source_citation"]["page"]
+        assert 214 <= p <= 227, f"{tid} page {p} outside [214, 227]"
+
+
+def test_chunk19_role_distribution() -> None:
+    """TT103 + TT106 = Vizier (Governor of the town and Vizier);
+    TT104 = None (no title in PM headword; 'Unknown' sentinel-null collapsed
+    at merge.py:159); rest = Official."""
+    expected = {
+        "TT101": "Official", "TT102": "Official", "TT103": "Vizier",
+        "TT104": None, "TT105": "Official", "TT106": "Vizier",
+        "TT107": "Official", "TT108": "Official", "TT109": "Official",
+        "TT110": "Official",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK19_TOMB_IDS}
+    assert actual == expected
+
+
+def test_chunk19_attribution_distribution() -> None:
+    """All chunk-19 rows are attested. TT108 has a `Tuthmosis IV(?)` regnal-date
+    hedge and TT110 has a `Pesediri (?)` parent-identification hedge — both are
+    secondary-clause hedges, not primary-occupant attribution hedges. DERIVER_OVERRIDES
+    pin both back to attested per the chunk-9 TT2 precedent."""
+    for tid in CHUNK19_TOMB_IDS:
+        assert _row(tid)["attribution_certainty"] == "attested", tid
+
+
+def test_chunk19_tt101_royal_butler_bracketed_title() -> None:
+    """TT101 Thanuro — [Royal butler] clean of hands, Sh. ʿAbd el-Qurna, p.214.
+    PM headword brackets the title `[Royal butler]` — preserved verbatim.
+    Agent A spawn-message taint caused A to emit `Royal butler clean of hands`
+    (no brackets); B+C correctly emitted `[Royal butler] clean of hands.`
+    The 2/1 B+C majority resolved cleanly at merge."""
+    r = _row("TT101")
+    assert r["occupant_name"] == "Thanuro"
+    assert r["occupant_role"] == "Official"
+    assert r["notes_from_pm"] == "[Royal butler] clean of hands. Temp. Amenophis II."
+    assert "[Royal butler]" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 214
+
+
+def test_chunk19_tt103_dagi_vizier_xi_dynasty() -> None:
+    """TT103 Dagi — Governor of the town and Vizier, End of Dyn. XI, p.216.
+    Mid-sentence citation `(L. D. Text, No. 36.)` placed before the `Wife`
+    clause per PM's printed convention (chunk-12 cluster precedent: TT26 etc.).
+    Wife (or mother) Maʿetnemti (ayin preserved)."""
+    r = _row("TT103")
+    assert r["occupant_name"] == "Dagi"
+    assert r["occupant_role"] == "Vizier"
+    assert "Governor of the town and Vizier" in r["notes_from_pm"]
+    assert "End of Dyn. XI" in r["notes_from_pm"]
+    assert "(L. D. Text, No. 36.)" in r["notes_from_pm"]
+    assert "Maʿetnemti" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 216
+
+
+def test_chunk19_tt104_hutnufer_shared_with_tt80() -> None:
+    """TT104 [Hutnufer] — Temp. Amenophis II, Sh. ʿAbd el-Qurna, p.217.
+    PM cross-reference `(See tomb 80.)` precedes temporal clause (tie-break-
+    overrides.json pin: agent A matched PM's printed word order, agents B/C
+    reversed or dropped the cross-reference). occupant_role is None because
+    PM gives no title for TT104 and 'Unknown' is a SENTINEL_NULL_STRING
+    (merge.py:159) — collapsed to null at merge, not repaired by any correction
+    (no title available from PM). shared_with_tombs=['TT80'] per the chunk-9
+    `See also Tomb N` ownership-pattern."""
+    r = _row("TT104")
+    assert r["occupant_name"] == "[Hutnufer]"
+    assert r["occupant_role"] is None
+    assert r["shared_with_tombs"] == ["TT80"]
+    assert r["notes_from_pm"] == "(See tomb 80.) Temp. Amenophis II."
+    assert r["source_citation"]["page"] == 217
+
+
+def test_chunk19_tt106_paser_vizier_mid_sentence_citation() -> None:
+    """TT106 Paser — Governor of the town and Vizier, Temp. Sethos I to
+    Ramesses II, p.219. Bibliographic citation `(CHAMPOLLION, No. 32,
+    L. D. Text, No. 39, HAY, No. 7.)` appears mid-sentence before `Parents,`
+    per PM's printed convention (tie-break-overrides.json pin: agent A
+    correct; B moved citation to end, C had OCR typo `Meytrerʿ` for
+    `Merytreʿ`). Mother's name `Merytreʿ` (ayin) is correct."""
+    r = _row("TT106")
+    assert r["occupant_name"] == "Paser"
+    assert r["occupant_role"] == "Vizier"
+    assert "Governor of the town and Vizier" in r["notes_from_pm"]
+    # Mid-sentence citation before Parents clause
+    assert "(CHAMPOLLION, No. 32, L. D. Text, No. 39, HAY, No. 7.)" in r["notes_from_pm"]
+    notes = r["notes_from_pm"]
+    champollion_pos = notes.index("(CHAMPOLLION")
+    parents_pos = notes.index("Parents,")
+    assert champollion_pos < parents_pos, "Citation must precede Parents clause"
+    # Correct mother name spelling
+    assert "Merytreʿ" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 219
+
+
+def test_chunk19_tt108_nebseny_regnal_hedge_attested() -> None:
+    """TT108 Nebseny — First prophet of Onuris, Temp. Tuthmosis IV(?), p.225.
+    `(?)` qualifies the regnal date (Tuthmosis IV), not Nebseny's
+    identification. DERIVER_OVERRIDE pins attribution_certainty=attested per
+    the chunk-9 TT2 / chunk-14 TT52 / chunk-15 TT69 regnal-date hedge
+    precedent."""
+    r = _row("TT108")
+    assert r["occupant_name"] == "Nebseny"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Tuthmosis IV(?)" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 225
+
+
+def test_chunk19_tt110_dhout_baktH_wife() -> None:
+    """TT110 Ḏhout — Royal butler, Royal herald, Temp. Ḥatshepsut to
+    Tuthmosis III, p.227. Wife Baktḥ (with underdot-ḥ). Parent Pesediri (?)
+    is a family-name hedge in a secondary clause — DERIVER_OVERRIDE pins
+    attribution_certainty=attested per the chunk-10 TT17 parent-hedge
+    precedent. occupant_name `Ḏhout` (d-bar preserved)."""
+    r = _row("TT110")
+    assert r["occupant_name"] == "Ḏhout"
+    assert "Ḏ" in r["occupant_name"]  # d-bar (Ḏ = U+1E0E) preserved
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Wife, Baktḥ." in r["notes_from_pm"]
+    assert "Pesediri (?)" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 227
 
 
 def test_chunk17_tt90_nebamun_macron_restored_third_collision() -> None:
