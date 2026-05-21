@@ -589,7 +589,13 @@
   },
   "TT305|co_occupants": {
     "rationale": "PM I.1 p.383 / chunk-39-tt301-tt310.txt (TT305 Paser). Three-way split: A = [] (empty — drops wife), B = [{name: Tamelhi}] (wrong name, drops ḥ AND changes vowel), C = [{name: Tamelkhit}] (kh for ḥ, correct pattern). Source line 194: `Wife, Tamel;lit` where `;l` cluster is an OCR artifact for underdot-ḥ → `Tamelḥit`. Apply strip-ḥ for co_occupants.name (matchable-name field): `Tamelḥit` → `Tamelkhit` is WRONG (kh ≠ h-stripped). Correct strip-ḥ: `Tamelḥit` → `Tamelhit`. However `Tamelklit` (A's notes form) and `Tamelkhit` (C) both use the `kh` rendition which is a common anglicised substitution for ḥ in PM names (cf. `Mutenopet` in TT306 keeps the p not kh). Actually the correct strip-ḥ for `occupant_name`-class fields gives `Tamelḥit` → h stripped → `Tamelhit`. C has `Tamelkhit` (kh substitution); this is the closest among the three agents and consistent with OCR `Tamel;lit` → `Tamelkhit` interpretation. A drops the wife entirely. Pin C's schema-valid form with name=`Tamelkhit`; CHUNK39_CORRECTIONS will correct the name to `Tamelhit` per strip-ḥ convention. EGYPTOLOGIST REVIEW REQUIRED: confirm wife's name form from PM I.1 p.383 printed source.",
-    "value": [{"alt_names": [], "name": "Tamelkhit", "role": "Unknown"}]
+    "value": [
+      {
+        "alt_names": [],
+        "name": "Tamelkhit",
+        "role": "Unknown"
+      }
+    ]
   },
   "TT305|notes_from_pm": {
     "rationale": "PM I.1 p.383 / chunk-39-tt301-tt310.txt (TT305 Paser). Three-way split on priest title and wife name. A = `Waab-priest ... Wife, Tamelklit.` (OCR-literal `Waab` for wʿab; name wrong). B = `Wab-priest ... Wife, Tamelhi.` (strips ayin entirely; name wrong vowel order). C = `Wab-priest ... Wife, Tamelkhit.` (strips ayin; name kh-substitution). Source line 191: `warb-priest` is an OCR rendering of `wʿab-priest` (the `<` ayin glyph before `a` rendered as `r` by OCR). C's `Wab-priest` drops the ayin but is the cleanest consonant form; `Waab` (A) is an OCR double-a artifact. Pin C's form (cleanest; majority B+C agree on `Wab-priest`). Wife name `Tamelkhit` in C matches the co_occupants pin. CHUNK39_CORRECTIONS restores ayin to give `Wʿab-priest` and will handle wife name diacritics.",
@@ -610,5 +616,37 @@
   "TT308|notes_from_pm": {
     "rationale": "PM I.1 p.385 / chunk-39-tt301-tt310.txt (TT308 Kemsit). Three-way split on (a) trailing ayin in Nebḥepetreʿ and (b) location qualifier in notes. A = `...(Nebhepetre). (NAVILLE, No. 10.)` (no ayin, has NAVILLE reference, no temple location). B = `...(Nebhepetrec). Located in the Temple of Mentuhotep.` (OCR-literal c for ayin, has temple location, no NAVILLE). C = `...(Nebhepetre). Deir el-Bahari, in the Temple of Mentuhotep.` (no ayin, has both location and implied NAVILLE bracket, but no explicit NAVILLE). Source line 288: `Neb}:lepetre<` where `}:l` = underdot-Ḥ and `<` = ayin → `Nebḥepetreʿ`. Source line 289: `Deir el-Bal).ri, in the Temple of Mentul).otp. (NAVILLE, No. 10.)` — PM prints BOTH the temple location AND the NAVILLE reference in the headword. The temple location (`Deir el-Bahari, in the Temple of Mentuhotep`) is also captured in `theban_area=Deir el-Bahari` + `location_sub_area` if set; notes_from_pm per verbatim-preserve should include the headword text. None of the three agents captured both NAVILLE AND temple location. Pin A for NAVILLE reference preservation; CHUNK39_CORRECTIONS will add the temple location qualifier and restore ayin + underdot-ḥ diacritics.",
     "value": "Unique royal concubine, Prophetess of Hathor. Temp. Mentuhotep (Nebhepetre). (NAVILLE, No. 10.)"
+  },
+  "TT312|occupant_name": {
+    "rationale": "PM I.1 p.387 / chunk-40-tt311-tt320.txt (TT312 Espel(a)shuti). Three-way split: A = `Espeladshuti` (OCR-literal `d` for parenthetical token), B = `Espelaashuti` (doubled a, no parenthetical), C = `Espel(a)shuti` (preserves PM's parenthetical letter). Source line 86 prints `EsPEI,{ASHUTI` where `{` is OCR for the parenthetical letter bracket. Existing reconciled.jsonl precedents for parenthetical letters in occupant_name: `Tanezem(t)`, `Amen(hir)khopshef`, `Nebmehy(t)` — all preserve the parenthetical. Pin C's `Espel(a)shuti` as source-faithful per the parenthetical-preserve convention. CHUNK40_CORRECTIONS will add any ayin restoration required at egyptologist pass.",
+    "value": "Espel(a)shuti"
+  },
+  "TT313|notes_from_pm": {
+    "rationale": "PM I.1 p.388 / chunk-40-tt311-tt320.txt (TT313 Henenu). Three-way split: A = `...Mentuhotep-Nebhepetrec and Mentuhotep-Sankhkare.` (OCR-literal c for ayin; correct Sankhkare), B = `...Mentuhotep-Nebhepetrec and Mentuhotep-Soankhkare.` (OCR misread of `S<` as `So`), C = `...Mentuhotep-Nebhepetre and Mentuhotep-Sankhkare.` (drops ayin on first name; correct Sankhkare). Source line 132: `MentuQ.otp-NebQ.epetre<` (underdot-H x2, ayin) + `MentuQ.otp-S<ankhkare<` (S-ayin-ankhkare-ayin). A+C agree on `Sankhkare` (correct); B's `Soankhkare` misreads `S<` as `So`. A preserves ayin as OCR-literal `c` consistent with same treatment at TT311/TT312/TT315. Pin A: OCR-literal `c` ayin preserved + correct `Sankhkare`. CHUNK40_CORRECTIONS will restore both `Nebhepetre<` -> `Nebhepetreʿ` and `Sankhkare` -> `Sʿankhkareʿ` diacritics.",
+    "value": "Great steward. Temp. Mentuhotep-Nebhepetrec and Mentuhotep-Sankhkare."
+  },
+  "TT316|occupant_name": {
+    "rationale": "PM I.1 p.390 / chunk-40-tt311-tt320.txt (TT316 Neferhotep). Three-way split: A = `Neferhotep` (strip-h applied, correct), B = `Neferihotep` (spurious extra i), C = `Neferkhotep` (kh substitution for stripped h). Source line 205: `NEFERI;IOTEP` where `I;I` = underdot-H OCR cluster. Full decode: `NEFERHOTEP` after strip-h. A's `Neferhotep` is the correct strip-h result. B's `Neferihotep` misreads the `I;I` cluster as vowel-i before h. C's `Neferkhotep` substitutes kh for h (wrong). Pin A's `Neferhotep`.",
+    "value": "Neferhotep"
+  },
+  "TT317|notes_from_pm": {
+    "rationale": "PM I.1 p.390 / chunk-40-tt311-tt320.txt (TT317 Dhutnufer). Three-way split on (CHAMPOLLION, No. 25.) ordering: A = CHAMPOLLION at end after Wife, B = drops CHAMPOLLION and Parents entirely, C = CHAMPOLLION after date clause before Parents. Source line 231: after location line PM prints `(CHAMPOLLION, No. 25.)` BEFORE the parents clause. C reflects PM's printed order. B drops both CHAMPOLLION and Parents — wrong. A keeps both but in wrong order. Pin C as source-order-faithful.",
+    "value": "Scribe of the counting of corn in the granary of divine offerings of Amun. Temp. Tuthmosis III(?). (CHAMPOLLION, No. 25.) Parents, Senires, Mayor, and Taiy. Wife, Titau."
+  },
+  "TT318|notes_from_pm": {
+    "rationale": "PM I.1 p.390-391 / chunk-40-tt311-tt320.txt (TT318 Amenmosi). Three-way split on (CHAMPOLLION, No. 26.) ordering: A = CHAMPOLLION at end after Wife, B = drops CHAMPOLLION entirely, C = CHAMPOLLION after date clause before Wife. Source line 256: `(CHAMPOLLION, No. 26.)` appears on the location line before the wife clause in PM's headword. C correctly places it before Wife. Same structural decision as TT317 (CHAMPOLLION before family clause). Pin C as source-order-faithful.",
+    "value": "Necropolis-stonemason of Amun. Temp. Tuthmosis III to Hatshepsut(?). (CHAMPOLLION, No. 26.) Wife, Henut."
+  },
+  "TT319|notes_from_pm": {
+    "rationale": "PM I.1 p.391 / chunk-40-tt311-tt320.txt (TT319 Nofru). Three-way split on father's epithet and mother's name. Source line 295: `daughter of Mentul.10tp-S<ankhibtaui and I<ob` decoded as: father = `Mentuhotep-Sʿankhibtaui` (ayin+i), mother = `Iʿob` (ayin). A = father `Sankhbtaui` (drops ayin+i, correct consonants otherwise) + mother `Khob` (wrong initial K). B = father `Soankhbtaui` (OCR `S<` misread as `So`; wrong) + mother `Iob` (correct I, drops ayin). C = father `Sankhbtaui` (same as A) + mother `Ikh` (wrong). A+C agree on `Sankhbtaui` for father (majority). Mother: B's `Iob` is closest to source `Iʿob` (correct initial I). No single agent has both correct. Pin A's form (majority father) as base; CHUNK40_CORRECTIONS will fix: (1) mother `Khob` -> `Iʿob` per source, (2) father `Sankhbtaui` -> `Sʿankhibtaui` restoring ayin+i, (3) `Nebhepetrec` -> `Nebhepetreʿ`. EGYPTOLOGIST REVIEW REQUIRED: confirm diacritics from PM I.1 p.391 printed source.",
+    "value": "Daughter of Mentuhotep-Sankhbtaui and Khob, wife of Mentuhotep-Nebhepetrec."
+  },
+  "TT320|notes_from_pm": {
+    "rationale": "PM I.1 p.392 / chunk-40-tt311-tt320.txt (TT320 Inhapi). Three-way split: A = `...Bibl. i2, Pt. 2...` (no space between i and 2), B = bare `Perhaps wife of Amosis. Dyn. XXI.` (drops Royal Cache parenthetical entirely), C = `...Bibl. i 2, Pt. 2...` (space between i and 2, matches PM superscript rendering). Source line 374-375: `Bib\\!. i 2 ,` — PM prints superscript 2 with space before it. C's `i 2` matches the printed spacing. B drops the entire Royal Cache parenthetical — wrong. Pin C as source-faithful on spacing.",
+    "value": "Perhaps wife of Amosis. (Royal Cache, Dyn. XXI, see DEIR EL-BAHARI, Bibl. i 2, Pt. 2, in the Press.)"
+  },
+  "TT320|occupant_name": {
+    "rationale": "PM I.1 p.392 / chunk-40-tt311-tt320.txt (TT320 Inhapi). Three-way split: A = `Inhapi` (strip-h applied, no ayin), B = `Inhaapi` (double a — OCR misread), C = `Inhijapi` (spurious ij insertion). Source line 374: `INI;IA<PI` where `I;I` = underdot-H OCR cluster and `<` = ayin glyph -> `INHAʿPI` after strip-h. A's `Inhapi` strips both h and ayin — ayin should be retained per TT293/TT300 ayin-retain precedent, giving `Inhaʿpi`. B has correct structure but wrong doubled-a. C inserts spurious ij. Pin A as base (closest consonant structure); CHUNK40_CORRECTIONS restores ayin to give `Inhaʿpi`. EGYPTOLOGIST REVIEW REQUIRED: confirm exact form from PM I.1 p.392 printed source.",
+    "value": "Inhapi"
   }
 }

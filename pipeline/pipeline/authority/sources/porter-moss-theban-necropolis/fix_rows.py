@@ -3890,6 +3890,176 @@ CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK39_RENAMES: dict[str, str] = {}
 
 
+# === Chunk 40: TT311–TT320 (PM I.1 Deir el-Bahari / Sh. ʿAbd el-Qurna) ========
+#
+# Pre-merge agents: a=395, b=395, c=394 (394 = c missing 1 row from an earlier
+# chunk, not this chunk). Merged: 395 rows. Chunk-40 added 10 rows (TT311-TT320).
+#
+# Tie-breaks applied (8 entries in tie-break-overrides.json):
+#   TT312|occupant_name — Espel(a)shuti (parenthetical-preserve per reconciled
+#       precedents Tanezem(t), Amen(hir)khopshef, Nebmehy(t))
+#   TT313|notes_from_pm — A's form (OCR-literal `c` ayin; correct Sankhkare
+#       vs B's Soankhkare OCR misread)
+#   TT316|occupant_name — Neferhotep (strip-h: NEFERH_OTEP → Neferhotep; A correct)
+#   TT317|notes_from_pm — C's form (CHAMPOLLION before Parents per PM source order)
+#   TT318|notes_from_pm — C's form (CHAMPOLLION before Wife per PM source order)
+#   TT319|notes_from_pm — A's form (majority father Sankhbtaui; CHUNK40 fixes mother)
+#   TT320|notes_from_pm — C's form (space in `i 2` per PM superscript rendering)
+#   TT320|occupant_name — A's Inhapi (ayin restore to Inhaʿpi by CHUNK40 below)
+#
+# CHUNK40_CORRECTIONS:
+# 1. TT311 notes_from_pm: restore `Nebhepetreʿ` (OCR-literal `c` ayin → ʿ)
+# 2. TT313 notes_from_pm: restore `Nebḥepetreʿ` and `Sʿankhkareʿ` diacritics
+# 3. TT314 dynasty: null → "XI" (source line 160 explicit `Dyn. XI`; majority
+#    B+C null is a miss — agent A alone had XI; CHUNK_CORRECTIONS fixes)
+# 4. TT315 notes_from_pm: restore `Nebhepetreʿ` (OCR-literal `c` ayin → ʿ)
+# 5. TT316 dynasty: null → "XI" (source line 205 explicit `Dyn. XI`; same
+#    majority-null-misses pattern as TT314)
+# 6. TT317 occupant_name: `Dhutnufer` → `Ḏhutnufer` (d-bar restore per TT32,
+#    TT205, TT295 Ḏhutmosi precedents)
+# 7. TT319 notes_from_pm: fix mother `Khob` → `Iʿob`, restore father ayin+i
+#    to `Sʿankhibtaui`, restore `Nebhepetreʿ`
+# 8. TT320 dynasty: null → "XXI" (source line 374 explicit `Dyn. XXI` in
+#    Royal Cache clause; majority B+C null is a miss)
+# 9. TT320 occupant_name: `Inhapi` → `Inhaʿpi` (ayin restore per TT293/TT300
+#    ayin-retain precedent)
+#
+# DERIVER_OVERRIDES (added below):
+#   TT316: `(?)` in `Wife(?), Mery(t).` qualifies the wife-relationship
+#     certainty, not the primary occupant Neferhotep's identity.
+#   TT317: `(?)` in `Temp. Tuthmosis III(?)` qualifies the regnal date,
+#     not the primary occupant Ḏhutnufer's identity.
+#   TT318: `(?)` in `Temp. Tuthmosis III to Hatshepsut(?)` qualifies the
+#     regnal-range tail (Hatshepsut), not Amenmosi's identity.
+#   TT320: `perhaps` in `perhaps wife of Amosis` qualifies the Amosis
+#     genealogical relationship, NOT the primary occupant identification.
+#     Inḥaʿpi's name is attested on the Royal Cache mummy-cloths (source
+#     line 374); only the spousal relationship carries the hedge. Same
+#     secondary-clause hedge pattern as TT2 `(probably) Esi` (second wife).
+CHUNK40_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT311",
+        "notes_from_pm",
+        "Seal-bearer of the King of Lower Egypt. Temp. Mentuḥotp-Nebḥepetreʿ.",
+        "Source line 40 of chunk-40-tt311-tt320.txt: `311. KHETY..., Seal-bearer "
+        "of the King of Lower Egypt. Temp. Mentul:_lotpNebl:_lepetrec.` where "
+        "`l:_l` = underdot-Ḥ OCR cluster and `c` = OCR-literal for ayin `<`. "
+        "Two restorations: (1) `Mentuhotep-Nebhepetrec` → `Mentuḥotp-Nebḥepetreʿ`: "
+        "restore underdot-Ḥ × 2 AND drop the anglicising vowel `e` in `-hotep` → `-ḥotp` (`Mentuhotep` → `Mentuḥotp` per chunk-36/39/40 "
+        "TT280/TT308/TT313 Mentuhotep-era precedents) and OCR-literal `c` → ayin ʿ. "
+        "notes_from_pm verbatim-preserve retains both diacritics. "
+        "EGYPTOLOGIST REVIEW REQUIRED: confirm exact Mentuhotep epithet diacritics "
+        "from PM I.1 p.386 printed source.",
+    ),
+    (
+        "TT313",
+        "notes_from_pm",
+        "Great steward. Temp. Mentuḥotp-Nebḥepetreʿ and Mentuḥotp-Sʿankhkareʿ.",
+        "Source line 132 of chunk-40-tt311-tt320.txt: `313. HENENU..., Great "
+        "steward. Temp. MentuQ.otp-NebQ.epetre< and MentuQ.otp-S<ankhkare<.` "
+        "where `Q.` = underdot-Ḥ and `<` = ayin. Four diacritic restorations: "
+        "(1) `Mentuhotep-Nebhepetrec` → `Mentuḥotp-Nebḥepetreʿ` (underdot-Ḥ × 2 "
+        "+ ayin); (2) `Mentuhotep-Sankhkare` → `Mentuḥotp-Sʿankhkareʿ` (underdot-Ḥ "
+        "+ leading ayin on `Sʿankh` + trailing ayin). notes_from_pm verbatim-preserve "
+        "retains all diacritics. Cf. TT280 chunk-36 `Mentuḥotp-Sʿankhkareʿ` "
+        "precedent. EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics from "
+        "PM I.1 p.388 printed source.",
+    ),
+    (
+        "TT314",
+        "dynasty",
+        "XI",
+        "Source line 160 of chunk-40-tt311-tt320.txt: `314. HARHQTP..., "
+        "Seal-bearer of the King of Lower Egypt, Henchman. Dyn. XI.` — PM "
+        "prints explicit `Dyn. XI` in the headword. Merge majority B+C=null "
+        "missed this; agent A alone had `XI`. CHUNK40_CORRECTIONS restores "
+        "the source-stated dynasty. notes_from_pm `Dyn. XI.` clause already "
+        "correct in merged output. Parallel to chunk-19 TT108/TT110 dynasty "
+        "null-miss pattern.",
+    ),
+    (
+        "TT315",
+        "notes_from_pm",
+        "Governor of the town and Vizier, Judge. Temp. Mentuḥotp-Nebḥepetreʿ.",
+        "Source line 180 of chunk-40-tt311-tt320.txt: `315. IPI..., Governor "
+        "of the town and Vizier, Judge. Temp. Mentul.10tp-NebQ.epetrec.` where "
+        "`l.10` / `Q.` = underdot-Ḥ OCR cluster and `c` = OCR-literal ayin. "
+        "Two restorations: `Mentuhotep-Nebhepetrec` → `Mentuḥotp-Nebḥepetreʿ` "
+        "(underdot-Ḥ × 2 + OCR-literal `c` → ayin ʿ). Same pattern as "
+        "TT311/TT313. EGYPTOLOGIST REVIEW REQUIRED: confirm diacritics from "
+        "PM I.1 p.389 printed source.",
+    ),
+    (
+        "TT316",
+        "dynasty",
+        "XI",
+        "Source line 205 of chunk-40-tt311-tt320.txt: `316. NEFERH_OTEP..., "
+        "Custodian of the bow. Dyn. XI.` — PM prints explicit `Dyn. XI` in "
+        "the headword. Merge majority B+C=null missed this; agent A alone had "
+        "`XI`. Same majority-null-miss pattern as TT314 in this chunk. "
+        "notes_from_pm `Dyn. XI.` clause already correct in merged output.",
+    ),
+    (
+        "TT317",
+        "occupant_name",
+        "Ḏhutnufer",
+        "Source line 229 of chunk-40-tt311-tt320.txt: `317. :>I;IUTNUFER` where "
+        "`:>` = d-bar Ḏ OCR sequence and `I;I` = underdot-Ḥ OCR cluster. Full "
+        "decode: `ḎḤUTNUFER`. Apply strip-ḥ for `occupant_name` (underdot-Ḥ "
+        "stripped) but RETAIN d-bar Ḏ (not a strip-ḥ target; cf. TT32 `Ḏhutmosi`, "
+        "TT205 `Ḏhutmosi`, TT295 `Ḏhutmosi` reconciled.jsonl precedents). "
+        "Tie-break majority A+B pinned `Dhutnufer` (drops d-bar). Correct form: "
+        "`Ḏhutnufer`. EGYPTOLOGIST REVIEW REQUIRED: confirm d-bar form from "
+        "PM I.1 p.390 printed source.",
+    ),
+    (
+        "TT319",
+        "notes_from_pm",
+        "Daughter of Mentuḥotp-Sʿankhibtaui and Iʿob, wife of Mentuḥotp-Nebḥepetreʿ.",
+        "Source line 295 of chunk-40-tt311-tt320.txt: `319. NOFRU, daughter of "
+        "Mentul.10tp-S<ankhibtaui and I<ob, wife of Mentul.10tp-Nebhepetre<.` "
+        "where `l.10` = underdot-Ḥ, `<` = ayin, `I<ob` = mother's name. "
+        "Three restorations from tie-break base (A's form with `Sankhbtaui`/`Khob`): "
+        "(1) Mother `Khob` → `Iʿob`: source `I<ob` = I + ayin + ob; A's `Khob` "
+        "misread initial `I` as `K`. B's `Iob` (drops ayin) and C's `Ikh` (wrong) "
+        "are both wrong; decode gives `Iʿob`. "
+        "(2) Father `Sankhbtaui` → `Sʿankhibtaui`: source `S<ankhibtaui` adds "
+        "ayin after S plus the `i` between `ankh` and `btaui`. "
+        "(3) `Nebhepetrec` → `Nebḥepetreʿ` (underdot-Ḥ + ayin per TT311/TT313/TT315). "
+        "Also `Mentuhotep` → `Mentuḥotp` (underdot-Ḥ restore × 2). "
+        "EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics from PM I.1 p.391 "
+        "printed source.",
+    ),
+    (
+        "TT320",
+        "dynasty",
+        "XXI",
+        "Source line 374 of chunk-40-tt311-tt320.txt: `320. INI;IA<PI, perhaps "
+        "wife of Amosis. (Royal Cache, Dyn. XXI, ...)` — PM explicitly states "
+        "`Dyn. XXI` in the Royal Cache parenthetical. Merge majority B+C=null "
+        "missed this; agent A alone had `XXI`. Same majority-null-miss pattern "
+        "as TT314/TT316 in this chunk. The Royal Cache context places the tomb "
+        "use squarely in Dyn. XXI.",
+    ),
+    (
+        "TT320",
+        "occupant_name",
+        "Inhaʿpi",
+        "Source line 374 of chunk-40-tt311-tt320.txt: `INI;IA<PI` where `I;I` "
+        "= underdot-Ḥ OCR cluster and `<` = ayin glyph. Full decode: `INḤAʿPI`. "
+        "Apply strip-ḥ for `occupant_name` matchable field (underdot-Ḥ stripped "
+        "to h) but RETAIN ayin ʿ (per TT293 `Raʿmessenakht`, TT300 `ʿAnhotp` "
+        "ayin-retain precedent): `INḤAʿPI` → strip-ḥ → `INHAʿPI` → `Inhaʿpi`. "
+        "Tie-break pinned A's `Inhapi` (strips ayin too). Restore ayin to give "
+        "`Inhaʿpi`. EGYPTOLOGIST REVIEW REQUIRED: confirm exact form from "
+        "PM I.1 p.392 printed source.",
+    ),
+]
+
+
+CHUNK40_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3933,6 +4103,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK37_CORRECTIONS,
     CHUNK38_CORRECTIONS,
     CHUNK39_CORRECTIONS,
+    CHUNK40_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3974,6 +4145,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK37_RENAMES,
     **CHUNK38_RENAMES,
     **CHUNK39_RENAMES,
+    **CHUNK40_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -5196,6 +5368,83 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "token — correct for primary-attribution hedges but a false positive "
         "for secondary-clause relational hedges. Same secondary-clause pattern "
         "as TT2 `(probably) Esi` (second wife), TT95 usurpation note, etc.",
+    ),
+    # Chunk-40 DERIVER_OVERRIDES:
+    # TT316 — attribution_certainty: `(?)` in `Wife(?), Mery(t).` qualifies
+    #   the certainty of the wife-relationship identification, NOT the primary
+    #   occupant Neferhotep's identity. Neferhotep is unambiguously named in
+    #   the headword with title `Custodian of the bow. Dyn. XI.` — no identity
+    #   hedge. Same secondary-clause-hedge pattern as TT2/TT12/TT45/TT298.
+    # TT317 — attribution_certainty: `(?)` in `Temp. Tuthmosis III(?)` qualifies
+    #   the regnal date (Tuthmosis III), not Ḏhutnufer's occupant identity.
+    #   Same regnal-date-hedge class as chunk-14 TT52, chunk-15 TT62, chunk-38
+    #   TT295 etc.
+    # TT318 — attribution_certainty: `(?)` in `Temp. Tuthmosis III to Hatshepsut(?)`
+    #   qualifies the regnal-range TAIL (Hatshepsut), not Amenmosi's identity.
+    #   Same regnal-range-tail pattern as chunk-10 TT12/TT19, chunk-13 TT41.
+    # TT320 — attribution_certainty: `perhaps` in `perhaps wife of Amosis`
+    #   qualifies the Amosis spousal/genealogical relationship, NOT the primary
+    #   occupant identification. Inḥaʿpi is attested by name on the Royal Cache
+    #   mummy-cloths (source line 374-398); only the genealogical tie to Amosis
+    #   carries the hedge. Same secondary-clause hedge pattern as TT2 `(probably)
+    #   Esi` (second wife identification, not primary occupant identification).
+    (
+        "TT316",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.390 / chunk-40 source line 205-207: `316. NEFERH_OTEP, "
+        "Custodian of the bow. Dyn. XI. Mother, Nebtiotef. Wife(?), Mery(t).` "
+        "The `(?)` qualifies the WIFE RELATIONSHIP certainty (is Mery(t) "
+        "definitively his wife?), not the primary occupant Neferhotep's "
+        "identity. Neferhotep is unambiguously named with title and dynasty "
+        "in the PM headword — no identity hedge. The deriver fires "
+        "context-free on any `(?)` in notes_from_pm; this is a false "
+        "positive on a secondary-clause relational hedge. Same class as "
+        "TT2 `(probably) Esi`, TT45 usurper-clause hedges, TT298 `father "
+        "(probably)` — secondary-clause hedge, not primary-attribution hedge.",
+    ),
+    (
+        "TT317",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.390 / chunk-40 source line 229-230: `317. DHUTNUFER, Scribe "
+        "of the counting of corn... Temp. Tuthmosis III(?).` The `(?)` "
+        "qualifies the REGNAL DATE (Tuthmosis III), not Ḏhutnufer's occupant "
+        "identity. Ḏhutnufer is unambiguously named with title in the headword. "
+        "Same regnal-date-hedge orthogonality class as chunk-14 TT52 "
+        "(`Temp. Tuthmosis IV(?)`), chunk-15 TT62 (`Temp. Tuthmosis III(?)`), "
+        "and chunk-38 TT295 (`Temp. Tuthmosis IV to Amenophis III (?)`). "
+        "Per chunk-9 TT2 precedent that attribution_certainty encodes "
+        "occupant-identity certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT318",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.390-391 / chunk-40 source line 254-255: `318. AMENMOSI, "
+        "Necropolis-stonemason of Amun. Temp. Tuthmosis III to Hatshepsut(?).` "
+        "The `(?)` qualifies the REGNAL-RANGE TAIL (Hatshepsut), not Amenmosi's "
+        "occupant identity. Same regnal-range-tail pattern as chunk-10 TT12 "
+        "(`Temp. Amosis to Amenophis I (?)`), chunk-10 TT19 (`Temp. Ramesses I "
+        "to Sethos I (?)`), and chunk-13 TT41 (`Temp. Ramesses I to Sethos I(?)`). "
+        "Per chunk-9 TT2 precedent that attribution_certainty encodes "
+        "occupant-identity certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT320",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.392 / chunk-40 source line 374-375: `320. INI;IA<PI, perhaps "
+        "wife of Amosis. (Royal Cache, Dyn. XXI...)` The `perhaps` qualifies "
+        "the SPOUSAL/GENEALOGICAL RELATIONSHIP (is she the wife of Amosis?), "
+        "NOT the primary occupant's identity. Inḥaʿpi is unambiguously "
+        "identified by name on Royal Cache mummy-cloths (source line 397: "
+        "`Name of deceased in hieratic, MASPERO, Momies royales...`); only "
+        "the attribution to Amosis as her husband carries the hedge. Same "
+        "secondary-clause hedge pattern as TT2 `(probably) Esi` (second wife "
+        "identification hedge, not primary occupant identification hedge). "
+        "Per chunk-9 TT2 precedent that attribution_certainty encodes "
+        "occupant-identity certainty, not relational certainty.",
     ),
 ]
 
