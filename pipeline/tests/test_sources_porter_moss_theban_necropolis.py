@@ -262,6 +262,17 @@ CHUNK19_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK20_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(111, 121)}
 )
+# Chunk-21: PM I.1 § I Numbered Tombs TT121-TT130 (Sh. ʿAbd el-Qurna).
+# 1 tie-break-override (TT122 notes_from_pm).
+# 4 DERIVER_OVERRIDES: TT121/TT126/TT127/TT130 attribution_certainty
+#   (all carry `(?)` qualifying a regnal date, not occupant identity).
+# TT122 is_joint_burial=True ([Amen]hotp + Amenemhet, both Overseers).
+# TT127 is_usurped=True (Senemiʿoh IS the usurped party, no override
+#   needed — contrast TT95 Mery the usurper).
+# TT129 anonymous (Name lost), Temp. Tuthmosis III or IV.
+CHUNK21_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(121, 131)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -282,6 +293,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK18_TOMB_IDS
     | CHUNK19_TOMB_IDS
     | CHUNK20_TOMB_IDS
+    | CHUNK21_TOMB_IDS
 )
 
 
@@ -638,7 +650,7 @@ def test_is_joint_burial_flag_paired_with_co_occupants() -> None:
             )
             seen_joint.append(r["tomb_id"])
     # Joint-coordinate burials in the current corpus, sorted by tomb_id
-    # via the merge sort key (TT10 sorts before SWV-ThreePrincesses
+    # via the merge sort key (TT10/TT122 sort before SWV-ThreePrincesses
     # because the TT prefix has rank 2 and SWV has rank 3 in
     # `merge.VALLEY_ORDER`):
     # - SWV-ThreePrincesses (chunk-7): PM p.591 lists Menhet/Merti/Menwi
@@ -646,9 +658,12 @@ def test_is_joint_burial_flag_paired_with_co_occupants() -> None:
     # - TT10 (chunk-9): PM p.19 lists Penbuy + Kasa coordinately as
     #   `PENBUY ... and KASA, Servants in the Place of Truth` — bare
     #   conjunction, plural role applies to both.
+    # - TT122 (chunk-21): PM p.235 lists [Amen]hotp + Amenemhet as
+    #   `[AMEN]ḤOTP, with Chapels of AMENEMḤET, both Overseers of the
+    #   magazine of Amūn` — coordinate dual-occupancy with shared role.
     # KV46 is intentionally False (asymmetric `YUIA ..., AND THUIU` —
     # Yuia leads). TT6 is also False (`X and son Y` — hierarchical).
-    assert seen_joint == ["TT10", "SWV-ThreePrincesses"], seen_joint
+    assert seen_joint == ["TT10", "TT122", "SWV-ThreePrincesses"], seen_joint
 
 
 def test_swv_three_princesses_per_person_role_propagation() -> None:
@@ -3511,9 +3526,12 @@ def test_182_usurped_canonical_set() -> None:
     Prophet of Amūn 'Great of Majesty', Ramesside — PM I.1 p.229). Note:
     TT112's original occupant Menkheperraʿsonb IS the usurped party (contrast
     TT95 Mery who was the USURPER — required a DERIVER_OVERRIDE to suppress
-    is_usurped); no override needed for TT112."""
+    is_usurped); no override needed for TT112.
+    Extended chunk 21: TT127 (Senemiʿoh, usurped in Ramesside times —
+    PM I.1 p.241). Senemiʿoh IS the usurped party; deriver fires correctly
+    on `usurped in Ramesside times`; no DERIVER_OVERRIDE needed."""
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
-                "TT65", "TT68", "TT70", "TT77", "TT84", "TT112"}
+                "TT65", "TT68", "TT70", "TT77", "TT84", "TT112", "TT127"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -5342,3 +5360,212 @@ def test_chunk17_tt90_nebamun_macron_restored_third_collision() -> None:
     assert "ū" in r["occupant_name"]  # macron-Ū restored
     assert "'Beloved-of-Amūn'" in r["notes_from_pm"]  # ASCII straight quotes
     assert r["source_citation"]["page"] == 183
+
+
+# ---------------------------------------------------------------------------
+# Chunk-21: TT121-TT130 (Sh. ʿAbd el-Qurna)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk21_all_rows_present() -> None:
+    """All 10 TT121-TT130 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK21_TOMB_IDS:
+        assert _row(tid)["tomb_id"] == tid
+
+
+def test_chunk21_theban_area() -> None:
+    """All chunk-21 rows are Sh. ʿAbd el-Qurna."""
+    for tid in CHUNK21_TOMB_IDS:
+        assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna", tid
+
+
+def test_chunk21_source_edition() -> None:
+    """All chunk-21 rows cite PM I.1 2nd ed. 1960."""
+    for tid in CHUNK21_TOMB_IDS:
+        assert _row(tid)["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", tid
+
+
+def test_chunk21_attribution_distribution() -> None:
+    """All chunk-21 rows are attested. TT121/TT126/TT127/TT130 each carry
+    `(?)` qualifying a regnal date or period, not the occupant identity.
+    DERIVER_OVERRIDES pin all four back to attested per the chunk-9 TT2
+    precedent. TT127 also has `usurped in Ramesside times` which correctly
+    sets is_usurped=True via the deriver (no override needed)."""
+    for tid in CHUNK21_TOMB_IDS:
+        assert _row(tid)["attribution_certainty"] == "attested", tid
+
+
+def test_chunk21_role_distribution() -> None:
+    """9 Officials + 1 null (TT129 `Name lost`, SENTINEL_NULL from merge).
+    TT122 joint burial: both occupant and co_occupant are Officials."""
+    expected = {
+        "TT121": "Official", "TT122": "Official", "TT123": "Official",
+        "TT124": "Official", "TT125": "Official", "TT126": "Official",
+        "TT127": "Official", "TT128": "Official", "TT129": None,
+        "TT130": "Official",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK21_TOMB_IDS}
+    assert actual == expected
+
+
+def test_chunk21_tt121_ahmosi_first_lector_amun() -> None:
+    """TT121 ʿAhmosi — First lector of Amūn, Temp. Tuthmosis III (?), p.235.
+    The `(?)` qualifies the regnal date only; DERIVER_OVERRIDE pins
+    attribution_certainty=attested. Macron-Ū on Amūn unanimous across agents."""
+    r = _row("TT121")
+    assert r["occupant_name"] == "ʿAhmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_usurped"] is False
+    assert r["is_joint_burial"] is False
+    assert "First lector of Amūn" in r["notes_from_pm"]
+    assert "Tuthmosis III (?)" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 235
+
+
+def test_chunk21_tt122_joint_burial_amenhotp_amenemhet() -> None:
+    """TT122 [Amen]hotp, joint burial with Amenemhet — both Overseers of the
+    magazine of Amūn, Temp. Tuthmosis III, p.235. is_joint_burial=True
+    unanimous. Tie-break pin: agent B's `with Chapels of Amenemḥet, both
+    Overseers...` (includes the shared-occupancy descriptor, no duplicate
+    occupant_name prefix). co_occupants=[{name: Amenemhet, role: Official}]."""
+    r = _row("TT122")
+    assert r["occupant_name"] == "[Amen]hotp"
+    assert r["occupant_role"] == "Official"
+    assert r["is_joint_burial"] is True
+    assert r["attribution_certainty"] == "attested"
+    assert r["co_occupants"] == [{"alt_names": [], "name": "Amenemhet", "role": "Official"}]
+    assert "with Chapels of Amenemḥet, both Overseers" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "ʿAmethu (tomb 83)" in r["notes_from_pm"]
+    assert "Neferḥotep, Prophet" in r["notes_from_pm"]
+    assert "Wife (of Amenemḥet), Esnub" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 235
+
+
+def test_chunk21_tt123_amenemhet_scribe_granary() -> None:
+    """TT123 Amenemhet — Scribe, Overseer of the granary, Counter of bread,
+    Temp. Tuthmosis III, p.236. (L. D. Text, No. 84.) Wife Ḥenu(t)iri.
+    Note name collision: TT122's co_occupant is also Amenemhet — different person
+    (different tomb, different role description)."""
+    r = _row("TT123")
+    assert r["occupant_name"] == "Amenemhet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Scribe, Overseer of the granary" in r["notes_from_pm"]
+    assert "Counter of bread" in r["notes_from_pm"]
+    assert "Tuthmosis III" in r["notes_from_pm"]
+    assert "Ḥenu(t)iri" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 236
+
+
+def test_chunk21_tt124_rey_steward_tuthmosis_i() -> None:
+    """TT124 Reʿy — Overseer of the magazine of the Lord of the Two Lands,
+    Steward of the good god Tuthmosis I, Temp. Tuthmosis I, p.237.
+    Wife Taerdais. Earliest dated tomb in chunk-21 (Tuthmosis I, Dyn. XVIII)."""
+    r = _row("TT124")
+    assert r["occupant_name"] == "Reʿy"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Overseer of the magazine of the Lord of the Two Lands" in r["notes_from_pm"]
+    assert "Tuthmosis I" in r["notes_from_pm"]
+    assert "Taerdais" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 237
+
+
+def test_chunk21_tt125_duauneheh_first_herald_hatshepsut() -> None:
+    """TT125 Duauneheh — First herald, Overseer of the estate of Amūn,
+    Temp. Ḥatshepsut, p.237. (CHAMPOLLION, No. 22, L. D. Text, No. 77.)
+    Mother, Tarunet. Underdot-Ḥ on Ḥatshepsut preserved in notes_from_pm
+    (verbatim-preserve field)."""
+    r = _row("TT125")
+    assert r["occupant_name"] == "Duauneheh"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "First herald" in r["notes_from_pm"]
+    assert "Ḥatshepsut" in r["notes_from_pm"]
+    assert "CHAMPOLLION, No. 22" in r["notes_from_pm"]
+    assert "Tarunet" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 237
+
+
+def test_chunk21_tt126_harmosi_great_commander_saite() -> None:
+    """TT126 Harmosi — Great commander of soldiers of the estate of Amūn,
+    Saite (?), p.241. (CHAMPOLLION, No. 23.) The `(?)` qualifies the Saite
+    period, not Harmosi's identity. DERIVER_OVERRIDE pins attested."""
+    r = _row("TT126")
+    assert r["occupant_name"] == "Harmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_usurped"] is False
+    assert "Great commander of soldiers" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Saite (?)" in r["notes_from_pm"]
+    assert "CHAMPOLLION, No. 23" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 241
+
+
+def test_chunk21_tt127_senemioh_usurped_ramesside() -> None:
+    """TT127 Senemiʿoh — Royal scribe, Overseer of all that grows,
+    Temp. Tuthmosis III (?), usurped in Ramesside times, p.241.
+    is_usurped=True: Senemiʿoh IS the usurped party (the deriver fires
+    correctly on `usurped in Ramesside times` — no override needed,
+    contrast TT95 Mery the usurper). attribution_certainty=attested via
+    DERIVER_OVERRIDE (`(?)` qualifies regnal date, not occupant identity).
+    Agent A swapped parents/wives — resolved by B+C 2/1 majority:
+    Parents Wazmosi and ʿAḥmosi; Wives Sensonb and Tetisonb."""
+    r = _row("TT127")
+    assert r["occupant_name"] == "Senemiʿoh"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_usurped"] is True
+    assert "usurped in Ramesside times" in r["notes_from_pm"]
+    assert "Parents, Wazmosi and ʿAḥmosi" in r["notes_from_pm"]
+    assert "Wives, Sensonb and Tetisonb" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 241
+
+
+def test_chunk21_tt128_pathenfy_mayor_edfu_saite() -> None:
+    """TT128 Pathenfy — Mayor of Edfu, Mayor of the City, Saite, p.243.
+    (CHAMPOLLION, No. 24.) Father Pedeamun. No `(?)` in notes — Saite
+    period is unhedged."""
+    r = _row("TT128")
+    assert r["occupant_name"] == "Pathenfy"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_usurped"] is False
+    assert "Mayor of Edfu" in r["notes_from_pm"]
+    assert "Saite" in r["notes_from_pm"]
+    assert "Pedeamun" in r["notes_from_pm"]
+    assert "CHAMPOLLION, No. 24" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 243
+
+
+def test_chunk21_tt129_anonymous_name_lost() -> None:
+    """TT129 — Name lost, Temp. Tuthmosis III or IV, p.244.
+    PM's headword `Name lost.` is the canonical anonymous form.
+    occupant_name=None, occupant_role=None (SENTINEL_NULL from merge —
+    all three agents emitted `Unknown` which collapses to null, same as
+    TT104/TT114/TT115/TT116/TT119 precedent)."""
+    r = _row("TT129")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"] == "Name lost. Temp. Tuthmosis III or IV."
+    assert r["source_citation"]["page"] == 244
+
+
+def test_chunk21_tt130_may_harbour_master_wife_tuy() -> None:
+    """TT130 May — Harbour-master in the Southern City, Temp. Tuthmosis III (?),
+    p.244. Wife Tuy. The `(?)` qualifies the regnal date; DERIVER_OVERRIDE
+    pins attribution_certainty=attested."""
+    r = _row("TT130")
+    assert r["occupant_name"] == "May"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_usurped"] is False
+    assert "Harbour-master in the Southern City" in r["notes_from_pm"]
+    assert "Tuthmosis III (?)" in r["notes_from_pm"]
+    assert "Tuy" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 244

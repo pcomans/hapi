@@ -1681,6 +1681,16 @@ CHUNK20_CORRECTIONS: list[tuple[str, str, object, str]] = []
 CHUNK20_RENAMES: dict[str, str] = {}
 
 
+# Chunk-21 (PM I.1 § I — TT121-TT130, Sh. ʿAbd el-Qurna).
+# One tie-break override (TT122 notes_from_pm). No reviewer-identified
+# corrections after 3-agent merge. The empty list is retained so
+# `test_all_corrections_includes_every_chunk_list` continues to enforce
+# ALL_CORRECTIONS aggregation.
+CHUNK21_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+CHUNK21_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1978,6 +1988,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK18_CORRECTIONS,
     CHUNK19_CORRECTIONS,
     CHUNK20_CORRECTIONS,
+    CHUNK21_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2000,6 +2011,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK18_RENAMES,
     **CHUNK19_RENAMES,
     **CHUNK20_RENAMES,
+    **CHUNK21_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -2476,6 +2488,53 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "explicit `Uninscribed` token; TT115 uses the synonymous `No texts` "
         "form). Egyptologically equivalent: both flag a tomb where PM "
         "found no inscriptional layer.",
+    ),
+    # Chunk-21 attribution_certainty overrides. TT121, TT126, TT127, and TT130
+    # each carry `(?)` qualifying a regnal date (e.g. `Tuthmosis III (?)` or
+    # `Saite (?)`) — a temporal-range hedge, not a primary occupant-identity
+    # hedge. All four occupants are named (or in TT126 titled without name) with
+    # unhedged attribution in the PM headword proper. Same regnal-date-hedge
+    # class as chunk-10 TT12/TT19/TT20, extended through chunks 13–20.
+    # Per chunk-9 TT2 precedent: attribution_certainty encodes occupant-identity
+    # certainty, not regnal-date certainty.
+    (
+        "TT121",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.235 prints `121. ʿAI;IMOSI ..., First lector of Amūn. "
+        "Temp. Tuthmosis III (?).` The `(?)` qualifies the regnal date "
+        "(Tuthmosis III), not the identification of ʿAhmosi as First lector "
+        "of Amūn. Per chunk-9 TT2 precedent.",
+    ),
+    (
+        "TT126",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.241 prints `126. I:IARMOSI ..., Great commander of soldiers "
+        "of the estate of Amūn. Saite (?).` The `(?)` qualifies the period "
+        "attribution (Saite), not Harmosi's identification. Per chunk-9 TT2 "
+        "precedent.",
+    ),
+    (
+        "TT127",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.241 prints `127. SENEMI<OI;I ..., Royal scribe, Overseer "
+        "of all that grows. Temp. Tuthmosis III (?), usurped in Ramesside "
+        "times.` The `(?)` qualifies the regnal date (Tuthmosis III), not "
+        "Senemiʿoh's identification. The `usurped in Ramesside times` clause "
+        "correctly sets is_usurped=True via the deriver (Senemiʿoh IS the "
+        "usurped party, no override needed — contrast TT95 Mery). Per chunk-9 "
+        "TT2 precedent.",
+    ),
+    (
+        "TT130",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.244 prints `130. MAY ..., Harbour-master in the Southern "
+        "City. Temp. Tuthmosis III (?).` The `(?)` qualifies the regnal date "
+        "(Tuthmosis III), not May's identification as Harbour-master. Per "
+        "chunk-9 TT2 precedent.",
     ),
 ]
 

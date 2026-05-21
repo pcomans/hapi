@@ -383,6 +383,12 @@ TT120 (ʿAnen):
   occupant_alt_names: a=["Mahu"] | b=[] | c=["Mahu"]  → chose ["Mahu"]
   shared_with_tombs: a=[] | b=["KV46"] | c=[]  → chose []
 
+TT122 ([Amen]hotp):
+  notes_from_pm: a="Overseers of the magazine of Amūn. Temp. Tuthmosis III. Parents (of [Amen]hotp), ʿAmethu (tomb 83) and Taʿamethu. Father (of Amenemḥet), Neferḥotep, Prophet. Wife (of Amenemḥet), Esnub." | b="with Chapels of Amenemḥet, both Overseers of the magazine of Amūn. Temp. Tuthmosis III. Parents (of [Amen]ḥotp), ʿAmethu (tomb 83) and Taʿamethu. Father (of Amenemḥet), Neferḥotep, Prophet. Wife (of Amenemḥet), Esnub." | c="[Amen]ḥotp, with Chapels of Amenemḥet, both Overseers of the magazine of Amūn. Temp. Tuthmosis III. Parents (of [Amen]ḥotp), ʿAmethu (tomb 83) and Taʿamethu. Father (of Amenemḥet), Neferḥotep, Prophet. Wife (of Amenemḥet), Esnub."  → chose "with Chapels of Amenemḥet, both Overseers of the magazine of Amūn. Temp. Tuthmosis III. Parents (of [Amen]ḥotp), ʿAmethu (tomb 83) and Taʿamethu. Father (of Amenemḥet), Neferḥotep, Prophet. Wife (of Amenemḥet), Esnub."
+
+TT127 (Senemiʿoh):
+  notes_from_pm: a="Royal scribe, Overseer of all that grows. Temp. Tuthmosis III (?), usurped in Ramesside times. (L. D. Text, No. 76.) Wives, Sensonb and ʿAḥmosi. Parents, Wazmosi and Tetisonb." | b="Royal scribe, Overseer of all that grows. Temp. Tuthmosis III (?), usurped in Ramesside times. (L. D. Text, No. 76.) Parents, Wazmosi and ʿAḥmosi. Wives, Sensonb and Tetisonb." | c="Royal scribe, Overseer of all that grows. Temp. Tuthmosis III (?), usurped in Ramesside times. (L. D. Text, No. 76.) Parents, Wazmosi and ʿAḥmosi. Wives, Sensonb and Tetisonb."  → chose "Royal scribe, Overseer of all that grows. Temp. Tuthmosis III (?), usurped in Ramesside times. (L. D. Text, No. 76.) Parents, Wazmosi and ʿAḥmosi. Wives, Sensonb and Tetisonb."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -465,6 +471,7 @@ Per-chunk correction counts:
 - Chunk 18: 6 correction(s) defined in CHUNK18_CORRECTIONS.
 - Chunk 19: 0 correction(s) defined in CHUNK19_CORRECTIONS.
 - Chunk 20: 0 correction(s) defined in CHUNK20_CORRECTIONS.
+- Chunk 21: 0 correction(s) defined in CHUNK21_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -744,8 +751,13 @@ Field corrections:
 - TT98: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT108: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT110: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT115: is_uninscribed → false (issue #182 derivation from notes_from_pm)
 - TT116: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT118: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT121: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT126: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT127: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT130: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -773,3 +785,7 @@ Field corrections:
 - TT116: attribution_certainty → "attested" (deriver override; PM I.1 p.233 prints `116. Hereditary prince. Temp. Tuthmosis IV to Amenophis III...)
 - TT118: attribution_certainty → "attested" (deriver override; PM I.1 p.233 prints `118. AMENMOSI ..., Fan-bearer on the right of the King. Tem...)
 - TT115: is_uninscribed → true (deriver override; PR #264 round-3 Gemini finding 3277852207: TT115 notes_from_pm begins `No texts....)
+- TT121: attribution_certainty → "attested" (deriver override; PM I.1 p.235 prints `121. ʿAI;IMOSI ..., First lector of Amūn. Temp. Tuthmosis I...)
+- TT126: attribution_certainty → "attested" (deriver override; PM I.1 p.241 prints `126. I:IARMOSI ..., Great commander of soldiers of the esta...)
+- TT127: attribution_certainty → "attested" (deriver override; PM I.1 p.241 prints `127. SENEMI<OI;I ..., Royal scribe, Overseer of all that gr...)
+- TT130: attribution_certainty → "attested" (deriver override; PM I.1 p.244 prints `130. MAY ..., Harbour-master in the Southern City. Temp. Tu...)
