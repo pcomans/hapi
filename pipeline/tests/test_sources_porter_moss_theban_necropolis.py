@@ -7139,11 +7139,12 @@ def test_chunk27_tt186_hy_nomarch_fip() -> None:
 
 
 def test_chunk27_tt187_pakhihet_wab_priest_amun() -> None:
-    """TT187 — Pakhihet, Wab-priest of Amun. Dyn. XIX. Khôkha. p.293.
+    """TT187 — Pakhihet, wʿab-priest of Amūn. Dyn. XIX. Khôkha. p.293.
     Parents: ʿAshakhet (tomb 174) + Tazabu. Wife Mutemonet.
-    notes 2/1 majority (A+B): `Wab-priest` capital-W, no macron on Amun.
-    Egyptologist flag: macron-Ū on Amūn likely needed per verbatim-preserve
-    policy; verify against PDF p.293."""
+    notes per CHUNK27_CORRECTIONS (PR #271 round-1 Gemini fix): sentence-
+    initial lowercase `wʿab-priest` preserved per PM source verbatim
+    (chunk-22 TT113 + chunk-26 ayin-before-a precedent); macron-Ū
+    restored on Amūn per chunk-12-onward verbatim-preserve policy."""
     r = _row("TT187")
     assert r["occupant_name"] == "Pakhihet"
     assert r["occupant_role"] == "Official"
@@ -7155,8 +7156,8 @@ def test_chunk27_tt187_pakhihet_wab_priest_amun() -> None:
     assert r["is_uninscribed"] is False
     assert r["is_unfinished"] is False
     assert r["is_usurped"] is False
-    assert "Wab-priest" in r["notes_from_pm"]
-    assert "Amun" in r["notes_from_pm"]
+    assert "wʿab-priest" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "ʿAshakhet" in r["notes_from_pm"]
     assert "tomb 174" in r["notes_from_pm"]

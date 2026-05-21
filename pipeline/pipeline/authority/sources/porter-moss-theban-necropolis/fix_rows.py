@@ -2099,6 +2099,23 @@ CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Verbatim-preserve policy on notes_from_pm.",
     ),
     (
+        "TT187",
+        "notes_from_pm",
+        "wʿab-priest of Amūn. Dyn. XIX. Parents, ʿAshakhet (tomb 174) "
+        "and Tazabu. Wife, Mutemonet.",
+        "PM I.1 p.293 / physical PDF p.311 (TT187 PAKHIḤET) prints "
+        "`warb-priest of Amūn. Dyn. XIX.` Three restorations: (a) "
+        "`Wab-priest` → `wʿab-priest` — PM source `warb-priest` decodes "
+        "to lowercase `wʿab-priest` per chunk-22 TT113 + chunk-23 TT141 "
+        "+ chunk-26 ayin-before-a precedent (sentence-initial lowercase "
+        "preserved per PM source verbatim, not auto-capitalized). (b) "
+        "`Amun` → `Amūn` — PM body-prose macron-Ū per chunk-12-onward "
+        "macron-retain class (same as TT184, TT189). (c) `<Ashakhet` → "
+        "`ʿAshakhet` — PM OCR raised-ayin glyph `<` → U+02BF per "
+        "postprocess whitelist. Verbatim-preserve policy on notes_from_pm. "
+        "Gemini PR #271 round 1 finding 3279424043.",
+    ),
+    (
         "TT190",
         "notes_from_pm",
         "Divine father, Prophet of the head of the King. Saite (usurped "

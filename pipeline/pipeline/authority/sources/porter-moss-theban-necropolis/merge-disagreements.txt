@@ -623,7 +623,7 @@ Per-chunk correction counts:
 - Chunk 24: 3 correction(s) defined in CHUNK24_CORRECTIONS.
 - Chunk 25: 1 correction(s) defined in CHUNK25_CORRECTIONS.
 - Chunk 26: 3 correction(s) defined in CHUNK26_CORRECTIONS.
-- Chunk 27: 4 correction(s) defined in CHUNK27_CORRECTIONS.
+- Chunk 27: 5 correction(s) defined in CHUNK27_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -889,6 +889,9 @@ Field corrections:
     value: "Head sculptor of the Lord of the Two Lands, and Ipuky, Sculptor of the Lord of the Two Lands. Temp. Amenophis III to IV. Parents (of Nebamūn), Neferḥet and Thepu; (of Ipuky), Senennūter and Netermosi. Wife of Ipuky (and probably of Nebamūn), Ḥenutnefert."
 - TT189: notes_from_pm already matches override (no-op this run; PM I.1 p.295 / physical PDF p.313 (TT189 Nekht-Ḏhout). Two restorations on the tie-break-pinned agent-A form: (a) `Neteḥab` → `Netemḥab` — PM p.295 prints `Netemḥab` (underdot-H with `m`); agent A's OCR shortening dropped the `m`. (b) `Amun` × 2 → `Amūn` × 2 — PM prints `Amūn` with macron-Ū in body prose (same chunk-12-onward macron-retain class as TT184, TT187 etc.). Verbatim-preserve policy on notes_from_pm.)
     value: "Overseer of carpenters of the northern lake of Amūn, Head of goldworkers in the estate of Amūn. Temp. Ramesses II. Wives, Netemḥab and Tentpa..."
+- TT187: notes_from_pm corrected this run (PM I.1 p.293 / physical PDF p.311 (TT187 PAKHIḤET) prints `warb-priest of Amūn. Dyn. XIX.` Three restorations: (a) `Wab-priest` → `wʿab-priest` — PM source `warb-priest` decodes to lowercase `wʿab-priest` per chunk-22 TT113 + chunk-23 TT141 + chunk-26 ayin-before-a precedent (sentence-initial lowercase preserved per PM source verbatim, not auto-capitalized). (b) `Amun` → `Amūn` — PM body-prose macron-Ū per chunk-12-onward macron-retain class (same as TT184, TT189). (c) `<Ashakhet` → `ʿAshakhet` — PM OCR raised-ayin glyph `<` → U+02BF per postprocess whitelist. Verbatim-preserve policy on notes_from_pm. Gemini PR #271 round 1 finding 3279424043.)
+    was: "Wab-priest of Amun. Dyn. XIX. Parents, ʿAshakhet (tomb 174) and Tazabu. Wife, Mutemonet."
+    now: "wʿab-priest of Amūn. Dyn. XIX. Parents, ʿAshakhet (tomb 174) and Tazabu. Wife, Mutemonet."
 - TT190: notes_from_pm already matches override (no-op this run; PM I.1 p.297 / physical PDF p.315 (TT190 Esbanebded). Two diacritic restorations on the tie-break-pinned agent-C form: (a) `Meramuniotes` → `Meramūniotes` — PM p.297 prints `Meramūniotes` with macron-Ū; agent C stripped the macron. (b) `Amen-Re` → `Amen-rēʿ` — PM p.297 prints `Amen-rēʿ` with macron-ē + ayin (standard PM rendering of the Amen-Re solar form in body prose); agents A+B have lowercase `Amen-re`, agent C has `Amen-Re` (capital R — heading artefact). Verbatim-preserve policy on notes_from_pm per the chunk-3/7 macron-preserve precedent (KV45/KV46/DAN-Neferhotep all preserve macrons in notes fields).)
     value: "Divine father, Prophet of the head of the King. Saite (usurped from a Ramesside tomb). Parents, Pakharkhons, Divine father, and Meramūniotes, Sistrum-player of Amen-rēʿ. Wife, Tanub."
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
