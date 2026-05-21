@@ -8878,7 +8878,7 @@ def test_chunk33_tt241_ahmosi_scribe_divine_writings() -> None:
     assert "Head of mysteries" in r["notes_from_pm"]
     assert "Tuthmosis III" in r["notes_from_pm"]
     assert "(?)" in r["notes_from_pm"]
-    assert "<Alimosi" in r["notes_from_pm"]  # ayin preserved in wife's name
+    assert "ʿAlimosi" in r["notes_from_pm"]  # ayin preserved in wife's name
     assert r["theban_area"] == "Khokha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 331
@@ -8902,7 +8902,7 @@ def test_chunk33_tt242_wehebrecon_chamberlain_divine_adoratress() -> None:
     assert r["is_unfinished"] is False
     assert r["is_usurped"] is False
     assert "Chamberlain of the divine adoratress" in r["notes_from_pm"]
-    assert "<Ankhnesneferebrec" in r["notes_from_pm"]
+    assert "ʿAnkhnesneferebreʿ" in r["notes_from_pm"]
     assert "Saite" in r["notes_from_pm"]
     assert "Tadepanehep" in r["notes_from_pm"]
     assert "Pedeamonnai" in r["notes_from_pm"]

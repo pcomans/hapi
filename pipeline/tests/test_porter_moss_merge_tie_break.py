@@ -821,10 +821,10 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT241", "notes_from_pm"):
             "Scribe of the divine writings, Child of the nursery, Head of "
             "mysteries in the House of the morning. Temp. Tuthmosis III(?). "
-            "Wife, <Alimosi.",
+            "Wife, ʿAlimosi.",
         ("TT241", "occupant_name"): "ʿAhmosi",
         ("TT242", "notes_from_pm"):
-            "Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. "
+            "Chamberlain of the divine adoratress ʿAnkhnesneferebreʿ. Saite. "
             "Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais. "
             "(L. D. Text, No. 22.)",
         ("TT242", "occupant_name"): "Wehebrecon",

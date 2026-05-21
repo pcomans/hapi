@@ -3071,7 +3071,7 @@ CHUNK33_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT242",
         "notes_from_pm",
-        "Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. "
+        "Chamberlain of the divine adoratress ʿAnkhnesneferebreʿ. Saite. "
         "Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais. "
         "(L. D. Text, No. 22.)",
         "PM I.1 p.332 / chunk-33 source text (TT242 Wehebrecon). Source "
@@ -3079,9 +3079,28 @@ CHUNK33_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "hieroglyphic `on` → `Pedeamonnai`); (2) wife `Tadepanehep`; "
         "(3) bibliographic ref `(L. D. Text, No. 22.)`. The tie-break "
         "pinned agent C's value which had the best adoratress name spelling "
-        "(`<Ankhnesneferebrec` with ayin) and `Pedeamonnai`, but omitted "
-        "the L.D. cite. Agent B had the L.D. cite but wrong adoratress name. "
-        "Append the missing bibliographic reference.",
+        "(`<Ankhnesneferebrec` with ayin OCR) and `Pedeamonnai`, but "
+        "omitted the L.D. cite. Append the missing bibliographic reference + "
+        "restore both ayin glyphs (leading `<` and trailing `c`) to U+02BF "
+        "per source-wide diacritic policy (Gemini PR #277 round-1 finding "
+        "3283267567/581).",
+    ),
+    (
+        "TT241",
+        "notes_from_pm",
+        "Scribe of the divine writings, Child of the nursery, Head of "
+        "mysteries in the House of the morning. Temp. Tuthmosis III(?). "
+        "Wife, ʿAlimosi.",
+        "PM I.1 p.331 / chunk-33 source text (TT241 ʿAhmosi). Tie-break "
+        "pinned agent C's `<Alimosi` for the wife's name. The leading `<` "
+        "is the OCR ayin glyph; restore to U+02BF (`ʿAlimosi`). Stays "
+        "agent-C-faithful on the body (`Alimosi`) rather than speculatively "
+        "Egyptologically normalizing to `ʿAḥmosi`: PM source OCR `<Al_lmosi` "
+        "has `_l` mid-word noise that doesn't unambiguously decode to `Ḥ` "
+        "(no `I;I` Ḥ-residual cluster present); per Constitutional Rule 1, "
+        "keep the OCR-decoded form and let egyptologist review decide if "
+        "the wife's name is the same as the occupant's. Gemini PR #277 "
+        "round-1 finding 3283267541.",
     ),
     (
         "TT248",
