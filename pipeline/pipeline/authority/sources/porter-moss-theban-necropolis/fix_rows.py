@@ -3019,7 +3019,7 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT163",
         "attribution_certainty",
         "attested",
-        "PM I.1 p.276 prints `163. AMENMḤET ..., Mayor of the Southern City, "
+        "PM I.1 p.276 prints `163. AMENEMḤET ..., Mayor of the Southern City, "
         "Royal scribe. Dyn. XIX. (Inaccessible.) Father(?), Ḥuy, Judge, Mayor.` "
         "The `(?)` qualifies the identification of the FATHER (Ḥuy), not "
         "Amenemhet's identification as Mayor/Royal scribe. Same parentage-hedge "
