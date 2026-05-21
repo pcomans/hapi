@@ -704,6 +704,20 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Third prophet of Amūn. Probably temp. Ramesses III. (CHAMPOLLION, "
             "No. 44, L. D. Text, No. 9.) Wife, Nefertere, Chief of the harim "
             "of Amūn.",
+        ("TT181", "notes_from_pm"):
+            "Head sculptor of the Lord of the Two Lands, and Ipuky, Sculptor of "
+            "the Lord of the Two Lands. Temp. Amenophis III to IV. Parents (of "
+            "Nebamūn), Neferḥet and Thepu; (of Ipuky), Senennūter and Netermosi. "
+            "Wife of Ipuky (and probably of Nebamūn), Ḥenutnefert.",
+        ("TT189", "occupant_name"): "Nekht-Ḏhout",
+        ("TT189", "notes_from_pm"):
+            "Overseer of carpenters of the northern lake of Amūn, Head of "
+            "goldworkers in the estate of Amūn. Temp. Ramesses II. Wives, "
+            "Netemḥab and Tentpa...",
+        ("TT190", "notes_from_pm"):
+            "Divine father, Prophet of the head of the King. Saite (usurped "
+            "from a Ramesside tomb). Parents, Pakharkhons, Divine father, and "
+            "Meramūniotes, Sistrum-player of Amen-rēʿ. Wife, Tanub.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
