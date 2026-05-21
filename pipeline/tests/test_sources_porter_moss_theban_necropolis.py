@@ -334,6 +334,9 @@ CHUNK30_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK31_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(221, 231)}
 )
+CHUNK32_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(231, 241)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -365,6 +368,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK29_TOMB_IDS
     | CHUNK30_TOMB_IDS
     | CHUNK31_TOMB_IDS
+    | CHUNK32_TOMB_IDS
 )
 
 
@@ -3673,6 +3677,12 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # genuinely uncertain). This is NOT a regnal-date tail or secondary-clause
         # hedge; the deriver correctly fires `uncertain`. No DERIVER_OVERRIDE needed.
         "TT230",
+        # TT239 chunk-32: PM headword `239. PENHET, Governor of all Northern Lands.
+        # Temp. Tuthmosis IV to Amenophis II (?).` — PM's standard `(?)` attribution-
+        # uncertainty glyph qualifies the regnal-date range. The deriver fires
+        # `uncertain` from the `(?)` in notes_from_pm. The tie-break override also
+        # pins `uncertain` (3-way split: A=uncertain/B=probable/C=attested).
+        "TT239",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -8483,3 +8493,287 @@ def test_chunk31_tt230_perhaps_menes_scribe_soldiers_unfinished() -> None:
     assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 328
+
+
+# Chunk-32: TT231–TT240 (Dra' Abu el-Naga, Qurnet Muraʿi, Khôkha, ʿAsâsîf)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk32_all_rows_present() -> None:
+    """All 10 TT231-TT240 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK32_TOMB_IDS
+    assert actual == CHUNK32_TOMB_IDS, sorted(CHUNK32_TOMB_IDS - actual)
+
+
+def test_chunk32_theban_area() -> None:
+    """TT231-TT234/TT236-TT237/TT239 Dra' Abu el-Naga, TT235 Qurnet Muraʿi,
+    TT238 Khokha, TT240 ʿAsâsîf."""
+    expected = {
+        "TT231": "Dra' Abu el-Naga",
+        "TT232": "Dra' Abu el-Naga",
+        "TT233": "Dra' Abu el-Naga",
+        "TT234": "Dra' Abu el-Naga",
+        "TT235": "Qurnet Muraʿi",
+        "TT236": "Dra' Abu el-Naga",
+        "TT237": "Dra' Abu el-Naga",
+        "TT238": "Khokha",
+        "TT239": "Dra' Abu el-Naga",
+        "TT240": "ʿAsâsîf",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, (tid, r["theban_area"])
+
+
+def test_chunk32_source_edition() -> None:
+    """All chunk-32 rows cite PM I.1 2nd ed. 1960."""
+    for tid in CHUNK32_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid,
+            r["source_citation"]["edition"],
+        )
+
+
+def test_chunk32_source_pages() -> None:
+    """Headword page citations (CHUNK32_CORRECTIONS applied to TT232/TT236)."""
+    expected_pages = {
+        "TT231": 328,
+        "TT232": 328,  # CHUNK32_CORRECTIONS: 329→328 (headword on p.328)
+        "TT233": 329,
+        "TT234": 329,
+        "TT235": 329,
+        "TT236": 329,  # CHUNK32_CORRECTIONS: 330→329 (headword on p.329)
+        "TT237": 330,
+        "TT238": 330,
+        "TT239": 330,
+        "TT240": 330,
+    }
+    for tid, page in expected_pages.items():
+        r = _row(tid)
+        assert r["source_citation"]["page"] == page, (tid, r["source_citation"]["page"])
+
+
+def test_chunk32_tt231_nebamun_scribe_grain() -> None:
+    """TT231 — Nebamun, Scribe, Counter of the grain of Amun. Early Dyn. XVIII.
+    Dra' Abu el-Naga. p.328. Wife Nefertere in notes."""
+    r = _row("TT231")
+    assert r["occupant_name"] == "Nebamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Counter of the grain" in r["notes_from_pm"]
+    assert "Early Dyn. XVIII" in r["notes_from_pm"]
+    assert "Nefertere" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 328
+
+
+def test_chunk32_tt232_tharwas_scribe_divine_seal() -> None:
+    """TT232 — Tharwas, Scribe of the divine seal of the treasury of Amun.
+    Ramesside. Dra' Abu el-Naga. p.328 (CHUNK32_CORRECTIONS: off-by-one 329→328).
+    Father Weshebamunḥeref (tie-break + CHUNK32_CORRECTIONS: restore underdot-ḥ)."""
+    r = _row("TT232")
+    assert r["occupant_name"] == "Tharwas"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "divine seal" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Weshebamunḥeref" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 328
+
+
+def test_chunk32_tt233_saroy_royal_scribe_table() -> None:
+    """TT233 — Saroy, Royal scribe of the table of the Lord of the Two Lands.
+    Ramesside. Dra' Abu el-Naga. p.329."""
+    r = _row("TT233")
+    assert r["occupant_name"] == "Saroy"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal scribe of the table" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 329
+
+
+def test_chunk32_tt234_roy_mayor_dyn18_or_19() -> None:
+    """TT234 — Roy, Mayor. Dyn. XVIII or XIX. Dra' Abu el-Naga. p.329.
+    Wife Ani in notes."""
+    r = _row("TT234")
+    assert r["occupant_name"] == "Roy"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Mayor" in r["notes_from_pm"]
+    assert "Dyn. XVIII or XIX" in r["notes_from_pm"]
+    assert "Ani" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 329
+
+
+def test_chunk32_tt235_userhet_first_prophet_monthu() -> None:
+    """TT235 — Userhet, First prophet of Monthu Lord of Thebes. Dyn. XX.
+    Qurnet Muraʿi. p.329.
+    Tie-break: all 3 agents garbled OCR `USERI;IET`; B's `Userhet` correct
+    (strip-Ḥ rule; A invented k, C invented ib)."""
+    r = _row("TT235")
+    assert r["occupant_name"] == "Userhet"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First prophet of Monthu" in r["notes_from_pm"]
+    assert "Dyn. XX" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 329
+
+
+def test_chunk32_tt236_harnakht_second_prophet_amun() -> None:
+    """TT236 — Harnakht, Second prophet of Amun, Overseer of the treasury of Amun.
+    Ramesside. Dra' Abu el-Naga. p.329 (CHUNK32_CORRECTIONS: off-by-one 330→329)."""
+    r = _row("TT236")
+    assert r["occupant_name"] == "Harnakht"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Second prophet of Amun" in r["notes_from_pm"]
+    assert "Overseer of the treasury" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 329
+
+
+def test_chunk32_tt237_unnufer_chief_lector() -> None:
+    """TT237 — Unnufer, Chief lector. Ramesside. Dra' Abu el-Naga. p.330."""
+    r = _row("TT237")
+    assert r["occupant_name"] == "Unnufer"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Chief lector" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 330
+
+
+def test_chunk32_tt238_neferweben_royal_butler() -> None:
+    """TT238 — Neferweben, Royal butler clean of hands. Dyn. XVIII. Khokha. p.330."""
+    r = _row("TT238")
+    assert r["occupant_name"] == "Neferweben"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal butler" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 330
+
+
+def test_chunk32_tt239_penhet_governor_northern_lands() -> None:
+    """TT239 — Penhet, Governor of all Northern Lands. Temp. Tuthmosis IV to
+    Amenophis II (?). Dra' Abu el-Naga. p.330.
+    Tie-break: attribution_certainty=uncertain (PM's `(?)` hedge; 3-way split).
+    CHUNK32_CORRECTIONS: wife Ḥetepti (restore underdot-ḥ; source `l:letepti`)."""
+    r = _row("TT239")
+    assert r["occupant_name"] == "Penhet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "uncertain"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Governor of all Northern Lands" in r["notes_from_pm"]
+    assert "Tuthmosis IV" in r["notes_from_pm"]
+    assert "(?)" in r["notes_from_pm"]
+    assert "Ḥetepti" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 330
+
+
+def test_chunk32_tt240_meru_overseer_sealers_mk() -> None:
+    """TT240 — Meru, Overseer of sealers. Temp. Mentuḥotp-Nebḥepetreʿ (MK Dyn. XI).
+    ʿAsâsîf. p.330.
+    CHUNK32_CORRECTIONS: restore `Mentuḥotp-Nebḥepetreʿ` (diacritics + ayin +
+    PM's older -hotp spelling; majority had plain `Mentuhotep-Nebhepetre`)."""
+    r = _row("TT240")
+    assert r["occupant_name"] == "Meru"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of sealers" in r["notes_from_pm"]
+    assert "Mentuḥotp-Nebḥepetreʿ" in r["notes_from_pm"]
+    assert "L. D. Text, No. 14" in r["notes_from_pm"]
+    assert "M.M.A. Excav. No. 517" in r["notes_from_pm"]
+    assert "Iku" in r["notes_from_pm"]
+    assert "Nebti" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 330
