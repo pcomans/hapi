@@ -114,7 +114,7 @@ If a row's headword sub-site line declares a sub-site NOT in this list, restore 
 
 Per the project's `occupant_name` matchable-name policy:
 - Strip underdot-Ḥ (`Ḥ` / `ḥ`) → plain `H` / `h`.
-- Strip vowel macrons (`ū`/`ō`/`ē`/`ā` AND capital `Ū`/`Ō`/`Ē`/`Ā`) → plain `u`/`o`/`e`/`a`. The matchable `occupant_name` field is meant for cross-source person identification; museums and other authority sources don't carry PM's macrons, so stripping makes the names matchable across sources. Macrons ARE preserved in `notes_from_pm` (verbatim-source policy applies there). chunk-15 TT65 `NEBAMŪN` → `Nebamun` precedent + chunk-36 TT261 `KHA<EMWĒSET` → `Khaʿemweset` precedent.
+- Strip vowel macrons (`ū`/`ō`/`ē`/`ā` AND capital `Ū`/`Ō`/`Ē`/`Ā`) → plain `u`/`o`/`e`/`a`. The matchable `occupant_name` field is meant for cross-source person identification; museums and other authority sources don't carry PM's macrons, so stripping makes the names matchable across sources. Macrons ARE preserved in `notes_from_pm` (verbatim-source policy applies there). chunk-15 TT65 `NEBAMŪN` → `Nebamun` precedent + chunk-35 TT261 `KHA<EMWĒSET` → `Khaʿemweset` precedent.
 - Preserve ayin (`ʿ`) where PM prints it as a distinguishing radical (chunk-7 / chunk-8 / chunk-9 precedent).
 - Preserve underdot-Ḳ (`Ḳ` / `ḳ`) (chunk-7 / chunk-9 precedent).
 - Preserve d-bar `Ḏ` / `ḏ` (U+1E0E / U+1E0F) for the Thoth/Djehuty (`Ḏḥwty`) name family — chunk-12 TT32 `Ḏhutmosi` precedent (PR #200) per PR #151 egyptologist-verified printed-source convention. NOT to be confused with d-underdot `Ḍ` (a different consonant). chunk-10 TT11 `Ḍhout` is currently under audit issue #201 for the same correction.

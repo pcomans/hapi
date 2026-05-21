@@ -3491,7 +3491,7 @@ CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "reading and belongs verbatim in notes_from_pm (parallel to chunk-3 "
         "KV34 `1st ed. 24` and chunk-2 KV18 `formerly XI` PM-editorial notes). "
         "(3) `Scankhkarec` → `Sʿankhkareʿ`: the prenomen S-ʿnkh-kꜣ-Rʿ "
-        "(Sankhkareʿ) carries TWO ayins; both leading `c` and trailing `c` "
+        "(Sʿankhkareʿ) carries TWO ayins; both leading `c` and trailing `c` "
         "in the OCR represent ayin glyphs (per Gemini PR #280 round-1 "
         "finding 3283948494). `(formerly ...)` capitalised to `(Formerly ...)` "
         "per sentence-opening convention — PM prints the parenthetical "
