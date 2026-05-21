@@ -292,6 +292,24 @@ CHUNK21_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK22_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(131, 141)}
 )
+# Chunk 23: TT141–TT150. All in Dra' Abu el-Naga (§ I). PM I.1 pp.254–261.
+# 7 tie-break-overrides entries: TT141/TT144/TT146/TT147/TT148/TT149/TT150
+# notes_from_pm (all Amün/Amūn/Amun 3-way macron splits; TT144 also has
+# Ḥenuttaui vs Henuttaui wife-name + (?) spacing; TT147 has (?) spacing).
+# 2/1-majority resolutions: TT142 Ḏḥutnofer (B+C d-bar), TT143 notes space
+# before (?) (A+C), TT145 notes ʿAḥḥotp (B+C), TT150 notes Iact-ib (A+C)
+# but overridden by tie-break (B's Amūn is load-bearing → pin B = Iaet-ib).
+# 3 CHUNK23_CORRECTIONS: TT141 wʿab-priest ayin+lowercase, TT143 occupant_role
+# sentinel-null, TT147 occupant_role sentinel-null.
+# 5 DERIVER_OVERRIDES: TT142/TT143/TT144/TT146/TT147 attribution_certainty
+# (all (?) qualify regnal date or anonymous-tomb title, not occupant identity).
+# Egyptologist flags: TT144 Ḥenuttaui vs Henuttaui (agent C has underdot;
+# majority A+B strip it — confirm PDF p.275); TT148 Thonnfer macron question
+# (may be Thonnūfer); TT150 wife Iaet-ib vs Iact-ib (A+C had Iact, B had Iaet
+# — confirm PDF p.279).
+CHUNK23_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(141, 151)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -314,6 +332,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK20_TOMB_IDS
     | CHUNK21_TOMB_IDS
     | CHUNK22_TOMB_IDS
+    | CHUNK23_TOMB_IDS
 )
 
 
@@ -5869,3 +5888,243 @@ def test_chunk22_tt140_neferronpet_hefia_dra_abu_el_naga() -> None:
     assert "Tauy" in r["notes_from_pm"]
     assert r["theban_area"] == "Dra' Abu el-Naga"
     assert r["source_citation"]["page"] == 254
+
+
+def test_chunk23_tt141_bekenkhons_waab_priest_amun() -> None:
+    """TT141 Bekenkhons — wʿab-priest of Amūn. Ramesside. Wife Takhaʿ(t). p.254.
+    Dra' Abu el-Naga. Tie-break pins agent B (Amūn macron + ayin on wife name).
+    CHUNK23_CORRECTIONS restores `Wab-priest` → `wʿab-priest` (ayin before a,
+    lowercase initial, same OCR class as TT135/TT139). 1/1/1 tie on Amün/Amūn/Amun
+    macron variant. All 3 agents agree on structured fields."""
+    r = _row("TT141")
+    assert r["occupant_name"] == "Bekenkhons"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"].startswith("wʿab-priest of Amūn.")
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Takhaʿ(t)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 254
+
+
+def test_chunk23_tt142_simut_overseer_works_djhutnofer() -> None:
+    """TT142 Simut — Overseer of works of Amen-reʿ in Karnak. Temp. Tuthmosis
+    III to Amenophis II (?). Parents: Menta (Overseer of granary of Amon) and
+    Ḏḥutnofer. Wife Sitamon. p.255. 2/1 majority: B+C emit d-bar Ḏḥutnofer;
+    A had `Dḥutnofer` (no d-bar). DERIVER_OVERRIDE pins attribution_certainty=
+    attested (the `(?)` qualifies the regnal-range tail, not Simut's
+    identification)."""
+    r = _row("TT142")
+    assert r["occupant_name"] == "Simut"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of works of Amen-reʿ in Karnak" in r["notes_from_pm"]
+    assert "Tuthmosis III to Amenophis II (?)" in r["notes_from_pm"]
+    assert "Menta" in r["notes_from_pm"]
+    assert "Ḏḥutnofer" in r["notes_from_pm"]
+    assert "Sitamon" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 255
+
+
+def test_chunk23_tt143_anonymous_name_lost_tentkhesbed() -> None:
+    """TT143 — Name lost. Temp. Tuthmosis III to Amenophis II (?). Wife
+    Tentkhesbed. p.255. occupant_name=null, occupant_role=Unknown (SENTINEL_NULL
+    coercion restored by CHUNK23_CORRECTIONS, same class as TT136/TT116/TT70/
+    TT58). DERIVER_OVERRIDE pins attribution_certainty=attested (anonymous tomb,
+    (?) qualifies regnal range tail only)."""
+    r = _row("TT143")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Name lost" in r["notes_from_pm"]
+    assert "Tuthmosis III to Amenophis II (?)" in r["notes_from_pm"]
+    assert "Tentkhesbed" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 255
+
+
+def test_chunk23_tt144_nu_head_field_labourers_henuttaui() -> None:
+    """TT144 Nu — Head of the field-labourers. Temp. Tuthmosis III (?). Wife
+    Henuttaui. p.257. Tie-break pins agent A: space before (?) (A+C majority)
+    + Henuttaui without underdot-Ḥ (A+B majority). DERIVER_OVERRIDE pins
+    attribution_certainty=attested ((?) qualifies regnal date, not Nu's
+    identification). Egyptologist flag: agent C had Ḥenuttaui with underdot;
+    confirm PDF p.275."""
+    r = _row("TT144")
+    assert r["occupant_name"] == "Nu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Head of the field-labourers" in r["notes_from_pm"]
+    assert "Tuthmosis III (?)" in r["notes_from_pm"]
+    assert "Henuttaui" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 257
+
+
+def test_chunk23_tt145_nebamun_head_bowmen_ahhotp() -> None:
+    """TT145 Nebamun — Head of bowmen. Dyn. XVIII. Wife ʿAḥḥotp. p.257.
+    2/1 majority: B+C emit ʿAḥḥotp (ayin + doubled-ḥ); agent A had OCR-noise
+    `<Al).l).otp.` No corrections needed — majority resolves cleanly."""
+    r = _row("TT145")
+    assert r["occupant_name"] == "Nebamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Head of bowmen" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "ʿAḥḥotp" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 257
+
+
+def test_chunk23_tt146_nebamun_granary_inaccessible() -> None:
+    """TT146 Nebamun — Overseer of the granary of Amūn, Scribe, Counter of
+    grain, tny of the god's wife (titles from cones). Temp. Tuthmosis III (?).
+    (Inaccessible.) Wife Suitnub (from cone). p.258. Tie-break pins agent B
+    (Amūn macron). DERIVER_OVERRIDE pins attribution_certainty=attested ((?)
+    qualifies regnal date only)."""
+    r = _row("TT146")
+    assert r["occupant_name"] == "Nebamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of the granary of Amūn" in r["notes_from_pm"]
+    assert "titles from cones" in r["notes_from_pm"]
+    assert "Tuthmosis III (?)" in r["notes_from_pm"]
+    assert "(Inaccessible.)" in r["notes_from_pm"]
+    assert "Suitnub" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 258
+
+
+def test_chunk23_tt147_anonymous_masters_ceremonies_amun() -> None:
+    """TT147 — Head of the masters of ceremonies(?) of Amūn, &c. Temp.
+    Tuthmosis IV(?). Wife Nefert. p.258. occupant_name=null, occupant_role=
+    Unknown (SENTINEL_NULL coercion restored by CHUNK23_CORRECTIONS). Tie-break
+    pins agent B: Amūn macron + no space before (?) + clean period on wife name.
+    DERIVER_OVERRIDE pins attribution_certainty=attested (both (?) qualify
+    title uncertainty and regnal date, not occupant identity)."""
+    r = _row("TT147")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "masters of ceremonies(?)" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Tuthmosis IV(?)" in r["notes_from_pm"]
+    assert "Nefert" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 258
+
+
+def test_chunk23_tt148_amenemopet_prophet_amun_thonnfer() -> None:
+    """TT148 Amenemopet — Prophet of Amūn. Temp. Ramesses III to V. Parents:
+    Thonnfer (tomb 158) and Nefertere. Wife Tamert, Chief of the harim [of Amūn].
+    p.259. Tie-break pins agent B (Amūn macron ×2). Egyptologist flag: Thonnfer
+    may carry a macron (Thonnūfer?) per PM verbatim — confirm PDF p.277."""
+    r = _row("TT148")
+    assert r["occupant_name"] == "Amenemopet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Prophet of Amūn" in r["notes_from_pm"]
+    assert "Ramesses III to V" in r["notes_from_pm"]
+    assert "Thonnfer" in r["notes_from_pm"]
+    assert "tomb 158" in r["notes_from_pm"]
+    assert "Nefertere" in r["notes_from_pm"]
+    assert "Tamert" in r["notes_from_pm"]
+    assert "harim [of Amūn]" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 259
+
+
+def test_chunk23_tt149_amenmosi_royal_scribe_huntsmen() -> None:
+    """TT149 Amenmosi — Royal scribe of the table of the Lord of the Two Lands,
+    Overseer of the huntsmen of Amūn. Ramesside. Wife Sitmut. p.260. Tie-break
+    pins agent B (Amūn macron). All agents agree on structured fields."""
+    r = _row("TT149")
+    assert r["occupant_name"] == "Amenmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal scribe of the table of the Lord of the Two Lands" in r["notes_from_pm"]
+    assert "Overseer of the huntsmen of Amūn" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Sitmut" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 260
+
+
+def test_chunk23_tt150_userhet_cattle_unfinished_iaetib() -> None:
+    """TT150 Userhet — Overseer of cattle of Amūn. Late Dyn. XVIII. (Unfinished.)
+    Wife Iaet-ib, Royal concubine. p.261. is_unfinished=True (derived from
+    `(Unfinished.)` in notes via _ISSUE_182_DERIVATIONS — all 3 agents agree).
+    Tie-break pins agent B (Amūn macron; B alone had Iaet-ib vs A+C's Iact-ib).
+    Egyptologist flag: confirm wife name Iaet-ib vs Iact-ib against PDF p.279."""
+    r = _row("TT150")
+    assert r["occupant_name"] == "Userhet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert "Overseer of cattle of Amūn" in r["notes_from_pm"]
+    assert "Late Dyn. XVIII" in r["notes_from_pm"]
+    assert "(Unfinished.)" in r["notes_from_pm"]
+    assert "Iaet-ib" in r["notes_from_pm"]
+    assert "Royal concubine" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 261
