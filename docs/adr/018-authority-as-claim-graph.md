@@ -103,6 +103,9 @@ Manifest excerpt (the full file is the citable contract):
 # (with comment) when no CRM superclass/superproperty fits. Unmanifested terms are rejected by the
 # cidoc-crm-validator subagent.
 
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix hapi:    <https://pcomans.github.io/hapi-crm#> .
 @prefix crm:     <http://www.cidoc-crm.org/cidoc-crm/> .
 @prefix crmdig:  <http://www.cidoc-crm.org/extensions/crmdig/> .
@@ -116,10 +119,12 @@ hapi:SourceData         rdfs:subClassOf  crmdig:D1_Digital_Object    .
 hapi:derived_by_run     rdfs:subPropertyOf crm:P15_was_influenced_by  .  # E13 → hapi:MatcherRun
 hapi:same_entity_as     rdfs:subPropertyOf crmdig:L54_is_same_as       .  # E1 ↔ E1
 hapi:same_entity_as     rdf:type           owl:SymmetricProperty       .  # OWL-reasoner inferred inverse
-hapi:shares_tomb_with   rdf:type           owl:SymmetricProperty       .  # E21 ↔ E21 (Ruler ↔ Ruler), free-standing
+hapi:shares_tomb_with   rdf:type           owl:SymmetricProperty       .  # E21 ↔ E21 (Ruler ↔ Ruler); DERIVED predicate, not loadable as a primary claim — see ADR text below
 ```
 
-Hapi predicates that don't have a clean CRM/CRMdig superproperty (`hapi:in_dynastic_period`, `hapi:tomb_owner`, `hapi:original_burial_in`, `hapi:cache_context_at`, `hapi:shares_tomb_with`, `hapi:display_name`, `hapi:reign_period`, `hapi:horus_name`) live in the manifest as plain `rdf:Property` declarations and as `:E55 Type` instances in the predicate registry. Tightening these to real `rdfs:subPropertyOf` declarations is a follow-up Egyptological + CRM-modelling cross-cut.
+Hapi predicates that don't have a clean CRM/CRMdig superproperty (`hapi:in_dynastic_period`, `hapi:tomb_owner`, `hapi:original_burial_in`, `hapi:cache_context_at`, `hapi:display_name`, `hapi:reign_period`, `hapi:horus_name`) live in the manifest as plain `rdf:Property` declarations and as `:E55 Type` instances in the predicate registry. Tightening these to real `rdfs:subPropertyOf` declarations is a follow-up Egyptological + CRM-modelling cross-cut.
+
+`hapi:shares_tomb_with` is **not** in that follow-up bucket. It is registered as a **derived / query-only predicate**: the edge encodes neither the shared Site nor the burial context (primary burial vs cache vs joint commissioning), so asserting it directly would lose the very context the rest of the model exists to preserve. The loader REJECTS direct assertions of `hapi:shares_tomb_with` from any source; the source's actual statement (e.g. "King X and Queen Y in KV35") is emitted as the two corresponding `original_burial_in` / `cache_context_at` claims, and `hapi:shares_tomb_with` is materialised at query time by intersecting two rulers' tomb-site clusters. The predicate registry carries a `derived: true` flag for this case (see Predicate registry section below).
 
 #### Declared deviations from strict CRM + CRMdig
 
@@ -365,6 +370,7 @@ The registry is the authoritative vocabulary for the claim graph. Each entry is 
 | `value_cardinality`   | `single` \| `multi`        | whether a subject can have one or many active claims of this predicate |
 | `crm_nearest`         | CIDOC P-number \| `null`   | nearest CIDOC property for interop documentation; `null` if no clean fit |
 | `is_symmetric`        | bool                       | whether the predicate is symmetric (e.g. `hapi:same_entity_as` is) |
+| `derived`             | bool                       | whether the predicate is derived from other claims (loader REJECTS direct assertions) vs loadable as a primary claim from a source. `hapi:shares_tomb_with` is the first derived predicate — it's materialised at query time by intersecting two rulers' tomb-site clusters because asserting it directly would lose the site/context information. Default `false`. |
 | `notes`               | string \| `null`           | rationale, scope notes, known edge cases |
 
 Adding a new predicate is an INSERT into this registry preceded by a review against existing predicates to avoid `buried_in` / `interred_at` / `tomb_location` vocabulary drift. The registry is committed to version control (`pipeline/pipeline/authority/predicate_registry.json` — exact path resolved during implementation) and validated by a CI test that loads each entry and asserts every required field is populated and that referenced E-classes exist in the class catalogue.
@@ -409,7 +415,7 @@ The example also illustrates why tomb references demand careful predicate granul
 
 A naive `hapi:buried_in` predicate that conflates these three loses information and produces wrong matches: a stela of Ramesses I found in the KV35 cache is not evidence that Ramesses I owned, was originally buried in, or has any primary association with KV35 — it was moved there ~400 years after his death. The open schema accommodates the distinction natively; rigorous matching demands it. The Haiku step becomes a fallback for genuinely ambiguous cases (overlapping co-regencies, post-burial usurpations, ambiguous cache attributions), not the primary disambiguation mechanism.
 
-**On the CIDOC status of these predicates.** Three of the four tomb predicates (`hapi:tomb_owner`, `hapi:original_burial_in`, `hapi:cache_context_at`) connect a `:Ruler` (E21 Person) directly to a `:Site` (E27 Site). The fourth, `hapi:shares_tomb_with`, is a symmetric `:Ruler` ↔ `:Ruler` relation (two persons sharing a tomb), not a person-place link, and is declared `owl:SymmetricProperty` in the manifest. All four are documented as **pragmatic Hapi-domain predicates**, free-standing (no `rdfs:subPropertyOf`). Two things worth noting honestly:
+**On the CIDOC status of these predicates.** Three of the four tomb predicates (`hapi:tomb_owner`, `hapi:original_burial_in`, `hapi:cache_context_at`) connect a `:Ruler` (E21 Person) directly to a `:Site` (E27 Site) and are documented as **pragmatic Hapi-domain predicates**, free-standing (no `rdfs:subPropertyOf`) and loadable as primary claims from sources. The fourth, `hapi:shares_tomb_with`, is a symmetric `:Ruler` ↔ `:Ruler` relation declared `owl:SymmetricProperty` in the manifest — but it is a **derived / query-only predicate**, not loadable as a primary claim (see the "free-standing predicates" section above for the rationale: asserting it directly would lose the site and burial-context information the rest of the model exists to preserve). Two things worth noting honestly about the three primary Ruler→Site predicates:
 
 1. **CIDOC core has no clean superproperty for this shape.** The closest candidate, `P53_has_former_or_current_location`, has domain `E18 Physical Thing` (which E21 satisfies via E21 ⊂ E20 ⊂ E19 ⊂ E18) and range `E53 Place` (which E27 Site does *not* satisfy — E27 ⊂ E26 ⊂ E18, not ⊂ E53). A `subPropertyOf P53` declaration would escape P53's range, which the "narrow not violate" rule forbids. So these are genuine domain extensions, not shortcut workarounds.
 
