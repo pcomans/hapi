@@ -2254,6 +2254,16 @@ CHUNK29_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "TT201 `Reʿ` and TT210 `Raʿweben`.",
     ),
     (
+        "TT204",
+        "notes_from_pm",
+        "Sailor of the first prophet of Amūn (title from cone). Dyn. XVIII.",
+        "PR #273 round 2 Gemini finding 3282425875: TT204 notes_from_pm "
+        "had `Amun` without macron-Ū. Per chunk-12-onward macron-retain "
+        "class (same precedent as TT202 / TT207 / TT208 in this chunk + "
+        "TT181/TT187/TT189 in chunks 27/28), PM body-prose always renders "
+        "`Amūn` with macron-Ū. Restore macron-Ū to verbatim-preserve.",
+    ),
+    (
         "TT207",
         "notes_from_pm",
         "Scribe of divine offerings of Amūn. Ramesside. Parents, Ḥemawen and Nebuy.",

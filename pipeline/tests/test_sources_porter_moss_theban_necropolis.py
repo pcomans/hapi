@@ -7682,7 +7682,7 @@ def test_chunk29_tt203_unnufer_divine_father_mut() -> None:
 
 
 def test_chunk29_tt204_nebanensu_sailor_first_prophet() -> None:
-    """TT204 — Nebʿanensu, Sailor of the first prophet of Amun. Dyn. XVIII.
+    """TT204 — Nebʿanensu, Sailor of the first prophet of Amūn. Dyn. XVIII.
     Khôkha. p.305.
     occupant_name: 2/1 majority chose `Nebanensu`; CHUNK29_CORRECTIONS restores
     ayin from PM headword `NEB<ANENSU` → `Nebʿanensu`."""
@@ -7697,7 +7697,7 @@ def test_chunk29_tt204_nebanensu_sailor_first_prophet() -> None:
     assert r["is_uninscribed"] is False
     assert r["is_unfinished"] is False
     assert r["is_usurped"] is False
-    assert "Sailor of the first prophet of Amun" in r["notes_from_pm"]
+    assert "Sailor of the first prophet of Amūn" in r["notes_from_pm"]
     assert "title from cone" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert r["theban_area"] == "Khokha"

@@ -683,7 +683,7 @@ Per-chunk correction counts:
 - Chunk 26: 3 correction(s) defined in CHUNK26_CORRECTIONS.
 - Chunk 27: 5 correction(s) defined in CHUNK27_CORRECTIONS.
 - Chunk 28: 1 correction(s) defined in CHUNK28_CORRECTIONS.
-- Chunk 29: 7 correction(s) defined in CHUNK29_CORRECTIONS.
+- Chunk 29: 8 correction(s) defined in CHUNK29_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -963,6 +963,9 @@ Field corrections:
     value: "Prophet of Ptaḥ Lord of Thebes, Priest in front of Amūn. Dyn. XIX(?)."
 - TT204: occupant_name already matches override (no-op this run; PM I.1 p.305 headword `NEB<ANENSU` — the `<` is the PM text-layer rendering of the ayin (ʿ). Agents A+B (2/1 majority) chose `Nebanensu`; agent C's `Nebʿanensu` matches PM. Ayin-preserve convention per README and Constitutional Rule 1. Same axis as TT201 `Reʿ` and TT210 `Raʿweben`.)
     value: "Nebʿanensu"
+- TT204: notes_from_pm corrected this run (PR #273 round 2 Gemini finding 3282425875: TT204 notes_from_pm had `Amun` without macron-Ū. Per chunk-12-onward macron-retain class (same precedent as TT202 / TT207 / TT208 in this chunk + TT181/TT187/TT189 in chunks 27/28), PM body-prose always renders `Amūn` with macron-Ū. Restore macron-Ū to verbatim-preserve.)
+    was: "Sailor of the first prophet of Amun (title from cone). Dyn. XVIII."
+    now: "Sailor of the first prophet of Amūn (title from cone). Dyn. XVIII."
 - TT207: notes_from_pm already matches override (no-op this run; Macron-Ū on `Amūn` per chunk-12-onward verbatim-preserve policy. Tie-break pinned agent C's form which had `Amun` without macron. `Ḥemawen` with underdot-Ḥ is already correct from the tie-break pin (PM `~emawen` → `Ḥemawen`).)
     value: "Scribe of divine offerings of Amūn. Ramesside. Parents, Ḥemawen and Nebuy."
 - TT208: notes_from_pm already matches override (no-op this run; PM I.1 p.306 headword `RoMA ~~·.Divine father of Amen-rec.` — `Amen-rec` is the PM text-layer rendering of `Amen-reʿ` (lowercase `r`, ayin ʿ). Agents A+B (2/1 majority) chose `Amen-Re` (capital R, no ayin) — both elements wrong. Verbatim-preserve policy: restore lowercase `r` per PM's body-prose convention and the ayin per the README ayin-preserve rule. Compare TT65 tie-break rationale `Amen-reʿ` in `notes_from_pm` (same divine-name form).)
