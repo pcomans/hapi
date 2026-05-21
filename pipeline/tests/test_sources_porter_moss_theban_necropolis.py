@@ -310,6 +310,9 @@ CHUNK22_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK23_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(141, 151)}
 )
+CHUNK24_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(151, 161)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -333,6 +336,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK21_TOMB_IDS
     | CHUNK22_TOMB_IDS
     | CHUNK23_TOMB_IDS
+    | CHUNK24_TOMB_IDS
 )
 
 
@@ -3568,9 +3572,14 @@ def test_182_usurped_canonical_set() -> None:
     is_usurped); no override needed for TT112.
     Extended chunk 21: TT127 (Senemiʿoh, usurped in Ramesside times —
     PM I.1 p.241). Senemiʿoh IS the usurped party; deriver fires correctly
-    on `usurped in Ramesside times`; no DERIVER_OVERRIDE needed."""
+    on `usurped in Ramesside times`; no DERIVER_OVERRIDE needed.
+    Extended chunk 24: TT152 (anonymous tomb, usurped in Ramesside times(?) —
+    PM I.1 p.262). Deriver fires correctly on `Usurped in Ramesside times`;
+    DERIVER_OVERRIDE sets attribution_certainty=attested (the (?) qualifies
+    the event timing, not occupant identity); is_usurped=True is correct."""
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
-                "TT65", "TT68", "TT70", "TT77", "TT84", "TT112", "TT127"}
+                "TT65", "TT68", "TT70", "TT77", "TT84", "TT112", "TT127",
+                "TT152"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -6128,3 +6137,252 @@ def test_chunk23_tt150_userhet_cattle_unfinished_iaetib() -> None:
     assert "Royal concubine" in r["notes_from_pm"]
     assert r["theban_area"] == "Dra' Abu el-Naga"
     assert r["source_citation"]["page"] == 261
+
+
+# ---------------------------------------------------------------------------
+# Chunk 24: TT151–TT160. All in Dra' Abu el-Naga (§ I). PM I.1 pp.261–273.
+# 3 tie-break-overrides entries: TT151|notes_from_pm (A omits Parents, B has
+# OCR garbage `Men:;;:`, pin C), TT157|notes_from_pm (Amūn×2 + CHAMPOLLION,
+# pin A), TT158|notes_from_pm (Amūn×2 + CHAMPOLLION, pin A).
+# 2/1-majority resolutions: TT152 notes `Name lost, late Dyn.` (A+C comma),
+# TT155 occupant_name `[Antef]` (A+C brackets), TT156 notes `CHAMPOLLION`
+# (A+C uppercase), TT159 occupant_name `Raʿya` (A+B trailing a),
+# TT160 notes `CHAMPOLLION` (A+C uppercase), all theban_area without trailing
+# apostrophe (A+B).
+# 3 CHUNK24_CORRECTIONS: TT151 Amun → Amūn (macron restore post-tie-break),
+# TT152 occupant_role sentinel-null restore, TT153 occupant_role sentinel-null.
+# 4 DERIVER_OVERRIDES: TT152 is_usurped(?)=event hedge not occupant-ID,
+# TT153 regnal-date hedge, TT154 regnal-date hedge, TT158 `Probably` on
+# regnal date — all attribution_certainty restored to `attested`.
+# Egyptologist flags: TT159 Raʿya vs Raʿy — PM source OCR `RAcy` (no
+# terminal a); confirm printed form against PDF p.271.
+# ---------------------------------------------------------------------------
+
+
+def test_chunk24_tt151_hety_scribe_steward_godswife() -> None:
+    """TT151 Hety — Scribe, Counter of cattle of the god's wife of Amūn,
+    Steward of the god's wife. Temp. Tuthmosis IV. (Unfinished.) Wife
+    Nefertere. Parents Nebnufer. p.261. is_unfinished=True.
+    Tie-break pins agent C (no OCR garbage, has Parents clause). Macron
+    Amun → Amūn restored via CHUNK24_CORRECTIONS."""
+    r = _row("TT151")
+    assert r["occupant_name"] == "Hety"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert "Scribe, Counter of cattle of the god's wife of Amūn" in r["notes_from_pm"]
+    assert "Steward of the god's wife" in r["notes_from_pm"]
+    assert "Temp. Tuthmosis IV" in r["notes_from_pm"]
+    assert "(Unfinished.)" in r["notes_from_pm"]
+    assert "Wife, Nefertere" in r["notes_from_pm"]
+    assert "Parents, Nebnufer" in r["notes_from_pm"]
+    assert "Men:;;:" not in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 261
+
+
+def test_chunk24_tt152_anonymous_usurped_ramesside() -> None:
+    """TT152 — Name lost, late Dyn. XVIII. Usurped in Ramesside times(?).
+    p.262. occupant_name=None, occupant_role=Unknown (sentinel-null restored).
+    is_usurped=True (deriver fires on `Usurped in Ramesside times`).
+    attribution_certainty=attested (DERIVER_OVERRIDE: (?) qualifies event
+    timing, not occupant identity; occupant is anonymous)."""
+    r = _row("TT152")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is True
+    assert "Name lost" in r["notes_from_pm"]
+    assert "late Dyn. XVIII" in r["notes_from_pm"]
+    assert "Usurped in Ramesside times(?)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 262
+
+
+def test_chunk24_tt153_anonymous_sethos() -> None:
+    """TT153 — Name lost. Temp. Sethos I (?). p.262. occupant_name=None,
+    occupant_role=Unknown (sentinel-null restored). attribution_certainty=attested
+    (DERIVER_OVERRIDE: (?) qualifies regnal date, not occupant identity)."""
+    r = _row("TT153")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Name lost" in r["notes_from_pm"]
+    assert "Temp. Sethos I (?)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 262
+
+
+def test_chunk24_tt154_tati_butler_tuthmosis() -> None:
+    """TT154 Tati — Butler. Temp. Tuthmosis III(?). p.262.
+    attribution_certainty=attested (DERIVER_OVERRIDE: (?) qualifies regnal
+    date, not Tati's identification as Butler)."""
+    r = _row("TT154")
+    assert r["occupant_name"] == "Tati"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Butler" in r["notes_from_pm"]
+    assert "Tuthmosis III(?)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 262
+
+
+def test_chunk24_tt155_antef_great_herald() -> None:
+    """TT155 [Antef] — Great herald of the King. Temp. Ḥatshepsut and
+    Tuthmosis III. (HAY, No. 1.) p.263. occupant_name includes brackets
+    (2/1 majority: A+C emitted `[Antef]`, B emitted `Antef`)."""
+    r = _row("TT155")
+    assert r["occupant_name"] == "[Antef]"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Great herald of the King" in r["notes_from_pm"]
+    assert "Ḥatshepsut" in r["notes_from_pm"]
+    assert "Tuthmosis III" in r["notes_from_pm"]
+    assert "(HAY, No. 1.)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 263
+
+
+def test_chunk24_tt156_pennesuttaui_captain_troops() -> None:
+    """TT156 Pennesuttaui — Captain of troops, Governor of the South Lands.
+    Dyn. XIX. (CHAMPOLLION, No. 43.) Wife Mia. p.265. CHAMPOLLION uppercase
+    per PM convention (A+C vs B's lowercase; 2/1 majority)."""
+    r = _row("TT156")
+    assert r["occupant_name"] == "Pennesuttaui"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Captain of troops" in r["notes_from_pm"]
+    assert "Governor of the South Lands" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 43.)" in r["notes_from_pm"]
+    assert "Wife, Mia" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 265
+
+
+def test_chunk24_tt157_nebwenenef_first_prophet_amun() -> None:
+    """TT157 Nebwenenef — First prophet of Amūn. Temp. Ramesses II.
+    (CHAMPOLLION, No. 42, L. D. Text, No. 7.) Wife Takhaʿt, Chief of the
+    harim of Amūn, Songstress of Isis. p.266. occupant_role=High Priest.
+    Tie-break pins agent A (Amūn×2, CHAMPOLLION uppercase)."""
+    r = _row("TT157")
+    assert r["occupant_name"] == "Nebwenenef"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First prophet of Amūn" in r["notes_from_pm"]
+    assert "Temp. Ramesses II" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 42, L. D. Text, No. 7.)" in r["notes_from_pm"]
+    assert "Wife, Takhaʿt" in r["notes_from_pm"]
+    assert "harim of Amūn" in r["notes_from_pm"]
+    assert "Songstress of Isis" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 266
+
+
+def test_chunk24_tt158_thonufer_third_prophet_amun() -> None:
+    """TT158 Thonufer — Third prophet of Amūn. Probably temp. Ramesses III.
+    (CHAMPOLLION, No. 44, L. D. Text, No. 9.) Wife Nefertere, Chief of the
+    harim of Amūn. p.268. attribution_certainty=attested (DERIVER_OVERRIDE:
+    `Probably` qualifies regnal date for Ramesses III, not Thonufer's
+    identity as Third prophet). Tie-break pins agent A (Amūn×2 + CHAMPOLLION)."""
+    r = _row("TT158")
+    assert r["occupant_name"] == "Thonufer"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Third prophet of Amūn" in r["notes_from_pm"]
+    assert "Probably temp. Ramesses III" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 44, L. D. Text, No. 9.)" in r["notes_from_pm"]
+    assert "Wife, Nefertere" in r["notes_from_pm"]
+    assert "harim of Amūn" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 268
+
+
+def test_chunk24_tt159_raya_fourth_prophet_amun() -> None:
+    """TT159 Raʿya — Fourth prophet of Amūn. Dyn. XIX. Wife Mutemwia. p.271.
+    occupant_name `Raʿya` per 2/1 majority (A+B vs C's `Raʿy`).
+    Egyptologist flag: source OCR `RAcy` (no terminal a); confirm `Raʿya`
+    vs `Raʿy` against printed PDF p.271."""
+    r = _row("TT159")
+    assert r["occupant_name"] == "Raʿya"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Fourth prophet of Amūn" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Wife, Mutemwia" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 271
+
+
+def test_chunk24_tt160_besenmut_royal_acquaintance_saite() -> None:
+    """TT160 Besenmut — True royal acquaintance. Saite. (CHAMPOLLION, No. 46.)
+    Parents Pedemut and Tahibet. p.273. CHAMPOLLION uppercase per PM convention
+    (A+C vs B's lowercase; 2/1 majority)."""
+    r = _row("TT160")
+    assert r["occupant_name"] == "Besenmut"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "True royal acquaintance" in r["notes_from_pm"]
+    assert "Saite" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 46.)" in r["notes_from_pm"]
+    assert "Parents, Pedemut and Tahibet" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 273
