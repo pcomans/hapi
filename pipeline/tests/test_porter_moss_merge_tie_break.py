@@ -734,6 +734,19 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT196", "notes_from_pm"):
             "Chief steward of Amūn. Saite. Parents, Ibi (tomb 36) and "
             "Shepenernōte.",
+        # Chunk-29 overrides (TT202/TT207/TT209/TT210 — all notes_from_pm).
+        # TT202 and TT207 have CHUNK29_CORRECTIONS applied post-merge that
+        # add macron-Ū to Amūn; TT209 and TT210 match the pinned value verbatim.
+        ("TT202", "notes_from_pm"):
+            "Prophet of Ptaḥ Lord of Thebes, Priest in front of Amūn. Dyn. XIX(?).",
+        ("TT207", "notes_from_pm"):
+            "Scribe of divine offerings of Amūn. Ramesside. Parents, Ḥemawen and Nebuy.",
+        ("TT209", "notes_from_pm"):
+            "(?) Hereditary prince, Sole beloved friend. Saite. (formerly read Ḥatashemro)",
+        ("TT210", "notes_from_pm"):
+            "Servant in the Place of Truth. Dyn. XIX. (L. D. Text, No. 104.) "
+            "Parents(?), Piay, Sculptor in the Place of Truth, and Nefertkhaʿ. "
+            "Wife, Nebtyunu.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

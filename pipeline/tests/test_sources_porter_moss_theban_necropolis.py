@@ -325,6 +325,9 @@ CHUNK27_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK28_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(191, 201)}
 )
+CHUNK29_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(201, 211)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -353,6 +356,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK26_TOMB_IDS
     | CHUNK27_TOMB_IDS
     | CHUNK28_TOMB_IDS
+    | CHUNK29_TOMB_IDS
 )
 
 
@@ -3650,6 +3654,11 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         "QV33",
         "QV60",
         "TT73",
+        # TT209 Seremhatrekhyt: PM headword `SEREMḤATREKHYT (?)` has the `(?)`
+        # directly qualifying the name transcription (a genuine reading-uncertainty
+        # on the hieroglyphic inscription itself, not a regnal-date tail or
+        # secondary-clause hedge). The deriver correctly fires `uncertain` here.
+        "TT209",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -7556,3 +7565,300 @@ def test_chunk28_tt200_ded_governor_deserts_west_thebes() -> None:
     assert r["theban_area"] == "Khokha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 303
+
+
+# === Chunk 29 — TT201-TT210 (Khôkha ×8 + ʿAsâsîf ×1 + Deir el-Medina ×1) ===
+
+
+def test_chunk29_all_rows_present() -> None:
+    """All 10 TT201-TT210 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK29_TOMB_IDS
+    assert actual == CHUNK29_TOMB_IDS, sorted(CHUNK29_TOMB_IDS - actual)
+
+
+def test_chunk29_theban_area() -> None:
+    """TT201-TT208 are Khôkha; TT209 is ʿAsâsîf; TT210 is Deir el-Medina
+    (PM I.1 p.304-307)."""
+    for tid in {f"TT{n}" for n in range(201, 209)}:
+        r = _row(tid)
+        assert r["theban_area"] == "Khokha", (tid, r["theban_area"])
+    r209 = _row("TT209")
+    assert r209["theban_area"] == "ʿAsâsîf", r209["theban_area"]
+    r210 = _row("TT210")
+    assert r210["theban_area"] == "Deir el-Medina", r210["theban_area"]
+
+
+def test_chunk29_source_edition() -> None:
+    """All chunk-29 rows cite PM I.1 2nd ed. 1960."""
+    for tid in CHUNK29_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid,
+            r["source_citation"]["edition"],
+        )
+
+
+def test_chunk29_all_official_role_except_prince() -> None:
+    """TT201-TT208 and TT210 are Official; TT209 (Hereditary prince) is Prince."""
+    for tid in CHUNK29_TOMB_IDS - {"TT209"}:
+        r = _row(tid)
+        assert r["occupant_role"] == "Official", (tid, r["occupant_role"])
+    r209 = _row("TT209")
+    assert r209["occupant_role"] == "Prince", r209["occupant_role"]
+
+
+def test_chunk29_tt201_re_first_royal_herald() -> None:
+    """TT201 — Reʿ, First royal herald. Temp. Tuthmosis IV to Amenophis III.
+    Khôkha. p.304.
+    occupant_name: 2/1 majority chose `Re`; CHUNK29_CORRECTIONS restores
+    ayin from PM headword `RE<` → `Reʿ`. Ayin-preserve convention."""
+    r = _row("TT201")
+    assert r["occupant_name"] == "Reʿ"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First royal herald" in r["notes_from_pm"]
+    assert "Tuthmosis IV" in r["notes_from_pm"]
+    assert "Amenophis III" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 304
+
+
+def test_chunk29_tt202_nekhtamun_prophet_ptah() -> None:
+    """TT202 — Nekhtamun, Prophet of Ptaḥ Lord of Thebes, Priest in front of
+    Amūn. Dyn. XIX(?). Khôkha. p.305.
+    occupant_role: 2/1 majority chose High Priest; CHUNK29_CORRECTIONS
+    downgrades to Official (Prophet of Ptaḥ is not First Prophet rank).
+    notes_from_pm: tie-break pinned Ptaḥ underdot + no-comma; CHUNK29_CORRECTIONS
+    adds macron-Ū on Amūn.
+    attribution_certainty: DERIVER_OVERRIDE to attested (Dyn. XIX(?) qualifies
+    dynastic date, not Nekhtamun's identity).
+    Egyptologist flag: confirm Official vs High Priest for Prophet of Ptaḥ."""
+    r = _row("TT202")
+    assert r["occupant_name"] == "Nekhtamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Prophet of Ptaḥ Lord of Thebes" in r["notes_from_pm"]
+    assert "Priest in front of Amūn" in r["notes_from_pm"]
+    assert "Dyn. XIX(?)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 305
+
+
+def test_chunk29_tt203_unnufer_divine_father_mut() -> None:
+    """TT203 — Unnufer, Divine father of Mut. Dyn. XIX. Khôkha. p.305.
+    All 3 agents unanimous on all fields."""
+    r = _row("TT203")
+    assert r["occupant_name"] == "Unnufer"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Divine father of Mut" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 305
+
+
+def test_chunk29_tt204_nebanensu_sailor_first_prophet() -> None:
+    """TT204 — Nebʿanensu, Sailor of the first prophet of Amūn. Dyn. XVIII.
+    Khôkha. p.305.
+    occupant_name: 2/1 majority chose `Nebanensu`; CHUNK29_CORRECTIONS restores
+    ayin from PM headword `NEB<ANENSU` → `Nebʿanensu`."""
+    r = _row("TT204")
+    assert r["occupant_name"] == "Nebʿanensu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Sailor of the first prophet of Amūn" in r["notes_from_pm"]
+    assert "title from cone" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 305
+
+
+def test_chunk29_tt205_dhutmosi_royal_butler() -> None:
+    """TT205 — Ḏhutmosi, Royal butler. Temp. Tuthmosis III(?) to Amenophis II(?).
+    Khôkha. p.305.
+    occupant_name: 2/1 majority chose `Ḏhutmosi` (d-bar, no ḥ-underdot).
+    attribution_certainty: DERIVER_OVERRIDE to attested — both (?) qualify
+    regnal-date endpoints, not Ḏhutmosi's identity."""
+    r = _row("TT205")
+    assert r["occupant_name"] == "Ḏhutmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal butler" in r["notes_from_pm"]
+    assert "Tuthmosis III(?)" in r["notes_from_pm"]
+    assert "Amenophis II(?)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 305
+
+
+def test_chunk29_tt206_inpuemhab_scribe_place_of_truth() -> None:
+    """TT206 — Inpuemhab, Scribe of the Place of Truth. Ramesside. Khôkha. p.305.
+    All 3 agents unanimous except B had `Inpuemḥab` (underdot-Ḥ stripped by
+    2/1 majority to `Inpuemhab` per strip-Ḥ rule for occupant_name)."""
+    r = _row("TT206")
+    assert r["occupant_name"] == "Inpuemhab"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of the Place of Truth" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 305
+
+
+def test_chunk29_tt207_haremhab_scribe_divine_offerings() -> None:
+    """TT207 — Haremhab, Scribe of divine offerings of Amūn. Ramesside.
+    Khôkha. p.306. Parents: Ḥemawen and Nebuy.
+    notes_from_pm: tie-break pinned Ḥemawen (PM `~emawen` → underdot-Ḥ);
+    CHUNK29_CORRECTIONS adds macron-Ū on Amūn."""
+    r = _row("TT207")
+    assert r["occupant_name"] == "Haremhab"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of divine offerings of Amūn" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Ḥemawen" in r["notes_from_pm"]
+    assert "Nebuy" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 306
+
+
+def test_chunk29_tt208_roma_divine_father_amen_re() -> None:
+    """TT208 — Roma, Divine father of Amen-reʿ. Ramesside. Khôkha. p.306.
+    notes_from_pm: 2/1 majority chose `Amen-Re`; CHUNK29_CORRECTIONS restores
+    lowercase `r` + ayin from PM `Amen-rec` → `Amen-reʿ`."""
+    r = _row("TT208")
+    assert r["occupant_name"] == "Roma"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Divine father of Amen-reʿ" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 306
+
+
+def test_chunk29_tt209_seremhatrekhyt_hereditary_prince_saite() -> None:
+    """TT209 — Seremhatrekhyt (?), Hereditary prince, Sole beloved friend.
+    Saite. ʿAsâsîf. p.306. Formerly read Ḥatashemro.
+    notes_from_pm: 1/1/1 tie-break pinned PM-faithful form with (?) and
+    formerly-read parenthetical.
+    attribution_certainty: uncertain — (?) qualifies the name-reading itself
+    (PM's standard reading-uncertainty marker on the name transcription).
+    occupant_role: 2/1 majority Prince (correct).
+    occupant_alt_names: 2/1 majority [] (correct — "formerly read" is a
+    superseded reading, not an alternate personal name).
+    Egyptologist flag: confirm whether `(?)` on PM's name transcription
+    warrants attribution_certainty=uncertain vs attested."""
+    r = _row("TT209")
+    assert r["occupant_name"] == "Seremhatrekhyt"
+    assert r["occupant_role"] == "Prince"
+    assert r["attribution_certainty"] == "uncertain"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Hereditary prince" in r["notes_from_pm"]
+    assert "Sole beloved friend" in r["notes_from_pm"]
+    assert "Saite" in r["notes_from_pm"]
+    assert "formerly read Ḥatashemro" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 306
+
+
+def test_chunk29_tt210_raweben_servant_place_of_truth_deir() -> None:
+    """TT210 — Raʿweben, Servant in the Place of Truth. Dyn. XIX.
+    Deir el-Medina (NEW sub-site first seen in PM I.1 § I numbered tombs
+    since chunk-9). p.307. Parents(?): Piay, Sculptor, and Nefertkhaʿ.
+    Wife: Nebtyunu. Shared with TT217 (brother (?) of deceased).
+    occupant_name: 2/1 majority chose `Raweben`; CHUNK29_CORRECTIONS restores
+    ayin from PM `RA<WEBEN` → `Raʿweben`.
+    notes_from_pm: 1/1/1 tie-break pinned agent C (L.D. cite mid-sentence +
+    Piay comma + Nefertkhaʿ ayin).
+    attribution_certainty: DERIVER_OVERRIDE to attested — Parents(?) qualifies
+    parentage identification, not Raʿweben's identity."""
+    r = _row("TT210")
+    assert r["occupant_name"] == "Raʿweben"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT217"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant in the Place of Truth" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "L. D. Text, No. 104." in r["notes_from_pm"]
+    assert "Piay, Sculptor in the Place of Truth" in r["notes_from_pm"]
+    assert "Nefertkhaʿ" in r["notes_from_pm"]
+    assert "Nebtyunu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 307
