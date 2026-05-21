@@ -16,7 +16,7 @@ ADR-018 pins both specifications:
 - **Conceptual CRM 7.1.3** + its **official RDFS encoding** (the two `cidoc_crm_v7.1.3.*` files)
 - **CRMdig 5.0** + its **official RDFS encoding** (the two `crmdig_v5.0.*` files)
 
-Both are CRM-SIG-issued artifacts. The graph emits data that is valid under both; Hapi-namespaced additions on top of that are silently ignored by strict CIDOC/CRMdig readers.
+Both are CRM-SIG-issued artifacts. Hapi-specific additions on top of the two specs are declared in a separate manifest at `../hapi_extension.rdf` using standard `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations (the same idiom CRMdig itself uses to extend core CRM). Reader behaviour for Hapi-namespaced triples depends on whether the manifest is loaded: a reader that has loaded the manifest applies an RDFS reasoner and interprets Hapi-extended terms (e.g. `hapi:MatcherRun`, `hapi:derived_by_run`, `hapi:same_entity_as`) through their declared CRM/CRMdig parents; a reader that has not loaded it retains those triples opaquely. Free-standing Hapi predicates (those without a declared `subPropertyOf`) remain opaque even with the manifest loaded. See ADR-018 for the full conformance picture.
 
 ## Which file for what
 
@@ -54,6 +54,6 @@ Version pins set by ADR-018. To move to a new release: in the same commit, (a) u
 
 CRMdig 5.0's RDFS file declares `owl:imports rdf:resource="http://www.cidoc-crm.org/extensions/crmsci/3.2/"` and uses CRMsci classes in a small number of places — specifically D11 Digital Measurement Event (`subClassOf S21_Measurement`) and a handful of measurement-related L-properties.
 
-**Hapi uses a CRMdig subset that does not touch CRMsci-dependent classes.** Our consumed classes (D1, D7, D10, D14) and properties (L10, L11, L23) have IS-A chains that go directly to core CRM (E73, E11, E65) without traversing any CRMsci class. We therefore do not vendor CRMsci 3.2.
+**Hapi uses a CRMdig subset that does not touch CRMsci-dependent classes.** Our consumed classes (D1, D7, D10, D14) and properties (L10, L11, L23, L54) have IS-A chains and domain/range references that go directly to core CRM (E1, E11, E65, E73) without traversing any CRMsci class. L54_is_same_as has domain and range E1 CRM Entity — no CRMsci dependency. We therefore do not vendor CRMsci 3.2.
 
 If a future Hapi feature requires CRMdig classes/properties that *do* depend on CRMsci (e.g. D11 for measurement events, or O24 for measurement provenance), the carve-out becomes invalid and CRMsci 3.2 must be vendored alongside the existing files. The `cidoc-crm-validator` subagent enforces this: any use of a CRMsci-dependent class/property when CRMsci is not vendored is a hard error.

@@ -79,11 +79,12 @@
        ============================================================ -->
 
   <rdf:Property rdf:about="#same_entity_as">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
     <rdfs:label xml:lang="en">same entity as</rdfs:label>
     <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity"/>
     <rdfs:range  rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity"/>
     <rdfs:subPropertyOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/L54_is_same_as"/>
-    <rdfs:comment xml:lang="en">Asserts that two per-source entity nodes refer to the same real-world person/site/etc. Symmetric. Declared rdfs:subPropertyOf crmdig:L54_is_same_as ("non-unique identification applied to E1 CRM Entity") — strict CIDOC/CRMdig readers that have loaded this manifest interpret hapi:same_entity_as as an L54 edge. Both endpoints are E1 by subsumption (E21 ⊂ E1 etc.), satisfying L54's E1-E1 domain/range.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Asserts that two per-source entity nodes refer to the same real-world person/site/etc. Symmetric — declared as owl:SymmetricProperty so OWL-aware readers infer the inverse direction automatically; readers using only RDFS reasoning will not infer symmetry from RDFS alone (the Hapi predicate registry enforces it at the application layer in that case). Declared rdfs:subPropertyOf crmdig:L54_is_same_as ("non-unique identification applied to E1 CRM Entity") — strict CIDOC/CRMdig readers that have loaded this manifest interpret hapi:same_entity_as as an L54 edge. Both endpoints are E1 by subsumption (E21 ⊂ E1 etc.), satisfying L54's E1-E1 domain/range.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#in_dynastic_period">
@@ -94,15 +95,22 @@
   <!--
        Burial predicates: pragmatic Hapi-domain extensions.
 
-       The four predicates below (tomb_owner, original_burial_in, cache_context_at,
-       shares_tomb_with) connect a :Ruler (E21 Person) directly to a :Site (E27 Site).
-       This is genuinely a Hapi-domain extension, not a workaround: CIDOC core has
-       no clean superproperty whose domain accepts E18/E21 AND whose range accepts
-       E27 Site. The closest candidate, P53_has_former_or_current_location, has
-       domain E18 (which E21 satisfies via E21 ⊂ E20 ⊂ E19 ⊂ E18) but range E53
-       Place — and E27 Site is NOT IS-A E53 (E27 ⊂ E26 ⊂ E18). So a direct
-       subPropertyOf P53 would escape its range, which the "narrow not violate"
-       rule forbids. Free-standing is the honest classification.
+       Three of the four predicates below (tomb_owner, original_burial_in,
+       cache_context_at) connect a :Ruler (E21 Person) directly to a :Site
+       (E27 Site). The fourth (shares_tomb_with) is a symmetric :Ruler ↔ :Ruler
+       relation — same-tomb co-occupancy between two persons, not a person-place
+       link. The framing differences below apply to the three Ruler→Site
+       predicates; shares_tomb_with's domain/range conformance is trivial (both
+       endpoints E21 ⊂ E1) and the manifest declaration uses owl:SymmetricProperty
+       for the symmetry semantic.
+
+       For the three Ruler→Site predicates: CIDOC core has no clean superproperty
+       whose domain accepts E18/E21 AND whose range accepts E27 Site. The closest
+       candidate, P53_has_former_or_current_location, has domain E18 (which E21
+       satisfies via E21 ⊂ E20 ⊂ E19 ⊂ E18) but range E53 Place — and E27 Site
+       is NOT IS-A E53 (E27 ⊂ E26 ⊂ E18). So a direct subPropertyOf P53 would
+       escape its range, which the "narrow not violate" rule forbids.
+       Free-standing is the honest classification.
 
        Different rigour levels exist in heritage practice. CRMarchaeo (the official
        CIDOC archaeology extension at https://cidoc-crm.org/crmarchaeo/) explicitly
@@ -112,11 +120,11 @@
        burial stratigraphy." Both are valid CIDOC practice; the choice is project-
        dependent. Our matching use-case is the former; we use the shortcuts.
 
-       Each of the four predicates below captures a structurally distinct relationship
-       (commissioning, primary burial, secondary cache reburial, joint burial) and
-       each would have its own rigorous-modelling shape in CRMarchaeo. We do not
-       attempt to summarise those rigorous shapes here — they are out of scope for
-       this manifest and best consulted in CRMarchaeo directly when archaeological-
+       Each predicate captures a structurally distinct relationship (commissioning,
+       primary burial, secondary cache reburial, joint burial) and each would have
+       its own rigorous-modelling shape in CRMarchaeo. We do not attempt to
+       summarise those rigorous shapes here — they are out of scope for this
+       manifest and best consulted in CRMarchaeo directly when archaeological-
        rigour use-cases emerge. The Hapi predicates here and any future rigorous
        chain can coexist.
   -->
@@ -137,8 +145,11 @@
   </rdf:Property>
 
   <rdf:Property rdf:about="#shares_tomb_with">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
     <rdfs:label xml:lang="en">shares tomb with</rdfs:label>
-    <rdfs:comment xml:lang="en">Symmetric relation between two Rulers buried in the same Site. A pragmatic Hapi-domain predicate, free-standing.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E21_Person"/>
+    <rdfs:range  rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E21_Person"/>
+    <rdfs:comment xml:lang="en">Symmetric relation between two Rulers (E21 Persons) buried in the same Site — a Ruler ↔ Ruler same-tomb-co-occupancy assertion, distinct from the three Ruler→Site burial predicates (tomb_owner, original_burial_in, cache_context_at). A pragmatic Hapi-domain predicate, free-standing. Declared owl:SymmetricProperty so OWL-aware readers infer the inverse direction automatically.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#display_name">
