@@ -3677,12 +3677,11 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # genuinely uncertain). This is NOT a regnal-date tail or secondary-clause
         # hedge; the deriver correctly fires `uncertain`. No DERIVER_OVERRIDE needed.
         "TT230",
-        # TT239 chunk-32: PM headword `239. PENHET, Governor of all Northern Lands.
-        # Temp. Tuthmosis IV to Amenophis II (?).` — PM's standard `(?)` attribution-
-        # uncertainty glyph qualifies the regnal-date range. The deriver fires
-        # `uncertain` from the `(?)` in notes_from_pm. The tie-break override also
-        # pins `uncertain` (3-way split: A=uncertain/B=probable/C=attested).
-        "TT239",
+        # TT239 NOT in this set — PR #276 round-1 Gemini correction: `(?)`
+        # qualifies the regnal-date range `Temp. Tuthmosis IV to Amenophis II`,
+        # not Penhet's identification. Per chunk-10 TT12/TT19/TT20 + chunk-31
+        # TT225 regnal-range-hedge orthogonality precedent, attribution_certainty
+        # = "attested" via DERIVER_OVERRIDE.
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -8735,7 +8734,7 @@ def test_chunk32_tt239_penhet_governor_northern_lands() -> None:
     r = _row("TT239")
     assert r["occupant_name"] == "Penhet"
     assert r["occupant_role"] == "Official"
-    assert r["attribution_certainty"] == "uncertain"
+    assert r["attribution_certainty"] == "attested"
     assert r["occupant_alt_names"] == []
     assert r["co_occupants"] == []
     assert r["shared_with_tombs"] == []

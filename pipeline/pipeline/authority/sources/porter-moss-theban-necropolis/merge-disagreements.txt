@@ -1253,3 +1253,4 @@ Field corrections:
 - TT210: attribution_certainty → "attested" (deriver override; PM I.1 p.307 prints `210. RA<WEBEN ..., Servant in the Place of Truth. Dyn. XIX....)
 - TT228: attribution_certainty → "attested" (deriver override; PM I.1 p.327 / physical PDF p.345 prints `228. AMENMOSI ..., Scribe of the treas...)
 - TT225: attribution_certainty → "attested" (deriver override; PM I.1 p.325 / physical PDF p.343 prints `225. A First prophet of Ḥathor. Temp. ...)
+- TT239: attribution_certainty → "attested" (deriver override; PM I.1 p.330 / physical PDF p.348 prints `239. PENḤET ..., Governor of all North...)

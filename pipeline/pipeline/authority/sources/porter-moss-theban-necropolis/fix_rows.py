@@ -4003,6 +4003,31 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "(attribution_certainty encodes occupant-identity certainty, not "
         "regnal-date certainty). Per chunk-9 TT2 precedent.",
     ),
+    # Chunk-32: TT239 Penḥet, Governor of all Northern Lands. The `(?)` in
+    # notes_from_pm qualifies the REGNAL DATE RANGE (`Temp. Tuthmosis IV to
+    # Amenophis II (?)`), not Penḥet's identification. PM headword `239.
+    # PENḤET ..., Governor of all Northern Lands. Temp. Tuthmosis IV to
+    # Amenophis II (?). Wife, Ḥetepti.` names Penḥet and his title unhedged.
+    # Same regnal-range-hedge class as chunk-10 TT12/TT19/TT20 + chunk-31 TT225
+    # + many others. Per Gemini PR #276 round-1 finding 3283048776/782/807.
+    (
+        "TT239",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.330 / physical PDF p.348 prints `239. PENḤET ..., "
+        "Governor of all Northern Lands. Temp. Tuthmosis IV to Amenophis "
+        "II (?). Wife, Ḥetepti.` — the `(?)` qualifies the REGNAL DATE "
+        "RANGE (`Temp. Tuthmosis IV to Amenophis II`), not Penḥet's "
+        "identification. Penḥet is unambiguously named + role-clustered "
+        "as Governor of all Northern Lands. Same regnal-range-hedge "
+        "orthogonality class as chunk-10 TT12/TT17/TT19/TT20 + chunk-13 "
+        "TT43 + chunk-31 TT225 + many others. Per chunk-9 TT2 precedent "
+        "that attribution_certainty encodes occupant-identity certainty, "
+        "not regnal-date certainty. Gemini PR #276 round-1 finding "
+        "3283048776/782/807. The tie-break-overrides.json TT239|"
+        "attribution_certainty entry (pinned `uncertain`) was wrong; "
+        "this DERIVER_OVERRIDE overrides the tie-break value post-merge.",
+    ),
 ]
 
 
