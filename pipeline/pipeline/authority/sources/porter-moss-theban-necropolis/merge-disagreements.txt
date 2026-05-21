@@ -849,6 +849,50 @@ TT289 (Setau):
 TT290 (Irinofer):
   notes_from_pm: a="Servant in the Place of Truth on the West. Ramesside. Parents, Siwazyt, Head of the bark of Amon, and Tausert. Wife, (wife name from text). Probably owner, see statuette under Finds." | b="Servant in the Place of Truth on the West. Ramesside. Parents, Siwazyt, Head of the bark of Amon, and Tausert Mehytkhacti. Wife, Irinofer." | c="Servant in the Place of Truth on the West. Ramesside. Parents, Siwazyt, Head of the bark of Amon, and Tausert. Wife, [Irinofer]."  → chose "Servant in the Place of Truth on the West. Ramesside. Parents, Siwazyt, Head of the bark of Amon, and Tausert Mehytkhacti. Wife, [name unresolved from OCR]."
 
+TT291 (Nu):
+  co_occupants: a=[{"alt_names": [], "name": "Nekhtmin", "role": "Official"}] | b=[{"alt_names": [], "role": "Official"}] | c=[{"alt_names": [], "role": "Servant in the Place of Truth"}]  → chose [{"alt_names": [], "name": "Nekhtmin", "role": "Official"}]
+  notes_from_pm: a="Servant in the Great Place, and Nekhtmin, Servant in the Place of Truth. Late Dyn. XVIII. Parents (of Nu), Pia and Mutnefert, and wife, Khatnesut. Parents (of Nekhtmin), Min-hotep and Nefertere, and wife, Sekhmet." | b="Servant in the Great Place. Late Dyn. XVIII. Parents (of Nu): Piay and Mutnefert, wife: Khátnesut. Parents (of Nekhtmin): Minhotep and Nefertere, wife: Sekhmet." | c="Servant in the Great Place, and Nekhtmin, Servant in the Place of Truth. Late Dyn. XVIII. Parents (of Nu), Pia and Mutnefert, and wife, Khatnesut. Parents (of Nekhtmin), Min and Nefertere, and wife, Sekhmet."  → chose "Servant in the Great Place, and Nekhtmin, Servant in the Place of Truth. Late Dyn. XVIII. Parents (of Nu), Pia and Mutnefert, and wife, Khatnesut. Parents (of Nekhtmin), Min-hotep and Nefertere, and wife, Sekhmet."
+  occupant_role: a="Official" | b="Official" | c="Servant in the Great Place"  → chose "Official"
+
+TT292 (Peshedu):
+  notes_from_pm: a="Servant in the Place of Truth. Temp. Sethos I to Ramesses II. Father, He-nekhu (from stela in Brit. Mus. 262). Wife, Makhay." | b="Servant in the Place of Truth. Temp. Sethos I to Ramesses II. Father: Hepnekhu (from stela in Brit. Mus. 262). Wife: Makhay." | c="Servant in the Place of Truth. Temp. Sethos I to Ramesses II. Father, Hemekhu (from stela in Brit. Mus. 262). Wife, Makhay."  → chose "Servant in the Place of Truth. Temp. Sethos I to Ramesses II. Father, He-nekhu (from stela in Brit. Mus. 262). Wife, Makhay."
+  occupant_role: a="Official" | b="Official" | c="Servant in the Place of Truth"  → chose "Official"
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 374, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 375, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 375, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 375, "section": "I"}
+
+TT293 (Raʿmessenakht):
+  notes_from_pm: a="First prophet of Amun. Temp. Ramesses IV. Father, Merubaste, Chief steward of the Lord of the Two Lands (name and title on statue in Cairo Mus. 42162)." | b="First prophet of Amun. Temp. Ramesses IV. Father: Merubaste, Chief steward of the Lord of the Two Lands (name and title on statue in Cairo Mus. 42162)." | c="First prophet of Amun. Temp. Ramesses IV. Father, Merubaste, Chief steward of the Lord of the Two Lands (name and title on statue in Cairo Mus. 42162)."  → chose "First prophet of Amun. Temp. Ramesses IV. Father, Merubaste, Chief steward of the Lord of the Two Lands (name and title on statue in Cairo Mus. 42162)."
+  occupant_name: a="Ra-messenakht" | b="Raʿmessenakht" | c="Ramessenakht"  → chose "Raʿmessenakht"
+
+TT294 (Amenhotep):
+  co_occupants: a=[{"alt_names": [], "name": "Roma", "role": "Official"}] | b=[] | c=[]  → chose []
+  is_usurped: a=false | b=true | c=false  → chose false
+  notes_from_pm: a="Overseer of the granary of Amun, temp. Amenophis III. Usurped by Roma, wab-priest of Amun, early Ramesside. Wife (of Roma), Hathore." | b="Overseer of the granary of Amun, temp. Amenophis III. Usurped by Roma, wab-priest of Amun, early Ramesside. Wife (of Roma): Hathor." | c="Overseer of the granary of Amun, temp. Amenophis III. Usurped by Roma, wab-priest of Amun, early Ramesside. Wife (of Roma), Hathtor. (Unfinished.)"  → chose "Overseer of the granary of Amun, temp. Amenophis III. Usurped by Roma, wab-priest of Amun, early Ramesside. Wife (of Roma), Hathor."
+
+TT295 (Dhutmosi):
+  notes_from_pm: a="Called Paroy. Head of the secrets in the Chest of Anubis, sem-priest in the Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). Parents, Sennuter, sem-priest in the Good House, &c., and Senemi-oth. Wives, Nefertere and Rennutet." | b="Head of the secrets in the Chest of Anubis, sem-priest in the Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). Parents: Sennuter, sem-priest in the Good House, and Senemioth. Wives: Nefertere and Rennutet." | c="Head of the secrets in the Chest of Anubis, sem-priest in the Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). Parents, Sennuter, sem-priest in the Good House, &c., and Senemioph. Wives, Nefertere and Rennutet."  → chose "Head of the secrets in the Chest of Anubis, sem-priest in the Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). Parents, Sennuter, sem-priest in the Good House, and Senemioth. Wives, Nefertere and Rennutet."
+  occupant_alt_names: a=["Paroy"] | b=[] | c=["Paroy"]  → chose ["Paroy"]
+  occupant_name: a="Dhutnose" | b="Dḥutmosi" | c="Dhutmosi"  → chose "Dhutmosi"
+  tomb_aliases: a=[] | b=["Paroy"] | c=[]  → chose []
+
+TT296 (Nefersekheru):
+  notes_from_pm: a="Scribe of the divine offerings of all the gods, Officer of the treasury ... in the Southern City. Ramesside. Wives, Maetmut, Sekhemui, and Nefertere." | b="Scribe of the divine offerings of all the gods, Officer of the treasury ... in the Southern City. Ramesside. Wives: Maʿetmut, Sekhemui, and Nefertere." | c="Scribe of the divine offerings of all the gods, Officer of the treasury ... in the Southern City. Ramesside. Wives, Maetmut, Sekhemui, and Nefertere."  → chose "Scribe of the divine offerings of all the gods, Officer of the treasury ... in the Southern City. Ramesside. Wives, Maetmut, Sekhemui, and Nefertere."
+
+TT297 (Amenemopet):
+  notes_from_pm: a="Called Thonufer. Scribe, Counter of grain of Amun, Overseer of fields (name and titles from cones). Early Dyn. XVIII." | b="Scribe, Counter of grain of Amun, Overseer of fields (name and titles from cones). Early Dyn. XVIII." | c="Scribe, Counter of grain of Amun, Overseer of fields (name and titles from cones). Early Dyn. XVIII."  → chose "Scribe, Counter of grain of Amun, Overseer of fields (name and titles from cones). Early Dyn. XVIII."
+
+TT298 (Baki):
+  co_occupants: a=[{"alt_names": [], "name": "Unnufer", "role": "Official"}] | b=[{"alt_names": [], "role": "Official"}] | c=[{"alt_names": [], "role": "Servant of the Lord of the Two Lands in the Place of Truth"}]  → chose [{"alt_names": [], "name": "Unnufer", "role": "Official"}]
+  notes_from_pm: a="Foreman in the Place of Truth, and father (probably), Unnufer, Servant of the Lord of the Two Lands in the Place of Truth [&c.]. Ramesside. Wife (of Baki), Taysen (name in tomb 213). Wife (of Unnufer), Maia." | b="Foreman in the Place of Truth. Father (probably): Unnufer, Servant of the Lord of the Two Lands in the Place of Truth. Ramesside. Wife (of Baki): Taysen (name in tomb 213). Wife (of Unnufer): Maia." | c="Foreman in the Place of Truth, and father (probably), Unnufer, Servant of the Lord of the Two Lands in the Place of Truth [&c.]. Ramesside. Wife (of Baki), Taysen (name in tomb 213). Wife (of Unnufer), Maia."  → chose "Foreman in the Place of Truth, and father (probably), Unnufer, Servant of the Lord of the Two Lands in the Place of Truth [&c.]. Ramesside. Wife (of Baki), Taysen (name in tomb 213). Wife (of Unnufer), Maia."
+
+TT299 (Iniherkhac):
+  notes_from_pm: a="Foreman of the Lord of the Two Lands in the Place of Truth [&c.]. (Also owner of tomb 359.) Temp. Ramesses III and IV. Father, Hay, Foreman in the Place of Truth. Wife, Wab." | b="Foreman of the Lord of the Two Lands in the Place of Truth. (Also owner of tomb 359.) Temp. Ramesses III and IV. Father: Hay, Foreman in the Place of Truth. Wife: Waʿb." | c="Foreman of the Lord of the Two Lands in the Place of Truth [&c.]. (Also owner of tomb 359.) Temp. Ramesses III and IV. Father, Hay, Foreman in the Place of Truth. Wife, Wab."  → chose "Foreman of the Lord of the Two Lands in the Place of Truth [&c.]. (Also owner of tomb 359.) Temp. Ramesses III and IV. Father, Hay, Foreman in the Place of Truth. Wife, Wab."
+  occupant_name: a="Iniherkhac" | b="Inherkhac" | c="Inherkhau"  → chose "Iniherkhac"
+
+TT300 (ʿAnhotp):
+  notes_from_pm: a="Viceroy of Kush, Governor of the South Lands, Scribe of the table of the Lord of the Two Lands. Ramesside. Wife, Hunuro." | b="Viceroy of Kush, Governor of the South Lands, Scribe of the table of the Lord of the Two Lands. Ramesside. Wife: Hunuro." | c="Viceroy of Kush, Governor of the South Lands, Scribe of the table of the Lord of the Two Lands. Ramesside. Wife, Hunuro."  → chose "Viceroy of Kush, Governor of the South Lands, Scribe of the table of the Lord of the Two Lands. Ramesside. Wife, Hunuro."
+  occupant_name: a="Amenhotep" | b="ʿAnhotp" | c="Canihotep"  → chose "ʿAnhotp"
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 381, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 381, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 380, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 381, "section": "I"}
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -948,6 +992,7 @@ Per-chunk correction counts:
 - Chunk 35: 6 correction(s) defined in CHUNK35_CORRECTIONS.
 - Chunk 36: 16 correction(s) defined in CHUNK36_CORRECTIONS.
 - Chunk 37: 8 correction(s) defined in CHUNK37_CORRECTIONS.
+- Chunk 38: 3 correction(s) defined in CHUNK38_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1372,6 +1417,12 @@ Field corrections:
     value: "Irinufer"
 - TT290: notes_from_pm already matches override (no-op this run; Three restorations: (1) `Amon` → `Amūn` per macron-retain policy (OCR `Amon` = `Amūn` with macron-u dropped). (2) Mother's compound name: source line prints `Tausert Mel).ytkhacti` where `l).` = underdot-ḥ, giving `Meḥytkhacti`. Agent A truncated to `Tausert` alone; agents B/C either misread (B appended wife name to mother, C truncated). Tie-break pinned B's expanded form `Tausert Mehytkhacti`; restore underdot-ḥ to give `Meḥytkhacti`. (3) Wife's name: the OCR source renders the wife name as a hieroglyphic glyph string (`\ l4o 4~ ~ ~.`) that cannot be resolved from the OCR alone. Agent B incorrectly used the occupant's own name `Irinofer`; agent C bracketed it with uncertainty. Replace with `[name unclear in source]` to be corrected after egyptologist printed-source review of PM p.372. EGYPTOLOGIST REVIEW REQUIRED: wife name of TT290 Irinufer.)
     value: "Servant in the Place of Truth on the West. Ramesside. Parents, Siwazyt, Head of the bark of Amūn, and Tausert Meḥytkhacti. Wife, [name unclear in source]."
+- TT292: notes_from_pm already matches override (no-op this run; Tie-break pinned A's `He-nekhu` (spurious hyphen, ḥ stripped). Source line 52 of chunk-38-tt291-tt300.txt prints `l:Ie}.nekhu` where `l:I` = underdot-Ḥ OCR glyph and `}.` = underdot/OCR noise cluster. Decoded: `Ḥenekhu` (underdot-Ḥ, no hyphen). Remove spurious hyphen, restore underdot-Ḥ. `notes_from_pm` is verbatim-preserve, so underdot-Ḥ is retained here (strip-ḥ rule applies only to `occupant_name`). EGYPTOLOGIST REVIEW REQUIRED: confirm exact father-name form from PM I.1 p.375 printed source.)
+    value: "Servant in the Place of Truth. Temp. Sethos I to Ramesses II. Father, Ḥenekhu (from stela in Brit. Mus. 262). Wife, Makhay."
+- TT295: occupant_name already matches override (no-op this run; Tie-break pinned C's `Dhutmosi` as intermediate. Source line 153 of chunk-38-tt291-tt300.txt prints `295· l)l;IUTMOSI` where `l)` = OCR for d-bar Ḏ and `l;I`/`I;I` = underdot-Ḥ. Full decode: `ḎḤUTMOSI`. Apply strip-ḥ (underdot-H) for matchable `occupant_name` field → `Ḏhutmosi`. D-bar `Ḏ` is NOT stripped (only underdot-Ḥ is stripped per project convention). Consistent with TT32 `Ḏhutmosi`, TT205 `Ḏhutmosi` in reconciled.jsonl. Task brief names this occupant `ḎḤUTMOSI` with d-bar explicitly.)
+    value: "Ḏhutmosi"
+- TT296: notes_from_pm already matches override (no-op this run; Majority (A+C) pinned `Maetmut` (ayin dropped). Source line 204 of chunk-38-tt291-tt300.txt prints `Ma<etmut` where `<` = PM's ayin glyph → `Maʿetmut`. Agent B correctly captured the ayin; A+C dropped it (OCR noise). `notes_from_pm` is verbatim-preserve — restore ayin per the established `<` = ʿ OCR-diacritic policy. Parallel to TT94/TT95/TT192 wife-name ayin restorations in prior chunks.)
+    value: "Scribe of the divine offerings of all the gods, Officer of the treasury ... in the Southern City. Ramesside. Wives, Maʿetmut, Sekhemui, and Nefertere."
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1470,6 +1521,8 @@ Field corrections:
 - TT276: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT284: is_usurped → false (issue #182 derivation from notes_from_pm)
 - TT288: is_usurped → false (issue #182 derivation from notes_from_pm)
+- TT295: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT298: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -1536,3 +1589,6 @@ Field corrections:
 - TT276: attribution_certainty → "attested" (deriver override; PM I.1 p.352 / chunk-36 source lines 139-140 (TT276 Amenemopet). Source reads `2...)
 - TT284: is_usurped → true (deriver override; PM I.1 p.366 / chunk-37 source prints `284. PAIJEMNETER ... (Reused.)` in the he...)
 - TT288: is_usurped → true (deriver override; PM I.1 p.369 / chunk-37 source prints `Re-used by Setau (tomb 289).` in the TT28...)
+- TT291: is_joint_burial already matches deriver override (no-op this run; PM I.1 p.374 / chunk-38. PM headword names two co-equal occupants: Nu (`Servant ...)
+- TT295: attribution_certainty → "attested" (deriver override; PM I.1 p.377 / chunk-38 source line 154-155: `295· Ḏ-ḤUTMOSI, called PAROY ... T...)
+- TT298: attribution_certainty → "attested" (deriver override; PM I.1 p.379 / chunk-38 source line 283: `298. BAKI ... Foreman in the Place of ...)
