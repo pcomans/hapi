@@ -3292,6 +3292,227 @@ CHUNK35_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK35_RENAMES: dict[str, str] = {}
 
 
+# Chunk-36 (TT271-TT280 — 10 rows: TT271-TT278 Qurnet Muraʿi, TT279 ʿAsâsîf,
+# TT280 Dra' Abu el-Naga). Corrections after 3-agent merge + tie-break pass:
+#
+# Page citations:
+#   TT274: A+B majority=352, correct=351 (physical 369 = printed 351; headword
+#          on physical 369, agents cited the continuation page).
+#   TT276: A+B majority=353, correct=352 (physical 370 = printed 352).
+#   TT277: A+B majority=354, correct=353 (physical 371 = printed 353).
+#   TT278: A+B+C all say 356, correct=355 (physical 373 = printed 355; all three
+#          agents cited the plan page rather than the headword page).
+#   TT280: B+C majority=360, correct=359 (physical 377 = printed 359).
+#
+# Diacritic and verbatim-preserve restorations:
+#   TT272: merged `Amun` → `Amūn` (macron-u; source line 32 `Amlin` = `Amūn`
+#          OCR; chunk-12-onward macron-retain policy).
+#   TT274: merged `Amun` → `Amūn` (same macron-retain policy).
+#   TT276: `Amenhotp` (tie-break intermediate) → `ʿAḥḥotp` (source `<Al_ll_lotp`
+#          = ayin + Amenhotp with double-underdot-ḥ; standard Ramesside form;
+#          parallel to DAN-AhmosiHenutempet's `ʿAḥḥotp`). Wife `Henutyunu` →
+#          `Ḥenutyunu` (source `l:Ienutyunu`, I:I = underdot-Ḥ).
+#   TT278: merged `Amen-Re` → `Amen-Reʿ` (source line 286 `Amen-re<` where `<`
+#          is PM's ayin glyph; notes_from_pm verbatim-preserve policy).
+#   TT279: `Tasentenhor` → `Tasentenḥor` (source line 423 `Tasentenl,>.or`
+#          where `l,>.` = underdot-ḥ artifact; verbatim-preserve policy).
+#   TT280: merged notes include `Mentuhotp`; restore `(formerly read Meḥenkwetreʿ)`
+#          PM-verbatim parenthetical (source line 547 `(formerly read Mel.tenkwetrec)`
+#          where `Mel.` = `Meḥ` and trailing `<` = ayin ʿ).
+#
+# Other:
+#   TT279: occupant_alt_names add `Pbes` (source line 421 headword `PABA SA (PBES)`;
+#          (PBES) is PM's alternate-name parenthetical, parallel to KV5
+#          occupant_alt_names convention).
+#   TT280: location_sub_area: majority null; source line 549 prints
+#          `In valley south of Deir el-Bal].ri Temples` — set to canonical form.
+#
+# DERIVER_OVERRIDES: TT276 has `Tuthmosis IV (?)` in notes_from_pm — the `(?)`
+# qualifies the REGNAL DATE, not Amenemopet's identification. Same class as
+# chunk-10 TT12/TT17/TT19/TT20 etc. Added below.
+CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT272",
+        "notes_from_pm",
+        "Divine father of Amūn in the West, Lector in the Temple of Sokari. Ramesside.",
+        "PM I.1 p.351 / chunk-36 source line 32 prints `Amlin` = `Amūn` with "
+        "macron-u (OCR artifacts `Aml` misread as `Ami`; the macron-u is the "
+        "standard PM Amūn form in body prose). Majority-merged value dropped "
+        "the macron. Restore per chunk-12-onward macron-retain policy "
+        "(notes_from_pm verbatim-preserve field).",
+    ),
+    (
+        "TT274",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 351, "section": "I"},
+        "PM I.1: TT274 headword starts on physical p.369 = printed p.351 "
+        "(chunk-36 source `PHYSICAL PAGE 369 (PRINTED PAGE 351)`, headword "
+        "at source line 97). A+B majority cited p.352 (the continuation "
+        "page). Per project-wide convention, source_citation.page records "
+        "where the headword starts. Same off-by-one class as chunk-35 "
+        "TT266 and chunk-34 TT258/TT260.",
+    ),
+    (
+        "TT274",
+        "notes_from_pm",
+        "First prophet of Monthu of Tod, and of Thebes, sem-priest in the Ramesseum in the estate of Amūn. Ramesside. (Inaccessible.) Wife, ...y.",
+        "Restore macron-ū on `Amūn` per chunk-12-onward macron-retain policy "
+        "(source line 98 `Amiin` = `Amūn` OCR). The tie-break-overrides.json "
+        "TT274|notes_from_pm entry used `Amun` as a stable merge-time "
+        "intermediate; this correction layers the macron post-merge per the "
+        "verbatim-preserve policy. `Tod` and `(Inaccessible.)` placement "
+        "already pinned by the tie-break.",
+    ),
+    (
+        "TT276",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 352, "section": "I"},
+        "PM I.1: TT276 headword starts on physical p.370 = printed p.352 "
+        "(chunk-36 source `PHYSICAL PAGE 370 (PRINTED PAGE 352)`, headword "
+        "at source line 139). A+B majority cited p.353 (the continuation "
+        "page). Per project-wide convention, source_citation.page records "
+        "where the headword starts.",
+    ),
+    (
+        "TT276",
+        "notes_from_pm",
+        "Overseer of the treasury of gold and silver, Judge, Overseer of the cabinet. Temp. Tuthmosis IV (?). Parents, Nekhu (?) and ʿAḥḥotp. Wife, Ḥenutyunu.",
+        "Two restorations: (1) `Amenhotp` (tie-break intermediate) → `ʿAḥḥotp`: "
+        "source line 142 prints `<Al_ll_lotp` where `<` is PM's ayin glyph and "
+        "`Al_ll_lotp` is the OCR rendering of the Ramesside theophoric compound; "
+        "PM's printed form is `ʿAḥḥotp` (ayin + double-underdot-ḥ), the standard "
+        "Ramesside writing of Amenhotp/Amenhotep — parallel to "
+        "DAN-AhmosiHenutempet `Daughter of ʿAḥḥotp` (fix_rows CHUNK7_CORRECTIONS). "
+        "(2) `Henutyunu` → `Ḥenutyunu`: source line 142 prints `l:Ienutyunu` where "
+        "`l:I` is PM's underdot-Ḥ glyph; notes_from_pm is verbatim-preserve "
+        "so the Ḥ underdot is retained.",
+    ),
+    (
+        "TT277",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 353, "section": "I"},
+        "PM I.1: TT277 headword starts on physical p.371 = printed p.353 "
+        "(chunk-36 source `PHYSICAL PAGE 371 (PRINTED PAGE 353)`, headword "
+        "at source line 205). A+B majority cited p.354 (the continuation "
+        "page). Per project-wide convention, source_citation.page records "
+        "where the headword starts.",
+    ),
+    (
+        "TT278",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 355, "section": "I"},
+        "PM I.1: TT278 headword starts on physical p.373 = printed p.355 "
+        "(chunk-36 source `PHYSICAL PAGE 373 (PRINTED PAGE 355)`, headword "
+        "at source line 286). All three agents cited p.356 (the plan/map page). "
+        "Per project-wide convention, source_citation.page records where the "
+        "headword starts.",
+    ),
+    (
+        "TT278",
+        "notes_from_pm",
+        "Herdsman of Amen-Reʿ. Ramesside. Wife, Tay, Songstress of Mut.",
+        "Restore ayin on `Amen-Reʿ`: source line 286 prints `Amen-re<` where "
+        "`<` is PM's ayin glyph. All three agents unanimously dropped the "
+        "ayin. notes_from_pm is verbatim-preserve per README policy; the ayin "
+        "is a meaningful consonant (distinguishes the solar epithet `Reʿ` from "
+        "plain `Re`). Parallel to the DAN-Ahhotep / chunk-7 ayin-preservation "
+        "precedents.",
+    ),
+    (
+        "TT279",
+        "occupant_alt_names",
+        ["Pbes"],
+        "PM I.1 p.357 / source line 421 headword prints `PABA SA (PBES)` — the "
+        "parenthetical `PBES` is PM's alternate-name marker, parallel to the "
+        "convention used for KV5 (`RAMESSES II`) and chunk-8 QV royal-name "
+        "alt-names. Majority-merged value left occupant_alt_names=[] because "
+        "A+C both omitted the parenthetical; agent B included the alternate in "
+        "occupant_name. Add `Pbes` to occupant_alt_names per the schema's "
+        "alt-name field purpose.",
+    ),
+    (
+        "TT279",
+        "notes_from_pm",
+        "Chief steward of the god's wife. Temp. Psammetikhos I. Parents, Pedubaste, Divine father beloved of the god, and Tasentenḥor.",
+        "Restore underdot-ḥ on `Tasentenḥor`: source line 423 prints "
+        "`Tasentenl,>.or` where `l,>.` is PM's underdot-ḥ OCR glyph. "
+        "Tie-break-overrides.json TT279|notes_from_pm used `Tasentenhor` "
+        "(no underdot) as the stable merge-time form; this correction layers "
+        "the verbatim-preserve underdot per README policy. The PM variant form "
+        "in parentheses after the mother's name (source `(or}. f~~)`) is "
+        "OCR-damaged and cannot be reliably resolved from the text layer alone; "
+        "flagged for egyptologist printed-source review.",
+    ),
+    (
+        "TT280",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 359, "section": "I"},
+        "PM I.1: TT280 headword starts on physical p.377 = printed p.359 "
+        "(chunk-36 source `PHYSICAL PAGE 377 (PRINTED PAGE 359)`, headword "
+        "at source line 547). B+C majority cited p.360 (the continuation "
+        "page). Per project-wide convention, source_citation.page records "
+        "where the headword starts.",
+    ),
+    (
+        "TT280",
+        "location_sub_area",
+        "In valley south of Deir el-Bahari Temples",
+        "PM I.1 p.359 / source line 549 prints `In valley south of Deir "
+        "el-Bal].ri Temples` where `Bal].ri` = `Bahari` (OCR artifact). "
+        "Majority (A+C) emitted null; agent B correctly captured this PM "
+        "location qualifier but was minority. PM explicitly marks this tomb "
+        "outside the standard theban_area grid (`D-3, i, 3` map reference "
+        "only). Restore the location_sub_area from the source per the "
+        "verbatim-preserve policy. `Deir el-Bahari` restored from OCR "
+        "`Deir el-Bal].ri`.",
+    ),
+    (
+        "TT280",
+        "notes_from_pm",
+        "Chief steward in ..., Chancellor. Temp. Mentuḥotp (Scankhkareʿ). "
+        "(Formerly read Meḥenkwetreʿ.) Son Antef, Hereditary Prince.",
+        "Two restorations from source line 547-548: (1) `Mentuhotp` → "
+        "`Mentuḥotp`: source `Mentul.totp` where `l.` = PM's underdot-ḥ glyph; "
+        "notes_from_pm is verbatim-preserve — restore the underdot. (2) Add "
+        "`(Formerly read Meḥenkwetreʿ.)`: source line 547 prints `(formerly "
+        "read Mel.tenkwetrec)` where `Mel.` = `Meḥ` (underdot-ḥ) and trailing "
+        "`c` = ayin ʿ. This is PM's own editorial note about a superseded "
+        "reading and belongs verbatim in notes_from_pm (parallel to chunk-3 "
+        "KV34 `1st ed. 24` and chunk-2 KV18 `formerly XI` PM-editorial notes). "
+        "Also `Scankhkarec` → `Scankhkareʿ` (trailing ayin on prenomen, per "
+        "source line 548). `(formerly ...)` capitalised to `(Formerly ...)` per "
+        "sentence-opening convention — PM prints the parenthetical standalone.",
+    ),
+    (
+        "TT274",
+        "co_occupants",
+        [{"alt_names": [], "name": "...y", "role": "Official"}],
+        "The tie-break-overrides.json TT274|co_occupants entry pinned "
+        "`role: 'Unknown'`; merge.py's SENTINEL_NULL_STRINGS mechanism "
+        "collapsed `Unknown` to null during structured-field deep-normalise. "
+        "Restore to `Official` — the wife of a Ramesside sem-priest "
+        "(`Amenwahsu`, First prophet of Monthu) is a non-royal woman of the "
+        "official class. Consistent with TT6/TT10/TT60/TT122 co_occupant "
+        "wives who all carry `Official` role.",
+    ),
+    (
+        "TT280",
+        "co_occupants",
+        [{"alt_names": [], "name": "Antef", "role": "Official"}],
+        "The B+C majority-merged co_occupants had `role: null` because agents "
+        "did not assign a role to son Antef. PM source line 783 prints `son "
+        "ANTEF ... Hereditary Prince` — Hereditary Prince is a high bureaucratic "
+        "title (not a royal-blood designation) in Middle Kingdom Egypt. `Official` "
+        "is the appropriate schema-level role per the project-wide convention "
+        "that non-royal-blood hereditary titles map to `Official`. Consistent "
+        "with TT279's Thalḥorpakhepesh role convention (son of a Late Period "
+        "steward).",
+    ),
+]
+
+CHUNK36_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3331,6 +3552,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK33_CORRECTIONS,
     CHUNK34_CORRECTIONS,
     CHUNK35_CORRECTIONS,
+    CHUNK36_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3368,6 +3590,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK33_RENAMES,
     **CHUNK34_RENAMES,
     **CHUNK35_RENAMES,
+    **CHUNK36_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -4476,6 +4699,30 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "31 TT225, chunk-32 TT239, chunk-33 TT241/TT249, chunk-34 "
         "TT253/TT255/TT258/TT260 — attribution_certainty encodes occupant-"
         "identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-36: TT276 Amenemopet. The `(?)` in notes_from_pm qualifies the
+    # REGNAL DATE (`Temp. Tuthmosis IV (?)`), not Amenemopet's identification.
+    # PM headword `276. AMENEMOPET ... Overseer of the treasury of gold and
+    # silver, Judge, Overseer of the cabinet. Temp. Tuthmosis IV (?).` names
+    # Amenemopet and his titles unambiguously; the `(?)` only qualifies the
+    # regnal period. Same regnal-date-hedge orthogonality class as chunk-10
+    # TT12/TT17/TT19/TT20, chunk-31 TT225, chunk-32 TT239, chunk-33
+    # TT241/TT249, chunk-34 TT253/TT255/TT258/TT260, chunk-35 TT262.
+    (
+        "TT276",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.352 / chunk-36 source lines 139-140 (TT276 Amenemopet). "
+        "Source reads `276. AMENEMOPET ... Overseer of the treasury of gold "
+        "and silver, Judge, Overseer of the cabinet. Temp. Tuthmosis IV (?).` "
+        "— the `(?)` qualifies the REGNAL DATE (`Temp. Tuthmosis IV`), not "
+        "Amenemopet's identity. Amenemopet is unambiguously named as headword "
+        "with no identity uncertainty in PM. The deriver fires on the regnal-"
+        "date `(?)` as an attribution hedge. Same regnal-date-hedge "
+        "orthogonality class as chunk-10 TT12/TT17/TT19/TT20, chunk-31 "
+        "TT225, chunk-32 TT239, chunk-33 TT241/TT249, chunk-34 "
+        "TT253/TT255/TT258/TT260, chunk-35 TT262 — attribution_certainty "
+        "encodes occupant-identity certainty, not regnal-date certainty.",
     ),
 ]
 

@@ -904,6 +904,34 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Family tomb of Nebnakht. Servant in the Place of Truth. Dyn. XIX. "
             "Parents, Ipy and ʿAuti (names from stela in Turin Mus. Sup. 6044). "
             "Wife, Thay.",
+        # Chunk-36 (TT271-TT280) — 7 tie-break overrides:
+        # TT273|occupant_name: source-verbatim Sayemiotf (no CHUNK36_CORRECTIONS).
+        # TT274|co_occupants: PM-verbatim ...y name; role null→Official by
+        #   CHUNK36_CORRECTIONS (SENTINEL_NULL_STRINGS collapses Unknown→null).
+        # TT274|notes_from_pm: Amun→Amūn macron by CHUNK36_CORRECTIONS.
+        # TT276|notes_from_pm: ʿAḥḥotp + Ḥenutyunu by CHUNK36_CORRECTIONS.
+        # TT278|occupant_name: Amemhab (no CHUNK36_CORRECTIONS on this field).
+        # TT279|notes_from_pm: Tasentenḥor underdot by CHUNK36_CORRECTIONS.
+        # TT280|notes_from_pm: Mentuḥotp + (Formerly read Meḥenkwetreʿ.) by
+        #   CHUNK36_CORRECTIONS.
+        ("TT273", "occupant_name"): "Sayemiotf",
+        ("TT274", "co_occupants"): [
+            {"alt_names": [], "name": "...y", "role": "Official"}
+        ],
+        ("TT274", "notes_from_pm"):
+            "First prophet of Monthu of Tod, and of Thebes, sem-priest in the "
+            "Ramesseum in the estate of Amūn. Ramesside. (Inaccessible.) Wife, ...y.",
+        ("TT276", "notes_from_pm"):
+            "Overseer of the treasury of gold and silver, Judge, Overseer of "
+            "the cabinet. Temp. Tuthmosis IV (?). Parents, Nekhu (?) and "
+            "ʿAḥḥotp. Wife, Ḥenutyunu.",
+        ("TT278", "occupant_name"): "Amemhab",
+        ("TT279", "notes_from_pm"):
+            "Chief steward of the god's wife. Temp. Psammetikhos I. Parents, "
+            "Pedubaste, Divine father beloved of the god, and Tasentenḥor.",
+        ("TT280", "notes_from_pm"):
+            "Chief steward in ..., Chancellor. Temp. Mentuḥotp (Scankhkareʿ). "
+            "(Formerly read Meḥenkwetreʿ.) Son Antef, Hereditary Prince.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
