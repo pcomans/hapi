@@ -2933,7 +2933,11 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
 #    (source OCR `l:letepti`; all three agents stripped the underdot).
 # 5. TT240 notes_from_pm: restore PM-faithful diacritics on the royal name —
 #    `Mentuḥotp-Nebḥepetreʿ` (source OCR `Mentul;totp-Nebl;tepetre<`; the
-#    `l;t` pattern = ḥt in this text layer; `<` = ayin; PM uses the older
+#    `l;t` pattern decodes to `ḥt` here because the `;` ligature glyph
+#    represents `ḥ` and the following `t` is the next consonant of `otp` /
+#    `epetre`, so the `t` after the ligature is not part of the same
+#    grapheme — the OCR cluster `l;t` consumes `ḥ` and the `t` is the next
+#    letter; `<` = ayin; PM uses the older
 #    PM-style `Mentuḥotp` without medial e, matching the chunk-7
 #    `DAN-MentuhotpIWifeOfDjhuti` descriptor convention).
 # ALL_CORRECTIONS aggregation enforced by
