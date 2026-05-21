@@ -4060,6 +4060,180 @@ CHUNK40_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK40_RENAMES: dict[str, str] = {}
 
 
+# Chunk-41 (TT321–TT330) merge analysis:
+#
+# Majority-resolved cleanly:
+#   TT321|occupant_name — B+C `Khaʿemopet` (ayin restore; A dropped ayin)
+#   TT325|occupant_name — A+B null (correct; C spuriously wrote `Smen` from
+#     the PM "Possibly SMEN" attribution hedge — primary occupant anonymous)
+#   TT326|shared_with_tombs — A+C `["TT3"]` (B missed the cross-ref)
+#   TT329|co_occupants — B+C correct named list; A malformed (missing `name`)
+#   TT329|is_joint_burial — A+C false (correct; B=true was wrong — this is a
+#     hierarchical annexed-tomb structure, NOT a coordinate co-burial)
+#   TT329|occupant_name — A+C `Mosi` (primary occupant; B=null wrong)
+#
+# Majority-WRONG (corrected below):
+#   TT322|source_citation.page — A+B=394 but TT322 headword (source line 54)
+#     falls on printed page 393 (page break to 394 at source line 62). C=393.
+#   TT323|source_citation.page — B+C=395 but TT323 headword (source line 91)
+#     falls on printed page 394 (page break to 395 at source line 115). A=394.
+#   TT326|source_citation.page — B+C=397 but TT326 headword (source line 203)
+#     falls on printed page 396 (page break to 397 at source line 217). A=396.
+#   TT328|notes_from_pm — A+C majority drops diacritic from wife Tatemenet vs
+#     B's `Tatemeḥet`. Source line 250: `Tatemel].et` where `l].` = underdot-ḥ
+#     OCR cluster → `Tatemeḥet`. Restore diacritic in notes_from_pm.
+#
+# CHUNK41_CORRECTIONS:
+# 1. TT321 notes_from_pm: restore Parents clause (majority A+B dropped it;
+#    C alone retained "Parents (perhaps), Busentef and Iy (names in tomb
+#    219 (5))"). Source line 46 unambiguous. Also: OCR `Bu~entef` —
+#    `~` likely underdot-ṣ/ẓ; flag for egyptologist.
+# 2. TT322 source_citation.page: majority-wrong 394 → 393.
+# 3. TT323 source_citation.page: majority-wrong 395 → 394.
+# 4. TT323 notes_from_pm: fix parent name `Ameneminet` → `Amenemḥet` (source
+#    line 94 `Ameneml_tet` where `l_t` = underdot-Ḥ OCR cluster → `ḥet`).
+#    EGYPTOLOGIST REVIEW REQUIRED.
+# 5. TT324 occupant_role: majority A+B=Official override → High Priest.
+#    PM headword "Chief prophet of Sobk" — `Chief prophet` = FIRST prophet
+#    in Egyptological title convention, same as "High Priest" classification
+#    (per chunk-39 TT303 Third prophet → Official; First/Chief prophet →
+#    High Priest).
+# 6. TT326 source_citation.page: majority-wrong 397 → 396.
+# 7. TT328 notes_from_pm: restore diacritic `Tatemenet` → `Tatemeḥet` per
+#    source line 250 OCR `Tatemel].et`.
+# 8. TT329 notes_from_pm: fix names in pinned tie-break value (C's form):
+#    `Icolnufer` → `Icoḥnufer` (source line 266 `Icol].nufer` where `l].` =
+#    underdot-ḥ OCR cluster); `Aqatet` → `Patet` (source line 266 `J>.atet`
+#    where `J>.` = `P` OCR artifact — PM name is `Pꜣtet`/Patet);
+#    `Henutwact` → `Ḥenutwact` (source line 265 `l:Ienutwact` where `l:I` =
+#    underdot-Ḥ OCR cluster; strip-ḥ for notes? No — notes_from_pm verbatim-
+#    preserve retains diacritics).
+# 9. TT330 notes_from_pm: fix OCR-literal ayin `c` in tie-break pin:
+#    `Takhac` → `Takhaʿ` (source line 306 `Takha<` where `<` = ayin).
+CHUNK41_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT321",
+        "notes_from_pm",
+        "Servant in the Place of Truth. Ramesside. Parents (perhaps), Busentef and Iy"
+        " (names in tomb 219 (5)). Wife, Maani.",
+        "Source line 46 of chunk-41-tt321-tt330.txt: `Parents (perhaps), Bu~entef and"
+        " ly (names in tomb 2I9 (5)). Wife, Maani`. Merge majority A+B dropped the"
+        " Parents clause entirely; C alone retained it. Restore per PM source."
+        " `Bu~entef` OCR `~` is ambiguous (likely underdot-ṣ/ẓ); the base form"
+        " `Busentef` is used here pending egyptologist printed-source confirmation."
+        " EGYPTOLOGIST REVIEW REQUIRED: confirm exact parent name from PM I.1 p.393.",
+    ),
+    (
+        "TT322",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 393, "section": "I"},
+        "TT322 headword appears at source line 54 of chunk-41-tt321-tt330.txt, which"
+        " is BEFORE the page break `===== PHYSICAL PAGE 412 (PRINTED PAGE 394) =====`"
+        " at source line 62. Printed page = 393. Merge majority A+B=394 was wrong;"
+        " C=393 is correct. Corrected per page-break marker.",
+    ),
+    (
+        "TT323",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 394, "section": "I"},
+        "TT323 headword appears at source line 91 of chunk-41-tt321-tt330.txt, which"
+        " is AFTER the page break to printed 394 (line 62) but BEFORE the page break"
+        " to printed 395 (line 115 `===== PHYSICAL PAGE 413 (PRINTED PAGE 395) =====`)."
+        " Printed page = 394. Merge majority B+C=395 was wrong; A=394 is correct.",
+    ),
+    (
+        "TT323",
+        "notes_from_pm",
+        "Outline-draughtsman of Amun in the Place of Truth, and in the Temple of"
+        " Sokari. Temp. Sethos I. Parents, Amenemḥet, Outline-draughtsman in the"
+        " Temple of Sokari, and Mutnefert. Wife, Nefertere.",
+        "Source line 94 of chunk-41-tt321-tt330.txt: `Parents, Ameneml_tet,`"
+        " where `l_t` = underdot-Ḥ OCR cluster → `ḥt` → parent name `Amenemḥet`."
+        " Tie-break pinned A's form `Ameneminet` (OCR misread of `l_t` as `in`)."
+        " Restore `Amenemḥet` per standard underdot-Ḥ OCR decode (cf. TT123"
+        " Amenemḥet precedent in chunk-21 reconciled.jsonl). notes_from_pm"
+        " verbatim-preserve retains the diacritic."
+        " EGYPTOLOGIST REVIEW REQUIRED: confirm from PM I.1 p.394 printed source.",
+    ),
+    (
+        "TT324",
+        "occupant_role",
+        "High Priest",
+        "PM I.1 p.395 / chunk-41 source line 129-130: `324. ḤATIAY..., Overseer of"
+        " the prophets of all the gods, Chief prophet of Sobk, Scribe of the Temple"
+        " of Monthu.` `Chief prophet` in Egyptological title taxonomy = First prophet"
+        " = High Priest class (the same senior cultic office). Merge majority A+B="
+        "`Official` was wrong; C=`High Priest` is correct. Per chunk-39 TT303"
+        " precedent: `Third prophet of Amun` → `Official`; `Chief/First prophet` →"
+        " `High Priest`. `Chief prophet of Sobk` is the local Sobek cult's first"
+        " prophet — highest priestly rank in that temple hierarchy.",
+    ),
+    (
+        "TT325",
+        "occupant_role",
+        "Unknown",
+        "All three agents correctly emitted `Unknown` for the anonymous TT325"
+        " occupant. The merge sentinel-null logic collapses the string `Unknown`"
+        " to null (SENTINEL_NULL_STRINGS includes 'unknown'), making the merged"
+        " row emit null instead of the intended `Unknown`. Restore per prompt"
+        " rule 1: `occupant_role='Unknown'` when `occupant_name` is null."
+        " Parallel to KV12/KV39/TT58/TT70/TT91 sentinel-null restoration pattern.",
+    ),
+    (
+        "TT326",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 396, "section": "I"},
+        "TT326 headword appears at source line 203 of chunk-41-tt321-tt330.txt, which"
+        " is AFTER the page break to printed 396 (line 167"
+        " `===== PHYSICAL PAGE 414 (PRINTED PAGE 396) =====`) but BEFORE the page"
+        " break to printed 397 (line 217"
+        " `===== PHYSICAL PAGE 415 (PRINTED PAGE 397) =====`)."
+        " Printed page = 396. Merge majority B+C=397 was wrong; A=396 is correct.",
+    ),
+    (
+        "TT328",
+        "notes_from_pm",
+        "Servant in the Place of Truth. Dyn. XX. Wife, Tatemeḥet.",
+        "Source line 250 of chunk-41-tt321-tt330.txt: `Wife, Tatemel].et` where"
+        " `l].` = underdot-ḥ OCR cluster → `ḥ` → `Tatemeḥet`. Merge majority A+C"
+        " dropped the diacritic to `Tatemenet`; B=`Tatemeḥet` is correct."
+        " notes_from_pm verbatim-preserve retains the underdot-ḥ.",
+    ),
+    (
+        "TT329",
+        "notes_from_pm",
+        "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, all Servants"
+        " in the Place of Truth. Ramesside. Wife (of Mosi, tomb 329), Ḥenutwact."
+        " Father (of Mosi, Annexed tomb), Icoḥnufer. Wife (of Mosi, Annexed tomb),"
+        " Patet (name on stela, Louvre, C. 280, see infra). Wife (of Ipy), Bakt.",
+        "Corrections to tie-break-pinned value (C's form of chunk-41 source lines"
+        " 262-268): (1) `Henutwact` → `Ḥenutwact`: source line 265 `l:Ienutwact`"
+        " where `l:I` = underdot-Ḥ OCR cluster; notes_from_pm verbatim-preserve"
+        " retains diacritic. (2) `Icolnufer` → `Icoḥnufer`: source line 266"
+        " `Icol].nufer` where `l].` = underdot-ḥ OCR cluster. (3) `Aqatet` → `Patet`:"
+        " source line 266 `J>.atet` where `J>.` is OCR artifact for `P` (descender"
+        " of capital P misread as J-period); PM name is `Pꜣtet`/Patet. Agent A also"
+        " had `Patet`; agent B had `Atatef` (OCR-scrambled). `Patet` is correct."
+        " EGYPTOLOGIST REVIEW REQUIRED: confirm `Ḥenutwact`, `Icoḥnufer`, and"
+        " `Patet` from PM I.1 p.397 printed source.",
+    ),
+    (
+        "TT330",
+        "notes_from_pm",
+        "Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu."
+        " Wife, Takhaʿ.",
+        "Source line 306 of chunk-41-tt321-tt330.txt: `Wife, Takha< i~~` where"
+        " `<` = OCR-literal ayin `ʿ`. Tie-break pinned C's form `Takhac` (raw OCR)."
+        " Restore ayin: `Takhac` → `Takhaʿ` per TT293/TT300 ayin-retain precedent."
+        " Also: tie-break dropped B's `Takhaʿ` (correct) over C's `Takhac` because"
+        " C retained the Parents clause. Final form: Parents retained + ayin restored.",
+    ),
+]
+
+
+CHUNK41_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4104,6 +4278,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK38_CORRECTIONS,
     CHUNK39_CORRECTIONS,
     CHUNK40_CORRECTIONS,
+    CHUNK41_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4146,6 +4321,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK38_RENAMES,
     **CHUNK39_RENAMES,
     **CHUNK40_RENAMES,
+    **CHUNK41_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -5445,6 +5621,43 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "identification hedge, not primary occupant identification hedge). "
         "Per chunk-9 TT2 precedent that attribution_certainty encodes "
         "occupant-identity certainty, not relational certainty.",
+    ),
+    # Chunk-41 DERIVER_OVERRIDES:
+    # TT321 — attribution_certainty: `perhaps` in `Parents (perhaps), Busentef...`
+    #   qualifies the parent IDENTIFICATION (are Busentef and Iy definitely his
+    #   parents?), NOT the primary occupant Khaʿemopet's identity. Khaʿemopet is
+    #   unambiguously named in the PM headword with title `Servant in the Place of
+    #   Truth`. Same secondary-clause hedge pattern as TT2/TT12/TT298 etc.
+    # TT329 — attribution_certainty: `probably` in `...Mosi probably his grandson`
+    #   and `perhaps` in `perhaps his son` (re Ipy) qualify the co-occupant
+    #   KINSHIP RELATIONSHIPS, NOT the primary occupant Mosi's identity. Mosi
+    #   (main tomb 329 occupant) is unambiguously named in the headword. Same
+    #   secondary/co-occupant kinship-hedge pattern as TT2 secondary-wife hedge
+    #   and TT291 co-occupant relational hedges.
+    (
+        "TT321",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.393 / chunk-41 source line 46: `Parents (perhaps), Bu~entef and"
+        " ly (names in tomb 219 (5)).` The `perhaps` qualifies the PARENT"
+        " IDENTIFICATION certainty (are Busentef and Iy definitively his parents?),"
+        " NOT the primary occupant Khaʿemopet's identity. Khaʿemopet is"
+        " unambiguously named with title `Servant in the Place of Truth` in the PM"
+        " headword (source line 44). Same secondary-clause hedge class as TT2"
+        " `(probably) Esi` (second wife hedge), TT12, TT298, TT316 etc.",
+    ),
+    (
+        "TT329",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.397 / chunk-41 source line 262-263: `M 0 s I... and Annexed tomb"
+        " of M 0 s I... probably his grandson, and I p y... perhaps his son, all"
+        " Servants in the Place of Truth.` The `probably` and `perhaps` qualify"
+        " the CO-OCCUPANT KINSHIP RELATIONSHIPS (is the annexed-tomb Mosi"
+        " definitively the grandson? is Ipy definitively the son?), NOT the primary"
+        " occupant Mosi's identity. Main Mosi is unambiguously named with title in"
+        " the headword. Same secondary/co-occupant kinship-hedge pattern as TT2"
+        " secondary-wife hedge, TT291 joint-burial kinship hedges.",
     ),
 ]
 
