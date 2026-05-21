@@ -881,6 +881,29 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT260", "notes_from_pm"):
             "Scribe, Weigher of [Amun], Overseer of the ploughed lands of "
             "[Amun]. Temp. Tuthmosis III (?). Wife, Nubemweset (name from cone).",
+        # Chunk-35 (TT261-TT270) — 4 tie-break overrides:
+        # TT266|occupant_name: B's `Amennakht` pinned (PDF-verbatim AMENNAKHT).
+        #   No CHUNK35_CORRECTIONS on this field — final value equals pinned.
+        # TT266|notes_from_pm: PDF-verbatim `Buḳentef` + `Ḥenutrayunu` pinned.
+        #   No CHUNK35_CORRECTIONS on this field — final value equals pinned.
+        # TT267|notes_from_pm: PDF-verbatim `Tārekhʿan` + `Ḥenutmet` pinned.
+        #   No CHUNK35_CORRECTIONS on this field — final value equals pinned.
+        # TT268|notes_from_pm: `Family tomb of Nebnakht.` + `ʿAuti` pinned.
+        #   No CHUNK35_CORRECTIONS on this field — final value equals pinned.
+        ("TT266", "occupant_name"): "Amennakht",
+        ("TT266", "notes_from_pm"):
+            "Chief craftsman of the Lord of the Two Lands in the Place of "
+            "Truth on the west of Thebes. Dyn. XIX. Parents, Buḳentef and Iy "
+            "(names in tomb 219). Wife, Ḥenutrayunu.",
+        ("TT267", "notes_from_pm"):
+            "Officer of the workmen in the Place of Truth on the west of "
+            "Thebes, Fashioner of the images of all the gods in the House of "
+            "Gold. Dyn. XX. (L. D. Text, Nos. 102-3.) Parents, Amennakht and "
+            "Tārekhʿan. Wife, Ḥenutmet.",
+        ("TT268", "notes_from_pm"):
+            "Family tomb of Nebnakht. Servant in the Place of Truth. Dyn. XIX. "
+            "Parents, Ipy and ʿAuti (names from stela in Turin Mus. Sup. 6044). "
+            "Wife, Thay.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
