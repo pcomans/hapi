@@ -392,5 +392,29 @@
   "TT239|attribution_certainty": {
     "rationale": "PM I.1 p.330 / chunk-32-tt231-tt240.txt line 126-127 (TT239 Penhet, Governor of Northern Lands). Source reads `Temp. Tuthmosis IV to Amenophis II (?).` — the `(?)` is PM's standard attribution-uncertainty glyph. Agents split 1/1/1: A=`uncertain` (correct — `(?)` maps to uncertain), B=`probable` (incorrect — treats PM's `(?)` as weaker uncertainty), C=`attested` (incorrect — ignores PM's `(?)`). The deriver (`_ATTRIBUTION_HEDGE_PATTERNS` `\\(\\?\\)` pattern in fix_rows.py) would also set `uncertain` from the merged notes_from_pm, confirming A's classification. Pin A's `uncertain`.",
     "value": "uncertain"
+  },
+  "TT241|notes_from_pm": {
+    "rationale": "PM I.1 p.331 / chunk-33-tt241-tt250.txt (TT241 ʿAḥmosi). Source OCR reads `Wife, <Al_lmosi.` where `<` is the standard ayin marker and `_l` is OCR noise within the name. Agent C's `<Alimosi` preserves the ayin prefix and resolves the OCR noise to `Alimosi` — closest to the PM text. Agent A has `<Al_lmosi` (verbatim OCR noise, unresolved). Agent B has `Alimosi` (dropped the ayin `<` prefix). Per verbatim-preserve policy, the ayin-prefixed form is correct. Pin agent C's value.",
+    "value": "Scribe of the divine writings, Child of the nursery, Head of mysteries in the House of the morning. Temp. Tuthmosis III(?). Wife, <Alimosi."
+  },
+  "TT241|occupant_name": {
+    "rationale": "PM I.1 p.331 / chunk-33-tt241-tt250.txt (TT241). Source headword OCR reads `<AI;IMOSI` where `<` is ayin and `I;I` is the standard underdot-Ḥ artifact. PM headword is `ʿAḥmosi`. All agents misread: A=`Kahmosi` (dropped ayin, misread Ḥ as kh), B=`Alimosi` (misread as wife's name), C=`Calimosi` (read `<` as `C`). No agent has the correct form. Agent A (`Kahmosi`) is closest phonetically — it at least preserves the Ḥ cluster as `kh`. CHUNK33_CORRECTIONS will supply the correct `ʿAhmosi` (strip-Ḥ rule applied to `ʿAḥmosi` for the matchable occupant_name field). Pin A's value as the least-wrong anchor; fix_rows will overwrite it.",
+    "value": "Kahmosi"
+  },
+  "TT242|notes_from_pm": {
+    "rationale": "PM I.1 p.332 / chunk-33-tt241-tt250.txt (TT242 Weḥebrecon). Source confirms: divine adoratress name `cAnkhnesneferebrec` (where `c` is ayin in OCR), parents `PedeamQnnai` + `Mutardais` (where `Q` is hieroglyphic `on`), wife `Tadepanehep`, and bibliographic ref `(L. D. Text, No. 22.)`. Agent A: has ayin as `c`, has wife, but missing parents and L.D. cite. Agent B: missing ayin on adoratress name and has `Ankhesneferebrec` (missing `n`), has parents as `Pedeamnai` (missing `on`), has L.D. cite. Agent C: has `<Ankhnesneferebrec` (correct ayin + correct `n`), has `Pedeamonnai` (correct `on`), has parents + wife, but missing L.D. cite. Pin agent C's value — best adoratress name and parent spelling; CHUNK33_CORRECTIONS adds the L.D. cite.",
+    "value": "Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais."
+  },
+  "TT242|occupant_name": {
+    "rationale": "PM I.1 p.332 / chunk-33-tt241-tt250.txt (TT242). Source headword OCR reads `WEI;IEBREC 0!\\'` where `I;I` is underdot-Ḥ and `0!\\'` resolves to `ON` (the terminal consonant). PM headword is `WEḤEBRECON`. Strip-Ḥ rule on the matchable occupant_name field gives `Wehebrecon`. Agents split 1/1/1: A=`Wenerbrec` (dropped the Ḥ cluster and terminal `n`, inserted phantom `r`), B=`Wehebreconi` (correct Ḥ stripping, correct `on` but added phantom `i`), C=`Werebrec` (garbled Ḥ to `r`, dropped terminal `on`). Agent B is closest to the PM headword. CHUNK33_CORRECTIONS will set the stripped form `Wehebrecon`. Pin agent B's `Wehebreconi` as the least-bad anchor.",
+    "value": "Wehebreconi"
+  },
+  "TT243|notes_from_pm": {
+    "rationale": "PM I.1 p.332 / chunk-33-tt241-tt250.txt (TT243 Pemu). Source shows `called ~gQ Q` in hieroglyphic notation — the nickname cannot be resolved from OCR. Agent A has `called Pemu` (error: repeats the main name as the nickname). Agent B has `called Ragi` (a plausible Egyptian name, likely an agent's scholarly rendering of the hieroglyphs). Agent C has `called <Egoc` (OCR garble with ayin prefix, unresolvable). Pin agent B's value as the most defensible non-garbled candidate; flag for egyptologist review of the actual nickname from PM hieroglyphics.",
+    "value": "Mayor of the Southern City, called Ragi, Royal scribe. Saite. Father, a prophet and Izeneku-priest in Southern On."
+  },
+  "TT246|notes_from_pm": {
+    "rationale": "PM I.1 p.333 / chunk-33-tt241-tt250.txt (TT246 Senenre). Source OCR reads `Wife, Sitmenl).it` where `l).` is the standard underdot-Ḥ artifact — wife's name is `Sitmenḥit`. Agent A has `Sitmenḥit` (correct — resolved underdot-Ḥ). Agent B has `Sitmenpit` (phantom `p` substitution for the Ḥ cluster). Agent C has `Sitmendit` (misread as `d`). Pin agent A's value as the source-verified form.",
+    "value": "Scribe. Dyn. XVIII. Wife, Sitmenḥit."
   }
 }

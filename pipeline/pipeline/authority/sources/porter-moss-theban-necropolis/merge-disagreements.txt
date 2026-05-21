@@ -676,6 +676,37 @@ TT239 (Penhet):
 TT240 (Meru):
   notes_from_pm: a="Overseer of sealers. Temp. Mentuhotep-Nebhepetre. (L. D. Text, No. 14, New York, M.M.A. Excav. No. 517.) Parents, Iku and Nebti." | b="Overseer of sealers. Temp. Mentuhotep-Nebhotepetre. (L. D. Text, No. 14, New York, M.M.A. Excav. No. 517.) Parents, Iku and Nebti." | c="Overseer of sealers. Temp. Mentuhotep-Nebhepetre. (L. D. Text, No. 14, New York, M.M.A. Excav. No. 517.) Parents, Iku and Nebti."  → chose "Overseer of sealers. Temp. Mentuhotep-Nebhepetre. (L. D. Text, No. 14, New York, M.M.A. Excav. No. 517.) Parents, Iku and Nebti."
 
+TT241 (Kahmosi):
+  notes_from_pm: a="Scribe of the divine writings, Child of the nursery, Head of mysteries in the House of the morning. Temp. Tuthmosis III(?). Wife, <Al_lmosi." | b="Scribe of the divine writings, Child of the nursery, Head of mysteries in the House of the morning. Temp. Tuthmosis III(?). Wife, Alimosi." | c="Scribe of the divine writings, Child of the nursery, Head of mysteries in the House of the morning. Temp. Tuthmosis III(?). Wife, <Alimosi."  → chose "Scribe of the divine writings, Child of the nursery, Head of mysteries in the House of the morning. Temp. Tuthmosis III(?). Wife, <Alimosi."
+  occupant_name: a="Kahmosi" | b="Alimosi" | c="Calimosi"  → chose "Kahmosi"
+
+TT242 (Wehebreconi):
+  notes_from_pm: a="Chamberlain of the divine adoratress cAnkhnesneferebrec. Saite. Wife, Tadepanehep." | b="Chamberlain of the divine adoratress Ankhesneferebrec. Saite. Parents, Pedeamnai and Mutardais. Wife, Tadepanehep. (L. D. Text, No. 22.)" | c="Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais."  → chose "Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais."
+  occupant_name: a="Wenerbrec" | b="Wehebreconi" | c="Werebrec"  → chose "Wehebreconi"
+
+TT243 (Pemu):
+  notes_from_pm: a="Mayor of the Southern City, called Pemu, Royal scribe. Saite. Father, a prophet and Izeneku-priest in Southern On." | b="Mayor of the Southern City, called Ragi, Royal scribe. Saite. Father, a prophet and Izeneku-priest in Southern On." | c="Mayor of the Southern City, called <Egoc, Royal scribe. Saite. Father, a prophet and Izeneku-priest in Southern On."  → chose "Mayor of the Southern City, called Ragi, Royal scribe. Saite. Father, a prophet and Izeneku-priest in Southern On."
+  occupant_alt_names: a=[] | b=["Ragi"] | c=[]  → chose []
+
+TT244 (Pakharu):
+  notes_from_pm: a="Overseer of carpenters of the Temple of Amun. Ramesside." | b="Overseer of carpenters of the Temple of Amiin. Ramesside." | c="Overseer of carpenters of the Temple of Amun. Ramesside."  → chose "Overseer of carpenters of the Temple of Amun. Ramesside."
+
+TT246 (Senenre):
+  notes_from_pm: a="Scribe. Dyn. XVIII. Wife, Sitmenḥit." | b="Scribe. Dyn. XVIII. Wife, Sitmenpit." | c="Scribe. Dyn. XVIII. Wife, Sitmendit."  → chose "Scribe. Dyn. XVIII. Wife, Sitmenḥit."
+
+TT247 (Simut):
+  notes_from_pm: a="Scribe, Counter of the cattle of Amun. Dyn. XVIII. Wife, Sitamon." | b="Scribe, Counter of the cattle of Amiin. Dyn. XVIII. Wife, Sitamon." | c="Scribe, Counter of the cattle of Amun. Dyn. XVIII. Wife, Sitamon."  → chose "Scribe, Counter of the cattle of Amun. Dyn. XVIII. Wife, Sitamon."
+
+TT248 (Djeḥutmosi):
+  occupant_name: a="Djeḥutmosi" | b="Pakhutmosi" | c="Djeḥutmosi"  → chose "Djeḥutmosi"
+
+TT249 (Neferronpet):
+  notes_from_pm: a="Purveyor(?) of date-wine. Temp. Tuthmosis IV(?)." | b="Purveyor(?) of date-wine. Temp. Tuthmosis IV(?)." | c="Purveyor(?) of date-wine. Temp. Tuthmosis IV(?)"  → chose "Purveyor(?) of date-wine. Temp. Tuthmosis IV(?)."
+
+TT250 (Amenemosi):
+  notes_from_pm: a="Royal scribe, Overseer of the cattle of Amun, Overseer of the magazine of Amun. Temp. early Tuthmosis III. Father, Nesu, Head of the magazine of Amun." | b="Royal scribe, Overseer of the cattle of Amiin, Overseer of the magazine of Amiin. Temp. early Tuthmosis III. Father, Nesu, Head of the magazine of Amiin." | c="Royal scribe, Overseer of the cattle of Amun, Overseer of the magazine of Amun. Temp. early Tuthmosis III. Father, Nesu, Head of the magazine of Amun."  → chose "Royal scribe, Overseer of the cattle of Amun, Overseer of the magazine of Amun. Temp. early Tuthmosis III. Father, Nesu, Head of the magazine of Amun."
+  occupant_name: a="Amenemosi" | b="Amenemosi" | c="Amenmosi"  → chose "Amenemosi"
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -770,6 +801,7 @@ Per-chunk correction counts:
 - Chunk 30: 16 correction(s) defined in CHUNK30_CORRECTIONS.
 - Chunk 31: 7 correction(s) defined in CHUNK31_CORRECTIONS.
 - Chunk 32: 5 correction(s) defined in CHUNK32_CORRECTIONS.
+- Chunk 33: 9 correction(s) defined in CHUNK33_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1113,6 +1145,26 @@ Field corrections:
     value: "Governor of all Northern Lands. Temp. Tuthmosis IV to Amenophis II (?). Wife, Ḥetepti."
 - TT240: notes_from_pm already matches override (no-op this run; PM I.1 p.330 / chunk-32 source text line 149 (TT240 Meru). Source OCR reads `Mentul;totp-Nebl;tepetre<` where `l;t` = `ḥt` (underdot-Ḥ followed by t) and trailing `<` = ayin (ʿ). PM prints the royal name `Mentuḥotp-Nebḥepetreʿ` — the older PM spelling of Mentuhotep-Nebhepetre (Nebhepetre Montuhotep II, XI Dynasty) without medial e, matching the `Mentuhotp` convention established by the chunk-7 `DAN-MentuhotpIWifeOfDjhuti` descriptor. The 2/1 majority merge picked agents A+C's `Mentuhotep-Nebhepetre` (stripped both ḥ underdots, used the modern -hotep spelling, and dropped the ayin). Restore PM-verbatim form: `Mentuḥotp-Nebḥepetreʿ`.)
     value: "Overseer of sealers. Temp. Mentuḥotp-Nebḥepetreʿ. (L. D. Text, No. 14, New York, M.M.A. Excav. No. 517.) Parents, Iku and Nebti."
+- TT241: occupant_name already matches override (no-op this run; PM I.1 p.331 / chunk-33 source text (TT241). Source headword OCR reads `<AI;IMOSI` where `<` is the standard ayin marker and `I;I` is the standard underdot-Ḥ artifact in this text layer. PM headword is `ʿAḥmosi`. The tie-break pinned agent A's `Kahmosi` (closest phonetically of three wrong reads). Apply strip-Ḥ rule to the matchable occupant_name field: `ʿAḥmosi` → `ʿAhmosi`. Parallel to chunk-31 TT224 `ʿAḥmosi-called-Ḥumay` and many prior chunks.)
+    value: "ʿAhmosi"
+- TT242: occupant_name already matches override (no-op this run; PM I.1 p.332 / chunk-33 source text (TT242). Source headword OCR reads `WEI;IEBREC 0!\'` where `I;I` is underdot-Ḥ and `0!\'` decodes to terminal `ON`. PM headword is `WEḤEBRECON`. Strip-Ḥ rule on the matchable occupant_name field gives `Wehebrecon`. The tie-break pinned agent B's `Wehebreconi` (best candidate — correct Ḥ stripping + `on`, but added phantom terminal `i`). Remove phantom `i`: `Wehebreconi` → `Wehebrecon`.)
+    value: "Wehebrecon"
+- TT242: notes_from_pm corrected this run (PM I.1 p.332 / chunk-33 source text (TT242 Wehebrecon). Source confirms: (1) parents `PedeamQnnai` + `Mutardais` (where `Q` = hieroglyphic `on` → `Pedeamonnai`); (2) wife `Tadepanehep`; (3) bibliographic ref `(L. D. Text, No. 22.)`. The tie-break pinned agent C's value which had the best adoratress name spelling (`<Ankhnesneferebrec` with ayin OCR) and `Pedeamonnai`, but omitted the L.D. cite. Append the missing bibliographic reference + restore both ayin glyphs (leading `<` and trailing `c`) to U+02BF per source-wide diacritic policy (Gemini PR #277 round-1 finding 3283267567/581).)
+    was: "Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais. (L. D. Text, No. 22.)"
+    now: "Chamberlain of the divine adoratress ʿAnkhnesneferebreʿ. Saite. Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais. (L. D. Text, No. 22.)"
+- TT241: notes_from_pm corrected this run (PM I.1 p.331 / chunk-33 source text (TT241 ʿAhmosi). Tie-break pinned agent C's `<Alimosi` for the wife's name. The leading `<` is the OCR ayin glyph; restore to U+02BF (`ʿAlimosi`). Stays agent-C-faithful on the body (`Alimosi`) rather than speculatively Egyptologically normalizing to `ʿAḥmosi`: PM source OCR `<Al_lmosi` has `_l` mid-word noise that doesn't unambiguously decode to `Ḥ` (no `I;I` Ḥ-residual cluster present); per Constitutional Rule 1, keep the OCR-decoded form and let egyptologist review decide if the wife's name is the same as the occupant's. Gemini PR #277 round-1 finding 3283267541.)
+    was: "Scribe of the divine writings, Child of the nursery, Head of mysteries in the House of the morning. Temp. Tuthmosis III(?). Wife, <Alimosi."
+    now: "Scribe of the divine writings, Child of the nursery, Head of mysteries in the House of the morning. Temp. Tuthmosis III(?). Wife, ʿAlimosi."
+- TT248: occupant_name already matches override (no-op this run; PM I.1 p.335 / chunk-33 source text (TT248). Source headword OCR reads `I>~;~uTMOSI` where `I>~` is the OCR rendering of d-bar `Ḏ` and `~;~` / `;~` encodes the underdot-Ḥ cluster. PM headword is `Ḏjeḥutmosi` (d-bar + underdot-Ḥ). The 2/1 majority (agents A+C) merged to `Djeḥutmosi`, dropping the d-bar. Restore the d-bar per the PM headword AND apply the strip-Ḥ rule for the matchable occupant_name field: `Djeḥutmosi` → `Ḏjehutmosi` (d-bar preserved as a distinguishing radical; underdot-ḥ stripped per README convention).)
+    value: "Ḏjehutmosi"
+- TT250: occupant_name already matches override (no-op this run; PM I.1 p.336 / chunk-33 source text (TT250). Source headword clearly reads `250. RA<MOSI.` where `<` is the standard ayin marker → `Raʿmosi`. All three agents extracted TT251's content (`AMENMOSI / Amenemosi — Royal scribe, Overseer of the cattle of Amun, Sh. ʿAbd el-Qurna`) instead. TT250 is the same Raʿmosi as TT7 (PM `See tomb 7.`); the cross-ref aligns with chunk-30 TT212 which also references TT7. Catastrophic misextraction corrected from source text.)
+    value: "Raʿmosi"
+- TT250: notes_from_pm already matches override (no-op this run; PM I.1 p.336 / chunk-33 source text (TT250 Raʿmosi). Source text for TT250 reads: `250. RA<MOSI. (See tomb 7.) Temp. Ramesses II. Deir el-Medina.` — this is the complete PM entry body. All three agents instead extracted TT251's note text (`Royal scribe, Overseer of the cattle of Amun, Overseer of the magazine of Amun. Temp. early Tuthmosis III. Father, Nesu, Head of the magazine of Amun.`). Full rewrite to PM source text.)
+    value: "(See tomb 7.) Temp. Ramesses II."
+- TT250: theban_area already matches override (no-op this run; PM I.1 p.336 / chunk-33 source text (TT250 Raʿmosi). Source explicitly states `Deir el-Medina.` as the location. All three agents extracted `Sh. ʿAbd el-Qurna` from TT251's content. Corrected from source text.)
+    value: "Deir el-Medina"
+- TT250: shared_with_tombs already matches override (no-op this run; PM I.1 p.336 / chunk-33 source text (TT250 Raʿmosi). Source reads `(See tomb 7.)` — explicit PM cross-reference to TT7, which is the same Raʿmosi scribe. Parallel to chunk-30 TT212 which also references TT7 via shared_with_tombs=["TT7"]. TT7 shared_with_tombs already includes TT250 as a back-reference (established in chunk-1 corrections per symmetry convention).)
+    value: ["TT7"]
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1199,6 +1251,9 @@ Field corrections:
 - TT210: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT225: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT228: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
+- TT239: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT241: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT249: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -1254,3 +1309,5 @@ Field corrections:
 - TT228: attribution_certainty → "attested" (deriver override; PM I.1 p.327 / physical PDF p.345 prints `228. AMENMOSI ..., Scribe of the treas...)
 - TT225: attribution_certainty → "attested" (deriver override; PM I.1 p.325 / physical PDF p.343 prints `225. A First prophet of Ḥathor. Temp. ...)
 - TT239: attribution_certainty → "attested" (deriver override; PM I.1 p.330 / physical PDF p.348 prints `239. PENḤET ..., Governor of all North...)
+- TT241: attribution_certainty → "attested" (deriver override; PM I.1 p.331 / chunk-33 source text (TT241 ʿAḥmosi). Source reads `241. <AI;IMOS...)
+- TT249: attribution_certainty → "attested" (deriver override; PM I.1 p.335 / chunk-33 source text (TT249 Neferronpet). Source reads `249. NEFE...)
