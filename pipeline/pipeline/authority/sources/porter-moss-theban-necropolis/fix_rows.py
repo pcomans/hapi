@@ -2100,17 +2100,20 @@ CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "PM I.1 p.293 / physical PDF p.311 (TT187 PAKHIḤET) prints "
         "`wʿab-priest of Amūn. Dyn. XIX.` (the printed-book form). "
         "The OCR text-layer renders this as `warb-priest of Amlin.` "
-        "All 3 agents emitted `Wab-priest` (capital-W, no ayin). "
-        "Three restorations: (a) `Wab-priest` → `wʿab-priest` — "
-        "insert U+02BF ayin + lowercase sentence-initial per "
-        "chunk-22 TT113 + chunk-23 TT141 + chunk-26 ayin-before-a "
-        "precedent (PM body-prose sentence-initial lowercase preserved "
-        "per source verbatim, not auto-capitalized). (b) `Amun` → "
-        "`Amūn` — PM body-prose macron-Ū per chunk-12-onward "
-        "macron-retain class (same as TT184, TT189). (c) `<Ashakhet` "
-        "→ `ʿAshakhet` — PM OCR raised-ayin glyph `<` → U+02BF per "
-        "postprocess whitelist. Verbatim-preserve policy on "
-        "notes_from_pm. Gemini PR #271 round 1 finding 3279424043.",
+        "Agents A+B emitted `Wab-priest` (capital-W); agent C emitted "
+        "`wab-priest` (lowercase, still no ayin). Two restorations: "
+        "(a) `Wab-priest` / `wab-priest` → `wʿab-priest` — insert "
+        "U+02BF ayin + lowercase sentence-initial per chunk-22 TT113 "
+        "+ chunk-23 TT141 + chunk-26 ayin-before-a precedent (PM "
+        "body-prose sentence-initial lowercase preserved per source "
+        "verbatim, not auto-capitalized). (b) `Amun` → `Amūn` — PM "
+        "body-prose macron-Ū per chunk-12-onward macron-retain class "
+        "(same as TT181, TT189 in this same chunk). The `ʿAshakhet` "
+        "raised-ayin glyph `<` → U+02BF is already applied by the "
+        "postprocess whitelist on the tie-break-pinned agent-A form "
+        "(no separate restoration needed here). Verbatim-preserve "
+        "policy on notes_from_pm. Gemini PR #271 round 1 finding "
+        "3279424043 + round 3 rationale-accuracy finding 3279927029.",
     ),
     (
         "TT189",
