@@ -623,6 +623,43 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Temp. Tuthmosis III. Parents (of [Amen]ḥotp), ʿAmethu (tomb 83) "
             "and Taʿamethu. Father (of Amenemḥet), Neferḥotep, Prophet. "
             "Wife (of Amenemḥet), Esnub.",
+        # Chunk 22 (TT131-TT140) — 7 tie-break overrides.
+        # TT134: agent C pinned ((1st ed. 135) + Amenaphis + mid-sentence citation;
+        #   CHUNK22_CORRECTIONS would restore Amūn macron but tie-break value
+        #   already has Amūn — passes through fix_rows unchanged on notes field.
+        # TT135: agent C pinned (macron-Ū correct, no ayin skeleton). CHUNK22_CORRECTIONS
+        #   restores `Wab-priest` → `wʿab-priest` — post-fix-rows value differs.
+        # TT137: agent C pinned (Amūn macron + mid-sentence citation). Passes through
+        #   fix_rows unchanged.
+        # TT138: agent C pinned (Amūn macron + CHAMPOLLION uppercase + mid-sentence).
+        #   CHUNK22_CORRECTIONS restores `Nesha.` → `Neshaʿ.` — post-fix-rows differs.
+        # TT139: agent C pinned (Amūn macrons + Ptaḥ/Ḥatḥor/Ḥenutnefert underdots).
+        #   CHUNK22_CORRECTIONS restores `Wab-priest` → `wʿab-priest` — post-fix-rows differs.
+        # TT140|notes_from_pm: agent A pinned (lowercase `probably`, no headword prefix).
+        #   CHUNK22_CORRECTIONS restores `Kefia` → `Ḥefia` — post-fix-rows differs.
+        # TT140|occupant_alt_names: agent B pinned (`["Hefia"]`, ḥ-stripped per
+        #   TT57/TT120 matchable-name precedent). Passes through fix_rows unchanged.
+        ("TT134", "notes_from_pm"):
+            "(1st ed. 135) Prophet of Amenaphis who navigates on the Sea of Amūn. "
+            "Dyn. XIX. (L. D. Text, No. 79.) Father, Besuemopet, same title as "
+            "deceased. Wife, Tabesi.",
+        ("TT135", "notes_from_pm"):
+            "wʿab-priest in front of Amūn. Dyn. XIX.",
+        ("TT137", "notes_from_pm"):
+            "Head of works of the Lord of the Two Lands in every monument of Amūn. "
+            "Temp. Ramesses II. (L. D. Text, No. 91.) Parents, Bak, Head of works "
+            "in the Place of Eternity, and Tekhu. Wife, Taikharu.",
+        ("TT138", "notes_from_pm"):
+            "Overseer of the garden in the Ramesseum in the estate of Amūn. "
+            "Temp. Ramesses II. (CHAMPOLLION, No. 29.) Wife, Neshaʿ.",
+        ("TT139", "notes_from_pm"):
+            "wʿab-priest in front, First royal son in front of Amūn, Overseer "
+            "of peasants of Amūn. Temp. Amenophis III. Father, Sheroy, Prophet "
+            "of Ptaḥ and Ḥatḥor. Wife, Ḥenutnefert.",
+        ("TT140", "notes_from_pm"):
+            "probably called Ḥefia, Goldworker, Portrait sculptor. "
+            "Temp. Tuthmosis III to Amenophis II. Wife, Tauy.",
+        ("TT140", "occupant_alt_names"): ["Hefia"],
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

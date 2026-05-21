@@ -1691,6 +1691,165 @@ CHUNK21_CORRECTIONS: list[tuple[str, str, object, str]] = []
 CHUNK21_RENAMES: dict[str, str] = {}
 
 
+# Chunk-22 (PM I.1 § I — TT131-TT140, Sh. ʿAbd el-Qurna + Dra' Abu el-Naga).
+# Seven tie-break-overrides.json entries (TT134|notes_from_pm, TT135|notes_from_pm,
+# TT137|notes_from_pm, TT138|notes_from_pm, TT139|notes_from_pm,
+# TT140|notes_from_pm, TT140|occupant_alt_names). 2/1-majority resolutions:
+# TT131 notes (A+C drop headword parenthetical), TT132 occupant_name (A+C
+# Raʿmosi), TT133 notes (B+C Amūn + Hunuro), TT137 occupant_name (B+C Mose).
+# Post-merge corrections applied here:
+#   TT131 — all 3 agents mis-decoded OCR `6z` as `62` (TT62) rather than `61`
+#     (TT61). Semantic and symmetry evidence confirms `61`: (a) TT61 (Governor
+#     and Vizier, Temp. Tuthmosis III) is the known companion tomb of Amenuser,
+#     the same official; TT62 (Overseer of Cabinet, Temp. Tuthmosis III (?)) is
+#     a different person. (b) The within-section symmetry test requires TT131 to
+#     back-ref TT61 because TT61 already carries `shared_with_tombs: ["TT131"]`
+#     from an earlier chunk. Fix: `shared_with_tombs: ["TT61"]` and
+#     `notes_from_pm: "(See tomb 61.) ..."` (replacing both the cross-ref value
+#     and the parenthetical text). The `z`→`1` OCR misread is a known hazard for
+#     this scan's numeral rendering (compare `z`→`2` majority class).
+#   TT133 — restore `Ḥunuro` underdot-ḥ (B+C majority stripped it; source OCR
+#     `l:lunuro` = `Ḥunuro`; verbatim-preserve policy for notes_from_pm).
+#   TT135 — `Wab-priest` → `wʿab-priest` (ayin before a, lowercase per PM
+#     body-prose convention; same class as TT113/TT114 ayin-before-a).
+#   TT136 — occupant_role: None → "Unknown" (sentinel-null coercion by merge.py;
+#     same precedent as TT58/TT70/TT91; all 3 agents correctly emitted
+#     occupant_role="Unknown" but the SENTINEL_NULL_STRINGS pass coerced it).
+#   TT138 — `Wife, Nesha.` → `Wife, Neshaʿ.` (ayin restoration; source OCR
+#     `Nesha(` = `Neshaʿ`; A+B emitted ayin, C dropped it; C won tie-break
+#     on other axes, so ayin must be restored here).
+#   TT139 — `Wab-priest` → `wʿab-priest` (same ayin-before-a class as TT135).
+#   TT140 — `Kefia` → `Ḥefia` in notes_from_pm (OCR `~EFIA` / `l):.efia`
+#     confirms underdot-Ḥ; `Hefia` in occupant_alt_names is ḥ-stripped per
+#     TT57/TT120 matchable-name precedent and resolves correctly via tie-break
+#     override; verbatim-preserve notes_from_pm restores `Ḥefia` with underdot).
+#     DERIVER_OVERRIDES below handle TT140 attribution_certainty over-fire
+#     (`probably called` hedges the alt-name only, not the primary attribution).
+# Egyptologist review pending for potential capital-macron restorations in
+# occupant_name fields (all 3 agents agree on the stripped forms; PDF visual
+# confirmation needed before applying macron restorations per chunk-11 precedent).
+CHUNK22_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT131",
+        "shared_with_tombs",
+        ["TT61"],
+        "PM I.1 p.245 / physical PDF p.263 (TT131 Amenuser). Source OCR "
+        "`(See tomb 6z.)` — all 3 agents decoded `6z` → `62` (TT62). Correct "
+        "reading is `61` (TT61): (1) TT61 (Governor and Vizier, Temp. Tuthmosis "
+        "III) is the documented companion tomb of Amenuser / User — same official, "
+        "same period; TT62 (Overseer of Cabinet, Temp. Tuthmosis III (?)) is a "
+        "different person with no known connection to TT131. (2) Within-section "
+        "symmetry: TT61 already carries `shared_with_tombs: [\"TT131\"]` from "
+        "chunk-9 processing, establishing the expected bidirectional pair. PM's "
+        "cross-ref convention requires the pair to be symmetric within § I. "
+        "The `z`→`1` OCR misread is plausible for this scan's numeral rendering "
+        "(compare the `6z` → `62` majority-class decoding pattern, where `z` "
+        "normally represents `2`, but occasionally represents `1` when the "
+        "numeral `1` has a serifed or ambiguous glyph form).",
+    ),
+    (
+        "TT131",
+        "notes_from_pm",
+        "(See tomb 61.) Temp. Tuthmosis III. (L. D. Text, No. 87.)",
+        "PM I.1 p.245 / physical PDF p.263 (TT131 Amenuser). Source OCR "
+        "`(See tomb 6z.) Temp. Tuthmosis III.` — all 3 agents decoded "
+        "`6z` → `62`, placing the parenthetical as `(See tomb 62.)`. Correct "
+        "reading is `61` (see shared_with_tombs correction above — same OCR "
+        "mis-decode rationale). Additionally: majority A+C dropped the cross-ref "
+        "parenthetical from notes_from_pm entirely; agent B retained it with "
+        "the incorrect `62`. Per the chunk-9-onward shared_with_tombs "
+        "ownership-cross-ref convention, the verbatim parenthetical is preserved "
+        "in notes_from_pm even when the structured field already carries the "
+        "reference (same policy as TT104 `(See tomb 80.)`). Cross-ref precedes "
+        "the temporal clause per PM's printed order (TT104 tie-break precedent).",
+    ),
+    (
+        "TT133",
+        "notes_from_pm",
+        "Chief of the weavers in the Ramesseum in the estate of Amūn on the "
+        "west of Thebes. Temp. Ramesses II. Wife, Ḥunuro.",
+        "PM I.1 p.249 / physical PDF p.267 (TT133 Neferronpet). Source OCR "
+        "`l:lunuro` = `Ḥunuro` (underdot-Ḥ confirmed by `l:` OCR pattern "
+        "for underdot-ḥ, same class as `l:Iatl:lor` = `Ḥatḥor` in TT139). "
+        "Majority B+C emitted `Hunuro` (underdot stripped); agent A correctly "
+        "emitted `Ḥunuro`. B+C won the notes tie on the `Amūn` macron axis; "
+        "the underdot-ḥ on the wife's name must be restored per the "
+        "verbatim-preserve policy for notes_from_pm.",
+    ),
+    (
+        "TT135",
+        "notes_from_pm",
+        "wʿab-priest in front of Amūn. Dyn. XIX.",
+        "PM I.1 p.250 / physical PDF p.268 (TT135 Bekenamun). Source OCR "
+        "`warb-priest` = `wʿab-priest` (ayin-hook before `a`, same OCR "
+        "rendering class as TT113/TT114 where `wʿab` was established by "
+        "TT14/TT68/TT97 precedent). Tie-break pinned agent C `Wab-priest` "
+        "(best non-ayin skeleton with macron-Ū). Restore: (1) ayin before `a` "
+        "→ `wʿab`; (2) sentence-initial lowercase `w` per PM body-prose "
+        "convention (contrast heading small-caps `W`). Full correction: "
+        "`Wab-priest` → `wʿab-priest`.",
+    ),
+    (
+        "TT136",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.251 / physical PDF p.269 (TT136, anonymous royal scribe). "
+        "All 3 agents correctly emitted occupant_role=\"Unknown\" (controlled-"
+        "vocab sentinel for rows with no identified occupant; paired with "
+        "occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS "
+        "pass coerces the literal string \"Unknown\" to JSON null — same class "
+        "as TT58 (chunk-14), TT70 (chunk-15), TT91 (chunk-18). Restore "
+        "\"Unknown\" here. Note: `occupant_name` is correctly null (all 3 "
+        "agents agreed) — no correction needed there.",
+    ),
+    (
+        "TT138",
+        "notes_from_pm",
+        "Overseer of the garden in the Ramesseum in the estate of Amūn. "
+        "Temp. Ramesses II. (CHAMPOLLION, No. 29.) Wife, Neshaʿ.",
+        "PM I.1 p.251 / physical PDF p.269 (TT138 Nezemger). Source OCR "
+        "`Wife, Nesha(` — the `(` is OCR rendering of ayin-hook `ʿ`, giving "
+        "`Neshaʿ`. Agents A+B emitted `Neshaʿ` (ayin correct); agent C "
+        "emitted `Nesha` (ayin dropped). Agent C won the tie on macron-Ū "
+        "+ CHAMPOLLION uppercase + mid-sentence citation axes; the ayin on "
+        "the wife's name must be restored per verbatim-preserve policy for "
+        "notes_from_pm.",
+    ),
+    (
+        "TT139",
+        "notes_from_pm",
+        "wʿab-priest in front, First royal son in front of Amūn, Overseer "
+        "of peasants of Amūn. Temp. Amenophis III. Father, Sheroy, Prophet "
+        "of Ptaḥ and Ḥatḥor. Wife, Ḥenutnefert.",
+        "PM I.1 p.252 / physical PDF p.270 (TT139 Pairi). Source OCR "
+        "`warb-priest` = `wʿab-priest` (same OCR-ayin rendering class as "
+        "TT113/TT114/TT135). Tie-break pinned agent C `Wab-priest` (correct "
+        "Amūn macrons + Ptaḥ/Ḥatḥor/Ḥenutnefert underdots). Restore: "
+        "(1) ayin before `a` → `wʿab`; (2) sentence-initial lowercase `w` "
+        "per PM body-prose convention. Full correction: `Wab-priest` → "
+        "`wʿab-priest`.",
+    ),
+    (
+        "TT140",
+        "notes_from_pm",
+        "probably called Ḥefia, Goldworker, Portrait sculptor. "
+        "Temp. Tuthmosis III to Amenophis II. Wife, Tauy.",
+        "PM I.1 p.254 / physical PDF p.272 (TT140 Neferronpet). Source OCR "
+        "p.272 `H7, probably called ~EFIA` and scene caption "
+        "`[Deceased as l):.efia and wife.]` — `l):` is the OCR rendering of "
+        "underdot-Ḥ (same class as `l:Iatl:lor` = `Ḥatḥor` in TT139). "
+        "Confirms PM-faithful alt-name is `Ḥefia` with underdot-ḥ. "
+        "Tie-break pinned agent A `probably called Kefia` (correct lowercase + "
+        "no headword-prefix convention); `Kefia` is an OCR misread (K for Ḥ). "
+        "Restore `Kefia` → `Ḥefia` in notes_from_pm per verbatim-preserve "
+        "policy. Note: occupant_alt_names uses ḥ-stripped `Hefia` per the "
+        "TT57/TT120 matchable-name strip-ḥ rule — no correction needed there.",
+    ),
+]
+
+CHUNK22_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -1989,6 +2148,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK19_CORRECTIONS,
     CHUNK20_CORRECTIONS,
     CHUNK21_CORRECTIONS,
+    CHUNK22_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2012,6 +2172,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK19_RENAMES,
     **CHUNK20_RENAMES,
     **CHUNK21_RENAMES,
+    **CHUNK22_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -2535,6 +2696,30 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "City. Temp. Tuthmosis III (?).` The `(?)` qualifies the regnal date "
         "(Tuthmosis III), not May's identification as Harbour-master. Per "
         "chunk-9 TT2 precedent.",
+    ),
+    # Chunk-22 attribution_certainty override. TT140 Neferronpet: the
+    # `probably called Ḥefia` token qualifies the ALT-NAME identification
+    # only (PM says the occupant is *probably* also known as Ḥefia — a
+    # naming hedge, not an occupant-identity hedge). The headword proper
+    # `140. NEFERRONPET H7, ...` attributes the tomb to Neferronpet without
+    # any qualification. The _detect_attribution_certainty regex fires
+    # context-free on `\bprobably\b` and returns `probable` — incorrect for
+    # this row. Per chunk-9 TT2 precedent: attribution_certainty encodes
+    # occupant-identity certainty, not alt-name certainty.
+    (
+        "TT140",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.254 prints `140. NEFERRONPET H7, probably called ~EFIA...` "
+        "The `probably called` token qualifies the ALT-NAME identification "
+        "(`Ḥefia`) only — PM attributes the tomb to Neferronpet without "
+        "qualification. The `_detect_attribution_certainty` regex fires "
+        "context-free on `\\bprobably\\b` and returns `probable` — incorrect "
+        "here. Per chunk-9 TT2 precedent: attribution_certainty encodes "
+        "occupant-identity certainty, not alt-name certainty. Same class as "
+        "TT49 (`Chief scribe of Amūn. Probably temp. Ay.` — regnal-date hedge "
+        "only), TT2 (`(probably) Esi` — second-wife hedge). Override → "
+        "`attested`.",
     ),
 ]
 
