@@ -253,7 +253,7 @@ Background (FYI only): the deriver flips `is_uninscribed=true` on `\buninscribed
 ## Report back
 
 After writing the JSONL, output a one-paragraph report with:
-- Row count (approximately 10 expected) and the complete list of TT tomb_ids you emitted in sort order and the complete list of TT tomb_ids you emitted in sort order.
+- Row count (approximately 10 expected) and the complete list of TT tomb_ids you emitted in sort order.
 - Per-row `theban_area` assignments (read each headword's sub-site line; map to the canonical sub-site list above).
 - Any field you're uncertain about, with the field name and your best-guess value.
 - Any unexpected text-layer noise that this prompt doesn't already flag.
