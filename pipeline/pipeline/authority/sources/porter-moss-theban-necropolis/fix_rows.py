@@ -3945,7 +3945,7 @@ CHUNK40_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "of the King of Lower Egypt. Temp. Mentul:_lotpNebl:_lepetrec.` where "
         "`l:_l` = underdot-Ḥ OCR cluster and `c` = OCR-literal for ayin `<`. "
         "Two restorations: (1) `Mentuhotep-Nebhepetrec` → `Mentuḥotp-Nebḥepetreʿ`: "
-        "restore underdot-Ḥ × 2 (`Mentuhotep` → `Mentuḥotp` per chunk-36/39/40 "
+        "restore underdot-Ḥ × 2 AND drop the anglicising vowel `e` in `-hotep` → `-ḥotp` (`Mentuhotep` → `Mentuḥotp` per chunk-36/39/40 "
         "TT280/TT308/TT313 Mentuhotep-era precedents) and OCR-literal `c` → ayin ʿ. "
         "notes_from_pm verbatim-preserve retains both diacritics. "
         "EGYPTOLOGIST REVIEW REQUIRED: confirm exact Mentuhotep epithet diacritics "
@@ -4034,7 +4034,7 @@ CHUNK40_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "TT320",
         "dynasty",
         "XXI",
-        "Source line 374 of chunk-40-tt311-tt320.txt: `320. INH_A<PI, perhaps "
+        "Source line 374 of chunk-40-tt311-tt320.txt: `320. INI;IA<PI, perhaps "
         "wife of Amosis. (Royal Cache, Dyn. XXI, ...)` — PM explicitly states "
         "`Dyn. XXI` in the Royal Cache parenthetical. Merge majority B+C=null "
         "missed this; agent A alone had `XXI`. Same majority-null-miss pattern "
@@ -5434,7 +5434,7 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT320",
         "attribution_certainty",
         "attested",
-        "PM I.1 p.392 / chunk-40 source line 374-375: `320. INH_A<PI, perhaps "
+        "PM I.1 p.392 / chunk-40 source line 374-375: `320. INI;IA<PI, perhaps "
         "wife of Amosis. (Royal Cache, Dyn. XXI...)` The `perhaps` qualifies "
         "the SPOUSAL/GENEALOGICAL RELATIONSHIP (is she the wife of Amosis?), "
         "NOT the primary occupant's identity. Inḥaʿpi is unambiguously "
