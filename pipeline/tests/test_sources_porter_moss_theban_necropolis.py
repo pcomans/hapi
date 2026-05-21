@@ -313,6 +313,9 @@ CHUNK23_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK24_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(151, 161)}
 )
+CHUNK25_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(161, 171)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -337,6 +340,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK22_TOMB_IDS
     | CHUNK23_TOMB_IDS
     | CHUNK24_TOMB_IDS
+    | CHUNK25_TOMB_IDS
 )
 
 
@@ -6386,3 +6390,272 @@ def test_chunk24_tt160_besenmut_royal_acquaintance_saite() -> None:
     assert "Parents, Pedemut and Tahibet" in r["notes_from_pm"]
     assert r["theban_area"] == "Dra' Abu el-Naga"
     assert r["source_citation"]["page"] == 273
+
+
+# ---------------------------------------------------------------------------
+# Chunk 25: TT161–TT170. Dra' Abu el-Naga (TT161–TT169) + Sh. ʿAbd el-Qurna
+# (TT170). PM I.1 pp.274–279.
+# 0 tie-break-overrides entries (all 2/1 or unanimous).
+# 2/1-majority resolutions:
+#   TT161 notes_from_pm — A+B ordering (title→parents→wife→biblio) + Taḳemt
+#     (K-underdot) over C's reordering + Taḥemt (H-underdot).
+#   TT162 occupant_name — B+C `Kenamun` (plain K) over A's `Ḳenamun` (underdot).
+#   TT162 notes_from_pm — B+C shorter form (no Daressy footnote) over A.
+# 1 CHUNK25_CORRECTIONS: TT167 occupant_role sentinel-null restore.
+# 3 DERIVER_OVERRIDES: TT161 regnal-date hedge (Amenophis III(?)),
+#   TT163 parentage-hedge (Father(?)), TT165 regnal-date hedge (Tuthmosis IV(?))
+#   — all attribution_certainty restored to `attested`.
+# Egyptologist flags:
+#   TT162 occupant_name — PM source headword line 93 reads `~ENAMUN` (OCR
+#     rendering with tilde rather than Ḳ/K prefix). Agent A read `Ḳenamun`
+#     (with underdot-K), B+C read `Kenamun` (plain K). Footnote 1 (p.275) says
+#     "Name and titles from cones" — the cone rendering may differ from the
+#     hieroglyphic text. Egyptologist should confirm correct diacritic form
+#     against cone catalogue or other references.
+#   TT162 notes_from_pm — Agent A included a Daressy footnote (`Footnote:
+#     Daressy gives alternative owner as: Eyes of the King in the North Land,
+#     Ḥari of Ḥaremmaʿet, from text in Hall at (1).`). B+C omitted it. Majority
+#     (B+C) prevailed. Egyptologist should confirm whether the footnote text
+#     belongs in notes_from_pm or a separate footnote field.
+# ---------------------------------------------------------------------------
+
+
+def test_chunk25_tt161_nakht_bearer_floral_offerings() -> None:
+    """TT161 Nakht — Bearer of the floral offerings of Amūn.
+    Temp. Amenophis III(?). Dra' Abu el-Naga. p.274.
+    is_unfinished=False. DERIVER_OVERRIDE: (?) qualifies regnal date."""
+    r = _row("TT161")
+    assert r["occupant_name"] == "Nakht"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Bearer of the floral offerings of Amūn" in r["notes_from_pm"]
+    assert "Amenophis III(?)" in r["notes_from_pm"]
+    assert "Guraru" in r["notes_from_pm"]
+    assert "Taḳemt" in r["notes_from_pm"]
+    assert "(L. D. Text, No. 13, HAY, No. 9.)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 274
+
+
+def test_chunk25_tt162_kenamun_mayor_southern_city() -> None:
+    """TT162 Kenamun — Mayor in the Southern City, Overseer of the granary
+    of Amūn. Dyn. XVIII. Dra' Abu el-Naga. p.275.
+    occupant_name 2/1 majority (B+C plain K over A underdot-Ḳ).
+    notes_from_pm 2/1 majority (B+C shorter form, no Daressy footnote)."""
+    r = _row("TT162")
+    assert r["occupant_name"] == "Kenamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Mayor in the Southern City" in r["notes_from_pm"]
+    assert "Overseer of the granary of Amūn" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "(Inaccessible.)" in r["notes_from_pm"]
+    assert "Mut-tuy" in r["notes_from_pm"]
+    assert "(from cone)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 275
+
+
+def test_chunk25_tt163_amenemhet_mayor_royal_scribe() -> None:
+    """TT163 Amenemhet — Mayor of the Southern City, Royal scribe. Dyn. XIX.
+    Dra' Abu el-Naga. p.276.
+    DERIVER_OVERRIDE: Father(?) is parentage hedge, not occupant-ID hedge."""
+    r = _row("TT163")
+    assert r["occupant_name"] == "Amenemhet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Mayor of the Southern City" in r["notes_from_pm"]
+    assert "Royal scribe" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "(Inaccessible.)" in r["notes_from_pm"]
+    assert "Ḥuy" in r["notes_from_pm"]
+    assert "Nezemt-net" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 276
+
+
+def test_chunk25_tt164_antef_scribe_recruits() -> None:
+    """TT164 Antef — Scribe of recruits. Temp. Tuthmosis III.
+    Dra' Abu el-Naga. p.276."""
+    r = _row("TT164")
+    assert r["occupant_name"] == "Antef"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of recruits" in r["notes_from_pm"]
+    assert "Tuthmosis III" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 276
+
+
+def test_chunk25_tt165_nehemaway_goldworker_sculptor() -> None:
+    """TT165 Nehemʿaway — Goldworker and portrait-sculptor.
+    Temp. Tuthmosis IV(?). Dra' Abu el-Naga. p.277.
+    DERIVER_OVERRIDE: (?) qualifies regnal date (Tuthmosis IV)."""
+    r = _row("TT165")
+    assert r["occupant_name"] == "Nehemʿaway"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Goldworker and portrait-sculptor" in r["notes_from_pm"]
+    assert "Tuthmosis IV(?)" in r["notes_from_pm"]
+    assert "Tentamentet" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 277
+
+
+def test_chunk25_tt166_racmosi_overseer_works_karnak() -> None:
+    """TT166 Raʿmosi — Overseer of works in Karnak, Overseer of cattle.
+    Dyn. XX. Dra' Abu el-Naga. p.277."""
+    r = _row("TT166")
+    assert r["occupant_name"] == "Raʿmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of works in Karnak" in r["notes_from_pm"]
+    assert "Overseer of cattle" in r["notes_from_pm"]
+    assert "Dyn. XX" in r["notes_from_pm"]
+    assert "Ipy" in r["notes_from_pm"]
+    assert "Thoth" in r["notes_from_pm"]
+    assert "Tay" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 277
+
+
+def test_chunk25_tt167_anonymous_unfinished_dyn18() -> None:
+    """TT167 — Name lost. Dyn. XVIII. (Unfinished.) Dra' Abu el-Naga. p.278.
+    occupant_name=None, occupant_role sentinel-null restored via CHUNK25_CORRECTIONS,
+    is_unfinished=True."""
+    r = _row("TT167")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert "Name lost" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "(Unfinished.)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 278
+
+
+def test_chunk25_tt168_any_divine_father() -> None:
+    """TT168 Any — Divine father clean of hands, Chosen lector of the lord
+    of the gods. Dyn. XIX. Dra' Abu el-Naga. p.278."""
+    r = _row("TT168")
+    assert r["occupant_name"] == "Any"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Divine father clean of hands" in r["notes_from_pm"]
+    assert "Chosen lector of the lord of the gods" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Merynub" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 278
+
+
+def test_chunk25_tt169_senna_head_goldworkers() -> None:
+    """TT169 Senna — Head of the goldworkers of Amūn. Temp. Amenophis II.
+    Dra' Abu el-Naga. p.278.
+    Egyptologist note: PM source OCR p.249 headword SENNA with cartouche-
+    like symbol — confirm full hieroglyphic name form against printed source."""
+    r = _row("TT169")
+    assert r["occupant_name"] == "Senna"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Head of the goldworkers of Amūn" in r["notes_from_pm"]
+    assert "Amenophis II" in r["notes_from_pm"]
+    assert "Sensonb" in r["notes_from_pm"]
+    assert "Tanub" in r["notes_from_pm"]
+    assert "Maʿetka" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 278
+
+
+def test_chunk25_tt170_nebmehyt_scribe_recruits_ramesseum() -> None:
+    """TT170 Nebmehy(t) — Scribe of recruits of the Ramesseum in the estate
+    of Amūn. Temp. Ramesses II. Sh. ʿAbd el-Qurna. p.279."""
+    r = _row("TT170")
+    assert r["occupant_name"] == "Nebmehy(t)"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of recruits of the Ramesseum" in r["notes_from_pm"]
+    assert "estate of Amūn" in r["notes_from_pm"]
+    assert "Ramesses II" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 279

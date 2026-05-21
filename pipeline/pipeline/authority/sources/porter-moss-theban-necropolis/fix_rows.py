@@ -1968,6 +1968,32 @@ CHUNK24_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK24_RENAMES: dict[str, str] = {}
 
 
+# Chunk-25 corrections (TT161–TT170): merge-output fixes.
+#
+# 1. TT167 occupant_role — all 3 agents correctly emitted occupant_role="Unknown"
+#    (controlled-vocab sentinel for rows with no identified occupant, paired with
+#    occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS
+#    coerces the literal string "Unknown" to JSON null. Restore "Unknown" per
+#    TT152/TT153 (chunk-24), TT143/TT147 (chunk-23), TT136 (chunk-22),
+#    TT116 (chunk-20), TT70 (chunk-15), TT58 (chunk-14) class precedent.
+CHUNK25_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT167",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.278 (TT167, anonymous unfinished tomb). PM headword carries no "
+        "personal name (`Name lost.`); all 3 agents correctly emitted "
+        "occupant_role=\"Unknown\" (controlled-vocab sentinel paired with "
+        "occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS "
+        "coerces \"Unknown\" to null. Restore per TT152/TT153 (chunk-24), "
+        "TT143/TT147 (chunk-23), TT136 (chunk-22), TT116 (chunk-20), TT70 "
+        "(chunk-15), TT58 (chunk-14) class precedent.",
+    ),
+]
+
+CHUNK25_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -2269,6 +2295,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK22_CORRECTIONS,
     CHUNK23_CORRECTIONS,
     CHUNK24_CORRECTIONS,
+    CHUNK25_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2295,6 +2322,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK22_RENAMES,
     **CHUNK23_RENAMES,
     **CHUNK24_RENAMES,
+    **CHUNK25_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -2968,6 +2996,48 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "as chunk-18 TT107/TT108, chunk-21 TT123, chunk-22 TT138 (all `Probably` "
         "tokens on regnal claims). Per chunk-9 TT2 precedent that attribution_certainty "
         "encodes occupant-identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-25 attribution_certainty overrides. TT161 and TT165 carry `(?)`
+    # tokens in notes_from_pm that qualify regnal-date claims, not the primary
+    # occupant attribution. The deriver fires context-free on any `(?)` in
+    # notes; per the chunk-9 TT2 precedent extended through chunks 10–24,
+    # attribution_certainty encodes occupant-identity certainty, not
+    # regnal-date certainty. Both PM headwords name the occupant unhedged
+    # with the title unhedged.
+    (
+        "TT161",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.274 prints `161. NAKHT ..., Bearer of the floral offerings of "
+        "Amūn. Temp. Amenophis III(?).` The `(?)` qualifies the regnal date "
+        "(Amenophis III), not Nakht's identification as Bearer of the floral "
+        "offerings of Amūn. PM headword names Nakht unhedged with the title "
+        "unhedged. Per chunk-9 TT2 precedent that attribution_certainty encodes "
+        "occupant-identity certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT163",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.276 prints `163. AMENEMḤET ..., Mayor of the Southern City, "
+        "Royal scribe. Dyn. XIX. (Inaccessible.) Father(?), Ḥuy, Judge, Mayor.` "
+        "The `(?)` qualifies the identification of the FATHER (Ḥuy), not "
+        "Amenemhet's identification as Mayor/Royal scribe. Same parentage-hedge "
+        "class as chunk-10 TT17 (`Amenḥotp (?)` = second parent). PM headword "
+        "names Amenemhet unhedged with the title unhedged. Per chunk-9 TT2 "
+        "precedent that attribution_certainty encodes occupant-identity certainty, "
+        "not parentage or regnal-date certainty.",
+    ),
+    (
+        "TT165",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.277 prints `165. NEḤEMCAWAY ..., Goldworker and portrait-"
+        "sculptor. Temp. Tuthmosis IV(?).` The `(?)` qualifies the regnal date "
+        "(Tuthmosis IV), not Nehemʿaway's identification as Goldworker and "
+        "portrait-sculptor. PM headword names Nehemʿaway unhedged with the title "
+        "unhedged. Per chunk-9 TT2 precedent that attribution_certainty encodes "
+        "occupant-identity certainty, not regnal-date certainty.",
     ),
 ]
 
