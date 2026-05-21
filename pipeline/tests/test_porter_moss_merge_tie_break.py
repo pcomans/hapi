@@ -747,6 +747,32 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Servant in the Place of Truth. Dyn. XIX. (L. D. Text, No. 104.) "
             "Parents(?), Piay, Sculptor in the Place of Truth, and Nefertkhaʿ. "
             "Wife, Nebtyunu.",
+        # Chunk-30 overrides (TT211/TT213/TT215/TT217/TT218 notes_from_pm
+        # + TT217 source_citation).
+        # TT211: CHUNK30_CORRECTIONS restores ayin Wa'be(t)→Waʿbe(t).
+        # TT213: pinned value matches final (Bald, commas, no L.D. bleed).
+        # TT215: CHUNK30_CORRECTIONS restores Ḥatḥor/Ḥunuro underdots + L.D. cite.
+        # TT217 notes: CHUNK30_CORRECTIONS restores ayin Nefertkha→Nefertkhaʿ.
+        # TT217 source_citation: pinned value is the final page dict.
+        # TT218: CHUNK30_CORRECTIONS rewrites to commas/no Co-occupants/Ḥetepti/Amūn.
+        ("TT211", "notes_from_pm"):
+            "Servant of the Lord of the Two Lands in the Place of Truth. Dyn. XIX. "
+            "Parents, Nefersenut, same title as deceased, and Iuy. Wife, Waʿbe(t).",
+        ("TT213", "notes_from_pm"):
+            "Servant of the Lord of the Two Lands, Servant in the Place of Truth. "
+            "Dyn. XX. Parents, Bald (tomb 298) and Taysen. Wife, Nebtnuhet.",
+        ("TT215", "notes_from_pm"):
+            "Royal scribe in the Place of Truth. (Burial Chamber is tomb 265.) "
+            "Dyn. XIX. Parents, Minmosi and Esi (names in tomb 335). Wife, "
+            "Ḥatḥor, called Ḥunuro. (L. D. Text, No. 100.)",
+        ("TT217", "notes_from_pm"):
+            "Sculptor. Temp. Ramesses II. Parents, Piay and Nefertkhaʿ "
+            "(names in tomb 210). Wife, Duammeres.",
+        ("TT217", "source_citation"):
+            {"edition": "PM I.1 2nd ed. 1960", "page": 315, "section": "I"},
+        ("TT218", "notes_from_pm"):
+            "Servant in the Place of Truth on the west of Thebes. Ramesside. "
+            "Parents, Nebenmaʿet, Hr-mnw of Amūn, and Ḥetepti. Wife, Iymway.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

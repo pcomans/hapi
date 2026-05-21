@@ -328,6 +328,9 @@ CHUNK28_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK29_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(201, 211)}
 )
+CHUNK30_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(211, 221)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -357,6 +360,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK27_TOMB_IDS
     | CHUNK28_TOMB_IDS
     | CHUNK29_TOMB_IDS
+    | CHUNK30_TOMB_IDS
 )
 
 
@@ -7862,3 +7866,312 @@ def test_chunk29_tt210_raweben_servant_place_of_truth_deir() -> None:
     assert r["theban_area"] == "Deir el-Medina"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 307
+
+
+# === Chunk 30 — TT211-TT220 (Deir el-Medina) =================================
+
+
+def test_chunk30_all_rows_present() -> None:
+    """All 10 TT211-TT220 rows must be present in reconciled.jsonl.
+    TT212 is a cross-ref-only stub (See tomb 7.) — included per TT104/TT131
+    precedent for cross-ref-only entries."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK30_TOMB_IDS
+    assert actual == CHUNK30_TOMB_IDS, sorted(CHUNK30_TOMB_IDS - actual)
+
+
+def test_chunk30_theban_area() -> None:
+    """All TT211-TT220 are Deir el-Medina (PM I.1 p.307-322)."""
+    for tid in CHUNK30_TOMB_IDS:
+        r = _row(tid)
+        assert r["theban_area"] == "Deir el-Medina", (tid, r["theban_area"])
+
+
+def test_chunk30_source_edition() -> None:
+    """All chunk-30 rows cite PM I.1 2nd ed. 1960."""
+    for tid in CHUNK30_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid,
+            r["source_citation"]["edition"],
+        )
+
+
+def test_chunk30_all_official_role() -> None:
+    """All TT211-TT220 are Official (Deir el-Medina workmen, Ramesside)."""
+    for tid in CHUNK30_TOMB_IDS:
+        r = _row(tid)
+        assert r["occupant_role"] == "Official", (tid, r["occupant_role"])
+
+
+def test_chunk30_tt211_paneb_servant_lord_two_lands() -> None:
+    """TT211 — Paneb, Servant of the Lord of the Two Lands. Dyn. XIX. p.307.
+    CHUNK30_CORRECTIONS: page 308→307 (2/1 wrong-majority); ayin Wa'be(t)→Waʿbe(t).
+    Wife Waʿbe(t) — editorial bracket on feminine ending per PM convention."""
+    r = _row("TT211")
+    assert r["occupant_name"] == "Paneb"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant of the Lord of the Two Lands in the Place of Truth" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Nefersenut" in r["notes_from_pm"]
+    assert "same title as deceased" in r["notes_from_pm"]
+    assert "Iuy" in r["notes_from_pm"]
+    assert "Waʿbe(t)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 307
+
+
+def test_chunk30_tt212_ramosi_cross_ref_only() -> None:
+    """TT212 — Raʿmosi, cross-ref-only stub. (See tomb 7.) Temp. Ramesses II.
+    Deir el-Medina. p.309.
+    TT212 is a cross-ref-only entry per TT104/TT131 precedent: PM prints only
+    the headword + See reference + temporal clause + L.D. cite.
+    All 3 agents wrote canonical identical rows (B+C added after context summary).
+    occupant_name: Raʿmosi (ayin from PM headword RA<MOSI; no CHUNK30 correction
+    needed as all 3 agreed on canonical form).
+    shared_with_tombs: [TT7] — bidirectional with TT7 (Raʿmosi appears there too)."""
+    r = _row("TT212")
+    assert r["occupant_name"] == "Raʿmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT7"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "(See tomb 7.)" in r["notes_from_pm"]
+    assert "Temp. Ramesses II" in r["notes_from_pm"]
+    assert "L. D. Text, No. 98." in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 309
+
+
+def test_chunk30_tt213_penamon_servant_lord_two_lands() -> None:
+    """TT213 — Penamon, Servant of the Lord of the Two Lands, Servant in the
+    Place of Truth. Dyn. XX. Deir el-Medina. p.310.
+    occupant_name: Penamon (all 3 agents unanimous).
+    notes_from_pm: tie-break pinned C (Bald not Baldi, commas, no L.D. bleed)."""
+    r = _row("TT213")
+    assert r["occupant_name"] == "Penamon"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant of the Lord of the Two Lands, Servant in the Place of Truth" in r["notes_from_pm"]
+    assert "Dyn. XX" in r["notes_from_pm"]
+    assert "Bald (tomb 298)" in r["notes_from_pm"]
+    assert "Taysen" in r["notes_from_pm"]
+    assert "Nebtnuhet" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 310
+
+
+def test_chunk30_tt214_khawi_custodian_place_of_truth() -> None:
+    """TT214 — Khawi, Custodian in the Place of Truth, Servant of Amūn in Luxor.
+    Ramesside. Deir el-Medina. p.310.
+    is_joint_burial: A had true (wife Tawert as co-occupant); B+C false → 2/1 correct.
+    Wife Tawert is a spousal mention, not a co-burial.
+    CHUNK30_CORRECTIONS: Amun→Amūn macron-Ū."""
+    r = _row("TT214")
+    assert r["occupant_name"] == "Khawi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Custodian in the Place of Truth" in r["notes_from_pm"]
+    assert "Servant of Amūn in Luxor" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Tawert" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 310
+
+
+def test_chunk30_tt215_amenemopet_royal_scribe_burial_chamber_tt265() -> None:
+    """TT215 — Amenemopet, Royal scribe in the Place of Truth. Dyn. XIX.
+    Deir el-Medina. p.311. Burial Chamber is tomb 265.
+    CHUNK30_CORRECTIONS: page 312→311 (2/1 wrong); shared_with_tombs []→[TT265]
+    (source explicit: 'Burial Chamber is tomb 265.'); Hathor→Ḥatḥor, Hunuro→Ḥunuro
+    (underdot-Ḥ per PM verbatim); L.D. cite appended.
+    Egyptologist flag: confirm TT265 reciprocal shared_with_tombs."""
+    r = _row("TT215")
+    assert r["occupant_name"] == "Amenemopet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT265"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal scribe in the Place of Truth" in r["notes_from_pm"]
+    assert "(Burial Chamber is tomb 265.)" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Minmosi" in r["notes_from_pm"]
+    assert "tomb 335" in r["notes_from_pm"]
+    assert "Ḥatḥor" in r["notes_from_pm"]
+    assert "Ḥunuro" in r["notes_from_pm"]
+    assert "L. D. Text, No. 100." in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 311
+
+
+def test_chunk30_tt216_neferhotep_foreman_ramesside() -> None:
+    """TT216 — Neferhotep, Foreman. Temp. Ramesses II to Sethos II.
+    Deir el-Medina. p.312.
+    occupant_name: 2/1 majority Neferhotep correct (C had OCR error Neferiotep).
+    CHUNK30_CORRECTIONS: page 313→312 (unanimous-wrong); L.D. cite appended."""
+    r = _row("TT216")
+    assert r["occupant_name"] == "Neferhotep"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Foreman" in r["notes_from_pm"]
+    assert "Ramesses II to Sethos II" in r["notes_from_pm"]
+    assert "Nebnufer (tomb 6)" in r["notes_from_pm"]
+    assert "Webekht" in r["notes_from_pm"]
+    assert "L. D. Text, No. 100." in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 312
+
+
+def test_chunk30_tt217_ipuy_sculptor_ramesside() -> None:
+    """TT217 — Ipuy, Sculptor. Temp. Ramesses II. Deir el-Medina. p.315.
+    shared_with_tombs: [TT210] — bidirectional (TT210 Raʿweben is Ipuy's father's
+    tomb; TT210 already carries shared_with_tombs=[TT217] from CHUNK29).
+    CHUNK30_CORRECTIONS: Nefertkha→Nefertkhaʿ (ayin from PM `Nefertkha<`).
+    tie-break pinned B (commas, no title expansion for Piay's hieroglyphic role)."""
+    r = _row("TT217")
+    assert r["occupant_name"] == "Ipuy"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT210"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Sculptor" in r["notes_from_pm"]
+    assert "Ramesses II" in r["notes_from_pm"]
+    assert "Piay" in r["notes_from_pm"]
+    assert "Nefertkhaʿ" in r["notes_from_pm"]
+    assert "names in tomb 210" in r["notes_from_pm"]
+    assert "Duammeres" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 315
+
+
+def test_chunk30_tt218_amennakht_servant_place_of_truth_complex() -> None:
+    """TT218 — Amennakht, Servant in the Place of Truth on the west of Thebes.
+    Ramesside. Deir el-Medina. p.317. Father of TT219 Nebenmaʿet + TT220 Khaʿemteri.
+    shared_with_tombs: [TT219, TT220] — family tomb complex.
+    CHUNK30_CORRECTIONS: page 318→317 (unanimous-wrong); colons→commas + remove
+    spurious Co-occupants clause + Hetepti→Ḥetepti + Amon→Amūn."""
+    r = _row("TT218")
+    assert r["occupant_name"] == "Amennakht"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT219", "TT220"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant in the Place of Truth on the west of Thebes" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Nebenmaʿet" in r["notes_from_pm"]
+    assert "Hr-mnw of Amūn" in r["notes_from_pm"]
+    assert "Ḥetepti" in r["notes_from_pm"]
+    assert "Iymway" in r["notes_from_pm"]
+    assert "Co-occupants" not in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 317
+
+
+def test_chunk30_tt219_nebenmaet_servant_place_of_truth() -> None:
+    """TT219 — Nebenmaʿet, Servant in the Place of Truth on the west of Thebes.
+    Ramesside. Deir el-Medina. p.320. Son of Amennakht (TT218).
+    occupant_name: 2/1 majority dropped ayin; CHUNK30_CORRECTIONS restores
+    Nebenmaet→Nebenmaʿet (PM headword NEBENMA<ET).
+    CHUNK30_CORRECTIONS: page 321→320 (unanimous-wrong)."""
+    r = _row("TT219")
+    assert r["occupant_name"] == "Nebenmaʿet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT218"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant in the Place of Truth on the west of Thebes" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Amennakht (tomb 218)" in r["notes_from_pm"]
+    assert "Iymway" in r["notes_from_pm"]
+    assert "Mertesger" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 320
+
+
+def test_chunk30_tt220_khaemteri_servant_place_of_truth() -> None:
+    """TT220 — Khaʿemteri, Servant in the Place of Truth. Ramesside.
+    Deir el-Medina. p.322. Son of Amennakht (TT218).
+    occupant_name: 2/1 majority dropped ayin; CHUNK30_CORRECTIONS restores
+    Khaemteri→Khaʿemteri (PM headword KHA<EMTERI)."""
+    r = _row("TT220")
+    assert r["occupant_name"] == "Khaʿemteri"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT218"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant in the Place of Truth" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Amennakht (tomb 218)" in r["notes_from_pm"]
+    assert "Iymway" in r["notes_from_pm"]
+    assert "Nefert(em)satet" in r["notes_from_pm"]
+    assert "Leyden Mus." in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 322
