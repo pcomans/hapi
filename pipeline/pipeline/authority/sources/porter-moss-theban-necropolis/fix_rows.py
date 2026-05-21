@@ -3837,7 +3837,7 @@ CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Majority A+B+C agreed on Mutenopet as wife. Role field was "
         "sentinel-null normalized from `Unknown` to null by merge.py. Restore "
         "`Unknown` as explicit role value per schema convention (cf. other "
-        "wife co_occupant entries in TT305, TT307 precedents).",
+        "wife co_occupant entries in TT305 + chunk-31 TT225/TT226 sentinel-null restoration precedents).",
     ),
     (
         "TT307",
@@ -3859,7 +3859,7 @@ CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "lines 287-289 of chunk-39-tt301-tt310.txt. (1) `Hathor` → `Ḥatḥor`: "
         "source `l:latl:lor` where `l:l` = underdot-Ḥ OCR glyph × 2. "
         "notes_from_pm verbatim-preserve retains underdot-ḥ. (2) `Mentuhotep` "
-        "→ `Mentuḥotp`: source `Mentul;10tp` where `l;I` = underdot-Ḥ cluster. "
+        "→ `Mentuḥotp`: source `Mentul;10tp` where `l;10` = underdot-Ḥ cluster. "
         "Cf. TT280 `Mentuḥotp` precedent. (3) `Nebhepetre` → `Nebḥepetreʿ`: "
         "source `Neb}:lepetre<` where `}:l` = underdot-Ḥ and `<` = ayin glyph. "
         "notes_from_pm is verbatim-preserve — restore both underdot-ḥ AND ayin. "
