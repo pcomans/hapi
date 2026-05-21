@@ -587,6 +587,33 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT110", "notes_from_pm"):
             "Royal butler, Royal herald. Temp. Ḥatshepsut to Tuthmosis III. "
             "Parents, Pesediri (?) and Keku. Wife, Baktḥ.",
+        # Chunk 20 (TT111-TT120) — 4 tie-break overrides, all on notes_from_pm.
+        # TT112: macron-Amūn + source-faithful `Wife of (ʿAshefytemweset)` order
+        #   per PM I.1 p.229 printed text; agent A pinned.
+        # TT113: ayin-before-a `wʿab` (TT14/TT68/TT97 precedent) + lowercase
+        #   initial (body prose) + `Bekenamtūn` (consonant-complete + macron-Ū);
+        #   assembled from correct elements across agents (no single agent perfect).
+        # TT114: macron-Amūn + ayin-before-a `wʿab-priest` for father's title;
+        #   agent A pinned. Egyptologist pending on role=None (PM prints a title).
+        # TT120: `Amūn` macron-Ū + `Maḥu` underdot-ḥ per PM `MAI;IU` glyph;
+        #   agent C pinned. All four pass through fix_rows unchanged on this field.
+        ("TT112", "notes_from_pm"):
+            "Temp. Tuthmosis III. Usurped by ʿAshefytemweset, Prophet of Amūn "
+            "'Great of Majesty', Ramesside. (CHAMPOLLION, No. 59.) "
+            "Father (of ʿAshefytemweset), Pentawer. "
+            "Wife of (ʿAshefytemweset), Mutemwia.",
+        ("TT113", "notes_from_pm"):
+            "wʿab-priest over-the-secrets of the estate of Amūn, Prophet in the "
+            "Temple of Tuthmosis IV. Temp. Ramesses VIII. "
+            "(WILKINSON, No. 2, HAY, No. 10.) Father, Bekenamtūn, "
+            "wʿab-priest of Amūn. Wife, Esi.",
+        ("TT114", "notes_from_pm"):
+            "Head of goldworkers of the estate of Amūn. Dyn. XX. "
+            "Father, a wʿab-priest of Anubis.",
+        ("TT120", "notes_from_pm"):
+            "Second prophet of Amūn. Temp. Amenophis III. "
+            "Parents, Yuia and Thuiu (tomb 46 in the Valley of the Kings). "
+            "Called Maḥu in GARDINER and WEIGALL, Cat.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

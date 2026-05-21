@@ -248,6 +248,20 @@ CHUNK18_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK19_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(101, 111)}
 )
+# Chunk-20: PM I.1 § I Numbered Tombs TT111-TT120 (Sh. ʿAbd el-Qurna).
+# 4 tie-break-overrides entries (TT112, TT113, TT114, TT120 notes_from_pm).
+# 2 DERIVER_OVERRIDES: TT116 regnal-date hedge, TT118 regnal-date hedge.
+# TT112 is_usurped=True (Menkheperraʿsonb usurped by ʿAshefytemweset —
+# the original occupant IS the usurped party, no override needed).
+# TT114/TT115/TT116/TT119 occupant_name=None/role=None (no surviving name
+# or title; sentinel-null collapsed at merge). Egyptologist review pending:
+# TT114 role=None even though PM headword prints a title ("Head of
+# goldworkers") — may warrant role=Official; TT120 occupant_alt_names=
+# ["Mahu"] is an external-catalogue alias (Gardiner & Weigall), not a
+# verified ancient name.
+CHUNK20_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(111, 121)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -267,6 +281,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK17_TOMB_IDS
     | CHUNK18_TOMB_IDS
     | CHUNK19_TOMB_IDS
+    | CHUNK20_TOMB_IDS
 )
 
 
@@ -3465,8 +3480,11 @@ def test_182_attribution_certainty_in_vocab() -> None:
 def test_182_uninscribed_canonical_set() -> None:
     """Rows where PM literally writes "uninscribed" in notes_from_pm.
     Pinned 2026-05-03: KV39 ('Uninscribed tomb...'), KV56 ("'Gold tomb',
-    uninscribed."), DAN-Neferhotep ('Rock-tomb, uninscribed')."""
-    expected = {"KV39", "KV56", "DAN-Neferhotep"}
+    uninscribed."), DAN-Neferhotep ('Rock-tomb, uninscribed').
+    Extended 2026-05-20 (chunk 20): TT115 — DERIVER_OVERRIDE for PM's
+    `No texts. Dyn. XIX.` semantic-equivalent of "uninscribed" per
+    Gemini PR #264 round-3 finding 3277852207."""
+    expected = {"KV39", "KV56", "DAN-Neferhotep", "TT115"}
     actual = {r["tomb_id"] for r in _rows() if r["is_uninscribed"]}
     assert actual == expected, sorted(actual)
 
@@ -3488,9 +3506,14 @@ def test_182_usurped_canonical_set() -> None:
     Extended 2026-05-10 (chunk 16): TT77 (Ptahemhet, usurped by Roy,
     Overseer of sculptors — PM I.1 p.150).
     Extended 2026-05-10 (chunk 17): TT84 (Amunezeḥ, partly usurped by Mery
-    of TT95, temp. Amenophis II — PM I.1 p.167)."""
+    of TT95, temp. Amenophis II — PM I.1 p.167).
+    Extended chunk 20: TT112 (Menkheperraʿsonb, usurped by ʿAshefytemweset,
+    Prophet of Amūn 'Great of Majesty', Ramesside — PM I.1 p.229). Note:
+    TT112's original occupant Menkheperraʿsonb IS the usurped party (contrast
+    TT95 Mery who was the USURPER — required a DERIVER_OVERRIDE to suppress
+    is_usurped); no override needed for TT112."""
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
-                "TT65", "TT68", "TT70", "TT77", "TT84"}
+                "TT65", "TT68", "TT70", "TT77", "TT84", "TT112"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -5092,6 +5115,218 @@ def test_chunk19_tt109_min_mayor_of_thinis() -> None:
     assert "Temp. Tuthmosis III" in r["notes_from_pm"]
     assert "Mother, Say" in r["notes_from_pm"]
     assert r["source_citation"]["page"] == 226
+
+
+def test_chunk20_all_rows_present() -> None:
+    """All 10 TT111-TT120 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK20_TOMB_IDS:
+        assert tid in EXPECTED_TOMB_IDS
+        _row(tid)
+
+
+def test_chunk20_all_rows_homogeneous_sub_site() -> None:
+    for tid in CHUNK20_TOMB_IDS:
+        assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna"
+
+
+def test_chunk20_all_rows_edition_pm_i1() -> None:
+    for tid in CHUNK20_TOMB_IDS:
+        assert _row(tid)["source_citation"]["edition"] == "PM I.1 2nd ed. 1960"
+
+
+def test_chunk20_pages_in_range() -> None:
+    for tid in CHUNK20_TOMB_IDS:
+        p = _row(tid)["source_citation"]["page"]
+        assert 229 <= p <= 234, f"{tid} page {p} outside [229, 234]"
+
+
+def test_chunk20_role_distribution() -> None:
+    """TT114/TT115/TT116/TT119 have no surviving name → role collapses to None
+    (sentinel-null from merge.py). TT112/TT113/TT117/TT118/TT120 are Officials.
+    TT111 Amenwahsu is Official (Scribe of divine writings)."""
+    expected = {
+        "TT111": "Official", "TT112": "Official", "TT113": "Official",
+        "TT114": None, "TT115": None, "TT116": None,
+        "TT117": "Official", "TT118": "Official", "TT119": None,
+        "TT120": "Official",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK20_TOMB_IDS}
+    assert actual == expected
+
+
+def test_chunk20_attribution_distribution() -> None:
+    """All chunk-20 rows are attested. TT116 has `Amenophis III (?)` regnal-date
+    hedge and TT118 has `Amenophis III (?)` regnal-date hedge — both are
+    secondary-clause hedges qualifying the date range, not the occupant identity.
+    DERIVER_OVERRIDES pin both back to attested per the chunk-9 TT2 precedent."""
+    for tid in CHUNK20_TOMB_IDS:
+        assert _row(tid)["attribution_certainty"] == "attested", tid
+
+
+def test_chunk20_tt111_amenwahsu_scribe_divine_writings() -> None:
+    """TT111 Amenwahsu — Scribe of divine writings in the estate of Amūn,
+    Temp. Ramesses II, p.229. Parents Simut (Head of outline-draughtsmen)
+    and Wiay; wife Iuy (Songstress of Bubastis). Amūn macron-Ū preserved
+    per PM body-prose verbatim policy (A+C 2/1 majority vs B's no-macron)."""
+    r = _row("TT111")
+    assert r["occupant_name"] == "Amenwahsu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Scribe of divine writings in the estate of Amūn" in r["notes_from_pm"]
+    assert "Temp. Ramesses II" in r["notes_from_pm"]
+    assert "Simut" in r["notes_from_pm"]
+    assert "Songstress of Bubastis" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 229
+
+
+def test_chunk20_tt112_menkheperraconb_usurped_by_ashefytemweset() -> None:
+    """TT112 Menkheperraʿsonb — Temp. Tuthmosis III, usurped by ʿAshefytemweset
+    (Prophet of Amūn 'Great of Majesty', Ramesside), p.229. Original occupant
+    is the USURPED party → is_usurped=True (regex fires correctly, no override
+    needed; contrast TT95 where Mery was the USURPER). shared_with_tombs=['TT86']
+    per the cross-ref `(see tomb 86)` in PM's headword. Tie-break pin: agent A's
+    macron-Amūn + source-faithful `Wife of (ʿAshefytemweset)` order."""
+    r = _row("TT112")
+    assert r["occupant_name"] == "Menkheperraʿsonb"
+    assert r["occupant_role"] == "Official"
+    assert r["is_usurped"] is True
+    assert r["shared_with_tombs"] == ["TT86"]
+    assert "ʿAshefytemweset" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]  # macron-Ū preserved
+    assert "Wife of (ʿAshefytemweset)" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 229
+
+
+def test_chunk20_tt113_kynebu_waab_priest_bekenamtun() -> None:
+    """TT113 Kynebu — wʿab-priest over-the-secrets of the estate of Amūn,
+    Prophet in the Temple of Tuthmosis IV, Temp. Ramesses VIII, p.230.
+    Father Bekenamtūn (wʿab-priest of Amun), wife Esi. Tie-break override
+    assembled from correct axes across agents: ayin-before-a `wʿab` (TT14/
+    TT68/TT97 precedent) + lowercase initial (body prose) + father name
+    `Bekenamtūn` (consonant-complete + macron-Ū matching PM OCR `tln` glyph)."""
+    r = _row("TT113")
+    assert r["occupant_name"] == "Kynebu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    # ayin-before-a form with lowercase initial
+    assert r["notes_from_pm"].startswith("wʿab-priest")
+    assert "wʿab-priest of Amūn" in r["notes_from_pm"]
+    assert "Bekenamtūn" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]  # macron-Ū preserved
+    assert "Wife, Esi" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 230
+
+
+def test_chunk20_tt114_anonymous_head_goldworkers_no_name() -> None:
+    """TT114 — Head of goldworkers of the estate of Amūn, Dyn. XX, p.231.
+    PM's headword prints the title without a personal name → occupant_name=None.
+    occupant_role=None because 'Unknown' is a SENTINEL_NULL_STRING (same as
+    TT104 precedent). Tie-break pin: agent A's macron-Amūn + ayin-before-a
+    wʿab-priest for the father's title. Egyptologist review pending: PM prints
+    a functional title suggesting role='Official' may be correct."""
+    r = _row("TT114")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] is None  # SENTINEL_NULL — see egyptologist pending note
+    assert r["attribution_certainty"] == "attested"
+    assert "Head of goldworkers of the estate of Amūn" in r["notes_from_pm"]
+    assert "Dyn. XX" in r["notes_from_pm"]
+    assert "wʿab-priest of Anubis" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 231
+
+
+def test_chunk20_tt115_anonymous_no_texts_dyn_xix() -> None:
+    """TT115 — No texts, Dyn. XIX, p.233. Unanimously null across all 3 agents."""
+    r = _row("TT115")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert r["notes_from_pm"] == "No texts. Dyn. XIX."
+    assert r["source_citation"]["page"] == 233
+
+
+def test_chunk20_tt116_anonymous_hereditary_prince_regnal_hedge_attested() -> None:
+    """TT116 — Hereditary prince, Temp. Tuthmosis IV to Amenophis III (?), p.233.
+    `(?)` qualifies the regnal-range tail (Amenophis III), not the anonymous
+    occupant's identity. DERIVER_OVERRIDE pins attribution_certainty=attested
+    per the chunk-10 TT12/TT19/TT20 regnal-date hedge class."""
+    r = _row("TT116")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert "Hereditary prince" in r["notes_from_pm"]
+    assert "Amenophis III (?)" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 233
+
+
+def test_chunk20_tt117_zemutefankh_dyn_xi_reuse_dyn_xxi_xxii() -> None:
+    """TT117 Zemutefʿankh — Outline-draughtsman of the House of Gold, fashioning
+    the gods of the estate of Amūn, Dyn. XXI-XXII. Original tomb Dyn. XI (unnamed
+    occupant), re-used by Zemutefʿankh. PM headword attributes the tomb to the
+    named re-user as the occupant of record — same pattern as TT57/TT58 usurpation
+    entries. The TT117 interpretation (named occupant = the later user, not the
+    original Dyn. XI owner) was confirmed by all 3 agents."""
+    r = _row("TT117")
+    assert r["occupant_name"] == "Zemutefʿankh"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Dyn. XI" in r["notes_from_pm"]
+    assert "used by Zemutefʿankh" in r["notes_from_pm"]
+    assert "Outline-draughtsman of the House of Gold" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Dyn. XXI-XXII" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 233
+
+
+def test_chunk20_tt118_amenmosi_fan_bearer_regnal_hedge_attested() -> None:
+    """TT118 Amenmosi — Fan-bearer on the right of the King, Temp. Amenophis
+    III (?), p.233. `(?)` qualifies the regnal date, not Amenmosi's identification.
+    DERIVER_OVERRIDE pins attribution_certainty=attested per the chunk-10 TT12/
+    TT19/TT20 regnal-date hedge class."""
+    r = _row("TT118")
+    assert r["occupant_name"] == "Amenmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Fan-bearer on the right of the King" in r["notes_from_pm"]
+    assert "Amenophis III (?)" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 233
+
+
+def test_chunk20_tt119_anonymous_name_lost() -> None:
+    """TT119 — Name lost, Temp. Ḥatshepsut to Tuthmosis III, p.234.
+    PM's headword `Name lost.` is the canonical anonymous form with
+    underdot-Ḥ on Ḥatshepsut preserved in notes_from_pm (verbatim-preserve
+    policy). All 3 agents agreed unanimously."""
+    r = _row("TT119")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert r["notes_from_pm"] == "Name lost. Temp. Ḥatshepsut to Tuthmosis III."
+    assert "Ḥatshepsut" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 234
+
+
+def test_chunk20_tt120_anen_second_prophet_mahu_alt_name() -> None:
+    """TT120 ʿAnen — Second prophet of Amūn, Temp. Amenophis III, p.234.
+    Parents Yuia and Thuiu (tomb 46 in Valley of the Kings). Called Maḥu in
+    Gardiner & Weigall Cat. Tie-break pin: agent C's value (Amūn macron-Ū
+    + Maḥu underdot-ḥ both correct; PM source `MAI;IU` = `Maḥu`).
+    occupant_alt_names=["Mahu"] (strip-ḥ per matchable-name convention;
+    the structured field strips underdots) wins A+C 2/1 majority over B's [].
+    shared_with_tombs=[] (A+C 2/1; B's ["KV46"] is cross-volume reference
+    noted in PM prose, not an ownership/sharing relation per chunk-9 rule).
+    Egyptologist review pending: external-catalogue alias in occupant_alt_names."""
+    r = _row("TT120")
+    assert r["occupant_name"] == "ʿAnen"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Second prophet of Amūn" in r["notes_from_pm"]
+    assert "Amenophis III" in r["notes_from_pm"]
+    assert "Yuia and Thuiu" in r["notes_from_pm"]
+    assert "tomb 46 in the Valley of the Kings" in r["notes_from_pm"]
+    assert "Called Maḥu in GARDINER and WEIGALL" in r["notes_from_pm"]
+    assert r["occupant_alt_names"] == ["Mahu"]
+    assert r["shared_with_tombs"] == []
+    assert r["source_citation"]["page"] == 234
 
 
 def test_chunk17_tt90_nebamun_macron_restored_third_collision() -> None:
