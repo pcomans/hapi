@@ -80,7 +80,10 @@
 
   <rdf:Property rdf:about="#same_entity_as">
     <rdfs:label xml:lang="en">same entity as</rdfs:label>
-    <rdfs:comment xml:lang="en">Asserts that two per-source entity nodes refer to the same real-world person/site/etc. Symmetric. No clean CRM superproperty in core 7.1.3 — CRMinf (Argumentation Model) extension may offer a tighter fit in future. Currently a free-standing Hapi property; strict readers see the triple but do not reason on it.</rdfs:comment>
+    <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity"/>
+    <rdfs:range  rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/L54_is_same_as"/>
+    <rdfs:comment xml:lang="en">Asserts that two per-source entity nodes refer to the same real-world person/site/etc. Symmetric. Declared rdfs:subPropertyOf crmdig:L54_is_same_as ("non-unique identification applied to E1 CRM Entity") — strict CIDOC/CRMdig readers that have loaded this manifest interpret hapi:same_entity_as as an L54 edge. Both endpoints are E1 by subsumption (E21 ⊂ E1 etc.), satisfying L54's E1-E1 domain/range.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#in_dynastic_period">
