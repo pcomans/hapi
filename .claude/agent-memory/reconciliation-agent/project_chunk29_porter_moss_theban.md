@@ -7,7 +7,7 @@ metadata:
 
 Chunk-29 PM I.1 § I TT201-TT210 completed. Merged 285 rows (275 → 285).
 
-**Why:** Chunk-29 added 8 Khôkha tombs (TT201-208), 1 ʿAsâsîf (TT209), 1 Deir el-Medina (TT210 — Deir el-Medina already existed in reconciled.jsonl from chunk-9; not truly "new."
+**Why:** Chunk-29 added 8 Khôkha tombs (TT201-208), 1 ʿAsâsîf (TT209), 1 Deir el-Medina (TT210 — Deir el-Medina already existed in reconciled.jsonl from chunk-9; not truly "new".)
 
 **Tie-break overrides (4, all notes_from_pm):**
 - `TT202|notes_from_pm`: Ptaḥ underdot + no spurious comma after Ptaḥ; pinned agent C
