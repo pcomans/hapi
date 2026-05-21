@@ -2299,6 +2299,248 @@ CHUNK29_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK29_RENAMES: dict[str, str] = {}
 
 
+# === Chunk 30 — TT211-TT220 (Deir el-Medina) =================================
+#
+# Tie-break-overrides.json resolved 6 substantive 1/1/1 splits:
+#   TT211|notes_from_pm — pin C (commas, Wa'be(t) bracket)
+#   TT213|notes_from_pm — pin C (Bald not Baldi, no L.D. bleed)
+#   TT215|notes_from_pm — pin C (correct order, tomb 335)
+#   TT217|notes_from_pm — pin B (commas, no title expansion)
+#   TT217|source_citation — pin 315 (source-confirmed headword page)
+#   TT218|notes_from_pm — pin A (Hr-mnw abbreviation, ayins)
+#
+# Post-merge CHUNK30_CORRECTIONS apply:
+#
+#   1. TT211 source_citation.page: 308 → 307 (2/1 majority wrong; headword
+#      `211. PANEB` appears at source line 25 under PRINTED PAGE 307).
+#   2. TT211 notes_from_pm: `Wa'be(t)` → `Waʿbe(t)` — straight apostrophe `'`
+#      restored to proper ayin U+02BF. Source `Wa<be(t)` where `<` = ayin ʿ
+#      (same OCR-ayin rendering class as TT210 `Nefertkhaʿ` in CHUNK29).
+#   3. TT214 notes_from_pm: `Amun` → `Amūn` — macron-Ū per chunk-12-onward
+#      verbatim-preserve policy (PM body prose prints `Amūn` throughout).
+#   4. TT215 source_citation.page: 312 → 311 (2/1 majority wrong; headword
+#      `215. AMENEMOPET` appears at source line 332 under PRINTED PAGE 311).
+#   5. TT215 shared_with_tombs: [] → ["TT265"] — 2/1 majority (B+C) wrong;
+#      source line 332-333 explicitly states `(Burial Chamber is tomb 265.)`.
+#      Same shared-burial-chamber precedent as TT215/TT265 bidirectional pair.
+#   6. TT215 notes_from_pm: restore underdot-Ḥ on `Ḥatḥor` and `Ḥunuro` +
+#      append `(L. D. Text, No. 100.)` — source line 395 `(L. D. Text, No. Ioo.)`
+#      appears on TT216's locator line; TT215's locator also has a cite but
+#      the TT215 agents' OCR extracted it from the Amenemopet body-cite line 344.
+#      Actually the L.D. cite for TT215 appears in Agent A's form only and was
+#      dropped by the tie-break — restoring here. PM `l:Iati}.or` = `Ḥatḥor`
+#      (underdot-Ḥ); `I:Iunuro` = `Ḥunuro` (underdot-Ḥ); both verbatim-preserve.
+#   7. TT216 source_citation.page: 313 → 312 (unanimous-wrong; headword
+#      `216. NEFERḤOTEP` appears at source line 391 under PRINTED PAGE 312).
+#   8. TT216 notes_from_pm: append `(L. D. Text, No. 100.)` — source line 395
+#      `Deir el-Medina. (L. D. Text, No. Ioo.)` is a locator-line cite for TT216.
+#      All 3 agents omitted it (2/1 majority pinned no-cite form). Per TT212
+#      locator-line-cite precedent (same cite format, same Deir el-Medina area
+#      line), the L.D. text citation belongs in notes_from_pm.
+#   9. TT217 notes_from_pm: `Nefertkha` → `Nefertkhaʿ` — ayin restore; PM
+#      source `Nefertkha<` where `<` = ayin ʿ (same OCR-ayin class as TT210
+#      `Nefertkhaʿ` in CHUNK29, TT217 is Ipuy, son of Piay + Nefertkhaʿ).
+#  10. TT218 source_citation.page: 318 → 317 (unanimous-wrong; headword
+#      `218. AMENNAKHT` at source line 649 under PRINTED PAGE 317).
+#  11. TT218 notes_from_pm: (a) colons → commas, (b) remove Co-occupants
+#      clause (spurious agent annotation not in PM headword), (c) parenthetical
+#      → comma form for parent title, (d) `Hetepti` → `Ḥetepti` (underdot-Ḥ;
+#      source `I;Ietepti`), (e) `Amon` → `Amūn` (macron-Ū).
+#  12. TT219 source_citation.page: 321 → 320 (unanimous-wrong; headword
+#      `219. NEBENMACET` at source line 847 under PRINTED PAGE 320).
+#  13. TT219 occupant_name: `Nebenmaet` → `Nebenmaʿet` — ayin restore;
+#      PM headword `NEBENMA<ET` where `<` = ayin ʿ (2/1 majority stripped it).
+#  14. TT220 occupant_name: `Khaemteri` → `Khaʿemteri` — ayin restore;
+#      PM headword `KHA<EMTERI` where `<` = ayin ʿ (2/1 majority stripped it).
+CHUNK30_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT211",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 307, "section": "I"},
+        "PM I.1 p.307 / physical PDF source chunk-30-tt211-tt220.txt line 25: "
+        "headword `211. PANEB` appears at source line 25 under "
+        "`===== PHYSICAL PAGE 325 (PRINTED PAGE 307) =====` (source line 1). "
+        "2/1 majority (agents A+B) reported page 308 — the next physical page "
+        "where the tomb body continues. Correct printed page is 307.",
+    ),
+    (
+        "TT211",
+        "notes_from_pm",
+        "Servant of the Lord of the Two Lands in the Place of Truth. Dyn. XIX. "
+        "Parents, Nefersenut, same title as deceased, and Iuy. Wife, Waʿbe(t).",
+        "PM I.1 p.307 / chunk-30-tt211-tt220.txt line 38: source OCR `Wa<be(t)` "
+        "where `<` is the PM text-layer rendering of ayin ʿ (U+02BF). The `(t)` "
+        "is PM's editorial bracket on the feminine ending. Tie-break pinned agent C "
+        "`Wa'be(t)` (correct bracket) but with straight apostrophe `'` instead of "
+        "proper ayin U+02BF. Restore: `Wa'be(t)` → `Waʿbe(t)` (same OCR-ayin "
+        "class as TT210 `Nefertkhaʿ` in CHUNK29_CORRECTIONS).",
+    ),
+    (
+        "TT214",
+        "notes_from_pm",
+        "Custodian in the Place of Truth, Servant of Amūn in Luxor. Ramesside. "
+        "Wife, Tawert.",
+        "PM I.1 p.310 / chunk-30-tt211-tt220.txt line 265: source OCR `Amlin` = "
+        "`Amūn` (macron-Ū on ū). 2/1 majority (agents B+C) emitted `Amun` without "
+        "macron; agent A used colon (lost at merge). Restore macron-Ū per "
+        "chunk-12-onward verbatim-preserve policy (PM body prose consistently "
+        "prints `Amūn` with macron throughout PM I.1 Deir el-Medina section).",
+    ),
+    (
+        "TT215",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 311, "section": "I"},
+        "PM I.1 p.311 / chunk-30-tt211-tt220.txt line 332: headword `215. AMENEMOPET` "
+        "appears at source line 332 under `===== PHYSICAL PAGE 329 (PRINTED PAGE 311) =====` "
+        "(source line 292). 2/1 majority (agents B+C) reported page 312 — the next "
+        "physical page where the tomb body continues. Correct printed page is 311.",
+    ),
+    (
+        "TT215",
+        "shared_with_tombs",
+        ["TT265"],
+        "PM I.1 p.311 / chunk-30-tt211-tt220.txt line 332-333: PM explicitly states "
+        "`(Burial Chamber is tomb 265.)` in TT215's headword. This is a direct "
+        "physical-sharing relationship (same structural class as TT215/TT265 burial-"
+        "chamber sharing). 2/1 majority (agents B+C) emitted [] (dropped the cross-ref); "
+        "agent A correctly emitted [\"TT265\"]. Per the TT131/TT61 bidirectional-pair "
+        "symmetry convention, TT265 must carry a reciprocal shared_with_tombs entry "
+        "for TT215 — flag for egyptologist to verify chunk covering TT265.",
+    ),
+    (
+        "TT215",
+        "notes_from_pm",
+        "Royal scribe in the Place of Truth. (Burial Chamber is tomb 265.) Dyn. XIX. "
+        "Parents, Minmosi and Esi (names in tomb 335). Wife, Ḥatḥor, called Ḥunuro. "
+        "(L. D. Text, No. 100.)",
+        "PM I.1 p.311 / chunk-30-tt211-tt220.txt line 335: source OCR `l:Iati}.or` = "
+        "`Ḥatḥor` (underdot-Ḥ on both H's); `I:Iunuro` = `Ḥunuro` (underdot-Ḥ). "
+        "Tie-break pinned agent C `Hathor, called Hunuro` (correct order + tomb 335) "
+        "but missing underdot-Ḥ on both names. Restore per verbatim-preserve policy "
+        "for notes_from_pm. Additionally: source locator line prints `Deir el-Medina.` "
+        "with L.D. cite annotation (agent A had `(L. D. Text, No. 100.)` but lost at "
+        "tie-break; same locator-line-cite class as TT212 `(L. D. Text, No. 98.)` and "
+        "TT216 `(L. D. Text, No. 100.)` per TT216's source line 395). Appended here.",
+    ),
+    (
+        "TT216",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 312, "section": "I"},
+        "PM I.1 p.312 / chunk-30-tt211-tt220.txt line 391: headword `216. NEFERḤOTEP` "
+        "appears at source line 391 under `===== PHYSICAL PAGE 330 (PRINTED PAGE 312) =====` "
+        "(source line 355). All 3 agents reported page 313 — the next physical page where "
+        "the tomb body continues. Unanimous-wrong; correct printed page is 312.",
+    ),
+    (
+        "TT216",
+        "notes_from_pm",
+        "Foreman. Temp. Ramesses II to Sethos II. Parents, Nebnufer (tomb 6) and Iy. "
+        "Wife, Webekht. (L. D. Text, No. 100.)",
+        "PM I.1 p.312 / chunk-30-tt211-tt220.txt line 395: source locator line "
+        "`Deir el-Medina. (L. D. Text, No. Ioo.)` contains the L.D. Text citation. "
+        "All 3 agents omitted it (2/1 majority pinned no-cite form via tie-break). "
+        "Per TT212 locator-line-cite precedent (`(L. D. Text, No. 98.)` in TT212 "
+        "notes_from_pm) and same-L.D.-number shared by TT215 and TT216, the citation "
+        "belongs in notes_from_pm. Same L.D. cite `No. 100` covers TT215+TT216 "
+        "(PM printed them together in the L.D. reference).",
+    ),
+    (
+        "TT217",
+        "notes_from_pm",
+        "Sculptor. Temp. Ramesses II. Parents, Piay and Nefertkhaʿ (names in tomb 210). "
+        "Wife, Duammeres.",
+        "PM I.1 p.315 / chunk-30-tt211-tt220.txt line 534: source OCR `Nefertkha< ~~~~` "
+        "where `<` = ayin ʿ (U+02BF). Tie-break pinned agent B `Nefertkha` (correct "
+        "comma structure, no title expansion) but missing the ayin on `Nefertkhaʿ`. "
+        "Restore ayin per the same OCR-ayin class as TT210 `Nefertkhaʿ` (CHUNK29) and "
+        "TT132/TT138/TT201/TT204 ayin-preserve precedents. Note: TT217 Ipuy is the son "
+        "of Piay + Nefertkhaʿ from TT210 — the bidirectional family link confirms ayin "
+        "(TT210 CHUNK29_CORRECTIONS already carries `Nefertkhaʿ` with ayin).",
+    ),
+    (
+        "TT218",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 317, "section": "I"},
+        "PM I.1 p.317 / chunk-30-tt211-tt220.txt line 649: headword `218. AMENNAKHT` "
+        "appears at source line 649 under `===== PHYSICAL PAGE 335 (PRINTED PAGE 317) =====` "
+        "(source line 624). All 3 agents reported page 318 — the next physical page. "
+        "Unanimous-wrong; correct printed page is 317.",
+    ),
+    (
+        "TT218",
+        "notes_from_pm",
+        "Servant in the Place of Truth on the west of Thebes. Ramesside. Parents, "
+        "Nebenmaʿet, Hr-mnw of Amūn, and Ḥetepti. Wife, Iymway.",
+        "PM I.1 p.317 / chunk-30-tt211-tt220.txt line 651: source OCR "
+        "`Nebenma<et :=::~ .:_~, r!-mnw of Amon, and I;Ietepti. Wife, lymway`. "
+        "Tie-break pinned agent A's form. Four corrections on that form: "
+        "(a) colons → commas (PM body-prose punctuation per all preceding chunks); "
+        "(b) remove `Co-occupants: Son Khaʿemteri (tomb 220) and son Nebenmaʿet "
+        "(tomb 219).` (spurious agent annotation — not in PM headword text; sons' "
+        "tombs are captured in `shared_with_tombs: [\"TT219\", \"TT220\"]`); "
+        "(c) `Hetepti` → `Ḥetepti` (underdot-Ḥ; source `I;Ietepti` = Ḥetepti, "
+        "same `I;I` OCR pattern for capital underdot-Ḥ as seen throughout chunks 1-29); "
+        "(d) `Amon` → `Amūn` (macron-Ū; chunk-12-onward verbatim-preserve policy). "
+        "Parenthetical → comma form: `(Hr-mnw of Amūn)` → `, Hr-mnw of Amūn,` per "
+        "PM's comma-separated title clause convention (source comma before `r!-mnw`).",
+    ),
+    (
+        "TT219",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 320, "section": "I"},
+        "PM I.1 p.320 / chunk-30-tt211-tt220.txt line 847: headword `219. NEBENMACET` "
+        "appears at source line 847 under `===== PHYSICAL PAGE 338 (PRINTED PAGE 320) =====` "
+        "(source line 814). All 3 agents reported page 321 — the next physical page. "
+        "Unanimous-wrong; correct printed page is 320.",
+    ),
+    (
+        "TT219",
+        "occupant_name",
+        "Nebenmaʿet",
+        "PM I.1 p.320 headword `219. NEBENMA<ET` (source line 847: `NEBENMACET` "
+        "where `C` = OCR rendering of `<ET` = ayin + ET, giving `Nebenmaʿet`). "
+        "2/1 majority (agents B+C) emitted `Nebenmaet` (ayin dropped). Agent A's "
+        "`Nebenmaʿet` matches PM headword. Ayin-preserve convention per README and "
+        "Constitutional Rule 1. Same OCR-ayin class as TT201 `Reʿ`, TT204 `Nebʿanensu`, "
+        "TT210 `Raʿweben` (CHUNK29) and TT220 `Khaʿemteri` (same chunk).",
+    ),
+    (
+        "TT220",
+        "occupant_name",
+        "Khaʿemteri",
+        "PM I.1 p.322 headword `220. KHA<EMTERI` (source line 956: `KHA<EMTERl` "
+        "where `<` = ayin ʿ U+02BF, final `l` = OCR for `i`). 2/1 majority (agents B+C) "
+        "emitted `Khaemteri` (ayin dropped). Agent A's `Khaʿemteri` matches PM headword. "
+        "Ayin-preserve convention per README and Constitutional Rule 1. Same OCR-ayin "
+        "class as TT219 `Nebenmaʿet` (same chunk) and TT201/TT204/TT210 (CHUNK29).",
+    ),
+    (
+        "TT219",
+        "shared_with_tombs",
+        ["TT218"],
+        "PM I.1 p.317-320 — TT218, TT219, TT220 form a family tomb complex: Amennakht "
+        "(TT218) is the father; his sons Nebenmaʿet (TT219) and Khaʿemteri (TT220) each "
+        "have adjacent tombs. TT218 already carries `shared_with_tombs: [\"TT219\", \"TT220\"]` "
+        "(unanimous agent agreement from body-text cross-references at source lines 804-805). "
+        "`test_shared_with_tombs_symmetry_within_chunk` requires bidirectional symmetry for "
+        "within-section pairs. Agent A correctly emitted `[\"TT218\"]` for TT219; 2/1 "
+        "majority (B+C) dropped the back-reference to []. Restoring symmetry here.",
+    ),
+    (
+        "TT220",
+        "shared_with_tombs",
+        ["TT218"],
+        "PM I.1 p.317-322 — same TT218/TT219/TT220 family tomb complex rationale as "
+        "TT219 CHUNK30 correction above. TT218 carries `shared_with_tombs: [\"TT219\", \"TT220\"]`; "
+        "symmetry requires TT220 to carry `[\"TT218\"]`. Agent A emitted `[\"TT218\"]`; "
+        "2/1 majority (B+C) dropped it. Restoring to satisfy "
+        "`test_shared_with_tombs_symmetry_within_chunk`.",
+    ),
+]
+
+CHUNK30_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -2605,6 +2847,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK27_CORRECTIONS,
     CHUNK28_CORRECTIONS,
     CHUNK29_CORRECTIONS,
+    CHUNK30_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2636,6 +2879,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK27_RENAMES,
     **CHUNK28_RENAMES,
     **CHUNK29_RENAMES,
+    **CHUNK30_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [

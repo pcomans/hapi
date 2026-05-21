@@ -273,7 +273,9 @@
   },
   "TT140|occupant_alt_names": {
     "rationale": "PM I.1 p.254 / physical PDF p.272 (TT140 Neferronpet). Agents split 1/1/1: A=`[\"Kefia\"]` (OCR misread K for Ḥ); B=`[\"Hefia\"]` (H without underdot — matches ḥ→H strip rule for matchable name fields per TT57 Mahu/TT120 Maḥu precedent); C=`[\"Efia\"]` (drops initial Ḥ entirely). PM p.254/p.272 source: `H7, probably called ~EFIA` and `l):.efia` — `l):` OCR pattern = underdot-Ḥ, confirming PM-faithful form `Ḥefia`. In `occupant_alt_names` (the matchable name field), underdot-ḥ is stripped per the TT57/TT120 precedent: `Ḥefia` → `Hefia`. Agent B's `Hefia` matches this policy exactly. Flag for egyptologist review: the alt-name is uncertain in the source OCR; `Hefia` is the most defensible reconstruction. Note: `notes_from_pm` verbatim-preserve uses `Ḥefia` (with underdot) after CHUNK22_CORRECTIONS restoration.",
-    "value": ["Hefia"]
+    "value": [
+      "Hefia"
+    ]
   },
   "TT151|notes_from_pm": {
     "rationale": "PM I.1 p.261 / physical PDF p.279 (TT151 Hety, Scribe). Agents split 1/1/1: A omits Parents clause, has macron `Amūn`; B has OCR garbage `Counter of cattle of the god's wife, and Men:;;:.` (contamination from line-wrap duplication) and no macron on `Amun`; C has no OCR garbage and includes Parents clause `Parents, Nebnufer.` consistent with source OCR text line 31 `Paren~Nebnufer`, no macron on `Amun`. Pin agent C: best available skeleton — no OCR garbage (B's `Men:;;:` is provably a line-wrap duplication artefact), includes the Parents clause confirmed by source text. Macron `Amun` → `Amūn` will be restored post-merge via CHUNK24_CORRECTIONS per TT141-TT150 cluster precedent.",
@@ -334,5 +336,33 @@
   "TT210|notes_from_pm": {
     "rationale": "PM I.1 p.307 / physical PDF p.325 (TT210 Raʿweben, Deir el-Medina). Agents split 1/1/1 on three axes: (1) citation position — A=no citation; B=end-sentence citation `(L. D. Text, No. 104.)` appended after Wife clause; C=mid-sentence citation before `Parents(?)` clause. PM chunk-29 source (line 170) prints `Deir el-Medina. (L. D. Text, No. I04.) Parents(?), Piay...` — the citation appears on the locator line before the `Parents(?)` clause, confirming mid-sentence position (same PM body-prose convention established across chunks 12-28). (2) `Piay` comma — A=`Piay Sculptor` (no comma, OCR spacing error); B+C=`Piay, Sculptor` (comma correct — PM prints `Piay R~~~~. Sculptor` where the period marks the end of the hieroglyphic and a comma separates the name from the title). (3) Nefertkhaʿ ayin — A+B=`Nefertkha` (no ayin); C=`Nefertkhaʿ` (ayin correct — PM `Nefertkha<` where `<` is OCR for ayin ʿ). Agent C is correct on all three axes: mid-sentence citation + `Piay, Sculptor` comma + `Nefertkhaʿ` ayin. Pin agent C.",
     "value": "Servant in the Place of Truth. Dyn. XIX. (L. D. Text, No. 104.) Parents(?), Piay, Sculptor in the Place of Truth, and Nefertkhaʿ. Wife, Nebtyunu."
+  },
+  "TT211|notes_from_pm": {
+    "rationale": "PM I.1 p.307 / physical PDF source (chunk-30-tt211-tt220.txt line 30-38). Agents split 1/1/1: A=colons + `Waʿbet` (no editorial bracket); B=period after Nefersenut (wrong — PM prints comma) + `Wabet` (no ayin); C=commas (correct PM punctuation) + `Wa'be(t)` (editorial bracket correct — PM prints `Wa<be(t)` where `<` is OCR for ayin ʿ, and `(t)` is PM's editorial bracket on the feminine ending). Agent C is correct on commas + bracket; uses straight apostrophe `'` instead of proper ayin U+02BF. Pin agent C. CHUNK30_CORRECTIONS will restore `Wa'be(t)` → `Waʿbe(t)` (proper ayin).",
+    "value": "Servant of the Lord of the Two Lands in the Place of Truth. Dyn. XIX. Parents, Nefersenut, same title as deceased, and Iuy. Wife, Wa'be(t)."
+  },
+  "TT213|notes_from_pm": {
+    "rationale": "PM I.1 p.310 / physical PDF source (chunk-30-tt211-tt220.txt line 240-243). Agents split 1/1/1: A=colons + `Bald` (correct) + spurious `(L. D. Text, No. 98.)` (bleed from TT212 — TT212 carries `No. 98`, not TT213); B=commas + `Baldi` (wrong — source text line 243 prints `Bald` without final `i`); C=commas + `Bald` (correct, no L.D. cite bleed). Pin agent C: commas correct + `Bald` correct + no spurious L.D. bleed. No CHUNK30_CORRECTIONS needed for this field.",
+    "value": "Servant of the Lord of the Two Lands, Servant in the Place of Truth. Dyn. XX. Parents, Bald (tomb 298) and Taysen. Wife, Nebtnuhet."
+  },
+  "TT215|notes_from_pm": {
+    "rationale": "PM I.1 p.311 / physical PDF source (chunk-30-tt211-tt220.txt line 332-335). Agents split 1/1/1: A=wrong order (Dyn. XIX before Burial Chamber parenthetical) + colons + tomb 335 + wife `Hathore` (wrong — PM prints `Ḥatḥor`); B=correct order (Burial Chamber first per PM's printed sequence) + commas + tomb 338 (wrong — source OCR line 335 prints `33S` = `335`); C=correct order + commas + tomb 335 (correct) + wife `Hathor, called Hunuro` (missing underdot-Ḥ on both Ḥatḥor and Ḥunuro — PM source `l:Iati}.or, called I:Iunuro` = Ḥatḥor, Ḥunuro with underdot-Ḥ). Pin agent C as best skeleton. CHUNK30_CORRECTIONS: (1) Hathor → Ḥatḥor, (2) Hunuro → Ḥunuro (underdot-Ḥ per verbatim-preserve policy for notes_from_pm), (3) append L. D. Text, No. 100. cite per TT212/TT216 locator-line-cite precedent.",
+    "value": "Royal scribe in the Place of Truth. (Burial Chamber is tomb 265.) Dyn. XIX. Parents, Minmosi and Esi (names in tomb 335). Wife, Hathor, called Hunuro."
+  },
+  "TT217|notes_from_pm": {
+    "rationale": "PM I.1 p.315 / physical PDF source (chunk-30-tt211-tt220.txt line 532-534). Agents split 1/1/1: A=colons + parenthesised `(Sculptor in the Place of Truth)` title expansion (PM headword note has hieroglyphic `R~~~~` for Piay's title, not a verbatim transcribed expansion — verbatim-preserve policy = no expansion); B=commas + no title expansion + `Nefertkha` (missing ayin — PM source line 534 `Nefertkha<` where `<` = ayin ʿ); C=commas + inline `, Sculptor in the Place of Truth,` expansion (same non-PM-verbatim expansion as A, different format). Pin agent B: commas correct + no title expansion (PM-verbatim). CHUNK30_CORRECTIONS: `Nefertkha` → `Nefertkhaʿ` (ayin-restore per OCR `<` → U+02BF class, same as TT210 `Nefertkhaʿ` correction in CHUNK29_CORRECTIONS).",
+    "value": "Sculptor. Temp. Ramesses II. Parents, Piay and Nefertkha (names in tomb 210). Wife, Duammeres."
+  },
+  "TT217|source_citation": {
+    "rationale": "PM I.1 p.315 — headword `217. IPUY` appears at source line 532, under the page marker `===== PHYSICAL PAGE 333 (PRINTED PAGE 315) =====` (source line 520). Agent A=315 (correct). Agent B=316 (the next physical page, where the tomb body content continues — off-by-one). Agent C=313 (wrong — two pages earlier). Pin 315 per source text headword position.",
+    "value": {
+      "edition": "PM I.1 2nd ed. 1960",
+      "page": 315,
+      "section": "I"
+    }
+  },
+  "TT218|notes_from_pm": {
+    "rationale": "PM I.1 p.317 / physical PDF source (chunk-30-tt211-tt220.txt line 649-651). Agents split 1/1/1: A=colons + `Nebenmaʿet (Hr-mnw of Amon)` parenthetical (correct PM abbreviation) + `Hetepti` (missing underdot-Ḥ) + spurious Co-occupants clause (not PM headword text); B=commas + period after `Nebenmaet` (wrong — PM uses comma) + `r-mnu` (garbled OCR) + no ayin on Nebenmaet; C=commas + `Foreman of Amon` (translated title, not PM-verbatim `Hr-mnw`). Agent A is closest to source: `Hr-mnw` abbreviation matches PM's OCR `r!-mnw`, ayin on Nebenmaʿet correct. Pin agent A. CHUNK30_CORRECTIONS: (1) colons → commas per PM body-prose punctuation, (2) remove Co-occupants clause (spurious agent annotation), (3) `Hetepti` → `Ḥetepti` (underdot-Ḥ — source `I;Ietepti` = Ḥetepti), (4) `Amon` → `Amūn` (macron-Ū per chunk-12-onward verbatim-preserve policy), (5) parenthetical → comma form: `Nebenmaʿet (Hr-mnw of Amūn)` → `Nebenmaʿet, Hr-mnw of Amūn`.",
+    "value": "Servant in the Place of Truth on the west of Thebes. Ramesside. Parents: Nebenmaʿet (Hr-mnw of Amon) and Hetepti. Wife: Iymway. Co-occupants: Son Khaʿemteri (tomb 220) and son Nebenmaʿet (tomb 219)."
   }
 }
