@@ -1051,11 +1051,11 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             " of Sokari. Temp. Sethos I. Parents, Amenemḥet, Outline-draughtsman"
             " in the Temple of Sokari, and Mutnefert. Wife, Nefertere.",
         ("TT329", "notes_from_pm"):
-            "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, all"
-            " Servants in the Place of Truth. Ramesside. Wife (of Mosi, tomb 329),"
-            " Ḥenutwact. Father (of Mosi, Annexed tomb), Icoḥnufer. Wife (of Mosi,"
-            " Annexed tomb), Patet (name on stela, Louvre, C. 280, see infra)."
-            " Wife (of Ipy), Bakt.",
+            "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, perhaps"
+            " his son, all Servants in the Place of Truth. Ramesside. Wife (of"
+            " Mosi, tomb 329), Ḥenutwact. Father (of Mosi, Annexed tomb),"
+            " Icoḥnufer. Wife (of Mosi, Annexed tomb), Patet (name on stela,"
+            " Louvre, C. 280, see infra). Wife (of Ipy), Bakt.",
         ("TT330", "notes_from_pm"):
             "Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu."
             " Wife, Takhaʿ.",

@@ -4202,12 +4202,18 @@ CHUNK41_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT329",
         "notes_from_pm",
-        "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, all Servants"
-        " in the Place of Truth. Ramesside. Wife (of Mosi, tomb 329), Ḥenutwact."
-        " Father (of Mosi, Annexed tomb), Icoḥnufer. Wife (of Mosi, Annexed tomb),"
-        " Patet (name on stela, Louvre, C. 280, see infra). Wife (of Ipy), Bakt.",
+        "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, perhaps"
+        " his son, all Servants in the Place of Truth. Ramesside. Wife (of Mosi,"
+        " tomb 329), Ḥenutwact. Father (of Mosi, Annexed tomb), Icoḥnufer."
+        " Wife (of Mosi, Annexed tomb), Patet (name on stela, Louvre, C. 280,"
+        " see infra). Wife (of Ipy), Bakt.",
         "Corrections to tie-break-pinned value (C's form of chunk-41 source lines"
-        " 262-268): (1) `Henutwact` → `Ḥenutwact`: source line 265 `l:Ienutwact`"
+        " 262-268): (0) `Ipy, all Servants` → `Ipy, perhaps his son, all Servants`"
+        " — source line 262-263 prints `... and Ipy ..., perhaps his son, all"
+        " Servants in the Place of Truth.` The `perhaps his son` qualifying"
+        " phrase for Ipy was dropped by all three agents; restore per PM"
+        " verbatim-preserve (PR #285 round-1 Gemini finding 3284937977)."
+        " (1) `Henutwact` → `Ḥenutwact`: source line 265 `l:Ienutwact`"
         " where `l:I` = underdot-Ḥ OCR cluster; notes_from_pm verbatim-preserve"
         " retains diacritic. (2) `Icolnufer` → `Icoḥnufer`: source line 266"
         " `Icol].nufer` where `l].` = underdot-ḥ OCR cluster. (3) `Aqatet` → `Patet`:"
