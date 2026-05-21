@@ -346,6 +346,9 @@ CHUNK34_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK35_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(261, 271)}
 )
+CHUNK36_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(271, 281)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -381,6 +384,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK33_TOMB_IDS
     | CHUNK34_TOMB_IDS
     | CHUNK35_TOMB_IDS
+    | CHUNK36_TOMB_IDS
 )
 
 
@@ -9686,3 +9690,307 @@ def test_chunk35_tt270_amenemwia_warb_priest_ptah_sokari() -> None:
     assert r["theban_area"] == "Qurnet Muraʿi"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 350
+
+
+# Chunk-36: TT271-TT280 (Qurnet Muraʿi ×8, ʿAsâsîf ×1, Dra' Abu el-Naga ×1).
+# Tie-break overrides (7 entries):
+#   TT273 occupant_name: Sayemiotf (source-verbatim; A=Sayemhotf, B=Sayemiōtf).
+#   TT274 co_occupants: name=`...y` (PM-verbatim partial name; A/B invented).
+#   TT274 notes_from_pm: Tod + (Inaccessible.) placement pinned; Amūn macron
+#     layered post-merge by CHUNK36_CORRECTIONS.
+#   TT276 notes_from_pm: parents order + Amenhotp intermediate (diacritics
+#     layered by CHUNK36_CORRECTIONS → ʿAḥḥotp / Ḥenutyunu).
+#   TT278 occupant_name: Amenemhab (ḥ stripped per matchable-name policy).
+#   TT279 notes_from_pm: Tasentenhor (Ḥ underdot layered by CHUNK36_CORRECTIONS).
+#   TT280 notes_from_pm: Mentuhotp (ḥ + formerly-read clause layered post-merge).
+# CHUNK36_CORRECTIONS:
+#   TT272 notes_from_pm: Amun → Amūn (macron-u macron-retain policy).
+#   TT274 source_citation: page 352→351 (headword on physical 369 = printed 351).
+#   TT274 notes_from_pm: Amun → Amūn macron.
+#   TT276 source_citation: page 353→352 (physical 370 = printed 352).
+#   TT276 notes_from_pm: Amenhotp→ʿAḥḥotp + Henutyunu→Ḥenutyunu.
+#   TT277 source_citation: page 354→353 (physical 371 = printed 353).
+#   TT278 source_citation: page 356→355 (physical 373 = printed 355).
+#   TT278 notes_from_pm: Amen-Re → Amen-Reʿ (ayin from source `re<`).
+#   TT279 occupant_alt_names: [] → ["Pbes"] (headword PABA SA (PBES)).
+#   TT279 notes_from_pm: Tasentenhor → Tasentenḥor (underdot-ḥ).
+#   TT280 source_citation: page 360→359 (physical 377 = printed 359).
+#   TT280 location_sub_area: null → "In valley south of Deir el-Bahari Temples".
+#   TT280 notes_from_pm: Mentuhotp→Mentuḥotp + (Formerly read Meḥenkwetreʿ.) added.
+#   TT274/TT280 co_occupants role: null → Official (SENTINEL_NULL_STRINGS fix).
+# DERIVER_OVERRIDE: TT276 attribution_certainty=attested — `Tuthmosis IV (?)`
+#   qualifies the REGNAL DATE, not Amenemopet's identification.
+
+
+def test_chunk36_all_rows_present() -> None:
+    """All 10 TT271-TT280 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK36_TOMB_IDS
+    assert actual == CHUNK36_TOMB_IDS, sorted(CHUNK36_TOMB_IDS - actual)
+
+
+def test_chunk36_theban_areas() -> None:
+    """TT271-TT278 Qurnet Muraʿi; TT279 ʿAsâsîf; TT280 Dra' Abu el-Naga."""
+    expected = {
+        "TT271": "Qurnet Muraʿi",
+        "TT272": "Qurnet Muraʿi",
+        "TT273": "Qurnet Muraʿi",
+        "TT274": "Qurnet Muraʿi",
+        "TT275": "Qurnet Muraʿi",
+        "TT276": "Qurnet Muraʿi",
+        "TT277": "Qurnet Muraʿi",
+        "TT278": "Qurnet Muraʿi",
+        "TT279": "ʿAsâsîf",
+        "TT280": "Dra' Abu el-Naga",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+
+
+def test_chunk36_tt271_nay_royal_scribe() -> None:
+    """TT271 — Nay, Royal scribe. Temp. Ay. Qurnet Muraʿi. p.350."""
+    r = _row("TT271")
+    assert r["occupant_name"] == "Nay"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal scribe" in r["notes_from_pm"]
+    assert "Temp. Ay" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 350
+
+
+def test_chunk36_tt272_khaemopet_divine_father_amun() -> None:
+    """TT272 — Khaʿemopet, Divine father of Amūn in the West, Lector in Temple of Sokari.
+    Ramesside. Qurnet Muraʿi. p.351.
+    CHUNK36_CORRECTIONS: Amun → Amūn (macron-u macron-retain policy)."""
+    r = _row("TT272")
+    assert r["occupant_name"] == "Khaʿemopet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Sokari" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 351
+
+
+def test_chunk36_tt273_sayemiotf_scribe() -> None:
+    """TT273 — Sayemiotf, Scribe in the estate of his Lord. Ramesside. Qurnet Muraʿi. p.351.
+    Tie-break: source-verbatim `Sayemiotf` (A=Sayemhotf, B=Sayemiōtf)."""
+    r = _row("TT273")
+    assert r["occupant_name"] == "Sayemiotf"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 351
+
+
+def test_chunk36_tt274_amenwahsu_first_prophet_monthu() -> None:
+    """TT274 — Amenwahsu, First prophet of Monthu of Tod, and of Thebes. Ramesside.
+    Qurnet Muraʿi. p.351. (Inaccessible.) Co-occupant wife ...y.
+    Tie-breaks: co_occupants[].name=`...y`; notes_from_pm Tod + (Inaccessible.) placement.
+    CHUNK36_CORRECTIONS: page 352→351; Amun→Amūn; co_occupants role null→Official."""
+    r = _row("TT274")
+    assert r["occupant_name"] == "Amenwahsu"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert len(r["co_occupants"]) == 1
+    co = r["co_occupants"][0]
+    assert co["name"] == "...y"
+    assert co["role"] == "Official"
+    assert co["alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First prophet of Monthu of Tod" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "(Inaccessible.)" in r["notes_from_pm"]
+    assert "...y" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 351
+
+
+def test_chunk36_tt275_sebkmosi_head_warbpriest() -> None:
+    """TT275 — Sebkmosi, Head warb-priest, Divine father in Temples of Amenophis III and Sokari.
+    Ramesside. Qurnet Muraʿi. p.352."""
+    r = _row("TT275")
+    assert r["occupant_name"] == "Sebkmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "warb-priest" in r["notes_from_pm"]
+    assert "Amenophis III" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 352
+
+
+def test_chunk36_tt276_amenemopet_overseer_treasury() -> None:
+    """TT276 — Amenemopet, Overseer of the treasury of gold and silver, Judge.
+    Temp. Tuthmosis IV (?). Qurnet Muraʿi. p.352. Parents Nekhu (?) and ʿAḥḥotp.
+    Tie-break: parents-before-wife order + Amenhotp intermediate.
+    CHUNK36_CORRECTIONS: page 353→352; ʿAḥḥotp + Ḥenutyunu diacritics restored.
+    DERIVER_OVERRIDE: attribution_certainty=attested (regnal-date hedge)."""
+    r = _row("TT276")
+    assert r["occupant_name"] == "Amenemopet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of the treasury" in r["notes_from_pm"]
+    assert "Tuthmosis IV" in r["notes_from_pm"]
+    assert "ʿAḥḥotp" in r["notes_from_pm"]
+    assert "Ḥenutyunu" in r["notes_from_pm"]
+    assert "Nekhu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 352
+
+
+def test_chunk36_tt277_amenemonet_divine_father() -> None:
+    """TT277 — Amenemonet, Divine father of the mansion of Amenophis III. Ramesside.
+    Qurnet Muraʿi. p.353. Mother Tazesertka, Wife Nefertere.
+    CHUNK36_CORRECTIONS: page 354→353 (physical 371 = printed 353)."""
+    r = _row("TT277")
+    assert r["occupant_name"] == "Amenemonet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Amenophis III" in r["notes_from_pm"]
+    assert "Tazesertka" in r["notes_from_pm"]
+    assert "Nefertere" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 353
+
+
+def test_chunk36_tt278_amemhab_herdsman_amen_re() -> None:
+    """TT278 — Amenemhab, Herdsman of Amen-Reʿ. Ramesside. Qurnet Muraʿi. p.355.
+    Wife Tay, Songstress of Mut.
+    Tie-break: Amenemhab (ḥ stripped per matchable-name policy).
+    CHUNK36_CORRECTIONS: page 356→355; Amen-Re→Amen-Reʿ (ayin from source)."""
+    r = _row("TT278")
+    assert r["occupant_name"] == "Amenemhab"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Amen-Reʿ" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Tay" in r["notes_from_pm"]
+    assert "Mut" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 355
+
+
+def test_chunk36_tt279_paba_sa_chief_steward_gods_wife() -> None:
+    """TT279 — Paba sa (alt Pbes), Chief steward of the god's wife. Temp. Psammetikhos I.
+    ʿAsâsîf. p.357. Parents Pedubaste and Tasentenḥor.
+    Tie-break: notes_from_pm Tasentenhor (Ḥ layered by CHUNK36_CORRECTIONS).
+    CHUNK36_CORRECTIONS: occupant_alt_names=["Pbes"]; Tasentenhor→Tasentenḥor."""
+    r = _row("TT279")
+    assert r["occupant_name"] == "Paba sa"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Pbes"]
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Chief steward of the god's wife" in r["notes_from_pm"]
+    assert "Psammetikhos I" in r["notes_from_pm"]
+    assert "Pedubaste" in r["notes_from_pm"]
+    assert "Tasentenḥor" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 357
+
+
+def test_chunk36_tt280_meketrec_chief_steward_mentuhotp() -> None:
+    """TT280 — Meketrec (formerly read Meḥenkwetreʿ), Chief steward, Chancellor.
+    Temp. Mentuḥotp (Scankhkareʿ). Dra' Abu el-Naga. p.359.
+    Son Antef (adjoining tomb) as co-occupant.
+    Tie-break: Mentuhotp form pinned; (Formerly read...) + ḥ layered post-merge.
+    CHUNK36_CORRECTIONS: page 360→359; location_sub_area set; Mentuḥotp + formerly-read
+    clause restored; co_occupants role null→Official."""
+    r = _row("TT280")
+    assert r["occupant_name"] == "Meketreʿ"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert len(r["co_occupants"]) == 1
+    co = r["co_occupants"][0]
+    assert co["name"] == "Antef"
+    assert co["role"] == "Official"
+    assert co["alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Mentuḥotp" in r["notes_from_pm"]
+    assert "Sʿankhkareʿ" in r["notes_from_pm"]
+    assert "Formerly read Meḥenkwetreʿ" in r["notes_from_pm"]
+    assert "Antef" in r["notes_from_pm"]
+    assert "Hereditary Prince" in r["notes_from_pm"]
+    assert r["location_sub_area"] == "In valley south of Deir el-Bahari Temples"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 359
