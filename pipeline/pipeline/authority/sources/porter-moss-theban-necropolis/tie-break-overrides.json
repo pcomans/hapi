@@ -648,5 +648,21 @@
   "TT320|occupant_name": {
     "rationale": "PM I.1 p.392 / chunk-40-tt311-tt320.txt (TT320 Inhapi). Three-way split: A = `Inhapi` (strip-h applied, no ayin), B = `Inhaapi` (double a — OCR misread), C = `Inhijapi` (spurious ij insertion). Source line 374: `INI;IA<PI` where `I;I` = underdot-H OCR cluster and `<` = ayin glyph -> `INHAʿPI` after strip-h. A's `Inhapi` strips both h and ayin — ayin should be retained per TT293/TT300 ayin-retain precedent, giving `Inhaʿpi`. B has correct structure but wrong doubled-a. C inserts spurious ij. Pin A as base (closest consonant structure); CHUNK40_CORRECTIONS restores ayin to give `Inhaʿpi`. EGYPTOLOGIST REVIEW REQUIRED: confirm exact form from PM I.1 p.392 printed source.",
     "value": "Inhapi"
+  },
+  "TT322|occupant_name": {
+    "rationale": "PM I.1 p.394 / chunk-41-tt321-tt330.txt line 54: `322. PENSHEN<ABU` where `<` is OCR-literal for ayin `ʿ`. Three-way split: A=`Penshenemtabu` (misreads ayin+ABU as `emtabu`), C=`Penshenoabu` (reads ayin as `o`). B=`Penshenʿabu` correctly restores the ayin before `abu` per the PM OCR-literal pattern (cf. TT293/TT300 ayin-restore precedents). Pin B.",
+    "value": "Penshenʿabu"
+  },
+  "TT323|notes_from_pm": {
+    "rationale": "PM I.1 p.395 / chunk-41-tt321-tt330.txt line 94: `Parents, Ameneml_tet, Outline-draughtsman in the Temple of Sokari, and Mutnefert`. Three-way split: A=`Ameneminet` (OCR misread of `l_t` as `in`), B=drops Parents clause entirely, C=`Amenemltet` (raw OCR transcription). The `l_tet` OCR cluster decodes as `ḥtet` → `Amenemḥet` (underdot-Ḥ + et; cf. TT123 Amenemḥet precedent). Neither A nor C reconstructs the correct name. Pin A's form as the structurally-fullest base (retains Parents clause, has occupant title, wife); CHUNK41_CORRECTIONS will fix the parent name. EGYPTOLOGIST REVIEW REQUIRED: confirm `Amenemḥet` vs other reading from PM I.1 p.395 printed source.",
+    "value": "Outline-draughtsman of Amun in the Place of Truth, and in the Temple of Sokari. Temp. Sethos I. Parents, Ameneminet, Outline-draughtsman in the Temple of Sokari, and Mutnefert. Wife, Nefertere."
+  },
+  "TT329|notes_from_pm": {
+    "rationale": "PM I.1 p.397 / chunk-41-tt321-tt330.txt lines 262-268: headword `M 0 s I... and Annexed tomb of M 0 s I... probably his grandson, and I p y... perhaps his son, all Servants in the Place of Truth. Ramesside.` followed by family-relation lines. Three-way split: A=structured family-relations only (drops PM's headword description); B=expands from PM's opening description but has OCR errors (`Icoḥnufer` → `Icoḥnufer`, `Atatef` wrong); C=follows PM's headword opening but has `Icolnufer` (raw OCR), `Aqatet` (wrong). Source line 266: `J>.atet` = `Patet` (J>. = P OCR artifact). Pin C's headword structure as closest to PM's opening description; CHUNK41_CORRECTIONS will fix `Icolnufer` → `Icoḥnufer` and `Aqatet` → `Patet` per source.",
+    "value": "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, all Servants in the Place of Truth. Ramesside. Wife (of Mosi, tomb 329), Henutwact. Father (of Mosi, Annexed tomb), Icolnufer. Wife (of Mosi, Annexed tomb), Aqatet (name on stela, Louvre, C. 280, see infra). Wife (of Ipy), Bakt."
+  },
+  "TT330|notes_from_pm": {
+    "rationale": "PM I.1 p.398 / chunk-41-tt321-tt330.txt line 304-306: `330. KARO... Dyn. XIX. Parents, Simut... and Peshedu... Wife, Takha< i~~` where `<` = OCR-literal ayin. Three-way split: A=`Takha` (drops Parents clause, drops ayin), B=`Takhaʿ` (correctly restores ayin, drops Parents clause), C=`Takhac` (raw OCR ayin `c`). The PM source includes the Parents clause (line 306 is unambiguous). Pin the fullest form with ayin: combine C's Parents clause retention with B's correct ayin restoration. Since no single agent has both, construct: Parents + `Takhaʿ`. CHUNK41_CORRECTIONS will apply the final form.",
+    "value": "Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu. Wife, Takhac."
   }
 }

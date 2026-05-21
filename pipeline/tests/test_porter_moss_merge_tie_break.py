@@ -1037,6 +1037,28 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Perhaps wife of Amosis. (Royal Cache, Dyn. XXI, see DEIR EL-BAHARI, "
             "Bibl. i 2, Pt. 2, in the Press.)",
         ("TT320", "occupant_name"): "Inhaʿpi",
+        # Chunk 41 (TT321–TT330) — 4 tie-break overrides.
+        # TT322 occupant_name: pinned B `Penshenʿabu` (source `PENSHEN<ABU`).
+        # TT323 notes_from_pm: pinned A's form as base; CHUNK41_CORRECTIONS
+        #   restores parent name `Amenemḥet` (OCR `Ameneml_tet`).
+        # TT329 notes_from_pm: pinned C's headword form; CHUNK41_CORRECTIONS
+        #   restores Ḥenutwact, Icoḥnufer, Patet.
+        # TT330 notes_from_pm: pinned C's form; CHUNK41_CORRECTIONS restores
+        #   ayin `Takhac` → `Takhaʿ`.
+        ("TT322", "occupant_name"): "Penshenʿabu",
+        ("TT323", "notes_from_pm"):
+            "Outline-draughtsman of Amun in the Place of Truth, and in the Temple"
+            " of Sokari. Temp. Sethos I. Parents, Amenemḥet, Outline-draughtsman"
+            " in the Temple of Sokari, and Mutnefert. Wife, Nefertere.",
+        ("TT329", "notes_from_pm"):
+            "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, perhaps"
+            " his son, all Servants in the Place of Truth. Ramesside. Wife (of"
+            " Mosi, tomb 329), Ḥenutwact. Father (of Mosi, Annexed tomb),"
+            " Icoḥnufer. Wife (of Mosi, Annexed tomb), Patet (name on stela,"
+            " Louvre, C. 280, see infra). Wife (of Ipy), Bakt.",
+        ("TT330", "notes_from_pm"):
+            "Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu."
+            " Wife, Takhaʿ.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
@@ -1103,8 +1125,8 @@ def test_overrides_json_keys_well_formed(merge_module):
 
 
 def test_chunk40_row_count(reconciled):
-    """Merged total should be 395 after chunk 40 (+10 from chunk-39's 385)."""
-    assert len(reconciled) == 395
+    """Merged total should be 405 after chunk 41 (+10 from chunk-40's 395)."""
+    assert len(reconciled) == 405
 
 
 def test_tt281_unfinished_temple(reconciled):
