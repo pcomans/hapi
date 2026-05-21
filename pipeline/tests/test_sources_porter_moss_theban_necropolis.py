@@ -273,6 +273,25 @@ CHUNK20_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK21_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(121, 131)}
 )
+# Chunk-22: PM I.1 § I Numbered Tombs TT131-TT139 (Sh. ʿAbd el-Qurna)
+# + TT140 (Dra' Abu el-Naga — first Dra' Abu el-Naga tomb in the numbered
+# sequence). 7 tie-break-overrides entries (TT134/TT135/TT137/TT138/TT139/
+# TT140 notes_from_pm; TT140 occupant_alt_names). 2/1-majority resolutions:
+# TT131 notes (A+C drop headword parenthetical), TT132 occupant_name (A+C
+# Raʿmosi), TT133 notes (B+C Amūn + Hunuro), TT137 occupant_name (B+C Mose).
+# 7 CHUNK22_CORRECTIONS: TT131 cross-ref restore, TT133 Ḥunuro underdot,
+# TT135 wʿab-priest ayin, TT136 occupant_role sentinel-null, TT138 Neshaʿ
+# ayin, TT139 wʿab-priest ayin, TT140 Ḥefia underdot.
+# 1 DERIVER_OVERRIDE: TT140 attribution_certainty (`probably called` hedges
+# alt-name only, not primary occupant attribution).
+# TT136 is anonymous (Royal scribe..., name not preserved) — occupant_role
+# restored to "Unknown" from sentinel-null (contrast TT129 Name-lost which
+# stays null). Egyptologist review pending for TT136 role (may warrant
+# role=Official given surviving title) and TT140 alt-name Ḥefia (OCR
+# reconstruction from ambiguous `~EFIA` / `l):.efia` glyphs).
+CHUNK22_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(131, 141)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -294,6 +313,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK19_TOMB_IDS
     | CHUNK20_TOMB_IDS
     | CHUNK21_TOMB_IDS
+    | CHUNK22_TOMB_IDS
 )
 
 
@@ -5569,3 +5589,283 @@ def test_chunk21_tt130_may_harbour_master_wife_tuy() -> None:
     assert "Tuthmosis III (?)" in r["notes_from_pm"]
     assert "Tuy" in r["notes_from_pm"]
     assert r["source_citation"]["page"] == 244
+
+
+# ============================================================================
+# Chunk-22: TT131-TT140 (PM I.1 § I, pp. 245-254)
+# ============================================================================
+
+
+def test_chunk22_all_rows_present() -> None:
+    """All 10 TT131-TT140 tomb IDs are in the expected set and in the data."""
+    for tid in CHUNK22_TOMB_IDS:
+        assert _row(tid)["tomb_id"] == tid
+
+
+def test_chunk22_source_edition() -> None:
+    """All chunk-22 rows cite PM I.1 2nd ed. 1960."""
+    for tid in CHUNK22_TOMB_IDS:
+        assert _row(tid)["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", tid
+
+
+def test_chunk22_attribution_distribution() -> None:
+    """All chunk-22 rows are attested. TT140 `probably called Ḥefia` hedges
+    only the alt-name; DERIVER_OVERRIDE pins attribution_certainty=attested."""
+    for tid in CHUNK22_TOMB_IDS:
+        assert _row(tid)["attribution_certainty"] == "attested", tid
+
+
+def test_chunk22_theban_area_distribution() -> None:
+    """TT131-TT139 are Sh. ʿAbd el-Qurna; TT140 is Dra' Abu el-Naga
+    (first numbered tomb in the Sh. ʿAbd el-Qurna section to break from
+    the sub-site — PM p.254 explicitly assigns it to Dra' Abu el-Naga)."""
+    for tid in {f"TT{n}" for n in range(131, 140)}:
+        assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna", tid
+    assert _row("TT140")["theban_area"] == "Dra' Abu el-Naga"
+
+
+def test_chunk22_role_distribution() -> None:
+    """8 Officials + TT136 Unknown (named title but no personal name) +
+    implicit Official for all others. Note TT136 occupant_role is restored
+    to `Unknown` from sentinel-null by CHUNK22_CORRECTIONS."""
+    expected = {
+        "TT131": "Official", "TT132": "Official", "TT133": "Official",
+        "TT134": "Official", "TT135": "Official", "TT136": "Unknown",
+        "TT137": "Official", "TT138": "Official", "TT139": "Official",
+        "TT140": "Official",
+    }
+    actual = {tid: _row(tid)["occupant_role"] for tid in CHUNK22_TOMB_IDS}
+    assert actual == expected
+
+
+def test_chunk22_tt131_amenuser_see_tomb_61() -> None:
+    """TT131 Amenuser — Official, Temp. Tuthmosis III, p.245.
+    Alt-name User (from headword `AMENUSER or USER`). Shared with TT61
+    (ownership cross-ref from `(See tomb 61.)`). All 3 agents mis-decoded
+    source OCR `6z` as `62` (TT62); CHUNK22_CORRECTIONS fixes to `61` (TT61)
+    — TT61 (Governor and Vizier, Temp. Tuthmosis III) is the companion tomb
+    of the same official; TT62 is a different person. CHUNK22_CORRECTIONS also
+    restores the `(See tomb 61.)` parenthetical that majority A+C dropped
+    (per chunk-9-onward cross-ref convention). (L. D. Text, No. 87.)"""
+    r = _row("TT131")
+    assert r["occupant_name"] == "Amenuser"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["User"]
+    assert r["shared_with_tombs"] == ["TT61"]
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert r["is_uninscribed"] is False
+    assert r["notes_from_pm"] == "(See tomb 61.) Temp. Tuthmosis III. (L. D. Text, No. 87.)"
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 245
+
+
+def test_chunk22_tt132_raomosi_treasuries_taharqa() -> None:
+    """TT132 Raʿmosi — Great scribe of the King, Overseer of the treasuries
+    of Taharqa. Temp. Taharqa, p.247. Mother Thesmeḥitpert (underdot-ḥ).
+    occupant_name `Raʿmosi` (ayin between Ra and mosi — 2/1 majority A+C
+    over agent B's `Rʿmosi` with no `a`). Citation mid-sentence before
+    Mother clause (2/1 majority A+C). (L. D. Text, No. 83.)"""
+    r = _row("TT132")
+    assert r["occupant_name"] == "Raʿmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert "(L. D. Text, No. 83.)" in r["notes_from_pm"]
+    assert "Mother, Thesmeḥitpert" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 247
+
+
+def test_chunk22_tt133_neferronpet_weavers_hunuro() -> None:
+    """TT133 Neferronpet — Chief of the weavers in the Ramesseum in the estate
+    of Amūn. Temp. Ramesses II, p.249. Wife Ḥunuro. Amūn macron from 2/1
+    majority B+C. Ḥunuro underdot-ḥ restored by CHUNK22_CORRECTIONS (source
+    OCR `l:lunuro` = underdot-Ḥ; A emitted correctly, B+C stripped it)."""
+    r = _row("TT133")
+    assert r["occupant_name"] == "Neferronpet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert "Chief of the weavers in the Ramesseum" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Ḥunuro" in r["notes_from_pm"]
+    assert "Ramesses II" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 249
+
+
+def test_chunk22_tt134_thauenany_called_any_amenaphis() -> None:
+    """TT134 Thauenany — Prophet of Amenaphis who navigates on the Sea of Amūn,
+    Dyn. XIX, p.249. Called Any. (1st ed. 135) cross-numbering note.
+    Father Besuemopet (same title). Wife Tabesi. (L. D. Text, No. 79.)
+    Tie-break pins agent C: has `(1st ed. 135)` + `Amenaphis` + Amūn macron
+    + mid-sentence citation. occupant_alt_names=[`Any`]."""
+    r = _row("TT134")
+    assert r["occupant_name"] == "Thauenany"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Any"]
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert "(1st ed. 135)" in r["notes_from_pm"]
+    assert "Amenaphis" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "(L. D. Text, No. 79.)" in r["notes_from_pm"]
+    assert "Besuemopet" in r["notes_from_pm"]
+    assert "Tabesi" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 249
+
+
+def test_chunk22_tt135_bekenamun_waab_priest() -> None:
+    """TT135 Bekenamun — wʿab-priest in front of Amūn, Dyn. XIX, p.250.
+    Tie-break pins agent C (`Wab-priest`, macron-Ū correct). CHUNK22_CORRECTIONS
+    restores `Wab-priest` → `wʿab-priest` (ayin before a, lowercase per PM
+    body-prose convention — same class as TT113/TT114/TT139)."""
+    r = _row("TT135")
+    assert r["occupant_name"] == "Bekenamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"] == "wʿab-priest in front of Amūn. Dyn. XIX."
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 250
+
+
+def test_chunk22_tt136_anonymous_royal_scribe_sentinel_null() -> None:
+    """TT136 — anonymous Royal scribe, Dyn. XIX, p.251. PM headword `136.
+    Royal scribe ... of the Lord of the Two Lands. Dyn. XIX.` — no personal
+    name. All 3 agents emitted occupant_name=null, occupant_role=`Unknown`.
+    merge.py SENTINEL_NULL_STRINGS coerces `Unknown` → null; CHUNK22_CORRECTIONS
+    restores occupant_role=`Unknown` (same as TT58/TT70/TT91 precedent).
+    Note: occupant_name remains null (no name to restore). Egyptologist
+    review pending: PM's headword prints a title (Royal scribe) — may
+    warrant occupant_role=`Official` per TT114 analogy."""
+    r = _row("TT136")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert "Royal scribe" in r["notes_from_pm"]
+    assert "Lord of the Two Lands" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 251
+
+
+def test_chunk22_tt137_mose_head_of_works() -> None:
+    """TT137 Mose — Head of works of the Lord of the Two Lands in every
+    monument of Amūn. Temp. Ramesses II, p.251. Parents: Bak (Head of works
+    in the Place of Eternity) and Tekhu. Wife Taikharu. (L. D. Text, No. 91.)
+    occupant_name `Mose` from 2/1 majority B+C (agent A had `Mosi` from OCR
+    `Mosx` trailing-x noise). Tie-break pins agent C: Amūn macron +
+    mid-sentence citation."""
+    r = _row("TT137")
+    assert r["occupant_name"] == "Mose"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert "Head of works of the Lord of the Two Lands" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Ramesses II" in r["notes_from_pm"]
+    assert "(L. D. Text, No. 91.)" in r["notes_from_pm"]
+    assert "Bak" in r["notes_from_pm"]
+    assert "Tekhu" in r["notes_from_pm"]
+    assert "Taikharu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 251
+
+
+def test_chunk22_tt138_nezemger_garden_neshaoin() -> None:
+    """TT138 Nezemger — Overseer of the garden in the Ramesseum in the estate
+    of Amūn. Temp. Ramesses II, p.251. (CHAMPOLLION, No. 29.) Wife Neshaʿ.
+    Tie-break pins agent C: Amūn macron + CHAMPOLLION uppercase + mid-sentence
+    citation. CHUNK22_CORRECTIONS restores ayin on Wife `Neshaʿ` (source OCR
+    `Nesha(` = `Neshaʿ`; A+B emitted ayin, C dropped it)."""
+    r = _row("TT138")
+    assert r["occupant_name"] == "Nezemger"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of the garden in the Ramesseum" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Ramesses II" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 29.)" in r["notes_from_pm"]
+    assert "Neshaʿ" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 251
+
+
+def test_chunk22_tt139_pairi_waab_priest_sheroy_hathor() -> None:
+    """TT139 Pairi — wʿab-priest in front, First royal son in front of Amūn,
+    Overseer of peasants of Amūn. Temp. Amenophis III, p.252. Father Sheroy,
+    Prophet of Ptaḥ and Ḥatḥor. Wife Ḥenutnefert. Tie-break pins agent C:
+    Amūn macrons (×2) + Ptaḥ + Ḥatḥor + Ḥenutnefert underdots correct.
+    CHUNK22_CORRECTIONS restores `Wab-priest` → `wʿab-priest` (ayin before a,
+    lowercase — same class as TT113/TT114/TT135)."""
+    r = _row("TT139")
+    assert r["occupant_name"] == "Pairi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"].startswith("wʿab-priest in front,")
+    assert "First royal son in front of Amūn" in r["notes_from_pm"]
+    assert "Overseer of peasants of Amūn" in r["notes_from_pm"]
+    assert "Amenophis III" in r["notes_from_pm"]
+    assert "Sheroy" in r["notes_from_pm"]
+    assert "Ptaḥ" in r["notes_from_pm"]
+    assert "Ḥatḥor" in r["notes_from_pm"]
+    assert "Ḥenutnefert" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["source_citation"]["page"] == 252
+
+
+def test_chunk22_tt140_neferronpet_hefia_dra_abu_el_naga() -> None:
+    """TT140 Neferronpet — probably called Ḥefia, Goldworker, Portrait sculptor,
+    Temp. Tuthmosis III to Amenophis II, p.254. Wife Tauy. Dra' Abu el-Naga
+    (first numbered tomb breaking from Sh. ʿAbd el-Qurna in this section).
+    occupant_alt_names=[`Hefia`] (ḥ-stripped per TT57/TT120 matchable-name
+    precedent; tie-break pins agent B). CHUNK22_CORRECTIONS restores `Kefia`
+    → `Ḥefia` in notes_from_pm (source OCR `l):.efia` confirms underdot-Ḥ).
+    DERIVER_OVERRIDE pins attribution_certainty=attested (`probably called`
+    hedges the alt-name only, not the primary occupant attribution)."""
+    r = _row("TT140")
+    assert r["occupant_name"] == "Neferronpet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Hefia"]
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_usurped"] is False
+    assert "probably called Ḥefia" in r["notes_from_pm"]
+    assert "Goldworker" in r["notes_from_pm"]
+    assert "Portrait sculptor" in r["notes_from_pm"]
+    assert "Tuthmosis III to Amenophis II" in r["notes_from_pm"]
+    assert "Tauy" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["source_citation"]["page"] == 254
