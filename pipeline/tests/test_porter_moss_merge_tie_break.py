@@ -773,6 +773,16 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT218", "notes_from_pm"):
             "Servant in the Place of Truth on the west of Thebes. Ramesside. "
             "Parents, Nebenmaʿet, Hr-mnw of Amūn, and Ḥetepti. Wife, Iymway.",
+        # Chunk-31 overrides (TT221/TT222 occupant_name, TT223/TT224 notes_from_pm).
+        ("TT221", "occupant_name"): "Horimin",
+        ("TT222", "occupant_name"): "Hekmaʿetreʿ-Nakht",
+        ("TT223", "notes_from_pm"):
+            "First ḳk-priest. Saite. (CHAMPOLLION, No. 17, L. D. Text, No. 93.)",
+        ("TT224", "notes_from_pm"):
+            "Overseer of the estate of the god's wife, Overseer of the two "
+            "granaries of the god's wife ʿAḥmosi Nefertere. Temp. Tuthmosis "
+            "III or Hatshepsut. Parents, Senusert and Taidy. Wife, Nub, "
+            "Royal concubine (in tombs 29 and 96).",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

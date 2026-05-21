@@ -2814,6 +2814,110 @@ AUDIT_FIX_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+CHUNK31_RENAMES: dict[str, str] = {}
+
+
+# Chunk-31 (TT221–TT230, Qurnet Muraʿi + ʿAsâsîf + Sh. ʿAbd el-Qurna).
+# 5 anonymous rows (TT225/226/227/229/230) — same null-name/null-role
+# pairing invariant issue as chunk-8 KV12/chunk-14 TT58/chunk-15 TT70.
+# TT224 occupant_name: all three agents misread the leading ayin (ʿ) in
+# PM's `ʿAHMOSI` headword as `C` (same OCR class as chunk-11 TT29
+# `[Caḥmosi]`). TT224 notes_from_pm: the god's-wife epithet includes
+# `ʿAḥmosi Nefertere` (PDF-verified ayin+Ḥ; the tie-break value carries
+# `Ahmosi Nefertere` without diacritics — restore post-merge here).
+# ALL_CORRECTIONS aggregation enforced by
+# `test_all_corrections_includes_every_chunk_list`.
+CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT224",
+        "occupant_name",
+        "ʿAhmosi",
+        "PM I.1 p.325 / physical PDF p.343 (TT224). Direct PDF visual check "
+        "confirms headword `224. 'AHMOSI [hieroglyph], called HUMAY` — the "
+        "apostrophe is PM's convention for ayin (ʿ). Titlecase: `ʿAhmosi`. "
+        "All three agents misread the leading ayin as `C` (OCR glyph collision "
+        "where ʿ resembles a capital C in the text-layer), emitting `Cahmosi`. "
+        "Same OCR-ayin-as-C class as chunk-11 TT29 `[Caḥmosi]` → `[ʿAḥmosi]` "
+        "correction (which cross-references this same individual: PM I.1 p.45 "
+        "prints `Parents, [ʿAḥmosi] Ḥumay (tomb 224)`). The strip-Ḥ policy "
+        "applies only to underdot-Ḥ in occupant_name; the ayin is preserved. "
+        "Note: the alt-name `Humay` (= `Ḥumay` with underdot stripped) is "
+        "correctly captured in `occupant_alt_names` by the 2/1 majority.",
+    ),
+    (
+        "TT224",
+        "notes_from_pm",
+        "Overseer of the estate of the god's wife, Overseer of the two granaries "
+        "of the god's wife ʿAḥmosi Nefertere. Temp. Tuthmosis III or Hatshepsut. "
+        "Parents, Senusert and Taidy. Wife, Nub, Royal concubine (in tombs 29 and 96).",
+        "PM I.1 p.325 / physical PDF p.343 (TT224 ʿAhmosi, called Ḥumay). "
+        "Two post-merge restorations: (1) restore ayin+Ḥ on `ʿAḥmosi Nefertere` "
+        "in the god's-wife epithet — PM prints the queen's name `ʿAḥmosi Nefertere` "
+        "with both diacritics in the body of the headword; the tie-break value "
+        "carries plain `Ahmosi Nefertere` (ayin and Ḥ both dropped). "
+        "notes_from_pm is the verbatim-preserve field; both diacritics must be "
+        "restored. (2) the wife's name is `Nub` (bare short form) per direct PDF "
+        "visual check; the tie-break value already pins `Nub` correctly (all three "
+        "agents' forms Nuby/Nubek/Nuba were wrong; the override value used B/C "
+        "structure with Nub restored). This correction entry solely layers the "
+        "diacritic restoration on the god's-wife clause.",
+    ),
+    (
+        "TT225",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.325 / physical PDF p.343 (TT225). Headword `225. A First prophet "
+        "of Ḥathor. Temp. Tuthmosis III (?).` — anonymous occupant (no personal "
+        "name). Per the controlled-vocab pairing invariant established by chunk-8 "
+        "KV12/KV39/KV56/QV36/QV40/QV73/QV75 and chunk-14 TT58 / chunk-15 TT70: "
+        "null `occupant_name` MUST co-occur with `occupant_role=\"Unknown\"`. "
+        "Agents A and C emitted `Unknown` (sentinel→null at merge), B emitted "
+        "`High Priest`; majority chose null. Fix enforces the pairing invariant.",
+    ),
+    (
+        "TT226",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.327 / physical PDF p.345 (TT226). Headword `226. A Royal scribe, "
+        "Overseer of the royal nurses. Temp. Amenophis III.` — anonymous occupant. "
+        "Per the null-name/null-role pairing invariant (chunk-8 KV12 / chunk-14 TT58 "
+        "/ chunk-15 TT70 precedent). Agents A and C emitted `Unknown` "
+        "(sentinel→null at merge), B emitted `Official`; majority chose null. "
+        "Fix enforces the pairing invariant.",
+    ),
+    (
+        "TT227",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.327 / physical PDF p.345 (TT227). Headword `227. Name lost. "
+        "Temp. Tuthmosis III.` — anonymous (name lost). Per the null-name/null-role "
+        "pairing invariant (chunk-8 KV12 / chunk-14 TT58 / chunk-15 TT70 precedent). "
+        "All three agents emitted `Unknown` (sentinel→null at merge); majority chose "
+        "null. Fix enforces the pairing invariant.",
+    ),
+    (
+        "TT229",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.328 / physical PDF p.346 (TT229). Headword `229. Name lost. "
+        "Dyn. XVIII. (Unfinished.)` — anonymous (name lost). Per the "
+        "null-name/null-role pairing invariant. All three agents emitted `Unknown` "
+        "(sentinel→null at merge). Fix enforces the pairing invariant.",
+    ),
+    (
+        "TT230",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.328 / physical PDF p.346 (TT230). Headword `230. Perhaps MEN~, "
+        "Scribe of soldiers of the Lord of the Two Lands (from cones). Dyn. XVIII. "
+        "(Unfinished.)` — anonymous (name lost; `Perhaps` attribution is to an "
+        "identification via cone evidence, not a personal attestation). Per the "
+        "null-name/null-role pairing invariant. All three agents emitted `Unknown` "
+        "(sentinel→null at merge). Fix enforces the pairing invariant.",
+    ),
+]
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -2848,6 +2952,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK28_CORRECTIONS,
     CHUNK29_CORRECTIONS,
     CHUNK30_CORRECTIONS,
+    CHUNK31_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2880,6 +2985,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK28_RENAMES,
     **CHUNK29_RENAMES,
     **CHUNK30_RENAMES,
+    **CHUNK31_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -3752,6 +3858,51 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "as TT2 `(probably) Esi` (wife identification). Per chunk-9 TT2 "
         "precedent that attribution_certainty encodes occupant-identity "
         "certainty, not secondary-clause certainty.",
+    ),
+    # Chunk-31: TT228 Amenmosi, Scribe of the treasury of Amun. The
+    # `(probably)` in notes_from_pm (`Father (probably), Camethu (tomb 83)`)
+    # qualifies the PATERNAL IDENTIFICATION (PM is uncertain whether Camethu
+    # of tomb 83 is Amenmosi's father), NOT the primary occupant attribution.
+    # PM headword `228. AMENMOSI ..., Scribe of the treasury of Amun. Dyn. XVIII.`
+    # names Amenmosi unhedged. Same secondary-clause hedge class as TT2
+    # (chunk-9 DERIVER_OVERRIDE where `(probably) Esi` qualifies the second wife).
+    (
+        "TT228",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.327 / physical PDF p.345 prints `228. AMENMOSI ..., "
+        "Scribe of the treasury of Amun. Dyn. XVIII. Father (probably), "
+        "Camethu (tomb 83).` — the `(probably)` qualifies the PATERNAL "
+        "IDENTIFICATION (PM is uncertain whether Camethu of tomb 83 is "
+        "Amenmosi's father), not Amenmosi's identification as the tomb "
+        "occupant. The headword names Amenmosi and his title unhedged. "
+        "Same secondary-clause hedge class as TT2 `(probably) Esi` "
+        "(chunk-9 DERIVER_OVERRIDE). Per chunk-9 TT2 precedent that "
+        "attribution_certainty encodes occupant-identity certainty, not "
+        "secondary-clause certainty.",
+    ),
+    # Chunk-31: TT225 anonymous First prophet of Ḥathor. The `(?)` in
+    # notes_from_pm qualifies the REGNAL DATE (`Temp. Tuthmosis III (?)`),
+    # not the occupant's role attribution. The role `First prophet of Ḥathor`
+    # is fully attested by PM's headword; only the dating is hedged.
+    # Same regnal-date class as chunk-10 TT12/TT17/TT19/TT20 overrides.
+    # (TT230's `Perhaps Menes` is a PRIMARY attribution hedge — different
+    # structural class — so TT230 gets no override; `uncertain` from the
+    # deriver is correct there.)
+    (
+        "TT225",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.325 / physical PDF p.343 prints `225. A First prophet of "
+        "Ḥathor. Temp. Tuthmosis III (?).` — the `(?)` qualifies the "
+        "regnal-date (`Tuthmosis III`), not the occupant's role-as-attribution. "
+        "The role `First prophet of Ḥathor` is itself unhedged (PM states it "
+        "as a definite known fact, not `probably` or `perhaps`). The occupant "
+        "is anonymous (no personal name), but the tomb's ownership by SOME "
+        "first prophet of Ḥathor is fully attested. Same regnal-date-hedge "
+        "class as chunk-10 TT12/TT17/TT19/TT20 and the chunk-10-to-30 cluster "
+        "(attribution_certainty encodes occupant-identity certainty, not "
+        "regnal-date certainty). Per chunk-9 TT2 precedent.",
     ),
 ]
 
