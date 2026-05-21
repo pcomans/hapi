@@ -832,6 +832,55 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Mayor of the Southern City, called Ragi, Royal scribe. Saite. "
             "Father, a prophet and Izeneku-priest in Southern On.",
         ("TT246", "notes_from_pm"): "Scribe. Dyn. XVIII. Wife, Sitmenḥit.",
+        # Chunk-34 (TT251-TT260) — 10 tie-break overrides (all notes_from_pm):
+        # Agent C systematically truncated notes (dropped parents/wife clauses)
+        # creating 1/1/1 splits. No CHUNK34_CORRECTIONS touch these fields, so
+        # final values equal the tie-break-pinned values verbatim.
+        ("TT251", "notes_from_pm"):
+            "Royal scribe, Overseer of the cattle of Amun, Overseer of the "
+            "magazine of Amun. Temp. early Tuthmosis III. Father, Nesu-t, "
+            "Head of the magazine of Amun.",
+        ("TT252", "notes_from_pm"):
+            "Steward, Nurse of the god's wife. Temp. Hatshepsut. Parents, "
+            "see tomb 71 (brother Senenmut). Wife, Senemiʿoḥ (name in tomb 71).",
+        ("TT253", "notes_from_pm"):
+            "Scribe, Counter of the grain (a) in the granary of Amun, (b) of "
+            "the granary of divine offerings. Temp. Amenophis III (?). "
+            "Wife, Tannfer.",
+        ("TT254", "notes_from_pm"):
+            "Scribe of the treasury, Custodian of the estate of Teye in the "
+            "estate of Amun. Late Dyn. XVIII. Wife, Tamert.",
+        ("TT255", "notes_from_pm"):
+            "Royal scribe, Steward in the estates of Haremhab, and of Amun. "
+            "Temp. Haremhab (?). Wife, Nebttaui, nickname Towey. "
+            "(CHAMPOLLION, No. 52, HAY, No. 2.)",
+        ("TT256", "notes_from_pm"):
+            "Overseer of the cabinet, Fanbearer, Child of the nursery. "
+            "Temp. Amenophis II. Wife, Ryu. (L. D. Text, No. 31.)",
+        # TT257 notes_from_pm: tie-break value unchanged by fix_rows.
+        # TT257 attribution_certainty: DERIVER_OVERRIDE → attested
+        #   (deriver fires on `perhaps Piay` = secondary figure's parentage hedge,
+        #   not occupant-identity hedge; same class as TT253/TT255/TT258/TT260).
+        # NOTE: tie-break-overrides.json only covers notes_from_pm for TT257;
+        # the attribution_certainty DERIVER_OVERRIDE is NOT a tie-break entry,
+        # so no separate pin is needed here beyond the notes_from_pm pin.
+        ("TT257", "notes_from_pm"):
+            "Scribe, Counter of the grain of Amun, temp. Tuthmosis IV to "
+            "Amenophis III. Usurped by Maḥu, Deputy in the mansion of "
+            "Usimare-setepenre (= Ramesseum) in the estate of Amun, temp. "
+            "Ramesses II. Father (of Maḥu), perhaps Piay. Wife (of Maḥu), "
+            "Tawert. (L. D. Text, No. 32.)",
+        ("TT258", "notes_from_pm"):
+            "Child of the nursery, Royal scribe of the house of the royal "
+            "children. Temp. Tuthmosis IV (?). Mother, Nay.",
+        ("TT259", "notes_from_pm"):
+            "Warb-priest, Scribe in all the monuments of the estate of Amun, "
+            "Head of the outline-draughtsmen in the House of Gold of the "
+            "estate of Amun. Ramesside. Parents, Ḥuy, warb-priest of Amun, "
+            "and Beketptaḥ. Wife, Mutemwia.",
+        ("TT260", "notes_from_pm"):
+            "Scribe, Weigher of [Amun], Overseer of the ploughed lands of "
+            "[Amun]. Temp. Tuthmosis III (?). Wife, Nubemweset (name from cone).",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

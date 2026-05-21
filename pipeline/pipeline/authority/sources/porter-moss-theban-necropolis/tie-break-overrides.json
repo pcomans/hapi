@@ -416,5 +416,45 @@
   "TT246|notes_from_pm": {
     "rationale": "PM I.1 p.333 / chunk-33-tt241-tt250.txt (TT246 Senenre). Source OCR reads `Wife, Sitmenl).it` where `l).` is the standard underdot-Ḥ artifact — wife's name is `Sitmenḥit`. Agent A has `Sitmenḥit` (correct — resolved underdot-Ḥ). Agent B has `Sitmenpit` (phantom `p` substitution for the Ḥ cluster). Agent C has `Sitmendit` (misread as `d`). Pin agent A's value as the source-verified form.",
     "value": "Scribe. Dyn. XVIII. Wife, Sitmenḥit."
+  },
+  "TT251|notes_from_pm": {
+    "rationale": "PM I.1 p.336 / chunk-34-tt251-tt260.txt (TT251 Amenmosi). Source shows `Royal scribe, Overseer of the cattle of Amiin, Overseer of the magazine of Amiin. Temp. early Tuthmosis III.` and separately `Father, Nesu ~ t}, Head of the magazine of Amlin.` where `Amiin`/`Amlin` are OCR artifacts for `Amun`. Three-way split: A has complete father clause but uses `Amuin` (OCR contamination from the raw `Amiin`). B has correct `Amun` but truncates father name to `Nesu-...` (OCR ellipsis dropout). C has correct `Amun` but truncates entire father clause. Pin the complete clause with source-verified `Amun` spelling and complete `Nesu-t` father name (A's father-name form is the accurate read of `Nesu ~ t}`, i.e. `Nesu-t` with cartouche-bracket artifact).",
+    "value": "Royal scribe, Overseer of the cattle of Amun, Overseer of the magazine of Amun. Temp. early Tuthmosis III. Father, Nesu-t, Head of the magazine of Amun."
+  },
+  "TT252|notes_from_pm": {
+    "rationale": "PM I.1 p.337 / chunk-34-tt251-tt260.txt (TT252 Senimen). Source shows `Parents, see tomb 71 (brother Senenmut). Wife, Senemi<ol). f~` where `<` = ayin → ʿ and `ol).` = underdot-Ḥ cluster → `oḥ` (same conventions as TT241 `<Alimosi` → `ʿAlimosi`, TT246 `Sitmenl).it` → `Sitmenḥit`, chunk-33; and TT127 wife recorded as `Senemiʿoh`, chunk-21 memory). Restored form: `Senemiʿoḥ`. Three-way split: A has `Senmio` (drops ayin + underdot-Ḥ + second `e`). B has `Senmiot...,` (same dropouts plus editorial ellipsis+comma). C omits parents/wife clause entirely. Pin restored `Senemiʿoḥ` per project OCR-diacritic convention; TT127 cross-reference confirms the same person's name in prior chunk.",
+    "value": "Steward, Nurse of the god's wife. Temp. Hatshepsut. Parents, see tomb 71 (brother Senenmut). Wife, Senemiʿoḥ (name in tomb 71)."
+  },
+  "TT253|notes_from_pm": {
+    "rationale": "PM I.1 p.338 / chunk-34-tt251-tt260.txt (TT253 Khnemmosi). Source shows `Wife, Tannfer` with double-n. Three-way split: A has `Tanfer` (single-n — OCR dropout of second n). B has `Tannfer...` (correct double-n but adds ellipsis not in source). C omits wife clause. Pin B's double-n spelling without the trailing ellipsis, matching source verbatim.",
+    "value": "Scribe, Counter of the grain (a) in the granary of Amun, (b) of the granary of divine offerings. Temp. Amenophis III (?). Wife, Tannfer."
+  },
+  "TT254|notes_from_pm": {
+    "rationale": "PM I.1 p.339 / chunk-34-tt251-tt260.txt (TT254 Mosi). Source shows `Wife, Tamert`. Three-way split: A has `Tamert` (correct, no trailing ellipsis). B has `Tamert...` (adds ellipsis not in source). C omits wife clause. Pin A's value as source-verbatim.",
+    "value": "Scribe of the treasury, Custodian of the estate of Teye in the estate of Amun. Late Dyn. XVIII. Wife, Tamert."
+  },
+  "TT255|notes_from_pm": {
+    "rationale": "PM I.1 p.340 / chunk-34-tt251-tt260.txt (TT255 Roy). Source shows `Wife, Nebttaui` (double-t) and `nickname Towey`. Three-way split: A has `Nebtaui` (single-t — OCR dropout) + no trailing ellipsis on nickname. B has `Nebttaui...` (correct double-t but adds ellipsis) + `nickname Towey....` (adds ellipsis). C omits wife/nickname clause. Pin B's double-t spelling without the trailing ellipses, combining correct `Nebttaui` with clean `Towey`.",
+    "value": "Royal scribe, Steward in the estates of Haremhab, and of Amun. Temp. Haremhab (?). Wife, Nebttaui, nickname Towey. (CHAMPOLLION, No. 52, HAY, No. 2.)"
+  },
+  "TT256|notes_from_pm": {
+    "rationale": "PM I.1 p.341 / chunk-34-tt251-tt260.txt (TT256 Nebenkemet). Source shows `Wife, Ryu`. Three-way split: A has `Wife, Ryu.` (correct, no ellipsis). B has `Wife, Ryu....` (adds ellipsis). C omits wife clause. Pin A's clean value without the trailing ellipsis.",
+    "value": "Overseer of the cabinet, Fanbearer, Child of the nursery. Temp. Amenophis II. Wife, Ryu. (L. D. Text, No. 31.)"
+  },
+  "TT257|notes_from_pm": {
+    "rationale": "PM I.1 p.342 / chunk-34-tt251-tt260.txt (TT257 Neferḥotep). Source shows `NEFERḤOTEP ... Usurped by MAḤU ... Father (of Maḥu), perhaps Piay ... Wife (of Maḥu), Tawert ... (L. D. Text, No. 32.)`. Three-way split: A has `Maḥu` (correct diacritic, has L.D. cite) but uses `Amuin` OCR error and capitalises `Temp.` mid-sentence. B has `Mahu` (no diacritic), has parents+wife, has `(L. D. Text, No. 32.)` ABSENT (B drops the cite), uses `Amun` correctly. C has `Mahu` (no diacritic), omits parents+wife clause, has L.D. cite, uses `Amun` correctly. Pin: `Amun` (B/C correct), `Maḥu` diacritic (A correct from source headword `MAḤU`), include parents+wife (B+A agree), include L.D. cite (A+C agree), lowercase `temp.` (B+C).",
+    "value": "Scribe, Counter of the grain of Amun, temp. Tuthmosis IV to Amenophis III. Usurped by Maḥu, Deputy in the mansion of Usimare-setepenre (= Ramesseum) in the estate of Amun, temp. Ramesses II. Father (of Maḥu), perhaps Piay. Wife (of Maḥu), Tawert. (L. D. Text, No. 32.)"
+  },
+  "TT258|notes_from_pm": {
+    "rationale": "PM I.1 p.342 / chunk-34-tt251-tt260.txt (TT258 Menkheper). Source shows `Mother, Nay`. Three-way split: A has `Mother, Nay.` (correct, terminal period). B has `Mother, Nay...` (adds ellipsis). C omits mother clause. Pin A's clean value with single terminal period.",
+    "value": "Child of the nursery, Royal scribe of the house of the royal children. Temp. Tuthmosis IV (?). Mother, Nay."
+  },
+  "TT259|notes_from_pm": {
+    "rationale": "PM I.1 p.343 / chunk-34-tt251-tt260.txt (TT259 Hori). Source shows `Parents, l:luy, warb-priest of Amnn, and Beketptal},` where `l:l` is underdot-Ḥ artifact giving `Ḥuy`, `Amnn` is `Amun`, `Beketptal},` is `Beketptaḥ`. Three-way split: A has `Beket-ptah` (hyphenated, drops diacritic ḥ) and uses `Amuin` OCR error. B has `Beketptah....` (unhyphenated, drops diacritic ḥ, adds ellipsis), uses `Amun` correctly. C omits parents/wife clause. Pin `Amun` (B correct) + unhyphenated `Beketptah` (B form matches PM unspaced form) without ellipsis (A form for the individual name elements), with `Ḥuy` resolving the `l:luy` OCR (ḥ from underdot).",
+    "value": "Warb-priest, Scribe in all the monuments of the estate of Amun, Head of the outline-draughtsmen in the House of Gold of the estate of Amun. Ramesside. Parents, Ḥuy, warb-priest of Amun, and Beketptaḥ. Wife, Mutemwia."
+  },
+  "TT260|notes_from_pm": {
+    "rationale": "PM I.1 p.344 / chunk-34-tt251-tt260.txt (TT260 User). Source shows `Scribe, Weigher of [Amiin], Overseer of the ploughed lands of [Amiin].` with square brackets — PM's editorial brackets indicating the divine name is inferred/restored. Agent B correctly transcribes `[Amun]` with brackets; A and C drop the brackets. Three-way split: A has no brackets + `Amuin` OCR error. B has brackets + correct `Amun` + `Nubemweset...` trailing ellipsis. C has no brackets + `Amun` + omits wife clause. Pin B's bracket-correct reading without the trailing ellipsis on the wife name.",
+    "value": "Scribe, Weigher of [Amun], Overseer of the ploughed lands of [Amun]. Temp. Tuthmosis III (?). Wife, Nubemweset (name from cone)."
   }
 }
