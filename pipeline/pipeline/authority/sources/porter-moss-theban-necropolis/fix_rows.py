@@ -2153,6 +2153,35 @@ CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK27_RENAMES: dict[str, str] = {}
 
 
+# === Chunk 28 — TT191-TT200 (ʿAsâsîf + Khôkha, LP + XVIII + XIX) ============
+#
+# All 4 substantive divergences (TT192/TT193/TT194/TT196 notes_from_pm) were
+# resolved via tie-break-overrides.json. One additional post-merge correction
+# is applied to TT194 (Amūn macron consistency across all 4 occurrences in
+# notes_from_pm, per Gemini PR #272 round-1 finding 3280621504).
+CHUNK28_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT194",
+        "notes_from_pm",
+        "Overseer of marshland-dwellers of the estate of Amūn, Scribe of "
+        "the temple of Amūn. Dyn. XIX. Father, a wʿab-priest in front of "
+        "Amūn, Scribe of divine offerings of Amūn. Wife, Nezemtmut.",
+        "PR #272 round 1 Gemini finding 3280621504: TT194 notes_from_pm "
+        "had `Amūn` with macron-Ū in the first 2 occurrences (Overseer + "
+        "Scribe of the temple) but `Amun` without macron in the 2 Father-"
+        "clause occurrences (in front of Amun, Scribe of divine offerings "
+        "of Amun). Per Constitutional Rule 6 verbatim-preserve + "
+        "chunk-12-onward macron-retain class (same as TT181/TT187/TT189 "
+        "in chunks 27/28), all 4 occurrences should carry macron-Ū. "
+        "Tie-break-pinned agent merge introduced the inconsistency. "
+        "Restoration applies macron-Ū to all 4 occurrences (no semantic "
+        "change; pure diacritic consistency)."
+    ),
+]
+
+CHUNK28_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -2457,6 +2486,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK25_CORRECTIONS,
     CHUNK26_CORRECTIONS,
     CHUNK27_CORRECTIONS,
+    CHUNK28_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2486,6 +2516,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK25_RENAMES,
     **CHUNK26_RENAMES,
     **CHUNK27_RENAMES,
+    **CHUNK28_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
