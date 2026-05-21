@@ -3724,6 +3724,172 @@ CHUNK38_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK38_RENAMES: dict[str, str] = {}
 
 
+# === Chunk-39 (TT301–TT310, Dra' Abu el-Naga + Deir el-Bahari + Sh. ʿAbd el-Qurna) =====
+# First chunk to introduce `Deir el-Bahari` as a primary `theban_area` value
+# (TT308 Kemsit in the Temple of Mentuḥotp; TT310 anonymous Chancellor).
+# The TT280 precedent used `Deir el-Bahari` only as a `location_sub_area`
+# qualifier because TT280's grid (D-3) pointed to Dra' Abu el-Naga proper.
+# TT308/TT310 are structurally different: PM I.1 p.385-386 lists them under
+# the Deir el-Bahari grid (Map III, C-4) and explicitly names the site in the
+# headword. `Deir el-Bahari` is admitted as a valid `theban_area` value.
+#
+# Corrections in this chunk:
+# 1. TT301 occupant_name: `Khori` → `Hori` (source `I;IORI` where `I;I`=Ḥ;
+#    strip-ḥ rule for matchable `occupant_name` field: Ḥori → `Hori`).
+# 2. TT302 occupant_name: `Paraemhab` → `Paraʿemhab` (source `PARA<EMI;IAB`
+#    where `<`=ayin, `I;I`=Ḥ; strip-ḥ retains ayin: `Paraʿemhab`).
+# 3. TT302 notes_from_pm: `Userhat` → `Userḥat` (underdot-ḥ restore in
+#    verbatim-preserve notes field; `Userl}~t` OCR → `Userḥat`).
+# 4. TT303 occupant_role: `High Priest` → `Official` (Third prophet ≠ First
+#    prophet; see CHUNK39_CORRECTIONS note 4 below; not a DERIVER_OVERRIDE
+#    as the majority vote was factually wrong on the role mapping).
+# 5. TT305 notes_from_pm: restore ayin in `Wab-priest` → `Wʿab-priest`
+#    (source `warb-priest` = OCR for wʿab-priest where `<`=ayin rendered as `r`).
+# 6. TT305 co_occupants: name `Tamelkhit` → `Tamelhit` (strip-ḥ: source
+#    `Tamel;lit` = `Tamelḥit`; strip-ḥ applied → `Tamelhit`).
+# 7. TT307 notes_from_pm: parenthesise `(Unfinished.)` per PM source
+#    (source line 275: `(Unfinished.)` with parentheses).
+# 8. TT308 notes_from_pm: add temple location qualifier and restore diacritics
+#    (source line 289: `Deir el-Bahari, in the Temple of Mentuḥotp.` +
+#    ayin on Nebḥepetreʿ + ḥ-underdot on Mentuḥotp and Ḥatḥor).
+CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT301",
+        "occupant_name",
+        "Hori",
+        "Source line 8 of chunk-39-tt301-tt310.txt: `301. I;IORI` where `I;I` "
+        "= underdot-Ḥ OCR glyph. Full decode: `ḤORI`. Apply strip-ḥ rule for "
+        "matchable `occupant_name` field: Ḥori → `Hori`. Tie-break (majority "
+        "A+B) pinned `Khori` — the `Kh` is an OCR misread of the `I;I` cluster "
+        "rather than the correct strip-ḥ mapping. Correct form is `Hori` (cf. "
+        "TT12 `Hori`, TT51 `Userhēt` — strip-ḥ convention applied throughout). "
+        "EGYPTOLOGIST REVIEW REQUIRED: confirm Hori vs Khori from PM I.1 p.381 "
+        "printed source.",
+    ),
+    (
+        "TT302",
+        "occupant_name",
+        "Paraʿemhab",
+        "Source line 24 of chunk-39-tt301-tt310.txt: `302. PARA<EMI;IAB` where "
+        "`<` = PM ayin glyph (→ ʿ) and `I;I` = underdot-Ḥ OCR glyph. Full "
+        "decode: `PARAʿEMḤAB`. Apply strip-ḥ for matchable `occupant_name` "
+        "field (underdot-Ḥ stripped) but RETAIN ayin ʿ (per TT293 `Raʿmessenakht`, "
+        "TT300 `ʿAnhotp` ayin-retain precedent). Correct form: `Paraʿemhab`. "
+        "Tie-break majority (B+C) pinned plain `Paraemhab` (dropped ayin).",
+    ),
+    (
+        "TT302",
+        "notes_from_pm",
+        "Overseer of the magazine. Ramesside. Father, Userḥat, Head of the "
+        "magazine of Amun. (Description by GREENLEES, in Philadelphia Univ. Mus.)",
+        "Tie-break pinned A's `Userhat` (drops underdot-ḥ). Source line 29 of "
+        "chunk-39-tt301-tt310.txt prints `Userl}~t` where `l}` = OCR cluster "
+        "for underdot-Ḥ → `Userḥat`. `notes_from_pm` is verbatim-preserve — "
+        "restore underdot-ḥ. Cf. TT292 `Ḥenekhu` and TT295 `Senemiʿoḥ` "
+        "precedents for underdot-ḥ restoration in notes_from_pm. "
+        "EGYPTOLOGIST REVIEW REQUIRED: confirm exact father-name form from "
+        "PM I.1 p.381 printed source.",
+    ),
+    (
+        "TT303",
+        "occupant_role",
+        "Official",
+        "PM I.1 p.381 / chunk-39 source. TT303 Paser holds `Third prophet of "
+        "Amun` — NOT `First prophet`. `High Priest` / role=`High Priest` is "
+        "reserved exclusively for First prophet of Amūn entries throughout "
+        "PM I.1 § Numbered Tombs (TT35, TT67, TT72, TT86, TT95, TT97, TT157, "
+        "TT222 in reconciled.jsonl). Second through Fourth prophets (cf. TT34 "
+        "Fourth prophet, TT39 Second prophet — both `Official`) are `Official`. "
+        "Merge majority A+C incorrectly voted `High Priest` on this row. Correct "
+        "to `Official` per project role-mapping convention.",
+    ),
+    (
+        "TT305",
+        "notes_from_pm",
+        "Wʿab-priest in front of Amun, Scribe of the divine offerings of Amun. "
+        "Dyn. XIX-XXI. Wife, Tamelḥit.",
+        "Two restorations from chunk-39-tt301-tt310.txt source line 191-194. "
+        "(1) `Wab-priest` → `Wʿab-priest`: source prints `warb-priest` where "
+        "`r` = OCR artifact for ayin `<` glyph (rendered as `r` before `a`). "
+        "Full decode `w<ab-priest` = `wʿab-priest`. notes_from_pm is verbatim-"
+        "preserve; restore ayin. Cf. TT97 `wʿab-priest` ayin-retain precedent. "
+        "(2) `Tamelkhit` → `Tamelḥit`: source line 194 `Tamel;lit` where `;l` "
+        "= underdot-Ḥ OCR cluster. notes_from_pm retains underdot-ḥ (verbatim-"
+        "preserve). EGYPTOLOGIST REVIEW REQUIRED: confirm wife-name diacritics "
+        "from PM I.1 p.383 printed source.",
+    ),
+    (
+        "TT305",
+        "co_occupants",
+        [{"alt_names": [], "name": "Tamelhit", "role": "Unknown"}],
+        "Strip-ḥ for co_occupants.name (matchable-name field): source "
+        "`Tamel;lit` = `Tamelḥit` → strip-ḥ → `Tamelhit`. Tie-break pinned "
+        "`Tamelkhit` (kh-substitution for ḥ); correct strip-ḥ removes the "
+        "underdot-H entirely → `Tamelhit`. Role set to `Unknown` (sentinel-null "
+        "normalized from `Unknown` by merge.py; explicit schema value restored). "
+        "EGYPTOLOGIST REVIEW REQUIRED: confirm exact wife-name form from PM I.1 "
+        "p.383 printed source.",
+    ),
+    (
+        "TT306",
+        "co_occupants",
+        [{"alt_names": [], "name": "Mutenopet", "role": "Unknown"}],
+        "Majority A+B+C agreed on Mutenopet as wife. Role field was "
+        "sentinel-null normalized from `Unknown` to null by merge.py. Restore "
+        "`Unknown` as explicit role value per schema convention (cf. other "
+        "wife co_occupant entries in TT305, TT307 precedents).",
+    ),
+    (
+        "TT307",
+        "notes_from_pm",
+        "(name from ushabti). Dyn. XX-XXI. (Unfinished.) "
+        "(Description by GREENLEES, in Philadelphia Univ. Mus.)",
+        "Source line 275 of chunk-39-tt301-tt310.txt prints `(Unfinished.)` "
+        "WITH parentheses. Tie-break pinned A's form `Unfinished.` (no parens). "
+        "Per verbatim-preserve policy, restore PM's parentheses: `(Unfinished.)` "
+        "— consistent with how `(Blocked.)` at TT309 is parenthesised in PM.",
+    ),
+    (
+        "TT308",
+        "notes_from_pm",
+        "Unique royal concubine, Prophetess of Ḥatḥor. Temp. Mentuḥotp "
+        "(Nebḥepetreʿ). Deir el-Bahari, in the Temple of Mentuḥotp. "
+        "(NAVILLE, No. 10.)",
+        "Three diacritic restorations + temple location addition from source "
+        "lines 287-289 of chunk-39-tt301-tt310.txt. (1) `Hathor` → `Ḥatḥor`: "
+        "source `l:latl:lor` where `l:l` = underdot-Ḥ OCR glyph × 2. "
+        "notes_from_pm verbatim-preserve retains underdot-ḥ. (2) `Mentuhotep` "
+        "→ `Mentuḥotp`: source `Mentul;10tp` where `l;I` = underdot-Ḥ cluster. "
+        "Cf. TT280 `Mentuḥotp` precedent. (3) `Nebhepetre` → `Nebḥepetreʿ`: "
+        "source `Neb}:lepetre<` where `}:l` = underdot-Ḥ and `<` = ayin glyph. "
+        "notes_from_pm is verbatim-preserve — restore both underdot-ḥ AND ayin. "
+        "Cf. TT280 `Sʿankhkareʿ` dual-ayin precedent. (4) Add temple location "
+        "qualifier: source line 289 `Deir el-Bal).ri, in the Temple of "
+        "Mentul).otp.` is part of the PM headword (site identification clause). "
+        "All three agents omitted this clause; verbatim-preserve policy requires "
+        "inclusion. EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics from "
+        "PM I.1 p.385 printed source.",
+    ),
+    (
+        "TT308",
+        "location_sub_area",
+        "In the Temple of Mentuḥotp",
+        "Source line 289: `Deir el-Bal).ri, in the Temple of Mentul).otp.` — "
+        "PM places the tomb specifically within the Mentuhotep temple complex "
+        "at Deir el-Bahari. The theban_area captures `Deir el-Bahari`; the "
+        "`location_sub_area` encodes the more precise location. Parallel to "
+        "TT280 `In valley south of Deir el-Bahari Temples` pattern (chunk-36 "
+        "CHUNK36_CORRECTIONS). Decode: `Bal).ri` = `Bahari`, `Mentul).otp` = "
+        "`Mentuḥotp` (underdot-ḥ restored per notes_from_pm verbatim-preserve). "
+        "EGYPTOLOGIST REVIEW REQUIRED: confirm location sub-area form from "
+        "PM I.1 p.385 printed source.",
+    ),
+]
+
+
+CHUNK39_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3766,6 +3932,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK36_CORRECTIONS,
     CHUNK37_CORRECTIONS,
     CHUNK38_CORRECTIONS,
+    CHUNK39_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3806,6 +3973,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK36_RENAMES,
     **CHUNK37_RENAMES,
     **CHUNK38_RENAMES,
+    **CHUNK39_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
