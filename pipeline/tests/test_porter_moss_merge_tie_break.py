@@ -614,6 +614,15 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Second prophet of Amūn. Temp. Amenophis III. "
             "Parents, Yuia and Thuiu (tomb 46 in the Valley of the Kings). "
             "Called Maḥu in GARDINER and WEIGALL, Cat.",
+        # Chunk 21 (TT121-TT130) — 1 tie-break override on notes_from_pm.
+        # TT122: agent B's `with Chapels of Amenemḥet, both Overseers...` value
+        #   pinned (includes shared-occupancy descriptor, no occupant_name dup,
+        #   macron-Ū on Amūn). Passes through fix_rows unchanged.
+        ("TT122", "notes_from_pm"):
+            "with Chapels of Amenemḥet, both Overseers of the magazine of Amūn. "
+            "Temp. Tuthmosis III. Parents (of [Amen]ḥotp), ʿAmethu (tomb 83) "
+            "and Taʿamethu. Father (of Amenemḥet), Neferḥotep, Prophet. "
+            "Wife (of Amenemḥet), Esnub.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
