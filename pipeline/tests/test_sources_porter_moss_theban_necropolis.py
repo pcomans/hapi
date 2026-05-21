@@ -316,6 +316,9 @@ CHUNK24_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK25_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(161, 171)}
 )
+CHUNK26_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(171, 181)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -341,6 +344,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK23_TOMB_IDS
     | CHUNK24_TOMB_IDS
     | CHUNK25_TOMB_IDS
+    | CHUNK26_TOMB_IDS
 )
 
 
@@ -6659,3 +6663,276 @@ def test_chunk25_tt170_nebmehyt_scribe_recruits_ramesseum() -> None:
     assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 279
+
+
+# Chunk 26: TT171–TT180. Sh. ʿAbd el-Qurna (TT171) + Khôkha (TT172–TT180).
+# PM I.1 pp.279–286.
+# 0 tie-break-overrides entries (all 2/1 or unanimous).
+# 2/1-majority resolutions:
+#   TT171 notes_from_pm — A+C `"Name lost. Dyn. XVIII. Wife, Esi."` wins 2/1
+#     over B's reordering `"Name lost. Wife, Ḥesi. Dyn. XVIII."` (B has Ḥesi,
+#     A+C have Esi — Esi vs Ḥesi flagged for egyptologist).
+#   TT172 notes_from_pm — A+B `"Mother, Ḥepu."` wins 2/1 over C's
+#     `"Mother, Ḥepu A."` (OCR hieroglyph-fragment `A` stripped by majority).
+#   TT178 notes_from_pm — A+B `"Amen-reʿ"` wins 2/1 over C's `"Amen-Reʿ"`
+#     (capital `R` dropped by majority).
+#   TT179 notes_from_pm — B+C clean `ʿAḥmosi` wins 2/1 over A's form with
+#     spurious space after ayin.
+# 3 CHUNK26_CORRECTIONS: TT171/TT175/TT180 occupant_role sentinel-null restore.
+# 3 DERIVER_OVERRIDES: TT172 regnal-range tail hedge (Amenophis II(?)),
+#   TT175 anonymous regnal-date hedge (Tuthmosis IV(?)),
+#   TT177 regnal-date hedge (Ramesses II(?)) — all attribution_certainty
+#   restored to `attested`.
+# Egyptologist flags (require PDF visual confirmation before applying):
+#   TT171 notes wife-name — majority form `Esi` vs minority B `Ḥesi`; OCR
+#     colon+E rendering may be Ḥ class. Check printed source for underdot-H.
+#   TT176 occupant_name — `[Amen]userhet` may be `[Amen]userhēt` per TT51/
+#     TT56 USERḤĒT→Userhēt precedent. Egyptologist should check vowel macron.
+#   TT177 occupant_name — `Amenemopet` may be `Amenemōpet` per TT29/TT41
+#     precedent. Egyptologist should confirm macron form.
+#   TT179 occupant_name — `Nebamun` may be `Nebamūn` per TT17/TT65/TT90
+#     within-source precedent (three earlier Nebamūn in PM I.1). Egyptologist
+#     should confirm macron form for this fourth instance.
+# ---------------------------------------------------------------------------
+
+
+def test_chunk26_tt171_anonymous_dyn18_sh_abd_el_qurna() -> None:
+    """TT171 — Name lost. Dyn. XVIII. Wife, Esi. Sh. ʿAbd el-Qurna. p.279.
+    occupant_name=None, occupant_role sentinel-null restored via CHUNK26_CORRECTIONS.
+    TT171 is the only chunk-26 tomb outside Khôkha (Sh. ʿAbd el-Qurna).
+    Egyptologist flag: wife name Esi vs Ḥesi — PDF confirmation pending."""
+    r = _row("TT171")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Name lost" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "Esi" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 279
+
+
+def test_chunk26_tt172_mentiywy_royal_butler() -> None:
+    """TT172 Mentiywy — Royal butler, Child of the nursery.
+    Temp. Tuthmosis III to Amenophis II (?). Khôkha. p.279.
+    notes 2/1 majority: A+B `Mother, Ḥepu.` over C's `Mother, Ḥepu A.`.
+    DERIVER_OVERRIDE: (?) qualifies regnal-range tail (Amenophis II)."""
+    r = _row("TT172")
+    assert r["occupant_name"] == "Mentiywy"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal butler" in r["notes_from_pm"]
+    assert "Child of the nursery" in r["notes_from_pm"]
+    assert "Tuthmosis III to Amenophis II (?)" in r["notes_from_pm"]
+    assert "Ḥepu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 279
+
+
+def test_chunk26_tt173_khay_scribe_divine_offerings() -> None:
+    """TT173 Khaʿy — Scribe of the divine offerings of the Gods of Thebes.
+    Dyn. XIX. Khôkha. p.281."""
+    r = _row("TT173")
+    assert r["occupant_name"] == "Khaʿy"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of the divine offerings of the Gods of Thebes" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Biathefu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 281
+
+
+def test_chunk26_tt174_ashakhet_priest_front_mut() -> None:
+    """TT174 ʿAshakhet — Priest in front of Mut. Dyn. XIX. Khôkha. p.281."""
+    r = _row("TT174")
+    assert r["occupant_name"] == "ʿAshakhet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Priest in front of Mut" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Tazabu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 281
+
+
+def test_chunk26_tt175_anonymous_tuthmosis_iv() -> None:
+    """TT175 — No name. Temp. Tuthmosis IV (?). Khôkha. p.281.
+    occupant_name=None, occupant_role sentinel-null restored via CHUNK26_CORRECTIONS.
+    DERIVER_OVERRIDE: (?) qualifies regnal date (Tuthmosis IV), not identity."""
+    r = _row("TT175")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "No name" in r["notes_from_pm"]
+    assert "Tuthmosis IV" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 281
+
+
+def test_chunk26_tt176_amenUserhet_servant_clean_hands() -> None:
+    """TT176 [Amen]userhet — Servant clean of hands.
+    Temp. Amenophis II to Tuthmosis IV. Khôkha. p.281.
+    Bracket-fragment name form preserved from PM headword.
+    Egyptologist flag: macron form [Amen]userhēt not confirmed against PDF."""
+    r = _row("TT176")
+    assert r["occupant_name"] == "[Amen]userhet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant clean of hands" in r["notes_from_pm"]
+    assert "Amenophis II to Tuthmosis IV" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 281
+
+
+def test_chunk26_tt177_amenemopet_scribe_truth_ramesseum() -> None:
+    """TT177 Amenemopet — Scribe of truth in the Ramesseum in the estate of Amūn.
+    Temp. Ramesses II (?). (Unfinished.) Khôkha. p.283.
+    is_unfinished=True. DERIVER_OVERRIDE: (?) qualifies regnal date (Ramesses II).
+    Egyptologist flag: macron form Amenemōpet not confirmed against PDF."""
+    r = _row("TT177")
+    assert r["occupant_name"] == "Amenemopet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert "Scribe of truth in the Ramesseum" in r["notes_from_pm"]
+    assert "estate of Amūn" in r["notes_from_pm"]
+    assert "Ramesses II (?)" in r["notes_from_pm"]
+    assert "(Unfinished.)" in r["notes_from_pm"]
+    assert "Nebḥed" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 283
+
+
+def test_chunk26_tt178_neferronpet_kenro_scribe_treasury() -> None:
+    """TT178 Neferronpet, called Kenro — Scribe of the treasury in the estate
+    of Amen-reʿ. Temp. Ramesses II. Khôkha. p.283.
+    occupant_alt_names=["Kenro"]. notes 2/1 majority: A+B `Amen-reʿ` over
+    C's `Amen-Reʿ` (capital R)."""
+    r = _row("TT178")
+    assert r["occupant_name"] == "Neferronpet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Kenro"]
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of the treasury" in r["notes_from_pm"]
+    assert "Amen-reʿ" in r["notes_from_pm"]
+    assert "Ramesses II" in r["notes_from_pm"]
+    assert "Mutemwia" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 283
+
+
+def test_chunk26_tt179_nebamun_scribe_counter_grain() -> None:
+    """TT179 Nebamun — Scribe, Counter of grain in the granary of divine
+    offerings of Amūn. Temp. Ḥatshepsut. Khôkha. p.285.
+    notes 2/1 majority: B+C clean ʿAḥmosi over A's spurious-space form.
+    Egyptologist flag: macron form Nebamūn not confirmed against PDF (fourth
+    Nebamun in PM I.1; TT17/TT65/TT90 all carry Nebamūn)."""
+    r = _row("TT179")
+    assert r["occupant_name"] == "Nebamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe, Counter of grain" in r["notes_from_pm"]
+    assert "divine offerings of Amūn" in r["notes_from_pm"]
+    assert "Ḥatshepsut" in r["notes_from_pm"]
+    assert "Yotef" in r["notes_from_pm"]
+    assert "ʿAḥmosi" in r["notes_from_pm"]
+    assert "Sentnefert" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 285
+
+
+def test_chunk26_tt180_anonymous_unfinished_dyn19() -> None:
+    """TT180 — No name. Dyn. XIX. (Unfinished.) Accessible from tomb 179.
+    Khôkha. p.286.
+    occupant_name=None, occupant_role sentinel-null restored via CHUNK26_CORRECTIONS.
+    is_unfinished=True. shared_with_tombs=[] (access relation, not ownership
+    cross-ref; `Accessible from tomb 179` is architectural, not `See also`)."""
+    r = _row("TT180")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert "No name" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "(Unfinished.)" in r["notes_from_pm"]
+    assert "Accessible from tomb 179" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 286
