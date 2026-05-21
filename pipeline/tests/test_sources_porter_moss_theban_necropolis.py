@@ -322,6 +322,9 @@ CHUNK26_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK27_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(181, 191)}
 )
+CHUNK28_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(191, 201)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -349,6 +352,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK25_TOMB_IDS
     | CHUNK26_TOMB_IDS
     | CHUNK27_TOMB_IDS
+    | CHUNK28_TOMB_IDS
 )
 
 
@@ -7249,3 +7253,306 @@ def test_chunk27_tt190_esbanebded_saite_usurper() -> None:
     assert r["theban_area"] == "ʿAsâsîf"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 297
+
+
+# === Chunk 28 — TT191-TT200 (ʿAsâsîf + Khôkha) ==============================
+
+
+def test_chunk28_all_rows_present() -> None:
+    """All 10 TT191-TT200 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK28_TOMB_IDS
+    assert actual == CHUNK28_TOMB_IDS, sorted(CHUNK28_TOMB_IDS - actual)
+
+
+def test_chunk28_theban_area() -> None:
+    """TT191-TT197 are ʿAsâsîf; TT198-TT200 are Khôkha (PM I.1 p.297-303)."""
+    for tid in {f"TT{n}" for n in range(191, 198)}:
+        r = _row(tid)
+        assert r["theban_area"] == "ʿAsâsîf", (tid, r["theban_area"])
+    for tid in {"TT198", "TT199", "TT200"}:
+        r = _row(tid)
+        assert r["theban_area"] == "Khokha", (tid, r["theban_area"])
+
+
+def test_chunk28_source_edition() -> None:
+    """All chunk-28 rows cite PM I.1 2nd ed. 1960."""
+    for tid in CHUNK28_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid,
+            r["source_citation"]["edition"],
+        )
+
+
+def test_chunk28_all_official_role() -> None:
+    """All 10 chunk-28 rows have occupant_role=Official."""
+    for tid in CHUNK28_TOMB_IDS:
+        r = _row(tid)
+        assert r["occupant_role"] == "Official", (tid, r["occupant_role"])
+
+
+def test_chunk28_tt191_wehebre_nebpehti_chamberlain() -> None:
+    """TT191 — Wehebreʿ-Nebpehti, Chamberlain of the divine adoratress,
+    Director of the festival. Temp. Psammetikhos I. ʿAsâsîf. p.297.
+    Parents: Pedeḥor (Head of outline-draughtsmen) + Thesmutpert.
+    All 3 agents unanimous on all fields."""
+    r = _row("TT191")
+    assert r["occupant_name"] == "Wehebreʿ-Nebpehti"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Chamberlain of the divine adoratress" in r["notes_from_pm"]
+    assert "Director of the festival" in r["notes_from_pm"]
+    assert "Psammetikhos I" in r["notes_from_pm"]
+    assert "Pedeḥor" in r["notes_from_pm"]
+    assert "Thesmutpert" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 297
+
+
+def test_chunk28_tt192_kharuef_steward_royal_wife_teye() -> None:
+    """TT192 — Kharuef (called Senaʿa), Steward of the Great Royal Wife Teye.
+    Temp. Amenophis III-IV. ʿAsâsîf. p.298.
+    Tie-break (1/1/1): notes_from_pm — pin 'called Senaʿa' inline + Silḥed
+    parent name. A+C omit 'called Senaʿa'; B has the clause but Siḥed
+    (missing 'l'). C had Silʿed (wrong diacritic — ayin not underdot-H).
+    occupant_alt_names=['Senaʿa'] unanimous (all 3 agents agree)."""
+    r = _row("TT192")
+    assert r["occupant_name"] == "Kharuef"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Senaʿa"]
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Steward of the Great Royal Wife Teye" in r["notes_from_pm"]
+    assert "called Senaʿa" in r["notes_from_pm"]
+    assert "Amenophis III to IV" in r["notes_from_pm"]
+    assert "Silḥed" in r["notes_from_pm"]
+    assert "Ruiu" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 298
+
+
+def test_chunk28_tt193_ptahemhab_magnate_seal_treasury() -> None:
+    """TT193 — Ptahemhab, Magnate of the seal in the treasury of the estate
+    of Amūn. Dyn. XIX. ʿAsâsîf. p.300.
+    Tie-break (1/1/1): notes_from_pm — pin C (macron-Amūn + stela clause).
+    A+B omit stela clause; B has circumflex Amûn. Source footnote ¹ on
+    headword '193. ¹ PTAḤEMḤAB' confirms stela-only status.
+    is_uninscribed=False: stela clause does not contain 'uninscribed' token."""
+    r = _row("TT193")
+    assert r["occupant_name"] == "Ptahemhab"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Magnate of the seal" in r["notes_from_pm"]
+    assert "estate of Amūn" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Tadetawert" in r["notes_from_pm"]
+    assert "Stela only, but numbered as a tomb" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 300
+
+
+def test_chunk28_tt194_dhutemhab_overseer_marshland_dwellers() -> None:
+    """TT194 — [Ḏ]hutemhab, Overseer of marshland-dwellers of the estate of
+    Amūn, Scribe of the temple of Amūn. Dyn. XIX. ʿAsâsîf. p.300.
+    Tie-break (1/1/1): notes_from_pm — composite pin (A+C macron-Amūn,
+    B wʿab-priest ayin, no stela clause — footnote ¹ belongs to TT193 not
+    TT194; agents A+B misattributed it).
+    occupant_name: [Ḏ]hutemhab (A+C 2/1 majority, B had [Ḏḥ]utemhab).
+    Egyptologist flag: bracket scope — source OCR headword '[>I;IUTEMI;IAB'
+    could be [Ḏ] (A+C) or [Ḏḥ] (B). Reviewer should confirm from PDF."""
+    r = _row("TT194")
+    assert r["occupant_name"] == "[Ḏ]hutemhab"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of marshland-dwellers" in r["notes_from_pm"]
+    assert "estate of Amūn" in r["notes_from_pm"]
+    assert "temple of Amūn" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "wʿab-priest" in r["notes_from_pm"]
+    assert "Scribe of divine offerings of Amun" in r["notes_from_pm"]
+    assert "Nezemtmut" in r["notes_from_pm"]
+    assert "Stela only" not in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 300
+
+
+def test_chunk28_tt195_bekenamun_scribe_treasury() -> None:
+    """TT195 — Bekenamun, Scribe of the treasury of the estate of Amūn.
+    Dyn. XIX. ʿAsâsîf. p.301.
+    notes_from_pm: A+C=Amūn (macron), B=Amûn (circumflex) — 2/1 majority."""
+    r = _row("TT195")
+    assert r["occupant_name"] == "Bekenamun"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of the treasury" in r["notes_from_pm"]
+    assert "estate of Amūn" in r["notes_from_pm"]
+    assert "Dyn. XIX" in r["notes_from_pm"]
+    assert "Wertnefert" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 301
+
+
+def test_chunk28_tt196_pedehorresnet_chief_steward_amun_saite() -> None:
+    """TT196 — Pedehorresnet, Chief steward of Amūn. Saite. ʿAsâsîf. p.302.
+    Tie-break (1/1/1): notes_from_pm — pin C (Amūn macron + Shepenernōte).
+    A=Shepenamūte (wrong name — OCR confusion). B=Shepenernûte (circumflex).
+    OCR source 'ShepenernOte' — capital O = macron-ō → Shepenernōte.
+    shared_with_tombs: A=['TT36'] vs B+C=[] — 2/1 majority chose []
+    (PM p.302 mentions Ibi's tomb 36 as parentage cross-ref, not shared
+    burial; agent A incorrectly encoded the text reference as shared_with_tombs)."""
+    r = _row("TT196")
+    assert r["occupant_name"] == "Pedehorresnet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Chief steward of Amūn" in r["notes_from_pm"]
+    assert "Saite" in r["notes_from_pm"]
+    assert "Ibi (tomb 36)" in r["notes_from_pm"]
+    assert "Shepenernōte" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 302
+
+
+def test_chunk28_tt197_pedeneith_chief_steward_gods_wife() -> None:
+    """TT197 — Pedeneith, Chief steward of the god's wife, the divine adoratress
+    ʿAnkhnesneferebreʿ. Temp. Psammetikhos II. ʿAsâsîf. p.302.
+    All 3 agents unanimous on all fields."""
+    r = _row("TT197")
+    assert r["occupant_name"] == "Pedeneith"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Chief steward of the god's wife" in r["notes_from_pm"]
+    assert "ʿAnkhnesneferebreʿ" in r["notes_from_pm"]
+    assert "Psammetikhos II" in r["notes_from_pm"]
+    assert "CHAMPOLLION, No. 55" in r["notes_from_pm"]
+    assert "Psammethek" in r["notes_from_pm"]
+    assert "Tadedubaste" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 302
+
+
+def test_chunk28_tt198_riya_head_magazine_amun_karnak() -> None:
+    """TT198 — Riya, Head of the magazine of Amūn in Karnak. Ramesside.
+    Khôkha. p.303.
+    notes_from_pm: A+C=Amūn (macron), B=Amûn (circumflex) — 2/1 majority."""
+    r = _row("TT198")
+    assert r["occupant_name"] == "Riya"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Head of the magazine of Amūn in Karnak" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 303
+
+
+def test_chunk28_tt199_amenarnofru_overseer_magazine_dyn18() -> None:
+    """TT199 — [Amen]arnofru, Overseer of the magazine. Dyn. XVIII.
+    Khôkha. (Inaccessible.) p.303.
+    All 3 agents unanimous on all fields."""
+    r = _row("TT199")
+    assert r["occupant_name"] == "[Amen]arnofru"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Overseer of the magazine" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "Inaccessible" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 303
+
+
+def test_chunk28_tt200_ded_governor_deserts_west_thebes() -> None:
+    """TT200 — Ded, Governor of the deserts on the west of Thebes, Head of
+    the regiment of Pharaoh. Temp. Tuthmosis III to Amenophis II. Khôkha. p.303.
+    occupant_name: A+B='Ded' (2/1 majority), C='Dedi'. Source OCR headword
+    'D ED 1' — superscript ¹ is a footnote marker, not a second letter 'i'.
+    PDF p.303 headword is 'DED' confirming the 2/1 majority.
+    Egyptologist flag: verify 'Ded' vs 'Dedi' against PDF p.321 headword."""
+    r = _row("TT200")
+    assert r["occupant_name"] == "Ded"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Governor of the deserts on the west of Thebes" in r["notes_from_pm"]
+    assert "Head of the regiment of Pharaoh" in r["notes_from_pm"]
+    assert "Tuthmosis III to Amenophis II" in r["notes_from_pm"]
+    assert "CHAMPOLLION, No. 36" in r["notes_from_pm"]
+    assert "HAY, No. 5" in r["notes_from_pm"]
+    assert "Tuy" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 303

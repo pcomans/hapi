@@ -2153,6 +2153,17 @@ CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK27_RENAMES: dict[str, str] = {}
 
 
+# === Chunk 28 — TT191-TT200 (ʿAsâsîf + Khôkha, LP + XVIII + XIX) ============
+#
+# All 4 substantive divergences (TT192/TT193/TT194/TT196 notes_from_pm) were
+# resolved via tie-break-overrides.json; no post-merge corrections are needed
+# for this chunk. The empty list is required so that
+# `test_all_corrections_includes_every_chunk_list` continues to pass.
+CHUNK28_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+CHUNK28_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -2457,6 +2468,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK25_CORRECTIONS,
     CHUNK26_CORRECTIONS,
     CHUNK27_CORRECTIONS,
+    CHUNK28_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2486,6 +2498,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK25_RENAMES,
     **CHUNK26_RENAMES,
     **CHUNK27_RENAMES,
+    **CHUNK28_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [

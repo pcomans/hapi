@@ -718,6 +718,22 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Divine father, Prophet of the head of the King. Saite (usurped "
             "from a Ramesside tomb). Parents, Pakharkhons, Divine father, and "
             "Meramūniotes, Sistrum-player of Amen-rēʿ. Wife, Tanub.",
+        # Chunk-28 overrides (TT192/TT193/TT194/TT196 — all notes_from_pm).
+        # No CHUNK28_CORRECTIONS touch these fields; post-fix-rows values
+        # match the pinned tie-break values verbatim.
+        ("TT192", "notes_from_pm"):
+            "Steward of the Great Royal Wife Teye, called Senaʿa. Temp. "
+            "Amenophis III to IV. Parents, Silḥed and Ruiu.",
+        ("TT193", "notes_from_pm"):
+            "Magnate of the seal in the treasury of the estate of Amūn. "
+            "Dyn. XIX. Wife, Tadetawert. Stela only, but numbered as a tomb.",
+        ("TT194", "notes_from_pm"):
+            "Overseer of marshland-dwellers of the estate of Amūn, Scribe of "
+            "the temple of Amūn. Dyn. XIX. Father, a wʿab-priest in front of "
+            "Amun, Scribe of divine offerings of Amun. Wife, Nezemtmut.",
+        ("TT196", "notes_from_pm"):
+            "Chief steward of Amūn. Saite. Parents, Ibi (tomb 36) and "
+            "Shepenernōte.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
