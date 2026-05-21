@@ -2034,6 +2034,94 @@ CHUNK26_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK26_RENAMES: dict[str, str] = {}
 
 
+# Chunk-27 (TT181–TT190, Khôkha + ʿAsâsîf). Four PDF-verified corrections
+# applied post-merge, all verbatim-preserve restorations against PM I.1:
+#
+# 1. TT181 — `occupant_name`: PM p.286 headword prints `NEBAMŪN` with
+#    capital macron-Ū. Same pypdf capital-macron-drop OCR class as TT65
+#    `NEBAMŪN` (chunk-15) and TT17 `NEBAMŪN` (chunk-10). All 3 agents
+#    emitted `Nebamun`; restore macron-Ū.
+# 2. TT181 — `notes_from_pm`: tie-break pinned agent A's form which carries
+#    two errors the PDF resolves: (a) `Nebamon` → `Nebamūn` (macron +
+#    correct `un` ending — PM p.286 prints `NEBAMŪN` headword); (b)
+#    `Senennoter` → `Senennūter` (macron-Ū — PM p.286 prints `Senennūter`
+#    with macron-Ū; the `no`→`ū` is a clear OCR misread of the macron
+#    over the `ū`).
+# 3. TT189 — `notes_from_pm`: tie-break pinned agent A's `Neteḥab` (closest
+#    to PM-faithful). PM p.295 prints `Netemḥab` (underdot-H, with `m`).
+#    Restore the missing `m` + add macron-Ū to `Amūn` ×2 per the
+#    verbatim-preserve policy (same chunk-12-onward macron-retain class).
+# 4. TT190 — `notes_from_pm`: tie-break pinned agent C's `Meramuniotes` and
+#    `Amen-Re`. PM p.297 prints `Meramūniotes` (macron-Ū) and `Amen-rēʿ`
+#    (macron-ē + ayin). Restore both diacritics.
+CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT181",
+        "occupant_name",
+        "Nebamūn",
+        "PM I.1 p.286 / physical PDF p.304 headword prints `NEBAMŪN` with "
+        "capital macron-Ū. Same pypdf capital-macron-drop OCR class as "
+        "chunk-10 TT17 `NEBAMŪN`, chunk-15 TT65 `NEBAMŪN` — all 3 agents "
+        "emitted `Nebamun` (macron stripped). Restore macron-Ū per "
+        "PM-faithful diacritic policy (preserve vowel macrons in "
+        "occupant_name; only underdot-Ḥ is stripped).",
+    ),
+    (
+        "TT181",
+        "notes_from_pm",
+        "Head sculptor of the Lord of the Two Lands, and Ipuky, Sculptor "
+        "of the Lord of the Two Lands. Temp. Amenophis III to IV. Parents "
+        "(of Nebamūn), Neferḥet and Thepu; (of Ipuky), Senennūter and "
+        "Netermosi. Wife of Ipuky (and probably of Nebamūn), Ḥenutnefert.",
+        "PM I.1 p.286 / physical PDF p.304. Two diacritic restorations on "
+        "the tie-break-pinned agent-A form: (a) `Nebamon` → `Nebamūn` "
+        "×2 — PM headword prints `NEBAMŪN` with macron-Ū (same OCR-drop "
+        "class as occupant_name fix above); PM's parenthetical form of "
+        "the name also carries the macron. (b) `Senennoter` → `Senennūter` "
+        "— PM p.286 prints `Senennūter` with macron-Ū on the ū; the OCR "
+        "text-layer rendered the macron-ū cluster as `no` (standard "
+        "macron-drop within a consonant cluster). Verbatim-preserve "
+        "policy on notes_from_pm per the chunk-9 KV55 / chunk-10 TT16 "
+        "macron-preserve precedent.",
+    ),
+    (
+        "TT189",
+        "notes_from_pm",
+        "Overseer of carpenters of the northern lake of Amūn, Head of "
+        "goldworkers in the estate of Amūn. Temp. Ramesses II. Wives, "
+        "Netemḥab and Tentpa...",
+        "PM I.1 p.295 / physical PDF p.313 (TT189 Nekht-Ḏhout). Two "
+        "restorations on the tie-break-pinned agent-A form: (a) `Neteḥab` "
+        "→ `Netemḥab` — PM p.295 prints `Netemḥab` (underdot-H with "
+        "`m`); agent A's OCR shortening dropped the `m`. (b) `Amun` × 2 "
+        "→ `Amūn` × 2 — PM prints `Amūn` with macron-Ū in body prose "
+        "(same chunk-12-onward macron-retain class as TT184, TT187 etc.). "
+        "Verbatim-preserve policy on notes_from_pm.",
+    ),
+    (
+        "TT190",
+        "notes_from_pm",
+        "Divine father, Prophet of the head of the King. Saite (usurped "
+        "from a Ramesside tomb). Parents, Pakharkhons, Divine father, and "
+        "Meramūniotes, Sistrum-player of Amen-rēʿ. Wife, Tanub.",
+        "PM I.1 p.297 / physical PDF p.315 (TT190 Esbanebded). Two "
+        "diacritic restorations on the tie-break-pinned agent-C form: "
+        "(a) `Meramuniotes` → `Meramūniotes` — PM p.297 prints "
+        "`Meramūniotes` with macron-Ū; agent C stripped the macron. "
+        "(b) `Amen-Re` → `Amen-rēʿ` — PM p.297 prints `Amen-rēʿ` with "
+        "macron-ē + ayin (standard PM rendering of the Amen-Re solar form "
+        "in body prose); agents A+B have lowercase `Amen-re`, agent C "
+        "has `Amen-Re` (capital R — heading artefact). Verbatim-preserve "
+        "policy on notes_from_pm per the chunk-3/7 macron-preserve "
+        "precedent (KV45/KV46/DAN-Neferhotep all preserve macrons in "
+        "notes fields).",
+    ),
+]
+
+
+CHUNK27_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -2337,6 +2425,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK24_CORRECTIONS,
     CHUNK25_CORRECTIONS,
     CHUNK26_CORRECTIONS,
+    CHUNK27_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2365,6 +2454,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK24_RENAMES,
     **CHUNK25_RENAMES,
     **CHUNK26_RENAMES,
+    **CHUNK27_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -3131,6 +3221,55 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT41/TT43, chunk-14 TT52, chunk-25 TT165. Per chunk-9 TT2 "
         "precedent that attribution_certainty encodes occupant-identity "
         "certainty, not regnal-date certainty.",
+    ),
+    # Chunk-27 deriver overrides.
+    # TT181 Nebamūn: notes_from_pm contains `(and probably of Nebamūn)` —
+    # this `probably` qualifies the identification of Ḥenutnefert as a
+    # PROBABLE WIFE OF NEBAMŪN (a secondary-clause parenthetical hedging
+    # the wife's association, not the headword occupant's identity).
+    # PM headword `181. NEBAMŪN ..., Head sculptor ... and IPUKY ...,
+    # Sculptor` attributes both men to the tomb without qualification.
+    # The `_detect_attribution_certainty` regex fires context-free on
+    # `\bprobably\b` and returns `probable` — incorrect for this row.
+    # Same structural class as TT2 (chunk-9 DERIVER_OVERRIDE: `(probably)
+    # Esi` qualifies the second wife, not the headword occupant). Per
+    # chunk-9 TT2 precedent that attribution_certainty encodes occupant-
+    # identity certainty, not secondary-association certainty.
+    (
+        "TT181",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.286 prints `181. NEBAMŪN ..., Head sculptor of the Lord "
+        "of the Two Lands, and IPUKY ..., Sculptor ...` — both occupants "
+        "attributed to the joint tomb without qualification. The `probably` "
+        "in notes_from_pm (`Wife of Ipuky (and probably of Nebamūn)`) "
+        "qualifies Ḥenutnefert's identification as Nebamūn's wife, not "
+        "the identity of either headword occupant. Same secondary-clause "
+        "hedge class as TT2 (`(probably) Esi` — second wife). Per "
+        "chunk-9 TT2 precedent that attribution_certainty encodes "
+        "occupant-identity certainty, not secondary-association certainty.",
+    ),
+    # TT190 Esbanebded: notes_from_pm reads
+    # `Saite (usurped from a Ramesside tomb)` — the `usurped` token means
+    # Esbanebded IS THE USURPER of an earlier Ramesside tomb, not the
+    # usurped party. The `_USURPED_RE` regex fires context-free on any
+    # `usurp` token and would set `is_usurped=True`, which is wrong for
+    # the headword occupant (PM's `is_usurped` flag is intended to mark
+    # the primary occupant as a VICTIM of usurpation, not as the agent).
+    # Exact structural parallel to TT95 Mery (chunk-18 DERIVER_OVERRIDE):
+    # Mery usurped TT84 but is the headword occupant of TT95 — is_usurped
+    # correctly False for TT95. Same logic applies here.
+    (
+        "TT190",
+        "is_usurped",
+        False,
+        "PM I.1 p.297 prints `190. ESBANEBDED ..., Divine father, Prophet "
+        "of the head of the King. Saite (usurped from a Ramesside tomb).` "
+        "Esbanebded IS THE USURPER (Saite-period occupant who took over a "
+        "Ramesside tomb); the `is_usurped` flag marks the PRIMARY OCCUPANT "
+        "as a victim of usurpation, not as the agent. Same structural "
+        "parallel as TT95 Mery (chunk-18 DERIVER_OVERRIDE). The deriver "
+        "regex fires on `usurped` context-free; override to False.",
     ),
 ]
 
