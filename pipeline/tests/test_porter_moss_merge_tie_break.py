@@ -660,6 +660,33 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "probably called Ḥefia, Goldworker, Portrait sculptor. "
             "Temp. Tuthmosis III to Amenophis II. Wife, Tauy.",
         ("TT140", "occupant_alt_names"): ["Hefia"],
+        # Chunk 23 (TT141-TT150) — 7 tie-break overrides (all notes_from_pm,
+        # all 1/1/1 Amün/Amūn/Amun macron split; TT144 also has (?) spacing +
+        # wife-name Ḥ; TT147 also has (?) spacing).
+        # TT141: agent B pinned (Amūn macron + wife-name ayin). CHUNK23_CORRECTIONS
+        #   restores `Wab-priest` → `wʿab-priest` — post-fix-rows value differs.
+        # TT144/TT146/TT147/TT148/TT149/TT150: agent B pinned (Amūn macron).
+        #   Pass through fix_rows unchanged on the notes field.
+        ("TT141", "notes_from_pm"):
+            "wʿab-priest of Amūn. Ramesside. Wife, Takhaʿ(t).",
+        ("TT144", "notes_from_pm"):
+            "Head of the field-labourers. Temp. Tuthmosis III (?). Wife, Henuttaui.",
+        ("TT146", "notes_from_pm"):
+            "Overseer of the granary of Amūn, Scribe, Counter of grain, tny of the "
+            "god's wife (titles from cones). Temp. Tuthmosis III (?). (Inaccessible.) "
+            "Wife, Suitnub (from cone).",
+        ("TT147", "notes_from_pm"):
+            "Head of the masters of ceremonies(?) of Amūn, &c. Temp. Tuthmosis IV(?). "
+            "Wife, Nefert.",
+        ("TT148", "notes_from_pm"):
+            "Prophet of Amūn. Temp. Ramesses III to V. Parents, Thonnfer (tomb 158) "
+            "and Nefertere. Wife, Tamert, Chief of the harim [of Amūn].",
+        ("TT149", "notes_from_pm"):
+            "Royal scribe of the table of the Lord of the Two Lands, Overseer of the "
+            "huntsmen of Amūn. Ramesside. Wife, Sitmut.",
+        ("TT150", "notes_from_pm"):
+            "Overseer of cattle of Amūn. Late Dyn. XVIII. (Unfinished.) Wife, "
+            "Iaet-ib, Royal concubine.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
