@@ -3019,6 +3019,133 @@ CHUNK32_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK32_RENAMES: dict[str, str] = {}
 
 
+# Chunk-33 (TT241–TT250, Khôkha + ʿAsâsîf + Sh. ʿAbd el-Qurna + Deir el-Medina).
+# 6 tie-break overrides: TT241|notes_from_pm, TT241|occupant_name,
+# TT242|notes_from_pm, TT242|occupant_name, TT243|notes_from_pm,
+# TT246|notes_from_pm.
+# Post-merge corrections:
+# 1. TT241 occupant_name: `Kahmosi` → `ʿAhmosi` (PM headword `<AI;IMOSI` =
+#    `ʿAḥmosi`; `<` = ayin, `I;I` = underdot-Ḥ artifact; strip-Ḥ rule → `ʿAhmosi`).
+# 2. TT242 occupant_name: `Wehebreconi` → `Wehebrecon` (PM headword
+#    `WEI;IEBREC 0!\'` = `Weḥebrecon`; strip-Ḥ, drop phantom terminal `i`).
+# 3. TT242 notes_from_pm: add `(L. D. Text, No. 22.)` — tie-break pinned agent C's
+#    value which lacked the bibliographic reference present in source and agent B.
+# 4. TT248 occupant_name: `Djeḥutmosi` → `Ḏjehutmosi` (PM headword `I>~;~uTMOSI`
+#    — `I>~` is OCR for d-bar `Ḏ`; `~;~` is OCR for underdot-Ḥ; 2/1 majority
+#    A+C merged to `Djeḥutmosi`, dropping the d-bar; restore d-bar and strip
+#    underdot-ḥ per matchable-name-field convention: `Ḏjehutmosi`).
+# 5. TT250 occupant_name: `Amenemosi` → `Raʿmosi` (catastrophic misextraction —
+#    all 3 agents extracted TT251 content; PM p.336 headword is `RA<MOSI` = `Raʿmosi`).
+# 6. TT250 notes_from_pm: full rewrite to `(See tomb 7.) Temp. Ramesses II.`
+#    (source text; agents extracted TT251's `Royal scribe, Overseer of the cattle...`).
+# 7. TT250 theban_area: `Sh. ʿAbd el-Qurna` → `Deir el-Medina` (source text).
+# 8. TT250 shared_with_tombs: `[]` → `["TT7"]` (PM `(See tomb 7.)` cross-ref;
+#    parallel to chunk-30 TT212 shared_with_tombs=[\"TT7\"] precedent — same Raʿmosi).
+# ALL_CORRECTIONS aggregation enforced by
+# `test_all_corrections_includes_every_chunk_list`.
+CHUNK33_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT241",
+        "occupant_name",
+        "ʿAhmosi",
+        "PM I.1 p.331 / chunk-33 source text (TT241). Source headword OCR "
+        "reads `<AI;IMOSI` where `<` is the standard ayin marker and `I;I` "
+        "is the standard underdot-Ḥ artifact in this text layer. PM headword "
+        "is `ʿAḥmosi`. The tie-break pinned agent A's `Kahmosi` (closest "
+        "phonetically of three wrong reads). Apply strip-Ḥ rule to the "
+        "matchable occupant_name field: `ʿAḥmosi` → `ʿAhmosi`. Parallel "
+        "to chunk-31 TT224 `ʿAḥmosi-called-Ḥumay` and many prior chunks.",
+    ),
+    (
+        "TT242",
+        "occupant_name",
+        "Wehebrecon",
+        "PM I.1 p.332 / chunk-33 source text (TT242). Source headword OCR "
+        "reads `WEI;IEBREC 0!\\'` where `I;I` is underdot-Ḥ and `0!\\'` "
+        "decodes to terminal `ON`. PM headword is `WEḤEBRECON`. Strip-Ḥ "
+        "rule on the matchable occupant_name field gives `Wehebrecon`. "
+        "The tie-break pinned agent B's `Wehebreconi` (best candidate — "
+        "correct Ḥ stripping + `on`, but added phantom terminal `i`). "
+        "Remove phantom `i`: `Wehebreconi` → `Wehebrecon`.",
+    ),
+    (
+        "TT242",
+        "notes_from_pm",
+        "Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. "
+        "Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais. "
+        "(L. D. Text, No. 22.)",
+        "PM I.1 p.332 / chunk-33 source text (TT242 Wehebrecon). Source "
+        "confirms: (1) parents `PedeamQnnai` + `Mutardais` (where `Q` = "
+        "hieroglyphic `on` → `Pedeamonnai`); (2) wife `Tadepanehep`; "
+        "(3) bibliographic ref `(L. D. Text, No. 22.)`. The tie-break "
+        "pinned agent C's value which had the best adoratress name spelling "
+        "(`<Ankhnesneferebrec` with ayin) and `Pedeamonnai`, but omitted "
+        "the L.D. cite. Agent B had the L.D. cite but wrong adoratress name. "
+        "Append the missing bibliographic reference.",
+    ),
+    (
+        "TT248",
+        "occupant_name",
+        "Ḏjehutmosi",
+        "PM I.1 p.335 / chunk-33 source text (TT248). Source headword OCR "
+        "reads `I>~;~uTMOSI` where `I>~` is the OCR rendering of d-bar `Ḏ` "
+        "and `~;~` / `;~` encodes the underdot-Ḥ cluster. PM headword is "
+        "`Ḏjeḥutmosi` (d-bar + underdot-Ḥ). The 2/1 majority (agents A+C) "
+        "merged to `Djeḥutmosi`, dropping the d-bar. Restore the d-bar per "
+        "the PM headword AND apply the strip-Ḥ rule for the matchable "
+        "occupant_name field: `Djeḥutmosi` → `Ḏjehutmosi` (d-bar preserved "
+        "as a distinguishing radical; underdot-ḥ stripped per README convention).",
+    ),
+    (
+        "TT250",
+        "occupant_name",
+        "Raʿmosi",
+        "PM I.1 p.336 / chunk-33 source text (TT250). Source headword "
+        "clearly reads `250. RA<MOSI.` where `<` is the standard ayin "
+        "marker → `Raʿmosi`. All three agents extracted TT251's content "
+        "(`AMENMOSI / Amenemosi — Royal scribe, Overseer of the cattle of "
+        "Amun, Sh. ʿAbd el-Qurna`) instead. TT250 is the same Raʿmosi as "
+        "TT7 (PM `See tomb 7.`); the cross-ref aligns with chunk-30 TT212 "
+        "which also references TT7. Catastrophic misextraction corrected "
+        "from source text.",
+    ),
+    (
+        "TT250",
+        "notes_from_pm",
+        "(See tomb 7.) Temp. Ramesses II.",
+        "PM I.1 p.336 / chunk-33 source text (TT250 Raʿmosi). Source text "
+        "for TT250 reads: `250. RA<MOSI. (See tomb 7.) Temp. Ramesses II. "
+        "Deir el-Medina.` — this is the complete PM entry body. All three "
+        "agents instead extracted TT251's note text (`Royal scribe, "
+        "Overseer of the cattle of Amun, Overseer of the magazine of Amun. "
+        "Temp. early Tuthmosis III. Father, Nesu, Head of the magazine of "
+        "Amun.`). Full rewrite to PM source text.",
+    ),
+    (
+        "TT250",
+        "theban_area",
+        "Deir el-Medina",
+        "PM I.1 p.336 / chunk-33 source text (TT250 Raʿmosi). Source "
+        "explicitly states `Deir el-Medina.` as the location. All three "
+        "agents extracted `Sh. ʿAbd el-Qurna` from TT251's content. "
+        "Corrected from source text.",
+    ),
+    (
+        "TT250",
+        "shared_with_tombs",
+        ["TT7"],
+        "PM I.1 p.336 / chunk-33 source text (TT250 Raʿmosi). Source "
+        "reads `(See tomb 7.)` — explicit PM cross-reference to TT7, "
+        "which is the same Raʿmosi scribe. Parallel to chunk-30 TT212 "
+        "which also references TT7 via shared_with_tombs=[\"TT7\"]. "
+        "TT7 shared_with_tombs already includes TT250 as a back-reference "
+        "(established in chunk-1 corrections per symmetry convention).",
+    ),
+]
+
+CHUNK33_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3055,6 +3182,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK30_CORRECTIONS,
     CHUNK31_CORRECTIONS,
     CHUNK32_CORRECTIONS,
+    CHUNK33_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3089,6 +3217,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK30_RENAMES,
     **CHUNK31_RENAMES,
     **CHUNK32_RENAMES,
+    **CHUNK33_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -4031,6 +4160,54 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "3283048776/782/807. The tie-break-overrides.json TT239|"
         "attribution_certainty entry (pinned `uncertain`) was wrong; "
         "this DERIVER_OVERRIDE overrides the tie-break value post-merge.",
+    ),
+    # Chunk-33: TT241 ʿAḥmosi, Scribe of divine writings. The `(?)` in
+    # notes_from_pm qualifies the REGNAL DATE (`Temp. Tuthmosis III(?)`),
+    # not ʿAḥmosi's identification. PM headword `241. <AI;IMOSI ... Temp.
+    # Tuthmosis III(?).` names ʿAḥmosi and his titles unambiguously; the
+    # SHORTER 1930 JEA article citation confirms the occupant. Same
+    # regnal-date-hedge class as chunk-10 TT12/TT17/TT19/TT20 + chunk-13
+    # TT43 + chunk-31 TT225 + chunk-32 TT239 + chunk-33 TT249.
+    (
+        "TT241",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.331 / chunk-33 source text (TT241 ʿAḥmosi). Source "
+        "reads `241. <AI;IMOSI ... Temp. Tuthmosis III(?).` — the `(?)` "
+        "qualifies the REGNAL DATE (`Temp. Tuthmosis III`), not the "
+        "occupant's identity. ʿAḥmosi is unambiguously named as headword "
+        "and the Shorter 1930 JEA xvi article (cited in source) confirms "
+        "the tomb attribution. Same regnal-date-hedge orthogonality class "
+        "as chunk-10 TT12/TT17/TT19/TT20, chunk-31 TT225, chunk-32 TT239, "
+        "chunk-33 TT249. Per chunk-9 TT2 precedent: attribution_certainty "
+        "encodes occupant-identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-33: TT249 Neferronpet, Purveyor(?) of date-wine. The `(?)` in
+    # notes_from_pm qualifies the ROLE/TITLE (`Purveyor(?)`) and the REGNAL
+    # DATE (`Temp. Tuthmosis IV(?)`), not Neferronpet's identification. PM
+    # headword `249. NEFERRONPET H7. Purveyor(?) of date-wine. Temp.
+    # Tuthmosis IV(?).` names Neferronpet unambiguously (H7 = tomb H.7 in
+    # the plan) — there is no uncertainty about who the tomb belongs to.
+    # Same role-hedge orthogonality class as chunk-9 TT2 (Amenemḥet, `called
+    # Suroy(?)`) + chunk-10 TT12/TT17/TT19/TT20 + chunk-13 TT43 + chunk-31
+    # TT225 + chunk-32 TT239. Per chunk-9 TT2 precedent that
+    # attribution_certainty encodes occupant-identity certainty, not
+    # role/title or regnal-date certainty.
+    (
+        "TT249",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.335 / chunk-33 source text (TT249 Neferronpet). Source "
+        "reads `249. NEFERRONPET H7. Purveyor(?) of date-wine. Temp. "
+        "Tuthmosis IV(?).` — both `(?)` markers qualify the role/title "
+        "(`Purveyor`) and the regnal date (`Tuthmosis IV`), not the "
+        "occupant's identity. Neferronpet is unambiguously named and "
+        "located (H7 plan reference). The deriver fires on `Purveyor(?)` "
+        "as an attribution hedge, but this hedge is on the title, not the "
+        "person. Same orthogonality class as chunk-9 TT2, chunk-10 "
+        "TT12/TT17/TT19/TT20, chunk-13 TT43, chunk-31 TT225, chunk-32 "
+        "TT239 — attribution_certainty encodes occupant-identity certainty, "
+        "not role or regnal-date certainty.",
     ),
 ]
 

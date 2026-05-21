@@ -801,6 +801,37 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Father, Weshebamunḥeref.",
         ("TT235", "occupant_name"): "Userhet",
         ("TT239", "attribution_certainty"): "attested",
+        # Chunk-33 (TT241-TT250) — 6 tie-break overrides:
+        # TT241|notes_from_pm: agent C's value pinned (wife `<Alimosi` — ayin
+        #   preserved). Post-fix-rows: unchanged (no CHUNK33_CORRECTIONS on this
+        #   field beyond what the tie-break already set).
+        # TT241|occupant_name: tie-break pinned agent A's `Kahmosi` (anchor;
+        #   all agents wrong). CHUNK33_CORRECTIONS overwrites to `ʿAhmosi`.
+        #   Post-fix-rows value differs from the pinned merge-time value.
+        # TT242|notes_from_pm: agent C's value pinned (best adoratress name +
+        #   Pedeamonnai). CHUNK33_CORRECTIONS appends `(L. D. Text, No. 22.)`.
+        #   Post-fix-rows value differs from the pinned merge-time value.
+        # TT242|occupant_name: agent B's `Wehebreconi` pinned. CHUNK33_CORRECTIONS
+        #   strips phantom `i` → `Wehebrecon`. Post-fix-rows differs.
+        # TT243|notes_from_pm: agent B's `called Ragi` pinned; no CHUNK33_CORRECTIONS
+        #   on this field — final value matches the override verbatim.
+        #   (Flag for egyptologist: nickname unresolvable from OCR hieroglyphs.)
+        # TT246|notes_from_pm: agent A's `Sitmenḥit` pinned (source OCR `l).` = ḥ);
+        #   no CHUNK33_CORRECTIONS — final value matches the override verbatim.
+        ("TT241", "notes_from_pm"):
+            "Scribe of the divine writings, Child of the nursery, Head of "
+            "mysteries in the House of the morning. Temp. Tuthmosis III(?). "
+            "Wife, <Alimosi.",
+        ("TT241", "occupant_name"): "ʿAhmosi",
+        ("TT242", "notes_from_pm"):
+            "Chamberlain of the divine adoratress <Ankhnesneferebrec. Saite. "
+            "Wife, Tadepanehep. Father, Pedeamonnai; mother, Mutardais. "
+            "(L. D. Text, No. 22.)",
+        ("TT242", "occupant_name"): "Wehebrecon",
+        ("TT243", "notes_from_pm"):
+            "Mayor of the Southern City, called Ragi, Royal scribe. Saite. "
+            "Father, a prophet and Izeneku-priest in Southern On.",
+        ("TT246", "notes_from_pm"): "Scribe. Dyn. XVIII. Wife, Sitmenḥit.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
