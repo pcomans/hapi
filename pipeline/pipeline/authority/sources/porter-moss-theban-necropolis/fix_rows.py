@@ -3639,6 +3639,91 @@ CHUNK37_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK37_RENAMES: dict[str, str] = {}
 
 
+# Chunk-38 (TT291–TT300) corrections after the field-rule-based prompt +
+# 3-agent merge + source-text review:
+#
+# 1. TT292 — `notes_from_pm`: tie-break pinned A's `He-nekhu` (spurious
+#    hyphen) for the father name. Source `l:Ie}.nekhu` decodes to
+#    `Ḥenekhu` (l:I = underdot-Ḥ, }.= OCR noise). Restore underdot-Ḥ;
+#    remove spurious hyphen to give `Ḥenekhu`. EGYPTOLOGIST REVIEW REQUIRED
+#    to confirm the exact father-name form from the printed source.
+# 2. TT295 — `occupant_name`: tie-break pinned `Dhutmosi` (C's form).
+#    Source headword `l)l;IUTMOSI` decodes to `Ḏhutmosi` (l) = d-bar Ḏ,
+#    I;I = underdot-Ḥ stripped per matchable-name rule). Add d-bar per
+#    TT32/TT205/TT248 precedent.
+# 3. TT296 — `notes_from_pm`: majority pinned `Maetmut` (A+C). Source
+#    line 204 prints `Ma<etmut` where `<` = PM's ayin glyph → `Maʿetmut`.
+#    Only agent B captured the ayin. Restore ayin per verbatim-preserve
+#    policy.
+# 4. TT292 — EGYPTOLOGIST REVIEW FLAG: father name `He-nekhu` is an OCR
+#    intermediate; the exact printed form of the father name in PM I.1 p.375
+#    should be confirmed from the printed source.
+CHUNK38_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT292",
+        "notes_from_pm",
+        "Servant in the Place of Truth. Temp. Sethos I to Ramesses II. "
+        "Father, Ḥenekhu (from stela in Brit. Mus. 262). Wife, Makhay.",
+        "Tie-break pinned A's `He-nekhu` (spurious hyphen, ḥ stripped). "
+        "Source line 52 of chunk-38-tt291-tt300.txt prints `l:Ie}.nekhu` "
+        "where `l:I` = underdot-Ḥ OCR glyph and `}.` = underdot/OCR noise "
+        "cluster. Decoded: `Ḥenekhu` (underdot-Ḥ, no hyphen). Remove "
+        "spurious hyphen, restore underdot-Ḥ. `notes_from_pm` is verbatim-"
+        "preserve, so underdot-Ḥ is retained here (strip-ḥ rule applies only "
+        "to `occupant_name`). EGYPTOLOGIST REVIEW REQUIRED: confirm exact "
+        "father-name form from PM I.1 p.375 printed source.",
+    ),
+    (
+        "TT295",
+        "occupant_name",
+        "Ḏhutmosi",
+        "Tie-break pinned C's `Dhutmosi` as intermediate. Source line 153 "
+        "of chunk-38-tt291-tt300.txt prints `295· l)l;IUTMOSI` where `l)` "
+        "= OCR for d-bar Ḏ and `l;I`/`I;I` = underdot-Ḥ. Full decode: "
+        "`ḎḤUTMOSI`. Apply strip-ḥ (underdot-H) for matchable `occupant_name` "
+        "field → `Ḏhutmosi`. D-bar `Ḏ` is NOT stripped (only underdot-Ḥ is "
+        "stripped per project convention). Consistent with TT32 `Ḏhutmosi`, "
+        "TT205 `Ḏhutmosi` in reconciled.jsonl. Task brief names this occupant "
+        "`ḎḤUTMOSI` with d-bar explicitly.",
+    ),
+    (
+        "TT295",
+        "notes_from_pm",
+        "Head of the secrets in the Chest of Anubis, sem-priest in the "
+        "Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). "
+        "Parents, Sennuter, sem-priest in the Good House, &c., and "
+        "Senemiʿoḥ. Wives, Nefertere and Rennutet.",
+        "PR #282 round 1 Gemini findings 3284269377/391/406. The tie-break "
+        "pinned agent B's form which was the MINORITY on `&c.`: source "
+        "merge-disagreements.txt confirms A+C had `&c.` after Sennuter's "
+        "title (PM verbatim); B dropped it. Per Constitutional Rule 6 + "
+        "majority-rule, restore `&c.` (PM source line 157: "
+        "`Sennuter t,` decodes to `Sennuter, sem-priest in the Good House, "
+        "&c.`). Two diacritic restorations on mother's name: source "
+        "`Senemi<ol,l` decodes as `Senemiʿoḥ` — `<` = ayin (U+02BF), "
+        "`ol,l` = OCR for `oḥ` (underdot-Ḥ). notes_from_pm is verbatim-"
+        "preserve; restore both ayin + underdot-ḥ. The tie-break "
+        "rationale's claim that `C drops &c.` was incorrect — C kept "
+        "`&c.`; only B dropped it.",
+    ),
+    (
+        "TT296",
+        "notes_from_pm",
+        "Scribe of the divine offerings of all the gods, Officer of the treasury "
+        "... in the Southern City. Ramesside. Wives, Maʿetmut, Sekhemui, and Nefertere.",
+        "Majority (A+C) pinned `Maetmut` (ayin dropped). Source line 204 of "
+        "chunk-38-tt291-tt300.txt prints `Ma<etmut` where `<` = PM's ayin "
+        "glyph → `Maʿetmut`. Agent B correctly captured the ayin; A+C dropped "
+        "it (OCR noise). `notes_from_pm` is verbatim-preserve — restore ayin "
+        "per the established `<` = ʿ OCR-diacritic policy. Parallel to "
+        "TT94/TT95/TT192 wife-name ayin restorations in prior chunks.",
+    ),
+]
+
+
+CHUNK38_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3680,6 +3765,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK35_CORRECTIONS,
     CHUNK36_CORRECTIONS,
     CHUNK37_CORRECTIONS,
+    CHUNK38_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3719,6 +3805,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK35_RENAMES,
     **CHUNK36_RENAMES,
     **CHUNK37_RENAMES,
+    **CHUNK38_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -4885,6 +4972,62 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "is_usurped=False. All three agents agreed is_usurped=False (the "
         "deriver miss was unanimous). Override to True to match PM's `Re-used` "
         "semantic. Parallel to TT284 `(Reused.)` in this chunk.",
+    ),
+    # Chunk-38 DERIVER_OVERRIDES:
+    # TT291 — is_joint_burial: PM headword names two co-equal occupants (Nu
+    #   and Nekhtmin) each with separate wife/parents clauses. FOURTH joint
+    #   burial in PM I.1 § Numbered Tombs after TT10 (chunk-9, Penbuy+Kasa),
+    #   TT122 (chunk-21), and TT181 (chunk-27). No auto-deriver exists for
+    #   is_joint_burial; all 3 agents emitted False.
+    # TT295 — attribution_certainty: `(?)` in notes qualifies the REGNAL DATE
+    #   range (`Temp. Tuthmosis IV to Amenophis III (?)`), not Ḏhutmosi's
+    #   occupant identity. Same regnal-date-hedge orthogonality class as
+    #   TT276/TT253/TT255/TT258/TT260 etc.
+    # TT298 — attribution_certainty: `(probably)` in notes qualifies the
+    #   FATHER RELATIONSHIP (`father (probably), Unnufer`), not primary
+    #   occupant Baki's identity. Same secondary-clause-hedge pattern as
+    #   TT2/TT95/TT108 etc.
+    (
+        "TT291",
+        "is_joint_burial",
+        True,
+        "PM I.1 p.374 / chunk-38. PM headword names two co-equal occupants: "
+        "Nu (`Servant in the Great Place`) and Nekhtmin (`Servant in the Place "
+        "of Truth`), each with separate parents and wife clauses. This is the "
+        "FOURTH coordinate joint-burial pattern in PM I.1 § Numbered Tombs "
+        "after TT10 (chunk-9, Penbuy + Kasa), TT122 (chunk-21, [Amen]ḥotp + "
+        "Amenemḥet), and TT181 (chunk-27, Nebamūn + Ipuky sculptors). No "
+        "auto-deriver exists for `is_joint_burial`; all three agents emitted "
+        "False. Override to True to match PM's dual-headword joint-occupancy "
+        "structure. Per Gemini PR #282 round-2 finding 3284295782/814.",
+    ),
+    (
+        "TT295",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.377 / chunk-38 source line 154-155: `295· Ḏ-ḤUTMOSI, called "
+        "PAROY ... Temp. Tuthmosis IV to Amenophis III (?).` — the `(?)` "
+        "qualifies the REGNAL DATE range (end of the period), not the "
+        "occupant's identity. Ḏhutmosi/Paroy is unambiguously named in the "
+        "headword with no identity uncertainty. The deriver fires on any `(?)` "
+        "in `notes_from_pm` as an attribution hedge — correct for occupant-"
+        "identity uncertainty (KV42, QV60 pattern) but a false positive for "
+        "regnal-date uncertainty. Same orthogonality class as chunk-34 "
+        "TT253/TT255/TT258/TT260 and chunk-36 TT276.",
+    ),
+    (
+        "TT298",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.379 / chunk-38 source line 283: `298. BAKI ... Foreman in "
+        "the Place of Truth, and father (probably), UNNUFER ...`. The "
+        "`(probably)` qualifies the FATHER RELATIONSHIP (Unnufer as probable "
+        "father of Baki), not the primary occupant Baki's identity. Baki is "
+        "unambiguously named as headword occupant with no identity uncertainty. "
+        "The deriver `_detect_attribution_certainty` fires on any `(probably)` "
+        "token — correct for primary-attribution hedges but a false positive "
+        "for secondary-clause relational hedges. Same secondary-clause pattern "
+        "as TT2 `(probably) Esi` (second wife), TT95 usurpation note, etc.",
     ),
 ]
 

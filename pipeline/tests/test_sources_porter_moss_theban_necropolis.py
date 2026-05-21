@@ -352,6 +352,9 @@ CHUNK36_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK37_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(281, 291)}
 )
+CHUNK38_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(291, 301)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -389,6 +392,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK35_TOMB_IDS
     | CHUNK36_TOMB_IDS
     | CHUNK37_TOMB_IDS
+    | CHUNK38_TOMB_IDS
 )
 
 
@@ -771,7 +775,13 @@ def test_is_joint_burial_flag_paired_with_co_occupants() -> None:
     #   conjunction with distinct per-occupant roles; coordinate joint.
     # KV46 is intentionally False (asymmetric `YUIA ..., AND THUIU` —
     # Yuia leads). TT6 is also False (`X and son Y` — hierarchical).
-    assert seen_joint == ["TT10", "TT122", "TT181", "SWV-ThreePrincesses"], seen_joint
+    # TT298 is intentionally False (`father (probably), Unnufer` — hierarchical
+    # parent-child, not co-equal joint occupancy).
+    # - TT291 (chunk-38): PM p.374 lists Nu + Nekhtmin coordinately as
+    #   `NU ... Servant in the Great Place, and NEKHTMIN ... Servant in the
+    #   Place of Truth` — bare conjunction with per-occupant roles and
+    #   separate parents/wife clauses. Third joint burial after TT122/TT181.
+    assert seen_joint == ["TT10", "TT122", "TT181", "TT291", "SWV-ThreePrincesses"], seen_joint
 
 
 def test_swv_three_princesses_per_person_role_propagation() -> None:
@@ -3656,9 +3666,11 @@ def test_182_usurped_canonical_set() -> None:
     # TT288 (Bekenkhons, PM `Re-used by Setau`). Both are re-use/usurpation
     # cases where the deriver regex `\busurp` misses the `Reused`/`Re-used`
     # lexical form; is_usurped=True pinned via DERIVER_OVERRIDES in fix_rows.py.
+    # Extended chunk 38: TT294 (Amenhotep, PM `Usurped by Roma, wab-priest of
+    # Amun, early Ramesside` — deriver auto-detects `\busurped\b` in notes).
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
                 "TT65", "TT68", "TT70", "TT77", "TT84", "TT112", "TT127",
-                "TT152", "TT257", "TT284", "TT288"}
+                "TT152", "TT257", "TT284", "TT288", "TT294"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -10280,3 +10292,353 @@ def test_chunk37_tt290_irinufer_deir_el_medina() -> None:
     assert r["theban_area"] == "Deir el-Medina"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 372
+
+
+# ---------------------------------------------------------------------------
+# Chunk 38: TT291-TT300
+# ---------------------------------------------------------------------------
+# CHUNK38_CORRECTIONS applied post-merge:
+#   TT292 notes_from_pm: He-nekhu → Ḥenekhu (underdot-Ḥ restored; spurious
+#     hyphen removed). EGYPTOLOGIST REVIEW REQUIRED for exact printed form.
+#   TT295 occupant_name: Dhutmosi → Ḏhutmosi (d-bar restored per TT32/TT205).
+#   TT296 notes_from_pm: Maetmut → Maʿetmut (ayin restored; source `Ma<etmut`).
+# DERIVER_OVERRIDES:
+#   TT291 is_joint_burial=True (PM dual-headword Nu + Nekhtmin joint burial;
+#     third joint burial after TT122/TT181; no auto-deriver for this field).
+#   TT295 attribution_certainty=attested (deriver fires on regnal-date (?)
+#     in `Temp. Tuthmosis IV to Amenophis III (?)`; occupant identity attested).
+#   TT298 attribution_certainty=attested (deriver fires on `(probably)` in
+#     `father (probably), Unnufer`; primary occupant Baki fully attested).
+#   TT294 is_usurped=True via deriver auto-detect (`\busurped\b` in notes).
+# Tie-breaks: 10 entries: TT291|co_occupants, TT291|notes_from_pm,
+#   TT292|notes_from_pm, TT293|occupant_name, TT294|notes_from_pm,
+#   TT295|occupant_name, TT295|notes_from_pm, TT298|co_occupants,
+#   TT299|occupant_name, TT300|occupant_name.
+# Usurpation direction: PM headword names AMENHOTEP (Amenophis III) as
+#   original occupant; Roma (early Ramesside) is the usurper. Correct schema:
+#   occupant_name = Amenhotep (original), is_usurped = True, co_occupants = [].
+
+
+def test_chunk38_all_rows_present() -> None:
+    """All 10 TT291-TT300 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK38_TOMB_IDS
+    assert actual == CHUNK38_TOMB_IDS, sorted(CHUNK38_TOMB_IDS - actual)
+
+
+def test_chunk38_theban_areas() -> None:
+    """Verify area assignments: Deir el-Medina / Dra' Abu el-Naga / Khôkha / ʿAsâsîf."""
+    expected = {
+        "TT291": "Deir el-Medina",
+        "TT292": "Deir el-Medina",
+        "TT293": "Dra' Abu el-Naga",
+        "TT294": "Khokha",
+        "TT295": "Khokha",
+        "TT296": "Khokha",
+        "TT297": "ʿAsâsîf",
+        "TT298": "Deir el-Medina",
+        "TT299": "Deir el-Medina",
+        "TT300": "Dra' Abu el-Naga",
+    }
+    by_id = {r["tomb_id"]: r for r in _rows()}
+    for tid, area in expected.items():
+        assert by_id[tid]["theban_area"] == area, f"{tid}: expected {area!r}"
+
+
+def test_tt291_nu_and_nekhtmin() -> None:
+    """TT291 — Nu + Nekhtmin, joint burial. Late Dyn. XVIII. Deir el-Medina. p.374.
+
+    Third joint burial in PM I.1 after TT122 (chunk-21) and TT181 (chunk-27).
+    co_occupants must carry Nekhtmin with name key (schema-valid).
+    is_joint_burial must be True (DERIVER_OVERRIDE; agents all emitted False).
+    """
+    r = _row("TT291")
+    assert r["occupant_name"] == "Nu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert len(r["co_occupants"]) == 1
+    co = r["co_occupants"][0]
+    assert co["name"] == "Nekhtmin"
+    assert co["role"] == "Official"
+    assert co["alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is True
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant in the Great Place" in r["notes_from_pm"]
+    assert "Nekhtmin" in r["notes_from_pm"]
+    assert "Late Dyn. XVIII" in r["notes_from_pm"]
+    assert "Pia" in r["notes_from_pm"]
+    assert "Mutnefert" in r["notes_from_pm"]
+    assert "Khatnesut" in r["notes_from_pm"]
+    assert "Min-hotep" in r["notes_from_pm"]
+    assert "Nefertere" in r["notes_from_pm"]
+    assert "Sekhmet" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 374
+
+
+def test_tt292_peshedu() -> None:
+    """TT292 — Peshedu, Servant in the Place of Truth. Temp. Sethos I–Ramesses II. p.375.
+
+    Father name Ḥenekhu restored (OCR `l:Ie}.nekhu`); spurious hyphen removed.
+    EGYPTOLOGIST REVIEW REQUIRED for exact father-name form from printed source.
+    """
+    r = _row("TT292")
+    assert r["occupant_name"] == "Peshedu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant in the Place of Truth" in r["notes_from_pm"]
+    assert "Sethos I" in r["notes_from_pm"]
+    assert "Ramesses II" in r["notes_from_pm"]
+    assert "Ḥenekhu" in r["notes_from_pm"]
+    assert "Brit. Mus. 262" in r["notes_from_pm"]
+    assert "Makhay" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 375
+
+
+def test_tt293_ramessesnakht() -> None:
+    """TT293 — Raʿmessenakht, First Prophet of Amun. Temp. Ramesses IV. p.376.
+
+    Tie-break pinned B's `Raʿmessenakht` (source `RA<MESSENAKHT`, `<` = ayin).
+    A had `Ra-messenakht` (spurious hyphen), C had `Ramessenakht` (no ayin).
+    """
+    r = _row("TT293")
+    assert r["occupant_name"] == "Raʿmessenakht"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First prophet of Amun" in r["notes_from_pm"]
+    assert "Ramesses IV" in r["notes_from_pm"]
+    assert "Merubaste" in r["notes_from_pm"]
+    assert "Cairo Mus. 42162" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 376
+
+
+def test_tt294_amenhotep_usurped_by_roma() -> None:
+    """TT294 — Amenhotep (original), usurped by Roma. Unfinished. Khokha. p.376.
+
+    Usurpation direction: PM headword names AMENHOTEP as original occupant;
+    Roma (wab-priest, early Ramesside) is the usurper. co_occupants=[] (Roma
+    captured in notes_from_pm only; parallel to chunk-37 TT288 Bekenkhons).
+    is_usurped=True via deriver auto-detect (`usurped` in notes_from_pm).
+    Tie-break majority (A+C) correctly gives co_occupants=[]; B alone had [Roma].
+    """
+    r = _row("TT294")
+    assert r["occupant_name"] == "Amenhotep"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is True
+    assert "Amenophis III" in r["notes_from_pm"]
+    assert "Usurped by Roma" in r["notes_from_pm"]
+    assert "wab-priest of Amun" in r["notes_from_pm"]
+    assert "Hathor" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 376
+
+
+def test_tt295_dhutmosi_called_paroy() -> None:
+    """TT295 — Ḏhutmosi called Paroy, sem-priest. Khokha. p.377.
+
+    occupant_name = `Ḏhutmosi` (d-bar restored via CHUNK38_CORRECTIONS;
+    tie-break intermediate was `Dhutmosi`; per TT32/TT205 precedent).
+    occupant_alt_names = ["Paroy"] (PM `called PAROY` headword byname;
+    majority A+C correct; B wrongly used tomb_aliases).
+    attribution_certainty = attested (DERIVER_OVERRIDE; `(?)` qualifies
+    regnal date, not occupant identity).
+    """
+    r = _row("TT295")
+    assert r["occupant_name"] == "Ḏhutmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Paroy"]
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Head of the secrets in the Chest of Anubis" in r["notes_from_pm"]
+    assert "sem-priest in the Good House" in r["notes_from_pm"]
+    assert "Tuthmosis IV" in r["notes_from_pm"]
+    assert "Sennuter" in r["notes_from_pm"]
+    assert "Senemiʿoḥ" in r["notes_from_pm"]
+    assert "Nefertere" in r["notes_from_pm"]
+    assert "Rennutet" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 377
+
+
+def test_tt296_nefersekheru() -> None:
+    """TT296 — Nefersekheru, Scribe. Ramesside. Khokha. p.378.
+
+    notes_from_pm: Maʿetmut (ayin restored by CHUNK38_CORRECTIONS;
+    majority had `Maetmut`; source `Ma<etmut`, `<` = ayin glyph).
+    """
+    r = _row("TT296")
+    assert r["occupant_name"] == "Nefersekheru"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of the divine offerings" in r["notes_from_pm"]
+    assert "Southern City" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Maʿetmut" in r["notes_from_pm"]
+    assert "Sekhemui" in r["notes_from_pm"]
+    assert "Nefertere" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 378
+
+
+def test_tt297_amenemopet_called_thonufer() -> None:
+    """TT297 — Amenemopet called Thonufer, Scribe. Early Dyn. XVIII. ʿAsâsîf. p.379."""
+    r = _row("TT297")
+    assert r["occupant_name"] == "Amenemopet"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Thonufer"]
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Counter of grain of Amun" in r["notes_from_pm"]
+    assert "Overseer of fields" in r["notes_from_pm"]
+    assert "Early Dyn. XVIII" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 379
+
+
+def test_tt298_baki_and_unnufer() -> None:
+    """TT298 — Baki + father Unnufer. Ramesside. Deir el-Medina. p.379.
+
+    Hierarchical relationship (father–son, `(probably)`); NOT a joint burial.
+    co_occupants carries Unnufer (tie-break pinned A's schema-valid form with
+    name key). is_joint_burial=False (correct for parent-child hierarchy).
+    attribution_certainty=attested (DERIVER_OVERRIDE; `(probably)` qualifies
+    father identification, not Baki's primary identity).
+    """
+    r = _row("TT298")
+    assert r["occupant_name"] == "Baki"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert len(r["co_occupants"]) == 1
+    co = r["co_occupants"][0]
+    assert co["name"] == "Unnufer"
+    assert co["role"] == "Official"
+    assert co["alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Foreman in the Place of Truth" in r["notes_from_pm"]
+    assert "father (probably)" in r["notes_from_pm"]
+    assert "Unnufer" in r["notes_from_pm"]
+    assert "Taysen" in r["notes_from_pm"]
+    assert "tomb 213" in r["notes_from_pm"]
+    assert "Maia" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 379
+
+
+def test_tt299_iniherkhac() -> None:
+    """TT299 — Iniherkhac, Foreman. Also owner of TT359. Deir el-Medina. p.380.
+
+    Tie-break pinned A's `Iniherkhac` (source `INI;IERKHAC]`, I;I=Ḥ stripped).
+    B had `Inherkhac` (dropped `Ini-` prefix); C had `Inherkhau` (wrong).
+    shared_with_tombs = ["TT359"] (also owner of tomb 359).
+    """
+    r = _row("TT299")
+    assert r["occupant_name"] == "Iniherkhac"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == ["TT359"]
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Foreman of the Lord of the Two Lands" in r["notes_from_pm"]
+    assert "tomb 359" in r["notes_from_pm"]
+    assert "Ramesses III" in r["notes_from_pm"]
+    assert "Hay" in r["notes_from_pm"]
+    assert "Wab" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 380
+
+
+def test_tt300_anhotp() -> None:
+    """TT300 — ʿAnhotp, Viceroy of Kush. Ramesside. Dra' Abu el-Naga. p.381.
+
+    Tie-break pinned B's `ʿAnhotp` (source `cANI;IOTP`, c=ayin, I;I=Ḥ stripped).
+    A had `Amenhotep` (completely wrong name); C had `Canihotep` (OCR-literal).
+    """
+    r = _row("TT300")
+    assert r["occupant_name"] == "ʿAnhotp"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Viceroy of Kush" in r["notes_from_pm"]
+    assert "Governor of the South Lands" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Hunuro" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 381

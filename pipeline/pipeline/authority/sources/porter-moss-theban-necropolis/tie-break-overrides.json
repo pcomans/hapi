@@ -479,7 +479,13 @@
   },
   "TT274|co_occupants": {
     "rationale": "PM I.1 p.351 / chunk-36-tt271-tt280.txt (TT274 Amenwahsu). Source line 100 prints `Wife, ...y ~~~.` — the `~~~` is OCR noise after `...y` (the partial wife name PM records with a trailing lacuna). Agent A: `Wife name lost` (invented description). Agent B: `Unnamed wife` (invented description). Agent C: `...y` (PM-verbatim partial name, correct). Pin agent C's source-verbatim form. The role='Unknown' for a co_occupant with a partial/lost name is unchanged (all agents agree on 'Unknown' role).",
-    "value": [{"alt_names": [], "name": "...y", "role": "Unknown"}]
+    "value": [
+      {
+        "alt_names": [],
+        "name": "...y",
+        "role": "Unknown"
+      }
+    ]
   },
   "TT274|notes_from_pm": {
     "rationale": "PM I.1 p.351 / chunk-36-tt271-tt280.txt (TT274 Amenwahsu). Source lines 97-100: `First prophet of Monthu of 'fod, and of Thebes, sem-priest in the Ramesseum in the estate of Amiin. Ramesside. (Inaccessible.) Wife, ...y ~~~.` where `'fod` = `Tod` (OCR apostrophe before T), `Amiin` = `Amūn` (macron-u per chunk-12-onward macron-retain policy), `(Inaccessible.)` is PM's access note after the location line, and `~~~` is OCR noise after the partial wife name. Three-way split: A: `Thod` (OCR noise), `Amen` (macron stripped), `(Inaccessible.)` at sentence-end after wife clause, OCR noise `~~~` stripped. B: `Tod` (correct), `Amun` (macron stripped), `~~~` retained (OCR noise). C: `Tod` (correct), `Amun` (macron stripped), `(Inaccessible.)` placed before wife clause matching source line order, `~~~` stripped. Best form combines: C's `(Inaccessible.)` placement (source lines 99-100 show `(Inaccessible.)` before the wife line) + `Tod` (lines 97-100 confirm `'fod` = Tod) + `Amūn` macron (macron-retain policy; fix_rows layers it) + wife clause without OCR noise. Pin a stable form; `Amūn` macron correction layered post-merge by CHUNK36_CORRECTIONS.",
@@ -516,5 +522,57 @@
   "TT290|notes_from_pm": {
     "rationale": "PM I.1 p.372 / chunk-37-tt281-tt290.txt (TT290 Irinufer). Three-way split on mother's compound name and wife's name. Source OCR prints `Parents, Siwazyt ~ ~ ~ o , Head of the bark of Amon, and Tausert Mel).ytkhacti` where `Mel).ytkhacti` = `Mehytkhacti` (underdot-ḥ), confirming the mother's full compound name is `Tausert Mehytkhacti`. Agent A = `Tausert` (truncates mother's name; replaces wife's unreadable hieroglyphic with `(wife name from text)` — an invented placeholder, wrong). Agent B = `Tausert Mehytkhacti` for mother (correct per source) but then `Wife, Irinofer` (wrong — `Irinofer` is the occupant's own name; the wife's name in source is a hieroglyphic rendering that OCR garbled as `i 1~ ~~ .`). Agent C = `Tausert` (truncates mother's name) + `Wife, [Irinofer]` (brackets signal agent uncertainty; still wrong name). Pin B's `Tausert Mehytkhacti` for the mother as the sole correctly-expanded form. The wife's name (garbled in source OCR) requires egyptologist printed-source review; CHUNK37_CORRECTIONS will correct the wife name after that review. The `Amon` → `Amūn` macron is layered post-merge by CHUNK37_CORRECTIONS. The footnote `Probably owner, see statuette under Finds.` in agent A is an invented editorial hedge not printed in the PM headword; dropped.",
     "value": "Servant in the Place of Truth on the West. Ramesside. Parents, Siwazyt, Head of the bark of Amon, and Tausert Mehytkhacti. Wife, [name unresolved from OCR]."
+  },
+  "TT291|co_occupants": {
+    "rationale": "PM I.1 p.374 / chunk-38-tt291-tt300.txt (TT291 Nu + Nekhtmin). Three-way split on co_occupants: A = [{\"alt_names\":[], \"name\":\"Nekhtmin\", \"role\":\"Official\"}] (schema-valid — has name key); B = [{\"alt_names\":[], \"role\":\"Official\"}] (schema-broken — missing `name` key); C = [{\"alt_names\":[], \"role\":\"Servant in the Place of Truth\"}] (schema-broken — missing `name` key). Source headword line 7 prints `291. Nu ... Servant in the Great Place, and NEKHTMIN ... Servant in the Place of Truth.` — Nekhtmin is explicitly named as co-occupant with separate wife and parents clauses. Pin agent A's form: name=Nekhtmin present (schema-valid), role=Official (matches the schema convention; the verbatim PM title `Servant in the Place of Truth` is captured in notes_from_pm). Parallel to TT122 and TT181 joint-burial co_occupants pattern.",
+    "value": [
+      {
+        "alt_names": [],
+        "name": "Nekhtmin",
+        "role": "Official"
+      }
+    ]
+  },
+  "TT291|notes_from_pm": {
+    "rationale": "PM I.1 p.374 / chunk-38-tt291-tt300.txt (TT291 Nu + Nekhtmin). Three-way split on lead clause and parent names. A = `Servant in the Great Place, and Nekhtmin, Servant in the Place of Truth. Late Dyn. XVIII. Parents (of Nu), Pia and Mutnefert, and wife, Khatnesut. Parents (of Nekhtmin), Min-hotep and Nefertere, and wife, Sekhmet.` B = `Servant in the Great Place. Late Dyn. XVIII. Parents (of Nu): Piay and Mutnefert, wife: Khátnesut. Parents (of Nekhtmin): Minhotep and Nefertere, wife: Sekhmet.` C = same lead clause as A but `Min` (truncated Nekhtmin's father name) instead of `Min-hotep`. Source line 7: `Nu ... Servant in the Great Place, and NEKHTMIN ... Servant in the Place of Truth` — full co-occupant clause; A+C correctly include the Nekhtmin clause in notes. Source line 10: `Pia~~~` — the `~~~` is OCR noise after the name, most likely `Piay` (B) or plain `Pia` (A+C); both are defensible OCR reads, A+C majority wins. Source line 11: `Min},lotp` = `Minhotp` (},` = OCR cluster for underdot), so A's `Min-hotep` is the closest form. Pin A's form as the most complete: full co-occupant clause + `Min-hotep` for Nekhtmin's father. The Ḥ diacritics (Khatnesut → Khātnesut if needed) to be reviewed at egyptologist pass.",
+    "value": "Servant in the Great Place, and Nekhtmin, Servant in the Place of Truth. Late Dyn. XVIII. Parents (of Nu), Pia and Mutnefert, and wife, Khatnesut. Parents (of Nekhtmin), Min-hotep and Nefertere, and wife, Sekhmet."
+  },
+  "TT292|notes_from_pm": {
+    "rationale": "PM I.1 p.375 / chunk-38-tt291-tt300.txt (TT292 Peshedu). Three-way split on father's name only; all three agents agree on the rest. Source line 52: `Father, l:Ie}.nekhu` where `l:I` = Ḥ (underdot-H OCR glyph) and `}.` = underdot/noise cluster. Decoded: `Ḥe[ḥ]nekhu` → most likely `Ḥenekhu` (single root). A = `He-nekhu` (hyphen insertion, drops ḥ), B = `Hepnekhu` (p for underdot — misread of `}.` glyph), C = `Hemekhu` (m for ḥ — wrong consonant). A's `He-nekhu` is the closest safe form: the hyphen is spurious but the consonants `H-e-n-e-k-h-u` are right. Pin A's form; the underdot-Ḥ restoration to `Ḥenekhu` deferred to egyptologist printed-source review. Notes-from-pm verbatim-preserve policy applies.",
+    "value": "Servant in the Place of Truth. Temp. Sethos I to Ramesses II. Father, He-nekhu (from stela in Brit. Mus. 262). Wife, Makhay."
+  },
+  "TT293|occupant_name": {
+    "rationale": "PM I.1 p.376 / chunk-38-tt291-tt300.txt (TT293 Raʿmessenakht). Three-way split on the ayin glyph in the headword. Source line 127: `293· RA<MESSENAKHT` where `<` = PM's ayin glyph. A = `Ra-messenakht` (drops ayin, adds spurious hyphen), B = `Raʿmessenakht` (correct ayin, no hyphen), C = `Ramessenakht` (drops ayin entirely). `occupant_name` is the matchable-name field: strip-ḥ (underdot-H) rule applies but ayin `ʿ` is retained (cf. TT181 `Mentuhotp-Sʿankhkareʿ`, TT94 `Raʿmosi` etc.). Pin B's `Raʿmessenakht`: source-verbatim ayin, no spurious hyphen.",
+    "value": "Raʿmessenakht"
+  },
+  "TT294|notes_from_pm": {
+    "rationale": "PM I.1 p.376 / chunk-38-tt291-tt300.txt (TT294 Amenhotep / usurped by Roma). Three-way split on wife name spelling only; the surrounding text is identical. Source line 143: `Wife (of Roma), l:Ia~or` where `l:I` = Ḥ and `~or` is OCR noise, decoded as `Ḥathor`. A = `Hathore` (spurious trailing e), B = `Hathor` (correct consonants, drops ḥ), C = `Hathtor` (OCR-doubled t). B's `Hathor` is the cleanest; `Hathor` (plain H) is the standard anglicised form used throughout PM I.1 (cf. `Hathor-cow`, `Western Hathor` elsewhere). Note: `is_usurped` majority of A+C = false is incorrect — source text states `Usurped by Roma`; this is corrected to true by the issue-#182 deriver (`\\busurped\\b` regex match) which fires on this notes_from_pm value. Pin B's wife-name form.",
+    "value": "Overseer of the granary of Amun, temp. Amenophis III. Usurped by Roma, wab-priest of Amun, early Ramesside. Wife (of Roma), Hathor."
+  },
+  "TT295|occupant_name": {
+    "rationale": "PM I.1 p.377 / chunk-38-tt291-tt300.txt (TT295 Ḏhutmosi called Paroy). Three-way split on the headword. Source line 153: `295· l)l;IUTMOSI` where `l)` = OCR for Ḏ (d-bar, the Egyptian letter ḏ) and `l;I` / `I;I` = Ḥ (underdot-H). Full decode: `ḎḤUTMOSI`. The `occupant_name` field applies strip-ḥ (underdot-H stripped) but retains ḏ (d-bar, not a matchable-field strippable diacritic — cf. TT32 `Ḏhutmosi`, TT205 `Ḏhutmosi` in reconciled.jsonl). Correct form: `Ḏhutmosi`. A = `Dhutnose` (wrong final vowel, no d-bar), B = `Dḥutmosi` (retains ḥ — violates strip-ḥ rule), C = `Dhutmosi` (drops d-bar). Pin C's consonant structure (`Dhutmosi`) as the tie-break intermediate; CHUNK38_CORRECTIONS restores the d-bar to give `Ḏhutmosi` per TT32/TT205 precedent.",
+    "value": "Dhutmosi"
+  },
+  "TT295|notes_from_pm": {
+    "rationale": "PM I.1 p.377 / chunk-38-tt291-tt300.txt (TT295 Ḏhutmosi called Paroy). Three-way split primarily on the `Called Paroy.` lead clause and mother's name spelling. A = starts with `Called Paroy. Head of the secrets...` (keeps PM's called-X clause in notes), B+C majority = starts with `Head of the secrets...` (drops called-X clause). Per PM I.1 convention `called X` appears in the headword and is encoded in `occupant_alt_names`; notes_from_pm should NOT duplicate it (cf. TT94 Raʿmosi where `called ʿAmy` stays in notes verbatim per PM headword; BUT TT297 `Called Thonufer` is a parallel where majority drops it — consistent treatment applied here). Majority B+C form is consistent. Mother name: A = `Senemi-oth` (hyphen), B = `Senemioth` (no hyphen), C = `Senemioph` (ph for th). Source line 157: `Senemi<ol,l` where `<` = ayin → `Senemiʿoḥ` (with underdot ḥ). B's `Senemioth` is closest (no spurious hyphen or wrong consonant). Pin B's form as majority and closest-to-source for the mother name. The `&c.` after Sennuter's title is PM verbatim (source line 157: `Sennuter t,`); A has `&c.`, B drops it, C keeps it (per merge-disagreements.txt line 872). 2/1 majority (A+C) has `&c.`; only B dropped it. The tie-break pinned B's (minority) form; CHUNK38_CORRECTIONS restores `&c.` per source-majority + PM verbatim. Ayin and ḥ restorations to be handled in CHUNK38_CORRECTIONS.",
+    "value": "Head of the secrets in the Chest of Anubis, sem-priest in the Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). Parents, Sennuter, sem-priest in the Good House, and Senemioth. Wives, Nefertere and Rennutet."
+  },
+  "TT298|co_occupants": {
+    "rationale": "PM I.1 p.379 / chunk-38-tt291-tt300.txt (TT298 Baki + Unnufer). Three-way split: A = [{\"alt_names\":[], \"name\":\"Unnufer\", \"role\":\"Official\"}] (schema-valid — has name key); B = [{\"alt_names\":[], \"role\":\"Official\"}] (schema-broken); C = [{\"alt_names\":[], \"role\":\"Servant of the Lord of the Two Lands in the Place of Truth\"}] (schema-broken). Source line 283-285: `298. BAKI ... Foreman in the Place of Truth, and father (probably), UNNUFER, Servant of the Lord of the Two Lands in the Place of Truth [&c.]` — PM names Unnufer in the headword with title. Note `(probably)` qualifies the father relationship; Unnufer appears as a secondary PM headword person. Pin agent A's form: name=Unnufer present (schema-valid), role=Official (consistent with schema convention). The `(probably)` qualifier on the paternal relationship means `is_joint_burial` remains false (this is a hierarchical father–son listing, not a co-equal joint burial); `is_joint_burial=False` is the unanimous agent reading and is correct.",
+    "value": [
+      {
+        "alt_names": [],
+        "name": "Unnufer",
+        "role": "Official"
+      }
+    ]
+  },
+  "TT299|occupant_name": {
+    "rationale": "PM I.1 p.380 / chunk-38-tt291-tt300.txt (TT299 Inherkhac). Three-way split on headword. Source line 329: `299. 1 INI;IERKHAC]` where `I;I` = Ḥ (underdot-H OCR glyph). Full decode: `INIḤERKHAC`. Apply strip-ḥ for `occupant_name` matchable field: `INIHERKHAC` → `Iniherkhac`. A = `Iniherkhac` (correct — strip-ḥ applied, retains `Ini-` prefix). B = `Inherkhac` (drops leading `Ini-` → `In-`). C = `Inherkhau` (wrong: drops `Ini-` AND changes final c→u). Pin A's `Iniherkhac` as the source-verbatim decode.",
+    "value": "Iniherkhac"
+  },
+  "TT300|occupant_name": {
+    "rationale": "PM I.1 p.381 / chunk-38-tt291-tt300.txt (TT300 ʿAnhotp). Source line 353: `300. cANI;IOTP` where `c` = PM's ayin glyph (→ ʿ) and `I;I` = Ḥ (underdot-H). Full decode: `ʿANḤOTP`. Apply strip-ḥ for `occupant_name` matchable field: ʿAnḥotp → `ʿAnhotp`. Retain ayin `ʿ` (matchable-name field retains ayin per TT293 Raʿmessenakht / TT192 Kharuef / TT94 Raʿmosi precedent). A = `Amenhotep` (completely wrong — read a different name), B = `ʿAnhotp` (correct: ayin retained, ḥ stripped), C = `Canihotep` (OCR-literal `c` read as `C` without ayin expansion). Pin B's `ʿAnhotp`.",
+    "value": "ʿAnhotp"
   }
 }
