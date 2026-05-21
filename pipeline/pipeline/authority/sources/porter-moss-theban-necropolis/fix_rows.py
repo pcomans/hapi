@@ -3445,6 +3445,17 @@ CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
     ),
     (
         "TT280",
+        "occupant_name",
+        "Meketreʿ",
+        "PM I.1 p.359 / source line 547 prints headword `280. MEKETREC` "
+        "where `C` is PM's OCR rendering of ayin (ʿ). Tie-break pinned "
+        "`Meketrec` verbatim; restore ayin to U+02BF per project-wide "
+        "ayin policy (consistent with `notes_from_pm` which uses "
+        "`Meḥenkwetreʿ` in the same row). Per Gemini PR #280 round-1 "
+        "finding 3283948489.",
+    ),
+    (
+        "TT280",
         "source_citation",
         {"edition": "PM I.1 2nd ed. 1960", "page": 359, "section": "I"},
         "PM I.1: TT280 headword starts on physical p.377 = printed p.359 "
@@ -3469,9 +3480,9 @@ CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT280",
         "notes_from_pm",
-        "Chief steward in ..., Chancellor. Temp. Mentuḥotp (Scankhkareʿ). "
+        "Chief steward in ..., Chancellor. Temp. Mentuḥotp (Sʿankhkareʿ). "
         "(Formerly read Meḥenkwetreʿ.) Son Antef, Hereditary Prince.",
-        "Two restorations from source line 547-548: (1) `Mentuhotp` → "
+        "Three restorations from source line 547-548: (1) `Mentuhotp` → "
         "`Mentuḥotp`: source `Mentul.totp` where `l.` = PM's underdot-ḥ glyph; "
         "notes_from_pm is verbatim-preserve — restore the underdot. (2) Add "
         "`(Formerly read Meḥenkwetreʿ.)`: source line 547 prints `(formerly "
@@ -3479,9 +3490,12 @@ CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "`c` = ayin ʿ. This is PM's own editorial note about a superseded "
         "reading and belongs verbatim in notes_from_pm (parallel to chunk-3 "
         "KV34 `1st ed. 24` and chunk-2 KV18 `formerly XI` PM-editorial notes). "
-        "Also `Scankhkarec` → `Scankhkareʿ` (trailing ayin on prenomen, per "
-        "source line 548). `(formerly ...)` capitalised to `(Formerly ...)` per "
-        "sentence-opening convention — PM prints the parenthetical standalone.",
+        "(3) `Scankhkarec` → `Sʿankhkareʿ`: the prenomen S-ʿnkh-kꜣ-Rʿ "
+        "(Sankhkareʿ) carries TWO ayins; both leading `c` and trailing `c` "
+        "in the OCR represent ayin glyphs (per Gemini PR #280 round-1 "
+        "finding 3283948494). `(formerly ...)` capitalised to `(Formerly ...)` "
+        "per sentence-opening convention — PM prints the parenthetical "
+        "standalone.",
     ),
     (
         "TT274",

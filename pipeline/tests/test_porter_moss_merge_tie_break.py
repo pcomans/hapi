@@ -910,7 +910,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         #   CHUNK36_CORRECTIONS (SENTINEL_NULL_STRINGS collapses Unknown→null).
         # TT274|notes_from_pm: Amun→Amūn macron by CHUNK36_CORRECTIONS.
         # TT276|notes_from_pm: ʿAḥḥotp + Ḥenutyunu by CHUNK36_CORRECTIONS.
-        # TT278|occupant_name: Amemhab (no CHUNK36_CORRECTIONS on this field).
+        # TT278|occupant_name: Amenemhab (no CHUNK36_CORRECTIONS on this field).
         # TT279|notes_from_pm: Tasentenḥor underdot by CHUNK36_CORRECTIONS.
         # TT280|notes_from_pm: Mentuḥotp + (Formerly read Meḥenkwetreʿ.) by
         #   CHUNK36_CORRECTIONS.
@@ -925,12 +925,12 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "Overseer of the treasury of gold and silver, Judge, Overseer of "
             "the cabinet. Temp. Tuthmosis IV (?). Parents, Nekhu (?) and "
             "ʿAḥḥotp. Wife, Ḥenutyunu.",
-        ("TT278", "occupant_name"): "Amemhab",
+        ("TT278", "occupant_name"): "Amenemhab",
         ("TT279", "notes_from_pm"):
             "Chief steward of the god's wife. Temp. Psammetikhos I. Parents, "
             "Pedubaste, Divine father beloved of the god, and Tasentenḥor.",
         ("TT280", "notes_from_pm"):
-            "Chief steward in ..., Chancellor. Temp. Mentuḥotp (Scankhkareʿ). "
+            "Chief steward in ..., Chancellor. Temp. Mentuḥotp (Sʿankhkareʿ). "
             "(Formerly read Meḥenkwetreʿ.) Son Antef, Hereditary Prince.",
     }
     # Sanity: EXPECTED covers every override.

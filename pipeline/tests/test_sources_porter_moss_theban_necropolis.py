@@ -9700,7 +9700,7 @@ def test_chunk35_tt270_amenemwia_warb_priest_ptah_sokari() -> None:
 #     layered post-merge by CHUNK36_CORRECTIONS.
 #   TT276 notes_from_pm: parents order + Amenhotp intermediate (diacritics
 #     layered by CHUNK36_CORRECTIONS → ʿAḥḥotp / Ḥenutyunu).
-#   TT278 occupant_name: Amemhab (ḥ stripped per matchable-name policy).
+#   TT278 occupant_name: Amenemhab (ḥ stripped per matchable-name policy).
 #   TT279 notes_from_pm: Tasentenhor (Ḥ underdot layered by CHUNK36_CORRECTIONS).
 #   TT280 notes_from_pm: Mentuhotp (ḥ + formerly-read clause layered post-merge).
 # CHUNK36_CORRECTIONS:
@@ -9914,12 +9914,12 @@ def test_chunk36_tt277_amenemonet_divine_father() -> None:
 
 
 def test_chunk36_tt278_amemhab_herdsman_amen_re() -> None:
-    """TT278 — Amemhab, Herdsman of Amen-Reʿ. Ramesside. Qurnet Muraʿi. p.355.
+    """TT278 — Amenemhab, Herdsman of Amen-Reʿ. Ramesside. Qurnet Muraʿi. p.355.
     Wife Tay, Songstress of Mut.
-    Tie-break: Amemhab (ḥ stripped per matchable-name policy).
+    Tie-break: Amenemhab (ḥ stripped per matchable-name policy).
     CHUNK36_CORRECTIONS: page 356→355; Amen-Re→Amen-Reʿ (ayin from source)."""
     r = _row("TT278")
-    assert r["occupant_name"] == "Amemhab"
+    assert r["occupant_name"] == "Amenemhab"
     assert r["occupant_role"] == "Official"
     assert r["attribution_certainty"] == "attested"
     assert r["occupant_alt_names"] == []
@@ -9971,7 +9971,7 @@ def test_chunk36_tt280_meketrec_chief_steward_mentuhotp() -> None:
     CHUNK36_CORRECTIONS: page 360→359; location_sub_area set; Mentuḥotp + formerly-read
     clause restored; co_occupants role null→Official."""
     r = _row("TT280")
-    assert r["occupant_name"] == "Meketrec"
+    assert r["occupant_name"] == "Meketreʿ"
     assert r["occupant_role"] == "Official"
     assert r["attribution_certainty"] == "attested"
     assert r["occupant_alt_names"] == []
@@ -9986,7 +9986,7 @@ def test_chunk36_tt280_meketrec_chief_steward_mentuhotp() -> None:
     assert r["is_unfinished"] is False
     assert r["is_usurped"] is False
     assert "Mentuḥotp" in r["notes_from_pm"]
-    assert "Scankhkareʿ" in r["notes_from_pm"]
+    assert "Sʿankhkareʿ" in r["notes_from_pm"]
     assert "Formerly read Meḥenkwetreʿ" in r["notes_from_pm"]
     assert "Antef" in r["notes_from_pm"]
     assert "Hereditary Prince" in r["notes_from_pm"]
