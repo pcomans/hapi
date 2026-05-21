@@ -2034,7 +2034,7 @@ CHUNK26_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK26_RENAMES: dict[str, str] = {}
 
 
-# Chunk-27 (TT181–TT190, Khôkha + ʿAsâsîf). Four PDF-verified corrections
+# Chunk-27 (TT181–TT190, Khôkha + ʿAsâsîf). Five PDF-verified corrections
 # applied post-merge, all verbatim-preserve restorations against PM I.1:
 #
 # 1. TT181 — `occupant_name`: PM p.286 headword prints `NEBAMŪN` with
@@ -2047,11 +2047,19 @@ CHUNK26_RENAMES: dict[str, str] = {}
 #    `Senennoter` → `Senennūter` (macron-Ū — PM p.286 prints `Senennūter`
 #    with macron-Ū; the `no`→`ū` is a clear OCR misread of the macron
 #    over the `ū`).
-# 3. TT189 — `notes_from_pm`: tie-break pinned agent A's `Neteḥab` (closest
+# 3. TT187 — `notes_from_pm`: tie-break pinned agent A's `Wab-priest`
+#    (PM-faithful for the role-token but capitalized). PM p.293 prints
+#    `wʿab-priest of Amūn. Dyn. XIX.` (OCR text-layer renders the printed
+#    `wʿab-priest` as `warb-priest`). Three restorations: (a) `Wab-priest`
+#    → `wʿab-priest` (insert U+02BF ayin + lowercase sentence-initial per
+#    chunk-22 TT113 ayin-before-a precedent); (b) `Amun` → `Amūn`
+#    (macron-Ū per chunk-12-onward verbatim-preserve); (c) `<Ashakhet`
+#    → `ʿAshakhet` (ayin whitelist).
+# 4. TT189 — `notes_from_pm`: tie-break pinned agent A's `Neteḥab` (closest
 #    to PM-faithful). PM p.295 prints `Netemḥab` (underdot-H, with `m`).
 #    Restore the missing `m` + add macron-Ū to `Amūn` ×2 per the
 #    verbatim-preserve policy (same chunk-12-onward macron-retain class).
-# 4. TT190 — `notes_from_pm`: tie-break pinned agent C's `Meramuniotes` and
+# 5. TT190 — `notes_from_pm`: tie-break pinned agent C's `Meramuniotes` and
 #    `Amen-Re`. PM p.297 prints `Meramūniotes` (macron-Ū) and `Amen-rēʿ`
 #    (macron-ē + ayin). Restore both diacritics.
 CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -2085,6 +2093,26 @@ CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "macron-preserve precedent.",
     ),
     (
+        "TT187",
+        "notes_from_pm",
+        "wʿab-priest of Amūn. Dyn. XIX. Parents, ʿAshakhet (tomb 174) "
+        "and Tazabu. Wife, Mutemonet.",
+        "PM I.1 p.293 / physical PDF p.311 (TT187 PAKHIḤET) prints "
+        "`wʿab-priest of Amūn. Dyn. XIX.` (the printed-book form). "
+        "The OCR text-layer renders this as `warb-priest of Amlin.` "
+        "All 3 agents emitted `Wab-priest` (capital-W, no ayin). "
+        "Three restorations: (a) `Wab-priest` → `wʿab-priest` — "
+        "insert U+02BF ayin + lowercase sentence-initial per "
+        "chunk-22 TT113 + chunk-23 TT141 + chunk-26 ayin-before-a "
+        "precedent (PM body-prose sentence-initial lowercase preserved "
+        "per source verbatim, not auto-capitalized). (b) `Amun` → "
+        "`Amūn` — PM body-prose macron-Ū per chunk-12-onward "
+        "macron-retain class (same as TT184, TT189). (c) `<Ashakhet` "
+        "→ `ʿAshakhet` — PM OCR raised-ayin glyph `<` → U+02BF per "
+        "postprocess whitelist. Verbatim-preserve policy on "
+        "notes_from_pm. Gemini PR #271 round 1 finding 3279424043.",
+    ),
+    (
         "TT189",
         "notes_from_pm",
         "Overseer of carpenters of the northern lake of Amūn, Head of "
@@ -2097,23 +2125,6 @@ CHUNK27_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "→ `Amūn` × 2 — PM prints `Amūn` with macron-Ū in body prose "
         "(same chunk-12-onward macron-retain class as TT184, TT187 etc.). "
         "Verbatim-preserve policy on notes_from_pm.",
-    ),
-    (
-        "TT187",
-        "notes_from_pm",
-        "wʿab-priest of Amūn. Dyn. XIX. Parents, ʿAshakhet (tomb 174) "
-        "and Tazabu. Wife, Mutemonet.",
-        "PM I.1 p.293 / physical PDF p.311 (TT187 PAKHIḤET) prints "
-        "`warb-priest of Amūn. Dyn. XIX.` Three restorations: (a) "
-        "`Wab-priest` → `wʿab-priest` — PM source `warb-priest` decodes "
-        "to lowercase `wʿab-priest` per chunk-22 TT113 + chunk-23 TT141 "
-        "+ chunk-26 ayin-before-a precedent (sentence-initial lowercase "
-        "preserved per PM source verbatim, not auto-capitalized). (b) "
-        "`Amun` → `Amūn` — PM body-prose macron-Ū per chunk-12-onward "
-        "macron-retain class (same as TT184, TT189). (c) `<Ashakhet` → "
-        "`ʿAshakhet` — PM OCR raised-ayin glyph `<` → U+02BF per "
-        "postprocess whitelist. Verbatim-preserve policy on notes_from_pm. "
-        "Gemini PR #271 round 1 finding 3279424043.",
     ),
     (
         "TT190",
