@@ -355,6 +355,9 @@ CHUNK37_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK38_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(291, 301)}
 )
+CHUNK39_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(301, 311)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -393,6 +396,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK36_TOMB_IDS
     | CHUNK37_TOMB_IDS
     | CHUNK38_TOMB_IDS
+    | CHUNK39_TOMB_IDS
 )
 
 
@@ -611,6 +615,12 @@ def test_theban_area_constraint() -> None:
         "ʿAsâsîf",
         "Khokha",
         "Qurnet Muraʿi",
+        # chunk-39: TT308 (Kemsit) + TT310 (anonymous Chancellor) are located
+        # in the Deir el-Bahari temple complex (PM Map III, C-4). PM I.1 p.385-386
+        # explicitly names `Deir el-Bahari` / `Deir el-Baḥri` in the headword.
+        # This differs from TT280 (chunk-36) where `Deir el-Bahari` appeared only
+        # as a location_sub_area qualifier (TT280's grid D-3 is Dra' Abu el-Naga).
+        "Deir el-Bahari",
     }
     # TT281 is an Unfinished Temple (not a private tomb); PM gives no
     # named theban_area for it — `theban_area=None` is correct.
@@ -10642,3 +10652,318 @@ def test_tt300_anhotp() -> None:
     assert r["theban_area"] == "Dra' Abu el-Naga"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
+
+
+# ===========================================================================
+# Chunk 39 — TT301–TT310 (Dra' Abu el-Naga × 7, Deir el-Bahari × 2,
+#            Sh. ʿAbd el-Qurna × 1)
+# ===========================================================================
+
+
+def test_chunk39_all_rows_present() -> None:
+    """All 10 TT301-TT310 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK39_TOMB_IDS
+    assert actual == CHUNK39_TOMB_IDS, sorted(CHUNK39_TOMB_IDS - actual)
+
+
+def test_chunk39_theban_areas() -> None:
+    """Verify area assignments. First chunk with Deir el-Bahari as primary area."""
+    expected = {
+        "TT301": "Dra' Abu el-Naga",
+        "TT302": "Dra' Abu el-Naga",
+        "TT303": "Dra' Abu el-Naga",
+        "TT304": "Dra' Abu el-Naga",
+        "TT305": "Dra' Abu el-Naga",
+        "TT306": "Dra' Abu el-Naga",
+        "TT307": "Dra' Abu el-Naga",
+        "TT308": "Deir el-Bahari",
+        "TT309": "Sh. ʿAbd el-Qurna",
+        "TT310": "Deir el-Bahari",
+    }
+    by_id = {r["tomb_id"]: r for r in _rows()}
+    for tid, area in expected.items():
+        assert by_id[tid]["theban_area"] == area, f"{tid}: expected {area!r}"
+
+
+def test_tt301_hori() -> None:
+    """TT301 — Hori, Scribe. Dra' Abu el-Naga. p.381.
+
+    Name: source `I;IORI` = Ḥori; strip-ḥ → `Hori` (CHUNK39_CORRECTIONS
+    from majority `Khori`). Wife named in cartouche. GREENLEES note.
+    EGYPTOLOGIST REVIEW REQUIRED: confirm Hori vs Khori.
+    """
+    r = _row("TT301")
+    assert r["occupant_name"] == "Hori"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Scribe of the table of the Lord of the Two Lands" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "GREENLEES" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 381
+
+
+def test_tt302_paraemhab() -> None:
+    """TT302 — Paraʿemhab, Overseer of the magazine. Dra' Abu el-Naga. p.381.
+
+    Name: ayin retained + ḥ stripped (source `PARA<EMI;IAB` → `Paraʿemhab`).
+    Father: `Userḥat` (underdot-ḥ restored in notes_from_pm).
+    EGYPTOLOGIST REVIEW REQUIRED: father-name diacritics.
+    """
+    r = _row("TT302")
+    assert r["occupant_name"] == "Paraʿemhab"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Overseer of the magazine" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "Userḥat" in r["notes_from_pm"]
+    assert "GREENLEES" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 381
+
+
+def test_tt303_paser_third_prophet() -> None:
+    """TT303 — Paser, Third prophet + Head of magazine of Amun. Dra' Abu el-Naga. p.381.
+
+    Role must be `Official` (Third prophet ≠ First prophet; majority A+C voted
+    `High Priest` incorrectly; corrected by CHUNK39_CORRECTIONS).
+    """
+    r = _row("TT303")
+    assert r["occupant_name"] == "Paser"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Third prophet of Amun" in r["notes_from_pm"]
+    assert "magazine" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 381
+
+
+def test_tt304_piay() -> None:
+    """TT304 — Piay, Scribe of the table. Dra' Abu el-Naga. p.383.
+
+    Cross-reference clause `For position, see p. 356.` in notes (no parens,
+    verbatim from source; tie-break pin B's form).
+    """
+    r = _row("TT304")
+    assert r["occupant_name"] == "Piay"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Scribe of the table of Amun" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert "p. 356" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 383
+
+
+def test_tt305_paser_waab() -> None:
+    """TT305 — Paser, Wʿab-priest + Scribe. Wife Tamelḥit. Dra' Abu el-Naga. p.383.
+
+    Priest title: ayin restored (`Wʿab-priest`; source `warb-priest`).
+    Wife name: `Tamelḥit` in notes (verbatim-preserve ḥ); `Tamelhit` in
+    co_occupants.name (strip-ḥ for matchable-name field).
+    EGYPTOLOGIST REVIEW REQUIRED: wife-name form.
+    """
+    r = _row("TT305")
+    assert r["occupant_name"] == "Paser"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert len(r["co_occupants"]) == 1
+    co = r["co_occupants"][0]
+    assert co["name"] == "Tamelhit"
+    assert co["role"] == "Unknown"
+    assert co["alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Wʿab-priest" in r["notes_from_pm"]
+    assert "Tamelḥit" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 383
+
+
+def test_tt306_irzanen() -> None:
+    """TT306 — Irzanen, Door-opener. Wife Mutenopet. Dra' Abu el-Naga. p.384.
+
+    Name: source `lRZANEN` → `Irzanen` (OCR l=I; A tie-break pin; C had Cyrillic).
+    GREENLEES note from PM headword section (scene-level son Nekht-Ḥarerau not added).
+    EGYPTOLOGIST REVIEW REQUIRED: Irzanen vs Irzana.
+    """
+    r = _row("TT306")
+    assert r["occupant_name"] == "Irzanen"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert len(r["co_occupants"]) == 1
+    co = r["co_occupants"][0]
+    assert co["name"] == "Mutenopet"
+    assert co["role"] == "Unknown"
+    assert co["alt_names"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Door-opener of the estate of Amun" in r["notes_from_pm"]
+    assert "Mutenopet" in r["notes_from_pm"]
+    assert "GREENLEES" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 384
+
+
+def test_tt307_thonufer_unfinished() -> None:
+    """TT307 — Thonufer (name from ushabti). Dra' Abu el-Naga. p.385. Unfinished.
+
+    is_unfinished=True. `(Unfinished.)` parenthesised per PM source. GREENLEES note.
+    occupant_role=None (sentinel-null from `Unknown`; no explicit role in PM).
+    """
+    r = _row("TT307")
+    assert r["occupant_name"] == "Thonufer"
+    assert r["occupant_role"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "name from ushabti" in r["notes_from_pm"]
+    assert "(Unfinished.)" in r["notes_from_pm"]
+    assert "GREENLEES" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 385
+
+
+def test_tt308_kemsit_deir_el_bahari() -> None:
+    """TT308 — Kemsit, royal concubine + Prophetess of Ḥatḥor. Deir el-Bahari. p.385.
+
+    First row with Deir el-Bahari as primary theban_area (PM Map III, C-4).
+    Temp. Mentuḥotp (Nebḥepetreʿ). location_sub_area = in the Temple of Mentuḥotp.
+    Notes include NAVILLE ref + temple location + diacritics: Ḥatḥor, Mentuḥotp,
+    Nebḥepetreʿ (source `Mentul;10tp`, `Neb}:lepetre<`).
+    EGYPTOLOGIST REVIEW REQUIRED: all diacritics from PM I.1 p.385 printed source.
+    """
+    r = _row("TT308")
+    assert r["occupant_name"] == "Kemsit"
+    assert r["occupant_role"] == "Royal Family"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] == "In the Temple of Mentuḥotp"
+    assert "royal concubine" in r["notes_from_pm"]
+    assert "Ḥatḥor" in r["notes_from_pm"]
+    assert "Mentuḥotp" in r["notes_from_pm"]
+    assert "Nebḥepetreʿ" in r["notes_from_pm"]
+    assert "NAVILLE" in r["notes_from_pm"]
+    assert "Deir el-Bahari" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 385
+
+
+def test_tt309_anonymous_blocked() -> None:
+    """TT309 — Name unknown. Sh. ʿAbd el-Qurna. p.386. Blocked.
+
+    occupant_name=None, occupant_role=None. `(Blocked.)` parenthesised per PM.
+    """
+    r = _row("TT309")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Name unknown" in r["notes_from_pm"]
+    assert "(Blocked.)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 386
+
+
+def test_tt310_anonymous_chancellor() -> None:
+    """TT310 — A Chancellor of the King of Lower Egypt. Deir el-Bahari. p.386. Dyn. XI.
+
+    Second Deir el-Bahari primary theban_area row (Dyn. XI).
+    occupant_name=None; occupant_role=None (sentinel-null from majority `Unknown`).
+    """
+    r = _row("TT310")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Chancellor" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 386
