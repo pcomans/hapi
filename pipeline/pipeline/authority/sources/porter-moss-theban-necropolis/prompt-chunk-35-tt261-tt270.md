@@ -113,11 +113,11 @@ If a row's headword sub-site line declares a sub-site NOT in this list, restore 
 **PM-verbatim, conventional-English form, titlecase.** Extract the NAME token from the heading line after applying the README's diacritic policy and the noise rules above.
 
 Per the project's `occupant_name` matchable-name policy:
-- Strip underdot-Ḥ (`Ḥ` / `ḥ`) → plain `H` / `h`. Underdot-Ḥ is the ONLY scholarly diacritic stripped from `occupant_name`.
+- Strip underdot-Ḥ (`Ḥ` / `ḥ`) → plain `H` / `h`.
+- Strip vowel macrons (`ū`/`ō`/`ē`/`ā` AND capital `Ū`/`Ō`/`Ē`/`Ā`) → plain `u`/`o`/`e`/`a`. The matchable `occupant_name` field is meant for cross-source person identification; museums and other authority sources don't carry PM's macrons, so stripping makes the names matchable across sources. Macrons ARE preserved in `notes_from_pm` (verbatim-source policy applies there). chunk-15 TT65 `NEBAMŪN` → `Nebamun` precedent + chunk-35 TT261 `KHA<EMWĒSET` → `Khaʿemweset` precedent.
 - Preserve ayin (`ʿ`) where PM prints it as a distinguishing radical (chunk-7 / chunk-8 / chunk-9 precedent).
 - Preserve underdot-Ḳ (`Ḳ` / `ḳ`) (chunk-7 / chunk-9 precedent).
 - Preserve d-bar `Ḏ` / `ḏ` (U+1E0E / U+1E0F) for the Thoth/Djehuty (`Ḏḥwty`) name family — chunk-12 TT32 `Ḏhutmosi` precedent (PR #200) per PR #151 egyptologist-verified printed-source convention. NOT to be confused with d-underdot `Ḍ` (a different consonant). chunk-10 TT11 `Ḍhout` is currently under audit issue #201 for the same correction.
-- Preserve vowel macrons (`ū`, `ō`, `ē`, `ā` AND their capital forms `Ū`, `Ō`, `Ē`, `Ā`) where PM prints them in name tokens (chunk-7 `Wahʿankh` precedent). When PM's headword is in all-caps and contains a capital-macron cluster, the macron-preserve rule applies AT TITLECASE — i.e. titlecase the all-caps form, preserve the macron on the resulting lowercase vowel, then apply strip-Ḥ if the title contained `Ḥ`/`ḥ`. The matchable form preserves the macron and strips only underdot-Ḥ.
 - Drop cartouche garbage (the text-layer noise after the name token).
 
 Honorific prefixes that PM uses to introduce role (an all-caps `KING`, `PRINCE`, `QUEEN`, `VIZIER` before the name) — strip from `occupant_name`, capture in `occupant_role`. When PM uses an all-caps role prefix before the name, strip it; otherwise the role is given by the title clause AFTER the name (see `occupant_role` rules).
