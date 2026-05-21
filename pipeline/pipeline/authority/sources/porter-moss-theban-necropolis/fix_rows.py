@@ -2589,6 +2589,11 @@ LEGACY_FIELD_RENAMES: dict[str, str] = {
 SCHEMA_FIELD_DEFAULTS: dict[str, object] = {
     "tomb_aliases": [],
     "co_occupants": [],
+    # `sub_period`: not yet populated by PM I.1 extraction (all agents return
+    # None; added here so rows from extraction prompts that omit the field still
+    # satisfy the required-fields schema test. When a later pass assigns
+    # sub-period values (e.g. Dyn. XVIII Early/Mid/Late), update here.
+    "sub_period": None,
     # PR A round-2 (egyptologist P1): explicit flag for joint coordinate
     # burials where PM does NOT mark a principal occupant. Default False
     # — the ordinary case is one tomb, one occupant (or one headword +
@@ -3165,6 +3170,33 @@ CHUNK33_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK33_RENAMES: dict[str, str] = {}
 
 
+# Chunk 34: TT251–TT260. Corrections beyond what tie-break-overrides resolved.
+# TT71 back-reference: TT252 PM says `Parents, see tomb 71 (brother Senenmut)`,
+# establishing a within-section (§ I) shared_with_tombs relationship. By the
+# pairing-invariant convention (enforced by test_shared_with_tombs_symmetry_
+# within_chunk), TT71 must list TT252. TT71 already has TT353 (see-also
+# inscription, also a within-section cross-ref); add TT252 alongside.
+# DERIVER_OVERRIDES below handle TT253/TT255/TT257/TT258/TT260
+# attribution_certainty over-fire on regnal-date/secondary-figure hedges.
+CHUNK34_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT71",
+        "shared_with_tombs",
+        ["TT252", "TT353"],
+        "PM I.1 p.337 / chunk-34 source text (TT252 Senimen). TT252 reads "
+        "`Parents, see tomb 71 (brother Senenmut)` — an explicit within-"
+        "section (§ I) PM cross-reference from TT252 to TT71. By the "
+        "pairing-invariant convention (back-reference symmetry), TT71 "
+        "must list TT252 in shared_with_tombs. TT71 already has TT353; "
+        "append TT252 and sort lexicographically per existing convention "
+        "(earlier TT-number first within the list). Parallel to TT250 "
+        "shared_with_tombs=[\"TT7\"] back-ref (CHUNK33_CORRECTIONS).",
+    ),
+]
+
+CHUNK34_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3202,6 +3234,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK31_CORRECTIONS,
     CHUNK32_CORRECTIONS,
     CHUNK33_CORRECTIONS,
+    CHUNK34_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3237,6 +3270,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK31_RENAMES,
     **CHUNK32_RENAMES,
     **CHUNK33_RENAMES,
+    **CHUNK34_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -4227,6 +4261,99 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT12/TT17/TT19/TT20, chunk-13 TT43, chunk-31 TT225, chunk-32 "
         "TT239 — attribution_certainty encodes occupant-identity certainty, "
         "not role or regnal-date certainty.",
+    ),
+    # Chunk-34: TT257 Neferhotep. The `perhaps` in notes_from_pm qualifies the
+    # identity of MAḤU'S FATHER (`Father (of Maḥu), perhaps Piay`), not
+    # Neferhotep's identification. Neferhotep is unambiguously named as PM
+    # headword. The usurper Maḥu is certain; only the paternity of Maḥu is
+    # hedged with `perhaps`. Same secondary-clause-hedge class as chunk-9 TT2
+    # (`called Suroy(?)`), chunk-10 TT12/TT17/TT19/TT20, chunk-31 TT225,
+    # chunk-32 TT239, chunk-33 TT241/TT249, chunk-34 TT253/TT255/TT258/TT260.
+    (
+        "TT257",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.342 / chunk-34 source text (TT257 Neferhotep). Source "
+        "reads `257. NEFERḤOTEP ... Usurped by MAḤU ... Father (of Maḥu), "
+        "perhaps Piay.` — the `perhaps` qualifies the identity of MAḤU'S "
+        "FATHER, not Neferhotep's identification. Neferhotep is "
+        "unambiguously named as PM headword and the usurpation is certain "
+        "(MAḤU's name also appears as a PM headword entry in the same "
+        "tomb record). The deriver fires on `perhaps` as an attribution "
+        "hedge, but this hedge applies only to a secondary figure's "
+        "parentage — not to the primary occupant's identity. Same "
+        "secondary-clause-hedge orthogonality class as chunk-9 TT2 "
+        "(`called Suroy(?)`), chunk-10 TT12/TT17/TT19/TT20, chunk-31 "
+        "TT225, chunk-32 TT239, chunk-33 TT241/TT249, chunk-34 "
+        "TT253/TT255/TT258/TT260 — attribution_certainty encodes "
+        "occupant-identity certainty, not secondary-figure paternity.",
+    ),
+    # Chunk-34: TT253 Khnemmosi. The `(?)` in notes_from_pm qualifies the
+    # REGNAL DATE (`Temp. Amenophis III (?)`), not Khnemmosi's identification.
+    # PM headword `253. KHNEMMOSI` names Khnemmosi unambiguously. Same
+    # regnal-date-hedge orthogonality class as chunk-10 TT12/TT17/TT19/TT20,
+    # chunk-31 TT225, chunk-32 TT239, chunk-33 TT241/TT249.
+    (
+        "TT253",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.338 / chunk-34 source text (TT253 Khnemmosi). Source "
+        "reads `253. KHNEMMOSI ... Temp. Amenophis III (?).` — the `(?)` "
+        "qualifies the REGNAL DATE (`Temp. Amenophis III`), not the "
+        "occupant's identity. Khnemmosi is unambiguously named as headword "
+        "with no identity uncertainty in PM. The deriver fires on the "
+        "regnal-date `(?)` as an attribution hedge. Same regnal-date-hedge "
+        "orthogonality class as chunk-10 TT12/TT17/TT19/TT20, chunk-31 "
+        "TT225, chunk-32 TT239, chunk-33 TT241/TT249 — attribution_certainty "
+        "encodes occupant-identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-34: TT255 Roy. The `(?)` in notes_from_pm qualifies the
+    # REGNAL DATE (`Temp. Haremhab (?)`), not Roy's identification.
+    # PM headword `255. ROY` names Roy unambiguously.
+    (
+        "TT255",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.340 / chunk-34 source text (TT255 Roy). Source reads "
+        "`255. ROY ... Temp. Haremhab (?).` — the `(?)` qualifies the "
+        "REGNAL DATE (`Temp. Haremhab`), not Roy's identity. Roy is "
+        "unambiguously named as headword with no identity uncertainty. "
+        "Same regnal-date-hedge orthogonality class as chunk-10 "
+        "TT12/TT17/TT19/TT20, chunk-31 TT225, chunk-32 TT239, chunk-33 "
+        "TT241/TT249, chunk-34 TT253 — attribution_certainty encodes "
+        "occupant-identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-34: TT258 Menkheper. The `(?)` in notes_from_pm qualifies the
+    # REGNAL DATE (`Temp. Tuthmosis IV (?)`), not Menkheper's identification.
+    # PM headword `258. MENKHEPER` names Menkheper unambiguously.
+    (
+        "TT258",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.342 / chunk-34 source text (TT258 Menkheper). Source "
+        "reads `258. MENKHEPER ... Temp. Tuthmosis IV (?).` — the `(?)` "
+        "qualifies the REGNAL DATE (`Temp. Tuthmosis IV`), not Menkheper's "
+        "identity. Menkheper is unambiguously named as headword. Same "
+        "regnal-date-hedge orthogonality class as chunk-10 "
+        "TT12/TT17/TT19/TT20, chunk-31 TT225, chunk-32 TT239, chunk-33 "
+        "TT241/TT249, chunk-34 TT253/TT255 — attribution_certainty encodes "
+        "occupant-identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-34: TT260 User. The `(?)` in notes_from_pm qualifies the
+    # REGNAL DATE (`Temp. Tuthmosis III (?)`), not User's identification.
+    # PM headword `260. USER` names User unambiguously.
+    (
+        "TT260",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.344 / chunk-34 source text (TT260 User). Source reads "
+        "`260. USER ... Temp. Tuthmosis III (?).` — the `(?)` qualifies "
+        "the REGNAL DATE (`Temp. Tuthmosis III`), not User's identity. "
+        "User is unambiguously named as headword. Same regnal-date-hedge "
+        "orthogonality class as chunk-10 TT12/TT17/TT19/TT20, chunk-31 "
+        "TT225, chunk-32 TT239, chunk-33 TT241/TT249, chunk-34 "
+        "TT253/TT255/TT258 — attribution_certainty encodes occupant-identity "
+        "certainty, not regnal-date certainty.",
     ),
 ]
 
