@@ -4975,9 +4975,10 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
     ),
     # Chunk-38 DERIVER_OVERRIDES:
     # TT291 — is_joint_burial: PM headword names two co-equal occupants (Nu
-    #   and Nekhtmin) each with separate wife/parents clauses. Third joint
-    #   burial in the source after TT122 (chunk-21) and TT181 (chunk-27).
-    #   No auto-deriver exists for is_joint_burial; all 3 agents emitted False.
+    #   and Nekhtmin) each with separate wife/parents clauses. FOURTH joint
+    #   burial in PM I.1 § Numbered Tombs after TT10 (chunk-9, Penbuy+Kasa),
+    #   TT122 (chunk-21), and TT181 (chunk-27). No auto-deriver exists for
+    #   is_joint_burial; all 3 agents emitted False.
     # TT295 — attribution_certainty: `(?)` in notes qualifies the REGNAL DATE
     #   range (`Temp. Tuthmosis IV to Amenophis III (?)`), not Ḏhutmosi's
     #   occupant identity. Same regnal-date-hedge orthogonality class as
@@ -4993,11 +4994,12 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "PM I.1 p.374 / chunk-38. PM headword names two co-equal occupants: "
         "Nu (`Servant in the Great Place`) and Nekhtmin (`Servant in the Place "
         "of Truth`), each with separate parents and wife clauses. This is the "
-        "third joint-burial pattern in the Theban Necropolis series after "
-        "TT122 (chunk-21, Nu + Nakhtmin joint) and TT181 (chunk-27, Nebwenenef "
-        "+ co-occupant joint). No auto-deriver exists for `is_joint_burial`; "
-        "all three agents emitted False. Override to True to match PM's "
-        "dual-headword joint-occupancy structure.",
+        "FOURTH coordinate joint-burial pattern in PM I.1 § Numbered Tombs "
+        "after TT10 (chunk-9, Penbuy + Kasa), TT122 (chunk-21, [Amen]ḥotp + "
+        "Amenemḥet), and TT181 (chunk-27, Nebamūn + Ipuky sculptors). No "
+        "auto-deriver exists for `is_joint_burial`; all three agents emitted "
+        "False. Override to True to match PM's dual-headword joint-occupancy "
+        "structure. Per Gemini PR #282 round-2 finding 3284295782/814.",
     ),
     (
         "TT295",
