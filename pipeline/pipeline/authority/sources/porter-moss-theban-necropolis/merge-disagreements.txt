@@ -633,6 +633,32 @@ TT220 (Khaemteri):
   occupant_name: a="Khaʿemteri" | b="Khaemteri" | c="Khaemteri"  → chose "Khaemteri"
   shared_with_tombs: a=["TT218"] | b=[] | c=[]  → chose []
 
+TT221 (Horimin):
+  occupant_name: a="Hor Min" | b="Unknown" | c="Or I Min"  → chose "Horimin"
+  occupant_role: a="Official" | b="Unknown" | c="Official"  → chose "Official"
+
+TT222 (Hekmaʿetreʿ-Nakht):
+  co_occupants: a=[{"alt_names": [], "name": "Wiay", "role": "Official"}] | b=[{"alt_names": [], "role": "High Priest"}] | c=[{"alt_names": [], "name": "Wiay", "role": "Official"}]  → chose [{"alt_names": [], "name": "Wiay", "role": "Official"}]
+  occupant_alt_names: a=["Turo"] | b=[] | c=["Turo"]  → chose ["Turo"]
+  occupant_name: a="Hej-s-Ma-etre-Nakht" | b="Hejmaernakht" | c="Hedjsmanakht"  → chose "Hekmaʿetreʿ-Nakht"
+  tomb_aliases: a=[] | b=["Turo"] | c=[]  → chose []
+
+TT223 (Karakhamun):
+  notes_from_pm: a="First r-priest. Saite. (CHAMPOLLION, No. 17, L. D. Text, No. 93.)" | b="First r[oyalty]-priest. Saite. (CHAMPOLLION, No. 17, L. D. Text, No. 93.)" | c="First ra-priest. Saite. (CHAMPOLLION, No. 17, L. D. Text, No. 93.)"  → chose "First ḳk-priest. Saite. (CHAMPOLLION, No. 17, L. D. Text, No. 93.)"
+
+TT224 (Cahmosi):
+  notes_from_pm: a="Overseer of the estate of the god's wife, Overseer of the two granaries of the god's wife. Temp. Tuthmosis III or Hatshepsut. Parents, Senusert and Taidy. Wife, Nuby, Royal concubine (in tombs 29 and 96)." | b="Overseer of the estate of the god's wife, Overseer of the two granaries of the god's wife Ahmosi Nefertere. Temp. Tuthmosis III or Hatshepsut. Parents, Senusert and Taidy [?]. Wife, Nubek, Royal concubine (in tombs 29 and 96)." | c="Overseer of the estate of the god's wife, Overseer of the two granaries of the god's wife Ahmosi Nefertere. Temp. Tuthmosis III or Hatshepsut. Parents, Senusert and Taidy. Wife, Nuba, Royal concubine (in tombs 29 and 96)."  → chose "Overseer of the estate of the god's wife, Overseer of the two granaries of the god's wife Ahmosi Nefertere. Temp. Tuthmosis III or Hatshepsut. Parents, Senusert and Taidy. Wife, Nub, Royal concubine (in tombs 29 and 96)."
+  occupant_alt_names: a=[] | b=["Humay"] | c=["Humay"]  → chose ["Humay"]
+
+TT225 (None):
+  occupant_role: a="Unknown" | b="High Priest" | c="Unknown"  → chose null
+
+TT226 (None):
+  occupant_role: a="Unknown" | b="Official" | c="Unknown"  → chose null
+
+TT229 (None):
+  is_uninscribed: a=false | b=false | c=true  → chose false
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -725,6 +751,7 @@ Per-chunk correction counts:
 - Chunk 28: 1 correction(s) defined in CHUNK28_CORRECTIONS.
 - Chunk 29: 8 correction(s) defined in CHUNK29_CORRECTIONS.
 - Chunk 30: 16 correction(s) defined in CHUNK30_CORRECTIONS.
+- Chunk 31: 7 correction(s) defined in CHUNK31_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1044,6 +1071,20 @@ Field corrections:
     value: ["TT218"]
 - TT220: shared_with_tombs already matches override (no-op this run; PM I.1 p.317-322 — same TT218/TT219/TT220 family tomb complex rationale as TT219 CHUNK30 correction above. TT218 carries `shared_with_tombs: ["TT219", "TT220"]`; symmetry requires TT220 to carry `["TT218"]`. Agent A emitted `["TT218"]`; 2/1 majority (B+C) dropped it. Restoring to satisfy `test_shared_with_tombs_symmetry_within_chunk`.)
     value: ["TT218"]
+- TT224: occupant_name already matches override (no-op this run; PM I.1 p.325 / physical PDF p.343 (TT224). Direct PDF visual check confirms headword `224. 'AHMOSI [hieroglyph], called HUMAY` — the apostrophe is PM's convention for ayin (ʿ). Titlecase: `ʿAhmosi`. All three agents misread the leading ayin as `C` (OCR glyph collision where ʿ resembles a capital C in the text-layer), emitting `Cahmosi`. Same OCR-ayin-as-C class as chunk-11 TT29 `[Caḥmosi]` → `[ʿAḥmosi]` correction (which cross-references this same individual: PM I.1 p.45 prints `Parents, [ʿAḥmosi] Ḥumay (tomb 224)`). The strip-Ḥ policy applies only to underdot-Ḥ in occupant_name; the ayin is preserved. Note: the alt-name `Humay` (= `Ḥumay` with underdot stripped) is correctly captured in `occupant_alt_names` by the 2/1 majority.)
+    value: "ʿAhmosi"
+- TT224: notes_from_pm already matches override (no-op this run; PM I.1 p.325 / physical PDF p.343 (TT224 ʿAhmosi, called Ḥumay). Two post-merge restorations: (1) restore ayin+Ḥ on `ʿAḥmosi Nefertere` in the god's-wife epithet — PM prints the queen's name `ʿAḥmosi Nefertere` with both diacritics in the body of the headword; the tie-break value carries plain `Ahmosi Nefertere` (ayin and Ḥ both dropped). notes_from_pm is the verbatim-preserve field; both diacritics must be restored. (2) the wife's name is `Nub` (bare short form) per direct PDF visual check; the tie-break value already pins `Nub` correctly (all three agents' forms Nuby/Nubek/Nuba were wrong; the override value used B/C structure with Nub restored). This correction entry solely layers the diacritic restoration on the god's-wife clause.)
+    value: "Overseer of the estate of the god's wife, Overseer of the two granaries of the god's wife ʿAḥmosi Nefertere. Temp. Tuthmosis III or Hatshepsut. Parents, Senusert and Taidy. Wife, Nub, Royal concubine (in tombs 29 and 96)."
+- TT225: occupant_role already matches override (no-op this run; PM I.1 p.325 / physical PDF p.343 (TT225). Headword `225. A First prophet of Ḥathor. Temp. Tuthmosis III (?).` — anonymous occupant (no personal name). Per the controlled-vocab pairing invariant established by chunk-8 KV12/KV39/KV56/QV36/QV40/QV73/QV75 and chunk-14 TT58 / chunk-15 TT70: null `occupant_name` MUST co-occur with `occupant_role="Unknown"`. Agents A and C emitted `Unknown` (sentinel→null at merge), B emitted `High Priest`; majority chose null. Fix enforces the pairing invariant.)
+    value: "Unknown"
+- TT226: occupant_role already matches override (no-op this run; PM I.1 p.327 / physical PDF p.345 (TT226). Headword `226. A Royal scribe, Overseer of the royal nurses. Temp. Amenophis III.` — anonymous occupant. Per the null-name/null-role pairing invariant (chunk-8 KV12 / chunk-14 TT58 / chunk-15 TT70 precedent). Agents A and C emitted `Unknown` (sentinel→null at merge), B emitted `Official`; majority chose null. Fix enforces the pairing invariant.)
+    value: "Unknown"
+- TT227: occupant_role already matches override (no-op this run; PM I.1 p.327 / physical PDF p.345 (TT227). Headword `227. Name lost. Temp. Tuthmosis III.` — anonymous (name lost). Per the null-name/null-role pairing invariant (chunk-8 KV12 / chunk-14 TT58 / chunk-15 TT70 precedent). All three agents emitted `Unknown` (sentinel→null at merge); majority chose null. Fix enforces the pairing invariant.)
+    value: "Unknown"
+- TT229: occupant_role already matches override (no-op this run; PM I.1 p.328 / physical PDF p.346 (TT229). Headword `229. Name lost. Dyn. XVIII. (Unfinished.)` — anonymous (name lost). Per the null-name/null-role pairing invariant. All three agents emitted `Unknown` (sentinel→null at merge). Fix enforces the pairing invariant.)
+    value: "Unknown"
+- TT230: occupant_role already matches override (no-op this run; PM I.1 p.328 / physical PDF p.346 (TT230). Headword `230. Perhaps MEN~, Scribe of soldiers of the Lord of the Two Lands (from cones). Dyn. XVIII. (Unfinished.)` — anonymous (name lost; `Perhaps` attribution is to an identification via cone evidence, not a personal attestation). Per the null-name/null-role pairing invariant. All three agents emitted `Unknown` (sentinel→null at merge). Fix enforces the pairing invariant.)
+    value: "Unknown"
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1128,6 +1169,8 @@ Field corrections:
 - TT202: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT205: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT210: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT225: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT228: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -1180,3 +1223,5 @@ Field corrections:
 - TT202: attribution_certainty → "attested" (deriver override; PM I.1 p.305 prints `202. NEKHTAMUN ..., Prophet of Ptaḥ Lord of Thebes, Priest ...)
 - TT205: attribution_certainty → "attested" (deriver override; PM I.1 p.305 prints `205. ḎHUTMOSI ..., Royal butler. Temp. Tuthmosis III(?) to ...)
 - TT210: attribution_certainty → "attested" (deriver override; PM I.1 p.307 prints `210. RA<WEBEN ..., Servant in the Place of Truth. Dyn. XIX....)
+- TT228: attribution_certainty → "attested" (deriver override; PM I.1 p.327 / physical PDF p.345 prints `228. AMENMOSI ..., Scribe of the treas...)
+- TT225: attribution_certainty → "attested" (deriver override; PM I.1 p.325 / physical PDF p.343 prints `225. A First prophet of Ḥathor. Temp. ...)

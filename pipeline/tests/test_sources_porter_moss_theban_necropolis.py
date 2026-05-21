@@ -331,6 +331,9 @@ CHUNK29_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK30_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(211, 221)}
 )
+CHUNK31_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(221, 231)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -361,6 +364,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK28_TOMB_IDS
     | CHUNK29_TOMB_IDS
     | CHUNK30_TOMB_IDS
+    | CHUNK31_TOMB_IDS
 )
 
 
@@ -3663,6 +3667,12 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # on the hieroglyphic inscription itself, not a regnal-date tail or
         # secondary-clause hedge). The deriver correctly fires `uncertain` here.
         "TT209",
+        # TT230 chunk-31: PM headword `230. Perhaps MEN~, Scribe of soldiers ...
+        # (from cones). Dyn. XVIII. (Unfinished.)` — the `Perhaps` qualifies the
+        # PRIMARY OCCUPANT identification (naming Menes via cone evidence is
+        # genuinely uncertain). This is NOT a regnal-date tail or secondary-clause
+        # hedge; the deriver correctly fires `uncertain`. No DERIVER_OVERRIDE needed.
+        "TT230",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -8175,3 +8185,301 @@ def test_chunk30_tt220_khaemteri_servant_place_of_truth() -> None:
     assert r["theban_area"] == "Deir el-Medina"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 322
+
+
+# ---------------------------------------------------------------------------
+# Chunk-31: TT221–TT230 (Qurnet Muraʿi, ʿAsâsîf, Sh. ʿAbd el-Qurna)
+# ---------------------------------------------------------------------------
+
+
+def test_chunk31_all_rows_present() -> None:
+    """All 10 TT221-TT230 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK31_TOMB_IDS
+    assert actual == CHUNK31_TOMB_IDS, sorted(CHUNK31_TOMB_IDS - actual)
+
+
+def test_chunk31_theban_area() -> None:
+    """TT221-TT222 Qurnet Muraʿi, TT223 ʿAsâsîf, TT224-TT230 Sh. ʿAbd el-Qurna."""
+    expected = {
+        "TT221": "Qurnet Muraʿi",
+        "TT222": "Qurnet Muraʿi",
+        "TT223": "ʿAsâsîf",
+        "TT224": "Sh. ʿAbd el-Qurna",
+        "TT225": "Sh. ʿAbd el-Qurna",
+        "TT226": "Sh. ʿAbd el-Qurna",
+        "TT227": "Sh. ʿAbd el-Qurna",
+        "TT228": "Sh. ʿAbd el-Qurna",
+        "TT229": "Sh. ʿAbd el-Qurna",
+        "TT230": "Sh. ʿAbd el-Qurna",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, (tid, r["theban_area"])
+
+
+def test_chunk31_source_edition() -> None:
+    """All chunk-31 rows cite PM I.1 2nd ed. 1960."""
+    for tid in CHUNK31_TOMB_IDS:
+        r = _row(tid)
+        assert r["source_citation"]["edition"] == "PM I.1 2nd ed. 1960", (
+            tid,
+            r["source_citation"]["edition"],
+        )
+
+
+def test_chunk31_anonymous_rows_role_unknown() -> None:
+    """TT225/226/227/229/230 have null occupant_name — role must be 'Unknown'.
+    CHUNK31_CORRECTIONS enforces null-name/null-role pairing invariant."""
+    for tid in {"TT225", "TT226", "TT227", "TT229", "TT230"}:
+        r = _row(tid)
+        assert r["occupant_name"] is None, (tid, r["occupant_name"])
+        assert r["occupant_role"] == "Unknown", (tid, r["occupant_role"])
+
+
+def test_chunk31_tt221_horimin_scribe_soldiers() -> None:
+    """TT221 — Horimin, Scribe of soldiers. Ramesside. Qurnet Muraʿi. p.323.
+    Tie-break override: all 3 agents garbled OCR `1:1 oR I MIN`; PDF confirms
+    headword `HORIMIN`. No underdot in name."""
+    r = _row("TT221")
+    assert r["occupant_name"] == "Horimin"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of soldiers" in r["notes_from_pm"]
+    assert "palace of the King" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 323
+
+
+def test_chunk31_tt222_hekmaetrenakht_first_prophet_monthu() -> None:
+    """TT222 — Hekmaʿetreʿ-Nakht, called Turo. First prophet of Monthu.
+    Temp. Ramesses III to IV. Qurnet Muraʿi. p.323-324.
+    Tie-break override: PDF confirms `HEKMA'ETRE'-NAKHT` (two ayins).
+    Wife Wiay (co_occupant); Turo is occupant_alt_name not tomb_alias."""
+    r = _row("TT222")
+    assert r["occupant_name"] == "Hekmaʿetreʿ-Nakht"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Turo"]
+    assert r["tomb_aliases"] == []
+    assert len(r["co_occupants"]) == 1
+    assert r["co_occupants"][0]["name"] == "Wiay"
+    assert r["co_occupants"][0]["role"] == "Official"
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First prophet of Monthu" in r["notes_from_pm"]
+    assert "Ramesses III to IV" in r["notes_from_pm"]
+    assert "Wiay" in r["notes_from_pm"]
+    assert "Chief of the harim of Monthu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 324
+
+
+def test_chunk31_tt223_karakhamun_first_ḳk_priest_saite() -> None:
+    """TT223 — Karakhamun, First ḳk-priest. Saite. ʿAsâsîf. p.324.
+    Tie-break override: PDF confirms `First ḳk-priest` (underdot-ḳ);
+    all 3 agents garbled the OCR title (r-priest / r[oyalty]-priest / ra-priest)."""
+    r = _row("TT223")
+    assert r["occupant_name"] == "Karakhamun"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "ḳk-priest" in r["notes_from_pm"]
+    assert "Saite" in r["notes_from_pm"]
+    assert "CHAMPOLLION, No. 17" in r["notes_from_pm"]
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 324
+
+
+def test_chunk31_tt224_ahmosi_called_humay_godswifeofficial() -> None:
+    """TT224 — ʿAhmosi, called Ḥumay. Overseer god's wife estate. p.325.
+    CHUNK31_CORRECTIONS: occupant_name Cahmosi→ʿAhmosi (ayin misread as C);
+    notes_from_pm: ʿAḥmosi Nefertere diacritics restored; wife Nub (PDF-verified).
+    TT29 cross-ref: chunk-11 notes `Parents, [ʿAḥmosi] Ḥumay (tomb 224)`."""
+    r = _row("TT224")
+    assert r["occupant_name"] == "ʿAhmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Humay"]
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "ʿAḥmosi Nefertere" in r["notes_from_pm"]
+    assert "Tuthmosis III or Hatshepsut" in r["notes_from_pm"]
+    assert "Senusert" in r["notes_from_pm"]
+    assert "Taidy" in r["notes_from_pm"]
+    assert "Wife, Nub" in r["notes_from_pm"]
+    assert "Royal concubine" in r["notes_from_pm"]
+    assert "tombs 29 and 96" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 325
+
+
+def test_chunk31_tt225_anon_first_prophet_hathor() -> None:
+    """TT225 — Anonymous. First prophet of Ḥathor. Temp. Tuthmosis III (?). p.325.
+    CHUNK31_CORRECTIONS: occupant_role null→Unknown (pairing invariant).
+    DERIVER_OVERRIDE: attribution_certainty uncertain→attested (the `(?)` qualifies
+    the regnal date, not the occupant's role attribution)."""
+    r = _row("TT225")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First prophet of" in r["notes_from_pm"]
+    assert "Tuthmosis III" in r["notes_from_pm"]
+    assert "Webekht" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 325
+
+
+def test_chunk31_tt226_anon_royal_scribe_overseer_nurses() -> None:
+    """TT226 — Anonymous. Royal scribe, Overseer of the royal nurses.
+    Temp. Amenophis III. Sh. ʿAbd el-Qurna. p.327.
+    CHUNK31_CORRECTIONS: occupant_role null→Unknown (pairing invariant)."""
+    r = _row("TT226")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Royal scribe" in r["notes_from_pm"]
+    assert "Overseer of the royal nurses" in r["notes_from_pm"]
+    assert "Amenophis III" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 327
+
+
+def test_chunk31_tt227_anon_name_lost_tuthmosis3() -> None:
+    """TT227 — Anonymous. Name lost. Temp. Tuthmosis III. p.327.
+    CHUNK31_CORRECTIONS: occupant_role null→Unknown (pairing invariant).
+    Father Hepu, Third lector of Amun."""
+    r = _row("TT227")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Name lost" in r["notes_from_pm"]
+    assert "Tuthmosis III" in r["notes_from_pm"]
+    assert "Hepu" in r["notes_from_pm"]
+    assert "Third lector of Amun" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 327
+
+
+def test_chunk31_tt228_amenmosi_scribe_treasury_amun() -> None:
+    """TT228 — Amenmosi, Scribe of the treasury of Amun. Dyn. XVIII. p.327.
+    Father (probably) Camethu (tomb 83) — the `(probably)` qualifies paternal
+    identification, NOT the primary occupant (DERIVER_OVERRIDE: attested).
+    shared_with_tombs=[] — `Father (probably), Camethu (tomb 83)` is a
+    family cross-ref, not a shared-occupancy relation."""
+    r = _row("TT228")
+    assert r["occupant_name"] == "Amenmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of the treasury of Amun" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "Camethu (tomb 83)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 327
+
+
+def test_chunk31_tt229_anon_name_lost_unfinished_dyn18() -> None:
+    """TT229 — Anonymous. Name lost. Dyn. XVIII. (Unfinished.) p.328.
+    CHUNK31_CORRECTIONS: occupant_role null→Unknown (pairing invariant).
+    is_unfinished=True (PM explicitly marks `(Unfinished.)`).
+    is_uninscribed=False — name lost does NOT mean uninscribed."""
+    r = _row("TT229")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert "Name lost" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "Unfinished" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 328
+
+
+def test_chunk31_tt230_perhaps_menes_scribe_soldiers_unfinished() -> None:
+    """TT230 — Perhaps Menes(?), Scribe of soldiers. Dyn. XVIII. (Unfinished.) p.328.
+    attribution_certainty=uncertain — `Perhaps` qualifies the PRIMARY occupant
+    identification (cone evidence, not personal attestation); no DERIVER_OVERRIDE.
+    occupant_name=None (cone identification not sufficient for a personal name).
+    CHUNK31_CORRECTIONS: occupant_role null→Unknown (pairing invariant)."""
+    r = _row("TT230")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["attribution_certainty"] == "uncertain"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert "Perhaps" in r["notes_from_pm"]
+    assert "Scribe of soldiers" in r["notes_from_pm"]
+    assert "from cones" in r["notes_from_pm"]
+    assert "Dyn. XVIII" in r["notes_from_pm"]
+    assert "Unfinished" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 328
