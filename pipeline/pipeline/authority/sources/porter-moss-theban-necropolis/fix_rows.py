@@ -2157,8 +2157,8 @@ CHUNK27_RENAMES: dict[str, str] = {}
 #
 # All 4 substantive divergences (TT192/TT193/TT194/TT196 notes_from_pm) were
 # resolved via tie-break-overrides.json; no post-merge corrections are needed
-# for this chunk. The empty list is required so that
-# `test_all_corrections_includes_every_chunk_list` continues to pass.
+# for this chunk. One post-merge correction is applied to TT194
+# (TT194 Amūn macron consistency, per Gemini PR #272 round-1 finding 3280621504).
 CHUNK28_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT194",
