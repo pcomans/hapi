@@ -2182,6 +2182,113 @@ CHUNK28_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK28_RENAMES: dict[str, str] = {}
 
 
+# === Chunk 29 — TT201-TT210 (Khôkha ×8 + ʿAsâsîf ×1 + Deir el-Medina ×1) ===
+#
+# Tie-break overrides (tie-break-overrides.json) resolved 4 substantive
+# 1/1/1 splits: TT202 notes_from_pm (Ptaḥ underdot + no-comma), TT207
+# notes_from_pm (Ḥemawen underdot), TT209 notes_from_pm (formerly-read
+# parenthetical + (?) uncertainty), TT210 notes_from_pm (L.D. citation
+# mid-sentence + Nefertkhaʿ ayin).
+#
+# Post-merge CHUNK29_CORRECTIONS apply:
+#   1. TT201 occupant_name: 2/1 majority chose `Re`; PM headword `RE<` =
+#      `Reʿ` (ayin). Restore ayin per README ayin-preserve policy. Same axis
+#      as TT204 and TT210 below.
+#   2. TT202 occupant_role: 2/1 majority chose `High Priest`; PM says
+#      `Prophet of Ptaḥ Lord of Thebes` — a lower-order priestly title, not
+#      the First Prophet of Amun. `Official` is the correct role per the
+#      pipeline's role-vocabulary precedent (TT197 `Chief steward of the
+#      god's wife...` = Official, TT193 `Magnate of the seal...` = Official).
+#   3. TT202 notes_from_pm: `Amun` → `Amūn` macron-Ū per chunk-12-onward
+#      verbatim-preserve policy (PM body prose prints Amūn with macron).
+#   4. TT204 occupant_name: 2/1 majority chose `Nebanensu`; PM `NEB<ANENSU`
+#      = `Nebʿanensu`. Ayin-preserve.
+#   5. TT207 notes_from_pm: `Amun` → `Amūn` macron-Ū (merge-pinned value
+#      from agent C had `Amun` without macron; verbatim-preserve applies).
+#   6. TT208 notes_from_pm: 2/1 majority chose `Amen-Re`; PM `Amen-rec` =
+#      `Amen-reʿ` (ayin, lowercase `r`). Restore per verbatim-preserve.
+#   7. TT210 occupant_name: 2/1 majority chose `Raweben`; PM `RA<WEBEN` =
+#      `Raʿweben`. Ayin-preserve.
+CHUNK29_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT201",
+        "occupant_name",
+        "Reʿ",
+        "PM I.1 p.304 headword `RE< =~·` — the `<` is the PM text-layer "
+        "rendering of the ayin (ʿ). Agents A+B (2/1 majority) chose `Re`; "
+        "agent C's `Reʿ` matches the PM headword. Ayin-preserve convention "
+        "per README and Constitutional Rule 1 (PM-faithful provenance). "
+        "Same OCR-ayin axis as TT204 `Nebʿanensu` and TT210 `Raʿweben`.",
+    ),
+    (
+        "TT202",
+        "occupant_role",
+        "Official",
+        "PM I.1 p.305 headword `Prophet of Ptaḥ Lord of Thebes, Priest in "
+        "front of Amun` — `Prophet of Ptaḥ` is a lower-order priestly "
+        "title, NOT the First Prophet of Amun (High Priest rank). The "
+        "project role-vocabulary uses `Official` for temple priests below "
+        "the First-Prophet level (TT197 Chief steward = Official; TT193 "
+        "Magnate of the seal = Official). Agents A+B (2/1 majority) chose "
+        "`High Priest`; agent C's `Official` is correct. Flagged for "
+        "egyptologist confirmation.",
+    ),
+    (
+        "TT202",
+        "notes_from_pm",
+        "Prophet of Ptaḥ Lord of Thebes, Priest in front of Amūn. Dyn. XIX(?).",
+        "Macron-Ū on `Amūn` per chunk-12-onward verbatim-preserve policy "
+        "(PM body prose prints Amūn with macron throughout). Tie-break "
+        "pinned agent C's form which had `Amun` without macron; correcting "
+        "here per the verbatim-preserve rule. Underdot-Ḥ on `Ptaḥ` is "
+        "already correct from the tie-break pin.",
+    ),
+    (
+        "TT204",
+        "occupant_name",
+        "Nebʿanensu",
+        "PM I.1 p.305 headword `NEB<ANENSU` — the `<` is the PM text-layer "
+        "rendering of the ayin (ʿ). Agents A+B (2/1 majority) chose "
+        "`Nebanensu`; agent C's `Nebʿanensu` matches PM. Ayin-preserve "
+        "convention per README and Constitutional Rule 1. Same axis as "
+        "TT201 `Reʿ` and TT210 `Raʿweben`.",
+    ),
+    (
+        "TT207",
+        "notes_from_pm",
+        "Scribe of divine offerings of Amūn. Ramesside. Parents, Ḥemawen and Nebuy.",
+        "Macron-Ū on `Amūn` per chunk-12-onward verbatim-preserve policy. "
+        "Tie-break pinned agent C's form which had `Amun` without macron. "
+        "`Ḥemawen` with underdot-Ḥ is already correct from the tie-break "
+        "pin (PM `~emawen` → `Ḥemawen`).",
+    ),
+    (
+        "TT208",
+        "notes_from_pm",
+        "Divine father of Amen-reʿ. Ramesside.",
+        "PM I.1 p.306 headword `RoMA ~~·.Divine father of Amen-rec.` — "
+        "`Amen-rec` is the PM text-layer rendering of `Amen-reʿ` (lowercase "
+        "`r`, ayin ʿ). Agents A+B (2/1 majority) chose `Amen-Re` (capital "
+        "R, no ayin) — both elements wrong. Verbatim-preserve policy: "
+        "restore lowercase `r` per PM's body-prose convention and the ayin "
+        "per the README ayin-preserve rule. Compare TT65 tie-break rationale "
+        "`Amen-reʿ` in `notes_from_pm` (same divine-name form).",
+    ),
+    (
+        "TT210",
+        "occupant_name",
+        "Raʿweben",
+        "PM I.1 p.307 headword `RA<WEBEN` — the `<` is the PM text-layer "
+        "rendering of the ayin (ʿ). Agents A+B (2/1 majority) chose "
+        "`Raweben`; agent C's `Raʿweben` matches PM. Ayin-preserve "
+        "convention per README and Constitutional Rule 1. Same axis as "
+        "TT201 `Reʿ` and TT204 `Nebʿanensu`.",
+    ),
+]
+
+CHUNK29_RENAMES: dict[str, str] = {}
+
+
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
 # Pre-PR-A audit (2026-05-02) found two distinct schema misuses in PM rows:
@@ -2487,6 +2594,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK26_CORRECTIONS,
     CHUNK27_CORRECTIONS,
     CHUNK28_CORRECTIONS,
+    CHUNK29_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2517,6 +2625,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK26_RENAMES,
     **CHUNK27_RENAMES,
     **CHUNK28_RENAMES,
+    **CHUNK29_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -3332,6 +3441,63 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "as a victim of usurpation, not as the agent. Same structural "
         "parallel as TT95 Mery (chunk-18 DERIVER_OVERRIDE). The deriver "
         "regex fires on `usurped` context-free; override to False.",
+    ),
+    # Chunk-29 deriver overrides.
+    # TT202 Nekhtamun: notes_from_pm contains `Dyn. XIX(?)` — the `(?)` qualifies
+    # the dynastic-date assignment, not Nekhtamun's identity as the tomb occupant.
+    # PM headword `202. NEKHTAMUN ..., Prophet of Ptaḥ Lord of Thebes, Priest in
+    # front of Amun` identifies the person unhedged. Same regnal-date hedge class
+    # as chunk-10 TT12/TT17/TT19/TT20, chunk-11 TT22, chunk-13 TT41/TT43/TT45/
+    # TT46/TT49. Per chunk-9 TT2 precedent.
+    (
+        "TT202",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.305 prints `202. NEKHTAMUN ..., Prophet of Ptaḥ Lord of "
+        "Thebes, Priest in front of Amun. Dyn. XIX(?).` — the `(?)` "
+        "qualifies the dynastic-date assignment (Dyn. XIX), not "
+        "Nekhtamun's identification as the tomb occupant. The headword "
+        "names the person unhedged. Deriver fires context-free on any "
+        "`(?)` in notes. Same regnal-date hedge class as chunk-10 TT12/"
+        "TT17/TT19/TT20, chunk-13 TT41/TT43/TT45/TT46/TT49, chunk-14 "
+        "TT52, chunk-25 TT165. Per chunk-9 TT2 precedent that "
+        "attribution_certainty encodes occupant-identity certainty, not "
+        "dynastic-date certainty.",
+    ),
+    # TT205 Ḏhutmosi: notes_from_pm contains `Tuthmosis III(?) to Amenophis II(?)`
+    # — both `(?)` qualify the regnal-period endpoints, not Ḏhutmosi's identity.
+    # PM headword `205. ḎHUTMOSI ..., Royal butler. Temp. Tuthmosis III(?) to
+    # Amenophis II(?).` names Ḏhutmosi unhedged. Same regnal-date class.
+    (
+        "TT205",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.305 prints `205. ḎHUTMOSI ..., Royal butler. Temp. "
+        "Tuthmosis III(?) to Amenophis II(?).` — both `(?)` qualify the "
+        "regnal-date range endpoints (Tuthmosis III, Amenophis II), not "
+        "Ḏhutmosi's identification as the tomb occupant. Same regnal-date "
+        "hedge class as TT202 (this chunk) and the chunk-10-to-25 cluster. "
+        "Per chunk-9 TT2 precedent.",
+    ),
+    # TT210 Raʿweben: notes_from_pm contains `Parents(?)` — the `(?)` qualifies
+    # the PARENTAGE identification (i.e., PM is uncertain who Raʿweben's parents
+    # were), not Raʿweben's identity as the tomb occupant. PM headword `RA<WEBEN
+    # ..., Servant in the Place of Truth. Dyn. XIX.` names the occupant unhedged.
+    # Structural parallel to TT2 (chunk-9 DERIVER_OVERRIDE): `(probably) Esi`
+    # qualifies the second wife, not the headword occupant.
+    (
+        "TT210",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.307 prints `210. RA<WEBEN ..., Servant in the Place of "
+        "Truth. Dyn. XIX. ... Parents(?), Piay, Sculptor in the Place of "
+        "Truth, and Nefertkhaʿ.` — the `(?)` qualifies the PARENTAGE "
+        "identification (PM is uncertain about Raʿweben's parents), not "
+        "Raʿweben's identity as the tomb occupant. The headword names "
+        "the person and title unhedged. Same secondary-clause hedge class "
+        "as TT2 `(probably) Esi` (wife identification). Per chunk-9 TT2 "
+        "precedent that attribution_certainty encodes occupant-identity "
+        "certainty, not secondary-clause certainty.",
     ),
 ]
 
