@@ -3687,6 +3687,26 @@ CHUNK38_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "`ḎḤUTMOSI` with d-bar explicitly.",
     ),
     (
+        "TT295",
+        "notes_from_pm",
+        "Head of the secrets in the Chest of Anubis, sem-priest in the "
+        "Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). "
+        "Parents, Sennuter, sem-priest in the Good House, &c., and "
+        "Senemiʿoḥ. Wives, Nefertere and Rennutet.",
+        "PR #282 round 1 Gemini findings 3284269377/391/406. The tie-break "
+        "pinned agent B's form which was the MINORITY on `&c.`: source "
+        "merge-disagreements.txt confirms A+C had `&c.` after Sennuter's "
+        "title (PM verbatim); B dropped it. Per Constitutional Rule 6 + "
+        "majority-rule, restore `&c.` (PM source line 157: "
+        "`Sennuter t,` decodes to `Sennuter, sem-priest in the Good House, "
+        "&c.`). Two diacritic restorations on mother's name: source "
+        "`Senemi<ol,l` decodes as `Senemiʿoḥ` — `<` = ayin (U+02BF), "
+        "`ol,l` = OCR for `oḥ` (underdot-Ḥ). notes_from_pm is verbatim-"
+        "preserve; restore both ayin + underdot-ḥ. The tie-break "
+        "rationale's claim that `C drops &c.` was incorrect — C kept "
+        "`&c.`; only B dropped it.",
+    ),
+    (
         "TT296",
         "notes_from_pm",
         "Scribe of the divine offerings of all the gods, Officer of the treasury "

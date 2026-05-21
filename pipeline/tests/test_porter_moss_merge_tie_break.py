@@ -977,7 +977,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT295", "notes_from_pm"):
             "Head of the secrets in the Chest of Anubis, sem-priest in the "
             "Good House, Embalmer. Temp. Tuthmosis IV to Amenophis III (?). "
-            "Parents, Sennuter, sem-priest in the Good House, and Senemioth. "
+            "Parents, Sennuter, sem-priest in the Good House, &c., and Senemiʿoḥ. "
             "Wives, Nefertere and Rennutet.",
         ("TT298", "co_occupants"): [
             {"alt_names": [], "name": "Unnufer", "role": "Official"}
@@ -1277,7 +1277,7 @@ def test_tt295_dhutmosi_paroy(reconciled):
     assert r["tomb_aliases"] == []
     assert r["attribution_certainty"] == "attested"
     assert r["is_usurped"] is False
-    assert "Senemioth" in r["notes_from_pm"]
+    assert "Senemiʿoḥ" in r["notes_from_pm"]
     assert r["source_citation"]["page"] == 377
 
 

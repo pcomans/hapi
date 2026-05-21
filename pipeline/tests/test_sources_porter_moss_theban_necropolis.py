@@ -10493,7 +10493,7 @@ def test_tt295_dhutmosi_called_paroy() -> None:
     assert "sem-priest in the Good House" in r["notes_from_pm"]
     assert "Tuthmosis IV" in r["notes_from_pm"]
     assert "Sennuter" in r["notes_from_pm"]
-    assert "Senemioth" in r["notes_from_pm"]
+    assert "Senemiʿoḥ" in r["notes_from_pm"]
     assert "Nefertere" in r["notes_from_pm"]
     assert "Rennutet" in r["notes_from_pm"]
     assert r["theban_area"] == "Khokha"
