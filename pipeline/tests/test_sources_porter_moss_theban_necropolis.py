@@ -349,6 +349,9 @@ CHUNK35_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK36_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(271, 281)}
 )
+CHUNK37_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(281, 291)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -385,6 +388,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK34_TOMB_IDS
     | CHUNK35_TOMB_IDS
     | CHUNK36_TOMB_IDS
+    | CHUNK37_TOMB_IDS
 )
 
 
@@ -604,7 +608,16 @@ def test_theban_area_constraint() -> None:
         "Khokha",
         "Qurnet Muraʿi",
     }
+    # TT281 is an Unfinished Temple (not a private tomb); PM gives no
+    # named theban_area for it — `theban_area=None` is correct.
     for r in _rows():
+        if r["theban_area"] is None:
+            assert r["tomb_id"] == "TT281", (
+                f"{r['tomb_id']}: unexpected null theban_area — only TT281 "
+                "(Unfinished Temple) is allowed to have no theban_area. "
+                "Check the source and add a correction if needed."
+            )
+            continue
         assert r["theban_area"] in valid, (r["tomb_id"], r["theban_area"])
 
 
@@ -3634,10 +3647,18 @@ def test_182_usurped_canonical_set() -> None:
     Neferhotep IS the usurped party (headword occupant = victim); deriver
     fires correctly on `Usurped by Maḥu`; is_usurped=True is correct.
     No DERIVER_OVERRIDE needed (contrast TT95 Mery and TT190 Esbanebded
-    where the headword occupant was the usurper, requiring override to False)."""
+    where the headword occupant was the usurper, requiring override to False).
+    Extended chunk 37: TT284 (Paijemneter, PM `(Reused.)` — PM I.1 p.366) and
+    TT288 (Bekenkhons, PM `Re-used by Setau (tomb 289)` — PM I.1 p.369).
+    Both: deriver regex `\\busurp` misses `Reused`/`Re-used` lexical form;
+    is_usurped=True pinned via DERIVER_OVERRIDES."""
+    # Extended chunk 37: TT284 (Paijemneter, PM `(Reused.)`) and
+    # TT288 (Bekenkhons, PM `Re-used by Setau`). Both are re-use/usurpation
+    # cases where the deriver regex `\busurp` misses the `Reused`/`Re-used`
+    # lexical form; is_usurped=True pinned via DERIVER_OVERRIDES in fix_rows.py.
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
                 "TT65", "TT68", "TT70", "TT77", "TT84", "TT112", "TT127",
-                "TT152", "TT257"}
+                "TT152", "TT257", "TT284", "TT288"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -9994,3 +10015,268 @@ def test_chunk36_tt280_meketrec_chief_steward_mentuhotp() -> None:
     assert r["theban_area"] == "Dra' Abu el-Naga"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 359
+
+
+# ---------------------------------------------------------------------------
+# Chunk 37: TT281-TT290 (Dra' Abu el-Naga + TT281 Unfinished Temple + TT290 Deir el-Medina)
+# ---------------------------------------------------------------------------
+# CHUNK37_CORRECTIONS applied post-merge:
+#   TT281 occupant_name: Mentuhotp→Mentuḥotp (underdot-Ḥ per source `MENTUI;IOTP`).
+#   TT281 notes_from_pm: abbreviated→full `Unfinished Temple of Mentuḥotp-Sʿankhkareʿ.`.
+#   TT283 notes_from_pm: Amun→Amūn (macron-retain policy).
+#   TT283 occupant_alt_names: []→["Roy"] (headword ROMA (RoY)).
+#   TT287 notes_from_pm: Amun→Amūn (macron-retain policy).
+#   TT290 occupant_name: Irinofer→Irinufer (OCR !RINUFER headword).
+#   TT290 notes_from_pm: Amon→Amūn + Meḥytkhacti underdot + wife placeholder.
+# DERIVER_OVERRIDES: TT284 is_usurped=True (PM `(Reused.)` — deriver misses lexical form).
+#   TT288 is_usurped=True (PM `Re-used by Setau` — deriver misses lexical form).
+# Tie-breaks: TT283|co_occupants + TT283|notes_from_pm + TT289|notes_from_pm +
+#   TT290|notes_from_pm (4 entries in tie-break-overrides.json).
+
+
+def test_chunk37_all_rows_present() -> None:
+    """All 10 TT281-TT290 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK37_TOMB_IDS
+    assert actual == CHUNK37_TOMB_IDS, sorted(CHUNK37_TOMB_IDS - actual)
+
+
+def test_chunk37_theban_areas() -> None:
+    """TT282-TT289 Dra' Abu el-Naga; TT281 null (Unfinished Temple); TT290 Deir el-Medina."""
+    expected = {
+        "TT281": None,
+        "TT282": "Dra' Abu el-Naga",
+        "TT283": "Dra' Abu el-Naga",
+        "TT284": "Dra' Abu el-Naga",
+        "TT285": "Dra' Abu el-Naga",
+        "TT286": "Dra' Abu el-Naga",
+        "TT287": "Dra' Abu el-Naga",
+        "TT288": "Dra' Abu el-Naga",
+        "TT289": "Dra' Abu el-Naga",
+        "TT290": "Deir el-Medina",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+
+
+def test_chunk37_tt281_unfinished_temple_mentuhotp() -> None:
+    """TT281 — Unfinished Temple of Mentuḥotp-Sʿankhkareʿ (King). p.364.
+    Special: King not private official; is_unfinished=True; theban_area=null.
+    CHUNK37_CORRECTIONS: underdot-Ḥ restored; full temple name restored in notes."""
+    r = _row("TT281")
+    assert r["occupant_name"] == "Mentuhotp-Sʿankhkareʿ"
+    assert r["occupant_role"] == "King"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"] == (
+        "Unfinished Temple of Mentuḥotp-Sʿankhkareʿ. See Bibl. ii, p. 135."
+    )
+    assert r["theban_area"] is None
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 364
+
+
+def test_chunk37_tt282_nakht_head_of_bowmen() -> None:
+    """TT282 — Nakht, Head of bowmen, Overseer of the South Lands. Ramesside. p.364."""
+    r = _row("TT282")
+    assert r["occupant_name"] == "Nakht"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Head of bowmen" in r["notes_from_pm"]
+    assert "Overseer of the South Lands" in r["notes_from_pm"]
+    assert "Ramesside" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 364
+
+
+def test_chunk37_tt283_roma_first_prophet_amun() -> None:
+    """TT283 — Roma (Roy), First prophet of Amūn. Temp. Ramesses II to Sethos II. p.365.
+    Tie-break: co_occupants=[] (wife Tamut in notes, not co-occupant);
+    notes_from_pm macron restored. CHUNK37_CORRECTIONS: alt-name Roy added; Amūn macron."""
+    r = _row("TT283")
+    assert r["occupant_name"] == "Roma"
+    assert r["occupant_role"] == "High Priest"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == ["Roy"]
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "First prophet of Amūn" in r["notes_from_pm"]
+    assert "Tamut" in r["notes_from_pm"]
+    assert "(name in niche in Court)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 365
+
+
+def test_chunk37_tt284_paiemneter_reused() -> None:
+    """TT284 — Paijemneter, Scribe. Ramesside. (Reused.) p.366.
+    DERIVER_OVERRIDE: is_usurped=True — PM `(Reused.)` not matched by `usurp` regex."""
+    r = _row("TT284")
+    assert r["occupant_name"] == "Paijemneter"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is True
+    assert "(Reused.)" in r["notes_from_pm"]
+    assert "Raʿy" in r["notes_from_pm"]
+    assert "Bek(et)werner" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 366
+
+
+def test_chunk37_tt285_iny_head_of_magazine() -> None:
+    """TT285 — Iny, Head of the magazine of Mut. Ramesside. p.367 (agent A off-by-one)."""
+    r = _row("TT285")
+    assert r["occupant_name"] == "Iny"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Head of the magazine of Mut" in r["notes_from_pm"]
+    assert "Tentonet" in r["notes_from_pm"]
+    assert "Songstress of Mut" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 367
+
+
+def test_chunk37_tt286_niay_scribe_of_table() -> None:
+    """TT286 — Niay, Scribe of the table. Ramesside. p.368."""
+    r = _row("TT286")
+    assert r["occupant_name"] == "Niay"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Scribe of the table" in r["notes_from_pm"]
+    assert "Roro" in r["notes_from_pm"]
+    assert "Esi" in r["notes_from_pm"]
+    assert "Tabes" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 368
+
+
+def test_chunk37_tt287_pendu_wab_priest() -> None:
+    """TT287 — Pendu, Wab-priest of Amūn (macron restored). Ramesside. p.369.
+    CHUNK37_CORRECTIONS: Amun→Amūn macron."""
+    r = _row("TT287")
+    assert r["occupant_name"] == "Pendu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"] == "Wab-priest of Amūn. Ramesside."
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 369
+
+
+def test_chunk37_tt288_bekenkhons_reused_by_setau() -> None:
+    """TT288 — Bekenkhons, re-used by Setau (TT289). Ramesside. p.369.
+    DERIVER_OVERRIDE: is_usurped=True (PM `Re-used by` not matched by `usurp` regex).
+    CHUNK37_CORRECTIONS: shared_with_tombs=[] (re-use ≠ shared ownership;
+    agents B+C set [TT289] but symmetry invariant requires TT289 to back-ref,
+    which PM does not support — re-use is captured by is_usurped + notes_from_pm)."""
+    r = _row("TT288")
+    assert r["occupant_name"] == "Bekenkhons"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is True
+    assert "Re-used by Setau" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 369
+
+
+def test_chunk37_tt289_setau_viceroy_of_kush() -> None:
+    """TT289 — Setau, Viceroy of Kush. Temp. Ramesses II. p.369.
+    Tie-break on notes_from_pm: harin (PM verbatim) + comma punctuation."""
+    r = _row("TT289")
+    assert r["occupant_name"] == "Setau"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Viceroy of Kush" in r["notes_from_pm"]
+    assert "Siwazyt" in r["notes_from_pm"]
+    assert "Nefertmut" in r["notes_from_pm"]
+    assert "harin" in r["notes_from_pm"]
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 369
+
+
+def test_chunk37_tt290_irinufer_deir_el_medina() -> None:
+    """TT290 — Irinufer (not Irinofer), Servant in the Place of Truth. Ramesside. p.372.
+    CHUNK37_CORRECTIONS: Irinofer→Irinufer (OCR !RINUFER); Meḥytkhacti underdot;
+    Amūn macron; wife name placeholder pending egyptologist review."""
+    r = _row("TT290")
+    assert r["occupant_name"] == "Irinufer"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert "Servant in the Place of Truth on the West" in r["notes_from_pm"]
+    assert "Siwazyt" in r["notes_from_pm"]
+    assert "Meḥytkhacti" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "[name unclear in source]" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 372

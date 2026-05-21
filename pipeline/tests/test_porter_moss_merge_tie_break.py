@@ -914,6 +914,10 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         # TT279|notes_from_pm: Tasentenḥor underdot by CHUNK36_CORRECTIONS.
         # TT280|notes_from_pm: Mentuḥotp + (Formerly read Meḥenkwetreʿ.) by
         #   CHUNK36_CORRECTIONS.
+        # TT283|co_occupants: [] (tie-break pinned empty list; Tamut is wife in notes).
+        # TT283|notes_from_pm: Amun→Amūn macron by CHUNK37_CORRECTIONS.
+        # TT289|notes_from_pm: harin + comma punctuation (tie-break; no CHUNK37 change).
+        # TT290|notes_from_pm: Tausert Meḥytkhacti + wife placeholder by CHUNK37_CORRECTIONS.
         ("TT273", "occupant_name"): "Sayemiotf",
         ("TT274", "co_occupants"): [
             {"alt_names": [], "name": "...y", "role": "Official"}
@@ -932,6 +936,17 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT280", "notes_from_pm"):
             "Chief steward in ..., Chancellor. Temp. Mentuḥotp (Sʿankhkareʿ). "
             "(Formerly read Meḥenkwetreʿ.) Son Antef, Hereditary Prince.",
+        ("TT283", "co_occupants"): [],
+        ("TT283", "notes_from_pm"):
+            "First prophet of Amūn. Temp. Ramesses II to Sethos II. Wife, Tamut. "
+            "(name in niche in Court).",
+        ("TT289", "notes_from_pm"):
+            "Viceroy of Kush, Overseer of the South Lands. Temp. Ramesses II. "
+            "Father, Siwazyt. Wife, Nefertmut, Chief of the harin of Nekhbet.",
+        ("TT290", "notes_from_pm"):
+            "Servant in the Place of Truth on the West. Ramesside. Parents, "
+            "Siwazyt, Head of the bark of Amūn, and Tausert Meḥytkhacti. "
+            "Wife, [name unclear in source].",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
@@ -990,3 +1005,159 @@ def test_overrides_json_keys_well_formed(merge_module):
             f"`page <digits>` / `book p<digits>` / `scan-NNN`. "
             f"Got: {rationale!r}"
         )
+
+
+# === Chunk-37 per-row pins (TT281-TT290) ============================
+# Rule 5: every row asserts all key fields. All values are post-fix-rows
+# final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
+
+
+def test_chunk37_row_count(reconciled):
+    """Merged total should be 365 after chunk 37 (+10 from 355)."""
+    assert len(reconciled) == 365
+
+
+def test_tt281_unfinished_temple(reconciled):
+    """TT281: Unfinished Temple of Mentuḥotp-Sʿankhkareʿ (King).
+    Special row — not a private tomb; is_unfinished=True; no theban_area."""
+    r = _row(reconciled, "TT281")
+    assert r["occupant_name"] == "Mentuhotp-Sʿankhkareʿ"
+    assert r["occupant_role"] == "King"
+    assert r["is_unfinished"] is True
+    assert r["is_usurped"] is False
+    assert r["theban_area"] is None
+    assert r["notes_from_pm"] == (
+        "Unfinished Temple of Mentuḥotp-Sʿankhkareʿ. See Bibl. ii, p. 135."
+    )
+    assert r["source_citation"]["page"] == 364
+    assert r["occupant_alt_names"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt282_nakht(reconciled):
+    """TT282: Nakht, Head of bowmen, Overseer of the South Lands. Ramesside.
+    Dra' Abu el-Naga'."""
+    r = _row(reconciled, "TT282")
+    assert r["occupant_name"] == "Nakht"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is False
+    assert r["is_unfinished"] is False
+    assert r["notes_from_pm"] == "Head of bowmen, Overseer of the South Lands. Ramesside."
+    assert r["source_citation"]["page"] == 364
+    assert r["occupant_alt_names"] == []
+
+
+def test_tt283_roma(reconciled):
+    """TT283: Roma (Roy), First prophet of Amūn. Alt-name Roy; wife Tamut
+    named in niche in Court. Tie-breaks on co_occupants and notes_from_pm."""
+    r = _row(reconciled, "TT283")
+    assert r["occupant_name"] == "Roma"
+    assert r["occupant_alt_names"] == ["Roy"]
+    assert r["occupant_role"] == "High Priest"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is False
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "First prophet of Amūn. Temp. Ramesses II to Sethos II. "
+        "Wife, Tamut. (name in niche in Court)."
+    )
+    assert r["source_citation"]["page"] == 365
+
+
+def test_tt284_paiemneter_reused(reconciled):
+    """TT284: Paijemneter. PM marks (Reused.) — is_usurped=True via
+    DERIVER_OVERRIDE (deriver regex misses 'Reused' lexical form)."""
+    r = _row(reconciled, "TT284")
+    assert r["occupant_name"] == "Paijemneter"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is True
+    assert r["notes_from_pm"] == (
+        "Scribe of the offerings of all the gods. Ramesside. (Reused.) "
+        "Father, Raʿy. Wife, Bek(et)werner."
+    )
+    assert r["source_citation"]["page"] == 366
+
+
+def test_tt285_iny(reconciled):
+    """TT285: Iny, Head of the magazine of Mut. Ramesside."""
+    r = _row(reconciled, "TT285")
+    assert r["occupant_name"] == "Iny"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is False
+    assert r["co_occupants"] == []
+    assert r["notes_from_pm"] == (
+        "Head of the magazine of Mut. Ramesside. Wife, Tentonet, Songstress of Mut."
+    )
+    assert r["source_citation"]["page"] == 367
+
+
+def test_tt286_niay(reconciled):
+    """TT286: Niay, Scribe of the table. Ramesside."""
+    r = _row(reconciled, "TT286")
+    assert r["occupant_name"] == "Niay"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"] == (
+        "Scribe of the table. Ramesside. Parents, Roro and Esi. Wife, Tabes."
+    )
+    assert r["source_citation"]["page"] == 368
+
+
+def test_tt287_pendu(reconciled):
+    """TT287: Pendu, Wab-priest of Amūn (macron restored). Ramesside."""
+    r = _row(reconciled, "TT287")
+    assert r["occupant_name"] == "Pendu"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"] == "Wab-priest of Amūn. Ramesside."
+    assert r["source_citation"]["page"] == 369
+
+
+def test_tt288_bekenkhons_reused(reconciled):
+    """TT288: Bekenkhons, re-used by Setau (TT289). is_usurped=True via
+    DERIVER_OVERRIDE; shared_with_tombs=[TT289] from B+C majority."""
+    r = _row(reconciled, "TT288")
+    assert r["occupant_name"] == "Bekenkhons"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is True
+    assert r["shared_with_tombs"] == []
+    assert r["notes_from_pm"] == (
+        "Scribe of the divine book of Khons. Ramesside. Re-used by Setau (tomb 289)."
+    )
+    assert r["source_citation"]["page"] == 369
+
+
+def test_tt289_setau(reconciled):
+    """TT289: Setau, Viceroy of Kush. Tie-break on notes_from_pm for
+    harin/harem and punctuation."""
+    r = _row(reconciled, "TT289")
+    assert r["occupant_name"] == "Setau"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["is_usurped"] is False
+    assert r["notes_from_pm"] == (
+        "Viceroy of Kush, Overseer of the South Lands. Temp. Ramesses II. "
+        "Father, Siwazyt. Wife, Nefertmut, Chief of the harin of Nekhbet."
+    )
+    assert r["source_citation"]["page"] == 369
+
+
+def test_tt290_irinufer(reconciled):
+    """TT290: Irinufer (not 'Irinofer' — OCR !RINUFER corrected by
+    CHUNK37_CORRECTIONS). Deir el-Medina. Wife name unclear in OCR;
+    EGYPTOLOGIST REVIEW REQUIRED."""
+    r = _row(reconciled, "TT290")
+    assert r["occupant_name"] == "Irinufer"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Deir el-Medina"
+    assert r["is_usurped"] is False
+    assert "Tausert Meḥytkhacti" in r["notes_from_pm"]
+    assert "Amūn" in r["notes_from_pm"]
+    assert "[name unclear in source]" in r["notes_from_pm"]
+    assert r["source_citation"]["page"] == 372

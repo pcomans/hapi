@@ -3527,6 +3527,118 @@ CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK36_RENAMES: dict[str, str] = {}
 
 
+CHUNK37_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT281",
+        "occupant_name",
+        "Mentuhotp-Sʿankhkareʿ",
+        "PM I.1 p.364 / chunk-37 source line prints headword "
+        "`MENTUI;IOTP-S<ANKHKARE<` where `I;I` = underdot-Ḥ glyph and `<` "
+        "= ayin. Agent C dropped the ayins, giving `Mentuhotp-Sankhkare`. "
+        "Majority (A+B) correctly has `Mentuhotp-Sʿankhkareʿ` with ayins. "
+        "The `occupant_name` field is the matchable-name field — strip-ḥ "
+        "policy applies (test_occupant_name_has_no_underdot_h). Underdot-Ḥ "
+        "is preserved in `notes_from_pm` per the verbatim-preserve policy. "
+        "The majority form `Mentuhotp-Sʿankhkareʿ` (no underdot) is correct "
+        "for this field. This entry ensures the post-merge value is stable "
+        "and documents the ayin-restoration.",
+    ),
+    (
+        "TT281",
+        "notes_from_pm",
+        "Unfinished Temple of Mentuḥotp-Sʿankhkareʿ. See Bibl. ii, p. 135.",
+        "PM I.1 p.364 / chunk-37 source headword reads `281. Unfinished Temple "
+        "of MENTUI;IOTP-S<ANKHKARE<. See Bibl. ii, p. 135.` Agent B correctly "
+        "preserved the occupant name in the notes text; A+C majority abbreviated "
+        "to `Unfinished Temple. See Bibl. ii, p. 135.` dropping the occupant "
+        "qualifier. Restore full PM headword text (verbatim-preserve policy). "
+        "`MENTUI;IOTP` decoded to `Mentuḥotp` (I;I = underdot-Ḥ OCR glyph); "
+        "`S<ANKHKARE<` decoded to `Sʿankhkareʿ` (< = ayin) per TT280 precedent.",
+    ),
+    (
+        "TT283",
+        "notes_from_pm",
+        "First prophet of Amūn. Temp. Ramesses II to Sethos II. Wife, Tamut. (name in niche in Court).",
+        "Restore macron-ū on `Amūn` per chunk-12-onward macron-retain policy. "
+        "Tie-break pinned `Amun` as a stable merge-time intermediate (agent A "
+        "had OCR garble `Amin`; B+C had `Amun` without macron). Source prints "
+        "`Amiin` (OCR) = `Amūn` with macron-u. Consistent with TT272/TT274 "
+        "and all prior chunk `Amūn` restorations.",
+    ),
+    (
+        "TT283",
+        "occupant_alt_names",
+        ["Roy"],
+        "PM I.1 p.365 / chunk-37 source line 34 prints headword `283. ROMA "
+        "(RoY)` where `(RoY)` is PM's alternate-name parenthetical. All three "
+        "agents emitted `occupant_alt_names: []` missing the `Roy` variant. "
+        "Parallel to TT279 `(PBES)` → `occupant_alt_names: [\"Pbes\"]` in "
+        "CHUNK36_CORRECTIONS. The parenthetical form without the PM-capitalisation "
+        "renders as `Roy` in titlecase.",
+    ),
+    (
+        "TT287",
+        "notes_from_pm",
+        "Wab-priest of Amūn. Ramesside.",
+        "Restore macron-ū on `Amūn` per chunk-12-onward macron-retain policy. "
+        "All three agents emitted `Amun` without macron. Source prints `Amlin` "
+        "or `Amiin` (OCR artifacts) = `Amūn`. Consistent with TT283/TT272/TT274 "
+        "restorations in this and prior chunks.",
+    ),
+    (
+        "TT288",
+        "shared_with_tombs",
+        [],
+        "PM I.1 p.369 / chunk-37 source prints `Re-used by Setau (tomb 289).` "
+        "Agents B+C set `shared_with_tombs=[\"TT289\"]`. But `shared_with_tombs` "
+        "encodes JOINT BURIAL / SHARED OWNERSHIP (cf. TT181/TT222 joint-burial "
+        "pairs where both owners hold the space). TT288 is a RE-USE case: "
+        "Setau (TT289 primary occupant) took over Bekenkhons's tomb. The "
+        "re-use is already captured by `is_usurped=True` + `notes_from_pm`. "
+        "Setting `shared_with_tombs=[\"TT289\"]` creates an asymmetry (TT289 "
+        "does NOT reference TT288 in shared_with_tombs) that violates the "
+        "`test_shared_with_tombs_symmetry_within_chunk` invariant. Correct to [].",
+    ),
+    (
+        "TT290",
+        "occupant_name",
+        "Irinufer",
+        "PM I.1 p.372 / chunk-37 source line prints headword `2<)0. !RINUFER` "
+        "where `2<)0` is the OCR rendering of `290` and `!RINUFER` is the "
+        "headword with OCR `!` for `I` (the capital I was garbled to an "
+        "exclamation mark). Correct reading is `IRINUFER` → titlecase "
+        "`Irinufer`. All three agents emitted `Irinofer` (substituting `o` "
+        "for `u`, likely from misreading the OCR). Source-verbatim reading "
+        "is `Irinufer`. Parallel pattern to TT278 `Amenemhab` where all agents "
+        "garbled the OCR headword and CHUNK36_CORRECTIONS restored the correct "
+        "form.",
+    ),
+    (
+        "TT290",
+        "notes_from_pm",
+        "Servant in the Place of Truth on the West. Ramesside. "
+        "Parents, Siwazyt, Head of the bark of Amūn, and Tausert Meḥytkhacti. "
+        "Wife, [name unclear in source].",
+        "Three restorations: (1) `Amon` → `Amūn` per macron-retain policy "
+        "(OCR `Amon` = `Amūn` with macron-u dropped). (2) Mother's compound "
+        "name: source line prints `Tausert Mel).ytkhacti` where `l).` = "
+        "underdot-ḥ, giving `Meḥytkhacti`. Agent A truncated to `Tausert` "
+        "alone; agents B/C either misread (B appended wife name to mother, C "
+        "truncated). Tie-break pinned B's expanded form `Tausert Mehytkhacti`; "
+        "restore underdot-ḥ to give `Meḥytkhacti`. (3) Wife's name: the OCR "
+        "source renders the wife name as a hieroglyphic glyph string "
+        "(`\\ l4o 4~ ~ ~.`) that cannot be resolved from the OCR alone. "
+        "Agent B incorrectly used the occupant's own name `Irinofer`; agent C "
+        "bracketed it with uncertainty. Replace with `[name unclear in source]` "
+        "to be corrected after egyptologist printed-source review of PM p.372. "
+        "EGYPTOLOGIST REVIEW REQUIRED: wife name of TT290 Irinufer.",
+    ),
+]
+
+
+CHUNK37_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3567,6 +3679,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK34_CORRECTIONS,
     CHUNK35_CORRECTIONS,
     CHUNK36_CORRECTIONS,
+    CHUNK37_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3605,6 +3718,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK34_RENAMES,
     **CHUNK35_RENAMES,
     **CHUNK36_RENAMES,
+    **CHUNK37_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -4738,7 +4852,48 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT253/TT255/TT258/TT260, chunk-35 TT262 — attribution_certainty "
         "encodes occupant-identity certainty, not regnal-date certainty.",
     ),
+    # Chunk-37 DERIVER_OVERRIDES: TT284 and TT288 use PM's `(Reused.)` /
+    # `Re-used by Setau` language for secondary use of a tomb. The deriver
+    # regex `\busurp(?:ed|ation)\b` does not match the `Reused`/`Re-used`
+    # lexical form, so is_usurped stays False after the deriver pass. These
+    # overrides explicitly pin is_usurped=True where PM's `Reused` clause
+    # unambiguously means the original occupant's tomb was taken over by a
+    # later user — the Egyptological equivalent of usurpation.
+    (
+        "TT284",
+        "is_usurped",
+        True,
+        "PM I.1 p.366 / chunk-37 source prints `284. PAIJEMNETER ... "
+        "(Reused.)` in the headword. PM's `(Reused.)` parenthetical is the "
+        "standard PM marker for a tomb re-appropriated by a later occupant — "
+        "Egyptologically equivalent to usurpation. The deriver regex "
+        "`\\busurp(?:ed|ation)\\b` does not match `Reused`, leaving "
+        "is_usurped=False after the deriver pass. All three agents were split "
+        "(only agent C set True); majority voted False. Override to True to "
+        "match PM's printed `(Reused.)` semantic. Parallel to TT288 in this "
+        "chunk which uses `Re-used by Setau`.",
+    ),
+    (
+        "TT288",
+        "is_usurped",
+        True,
+        "PM I.1 p.369 / chunk-37 source prints `Re-used by Setau (tomb 289).` "
+        "in the TT288 Bekenkhons entry. PM's `Re-used by` clause means "
+        "Bekenkhons's tomb was taken over by Setau (the occupant of TT289) — "
+        "Egyptologically equivalent to usurpation of Bekenkhons. The deriver "
+        "regex `\\busurp(?:ed|ation)\\b` does not match `Re-used`, leaving "
+        "is_usurped=False. All three agents agreed is_usurped=False (the "
+        "deriver miss was unanimous). Override to True to match PM's `Re-used` "
+        "semantic. Parallel to TT284 `(Reused.)` in this chunk.",
+    ),
 ]
+
+# Note: TT288 shared_with_tombs is corrected to [] by CHUNK37_CORRECTIONS below.
+# Agents B+C set TT288.shared_with_tombs=["TT289"] but this is wrong —
+# `shared_with_tombs` encodes JOINT BURIAL / SHARED OWNERSHIP, not re-use/usurpation.
+# The re-use relationship is captured by is_usurped=True + notes_from_pm.
+# Setting ["TT289"] would violate the symmetry invariant (TT289 does not
+# share ownership of TT288; Setau merely re-used Bekenkhons's space).
 
 
 def _apply_issue_182_migrations(rows: list[dict]) -> list[str]:
