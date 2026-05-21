@@ -495,6 +495,18 @@ TT162 (Kenamun):
   notes_from_pm: a="Mayor in the Southern City, Overseer of the granary of Amūn. Dyn. XVIII. (Inaccessible.) Wife, Mut-tuy (from cone). Footnote: Daressy gives alternative owner as: Eyes of the King in the North Land, Ḥari of Ḥaremmaʿet, from text in Hall at (1)." | b="Mayor in the Southern City, Overseer of the granary of Amūn. Dyn. XVIII. (Inaccessible.) Wife, Mut-tuy (from cone)." | c="Mayor in the Southern City, Overseer of the granary of Amūn. Dyn. XVIII. (Inaccessible.) Wife, Mut-tuy (from cone)."  → chose "Mayor in the Southern City, Overseer of the granary of Amūn. Dyn. XVIII. (Inaccessible.) Wife, Mut-tuy (from cone)."
   occupant_name: a="Ḳenamun" | b="Kenamun" | c="Kenamun"  → chose "Kenamun"
 
+TT171 (None):
+  notes_from_pm: a="Name lost. Dyn. XVIII. Wife, Esi." | b="Name lost. Wife, Ḥesi. Dyn. XVIII." | c="Name lost. Dyn. XVIII. Wife, Esi."  → chose "Name lost. Dyn. XVIII. Wife, Esi."
+
+TT172 (Mentiywy):
+  notes_from_pm: a="Royal butler, Child of the nursery. Temp. Tuthmosis III to Amenophis II (?). Mother, Ḥepu." | b="Royal butler, Child of the nursery. Temp. Tuthmosis III to Amenophis II (?). Mother, Ḥepu." | c="Royal butler, Child of the nursery. Temp. Tuthmosis III to Amenophis II (?). Mother, Ḥepu A."  → chose "Royal butler, Child of the nursery. Temp. Tuthmosis III to Amenophis II (?). Mother, Ḥepu."
+
+TT178 (Neferronpet):
+  notes_from_pm: a="Scribe of the treasury in the estate of Amen-reʿ. Temp. Ramesses II. Wife, Mutemwia." | b="Scribe of the treasury in the estate of Amen-reʿ. Temp. Ramesses II. Wife, Mutemwia." | c="Scribe of the treasury in the estate of Amen-Reʿ. Temp. Ramesses II. Wife, Mutemwia."  → chose "Scribe of the treasury in the estate of Amen-reʿ. Temp. Ramesses II. Wife, Mutemwia."
+
+TT179 (Nebamun):
+  notes_from_pm: a="Scribe, Counter of grain in the granary of divine offerings of Amūn. Temp. Ḥatshepsut. Parents, Yotef, Steward of the Lord of the Two Lands, and ʿ Aḥmosi. Wife, Sentnefert." | b="Scribe, Counter of grain in the granary of divine offerings of Amūn. Temp. Ḥatshepsut. Parents, Yotef, Steward of the Lord of the Two Lands, and ʿAḥmosi. Wife, Sentnefert." | c="Scribe, Counter of grain in the granary of divine offerings of Amūn. Temp. Ḥatshepsut. Parents, Yotef, Steward of the Lord of the Two Lands, and ʿAḥmosi. Wife, Sentnefert."  → chose "Scribe, Counter of grain in the granary of divine offerings of Amūn. Temp. Ḥatshepsut. Parents, Yotef, Steward of the Lord of the Two Lands, and ʿAḥmosi. Wife, Sentnefert."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -582,6 +594,7 @@ Per-chunk correction counts:
 - Chunk 23: 3 correction(s) defined in CHUNK23_CORRECTIONS.
 - Chunk 24: 3 correction(s) defined in CHUNK24_CORRECTIONS.
 - Chunk 25: 1 correction(s) defined in CHUNK25_CORRECTIONS.
+- Chunk 26: 3 correction(s) defined in CHUNK26_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -835,6 +848,12 @@ Field corrections:
     value: "Unknown"
 - TT167: occupant_role already matches override (no-op this run; PM I.1 p.278 (TT167, anonymous unfinished tomb). PM headword carries no personal name (`Name lost.`); all 3 agents correctly emitted occupant_role="Unknown" (controlled-vocab sentinel paired with occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS coerces "Unknown" to null. Restore per TT152/TT153 (chunk-24), TT143/TT147 (chunk-23), TT136 (chunk-22), TT116 (chunk-20), TT70 (chunk-15), TT58 (chunk-14) class precedent.)
     value: "Unknown"
+- TT171: occupant_role already matches override (no-op this run; PM I.1 p.279 (TT171, anonymous Dyn. XVIII tomb, Sh. ʿAbd el-Qurna). PM headword carries no personal name (`Name lost.`); all 3 agents correctly emitted occupant_role="Unknown" (controlled-vocab sentinel paired with occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS coerces "Unknown" to null. Restore per TT167 (chunk-25), TT152/TT153 (chunk-24), TT143/TT147 (chunk-23), TT136 (chunk-22), TT116 (chunk-20), TT70 (chunk-15), TT58 (chunk-14) class precedent.)
+    value: "Unknown"
+- TT175: occupant_role already matches override (no-op this run; PM I.1 p.281 (TT175, anonymous tomb, Khokha). PM headword carries no personal name (`No name.`); all 3 agents correctly emitted occupant_role="Unknown" (controlled-vocab sentinel paired with occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS coerces "Unknown" to null. Restore per TT171 (this chunk), TT167 (chunk-25), TT152/TT153 (chunk-24) class precedent.)
+    value: "Unknown"
+- TT180: occupant_role already matches override (no-op this run; PM I.1 p.286 (TT180, anonymous unfinished tomb, Khokha). PM headword carries no personal name (`No name.`); all 3 agents correctly emitted occupant_role="Unknown" (controlled-vocab sentinel paired with occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS coerces "Unknown" to null. Restore per TT171/TT175 (this chunk), TT167 (chunk-25), TT152/TT153 (chunk-24) class precedent.)
+    value: "Unknown"
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -911,6 +930,9 @@ Field corrections:
 - TT161: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT163: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT165: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT172: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT175: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT177: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -953,5 +975,8 @@ Field corrections:
 - TT154: attribution_certainty → "attested" (deriver override; PM I.1 p.262 prints `154. TATI ..., Butler. Temp. Tuthmosis III(?).` The `(?)` q...)
 - TT158: attribution_certainty → "attested" (deriver override; PM I.1 p.268 prints `158. THONUFER ..., Third prophet of Amūn. Probably temp. Ra...)
 - TT161: attribution_certainty → "attested" (deriver override; PM I.1 p.274 prints `161. NAKHT ..., Bearer of the floral offerings of Amūn. Tem...)
-- TT163: attribution_certainty → "attested" (deriver override; PM I.1 p.276 prints `163. AMENMḤET ..., Mayor of the Southern City, Royal scribe...)
+- TT163: attribution_certainty → "attested" (deriver override; PM I.1 p.276 prints `163. AMENEMḤET ..., Mayor of the Southern City, Royal scrib...)
 - TT165: attribution_certainty → "attested" (deriver override; PM I.1 p.277 prints `165. NEḤEMCAWAY ..., Goldworker and portrait-sculptor. Temp...)
+- TT172: attribution_certainty → "attested" (deriver override; PM I.1 p.279 prints `172. MENTIYWY ..., Royal butler, Child of the nursery. Temp...)
+- TT175: attribution_certainty → "attested" (deriver override; PM I.1 p.281 prints `175. No name. Temp. Tuthmosis IV (?).` The `(?)` qualifies ...)
+- TT177: attribution_certainty → "attested" (deriver override; PM I.1 p.283 prints `177. AMENEMOPET ..., Scribe of truth in the Ramesseum in th...)

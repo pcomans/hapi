@@ -1993,6 +1993,46 @@ CHUNK25_CORRECTIONS: list[tuple[str, str, object, str]] = [
 
 CHUNK25_RENAMES: dict[str, str] = {}
 
+CHUNK26_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT171",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.279 (TT171, anonymous Dyn. XVIII tomb, Sh. ʿAbd el-Qurna). "
+        "PM headword carries no personal name (`Name lost.`); all 3 agents "
+        "correctly emitted occupant_role=\"Unknown\" (controlled-vocab sentinel "
+        "paired with occupant_name=null per schema invariant). merge.py "
+        "SENTINEL_NULL_STRINGS coerces \"Unknown\" to null. Restore per TT167 "
+        "(chunk-25), TT152/TT153 (chunk-24), TT143/TT147 (chunk-23), TT136 "
+        "(chunk-22), TT116 (chunk-20), TT70 (chunk-15), TT58 (chunk-14) "
+        "class precedent.",
+    ),
+    (
+        "TT175",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.281 (TT175, anonymous tomb, Khokha). PM headword carries no "
+        "personal name (`No name.`); all 3 agents correctly emitted "
+        "occupant_role=\"Unknown\" (controlled-vocab sentinel paired with "
+        "occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS "
+        "coerces \"Unknown\" to null. Restore per TT171 (this chunk), TT167 "
+        "(chunk-25), TT152/TT153 (chunk-24) class precedent.",
+    ),
+    (
+        "TT180",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.286 (TT180, anonymous unfinished tomb, Khokha). PM headword "
+        "carries no personal name (`No name.`); all 3 agents correctly emitted "
+        "occupant_role=\"Unknown\" (controlled-vocab sentinel paired with "
+        "occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS "
+        "coerces \"Unknown\" to null. Restore per TT171/TT175 (this chunk), "
+        "TT167 (chunk-25), TT152/TT153 (chunk-24) class precedent.",
+    ),
+]
+
+CHUNK26_RENAMES: dict[str, str] = {}
+
 
 # === Audit-fix migration (issue: occupant_alt_names misuse) ==================
 #
@@ -2296,6 +2336,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK23_CORRECTIONS,
     CHUNK24_CORRECTIONS,
     CHUNK25_CORRECTIONS,
+    CHUNK26_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2323,6 +2364,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK23_RENAMES,
     **CHUNK24_RENAMES,
     **CHUNK25_RENAMES,
+    **CHUNK26_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -3038,6 +3080,57 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "portrait-sculptor. PM headword names Nehemʿaway unhedged with the title "
         "unhedged. Per chunk-9 TT2 precedent that attribution_certainty encodes "
         "occupant-identity certainty, not regnal-date certainty.",
+    ),
+    # Chunk-26 attribution_certainty overrides. TT172, TT175, and TT177 each
+    # carry a `(?)` token in notes_from_pm that qualifies a regnal-date claim,
+    # NOT the primary occupant attribution. The deriver fires context-free on
+    # any `(?)` in notes; per the chunk-9 TT2 precedent extended through
+    # chunks 10–25, attribution_certainty encodes occupant-identity certainty,
+    # not regnal-date certainty. TT175 is anonymous (occupant_name=null) but
+    # the `(?)` still qualifies the temporal clause, not an identity claim;
+    # `attested` here means "this tomb is unambiguously identified as TT175,
+    # the occupant identity is unknown rather than uncertain."
+    (
+        "TT172",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.279 prints `172. MENTIYWY ..., Royal butler, Child of the "
+        "nursery. Temp. Tuthmosis III to Amenophis II (?). Mother, Ḥepu.` "
+        "The `(?)` qualifies the regnal-range tail (Amenophis II), not "
+        "Mentiywy's identification as Royal butler / Child of the nursery. "
+        "PM headword names Mentiywy unhedged with the title unhedged. Same "
+        "regnal-range tail hedge class as chunk-10 TT12/TT19/TT20, chunk-13 "
+        "TT41/TT43/TT46, chunk-14 TT52/TT54, chunk-16 TT79. Per chunk-9 "
+        "TT2 precedent that attribution_certainty encodes occupant-identity "
+        "certainty, not regnal-date certainty.",
+    ),
+    (
+        "TT175",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.281 prints `175. No name. Temp. Tuthmosis IV (?).` "
+        "The `(?)` qualifies the regnal date (Tuthmosis IV), not any "
+        "occupant-identity claim — there is no identity claim; the occupant "
+        "is anonymous. `attested` here means the tomb record is "
+        "unambiguously TT175 (the identity is unknown, not uncertain). "
+        "Same regnal-date hedge class as chunk-10 TT12/TT20, chunk-14 "
+        "TT52, chunk-15 TT69, chunk-25 TT165. Per chunk-9 TT2 precedent "
+        "that attribution_certainty encodes occupant-identity certainty, "
+        "not regnal-date certainty.",
+    ),
+    (
+        "TT177",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.283 prints `177. AMENEMOPET ..., Scribe of truth in the "
+        "Ramesseum in the estate of Amūn. Temp. Ramesses II (?). "
+        "(Unfinished.)` The `(?)` qualifies the regnal date (Ramesses II), "
+        "not Amenemopet's identification as Scribe of truth. PM headword "
+        "names Amenemopet unhedged with the title unhedged. Same "
+        "regnal-date hedge class as chunk-10 TT12/TT19/TT20, chunk-13 "
+        "TT41/TT43, chunk-14 TT52, chunk-25 TT165. Per chunk-9 TT2 "
+        "precedent that attribution_certainty encodes occupant-identity "
+        "certainty, not regnal-date certainty.",
     ),
 ]
 
