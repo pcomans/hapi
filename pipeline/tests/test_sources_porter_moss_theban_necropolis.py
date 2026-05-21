@@ -3480,8 +3480,11 @@ def test_182_attribution_certainty_in_vocab() -> None:
 def test_182_uninscribed_canonical_set() -> None:
     """Rows where PM literally writes "uninscribed" in notes_from_pm.
     Pinned 2026-05-03: KV39 ('Uninscribed tomb...'), KV56 ("'Gold tomb',
-    uninscribed."), DAN-Neferhotep ('Rock-tomb, uninscribed')."""
-    expected = {"KV39", "KV56", "DAN-Neferhotep"}
+    uninscribed."), DAN-Neferhotep ('Rock-tomb, uninscribed').
+    Extended 2026-05-20 (chunk 20): TT115 — DERIVER_OVERRIDE for PM's
+    `No texts. Dyn. XIX.` semantic-equivalent of "uninscribed" per
+    Gemini PR #264 round-3 finding 3277852207."""
+    expected = {"KV39", "KV56", "DAN-Neferhotep", "TT115"}
     actual = {r["tomb_id"] for r in _rows() if r["is_uninscribed"]}
     assert actual == expected, sorted(actual)
 

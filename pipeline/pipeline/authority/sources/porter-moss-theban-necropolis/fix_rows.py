@@ -1673,6 +1673,10 @@ CHUNK19_RENAMES: dict[str, str] = {}
 #   designed for alternate ancient readings; whether a modern-catalogue label
 #   belongs here is an egyptologist judgment call.
 CHUNK20_CORRECTIONS: list[tuple[str, str, object, str]] = []
+# TT115 is_uninscribed=True moved to DERIVER_OVERRIDES below (the issue-#182
+# deriver pass runs after SPOT_CORRECTIONS and would over-write a True
+# value here back to False since `No texts` doesn't match the deriver's
+# `\buninscribed\b` regex). DERIVER_OVERRIDES wins over deriver output.
 
 CHUNK20_RENAMES: dict[str, str] = {}
 
@@ -2457,6 +2461,21 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "date (Amenophis III), not Amenmosi's identification as Fan-bearer. "
         "Same regnal-date hedge class as chunk-10 TT12/TT19/TT20 and the "
         "TT116 same-chunk override above. Per chunk-9 TT2 precedent.",
+    ),
+    (
+        "TT115",
+        "is_uninscribed",
+        True,
+        "PR #264 round-3 Gemini finding 3277852207: TT115 notes_from_pm "
+        "begins `No texts. Dyn. XIX.` — PM's `No texts` is the semantic "
+        "equivalent of `uninscribed` for chunk-20-class tombs (a Dyn. XIX "
+        "tomb where PM found no inscriptions). The is_uninscribed deriver "
+        "regex fires only on the literal word `uninscribed`; this DERIVER_"
+        "OVERRIDE extends the typed-flag to PM's `No texts` phrasing per "
+        "the chunk-12 TT47 `(Uninscribed.)` precedent (note: TT47 used the "
+        "explicit `Uninscribed` token; TT115 uses the synonymous `No texts` "
+        "form). Egyptologically equivalent: both flag a tomb where PM "
+        "found no inscriptional layer.",
     ),
 ]
 
