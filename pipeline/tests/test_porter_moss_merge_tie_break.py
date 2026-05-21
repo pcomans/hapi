@@ -783,6 +783,24 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "granaries of the god's wife ʿAḥmosi Nefertere. Temp. Tuthmosis "
             "III or Hatshepsut. Parents, Senusert and Taidy. Wife, Nub, "
             "Royal concubine (in tombs 29 and 96).",
+        # Chunk-32 (TT231-TT240) — 3 tie-break overrides:
+        # TT232|notes_from_pm: agent A's `Weshebamunheref` pinned at merge;
+        #   CHUNK32_CORRECTIONS restores the underdot-ḥ → `Weshebamunḥeref`.
+        #   Post-fix-rows value differs from the pinned merge-time value.
+        # TT235|occupant_name: agent B's `Userhet` pinned; no CHUNK32_CORRECTIONS
+        #   on this field — final value matches the override verbatim.
+        # TT239|attribution_certainty: tie-break pinned `uncertain` (3-way split:
+        #   A=uncertain, B=probable, C=attested), the deriver also fires
+        #   `uncertain` from the `(?)`. BUT a DERIVER_OVERRIDE (added PR #276
+        #   round-1 per Gemini correction) overrides to `attested` because the
+        #   `(?)` qualifies the REGNAL DATE RANGE (Temp. Tuthmosis IV to
+        #   Amenophis II), not Penhet's identification. Per chunk-10 TT12 +
+        #   chunk-31 TT225 orthogonality precedent.
+        ("TT232", "notes_from_pm"):
+            "Scribe of the divine seal of the treasury of Amun. Ramesside. "
+            "Father, Weshebamunḥeref.",
+        ("TT235", "occupant_name"): "Userhet",
+        ("TT239", "attribution_certainty"): "attested",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())

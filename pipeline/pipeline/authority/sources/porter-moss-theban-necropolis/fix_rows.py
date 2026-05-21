@@ -2918,6 +2918,107 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# Chunk-32 (TT231–TT240, Dra' Abu el-Naga + Qurnet Muraʿi + Khôkha + ʿAsâsîf).
+# 3 tie-break overrides: TT232|notes_from_pm (OCR garble of father's name),
+# TT235|occupant_name (3 agents disagree on OCR `USERI;IET`), and
+# TT239|attribution_certainty (3-way split on PM's `(?)` hedge).
+# Post-merge corrections:
+# 1. TT232 notes_from_pm: restore underdot-ḥ in father's name `Weshebamunḥeref`
+#    (tie-break pinned agent A's plain `Weshebamunheref`; source OCR `l}.` = ḥ).
+# 2. TT232 source_citation.page: 329 → 328 (headword at source line 41, under
+#    physical p.346 / printed p.328; majority 2/1 landed on p.329 off-by-one).
+# 3. TT236 source_citation.page: 330 → 329 (headword at source line 103, before
+#    the p.330 page-break at source line 110; 2/1 majority landed on p.330).
+# 4. TT239 notes_from_pm: restore underdot-ḥ in wife's name `Ḥetepti`
+#    (source OCR `l:letepti`; all three agents stripped the underdot).
+# 5. TT240 notes_from_pm: restore PM-faithful diacritics on the royal name —
+#    `Mentuḥotp-Nebḥepetreʿ` (source OCR `Mentul;totp-Nebl;tepetre<`; the
+#    `l;t` pattern decodes to `ḥt` here because the `;` ligature glyph
+#    represents `ḥ` and the following `t` is the next consonant of `otp` /
+#    `epetre`, so the `t` after the ligature is not part of the same
+#    grapheme — the OCR cluster `l;t` consumes `ḥ` and the `t` is the next
+#    letter; `<` = ayin; PM uses the older
+#    PM-style `Mentuḥotp` without medial e, matching the chunk-7
+#    `DAN-MentuhotpIWifeOfDjhuti` descriptor convention).
+# ALL_CORRECTIONS aggregation enforced by
+# `test_all_corrections_includes_every_chunk_list`.
+CHUNK32_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT232",
+        "notes_from_pm",
+        "Scribe of the divine seal of the treasury of Amun. Ramesside. "
+        "Father, Weshebamunḥeref.",
+        "PM I.1 p.328 / chunk-32 source text line 44 (TT232 Tharwas). "
+        "Source OCR reads `Weshebamunl}.eref` where `l}.` is the standard "
+        "underdot-Ḥ artifact in this text layer (same class as `I;I` / "
+        "`l:I` / `l;I` seen in other chunks). The merge tie-break pinned "
+        "agent A's `Weshebamunheref` (cleanest OCR form — preserved the h "
+        "consonant, stripped only the underdot). Restore the underdot per "
+        "the notes_from_pm verbatim-preserve policy: `Weshebamunheref` → "
+        "`Weshebamunḥeref`. Parallel to chunk-8 QV47 `Sit-ḏḥout` and "
+        "chunk-9 TT6 `Neferḥōtep` restorations in notes_from_pm.",
+    ),
+    (
+        "TT232",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 328, "section": "I"},
+        "PM I.1 p.328 / chunk-32 source text. TT232 headword `THARWAS` "
+        "appears at source line 41, which is under the physical page 346 / "
+        "printed page 328 header (source line 1 / page marker). The printed "
+        "page 329 header does not appear until source line 54. Agents A+B "
+        "both cited page 329 (off-by-one — reading the body continuation "
+        "page rather than the headword page); agent C correctly cited 328. "
+        "Majority 2/1 picked 329. Correct the off-by-one per the chunk-30 "
+        "TT211/TT215/TT216/TT218/TT219 source_citation.page correction "
+        "precedent (CHUNK30_CORRECTIONS).",
+    ),
+    (
+        "TT236",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 329, "section": "I"},
+        "PM I.1 p.329 / chunk-32 source text. TT236 headword `HARNAKHT` "
+        "appears at source line 103, which is before the physical page 348 / "
+        "printed page 330 header at source line 110. The headword is on "
+        "printed page 329. Agents A+C both cited page 330 (off-by-one — "
+        "reading the body continuation page); agent B correctly cited 329. "
+        "Majority 2/1 picked 330. Correct the off-by-one per the chunk-30 "
+        "source_citation.page correction precedent.",
+    ),
+    (
+        "TT239",
+        "notes_from_pm",
+        "Governor of all Northern Lands. Temp. Tuthmosis IV to "
+        "Amenophis II (?). Wife, Ḥetepti.",
+        "PM I.1 p.330 / chunk-32 source text line 129 (TT239 Penhet). "
+        "Source OCR reads `Wife, l:letepti` where `l:l` is the standard "
+        "underdot-Ḥ artifact (`l:I` class). PM prints `Ḥetepti` with "
+        "underdot-Ḥ. All three agents stripped the underdot, emitting "
+        "`Hetepti`. Restore per the notes_from_pm verbatim-preserve policy. "
+        "Parallel to chunk-9 TT6 `Neferḥōtep` / `Nebnūfer` underdot "
+        "restorations in notes_from_pm.",
+    ),
+    (
+        "TT240",
+        "notes_from_pm",
+        "Overseer of sealers. Temp. Mentuḥotp-Nebḥepetreʿ. "
+        "(L. D. Text, No. 14, New York, M.M.A. Excav. No. 517.) "
+        "Parents, Iku and Nebti.",
+        "PM I.1 p.330 / chunk-32 source text line 149 (TT240 Meru). "
+        "Source OCR reads `Mentul;totp-Nebl;tepetre<` where `l;t` = `ḥt` "
+        "(underdot-Ḥ followed by t) and trailing `<` = ayin (ʿ). "
+        "PM prints the royal name `Mentuḥotp-Nebḥepetreʿ` — the older "
+        "PM spelling of Mentuhotep-Nebhepetre (Nebhepetre Montuhotep II, "
+        "XI Dynasty) without medial e, matching the `Mentuhotp` convention "
+        "established by the chunk-7 `DAN-MentuhotpIWifeOfDjhuti` descriptor. "
+        "The 2/1 majority merge picked agents A+C's `Mentuhotep-Nebhepetre` "
+        "(stripped both ḥ underdots, used the modern -hotep spelling, and "
+        "dropped the ayin). Restore PM-verbatim form: `Mentuḥotp-Nebḥepetreʿ`.",
+    ),
+]
+
+CHUNK32_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -2953,6 +3054,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK29_CORRECTIONS,
     CHUNK30_CORRECTIONS,
     CHUNK31_CORRECTIONS,
+    CHUNK32_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -2986,6 +3088,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK29_RENAMES,
     **CHUNK30_RENAMES,
     **CHUNK31_RENAMES,
+    **CHUNK32_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -3903,6 +4006,31 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "class as chunk-10 TT12/TT17/TT19/TT20 and the chunk-10-to-30 cluster "
         "(attribution_certainty encodes occupant-identity certainty, not "
         "regnal-date certainty). Per chunk-9 TT2 precedent.",
+    ),
+    # Chunk-32: TT239 Penḥet, Governor of all Northern Lands. The `(?)` in
+    # notes_from_pm qualifies the REGNAL DATE RANGE (`Temp. Tuthmosis IV to
+    # Amenophis II (?)`), not Penḥet's identification. PM headword `239.
+    # PENḤET ..., Governor of all Northern Lands. Temp. Tuthmosis IV to
+    # Amenophis II (?). Wife, Ḥetepti.` names Penḥet and his title unhedged.
+    # Same regnal-range-hedge class as chunk-10 TT12/TT19/TT20 + chunk-31 TT225
+    # + many others. Per Gemini PR #276 round-1 finding 3283048776/782/807.
+    (
+        "TT239",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.330 / physical PDF p.348 prints `239. PENḤET ..., "
+        "Governor of all Northern Lands. Temp. Tuthmosis IV to Amenophis "
+        "II (?). Wife, Ḥetepti.` — the `(?)` qualifies the REGNAL DATE "
+        "RANGE (`Temp. Tuthmosis IV to Amenophis II`), not Penḥet's "
+        "identification. Penḥet is unambiguously named + role-clustered "
+        "as Governor of all Northern Lands. Same regnal-range-hedge "
+        "orthogonality class as chunk-10 TT12/TT17/TT19/TT20 + chunk-13 "
+        "TT43 + chunk-31 TT225 + many others. Per chunk-9 TT2 precedent "
+        "that attribution_certainty encodes occupant-identity certainty, "
+        "not regnal-date certainty. Gemini PR #276 round-1 finding "
+        "3283048776/782/807. The tie-break-overrides.json TT239|"
+        "attribution_certainty entry (pinned `uncertain`) was wrong; "
+        "this DERIVER_OVERRIDE overrides the tie-break value post-merge.",
     ),
 ]
 

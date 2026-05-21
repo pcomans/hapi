@@ -380,5 +380,17 @@
   "TT224|notes_from_pm": {
     "rationale": "PM I.1 p.325 / physical PDF p.343 (TT224 ʿAḥmosi, called Ḥumay). Direct PDF visual check confirms: (1) wife's name is `Nub` (short form, no trailing y/ek/a suffix — PM headword `Wife, Nub [hieroglyph], Royal concubine`); (2) the god's-wife epithet includes `ʿAḥmosi Nefertere` (PM prints `Overseer of the two granaries of the god's wife ʿAḥmosi Nefertere`); (3) `Taidy` with no bracketed question-mark (agent B's `[?]` was an agent annotation, not PM text). Agents split 1/1/1 on wife name: A=`Nuby`, B=`Nubek`, C=`Nuba`. Pin the PDF-verified `Nub`. The `ʿAḥmosi Nefertere` clause is in B and C but not A — the ayin+Ḥ form is a fix_rows CHUNK31_CORRECTIONS post-merge restoration. Pin B/C structure (with `Ahmosi Nefertere` — ayin restoration deferred to fix_rows), correcting only the wife name here.",
     "value": "Overseer of the estate of the god's wife, Overseer of the two granaries of the god's wife Ahmosi Nefertere. Temp. Tuthmosis III or Hatshepsut. Parents, Senusert and Taidy. Wife, Nub, Royal concubine (in tombs 29 and 96)."
+  },
+  "TT232|notes_from_pm": {
+    "rationale": "PM I.1 p.328 / chunk-32-tt231-tt240.txt line 44 (TT232 Tharwas). Agents split 1/1/1 on father's name: A=`Weshebamunheref` (plain h, stripped underdot), B=`Weshebamuneref` (dropped h entirely — OCR e-insertion for the ḥ glyph), C=`Weshebamun~ref` (used tilde placeholder for damaged glyph). Source OCR reads `Weshebamunl}.eref` where `l}.` is the standard underdot-Ḥ artifact in this text layer. Agent A is the cleanest form (preserves the h consonant, stripping only the underdot). Pin agent A's value; CHUNK32_CORRECTIONS restores `Weshebamunḥeref` with the underdot per the notes_from_pm verbatim-preserve policy.",
+    "value": "Scribe of the divine seal of the treasury of Amun. Ramesside. Father, Weshebamunheref."
+  },
+  "TT235|occupant_name": {
+    "rationale": "PM I.1 p.329 / chunk-32-tt231-tt240.txt line 97 (TT235 Userḥet, First prophet of Monthu). Source OCR reads `U SERI;IET` where `I;I` / `I;` is the standard underdot-Ḥ artifact. PM headword is `USERḤET` → strip-Ḥ rule on the matchable occupant_name field gives `Userhet`. Agents split 1/1/1: A=`Userkhet` (invents phantom k after the Ḥ glyph), B=`Userhet` (correct — stripped Ḥ cleanly), C=`Useribet` (inserts phantom `ib` for the Ḥ cluster). Pin agent B's `Userhet`.",
+    "value": "Userhet"
+  },
+  "TT239|attribution_certainty": {
+    "rationale": "PM I.1 p.330 / chunk-32-tt231-tt240.txt line 126-127 (TT239 Penhet, Governor of Northern Lands). Source reads `Temp. Tuthmosis IV to Amenophis II (?).` — the `(?)` is PM's standard attribution-uncertainty glyph. Agents split 1/1/1: A=`uncertain` (correct — `(?)` maps to uncertain), B=`probable` (incorrect — treats PM's `(?)` as weaker uncertainty), C=`attested` (incorrect — ignores PM's `(?)`). The deriver (`_ATTRIBUTION_HEDGE_PATTERNS` `\\(\\?\\)` pattern in fix_rows.py) would also set `uncertain` from the merged notes_from_pm, confirming A's classification. Pin A's `uncertain`.",
+    "value": "uncertain"
   }
 }
