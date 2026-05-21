@@ -2871,7 +2871,7 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "name). Per the controlled-vocab pairing invariant established by chunk-8 "
         "KV12/KV39/KV56/QV36/QV40/QV73/QV75 and chunk-14 TT58 / chunk-15 TT70: "
         "null `occupant_name` MUST co-occur with `occupant_role=\"Unknown\"`. "
-        "Agents A and C emitted `Unknown` (sentinel→null at merge), B emitted "
+        "Agents A and C emitted `Unknown` (`Unknown` collapses to null at merge per SENTINEL_NULL_STRINGS; CHUNK31_CORRECTIONS restores it post-merge), B emitted "
         "`High Priest`; majority chose null. Fix enforces the pairing invariant.",
     ),
     (
@@ -2882,7 +2882,7 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "Overseer of the royal nurses. Temp. Amenophis III.` — anonymous occupant. "
         "Per the null-name/null-role pairing invariant (chunk-8 KV12 / chunk-14 TT58 "
         "/ chunk-15 TT70 precedent). Agents A and C emitted `Unknown` "
-        "(sentinel→null at merge), B emitted `Official`; majority chose null. "
+        "(`Unknown` collapses to null at merge per SENTINEL_NULL_STRINGS; CHUNK31_CORRECTIONS restores it post-merge), B emitted `Official`; majority chose null. "
         "Fix enforces the pairing invariant.",
     ),
     (
@@ -2892,7 +2892,7 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "PM I.1 p.327 / physical PDF p.345 (TT227). Headword `227. Name lost. "
         "Temp. Tuthmosis III.` — anonymous (name lost). Per the null-name/null-role "
         "pairing invariant (chunk-8 KV12 / chunk-14 TT58 / chunk-15 TT70 precedent). "
-        "All three agents emitted `Unknown` (sentinel→null at merge); majority chose "
+        "All three agents emitted `Unknown` (`Unknown` collapses to null at merge per SENTINEL_NULL_STRINGS; CHUNK31_CORRECTIONS restores it post-merge); majority chose "
         "null. Fix enforces the pairing invariant.",
     ),
     (
@@ -2902,7 +2902,7 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "PM I.1 p.328 / physical PDF p.346 (TT229). Headword `229. Name lost. "
         "Dyn. XVIII. (Unfinished.)` — anonymous (name lost). Per the "
         "null-name/null-role pairing invariant. All three agents emitted `Unknown` "
-        "(sentinel→null at merge). Fix enforces the pairing invariant.",
+        "(`Unknown` collapses to null at merge per SENTINEL_NULL_STRINGS; CHUNK31_CORRECTIONS restores it post-merge). Fix enforces the pairing invariant.",
     ),
     (
         "TT230",
@@ -2913,7 +2913,7 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "(Unfinished.)` — anonymous (name lost; `Perhaps` attribution is to an "
         "identification via cone evidence, not a personal attestation). Per the "
         "null-name/null-role pairing invariant. All three agents emitted `Unknown` "
-        "(sentinel→null at merge). Fix enforces the pairing invariant.",
+        "(`Unknown` collapses to null at merge per SENTINEL_NULL_STRINGS; CHUNK31_CORRECTIONS restores it post-merge). Fix enforces the pairing invariant.",
     ),
 ]
 
