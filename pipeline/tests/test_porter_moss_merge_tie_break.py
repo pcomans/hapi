@@ -687,6 +687,23 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT150", "notes_from_pm"):
             "Overseer of cattle of Amūn. Late Dyn. XVIII. (Unfinished.) Wife, "
             "Iaet-ib, Royal concubine.",
+        # Chunk 24 (TT151-TT160) — 3 tie-break overrides (all notes_from_pm).
+        # TT151: agent C pinned (no OCR garbage, has Parents clause). CHUNK24_CORRECTIONS
+        #   restores `Amun` → `Amūn` — post-fix-rows value differs from pinned C value.
+        # TT157: agent A pinned (Amūn×2, CHAMPOLLION uppercase). Pass through unchanged.
+        # TT158: agent A pinned (Amūn×2, CHAMPOLLION uppercase). Pass through unchanged.
+        ("TT151", "notes_from_pm"):
+            "Scribe, Counter of cattle of the god's wife of Amūn, Steward of the "
+            "god's wife. Temp. Tuthmosis IV. (Unfinished.) Wife, Nefertere. "
+            "Parents, Nebnufer.",
+        ("TT157", "notes_from_pm"):
+            "First prophet of Amūn. Temp. Ramesses II. (CHAMPOLLION, No. 42, "
+            "L. D. Text, No. 7.) Wife, Takhaʿt, Chief of the harim of Amūn, "
+            "Songstress of Isis.",
+        ("TT158", "notes_from_pm"):
+            "Third prophet of Amūn. Probably temp. Ramesses III. (CHAMPOLLION, "
+            "No. 44, L. D. Text, No. 9.) Wife, Nefertere, Chief of the harim "
+            "of Amūn.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
