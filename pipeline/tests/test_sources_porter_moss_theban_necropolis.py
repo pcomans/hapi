@@ -358,6 +358,9 @@ CHUNK38_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK39_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(301, 311)}
 )
+CHUNK40_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(311, 321)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -397,6 +400,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK37_TOMB_IDS
     | CHUNK38_TOMB_IDS
     | CHUNK39_TOMB_IDS
+    | CHUNK40_TOMB_IDS
 )
 
 
@@ -10967,3 +10971,306 @@ def test_tt310_anonymous_chancellor() -> None:
     assert r["theban_area"] == "Deir el-Bahari"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 386
+
+
+def test_tt311_khety() -> None:
+    """TT311 — Khety, Seal-bearer. Deir el-Bahari. p.386.
+
+    Temp. Mentuḥotp-Nebḥepetreʿ (diacritic restore by CHUNK40).
+    EGYPTOLOGIST REVIEW REQUIRED: confirm Mentuhotep diacritics.
+    """
+    r = _row("TT311")
+    assert r["occupant_name"] == "Khety"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Seal-bearer" in r["notes_from_pm"]
+    assert "Mentu" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 386
+
+
+def test_tt312_espelaashuti_vizier() -> None:
+    """TT312 — Espel(a)shuti, Vizier. Deir el-Bahari. p.387. Saite.
+
+    Parenthetical letter (a) preserved per reconciled precedent.
+    In court of a Dyn. XI tomb. Mother Irterau (tomb 390).
+    """
+    r = _row("TT312")
+    assert r["occupant_name"] == "Espel(a)shuti"
+    assert r["occupant_role"] == "Vizier"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Vizier" in r["notes_from_pm"]
+    assert "Saite" in r["notes_from_pm"]
+    assert "Irterau" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 387
+
+
+def test_tt313_henenu_great_steward() -> None:
+    """TT313 — Henenu, Great steward. Deir el-Bahari. p.388.
+
+    Two-king tenure: Mentuḥotp-Nebḥepetreʿ and Mentuḥotp-Sʿankhkareʿ.
+    EGYPTOLOGIST REVIEW REQUIRED: confirm diacritics.
+    """
+    r = _row("TT313")
+    assert r["occupant_name"] == "Henenu"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Great steward" in r["notes_from_pm"]
+    assert "Sʿankhkareʿ" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 388
+
+
+def test_tt314_harhotep_dyn_xi() -> None:
+    """TT314 — Harhotep, Seal-bearer. Deir el-Bahari. p.389. Dyn. XI.
+
+    dynasty=XI restored by CHUNK40 (merge majority B+C=null miss).
+    Mother, Sentshe.
+    """
+    r = _row("TT314")
+    assert r["occupant_name"] == "Harhotep"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Seal-bearer" in r["notes_from_pm"]
+    assert "Dyn. XI" in r["notes_from_pm"]
+    assert "Sentshe" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] == "XI"
+    assert r["source_citation"]["page"] == 389
+
+
+def test_tt315_ipi_vizier() -> None:
+    """TT315 — Ipi, Vizier + Judge. Deir el-Bahari. p.389.
+
+    Temp. Mentuḥotp-Nebḥepetreʿ (diacritic restore by CHUNK40).
+    EGYPTOLOGIST REVIEW REQUIRED: confirm diacritics.
+    """
+    r = _row("TT315")
+    assert r["occupant_name"] == "Ipi"
+    assert r["occupant_role"] == "Vizier"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Vizier" in r["notes_from_pm"]
+    assert "Nebḥepetreʿ" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 389
+
+
+def test_tt316_neferhotep_custodian_dyn_xi() -> None:
+    """TT316 — Neferhotep, Custodian of the bow. Deir el-Bahari. p.390. Dyn. XI.
+
+    dynasty=XI restored by CHUNK40.
+    attribution_certainty=attested via DERIVER_OVERRIDE (Wife(?) secondary-clause hedge).
+    """
+    r = _row("TT316")
+    assert r["occupant_name"] == "Neferhotep"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Custodian of the bow" in r["notes_from_pm"]
+    assert "Dyn. XI" in r["notes_from_pm"]
+    assert "Nebtiotef" in r["notes_from_pm"]
+    assert "Mery(t)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] == "XI"
+    assert r["source_citation"]["page"] == 390
+
+
+def test_tt317_dhutnufer_sh_abd_el_qurna() -> None:
+    """TT317 — Ḏhutnufer, Scribe. Sh. ʿAbd el-Qurna. p.390.
+
+    d-bar Ḏ restored by CHUNK40. CHAMPOLLION No. 25 before Parents.
+    attribution_certainty=attested via DERIVER_OVERRIDE (regnal-date hedge).
+    EGYPTOLOGIST REVIEW REQUIRED: confirm d-bar from printed source.
+    """
+    r = _row("TT317")
+    assert r["occupant_name"] == "Ḏhutnufer"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Scribe of the counting of corn" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 25.)" in r["notes_from_pm"]
+    assert "Parents, Senires" in r["notes_from_pm"]
+    assert "Titau" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 390
+
+
+def test_tt318_amenmosi_sh_abd_el_qurna() -> None:
+    """TT318 — Amenmosi, Necropolis-stonemason. Sh. ʿAbd el-Qurna. p.391.
+
+    CHAMPOLLION No. 26 before Wife per PM source order.
+    attribution_certainty=attested via DERIVER_OVERRIDE (regnal-range-tail hedge).
+    """
+    r = _row("TT318")
+    assert r["occupant_name"] == "Amenmosi"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Necropolis-stonemason" in r["notes_from_pm"]
+    assert "(CHAMPOLLION, No. 26.)" in r["notes_from_pm"]
+    assert "Henut" in r["notes_from_pm"]
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 391
+
+
+def test_tt319_nofru_royal_family() -> None:
+    """TT319 — Nofru, Royal Family. Deir el-Bahari. p.391.
+
+    King's daughter. Father Mentuḥotp-Sʿankhibtaui; mother Iʿob (restored by CHUNK40).
+    EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics.
+    """
+    r = _row("TT319")
+    assert r["occupant_name"] == "Nofru"
+    assert r["occupant_role"] == "Royal Family"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Sʿankhibtaui" in r["notes_from_pm"]
+    assert "Iʿob" in r["notes_from_pm"]
+    assert "Nebḥepetreʿ" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] is None
+    assert r["source_citation"]["page"] == 391
+
+
+def test_tt320_inhapi_royal_cache() -> None:
+    """TT320 — Inhaʿpi, perhaps wife of Amosis. Deir el-Bahari. p.392. Dyn. XXI.
+
+    Royal Family; dynasty=XXI restored by CHUNK40.
+    occupant_name ayin restored to Inhaʿpi.
+    attribution_certainty=attested via DERIVER_OVERRIDE (spousal hedge).
+    EGYPTOLOGIST REVIEW REQUIRED: confirm occupant_name from PM I.1 p.392.
+    """
+    r = _row("TT320")
+    assert r["occupant_name"] == "Inhaʿpi"
+    assert r["occupant_role"] == "Royal Family"
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["tomb_aliases"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+    assert r["is_joint_burial"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_unfinished"] is False
+    assert r["is_usurped"] is False
+    assert r["location_sub_area"] is None
+    assert "Perhaps wife of Amosis" in r["notes_from_pm"]
+    assert "Royal Cache" in r["notes_from_pm"]
+    assert "Dyn. XXI" in r["notes_from_pm"]
+    assert "i 2" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["dynasty"] == "XXI"
+    assert r["source_citation"]["page"] == 392
+
+
+# ===========================================================================
+# Chunk 40 — TT311–TT320 (Deir el-Bahari × 8, Sh. ʿAbd el-Qurna × 2)
+# ===========================================================================
+
+
+def test_chunk40_all_rows_present() -> None:
+    """All 10 TT311-TT320 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK40_TOMB_IDS
+    assert actual == CHUNK40_TOMB_IDS, sorted(CHUNK40_TOMB_IDS - actual)
+
+
+def test_chunk40_theban_areas() -> None:
+    """Verify area assignments. TT311-TT316/TT319-TT320 Deir el-Bahari; TT317-TT318 Sh. Abd el-Qurna."""
+    expected = {
+        "TT311": "Deir el-Bahari",
+        "TT312": "Deir el-Bahari",
+        "TT313": "Deir el-Bahari",
+        "TT314": "Deir el-Bahari",
+        "TT315": "Deir el-Bahari",
+        "TT316": "Deir el-Bahari",
+        "TT317": "Sh. ʿAbd el-Qurna",
+        "TT318": "Sh. ʿAbd el-Qurna",
+        "TT319": "Deir el-Bahari",
+        "TT320": "Deir el-Bahari",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, f"{tid}: expected {area!r}, got {r['theban_area']!r}"

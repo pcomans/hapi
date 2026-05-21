@@ -932,6 +932,48 @@ TT310 (None):
   notes_from_pm: a="A Chancellor of the King of Lower Egypt. Dyn. XI." | b="A Chancellor of the King of Lower Egypt. Dyn. XI." | c="Chancellor of the King of Lower Egypt. Dyn. XI."  → chose "A Chancellor of the King of Lower Egypt. Dyn. XI."
   occupant_role: a="Official" | b="Unknown" | c="Unknown"  → chose null
 
+TT311 (Khety):
+  notes_from_pm: a="Seal-bearer of the King of Lower Egypt. Temp. Mentuhotep-Nebhepetrec." | b="Seal-bearer of the King of Lower Egypt. Temp. Mentuhotep-Nebhepetrec." | c="Seal-bearer of the King of Lower Egypt. Temp. Mentuhotep-Nebhepetre."  → chose "Seal-bearer of the King of Lower Egypt. Temp. Mentuhotep-Nebhepetrec."
+
+TT312 (Espel(a)shuti):
+  notes_from_pm: a="Governor of the town and Vizier. Saite. In court of a Dyn. XI tomb. Mother, Irterau (tomb 390)." | b="Governor of the town and Vizier. Saite." | c="Governor of the town and Vizier. Saite. In court of a Dyn. XI tomb. Mother, Irterau (tomb 390)."  → chose "Governor of the town and Vizier. Saite. In court of a Dyn. XI tomb. Mother, Irterau (tomb 390)."
+  occupant_name: a="Espeladshuti" | b="Espelaashuti" | c="Espel(a)shuti"  → chose "Espel(a)shuti"
+
+TT313 (Henenu):
+  notes_from_pm: a="Great steward. Temp. Mentuhotep-Nebhepetrec and Mentuhotep-Sankhkare." | b="Great steward. Temp. Mentuhotep-Nebhepetrec and Mentuhotep-Soankhkare." | c="Great steward. Temp. Mentuhotep-Nebhepetre and Mentuhotep-Sankhkare."  → chose "Great steward. Temp. Mentuhotep-Nebhepetrec and Mentuhotep-Sankhkare."
+
+TT314 (Harhotep):
+  dynasty: a="XI" | b=null | c=null  → chose null
+  notes_from_pm: a="Seal-bearer of the King of Lower Egypt, Henchman. Dyn. XI. Mother, Sentshe." | b="Seal-bearer of the King of Lower Egypt, Henchman. Dyn. XI." | c="Seal-bearer of the King of Lower Egypt, Henchman. Dyn. XI. Mother, Sentshe."  → chose "Seal-bearer of the King of Lower Egypt, Henchman. Dyn. XI. Mother, Sentshe."
+
+TT315 (Ipi):
+  notes_from_pm: a="Governor of the town and Vizier, Judge. Temp. Mentuhotep-Nebhepetrec." | b="Governor of the town and Vizier, Judge. Temp. Mentuhotep-Nebhepetrec." | c="Governor of the town and Vizier, Judge. Temp. Mentuhotep-Nebhepetre."  → chose "Governor of the town and Vizier, Judge. Temp. Mentuhotep-Nebhepetrec."
+
+TT316 (Neferhotep):
+  dynasty: a="XI" | b=null | c=null  → chose null
+  notes_from_pm: a="Custodian of the bow. Dyn. XI. Mother, Nebtiotef. Wife(?), Mery(t)." | b="Custodian of the bow. Dyn. XI." | c="Custodian of the bow. Dyn. XI. Mother, Nebtiotef. Wife(?), Mery(t)."  → chose "Custodian of the bow. Dyn. XI. Mother, Nebtiotef. Wife(?), Mery(t)."
+  occupant_name: a="Neferhotep" | b="Neferihotep" | c="Neferkhotep"  → chose "Neferhotep"
+
+TT317 (Dhutnufer):
+  attribution_certainty: a="probable" | b="attested" | c="attested"  → chose "attested"
+  notes_from_pm: a="Scribe of the counting of corn in the granary of divine offerings of Amun. Temp. Tuthmosis III(?). Parents, Senires, Mayor, and Taiy. Wife, Titau. (CHAMPOLLION, No. 25.)" | b="Scribe of the counting of corn in the granary of divine offerings of Amun. Temp. Tuthmosis III(?). Wife, Titau." | c="Scribe of the counting of corn in the granary of divine offerings of Amun. Temp. Tuthmosis III(?). (CHAMPOLLION, No. 25.) Parents, Senires, Mayor, and Taiy. Wife, Titau."  → chose "Scribe of the counting of corn in the granary of divine offerings of Amun. Temp. Tuthmosis III(?). (CHAMPOLLION, No. 25.) Parents, Senires, Mayor, and Taiy. Wife, Titau."
+  occupant_name: a="Dhutnufer" | b="Dhutnufer" | c="Khutnufer"  → chose "Dhutnufer"
+
+TT318 (Amenmosi):
+  attribution_certainty: a="probable" | b="attested" | c="attested"  → chose "attested"
+  notes_from_pm: a="Necropolis-stonemason of Amun. Temp. Tuthmosis III to Hatshepsut(?). Wife, Henut. (CHAMPOLLION, No. 26.)" | b="Necropolis-stonemason of Amun. Temp. Tuthmosis III to Hatshepsut(?). Wife, Henut." | c="Necropolis-stonemason of Amun. Temp. Tuthmosis III to Hatshepsut(?). (CHAMPOLLION, No. 26.) Wife, Henut."  → chose "Necropolis-stonemason of Amun. Temp. Tuthmosis III to Hatshepsut(?). (CHAMPOLLION, No. 26.) Wife, Henut."
+
+TT319 (Nofru):
+  notes_from_pm: a="Daughter of Mentuhotep-Sankhbtaui and Khob, wife of Mentuhotep-Nebhepetrec." | b="Daughter of Mentuhotep-Soankhbtaui and Iob, wife of Mentuhotep-Nebhepetrec." | c="Daughter of Mentuhotep-Sankhbtaui and Ikh, wife of Mentuhotep-Nebhepetre."  → chose "Daughter of Mentuhotep-Sankhbtaui and Khob, wife of Mentuhotep-Nebhepetrec."
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 391, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 391, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 392, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 391, "section": "I"}
+
+TT320 (Inhapi):
+  attribution_certainty: a="probable" | b="attested" | c="attested"  → chose "attested"
+  dynasty: a="XXI" | b=null | c=null  → chose null
+  notes_from_pm: a="Perhaps wife of Amosis. (Royal Cache, Dyn. XXI, see DEIR EL-BAHARI, Bibl. i2, Pt. 2, in the Press.)" | b="Perhaps wife of Amosis. Dyn. XXI." | c="Perhaps wife of Amosis. (Royal Cache, Dyn. XXI, see DEIR EL-BAHARI, Bibl. i 2, Pt. 2, in the Press.)"  → chose "Perhaps wife of Amosis. (Royal Cache, Dyn. XXI, see DEIR EL-BAHARI, Bibl. i 2, Pt. 2, in the Press.)"
+  occupant_name: a="Inhapi" | b="Inhaapi" | c="Inhijapi"  → chose "Inhapi"
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 392, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 392, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 393, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 392, "section": "I"}
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -1033,6 +1075,7 @@ Per-chunk correction counts:
 - Chunk 37: 8 correction(s) defined in CHUNK37_CORRECTIONS.
 - Chunk 38: 4 correction(s) defined in CHUNK38_CORRECTIONS.
 - Chunk 39: 10 correction(s) defined in CHUNK39_CORRECTIONS.
+- Chunk 40: 9 correction(s) defined in CHUNK40_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1477,14 +1520,32 @@ Field corrections:
     value: "Wʿab-priest in front of Amun, Scribe of the divine offerings of Amun. Dyn. XIX-XXI. Wife, Tamelḥit."
 - TT305: co_occupants already matches override (no-op this run; Strip-ḥ for co_occupants.name (matchable-name field): source `Tamel;lit` = `Tamelḥit` → strip-ḥ → `Tamelhit`. Tie-break pinned `Tamelkhit` (kh-substitution for ḥ); correct strip-ḥ removes the underdot-H entirely → `Tamelhit`. Role set to `Unknown` (sentinel-null normalized from `Unknown` by merge.py; explicit schema value restored). EGYPTOLOGIST REVIEW REQUIRED: confirm exact wife-name form from PM I.1 p.383 printed source.)
     value: [{"alt_names": [], "name": "Tamelhit", "role": "Unknown"}]
-- TT306: co_occupants already matches override (no-op this run; Majority A+B+C agreed on Mutenopet as wife. Role field was sentinel-null normalized from `Unknown` to null by merge.py. Restore `Unknown` as explicit role value per schema convention (cf. other wife co_occupant entries in TT305, TT307 precedents).)
+- TT306: co_occupants already matches override (no-op this run; Majority A+B+C agreed on Mutenopet as wife. Role field was sentinel-null normalized from `Unknown` to null by merge.py. Restore `Unknown` as explicit role value per schema convention (cf. other wife co_occupant entries in TT305 + chunk-31 TT225/TT226 sentinel-null restoration precedents).)
     value: [{"alt_names": [], "name": "Mutenopet", "role": "Unknown"}]
 - TT307: notes_from_pm already matches override (no-op this run; Source line 275 of chunk-39-tt301-tt310.txt prints `(Unfinished.)` WITH parentheses. Tie-break pinned A's form `Unfinished.` (no parens). Per verbatim-preserve policy, restore PM's parentheses: `(Unfinished.)` — consistent with how `(Blocked.)` at TT309 is parenthesised in PM.)
     value: "(name from ushabti). Dyn. XX-XXI. (Unfinished.) (Description by GREENLEES, in Philadelphia Univ. Mus.)"
-- TT308: notes_from_pm already matches override (no-op this run; Three diacritic restorations + temple location addition from source lines 287-289 of chunk-39-tt301-tt310.txt. (1) `Hathor` → `Ḥatḥor`: source `l:latl:lor` where `l:l` = underdot-Ḥ OCR glyph × 2. notes_from_pm verbatim-preserve retains underdot-ḥ. (2) `Mentuhotep` → `Mentuḥotp`: source `Mentul;10tp` where `l;I` = underdot-Ḥ cluster. Cf. TT280 `Mentuḥotp` precedent. (3) `Nebhepetre` → `Nebḥepetreʿ`: source `Neb}:lepetre<` where `}:l` = underdot-Ḥ and `<` = ayin glyph. notes_from_pm is verbatim-preserve — restore both underdot-ḥ AND ayin. Cf. TT280 `Sʿankhkareʿ` dual-ayin precedent. (4) Add temple location qualifier: source line 289 `Deir el-Bal).ri, in the Temple of Mentul).otp.` is part of the PM headword (site identification clause). All three agents omitted this clause; verbatim-preserve policy requires inclusion. EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics from PM I.1 p.385 printed source.)
+- TT308: notes_from_pm already matches override (no-op this run; Three diacritic restorations + temple location addition from source lines 287-289 of chunk-39-tt301-tt310.txt. (1) `Hathor` → `Ḥatḥor`: source `l:latl:lor` where `l:l` = underdot-Ḥ OCR glyph × 2. notes_from_pm verbatim-preserve retains underdot-ḥ. (2) `Mentuhotep` → `Mentuḥotp`: source `Mentul;10tp` where `l;10` = underdot-Ḥ cluster. Cf. TT280 `Mentuḥotp` precedent. (3) `Nebhepetre` → `Nebḥepetreʿ`: source `Neb}:lepetre<` where `}:l` = underdot-Ḥ and `<` = ayin glyph. notes_from_pm is verbatim-preserve — restore both underdot-ḥ AND ayin. Cf. TT280 `Sʿankhkareʿ` dual-ayin precedent. (4) Add temple location qualifier: source line 289 `Deir el-Bal).ri, in the Temple of Mentul).otp.` is part of the PM headword (site identification clause). All three agents omitted this clause; verbatim-preserve policy requires inclusion. EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics from PM I.1 p.385 printed source.)
     value: "Unique royal concubine, Prophetess of Ḥatḥor. Temp. Mentuḥotp (Nebḥepetreʿ). Deir el-Bahari, in the Temple of Mentuḥotp. (NAVILLE, No. 10.)"
 - TT308: location_sub_area already matches override (no-op this run; Source line 289: `Deir el-Bal).ri, in the Temple of Mentul).otp.` — PM places the tomb specifically within the Mentuhotep temple complex at Deir el-Bahari. The theban_area captures `Deir el-Bahari`; the `location_sub_area` encodes the more precise location. Parallel to TT280 `In valley south of Deir el-Bahari Temples` pattern (chunk-36 CHUNK36_CORRECTIONS). Decode: `Bal).ri` = `Bahari`, `Mentul).otp` = `Mentuḥotp` (underdot-ḥ restored per notes_from_pm verbatim-preserve). EGYPTOLOGIST REVIEW REQUIRED: confirm location sub-area form from PM I.1 p.385 printed source.)
     value: "In the Temple of Mentuḥotp"
+- TT311: notes_from_pm already matches override (no-op this run; Source line 40 of chunk-40-tt311-tt320.txt: `311. KHETY..., Seal-bearer of the King of Lower Egypt. Temp. Mentul:_lotpNebl:_lepetrec.` where `l:_l` = underdot-Ḥ OCR cluster and `c` = OCR-literal for ayin `<`. Two restorations: (1) `Mentuhotep-Nebhepetrec` → `Mentuḥotp-Nebḥepetreʿ`: restore underdot-Ḥ × 2 (`Mentuhotep` → `Mentuḥotp` per chunk-36/39/40 TT280/TT308/TT313 Mentuhotep-era precedents) and OCR-literal `c` → ayin ʿ. notes_from_pm verbatim-preserve retains both diacritics. EGYPTOLOGIST REVIEW REQUIRED: confirm exact Mentuhotep epithet diacritics from PM I.1 p.386 printed source.)
+    value: "Seal-bearer of the King of Lower Egypt. Temp. Mentuḥotp-Nebḥepetreʿ."
+- TT313: notes_from_pm already matches override (no-op this run; Source line 132 of chunk-40-tt311-tt320.txt: `313. HENENU..., Great steward. Temp. MentuQ.otp-NebQ.epetre< and MentuQ.otp-S<ankhkare<.` where `Q.` = underdot-Ḥ and `<` = ayin. Four diacritic restorations: (1) `Mentuhotep-Nebhepetrec` → `Mentuḥotp-Nebḥepetreʿ` (underdot-Ḥ × 2 + ayin); (2) `Mentuhotep-Sankhkare` → `Mentuḥotp-Sʿankhkareʿ` (underdot-Ḥ + leading ayin on `Sʿankh` + trailing ayin). notes_from_pm verbatim-preserve retains all diacritics. Cf. TT280 chunk-36 `Mentuḥotp-Sʿankhkareʿ` precedent. EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics from PM I.1 p.388 printed source.)
+    value: "Great steward. Temp. Mentuḥotp-Nebḥepetreʿ and Mentuḥotp-Sʿankhkareʿ."
+- TT314: dynasty already matches override (no-op this run; Source line 160 of chunk-40-tt311-tt320.txt: `314. HARHQTP..., Seal-bearer of the King of Lower Egypt, Henchman. Dyn. XI.` — PM prints explicit `Dyn. XI` in the headword. Merge majority B+C=null missed this; agent A alone had `XI`. CHUNK40_CORRECTIONS restores the source-stated dynasty. notes_from_pm `Dyn. XI.` clause already correct in merged output. Parallel to chunk-19 TT108/TT110 dynasty null-miss pattern.)
+    value: "XI"
+- TT315: notes_from_pm already matches override (no-op this run; Source line 180 of chunk-40-tt311-tt320.txt: `315. IPI..., Governor of the town and Vizier, Judge. Temp. Mentul.10tp-NebQ.epetrec.` where `l.10` / `Q.` = underdot-Ḥ OCR cluster and `c` = OCR-literal ayin. Two restorations: `Mentuhotep-Nebhepetrec` → `Mentuḥotp-Nebḥepetreʿ` (underdot-Ḥ × 2 + OCR-literal `c` → ayin ʿ). Same pattern as TT311/TT313. EGYPTOLOGIST REVIEW REQUIRED: confirm diacritics from PM I.1 p.389 printed source.)
+    value: "Governor of the town and Vizier, Judge. Temp. Mentuḥotp-Nebḥepetreʿ."
+- TT316: dynasty already matches override (no-op this run; Source line 205 of chunk-40-tt311-tt320.txt: `316. NEFERH_OTEP..., Custodian of the bow. Dyn. XI.` — PM prints explicit `Dyn. XI` in the headword. Merge majority B+C=null missed this; agent A alone had `XI`. Same majority-null-miss pattern as TT314 in this chunk. notes_from_pm `Dyn. XI.` clause already correct in merged output.)
+    value: "XI"
+- TT317: occupant_name already matches override (no-op this run; Source line 229 of chunk-40-tt311-tt320.txt: `317. :>I;IUTNUFER` where `:>` = d-bar Ḏ OCR sequence and `I;I` = underdot-Ḥ OCR cluster. Full decode: `ḎḤUTNUFER`. Apply strip-ḥ for `occupant_name` (underdot-Ḥ stripped) but RETAIN d-bar Ḏ (not a strip-ḥ target; cf. TT32 `Ḏhutmosi`, TT205 `Ḏhutmosi`, TT295 `Ḏhutmosi` reconciled.jsonl precedents). Tie-break majority A+B pinned `Dhutnufer` (drops d-bar). Correct form: `Ḏhutnufer`. EGYPTOLOGIST REVIEW REQUIRED: confirm d-bar form from PM I.1 p.390 printed source.)
+    value: "Ḏhutnufer"
+- TT319: notes_from_pm already matches override (no-op this run; Source line 295 of chunk-40-tt311-tt320.txt: `319. NOFRU, daughter of Mentul.10tp-S<ankhibtaui and I<ob, wife of Mentul.10tp-Nebhepetre<.` where `l.10` = underdot-Ḥ, `<` = ayin, `I<ob` = mother's name. Three restorations from tie-break base (A's form with `Sankhbtaui`/`Khob`): (1) Mother `Khob` → `Iʿob`: source `I<ob` = I + ayin + ob; A's `Khob` misread initial `I` as `K`. B's `Iob` (drops ayin) and C's `Ikh` (wrong) are both wrong; decode gives `Iʿob`. (2) Father `Sankhbtaui` → `Sʿankhibtaui`: source `S<ankhibtaui` adds ayin after S plus the `i` between `ankh` and `btaui`. (3) `Nebhepetrec` → `Nebḥepetreʿ` (underdot-Ḥ + ayin per TT311/TT313/TT315). Also `Mentuhotep` → `Mentuḥotp` (underdot-Ḥ restore × 2). EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics from PM I.1 p.391 printed source.)
+    value: "Daughter of Mentuḥotp-Sʿankhibtaui and Iʿob, wife of Mentuḥotp-Nebḥepetreʿ."
+- TT320: dynasty already matches override (no-op this run; Source line 374 of chunk-40-tt311-tt320.txt: `320. INH_A<PI, perhaps wife of Amosis. (Royal Cache, Dyn. XXI, ...)` — PM explicitly states `Dyn. XXI` in the Royal Cache parenthetical. Merge majority B+C=null missed this; agent A alone had `XXI`. Same majority-null-miss pattern as TT314/TT316 in this chunk. The Royal Cache context places the tomb use squarely in Dyn. XXI.)
+    value: "XXI"
+- TT320: occupant_name already matches override (no-op this run; Source line 374 of chunk-40-tt311-tt320.txt: `INI;IA<PI` where `I;I` = underdot-Ḥ OCR cluster and `<` = ayin glyph. Full decode: `INḤAʿPI`. Apply strip-ḥ for `occupant_name` matchable field (underdot-Ḥ stripped to h) but RETAIN ayin ʿ (per TT293 `Raʿmessenakht`, TT300 `ʿAnhotp` ayin-retain precedent): `INḤAʿPI` → strip-ḥ → `INHAʿPI` → `Inhaʿpi`. Tie-break pinned A's `Inhapi` (strips ayin too). Restore ayin to give `Inhaʿpi`. EGYPTOLOGIST REVIEW REQUIRED: confirm exact form from PM I.1 p.392 printed source.)
+    value: "Inhaʿpi"
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1585,6 +1646,10 @@ Field corrections:
 - TT288: is_usurped → false (issue #182 derivation from notes_from_pm)
 - TT295: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT298: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
+- TT316: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT317: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT318: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT320: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -1654,3 +1719,7 @@ Field corrections:
 - TT291: is_joint_burial already matches deriver override (no-op this run; PM I.1 p.374 / chunk-38. PM headword names two co-equal occupants: Nu (`Servant ...)
 - TT295: attribution_certainty → "attested" (deriver override; PM I.1 p.377 / chunk-38 source line 154-155: `295· Ḏ-ḤUTMOSI, called PAROY ... T...)
 - TT298: attribution_certainty → "attested" (deriver override; PM I.1 p.379 / chunk-38 source line 283: `298. BAKI ... Foreman in the Place of ...)
+- TT316: attribution_certainty → "attested" (deriver override; PM I.1 p.390 / chunk-40 source line 205-207: `316. NEFERH_OTEP, Custodian of the...)
+- TT317: attribution_certainty → "attested" (deriver override; PM I.1 p.390 / chunk-40 source line 229-230: `317. DHUTNUFER, Scribe of the coun...)
+- TT318: attribution_certainty → "attested" (deriver override; PM I.1 p.390-391 / chunk-40 source line 254-255: `318. AMENMOSI, Necropolis-ston...)
+- TT320: attribution_certainty → "attested" (deriver override; PM I.1 p.392 / chunk-40 source line 374-375: `320. INH_A<PI, perhaps wife of Amo...)
