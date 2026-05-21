@@ -730,7 +730,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT194", "notes_from_pm"):
             "Overseer of marshland-dwellers of the estate of Amūn, Scribe of "
             "the temple of Amūn. Dyn. XIX. Father, a wʿab-priest in front of "
-            "Amun, Scribe of divine offerings of Amun. Wife, Nezemtmut.",
+            "Amūn, Scribe of divine offerings of Amūn. Wife, Nezemtmut.",
         ("TT196", "notes_from_pm"):
             "Chief steward of Amūn. Saite. Parents, Ibi (tomb 36) and "
             "Shepenernōte.",

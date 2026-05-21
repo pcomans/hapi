@@ -2159,7 +2159,25 @@ CHUNK27_RENAMES: dict[str, str] = {}
 # resolved via tie-break-overrides.json; no post-merge corrections are needed
 # for this chunk. The empty list is required so that
 # `test_all_corrections_includes_every_chunk_list` continues to pass.
-CHUNK28_CORRECTIONS: list[tuple[str, str, object, str]] = []
+CHUNK28_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT194",
+        "notes_from_pm",
+        "Overseer of marshland-dwellers of the estate of Amūn, Scribe of "
+        "the temple of Amūn. Dyn. XIX. Father, a wʿab-priest in front of "
+        "Amūn, Scribe of divine offerings of Amūn. Wife, Nezemtmut.",
+        "PR #272 round 1 Gemini finding 3280621504: TT194 notes_from_pm "
+        "had `Amūn` with macron-Ū in the first 2 occurrences (Overseer + "
+        "Scribe of the temple) but `Amun` without macron in the 2 Father-"
+        "clause occurrences (in front of Amun, Scribe of divine offerings "
+        "of Amun). Per Constitutional Rule 6 verbatim-preserve + "
+        "chunk-12-onward macron-retain class (same as TT181/TT187/TT189 "
+        "in chunks 27/28), all 4 occurrences should carry macron-Ū. "
+        "Tie-break-pinned agent merge introduced the inconsistency. "
+        "Restoration applies macron-Ū to all 4 occurrences (no semantic "
+        "change; pure diacritic consistency)."
+    ),
+]
 
 CHUNK28_RENAMES: dict[str, str] = {}
 

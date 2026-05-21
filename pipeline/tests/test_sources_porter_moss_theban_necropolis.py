@@ -7398,7 +7398,7 @@ def test_chunk28_tt194_dhutemhab_overseer_marshland_dwellers() -> None:
     assert "temple of Amūn" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "wʿab-priest" in r["notes_from_pm"]
-    assert "Scribe of divine offerings of Amun" in r["notes_from_pm"]
+    assert "Scribe of divine offerings of Amūn" in r["notes_from_pm"]
     assert "Nezemtmut" in r["notes_from_pm"]
     assert "Stela only" not in r["notes_from_pm"]
     assert r["theban_area"] == "ʿAsâsîf"
