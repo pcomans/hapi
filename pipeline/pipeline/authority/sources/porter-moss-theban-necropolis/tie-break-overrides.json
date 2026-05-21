@@ -456,5 +456,21 @@
   "TT260|notes_from_pm": {
     "rationale": "PM I.1 p.344 / chunk-34-tt251-tt260.txt (TT260 User). Source shows `Scribe, Weigher of [Amiin], Overseer of the ploughed lands of [Amiin].` with square brackets — PM's editorial brackets indicating the divine name is inferred/restored. Agent B correctly transcribes `[Amun]` with brackets; A and C drop the brackets. Three-way split: A has no brackets + `Amuin` OCR error. B has brackets + correct `Amun` + `Nubemweset...` trailing ellipsis. C has no brackets + `Amun` + omits wife clause. Pin B's bracket-correct reading without the trailing ellipsis on the wife name.",
     "value": "Scribe, Weigher of [Amun], Overseer of the ploughed lands of [Amun]. Temp. Tuthmosis III (?). Wife, Nubemweset (name from cone)."
+  },
+  "TT268|notes_from_pm": {
+    "rationale": "PM I.1 p.349 / physical PDF p.367 (TT268 Nebnakht). Three-way split on leading clause and ayin on mother's name. PDF p.367 prints `268. Family tomb of NEBNAKHT` — the full `Family tomb of Nebnakht` phrasing is PM-verbatim (agent C correct; agents A and B abbreviate to `Family tomb.`). PDF also prints `ʿAuti` with ayin before `A` — source OCR shows `<Auti` where `<` = ayin glyph (agent B correct on ayin; agents A and C drop it). Pin: combine agent C's PM-verbatim lead clause `Family tomb of Nebnakht.` with agent B's ayin `ʿAuti`.",
+    "value": "Family tomb of Nebnakht. Servant in the Place of Truth. Dyn. XIX. Parents, Ipy and ʿAuti (names from stela in Turin Mus. Sup. 6044). Wife, Thay."
+  },
+  "TT266|occupant_name": {
+    "rationale": "PM I.1 p.346 / physical PDF p.364 (TT266). Headword prints `AMENNAKHT` in capitals. Agent B correctly renders `Amennakht`. Agent A has `Amennakit` (transposed k/t). Agent C has `Amenakht` (drops medial `n`). Pin agent B's PDF-verbatim form.",
+    "value": "Amennakht"
+  },
+  "TT266|notes_from_pm": {
+    "rationale": "PM I.1 p.346 / physical PDF p.364 (TT266 Amennakht). Three-way split on father's name and wife's name diacritics. OCR source (chunk-35-tt261-tt270.txt line 166) shows `Bu~entef` (tilde masks underdot-ḳ) and `I:Ienutrayunu` (I:I = Ḥ underdot). PDF p.364 printed text reads `Buḳentef` (with underdot-k ḳ) and `Ḥenutrayunu` (underdot-Ḥ + `rayunu` ending). Agent A: `Buentiaf` (wrong consonant order) + `Henutraÿunu` (diaeresis-y, not a PM diacritic). Agent B: `Busentef` (s instead of ḳ) + `Henutrayunu` (correct ending, wrong leading H). Agent C: `Busetef` (s+e instead of ḳ) + `Henutrayunu` (correct ending, wrong leading H). Pin: `Buḳentef` (PDF-verbatim underdot-ḳ) + `Ḥenutrayunu` (I:I underdot-Ḥ prefix per OCR policy + B/C correct `-rayunu` ending).",
+    "value": "Chief craftsman of the Lord of the Two Lands in the Place of Truth on the west of Thebes. Dyn. XIX. Parents, Buḳentef and Iy (names in tomb 219). Wife, Ḥenutrayunu."
+  },
+  "TT267|notes_from_pm": {
+    "rationale": "PM I.1 p.347 / physical PDF p.365 (TT267 Hay). Three-way split on mother's name and wife's name. OCR source shows `Tarekhcan` (c = ayin glyph) and `J:Ienutmet` (J:I = Ḥ). PDF p.365 printed text reads `Tarekh'an` (ayin after `kh`) and `Ḥenutmet` (underdot-Ḥ). Agent A: `Taarakhkau` (wrong — fabricated form). Agent B: `Tarékhmani` (wrong — different name). Agent C: `Tarekhan` (closest, misses the ayin). Also: wife name — A has `Henumet` (drops `t`), B has `Henutumet` (adds `u`), C has `Henutmet` (correct consonants, wrong leading H). Pin: `Tārekhʿan` with ayin per PDF + `Ḥenutmet` (J:I underdot-Ḥ + C's correct consonants).",
+    "value": "Officer of the workmen in the Place of Truth on the west of Thebes, Fashioner of the images of all the gods in the House of Gold. Dyn. XX. (L. D. Text, Nos. 102-3.) Parents, Amennakht and Tārekhʿan. Wife, Ḥenutmet."
   }
 }

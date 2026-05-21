@@ -3197,6 +3197,101 @@ CHUNK34_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK34_RENAMES: dict[str, str] = {}
 
 
+# Chunk-35: TT261–TT270. Corrections beyond what tie-break-overrides resolved.
+#
+# 1. TT261 — `occupant_name`: PM p.344 prints `KHA<EMWĒSET` where `<` is PM's
+#    ayin glyph. All three agents dropped the ayin, producing `Khaemweset`.
+#    The project-wide convention preserves ayin in `occupant_name` (matchable-
+#    name field). Restore to `Khaʿemweset`. Macron-ē stripped per matchable-
+#    name diacritic policy.
+# 2. TT262 — `occupant_role`: prompt rule says role='Unknown' when
+#    occupant_name is null. PM p.344 headword is bare `An Overseer of the
+#    fields.` with no name; all agents emitted null despite the rule. Same
+#    fix pattern as chunk-2 KV12, chunk-3 KV39, chunk-4 KV56, chunk-8 QV36.
+# 3. TT269 — `occupant_role`: same null-name → Unknown rule. PM p.349 prints
+#    `269. Name lost. Ramesside.` — no occupant named; agents emitted null.
+# 4. TT270 — `notes_from_pm`: PM p.350 / physical PDF p.368 prints
+#    `Ptaḥ-Sokari` with underdot-ḥ (verbatim-preserve field). Majority-
+#    merged value `Ptah-Sokari` dropped the diacritic. Restore per README's
+#    notes_from_pm verbatim-preserve policy.
+CHUNK35_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT261",
+        "occupant_name",
+        "Khaʿemweset",
+        "PM I.1 p.344 / physical PDF p.362 prints `KHA<EMWĒSET` where `<` "
+        "is PM's ayin glyph and `Ē` is macron-e. All three agents dropped "
+        "the ayin; merged value is `Khaemweset`. Project-wide convention "
+        "preserves ayin (ʿ) in `occupant_name` per the DAN-Ahhotep / "
+        "DAN-AhmosiHenutempet / chunk-7 ayin-family precedent. Macron-ē "
+        "stripped per matchable-name diacritic policy (same as "
+        "Khaʿemwaset/Tutʿankhamun etc.).",
+    ),
+    (
+        "TT262",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.344 / physical PDF p.362. Headword is bare `An Overseer "
+        "of the fields. Temp. Tuthmosis III (?).` — no occupant name given. "
+        "Prompt rule: role='Unknown' when occupant_name is null. All three "
+        "agents emitted null despite the rule. Same fix pattern as "
+        "chunk-2 KV12, chunk-3 KV39, chunk-4 KV56, chunk-8 QV36/QV40/"
+        "QV73/QV75.",
+    ),
+    (
+        "TT269",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.349 / physical PDF p.367. Headword is bare `269. Name "
+        "lost. Ramesside.` — no occupant name. Prompt rule: role='Unknown' "
+        "when occupant_name is null. All three agents emitted null. Same "
+        "fix pattern as TT262 above and the KV12/KV39/KV56/QV36 cluster.",
+    ),
+    (
+        "TT266",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 346, "section": "I"},
+        "PM I.1 p.346 / physical PDF p.364. TT266 headword begins on "
+        "printed page 346 (physical page 364); all three agents cited "
+        "page 347 (the continuation page). The `source_citation.page` "
+        "should record where the headword starts per the project-wide "
+        "convention (matching TT265 page=346 on the same physical page). "
+        "Same off-by-one class as chunk-34 TT258/TT260 (agent C).",
+    ),
+    (
+        "TT266",
+        "shared_with_tombs",
+        [],
+        "PM I.1 p.346 / physical PDF p.364 (TT266 Amennakht). The phrase "
+        "`names in tomb 219` in notes_from_pm records that the occupant's "
+        "parents' names are attested in a text within TT219 — a one-way "
+        "genealogical name-record reference, NOT a physical sharing or "
+        "chapel/burial-chamber split of the same tomb. Majority (A+C) "
+        "emitted `[\"TT219\"]`; fix_rows zeroes this out. Contrast with "
+        "TT252 `Parents, see tomb 71 (brother Senenmut)` — which is an "
+        "explicit PM `see tomb N` cross-reference between brothers' tombs "
+        "— and TT265 `(See tomb 215, which is the Chapel.)` — where two "
+        "tomb numbers reference the same physical structure. TT219 is a "
+        "separate person and tomb (Amennakht, son of TT218's Amennakht); "
+        "TT266's occupant is an unrelated person whose parents are merely "
+        "named in TT219's inscriptions. The symmetry test "
+        "(`test_shared_with_tombs_symmetry_within_chunk`) rightly rejects "
+        "the asymmetric one-way reference.",
+    ),
+    (
+        "TT270",
+        "notes_from_pm",
+        "Warb-priest, Lector of Ptaḥ-Sokari. Dyn. XIX. Destroyed.",
+        "PM I.1 p.350 / physical PDF p.368 prints `Ptaḥ-Sokari` with "
+        "underdot-ḥ in the compound divine name. The majority-merged value "
+        "`Ptah-Sokari` dropped the underdot. `notes_from_pm` is verbatim-"
+        "preserve per README policy — restore the underdot.",
+    ),
+]
+
+CHUNK35_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -3235,6 +3330,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK32_CORRECTIONS,
     CHUNK33_CORRECTIONS,
     CHUNK34_CORRECTIONS,
+    CHUNK35_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -3271,6 +3367,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK32_RENAMES,
     **CHUNK33_RENAMES,
     **CHUNK34_RENAMES,
+    **CHUNK35_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -4354,6 +4451,31 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "TT225, chunk-32 TT239, chunk-33 TT241/TT249, chunk-34 "
         "TT253/TT255/TT258 — attribution_certainty encodes occupant-identity "
         "certainty, not regnal-date certainty.",
+    ),
+    # Chunk-35: TT262 (anonymous Overseer of fields). The `(?)` in
+    # notes_from_pm qualifies the REGNAL DATE (`Temp. Tuthmosis III (?)`),
+    # not the occupant's identification. PM p.344 headword is the bare
+    # description `An Overseer of the fields.` — the occupant is anonymous
+    # (no name), so occupant_name=null and occupant_role='Unknown'. The
+    # deriver fires on the regnal-date `(?)` hedge. Attribution_certainty
+    # encodes identity certainty (can we identify the occupant?), not
+    # regnal-date certainty — same orthogonality class as chunk-10
+    # TT12/TT17/TT19/TT20, chunk-31 TT225, chunk-32 TT239, chunk-33
+    # TT241/TT249, chunk-34 TT253/TT255/TT258/TT260.
+    (
+        "TT262",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.344 / physical PDF p.362 (TT262, anonymous). Headword "
+        "is bare `An Overseer of the fields. Temp. Tuthmosis III (?).` — "
+        "the `(?)` qualifies the REGNAL DATE, not occupant identity. The "
+        "occupant is anonymous (no name); `attested` reflects that PM "
+        "records this tomb as definitively belonging to this person (even "
+        "unnamed), not that the attribution is uncertain. Same regnal-date-"
+        "hedge orthogonality class as chunk-10 TT12/TT17/TT19/TT20, chunk-"
+        "31 TT225, chunk-32 TT239, chunk-33 TT241/TT249, chunk-34 "
+        "TT253/TT255/TT258/TT260 — attribution_certainty encodes occupant-"
+        "identity certainty, not regnal-date certainty.",
     ),
 ]
 
