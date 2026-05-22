@@ -126,11 +126,15 @@
        CRMarchaeo. The fourth predicate, shares_tomb_with, is declared further
        below as a DERIVED / query-only predicate — not loadable as a primary
        claim. The loader REJECTS direct assertions of it; consumers derive it at
-       query time by intersecting two rulers' tomb-site clusters from the three
-       primary predicates. We do not attempt to summarise the CRMarchaeo rigorous
-       shapes here — they are out of scope for this manifest and best consulted in
-       CRMarchaeo directly when archaeological-rigour use-cases emerge. The Hapi
-       predicates here and any future rigorous chain can coexist.
+       query time by intersecting two rulers' actual-burial site sets, drawn ONLY
+       from the two burial predicates original_burial_in and cache_context_at
+       (NOT from tomb_owner, which is commissioning rather than interment — a
+       commissioner who was never buried in the tomb should not be derived as
+       "shares tomb with" anyone subsequently interred there). We do not attempt
+       to summarise the CRMarchaeo rigorous shapes here — they are out of scope
+       for this manifest and best consulted in CRMarchaeo directly when
+       archaeological-rigour use-cases emerge. The Hapi predicates here and any
+       future rigorous chain can coexist.
   -->
 
   <rdf:Property rdf:about="#tomb_owner">
@@ -153,7 +157,7 @@
     <rdfs:label xml:lang="en">shares tomb with (DERIVED — not loadable as a primary claim)</rdfs:label>
     <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E21_Person"/>
     <rdfs:range  rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E21_Person"/>
-    <rdfs:comment xml:lang="en">**DERIVED / QUERY-ONLY predicate — not loadable as a primary claim from any source.** Asserts that two Rulers (E21 Persons) are buried in the same Site. Because this edge encodes neither the Site itself nor the burial context (primary burial vs cache vs joint commissioning), it is semantically weak as a primary claim — the information is lost compared to the source's actual statement (e.g. "King X and Queen Y both interred in KV35"). To preserve context, the loader emits the underlying primary claims (`hapi:original_burial_in`, `hapi:cache_context_at`, `hapi:tomb_owner`) per ruler-site pair, and consumers derive `hapi:shares_tomb_with` at query time by intersecting two rulers' tomb-site clusters. The predicate is registered with `derived: true` in the predicate registry; the loader REJECTS direct assertions of it. Declared `owl:SymmetricProperty` so OWL-aware readers see the materialised query-derived edges as symmetric.</rdfs:comment>
+    <rdfs:comment xml:lang="en">**DERIVED / QUERY-ONLY predicate — not loadable as a primary claim from any source.** Asserts that two Rulers (E21 Persons) are both interred in the same Site. Because this edge encodes neither the Site itself nor the burial context (primary burial vs cache), it is semantically weak as a primary claim — the information is lost compared to the source's actual statement (e.g. "King X and Queen Y both interred in KV35"). To preserve context, the loader emits the underlying primary claims (`hapi:original_burial_in` and/or `hapi:cache_context_at`) per ruler-site pair, and consumers derive `hapi:shares_tomb_with` at query time by intersecting two rulers' actual-burial site sets. **The derivation source set is only the burial predicates — `hapi:original_burial_in` and `hapi:cache_context_at`. `hapi:tomb_owner` is commissioning/ownership and is NOT a derivation source** (a king who commissioned a tomb but is never interred there should not be inferred as "buried with" anyone subsequently interred in that tomb). The predicate is registered with `derived: true` in the predicate registry; the loader REJECTS direct assertions of it. Declared `owl:SymmetricProperty` so OWL-aware readers see the materialised query-derived edges as symmetric.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#display_name">

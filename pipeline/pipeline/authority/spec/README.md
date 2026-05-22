@@ -16,7 +16,13 @@ ADR-018 pins both specifications:
 - **Conceptual CRM 7.1.3** + its **official RDFS encoding** (the two `cidoc_crm_v7.1.3.*` files)
 - **CRMdig 5.0** + its **official RDFS encoding** (the two `crmdig_v5.0.*` files)
 
-Both are CRM-SIG-issued artifacts. Hapi-specific additions on top of the two specs are declared in a separate manifest at `../hapi_extension.rdf` using standard `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations (the same idiom CRMdig itself uses to extend core CRM). Reader behaviour for Hapi-namespaced triples depends on whether the manifest is loaded: a reader that has loaded the manifest applies an RDFS reasoner and interprets Hapi-extended terms (e.g. `hapi:MatcherRun`, `hapi:derived_by_run`, `hapi:same_entity_as`) through their declared CRM/CRMdig parents; a reader that has not loaded it retains those triples opaquely. Free-standing Hapi predicates (those without a declared `subPropertyOf`) remain opaque even with the manifest loaded. See ADR-018 for the full conformance picture.
+Both are CRM-SIG-issued artifacts. Hapi-specific additions on top of the two specs are declared in a separate manifest at `../hapi_extension.rdf` using standard `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations plus `owl:SymmetricProperty` typing on the two symmetric Hapi predicates (the same idioms CRMdig itself uses to extend core CRM). Reader behaviour for Hapi-namespaced triples depends on what the reader has loaded and which reasoner it applies:
+
+- **Reader has NOT loaded the manifest** — Hapi-namespaced triples are unrecognised URIs; the reader retains them but does not reason on them.
+- **Reader has loaded the manifest + applies an RDFS reasoner** — interprets Hapi-extended terms through their declared CRM/CRMdig parents (e.g. `hapi:MatcherRun` is also typed as `crmdig:D10 Software Execution`; `hapi:derived_by_run` is also `crm:P15_was_influenced_by`; `hapi:same_entity_as` is also `crmdig:L54_is_same_as`). RDFS reasoning does NOT infer property symmetry, so the OWL declarations are effectively no-ops on this reader.
+- **Reader has loaded the manifest + applies an OWL-aware reasoner** — additionally applies the manifest's `owl:SymmetricProperty` declarations (currently on `hapi:same_entity_as` and `hapi:shares_tomb_with`) and infers the inverse direction of each symmetric edge automatically.
+
+Free-standing Hapi predicates (those without any declared `subPropertyOf` or OWL typing) remain opaque even with the manifest loaded. See ADR-018 for the full conformance picture.
 
 ## Which file for what
 
