@@ -4304,21 +4304,12 @@ CHUNK42_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " Majority B+C=[] missed the cross-reference; A=[`TT324`] was correct."
         " Restore per `test_shared_with_tombs_symmetry_within_chunk` enforcement.",
     ),
-    (
-        "TT331",
-        "notes_from_pm",
-        "Chief prophet of Monthu. Ramesside. Father, Ḥatiay (tomb 324). Wife, Maiay."
-        " Chief of the harim of Monthu.",
-        "Source line 9 of chunk-42-tt331-tt340.txt: `Father, I:Iatiay (tomb 324).`"
-        " where `I:I` = underdot-Ḥ OCR cluster → `Ḥ` → `Ḥatiay`. Tie-break-overrides.json"
-        " TT331|notes_from_pm pinned C's form `Hatiay` (dropped the Ḥ OCR cluster entirely)."
-        " Restore diacritic: `Hatiay` → `Ḥatiay`. notes_from_pm verbatim-preserve retains"
-        " the underdot-Ḥ per macron/diacritic-retain policy (cf. TT323 Amenemḥet, TT328"
-        " Tatemeḥet, TT329 Ḥenutwact precedents in chunk-41). L.D.Text No. 105 marker"
-        " is absent from TT331 notes: that marker belongs to TT335 (source line 188);"
-        " A+B hallucinated it for TT331."
-        " EGYPTOLOGIST REVIEW REQUIRED: confirm Ḥatiay from PM I.1 p.399 printed source.",
-    ),
+    # TT331|notes_from_pm: tie-break-overrides.json TT331|notes_from_pm value
+    # at line 670 already contains the corrected form with Ḥatiay diacritic
+    # restored; no separate CHUNK42_CORRECTIONS entry needed since the override
+    # value is used directly at merge time (per Gemini PR #286 round-1 finding
+    # 3289800344). Symmetry-invariant TT331|shared_with_tombs=["TT324"] is
+    # still required via the entry above.
     (
         "TT332",
         "source_citation",

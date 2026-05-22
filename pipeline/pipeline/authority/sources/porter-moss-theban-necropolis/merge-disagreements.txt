@@ -1161,7 +1161,7 @@ Per-chunk correction counts:
 - Chunk 39: 10 correction(s) defined in CHUNK39_CORRECTIONS.
 - Chunk 40: 9 correction(s) defined in CHUNK40_CORRECTIONS.
 - Chunk 41: 10 correction(s) defined in CHUNK41_CORRECTIONS.
-- Chunk 42: 11 correction(s) defined in CHUNK42_CORRECTIONS.
+- Chunk 42: 10 correction(s) defined in CHUNK42_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1658,8 +1658,6 @@ Field corrections:
     value: "Unknown"
 - TT331: shared_with_tombs already matches override (no-op this run; TT331 (Penne) notes: `Father, Ḥatiay (tomb 324)`. TT324 (Ḥatiay, father) already has shared_with_tombs=[`TT331`] (from chunk-41 reconciliation). Symmetry invariant requires TT331.shared_with_tombs=[`TT324`] in return. Majority B+C=[] missed the cross-reference; A=[`TT324`] was correct. Restore per `test_shared_with_tombs_symmetry_within_chunk` enforcement.)
     value: ["TT324"]
-- TT331: notes_from_pm already matches override (no-op this run; Source line 9 of chunk-42-tt331-tt340.txt: `Father, I:Iatiay (tomb 324).` where `I:I` = underdot-Ḥ OCR cluster → `Ḥ` → `Ḥatiay`. Tie-break-overrides.json TT331|notes_from_pm pinned C's form `Hatiay` (dropped the Ḥ OCR cluster entirely). Restore diacritic: `Hatiay` → `Ḥatiay`. notes_from_pm verbatim-preserve retains the underdot-Ḥ per macron/diacritic-retain policy (cf. TT323 Amenemḥet, TT328 Tatemeḥet, TT329 Ḥenutwact precedents in chunk-41). L.D.Text No. 105 marker is absent from TT331 notes: that marker belongs to TT335 (source line 188); A+B hallucinated it for TT331. EGYPTOLOGIST REVIEW REQUIRED: confirm Ḥatiay from PM I.1 p.399 printed source.)
-    value: "Chief prophet of Monthu. Ramesside. Father, Ḥatiay (tomb 324). Wife, Maiay. Chief of the harim of Monthu."
 - TT332: source_citation already matches override (no-op this run; TT332 headword appears at source line 34 of chunk-42-tt331-tt340.txt, inside the block `===== PHYSICAL PAGE 417 (PRINTED PAGE 399) =====` (lines 1-52), BEFORE the page break to printed 400 at line 53. Printed page = 399. Merge majority A+B=400 was wrong; C=399 is correct. Same majority-wrong page pattern as chunk-41 TT322/TT323/TT326.)
     value: {"edition": "PM I.1 2nd ed. 1960", "page": 399, "section": "I"}
 - TT335: source_citation already matches override (no-op this run; TT335 headword appears at source line 186 of chunk-42-tt331-tt340.txt, inside the block `===== PHYSICAL PAGE 419 (PRINTED PAGE 401) =====` (lines 152-206), BEFORE the page break to printed 402 at line 207. Printed page = 401. Merge majority A+B=402 was wrong; C=401 is correct. Same majority-wrong page pattern as chunk-41 TT322/TT323/TT326.)
