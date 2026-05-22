@@ -22,7 +22,7 @@ Both are CRM-SIG-issued artifacts. Hapi-specific additions on top of the two spe
 - **Reader has loaded the manifest + applies an RDFS reasoner** — interprets Hapi-extended terms through their declared CRM/CRMdig parents (e.g. `hapi:MatcherRun` is also typed as `crmdig:D10 Software Execution`; `hapi:derived_by_run` is also `crm:P15_was_influenced_by`; `hapi:same_entity_as` is also `crmdig:L54_is_same_as`). RDFS reasoning does NOT infer property symmetry, so the OWL declarations are effectively no-ops on this reader.
 - **Reader has loaded the manifest + applies an OWL-aware reasoner** — additionally applies the manifest's `owl:SymmetricProperty` declarations (currently on `hapi:same_entity_as` and `hapi:shares_tomb_with`) and infers the inverse direction of each symmetric edge automatically.
 
-Free-standing Hapi predicates (those without any declared `subPropertyOf` or OWL typing) remain opaque even with the manifest loaded. See ADR-018 for the full conformance picture.
+**CIDOC-opacity and OWL-behavior are independent.** Predicates without a declared `rdfs:subPropertyOf` remain opaque to CRM/CRMdig vocabulary even with the manifest loaded — OWL typing may add non-CIDOC behavior (such as symmetry inference for `owl:SymmetricProperty`), but it does not add CIDOC interpretation. `hapi:shares_tomb_with` is OWL-symmetric but CIDOC-opaque; the tomb-context predicates (`tomb_owner`, `original_burial_in`, `cache_context_at`) are both CIDOC-opaque and OWL-untyped. See ADR-018 for the full conformance picture.
 
 ## Which file for what
 
