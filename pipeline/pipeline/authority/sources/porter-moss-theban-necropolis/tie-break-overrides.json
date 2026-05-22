@@ -664,5 +664,29 @@
   "TT330|notes_from_pm": {
     "rationale": "PM I.1 p.398 / chunk-41-tt321-tt330.txt line 304-306: `330. KARO... Dyn. XIX. Parents, Simut... and Peshedu... Wife, Takha< i~~` where `<` = OCR-literal ayin. Three-way split: A=`Takha` (drops Parents clause, drops ayin), B=`Takhaʿ` (correctly restores ayin, drops Parents clause), C=`Takhac` (raw OCR ayin `c`). The PM source includes the Parents clause (line 306 is unambiguous). Pin the fullest form with ayin: combine C's Parents clause retention with B's correct ayin restoration. Since no single agent has both, construct: Parents + `Takhaʿ`. CHUNK41_CORRECTIONS will apply the final form.",
     "value": "Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu. Wife, Takhac."
+  },
+  "TT331|notes_from_pm": {
+    "value": "Chief prophet of Monthu. Ramesside. Father, Ḥatiay (tomb 324). Wife, Maiay. Chief of the harim of Monthu.",
+    "rationale": "PM I.1 p.399 / chunk-42-tt331-tt340.txt lines 7-9:  /  Three-way split: A= (imports L.D.Text ref from TT335, compresses Ḥatiay→Hatay); B= (B bibliography from TT335 line 188 — not TT331; Ḥatiay→Hatiay); C= (no spurious bibliography; closest to source but Ḥatiay→Hatiay and comma after Maiay). Source lines 11-13 are bibliography for TT331 itself (Davies/Gardiner, Yeivin, Mond) — not part of notes_from_pm. L.D. Text No. 105 marker at source line 188 belongs to TT335; A and B hallucinated it for TT331. Source line 9  where  = underdot-Ḥ OCR cluster → . Source line 9  → period after Maiay (C had comma). Pin C-shape corrected: no bibliography, , period after Maiay. CHUNK42_CORRECTIONS will apply  →  diacritic restoration. EGYPTOLOGIST REVIEW REQUIRED: confirm  from PM I.1 p.399 printed source."
+  },
+  "TT333|source_citation": {
+    "value": {
+      "edition": "PM I.1 2nd ed. 1960",
+      "page": 399,
+      "section": "I"
+    },
+    "rationale": "PM I.1 p.399 / chunk-42-tt331-tt340.txt: TT333 headword (\"Name lost. Temp. Amenophis III (?)\") appears at source line 48, inside PHYSICAL PAGE 417 (PRINTED PAGE 399) block (lines 1-52), BEFORE the page break to printed p.400 at line 53. Three-way split: A=400, B=401, C=399. C=399 is correct per page-break marker. Same majority-wrong page pattern as chunk-41 TT322/TT323/TT326."
+  },
+  "TT335|notes_from_pm": {
+    "value": "Warb-priest of Amenophis (I) Lord of the Two Lands, Chiseller of Amun, Servant in the Place of Truth. Dyn. XIX. (L. D. Text, No. 105.) Parents, Piay and Nefertkha. Wife, Nubemsheset.",
+    "rationale": "PM I.1 p.401 / chunk-42-tt331-tt340.txt lines 186-189:  /  Three-way split: A has  +  +  (raw OCR) before Parents; B has  +  (drops parens) +  moved to end; C has  +  +  (decoded) before Parents. Source line 188 places L.D.Text after Dyn.XIX and before Parents (C correct placement). A+C capitalize Warb-priest (consistent with notes starting as sentence after headword strip). A+C preserve  parens per source. C decodes  →  (x=1, o=0, s=5; standard OCR artifact). Pin C:  capitalised +  parens +  decoded + correct placement."
+  },
+  "TT339|notes_from_pm": {
+    "value": "Servant in the Place of Truth, and Peshedu, Servant in the Place of Truth, Necropolis-stonemason of Amun in Karnak. Temp. Ramesses II. Parents (of Huy), Seba and Nefer[t]iyti (names from stelae in Brit. Mus. 446 and Louvre, C. 86). Father (of Peshedu), Harmosi. Wife (of both), Takharu.",
+    "rationale": "PM I.1 p.407 / chunk-42-tt331-tt340.txt lines 460-474:  Three-way split: A omits Peshedu second role title and has  + no space ; B includes Peshedu second role (matching TT181/TT291 joint-burial precedent) but has  (fills bracket) +  with space; C uses  /  name prefixes (not consistent with TT10/TT181/TT291 pattern). Pin B-style (includes Peshedu full role, space in  per TT10 precedent) with [t] bracket restored from A/C: source line 466  preserves PM bracket notation."
+  },
+  "TT340|notes_from_pm": {
+    "value": "Servant in the Place of Truth (perhaps also owner of tomb 354). Early Dyn. XVIII. Parents, Macenhmut(?) and Hut. Wives, Reditico and Nubnefert.",
+    "rationale": "PM I.1 p.408 / chunk-42-tt331-tt340.txt line 507:  (where  = ,  = OCR artifact for /). Three-way split on parent name: A=, B=, C=. Source  maps to ; A inserts  after  →  (consistent with the -mut/Mwt name-element common in Dyn. XVIII Deir el-Medina names). B transposes to , C misreads the final  entirely. Pin A= as closest to source OCR. EGYPTOLOGIST REVIEW REQUIRED: confirm exact name from PM I.1 p.408 printed source. Also:  applies to the tomb-354 ownership clause (\"perhaps also owner of tomb 354\"), not to Amenemḥet primary occupancy; see CHUNK42_CORRECTIONS TT340 attribution_certainty override (C=attested is source-correct; majority A+B=probable was wrong)."
   }
 }

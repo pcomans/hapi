@@ -4240,6 +4240,169 @@ CHUNK41_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK41_RENAMES: dict[str, str] = {}
 
 
+# Pre-merge disagreement map for chunk 42 (TT331–TT340):
+#   TT331|notes_from_pm — 3-way tie: A=Hatay+L.D.Text xos, B=Hatiay+L.D.Text 105+Davies bib,
+#     C=Hatiay, no bib. Tie-break pinned C-shape with Ḥatiay restored (source line 9
+#     `I:Iatiay` where `I:I`=Ḥ). No L.D.Text marker for TT331; that marker belongs to TT335
+#     (source line 188). CHUNK42_CORRECTIONS restores Hatiay→Ḥatiay diacritic.
+#     EGYPTOLOGIST REVIEW REQUIRED: confirm Ḥatiay from PM I.1 p.399.
+#   TT332|source_citation — majority A+B=400; source line 34 is inside PHYSICAL PAGE 417
+#     (PRINTED PAGE 399) block (lines 1-52), before page break at line 53. Correct=399.
+#   TT333|source_citation — 3-way tie 400/401/399; tie-break → 399 (source line 48 in
+#     PRINTED PAGE 399 block). Correct. No further correction needed.
+#   TT335|source_citation — majority A+B=402; source line 186 is inside PHYSICAL PAGE 419
+#     (PRINTED PAGE 401) block (lines 152-206), before page break to 402 at line 207.
+#     Correct=401.
+#   TT335|co_occupants — majority A+B=[{role:Official, no name}]; C=[]. TT335 is Nekhtamun
+#     solo; no co_occupant. The empty-name entry is a spurious extraction artifact.
+#     Correct=[] (C is right).
+#   TT339|source_citation — unanimous A+B+C=407; source line 460 is inside PHYSICAL PAGE 424
+#     (PRINTED PAGE 406) block (lines 414-468), before page break to 407 at line 469.
+#     Correct=406.
+#   TT339|co_occupants — majority A+B=[{role:Official, no name}]; C=[{name:Peshedu,...}].
+#     This IS joint burial (Huy + Peshedu); co_occupant name Peshedu must be present.
+#     Restore name from C's extraction. is_joint_burial already True via majority.
+#   TT340|attribution_certainty — majority A+B=probable; C=attested. `perhaps` in notes
+#     applies to secondary ownership of tomb 354 (`perhaps also owner of tomb 354`), NOT
+#     to Amenemḥet's primary occupancy. DERIVER_OVERRIDE → attested.
+#
+# CHUNK42_CORRECTIONS:
+# 1. TT331 notes_from_pm: restore Ḥatiay diacritic (tie-break value pinned `Hatiay`
+#    from C; source `I:Iatiay` where `I:I`=Ḥ OCR cluster → `Ḥatiay`).
+#    EGYPTOLOGIST REVIEW REQUIRED: confirm Ḥatiay from PM I.1 p.399.
+# 2. TT332 source_citation.page: majority-wrong 400 → 399.
+# 3. TT335 source_citation.page: majority-wrong 402 → 401.
+# 4. TT335 co_occupants: remove spurious empty-name entry → [].
+# 5. TT339 source_citation.page: unanimous-wrong 407 → 406.
+# 6. TT339 co_occupants: restore Peshedu name stripped by majority vote.
+CHUNK42_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT333",
+        "occupant_role",
+        "Unknown",
+        "TT333 is anonymous (occupant_name=None). merge.py sentinel-null normalization"
+        " collapses the string `Unknown` to null. Restore `Unknown` per schema convention"
+        " (prompt rule 1: `occupant_role=Unknown` when occupant_name is null)."
+        " Same sentinel-null restoration pattern as TT325, KV12, KV39, TT58, TT70, TT91.",
+    ),
+    (
+        "TT334",
+        "occupant_role",
+        "Unknown",
+        "TT334 is anonymous (occupant_name=None). merge.py sentinel-null normalization"
+        " collapses the string `Unknown` to null. Restore `Unknown` per schema convention"
+        " (prompt rule 1: `occupant_role=Unknown` when occupant_name is null)."
+        " Same sentinel-null restoration pattern as TT333, TT325, KV12, KV39.",
+    ),
+    (
+        "TT331",
+        "shared_with_tombs",
+        ["TT324"],
+        "TT331 (Penne) notes: `Father, Ḥatiay (tomb 324)`. TT324 (Ḥatiay, father)"
+        " already has shared_with_tombs=[`TT331`] (from chunk-41 reconciliation)."
+        " Symmetry invariant requires TT331.shared_with_tombs=[`TT324`] in return."
+        " Majority B+C=[] missed the cross-reference; A=[`TT324`] was correct."
+        " Restore per `test_shared_with_tombs_symmetry_within_chunk` enforcement.",
+    ),
+    (
+        "TT331",
+        "notes_from_pm",
+        "Chief prophet of Monthu. Ramesside. Father, Ḥatiay (tomb 324). Wife, Maiay."
+        " Chief of the harim of Monthu.",
+        "Source line 9 of chunk-42-tt331-tt340.txt: `Father, I:Iatiay (tomb 324).`"
+        " where `I:I` = underdot-Ḥ OCR cluster → `Ḥ` → `Ḥatiay`. Tie-break-overrides.json"
+        " TT331|notes_from_pm pinned C's form `Hatiay` (dropped the Ḥ OCR cluster entirely)."
+        " Restore diacritic: `Hatiay` → `Ḥatiay`. notes_from_pm verbatim-preserve retains"
+        " the underdot-Ḥ per macron/diacritic-retain policy (cf. TT323 Amenemḥet, TT328"
+        " Tatemeḥet, TT329 Ḥenutwact precedents in chunk-41). L.D.Text No. 105 marker"
+        " is absent from TT331 notes: that marker belongs to TT335 (source line 188);"
+        " A+B hallucinated it for TT331."
+        " EGYPTOLOGIST REVIEW REQUIRED: confirm Ḥatiay from PM I.1 p.399 printed source.",
+    ),
+    (
+        "TT332",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 399, "section": "I"},
+        "TT332 headword appears at source line 34 of chunk-42-tt331-tt340.txt, inside"
+        " the block `===== PHYSICAL PAGE 417 (PRINTED PAGE 399) =====` (lines 1-52),"
+        " BEFORE the page break to printed 400 at line 53."
+        " Printed page = 399. Merge majority A+B=400 was wrong; C=399 is correct."
+        " Same majority-wrong page pattern as chunk-41 TT322/TT323/TT326.",
+    ),
+    (
+        "TT335",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 401, "section": "I"},
+        "TT335 headword appears at source line 186 of chunk-42-tt331-tt340.txt, inside"
+        " the block `===== PHYSICAL PAGE 419 (PRINTED PAGE 401) =====` (lines 152-206),"
+        " BEFORE the page break to printed 402 at line 207."
+        " Printed page = 401. Merge majority A+B=402 was wrong; C=401 is correct."
+        " Same majority-wrong page pattern as chunk-41 TT322/TT323/TT326.",
+    ),
+    (
+        "TT335",
+        "shared_with_tombs",
+        ["TT336"],
+        "TT336 (Neferronpet, brother of TT335 Nekhtamun) has shared_with_tombs=[`TT335`]."
+        " Symmetry invariant requires TT335.shared_with_tombs=[`TT336`] in return."
+        " Source lines 238-239 of chunk-42-tt331-tt340.txt reference Neferronpet (tomb 336)"
+        " in TT335 Chamber B scene (13). Majority A+C=[] missed this; only B captured [TT336]"
+        " (B also spuriously added TT217/TT292 — the TT336 entry alone is correct)."
+        " Agent B's TT217/TT292 additions are spurious scene-based cross-references not"
+        " qualifying as shared_with_tombs ownership links. Restore only [TT336] per"
+        " `test_shared_with_tombs_symmetry_within_chunk` enforcement.",
+    ),
+    (
+        "TT335",
+        "co_occupants",
+        [],
+        "TT335 (Nekhtamun) is a sole-occupant tomb. Source lines 186-189 of"
+        " chunk-42-tt331-tt340.txt name only Nekhtamun as headword owner; Nubemsheset"
+        " is his wife (in notes). No co_occupant exists. Majority A+B=[{role:'Official',"
+        " no name}] is a spurious extraction artifact (agents invented an unnamed"
+        " co_occupant). C=[] is correct. is_joint_burial=False (majority). Reset to [].",
+    ),
+    (
+        "TT337",
+        "shared_with_tombs",
+        ["TT4"],
+        "TT337 (Ken) notes: `Chiseller in the Place of Truth (see tomb 4)`. TT4's"
+        " notes (chunk-9, reconciled) read `Perhaps also owner of tomb 337` which"
+        " generated TT4.shared_with_tombs=[`TT337`]. Symmetry invariant requires"
+        " TT337.shared_with_tombs=[`TT4`] in return. Majority A+C=[] missed the"
+        " cross-reference; B=[`TT4`] was correct. Restore per"
+        " `test_shared_with_tombs_symmetry_within_chunk` enforcement.",
+    ),
+    (
+        "TT339",
+        "source_citation",
+        {"edition": "PM I.1 2nd ed. 1960", "page": 406, "section": "I"},
+        "TT339 headword appears at source line 460 of chunk-42-tt331-tt340.txt, inside"
+        " the block `===== PHYSICAL PAGE 424 (PRINTED PAGE 406) =====` (lines 414-468),"
+        " BEFORE the page break to printed 407 at line 469."
+        " Printed page = 406. All three agents (unanimous) gave 407 — wrong."
+        " Correct = 406. Unanimous-wrong page citation, not resolvable by majority vote;"
+        " fixed here per chunk-12/chunk-41 page-citation correction precedent.",
+    ),
+    (
+        "TT339",
+        "co_occupants",
+        [{"alt_names": [], "name": "Peshedu", "role": "Official"}],
+        "TT339 is joint burial of Huy + Peshedu (is_joint_burial=True, all 3 agents"
+        " agreed). Source line 460: `339. HUY ..., Servant in the Place of Truth, and"
+        " PESHEDU ..., Servant in the Place of Truth, Necropolis-stonemason of Amun in"
+        " Karnak.` Only agent C extracted co_occupant name Peshedu; A+B extracted an"
+        " unnamed {role:'Official'} stub. Majority vote stripped the name. Restore"
+        " Peshedu as co_occupant name from C's extraction, which is source-accurate."
+        " Consistent with TT10 (Kasa), TT122 (Amenemḥet), TT181 (Ipuky), TT291"
+        " (Nekhtmin) co_occupant name retention precedents.",
+    ),
+]
+
+
+CHUNK42_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4285,6 +4448,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK39_CORRECTIONS,
     CHUNK40_CORRECTIONS,
     CHUNK41_CORRECTIONS,
+    CHUNK42_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4328,6 +4492,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK39_RENAMES,
     **CHUNK40_RENAMES,
     **CHUNK41_RENAMES,
+    **CHUNK42_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -5664,6 +5829,30 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         " occupant Mosi's identity. Main Mosi is unambiguously named with title in"
         " the headword. Same secondary/co-occupant kinship-hedge pattern as TT2"
         " secondary-wife hedge, TT291 joint-burial kinship hedges.",
+    ),
+    # Chunk-42 DERIVER_OVERRIDES:
+    # TT340 — attribution_certainty: `perhaps` in `(perhaps also owner of tomb 354)`
+    #   qualifies the SECONDARY TOMB OWNERSHIP (is TT354 also his?), NOT the primary
+    #   occupant Amenemḥet's identity at TT340. Amenemḥet is unambiguously named
+    #   in the headword with title `Servant in the Place of Truth`. The deriver fires
+    #   context-free on `perhaps` in notes_from_pm → probable; but the hedge applies
+    #   to a secondary-property attribution (TT354 ownership), not to occupant identity.
+    #   Same secondary-clause hedge pattern as TT2 `(probably) Esi`, TT320 `perhaps
+    #   wife of Amosis`, TT329 `probably his grandson`.
+    (
+        "TT340",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.408 / chunk-42 source lines 503-505: `340. AMENEMḤET ..., Servant"
+        " in the Place of Truth (perhaps also owner of tomb 354). Early Dyn. XVIII.`"
+        " The `perhaps` qualifies the SECONDARY TOMB OWNERSHIP (is TT354 also"
+        " Amenemḥet's tomb?), NOT the primary occupant's identity at TT340."
+        " Amenemḥet is unambiguously named with title `Servant in the Place of Truth`"
+        " in the headword; no identity hedge. Merge majority A+B=`probable` was wrong;"
+        " C=`attested` is correct. Per chunk-9 TT2 precedent that attribution_certainty"
+        " encodes occupant-identity certainty, not secondary-property certainty. Same"
+        " class as TT320 `perhaps wife of Amosis` (secondary genealogical clause) and"
+        " TT329 `probably his grandson` (co-occupant kinship clause).",
     ),
 ]
 
