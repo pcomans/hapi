@@ -364,6 +364,9 @@ CHUNK40_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK41_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(321, 331)}
 )
+CHUNK42_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(331, 341)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -405,6 +408,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK39_TOMB_IDS
     | CHUNK40_TOMB_IDS
     | CHUNK41_TOMB_IDS
+    | CHUNK42_TOMB_IDS
 )
 
 
@@ -799,7 +803,12 @@ def test_is_joint_burial_flag_paired_with_co_occupants() -> None:
     #   `NU ... Servant in the Great Place, and NEKHTMIN ... Servant in the
     #   Place of Truth` — bare conjunction with per-occupant roles and
     #   separate parents/wife clauses. Third joint burial after TT122/TT181.
-    assert seen_joint == ["TT10", "TT122", "TT181", "TT291", "SWV-ThreePrincesses"], seen_joint
+    # - TT339 (chunk-42): PM p.406 lists HUY + PESHEDU coordinately as
+    #   `HUY ..., Servant in the Place of Truth, and PESHEDU ..., Servant in
+    #   the Place of Truth, Necropolis-stonemason of Amun in Karnak` — bare
+    #   conjunction with per-occupant roles and separate parents/wife clauses.
+    #   Fifth joint burial after TT10/TT122/TT181/TT291.
+    assert seen_joint == ["TT10", "TT122", "TT181", "TT291", "TT339", "SWV-ThreePrincesses"], seen_joint
 
 
 def test_swv_three_princesses_per_person_role_propagation() -> None:
@@ -3686,9 +3695,11 @@ def test_182_usurped_canonical_set() -> None:
     # lexical form; is_usurped=True pinned via DERIVER_OVERRIDES in fix_rows.py.
     # Extended chunk 38: TT294 (Amenhotep, PM `Usurped by Roma, wab-priest of
     # Amun, early Ramesside` — deriver auto-detects `\busurped\b` in notes).
+    # Extended chunk 42: TT337 (Ken, PM `Usurped by Eskhons, Dyn. XXI or XXII`
+    # — deriver auto-detects `\busurped\b` in notes).
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
                 "TT65", "TT68", "TT70", "TT77", "TT84", "TT112", "TT127",
-                "TT152", "TT257", "TT284", "TT288", "TT294"}
+                "TT152", "TT257", "TT284", "TT288", "TT294", "TT337"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -3761,6 +3772,18 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # is the same pattern as TT230 `Perhaps MEN~` (cone-attribution hedge on
         # primary occupant). No DERIVER_OVERRIDE needed.
         "TT325",
+        # TT333 chunk-42: anonymous tomb (occupant_name=None, `Name lost`). The
+        # `(?)` in `Temp. Amenophis III (?)` qualifies the regnal date, but the
+        # occupant identity is genuinely unknown (no inscription survived). The
+        # deriver fires on `(?)` → `uncertain`; this is correct — the tomb owner
+        # is not identified, making attribution_certainty=uncertain appropriate.
+        # Contrast with TT12/TT17 etc where `(?)` qualifies only a regnal tail
+        # while the occupant is fully named with unhedged title.
+        "TT333",
+        # TT334 chunk-42: anonymous tomb (occupant_name=None, `A Chief of
+        # husbandmen`). Same reasoning as TT333 — occupant is genuinely
+        # unidentified; attribution_certainty=uncertain is correct.
+        "TT334",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -11607,3 +11630,99 @@ def test_chunk41_theban_areas() -> None:
     for tid, area in expected.items():
         r = _row(tid)
         assert r["theban_area"] == area, f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+
+
+# ===========================================================================
+# Chunk 42 — TT331–TT340 (Sh. ʿAbd el-Qurna × 1, Dra' Abu el-Naga × 3, Deir el-Medina × 6)
+# ===========================================================================
+
+
+def test_chunk42_all_rows_present() -> None:
+    """All 10 TT331-TT340 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK42_TOMB_IDS
+    assert actual == CHUNK42_TOMB_IDS, sorted(CHUNK42_TOMB_IDS - actual)
+
+
+def test_chunk42_theban_areas() -> None:
+    """Verify area assignments. TT331 Sh. Abd el-Qurna; TT332-334 Dra Abu el-Naga;
+    TT335-340 Deir el-Medina."""
+    expected = {
+        "TT331": "Sh. ʿAbd el-Qurna",
+        "TT332": "Dra' Abu el-Naga",
+        "TT333": "Dra' Abu el-Naga",
+        "TT334": "Dra' Abu el-Naga",
+        "TT335": "Deir el-Medina",
+        "TT336": "Deir el-Medina",
+        "TT337": "Deir el-Medina",
+        "TT338": "Deir el-Medina",
+        "TT339": "Deir el-Medina",
+        "TT340": "Deir el-Medina",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+
+
+def test_chunk42_source_pages() -> None:
+    """Verify corrected source_citation pages for chunk-42 rows.
+    TT332 page=399 (CHUNK42_CORRECTIONS, majority-wrong 400→399).
+    TT335 page=401 (CHUNK42_CORRECTIONS, majority-wrong 402→401).
+    TT339 page=406 (CHUNK42_CORRECTIONS, unanimous-wrong 407→406).
+    """
+    expected = {
+        "TT331": 399,
+        "TT332": 399,
+        "TT333": 399,
+        "TT334": 401,
+        "TT335": 401,
+        "TT336": 404,
+        "TT337": 405,
+        "TT338": 406,
+        "TT339": 406,
+        "TT340": 407,
+    }
+    for tid, page in expected.items():
+        r = _row(tid)
+        assert r["source_citation"]["page"] == page, (
+            f"{tid}: expected page {page}, got {r['source_citation']['page']}"
+        )
+
+
+def test_chunk42_joint_burial_tt339() -> None:
+    """TT339: Huy + Peshedu, fifth joint burial in PM I.1 numbered tombs.
+    is_joint_burial=True (all 3 agents agreed). co_occupants[0].name=Peshedu
+    restored by CHUNK42_CORRECTIONS (majority stripped the name)."""
+    r = _row("TT339")
+    assert r["is_joint_burial"] is True
+    assert len(r["co_occupants"]) == 1
+    assert r["co_occupants"][0]["name"] == "Peshedu"
+    assert r["co_occupants"][0]["role"] == "Official"
+    assert r["occupant_name"] == "Huy"
+
+
+def test_chunk42_usurped_tt337() -> None:
+    """TT337: Ken usurped BY Eskhons (victim direction). is_usurped=True via deriver.
+    shared_with_tombs=[TT4] (symmetry: TT4 notes `Perhaps also owner of tomb 337`).
+    CHUNK42_CORRECTIONS: majority A+C=[] missed the cross-reference; B=["TT4"] correct."""
+    r = _row("TT337")
+    assert r["is_usurped"] is True
+    assert r["occupant_name"] == "Ken"
+    assert r["shared_with_tombs"] == ["TT4"]
+    assert "Eskhons" in r["notes_from_pm"]
+
+
+def test_chunk42_attribution_certainties() -> None:
+    """TT333/TT334 uncertain (anonymous with (?)); TT340 attested (DERIVER_OVERRIDE:
+    `perhaps` qualifies secondary TT354 ownership, not primary Amenemhet identity)."""
+    assert _row("TT333")["attribution_certainty"] == "uncertain"
+    assert _row("TT334")["attribution_certainty"] == "uncertain"
+    assert _row("TT340")["attribution_certainty"] == "attested"
+
+
+def test_chunk42_anonymous_roles_restored() -> None:
+    """TT333/TT334 anonymous: merge.py sentinel-null normalization collapsed
+    `Unknown` to null; CHUNK42_CORRECTIONS restores occupant_role=`Unknown`."""
+    for tid in ("TT333", "TT334"):
+        r = _row(tid)
+        assert r["occupant_name"] is None, f"{tid}: expected null occupant_name"
+        assert r["occupant_role"] == "Unknown", f"{tid}: expected Unknown role"

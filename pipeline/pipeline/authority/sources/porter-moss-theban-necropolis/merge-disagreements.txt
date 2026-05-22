@@ -1013,6 +1013,51 @@ TT329 (Mosi):
 TT330 (Karo):
   notes_from_pm: a="Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu. Wife, Takha." | b="Servant in the Place of Truth. Dyn. XIX. Wife, Takhaʿ." | c="Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu. Wife, Takhac."  → chose "Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu. Wife, Takhac."
 
+TT331 (Penne):
+  notes_from_pm: a="Chief prophet of Monthu. Ramesside. Father, Hatay (tomb 324). Wife, Maiay. Chief of the harim of Monthu. (L. D. Text, No. xos.)" | b="Chief prophet of Monthu. Ramesside. Father, Hatay (tomb 324). Wife, Maiay. Chief of the harim of Monthu. (L. D. Text, No. 105.) (DAVIES and GARDINER, Seven Private Tombs at Turnah, pp. 53-5, with plan on pl. xl; YEIVIN in Liv. Ann. xiii (1926), pp. 10-11 (called 336); plan, MOND in Liv. Ann. xiv (1927), on pl. ii (called 336))." | c="Chief prophet of Monthu. Ramesside. Father, Hatiay (tomb 324). Wife, Maiay, Chief of the harim of Monthu."  → chose "Chief prophet of Monthu. Ramesside. Father, Ḥatiay (tomb 324). Wife, Maiay. Chief of the harim of Monthu."
+  occupant_name: a="Penne" | b="Penne" | c="Penfe"  → chose "Penne"
+  shared_with_tombs: a=["TT324"] | b=[] | c=[]  → chose []
+
+TT332 (Penernutet):
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 400, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 400, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 399, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 400, "section": "I"}
+
+TT333 (None):
+  attribution_certainty: a="attested" | b="uncertain" | c="uncertain"  → chose "uncertain"
+  is_uninscribed: a=true | b=false | c=false  → chose false
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 400, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 401, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 399, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 399, "section": "I"}
+
+TT334 (None):
+  attribution_certainty: a="probable" | b="uncertain" | c="uncertain"  → chose "uncertain"
+  notes_from_pm: a="A Chief of husbandmen. Temp. Amenophis III (?)." | b="Chief of husbandmen. Temp. Amenophis III (?). (II-III, DAVIES, Town House, fig. 9, cf. p. 248 (called tomb 324))." | c="A Chief of husbandmen. Temp. Amenophis III (?)."  → chose "A Chief of husbandmen. Temp. Amenophis III (?)."
+
+TT335 (Nekhtamun):
+  co_occupants: a=[{"alt_names": [], "role": "Official"}] | b=[{"alt_names": [], "role": "Official"}] | c=[]  → chose [{"alt_names": [], "role": "Official"}]
+  is_unfinished: a=true | b=false | c=true  → chose true
+  notes_from_pm: a="Warb-priest of Amenophis (I) Lord of the Two Lands, Chiseller of Amun, Servant in the Place of Truth. Dyn. XIX. (L. D. Text, No. xos.) Parents, Piay and Nefertkha. Wife, Nubemsheset." | b="warb-priest of Amenophis I Lord of the Two Lands, Chiseller of Amun, Servant in the Place of Truth. Dyn. XIX. Parents, Piay and Nefertkha. Wife, Nubemsheset. (L. D. Text, No. 105.)" | c="Warb-priest of Amenophis (I) Lord of the Two Lands, Chiseller of Amun, Servant in the Place of Truth. Dyn. XIX. (L. D. Text, No. 105.) Parents, Piay and Nefertkha. Wife, Nubemsheset."  → chose "Warb-priest of Amenophis (I) Lord of the Two Lands, Chiseller of Amun, Servant in the Place of Truth. Dyn. XIX. (L. D. Text, No. 105.) Parents, Piay and Nefertkha. Wife, Nubemsheset."
+  shared_with_tombs: a=[] | b=["TT217", "TT292", "TT336"] | c=[]  → chose []
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 402, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 402, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 401, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 402, "section": "I"}
+
+TT336 (Neferronpet):
+  notes_from_pm: a="Servant in the Place of Truth. Dyn. XIX. Parents, see tomb 335 (brother). Wife, Huynefer." | b="Servant in the Place of Truth. Dyn. XIX. Parents, see tomb 335 (brother). Wife, Huynefert." | c="Servant in the Place of Truth. Dyn. XIX. Parents, see tomb 335 (brother). Wife, Huynefert."  → chose "Servant in the Place of Truth. Dyn. XIX. Parents, see tomb 335 (brother). Wife, Huynefert."
+
+TT337 (Ken):
+  notes_from_pm: a="Chiseller in the Place of Truth (see tomb 4), temp. Ramesses II. Usurped by Eskhons. Dyn. XXI or XXII." | b="Chiseller in the Place of Truth (see tomb 4), temp. Ramesses II. Usurped by Eskhons. Dyn. XXI or XXII." | c="Chiseller in the Place of Truth (see tomb 4), temp. Ramesses II. Usurped by Eskhons, Dyn. XXI or XXII."  → chose "Chiseller in the Place of Truth (see tomb 4), temp. Ramesses II. Usurped by Eskhons. Dyn. XXI or XXII."
+  shared_with_tombs: a=[] | b=["TT4"] | c=[]  → chose []
+
+TT338 (May):
+  notes_from_pm: a="Outline-draughtsman of Amun. Late Dyn. XVIII. Wife, Tamyt." | b="Outline-draughtsman of Amun. Late Dyn. XVIII. Wife, Tamyt. (In Turin Mus. Sup. 7886) (ALINARI photos. 31406(17; left part, WERBROUCK, Pleureuses, pl. xviii (from ALINARI), p. 65. Sarcophagus dragged in I, LÜDDEKENS in Mitt. Kairo, xi (1943), Abb. 31, cf. pp. 913 [37])." | c="Outline-draughtsman of Amun. Late Dyn. XVIII. Wife, Tamyt."  → chose "Outline-draughtsman of Amun. Late Dyn. XVIII. Wife, Tamyt."
+
+TT339 (Huy):
+  co_occupants: a=[{"alt_names": [], "role": "Official"}] | b=[{"alt_names": [], "role": "Official"}] | c=[{"alt_names": [], "name": "Peshedu", "role": "Official"}]  → chose [{"alt_names": [], "role": "Official"}]
+  notes_from_pm: a="Servant in the Place of Truth, and Peshedu. Necropolis-stonemason of Amun in Karnak. Temp. Ramesses II. Parents (of Huy), Seba and Nefer[t]iyti (names from stelae in Brit. Mus. 446 and Louvre, C. 86). Father(of Peshedu), Harmosi. Wife (of both), Takharu." | b="Servant in the Place of Truth, and Peshedu, Servant in the Place of Truth, Necropolis-stonemason of Amun in Karnak. Temp. Ramesses II. Parents (of Huy), Seba and Nefertiyti (names from stelae in Brit. Mus. 446 and Louvre, C. 86). Father (of Peshedu), Harmosi. Wife (of both), Takharu." | c="Huy: Servant in the Place of Truth, and Peshedu: Servant in the Place of Truth, Necropolis-stonemason of Amun in Karnak. Temp. Ramesses II. Parents (of Huy), Seba and Nefer[t]iyti (names from stelae in Brit. Mus. 446 and Louvre, C. 86). Father (of Peshedu), Harmosi. Wife (of both), Takharu."  → chose "Servant in the Place of Truth, and Peshedu, Servant in the Place of Truth, Necropolis-stonemason of Amun in Karnak. Temp. Ramesses II. Parents (of Huy), Seba and Nefer[t]iyti (names from stelae in Brit. Mus. 446 and Louvre, C. 86). Father (of Peshedu), Harmosi. Wife (of both), Takharu."
+
+TT340 (Amenemhet):
+  attribution_certainty: a="probable" | b="probable" | c="attested"  → chose "probable"
+  is_unfinished: a=true | b=false | c=true  → chose true
+  notes_from_pm: a="Servant in the Place of Truth (perhaps also owner of tomb 354). Early Dyn. XVIII. Parents, Macenhmut(?) and Hut. Wives, Reditico and Nubnefert." | b="Servant in the Place of Truth (perhaps also owner of tomb 354). Early Dyn. XVIII. Parents, Macenhumt(?) and Hut. Wives, Reditico and Nubnefert." | c="Servant in the Place of Truth (perhaps also owner of tomb 354). Early Dyn. XVIII. Parents, Macenhmy (?) and Hut. Wives, Reditico and Nubnefert."  → chose "Servant in the Place of Truth (perhaps also owner of tomb 354). Early Dyn. XVIII. Parents, Macenhmut(?) and Hut. Wives, Reditico and Nubnefert."
+  occupant_name: a="Amenemhet" | b="Amenemhet" | c="Amenemihet"  → chose "Amenemhet"
+  source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 408, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 407, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 407, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 407, "section": "I"}
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -1116,6 +1161,7 @@ Per-chunk correction counts:
 - Chunk 39: 10 correction(s) defined in CHUNK39_CORRECTIONS.
 - Chunk 40: 9 correction(s) defined in CHUNK40_CORRECTIONS.
 - Chunk 41: 10 correction(s) defined in CHUNK41_CORRECTIONS.
+- Chunk 42: 10 correction(s) defined in CHUNK42_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1602,11 +1648,30 @@ Field corrections:
     value: {"edition": "PM I.1 2nd ed. 1960", "page": 396, "section": "I"}
 - TT328: notes_from_pm already matches override (no-op this run; Source line 250 of chunk-41-tt321-tt330.txt: `Wife, Tatemel].et` where `l].` = underdot-ḥ OCR cluster → `ḥ` → `Tatemeḥet`. Merge majority A+C dropped the diacritic to `Tatemenet`; B=`Tatemeḥet` is correct. notes_from_pm verbatim-preserve retains the underdot-ḥ.)
     value: "Servant in the Place of Truth. Dyn. XX. Wife, Tatemeḥet."
-- TT329: notes_from_pm corrected this run (Corrections to tie-break-pinned value (C's form of chunk-41 source lines 262-268): (0) `Ipy, all Servants` → `Ipy, perhaps his son, all Servants` — source line 262-263 prints `... and Ipy ..., perhaps his son, all Servants in the Place of Truth.` The `perhaps his son` qualifying phrase for Ipy was dropped by all three agents; restore per PM verbatim-preserve (PR #285 round-1 Gemini finding 3284937977). (1) `Henutwact` → `Ḥenutwact`: source line 265 `l:Ienutwact` where `l:I` = underdot-Ḥ OCR cluster; notes_from_pm verbatim-preserve retains diacritic. (2) `Icolnufer` → `Icoḥnufer`: source line 266 `Icol].nufer` where `l].` = underdot-ḥ OCR cluster. (3) `Aqatet` → `Patet`: source line 266 `J>.atet` where `J>.` is OCR artifact for `P` (descender of capital P misread as J-period); PM name is `Pꜣtet`/Patet. Agent A also had `Patet`; agent B had `Atatef` (OCR-scrambled). `Patet` is correct. EGYPTOLOGIST REVIEW REQUIRED: confirm `Ḥenutwact`, `Icoḥnufer`, and `Patet` from PM I.1 p.397 printed source.)
-    was: "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, all Servants in the Place of Truth. Ramesside. Wife (of Mosi, tomb 329), Ḥenutwact. Father (of Mosi, Annexed tomb), Icoḥnufer. Wife (of Mosi, Annexed tomb), Patet (name on stela, Louvre, C. 280, see infra). Wife (of Ipy), Bakt."
-    now: "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, perhaps his son, all Servants in the Place of Truth. Ramesside. Wife (of Mosi, tomb 329), Ḥenutwact. Father (of Mosi, Annexed tomb), Icoḥnufer. Wife (of Mosi, Annexed tomb), Patet (name on stela, Louvre, C. 280, see infra). Wife (of Ipy), Bakt."
+- TT329: notes_from_pm already matches override (no-op this run; Corrections to tie-break-pinned value (C's form of chunk-41 source lines 262-268): (0) `Ipy, all Servants` → `Ipy, perhaps his son, all Servants` — source line 262-263 prints `... and Ipy ..., perhaps his son, all Servants in the Place of Truth.` The `perhaps his son` qualifying phrase for Ipy was dropped by all three agents; restore per PM verbatim-preserve (PR #285 round-1 Gemini finding 3284937977). (1) `Henutwact` → `Ḥenutwact`: source line 265 `l:Ienutwact` where `l:I` = underdot-Ḥ OCR cluster; notes_from_pm verbatim-preserve retains diacritic. (2) `Icolnufer` → `Icoḥnufer`: source line 266 `Icol].nufer` where `l].` = underdot-ḥ OCR cluster. (3) `Aqatet` → `Patet`: source line 266 `J>.atet` where `J>.` is OCR artifact for `P` (descender of capital P misread as J-period); PM name is `Pꜣtet`/Patet. Agent A also had `Patet`; agent B had `Atatef` (OCR-scrambled). `Patet` is correct. EGYPTOLOGIST REVIEW REQUIRED: confirm `Ḥenutwact`, `Icoḥnufer`, and `Patet` from PM I.1 p.397 printed source.)
+    value: "Mosi and Annexed tomb of Mosi probably his grandson, and Ipy, perhaps his son, all Servants in the Place of Truth. Ramesside. Wife (of Mosi, tomb 329), Ḥenutwact. Father (of Mosi, Annexed tomb), Icoḥnufer. Wife (of Mosi, Annexed tomb), Patet (name on stela, Louvre, C. 280, see infra). Wife (of Ipy), Bakt."
 - TT330: notes_from_pm already matches override (no-op this run; Source line 306 of chunk-41-tt321-tt330.txt: `Wife, Takha< i~~` where `<` = OCR-literal ayin `ʿ`. Tie-break pinned C's form `Takhac` (raw OCR). Restore ayin: `Takhac` → `Takhaʿ` per TT293/TT300 ayin-retain precedent. Also: tie-break dropped B's `Takhaʿ` (correct) over C's `Takhac` because C retained the Parents clause. Final form: Parents retained + ayin restored.)
     value: "Servant in the Place of Truth. Dyn. XIX. Parents, Simut and Peshedu. Wife, Takhaʿ."
+- TT333: occupant_role already matches override (no-op this run; TT333 is anonymous (occupant_name=None). merge.py sentinel-null normalization collapses the string `Unknown` to null. Restore `Unknown` per schema convention (prompt rule 1: `occupant_role=Unknown` when occupant_name is null). Same sentinel-null restoration pattern as TT325, KV12, KV39, TT58, TT70, TT91.)
+    value: "Unknown"
+- TT334: occupant_role already matches override (no-op this run; TT334 is anonymous (occupant_name=None). merge.py sentinel-null normalization collapses the string `Unknown` to null. Restore `Unknown` per schema convention (prompt rule 1: `occupant_role=Unknown` when occupant_name is null). Same sentinel-null restoration pattern as TT333, TT325, KV12, KV39.)
+    value: "Unknown"
+- TT331: shared_with_tombs already matches override (no-op this run; TT331 (Penne) notes: `Father, Ḥatiay (tomb 324)`. TT324 (Ḥatiay, father) already has shared_with_tombs=[`TT331`] (from chunk-41 reconciliation). Symmetry invariant requires TT331.shared_with_tombs=[`TT324`] in return. Majority B+C=[] missed the cross-reference; A=[`TT324`] was correct. Restore per `test_shared_with_tombs_symmetry_within_chunk` enforcement.)
+    value: ["TT324"]
+- TT332: source_citation already matches override (no-op this run; TT332 headword appears at source line 34 of chunk-42-tt331-tt340.txt, inside the block `===== PHYSICAL PAGE 417 (PRINTED PAGE 399) =====` (lines 1-52), BEFORE the page break to printed 400 at line 53. Printed page = 399. Merge majority A+B=400 was wrong; C=399 is correct. Same majority-wrong page pattern as chunk-41 TT322/TT323/TT326.)
+    value: {"edition": "PM I.1 2nd ed. 1960", "page": 399, "section": "I"}
+- TT335: source_citation already matches override (no-op this run; TT335 headword appears at source line 186 of chunk-42-tt331-tt340.txt, inside the block `===== PHYSICAL PAGE 419 (PRINTED PAGE 401) =====` (lines 152-206), BEFORE the page break to printed 402 at line 207. Printed page = 401. Merge majority A+B=402 was wrong; C=401 is correct. Same majority-wrong page pattern as chunk-41 TT322/TT323/TT326.)
+    value: {"edition": "PM I.1 2nd ed. 1960", "page": 401, "section": "I"}
+- TT335: shared_with_tombs already matches override (no-op this run; TT336 (Neferronpet, brother of TT335 Nekhtamun) has shared_with_tombs=[`TT335`]. Symmetry invariant requires TT335.shared_with_tombs=[`TT336`] in return. Source lines 238-239 of chunk-42-tt331-tt340.txt reference Neferronpet (tomb 336) in TT335 Chamber B scene (13). Majority A+C=[] missed this; only B captured [TT336] (B also spuriously added TT217/TT292 — the TT336 entry alone is correct). Agent B's TT217/TT292 additions are spurious scene-based cross-references not qualifying as shared_with_tombs ownership links. Restore only [TT336] per `test_shared_with_tombs_symmetry_within_chunk` enforcement.)
+    value: ["TT336"]
+- TT335: co_occupants already matches override (no-op this run; TT335 (Nekhtamun) is a sole-occupant tomb. Source lines 186-189 of chunk-42-tt331-tt340.txt name only Nekhtamun as headword owner; Nubemsheset is his wife (in notes). No co_occupant exists. Majority A+B=[{role:'Official', no name}] is a spurious extraction artifact (agents invented an unnamed co_occupant). C=[] is correct. is_joint_burial=False (majority). Reset to [].)
+    value: []
+- TT337: shared_with_tombs already matches override (no-op this run; TT337 (Ken) notes: `Chiseller in the Place of Truth (see tomb 4)`. TT4's notes (chunk-9, reconciled) read `Perhaps also owner of tomb 337` which generated TT4.shared_with_tombs=[`TT337`]. Symmetry invariant requires TT337.shared_with_tombs=[`TT4`] in return. Majority A+C=[] missed the cross-reference; B=[`TT4`] was correct. Restore per `test_shared_with_tombs_symmetry_within_chunk` enforcement.)
+    value: ["TT4"]
+- TT339: source_citation already matches override (no-op this run; TT339 headword appears at source line 460 of chunk-42-tt331-tt340.txt, inside the block `===== PHYSICAL PAGE 424 (PRINTED PAGE 406) =====` (lines 414-468), BEFORE the page break to printed 407 at line 469. Printed page = 406. All three agents (unanimous) gave 407 — wrong. Correct = 406. Unanimous-wrong page citation, not resolvable by majority vote; fixed here per chunk-12/chunk-41 page-citation correction precedent.)
+    value: {"edition": "PM I.1 2nd ed. 1960", "page": 406, "section": "I"}
+- TT339: co_occupants already matches override (no-op this run; TT339 is joint burial of Huy + Peshedu (is_joint_burial=True, all 3 agents agreed). Source line 460: `339. HUY ..., Servant in the Place of Truth, and PESHEDU ..., Servant in the Place of Truth, Necropolis-stonemason of Amun in Karnak.` Only agent C extracted co_occupant name Peshedu; A+B extracted an unnamed {role:'Official'} stub. Majority vote stripped the name. Restore Peshedu as co_occupant name from C's extraction, which is source-accurate. Consistent with TT10 (Kasa), TT122 (Amenemḥet), TT181 (Ipuky), TT291 (Nekhtmin) co_occupant name retention precedents.)
+    value: [{"alt_names": [], "name": "Peshedu", "role": "Official"}]
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1713,6 +1778,7 @@ Field corrections:
 - TT320: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT321: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT329: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT340: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -1788,3 +1854,4 @@ Field corrections:
 - TT320: attribution_certainty → "attested" (deriver override; PM I.1 p.392 / chunk-40 source line 374-375: `320. INI;IA<PI, perhaps wife of Am...)
 - TT321: attribution_certainty → "attested" (deriver override; PM I.1 p.393 / chunk-41 source line 46: `Parents (perhaps), Bu~entef and ly (nam...)
 - TT329: attribution_certainty → "attested" (deriver override; PM I.1 p.397 / chunk-41 source line 262-263: `M 0 s I... and Annexed tomb of M 0...)
+- TT340: attribution_certainty → "attested" (deriver override; PM I.1 p.408 / chunk-42 source lines 503-505: `340. AMENEMḤET ..., Servant in th...)
