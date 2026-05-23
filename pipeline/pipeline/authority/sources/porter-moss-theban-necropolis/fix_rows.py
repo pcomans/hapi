@@ -4839,8 +4839,13 @@ CHUNK48_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " → `Khonsemweset`; all three agents dropped macron-ō → `Neferḥotep`."
         " Verbatim-preserve policy for notes_from_pm + macron-retention"
         " precedent (TT26/TT53/chunk-12-onward series) requires restoration"
-        " of both macrons. No tie-break entry because neither axis was flagged"
-        " as 1/1/1 at merge time; restore via CHUNK48_CORRECTIONS post-merge.",
+        " of both macrons. egyptologist-reviewer PR #295 round-1 PDF p.441"
+        " verification (`Diacritics (ḥ/ō/ū) correct`) confirmed both macrons"
+        " against the printed page. No tie-break entry because neither axis"
+        " was flagged as 1/1/1 at merge time; restore via CHUNK48_CORRECTIONS"
+        " post-merge per the same fix_rows.py-direct-PDF-cite-with-reviewer-"
+        "attribution pattern as TT346 (chunk-43), TT366 + TT369 (chunk-45),"
+        " TT380 (chunk-46), TT382 + TT386 + TT389 (chunk-47).",
     ),
     (
         "TT397",
@@ -4851,7 +4856,12 @@ CHUNK48_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " `Dyn. XVIII (?)` with a space before the parenthetical. B+C 2/1"
         " majority printed `Dyn. XVIII(?)` (no space). Verbatim-preserve"
         " policy for notes_from_pm requires retention of the PM space."
-        " No tie-break entry (not a 1/1/1 tie); restore post-merge.",
+        " egyptologist-reviewer PR #295 round-1 confirmed all 10 chunk-48"
+        " rows are PM-faithful against PDF pp.441-444 (no P1/P2/P3"
+        " corrections required); this entry restores the PM-faithful space"
+        " that the merge majority dropped. No tie-break entry (not a 1/1/1"
+        " tie); restore post-merge per the same fix_rows.py-direct-PDF-cite-"
+        "with-reviewer-attribution pattern as the TT391 entry above.",
     ),
 ]
 
