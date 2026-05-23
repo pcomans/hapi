@@ -12205,8 +12205,13 @@ def test_chunk46_tt374_cross_reference() -> None:
 
 def test_chunk46_tt380_occupant_name() -> None:
     """TT380: occupant_name must be ʿAnkhef(en)-Reʿ-Harakhti with Reʿ (not Rʿ).
-    B+C 2/1 majority over A's Rʿ; PDF p.435 confirms Reʿ."""
+    B+C 2/1 majority over A's Rʿ; PDF p.435 confirms Reʿ. Parents-clause
+    `Dḥout` (PLAIN D, not d-bar Ḏ — over-application of Thoth-family
+    convention corrected per CHUNK46_CORRECTIONS) + `Esnūter` (macron-ū
+    restored from agent B; A+C OCR-misread as `Esntiter`) per egyptologist
+    + code-reviewer P2 PR #293 round 1."""
     r = _row("TT380")
     assert r["occupant_name"] == "ʿAnkhef(en)-Reʿ-Harakhti"
     assert r["theban_area"] == "Qurnet Muraʿi"
-    assert "Ḏḥout" in r["notes_from_pm"]
+    assert "Dḥout" in r["notes_from_pm"]
+    assert "Esnūter" in r["notes_from_pm"]

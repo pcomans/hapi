@@ -4663,6 +4663,26 @@ CHUNK46_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "PM I.1 p.435 / physical PDF p.453 (TT379 anonymous). Same sentinel-null"
         " collapse as TT371. Restore per null-name/null-role pairing invariant.",
     ),
+    (
+        "TT380",
+        "notes_from_pm",
+        "Chief in Thebes. Ptolemaic. Parents, Dḥout and Esnūter.",
+        "PM I.1 p.435 / physical PDF p.453 (TT380 ʿANKHEF(EN)-RĒʿ-ḤARAKHTI)."
+        " Two PM-faithfulness regressions in the parents-clause names,"
+        " corrected from direct PDF read after egyptologist-reviewer P2 +"
+        " code-reviewer P2 surfaced the issues in PR #293 round 1:"
+        " (1) Parent name `Dḥout` — PM p.435 prints PLAIN D + ḥ-underdot"
+        " (D-ḥ-o-u-t), NOT d-bar Ḏ + ḥ-underdot. Agent C decoded the OCR"
+        " cluster `!)!;lout` as d-bar `Ḏḥout` per the Thoth/Djehuty"
+        " family convention, but the PDF clearly shows the unbarred D-letter"
+        " on p.435. This is the first PM-I.1 instance of `Dḥout` with plain D"
+        " (not Ḏ) — possibly a PM-specific Romanization variant or simply not"
+        " the Thoth name root despite the surface similarity. (2) Parent name"
+        " `Esnūter` with macron-ū — PM p.435 clearly shows macron-ū on the u"
+        " vowel. Agents A+C OCR-misread as `Esntiter` (extra t, no macron);"
+        " agent B's `Esnūter` was correct but lost in majority vote. Restore"
+        " both per PM verbatim under notes_from_pm preserve policy.",
+    ),
 ]
 
 CHUNK46_RENAMES: dict[str, str] = {}

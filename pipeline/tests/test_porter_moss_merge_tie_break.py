@@ -1212,7 +1212,7 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk45_row_count(reconciled):
+def test_chunk46_row_count(reconciled):
     """Merged total should be 455 after chunk 46 (+10 from chunk-45's 445)."""
     assert len(reconciled) == 455
 
@@ -2503,14 +2503,17 @@ def test_tt379_anonymous_dra_abu_el_naga(reconciled):
 def test_tt380_ankhefen_re_harakhti(reconciled):
     """TT380: ʿAnkhef(en)-Reʿ-Harakhti, Chief in Thebes. Ptolemaic. Qurnet Muraʿi.
     occupant_name: B+C majority `Reʿ` wins over A's `Rʿ` (PDF p.435 line 140 =
-    `R:Ec` OCR = Reʿ). Parent Ḏḥout: A+C majority correct (underdot on ḥ);
-    B's `Ḏhout` (no underdot) was the minority."""
+    `R:Ec` OCR = Reʿ). Parents: CHUNK46_CORRECTIONS post-fix-rows restores both
+    parent names from PM p.435 direct PDF read (egyptologist + code-reviewer
+    P2 PR #293 round 1): `Dḥout` (PLAIN D, NOT d-bar Ḏ — agents over-applied
+    the Thoth-family convention) and `Esnūter` (macron-ū restored from agent
+    B; A+C majority OCR-misread as `Esntiter`)."""
     r = _row(reconciled, "TT380")
     assert r["occupant_name"] == "ʿAnkhef(en)-Reʿ-Harakhti"
     assert r["occupant_role"] == "Official"
     assert r["theban_area"] == "Qurnet Muraʿi"
     assert r["notes_from_pm"] == (
-        "Chief in Thebes. Ptolemaic. Parents, Ḏḥout and Esntiter."
+        "Chief in Thebes. Ptolemaic. Parents, Dḥout and Esnūter."
     )
     assert r["source_citation"]["page"] == 435
     assert r["attribution_certainty"] == "attested"
