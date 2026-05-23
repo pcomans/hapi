@@ -1,5 +1,11 @@
 {
   "image": "mcr.microsoft.com/devcontainers/python:3",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,relabel=private",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
+  },
+  "containerEnv": {
+    "CLAUDE_CODE_OAUTH_TOKEN": "${localEnv:CLAUDE_CODE_OAUTH_TOKEN}"
+  }
 }
