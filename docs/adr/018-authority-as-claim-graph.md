@@ -83,7 +83,10 @@ Every E13 Statement carries a universally-required triad — P140 (subject), P14
 
 #### Hapi extension manifest
 
-The `hapi:` prefix used throughout this ADR resolves to the namespace `https://pcomans.github.io/hapi-crm#`. The full extension manifest — `rdfs:subClassOf` / `rdfs:subPropertyOf` declarations and free-standing Hapi predicate declarations — is committed at `pipeline/pipeline/authority/hapi_extension.rdf`. The declarations are the standard CIDOC extension idiom (every official extension, including CRMdig itself, uses the same `subClassOf` / `subPropertyOf` mechanism to relate to core CRM). They are **not deviations**.
+The `hapi:` prefix used throughout this ADR resolves to the namespace `https://pcomans.github.io/hapi-crm#`. The full extension manifest is committed at `pipeline/pipeline/authority/hapi_extension.rdf`. It contains two structurally distinct kinds of declaration:
+
+- **`rdfs:subClassOf` / `rdfs:subPropertyOf` narrowing declarations.** These are the standard CIDOC extension idiom — every official extension, including CRMdig itself, uses the same `subClassOf` / `subPropertyOf` mechanism to relate to core CRM. They are **not deviations** from CIDOC.
+- **Free-standing Hapi predicate declarations** (the ones with no `rdfs:subPropertyOf` to a CRM/CRMdig parent). These are **project vocabulary, CIDOC-opaque** unless and until a future round identifies a CRM/CRMdig superproperty to tie them to. CIDOC's open extension model permits this shape (extensions are free to introduce new predicates without subsumption), but does not make it the "CIDOC extension idiom" — calling it that would overstate. The CIDOC-opacity is explicitly acknowledged in the three-reader-mode framing below and in each free-standing predicate's manifest comment.
 
 **Shortcut triple emission for manifest interop.** Every E13 Statement reification this ADR specifies — `(:E13) -P140-> (subject)`, `(:E13) -P141-> (value)`, `(:E13) -P177-> (:E55_Type {id: 'hapi:<predicate>'})` — captures *who/where/why* the claim came to be, but the reification on its own is **not** a `(subject, hapi:<predicate>, value)` triple. RDFS / OWL inference operates on existing triples, so the manifest's `rdfs:subPropertyOf` declaration on `hapi:<predicate>` cannot fire against an E13 reification; there is no `(subject, hapi:<predicate>, value)` triple in the graph for it to rewrite. (`hapi:<predicate>` is a metavariable in this paragraph — read it as "whatever specific hapi-namespaced predicate URI is recorded in this E13's P177 → :E55 Type target", e.g. `hapi:same_entity_as`, `hapi:matcher_review_verdict`. The angle brackets are not part of any actual URI.)
 
@@ -532,7 +535,7 @@ Two viable candidates, evaluated against the model above. A follow-up ADR will c
 ### Postgres (relational encoding or with Apache AGE)
 
 - **Pro:** ADR-004 + ADR-011 already commit Postgres as canonical store. SQLAlchemy + Alembic + Drizzle introspection toolchain is already wired up. Artifacts (millions, property-heavy, search-driven) stay in Postgres; authority graph in the same database keeps artifact ↔ authority joins as single-DB SQL. No new ops surface. Apache 2.0 license, no per-GB pricing.
-- **Pro:** Predicates-as-rows pattern gives FK-enforced verify-before-create with zero migrations per new predicate.
+- **Pro:** Predicates-as-rows pattern gives FK-enforced verify-before-create for primary P177-target predicates (`p177_target: true`) — the `:E55 Type` table is the FK target for the E13.P177 column, with zero migrations per new predicate. Derived / query-only predicates (`p177_target: false`) get the same registry control via loader-side rejection of P177 = derived-predicate-URI assertions (per the bifurcated enforcement story documented in the predicate-registry section and the Implications bullet on registry-as-vocabulary-contract).
 - **Con:** Multi-hop graph traversals are recursive CTEs (workable for 1–2 hops, ugly at depth). No native graph visualization (Bloom-equivalent).
 - **AGE variant:** First-class Cypher inside Postgres; trades native graph storage performance at depth + `pg_upgrade` friction.
 
