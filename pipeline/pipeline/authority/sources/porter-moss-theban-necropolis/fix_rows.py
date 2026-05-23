@@ -4394,6 +4394,16 @@ CHUNK42_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK42_RENAMES: dict[str, str] = {}
 
 
+# Chunk-43 (TT341–TT350):
+# All three tie-break disagreements (TT343|notes_from_pm, TT345|notes_from_pm,
+# TT346|notes_from_pm) were resolved via tie-break-overrides.json with PDF
+# verification. No remaining field corrections needed for this chunk.
+# DERIVER_OVERRIDE for TT346 attribution_certainty is handled below.
+CHUNK43_CORRECTIONS: list[tuple[str, str, object, str]] = []
+
+CHUNK43_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4440,6 +4450,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK40_CORRECTIONS,
     CHUNK41_CORRECTIONS,
     CHUNK42_CORRECTIONS,
+    CHUNK43_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4484,6 +4495,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK40_RENAMES,
     **CHUNK41_RENAMES,
     **CHUNK42_RENAMES,
+    **CHUNK43_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -5845,6 +5857,35 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         " class as TT320 `perhaps wife of Amosis` (secondary genealogical clause) and"
         " TT329 `probably his grandson` (co-occupant kinship clause).",
     ),
+    # Chunk-43 DERIVER_OVERRIDES:
+    # TT346 — attribution_certainty: `Probably usurped from Penrēʿ` in notes_from_pm
+    #   qualifies the USURPATION EVENT (the identification of who the tomb was usurped
+    #   FROM is uncertain), NOT the primary occupant Amenhotp's identity at TT346.
+    #   Amenhotp is unambiguously named in the headword as `Overseer of the women of
+    #   the royal harim of the divine adoratress Tentōpet`. The deriver fires
+    #   context-free on `Probably` in notes_from_pm → probable; but the hedge applies
+    #   to the usurpation-source identification (who is the prior owner?), not to the
+    #   primary occupant's identity. is_usurped=True is CORRECT (TT346 is the tomb
+    #   that was usurped; contrast TT95 where Mery was the active usurper of another
+    #   tomb). Same structural class as TT340 `(perhaps also owner of tomb 354)`.
+    (
+        "TT346",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.414 / physical PDF p.432 / chunk-43-tt341-tt350.txt lines 284-287:"
+        " `346. AMENHOTP ... Overseer of the women of the royal harim of the divine"
+        " adoratress Tentōpet, temp. Ramesses IV. Probably usurped from Penrēʿ ...`"
+        " The `Probably` qualifies the USURPATION EVENT (uncertain identification of"
+        " the prior owner Penrēʿ), NOT the primary occupant Amenhotp's identity."
+        " Amenhotp is unambiguously named in the headword with title; no identity"
+        " hedge. Same secondary-clause hedge pattern as TT340 (chunk-42 DERIVER_OVERRIDE).",
+    ),
+    # Note on TT348: deriver fires attribution_certainty=uncertain on `Suru (?)`
+    # in notes_from_pm. The original Dyn. XVIII occupant is anonymous — only the
+    # usurper Naʿamutnakht is named — so the primary attribution is genuinely
+    # unknown. No DERIVER_OVERRIDE: uncertain reflects real primary-attribution
+    # uncertainty (same precedent as TT333/TT334 chunk-42 anonymous tombs with
+    # `(?)` tokens in their notes).
 ]
 
 # Note: TT288 shared_with_tombs is corrected to [] by CHUNK37_CORRECTIONS below.

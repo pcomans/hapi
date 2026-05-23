@@ -1085,6 +1085,31 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT340", "notes_from_pm"):
             "Servant in the Place of Truth (perhaps also owner of tomb 354). Early"
             " Dyn. XVIII. Parents, Macenhmut(?) and Hut. Wives, Reditico and Nubnefert.",
+        # Chunk 43 (TT341–TT350) — 3 tie-break overrides.
+        # TT343 notes_from_pm: 1/1/1 split on `called Paḥeḳmen,` prefix presence +
+        #   mid-sentence citation punctuation. Agent B pinned (correct prefix, clean `.)
+        #   Parents,`). PDF p.428 / chunk-43 source line 119 confirms `called PAḤEKMEN`.
+        # TT345 notes_from_pm: 1/1/1 split on three axes: ayin in wʿb-priest, parent
+        #   name (Senidhout vs Senigḥout vs Senighout), punctuation. Constructed value:
+        #   ayin from B, `Senidhout` from A (PDF p.431 plain `d`), clean punctuation.
+        # TT346 notes_from_pm: 1/1/1 split on macron-ō in Tentōpet and macron-ē + case
+        #   in Penrēʿ. Constructed: `Tentōpet` from A (macron-ō confirmed PDF p.432),
+        #   `Penrēʿ` from direct PDF read (small-caps with macron-ē → title-case).
+        #   DERIVER_OVERRIDE needed: `Probably` qualifies usurpation event, not primary
+        #   attribution; attribution_certainty pinned back to `attested`.
+        ("TT343", "notes_from_pm"):
+            "called Paḥeḳmen, Overseer of works, Child of the nursery. Early Dyn."
+            " XVIII. (CHAMPOLLION, No. 37, L. D. Text, No. 74.) Parents, Irtonena"
+            " and Tirukak.",
+        ("TT345", "notes_from_pm"):
+            "wʿb-priest, Eldest king's son of Tuthmosis I. Temp. Tuthmosis I."
+            " (CHAMPOLLION, No. 30, L. D. Text, No. 75.) Parents, Senidhout and"
+            " Takhrod. Wife, Renay.",
+        ("TT346", "notes_from_pm"):
+            "Overseer of the women of the royal harim of the divine adoratress"
+            " Tentōpet, temp. Ramesses IV. Probably usurped from Penrēʿ, Chief of"
+            " Mezay, Overseer of the Lands of Syria (name on cones in Pit in Court),"
+            " [temp. Ramesses II].",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
@@ -1150,9 +1175,9 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk42_row_count(reconciled):
-    """Merged total should be 415 after chunk 42 (+10 from chunk-41's 405)."""
-    assert len(reconciled) == 415
+def test_chunk43_row_count(reconciled):
+    """Merged total should be 425 after chunk 43 (+10 from chunk-42's 415)."""
+    assert len(reconciled) == 425
 
 
 def test_tt281_unfinished_temple(reconciled):
