@@ -1251,9 +1251,10 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk48_row_count(reconciled):
-    """Merged total should be 475 after chunk 48 (+10 from chunk-47's 465)."""
-    assert len(reconciled) == 475
+def test_chunk49_row_count(reconciled):
+    """Merged total should be 484 after chunk 49 (+9 from chunk-48's 475).
+    This is the FINAL chunk of PM I.1 § I — TT-numbering ends at TT409."""
+    assert len(reconciled) == 484
 
 
 def test_tt281_unfinished_temple(reconciled):
@@ -2556,6 +2557,203 @@ def test_tt380_ankhefen_re_harakhti(reconciled):
     )
     assert r["source_citation"]["page"] == 435
     assert r["attribution_certainty"] == "attested"
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+# === Chunk-49 per-row pins (TT401–TT409) ====================================
+# Rule 5: every row asserts all key fields. All values are post-fix-rows
+# final state (after CHUNK49_CORRECTIONS and DERIVER_OVERRIDES applied).
+
+
+def test_tt401_nebseny(reconciled):
+    """TT401: Nebseny (NO trailing ayin — PDF p.444/physical p.462 headword
+    confirms plain NEBSENY; agent B's Nebsenyʿ was wrong). Overseer of
+    goldsmiths of Amūn (macron restored by CHUNK49_CORRECTIONS from PDF p.444).
+    DERIVER_OVERRIDE: attribution_certainty=attested (Temp. ... (?) is regnal-
+    date hedge, not occupant identity hedge)."""
+    r = _row(reconciled, "TT401")
+    assert r["occupant_name"] == "Nebseny"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["notes_from_pm"] == (
+        "Overseer of goldsmiths of Amūn (from cone). Temp. Tuthmosis III to"
+        " Amenophis II (?). (Inaccessible.)"
+    )
+    assert r["source_citation"]["page"] == 444
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt402_anonymous(reconciled):
+    """TT402: Anonymous (Name unknown). Dra' Abu el-Naga. occupant_role=Unknown
+    (sentinel-null collapse fixed by CHUNK49_CORRECTIONS; TT402 anonymous per
+    all 3 agents, same pattern as TT392–TT400 chunk-48)."""
+    r = _row(reconciled, "TT402")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["notes_from_pm"] == "Name unknown. Temp. Tuthmosis IV to Amenophis III."
+    assert r["source_citation"]["page"] == 444
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt403_merymaet(reconciled):
+    """TT403: Merymaʿet (capital C → ayin; PDF p.445/physical p.463).
+    Space restored in `Dyn. XVIII (?)` by CHUNK49_CORRECTIONS (PM prints space
+    before parenthetical). DERIVER_OVERRIDE: attested (Dyn. XVIII(?) is regnal-
+    date hedge only)."""
+    r = _row(reconciled, "TT403")
+    assert r["occupant_name"] == "Merymaʿet"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Sh. ʿAbd el-Qurna"
+    assert r["notes_from_pm"] == (
+        "(name from ushabti), Temple-scribe, Steward. Dyn. XVIII (?). (CHAMPOLLION,"
+        " No. 21, Bibl. i, 1st ed. p. 192, mm.)"
+    )
+    assert r["source_citation"]["page"] == 445
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt404_akhamenerau(reconciled):
+    """TT404: Akhamenerau, Chief steward of divine adoratress. ʿAsâsîf. Dyn. XXV.
+    Amūn macron restored in `Prophet of Amūn` by CHUNK49_CORRECTIONS (PDF p.445
+    confirms; A+B dropped macron, C preserved, merge 2/1 chose no-macron)."""
+    r = _row(reconciled, "TT404")
+    assert r["occupant_name"] == "Akhamenerau"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["notes_from_pm"] == (
+        "Chief steward of the divine adoratress. Temp. Amenardais I and Shepenwept"
+        " II, Dyn. XXV. Parents, Pekiry, Prophet of Amūn, and Mereskhons."
+    )
+    assert r["source_citation"]["page"] == 445
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt405_khenti(reconciled):
+    """TT405: Khenti, Nomarch. Khokha. First Intermediate Period.
+    shared_with_tombs=[]: B+C majority correctly rejected A's ["TT186"] — the
+    `Father (probably), Iḥy (tomb 186)` entry is filiation, not co-ownership.
+    DERIVER_OVERRIDE: attested (`(probably)` qualifies filiation, not occupant
+    identity per TT2/TT340/TT346 secondary-clause hedge rule)."""
+    r = _row(reconciled, "TT405")
+    assert r["occupant_name"] == "Khenti"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Khokha"
+    assert r["notes_from_pm"] == (
+        "Nomarch. First Intermediate Period. Father (probably), Iḥy (tomb 186)."
+        " Wife, Mertiotes, Prophetess of Ḥatḥor."
+    )
+    assert r["source_citation"]["page"] == 445
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt406_piay(reconciled):
+    """TT406: Piay, Scribe of offering-table. ʿAsâsîf. Ramesside.
+    is_unfinished=False: `(Unfinished)` appears on `Hall.` body sub-header line
+    (out of headword block) — A+B correctly read false; C's true was wrong.
+    Merge 2/1 majority correctly chose false."""
+    r = _row(reconciled, "TT406")
+    assert r["occupant_name"] == "Piay"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["notes_from_pm"] == (
+        "Scribe of the offering-table of the Lord of the Two Lands. Ramesside."
+    )
+    assert r["source_citation"]["page"] == 446
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt407_bintenduanuter(reconciled):
+    """TT407: Bintenduanuter, Chamberlain of divine adoratress. ʿAsâsîf. Saite.
+    All 3 agents unanimous."""
+    r = _row(reconciled, "TT407")
+    assert r["occupant_name"] == "Bintenduanuter"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["notes_from_pm"] == "Chamberlain of the divine adoratress. Saite."
+    assert r["source_citation"]["page"] == 446
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt408_bekenamun_unfinished(reconciled):
+    """TT408: Bekenamun, Head of servants of estate of Amūn. ʿAsâsîf. Ramesside.
+    is_unfinished=True — `(Unfinished.)` appears in the headword block (between
+    title-line and sub-site ʿAsasif). All 3 agents agreed. Unanimous."""
+    r = _row(reconciled, "TT408")
+    assert r["occupant_name"] == "Bekenamun"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "ʿAsâsîf"
+    assert r["is_unfinished"] is True
+    assert r["notes_from_pm"].startswith(
+        "Head of servants of the estate of Amūn. Ramesside. (Unfinished.)"
+    )
+    assert r["source_citation"]["page"] == 446
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt409_stub(reconciled):
+    """TT409: Stub entry (`See Addendum, p. 461.`). Final numbered TT in PM I.1
+    § I. occupant_name=null, occupant_role=Unknown (sentinel-null restored by
+    CHUNK49_CORRECTIONS), theban_area=null. All 3 agents unanimous on stub."""
+    r = _row(reconciled, "TT409")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] is None
+    assert r["notes_from_pm"] == "See Addendum, p. 461."
+    assert r["source_citation"]["page"] == 446
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_unfinished"] is False
     assert r["is_uninscribed"] is False
     assert r["is_usurped"] is False
     assert r["occupant_alt_names"] == []

@@ -4869,6 +4869,95 @@ CHUNK48_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK48_RENAMES: dict[str, str] = {}
 
 
+# Chunk-49 (TT401–TT409) corrections.
+#
+# Sentinel-null restorations:
+#   TT402 — `occupant_role`: all three agents emitted `role='Unknown'`; merge.py
+#     sentinel-null normalisation collapsed it to null because 'unknown' is in
+#     SENTINEL_NULL_STRINGS. Restore per null-name/null-role pairing invariant
+#     (KV12 chunk-2 precedent; also TT371–TT379 chunk-46, TT392–TT396/TT399/TT400
+#     chunk-48).
+#   TT409 — stub entry (`See Addendum, p. 461.`), occupant_name=null. Same
+#     sentinel-null collapse as TT402. Restore Unknown per same invariant.
+#
+# Macron restorations (verbatim-preserve policy):
+#   TT401 notes_from_pm: A+B dropped macron-ū from `Amūn`; C preserved it.
+#     Merge 2/1 majority chose `Amun`. PM p.444 / physical PDF p.462 prints
+#     `goldsmiths of Amūn` with macron-ū — same PM printing convention confirmed
+#     on same physical page range as chunk-48 TT391/TT397 restorations.
+#   TT403 notes_from_pm: A+B printed `Dyn. XVIII(?)` (no space); C printed
+#     `Dyn. XVIII (?)` (with space). Merge 2/1 chose no-space. PM p.445 /
+#     physical PDF p.463 prints `Dyn. XVIII (?)` with space before parenthetical.
+#     Verbatim-preserve policy requires restoration (same pattern as TT397
+#     chunk-48 CHUNK48_CORRECTIONS entry).
+#   TT404 notes_from_pm: A+B dropped macron-ū from `Amūn`; C preserved it.
+#     Merge 2/1 chose `Amun`. PM p.445 / physical PDF p.463 prints `Prophet of
+#     Amūn` with macron-ū. Same macron-retention precedent as TT391/TT401.
+CHUNK49_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT402",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.444 / physical PDF p.462 (TT402 anonymous, 'Name unknown."
+        " Temp. Tuthmosis IV to Amenophis III.'). All three agents emitted"
+        " `occupant_role='Unknown'`; merge.py sentinel-null normalisation"
+        " collapsed it to null because 'unknown' is in SENTINEL_NULL_STRINGS."
+        " Restore per null-name/null-role pairing invariant (KV12 chunk-2"
+        " precedent; TT371–TT379 chunk-46; TT392–TT400 chunk-48).",
+    ),
+    (
+        "TT409",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.446 / physical PDF p.464 (TT409 stub, 'See Addendum, p."
+        " 461.'). All three agents emitted `occupant_role='Unknown'`; merge.py"
+        " sentinel-null normalisation collapsed it to null. Restore per"
+        " null-name/null-role pairing invariant (KV12 chunk-2 precedent;"
+        " TT392–TT400 chunk-48). TT409 is a genuine stub — occupant is unknown,"
+        " details deferred to the Addendum.",
+    ),
+    (
+        "TT401",
+        "notes_from_pm",
+        "Overseer of goldsmiths of Amūn (from cone). Temp. Tuthmosis III to"
+        " Amenophis II (?). (Inaccessible.)",
+        "PM I.1 p.444 / physical PDF p.462 (TT401 NEBSENY). PDF p.462 prints"
+        " `goldsmiths of Amūn` with macron-ū. A+B dropped the macron → `Amun`;"
+        " merge 2/1 chose `Amun`. Verbatim-preserve policy for notes_from_pm +"
+        " macron-retention precedent (TT26/TT53/chunk-12-onward series) requires"
+        " restoration. Same printing convention confirmed on same physical page"
+        " range as chunk-48 TT391/TT397 restorations (printed pp.441-444).",
+    ),
+    (
+        "TT403",
+        "notes_from_pm",
+        "(name from ushabti), Temple-scribe, Steward. Dyn. XVIII (?). (CHAMPOLLION,"
+        " No. 21, Bibl. i, 1st ed. p. 192, mm.)",
+        "PM I.1 p.445 / physical PDF p.463 (TT403 MERYMACET). PDF p.463 prints"
+        " `Dyn. XVIII (?)` with a space before the parenthetical. A+B chose"
+        " `Dyn. XVIII(?)` (no space); merge 2/1 dropped the space. Verbatim-"
+        "preserve policy for notes_from_pm requires retention of the PM space."
+        " Same pattern as TT397 chunk-48 CHUNK48_CORRECTIONS entry (`Dyn."
+        " XVIII (?)` with space per printed p.443).",
+    ),
+    (
+        "TT404",
+        "notes_from_pm",
+        "Chief steward of the divine adoratress. Temp. Amenardais I and"
+        " Shepenwept II, Dyn. XXV. Parents, Pekiry, Prophet of Amūn, and"
+        " Mereskhons.",
+        "PM I.1 p.445 / physical PDF p.463 (TT404 AKHAMENERAU). PDF p.463"
+        " prints `Prophet of Amūn` with macron-ū. A+B dropped the macron →"
+        " `Amun`; merge 2/1 chose `Amun`. Verbatim-preserve policy for"
+        " notes_from_pm + macron-retention precedent requires restoration."
+        " Same PM macron-ū printing convention as TT401 (chunk-49) and"
+        " TT391 (chunk-48).",
+    ),
+]
+
+CHUNK49_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4921,6 +5010,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK46_CORRECTIONS,
     CHUNK47_CORRECTIONS,
     CHUNK48_CORRECTIONS,
+    CHUNK49_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4971,6 +5061,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK46_RENAMES,
     **CHUNK47_RENAMES,
     **CHUNK48_RENAMES,
+    **CHUNK49_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -6512,6 +6603,61 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         " (chunk-20) and TT388 (chunk-47) and TT394 (chunk-48). Deriver"
         " fires only on literal `uninscribed`; DERIVER_OVERRIDE extends to"
         " PM's `No texts` synonym per established precedent.",
+    ),
+    # Chunk-49 DERIVER_OVERRIDES:
+    # TT401 — attribution_certainty: `Temp. Tuthmosis III to Amenophis II (?)`
+    #   is a REGNAL-DATE hedge (uncertain period assignment), NOT a primary-
+    #   occupant identity hedge. NEBSENY is unambiguously named with title in
+    #   the PM headword (from cone). The `(?)` fires deriver → `uncertain`; but
+    #   the hedge applies to the temporal assignment only, not the occupant's
+    #   identity. Per TT2/TT12/TT121/TT391/TT397 regnal-date-hedge rule.
+    (
+        "TT401",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.444 / physical PDF p.462 / chunk-49-tt401-tt409.txt lines"
+        " 14-16: `401. NEBSENY ..., Overseer of goldsmiths of Amun (from cone)."
+        " Temp. Tuthmosis III to Amenophis II (?).` The `(?)` qualifies the"
+        " REGNAL DATE RANGE only, not the occupant's identity. NEBSENY is"
+        " unambiguously named (cone evidence cited). Deriver fires context-free"
+        " on `(?)` → uncertain; override to attested per the regnal-date-hedge"
+        " rule established at TT2/TT12/TT121/TT391/TT397 (chunk-48).",
+    ),
+    # TT403 — attribution_certainty: `Dyn. XVIII(?)` is a REGNAL-DATE hedge,
+    #   not a primary-occupant identity hedge. MERYMAET is named (from ushabti).
+    #   Deriver fires `(?)` → uncertain; correct value is attested per same rule.
+    (
+        "TT403",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.445 / physical PDF p.463 / chunk-49-tt401-tt409.txt lines"
+        " 35-36: `403. MERYMACET ..., (name from ushabti), Temple-scribe,"
+        " Steward. Dyn. XVIII(?).` The `(?)` qualifies the DYNASTIC PERIOD"
+        " ASSIGNMENT only, not the occupant's identity. MERYMACET is"
+        " unambiguously named (ushabti evidence cited). Deriver fires"
+        " context-free on `(?)` → uncertain; override to attested per the"
+        " regnal-date-hedge rule (TT2/TT12/TT121/TT391/TT397 precedents)."
+        " Same structural class as TT397 DERIVER_OVERRIDE (chunk-48).",
+    ),
+    # TT405 — attribution_certainty: `Father (probably), Iḥy (tomb 186)` —
+    #   the `(probably)` qualifies the KINSHIP/FILIATION relationship (uncertain
+    #   whether Iḥy of TT186 is actually Khenti's father), NOT the primary
+    #   occupant's identity. KHENTI is unambiguously named as Nomarch in the
+    #   headword. Deriver fires context-free on `(probably)` → probable; correct
+    #   value is attested. Per TT340/TT346/TT2 (secondary-clause hedge) precedent.
+    (
+        "TT405",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.445 / physical PDF p.463 / chunk-49-tt401-tt409.txt lines"
+        " 58-61: `405. KHENTI ..., Nomarch. First Intermediate Period. Father"
+        " (probably), Iḥy (tomb 186).` The `(probably)` qualifies the FILIATION"
+        " relationship (uncertain whether Iḥy of TT186 is Khenti's father), NOT"
+        " the primary occupant's identity. KHENTI is unambiguously named as"
+        " Nomarch. Deriver fires context-free on `(probably)` → probable;"
+        " override to attested per secondary-clause hedge rule (TT2 `(probably)"
+        " Esi` second-wife, TT340/TT346 chunk-42/chunk-43 DERIVER_OVERRIDE"
+        " precedents).",
     ),
 ]
 

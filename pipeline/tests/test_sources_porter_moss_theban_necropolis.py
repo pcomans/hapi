@@ -385,6 +385,9 @@ CHUNK47_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK48_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(391, 401)}
 )
+CHUNK49_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(401, 410)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -433,6 +436,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK46_TOMB_IDS
     | CHUNK47_TOMB_IDS
     | CHUNK48_TOMB_IDS
+    | CHUNK49_TOMB_IDS
 )
 
 
@@ -660,12 +664,15 @@ def test_theban_area_constraint() -> None:
     }
     # TT281 is an Unfinished Temple (not a private tomb); PM gives no
     # named theban_area for it — `theban_area=None` is correct.
+    # TT409 is a stub entry (`See Addendum, p. 461.`) with no location
+    # assigned in PM I.1 § I — `theban_area=None` is correct.
+    _NULL_THEBAN_AREA_ALLOWED = {"TT281", "TT409"}
     for r in _rows():
         if r["theban_area"] is None:
-            assert r["tomb_id"] == "TT281", (
-                f"{r['tomb_id']}: unexpected null theban_area — only TT281 "
-                "(Unfinished Temple) is allowed to have no theban_area. "
-                "Check the source and add a correction if needed."
+            assert r["tomb_id"] in _NULL_THEBAN_AREA_ALLOWED, (
+                f"{r['tomb_id']}: unexpected null theban_area — only "
+                f"{_NULL_THEBAN_AREA_ALLOWED} are allowed to have no "
+                "theban_area. Check the source and add a correction if needed."
             )
             continue
         assert r["theban_area"] in valid, (r["tomb_id"], r["theban_area"])
