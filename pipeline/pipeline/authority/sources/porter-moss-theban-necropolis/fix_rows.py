@@ -4427,7 +4427,7 @@ CHUNK42_RENAMES: dict[str, str] = {}
 # Egyptologist printed-source review (PR #287 round 1) flagged 4 P1
 # diacritic regressions; 3 accepted as in-scope per-row corrections below
 # (TT342 Tepiḥu, TT343 Paḥekmen, TT349 Amenhotp wife). The 4th (TT344
-# theban_area `Draʿ Abû el-Nagaʿ` → PM's printed `Dra' Abû el-Naga'`) was
+# theban_area `Dra' Abu el-Naga` → PM's printed `Draʿ Abû el-Nagaʿ`) was
 # declined as out-of-scope: the canonical sub-site form is project-wide
 # convention used by ~30+ rows across 11+ shipped chunks, so a per-row fix
 # would break theban_area grouping; tracked as a follow-up cross-chunk
