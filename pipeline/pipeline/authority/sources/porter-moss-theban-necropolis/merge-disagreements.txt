@@ -1171,6 +1171,23 @@ TT397 (Nakht):
 TT398 (Kamosi):
   notes_from_pm: a="called NENTOWAREF, Child of the nursery (from cones). Probably Dyn. XVIII." | b="Called Nentowaref. Child of the nursery (from cones). Probably Dyn. XVIII." | c="called NENTOWAREF (from cones). Child of the nursery. Probably Dyn. XVIII."  → chose "called NENTOWAREF, Child of the nursery (from cones). Probably Dyn. XVIII."
 
+TT401 (Nebseny):
+  notes_from_pm: a="Overseer of goldsmiths of Amun (from cone). Temp. Tuthmosis III to Amenophis II (?). (Inaccessible.)" | b="Overseer of goldsmiths of Amun (from cone). Temp. Tuthmosis III to Amenophis II (?). (Inaccessible.)" | c="Overseer of goldsmiths of Amūn (from cone). Temp. Tuthmosis III to Amenophis II (?). (Inaccessible.)"  → chose "Overseer of goldsmiths of Amun (from cone). Temp. Tuthmosis III to Amenophis II (?). (Inaccessible.)"
+  occupant_name: a="Nebseny" | b="Nebsenyʿ" | c="Nebseny"  → chose "Nebseny"
+
+TT403 (Merymaʿet):
+  notes_from_pm: a="(name from ushabti), Temple-scribe, Steward. Dyn. XVIII(?). (CHAMPOLLION, No. 21, Bibl. i, 1st ed. p. 192, mm.)" | b="(name from ushabti), Temple-scribe, Steward. Dyn. XVIII(?). (CHAMPOLLION, No. 21, Bibl. i, 1st ed. p. 192, mm.)" | c="(name from ushabti), Temple-scribe, Steward. Dyn. XVIII (?). (CHAMPOLLION, No. 21, Bibl. i, 1st ed. p. 192, mm.)"  → chose "(name from ushabti), Temple-scribe, Steward. Dyn. XVIII(?). (CHAMPOLLION, No. 21, Bibl. i, 1st ed. p. 192, mm.)"
+
+TT404 (Akhamenerau):
+  notes_from_pm: a="Chief steward of the divine adoratress. Temp. Amenardais I and Shepenwept II, Dyn. XXV. Parents, Pekiry, Prophet of Amun, and Mereskhons." | b="Chief steward of the divine adoratress. Temp. Amenardais I and Shepenwept II, Dyn. XXV. Parents, Pekiry, Prophet of Amun, and Mereskhons." | c="Chief steward of the divine adoratress. Temp. Amenardais I and Shepenwept II, Dyn. XXV. Parents, Pekiry, Prophet of Amūn, and Mereskhons."  → chose "Chief steward of the divine adoratress. Temp. Amenardais I and Shepenwept II, Dyn. XXV. Parents, Pekiry, Prophet of Amun, and Mereskhons."
+
+TT405 (Khenti):
+  shared_with_tombs: a=["TT186"] | b=[] | c=[]  → chose []
+
+TT406 (Piay):
+  is_unfinished: a=false | b=false | c=true  → chose false
+  notes_from_pm: a="Scribe of the offering-table of the Lord of the Two Lands. Ramesside." | b="Scribe of the offering-table of the Lord of the Two Lands. Ramesside." | c="Scribe of the offering-table of the Lord of the Two Lands. Ramesside. (Unfinished)."  → chose "Scribe of the offering-table of the Lord of the Two Lands. Ramesside."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -1281,6 +1298,7 @@ Per-chunk correction counts:
 - Chunk 46: 8 correction(s) defined in CHUNK46_CORRECTIONS.
 - Chunk 47: 3 correction(s) defined in CHUNK47_CORRECTIONS.
 - Chunk 48: 9 correction(s) defined in CHUNK48_CORRECTIONS.
+- Chunk 49: 5 correction(s) defined in CHUNK49_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1847,10 +1865,20 @@ Field corrections:
     value: "Unknown"
 - TT400: occupant_role already matches override (no-op this run; PM I.1 p.444 / physical PDF p.462 (TT400 anonymous, 'No texts.'). Same sentinel-null restoration as TT392.)
     value: "Unknown"
-- TT391: notes_from_pm already matches override (no-op this run; PM I.1 p.441 / physical PDF p.459 (TT391 KARABASAKEN). PDF p.459 confirms PM prints `Khonsemwēset-Neferḥōtep` with macron-ē on `wēset` and macron-ō on `hōtep`. B+C 2/1 majority dropped macron-ē → `Khonsemweset`; all three agents dropped macron-ō → `Neferḥotep`. Verbatim-preserve policy for notes_from_pm + macron-retention precedent (TT26/TT53/chunk-12-onward series) requires restoration of both macrons. No tie-break entry because neither axis was flagged as 1/1/1 at merge time; restore via CHUNK48_CORRECTIONS post-merge.)
+- TT391: notes_from_pm already matches override (no-op this run; PM I.1 p.441 / physical PDF p.459 (TT391 KARABASAKEN). PDF p.459 confirms PM prints `Khonsemwēset-Neferḥōtep` with macron-ē on `wēset` and macron-ō on `hōtep`. B+C 2/1 majority dropped macron-ē → `Khonsemweset`; all three agents dropped macron-ō → `Neferḥotep`. Verbatim-preserve policy for notes_from_pm + macron-retention precedent (TT26/TT53/chunk-12-onward series) requires restoration of both macrons. egyptologist-reviewer PR #295 round-1 PDF p.441 verification covered the row's full diacritic set (`ḥ/ē/ō` in `Khonsemwēset-Neferḥōtep` + `ū` in `Amūn`) and confirmed all four against the printed page. No tie-break entry because neither axis was flagged as 1/1/1 at merge time; restore via CHUNK48_CORRECTIONS post-merge per the same fix_rows.py-direct-PDF-cite-with-reviewer-attribution pattern as TT346 (chunk-43), TT366 + TT369 (chunk-45), TT380 (chunk-46), TT382 + TT386 + TT389 (chunk-47).)
     value: "Prophet of Khonsemwēset-Neferḥōtep, Fourth prophet of Amūn, Mayor of the City. Probably Dyn. XXV. (CHAMPOLLION, No. 18, L. D. Text, No. 95, Bibl. i, 1st ed. p. 194, tt.)"
-- TT397: notes_from_pm already matches override (no-op this run; PM I.1 p.443 / physical PDF p.461 (TT397 NAKHT). PDF p.461 prints `Dyn. XVIII (?)` with a space before the parenthetical. B+C 2/1 majority printed `Dyn. XVIII(?)` (no space). Verbatim-preserve policy for notes_from_pm requires retention of the PM space. No tie-break entry (not a 1/1/1 tie); restore post-merge.)
+- TT397: notes_from_pm already matches override (no-op this run; PM I.1 p.443 / physical PDF p.461 (TT397 NAKHT). PDF p.461 prints `Dyn. XVIII (?)` with a space before the parenthetical. B+C 2/1 majority printed `Dyn. XVIII(?)` (no space). Verbatim-preserve policy for notes_from_pm requires retention of the PM space. egyptologist-reviewer PR #295 round-1 confirmed all 10 chunk-48 rows are PM-faithful against PDF pp.441-444 (no P1/P2/P3 corrections required); this entry restores the PM-faithful space that the merge majority dropped. No tie-break entry (not a 1/1/1 tie); restore post-merge per the same fix_rows.py-direct-PDF-cite-with-reviewer-attribution pattern as the TT391 entry above.)
     value: "wʿb-priest of Amūn, Overseer of the magazine of Amūn, First King's son of Amūn. Dyn. XVIII (?). Wife, Senḥotp, Royal concubine."
+- TT402: occupant_role already matches override (no-op this run; PM I.1 p.444 / physical PDF p.462 (TT402 anonymous, 'Name unknown. Temp. Tuthmosis IV to Amenophis III.'). All three agents emitted `occupant_role='Unknown'`; merge.py sentinel-null normalisation collapsed it to null because 'unknown' is in SENTINEL_NULL_STRINGS. Restore per null-name/null-role pairing invariant (KV12 chunk-2 precedent; TT371–TT379 chunk-46; TT392–TT400 chunk-48).)
+    value: "Unknown"
+- TT409: occupant_role already matches override (no-op this run; PM I.1 p.446 / physical PDF p.464 (TT409 stub, 'See Addendum, p. 461.'). All three agents emitted `occupant_role='Unknown'`; merge.py sentinel-null normalisation collapsed it to null. Restore per null-name/null-role pairing invariant (KV12 chunk-2 precedent; TT392–TT400 chunk-48). TT409 is a genuine stub — occupant is unknown, details deferred to the Addendum.)
+    value: "Unknown"
+- TT401: notes_from_pm already matches override (no-op this run; PM I.1 p.444 / physical PDF p.462 (TT401 NEBSENY). PDF p.462 prints `goldsmiths of Amūn` with macron-ū. A+B dropped the macron → `Amun`; merge 2/1 chose `Amun`. Verbatim-preserve policy for notes_from_pm + macron-retention precedent (TT26/TT53/chunk-12-onward series) requires restoration. Same printing convention confirmed on same physical page range as chunk-48 TT391/TT397 restorations (PDF pp.441-444).)
+    value: "Overseer of goldsmiths of Amūn (from cone). Temp. Tuthmosis III to Amenophis II (?). (Inaccessible.)"
+- TT403: notes_from_pm already matches override (no-op this run; PM I.1 p.445 / physical PDF p.463 (TT403 MERYMAET). PDF p.463 prints `Dyn. XVIII (?)` with a space before the parenthetical. A+B chose `Dyn. XVIII(?)` (no space); merge 2/1 dropped the space. Verbatim-preserve policy for notes_from_pm requires retention of the PM space. Same pattern as TT397 chunk-48 CHUNK48_CORRECTIONS entry (`Dyn. XVIII (?)` with space per PDF p.443).)
+    value: "(name from ushabti), Temple-scribe, Steward. Dyn. XVIII (?). (CHAMPOLLION, No. 21, Bibl. i, 1st ed. p. 192, mm.)"
+- TT404: notes_from_pm already matches override (no-op this run; PM I.1 p.445 / physical PDF p.463 (TT404 AKHAMENERAU). PDF p.463 prints `Prophet of Amūn` with macron-ū. A+B dropped the macron → `Amun`; merge 2/1 chose `Amun`. Verbatim-preserve policy for notes_from_pm + macron-retention precedent requires restoration. Same PM macron-ū printing convention as TT401 (chunk-49) and TT391 (chunk-48).)
+    value: "Chief steward of the divine adoratress. Temp. Amenardais I and Shepenwept II, Dyn. XXV. Parents, Pekiry, Prophet of Amūn, and Mereskhons."
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1966,6 +1994,9 @@ Field corrections:
 - TT397: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT398: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - TT400: is_uninscribed → false (issue #182 derivation from notes_from_pm)
+- TT401: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT403: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT405: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -2050,3 +2081,6 @@ Field corrections:
 - TT398: attribution_certainty → "attested" (deriver override; PM I.1 p.443 / physical PDF p.461 / chunk-48-tt391-tt400.txt lines 98-99: `398. ...)
 - TT394: is_uninscribed → true (deriver override; PM I.1 p.442 / physical PDF p.460 / chunk-48-tt391-tt400.txt line 60: `394. No t...)
 - TT400: is_uninscribed → true (deriver override; PM I.1 p.444 / physical PDF p.462 / chunk-48-tt391-tt400.txt line 131: `400. No ...)
+- TT401: attribution_certainty → "attested" (deriver override; PM I.1 p.444 / physical PDF p.462 / chunk-49-tt401-tt409.txt lines 14-16: `401. ...)
+- TT403: attribution_certainty → "attested" (deriver override; PM I.1 p.445 / physical PDF p.463 / chunk-49-tt401-tt409.txt lines 35-36: `403. ...)
+- TT405: attribution_certainty → "attested" (deriver override; PM I.1 p.445 / physical PDF p.463 / chunk-49-tt401-tt409.txt lines 58-61: `405. ...)
