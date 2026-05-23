@@ -1251,8 +1251,9 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk48_row_count(reconciled):
-    """Merged total should be 484 after chunk 49 (+9 from chunk-48's 475)."""
+def test_chunk49_row_count(reconciled):
+    """Merged total should be 484 after chunk 49 (+9 from chunk-48's 475).
+    This is the FINAL chunk of PM I.1 § I — TT-numbering ends at TT409."""
     assert len(reconciled) == 484
 
 
