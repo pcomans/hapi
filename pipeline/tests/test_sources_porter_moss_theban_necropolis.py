@@ -70,12 +70,12 @@ CHUNK4_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK5_TOMB_IDS: frozenset[str] = frozenset({"KV62"})
 # Chunk-6: PM I.2 § I.A closure sweep, no rows added (KV63/KV64/KV65 are
 # post-1964 discoveries, out of scope for PM I.2 2nd ed. 1964).
-# Chunk-7: PM I.2 §§ II (South-West Valleys) + III.A/C/D (Dra' Abu el-Naga:
+# Chunk-7: PM I.2 §§ II (South-West Valleys) + III.A/C/D (Draʿ Abû el-Nagaʿ:
 # Antef Cemetery Dyn XI, Tomb of Ahmose-Nefertari, Seventeenth Dynasty
 # Cemetery). First chunk of this source with NON-NUMBERED tomb_ids — PM
 # does not assign KV/QV/TT numbers to these sections, so tomb_id uses the
 # descriptor convention `<PREFIX>-<Occupant>` where PREFIX is the valley
-# code (`SWV` = South-West Valleys, `DAN` = Dra' Abu el-Naga). 18 rows.
+# code (`SWV` = South-West Valleys, `DAN` = Draʿ Abû el-Nagaʿ). 18 rows.
 CHUNK7_TOMB_IDS: frozenset[str] = frozenset({
     # § II.A Wadi Sikket Taqet Zaid (1)
     "SWV-HatshepsutSouth",
@@ -118,8 +118,8 @@ CHUNK8_TOMB_IDS: frozenset[str] = frozenset({
 CHUNK9_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(1, 11)}
 )
-# Chunk-10 (PM I.1 § I — TT11-TT20 Dra' Abu el-Naga). Second chunk drawn from
-# PM I.1; theban_area shifts from Deir el-Medina (chunk 9) to Dra' Abu el-Naga.
+# Chunk-10 (PM I.1 § I — TT11-TT20 Draʿ Abû el-Nagaʿ). Second chunk drawn from
+# PM I.1; theban_area shifts from Deir el-Medina (chunk 9) to Draʿ Abû el-Nagaʿ.
 # Every TT number in TT11..TT20 is present in PM I.1 § I — no gaps. 10 rows.
 CHUNK10_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(11, 21)}
@@ -133,8 +133,8 @@ CHUNK11_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(21, 31)}
 )
 # Chunk-12 (PM I.1 § I — TT31-TT40). Introduces two new theban_area values:
-# `Khokha` (TT32, TT39) and `Qurnet Muraʿi` (TT40). TT35 is in
-# `Dra' Abu el-Naga` — first TT-numbered tomb outside Sh. ʿAbd el-Qurna or
+# `Khôkha` (TT32, TT39) and `Qurnet Muraʿi` (TT40). TT35 is in
+# `Draʿ Abû el-Nagaʿ` — first TT-numbered tomb outside Sh. ʿAbd el-Qurna or
 # ʿAsâsîf in the I.1 section. TT32 occupant_name = `Thutmosi` pre-fix_rows;
 # the diacritic restoration to `Ḏhutmosi` (d-bar Ḏ, U+1E0E — the standard
 # Egyptological transliteration of the d-emphatic in `Ḏḥwty`/Thoth and
@@ -146,7 +146,7 @@ CHUNK12_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(31, 41)}
 )
 # Chunk-13 (PM I.1 § I — TT41-TT50, 10 rows). Heterogeneous across
-# 2 sub-sites: `Sh. ʿAbd el-Qurna` (TT41-46, TT50) and `Khokha`
+# 2 sub-sites: `Sh. ʿAbd el-Qurna` (TT41-46, TT50) and `Khôkha`
 # (TT47-49). One usurpation (TT45 — Ḏhout original, Ḏḥutemḥab usurper);
 # two `called <ALT>` alt-name patterns (TT41 Amenemōpet/Ipy, TT48
 # Amenemḥet/Surero); one tomb-state marker (TT47 `(Inaccessible.)`);
@@ -274,7 +274,7 @@ CHUNK21_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(121, 131)}
 )
 # Chunk-22: PM I.1 § I Numbered Tombs TT131-TT139 (Sh. ʿAbd el-Qurna)
-# + TT140 (Dra' Abu el-Naga — first Dra' Abu el-Naga tomb in the numbered
+# + TT140 (Draʿ Abû el-Nagaʿ — first Draʿ Abû el-Nagaʿ tomb in the numbered
 # sequence). 7 tie-break-overrides entries (TT134/TT135/TT137/TT138/TT139/
 # TT140 notes_from_pm; TT140 occupant_alt_names). 2/1-majority resolutions:
 # TT131 notes (A+C drop headword parenthetical), TT132 occupant_name (A+C
@@ -292,7 +292,7 @@ CHUNK21_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK22_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(131, 141)}
 )
-# Chunk 23: TT141–TT150. All in Dra' Abu el-Naga (§ I). PM I.1 pp.254–261.
+# Chunk 23: TT141–TT150. All in Draʿ Abû el-Nagaʿ (§ I). PM I.1 pp.254–261.
 # 7 tie-break-overrides entries: TT141/TT144/TT146/TT147/TT148/TT149/TT150
 # notes_from_pm (all Amün/Amūn/Amun 3-way macron splits; TT144 also has
 # Ḥenuttaui vs Henuttaui wife-name + (?) spacing; TT147 has (?) spacing).
@@ -488,7 +488,7 @@ def test_tomb_id_is_unique() -> None:
 # form (`["KV20"]` for SWV-HatshepsutSouth's See-also), so this regex also
 # backs `test_shared_with_tombs_are_valid_tomb_ids`.
 # Descriptor-prefix vocabulary is limited to the prefixes actually in use
-# (chunks landed to date: SWV South-West Valleys, DAN Dra' Abu el-Naga).
+# (chunks landed to date: SWV South-West Valleys, DAN Draʿ Abû el-Nagaʿ).
 # Future chunks extend this regex AS THEY LAND their first row — speculative
 # pre-registration was removed after the retrospective code-review on PR #100
 # flagged it as YAGNI. See `test_prefix_vocabulary_consistent` below which
@@ -627,14 +627,14 @@ def test_theban_area_constraint() -> None:
 
     Forms in use:
     - chunks 1–6 (KV): `Valley of the Kings`
-    - chunk 7 (DAN/SWV): `Dra' Abu el-Naga`, `South-West Valleys`
+    - chunk 7 (DAN/SWV): `Draʿ Abû el-Nagaʿ`, `South-West Valleys`
     - chunk 8 (QV): `Valley of the Queens`
     - chunk 9 (TT1–TT10): `Deir el-Medina`
-    - chunk 10 (TT11–TT20): `Dra' Abu el-Naga`
-    - chunk 11 (TT21–TT30): `Sh. ʿAbd el-Qurna`, `Dra' Abu el-Naga`,
+    - chunk 10 (TT11–TT20): `Draʿ Abû el-Nagaʿ`
+    - chunk 11 (TT21–TT30): `Sh. ʿAbd el-Qurna`, `Draʿ Abû el-Nagaʿ`,
       `ʿAsâsîf` — PM-faithful forms with `Sh.` abbreviation, ayin
       U+02BF on `ʿAbd` / `ʿAsâsîf`, circumflexes preserved on `ʿAsâsîf`.
-    - chunk 12 (TT31–TT40): `Khokha` (TT32, TT39), `Qurnet Muraʿi` (TT40)
+    - chunk 12 (TT31–TT40): `Khôkha` (TT32, TT39), `Qurnet Muraʿi` (TT40)
       — ayin U+02BF in `Muraʿi` per PM I.1's printed romanisation.
 
     Forward-compatible placeholders for future chunks (Deir el-Bahri,
@@ -649,18 +649,18 @@ def test_theban_area_constraint() -> None:
         "Valley of the Kings",
         "Valley of the Queens",
         "South-West Valleys",
-        "Dra' Abu el-Naga",
+        "Draʿ Abû el-Nagaʿ",
         "Deir el-Medina",
         "Sh. ʿAbd el-Qurna",
         "ʿAsâsîf",
-        "Khokha",
+        "Khôkha",
         "Qurnet Muraʿi",
         # chunk-39: TT308 (Kemsit) + TT310 (anonymous Chancellor) are located
-        # in the Deir el-Bahari temple complex (PM Map III, C-4). PM I.1 p.385-386
-        # explicitly names `Deir el-Bahari` / `Deir el-Baḥri` in the headword.
-        # This differs from TT280 (chunk-36) where `Deir el-Bahari` appeared only
-        # as a location_sub_area qualifier (TT280's grid D-3 is Dra' Abu el-Naga).
-        "Deir el-Bahari",
+        # in the Deir el-Baḥri temple complex (PM Map III, C-4). PM I.1 p.385-386
+        # explicitly names `Deir el-Baḥri` / `Deir el-Baḥri` in the headword.
+        # This differs from TT280 (chunk-36) where `Deir el-Baḥri` appeared only
+        # as a location_sub_area qualifier (TT280's grid D-3 is Draʿ Abû el-Nagaʿ).
+        "Deir el-Baḥri",
     }
     # TT281 is an Unfinished Temple (not a private tomb); PM gives no
     # named theban_area for it — `theban_area=None` is correct.
@@ -2228,7 +2228,7 @@ def test_chunk5_kv62_tutankhamun_full_row() -> None:
 
 # ---------------------------------------------------------------------------
 # Chunk-7 specific value-assertion tests (PM I.2 § II + § III.A/C/D —
-# South-West Valleys + Dra' Abu el-Naga royal-and-near-royal tombs).
+# South-West Valleys + Draʿ Abû el-Nagaʿ royal-and-near-royal tombs).
 #
 # First chunk with NON-NUMBERED tomb_ids: descriptor form `<PREFIX>-<Name>`.
 # Per CLAUDE.md rule 5 every mappable field on every chunk-7 row is
@@ -2274,7 +2274,7 @@ def test_chunk7_section_iii_a_location_sub_areas() -> None:
 
 def test_chunk7_section_iii_c_and_d_no_sub_area() -> None:
     """§ III.C and § III.D headwords don't name a finer wadi beyond
-    Dra' Abu el-Naga itself — `location_sub_area` stays null for those rows.
+    Draʿ Abû el-Nagaʿ itself — `location_sub_area` stays null for those rows.
     """
     section_iii_c_and_d = CHUNK7_TOMB_IDS - {
         "SWV-HatshepsutSouth",
@@ -2311,12 +2311,12 @@ def test_chunk7_shared_with_tombs() -> None:
 
 
 def test_chunk7_valleys() -> None:
-    """§ II rows → `South-West Valleys`; § III rows → `Dra' Abu el-Naga`."""
+    """§ II rows → `South-West Valleys`; § III rows → `Draʿ Abû el-Nagaʿ`."""
     swv_ids = {"SWV-HatshepsutSouth", "SWV-Neferure", "SWV-ThreePrincesses"}
     for tid in swv_ids:
         assert _row(tid)["theban_area"] == "South-West Valleys", tid
     for tid in CHUNK7_TOMB_IDS - swv_ids:
-        assert _row(tid)["theban_area"] == "Dra' Abu el-Naga", tid
+        assert _row(tid)["theban_area"] == "Draʿ Abû el-Nagaʿ", tid
 
 
 def test_chunk7_pm_sections() -> None:
@@ -2792,7 +2792,7 @@ def test_chunk9_uniform_null_phase_a_fields() -> None:
     `source_citation.section` is exactly "I" (PM I.1 § I has no sub-letter
     for this range).
     `theban_area` is "Deir el-Medina" for every TT1-TT10 row (workmen's
-    tombs at Deir el-Medina; sub-site shifts to Dra' Abu el-Naga at TT11+).
+    tombs at Deir el-Medina; sub-site shifts to Draʿ Abû el-Nagaʿ at TT11+).
     `is_unfinished` is `false` for every row (PM I.1 prints no `Unfinished`
     flag in TT1-TT10).
     """
@@ -3019,20 +3019,20 @@ def test_chunk9_postprocess_j_period_i_normalisation() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Chunk 10: PM I.1 § I — TT11-TT20 Dra' Abu el-Naga
+# Chunk 10: PM I.1 § I — TT11-TT20 Draʿ Abû el-Nagaʿ
 # ---------------------------------------------------------------------------
 
 
 def test_chunk10_uniform_null_phase_a_fields() -> None:
     """Every chunk-10 row carries null for Phase-A-enrichment fields and
-    `theban_area="Dra' Abu el-Naga"` (sub-site shifts from chunk-9's
+    `theban_area="Draʿ Abû el-Nagaʿ"` (sub-site shifts from chunk-9's
     `Deir el-Medina`). `source_citation.edition` is `PM I.1 2nd ed. 1960`,
     `source_citation.section` is `"I"`, `is_unfinished` is `false` for
     every row (PM I.1 prints no `Unfinished` flag in TT11-TT20).
     """
     for tid in CHUNK10_TOMB_IDS:
         r = _row(tid)
-        assert r["theban_area"] == "Dra' Abu el-Naga", tid
+        assert r["theban_area"] == "Draʿ Abû el-Nagaʿ", tid
         assert r["source_citation"]["edition"] == EDITION_PM_I1, tid
         assert r["source_citation"]["section"] == "I", tid
         assert r["dynasty"] is None, tid
@@ -3217,7 +3217,7 @@ def test_chunk11_theban_area_per_row() -> None:
         "TT21": "Sh. ʿAbd el-Qurna",
         "TT22": "Sh. ʿAbd el-Qurna",
         "TT23": "Sh. ʿAbd el-Qurna",
-        "TT24": "Dra' Abu el-Naga",
+        "TT24": "Draʿ Abû el-Nagaʿ",
         "TT25": "ʿAsâsîf",
         "TT26": "ʿAsâsîf",
         "TT27": "ʿAsâsîf",
@@ -3930,15 +3930,15 @@ def test_chunk12_all_rows_no_flags() -> None:
 
 def test_chunk12_theban_area_distribution() -> None:
     """Chunk-12 spreads across 5 PM-faithful sub-sites: 2× Sh. ʿAbd el-Qurna,
-    2× Khokha, 3× ʿAsâsîf, 2× Dra' Abu el-Naga, 1× Qurnet Muraʿi.
+    2× Khôkha, 3× ʿAsâsîf, 2× Draʿ Abû el-Nagaʿ, 1× Qurnet Muraʿi.
     Set-equality pin guards against any sub-site silently shifting under
     a future re-merge / fix_rows pass.
     """
     expected: dict[str, set[str]] = {
         "Sh. ʿAbd el-Qurna": {"TT31", "TT38"},
-        "Khokha": {"TT32", "TT39"},
+        "Khôkha": {"TT32", "TT39"},
         "ʿAsâsîf": {"TT33", "TT34", "TT36", "TT37"},
-        "Dra' Abu el-Naga": {"TT35"},
+        "Draʿ Abû el-Nagaʿ": {"TT35"},
         "Qurnet Muraʿi": {"TT40"},
     }
     actual: dict[str, set[str]] = {}
@@ -3982,7 +3982,7 @@ def test_chunk12_tt31_khons() -> None:
 
 
 def test_chunk12_tt32_thutmosi() -> None:
-    """TT32 — Ḏhutmosi, Chief steward of Amūn, Khokha, p.49.
+    """TT32 — Ḏhutmosi, Chief steward of Amūn, Khôkha, p.49.
     The d-emphatic in this name family (`Thutmose` < Egyptian `Ḏḥwty-msj`
     < `Ḏḥwty`/Thoth) is d-bar `Ḏ` (U+1E0E), the standard Egyptological
     transliteration of the d-emphatic — NOT d-underdot `Ḍ` (U+1E0C, a
@@ -3996,7 +3996,7 @@ def test_chunk12_tt32_thutmosi() -> None:
     """
     r = _row("TT32")
     assert r["tomb_id"] == "TT32"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["occupant_name"] == "Ḏhutmosi"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
@@ -4060,10 +4060,10 @@ def test_chunk12_tt34_mentuemhet() -> None:
 
 
 def test_chunk12_tt35_bekenkhons() -> None:
-    """TT35 — Bekenkhons, First prophet of Amūn (High Priest role), Dra' Abu el-Naga, p.61."""
+    """TT35 — Bekenkhons, First prophet of Amūn (High Priest role), Draʿ Abû el-Nagaʿ, p.61."""
     r = _row("TT35")
     assert r["tomb_id"] == "TT35"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["occupant_name"] == "Bekenkhons"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "High Priest"
@@ -4143,14 +4143,14 @@ def test_chunk12_tt38_zeserkaraasonb() -> None:
 
 
 def test_chunk12_tt39_puimre() -> None:
-    """TT39 — Puimrēʿ, Second prophet of Amūn, Khokha, p.71.
+    """TT39 — Puimrēʿ, Second prophet of Amūn, Khôkha, p.71.
     PM prints the headword `PUIMRĒʿ` with capital macron-Ē + ayin (direct PDF visual
     check, physical p.89). pypdf text-layer drops the macron; CHUNK12_CORRECTIONS
     restores it.
     """
     r = _row("TT39")
     assert r["tomb_id"] == "TT39"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["occupant_name"] == "Puimrēʿ"
     assert r["occupant_alt_names"] == []
     assert r["occupant_role"] == "Official"
@@ -4255,13 +4255,13 @@ def test_chunk13_all_rows_official_role() -> None:
 
 def test_chunk13_theban_area_distribution() -> None:
     """Chunk-13 spreads across 2 PM-faithful sub-sites: 7× Sh. ʿAbd el-Qurna
-    (TT41-46, TT50) and 3× Khokha (TT47-49). Set-equality pin guards
+    (TT41-46, TT50) and 3× Khôkha (TT47-49). Set-equality pin guards
     against any sub-site silently shifting under a future re-merge /
     fix_rows pass.
     """
     expected: dict[str, set[str]] = {
         "Sh. ʿAbd el-Qurna": {"TT41", "TT42", "TT43", "TT44", "TT45", "TT46", "TT50"},
-        "Khokha": {"TT47", "TT48", "TT49"},
+        "Khôkha": {"TT47", "TT48", "TT49"},
     }
     actual: dict[str, set[str]] = {}
     for tid in CHUNK13_TOMB_IDS:
@@ -4321,14 +4321,14 @@ def test_chunk13_tt45_dhout_usurped() -> None:
 
 
 def test_chunk13_tt47_inaccessible() -> None:
-    """TT47 — Userhet, Khokha, p.87. Headword carries the `(Inaccessible.)`
+    """TT47 — Userhet, Khôkha, p.87. Headword carries the `(Inaccessible.)`
     tomb-state-marker parenthetical preserved verbatim in notes_from_pm
     (chunk-12 precedent — no schema field for tomb state). The
     spurious-double-period after `(Inaccessible.)` is corrected via
     CHUNK13_CORRECTIONS.
     """
     r = _row("TT47")
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["occupant_name"] == "Userhet"
     assert r["source_citation"]["page"] == 87
     assert "(Inaccessible.)" in r["notes_from_pm"]
@@ -4338,10 +4338,10 @@ def test_chunk13_tt47_inaccessible() -> None:
 
 
 def test_chunk13_tt48_alt_name_surero() -> None:
-    """TT48 — Amenemhet (called Surero), Khokha, p.87. The `called X`
+    """TT48 — Amenemhet (called Surero), Khôkha, p.87. The `called X`
     pattern captures the alt-name in occupant_alt_names."""
     r = _row("TT48")
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["occupant_name"] == "Amenemhet"
     assert r["occupant_alt_names"] == ["Surero"]
     assert r["occupant_role"] == "Official"
@@ -4360,7 +4360,7 @@ def test_chunk13_tt49_tt50_neferhotep_collision() -> None:
     assert r49["occupant_name"] == "Neferhotep"
     assert r50["occupant_name"] == "Neferhotep"
     # Distinct sub-sites:
-    assert r49["theban_area"] == "Khokha"
+    assert r49["theban_area"] == "Khôkha"
     assert r50["theban_area"] == "Sh. ʿAbd el-Qurna"
     # Distinct regnal periods:
     assert "Probably temp. Ay" in r49["notes_from_pm"]
@@ -5879,12 +5879,12 @@ def test_chunk22_attribution_distribution() -> None:
 
 
 def test_chunk22_theban_area_distribution() -> None:
-    """TT131-TT139 are Sh. ʿAbd el-Qurna; TT140 is Dra' Abu el-Naga
+    """TT131-TT139 are Sh. ʿAbd el-Qurna; TT140 is Draʿ Abû el-Nagaʿ
     (first numbered tomb in the Sh. ʿAbd el-Qurna section to break from
-    the sub-site — PM p.254 explicitly assigns it to Dra' Abu el-Naga)."""
+    the sub-site — PM p.254 explicitly assigns it to Draʿ Abû el-Nagaʿ)."""
     for tid in {f"TT{n}" for n in range(131, 140)}:
         assert _row(tid)["theban_area"] == "Sh. ʿAbd el-Qurna", tid
-    assert _row("TT140")["theban_area"] == "Dra' Abu el-Naga"
+    assert _row("TT140")["theban_area"] == "Draʿ Abû el-Nagaʿ"
 
 
 def test_chunk22_role_distribution() -> None:
@@ -6110,7 +6110,7 @@ def test_chunk22_tt139_pairi_waab_priest_sheroy_hathor() -> None:
 
 def test_chunk22_tt140_neferronpet_hefia_dra_abu_el_naga() -> None:
     """TT140 Neferronpet — probably called Ḥefia, Goldworker, Portrait sculptor,
-    Temp. Tuthmosis III to Amenophis II, p.254. Wife Tauy. Dra' Abu el-Naga
+    Temp. Tuthmosis III to Amenophis II, p.254. Wife Tauy. Draʿ Abû el-Nagaʿ
     (first numbered tomb breaking from Sh. ʿAbd el-Qurna in this section).
     occupant_alt_names=[`Hefia`] (ḥ-stripped per TT57/TT120 matchable-name
     precedent; tie-break pins agent B). CHUNK22_CORRECTIONS restores `Kefia`
@@ -6130,13 +6130,13 @@ def test_chunk22_tt140_neferronpet_hefia_dra_abu_el_naga() -> None:
     assert "Portrait sculptor" in r["notes_from_pm"]
     assert "Tuthmosis III to Amenophis II" in r["notes_from_pm"]
     assert "Tauy" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 254
 
 
 def test_chunk23_tt141_bekenkhons_waab_priest_amun() -> None:
     """TT141 Bekenkhons — wʿab-priest of Amūn. Ramesside. Wife Takhaʿ(t). p.254.
-    Dra' Abu el-Naga. Tie-break pins agent B (Amūn macron + ayin on wife name).
+    Draʿ Abû el-Nagaʿ. Tie-break pins agent B (Amūn macron + ayin on wife name).
     CHUNK23_CORRECTIONS restores `Wab-priest` → `wʿab-priest` (ayin before a,
     lowercase initial, same OCR class as TT135/TT139). 1/1/1 tie on Amün/Amūn/Amun
     macron variant. All 3 agents agree on structured fields."""
@@ -6153,7 +6153,7 @@ def test_chunk23_tt141_bekenkhons_waab_priest_amun() -> None:
     assert r["notes_from_pm"].startswith("wʿab-priest of Amūn.")
     assert "Ramesside" in r["notes_from_pm"]
     assert "Takhaʿ(t)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 254
 
 
@@ -6179,7 +6179,7 @@ def test_chunk23_tt142_simut_overseer_works_djhutnofer() -> None:
     assert "Menta" in r["notes_from_pm"]
     assert "Ḏḥutnofer" in r["notes_from_pm"]
     assert "Sitamon" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 255
 
 
@@ -6202,7 +6202,7 @@ def test_chunk23_tt143_anonymous_name_lost_tentkhesbed() -> None:
     assert "Name lost" in r["notes_from_pm"]
     assert "Tuthmosis III to Amenophis II (?)" in r["notes_from_pm"]
     assert "Tentkhesbed" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 255
 
 
@@ -6226,7 +6226,7 @@ def test_chunk23_tt144_nu_head_field_labourers_henuttaui() -> None:
     assert "Head of the field-labourers" in r["notes_from_pm"]
     assert "Tuthmosis III (?)" in r["notes_from_pm"]
     assert "Henuttaui" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 257
 
 
@@ -6247,7 +6247,7 @@ def test_chunk23_tt145_nebamun_head_bowmen_ahhotp() -> None:
     assert "Head of bowmen" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert "ʿAḥḥotp" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 257
 
 
@@ -6272,7 +6272,7 @@ def test_chunk23_tt146_nebamun_granary_inaccessible() -> None:
     assert "Tuthmosis III (?)" in r["notes_from_pm"]
     assert "(Inaccessible.)" in r["notes_from_pm"]
     assert "Suitnub" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 258
 
 
@@ -6297,7 +6297,7 @@ def test_chunk23_tt147_anonymous_masters_ceremonies_amun() -> None:
     assert "Amūn" in r["notes_from_pm"]
     assert "Tuthmosis IV(?)" in r["notes_from_pm"]
     assert "Nefert" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 258
 
 
@@ -6323,7 +6323,7 @@ def test_chunk23_tt148_amenemopet_prophet_amun_thonnfer() -> None:
     assert "Nefertere" in r["notes_from_pm"]
     assert "Tamert" in r["notes_from_pm"]
     assert "harim [of Amūn]" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 259
 
 
@@ -6345,7 +6345,7 @@ def test_chunk23_tt149_amenmosi_royal_scribe_huntsmen() -> None:
     assert "Overseer of the huntsmen of Amūn" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
     assert "Sitmut" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 260
 
 
@@ -6370,12 +6370,12 @@ def test_chunk23_tt150_userhet_cattle_unfinished_iaetib() -> None:
     assert "(Unfinished.)" in r["notes_from_pm"]
     assert "Iaet-ib" in r["notes_from_pm"]
     assert "Royal concubine" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 261
 
 
 # ---------------------------------------------------------------------------
-# Chunk 24: TT151–TT160. All in Dra' Abu el-Naga (§ I). PM I.1 pp.261–273.
+# Chunk 24: TT151–TT160. All in Draʿ Abû el-Nagaʿ (§ I). PM I.1 pp.261–273.
 # 3 tie-break-overrides entries: TT151|notes_from_pm (A omits Parents, B has
 # OCR garbage `Men:;;:`, pin C), TT157|notes_from_pm (Amūn×2 + CHAMPOLLION,
 # pin A), TT158|notes_from_pm (Amūn×2 + CHAMPOLLION, pin A).
@@ -6417,7 +6417,7 @@ def test_chunk24_tt151_hety_scribe_steward_godswife() -> None:
     assert "Wife, Nefertere" in r["notes_from_pm"]
     assert "Parents, Nebnufer" in r["notes_from_pm"]
     assert "Men:;;:" not in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 261
 
 
@@ -6440,7 +6440,7 @@ def test_chunk24_tt152_anonymous_usurped_ramesside() -> None:
     assert "Name lost" in r["notes_from_pm"]
     assert "late Dyn. XVIII" in r["notes_from_pm"]
     assert "Usurped in Ramesside times(?)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 262
 
 
@@ -6460,7 +6460,7 @@ def test_chunk24_tt153_anonymous_sethos() -> None:
     assert r["is_usurped"] is False
     assert "Name lost" in r["notes_from_pm"]
     assert "Temp. Sethos I (?)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 262
 
 
@@ -6480,7 +6480,7 @@ def test_chunk24_tt154_tati_butler_tuthmosis() -> None:
     assert r["is_usurped"] is False
     assert "Butler" in r["notes_from_pm"]
     assert "Tuthmosis III(?)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 262
 
 
@@ -6502,7 +6502,7 @@ def test_chunk24_tt155_antef_great_herald() -> None:
     assert "Ḥatshepsut" in r["notes_from_pm"]
     assert "Tuthmosis III" in r["notes_from_pm"]
     assert "(HAY, No. 1.)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 263
 
 
@@ -6525,7 +6525,7 @@ def test_chunk24_tt156_pennesuttaui_captain_troops() -> None:
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "(CHAMPOLLION, No. 43.)" in r["notes_from_pm"]
     assert "Wife, Mia" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 265
 
 
@@ -6550,7 +6550,7 @@ def test_chunk24_tt157_nebwenenef_first_prophet_amun() -> None:
     assert "Wife, Takhaʿt" in r["notes_from_pm"]
     assert "harim of Amūn" in r["notes_from_pm"]
     assert "Songstress of Isis" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 266
 
 
@@ -6575,7 +6575,7 @@ def test_chunk24_tt158_thonufer_third_prophet_amun() -> None:
     assert "(CHAMPOLLION, No. 44, L. D. Text, No. 9.)" in r["notes_from_pm"]
     assert "Wife, Nefertere" in r["notes_from_pm"]
     assert "harim of Amūn" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 268
 
 
@@ -6597,7 +6597,7 @@ def test_chunk24_tt159_raya_fourth_prophet_amun() -> None:
     assert "Fourth prophet of Amūn" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "Wife, Mutemwia" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 271
 
 
@@ -6619,12 +6619,12 @@ def test_chunk24_tt160_besenmut_royal_acquaintance_saite() -> None:
     assert "Saite" in r["notes_from_pm"]
     assert "(CHAMPOLLION, No. 46.)" in r["notes_from_pm"]
     assert "Parents, Pedemut and Tahibet" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["source_citation"]["page"] == 273
 
 
 # ---------------------------------------------------------------------------
-# Chunk 25: TT161–TT170. Dra' Abu el-Naga (TT161–TT169) + Sh. ʿAbd el-Qurna
+# Chunk 25: TT161–TT170. Draʿ Abû el-Nagaʿ (TT161–TT169) + Sh. ʿAbd el-Qurna
 # (TT170). PM I.1 pp.274–279.
 # 0 tie-break-overrides entries (all 2/1 or unanimous).
 # 2/1-majority resolutions:
@@ -6653,7 +6653,7 @@ def test_chunk24_tt160_besenmut_royal_acquaintance_saite() -> None:
 
 def test_chunk25_tt161_nakht_bearer_floral_offerings() -> None:
     """TT161 Nakht — Bearer of the floral offerings of Amūn.
-    Temp. Amenophis III(?). Dra' Abu el-Naga. p.274.
+    Temp. Amenophis III(?). Draʿ Abû el-Nagaʿ. p.274.
     is_unfinished=False. DERIVER_OVERRIDE: (?) qualifies regnal date."""
     r = _row("TT161")
     assert r["occupant_name"] == "Nakht"
@@ -6671,14 +6671,14 @@ def test_chunk25_tt161_nakht_bearer_floral_offerings() -> None:
     assert "Guraru" in r["notes_from_pm"]
     assert "Taḳemt" in r["notes_from_pm"]
     assert "(L. D. Text, No. 13, HAY, No. 9.)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 274
 
 
 def test_chunk25_tt162_kenamun_mayor_southern_city() -> None:
     """TT162 Kenamun — Mayor in the Southern City, Overseer of the granary
-    of Amūn. Dyn. XVIII. Dra' Abu el-Naga. p.275.
+    of Amūn. Dyn. XVIII. Draʿ Abû el-Nagaʿ. p.275.
     occupant_name 2/1 majority (B+C plain K over A underdot-Ḳ).
     notes_from_pm 2/1 majority (B+C shorter form, no Daressy footnote)."""
     r = _row("TT162")
@@ -6698,14 +6698,14 @@ def test_chunk25_tt162_kenamun_mayor_southern_city() -> None:
     assert "(Inaccessible.)" in r["notes_from_pm"]
     assert "Mut-tuy" in r["notes_from_pm"]
     assert "(from cone)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 275
 
 
 def test_chunk25_tt163_amenemhet_mayor_royal_scribe() -> None:
     """TT163 Amenemhet — Mayor of the Southern City, Royal scribe. Dyn. XIX.
-    Dra' Abu el-Naga. p.276.
+    Draʿ Abû el-Nagaʿ. p.276.
     DERIVER_OVERRIDE: Father(?) is parentage hedge, not occupant-ID hedge."""
     r = _row("TT163")
     assert r["occupant_name"] == "Amenemhet"
@@ -6724,14 +6724,14 @@ def test_chunk25_tt163_amenemhet_mayor_royal_scribe() -> None:
     assert "(Inaccessible.)" in r["notes_from_pm"]
     assert "Ḥuy" in r["notes_from_pm"]
     assert "Nezemt-net" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 276
 
 
 def test_chunk25_tt164_antef_scribe_recruits() -> None:
     """TT164 Antef — Scribe of recruits. Temp. Tuthmosis III.
-    Dra' Abu el-Naga. p.276."""
+    Draʿ Abû el-Nagaʿ. p.276."""
     r = _row("TT164")
     assert r["occupant_name"] == "Antef"
     assert r["occupant_role"] == "Official"
@@ -6745,14 +6745,14 @@ def test_chunk25_tt164_antef_scribe_recruits() -> None:
     assert r["is_usurped"] is False
     assert "Scribe of recruits" in r["notes_from_pm"]
     assert "Tuthmosis III" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 276
 
 
 def test_chunk25_tt165_nehemaway_goldworker_sculptor() -> None:
     """TT165 Nehemʿaway — Goldworker and portrait-sculptor.
-    Temp. Tuthmosis IV(?). Dra' Abu el-Naga. p.277.
+    Temp. Tuthmosis IV(?). Draʿ Abû el-Nagaʿ. p.277.
     DERIVER_OVERRIDE: (?) qualifies regnal date (Tuthmosis IV)."""
     r = _row("TT165")
     assert r["occupant_name"] == "Nehemʿaway"
@@ -6768,14 +6768,14 @@ def test_chunk25_tt165_nehemaway_goldworker_sculptor() -> None:
     assert "Goldworker and portrait-sculptor" in r["notes_from_pm"]
     assert "Tuthmosis IV(?)" in r["notes_from_pm"]
     assert "Tentamentet" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 277
 
 
 def test_chunk25_tt166_racmosi_overseer_works_karnak() -> None:
     """TT166 Raʿmosi — Overseer of works in Karnak, Overseer of cattle.
-    Dyn. XX. Dra' Abu el-Naga. p.277."""
+    Dyn. XX. Draʿ Abû el-Nagaʿ. p.277."""
     r = _row("TT166")
     assert r["occupant_name"] == "Raʿmosi"
     assert r["occupant_role"] == "Official"
@@ -6793,13 +6793,13 @@ def test_chunk25_tt166_racmosi_overseer_works_karnak() -> None:
     assert "Ipy" in r["notes_from_pm"]
     assert "Thoth" in r["notes_from_pm"]
     assert "Tay" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 277
 
 
 def test_chunk25_tt167_anonymous_unfinished_dyn18() -> None:
-    """TT167 — Name lost. Dyn. XVIII. (Unfinished.) Dra' Abu el-Naga. p.278.
+    """TT167 — Name lost. Dyn. XVIII. (Unfinished.) Draʿ Abû el-Nagaʿ. p.278.
     occupant_name=None, occupant_role sentinel-null restored via CHUNK25_CORRECTIONS,
     is_unfinished=True."""
     r = _row("TT167")
@@ -6816,14 +6816,14 @@ def test_chunk25_tt167_anonymous_unfinished_dyn18() -> None:
     assert "Name lost" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert "(Unfinished.)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 278
 
 
 def test_chunk25_tt168_any_divine_father() -> None:
     """TT168 Any — Divine father clean of hands, Chosen lector of the lord
-    of the gods. Dyn. XIX. Dra' Abu el-Naga. p.278."""
+    of the gods. Dyn. XIX. Draʿ Abû el-Nagaʿ. p.278."""
     r = _row("TT168")
     assert r["occupant_name"] == "Any"
     assert r["occupant_role"] == "Official"
@@ -6839,14 +6839,14 @@ def test_chunk25_tt168_any_divine_father() -> None:
     assert "Chosen lector of the lord of the gods" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "Merynub" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 278
 
 
 def test_chunk25_tt169_senna_head_goldworkers() -> None:
     """TT169 Senna — Head of the goldworkers of Amūn. Temp. Amenophis II.
-    Dra' Abu el-Naga. p.278.
+    Draʿ Abû el-Nagaʿ. p.278.
     Egyptologist note: PM source OCR p.249 headword SENNA with cartouche-
     like symbol — confirm full hieroglyphic name form against printed source."""
     r = _row("TT169")
@@ -6865,7 +6865,7 @@ def test_chunk25_tt169_senna_head_goldworkers() -> None:
     assert "Sensonb" in r["notes_from_pm"]
     assert "Tanub" in r["notes_from_pm"]
     assert "Maʿetka" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 278
 
@@ -6967,7 +6967,7 @@ def test_chunk26_tt172_mentiywy_royal_butler() -> None:
     assert "Child of the nursery" in r["notes_from_pm"]
     assert "Tuthmosis III to Amenophis II (?)" in r["notes_from_pm"]
     assert "Ḥepu" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 279
 
@@ -6989,7 +6989,7 @@ def test_chunk26_tt173_khay_scribe_divine_offerings() -> None:
     assert "Scribe of the divine offerings of the Gods of Thebes" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "Biathefu" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 281
 
@@ -7010,7 +7010,7 @@ def test_chunk26_tt174_ashakhet_priest_front_mut() -> None:
     assert "Priest in front of Mut" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "Tazabu" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 281
 
@@ -7032,7 +7032,7 @@ def test_chunk26_tt175_anonymous_tuthmosis_iv() -> None:
     assert r["is_usurped"] is False
     assert "No name" in r["notes_from_pm"]
     assert "Tuthmosis IV" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 281
 
@@ -7055,7 +7055,7 @@ def test_chunk26_tt176_amenUserhet_servant_clean_hands() -> None:
     assert r["is_usurped"] is False
     assert "Servant clean of hands" in r["notes_from_pm"]
     assert "Amenophis II to Tuthmosis IV" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 281
 
@@ -7081,7 +7081,7 @@ def test_chunk26_tt177_amenemopet_scribe_truth_ramesseum() -> None:
     assert "Ramesses II (?)" in r["notes_from_pm"]
     assert "(Unfinished.)" in r["notes_from_pm"]
     assert "Nebḥed" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 283
 
@@ -7106,7 +7106,7 @@ def test_chunk26_tt178_neferronpet_kenro_scribe_treasury() -> None:
     assert "Amen-reʿ" in r["notes_from_pm"]
     assert "Ramesses II" in r["notes_from_pm"]
     assert "Mutemwia" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 283
 
@@ -7134,7 +7134,7 @@ def test_chunk26_tt179_nebamun_scribe_counter_grain() -> None:
     assert "Yotef" in r["notes_from_pm"]
     assert "ʿAḥmosi" in r["notes_from_pm"]
     assert "Sentnefert" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 285
 
@@ -7160,7 +7160,7 @@ def test_chunk26_tt180_anonymous_unfinished_dyn19() -> None:
     assert "Dyn. XIX" in r["notes_from_pm"]
     assert "(Unfinished.)" in r["notes_from_pm"]
     assert "Accessible from tomb 179" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 286
 
@@ -7180,7 +7180,7 @@ def test_chunk27_theban_area() -> None:
     """TT181–TT188 are Khôkha; TT189–TT190 are ʿAsâsîf (PM I.1 p.286–297)."""
     for tid in {f"TT{n}" for n in range(181, 189)}:
         r = _row(tid)
-        assert r["theban_area"] == "Khokha", (tid, r["theban_area"])
+        assert r["theban_area"] == "Khôkha", (tid, r["theban_area"])
     for tid in {"TT189", "TT190"}:
         r = _row(tid)
         assert r["theban_area"] == "ʿAsâsîf", (tid, r["theban_area"])
@@ -7232,7 +7232,7 @@ def test_chunk27_tt181_nebamun_ipuky_joint_burial() -> None:
     assert "Senennūter" in r["notes_from_pm"]
     assert "Ḥenutnefert" in r["notes_from_pm"]
     assert "Nebamūn" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 286
 
@@ -7254,7 +7254,7 @@ def test_chunk27_tt182_amenemhet_scribe_mat() -> None:
     assert "Scribe of the mat" in r["notes_from_pm"]
     assert "Tuthmosis III" in r["notes_from_pm"]
     assert "Sit-ḏḥout" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 289
 
@@ -7280,7 +7280,7 @@ def test_chunk27_tt183_nebsumenu_chief_steward_ramesses2() -> None:
     assert "Bekmut" in r["notes_from_pm"]
     assert "Hunufer" in r["notes_from_pm"]
     assert "tomb 385" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 289
 
@@ -7304,7 +7304,7 @@ def test_chunk27_tt184_nefermenu_mayor_southern_city() -> None:
     assert "Mayor in the Southern City" in r["notes_from_pm"]
     assert "Royal scribe" in r["notes_from_pm"]
     assert "Ramesses II" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 290
 
@@ -7327,7 +7327,7 @@ def test_chunk27_tt185_senioher_hereditary_prince_fip() -> None:
     assert "Hereditary prince" in r["notes_from_pm"]
     assert "Divine chancellor" in r["notes_from_pm"]
     assert "First Intermediate Period" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 290
 
@@ -7352,7 +7352,7 @@ def test_chunk27_tt186_hy_nomarch_fip() -> None:
     assert "First Intermediate Period" in r["notes_from_pm"]
     assert "Imy" in r["notes_from_pm"]
     assert "Ḥatḥor" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 290
 
@@ -7382,7 +7382,7 @@ def test_chunk27_tt187_pakhihet_wab_priest_amun() -> None:
     assert "tomb 174" in r["notes_from_pm"]
     assert "Tazabu" in r["notes_from_pm"]
     assert "Mutemonet" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 293
 
@@ -7404,7 +7404,7 @@ def test_chunk27_tt188_parennufer_royal_butler_amenophis4() -> None:
     assert "Royal butler clean of hands" in r["notes_from_pm"]
     assert "Steward" in r["notes_from_pm"]
     assert "Amenophis IV" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 293
 
@@ -7486,7 +7486,7 @@ def test_chunk28_theban_area() -> None:
         assert r["theban_area"] == "ʿAsâsîf", (tid, r["theban_area"])
     for tid in {"TT198", "TT199", "TT200"}:
         r = _row(tid)
-        assert r["theban_area"] == "Khokha", (tid, r["theban_area"])
+        assert r["theban_area"] == "Khôkha", (tid, r["theban_area"])
 
 
 def test_chunk28_source_edition() -> None:
@@ -7716,7 +7716,7 @@ def test_chunk28_tt198_riya_head_magazine_amun_karnak() -> None:
     assert r["is_usurped"] is False
     assert "Head of the magazine of Amūn in Karnak" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 303
 
@@ -7739,7 +7739,7 @@ def test_chunk28_tt199_amenarnofru_overseer_magazine_dyn18() -> None:
     assert "Overseer of the magazine" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert "Inaccessible" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 303
 
@@ -7768,7 +7768,7 @@ def test_chunk28_tt200_ded_governor_deserts_west_thebes() -> None:
     assert "CHAMPOLLION, No. 36" in r["notes_from_pm"]
     assert "HAY, No. 5" in r["notes_from_pm"]
     assert "Tuy" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 303
 
@@ -7787,7 +7787,7 @@ def test_chunk29_theban_area() -> None:
     (PM I.1 p.304-307)."""
     for tid in {f"TT{n}" for n in range(201, 209)}:
         r = _row(tid)
-        assert r["theban_area"] == "Khokha", (tid, r["theban_area"])
+        assert r["theban_area"] == "Khôkha", (tid, r["theban_area"])
     r209 = _row("TT209")
     assert r209["theban_area"] == "ʿAsâsîf", r209["theban_area"]
     r210 = _row("TT210")
@@ -7832,7 +7832,7 @@ def test_chunk29_tt201_re_first_royal_herald() -> None:
     assert "First royal herald" in r["notes_from_pm"]
     assert "Tuthmosis IV" in r["notes_from_pm"]
     assert "Amenophis III" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 304
 
@@ -7861,7 +7861,7 @@ def test_chunk29_tt202_nekhtamun_prophet_ptah() -> None:
     assert "Prophet of Ptaḥ Lord of Thebes" in r["notes_from_pm"]
     assert "Priest in front of Amūn" in r["notes_from_pm"]
     assert "Dyn. XIX(?)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 305
 
@@ -7882,7 +7882,7 @@ def test_chunk29_tt203_unnufer_divine_father_mut() -> None:
     assert r["is_usurped"] is False
     assert "Divine father of Mut" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 305
 
@@ -7906,7 +7906,7 @@ def test_chunk29_tt204_nebanensu_sailor_first_prophet() -> None:
     assert "Sailor of the first prophet of Amūn" in r["notes_from_pm"]
     assert "title from cone" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 305
 
@@ -7931,7 +7931,7 @@ def test_chunk29_tt205_dhutmosi_royal_butler() -> None:
     assert "Royal butler" in r["notes_from_pm"]
     assert "Tuthmosis III(?)" in r["notes_from_pm"]
     assert "Amenophis II(?)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 305
 
@@ -7953,7 +7953,7 @@ def test_chunk29_tt206_inpuemhab_scribe_place_of_truth() -> None:
     assert r["is_usurped"] is False
     assert "Scribe of the Place of Truth" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 305
 
@@ -7978,7 +7978,7 @@ def test_chunk29_tt207_haremhab_scribe_divine_offerings() -> None:
     assert "Ramesside" in r["notes_from_pm"]
     assert "Ḥemawen" in r["notes_from_pm"]
     assert "Nebuy" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 306
 
@@ -8000,7 +8000,7 @@ def test_chunk29_tt208_roma_divine_father_amen_re() -> None:
     assert r["is_usurped"] is False
     assert "Divine father of Amen-reʿ" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 306
 
@@ -8677,7 +8677,7 @@ def test_chunk31_tt230_perhaps_menes_scribe_soldiers_unfinished() -> None:
     assert r["source_citation"]["page"] == 328
 
 
-# Chunk-32: TT231–TT240 (Dra' Abu el-Naga, Qurnet Muraʿi, Khôkha, ʿAsâsîf)
+# Chunk-32: TT231–TT240 (Draʿ Abû el-Nagaʿ, Qurnet Muraʿi, Khôkha, ʿAsâsîf)
 # ---------------------------------------------------------------------------
 
 
@@ -8688,18 +8688,18 @@ def test_chunk32_all_rows_present() -> None:
 
 
 def test_chunk32_theban_area() -> None:
-    """TT231-TT234/TT236-TT237/TT239 Dra' Abu el-Naga, TT235 Qurnet Muraʿi,
-    TT238 Khokha, TT240 ʿAsâsîf."""
+    """TT231-TT234/TT236-TT237/TT239 Draʿ Abû el-Nagaʿ, TT235 Qurnet Muraʿi,
+    TT238 Khôkha, TT240 ʿAsâsîf."""
     expected = {
-        "TT231": "Dra' Abu el-Naga",
-        "TT232": "Dra' Abu el-Naga",
-        "TT233": "Dra' Abu el-Naga",
-        "TT234": "Dra' Abu el-Naga",
+        "TT231": "Draʿ Abû el-Nagaʿ",
+        "TT232": "Draʿ Abû el-Nagaʿ",
+        "TT233": "Draʿ Abû el-Nagaʿ",
+        "TT234": "Draʿ Abû el-Nagaʿ",
         "TT235": "Qurnet Muraʿi",
-        "TT236": "Dra' Abu el-Naga",
-        "TT237": "Dra' Abu el-Naga",
-        "TT238": "Khokha",
-        "TT239": "Dra' Abu el-Naga",
+        "TT236": "Draʿ Abû el-Nagaʿ",
+        "TT237": "Draʿ Abû el-Nagaʿ",
+        "TT238": "Khôkha",
+        "TT239": "Draʿ Abû el-Nagaʿ",
         "TT240": "ʿAsâsîf",
     }
     for tid, area in expected.items():
@@ -8738,7 +8738,7 @@ def test_chunk32_source_pages() -> None:
 
 def test_chunk32_tt231_nebamun_scribe_grain() -> None:
     """TT231 — Nebamun, Scribe, Counter of the grain of Amun. Early Dyn. XVIII.
-    Dra' Abu el-Naga. p.328. Wife Nefertere in notes."""
+    Draʿ Abû el-Nagaʿ. p.328. Wife Nefertere in notes."""
     r = _row("TT231")
     assert r["occupant_name"] == "Nebamun"
     assert r["occupant_role"] == "Official"
@@ -8753,14 +8753,14 @@ def test_chunk32_tt231_nebamun_scribe_grain() -> None:
     assert "Counter of the grain" in r["notes_from_pm"]
     assert "Early Dyn. XVIII" in r["notes_from_pm"]
     assert "Nefertere" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 328
 
 
 def test_chunk32_tt232_tharwas_scribe_divine_seal() -> None:
     """TT232 — Tharwas, Scribe of the divine seal of the treasury of Amun.
-    Ramesside. Dra' Abu el-Naga. p.328 (CHUNK32_CORRECTIONS: off-by-one 329→328).
+    Ramesside. Draʿ Abû el-Nagaʿ. p.328 (CHUNK32_CORRECTIONS: off-by-one 329→328).
     Father Weshebamunḥeref (tie-break + CHUNK32_CORRECTIONS: restore underdot-ḥ)."""
     r = _row("TT232")
     assert r["occupant_name"] == "Tharwas"
@@ -8776,14 +8776,14 @@ def test_chunk32_tt232_tharwas_scribe_divine_seal() -> None:
     assert "divine seal" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
     assert "Weshebamunḥeref" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 328
 
 
 def test_chunk32_tt233_saroy_royal_scribe_table() -> None:
     """TT233 — Saroy, Royal scribe of the table of the Lord of the Two Lands.
-    Ramesside. Dra' Abu el-Naga. p.329."""
+    Ramesside. Draʿ Abû el-Nagaʿ. p.329."""
     r = _row("TT233")
     assert r["occupant_name"] == "Saroy"
     assert r["occupant_role"] == "Official"
@@ -8797,13 +8797,13 @@ def test_chunk32_tt233_saroy_royal_scribe_table() -> None:
     assert r["is_usurped"] is False
     assert "Royal scribe of the table" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 329
 
 
 def test_chunk32_tt234_roy_mayor_dyn18_or_19() -> None:
-    """TT234 — Roy, Mayor. Dyn. XVIII or XIX. Dra' Abu el-Naga. p.329.
+    """TT234 — Roy, Mayor. Dyn. XVIII or XIX. Draʿ Abû el-Nagaʿ. p.329.
     Wife Ani in notes."""
     r = _row("TT234")
     assert r["occupant_name"] == "Roy"
@@ -8819,7 +8819,7 @@ def test_chunk32_tt234_roy_mayor_dyn18_or_19() -> None:
     assert "Mayor" in r["notes_from_pm"]
     assert "Dyn. XVIII or XIX" in r["notes_from_pm"]
     assert "Ani" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 329
 
@@ -8849,7 +8849,7 @@ def test_chunk32_tt235_userhet_first_prophet_monthu() -> None:
 
 def test_chunk32_tt236_harnakht_second_prophet_amun() -> None:
     """TT236 — Harnakht, Second prophet of Amun, Overseer of the treasury of Amun.
-    Ramesside. Dra' Abu el-Naga. p.329 (CHUNK32_CORRECTIONS: off-by-one 330→329)."""
+    Ramesside. Draʿ Abû el-Nagaʿ. p.329 (CHUNK32_CORRECTIONS: off-by-one 330→329)."""
     r = _row("TT236")
     assert r["occupant_name"] == "Harnakht"
     assert r["occupant_role"] == "High Priest"
@@ -8864,13 +8864,13 @@ def test_chunk32_tt236_harnakht_second_prophet_amun() -> None:
     assert "Second prophet of Amun" in r["notes_from_pm"]
     assert "Overseer of the treasury" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 329
 
 
 def test_chunk32_tt237_unnufer_chief_lector() -> None:
-    """TT237 — Unnufer, Chief lector. Ramesside. Dra' Abu el-Naga. p.330."""
+    """TT237 — Unnufer, Chief lector. Ramesside. Draʿ Abû el-Nagaʿ. p.330."""
     r = _row("TT237")
     assert r["occupant_name"] == "Unnufer"
     assert r["occupant_role"] == "Official"
@@ -8884,13 +8884,13 @@ def test_chunk32_tt237_unnufer_chief_lector() -> None:
     assert r["is_usurped"] is False
     assert "Chief lector" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 330
 
 
 def test_chunk32_tt238_neferweben_royal_butler() -> None:
-    """TT238 — Neferweben, Royal butler clean of hands. Dyn. XVIII. Khokha. p.330."""
+    """TT238 — Neferweben, Royal butler clean of hands. Dyn. XVIII. Khôkha. p.330."""
     r = _row("TT238")
     assert r["occupant_name"] == "Neferweben"
     assert r["occupant_role"] == "Official"
@@ -8904,14 +8904,14 @@ def test_chunk32_tt238_neferweben_royal_butler() -> None:
     assert r["is_usurped"] is False
     assert "Royal butler" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 330
 
 
 def test_chunk32_tt239_penhet_governor_northern_lands() -> None:
     """TT239 — Penhet, Governor of all Northern Lands. Temp. Tuthmosis IV to
-    Amenophis II (?). Dra' Abu el-Naga. p.330.
+    Amenophis II (?). Draʿ Abû el-Nagaʿ. p.330.
     Tie-break: attribution_certainty=uncertain (PM's `(?)` hedge; 3-way split).
     CHUNK32_CORRECTIONS: wife Ḥetepti (restore underdot-ḥ; source `l:letepti`)."""
     r = _row("TT239")
@@ -8929,7 +8929,7 @@ def test_chunk32_tt239_penhet_governor_northern_lands() -> None:
     assert "Tuthmosis IV" in r["notes_from_pm"]
     assert "(?)" in r["notes_from_pm"]
     assert "Ḥetepti" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 330
 
@@ -8988,17 +8988,17 @@ def test_chunk33_all_rows_present() -> None:
 
 
 def test_chunk33_theban_area() -> None:
-    """TT241 Khokha, TT242-TT244 ʿAsâsîf, TT245-TT248 Khokha,
+    """TT241 Khôkha, TT242-TT244 ʿAsâsîf, TT245-TT248 Khôkha,
     TT249 Sh. ʿAbd el-Qurna, TT250 Deir el-Medina."""
     expected = {
-        "TT241": "Khokha",
+        "TT241": "Khôkha",
         "TT242": "ʿAsâsîf",
         "TT243": "ʿAsâsîf",
         "TT244": "ʿAsâsîf",
-        "TT245": "Khokha",
-        "TT246": "Khokha",
-        "TT247": "Khokha",
-        "TT248": "Khokha",
+        "TT245": "Khôkha",
+        "TT246": "Khôkha",
+        "TT247": "Khôkha",
+        "TT248": "Khôkha",
         "TT249": "Sh. ʿAbd el-Qurna",
         "TT250": "Deir el-Medina",  # CHUNK33_CORRECTIONS: agents had Sh. ʿAbd el-Qurna (TT251 content)
     }
@@ -9037,7 +9037,7 @@ def test_chunk33_source_pages() -> None:
 
 
 def test_chunk33_tt241_ahmosi_scribe_divine_writings() -> None:
-    """TT241 — ʿAhmosi, Scribe of the divine writings, Temp. Tuthmosis III(?). Khokha. p.331.
+    """TT241 — ʿAhmosi, Scribe of the divine writings, Temp. Tuthmosis III(?). Khôkha. p.331.
     Tie-break: notes_from_pm (wife ʿAlimosi — ayin prefix); occupant_name (anchor Kahmosi).
     CHUNK33_CORRECTIONS: occupant_name `ʿAhmosi` (PM headword `<AI;IMOSI` = ʿAḥmosi; strip-Ḥ).
     DERIVER_OVERRIDE: attribution_certainty=attested (`Temp. Tuthmosis III(?)` is regnal hedge)."""
@@ -9058,7 +9058,7 @@ def test_chunk33_tt241_ahmosi_scribe_divine_writings() -> None:
     assert "Tuthmosis III" in r["notes_from_pm"]
     assert "(?)" in r["notes_from_pm"]
     assert "ʿAlimosi" in r["notes_from_pm"]  # ayin preserved in wife's name
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 331
 
@@ -9140,7 +9140,7 @@ def test_chunk33_tt244_pakharu_overseer_carpenters() -> None:
 
 
 def test_chunk33_tt245_hory_scribe_steward_royal_wife() -> None:
-    """TT245 — Hory, Scribe, Steward of the royal wife. Dyn. XVIII. (Blocked.) Khokha. p.333."""
+    """TT245 — Hory, Scribe, Steward of the royal wife. Dyn. XVIII. (Blocked.) Khôkha. p.333."""
     r = _row("TT245")
     assert r["occupant_name"] == "Hory"
     assert r["occupant_role"] == "Official"
@@ -9156,13 +9156,13 @@ def test_chunk33_tt245_hory_scribe_steward_royal_wife() -> None:
     assert "Steward of the royal wife" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert "Blocked" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 333
 
 
 def test_chunk33_tt246_senenre_scribe_wife_sitmenhit() -> None:
-    """TT246 — Senenre, Scribe. Dyn. XVIII. Khokha. p.333.
+    """TT246 — Senenre, Scribe. Dyn. XVIII. Khôkha. p.333.
     Tie-break: notes_from_pm (agent A `Sitmenḥit`; source OCR `Sitmenl).it` = underdot-Ḥ)."""
     r = _row("TT246")
     assert r["occupant_name"] == "Senenre"
@@ -9178,13 +9178,13 @@ def test_chunk33_tt246_senenre_scribe_wife_sitmenhit() -> None:
     assert "Scribe" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert "Sitmenḥit" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 333
 
 
 def test_chunk33_tt247_simut_scribe_counter_cattle() -> None:
-    """TT247 — Simut, Scribe, Counter of the cattle of Amun. Dyn. XVIII. Khokha. p.333."""
+    """TT247 — Simut, Scribe, Counter of the cattle of Amun. Dyn. XVIII. Khôkha. p.333."""
     r = _row("TT247")
     assert r["occupant_name"] == "Simut"
     assert r["occupant_role"] == "Official"
@@ -9199,13 +9199,13 @@ def test_chunk33_tt247_simut_scribe_counter_cattle() -> None:
     assert "Counter of the cattle of Amun" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert "Sitamon" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 333
 
 
 def test_chunk33_tt248_djehutmosi_maker_offerings() -> None:
-    """TT248 — Ḏjehutmosi, Maker of offerings of Tuthmosis III. Dyn. XVIII. Khokha. p.335.
+    """TT248 — Ḏjehutmosi, Maker of offerings of Tuthmosis III. Dyn. XVIII. Khôkha. p.335.
     CHUNK33_CORRECTIONS: occupant_name `Ḏjehutmosi` (restore d-bar + strip underdot-ḥ;
     2/1 majority had `Djeḥutmosi`; PM headword `I>~;~uTMOSI` = Ḏ + underdot-Ḥ;
     matchable-name-field convention strips ḥ → h; d-bar preserved as distinguishing radical)."""
@@ -9223,7 +9223,7 @@ def test_chunk33_tt248_djehutmosi_maker_offerings() -> None:
     assert "Maker of offerings of Tuthmosis III" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
     assert "Tamert" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 335
 
@@ -9277,7 +9277,7 @@ def test_chunk33_tt250_ramosi_deir_el_medina() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Chunk-34: TT251–TT260 (Sh. ʿAbd el-Qurna, Khokha, Dra' Abu el-Naga)
+# Chunk-34: TT251–TT260 (Sh. ʿAbd el-Qurna, Khôkha, Draʿ Abû el-Nagaʿ)
 # ---------------------------------------------------------------------------
 # 10 tie-break overrides (all notes_from_pm): agent C systematically truncated
 # notes, dropping parents/wife clauses, creating 1/1/1 splits on every row.
@@ -9301,19 +9301,19 @@ def test_chunk34_all_rows_present() -> None:
 
 
 def test_chunk34_theban_areas() -> None:
-    """TT251-TT252 Sh. ʿAbd el-Qurna; TT253-TT254 Khokha; TT255 Dra' Abu el-Naga;
-    TT256-TT259 Khokha; TT260 Dra' Abu el-Naga."""
+    """TT251-TT252 Sh. ʿAbd el-Qurna; TT253-TT254 Khôkha; TT255 Draʿ Abû el-Nagaʿ;
+    TT256-TT259 Khôkha; TT260 Draʿ Abû el-Nagaʿ."""
     expected = {
         "TT251": "Sh. ʿAbd el-Qurna",
         "TT252": "Sh. ʿAbd el-Qurna",
-        "TT253": "Khokha",
-        "TT254": "Khokha",
-        "TT255": "Dra' Abu el-Naga",
-        "TT256": "Khokha",
-        "TT257": "Khokha",
-        "TT258": "Khokha",
+        "TT253": "Khôkha",
+        "TT254": "Khôkha",
+        "TT255": "Draʿ Abû el-Nagaʿ",
+        "TT256": "Khôkha",
+        "TT257": "Khôkha",
+        "TT258": "Khôkha",
         "TT259": "Sh. ʿAbd el-Qurna",
-        "TT260": "Dra' Abu el-Naga",
+        "TT260": "Draʿ Abû el-Nagaʿ",
     }
     rows = {r["tomb_id"]: r for r in _rows() if r["tomb_id"] in expected}
     for tid, area in expected.items():
@@ -9387,13 +9387,13 @@ def test_chunk34_tt253_khnemmosi_granary_amun() -> None:
     assert "granary of Amun" in r["notes_from_pm"]
     assert "Amenophis III (?)" in r["notes_from_pm"]
     assert "Tannfer" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 338
 
 
 def test_chunk34_tt254_mosi_scribe_treasury() -> None:
-    """TT254 — Mosi, Scribe of the treasury. Late Dyn. XVIII. Khokha. p.339.
+    """TT254 — Mosi, Scribe of the treasury. Late Dyn. XVIII. Khôkha. p.339.
     Tie-break: notes_from_pm. Wife `Tamert` (A correct, no trailing ellipsis)."""
     r = _row("TT254")
     assert r["occupant_name"] == "Mosi"
@@ -9410,13 +9410,13 @@ def test_chunk34_tt254_mosi_scribe_treasury() -> None:
     assert "Teye" in r["notes_from_pm"]
     assert "Late Dyn. XVIII" in r["notes_from_pm"]
     assert "Tamert" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 339
 
 
 def test_chunk34_tt255_roy_royal_scribe_haremhab() -> None:
-    """TT255 — Roy, Royal scribe. Temp. Haremhab (?). Dra' Abu el-Naga. p.340.
+    """TT255 — Roy, Royal scribe. Temp. Haremhab (?). Draʿ Abû el-Nagaʿ. p.340.
     Tie-break: notes_from_pm. Wife `Nebttaui` (double-t, source verbatim), nickname Towey.
     DERIVER_OVERRIDE: attribution_certainty=attested — `Haremhab (?)` hedges regnal date."""
     r = _row("TT255")
@@ -9434,7 +9434,7 @@ def test_chunk34_tt255_roy_royal_scribe_haremhab() -> None:
     assert "Nebttaui" in r["notes_from_pm"]
     assert "Towey" in r["notes_from_pm"]
     assert "CHAMPOLLION" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 340
 
@@ -9457,13 +9457,13 @@ def test_chunk34_tt256_nebenkemet_fanbearer() -> None:
     assert "Amenophis II" in r["notes_from_pm"]
     assert "Ryu" in r["notes_from_pm"]
     assert "L. D. Text, No. 31" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 341
 
 
 def test_chunk34_tt257_neferhotep_usurped_by_mahu() -> None:
-    """TT257 — Neferhotep, Scribe. Khokha. p.342. Usurped by Maḥu (Ramesses II).
+    """TT257 — Neferhotep, Scribe. Khôkha. p.342. Usurped by Maḥu (Ramesses II).
     is_usurped=True — Neferhotep is the VICTIM; Maḥu is the usurper.
     co_occupants=[] (majority A+C; B's [Mahu] is structural error — usurper not co-occupant).
     is_unfinished=False (majority B+C; A's True is spurious — stela in (2) is unfinished
@@ -9486,13 +9486,13 @@ def test_chunk34_tt257_neferhotep_usurped_by_mahu() -> None:
     assert "Piay" in r["notes_from_pm"]
     assert "Tawert" in r["notes_from_pm"]
     assert "L. D. Text, No. 32" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 342
 
 
 def test_chunk34_tt258_menkheper_child_nursery() -> None:
-    """TT258 — Menkheper, Child of the nursery. Temp. Tuthmosis IV (?). Khokha. p.342.
+    """TT258 — Menkheper, Child of the nursery. Temp. Tuthmosis IV (?). Khôkha. p.342.
     Tie-break: notes_from_pm. Mother `Nay` (A clean terminal period, no ellipsis).
     Agent C off-by-one: page=341 (should be 342 — same physical page as TT257). Majority A+B correct.
     DERIVER_OVERRIDE: attribution_certainty=attested — `Tuthmosis IV (?)` hedges regnal date."""
@@ -9510,7 +9510,7 @@ def test_chunk34_tt258_menkheper_child_nursery() -> None:
     assert "Child of the nursery" in r["notes_from_pm"]
     assert "Tuthmosis IV (?)" in r["notes_from_pm"]
     assert "Nay" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 342
 
@@ -9542,7 +9542,7 @@ def test_chunk34_tt259_hori_warb_priest_ramesside() -> None:
 
 
 def test_chunk34_tt260_user_weigher_amun() -> None:
-    """TT260 — User, Scribe, Weigher of [Amun]. Temp. Tuthmosis III (?). Dra' Abu el-Naga. p.344.
+    """TT260 — User, Scribe, Weigher of [Amun]. Temp. Tuthmosis III (?). Draʿ Abû el-Nagaʿ. p.344.
     Tie-break: notes_from_pm. B correctly preserved PM's square brackets `[Amun]` —
     editorial restoration markers present in PM text. Wife: Nubemweset (name from cone).
     Agent C off-by-one: page=343 (should be 344). Majority A+B correct.
@@ -9562,13 +9562,13 @@ def test_chunk34_tt260_user_weigher_amun() -> None:
     assert "Tuthmosis III (?)" in r["notes_from_pm"]
     assert "Nubemweset" in r["notes_from_pm"]
     assert "cone" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 344
 
 
 # ---------------------------------------------------------------------------
-# Chunk-35: TT261–TT270 (Dra' Abu el-Naga, Sh. ʿAbd el-Qurna, Khokha,
+# Chunk-35: TT261–TT270 (Draʿ Abû el-Nagaʿ, Sh. ʿAbd el-Qurna, Khôkha,
 #           Deir el-Medina, Qurnet Muraʿi)
 # ---------------------------------------------------------------------------
 # 3 tie-break overrides (all notes_from_pm + occupant_name):
@@ -9597,13 +9597,13 @@ def test_chunk35_all_rows_present() -> None:
 
 
 def test_chunk35_theban_areas() -> None:
-    """TT261-TT262 Dra' Abu el-Naga; TT263 + TT269 Sh. ʿAbd el-Qurna;
-    TT264 Khokha; TT265-TT268 Deir el-Medina; TT270 Qurnet Muraʿi."""
+    """TT261-TT262 Draʿ Abû el-Nagaʿ; TT263 + TT269 Sh. ʿAbd el-Qurna;
+    TT264 Khôkha; TT265-TT268 Deir el-Medina; TT270 Qurnet Muraʿi."""
     expected = {
-        "TT261": "Dra' Abu el-Naga",
-        "TT262": "Dra' Abu el-Naga",
+        "TT261": "Draʿ Abû el-Nagaʿ",
+        "TT262": "Draʿ Abû el-Nagaʿ",
         "TT263": "Sh. ʿAbd el-Qurna",
-        "TT264": "Khokha",
+        "TT264": "Khôkha",
         "TT265": "Deir el-Medina",
         "TT266": "Deir el-Medina",
         "TT267": "Deir el-Medina",
@@ -9617,7 +9617,7 @@ def test_chunk35_theban_areas() -> None:
 
 
 def test_chunk35_tt261_khaemweset_warb_priest() -> None:
-    """TT261 — Khaʿemweset, warb-priest of Amenophis I. Dyn. XVIII. Dra' Abu el-Naga. p.344.
+    """TT261 — Khaʿemweset, warb-priest of Amenophis I. Dyn. XVIII. Draʿ Abû el-Nagaʿ. p.344.
     CHUNK35_CORRECTIONS: ayin restored in occupant_name (PDF p.362 `KHA<EMWĒSET`).
     All 3 agents had `Khaemweset` (dropped ayin); majority merged as such; fix_rows restores."""
     r = _row("TT261")
@@ -9634,13 +9634,13 @@ def test_chunk35_tt261_khaemweset_warb_priest() -> None:
     assert "Warb-priest of Amenophis I" in r["notes_from_pm"]
     assert "cones" in r["notes_from_pm"]
     assert "Dyn. XVIII" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 344
 
 
 def test_chunk35_tt262_anonymous_overseer_fields() -> None:
-    """TT262 — anonymous, Overseer of the fields. Temp. Tuthmosis III (?). Dra' Abu el-Naga. p.344.
+    """TT262 — anonymous, Overseer of the fields. Temp. Tuthmosis III (?). Draʿ Abû el-Nagaʿ. p.344.
     CHUNK35_CORRECTIONS: occupant_role null → `Unknown` (null-name rule).
     DERIVER_OVERRIDE: attribution_certainty=attested — `(?)` hedges regnal date only."""
     r = _row("TT262")
@@ -9656,7 +9656,7 @@ def test_chunk35_tt262_anonymous_overseer_fields() -> None:
     assert r["is_usurped"] is False
     assert "An Overseer of the fields" in r["notes_from_pm"]
     assert "Tuthmosis III (?)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 344
 
@@ -9684,7 +9684,7 @@ def test_chunk35_tt263_piay_scribe_granary() -> None:
 
 
 def test_chunk35_tt264_piay_overseer_cattle() -> None:
-    """TT264 — Piay, Overseer of cattle. Dyn. XIX. Khokha. p.345."""
+    """TT264 — Piay, Overseer of cattle. Dyn. XIX. Khôkha. p.345."""
     r = _row("TT264")
     assert r["occupant_name"] == "Piay"
     assert r["occupant_role"] == "Official"
@@ -9698,7 +9698,7 @@ def test_chunk35_tt264_piay_overseer_cattle() -> None:
     assert r["is_usurped"] is False
     assert "Overseer of cattle" in r["notes_from_pm"]
     assert "Dyn. XIX" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 345
 
@@ -9851,7 +9851,7 @@ def test_chunk35_tt270_amenemwia_warb_priest_ptah_sokari() -> None:
     assert r["source_citation"]["page"] == 350
 
 
-# Chunk-36: TT271-TT280 (Qurnet Muraʿi ×8, ʿAsâsîf ×1, Dra' Abu el-Naga ×1).
+# Chunk-36: TT271-TT280 (Qurnet Muraʿi ×8, ʿAsâsîf ×1, Draʿ Abû el-Nagaʿ ×1).
 # Tie-break overrides (7 entries):
 #   TT273 occupant_name: Sayemiotf (source-verbatim; A=Sayemhotf, B=Sayemiōtf).
 #   TT274 co_occupants: name=`...y` (PM-verbatim partial name; A/B invented).
@@ -9874,7 +9874,7 @@ def test_chunk35_tt270_amenemwia_warb_priest_ptah_sokari() -> None:
 #   TT279 occupant_alt_names: [] → ["Pbes"] (headword PABA SA (PBES)).
 #   TT279 notes_from_pm: Tasentenhor → Tasentenḥor (underdot-ḥ).
 #   TT280 source_citation: page 360→359 (physical 377 = printed 359).
-#   TT280 location_sub_area: null → "In valley south of Deir el-Bahari Temples".
+#   TT280 location_sub_area: null → "In valley south of Deir el-Baḥri Temples".
 #   TT280 notes_from_pm: Mentuhotp→Mentuḥotp + (Formerly read Meḥenkwetreʿ.) added.
 #   TT274/TT280 co_occupants role: null → Official (SENTINEL_NULL_STRINGS fix).
 # DERIVER_OVERRIDE: TT276 attribution_certainty=attested — `Tuthmosis IV (?)`
@@ -9888,7 +9888,7 @@ def test_chunk36_all_rows_present() -> None:
 
 
 def test_chunk36_theban_areas() -> None:
-    """TT271-TT278 Qurnet Muraʿi; TT279 ʿAsâsîf; TT280 Dra' Abu el-Naga."""
+    """TT271-TT278 Qurnet Muraʿi; TT279 ʿAsâsîf; TT280 Draʿ Abû el-Nagaʿ."""
     expected = {
         "TT271": "Qurnet Muraʿi",
         "TT272": "Qurnet Muraʿi",
@@ -9899,7 +9899,7 @@ def test_chunk36_theban_areas() -> None:
         "TT277": "Qurnet Muraʿi",
         "TT278": "Qurnet Muraʿi",
         "TT279": "ʿAsâsîf",
-        "TT280": "Dra' Abu el-Naga",
+        "TT280": "Draʿ Abû el-Nagaʿ",
     }
     for tid, area in expected.items():
         r = _row(tid)
@@ -10124,7 +10124,7 @@ def test_chunk36_tt279_paba_sa_chief_steward_gods_wife() -> None:
 
 def test_chunk36_tt280_meketrec_chief_steward_mentuhotp() -> None:
     """TT280 — Meketrec (formerly read Meḥenkwetreʿ), Chief steward, Chancellor.
-    Temp. Mentuḥotp (Scankhkareʿ). Dra' Abu el-Naga. p.359.
+    Temp. Mentuḥotp (Scankhkareʿ). Draʿ Abû el-Nagaʿ. p.359.
     Son Antef (adjoining tomb) as co-occupant.
     Tie-break: Mentuhotp form pinned; (Formerly read...) + ḥ layered post-merge.
     CHUNK36_CORRECTIONS: page 360→359; location_sub_area set; Mentuḥotp + formerly-read
@@ -10149,14 +10149,14 @@ def test_chunk36_tt280_meketrec_chief_steward_mentuhotp() -> None:
     assert "Formerly read Meḥenkwetreʿ" in r["notes_from_pm"]
     assert "Antef" in r["notes_from_pm"]
     assert "Hereditary Prince" in r["notes_from_pm"]
-    assert r["location_sub_area"] == "In valley south of Deir el-Bahari Temples"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["location_sub_area"] == "In valley south of Deir el-Baḥri Temples"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 359
 
 
 # ---------------------------------------------------------------------------
-# Chunk 37: TT281-TT290 (Dra' Abu el-Naga + TT281 Unfinished Temple + TT290 Deir el-Medina)
+# Chunk 37: TT281-TT290 (Draʿ Abû el-Nagaʿ + TT281 Unfinished Temple + TT290 Deir el-Medina)
 # ---------------------------------------------------------------------------
 # CHUNK37_CORRECTIONS applied post-merge:
 #   TT281 occupant_name: Mentuhotp→Mentuḥotp (underdot-Ḥ per source `MENTUI;IOTP`).
@@ -10179,17 +10179,17 @@ def test_chunk37_all_rows_present() -> None:
 
 
 def test_chunk37_theban_areas() -> None:
-    """TT282-TT289 Dra' Abu el-Naga; TT281 null (Unfinished Temple); TT290 Deir el-Medina."""
+    """TT282-TT289 Draʿ Abû el-Nagaʿ; TT281 null (Unfinished Temple); TT290 Deir el-Medina."""
     expected = {
         "TT281": None,
-        "TT282": "Dra' Abu el-Naga",
-        "TT283": "Dra' Abu el-Naga",
-        "TT284": "Dra' Abu el-Naga",
-        "TT285": "Dra' Abu el-Naga",
-        "TT286": "Dra' Abu el-Naga",
-        "TT287": "Dra' Abu el-Naga",
-        "TT288": "Dra' Abu el-Naga",
-        "TT289": "Dra' Abu el-Naga",
+        "TT282": "Draʿ Abû el-Nagaʿ",
+        "TT283": "Draʿ Abû el-Nagaʿ",
+        "TT284": "Draʿ Abû el-Nagaʿ",
+        "TT285": "Draʿ Abû el-Nagaʿ",
+        "TT286": "Draʿ Abû el-Nagaʿ",
+        "TT287": "Draʿ Abû el-Nagaʿ",
+        "TT288": "Draʿ Abû el-Nagaʿ",
+        "TT289": "Draʿ Abû el-Nagaʿ",
         "TT290": "Deir el-Medina",
     }
     for tid, area in expected.items():
@@ -10236,7 +10236,7 @@ def test_chunk37_tt282_nakht_head_of_bowmen() -> None:
     assert "Head of bowmen" in r["notes_from_pm"]
     assert "Overseer of the South Lands" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 364
 
@@ -10259,7 +10259,7 @@ def test_chunk37_tt283_roma_first_prophet_amun() -> None:
     assert "First prophet of Amūn" in r["notes_from_pm"]
     assert "Tamut" in r["notes_from_pm"]
     assert "(name in niche in Court)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 365
 
@@ -10281,7 +10281,7 @@ def test_chunk37_tt284_paiemneter_reused() -> None:
     assert "(Reused.)" in r["notes_from_pm"]
     assert "Raʿy" in r["notes_from_pm"]
     assert "Bek(et)werner" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 366
 
@@ -10302,7 +10302,7 @@ def test_chunk37_tt285_iny_head_of_magazine() -> None:
     assert "Head of the magazine of Mut" in r["notes_from_pm"]
     assert "Tentonet" in r["notes_from_pm"]
     assert "Songstress of Mut" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 367
 
@@ -10324,7 +10324,7 @@ def test_chunk37_tt286_niay_scribe_of_table() -> None:
     assert "Roro" in r["notes_from_pm"]
     assert "Esi" in r["notes_from_pm"]
     assert "Tabes" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 368
 
@@ -10344,7 +10344,7 @@ def test_chunk37_tt287_pendu_wab_priest() -> None:
     assert r["is_unfinished"] is False
     assert r["is_usurped"] is False
     assert r["notes_from_pm"] == "Wab-priest of Amūn. Ramesside."
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 369
 
@@ -10367,7 +10367,7 @@ def test_chunk37_tt288_bekenkhons_reused_by_setau() -> None:
     assert r["is_unfinished"] is False
     assert r["is_usurped"] is True
     assert "Re-used by Setau" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 369
 
@@ -10390,7 +10390,7 @@ def test_chunk37_tt289_setau_viceroy_of_kush() -> None:
     assert "Siwazyt" in r["notes_from_pm"]
     assert "Nefertmut" in r["notes_from_pm"]
     assert "harin" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 369
 
@@ -10452,18 +10452,18 @@ def test_chunk38_all_rows_present() -> None:
 
 
 def test_chunk38_theban_areas() -> None:
-    """Verify area assignments: Deir el-Medina / Dra' Abu el-Naga / Khôkha / ʿAsâsîf."""
+    """Verify area assignments: Deir el-Medina / Draʿ Abû el-Nagaʿ / Khôkha / ʿAsâsîf."""
     expected = {
         "TT291": "Deir el-Medina",
         "TT292": "Deir el-Medina",
-        "TT293": "Dra' Abu el-Naga",
-        "TT294": "Khokha",
-        "TT295": "Khokha",
-        "TT296": "Khokha",
+        "TT293": "Draʿ Abû el-Nagaʿ",
+        "TT294": "Khôkha",
+        "TT295": "Khôkha",
+        "TT296": "Khôkha",
         "TT297": "ʿAsâsîf",
         "TT298": "Deir el-Medina",
         "TT299": "Deir el-Medina",
-        "TT300": "Dra' Abu el-Naga",
+        "TT300": "Draʿ Abû el-Nagaʿ",
     }
     by_id = {r["tomb_id"]: r for r in _rows()}
     for tid, area in expected.items():
@@ -10558,13 +10558,13 @@ def test_tt293_ramessesnakht() -> None:
     assert "Ramesses IV" in r["notes_from_pm"]
     assert "Merubaste" in r["notes_from_pm"]
     assert "Cairo Mus. 42162" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 376
 
 
 def test_tt294_amenhotep_usurped_by_roma() -> None:
-    """TT294 — Amenhotep (original), usurped by Roma. Unfinished. Khokha. p.376.
+    """TT294 — Amenhotep (original), usurped by Roma. Unfinished. Khôkha. p.376.
 
     Usurpation direction: PM headword names AMENHOTEP as original occupant;
     Roma (wab-priest, early Ramesside) is the usurper. co_occupants=[] (Roma
@@ -10588,13 +10588,13 @@ def test_tt294_amenhotep_usurped_by_roma() -> None:
     assert "Usurped by Roma" in r["notes_from_pm"]
     assert "wab-priest of Amun" in r["notes_from_pm"]
     assert "Hathor" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 376
 
 
 def test_tt295_dhutmosi_called_paroy() -> None:
-    """TT295 — Ḏhutmosi called Paroy, sem-priest. Khokha. p.377.
+    """TT295 — Ḏhutmosi called Paroy, sem-priest. Khôkha. p.377.
 
     occupant_name = `Ḏhutmosi` (d-bar restored via CHUNK38_CORRECTIONS;
     tie-break intermediate was `Dhutmosi`; per TT32/TT205 precedent).
@@ -10622,13 +10622,13 @@ def test_tt295_dhutmosi_called_paroy() -> None:
     assert "Senemiʿoḥ" in r["notes_from_pm"]
     assert "Nefertere" in r["notes_from_pm"]
     assert "Rennutet" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 377
 
 
 def test_tt296_nefersekheru() -> None:
-    """TT296 — Nefersekheru, Scribe. Ramesside. Khokha. p.378.
+    """TT296 — Nefersekheru, Scribe. Ramesside. Khôkha. p.378.
 
     notes_from_pm: Maʿetmut (ayin restored by CHUNK38_CORRECTIONS;
     majority had `Maetmut`; source `Ma<etmut`, `<` = ayin glyph).
@@ -10651,7 +10651,7 @@ def test_tt296_nefersekheru() -> None:
     assert "Maʿetmut" in r["notes_from_pm"]
     assert "Sekhemui" in r["notes_from_pm"]
     assert "Nefertere" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 378
 
@@ -10744,7 +10744,7 @@ def test_tt299_iniherkhac() -> None:
 
 
 def test_tt300_anhotp() -> None:
-    """TT300 — ʿAnhotp, Viceroy of Kush. Ramesside. Dra' Abu el-Naga. p.381.
+    """TT300 — ʿAnhotp, Viceroy of Kush. Ramesside. Draʿ Abû el-Nagaʿ. p.381.
 
     Tie-break pinned B's `ʿAnhotp` (source `cANI;IOTP`, c=ayin, I;I=Ḥ stripped).
     A had `Amenhotep` (completely wrong name); C had `Canihotep` (OCR-literal).
@@ -10765,13 +10765,13 @@ def test_tt300_anhotp() -> None:
     assert "Governor of the South Lands" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
     assert "Hunuro" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
 
 
 # ===========================================================================
-# Chunk 39 — TT301–TT310 (Dra' Abu el-Naga × 7, Deir el-Bahari × 2,
+# Chunk 39 — TT301–TT310 (Draʿ Abû el-Nagaʿ × 7, Deir el-Baḥri × 2,
 #            Sh. ʿAbd el-Qurna × 1)
 # ===========================================================================
 
@@ -10783,18 +10783,18 @@ def test_chunk39_all_rows_present() -> None:
 
 
 def test_chunk39_theban_areas() -> None:
-    """Verify area assignments. First chunk with Deir el-Bahari as primary area."""
+    """Verify area assignments. First chunk with Deir el-Baḥri as primary area."""
     expected = {
-        "TT301": "Dra' Abu el-Naga",
-        "TT302": "Dra' Abu el-Naga",
-        "TT303": "Dra' Abu el-Naga",
-        "TT304": "Dra' Abu el-Naga",
-        "TT305": "Dra' Abu el-Naga",
-        "TT306": "Dra' Abu el-Naga",
-        "TT307": "Dra' Abu el-Naga",
-        "TT308": "Deir el-Bahari",
+        "TT301": "Draʿ Abû el-Nagaʿ",
+        "TT302": "Draʿ Abû el-Nagaʿ",
+        "TT303": "Draʿ Abû el-Nagaʿ",
+        "TT304": "Draʿ Abû el-Nagaʿ",
+        "TT305": "Draʿ Abû el-Nagaʿ",
+        "TT306": "Draʿ Abû el-Nagaʿ",
+        "TT307": "Draʿ Abû el-Nagaʿ",
+        "TT308": "Deir el-Baḥri",
         "TT309": "Sh. ʿAbd el-Qurna",
-        "TT310": "Deir el-Bahari",
+        "TT310": "Deir el-Baḥri",
     }
     by_id = {r["tomb_id"]: r for r in _rows()}
     for tid, area in expected.items():
@@ -10802,7 +10802,7 @@ def test_chunk39_theban_areas() -> None:
 
 
 def test_tt301_hori() -> None:
-    """TT301 — Hori, Scribe. Dra' Abu el-Naga. p.381.
+    """TT301 — Hori, Scribe. Draʿ Abû el-Nagaʿ. p.381.
 
     Name: source `I;IORI` = Ḥori; strip-ḥ → `Hori` (CHUNK39_CORRECTIONS
     from majority `Khori`). Wife named in cartouche. GREENLEES note.
@@ -10824,13 +10824,13 @@ def test_tt301_hori() -> None:
     assert "Scribe of the table of the Lord of the Two Lands" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
 
 
 def test_tt302_paraemhab() -> None:
-    """TT302 — Paraʿemhab, Overseer of the magazine. Dra' Abu el-Naga. p.381.
+    """TT302 — Paraʿemhab, Overseer of the magazine. Draʿ Abû el-Nagaʿ. p.381.
 
     Name: ayin retained + ḥ stripped (source `PARA<EMI;IAB` → `Paraʿemhab`).
     Father: `Userḥat` (underdot-ḥ restored in notes_from_pm).
@@ -10853,13 +10853,13 @@ def test_tt302_paraemhab() -> None:
     assert "Ramesside" in r["notes_from_pm"]
     assert "Userḥat" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
 
 
 def test_tt303_paser_third_prophet() -> None:
-    """TT303 — Paser, Third prophet + Head of magazine of Amun. Dra' Abu el-Naga. p.381.
+    """TT303 — Paser, Third prophet + Head of magazine of Amun. Draʿ Abû el-Nagaʿ. p.381.
 
     Role must be `Official` (Third prophet ≠ First prophet; majority A+C voted
     `High Priest` incorrectly; corrected by CHUNK39_CORRECTIONS).
@@ -10879,13 +10879,13 @@ def test_tt303_paser_third_prophet() -> None:
     assert r["location_sub_area"] is None
     assert "Third prophet of Amun" in r["notes_from_pm"]
     assert "magazine" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
 
 
 def test_tt304_piay() -> None:
-    """TT304 — Piay, Scribe of the table. Dra' Abu el-Naga. p.383.
+    """TT304 — Piay, Scribe of the table. Draʿ Abû el-Nagaʿ. p.383.
 
     Cross-reference clause `For position, see p. 356.` in notes (no parens,
     verbatim from source; tie-break pin B's form).
@@ -10906,13 +10906,13 @@ def test_tt304_piay() -> None:
     assert "Scribe of the table of Amun" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
     assert "p. 356" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 383
 
 
 def test_tt305_paser_waab() -> None:
-    """TT305 — Paser, Wʿab-priest + Scribe. Wife Tamelḥit. Dra' Abu el-Naga. p.383.
+    """TT305 — Paser, Wʿab-priest + Scribe. Wife Tamelḥit. Draʿ Abû el-Nagaʿ. p.383.
 
     Priest title: ayin restored (`Wʿab-priest`; source `warb-priest`).
     Wife name: `Tamelḥit` in notes (verbatim-preserve ḥ); `Tamelhit` in
@@ -10938,13 +10938,13 @@ def test_tt305_paser_waab() -> None:
     assert r["location_sub_area"] is None
     assert "Wʿab-priest" in r["notes_from_pm"]
     assert "Tamelḥit" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 383
 
 
 def test_tt306_irzanen() -> None:
-    """TT306 — Irzanen, Door-opener. Wife Mutenopet. Dra' Abu el-Naga. p.384.
+    """TT306 — Irzanen, Door-opener. Wife Mutenopet. Draʿ Abû el-Nagaʿ. p.384.
 
     Name: source `lRZANEN` → `Irzanen` (OCR l=I; A tie-break pin; C had Cyrillic).
     GREENLEES note from PM headword section (scene-level son Nekht-Ḥarerau not added).
@@ -10970,13 +10970,13 @@ def test_tt306_irzanen() -> None:
     assert "Door-opener of the estate of Amun" in r["notes_from_pm"]
     assert "Mutenopet" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 384
 
 
 def test_tt307_thonufer_unfinished() -> None:
-    """TT307 — Thonufer (name from ushabti). Dra' Abu el-Naga. p.385. Unfinished.
+    """TT307 — Thonufer (name from ushabti). Draʿ Abû el-Nagaʿ. p.385. Unfinished.
 
     is_unfinished=True. `(Unfinished.)` parenthesised per PM source. GREENLEES note.
     occupant_role=None (sentinel-null from `Unknown`; no explicit role in PM).
@@ -10997,15 +10997,15 @@ def test_tt307_thonufer_unfinished() -> None:
     assert "name from ushabti" in r["notes_from_pm"]
     assert "(Unfinished.)" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 385
 
 
 def test_tt308_kemsit_deir_el_bahari() -> None:
-    """TT308 — Kemsit, royal concubine + Prophetess of Ḥatḥor. Deir el-Bahari. p.385.
+    """TT308 — Kemsit, royal concubine + Prophetess of Ḥatḥor. Deir el-Baḥri. p.385.
 
-    First row with Deir el-Bahari as primary theban_area (PM Map III, C-4).
+    First row with Deir el-Baḥri as primary theban_area (PM Map III, C-4).
     Temp. Mentuḥotp (Nebḥepetreʿ). location_sub_area = in the Temple of Mentuḥotp.
     Notes include NAVILLE ref + temple location + diacritics: Ḥatḥor, Mentuḥotp,
     Nebḥepetreʿ (source `Mentul;10tp`, `Neb}:lepetre<`).
@@ -11029,8 +11029,8 @@ def test_tt308_kemsit_deir_el_bahari() -> None:
     assert "Mentuḥotp" in r["notes_from_pm"]
     assert "Nebḥepetreʿ" in r["notes_from_pm"]
     assert "NAVILLE" in r["notes_from_pm"]
-    assert "Deir el-Bahari" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert "Deir el-Baḥri" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 385
 
@@ -11061,9 +11061,9 @@ def test_tt309_anonymous_blocked() -> None:
 
 
 def test_tt310_anonymous_chancellor() -> None:
-    """TT310 — A Chancellor of the King of Lower Egypt. Deir el-Bahari. p.386. Dyn. XI.
+    """TT310 — A Chancellor of the King of Lower Egypt. Deir el-Baḥri. p.386. Dyn. XI.
 
-    Second Deir el-Bahari primary theban_area row (Dyn. XI).
+    Second Deir el-Baḥri primary theban_area row (Dyn. XI).
     occupant_name=None; occupant_role=None (sentinel-null from majority `Unknown`).
     """
     r = _row("TT310")
@@ -11080,13 +11080,13 @@ def test_tt310_anonymous_chancellor() -> None:
     assert r["is_usurped"] is False
     assert r["location_sub_area"] is None
     assert "Chancellor" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 386
 
 
 def test_tt311_khety() -> None:
-    """TT311 — Khety, Seal-bearer. Deir el-Bahari. p.386.
+    """TT311 — Khety, Seal-bearer. Deir el-Baḥri. p.386.
 
     Temp. Mentuḥotp-Nebḥepetreʿ (diacritic restore by CHUNK40).
     EGYPTOLOGIST REVIEW REQUIRED: confirm Mentuhotep diacritics.
@@ -11106,13 +11106,13 @@ def test_tt311_khety() -> None:
     assert r["location_sub_area"] is None
     assert "Seal-bearer" in r["notes_from_pm"]
     assert "Mentu" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 386
 
 
 def test_tt312_espelaashuti_vizier() -> None:
-    """TT312 — Espel(a)shuti, Vizier. Deir el-Bahari. p.387. Saite.
+    """TT312 — Espel(a)shuti, Vizier. Deir el-Baḥri. p.387. Saite.
 
     Parenthetical letter (a) preserved per reconciled precedent.
     In court of a Dyn. XI tomb. Mother Irterau (tomb 390).
@@ -11133,13 +11133,13 @@ def test_tt312_espelaashuti_vizier() -> None:
     assert "Vizier" in r["notes_from_pm"]
     assert "Saite" in r["notes_from_pm"]
     assert "Irterau" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 387
 
 
 def test_tt313_henenu_great_steward() -> None:
-    """TT313 — Henenu, Great steward. Deir el-Bahari. p.388.
+    """TT313 — Henenu, Great steward. Deir el-Baḥri. p.388.
 
     Two-king tenure: Mentuḥotp-Nebḥepetreʿ and Mentuḥotp-Sʿankhkareʿ.
     EGYPTOLOGIST REVIEW REQUIRED: confirm diacritics.
@@ -11159,13 +11159,13 @@ def test_tt313_henenu_great_steward() -> None:
     assert r["location_sub_area"] is None
     assert "Great steward" in r["notes_from_pm"]
     assert "Sʿankhkareʿ" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 388
 
 
 def test_tt314_harhotep_dyn_xi() -> None:
-    """TT314 — Harhotep, Seal-bearer. Deir el-Bahari. p.389. Dyn. XI.
+    """TT314 — Harhotep, Seal-bearer. Deir el-Baḥri. p.389. Dyn. XI.
 
     dynasty=XI restored by CHUNK40 (merge majority B+C=null miss).
     Mother, Sentshe.
@@ -11186,13 +11186,13 @@ def test_tt314_harhotep_dyn_xi() -> None:
     assert "Seal-bearer" in r["notes_from_pm"]
     assert "Dyn. XI" in r["notes_from_pm"]
     assert "Sentshe" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] == "XI"
     assert r["source_citation"]["page"] == 389
 
 
 def test_tt315_ipi_vizier() -> None:
-    """TT315 — Ipi, Vizier + Judge. Deir el-Bahari. p.389.
+    """TT315 — Ipi, Vizier + Judge. Deir el-Baḥri. p.389.
 
     Temp. Mentuḥotp-Nebḥepetreʿ (diacritic restore by CHUNK40).
     EGYPTOLOGIST REVIEW REQUIRED: confirm diacritics.
@@ -11212,13 +11212,13 @@ def test_tt315_ipi_vizier() -> None:
     assert r["location_sub_area"] is None
     assert "Vizier" in r["notes_from_pm"]
     assert "Nebḥepetreʿ" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 389
 
 
 def test_tt316_neferhotep_custodian_dyn_xi() -> None:
-    """TT316 — Neferhotep, Custodian of the bow. Deir el-Bahari. p.390. Dyn. XI.
+    """TT316 — Neferhotep, Custodian of the bow. Deir el-Baḥri. p.390. Dyn. XI.
 
     dynasty=XI restored by CHUNK40.
     attribution_certainty=attested via DERIVER_OVERRIDE (Wife(?) secondary-clause hedge).
@@ -11240,7 +11240,7 @@ def test_tt316_neferhotep_custodian_dyn_xi() -> None:
     assert "Dyn. XI" in r["notes_from_pm"]
     assert "Nebtiotef" in r["notes_from_pm"]
     assert "Mery(t)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] == "XI"
     assert r["source_citation"]["page"] == 390
 
@@ -11302,7 +11302,7 @@ def test_tt318_amenmosi_sh_abd_el_qurna() -> None:
 
 
 def test_tt319_nofru_royal_family() -> None:
-    """TT319 — Nofru, Royal Family. Deir el-Bahari. p.391.
+    """TT319 — Nofru, Royal Family. Deir el-Baḥri. p.391.
 
     King's daughter. Father Mentuḥotp-Sʿankhibtaui; mother Iʿob (restored by CHUNK40).
     EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics.
@@ -11323,13 +11323,13 @@ def test_tt319_nofru_royal_family() -> None:
     assert "Sʿankhibtaui" in r["notes_from_pm"]
     assert "Iʿob" in r["notes_from_pm"]
     assert "Nebḥepetreʿ" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 391
 
 
 def test_tt320_inhapi_royal_cache() -> None:
-    """TT320 — Inhaʿpi, perhaps wife of Amosis. Deir el-Bahari. p.392. Dyn. XXI.
+    """TT320 — Inhaʿpi, perhaps wife of Amosis. Deir el-Baḥri. p.392. Dyn. XXI.
 
     Royal Family; dynasty=XXI restored by CHUNK40.
     occupant_name ayin restored to Inhaʿpi.
@@ -11353,13 +11353,13 @@ def test_tt320_inhapi_royal_cache() -> None:
     assert "Royal Cache" in r["notes_from_pm"]
     assert "Dyn. XXI" in r["notes_from_pm"]
     assert "i 2" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] == "XXI"
     assert r["source_citation"]["page"] == 392
 
 
 # ===========================================================================
-# Chunk 40 — TT311–TT320 (Deir el-Bahari × 8, Sh. ʿAbd el-Qurna × 2)
+# Chunk 40 — TT311–TT320 (Deir el-Baḥri × 8, Sh. ʿAbd el-Qurna × 2)
 # ===========================================================================
 
 
@@ -11370,18 +11370,18 @@ def test_chunk40_all_rows_present() -> None:
 
 
 def test_chunk40_theban_areas() -> None:
-    """Verify area assignments. TT311-TT316/TT319-TT320 Deir el-Bahari; TT317-TT318 Sh. Abd el-Qurna."""
+    """Verify area assignments. TT311-TT316/TT319-TT320 Deir el-Baḥri; TT317-TT318 Sh. Abd el-Qurna."""
     expected = {
-        "TT311": "Deir el-Bahari",
-        "TT312": "Deir el-Bahari",
-        "TT313": "Deir el-Bahari",
-        "TT314": "Deir el-Bahari",
-        "TT315": "Deir el-Bahari",
-        "TT316": "Deir el-Bahari",
+        "TT311": "Deir el-Baḥri",
+        "TT312": "Deir el-Baḥri",
+        "TT313": "Deir el-Baḥri",
+        "TT314": "Deir el-Baḥri",
+        "TT315": "Deir el-Baḥri",
+        "TT316": "Deir el-Baḥri",
         "TT317": "Sh. ʿAbd el-Qurna",
         "TT318": "Sh. ʿAbd el-Qurna",
-        "TT319": "Deir el-Bahari",
-        "TT320": "Deir el-Bahari",
+        "TT319": "Deir el-Baḥri",
+        "TT320": "Deir el-Baḥri",
     }
     for tid, area in expected.items():
         r = _row(tid)
@@ -11712,7 +11712,7 @@ def test_chunk41_theban_areas() -> None:
 
 
 # ===========================================================================
-# Chunk 42 — TT331–TT340 (Sh. ʿAbd el-Qurna × 1, Dra' Abu el-Naga × 3, Deir el-Medina × 6)
+# Chunk 42 — TT331–TT340 (Sh. ʿAbd el-Qurna × 1, Draʿ Abû el-Nagaʿ × 3, Deir el-Medina × 6)
 # ===========================================================================
 
 
@@ -11727,9 +11727,9 @@ def test_chunk42_theban_areas() -> None:
     TT335-340 Deir el-Medina."""
     expected = {
         "TT331": "Sh. ʿAbd el-Qurna",
-        "TT332": "Dra' Abu el-Naga",
-        "TT333": "Dra' Abu el-Naga",
-        "TT334": "Dra' Abu el-Naga",
+        "TT332": "Draʿ Abû el-Nagaʿ",
+        "TT333": "Draʿ Abû el-Nagaʿ",
+        "TT334": "Draʿ Abû el-Nagaʿ",
         "TT335": "Deir el-Medina",
         "TT336": "Deir el-Medina",
         "TT337": "Deir el-Medina",
@@ -11808,7 +11808,7 @@ def test_chunk42_anonymous_roles_restored() -> None:
 
 
 # ===========================================================================
-# Chunk 43 — TT341–TT350 (Sh. ʿAbd el-Qurna × 9, Dra' Abu el-Naga × 1)
+# Chunk 43 — TT341–TT350 (Sh. ʿAbd el-Qurna × 9, Draʿ Abû el-Nagaʿ × 1)
 # ===========================================================================
 
 
@@ -11824,7 +11824,7 @@ def test_chunk43_theban_areas() -> None:
         "TT341": "Sh. ʿAbd el-Qurna",
         "TT342": "Sh. ʿAbd el-Qurna",
         "TT343": "Sh. ʿAbd el-Qurna",
-        "TT344": "Dra' Abu el-Naga",
+        "TT344": "Draʿ Abû el-Nagaʿ",
         "TT345": "Sh. ʿAbd el-Qurna",
         "TT346": "Sh. ʿAbd el-Qurna",
         "TT347": "Sh. ʿAbd el-Qurna",
@@ -11916,7 +11916,7 @@ def test_chunk43_damaged_name_tt350() -> None:
 
 
 # ===========================================================================
-# Chunk 44 — TT351–TT360 (Sh. ʿAbd el-Qurna × 2, Deir el-Bahari × 2,
+# Chunk 44 — TT351–TT360 (Sh. ʿAbd el-Qurna × 2, Deir el-Baḥri × 2,
 #            Deir el-Medina × 6)
 # ===========================================================================
 
@@ -11930,19 +11930,19 @@ def test_chunk44_all_rows_present() -> None:
 def test_chunk44_theban_areas() -> None:
     """Verify area assignments.
     TT351, TT352: Sh. ʿAbd el-Qurna.
-    TT353, TT358: Deir el-Bahari (canonical plain-h form from 10 prior rows).
+    TT353, TT358: Deir el-Baḥri (canonical plain-h form from 10 prior rows).
     TT354–TT357, TT359, TT360: Deir el-Medina.
     Agent B used `Deir el-Baḥri` (Ḥ-underdot) for TT353/TT358; majority 2/1
-    resolved to canonical plain-h form `Deir el-Bahari`."""
+    resolved to canonical plain-h form `Deir el-Baḥri`."""
     expected = {
         "TT351": "Sh. ʿAbd el-Qurna",
         "TT352": "Sh. ʿAbd el-Qurna",
-        "TT353": "Deir el-Bahari",
+        "TT353": "Deir el-Baḥri",
         "TT354": "Deir el-Medina",
         "TT355": "Deir el-Medina",
         "TT356": "Deir el-Medina",
         "TT357": "Deir el-Medina",
-        "TT358": "Deir el-Bahari",
+        "TT358": "Deir el-Baḥri",
         "TT359": "Deir el-Medina",
         "TT360": "Deir el-Medina",
     }
@@ -12009,17 +12009,17 @@ def test_chunk44_tt358_location_sub_area() -> None:
     r = _row("TT358")
     assert r["location_sub_area"] == "In Court of Temple of Ḥatshepsut"
     assert r["occupant_role"] == "Queen"
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["shared_with_tombs"] == []
 
 
 def test_chunk44_tt353_senenmut_shared() -> None:
-    """TT353: Senenmut's second tomb (Deir el-Bahari). shared_with_tombs=[TT71]
+    """TT353: Senenmut's second tomb (Deir el-Baḥri). shared_with_tombs=[TT71]
     (Senenmut's primary tomb). All 3 agents agree."""
     r = _row("TT353")
     assert r["occupant_name"] == "Senenmut"
     assert r["shared_with_tombs"] == ["TT71"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
 
 
 def test_chunk44_tt359_inherkha_shared() -> None:
@@ -12050,7 +12050,7 @@ def test_chunk44_tt352_anonymous() -> None:
 
 
 # ===========================================================================
-# Chunk 45 — TT361–TT370 (Deir el-Medina × 1, Khokha × 6, ʿAsâsîf × 2,
+# Chunk 45 — TT361–TT370 (Deir el-Medina × 1, Khôkha × 6, ʿAsâsîf × 2,
 #            Sh. ʿAbd el-Qurna × 2; note TT361+TT368+TT367 vary)
 # ===========================================================================
 
@@ -12065,15 +12065,15 @@ def test_chunk45_theban_areas() -> None:
     """Verify area assignments per PM I.1 p.426–432 headword sub-site lines."""
     expected = {
         "TT361": "Deir el-Medina",
-        "TT362": "Khokha",
-        "TT363": "Khokha",
+        "TT362": "Khôkha",
+        "TT363": "Khôkha",
         "TT364": "ʿAsâsîf",
-        "TT365": "Khokha",
+        "TT365": "Khôkha",
         "TT366": "ʿAsâsîf",
         "TT367": "Sh. ʿAbd el-Qurna",
         "TT368": "Sh. ʿAbd el-Qurna",
-        "TT369": "Khokha",
-        "TT370": "Khokha",
+        "TT369": "Khôkha",
+        "TT370": "Khôkha",
     }
     for tid, area in expected.items():
         r = _row(tid)
@@ -12168,7 +12168,7 @@ def test_chunk45_tt369_high_priest() -> None:
     assert r["occupant_name"] == "Kaemweset"
     assert r["occupant_role"] == "High Priest"
     assert "Taōne(t)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
 
 
 def test_chunk45_tt370_anonymous() -> None:
@@ -12193,7 +12193,7 @@ def test_chunk45_tt361_huy_no_shared() -> None:
 
 
 # ===========================================================================
-# Chunk 46 — TT371–TT380 (Khokha × 4, Dra' Abu el-Naga × 5, Qurnet Muraʿi × 1)
+# Chunk 46 — TT371–TT380 (Khôkha × 4, Draʿ Abû el-Nagaʿ × 5, Qurnet Muraʿi × 1)
 # ===========================================================================
 
 
@@ -12205,17 +12205,17 @@ def test_chunk46_all_rows_present() -> None:
 
 def test_chunk46_theban_areas() -> None:
     """Verify area assignments per PM I.1 p.432–435 headword sub-site lines.
-    4 Khokha (TT371–TT374), 5 Dra' Abu el-Naga (TT375–TT379), 1 Qurnet Muraʿi (TT380)."""
+    4 Khôkha (TT371–TT374), 5 Draʿ Abû el-Nagaʿ (TT375–TT379), 1 Qurnet Muraʿi (TT380)."""
     expected = {
-        "TT371": "Khokha",
-        "TT372": "Khokha",
-        "TT373": "Khokha",
-        "TT374": "Khokha",
-        "TT375": "Dra' Abu el-Naga",
-        "TT376": "Dra' Abu el-Naga",
-        "TT377": "Dra' Abu el-Naga",
-        "TT378": "Dra' Abu el-Naga",
-        "TT379": "Dra' Abu el-Naga",
+        "TT371": "Khôkha",
+        "TT372": "Khôkha",
+        "TT373": "Khôkha",
+        "TT374": "Khôkha",
+        "TT375": "Draʿ Abû el-Nagaʿ",
+        "TT376": "Draʿ Abû el-Nagaʿ",
+        "TT377": "Draʿ Abû el-Nagaʿ",
+        "TT378": "Draʿ Abû el-Nagaʿ",
+        "TT379": "Draʿ Abû el-Nagaʿ",
         "TT380": "Qurnet Muraʿi",
     }
     for tid, area in expected.items():
@@ -12344,7 +12344,7 @@ def test_chunk47_tt390_amun_macron() -> None:
 
 
 # ===========================================================================
-# Chunk 48 — TT391–TT400 (Sh. ʿAbd el-Qurna × 5, Khokha × 1, Dra' Abu el-Naga × 4)
+# Chunk 48 — TT391–TT400 (Sh. ʿAbd el-Qurna × 5, Khôkha × 1, Draʿ Abû el-Nagaʿ × 4)
 # ===========================================================================
 
 
@@ -12356,15 +12356,15 @@ def test_chunk48_all_rows_present() -> None:
 
 def test_chunk48_theban_areas() -> None:
     """Verify area assignments per PM I.1 p.441–444 headword sub-site lines.
-    TT391=Sh. ʿAbd el-Qurna, TT392=Khokha, TT393–TT396=Dra' Abu el-Naga,
+    TT391=Sh. ʿAbd el-Qurna, TT392=Khôkha, TT393–TT396=Draʿ Abû el-Nagaʿ,
     TT397–TT400=Sh. ʿAbd el-Qurna."""
     expected = {
         "TT391": "Sh. ʿAbd el-Qurna",
-        "TT392": "Khokha",
-        "TT393": "Dra' Abu el-Naga",
-        "TT394": "Dra' Abu el-Naga",
-        "TT395": "Dra' Abu el-Naga",
-        "TT396": "Dra' Abu el-Naga",
+        "TT392": "Khôkha",
+        "TT393": "Draʿ Abû el-Nagaʿ",
+        "TT394": "Draʿ Abû el-Nagaʿ",
+        "TT395": "Draʿ Abû el-Nagaʿ",
+        "TT396": "Draʿ Abû el-Nagaʿ",
         "TT397": "Sh. ʿAbd el-Qurna",
         "TT398": "Sh. ʿAbd el-Qurna",
         "TT399": "Sh. ʿAbd el-Qurna",

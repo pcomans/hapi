@@ -54,7 +54,7 @@ If your headword scan returns a number outside this range, RE-CHECK the chunk fi
 - **Tomb-number-position digit/letter substitution.** A headword tomb-number can appear in the postprocessed chunk text as a non-canonical glyph: an Arabic `2` rendered as `z`, an Arabic `0` rendered as `o`, or the ASCII period rendered as a middle-dot `·` or bullet `•`. Disambiguation: a tomb-number is at column-zero, immediately followed by an all-caps NAME token. A token like `zo. <CAPS-NAME>` at column zero is the tomb-number `20`; `12• <CAPS-NAME>` is the tomb-number `12`. Apply this only at headword position.
 - **Capital underdot-Ḥ residuals beyond `J.I`.** PM-I.1 prints capital underdot-Ḥ (`Ḥ`) inside all-caps name tokens; chunk 9 added `J.I` to the postprocess table. Where the OCR has rendered the Ḥ-glyph as a `<DIGIT>;I`-shaped multi-glyph cluster preceding a space and the rest of the name, read this as `Ḥ<NAME-TAIL>` per PM's printed page. Apply the README's strip-Ḥ rule then to `occupant_name` (matchable field — the underdot-Ḥ becomes plain `H` there).
 - **Capital underdot-Ḍ.** Where PM-I.1 prints capital underdot-Ḍ (`Ḍ`) at the start of an all-caps name token, the text-layer renders this as a noisy multi-glyph cluster `:[>` immediately preceding the rest of the all-caps name. Read this as `Ḍ` per PM's printed page. PM-I.1's underdot-Ḍ glyph in `occupant_name` is **preserved** (the README's strip rule covers underdot-Ḥ ONLY). The lowercase `ḍ` may also appear in `notes_from_pm` transliteration clauses where PM prints it; preserve as PM prints.
-- **Token-final ayin `<NAME>(`.** PM's name-ending ayin (`ʿ`) renders in chunk 9 as `<LETTER>(` adjacent to a cartouche-glyph context. Chunk-10 headwords for the Dra' Abu el-Naga sub-site contain the very common phrase `Dra' Abû el-Naga'.` as the sub-site declaration; the publisher OCR renders the trailing apostrophe as a middle-dot or bullet (`Dra· Abu el-Naga·.` / `Dra· Abu el-Naga•.`). The intended canonical English is `Dra' Abu el-Naga`. Per chunk-7 convention `theban_area = "Dra' Abu el-Naga"` (one apostrophe after Dra, no trailing apostrophe).
+- **Token-final ayin `<NAME>(`.** PM's name-ending ayin (`ʿ`) renders in chunk 9 as `<LETTER>(` adjacent to a cartouche-glyph context. Chunk-10 headwords for the Draʿ Abû el-Nagaʿ sub-site contain the very common phrase `Dra' Abû el-Naga'.` as the sub-site declaration; the publisher OCR renders the trailing apostrophe as a middle-dot or bullet (`Dra· Abu el-Naga·.` / `Dra· Abu el-Naga•.`). The intended canonical English is `Draʿ Abû el-Nagaʿ`. Per chunk-7 convention `theban_area = "Draʿ Abû el-Nagaʿ"` (one apostrophe after Dra, no trailing apostrophe).
 
 After postprocessing you'll see canonical Unicode `Ḥ`, `Ḳ`, `Ḍ`, `ʿ`, `ē`, `ō`, `ū` in body prose where the publisher noise has already been reduced. Restore the residuals listed above per the README's `occupant_name` diacritic policy.
 
@@ -65,7 +65,7 @@ Every row MUST have these keys; use `null` (not omitted, not empty string) for u
 ```json
 {
   "tomb_id": "TT<N>",
-  "theban_area": "Dra' Abu el-Naga",
+  "theban_area": "Draʿ Abû el-Nagaʿ",
   "occupant_name": "...",
   "occupant_alt_names": [],
   "tomb_aliases": [],
@@ -97,7 +97,7 @@ Identical to chunk 9 unless explicitly overridden below. Re-read chunk 9's promp
 `TT<N>` where `<N>` is the Arabic tomb number from the heading line (10 expected values: TT11–TT20).
 
 ### `theban_area`
-The TT11–TT20 range falls under PM I.1's Dra' Abu el-Naga sub-site (PM declares `Dra' Abû el-Naga'.` on the line below each headword title). Use the canonical form **`"Dra' Abu el-Naga"`** (single apostrophe after `Dra`, no trailing apostrophe, ASCII `'`) — same convention as chunk-7's `DAN-` rows. Re-read each headword's sub-site line; if PM declares a DIFFERENT sub-site for any row in this range that is a re-check signal — the range was scoped to a single sub-site cluster.
+The TT11–TT20 range falls under PM I.1's Draʿ Abû el-Nagaʿ sub-site (PM declares `Dra' Abû el-Naga'.` on the line below each headword title). Use the canonical form **`"Draʿ Abû el-Nagaʿ"`** (single apostrophe after `Dra`, no trailing apostrophe, ASCII `'`) — same convention as chunk-7's `DAN-` rows. Re-read each headword's sub-site line; if PM declares a DIFFERENT sub-site for any row in this range that is a re-check signal — the range was scoped to a single sub-site cluster.
 
 ### `occupant_name`
 **PM-verbatim, conventional-English form, titlecase**, per chunk 9's diacritic policy:
@@ -139,12 +139,12 @@ Per chunk 9's rule (apply mechanically per headword). Recall from chunk 9 the tw
 1. **10 rows expected** (every TT number in TT11..TT20 has a headword in PM I.1 § I — no gaps in this decade).
 2. **PM I.1 offset is +18** (printed = physical − 18). Use the `===== PRINTED PAGE M =====` marker for `source_citation.page`.
 3. **`section: "I"`**, **`edition: "PM I.1 2nd ed. 1960"`** (same as chunk 9).
-4. **`theban_area: "Dra' Abu el-Naga"`** for every row in this range (ASCII apostrophe after Dra, no trailing apostrophe).
+4. **`theban_area: "Draʿ Abû el-Nagaʿ"`** for every row in this range (ASCII apostrophe after Dra, no trailing apostrophe).
 5. **`is_joint_burial`** / **`co_occupants`**: apply the hierarchical (`X and son Y`, `false`) vs coordinate (`X and Y, plural-role`, `true`) rule mechanically per headword. Single-occupant: `is_joint_burial=false`, `co_occupants=[]`.
 6. **`shared_with_tombs`**: populate when a TT11–TT20 headword carries `Also owner of tomb N` / `Perhaps also owner of tomb N` / `See also Tomb N` / `(also owner of tombs N and M)` phrasing per the field rule. Empty list `[]` otherwise.
 7. **`occupant_role`** per the controlled-vocab rules; non-royal occupational titles flatten to `"Official"`. The verbatim role-title clause goes in `notes_from_pm`.
 8. **`dynasty` / `sub_period` / `date_bce_*` / `location_sub_area` / `discovery_year` / `discoverer`** all `null` for every row — Phase A enrichment fills these. PM's `Temp. <King>` / `Dyn. <Numeral>` / `Ramesside.` / `Early Dyn. XVIII.` clauses go verbatim into `notes_from_pm`, not into typed fields.
-9. **PM I.1 chunk-10 noise residuals**: `12•` / `zo.` for tomb-number positions; `1;I` for `Ḥ`; `:[>` for `Ḍ`; mid-dot/bullet for trailing apostrophe in `Dra' Abu el-Naga`. Apply per the README's `occupant_name` diacritic policy and the noise section above.
+9. **PM I.1 chunk-10 noise residuals**: `12•` / `zo.` for tomb-number positions; `1;I` for `Ḥ`; `:[>` for `Ḍ`; mid-dot/bullet for trailing apostrophe in `Draʿ Abû el-Nagaʿ`. Apply per the README's `occupant_name` diacritic policy and the noise section above.
 10. **Tier-3 typed flags** emit defaults (`false`/`false`/`"attested"`); the `fix_rows.py` deriver overwrites post-merge.
 11. **Preserve underdot-Ḍ (`Ḍ` / `ḍ`)** in `occupant_name` — first chunk to surface this glyph in a headword name token; the README's strip rule covers underdot-Ḥ ONLY.
 

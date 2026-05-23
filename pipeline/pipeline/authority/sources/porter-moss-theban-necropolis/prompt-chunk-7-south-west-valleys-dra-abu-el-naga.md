@@ -116,7 +116,7 @@ Non-numbered tombs have no KV/QV/TT prefix. Use this convention:
 
 Where **VALLEY-PREFIX** is:
 - `SWV` = South-West Valleys (§ II)
-- `DAN` = Dra' Abu el-Naga (§ III)
+- `DAN` = Draʿ Abû el-Nagaʿ (§ III)
 
 And **OCCUPANT-DESCRIPTOR** is a compact identifier:
 - For § II.A South Tomb of Hatshepsut: `HatshepsutSouth` → `tomb_id: "SWV-HatshepsutSouth"`
@@ -142,7 +142,7 @@ And **OCCUPANT-DESCRIPTOR** is a compact identifier:
 ## `theban_area`
 
 - `"South-West Valleys"` for § II.A, § II.B rows.
-- `"Dra' Abu el-Naga"` for § III.A, § III.C, § III.D rows. Use ASCII apostrophe (not Unicode ʻ) per the chunk-1 convention.
+- `"Draʿ Abû el-Nagaʿ"` for § III.A, § III.C, § III.D rows. Use ASCII apostrophe (not Unicode ʻ) per the chunk-1 convention.
 
 ## `occupant_name`
 
@@ -193,7 +193,7 @@ Set to the specific wadi / sub-area phrase PM uses when that phrase is a named w
 - § II.B rows: `"Wadi Qubbanet el-Qirud"`.
 - § III.A rows: `"El-Ṭaraf"` (PM's Dyn-XI Antef Cemetery is located at El-Taraf per the `A. ANTEF CEMETERY. Dyn. XI. At El-Ṭaraf` header).
 - § III.C rows: `null` (no finer wadi PM names).
-- § III.D rows: `null` (PM's Dyn-17 cemetery is the whole of Dra' Abu el-Naga; no finer wadi).
+- § III.D rows: `null` (PM's Dyn-17 cemetery is the whole of Draʿ Abû el-Nagaʿ; no finer wadi).
 
 Apply the text-layer-noise normalisation to the sub-area string (drop cartouche garbage; underdot-T `ṭ` → `ṭ` or text-layer `ţ` / `t` — preserve the scholarly character if PM prints it; `El-Ṭaraf` is the PM form).
 
@@ -237,7 +237,7 @@ Object with three fixed keys:
 - **§ III.D BURIALS sub-block:** this is the big one. Every all-caps royal or royal-family headword in the BURIALS prose is a tomb row. Watch for ~7-9 headwords in this sub-block (Kamose, Ahhotep, Antef-Nubkheperre, Antef-Sekhemre-Wepmaet, Queen Mentuhotep wife of Djehuti, Ahmose son of Seqenenre, Ahhor, and potentially Seqenenre-Taʿa himself). Chunk-1 found ~6-8; do not truncate if you see more.
 - **§ III.C "TOMB OF QUEEN ʿAHMOSI NEFERTERE (probably)":** the parenthetical `(probably)` is PM's own hedge on the attribution. Keep it in `notes_from_pm`, emit `occupant_name: "ʿAhmosi Nefertere"` (PM-form with ayin PRESERVED, underdot-H STRIPPED per the README's matchable-name-field convention).
 - **Boundary at physical p.148 / printed p.606:** STOP emitting rows before `E. PETRIE EXCAVATIONS.` (physical p.148 begins the out-of-scope excavator-organised find-report block). The chunk file extends through p.148 only so you can see the boundary; do NOT extract Petrie Excavation rows.
-- **`Tomb 20` reference** in the South Tomb of Hatshepsut headword is **KV20** (our chunk-3 row), not a Dra' Abu el-Naga tomb. → `shared_with_tombs: ["KV20"]`.
+- **`Tomb 20` reference** in the South Tomb of Hatshepsut headword is **KV20** (our chunk-3 row), not a Draʿ Abû el-Nagaʿ tomb. → `shared_with_tombs: ["KV20"]`.
 
 ## Pitfall summary (read LAST before running)
 

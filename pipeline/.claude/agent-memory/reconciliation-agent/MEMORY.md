@@ -11,3 +11,5 @@
 - [project_chunk45_porter_moss_theban.md](project_chunk45_porter_moss_theban.md) — Chunk 45 (TT361–TT370) merged and fixed; 445 rows; 2 tie-breaks; 2 CHUNK45_CORRECTIONS; 0 DERIVER_OVERRIDES; 0 substantive flags.
 - [project_chunk46_porter_moss_theban.md](project_chunk46_porter_moss_theban.md) — Chunk 46 (TT371–TT380) merged and fixed; 455 rows; 0 tie-breaks; 7 CHUNK46_CORRECTIONS; 0 DERIVER_OVERRIDES; 0 substantive flags.
 - [project_chunk47_porter_moss_theban.md](project_chunk47_porter_moss_theban.md) — Chunk 47 (TT381–TT390) merged and fixed; 465 rows; 3 tie-breaks; 2 CHUNK47_CORRECTIONS; 1 DERIVER_OVERRIDE (TT385); 1 substantive flag (TT389 priest titles).
+- [project_chunk48_porter_moss_theban.md](project_chunk48_porter_moss_theban.md) — Chunk 48 (TT391–TT400) merged and fixed; 475 rows; 1 tie-break; 9 CHUNK48_CORRECTIONS; 5 DERIVER_OVERRIDES; 0 substantive flags.
+- [project_chunk49_porter_moss_theban.md](project_chunk49_porter_moss_theban.md) — Chunk 49 (TT401–TT409) merged and fixed; 484 rows; 0 tie-breaks; 5 CHUNK49_CORRECTIONS; 3 DERIVER_OVERRIDES; 0 substantive flags. FINAL § I chunk.

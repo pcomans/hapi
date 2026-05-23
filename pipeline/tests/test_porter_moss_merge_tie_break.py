@@ -1012,7 +1012,7 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "(Description by GREENLEES, in Philadelphia Univ. Mus.)",
         ("TT308", "notes_from_pm"):
             "Unique royal concubine, Prophetess of Ḥatḥor. Temp. Mentuḥotp "
-            "(Nebḥepetreʿ). Deir el-Bahari, in the Temple of Mentuḥotp. "
+            "(Nebḥepetreʿ). Deir el-Baḥri, in the Temple of Mentuḥotp. "
             "(NAVILLE, No. 10.)",
         # Chunk 40 (TT311–TT320) — 8 tie-break overrides.
         # TT311/TT313/TT315/TT317/TT318/TT319/TT320 notes: CHUNK40_CORRECTIONS
@@ -1276,11 +1276,11 @@ def test_tt281_unfinished_temple(reconciled):
 
 def test_tt282_nakht(reconciled):
     """TT282: Nakht, Head of bowmen, Overseer of the South Lands. Ramesside.
-    Dra' Abu el-Naga'."""
+    Draʿ Abû el-Nagaʿ'."""
     r = _row(reconciled, "TT282")
     assert r["occupant_name"] == "Nakht"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert r["is_unfinished"] is False
     assert r["notes_from_pm"] == "Head of bowmen, Overseer of the South Lands. Ramesside."
@@ -1295,7 +1295,7 @@ def test_tt283_roma(reconciled):
     assert r["occupant_name"] == "Roma"
     assert r["occupant_alt_names"] == ["Roy"]
     assert r["occupant_role"] == "High Priest"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert r["co_occupants"] == []
     assert r["notes_from_pm"] == (
@@ -1311,7 +1311,7 @@ def test_tt284_paiemneter_reused(reconciled):
     r = _row(reconciled, "TT284")
     assert r["occupant_name"] == "Paijemneter"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is True
     assert r["notes_from_pm"] == (
         "Scribe of the offerings of all the gods. Ramesside. (Reused.) "
@@ -1325,7 +1325,7 @@ def test_tt285_iny(reconciled):
     r = _row(reconciled, "TT285")
     assert r["occupant_name"] == "Iny"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert r["co_occupants"] == []
     assert r["notes_from_pm"] == (
@@ -1339,7 +1339,7 @@ def test_tt286_niay(reconciled):
     r = _row(reconciled, "TT286")
     assert r["occupant_name"] == "Niay"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert r["notes_from_pm"] == (
         "Scribe of the table. Ramesside. Parents, Roro and Esi. Wife, Tabes."
@@ -1352,7 +1352,7 @@ def test_tt287_pendu(reconciled):
     r = _row(reconciled, "TT287")
     assert r["occupant_name"] == "Pendu"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert r["notes_from_pm"] == "Wab-priest of Amūn. Ramesside."
     assert r["source_citation"]["page"] == 369
@@ -1364,7 +1364,7 @@ def test_tt288_bekenkhons_reused(reconciled):
     r = _row(reconciled, "TT288")
     assert r["occupant_name"] == "Bekenkhons"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is True
     assert r["shared_with_tombs"] == []
     assert r["notes_from_pm"] == (
@@ -1379,7 +1379,7 @@ def test_tt289_setau(reconciled):
     r = _row(reconciled, "TT289")
     assert r["occupant_name"] == "Setau"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert r["notes_from_pm"] == (
         "Viceroy of Kush, Overseer of the South Lands. Temp. Ramesses II. "
@@ -1446,21 +1446,21 @@ def test_tt293_ramessesnakht(reconciled):
     r = _row(reconciled, "TT293")
     assert r["occupant_name"] == "Raʿmessenakht"
     assert r["occupant_role"] == "High Priest"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert "Merubaste" in r["notes_from_pm"]
     assert r["source_citation"]["page"] == 376
 
 
 def test_tt294_amenhotep_usurped(reconciled):
-    """TT294: Amenhotep (original), usurped by Roma. Unfinished. Khokha.
+    """TT294: Amenhotep (original), usurped by Roma. Unfinished. Khôkha.
     is_usurped=True: auto-detected by deriver (`\\busurped\\b` in notes).
     co_occupants=[]: Roma captured in notes_from_pm only (usurper, not co-owner).
     Usurpation direction: Amenhotep is the original occupant."""
     r = _row(reconciled, "TT294")
     assert r["occupant_name"] == "Amenhotep"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["is_usurped"] is True
     assert r["is_unfinished"] is True
     assert r["co_occupants"] == []
@@ -1475,7 +1475,7 @@ def test_tt295_dhutmosi_paroy(reconciled):
     r = _row(reconciled, "TT295")
     assert r["occupant_name"] == "Ḏhutmosi"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["occupant_alt_names"] == ["Paroy"]
     assert r["tomb_aliases"] == []
     assert r["attribution_certainty"] == "attested"
@@ -1490,7 +1490,7 @@ def test_tt296_nefersekheru(reconciled):
     r = _row(reconciled, "TT296")
     assert r["occupant_name"] == "Nefersekheru"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["is_usurped"] is False
     assert "Maʿetmut" in r["notes_from_pm"]
     assert r["source_citation"]["page"] == 378
@@ -1544,7 +1544,7 @@ def test_tt300_anhotp(reconciled):
     r = _row(reconciled, "TT300")
     assert r["occupant_name"] == "ʿAnhotp"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["is_usurped"] is False
     assert "Viceroy of Kush" in r["notes_from_pm"]
     assert "Hunuro" in r["notes_from_pm"]
@@ -1555,7 +1555,7 @@ def test_tt300_anhotp(reconciled):
 
 
 def test_tt301_hori(reconciled):
-    """TT301 — Hori, Scribe. Dra' Abu el-Naga. p.381.
+    """TT301 — Hori, Scribe. Draʿ Abû el-Nagaʿ. p.381.
 
     Name: source `I;IORI` = Ḥori; strip-ḥ → `Hori` (tie-break + CHUNK39
     correction from majority `Khori`). GREENLEES note in notes_from_pm.
@@ -1578,13 +1578,13 @@ def test_tt301_hori(reconciled):
     assert "Scribe of the table of the Lord of the Two Lands" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
 
 
 def test_tt302_paraemhab(reconciled):
-    """TT302 — Paraʿemhab, Overseer of the magazine. Dra' Abu el-Naga. p.381.
+    """TT302 — Paraʿemhab, Overseer of the magazine. Draʿ Abû el-Nagaʿ. p.381.
 
     Name: source `PARA<EMI;IAB` → `Paraʿemhab` (ayin retained, ḥ stripped via
     CHUNK39_CORRECTIONS). Father: `Userḥat` (underdot-ḥ restored in
@@ -1608,13 +1608,13 @@ def test_tt302_paraemhab(reconciled):
     assert "Ramesside" in r["notes_from_pm"]
     assert "Userḥat" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
 
 
 def test_tt303_paser_third_prophet(reconciled):
-    """TT303 — Paser, Third prophet + Head of magazine of Amun. Dra' Abu el-Naga. p.381.
+    """TT303 — Paser, Third prophet + Head of magazine of Amun. Draʿ Abû el-Nagaʿ. p.381.
 
     Role: `Official` (NOT `High Priest`). High Priest reserved for First prophet
     of Amūn only (TT35/TT67/TT86/TT95 precedent). Third prophet → Official.
@@ -1635,13 +1635,13 @@ def test_tt303_paser_third_prophet(reconciled):
     assert r["location_sub_area"] is None
     assert "Third prophet of Amun" in r["notes_from_pm"]
     assert "magazine" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 381
 
 
 def test_tt304_piay(reconciled):
-    """TT304 — Piay, Scribe of the table. Dra' Abu el-Naga. p.383.
+    """TT304 — Piay, Scribe of the table. Draʿ Abû el-Nagaʿ. p.383.
 
     Tie-break pinned B's form (no parentheses on cross-reference clause).
     Source line 183: `For position, see p. 356.` — verbatim, no parens.
@@ -1662,13 +1662,13 @@ def test_tt304_piay(reconciled):
     assert "Scribe of the table of Amun" in r["notes_from_pm"]
     assert "Ramesside" in r["notes_from_pm"]
     assert "p. 356" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 383
 
 
 def test_tt305_paser_waab(reconciled):
-    """TT305 — Paser, Wʿab-priest. Wife Tamelḥit. Dra' Abu el-Naga. p.383.
+    """TT305 — Paser, Wʿab-priest. Wife Tamelḥit. Draʿ Abû el-Nagaʿ. p.383.
 
     ayin restored in priest title (source `warb-priest` = wʿab-priest).
     Wife: `Tamelḥit` in notes; `Tamelhit` in co_occupants.name (strip-ḥ).
@@ -1693,13 +1693,13 @@ def test_tt305_paser_waab(reconciled):
     assert r["location_sub_area"] is None
     assert "Wʿab-priest" in r["notes_from_pm"]
     assert "Tamelḥit" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 383
 
 
 def test_tt306_irzanen(reconciled):
-    """TT306 — Irzanen, Door-opener. Wife Mutenopet. Dra' Abu el-Naga. p.384.
+    """TT306 — Irzanen, Door-opener. Wife Mutenopet. Draʿ Abû el-Nagaʿ. p.384.
 
     Name: source `lRZANEN` (l=OCR for I) → `Irzanen` (tie-break pinned A; C had
     Cyrillic contamination). GREENLEES note from headword preserved.
@@ -1725,13 +1725,13 @@ def test_tt306_irzanen(reconciled):
     assert "Door-opener of the estate of Amun" in r["notes_from_pm"]
     assert "Mutenopet" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 384
 
 
 def test_tt307_thonufer_unfinished(reconciled):
-    """TT307 — Thonufer. Dra' Abu el-Naga. p.385. Unfinished.
+    """TT307 — Thonufer. Draʿ Abû el-Nagaʿ. p.385. Unfinished.
 
     is_unfinished=True (PM literal `(Unfinished.)`). Name from ushabti.
     GREENLEES note from headword. Parenthesised `(Unfinished.)` per source.
@@ -1752,15 +1752,15 @@ def test_tt307_thonufer_unfinished(reconciled):
     assert "name from ushabti" in r["notes_from_pm"]
     assert "(Unfinished.)" in r["notes_from_pm"]
     assert "GREENLEES" in r["notes_from_pm"]
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 385
 
 
 def test_tt308_kemsit_royal_concubine(reconciled):
-    """TT308 — Kemsit, Unique royal concubine + Prophetess of Ḥatḥor. Deir el-Bahari. p.385.
+    """TT308 — Kemsit, Unique royal concubine + Prophetess of Ḥatḥor. Deir el-Baḥri. p.385.
 
-    First Deir el-Bahari primary theban_area row. Temp. Mentuḥotp (Nebḥepetreʿ).
+    First Deir el-Baḥri primary theban_area row. Temp. Mentuḥotp (Nebḥepetreʿ).
     location_sub_area = `In the Temple of Mentuḥotp`. Notes include NAVILLE ref
     and temple location. Diacritics: Ḥatḥor, Mentuḥotp, Nebḥepetreʿ.
     EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics.
@@ -1783,8 +1783,8 @@ def test_tt308_kemsit_royal_concubine(reconciled):
     assert "Mentuḥotp" in r["notes_from_pm"]
     assert "Nebḥepetreʿ" in r["notes_from_pm"]
     assert "NAVILLE" in r["notes_from_pm"]
-    assert "Deir el-Bahari" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert "Deir el-Baḥri" in r["notes_from_pm"]
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 385
 
@@ -1816,9 +1816,9 @@ def test_tt309_anonymous_blocked(reconciled):
 
 
 def test_tt310_anonymous_chancellor(reconciled):
-    """TT310 — A Chancellor of the King of Lower Egypt. Deir el-Bahari. p.386.
+    """TT310 — A Chancellor of the King of Lower Egypt. Deir el-Baḥri. p.386.
 
-    Second Deir el-Bahari primary theban_area row. Anonymous chancellor: Dyn. XI.
+    Second Deir el-Baḥri primary theban_area row. Anonymous chancellor: Dyn. XI.
     occupant_name=None, occupant_role=None (sentinel-null normalization from `Unknown`).
     """
     r = _row(reconciled, "TT310")
@@ -1835,7 +1835,7 @@ def test_tt310_anonymous_chancellor(reconciled):
     assert r["is_usurped"] is False
     assert r["location_sub_area"] is None
     assert "Chancellor" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 386
 
@@ -1844,7 +1844,7 @@ def test_tt310_anonymous_chancellor(reconciled):
 
 
 def test_tt311_khety_deir_el_bahari(reconciled):
-    """TT311 — Khety, Seal-bearer. Deir el-Bahari. p.386. Temp. Mentuḥotp-Nebḥepetreʿ.
+    """TT311 — Khety, Seal-bearer. Deir el-Baḥri. p.386. Temp. Mentuḥotp-Nebḥepetreʿ.
 
     First Dyn. XI Mentuhotep-era cluster row. Diacritic restore by CHUNK40.
     EGYPTOLOGIST REVIEW REQUIRED: confirm Mentuhotep diacritics.
@@ -1864,13 +1864,13 @@ def test_tt311_khety_deir_el_bahari(reconciled):
     assert r["location_sub_area"] is None
     assert "Seal-bearer" in r["notes_from_pm"]
     assert "Mentuḥotp-Nebḥepetreʿ" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 386
 
 
 def test_tt312_espelaashuti_vizier(reconciled):
-    """TT312 — Espel(a)shuti, Vizier. Deir el-Bahari. p.387. Saite.
+    """TT312 — Espel(a)shuti, Vizier. Deir el-Baḥri. p.387. Saite.
 
     Parenthetical-preserve in occupant_name per reconciled precedents.
     In court of a Dyn. XI tomb. Mother, Irterau (tomb 390).
@@ -1891,13 +1891,13 @@ def test_tt312_espelaashuti_vizier(reconciled):
     assert "Vizier" in r["notes_from_pm"]
     assert "Saite" in r["notes_from_pm"]
     assert "Irterau" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 387
 
 
 def test_tt313_henenu_great_steward(reconciled):
-    """TT313 — Henenu, Great steward. Deir el-Bahari. p.388. Dyn. XI two-king tenure.
+    """TT313 — Henenu, Great steward. Deir el-Baḥri. p.388. Dyn. XI two-king tenure.
 
     Diacritic restore by CHUNK40: Mentuḥotp-Nebḥepetreʿ and Mentuḥotp-Sʿankhkareʿ.
     EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics.
@@ -1918,13 +1918,13 @@ def test_tt313_henenu_great_steward(reconciled):
     assert "Great steward" in r["notes_from_pm"]
     assert "Mentuḥotp-Nebḥepetreʿ" in r["notes_from_pm"]
     assert "Sʿankhkareʿ" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 388
 
 
 def test_tt314_harhotep_dyn_xi(reconciled):
-    """TT314 — Harhotep, Seal-bearer. Deir el-Bahari. p.389. Dyn. XI.
+    """TT314 — Harhotep, Seal-bearer. Deir el-Baḥri. p.389. Dyn. XI.
 
     dynasty=XI restored by CHUNK40 (merge majority B+C=null miss; source explicit).
     Mother, Sentshe.
@@ -1945,13 +1945,13 @@ def test_tt314_harhotep_dyn_xi(reconciled):
     assert "Seal-bearer" in r["notes_from_pm"]
     assert "Dyn. XI" in r["notes_from_pm"]
     assert "Sentshe" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] == "XI"
     assert r["source_citation"]["page"] == 389
 
 
 def test_tt315_ipi_vizier(reconciled):
-    """TT315 — Ipi, Vizier. Deir el-Bahari. p.389. Temp. Mentuḥotp-Nebḥepetreʿ.
+    """TT315 — Ipi, Vizier. Deir el-Baḥri. p.389. Temp. Mentuḥotp-Nebḥepetreʿ.
 
     Second Vizier of the Mentuhotep cluster (TT312 Espel(a)shuti is Saite).
     Diacritic restore by CHUNK40.
@@ -1972,13 +1972,13 @@ def test_tt315_ipi_vizier(reconciled):
     assert r["location_sub_area"] is None
     assert "Vizier" in r["notes_from_pm"]
     assert "Mentuḥotp-Nebḥepetreʿ" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 389
 
 
 def test_tt316_neferhotep_custodian_dyn_xi(reconciled):
-    """TT316 — Neferhotep, Custodian of the bow. Deir el-Bahari. p.390. Dyn. XI.
+    """TT316 — Neferhotep, Custodian of the bow. Deir el-Baḥri. p.390. Dyn. XI.
 
     dynasty=XI restored by CHUNK40 (merge majority null miss; source explicit).
     Wife(?), Mery(t) — DERIVER_OVERRIDE: (?) qualifies wife relationship, not
@@ -2001,7 +2001,7 @@ def test_tt316_neferhotep_custodian_dyn_xi(reconciled):
     assert "Dyn. XI" in r["notes_from_pm"]
     assert "Nebtiotef" in r["notes_from_pm"]
     assert "Mery(t)" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] == "XI"
     assert r["source_citation"]["page"] == 390
 
@@ -2067,7 +2067,7 @@ def test_tt318_amenmosi_sh_abd_el_qurna(reconciled):
 def test_tt319_nofru_royal_family(reconciled):
     """TT319 — Nofru, daughter of Mentuḥotp-Sʿankhibtaui, wife of Mentuḥotp-Nebḥepetreʿ.
 
-    King's daughter (Royal Family). Deir el-Bahari in Temple of Ḥatshepsut. p.391.
+    King's daughter (Royal Family). Deir el-Baḥri in Temple of Ḥatshepsut. p.391.
     Mother Iʿob restored by CHUNK40. Father epithet Sʿankhibtaui restored (ayin+i).
     EGYPTOLOGIST REVIEW REQUIRED: confirm all diacritics.
     """
@@ -2087,13 +2087,13 @@ def test_tt319_nofru_royal_family(reconciled):
     assert "Sʿankhibtaui" in r["notes_from_pm"]
     assert "Iʿob" in r["notes_from_pm"]
     assert "Nebḥepetreʿ" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] is None
     assert r["source_citation"]["page"] == 391
 
 
 def test_tt320_inhapi_royal_cache(reconciled):
-    """TT320 — Inhaʿpi, perhaps wife of Amosis. Royal Cache, Dyn. XXI. Deir el-Bahari. p.392.
+    """TT320 — Inhaʿpi, perhaps wife of Amosis. Royal Cache, Dyn. XXI. Deir el-Baḥri. p.392.
 
     Royal Family; dynasty=XXI restored by CHUNK40 (merge majority null miss).
     occupant_name ayin restored to Inhaʿpi by CHUNK40.
@@ -2118,7 +2118,7 @@ def test_tt320_inhapi_royal_cache(reconciled):
     assert "Royal Cache" in r["notes_from_pm"]
     assert "Dyn. XXI" in r["notes_from_pm"]
     assert "i 2" in r["notes_from_pm"]
-    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["theban_area"] == "Deir el-Baḥri"
     assert r["dynasty"] == "XXI"
     assert r["source_citation"]["page"] == 392
 
@@ -2157,7 +2157,7 @@ def test_tt331_penne_chief_prophet_monthu(reconciled):
 
 
 def test_tt332_penernutet_granary_watchman(reconciled):
-    """TT332: Penernutet, Chief watchman granary estate of Amun. Dra' Abu el-Naga. p.399.
+    """TT332: Penernutet, Chief watchman granary estate of Amun. Draʿ Abû el-Nagaʿ. p.399.
 
     CHUNK42_CORRECTIONS: majority-wrong page 400 → 399 (source line 34 in printed-399 block).
     """
@@ -2165,7 +2165,7 @@ def test_tt332_penernutet_granary_watchman(reconciled):
     assert r["occupant_name"] == "Penernutet"
     assert r["occupant_role"] == "Official"
     assert r["attribution_certainty"] == "attested"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["occupant_alt_names"] == []
     assert r["tomb_aliases"] == []
     assert r["co_occupants"] == []
@@ -2181,7 +2181,7 @@ def test_tt332_penernutet_granary_watchman(reconciled):
 
 
 def test_tt333_anonymous_amenophis_iii(reconciled):
-    """TT333: Anonymous, name lost. Dra' Abu el-Naga. p.399.
+    """TT333: Anonymous, name lost. Draʿ Abû el-Nagaʿ. p.399.
 
     Tie-break: source_citation 3-way 400/401/399 → 399 (C correct, per page-break).
     attribution_certainty=uncertain (name lost, temp date hedged with (?)).
@@ -2190,7 +2190,7 @@ def test_tt333_anonymous_amenophis_iii(reconciled):
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
     assert r["attribution_certainty"] == "uncertain"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["occupant_alt_names"] == []
     assert r["tomb_aliases"] == []
     assert r["co_occupants"] == []
@@ -2206,7 +2206,7 @@ def test_tt333_anonymous_amenophis_iii(reconciled):
 
 
 def test_tt334_anonymous_chief_husbandmen(reconciled):
-    """TT334: Anonymous, A Chief of husbandmen. Dra' Abu el-Naga. p.401.
+    """TT334: Anonymous, A Chief of husbandmen. Draʿ Abû el-Nagaʿ. p.401.
 
     attribution_certainty=uncertain ((?)-hedged temp date).
     """
@@ -2214,7 +2214,7 @@ def test_tt334_anonymous_chief_husbandmen(reconciled):
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
     assert r["attribution_certainty"] == "uncertain"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["occupant_alt_names"] == []
     assert r["tomb_aliases"] == []
     assert r["co_occupants"] == []
@@ -2393,12 +2393,12 @@ def test_tt340_amenemhet_perhaps_tt354(reconciled):
 
 
 def test_tt371_anonymous_khokha(reconciled):
-    """TT371: Anonymous, Ramesside. Khokha. occupant_role restored to Unknown
+    """TT371: Anonymous, Ramesside. Khôkha. occupant_role restored to Unknown
     (sentinel-null collapse fixed by CHUNK46_CORRECTIONS)."""
     r = _row(reconciled, "TT371")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["notes_from_pm"] == "Name unknown. Ramesside."
     assert r["source_citation"]["page"] == 432
     assert r["attribution_certainty"] == "attested"
@@ -2411,12 +2411,12 @@ def test_tt371_anonymous_khokha(reconciled):
 
 def test_tt372_amenkhau(reconciled):
     """TT372: Amenkhaʿu, Overseer of carpenters of Temple of Medinet Habu.
-    Temp. Ramesses III. Khokha. Mother Maʿetnefert, wife Nefertere-emḥab.
+    Temp. Ramesses III. Khôkha. Mother Maʿetnefert, wife Nefertere-emḥab.
     Cosmetic: agent B had Medînet (circumflex); A+C majority correct."""
     r = _row(reconciled, "TT372")
     assert r["occupant_name"] == "Amenkhaʿu"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["notes_from_pm"] == (
         "Overseer of carpenters of the Temple of Medinet Habu."
         " Temp. Ramesses III. Mother, Maʿetnefert. Wife, Nefertere-emḥab."
@@ -2431,11 +2431,11 @@ def test_tt372_amenkhau(reconciled):
 
 
 def test_tt373_amenmessu(reconciled):
-    """TT373: Amenmessu, Scribe of the altar. Ramesside. Khokha. Father Iny."""
+    """TT373: Amenmessu, Scribe of the altar. Ramesside. Khôkha. Father Iny."""
     r = _row(reconciled, "TT373")
     assert r["occupant_name"] == "Amenmessu"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["notes_from_pm"] == (
         "Scribe of the altar of the Lord of the Two Lands. Ramesside. Father, Iny."
     )
@@ -2449,14 +2449,14 @@ def test_tt373_amenmessu(reconciled):
 
 
 def test_tt374_amenemopet_cross_reference(reconciled):
-    """TT374: Amenemopet, Scribe of treasury. Dyn. XIX. Khokha.
+    """TT374: Amenemopet, Scribe of treasury. Dyn. XIX. Khôkha.
     CHUNK46_CORRECTIONS restored `For position, see p. 292.` (agent C had it;
     A+B majority dropped it; verbatim-preserve policy requires restoration).
     Matchable-name policy: PM AMENEMŌPET macron-Ō stripped → Amenemopet."""
     r = _row(reconciled, "TT374")
     assert r["occupant_name"] == "Amenemopet"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["notes_from_pm"] == (
         "Scribe of the treasury in the Ramesseum. Dyn. XIX. For position, see p. 292."
     )
@@ -2470,12 +2470,12 @@ def test_tt374_amenemopet_cross_reference(reconciled):
 
 
 def test_tt375_anonymous_dra_abu_el_naga(reconciled):
-    """TT375: Anonymous, Ramesside. Dra' Abu el-Naga. occupant_role=Unknown
+    """TT375: Anonymous, Ramesside. Draʿ Abû el-Nagaʿ. occupant_role=Unknown
     (sentinel-null collapse fixed by CHUNK46_CORRECTIONS)."""
     r = _row(reconciled, "TT375")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["notes_from_pm"] == "Name unknown. Ramesside."
     assert r["source_citation"]["page"] == 434
     assert r["attribution_certainty"] == "attested"
@@ -2485,11 +2485,11 @@ def test_tt375_anonymous_dra_abu_el_naga(reconciled):
 
 
 def test_tt376_anonymous_dra_abu_el_naga(reconciled):
-    """TT376: Anonymous, Dyn. XVIII. Dra' Abu el-Naga. occupant_role=Unknown."""
+    """TT376: Anonymous, Dyn. XVIII. Draʿ Abû el-Nagaʿ. occupant_role=Unknown."""
     r = _row(reconciled, "TT376")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["notes_from_pm"] == "Name lost. Dyn. XVIII."
     assert r["source_citation"]["page"] == 434
     assert r["attribution_certainty"] == "attested"
@@ -2499,11 +2499,11 @@ def test_tt376_anonymous_dra_abu_el_naga(reconciled):
 
 
 def test_tt377_anonymous_dra_abu_el_naga(reconciled):
-    """TT377: Anonymous, Ramesside. Dra' Abu el-Naga. occupant_role=Unknown."""
+    """TT377: Anonymous, Ramesside. Draʿ Abû el-Nagaʿ. occupant_role=Unknown."""
     r = _row(reconciled, "TT377")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["notes_from_pm"] == "Name lost. Ramesside."
     assert r["source_citation"]["page"] == 434
     assert r["attribution_certainty"] == "attested"
@@ -2513,11 +2513,11 @@ def test_tt377_anonymous_dra_abu_el_naga(reconciled):
 
 
 def test_tt378_anonymous_dra_abu_el_naga(reconciled):
-    """TT378: Anonymous, Dyn. XIX. Dra' Abu el-Naga. occupant_role=Unknown."""
+    """TT378: Anonymous, Dyn. XIX. Draʿ Abû el-Nagaʿ. occupant_role=Unknown."""
     r = _row(reconciled, "TT378")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["notes_from_pm"] == "Name unknown. Dyn. XIX."
     assert r["source_citation"]["page"] == 435
     assert r["attribution_certainty"] == "attested"
@@ -2527,11 +2527,11 @@ def test_tt378_anonymous_dra_abu_el_naga(reconciled):
 
 
 def test_tt379_anonymous_dra_abu_el_naga(reconciled):
-    """TT379: Anonymous, Ramesside. Dra' Abu el-Naga. occupant_role=Unknown."""
+    """TT379: Anonymous, Ramesside. Draʿ Abû el-Nagaʿ. occupant_role=Unknown."""
     r = _row(reconciled, "TT379")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["notes_from_pm"] == "Name lost. Ramesside."
     assert r["source_citation"]["page"] == 435
     assert r["attribution_certainty"] == "attested"
@@ -2578,7 +2578,7 @@ def test_tt401_nebseny(reconciled):
     r = _row(reconciled, "TT401")
     assert r["occupant_name"] == "Nebseny"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["notes_from_pm"] == (
         "Overseer of goldsmiths of Amūn (from cone). Temp. Tuthmosis III to"
         " Amenophis II (?). (Inaccessible.)"
@@ -2594,13 +2594,13 @@ def test_tt401_nebseny(reconciled):
 
 
 def test_tt402_anonymous(reconciled):
-    """TT402: Anonymous (Name unknown). Dra' Abu el-Naga. occupant_role=Unknown
+    """TT402: Anonymous (Name unknown). Draʿ Abû el-Nagaʿ. occupant_role=Unknown
     (sentinel-null collapse fixed by CHUNK49_CORRECTIONS; TT402 anonymous per
     all 3 agents, same pattern as TT392–TT400 chunk-48)."""
     r = _row(reconciled, "TT402")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["theban_area"] == "Draʿ Abû el-Nagaʿ"
     assert r["notes_from_pm"] == "Name unknown. Temp. Tuthmosis IV to Amenophis III."
     assert r["source_citation"]["page"] == 444
     assert r["attribution_certainty"] == "attested"
@@ -2658,7 +2658,7 @@ def test_tt404_akhamenerau(reconciled):
 
 
 def test_tt405_khenti(reconciled):
-    """TT405: Khenti, Nomarch. Khokha. First Intermediate Period.
+    """TT405: Khenti, Nomarch. Khôkha. First Intermediate Period.
     shared_with_tombs=[]: B+C majority correctly rejected A's ["TT186"] — the
     `Father (probably), Iḥy (tomb 186)` entry is filiation, not co-ownership.
     DERIVER_OVERRIDE: attested (`(probably)` qualifies filiation, not occupant
@@ -2666,7 +2666,7 @@ def test_tt405_khenti(reconciled):
     r = _row(reconciled, "TT405")
     assert r["occupant_name"] == "Khenti"
     assert r["occupant_role"] == "Official"
-    assert r["theban_area"] == "Khokha"
+    assert r["theban_area"] == "Khôkha"
     assert r["notes_from_pm"] == (
         "Nomarch. First Intermediate Period. Father (probably), Iḥy (tomb 186)."
         " Wife, Mertiotes, Prophetess of Ḥatḥor."

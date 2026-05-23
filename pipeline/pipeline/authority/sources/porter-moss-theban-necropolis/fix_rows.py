@@ -1691,7 +1691,7 @@ CHUNK21_CORRECTIONS: list[tuple[str, str, object, str]] = []
 CHUNK21_RENAMES: dict[str, str] = {}
 
 
-# Chunk-22 (PM I.1 § I — TT131-TT140, Sh. ʿAbd el-Qurna + Dra' Abu el-Naga).
+# Chunk-22 (PM I.1 § I — TT131-TT140, Sh. ʿAbd el-Qurna + Draʿ Abû el-Nagaʿ).
 # Seven tie-break-overrides.json entries (TT134|notes_from_pm, TT135|notes_from_pm,
 # TT137|notes_from_pm, TT138|notes_from_pm, TT139|notes_from_pm,
 # TT140|notes_from_pm, TT140|occupant_alt_names). 2/1-majority resolutions:
@@ -2011,7 +2011,7 @@ CHUNK26_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "TT175",
         "occupant_role",
         "Unknown",
-        "PM I.1 p.281 (TT175, anonymous tomb, Khokha). PM headword carries no "
+        "PM I.1 p.281 (TT175, anonymous tomb, Khôkha). PM headword carries no "
         "personal name (`No name.`); all 3 agents correctly emitted "
         "occupant_role=\"Unknown\" (controlled-vocab sentinel paired with "
         "occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS "
@@ -2022,7 +2022,7 @@ CHUNK26_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "TT180",
         "occupant_role",
         "Unknown",
-        "PM I.1 p.286 (TT180, anonymous unfinished tomb, Khokha). PM headword "
+        "PM I.1 p.286 (TT180, anonymous unfinished tomb, Khôkha). PM headword "
         "carries no personal name (`No name.`); all 3 agents correctly emitted "
         "occupant_role=\"Unknown\" (controlled-vocab sentinel paired with "
         "occupant_name=null per schema invariant). merge.py SENTINEL_NULL_STRINGS "
@@ -2586,6 +2586,28 @@ LEGACY_FIELD_RENAMES: dict[str, str] = {
 }
 
 
+# Sub-site (theban_area) value migration to PM-faithful canonical forms (issues
+# #288 + #291). Decided 2026-05-23: migrate `theban_area` values to match PM's
+# printed diacritics, consistent with how `Sh. ʿAbd el-Qurna` / `ʿAsâsîf` /
+# `Qurnet Muraʿi` already preserve PM's diacritics. The agent prompts and the
+# per-chunk agent JSONLs landed BEFORE this decision used the project-stripped
+# forms (`Dra' Abu el-Naga` / `Khokha` / `Deir el-Bahari`). Re-running merge.py
+# regenerates rows with the OLD stripped values from the stable agent JSONLs;
+# this migration runs in main() before SPOT_CORRECTIONS so downstream per-row
+# corrections operate on the canonical PM-faithful form. Idempotent: a row
+# already carrying the new form is unchanged. Character-precision verified by
+# egyptologist-reviewer (issues #288/#291 PR): PM uses U+02BF MODIFIER LETTER
+# LEFT HALF RING (ʿayin) in BOTH the leading and terminal positions of
+# `Draʿ Abû el-Nagaʿ` — NOT ASCII apostrophe.
+# `Deir el-Medina` is NOT migrated — PM prints it plain (no diacritics) per
+# direct PDF verification (PM I.1 p.311 TT215 headword).
+SUBSITE_PM_FAITHFUL_MIGRATION: dict[str, str] = {
+    "Dra' Abu el-Naga": "Draʿ Abû el-Nagaʿ",
+    "Khokha": "Khôkha",
+    "Deir el-Bahari": "Deir el-Baḥri",
+}
+
+
 SCHEMA_FIELD_DEFAULTS: dict[str, object] = {
     "tomb_aliases": [],
     "co_occupants": [],
@@ -2923,7 +2945,7 @@ CHUNK31_CORRECTIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
-# Chunk-32 (TT231–TT240, Dra' Abu el-Naga + Qurnet Muraʿi + Khôkha + ʿAsâsîf).
+# Chunk-32 (TT231–TT240, Draʿ Abû el-Nagaʿ + Qurnet Muraʿi + Khôkha + ʿAsâsîf).
 # 3 tie-break overrides: TT232|notes_from_pm (OCR garble of father's name),
 # TT235|occupant_name (3 agents disagree on OCR `USERI;IET`), and
 # TT239|attribution_certainty (3-way split on PM's `(?)` hedge).
@@ -3293,7 +3315,7 @@ CHUNK35_RENAMES: dict[str, str] = {}
 
 
 # Chunk-36 (TT271-TT280 — 10 rows: TT271-TT278 Qurnet Muraʿi, TT279 ʿAsâsîf,
-# TT280 Dra' Abu el-Naga). Corrections after 3-agent merge + tie-break pass:
+# TT280 Draʿ Abû el-Nagaʿ). Corrections after 3-agent merge + tie-break pass:
 #
 # Page citations:
 #   TT274: A+B majority=352, correct=351 (physical 369 = printed 351; headword
@@ -3467,14 +3489,14 @@ CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
         "TT280",
         "location_sub_area",
-        "In valley south of Deir el-Bahari Temples",
+        "In valley south of Deir el-Baḥri Temples",
         "PM I.1 p.359 / source line 549 prints `In valley south of Deir "
         "el-Bal].ri Temples` where `Bal].ri` = `Bahari` (OCR artifact). "
         "Majority (A+C) emitted null; agent B correctly captured this PM "
         "location qualifier but was minority. PM explicitly marks this tomb "
         "outside the standard theban_area grid (`D-3, i, 3` map reference "
         "only). Restore the location_sub_area from the source per the "
-        "verbatim-preserve policy. `Deir el-Bahari` restored from OCR "
+        "verbatim-preserve policy. `Deir el-Baḥri` restored from OCR "
         "`Deir el-Bal].ri`.",
     ),
     (
@@ -3724,14 +3746,14 @@ CHUNK38_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK38_RENAMES: dict[str, str] = {}
 
 
-# === Chunk-39 (TT301–TT310, Dra' Abu el-Naga + Deir el-Bahari + Sh. ʿAbd el-Qurna) =====
-# First chunk to introduce `Deir el-Bahari` as a primary `theban_area` value
+# === Chunk-39 (TT301–TT310, Draʿ Abû el-Nagaʿ + Deir el-Baḥri + Sh. ʿAbd el-Qurna) =====
+# First chunk to introduce `Deir el-Baḥri` as a primary `theban_area` value
 # (TT308 Kemsit in the Temple of Mentuḥotp; TT310 anonymous Chancellor).
-# The TT280 precedent used `Deir el-Bahari` only as a `location_sub_area`
-# qualifier because TT280's grid (D-3) pointed to Dra' Abu el-Naga proper.
+# The TT280 precedent used `Deir el-Baḥri` only as a `location_sub_area`
+# qualifier because TT280's grid (D-3) pointed to Draʿ Abû el-Nagaʿ proper.
 # TT308/TT310 are structurally different: PM I.1 p.385-386 lists them under
-# the Deir el-Bahari grid (Map III, C-4) and explicitly names the site in the
-# headword. `Deir el-Bahari` is admitted as a valid `theban_area` value.
+# the Deir el-Baḥri grid (Map III, C-4) and explicitly names the site in the
+# headword. `Deir el-Baḥri` is admitted as a valid `theban_area` value.
 #
 # Corrections in this chunk:
 # 1. TT301 occupant_name: `Khori` → `Hori` (source `I;IORI` where `I;I`=Ḥ;
@@ -3750,7 +3772,7 @@ CHUNK38_RENAMES: dict[str, str] = {}
 # 7. TT307 notes_from_pm: parenthesise `(Unfinished.)` per PM source
 #    (source line 275: `(Unfinished.)` with parentheses).
 # 8. TT308 notes_from_pm: add temple location qualifier and restore diacritics
-#    (source line 289: `Deir el-Bahari, in the Temple of Mentuḥotp.` +
+#    (source line 289: `Deir el-Baḥri, in the Temple of Mentuḥotp.` +
 #    ayin on Nebḥepetreʿ + ḥ-underdot on Mentuḥotp and Ḥatḥor).
 CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
     (
@@ -3853,7 +3875,7 @@ CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "TT308",
         "notes_from_pm",
         "Unique royal concubine, Prophetess of Ḥatḥor. Temp. Mentuḥotp "
-        "(Nebḥepetreʿ). Deir el-Bahari, in the Temple of Mentuḥotp. "
+        "(Nebḥepetreʿ). Deir el-Baḥri, in the Temple of Mentuḥotp. "
         "(NAVILLE, No. 10.)",
         "Three diacritic restorations + temple location addition from source "
         "lines 287-289 of chunk-39-tt301-tt310.txt. (1) `Hathor` → `Ḥatḥor`: "
@@ -3876,9 +3898,9 @@ CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "In the Temple of Mentuḥotp",
         "Source line 289: `Deir el-Bal).ri, in the Temple of Mentul).otp.` — "
         "PM places the tomb specifically within the Mentuhotep temple complex "
-        "at Deir el-Bahari. The theban_area captures `Deir el-Bahari`; the "
+        "at Deir el-Baḥri. The theban_area captures `Deir el-Baḥri`; the "
         "`location_sub_area` encodes the more precise location. Parallel to "
-        "TT280 `In valley south of Deir el-Bahari Temples` pattern (chunk-36 "
+        "TT280 `In valley south of Deir el-Baḥri Temples` pattern (chunk-36 "
         "CHUNK36_CORRECTIONS). Decode: `Bal).ri` = `Bahari`, `Mentul).otp` = "
         "`Mentuḥotp` (underdot-ḥ restored per notes_from_pm verbatim-preserve). "
         "EGYPTOLOGIST REVIEW REQUIRED: confirm location sub-area form from "
@@ -3890,7 +3912,7 @@ CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK39_RENAMES: dict[str, str] = {}
 
 
-# === Chunk 40: TT311–TT320 (PM I.1 Deir el-Bahari / Sh. ʿAbd el-Qurna) ========
+# === Chunk 40: TT311–TT320 (PM I.1 Deir el-Baḥri / Sh. ʿAbd el-Qurna) ========
 #
 # Pre-merge agents: a=395, b=395, c=394 (394 = c missing 1 row from an earlier
 # chunk, not this chunk). Merged: 395 rows. Chunk-40 added 10 rows (TT311-TT320).
@@ -4403,7 +4425,7 @@ CHUNK42_RENAMES: dict[str, str] = {}
 # Egyptologist printed-source review (PR #287 round 1) flagged 4 P1
 # diacritic regressions; 3 accepted as in-scope per-row corrections below
 # (TT342 Tepiḥu, TT343 Paḥekmen, TT349 Amenhotp wife). The 4th (TT344
-# theban_area `Dra' Abu el-Naga` → PM's printed `Dra' Abû el-Naga'`) was
+# theban_area `Draʿ Abû el-Nagaʿ` → PM's printed `Dra' Abû el-Naga'`) was
 # declined as out-of-scope: the canonical sub-site form is project-wide
 # convention used by ~30+ rows across 11+ shipped chunks, so a per-row fix
 # would break theban_area grouping; tracked as a follow-up cross-chunk
@@ -6811,6 +6833,32 @@ def main() -> None:
                 f"(every row already uses {new_key!r})"
             )
 
+    # Sub-site (theban_area) value migration to PM-faithful canonical forms
+    # (issues #288 + #291). Runs after the legacy-field rename so the field
+    # exists, and BEFORE per-chunk corrections so they reference the new
+    # canonical form. Idempotent: a row already carrying the new form is
+    # unchanged.
+    subsite_migration_log: list[str] = []
+    subsite_migrated_count = 0
+    for old_value, new_value in SUBSITE_PM_FAITHFUL_MIGRATION.items():
+        per_form_migrated: list[str] = []
+        for row in rows:
+            if row.get("theban_area") == old_value:
+                row["theban_area"] = new_value
+                per_form_migrated.append(row["tomb_id"])
+        subsite_migrated_count += len(per_form_migrated)
+        if per_form_migrated:
+            subsite_migration_log.append(
+                f"- theban_area {old_value!r} → {new_value!r}: migrated on "
+                f"{len(per_form_migrated)} row(s) "
+                f"(first/last: {per_form_migrated[0]}, {per_form_migrated[-1]})"
+            )
+        else:
+            subsite_migration_log.append(
+                f"- theban_area {old_value!r} → {new_value!r}: no-op this run "
+                f"(every row already uses the PM-faithful form)"
+            )
+
     # Renames first: some reviewer-flagged corrections involve renaming a
     # descriptor tomb_id to match PM's printed name (e.g. `DAN-Ahhor` →
     # `DAN-Aqhor` because PM actually prints `ʿAḲ-ḤOR`, not `ʿAḥḥor`).
@@ -6945,6 +6993,11 @@ def main() -> None:
         body_sections.append(
             "Legacy field-key renames (post-#170 reconcile):\n"
             + "\n".join(legacy_rename_log)
+        )
+    if subsite_migration_log:
+        body_sections.append(
+            "Sub-site (theban_area) PM-faithful migration (issues #288 + #291):\n"
+            + "\n".join(subsite_migration_log)
         )
     if rename_log:
         body_sections.append("Tomb-id renames:\n" + "\n".join(rename_log))
