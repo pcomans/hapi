@@ -34,8 +34,8 @@ Chunk 48 (TT391–TT400) reconciled 2026-05-22.
 
 ## Sub-site distribution
 - Sh. ʿAbd el-Qurna: TT391, TT397, TT398, TT399, TT400 (5)
-- Khokha: TT392 (1)
-- Dra' Abu el-Naga: TT393, TT394, TT395, TT396 (4)
+- Khôkha: TT392 (1)
+- Draʿ Abû el-Nagaʿ: TT393, TT394, TT395, TT396 (4)
 
 ## Disagreement profile
 - TT391: cosmetic (macron-ē on Khonsemwēset; 2/1 majority dropped it → CHUNK48_CORRECTIONS)

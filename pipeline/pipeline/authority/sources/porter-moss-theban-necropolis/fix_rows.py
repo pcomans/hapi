@@ -3903,7 +3903,8 @@ CHUNK39_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "at Deir el-Baḥri. The theban_area captures `Deir el-Baḥri`; the "
         "`location_sub_area` encodes the more precise location. Parallel to "
         "TT280 `In valley south of Deir el-Baḥri Temples` pattern (chunk-36 "
-        "CHUNK36_CORRECTIONS). Decode: `Bal).ri` = `Bahari`, `Mentul).otp` = "
+        "CHUNK36_CORRECTIONS). Decode: `Bal).ri` = `Baḥri` (Ḥ-underdot per "
+        "post-issue #291 PM-faithful canonical), `Mentul).otp` = "
         "`Mentuḥotp` (underdot-ḥ restored per notes_from_pm verbatim-preserve). "
         "EGYPTOLOGIST REVIEW REQUIRED: confirm location sub-area form from "
         "PM I.1 p.385 printed source.",
