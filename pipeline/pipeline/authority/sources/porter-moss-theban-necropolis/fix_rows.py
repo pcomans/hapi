@@ -4688,6 +4688,69 @@ CHUNK46_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK46_RENAMES: dict[str, str] = {}
 
 
+# Chunk-47 corrections (TT381–TT390):
+#
+# 1. TT388 — `occupant_role`: all three agents emitted `occupant_role='Unknown'`
+#    but merge.py sentinel-null normalisation collapsed it to null because
+#    `'unknown'` is in SENTINEL_NULL_STRINGS. Restore per the null-name/null-role
+#    pairing invariant (KV12 chunk-2 precedent; TT371–TT379 same chunk-46).
+#
+# 2. TT390 — `notes_from_pm`: B+C 2/1 majority chose `Amon` (no macron) for
+#    the divine father's title `Divine father of Amūn`. PM I.1 p.440 / physical
+#    PDF p.458 prints `Amūn` with macron-Ū throughout the Saite-period entries.
+#    Agent A's `Amūn` (macron) is PM-faithful; B+C dropped the macron.
+#    Per the verbatim-preserve policy for `notes_from_pm` and the macron-retention
+#    precedent established in chunk-12-onward (TT26, TT53, etc.), restore `Amūn`.
+CHUNK47_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT388",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.439 / physical PDF p.457 (TT388 anonymous, 'No texts. Saite.')."
+        " All three agents emitted `occupant_role='Unknown'`; merge.py sentinel-null"
+        " normalisation collapsed it to null because `'unknown'` is in"
+        " SENTINEL_NULL_STRINGS. Restore per the null-name/null-role pairing"
+        " invariant (KV12 chunk-2 precedent; also TT371–TT379 chunk-46).",
+    ),
+    (
+        "TT390",
+        "notes_from_pm",
+        "Female scribe, Chief attendant of the divine adoratress Nitocris."
+        " Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94,"
+        " Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of"
+        " Amūn, and Tashaiu.",
+        "PM I.1 p.440 / physical PDF p.458 (TT390 IRTERAU). B+C 2/1 majority"
+        " chose `Amon` (no macron) for `Divine father of Amūn`. PM prints"
+        " `Amūn` with macron-Ū throughout the Saite-period entries (physical"
+        " PDF p.458 confirmed). Agent A's `Amūn` is PM-faithful; B+C dropped"
+        " the macron. Verbatim-preserve policy for notes_from_pm + macron-"
+        "retention precedent (TT26/TT53/chunk-12-onward series) requires"
+        " restoration.",
+    ),
+    (
+        "TT389",
+        "notes_from_pm",
+        "smtj-priest, Chamberlain of Min, ḥsk-priest, Mayor of the Southern"
+        " City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28, Bibl. i,"
+        " 1st ed. p. 190, cc.) Parents, Amenemōnet, Prophet of Min, and"
+        " Neferuneit. Wives, Tahert and Beteb.",
+        "PM I.1 p.440 / physical PDF p.458 (TT389 BASA). Direct PDF read"
+        " confirms the priest-title cluster the reconciliation agent"
+        " explicitly flagged at PR-merge time: PM prints `smtj-priest`"
+        " (NOT `snwḥ-priest`), `Chamberlain of Min`, `ḥsk-priest` (NOT"
+        " `ḥrk-priest`), `Mayor of the Southern City`. The text-layer"
+        " cluster the 3 agents tried to decode (`snulj-priest` / similar +"
+        " `lz.rk-priest` / similar) was opaque OCR; the agents constructed"
+        " plausible-but-wrong reconstructions. Also restores macron-ō on"
+        " parent `Amenemōnet` (PDF confirmed; B+C majority dropped to"
+        " plain o). All three corrections from same PDF-direct-read"
+        " pattern as TT380 chunk-46 / TT346 chunk-43 / TT366 chunk-45.",
+    ),
+]
+
+CHUNK47_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4738,6 +4801,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK44_CORRECTIONS,
     CHUNK45_CORRECTIONS,
     CHUNK46_CORRECTIONS,
+    CHUNK47_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4786,6 +4850,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK44_RENAMES,
     **CHUNK45_RENAMES,
     **CHUNK46_RENAMES,
+    **CHUNK47_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -6176,6 +6241,30 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
     # unknown. No DERIVER_OVERRIDE: uncertain reflects real primary-attribution
     # uncertainty (same precedent as TT333/TT334 chunk-42 anonymous tombs with
     # `(?)` tokens in their notes).
+    # Chunk-47 DERIVER_OVERRIDES:
+    # TT385 — attribution_certainty: `(Perhaps brother of Nebsumenu, tomb 183.)`
+    #   qualifies a KINSHIP RELATIONSHIP (is Hunufer perhaps the brother of
+    #   Nebsumenu?), NOT the primary occupant Hunufer's identity at TT385.
+    #   Hunufer is unambiguously named in the headword as `Mayor of the Southern
+    #   City, Overseer of the granary of divine offerings of Amūn`. The deriver
+    #   fires context-free on `Perhaps` in notes_from_pm → uncertain; but the hedge
+    #   applies to the secondary kinship clause (parenthetical), not to the primary
+    #   occupant identity. Same secondary-clause hedge pattern as TT340 `(perhaps
+    #   also owner of tomb 354)` and TT320 `perhaps wife of Amosis`.
+    (
+        "TT385",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.437 / physical PDF p.455 / chunk-47-tt381-tt390.txt lines 94-95:"
+        " `385. HUNUFER ..., Mayor of the Southern City, Overseer of the granary"
+        " of divine offerings of Amūn. (Perhaps brother of Nebsumenu, tomb 183.)`"
+        " The `Perhaps` qualifies the KINSHIP RELATIONSHIP (is Hunufer the brother"
+        " of Nebsumenu at TT183?), NOT the primary occupant Hunufer's identity."
+        " Hunufer is unambiguously named with title in the headword; no identity"
+        " hedge. Same secondary-clause hedge pattern as TT340 `(perhaps also owner"
+        " of tomb 354)` (chunk-42 DERIVER_OVERRIDE) and TT320 `perhaps wife of"
+        " Amosis` (chunk-40 DERIVER_OVERRIDE).",
+    ),
 ]
 
 # Note: TT288 shared_with_tombs is corrected to [] by CHUNK37_CORRECTIONS below.
