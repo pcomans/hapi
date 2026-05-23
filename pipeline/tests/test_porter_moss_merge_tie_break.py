@@ -1119,8 +1119,12 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         #   `Perhaps AMENEMḤET` name + C truncated `(tomb 340, ...)` parenthetical.
         #   Pin B's mixed-case form with full parenthetical; PDF p.418 confirms full
         #   text. No DERIVER_OVERRIDE: `Perhaps` correctly fires uncertain on primary
-        #   attribution. TT354 shared_with_tombs corrected to [] via CHUNK44_CORRECTIONS
-        #   (provenance-of-find evidence, not co-ownership).
+        #   attribution. TT354 shared_with_tombs=["TT340"] is correct (B+C majority,
+        #   accepted as-is): PM phrases the cross-tomb relationship in TT354 via
+        #   `Perhaps AMENEMḤET (tomb 340, ...)` and reciprocally in TT340 via
+        #   `(perhaps also owner of tomb 354)` — same person proposed for both tombs,
+        #   bidirectional cross-tomb-identity reference. Symmetry with TT340.shared_with_tombs=["TT354"]
+        #   (landed chunk-42).
         ("TT354", "notes_from_pm"):
             "No texts. Perhaps Amenemḥet (tomb 340, cf. box-lid in Finds of this"
             " tomb). Early Dyn. XVIII.",

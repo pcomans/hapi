@@ -4487,6 +4487,57 @@ CHUNK44_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " Agent A correctly extracted this value; majority B+C emitted null."
         " Restore agent A's reading per PM verbatim.",
     ),
+    (
+        "TT358",
+        "occupant_alt_names",
+        ["Meryet-Amun"],
+        "PM I.1 p.421 / physical PDF p.439 cites Winlock's monograph"
+        " `The Tomb of Queen Meryet-Amūn at Thebes` in the headword's"
+        " bibliographic reference, giving PM's textual alternative"
+        " Romanization (`Meryet-Amūn`) of the same person who is named"
+        " `ʿAḤMOSI MERYTAMŪN` in the headword's NAME-token. Per the"
+        " matchable-name policy (strip macron-ū → plain u), the alt-name"
+        " form is `Meryet-Amun`. This is the form the Met catalog uses"
+        " for her own burial finds (M.M.A. Pit 65 sarcophagi + coffins,"
+        " cited verbatim in this PM entry). The 3 agents extracted []"
+        " (no alt-names) — egyptologist-reviewer P1 PR #290 round 1"
+        " identified the missing alias; this restoration adds the single"
+        " PM-cited form. Same `external-catalogue label as alt_name`"
+        " pattern as chunk-21 TT120 ʿAnen → ['Mahu'] from Gardiner &"
+        " Weigall Cat.",
+    ),
+    (
+        "TT353",
+        "notes_from_pm",
+        "(See tomb 71.) Temp. Ḥatshepsut.",
+        "PM I.1 p.417 / physical PDF p.435: TT353 SENENMUT headword prints"
+        " `353. SENENMUT. (See tomb 71.) Temp. Ḥatshepsut.` The agents"
+        " correctly populated shared_with_tombs=['TT71'] from the"
+        " `(See tomb 71.)` cross-ref, but dropped the parenthetical from"
+        " notes_from_pm. Per the established 6-row cross-chunk precedent"
+        " (TT104, TT131, TT212, TT250, TT265, TT326 all preserve"
+        " `(See tomb N.)` in notes_from_pm even when shared_with_tombs"
+        " captures the structural relation), the `(See tomb N.)` parenthetical"
+        " is preserved in notes_from_pm verbatim. The drop-rule applies only"
+        " to `(Also owner of tomb N.)` / `(Perhaps also owner of tomb N.)`"
+        " cross-ownership parentheticals (not `See tomb`). Restore per"
+        " egyptologist-reviewer P1 PR #290 round 1.",
+    ),
+    (
+        "TT359",
+        "notes_from_pm",
+        "(See tomb 299 with footnote.) Temp. Ramesses III and IV."
+        " (L. D. Text, No. 108, WILKINSON, No. 10.)",
+        "PM I.1 p.421 / physical PDF p.439: TT359 INḤERKHAʿ headword prints"
+        " `359. INḤERKHAʿ. (See tomb 299 with footnote.) Temp. Ramesses III"
+        " and IV.` followed by `(L. D. Text, No. 108, WILKINSON, No. 10.)`"
+        " The agents correctly populated shared_with_tombs=['TT299'] +"
+        " preserved the bibliographic cross-numbering paren, but dropped the"
+        " `(See tomb 299 with footnote.)` cross-ref from notes_from_pm."
+        " Restore per the same 6-row prior-chunk precedent cited in the"
+        " TT353 entry above. Symmetric fix to TT353; both are PM-faithfulness"
+        " regressions vs the established `See tomb N` retention pattern.",
+    ),
 ]
 
 CHUNK44_RENAMES: dict[str, str] = {}
