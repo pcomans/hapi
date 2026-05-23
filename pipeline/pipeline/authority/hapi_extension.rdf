@@ -68,12 +68,24 @@
            (where applicable) rdfs:subPropertyOf declarations, and so the
            shortcut-triple emission rule (see ADR §"Shortcut triple emission
            for manifest interop") yields well-typed RDF triples.
-       (b) crm:E55_Type — so the same URI can also serve as a P141 / P177
-           value (CIDOC P177's range is E55 Type; declaring the predicate
-           URI as both rdf:Property and E55 Type is RDF "punning" and is
-           the standard CIDOC idiom for hapi-style claim predicates that
-           need to be both a relation in the data model AND a registry
-           entry in the predicate vocabulary).
+       (b) crm:E55_Type — so the same URI can also serve as a P177 value
+           (CIDOC P177's range is E55 Type; declaring the predicate URI as
+           both rdf:Property and E55 Type is RDF "punning" and is the
+           standard CIDOC idiom for hapi-style claim predicates that need
+           to be both a relation in the data model AND a registry entry in
+           the predicate vocabulary). NOTE: P141 values are the assigned
+           VALUES (the entity being assigned), not the predicate type;
+           predicate-vocabulary E55 Types serve as P177 targets only.
+           The closed verdict-outcome vocabulary (handled in its own block
+           further below) is the separate case where the E55 Type instances
+           ARE used as P141 values.
+
+       The DERIVED / query-only predicate hapi:shares_tomb_with is a
+       documented exception: it is NEVER a P177 target in the persisted
+       graph (the loader REJECTS direct E13 assertions of it), it appears
+       only as raw query-output triples between two :Ruler nodes, so it
+       does NOT carry crm:E55_Type typing — only rdf:Property + the OWL
+       symmetric typing.
 
        Each entry below either:
          (i)  declares a rdfs:subPropertyOf relationship to a CRM property,
@@ -170,12 +182,11 @@
   </rdf:Property>
 
   <rdf:Property rdf:about="#shares_tomb_with">
-    <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
-    <rdfs:label xml:lang="en">shares tomb with (DERIVED — not loadable as a primary claim)</rdfs:label>
+    <rdfs:label xml:lang="en">shares tomb with (DERIVED — not loadable as a primary claim, not an E13 claim)</rdfs:label>
     <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E21_Person"/>
     <rdfs:range  rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E21_Person"/>
-    <rdfs:comment xml:lang="en">**DERIVED / QUERY-ONLY predicate — not loadable as a primary claim from any source.** Asserts that two Rulers (E21 Persons) are both interred in the same Site. Because this edge encodes neither the Site itself nor the burial context (primary burial vs cache), it is semantically weak as a primary claim — the information is lost compared to the source's actual statement (e.g. "King X and Queen Y both interred in KV35"). To preserve context, the loader emits the underlying primary claims (`hapi:original_burial_in` and/or `hapi:cache_context_at`) per ruler-site pair, and consumers derive `hapi:shares_tomb_with` at query time by intersecting two rulers' actual-burial site sets. **The derivation source set is only the burial predicates — `hapi:original_burial_in` and `hapi:cache_context_at`. `hapi:tomb_owner` is commissioning/ownership and is NOT a derivation source** (a king who commissioned a tomb but is never interred there should not be inferred as "buried with" anyone subsequently interred in that tomb). The predicate is registered with `derived: true` in the predicate registry; the loader REJECTS direct assertions of it. Declared `owl:SymmetricProperty` so OWL-aware readers see the materialised query-derived edges as symmetric. Also typed as crm:E55_Type per the punning rule (the derived edges that the query materialises are still E13 claims with this URI as their P177 target).</rdfs:comment>
+    <rdfs:comment xml:lang="en">**DERIVED / QUERY-ONLY predicate — not loadable as a primary claim from any source AND not an E13 claim in the persisted graph.** Asserts that two Rulers (E21 Persons) are both interred in the same Site. The loader REJECTS direct assertions of this predicate from any source AND rejects E13 reifications whose P177 target is hapi:shares_tomb_with. Instead, the underlying primary claims (`hapi:original_burial_in` and/or `hapi:cache_context_at`) are emitted per ruler-site pair as full E13 reifications with documented provenance, and consumers derive `hapi:shares_tomb_with` at query time by intersecting two rulers' actual-burial site sets — producing raw RDF triples `(:Ruler) hapi:shares_tomb_with (:Ruler)` in query output ONLY, never persisted as E13 reifications. This is why the predicate is declared as `rdf:Property` + `owl:SymmetricProperty` but NOT `crm:E55_Type` — it is never a P177 target in the persisted graph, so the punning rule does not apply. Provenance lives on the underlying `hapi:original_burial_in` / `hapi:cache_context_at` E13s, not on the derived edge itself; the derived edge is a projection of those underlying claims through the query definition (a stored SQL/SPARQL function, committed alongside the loader), not a fresh claim. This is the standard CIDOC-faithful framing for derived-edge predicates: the underlying claims carry provenance; the derivation is a query, not a new claim. **The derivation source set is only the burial predicates — `hapi:original_burial_in` and `hapi:cache_context_at`. `hapi:tomb_owner` is commissioning/ownership and is NOT a derivation source** (a king who commissioned a tomb but is never interred there should not be inferred as "buried with" anyone subsequently interred in that tomb). The predicate is registered with `derived: true` in the predicate registry. Declared `owl:SymmetricProperty` so OWL-aware readers see the query-output triples as symmetric.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#display_name">
@@ -206,7 +217,7 @@
     <rdfs:label xml:lang="en">supersedes</rdfs:label>
     <rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E13_Attribute_Assignment"/>
     <rdfs:range  rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E13_Attribute_Assignment"/>
-    <rdfs:comment xml:lang="en">Asserts that a newer verdict-E13 (subject) replaces an older verdict-E13 (range) for the same matcher-claim. The two verdict-E13s' P140 subjects (their matcher-claim targets) must be the same E13; the loader enforces this. **Chain integrity is enforced by TWO load-time uniqueness constraints, both required for the "unique tip" property to hold:** (1) **unique successor per predecessor** — each verdict-E13 has at most one incoming hapi:supersedes from any other verdict; forking (two verdicts both claiming the same predecessor) is a hard load error. (2) **unique root per matcher-claim** — at most one verdict-E13 covering a given matcher-claim has no outgoing hapi:supersedes; multiple "first verdicts" on the same matcher-claim are a hard load error. Together these guarantee a linear chain with exactly one tip. The "current verdict" for a matcher-claim is the tip (the verdict-E13 with no incoming hapi:supersedes). NOT a rdf:Property + E55_Type pun — hapi:supersedes is a direct E13→E13 relation, never a P177 target (no E13's P177 points at the URI #supersedes), so only the rdf:Property typing is needed. No clean CRM superproperty was identified — P130 / P132 are about similarity / overlap, not "this assertion replaces that one." Free-standing for now; pin discipline as for the other free-standing hapi: predicates.</rdfs:comment>
+    <rdfs:comment xml:lang="en">Asserts that a newer verdict-E13 (subject) replaces an older verdict-E13 (range) for the same matcher-claim. The two verdict-E13s' P140 subjects (their matcher-claim targets) must be the same E13; the loader enforces this. **Chain integrity is enforced by THREE complementary load-time constraints, all three required for the "unique linear chain with one tip" property to hold:** (1) **unique successor per predecessor** — each verdict-E13 has at most one incoming hapi:supersedes; forking (two verdicts both claiming the same predecessor) is a hard load error. (2) **unique root per matcher-claim** — at most one verdict-E13 covering a given matcher-claim has no outgoing hapi:supersedes; multiple "first verdicts" on the same matcher-claim are a hard load error. (3) **insert-time tip-only rule** — a non-root verdict-E13 inserted at time T MUST point its hapi:supersedes edge at the verdict-E13 that is the current chain tip at time T (i.e. has no incoming hapi:supersedes at T). The loader REJECTS a non-root insert that supersedes a mid-chain (non-tip) verdict-E13. Constraint (3) is what prevents disconnected cycles (e.g. A→B→C→A, where all three uniqueness checks pass because every node has exactly one in-edge and one out-edge and there is no root, but the chain is malformed) and disconnected sub-chains (e.g. A→B plus C→D for the same matcher-claim, where (a) and (b) hold because there are two roots A and C, ruled out by (2); but cycles have no root and would slip through without (3)). Constraints (1)+(2) alone permit cycles; (3) closes the gap. The "current verdict" for a matcher-claim is the tip (the verdict-E13 with no incoming hapi:supersedes). NOT a rdf:Property + E55_Type pun — hapi:supersedes is a direct E13→E13 relation, never a P177 target (no E13's P177 points at the URI #supersedes), so only the rdf:Property typing is needed. No clean CRM superproperty was identified — P130 / P132 are about similarity / overlap, not "this assertion replaces that one." Free-standing for now; pin discipline as for the other free-standing hapi: predicates.</rdfs:comment>
   </rdf:Property>
 
   <!-- ============================================================
