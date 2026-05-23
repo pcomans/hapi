@@ -1,0 +1,5 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,relabel=private",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+}
