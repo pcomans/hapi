@@ -1144,6 +1144,24 @@ TT380 (ʿAnkhef(en)-Reʿ-Harakhti):
   notes_from_pm: a="Chief in Thebes. Ptolemaic. Parents, Ḏḥout and Esntiter." | b="Chief in Thebes. Ptolemaic. Parents, Ḏhout and Esnūter." | c="Chief in Thebes. Ptolemaic. Parents, Ḏḥout and Esntiter."  → chose "Chief in Thebes. Ptolemaic. Parents, Ḏḥout and Esntiter."
   occupant_name: a="ʿAnkhef(en)-Rʿ-Harakhti" | b="ʿAnkhef(en)-Reʿ-Harakhti" | c="ʿAnkhef(en)-Reʿ-Harakhti"  → chose "ʿAnkhef(en)-Reʿ-Harakhti"
 
+TT381 (Amenemonet):
+  notes_from_pm: a="Uninscribed. Perhaps AMENEMONET, Messenger of the King to every land. Ramesside. Headless statue of Amenemōnet." | b="Uninscribed. Perhaps Amenemonet, Messenger of the King to every land. Ramesside." | c="Uninscribed. Perhaps AMENEMONET, Messenger of the King to every land. Ramesside."  → chose "Uninscribed. Perhaps AMENEMŌNET, Messenger of the King to every land. Ramesside. Headless statue of Amenemōnet."
+
+TT382 (Usermontu):
+  notes_from_pm: a="Overseer of cattle, Overseer of the treasury, First prophet of Monthu. Ramesside. Wife, Tiy, Chief of the harîm of Monthu." | b="Overseer of cattle, Overseer of the treasury, First prophet of Monthu. Ramesside. Wife, Tiy, Chief of the harim of Monthu." | c="Overseer of cattle, Overseer of the treasury, First prophet of Monthu. Ramesside. Wife, Tiy, Chief of the harim of Monthu."  → chose "Overseer of cattle, Overseer of the treasury, First prophet of Monthu. Ramesside. Wife, Tiy, Chief of the harim of Monthu."
+
+TT386 (Antef):
+  notes_from_pm: a="Chancellor of the King of Lower Egypt, Overseer of soldiers. Middle Kingdom. (WILKINSON, 'Bab om el Mináfed', Bibl. i, 1st ed. p. 190, bb.)" | b="Chancellor of the King of Lower Egypt, Overseer of soldiers. Middle Kingdom." | c="Chancellor of the King of Lower Egypt, Overseer of soldiers. Middle Kingdom. (WILKINSON, 'Bab om el Mimifed', Bibl. i, 1st ed. p. 190, bb.)"  → chose "Chancellor of the King of Lower Egypt, Overseer of soldiers. Middle Kingdom. (WILKINSON, 'Bab om el Mináfed', Bibl. i, 1st ed. p. 190, bb.)"
+
+TT387 (Meryptah):
+  notes_from_pm: a="Royal scribe of the table of the Lord of the Two Lands in Karnak. Temp. Ramesses II. Wife, Neb..." | b="Royal scribe of the table of the Lord of the Two Lands in Karnak. Temp. Ramesses II. Wife, Neb ... ." | c="Royal scribe of the table of the Lord of the Two Lands in Karnak. Temp. Ramesses II. Wife, Neb..."  → chose "Royal scribe of the table of the Lord of the Two Lands in Karnak. Temp. Ramesses II. Wife, Neb..."
+
+TT389 (Basa):
+  notes_from_pm: a="smtj-priest, Chamberlain of Min, ḥsk-priest, Mayor of the Southern City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28, Bibl. i, 1st ed. p. 190, cc.) Parents, Amenemōnet, Prophet of Min, and Neferuneit. Wives, Tahert and Beteb." | b="snwḥ-priest, Chamberlain of Min, ḥrk-priest, Mayor of the Southern City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28, Bibl. i, 1st ed. p. 190, cc.) Parents, Amenemonet, Prophet of Min, and Neferuneit. Wives, Tahert and Beteb." | c="sm-priest, Chamberlain of Min, ḥrk-priest, Mayor of the Southern City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28, Bibl. i, 1st ed. p. 190, cc.) Parents, Amenemonet, Prophet of Min, and Neferuneit. Wives, Tahert and Beteb."  → chose "smtj-priest, Chamberlain of Min, ḥsk-priest, Mayor of the Southern City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28, Bibl. i, 1st ed. p. 190, cc.) Parents, Amenemōnet, Prophet of Min, and Neferuneit. Wives, Tahert and Beteb."
+
+TT390 (Irterau):
+  notes_from_pm: a="Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amūn, and Tashaiu." | b="Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amon, and Tashaiu." | c="Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amon, and Tashaiu."  → chose "Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amon, and Tashaiu."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -1252,6 +1270,7 @@ Per-chunk correction counts:
 - Chunk 44: 4 correction(s) defined in CHUNK44_CORRECTIONS.
 - Chunk 45: 2 correction(s) defined in CHUNK45_CORRECTIONS.
 - Chunk 46: 8 correction(s) defined in CHUNK46_CORRECTIONS.
+- Chunk 47: 3 correction(s) defined in CHUNK47_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1798,6 +1817,12 @@ Field corrections:
     value: "Unknown"
 - TT380: notes_from_pm already matches override (no-op this run; PM I.1 p.435 / physical PDF p.453 (TT380 ʿANKHEF(EN)-RĒʿ-ḤARAKHTI). Two PM-faithfulness regressions in the parents-clause names, corrected from direct PDF read after egyptologist-reviewer P2 + code-reviewer P2 surfaced the issues in PR #293 round 1: (1) Parent name `Dḥout` — PM p.435 prints PLAIN D + ḥ-underdot (D-ḥ-o-u-t), NOT d-bar Ḏ + ḥ-underdot. Agent C decoded the OCR cluster `!)!;lout` as d-bar `Ḏḥout` per the Thoth/Djehuty family convention, but the PDF clearly shows the unbarred D-letter on p.435. This is the first PM-I.1 instance of `Dḥout` with plain D (not Ḏ) — possibly a PM-specific Romanization variant or simply not the Thoth name root despite the surface similarity. (2) Parent name `Esnūter` with macron-ū — PM p.435 clearly shows macron-ū on the u vowel. Agents A+C OCR-misread as `Esntiter` (extra t, no macron); agent B's `Esnūter` was correct but lost in majority vote. Restore both per PM verbatim under notes_from_pm preserve policy.)
     value: "Chief in Thebes. Ptolemaic. Parents, Dḥout and Esnūter."
+- TT388: occupant_role already matches override (no-op this run; PM I.1 p.439 / physical PDF p.457 (TT388 anonymous, 'No texts. Saite.'). All three agents emitted `occupant_role='Unknown'`; merge.py sentinel-null normalisation collapsed it to null because `'unknown'` is in SENTINEL_NULL_STRINGS. Restore per the null-name/null-role pairing invariant (KV12 chunk-2 precedent; also TT371–TT379 chunk-46).)
+    value: "Unknown"
+- TT390: notes_from_pm already matches override (no-op this run; PM I.1 p.440 / physical PDF p.458 (TT390 IRTERAU). B+C 2/1 majority chose `Amon` (no macron) for `Divine father of Amūn`. PM prints `Amūn` with macron-Ū throughout the Saite-period entries (physical PDF p.458 confirmed). Agent A's `Amūn` is PM-faithful; B+C dropped the macron. Verbatim-preserve policy for notes_from_pm + macron-retention precedent (TT26/TT53/chunk-12-onward series) requires restoration.)
+    value: "Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amūn, and Tashaiu."
+- TT382: notes_from_pm already matches override (no-op this run; PM I.1 p.435 / physical PDF p.453 (TT382 USERMONTU). egyptologist-reviewer P1 F3 PR #294 round-1 PDF verification: PM p.435 prints `Chief of the harîm of Monthu` with circumflex î (same character as 12+ earlier rows preserving `harîm` per chunk-45 TT366 + chunk-15+ convention). Agent A's `harîm` was PM-faithful; B+C 2/1 majority dropped the circumflex to plain `harim`. No tie-break entry because the 2/1 was not flagged as 1/1/1 at merge time; restore via CHUNK47_CORRECTIONS post-merge per the verbatim-preserve policy for notes_from_pm.)
+    value: "Overseer of cattle, Overseer of the treasury, First prophet of Monthu. Ramesside. Wife, Tiy, Chief of the harîm of Monthu."
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1906,6 +1931,8 @@ Field corrections:
 - TT329: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT340: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT346: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
+- TT385: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT388: is_uninscribed → false (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -1983,3 +2010,5 @@ Field corrections:
 - TT329: attribution_certainty → "attested" (deriver override; PM I.1 p.397 / chunk-41 source line 262-263: `M 0 s I... and Annexed tomb of M 0...)
 - TT340: attribution_certainty → "attested" (deriver override; PM I.1 p.408 / chunk-42 source lines 503-505: `340. AMENEMḤET ..., Servant in th...)
 - TT346: attribution_certainty → "attested" (deriver override; PM I.1 p.414 / physical PDF p.432 / chunk-43-tt341-tt350.txt lines 284-287: `346...)
+- TT385: attribution_certainty → "attested" (deriver override; PM I.1 p.437 / physical PDF p.455 / chunk-47-tt381-tt390.txt lines 94-95: `385. ...)
+- TT388: is_uninscribed → true (deriver override; PR #294 round-1 code-reviewer finding: TT388 notes_from_pm is `No texts. Saite.`...)

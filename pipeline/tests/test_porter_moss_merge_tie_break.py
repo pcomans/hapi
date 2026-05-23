@@ -1147,6 +1147,34 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "called Ḥuy, Overseer of sculptors of Amūn in the Southern City."
             " Late Dyn. XVIII. Parents, Ḥati, Overseer of sculptors of the"
             " Lord of the Two Lands, and Ipy. Wife, Mery[mut].",
+        # TT381 notes_from_pm: 1/1/1 split on statue-sentence inclusion +
+        #   CAPS on AMENEMONET + macron-Ō/-ō (egyptologist P1 F2 PR #294
+        #   round-1 PDF verification confirmed PM prints macron on both
+        #   AMENEMŌNET and Amenemōnet). Pin agent A's complete form per
+        #   PDF p.453.
+        ("TT381", "notes_from_pm"):
+            "Uninscribed. Perhaps AMENEMŌNET, Messenger of the King to every"
+            " land. Ramesside. Headless statue of Amenemōnet.",
+        # TT386 notes_from_pm: 1/1/1 split on parenthetical inclusion and
+        #   Wilkinson site-name spelling. A=Mináfed (acute á — PDF-correct);
+        #   B=dropped parenthetical; C=Mimifed (OCR-noise reading). Pin A's
+        #   PM-faithful Mináfed per egyptologist P1 F1 PR #294 round-1 PDF
+        #   verification on p.437.
+        ("TT386", "notes_from_pm"):
+            "Chancellor of the King of Lower Egypt, Overseer of soldiers."
+            " Middle Kingdom. (WILKINSON, 'Bab om el Mináfed',"
+            " Bibl. i, 1st ed. p. 190, bb.)",
+        # TT389 notes_from_pm: 1/1/1 split on OCR-garbled priest-title cluster.
+        #   A=smtj/ḥsk+Amenemōnet (PDF-faithful); B=snwḥ/ḥrk+Amenemonet;
+        #   C=sm/ḥrk+Amenemonet. Merge picked B+C 2/1 majority, but PDF p.440
+        #   confirms agent A was correct. Pinned post-CHUNK47_CORRECTIONS:
+        #   `smtj-priest, ..., ḥsk-priest, ..., Amenemōnet, ...` per PDF
+        #   p.440 direct read (post-reconciliation-agent SUBSTANTIVE FLAG).
+        ("TT389", "notes_from_pm"):
+            "smtj-priest, Chamberlain of Min, ḥsk-priest, Mayor of the"
+            " Southern City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28,"
+            " Bibl. i, 1st ed. p. 190, cc.) Parents, Amenemōnet, Prophet of"
+            " Min, and Neferuneit. Wives, Tahert and Beteb.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
@@ -1212,9 +1240,9 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk46_row_count(reconciled):
-    """Merged total should be 455 after chunk 46 (+10 from chunk-45's 445)."""
-    assert len(reconciled) == 455
+def test_chunk47_row_count(reconciled):
+    """Merged total should be 465 after chunk 47 (+10 from chunk-46's 455)."""
+    assert len(reconciled) == 465
 
 
 def test_tt281_unfinished_temple(reconciled):

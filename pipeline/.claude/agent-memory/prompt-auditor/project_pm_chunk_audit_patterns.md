@@ -1,0 +1,55 @@
+---
+name: PM TT-chunk prompt audit patterns
+description: Recurring failure modes caught in PM I.1 TT-range extraction prompt audits
+type: project
+---
+
+Recurring patterns that generate P2 findings in PM I.1 TT-chunk prompts:
+
+1. **Enumerated ID sub-lists in noise rules** — listing specific tomb IDs that exhibit a noise variant (e.g. "TT43-TT45-TT47-TT48-TT49 render with middle-dot") narrows the agent's per-row OCR expectation. Drop to a generic "some tomb-numbers in this range" phrasing.
+
+2. **Hedge-softened within-chunk collision hints** — "chunk N may surface a name collision within-decade" is load-bearing when the raw confirms the collision exists (e.g. chunk-13 TT49+TT50 both Neferhotep). Even "may" narrows emit space. Replace with prior-chunk-only precedent: "Chunk 10's TT17 surfaced one such case."
+
+3. **Factual cross-chunk label errors in the header and schema comment** — (a) the introductory paragraph naming prior chunks and their ranges must use accurate range labels; (b) the schema JSON comment `// <N> is the printed tomb number (XX–YY)` carries the prior-chunk range and must be updated on every adaptation. Chunk-14 prompt shipped with `(41–50)` instead of `(51–60)`.
+
+4. **Heterogeneous-sub-site framing that contradicts raw** — prompts adapted from multi-sub-site chunks assert "chunk N spans multiple Theban sub-sites / expect rows across the canonical sub-site list" even when the raw chunk is homogeneous (chunk-14: all 10 rows are Sh. ʿAbd el-Qurna). Verify sub-site distribution against raw before claiming heterogeneous pattern continues.
+
+5. **Combined-case examples that only fit one chunk-14 row** — documenting a rule combination that is first used in the current chunk (e.g. anonymous-primary + usurpation = null occupant_name + usurper in notes_from_pm) effectively leaks the one row that activates the combination (TT58 in chunk-14). State both rules independently with prior-chunk-only precedent examples; drop the combined-shape example when the combination is new.
+
+6. **New-rule examples drawn from the current chunk's only activating row** — if a rule is introduced for the first time in the current chunk AND the example matches exactly one row, the example is a per-row answer. Chunk-15: the `[PER?]ENKHMUN` example in the bracketed-name-fragment rule is the verbatim TT68 headword. Replace with a fabricated/generic placeholder (`[ABD?]KHONS`, etc.) or a prior-chunk example if one exists.
+
+7. **Stale schema comment range** — `tomb_id` comment in the schema JSON block carries the prior chunk's range (e.g. `(51–60)` in chunk-15 which covers 61–70). Update on every adaptation; missed in chunk-15.
+
+8. **Wrong-direction boundary-marker language** — "Do not extract TT61 row" language in the structural-gotchas section when TT61 is the FIRST in-scope tomb, not a boundary exclusion. The exclusion note belongs only for the out-of-scope trailing headword (TT71), not the leading one.
+
+9. **OCR-cluster rule naming the specific new-chunk cluster shape when only one row activates it (P1).** Chunk-16 audit: line 85 introduces `J)` as a new OCR signature for capital d-bar `Ḏ` "immediately preceding a CAPS Thoth/Djehuty-derived NAME stem (e.g. anywhere preceding `?ḤUT-` / `?ḤOUT-` / `?ḤWTY-` / similar)". Raw confirms exactly one Thoth/Djehuty-derived headword in the chunk (`J)ḤUTNUFER` at TT80). The cluster shape + name-stem token shapes together fingerprint TT80 as the row that decodes to `Ḏ`+`HUTNUFER`. Fix: drop the specific cluster shape; instead say "OCR signatures for capital d-bar may continue to surface as new cluster shapes chunk-to-chunk. When you encounter an unfamiliar non-letter cluster immediately preceding a CAPS NAME-TOKEN you can identify as Thoth/Djehuty-family, read the cluster as `Ḏ` (d-bar) per the chunk-10/-12/-13 precedent."
+
+10. **"Patterns that appear in chunk N" framing in the preface (P2).** Chunk-16 line 7: "Patterns that appear in chunk 16 … are documented here as RULES, not as per-row values to copy." Listing named patterns narrows what the agent must find. Replace with "Patterns documented in this prompt as RULES (whether or not they appear in this chunk) …" — drop the "appear in chunk 16" framing.
+
+11. **"Good name" alias examples naming current-chunk rows (P1).** Chunk-8 audit (PM III Memphis): rule explaining the `<PRIMARY> good name <ALT>` alias convention cited two specific in-scope rows with their exact primary+alt name values (`G 2370 SENEZEMIB good name INTI`, `G 2378 SENEZEMIB good name MEHI`). This pre-fills `occupant_name` AND `occupant_alt_names` for both rows. Fix: state the rule abstractly or use a prior-chunk example; drop "Chunk-N examples are dense: G XXXX (`NAME good name ALT`)" phrasing entirely.
+
+12. **Multi-line carryover example quoting a verbatim current-chunk headword (P1).** Chunk-8 audit: multi-line headword rule included the literal PM text-layer string for an in-scope row as the example. This pre-fills `tomb_id`, `occupant_name`, `occupant_alt_names`, `occupant_role`, and `dynasty` simultaneously. Fix: use `G <NNNN>. <NAME> good name <ALT> <Title>, etc. Dyn. <Roman>.` abstract form, or reference a prior-chunk row.
+
+13. **Named per-row alias and joint-burial examples for current-chunk rows (P1).** `tomb_aliases` and `is_joint_burial` rule paragraphs named specific in-scope IDs with their expected field values (G 2430 → `["LG 25"]`; G 2415 → `WERI and wife METI` → `is_joint_burial: true`). Both are P1 leaks. Fix: state the rule abstractly; use chunk-N-1 examples or abstract forms with placeholder names.
+
+14. **Letter-suffix sub-headword examples naming current-chunk IDs (borderline P1/P2).** Rule explaining letter-suffix sub-tombs (`G 2347a.`, `G 2375a.`) pinpoints which two specific rows emit standalone rows before the agent reads the chunk. Fix: abstract to `G <NNNN>a.` or use a prior-chunk example.
+
+15. **Verbatim title string from current-chunk headword used as normalization example (P1).** Chunk-9 audit: line 113 in the raised-ayin-in-body-refs rule used `Prophet of Khufu and Raʿzedef` as the example — this is the ayin-normalized form of G3086's headword title block (raw: `Prophet of Khufu, Raazedef, and Khephren, waab-priest`). The example teaches the agent the normalized content of one specific row's notes_from_pm. Fix: replace with abstract placeholder `Prophet of <King1> and <King2>` or a prior-chunk title string.
+
+16. **`occupant_role` vocabulary list extended with current-chunk-only title tokens (P1).** Chunk-9 audit: the `occupant_role` → `"Official"` mapping list was extended with `ka-servant`, `Overseer of washermen`, `Overseer of the Treasury`, `King's adorner`, `Keeper of unguents` — each of which is the EXACT title of a specific G3000-range row in the chunk. An agent can infer per-row occupant_role without reading the chunk. Fix: keep the stable cross-chunk vocabulary list; add a catch-all "Any other non-royal, non-vizier, non-high-priest title → `\"Official\"`" instead of listing tokens drawn from the current chunk.
+
+17. **Pre-counted shape-variant distribution for the current chunk (P2).** Chunk-9 audit: "no Shape-3 twins in chunk 9" (line 66) and "No 'good name' rows expected in chunk 9 based on structural scan" (line 102) both pre-count shape variants to zero for the specific chunk. Remove; the canonical rule is sufficient.
+
+18. **First-row-of-chunk used as concrete tomb_id-convention example (P1).** Chunk-10 audit (PM III Memphis): the tomb_id convention section used `IRTY → JKR-Irty` as the shape-1 example — IRTY is the very first headword in the chunk. Fix: use a fabricated or prior-chunk name that is not in-chunk.
+
+19. **Ayin-normalisation example naming an in-chunk ayin row (P1).** Chunk-10: `aANKHU → JKR-Ankhu / occupant_name ʿAnkhu` simultaneously pre-fills tomb_id and the full normalised occupant_name for an in-chunk row. Fix: use an abstract `<aROOT>` placeholder or a prior-chunk G-range name not in the current chunk.
+
+20. **"Sub-feature trap" warning naming the specific large in-chunk headword (P1).** Chunk-10: "the very large SONB I block" in the row-emitting rules section names the one in-chunk row most likely to be mis-split. Fix: describe the structural trap without naming the row: "the largest named-headword block in this cluster spans 3+ pages of chapel sub-features and is ONE row."
+
+21. **Roman-regnal examples naming all three in-chunk bracketed-Roman rows (P1).** Chunk-10: both the noise section (line 124) and the field-by-field rules (lines 136, 138) used `Khesef I`, `Meni I`, `Ptahshepses II` as concrete examples — these are the exact three Shape-3 rows. Together they enumerate the full set of bracketed-Roman occupants. Fix: use abstract `<Name> I` / `<Name> II` throughout.
+
+22. **"Chunk-N-relevant" qualifier on noise-root lists (P2).** Chunk-10: "Common chunk-10-relevant underdot roots: ḥtp, mḥ, ḥnk, ḥ initial" narrows which rows carry ḥ-root names. Drop the "chunk-10-relevant" qualifier; state the rule cross-chunk or use prior-chunk evidence only.
+
+**Why:** These are the P2/P1 categories that survive rule-only prompts adapted from passing prior-chunk prompts — they enter as copy-paste with partial edits, factual assertion errors, or over-specific new-combination examples.
+
+**How to apply:** On every adapted prompt, grep for (a) enumerated tomb-ID lists outside the structural "10 rows expected" section, (b) "within-decade / within-range" collision phrases, (c) prior-chunk range labels in the header paragraph AND schema comment, (d) heterogeneous-sub-site assertions (cross-check against raw), (e) new rule combinations that only exist in a single row of the current chunk, (f) new-rule examples that match a specific current-chunk row verbatim, (g) boundary-marker direction (leading vs. trailing), (h) new OCR-cluster shapes introduced in the current chunk when only one headword activates that cluster — the combination of cluster-shape + name-family tokens fingerprints the one row, (i) "good name" alias examples citing current-chunk IDs with their actual name tokens, (j) multi-line carryover examples using verbatim current-chunk headword strings, (k) `tomb_aliases` / `is_joint_burial` rule paragraphs that name specific current-chunk IDs with their expected values, (l) letter-suffix sub-headword examples citing specific current-chunk IDs, (m) normalization-rule examples using verbatim title strings extracted from current-chunk headwords, (n) `occupant_role` vocabulary lists extended with title tokens that appear only in the current chunk's rows, (o) first/prominent in-chunk row used as the concrete shape-example in a new tomb_id-convention section, (p) ayin-normalisation examples naming an in-chunk row with its full normalised tomb_id+occupant_name, (q) sub-feature-trap warning naming the specific in-chunk large block, (r) Roman-regnal examples that together enumerate the full set of bracketed-Roman rows in the chunk, (s) "chunk-N-relevant" qualifiers on noise-root or glyph-variant lists.

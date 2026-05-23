@@ -379,6 +379,9 @@ CHUNK45_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK46_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(371, 381)}
 )
+CHUNK47_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(381, 391)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -425,6 +428,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK44_TOMB_IDS
     | CHUNK45_TOMB_IDS
     | CHUNK46_TOMB_IDS
+    | CHUNK47_TOMB_IDS
 )
 
 
@@ -3659,8 +3663,14 @@ def test_182_uninscribed_canonical_set() -> None:
     uninscribed."), DAN-Neferhotep ('Rock-tomb, uninscribed').
     Extended 2026-05-20 (chunk 20): TT115 — DERIVER_OVERRIDE for PM's
     `No texts. Dyn. XIX.` semantic-equivalent of "uninscribed" per
-    Gemini PR #264 round-3 finding 3277852207."""
-    expected = {"KV39", "KV56", "DAN-Neferhotep", "TT115"}
+    Gemini PR #264 round-3 finding 3277852207.
+    Extended 2026-05-22 (chunk 47): TT381 — PM prints 'Uninscribed. Perhaps
+    AMENEMONET'; deriver fires on 'Uninscribed' in notes_from_pm correctly.
+    Extended 2026-05-22 (chunk 47, code-reviewer P1 PR #294): TT388 — PM
+    prints 'No texts. Saite.' (same `No texts` synonym class as TT115);
+    DERIVER_OVERRIDE extends is_uninscribed=true per the established
+    chunk-20 TT115 precedent."""
+    expected = {"KV39", "KV56", "DAN-Neferhotep", "TT115", "TT381", "TT388"}
     actual = {r["tomb_id"] for r in _rows() if r["is_uninscribed"]}
     assert actual == expected, sorted(actual)
 
@@ -3823,6 +3833,12 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # identification. Same pattern as TT230/TT325. Deriver correctly fires
         # `uncertain`. No DERIVER_OVERRIDE needed.
         "TT355",
+        # TT381 chunk-47: PM headword `Uninscribed. Perhaps AMENEMONET, Messenger
+        # of the King to every land. Ramesside.` — `Perhaps` qualifies the PRIMARY
+        # OCCUPANT identification. The tomb is uninscribed; the candidate name
+        # Amenemonet is a tentative attribution from a headless statue found nearby.
+        # Deriver correctly fires `uncertain`. No DERIVER_OVERRIDE needed.
+        "TT381",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -12215,3 +12231,89 @@ def test_chunk46_tt380_occupant_name() -> None:
     assert r["theban_area"] == "Qurnet Muraʿi"
     assert "Dḥout" in r["notes_from_pm"]
     assert "Esnūter" in r["notes_from_pm"]
+
+
+# ===========================================================================
+# Chunk 47 — TT381–TT390 (Qurnet Muraʿi × 3, Sh. ʿAbd el-Qurna × 2, ʿAsâsîf × 5)
+# ===========================================================================
+
+
+def test_chunk47_all_rows_present() -> None:
+    """All 10 TT381–TT390 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK47_TOMB_IDS
+    assert actual == CHUNK47_TOMB_IDS, sorted(CHUNK47_TOMB_IDS - actual)
+
+
+def test_chunk47_theban_areas() -> None:
+    """Verify area assignments per PM I.1 p.435–440 headword sub-site lines.
+    3 Qurnet Muraʿi (TT381–TT383), 2 Sh. ʿAbd el-Qurna (TT384–TT385),
+    5 ʿAsâsîf (TT386–TT390)."""
+    expected = {
+        "TT381": "Qurnet Muraʿi",
+        "TT382": "Qurnet Muraʿi",
+        "TT383": "Qurnet Muraʿi",
+        "TT384": "Sh. ʿAbd el-Qurna",
+        "TT385": "Sh. ʿAbd el-Qurna",
+        "TT386": "ʿAsâsîf",
+        "TT387": "ʿAsâsîf",
+        "TT388": "ʿAsâsîf",
+        "TT389": "ʿAsâsîf",
+        "TT390": "ʿAsâsîf",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, (
+            f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+        )
+
+
+def test_chunk47_tt381_uninscribed_perhaps() -> None:
+    """TT381: uninscribed tomb with possible attribution to Amenemonet.
+    is_uninscribed=True (deriver fires on 'Uninscribed' in notes).
+    attribution_certainty=uncertain (deriver fires on 'Perhaps').
+    notes_from_pm includes statue sentence (tie-break override pinned
+    agent A's complete form). Macron-Ō on AMENEMŌNET + macron-ō on
+    Amenemōnet restored per egyptologist P1 F2 PR #294 round-1 PDF
+    p.453 verification."""
+    r = _row("TT381")
+    assert r["occupant_name"] == "Amenemonet"
+    assert r["is_uninscribed"] is True
+    assert r["attribution_certainty"] == "uncertain"
+    assert "Headless statue of Amenemōnet" in r["notes_from_pm"]
+    assert "AMENEMŌNET" in r["notes_from_pm"]
+
+
+def test_chunk47_tt388_anonymous_no_texts() -> None:
+    """TT388: 'No texts. Saite.' — anonymous variant.
+    occupant_name=null, occupant_role='Unknown' (CHUNK47_CORRECTIONS
+    restored after sentinel-null collapse in merge.py).
+    is_uninscribed=True via DERIVER_OVERRIDE per TT115 chunk-20
+    precedent (PM's `No texts` is the semantic equivalent of
+    `uninscribed`; the regex deriver fires only on the literal
+    `uninscribed` word, so the typed-flag is extended manually).
+    code-reviewer P1 PR #294 round 1."""
+    r = _row("TT388")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["is_uninscribed"] is True
+    assert "No texts" in r["notes_from_pm"]
+
+
+def test_chunk47_tt385_attribution_attested() -> None:
+    """TT385: Hunufer — 'Perhaps brother of Nebsumenu, tomb 183.' is a
+    kinship clause, not an identity hedge. DERIVER_OVERRIDE pins
+    attribution_certainty=attested (same pattern as TT340/TT346)."""
+    r = _row("TT385")
+    assert r["occupant_name"] == "Hunufer"
+    assert r["attribution_certainty"] == "attested"
+    assert "Perhaps brother of Nebsumenu" in r["notes_from_pm"]
+
+
+def test_chunk47_tt390_amun_macron() -> None:
+    """TT390: notes_from_pm must use 'Amūn' (macron-ū) for the divine
+    father's title. CHUNK47_CORRECTIONS restored macron over B+C 2/1
+    majority 'Amon'."""
+    r = _row("TT390")
+    assert r["occupant_name"] == "Irterau"
+    assert "Amūn" in r["notes_from_pm"]
+    assert "Amon" not in r["notes_from_pm"]
