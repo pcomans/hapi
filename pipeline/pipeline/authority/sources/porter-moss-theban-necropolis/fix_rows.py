@@ -6462,7 +6462,7 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "attribution_certainty",
         "attested",
         "PM I.1 p.443 / physical PDF p.461 / chunk-48-tt391-tt400.txt lines"
-        " 87-88: `397. NAKHT ..., warb-priest of Amūn, Overseer of the"
+        " 87-88: `397. NAKHT ..., wʿb-priest of Amūn, Overseer of the"
         " magazine of Amūn, First King's son of Amūn. Dyn. XVIII(?).` The"
         " `(?)` qualifies the DYNASTIC PERIOD ASSIGNMENT only, not the"
         " occupant's identity. NAKHT is unambiguously named with full titles."
