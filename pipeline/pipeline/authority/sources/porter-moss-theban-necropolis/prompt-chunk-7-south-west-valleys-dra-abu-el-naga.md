@@ -142,7 +142,7 @@ And **OCCUPANT-DESCRIPTOR** is a compact identifier:
 ## `theban_area`
 
 - `"South-West Valleys"` for § II.A, § II.B rows.
-- `\"Draʿ Abû el-Nagaʿ\"` for § III.A, § III.C, § III.D rows. Use U+02BF MODIFIER LETTER LEFT HALF RING (ʿayin) in BOTH `Draʿ` and `Nagaʿ` positions per the post-#288 PM-faithful canonical.
+- `"Draʿ Abû el-Nagaʿ"` for § III.A, § III.C, § III.D rows. Use U+02BF MODIFIER LETTER LEFT HALF RING (ʿayin) in BOTH `Draʿ` and `Nagaʿ` positions per the post-#288 PM-faithful canonical.
 
 ## `occupant_name`
 

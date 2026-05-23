@@ -105,7 +105,7 @@ Canonical sub-site forms (use these literal strings; preserve PM's diacritics an
 - **`"ʿAsâsîf"`** — ʿAsâsîf (leading ayin U+02BF; circumflex `â` and `î` preserved per PM's printed typography).
 - **`"Khôkha"`** — Khôkha (circumflex ô preserved per PM's printed form — migrated 2026-05-23 per issue #291 from project-stripped `Khokha`).
 - **`"Qurnet Muraʿi"`** — Qurnet Muraʿi (chunk-12 precedent; ASCII space between `Qurnet` and `Muraʿi`; U+02BF MODIFIER LETTER LEFT HALF RING for the ayin in `Muraʿi`).
-- **`\"Deir el-Baḥri\"`** — Deir el-Baḥri (Ḥ-underdot preserved per PM's printed form — migrated 2026-05-23 per issue #291 from project-stripped `Deir el-Bahari`). Added to canonical list per PR #290 chunk-44 code-reviewer P3 + egyptologist P2 follow-up.
+- **`"Deir el-Baḥri"`** — Deir el-Baḥri (Ḥ-underdot preserved per PM's printed form — migrated 2026-05-23 per issue #291 from project-stripped `Deir el-Bahari`). Added to canonical list per PR #290 chunk-44 code-reviewer P3 + egyptologist P2 follow-up.
 - **`"Deir el-Medina"`** — Deir el-Medina (no diacritics; PM prints with no diacritics — plain ASCII match). Established across chunks 29+ in 135+ rows. Added to canonical list per PR #290 follow-up.
 
 If a row's headword sub-site line declares a sub-site NOT in this list, restore it to its canonical form per PM's printed text and report it in your final report as a new sub-site that may need adding to the canonical list.

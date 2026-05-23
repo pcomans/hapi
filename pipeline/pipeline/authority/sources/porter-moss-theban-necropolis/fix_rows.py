@@ -3491,7 +3491,9 @@ CHUNK36_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "location_sub_area",
         "In valley south of Deir el-Baḥri Temples",
         "PM I.1 p.359 / source line 549 prints `In valley south of Deir "
-        "el-Bal].ri Temples` where `Bal].ri` = `Bahari` (OCR artifact). "
+        "el-Bal].ri Temples` where `Bal].ri` = `Baḥri` (OCR artifact; the "
+        "PM-faithful canonical form post-issue #291 migration is "
+        "`Deir el-Baḥri` with Ḥ-underdot). "
         "Majority (A+C) emitted null; agent B correctly captured this PM "
         "location qualifier but was minority. PM explicitly marks this tomb "
         "outside the standard theban_area grid (`D-3, i, 3` map reference "
@@ -6849,7 +6851,6 @@ def main() -> None:
         if new_value is not None:
             row["theban_area"] = new_value
             per_form_migrated[old_value].append(row["tomb_id"])
-    subsite_migrated_count = sum(len(v) for v in per_form_migrated.values())
     for old_value, new_value in SUBSITE_PM_FAITHFUL_MIGRATION.items():
         migrated = per_form_migrated[old_value]
         if migrated:
