@@ -5,8 +5,5 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {}
   },
-  "postCreateCommand": "npm install -g @anthropic-ai/claude-code",
-  "containerEnv": {
-    "CLAUDE_CODE_OAUTH_TOKEN": "${localEnv:CLAUDE_CODE_OAUTH_TOKEN}"
-  }
+  "postCreateCommand": "curl -fsSL https://claude.ai/install.sh | bash"
 }
