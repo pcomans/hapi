@@ -373,6 +373,9 @@ CHUNK43_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK44_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(351, 361)}
 )
+CHUNK45_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(361, 371)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -417,6 +420,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK42_TOMB_IDS
     | CHUNK43_TOMB_IDS
     | CHUNK44_TOMB_IDS
+    | CHUNK45_TOMB_IDS
 )
 
 
@@ -11999,3 +12003,146 @@ def test_chunk44_tt352_anonymous() -> None:
     assert r["occupant_name"] is None
     assert r["attribution_certainty"] == "attested"
     assert r["occupant_role"] == "Official"
+
+
+# ===========================================================================
+# Chunk 45 — TT361–TT370 (Deir el-Medina × 1, Khokha × 6, ʿAsâsîf × 2,
+#            Sh. ʿAbd el-Qurna × 2; note TT361+TT368+TT367 vary)
+# ===========================================================================
+
+
+def test_chunk45_all_rows_present() -> None:
+    """All 10 TT361-TT370 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK45_TOMB_IDS
+    assert actual == CHUNK45_TOMB_IDS, sorted(CHUNK45_TOMB_IDS - actual)
+
+
+def test_chunk45_theban_areas() -> None:
+    """Verify area assignments per PM I.1 p.426–432 headword sub-site lines."""
+    expected = {
+        "TT361": "Deir el-Medina",
+        "TT362": "Khokha",
+        "TT363": "Khokha",
+        "TT364": "ʿAsâsîf",
+        "TT365": "Khokha",
+        "TT366": "ʿAsâsîf",
+        "TT367": "Sh. ʿAbd el-Qurna",
+        "TT368": "Sh. ʿAbd el-Qurna",
+        "TT369": "Khokha",
+        "TT370": "Khokha",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, (
+            f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+        )
+
+
+def test_chunk45_source_pages() -> None:
+    """Verify source_citation pages for chunk-45 rows.
+    TT362 page=426 (A+C correct; B off-by-one at 427, 2/1 majority resolved)."""
+    expected = {
+        "TT361": 426,
+        "TT362": 426,
+        "TT363": 427,
+        "TT364": 427,
+        "TT365": 427,
+        "TT366": 429,
+        "TT367": 430,
+        "TT368": 431,
+        "TT369": 432,
+        "TT370": 432,
+    }
+    for tid, page in expected.items():
+        r = _row(tid)
+        assert r["source_citation"]["page"] == page, (
+            f"{tid}: expected page {page}, got {r['source_citation']['page']}"
+        )
+
+
+def test_chunk45_attribution_certainties() -> None:
+    """All TT361-TT370 rows are attested (no `perhaps`/`probably`/`(?)` in headwords)."""
+    for tid in (f"TT{n}" for n in range(361, 371)):
+        r = _row(tid)
+        assert r["attribution_certainty"] == "attested", (
+            f"{tid}: expected attested, got {r['attribution_certainty']!r}"
+        )
+
+
+def test_chunk45_tt362_wab_priest() -> None:
+    """TT362 PAʿANEMWESET: wʿab-priest of Amūn — canonical ayin-before-a form
+    per TT14/TT97/TT100 precedent (resolved via tie-break-overrides.json); macron-Ū
+    on Amūn preserved from agent extraction (no CHUNK45_CORRECTIONS needed)."""
+    r = _row("TT362")
+    assert r["occupant_name"] == "Paʿanemweset"
+    assert r["occupant_role"] == "Official"
+    assert r["notes_from_pm"] == "wʿab-priest of Amūn. Late Dyn. XIX. Wife, Ḥatḥor."
+    assert r["shared_with_tombs"] == []
+
+
+def test_chunk45_tt363_occupant_name() -> None:
+    """TT363 PARAʿEMḤAB: ayin present (B+C majority 2/1 over A's `Paraemhab`)."""
+    r = _row("TT363")
+    assert r["occupant_name"] == "Paraʿemhab"
+    assert r["occupant_role"] == "Official"
+
+
+def test_chunk45_tt365_positional_crossref() -> None:
+    """TT365: `For position in court of tomb 296, see p. 370` is a positional
+    cross-ref, NOT an ownership relation. shared_with_tombs=[] correct (all 3 agents
+    agreed; B+C notes include the cross-ref sentence, A dropped it — 2/1 majority)."""
+    r = _row("TT365")
+    assert r["shared_with_tombs"] == []
+    assert r["occupant_name"] == "Nefermenu"
+    assert "tomb 296" in r["notes_from_pm"]
+
+
+def test_chunk45_tt366_diacritics() -> None:
+    """TT366 ZAR: CHUNK45_CORRECTIONS restores PM-printed diacritics `harîm`
+    (circumflex î) and `Nebḥepetrēʿ` (macron ē) that A+C majority dropped."""
+    r = _row("TT366")
+    assert "harîm" in r["notes_from_pm"]
+    assert "Nebḥepetrēʿ" in r["notes_from_pm"]
+    assert r["occupant_name"] == "Zar"
+    assert r["occupant_role"] == "Official"
+
+
+def test_chunk45_tt368_called_huy() -> None:
+    """TT368 AMENHOTP called ḤUY: lowercase `called Ḥuy` prefix (agent B verbatim,
+    A capitalised wrong, C dropped it). occupant_alt_names=["Huy"] from all 3 agents."""
+    r = _row("TT368")
+    assert r["occupant_name"] == "Amenhotp"
+    assert r["occupant_alt_names"] == ["Huy"]
+    assert r["notes_from_pm"].startswith("called Ḥuy,")
+    assert r["shared_with_tombs"] == []
+
+
+def test_chunk45_tt369_high_priest() -> None:
+    """TT369 KAEMWESET: First prophet of Ptaḥ — maps to High Priest (A+B 2/1;
+    C emitted Official). CHUNK45_CORRECTIONS restores macron ō on Taōne(t)."""
+    r = _row("TT369")
+    assert r["occupant_name"] == "Kaemweset"
+    assert r["occupant_role"] == "High Priest"
+    assert "Taōne(t)" in r["notes_from_pm"]
+    assert r["theban_area"] == "Khokha"
+
+
+def test_chunk45_tt370_anonymous() -> None:
+    """TT370: anonymous Royal scribe (Ramesside). `A Royal scribe.` opener → occupant_name=null,
+    occupant_role=Official (role attested from title even when name is not)."""
+    r = _row("TT370")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert r["shared_with_tombs"] == []
+
+
+def test_chunk45_tt361_huy_no_shared() -> None:
+    """TT361 ḤUY: Great carpenter, Deir el-Medina. shared_with_tombs=[] — the
+    `(name from tomb 360)` in notes identifies the wife's name source, NOT ownership.
+    TT360 reciprocally has shared_with_tombs=[] for the same reason (chunk-44)."""
+    r = _row("TT361")
+    assert r["occupant_name"] == "Huy"
+    assert r["shared_with_tombs"] == []
+    assert r["theban_area"] == "Deir el-Medina"
+    assert "tomb 360" in r["notes_from_pm"]
