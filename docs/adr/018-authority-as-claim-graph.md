@@ -67,7 +67,7 @@ For each, the HTML release is the semantic authority (scope notes, conceptual ra
 
 #### Edge spine
 
-Every E13 Statement carries a universally-required triad — P140 (subject), P141 (value), P177 (predicate type) — plus provenance edges that vary by claim type. **Human-documentary** claims carry P14 (actor) + P70i (document); **matcher-derived** claims carry `hapi:derived_by_run → :D10` (the Software Execution that produced them) and don't carry P70i (matchers don't have documentary anchors — their provenance is algorithmic). Confidence on the matcher's E13 is informational, not gating. Matcher-derived claims are produced by a **two-stage pipeline**: a deterministic stage-1 matcher emits candidate E13s, and a stage-2 LLM reviewer evaluates each candidate and emits a verdict — itself an E13 whose P140 subject IS the matcher's E13 (see schema sketch case 4b). Downstream effects (specifically the shortcut-triple emission for manifest interop) are gated on a latest verdict-E13 with value `hapi:verdict_approved` existing for the matcher's E13.
+Every E13 Statement carries a universally-required triad — P140 (subject), P141 (value), P177 (predicate type) — plus provenance edges that vary by claim type. **Human-documentary** claims carry P14 (actor) + P70i (document); **matcher-derived** claims carry `hapi:derived_by_run → :D10` (the Software Execution that produced them) and don't carry P70i (matchers don't have documentary anchors — their provenance is algorithmic). Confidence on the matcher's E13 is informational, not gating. Matcher-derived claims are produced by a **two-stage pipeline**: a deterministic stage-1 matcher emits candidate E13s, and a stage-2 LLM reviewer evaluates each candidate and emits a verdict — itself an E13 whose P140 subject IS the matcher's E13 (see schema sketch case 4b). Verdicts form a linear supersession chain over `hapi:supersedes` edges; downstream effects (specifically the shortcut-triple emission for manifest interop) are gated on the unique tip of that chain having P141 = `hapi:verdict_approved`.
 
 | Edge                                  | Specification | Domain | Range | Purpose |
 |---------------------------------------|---------------|--------|-------|---------|
@@ -89,7 +89,7 @@ The `hapi:` prefix used throughout this ADR resolves to the namespace `https://p
 
 To make the manifest-loaded interop story actually work, the loader / strict-RDF export emits **two triples per claim** for any predicate that plays the P140-subject → P141-value relation role (currently: `hapi:same_entity_as`, and any future predicate type assigned by P177 that downstream consumers want to query directly): the full E13 reification *and* a direct shortcut triple `(subject) hapi:<predicate> (value)` between the E13's P140 subject and P141 value. The reification carries provenance; the shortcut carries the queryable relationship.
 
-**Matcher-derived claims gate shortcut emission on review verdict.** For human-attested E13s (P14 → E39 Actor) the shortcut emits unconditionally. For matcher-derived E13s (`hapi:derived_by_run → :D10`) the shortcut emits only when there exists a latest verdict-E13 (see schema sketch case 4b) with P140-subject pointing at the matcher's E13 and P141-value = `:E55 Type {id: 'hapi:verdict_approved'}`. Pending, rejected, and superseded verdicts do *not* cause shortcut emission. This is how the two-stage pipeline composes with the manifest-interop story: matcher proposals exist in the graph (as full E13 reifications) regardless of verdict; only approved verdicts cause the direct edge that downstream consumers query against to materialise. The matcher's E13 is never mutated; revisiting a verdict produces a new verdict-E13 that supersedes the previous one (latest-by-`reviewer-run.started_at` wins).
+**Matcher-derived claims gate shortcut emission on review verdict.** For human-attested E13s (P14 → E39 Actor) the shortcut emits unconditionally. For matcher-derived E13s (`hapi:derived_by_run → :D10`) the shortcut emits only when the **unique tip of the verdict supersession chain** for the matcher's E13 has `P141 = :E55 Type {id: 'hapi:verdict_approved'}`. The tip is the verdict-E13 that has no incoming `hapi:supersedes` edge from any other verdict-E13 covering the same matcher's E13. A matcher's E13 with no verdict at all has no tip and therefore no shortcut emission; "pending" is the absence of a verdict, not a verdict outcome. Rejected and superseded verdict outcomes also do not cause shortcut emission. The matcher's E13 is never mutated; revisiting a verdict produces a NEW verdict-E13 that carries `hapi:supersedes` to the previous tip, making the new verdict the new tip. **Supersession is not based on `started_at`** — forks (two verdict-E13s both claiming the same predecessor) fail loud at load time so the chain is always linear. `started_at` / `completed_at` remain on the reviewer's `:D10` as reproducibility metadata, never as supersession state. This is how the two-stage pipeline composes with the manifest-interop story: matcher proposals exist in the graph (as full E13 reifications) regardless of verdict; only the approved tip of the supersession chain materialises the direct edge that downstream consumers query against.
 
 This dual-emission pattern is **a Hapi-defined export rule inspired by CIDOC's dual-form shortcut idiom**, not a CRM-defined shortcut itself. CIDOC defines specific shortcut properties with formal FOL semantics — the canonical worked example is P2 has type, whose scope note documents it as *"a shortcut for the path from E1 CRM Entity through P41i was classified by, E17 Type Assignment, P42 assigned to E55 Type"* (`pipeline/pipeline/authority/spec/cidoc_crm_v7.1.3.html#P2`). The long form (E1 ← P41i ← E17 Type Assignment → P42 → E55 Type) is the reified form; P2 itself is CIDOC's named shortcut between the endpoints. The structural parallel to Hapi's case is close — E17 Type Assignment is itself a subclass of E13 Attribute Assignment, so Hapi's E13 + P177 → :E55 Type reification is the same construct that P2 shortcuts. The difference is that CIDOC pre-defined P2 as the shortcut for that specific case with FOL semantics; Hapi is intentionally materialising an analogous shortcut for our open-ended set of `hapi:` predicates assigned via P177. The pattern follows CIDOC's idiom; the specific shortcut properties (`hapi:same_entity_as`, etc.) are Hapi-defined, not CRM-defined.
 
@@ -137,7 +137,7 @@ hapi:same_entity_as     rdf:type           owl:SymmetricProperty       .  # OWL-
 hapi:shares_tomb_with   rdf:type           owl:SymmetricProperty       .  # E21 ↔ E21 (Ruler ↔ Ruler); DERIVED predicate, not loadable as a primary claim — see ADR text below
 ```
 
-Hapi predicates that don't have a clean CRM/CRMdig superproperty (`hapi:in_dynastic_period`, `hapi:tomb_owner`, `hapi:original_burial_in`, `hapi:cache_context_at`, `hapi:display_name`, `hapi:reign_period`, `hapi:horus_name`, `hapi:matcher_review_verdict`) live in the manifest as plain `rdf:Property` declarations and as `:E55 Type` instances in the predicate registry. Tightening these to real `rdfs:subPropertyOf` declarations is a follow-up Egyptological + CRM-modelling cross-cut. For `hapi:matcher_review_verdict` specifically, the closest CRMdig affinity is `crmdig:L43_annotates` (a `subPropertyOf P129_is_about` whose conceptual intent — an annotation object asserting something about another CRM entity — closely parallels a reviewer's verdict on a matcher's E13). The reason it is NOT declared `rdfs:subPropertyOf crmdig:L43_annotates` is a domain conflict: L43's `rdfs:domain` is `D29 Annotation Object`, and our verdict-E13 is an E13 Attribute Assignment, not a D29 — declaring subPropertyOf would escape L43's domain, violating the "narrow not violate" rule. The affinity is documented via `crm_nearest: 'crmdig:L43_annotates'` in the predicate registry only (documentation-level, no inference effect). D29 / D30 / L43 remain documentation-only references; they are NOT added to the consumed CRMdig subset (still D1, D7, D10, D14 + L10, L11, L23, L54).
+Hapi predicates that don't have a clean CRM/CRMdig superproperty (`hapi:in_dynastic_period`, `hapi:tomb_owner`, `hapi:original_burial_in`, `hapi:cache_context_at`, `hapi:display_name`, `hapi:reign_period`, `hapi:horus_name`, `hapi:matcher_review_verdict`, `hapi:supersedes`) live in the manifest as plain `rdf:Property` declarations and as `:E55 Type` instances in the predicate registry. Tightening these to real `rdfs:subPropertyOf` declarations is a follow-up Egyptological + CRM-modelling cross-cut. For `hapi:matcher_review_verdict` specifically, the closest CRMdig affinity is `crmdig:L43_annotates` (a `subPropertyOf P129_is_about` whose conceptual intent — an annotation object asserting something about another CRM entity — closely parallels a reviewer's verdict on a matcher's E13). The reason it is NOT declared `rdfs:subPropertyOf crmdig:L43_annotates` is a domain conflict: L43's `rdfs:domain` is `D29 Annotation Object`, and our verdict-E13 is an E13 Attribute Assignment, not a D29 — declaring subPropertyOf would escape L43's domain, violating the "narrow not violate" rule. The affinity is documented via `crm_nearest: 'crmdig:L43_annotates'` in the predicate registry only (documentation-level, no inference effect). D29 / D30 / L43 remain documentation-only references; they are NOT added to the consumed CRMdig subset (still D1, D7, D10, D14 + L10, L11, L23, L54). For `hapi:supersedes` specifically, no CRM superproperty fits the "this E13 replaces that E13" semantic (P130 / P132 are about similarity / overlap, not replacement).
 
 `hapi:shares_tomb_with` is **not** in that follow-up bucket. It is registered as a **derived / query-only predicate**: the edge encodes neither the shared Site nor the burial context (primary burial vs cache), so asserting it directly would lose the very context the rest of the model exists to preserve. The loader REJECTS direct assertions of `hapi:shares_tomb_with` from any source; the source's actual statement (e.g. "King X and Queen Y in KV35") is emitted as the two corresponding `original_burial_in` / `cache_context_at` claims, and `hapi:shares_tomb_with` is materialised at query time by intersecting two rulers' **actual-burial site sets** — *only* the burial predicates `hapi:original_burial_in` and `hapi:cache_context_at`. `hapi:tomb_owner` is commissioning/ownership, not interment, and is **not** a derivation source for `hapi:shares_tomb_with` (a king who commissioned a tomb but was never interred there should not be inferred as "buried with" anyone subsequently interred in it). The predicate registry carries a `derived: true` flag for this case (see Predicate registry section below).
 
@@ -321,13 +321,27 @@ Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human
 
 // (4b) STAGE 2 — A review verdict from the LLM reviewer evaluating the matcher's E13 above.
 //     The verdict is itself an E13. Its P140-subject is the matcher's E13 (E13 ⊂ E1, so P140's E1
-//     range is satisfied). Its P141-value is the verdict outcome as an :E55 Type. The reviewer's
-//     run is itself a :D10 Software Execution — separate run record from the matcher's. The
-//     verdict E13 is not mutated; if the reviewer revisits and changes its mind, a third E13
-//     supersedes this one. Latest verdict wins (MAX over reviewer-run.started_at).
-//     The shortcut-emission rule (see §Shortcut triple emission for manifest interop) fires
-//     for the matcher's hapi:same_entity_as claim only when there exists a latest verdict-E13
-//     with P141 → :E55 Type {id: 'hapi:verdict_approved'} pointing at it.
+//     range is satisfied). Its P141-value is the verdict outcome as an :E55 Type drawn from the
+//     verdict-outcome controlled vocabulary (see "Verdict-outcome controlled vocabulary" below).
+//     The reviewer's run is itself a :D10 Software Execution — separate run record from the
+//     matcher's, paired with its own :D14 reviewer software. The verdict E13 is never mutated;
+//     if the reviewer revisits and changes its mind, a NEW verdict-E13 is emitted that carries a
+//     hapi:supersedes edge to the previous verdict-E13. The "current verdict" for a matcher's E13
+//     is the unique tip of the supersedes chain (the verdict-E13 with no incoming hapi:supersedes
+//     from any other verdict-E13 covering the same matcher's E13). Forking supersession — two
+//     verdict-E13s both pointing at the same predecessor — is a hard load error: each predecessor
+//     has at most one successor, enforced at load time. started_at / completed_at remain on the
+//     :D10 reviewer-run as informational reproducibility metadata, NOT as the basis of supersession
+//     state.
+//     The shortcut-emission rule (see §Shortcut triple emission for manifest interop) fires for
+//     the matcher's hapi:same_entity_as claim only when the unique tip of the supersedes chain
+//     covering the matcher's E13 has P141 → :E55 Type {id: 'hapi:verdict_approved'}.
+//
+//     Reviewer-run D1 provenance is fuller than a deterministic matcher's: the LLM reviewer's
+//     reproducibility audit needs the prompt template, the source-side context that informed the
+//     review, and a verdict-serialisation output, NOT just the candidate-claims input file. The
+//     example below shows the minimum loadable set; the loader specification owns the per-stage
+//     L10/L11 contract.
 (:Statement:E13 verdict-claim)
   -[:P140_assigned_attribute_to]->    (:Statement:E13 matcher-claim)        // ← the matcher's E13 above
   -[:P141_assigned]->                  (:Type:E55 {id: 'hapi:verdict_approved'})
@@ -346,16 +360,48 @@ Every claim is an E13 Statement. Edge cardinality depends on claim type. **Human
                                            started_at:           '2026-05-17T15:03:11Z',
                                            completed_at:         '2026-05-17T15:08:42Z'
                                        })
+  // No hapi:supersedes here — this is the FIRST verdict on the matcher-claim. A later revisit
+  // would emit a second verdict-E13 carrying:
+  //     -[:hapi:supersedes]-> (:Statement:E13 verdict-claim)    // ← THIS verdict
+  // making the second verdict the new tip of the chain.
 
 (:MatcherRun:D10 reviewer-run)
   -[:L23_used_software_or_firmware]-> (:MatcherAlgorithm:D14 {
                                            id: 'llm_reviewer_v1',
                                            version: '0.1.0',
                                            algorithm: 'claude-opus-4-7-review-prompt',
-                                           hyperparameters_json: '{"temperature": 0.1}'
+                                           hyperparameters_json: '{"temperature": 0.1, "seed": 42}',
+                                           model_provider: 'anthropic',
+                                           model_id:       'claude-opus-4-7',
+                                           model_snapshot: 'claude-opus-4-7-20260501'   // dated provider snapshot
                                        })
   -[:L10_had_input]->                  (:SourceData:D1 {
-                                           path: 'matcher_outputs/run_2026_05_17T14_22Z.jsonl'
+                                           role:        'candidate_claims',
+                                           path:        'matcher_outputs/run_2026_05_17T14_22Z.jsonl',
+                                           git_commit:  'a8f3e9d...',
+                                           sha256:      'sha256:c4d...'
+                                       })
+  -[:L10_had_input]->                  (:SourceData:D1 {
+                                           role:        'prompt_template',
+                                           path:        'reviewer_prompts/review_v1.md',
+                                           git_commit:  'a8f3e9d...',
+                                           sha256:      'sha256:e72...'
+                                       })
+  -[:L10_had_input]->                  (:SourceData:D1 {
+                                           role:        'source_context_snippets',
+                                           path:        'reviewer_inputs/run_2026_05_17T15_03Z_context.jsonl',
+                                           git_commit:  'a8f3e9d...',
+                                           sha256:      'sha256:f19...'
+                                                                                // per-candidate source-side
+                                                                                // excerpts the LLM saw
+                                       })
+  -[:L11_had_output]->                 (:SourceData:D1 {
+                                           role:        'verdict_serialisation',
+                                           path:        'reviewer_outputs/run_2026_05_17T15_03Z_verdicts.jsonl',
+                                           sha256:      'sha256:a34...'
+                                                                                // raw verdicts + per-verdict
+                                                                                // reasoning trace, one row per
+                                                                                // input candidate
                                        })
 
 // (5) Curator-decision display name. Actor is the curatorial Group; document is the dated decision batch.
@@ -429,6 +475,18 @@ The registry is the authoritative vocabulary for the claim graph. Each entry is 
 
 Adding a new predicate is an INSERT into this registry preceded by a review against existing predicates to avoid `buried_in` / `interred_at` / `tomb_location` vocabulary drift. The registry is committed to version control (`pipeline/pipeline/authority/predicate_registry.json` — exact path resolved during implementation) and validated by a CI test that loads each entry and asserts every required field is populated and that referenced E-classes exist in the class catalogue.
 
+### Verdict-outcome controlled vocabulary
+
+The predicate `hapi:matcher_review_verdict` (P177 type on verdict-E13s, see schema sketch case 4b) takes its P141 value from a **closed three-term vocabulary**. Each term is a separately-declared `:E55 Type` instance — formally declared in the extension manifest as `rdf:type crm:E55_Type`, NOT a magic-string in prose. The loader REJECTS any verdict-E13 whose P141 value isn't one of these three IDs.
+
+| `:E55 Type` id (URI) | label | meaning |
+|---|---|---|
+| `hapi:verdict_approved` | reviewer approved | the LLM reviewer accepts the matcher's candidate identity claim. The matcher's claim becomes eligible for shortcut-triple emission IF this verdict-E13 is the unique tip of the supersession chain. |
+| `hapi:verdict_rejected` | reviewer rejected | the LLM reviewer rejects the matcher's candidate. No shortcut emission. The matcher's E13 remains in the graph (as a candidate-claim record); the verdict is the authoritative reason it isn't materialised. |
+| `hapi:verdict_superseded` | superseded by a re-review | use this outcome when a NEW verdict-E13 is being emitted to overturn a previous tip; the new verdict's P141 carries the substantive new outcome (approved or rejected), the new verdict carries `hapi:supersedes → previous-tip-E13`, and the old tip's outcome remains as it was recorded — `verdict_superseded` is NOT used on the old tip retroactively. Reserved for explicit "no new substantive call, just retracting the previous one" cases (e.g. the candidate has been removed from the matcher's input set; the reviewer no longer has a position). |
+
+Each of these three `:E55 Type` instances is declared in `pipeline/pipeline/authority/hapi_extension.rdf` as an explicit `<rdf:Description rdf:about="#verdict_..."><rdf:type rdf:resource="...E55_Type"/></rdf:Description>` entry. The supersession edge is the `hapi:supersedes` predicate (separately declared in the manifest), domain `:E13`, range `:E13`, free-standing for now — no clean CRM superproperty was identified; P132_overlaps_with and similar candidates don't fit "this assertion replaces that one" semantics. The fork-prevention rule (each verdict-E13 has at most one successor in the chain) is enforced at load time by a uniqueness constraint over the (predecessor-verdict-E13.id) column.
+
 ### What this does not decide
 
 - **Storage technology** — Postgres (with relational encoding of the graph, or with the Apache AGE extension) and Neo4j (self-hosted Community or Aura managed) are the two viable candidates. A separate ADR will resolve this based on the pilot evidence accumulated under this model. Until then, the conceptual model is binding; the storage substrate is open.
@@ -484,9 +542,9 @@ A follow-up ADR will revise ADR-009 to specify the constraint-narrowed algorithm
 - **Phase 0 output shape changes.** Sources still produce `reconciled.jsonl`, but the downstream loader emits per-source E13 Statements, not collapsed per-entity rows. The 3-agent extraction step's job is unchanged (faithful capture of the source); per-row resolution still follows the Rule-2 decision tree (unanimity / majority / `tie-break-overrides.json` / documented policy) — the loader trusts whatever the existing pipeline emits and never re-resolves at the graph layer.
 - **Reconciliation semantics change.** "Reconciliation" no longer means "pick one value across sources"; it means "load all sources' claims into the graph and let the resolution policy (per-predicate, per-consumer) decide what to surface." The current `tie-break-overrides.json` becomes **pipeline QA provenance**, not scholarly citation evidence. Tie-break overrides justify *extraction arbitration* (which of the 3 agents' readings of the source was correct), not the source publication's historical claim itself; they sit in a separate QA-provenance layer attached to the loader event or extraction step that produced the Statement, queryable as "how was this Statement produced" rather than "who attested to this Statement." A Statement's scholarly citation chain remains P14 → scholar + P70i → publication; QA provenance lives alongside, never inside, that chain.
 - **Disagreements become first-class artifacts.** The UI can honestly show "1353–1336 BCE (Leprohon 2013) / 1352–1335 BCE (Dodson-Hilton 2010)" instead of pretending certainty it doesn't have. Authority disagreements appear in search snippets, hover cards, and the artifact detail page.
-- **Cross-source identity becomes data, not a structural primitive.** Adding a new source (Hornung, Kitchen, Ryholt) does not require re-curation of existing entities. It adds per-source nodes that get linked to existing nodes via `hapi:same_entity_as` Statements emitted by the **two-stage matcher pipeline**: a deterministic stage-1 matcher (`:D10 Software Execution`, attached via `hapi:derived_by_run`) produces candidate same-entity-as E13s, and a stage-2 LLM reviewer evaluates each candidate and emits a verdict-E13 pointing at the candidate (see schema sketch case 4b). Downstream consumers see the matcher's identity claim as a queryable direct edge (the shortcut-triple) only after the latest verdict-E13 for that candidate has P141 = `hapi:verdict_approved`. A canonical-person view, if needed, can be derived from approved-`same_entity_as` clusters as a materialized view; the source of truth remains the per-source nodes plus their identity claims and the reviewer's verdicts on them. (Human curator attribution via P14 + P70i is reserved for explicitly-curatorial decisions on the same data — e.g. a curator overriding a reviewer verdict — and is a separate provenance shape, not a fallback for matcher claims.)
+- **Cross-source identity becomes data, not a structural primitive.** Adding a new source (Hornung, Kitchen, Ryholt) does not require re-curation of existing entities. It adds per-source nodes that get linked to existing nodes via `hapi:same_entity_as` Statements emitted by the **two-stage matcher pipeline**: a deterministic stage-1 matcher (`:D10 Software Execution`, attached via `hapi:derived_by_run`) produces candidate same-entity-as E13s, and a stage-2 LLM reviewer evaluates each candidate and emits a verdict-E13 pointing at the candidate (see schema sketch case 4b). Downstream consumers see the matcher's identity claim as a queryable direct edge (the shortcut-triple) only when the unique tip of the verdict supersession chain for that candidate has P141 = `hapi:verdict_approved`. A canonical-person view, if needed, can be derived from approved-`same_entity_as` clusters as a materialized view; the source of truth remains the per-source nodes plus their identity claims and the reviewer's verdicts on them. (Human curator attribution via P14 + P70i is reserved for explicitly-curatorial decisions on the same data — e.g. a curator overriding a reviewer verdict — and is a separate provenance shape, not a fallback for matcher claims.)
 - **The predicate registry becomes the vocabulary contract.** Any new relationship type proposed by an agent, a Phase 0 chunk, or a contributor must be reviewed against the registry. The CI check is FK-enforced at the DB layer; convention is not enough.
 - **Citation network becomes queryable.** Citation tokens currently buried as text inside Leprohon's `source_note` fields (referencing Beckerath 1999, Gauthier 1907, Wilkinson 2000, etc.) become explicit edges from Statements to Citation nodes, queryable as "claims about Akhenaten that cite Wilkinson" or "what does Leprohon cite that we have no authority data for."
 - **`attested_in` becomes the bridge to artifacts.** Attestation entries currently nested inside Leprohon name qualifiers become explicit edges from Name Statements to Inscription / Artifact nodes, linking the authority layer to the museum layer at the data level.
-- **Temporal phases gain structure without canonicalisation.** Leprohon's split of Akhenaten into "Amenhotep IV (Regnal Years 1 to 5)" + "Akhenaten (Regnal Years 5 to 17)" produces two per-source `:Ruler` nodes (two rows in Leprohon, two nodes in the graph). They are linked by a `hapi:same_entity_as` Statement attributed to the source itself — Leprohon's text explicitly identifies the two as a single ruler at different naming phases. Each `:Ruler` carries its own `hapi:reign_period` Statement covering the relevant regnal years. Beckerath's single "Amenophis IV. Ach-en-aten" row becomes a third per-source `:Ruler` node, linked to either of the Leprohon nodes via a separate cross-source `hapi:same_entity_as` Statement emitted by the two-stage matcher pipeline (stage-1 deterministic matcher → stage-2 LLM-reviewer verdict; the shortcut-triple materialises only on an approved verdict). No canonical Person is materialised at load time; the "same person, different naming period" structure is data, not schema.
+- **Temporal phases gain structure without canonicalisation.** Leprohon's split of Akhenaten into "Amenhotep IV (Regnal Years 1 to 5)" + "Akhenaten (Regnal Years 5 to 17)" produces two per-source `:Ruler` nodes (two rows in Leprohon, two nodes in the graph). They are linked by a `hapi:same_entity_as` Statement attributed to the source itself — Leprohon's text explicitly identifies the two as a single ruler at different naming phases. Each `:Ruler` carries its own `hapi:reign_period` Statement covering the relevant regnal years. Beckerath's single "Amenophis IV. Ach-en-aten" row becomes a third per-source `:Ruler` node, linked to either of the Leprohon nodes via a separate cross-source `hapi:same_entity_as` Statement emitted by the two-stage matcher pipeline (stage-1 deterministic matcher → stage-2 LLM-reviewer verdict; the shortcut-triple materialises only when the supersession-chain tip is an approved verdict). No canonical Person is materialised at load time; the "same person, different naming period" structure is data, not schema.
 - **The storage decision is the gating follow-up.** Until ADR-019 (or the storage ADR, whatever number it lands at) is resolved, no production graph build can start. A Phase 0 → graph loader can be sketched against either substrate.
