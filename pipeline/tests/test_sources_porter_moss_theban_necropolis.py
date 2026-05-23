@@ -376,6 +376,9 @@ CHUNK44_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK45_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(361, 371)}
 )
+CHUNK46_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(371, 381)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -421,6 +424,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK43_TOMB_IDS
     | CHUNK44_TOMB_IDS
     | CHUNK45_TOMB_IDS
+    | CHUNK46_TOMB_IDS
 )
 
 
@@ -12146,3 +12150,63 @@ def test_chunk45_tt361_huy_no_shared() -> None:
     assert r["shared_with_tombs"] == []
     assert r["theban_area"] == "Deir el-Medina"
     assert "tomb 360" in r["notes_from_pm"]
+
+
+# ===========================================================================
+# Chunk 46 — TT371–TT380 (Khokha × 4, Dra' Abu el-Naga × 5, Qurnet Muraʿi × 1)
+# ===========================================================================
+
+
+def test_chunk46_all_rows_present() -> None:
+    """All 10 TT371–TT380 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK46_TOMB_IDS
+    assert actual == CHUNK46_TOMB_IDS, sorted(CHUNK46_TOMB_IDS - actual)
+
+
+def test_chunk46_theban_areas() -> None:
+    """Verify area assignments per PM I.1 p.432–435 headword sub-site lines.
+    4 Khokha (TT371–TT374), 5 Dra' Abu el-Naga (TT375–TT379), 1 Qurnet Muraʿi (TT380)."""
+    expected = {
+        "TT371": "Khokha",
+        "TT372": "Khokha",
+        "TT373": "Khokha",
+        "TT374": "Khokha",
+        "TT375": "Dra' Abu el-Naga",
+        "TT376": "Dra' Abu el-Naga",
+        "TT377": "Dra' Abu el-Naga",
+        "TT378": "Dra' Abu el-Naga",
+        "TT379": "Dra' Abu el-Naga",
+        "TT380": "Qurnet Muraʿi",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, (
+            f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+        )
+
+
+def test_chunk46_anonymous_roles() -> None:
+    """TT371, TT375–TT379 are anonymous; occupant_role must be 'Unknown'
+    (CHUNK46_CORRECTIONS restored these after sentinel-null collapse in merge.py)."""
+    for tid in ("TT371", "TT375", "TT376", "TT377", "TT378", "TT379"):
+        r = _row(tid)
+        assert r["occupant_name"] is None, f"{tid}: expected null name"
+        assert r["occupant_role"] == "Unknown", (
+            f"{tid}: expected Unknown role, got {r['occupant_role']!r}"
+        )
+
+
+def test_chunk46_tt374_cross_reference() -> None:
+    """TT374: notes_from_pm must include 'For position, see p. 292.'
+    (CHUNK46_CORRECTIONS restored this; A+B majority had dropped it)."""
+    r = _row("TT374")
+    assert "For position, see p. 292." in r["notes_from_pm"]
+
+
+def test_chunk46_tt380_occupant_name() -> None:
+    """TT380: occupant_name must be ʿAnkhef(en)-Reʿ-Harakhti with Reʿ (not Rʿ).
+    B+C 2/1 majority over A's Rʿ; PDF p.435 confirms Reʿ."""
+    r = _row("TT380")
+    assert r["occupant_name"] == "ʿAnkhef(en)-Reʿ-Harakhti"
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert "Ḏḥout" in r["notes_from_pm"]
