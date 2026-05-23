@@ -97,7 +97,7 @@ Identical to chunk 9 unless explicitly overridden below. Re-read chunk 9's promp
 `TT<N>` where `<N>` is the Arabic tomb number from the heading line (10 expected values: TT11–TT20).
 
 ### `theban_area`
-The TT11–TT20 range falls under PM I.1's Draʿ Abû el-Nagaʿ sub-site (PM declares `Dra' Abû el-Naga'.` on the line below each headword title). Use the canonical form **`"Draʿ Abû el-Nagaʿ"`** (single apostrophe after `Dra`, no trailing apostrophe, ASCII `'`) — same convention as chunk-7's `DAN-` rows. Re-read each headword's sub-site line; if PM declares a DIFFERENT sub-site for any row in this range that is a re-check signal — the range was scoped to a single sub-site cluster.
+The TT11–TT20 range falls under PM I.1's Draʿ Abû el-Nagaʿ sub-site (PM declares `Dra' Abû el-Naga'.` on the line below each headword title). Use the canonical form **`\"Draʿ Abû el-Nagaʿ\"`** (U+02BF ʿayin in BOTH `Draʿ` and terminal `Nagaʿ` positions, circumflex `û` per PM's printed form — issue #288 migration; same convention as chunk-7's `DAN-` rows). Re-read each headword's sub-site line; if PM declares a DIFFERENT sub-site for any row in this range that is a re-check signal — the range was scoped to a single sub-site cluster.
 
 ### `occupant_name`
 **PM-verbatim, conventional-English form, titlecase**, per chunk 9's diacritic policy:
@@ -139,7 +139,7 @@ Per chunk 9's rule (apply mechanically per headword). Recall from chunk 9 the tw
 1. **10 rows expected** (every TT number in TT11..TT20 has a headword in PM I.1 § I — no gaps in this decade).
 2. **PM I.1 offset is +18** (printed = physical − 18). Use the `===== PRINTED PAGE M =====` marker for `source_citation.page`.
 3. **`section: "I"`**, **`edition: "PM I.1 2nd ed. 1960"`** (same as chunk 9).
-4. **`theban_area: "Draʿ Abû el-Nagaʿ"`** for every row in this range (ASCII apostrophe after Dra, no trailing apostrophe).
+4. **`theban_area: \"Draʿ Abû el-Nagaʿ\"`** for every row in this range (U+02BF ʿayin in BOTH positions, circumflex `û` per PM).
 5. **`is_joint_burial`** / **`co_occupants`**: apply the hierarchical (`X and son Y`, `false`) vs coordinate (`X and Y, plural-role`, `true`) rule mechanically per headword. Single-occupant: `is_joint_burial=false`, `co_occupants=[]`.
 6. **`shared_with_tombs`**: populate when a TT11–TT20 headword carries `Also owner of tomb N` / `Perhaps also owner of tomb N` / `See also Tomb N` / `(also owner of tombs N and M)` phrasing per the field rule. Empty list `[]` otherwise.
 7. **`occupant_role`** per the controlled-vocab rules; non-royal occupational titles flatten to `"Official"`. The verbatim role-title clause goes in `notes_from_pm`.

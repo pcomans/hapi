@@ -6837,21 +6837,26 @@ def main() -> None:
     # (issues #288 + #291). Runs after the legacy-field rename so the field
     # exists, and BEFORE per-chunk corrections so they reference the new
     # canonical form. Idempotent: a row already carrying the new form is
-    # unchanged.
+    # unchanged. Single-pass O(N + K) implementation (Gemini PR #297
+    # round-1 optimisation).
     subsite_migration_log: list[str] = []
-    subsite_migrated_count = 0
+    per_form_migrated: dict[str, list[str]] = {
+        old: [] for old in SUBSITE_PM_FAITHFUL_MIGRATION
+    }
+    for row in rows:
+        old_value = row.get("theban_area")
+        new_value = SUBSITE_PM_FAITHFUL_MIGRATION.get(old_value)
+        if new_value is not None:
+            row["theban_area"] = new_value
+            per_form_migrated[old_value].append(row["tomb_id"])
+    subsite_migrated_count = sum(len(v) for v in per_form_migrated.values())
     for old_value, new_value in SUBSITE_PM_FAITHFUL_MIGRATION.items():
-        per_form_migrated: list[str] = []
-        for row in rows:
-            if row.get("theban_area") == old_value:
-                row["theban_area"] = new_value
-                per_form_migrated.append(row["tomb_id"])
-        subsite_migrated_count += len(per_form_migrated)
-        if per_form_migrated:
+        migrated = per_form_migrated[old_value]
+        if migrated:
             subsite_migration_log.append(
                 f"- theban_area {old_value!r} → {new_value!r}: migrated on "
-                f"{len(per_form_migrated)} row(s) "
-                f"(first/last: {per_form_migrated[0]}, {per_form_migrated[-1]})"
+                f"{len(migrated)} row(s) "
+                f"(first/last: {migrated[0]}, {migrated[-1]})"
             )
         else:
             subsite_migration_log.append(

@@ -100,9 +100,9 @@ If your headword scan returns a number outside this range, RE-CHECK the chunk fi
 
 Canonical sub-site forms (use these literal strings; preserve PM's diacritics and apostrophes per the canonicalisation already established in chunks 7–10):
 - **`"Sh. ʿAbd el-Qurna"`** — Sheikh ʿAbd el-Qurna (with U+02BF MODIFIER LETTER LEFT HALF RING for the ayin in `ʿAbd`; `Sh.` abbreviated as PM prints, period preserved).
-- **`"Draʿ Abû el-Nagaʿ"`** — Draʿ Abû el-Nagaʿ (ASCII apostrophe after `Dra`, no trailing apostrophe — chunk-7 / chunk-10 precedent for the `DAN-` / TT11–TT20 cluster).
+- **`"Draʿ Abû el-Nagaʿ"`** — Draʿ Abû el-Nagaʿ (U+02BF MODIFIER LETTER LEFT HALF RING for the ʿayin in BOTH `Draʿ` and terminal `Nagaʿ` positions; circumflex `û` preserved per PM's printed form — migrated 2026-05-23 per issue #288 from project-stripped `Dra' Abu el-Naga` shared with chunk-7 `DAN-` rows).
 - **`"ʿAsâsîf"`** — ʿAsâsîf (leading ayin U+02BF; circumflex `â` and `î` preserved per PM's printed typography).
-- **`"Khôkha"`** — Khôkha (no diacritics; PM prints in plain Roman).
+- **`"Khôkha"`** — Khôkha (circumflex ô preserved per PM's printed form — migrated 2026-05-23 per issue #291 from project-stripped `Khokha`).
 
 If a row's headword sub-site line declares a sub-site NOT in this list, restore it to its canonical form per PM's printed text and report it in your final report as a new sub-site that may need adding to the canonical list.
 
@@ -233,7 +233,7 @@ Background (FYI only): the deriver flips `is_uninscribed=true` on `\buninscribed
 1. **10 rows expected** (every TT number in TT21..TT30 has a headword in PM I.1 § I — no gaps in this decade).
 2. **PM I.1 offset is +18** (printed = physical − 18). Use the `===== PRINTED PAGE M =====` marker for `source_citation.page`.
 3. **`section: "I"`**, **`edition: "PM I.1 2nd ed. 1960"`**.
-4. **`theban_area` is per-row** (chunk 11 spans 3+ sub-sites). Use the canonical sub-site list above; ASCII apostrophe in `Draʿ Abû el-Nagaʿ`, U+02BF ayin in `ʿAsâsîf` and `Sh. ʿAbd el-Qurna`, circumflex preserved in `ʿAsâsîf`. Read each headword's sub-site line and assign per row.
+4. **`theban_area` is per-row** (chunk 11 spans 3+ sub-sites). Use the canonical sub-site list above; U+02BF ʿayin in `Draʿ Abû el-Nagaʿ`, U+02BF ayin in `ʿAsâsîf` and `Sh. ʿAbd el-Qurna`, circumflex preserved in `ʿAsâsîf`. Read each headword's sub-site line and assign per row.
 5. **`is_joint_burial`** / **`co_occupants`**: apply the hierarchical (`X and son Y`, `false`) vs coordinate (`X and Y, plural-role`, `true`) rule mechanically per headword. Single-occupant: `is_joint_burial=false`, `co_occupants=[]`. **Usurpers do NOT go in `co_occupants`** — usurpation prose stays in `notes_from_pm`; the deriver flips `is_usurped=true`.
 6. **`shared_with_tombs`**: populate when a TT21–TT30 headword carries `Also owner of tomb N` / `Perhaps also owner of tomb N` / `See also Tomb N` / `(also owner of tombs N and M)` / `(Also owner of tomb N in the Valley of the Kings.)` phrasing. Use `KV<N>` for cross-valley references when PM names the valley qualifier; default to `TT<N>` otherwise.
 7. **`occupant_role`** per the controlled-vocab rules; non-royal occupational titles flatten to `"Official"` UNLESS PM explicitly names a controlled-vocab role (`Vizier` is the in-range example). The verbatim role-title clause goes in `notes_from_pm` regardless.
