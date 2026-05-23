@@ -11832,12 +11832,17 @@ def test_chunk43_anonymous_tt348() -> None:
 
 
 def test_chunk43_alt_names() -> None:
-    """TT343: Benia called Paḥeḳmen — strip-H policy yields `Paheḳmen` in alt_names
-    (ḥ-underdot stripped; ḳ-underdot retained per occupant_name policy)."""
+    """TT343: Benia called Paḥekmen — PM I.1 p.428 prints PAḤEKMEN with
+    Ḥ-underdot but PLAIN k (egyptologist-reviewer P1.2, PR #287 round 1). The
+    chunk-43 OCR cluster `J5:` was decoded as Ḳ-underdot by the 3 agents based
+    on the prompt's general Ḳ-pattern recognition; PDF reading is authoritative
+    and shows plain k. notes_from_pm preserves `Paḥekmen` verbatim (Ḥ + plain
+    k); occupant_alt_names applies the matchable-name policy and strips Ḥ →
+    `Pahekmen` (plain h + plain k)."""
     r = _row("TT343")
     assert r["occupant_name"] == "Benia"
-    assert r["occupant_alt_names"] == ["Paheḳmen"]
-    assert "called Paḥeḳmen" in r["notes_from_pm"]
+    assert r["occupant_alt_names"] == ["Pahekmen"]
+    assert "called Paḥekmen" in r["notes_from_pm"]
 
 
 def test_chunk43_damaged_name_tt350() -> None:

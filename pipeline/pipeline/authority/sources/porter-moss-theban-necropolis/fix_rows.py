@@ -4395,11 +4395,65 @@ CHUNK42_RENAMES: dict[str, str] = {}
 
 
 # Chunk-43 (TT341–TT350):
-# All three tie-break disagreements (TT343|notes_from_pm, TT345|notes_from_pm,
+# Three tie-break disagreements (TT343|notes_from_pm, TT345|notes_from_pm,
 # TT346|notes_from_pm) were resolved via tie-break-overrides.json with PDF
-# verification. No remaining field corrections needed for this chunk.
-# DERIVER_OVERRIDE for TT346 attribution_certainty is handled below.
-CHUNK43_CORRECTIONS: list[tuple[str, str, object, str]] = []
+# verification at merge time. DERIVER_OVERRIDE for TT346 attribution_certainty
+# is handled below.
+#
+# Egyptologist printed-source review (PR #287 round 1) flagged 4 P1
+# diacritic regressions; 3 accepted as in-scope per-row corrections below
+# (TT342 Tepiḥu, TT343 Paḥekmen, TT349 Amenhotp wife). The 4th (TT344
+# theban_area `Dra' Abu el-Naga` → PM's printed `Dra' Abû el-Naga'`) was
+# declined as out-of-scope: the canonical sub-site form is project-wide
+# convention used by ~30+ rows across 11+ shipped chunks, so a per-row fix
+# would break theban_area grouping; tracked as a follow-up cross-chunk
+# canonical-form migration issue.
+CHUNK43_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT342",
+        "notes_from_pm",
+        "Hereditary prince, Royal herald. Temp. Tuthmosis III. (CHAMPOLLION, No. 19,"
+        " HAY, No. 6.) Mother, Tabenert. Wife, Tepiḥu.",
+        "PM I.1 p.409 / physical PDF p.427 prints `Wife, Tepiḥu` with Ḥ-underdot"
+        " (egyptologist-reviewer P1.1, PR #287 round 1). Agents split 1/2 on the"
+        " diacritic; majority picked the wrong plain-h reading. Restore Ḥ-underdot"
+        " per PM's printed page (notes_from_pm verbatim-preserve policy preserves"
+        " Ḥ; the strip-Ḥ rule applies only to occupant_name).",
+    ),
+    (
+        "TT343",
+        "notes_from_pm",
+        "called Paḥekmen, Overseer of works, Child of the nursery. Early Dyn. XVIII."
+        " (CHAMPOLLION, No. 37, L. D. Text, No. 74.) Parents, Irtonena and Tirukak.",
+        "PM I.1 p.410 / physical PDF p.428 prints `called PAḤEKMEN` with Ḥ-underdot"
+        " on the h but PLAIN k (no Ḳ-underdot) — egyptologist-reviewer P1.2 PDF"
+        " verification, PR #287 round 1. The chunk-43 OCR cluster `J5:` was decoded"
+        " as Ḳ by the 3 agents based on the prompt's general Ḳ-pattern recognition;"
+        " PDF reading is authoritative. Compare to same-page `Ḳurna` where Ḳ-underdot"
+        " IS unmistakably printed. Restore plain k in the verbatim notes_from_pm.",
+    ),
+    (
+        "TT343",
+        "occupant_alt_names",
+        ["Pahekmen"],
+        "Companion correction to the TT343 notes_from_pm fix above (egyptologist"
+        " P1.2). PM prints `Paḥekmen` with Ḥ-underdot + plain k. Per the matchable-name"
+        " policy that governs occupant_alt_names (same rules as occupant_name: strip"
+        " Ḥ-underdot → plain h, preserve Ḳ but here there is no Ḳ), the alt_names"
+        " form is `Pahekmen` (plain h, plain k). The prior reconciled value"
+        " `Paheḳmen` had a spurious Ḳ-underdot that was not in PM's printed page.",
+    ),
+    (
+        "TT349",
+        "notes_from_pm",
+        "Overseer of fowl-houses. Early Dyn. XVIII. Mother, Ipu. Wife, Amenhotp.",
+        "PM I.1 p.415 / physical PDF p.433 prints `Wife, Amenhotp` with PLAIN h"
+        " (no Ḥ-underdot) — egyptologist-reviewer P1.4 PDF verification, PR #287"
+        " round 1. Reconciled value spuriously inserted Ḥ-underdot. Within this"
+        " same chunk TT345 + TT346 occupants `Amenhotp` correctly use plain h;"
+        " TT349 wife was the outlier. Restore plain h per PM.",
+    ),
+]
 
 CHUNK43_RENAMES: dict[str, str] = {}
 

@@ -1097,8 +1097,12 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         #   `Penrēʿ` from direct PDF read (small-caps with macron-ē → title-case).
         #   DERIVER_OVERRIDE needed: `Probably` qualifies usurpation event, not primary
         #   attribution; attribution_certainty pinned back to `attested`.
+        # TT343 notes EXPECTED reflects the post-CHUNK43_CORRECTIONS form: plain k
+        # (egyptologist P1.2 PDF verification — PM p.428 prints `PAḤEKMEN` with
+        # Ḥ-underdot + plain K, not Ḳ-underdot). The merge-time tie-break value
+        # had Ḳ-underdot (`Paḥeḳmen`), which is then overridden in fix_rows.py.
         ("TT343", "notes_from_pm"):
-            "called Paḥeḳmen, Overseer of works, Child of the nursery. Early Dyn."
+            "called Paḥekmen, Overseer of works, Child of the nursery. Early Dyn."
             " XVIII. (CHAMPOLLION, No. 37, L. D. Text, No. 74.) Parents, Irtonena"
             " and Tirukak.",
         ("TT345", "notes_from_pm"):
