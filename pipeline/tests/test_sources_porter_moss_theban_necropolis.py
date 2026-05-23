@@ -12071,7 +12071,8 @@ def test_chunk45_attribution_certainties() -> None:
 
 def test_chunk45_tt362_wab_priest() -> None:
     """TT362 PAʿANEMWESET: wʿab-priest of Amūn — canonical ayin-before-a form
-    per TT14/TT97/TT100 precedent; CHUNK45_CORRECTIONS restores macron Ū on Amūn."""
+    per TT14/TT97/TT100 precedent (resolved via tie-break-overrides.json); macron-Ū
+    on Amūn preserved from agent extraction (no CHUNK45_CORRECTIONS needed)."""
     r = _row("TT362")
     assert r["occupant_name"] == "Paʿanemweset"
     assert r["occupant_role"] == "Official"
