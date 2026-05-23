@@ -32,7 +32,7 @@
   <rdfs:Class rdf:about="#MatcherRun">
     <rdfs:label xml:lang="en">Matcher run</rdfs:label>
     <rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/extensions/crmdig/D10_Software_Execution"/>
-    <rdfs:comment xml:lang="en">A specific execution of a Hapi matcher: a software program runs over source data as a single task, producing derived assertions. IS-A chain: hapi:MatcherRun ⊂ crmdig:D10 Software Execution ⊂ D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. NOT a D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object (colour corrections, resizing, format conversions); a matcher producing identity assertions does not fit that semantic. D10 is the correct general parent for "software ran and produced output." Carries run-reproducibility metadata (run_id, parameters_hash, reviewer_status, etc.) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional.</rdfs:comment>
+    <rdfs:comment xml:lang="en">A specific execution of a software run in the matcher pipeline — either a deterministic stage-1 matcher OR a stage-2 LLM reviewer. Both are hapi:MatcherRun instances; the run's hapi:MatcherAlgorithm (D14) records which of the two roles it played. IS-A chain: hapi:MatcherRun ⊂ crmdig:D10 Software Execution ⊂ D7 Digital Machine Event ⊂ crm:E11 Modification &amp; E65 Creation ⊂ E7 Activity. NOT a D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object (colour corrections, resizing, format conversions); a matcher producing identity assertions does not fit that semantic. D10 is the correct general parent for "software ran and produced output." Carries run-reproducibility metadata (run_id, parameters_hash, started_at, completed_at) as Hapi-namespaced properties — those properties have no declared CRM relationship and are ignored by strict readers, which is intentional. There is NO reviewer_status / reviewer_id / reviewed_at field on the MatcherRun itself: verdicts from the stage-2 reviewer are their own E13s whose P140 subject IS the matcher's E13 and whose hapi:derived_by_run points at the reviewer's MatcherRun (see ADR-018 schema sketch case 4b).</rdfs:comment>
   </rdfs:Class>
 
   <rdfs:Class rdf:about="#MatcherAlgorithm">
@@ -173,6 +173,11 @@
   <rdf:Property rdf:about="#horus_name">
     <rdfs:label xml:lang="en">Horus name</rdfs:label>
     <rdfs:comment xml:lang="en">A Ruler's Horus titulary element. Closest CRM superproperty under review: P1_is_identified_by (E1 → E41), with the value being an E41 Appellation subclass typed for Horus-name semantics. Pending.</rdfs:comment>
+  </rdf:Property>
+
+  <rdf:Property rdf:about="#matcher_review_verdict">
+    <rdfs:label xml:lang="en">matcher review verdict</rdfs:label>
+    <rdfs:comment xml:lang="en">The P177-target predicate type for a stage-2 reviewer's verdict on a stage-1 matcher's E13. The verdict-E13's P140 subject is itself an E13 (the matcher's claim); its P141 value is an :E55 Type drawn from the small vocabulary {hapi:verdict_approved, hapi:verdict_rejected, hapi:verdict_superseded}. Free-standing rather than declared as rdfs:subPropertyOf crmdig:L43_annotates because L43_annotates's rdfs:domain is D29 Annotation Object — our verdict-E13 is an E13 Attribute Assignment, not a D29; declaring subPropertyOf would escape L43's domain (a "narrow not violate" rule violation). The conceptual affinity to L43_annotates (and to D29 / D30 Annotation Event more broadly — both subClassOf E89 Propositional Object, no CRMsci dependency) IS recorded in the predicate registry as a documentation-only `crm_nearest` annotation, exclusively for human readers and tooling. The CRMdig consumed-subset (D1, D7, D10, D14 + L10, L11, L23, L54) is NOT expanded by this annotation; D29/D30/L43 remain documentation-level references only. See ADR-018 schema sketch case 4b.</rdfs:comment>
   </rdf:Property>
 
 </rdf:RDF>
