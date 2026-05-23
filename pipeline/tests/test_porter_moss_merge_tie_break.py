@@ -1114,6 +1114,16 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             " Tentōpet, temp. Ramesses IV. Probably usurped from Penrēʿ, Chief of"
             " Mezay, Overseer of the Lands of Syria (name on cones in Pit in Court),"
             " [temp. Ramesses II].",
+        # Chunk 44 (TT351–TT360) — 1 tie-break override.
+        # TT354 notes_from_pm: 1/1/1 split on all-caps vs title-case for inline
+        #   `Perhaps AMENEMḤET` name + C truncated `(tomb 340, ...)` parenthetical.
+        #   Pin B's mixed-case form with full parenthetical; PDF p.418 confirms full
+        #   text. No DERIVER_OVERRIDE: `Perhaps` correctly fires uncertain on primary
+        #   attribution. TT354 shared_with_tombs corrected to [] via CHUNK44_CORRECTIONS
+        #   (provenance-of-find evidence, not co-ownership).
+        ("TT354", "notes_from_pm"):
+            "No texts. Perhaps Amenemḥet (tomb 340, cf. box-lid in Finds of this"
+            " tomb). Early Dyn. XVIII.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
@@ -1179,9 +1189,9 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk43_row_count(reconciled):
-    """Merged total should be 425 after chunk 43 (+10 from chunk-42's 415)."""
-    assert len(reconciled) == 425
+def test_chunk44_row_count(reconciled):
+    """Merged total should be 435 after chunk 44 (+10 from chunk-43's 425)."""
+    assert len(reconciled) == 435
 
 
 def test_tt281_unfinished_temple(reconciled):

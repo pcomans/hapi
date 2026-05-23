@@ -4458,6 +4458,40 @@ CHUNK43_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK43_RENAMES: dict[str, str] = {}
 
 
+# Chunk-44 (TT351–TT360) corrections.
+#
+# One substantive correction after merge:
+#
+# TT358 location_sub_area: majority B+C emitted null; agent A correctly
+#   extracted "In Court of Temple of Ḥatshepsut" from PM I.1 p.421. PM
+#   prints this as an explicit sub-area descriptor after the main headword
+#   clause. Structural parallel: TT308 Kemsit has location_sub_area="In the
+#   Temple of Mentuḥotp" (PDF p.403). Restore A's reading per PM verbatim.
+#
+# Note on TT354 shared_with_tombs: majority B+C emitted ["TT340"]. This is
+#   CORRECT — TT340's landed reconciled entry (chunk-42) has
+#   shared_with_tombs=["TT354"] based on PM's `(perhaps also owner of tomb 354)`
+#   phrasing (explicit ownership formulation). TT354's `Perhaps AMENEMḤET
+#   (tomb 340, cf. box-lid)` describes the same relationship from the other
+#   side; the symmetry invariant (test_shared_with_tombs_symmetry_within_chunk)
+#   requires both sides to reference each other. No correction needed.
+CHUNK44_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT358",
+        "location_sub_area",
+        "In Court of Temple of Ḥatshepsut",
+        "PM I.1 p.421 / physical PDF p.439: TT358 (ʿAḥmosi Merytamun)"
+        " headword prints `In Court of Temple of Ḥatshepsut` as an explicit"
+        " sub-area descriptor, paralleling TT308 Kemsit's"
+        " location_sub_area='In the Temple of Mentuḥotp' (PDF p.403)."
+        " Agent A correctly extracted this value; majority B+C emitted null."
+        " Restore agent A's reading per PM verbatim.",
+    ),
+]
+
+CHUNK44_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4505,6 +4539,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK41_CORRECTIONS,
     CHUNK42_CORRECTIONS,
     CHUNK43_CORRECTIONS,
+    CHUNK44_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4550,6 +4585,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK41_RENAMES,
     **CHUNK42_RENAMES,
     **CHUNK43_RENAMES,
+    **CHUNK44_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
