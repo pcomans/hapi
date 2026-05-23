@@ -4589,6 +4589,105 @@ CHUNK45_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK45_RENAMES: dict[str, str] = {}
 
 
+# Chunk-46 (TT371–TT380) corrections.
+#
+# 1. TT371, TT375, TT376, TT377, TT378, TT379 — `occupant_role`: sentinel-
+#    null normalisation in merge.py collapses all three agents' `"Unknown"`
+#    to null (because "unknown" is in SENTINEL_NULL_STRINGS). Restore per
+#    the null-name/null-role pairing invariant established at KV12 (chunk-2),
+#    QV36/40/73/75 (chunk-8), TT58 (chunk-14), TT225–TT230 (chunk-26), etc.
+#
+# 2. TT374 — `notes_from_pm`: agent C correctly included PM's cross-reference
+#    sentence `"For position, see p. 292."` (chunk-46 source text line 92,
+#    physical PDF p.452 / printed p.434). Agents A+B majority dropped it.
+#    Per the verbatim-preserve policy for notes_from_pm and the established
+#    precedent of TT304 (`"For position, see p. 356."`) and TT365
+#    (`"For position, see p. ..."`) both preserved in reconciled.jsonl,
+#    the dropped cross-reference must be restored.
+CHUNK46_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT371",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.432 / physical PDF p.450 (TT371 anonymous). All three agents"
+        " emitted `occupant_role='Unknown'`; merge.py sentinel-null normalisation"
+        " collapsed it to null because `'unknown'` is in SENTINEL_NULL_STRINGS."
+        " Restore per the null-name/null-role pairing invariant (KV12 chunk-2"
+        " precedent; also TT225–TT230 chunk-26, TT375–TT379 same chunk-46).",
+    ),
+    (
+        "TT374",
+        "notes_from_pm",
+        "Scribe of the treasury in the Ramesseum. Dyn. XIX. For position, see p. 292.",
+        "PM I.1 p.434 / physical PDF p.452 (TT374 AMENEMOPET). Chunk-46 source"
+        " text line 92 prints `For position, seep. 292.` (OCR artefact of"
+        " `see p.`); the actual PM text is `For position, see p. 292.` Agent C"
+        " captured this cross-reference; A+B majority dropped it. Verbatim-"
+        "preserve policy for notes_from_pm requires restoration. Precedent:"
+        " TT304 `For position, see p. 356.` and TT365 `For position, see p. ...`"
+        " both preserved in reconciled.jsonl. Direct PDF read during chunk-46"
+        " merge confirms the sentence is present on PM p.434.",
+    ),
+    (
+        "TT375",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.434 / physical PDF p.452 (TT375 anonymous). Same sentinel-null"
+        " collapse as TT371. Restore per null-name/null-role pairing invariant.",
+    ),
+    (
+        "TT376",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.434 / physical PDF p.452 (TT376 anonymous). Same sentinel-null"
+        " collapse as TT371. Restore per null-name/null-role pairing invariant.",
+    ),
+    (
+        "TT377",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.434 / physical PDF p.452 (TT377 anonymous). Same sentinel-null"
+        " collapse as TT371. Restore per null-name/null-role pairing invariant.",
+    ),
+    (
+        "TT378",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.435 / physical PDF p.453 (TT378 anonymous). Same sentinel-null"
+        " collapse as TT371. Restore per null-name/null-role pairing invariant.",
+    ),
+    (
+        "TT379",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.435 / physical PDF p.453 (TT379 anonymous). Same sentinel-null"
+        " collapse as TT371. Restore per null-name/null-role pairing invariant.",
+    ),
+    (
+        "TT380",
+        "notes_from_pm",
+        "Chief in Thebes. Ptolemaic. Parents, Dḥout and Esnūter.",
+        "PM I.1 p.435 / physical PDF p.453 (TT380 ʿANKHEF(EN)-RĒʿ-ḤARAKHTI)."
+        " Two PM-faithfulness regressions in the parents-clause names,"
+        " corrected from direct PDF read after egyptologist-reviewer P2 +"
+        " code-reviewer P2 surfaced the issues in PR #293 round 1:"
+        " (1) Parent name `Dḥout` — PM p.435 prints PLAIN D + ḥ-underdot"
+        " (D-ḥ-o-u-t), NOT d-bar Ḏ + ḥ-underdot. Agent C decoded the OCR"
+        " cluster `!)!;lout` as d-bar `Ḏḥout` per the Thoth/Djehuty"
+        " family convention, but the PDF clearly shows the unbarred D-letter"
+        " on p.435. This is the first PM-I.1 instance of `Dḥout` with plain D"
+        " (not Ḏ) — possibly a PM-specific Romanization variant or simply not"
+        " the Thoth name root despite the surface similarity. (2) Parent name"
+        " `Esnūter` with macron-ū — PM p.435 clearly shows macron-ū on the u"
+        " vowel. Agents A+C OCR-misread as `Esntiter` (extra t, no macron);"
+        " agent B's `Esnūter` was correct but lost in majority vote. Restore"
+        " both per PM verbatim under notes_from_pm preserve policy.",
+    ),
+]
+
+CHUNK46_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4638,6 +4737,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK43_CORRECTIONS,
     CHUNK44_CORRECTIONS,
     CHUNK45_CORRECTIONS,
+    CHUNK46_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4685,6 +4785,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK43_RENAMES,
     **CHUNK44_RENAMES,
     **CHUNK45_RENAMES,
+    **CHUNK46_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [

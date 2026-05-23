@@ -1212,9 +1212,9 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk45_row_count(reconciled):
-    """Merged total should be 445 after chunk 45 (+10 from chunk-44's 435)."""
-    assert len(reconciled) == 445
+def test_chunk46_row_count(reconciled):
+    """Merged total should be 455 after chunk 46 (+10 from chunk-45's 445)."""
+    assert len(reconciled) == 455
 
 
 def test_tt281_unfinished_temple(reconciled):
@@ -2345,3 +2345,180 @@ def test_tt340_amenemhet_perhaps_tt354(reconciled):
     assert "Reditico" in r["notes_from_pm"]
     assert "Nubnefert" in r["notes_from_pm"]
     assert r["source_citation"]["page"] == 407
+
+
+# === Chunk-46 per-row pins (TT371–TT380) ====================================
+# Rule 5: every row asserts all key fields. All values are post-fix-rows
+# final state (after CHUNK46_CORRECTIONS applied).
+
+
+def test_tt371_anonymous_khokha(reconciled):
+    """TT371: Anonymous, Ramesside. Khokha. occupant_role restored to Unknown
+    (sentinel-null collapse fixed by CHUNK46_CORRECTIONS)."""
+    r = _row(reconciled, "TT371")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] == "Khokha"
+    assert r["notes_from_pm"] == "Name unknown. Ramesside."
+    assert r["source_citation"]["page"] == 432
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt372_amenkhau(reconciled):
+    """TT372: Amenkhaʿu, Overseer of carpenters of Temple of Medinet Habu.
+    Temp. Ramesses III. Khokha. Mother Maʿetnefert, wife Nefertere-emḥab.
+    Cosmetic: agent B had Medînet (circumflex); A+C majority correct."""
+    r = _row(reconciled, "TT372")
+    assert r["occupant_name"] == "Amenkhaʿu"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Khokha"
+    assert r["notes_from_pm"] == (
+        "Overseer of carpenters of the Temple of Medinet Habu."
+        " Temp. Ramesses III. Mother, Maʿetnefert. Wife, Nefertere-emḥab."
+    )
+    assert r["source_citation"]["page"] == 432
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt373_amenmessu(reconciled):
+    """TT373: Amenmessu, Scribe of the altar. Ramesside. Khokha. Father Iny."""
+    r = _row(reconciled, "TT373")
+    assert r["occupant_name"] == "Amenmessu"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Khokha"
+    assert r["notes_from_pm"] == (
+        "Scribe of the altar of the Lord of the Two Lands. Ramesside. Father, Iny."
+    )
+    assert r["source_citation"]["page"] == 433
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt374_amenemopet_cross_reference(reconciled):
+    """TT374: Amenemopet, Scribe of treasury. Dyn. XIX. Khokha.
+    CHUNK46_CORRECTIONS restored `For position, see p. 292.` (agent C had it;
+    A+B majority dropped it; verbatim-preserve policy requires restoration).
+    Matchable-name policy: PM AMENEMŌPET macron-Ō stripped → Amenemopet."""
+    r = _row(reconciled, "TT374")
+    assert r["occupant_name"] == "Amenemopet"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Khokha"
+    assert r["notes_from_pm"] == (
+        "Scribe of the treasury in the Ramesseum. Dyn. XIX. For position, see p. 292."
+    )
+    assert r["source_citation"]["page"] == 434
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt375_anonymous_dra_abu_el_naga(reconciled):
+    """TT375: Anonymous, Ramesside. Dra' Abu el-Naga. occupant_role=Unknown
+    (sentinel-null collapse fixed by CHUNK46_CORRECTIONS)."""
+    r = _row(reconciled, "TT375")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["notes_from_pm"] == "Name unknown. Ramesside."
+    assert r["source_citation"]["page"] == 434
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt376_anonymous_dra_abu_el_naga(reconciled):
+    """TT376: Anonymous, Dyn. XVIII. Dra' Abu el-Naga. occupant_role=Unknown."""
+    r = _row(reconciled, "TT376")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["notes_from_pm"] == "Name lost. Dyn. XVIII."
+    assert r["source_citation"]["page"] == 434
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt377_anonymous_dra_abu_el_naga(reconciled):
+    """TT377: Anonymous, Ramesside. Dra' Abu el-Naga. occupant_role=Unknown."""
+    r = _row(reconciled, "TT377")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["notes_from_pm"] == "Name lost. Ramesside."
+    assert r["source_citation"]["page"] == 434
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt378_anonymous_dra_abu_el_naga(reconciled):
+    """TT378: Anonymous, Dyn. XIX. Dra' Abu el-Naga. occupant_role=Unknown."""
+    r = _row(reconciled, "TT378")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["notes_from_pm"] == "Name unknown. Dyn. XIX."
+    assert r["source_citation"]["page"] == 435
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt379_anonymous_dra_abu_el_naga(reconciled):
+    """TT379: Anonymous, Ramesside. Dra' Abu el-Naga. occupant_role=Unknown."""
+    r = _row(reconciled, "TT379")
+    assert r["occupant_name"] is None
+    assert r["occupant_role"] == "Unknown"
+    assert r["theban_area"] == "Dra' Abu el-Naga"
+    assert r["notes_from_pm"] == "Name lost. Ramesside."
+    assert r["source_citation"]["page"] == 435
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
+
+
+def test_tt380_ankhefen_re_harakhti(reconciled):
+    """TT380: ʿAnkhef(en)-Reʿ-Harakhti, Chief in Thebes. Ptolemaic. Qurnet Muraʿi.
+    occupant_name: B+C majority `Reʿ` wins over A's `Rʿ` (PDF p.435 line 140 =
+    `R:Ec` OCR = Reʿ). Parents: CHUNK46_CORRECTIONS post-fix-rows restores both
+    parent names from PM p.435 direct PDF read (egyptologist + code-reviewer
+    P2 PR #293 round 1): `Dḥout` (PLAIN D, NOT d-bar Ḏ — agents over-applied
+    the Thoth-family convention) and `Esnūter` (macron-ū restored from agent
+    B; A+C majority OCR-misread as `Esntiter`)."""
+    r = _row(reconciled, "TT380")
+    assert r["occupant_name"] == "ʿAnkhef(en)-Reʿ-Harakhti"
+    assert r["occupant_role"] == "Official"
+    assert r["theban_area"] == "Qurnet Muraʿi"
+    assert r["notes_from_pm"] == (
+        "Chief in Thebes. Ptolemaic. Parents, Dḥout and Esnūter."
+    )
+    assert r["source_citation"]["page"] == 435
+    assert r["attribution_certainty"] == "attested"
+    assert r["is_uninscribed"] is False
+    assert r["is_usurped"] is False
+    assert r["occupant_alt_names"] == []
+    assert r["co_occupants"] == []
+    assert r["shared_with_tombs"] == []
