@@ -70,15 +70,23 @@
            for manifest interop") yields well-typed RDF triples.
        (b) crm:E55_Type — so the same URI can also serve as a P177 value
            (CIDOC P177's range is E55 Type; declaring the predicate URI as
-           both rdf:Property and E55 Type is RDF "punning" and is the
-           standard CIDOC idiom for hapi-style claim predicates that need
-           to be both a relation in the data model AND a registry entry in
-           the predicate vocabulary). NOTE: P141 values are the assigned
-           VALUES (the entity being assigned), not the predicate type;
-           predicate-vocabulary E55 Types serve as P177 targets only.
-           The closed verdict-outcome vocabulary (handled in its own block
-           further below) is the separate case where the E55 Type instances
-           ARE used as P141 values.
+           both rdf:Property and E55 Type is RDF "punning" — an OWL 2
+           feature that permits one URI to play multiple roles. This is a
+           Hapi-manifest pattern for claim predicates that need to be
+           both a relation in the data model AND a registry entry in the
+           predicate vocabulary. CIDOC CRM 7.1.3 + CRMdig 5.0 do not
+           document or prescribe punning specifically; CIDOC's open
+           extension model permits this shape because the requirement
+           from CIDOC's side is only that a P177 value carries E55_Type
+           typing — how that URI gets that typing is a downstream
+           modelling choice, and Hapi's choice is punning so we don't
+           have to mint two parallel URIs per claim predicate). NOTE:
+           P141 values are the assigned VALUES (the entity being
+           assigned), not the predicate type; predicate-vocabulary E55
+           Types serve as P177 targets only. The closed verdict-outcome
+           vocabulary (handled in its own block further below) is the
+           separate case where E55 Type instances ARE used as P141
+           values.
 
        The DERIVED / query-only predicate hapi:shares_tomb_with is a
        documented exception: it is NEVER a P177 target in the persisted
@@ -198,7 +206,7 @@
   <rdf:Property rdf:about="#reign_period">
     <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
     <rdfs:label xml:lang="en">reign period</rdfs:label>
-    <rdfs:comment xml:lang="en">A Ruler's reign as an E52 Time-Span. No clean core-CRM superproperty identified in this pass. The CIDOC-faithful approach materialises the reign itself as a separate temporal entity (likely E7 Activity or E4 Period — a reign is an extended action carried out by a ruler over a coherent period, not a modification of a physical thing), with that entity carrying P4_has_time-span to an E52. The right specific class is a follow-up modelling decision. Free-standing for now. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
+    <rdfs:comment xml:lang="en">A Ruler's reign as an E52 Time-Span. No clean core-CRM superproperty identified in this pass. A more CIDOC-idiomatic shape (an alternative to inlining the reign as a Ruler property pointing at an E52) would materialise the reign itself as a separate temporal entity — plausibly E7 Activity or E4 Period, since a reign is an extended action carried out by a ruler over a coherent period rather than a modification of a physical thing — with that entity carrying P4_has_time-span to an E52. The class choice (E7 vs E4 vs something else) is a follow-up modelling decision, not a CIDOC prescription; CIDOC permits multiple shapes for "extended human activity" and the project's right answer depends on what queries the reign-entity needs to support. Free-standing for now. Also typed as crm:E55_Type per the punning rule.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#horus_name">
