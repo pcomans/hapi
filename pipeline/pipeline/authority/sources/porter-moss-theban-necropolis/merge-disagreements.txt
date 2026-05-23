@@ -1058,6 +1058,28 @@ TT340 (Amenemhet):
   occupant_name: a="Amenemhet" | b="Amenemhet" | c="Amenemihet"  → chose "Amenemhet"
   source_citation: a={"edition": "PM I.1 2nd ed. 1960", "page": 408, "section": "I"} | b={"edition": "PM I.1 2nd ed. 1960", "page": 407, "section": "I"} | c={"edition": "PM I.1 2nd ed. 1960", "page": 407, "section": "I"}  → chose {"edition": "PM I.1 2nd ed. 1960", "page": 407, "section": "I"}
 
+TT342 (Ḏhutmosi):
+  notes_from_pm: a="Hereditary prince, Royal herald. Temp. Tuthmosis III. (CHAMPOLLION, No. 19, HAY, No. 6.). Mother, Tabenert. Wife, Tepiḥu." | b="Hereditary prince, Royal herald. Temp. Tuthmosis III. (CHAMPOLLION, No. 19, HAY, No. 6.) Mother, Tabenert. Wife, Tepihu." | c="Hereditary prince, Royal herald. Temp. Tuthmosis III. (CHAMPOLLION, No. 19, HAY, No. 6.) Mother, Tabenert. Wife, Tepihu."  → chose "Hereditary prince, Royal herald. Temp. Tuthmosis III. (CHAMPOLLION, No. 19, HAY, No. 6.) Mother, Tabenert. Wife, Tepihu."
+
+TT343 (Benia):
+  notes_from_pm: a="called Paḥeḳmen, Overseer of works, Child of the nursery. Early Dyn. XVIII. (CHAMPOLLION, No. 37, L. D. Text, No. 74.). Parents, Irtonena and Tirukak." | b="called Paḥeḳmen, Overseer of works, Child of the nursery. Early Dyn. XVIII. (CHAMPOLLION, No. 37, L. D. Text, No. 74.) Parents, Irtonena and Tirukak." | c="Overseer of works, Child of the nursery. Early Dyn. XVIII. (CHAMPOLLION, No. 37, L. D. Text, No. 74.) Parents, Irtonena and Tirukak."  → chose "called Paḥeḳmen, Overseer of works, Child of the nursery. Early Dyn. XVIII. (CHAMPOLLION, No. 37, L. D. Text, No. 74.) Parents, Irtonena and Tirukak."
+  occupant_alt_names: a=["Paḥeḳmen"] | b=["Paheḳmen"] | c=["Paheḳmen"]  → chose ["Paheḳmen"]
+
+TT345 (Amenhotp):
+  notes_from_pm: a="wab-priest, Eldest king's son of Tuthmosis I. Temp. Tuthmosis I. (CHAMPOLLION, No. 30, L. D. Text, No. 75.). Parents, Senidhout and Takhrod. Wife, Renay." | b="wʿb-priest, Eldest king's son of Tuthmosis I. Temp. Tuthmosis I. (CHAMPOLLION, No. 30, L. D. Text, No. 75.) Parents, Senigḥout and Takhrod. Wife, Renay." | c="Wab-priest, Eldest king's son of Tuthmosis I. Temp. Tuthmosis I. (CHAMPOLLION, No. 30, L. D. Text, No. 75.) Parents, Senighout and Takhrod. Wife, Renay."  → chose "wʿb-priest, Eldest king's son of Tuthmosis I. Temp. Tuthmosis I. (CHAMPOLLION, No. 30, L. D. Text, No. 75.) Parents, Senidhout and Takhrod. Wife, Renay."
+
+TT346 (Amenhotp):
+  notes_from_pm: a="Overseer of the women of the royal harim of the divine adoratress Tentōpet, temp. Ramesses IV. Probably usurped from Penreʿ, Chief of Mezay, Overseer of the Lands of Syria (name on cones in Pit in Court), [temp. Ramesses II]." | b="Overseer of the women of the royal harim of the divine adoratress Tentopet, temp. Ramesses IV. Probably usurped from Penreʿ, Chief of Mezay, Overseer of the Lands of Syria (name on cones in Pit in Court), [temp. Ramesses II]." | c="Overseer of the women of the royal harim of the divine adoratress Tentopet, temp. Ramesses IV. Probably usurped from PENREʿ, Chief of Mezay, Overseer of the Lands of Syria (name on cones in Pit in Court), [temp. Ramesses II]."  → chose "Overseer of the women of the royal harim of the divine adoratress Tentōpet, temp. Ramesses IV. Probably usurped from Penrēʿ, Chief of Mezay, Overseer of the Lands of Syria (name on cones in Pit in Court), [temp. Ramesses II]."
+
+TT347 (Hori):
+  notes_from_pm: a="Scribe of the nome. Ramesside. (CHAMPOLLION, No. 20.). Wife, Nefertere." | b="Scribe of the nome. Ramesside. (CHAMPOLLION, No. 20.) Wife, Nefertere." | c="Scribe of the nome. Ramesside. (CHAMPOLLION, No. 20.) Wife, Nefertere."  → chose "Scribe of the nome. Ramesside. (CHAMPOLLION, No. 20.) Wife, Nefertere."
+
+TT348 (None):
+  notes_from_pm: a="A Chief steward, Unique friend, Mayor, Dyn. XVIII. Usurped by Naʿamutnakht, Door-opener of the House of Gold of Amūn, Dyn. XXII. Wife (of original owner), Diʿankh. Parents (of Naʿamutnakht), Nezem, same title, and Suru (?)." | b="A Chief steward, Unique friend, Mayor, Dyn. XVIII. Usurped by Naʿamutnakht, Door-opener of the House of Gold of Amūn, Dyn. XXII. Wife (of original owner), Diʿankh. Parents (of Naʿamutnakht), Nezem, same title, and Suru (?)." | c="A Chief steward, Unique friend, Mayor, Dyn. XVIII. Usurped by NAʿAMUTNAKHT, Door-opener of the House of Gold of Amūn, Dyn. XXII. Wife (of original owner), Diʿankh. Parents (of Naʿamutnakht), Nezem, same title, and Suru (?)."  → chose "A Chief steward, Unique friend, Mayor, Dyn. XVIII. Usurped by Naʿamutnakht, Door-opener of the House of Gold of Amūn, Dyn. XXII. Wife (of original owner), Diʿankh. Parents (of Naʿamutnakht), Nezem, same title, and Suru (?)."
+
+TT350 (. . . Y):
+  occupant_name: a=". . . Y" | b=". . . Y" | c=". . . y"  → chose ". . . Y"
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -1162,6 +1184,7 @@ Per-chunk correction counts:
 - Chunk 40: 9 correction(s) defined in CHUNK40_CORRECTIONS.
 - Chunk 41: 10 correction(s) defined in CHUNK41_CORRECTIONS.
 - Chunk 42: 10 correction(s) defined in CHUNK42_CORRECTIONS.
+- Chunk 43: 4 correction(s) defined in CHUNK43_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1672,6 +1695,14 @@ Field corrections:
     value: {"edition": "PM I.1 2nd ed. 1960", "page": 406, "section": "I"}
 - TT339: co_occupants already matches override (no-op this run; TT339 is joint burial of Huy + Peshedu (is_joint_burial=True, all 3 agents agreed). Source line 460: `339. HUY ..., Servant in the Place of Truth, and PESHEDU ..., Servant in the Place of Truth, Necropolis-stonemason of Amun in Karnak.` Only agent C extracted co_occupant name Peshedu; A+B extracted an unnamed {role:'Official'} stub. Majority vote stripped the name. Restore Peshedu as co_occupant name from C's extraction, which is source-accurate. Consistent with TT10 (Kasa), TT122 (Amenemḥet), TT181 (Ipuky), TT291 (Nekhtmin) co_occupant name retention precedents.)
     value: [{"alt_names": [], "name": "Peshedu", "role": "Official"}]
+- TT342: notes_from_pm already matches override (no-op this run; PM I.1 p.409 / physical PDF p.427 prints `Wife, Tepiḥu` with Ḥ-underdot (egyptologist-reviewer P1.1, PR #287 round 1). Agents split 1/2 on the diacritic; majority picked the wrong plain-h reading. Restore Ḥ-underdot per PM's printed page (notes_from_pm verbatim-preserve policy preserves Ḥ; the strip-Ḥ rule applies only to occupant_name).)
+    value: "Hereditary prince, Royal herald. Temp. Tuthmosis III. (CHAMPOLLION, No. 19, HAY, No. 6.) Mother, Tabenert. Wife, Tepiḥu."
+- TT343: notes_from_pm already matches override (no-op this run; PM I.1 p.410 / physical PDF p.428 prints `called PAḤEKMEN` with Ḥ-underdot on the h but PLAIN k (no Ḳ-underdot) — egyptologist-reviewer P1.2 PDF verification, PR #287 round 1. The chunk-43 OCR cluster `J5:` was decoded as Ḳ by the 3 agents based on the prompt's general Ḳ-pattern recognition; PDF reading is authoritative. Compare to same-page `Ḳurna` where Ḳ-underdot IS unmistakably printed. Restore plain k in the verbatim notes_from_pm.)
+    value: "called Paḥekmen, Overseer of works, Child of the nursery. Early Dyn. XVIII. (CHAMPOLLION, No. 37, L. D. Text, No. 74.) Parents, Irtonena and Tirukak."
+- TT343: occupant_alt_names already matches override (no-op this run; Companion correction to the TT343 notes_from_pm fix above (egyptologist P1.2). PM prints `Paḥekmen` with Ḥ-underdot + plain k. Per the matchable-name policy that governs occupant_alt_names (same rules as occupant_name: strip Ḥ-underdot → plain h, preserve Ḳ but here there is no Ḳ), the alt_names form is `Pahekmen` (plain h, plain k). The prior reconciled value `Paheḳmen` had a spurious Ḳ-underdot that was not in PM's printed page.)
+    value: ["Pahekmen"]
+- TT349: notes_from_pm already matches override (no-op this run; PM I.1 p.415 / physical PDF p.433 prints `Wife, Amenhotp` with PLAIN h (no Ḥ-underdot) — egyptologist-reviewer P1.4 PDF verification, PR #287 round 1. Reconciled value spuriously inserted Ḥ-underdot. Within this same chunk TT345 + TT346 occupants `Amenhotp` correctly use plain h; TT349 wife was the outlier. Restore plain h per PM.)
+    value: "Overseer of fowl-houses. Early Dyn. XVIII. Mother, Ipu. Wife, Amenhotp."
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1779,6 +1810,7 @@ Field corrections:
 - TT321: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT329: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT340: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT346: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -1855,3 +1887,4 @@ Field corrections:
 - TT321: attribution_certainty → "attested" (deriver override; PM I.1 p.393 / chunk-41 source line 46: `Parents (perhaps), Bu~entef and ly (nam...)
 - TT329: attribution_certainty → "attested" (deriver override; PM I.1 p.397 / chunk-41 source line 262-263: `M 0 s I... and Annexed tomb of M 0...)
 - TT340: attribution_certainty → "attested" (deriver override; PM I.1 p.408 / chunk-42 source lines 503-505: `340. AMENEMḤET ..., Servant in th...)
+- TT346: attribution_certainty → "attested" (deriver override; PM I.1 p.414 / physical PDF p.432 / chunk-43-tt341-tt350.txt lines 284-287: `346...)

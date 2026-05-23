@@ -367,6 +367,9 @@ CHUNK41_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK42_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(331, 341)}
 )
+CHUNK43_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(341, 351)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -409,6 +412,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK40_TOMB_IDS
     | CHUNK41_TOMB_IDS
     | CHUNK42_TOMB_IDS
+    | CHUNK43_TOMB_IDS
 )
 
 
@@ -3697,9 +3701,16 @@ def test_182_usurped_canonical_set() -> None:
     # Amun, early Ramesside` — deriver auto-detects `\busurped\b` in notes).
     # Extended chunk 42: TT337 (Ken, PM `Usurped by Eskhons, Dyn. XXI or XXII`
     # — deriver auto-detects `\busurped\b` in notes).
+    # Extended chunk 43: TT346 (Amenhotp, PM `Probably usurped from Penrēʿ`
+    # — deriver auto-detects `\busurped\b` in notes; DERIVER_OVERRIDE pins
+    # attribution_certainty=attested since `Probably` qualifies the usurpation
+    # source identification, not the primary Amenhotp identity).
+    # TT348 (anonymous, PM `Usurped by Naʿamutnakht, Door-opener of the House
+    # of Gold of Amūn, Dyn. XXII` — deriver auto-detects `\busurped\b`).
     expected = {"KV9", "KV14", "TT22", "TT45", "TT54", "TT58",
                 "TT65", "TT68", "TT70", "TT77", "TT84", "TT112", "TT127",
-                "TT152", "TT257", "TT284", "TT288", "TT294", "TT337"}
+                "TT152", "TT257", "TT284", "TT288", "TT294", "TT337",
+                "TT346", "TT348"}
     actual = {r["tomb_id"] for r in _rows() if r["is_usurped"]}
     assert actual == expected, sorted(actual)
 
@@ -3784,6 +3795,12 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # husbandmen`). Same reasoning as TT333 — occupant is genuinely
         # unidentified; attribution_certainty=uncertain is correct.
         "TT334",
+        # TT348 chunk-43: anonymous tomb (occupant_name=None, `A Chief steward,
+        # Unique friend, Mayor, Dyn. XVIII`). The original Dyn. XVIII owner's name
+        # is entirely lost; only the usurper Naʿamutnakht (Dyn. XXII) is named.
+        # attribution_certainty=uncertain is correct — the primary occupant is
+        # genuinely unidentified.
+        "TT348",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -11726,3 +11743,111 @@ def test_chunk42_anonymous_roles_restored() -> None:
         r = _row(tid)
         assert r["occupant_name"] is None, f"{tid}: expected null occupant_name"
         assert r["occupant_role"] == "Unknown", f"{tid}: expected Unknown role"
+
+
+# ===========================================================================
+# Chunk 43 — TT341–TT350 (Sh. ʿAbd el-Qurna × 9, Dra' Abu el-Naga × 1)
+# ===========================================================================
+
+
+def test_chunk43_all_rows_present() -> None:
+    """All 10 TT341-TT350 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK43_TOMB_IDS
+    assert actual == CHUNK43_TOMB_IDS, sorted(CHUNK43_TOMB_IDS - actual)
+
+
+def test_chunk43_theban_areas() -> None:
+    """Verify area assignments. TT344 Dra Abu el-Naga; all others Sh. Abd el-Qurna."""
+    expected = {
+        "TT341": "Sh. ʿAbd el-Qurna",
+        "TT342": "Sh. ʿAbd el-Qurna",
+        "TT343": "Sh. ʿAbd el-Qurna",
+        "TT344": "Dra' Abu el-Naga",
+        "TT345": "Sh. ʿAbd el-Qurna",
+        "TT346": "Sh. ʿAbd el-Qurna",
+        "TT347": "Sh. ʿAbd el-Qurna",
+        "TT348": "Sh. ʿAbd el-Qurna",
+        "TT349": "Sh. ʿAbd el-Qurna",
+        "TT350": "Sh. ʿAbd el-Qurna",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+
+
+def test_chunk43_source_pages() -> None:
+    """Verify source_citation pages for chunk-43 rows (no CHUNK43_CORRECTIONS page fixes)."""
+    expected = {
+        "TT341": 408,
+        "TT342": 409,
+        "TT343": 410,
+        "TT344": 412,
+        "TT345": 413,
+        "TT346": 414,
+        "TT347": 415,
+        "TT348": 415,
+        "TT349": 415,
+        "TT350": 417,
+    }
+    for tid, page in expected.items():
+        r = _row(tid)
+        assert r["source_citation"]["page"] == page, (
+            f"{tid}: expected page {page}, got {r['source_citation']['page']}"
+        )
+
+
+def test_chunk43_attribution_certainties() -> None:
+    """TT348 uncertain (anonymous — original owner name lost; `A Chief steward` opener
+    with no identity); TT346 attested (DERIVER_OVERRIDE: `Probably` qualifies the
+    usurpation-source identification, not primary Amenhotp identity). All others attested."""
+    assert _row("TT348")["attribution_certainty"] == "uncertain"
+    assert _row("TT346")["attribution_certainty"] == "attested"
+    for tid in ("TT341", "TT342", "TT343", "TT344", "TT345", "TT347", "TT349", "TT350"):
+        r = _row(tid)
+        assert r["attribution_certainty"] == "attested", (
+            f"{tid}: expected attested, got {r['attribution_certainty']!r}"
+        )
+
+
+def test_chunk43_usurped_tt346() -> None:
+    """TT346: Amenhotp is the usurped party (victim). is_usurped=True via deriver
+    (`Probably usurped from Penrēʿ`). attribution_certainty=attested via DERIVER_OVERRIDE
+    (the `Probably` qualifies who the usurper was, not Amenhotp's primary identity)."""
+    r = _row("TT346")
+    assert r["is_usurped"] is True
+    assert r["occupant_name"] == "Amenhotp"
+    assert r["attribution_certainty"] == "attested"
+    assert "Penrēʿ" in r["notes_from_pm"]
+    assert "Tentōpet" in r["notes_from_pm"]
+
+
+def test_chunk43_anonymous_tt348() -> None:
+    """TT348: original owner anonymous (`A Chief steward ...`); Naʿamutnakht is the
+    usurper (Dyn. XXII). occupant_name=None, is_usurped=True, attribution_certainty=uncertain."""
+    r = _row("TT348")
+    assert r["occupant_name"] is None
+    assert r["is_usurped"] is True
+    assert r["attribution_certainty"] == "uncertain"
+    assert "Naʿamutnakht" in r["notes_from_pm"]
+
+
+def test_chunk43_alt_names() -> None:
+    """TT343: Benia called Paḥekmen — PM I.1 p.428 prints PAḤEKMEN with
+    Ḥ-underdot but PLAIN k (egyptologist-reviewer P1.2, PR #287 round 1). The
+    chunk-43 OCR cluster `J5:` was decoded as Ḳ-underdot by the 3 agents based
+    on the prompt's general Ḳ-pattern recognition; PDF reading is authoritative
+    and shows plain k. notes_from_pm preserves `Paḥekmen` verbatim (Ḥ + plain
+    k); occupant_alt_names applies the matchable-name policy and strips Ḥ →
+    `Pahekmen` (plain h + plain k)."""
+    r = _row("TT343")
+    assert r["occupant_name"] == "Benia"
+    assert r["occupant_alt_names"] == ["Pahekmen"]
+    assert "called Paḥekmen" in r["notes_from_pm"]
+
+
+def test_chunk43_damaged_name_tt350() -> None:
+    """TT350: damaged name fragment `. . . Y` preserved verbatim as occupant_name
+    (three spaced ASCII periods + surviving capital letter — not a sentinel null)."""
+    r = _row("TT350")
+    assert r["occupant_name"] == ". . . Y"
+    assert r["attribution_certainty"] == "attested"
