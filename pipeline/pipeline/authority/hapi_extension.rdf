@@ -146,18 +146,19 @@
        escape its range, which the "narrow not violate" rule forbids.
        Free-standing is the honest classification.
 
-       A Hapi choice between two CIDOC-permitted shapes. CRMarchaeo (the official
-       CIDOC archaeology extension at https://cidoc-crm.org/crmarchaeo/) explicitly
-       materialises excavation, stratigraphy, and interment as first-class events —
-       the rigorous shape for archaeological-stratigraphy queries. The alternative
-       is direct shortcut predicates between domain entities, skipping the event
-       reification when the use-case doesn't need it. CIDOC's open extension model
-       permits both shapes; this manifest makes no broader sociology-of-practice
-       claim about how other museum-catalog implementations choose between them
-       (such a claim would need cited evidence per the validator's Cite-or-Shut-Up
-       rule, which we do not currently carry). Hapi's choice here is driven by
-       the matching use-case ("show me artefacts associated with this ruler /
-       this tomb-context"), not by archaeological stratigraphy.
+       A Hapi choice from the shapes CIDOC's open extension model permits. CIDOC
+       permits multiple modelling shapes here — including (a) direct shortcut
+       predicates between domain entities, and (b) reification through intermediate
+       event entities (excavation, interment, etc.) when archaeological-stratigraphy
+       queries are central. Hapi uses (a); shape (b) is documented in CRMarchaeo
+       (https://cidoc-crm.org/crmarchaeo/) but **CRMarchaeo is NOT vendored in this
+       repo** — see pipeline/pipeline/authority/spec/README.md. The conformance
+       contract is strictly the vendored CRM 7.1.3 + CRMdig 5.0 files; the
+       CRMarchaeo reference here is a URL pointer, not an in-tree-validated
+       conformance claim. If a future Hapi feature needs CRMarchaeo's rigorous
+       archaeological shapes, CRMarchaeo gets vendored alongside (per the
+       README's CRMsci-carve-out pin discipline) and only then does it enter
+       the conformance argument.
 
        Each of the three primary Ruler→Site predicates captures a structurally
        distinct loadable relationship (commissioning, primary burial, secondary
