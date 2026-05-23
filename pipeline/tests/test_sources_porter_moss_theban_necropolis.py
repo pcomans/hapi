@@ -382,6 +382,9 @@ CHUNK46_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK47_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(381, 391)}
 )
+CHUNK48_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(391, 401)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -429,6 +432,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK45_TOMB_IDS
     | CHUNK46_TOMB_IDS
     | CHUNK47_TOMB_IDS
+    | CHUNK48_TOMB_IDS
 )
 
 
@@ -3669,8 +3673,15 @@ def test_182_uninscribed_canonical_set() -> None:
     Extended 2026-05-22 (chunk 47, code-reviewer P1 PR #294): TT388 — PM
     prints 'No texts. Saite.' (same `No texts` synonym class as TT115);
     DERIVER_OVERRIDE extends is_uninscribed=true per the established
-    chunk-20 TT115 precedent."""
-    expected = {"KV39", "KV56", "DAN-Neferhotep", "TT115", "TT381", "TT388"}
+    chunk-20 TT115 precedent.
+    Extended 2026-05-22 (chunk 48): TT394 — PM prints 'No texts. Ramesside.';
+    TT400 — PM prints 'No texts.' Both use the same `No texts` synonym class
+    as TT115 and TT388; DERIVER_OVERRIDE extends is_uninscribed=True per
+    established precedent."""
+    expected = {
+        "KV39", "KV56", "DAN-Neferhotep", "TT115", "TT381", "TT388",
+        "TT394", "TT400",
+    }
     actual = {r["tomb_id"] for r in _rows() if r["is_uninscribed"]}
     assert actual == expected, sorted(actual)
 
@@ -3839,6 +3850,12 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # Amenemonet is a tentative attribution from a headless statue found nearby.
         # Deriver correctly fires `uncertain`. No DERIVER_OVERRIDE needed.
         "TT381",
+        # TT392 chunk-48: anonymous tomb (`Name unknown. Saite (?).`). The `(?)`
+        # qualifies the PERIOD DATING of an anonymous occupant — the owner is
+        # genuinely unidentified. Per TT333/TT334 precedent: anonymous tombs where
+        # PM uses `(?)` for dating correctly carry attribution_certainty=uncertain.
+        # Deriver fires on `(?)` → `uncertain`. No DERIVER_OVERRIDE.
+        "TT392",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -12317,3 +12334,103 @@ def test_chunk47_tt390_amun_macron() -> None:
     assert r["occupant_name"] == "Irterau"
     assert "Amūn" in r["notes_from_pm"]
     assert "Amon" not in r["notes_from_pm"]
+
+
+# ===========================================================================
+# Chunk 48 — TT391–TT400 (Sh. ʿAbd el-Qurna × 5, Khokha × 1, Dra' Abu el-Naga × 4)
+# ===========================================================================
+
+
+def test_chunk48_all_rows_present() -> None:
+    """All 10 TT391–TT400 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK48_TOMB_IDS
+    assert actual == CHUNK48_TOMB_IDS, sorted(CHUNK48_TOMB_IDS - actual)
+
+
+def test_chunk48_theban_areas() -> None:
+    """Verify area assignments per PM I.1 p.441–444 headword sub-site lines.
+    TT391=Sh. ʿAbd el-Qurna, TT392=Khokha, TT393–TT396=Dra' Abu el-Naga,
+    TT397–TT400=Sh. ʿAbd el-Qurna."""
+    expected = {
+        "TT391": "Sh. ʿAbd el-Qurna",
+        "TT392": "Khokha",
+        "TT393": "Dra' Abu el-Naga",
+        "TT394": "Dra' Abu el-Naga",
+        "TT395": "Dra' Abu el-Naga",
+        "TT396": "Dra' Abu el-Naga",
+        "TT397": "Sh. ʿAbd el-Qurna",
+        "TT398": "Sh. ʿAbd el-Qurna",
+        "TT399": "Sh. ʿAbd el-Qurna",
+        "TT400": "Sh. ʿAbd el-Qurna",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, (
+            f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+        )
+
+
+def test_chunk48_anonymous_rows_role_restored() -> None:
+    """7 anonymous rows (TT392–TT396, TT399, TT400): occupant_name=null,
+    occupant_role='Unknown'. CHUNK48_CORRECTIONS restores after sentinel-null
+    collapse in merge.py (KV12 / chunk-46 TT371–TT379 precedent)."""
+    anon_ids = ["TT392", "TT393", "TT394", "TT395", "TT396", "TT399", "TT400"]
+    for tid in anon_ids:
+        r = _row(tid)
+        assert r["occupant_name"] is None, f"{tid}: expected null occupant_name"
+        assert r["occupant_role"] == "Unknown", (
+            f"{tid}: expected 'Unknown', got {r['occupant_role']!r}"
+        )
+
+
+def test_chunk48_tt394_tt400_uninscribed() -> None:
+    """TT394 ('No texts. Ramesside.') and TT400 ('No texts.'): is_uninscribed=True
+    via DERIVER_OVERRIDE per TT115 chunk-20 + TT388 chunk-47 precedent.
+    Other anonymous rows with textual remains: is_uninscribed=False."""
+    assert _row("TT394")["is_uninscribed"] is True
+    assert _row("TT400")["is_uninscribed"] is True
+    # TT392–TT393, TT395–TT396, TT399 have textual/decorative content
+    for tid in ["TT392", "TT393", "TT395", "TT396", "TT399"]:
+        assert _row(tid)["is_uninscribed"] is False, (
+            f"{tid}: unexpected is_uninscribed=True"
+        )
+
+
+def test_chunk48_tt391_karabasaken() -> None:
+    """TT391: KARABASAKEN, Fourth prophet of Amūn, Dyn. XXV.
+    attribution_certainty=attested (DERIVER_OVERRIDE: 'Probably Dyn. XXV'
+    is a regnal-date hedge, not identity hedge — TT2/TT12 precedent).
+    notes_from_pm: macrons on Khonsemwēset (ē) and Neferḥōtep (ō) restored
+    via CHUNK48_CORRECTIONS per PDF p.441."""
+    r = _row("TT391")
+    assert r["occupant_name"] == "Karabasaken"
+    assert r["occupant_role"] == "Official"
+    assert r["attribution_certainty"] == "attested"
+    assert "Khonsemwēset" in r["notes_from_pm"]
+    assert "Neferḥōtep" in r["notes_from_pm"]
+
+
+def test_chunk48_tt397_nakht() -> None:
+    """TT397: NAKHT, warb-priest of Amūn, Dyn. XVIII(?).
+    attribution_certainty=attested (DERIVER_OVERRIDE: 'Dyn. XVIII(?)' is
+    regnal-date hedge — same TT391 pattern).
+    notes_from_pm: space preserved in 'Dyn. XVIII (?)' per PDF p.443
+    (CHUNK48_CORRECTIONS restores over B+C 2/1 'Dyn. XVIII(?)')."""
+    r = _row("TT397")
+    assert r["occupant_name"] == "Nakht"
+    assert r["attribution_certainty"] == "attested"
+    assert "Dyn. XVIII (?)" in r["notes_from_pm"]
+
+
+def test_chunk48_tt398_kamosi_nentowaref() -> None:
+    """TT398: KAMOSI called NENTOWAREF.
+    alt-name Nentowaref present. attribution_certainty=attested
+    (DERIVER_OVERRIDE: 'Probably Dyn. XVIII' is regnal-date hedge).
+    notes_from_pm: CAPS NENTOWAREF + '(from cones)' after nursery per
+    PDF p.443 tie-break override."""
+    r = _row("TT398")
+    assert r["occupant_name"] == "Kamosi"
+    assert "Nentowaref" in r.get("occupant_alt_names", [])
+    assert r["attribution_certainty"] == "attested"
+    assert "NENTOWAREF" in r["notes_from_pm"]
+    assert "Child of the nursery (from cones)" in r["notes_from_pm"]

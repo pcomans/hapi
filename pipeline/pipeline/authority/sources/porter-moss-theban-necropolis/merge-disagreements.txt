@@ -1162,6 +1162,15 @@ TT389 (Basa):
 TT390 (Irterau):
   notes_from_pm: a="Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amūn, and Tashaiu." | b="Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amon, and Tashaiu." | c="Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amon, and Tashaiu."  → chose "Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amon, and Tashaiu."
 
+TT391 (Karabasaken):
+  notes_from_pm: a="Prophet of Khonsemwēset-Neferḥotep, Fourth prophet of Amūn, Mayor of the City. Probably Dyn. XXV. (CHAMPOLLION, No. 18, L. D. Text, No. 95, Bibl. i, 1st ed. p. 194, tt.)" | b="Prophet of Khonsemweset-Neferḥotep, Fourth prophet of Amūn, Mayor of the City. Probably Dyn. XXV. (CHAMPOLLION, No. 18, L. D. Text, No. 95, Bibl. i, 1st ed. p. 194, tt.)" | c="Prophet of Khonsemweset-Neferḥotep, Fourth prophet of Amūn, Mayor of the City. Probably Dyn. XXV. (CHAMPOLLION, No. 18, L. D. Text, No. 95, Bibl. i, 1st ed. p. 194, tt.)"  → chose "Prophet of Khonsemweset-Neferḥotep, Fourth prophet of Amūn, Mayor of the City. Probably Dyn. XXV. (CHAMPOLLION, No. 18, L. D. Text, No. 95, Bibl. i, 1st ed. p. 194, tt.)"
+
+TT397 (Nakht):
+  notes_from_pm: a="wʿb-priest of Amūn, Overseer of the magazine of Amūn, First King's son of Amūn. Dyn. XVIII (?). Wife, Senḥotp, Royal concubine." | b="wʿb-priest of Amūn, Overseer of the magazine of Amūn, First King's son of Amūn. Dyn. XVIII(?). Wife, Senḥotp, Royal concubine." | c="wʿb-priest of Amūn, Overseer of the magazine of Amūn, First King's son of Amūn. Dyn. XVIII(?). Wife, Senḥotp, Royal concubine."  → chose "wʿb-priest of Amūn, Overseer of the magazine of Amūn, First King's son of Amūn. Dyn. XVIII(?). Wife, Senḥotp, Royal concubine."
+
+TT398 (Kamosi):
+  notes_from_pm: a="called NENTOWAREF, Child of the nursery (from cones). Probably Dyn. XVIII." | b="Called Nentowaref. Child of the nursery (from cones). Probably Dyn. XVIII." | c="called NENTOWAREF (from cones). Child of the nursery. Probably Dyn. XVIII."  → chose "called NENTOWAREF, Child of the nursery (from cones). Probably Dyn. XVIII."
+
 SWV-HatshepsutSouth (Hatshepsut):
   notes_from_pm: a="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort." | b="South Tomb of Ḥatshepsut. See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite." | c="See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort, quartzite."  → chose "See also Tomb 20, supra, p. 546. Sarcophagus as Queen-Consort."
 
@@ -1271,6 +1280,7 @@ Per-chunk correction counts:
 - Chunk 45: 2 correction(s) defined in CHUNK45_CORRECTIONS.
 - Chunk 46: 8 correction(s) defined in CHUNK46_CORRECTIONS.
 - Chunk 47: 3 correction(s) defined in CHUNK47_CORRECTIONS.
+- Chunk 48: 9 correction(s) defined in CHUNK48_CORRECTIONS.
 
 Legacy field-key renames (post-#170 reconcile):
 - valley → theban_area: no-op this run (every row already uses 'theban_area')
@@ -1823,6 +1833,24 @@ Field corrections:
     value: "Female scribe, Chief attendant of the divine adoratress Nitocris. Temp. Psammetikhos I. (CHAMPOLLION, No. 16, L. D. Text, No. 94, Bibl. i, 1st ed. pp. 193-4, ss.) Parents, Ipwer, Divine father of Amūn, and Tashaiu."
 - TT382: notes_from_pm already matches override (no-op this run; PM I.1 p.435 / physical PDF p.453 (TT382 USERMONTU). egyptologist-reviewer P1 F3 PR #294 round-1 PDF verification: PM p.435 prints `Chief of the harîm of Monthu` with circumflex î (same character as 12+ earlier rows preserving `harîm` per chunk-45 TT366 + chunk-15+ convention). Agent A's `harîm` was PM-faithful; B+C 2/1 majority dropped the circumflex to plain `harim`. No tie-break entry because the 2/1 was not flagged as 1/1/1 at merge time; restore via CHUNK47_CORRECTIONS post-merge per the verbatim-preserve policy for notes_from_pm.)
     value: "Overseer of cattle, Overseer of the treasury, First prophet of Monthu. Ramesside. Wife, Tiy, Chief of the harîm of Monthu."
+- TT392: occupant_role already matches override (no-op this run; PM I.1 p.442 / physical PDF p.460 (TT392 anonymous, 'Name unknown. Saite (?).').  All three agents emitted `occupant_role='Unknown'`; merge.py sentinel-null normalisation collapsed it to null because `'unknown'` is in SENTINEL_NULL_STRINGS. Restore per the null-name/null-role pairing invariant (KV12 chunk-2 precedent; also TT371–TT379 chunk-46).)
+    value: "Unknown"
+- TT393: occupant_role already matches override (no-op this run; PM I.1 p.442 / physical PDF p.460 (TT393 anonymous, 'Name unknown. Early Dyn. XVIII.'). Same sentinel-null restoration as TT392. KV12 / chunk-46 TT371–TT379 precedent.)
+    value: "Unknown"
+- TT394: occupant_role already matches override (no-op this run; PM I.1 p.442 / physical PDF p.460 (TT394 anonymous, 'No texts. Ramesside.'). Same sentinel-null restoration as TT392.)
+    value: "Unknown"
+- TT395: occupant_role already matches override (no-op this run; PM I.1 p.442 / physical PDF p.460 (TT395 anonymous, 'Name lost. Ramesside.'). Same sentinel-null restoration as TT392.)
+    value: "Unknown"
+- TT396: occupant_role already matches override (no-op this run; PM I.1 p.442 / physical PDF p.460 (TT396 anonymous, 'Name unknown. Dyn. XVIII.'). Same sentinel-null restoration as TT392.)
+    value: "Unknown"
+- TT399: occupant_role already matches override (no-op this run; PM I.1 p.443 / physical PDF p.461 (TT399 anonymous, 'No name. Ramesside.'). Same sentinel-null restoration as TT392.)
+    value: "Unknown"
+- TT400: occupant_role already matches override (no-op this run; PM I.1 p.444 / physical PDF p.462 (TT400 anonymous, 'No texts.'). Same sentinel-null restoration as TT392.)
+    value: "Unknown"
+- TT391: notes_from_pm already matches override (no-op this run; PM I.1 p.441 / physical PDF p.459 (TT391 KARABASAKEN). PDF p.459 confirms PM prints `Khonsemwēset-Neferḥōtep` with macron-ē on `wēset` and macron-ō on `hōtep`. B+C 2/1 majority dropped macron-ē → `Khonsemweset`; all three agents dropped macron-ō → `Neferḥotep`. Verbatim-preserve policy for notes_from_pm + macron-retention precedent (TT26/TT53/chunk-12-onward series) requires restoration of both macrons. No tie-break entry because neither axis was flagged as 1/1/1 at merge time; restore via CHUNK48_CORRECTIONS post-merge.)
+    value: "Prophet of Khonsemwēset-Neferḥōtep, Fourth prophet of Amūn, Mayor of the City. Probably Dyn. XXV. (CHAMPOLLION, No. 18, L. D. Text, No. 95, Bibl. i, 1st ed. p. 194, tt.)"
+- TT397: notes_from_pm already matches override (no-op this run; PM I.1 p.443 / physical PDF p.461 (TT397 NAKHT). PDF p.461 prints `Dyn. XVIII (?)` with a space before the parenthetical. B+C 2/1 majority printed `Dyn. XVIII(?)` (no space). Verbatim-preserve policy for notes_from_pm requires retention of the PM space. No tie-break entry (not a 1/1/1 tie); restore post-merge.)
+    value: "wʿb-priest of Amūn, Overseer of the magazine of Amūn, First King's son of Amūn. Dyn. XVIII (?). Wife, Senḥotp, Royal concubine."
 - KV9: tomb_aliases already matches override (no-op this run; Audit-fix (PR A): the strings 'Tomb of Metempsychosis' and 'Tomb of Memnon' are 19th-c. classical-traveller nicknames for the TOMB (Ramesses VI's KV9 was misidentified as Memnon's by early European travellers), not alternate names of the occupant. Migrated from occupant_alt_names to the new tomb_aliases field. PM I.2 p.511 prints these in the headword parenthetical `('Tomb of Metempsychosis', or 'Tomb of Memnon'. ...)`.)
     value: ["Tomb of Metempsychosis", "Tomb of Memnon"]
 - KV9: occupant_alt_names already matches override (no-op this run; Audit-fix (PR A): cleared after migrating tomb-nicknames to tomb_aliases. Ramesses VI's prenomen `Nebmaatre-Meryamun` (printed in PM as a hieroglyphic cartouche only, not as a transcribed English variant) lives in pharaoh.se's authority record, not in this row's `occupant_alt_names`. PR A round-2 egyptologist clarification: empty list is correct here for what PM prints in transcribed form.)
@@ -1933,6 +1961,11 @@ Field corrections:
 - TT346: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
 - TT385: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
 - TT388: is_uninscribed → false (issue #182 derivation from notes_from_pm)
+- TT391: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
+- TT394: is_uninscribed → false (issue #182 derivation from notes_from_pm)
+- TT397: attribution_certainty → "uncertain" (issue #182 derivation from notes_from_pm)
+- TT398: attribution_certainty → "probable" (issue #182 derivation from notes_from_pm)
+- TT400: is_uninscribed → false (issue #182 derivation from notes_from_pm)
 - TT2: attribution_certainty → "attested" (deriver override; PM I.1 p.6 prints `2. KHAʿBEKHNET ..., Servant in the Place of Truth. Temp. Rame...)
 - TT12: attribution_certainty → "attested" (deriver override; PM I.1 p.24 prints `12. ḤRAY ..., Overseer of the granary of the King's wife and...)
 - TT17: attribution_certainty → "attested" (deriver override; PM I.1 p.29 prints `17. NEBAMŪN ..., Scribe and physician of the King. Temp. Ame...)
@@ -2012,3 +2045,8 @@ Field corrections:
 - TT346: attribution_certainty → "attested" (deriver override; PM I.1 p.414 / physical PDF p.432 / chunk-43-tt341-tt350.txt lines 284-287: `346...)
 - TT385: attribution_certainty → "attested" (deriver override; PM I.1 p.437 / physical PDF p.455 / chunk-47-tt381-tt390.txt lines 94-95: `385. ...)
 - TT388: is_uninscribed → true (deriver override; PR #294 round-1 code-reviewer finding: TT388 notes_from_pm is `No texts. Saite.`...)
+- TT391: attribution_certainty → "attested" (deriver override; PM I.1 p.441 / physical PDF p.459 / chunk-48-tt391-tt400.txt lines 34-36: `391. ...)
+- TT397: attribution_certainty → "attested" (deriver override; PM I.1 p.443 / physical PDF p.461 / chunk-48-tt391-tt400.txt lines 87-88: `397. ...)
+- TT398: attribution_certainty → "attested" (deriver override; PM I.1 p.443 / physical PDF p.461 / chunk-48-tt391-tt400.txt lines 98-99: `398. ...)
+- TT394: is_uninscribed → true (deriver override; PM I.1 p.442 / physical PDF p.460 / chunk-48-tt391-tt400.txt line 60: `394. No t...)
+- TT400: is_uninscribed → true (deriver override; PM I.1 p.444 / physical PDF p.462 / chunk-48-tt391-tt400.txt line 131: `400. No ...)
