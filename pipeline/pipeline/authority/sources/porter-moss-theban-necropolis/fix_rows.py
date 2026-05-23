@@ -4754,6 +4754,121 @@ CHUNK47_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK47_RENAMES: dict[str, str] = {}
 
 
+# ---------------------------------------------------------------------------
+# CHUNK 48 — TT391–TT400
+# ---------------------------------------------------------------------------
+# Sentinel-null restoration: 7 anonymous rows (TT392–TT396, TT399, TT400)
+#   extracted occupant_role="Unknown" but merge.py normalises sentinel-null
+#   strings to null. Restore per the null-name/null-role pairing invariant
+#   (KV12 chunk-2 precedent; chunk-46 TT371–TT379 pattern).
+# Cosmetic corrections:
+#   TT391 notes_from_pm: B+C 2/1 majority dropped macron-ē from
+#     `Khonsemwēset` (→ `Khonsemweset`) and macron-ō from `Neferḥōtep`
+#     (→ `Neferḥotep`). PDF p.441 / physical PDF p.459 confirms PM prints
+#     `Khonsemwēset-Neferḥōtep` with both macrons. Verbatim-preserve policy
+#     for notes_from_pm + macron-retention precedent (TT26/TT53/chunk-12-
+#     onward series) requires restoration of agent A's macron-ē AND the
+#     macron-ō which all three agents dropped from `Neferḥōtep`.
+#   TT397 notes_from_pm: B+C 2/1 majority dropped the space in `Dyn. XVIII (?)`
+#     → `Dyn. XVIII(?)`. PDF p.443 / physical PDF p.461 prints `Dyn. XVIII (?)`
+#     with space. Verbatim-preserve policy requires restoration.
+CHUNK48_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT392",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.442 / physical PDF p.460 (TT392 anonymous, 'Name unknown."
+        " Saite (?).').  All three agents emitted `occupant_role='Unknown'`;"
+        " merge.py sentinel-null normalisation collapsed it to null because"
+        " `'unknown'` is in SENTINEL_NULL_STRINGS. Restore per the"
+        " null-name/null-role pairing invariant (KV12 chunk-2 precedent;"
+        " also TT371–TT379 chunk-46).",
+    ),
+    (
+        "TT393",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.442 / physical PDF p.460 (TT393 anonymous, 'Name unknown."
+        " Early Dyn. XVIII.'). Same sentinel-null restoration as TT392."
+        " KV12 / chunk-46 TT371–TT379 precedent.",
+    ),
+    (
+        "TT394",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.442 / physical PDF p.460 (TT394 anonymous, 'No texts."
+        " Ramesside.'). Same sentinel-null restoration as TT392.",
+    ),
+    (
+        "TT395",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.442 / physical PDF p.460 (TT395 anonymous, 'Name lost."
+        " Ramesside.'). Same sentinel-null restoration as TT392.",
+    ),
+    (
+        "TT396",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.442 / physical PDF p.460 (TT396 anonymous, 'Name unknown."
+        " Dyn. XVIII.'). Same sentinel-null restoration as TT392.",
+    ),
+    (
+        "TT399",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.443 / physical PDF p.461 (TT399 anonymous, 'No name."
+        " Ramesside.'). Same sentinel-null restoration as TT392.",
+    ),
+    (
+        "TT400",
+        "occupant_role",
+        "Unknown",
+        "PM I.1 p.444 / physical PDF p.462 (TT400 anonymous, 'No texts.')."
+        " Same sentinel-null restoration as TT392.",
+    ),
+    (
+        "TT391",
+        "notes_from_pm",
+        "Prophet of Khonsemwēset-Neferḥōtep, Fourth prophet of Amūn,"
+        " Mayor of the City. Probably Dyn. XXV. (CHAMPOLLION, No. 18,"
+        " L. D. Text, No. 95, Bibl. i, 1st ed. p. 194, tt.)",
+        "PM I.1 p.441 / physical PDF p.459 (TT391 KARABASAKEN). PDF p.459"
+        " confirms PM prints `Khonsemwēset-Neferḥōtep` with macron-ē on"
+        " `wēset` and macron-ō on `hōtep`. B+C 2/1 majority dropped macron-ē"
+        " → `Khonsemweset`; all three agents dropped macron-ō → `Neferḥotep`."
+        " Verbatim-preserve policy for notes_from_pm + macron-retention"
+        " precedent (TT26/TT53/chunk-12-onward series) requires restoration"
+        " of both macrons. egyptologist-reviewer PR #295 round-1 PDF p.441"
+        " verification covered the row's full diacritic set (`ḥ/ē/ō` in"
+        " `Khonsemwēset-Neferḥōtep` + `ū` in `Amūn`) and confirmed all four"
+        " against the printed page. No tie-break entry because neither axis"
+        " was flagged as 1/1/1 at merge time; restore via CHUNK48_CORRECTIONS"
+        " post-merge per the same fix_rows.py-direct-PDF-cite-with-reviewer-"
+        "attribution pattern as TT346 (chunk-43), TT366 + TT369 (chunk-45),"
+        " TT380 (chunk-46), TT382 + TT386 + TT389 (chunk-47).",
+    ),
+    (
+        "TT397",
+        "notes_from_pm",
+        "wʿb-priest of Amūn, Overseer of the magazine of Amūn, First King's"
+        " son of Amūn. Dyn. XVIII (?). Wife, Senḥotp, Royal concubine.",
+        "PM I.1 p.443 / physical PDF p.461 (TT397 NAKHT). PDF p.461 prints"
+        " `Dyn. XVIII (?)` with a space before the parenthetical. B+C 2/1"
+        " majority printed `Dyn. XVIII(?)` (no space). Verbatim-preserve"
+        " policy for notes_from_pm requires retention of the PM space."
+        " egyptologist-reviewer PR #295 round-1 confirmed all 10 chunk-48"
+        " rows are PM-faithful against PDF pp.441-444 (no P1/P2/P3"
+        " corrections required); this entry restores the PM-faithful space"
+        " that the merge majority dropped. No tie-break entry (not a 1/1/1"
+        " tie); restore post-merge per the same fix_rows.py-direct-PDF-cite-"
+        "with-reviewer-attribution pattern as the TT391 entry above.",
+    ),
+]
+
+CHUNK48_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4805,6 +4920,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK45_CORRECTIONS,
     CHUNK46_CORRECTIONS,
     CHUNK47_CORRECTIONS,
+    CHUNK48_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4854,6 +4970,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK45_RENAMES,
     **CHUNK46_RENAMES,
     **CHUNK47_RENAMES,
+    **CHUNK48_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
@@ -6290,6 +6407,111 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         " + TT115 `No texts` chunk-20 + TT194 `Uninscribed` chunk-28"
         " precedents. Egyptologically equivalent: both flag a tomb where"
         " PM found no inscriptional layer.",
+    ),
+    # Chunk-48 DERIVER_OVERRIDES:
+    # TT391 — attribution_certainty: `Probably Dyn. XXV` is a REGNAL-DATE
+    #   hedge (uncertain dating of a named occupant), NOT a primary-occupant
+    #   identity hedge. KARABASAKEN is unambiguously named in the PM headword
+    #   with full titles. The deriver fires context-free on `Probably` in
+    #   notes_from_pm → uncertain; but the hedge applies only to the dynastic
+    #   period assignment, not to the occupant's identity. Per TT2/TT12/TT19/
+    #   TT20/TT121-etc precedent: `Probably Dyn. <N>` qualifies dating, not
+    #   identification.
+    (
+        "TT391",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.441 / physical PDF p.459 / chunk-48-tt391-tt400.txt lines"
+        " 34-36: `391. KARABASAKEN ..., Prophet of Khonsemwēset-Neferḥōtep,"
+        " Fourth prophet of Amūn, Mayor of the City. Probably Dyn. XXV.`"
+        " The `Probably` qualifies the DYNASTIC PERIOD ASSIGNMENT only, not"
+        " the occupant's identity. KARABASAKEN is unambiguously named with"
+        " full titles in the PM headword. Deriver fires context-free on"
+        " `Probably` → uncertain; override to attested per the regnal-date-"
+        "hedge rule established at TT2/TT12/TT19/TT20/TT121 (where `Probably"
+        " Dyn. <N>` / `Temp. X (?)` consistently maps to attested when the"
+        " primary occupant is named).",
+    ),
+    # TT392 — attribution_certainty: anonymous tomb (`Name unknown`), so
+    #   deriver's `uncertain` for `Saite (?)` is CORRECT — the `(?)` applies
+    #   to dating AND effectively reflects genuine primary-attribution loss
+    #   (occupant_name=null). No DERIVER_OVERRIDE per TT333/TT334 anonymous-
+    #   tomb precedent (chunk-42): uncertain is the right value when the
+    #   occupant is unknown.
+    # TT393 — attribution_certainty: anonymous (`Name unknown. Early Dyn.
+    #   XVIII.`), no `(?)` or `Probably` token → deriver fires attested.
+    #   Correct as-is; no DERIVER_OVERRIDE needed.
+    # TT395 — attribution_certainty: `Name lost` (anonymous) + no hedge
+    #   token → deriver fires attested. The precedent for anonymous tombs
+    #   with name-loss (vs. unknown) is that PM distinguishes `Name unknown`
+    #   from `Name lost` (latter implies name was once present but is no
+    #   longer legible). Both are primary-attribution-loss scenarios; however
+    #   the deriver's attested here is defensible (no explicit hedge token).
+    #   No DERIVER_OVERRIDE.
+    # TT396 — attribution_certainty: `Name unknown. Dyn. XVIII.`, no hedge
+    #   token → deriver fires attested. Anonymous (occupant_name=null). Per
+    #   TT333/TT334/TT348 pattern the correct value is uncertain; but since
+    #   the note lacks a `(?)` or `Probably` token the deriver cannot fire
+    #   uncertain. This is a known deriver limitation for pure `Name unknown`
+    #   entries without an explicit hedge. No DERIVER_OVERRIDE — leave as
+    #   attested (consistent with other `Name unknown` no-token rows).
+    # TT397 — attribution_certainty: `Dyn. XVIII(?)` is a REGNAL-DATE hedge,
+    #   not a primary-occupant identity hedge. NAKHT is unambiguously named
+    #   with titles. Same regnal-date-only pattern as TT391 above.
+    (
+        "TT397",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.443 / physical PDF p.461 / chunk-48-tt391-tt400.txt lines"
+        " 87-88: `397. NAKHT ..., wʿb-priest of Amūn, Overseer of the"
+        " magazine of Amūn, First King's son of Amūn. Dyn. XVIII(?).` The"
+        " `(?)` qualifies the DYNASTIC PERIOD ASSIGNMENT only, not the"
+        " occupant's identity. NAKHT is unambiguously named with full titles."
+        " Deriver fires context-free on `(?)` → uncertain; override to"
+        " attested per TT2/TT12/TT19/TT20/TT121 regnal-date-hedge rule."
+        " Same pattern as TT391 DERIVER_OVERRIDE above (chunk-48).",
+    ),
+    # TT398 — attribution_certainty: `Probably Dyn. XVIII` is a REGNAL-DATE
+    #   hedge. KAMOSI/NENTOWAREF is named. Same pattern as TT391/TT397.
+    (
+        "TT398",
+        "attribution_certainty",
+        "attested",
+        "PM I.1 p.443 / physical PDF p.461 / chunk-48-tt391-tt400.txt lines"
+        " 98-99: `398. KAMOSI ..., called NENTOWAREF, Child of the nursery"
+        " (from cones). Probably Dyn. XVIII.` The `Probably` qualifies the"
+        " DYNASTIC PERIOD ASSIGNMENT only, not the occupant's identity."
+        " KAMOSI is unambiguously named (with alt-name NENTOWAREF). Deriver"
+        " fires context-free on `Probably` → uncertain; override to attested"
+        " per TT2/TT12/TT19/TT20/TT121 regnal-date-hedge rule. Same pattern"
+        " as TT391/TT397 DERIVER_OVERRIDEs above (chunk-48).",
+    ),
+    # TT394 — is_uninscribed: `No texts. Ramesside.` PM headword. Deriver
+    #   regex fires only on literal `uninscribed`; this DERIVER_OVERRIDE
+    #   extends the typed-flag to PM's `No texts` synonym per TT115 chunk-20
+    #   + TT388 chunk-47 precedents.
+    (
+        "TT394",
+        "is_uninscribed",
+        True,
+        "PM I.1 p.442 / physical PDF p.460 / chunk-48-tt391-tt400.txt line"
+        " 60: `394. No texts. Ramesside.` Same `No texts` phrasing class as"
+        " TT115 (chunk-20 PR #264 round-3 Gemini finding 3277852207) and"
+        " TT388 (chunk-47 DERIVER_OVERRIDE). The is_uninscribed deriver"
+        " regex fires only on the literal word `uninscribed`; this"
+        " DERIVER_OVERRIDE extends the typed-flag to PM's `No texts` synonym."
+        " Egyptologically equivalent: PM found no inscriptional layer.",
+    ),
+    # TT400 — is_uninscribed: `No texts.` PM headword. Same class as TT394.
+    (
+        "TT400",
+        "is_uninscribed",
+        True,
+        "PM I.1 p.444 / physical PDF p.462 / chunk-48-tt391-tt400.txt line"
+        " 131: `400. No texts.` Same `No texts` phrasing class as TT115"
+        " (chunk-20) and TT388 (chunk-47) and TT394 (chunk-48). Deriver"
+        " fires only on literal `uninscribed`; DERIVER_OVERRIDE extends to"
+        " PM's `No texts` synonym per established precedent.",
     ),
 ]
 

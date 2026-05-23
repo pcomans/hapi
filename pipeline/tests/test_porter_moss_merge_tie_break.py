@@ -1175,6 +1175,17 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             " Southern City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28,"
             " Bibl. i, 1st ed. p. 190, cc.) Parents, Amenemōnet, Prophet of"
             " Min, and Neferuneit. Wives, Tahert and Beteb.",
+        # TT398 notes_from_pm: 1/1/1 split on (1) called-name capitalisation
+        #   (A/C=NENTOWAREF caps vs B=Nentowaref mixed-case) and (2) placement
+        #   of `(from cones)` parenthetical (A+B=after `nursery`, correct;
+        #   C=after `NENTOWAREF`, wrong). Pinned to agent A's form: CAPS
+        #   called-name per PM headword convention + correct `(from cones)`
+        #   placement. PDF p.443 / physical p.461 confirms. CHUNK48_CORRECTIONS
+        #   also corrects macrons on TT391/TT397; the tie-break value here
+        #   is the notes_from_pm baseline before those corrections.
+        ("TT398", "notes_from_pm"):
+            "called NENTOWAREF, Child of the nursery (from cones)."
+            " Probably Dyn. XVIII.",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
@@ -1240,9 +1251,9 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk47_row_count(reconciled):
-    """Merged total should be 465 after chunk 47 (+10 from chunk-46's 455)."""
-    assert len(reconciled) == 465
+def test_chunk48_row_count(reconciled):
+    """Merged total should be 475 after chunk 48 (+10 from chunk-47's 465)."""
+    assert len(reconciled) == 475
 
 
 def test_tt281_unfinished_temple(reconciled):
