@@ -1276,7 +1276,7 @@ def test_tt281_unfinished_temple(reconciled):
 
 def test_tt282_nakht(reconciled):
     """TT282: Nakht, Head of bowmen, Overseer of the South Lands. Ramesside.
-    Draʿ Abû el-Nagaʿ'."""
+    Draʿ Abû el-Nagaʿ."""
     r = _row(reconciled, "TT282")
     assert r["occupant_name"] == "Nakht"
     assert r["occupant_role"] == "Official"
@@ -1843,7 +1843,7 @@ def test_tt310_anonymous_chancellor(reconciled):
 # ===== Chunk 40 (TT311–TT320) ============================================
 
 
-def test_tt311_khety_deir_el_bahari(reconciled):
+def test_tt311_khety_deir_el_baḥri(reconciled):
     """TT311 — Khety, Seal-bearer. Deir el-Baḥri. p.386. Temp. Mentuḥotp-Nebḥepetreʿ.
 
     First Dyn. XI Mentuhotep-era cluster row. Diacritic restore by CHUNK40.
