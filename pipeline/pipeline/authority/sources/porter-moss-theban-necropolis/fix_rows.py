@@ -4926,7 +4926,7 @@ CHUNK49_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " merge 2/1 chose `Amun`. Verbatim-preserve policy for notes_from_pm +"
         " macron-retention precedent (TT26/TT53/chunk-12-onward series) requires"
         " restoration. Same printing convention confirmed on same physical page"
-        " range as chunk-48 TT391/TT397 restorations (PDF pp.441-444).",
+        " range as chunk-48 TT391/TT397 restorations (printed pp.441-444).",
     ),
     (
         "TT403",
@@ -4938,7 +4938,7 @@ CHUNK49_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " `Dyn. XVIII(?)` (no space); merge 2/1 dropped the space. Verbatim-"
         "preserve policy for notes_from_pm requires retention of the PM space."
         " Same pattern as TT397 chunk-48 CHUNK48_CORRECTIONS entry (`Dyn."
-        " XVIII (?)` with space per PDF p.443).",
+        " XVIII (?)` with space per printed p.443).",
     ),
     (
         "TT404",
@@ -6633,7 +6633,7 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         "PM I.1 p.445 / physical PDF p.463 / chunk-49-tt401-tt409.txt lines"
         " 35-36: `403. MERYMACET ..., (name from ushabti), Temple-scribe,"
         " Steward. Dyn. XVIII(?).` The `(?)` qualifies the DYNASTIC PERIOD"
-        " ASSIGNMENT only, not the occupant's identity. MERYMAET is"
+        " ASSIGNMENT only, not the occupant's identity. MERYMACET is"
         " unambiguously named (ushabti evidence cited). Deriver fires"
         " context-free on `(?)` → uncertain; override to attested per the"
         " regnal-date-hedge rule (TT2/TT12/TT121/TT391/TT397 precedents)."
