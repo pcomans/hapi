@@ -1128,6 +1128,25 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
         ("TT354", "notes_from_pm"):
             "No texts. Perhaps Amenemḥet (tomb 340, cf. box-lid in Finds of this"
             " tomb). Early Dyn. XVIII.",
+        # Chunk 45 (TT361–TT370) — 2 tie-break overrides.
+        # TT362 notes_from_pm: 1/1/1 split on wab-priest romanisation:
+        #   A=`Wab-priest` (capitalised W, ayin dropped); B=`waʿb-priest`
+        #   (ayin after a); C=`wʿb-priest` (ayin present, medial-a dropped).
+        #   Pin `wʿab-priest` per the bar-a-as-ayin-before-a convention from
+        #   TT14/TT97/TT100 overrides. CHUNK45_CORRECTIONS then restores
+        #   PM diacritics on TT366+TT369; no CHUNK45_CORRECTIONS on TT362
+        #   (the wʿab form is the merge-time final form, no post-merge diacritic).
+        ("TT362", "notes_from_pm"):
+            "wʿab-priest of Amūn. Late Dyn. XIX. Wife, Ḥatḥor.",
+        # TT368 notes_from_pm: 1/1/1 split on `called Ḥuy` prefix:
+        #   A=`Called Ḥuy,...` (capitalised C — wrong, mid-sentence position);
+        #   B=`called Ḥuy,...` (lowercase c — verbatim PM p.431);
+        #   C dropped `called Ḥuy,` entirely (substantive omission).
+        #   Pin agent B; lowercase per PM printed page.
+        ("TT368", "notes_from_pm"):
+            "called Ḥuy, Overseer of sculptors of Amūn in the Southern City."
+            " Late Dyn. XVIII. Parents, Ḥati, Overseer of sculptors of the"
+            " Lord of the Two Lands, and Ipy. Wife, Mery[mut].",
     }
     # Sanity: EXPECTED covers every override.
     override_keys = set(merge_module.TIE_BREAK_OVERRIDES.keys())
@@ -1193,9 +1212,9 @@ def test_overrides_json_keys_well_formed(merge_module):
 # final state (after CHUNK37_CORRECTIONS and DERIVER_OVERRIDES applied).
 
 
-def test_chunk44_row_count(reconciled):
-    """Merged total should be 435 after chunk 44 (+10 from chunk-43's 425)."""
-    assert len(reconciled) == 435
+def test_chunk45_row_count(reconciled):
+    """Merged total should be 445 after chunk 45 (+10 from chunk-44's 435)."""
+    assert len(reconciled) == 445
 
 
 def test_tt281_unfinished_temple(reconciled):

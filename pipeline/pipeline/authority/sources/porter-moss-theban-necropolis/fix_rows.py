@@ -4543,6 +4543,40 @@ CHUNK44_CORRECTIONS: list[tuple[str, str, object, str]] = [
 CHUNK44_RENAMES: dict[str, str] = {}
 
 
+CHUNK45_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "TT366",
+        "notes_from_pm",
+        "Custodian of the King's harîm. Temp. Mentuḥotp-Nebḥepetrēʿ."
+        " (New York, M.M.A. Excav. No. 820.)",
+        "PM I.1 p.429 / physical PDF p.447 (TT366 ZAR): PM p.429 prints"
+        " `harîm` (circumflex î) and `Nebḥepetrēʿ` (macron ē + trailing"
+        " ayin). Agent B correctly rendered both diacritics; A+C majority"
+        " dropped both (`harim` plain i, `Nebḥepetreʿ` no macron on ē)."
+        " Restore PM-faithful diacritics per the verbatim-preserve policy"
+        " for notes_from_pm (macrons preserved in this field per"
+        " chunk-15-onward convention). Matching the diacritics-at-fix_rows"
+        " pattern established in KV36, QV47, TT346, TT354 overrides.",
+    ),
+    (
+        "TT369",
+        "notes_from_pm",
+        "First prophet of Ptaḥ, Third prophet of Amūn. Dyn. XIX."
+        " Wife, Taōne(t).",
+        "PM I.1 p.432 / physical PDF p.450 (TT369 KAEMWESET): PM p.432"
+        " prints `Taōne(t)` with macron ō on the vowel. Agent B correctly"
+        " rendered `Taōne(t)`; A+C majority dropped the macron to `Taone(t)`."
+        " Restore macron ō per the verbatim-preserve policy for notes_from_pm."
+        " The majority `occupant_role=High Priest` (A+B) is correct and"
+        " requires no correction (agent C's `Official` was wrong — `First"
+        " prophet of Ptaḥ` maps to High Priest under prompt rule 2 per the"
+        " major-state-cult extension covering Ptaḥ alongside Amun/Amen-Re).",
+    ),
+]
+
+CHUNK45_RENAMES: dict[str, str] = {}
+
+
 # Aggregation: every chunk's corrections list must appear here.
 # `test_all_corrections_includes_every_chunk_list` asserts module-level
 # `CHUNK*_CORRECTIONS` attributes are all present so dropping one silently
@@ -4591,6 +4625,7 @@ ALL_CORRECTIONS: list[list[tuple[str, str, object, str]]] = [
     CHUNK42_CORRECTIONS,
     CHUNK43_CORRECTIONS,
     CHUNK44_CORRECTIONS,
+    CHUNK45_CORRECTIONS,
     AUDIT_FIX_CORRECTIONS,
 ]
 
@@ -4637,6 +4672,7 @@ ALL_RENAMES: dict[str, str] = {
     **CHUNK42_RENAMES,
     **CHUNK43_RENAMES,
     **CHUNK44_RENAMES,
+    **CHUNK45_RENAMES,
 }
 
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
