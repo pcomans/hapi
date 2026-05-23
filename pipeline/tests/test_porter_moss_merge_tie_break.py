@@ -1147,21 +1147,22 @@ def test_post_fix_rows_pipeline_determinism(merge_module, reconciled):
             "called Ḥuy, Overseer of sculptors of Amūn in the Southern City."
             " Late Dyn. XVIII. Parents, Ḥati, Overseer of sculptors of the"
             " Lord of the Two Lands, and Ipy. Wife, Mery[mut].",
-        # TT381 notes_from_pm: 1/1/1 split on statue-sentence inclusion and
-        #   CAPS on AMENEMONET. A=complete with statue sentence + CAPS;
-        #   B=truncated + lowercase; C=truncated + CAPS. Pin A's complete form
-        #   (verbatim-preserve: statue sentence is PM body content, not a
-        #   citation ribbon). Macron stripped per OCR source (no macron visible).
+        # TT381 notes_from_pm: 1/1/1 split on statue-sentence inclusion +
+        #   CAPS on AMENEMONET + macron-Ō/-ō (egyptologist P1 F2 PR #294
+        #   round-1 PDF verification confirmed PM prints macron on both
+        #   AMENEMŌNET and Amenemōnet). Pin agent A's complete form per
+        #   PDF p.453.
         ("TT381", "notes_from_pm"):
-            "Uninscribed. Perhaps AMENEMONET, Messenger of the King to every"
-            " land. Ramesside. Headless statue of Amenemonet.",
+            "Uninscribed. Perhaps AMENEMŌNET, Messenger of the King to every"
+            " land. Ramesside. Headless statue of Amenemōnet.",
         # TT386 notes_from_pm: 1/1/1 split on parenthetical inclusion and
-        #   Wilkinson site-name spelling. A=Mináfed (accent); B=dropped
-        #   parenthetical; C=Mimifed (matches OCR source). Pin C's Mimifed
-        #   form + A+C's parenthetical inclusion.
+        #   Wilkinson site-name spelling. A=Mináfed (acute á — PDF-correct);
+        #   B=dropped parenthetical; C=Mimifed (OCR-noise reading). Pin A's
+        #   PM-faithful Mináfed per egyptologist P1 F1 PR #294 round-1 PDF
+        #   verification on p.437.
         ("TT386", "notes_from_pm"):
             "Chancellor of the King of Lower Egypt, Overseer of soldiers."
-            " Middle Kingdom. (WILKINSON, 'Bab om el Mimifed',"
+            " Middle Kingdom. (WILKINSON, 'Bab om el Mináfed',"
             " Bibl. i, 1st ed. p. 190, bb.)",
         # TT389 notes_from_pm: 1/1/1 split on OCR-garbled priest-title cluster.
         #   A=smtj/ḥsk+Amenemōnet (PDF-faithful); B=snwḥ/ḥrk+Amenemonet;

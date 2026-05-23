@@ -3665,8 +3665,12 @@ def test_182_uninscribed_canonical_set() -> None:
     `No texts. Dyn. XIX.` semantic-equivalent of "uninscribed" per
     Gemini PR #264 round-3 finding 3277852207.
     Extended 2026-05-22 (chunk 47): TT381 — PM prints 'Uninscribed. Perhaps
-    AMENEMONET'; deriver fires on 'Uninscribed' in notes_from_pm correctly."""
-    expected = {"KV39", "KV56", "DAN-Neferhotep", "TT115", "TT381"}
+    AMENEMONET'; deriver fires on 'Uninscribed' in notes_from_pm correctly.
+    Extended 2026-05-22 (chunk 47, code-reviewer P1 PR #294): TT388 — PM
+    prints 'No texts. Saite.' (same `No texts` synonym class as TT115);
+    DERIVER_OVERRIDE extends is_uninscribed=true per the established
+    chunk-20 TT115 precedent."""
+    expected = {"KV39", "KV56", "DAN-Neferhotep", "TT115", "TT381", "TT388"}
     actual = {r["tomb_id"] for r in _rows() if r["is_uninscribed"]}
     assert actual == expected, sorted(actual)
 
@@ -12268,23 +12272,30 @@ def test_chunk47_tt381_uninscribed_perhaps() -> None:
     is_uninscribed=True (deriver fires on 'Uninscribed' in notes).
     attribution_certainty=uncertain (deriver fires on 'Perhaps').
     notes_from_pm includes statue sentence (tie-break override pinned
-    agent A's complete form)."""
+    agent A's complete form). Macron-Ō on AMENEMŌNET + macron-ō on
+    Amenemōnet restored per egyptologist P1 F2 PR #294 round-1 PDF
+    p.453 verification."""
     r = _row("TT381")
     assert r["occupant_name"] == "Amenemonet"
     assert r["is_uninscribed"] is True
     assert r["attribution_certainty"] == "uncertain"
-    assert "Headless statue of Amenemonet" in r["notes_from_pm"]
-    assert "AMENEMONET" in r["notes_from_pm"]
+    assert "Headless statue of Amenemōnet" in r["notes_from_pm"]
+    assert "AMENEMŌNET" in r["notes_from_pm"]
 
 
 def test_chunk47_tt388_anonymous_no_texts() -> None:
     """TT388: 'No texts. Saite.' — anonymous variant.
     occupant_name=null, occupant_role='Unknown' (CHUNK47_CORRECTIONS
-    restored after sentinel-null collapse in merge.py)."""
+    restored after sentinel-null collapse in merge.py).
+    is_uninscribed=True via DERIVER_OVERRIDE per TT115 chunk-20
+    precedent (PM's `No texts` is the semantic equivalent of
+    `uninscribed`; the regex deriver fires only on the literal
+    `uninscribed` word, so the typed-flag is extended manually).
+    code-reviewer P1 PR #294 round 1."""
     r = _row("TT388")
     assert r["occupant_name"] is None
     assert r["occupant_role"] == "Unknown"
-    assert r["is_uninscribed"] is False
+    assert r["is_uninscribed"] is True
     assert "No texts" in r["notes_from_pm"]
 
 

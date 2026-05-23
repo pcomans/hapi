@@ -1,0 +1,193 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-29 (PM III.2 §§ II.H-II.I, Pepy I/Merenrēʿ I/Isesi/Ibi/Pepy II cemeteries, pp.671-688). Three classes of divergence appear across the three extraction agents: (1) Agent A prepended Jéquier tomb-number prefixes (N.V → NVShenay, N.VII → NVIIDegemMerypepy, etc.) in violation of the SAQ-<TitleCaseName> descriptor convention from chunks 22/25/26/28; (2) Agent A appended the M.III Jéquier number prefix to the tomb_id; (3) Agent C appended Jéquier tomb-number suffixes (NX, MXV, etc.) or location suffixes (MastabetFaraun, NwMerenre, Merenre) after the name component. In all cases the canonical form is SAQ-<TitleCaseName> without any tomb-number prefix or suffix. Additional corrections: Agent A's double-r typo in ImameryreImapepy; Agent A's appended alias in KhnemuKhnementi; Agent C's tomb_id for M.XVII misread as SAQ-Sebhotp (dropping the k from Sebkhotp); Agent B's lowercase 'nakht' interior in NeferkarenakhtKhetuiHetep vs A+C's correct TitleCase NakhtKhetuiHetep; Agent C's IniTepemkau emitted as ImaTepemkau (Ima vs Ini headword — C has a substantive occupant_name reading error; A+B majority = Ini). Per pre_merge.py convention: each correction cites PM III.2 2nd ed. 1978/1981 printed page and rationale; pre_merge.py applies deterministically before merge.py runs.",
+  "a|SAQ-ImamerryreImapepy": {
+    "canonical_tomb_id": "SAQ-ImameryreImapepy",
+    "canonical_occupant_name": "Imameryreʿ",
+    "rationale": "Agent A used a double-r form 'Imamerryre' in the tomb_id; agents B and C both used the single-r canonical form 'Imameryreʿ' matching PM III.2 printed p.680 headword 'IMAMERYREʿ IMAPEPY'. The tomb_id descriptor must match the TitleCase of the occupant headword; the double-r is a transcription slip. 2/3 canonical form: SAQ-ImameryreImapepy."
+  },
+  "a|SAQ-KhnemuKhnementi": {
+    "canonical_tomb_id": "SAQ-Khnemu",
+    "canonical_occupant_name": "Khnemu",
+    "rationale": "Agent A appended the alias 'Khnementi' from the body prose into the tomb_id, producing SAQ-KhnemuKhnementi. PM III.2 printed p.681 headword reads 'KHNEMU (also KHNEMENTI)' — the primary occupant name is KHNEMU; '(also KHNEMENTI)' is an alternate name, not a tomb_id component. Per SAQ-<TitleCaseName> convention (chunks 22/25/26/28), the descriptor uses the primary headword only. Agents B and C both emitted SAQ-Khnemu (2/3 canonical form)."
+  },
+  "a|SAQ-MIIIIniTepemkau": {
+    "canonical_tomb_id": "SAQ-IniTepemkau",
+    "canonical_occupant_name": "Ini",
+    "rationale": "Agent A prepended the Jéquier M.III tomb-number prefix into the tomb_id, producing SAQ-MIIIIniTepemkau. PM III.2 printed p.678 headword reads 'INI TEPEMKAU' (per agents A+B both giving occupant_name='Ini'). Per SAQ-<TitleCaseName> convention, the descriptor is the primary headword name without tomb-number prefix. Agent B emitted SAQ-IniTepemkau (canonical form). Agent C emitted SAQ-ImaTepemkau with occupant_name='Ima' — a substantive headword misread (IMA vs INI); after normalisation this becomes a 2/1 field disagreement on occupant_name resolved by majority to Ini."
+  },
+  "a|SAQ-NVIIDegemMerypepy": {
+    "canonical_tomb_id": "SAQ-DegemMerypepy",
+    "canonical_occupant_name": "Degem",
+    "rationale": "Agent A prepended the Jéquier N.VII tomb-number prefix into the tomb_id, producing SAQ-NVIIDegemMerypepy. PM III.2 printed p.680 headword reads 'DEGEM MERYPEPY'. Per SAQ-<TitleCaseName> convention (chunks 22/25/26/28), the descriptor is the primary headword name only; the Jéquier number belongs in tomb_aliases or notes_from_pm, not the tomb_id. Agents B and C both emitted SAQ-DegemMerypepy (2/3 canonical form)."
+  },
+  "a|SAQ-NVIIIRaherkaIpi": {
+    "canonical_tomb_id": "SAQ-RaherkaIpi",
+    "canonical_occupant_name": "Raʿḥerka",
+    "rationale": "Agent A prepended the Jéquier N.VIII tomb-number prefix into the tomb_id, producing SAQ-NVIIIRaherkaIpi. PM III.2 printed p.680 headword reads 'RAʿḤERKA IPI'. Per SAQ-<TitleCaseName> convention, the Jéquier number belongs in tomb_aliases, not the tomb_id. Agents B and C both emitted SAQ-RaherkaIpi (2/3 canonical form)."
+  },
+  "a|SAQ-NVShenay": {
+    "canonical_tomb_id": "SAQ-Shenay",
+    "canonical_occupant_name": "Shenay",
+    "rationale": "Agent A prepended the Jéquier N.V tomb-number prefix into the tomb_id, producing SAQ-NVShenay. PM III.2 printed p.679 headword reads 'SHENAY'. Per SAQ-<TitleCaseName> convention, the Jéquier number belongs in tomb_aliases, not the tomb_id. Agents B and C both emitted SAQ-Shenay (2/3 canonical form)."
+  },
+  "a|SAQ-NI": {
+    "canonical_tomb_id": "SAQ-NI-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted a bare anonymous numbered tomb SAQ-NI with occupant_name=null. This is a Jéquier N.I anonymous tomb with no named occupant. Per Shape-5 drop policy (chunk-29 brief: only emit rows where PM gives a named occupant OR an anonymous tomb with concrete title/dating AND ≥2 agents agree), this row should not be emitted — it has no occupant_name and appears only in Agent A (1/3). The canonical_tomb_id SAQ-NI-ANON serves as a pre-merge normalisation that still causes merge.py singleton-rejection (the corrected id will still be 1/3 only), but documents the drop decision with a cited rationale rather than leaving an unexplained singleton. ACTUAL DISPOSITION: this row is dropped at merge time as a 1/3 singleton with no named occupant."
+  },
+  "a|SAQ-NII": {
+    "canonical_tomb_id": "SAQ-NII-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-NII with occupant_name=null. Jéquier N.II anonymous tomb; only A emitted it (1/3). Agent C emitted SAQ-NestiNII (named occupant Nesti found inside N.II) under a different tomb_id. These are distinct entries: A's SAQ-NII is the tomb container row; C's SAQ-NestiNII is a named findspot inside it. Per constitutional Rule 2 + chunk-29 Shape-5 policy, the anonymous container row cannot be merged from 1/3 presence. Dropped as singleton with no named occupant."
+  },
+  "a|SAQ-NIII": {
+    "canonical_tomb_id": "SAQ-NIII-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-NIII with occupant_name=null. Jéquier N.III anonymous tomb; only A emitted it (1/3). Agent C emitted SAQ-HarhotpNIII (named occupant Ḥarḥotp inside N.III) under a different tomb_id. The anonymous container row is 1/3 singleton; dropped per Shape-5 policy."
+  },
+  "a|SAQ-NIV": {
+    "canonical_tomb_id": "SAQ-NIV-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-NIV with occupant_name=null. Jéquier N.IV anonymous tomb; only A emitted it (1/3). Agent C emitted SAQ-DiuNIV (named occupant Diu inside N.IV) under a different tomb_id. The anonymous container row is 1/3 singleton; dropped per Shape-5 policy."
+  },
+  "a|SAQ-NVI": {
+    "canonical_tomb_id": "SAQ-NVI-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-NVI with occupant_name=null. Jéquier N.VI anonymous tomb; only A emitted it (1/3). Agent C emitted SAQ-DersenezNeferkareankh (named occupant Dersenez inside N.VI) under a different tomb_id. The anonymous container row is 1/3 singleton; dropped per Shape-5 policy."
+  },
+  "a|SAQ-MII": {
+    "canonical_tomb_id": "SAQ-MII-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-MII with occupant_name=null. Jéquier M.II anonymous tomb; only A emitted it (1/3). No agent emitted a named occupant for M.II. Dropped as 1/3 singleton with no named occupant per Shape-5 policy."
+  },
+  "a|SAQ-MVI": {
+    "canonical_tomb_id": "SAQ-MVI-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-MVI with occupant_name=null. Jéquier M.VI anonymous tomb; only A emitted it (1/3). Agent C emitted SAQ-NestiMVI (named occupant Nesti inside M.VI) under a different tomb_id. The anonymous container row is 1/3 singleton; dropped per Shape-5 policy."
+  },
+  "a|SAQ-MVII": {
+    "canonical_tomb_id": "SAQ-MVII-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-MVII with occupant_name=null. Jéquier M.VII anonymous tomb; only A emitted it (1/3). Agent C emitted SAQ-PenuMVII (named occupant Penu inside M.VII) under a different tomb_id. The anonymous container row is 1/3 singleton; dropped per Shape-5 policy."
+  },
+  "a|SAQ-MXII": {
+    "canonical_tomb_id": "SAQ-MXII-ANON",
+    "canonical_occupant_name": null,
+    "rationale": "Agent A emitted bare anonymous numbered tomb SAQ-MXII with occupant_name=null. Jéquier M.XII anonymous tomb; only A emitted it (1/3). Agent C emitted SAQ-SebhuMXII (named occupant Sebḥu inside M.XII) under a different tomb_id. The anonymous container row is 1/3 singleton; dropped per Shape-5 policy."
+  },
+  "a|SAQ-NipepyNikapepy": {
+    "canonical_tomb_id": "SAQ-Nipepy",
+    "canonical_occupant_name": "Nipepy",
+    "rationale": "Agent A appended alt-name 'Nikapepy' and alias component 'Ni' after the primary headword, producing SAQ-NipepyNikapepy. PM III.2 printed p.681 headword reads 'NIPEPY (or NIKAPEPY) NI (or NIKA)' — 'NIPEPY' is the primary name; '(or NIKAPEPY)' and 'NI (or NIKA)' are parenthetical alternates. Per SAQ-<TitleCaseName> convention, the descriptor uses the primary headword name only. Agent B emitted SAQ-Nipepy (canonical form). Agent C emitted SAQ-NipepyNi (also non-canonical — corrected separately)."
+  },
+  "b|SAQ-NeferkarenakhtKhetuiHetep": {
+    "canonical_tomb_id": "SAQ-NeferkareNakhtKhetuiHetep",
+    "canonical_occupant_name": "Neferkareʿ-nakht",
+    "rationale": "Agent B used lowercase 'nakht' in the interior of the tomb_id descriptor, producing SAQ-NeferkarenakhtKhetuiHetep. Agents A and C both used TitleCase 'Nakht', producing SAQ-NeferkareNakhtKhetuiHetep. Per the SAQ-<TitleCaseName> convention (chunks 22/25/26/28), each component word in the descriptor is title-cased. The PM III.2 printed p.680 headword 'NEFERKAREʿ-NAKHT KHETUI ḤETEP' renders as TitleCase 'NeferkareNakhtKhetuiHetep'. Agent B's lowercase-interior form is a capitalisation slip; A+C 2/3 canonical form applies."
+  },
+  "c|SAQ-AnkhnebefNX": {
+    "canonical_tomb_id": "SAQ-Ankhnebef",
+    "canonical_occupant_name": "ʿAnkhnebef",
+    "rationale": "Agent C appended the Jéquier N.X tomb-number suffix into the tomb_id, producing SAQ-AnkhnebefNX. PM III.2 printed p.679 headword reads 'ʿANKHNEBEF'. Per SAQ-<TitleCaseName> convention, the descriptor is the primary headword name without tomb-number suffix. Agents A and B both emitted SAQ-Ankhnebef (2/3 canonical form)."
+  },
+  "c|SAQ-ImaTepemkau": {
+    "canonical_tomb_id": "SAQ-IniTepemkau",
+    "canonical_occupant_name": "Ini",
+    "rationale": "Agent C read the M.III headword as 'IMA TEPEMKAU' (occupant_name='Ima'), while agents A and B both read it as 'INI TEPEMKAU' (occupant_name='Ini'). The I-M vs I-N misread is a single-character OCR ambiguity. Agents A+B 2/3 majority gives the canonical occupant name as Ini. After this tomb_id normalisation, the merge will resolve occupant_name='Ini' (2/3 A+B) vs 'Ima' (1/3 C) by majority. PM III.2 printed p.678 headword form is 'INI TEPEMKAU'; the canonical tomb_id is SAQ-IniTepemkau."
+  },
+  "a|SAQ-Iarti": {
+    "canonical_tomb_id": "SAQ-IartiMerenreI",
+    "canonical_occupant_name": "Iarti",
+    "rationale": "Agent A emitted SAQ-Iarti for the chunk-29 Iarti (wʿb-priest of the Pyramid of Merenrēʿ I, PM III.2 printed p.674). However SAQ-Iarti is already occupied in chunk-25 by a different Iarti (Inspector of prophets of the Pyramid of Unis, PM III.2 printed p.622). Cross-chunk ID collision: merge.py raises on duplicate tomb_id. The canonical disambiguated form is SAQ-IartiMerenreI — the 'MerenreI' suffix identifies this Iarti's priestly association (Pyramid of Merenrēʿ I) and the regnal ordinal I prevents collision with any future Merenrēʿ II row. All three chunk-29 agents must receive this correction."
+  },
+  "b|SAQ-Iarti": {
+    "canonical_tomb_id": "SAQ-IartiMerenreI",
+    "canonical_occupant_name": "Iarti",
+    "rationale": "Same cross-chunk collision as agent A: chunk-25 SAQ-Iarti (Unis priest, p.622) ≠ chunk-29 SAQ-Iarti (Merenrēʿ I priest, p.674). Agent B emitted SAQ-Iarti; corrected to SAQ-IartiMerenreI for disambiguation. See a|SAQ-Iarti rationale."
+  },
+  "c|SAQ-IartiMerenre": {
+    "canonical_tomb_id": "SAQ-IartiMerenreI",
+    "canonical_occupant_name": "Iarti",
+    "rationale": "Agent C appended the royal name 'Merenre' (without ordinal) into the tomb_id, producing SAQ-IartiMerenre. PM III.2 printed p.674 headword reads 'IARTI'. The canonical disambiguated form is SAQ-IartiMerenreI (with regnal ordinal I) to match the a|SAQ-Iarti and b|SAQ-Iarti corrections and to unambiguously identify this as the Merenrēʿ I-associated Iarti. Agents A+B are simultaneously corrected to the same canonical form."
+  },
+  "c|SAQ-Iarti": {
+    "canonical_tomb_id": "SAQ-IartiMerenreI",
+    "canonical_occupant_name": "Iarti",
+    "rationale": "Agent C's SAQ-IartiMerenre was normalised to SAQ-Iarti by the first pre_merge.py pass (using c|SAQ-IartiMerenre entry above). After that pass, C now holds SAQ-Iarti which still collides with the chunk-25 SAQ-Iarti. This second-pass correction routes C's SAQ-Iarti to the canonical SAQ-IartiMerenreI disambiguated form. The two-pass normalisation is explicitly documented and auditable via this corrections file."
+  },
+  "c|SAQ-NipepyNi": {
+    "canonical_tomb_id": "SAQ-Nipepy",
+    "canonical_occupant_name": "Nipepy",
+    "rationale": "Agent C appended the alternate component 'Ni' after the primary headword, producing SAQ-NipepyNi. PM III.2 printed p.681 headword reads 'NIPEPY (or NIKAPEPY) NI (or NIKA)' — 'NIPEPY' is the primary name; 'NI (or NIKA)' is a parenthetical alternate component. Per SAQ-<TitleCaseName> convention, the descriptor uses the primary headword name only. Agent B emitted SAQ-Nipepy (canonical form)."
+  },
+  "c|SAQ-Sebhotp": {
+    "canonical_tomb_id": "SAQ-Sebkhotp",
+    "canonical_occupant_name": "Sebkḥotp",
+    "rationale": "Agent C read the M.XVII headword as 'SEBḤOTP' (dropping the k), while agents A and B both read it as 'SEBKḤOTP'. PM III.2 printed p.682 headword is 'SEBKḤOTP' (Jéquier, Ann. Serv. xxxv, 1935); the k is present in the source. Agent C's 'SEBḤOTP' is a single-character OCR omission. After this tomb_id normalisation, the merge will resolve occupant_name 'Sebkḥotp' (2/3 A+B) vs 'Sebḥotp' (1/3 C) by majority to Sebkḥotp. The canonical tomb_id is SAQ-Sebkhotp."
+  },
+  "c|SAQ-SeniMastabetFaraun": {
+    "canonical_tomb_id": "SAQ-Seni",
+    "canonical_occupant_name": "Seni",
+    "rationale": "Agent C appended the geographic location 'MastabetFaraun' after the occupant name, producing SAQ-SeniMastabetFaraun. PM III.2 printed p.686 headword reads 'SENI'. Per SAQ-<TitleCaseName> convention, the descriptor is the primary headword name only; the location anchor belongs in notes_from_pm, not the tomb_id. Agents A and B both emitted SAQ-Seni (2/3 canonical form)."
+  },
+  "c|SAQ-ShemaiNwMerenre": {
+    "canonical_tomb_id": "SAQ-Shemai",
+    "canonical_occupant_name": "Shemai",
+    "rationale": "Agent C appended a directional/royal suffix 'NwMerenre' (from 'North-west of Pyramid of Merenrēʿ I') after the occupant name, producing SAQ-ShemaiNwMerenre. PM III.2 printed p.672 headword reads 'SHEMAI'. Per SAQ-<TitleCaseName> convention, the topographic anchor belongs in notes_from_pm, not the tomb_id. Agents A and B both emitted SAQ-Shemai (2/3 canonical form)."
+  },
+  "a|SAQ-Teti": {
+    "canonical_tomb_id": "SAQ-TetiMXV",
+    "canonical_occupant_name": "Teti",
+    "rationale": "Agent A emitted SAQ-Teti for the chunk-29 Teti (King's eldest son, Chief Justice and Vizier, M.XV, PM III.2 printed p.684). However SAQ-Teti is already occupied in chunk-5 by King Teti (Pyramid-complex of Teti, PM III.2 printed p.393). Cross-chunk ID collision: merge.py raises on duplicate tomb_id. The canonical disambiguated form is SAQ-TetiMXV — the Jéquier M.XV suffix unambiguously identifies this as the private official in Mastaba M.XV east of the Pyramid of Pepy II, distinct from the royal Teti in chunk-5. Agent C's original form SAQ-TetiMXV was the correct choice; all three chunk-29 agents are routed to this form."
+  },
+  "b|SAQ-Teti": {
+    "canonical_tomb_id": "SAQ-TetiMXV",
+    "canonical_occupant_name": "Teti",
+    "rationale": "Same cross-chunk collision as agent A: chunk-5 SAQ-Teti (King Teti, p.393) ≠ chunk-29 SAQ-Teti (Official Teti M.XV son of Pepy II, p.684). Corrected to SAQ-TetiMXV. See a|SAQ-Teti rationale."
+  },
+  "c|SAQ-Teti": {
+    "canonical_tomb_id": "SAQ-TetiMXV",
+    "canonical_occupant_name": "Teti",
+    "rationale": "Agent C originally emitted SAQ-TetiMXV but the first pre_merge.py pass converted it to SAQ-Teti (via the now-removed c|SAQ-TetiMXV→SAQ-Teti rule). This second-pass correction routes C's SAQ-Teti back to SAQ-TetiMXV, the canonical disambiguated form. See a|SAQ-Teti rationale for the cross-chunk collision with chunk-5 King Teti."
+  },
+  "c|SAQ-DersenezNeferkareankh": {
+    "canonical_tomb_id": "SAQ-DersenezNeferkareankh-DROP",
+    "canonical_occupant_name": "Dersenez Neferkareʿ-ʿankh",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.679 N.VI: Agent A emitted bare anonymous SAQ-NVI (no occupant_name); neither A nor B emitted a named Dersenez row. Agent C's SAQ-DersenezNeferkareankh claims DERSENEZ NEFERKARĒʿ-ʿANKH as the N.VI occupant. This is a body-prose findspot attribution (name appears as an inscription find inside the anonymous tomb N.VI), not a CAPS-NAME headword in the PM sense — Agent A confirms by emitting N.VI as anonymous. Single-agent row; dropped per constitutional Rule 2 (1/3 presence, no deterministic policy). Flagged for egyptologist review: if PM III.2 p.679 does give DERSENEZ as a headword, A+B missed it and should be re-extracted."
+  },
+  "c|SAQ-DiuNIV": {
+    "canonical_tomb_id": "SAQ-DiuNIV-DROP",
+    "canonical_occupant_name": "Diu",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.678 N.IV: Agent A emitted bare anonymous SAQ-NIV (no occupant_name); neither A nor B emitted a named Diu row. Agent C's SAQ-DiuNIV claims Diu as the N.IV occupant from body-prose inscription finds. Single-agent row; dropped per constitutional Rule 2. Flagged for egyptologist review."
+  },
+  "c|SAQ-HarhotpNIII": {
+    "canonical_tomb_id": "SAQ-HarhotpNIII-DROP",
+    "canonical_occupant_name": "Ḥarḥotp",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.677 N.III: Agent A emitted bare anonymous SAQ-NIII (no occupant_name); neither A nor B emitted a named Ḥarḥotp row. Agent C's SAQ-HarhotpNIII claims Ḥarḥotp as the N.III occupant from body-prose inscription finds. Single-agent row; dropped per constitutional Rule 2. Flagged for egyptologist review."
+  },
+  "c|SAQ-IstiNI": {
+    "canonical_tomb_id": "SAQ-IstiNI-DROP",
+    "canonical_occupant_name": "Isti",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.677 N.I: Agent A emitted bare anonymous SAQ-NI (no occupant_name); neither A nor B emitted a named Isti row. Agent C's SAQ-IstiNI claims Isti as the N.I occupant from body-prose inscription finds. Single-agent row; dropped per constitutional Rule 2. Flagged for egyptologist review."
+  },
+  "c|SAQ-NestiNII": {
+    "canonical_tomb_id": "SAQ-NestiNII-DROP",
+    "canonical_occupant_name": "Nesti",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.677 N.II: Agent A emitted bare anonymous SAQ-NII (no occupant_name); neither A nor B emitted a named Nesti row for N.II. Agent C's SAQ-NestiNII claims Nesti as the N.II occupant. Single-agent row; dropped per constitutional Rule 2. Flagged for egyptologist review."
+  },
+  "c|SAQ-NestiMVI": {
+    "canonical_tomb_id": "SAQ-NestiMVI-DROP",
+    "canonical_occupant_name": "Nesti",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.678 M.VI: Agent A emitted bare anonymous SAQ-MVI (no occupant_name); neither A nor B emitted a named Nesti row for M.VI. Agent C's SAQ-NestiMVI claims Nesti as the M.VI occupant from a fragmentary false-door find. Single-agent row; dropped per constitutional Rule 2. Flagged for egyptologist review."
+  },
+  "c|SAQ-PenuMVII": {
+    "canonical_tomb_id": "SAQ-PenuMVII-DROP",
+    "canonical_occupant_name": "Penu",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.678 M.VII: Agent A emitted bare anonymous SAQ-MVII (no occupant_name); neither A nor B emitted a named Penu row for M.VII. Agent C's SAQ-PenuMVII claims Penu as the M.VII occupant (burial chamber (a)). This is a body-prose sub-chamber attribution, not a CAPS-NAME headword. Single-agent row; dropped per constitutional Rule 2. Flagged for egyptologist review."
+  },
+  "c|SAQ-SebhuMXII": {
+    "canonical_tomb_id": "SAQ-SebhuMXII-DROP",
+    "canonical_occupant_name": "Sebḥu",
+    "rationale": "Agent C-only row (1/3). PM III.2 printed p.679 M.XII: Agent A emitted bare anonymous SAQ-MXII; neither A nor B emitted a named Sebḥu row. Agent C's SAQ-SebhuMXII claims Sebḥu from an obelisk-fragment find inscription. Single-agent row; dropped per constitutional Rule 2. Flagged for egyptologist review."
+  }
+}

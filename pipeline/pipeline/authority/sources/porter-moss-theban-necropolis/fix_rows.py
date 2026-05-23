@@ -4727,24 +4727,27 @@ CHUNK47_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "retention precedent (TT26/TT53/chunk-12-onward series) requires"
         " restoration.",
     ),
+    # Note on TT389: PDF-confirmed priest-title cluster (`smtj-priest` +
+    # `ḥsk-priest`) + macron-bearing parent (`Amenemōnet`) now pinned
+    # DIRECTLY in tie-break-overrides.json TT389|notes_from_pm value (per
+    # Gemini-PR-#294-round-1 architectural simplification: single source of
+    # truth for the value, with PDF-verification cite in the tie-break
+    # rationale, rather than wrong-merge-value + post-merge correction).
+    # No CHUNK47_CORRECTIONS entry needed.
     (
-        "TT389",
+        "TT382",
         "notes_from_pm",
-        "smtj-priest, Chamberlain of Min, ḥsk-priest, Mayor of the Southern"
-        " City. Saite. (CHAMPOLLION, No. 57, L. D. Text, No. 28, Bibl. i,"
-        " 1st ed. p. 190, cc.) Parents, Amenemōnet, Prophet of Min, and"
-        " Neferuneit. Wives, Tahert and Beteb.",
-        "PM I.1 p.440 / physical PDF p.458 (TT389 BASA). Direct PDF read"
-        " confirms the priest-title cluster the reconciliation agent"
-        " explicitly flagged at PR-merge time: PM prints `smtj-priest`"
-        " (NOT `snwḥ-priest`), `Chamberlain of Min`, `ḥsk-priest` (NOT"
-        " `ḥrk-priest`), `Mayor of the Southern City`. The text-layer"
-        " cluster the 3 agents tried to decode (`snulj-priest` / similar +"
-        " `lz.rk-priest` / similar) was opaque OCR; the agents constructed"
-        " plausible-but-wrong reconstructions. Also restores macron-ō on"
-        " parent `Amenemōnet` (PDF confirmed; B+C majority dropped to"
-        " plain o). All three corrections from same PDF-direct-read"
-        " pattern as TT380 chunk-46 / TT346 chunk-43 / TT366 chunk-45.",
+        "Overseer of cattle, Overseer of the treasury, First prophet of"
+        " Monthu. Ramesside. Wife, Tiy, Chief of the harîm of Monthu.",
+        "PM I.1 p.435 / physical PDF p.453 (TT382 USERMONTU). egyptologist-"
+        "reviewer P1 F3 PR #294 round-1 PDF verification: PM p.435 prints"
+        " `Chief of the harîm of Monthu` with circumflex î (same character"
+        " as 12+ earlier rows preserving `harîm` per chunk-45 TT366 +"
+        " chunk-15+ convention). Agent A's `harîm` was PM-faithful; B+C 2/1"
+        " majority dropped the circumflex to plain `harim`. No tie-break"
+        " entry because the 2/1 was not flagged as 1/1/1 at merge time;"
+        " restore via CHUNK47_CORRECTIONS post-merge per the verbatim-"
+        "preserve policy for notes_from_pm.",
     ),
 ]
 
@@ -6264,6 +6267,29 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
         " hedge. Same secondary-clause hedge pattern as TT340 `(perhaps also owner"
         " of tomb 354)` (chunk-42 DERIVER_OVERRIDE) and TT320 `perhaps wife of"
         " Amosis` (chunk-40 DERIVER_OVERRIDE).",
+    ),
+    # TT388 — is_uninscribed: PM `No texts. Saite.` headword. The
+    #   `is_uninscribed` deriver regex fires only on the literal word
+    #   `uninscribed`; this DERIVER_OVERRIDE extends the typed-flag to PM's
+    #   `No texts` phrasing per the TT115 chunk-20 precedent (PR #264 round-3
+    #   Gemini finding 3277852207). TT115 establishes the rule: PM's `No
+    #   texts` is the semantic equivalent of `uninscribed` for anonymous
+    #   tombs where PM found no inscriptional layer.
+    (
+        "TT388",
+        "is_uninscribed",
+        True,
+        "PR #294 round-1 code-reviewer finding: TT388 notes_from_pm is `No"
+        " texts. Saite.` — same `No texts` phrasing class as TT115 (chunk-20"
+        " PR #264 round-3 Gemini finding 3277852207, which established the"
+        " rule: PM's `No texts` is the semantic equivalent of `uninscribed`"
+        " for anonymous tombs where PM found no inscriptional layer). The"
+        " is_uninscribed deriver regex fires only on the literal word"
+        " `uninscribed`; this DERIVER_OVERRIDE extends the typed-flag to"
+        " PM's `No texts` synonym per the chunk-12 TT47 `(Uninscribed.)`"
+        " + TT115 `No texts` chunk-20 + TT194 `Uninscribed` chunk-28"
+        " precedents. Egyptologically equivalent: both flag a tomb where"
+        " PM found no inscriptional layer.",
     ),
 ]
 
