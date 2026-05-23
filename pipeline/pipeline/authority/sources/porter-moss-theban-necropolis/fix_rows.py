@@ -4840,7 +4840,8 @@ CHUNK48_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " Verbatim-preserve policy for notes_from_pm + macron-retention"
         " precedent (TT26/TT53/chunk-12-onward series) requires restoration"
         " of both macrons. egyptologist-reviewer PR #295 round-1 PDF p.441"
-        " verification (`Diacritics (ḥ/ō/ū) correct`) confirmed both macrons"
+        " verification covered the row's full diacritic set (`ḥ/ē/ō` in"
+        " `Khonsemwēset-Neferḥōtep` + `ū` in `Amūn`) and confirmed all four"
         " against the printed page. No tie-break entry because neither axis"
         " was flagged as 1/1/1 at merge time; restore via CHUNK48_CORRECTIONS"
         " post-merge per the same fix_rows.py-direct-PDF-cite-with-reviewer-"
@@ -6415,7 +6416,7 @@ DERIVER_OVERRIDES: list[tuple[str, str, object, str]] = [
     #   notes_from_pm → uncertain; but the hedge applies only to the dynastic
     #   period assignment, not to the occupant's identity. Per TT2/TT12/TT19/
     #   TT20/TT121-etc precedent: `Probably Dyn. <N>` qualifies dating, not
-    #   identification. Same pattern as TT391's regnal-date-only hedge.
+    #   identification.
     (
         "TT391",
         "attribution_certainty",
