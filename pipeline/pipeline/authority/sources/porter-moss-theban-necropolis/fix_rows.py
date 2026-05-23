@@ -4933,7 +4933,7 @@ CHUNK49_CORRECTIONS: list[tuple[str, str, object, str]] = [
         "notes_from_pm",
         "(name from ushabti), Temple-scribe, Steward. Dyn. XVIII (?). (CHAMPOLLION,"
         " No. 21, Bibl. i, 1st ed. p. 192, mm.)",
-        "PM I.1 p.445 / physical PDF p.463 (TT403 MERYMAET). PDF p.463 prints"
+        "PM I.1 p.445 / physical PDF p.463 (TT403 MERYMACET). PDF p.463 prints"
         " `Dyn. XVIII (?)` with a space before the parenthetical. A+B chose"
         " `Dyn. XVIII(?)` (no space); merge 2/1 dropped the space. Verbatim-"
         "preserve policy for notes_from_pm requires retention of the PM space."
