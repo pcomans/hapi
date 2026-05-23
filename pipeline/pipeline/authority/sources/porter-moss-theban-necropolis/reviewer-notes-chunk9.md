@@ -85,7 +85,7 @@ All 10 page numbers verified directly against the PDF:
 | TT9 | 18 | 36 | `9. AMENMOSI …, Servant in the Place of Truth, Charmer of scorpions.` |
 | TT10 | 19 | 37 | `10. PENBUY … and KASA …, Servants in the Place of Truth.` |
 
-Boundary marker TT11 verified at physical p.39 (= printed p.21) — out of chunk-9 scope and shifts theban_area to Dra' Abu el-Naga.
+Boundary marker TT11 verified at physical p.39 (= printed p.21) — out of chunk-9 scope and shifts theban_area to Draʿ Abû el-Nagaʿ.
 
 ---
 

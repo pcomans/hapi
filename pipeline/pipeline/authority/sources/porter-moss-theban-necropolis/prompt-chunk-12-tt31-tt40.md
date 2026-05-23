@@ -4,7 +4,7 @@
 
 You are one of three independent extraction subagents. Read the text-layer chunk file at `pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/raw/chunk-p65-p96.txt` and produce a JSONL file with one structured row per numbered tomb in PM I.1 § I "Numbered Tombs" within the **TT31–TT40** range. The other two agents see the same prompt and the same chunk; their outputs are majority-voted by `merge.py`.
 
-**Prompt discipline (per CLAUDE.md rules 1 and 7):** this prompt gives field-extraction RULES and normalisation conventions — it does NOT hand you per-tomb answers. Every field value must trace to something in the chunk file. The only things the prompt may validly hint: structural facts about the section (page range, tomb-id range), text-layer noise signatures, vocabulary constraints, and explicit examples drawn from PRIOR landed chunks (chunks 1–11) for analogy. NEW row shapes that appear for the first time in chunk 12 (additional sub-sites such as Khokha and Qurnet Muraʿi, multi-wife `<NAME-A> and <NAME-B> or <NAME-C>` headword phrasings, capital macron-Ē / macron-Ō in `occupant_name`) are documented here as RULES, not as per-row values to copy.
+**Prompt discipline (per CLAUDE.md rules 1 and 7):** this prompt gives field-extraction RULES and normalisation conventions — it does NOT hand you per-tomb answers. Every field value must trace to something in the chunk file. The only things the prompt may validly hint: structural facts about the section (page range, tomb-id range), text-layer noise signatures, vocabulary constraints, and explicit examples drawn from PRIOR landed chunks (chunks 1–11) for analogy. NEW row shapes that appear for the first time in chunk 12 (additional sub-sites such as Khôkha and Qurnet Muraʿi, multi-wife `<NAME-A> and <NAME-B> or <NAME-C>` headword phrasings, capital macron-Ē / macron-Ō in `occupant_name`) are documented here as RULES, not as per-row values to copy.
 
 ## Source
 
@@ -100,9 +100,9 @@ If your headword scan returns a number outside this range, RE-CHECK the chunk fi
 
 Canonical sub-site forms (use these literal strings; preserve PM's diacritics and apostrophes per the canonicalisation already established in chunks 7–11):
 - **`"Sh. ʿAbd el-Qurna"`** — Sheikh ʿAbd el-Qurna (with U+02BF MODIFIER LETTER LEFT HALF RING for the ayin in `ʿAbd`; `Sh.` abbreviated as PM prints, period preserved).
-- **`"Dra' Abu el-Naga"`** — Dra' Abu el-Naga (ASCII apostrophe after `Dra`, no trailing apostrophe — chunk-7 / chunk-10 / chunk-11 precedent).
+- **`"Draʿ Abû el-Nagaʿ"`** — Draʿ Abû el-Nagaʿ (U+02BF MODIFIER LETTER LEFT HALF RING for the ʿayin in BOTH `Draʿ` and terminal `Nagaʿ` positions; circumflex `û` preserved per PM's printed form — migrated 2026-05-23 per issue #288 from project-stripped `Dra' Abu el-Naga`).
 - **`"ʿAsâsîf"`** — ʿAsâsîf (leading ayin U+02BF; circumflex `â` and `î` preserved per PM's printed typography).
-- **`"Khokha"`** — Khokha (no diacritics; PM prints in plain Roman).
+- **`"Khôkha"`** — Khôkha (circumflex ô preserved per PM's printed form — migrated 2026-05-23 per issue #291 from project-stripped `Khokha`).
 - **`"Qurnet Muraʿi"`** — Qurnet Muraʿi (**NEW canonical sub-site for chunk 12**; ASCII space between `Qurnet` and `Muraʿi`; U+02BF MODIFIER LETTER LEFT HALF RING for the ayin in `Muraʿi`; PM prints `Qurnet Muraʿi.` with the ayin between `a` and `i` of the second token).
 
 If a row's headword sub-site line declares a sub-site NOT in this list, restore it to its canonical form per PM's printed text and report it in your final report as a new sub-site that may need adding to the canonical list.
@@ -234,7 +234,7 @@ Background (FYI only): the deriver flips `is_uninscribed=true` on `\buninscribed
 1. **10 rows expected** (every TT number in TT31..TT40 has a headword in PM I.1 § I — no gaps in this decade).
 2. **PM I.1 offset is +18** (printed = physical − 18). Use the `===== PRINTED PAGE M =====` marker for `source_citation.page`.
 3. **`section: "I"`**, **`edition: "PM I.1 2nd ed. 1960"`**.
-4. **`theban_area` is per-row** (chunk 12 spans 4+ sub-sites including the **NEW `Qurnet Muraʿi`** form). Use the canonical sub-site list above; ASCII apostrophe in `Dra' Abu el-Naga`, U+02BF ayin in `ʿAsâsîf` / `Sh. ʿAbd el-Qurna` / `Qurnet Muraʿi`, circumflex preserved in `ʿAsâsîf`. Read each headword's sub-site line and assign per row.
+4. **`theban_area` is per-row** (chunk 12 spans 4+ sub-sites including the **NEW `Qurnet Muraʿi`** form). Use the canonical sub-site list above; U+02BF ʿayin in `Draʿ Abû el-Nagaʿ`, U+02BF ayin in `ʿAsâsîf` / `Sh. ʿAbd el-Qurna` / `Qurnet Muraʿi`, circumflex preserved in `ʿAsâsîf`. Read each headword's sub-site line and assign per row.
 5. **`is_joint_burial`** / **`co_occupants`**: apply the hierarchical (`X and son Y`, `false`) vs coordinate (`X and Y, plural-role`, `true`) rule mechanically per headword. Single-occupant: `is_joint_burial=false`, `co_occupants=[]`. **Usurpers do NOT go in `co_occupants`** — usurpation prose stays in `notes_from_pm`; the deriver flips `is_usurped=true`.
 6. **`shared_with_tombs`**: populate when a TT31–TT40 headword carries `Also owner of tomb N` / `Perhaps also owner of tomb N` / `See also Tomb N` / `(also owner of tombs N and M)` / `(Also owner of tomb N in the Valley of the Kings.)` phrasing. Use `KV<N>` for cross-valley references when PM names the valley qualifier; default to `TT<N>` otherwise.
 7. **`occupant_role`** per the controlled-vocab rules; non-royal occupational titles flatten to `"Official"` UNLESS PM explicitly names a controlled-vocab role. The verbatim role-title clause goes in `notes_from_pm` regardless.

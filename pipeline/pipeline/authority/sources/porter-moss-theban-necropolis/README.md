@@ -1,6 +1,6 @@
 # Porter & Moss — Topographical Bibliography Vol I (Theban Necropolis)
 
-Authority extract of named tombs in the Theban necropolis: occupant, dynasty, Theban area (valley / sub-site classification per PM I.1 Appendix D). Source for tomb-attributed provenances at Thebes (KV / QV / TT / Dra' Abu el-Naga / Deir el-Bahri / Asasif / Sheikh Abd el-Qurna / etc.).
+Authority extract of named tombs in the Theban necropolis: occupant, dynasty, Theban area (valley / sub-site classification per PM I.1 Appendix D). Source for tomb-attributed provenances at Thebes (KV / QV / TT / Draʿ Abû el-Nagaʿ / Deir el-Baḥri / Asasif / Sheikh Abd el-Qurna / etc.).
 
 ## Citation
 
@@ -15,7 +15,7 @@ Both are the Griffith Institute's free-distribution scans (downloaded from `grif
 
 ## Scope
 
-**In scope** — one row per named tomb in the Theban necropolis with a known occupant. Initial chunk: KV1–KV10 (PM I.2 § I.A "Tombs", printed p.495–518 / physical p.37–60). Subsequent chunks land KV11–KV65, the South-West Valleys, Dra' Abu el-Naga / Asasif / Deir el-Bahri / Sheikh Abd el-Qurna / Ramesseum / Deir el-Medina / Qurnet Mura'i / Medinet Habu sections from PM I.2, and the numbered TT tombs from PM I.1.
+**In scope** — one row per named tomb in the Theban necropolis with a known occupant. Initial chunk: KV1–KV10 (PM I.2 § I.A "Tombs", printed p.495–518 / physical p.37–60). Subsequent chunks land KV11–KV65, the South-West Valleys, Draʿ Abû el-Nagaʿ / Asasif / Deir el-Baḥri / Sheikh Abd el-Qurna / Ramesseum / Deir el-Medina / Qurnet Mura'i / Medinet Habu sections from PM I.2, and the numbered TT tombs from PM I.1.
 
 **Out of scope** (do NOT extract):
 - Per-room descriptive prose: scene catalogs, wall-by-wall epigraphy, plate references, pillar/corridor breakdowns. PM's expressive content is the iconographic description, which is copyrighted scholarly expression — see "Rights" below. The headword line per tomb (tomb number + occupant + cartouches + bibliographic refs in parens + "Plan, p. X") is fact, the body description is expression.
@@ -71,7 +71,7 @@ This split lets downstream joins against pharaoh.se / Beckerath work on a normal
 
 **Field semantics:**
 - `tomb_id` — `KV<n>`, `QV<n>`, `TT<n>`. Letter-suffix variants (`KV5a`) are reproduced verbatim.
-- `theban_area` — Coarse Theban sub-area / valley / cemetery name: `"Valley of the Kings"`, `"Valley of the Queens"`, `"South-West Valleys"`, `"Dra' Abu el-Naga"`, `"Deir el-Bahri"`, `"ʿAsâsîf"`, `"Sh. ʿAbd el-Qurna"`, `"Khokha"`, `"Qurnet Muraʿi"`, `"Deir el-Medina"`, `"Ramesseum"`, `"Medinet Habu"`. PM-faithful diacritics (ayin U+02BF, vowel circumflexes) preserved as PM prints them; `Sh.` is PM's standard abbreviation for `Sheikh`. The `test_theban_area_constraint` test is the authoritative enforcement spec.
+- `theban_area` — Coarse Theban sub-area / valley / cemetery name: `"Valley of the Kings"`, `"Valley of the Queens"`, `"South-West Valleys"`, `"Draʿ Abû el-Nagaʿ"`, `"Deir el-Baḥri"`, `"ʿAsâsîf"`, `"Sh. ʿAbd el-Qurna"`, `"Khôkha"`, `"Qurnet Muraʿi"`, `"Deir el-Medina"`, `"Ramesseum"`, `"Medinet Habu"`. PM-faithful diacritics (ayin U+02BF, vowel circumflexes) preserved as PM prints them; `Sh.` is PM's standard abbreviation for `Sheikh`. The `test_theban_area_constraint` test is the authoritative enforcement spec.
   The Theban area a tomb belongs to is structural in PM (each numbered tomb sits within a section / sub-section); for PM I.1 numbered tombs the canonical classification is the Appendix-D Theban sub-site list (the field was renamed from `valley` → `theban_area` because PM I.1 sub-sites like Deir el-Medina are not literally valleys).
 - `occupant_name` — Conventional English form of the king's / queen's / official's name. Drawn verbatim from PM's headword (e.g. `Sethos I`, `Ramesses IV`, `Tut'ankhamun`). PM uses `Sethos` not `Seti`; preserved as-is, the name authority handles cross-resolution to `Seti I`.
 - `occupant_alt_names` — Alternate name forms of the SAME PERSON named in `occupant_name`: prenomens (e.g. chunk-7's `["Wadjkheperreʿ"]` for Kamose), throne-name vs birth-name pairs, transliteration variants. PR A audit-fix (2026-05-02) narrowed this field's semantics — tomb-nicknames are NO LONGER allowed here (they belong in `tomb_aliases`). Empty list `[]` for the common case where PM gives no per-person alt-name.
@@ -124,11 +124,11 @@ This source lands across multiple PRs (Dodson-Hilton pattern). Per the playbook 
   - PM I.2 § I.B "Finds from the Valley of the Kings" — mostly object lists already redundant with museum APIs, likely skipped.
   - PM I.2 § I.C "Rest-houses and Shrines" — workmen's villages, non-KV structures; schema fit uncertain.
   - PM I.2 § I.D "Graffiti" — graffiti numbering, out of scope for tomb-row.
-  - PM I.2 § III.E–III.L (Petrie, Gauthier-Chassinat, Northampton, Philadelphia, Carnarvon-Carter, Passalacqua excavations at Dra' Abu el-Naga) — sparse named-tomb headwords (Tomb 41 Antef Dyn XII, Tombs Beneath Temple of Nebwenenef, Tombs in El-Mandara). Cherry-pick the royal-and-near-royal entries if any; may produce 5–10 additional rows or be skipped.
-  - PM I.2 §§ IV–IX 'Asasif / Deir el-Bahri / Valleys south of Deir el-Bahri / Sheikh Abd el-Qurna / Ramesseum / Deir el-Medina — named-royal-tomb entries only (Deir el-Bahri Royal Cache, Deir el-Medina Saite Princesses tombs, etc.). CG/JE-keyed individual priest burials (§ V Dyn-21 priests of Amun, Dyn-22-26 priests of Monthu) are OUT OF SCOPE — the tomb-row schema doesn't fit shaft/mummy-number burial clusters. Chunks will be explicitly scoped to only the named-royal-tomb subset in each section.
+  - PM I.2 § III.E–III.L (Petrie, Gauthier-Chassinat, Northampton, Philadelphia, Carnarvon-Carter, Passalacqua excavations at Draʿ Abû el-Nagaʿ) — sparse named-tomb headwords (Tomb 41 Antef Dyn XII, Tombs Beneath Temple of Nebwenenef, Tombs in El-Mandara). Cherry-pick the royal-and-near-royal entries if any; may produce 5–10 additional rows or be skipped.
+  - PM I.2 §§ IV–IX 'Asasif / Deir el-Baḥri / Valleys south of Deir el-Baḥri / Sheikh Abd el-Qurna / Ramesseum / Deir el-Medina — named-royal-tomb entries only (Deir el-Baḥri Royal Cache, Deir el-Medina Saite Princesses tombs, etc.). CG/JE-keyed individual priest burials (§ V Dyn-21 priests of Amun, Dyn-22-26 priests of Monthu) are OUT OF SCOPE — the tomb-row schema doesn't fit shaft/mummy-number burial clusters. Chunks will be explicitly scoped to only the named-royal-tomb subset in each section.
   - PM I.2 § XI "Medinet Habu" — Mortuary Chapels I–VII Dyn XX–XXIV have a clear headword format, possibly 7 rows; § XI's temple-area burials and Palace-City may require schema assessment.
   - PM I.2 § XII "Objects from Thebes" — museum-object catalog, out of scope.
-  - PM I.1 numbered Theban Tombs `TT11`–`TT400+` (many chunks, likely keyed by numbered-tomb decades). Chunk 9 landed TT1–TT10; subsequent decades (TT11–TT20, TT21–TT30, etc.) inherit the PM-I.1 offset (+18), the four PM-I.1 noise residuals (`J.I → Ḥ`, `( → ʿ`, `I>. → Ḳ`, trailing-`c → ʿ`), and the per-row `DERIVER_OVERRIDES` mechanism for secondary-clause hedges. The `theban_area` will shift away from `"Deir el-Medina"` once TT11 lands (TT11 is at Dra' Abu el-Naga per PM p.21 — already verified as the chunk-9 boundary marker).
+  - PM I.1 numbered Theban Tombs `TT11`–`TT400+` (many chunks, likely keyed by numbered-tomb decades). Chunk 9 landed TT1–TT10; subsequent decades (TT11–TT20, TT21–TT30, etc.) inherit the PM-I.1 offset (+18), the four PM-I.1 noise residuals (`J.I → Ḥ`, `( → ʿ`, `I>. → Ḳ`, trailing-`c → ʿ`), and the per-row `DERIVER_OVERRIDES` mechanism for secondary-clause hedges. The `theban_area` will shift away from `"Deir el-Medina"` once TT11 lands (TT11 is at Draʿ Abû el-Nagaʿ per PM p.21 — already verified as the chunk-9 boundary marker).
 
 Per-chunk prompt files: `prompt.md` (chunk 1), `prompt-<chunk>.md` (chunks 2+). Per-chunk agent JSONLs: `raw/agent-{a,b,c}.jsonl` (chunk 1), `raw/agent-{a,b,c}-<chunk>.jsonl` (chunks 2+).
 

@@ -60,7 +60,7 @@ VALLEY_ORDER: dict[str, int] = {
     "QV": 1,    # Valley of the Queens (PM I.2 § X)
     "TT": 2,    # Theban Tomb — numbered private tombs (PM I.1)
     "SWV": 3,   # South-West Valleys (PM I.2 § II) — descriptor IDs
-    "DAN": 4,   # Dra' Abu el-Naga (PM I.2 § III) — descriptor IDs
+    "DAN": 4,   # Draʿ Abû el-Nagaʿ (PM I.2 § III) — descriptor IDs
     # Future chunks extend this dict AS THEY LAND their first row; the
     # retrospective code-review on PR #100 flagged pre-registered prefixes
     # as speculative generality. `tests/…::test_prefix_vocabulary_consistent`
