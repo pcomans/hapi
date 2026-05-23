@@ -21,7 +21,7 @@ A pilot load of Leprohon (395 rows) + Beckerath (174 rows, 166 non-marker) into 
 
 ## Decision
 
-The authority layer is modeled as a **source-attributed claim graph** following the CIDOC CRM E13 Attribute Assignment pattern. Every fact about an authority entity is reified as an E13 Statement node connecting subject to value, carrying the actor that performed the assignment and the document that records it. Disagreements between sources are preserved as parallel Statements, not collapsed at reconciliation time.
+The authority layer is modeled as a **source-attributed claim graph** following the CIDOC CRM E13 Attribute Assignment pattern. Every fact about an authority entity is reified as an E13 Statement node carrying the universally-required `P140` (subject) / `P141` (value) / `P177` (predicate type) spine, plus a provenance shape that varies by claim kind. **Human-documentary claims** additionally carry `P14_carried_out_by → E39 Actor` (the scholar or curatorial body) plus `P70i_is_documented_in → E31 Document` (the publication or decision batch). **Machine-derived claims** (matcher-derived candidate identity claims and the stage-2 LLM-reviewer verdicts that gate them) instead carry `hapi:derived_by_run → :MatcherRun:D10` to the CRMdig Software Execution that produced them; they never carry P14 or P70i (matcher provenance is algorithmic, not documentary, and the design has no human-review step). Disagreements between sources are preserved as parallel Statements, not collapsed at reconciliation time.
 
 ### CIDOC alignment
 
