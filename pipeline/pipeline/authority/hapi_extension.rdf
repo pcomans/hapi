@@ -146,13 +146,18 @@
        escape its range, which the "narrow not violate" rule forbids.
        Free-standing is the honest classification.
 
-       Different rigour levels exist in heritage practice. CRMarchaeo (the official
+       A Hapi choice between two CIDOC-permitted shapes. CRMarchaeo (the official
        CIDOC archaeology extension at https://cidoc-crm.org/crmarchaeo/) explicitly
-       materialises excavation, stratigraphy, and interment as first-class events.
-       Museum-catalog CIDOC implementations generally use direct shortcuts when the
-       use-case is "show me objects associated with X" rather than "reconstruct the
-       burial stratigraphy." Both are valid CIDOC practice; the choice is project-
-       dependent. Our matching use-case is the former; we use the shortcuts.
+       materialises excavation, stratigraphy, and interment as first-class events —
+       the rigorous shape for archaeological-stratigraphy queries. The alternative
+       is direct shortcut predicates between domain entities, skipping the event
+       reification when the use-case doesn't need it. CIDOC's open extension model
+       permits both shapes; this manifest makes no broader sociology-of-practice
+       claim about how other museum-catalog implementations choose between them
+       (such a claim would need cited evidence per the validator's Cite-or-Shut-Up
+       rule, which we do not currently carry). Hapi's choice here is driven by
+       the matching use-case ("show me artefacts associated with this ruler /
+       this tomb-context"), not by archaeological stratigraphy.
 
        Each of the three primary Ruler→Site predicates captures a structurally
        distinct loadable relationship (commissioning, primary burial, secondary
