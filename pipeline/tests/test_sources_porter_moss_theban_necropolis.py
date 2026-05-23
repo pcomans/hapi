@@ -370,6 +370,9 @@ CHUNK42_TOMB_IDS: frozenset[str] = frozenset(
 CHUNK43_TOMB_IDS: frozenset[str] = frozenset(
     {f"TT{n}" for n in range(341, 351)}
 )
+CHUNK44_TOMB_IDS: frozenset[str] = frozenset(
+    {f"TT{n}" for n in range(351, 361)}
+)
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS
     | CHUNK2_TOMB_IDS
@@ -413,6 +416,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK41_TOMB_IDS
     | CHUNK42_TOMB_IDS
     | CHUNK43_TOMB_IDS
+    | CHUNK44_TOMB_IDS
 )
 
 
@@ -3801,6 +3805,16 @@ def test_182_uncertain_attribution_canonical_set() -> None:
         # attribution_certainty=uncertain is correct — the primary occupant is
         # genuinely unidentified.
         "TT348",
+        # TT354 chunk-44: PM headword `Perhaps AMENEMḤET (tomb 340, cf. box-lid
+        # in Finds of this tomb). Early Dyn. XVIII.` — `Perhaps` qualifies the
+        # PRIMARY OCCUPANT identification. The deriver correctly fires `uncertain`.
+        # No DERIVER_OVERRIDE needed.
+        "TT354",
+        # TT355 chunk-44: PM headword `Perhaps AMENPAḤAʿPI, Servant in the Place
+        # of Truth. Dyn. XX.` — `Perhaps` qualifies the PRIMARY OCCUPANT
+        # identification. Same pattern as TT230/TT325. Deriver correctly fires
+        # `uncertain`. No DERIVER_OVERRIDE needed.
+        "TT355",
     }
     actual = {r["tomb_id"] for r in _rows() if r["attribution_certainty"] == "uncertain"}
     assert actual == expected, sorted(actual)
@@ -11851,3 +11865,137 @@ def test_chunk43_damaged_name_tt350() -> None:
     r = _row("TT350")
     assert r["occupant_name"] == ". . . Y"
     assert r["attribution_certainty"] == "attested"
+
+
+# ===========================================================================
+# Chunk 44 — TT351–TT360 (Sh. ʿAbd el-Qurna × 2, Deir el-Bahari × 2,
+#            Deir el-Medina × 6)
+# ===========================================================================
+
+
+def test_chunk44_all_rows_present() -> None:
+    """All 10 TT351-TT360 rows must be present in reconciled.jsonl."""
+    actual = {r["tomb_id"] for r in _rows()} & CHUNK44_TOMB_IDS
+    assert actual == CHUNK44_TOMB_IDS, sorted(CHUNK44_TOMB_IDS - actual)
+
+
+def test_chunk44_theban_areas() -> None:
+    """Verify area assignments.
+    TT351, TT352: Sh. ʿAbd el-Qurna.
+    TT353, TT358: Deir el-Bahari (canonical plain-h form from 10 prior rows).
+    TT354–TT357, TT359, TT360: Deir el-Medina.
+    Agent B used `Deir el-Baḥri` (Ḥ-underdot) for TT353/TT358; majority 2/1
+    resolved to canonical plain-h form `Deir el-Bahari`."""
+    expected = {
+        "TT351": "Sh. ʿAbd el-Qurna",
+        "TT352": "Sh. ʿAbd el-Qurna",
+        "TT353": "Deir el-Bahari",
+        "TT354": "Deir el-Medina",
+        "TT355": "Deir el-Medina",
+        "TT356": "Deir el-Medina",
+        "TT357": "Deir el-Medina",
+        "TT358": "Deir el-Bahari",
+        "TT359": "Deir el-Medina",
+        "TT360": "Deir el-Medina",
+    }
+    for tid, area in expected.items():
+        r = _row(tid)
+        assert r["theban_area"] == area, f"{tid}: expected {area!r}, got {r['theban_area']!r}"
+
+
+def test_chunk44_source_pages() -> None:
+    """Verify source_citation pages for chunk-44 rows.
+    TT360 page=424 (A+C correct; B emitted 423 — off-by-one, majority resolved)."""
+    expected = {
+        "TT351": 417,
+        "TT352": 417,
+        "TT353": 417,
+        "TT354": 418,
+        "TT355": 419,
+        "TT356": 419,
+        "TT357": 420,
+        "TT358": 421,
+        "TT359": 421,
+        "TT360": 424,
+    }
+    for tid, page in expected.items():
+        r = _row(tid)
+        assert r["source_citation"]["page"] == page, (
+            f"{tid}: expected page {page}, got {r['source_citation']['page']}"
+        )
+
+
+def test_chunk44_attribution_certainties() -> None:
+    """TT354 uncertain (PM headword `Perhaps AMENEMḤET` → deriver fires on Perhaps).
+    TT355 uncertain (PM headword `Perhaps AMENPAḤAʿPI` → deriver fires on Perhaps).
+    All others attested."""
+    assert _row("TT354")["attribution_certainty"] == "uncertain"
+    assert _row("TT355")["attribution_certainty"] == "uncertain"
+    for tid in ("TT351", "TT352", "TT353", "TT356", "TT357", "TT358", "TT359", "TT360"):
+        r = _row(tid)
+        assert r["attribution_certainty"] == "attested", (
+            f"{tid}: expected attested, got {r['attribution_certainty']!r}"
+        )
+
+
+def test_chunk44_tt354_corrections() -> None:
+    """TT354: `Perhaps AMENEMḤET` — primary identification, uncertainty correct.
+    shared_with_tombs=["TT340"]: TT340 (chunk-42) has `perhaps also owner of tomb 354`
+    (explicit ownership phrasing) → shared_with_tombs=["TT354"]. Symmetry invariant
+    requires TT354 to reciprocate. Majority B+C correctly emitted ["TT340"]; no
+    CHUNK44_CORRECTIONS override needed.
+    occupant_name=`Amenemhet` (title-case, A+B majority; C wrong-null).
+    notes_from_pm verbatim includes `(tomb 340, cf. box-lid in Finds of this tomb)`."""
+    r = _row("TT354")
+    assert r["occupant_name"] == "Amenemhet"
+    assert r["attribution_certainty"] == "uncertain"
+    assert r["shared_with_tombs"] == ["TT340"]
+    assert "(tomb 340, cf. box-lid in Finds of this tomb)" in r["notes_from_pm"]
+    assert r["occupant_role"] == "Official"
+
+
+def test_chunk44_tt358_location_sub_area() -> None:
+    """TT358 ʿAḥmosi Merytamun: location_sub_area restored from agent A per PM p.421.
+    CHUNK44_CORRECTIONS overrides the majority-null (B+C) to preserve PM's explicit
+    `In Court of Temple of Ḥatshepsut` sub-area descriptor (parallel to TT308 Kemsit)."""
+    r = _row("TT358")
+    assert r["location_sub_area"] == "In Court of Temple of Ḥatshepsut"
+    assert r["occupant_role"] == "Queen"
+    assert r["theban_area"] == "Deir el-Bahari"
+    assert r["shared_with_tombs"] == []
+
+
+def test_chunk44_tt353_senenmut_shared() -> None:
+    """TT353: Senenmut's second tomb (Deir el-Bahari). shared_with_tombs=[TT71]
+    (Senenmut's primary tomb). All 3 agents agree."""
+    r = _row("TT353")
+    assert r["occupant_name"] == "Senenmut"
+    assert r["shared_with_tombs"] == ["TT71"]
+    assert r["theban_area"] == "Deir el-Bahari"
+
+
+def test_chunk44_tt359_inherkha_shared() -> None:
+    """TT359: Inherkhaʿ shares with TT299 (also owner). All 3 agents agree."""
+    r = _row("TT359")
+    assert r["occupant_name"] == "Inherkhaʿ"
+    assert r["shared_with_tombs"] == ["TT299"]
+    assert r["theban_area"] == "Deir el-Medina"
+
+
+def test_chunk44_tt360_kaha() -> None:
+    """TT360: Ḳaha, Foreman in Place of Truth. Temp. Ramesses II.
+    shared_with_tombs=[] — `(tomb 361)` in notes qualifies parent Ḥuy's burial
+    location, NOT TT360 co-ownership. Page=424 (A+C correct vs B's off-by-one 423)."""
+    r = _row("TT360")
+    assert r["occupant_name"] == "Ḳaha"
+    assert r["shared_with_tombs"] == []
+    assert r["source_citation"]["page"] == 424
+    assert "Ḥuy (tomb 361)" in r["notes_from_pm"]
+
+
+def test_chunk44_tt352_anonymous() -> None:
+    """TT352: anonymous Overseer of the granary of Amūn. No identity → occupant_name=None."""
+    r = _row("TT352")
+    assert r["occupant_name"] is None
+    assert r["attribution_certainty"] == "attested"
+    assert r["occupant_role"] == "Official"
