@@ -4478,6 +4478,29 @@ CHUNK43_CORRECTIONS: list[tuple[str, str, object, str]] = [
         " same chunk TT345 + TT346 occupants `Amenhotp` correctly use plain h;"
         " TT349 wife was the outlier. Restore plain h per PM.",
     ),
+    (
+        "TT345",
+        "occupant_role",
+        "Royal Family",
+        "Issue #289 resolution 2026-05-23: PM I.1 p.413 prints `345. AMENḤOTP"
+        " ..., wʿb-priest, Eldest king's son of Tuthmosis I. Temp. Tuthmosis I.`"
+        " The `Eldest king's son of <NamedKing>` form (sꜣ-nsw smsw n <King>)"
+        " is the Egyptologically-recognised structural discriminator for a"
+        " literal blood-prince of a NAMED king (vs the polyvalent bare"
+        " `King's son` honorific used for TT15 Tetiky, or the Karnak"
+        " priestly office `King's son of Amūn` used for TT397 Nakht)."
+        " Per Dodson & Hilton 2004 *Complete Royal Families*, Schmitz 1976"
+        " *Untersuchungen zum Titel sꜣ-nswt 'Königssohn'*, and the UCL"
+        " Digital Egypt tomb survey, TT345 Amenhotp is classified as a"
+        " genealogically-attested son of Thutmose I and included in the"
+        " Thutmoside royal-family genealogy. Reclassify from `Official`"
+        " (the prior rule-5 reading that flattened all `King's son` rows"
+        " regardless of named-king binding) to `Royal Family` per the"
+        " issue-#289 narrow-exception rule (c-i). TT15 stays Official"
+        " (bare-rank); TT397 stays Official (Karnak priestly office);"
+        " TT64 + TT350 stay Official (Nurse-OF-the-King's-son references,"
+        " not bearers).",
+    ),
 ]
 
 CHUNK43_RENAMES: dict[str, str] = {}

@@ -1292,7 +1292,7 @@ Per-chunk correction counts:
 - Chunk 40: 9 correction(s) defined in CHUNK40_CORRECTIONS.
 - Chunk 41: 10 correction(s) defined in CHUNK41_CORRECTIONS.
 - Chunk 42: 10 correction(s) defined in CHUNK42_CORRECTIONS.
-- Chunk 43: 4 correction(s) defined in CHUNK43_CORRECTIONS.
+- Chunk 43: 5 correction(s) defined in CHUNK43_CORRECTIONS.
 - Chunk 44: 4 correction(s) defined in CHUNK44_CORRECTIONS.
 - Chunk 45: 2 correction(s) defined in CHUNK45_CORRECTIONS.
 - Chunk 46: 8 correction(s) defined in CHUNK46_CORRECTIONS.
@@ -1822,6 +1822,9 @@ Field corrections:
     value: ["Pahekmen"]
 - TT349: notes_from_pm already matches override (no-op this run; PM I.1 p.415 / physical PDF p.433 prints `Wife, Amenhotp` with PLAIN h (no Ḥ-underdot) — egyptologist-reviewer P1.4 PDF verification, PR #287 round 1. Reconciled value spuriously inserted Ḥ-underdot. Within this same chunk TT345 + TT346 occupants `Amenhotp` correctly use plain h; TT349 wife was the outlier. Restore plain h per PM.)
     value: "Overseer of fowl-houses. Early Dyn. XVIII. Mother, Ipu. Wife, Amenhotp."
+- TT345: occupant_role corrected this run (Issue #289 resolution 2026-05-23: PM I.1 p.413 prints `345. AMENḤOTP ..., wʿb-priest, Eldest king's son of Tuthmosis I. Temp. Tuthmosis I.` The `Eldest king's son of <NamedKing>` form (sꜣ-nsw smsw n <King>) is the Egyptologically-recognised structural discriminator for a literal blood-prince of a NAMED king (vs the polyvalent bare `King's son` honorific used for TT15 Tetiky, or the Karnak priestly office `King's son of Amūn` used for TT397 Nakht). Per Dodson & Hilton 2004 *Complete Royal Families*, Schmitz 1976 *Untersuchungen zum Titel sꜣ-nswt 'Königssohn'*, and the UCL Digital Egypt tomb survey, TT345 Amenhotp is classified as a genealogically-attested son of Thutmose I and included in the Thutmoside royal-family genealogy. Reclassify from `Official` (the prior rule-5 reading that flattened all `King's son` rows regardless of named-king binding) to `Royal Family` per the issue-#289 narrow-exception rule (c-i). TT15 stays Official (bare-rank); TT397 stays Official (Karnak priestly office); TT64 + TT350 stay Official (Nurse-OF-the-King's-son references, not bearers).)
+    was: "Official"
+    now: "Royal Family"
 - TT358: location_sub_area already matches override (no-op this run; PM I.1 p.421 / physical PDF p.439: TT358 (ʿAḥmosi Merytamun) headword prints `In Court of Temple of Ḥatshepsut` as an explicit sub-area descriptor, paralleling TT308 Kemsit's location_sub_area='In the Temple of Mentuḥotp' (PDF p.403). Agent A correctly extracted this value; majority B+C emitted null. Restore agent A's reading per PM verbatim.)
     value: "In Court of Temple of Ḥatshepsut"
 - TT358: occupant_alt_names already matches override (no-op this run; PM I.1 p.421 / physical PDF p.439 cites Winlock's monograph `The Tomb of Queen Meryet-Amūn at Thebes` in the headword's bibliographic reference, giving PM's textual alternative Romanization (`Meryet-Amūn`) of the same person who is named `ʿAḤMOSI MERYTAMŪN` in the headword's NAME-token. Per the matchable-name policy (strip macron-ū → plain u), the alt-name form is `Meryet-Amun`. This is the form the Met catalog uses for her own burial finds (M.M.A. Pit 65 sarcophagi + coffins, cited verbatim in this PM entry). The 3 agents extracted [] (no alt-names) — egyptologist-reviewer P1 PR #290 round 1 identified the missing alias; this restoration adds the single PM-cited form. Same `external-catalogue label as alt_name` pattern as chunk-21 TT120 ʿAnen → ['Mahu'] from Gardiner & Weigall Cat.)
