@@ -5,5 +5,10 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {}
   },
+  "runArgs": [
+    "--security-opt=no-new-privileges",
+    "--dns=1.1.1.1",
+    "--dns=8.8.8.8"
+  ],
   "postCreateCommand": "curl -fsSL https://claude.ai/install.sh | bash"
 }
