@@ -32,7 +32,7 @@ Both are CRM-SIG-issued artifacts. Hapi-specific additions on top of the two spe
 | "Does P82a exist? What's its `rdfs:range`?" | core CRM RDFS |
 | "What does D3 Formal Derivation *mean*? Examples?" | CRMdig HTML |
 | "What's L21's range? Is D10 IS-A D7?" | CRMdig RDFS |
-| Project-declared deviations and Hapi extensions | `docs/adr/018-authority-as-claim-graph.md` |
+| Project encoding conventions (with CIDOC RDF serialisation mappings), conceptual deviations (currently none), and Hapi extensions | `docs/adr/018-authority-as-claim-graph.md` |
 
 ## Provenance
 

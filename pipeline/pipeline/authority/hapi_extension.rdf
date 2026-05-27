@@ -16,6 +16,16 @@
       and range, never violate. Strict CIDOC readers running RDFS reasoning
       interpret Hapi terms through their declared parents.
 
+      Hapi's property graph is a CIDOC-compatible internal encoding of a
+      CIDOC/CRMdig + Hapi-extension conceptual graph; the strict CIDOC RDF
+      serialisation is materialised at export time per the round-trip mappings
+      documented in ADR-018 § "Property-graph encoding conventions and CIDOC
+      RDF serialisation mappings". The store is CIDOC-conformant by design,
+      not by export — the export emits a different syntax for the same
+      conceptual content. Conceptual deviations from CRM/CRMdig (real
+      departures from the conceptual model) are tracked in a separate
+      ADR-018 subsection and are currently zero.
+
       See docs/adr/018-authority-as-claim-graph.md, section "Hapi extension
       manifest", for full context and the rationale for each declaration.
 
