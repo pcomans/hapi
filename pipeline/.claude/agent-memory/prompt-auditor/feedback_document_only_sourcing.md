@@ -1,6 +1,6 @@
 ---
 name: Document-only sourcing rule for factual fields in extraction prompts
-description: Flag Phase-0 prompts that don't require world-knowledge be off-limits for factual fields. Prevents agents from filling null gold-values with training-data inferences (venue/date type errors).
+description: Flag Phase-0 prompts that don't require world-knowledge to be off-limits for factual fields. Prevents agents from filling null gold-values with training-data inferences (venue/date type errors).
 metadata:
   type: feedback
 ---
@@ -37,7 +37,7 @@ Treat the rule as a default-on recommendation for NEW prompt drafts. Existing pe
 
 ## How to apply
 
-In your audit report, if the prompt lacks an explicit document-only sourcing rule for factual fields, raise a **P2 finding** (not P1 — the rule is recommended-default, not required-by-CLAUDE.md-rule-3-yet) titled "Document-only sourcing rule missing" with:
+In your audit report, if the prompt lacks an explicit document-only sourcing rule for factual fields, raise a **P2 finding** (not P1 — the rule is recommended-default, not yet required by CLAUDE.md rule 3) titled "Document-only sourcing rule missing" with:
 - Quote the prompt's existing world-knowledge guidance if any (most prompts say "do not invent" — note that this is too soft).
 - Suggest the load-bearing phrasing above, adapted to the source's vocabulary.
 - Suggest the `name_anglicised` carve-out if the source has such a field.
