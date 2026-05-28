@@ -84,6 +84,8 @@ For multi-chunk targets (e.g. Ryholt's 81 pages), spawn one subagent per 5-physi
 
 Before launching the 3-agent triplet, run the **`prompt-auditor`** subagent (`.claude/agents/prompt-auditor.md`) against the chunk's `prompt-chunk-*.md`. The auditor catches per-row answer leaks, verbatim-source-string leaks, and internal contradictions — the rule-1/7 regression class that has historically taken 1-2 review rounds to surface (PR #66 / #68 / #70 / #196). Catching it pre-extraction means the 3 agents run on a clean, rule-based prompt.
 
+The auditor also flags a **missing document-only sourcing rule** for factual fields (P2) — extraction agents fill `null` factual values with training-data inferences when the source PDF is silent, and a soft "do not invent values" rule is not strong enough to prevent it. See `pipeline/.claude/agent-memory/prompt-auditor/feedback_document_only_sourcing.md` for the recommended load-bearing phrasing, the experimental evidence (NIPS-1989 hill-climb + Baud chunk-1 spot-check), and the `name_anglicised` scope carve-out. New `prompt-chunk-*.md` files should include the rule by default; existing prompts are pinned to their shipped `reconciled.jsonl` and should not be retroactively modified.
+
 If the auditor finds P1 leaks, rewrite the prompt before proceeding to step 4. P2 / P3 findings can be deferred but flag them in the PR body.
 
 ## Step 4 — three parallel extraction subagents
