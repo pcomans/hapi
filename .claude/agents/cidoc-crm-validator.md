@@ -88,7 +88,7 @@ Spec versions: core CRM 7.1.3 + CRMdig 5.0 (pinned by ADR-018)
 1. <name> — clear-label ✓ justification ✓ containment ✓ round-trip ✓. (Currently expected: none. ADR-018's "Conceptual deviations from CRM/CRMdig" subsection is empty by design; any entry here is a real CIDOC departure and requires its own justification.)
 
 ### Hapi extensions (confirmed against ADR-018 extension manifest)
-1. <extension> — rdfs:subClassOf / rdfs:subPropertyOf and/or owl:SymmetricProperty declarations check out; domain/range conform; symmetric-property domain/range identical where applicable. Free-standing Hapi predicates (no rdfs:subPropertyOf) are extensions, NOT deviations and NOT encoding conventions — CIDOC's open extension model permits new predicates via the manifest idiom.
+1. <extension> — rdfs:subClassOf / rdfs:subPropertyOf and/or owl:SymmetricProperty declarations check out; domain/range conform; symmetric-property domain/range identical where applicable. Two shapes are valid: (a) parent-narrowed declarations (the standard CIDOC extension idiom — CRMdig itself uses this same `subClassOf` / `subPropertyOf` mechanism); (b) free-standing `rdf:Property` / `rdfs:Class` declarations with no CRM/CRMdig parent, permitted by CIDOC's open extension model but intentionally CIDOC-opaque (a reader with the manifest loaded sees the URI's domain/range but cannot interpret the predicate through any CRM/CRMdig term). Both shapes are extensions, NOT deviations and NOT encoding conventions; flag the sub-shape per the predicate.
 
 ### Clean
 - <bullet list of E/P/D/L references checked and found correct>
