@@ -11,10 +11,26 @@
     <owl:versionInfo>Hapi CRM/CRMdig extension manifest, May 2026</owl:versionInfo>
     <rdfs:comment xml:lang="en">
       Hapi project's RDFS extensions on top of CIDOC CRM 7.1.3 + CRMdig 5.0.
-      Conforms to the standard CIDOC extension idiom: rdfs:subClassOf and
-      rdfs:subPropertyOf declarations that narrow within the parent's domain
-      and range, never violate. Strict CIDOC readers running RDFS reasoning
-      interpret Hapi terms through their declared parents.
+      The manifest declares two structurally different kinds of extension:
+        (a) rdfs:subClassOf / rdfs:subPropertyOf narrowing declarations
+            (e.g. hapi:MatcherRun ⊂ crmdig:D10, hapi:derived_by_run ⊂ P15,
+            hapi:same_entity_as ⊂ L54). These follow the standard CIDOC
+            extension idiom — narrowing within the parent's domain/range,
+            never violating — and strict CIDOC readers running RDFS
+            reasoning interpret them through their declared parents.
+        (b) Free-standing rdf:Property / rdfs:Class declarations
+            (the tomb predicates, hapi:in_dynastic_period, the display-name
+            / reign-period / horus-name predicates, hapi:matcher_review_verdict,
+            hapi:supersedes, and the verdict-outcome E55 Type instances).
+            These are manifest-declared project vocabulary with NO CIDOC
+            parent. CIDOC's open extension model permits this shape, but it
+            is intentionally CIDOC-opaque: a reader with the manifest loaded
+            sees the URI and its declared rdfs:domain / rdfs:range but
+            cannot interpret the predicate through any CRM/CRMdig term,
+            because none is declared. The full list of free-standing
+            predicates with their sub-categories (primary P177-target,
+            derived/query-only, E13-internal) is in ADR-018 § "Hapi
+            extension manifest".
 
       Hapi's property graph is a CIDOC-compatible internal encoding of a
       CIDOC/CRMdig + Hapi-extension conceptual graph; the strict CIDOC RDF
