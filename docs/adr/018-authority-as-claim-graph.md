@@ -60,7 +60,7 @@ For each, the HTML release is the semantic authority (scope notes, conceptual ra
 | `:Appellation`          | E41 Appellation                | Name-shaped value entity; literal accessed via P190. Type-classified via `P2_has_type → :E55 Type`. |
 | `:TimeSpan`             | E52 Time-Span                  | Date-shaped value entity. Conceptual CRM uses P81 / P82 (range E61 Time Primitive); the RDFS implementation refines them to P81a / P81b / P82a / P82b with `rdfs:Literal` range. The property-graph stores boundary literals on the node; exports use the RDFS refinements. See encoding convention #3. |
 | `:Dimension`            | E54 Dimension                  | Numeric measurement; P90 / P91. |
-| `:Type`                 | E55 Type                       | The predicate registry; targets of P177. |
+| `:Type`                 | E55 Type                       | Two distinct roles in the data model. (i) **Predicate-type registry instances** — `:E55 Type` nodes that every E13's `P177_assigned_property_of_type` edge points at; the FK target for the registry-scoped P177 column (see "Predicate registry" section). (ii) **Controlled-vocabulary value instances** — `:E55 Type` nodes used as `P141_assigned` values when the value is a closed vocabulary term rather than a substantive entity; currently the three verdict outcomes `hapi:verdict_approved` / `_rejected` / `_retracted` on `hapi:matcher_review_verdict` E13s (see "Verdict-outcome controlled vocabulary" section). Both roles are CIDOC E55 Type instances; the distinction is which P-property they're a target of (P177 → registry; P141 → vocabulary value), not anything about the class itself. |
 | `:MatcherRun`           | **D10 Software Execution** *(CRMdig)* | The specific execution of a software run: deterministic matcher OR LLM reviewer — both are D10 instances. IS-A chain: D10 ⊂ D7 Digital Machine Event ⊂ E11 Modification & E65 Creation ⊂ E7 Activity. (Not D3 Formal Derivation — D3's scope is restricted to derivations producing a "different form" of the same digital object; matcher output is different *information*, not a different form.) Carries run-reproducibility metadata as Hapi-namespaced properties (run_id, parameters_hash, started_at, completed_at). No verdict / review fields on MatcherRun itself — verdicts are their own E13s pointing at the matcher's E13 via P140 (see schema sketch case 4b). |
 | `:MatcherAlgorithm`     | **D14 Software** *(CRMdig)* | The matcher algorithm definition (e.g. `normalized_name_v1`): the code/procedure that gets executed. IS-A chain: D14 ⊂ D1 Digital Object ⊂ E73 Information Object. Long-lived; many `:MatcherRun` instances reference one `:MatcherAlgorithm`. |
 | `:SourceData`           | **D1 Digital Object** *(CRMdig)* | A reconciled.jsonl file (or other digital input) consumed by a matcher run. IS-A chain: D1 ⊂ E73 Information Object. |
@@ -119,9 +119,14 @@ Manifest excerpt (the full file is the citable contract):
 
 ```turtle
 # Hapi extension manifest excerpt — see pipeline/pipeline/authority/hapi_extension.rdf for the full file
-# Every Hapi-namespaced class and predicate referenced anywhere in this ADR MUST appear in that file,
-# with either a sound subClassOf/subPropertyOf declaration or an explicit free-standing declaration
-# (with comment) when no CRM superclass/superproperty fits. Unmanifested terms are rejected by the
+# Every Hapi-namespaced class, predicate, or controlled-vocabulary E55 Type instance referenced anywhere
+# in this ADR MUST appear in that file, declared per its shape:
+#   (a) parent-narrowed extensions: a sound subClassOf/subPropertyOf declaration;
+#   (b) free-standing extensions: an explicit rdf:Property / rdfs:Class declaration (with comment
+#       documenting that no CRM superclass/superproperty fits); OR
+#   (c) controlled-vocabulary E55 Type instances: an <rdf:Description rdf:about="#..."><rdf:type
+#       rdf:resource=".../E55_Type"/> declaration.
+# Unmanifested terms are rejected by the
 # cidoc-crm-validator subagent.
 
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
