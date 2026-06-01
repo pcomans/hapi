@@ -11,9 +11,12 @@ from pipeline.authority.claim_graph import (
     P177,
     PredicateRegistry,
     Statement,
+    build_authority_graph,
+    graph_dump,
     leprohon_ruler_projection,
     predicate_uri,
     strict_rdf_triples,
+    write_authority_graph,
 )
 
 
@@ -105,3 +108,30 @@ def test_graph_rejects_unregistered_or_derived_statement_predicates():
             ),
             registry,
         )
+
+
+def test_build_authority_graph_covers_every_reconciled_source_row():
+    registry = PredicateRegistry.load()
+    graph = build_authority_graph(registry=registry)
+    source_rows = sum(
+        1
+        for path in (AUTHORITY_ROOT / "sources").glob("*/reconciled.jsonl")
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    )
+
+    raw_row_nodes = [node for node in graph.nodes.values() if "raw_row" in node.properties]
+    assert len(raw_row_nodes) >= source_rows
+    assert len(graph.statements) > source_rows
+
+
+def test_graph_dump_is_deterministic_and_writable(tmp_path):
+    registry = PredicateRegistry.load()
+    first = write_authority_graph(path=tmp_path / "claim_graph.json", registry=registry)
+    second = graph_dump(build_authority_graph(registry=registry), registry)
+
+    assert first["metadata"] == second["metadata"]
+    assert first["nodes"] == second["nodes"]
+    assert first["statements"] == second["statements"]
+    assert first["triples"] == second["triples"]
+    assert (tmp_path / "claim_graph.json").exists()
