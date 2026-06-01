@@ -69,6 +69,7 @@ The repo ships several `.claude/agents/<name>.md` definitions with `memory: proj
 | `egyptologist-reviewer` | PM-faithfulness against printed source | Phase-0 source PRs; needs PDF on disk. |
 | `scope-accountability-enforcer` | Audit planned PR replies for improper deferrals | Run once per review-feedback batch before posting replies. |
 | `reconciliation-agent` | Drive `merge.py` + `fix_rows.py` end-to-end on a chunk | Phase-0 chunk reconciliation; reports disagreements + idempotence. |
+| `cidoc-crm-validator` | CIDOC CRM 7.1.3 + CRMdig 5.0 conformance review | ADR-018 onward; run before merging claim-graph, manifest, predicate-registry, mapper, or schema changes that claim CIDOC/CRMdig compatibility. |
 | `schema-reviewer` | Mechanical structural-fitness gate over `reconciled.jsonl` | Phase-0 source PRs; complements code-reviewer + egyptologist with non-overlapping scope. |
 | `prompt-auditor` | Phase-0 extraction prompt audit (rule-1/7 leak detection) | Run BEFORE spawning the 3-agent extraction triplet on a new chunk prompt. |
 

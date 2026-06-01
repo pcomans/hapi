@@ -20,3 +20,5 @@ Each file records a single architectural decision: the context, the decision, an
 | [014](014-exclude-non-ancient-records.md) | Exclude non-ancient records during normalization | Accepted |
 | [015](015-findspot-and-production-place.md) | Findspot and production place are separate fields | Accepted |
 | [016](016-royal-display-name-anglicized-nomen.md) | Royal display name standard is Conventional English Display Form | Accepted |
+| [017](017-ocr-pipeline-for-scan-only-sources.md) | OCR pipeline for scan-only authority sources | Accepted |
+| [018](018-authority-as-claim-graph.md) | Authority layer as source-attributed claim graph | Proposed |
