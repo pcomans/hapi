@@ -1,0 +1,112 @@
+[
+  {
+    "id": "hapi:same_entity_as",
+    "label": "same entity as",
+    "subject_class": "E1_CRM_Entity",
+    "value_class": "E1_CRM_Entity",
+    "crm_nearest": "crmdig:L54_is_same_as",
+    "is_symmetric": true,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:in_dynastic_period",
+    "label": "in dynastic period",
+    "subject_class": "E21_Person",
+    "value_class": "E4_Period",
+    "crm_nearest": null,
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:tomb_owner",
+    "label": "tomb owner",
+    "subject_class": "E21_Person",
+    "value_class": "E27_Site",
+    "crm_nearest": null,
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:original_burial_in",
+    "label": "original burial in",
+    "subject_class": "E21_Person",
+    "value_class": "E27_Site",
+    "crm_nearest": null,
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:cache_context_at",
+    "label": "cache context at",
+    "subject_class": "E21_Person",
+    "value_class": "E27_Site",
+    "crm_nearest": null,
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:display_name",
+    "label": "display name",
+    "subject_class": "E21_Person",
+    "value_class": "E41_Appellation",
+    "crm_nearest": "crm:P1_is_identified_by",
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:reign_period",
+    "label": "reign period",
+    "subject_class": "E21_Person",
+    "value_class": "E52_Time-Span",
+    "crm_nearest": null,
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:horus_name",
+    "label": "Horus name",
+    "subject_class": "E21_Person",
+    "value_class": "E41_Appellation",
+    "crm_nearest": "crm:P1_is_identified_by",
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": true
+  },
+  {
+    "id": "hapi:matcher_review_verdict",
+    "label": "matcher review verdict",
+    "subject_class": "E13_Attribute_Assignment",
+    "value_class": "E55_Type",
+    "crm_nearest": "crmdig:L43_annotates",
+    "is_symmetric": false,
+    "derived": false,
+    "p177_target": true,
+    "emit_shortcut": false
+  },
+  {
+    "id": "hapi:shares_tomb_with",
+    "label": "shares tomb with",
+    "subject_class": "E21_Person",
+    "value_class": "E21_Person",
+    "crm_nearest": null,
+    "is_symmetric": true,
+    "derived": true,
+    "p177_target": false,
+    "emit_shortcut": false
+  }
+]
