@@ -1,0 +1,14 @@
+{
+  "$comment": "Curator-decision batch seeding the hapi:display_name resolution policy (ADR-018 § Display name migration). Canonical Anglicised display forms per ADR-016. Each decision attaches a curator display_name claim (P14 → curatorial Group, P70i → this batch document, kind=curator_decision_batch) to a per-source :Ruler node. POC slice: a handful of rulers (incl. the deterministic-matcher pairs). Rulers without a decision here are intentionally unrenderable until a curator reviews them (fail-loud default).",
+  "document_id": "hapi_display_names_2026_05",
+  "kind": "curator_decision_batch",
+  "decided_at": "2026-05-17",
+  "rationale": "Initial canonical Anglicised display forms per ADR-016 (Conventional English Display Form).",
+  "decisions": [
+    {"ruler_key": "leprohon::leprohon-5.09", "display_name": "Unas"},
+    {"ruler_key": "leprohon::leprohon-6.01", "display_name": "Teti"},
+    {"ruler_key": "leprohon::leprohon-18.09", "display_name": "Amenhotep III"},
+    {"ruler_key": "leprohon::leprohon-22.02", "display_name": "Osorkon I"},
+    {"ruler_key": "leprohon::leprohon-27.03", "display_name": "Xerxes I"}
+  ]
+}
