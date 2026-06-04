@@ -190,6 +190,25 @@ class CidocCatalogue:
             stack.extend(self._subclass.get(cur, ()))
         return False
 
+    def controlled_vocab_e55(self) -> set[str]:
+        """Hapi local names that are pure ``crm:E55_Type`` instances.
+
+        These are the controlled-vocabulary verdict outcomes (verdict_approved /
+        _rejected / _retracted) — typed ``crm:E55_Type`` in the manifest but NOT
+        ``rdf:Property`` (which is how they differ from the punned P177-target
+        predicate URIs). Read straight from the manifest RDF, so the set is
+        traceable to the committed contract, not hardcoded.
+        """
+        e55 = URIRef(CRM_NS + "E55_Type")
+        out: set[str] = set()
+        for s in self._g.subjects(RDF.type, e55):
+            if not (isinstance(s, URIRef) and str(s).startswith(HAPI_NS)):
+                continue
+            if (s, RDF.type, RDF.Property) in self._g:
+                continue  # punned predicate URI, not a pure vocabulary instance
+            out.add(_local_name(str(s)))
+        return out
+
     @property
     def class_codes(self) -> set[str]:
         return set(self._classes_by_code)
