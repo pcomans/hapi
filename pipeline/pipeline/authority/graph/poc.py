@@ -79,6 +79,20 @@ def build_poc_graph(review_fn: ReviewFn | None = None) -> ClaimGraph:
     return g
 
 
+def build_poc_graph_live() -> tuple[ClaimGraph, list[str], list[str]]:
+    """Build via the LIVE stage-2 Anthropic reviewer (real SDK calls).
+
+    Requires ``ANTHROPIC_API_KEY`` — raises loudly otherwise (no silent fallback).
+    Returns (graph, verdict_ids, escalated_candidate_ids).
+    """
+    g = load_poc_graph()
+    load_curator_display_names(g)
+    candidates = run_stage1_matcher(g)
+    verdicts, escalations = run_stage2_reviewer(g, candidates)  # default = real SDK
+    emit_shortcuts(g)
+    return g, verdicts, escalations
+
+
 def summarize(g: ClaimGraph) -> dict[str, int]:
     """Headline counts for the built graph."""
     shortcuts = len(g.edges_with_predicate(SAME_ENTITY_AS))
