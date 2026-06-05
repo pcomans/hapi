@@ -1,0 +1,202 @@
+"""Constraint-narrowed candidate generation + match (ADR-018 § Implications for matching).
+
+ADR-009 forbids surface-string acceptance (edit distance / token overlap) because
+those metrics are ANTI-correlated with identity for Egyptian royal names: the
+regnal numeral discriminates identity but is a tiny surface difference (Thutmose
+III vs IV), while the stem transliteration preserves identity but varies wildly
+(Thutmose/Tuthmosis, Amenhotep/Amenophis). So this module does NOT score names.
+
+Instead it follows ADR-018: constraint-narrow the candidate set via STRUCTURED
+graph facts (here, shared dynasty — the only structured signal both sources
+carry; Leprohon dates no reigns), then have the LLM reviewer "match the name
+against the narrowed set" — one pick per left ruler over its same-dynasty
+candidate set. The deterministic narrowing emits candidate same_entity_as E13s;
+the LLM pick is the stage-2 review that approves exactly one (or none) per left
+ruler. No surface-string metric is ever used to ACCEPT a match.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+from collections import defaultdict
+
+from ..ir import ClaimGraph, Edge, Node
+from ..verdicts import VERDICT_APPROVED, add_verdict
+
+GEN_ALGORITHM_ID = "constraint_narrowed_v1"
+PICK_ALGORITHM_ID = "llm_pick_from_narrowed_v1"
+DEFAULT_MODEL = "claude-opus-4-8"
+MAX_TOKENS = 1024
+
+P140 = "P140_assigned_attribute_to"
+P141 = "P141_assigned"
+P177 = "P177_assigned_property_of_type"
+DERIVED_BY_RUN = "hapi:derived_by_run"
+L23 = "L23_used_software_or_firmware"
+
+
+def _dynasty_of(g: ClaimGraph, ruler_id: str) -> int | None:
+    for e in g.out_edges(f"stmt::{ruler_id}::in_dynastic_period"):
+        if e.predicate == P141:
+            return g.node(e.object_id).props.get("number")
+    return None
+
+
+def _display(g: ClaimGraph, ruler_id: str) -> str | None:
+    try:
+        return g.node(f"appellation::{ruler_id}::display_name").props["symbolic_content"]
+    except KeyError:
+        return None
+
+
+def narrowed_sets(
+    g: ClaimGraph, *, left: str = "leprohon", right: str = "beckerath", dynasty: int | None = None
+) -> dict[str, list[str]]:
+    """Deterministic structured narrowing: left ruler → same-dynasty right rulers.
+
+    No name scoring — pure graph-constraint narrowing (shared dynasty).
+    """
+    right_by_dyn: dict[int | None, list[str]] = defaultdict(list)
+    for n in g.nodes_of_class("E21"):
+        if n.props.get("source") == right:
+            right_by_dyn[_dynasty_of(g, n.id)].append(n.id)
+    out: dict[str, list[str]] = {}
+    for n in g.nodes_of_class("E21"):
+        if n.props.get("source") != left:
+            continue
+        d = _dynasty_of(g, n.id)
+        if dynasty is not None and d != dynasty:
+            continue
+        if d is None:
+            continue
+        out[n.id] = list(right_by_dyn.get(d, []))
+    return out
+
+
+def _ensure_gen_provenance(g: ClaimGraph, run_id: str) -> str:
+    algo = f"algorithm::{GEN_ALGORITHM_ID}"
+    g.add_node(Node(algo, ("D14",), {"id": GEN_ALGORITHM_ID, "algorithm": "same_dynasty_narrowing"}, "MatcherAlgorithm"))
+    run = f"run::{run_id}"
+    g.add_node(Node(run, ("D10",), {"run_id": run_id}, "MatcherRun"))
+    g.add_edge(Edge(run, L23, algo))
+    return run
+
+
+def generate_candidates(
+    g: ClaimGraph,
+    narrowed: dict[str, list[str]],
+    *,
+    run_id: str = "cn_gen_poc_0001",
+) -> dict[str, list[str]]:
+    """Emit candidate same_entity_as E13s for every narrowed (left,right) pair.
+
+    Returns {left_id: [candidate_stmt_id, ...]}. Deterministic, no LLM.
+    """
+    run = _ensure_gen_provenance(g, run_id)
+    same_type = "type::hapi:same_entity_as"
+    g.add_node(Node(same_type, ("E55",), {"id": "hapi:same_entity_as"}, "Type"))
+    out: dict[str, list[str]] = defaultdict(list)
+    for left_id, rights in narrowed.items():
+        for right_id in rights:
+            stmt = f"stmt::cn::{left_id}::{right_id}"
+            g.add_node(Node(stmt, ("E13",), {}, "Statement"))
+            g.add_edge(Edge(stmt, P140, left_id))
+            g.add_edge(Edge(stmt, P141, right_id))
+            g.add_edge(Edge(stmt, P177, same_type))
+            g.add_edge(Edge(stmt, DERIVED_BY_RUN, run))
+            out[left_id].append(stmt)
+    return dict(out)
+
+
+def _default_pick(left: dict, rights: list[dict]) -> dict:
+    """LLM pick: choose the right ruler that is the SAME as left, or none.
+
+    Requires ANTHROPIC_API_KEY. Returns {'choice': right_id|None, 'reasoning': str}.
+    """
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        raise RuntimeError("constraint-narrowed pick requires ANTHROPIC_API_KEY")
+    import anthropic
+
+    client = anthropic.Anthropic()
+    tool = {
+        "name": "pick_match",
+        "description": "Pick which candidate denotes the SAME historical ruler as the target, or none.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "choice": {"type": ["string", "null"], "description": "the chosen candidate ruler_id, or null"},
+                "reasoning": {"type": "string"},
+            },
+            "required": ["choice", "reasoning"],
+        },
+    }
+    prompt = (
+        "All candidates are in the same Egyptian dynasty as the target. Pick the ONE "
+        "candidate that denotes the SAME historical ruler as the target (accounting for "
+        "English vs German transliteration, e.g. Amenhotep=Amenophis, Thutmose=Tuthmosis). "
+        "Return null if none match. Do NOT match on regnal number alone — III vs IV are "
+        "different kings.\n\n"
+        f"Target: {json.dumps(left, ensure_ascii=False)}\n"
+        f"Candidates: {json.dumps(rights, ensure_ascii=False)}\n"
+    )
+    resp = client.messages.create(
+        model=DEFAULT_MODEL, max_tokens=MAX_TOKENS, tools=[tool],
+        tool_choice={"type": "tool", "name": "pick_match"},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    for block in resp.content:
+        if block.type == "tool_use" and block.name == "pick_match":
+            r = dict(block.input)
+            r["_model_snapshot"] = resp.model
+            return r
+    raise RuntimeError("pick_match returned no tool call")
+
+
+def review_narrowed(
+    g: ClaimGraph,
+    candidate_map: dict[str, list[str]],
+    *,
+    pick_fn=None,
+    run_id: str = "cn_review_poc_0001",
+) -> list[tuple[str, str]]:
+    """Per left ruler, LLM-pick the matching candidate from its narrowed set and
+    approve that candidate's verdict. Returns [(left_id, right_id), ...] matches."""
+    pick_fn = pick_fn or _default_pick
+    algo = f"algorithm::{PICK_ALGORITHM_ID}"
+    g.add_node(Node(algo, ("D14",), {"id": PICK_ALGORITHM_ID, "model_id": DEFAULT_MODEL}, "MatcherAlgorithm"))
+    run = f"run::{run_id}"
+    g.add_node(Node(run, ("D10",), {"run_id": run_id}, "MatcherRun"))
+    g.add_edge(Edge(run, L23, algo))
+
+    matches: list[tuple[str, str]] = []
+    for left_id, cand_stmts in candidate_map.items():
+        def _right_of(stmt_id: str) -> str:
+            for e in g.out_edges(stmt_id):
+                if e.predicate == P141:
+                    return e.object_id
+            raise ValueError(f"candidate {stmt_id} has no P141 value")
+        right_ctx = []
+        seen: set[str] = set()
+        for s in cand_stmts:
+            rid = _right_of(s)
+            if rid not in seen:
+                seen.add(rid)
+                right_ctx.append({"ruler_id": rid, "display_name": _display(g, rid)})
+        if not right_ctx:
+            continue
+        left_ctx = {"ruler_id": left_id, "display_name": _display(g, left_id)}
+        result = pick_fn(left_ctx, right_ctx)
+        choice = result.get("choice")
+        if not choice:
+            continue
+        stmt = f"stmt::cn::{left_id}::{choice}"
+        add_verdict(
+            g,
+            matcher_stmt_id=stmt,
+            outcome=VERDICT_APPROVED,
+            verdict_id=f"verdict::{stmt}",
+            reviewer_run=run,
+        )
+        matches.append((left_id, choice))
+    return matches

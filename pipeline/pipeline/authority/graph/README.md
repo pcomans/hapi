@@ -82,6 +82,34 @@ uv run python -c "from pipeline.authority.graph.poc import build_poc_graph, expo
 
 The relational / neo4j tests auto-skip when their services are down.
 
+## Constraint-narrowed matching (ADR-009 / ADR-018)
+
+`matcher/constraint_narrowed.py` demonstrates the ADR-sanctioned way to lift
+recall beyond exact name matching. ADR-009 forbids surface-string acceptance
+(edit distance / token overlap) because those metrics are *anti-correlated* with
+identity for Egyptian royal names: the regnal numeral discriminates identity but
+is a tiny surface difference (Thutmose III vs IV = distance 1, different kings),
+while the stem transliteration preserves identity but varies wildly (Thutmose /
+Tuthmosis, Amenhotep / Amenophis). So this module never scores names — it
+**constraint-narrows by structured graph facts (shared dynasty), then the LLM
+picks the match from the narrowed set** (ADR-018 § Implications for matching).
+
+**Dynasty 18 experiment** (the hardest case — every cross-source pair is
+cross-language, so the exact matcher scores **0**):
+
+| Approach | Matches on Dynasty 18 |
+|---|---|
+| exact normalized-name (stage-1) | 0 / 17 |
+| constraint-narrow + LLM pick (17 API calls) | 17 / 17 |
+
+Recovered the cross-language pairs (Amenhotep III == Amenophis III., Thutmose
+I–IV == Tuthmosis I–IV, Tutankhamun == Tut-anch-amun, Horemheb == Har-em-hab)
+AND the intra-source phase splits as many-to-one (both Leprohon *Amenhotep IV* +
+*Akhenaten* rows → the single Beckerath *Amenophis IV. Ach-en-aten*). The
+genuinely-contested Smenkhkare / Neferneferuaten identity surfaced honestly. The
+deterministic narrowing + candidate emission is tested offline; the LLM pick is
+injectable.
+
 ## Known boundaries (not yet done)
 
 - **Live stage-2 reviewer needs `ANTHROPIC_API_KEY`.** The Claude Code OAuth proxy
