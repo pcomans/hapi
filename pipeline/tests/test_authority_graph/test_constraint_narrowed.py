@@ -67,13 +67,14 @@ def test_pick_approves_chosen_candidate_and_gates_shortcut(graph):
     # Stub pick: match Amenhotep III → Amenophis III. by id; abstain otherwise.
     def pick_fn(left, rights):
         if left["ruler_id"] == "leprohon::leprohon-18.09":
-            return {"choice": "beckerath::18.09", "reasoning": "stub"}
-        return {"choice": None, "reasoning": "stub abstain"}
+            return {"choice": "beckerath::18.09", "escalate": False, "reasoning": "stub"}
+        return {"choice": None, "escalate": False, "reasoning": "stub abstain"}
 
-    matches = review_narrowed(graph, cand_map, pick_fn=pick_fn)
+    matches, escalations = review_narrowed(graph, cand_map, pick_fn=pick_fn)
     assert matches == [("leprohon::leprohon-18.09", "beckerath::18.09")]
+    assert escalations == []
 
-    chosen = "stmt::cn::leprohon::leprohon-18.09::beckerath::05.09".replace("05.09", "18.09")
+    chosen = "stmt::cn::leprohon::leprohon-18.09::beckerath::18.09"
     assert verdict_outcome(graph, tip_verdict(graph, chosen)) == VERDICT_APPROVED
     # Approved tip → gated shortcut emitted between the two rulers.
     added = emit_shortcuts(graph)
@@ -83,3 +84,20 @@ def test_pick_approves_chosen_candidate_and_gates_shortcut(graph):
         and e.object_id == "beckerath::18.09"
         for e in added
     )
+
+
+def test_contested_identity_is_escalated_not_matched(graph):
+    narrowed = narrowed_sets(graph, dynasty=18)
+    cand_map = generate_candidates(graph, narrowed)
+
+    # Stub: escalate the contested case, match/abstain on everything else.
+    def pick_fn(left, rights):
+        if left["ruler_id"] == "leprohon::leprohon-18.09":
+            return {"choice": None, "escalate": True, "reasoning": "contested"}
+        return {"choice": None, "escalate": False, "reasoning": "abstain"}
+
+    matches, escalations = review_narrowed(graph, cand_map, pick_fn=pick_fn)
+    assert matches == []
+    assert escalations == ["leprohon::leprohon-18.09"]
+    # Escalated → NO verdict → no shortcut.
+    assert tip_verdict(graph, "stmt::cn::leprohon::leprohon-18.09::beckerath::18.09") is None

@@ -33,7 +33,7 @@ def resilient_pick(left, rights):
         except Exception as exc:  # noqa: BLE001 - measurement resilience, recorded not swallowed
             if attempt == 2:
                 errors.append({"left": left["ruler_id"], "error": f"{type(exc).__name__}: {exc}"})
-                return {"choice": None, "reasoning": f"ERROR: {exc}"}
+                return {"choice": None, "escalate": False, "reasoning": f"ERROR: {exc}"}
             time.sleep(2 ** attempt)
 
 
@@ -42,7 +42,7 @@ def main() -> None:
     narrowed = narrowed_sets(g)
     leprohon_total = len(narrowed)
     cand_map = generate_candidates(g, narrowed)
-    matches = review_narrowed(g, cand_map, pick_fn=resilient_pick)
+    matches, escalations = review_narrowed(g, cand_map, pick_fn=resilient_pick)
 
     def disp(rid):
         try:
@@ -58,10 +58,12 @@ def main() -> None:
         "leprohon_rulers_in_shared_dynasty": leprohon_total,
         "beckerath_rulers": beckerath_total,
         "matches": len(matches),
+        "escalated": len(escalations),
         "distinct_beckerath_matched": len(distinct_beckerath),
         "leprohon_match_rate_pct": round(100 * len(matches) / leprohon_total, 1),
         "beckerath_coverage_pct": round(100 * len(distinct_beckerath) / beckerath_total, 1),
         "errors": errors,
+        "escalations": escalations,
         "match_list": [{"leprohon": disp(l), "beckerath": disp(r), "lid": l, "rid": r} for l, r in matches],
     }
     with open(RESULT_PATH, "w") as f:

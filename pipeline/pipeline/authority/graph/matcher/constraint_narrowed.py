@@ -110,9 +110,10 @@ def generate_candidates(
 
 
 def _default_pick(left: dict, rights: list[dict]) -> dict:
-    """LLM pick: choose the right ruler that is the SAME as left, or none.
+    """LLM pick: choose the right ruler that is the SAME as left, or none, or escalate.
 
-    Requires ANTHROPIC_API_KEY. Returns {'choice': right_id|None, 'reasoning': str}.
+    Requires ANTHROPIC_API_KEY. Returns
+    {'choice': right_id|None, 'escalate': bool, 'reasoning': str}.
     """
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise RuntimeError("constraint-narrowed pick requires ANTHROPIC_API_KEY")
@@ -121,22 +122,29 @@ def _default_pick(left: dict, rights: list[dict]) -> dict:
     client = anthropic.Anthropic()
     tool = {
         "name": "pick_match",
-        "description": "Pick which candidate denotes the SAME historical ruler as the target, or none.",
+        "description": "Pick which candidate denotes the SAME historical ruler as the target, none, or escalate.",
         "input_schema": {
             "type": "object",
             "properties": {
                 "choice": {"type": ["string", "null"], "description": "the chosen candidate ruler_id, or null"},
+                "escalate": {
+                    "type": "boolean",
+                    "description": "true if the identity is GENUINELY CONTESTED in Egyptology (e.g. "
+                    "Smenkhkare/Neferneferuaten, Aha/Menes, Sekhemib/Peribsen) and should go to a human "
+                    "curator instead of an automatic pick; set choice=null when escalating",
+                },
                 "reasoning": {"type": "string"},
             },
-            "required": ["choice", "reasoning"],
+            "required": ["choice", "escalate", "reasoning"],
         },
     }
     prompt = (
         "All candidates are in the same Egyptian dynasty as the target. Pick the ONE "
         "candidate that denotes the SAME historical ruler as the target (accounting for "
-        "English vs German transliteration, e.g. Amenhotep=Amenophis, Thutmose=Tuthmosis). "
-        "Return null if none match. Do NOT match on regnal number alone — III vs IV are "
-        "different kings.\n\n"
+        "English vs German transliteration, e.g. Amenhotep=Amenophis, Thutmose=Tuthmosis, "
+        "and for Manetho's Greek names, e.g. Den=Usaphais). Return choice=null if none match. "
+        "If the identity is GENUINELY CONTESTED in scholarship, set escalate=true and choice=null "
+        "rather than guessing. Do NOT match on regnal number alone — III vs IV are different kings.\n\n"
         f"Target: {json.dumps(left, ensure_ascii=False)}\n"
         f"Candidates: {json.dumps(rights, ensure_ascii=False)}\n"
     )
@@ -159,9 +167,10 @@ def review_narrowed(
     *,
     pick_fn=None,
     run_id: str = "cn_review_poc_0001",
-) -> list[tuple[str, str]]:
+) -> tuple[list[tuple[str, str]], list[str]]:
     """Per left ruler, LLM-pick the matching candidate from its narrowed set and
-    approve that candidate's verdict. Returns [(left_id, right_id), ...] matches."""
+    approve that candidate's verdict. A genuinely-contested identity is ESCALATED
+    to a human (no verdict emitted). Returns (matches, escalated_left_ids)."""
     pick_fn = pick_fn or _default_pick
     algo = f"algorithm::{PICK_ALGORITHM_ID}"
     g.add_node(Node(algo, ("D14",), {"id": PICK_ALGORITHM_ID, "model_id": DEFAULT_MODEL}, "MatcherAlgorithm"))
@@ -170,6 +179,7 @@ def review_narrowed(
     g.add_edge(Edge(run, L23, algo))
 
     matches: list[tuple[str, str]] = []
+    escalations: list[str] = []
     for left_id, cand_stmts in candidate_map.items():
         def _right_of(stmt_id: str) -> str:
             for e in g.out_edges(stmt_id):
@@ -187,6 +197,9 @@ def review_narrowed(
             continue
         left_ctx = {"ruler_id": left_id, "display_name": _display(g, left_id)}
         result = pick_fn(left_ctx, right_ctx)
+        if result.get("escalate"):
+            escalations.append(left_id)  # contested → human queue, no verdict
+            continue
         choice = result.get("choice")
         if not choice:
             continue
@@ -199,4 +212,4 @@ def review_narrowed(
             reviewer_run=run,
         )
         matches.append((left_id, choice))
-    return matches
+    return matches, escalations
