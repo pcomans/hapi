@@ -28,7 +28,6 @@ from ..verdicts import add_verdict
 REVIEWER_ALGORITHM_ID = "llm_reviewer_v1"
 REVIEWER_VERSION = "0.1.0"
 DEFAULT_MODEL = "claude-opus-4-8"
-TEMPERATURE = 0.0
 MAX_TOKENS = 1024
 
 L23 = "L23_used_software_or_firmware"
@@ -111,10 +110,11 @@ def _default_sdk_review(context: dict) -> dict:
         f"Left:  {json.dumps(context['left'], ensure_ascii=False)}\n"
         f"Right: {json.dumps(context['right'], ensure_ascii=False)}\n"
     )
+    # NOTE: claude-opus-4-8 deprecates `temperature`; we omit it rather than send
+    # a rejected param. The actual returned model snapshot is recorded below.
     resp = client.messages.create(
         model=DEFAULT_MODEL,
         max_tokens=MAX_TOKENS,
-        temperature=TEMPERATURE,
         tools=[tool],
         tool_choice={"type": "tool", "name": "record_verdict"},
         messages=[{"role": "user", "content": prompt}],
@@ -157,9 +157,10 @@ def run_stage2_reviewer(
                 "model_provider": "anthropic",
                 "model_id": DEFAULT_MODEL,
                 "model_snapshot": model_snapshot,
-                # NOTE: the Messages API has no `seed` param; we record the real
-                # hyperparameters we send, not the ADR sketch's illustrative seed.
-                "hyperparameters_json": json.dumps({"temperature": TEMPERATURE, "max_tokens": MAX_TOKENS}),
+                # NOTE: the Messages API has no `seed` param, and claude-opus-4-8
+                # deprecates `temperature`; we record the real params we send, not
+                # the ADR sketch's illustrative seed/temperature.
+                "hyperparameters_json": json.dumps({"max_tokens": MAX_TOKENS}),
             },
             "MatcherAlgorithm",
         )
