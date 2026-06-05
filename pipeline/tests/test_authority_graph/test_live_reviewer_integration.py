@@ -29,7 +29,20 @@ pytestmark = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def live():
-    graph, verdicts, escalations = build_poc_graph_live()
+    # A transient API outage (overload 529 / 5xx / timeout / connection) is
+    # infrastructure, not a logic failure — skip on those. A 4xx (e.g. the
+    # temperature-deprecation 400) IS a real bug and re-raises. A wrong verdict
+    # still fails via the assertions below.
+    import anthropic
+
+    try:
+        graph, verdicts, escalations = build_poc_graph_live()
+    except (anthropic.APIConnectionError, anthropic.APITimeoutError) as exc:
+        pytest.skip(f"Anthropic API transiently unavailable: {type(exc).__name__}")
+    except anthropic.APIStatusError as exc:
+        if exc.status_code >= 500:  # 529 overloaded / 5xx server-side = transient
+            pytest.skip(f"Anthropic API transient {exc.status_code}: {type(exc).__name__}")
+        raise  # 4xx is a real client error — fail loud
     return graph, verdicts, escalations
 
 
