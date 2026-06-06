@@ -122,6 +122,21 @@ over the approved `hapi:same_entity_as` edges. Cross-source identity is *data*:
 (Kitchen "Takeloth" vs Leprohon "Takelot", "Shoshenq" vs Beckerath "Schoschenq")
 need the constraint-narrowed LLM pick — adding those is the natural next step.
 
+**LLM 3-way clustering** (constraint-narrowed pick for the Kitchen pairs over the
+TIP dynasties 21–25, 106 calls; `run_3way_llm.py`, raw result
+[`threeway_llm_result.json`](./threeway_llm_result.json)) lifts the 3-source
+clusters from **2 → 27**, recovering deep variation the exact matcher can't —
+Shoshenq/Schoschenq/Sheshonq, Greek↔Egyptian (Bokchoris↔Bakenranef, Psusennes I↔
+Pa-Seba-Kha-En-Niut I), and the Nubian Dyn-25 spellings (Piye/Pije/Piankhy,
+Shabako/Schabako/Shabaka, Tantamani/Tanot-amun).
+
+**Precision caveat (real):** transitive connected-components over pairwise LLM
+picks can over-merge. One of the 27 clusters is a **false merge** — Pinudjem I and
+Menkheperre (father and son, two distinct 21st-Dynasty Theban figures) were
+conflated. So 3-way clustering has high recall but **unvalidated precision**; a
+clustering step that detects/blocks contradictory merges (or routes them to
+escalation) is needed before treating clusters as authority data.
+
 ## Known boundaries (not yet done)
 
 - **Live stage-2 reviewer needs `ANTHROPIC_API_KEY`.** The Claude Code OAuth proxy

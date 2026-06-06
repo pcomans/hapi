@@ -1,0 +1,147 @@
+{
+  "llm_pick_calls": 106,
+  "errors": 0,
+  "total_clusters": 46,
+  "three_source_clusters": 27,
+  "three_source_list": [
+    [
+      "beckerath:Osorkon I.",
+      "kitchen:Osorkon I",
+      "leprohon:Osorkon I"
+    ],
+    [
+      "beckerath:Takelot I.",
+      "kitchen:Takeloth I",
+      "leprohon:Takelot I"
+    ],
+    [
+      "beckerath:Osorkon II.",
+      "kitchen:Osorkon II",
+      "leprohon:Osorkon II"
+    ],
+    [
+      "beckerath:Takelot II.",
+      "kitchen:Takeloth II",
+      "leprohon:Takelot II"
+    ],
+    [
+      "beckerath:Amen-em-nisu",
+      "kitchen:Amenemnisu",
+      "leprohon:Amenemnisu"
+    ],
+    [
+      "beckerath:Amen-em-opet",
+      "kitchen:Amenemope",
+      "leprohon:Amenemope"
+    ],
+    [
+      "beckerath:Si-amun",
+      "kitchen:Siamun",
+      "leprohon:Siamun"
+    ],
+    [
+      "beckerath:Pi-nodjem I.",
+      "kitchen:Menkheperre",
+      "kitchen:Pinudjem I",
+      "kitchen:Pinudjem I",
+      "leprohon:Menkheperre",
+      "leprohon:Pinodjem I"
+    ],
+    [
+      "beckerath:Har-si-êset",
+      "kitchen:Harsiese",
+      "leprohon:Harsiese"
+    ],
+    [
+      "beckerath:Auput II.",
+      "kitchen:Iuput II",
+      "leprohon:Iuput II"
+    ],
+    [
+      "beckerath:Kaschta",
+      "kitchen:Kashta",
+      "leprohon:Kashta"
+    ],
+    [
+      "beckerath:Taharqo",
+      "kitchen:Taharqa",
+      "leprohon:Taharqa"
+    ],
+    [
+      "beckerath:Psusennes I.",
+      "kitchen:Psusennes I",
+      "leprohon:Pa-Seba-Kha-En-Niut I"
+    ],
+    [
+      "beckerath:Osochor",
+      "kitchen:Osochor",
+      "leprohon:Osorkon (the Elder)"
+    ],
+    [
+      "beckerath:Smendes",
+      "kitchen:Smendes I",
+      "leprohon:Nesbanebdjed (Smendes)"
+    ],
+    [
+      "beckerath:Psusennes II.",
+      "kitchen:(Har-)Psusennes II",
+      "leprohon:Pa-Seba-Kha-En-Niut II"
+    ],
+    [
+      "beckerath:Schoschenq I.",
+      "kitchen:Shoshenq I",
+      "leprohon:Sheshonq I"
+    ],
+    [
+      "beckerath:Schoschenq II.",
+      "kitchen:Shoshenq II",
+      "leprohon:Sheshonq IIa"
+    ],
+    [
+      "beckerath:Schoschenq III.",
+      "kitchen:Shoshenq III",
+      "leprohon:Sheshonq III"
+    ],
+    [
+      "beckerath:Pe-mu",
+      "kitchen:Pimay",
+      "leprohon:Pamiu"
+    ],
+    [
+      "beckerath:Schoschenq V.",
+      "kitchen:Shoshenq V",
+      "leprohon:Sheshonq V"
+    ],
+    [
+      "beckerath:Fürst Tef-nachte",
+      "kitchen:Tefnakht I",
+      "kitchen:Tefnakht I",
+      "leprohon:Tefnakht"
+    ],
+    [
+      "beckerath:Bokchoris",
+      "kitchen:Bakenranef",
+      "leprohon:Bakenrenef (Bocchoris)"
+    ],
+    [
+      "beckerath:Pije",
+      "kitchen:Piankhy",
+      "leprohon:Piye/Piankhy"
+    ],
+    [
+      "beckerath:Schabako",
+      "kitchen:Shabako",
+      "leprohon:Shabaka"
+    ],
+    [
+      "beckerath:Schebitko",
+      "kitchen:Shebitku",
+      "leprohon:Shabataka/Shebitko"
+    ],
+    [
+      "beckerath:Tanot-amun",
+      "kitchen:Tantamani",
+      "leprohon:Tanutamun"
+    ]
+  ]
+}
