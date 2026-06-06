@@ -110,6 +110,18 @@ genuinely-contested Smenkhkare / Neferneferuaten identity surfaced honestly. The
 deterministic narrowing + candidate emission is tested offline; the LLM pick is
 injectable.
 
+## 3-way clustering (Leprohon + Beckerath + Kitchen)
+
+`loader.load_poc_graph_3way()` adds Kitchen (60 Third-Intermediate-Period kings)
+as a third source; `poc.build_3way_graph()` runs the exact matcher across all
+three source pairs and `poc.same_entity_clusters()` computes connected components
+over the approved `hapi:same_entity_as` edges. Cross-source identity is *data*:
+**Osorkon I** and **Osorkon II** form clean clusters spanning all three sources
+(e.g. `{kitchen::22.02, leprohon::leprohon-22.02, beckerath::22.02}`). Only two
+3-source clusters emerge from the *exact* matcher because cross-spelling pairs
+(Kitchen "Takeloth" vs Leprohon "Takelot", "Shoshenq" vs Beckerath "Schoschenq")
+need the constraint-narrowed LLM pick — adding those is the natural next step.
+
 ## Known boundaries (not yet done)
 
 - **Live stage-2 reviewer needs `ANTHROPIC_API_KEY`.** The Claude Code OAuth proxy

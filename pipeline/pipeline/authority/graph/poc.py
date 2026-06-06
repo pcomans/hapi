@@ -15,8 +15,10 @@ shape: no storage decision is baked in (ADR-019 stays open).
 
 from __future__ import annotations
 
+from collections import defaultdict
+
 from .ir import ClaimGraph, Edge, Node
-from .loader import load_poc_graph
+from .loader import load_poc_graph, load_poc_graph_3way
 from .matcher.stage1_deterministic import run_stage1_matcher
 from .matcher.stage2_reviewer import ReviewFn, run_stage2_reviewer
 from .resolution import CURATORIAL_GROUP, load_curator_display_names
@@ -91,6 +93,60 @@ def build_poc_graph_live() -> tuple[ClaimGraph, list[str], list[str]]:
     verdicts, escalations = run_stage2_reviewer(g, candidates)  # default = real SDK
     emit_shortcuts(g)
     return g, verdicts, escalations
+
+
+def build_3way_graph() -> ClaimGraph:
+    """Leprohon + Beckerath + Kitchen, deterministically matched across all three
+    source pairs and curator-approved, so same_entity_as clusters can span 3 sources.
+
+    Uses the exact (stage-1) matcher only — no API — so 3-way clustering is
+    demonstrable offline. Cross-spelling pairs (e.g. Kitchen 'Takeloth' vs Leprohon
+    'Takelot') need the constraint-narrowed LLM pick and are out of this exact pass.
+    """
+    g = load_poc_graph_3way()
+    load_curator_display_names(g)
+    pairs = [
+        ("leprohon", "beckerath", "cn_lb"),
+        ("leprohon", "kitchen", "cn_lk"),
+        ("beckerath", "kitchen", "cn_bk"),
+    ]
+    all_candidates: list[str] = []
+    for left, right, run_id in pairs:
+        all_candidates += run_stage1_matcher(
+            g, left_source=left, right_source=right, run_id=run_id
+        )
+    approve_candidates_via_curator(g, all_candidates)
+    emit_shortcuts(g)
+    return g
+
+
+def same_entity_clusters(g: ClaimGraph) -> list[frozenset[str]]:
+    """Connected components over approved hapi:same_entity_as shortcut edges.
+
+    same_entity_as is symmetric, so edges are treated as undirected. Returns the
+    multi-member clusters (singletons omitted), each a frozenset of ruler ids.
+    """
+    parent: dict[str, str] = {}
+
+    def find(x: str) -> str:
+        parent.setdefault(x, x)
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+
+    for e in g.edges_with_predicate(SAME_ENTITY_AS):
+        union(e.subject_id, e.object_id)
+
+    groups: dict[str, set[str]] = defaultdict(set)
+    for node in list(parent):
+        groups[find(node)].add(node)
+    return [frozenset(members) for members in groups.values() if len(members) > 1]
 
 
 def summarize(g: ClaimGraph) -> dict[str, int]:

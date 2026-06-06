@@ -66,6 +66,20 @@ def _seed_actor_and_document_catalogue(g: ClaimGraph) -> None:
             "Document",
         )
     )
+    g.add_node(Node("person::kitchen_ka", ("E21",), {"full_name": "Kenneth A. Kitchen"}, "Person"))
+    g.add_node(
+        Node(
+            "document::kitchen_1996",
+            ("E31",),
+            {
+                "kind": "publication",
+                "citation": "Kitchen, The Third Intermediate Period in Egypt (1100–650 BC) (Aris & Phillips, 3rd ed. 1996)",
+                "year": 1996,
+                "language": "en",
+            },
+            "Document",
+        )
+    )
 
 
 def _ensure_predicate_type_node(g: ClaimGraph, predicate_id: str) -> str:
@@ -328,10 +342,85 @@ def load_beckerath(g: ClaimGraph, path: Path | None = None) -> int:
     return rows
 
 
+# ---------------------------------------------------------------------------
+# Kitchen (Third Intermediate Period kings) — the third source for 3-way clustering
+# ---------------------------------------------------------------------------
+def load_kitchen(g: ClaimGraph, path: Path | None = None) -> int:
+    path = path or _SOURCES_DIR / "kitchen-tipe" / "reconciled.jsonl"
+    actor = "person::kitchen_ka"
+    doc = "document::kitchen_1996"
+    rows = 0
+    for line in path.read_text().splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        rid = row["kitchen_id"]
+        ruler_id = f"kitchen::{rid}"
+        g.add_node(Node(ruler_id, ("E21",), {"source": "kitchen", "source_id": rid}, "Ruler"))
+        cited = row.get("source_citation") or {}
+        pdf = cited.get("pdf_pages")
+
+        # display_name → E41 Appellation (English).
+        if row.get("name"):
+            appel = f"appellation::{ruler_id}::display_name"
+            g.add_node(
+                Node(
+                    appel,
+                    ("E41",),
+                    {"symbolic_content": row["name"], "appellation_kind": "display_name", "language": "en"},
+                    "Appellation",
+                )
+            )
+            _add_human_statement(
+                g, stmt_id=f"stmt::{ruler_id}::display_name", subject_id=ruler_id,
+                predicate_id="hapi:display_name", value_id=appel, actor_id=actor,
+                document_id=doc, cited_pdf_page=pdf,
+            )
+
+        # in_dynastic_period → E4 Period.
+        if row.get("dynasty") is not None:
+            dyn = _ensure_dynasty(g, row["dynasty"])
+            _add_human_statement(
+                g, stmt_id=f"stmt::{ruler_id}::in_dynastic_period", subject_id=ruler_id,
+                predicate_id="hapi:in_dynastic_period", value_id=dyn, actor_id=actor,
+                document_id=doc, cited_pdf_page=pdf,
+            )
+
+        # reign_period → E52 Time-Span from end_bce + length_of_reign_years.
+        end = row.get("corrected_end_bce")
+        if end is None:
+            end = row.get("end_bce")
+        length = row.get("length_of_reign_years")
+        if end is not None:
+            begin = (end - length) if length is not None else None
+            ts = f"timespan::{ruler_id}::reign"
+            g.add_node(
+                Node(
+                    ts, ("E52",),
+                    {"begin_of_the_begin": begin, "end_of_the_end": end, "calendar": "astronomical_year"},
+                    "TimeSpan",
+                )
+            )
+            _add_human_statement(
+                g, stmt_id=f"stmt::{ruler_id}::reign_period", subject_id=ruler_id,
+                predicate_id="hapi:reign_period", value_id=ts, actor_id=actor,
+                document_id=doc, cited_pdf_page=pdf,
+            )
+        rows += 1
+    return rows
+
+
 def load_poc_graph() -> ClaimGraph:
     """Load the Leprohon + Beckerath vertical slice into a fresh ClaimGraph."""
     g = ClaimGraph()
     _seed_actor_and_document_catalogue(g)
     load_leprohon(g)
     load_beckerath(g)
+    return g
+
+
+def load_poc_graph_3way() -> ClaimGraph:
+    """Load Leprohon + Beckerath + Kitchen for 3-way same_entity_as clustering."""
+    g = load_poc_graph()
+    load_kitchen(g)
     return g
