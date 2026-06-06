@@ -29,20 +29,29 @@ pytestmark = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def live():
-    # A transient API outage (overload 529 / 5xx / timeout / connection) is
-    # infrastructure, not a logic failure — skip on those. A 4xx (e.g. the
-    # temperature-deprecation 400) IS a real bug and re-raises. A wrong verdict
-    # still fails via the assertions below.
+    # Distinguish environment conditions (skip) from code bugs (fail loud):
+    #  - 5xx / connection / timeout  → transient infra
+    #  - 401/403/429                 → key / billing / rate-limit (account state)
+    #  - 400 mentioning credit/billing/quota → out-of-credit account state
+    # A genuine malformed-request 400 (e.g. a deprecated param like the
+    # temperature regression) still re-raises. A wrong verdict still fails via
+    # the assertions below.
     import anthropic
+
+    def _is_account_state(exc: anthropic.APIStatusError) -> bool:
+        if exc.status_code in (401, 403, 429) or exc.status_code >= 500:
+            return True
+        msg = str(exc).lower()
+        return exc.status_code == 400 and any(k in msg for k in ("credit", "billing", "quota"))
 
     try:
         graph, verdicts, escalations = build_poc_graph_live()
     except (anthropic.APIConnectionError, anthropic.APITimeoutError) as exc:
         pytest.skip(f"Anthropic API transiently unavailable: {type(exc).__name__}")
     except anthropic.APIStatusError as exc:
-        if exc.status_code >= 500:  # 529 overloaded / 5xx server-side = transient
-            pytest.skip(f"Anthropic API transient {exc.status_code}: {type(exc).__name__}")
-        raise  # 4xx is a real client error — fail loud
+        if _is_account_state(exc):
+            pytest.skip(f"Anthropic account/infra state ({exc.status_code}): {type(exc).__name__}")
+        raise  # genuine client error (malformed request) — fail loud
     return graph, verdicts, escalations
 
 
