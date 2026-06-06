@@ -1,23 +1,31 @@
 {
   "leprohon_rulers_in_shared_dynasty": 395,
   "beckerath_rulers": 166,
-  "matches": 156,
-  "distinct_beckerath_matched": 146,
-  "leprohon_match_rate_pct": 39.5,
-  "beckerath_coverage_pct": 88.0,
+  "matches": 154,
+  "escalated": 5,
+  "distinct_beckerath_matched": 145,
+  "leprohon_match_rate_pct": 39.0,
+  "beckerath_coverage_pct": 87.3,
   "errors": [],
+  "escalations": [
+    "leprohon::leprohon-1.01",
+    "leprohon::leprohon-2.06",
+    "leprohon::leprohon-3.04",
+    "leprohon::leprohon-18.11",
+    "leprohon::leprohon-18.12"
+  ],
   "match_list": [
-    {
-      "leprohon": "Aha",
-      "beckerath": "Menes",
-      "lid": "leprohon::leprohon-1.01",
-      "rid": "beckerath::01.01"
-    },
     {
       "leprohon": "Djer",
       "beckerath": "Athothis",
       "lid": "leprohon::leprohon-1.02",
       "rid": "beckerath::01.03"
+    },
+    {
+      "leprohon": "Djet/Wadjet",
+      "beckerath": "Ita",
+      "lid": "leprohon::leprohon-1.03",
+      "rid": "beckerath::01.04"
     },
     {
       "leprohon": "Den",
@@ -57,9 +65,9 @@
     },
     {
       "leprohon": "Ninetjer",
-      "beckerath": "Binothris",
+      "beckerath": "Kaiëchós",
       "lid": "leprohon::leprohon-2.03",
-      "rid": "beckerath::02.03"
+      "rid": "beckerath::02.02"
     },
     {
       "leprohon": "(Two Ladies) Weneg",
@@ -72,12 +80,6 @@
       "beckerath": "Sethenes",
       "lid": "leprohon::leprohon-2.05",
       "rid": "beckerath::02.05"
-    },
-    {
-      "leprohon": "Sekhemib",
-      "beckerath": "Seth Per-ib-sen",
-      "lid": "leprohon::leprohon-2.06",
-      "rid": "beckerath::02.09"
     },
     {
       "leprohon": "Peribsen",
@@ -120,12 +122,6 @@
       "beckerath": "Hor Cha-bai",
       "lid": "leprohon::leprohon-3.03",
       "rid": "beckerath::03.04"
-    },
-    {
-      "leprohon": "Sanakht",
-      "beckerath": "Neb-ka",
-      "lid": "leprohon::leprohon-3.04",
-      "rid": "beckerath::03.01"
     },
     {
       "leprohon": "Snefru",
@@ -470,18 +466,6 @@
       "rid": "beckerath::18.10"
     },
     {
-      "leprohon": "Nefer-neferu-aten",
-      "beckerath": "Semench-ka-rê Nefer-nefru-aten",
-      "lid": "leprohon::leprohon-18.11",
-      "rid": "beckerath::18.12"
-    },
-    {
-      "leprohon": "Smenkhkare",
-      "beckerath": "Semench-ka-rê Nefer-nefru-aten",
-      "lid": "leprohon::leprohon-18.12",
-      "rid": "beckerath::18.12"
-    },
-    {
       "leprohon": "Tutankhamun",
       "beckerath": "Tut-anch-amun",
       "lid": "leprohon::leprohon-18.13",
@@ -662,12 +646,6 @@
       "rid": "beckerath::21.08"
     },
     {
-      "leprohon": "Pa-Seba-Kha-En-Niut III",
-      "beckerath": "Psusennes I.",
-      "lid": "leprohon::leprohon-21a.03",
-      "rid": "beckerath::21.03"
-    },
-    {
       "leprohon": "Sheshonq I",
       "beckerath": "Schoschenq I.",
       "lid": "leprohon::leprohon-22.01",
@@ -740,6 +718,12 @@
       "rid": "beckerath::23.01"
     },
     {
+      "leprohon": "Iuput I",
+      "beckerath": "Auput II.",
+      "lid": "leprohon::leprohon-23.02",
+      "rid": "beckerath::23.02"
+    },
+    {
       "leprohon": "Iuput II",
       "beckerath": "Auput II.",
       "lid": "leprohon::leprohon-23.08",
@@ -750,6 +734,12 @@
       "beckerath": "Petubastis II.",
       "lid": "leprohon::leprohon-23a.01",
       "rid": "beckerath::23.01"
+    },
+    {
+      "leprohon": "Padinemty",
+      "beckerath": "„Psammûs“",
+      "lid": "leprohon::leprohon-23a.05",
+      "rid": "beckerath::23.04"
     },
     {
       "leprohon": "Tefnakht",
@@ -876,6 +866,12 @@
       "beckerath": "Artaxerxes II.",
       "lid": "leprohon::leprohon-27.07",
       "rid": "beckerath::27.07"
+    },
+    {
+      "leprohon": "Amenirdis",
+      "beckerath": "Amyrtaios",
+      "lid": "leprohon::leprohon-28.01",
+      "rid": "beckerath::28.01"
     },
     {
       "leprohon": "Nefaarudu I",

@@ -6,18 +6,28 @@ sources, run via `pipeline/run_match_rate.py`. Raw result:
 
 ## Headline
 
-| Metric | Constraint-narrow + LLM | Exact name match |
-|---|---|---|
-| **Beckerath coverage** (146 / 166 distinct) | **88.0%** | ~6% |
-| Leprohon match rate (156 / 395) | 39.5% | ~6% |
-| API errors | 0 | — |
+| Metric | Constraint-narrow + LLM | + escalation | Exact name match |
+|---|---|---|---|
+| **Beckerath coverage** | **88.0%** (146/166) | **87.3%** (145/166) | ~6% |
+| Leprohon match rate | 39.5% (156/395) | 39.0% (154/395) | ~6% |
+| Escalated to human | 0 | **5** | — |
+| API errors | 0 | 0 | — |
 
-**The meaningful number is ~88%** — of Beckerath's 166 rulers, 146 found a
+**The meaningful number is ~88%** — of Beckerath's 166 rulers, ~146 found a
 Leprohon counterpart. The 39.5% Leprohon figure is low for a structural reason,
 not a matcher failure: **Leprohon lists ~2.4× more rulers** (395 vs 166), so
 ~230 Leprohon entries (anti-kings, ephemeral SIP/TIP/Ptolemaic-detail rulers)
 have no Beckerath counterpart at all. Against the exact-name baseline (~6%),
 constraint-narrow + LLM is a **~14× lift**.
+
+**With escalation enabled** (added after the first run), coverage barely moves
+(88.0% → 87.3%, −0.7pp) while **5 genuinely-contested identities correctly route
+to the human queue instead of being auto-resolved**: Aha (the Aha/Menes/Narmer
+"who is Menes" problem), Sekhemib (Sekhemib/Peribsen), Sanakht (uncertain
+placement, possibly = Nebka), and Neferneferuaten + Smenkhkare (the Amarna
+succession). The model's escalation choices map precisely onto real
+Egyptological controversies — escalation removes over-confident resolution of
+disputed identities at negligible cost to coverage.
 
 ## Method (why not edit distance / token overlap)
 
@@ -48,15 +58,15 @@ Leprohon ruler in a shared dynasty.
 1. **This is recall/coverage, not validated precision.** No gold-standard match
    set exists, so not all 156 matches are certified correct. Dynasty 1 and 18
    spot-checks are strong, but a labeled set is needed for a precision claim.
-2. **The measured run used the pick variant WITHOUT an escalation path**, so it
-   resolved genuinely-contested identities as confident matches — Aha == Menes
-   (debated; could be Narmer), Sekhemib + Peribsen → one, Smenkhkare /
-   Neferneferuaten. An `escalate` option was **added afterward** (see
-   `constraint_narrowed.py`): contested cases now go to the human queue instead
-   of an automatic pick. Re-running with escalation enabled would move some of
-   these matches into escalations. (Live behavioral confirmation of escalation
-   was pending an API-wide overload at the time of writing; the escalation wiring
-   is covered by `test_contested_identity_is_escalated_not_matched`.)
+2. **Escalation is now enabled and confirmed live.** The first run lacked an
+   `escalate` path and resolved contested identities as confident matches; the
+   `escalate` option (see `constraint_narrowed.py`) was added and the full run
+   re-done. Confirmed against the real API: the pick escalates exactly the 5
+   genuinely-contested identities listed above (and, on the Dynasty-18 sample,
+   Neferneferuaten + Smenkhkare). The wiring is also covered offline by
+   `test_contested_identity_is_escalated_not_matched`. These numbers are still
+   recall/coverage, not precision-validated — but the disputed cases are no
+   longer silently resolved.
 
 ## Bottom line
 
