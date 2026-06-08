@@ -20,9 +20,21 @@ from __future__ import annotations
 import json
 import os
 from collections import defaultdict
+from functools import lru_cache
+from pathlib import Path
 
 from ..ir import ClaimGraph, Edge, Node
 from ..verdicts import VERDICT_APPROVED, add_verdict
+
+# Raw reconciled rows are legitimate matcher INPUT (ADR-018 L10_had_input): the
+# matcher may read source fields (throne name / prenomen, name variants) to
+# ground its decision, even though only the OUTPUT same_entity_as claim is stored.
+_SOURCES_DIR = Path(__file__).resolve().parents[2] / "sources"
+_SOURCE_FILES = {
+    "leprohon": ("leprohon-2013-titulary", "leprohon_id"),
+    "beckerath": ("beckerath-1997-chronologie", "beckerath_id"),
+    "kitchen": ("kitchen-tipe", "kitchen_id"),
+}
 
 GEN_ALGORITHM_ID = "constraint_narrowed_v1"
 PICK_ALGORITHM_ID = "llm_pick_from_narrowed_v1"
@@ -41,6 +53,61 @@ def _dynasty_of(g: ClaimGraph, ruler_id: str) -> int | None:
         if e.predicate == P141:
             return g.node(e.object_id).props.get("number")
     return None
+
+
+@lru_cache(maxsize=1)
+def _raw_index() -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for src, (folder, idfield) in _SOURCE_FILES.items():
+        path = _SOURCES_DIR / folder / "reconciled.jsonl"
+        if not path.exists():
+            continue
+        for line in path.read_text().splitlines():
+            if line.strip():
+                row = json.loads(line)
+                out[f"{src}::{row[idfield]}"] = row
+    return out
+
+
+def _extra_names(source: str, row: dict) -> tuple[list[str], list[str]]:
+    """(throne-name/prenomen candidates, name variants) from a raw source row."""
+    pren: list[str] = []
+    variants: list[str] = []
+    if source == "beckerath":
+        if row.get("prenomen"):
+            pren.append(row["prenomen"])
+        variants = list(row.get("name_variants") or [])
+    elif source == "kitchen":
+        if row.get("prenomen"):
+            pren.append(row["prenomen"])
+        pren += [p for p in (row.get("prenomens") or []) if p]
+    elif source == "leprohon":
+        for t in row.get("throne_names") or []:
+            v = t.get("anglicised") or t.get("transliteration")
+            if v:
+                pren.append(v)
+        variants = list(row.get("alt_display_names") or [])
+    return pren[:3], variants[:3]
+
+
+def rich_describe(g: ClaimGraph, ruler_id: str) -> dict:
+    """Full structured record for the LLM (ADR-020 §6: not the name alone)."""
+    node = g.node(ruler_id)
+    d: dict = {"ruler_id": ruler_id, "display_name": _display(g, ruler_id),
+               "dynasty": _dynasty_of(g, ruler_id), "source": node.props.get("source")}
+    try:
+        ts = g.node(f"timespan::{ruler_id}::reign")
+        d["reign_bce"] = [ts.props.get("begin_of_the_begin"), ts.props.get("end_of_the_end")]
+    except KeyError:
+        pass
+    row = _raw_index().get(f"{node.props.get('source')}::{node.props.get('source_id')}")
+    if row:
+        pren, variants = _extra_names(node.props.get("source"), row)
+        if pren:
+            d["throne_name"] = pren
+        if variants:
+            d["name_variants"] = variants
+    return d
 
 
 def _display(g: ClaimGraph, ruler_id: str) -> str | None:
@@ -143,9 +210,12 @@ def _default_pick(left: dict, rights: list[dict]) -> dict:
         "candidate that denotes the SAME historical ruler as the target (accounting for "
         "English vs German transliteration, e.g. Amenhotep=Amenophis, Thutmose=Tuthmosis, "
         "and for Manetho's Greek names, e.g. Den=Usaphais). Return choice=null if none match. "
-        "If the identity is GENUINELY CONTESTED in scholarship, set escalate=true and choice=null "
-        "rather than guessing. Do NOT match on regnal number alone — III vs IV are different kings. "
-        "Keep `reasoning` under 256 characters.\n\n"
+        "Use ALL provided fields to corroborate — display name AND, when present, dynasty, reign "
+        "dates (reign_bce), throne name (prenomen), and name variants. The throne name/prenomen is "
+        "the strongest identity discriminator. PRECISION-FIRST (a missing merge is better than a "
+        "false one): if the evidence is not consistent, or the identity is genuinely contested, set "
+        "escalate=true and choice=null rather than guessing. Do NOT match on regnal number alone — "
+        "III vs IV are different kings. Keep `reasoning` under 256 characters.\n\n"
         f"Target: {json.dumps(left, ensure_ascii=False)}\n"
         f"Candidates: {json.dumps(rights, ensure_ascii=False)}\n"
     )
@@ -168,11 +238,20 @@ def review_narrowed(
     *,
     pick_fn=None,
     run_id: str = "cn_review_poc_0001",
+    rich_context: bool = False,
 ) -> tuple[list[tuple[str, str]], list[str]]:
     """Per left ruler, LLM-pick the matching candidate from its narrowed set and
     approve that candidate's verdict. A genuinely-contested identity is ESCALATED
-    to a human (no verdict emitted). Returns (matches, escalated_left_ids)."""
+    to a human (no verdict emitted). Returns (matches, escalated_left_ids).
+
+    ``rich_context`` passes the full structured record (dynasty, reign, throne
+    name, variants, source) to the pick instead of the display name alone
+    (ADR-020 §6).
+    """
     pick_fn = pick_fn or _default_pick
+    describe = (lambda rid: rich_describe(g, rid)) if rich_context else (
+        lambda rid: {"ruler_id": rid, "display_name": _display(g, rid)}
+    )
     algo = f"algorithm::{PICK_ALGORITHM_ID}"
     g.add_node(Node(algo, ("D14",), {"id": PICK_ALGORITHM_ID, "model_id": DEFAULT_MODEL}, "MatcherAlgorithm"))
     run = f"run::{run_id}"
@@ -193,10 +272,10 @@ def review_narrowed(
             rid = _right_of(s)
             if rid not in seen:
                 seen.add(rid)
-                right_ctx.append({"ruler_id": rid, "display_name": _display(g, rid)})
+                right_ctx.append(describe(rid))
         if not right_ctx:
             continue
-        left_ctx = {"ruler_id": left_id, "display_name": _display(g, left_id)}
+        left_ctx = describe(left_id)
         result = pick_fn(left_ctx, right_ctx)
         if result.get("escalate"):
             escalations.append(left_id)  # contested → human queue, no verdict
