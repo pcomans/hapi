@@ -144,7 +144,8 @@ def _default_pick(left: dict, rights: list[dict]) -> dict:
         "English vs German transliteration, e.g. Amenhotep=Amenophis, Thutmose=Tuthmosis, "
         "and for Manetho's Greek names, e.g. Den=Usaphais). Return choice=null if none match. "
         "If the identity is GENUINELY CONTESTED in scholarship, set escalate=true and choice=null "
-        "rather than guessing. Do NOT match on regnal number alone — III vs IV are different kings.\n\n"
+        "rather than guessing. Do NOT match on regnal number alone — III vs IV are different kings. "
+        "Keep `reasoning` under 256 characters.\n\n"
         f"Target: {json.dumps(left, ensure_ascii=False)}\n"
         f"Candidates: {json.dumps(rights, ensure_ascii=False)}\n"
     )
@@ -210,6 +211,7 @@ def review_narrowed(
             outcome=VERDICT_APPROVED,
             verdict_id=f"verdict::{stmt}",
             reviewer_run=run,
+            reasoning=result.get("reasoning"),
         )
         matches.append((left_id, choice))
     return matches, escalations

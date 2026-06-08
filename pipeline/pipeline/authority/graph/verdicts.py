@@ -51,6 +51,24 @@ class VerdictError(ValueError):
     """Raised on any verdict-chain integrity violation (fail loud, Rule 2)."""
 
 
+# Reasoning ("why the reviewer chose this") length policy: the prompt ASKS for
+# < 256 chars (soft target, set in the matcher/reviewer prompts); the store
+# ENFORCES a 1024-char hard cap, truncating with an ellipsis. Reasoning is
+# explanatory metadata, not authority data, so a cap-and-truncate is acceptable.
+REASONING_SOFT_LIMIT = 256
+REASONING_HARD_LIMIT = 1024
+
+
+def clamp_reasoning(text: str | None) -> str | None:
+    """Hard-cap reasoning at REASONING_HARD_LIMIT chars (ellipsis-truncated)."""
+    if text is None:
+        return None
+    text = text.strip()
+    if len(text) <= REASONING_HARD_LIMIT:
+        return text
+    return text[: REASONING_HARD_LIMIT - 1].rstrip() + "…"
+
+
 def _valid_outcomes() -> set[str]:
     # {"verdict_approved", ...} from the manifest → {"hapi:verdict_approved", ...}.
     return {f"hapi:{name}" for name in load_catalogue().controlled_vocab_e55()}
@@ -124,12 +142,15 @@ def add_verdict(
     curator_actor: str | None = None,
     curator_document: str | None = None,
     supersedes: str | None = None,
+    reasoning: str | None = None,
 ) -> str:
     """Add a verdict-E13 on ``matcher_stmt_id`` enforcing chain integrity.
 
     Exactly one provenance shape must be supplied: ``reviewer_run`` (machine,
     stage-2 LLM reviewer D10) XOR (``curator_actor`` + ``curator_document``)
-    (human-escalation curator decision).
+    (human-escalation curator decision). ``reasoning`` records WHY the reviewer
+    decided this way (hard-capped at REASONING_HARD_LIMIT chars); it round-trips
+    as a node property and maps to P3_has_note in strict-RDF export.
     """
     if outcome not in _valid_outcomes():
         raise VerdictError(
@@ -195,7 +216,11 @@ def add_verdict(
     # Build the verdict-E13.
     outcome_node = _ensure_outcome_node(g, outcome)
     type_node = _ensure_verdict_type_node(g)
-    g.add_node(Node(verdict_id, ("E13",), {}, "Statement"))
+    props: dict[str, object] = {}
+    clamped = clamp_reasoning(reasoning)
+    if clamped is not None:
+        props["reasoning"] = clamped
+    g.add_node(Node(verdict_id, ("E13",), props, "Statement"))
     g.add_edge(Edge(verdict_id, P140, matcher_stmt_id))
     g.add_edge(Edge(verdict_id, P141, outcome_node))
     g.add_edge(Edge(verdict_id, P177, type_node))

@@ -82,8 +82,15 @@ def main() -> None:
     }
     with open("/tmp/threeway_llm.json", "w") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
+    # Persist the same_entity_as edges (subject/object/outcome/reasoning) so this
+    # run is disk-evaluable — never re-run the LLM just to score it (ADR-020).
+    from pathlib import Path
+    from pipeline.authority.graph.benchmark.persist import write_same_entity_edges
+    edges_path = Path(__file__).resolve().parent / "pipeline" / "authority" / "graph" / "threeway_edges.json"
+    n_edges = write_same_entity_edges(g, edges_path)
     print(f"DONE. llm_calls={llm_calls} errors={len(errors)} "
-          f"3-source clusters={len(threeway)} (exact-only baseline was 2)")
+          f"3-source clusters={len(threeway)} (exact-only baseline was 2); "
+          f"persisted {n_edges} same_entity_as edge records -> {edges_path.name}")
     for c in result["three_source_list"]:
         print("  " + "  |  ".join(c))
 

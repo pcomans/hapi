@@ -106,7 +106,8 @@ def _default_sdk_review(context: dict) -> dict:
         "You are reviewing a candidate cross-source identity claim between two "
         "Egyptological source records. Decide whether they denote the SAME "
         "historical ruler. 'approved' = same ruler; 'rejected' = different; "
-        "'escalate' = genuinely uncertain, defer to a human curator.\n\n"
+        "'escalate' = genuinely uncertain, defer to a human curator. "
+        "Keep `reasoning` under 256 characters.\n\n"
         f"Left:  {json.dumps(context['left'], ensure_ascii=False)}\n"
         f"Right: {json.dumps(context['right'], ensure_ascii=False)}\n"
     )
@@ -193,6 +194,7 @@ def run_stage2_reviewer(
             outcome=_OUTCOME_URI[outcome],
             verdict_id=vid,
             reviewer_run=run,
+            reasoning=result.get("reasoning"),
         )
         verdicts.append(vid)
         output_rows.append({"candidate": cid, **{k: result.get(k) for k in ("outcome", "confidence", "reasoning")}})
