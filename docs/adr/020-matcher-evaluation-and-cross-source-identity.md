@@ -60,11 +60,26 @@ the wrong axis (intra-source).
 
 ### 3. Evaluation uses precision / recall / B-cubed against a committed gold set
 
+**The gold set is a closed-world evaluation fixture, not a loose list of positive
+links.** It is defined over a *named, enumerated entity universe* (the specific
+records in scope) as a set of *adjudicated equivalence classes*. Within that
+universe every pair is therefore decided: **gold-positive** iff both records are
+in the same class (the gold positives are the transitive closure of the classes),
+**gold-negative** otherwise. Records that are unknown or unadjudicated are
+**excluded from the universe entirely** (never scored) — so a predicted pair is
+never counted as a false positive merely for being unadjudicated, and B-cubed's
+singleton/negative side is well-defined (an unmatched in-universe record is its
+own singleton class). The Wikidata *silver* fixture realises this with the
+universe = records that align to a QID and the classes = QID groups; the committed
+*gold* fixture realises it as human-adjudicated equivalence classes, with
+per-class provenance, over an enumerated record set.
+
 Two metric families are reported, and **must not be conflated** — collapsing them
 recreates the "coverage is not recall" error this ADR exists to prevent:
 
-- **End-to-end metrics (the headline).** Denominator is the **full gold set** of
-  same-entity links among the evaluable entities. Every gold link the system does
+- **End-to-end metrics (the headline).** Denominator is **all gold-positive pairs**
+  (the transitive closure of the gold equivalence classes) over the closed
+  universe. Every gold link the system does
   not surface counts against recall — *whether it was wrongly rejected, never
   proposed, or left unresolved by an abstention/escalation*. Abstentions are
   **not** removed from the denominator here: an unresolved gold link is a false
@@ -105,8 +120,9 @@ alone.
    directional, and already catches the Pinudjem/Menkheperre merge (distinct QIDs).
 2. **Silver + adjudicate disagreements** — human reviews only matcher↔Wikidata
    deltas; upgrades the contested cases at a fraction of full-labelling cost.
-3. **Committed gold** — scholar-curated, per-link provenance; required only for
-   authority-grade / citable numbers (Constitutional rule 1).
+3. **Committed gold** — scholar-curated **equivalence classes over an enumerated
+   record universe** (a closed-world fixture per decision 3), with per-class
+   provenance; required only for authority-grade / citable numbers (rule 1).
 
 **Wikidata is a silver standard, never gold.** It is (a) not independent — it is
 derived from Wikipedia and from the same scholarly sources (Beckerath, Leprohon,
