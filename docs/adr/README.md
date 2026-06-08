@@ -22,3 +22,4 @@ Each file records a single architectural decision: the context, the decision, an
 | [016](016-royal-display-name-anglicized-nomen.md) | Royal display name standard is Conventional English Display Form | Accepted |
 | [017](017-ocr-pipeline-for-scan-only-sources.md) | OCR pipeline for scan-only authority sources | Accepted |
 | [018](018-authority-as-claim-graph.md) | Authority layer as source-attributed claim graph | Proposed |
+| [020](020-matcher-evaluation-and-cross-source-identity.md) | Matcher evaluation & cross-source identity ground truth | Proposed |
