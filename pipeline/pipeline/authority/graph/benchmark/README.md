@@ -27,17 +27,28 @@ no named answer pairs, opaque shuffled labels — constitutional rule 14). Earli
 **Headline: precision 1.00 / recall 0.89** (LLM + cannot-link guard, Wikidata
 silver, aligned set) — zero measurable false merges at 0.89 recall, with
 escalation doing the precision work (the "missing > false" profile, ADR-020 §6).
+The table is identical for name-only and rich context **because the silver set
+only covers well-known rulers** (see the rich-context note below).
 
 Two findings worth recording:
 - **The prompt leak was *hurting* precision.** The leaky-prompt id-tell caused
   false merges where dynasty-sequence aligned but the rulers differ; the
   de-leaked precision-first prompt is *more* precise (0.92 → 0.98 unguarded), and
   the guard takes it to 1.00. Recall (47 TP / 6 FN) was never affected by the leak.
-- **Rich context did NOT help.** Passing the full record (reign, throne
-  name/prenomen) gave identical recall, slightly *worse* unguarded precision
-  (2 FP vs 1) and more escalations — its disambiguating signal is already captured
-  deterministically by the cannot-link guard. Tested, no benefit → name-only is
-  the default.
+- **Rich context helps — where the name doesn't already suffice — but the silver
+  benchmark is blind to it.** On the aligned set the numbers are identical, but
+  that set is the ~296 *famous* rulers, for whom the display name is already a key
+  into the model's parametric knowledge (it knows Amenhotep III = Amenophis III,
+  the reign, the prenomen, from training). Reading the persisted reasoning, rich
+  context made **15 extra correct matches on obscure rulers** by using the
+  structured evidence — e.g. *Nakhthorhebyt → Nektanebôs* disambiguated among
+  three near-identical late-period kings **by reign dates**, and *Sheshonq IIa →
+  Schoschenq II.* matched **by prenomen** ("Heqa-kheper-re"). Those rulers don't
+  align to Wikidata, so they never count as true positives — the benchmark
+  structurally undersells context. **Rich context is a kept option (not retired),
+  recommended where the model's parametric knowledge is weak (obscure rulers);
+  name-only remains the default for cost on famous-heavy sets.** Properly
+  measuring the gain needs a gold set that includes obscure rulers (ADR-020 Tier 3).
 
 The exact matcher is precision-perfect but misses every cross-language pair
 (Khufu/Cheops, Amenhotep I/Amenophis I., …); the LLM nearly triples recall

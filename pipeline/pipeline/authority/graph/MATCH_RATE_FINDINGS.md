@@ -81,9 +81,12 @@ for the full table; headline (LB, aligned set):
 
 The "~88% coverage" headline above was an upper bound; **measured recall against
 the silver key is 0.89 at precision 1.00** (zero false merges after the guard),
-with escalation doing the precision work (ADR-020 §6, missing > false). Rich
-context tested → no benefit. Earlier "0.92/0.98" figures were leaky-prompt
-artifacts and are discarded. Only the alignable subset is scored (≈296–336 of
+with escalation doing the precision work (ADR-020 §6, missing > false). Earlier
+"0.92/0.98" figures were leaky-prompt artifacts and are discarded. **Rich context
+helps on obscure rulers** (e.g. disambiguating late-period kings by reign dates /
+prenomen) but the Wikidata silver set only covers famous rulers — where the name
+already suffices — so the benchmark can't see the gain; it is a kept option, not
+retired (see [`benchmark/README.md`](./benchmark/README.md)). Only the alignable subset is scored (≈296–336 of
 ~620); Wikidata is silver, so these are directional, not authority-grade (ADR-020).
 
 ## Bottom line
