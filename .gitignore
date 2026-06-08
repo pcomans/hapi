@@ -80,5 +80,5 @@ coverage/
 # (The Wikidata cache re-fetches from the committed SPARQL query; result/edge
 #  JSONs reproduce from the run scripts; the numbers live in the findings .md.)
 pipeline/pipeline/authority/graph/benchmark/wikidata_pharaohs.json
-pipeline/pipeline/authority/graph/*_result.json
+pipeline/pipeline/authority/graph/*result*.json
 pipeline/pipeline/authority/graph/*_edges.json
