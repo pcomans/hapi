@@ -13,29 +13,35 @@ cd pipeline && uv run python run_benchmark.py   # writes benchmark_results.json
 Graded against Wikidata QIDs, **end-to-end** (escalations/misses count against
 recall), on the subset of rulers that align to a QID.
 
-| Matcher | aligned | Pairwise P | Pairwise R | F1 | B-cubed F1 | false merges | missed |
-|---|---|---|---|---|---|---|---|
-| Exact (deterministic) | 336 | **1.00** | 0.33 | 0.50 | 0.91 | 0 | 63 |
-| LLM (Leprohon×Beckerath) | 296 | 0.92 | 0.89 | 0.90 | 0.98 | 4 | 6 |
-| **LLM + cannot-link guard** | 296 | **0.98** | **0.89** | **0.93** | 0.99 | 1 | 6 |
+All LLM numbers are from the **de-leaked, precision-first prompt** (no source ids,
+no named answer pairs, opaque shuffled labels — constitutional rule 14). Earlier
+"0.92/0.98" figures were measured on a *leaky* prompt and are discarded as invalid.
 
-**Headline (LLM + guard): precision ≈ 0.98, recall ≈ 0.89.** The cannot-link
-guard (regnal-numeral mismatch, same-source-distinct rows, disjoint reign spans
-— see `matcher/constraints.py` + `poc.guarded_same_entity_clusters`) lifts
-precision **0.92 → 0.98 at zero recall cost**, holding apart 5 contradictory
-merges (Menkheperre/Pinudjem, Iuput I/Auput II, …). The one remaining false merge
-(Aper-anati/Bêôn) has no structured discriminator — that needs bidirectional
-agreement (advisor Priority 3) or post-cluster escalation (Priority 4).
+| Matcher (Leprohon×Beckerath) | aligned | Pairwise P | Pairwise R | F1 | false merges |
+|---|---|---|---|---|---|
+| Exact (deterministic) | 336 | **1.00** | 0.33 | 0.50 | 0 |
+| LLM name-only, unguarded | 296 | 0.98 | 0.89 | 0.93 | 1 |
+| **LLM name-only + guard** | 296 | **1.00** | **0.89** | **0.94** | **0** |
+| LLM rich-context + guard | 296 | **1.00** | **0.89** | **0.94** | 0 |
 
-The LLM nearly triples recall over exact name matching (0.33 → 0.89) at a small
-precision cost:
-- **4 false merges** (over-merges): Nebre/Ninetjer, Iuput I/II, Auput II./Iuput I,
-  Aper-anati/Bêôn.
-- **6 missed** links (+ 5 escalations also counted as misses, end-to-end) hold
-  recall at 0.89 — mostly Libyan-period spelling variants Wikidata also splits.
+**Headline: precision 1.00 / recall 0.89** (LLM + cannot-link guard, Wikidata
+silver, aligned set) — zero measurable false merges at 0.89 recall, with
+escalation doing the precision work (the "missing > false" profile, ADR-020 §6).
 
-The exact matcher is the precision ceiling (1.00, zero false merges) but misses
-every cross-language pair (Khufu/Cheops, Amenhotep I/Amenophis I., …).
+Two findings worth recording:
+- **The prompt leak was *hurting* precision.** The leaky-prompt id-tell caused
+  false merges where dynasty-sequence aligned but the rulers differ; the
+  de-leaked precision-first prompt is *more* precise (0.92 → 0.98 unguarded), and
+  the guard takes it to 1.00. Recall (47 TP / 6 FN) was never affected by the leak.
+- **Rich context did NOT help.** Passing the full record (reign, throne
+  name/prenomen) gave identical recall, slightly *worse* unguarded precision
+  (2 FP vs 1) and more escalations — its disambiguating signal is already captured
+  deterministically by the cannot-link guard. Tested, no benefit → name-only is
+  the default.
+
+The exact matcher is precision-perfect but misses every cross-language pair
+(Khufu/Cheops, Amenhotep I/Amenophis I., …); the LLM nearly triples recall
+(0.33 → 0.89).
 
 ## Method
 

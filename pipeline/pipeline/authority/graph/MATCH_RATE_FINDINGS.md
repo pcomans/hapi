@@ -70,22 +70,21 @@ Leprohon ruler in a shared dynasty.
 
 ## Precision / recall vs Wikidata (silver standard, ADR-020)
 
-Now measured against the Wikidata QID crosswalk (silver, not gold) —
-`run_benchmark.py`, raw result [`benchmark_results.json`](./benchmark_results.json).
-End-to-end metrics (escalations/misses count as FN). NO API calls: matcher
-outputs are read from disk (`match_rate_result.json`).
+Measured against the Wikidata QID crosswalk (silver, not gold), **de-leaked
+precision-first prompt** (rule 14). See [`benchmark/README.md`](./benchmark/README.md)
+for the full table; headline (LB, aligned set):
 
-| Matcher | aligned | pairwise P | pairwise R | F1 | B-cubed F1 | false merges |
-|---|---|---|---|---|---|---|
-| Exact (deterministic) | 336 | **1.00** | 0.33 | 0.50 | 0.91 | 0 |
-| LLM (leprohon×beckerath) | 296 | 0.92 | **0.89** | **0.90** | 0.98 | 4 |
+| Matcher | aligned | pairwise P | pairwise R | F1 | false merges |
+|---|---|---|---|---|---|
+| Exact (deterministic) | 336 | **1.00** | 0.33 | 0.50 | 0 |
+| LLM name-only + cannot-link guard | 296 | **1.00** | **0.89** | **0.94** | 0 |
 
 The "~88% coverage" headline above was an upper bound; **measured recall against
-the silver key is 0.89 with precision 0.92** (4 real over-merges: Nebre/Ninetjer,
-Iuput I/II, …). The LLM nearly triples recall over exact (0.33 → 0.89) for a small
-precision cost — the trade the benchmark exists to quantify. Only the alignable
-subset is scored (≈296–336 of ~620); Wikidata is silver, so these are directional,
-not authority-grade (ADR-020).
+the silver key is 0.89 at precision 1.00** (zero false merges after the guard),
+with escalation doing the precision work (ADR-020 §6, missing > false). Rich
+context tested → no benefit. Earlier "0.92/0.98" figures were leaky-prompt
+artifacts and are discarded. Only the alignable subset is scored (≈296–336 of
+~620); Wikidata is silver, so these are directional, not authority-grade (ADR-020).
 
 ## Bottom line
 
