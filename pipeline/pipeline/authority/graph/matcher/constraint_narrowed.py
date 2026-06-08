@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import json
 import os
+import random
 from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
@@ -176,16 +177,41 @@ def generate_candidates(
     return dict(out)
 
 
-def _default_pick(left: dict, rights: list[dict]) -> dict:
-    """LLM pick: choose the right ruler that is the SAME as left, or none, or escalate.
+def _opaque_view(left: dict, rights: list[dict]) -> tuple[dict, list[dict], dict[str, str]]:
+    """Strip answer-leaking info before the prompt.
 
+    - Removes ``ruler_id`` from everything shown to the model: the source ids
+      encode the cross-source dynasty.sequence alignment (e.g. both carry
+      "18.09"), which is an answer leak.
+    - Gives candidates opaque labels (C1, C2, …) in a DETERMINISTICALLY SHUFFLED
+      order, so neither the id nor the position hints the match.
+    Returns (target_view, candidate_view, label→ruler_id map).
+    """
+    rng = random.Random(str(left.get("ruler_id", "")))
+    shuffled = list(rights)
+    rng.shuffle(shuffled)
+    label_to_id: dict[str, str] = {}
+    cand_view: list[dict] = []
+    for i, r in enumerate(shuffled, 1):
+        label = f"C{i}"
+        label_to_id[label] = r.get("ruler_id")
+        cand_view.append({"label": label, **{k: v for k, v in r.items() if k != "ruler_id"}})
+    target_view = {k: v for k, v in left.items() if k != "ruler_id"}
+    return target_view, cand_view, label_to_id
+
+
+def _default_pick(left: dict, rights: list[dict]) -> dict:
+    """LLM pick: choose the candidate that is the SAME as the target, none, or escalate.
+
+    The prompt never contains source ids or named answer pairs (no leakage).
     Requires ANTHROPIC_API_KEY. Returns
-    {'choice': right_id|None, 'escalate': bool, 'reasoning': str}.
+    {'choice': ruler_id|None, 'escalate': bool, 'reasoning': str}.
     """
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise RuntimeError("constraint-narrowed pick requires ANTHROPIC_API_KEY")
     import anthropic
 
+    target_view, cand_view, label_to_id = _opaque_view(left, rights)
     client = anthropic.Anthropic()
     tool = {
         "name": "pick_match",
@@ -193,31 +219,29 @@ def _default_pick(left: dict, rights: list[dict]) -> dict:
         "input_schema": {
             "type": "object",
             "properties": {
-                "choice": {"type": ["string", "null"], "description": "the chosen candidate ruler_id, or null"},
-                "escalate": {
-                    "type": "boolean",
-                    "description": "true if the identity is GENUINELY CONTESTED in Egyptology (e.g. "
-                    "Smenkhkare/Neferneferuaten, Aha/Menes, Sekhemib/Peribsen) and should go to a human "
-                    "curator instead of an automatic pick; set choice=null when escalating",
-                },
+                "choice": {"type": ["string", "null"],
+                           "description": "the label (C1, C2, …) of the matching candidate, or null"},
+                "escalate": {"type": "boolean",
+                             "description": "true if the identity is genuinely contested in scholarship and "
+                             "should go to a human curator instead of an automatic pick; set choice=null"},
                 "reasoning": {"type": "string"},
             },
             "required": ["choice", "escalate", "reasoning"],
         },
     }
     prompt = (
-        "All candidates are in the same Egyptian dynasty as the target. Pick the ONE "
-        "candidate that denotes the SAME historical ruler as the target (accounting for "
-        "English vs German transliteration, e.g. Amenhotep=Amenophis, Thutmose=Tuthmosis, "
-        "and for Manetho's Greek names, e.g. Den=Usaphais). Return choice=null if none match. "
-        "Use ALL provided fields to corroborate — display name AND, when present, dynasty, reign "
-        "dates (reign_bce), throne name (prenomen), and name variants. The throne name/prenomen is "
-        "the strongest identity discriminator. PRECISION-FIRST (a missing merge is better than a "
-        "false one): if the evidence is not consistent, or the identity is genuinely contested, set "
-        "escalate=true and choice=null rather than guessing. Do NOT match on regnal number alone — "
-        "III vs IV are different kings. Keep `reasoning` under 256 characters.\n\n"
-        f"Target: {json.dumps(left, ensure_ascii=False)}\n"
-        f"Candidates: {json.dumps(rights, ensure_ascii=False)}\n"
+        "All candidates are in the same Egyptian dynasty as the target. Pick, by its label, the ONE "
+        "candidate that denotes the SAME historical ruler as the target. The same ruler is often "
+        "written very differently across sources — different transliteration conventions, different "
+        "national spelling traditions, and Greek/Manetho forms vs Egyptian forms — so do NOT rely on "
+        "string similarity of the display names. Decide from the structured evidence: throne "
+        "name/prenomen (the strongest identity discriminator), reign dates (reign_bce), and dynasty. "
+        "Return choice=null if none match. PRECISION-FIRST (a missing merge is better than a false "
+        "one): if the evidence is not consistent, or the identity is genuinely contested in "
+        "scholarship, set escalate=true and choice=null rather than guessing. Do NOT match on regnal "
+        "number alone — III vs IV are different kings. Keep `reasoning` under 256 characters.\n\n"
+        f"Target: {json.dumps(target_view, ensure_ascii=False)}\n"
+        f"Candidates: {json.dumps(cand_view, ensure_ascii=False)}\n"
     )
     resp = client.messages.create(
         model=DEFAULT_MODEL, max_tokens=MAX_TOKENS, tools=[tool],
@@ -227,6 +251,7 @@ def _default_pick(left: dict, rights: list[dict]) -> dict:
     for block in resp.content:
         if block.type == "tool_use" and block.name == "pick_match":
             r = dict(block.input)
+            r["choice"] = label_to_id.get(r.get("choice"))  # map label → ruler_id (None if null)
             r["_model_snapshot"] = resp.model
             return r
     raise RuntimeError("pick_match returned no tool call")

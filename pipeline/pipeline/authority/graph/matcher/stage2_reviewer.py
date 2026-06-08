@@ -108,8 +108,10 @@ def _default_sdk_review(context: dict) -> dict:
         "historical ruler. 'approved' = same ruler; 'rejected' = different; "
         "'escalate' = genuinely uncertain, defer to a human curator. "
         "Keep `reasoning` under 256 characters.\n\n"
-        f"Left:  {json.dumps(context['left'], ensure_ascii=False)}\n"
-        f"Right: {json.dumps(context['right'], ensure_ascii=False)}\n"
+        # Strip ruler_id: the source ids encode the cross-source dynasty.sequence
+        # alignment (an answer leak); judge on the evidence, not the id.
+        f"Left:  {json.dumps({k: v for k, v in context['left'].items() if k != 'ruler_id'}, ensure_ascii=False)}\n"
+        f"Right: {json.dumps({k: v for k, v in context['right'].items() if k != 'ruler_id'}, ensure_ascii=False)}\n"
     )
     # NOTE: claude-opus-4-8 deprecates `temperature`; we omit it rather than send
     # a rejected param. The actual returned model snapshot is recorded below.
