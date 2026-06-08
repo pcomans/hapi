@@ -9,7 +9,11 @@ from __future__ import annotations
 
 import pytest
 
-from pipeline.authority.graph.loader import load_kitchen, load_poc_graph_3way
+from pipeline.authority.graph.loader import (
+    load_kitchen,
+    load_kitchen_identity,
+    load_poc_graph_3way,
+)
 from pipeline.authority.graph.poc import build_3way_graph, same_entity_clusters
 
 
@@ -34,9 +38,48 @@ def test_kitchen_provenance_is_kitchen_not_other_source():
     assert p70i.object_id == "document::kitchen_1996"
 
 
+def test_same_person_as_loaded_as_source_attributed_claims():
+    g = load_poc_graph_3way()
+    # Two intra-Kitchen same_person_as pairs → two same_entity_as E13s.
+    sea = [
+        n for n in g.nodes_of_class("E13")
+        if {e.predicate: e.object_id for e in g.out_edges(n.id)}.get(
+            "P177_assigned_property_of_type"
+        ) == "type::hapi:same_entity_as"
+    ]
+    assert len(sea) == 2
+    # The Pinudjem I pair, attributed to the SOURCE (human-documentary), not a matcher.
+    stmt = "stmt::kitchen::21H.03::same_entity_as::kitchen::21H.04"
+    ed = {e.predicate: e.object_id for e in g.out_edges(stmt)}
+    assert ed["P140_assigned_attribute_to"] == "kitchen::21H.03"
+    assert ed["P141_assigned"] == "kitchen::21H.04"
+    assert ed["P14_carried_out_by"] == "person::kitchen_ka"
+    assert ed["P70i_is_documented_in"] == "document::kitchen_1996"
+    assert "hapi:derived_by_run" not in ed  # NOT matcher-derived
+
+
+def test_load_kitchen_identity_requires_loaded_rulers():
+    from pipeline.authority.graph.ir import ClaimGraph
+    from pipeline.authority.graph.loader import _seed_actor_and_document_catalogue
+    g = ClaimGraph()
+    _seed_actor_and_document_catalogue(g)
+    # No Kitchen rulers loaded → the same_person_as endpoints don't exist → fail loud.
+    with pytest.raises(KeyError):
+        load_kitchen_identity(g)
+
+
 @pytest.fixture(scope="module")
 def threeway_graph():
     return build_3way_graph()
+
+
+def test_intra_source_consistency_pinudjem_pair_clusters(threeway_graph):
+    # Kitchen's own same_person_as asserts 21H.03 == 21H.04; any correct
+    # clustering MUST keep them together (under-merge consistency check).
+    clusters = same_entity_clusters(threeway_graph)
+    pin = [c for c in clusters if "kitchen::21H.03" in c]
+    assert len(pin) == 1
+    assert "kitchen::21H.04" in pin[0]
 
 
 def test_osorkon_i_forms_a_three_source_cluster(threeway_graph):

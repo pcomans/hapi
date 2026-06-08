@@ -410,6 +410,45 @@ def load_kitchen(g: ClaimGraph, path: Path | None = None) -> int:
     return rows
 
 
+def load_kitchen_identity(g: ClaimGraph, path: Path | None = None) -> int:
+    """Load Kitchen's intra-source ``same_person_as`` as source-attributed
+    ``hapi:same_entity_as`` claims (ADR-018: intra-source same-person assertions
+    are attributed to the SOURCE itself — human-documentary P14 + P70i — NOT a
+    matcher). One claim per unordered pair. Requires Kitchen rulers already loaded.
+    """
+    path = path or _SOURCES_DIR / "kitchen-tipe" / "reconciled.jsonl"
+    rows = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
+    seen: set[tuple[str, str]] = set()
+    n = 0
+    for row in rows:
+        spa = row.get("same_person_as")
+        if not spa:
+            continue
+        targets = spa if isinstance(spa, list) else [spa]
+        a = f"kitchen::{row['kitchen_id']}"
+        for t in targets:
+            b = f"kitchen::{t}"
+            key = tuple(sorted((a, b)))
+            if key in seen:
+                continue
+            seen.add(key)
+            g.node(a)  # both endpoints must already exist — fail loud otherwise
+            g.node(b)
+            cited = row.get("source_citation") or {}
+            _add_human_statement(
+                g,
+                stmt_id=f"stmt::{key[0]}::same_entity_as::{key[1]}",
+                subject_id=key[0],
+                predicate_id="hapi:same_entity_as",
+                value_id=key[1],
+                actor_id="person::kitchen_ka",
+                document_id="document::kitchen_1996",
+                cited_pdf_page=cited.get("pdf_pages"),
+            )
+            n += 1
+    return n
+
+
 def load_poc_graph() -> ClaimGraph:
     """Load the Leprohon + Beckerath vertical slice into a fresh ClaimGraph."""
     g = ClaimGraph()
@@ -420,7 +459,9 @@ def load_poc_graph() -> ClaimGraph:
 
 
 def load_poc_graph_3way() -> ClaimGraph:
-    """Load Leprohon + Beckerath + Kitchen for 3-way same_entity_as clustering."""
+    """Load Leprohon + Beckerath + Kitchen (incl. Kitchen's intra-source
+    same_person_as) for 3-way same_entity_as clustering."""
     g = load_poc_graph()
     load_kitchen(g)
+    load_kitchen_identity(g)
     return g
