@@ -133,9 +133,12 @@ Shabako/Schabako/Shabaka, Tantamani/Tanot-amun).
 **Precision caveat (real):** transitive connected-components over pairwise LLM
 picks can over-merge. One of the 27 clusters is a **false merge** — Pinudjem I and
 Menkheperre (father and son, two distinct 21st-Dynasty Theban figures) were
-conflated. So 3-way clustering has high recall but **unvalidated precision**; a
-clustering step that detects/blocks contradictory merges (or routes them to
-escalation) is needed before treating clusters as authority data.
+conflated. The contradictory-merge guard for this is now **implemented**
+(`matcher/constraints.py` + `poc.guarded_same_entity_clusters`, the ADR-020 §6
+cannot-link guard) and verified on the Leprohon×Beckerath slice (precision → 1.00;
+see `benchmark/README.md`); the 3-way (Kitchen) run above predates persisted edges,
+so re-scoring it under the guard is a follow-up. Until then, treat 3-way clusters
+as high-recall / unvalidated-precision and not yet authority data.
 
 ## Known boundaries (not yet done)
 

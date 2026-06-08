@@ -91,8 +91,11 @@ retired (see [`benchmark/README.md`](./benchmark/README.md)). Only the alignable
 
 ## Bottom line
 
-Constraint-narrow + LLM achieves **~88% cross-source coverage vs ~6% exact** —
-the ADRs' thesis vindicated and the concrete reason surface-string metrics are
-the wrong tool. The numbers are recall, not precision-validated, and the
-escalation path (now added) should be used before treating any of these as
-authority data.
+Measured against Wikidata silver (de-leaked, precision-first prompt), the LLM
+matcher + cannot-link guard reaches **precision 1.00 / recall 0.89** on the
+aligned set — vindicating the ADRs' thesis that surface-string metrics are the
+wrong tool. **"~88% coverage" is an upper bound, not recall** (ADR-020:
+never report coverage as recall); the trustworthy figure is the silver-measured
+recall above. These are silver, not authority-grade — the escalation path
+(missing > false) plus a committed gold set (ADR-020 Tier 3, incl. obscure
+rulers) are needed before treating clusters as authority data.

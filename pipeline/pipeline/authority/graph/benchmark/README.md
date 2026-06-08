@@ -89,5 +89,6 @@ placing two cannot-link rulers in one component (checked across all members, so 
 single bad edge can't metastasize). Rules: regnal-numeral mismatch (a structured
 discriminator, not an edit-distance — ADR-009-safe), disjoint reign Time-Spans,
 and same-source-distinct rows (exempting phase-suffix siblings and documentary
-`same_person_as` links). Result above: 0.92 → 0.98 precision, zero recall cost.
-Held-apart conflicts are the natural input to the escalation path (advisor P4).
+`same_person_as` links). Result above: the guard takes name-only precision
+**0.98 → 1.00** at zero recall cost. Held-apart conflicts are the natural input to
+the escalation path (ADR-020 §6, doubt → escalation).
