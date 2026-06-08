@@ -49,30 +49,55 @@ link is *attested by a source* or *proposed by an algorithm*.
 Because cross-source identity is in no single source (finding 2), the gold
 standard for *cross-source* matching must come from one of:
 - **human curatorial adjudication** (committed, cited — the ADR-018 / Rule-1 shape), or
-- an **external identity crosswalk** (e.g. Wikidata QIDs).
+- an **external identity crosswalk** — but a crosswalk qualifies as **gold only if
+  it is independently curated and provenance-qualified** (each link carries its
+  own cited basis). A crowd-aggregated crosswalk derived from the same scholarly
+  sources is **silver, not gold** (see decision 5). **Wikidata specifically is
+  silver**, never the committed gold set.
 
 No source's own fields (including `same_person_as`) can fill this role — they are
 the wrong axis (intra-source).
 
 ### 3. Evaluation uses precision / recall / B-cubed against a committed gold set
 
-- **Pairwise**: TP/FP/FN over candidate cross-source pairs → precision, recall, F1.
-- **Cluster-level**: because identity is an equivalence relation and the system
-  clusters (connected components), report **B-cubed** (or CEAF) precision/recall,
-  which correctly penalise *over-merge* (the Pinudjem/Menkheperre case) and
-  *under-merge* (missed cross-spelling).
-- **Abstentions are not errors**: escalated candidates are excluded from TP/FP/FN;
-  report an abstention rate alongside. Metrics are reported **per stage** (exact
-  matcher vs LLM pick vs final clusters).
+Two metric families are reported, and **must not be conflated** — collapsing them
+recreates the "coverage is not recall" error this ADR exists to prevent:
 
-### 4. Intra-source `same_person_as` is a free consistency constraint
+- **End-to-end metrics (the headline).** Denominator is the **full gold set** of
+  same-entity links among the evaluable entities. Every gold link the system does
+  not surface counts against recall — *whether it was wrongly rejected, never
+  proposed, or left unresolved by an abstention/escalation*. Abstentions are
+  **not** removed from the denominator here: an unresolved gold link is a false
+  negative (pairwise) / under-merge (B-cubed). This is the number that may be
+  reported as the system's recall.
+- **Selective-automation metrics (clearly labelled, never the headline recall).**
+  Restricted to the links the system actually *decided* (abstentions excluded),
+  measuring the quality of what was auto-resolved, reported **alongside an explicit
+  abstention/escalation rate**. Useful for tuning the decide-vs-escalate threshold;
+  misleading if presented as overall recall.
 
-Loaded intra-source identities (decision 1) are *partial gold* on the cluster
-structure: any correct clustering MUST keep `same_person_as` pairs together
-(under-merge check), with no adjudication and no external data. They also
-corroborate specific errors — Kitchen asserts `21H.03`==`21H.04` and does *not*
-assert Pinudjem==Menkheperre, which is on-disk evidence the merge in finding 1 is
-wrong.
+Both families use **pairwise** TP/FP/FN → P/R/F1 and, because identity is an
+equivalence relation over clusters, **B-cubed** (or CEAF) P/R, which correctly
+penalise *over-merge* (the Pinudjem/Menkheperre case) and *under-merge* (missed
+cross-spelling). Metrics are reported **per stage** (exact matcher vs LLM pick vs
+final clusters). The harness computes the end-to-end family by default.
+
+### 4. Intra-source `same_person_as` is a source-consistency constraint (not gold)
+
+Loaded intra-source identities (decision 1) are **source-faithfulness /
+consistency evidence**, not gold truth — consistent with ADR-018, which treats
+documentary claims as *attributed claims*, never automatic truth. Concretely they
+give a **free under-merge consistency check**: any clustering that *separates* a
+`same_person_as` pair contradicts the source and is wrong, with no adjudication or
+external data needed. They do **not** establish that a merge is *correct*.
+
+Note the open-world limit: Kitchen asserting `21H.03`==`21H.04` is positive
+evidence those two rows corefer, but Kitchen's *silence* on Pinudjem vs
+Menkheperre is **not** itself proof they differ (the field is not documented as
+closed-world complete). The evidence that the Pinudjem/Menkheperre merge (finding
+1) is wrong is external: they are separate Kitchen rows with no asserted identity
+*and* carry distinct Wikidata QIDs — not the absence of a `same_person_as` link
+alone.
 
 ### 5. Tiered ground-truth strategy (cost vs rigor)
 
