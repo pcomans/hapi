@@ -66,6 +66,11 @@ def _seed_actor_and_document_catalogue(g: ClaimGraph) -> None:
             "Document",
         )
     )
+
+
+def _seed_kitchen_catalogue(g: ClaimGraph) -> None:
+    """Kitchen scholar + publication — seeded only when Kitchen is loaded, so the
+    2-source (Leprohon+Beckerath) graph isn't polluted with an unused E21."""
     g.add_node(Node("person::kitchen_ka", ("E21",), {"full_name": "Kenneth A. Kitchen"}, "Person"))
     g.add_node(
         Node(
@@ -347,6 +352,7 @@ def load_beckerath(g: ClaimGraph, path: Path | None = None) -> int:
 # ---------------------------------------------------------------------------
 def load_kitchen(g: ClaimGraph, path: Path | None = None) -> int:
     path = path or _SOURCES_DIR / "kitchen-tipe" / "reconciled.jsonl"
+    _seed_kitchen_catalogue(g)
     actor = "person::kitchen_ka"
     doc = "document::kitchen_1996"
     rows = 0

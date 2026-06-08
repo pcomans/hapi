@@ -13,12 +13,19 @@ cd pipeline && uv run python run_benchmark.py   # writes benchmark_results.json
 Graded against Wikidata QIDs, **end-to-end** (escalations/misses count against
 recall), on the subset of rulers that align to a QID.
 
-| Matcher | aligned | Pairwise P | Pairwise R | F1 | B-cubed P | B-cubed R | B-cubed F1 | false merges | missed |
-|---|---|---|---|---|---|---|---|---|---|
-| Exact (deterministic) | 336 | **1.00** | 0.33 | 0.50 | 1.00 | 0.83 | 0.91 | 0 | 63 |
-| **LLM (Leprohon×Beckerath)** | 296 | **0.92** | **0.89** | **0.90** | 0.99 | 0.98 | 0.98 | 4 | 6 |
+| Matcher | aligned | Pairwise P | Pairwise R | F1 | B-cubed F1 | false merges | missed |
+|---|---|---|---|---|---|---|---|
+| Exact (deterministic) | 336 | **1.00** | 0.33 | 0.50 | 0.91 | 0 | 63 |
+| LLM (Leprohon×Beckerath) | 296 | 0.92 | 0.89 | 0.90 | 0.98 | 4 | 6 |
+| **LLM + cannot-link guard** | 296 | **0.98** | **0.89** | **0.93** | 0.99 | 1 | 6 |
 
-**Headline (the LLM matcher we actually run): precision ≈ 0.92, recall ≈ 0.89.**
+**Headline (LLM + guard): precision ≈ 0.98, recall ≈ 0.89.** The cannot-link
+guard (regnal-numeral mismatch, same-source-distinct rows, disjoint reign spans
+— see `matcher/constraints.py` + `poc.guarded_same_entity_clusters`) lifts
+precision **0.92 → 0.98 at zero recall cost**, holding apart 5 contradictory
+merges (Menkheperre/Pinudjem, Iuput I/Auput II, …). The one remaining false merge
+(Aper-anati/Bêôn) has no structured discriminator — that needs bidirectional
+agreement (advisor Priority 3) or post-cluster escalation (Priority 4).
 
 The LLM nearly triples recall over exact name matching (0.33 → 0.89) at a small
 precision cost:
@@ -56,8 +63,14 @@ every cross-language pair (Khufu/Cheops, Amenhotep I/Amenophis I., …).
   `threeway_edges.json` now fix that, so the next 3-way run is disk-evaluable
   without re-spending.
 
-## Known precision gap
+## Precision guard (implemented)
 
-Transitive connected-components clustering over pairwise LLM picks can **over-merge**
-(the Pinudjem I / Menkheperre case). A contradictory-merge guard is the open
-follow-up — see the matcher discussion in ADR-020 § Consequences.
+The contradictory-merge guard ADR-020 § Consequences called for is implemented:
+deterministic **cannot-link constraints** (`matcher/constraints.py`) +
+**guarded clustering** (`poc.guarded_same_entity_clusters`) that refuses any union
+placing two cannot-link rulers in one component (checked across all members, so a
+single bad edge can't metastasize). Rules: regnal-numeral mismatch (a structured
+discriminator, not an edit-distance — ADR-009-safe), disjoint reign Time-Spans,
+and same-source-distinct rows (exempting phase-suffix siblings and documentary
+`same_person_as` links). Result above: 0.92 → 0.98 precision, zero recall cost.
+Held-apart conflicts are the natural input to the escalation path (advisor P4).

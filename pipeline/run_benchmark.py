@@ -35,9 +35,17 @@ def _llm_lb_graph():
 
 
 def main() -> None:
+    from pipeline.authority.graph.poc import guarded_same_entity_clusters
+
+    lb = _llm_lb_graph()
+    clusters, conflicts = guarded_same_entity_clusters(lb)
+    guarded = evaluate(lb, clusters=clusters)
+    guarded["conflicts_held_apart"] = len(conflicts)
+
     results = {
         "exact_3way": evaluate(build_3way_graph()),
         "llm_leprohon_beckerath": evaluate(_llm_lb_graph()),
+        "llm_leprohon_beckerath_guarded": guarded,
     }
     _OUT.write_text(json.dumps(results, indent=2, ensure_ascii=False))
     for name, ev in results.items():

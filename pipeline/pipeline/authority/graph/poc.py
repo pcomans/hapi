@@ -149,6 +149,61 @@ def same_entity_clusters(g: ClaimGraph) -> list[frozenset[str]]:
     return [frozenset(members) for members in groups.values() if len(members) > 1]
 
 
+def guarded_same_entity_clusters(
+    g: ClaimGraph, cannot_link_fn=None
+) -> tuple[list[frozenset[str]], list[tuple[str, str, str]]]:
+    """Constraint-aware clustering (advisor Priority 2 / ADR-020 merge guard).
+
+    Like ``same_entity_clusters`` but refuses any union that would place two
+    cannot-link rulers in one component — checked across ALL current members of
+    the two components, so one bad pairwise edge can't metastasize (the
+    Pinudjem I / Menkheperre over-merge). Returns (clusters, conflicts) where
+    each conflict is (a, b, reason) — the held-apart pairs to route to escalation.
+    """
+    if cannot_link_fn is None:
+        from .matcher.constraints import cannot_link, documentary_same_entity_pairs
+        doc_pairs = documentary_same_entity_pairs(g)
+
+        def cannot_link_fn(x: str, y: str) -> str | None:  # noqa: ANN001
+            return cannot_link(g, x, y, doc_pairs=doc_pairs)
+
+    parent: dict[str, str] = {}
+    members: dict[str, set[str]] = {}
+    conflicts: list[tuple[str, str, str]] = []
+
+    def find(x: str) -> str:
+        parent.setdefault(x, x)
+        members.setdefault(x, {x})
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        ra, rb = find(a), find(b)
+        if ra == rb:
+            return
+        # Guard: a union is allowed only if NO member-pair across the two
+        # components is cannot-link.
+        for x in members[ra]:
+            for y in members[rb]:
+                reason = cannot_link_fn(x, y)
+                if reason:
+                    conflicts.append((x, y, reason))
+                    return  # refuse the union; components stay apart
+        parent[ra] = rb
+        members[rb] |= members[ra]
+        members.pop(ra, None)
+
+    for e in g.edges_with_predicate(SAME_ENTITY_AS):
+        union(e.subject_id, e.object_id)
+
+    clusters = [
+        frozenset(members[r]) for r in {find(n) for n in parent} if len(members[r]) > 1
+    ]
+    return clusters, conflicts
+
+
 def summarize(g: ClaimGraph) -> dict[str, int]:
     """Headline counts for the built graph."""
     shortcuts = len(g.edges_with_predicate(SAME_ENTITY_AS))

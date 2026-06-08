@@ -41,10 +41,18 @@ def _aligned_rulers(g: ClaimGraph) -> tuple[dict[str, str], dict[str, int]]:
     return qid_of, dict(status_counts)
 
 
-def _predicted_partition(g: ClaimGraph, universe: set[str]) -> dict[str, frozenset[str]]:
-    """ruler_id → its predicted cluster (restricted to ``universe``); singletons included."""
+def _predicted_partition(
+    g: ClaimGraph, universe: set[str], clusters: list[frozenset[str]] | None = None
+) -> dict[str, frozenset[str]]:
+    """ruler_id → its predicted cluster (restricted to ``universe``); singletons included.
+
+    ``clusters`` lets a caller supply a precomputed partition (e.g. the guarded
+    clustering); default is the unguarded connected components.
+    """
+    if clusters is None:
+        clusters = same_entity_clusters(g)
     member_to_cluster: dict[str, frozenset[str]] = {}
-    for cluster in same_entity_clusters(g):
+    for cluster in clusters:
         restricted = frozenset(cluster & universe)
         for m in restricted:
             member_to_cluster[m] = restricted
@@ -66,7 +74,7 @@ def _pairs(partition_members: dict[str, frozenset[str]]) -> set[frozenset[str]]:
     return out
 
 
-def evaluate(g: ClaimGraph) -> dict:
+def evaluate(g: ClaimGraph, clusters: list[frozenset[str]] | None = None) -> dict:
     qid_of, status_counts = _aligned_rulers(g)
     universe = set(qid_of)
 
@@ -76,7 +84,7 @@ def evaluate(g: ClaimGraph) -> dict:
         gold_clusters[qid].add(rid)
     gold_member = {rid: frozenset(gold_clusters[qid]) for rid, qid in qid_of.items()}
 
-    pred_member = _predicted_partition(g, universe)
+    pred_member = _predicted_partition(g, universe, clusters)
 
     pred_pairs = _pairs(pred_member)
     gold_pairs = _pairs(gold_member)
