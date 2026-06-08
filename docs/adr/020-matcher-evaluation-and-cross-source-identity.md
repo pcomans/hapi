@@ -130,6 +130,42 @@ Kitchen), so grading against it risks measuring agreement-with-Wikidata, and (b)
 least reliable on exactly the contested identities (Aha/Menes, Smenkhkare/
 Neferneferuaten, Pinudjem/Menkheperre) that drive matcher error.
 
+### 6. Matching is precision-first: a missing merge beats a false merge
+
+**For cross-source matching, a false merge (conflating two distinct rulers) is
+worse than a missed merge (failing to link two records that are the same).** The
+matcher optimises **precision**; recall shortfalls are acceptable and are
+expressed as **escalations, not guesses.**
+
+Rationale: a false merge corrupts authority data — a wrong identity propagates to
+every artifact, date, and relationship attached to the cluster, and is hard to
+detect downstream (per ADR-018, reconciled data is sacred; a wrong identity claim
+is slop). A missed merge is visible (two records simply stay separate) and
+recoverable later. The asymmetry is real, so the policy is asymmetric.
+
+Consequences for the matcher (the spec follows; some parts are built, some are
+follow-ups):
+- **Corroborate-or-escalate acceptance.** A matcher-derived `hapi:same_entity_as`
+  is auto-approved only when a *structured* signal corroborates the name judgment
+  (e.g. shared dynasty AND reign-overlap or matching regnal numeral). Name
+  agreement alone is **not** sufficient to accept — it routes to escalation. *(Spec
+  follow-up: the exact corroboration predicate.)*
+- **Cannot-link guard** (built): contradictory merges are refused
+  (`matcher/constraints.py`, `poc.guarded_same_entity_clusters`).
+- **Doubt → escalation, never a guess.** Held-apart conflicts and uncorroborated
+  picks go to the human/curator queue via the verdict/supersession path; they do
+  **not** become accepted links and are **not** silently dropped. *(Follow-up: the
+  escalation-queue contract.)*
+- **Bidirectional agreement** as the tie-break for name-only candidates: accept
+  only if both match directions independently agree, else escalate.
+- **Give the model the full record, not the name.** The reviewer/pick is given the
+  records' structured metadata (dynasty, reign span, prenomen/throne names, full
+  titulary, source), not the display name alone — so judgments are grounded and
+  corroboration is assessable. *(The current constraint-narrowed pick passes only
+  the display name; closing this is part of corroborate-or-escalate.)*
+- **Metrics:** precision is the primary reported number; recall is secondary and is
+  always reported with the abstention/escalation rate (per decision 3).
+
 ## Consequences
 
 - **Never report coverage as recall.** Coverage is an upper bound; real precision/
