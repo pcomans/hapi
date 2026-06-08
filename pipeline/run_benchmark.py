@@ -15,22 +15,25 @@ import json
 from pathlib import Path
 
 from pipeline.authority.graph.benchmark.evaluate import evaluate
-from pipeline.authority.graph.ir import Edge
 from pipeline.authority.graph.loader import load_poc_graph
 from pipeline.authority.graph.poc import build_3way_graph
 
 _GRAPH_DIR = Path(__file__).resolve().parent / "pipeline" / "authority" / "graph"
-_LB_MATCHES = _GRAPH_DIR / "match_rate_result.json"
+# Canonical clean (de-leaked) LB matcher output, persisted by run_ab_clean.py.
+_LB_EDGES = _GRAPH_DIR / "match_nameonly_clean_edges.json"
 _OUT = _GRAPH_DIR / "benchmark_results.json"
 
 
 def _llm_lb_graph():
-    """Rebuild the LB LLM matcher's predictions from the persisted match_list."""
+    """Rebuild the LB LLM matcher's predictions from the persisted clean edges.
+
+    Reads the de-leaked run's edge records (rule 13: never re-run to score).
+    """
+    from pipeline.authority.graph.benchmark.persist import load_same_entity_edges
+
     g = load_poc_graph()
-    matches = json.loads(_LB_MATCHES.read_text())["match_list"]
-    for m in matches:
-        g.node(m["lid"]); g.node(m["rid"])
-        g.add_edge(Edge(m["lid"], "hapi:same_entity_as", m["rid"]))
+    records = json.loads(_LB_EDGES.read_text())
+    load_same_entity_edges(g, records)
     return g
 
 
