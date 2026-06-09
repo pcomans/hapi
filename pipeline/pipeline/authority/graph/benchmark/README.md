@@ -95,9 +95,11 @@ re-prompt; Constitutional rule 2) and precision-first (ADR-020 §6):
   escalate — set-based, so it's order-independent and never auto-keeps an
   incumbent. (Catches the Ninetjer/Nebre → Kaiëchós error.)
 - **Regnal-mismatch escalation (Fix 2):** a regnal-number difference escalates
-  rather than hard-blocking — sources number the same name differently
-  (Ahmose III = Amosis II = Amasis, shared throne name Khnemibre), so a hard block
-  would *false-reject* true matches.
+  rather than hard-blocking — sources number the same name differently (the
+  Dynasty 26 king Amasis, throne name Khnemibre, is Leprohon's verbatim
+  `"Ahmose III"` (`leprohon-26.05`) but Beckerath's `"Amosis II."` — a III-vs-II
+  clash on one person; conventional name Ahmose II), so a hard block would
+  *false-reject* true matches.
 
 Result above: precision **0.98 → 1.00** at zero measurable recall cost; the
 held-apart / clashing / regnal cases become explicit human escalations rather than
