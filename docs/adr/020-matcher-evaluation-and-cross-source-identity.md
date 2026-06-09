@@ -122,7 +122,7 @@ alone.
    deltas; upgrades the contested cases at a fraction of full-labelling cost.
 3. **Committed gold** — scholar-curated **equivalence classes over an enumerated
    record universe** (a closed-world fixture per decision 3), with per-class
-   provenance; required only for authority-grade / citable numbers (rule 1).
+   provenance; required only for authority-grade / citable numbers (Rule 1).
 
 **Wikidata is a silver standard, never gold.** It is (a) not independent — it is
 derived from Wikipedia and from the same scholarly sources (Beckerath, Leprohon,
