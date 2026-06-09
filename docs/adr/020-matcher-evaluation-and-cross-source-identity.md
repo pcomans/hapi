@@ -164,9 +164,12 @@ follow-ups):
     escalate — set-based, so it never auto-keeps an "incumbent" the way a re-prompt
     would. Catches the Ninetjer/Nebre → Kaiëchós error.
   - **Regnal-mismatch escalation (Fix 2):** a regnal-number difference escalates
-    rather than hard-blocking, because sources number the same name differently
-    (Ahmose III = Amosis II = Amasis, shared throne name Khnemibre) and a hard block
-    would false-reject true matches.
+    rather than hard-blocking, because sources number the same name differently —
+    e.g. the Dynasty 26 king Amasis (throne name Khnemibre) is Leprohon's
+    `"Ahmose III"` (`leprohon-26.05`) but Beckerath's `"Amosis II."`, a III-vs-II
+    clash on one person — so a hard block would false-reject a true match. (The
+    labels are the sources' verbatim numbering, not our gloss; the conventional
+    Egyptological name is Ahmose II.)
 - **Doubt → escalation, never a guess.** Held-apart conflicts, uniqueness clashes,
   regnal mismatches, and uncorroborated picks go to the human/curator queue via the
   verdict/supersession path; they do **not** become accepted links and are **not**
