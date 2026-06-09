@@ -150,14 +150,27 @@ follow-ups):
   (e.g. shared dynasty AND reign-overlap or matching regnal numeral). Name
   agreement alone is **not** sufficient to accept — it routes to escalation. *(Spec
   follow-up: the exact corroboration predicate.)*
-- **Cannot-link guard** (built): contradictory merges are refused
-  (`matcher/constraints.py`, `poc.guarded_same_entity_clusters`).
-- **Doubt → escalation, never a guess.** Held-apart conflicts and uncorroborated
-  picks go to the human/curator queue via the verdict/supersession path; they do
-  **not** become accepted links and are **not** silently dropped. *(Follow-up: the
-  escalation-queue contract.)*
-- **Bidirectional agreement** as the tie-break for name-only candidates: accept
-  only if both match directions independently agree, else escalate.
+- **Order-independent resolution** (built): `poc.resolve_matches` resolves a set
+  of matcher edges with no incumbent and no re-prompt — a node's fate is a pure
+  function of its edge set, not of file/iteration/hash order (Constitutional rule
+  2). It comprises three deterministic guards:
+  - **Hard cannot-link guard** (`matcher/constraints.cannot_link` + `_guarded_union`):
+    refuses any union that would place two cannot-link rulers in one component
+    (checked across all members, so one bad edge can't metastasize). Hard rules:
+    disjoint reign Time-Spans, and same-source-distinct rows (exempting phase-suffix
+    siblings and documentary `same_person_as` links).
+  - **Uniqueness escalation (Fix 1):** if two *distinct* rulers from one source both
+    claim a single target (and aren't the same person), *all* the clashing edges
+    escalate — set-based, so it never auto-keeps an "incumbent" the way a re-prompt
+    would. Catches the Ninetjer/Nebre → Kaiëchós error.
+  - **Regnal-mismatch escalation (Fix 2):** a regnal-number difference escalates
+    rather than hard-blocking, because sources number the same name differently
+    (Ahmose III = Amosis II = Amasis, shared throne name Khnemibre) and a hard block
+    would false-reject true matches.
+- **Doubt → escalation, never a guess.** Held-apart conflicts, uniqueness clashes,
+  regnal mismatches, and uncorroborated picks go to the human/curator queue via the
+  verdict/supersession path; they do **not** become accepted links and are **not**
+  silently dropped. *(Follow-up: the escalation-queue contract.)*
 - **Give the model the full record, not the name.** The reviewer/pick is given the
   records' structured metadata (dynasty, reign span, prenomen/throne names, full
   titulary, source), not the display name alone — so judgments are grounded and
