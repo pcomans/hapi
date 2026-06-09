@@ -105,18 +105,46 @@ def documentary_same_entity_pairs(g: ClaimGraph) -> set[frozenset[str]]:
     return out
 
 
-def cannot_link(
-    g: ClaimGraph, a: str, b: str, *, doc_pairs: set[frozenset[str]] | None = None
-) -> str | None:
-    """Return a reason if rulers ``a`` and ``b`` cannot be the same person, else None."""
-    if a == b:
-        return None
-    na, nb = g.node(a), g.node(b)
+def regnal_mismatch(g: ClaimGraph, a: str, b: str) -> str | None:
+    """Both names carry a regnal numeral and they differ (Iuput I vs Iuput II).
 
-    # 1c — regnal-numeral mismatch.
+    NOT a hard cannot-link — sources sometimes number the same name differently
+    (Leprohon "Ahmose III" = Beckerath "Amosis II" = Amasis). Per ADR-020 §6 this
+    routes to human escalation, never a silent block or accept.
+    """
     ra, rb = regnal_number(_display(g, a)), regnal_number(_display(g, b))
     if ra is not None and rb is not None and ra != rb:
         return f"regnal-number mismatch ({ra} vs {rb})"
+    return None
+
+
+def same_person(
+    g: ClaimGraph, a: str, b: str, doc_pairs: set[frozenset[str]] | None = None
+) -> bool:
+    """True if a and b are the SAME person within one source — a phase split.
+
+    Either stage-suffix siblings of one id stem (Leprohon 18.10a/18.10b) or
+    linked by a documentary same_entity_as (Kitchen same_person_as). Used to
+    EXEMPT legitimate many-to-one (phase) cases from the uniqueness constraint.
+    """
+    na, nb = g.node(a), g.node(b)
+    if na.props.get("source") != nb.props.get("source"):
+        return False
+    stem_a = _stem(na.props.get("source_id"))
+    if stem_a is not None and stem_a == _stem(nb.props.get("source_id")):
+        return True
+    return doc_pairs is not None and frozenset((a, b)) in doc_pairs
+
+
+def cannot_link(
+    g: ClaimGraph, a: str, b: str, *, doc_pairs: set[frozenset[str]] | None = None
+) -> str | None:
+    """Hard cannot-link reasons (block a merge). Regnal mismatch is NOT here — it
+    escalates (see ``regnal_mismatch``). Hard rules: disjoint reign spans, and
+    same-source distinct rows not linked by the source."""
+    if a == b:
+        return None
+    na, nb = g.node(a), g.node(b)
 
     # 1b — disjoint reign Time-Spans (both present, no overlap within tolerance).
     sa, sb = _reign_span(g, a), _reign_span(g, b)
@@ -127,13 +155,7 @@ def cannot_link(
 
     # 1a — same-source distinct rows (unless source-linked or phase siblings).
     src = na.props.get("source")
-    if src and src == nb.props.get("source"):
-        same_stem = (
-            _stem(na.props.get("source_id")) == _stem(nb.props.get("source_id"))
-            and _stem(na.props.get("source_id")) is not None
-        )
-        linked = doc_pairs is not None and frozenset((a, b)) in doc_pairs
-        if not same_stem and not linked:
-            return f"same-source ({src}) distinct rows not linked by the source"
+    if src and src == nb.props.get("source") and not same_person(g, a, b, doc_pairs):
+        return f"same-source ({src}) distinct rows not linked by the source"
 
     return None

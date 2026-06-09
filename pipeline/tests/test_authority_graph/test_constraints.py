@@ -14,7 +14,11 @@ from pipeline.authority.graph.matcher.constraints import (
     documentary_same_entity_pairs,
     regnal_number,
 )
-from pipeline.authority.graph.poc import guarded_same_entity_clusters
+from pipeline.authority.graph.poc import guarded_same_entity_clusters, resolve_matches
+
+
+def _edge(g, a, b):
+    g.add_edge(Edge(a, "hapi:same_entity_as", b))
 
 
 def _ruler(g, rid, name, *, source, source_id, reign=None):
@@ -34,14 +38,18 @@ def test_regnal_number_parsing():
     assert regnal_number("Iuput I") == 1
 
 
-def test_regnal_mismatch_cannot_link():
+def test_regnal_mismatch_escalates_not_blocks():
+    # Regnal mismatch is NOT a hard cannot-link (sources may number a name
+    # differently — Ahmose III = Amosis II); it routes to escalation.
+    from pipeline.authority.graph.matcher.constraints import regnal_mismatch
     g = ClaimGraph()
     _ruler(g, "a", "Iuput I", source="leprohon", source_id="lep-23.01")
     _ruler(g, "b", "Iuput II", source="beckerath", source_id="bec-23.05")
-    assert "regnal-number mismatch" in cannot_link(g, "a", "b")
-    # Same numeral (or one missing) → not blocked on this rule.
+    assert "regnal-number mismatch" in regnal_mismatch(g, "a", "b")
+    assert cannot_link(g, "a", "b") is None  # regnal is no longer a hard block
+    # Same numeral (or one missing) → no regnal conflict.
     _ruler(g, "c", "Iuput I", source="kitchen", source_id="k-23.01")
-    assert cannot_link(g, "a", "c") is None
+    assert regnal_mismatch(g, "a", "c") is None
 
 
 def test_disjoint_reign_cannot_link():
@@ -115,3 +123,45 @@ def test_guarded_clustering_keeps_phase_siblings_together():
     assert len(clusters) == 1
     assert clusters[0] == frozenset({"lep::a", "lep::b", "bec::akh"})
     assert conflicts == []
+
+
+# --- resolve_matches: escalation (precision-first, order-independent) ---------
+def test_resolve_escalates_uniqueness_clash():
+    # Two distinct Leprohon kings both claim one Beckerath king (the Nebre/Ninetjer
+    # → Kaiëchós error). Both edges escalate; nothing auto-clusters.
+    g = ClaimGraph()
+    _ruler(g, "lep::nebre", "Nebre", source="leprohon", source_id="lep-2.02")
+    _ruler(g, "lep::ninetjer", "Ninetjer", source="leprohon", source_id="lep-2.03")
+    _ruler(g, "bec::kaiechos", "Kaiechos", source="beckerath", source_id="bec-2.02")
+    _edge(g, "lep::nebre", "bec::kaiechos")
+    _edge(g, "lep::ninetjer", "bec::kaiechos")
+    clusters, esc = resolve_matches(g)
+    assert clusters == []
+    pairs = {frozenset((a, b)) for a, b, _ in esc}
+    assert frozenset(("lep::nebre", "bec::kaiechos")) in pairs
+    assert frozenset(("lep::ninetjer", "bec::kaiechos")) in pairs
+    assert all("uniqueness" in r for _, _, r in esc)
+
+
+def test_resolve_preserves_phase_split_many_to_one():
+    # Two Leprohon phase rows (same id stem) → one Beckerath ruler is the SAME
+    # person, so it must cluster, not escalate.
+    g = ClaimGraph()
+    _ruler(g, "lep::a", "Amenhotep IV", source="leprohon", source_id="leprohon-18.10a")
+    _ruler(g, "lep::b", "Akhenaten", source="leprohon", source_id="leprohon-18.10b")
+    _ruler(g, "bec::akh", "Amenophis IV", source="beckerath", source_id="bec-18.10")
+    _edge(g, "lep::a", "bec::akh")
+    _edge(g, "lep::b", "bec::akh")
+    clusters, esc = resolve_matches(g)
+    assert clusters == [frozenset({"lep::a", "lep::b", "bec::akh"})]
+    assert esc == []
+
+
+def test_resolve_escalates_regnal_mismatch():
+    g = ClaimGraph()
+    _ruler(g, "lep::iuput1", "Iuput I", source="leprohon", source_id="lep-23.01")
+    _ruler(g, "bec::auput2", "Auput II", source="beckerath", source_id="bec-23.05")
+    _edge(g, "lep::iuput1", "bec::auput2")
+    clusters, esc = resolve_matches(g)
+    assert clusters == []
+    assert any("regnal" in r for _, _, r in esc)

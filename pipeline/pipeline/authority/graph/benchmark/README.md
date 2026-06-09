@@ -82,13 +82,25 @@ The exact matcher is precision-perfect but misses every cross-language pair
 
 ## Precision guard (implemented)
 
-The contradictory-merge guard ADR-020 § Consequences called for is implemented:
-deterministic **cannot-link constraints** (`matcher/constraints.py`) +
-**guarded clustering** (`poc.guarded_same_entity_clusters`) that refuses any union
-placing two cannot-link rulers in one component (checked across all members, so a
-single bad edge can't metastasize). Rules: regnal-numeral mismatch (a structured
-discriminator, not an edit-distance — ADR-009-safe), disjoint reign Time-Spans,
-and same-source-distinct rows (exempting phase-suffix siblings and documentary
-`same_person_as` links). Result above: the guard takes name-only precision
-**0.98 → 1.00** at zero recall cost. Held-apart conflicts are the natural input to
-the escalation path (ADR-020 §6, doubt → escalation).
+Resolution is `poc.resolve_matches` — order-independent (no incumbent, no
+re-prompt; Constitutional rule 2) and precision-first (ADR-020 §6):
+
+- **Hard cannot-link guard** (`matcher/constraints.cannot_link` + `_guarded_union`):
+  refuses any union placing two cannot-link rulers in one component (checked across
+  all members, so a single bad edge can't metastasize). Hard rules: disjoint reign
+  Time-Spans, and same-source-distinct rows (exempting phase-suffix siblings and
+  documentary `same_person_as` links).
+- **Uniqueness escalation (Fix 1):** if two DISTINCT rulers from one source both
+  claim a single target (and aren't the same person), ALL the clashing edges
+  escalate — set-based, so it's order-independent and never auto-keeps an
+  incumbent. (Catches the Ninetjer/Nebre → Kaiëchós error.)
+- **Regnal-mismatch escalation (Fix 2):** a regnal-number difference escalates
+  rather than hard-blocking — sources number the same name differently
+  (Ahmose III = Amosis II = Amasis, shared throne name Khnemibre), so a hard block
+  would *false-reject* true matches.
+
+Result above: precision **0.98 → 1.00** at zero measurable recall cost; the
+held-apart / clashing / regnal cases become explicit human escalations rather than
+silent accepts or rejects. (Ground-truthed via web research — see the matcher
+discussion; only 1 of 3 flagged "failures" was a real model error, and it was a
+uniqueness clash.)

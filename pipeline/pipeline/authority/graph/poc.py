@@ -204,6 +204,117 @@ def guarded_same_entity_clusters(
     return clusters, conflicts
 
 
+def _guarded_union(pairs, cannot_link_fn):
+    """Constraint-aware union-find over a list of (a, b) pairs. Returns
+    (clusters, conflicts); refuses a union if any cross-component member-pair is
+    cannot-link. Order-independent over the pair set for the accept/reject of a
+    given pair set (conflicts are recorded, never silently resolved)."""
+    parent: dict[str, str] = {}
+    members: dict[str, set[str]] = {}
+    conflicts: list[tuple[str, str, str]] = []
+
+    def find(x):
+        parent.setdefault(x, x)
+        members.setdefault(x, {x})
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a, b):
+        ra, rb = find(a), find(b)
+        if ra == rb:
+            return
+        for x in members[ra]:
+            for y in members[rb]:
+                reason = cannot_link_fn(x, y)
+                if reason:
+                    conflicts.append((x, y, reason))
+                    return
+        parent[ra] = rb
+        members[rb] |= members[ra]
+        members.pop(ra, None)
+
+    for a, b in pairs:
+        union(a, b)
+    clusters = [frozenset(members[r]) for r in {find(n) for n in parent} if len(members[r]) > 1]
+    return clusters, conflicts
+
+
+def resolve_matches(g: ClaimGraph) -> tuple[list[frozenset[str]], list[tuple[str, str, str]]]:
+    """Resolve same_entity_as matches into (clusters, escalations), precision-first
+    and ORDER-INDEPENDENT (no incumbent, no re-prompt — ADR-020 §6).
+
+    - Regnal mismatch (Fix 2) → escalate (sources may number the same name
+      differently; never silently block or accept).
+    - Uniqueness clash (Fix 1): if two DISTINCT rulers from one source both claim
+      a single target ruler — and they are not the same person (phase split) —
+      escalate ALL the clashing edges (set-based detection; the correct one is
+      re-confirmed by a human, never auto-kept).
+    - Remaining edges cluster under the hard guard (disjoint reign, same-source
+      distinct); held-apart pairs are escalated too.
+    """
+    from .matcher.constraints import (
+        cannot_link,
+        documentary_same_entity_pairs,
+        regnal_mismatch,
+        same_person,
+    )
+
+    doc = documentary_same_entity_pairs(g)
+    pairs = {frozenset((e.subject_id, e.object_id)): (e.subject_id, e.object_id)
+             for e in g.edges_with_predicate(SAME_ENTITY_AS)}.values()
+
+    escalated: set[frozenset[str]] = set()
+    escalations: list[tuple[str, str, str]] = []
+
+    def _src(x):
+        return g.node(x).props.get("source")
+
+    # Fix 2 — regnal mismatch escalates.
+    for a, b in pairs:
+        reason = regnal_mismatch(g, a, b)
+        if reason:
+            escalated.add(frozenset((a, b)))
+            escalations.append((a, b, reason))
+
+    # Fix 1 — uniqueness clash escalates ALL clashers (order-independent).
+    adj: dict[str, list[str]] = defaultdict(list)
+    for a, b in pairs:
+        if frozenset((a, b)) in escalated:
+            continue
+        adj[a].append(b)
+        adj[b].append(a)
+    for target, neighbours in adj.items():
+        by_source: dict[str, list[str]] = defaultdict(list)
+        for n in neighbours:
+            by_source[_src(n)].append(n)
+        for source, members in by_source.items():
+            members = list(dict.fromkeys(members))
+            if len(members) < 2:
+                continue
+            all_same = all(
+                same_person(g, members[i], members[j], doc)
+                for i in range(len(members)) for j in range(i + 1, len(members))
+            )
+            if all_same:
+                continue  # legitimate phase-split many-to-one
+            for m in members:
+                key = frozenset((target, m))
+                if key not in escalated:
+                    escalated.add(key)
+                    escalations.append(
+                        (target, m, f"uniqueness clash: target claimed by >1 distinct {source} ruler")
+                    )
+
+    remaining = [(a, b) for a, b in pairs if frozenset((a, b)) not in escalated]
+    clusters, conflicts = _guarded_union(
+        remaining, lambda x, y: cannot_link(g, x, y, doc_pairs=doc)
+    )
+    escalations.extend(conflicts)
+    return clusters, escalations
+
+
 def summarize(g: ClaimGraph) -> dict[str, int]:
     """Headline counts for the built graph."""
     shortcuts = len(g.edges_with_predicate(SAME_ENTITY_AS))
