@@ -157,8 +157,16 @@ detect downstream (per ADR-018, reconciled data is sacred; a wrong identity clai
 is slop). A missed merge is visible (two records simply stay separate) and
 recoverable later. The asymmetry is real, so the policy is asymmetric.
 
-Consequences for the matcher (the spec follows; some parts are built, some are
-follow-ups):
+Consequences for the matcher — **policy and structured constraints, not
+implementation.** The matcher *architecture* — candidate generation / blocking,
+the decision rule (per-pair resolution vs a global reject-by-default solver), and
+whether a model sits *in* or *out of* the decision path — is specified separately
+and is under active reconsideration: see issue
+[#306](https://github.com/pcomans/hapi/issues/306) ("Matcher rearchitecture: cross-
+source ruler identity as a cited claim-graph alignment, not per-pair LLM picking").
+This ADR fixes the policy and the constraints below; it does **not** settle the
+resolution mechanism (the POC's `poc.resolve_matches` is one implementation, not
+the ratified design).
 - **Corroborate-or-escalate acceptance.** A matcher-derived `hapi:same_entity_as`
   is auto-approved only when a *structured* signal corroborates the name judgment;
   name agreement alone is **not** sufficient to accept — it routes to escalation.
@@ -178,51 +186,41 @@ follow-ups):
   prenomen-match predicate plus a committed homonym exception list — see decision 3
   — for the cases where one prenomen is shared across distinct kings: Menkheperre,
   Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.)*
-- **Order-independent resolution** (built): `poc.resolve_matches` resolves a set
-  of matcher edges with no incumbent and no re-prompt — a node's fate is a pure
-  function of its edge set, not of file/iteration/hash order (Constitutional rule
-  2). It comprises three deterministic guards:
-  - **Hard cannot-link guard** (`matcher/constraints.cannot_link` +
-    `_guarded_components`): refuses any union that would place two cannot-link rulers
-    in one component (checked across all members, so one bad edge can't metastasize).
-    Hard rules: same-source-distinct rows (exempting phase-suffix siblings and
-    documentary `same_person_as` links), and disjoint reign Time-Spans — but reign
-    disjointness is a hard block **only within a single source/framework** (where a
-    source never dates one person to two disjoint spans, so it genuinely proves
-    distinctness); **cross-framework it escalates rather than hard-blocks**, because
-    absolute Egyptian chronology is framework-relative and the divergence grows with
-    antiquity (Beckerath opens Dynasty 1 at ~3032 BCE vs Hornung–Krauss–Warburton
-    ~2900 — a ~century offset on the same kings), so two sources' spans for one
-    Early-Dynastic king can be fully disjoint purely from the framework offset. The
-    cross-framework comparison therefore uses a **period-scaled tolerance** (±~25 yr
-    Late Period widening to ±100+ yr Early Dynastic) before disjointness counts at
-    all. *(Spec follow-up: the per-source framework tag + the tolerance schedule.)*
-  - **Uniqueness escalation (Fix 1):** if two *distinct* rulers from one source both
-    claim a single target (and aren't the same person), *all* the clashing edges
-    escalate — set-based, so it never auto-keeps an "incumbent" the way a re-prompt
-    would. Catches the Ninetjer/Nebre → Kaiëchós error.
-  - **Regnal-mismatch escalation (Fix 2):** a regnal-number difference escalates
-    rather than hard-blocking, because sources number the same name differently —
-    e.g. the Dynasty 26 king Amasis (throne name Khnemibre) is Leprohon's
-    `"Ahmose III"` (`leprohon-26.05`) but Beckerath's `"Amosis II."`, a III-vs-II
-    clash on one person — so a hard block would false-reject a true match. (The
-    labels are the sources' verbatim numbering, not our gloss; the conventional
-    Egyptological name is Ahmose II.) The numeral divergence is **systematic, not a
-    one-off**: it appears wherever scholarly numbering conventions differ (most
-    acutely the Dynasty-13 Sobekhoteps under Ryholt vs Beckerath), and it cuts both
-    ways — a numeral can *mismatch* on one king (here) and *match* on two different
-    kings — which is the deeper reason "matching regnal numeral" is not safe as
-    accepting corroboration (see the corroborate-or-escalate bullet) and escalation
-    is right in both directions.
+- **Structured cannot-link / escalation constraints.** Identity decisions must
+  honour deterministic structured discriminators (never surface-string similarity,
+  ADR-009). *How* these are applied — as guards over a pairwise-edge graph (the
+  POC's approach) or as first-class constraints in a global, reject-by-default
+  solver — is the architecture question deferred to #306; the constraints
+  themselves are policy:
+  - **Same-source distinctness:** two rows from one source are presumptively
+    different people unless the source links them (documentary `same_person_as`) or
+    they are stage-suffix phase siblings of one record.
+  - **Reign-span disjointness** is a discriminator **only within a single
+    chronological framework** (a source never dates one person to two disjoint
+    spans); cross-framework it must **escalate, not block**, on a period-scaled
+    tolerance, because absolute chronology is framework-relative and the divergence
+    grows with antiquity (Beckerath opens Dynasty 1 ~3032 BCE vs Hornung–Krauss–
+    Warburton ~2900 — a ~century offset on the same kings).
+  - **Uniqueness:** if two *distinct* rulers from one source both claim a single
+    target (and aren't the same person), the clash **escalates** — never resolved by
+    an order-dependent "incumbent" (catches the Ninetjer/Nebre → Kaiëchós error).
+  - **Regnal-number divergence escalates, never blocks.** Numbering is
+    convention-relative and **cuts both ways**: a numeral can *mismatch* on one king
+    (Leprohon's `"Ahmose III"` (`leprohon-26.05`) = Beckerath's `"Amosis II."` = the
+    Dynasty 26 king Amasis, throne name Khnemibre) and *match* on two different kings
+    (the Dynasty-13 Sobekhoteps under Ryholt vs Beckerath) — so a matching numeral is
+    not safe as accepting corroboration either.
 - **Doubt → escalation, never a guess.** Held-apart conflicts, uniqueness clashes,
   regnal mismatches, and uncorroborated picks go to the human/curator queue via the
   verdict/supersession path; they do **not** become accepted links and are **not**
   silently dropped. *(Follow-up: the escalation-queue contract.)*
-- **Give the model the full record, not the name.** The reviewer/pick is given the
-  records' structured metadata (dynasty, reign span, prenomen/throne names, full
-  titulary, source), not the display name alone — so judgments are grounded and
-  corroboration is assessable. *(The current constraint-narrowed pick passes only
-  the display name; closing this is part of corroborate-or-escalate.)*
+- **Ground every judgment in the full record, not the display name** — dynasty,
+  reign span, prenomen/throne names, full titulary, source. Whether a model-assisted
+  judgment sits *in* the decision path or only drafts cited evidence *behind a
+  deterministic gate* is a matcher-architecture question (#306); either way the
+  judgment must rest on the structured record, never the name alone. *(The POC's
+  constraint-narrowed pick passes only the display name — a known limitation that
+  the #306 redesign closes by construction.)*
 - **Metrics:** precision is the primary reported number; recall is secondary and is
   always reported with the abstention/escalation rate (per decision 3).
 
@@ -230,14 +228,16 @@ follow-ups):
 
 - **Never report coverage as recall.** Coverage is an upper bound; real precision/
   recall require a gold set.
-- **Transitive clustering needs a contradictory-merge guard.** Connected components
-  over pairwise links can conflate distinct people; clustering must detect/block
-  contradictory merges or route them to escalation before clusters become
-  authority data.
+- **Pairwise links must never become unsourced merges.** However identity
+  decisions are computed, two distinct people must not be silently conflated;
+  contradictions are surfaced and escalated before any cluster becomes authority
+  data. (Whether this is enforced as a guard over a pairwise-edge graph or as
+  constraints inside a global solver is the matcher-architecture question — #306.)
 - **Intra-source identity must be loaded** (not discarded) so its consistency
   constraints and provenance distinction are available.
 - The matcher-evaluation harness (`evaluate.py`) and any committed gold set are a
-  follow-up; this ADR fixes the method and the ground-truth semantics.
+  follow-up; this ADR fixes the evaluation method, the ground-truth semantics, and
+  the matching policy — **not** the matcher architecture, which is #306.
 
 ## Relationship to other ADRs
 - **ADR-009** (fuzzy review queue): excludes surface-string metrics from acceptance;
@@ -245,3 +245,9 @@ follow-ups):
 - **ADR-018** (claim graph): defines the `hapi:same_entity_as` shapes (source-
   attributed vs matcher-derived) this ADR's intra-source loading and evaluation
   rely on.
+- **Issue [#306](https://github.com/pcomans/hapi/issues/306)** (matcher
+  rearchitecture): owns the matcher *implementation* — candidate generation /
+  blocking, the decision rule, and the LLM's placement — which this ADR deliberately
+  leaves open. ADR-020 is the evaluation + ground-truth + matching-policy record;
+  #306 is the design. A reader should not take the POC's per-pair resolution /
+  connected-components mechanics as the settled architecture.
