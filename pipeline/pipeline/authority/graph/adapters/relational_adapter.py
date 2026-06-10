@@ -36,6 +36,12 @@ P177 = "P177_assigned_property_of_type"
 _SCHEMA_DDL = """
 CREATE SCHEMA IF NOT EXISTS claimgraph;
 
+-- Greenfield (Rule 10): DROP + recreate so a pre-existing claimgraph DB always
+-- picks up the current table definitions (e.g. new CHECK constraints) rather than
+-- being silently skipped by CREATE TABLE IF NOT EXISTS. write_graph rewrites the
+-- whole graph each call, so there is nothing to preserve.
+DROP TABLE IF EXISTS claimgraph.verdict_chain, claimgraph.edge, claimgraph.node CASCADE;
+
 CREATE TABLE IF NOT EXISTS claimgraph.node (
     id           text PRIMARY KEY,
     crm_classes  text[] NOT NULL,

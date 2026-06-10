@@ -14,6 +14,7 @@ from pipeline.authority.graph.loader import load_poc_graph
 from pipeline.authority.graph.matcher.constraint_narrowed import (
     generate_candidates,
     narrowed_sets,
+    resolve_pick_label,
     review_narrowed,
 )
 from pipeline.authority.graph.verdicts import (
@@ -27,6 +28,21 @@ from pipeline.authority.graph.verdicts import (
 @pytest.fixture
 def graph():
     return load_poc_graph()
+
+
+def test_resolve_pick_label_maps_offered_label_and_passes_null():
+    labels = {"C1": "lep::a", "C2": "lep::b"}
+    assert resolve_pick_label("C1", labels) == "lep::a"
+    assert resolve_pick_label("C2", labels) == "lep::b"
+    # null is the legitimate "none of these" answer.
+    assert resolve_pick_label(None, labels) is None
+
+
+def test_resolve_pick_label_raises_on_hallucinated_label():
+    # A label that was never offered must NOT be laundered into None (Rule 2).
+    labels = {"C1": "lep::a", "C2": "lep::b"}
+    with pytest.raises(RuntimeError, match="unknown label 'C9'"):
+        resolve_pick_label("C9", labels)
 
 
 def test_narrowing_is_same_dynasty_only(graph):

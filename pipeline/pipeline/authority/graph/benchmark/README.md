@@ -85,7 +85,7 @@ The exact matcher is precision-perfect but misses every cross-language pair
 Resolution is `poc.resolve_matches` — order-independent (no incumbent, no
 re-prompt; Constitutional rule 2) and precision-first (ADR-020 §6):
 
-- **Hard cannot-link guard** (`matcher/constraints.cannot_link` + `_guarded_union`):
+- **Hard cannot-link guard** (`matcher/constraints.cannot_link` + `_guarded_components`):
   refuses any union placing two cannot-link rulers in one component (checked across
   all members, so a single bad edge can't metastasize). Hard rules: disjoint reign
   Time-Spans, and same-source-distinct rows (exempting phase-suffix siblings and

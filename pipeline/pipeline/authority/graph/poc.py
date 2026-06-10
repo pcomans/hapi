@@ -243,6 +243,10 @@ def _guarded_components(pairs, cannot_link_fn):
                 (a, b, f"contradictory component (cannot-link {bx} / {by}: {breason})")
             )
     clusters.sort(key=lambda c: tuple(sorted(c)))
+    # Component iteration order is hash-dependent (the components come from a set);
+    # the conflict *set* is stable, so sort the list for a deterministic return
+    # (Rule 2: nothing order/hash-dependent).
+    conflicts.sort()
     return clusters, conflicts
 
 
@@ -317,6 +321,7 @@ def resolve_matches(g: ClaimGraph) -> tuple[list[frozenset[str]], list[tuple[str
         remaining, lambda x, y: cannot_link(g, x, y, doc_pairs=doc)
     )
     escalations.extend(conflicts)
+    escalations.sort()  # deterministic return, independent of edge/hash order (Rule 2)
     return clusters, escalations
 
 

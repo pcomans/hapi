@@ -20,17 +20,19 @@ from pipeline.authority.graph.matcher.constraint_narrowed import (
     generate_candidates,
     narrowed_sets,
     review_narrowed,
+    transient_sdk_errors,
 )
 
 RESULT_PATH = "/tmp/match_rate_result.json"
 errors: list[dict] = []
+_TRANSIENT = transient_sdk_errors()
 
 
 def resilient_pick(left, rights):
     for attempt in range(3):
         try:
             return _default_pick(left, rights)
-        except Exception as exc:  # noqa: BLE001 - measurement resilience, recorded not swallowed
+        except _TRANSIENT as exc:  # only flaky network/rate-limit/5xx; bugs propagate (Rule 2)
             if attempt == 2:
                 errors.append({"left": left["ruler_id"], "error": f"{type(exc).__name__}: {exc}"})
                 return {"choice": None, "escalate": False, "reasoning": f"ERROR: {exc}"}

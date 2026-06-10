@@ -114,3 +114,31 @@ def test_constraint_c_trigger_rejects_cross_claim_predecessor(written):
                 "('verdict::teti::bad', :teti, 'verdict::unas::1', 'hapi:verdict_approved')"
             ), {"teti": TETI_MATCH})
     assert "not a verdict for matcher claim" in str(exc.value)
+
+
+def test_retracted_root_rejected_by_db_check(written):
+    engine, _ = written
+    # A ROOT (predecessor NULL) verdict can never be 'retracted' (ADR-018) —
+    # enforced by the verdict_retracted_must_supersede CHECK at the DB layer.
+    with pytest.raises(IntegrityError):
+        with engine.begin() as conn:
+            _add_node_row(conn, "verdict::teti::root_retract")
+            conn.execute(text(
+                "INSERT INTO claimgraph.verdict_chain "
+                "(verdict_id, matcher_claim_id, predecessor_verdict_id, outcome) "
+                "VALUES ('verdict::teti::root_retract', :teti, NULL, 'hapi:verdict_retracted')"
+            ), {"teti": TETI_MATCH})
+
+
+def test_outcome_vocabulary_check_enforced_by_db(written):
+    engine, _ = written
+    # An outcome outside the three-term vocabulary is rejected by the
+    # verdict_outcome_vocabulary CHECK.
+    with pytest.raises(IntegrityError):
+        with engine.begin() as conn:
+            _add_node_row(conn, "verdict::teti::bogus")
+            conn.execute(text(
+                "INSERT INTO claimgraph.verdict_chain "
+                "(verdict_id, matcher_claim_id, predecessor_verdict_id, outcome) "
+                "VALUES ('verdict::teti::bogus', :teti, NULL, 'hapi:verdict_maybe')"
+            ), {"teti": TETI_MATCH})

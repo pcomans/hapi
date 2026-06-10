@@ -18,6 +18,7 @@ from pipeline.authority.graph.matcher.constraint_narrowed import (
     generate_candidates,
     narrowed_sets,
     review_narrowed,
+    transient_sdk_errors,
 )
 from pipeline.authority.graph.matcher.stage1_deterministic import run_stage1_matcher
 from pipeline.authority.graph.poc import approve_candidates_via_curator, same_entity_clusters
@@ -25,13 +26,14 @@ from pipeline.authority.graph.verdicts import emit_shortcuts
 
 TIP_DYNASTIES = [21, 22, 23, 24, 25]
 errors: list[dict] = []
+_TRANSIENT = transient_sdk_errors()
 
 
 def resilient_pick(left, rights):
     for attempt in range(4):
         try:
             return _default_pick(left, rights)
-        except Exception as exc:  # noqa: BLE001 - measurement resilience, recorded
+        except _TRANSIENT as exc:  # only flaky network/rate-limit/5xx; bugs propagate (Rule 2)
             if attempt == 3:
                 errors.append({"left": left["ruler_id"], "error": f"{type(exc).__name__}: {exc}"})
                 return {"choice": None, "escalate": False, "reasoning": f"ERROR: {exc}"}

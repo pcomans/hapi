@@ -175,49 +175,52 @@ def run_stage2_reviewer(
     verdicts: list[str] = []
     escalations: list[str] = []
     output_rows: list[dict] = []
-    for cid in candidate_ids:
-        context = candidate_context(g, cid)
-        result = review_fn(context)
-        outcome = result["outcome"]
-        row = {
-            "candidate": cid,
-            "outcome": outcome,
-            "confidence": result.get("confidence"),
-            "reasoning": result.get("reasoning"),
-            "context": context,
-            "prompt": result.get("_prompt"),
-            "model_snapshot": result.get("_model_snapshot"),
-            "raw_response": result.get("_raw_response"),
-        }
-        output_rows.append(row)
-        if outcome == "escalate":
-            escalations.append(cid)  # persisted above; no verdict (stays pending)
-            continue
-        # 'retracted' is only valid as a SUPERSEDING verdict that withdraws a
-        # previous tip (ADR-018); it cannot be a first/root verdict. Reject it
-        # loudly rather than load a semantically-invalid root (Rule 2).
-        if outcome == "retracted":
-            raise ValueError(
-                f"Reviewer returned 'retracted' as a first verdict for {cid}; "
-                "retraction is only valid as a superseding verdict (ADR-018)."
+    # Persist in a `finally` so that even a fail-loud raise below still flushes the
+    # interactions collected so far to disk — those are exactly the LLM responses
+    # we'd most want to inspect after a bad outcome (Rule 13: never discard them).
+    try:
+        for cid in candidate_ids:
+            context = candidate_context(g, cid)
+            result = review_fn(context)
+            outcome = result["outcome"]
+            row = {
+                "candidate": cid,
+                "outcome": outcome,
+                "confidence": result.get("confidence"),
+                "reasoning": result.get("reasoning"),
+                "context": context,
+                "prompt": result.get("_prompt"),
+                "model_snapshot": result.get("_model_snapshot"),
+                "raw_response": result.get("_raw_response"),
+            }
+            output_rows.append(row)
+            if outcome == "escalate":
+                escalations.append(cid)  # persisted; no verdict (stays pending)
+                continue
+            # 'retracted' is only valid as a SUPERSEDING verdict that withdraws a
+            # previous tip (ADR-018); it cannot be a first/root verdict. Reject it
+            # loudly rather than load a semantically-invalid root (Rule 2).
+            if outcome == "retracted":
+                raise ValueError(
+                    f"Reviewer returned 'retracted' as a first verdict for {cid}; "
+                    "retraction is only valid as a superseding verdict (ADR-018)."
+                )
+            if outcome not in _OUTCOME_URI:
+                raise ValueError(f"Reviewer returned unknown outcome {outcome!r} for {cid}")
+            vid = f"verdict::{cid}"
+            add_verdict(
+                g,
+                matcher_stmt_id=cid,
+                outcome=_OUTCOME_URI[outcome],
+                verdict_id=vid,
+                reviewer_run=run,
+                reasoning=result.get("reasoning"),
             )
-        if outcome not in _OUTCOME_URI:
-            raise ValueError(f"Reviewer returned unknown outcome {outcome!r} for {cid}")
-        vid = f"verdict::{cid}"
-        add_verdict(
-            g,
-            matcher_stmt_id=cid,
-            outcome=_OUTCOME_URI[outcome],
-            verdict_id=vid,
-            reviewer_run=run,
-            reasoning=result.get("reasoning"),
-        )
-        verdicts.append(vid)
-
-    # Persist the full per-candidate interaction; the D1 output node references
-    # that committed file (path + content sha256), so the hash is verifiable and
-    # the decision replayable (Rules 1 & 13) — not a hash of discarded data.
-    out_path, out_sha = persist_reviewer_run(run_id, output_rows, output_dir)
+            verdicts.append(vid)
+    finally:
+        # The D1 output node references this committed file (path + content
+        # sha256), so the hash is verifiable and the decision replayable.
+        out_path, out_sha = persist_reviewer_run(run_id, output_rows, output_dir)
 
     # D14 reviewer software, with the model's ACTUAL returned snapshot.
     algo = f"algorithm::{REVIEWER_ALGORITHM_ID}"

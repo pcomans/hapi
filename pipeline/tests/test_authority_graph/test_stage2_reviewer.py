@@ -96,12 +96,13 @@ def test_reviewer_provenance_chain(matched, tmp_path):
     assert len(by_pred["L11_had_output"]) == 1
 
 
-def test_live_review_raises_without_api_key(matched, monkeypatch):
+def test_live_review_raises_without_api_key(matched, monkeypatch, tmp_path):
     g, cands = matched
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     # No review_fn → the real SDK path, which must raise loudly without a key.
+    # output_dir=tmp_path so the finally-persist doesn't touch the committed dir.
     with pytest.raises(RuntimeError, match="ANTHROPIC_API_KEY"):
-        run_stage2_reviewer(g, [UNAS_MATCH])
+        run_stage2_reviewer(g, [UNAS_MATCH], output_dir=tmp_path)
 
 
 def test_reviewer_outputs_file_is_written_and_hash_matches(matched, tmp_path):

@@ -200,6 +200,41 @@ def _opaque_view(left: dict, rights: list[dict]) -> tuple[dict, list[dict], dict
     return target_view, cand_view, label_to_id
 
 
+def transient_sdk_errors() -> tuple[type[Exception], ...]:
+    """Anthropic SDK exception types that are genuinely transient (safe to retry).
+
+    Used by the run scripts' retry wrappers so that ONLY a flaky network / rate
+    limit / 5xx is retried-then-recorded; a deterministic protocol violation (an
+    unknown pick label from `resolve_pick_label`, a malformed response) must
+    propagate, never be laundered into an abstention (Rule 2) — especially in the
+    scripts that produce the headline numbers.
+    """
+    import anthropic
+
+    return (
+        anthropic.APIConnectionError,  # includes APITimeoutError
+        anthropic.RateLimitError,
+        anthropic.InternalServerError,
+    )
+
+
+def resolve_pick_label(raw_choice: str | None, label_to_id: dict[str, str]) -> str | None:
+    """Map a returned pick label (C1, C2, … | null) to its ruler_id.
+
+    A returned label MUST be one we offered. Mapping an unknown/hallucinated label
+    (e.g. "C9" when only 4 were shown) silently to ``None`` would launder a
+    malformed response into a deliberate "none of these" — raise instead (Rule 2:
+    a malformed response is not a decision). ``None``/null is the legitimate
+    "no match" answer and passes through. Pure + offline-testable (no SDK).
+    """
+    if raw_choice is not None and raw_choice not in label_to_id:
+        raise RuntimeError(
+            f"pick_match returned unknown label {raw_choice!r}; "
+            f"expected one of {sorted(label_to_id)} or null"
+        )
+    return label_to_id.get(raw_choice)
+
+
 def _default_pick(left: dict, rights: list[dict]) -> dict:
     """LLM pick: choose the candidate that is the SAME as the target, none, or escalate.
 
@@ -252,17 +287,7 @@ def _default_pick(left: dict, rights: list[dict]) -> dict:
     for block in resp.content:
         if block.type == "tool_use" and block.name == "pick_match":
             r = dict(block.input)
-            raw_choice = r.get("choice")
-            # A returned label MUST be one we offered. Mapping an unknown/
-            # hallucinated label (e.g. "C9" when 4 were shown) silently to None
-            # would launder a malformed response into a deliberate "none of these"
-            # — raise instead (Rule 2: a malformed response is not a decision).
-            if raw_choice is not None and raw_choice not in label_to_id:
-                raise RuntimeError(
-                    f"pick_match returned unknown label {raw_choice!r}; "
-                    f"expected one of {sorted(label_to_id)} or null"
-                )
-            r["choice"] = label_to_id.get(raw_choice)  # map label → ruler_id (None if null)
+            r["choice"] = resolve_pick_label(r.get("choice"), label_to_id)
             r["_model_snapshot"] = resp.model
             r["_prompt"] = prompt
             r["_raw_response"] = resp.model_dump(mode="json")

@@ -154,7 +154,7 @@ follow-ups):
   of matcher edges with no incumbent and no re-prompt — a node's fate is a pure
   function of its edge set, not of file/iteration/hash order (Constitutional rule
   2). It comprises three deterministic guards:
-  - **Hard cannot-link guard** (`matcher/constraints.cannot_link` + `_guarded_union`):
+  - **Hard cannot-link guard** (`matcher/constraints.cannot_link` + `_guarded_components`):
     refuses any union that would place two cannot-link rulers in one component
     (checked across all members, so one bad edge can't metastasize). Hard rules:
     disjoint reign Time-Spans, and same-source-distinct rows (exempting phase-suffix

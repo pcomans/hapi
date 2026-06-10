@@ -19,19 +19,21 @@ from pipeline.authority.graph.matcher.constraint_narrowed import (
     generate_candidates,
     narrowed_sets,
     review_narrowed,
+    transient_sdk_errors,
 )
 from pipeline.authority.graph.matcher.stage1_deterministic import run_stage1_matcher
 from pipeline.authority.graph.poc import approve_candidates_via_curator
 from pipeline.authority.graph.verdicts import emit_shortcuts
 
 TIP = [21, 22, 23, 24, 25]
+_TRANSIENT = transient_sdk_errors()
 
 
 def resilient(left, rights):
     for a in range(4):
         try:
             return _default_pick(left, rights)
-        except Exception:  # noqa: BLE001 - measurement resilience
+        except _TRANSIENT:  # only flaky network/rate-limit/5xx; bugs propagate (Rule 2)
             if a == 3:
                 return {"choice": None, "escalate": False, "reasoning": "ERROR"}
             time.sleep(2 ** a)

@@ -21,11 +21,13 @@ from pipeline.authority.graph.matcher.constraint_narrowed import (
     generate_candidates,
     narrowed_sets,
     review_narrowed,
+    transient_sdk_errors,
 )
 from pipeline.authority.graph.poc import guarded_same_entity_clusters
 from pipeline.authority.graph.verdicts import emit_shortcuts
 
 _GRAPH_DIR = Path(__file__).resolve().parent / "pipeline" / "authority" / "graph"
+_TRANSIENT = transient_sdk_errors()
 
 
 def _resilient(errors):
@@ -33,7 +35,7 @@ def _resilient(errors):
         for a in range(4):
             try:
                 return _default_pick(left, rights)
-            except Exception as exc:  # noqa: BLE001 - measurement resilience, recorded
+            except _TRANSIENT as exc:  # only flaky network/rate-limit/5xx; bugs propagate (Rule 2)
                 if a == 3:
                     errors.append(str(exc)[:80])
                     return {"choice": None, "escalate": False, "reasoning": "ERROR"}
