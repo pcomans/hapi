@@ -252,8 +252,20 @@ def _default_pick(left: dict, rights: list[dict]) -> dict:
     for block in resp.content:
         if block.type == "tool_use" and block.name == "pick_match":
             r = dict(block.input)
-            r["choice"] = label_to_id.get(r.get("choice"))  # map label → ruler_id (None if null)
+            raw_choice = r.get("choice")
+            # A returned label MUST be one we offered. Mapping an unknown/
+            # hallucinated label (e.g. "C9" when 4 were shown) silently to None
+            # would launder a malformed response into a deliberate "none of these"
+            # — raise instead (Rule 2: a malformed response is not a decision).
+            if raw_choice is not None and raw_choice not in label_to_id:
+                raise RuntimeError(
+                    f"pick_match returned unknown label {raw_choice!r}; "
+                    f"expected one of {sorted(label_to_id)} or null"
+                )
+            r["choice"] = label_to_id.get(raw_choice)  # map label → ruler_id (None if null)
             r["_model_snapshot"] = resp.model
+            r["_prompt"] = prompt
+            r["_raw_response"] = resp.model_dump(mode="json")
             return r
     raise RuntimeError("pick_match returned no tool call")
 
@@ -265,6 +277,7 @@ def review_narrowed(
     pick_fn=None,
     run_id: str = "cn_review_poc_0001",
     rich_context: bool = False,
+    output_dir: "Path | str | None" = None,
 ) -> tuple[list[tuple[str, str]], list[str]]:
     """Per left ruler, LLM-pick the matching candidate from its narrowed set and
     approve that candidate's verdict. A genuinely-contested identity is ESCALATED
@@ -273,19 +286,31 @@ def review_narrowed(
     ``rich_context`` passes the full structured record (dynasty, reign, throne
     name, variants, source) to the pick instead of the display name alone
     (ADR-020 §6).
+
+    The full per-pick interaction (prompt, raw response, model snapshot, decision,
+    and BOTH the match and escalation rows) is persisted to a committed
+    reviewer-outputs file; the D14 records the model's actual snapshot and the D1
+    output node references that file (path + sha256) — Rules 1 & 13.
     """
+    from pathlib import Path
+
+    from .reviewer_provenance import (
+        DEFAULT_OUTPUT_DIR,
+        model_snapshot_from_rows,
+        persist_reviewer_run,
+    )
+
     pick_fn = pick_fn or _default_pick
+    output_dir = Path(output_dir) if output_dir is not None else DEFAULT_OUTPUT_DIR
     describe = (lambda rid: rich_describe(g, rid)) if rich_context else (
         lambda rid: {"ruler_id": rid, "display_name": _display(g, rid)}
     )
-    algo = f"algorithm::{PICK_ALGORITHM_ID}"
-    g.add_node(Node(algo, ("D14",), {"id": PICK_ALGORITHM_ID, "model_id": DEFAULT_MODEL}, "MatcherAlgorithm"))
     run = f"run::{run_id}"
     g.add_node(Node(run, ("D10",), {"run_id": run_id}, "MatcherRun"))
-    g.add_edge(Edge(run, L23, algo))
 
     matches: list[tuple[str, str]] = []
     escalations: list[str] = []
+    output_rows: list[dict] = []
     for left_id, cand_stmts in candidate_map.items():
         def _right_of(stmt_id: str) -> str:
             for e in g.out_edges(stmt_id):
@@ -303,10 +328,21 @@ def review_narrowed(
             continue
         left_ctx = describe(left_id)
         result = pick_fn(left_ctx, right_ctx)
+        choice = None if result.get("escalate") else result.get("choice")
+        output_rows.append({
+            "left": left_id,
+            "escalate": bool(result.get("escalate")),
+            "choice": choice,
+            "reasoning": result.get("reasoning"),
+            "left_context": left_ctx,
+            "candidate_context": right_ctx,
+            "prompt": result.get("_prompt"),
+            "model_snapshot": result.get("_model_snapshot"),
+            "raw_response": result.get("_raw_response"),
+        })
         if result.get("escalate"):
             escalations.append(left_id)  # contested → human queue, no verdict
             continue
-        choice = result.get("choice")
         if not choice:
             continue
         stmt = f"stmt::cn::{left_id}::{choice}"
@@ -319,4 +355,17 @@ def review_narrowed(
             reasoning=result.get("reasoning"),
         )
         matches.append((left_id, choice))
+
+    out_path, out_sha = persist_reviewer_run(run_id, output_rows, output_dir)
+    algo = f"algorithm::{PICK_ALGORITHM_ID}"
+    g.add_node(Node(algo, ("D14",), {
+        "id": PICK_ALGORITHM_ID, "model_id": DEFAULT_MODEL,
+        "model_snapshot": model_snapshot_from_rows(output_rows),
+    }, "MatcherAlgorithm"))
+    g.add_edge(Edge(run, L23, algo))
+    out_data = f"sourcedata::pick_output::{run_id}"
+    g.add_node(Node(out_data, ("D1",),
+                    {"role": "reviewer_outputs_jsonl", "path": out_path, "sha256": out_sha},
+                    "SourceData"))
+    g.add_edge(Edge(run, "L11_had_output", out_data))
     return matches, escalations

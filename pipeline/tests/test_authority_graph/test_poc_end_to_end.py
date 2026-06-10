@@ -58,7 +58,7 @@ def test_full_graph_round_trips_losslessly(poc):
     assert len(back.edges) == len(poc.edges)
 
 
-def test_reviewer_path_also_works(poc):
+def test_reviewer_path_also_works(poc, tmp_path):
     # Building via the stage-2 reviewer path (stubbed) approves Unas too.
     g = build_poc_graph(
         review_fn=lambda ctx: {
@@ -66,6 +66,7 @@ def test_reviewer_path_also_works(poc):
             else "escalate",
             "confidence": 1.0,
             "reasoning": "stub",
-        }
+        },
+        output_dir=tmp_path,
     )
     assert verdict_outcome(g, tip_verdict(g, UNAS_MATCH)) == VERDICT_APPROVED

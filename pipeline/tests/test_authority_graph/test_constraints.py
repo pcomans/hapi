@@ -165,3 +165,60 @@ def test_resolve_escalates_regnal_mismatch():
     clusters, esc = resolve_matches(g)
     assert clusters == []
     assert any("regnal" in r for _, _, r in esc)
+
+
+def _triangle_graph():
+    # A cross-source triangle: one Leprohon king edge-linked to a Beckerath AND a
+    # Kitchen king, where the Beckerath and Kitchen kings are cannot-link (disjoint
+    # reigns). The component is internally contradictory.
+    g = ClaimGraph()
+    _ruler(g, "lep::x", "Sobekhotep", source="leprohon", source_id="lep-13.10")
+    _ruler(g, "bec::y", "Sobekhotep II", source="beckerath", source_id="bec-13.05",
+           reign=(-1800, -1790))
+    _ruler(g, "kit::z", "Sobekhotep", source="kitchen", source_id="kit-13.20",
+           reign=(-1700, -1690))
+    _edge(g, "lep::x", "bec::y")
+    _edge(g, "lep::x", "kit::z")
+    return g
+
+
+def test_resolve_is_order_independent_for_contradictory_triangle():
+    # Regression for the order-dependent _guarded_union bug: the cross-source
+    # triangle must escalate the WHOLE component (both edges), identically under
+    # every edge order — never order-dependently keep one edge and drop the other.
+    import itertools
+
+    results = []
+    for order in itertools.permutations(["bec::y", "kit::z"]):
+        g = ClaimGraph()
+        _ruler(g, "lep::x", "Sobekhotep", source="leprohon", source_id="lep-13.10")
+        _ruler(g, "bec::y", "Sobekhotep II", source="beckerath", source_id="bec-13.05",
+               reign=(-1800, -1790))
+        _ruler(g, "kit::z", "Sobekhotep", source="kitchen", source_id="kit-13.20",
+               reign=(-1700, -1690))
+        for other in order:
+            _edge(g, "lep::x", other)
+        clusters, esc = resolve_matches(g)
+        results.append((clusters, {frozenset((a, b)) for a, b, _ in esc}))
+    # Identical outcome regardless of edge order (Rule 2), and BOTH edges escalate.
+    assert results[0] == results[1]
+    assert results[0][0] == []  # no cluster from a contradictory component
+    assert results[0][1] == {
+        frozenset(("lep::x", "bec::y")), frozenset(("lep::x", "kit::z"))
+    }
+
+
+def test_sheshonq_iv_homonym_is_a_known_unguarded_collision():
+    # Two DIFFERENT kings sharing name + numeral + (assigned) dynasty across
+    # sources: the deterministic guards cannot separate them (documented KNOWN GAP
+    # in the module docstring). This fixture pins that gap — a future prenomen
+    # corroborator should flip cannot_link to a held-apart, at which point this
+    # test is updated to assert the block.
+    g = ClaimGraph()
+    _ruler(g, "lep::sh4", "Sheshonq IV", source="leprohon", source_id="leprohon-22.10")
+    _ruler(g, "bec::sh4", "Schoschenq IV.", source="beckerath", source_id="beckerath-22.14")
+    # Same numeral → regnal_mismatch is silent; different sources, no reigns → the
+    # hard guard is silent too. The collision is NOT auto-detectable today.
+    from pipeline.authority.graph.matcher.constraints import regnal_mismatch
+    assert regnal_mismatch(g, "lep::sh4", "bec::sh4") is None
+    assert cannot_link(g, "lep::sh4", "bec::sh4") is None

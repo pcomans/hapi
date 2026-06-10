@@ -203,3 +203,29 @@ def test_invalid_outcome_rejected(matched):
             curator_actor="group::hapi_curatorial",
             curator_document="document::curator_2026_05",
         )
+
+
+def test_retracted_as_root_verdict_rejected(matched):
+    # 'retracted' is only valid as a SUPERSEDING verdict (ADR-018). A root
+    # retraction (no supersedes target) must fail loudly at the IR layer.
+    with pytest.raises(VerdictError, match="retracted.*must supersede|invalid as a first"):
+        add_verdict(
+            matched,
+            matcher_stmt_id=UNAS_MATCH,
+            outcome=VERDICT_RETRACTED,
+            verdict_id="verdict::unas::root_retract",
+            curator_actor="group::hapi_curatorial",
+            curator_document="document::curator_2026_05",
+        )
+    # And it IS valid as a supersession of an existing approved tip.
+    _approve(matched, verdict_id="verdict::unas::1")
+    add_verdict(
+        matched,
+        matcher_stmt_id=UNAS_MATCH,
+        outcome=VERDICT_RETRACTED,
+        verdict_id="verdict::unas::2",
+        curator_actor="group::hapi_curatorial",
+        curator_document="document::curator_2026_05",
+        supersedes="verdict::unas::1",
+    )
+    assert verdict_outcome(matched, tip_verdict(matched, UNAS_MATCH)) == VERDICT_RETRACTED

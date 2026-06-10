@@ -158,6 +158,15 @@ def add_verdict(
             f"{sorted(_valid_outcomes())}"
         )
 
+    # 'retracted' is only valid as a SUPERSEDING verdict that withdraws a previous
+    # tip (ADR-018): a root verdict cannot retract anything. Enforce the invariant
+    # at the IR layer so no path can load a semantically-invalid root retraction.
+    if outcome == VERDICT_RETRACTED and supersedes is None:
+        raise VerdictError(
+            "A 'retracted' verdict must supersede the current tip; "
+            "'retracted' is invalid as a first/root verdict (ADR-018)."
+        )
+
     has_reviewer = reviewer_run is not None
     has_curator = curator_actor is not None and curator_document is not None
     if has_reviewer == has_curator:
@@ -249,26 +258,57 @@ def emit_shortcuts(g: ClaimGraph) -> list[Edge]:
     added. Idempotent (re-emitting an identical edge is a no-op at adapter level;
     here we skip duplicates).
     """
+    from collections import defaultdict
+
     reg = load_registry()
     emit_predicates = {
         f"type::{pid}": pid for pid, p in reg.items() if p.p177_target and p.emit_shortcut
     }
+
+    # Precompute once (was O(claims × E13 × E) via a per-claim tip_verdict that
+    # re-scanned every E13 and every edge): a single pass over the edge list gives
+    # each node's predicate→object map and the set of superseded verdicts.
+    out_map: dict[str, dict[str, str]] = defaultdict(dict)
+    superseded: set[str] = set()
+    for e in g.edges:
+        out_map[e.subject_id][e.predicate] = e.object_id  # last-wins (single-valued here)
+        if e.predicate == SUPERSEDES:
+            superseded.add(e.object_id)
+
+    # Tip outcome per matcher-claim, computed once. A tip is a verdict with no
+    # incoming supersedes; >1 tip for one claim is a malformed chain → raise (same
+    # contract as ``tip_verdict``).
+    verdict_type_node = f"type::{VERDICT_TYPE}"
+    tips_by_claim: dict[str, list[str]] = defaultdict(list)
+    for n in g.nodes_of_class("E13"):
+        em = out_map.get(n.id, {})
+        if em.get(P177) != verdict_type_node or n.id in superseded:
+            continue
+        claim = em.get(P140)
+        if claim is not None:
+            tips_by_claim[claim].append(n.id)
+    approved_claims: set[str] = set()
+    for claim, tips in tips_by_claim.items():
+        if len(tips) > 1:
+            raise VerdictError(f"Matcher claim {claim!r} has {len(tips)} chain tips: {tips}")
+        outcome_node = out_map.get(tips[0], {}).get(P141)
+        if outcome_node is not None and g.node(outcome_node).props.get("id") == VERDICT_APPROVED:
+            approved_claims.add(claim)
+
     existing = {(e.subject_id, e.predicate, e.object_id) for e in g.edges}
     added: list[Edge] = []
     for stmt in g.nodes_of_class("E13"):
-        edges = {e.predicate: e.object_id for e in g.out_edges(stmt.id)}
-        type_node = edges.get(P177)
-        pid = emit_predicates.get(type_node)
+        edges = out_map.get(stmt.id, {})
+        pid = emit_predicates.get(edges.get(P177))
         if pid is None:
             continue  # not an emit_shortcut predicate (or verdict/derived)
         subject = edges.get(P140)
         value = edges.get(P141)
         if subject is None or value is None:
             continue
-        if _is_machine_derived(g, stmt.id):
-            tip = tip_verdict(g, stmt.id)
-            if tip is None or verdict_outcome(g, tip) != VERDICT_APPROVED:
-                continue  # gated: no approved tip → no shortcut
+        # machine-derived (has hapi:derived_by_run) → gated on an approved tip.
+        if DERIVED_BY_RUN in edges and stmt.id not in approved_claims:
+            continue
         triple = (subject, pid, value)
         if triple in existing:
             continue

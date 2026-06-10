@@ -17,6 +17,23 @@ Rules:
   different people UNLESS the source links them (Kitchen `same_person_as`, loaded
   as documentary same_entity_as) OR they are stage-suffix phase siblings of one
   id stem (Leprohon `leprohon-18.10a`/`-18.10b`).
+
+KNOWN GAP — same-name + same-numeral collisions across sources (dynasty-assignment
+divergence). None of these deterministic guards catches two DIFFERENT kings that
+share a name AND a regnal numeral AND a (differently-assigned) dynasty across
+sources. The standing case: Beckerath `22.14` "Schoschenq IV." (the Pedubastis-line
+king Leprohon files as Sheshonq VI, `leprohon-23.03`) vs Leprohon `22.10`
+"Sheshonq IV" (Hedjkheperre, after Sheshonq III) — same name + numeral, both filed
+Dynasty 22: `regnal_mismatch` cannot fire (IV == IV), the reign rule cannot fire
+(Leprohon dates no reigns), and the Wikidata silver benchmark is blind to the pair
+(no "Sheshonq IV" alias, so both drop from the universe). The robust discriminator
+is the PRENOMEN (Leprohon's Hedjkheperre vs the Pedubastis-line throne name) — the
+ADR-020 §6 corroboration-predicate spec follow-up; until that lands this pair is an
+*adversarial cannot-link* fixture (see
+``test_constraints.test_sheshonq_iv_homonym_is_a_known_unguarded_collision``), not a
+case the matcher can resolve automatically. The same dynasty-divergence mechanism
+turns several `MATCH_RATE_FINDINGS.md` "genuine gaps" (Osorkon III/IV, Takelot III,
+Petubastis I, Rudamun — all listed by Leprohon) into structural false negatives.
 """
 
 from __future__ import annotations

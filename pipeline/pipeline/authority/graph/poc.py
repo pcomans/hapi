@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from .ir import ClaimGraph, Edge, Node
+from .ir import ClaimGraph, Node
 from .loader import load_poc_graph, load_poc_graph_3way
 from .matcher.stage1_deterministic import run_stage1_matcher
 from .matcher.stage2_reviewer import ReviewFn, run_stage2_reviewer
@@ -63,18 +63,19 @@ def approve_candidates_via_curator(g: ClaimGraph, candidate_ids: list[str]) -> l
     return verdicts
 
 
-def build_poc_graph(review_fn: ReviewFn | None = None) -> ClaimGraph:
+def build_poc_graph(review_fn: ReviewFn | None = None, *, output_dir=None) -> ClaimGraph:
     """Build the complete POC claim graph.
 
     ``review_fn`` (or a real ANTHROPIC_API_KEY) routes approval through the
     stage-2 LLM reviewer; otherwise the curator human-escalation path approves
-    the deterministic candidates.
+    the deterministic candidates. ``output_dir`` is the reviewer-outputs location
+    (defaults to the committed dir; offline tests pass a tmp dir).
     """
     g = load_poc_graph()
     load_curator_display_names(g)
     candidates = run_stage1_matcher(g)
     if review_fn is not None:
-        run_stage2_reviewer(g, candidates, review_fn=review_fn)
+        run_stage2_reviewer(g, candidates, review_fn=review_fn, output_dir=output_dir)
     else:
         approve_candidates_via_curator(g, candidates)
     emit_shortcuts(g)
@@ -154,11 +155,12 @@ def guarded_same_entity_clusters(
 ) -> tuple[list[frozenset[str]], list[tuple[str, str, str]]]:
     """Constraint-aware clustering (advisor Priority 2 / ADR-020 merge guard).
 
-    Like ``same_entity_clusters`` but refuses any union that would place two
-    cannot-link rulers in one component — checked across ALL current members of
-    the two components, so one bad pairwise edge can't metastasize (the
-    Pinudjem I / Menkheperre over-merge). Returns (clusters, conflicts) where
-    each conflict is (a, b, reason) — the held-apart pairs to route to escalation.
+    Like ``same_entity_clusters`` but order-independent and guarded: any connected
+    component that contains a cannot-link member-pair is escalated *whole* (every
+    edge in it), never split edge-by-edge in arrival order — so one bad pairwise
+    edge can't metastasize (the Pinudjem I / Menkheperre over-merge) and the
+    result does not depend on edge order (Rule 2). Returns (clusters, conflicts)
+    where each conflict is (a, b, reason) — the escalation queue.
     """
     if cannot_link_fn is None:
         from .matcher.constraints import cannot_link, documentary_same_entity_pairs
@@ -167,77 +169,80 @@ def guarded_same_entity_clusters(
         def cannot_link_fn(x: str, y: str) -> str | None:  # noqa: ANN001
             return cannot_link(g, x, y, doc_pairs=doc_pairs)
 
+    pairs = [
+        (e.subject_id, e.object_id) for e in g.edges_with_predicate(SAME_ENTITY_AS)
+    ]
+    return _guarded_components(pairs, cannot_link_fn)
+
+
+def _connected_components(pairs) -> list[set[str]]:
+    """Raw connected components over an iterable of (a, b) pairs. Constraint-free
+    union-find: the resulting partition is a pure function of the pair *set*,
+    independent of iteration order."""
     parent: dict[str, str] = {}
-    members: dict[str, set[str]] = {}
-    conflicts: list[tuple[str, str, str]] = []
 
     def find(x: str) -> str:
         parent.setdefault(x, x)
-        members.setdefault(x, {x})
         while parent[x] != x:
             parent[x] = parent[parent[x]]
             x = parent[x]
         return x
 
-    def union(a: str, b: str) -> None:
-        ra, rb = find(a), find(b)
-        if ra == rb:
-            return
-        # Guard: a union is allowed only if NO member-pair across the two
-        # components is cannot-link.
-        for x in members[ra]:
-            for y in members[rb]:
-                reason = cannot_link_fn(x, y)
-                if reason:
-                    conflicts.append((x, y, reason))
-                    return  # refuse the union; components stay apart
-        parent[ra] = rb
-        members[rb] |= members[ra]
-        members.pop(ra, None)
-
-    for e in g.edges_with_predicate(SAME_ENTITY_AS):
-        union(e.subject_id, e.object_id)
-
-    clusters = [
-        frozenset(members[r]) for r in {find(n) for n in parent} if len(members[r]) > 1
-    ]
-    return clusters, conflicts
-
-
-def _guarded_union(pairs, cannot_link_fn):
-    """Constraint-aware union-find over a list of (a, b) pairs. Returns
-    (clusters, conflicts); refuses a union if any cross-component member-pair is
-    cannot-link. Order-independent over the pair set for the accept/reject of a
-    given pair set (conflicts are recorded, never silently resolved)."""
-    parent: dict[str, str] = {}
-    members: dict[str, set[str]] = {}
-    conflicts: list[tuple[str, str, str]] = []
-
-    def find(x):
-        parent.setdefault(x, x)
-        members.setdefault(x, {x})
-        while parent[x] != x:
-            parent[x] = parent[parent[x]]
-            x = parent[x]
-        return x
-
-    def union(a, b):
-        ra, rb = find(a), find(b)
-        if ra == rb:
-            return
-        for x in members[ra]:
-            for y in members[rb]:
-                reason = cannot_link_fn(x, y)
-                if reason:
-                    conflicts.append((x, y, reason))
-                    return
-        parent[ra] = rb
-        members[rb] |= members[ra]
-        members.pop(ra, None)
-
+    nodes: set[str] = set()
     for a, b in pairs:
-        union(a, b)
-    clusters = [frozenset(members[r]) for r in {find(n) for n in parent} if len(members[r]) > 1]
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+        nodes.add(a)
+        nodes.add(b)
+    comps: dict[str, set[str]] = defaultdict(set)
+    for n in nodes:
+        comps[find(n)].add(n)
+    return list(comps.values())
+
+
+def _guarded_components(pairs, cannot_link_fn):
+    """Order-independent guarded clustering. Returns (clusters, conflicts).
+
+    Computes the raw connected components over ``pairs`` (constraint-free, so
+    order-independent), then decides each component as a SET, never edge-by-edge:
+
+    - if no member-pair is cannot-link → accept the whole component as a cluster;
+    - if ANY member-pair is cannot-link → the component is internally
+      contradictory, so EVERY edge in it is escalated (Rule 2: a human resolves
+      the whole ambiguous component; we never order-dependently keep a "winner"
+      and drop the edge that happened to arrive second).
+
+    A node's outcome is thus a pure function of its component's node-set and
+    edge-set — independent of pair/iteration/hash order.
+    """
+    pairs = [tuple(p) for p in pairs]
+    clusters: list[frozenset[str]] = []
+    conflicts: list[tuple[str, str, str]] = []
+    for comp in _connected_components(pairs):
+        members = sorted(comp)
+        bad: tuple[str, str, str] | None = None
+        for i in range(len(members)):
+            for j in range(i + 1, len(members)):
+                reason = cannot_link_fn(members[i], members[j])
+                if reason:
+                    bad = (members[i], members[j], reason)
+                    break
+            if bad:
+                break
+        if bad is None:
+            if len(comp) > 1:
+                clusters.append(frozenset(comp))
+            continue
+        bx, by, breason = bad
+        comp_edges = {
+            tuple(sorted((a, b))) for a, b in pairs if a in comp and b in comp and a != b
+        }
+        for a, b in sorted(comp_edges):
+            conflicts.append(
+                (a, b, f"contradictory component (cannot-link {bx} / {by}: {breason})")
+            )
+    clusters.sort(key=lambda c: tuple(sorted(c)))
     return clusters, conflicts
 
 
@@ -308,7 +313,7 @@ def resolve_matches(g: ClaimGraph) -> tuple[list[frozenset[str]], list[tuple[str
                     )
 
     remaining = [(a, b) for a, b in pairs if frozenset((a, b)) not in escalated]
-    clusters, conflicts = _guarded_union(
+    clusters, conflicts = _guarded_components(
         remaining, lambda x, y: cannot_link(g, x, y, doc_pairs=doc)
     )
     escalations.extend(conflicts)
@@ -329,7 +334,16 @@ def summarize(g: ClaimGraph) -> dict[str, int]:
 
 
 def export_all(g: ClaimGraph) -> dict[str, object]:
-    """Serialise the IR to every reachable substrate. Never raises on a down service."""
+    """Serialise the IR to every reachable substrate.
+
+    Only a *down service* is tolerated (reported as ``unavailable: ...``); any
+    other exception — a bug in an adapter's ``write_graph``, a mapping error —
+    propagates (Rule 2: no swallowed failures). The tolerated types are the
+    narrow connectivity errors each driver raises when its service is unreachable.
+    """
+    from sqlalchemy.exc import OperationalError
+    from neo4j.exceptions import ServiceUnavailable
+
     from .adapters import rdf_adapter
 
     results: dict[str, object] = {}
@@ -341,7 +355,7 @@ def export_all(g: ClaimGraph) -> dict[str, object]:
         from .adapters import relational_adapter
         engine = relational_adapter.get_engine()
         results["postgres"] = relational_adapter.write_graph(engine, g)
-    except Exception as exc:  # noqa: BLE001 - report, never fail the export
+    except OperationalError as exc:  # Postgres unreachable — report, don't fail.
         results["postgres"] = f"unavailable: {type(exc).__name__}"
 
     try:
@@ -350,7 +364,7 @@ def export_all(g: ClaimGraph) -> dict[str, object]:
         driver.verify_connectivity()
         results["neo4j"] = neo4j_adapter.write_graph(driver, g)
         driver.close()
-    except Exception as exc:  # noqa: BLE001
+    except ServiceUnavailable as exc:  # Neo4j unreachable — report, don't fail.
         results["neo4j"] = f"unavailable: {type(exc).__name__}"
 
     return results

@@ -1,8 +1,18 @@
 # Cross-source match-rate findings (Leprohon × Beckerath)
 
-Measured result of constraint-narrowed + LLM-pick matching between the two POC
-sources, run via `pipeline/run_match_rate.py`. Raw result:
-[`match_rate_result.json`](./match_rate_result.json).
+> **⚠️ Not reproducible from this branch.** Every number below comes from a *live*
+> LLM run. To keep this POC PR slim, the multi-hundred-KB run artifacts
+> (`match_rate_result.json`, the per-pick clean-edge dumps, `benchmark_results.json`)
+> are **not committed**, so these figures are **directional, not branch-verifiable**
+> — do not cite them as established results. Reproduce with
+> `cd pipeline && uv run python run_match_rate.py` (constraint-narrow + LLM pick)
+> and `run_benchmark.py` (silver scoring); a live run now persists the *full*
+> per-candidate interaction (prompt + raw response + model snapshot) to
+> `reviewer_outputs/<run_id>.jsonl` (Rules 1 & 13), which is what a committed run
+> must include before any of these numbers become authority-grade.
+
+Constraint-narrowed + LLM-pick matching between the two POC sources, run via
+`pipeline/run_match_rate.py`.
 
 ## Headline
 

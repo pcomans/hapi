@@ -60,7 +60,7 @@ def test_generate_emits_candidate_e13s_with_machine_provenance(graph):
     assert "P14_carried_out_by" not in preds  # not human-documentary
 
 
-def test_pick_approves_chosen_candidate_and_gates_shortcut(graph):
+def test_pick_approves_chosen_candidate_and_gates_shortcut(graph, tmp_path):
     narrowed = narrowed_sets(graph, dynasty=18)
     cand_map = generate_candidates(graph, narrowed)
 
@@ -70,7 +70,9 @@ def test_pick_approves_chosen_candidate_and_gates_shortcut(graph):
             return {"choice": "beckerath::18.09", "escalate": False, "reasoning": "stub"}
         return {"choice": None, "escalate": False, "reasoning": "stub abstain"}
 
-    matches, escalations = review_narrowed(graph, cand_map, pick_fn=pick_fn)
+    matches, escalations = review_narrowed(
+        graph, cand_map, pick_fn=pick_fn, output_dir=tmp_path
+    )
     assert matches == [("leprohon::leprohon-18.09", "beckerath::18.09")]
     assert escalations == []
 
@@ -86,7 +88,7 @@ def test_pick_approves_chosen_candidate_and_gates_shortcut(graph):
     )
 
 
-def test_contested_identity_is_escalated_not_matched(graph):
+def test_contested_identity_is_escalated_not_matched(graph, tmp_path):
     narrowed = narrowed_sets(graph, dynasty=18)
     cand_map = generate_candidates(graph, narrowed)
 
@@ -96,7 +98,9 @@ def test_contested_identity_is_escalated_not_matched(graph):
             return {"choice": None, "escalate": True, "reasoning": "contested"}
         return {"choice": None, "escalate": False, "reasoning": "abstain"}
 
-    matches, escalations = review_narrowed(graph, cand_map, pick_fn=pick_fn)
+    matches, escalations = review_narrowed(
+        graph, cand_map, pick_fn=pick_fn, output_dir=tmp_path
+    )
     assert matches == []
     assert escalations == ["leprohon::leprohon-18.09"]
     # Escalated → NO verdict → no shortcut.

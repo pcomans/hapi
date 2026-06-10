@@ -25,7 +25,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 
 from ..ir import ClaimGraph
-from ..verdicts import SAME_ENTITY_AS, SUPERSEDES, VERDICT_TYPE
+from ..verdicts import SUPERSEDES, VERDICT_TYPE
 
 DEFAULT_DSN = "postgresql+psycopg2://hapi:hapi@127.0.0.1:5432/hapi_poc"
 
@@ -58,7 +58,17 @@ CREATE TABLE IF NOT EXISTS claimgraph.verdict_chain (
     outcome                 text NOT NULL,
     -- (a) unique successor per predecessor (NULLs are distinct in Postgres, so
     --     this does NOT block multiple roots — (b) handles that).
-    CONSTRAINT verdict_unique_successor UNIQUE (predecessor_verdict_id)
+    CONSTRAINT verdict_unique_successor UNIQUE (predecessor_verdict_id),
+    -- outcome is restricted to the three-term verdict vocabulary (ADR-018).
+    CONSTRAINT verdict_outcome_vocabulary CHECK (
+        outcome IN ('hapi:verdict_approved', 'hapi:verdict_rejected', 'hapi:verdict_retracted')
+    ),
+    -- 'retracted' is valid ONLY as a superseding verdict (it withdraws a prior
+    --     tip); a root verdict can never be a retraction (ADR-018). Same-row
+    --     columns, so a plain CHECK suffices.
+    CONSTRAINT verdict_retracted_must_supersede CHECK (
+        outcome <> 'hapi:verdict_retracted' OR predecessor_verdict_id IS NOT NULL
+    )
 );
 
 -- (b) unique root per matcher-claim.
@@ -94,9 +104,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- BEFORE INSERT OR UPDATE: an UPDATE that re-pointed predecessor_verdict_id
+--     would otherwise bypass the tip rule (the trigger only fired on INSERT).
 DROP TRIGGER IF EXISTS verdict_tip_trigger ON claimgraph.verdict_chain;
 CREATE TRIGGER verdict_tip_trigger
-    BEFORE INSERT ON claimgraph.verdict_chain
+    BEFORE INSERT OR UPDATE ON claimgraph.verdict_chain
     FOR EACH ROW EXECUTE FUNCTION claimgraph.verdict_tip_check();
 """
 

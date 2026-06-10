@@ -39,9 +39,18 @@ NOT repurposed for direct API calls.
 
 The curator-approval path (`build_poc_graph()`) proves verdict gating end-to-end
 without any API calls. The live path (`build_poc_graph_live()`) additionally
-produces **faithful CRMdig provenance**: the reviewer `:D14` records the actual
-returned `model_snapshot`, and verdict-E13s carry real `:D10` run metadata —
-exactly as ADR case-4b specifies.
+produces **faithful CRMdig provenance**: the reviewer `:D14` records the model's
+actual returned `model_snapshot` (taken from the response, not a caller param),
+and verdict-E13s carry real `:D10` run metadata — exactly as ADR case-4b specifies.
+
+Every live run also **persists the complete per-candidate interaction** — the
+exact prompt, the full raw response, the returned model snapshot, the decision,
+and the input context — to `reviewer_outputs/<run_id>.jsonl`. The run's `:D1`
+output node records that file's path + content `sha256`, so the recorded hash is
+verifiable against a file that exists on disk and the decision is replayable
+(Rules 1 & 13). Commit that file alongside any numbers a run produces; reading the
+persisted response is how you inspect/score a past decision — never re-run the LLM
+to re-derive it.
 
 ## Cost note
 

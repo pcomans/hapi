@@ -123,9 +123,12 @@ over the approved `hapi:same_entity_as` edges. Cross-source identity is *data*:
 need the constraint-narrowed LLM pick — adding those is the natural next step.
 
 **LLM 3-way clustering** (constraint-narrowed pick for the Kitchen pairs over the
-TIP dynasties 21–25, 106 calls; `run_3way_llm.py`, raw result
-[`threeway_llm_result.json`](./threeway_llm_result.json)) lifts the 3-source
-clusters from **2 → 27**, recovering deep variation the exact matcher can't —
+TIP dynasties 21–25, 106 calls; `run_3way_llm.py` — a *live* run whose
+multi-hundred-KB result artifact is **not committed** in this slimmed POC PR, so
+the count below is directional, not branch-verifiable; reproduce by running the
+script, which persists the full per-pick interaction to `reviewer_outputs/`) lifts
+the 3-source clusters from **2 → 27**, recovering deep variation the exact matcher
+can't —
 Shoshenq/Schoschenq/Sheshonq, Greek↔Egyptian (Bokchoris↔Bakenranef, Psusennes I↔
 Pa-Seba-Kha-En-Niut I), and the Nubian Dyn-25 spellings (Piye/Pije/Piankhy,
 Shabako/Schabako/Shabaka, Tantamani/Tanot-amun).
