@@ -76,9 +76,13 @@ tsdata/
 htmlcov/
 coverage/
 
-# Authority matcher benchmark — regenerable caches + run artifacts.
-# (The Wikidata cache re-fetches from the committed SPARQL query; result/edge
-#  JSONs reproduce from the run scripts; the numbers live in the findings .md.)
+# Authority matcher benchmark — large, machine-generated run artifacts, kept out
+# of this slim draft-POC PR (they are ~hundreds of KB / ~11k-line JSON dumps).
+# Because they are NOT committed, any figure derived from them is not verifiable
+# from the branch — the findings docs carry that disclaimer, and the reproducible
+# provenance vehicle for a real (committed) run is `reviewer_outputs/<run_id>.jsonl`
+# (Rules 1 & 13). To make the numbers branch-verifiable, commit a fresh run's
+# artifacts (and drop the matching line below) rather than relying on prose.
 pipeline/pipeline/authority/graph/benchmark/wikidata_pharaohs.json
 pipeline/pipeline/authority/graph/*result*.json
 pipeline/pipeline/authority/graph/*_edges.json
