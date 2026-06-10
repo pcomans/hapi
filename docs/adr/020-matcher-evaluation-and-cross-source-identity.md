@@ -74,6 +74,20 @@ universe = records that align to a QID and the classes = QID groups; the committ
 *gold* fixture realises it as human-adjudicated equivalence classes, with
 per-class provenance, over an enumerated record set.
 
+**Universe composition is itself a reviewed artifact, not a by-product of candidate
+generation.** If the universe is assembled only from records that name-similarity
+already links, it under-tests exactly the adversarial cases that drive real matcher
+error, and a high B-cubed precision becomes an artifact of a friendly universe
+rather than a property of the matcher. The gold universe must therefore deliberately
+seed the known **homonym traps as *distinct* classes** — Egyptian royal naming
+reuses prenomina across distant individuals — including at minimum: **Menkheperre**
+(Thutmose III, the Dynasty-21 High Priest, and one of Piye's throne names — a
+three-way trap across the committed sources), **Nebmaatre** (Amenhotep III /
+Ramesses VI), the **Usermaatre** cluster (Ramesses II plus several TIP kings), the
+**Sekhemre-\*** compounds (Dynasty 13/16/17), and same-name father/son and
+predecessor/successor runs (Pinudjem I/II, Osorkon I–IV, Takelot I–III, Sobekhotep
+I–VIII).
+
 Two metric families are reported, and **must not be conflated** — collapsing them
 recreates the "coverage is not recall" error this ADR exists to prevent:
 
@@ -118,7 +132,7 @@ alone.
 
 1. **Silver (Wikidata)** — align rows to QIDs, treat same-QID as truth. Cheap,
    directional, and already catches the Pinudjem/Menkheperre merge (distinct QIDs).
-2. **Silver + adjudicate disagreements** — human reviews only matcher↔Wikidata
+2. **Silver + adjudicate disagreements** — human reviews of only the matcher↔Wikidata
    deltas; upgrades the contested cases at a fraction of full-labelling cost.
 3. **Committed gold** — scholar-curated **equivalence classes over an enumerated
    record universe** (a closed-world fixture per decision 3), with per-class
@@ -146,19 +160,43 @@ recoverable later. The asymmetry is real, so the policy is asymmetric.
 Consequences for the matcher (the spec follows; some parts are built, some are
 follow-ups):
 - **Corroborate-or-escalate acceptance.** A matcher-derived `hapi:same_entity_as`
-  is auto-approved only when a *structured* signal corroborates the name judgment
-  (e.g. shared dynasty AND reign-overlap or matching regnal numeral). Name
-  agreement alone is **not** sufficient to accept — it routes to escalation. *(Spec
-  follow-up: the exact corroboration predicate.)*
+  is auto-approved only when a *structured* signal corroborates the name judgment;
+  name agreement alone is **not** sufficient to accept — it routes to escalation.
+  The corroborator is **prenomen (throne-name) match as the *primary* signal**,
+  with dynasty / reign-overlap as secondary support only. Shared dynasty and
+  matching regnal numeral are the two *weakest* signals for exactly these sources
+  and must not be load-bearing: TIP dynasty assignments disagree **in the committed
+  data** (Takelot III is Dynasty 22 in Beckerath but Dynasty 23 in Kitchen), so a
+  predicate requiring dynasty agreement systematically routes true TIP matches to
+  escalation; and regnal numerals are convention-relative (Ryholt renumbered the
+  Dynasty-13 Sobekhoteps against Beckerath, so a matching numeral on two
+  "Sobekhotep II" rows from different conventions can be *anti*-corroborating, while
+  reign-overlap-AND-dynasty actively endorses the adjacent-homonym / co-regent
+  false-positive profile the guard exists to catch). The prenomen
+  (`khnum ib ra` uniquely fixes Amasis; prenomen compounds are the only stable
+  discriminator across the Sobekhoteps) carries the identity. *(Spec follow-up: the
+  prenomen-match predicate plus a committed homonym exception list — see decision 3
+  — for the cases where one prenomen is shared across distinct kings: Menkheperre,
+  Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.)*
 - **Order-independent resolution** (built): `poc.resolve_matches` resolves a set
   of matcher edges with no incumbent and no re-prompt — a node's fate is a pure
   function of its edge set, not of file/iteration/hash order (Constitutional rule
   2). It comprises three deterministic guards:
-  - **Hard cannot-link guard** (`matcher/constraints.cannot_link` + `_guarded_union`):
-    refuses any union that would place two cannot-link rulers in one component
-    (checked across all members, so one bad edge can't metastasize). Hard rules:
-    disjoint reign Time-Spans, and same-source-distinct rows (exempting phase-suffix
-    siblings and documentary `same_person_as` links).
+  - **Hard cannot-link guard** (`matcher/constraints.cannot_link` +
+    `_guarded_components`): refuses any union that would place two cannot-link rulers
+    in one component (checked across all members, so one bad edge can't metastasize).
+    Hard rules: same-source-distinct rows (exempting phase-suffix siblings and
+    documentary `same_person_as` links), and disjoint reign Time-Spans — but reign
+    disjointness is a hard block **only within a single source/framework** (where a
+    source never dates one person to two disjoint spans, so it genuinely proves
+    distinctness); **cross-framework it escalates rather than hard-blocks**, because
+    absolute Egyptian chronology is framework-relative and the divergence grows with
+    antiquity (Beckerath opens Dynasty 1 at ~3032 BCE vs Hornung–Krauss–Warburton
+    ~2900 — a ~century offset on the same kings), so two sources' spans for one
+    Early-Dynastic king can be fully disjoint purely from the framework offset. The
+    cross-framework comparison therefore uses a **period-scaled tolerance** (±~25 yr
+    Late Period widening to ±100+ yr Early Dynastic) before disjointness counts at
+    all. *(Spec follow-up: the per-source framework tag + the tolerance schedule.)*
   - **Uniqueness escalation (Fix 1):** if two *distinct* rulers from one source both
     claim a single target (and aren't the same person), *all* the clashing edges
     escalate — set-based, so it never auto-keeps an "incumbent" the way a re-prompt
@@ -169,7 +207,13 @@ follow-ups):
     `"Ahmose III"` (`leprohon-26.05`) but Beckerath's `"Amosis II."`, a III-vs-II
     clash on one person — so a hard block would false-reject a true match. (The
     labels are the sources' verbatim numbering, not our gloss; the conventional
-    Egyptological name is Ahmose II.)
+    Egyptological name is Ahmose II.) The numeral divergence is **systematic, not a
+    one-off**: it appears wherever scholarly numbering conventions differ (most
+    acutely the Dynasty-13 Sobekhoteps under Ryholt vs Beckerath), and it cuts both
+    ways — a numeral can *mismatch* on one king (here) and *match* on two different
+    kings — which is the deeper reason "matching regnal numeral" is not safe as
+    accepting corroboration (see the corroborate-or-escalate bullet) and escalation
+    is right in both directions.
 - **Doubt → escalation, never a guess.** Held-apart conflicts, uniqueness clashes,
   regnal mismatches, and uncorroborated picks go to the human/curator queue via the
   verdict/supersession path; they do **not** become accepted links and are **not**
