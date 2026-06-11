@@ -29,7 +29,7 @@
             CRM/CRMdig term, because none is declared.
         (c) Controlled-vocabulary E55 Type instances
             (hapi:verdict_approved, hapi:verdict_rejected, hapi:verdict_retracted —
-            declared via <rdf:Description><rdf:type rdf:resource="...E55_Type"/>).
+            declared via &lt;rdf:Description&gt;&lt;rdf:type rdf:resource="...E55_Type"/&gt;).
             These are NOT predicates and NOT free-standing project vocabulary
             without a CIDOC parent — they are CIDOC vocabulary INSTANCES,
             typed directly under CIDOC's E55 Type class. They are P141 values
