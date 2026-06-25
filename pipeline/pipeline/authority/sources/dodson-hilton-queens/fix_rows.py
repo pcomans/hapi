@@ -624,7 +624,7 @@ def backfill_is_group_entry(rows: list[dict]) -> list[str]:
 
 
 def main() -> None:
-    rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+    rows = [json.loads(line) for line in RECONCILED.read_text(encoding="utf-8").splitlines() if line.strip()]
 
     # Schema-shape backfills first — every row gains the new typed
     # `is_group_entry` field BEFORE SPOT_CORRECTIONS runs. Patterned
@@ -672,10 +672,11 @@ def main() -> None:
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows
         )
-        + "\n"
+        + "\n",
+        encoding="utf-8",
     )
 
-    existing_diff = DIFF.read_text()
+    existing_diff = DIFF.read_text(encoding="utf-8")
     marker = _OVERRIDES_MARKER
     # Strip the previous LLM-APPLIED OVERRIDES section in-place so the
     # rewritten section replaces (not duplicates) it. Use the bare marker
@@ -728,7 +729,7 @@ def main() -> None:
         "provisional until that happens.\n\n"
         f"{body}\n"
     )
-    DIFF.write_text(appended)
+    DIFF.write_text(appended, encoding="utf-8")
 
     print(f"Applied {applied_count} override(s) this run ({len(override_log)} total in log).")
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
