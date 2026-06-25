@@ -85,7 +85,7 @@ CITATION_FOUNDERS = {"pdf_pages": PDF_PAGES_FOUNDERS, "edition": EDITION}
 # and her sisters-in-law, the Sobkhotep / Neferhotep royal lineages, and
 # the Nubkhaes A matrilineal cluster. Introduces the cross-section
 # duplicate pattern for an 11th/12th↔13th-Dynasty individual (Hetepti —
-# full prose in Seizers, stub here with `notes: "See previous section."`).
+# listed in both Seizers and here; see CROSS_SECTION_DUPLICATE_IDS).
 # Printed p. 110 is a full-bleed photograph with zero entries, so the
 # chunk page-header sequence skips 110.
 PDF_PAGES_KC = "98-103"
@@ -123,6 +123,33 @@ def _fix_rows_module():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
+
+
+@lru_cache(maxsize=1)
+def _destructure_module():
+    """Path-load `destructure_notes.py` (hyphenated source dir)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "dh_destructure_notes", SOURCE_DIR / "destructure_notes.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_destructure_drops_prose_and_is_idempotent() -> None:
+    """`destructure_notes` removes prose fields, preserves every other field,
+    and is idempotent (re-running on a destructured row is a no-op)."""
+    mod = _destructure_module()
+    row = {
+        "dh_id": "X", "name": "X", "notes": "verbatim D&H prose here",
+        "roles": ["KW"], "dynasty": 18,
+    }
+    once = mod.destructure_row(row)
+    assert "notes" not in once
+    assert once == {"dh_id": "X", "name": "X", "roles": ["KW"], "dynasty": 18}
+    assert mod.destructure_row(once) == once  # idempotent
+    assert mod.PROSE_FIELDS == ("notes",)
 
 
 def _row(dh_id: str, sub_period: str | None = None) -> dict:
@@ -172,7 +199,7 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
         "dh_id", "name", "alt_names", "roles", "sex",
         "spouse_names", "father_name", "mother_name", "children_names",
         "dynasty", "sub_period", "unplaced",
-        "notes", "source_citation",
+        "source_citation",
         "is_group_entry",
     }
     expected = dict(expected)
@@ -195,6 +222,24 @@ def _assert_full_row(dh_id: str, expected: dict, sub_period: str | None = None) 
 def test_row_count() -> None:
     """Power (59) + Amarna (41) + Ramesside (170) + Head of South (13) + Seizers (48) + Kings and Commoners (108) + Founders (26) + Of Kings and Priests (84) = 549 rows total."""
     assert len(_rows()) == 549, len(_rows())
+
+
+def test_no_verbatim_notes_prose() -> None:
+    """The verbatim D&H Brief-Lives prose (`notes`) is dropped before any
+    public release by `destructure_notes.py` — the terminal pipeline stage.
+    Names, kinships, titles and dynasty are uncopyrightable facts and live in
+    their own structured fields; D&H's specific phrasing of the narrative is
+    their protectable expression and must not be reproduced. This closure test
+    locks the destructure: no reconciled row may carry a `notes` (or any other
+    verbatim-prose) key. See the source README "Rights" section and
+    docs/PUBLISH-READINESS.md."""
+    prose_fields = {"notes"}
+    offenders = [
+        (r["dh_id"], r["sub_period"], sorted(prose_fields & r.keys()))
+        for r in _rows()
+        if prose_fields & r.keys()
+    ]
+    assert not offenders, f"verbatim-prose field(s) present: {offenders[:5]}"
 
 
 def test_row_counts_per_chunk() -> None:
@@ -344,7 +389,7 @@ def test_dynasty_per_chunk() -> None:
     joins the 1st, 2nd and 3rd Dynasties — the chunk-default is Dyn 1
     (D&H's section placement) with per-row refinements via
     `FOUNDERS_CORRECTIONS` in `fix_rows.py` for the four Unplaced rows
-    whose notes prose explicitly anchors them to Dyn 2 (Shepsetipet,
+    that D&H's per-entry text places in Dyn 2 (Shepsetipet,
     Sitba, Syhefernerer) or Dyn 3 (Redji).
     """
     expected_dynasty = {
@@ -604,9 +649,10 @@ def test_is_group_entry_matches_canonical_set() -> None:
 
 def test_sitre_a_alt_names_cleared() -> None:
     """Issue #175 regression-pin: Sitre A's `alt_names = ['Tia Q']`
-    was cleared per the Thutmose B precedent (D&H's prose 'She may
-    previously have borne the name Tia (Q).' is a hedged identity
-    hint preserved in `notes`, not a confirmed alt_name).
+    was cleared per the Thutmose B precedent — D&H's text ('She may
+    previously have borne the name Tia (Q).') is a hedged identity
+    hint, deliberately not promoted to a confirmed alt_name. (The
+    verbatim text is no longer reproduced; see destructure_notes.py.)
     """
     sitre = next(
         (r for r in _rows() if r["dh_id"] == "Sitre A"),
@@ -738,11 +784,6 @@ def test_ahmes_b_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Wife of Thutmose I; known from a range of monuments, principally "
-            "those of her daughter, Hatshepsut, but also from other material, "
-            "including a statue of her mortuary priest, Nakht, from Karnak."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -762,13 +803,6 @@ def test_hatshepsut_d_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Daughter of Thutmose I, wife of Thutmose II and later king. A "
-            "range of monuments date to her period as queen, and also as "
-            "regent for Thutmose III. These include inscriptions from Karnak, "
-            "Nubia and Sinai, and an (unused) tomb and sarcophagus in the "
-            "Wadi Siqqat Taqa el-Zeide at Thebes."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -788,12 +822,6 @@ def test_iset_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Mother of Thutmose III; she was given the title of KGW during "
-            "his reign, as well as GW after her death. Possessor of a statue "
-            "from Karnak, and mentioned a number of times on her son's "
-            "funerary monuments and equipment."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -813,10 +841,6 @@ def test_iset_b_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Daughter of Thutmose III and Meryetre-Hatshepsut. Represented on "
-            "the statue of her grandmother, Huy, in the British Museum."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -836,15 +860,6 @@ def test_mutemwia_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Wife of Thutmose IV and mother of Amenhotep III; shown in the "
-            "'divine birth' scenes of her son in Luxor temple. A statue of her "
-            "probably came from his mortuary temple, with a figure of her in "
-            "a boat found adjacent to the granite sanctuary of the Karnak "
-            "temple (British Museum); she is also represented with her son on "
-            "the Colossi of Memnon and in the tomb of Heqareshu (TT226, now "
-            "in the Luxor Museum)."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -866,23 +881,15 @@ def test_mutneferet_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Wife of Thutmose I, mother of Thutmose II and probable daughter "
-            "of Ahmose I. Represented by the leg of her son on a colossus in "
-            "front of the south face of the Eighth Pylon, in the temple of "
-            "Thutmose III at Deir el-Bahari and on a stela found near the "
-            "Ramesseum. She was also the owner of a statue found in the "
-            "chapel of Wadjmose."
-        ),
         "source_citation": CITATION_POWER,
     })
 
 
-def test_tiaa_a_full_row_with_egyptologist_override_applied() -> None:
-    """Tiaa A's `notes` was corrected by fix_rows.py to restore the article
-    "a" in "including a number of usurpations" (Gemini OCR had dropped it
-    and left a stray colon). This test locks in the corrected verbatim-
-    prose and would break if fix_rows.py stopped running.
+def test_tiaa_a_full_row() -> None:
+    """Mother of Thutmose IV — KGW, KM, GW. (Tiaa A's old `notes`
+    verbatim-prose correction was retired when the `notes` field was
+    dropped by destructure_notes.py; the structured fields are asserted
+    here as for every other row.)
     """
     _assert_full_row("Tiaa A", {
         "dh_id": "Tiaa A",
@@ -897,16 +904,6 @@ def test_tiaa_a_full_row_with_egyptologist_override_applied() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Wife of Amenhotep II and mother of Thutmose IV. A number of "
-            "monuments were created for her by the latter at Giza, Thebes and "
-            "the Fayoum, including a number of usurpations of material "
-            "belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, "
-            "where many fragments of her funerary equipment have been found; "
-            "some material was washed by floodwater into the adjacent tomb "
-            "KV47, where it was for a long time thought to belong to a "
-            "like-named mother of Siptah."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -926,12 +923,6 @@ def test_menhet_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Wife of Thutmose III, probably of Syrian extraction. Buried in "
-            "a tomb in Wadi Gabbanet el-Qurud together with Menwi and Merti; "
-            "much of the funerary equipment is now in the Metropolitan "
-            "Museum of Art."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -950,10 +941,6 @@ def test_menwi_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Wife of Thutmose III, probably of Syrian extraction. Buried with "
-            "Menhet and Merti."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -972,10 +959,6 @@ def test_merti_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Wife of Thutmose III, probably of Syrian extraction. Buried with "
-            "Menhet and Menwi."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -998,10 +981,6 @@ def test_pyihia_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Daughter of Thutmose IV. One of the group of princesses reburied "
-            "during the 21st Dynasty on Sheikh Abd el-Qurna."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -1024,10 +1003,6 @@ def test_lacuna_name_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": True,
-        "notes": (
-            "Unplaced, probably mid-18th Dynasty. Known only from a fragment "
-            "of sphinx-stela from near the Second Pyramid of Giza."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -1049,10 +1024,6 @@ def test_siamun_b_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_POWER,
         "unplaced": False,
-        "notes": (
-            "Son of Thutmose III. Named upon the statuette of the Chancellor, "
-            "Sennefer, in the Cairo Museum."
-        ),
         "source_citation": CITATION_POWER,
     })
 
@@ -1080,10 +1051,6 @@ def test_amarna_18a_h_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see '
-            'p. 30); some may be identical with named daughters.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1102,7 +1069,6 @@ def test_amarna_18j_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": 'Son of Anen; depicted with his siblings in tomb TT120.',
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1124,7 +1090,6 @@ def test_amarna_18k_n_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": 'Daughters of Anen; depicted with their siblings in tomb TT120.',
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1143,10 +1108,6 @@ def test_amarna_amenhotep_e_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Son of Amenhotep III; his estate is mentioned on a wine-jar seal from '
-            'Malqata, and he later became king as AMENHOTEP IV/AKHENATEN.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1165,11 +1126,6 @@ def test_amarna_amenia_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife of Horemheb; named on a column in his Saqqara tomb, and possibly '
-            'buried in the upper suite in shaft IV, perhaps dated to the reign of '
-            'Ay.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1188,13 +1144,6 @@ def test_amarna_anen_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Brother of Tiye A; left office some time during the final decade of '
-            "Amenhotep III's reign when he was replaced by Simut, previously "
-            'Fourth Prophet. Owner of tomb TT120 on Sheikh Abd el-Qurna, where his '
-            'figure has been mutilated, a shabti in The Hague and a statue in '
-            'Turin.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1213,16 +1162,6 @@ def test_amarna_ankhesenpaaten_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Third daughter of Akhenaten and Nefertiti and wife of Tutankhamun, '
-            'later known as Ankhesenamun. Known as a princess from numerous '
-            'depictions from Amarna and others at Karnak; as queen, she is '
-            "depicted or mentioned on various items from her husband's tomb, in "
-            "his 'resthouse' at Giza, scenes in the colonnade of the temple of "
-            'Luxor, on a lintel in Berlin and a number of faience items. Amongst '
-            'these last items is a ring in Berlin that joins her cartouche with '
-            'that of King Ay, perhaps indicating a brief marriage.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1241,11 +1180,6 @@ def test_amarna_ankhesenpaaten_tasherit_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Perhaps a daughter of Akhenaten and Kiya, or Smenkhkare and '
-            'Meryetaten; named on blocks from Hermopolis, originally deriving from '
-            'Amarna.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1264,11 +1198,6 @@ def test_amarna_ay_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Possibly father of Nefertiti and perhaps son of Yuya; owner of tomb '
-            'TA25 at Amarna and later king. He may have become Vizier under '
-            'Tutankhamun, if a fragment of gold leaf from KV58 refers to him.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1287,10 +1216,6 @@ def test_amarna_ay_b_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Probably a nephew of Ay; depicted by a block statue in the Brooklyn '
-            'Museum, probably from Dahamsha.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1309,12 +1234,6 @@ def test_amarna_beketaten_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Youngest daughter of Amenhotep III and Tiye A; depicted with her '
-            'mother (and once near her father) in the tomb of Huya at Amarna '
-            '(TA1). A statue of the princess is shown being painted in another '
-            'scene in the tomb.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1333,11 +1252,6 @@ def test_amarna_gilukhipa_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife of Amenhotep III and daughter of Shuttarna II of Mitanni. A '
-            'series of scarabs record that she arrived in Egypt with a retinue of '
-            "317 women in year 10 of her husband's reign."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1356,13 +1270,6 @@ def test_amarna_henuttaneb_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Daughter of Amenhotep III and Tiye A; shown with her parents and '
-            'sister, Iset C, in the temple at Soleb, on a carnelian plaque '
-            '(Metropolitan Museum of Art) and on a colossus from Medinet Habu '
-            '(Cairo). Mentioned on a stela from Malqata and owner of faience '
-            'fragments, two once in private collections and one from Gurob.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1381,13 +1288,6 @@ def test_amarna_horemheb_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Army officer who may have been designated heir to Ay, and later king. '
-            'Possibly began his career as Paatenemheb (Amarna tomb TA24), but '
-            'certainly originally from the Herakleopolitan area. Acted as Deputy '
-            'under Tutankhamun, when he also led military expeditions and built a '
-            'tomb at Saqqara.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1406,12 +1306,6 @@ def test_amarna_iset_c_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            "Daughter of Amenhotep III and Tiye A; shown as her father's wife on a "
-            'statue in the G. Ortiz Collection, and as a simple princess at Soleb '
-            'and on a carnelian plaque (Metropolitan Museum of Art). Also probably '
-            'hers are a box from Gurob and a pair of kohl-tubes, all now in Cairo.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1430,20 +1324,6 @@ def test_amarna_kiya_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife of Akhenaten, and conceivably the former Tadukhipa – the '
-            'daughter of Tushratta, king of Mitanni. Kiya is named and depicted on '
-            'various blocks originating at Amarna, on vases in London and New '
-            'York, four fragmentary kohl-tubes in Berlin and London, and a '
-            'wine-jar docket. She may also be depicted by three uninscribed '
-            "sculptor's studies. Her coffin and canopic jars were taken over for "
-            'the burial of a king (probably Smenkhkare), which was ultimately '
-            'discovered in tomb KV55 in the Valley of the Kings. Almost all of '
-            "Kiya's monuments were usurped for daughters of Akhenaten, making it "
-            'fairly certain that she was disgraced some time after year 11, '
-            'although one researcher has suggested that she actually became king '
-            'as Smenkhkare.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1462,12 +1342,6 @@ def test_amarna_meketaten_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Second daughter of Akhenaten and Nefertiti; known from a large number '
-            'of reliefs from or at Amarna and Karnak, and a writing palette in New '
-            'York. Her death (interpreted by some as in childbirth) and mourning '
-            "are shown in chamber 'gamma' of the Royal Tomb at Amarna."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1486,16 +1360,6 @@ def test_amarna_meryetaten_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Eldest daughter of Akhenaten and Nefertiti; wife of Smenkhkare. Known '
-            'as a princess from a large number of reliefs from or at Amarna and '
-            'Karnak, together with others usurped from Kiya, and a writing pallet '
-            "found in Tutankhamun's tomb (KV62). As a queen, she is shown with her "
-            'husband in tomb TA2 at Amarna (belonging to a nobleman called Meryre '
-            'ii), and named alongside Smenkhkare on a block from Memphis (lost) '
-            'and a box from tomb KV62. She seems to have become female king '
-            "NEFERNEFERUATEN towards the end of her father's reign."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1514,10 +1378,6 @@ def test_amarna_meryetaten_tasherit_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Perhaps a daughter of Akhenaten and Kiya, or Smenkhkare and '
-            'Meryetaten; named on blocks from Hermopolis, originally from Amarna.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1536,7 +1396,6 @@ def test_amarna_mutemnub_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": 'Mother of Ay B, and probably sister of Tey; named on the statue of her son.',
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1555,12 +1414,6 @@ def test_amarna_mutnodjmet_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            "Sister of Nefertiti; depicted adjacent to Nefertiti's daughters, and "
-            'attended by two dwarfs in the tombs of Ay, Panehsy, Parennefer, Tutu, '
-            'and May at Amarna (tombs TA25, 6, 7, 8 and 14); perhaps identical '
-            'with Mutnodjmet Q.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1579,20 +1432,6 @@ def test_amarna_mutnodjmet_q_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife of Horemheb, and possibly identical with Mutnodjmet A. She '
-            'appears with her husband on the Coronation Statue in Turin, in the '
-            'tomb of Roy (TT255), and was the usurper of a number of inscriptions '
-            'of Ankhesenamun at Luxor temple. A statue and other items of hers '
-            'were found in the substructure of the tomb of Horemheb at Saqqara, '
-            'suggesting that she may have been buried there. Human remains found '
-            'near the lower burial chamber of shaft IV may thus be hers, '
-            'accompanied by the bones of a foetus or newborn child. If so, '
-            'Mutnodjmet may have been in her mid-40s at death, having lost all her '
-            'teeth early in life; this burial may be dated soon after year 13 by a '
-            'wine-jar docket found in the burial chamber. A canopic jar of the '
-            'queen is in the British Museum.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1611,7 +1450,6 @@ def test_amarna_nakhtmin_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": 'Father of Ay B; named on the statue of his son.',
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1630,10 +1468,6 @@ def test_amarna_nakhtmin_b_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Probable son of Ay; represented on one, and possibly another, statue '
-            'in Cairo. He donated five shabtis to the burial of Tutankhamun.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1652,7 +1486,6 @@ def test_amarna_nebetiah_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": 'Daughter of Amenhotep III, shown on a colossal statue from Medinet Habu (Cairo).',
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1671,11 +1504,6 @@ def test_amarna_neferneferuaten_tasherit_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Fourth daughter of Akhenaten and Nefertiti; known from reliefs from '
-            'or at Amarna. She may be the now-anonymous person buried in chamber '
-            "'alpha' in the royal tomb."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1694,13 +1522,6 @@ def test_amarna_neferneferure_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Fifth daughter of Akhenaten and Nefertiti; known from a large number '
-            'of reliefs from or at Amarna, a seal-impression from the Royal Wadi '
-            'there, and a box-lid from the tomb of Tutankhamun. It is possible '
-            "that she may be the now-anonymous person buried in chamber 'alpha' in "
-            'the royal tomb.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1719,22 +1540,6 @@ def test_amarna_nefertiti_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife of Akhenaten; known from year 5 onwards as '
-            'Neferneferuaten-Nefertiti. Represented in many reliefs from or at '
-            'Amarna and Karnak alongside her husband and daughters, and by large '
-            'numbers of statues and statuettes, including the famous bust in '
-            'Berlin. She appears to have married her husband soon after he came to '
-            'the throne and is constantly at his side until around year 13, when '
-            'she disappears from view. It has been suggested that she then became '
-            'king as first Neferneferuaten, and later as Smenkhkare, but it seems '
-            'more likely that she had died. There is no evidence to substantiate '
-            'the assertion that her disappearance was the result of disgrace – the '
-            'alleged data in fact refers to Kiya (see p. 148). Shabti-fragments of '
-            'Nefertiti are in the Louvre and Brooklyn. Attempts to identify '
-            "Nefertiti's mummy as one of two bodies in KV35 (Amenhotep II's tomb) "
-            'are not based on any compelling evidence.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1753,11 +1558,6 @@ def test_amarna_setpenre_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Sixth daughter of Akhenaten and Nefertiti; known from a number of '
-            'reliefs from or at Amarna. It is possible that she may be the '
-            "now-anonymous person buried in chamber 'alpha' in the royal tomb."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1776,7 +1576,6 @@ def test_amarna_shuttarna_ii_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": 'Father-in-law of Amenhotep III.',
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1795,15 +1594,6 @@ def test_amarna_sitamun_b_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife and probable daughter of Amenhotep III; shown as a princess from '
-            'Abydos and on a chair from the tomb of Yuya and Tjuiu (all now in '
-            'Cairo). The pedestal of a statue of the senior nobleman '
-            "Amenhotep-son-of-Hapu, from Karnak (Cairo), names her as a King's "
-            'Wife, showing that she attained the rank before the former died '
-            'between years 30 and 34. She is named as Great Wife on a kohl-tube '
-            'and a disc now in Oxford.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1822,11 +1612,6 @@ def test_amarna_tadukhipa_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife of Amenhotep III and later of Akhenaten; daughter of Tushratta, '
-            'king of Mitanni, whose arrival is mentioned in Amarna Letter 17. It '
-            'is possible that she was the same person as Kiya.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1845,14 +1630,6 @@ def test_amarna_tey_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her "
-            'husband in his tomb at Amarna and later became his queen. As such, '
-            'she is depicted with Ay in his royal tomb in the Valley of the Kings '
-            '(WV23) and in the rock-chapel of Min at Akhmim. If she were the '
-            'mother of Nakhtmin B, she will also have held the title of Adorer of '
-            'Min.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1871,15 +1648,6 @@ def test_amarna_thutmose_b_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Eldest son of Amenhotep III, and conceivably identical with Thutmose '
-            'Q (p. 141); known in particular from material from the burial of Apis '
-            'I at the Serapeum at Saqqara, carried out while he was our only '
-            'Sem-Priest at Memphis. A small figure of the prince as a miller is in '
-            'the Louvre, while a recumbent mummiform figure is in Berlin; the '
-            'coffin of a cat, dedicated by him, is in Cairo. The prince seems to '
-            "have died some time during the third decade of his father's reign."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1898,24 +1666,6 @@ def test_amarna_tiye_a_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Wife of Amenhotep III, her union with whom was commemorated by the '
-            'series of marriage scarabs; mother of Akhenaten. Known from a wide '
-            'variety of sources, including temple reliefs at Soleb and Sedeinga. '
-            'Sculptures of her together with her husband include a colossus from '
-            'Medinet Habu and the Colossi of Memnon. Individual heads from '
-            'particularly fine statuettes of Tiye are in Cairo (from Sinai) and '
-            'Berlin (Gurob), with small objects in various collections. Tiye is '
-            'also depicted in the tombs of Userhat (TT47), Kheruef (TT192) and '
-            'Huya (TA1), the last suggesting that she may have resided at Amarna '
-            "later in her son's reign. Shabtis of hers were found in Amenhotep "
-            "III's tomb, but a broken sarcophagus made for her was found in the "
-            'Royal Tomb at Amarna, and a gilded funerary shrine (showing her with '
-            'Akhenaten) ultimately found its way to tomb KV55 in the Valley of the '
-            "Kings. A lock of Tiye's hair was found in a nest of miniature coffins "
-            'in the tomb of Tutankhamun; it seems very unlikely that her mummy '
-            "could be the so-called 'Elder Lady' in the tomb of Amenhotep II."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1934,10 +1684,6 @@ def test_amarna_tjuiu_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Mother of Tiye A; buried with her husband in Valley of the Kings tomb '
-            'KV46; her mummy and funerary equipment now in the Cairo Museum.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1956,7 +1702,6 @@ def test_amarna_tushratta_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": 'Possible father-in-law of Akhenaten.',
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1975,11 +1720,6 @@ def test_amarna_tutankhuaten_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Probable son of Akhenaten, later king as TUTANKHATEN/AMUN. Named on a '
-            "block from Hermopolis, and possibly shown as a baby in his nurse's "
-            "arms in chambers 'alpha' and 'gamma' in the royal tomb at Amarna."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -1998,10 +1738,6 @@ def test_amarna_yuya_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Father of Tiye A; buried with his wife in tomb KV46; his mummy and '
-            'funerary equipment now in the Cairo Museum.'
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -2020,10 +1756,6 @@ def test_amarna_18p_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Unnamed, still-born daughter of Tutankhamun and Ankhesenamun, found '
-            "in her father's tomb and now in Cairo."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -2042,10 +1774,6 @@ def test_amarna_18q_full_row() -> None:
         "dynasty": 18,
         "sub_period": SUB_PERIOD_AMARNA,
         "unplaced": False,
-        "notes": (
-            'Unnamed, still-born daughter of Tutankhamun and Ankhesenamun, found '
-            "in her father's tomb and now in Cairo."
-        ),
         "source_citation": CITATION_AMARNA,
     })
 
@@ -2077,7 +1805,6 @@ def test_p_rehirwenemef_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and Nefertiry D, and number 3 in the processions of sons. Also depicted at Abu Simbel and in the triumph that followed the Battle of Qadesh.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2095,7 +1822,6 @@ def test_ramesses_meryastarte_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 26 in the Abydos procession of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2113,7 +1839,6 @@ def test_ramesses_merymaat_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 25 in the Abydos procession of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2131,7 +1856,6 @@ def test_ramesses_siptah_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and probably Sutererey, and number 26 in the processions of sons. A Book of the Dead probably belonging to him is in the Florence Museum, while a relief of the prince and his mother is in the Louvre.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2149,7 +1873,6 @@ def test_ramesses_userkhepesh_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 22 in the Abydos procession of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2167,7 +1890,6 @@ def test_ramesses_pre_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 20 in the Abydos procession of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2185,7 +1907,6 @@ def test_19a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Bintanath; depicted with her mother in tomb QV71.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2203,7 +1924,6 @@ def test_19b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Tjia and Tia C; depicted in her parents' tomb at Saqqara.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2221,7 +1941,6 @@ def test_jheb_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 13 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2239,7 +1958,6 @@ def test_khesbed_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 16 in the second Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2257,7 +1975,6 @@ def test_taweret_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 3 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2275,7 +1992,6 @@ def test_mut_metennefer_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Tjia and Tia C; depicted in their tomb at Saqqara.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2293,7 +2009,6 @@ def test_r_uia_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Mother-in-law of Sety I. Known from a block at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2311,7 +2026,6 @@ def test_set_emnakhte_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; depicted on a block from the Ramesseum, reused at Medinet Habu, and on a doorway from Qantir (Cairo).",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2329,7 +2043,6 @@ def test_amenemopet_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 19 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2347,7 +2060,6 @@ def test_amenemwia_setemwia_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 8 in the processions of sons; changed his name – perhaps at the same time as Amen/Sethirkopshef A. Present at the siege of the Syrian city of Dapur in year 10.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2365,7 +2077,6 @@ def test_amenhirwenemef_amenhirkopshef_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Eldest Son of Ramesses II and Nefertiry D, and number 1 in the processions of sons; changed his name early in the reign. First heir to the throne, he took part in his father's early campaigns, appearing on the wall of the temple of Beit el-Wali along with Khaemwaset C, and in the triumph that followed the Battle of Qadesh. Depicted with his father lassoing a bull in the Sety I temple at Abydos, and frequently on Ramesses II's statues, but seems to have changed his name once again around year 20 to Sethirkopshef (A). Involved in the exchange of correspondence following the Hittite peace treaty in year 21, but died around year 25. Buried in tomb KV5 in the Valley of the Kings, his interment being apparently inspected in year 53 of his father's reign.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2383,7 +2094,6 @@ def test_amenhotep_f_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 14 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2401,7 +2111,6 @@ def test_amenwahsu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Father of Tjia; shown with him, Ramesses II, and Sety B on a block in Chicago.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2419,7 +2128,6 @@ def test_astarthirwenemef_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; depicted on a block from the Ramesseum, reused at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2437,7 +2145,6 @@ def test_bakmut_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 2 in the processions of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2455,7 +2162,6 @@ def test_benanath_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Syrian ship's captain and father-in-law of Simentu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2473,7 +2179,6 @@ def test_bintanath_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Eldest daughter of Ramesses II and Isetneferet A. Served as one of her father's Great Wives following her mother's death and was represented on a number of monuments throughout Ramesses II's reign. Survived into the reign of her brother, Merenptah, when she was depicted on a statue usurped by him, and buried in tomb QV71 in the Valley of the Queens.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2491,7 +2196,6 @@ def test_geregtawi_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; depicted on a block from the Ramesseum, reused at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2509,7 +2213,6 @@ def test_hattusilis_iii_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Father-in-law of Ramesses II.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2527,7 +2230,6 @@ def test_henttawy_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 7 in the processions of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2545,7 +2247,6 @@ def test_henut_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 20 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2563,7 +2264,6 @@ def test_henutmire_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Wife of Ramesses II and probably daughter of Sety I. Depicted on a statue of Tuy A in the Vatican and statues of Ramesses II from Abukir and Hermopolis. Buried in tomb QV75 in the Valley of the Queens; the trough of her coffin was later usurped by Harsiese A for his interment at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2581,7 +2281,6 @@ def test_henutpahuro_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 26 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2599,7 +2298,6 @@ def test_henutpre_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 58 in the Wadi el-Sebua procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2617,7 +2315,6 @@ def test_henutsekhemu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 25 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2635,7 +2332,6 @@ def test_henuttadesh_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 6 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2653,7 +2349,6 @@ def test_henuttamehu_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 9 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2671,7 +2366,6 @@ def test_henuttaneb_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 4 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2689,7 +2383,6 @@ def test_hetepuemamun_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 7 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2707,7 +2400,6 @@ def test_horhirwenemef_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; number 12 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2725,7 +2417,6 @@ def test_hori_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Probably a grandson of Ramesses II and son of Khaemwaset C. Depicted on a pillar from his tomb at Saqqara (Cairo Museum), and a stela from Memphis. His probable sarcophagus and canopic jars are in Berlin and the British Museum/Liège respectively.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2743,7 +2434,6 @@ def test_hori_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Hori A, shown with him on a stela from Memphis. First northern, and then southern, Vizier.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2761,7 +2451,6 @@ def test_iryet_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Wife of Simentu and daughter of Benanath, a Syrian ship's captain. Possibly died in year 42 of Ramesses II's reign.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2779,7 +2468,6 @@ def test_isetneferet_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Wife of Ramesses II and mother of Merenptah. Seen on a number of mounuments, and appears to have died around year 34. Her tomb has not been identified, but work on it (and that of Meryatum A) is recorded on an ostrakon that may imply her burial in the area of the Valley of the Queens. Otherwise, she is commemorated alongside her son, Khaemwaset C, on a number of his monuments, as well as others at Saqqara.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2797,7 +2485,6 @@ def test_isetneferet_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 6 in the processions of daughters. A letter from two palace singers to the princess enquiring after her health survives. It is possible that she may have been the wife of Merenptah, rather than Isetneferet C.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2815,7 +2502,6 @@ def test_isetneferet_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Granddaughter of Ramesses II, daughter of Khaemwaset C and possibly wife of Merenptah (see next section).",
         "source_citation": CITATION_HOUSE,
     }, sub_period=SUB_PERIOD_HOUSE)
 
@@ -2833,7 +2519,6 @@ def test_itamun_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 15 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2851,7 +2536,6 @@ def test_khaemwaset_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Uncle of Ramesses I, mentioned on a stela of his brother, Sety A. He seems to have been the owner of a statue from Kawa, now in Khartoum.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2869,7 +2553,6 @@ def test_khaemwaset_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and Isetneferet A, and number 4 in the processions of sons. By far the best-known son of the king, remembered for centuries after his death, and the hero of a cycle of stories written in Late/Ptolemaic times. Crown Prince during the early 50s of his father's reign, but died soon after year 55 and probably buried at Saqqara, perhaps below his hilltop sanctuary between Abusir and Saqqara.124",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2887,7 +2570,6 @@ def test_maathorneferure_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Hattusilis III of Hatti and wife of Ramesses II from year 34. The marriage is commemorated in a contemporary stela at Abu Simbel, but also remembered in the so-called Bentresh stela of Ptolemaic times. She is represented on a colossus of Ramesses II, but seems to have retired to Gurob later in the reign.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2905,7 +2587,6 @@ def test_mahiranat_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; depicted on a block from the Ramesseum, reused at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2923,7 +2604,6 @@ def test_mentuemwaset_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 24 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2941,7 +2621,6 @@ def test_mentuenheqau_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 28 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2959,7 +2638,6 @@ def test_mentuhirkopshef_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 5 in the processions of sons. Owner of a statue from Bubastis, and depicted on a stela in Copenhagen. Present at the siege of the Syrian city of Dapur in year 10.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2977,7 +2655,6 @@ def test_merenptah_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and Isetneferet A, and number 13 in the processions of sons; heir to the throne and effective regent during the last ten years of Ramesses II's reign. Early in the reign he was explicitly called the 'younger brother' of Khaemwaset C, Bintanath and Ramesses B on a rock-carving at Aswan, and also appeared with them and their parents on a stela in the rock-temple at Gebel el-Silsila. During the fifth decade of his father's reign he obtained the title of Generalissimo, and finally an heir's titles after year 55. As such, he is known from monuments at Karnak, the Serapeum, Memphis, Tanis (ex-Piramesse) and Athribis. Other monuments, attributed to Merenptah B, may also be his. He later became king.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -2995,7 +2672,6 @@ def test_meryamun_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Also known as Ramesses-Meryamun. Son of Ramesses II and number 7 in the processions of sons. Present at the triumph that followed the Battle of Qadesh and at the siege of the Syrian city of Dapur in year 10, and buried in tomb KV5 in the Valley of the Kings, where remains of his canopic jars were found.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3013,7 +2689,6 @@ def test_meryatum_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and Nefertiry D, and number 16 in the processions of sons. Appears to have visited Sinai during the second decade of his father's reign, and been appointed Heliopolitan High Priest in the late 20s; two statues of him are in Berlin, plus a stela in Hildesheim. He served for around twenty years, work on his tomb (and that of Isetneferet A) being recorded on an ostrakon that may imply his burial in the area of the Valley of the Queens. On the other hand, a fragment of canopic jar found in tomb KV5 may be his.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3031,7 +2706,6 @@ def test_meryetamun_e_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II and Nefertiry D; number 4 in the processions of daughters. Served as one of her father's Great Wives following her mother's death and appears on a number of monuments; buried in tomb QV68 in the Valley of the Queens.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3049,7 +2723,6 @@ def test_meryetkhet_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 13 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3067,7 +2740,6 @@ def test_meryetmihapi_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 22 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3085,7 +2757,6 @@ def test_meryetnetjer_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 32 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3103,7 +2774,6 @@ def test_meryetptah_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 16 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3121,7 +2791,6 @@ def test_meryetyotes_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 23 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3139,7 +2808,6 @@ def test_merymentu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; depicted at Wadi el-Sebua and Abydos.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3157,7 +2825,6 @@ def test_meryre_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and Nefertiry D; number 11 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3175,7 +2842,6 @@ def test_meryre_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; number 18 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3193,7 +2859,6 @@ def test_mut_tuy_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 15 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3211,7 +2876,6 @@ def test_neben_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; named on an ostrakon in the Cairo Museum.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3229,7 +2893,6 @@ def test_nebenkharu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; number 6 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3247,7 +2910,6 @@ def test_nebet_h_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 14 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3265,7 +2927,6 @@ def test_nebetananash_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 10 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3283,7 +2944,6 @@ def test_nebetimmunedjem_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 8 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3301,7 +2961,6 @@ def test_nebetiunet_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 11 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3319,7 +2978,6 @@ def test_nebetnehat_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 59 in the Wadi el-Sebua procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3337,7 +2995,6 @@ def test_nebettawy_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II and Nefertiry D; number 5 in the processions of daughters. Served as one of her father's Great Wives and buried in tomb QV60 in the Valley of the Queens.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3355,7 +3012,6 @@ def test_nebtaneb_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 17 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3373,7 +3029,6 @@ def test_nedjemmut_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 9 in the processions of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3391,7 +3046,6 @@ def test_nefertiry_d_meryetmut_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Wife of Ramesses II; perhaps a descendant of Ay. Numerous monuments known, including the small temple at Abu Simbel, and others from sites throughout Egypt. Corresponded with her Hittite counterpart, Pudukhepa, in year 21, and attended the inauguration of the Abu Simbel temples in year 24. Appears to have died soon afterwards and buried in tomb QV66 in the Valley of the Queens; her sarcophagus lid and various remains of her funerary equipment are in Turin, along with the knees from her mummy.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3409,7 +3063,6 @@ def test_nefertiry_e_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 3 in the processions of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3427,7 +3080,6 @@ def test_nefertiry_f_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Wife of Amenhirkopshef (Sethirkopshef A) and mother of Sety C; mentioned on an ostrakon in the Louvre; conceivably identical with Nefertiry E.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3445,7 +3097,6 @@ def test_neferure_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 31 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3463,7 +3114,6 @@ def test_nubemiunu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 24 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3481,7 +3131,6 @@ def test_nubemweskhet_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 15 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3499,7 +3148,6 @@ def test_nubhir_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 18 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3517,7 +3165,6 @@ def test_paramessu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Sety A and later king as RAMESSES I. Known from two statues from Karnak and his unused stone coffins from Medinet Habu and Gurob.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3535,7 +3182,6 @@ def test_prerenpetnefer_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 12 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3553,7 +3199,6 @@ def test_pudukhepa_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Wife of Hattusilis III; corresponded with Nefertiry D.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3571,7 +3216,6 @@ def test_pypuy_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 10 in the processions of daughters. Perhaps the princess of the name, the daughter of a lady named Iwy, whose mummy was reburied with others during the 21st Dynasty on Sheikh Abd el-Qurna (see pp. 135–37).",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3589,7 +3233,6 @@ def test_raia_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Father-in-law of Sety I. Known from a block at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3607,7 +3250,6 @@ def test_ramesses_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Eldest son of Sety I, and later king as RAMESSES II. Depicted with his father in the latter's Abydos temple.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3625,7 +3267,6 @@ def test_ramesses_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and Isetneferet A, and number 2 in the processions of sons. Heir to the throne from around year 25 to year 50. Attested in various inscriptions and sculptures, including the triumph that followed the Battle of Qadesh. Buried in tomb KV5 in the Valley of the Kings.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3643,7 +3284,6 @@ def test_ramesses_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Grandson of Ramesses II. Dedicator at Memphis of a statue of his father, Khaemwaset C, now in Vienna.",
         "source_citation": CITATION_HOUSE,
     }, sub_period=SUB_PERIOD_HOUSE)
 
@@ -3661,7 +3301,6 @@ def test_ramesses_maatptah_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Known only from a letter in which the palace servant Meryotef rebukes him for failing to respond to his communications.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3679,7 +3318,6 @@ def test_ramesses_merenre_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 21 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3697,7 +3335,6 @@ def test_ramesses_meretmirre_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 48 in the Wadi el-Sebua procession of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3715,7 +3352,6 @@ def test_ramesses_meryamun_nebweben_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; does not appear in the surviving processions of sons, and therefore likely to have been one of the king's younger children. Known only from the addition of his name to two stone coffins of his grandfather, Ramesses I, made while the latter was still only Vizier. The outer one was used for the prince's interment in tomb W5 at Gurob: bones found alongside it were those of a man with a badly deformed spine. The inner coffin was found in a pit at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3733,7 +3369,6 @@ def test_ramesses_meryset_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; depicted on a block from the Ramesseum, reused at Medinet Habu; at Abydos (number 23 in the procession); on a door lintel from Qantir (Hildesheim); on a doorjamb in Cairo; and on a stela in Berlin.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3751,7 +3386,6 @@ def test_ramesses_payotnetjer_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; named on an ostrakon in the Cairo Museum.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3769,7 +3403,6 @@ def test_ramesses_siatum_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 19 in the Abydos procession of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3787,7 +3420,6 @@ def test_ramesses_sikhepri_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 24 in the Abydos procession of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3805,7 +3437,6 @@ def test_ramesses_userpehty_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Probably a son of Ramesses II, named on a plaque formerly in the Fraser Collection and on a column-base at Memphis.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3823,7 +3454,6 @@ def test_renpetnefer_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 12 in the Luxor procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3841,7 +3471,6 @@ def test_senakhtenamen_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 20 in the processions of sons. A faience votive plaque showing Ptah and Sekhmet, dedicated by one Amenmose who was employed in the prince's household, suggests that the latter may have been resident at Memphis.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3859,7 +3488,6 @@ def test_seshnesuen_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; named on an ostrakon in the Cairo Museum.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3877,7 +3505,6 @@ def test_setem_hir_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; named on an ostrakon in the Cairo Museum.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3895,7 +3522,6 @@ def test_setpenre_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; and number 10 in the processions of sons. Present at the siege of the Syrian city of Dapur in year 10.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3913,7 +3539,6 @@ def test_sety_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Father of Ramesses I. Named on the latter's statues as Vizier, a stela of Sety is in the Oriental Institute, Chicago. He may have been a royal envoy in Palestine during the Amarna Period.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3931,7 +3556,6 @@ def test_sety_b_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Name spelled Sutiy in his funerary equipment. Son of Ramesses II; number 9 in the processions of sons. Present at the triumph that followed the Battle of Qadesh, and the siege of the Syrian city of Dapur in year 10. Buried in tomb KV5 in the Valley of the Kings, where two of his canopic jars were found; his interment was apparently inspected in year 53 of his father's reign.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3949,7 +3573,6 @@ def test_sety_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Amenhirkopshef (Sethirkopshef) A and Nefertiry F; mentioned on an ostrakon in the Louvre.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3967,7 +3590,6 @@ def test_sety_d_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; named on an ostrakon in the Cairo Museum and conceivably identical with Sety B.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -3985,7 +3607,6 @@ def test_shepsemiunu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; depicted on a block from the Ramesseum, reused at Medinet Habu.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4003,7 +3624,6 @@ def test_siamun_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 25 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4021,7 +3641,6 @@ def test_simentu_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II and number 23 in the processions of sons; husband of Iryet.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4039,7 +3658,6 @@ def test_sitamun_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 11 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4048,8 +3666,8 @@ def test_sitre_a_house_full_row() -> None:
         "dh_id": "Sitre A",
         "name": "Sitre A",
         # Issue #175: alt_names cleared per Thutmose B precedent — D&H's
-        # `She may previously have borne the name Tia (Q)` is a hedged
-        # identity hint preserved in `notes`, not a confirmed alt_name.
+        # hedged "She may previously have borne the name Tia (Q)" identity
+        # hint is deliberately not promoted to a confirmed alt_name.
         "alt_names": [],
         "roles": ["GW", "KGW", "L2L", "GM", "KM", "MULE"],
         "sex": "female",
@@ -4060,7 +3678,6 @@ def test_sitre_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Wife of Ramesses I and mother of Sety I. Her statue is depicted in the Abydos temple of her son, while her tomb is number QV38 in the Valley of the Queens. She may previously have borne the name Tia (Q).",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4078,7 +3695,6 @@ def test_sutererey_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Mother of a Prince Ramesses-Siptah and probably a wife of Ramesses II. Shown with her son on a relief in the Louvre.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4096,7 +3712,6 @@ def test_syhiryotes_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 19 in the Abydos procession of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4114,7 +3729,6 @@ def test_taemwadjy_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Aunt of Ramesses I. Shown on a statue with her husband, Khaemwaset B.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4132,7 +3746,6 @@ def test_takhat_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 14 on the Louvre ostrakon list. Probable wife of Sety II (see next section).",
         "source_citation": CITATION_HOUSE,
     }, sub_period=SUB_PERIOD_HOUSE)
 
@@ -4150,7 +3763,6 @@ def test_thutmose_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; number 22 in the processions of sons.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4168,7 +3780,6 @@ def test_tia_c_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Sister of Ramesses II. Buried with her husband, Tjia, in a tomb at Saqqara, and shown alongside him and her mother on a block in Toronto.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4186,7 +3797,6 @@ def test_tia_q_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Stated to be the mother of Vizier Sety on the Year 400 stela from Tanis; if Vizier Sety is to be equated with King Sety I, Tia may be identical with Sitre.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4204,7 +3814,6 @@ def test_tia_sitre_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 12 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4222,7 +3831,6 @@ def test_tjia_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Brother-in-law of Ramesses II. Shown along with his mother-in-law and wife on a block in Toronto. Buried with his wife in a tomb at Saqqara.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4240,7 +3848,6 @@ def test_tuia_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 5 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4258,7 +3865,6 @@ def test_tuia_nebettawy_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 13 on the Louvre ostrakon list.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4276,7 +3882,6 @@ def test_tuy_a_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Name also found with the longer form Mut-Tuy. Wife of Sety I and mother of Ramesses II; named on many of her son's monuments and represented amongst the colossi at Abu Simbel, and on a broken statue at Tanis. A number of blocks involving her, including a divine birth scene, were reused at Medinet Habu in Ptolemaic times. Buried in tomb QV80 in the Valley of the Queens.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4294,7 +3899,6 @@ def test_werenro_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses II; number 8 in the processions of daughters.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4312,7 +3916,6 @@ def test_wermaa_house_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_HOUSE,
         "unplaced": False,
-        "notes": "Son of Ramesses II; named on an ostrakon in the Cairo Museum.",
         "source_citation": CITATION_HOUSE,
     })
 
@@ -4330,7 +3933,6 @@ def test_19c_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Wife of Amenmesse; represented on a statue of the king at Karnak.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4348,7 +3950,6 @@ def test_isetneferet_c_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Wife of Merenptah. Depicted on a statue usurped for her husband from Amenhotep III in his chapel at Gebel el-Silsila, on the stelae of the Vizier Panehsy at the same site, and on a statuette dedicated by Panehsy.",
         "source_citation": CITATION_FEUD,
     }, sub_period=SUB_PERIOD_FEUD)
 
@@ -4366,7 +3967,6 @@ def test_isetneferet_d_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Probably a daughter of Merenptah, named in a ship's log in Leiden.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4384,7 +3984,6 @@ def test_khaemwaset_d_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Son of Merenptah. Depicted in his father's war reliefs in the Cour de Cachette in the Karnak temple.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4402,7 +4001,6 @@ def test_merenptah_b_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Probable son of Merenptah. Known from reliefs on two statues of Senwosret I (usurped by Merenptah and found at Alexandria and Tanis) and on three statue fragments from Bubastis. Assumed a uraeus at some point in his career.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4420,7 +4018,6 @@ def test_messuy_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Probably identical with King AMENMESSE, and thus probably a son of Sety II and Takhat A. Served as Viceroy during much of Merenptah's reign, but was succeeded by Khaemtjitry (who was promoted to Vizier under Amenmesse) prior to Merenptah's death. Commemorated by a number of kneeling figures and inscriptions in the Nubian temples at Amada, Aksha and Beit el-Wali, plus shabti figures from Wadi el-Sebua and Aniba, as well as a doorjamb inscribed by one of his subordinates at Aniba. In Egypt proper, an Aswan/Philae road inscription shows the chariot-borne Merenptah, while Messuy's name appears on the island of Bigeh, near Aswan. It was doubtless the power-base provided by his viceregal background and his close relationship with the current Viceroy, Khaemtjitry, which allowed Messuy/Amenmesse's bid for power to be backed by the resources of Nubia, and explain how he managed to maintain his position for nearly four years.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4438,7 +4035,6 @@ def test_sety_merenptah_a_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Son of Merenptah; depicted on the side of the rear pillar of six of his father's statues, and on two stelae of the Vizier Panehsy at Gebel el-Silsila. Also shown in battle scenes where, given Merenptah's advanced age, he may have been in actual charge. Later king as SETY II.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4456,7 +4052,6 @@ def test_sety_merenptah_b_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Son of Sety II; depicted behind his father in the small temple of the latter at Karnak, possibly replacing a figure of the Chancellor Bay. It has recently been suggested that he was actually a baby, born in the last year of his father's reign, who died in year 4 of Siptah; this, however, remains doubtful.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4474,7 +4069,6 @@ def test_takhat_a_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Wife of Sety II, mother of Amenmesse, and probable daughter of Ramesses II. Depicted on a number of statues of her husband and son. Probably buried in the former tomb of Amenmesse (KV10), with a sarcophagus lid that once belonged to an otherwise-unknown King's Daughter and King's Wife, Anuketemheb. The tomb was subsequently usurped for Takhat B and Baketwernel A (pp. 191, 192, 194).",
         "source_citation": CITATION_FEUD,
     }, sub_period=SUB_PERIOD_FEUD)
 
@@ -4492,7 +4086,6 @@ def test_tawosret_feud_full_row() -> None:
         "dynasty": 19,
         "sub_period": SUB_PERIOD_FEUD,
         "unplaced": False,
-        "notes": "Wife of Sety II, regent for Siptah and later king. Jointly provided jewellery with Sety II to a burial in tomb KV56 in the Valley of the Kings; depicted during the regency with the Chancellor Bay in the temple of Amada, and also on various small items. Assumed full pharaonic titles around the time of Siptah's death and ruled for two years — continuing Siptah's regnal numbering sequence — until apparently overthrown by Setnakhte. Owner of tomb KV14 in the Valley of the Kings, apparently begun in the second regnal year of Sety II, enlarged during the regency, and then once again extended during Tawosret's reign; the tomb was later usurped for Setnakhte. Nothing is known about the fate of the queen's body,132 although her original sarcophagus was later reused for the burial of Amenhirkopshef D in tomb KV13 under Ramesses VI.",
         "source_citation": CITATION_FEUD,
     })
 
@@ -4510,7 +4103,6 @@ def test_dua_tentopet_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Wife of Ramesses IV, buried in Valley of the Queens tomb QV74. Appears as Adoratrix, probably under Ramesses III, in the temple of Khonsu at Karnak. Her steward, Amunhotep, was the owner of tomb TT346.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4528,7 +4120,6 @@ def test_amenhirkhopshef_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Name also found as Ramesses-Amenhirkhopshef. Son of Ramesses III. Depicted in the Medinet Habu procession and owner of tomb QV55 in the Valley of the Queens; died young as heir presumptive.136",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4546,7 +4137,6 @@ def test_amenhirkopshef_c_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses III and Iset D. Depicted in the Medinet Habu procession and to be seen in two sets of temple reliefs dating to his father's reign: in the forecourt of the Ramesses III temple in the first court of the Amun temple at Karnak, and in a scene of games under the Window of Appearances at Medinet Habu. Later king as RAMESSES VI.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4564,7 +4154,6 @@ def test_amenhirkopshef_d_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses VI. Buried in an extension of tomb KV13 in the Valley of the Kings.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4582,7 +4171,6 @@ def test_baketwernel_a_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Possible wife of Ramesses IX. Buried in the former tomb of Amenmesse (KV10), where one chamber was plastered and redecorated for her.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4600,7 +4188,6 @@ def test_hemdjert_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Mother of Iset D. Given the variant spellings of her name (e.g. 'Hebnerdjent'), she may have been of foreign extraction.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4618,7 +4205,6 @@ def test_henttawy_q_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Probable daughter of Ramesses XI (see next section).",
         "source_citation": CITATION_DECLINE,
     }, sub_period=SUB_PERIOD_DECLINE)
 
@@ -4636,7 +4222,6 @@ def test_henutwati_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Wife of Ramesses V; mentioned in Papyrus Wilbour.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4654,7 +4239,6 @@ def test_iset_d_ta_hemdjert_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Wife of Ramesses III. Depicted on a statue of the king in the temple of Mut at Karnak, and participated under Ramesses VI in the installation of her granddaughter, Iset E, as God's Wife of Amun. Owner of tomb QV51 in the Valley of the Queens.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4672,7 +4256,6 @@ def test_iset_e_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Daughter of Ramesses VI; name written with the Adoratrix title within the cartouche. Depicted on a stela from Koptos, now in the Manchester Museum, while her installation as God's Wife of Amun is recorded on a block from Deir el-Bakhit, on Dira Abu'l-Naga.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4690,7 +4273,6 @@ def test_khaemwaset_e_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Name also found as Ramesses-Khaemwaset. Depicted in the Medinet Habu procession and buried in Valley of the Queens tomb QV44; a canopic jar is in the Cairo Museum, while his sarcophagus lid and possible mummy are in Turin.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4708,7 +4290,6 @@ def test_mentuhirkopshef_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses III. Depicted in the Medinet Habu procession and possibly the father of Ramesses IX. Probably the prince of the name buried in the Valley of the Kings tomb KV13.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4726,7 +4307,6 @@ def test_mentuhirkopshef_c_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Name also found as Ramesses-Mentuhirkopshef. Son of Ramesses IX; took over tomb KV19 for his burial.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4744,7 +4324,6 @@ def test_meryamun_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Name given in full as Ramesses-Meryamun. Son of Ramesses III; nothing of his life or death known, other than his representation in the Medinet Habu list.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4762,7 +4341,6 @@ def test_meryatum_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Name also found as Ramesses-Meryatum. Son of Ramesses III; depicted in the Medinet Habu procession. Outlived his father, and occupied the High Priesthood of the Sun at Heliopolis on into the reigns of Ramesses IV and V, when he is mentioned in Papyrus Wilbour.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4780,7 +4358,6 @@ def test_nebmaatre_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses IX. Named together with his father on two gateways which they reinscribed in a temple at Arab el-Hisn, Heliopolis.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4798,7 +4375,6 @@ def test_nebseny_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Father of Tentamun A. Possibly buried in tomb TT320 at Thebes.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4816,7 +4392,6 @@ def test_nesibanebdjedet_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Governor of Tanis and possible son-in-law of Ramesses XI. Later king.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4834,7 +4409,6 @@ def test_nubkhesbed_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Wife of Ramesses VI. Mentioned on a stela of Iset E from Koptos, and also in tomb KV13 in the Valley of the Kings.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4852,7 +4426,6 @@ def test_panebenkemyt_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses VI. Shown on a statues of the king, now in the Luxor Museum.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4870,7 +4443,6 @@ def test_pentaweret_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses III and Tiye C. In the Turin Judicial Papyrus, recording the trial of those involved in the plot against the king, the following is stated: 'Pentaweret, to whom had been given that other name (perhaps referring to his putative name as pharaoh?): He was brought in because of his collusion with Tiye, his mother, when she had plotted the matters with the women of the harem, concerning rebellion against his lord. He was placed before the (court commissioners) in order to examine him; they found him guilty; they left him in his place; he took his own life.'",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4888,7 +4460,6 @@ def test_pinudjem_i_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Probable son-in-law of Ramesses XI (see next section).",
         "source_citation": CITATION_DECLINE,
     }, sub_period=SUB_PERIOD_DECLINE)
 
@@ -4906,7 +4477,6 @@ def test_prehirwenemef_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses III. Depicted in the Medinet Habu procession; predeceased his father and was buried in the Valley of the Queens (QV42).",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4924,7 +4494,6 @@ def test_ramesses_c_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses III and Iset D. Depicted in the Medinet Habu procession and heir to the throne for much of his father's reign. He is to be seen in two sets of temple reliefs dating to his father's reign: in the forecourt of the Ramesses III temple in the first court of the Amun temple at Karnak, and in a scene of games under the Window of Appearances at Medinet Habu. As Crown Prince, he seems to have taken an increasingly important role in the rule of Egypt during the closing years of his father's reign. For example, as early as year 27 he is depicted as being responsible for the appointment of one Amenemopet as High Priest of Mut at Karnak in the latter's tomb (TT148) on Dira Abu'l-Naga at Western Thebes. A tomb was constructed for the prince in the Valley of the Queens (QV53), but remained unused when he ascended the throne as RAMESSES IV.",
         "source_citation": CITATION_DECLINE,
     }, sub_period=SUB_PERIOD_DECLINE)
 
@@ -4942,7 +4511,6 @@ def test_ramesses_d_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses VII. The foundation of his tomb, presumably in the Valley of the Queens, is mentioned on an ostrakon in the Louvre.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4960,7 +4528,6 @@ def test_sethirkopshef_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Son of Ramesses III, and depicted in the Medinet Habu procession. Except for his tomb in the Valley of the Queens (QV43), little is known of this prince during his father's lifetime, but he survived into the reigns of his elder brothers and began a new tomb in the Valley of the Kings (KV19). However, he ultimately became king as RAMESSES VIII.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4978,7 +4545,6 @@ def test_takhat_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Probable wife of Mentuhirkopshef B and mother of Ramesses IX. Probably buried in the former tomb of Amenmesse (KV10), where one chamber was plastered and redecorated for her. Parts of her probable mummy were found in the tomb from 1996 onwards.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -4996,7 +4562,6 @@ def test_tawerettenru_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Wife of Ramesses V; mentioned in Papyrus Wilbour.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -5014,7 +4579,6 @@ def test_tentamun_a_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Mother of Henttawy Q and probably wife of Ramesses XI; mentioned in the funerary papyrus of her daughter.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -5032,7 +4596,6 @@ def test_tentamun_b_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Probable daughter of Ramesses XI and wife of Nesibanebdjedet I (see next section).",
         "source_citation": CITATION_DECLINE,
     }, sub_period=SUB_PERIOD_DECLINE)
 
@@ -5050,7 +4613,6 @@ def test_tiye_b_mereniset_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Wife of Setnakhte, with whom she is adored by a priest named Meresyotef on a stela from Abydos, now in Cairo. Shown with her son, Ramesses III, on another block from the site.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -5068,7 +4630,6 @@ def test_tiye_c_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Wife of Ramesses III; conspired with others to place her son, Pentaweret, on the throne. Final fate unknown, but presumably tried and condemned.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -5086,7 +4647,6 @@ def test_tyti_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": False,
-        "notes": "Possible wife of Ramesses X. Owner of tomb QV52 in the Valley of the Queens.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -5104,7 +4664,6 @@ def test_anuketemheb_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": True,
-        "notes": "Original owner of a sarcophagus and canopic jars later usurped for Takhat B in KV10.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -5122,7 +4681,6 @@ def test_taiay_decline_full_row() -> None:
         "dynasty": 20,
         "sub_period": SUB_PERIOD_DECLINE,
         "unplaced": True,
-        "notes": "Name and title appears written in ink on an ostrakon found in the Valley of the Kings, between the tombs of Amenmesse and Ramesses III.",
         "source_citation": CITATION_DECLINE,
     })
 
@@ -5142,7 +4700,6 @@ def test_headofsouth_ashayet_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Wife of Mentuhotep II; buried in tomb DBXI.17 within the king's mortuary chapel during the second third of his reign. Her sarcophagus and coffin are in the Cairo Museum, as is her mummy (previously in Qasr el-Aini Medical School).",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5161,7 +4718,6 @@ def test_headofsouth_henhenet_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Wife of Mentuhotep II; died in childbirth and buried in tomb DBXI.11 within the king's mortuary chapel during the second third of his reign. Her sarcophagus is in New York, while her mummy is in Cairo (previously in New York and then Qasr el-Aini Medical School).",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5180,7 +4736,6 @@ def test_headofsouth_iah_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': 'Daughter of Inyotef II, wife of Inyotef III and mother of Mentuhotep II and Neferu II. Depicted with her son and late husband at Shatt el-Rigal, and on a block now in the British Museum; she is also named in the tomb of her daughter.',
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5199,7 +4754,6 @@ def test_headofsouth_ikui_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': 'Mother of Inyotef A; her name is coupled with that of her son on two of his posthumous memorials.',
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5218,7 +4772,6 @@ def test_headofsouth_imi_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Mother of Mentuhotep IV; named in an inscription in the Wadi Hammamat recording an expedition to quarry stone there for the king's sarcophagus.",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5243,7 +4796,6 @@ def test_headofsouth_inyotef_a_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Son of Ikui, and probable father of Mentuhotep I; commemorated by the 11th Dynasty stela of Maat (New York) and a scribe-statue dedicated by Senwosret I at Karnak (Cairo), as well as much later in Thutmose III's Karnak king list.",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5262,7 +4814,6 @@ def test_headofsouth_kawit_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Possibly a wife of Mentuhotep II; buried in tomb DBXI.9 within the king's mortuary chapel during the second third of his reign. Her sarcophagus is in the Cairo Museum.",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5281,7 +4832,6 @@ def test_headofsouth_kemsit_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Possibly a wife of Mentuhotep II; buried in tomb TT308 within the king's mortuary chapel during the second third of his reign. The fragments of her sarcophagus are in the British Museum.",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5300,7 +4850,6 @@ def test_headofsouth_neferu_i_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Mother of Inyotef II; her son is given the epithet 'born of Neferu' on the stelae of Tjetji (British Museum), Heny (Moscow), and Djari (Cairo and Brussels), as well as one of his own (Metropolitan Museum of Art).",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5319,7 +4868,6 @@ def test_headofsouth_neferu_ii_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': 'Daughter of Inyotef III and Iah, and wife of Mentuhotep II; buried in tomb TT319 at Deir el-Bahari.',
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5338,7 +4886,6 @@ def test_headofsouth_sadhe_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': "Wife of Mentuhotep II; buried in tomb DBXI.7 within the king's mortuary chapel during the second third of his reign.",
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5357,7 +4904,6 @@ def test_headofsouth_tem_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': False,
-        'notes': 'Wife of Mentuhotep II and mother of Mentuhotep III; buried in tomb DBXI.15, within the mortuary temple of her husband.',
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5385,7 +4931,6 @@ def test_headofsouth_neferkayet_full_row() -> None:
         'dynasty': 11,
         "sub_period": SUB_PERIOD_HEADOFSOUTH,
         'unplaced': True,
-        'notes': 'Daughter and wife of unknown kings; named on the stela of her steward, Rediukhnum, from Dendara, now in Cairo.',
         'source_citation': CITATION_HEADOFSOUTH,
     })
 
@@ -5404,7 +4949,6 @@ def test_seizers_lac12a_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Senwosret II and wife of Senwosret III; owner of Pyramid IV in the complex of her husband at Dahshur.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5423,7 +4967,6 @@ def test_seizers_lac12b_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Wife of Amenemhat III; buried under his pyramid at Dahshur.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5442,7 +4985,6 @@ def test_seizers_aat_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Wife of Amenemhat III; buried under his pyramid at Dahshur – a false door, an offering table, funerary equipment and a sarcophagus being recovered.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5461,7 +5003,6 @@ def test_seizers_amenemhatankh_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probable son of Amenemhat II; known from fragments of false door found reused in the tombs of Khnemet and Siese (Dahshur tomb L.LV), a text on a block statue recording his appointment of the priest Tetiemsaf (from Saqqara, now in Cairo), the block statue of a certain Horemsaf (B) (Saqqara), a statue-base from the temple of Mut at Karnak (now in Cairo), and from a posthumous mention in the autobiographical text of Khnumhotep (Dahshur tomb 2).',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5487,7 +5028,6 @@ def test_seizers_ameny_a_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Eldest son of Senwosret I; later king as AMENEMHAT II. Amenemhat, nomarch of Beni Hasan, states that the prince sailed with him when he went 'southward ... to bring gold for the person of the Dual King, Kheperkare, ... with 400 of the choicest of [his] troops, who returned safely, without loss' (text in Beni Hasan tomb BH2).",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5506,7 +5046,6 @@ def test_seizers_hathorhetepet_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Possibly a daughter of Amenemhat III; a fragment of her canopic jar was found in his complex at Dahshur.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5531,7 +5070,6 @@ def test_seizers_hetepti_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Mother of Amenemhat IV, and possibly a wife of Amenemhat III; depicted in a relief at Medinet Maadi.',
         'source_citation': CITATION_SEIZERS,
     }, sub_period=SUB_PERIOD_SEIZERS)
 
@@ -5550,7 +5088,6 @@ def test_seizers_ita_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Daughter of Amenemhat II. Owner of a sphinx, found at Qatna in Syria, and now in the Louvre; buried in a double-tomb with Khnemet in their father's funerary enclosure.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5569,7 +5106,6 @@ def test_seizers_itakayet_a_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Probable daughter of Senwosret I; owner of Pyramid 2 in the latter's pyramid complex, but possibly not buried there. It is not impossible that she may be identical with Itakayet B.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5588,7 +5124,6 @@ def test_seizers_itakayet_b_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probably a daughter of Amenemhat II; named on a cylinder seal in Berlin that also bears the cartouche of an Amenemhat; conceivably identical with Itakayet C.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5607,7 +5142,6 @@ def test_seizers_itakayet_c_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probably a daughter of Senwosret II; buried in Pyramid III in the funerary complex of Senwosret III at Dahshur, and probably the lady of the name listed with other members of the royal family on a papyrus from Kahun.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5626,7 +5160,6 @@ def test_seizers_itaweret_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Daughter of Amenemhat II, and probably wife of Senwosret II; buried in a double-tomb with Sithathormeryet in her father's funerary enclosure.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5645,7 +5178,6 @@ def test_seizers_kaneferu_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probably a wife of Amenemhat II; named with him on a seal in Tübingen.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5664,7 +5196,6 @@ def test_seizers_kayet_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Amenemhat I; known from a fragment of relief from Lisht.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5683,7 +5214,6 @@ def test_seizers_keminub_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Wife of Amenemhat II; buried in a tomb in her husband's funerary enclosure at Dahshur, shared with a certain Amenhotep (i).",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5702,7 +5232,6 @@ def test_seizers_khnemet_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Daughter of Amenemhat II, and probably a wife of Senwosret II; buried in a double-tomb with Ita in her father's funerary enclosure.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5721,7 +5250,6 @@ def test_seizers_khnemetlac_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Senwosret III; known from a fragment of relief from his pyramid complex at Dahshur.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5740,7 +5268,6 @@ def test_seizers_khnemetneferhedjet_a_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Amenemhat II; named on a cylinder seal in New York, alongside her father. Conceivably identical with Khnemetneferhedjet I Weret.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5759,7 +5286,6 @@ def test_seizers_khnemetneferhedjet_i_weret_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Wife of Senwosret II and mother of Senwosret III. Known from a seal found at Lahun and now in Tonbridge; a mention in a Kahun papyrus in Berlin; a statue in the British Museum; and her cenotaph in the pyramid complex of her son (Pyramid VIII). She was probably buried in the small pyramid in her husband's complex at Lahun.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5778,7 +5304,6 @@ def test_seizers_khnemetneferhedjet_ii_weret_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Wife of Senwosret III; known from a statue of her husband in the British Museum and another from Herakleopolis (now in Cairo). Buried in Pyramid IX in her son's complex, where a set of her jewellery was found in 1994.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5797,7 +5322,6 @@ def test_seizers_menet_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur. Two sets of canopic jar fragments are in the Cairo Museum.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5816,7 +5340,6 @@ def test_seizers_mereret_b_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur. Her jewellery is now in the Cairo Museum, and includes items bearing the name of Amenemhat III.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5835,7 +5358,6 @@ def test_seizers_mertseger_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Wife of Senwosret III; depicted on a broken stela in the British Museum and in an inscription at Semna dating to the time of Thutmose III in honour of her husband.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5854,7 +5376,6 @@ def test_seizers_neferet_b_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probably a daughter of Senwosret II; listed with other members of the royal family on a papyrus from Kahun, now in Berlin.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5873,7 +5394,6 @@ def test_seizers_neferet_i_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Probable mother of Amenemhat I; named on an offering table found reused in a later house near the king's pyramid at Lisht.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5892,7 +5412,6 @@ def test_seizers_neferet_ii_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Amenemhat II and wife of Senwosret II; owner of two statues, from Tanis and now in Cairo. Possible owner of the small pyramid in the complex of Senwosret II at Lahun.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5911,7 +5430,6 @@ def test_seizers_neferhenut_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Wife of Senwosret III; buried in tomb II in her husband's funerary complex at Dahshur.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5930,7 +5448,6 @@ def test_seizers_neferitatjenen_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Wife of Amenemhat I and mother of Senwosret I. Named on a statuette of her son, stolen from the Louvre in 1830.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5949,7 +5466,6 @@ def test_seizers_neferu_iii_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Daughter of Amenemhat I and wife of Senwosret I; mentioned in the Story of Sinuhe and known from a fragment of stone found in Amenemhat I's complex at Lisht, Amenemhat II's shrine of Senwosret I at Serabit el-Khadim, and her pyramid in her husband's cemetery. This pyramid may not have been used for her burial, in which case it is possible she was interred at Dahshur near her son, Amenemhat II.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5968,7 +5484,6 @@ def test_seizers_neferuptah_a_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probable daughter of Senwosret I; an ivory wand bearing her name was found near his pyramid.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -5987,7 +5502,6 @@ def test_seizers_neferuptah_b_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Amenemhat III; towards the end of her life she obtained the use of a cartouche, and it is possible that she may have been regarded as a potential female king before her premature death. She was originally provided with a burial place alongside her father in his burial chamber at Hawara, but seems to have been translated to her own pyramid at Hawara-South; this was found to be intact in 1956, the contents now in Cairo. Besides her funerary equipment, she is also known from a relief in the temple at Medinet Maadi, a statue from Elephantine, a sphinx of her father, and a reference in a Kahun papyrus.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6006,7 +5520,6 @@ def test_seizers_neferusherit_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Daughter of Amenemhat I; known from a granite object found amongst the shaft-tombs west of her father's pyramid at Lisht.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6025,7 +5538,6 @@ def test_seizers_neferusobk_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probable daughter of Senwosret I; a fragment of a granite bowl bearing her name was found near his pyramid. It is conceivable that the bowl may be from a later offering, and that this lady is identical with Sobkneferu.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6044,7 +5556,6 @@ def test_seizers_nensedlac_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probable daughter of Senwosret I; a fragment of a dish bearing her name was found near his pyramid.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6063,7 +5574,6 @@ def test_seizers_nubhotepet_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Possibly a daughter of Amenemhat III; a fragment of her canopic jar was found in his complex at Dahshur.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6082,7 +5592,6 @@ def test_seizers_sebat_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Daughter of Senwosret I; mentioned in Amenemhat II's shrine of Senwosret I at Serabit el-Khadim.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6101,7 +5610,6 @@ def test_seizers_senetsenbetes_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6120,7 +5628,6 @@ def test_seizers_senwosret_a_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probable father of Amenemhat I; named alongside Mentuhotep II and III on a block from a chapel at Karnak of the time of Amenhotep I.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6139,7 +5646,6 @@ def test_seizers_senwosretsonbe_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Son of Senwosret II; included in a papyrus from Kahun, now in Berlin, listing offerings to the family of the king.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6158,7 +5664,6 @@ def test_seizers_sitlacja_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Senwosret III; buried in the lower galleries of his complex at Dahshur.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6177,7 +5682,6 @@ def test_seizers_sithathor_a_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Probably a daughter of Senwosret III; buried in the lower galleries in his pyramid complex at Dahshur. Her jewellery is in the Cairo Museum, including a pectoral of Senwosret II.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6196,7 +5700,6 @@ def test_seizers_sithathor_b_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Possible daughter of Amenemhat III; buried in a cutting in the entrance staircase of the king's pyramid at Dahshur.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6215,7 +5718,6 @@ def test_seizers_sithathoriunet_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Senwosret II and probably wife of Senwosret III; buried at Lahun, where her jewellery (now in Cairo and New York) was found in 1914.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6234,7 +5736,6 @@ def test_seizers_sithathormeryet_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': "Probably a member of the family of Amenemhat II; buried in a double-tomb with Itaweret in the king's funerary enclosure.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6253,7 +5754,6 @@ def test_seizers_sobkneferu_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': False,
-        'notes': 'Daughter of Amenemhat III; later female king, and probably the owner as a princess of statue-base from Gezer, and perhaps a bowl from Lisht.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6281,7 +5781,6 @@ def test_seizers_didit_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': True,
-        'notes': "Sister of an unknown king; mother of Neferet Q; named on the latter's stela in Munich.",
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6300,7 +5799,6 @@ def test_seizers_neferet_q_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': True,
-        'notes': 'Sister of an unknown king; named on her funerary stela in Munich alongside her mother, Didit.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6319,7 +5817,6 @@ def test_seizers_sithathor_q_full_row() -> None:
         'dynasty': 12,
         "sub_period": SUB_PERIOD_SEIZERS,
         'unplaced': True,
-        'notes': 'Mother of Didit, named on the funerary stela of Neferet Q in Munich.',
         'source_citation': CITATION_SEIZERS,
     })
 
@@ -6338,7 +5835,6 @@ def test_kc_lac13a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Non-royal father of either Imyromesha or Inyotef IV, on the basis of the data from the court accounts of his son's reign.",
         'source_citation': CITATION_KC,
     })
 
@@ -6357,7 +5853,6 @@ def test_kc_lac13b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Brother of Iy; known from his stela in Würzburg.',
         'source_citation': CITATION_KC,
     })
 
@@ -6376,7 +5871,6 @@ def test_kc_lac13c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Second husband of Iuhetibu A and step-father of Sobkhotep III; shown with the latter on an altar from Sehel.',
         'source_citation': CITATION_KC,
     })
 
@@ -6395,7 +5889,6 @@ def test_kc_lac13d_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Father of Sobkhotep V; known from a broken seal-impression from Tukh.',
         'source_citation': CITATION_KC,
     })
 
@@ -6414,7 +5907,6 @@ def test_kc_lac13e_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Wife of Reniseneb B and the descendant of Senebsen, as well as Aya A.',
         'source_citation': CITATION_KC,
     })
 
@@ -6433,7 +5925,6 @@ def test_kc_amenhotep_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Sobkhotep IV and Tjin; named on a box in Cairo.',
         'source_citation': CITATION_KC,
     })
 
@@ -6452,7 +5943,6 @@ def test_kc_ankhu_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Merestekhi, and so possibly nephew of Amenemhat IV; known from a number of sources, in particular a block in Boston.',
         'source_citation': CITATION_KC,
     })
 
@@ -6471,7 +5961,6 @@ def test_kc_ankhu_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Father of the wife of the brother of Iy; in office under Khendjer and known from a series of statues and Papyrus Bulaq 18.',
         'source_citation': CITATION_KC,
     })
 
@@ -6490,7 +5979,6 @@ def test_kc_aya_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son-in-law of Nubkhaes A; mentioned in a genealogy in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -6509,7 +5997,6 @@ def test_kc_aya_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Husband of Reditenes B; known from the Juridical Stela from Karnak (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -6528,7 +6015,6 @@ def test_kc_aya_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Aya B and Reditenes B; known from the Juridical Stela from Karnak (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -6547,7 +6033,6 @@ def test_kc_ayameru_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Father of Aya A; mentioned in a genealogy in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -6566,7 +6051,6 @@ def test_kc_ayameru_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Aya B and Reditenes B; known from the Juridical Stela from Karnak (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -6585,7 +6069,6 @@ def test_kc_bebi_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -6604,7 +6087,6 @@ def test_kc_bebi_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in a set of palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -6623,7 +6105,6 @@ def test_kc_bebi_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Sobkhotep VII; depicted on a statue of his father from Karnak, now in Cairo, and the owner of two stelae set up at Abydos by his steward, Ptaha (Cairo and Bologna).',
         'source_citation': CITATION_KC,
     })
 
@@ -6642,7 +6123,6 @@ def test_kc_bebires_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Daughter of Nubkhaes A; mentioned in her stela in the Louvre.',
         'source_citation': CITATION_KC,
     })
 
@@ -6661,7 +6141,6 @@ def test_kc_dedetanuq_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Daughter of Sobkhotep III; shown with her sister on a stela from Koptos (Louvre) and with other members of her family on a stela in Wadi el-Hol.',
         'source_citation': CITATION_KC,
     })
 
@@ -6680,7 +6159,6 @@ def test_kc_dedusobk_bebi_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Father of Nubkhaes A; mentioned in her stela in the Louvre.',
         'source_citation': CITATION_KC,
     })
 
@@ -6699,7 +6177,6 @@ def test_kc_duaneferet_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Mother of Nubkhaes A; mentioned in her stela in the Louvre.',
         'source_citation': CITATION_KC,
     })
 
@@ -6718,7 +6195,6 @@ def test_kc_duaneferet_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Daughter of Nubkhaes A; mentioned in her stela in the Louvre.',
         'source_citation': CITATION_KC,
     })
 
@@ -6737,7 +6213,6 @@ def test_kc_haankhef_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Father of Neferhotep I, Sihathor and Sobkhotep IV; owner of a stela (probably from Heliopolis) in Rio de Janeiro, and named on a number of scarabs of his elder sons, together with inscriptions of Neferhotep I.',
         'source_citation': CITATION_KC,
     })
 
@@ -6756,7 +6231,6 @@ def test_kc_haankhef_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Son of Neferhotep I; named in his father's Sehel inscription.",
         'source_citation': CITATION_KC,
     })
 
@@ -6775,7 +6249,6 @@ def test_kc_haankhef_c_ikherneferet_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Sobkhotep IV; named on a stela of his father in the Wadi Hammamat.',
         'source_citation': CITATION_KC,
     })
 
@@ -6794,7 +6267,6 @@ def test_kc_hapyu_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Grandmother of Nubkhaes A; mentioned in her stela in the Louvre.',
         'source_citation': CITATION_KC,
     })
 
@@ -6813,7 +6285,6 @@ def test_kc_hatshepsut_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Wife of Neferhotep B and descendant of Senebsen; mentioned in a genealogy in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -6832,7 +6303,6 @@ def test_kc_henut_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Niece of Sobkhotep III; named on the Vienna stela of her father, Seneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -6857,7 +6327,6 @@ def test_kc_hetepti_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'See previous section.',
         'source_citation': CITATION_KC,
     }, sub_period=SUB_PERIOD_KC)
 
@@ -6876,7 +6345,6 @@ def test_kc_horemheb_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -6895,7 +6363,6 @@ def test_kc_inni_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Possible wife of Aya; known from at least 21 scarabs and one seal-impression, the latter from Kerma in Nubia.',
         'source_citation': CITATION_KC,
     })
 
@@ -6914,7 +6381,6 @@ def test_kc_inyotef_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Probable son of Amenemhat V and father of Amenemhat VI; known only from the filiative nomen of his son.',
         'source_citation': CITATION_KC,
     })
 
@@ -6933,7 +6399,6 @@ def test_kc_inyotef_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister of Iy; known from a stela of her probable brother in Würzburg.',
         'source_citation': CITATION_KC,
     })
 
@@ -6952,7 +6417,6 @@ def test_kc_iuhetibu_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Mother of Sobkhotep III, shown with him on an altar from Sehel and a stela in the Wadi el-Hol.',
         'source_citation': CITATION_KC,
     })
 
@@ -6971,7 +6435,6 @@ def test_kc_iuhetibu_b_fendy_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Daughter of Sobkhotep III; shown with her sister on a stela from Koptos (Louvre) and with other members of her family on a stela in Wadi el-Hol.',
         'source_citation': CITATION_KC,
     })
 
@@ -6990,7 +6453,6 @@ def test_kc_iuhetibu_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Niece of Sobkhotep III; named on the Vienna stela of her father, Seneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7009,7 +6471,6 @@ def test_kc_iy_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Probably wife of either Imyromesha or Inyotef IV; mentioned in palace accounts in Cairo (Papyrus Bulaq 18) and on a stela in Würzburg.',
         'source_citation': CITATION_KC,
     })
 
@@ -7028,7 +6489,6 @@ def test_kc_kay_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Father of Amenemhat VII, on the basis of the latter's filiative nomen.",
         'source_citation': CITATION_KC,
     })
 
@@ -7047,7 +6507,6 @@ def test_kc_kebsi_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Ayameru B; known from the Juridical Stela from Karnak (Cairo), in which he sold the Governorate to one Sobknakhte (B) in the time of Nebiriau I.',
         'source_citation': CITATION_KC,
     })
 
@@ -7066,7 +6525,6 @@ def test_kc_kemi_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Mother of Neferhotep I, Sihathor and Sobkhotep IV; named on a number of scarabs of her sons, inscriptions of Neferhotep I from around the area of the First Cataract of the Nile, near Aswan, and on two statues of Sihathor.',
         'source_citation': CITATION_KC,
     })
 
@@ -7085,7 +6543,6 @@ def test_kc_kemi_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Daughter of Neferhotep I; named in her father's Sehel inscription and two scarabs.",
         'source_citation': CITATION_KC,
     })
 
@@ -7104,7 +6561,6 @@ def test_kc_khakau_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Brother of Sobkhotep III; shown with the king and other members of his family on a stela in the Wadi el-Hol and on an altar from Sehel.',
         'source_citation': CITATION_KC,
     })
 
@@ -7123,7 +6579,6 @@ def test_kc_khemmet_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7142,7 +6597,6 @@ def test_kc_khonskhufsy_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Daughter of Nubkhaes A and wife of Aya A; mentioned in a genealogy in the tomb of Reniseneb B and on her mother's stela in the Louvre.",
         'source_citation': CITATION_KC,
     })
 
@@ -7161,7 +6615,6 @@ def test_kc_mentuhotep_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Father of Sobkhotep III; named on scarabs of his son, as well as being depicted with his sons, his wife and step-daughter on an altar from Sehel and a stela at Wadi el-Hol.',
         'source_citation': CITATION_KC,
     })
 
@@ -7180,7 +6633,6 @@ def test_kc_mentuhotep_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Nephew of Sobkhotep III; named on the Vienna stela of his father, Seneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7199,7 +6651,6 @@ def test_kc_merestekhi_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Mother of Ankhu A and possibly sister of Amenemhat IV; known from the monuments of her son.',
         'source_citation': CITATION_KC,
     })
 
@@ -7218,7 +6669,6 @@ def test_kc_minemaes_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Possibly the daughter of Se[...]kare, depicted on a stela now in Cairo alongside her brother, Sankhptahi.',
         'source_citation': CITATION_KC,
     })
 
@@ -7237,7 +6687,6 @@ def test_kc_nebankh_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Uncle of Nubkhaes A; mentioned in her stela in the Louvre, and also in the family lists of Neferhotep I at Philae and Sehel.',
         'source_citation': CITATION_KC,
     })
 
@@ -7256,7 +6705,6 @@ def test_kc_nebetiunet_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Daughter of Sobkhotep IV and Tjin; named on a now-lost vase and a scarab in Basel.',
         'source_citation': CITATION_KC,
     })
 
@@ -7275,7 +6723,6 @@ def test_kc_nebtit_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Sobkhotep III; named on the Vienna stela of her husband, Seneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7294,7 +6741,6 @@ def test_kc_neferetiu_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7313,7 +6759,6 @@ def test_kc_neferhotep_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Descendant of Senebsen; mentioned in a genealogy in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7332,7 +6777,6 @@ def test_kc_neferhotep_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Grandson of Nubkhaes A; mentioned in a genealogy in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7351,7 +6795,6 @@ def test_kc_neferu_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7370,7 +6813,6 @@ def test_kc_nehy_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Grandfather of Neferhotep I, Sihathor and Sobkhotep IV; named on the Rio de Janeiro stela of Haankhef A.',
         'source_citation': CITATION_KC,
     })
 
@@ -7389,7 +6831,6 @@ def test_kc_nenqlac_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Father of Sobkhotep II, named in the Turin Canon.',
         'source_citation': CITATION_KC,
     })
 
@@ -7408,7 +6849,6 @@ def test_kc_neni_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Wife of Sobkhotep III; named as the mother of Iuhetibu B and Dedetanuq on a stela in the Louvre, and also probably shown on stela in the Wadi el-Hol.',
         'source_citation': CITATION_KC,
     })
 
@@ -7427,7 +6867,6 @@ def test_kc_neshemethotepti_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Niece of Iy; known from a stela of her father in Würzburg.',
         'source_citation': CITATION_KC,
     })
 
@@ -7446,7 +6885,6 @@ def test_kc_nubhotepti_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Probable wife of Hor; known from two distinct groups of scarabs, one of which gives her the title of King's Mother.",
         'source_citation': CITATION_KC,
     })
 
@@ -7465,7 +6903,6 @@ def test_kc_nubhotepti_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Mother of Sobkhotep V; named on two scarabs in London and New York.',
         'source_citation': CITATION_KC,
     })
 
@@ -7484,7 +6921,6 @@ def test_kc_nubhoteptikhered_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Probable daughter of Hor; buried in a shaft-tomb alongside that of Hor on the north side of the pyramid of Amenemhat III at Dahshur. Her tomb was found intact in 1894, its contents now being in the Cairo Museum.',
         'source_citation': CITATION_KC,
     })
 
@@ -7503,7 +6939,6 @@ def test_kc_nubkhaes_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Probable wife of either Sobkhotep V, Sobkhotep VI or Iaib; owner of a stela in the Louvre and mentioned in the tomb of Reniseneb B at El-Kab.',
         'source_citation': CITATION_KC,
     })
 
@@ -7522,7 +6957,6 @@ def test_kc_peshu_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7541,7 +6975,6 @@ def test_kc_redienef_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7560,7 +6993,6 @@ def test_kc_reditenes_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Wife of Ayameru A; mentioned in a genealogy in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7579,7 +7011,6 @@ def test_kc_reditenes_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Probable daughter of King Aya and wife of Aya B; known from the Juridical Stela from Karnak (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -7598,7 +7029,6 @@ def test_kc_reniseneb_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Half-sister of Sobkhotep III, shown with him on an altar from Sehel.',
         'source_citation': CITATION_KC,
     })
 
@@ -7617,7 +7047,6 @@ def test_kc_reniseneb_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Husband of a descendant of Senebsen; owner of tomb 9 at El-Kab.',
         'source_citation': CITATION_KC,
     })
 
@@ -7636,7 +7065,6 @@ def test_kc_resi_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7655,7 +7083,6 @@ def test_kc_ressonbe_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Husband of Neferhotep A; mentioned in a genealogy in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7674,7 +7101,6 @@ def test_kc_sankhptahi_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Possibly the son of Se[...]kare, depicted on a stela now in Cairo; probably later king.',
         'source_citation': CITATION_KC,
     })
 
@@ -7693,7 +7119,6 @@ def test_kc_seb_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Grandfather of Amenemhat VII, on the basis of the latter's filiative nomen.",
         'source_citation': CITATION_KC,
     })
 
@@ -7712,7 +7137,6 @@ def test_kc_seneb_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7731,7 +7155,6 @@ def test_kc_seneb_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Brother of Sobkhotep III; shown with his brother and other members of his family on a stela in the Wadi el-Hol and on an altar from Sehel, while a stela of his own is in Vienna.',
         'source_citation': CITATION_KC,
     })
 
@@ -7750,7 +7173,6 @@ def test_kc_senebhenas_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': "Probable wife of Khendjer; known from a canopic jar fragment from the king's pyramid complex and a number of scarabs.",
         'source_citation': CITATION_KC,
     })
 
@@ -7769,7 +7191,6 @@ def test_kc_senebhenas_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; known from the monuments of her husband.',
         'source_citation': CITATION_KC,
     })
 
@@ -7788,7 +7209,6 @@ def test_kc_senebhenas_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Wife of Sobkhotep III; shown with him on an altar from Sehel and a stela in the Wadi el-Hol.',
         'source_citation': CITATION_KC,
     })
 
@@ -7807,7 +7227,6 @@ def test_kc_senebsen_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Wife of Neferhotep I. Recorded in the Sehel inscription of the king. Mentioned in the tomb of Reniseneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7826,7 +7245,6 @@ def test_kc_senebtisi_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Grandmother of Neferhotep I, Sihathor and Sobkhotep IV; named on the Rio de Janeiro stela of Haankhef A; conceivably the lady of this name who was buried at Lisht, and has her funerary equipment in the Metropolitan Museum of Art.',
         'source_citation': CITATION_KC,
     })
 
@@ -7845,7 +7263,6 @@ def test_kc_sihathor_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Brother of Neferhotep I and Sobkhotep IV; known from the Philae and Sehel texts of his elder brother and the Wadi Hammamat stela of Sobkhotep IV, as well as two statues of his own from Elephantine and another, dedicated by Sobkhotep IV, in the Qurna temple of Sety I. It is possible he was briefly co-regent with his elder brother, but the last monument only refers to him as a prince.',
         'source_citation': CITATION_KC,
     })
 
@@ -7864,7 +7281,6 @@ def test_kc_sitlacb_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Possibly the daughter of Se[...]kare, depicted on a stela now in Cairo alongside her brother, Sankhptahi.',
         'source_citation': CITATION_KC,
     })
 
@@ -7883,7 +7299,6 @@ def test_kc_sithathor_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Sister-in-law of Iy; named in palace accounts in Cairo (Papyrus Bulaq 18).',
         'source_citation': CITATION_KC,
     })
 
@@ -7902,7 +7317,6 @@ def test_kc_sobkhotep_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Nephew of Sobkhotep III; named on the Vienna stela of his father, Seneb B.',
         'source_citation': CITATION_KC,
     })
 
@@ -7921,7 +7335,6 @@ def test_kc_sobkhotep_b_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Grandfather of Nubkhaes A; mentioned in her stela in the Louvre.',
         'source_citation': CITATION_KC,
     })
 
@@ -7940,7 +7353,6 @@ def test_kc_sobkhotep_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Brother of Neferhotep I; known from the Philae and Sehel texts of that king, and perhaps a few scarabs. Later co-regent and king as SOBKHOTEP IV.',
         'source_citation': CITATION_KC,
     })
 
@@ -7959,7 +7371,6 @@ def test_kc_sobkhotep_d_miu_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Sobkhotep IV; named on a stela of his father in the Wadi Hammamat, and probably on another from Wadi el-Hudi (Aswan Museum).',
         'source_citation': CITATION_KC,
     })
 
@@ -7978,7 +7389,6 @@ def test_kc_sobkhotep_e_djadja_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Sobkhotep IV; named on a stela of his father in the Wadi Hammamat.',
         'source_citation': CITATION_KC,
     })
 
@@ -7997,7 +7407,6 @@ def test_kc_sobkhotep_f_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Probable son of Sihathor; named as the offspring of a prince of that name on a scarab.',
         'source_citation': CITATION_KC,
     })
 
@@ -8016,7 +7425,6 @@ def test_kc_sobkhotep_g_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Son of Sobkhotep VII; depicted on a statue of his father from Karnak, now in Cairo.',
         'source_citation': CITATION_KC,
     })
 
@@ -8035,7 +7443,6 @@ def test_kc_tjin_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Wife of Sobkhotep IV; named on a box in Cairo, on a vase of her daughter and on a bead in the British Museum.',
         'source_citation': CITATION_KC,
     })
 
@@ -8054,7 +7461,6 @@ def test_kc_wepwawethotep_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': False,
-        'notes': 'Brother of Iy; known from a stela of his probable brother in Würzburg.',
         'source_citation': CITATION_KC,
     })
 
@@ -8073,7 +7479,6 @@ def test_kc_lacdjeb_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Daughter of an unknown king; known from a stela from Abydos (Cairo) that also names Haankhef Q, Horhotep Q and Neferhotep Q.',
         'source_citation': CITATION_KC,
     })
 
@@ -8092,7 +7497,6 @@ def test_kc_ahhotepti_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Wife and mother of unknown kings; known from a scarab, once in a Cairo private collection, the design of which suggests that she lived prior to the reign of Sobkhotep III.',
         'source_citation': CITATION_KC,
     })
 
@@ -8111,7 +7515,6 @@ def test_kc_anuqneferetweben_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Daughter of an unknown king; known from three seals, roughly datable to the time of Sobkhotep IV or Sobkhotep V.',
         'source_citation': CITATION_KC,
     })
 
@@ -8130,7 +7533,6 @@ def test_kc_dedetamun_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': "Daughter of a king whose prenomen included the syllable 'hotep' (perhaps Sobkhotep V, Sobkhotep VI or Ini I); wife of the God's Seal-Bearer, Nebsenet, son of one Bembu. Known from a stela from Abydos (Vatican).",
         'source_citation': CITATION_KC,
     })
 
@@ -8149,7 +7551,6 @@ def test_kc_dedetsobk_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Sister of an unknown king, daughter of Iuhetibu Q and Dedusobk A; known from a stela from Abydos (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -8168,7 +7569,6 @@ def test_kc_dedusobk_a_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Father of an unknown king, husband of Iuhetibu Q and son of a certain Bebiankh (Q); known from a stela from Abydos (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -8187,7 +7587,6 @@ def test_kc_haankhef_q_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Son of an unknown king; known from a stela from Abydos (Cairo) that also names Neferhotep Q, Horhotep Q and [...]djeb.',
         'source_citation': CITATION_KC,
     })
 
@@ -8206,7 +7605,6 @@ def test_kc_hatshepsut_c_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Daughter of Neferet R and an unknown king; known from a stela of her husband, Nedjesankh-Iu.',
         'source_citation': CITATION_KC,
     })
 
@@ -8225,7 +7623,6 @@ def test_kc_horhotep_q_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Son of an unknown king; known from a stela from Abydos (Cairo) that also names Haankhef Q, Neferhotep Q and [...]djeb.',
         'source_citation': CITATION_KC,
     })
 
@@ -8244,7 +7641,6 @@ def test_kc_iuhetibu_q_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Mother of an unknown king, wife of Dedusobk A and daughter of a certain Senwosret (Q); known from a stela from Abydos (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -8263,7 +7659,6 @@ def test_kc_neferet_r_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': "Wife of an unknown king; known from a stela of a man named Nedjesankh-Iu, one of whose wives (Hatshepsut C) was Neferet's daughter.",
         'source_citation': CITATION_KC,
     })
 
@@ -8282,7 +7677,6 @@ def test_kc_neferhotep_q_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Daughter of an unknown king; known from a stela from Abydos (Cairo) that also names Haankhef Q, Horhotep Q and [...]djeb.',
         'source_citation': CITATION_KC,
     })
 
@@ -8301,7 +7695,6 @@ def test_kc_neferu_q_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Daughter of an unknown king and wife of the Chief of Police of the temple of Anubis, Sobkhotep, the son of Dediresu and Ptahqeni. Known from a stela from Abydos (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -8320,7 +7713,6 @@ def test_kc_reniseneb_q_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Daughter of an unknown king; known from a seal, roughly datable to the time of Sobkhotep IV or Sobkhotep V.',
         'source_citation': CITATION_KC,
     })
 
@@ -8339,7 +7731,6 @@ def test_kc_reniseneb_r_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Daughter of an unknown king, and perhaps sister of Sobkhotep Q; known from a seal, roughly datable to the latter part of the 13th Dynasty.',
         'source_citation': CITATION_KC,
     })
 
@@ -8358,7 +7749,6 @@ def test_kc_senetmut_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Sister of an unknown king, daughter of Iuhetibu Q and Dedusobk A; known from a stela from Abydos (Cairo).',
         'source_citation': CITATION_KC,
     })
 
@@ -8377,7 +7767,6 @@ def test_kc_sobkhotep_q_full_row() -> None:
         'dynasty': 13,
         "sub_period": SUB_PERIOD_KC,
         'unplaced': True,
-        'notes': 'Son of an unknown king, and perhaps brother of Reniseneb R; known from a seal, roughly datable to the latter part of the 13th Dynasty.',
         'source_citation': CITATION_KC,
     })
 
@@ -8396,7 +7785,6 @@ def test_founders_lac1a_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Known from her stela (number 128), from a grave in the funerary complex of the Horus Den at Umm el-Qaab.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8415,7 +7803,6 @@ def test_founders_batirytes_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Mother of Semerkhet; named on the Cairo Annals Stone.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8434,7 +7821,6 @@ def test_founders_benerib_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Name written alongside that of Hor-Aha and presumably his wife; possibly owner of tomb B14 at Umm el-Qaab.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8453,7 +7839,6 @@ def test_founders_herneith_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Probable wife of Djer, and possible owner of Saqqara S3507 which contains vases bearing her name, as well as seals showing the names of Den and Qaa.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8472,7 +7857,6 @@ def test_founders_hotephirnebty_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Wife of Djoser. Named on a series of boundary stelae from the Step Pyramid enclosure (now in various museums) and a fragment of relief from a building at Heliopolis, now in Turin.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8491,7 +7875,6 @@ def test_founders_intkaes_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Daughter of Djoser. Named on a series of boundary stelae from the Step Pyramid enclosure (now in various museums) and a fragment of relief from Heliopolis.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8510,7 +7893,6 @@ def test_founders_khenthap_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Stated to have been the mother of the Horus Djer on the Cairo Annals Stone.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8529,7 +7911,6 @@ def test_founders_meryetneith_a_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': "Mother of Den. Owner of Umm el-Qaab tomb Y, the stela from which is in the Cairo Museum. The tomb and stela are like those used for contemporary kings, but on the stela Meryetneith's name is written without the serekh used on kingly examples. She is named as Den's mother on a seal from Abydos and probably on the Palermo Stone. One of her officials was buried in Saqqara tomb S3503.",
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8548,7 +7929,6 @@ def test_founders_nakhtneith_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Known from her stela (number 95), from a grave in the funerary complex of Djer at Umm el-Qaab.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8567,7 +7947,6 @@ def test_founders_neithhotep_a_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Known from the Royal Tomb at Naqada, an ivory lid found in the tomb of Djer at Abydos, and on a label from Helwan.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8586,7 +7965,6 @@ def test_founders_nymaathap_a_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Named on sealings from the funerary complex of Khasekhemwy at Abydos, and from tomb K1 at Beit Khallaf. Her posthumous cult is referred to in the early 4th Dynasty tomb of Metjen at Saqqara (LS6).',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8605,7 +7983,6 @@ def test_founders_perneb_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Seal-impressions bearing his name were found in Hotepsekhemwy at Saqqara.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8624,7 +8001,6 @@ def test_founders_semat_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Known from her stela (number 129), found in a grave in the funerary complex of Den at Umm el-Qaab.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8643,7 +8019,6 @@ def test_founders_serethor_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Known from her stela, excavated in a grave in the funerary complex of Den at Umm el-Qaab and now in the Louvre.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8662,7 +8037,6 @@ def test_founders_seshemetka_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': False,
-        'notes': 'Known from her stela (number 126), discovered in a grave in the funerary complex of Den at Umm el-Qaab.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8681,7 +8055,6 @@ def test_founders_khnemetptah_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Buried in tomb 175 H8 at Helwan.[^60]',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8700,7 +8073,6 @@ def test_founders_menehpet_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Known from a seal of unknown origin.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8719,7 +8091,6 @@ def test_founders_mesenka_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Name inscribed on a diorite vessel found under the Step Pyramid.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8738,7 +8109,6 @@ def test_founders_neithhotep_b_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Known from an inscribed vessel of unknown provenance.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8757,7 +8127,6 @@ def test_founders_nysuheqat_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Owner of tomb 964 H8 at Helwan.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8776,7 +8145,6 @@ def test_founders_qaienneith_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Known from a seal of unknown provenance.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8800,7 +8168,6 @@ def test_founders_redji_full_row() -> None:
         'dynasty': 3,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Owner of a statuette (now in the Turin Museum) dated stylistically to the 3rd Dynasty.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8820,7 +8187,6 @@ def test_founders_shepsetipet_full_row() -> None:
         'dynasty': 2,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': '2nd Dynasty; known from a stela found near tomb S3477[^61] at Saqqara, to which it may have belonged. The body found in the tomb was that of a woman at least 60 years old, suffering from a badly deformed jaw.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8840,7 +8206,6 @@ def test_founders_sitba_full_row() -> None:
         'dynasty': 2,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': '2nd Dynasty; buried in Helwan tomb 1241 H9.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8860,7 +8225,6 @@ def test_founders_syhefernerer_full_row() -> None:
         'dynasty': 2,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': '2nd Dynasty; buried in Saqqara tomb S2146E, from which came her stela, now in Cairo.[^62]',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -8879,7 +8243,6 @@ def test_founders_wadjetefni_full_row() -> None:
         'dynasty': 1,
         "sub_period": SUB_PERIOD_FOUNDERS,
         'unplaced': True,
-        'notes': 'Named on a diorite vessel from below the Step Pyramid.',
         'source_citation': CITATION_FOUNDERS,
     })
 
@@ -9012,7 +8375,7 @@ def test_llm_applied_overrides_section_describes_every_spot_correction() -> None
 
 
 def test_okp_henttawy_q_full_row() -> None:
-    """P1 correction anchor: relation-token roles + clean prose notes."""
+    """P1 correction anchor: relation-token roles + Duahathor-Henttawy alt_name."""
     _assert_full_row("Henttawy Q", {
         "dh_id": "Henttawy Q",
         "name": "Henttawy Q",
@@ -9026,7 +8389,6 @@ def test_okp_henttawy_q_full_row() -> None:
         "dynasty": 21,
         "sub_period": SUB_PERIOD_OKP,
         "unplaced": False,
-        "notes": "Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum.",
         "source_citation": CITATION_OKP,
     }, sub_period=SUB_PERIOD_OKP)
 
@@ -9046,7 +8408,6 @@ def test_okp_maatkare_a_full_row() -> None:
         "dynasty": 21,
         "sub_period": SUB_PERIOD_OKP,
         "unplaced": False,
-        "notes": "Daughter of Pinudjem I and Henttawy Q. Depicted early in life in a graffito in Luxor temple, as God's Wife of Amun on the façade of the Khonsu temple at Karnak and by a statue in Marseilles. Her mummy, coffins, papyrus and shabtis were found in tomb TT320; Maatkare's body was accompanied in its coffin by the mummy of her pet baboon.",
         "source_citation": CITATION_OKP,
     })
 
@@ -9068,7 +8429,6 @@ def test_okp_pinudjem_i_full_row() -> None:
         "dynasty": 21,
         "sub_period": SUB_PERIOD_OKP,
         "unplaced": False,
-        "notes": "Son of Piankh. As High Priest he added inscriptions to the Karnak Khonsu temple and the small temple at Medinet Habu. However, a statuette (Cairo, from Karnak) shows him with High Priestly titles but wearing royal garb, and in one case a representation was altered back to showing him in priestly garb, as if to hint at some hesitation on Pinudjem's part. From at least year 16 of Nesibanebdjedet I he took full pharaonic titles as well.",
         "source_citation": CITATION_OKP,
     }, sub_period=SUB_PERIOD_OKP)
 
@@ -9090,7 +8450,6 @@ def test_okp_nesikhonsu_a_full_row() -> None:
         "dynasty": 21,
         "sub_period": SUB_PERIOD_OKP,
         "unplaced": False,
-        "notes": "Wife of Pinudjem II; known from her burial in tomb TT320, which took place in year 5 of Siamun according to an inscription at the tomb entrance, and which employed coffins originally made for Isetemkheb D. Nesikhonsu's burial included a religious decree, written on a wooden board, that was to ensure her well-being in the next world – and to prevent her doing harm to her husband and children from there. This suggests that family problems may have existed around the time of her death. Nesikhonsu is also named on the funerary papyrus of her daughter, Nesitanebetashru A.",
         "source_citation": CITATION_OKP,
     })
 
@@ -9113,7 +8472,6 @@ def test_okp_shoshenq_b_full_row() -> None:
         "dynasty": 21,
         "sub_period": SUB_PERIOD_OKP,
         "unplaced": False,
-        "notes": "Nephew of Osorkon the Elder, and later king as SHOSHENQ I. Dedicated a statue to his father, Nimlot A, at Abydos, in which he indicates a close relationship with the then-king, unnamed but probably Siamun. He seems to have ruled Upper Egypt for at least two years before becoming acknowledged king – to judge from an entry in the Karnak Priestly Annals, which is dated to his second year but only gives his title as Chieftain.",
         "source_citation": CITATION_OKP,
     })
 

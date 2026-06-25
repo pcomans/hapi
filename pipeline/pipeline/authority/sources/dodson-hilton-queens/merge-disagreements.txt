@@ -13,8 +13,6 @@ Ay A (Ay A):
 Baketwernel A (Baketwernel A):
   spouse_names: a=["Ramesses IX (possibly)"] | b=["Ramesses IX (possibly)"] | c=["Ramesses IX (possible)"]  → chose ["Ramesses IX (possibly)"]
 
-Djedmutesankh A (Djedmutesankh A):
-  notes: a="Possibly wife of Djedkhonsiufankh I; her burial (probably to the latter part of the dynasty) was found in Deir el-Bahari tomb MMA60 and is now in New York." | b="Possibly wife of Djedkhonsiufankh I; her burial (probably to the latter part of the dynasty) was found in Deir el-Bahari tomb MMA60 and is now in New York." | c="Possibly wife of Djedkhonsiufankh I; her burial (probably in the latter part of the dynasty) was found in Deir el-Bahari tomb MMA60 and is now in New York."  → chose "Possibly wife of Djedkhonsiufankh I; her burial (probably to the latter part of the dynasty) was found in Deir el-Bahari tomb MMA60 and is now in New York."
 
 Harweben (Harweben):
   mother_name: a=null | b="Isetemkheb D" | c="Isetemkheb D"  → chose "Isetemkheb D"
@@ -30,7 +28,6 @@ Henttawy C (Henttawy C):
   roles: a=["ChA"] | b=["ChHA"] | c=["ChHA"]  → chose ["ChHA"]
 
 Henttawy Q [Of Kings and Priests] (Henttawy Q):
-  notes: a="Daughter of: KGW; Mother of: KGW, HPA & Genmo. Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum." | b="Daughter of KGW; 1ChHA; Mother of: KGW, HPA & Genmo Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum." | c="Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum."  → chose "Daughter of: KGW; Mother of: KGW, HPA & Genmo. Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum."
   roles: a=["KD", "KW", "KM", "L2L", "M2L"] | b=["KD", "KW", "KM", "L2L", "M2L", "1ChHA"] | c=["KD", "KW", "KM", "L2L", "M2L", "1ChHA", "Daughter of KGW, HPA & Genmo", "Mother of: KGW, HPA & Genmo"]  → chose ["KD", "KW", "KM", "L2L", "M2L"]
 
 Henttawy Q [The Decline of the Ramessides] (Henttawy Q):
@@ -67,8 +64,6 @@ Kiya (Kiya):
 Maathorneferure (Maathorneferure):
   mother_name: a=null | b="Pudukhepa" | c=null  → chose null
 
-Masaharta C (Masaharta C):
-  notes: a="Son of Pinudjem II and Nesikhonsu A; named on his mother's decree text." | b="Son of Pinudjem II and Nesikhonsu A; named on her mother's decree text." | c="Son of Pinudjem II and Nesikhonsu A; named on his mother's decree text."  → chose "Son of Pinudjem II and Nesikhonsu A; named on his mother's decree text."
 
 Mawasun (Mawasun):
   sex: a="male" | b="female" | c="male"  → chose "male"
@@ -76,8 +71,6 @@ Mawasun (Mawasun):
 Mehytenweskhet A (Mehytenweskhet A):
   children_names: a=["Osorkon the Elder"] | b=["Osorkon the Elder"] | c=["Osorkon the Elder", "Shoshenq I"]  → chose ["Osorkon the Elder"]
 
-Menkheperre B (Menkheperre B):
-  notes: a="Son of Pinudjem I. Assumed the priesthood in year 25 of Nesibanebdjedet I and immediately proceeded southward to Thebes to 'pacify the land and suppress his enemy', as recorded on a stela now in the Louvre. As also recorded on the stela, a number of those people implicated in the troubles were exiled to the western oases, to be recalled a few years later. Menkheperre undertook building work at the fortress of El-Hiba, as well as building other forts further south. On occasion he used a cartouche, and is shown wearing a kingly kilt on a statuette in Rio de Janeiro, but he seems not to have made any substantive claim to kingship. Menkheperre's pontificate lasted for some 50 years, running in parallel with the reign of his brother, Pasebkhanut I. Nothing is known of his burial." | b="Son of Pinudjem I. Assumed the priesthood in year 25 of Nesibanebdjedet I and immediately proceeded southward to Thebes to 'pacify the land and suppress his enemy', as also recorded in the Louvre. As also recorded on the stela, a number of those people implicated in the troubles were exiled to the western oases, to be recalled a few years later. Menkheperre undertook building work at the fortress of El-Hiba, as well as building other forts further south. On occasion he used a cartouche, and is shown wearing a kingly kilt on a statuette in Rio de Janeiro, but he seems not to have made any substantive claim to kingship. Menkheperre's pontificate lasted for some 50 years, running in parallel with the reign of his brother, Pasebkhanut I. Nothing is known of his burial." | c="Son of Pinudjem I. Assumed the priesthood in year 25 of Nesibanebdjedet I and immediately proceeded southward to Thebes to 'pacify the land and suppress his enemy', as also recorded on the stela in the Louvre. As also recorded on the stela, a number of those people implicated in the troubles were exiled to the western oases, to be recalled a few years later. Menkheperre undertook building work at the fortress of El-Hiba, as well as building other forts further south. On occasion he used a cartouche, and is shown wearing a kingly kilt on a statuette in Rio de Janeiro, but he seems not to have made any substantive claim to kingship. Menkheperre's pontificate lasted for some 50 years, running in parallel with the reign of his brother, Pasebkhanut I. Nothing is known of his burial."  → chose "Son of Pinudjem I. Assumed the priesthood in year 25 of Nesibanebdjedet I and immediately proceeded southward to Thebes to 'pacify the land and suppress his enemy', as recorded on a stela now in the Louvre. As also recorded on the stela, a number of those people implicated in the troubles were exiled to the western oases, to be recalled a few years later. Menkheperre undertook building work at the fortress of El-Hiba, as well as building other forts further south. On occasion he used a cartouche, and is shown wearing a kingly kilt on a statuette in Rio de Janeiro, but he seems not to have made any substantive claim to kingship. Menkheperre's pontificate lasted for some 50 years, running in parallel with the reign of his brother, Pasebkhanut I. Nothing is known of his burial."
 
 Mentuhirkopshef B (Mentuhirkopshef B):
   spouse_names: a=[] | b=["Takhat B (probable)"] | c=[]  → chose []
@@ -111,8 +104,6 @@ Neferhotep B (Neferhotep B):
 Nesibanebdjedet (Nesibanebdjedet):
   spouse_names: a=[] | b=["Tentamun B"] | c=[]  → chose []
 
-Nesibanebdjedet II (Nesibanebdjedet II):
-  notes: a="Son of Menkheperre B, and served as High Steward under his father before assuming the pontificate. His monuments are scarce, limited to an inscription at Karnak, a note on the bandages of a mummy and bracelets bearing his name on the mummy of Pasebkhanut I A. A scribal palette in New York may be his, although it may belong to Nesibanebdjedet III." | b="Son of Menkheperre B, and served as High Steward under his father before assuming the pontificate. His monuments are scarce, limited to an inscription at Karnak, a note on the bandages of a mummy and bracelets bearing his name on the mummy of Pasebkhanut I. A scribal palette in New York may be his, although it may belong to Nesibanebdjedet III." | c="Son of Menkheperre B, and served as High Steward under his father before assuming the pontificate. His monuments are scarce, limited to an inscription at Karnak, a note on the bandages of a mummy and bracelets bearing his name on the mummy of Pasebkhanut I A. A scribal palette in New York may be his, although it may belong to Nesibanebdjedet III."  → chose "Son of Menkheperre B, and served as High Steward under his father before assuming the pontificate. His monuments are scarce, limited to an inscription at Karnak, a note on the bandages of a mummy and bracelets bearing his name on the mummy of Pasebkhanut I A. A scribal palette in New York may be his, although it may belong to Nesibanebdjedet III."
 
 Nesikhonsu B (Nesikhonsu B):
   roles: a=["ChHA–1st phyle"] | b=["ChHA—1st phyle"] | c=["ChHA–1st phyle"]  → chose ["ChHA–1st phyle"]
@@ -120,8 +111,6 @@ Nesikhonsu B (Nesikhonsu B):
 Nubkhaes A (Nubkhaes A):
   spouse_names: a=["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"] | b=["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"] | c=["Sobkhotep V (either, probable)", "Sobkhotep VI (either, probable)", "Iaib (either, probable)"]  → chose ["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"]
 
-Pasebkhanut II (Pasebkhanut II):
-  notes: a="Son of Pinudjem II; known from a number of wrappings from mummies from the Bab el-Gasus, and from a graffito in the temple of Sety I at Abydos which gives him a composite priestly/kingly set of titles. He appears to have assumed full kingship as co-regent of Shoshenq I. Buried in NRTIII." | b="Son of Pinudjem II; known from a number of wrappings of mummies from the Bab el-Gasus, and from a graffito in the temple of Sety I at Abydos which gives him a composite priestly/kingly set of titles. He appears to have assumed full kingship as co-regent of Shoshenq I. Buried in NRTIII." | c="Son of Pinudjem II; known from a number of mummies from the Bab el-Gasus, and from a graffito in the temple of Sety I at Abydos which gives him a composite priestly/kingly set of titles. He appears to have assumed full kingship as co-regent of Shoshenq I. Buried in NRTIII."  → chose "Son of Pinudjem II; known from a number of wrappings from mummies from the Bab el-Gasus, and from a graffito in the temple of Sety I at Abydos which gives him a composite priestly/kingly set of titles. He appears to have assumed full kingship as co-regent of Shoshenq I. Buried in NRTIII."
 
 Pinudjem I [The Decline of the Ramessides] (Pinudjem I):
   spouse_names: a=[] | b=["Henttawy Q"] | c=[]  → chose []
@@ -157,7 +146,6 @@ Tentamun A (Tentamun A):
 
 Tey (Tey):
   children_names: a=["Nakhtmin B (if she were his mother)"] | b=["Nakhtmin B (if)"] | c=["Nakhtmin B (if she were his mother)"]  → chose ["Nakhtmin B (if she were his mother)"]
-  notes: a="Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules." | b="Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min." | c="Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. (D&H prints code KGW twice; deduplicated.)"  → chose "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules."
 
 Thutmose B (Thutmose B):
   alt_names: a=["Thutmose Q (conceivably identical)"] | b=[] | c=["Thutmose Q (conceivably identical)"]  → chose ["Thutmose Q (conceivably identical)"]
@@ -175,12 +163,6 @@ Tyti (Tyti):
 Wiay B (Wiay B):
   children_names: a=["Pinudjem II"] | b=[] | c=[]  → chose []
 
-[...]18A–H ([...]18A–H):
-  notes: a="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters." | b="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering daughters A through H." | c="Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."  → chose "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters."
-
-[...]18K–N ([...]18K–N):
-  notes: a="Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters." | b="Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering daughters K through N." | c="Daughters of Anen; depicted with their siblings in tomb TT120."  → chose "Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters."
-
 LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED
 ===========================================
 Corrections applied by fix_rows.py AFTER the 3-subagent majority-vote
@@ -194,624 +176,41 @@ Schema backfills:
     [...]18A–H [The Amarna Interlude]: True
     [...]18K–N [The Amarna Interlude]: True
     (all 547 other rows: False)
-  This-run delta:
-    (Dua)tentopet [The Decline of the Ramessides]: backfilled is_group_entry=False
-    (P)rehirwenemef A [The House of Ramesses]: backfilled is_group_entry=False
-    (Ramesses-)Meryastarte [The House of Ramesses]: backfilled is_group_entry=False
-    (Ramesses-)Merymaat [The House of Ramesses]: backfilled is_group_entry=False
-    (Ramesses-)Siptah A [The House of Ramesses]: backfilled is_group_entry=False
-    (Ramesses-)Userkhepesh [The House of Ramesses]: backfilled is_group_entry=False
-    (Ramesses-...)pre [The House of Ramesses]: backfilled is_group_entry=False
-    Aat [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Ahmes B [The Power and the Glory]: backfilled is_group_entry=False
-    Ahmose B [The Power and the Glory]: backfilled is_group_entry=False
-    Akheper[ka?]re [The Power and the Glory]: backfilled is_group_entry=False
-    Akheperure [The Power and the Glory]: backfilled is_group_entry=False
-    Amenemhat B [The Power and the Glory]: backfilled is_group_entry=False
-    Amenemhat C [The Power and the Glory]: backfilled is_group_entry=False
-    Amenemhatankh [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Amenemopet A [The Power and the Glory]: backfilled is_group_entry=False
-    Amenemopet B [The Power and the Glory]: backfilled is_group_entry=False
-    Amenemopet C [The House of Ramesses]: backfilled is_group_entry=False
-    Amenemwia/Setemwia [The House of Ramesses]: backfilled is_group_entry=False
-    Amenhirkhopshef B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Amenhirkopshef C [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Amenhirkopshef D [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Amenhirwenemef B [Of Kings and Priests]: backfilled is_group_entry=False
-    Amenhirwenemef/Amenhirkopshef A [The House of Ramesses]: backfilled is_group_entry=False
-    Amenhotep A [Kings and Commoners]: backfilled is_group_entry=False
-    Amenhotep B [The Power and the Glory]: backfilled is_group_entry=False
-    Amenhotep C [The Power and the Glory]: backfilled is_group_entry=False
-    Amenhotep D [The Power and the Glory]: backfilled is_group_entry=False
-    Amenhotep E [The Amarna Interlude]: backfilled is_group_entry=False
-    Amenhotep F [The House of Ramesses]: backfilled is_group_entry=False
-    Amenia [The Amarna Interlude]: backfilled is_group_entry=False
-    Amenmose [The Power and the Glory]: backfilled is_group_entry=False
-    Amenre[...]shef [Of Kings and Priests]: backfilled is_group_entry=False
-    Amenwahsu [The House of Ramesses]: backfilled is_group_entry=False
-    Ameny A [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Anen [The Amarna Interlude]: backfilled is_group_entry=False
-    Ankhef(enmut A) [Of Kings and Priests]: backfilled is_group_entry=False
-    Ankhefenmut B [Of Kings and Priests]: backfilled is_group_entry=False
-    Ankhefenmut C [Of Kings and Priests]: backfilled is_group_entry=False
-    Ankhesenpaaten [The Amarna Interlude]: backfilled is_group_entry=False
-    Ankhesenpaaten-tasherit [The Amarna Interlude]: backfilled is_group_entry=False
-    Ankhu A [Kings and Commoners]: backfilled is_group_entry=False
-    Ankhu B [Kings and Commoners]: backfilled is_group_entry=False
-    Ashayet [The Head of the South]: backfilled is_group_entry=False
-    Astarthirwenemef [The House of Ramesses]: backfilled is_group_entry=False
-    Ay A [The Amarna Interlude]: backfilled is_group_entry=False
-    Ay B [The Amarna Interlude]: backfilled is_group_entry=False
-    Aya A [Kings and Commoners]: backfilled is_group_entry=False
-    Aya B [Kings and Commoners]: backfilled is_group_entry=False
-    Aya C [Kings and Commoners]: backfilled is_group_entry=False
-    Ayameru A [Kings and Commoners]: backfilled is_group_entry=False
-    Ayameru B [Kings and Commoners]: backfilled is_group_entry=False
-    Baketwernel A [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Bakmut [The House of Ramesses]: backfilled is_group_entry=False
-    Baknetjery [Of Kings and Priests]: backfilled is_group_entry=False
-    Batirytes [The Founders]: backfilled is_group_entry=False
-    Bebi A [Kings and Commoners]: backfilled is_group_entry=False
-    Bebi B [Kings and Commoners]: backfilled is_group_entry=False
-    Bebi C [Kings and Commoners]: backfilled is_group_entry=False
-    Bebires [Kings and Commoners]: backfilled is_group_entry=False
-    Beket(amun) [The Power and the Glory]: backfilled is_group_entry=False
-    Beketaten [The Amarna Interlude]: backfilled is_group_entry=False
-    Benanath [The House of Ramesses]: backfilled is_group_entry=False
-    Benerib [The Founders]: backfilled is_group_entry=False
-    Bintanath [The House of Ramesses]: backfilled is_group_entry=False
-    Buyuawa [Of Kings and Priests]: backfilled is_group_entry=False
-    Dedetanuq [Kings and Commoners]: backfilled is_group_entry=False
-    Dedusobk Bebi [Kings and Commoners]: backfilled is_group_entry=False
-    Djedkhonsiufankh I [Of Kings and Priests]: backfilled is_group_entry=False
-    Djedmutesankh A [Of Kings and Priests]: backfilled is_group_entry=False
-    Duaneferet A [Kings and Commoners]: backfilled is_group_entry=False
-    Duaneferet B [Kings and Commoners]: backfilled is_group_entry=False
-    Faienmut [Of Kings and Priests]: backfilled is_group_entry=False
-    Gautsoshen A [Of Kings and Priests]: backfilled is_group_entry=False
-    Geregtawi [The House of Ramesses]: backfilled is_group_entry=False
-    Gilukhipa [The Amarna Interlude]: backfilled is_group_entry=False
-    Haankhef A [Kings and Commoners]: backfilled is_group_entry=False
-    Haankhef B [Kings and Commoners]: backfilled is_group_entry=False
-    Haankhef C Ikherneferet [Kings and Commoners]: backfilled is_group_entry=False
-    Hapyu [Kings and Commoners]: backfilled is_group_entry=False
-    Harweben [Of Kings and Priests]: backfilled is_group_entry=False
-    Hathorhetepet [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Hatshepsut B [Kings and Commoners]: backfilled is_group_entry=False
-    Hatshepsut D [The Power and the Glory]: backfilled is_group_entry=False
-    Hattusilis III [The House of Ramesses]: backfilled is_group_entry=False
-    Hemdjert [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Henhenet [The Head of the South]: backfilled is_group_entry=False
-    Henttawy A [The House of Ramesses]: backfilled is_group_entry=False
-    Henttawy B [Of Kings and Priests]: backfilled is_group_entry=False
-    Henttawy C [Of Kings and Priests]: backfilled is_group_entry=False
-    Henttawy D [Of Kings and Priests]: backfilled is_group_entry=False
-    Henttawy Q [Of Kings and Priests]: backfilled is_group_entry=False
-    Henttawy Q [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Henut A [Kings and Commoners]: backfilled is_group_entry=False
-    Henut[...] [The House of Ramesses]: backfilled is_group_entry=False
-    Henutmire [The House of Ramesses]: backfilled is_group_entry=False
-    Henutpahuro[...] [The House of Ramesses]: backfilled is_group_entry=False
-    Henutpre[...] [The House of Ramesses]: backfilled is_group_entry=False
-    Henutsekhemu [The House of Ramesses]: backfilled is_group_entry=False
-    Henuttadesh [The House of Ramesses]: backfilled is_group_entry=False
-    Henuttamehu B [The House of Ramesses]: backfilled is_group_entry=False
-    Henuttaneb A [The Amarna Interlude]: backfilled is_group_entry=False
-    Henuttaneb B [The House of Ramesses]: backfilled is_group_entry=False
-    Henutwati [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Heqamaat [Of Kings and Priests]: backfilled is_group_entry=False
-    Heqanefer [Of Kings and Priests]: backfilled is_group_entry=False
-    Herneith [The Founders]: backfilled is_group_entry=False
-    Hetepti [Kings and Commoners]: backfilled is_group_entry=False
-    Hetepti [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Hetepuemamun [The House of Ramesses]: backfilled is_group_entry=False
-    Horemheb [The Amarna Interlude]: backfilled is_group_entry=False
-    Horemheb A [Kings and Commoners]: backfilled is_group_entry=False
-    Horhirwenemef [The House of Ramesses]: backfilled is_group_entry=False
-    Hori A [The House of Ramesses]: backfilled is_group_entry=False
-    Hori B [The House of Ramesses]: backfilled is_group_entry=False
-    Hori C [Of Kings and Priests]: backfilled is_group_entry=False
-    Hotephirnebty [The Founders]: backfilled is_group_entry=False
-    Hrere [Of Kings and Priests]: backfilled is_group_entry=False
-    Huy [The Power and the Glory]: backfilled is_group_entry=False
-    Iah [The Head of the South]: backfilled is_group_entry=False
-    Iaret [The Power and the Glory]: backfilled is_group_entry=False
-    Ikui [The Head of the South]: backfilled is_group_entry=False
-    Imi [The Head of the South]: backfilled is_group_entry=False
-    Inni [Kings and Commoners]: backfilled is_group_entry=False
-    Intkaes [The Founders]: backfilled is_group_entry=False
-    Inyotef A [The Head of the South]: backfilled is_group_entry=False
-    Inyotef B [Kings and Commoners]: backfilled is_group_entry=False
-    Inyotef C [Kings and Commoners]: backfilled is_group_entry=False
-    Ipu B [The Power and the Glory]: backfilled is_group_entry=False
-    Iryet [The House of Ramesses]: backfilled is_group_entry=False
-    Iset A [The Power and the Glory]: backfilled is_group_entry=False
-    Iset B [The Power and the Glory]: backfilled is_group_entry=False
-    Iset C [The Amarna Interlude]: backfilled is_group_entry=False
-    Iset D Ta-Hemdjert [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Iset E [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Isetemkheb A [Of Kings and Priests]: backfilled is_group_entry=False
-    Isetemkheb B [Of Kings and Priests]: backfilled is_group_entry=False
-    Isetemkheb C [Of Kings and Priests]: backfilled is_group_entry=False
-    Isetemkheb D [Of Kings and Priests]: backfilled is_group_entry=False
-    Isetemkheb E [Of Kings and Priests]: backfilled is_group_entry=False
-    Isetemkheb Q [Of Kings and Priests]: backfilled is_group_entry=False
-    Isetneferet A [The House of Ramesses]: backfilled is_group_entry=False
-    Isetneferet B [The House of Ramesses]: backfilled is_group_entry=False
-    Isetneferet C [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Isetneferet C [The House of Ramesses]: backfilled is_group_entry=False
-    Isetneferet D [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Ita [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Itakayet A [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Itakayet B [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Itakayet C [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Itamun A [The House of Ramesses]: backfilled is_group_entry=False
-    Itamun B [Of Kings and Priests]: backfilled is_group_entry=False
-    Itaweret [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Itawy A [Of Kings and Priests]: backfilled is_group_entry=False
-    Iuhetibu A [Kings and Commoners]: backfilled is_group_entry=False
-    Iuhetibu B Fendy [Kings and Commoners]: backfilled is_group_entry=False
-    Iuhetibu C [Kings and Commoners]: backfilled is_group_entry=False
-    Iy [Kings and Commoners]: backfilled is_group_entry=False
-    Kaneferu [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Kawit [The Head of the South]: backfilled is_group_entry=False
-    Kay [Kings and Commoners]: backfilled is_group_entry=False
-    Kayet [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Kebsi [Kings and Commoners]: backfilled is_group_entry=False
-    Kemi A [Kings and Commoners]: backfilled is_group_entry=False
-    Kemi B [Kings and Commoners]: backfilled is_group_entry=False
-    Keminub [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Kemsit [The Head of the South]: backfilled is_group_entry=False
-    Khaemwaset A [The Power and the Glory]: backfilled is_group_entry=False
-    Khaemwaset B [The House of Ramesses]: backfilled is_group_entry=False
-    Khaemwaset C [The House of Ramesses]: backfilled is_group_entry=False
-    Khaemwaset D [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Khaemwaset E [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Khakau [Kings and Commoners]: backfilled is_group_entry=False
-    Khemmet [Kings and Commoners]: backfilled is_group_entry=False
-    Khenthap [The Founders]: backfilled is_group_entry=False
-    Khnemet [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Khnemet[...] [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Khnemetneferhedjet A [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Khnemetneferhedjet I Weret [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Khnemetneferhedjet II Weret [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Khonskhufsy [Kings and Commoners]: backfilled is_group_entry=False
-    Kiya [The Amarna Interlude]: backfilled is_group_entry=False
-    Maathorneferure [The House of Ramesses]: backfilled is_group_entry=False
-    Maatkare A [Of Kings and Priests]: backfilled is_group_entry=False
-    Madenneb [Of Kings and Priests]: backfilled is_group_entry=False
-    Mahiranat [The House of Ramesses]: backfilled is_group_entry=False
-    Masaharta A [Of Kings and Priests]: backfilled is_group_entry=False
-    Masaharta B [Of Kings and Priests]: backfilled is_group_entry=False
-    Masaharta C [Of Kings and Priests]: backfilled is_group_entry=False
-    Masaqaharta [Of Kings and Priests]: backfilled is_group_entry=False
-    Mawasun [Of Kings and Priests]: backfilled is_group_entry=False
-    Mehytenweskhet A [Of Kings and Priests]: backfilled is_group_entry=False
-    Meketaten [The Amarna Interlude]: backfilled is_group_entry=False
-    Menet [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Menhet [The Power and the Glory]: backfilled is_group_entry=False
-    Menkheperre A [The Power and the Glory]: backfilled is_group_entry=False
-    Menkheperre B [Of Kings and Priests]: backfilled is_group_entry=False
-    Menkheperre C [Of Kings and Priests]: backfilled is_group_entry=False
-    Mentuemwaset [The House of Ramesses]: backfilled is_group_entry=False
-    Mentuenheqau [The House of Ramesses]: backfilled is_group_entry=False
-    Mentuhirkopshef A [The House of Ramesses]: backfilled is_group_entry=False
-    Mentuhirkopshef B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Mentuhirkopshef C [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Mentuhotep A [Kings and Commoners]: backfilled is_group_entry=False
-    Mentuhotep B [Kings and Commoners]: backfilled is_group_entry=False
-    Menwi [The Power and the Glory]: backfilled is_group_entry=False
-    Merenptah A [The House of Ramesses]: backfilled is_group_entry=False
-    Merenptah B [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Mereret B [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Merestekhi [Kings and Commoners]: backfilled is_group_entry=False
-    Merti [The Power and the Glory]: backfilled is_group_entry=False
-    Mertseger [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Meryamun A [The House of Ramesses]: backfilled is_group_entry=False
-    Meryamun B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Meryatum A [The House of Ramesses]: backfilled is_group_entry=False
-    Meryatum B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Meryetamun C [The Power and the Glory]: backfilled is_group_entry=False
-    Meryetamun D [The Power and the Glory]: backfilled is_group_entry=False
-    Meryetamun E [The House of Ramesses]: backfilled is_group_entry=False
-    Meryetamun F [Of Kings and Priests]: backfilled is_group_entry=False
-    Meryetaten [The Amarna Interlude]: backfilled is_group_entry=False
-    Meryetaten-tasherit [The Amarna Interlude]: backfilled is_group_entry=False
-    Meryetkhet [The House of Ramesses]: backfilled is_group_entry=False
-    Meryetmihapi [The House of Ramesses]: backfilled is_group_entry=False
-    Meryetneith A [The Founders]: backfilled is_group_entry=False
-    Meryetnetjer [The House of Ramesses]: backfilled is_group_entry=False
-    Meryetptah B [The House of Ramesses]: backfilled is_group_entry=False
-    Meryetre(-Hatshepsut) [The Power and the Glory]: backfilled is_group_entry=False
-    Meryetyotes B [The House of Ramesses]: backfilled is_group_entry=False
-    Merymentu [The House of Ramesses]: backfilled is_group_entry=False
-    Meryre A [The House of Ramesses]: backfilled is_group_entry=False
-    Meryre B [The House of Ramesses]: backfilled is_group_entry=False
-    Messuy [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Minemaes [Kings and Commoners]: backfilled is_group_entry=False
-    Mut-Tuy B [The House of Ramesses]: backfilled is_group_entry=False
-    Mutemnub [The Amarna Interlude]: backfilled is_group_entry=False
-    Mutemwia [The Power and the Glory]: backfilled is_group_entry=False
-    Mutneferet A [The Power and the Glory]: backfilled is_group_entry=False
-    Mutnodjmet A [The Amarna Interlude]: backfilled is_group_entry=False
-    Mutnodjmet B [Of Kings and Priests]: backfilled is_group_entry=False
-    Mutnodjmet Q [The Amarna Interlude]: backfilled is_group_entry=False
-    Nakhtmin A [The Amarna Interlude]: backfilled is_group_entry=False
-    Nakhtmin B [The Amarna Interlude]: backfilled is_group_entry=False
-    Nakhtneith [The Founders]: backfilled is_group_entry=False
-    Nauny [Of Kings and Priests]: backfilled is_group_entry=False
-    Nebankh [Kings and Commoners]: backfilled is_group_entry=False
-    Neben[...] [The House of Ramesses]: backfilled is_group_entry=False
-    Nebenkharu [The House of Ramesses]: backfilled is_group_entry=False
-    Nebet[...]h[...]a [The House of Ramesses]: backfilled is_group_entry=False
-    Nebetananash [The House of Ramesses]: backfilled is_group_entry=False
-    Nebetia [The Power and the Glory]: backfilled is_group_entry=False
-    Nebetiah [The Amarna Interlude]: backfilled is_group_entry=False
-    Nebetimmunedjem [The House of Ramesses]: backfilled is_group_entry=False
-    Nebetiunet A [Kings and Commoners]: backfilled is_group_entry=False
-    Nebetiunet B [The Power and the Glory]: backfilled is_group_entry=False
-    Nebetiunet C [The House of Ramesses]: backfilled is_group_entry=False
-    Nebetnehat B [The House of Ramesses]: backfilled is_group_entry=False
-    Nebettawy A [The House of Ramesses]: backfilled is_group_entry=False
-    Nebmaatre [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Nebneshi [Of Kings and Priests]: backfilled is_group_entry=False
-    Nebseny [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Nebtaneb [The House of Ramesses]: backfilled is_group_entry=False
-    Nebtit [Kings and Commoners]: backfilled is_group_entry=False
-    Nebtu [The Power and the Glory]: backfilled is_group_entry=False
-    Nedjem [The Power and the Glory]: backfilled is_group_entry=False
-    Nedjemmut A [The House of Ramesses]: backfilled is_group_entry=False
-    Neferet B [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferet I [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferet II [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferetiu [Kings and Commoners]: backfilled is_group_entry=False
-    Neferhenut [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferhotep A [Kings and Commoners]: backfilled is_group_entry=False
-    Neferhotep B [Kings and Commoners]: backfilled is_group_entry=False
-    Neferitatjenen [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferneferuaten-tasherit [The Amarna Interlude]: backfilled is_group_entry=False
-    Neferneferure [The Amarna Interlude]: backfilled is_group_entry=False
-    Nefertiry B [The Power and the Glory]: backfilled is_group_entry=False
-    Nefertiry C [The Power and the Glory]: backfilled is_group_entry=False
-    Nefertiry D Meryetmut [The House of Ramesses]: backfilled is_group_entry=False
-    Nefertiry E [The House of Ramesses]: backfilled is_group_entry=False
-    Nefertiry F [The House of Ramesses]: backfilled is_group_entry=False
-    Nefertiti [The Amarna Interlude]: backfilled is_group_entry=False
-    Neferu A [Kings and Commoners]: backfilled is_group_entry=False
-    Neferu I [The Head of the South]: backfilled is_group_entry=False
-    Neferu II [The Head of the South]: backfilled is_group_entry=False
-    Neferu III [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferubity [The Power and the Glory]: backfilled is_group_entry=False
-    Neferuptah A [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferuptah B [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferure A [The Power and the Glory]: backfilled is_group_entry=False
-    Neferure B [The House of Ramesses]: backfilled is_group_entry=False
-    Neferusherit [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferusobk [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Nehy [Kings and Commoners]: backfilled is_group_entry=False
-    Neithhotep A [The Founders]: backfilled is_group_entry=False
-    Nen?[...] [Kings and Commoners]: backfilled is_group_entry=False
-    Neni [Kings and Commoners]: backfilled is_group_entry=False
-    Nensed[...] [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neshemethotepti [Kings and Commoners]: backfilled is_group_entry=False
-    Nesibanebdjedet [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Nesibanebdjedet II [Of Kings and Priests]: backfilled is_group_entry=False
-    Nesikhonsu A [Of Kings and Priests]: backfilled is_group_entry=False
-    Nesikhonsu B [Of Kings and Priests]: backfilled is_group_entry=False
-    Nesipaherenmut [Of Kings and Priests]: backfilled is_group_entry=False
-    Nesipaneferhor [Of Kings and Priests]: backfilled is_group_entry=False
-    Nesitanebetashru A [Of Kings and Priests]: backfilled is_group_entry=False
-    Nesta[...] [Of Kings and Priests]: backfilled is_group_entry=False
-    Nimlot A [Of Kings and Priests]: backfilled is_group_entry=False
-    Nodjmet [Of Kings and Priests]: backfilled is_group_entry=False
-    Nubemiunu [The House of Ramesses]: backfilled is_group_entry=False
-    Nubemweskhet [The House of Ramesses]: backfilled is_group_entry=False
-    Nubhir[...] [The House of Ramesses]: backfilled is_group_entry=False
-    Nubhotepet [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Nubhotepti A [Kings and Commoners]: backfilled is_group_entry=False
-    Nubhotepti B [Kings and Commoners]: backfilled is_group_entry=False
-    Nubhoteptikhered [Kings and Commoners]: backfilled is_group_entry=False
-    Nubkhaes A [Kings and Commoners]: backfilled is_group_entry=False
-    Nubkhesbed [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Nymaathap A [The Founders]: backfilled is_group_entry=False
-    Paihuty [Of Kings and Priests]: backfilled is_group_entry=False
-    Panebenkemyt [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Panefer[...] [Of Kings and Priests]: backfilled is_group_entry=False
-    Paramessu [The House of Ramesses]: backfilled is_group_entry=False
-    Pasebkhanut A [Of Kings and Priests]: backfilled is_group_entry=False
-    Pasebkhanut II [Of Kings and Priests]: backfilled is_group_entry=False
-    Pashedkhonsu [Of Kings and Priests]: backfilled is_group_entry=False
-    Pentaweret [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Perneb [The Founders]: backfilled is_group_entry=False
-    Peshu [Kings and Commoners]: backfilled is_group_entry=False
-    Piankh [Of Kings and Priests]: backfilled is_group_entry=False
-    Pinudjem A [Of Kings and Priests]: backfilled is_group_entry=False
-    Pinudjem I [Of Kings and Priests]: backfilled is_group_entry=False
-    Pinudjem I [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Pinudjem II [Of Kings and Priests]: backfilled is_group_entry=False
-    Preamenenamun [Of Kings and Priests]: backfilled is_group_entry=False
-    Prehirwenemef B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Prerenpetnefer [The House of Ramesses]: backfilled is_group_entry=False
-    Pudukhepa [The House of Ramesses]: backfilled is_group_entry=False
-    Pyihia [The Power and the Glory]: backfilled is_group_entry=False
-    Pypuy [The House of Ramesses]: backfilled is_group_entry=False
-    Raia [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses A [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses B [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses C [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Ramesses C [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses D [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Ramesses-Maatptah [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-Merenre [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-Meretmirre [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-meryamun-Nebweben [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-Meryset [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-Payotnetjer [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-Siatum [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-Sikhepri [The House of Ramesses]: backfilled is_group_entry=False
-    Ramesses-Userpehty [The House of Ramesses]: backfilled is_group_entry=False
-    Redienef [Kings and Commoners]: backfilled is_group_entry=False
-    Reditenes A [Kings and Commoners]: backfilled is_group_entry=False
-    Reditenes B [Kings and Commoners]: backfilled is_group_entry=False
-    Reniseneb A [Kings and Commoners]: backfilled is_group_entry=False
-    Reniseneb B [Kings and Commoners]: backfilled is_group_entry=False
-    Renpetnefer [The House of Ramesses]: backfilled is_group_entry=False
-    Resi [Kings and Commoners]: backfilled is_group_entry=False
-    Ressonbe [Kings and Commoners]: backfilled is_group_entry=False
-    Rudament(?) [Of Kings and Priests]: backfilled is_group_entry=False
-    Sadhe [The Head of the South]: backfilled is_group_entry=False
-    Sankhptahi [Kings and Commoners]: backfilled is_group_entry=False
-    Seb [Kings and Commoners]: backfilled is_group_entry=False
-    Sebat [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Semat [The Founders]: backfilled is_group_entry=False
-    Senakhtenamen [The House of Ramesses]: backfilled is_group_entry=False
-    Seneb A [Kings and Commoners]: backfilled is_group_entry=False
-    Seneb B [Kings and Commoners]: backfilled is_group_entry=False
-    Seneb[henas A] [Kings and Commoners]: backfilled is_group_entry=False
-    Senebhenas B [Kings and Commoners]: backfilled is_group_entry=False
-    Senebhenas C [Kings and Commoners]: backfilled is_group_entry=False
-    Senebsen [Kings and Commoners]: backfilled is_group_entry=False
-    Senebtisi [Kings and Commoners]: backfilled is_group_entry=False
-    Senetsenbetes [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Senwosret A [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Senwosretsonbe [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Serethor [The Founders]: backfilled is_group_entry=False
-    Seshemetka [The Founders]: backfilled is_group_entry=False
-    Seshnesuen[...] [The House of Ramesses]: backfilled is_group_entry=False
-    Setem[hir...] [The House of Ramesses]: backfilled is_group_entry=False
-    Sethirkopshef B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Setpenre A [The Amarna Interlude]: backfilled is_group_entry=False
-    Setpenre B [The House of Ramesses]: backfilled is_group_entry=False
-    Sety A [The House of Ramesses]: backfilled is_group_entry=False
-    Sety B [The House of Ramesses]: backfilled is_group_entry=False
-    Sety C [The House of Ramesses]: backfilled is_group_entry=False
-    Sety D [The House of Ramesses]: backfilled is_group_entry=False
-    Sety-Merenptah A [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Sety-Merenptah B [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Shepsemiunu [The House of Ramesses]: backfilled is_group_entry=False
-    Shoshenq A [Of Kings and Priests]: backfilled is_group_entry=False
-    Shoshenq B [Of Kings and Priests]: backfilled is_group_entry=False
-    Shuttarna II [The Amarna Interlude]: backfilled is_group_entry=False
-    Siamun B [The Power and the Glory]: backfilled is_group_entry=False
-    Siamun C [The House of Ramesses]: backfilled is_group_entry=False
-    Siatum A [The Power and the Glory]: backfilled is_group_entry=False
-    Sihathor [Kings and Commoners]: backfilled is_group_entry=False
-    Simentu [The House of Ramesses]: backfilled is_group_entry=False
-    Sit[...]B [Kings and Commoners]: backfilled is_group_entry=False
-    Sit[...]JA [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Sitamun B [The Amarna Interlude]: backfilled is_group_entry=False
-    Sitamun C [The House of Ramesses]: backfilled is_group_entry=False
-    Sithathor A [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Sithathor B [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Sithathor C [Kings and Commoners]: backfilled is_group_entry=False
-    Sithathoriunet [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Sithathormeryet [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Sitiah [The Power and the Glory]: backfilled is_group_entry=False
-    Sitre A [The House of Ramesses]: backfilled is_group_entry=False
-    Sobkhotep A [Kings and Commoners]: backfilled is_group_entry=False
-    Sobkhotep B [Kings and Commoners]: backfilled is_group_entry=False
-    Sobkhotep C [Kings and Commoners]: backfilled is_group_entry=False
-    Sobkhotep D Miu [Kings and Commoners]: backfilled is_group_entry=False
-    Sobkhotep E Djadja [Kings and Commoners]: backfilled is_group_entry=False
-    Sobkhotep F [Kings and Commoners]: backfilled is_group_entry=False
-    Sobkhotep G [Kings and Commoners]: backfilled is_group_entry=False
-    Sobkneferu [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Sutererey [The House of Ramesses]: backfilled is_group_entry=False
-    Syhiryotes [The House of Ramesses]: backfilled is_group_entry=False
-    Tadukhipa [The Amarna Interlude]: backfilled is_group_entry=False
-    Taemwadjy [The House of Ramesses]: backfilled is_group_entry=False
-    Tahentdjehuty [Of Kings and Priests]: backfilled is_group_entry=False
-    Takhat A [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Takhat A [The House of Ramesses]: backfilled is_group_entry=False
-    Takhat B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Tawerettenru [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Tawosret [The Feud of the Ramessides]: backfilled is_group_entry=False
-    Tayuheret [Of Kings and Priests]: backfilled is_group_entry=False
-    Tekhui [Of Kings and Priests]: backfilled is_group_entry=False
-    Tem [The Head of the South]: backfilled is_group_entry=False
-    Tentamun A [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Tentamun B [Of Kings and Priests]: backfilled is_group_entry=False
-    Tentamun B [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Tentnabekhenu [Of Kings and Priests]: backfilled is_group_entry=False
-    Tentsepeh A [Of Kings and Priests]: backfilled is_group_entry=False
-    Tey [The Amarna Interlude]: backfilled is_group_entry=False
-    Thutmose A [The Power and the Glory]: backfilled is_group_entry=False
-    Thutmose B [The Amarna Interlude]: backfilled is_group_entry=False
-    Thutmose C [The House of Ramesses]: backfilled is_group_entry=False
-    Tia C [The House of Ramesses]: backfilled is_group_entry=False
-    Tia Q [The House of Ramesses]: backfilled is_group_entry=False
-    Tia-Sitre [The House of Ramesses]: backfilled is_group_entry=False
-    Tiaa A [The Power and the Glory]: backfilled is_group_entry=False
-    Tiaa B [The Power and the Glory]: backfilled is_group_entry=False
-    Tintamun [The Power and the Glory]: backfilled is_group_entry=False
-    Tiye A [The Amarna Interlude]: backfilled is_group_entry=False
-    Tiye B Mereniset [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Tiye C [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Tjanefer A [Of Kings and Priests]: backfilled is_group_entry=False
-    Tjanefer B [Of Kings and Priests]: backfilled is_group_entry=False
-    Tjia [The House of Ramesses]: backfilled is_group_entry=False
-    Tjin [Kings and Commoners]: backfilled is_group_entry=False
-    Tjuiu [The Amarna Interlude]: backfilled is_group_entry=False
-    Tuia [The House of Ramesses]: backfilled is_group_entry=False
-    Tuia-Nebettawy [The House of Ramesses]: backfilled is_group_entry=False
-    Tushratta [The Amarna Interlude]: backfilled is_group_entry=False
-    Tutankhuaten [The Amarna Interlude]: backfilled is_group_entry=False
-    Tuy A [The House of Ramesses]: backfilled is_group_entry=False
-    Tyti [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Wadjmose [The Power and the Glory]: backfilled is_group_entry=False
-    Webensenu [The Power and the Glory]: backfilled is_group_entry=False
-    Wepwawethotep [Kings and Commoners]: backfilled is_group_entry=False
-    Werenro [The House of Ramesses]: backfilled is_group_entry=False
-    Wermaa[...] [The House of Ramesses]: backfilled is_group_entry=False
-    Wiay B [Of Kings and Priests]: backfilled is_group_entry=False
-    Yuya [The Amarna Interlude]: backfilled is_group_entry=False
-    [...]12A [Seizers of the Two Lands]: backfilled is_group_entry=False
-    [...]12B [Seizers of the Two Lands]: backfilled is_group_entry=False
-    [...]13A [Kings and Commoners]: backfilled is_group_entry=False
-    [...]13B [Kings and Commoners]: backfilled is_group_entry=False
-    [...]13C [Kings and Commoners]: backfilled is_group_entry=False
-    [...]13D [Kings and Commoners]: backfilled is_group_entry=False
-    [...]13E [Kings and Commoners]: backfilled is_group_entry=False
-    [...]18A–H [The Amarna Interlude]: backfilled is_group_entry=True
-    [...]18J [The Amarna Interlude]: backfilled is_group_entry=False
-    [...]18K–N [The Amarna Interlude]: backfilled is_group_entry=True
-    [...]19A [The House of Ramesses]: backfilled is_group_entry=False
-    [...]19B [The House of Ramesses]: backfilled is_group_entry=False
-    [...]19C [The Feud of the Ramessides]: backfilled is_group_entry=False
-    [...]1A [The Founders]: backfilled is_group_entry=False
-    [...]21A [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]21B [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]21C [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]21D [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]21E [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]21F [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]It[...] [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]Jamenweret [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]Janm [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]Jemkheb [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]Jheb [The House of Ramesses]: backfilled is_group_entry=False
-    [...]Jmemsunay [Of Kings and Priests]: backfilled is_group_entry=False
-    [...]khesbed [The House of Ramesses]: backfilled is_group_entry=False
-    [...]taweret [The House of Ramesses]: backfilled is_group_entry=False
-    [Mut]metennefer [The House of Ramesses]: backfilled is_group_entry=False
-    [R]uia [The House of Ramesses]: backfilled is_group_entry=False
-    [Set]emnakhte [The House of Ramesses]: backfilled is_group_entry=False
-    –18P [The Amarna Interlude]: backfilled is_group_entry=False
-    –18Q [The Amarna Interlude]: backfilled is_group_entry=False
-    Ahhotepti [Kings and Commoners]: backfilled is_group_entry=False
-    Amenemhat Q [The Power and the Glory]: backfilled is_group_entry=False
-    Anuketemheb [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Anuqneferetweben [Kings and Commoners]: backfilled is_group_entry=False
-    Dedetamun [Kings and Commoners]: backfilled is_group_entry=False
-    Dedetsobk [Kings and Commoners]: backfilled is_group_entry=False
-    Dedusobk A [Kings and Commoners]: backfilled is_group_entry=False
-    Didit [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Haankhef Q [Kings and Commoners]: backfilled is_group_entry=False
-    Hatshepsut C [Kings and Commoners]: backfilled is_group_entry=False
-    Henut Q [The Power and the Glory]: backfilled is_group_entry=False
-    Henutiunu [The Power and the Glory]: backfilled is_group_entry=False
-    Horhotep Q [Kings and Commoners]: backfilled is_group_entry=False
-    Iuhetibu Q [Kings and Commoners]: backfilled is_group_entry=False
-    Khnemetptah [The Founders]: backfilled is_group_entry=False
-    Menehpet [The Founders]: backfilled is_group_entry=False
-    Merybennu [The Power and the Glory]: backfilled is_group_entry=False
-    Meryetptah A [The Power and the Glory]: backfilled is_group_entry=False
-    Mesenka [The Founders]: backfilled is_group_entry=False
-    Nebetnehat A [The Power and the Glory]: backfilled is_group_entry=False
-    Neferet Q [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Neferet R [Kings and Commoners]: backfilled is_group_entry=False
-    Neferhotep Q [Kings and Commoners]: backfilled is_group_entry=False
-    Neferkayet [The Head of the South]: backfilled is_group_entry=False
-    Neferu Q [Kings and Commoners]: backfilled is_group_entry=False
-    Neithhotep B [The Founders]: backfilled is_group_entry=False
-    Nysuheqat [The Founders]: backfilled is_group_entry=False
-    Qaienneith [The Founders]: backfilled is_group_entry=False
-    Redji [The Founders]: backfilled is_group_entry=False
-    Reniseneb Q [Kings and Commoners]: backfilled is_group_entry=False
-    Reniseneb R [Kings and Commoners]: backfilled is_group_entry=False
-    Senetmut [Kings and Commoners]: backfilled is_group_entry=False
-    Shepsetipet [The Founders]: backfilled is_group_entry=False
-    Sitba [The Founders]: backfilled is_group_entry=False
-    Sithathor Q [Seizers of the Two Lands]: backfilled is_group_entry=False
-    Sithori [The Power and the Glory]: backfilled is_group_entry=False
-    Sobkhotep Q [Kings and Commoners]: backfilled is_group_entry=False
-    Syhefernerer [The Founders]: backfilled is_group_entry=False
-    Taiay [The Decline of the Ramessides]: backfilled is_group_entry=False
-    Tatau [The Power and the Glory]: backfilled is_group_entry=False
-    Thutmose Q [The Power and the Glory]: backfilled is_group_entry=False
-    Ti [The Power and the Glory]: backfilled is_group_entry=False
-    Wadjetefni [The Founders]: backfilled is_group_entry=False
-    Wiay A [The Power and the Glory]: backfilled is_group_entry=False
-    [...]djeb [Kings and Commoners]: backfilled is_group_entry=False
-    [...]pentepkau [The Power and the Glory]: backfilled is_group_entry=False
 
 Field corrections:
-- Tiaa A [The Power and the Glory]: notes corrected (Gemini OCR dropped the article "a" in "including a number of usurpations" and left a stray colon after "including". The PDF (p. 140 col 2, Tiaa A entry) reads with the article; `notes` is a verbatim-quotation field so the reviewer's correction is applied rather than preserving the OCR artifact.)
-    was: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including: number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
-    now: "Wife of Amenhotep II and mother of Thutmose IV. A number of monuments were created for her by the latter at Giza, Thebes and the Fayoum, including a number of usurpations of material belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, where many fragments of her funerary equipment have been found; some material was washed by floodwater into the adjacent tomb KV47, where it was for a long time thought to belong to a like-named mother of Siptah."
-- [...]18A–H [The Amarna Interlude]: notes corrected (Majority-voted notes retained an editorial tail ('Group entry covering multiple daughters.') added by agent-a that is not in D&H's prose on p. 157. `notes` is a verbatim-quotation field; the tail is stripped.)
-    was: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters. Group entry covering multiple daughters."
-    now: "Daughters of Amenhotep III, shown in the tomb of Kheruef (TT192; see p. 30); some may be identical with named daughters."
-- [...]18K–N [The Amarna Interlude]: notes corrected (Majority-voted notes retained the same 'Group entry covering multiple daughters.' editorial tail added by agent-a. Stripped for verbatim fidelity to D&H p. 157.)
-    was: "Daughters of Anen; depicted with their siblings in tomb TT120. Group entry covering multiple daughters."
-    now: "Daughters of Anen; depicted with their siblings in tomb TT120."
-- Tey [The Amarna Interlude]: notes corrected (Majority-voted notes retained agent-a's editorial tail 'D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules.' That is meta-commentary about the extraction, not D&H prose. Stripped. The KGW deduplication itself is correct (see roles field).)
-    was: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min. D&H writes the role code KGW twice in the parenthetical; treated as a single role per extraction rules."
-    now: "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown with her husband in his tomb at Amarna and later became his queen. As such, she is depicted with Ay in his royal tomb in the Valley of the Kings (WV23) and in the rock-chapel of Min at Akhmim. If she were the mother of Nakhtmin B, she will also have held the title of Adorer of Min."
 - Thutmose B [The Amarna Interlude]: alt_names corrected (Two of three agents included 'Thutmose Q (conceivably identical)' as an alt_name, but `alt_names` is reserved for alternate forms of the same individual's name (e.g. 'Ankhesenpaaten' → 'Ankhesenamun'). Thutmose Q is a distinct Brief Lives entry that D&H flags as conceivably the same person; that cross-reference belongs in `notes` (where it is already preserved) not `alt_names`.)
-    was: ["Thutmose Q (conceivably identical)"]
-    now: []
+    value: []
 - Tutankhuaten [The Amarna Interlude]: alt_names corrected (All three agents split the D&H compact-notation 'TUTANKHATEN/AMUN' literally to ['TUTANKHATEN', 'AMUN'], but the slash is D&H's shorthand for the successive regnal names Tutankhaten → Tutankhamun (the 'Tutankh-' prefix is dropped before /AMUN for typographic economy, as with other of D&H's name-change slashes). Expanded to the canonical pair.)
-    was: ["TUTANKHATEN", "AMUN"]
-    now: ["Tutankhaten", "Tutankhamun"]
+    value: ["Tutankhaten", "Tutankhamun"]
 - Amenhotep E [The Amarna Interlude]: alt_names corrected (Agents preserved D&H's BOLD-CAPITALS rendering (used by D&H for kings' regnal names) as ALLCAPS strings ['AMENHOTEP IV', 'AKHENATEN']. Museum catalogues and downstream authority matching use titlecase ('Akhenaten', 'Amenhotep IV'); normalising to titlecase is consistent with the Tutankhuaten correction above and with titlecase alt_names already present on Ankhesenpaaten, Nefertiti, Horemheb, and Meryetaten-tasherit. D&H's typographic emphasis is a formatting signal, not a canonical-name choice.)
-    was: ["AMENHOTEP IV", "AKHENATEN"]
-    now: ["Amenhotep IV", "Akhenaten"]
+    value: ["Amenhotep IV", "Akhenaten"]
 - Meryetaten [The Amarna Interlude]: alt_names corrected (Same allcaps-vs-titlecase normalisation as Amenhotep E: agents preserved D&H's BOLD-CAPITALS rendering of the regnal name **NEFERNEFERUATEN** as 'NEFERNEFERUATEN'. Titlecase matches museum-catalogue spelling and the rest of the source's alt_names.)
-    was: ["NEFERNEFERUATEN"]
-    now: ["Neferneferuaten"]
+    value: ["Neferneferuaten"]
 - Ankhesenpaaten [The Amarna Interlude]: spouse_names corrected (Agents rendered the Ay-marriage hedge as 'Ay (brief marriage)', dropping D&H's explicit 'perhaps' from the phrase 'a ring in Berlin that joins her cartouche with that of King Ay, perhaps indicating a brief marriage' (p. 154). The hedge belongs on the existence of the marriage, not its duration; preserved verbatim in the parenthetical.)
-    was: ["Tutankhamun", "Ay (brief marriage)"]
-    now: ["Tutankhamun", "Ay (perhaps, brief marriage)"]
+    value: ["Tutankhamun", "Ay (perhaps, brief marriage)"]
 - Khaemwaset C [The House of Ramesses]: children_names corrected (Chunk-2 sanctioned cross-entry-inference pattern: Khaemwaset C's own entry (p. 171) names no children, while three separate Brief Lives entries in the same sub-section explicitly name him as father — Hori A (p. 171, 'Probably a grandson of Ramesses II and son of Khaemwaset C'), Isetneferet C House-row (p. 171, 'daughter of Khaemwaset C'), Ramesses C House-row (p. 173, 'Dedicator at Memphis of a statue of his father, Khaemwaset C'). Agent-b captured all three; the majority voted [] and lost the symmetry. Same mechanism as the Shuttarna II → Gilukhipa and Tushratta → Tadukhipa inferences sanctioned in the Amarna chunk README.)
-    was: []
-    now: ["Hori A", "Isetneferet C", "Ramesses C"]
+    value: ["Hori A", "Isetneferet C", "Ramesses C"]
 - Iset D Ta-Hemdjert [The Decline of the Ramessides]: children_names corrected (Chunk-2 sanctioned cross-entry-inference pattern: Iset D Ta-Hemdjert's own entry (p. 192) names only her granddaughter Iset E, but both Amenhirkopshef C (p. 192, 'Son of Ramesses III and Iset D') and Ramesses C Decline-row (p. 194, 'Son of Ramesses III and Iset D') explicitly name her as mother. D&H uses the short form 'Iset D' in the children's entries and the long compound 'Iset D Ta-Hemdjert' as her own dh_id — same individual. Without this inference the family tree is asymmetric. Populating children here matches the chunk-2 precedent (the mother's and grandmother's entries both point to Iset E's eventual appointment) and brings the row in line with the granddaughter mention already in `notes`.)
-    was: []
-    now: ["Amenhirkopshef C", "Ramesses C"]
+    value: ["Amenhirkopshef C", "Ramesses C"]
 - Hori A [The House of Ramesses]: father_name corrected (D&H p. 171 reads 'Probably a grandson of Ramesses II and son of Khaemwaset C.' Standard English coordination scopes 'probably' over the whole nominal phrase — both the grandson claim and the son-of-Khaemwaset-C claim share the hedge. The extraction agents stripped the hedge from `father_name`; restored verbatim to match the chunks-1-2 hedge-preservation convention ('Yuya (probable)' on Mutemwia etc.). The paired cross-entry inference on Khaemwaset C keeps `children_names = ['Hori A', ...]` bare per the README's hedge-handling rule (hedges live on the child-row's `father_name`, not on the parent's `children_names` list).)
-    was: "Khaemwaset C"
-    now: "Khaemwaset C (probable)"
+    value: "Khaemwaset C (probable)"
 - Shepsetipet [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; known from a stela found near tomb S3477 at Saqqara …' — the chunk-default `dynasty: 1` from D&H's Ch-1-joint-dynasties section placement contradicts the row's own evidence. Refined to 2 here.)
-    was: 1
-    now: 2
+    value: 2
 - Sitba [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; buried in Helwan tomb 1241 H9.' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 2.)
-    was: 1
-    now: 2
+    value: 2
 - Syhefernerer [The Founders]: dynasty corrected (Notes prose explicitly opens with '2nd Dynasty; buried in Saqqara tomb S2146E …' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 2.)
-    was: 1
-    now: 2
+    value: 2
 - Redji [The Founders]: dynasty corrected (Notes prose explicitly ends with 'dated stylistically to the 3rd Dynasty.' — chunk-default `dynasty: 1` contradicts on-row evidence. Refined to 3.)
-    was: 1
-    now: 3
+    value: 3
 - Ameny A [Seizers of the Two Lands]: alt_names corrected (Ameny A's prose explicitly states 'later king as AMENEMHAT II' (D&H's BOLD-CAPITALS convention for a regnal-name reference). Earlier D&H chunks consistently populate `alt_names` with the titlecase regnal form when an individual has a later-king reference — precedents include `Paramessu` (alt_names: 'Ramesses I'), `Ramesses A` (alt_names: 'Ramesses II'), `Amenhotep E` (alt_names: 'Amenhotep IV', 'Akhenaten'), and `Sobkhotep C` which the Kings and Commoners chunk later applied the same rule to ('later co-regent and king as SOBKHOTEP IV'). Seizers extraction missed the rule. Surfaced by Codex review on 2026-04-19 retrospective pass; fix restores cross-chunk-consistent aliasing so Phase-A matcher can hit Ameny A via either his D&H dh_id or his pharaoh.se canonical-name `Amenemhat II`.)
-    was: []
-    now: ["Amenemhat II"]
+    value: ["Amenemhat II"]
 - Didit [Seizers of the Two Lands]: mother_name corrected (Didit's Brief Life ends with `mother of Neferet Q`; `Sithathor Q`'s Brief Life in the same sub-section's Unplaced block opens `Mother of Didit, named on the funerary stela of Neferet Q in Munich.` The cross-entry-inference rule D&H adopted in chunk 2 Amarna (Gilukhipa / Shuttarna II pair) and chunk 3 Ramesside (Hattusilis III / Pudukhepa pair, and others) symmetrises kinship: a parent-named-as-X-in-child's-notes populates `father_name`/`mother_name` on the child's row, and the reciprocal `children_names` on the parent's row. Seizers extraction applied the symmetry on child→parent (Didit's entry names Neferet Q as child → Neferet Q's row must have mother_name `Didit` — which it does) but missed the other symmetry edge: parent→child. `Sithathor Q` is a mother in her own entry but `Didit`'s row has `mother_name: null`. Surfaced by Codex review on 2026-04-19 retrospective pass; fix restores intra-chunk kinship symmetry.)
-    was: null
-    now: "Sithathor Q"
+    value: "Sithathor Q"
 - Henttawy Q [Of Kings and Priests]: roles corrected (Egyptologist printed-source verification (p.205 right column): D&H's role-parenthetical for Henttawy Q reads `(KD; KW; KM; L2L; M2L; Daughter of: KGW; 1ChHA; Mother of: KGW, HPA & Genmo)`. Majority-voted roles dropped `1ChHA` and the two relation-tokens entirely; merged notes silently absorbed the relation-tokens as prose. Restoring the full role list per D&H's printed parenthetical (relation-tokens are D&H's annotation of kinship roles; Phase A owns the role-code glossary including these).)
-    was: ["KD", "KW", "KM", "L2L", "M2L"]
-    now: ["KD", "KW", "KM", "L2L", "M2L", "Daughter of: KGW", "1ChHA", "Mother of: KGW, HPA & Genmo"]
-- Henttawy Q [Of Kings and Priests]: notes corrected (Companion to the roles correction above. Strip the leading sentence `Daughter of: KGW; Mother of: KGW, HPA & Genmo.` that all three agents absorbed into notes — that text is the role-parenthetical content, not D&H's prose. The true prose paragraph begins at `Wife of Pinudjem I, mother of Pasebkhanut I...`.)
-    was: "Daughter of: KGW; Mother of: KGW, HPA & Genmo. Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum."
-    now: "Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum."
+    value: ["KD", "KW", "KM", "L2L", "M2L", "Daughter of: KGW", "1ChHA", "Mother of: KGW, HPA & Genmo"]
 - Maatkare A [Of Kings and Priests]: roles corrected (Egyptologist printed-source verification (p.206): D&H's role-parenthetical for Maatkare A reads `(KDB; Ador; GWA: prenomen Mutemhat)`. The colon-bearing `GWA: prenomen Mutemhat` token is an annotation of the GWA cartouche's prenomen reading, not a role-code itself. Split into bare `GWA` (the role) plus alt_names `Mutemhat` (already preserved). No other row carries a colon-bearing role token; this would break downstream role-vocabulary matching.)
-    was: ["KDB", "Ador", "GWA: prenomen Mutemhat"]
-    now: ["KDB", "Ador", "GWA"]
+    value: ["KDB", "Ador", "GWA"]
 - Sitre A [The House of Ramesses]: alt_names corrected (Issue #175: clear `alt_names = ['Tia Q']` per the Thutmose B precedent (already in this fix_rows.py). D&H's notes prose for this row reads `She may previously have borne the name Tia (Q).` — a hedged identity hint, NOT a confirmed alt_name. `alt_names` is reserved for alternate forms of the same individual's verified name (e.g. `Ankhesenpaaten` → `Ankhesenamun`). The cross-reference to Tia (Q) is already preserved in `notes` so no information is lost; clearing `alt_names` brings this row in line with the Thutmose B / Thutmose Q correction also in this file.)
-    was: ["Tia Q"]
-    now: []
+    value: []
 - Thutmose B [The Amarna Interlude]: roles corrected (Issue #175: fix `OPULE` typo (1 row) → `MULE` (8 rows in corpus). `OPULE` is not a documented D&H role token; `MULE` (Master / Overseer of the Lord's Estate) is the intended code. The `KNOWN_ROLE_TOKENS` allowlist + `test_role_tokens_in_known_vocab` closure test added in this PR catch this class of typo going forward.)
-    was: ["EKSon", "HPM", "SPP", "OPULE"]
-    now: ["EKSon", "HPM", "SPP", "MULE"]
+    value: ["EKSon", "HPM", "SPP", "MULE"]
