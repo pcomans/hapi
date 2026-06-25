@@ -44,7 +44,7 @@ Ordered. Items 1–3 are done in this change; 4–6 are actions to take when you
 1. ✅ **Add `LICENSE`** (Apache-2.0) — done.
 2. ✅ **Add `NOTICE`** with required attributions — done.
 3. ✅ **Set the `license` field** in `web/package.json` and `pipeline/pyproject.toml` (and fix the placeholder description) — done.
-4. ⏳ **Scrub PII from commit history** (decided: yes). Author/committer history contains an employer email (`philipp.comans@chime.com`) and a private hostname (`Leonardos-Virtual-Machine.local`). This requires a one-time history rewrite — see §5. **Run it as the final step**, because it rewrites every commit SHA.
+4. ⏳ **Scrub PII from commit history** (decided: yes). Author/committer history contains an employer email and a private machine hostname (enumerate them locally — do not paste them into committed docs; see §5). This requires a one-time history rewrite — **run it as the final step**, because it rewrites every commit SHA.
 5. ⏳ **Confirm `hapi-proprietary` is and stays private** on GitHub before publishing. This is the single load-bearing external assumption: if that repo is public, all the copyrighted PDFs are exposed. (Cannot be verified from inside this repo.)
 6. ⏳ **Resolve open PRs first.** A history rewrite (step 4) orphans every open PR by changing SHAs. Merge or close the 5 open PRs — notably #303 (the ADR-018 POC) — *before* rewriting and force-pushing.
 
@@ -53,26 +53,31 @@ Ordered. Items 1–3 are done in this change; 4–6 are actions to take when you
 Uses [`git filter-repo`](https://github.com/newren/git-filter-repo). **Do this after open PRs are resolved and against a fresh mirror clone you can verify before force-pushing.**
 
 ```bash
-# 1. Author/committer mailmap — map the PII identities to a clean public identity.
+# 1. Enumerate the identities actually present in history (locally — do NOT
+#    commit the output). Pick out the employer email and the *.local hostname.
+git log --all --format='%an <%ae>%n%cn <%ce>' | sort -u
+
+# 2. Build a mailmap that maps every sensitive identity to your clean public
+#    identity. Fill in the placeholders from step 1's output — keep this file
+#    local; never commit it.
 cat > /tmp/hapi-mailmap <<'EOF'
-Philipp Comans <ikedacomans@gmail.com> <philipp.comans@chime.com>
-Philipp Comans <ikedacomans@gmail.com> <philipp.comans@gmail.com>
-Philipp Comans <ikedacomans@gmail.com> <philipp.comans.agent@gmail.com>
-Leonardo <ikedacomans@gmail.com> <leonardo@Leonardos-Virtual-Machine.local>
+<Public Name> <public-email>  <employer-email-to-scrub>
+<Public Name> <public-email>  <other-private-email-to-scrub>
+<Public Name> <public-email>  <user@private-hostname.local>
 EOF
 
-# 2. Work on a fresh mirror so the live repo is untouched until you've verified.
+# 3. Work on a fresh mirror so the live repo is untouched until you've verified.
 git clone --mirror <repo-url> hapi-rewrite.git
 cd hapi-rewrite.git
 git filter-repo --mailmap /tmp/hapi-mailmap
 
-# 3. Verify the PII is gone before pushing anywhere public.
-git log --all --format='%ae%n%ce' | sort -u   # no chime.com / .local should remain
+# 4. Verify no sensitive identity remains before pushing anywhere public.
+git log --all --format='%ae%n%ce' | sort -u   # employer domain / *.local must be gone
 
-# 4. Only then force-push the rewritten history to the (now public) remote.
+# 5. Only then force-push the rewritten history to the (now public) remote.
 ```
 
-Adjust the canonical name/email in the mailmap to whatever public identity you want on the commits. Every SHA changes; anyone with an old clone must re-clone.
+The placeholders above are intentional — the whole point of this step is to keep the sensitive email/hostname out of the public tree, so they must not be pasted into this committed runbook. Fill them in from step 1 at run time. Every SHA changes; anyone with an old clone must re-clone.
 
 ## 6. Optional cleanups (not blockers)
 
