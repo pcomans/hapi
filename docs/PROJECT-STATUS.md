@@ -39,7 +39,7 @@ This data is committed and tested, but **not yet consumed** — the enrich stage
 
 ## What's designed but not built
 
-- **The authority claim graph (ADR-018).** A CIDOC CRM 7.1.3 + CRMdig source-attributed model that preserves cross-source disagreement instead of collapsing it, with a deterministic + LLM two-stage matcher and a human-escalation path. The spec is complete and a proof-of-concept exists ([open PR #303](../../../pull/303)); it is **not** merged or wired into the pipeline.
+- **The authority claim graph (ADR-018).** A CIDOC CRM 7.1.3 + CRMdig source-attributed model that preserves cross-source disagreement instead of collapsing it, with a deterministic + LLM two-stage matcher and a human-escalation path. The spec is complete and a proof-of-concept exists ([open PR #303](https://github.com/pcomans/hapi/pull/303)); it is **not** merged or wired into the pipeline.
 - **Web features beyond search:** artifact detail pages, browse-by-site, museum browse, the map view, and companion-piece discovery are all planned, not implemented.
 
 ## The honest gap
