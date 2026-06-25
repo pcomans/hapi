@@ -13,7 +13,6 @@ Ay A (Ay A):
 Baketwernel A (Baketwernel A):
   spouse_names: a=["Ramesses IX (possibly)"] | b=["Ramesses IX (possibly)"] | c=["Ramesses IX (possible)"]  → chose ["Ramesses IX (possibly)"]
 
-
 Harweben (Harweben):
   mother_name: a=null | b="Isetemkheb D" | c="Isetemkheb D"  → chose "Isetemkheb D"
   roles: a=["ChHA–4th phyle"] | b=["ChHA—4th phyle"] | c=["ChHA–4th phyle"]  → chose ["ChHA–4th phyle"]
@@ -64,13 +63,11 @@ Kiya (Kiya):
 Maathorneferure (Maathorneferure):
   mother_name: a=null | b="Pudukhepa" | c=null  → chose null
 
-
 Mawasun (Mawasun):
   sex: a="male" | b="female" | c="male"  → chose "male"
 
 Mehytenweskhet A (Mehytenweskhet A):
   children_names: a=["Osorkon the Elder"] | b=["Osorkon the Elder"] | c=["Osorkon the Elder", "Shoshenq I"]  → chose ["Osorkon the Elder"]
-
 
 Mentuhirkopshef B (Mentuhirkopshef B):
   spouse_names: a=[] | b=["Takhat B (probable)"] | c=[]  → chose []
@@ -104,13 +101,11 @@ Neferhotep B (Neferhotep B):
 Nesibanebdjedet (Nesibanebdjedet):
   spouse_names: a=[] | b=["Tentamun B"] | c=[]  → chose []
 
-
 Nesikhonsu B (Nesikhonsu B):
   roles: a=["ChHA–1st phyle"] | b=["ChHA—1st phyle"] | c=["ChHA–1st phyle"]  → chose ["ChHA–1st phyle"]
 
 Nubkhaes A (Nubkhaes A):
   spouse_names: a=["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"] | b=["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"] | c=["Sobkhotep V (either, probable)", "Sobkhotep VI (either, probable)", "Iaib (either, probable)"]  → chose ["Sobkhotep V (probable)", "Sobkhotep VI (probable)", "Iaib (probable)"]
-
 
 Pinudjem I [The Decline of the Ramessides] (Pinudjem I):
   spouse_names: a=[] | b=["Henttawy Q"] | c=[]  → chose []

@@ -94,7 +94,10 @@ def sanitize_disagreements(text: str) -> str:
             # only field line was a dropped prose field (orphaned header).
             header = line if line.strip() else None
             header_has_fields = False
-            if not line.strip():
+            # Append a blank separator only when it follows a non-blank line, so
+            # that dropping an orphaned header (its sole field was prose) does
+            # not leave consecutive blank lines.
+            if not line.strip() and out and out[-1].strip():
                 out.append(line)
     pre_clean = "\n".join(out)
     if marker:
@@ -105,7 +108,7 @@ def sanitize_disagreements(text: str) -> str:
 def main() -> None:
     rows = [
         json.loads(line)
-        for line in RECONCILED.read_text().splitlines()
+        for line in RECONCILED.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
     stripped = sum(1 for r in rows if any(f in r for f in PROSE_FIELDS))
@@ -114,18 +117,19 @@ def main() -> None:
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows
         )
-        + "\n"
+        + "\n",
+        encoding="utf-8",
     )
     print(
         f"destructure_notes: removed {PROSE_FIELDS} from {stripped}/{len(rows)} rows"
     )
 
     if DISAGREEMENTS.exists():
-        before = DISAGREEMENTS.read_text()
+        before = DISAGREEMENTS.read_text(encoding="utf-8")
         after = sanitize_disagreements(before)
-        DISAGREEMENTS.write_text(after)
+        DISAGREEMENTS.write_text(after, encoding="utf-8")
         removed = before.count("\n") - after.count("\n")
-        print(f"destructure_notes: removed {removed} prose line(s) from {DISAGREEMENTS.name}")
+        print(f"destructure_notes: sanitized {DISAGREEMENTS.name} (-{removed} line(s))")
 
 
 if __name__ == "__main__":
