@@ -152,6 +152,44 @@ def test_destructure_drops_prose_and_is_idempotent() -> None:
     assert mod.PROSE_FIELDS == ("notes",)
 
 
+@lru_cache(maxsize=1)
+def _harvest_module():
+    """Path-load `harvest_notes_audit.py` (hyphenated source dir)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "dh_harvest_notes_audit", SOURCE_DIR / "harvest_notes_audit.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_harvest_audit_detects_planted_gap() -> None:
+    """The committed `harvest_notes_audit.txt` reports 0 gaps; that is only
+    trustworthy if the verifier actually catches gaps. Plant an alt-name that
+    lives ONLY in the prose and confirm it is flagged; then put the same name in
+    `alt_names` and confirm the gap disappears."""
+    mod = _harvest_module()
+    leaky = {
+        "name": "Foo", "dh_id": "Foo", "alt_names": [],
+        "notes": "Also known as Barbaz; daughter of Someone.",
+    }
+    assert mod.audit([leaky])["name_variant_gaps"], "verifier failed to catch a planted gap"
+    fixed = {**leaky, "alt_names": ["Barbaz"]}
+    assert not mod.audit([fixed])["name_variant_gaps"], "structured alt_name should close the gap"
+
+
+def test_override_marker_constants_in_sync() -> None:
+    """`destructure_notes.py` splits `merge-disagreements.txt` on the same
+    LLM-APPLIED-OVERRIDES marker that `fix_rows.py` writes. The two are
+    standalone scripts in a hyphenated dir (no shared import), so the constant
+    is duplicated — this test fails loud if they ever drift, which would
+    silently stop the scrubber from finding the override section."""
+    fix_marker = _fix_rows_module()._OVERRIDES_MARKER
+    destr_marker = _destructure_module()._OVERRIDE_MARKER
+    assert fix_marker == destr_marker, (fix_marker, destr_marker)
+
+
 def test_sanitize_disagreements_branches() -> None:
     """`sanitize_disagreements` drops prose field lines, removes orphaned row
     headers entirely, and never emits a doubled trailing newline (the no-marker
@@ -280,8 +318,8 @@ def test_no_verbatim_notes_prose() -> None:
     their own structured fields; D&H's specific phrasing of the narrative is
     their protectable expression and must not be reproduced. This closure test
     locks the destructure: no reconciled row may carry a `notes` (or any other
-    verbatim-prose) key. See the source README "Rights" section and
-    docs/PUBLISH-READINESS.md."""
+    verbatim-prose) key. See the source README "Rights" section and the
+    committed `harvest_notes_audit.py` / `.txt` (the 0-gaps verification)."""
     prose_fields = {"notes"}
     offenders = [
         (r["dh_id"], r["sub_period"], sorted(prose_fields & r.keys()))

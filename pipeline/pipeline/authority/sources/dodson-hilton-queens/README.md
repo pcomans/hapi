@@ -26,7 +26,7 @@ Brief Lives prosopographical sub-blocks from chapters 2 and 3. Extraction from t
 | (merged) | Ch 2 *Kings and Commoners* — Brief Lives + Unplaced (Dyn 13, SIP start) | 108–113 | 98–103 | 108 (91 placed + 17 Unplaced) |
 | this PR | Ch 1 *The Founders* — Brief Lives + Unplaced (Dyn 1/2/3 Early Dynastic) | 48–49 | 44–45 | 26 (15 placed + 11 Unplaced) |
 
-Combined `reconciled.jsonl` 465 rows (Ch 3 New Kingdom: 59 Power + 41 Amarna + 125 House + 10 Feud + 35 Decline = 270; Ch 2: 13 Head of South + 48 Seizers of the Two Lands + 108 Kings and Commoners = 169; Ch 1: 26 Founders).
+Combined `reconciled.jsonl` 549 rows (Ch 3 New Kingdom: 59 Power + 41 Amarna + 125 House + 10 Feud + 35 Decline = 270; Ch 2: 13 Head of South + 48 Seizers of the Two Lands + 108 Kings and Commoners = 169; Ch 1: 26 Founders; Ch 4: 84 Of Kings and Priests = 549 total).
 
 Out of scope for this PR, landing in follow-up PRs:
 - **Chapters 1, 2, 4, 5** (Early Dynastic / OK / MK / SIP / TIP / Late Period) — separate PRs; `sources/baud-1999-ok-royal-family/` is the preferred OK source and this book is known-weaker there.
@@ -102,15 +102,15 @@ One row per named royal-family member (queen, king's mother, king's wife, king's
   terminal `destructure_notes.py` stage before publication (Names, kinships,
   titles, dynasty — the uncopyrightable facts — live in their own structured
   fields). A harvest pass verified the drop loses no matchable data: 0
-  name-variant gaps and 0 kinship gaps across all rows. See the "Rights" section
-  and `docs/PUBLISH-READINESS.md`.
+  name-variant gaps and 0 kinship gaps across all rows — committed as
+  `harvest_notes_audit.py` + `harvest_notes_audit.txt`. See the "Rights" section.
 - **`source_citation.pdf_pages`** = the **PDF-viewer page range** of the OCR chunk that produced this row — i.e., the page numbers a reader sees when opening the raw PDF in a viewer, counting from the first rendered page (`"126-130"` for Power-and-Glory rows, `"142-145"` for Amarna-Interlude rows). These differ from the book's **printed page numbers** (Power 137–141, Amarna 154–157) by the frontmatter offset (~11 pages). Each row cites the chunk range, not a single page; D&H's own printed page numbers appear in the OCR markdown so a reviewer can cross-reference to a specific printed page within the chunk trivially.
 
 ## Rights
 
 Thames & Hudson, 2004, in copyright. This extract contains only **factual data** — names, kinship relations (spouse, parent, child), royal titles extracted verbatim from D&H's own abbreviation set, and dynasty numbers. The book's extensive illustrations, genealogical chart diagrams, narrative chapter prose, and scholarly argumentation chapters are **not** reproduced. Per ADR-017, the source PDF is not committed; per-page OCR markdown in `raw/` is gitignored (`raw/*` pattern).
 
-**Verbatim-quotation caveat — RESOLVED.** The `notes` field formerly reproduced D&H's Brief-Lives paragraphs (typically 30–80 words per entry) verbatim. Facts (names, kinships, monument references) are not copyrightable; D&H's specific phrasing of the narrative interpretation around those facts is. The `notes` field — and the verbatim `notes:` lines in `merge-disagreements.txt` — are now **dropped** by the terminal `destructure_notes.py` stage. A harvest pass first verified that every matchable fact already lives in a structured field (0 name-variant gaps, 0 kinship gaps), so no matching data is lost. See `docs/PUBLISH-READINESS.md`.
+**Verbatim-quotation caveat — RESOLVED.** The `notes` field formerly reproduced D&H's Brief-Lives paragraphs (typically 30–80 words per entry) verbatim. Facts (names, kinships, monument references) are not copyrightable; D&H's specific phrasing of the narrative interpretation around those facts is. The `notes` field — and the verbatim `notes:` lines in `merge-disagreements.txt` — are now **dropped** by the terminal `destructure_notes.py` stage. A harvest pass first verified that every matchable fact already lives in a structured field (0 name-variant gaps, 0 kinship gaps), so no matching data is lost; that verification is committed and reproducible as `harvest_notes_audit.py` (the verifier) and `harvest_notes_audit.txt` (its output against the pre-drop data).
 
 ## Method
 

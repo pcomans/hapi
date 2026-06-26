@@ -4,19 +4,9 @@ Run AFTER merge.py. Mirrors Kitchen's pattern — idempotent re-runs,
 append-only LLM-APPLIED OVERRIDES section in merge-disagreements.txt,
 every override recorded with rationale.
 
-For the Pre-Amarna chunk (p126–p130), the egyptologist-reviewer Claude
-Code subagent flagged a single verbatim-prose OCR drift on `Tiaa A`'s
-`notes`: Gemini's OCR dropped an article and introduced a stray colon
-(`"including: number of usurpations"` vs the PDF's `"including a
-number of usurpations"`). Since `notes` is a verbatim-quotation field,
-the correction is applied rather than left in the extract.
+Corrections target the structured fields only. The remaining Amarna
+corrections fix `alt_names` / `spouse_names` semantics:
 
-For the Amarna chunk (p142–p145), eight field-level drifts are
-corrected:
-
-- Four editorial tails added by individual extraction subagents that
-  survived majority-vote ([...]18A–H, [...]18K–N, Tey, Thutmose B
-  alt_names cross-reference).
 - One slash-expansion error on `Tutankhuaten`'s `alt_names` where
   "TUTANKHATEN/AMUN" was literally split to `["TUTANKHATEN", "AMUN"]`
   instead of being glossed as the successive regnal names
@@ -26,16 +16,19 @@ corrected:
   BOLD-CAPITALS rendering of regnal names is typographic emphasis,
   not a canonical spelling, and museum-catalogue matching requires
   titlecase.
+- The `Thutmose B` alt_names cross-reference removal (the conceivably-
+  identical `Thutmose Q` hint belongs in prose, not `alt_names`).
 - One hedge-preservation fix on `Ankhesenpaaten.spouse_names` where
   agents dropped D&H's explicit "perhaps" from the Ay brief-marriage
   qualification.
 
-Corrections sourced from a two-stage review pass: Claude Opus 4.6
-main-session cross-check against the Opus-produced OCR chunk
-(editorial tails, slash-split), followed by the egyptologist-reviewer
-Claude Code subagent walking `reconciled.jsonl` against the source
-PDF (casing, hedge loss). Each correction restores the verbatim prose
-or fixes the semantic split.
+**The five `notes`-targeting corrections that this module formerly
+carried (Tiaa A OCR-article restore; the [...]18A–H / [...]18K–N / Tey
+editorial-tail strips; Henttawy Q leading-sentence strip) were REMOVED**
+when the `notes` field itself was dropped by the terminal
+`destructure_notes.py` stage: writing `notes` here would re-introduce
+verbatim D&H prose on a re-run. The corrections above source from the
+egyptologist-reviewer pass against the source PDF.
 
 No deterministic recomputation is needed for this source (the schema
 has no interval-overlap or cross-row fields).
