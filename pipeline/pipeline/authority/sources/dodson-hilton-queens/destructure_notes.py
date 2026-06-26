@@ -77,15 +77,48 @@ def destructure(rows: list[dict]) -> list[dict]:
     return [destructure_row(r) for r in rows]
 
 
+def _drop_prose_overrides(post: str) -> str:
+    """Drop fix_rows override entries targeting a PROSE_FIELDS field from the
+    post-marker section.
+
+    Defensive completeness: `fix_rows.py` no longer emits `notes` corrections,
+    so on a current artifact this is a no-op (and returns `post` byte-for-byte).
+    But if this terminal stage is ever run on a `merge-disagreements.txt`
+    produced by an OLDER `fix_rows.py` that still wrote `notes` corrections,
+    their verbatim `value:`/`was:`/`now:` lines would otherwise survive here —
+    so this stage cleans them too, making it a self-sufficient scrubber rather
+    than one coupled to fix_rows' state. Override entries have the shape
+    `- <dh_id> [<sub_period>]: <field> corrected (...)` followed by indented
+    continuation lines.
+    """
+    drop_headers = tuple(f": {f} corrected" for f in PROSE_FIELDS)
+    if not any(h in post for h in drop_headers):
+        return post  # nothing to drop — preserve exactly
+    out: list[str] = []
+    dropping = False
+    for line in post.splitlines():
+        if line.startswith("- "):
+            dropping = any(h in line for h in drop_headers)
+            if not dropping:
+                out.append(line)
+            continue
+        if dropping and (line.startswith("    ") or not line.strip()):
+            continue  # indented continuation / blank inside the dropped entry
+        dropping = False
+        out.append(line)
+    return "\n".join(out) + ("\n" if post.endswith("\n") else "")
+
+
 def sanitize_disagreements(text: str) -> str:
-    """Strip verbatim-prose field lines from the merge-disagreements audit log.
+    """Strip verbatim-prose from the merge-disagreements audit log.
 
     The pre-marker portion records the 3 agents' per-field disagreements as
     `  <field>: a="..." | b="..." -> chose "..."` lines — for `notes` those
     carry full D&H paragraphs verbatim. Drop every `  <field>:` line for a
     PROSE_FIELDS field, plus any row header left with no remaining field lines.
-    The override section (post-marker) is regenerated notes-free by fix_rows.py,
-    so it is passed through unchanged. Pure; idempotent.
+    The post-marker override section is also scrubbed of any prose-field
+    override entries (`_drop_prose_overrides`) so the stage is a self-sufficient
+    scrubber, not coupled to fix_rows.py having regenerated it. Pure; idempotent.
     """
     pre, marker, post = text.partition(_OVERRIDE_MARKER)
     drop_prefixes = tuple(f"  {f}:" for f in PROSE_FIELDS)
@@ -118,7 +151,7 @@ def sanitize_disagreements(text: str) -> str:
         # pre-portion; otherwise (every disagreement was a stripped prose
         # field) the leading "\n\n" would prepend blank lines to the marker.
         sep = "\n\n" if pre_clean else ""
-        return pre_clean + sep + marker + post
+        return pre_clean + sep + marker + _drop_prose_overrides(post)
     if not pre_clean:
         return ""
     return pre_clean + ("\n" if text.endswith("\n") else "")

@@ -177,6 +177,16 @@ def test_sanitize_disagreements_branches() -> None:
         f'RowE (RowE):\n  roles: ["KW"]\n\n{marker}\nbody\n'
     )
     assert out4 == f'RowE (RowE):\n  roles: ["KW"]\n\n{marker}\nbody\n'
+    # Post-marker override section: a `notes corrected` entry (verbatim prose in
+    # its value line) is dropped even though fix_rows.py no longer emits one —
+    # the stage is a self-sufficient scrubber. A non-prose override is kept.
+    out5 = mod.sanitize_disagreements(
+        f'RowF (RowF):\n  roles: a\n\n{marker}\n\nField corrections:\n'
+        '- X [P]: notes corrected (r)\n    value: "verbatim prose"\n'
+        '- Y [P]: roles corrected (r)\n    value: ["KD"]\n'
+    )
+    assert "notes corrected" not in out5 and "verbatim prose" not in out5
+    assert "roles corrected" in out5 and "Y [P]" in out5
 
 
 def _row(dh_id: str, sub_period: str | None = None) -> dict:
