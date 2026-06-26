@@ -72,8 +72,8 @@ uv run alembic upgrade head      # apply DB migrations
 uv run dagster dev               # launch the Dagster UI to run ingest/normalize/index
 uv run pytest                    # run the pipeline test suite
 
-# Web app
-cd web && pnpm install
+# Web app (../web — sibling of pipeline/)
+cd ../web && pnpm install
 pnpm dev                         # dev server at http://localhost:3000
 pnpm test                        # component tests
 ```

@@ -71,7 +71,9 @@ EOF
 # 3. Work on a fresh mirror so the live repo is untouched until you've verified.
 git clone --mirror <repo-url> hapi-rewrite.git
 cd hapi-rewrite.git
-git filter-repo --mailmap /tmp/hapi-mailmap
+# --force is required: a --mirror clone has a remote, and git filter-repo
+# refuses to run on a non-"fresh" clone without it.
+git filter-repo --force --mailmap /tmp/hapi-mailmap
 
 # 4. Verify no sensitive identity remains before pushing anywhere public.
 git log --all --format='%ae%n%ce' | sort -u   # employer domain / *.local must be gone
