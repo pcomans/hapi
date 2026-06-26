@@ -110,13 +110,18 @@ def sanitize_disagreements(text: str) -> str:
             # not leave consecutive blank lines.
             if not line.strip() and out and out[-1].strip():
                 out.append(line)
-    pre_clean = "\n".join(out)
+    # rstrip() drops any trailing blank line `out` may carry, so the trailing
+    # newline is re-added deliberately below and can't be doubled.
+    pre_clean = "\n".join(out).rstrip()
     if marker:
-        return pre_clean.rstrip() + "\n\n" + marker + post
-    # rstrip() before re-adding a single trailing newline: `out` can already
-    # end with a blank line (appended after a field block), so `pre_clean`
-    # would otherwise end with "\n" and a naive `+ "\n"` would double it.
-    return pre_clean.rstrip() + ("\n" if text.endswith("\n") else "")
+        # Only separate the pre-portion from the marker when there IS a
+        # pre-portion; otherwise (every disagreement was a stripped prose
+        # field) the leading "\n\n" would prepend blank lines to the marker.
+        sep = "\n\n" if pre_clean else ""
+        return pre_clean + sep + marker + post
+    if not pre_clean:
+        return ""
+    return pre_clean + ("\n" if text.endswith("\n") else "")
 
 
 def main() -> None:

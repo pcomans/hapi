@@ -167,6 +167,16 @@ def test_sanitize_disagreements_branches() -> None:
     )
     assert "RowB" not in out2 and "notes:" not in out2
     assert "RowC (RowC):" in out2
+    # Marker present but every disagreement was a stripped prose field: the
+    # marker must not be prefixed with leading blank lines.
+    marker = "LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED"
+    out3 = mod.sanitize_disagreements(f"RowD (RowD):\n  notes: z\n\n{marker}\nbody\n")
+    assert out3.startswith(marker), repr(out3[:30])
+    # Marker present WITH a surviving disagreement: exactly one blank separator.
+    out4 = mod.sanitize_disagreements(
+        f'RowE (RowE):\n  roles: ["KW"]\n\n{marker}\nbody\n'
+    )
+    assert out4 == f'RowE (RowE):\n  roles: ["KW"]\n\n{marker}\nbody\n'
 
 
 def _row(dh_id: str, sub_period: str | None = None) -> dict:
