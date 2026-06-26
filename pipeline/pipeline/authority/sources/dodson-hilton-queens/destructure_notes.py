@@ -40,11 +40,22 @@ Properties
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 SOURCE_DIR = Path(__file__).resolve().parent
 RECONCILED = SOURCE_DIR / "reconciled.jsonl"
 DISAGREEMENTS = SOURCE_DIR / "merge-disagreements.txt"
+
+
+def _atomic_write(path: Path, content: str) -> None:
+    """Write `content` to `path` atomically: stage to a sibling `.tmp` file
+    then `os.replace()`, so an interrupted run cannot leave the target in a
+    corrupted or partial state. Matches the in-directory precedent in
+    `pre_merge.py` (Gemini PR #218 round-3)."""
+    temp_path = path.with_suffix(path.suffix + ".tmp")
+    temp_path.write_text(content, encoding="utf-8")
+    os.replace(temp_path, path)
 
 # Verbatim-prose fields stripped before publication. `notes` is the only one this
 # source carries; the list makes the intent explicit and future-proof.
@@ -116,12 +127,12 @@ def main() -> None:
     ]
     stripped = sum(1 for r in rows if any(f in r for f in PROSE_FIELDS))
     rows = destructure(rows)
-    RECONCILED.write_text(
+    _atomic_write(
+        RECONCILED,
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows
         )
         + "\n",
-        encoding="utf-8",
     )
     print(
         f"destructure_notes: removed {PROSE_FIELDS} from {stripped}/{len(rows)} rows"
@@ -130,7 +141,7 @@ def main() -> None:
     if DISAGREEMENTS.exists():
         before = DISAGREEMENTS.read_text(encoding="utf-8")
         after = sanitize_disagreements(before)
-        DISAGREEMENTS.write_text(after, encoding="utf-8")
+        _atomic_write(DISAGREEMENTS, after)
         removed = before.count("\n") - after.count("\n")
         print(f"destructure_notes: sanitized {DISAGREEMENTS.name} (-{removed} line(s))")
 
