@@ -59,11 +59,13 @@ git log --all --format='%an <%ae>%n%cn <%ce>' | sort -u
 
 # 2. Build a mailmap that maps every sensitive identity to your clean public
 #    identity. Fill in the placeholders from step 1's output — keep this file
-#    local; never commit it.
+#    local; never commit it. Mailmap syntax is `Proper Name <proper-email>
+#    <commit-email-to-replace>`: the NAME is plain text (no angle brackets),
+#    only the emails are bracketed.
 cat > /tmp/hapi-mailmap <<'EOF'
-<Public Name> <public-email>  <employer-email-to-scrub>
-<Public Name> <public-email>  <other-private-email-to-scrub>
-<Public Name> <public-email>  <user@private-hostname.local>
+Your Public Name <your-public-email>  <employer-email-to-scrub>
+Your Public Name <your-public-email>  <other-private-email-to-scrub>
+Your Public Name <your-public-email>  <user@private-hostname.local>
 EOF
 
 # 3. Work on a fresh mirror so the live repo is untouched until you've verified.
