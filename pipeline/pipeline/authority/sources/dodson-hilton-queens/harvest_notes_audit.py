@@ -35,25 +35,32 @@ from pathlib import Path
 SOURCE_DIR = Path(__file__).resolve().parent
 DEFAULT_INPUT = SOURCE_DIR / "reconciled.jsonl"
 
-# Prose patterns that, if present, would carry a matchable signal.
+# Prose patterns that, if present, would carry a matchable signal. Matched with
+# re.IGNORECASE so a sentence-INITIAL keyword (e.g. "Also known as …", "Known
+# as …") is caught, NOT just mid-sentence lowercase ones. The capture group is
+# anchored to an uppercase initial via `(?-i:[A-Z])` even under IGNORECASE, so we
+# only capture Capitalised proper-name candidates and don't over-match common
+# words (e.g. "known as the Late Ramesside Letters" — `the` is not captured).
+_NAME = r"((?-i:[A-Z])[\w\- ]+)"
+_KIN = r"((?-i:[A-Z])[\w ]+?)"
 ALT_PATTERNS = [
-    r"name written in full is ([A-Z][\w\- ]+)",
-    r"also (?:called|known as|written) ([A-Z][\w\- ]+)",
-    r"known (?:from [^,]+ )?(?:onwards )?as ([A-Z][\w\- ]+)",
-    r"\bi\.e\.,? ([A-Z][\w\- ]+)",
+    rf"name written in full is {_NAME}",
+    rf"also (?:called|known as|written) {_NAME}",
+    rf"known (?:from [^,]+ )?(?:onwards )?as {_NAME}",
+    rf"\bi\.e\.,? {_NAME}",
 ]
 IDENT_PATTERNS = [
-    r"identical with (?:King |Queen )?([A-Z][\w\- ]+)",
-    r"to be identified (?:with|as) ([A-Z][\w\- ]+)",
+    rf"identical with (?:King |Queen )?{_NAME}",
+    rf"to be identified (?:with|as) {_NAME}",
 ]
 KIN_PATTERNS = {
     "parent": [
-        r"[Ss]on of ([A-Z][\w ]+?)(?: and| by|[,.])",
-        r"[Dd]aughter of ([A-Z][\w ]+?)(?: and| by|[,.])",
+        rf"son of {_KIN}(?: and| by|[,.])",
+        rf"daughter of {_KIN}(?: and| by|[,.])",
     ],
     "spouse": [
-        r"[Ww]ife of ([A-Z][\w ]+?)(?:[,.;]| who| whom)",
-        r"[Hh]usband of ([A-Z][\w ]+?)(?:[,.;])",
+        rf"wife of {_KIN}(?:[,.;]| who| whom)",
+        rf"husband of {_KIN}(?:[,.;])",
     ],
 }
 
@@ -91,19 +98,19 @@ def audit(rows: list[dict]) -> dict:
             continue
         names = _structured_names(r)
         for pat in ALT_PATTERNS:
-            for m in re.finditer(pat, note):
+            for m in re.finditer(pat, note, re.IGNORECASE):
                 cand = m.group(1).strip().rstrip(".").strip()
                 if _norm(cand) and _norm(cand) not in names and 2 < len(cand) < 40:
                     name_gaps.append((r["name"], cand, m.group(0)))
         for pat in IDENT_PATTERNS:
-            for m in re.finditer(pat, note):
+            for m in re.finditer(pat, note, re.IGNORECASE):
                 cand = m.group(1).strip().rstrip(".").strip()
                 if _norm(cand) and _norm(cand) not in names and 2 < len(cand) < 40:
                     identity_refs.append((r["name"], cand, m.group(0)))
         kin = _structured_kin(r)
         for kind, pats in KIN_PATTERNS.items():
             for pat in pats:
-                for m in re.finditer(pat, note):
+                for m in re.finditer(pat, note, re.IGNORECASE):
                     cand = _norm(m.group(1))
                     if cand and not any(cand in s or s in cand for s in kin if s):
                         # Heuristic hit: the prose names someone not in this

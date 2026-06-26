@@ -177,6 +177,21 @@ def test_harvest_audit_detects_planted_gap() -> None:
     assert mod.audit([leaky])["name_variant_gaps"], "verifier failed to catch a planted gap"
     fixed = {**leaky, "alt_names": ["Barbaz"]}
     assert not mod.audit([fixed])["name_variant_gaps"], "structured alt_name should close the gap"
+    # Case-insensitivity: a SENTENCE-INITIAL keyword ("Also called …") with no
+    # other signal must still be caught — the case-sensitive verifier missed it.
+    sentence_initial = {
+        "name": "Baz", "dh_id": "Baz", "alt_names": [],
+        "notes": "Also called Quux.",
+    }
+    assert mod.audit([sentence_initial])["name_variant_gaps"], "missed a sentence-initial keyword"
+    # …but the uppercase capture anchor must NOT over-match a common word: a
+    # document/title reference ("known as the Late Ramesside Letters") is not a
+    # personal alt-name and must not be flagged.
+    doc_ref = {
+        "name": "Piankh", "dh_id": "Piankh", "alt_names": [],
+        "notes": "known as the Late Ramesside Letters",
+    }
+    assert not mod.audit([doc_ref])["name_variant_gaps"], "over-matched a common word as a name"
 
 
 def test_override_marker_constants_in_sync() -> None:
