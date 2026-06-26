@@ -105,8 +105,18 @@ def _drop_prose_overrides(post: str) -> str:
         if dropping and (line.startswith("    ") or not line.strip()):
             continue  # indented continuation / blank inside the dropped entry
         dropping = False
+        # Collapse a blank left dangling by a removed entry (both the leading
+        # case — dropped first block — and consecutive blanks): append a blank
+        # only after a non-blank line.
+        if not line.strip() and (not out or not out[-1].strip()):
+            continue
         out.append(line)
-    return "\n".join(out) + ("\n" if post.endswith("\n") else "")
+    # Strip blank lines from both ends of the body, then reattach the single
+    # newline that structurally separates the marker line from the section
+    # (so dropping the first/last entry leaves neither a leading nor trailing
+    # blank), plus the trailing newline if the input had one.
+    body = "\n".join(out).strip("\n")
+    return "\n" + body + ("\n" if post.endswith("\n") else "")
 
 
 def sanitize_disagreements(text: str) -> str:

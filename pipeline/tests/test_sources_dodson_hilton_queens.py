@@ -179,14 +179,26 @@ def test_sanitize_disagreements_branches() -> None:
     assert out4 == f'RowE (RowE):\n  roles: ["KW"]\n\n{marker}\nbody\n'
     # Post-marker override section: a `notes corrected` entry (verbatim prose in
     # its value line) is dropped even though fix_rows.py no longer emits one —
-    # the stage is a self-sufficient scrubber. A non-prose override is kept.
-    out5 = mod.sanitize_disagreements(
-        f'RowF (RowF):\n  roles: a\n\n{marker}\n\nField corrections:\n'
-        '- X [P]: notes corrected (r)\n    value: "verbatim prose"\n'
-        '- Y [P]: roles corrected (r)\n    value: ["KD"]\n'
-    )
-    assert "notes corrected" not in out5 and "verbatim prose" not in out5
-    assert "roles corrected" in out5 and "Y [P]" in out5
+    # the stage is a self-sufficient scrubber. Cover the prose entry first, last,
+    # and only; in every case no dangling leading/trailing blank is left and the
+    # pass is idempotent. Non-prose overrides survive.
+    notes_entry = '- X [P]: notes corrected (r)\n    value: "verbatim prose"\n'
+    roles_entry = '- Y [P]: roles corrected (r)\n    value: ["KD"]\n'
+    for label, entries, expect_roles in [
+        ("first", notes_entry + roles_entry, True),
+        ("last", roles_entry + notes_entry, True),
+        ("only", notes_entry, False),
+    ]:
+        out5 = mod.sanitize_disagreements(
+            f'RowF (RowF):\n  roles: a\n\n{marker}\n====\n\nField corrections:\n{entries}'
+        )
+        assert "notes corrected" not in out5 and "verbatim prose" not in out5, label
+        if expect_roles:
+            assert "roles corrected" in out5, label
+        assert "\n\n\n" not in out5, (label, "triple newline")
+        assert out5.split(marker, 1)[1].startswith("\n===="), (label, "leading blank")
+        assert not out5.endswith("\n\n"), (label, "trailing blank")
+        assert mod.sanitize_disagreements(out5) == out5, (label, "not idempotent")
 
 
 def _row(dh_id: str, sub_period: str | None = None) -> dict:
