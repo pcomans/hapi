@@ -102,7 +102,10 @@ def sanitize_disagreements(text: str) -> str:
     pre_clean = "\n".join(out)
     if marker:
         return pre_clean.rstrip() + "\n\n" + marker + post
-    return pre_clean + ("\n" if text.endswith("\n") else "")
+    # rstrip() before re-adding a single trailing newline: `out` can already
+    # end with a blank line (appended after a field block), so `pre_clean`
+    # would otherwise end with "\n" and a naive `+ "\n"` would double it.
+    return pre_clean.rstrip() + ("\n" if text.endswith("\n") else "")
 
 
 def main() -> None:

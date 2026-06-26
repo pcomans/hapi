@@ -152,6 +152,23 @@ def test_destructure_drops_prose_and_is_idempotent() -> None:
     assert mod.PROSE_FIELDS == ("notes",)
 
 
+def test_sanitize_disagreements_branches() -> None:
+    """`sanitize_disagreements` drops prose field lines, removes orphaned row
+    headers entirely, and never emits a doubled trailing newline (the no-marker
+    branch)."""
+    mod = _destructure_module()
+    # No marker present + a trailing blank after a kept block: must not double \n.
+    out = mod.sanitize_disagreements('RowA (RowA):\n  notes: x\n  roles: ["KW"]\n\n')
+    assert out == 'RowA (RowA):\n  roles: ["KW"]\n'
+    assert not out.endswith("\n\n")
+    # A row whose only field was prose is removed entirely (header + line).
+    out2 = mod.sanitize_disagreements(
+        'RowB (RowB):\n  notes: y\n\nRowC (RowC):\n  roles: ["KM"]\n'
+    )
+    assert "RowB" not in out2 and "notes:" not in out2
+    assert "RowC (RowC):" in out2
+
+
 def _row(dh_id: str, sub_period: str | None = None) -> dict:
     """Return the unique row matching `dh_id` (+ optional `sub_period`).
 
