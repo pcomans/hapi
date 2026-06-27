@@ -16,21 +16,35 @@ Hapi builds that index. It ingests artifact data from many museums, normalizes i
 
 Two independent systems share one database:
 
-```
-   Museum APIs                                            Browser
-  (Met, Harvard,                                            │
-   Brooklyn, …)                                             │
-       │                                                    │
-       ▼                                                    ▼
-┌──────────────────┐        Postgres          ┌──────────────────────┐
-│   PIPELINE       │   ┌──────────────────┐    │      WEB APP         │
-│ Python / Dagster │──▶│ catalog.*  (data)│◀───│  TypeScript / Next   │
-│                  │   │ web.*  (app data)│    │                      │
-│ ingest →         │   └──────────────────┘    │  search · filter ·   │
-│ normalize →      │            │              │  browse-by-site ·    │
-│ enrich →         │            ▼              │  map (planned)       │
-│ index            │       Typesense ──────────▶  (full-text search)  │
-└──────────────────┘                           └──────────────────────┘
+```mermaid
+flowchart LR
+    APIs["Museum APIs<br/>(Met · Harvard · Brooklyn)"]
+
+    subgraph Pipeline["PIPELINE · Python / Dagster"]
+        direction LR
+        ingest["ingest"] --> normalize["normalize"] --> enrich["enrich<br/>(planned)"] --> index["index"]
+    end
+
+    subgraph Postgres["Postgres"]
+        catalog[("catalog.*<br/>canonical data")]
+        webschema[("web.*<br/>app data")]
+    end
+
+    Typesense[("Typesense<br/>full-text search")]
+
+    subgraph WebApp["WEB APP · TypeScript / Next.js"]
+        ui["search · filter ·<br/>browse-by-site · map (planned)"]
+    end
+
+    Browser(["Browser"])
+
+    APIs --> ingest
+    index --> catalog
+    index --> Typesense
+    catalog -- read --> ui
+    Typesense -- search --> ui
+    ui -- owns --> webschema
+    ui --> Browser
 ```
 
 - **Pipeline** (`pipeline/`, Python + [Dagster](https://dagster.io/)) — ingests museum API responses verbatim, maps each museum's shape into one canonical artifact schema, enriches with scholarly authority data, and syncs the result into a search index.
