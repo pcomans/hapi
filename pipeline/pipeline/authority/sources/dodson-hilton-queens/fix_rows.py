@@ -4,19 +4,9 @@ Run AFTER merge.py. Mirrors Kitchen's pattern — idempotent re-runs,
 append-only LLM-APPLIED OVERRIDES section in merge-disagreements.txt,
 every override recorded with rationale.
 
-For the Pre-Amarna chunk (p126–p130), the egyptologist-reviewer Claude
-Code subagent flagged a single verbatim-prose OCR drift on `Tiaa A`'s
-`notes`: Gemini's OCR dropped an article and introduced a stray colon
-(`"including: number of usurpations"` vs the PDF's `"including a
-number of usurpations"`). Since `notes` is a verbatim-quotation field,
-the correction is applied rather than left in the extract.
+Corrections target the structured fields only. The remaining Amarna
+corrections fix `alt_names` / `spouse_names` semantics:
 
-For the Amarna chunk (p142–p145), eight field-level drifts are
-corrected:
-
-- Four editorial tails added by individual extraction subagents that
-  survived majority-vote ([...]18A–H, [...]18K–N, Tey, Thutmose B
-  alt_names cross-reference).
 - One slash-expansion error on `Tutankhuaten`'s `alt_names` where
   "TUTANKHATEN/AMUN" was literally split to `["TUTANKHATEN", "AMUN"]`
   instead of being glossed as the successive regnal names
@@ -26,16 +16,19 @@ corrected:
   BOLD-CAPITALS rendering of regnal names is typographic emphasis,
   not a canonical spelling, and museum-catalogue matching requires
   titlecase.
+- The `Thutmose B` alt_names cross-reference removal (the conceivably-
+  identical `Thutmose Q` hint belongs in prose, not `alt_names`).
 - One hedge-preservation fix on `Ankhesenpaaten.spouse_names` where
   agents dropped D&H's explicit "perhaps" from the Ay brief-marriage
   qualification.
 
-Corrections sourced from a two-stage review pass: Claude Opus 4.6
-main-session cross-check against the Opus-produced OCR chunk
-(editorial tails, slash-split), followed by the egyptologist-reviewer
-Claude Code subagent walking `reconciled.jsonl` against the source
-PDF (casing, hedge loss). Each correction restores the verbatim prose
-or fixes the semantic split.
+**The five `notes`-targeting corrections that this module formerly
+carried (Tiaa A OCR-article restore; the [...]18A–H / [...]18K–N / Tey
+editorial-tail strips; Henttawy Q leading-sentence strip) were REMOVED**
+when the `notes` field itself was dropped by the terminal
+`destructure_notes.py` stage: writing `notes` here would re-introduce
+verbatim D&H prose on a re-run. The corrections above source from the
+egyptologist-reviewer pass against the source PDF.
 
 No deterministic recomputation is needed for this source (the schema
 has no interval-overlap or cross-row fields).
@@ -63,66 +56,17 @@ DIFF = SOURCE_DIR / "merge-disagreements.txt"
 # D&H lists some individuals (e.g. Takhat A) under two Brief Lives
 # sub-sections as separate rows, so a correction may target only one
 # of those rows.
-POWER_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
-    (
-        "Tiaa A",
-        "The Power and the Glory",
-        "notes",
-        "Wife of Amenhotep II and mother of Thutmose IV. A number of "
-        "monuments were created for her by the latter at Giza, Thebes "
-        "and the Fayoum, including a number of usurpations of material "
-        "belonging to Meryetre-Hatshepsut. She was buried in tomb KV32, "
-        "where many fragments of her funerary equipment have been found; "
-        "some material was washed by floodwater into the adjacent tomb "
-        "KV47, where it was for a long time thought to belong to a "
-        "like-named mother of Siptah.",
-        'Gemini OCR dropped the article "a" in "including a number of '
-        'usurpations" and left a stray colon after "including". The PDF '
-        "(p. 140 col 2, Tiaa A entry) reads with the article; `notes` "
-        "is a verbatim-quotation field so the reviewer's correction is "
-        "applied rather than preserving the OCR artifact.",
-    ),
-]
+# No POWER spot corrections remain: the only entry was a `notes`
+# verbatim-prose fix, dropped along with the `notes` field itself by the
+# terminal `destructure_notes.py` stage (D&H prose is not reproduced).
+POWER_CORRECTIONS: list[tuple[str, str, str, object, str]] = []
 
 
 AMARNA_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
-    (
-        "[...]18A–H",
-        "The Amarna Interlude",
-        "notes",
-        "Daughters of Amenhotep III, shown in the tomb of Kheruef "
-        "(TT192; see p. 30); some may be identical with named "
-        "daughters.",
-        "Majority-voted notes retained an editorial tail ('Group entry "
-        "covering multiple daughters.') added by agent-a that is not in "
-        "D&H's prose on p. 157. `notes` is a verbatim-quotation field; "
-        "the tail is stripped.",
-    ),
-    (
-        "[...]18K–N",
-        "The Amarna Interlude",
-        "notes",
-        "Daughters of Anen; depicted with their siblings in tomb TT120.",
-        "Majority-voted notes retained the same 'Group entry covering "
-        "multiple daughters.' editorial tail added by agent-a. Stripped "
-        "for verbatim fidelity to D&H p. 157.",
-    ),
-    (
-        "Tey",
-        "The Amarna Interlude",
-        "notes",
-        "Wife of Ay A and 'nurse' (= stepmother?) of Nefertiti; shown "
-        "with her husband in his tomb at Amarna and later became his "
-        "queen. As such, she is depicted with Ay in his royal tomb in "
-        "the Valley of the Kings (WV23) and in the rock-chapel of Min "
-        "at Akhmim. If she were the mother of Nakhtmin B, she will also "
-        "have held the title of Adorer of Min.",
-        "Majority-voted notes retained agent-a's editorial tail 'D&H "
-        "writes the role code KGW twice in the parenthetical; treated "
-        "as a single role per extraction rules.' That is meta-commentary "
-        "about the extraction, not D&H prose. Stripped. The KGW "
-        "deduplication itself is correct (see roles field).",
-    ),
+    # Three `notes` verbatim-prose corrections (group entries [...]18A–H,
+    # [...]18K–N, and Tey) were removed: the `notes` field they fixed is
+    # dropped wholesale by the terminal `destructure_notes.py` stage, so
+    # writing it here would re-introduce D&H prose on a fix_rows re-run.
     (
         "Thutmose B",
         "The Amarna Interlude",
@@ -362,17 +306,10 @@ OFKINGSANDPRIESTS_CORRECTIONS: list[tuple[str, str, str, object, str]] = [
         "(relation-tokens are D&H's annotation of kinship roles; Phase A "
         "owns the role-code glossary including these).",
     ),
-    (
-        "Henttawy Q",
-        "Of Kings and Priests",
-        "notes",
-        "Wife of Pinudjem I, mother of Pasebkhanut I, Maatkare A, and one or more of Masaharta B, Djedkhonsiufankh I or Menkheperre B, and probably daughter of Ramesses XI; name written in full is Duahathor-Henttawy. A goblet from tomb NRTIII at Tanis, a scene on the pylon of the Khonsu temple at Karnak and a lintel refer to her in the period before her husband's assumption of royal titles. Nevertheless, these sources give Henttawy a number of queenly titles, as well as that of King's Daughter and the cartouche to which she was entitled by virtue of that status. To the subsequent phase of her career date a stela from Koptos, a dedication inscription in the temple of Mut at Karnak, a scene on the façade of the Khonsu temple at Karnak, and a number of inscribed items from the tomb of her son at Tanis. Her funerary papyrus, mummy and coffins were found in tomb TT320 and are now in the Cairo Museum.",
-        "Companion to the roles correction above. Strip the leading sentence "
-        "`Daughter of: KGW; Mother of: KGW, HPA & Genmo.` that all three "
-        "agents absorbed into notes — that text is the role-parenthetical "
-        "content, not D&H's prose. The true prose paragraph begins at "
-        "`Wife of Pinudjem I, mother of Pasebkhanut I...`.",
-    ),
+    # The Henttawy Q `notes` correction (companion to the roles fix below)
+    # was removed: `notes` is dropped by `destructure_notes.py`. The full
+    # name "Duahathor-Henttawy" that it mentioned already lives in
+    # `alt_names`, so no matchable fact is lost.
     (
         "Maatkare A",
         "Of Kings and Priests",
@@ -680,7 +617,7 @@ def backfill_is_group_entry(rows: list[dict]) -> list[str]:
 
 
 def main() -> None:
-    rows = [json.loads(line) for line in RECONCILED.read_text().splitlines() if line.strip()]
+    rows = [json.loads(line) for line in RECONCILED.read_text(encoding="utf-8").splitlines() if line.strip()]
 
     # Schema-shape backfills first — every row gains the new typed
     # `is_group_entry` field BEFORE SPOT_CORRECTIONS runs. Patterned
@@ -728,10 +665,11 @@ def main() -> None:
         "\n".join(
             json.dumps(r, ensure_ascii=False, sort_keys=True) for r in rows
         )
-        + "\n"
+        + "\n",
+        encoding="utf-8",
     )
 
-    existing_diff = DIFF.read_text()
+    existing_diff = DIFF.read_text(encoding="utf-8")
     marker = _OVERRIDES_MARKER
     # Strip the previous LLM-APPLIED OVERRIDES section in-place so the
     # rewritten section replaces (not duplicates) it. Use the bare marker
@@ -784,7 +722,7 @@ def main() -> None:
         "provisional until that happens.\n\n"
         f"{body}\n"
     )
-    DIFF.write_text(appended)
+    DIFF.write_text(appended, encoding="utf-8")
 
     print(f"Applied {applied_count} override(s) this run ({len(override_log)} total in log).")
     print(f"Updated {RECONCILED.relative_to(RECONCILED.parents[4])}")
