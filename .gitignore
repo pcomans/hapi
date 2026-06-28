@@ -75,3 +75,6 @@ tsdata/
 .coverage
 htmlcov/
 coverage/
+
+# Local-only working notes (not for publication)
+docs/PUBLISH-READINESS.md
