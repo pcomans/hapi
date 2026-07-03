@@ -124,6 +124,18 @@
            separate case where E55 Type instances ARE used as P141
            values.
 
+       One spec-mandated entailment to be aware of: the CIDOC RDFS declares
+       P177_assigned_property_of_type rdfs:subPropertyOf P2_has_type
+       (cidoc_crm_v7.1.3.rdf, P177), so under RDFS reasoning every E13's
+       P177 edge is ALSO a P2_has_type edge — the P177-target URI ends up
+       classifying the Statement node itself ("this E13 is of kind
+       hapi:horus_name"). This holds for ANY URI used as a P177 target,
+       with or without punning, and with or without this manifest loaded
+       (the entailment comes from the CIDOC RDFS, not from Hapi). It is
+       harmless and yields a free query idiom — "all Statements of kind X"
+       is a native P2 query. Documented here so it is not mistaken for an
+       export bug.
+
        The DERIVED / query-only predicate hapi:shares_tomb_with is a
        documented exception: it is NEVER a P177 target in the persisted
        graph (the loader REJECTS direct E13 assertions of it), it appears
