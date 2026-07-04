@@ -105,6 +105,8 @@ Your launch-prompt per agent should include:
 - Expected row count as a sanity bound ("if above X or below Y, re-read the prompt").
 - A one-sentence report format: row count + any anomalies. Under 80 words.
 
+**Row-schema design note (hard-learned on Beckerath):** if the source's tables interleave structurally different row kinds — king rows plus dynasty-header rows carrying their own scholarship (date ranges, king counts, concurrency notes) — give each kind an **explicit record type in the extraction schema** (e.g. a `record_kind: 'king' | 'dynasty_entry'` discriminator with kind-specific fields), rather than one king-shaped schema with a boolean flag. Beckerath's 8 `is_dynasty_marker: true` rows work (the flag routes deterministically at load time, per ADR-018's marker-row loader rule) but carry meaningless king fields (`is_anti_king: false` on a dynasty header); typed records avoid that from the start. Do not reshape already-reviewed sources retroactively — this note binds future sources only.
+
 ## Step 5 — deterministic merge
 
 You can either run the merge yourself (the canonical path described below), or delegate to the **`reconciliation-agent`** subagent (`.claude/agents/reconciliation-agent.md`) to drive the `merge.py` + `fix_rows.py` pipeline end-to-end and return a tight summary. The agent is useful when the per-tomb tie output would otherwise flood the parent's context (chunk-9 PR #196 spent ~30% of orchestration on disagreement-classification that the agent could have handled). The agent does not make scholarly calls — those still come back to the parent for the egyptologist pass.

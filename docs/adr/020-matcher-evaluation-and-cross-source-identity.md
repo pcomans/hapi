@@ -222,7 +222,20 @@ the ratified design).
   committed sources spell one throne name `Chnem-ib-rê` (Beckerath) vs `khnum ib ra`
   (Leprohon), so without a committed cross-convention normalization table the
   promoted "structured signal" silently inherits the very surface-string-matching
-  problem (ADR-009) it was meant to escape. *(Spec follow-up: that normalization
+  problem (ADR-009) it was meant to escape. Two further constraints on the
+  match predicate are **fixed here as policy** — both forced by the committed
+  data: (i) **the normalization table and the matcher bind to the structured
+  titulary fields** (`prenomens[]`, `throne_names[]` and their per-variant
+  entries), never to scalar display fields — Kitchen's scalar `prenomen` for
+  Piankhy is the literal string `"Usimare, then Sneferre"`, a rendering for
+  human readers, not a name; a matcher fed display fields compares garbage.
+  (ii) **The prenomen/Horus match is set-valued**: two records corroborate when
+  their normalized *attested-variant sets intersect*, never by comparing one
+  designated name per record — kings hold multiple prenomina over a lifetime
+  (Piankhy carries `Usimare` then `Sneferre` in Kitchen, plus a variant
+  `men kheper ra` in Leprohon), so a scalar comparator would *anti*-corroborate
+  true matches and silently depress recall through the escalation path.
+  *(Spec follow-up: that normalization
   table, plus the prenomen/Horus-match predicate and a committed homonym exception
   list — see decision 3 — for the cases where one prenomen is shared across distinct
   kings: Menkheperre, Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.)*
