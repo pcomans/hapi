@@ -76,6 +76,7 @@ EXPECTED_TYPING: dict[str, tuple[str, frozenset[str]]] = {
     "#verdict_approved": (RDF_DESCRIPTION, frozenset({E55_TYPE})),
     "#verdict_rejected": (RDF_DESCRIPTION, frozenset({E55_TYPE})),
     "#verdict_retracted": (RDF_DESCRIPTION, frozenset({E55_TYPE})),
+    "#verdict_escalated": (RDF_DESCRIPTION, frozenset({E55_TYPE})),
 }
 
 # Inventory is derived from the typing matrix — single source of truth (Rule 4).

@@ -28,13 +28,14 @@
             rdfs:range but cannot interpret the predicate through any
             CRM/CRMdig term, because none is declared.
         (c) Controlled-vocabulary E55 Type instances
-            (hapi:verdict_approved, hapi:verdict_rejected, hapi:verdict_retracted —
+            (hapi:verdict_approved, hapi:verdict_rejected, hapi:verdict_retracted,
+            hapi:verdict_escalated —
             declared via &lt;rdf:Description&gt;&lt;rdf:type rdf:resource="...E55_Type"/&gt;).
             These are NOT predicates and NOT free-standing project vocabulary
             without a CIDOC parent — they are CIDOC vocabulary INSTANCES,
             typed directly under CIDOC's E55 Type class. They are P141 values
             (not P177 targets, not relation predicates), used as the closed
-            three-term verdict-outcome vocabulary on hapi:matcher_review_verdict
+            four-term verdict-outcome vocabulary on hapi:matcher_review_verdict
             E13s. CIDOC-interpretable as instances of E55 Type via their
             explicit rdf:type assertion.
 
@@ -272,7 +273,7 @@
   <rdf:Property rdf:about="#matcher_review_verdict">
     <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
     <rdfs:label xml:lang="en">matcher review verdict</rdfs:label>
-    <rdfs:comment xml:lang="en">The P177-target predicate type for a stage-2 reviewer's verdict on a stage-1 matcher's E13. The verdict-E13's P140 subject is itself an E13 (the matcher's claim); its P141 value is an :E55 Type drawn from the small vocabulary {hapi:verdict_approved, hapi:verdict_rejected, hapi:verdict_retracted} — each formally declared as an :E55 Type instance below, NOT a magic string. Free-standing rather than declared as rdfs:subPropertyOf crmdig:L43_annotates because L43_annotates's rdfs:domain is D29 Annotation Object — our verdict-E13 is an E13 Attribute Assignment, not a D29; declaring subPropertyOf would escape L43's domain (a "narrow not violate" rule violation). The conceptual affinity to L43_annotates (and to the broader CRMdig annotation pattern — D29 Annotation Object is subClassOf E89 Propositional Object; D30 Annotation Event is subClassOf E65 Creation; both parents are core CRM, no CRMsci dependency) IS recorded in the predicate registry as a documentation-only `crm_nearest` annotation, exclusively for human readers and tooling. The CRMdig consumed-subset (D1, D7, D10, D14 + L10, L11, L23, L54) is NOT expanded by this annotation; D29/D30/L43 remain documentation-level references only. Also typed as crm:E55_Type per the punning rule. See ADR-018 schema sketch case 4b.</rdfs:comment>
+    <rdfs:comment xml:lang="en">The P177-target predicate type for a reviewer's verdict on a stage-1 matcher's E13. The verdict-E13's P140 subject is itself an E13 (the matcher's claim); its P141 value is an :E55 Type drawn from the closed vocabulary {hapi:verdict_approved, hapi:verdict_rejected, hapi:verdict_retracted, hapi:verdict_escalated} — each formally declared as an :E55 Type instance below, NOT a magic string. **Verdict statements are additionally typed E17 Type Assignment** (core CRM; E17 is subClassOf E13, verified in the vendored RDFS): a verdict is precisely a dated, attributed act of classifying another entity — the matcher's E13 — with a term from a closed vocabulary, and CIDOC's own P42 example (two experts assigning conflicting types to the same vase fragment) is the exact structure of the supersession chain. The E17 view costs nothing structurally: P41_classified is rdfs:subPropertyOf P140_assigned_attribute_to (range E1; the matcher's E13 qualifies via E13 ⊂ E1) and P42_assigned is rdfs:subPropertyOf P141_assigned (range E55) — both verified in cidoc_crm_v7.1.3.rdf — so the uniform P140/P141 spine holds by RDFS entailment from the E17-specific edges, and strict readers interpret verdicts natively as Type Assignments with no Hapi vocabulary needed. The absence of a materialised P2 shortcut (emit_shortcut: false on this predicate) aligns with CRM shortcut discipline: P2 has type is the spec's declared shortcut of the P41i/E17/P42 path, and Hapi deliberately keeps the reified form only. Also typed as crm:E55_Type per the punning rule. See ADR-018 schema sketch case 4b.</rdfs:comment>
   </rdf:Property>
 
   <rdf:Property rdf:about="#supersedes">
@@ -284,11 +285,13 @@
 
   <!-- ============================================================
        Verdict-outcome controlled vocabulary
-       Closed three-term :E55 Type vocabulary used as P141 values on
-       hapi:matcher_review_verdict E13s. The loader REJECTS verdict-E13s
-       whose P141 isn't one of these three formally-declared instances.
+       Closed four-term :E55 Type vocabulary used as P141 values on
+       hapi:matcher_review_verdict E13s (E17-typed; see the
+       matcher_review_verdict comment above). The loader REJECTS
+       verdict-E13s whose P141 isn't one of these four formally-declared
+       instances.
 
-       These three are pure :E55 Type instances (vocabulary values), NOT
+       These four are pure :E55 Type instances (vocabulary values), NOT
        predicates — they don't carry rdf:Property typing, only crm:E55_Type.
        ============================================================ -->
 
@@ -302,6 +305,12 @@
     <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
     <rdfs:label xml:lang="en">reviewer rejected</rdfs:label>
     <rdfs:comment xml:lang="en">Verdict-outcome :E55 Type. Used as P141 value on a verdict-E13 to record that the LLM reviewer rejected the matcher's candidate. No shortcut emission. The matcher's E13 stays in the graph as a candidate-claim record; the verdict is the authoritative reason it isn't materialised.</rdfs:comment>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="#verdict_escalated">
+    <rdf:type rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E55_Type"/>
+    <rdfs:label xml:lang="en">reviewer escalated to human</rdfs:label>
+    <rdfs:comment xml:lang="en">Verdict-outcome :E55 Type. Used as P141 value on a verdict-E13 to record that the reviewer examined the matcher's candidate and is ON RECORD referring it to a human — a dated, attributed act of deferral, structurally distinct from the ABSENCE of a verdict ("pending" = nobody has looked yet; "escalated" = looked and deliberately routed to the curator queue). This makes the escalation queue rebuildable from the graph alone: queue membership = matcher-claims whose chain tip has P141 = hapi:verdict_escalated. NO shortcut emission (tip-outcome != hapi:verdict_approved). The resolving human verdict (ADR-020 curator shape: P14 + P70i) supersedes the escalated verdict as a normal chain successor. Per ADR-020 §6: doubt routes to escalation, never to a guess and never to a silent drop.</rdfs:comment>
   </rdf:Description>
 
   <rdf:Description rdf:about="#verdict_retracted">
