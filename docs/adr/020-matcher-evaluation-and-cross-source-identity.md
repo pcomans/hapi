@@ -98,13 +98,32 @@ Priest Menkheperre; and **Necho I** (Dyn 24/26, prenomen `Menkheperre` in Kitche
 whom Beckerath gives `Men-cheper-rê (?)` — flagged uncertain; and **Piye**, to whom
 Leprohon assigns Menkheperre while Kitchen lists Piankhy's prenomens as
 `Usimare`/`Sneferre` and does not record Menkheperre for him — the sources do not agree
-he carried it) — the contestation is itself part of what the universe must represent; **Nebmaatre**
+he carried it) — the contestation is itself part of what the universe must represent.
+**The two contested attributions are not independent: both hinge on one object, Stela
+Louvre C100** — Leprohon's `men kheper ra` for Piye is a variant throne name from that
+stela, whose attribution Jansen-Winkeln gives "with some hesitation" to King Iny, per
+Leprohon's own source note. **When contested cases share an evidentiary basis, the gold
+set's per-class provenance must cite the shared object and document the classes as
+linked** — classes that stand or fall together must not be scoreable as independent
+successes, or a matcher can pass one and fail the other with nobody noticing they rest
+on the same disputed reading. Louvre C100 is the worked example; **Nebmaatre**
 (Amenhotep III / Ramesses VI, plus a standalone king *Nebmaatre* attested in the
 committed data — at least three-way); the **Usermaatre** cluster (Ramesses II plus
 several TIP kings); the **Sekhemre-\*** compounds (Dynasty 13/16/17); and same-name
 father/son, grandfather/grandson, and predecessor/successor runs (Pinedjem I/II —
 grandfather/grandson via Menkheperre, *not* father/son — Osorkon I–IV, Takelot I–III,
-Sobekhotep I–VIII). **Symmetrically, the universe must also seed known hard
+Sobekhotep I–VIII); and — a structurally distinct trap *kind* — **traditional-name vs
+archaeological-name identity**: Beckerath opens Dynasty 1 with a row named `Menes`
+(the Manethonian tradition-name, sequence 1), while Leprohon carries `Narmer` and
+`Aha` as *separate* rows, and Leprohon's own Narmer source note records the
+century-old dispute over which archaeological king Menes is ("Narmer is possibly the
+King Menes … although some scholars equate the Horus Aha with Menes"). Verified in
+the committed data. Unlike the homonym traps (one prenomen, many kings), this is one
+tradition-name contested between two archaeological kings, and there is no
+gold-positive answer: **the fixture must assert that the matcher escalates Beckerath's
+Menes rather than linking it to either candidate** — the canonical case where the
+correct output is a refusal, exercising the doubt → escalation policy of decision 6
+end-to-end. **Symmetrically, the universe must also seed known hard
 *positives*** — cross-convention / cross-numeral true matches (Leprohon "Ahmose III"
 ↔ Beckerath "Amosis II."; "Tuthmosis III." ↔ "Thutmose III"; dynasty-divergent TIP
 pairs such as Takelot III) — or end-to-end *recall* is measured on easy links and
@@ -222,7 +241,20 @@ the ratified design).
   committed sources spell one throne name `Chnem-ib-rê` (Beckerath) vs `khnum ib ra`
   (Leprohon), so without a committed cross-convention normalization table the
   promoted "structured signal" silently inherits the very surface-string-matching
-  problem (ADR-009) it was meant to escape. *(Spec follow-up: that normalization
+  problem (ADR-009) it was meant to escape. Two further constraints on the
+  match predicate are **fixed here as policy** — both forced by the committed
+  data: (i) **the normalization table and the matcher bind to the structured
+  titulary fields** (`prenomens[]`, `throne_names[]` and their per-variant
+  entries), never to scalar display fields — Kitchen's scalar `prenomen` for
+  Piankhy is the literal string `"Usimare, then Sneferre"`, a rendering for
+  human readers, not a name; a matcher fed display fields compares garbage.
+  (ii) **The prenomen/Horus match is set-valued**: two records corroborate when
+  their normalized *attested-variant sets intersect*, never by comparing one
+  designated name per record — kings hold multiple prenomina over a lifetime
+  (Piankhy carries `Usimare` then `Sneferre` in Kitchen, plus a variant
+  `men kheper ra` in Leprohon), so a scalar comparator would *anti*-corroborate
+  true matches and silently depress recall through the escalation path.
+  *(Spec follow-up: that normalization
   table, plus the prenomen/Horus-match predicate and a committed homonym exception
   list — see decision 3 — for the cases where one prenomen is shared across distinct
   kings: Menkheperre, Nebmaatre, the Usermaatre cluster, the Sekhemre-\* compounds.)*
