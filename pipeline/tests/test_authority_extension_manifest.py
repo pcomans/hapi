@@ -193,10 +193,8 @@ class TestManifestTermResolution:
             "#SourceData": CRMDIG_PREFIX + "D1_Digital_Object",
             "#derived_by_run": CRM_PREFIX + "P15_was_influenced_by",
             "#same_entity_as": CRMDIG_PREFIX + "L54_is_same_as",
-            "#original_burial_in": CRM_PREFIX
-            + "P53_has_former_or_current_location",
-            "#cache_context_at": CRM_PREFIX
-            + "P53_has_former_or_current_location",
+            "#original_burial_in": CRM_PREFIX + "P53_has_former_or_current_location",
+            "#cache_context_at": CRM_PREFIX + "P53_has_former_or_current_location",
         }
         for term, parent in expected_parents.items():
             declared = {
