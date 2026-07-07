@@ -1,0 +1,17 @@
+/node_modules
+/.next
+/out
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+.DS_Store
+.env
+.env*.local
+
+bld.log
+srv.log
+# NOTE: data/*.reviewer-run.jsonl is deliberately NOT ignored. It is the full LLM
+# interaction (prompt + raw response + model snapshot) behind every approved link and is
+# committed as the replayable provenance record (Constitutional Rule 13). Only the
+# transient resume cache below is ignored.
+data/*.verdict-cache.jsonl
