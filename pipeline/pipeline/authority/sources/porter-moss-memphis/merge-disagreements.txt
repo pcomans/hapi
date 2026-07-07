@@ -2665,3 +2665,10 @@ Reviewer-cited row corrections:
   DAH-Siesi.cemetery: "South of Enclosure of Amenemḥet II" → "South of Enclosure of Amenemḥēt II"
   DAH-SnefruNorthernComplex.tomb_aliases: [] → ["Red Pyramid", "Lepsius XLIX"]
   DAH-SnefruSouthernComplex.tomb_aliases: [] → ["Bent Pyramid", "Blunted Pyramid", "False Pyramid", "Rhomboidal Pyramid", "Lepsius LVI"]
+
+Chunk 36 (Abûsîr, PM III.1) reviewer-cited row corrections:
+  ABU-ChildrenOfPtahshepses.shared_with_tombs: [] → ["ABU-Ptahshepses"]
+  ABU-HarshefhotpI.occupant_name: "Ḥarshefḥotp I" → "Ḥarshefḥotp [I]"
+  ABU-HarshefhotpII.occupant_name: "Ḥarshefḥotp II" → "Ḥarshefḥotp [II]"
+  ABU-Ptahshepses.shared_with_tombs: [] → ["ABU-ChildrenOfPtahshepses"]
+  ABU-Werirni.occupant_alt_names: ["Kanufer"] → ["Kanūfer"]

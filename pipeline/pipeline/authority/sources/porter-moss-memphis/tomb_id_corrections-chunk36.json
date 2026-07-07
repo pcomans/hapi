@@ -1,0 +1,23 @@
+{
+  "_doc": "Pre-merge tomb_id corrections for chunk-36 (PM III.1 2nd ed. 1974, Pyramid-field of Abusir: Sun-temple (§I), Pyramids A-D (§II), and Necropolis Middle-Kingdom shaft-tombs east of the Pyramid of Neuserre< (§III), printed pp.324-350, phys pp.351-378). One divergence class: Agent B systematically disambiguated the Middle-Kingdom shaft-tomb headwords in the Neuserre< necropolis (Schafer, Priestergraber ... vom Totentempel des Ne-user-re) using the excavator's mR-number (mR6, mR8, mR11, mR13) appended to the tomb_id, where Agents A and C used PM's own printed disambiguator instead: for the two HARSHEFHOTP entries PM itself prints bracketed Roman ordinals '[I]'/'[II]' after the headword (p.346 mR6, p.347 mR8), so the ordinal-suffixed tomb_id is source-faithful and is also the 2/3 form. For the mR11 (INHOTP) and mR13 (NAKHT) entries, PM prints no disambiguator at all -- these coffin-fragment headwords are bare single-word headwords in their own right (p.347); the co-occurring INHOTP and NAKHTI named at mR1 (p.345, headword INEMAKHET) are body-text co-occupants of a joint four-coffin burial, not separate top-level headwords, so they never populate a competing tomb_id row and no mR-suffix disambiguation is needed. Agent B's mR-suffixed forms are corrected to the bare/ordinal 2/3-majority forms. In all four cases Agent B's own occupant_name field already carried the canonical value, so canonical_occupant_name here is a no-op (just satisfies pre_merge.py's required-keys schema) -- only tomb_id (the merge row-key) changes.",
+  "b|ABU-HarshefhotpmR6": {
+    "canonical_tomb_id": "ABU-HarshefhotpI",
+    "canonical_occupant_name": "Ḥarshefḥotp I",
+    "rationale": "Agent B keyed this row on the excavator's Schäfer mR-number, producing ABU-HarshefhotpmR6. PM III.1 2nd ed. 1974 printed p.346 headword reads 'ḤARSHEFḤOTP [I], Regulator of a phyle and Chief of estate of the Pyramid of Neuserreꜥ' -- PM's own disambiguator is the bracketed Roman ordinal '[I]', not the mR-number (mR 6 is cited only as a tomb_alias/cross-reference in the entry body). Agents A and C both emitted ABU-HarshefhotpI (2/3 canonical, source-faithful form)."
+  },
+  "b|ABU-HarshefhotpmR8": {
+    "canonical_tomb_id": "ABU-HarshefhotpII",
+    "canonical_occupant_name": "Ḥarshefḥotp II",
+    "rationale": "Agent B keyed this row on the excavator's Schäfer mR-number, producing ABU-HarshefhotpmR8. PM III.1 2nd ed. 1974 printed p.347 headword reads 'ḤARSHEFḤOTP [II], Regulator of a phyle and Chief of estate of the Pyramid of Neuserreꜥ' -- PM's own disambiguator is the bracketed Roman ordinal '[II]'. Agents A and C both emitted ABU-HarshefhotpII (2/3 canonical, source-faithful form)."
+  },
+  "b|ABU-InhotpmR11": {
+    "canonical_tomb_id": "ABU-Inhotp",
+    "canonical_occupant_name": "Inḥotp",
+    "rationale": "Agent B appended the excavator mR-number, producing ABU-InhotpmR11. PM III.1 2nd ed. 1974 printed p.347 reads 'mR 11. Middle Kingdom. Fragments of coffin of Inḥotp, wood' -- PM gives no bracketed ordinal or other disambiguator for this headword (unlike the ḤARSHEFḤOTP [I]/[II] pair). The only other 'Inḥotp' in the chunk is the co-occupant named inside the mR1/ABU-Inemakhet joint four-coffin burial (p.345); that mention is a body-text co-occupant of a different tomb's headword, not a competing top-level headword, so no mR-suffix disambiguation is required. Agents A and C both emitted the bare ABU-Inhotp (2/3 canonical form)."
+  },
+  "b|ABU-NakhtmR13": {
+    "canonical_tomb_id": "ABU-Nakht",
+    "canonical_occupant_name": "Nakht",
+    "rationale": "Agent B appended the excavator mR-number, producing ABU-NakhtmR13. PM III.1 2nd ed. 1974 printed p.347 reads 'mR 13. Middle Kingdom. Fragments of coffin of Nakht (woman), wood' -- PM gives no bracketed ordinal or other disambiguator. The only other 'Nakht'-family name in the chunk is 'Nakhti', the co-occupant named inside the mR1/ABU-Inemakhet joint four-coffin burial (p.345); that is a body-text co-occupant of a different tomb's headword (and a distinct spelling, Nakhti vs Nakht), not a competing top-level headword, so no mR-suffix disambiguation is required. Agents A and C both emitted the bare ABU-Nakht (2/3 canonical form)."
+  }
+}

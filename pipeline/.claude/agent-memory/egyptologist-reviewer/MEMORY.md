@@ -2,3 +2,5 @@
 - [Project: Beckerath 1997 extraction](project_beckerath_1997.md) — reviewer pass complete; fix_rows.py written; 15 overrides across 13 rows
 - [Feedback: French vs anglicized filiation names](feedback_filiation_name_consistency.md) — Baud uses French king names (Rêkhaef, Snéfrou, Pépi Iᵉʳ); preserve in filiation fields, don't silently anglicize
 - [Feedback: hedge preservation priority](feedback_hedge_preservation.md) — Baud's hedges ("(?)", "probable", "per Baud") are load-bearing; flag any stripped hedge
+- [Project: PM Memphis Abûsîr (chunk-36)](project_pm_memphis_abusir.md) — ABU- rows 850-877; prompt-induced ayin-codepoint + macron regression to watch for in future chunks
+- [Feedback: PM headword typography](feedback_pm_headword_typography.md) — caps = tomb headword (emit); normal-case under Statues/Blocks/False-doors = find-object (exclude)

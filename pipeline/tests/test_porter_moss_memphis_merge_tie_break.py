@@ -452,6 +452,19 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
       Wife-<Hathor/Neith>-clause rows in the second half, G 4761
       Nufer [I] three-co-occupant Probably-parent-pair-plus-wife).
 
+    - Chunk 36 (PYRAMID-FIELD OF ABÛSÎR, PM III.1 printed pp.324–350): 24
+      overrides, all `notes_from_pm` (one per row). The ties are 1/1/1 over
+      clause-ordering, excavator-attribution phrasing (`mR N (Schäfer)` vs
+      `Excavator tomb mR N`), and retained findspot/Lepsius-number detail.
+      Resolved as strict single-agent picks — the more PM-faithful form
+      (avoiding agent editorial scaffolding); some notes are further
+      normalised post-merge by fix_rows (ayin U+A725→U+02BF, Rēʿ-name
+      macrons, and the ABU-Abahem father-name Ḳiredebʿakh per egyptologist
+      findings C2/C3/C4). The 4 Dyn-VI/FIP false-door rows the merge had
+      included by 2/3 majority were removed per finding C1, dropping their
+      5 overrides (incl. the only occupant_alt_names override, on
+      ABU-Khuenkhnum) — see chunk36-scope-exclusions.json.
+
     Constitutional rule 2: every tie-break has a documented printed-source
     citation; no first-seen-pick, no `Counter.most_common(1)[0]`-on-tie
     silent resolution. This test fails loud when a new chunk adds an
@@ -1168,6 +1181,36 @@ def test_tie_break_overrides_contains_documented_chunks(merge_module):
         ("DAH-Siesi", "notes_from_pm"),
         ("DAH-Siesi", "tomb_aliases"),
         ("DAH-Thenti", "notes_from_pm"),
+        # Chunk 36 — PYRAMID-FIELD OF ABÛSÎR (PM III.1 printed pp.324–350).
+        # 24 overrides, all notes_from_pm.
+        # (The 4 Dyn-VI/FIP false-door rows the merge included by majority
+        # were removed per egyptologist finding C1, dropping their 5
+        # overrides incl. the sole occupant_alt_names override on
+        # ABU-Khuenkhnum — see chunk36-scope-exclusions.json.)
+        ("ABU-Abahem", "notes_from_pm"),
+        ("ABU-ChildrenOfPtahshepses", "notes_from_pm"),
+        ("ABU-HarshefhotpII", "notes_from_pm"),
+        ("ABU-HarshefhotpI", "notes_from_pm"),
+        ("ABU-Impy", "notes_from_pm"),
+        ("ABU-Imp", "notes_from_pm"),
+        ("ABU-Inemakhet", "notes_from_pm"),
+        ("ABU-Inemsaf", "notes_from_pm"),
+        ("ABU-Inhotpi", "notes_from_pm"),
+        ("ABU-Inhotp", "notes_from_pm"),
+        ("ABU-Ipisaf", "notes_from_pm"),
+        ("ABU-Khethap", "notes_from_pm"),
+        ("ABU-Mereri", "notes_from_pm"),
+        ("ABU-Nakht", "notes_from_pm"),
+        ("ABU-Neferirkare", "notes_from_pm"),
+        ("ABU-Neuserre", "notes_from_pm"),
+        ("ABU-Ptahshepses", "notes_from_pm"),
+        ("ABU-Raneferef", "notes_from_pm"),
+        ("ABU-Sahure", "notes_from_pm"),
+        ("ABU-Sitnufer", "notes_from_pm"),
+        ("ABU-SunTempleUserkaf", "notes_from_pm"),
+        ("ABU-Tepemankh", "notes_from_pm"),
+        ("ABU-Userkafankh", "notes_from_pm"),
+        ("ABU-Werirni", "notes_from_pm"),
     }
 
     g7000x = overrides[("G7000x", "notes_from_pm")]

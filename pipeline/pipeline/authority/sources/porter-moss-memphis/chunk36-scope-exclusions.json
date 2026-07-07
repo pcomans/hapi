@@ -1,0 +1,25 @@
+{
+  "_doc": "Post-review scope exclusions for chunk-36 (PYRAMID-FIELD OF ABÛSÎR, PM III.1 printed pp.324-350). The 3-agent extraction surfaced a genuine scope disagreement on the '§ III.A DYNASTY VI AND FIRST INTERMEDIATE PERIOD TOMBS' group: agents B+C emitted 4 rows for names under the 'False-doors.' object sub-block; agent A excluded them. The 2/3 majority vote INCLUDED them, but the egyptologist-reviewer pass (2026-07-04, verified against rendered PM III.1 p.345) ruled them OUT: on p.345 these names appear in normal upper-lower case carrying Schäfer find-numbers [17]-[20], continuing the 'Blocks, etc.' object sequence [10]-[16] whose names (Sienptaḥ, Shededu-isi, Kairi) the extraction ALREADY correctly excluded. The whole Dyn-VI/FIP group is destroyed-superstructure object dumps with ZERO caps tomb-owner headwords. Agent A was correct; majority was wrong (a reminder that PM typography/object-numbering overrides agent headcount). Per this ruling the 4 rows were removed from the agent-b and agent-c chunk-36 raw JSONLs and their tie-break-overrides.json entries deleted, so the merge deterministically yields 24 rows. This file is the committed audit trail for that removal (raw/ is gitignored). Egyptologist finding C1; cite PM III.1 2nd ed. 1974 printed p.345.",
+  "excluded_tomb_ids": [
+    "ABU-Ipi",
+    "ABU-Sitimp",
+    "ABU-Khuenkhnum",
+    "ABU-Seshemntifer"
+  ],
+  "removed_override_keys": [
+    "ABU-Ipi|notes_from_pm",
+    "ABU-Sitimp|notes_from_pm",
+    "ABU-Khuenkhnum|notes_from_pm",
+    "ABU-Khuenkhnum|occupant_alt_names",
+    "ABU-Seshemntifer|notes_from_pm"
+  ],
+  "co_occupant_exclusions": [
+    {
+      "row": "ABU-ChildrenOfPtahshepses",
+      "excluded_co_occupant": "Khaʿmerernebti",
+      "pm_text": "PM (printed p.342) lists false-doors of THREE people in this tomb — Khaʿmerernebti, Mertiotes, and Kaḥotp — but `co_occupants` intentionally carries only Mertiotes and Kaḥotp.",
+      "rationale": "Khaʿmerernebti is the wife of Ptaḥshepses and the mother named in this tomb's title ('Children of Ptaḥshepses and Khaʿmerernebti', see-preceding-tomb). Her false-door here is dedicatory / cult-provision, not evidence of her burial in this mastaba: she is recorded as the co-occupant of the ADJACENT ABU-Ptahshepses mastaba (`ABU-Ptahshepses.co_occupants = [\"Khaʿmerernebti\"]`), and the two tombs cross-reference via `shared_with_tombs`. Listing her as a buried co-occupant of BOTH tombs would double-count one burial. This is an inference beyond PM's literal false-door list, documented here per Constitutional Rule 6 (reconciled data must trace to a cited rationale, never a silent pick). Flagged by the chunk-36 Fable egyptologist-review pass, 2026-07-07; cite PM III.1 2nd ed. 1974 printed p.342.",
+      "reviewed_status": "approved_human_egyptologist_signoff_2026-07-07"
+    }
+  ]
+}

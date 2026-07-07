@@ -132,6 +132,15 @@ AREA_ORDER: dict[str, int] = {
                 # C. PYRAMID-COMPLEX OF SESOSTRIS III, etc.), so descriptor
                 # IDs synthesise `DAH-<Descriptor>` from the section
                 # heading. Sorts after all Saqqâra prefixes.
+    "ABU": 17,  # Abûsîr descriptor-form (ABU-SunTemple<King>, ABU-<King>
+                # for the Dyn-V pyramid-complexes, ABU-<Name> for the
+                # necropolis private mastabas) — PM III.1 Pyramid-field of
+                # Abûsîr (§ I Sun-temple + § II Pyramids A–D + § III
+                # Necropolis), chunk 36. Landed after re-fetching a complete
+                # PM III.1 scan (the prior scan was missing printed pp.313–359).
+                # Added as it lands, per the "extend AS THEY LAND" convention
+                # above — geographic position (Abûsîr sits between Gîza and
+                # Saqqâra) is not the sort basis; prefix-landing order is.
     # NB: chunks 15 + 17 (Cemetery en Echelon South + G 7000 East Field
     # remainder) re-use Reisner G-numbers (G 4911-G 5560 + G 7152-G 7948)
     # so no new prefix is needed there. Chunks 16 (Cemetery G 6000) and

@@ -3230,6 +3230,112 @@ CHUNK35_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
 }
 
 
+# Chunk 36 — PYRAMID-FIELD OF ABÛSÎR (PM III.1 printed pp.324–350).
+# Egyptologist-reviewer pass 2026-07-04 (verified against rendered PM III.1).
+CHUNK36_CORRECTIONS: dict[tuple[str, str], dict[str, object]] = {
+    ("ABU-HarshefhotpI", "occupant_name"): {
+        "value": "Ḥarshefḥotp [I]",
+        "rationale": (
+            "Egyptologist finding C5. PM III.1 2nd ed. 1974 printed p.346 "
+            "prints the disambiguating ordinal in brackets: `ḤARSHEFḤOTP "
+            "[I]`. The source-wide convention stores the bracketed ordinal in "
+            "occupant_name (cf. SAQ-PtahshepsesI... → `Ptaḥshepses [I]`); "
+            "agents dropped the brackets (`Ḥarshefḥotp I`). Restore `[I]`."
+        ),
+    },
+    ("ABU-HarshefhotpII", "occupant_name"): {
+        "value": "Ḥarshefḥotp [II]",
+        "rationale": (
+            "Egyptologist finding C5. PM III.1 printed p.347 prints "
+            "`ḤARSHEFḤOTP [II]`; store the bracketed ordinal per the "
+            "source-wide convention (cf. ABU-HarshefhotpI)."
+        ),
+    },
+    ("ABU-Werirni", "occupant_alt_names"): {
+        "value": ["Kanūfer"],
+        "rationale": (
+            "Egyptologist flag. PM III.1 printed p.348 prints the good-name "
+            "with a macron: `Kanūfer`. Agents dropped the macron (`Kanufer`)."
+        ),
+    },
+    ("ABU-Ptahshepses", "shared_with_tombs"): {
+        "value": ["ABU-ChildrenOfPtahshepses"],
+        "rationale": (
+            "Schema-reviewer P3. The adjacent 'Children of Ptaḥshepses and "
+            "Khaꜥmerernebti' tomb (ABU-ChildrenOfPtahshepses) cross-references "
+            "this mastaba; PM III.1 printed p.342 marks it '(see preceding "
+            "tomb)'. Propagate the cross-ref per the source-wide "
+            "shared_with_tombs convention (cf. SAQD62/SAQD64a father/son)."
+        ),
+    },
+    ("ABU-ChildrenOfPtahshepses", "shared_with_tombs"): {
+        "value": ["ABU-Ptahshepses"],
+        "rationale": (
+            "Schema-reviewer P3. This tomb's own notes read '(see preceding "
+            "tomb)' pointing back to ABU-Ptahshepses (PM III.1 printed p.342). "
+            "Propagate the reciprocal cross-ref."
+        ),
+    },
+}
+
+
+# Chunk-36 (Abûsîr) source-wide normalisations, SCOPED to `ABU-` rows so the
+# 849 signed-off chunk-1–35 rows are never touched. Applied recursively to
+# every string in an ABU row, IN ORDER (idempotent). Rationale:
+#   (a) ayin codepoint — the chunk-36 prompt mislabelled the ayin as U+02BF
+#       but pasted U+A725 (LATIN SMALL LETTER EGYPTOLOGICAL AIN); every prior
+#       chunk / the rest of this authority file uses U+02BF (MODIFIER LETTER
+#       LEFT HALF RING). Same ruler spelled two ways breaks enrich-stage name
+#       matching — egyptologist finding C2. Normalise ABU rows to U+02BF.
+#   (b) macron on the Dyn-V Rēʿ-names dropped by the noisy OCR; PM prints the
+#       macron and 100+ prior lines carry it — egyptologist finding C3.
+#       (These subs use the U+02BF ayin, so (a) MUST run first.)
+#   (c) ABU-Abahem father-name: initial glyph is Ḳ (K + underdot), not Ṣ;
+#       the reconciliation tie-pick chose the wrong reading — finding C4.
+_CHUNK36_ABU_DEEP_SUBS: list[tuple[str, str]] = [
+    ("ꜥ", "ʿ"),                    # (a) ain U+A725 → U+02BF
+    ("Neuserreʿ", "Neuserrēʿ"),              # (b) macron restore
+    ("Saḥureʿ", "Saḥurēʿ"),
+    ("Neferirkareʿ", "Neferirkarēʿ"),
+    ("Ṣiredebʿakh", "Ḳiredebʿakh"),          # (c) C4 father-name Ḳ not Ṣ
+]
+
+
+def _flatten_abu_co_occupants(row: dict) -> bool:
+    """Normalise chunk-36 `co_occupants` to the source-wide shape.
+
+    The established convention across all 237 co-occupant rows in chunks 1–35
+    is `co_occupants: list[str]` (bare names), with roles carried in the
+    parallel `co_occupant_roles: list[str]`. The chunk-36 extraction agents
+    emitted `co_occupants` as dicts (`{"name","role","alt_names"}`), which
+    would put two element shapes in one field across the authority file
+    (CLAUDE.md rule 4). Flatten each dict to its `name`; the parallel
+    `co_occupant_roles` already carries the roles (verified length- and
+    order-matched). Idempotent — a list already of strings is unchanged.
+    Returns True if the row was modified."""
+    co = row.get("co_occupants")
+    if isinstance(co, list) and any(isinstance(x, dict) for x in co):
+        row["co_occupants"] = [x["name"] if isinstance(x, dict) else x for x in co]
+        return True
+    return False
+
+
+def _apply_abu_deep_subs(value: object) -> object:
+    """Recursively apply `_CHUNK36_ABU_DEEP_SUBS` to every string in a value
+    (str / list / dict). Idempotent — each substitution's RHS does not
+    contain its LHS. Caller gates this to `ABU-` rows."""
+    if isinstance(value, str):
+        out = value
+        for src, dst in _CHUNK36_ABU_DEEP_SUBS:
+            out = out.replace(src, dst)
+        return out
+    if isinstance(value, list):
+        return [_apply_abu_deep_subs(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _apply_abu_deep_subs(v) for k, v in value.items()}
+    return value
+
+
 # Registry of all per-chunk correction dicts. New chunks add their
 # `CHUNK<N>_CORRECTIONS` constant to THIS list (single source of truth);
 # `main`'s correction loop iterates this list rather than hardcoding the
@@ -3265,6 +3371,7 @@ _ALL_CHUNK_CORRECTIONS: list[dict[tuple[str, str], dict[str, object]]] = [
     CHUNK33_CORRECTIONS,
     CHUNK34_CORRECTIONS,
     CHUNK35_CORRECTIONS,
+    CHUNK36_CORRECTIONS,
 ]
 
 # Schema-uniformity backfill: every reconciled row carries
@@ -3322,6 +3429,15 @@ def main() -> None:
         # (so that `CHUNK3_CORRECTIONS`'s `co_occupant_roles` overrides
         # treat the default as `[]`, not as absent).
         _ensure_co_occupant_roles_default(row)
+
+        # Chunk-36 (Abûsîr) ayin-codepoint + macron + father-name
+        # normalisation, scoped to ABU- rows (never touches the 849
+        # signed-off rows). Runs BEFORE the notes-OCR and per-chunk
+        # correction passes so those see the normalised strings.
+        if tid.startswith("ABU-"):
+            _flatten_abu_co_occupants(row)
+            for key in list(row.keys()):
+                row[key] = _apply_abu_deep_subs(row[key])
 
         original_notes = row.get("notes_from_pm")
         fixed_notes = _apply_ocr_fixes(original_notes)
