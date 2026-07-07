@@ -60,3 +60,16 @@ CREATE TABLE fuzzy_match_reviews (
 - The review table provides an audit trail: which matches were human-verified vs LLM-verified
 - Approved variants feed back into authority files, so the fuzzy path fires less over time
 - The same pattern works for both ruler and site matching
+
+## Scope: this is variant resolution, not cross-source identity
+
+This ADR governs resolving a raw museum string to an *already-known* authority entry via
+its committed variant array (e.g. confirming "Tuthmosis" is a spelling of Thutmose III) —
+a task for which known name variants are indeed well within LLM knowledge. It does **not**
+govern proposing that two *distinct source records* denote the same ruler. That is
+cross-source identity matching, whose stricter regime lives in
+[ADR-020](020-matcher-evaluation-and-cross-source-identity.md) §6: there, name agreement
+alone can never be LLM-approved — a name-only pair (no shared prenomen/Horus-name
+corroborator) is escalated deterministically and confirmed only by a curator attaching
+external cited evidence, because per Constitutional Rule 1 "the model knows" is not a
+source.

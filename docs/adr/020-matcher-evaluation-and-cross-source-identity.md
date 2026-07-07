@@ -286,6 +286,19 @@ the ratified design).
   regnal mismatches, and uncorroborated picks go to the human/curator queue via the
   verdict/supersession path; they do **not** become accepted links and are **not**
   silently dropped. *(Follow-up: the escalation-queue contract.)*
+- **A name-only match is confirmed by external documented evidence, never by a model
+  assertion.** When two records share only a name and have no prenomen/Horus corroborator,
+  the pair escalates (above) and may be promoted to an accepted `hapi:same_entity_as`
+  **only** by a curator attaching external, citable evidence for the identification — a
+  published scholarly equation (e.g. the Manetho Hellenised-name crosswalk behind
+  `Usaphais` = Den, `Semempses` = Semerkhet, `Sethenes` = Senedj), captured as a source on
+  disk with its citation. A model stating "these are the same" from its own memory is **not
+  admissible**: per Rule 1, "the model knows" is not a source, and a name-only approval is
+  traceable to nothing in the committed records. The claim-graph implementation therefore
+  escalates every name-only candidate **deterministically, without spending a reviewer call
+  on it** — a live reviewer's "approved" on a name-only pair could rest only on unsourced
+  world knowledge, so it is never solicited. Confirmation requires a documented source and a
+  web-search / literature check by a human, then a cited override.
 - **Ground every judgment in the full record, not the display name** — dynasty,
   reign span, prenomen/throne names, full titulary, source. Whether a model-assisted
   judgment sits *in* the decision path or only drafts cited evidence *behind a
