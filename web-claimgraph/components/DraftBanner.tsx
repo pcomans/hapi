@@ -1,5 +1,4 @@
 import { getMeta } from "@/lib/queries";
-import { modelLabel } from "@/lib/ui";
 
 /**
  * Surfaces the reviewer provenance honestly. When the graph was built with the
@@ -9,17 +8,8 @@ import { modelLabel } from "@/lib/ui";
  */
 export function DraftBanner() {
   const meta = getMeta();
-  if (meta.reviewer === "llm") {
-    return (
-      <div className="banner live">
-        <span>✓</span>
-        <div>
-          Every link was checked one at a time by <strong>{modelLabel(meta.model)}</strong>, and
-          each one carries its source citation.
-        </div>
-      </div>
-    );
-  }
+  // Live-reviewed graph: no banner. (Provenance still shown on the About page.)
+  if (meta.reviewer === "llm") return null;
   return (
     <div className="banner">
       <span>⚠</span>
