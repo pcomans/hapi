@@ -1955,5 +1955,101 @@
   "DAH-Thenti|notes_from_pm": {
     "value": "Prophet of Snefru, etc. Old Kingdom. Name and titles from lintel of doorway, MASPERO, Trois annees de fouilles [etc.] in Mem. Miss. i, p. 191 [6].",
     "rationale": "1/1/1 tie on chunk-35 DAH-Thenti notes_from_pm. PM III.2 2nd ed. 1978/1981, chunk-35 raw/chunk-35-p534-p538-dahshur-iib-c-d.txt. Source (phys p.535/printed p.895): Agent A includes `Name and titles from lintel of doorway` and [6] marker; B drops provenance; C is abbreviated. A is most complete."
+  },
+  "ABU-Abahem|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.348 (Sp 14) reads '...son of Ṣiredebꜥakh...wood, Dyn. XXVI, re-used'. Agent B's candidate misspells the patronymic as 'Ḳiredebꜥakh' (Ḳ for Ṣ), an OCR-confusion error not supported by the 2/3 agreement of Agents A and C on 'Ṣiredebꜥakh'; B is disqualified on that diacritic error. Between A and C, A additionally retains the coffin's material ('wood'), present in PM's text, which C drops. Chose Agent A's value.",
+    "value": "Late burial Sp 14; lid of anthropoid coffin of ꜥAbaḥem called ꜥAnkh-weḥebreꜥ, son of Ṣiredebꜥakh, wood, Dyn. XXVI, re-used."
+  },
+  "ABU-ChildrenOfPtahshepses|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.342 lists three named false-door occupants of the children's tomb: (a) Khaꜥmerernebti, (b) Mertiotes (King's daughter), (d) Kaḥotp (Sole companion, Lector-priest). Agent B's candidate is the only one that names all three occupants with Kaḥotp's titles; Agent A's drops Khaꜥmerernebti and Agent C's omits all three named occupants. Chose Agent B's value as the most complete and source-faithful.",
+    "value": "'Children of Ptaḥshepses and Khaꜥmerernebti' (see preceding tomb); 'Grab der Prinzessinnen'; middle or late Dyn. V; false-doors of Khaꜥmerernebti, Mertiotes (King's daughter) and Kaḥotp (Sole companion, Lector-priest); partly brick- and stone-built mastaba."
+  },
+  "ABU-HarshefhotpII|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 8. ḤARSHEFḤOTP [II]...'. Same basis as the mR 6 (ABU-HarshefhotpI) entry above: Agents A and B retain the Schäfer attribution, C drops it; chose Agent B's value for consistency of ordering convention.",
+    "value": "mR 8 (Schäfer); Ḥarshefḥotp [II], Regulator of a phyle and Chief of estate of the Pyramid of Neuserreꜥ; Middle Kingdom."
+  },
+  "ABU-HarshefhotpI|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.346, 'mR 6. ḤARSHEFḤOTP [I]...'. Agents A and B both retain the Schäfer excavator attribution present in PM's running head for this section ('quoted here as Schäfer'); Agent C drops it. Between A and B (equal in content, differing only in clause order), chose Agent B's mR-number-led phrasing, consistent with the majority ordering convention used by Agents B/C across this Middle-Kingdom-necropolis run.",
+    "value": "mR 6 (Schäfer); Ḥarshefḥotp [I], Regulator of a phyle and Chief of estate of the Pyramid of Neuserreꜥ; Middle Kingdom."
+  },
+  "ABU-Impy|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 42. IMPY, Overseer of the altar, Companion...'. Agent B retains the Schäfer excavator attribution (present in the section's running head); Agent C drops it in favour of the coffin-material detail. Chose Agent B's value for consistency with the attribution-retention basis applied across this run of mR-numbered entries.",
+    "value": "mR 42 (Schäfer); Impy, Overseer of the altar, Companion; Middle Kingdom."
+  },
+  "ABU-Imp|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 25. IMP... Model sailing-boat (with name of deceased)...'. Agent B's phrase 'name of deceased on model sailing-boat' tracks PM's parenthetical most precisely and retains the Schäfer attribution; Agent C drops the attribution. Chose Agent B's value.",
+    "value": "mR 25 (Schäfer); Imp; Middle Kingdom; name of deceased on model sailing-boat."
+  },
+  "ABU-Inemakhet|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.345, 'mR 1. INEMAKHET...' under the 'MIDDLE KINGDOM TOMBS / East of Pyramid of Neuserreꜥ / Superstructures destroyed. Brick-lined shafts...' heading. Agent B's candidate is the only one that retains all of: the Schäfer attribution, all four named coffin-occupants, and the 'brick-lined shaft east of Pyramid of Neuserreꜥ' structural fact drawn from the section heading. Chose Agent B's value as most complete.",
+    "value": "mR 1 (Schäfer); Inemakhet, Lector-priest; four coffins in the tomb — Inemakhet, Inḥotp (Inspector of prophets of the Pyramid of Iny/Neuserreꜥ), Nakhti (woman), Situbastet (woman); Middle Kingdom; brick-lined shaft east of Pyramid of Neuserreꜥ."
+  },
+  "ABU-Inemsaf|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.348, 'mR 43. INEMSAF... Rectangular coffin of deceased, wood...'. Agent B retains both the Schäfer attribution and the coffin-material fact ('rectangular wooden coffin'); Agent A has the attribution but not the material fact, Agent C has the material fact but not the attribution. Chose Agent B's value as the only one combining both.",
+    "value": "mR 43 (Schäfer); Inemsaf; Middle Kingdom; rectangular wooden coffin."
+  },
+  "ABU-Inhotpi|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 32. lNI;IOTPI..., Chief wꜥb-priest'. Agent C's candidate drops the ayin in the title, rendering 'wab-priest' instead of 'wꜥb-priest' (an OCR/diacritic-loss error). Agents A and B both render the title correctly; chose Agent B's value, which additionally retains the Schäfer excavator attribution that Agent A's candidate also has (equal there), for consistency with the attribution-led phrasing convention used across this run.",
+    "value": "mR 32 (Schäfer); Inḥotpi, Chief wꜥb-priest; Middle Kingdom; name and title from coffin."
+  },
+  "ABU-Inhotp|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 11. ... Fragments of coffin of Inḥotp, wood'. Agents A and B both retain the Schäfer attribution; Agent C drops it. Chose Agent B's value, consistent with the attribution-retention basis applied across this run.",
+    "value": "mR 11 (Schäfer); tomb of Inḥotp, known from coffin fragments; Middle Kingdom."
+  },
+  "ABU-Ipisaf|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 36. IPISAF...'. Agents A and B both retain the Schäfer attribution; Agent C drops it. Chose Agent B's value for consistency with the attribution-retention basis applied across this run.",
+    "value": "mR 36 (Schäfer); Ipisaf; Middle Kingdom; name from coffin."
+  },
+  "ABU-Khethap|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.348, 'Sp 12. Anthropoid coffin of Khetḥap...Ptolemaic' under the 'LATE BURIALS / East of Pyramid of Neuserreꜥ' heading (same Schäfer monograph as the mR-numbered tombs). Agent B's candidate is the only one retaining both the Schäfer attribution and the section's locational fact ('east of Pyramid of Neuserreꜥ'); Agent A retains the coffin material ('wood') instead but drops both of those. Chose Agent B's value for consistency with the attribution-retention basis applied elsewhere in this run; flagging the material-fact trade-off for the egyptologist pass.",
+    "value": "Sp 12 (Schäfer); anthropoid coffin of Khetḥap, Ptolemaic; Late Burial east of Pyramid of Neuserreꜥ."
+  },
+  "ABU-Mereri|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 29. MERERI...'. Agents A and B both retain the Schäfer attribution; Agent C drops it. Chose Agent B's value for consistency with the attribution-retention basis applied across this run.",
+    "value": "mR 29 (Schäfer); Mereri, Treasurer of the King of Lower Egypt, Sole companion, Regulator of a phyle; Middle Kingdom; name and titles from coffin."
+  },
+  "ABU-Nakht|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 13. ... Fragments of coffin of Nakht (woman), wood'. Agents A and B both retain the Schäfer attribution; Agent C drops it. Chose Agent B's value for consistency with the attribution-retention basis applied across this run.",
+    "value": "mR 13 (Schäfer); tomb of Nakht (woman), known from coffin fragments; Middle Kingdom."
+  },
+  "ABU-Neferirkare|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.339 heading reads 'C. PYRAMID-COMPLEX OF NEFERIRKAREꜥ KAKAI... Dyn. V'. Agent B's candidate mirrors this printed section-letter-plus-caps headword verbatim and retains the 'valley temple and causeway left unfinished' fact (matching Agent A); Agent C drops that fact in favour of an attribution clause. Chose Agent B's value as most PM-faithful to the printed headword AND most complete.",
+    "value": "C. PYRAMID-COMPLEX OF NEFERIRKAREꜥ KAKAI, Dyn. V; Lepsius Pyramid XXI; valley temple and causeway left unfinished, later used by Neuserreꜥ."
+  },
+  "ABU-Neuserre|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.335 heading reads 'B. PYRAMID-COMPLEX OF NEUSERREꜥ INY... Dyn. V'. Agent B's candidate mirrors this printed section-letter-plus-caps headword verbatim, which Agents A and C both paraphrase into sentence case, dropping PM's own lettering scheme. Chose Agent B's value as most PM-faithful to the printed headword.",
+    "value": "B. PYRAMID-COMPLEX OF NEUSERREꜥ INY, Dyn. V; Lepsius Pyramid XX; published by Borchardt."
+  },
+  "ABU-Ptahshepses|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.340 order is: title/dynasty, then 'Wife, Khaꜥmerernebti...', then 'Stone-built mastaba...Excavated by [Žába]'. Agent A's candidate follows this exact order; Agent C reorders the wife-clause to the end. Separately, the excavator's name is 'Žába' (Czech Egyptologist Jaromír Žába) — Agents A and C both render 'Žába' (2/3), Agent B renders 'Žaba', dropping the accent on the second vowel. Chose Agent A's value: correct diacritic form (shared with C) and PM's own clause ordering.",
+    "value": "Chief Justice and Vizier (of Neuserreꜥ), etc. Middle Dyn. V. Wife Khaꜥmerernebti, King's daughter, Prophetess of Ḥatḥor Mistress-of-the-Sycamore. Stone-built mastaba, 'Pyramid' XIX of Lepsius, excavated by Žába."
+  },
+  "ABU-Raneferef|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.340 heading reads 'D. PYRAMID ATTRIBUTED TO RAꜥNEFEREF... Dyn. V. Unfinished. Lepsius, XXVI' — Agent B's candidate is a verbatim match of this printed headword (section letter, caps, 'Unfinished', Lepsius number); Agents A and C both paraphrase into sentence case. Chose Agent B's value as most PM-faithful.",
+    "value": "D. PYRAMID ATTRIBUTED TO RAꜥNEFEREF, Dyn. V, Unfinished; Lepsius XXVI."
+  },
+  "ABU-Sahure|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.326 heading reads 'A. PYRAMID-COMPLEX OF SAḤUREꜥ... Dyn. V'. Agent B's candidate mirrors this printed section-letter-plus-caps headword and retains both 'excavated' and 'published' (matching Agent C's dual verb, which A drops to 'Excavated by' only); Agents A/C both paraphrase into sentence case. Chose Agent B's value as most PM-faithful and equally complete.",
+    "value": "A. PYRAMID-COMPLEX OF SAḤUREꜥ, Dyn. V; Lepsius 'Pyramid' XVIII; excavated and published by Borchardt."
+  },
+  "ABU-Sitnufer|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.347, 'mR 16. SITNUFER...'. Agents A and B both retain the Schäfer attribution; Agent C drops it in favour of the coffin-material detail. Chose Agent B's value for consistency with the attribution-retention basis applied across this run; flagging the dropped coffin-material fact for the egyptologist pass.",
+    "value": "mR 16 (Schäfer); Sitnufer, King's sole adorner (woman); Middle Kingdom."
+  },
+  "ABU-SunTempleUserkaf|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.324 includes 'UPPER TEMPLE WITH OBELISK. Lepsius, \"Pyramid\" XVII' as a named sub-feature with its own Lepsius number. Agent B's otherwise-preferred caps-headword candidate omits this Lepsius number entirely; per the explicit Lepsius-number faithfulness criterion, Agents A and C are preferred here (both include it). Between A and C, chose A: its comma punctuation ('Lepsius, \"Pyramid\" XVII') matches PM's own punctuation more closely than C's substituted '='.",
+    "value": "Sun-temple of Userkaf, Dyn. V. Upper Temple with obelisk, Lepsius 'Pyramid' XVII. Excavated by Ricke."
+  },
+  "ABU-Tepemankh|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.343 reads 'TEPEMꜥANKH..., Director of the Palace, Secretary of the Toilet-house, Servant of the throne, etc. ... Partly brick-built and partly stone-built mastaba.' Agent A's candidate is the only one retaining both the trailing 'etc.' and 'Partly'; Agent B drops 'etc.', Agent C drops 'Partly'. Chose Agent A's value as closest verbatim match to PM's phrasing.",
+    "value": "Director of the Palace, Secretary of the Toilet-house, Servant of the throne, etc. Temp. Neuserreꜥ to end of Dyn. V. Partly brick- and stone-built mastaba."
+  },
+  "ABU-Userkafankh|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.344 reads 'USERKAFꜥANKH..., Boundary official of Dep, Overseer of all works of the King, Inspector of wꜥb-priests of the Pyramid of Saḥureꜥ, Herdsman of the White Bull, etc. ... Partly brick-built and partly stone-built mastaba.' Agent A's candidate is the only one retaining all of: 'Herdsman of the White Bull', trailing 'etc.', 'Partly', and the correct ayin in 'wꜥb-priests' (Agent C renders 'wab-priests', dropping the ayin, and also drops 'Herdsman of the White Bull' and 'Partly'; Agent B drops 'etc.'). Chose Agent A's value as the fullest and most accurate.",
+    "value": "Boundary official of Dep, Overseer of all works of the King, Inspector of wꜥb-priests of the Pyramid of Saḥureꜥ, Herdsman of the White Bull, etc. Temp. Neuserreꜥ. Partly brick- and stone-built mastaba."
+  },
+  "ABU-Werirni|notes_from_pm": {
+    "rationale": "PM III.1 2nd ed. 1974 printed p.348 section heading reads 'C. TOMBS IN PLAIN SOUTH-EAST OF PYRAMIDS / Probably late Old Kingdom / Two brick-built painted mastabas... Fragment with incised offering-text of Werir[ni]... good name Kanufer.' Agent B's candidate is the only one retaining both the '(name partly restored)' parenthetical and the 'in the plain south-east of the pyramids' locational fact drawn from the section heading; Agent A lacks the locational fact, Agent C lacks both and additionally renders 'Kanüfer' with a spurious umlaut not supported by the 2/3 (A/B) plain-vowel form. Chose Agent B's value as most complete and accurate.",
+    "value": "Fragment with incised offering-text of Werir[ni] (name partly restored), good name Kanufer; one of two brick-built painted mastabas in the plain south-east of the pyramids; probably late Old Kingdom."
   }
 }

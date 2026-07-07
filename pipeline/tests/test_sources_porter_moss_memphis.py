@@ -845,6 +845,50 @@ CHUNK35_TOMB_IDS: frozenset[str] = frozenset({
 })
 
 
+# Chunk 36 — PYRAMID-FIELD OF ABÛSÎR (PM III.1 printed pp.324–350). First
+# `ABU-` prefix; first `memphite_area="Abusir"`. Landed after re-fetching a
+# complete PM III.1 scan (the prior proprietary scan was missing printed
+# pp.313–359, all of Abûsîr). 24 rows: 5 royal (§I sun-temple + §II pyramid-
+# complexes A–D) + 19 private (§III necropolis). The 4 Dyn-VI/FIP false-door
+# names the 3-agent merge included by 2/3 majority were REMOVED per
+# egyptologist finding C1 (object-catalogue, not tomb headwords) — see
+# chunk36-scope-exclusions.json.
+CHUNK36_TOMB_IDS: frozenset[str] = frozenset({
+    # § I. Sun-temple + § II. Pyramids (royal, Dyn. V)
+    "ABU-SunTempleUserkaf",     # § I. Sun-temple of Userkaf, King
+    "ABU-Sahure",               # § II.A. Pyramid-complex of Saḥureꜥ, King
+    "ABU-Neuserre",             # § II.B. Pyramid-complex of Neuserreꜥ Iny, King
+    "ABU-Neferirkare",          # § II.C. Pyramid-complex of Neferirkareꜥ Kakai, King
+    "ABU-Raneferef",            # § II.D. Pyramid attributed to Raꜥneferef, King, probable/unfinished
+    # § III.A. Large Dynasty V mastabas
+    "ABU-Ptahshepses",          # Chief Justice and Vizier, Middle Dyn. V (+wife Khaꜥmerernebti)
+    "ABU-ChildrenOfPtahshepses",# Collective princesses' burial, joint, Royal Family
+    "ABU-Tepemankh",            # Director of the Palace, Dyn. V
+    "ABU-Userkafankh",          # Boundary official, Dyn. V
+    # NB: the § III.A "Dynasty VI / First Intermediate Period" False-doors
+    # (Ipi, Sitimp, Khuenkhnum, Seshemnufer) were EXCLUDED per egyptologist
+    # finding C1 (object-catalogue entries with Schäfer find-numbers, not
+    # caps tomb-owner headwords) — see chunk36-scope-exclusions.json.
+    # § III.A. Middle Kingdom mR-numbered tombs
+    "ABU-Inemakhet",            # mR 1, Lector-priest (4-coffin joint tomb)
+    "ABU-HarshefhotpI",         # mR 6, Regulator of a phyle
+    "ABU-HarshefhotpII",        # mR 8
+    "ABU-Inhotp",               # mR 11
+    "ABU-Nakht",                # mR 13 (woman)
+    "ABU-Sitnufer",             # mR 16 (woman)
+    "ABU-Imp",                  # mR 25
+    "ABU-Mereri",               # mR 29, Treasurer of the King of Lower Egypt
+    "ABU-Inhotpi",              # mR 32, Chief wꜥb-priest
+    "ABU-Ipisaf",               # mR 36
+    "ABU-Impy",                 # mR 42, Overseer of the altar
+    "ABU-Inemsaf",              # mR 43
+    # § III.A. Late Burials (Sp-numbered) + § III.C
+    "ABU-Khethap",              # Sp 12, Ptolemaic
+    "ABU-Abahem",               # Sp 14, Dyn. XXVI, re-used
+    "ABU-Werirni",              # § III.C. Plain SE of pyramids, late Old Kingdom
+})
+
+
 EXPECTED_TOMB_IDS: frozenset[str] = (
     CHUNK1_TOMB_IDS | CHUNK2_TOMB_IDS | CHUNK3_TOMB_IDS | CHUNK4_TOMB_IDS
     | CHUNK5_TOMB_IDS | CHUNK6_TOMB_IDS | CHUNK7_TOMB_IDS | CHUNK8_TOMB_IDS
@@ -856,7 +900,7 @@ EXPECTED_TOMB_IDS: frozenset[str] = (
     | CHUNK27A_TOMB_IDS | CHUNK27B_TOMB_IDS | CHUNK28_TOMB_IDS
     | CHUNK29_TOMB_IDS | CHUNK30_TOMB_IDS | CHUNK31_TOMB_IDS
     | CHUNK32_TOMB_IDS | CHUNK33_TOMB_IDS | CHUNK34_TOMB_IDS
-    | CHUNK35_TOMB_IDS
+    | CHUNK35_TOMB_IDS | CHUNK36_TOMB_IDS
 )
 
 
@@ -1013,7 +1057,7 @@ def test_attribution_certainty_controlled_vocab() -> None:
         assert row["attribution_certainty"] in _VALID_CERTAINTY, row
 
 
-_VALID_MEMPHITE_AREAS = frozenset({"Giza", "Saqqara", "Dahshur"})
+_VALID_MEMPHITE_AREAS = frozenset({"Giza", "Saqqara", "Dahshur", "Abusir"})
 
 
 def test_memphite_area_controlled_vocab() -> None:
@@ -1117,6 +1161,11 @@ def test_source_citation_section_matches_chunk() -> None:
             # § I rows (PyramidsGH, AmenyQemau) cite section "I";
             # § II rows (all mastabas) cite section "II".
             assert row["source_citation"]["section"] in {"I", "II"}, row
+        elif row["tomb_id"] in CHUNK36_TOMB_IDS:
+            # § I sun-temple → "I"; § II pyramid-complexes → "II";
+            # § III necropolis → "III" (exact per-section counts pinned by
+            # test_chunk36_section_distribution).
+            assert row["source_citation"]["section"] in {"I", "II", "III"}, row
 
 
 def test_source_citation_edition_matches_chunk() -> None:
@@ -1128,7 +1177,7 @@ def test_source_citation_edition_matches_chunk() -> None:
             | CHUNK9_TOMB_IDS | CHUNK10_TOMB_IDS | CHUNK11_TOMB_IDS
             | CHUNK13_TOMB_IDS | CHUNK14_TOMB_IDS | CHUNK15_TOMB_IDS
             | CHUNK16_TOMB_IDS | CHUNK17_TOMB_IDS | CHUNK18_TOMB_IDS
-            | CHUNK19_TOMB_IDS
+            | CHUNK19_TOMB_IDS | CHUNK36_TOMB_IDS
         ):
             assert row["source_citation"]["edition"] == EDITION_PM_III_1, row
         elif row["tomb_id"] in (
@@ -1234,6 +1283,8 @@ def test_source_citation_page_in_expected_range() -> None:
             assert 890 <= page <= 893, f"{row['tomb_id']} page {page} outside chunk-34 [890, 893]"
         elif row["tomb_id"] in CHUNK35_TOMB_IDS:
             assert 894 <= page <= 898, f"{row['tomb_id']} page {page} outside chunk-35 [894, 898]"
+        elif row["tomb_id"] in CHUNK36_TOMB_IDS:
+            assert 324 <= page <= 350, f"{row['tomb_id']} page {page} outside chunk-36 [324, 350]"
 
 
 # === Phase-0 boundary assertions ============================================
@@ -4577,3 +4628,347 @@ def test_chunk35_siesi() -> None:
             "DE MORGAN, Dahchour, ii, pp. 78-86."
         ),
     )
+
+
+# === Chunk 36 — PYRAMID-FIELD OF ABÛSÎR (PM III.1 printed pp.324–350) ========
+
+
+def test_chunk36_presence() -> None:
+    """All 24 chunk-36 (Abûsîr) tomb_ids present in reconciled.jsonl."""
+    ch36 = [r for r in _rows() if r["tomb_id"] in CHUNK36_TOMB_IDS]
+    assert len(ch36) == 24, f"Expected 24, got {len(ch36)}: {[r['tomb_id'] for r in ch36]}"
+    assert len(CHUNK36_TOMB_IDS) == 24
+    for tid in CHUNK36_TOMB_IDS:
+        assert _by_id(tid) is not None, f"Missing chunk-36 row: {tid}"
+
+
+def test_chunk36_section_distribution() -> None:
+    """§ I sun-temple (1) + § II pyramid-complexes A–D (4) + § III necropolis (19)."""
+    from collections import Counter
+    dist = Counter(_by_id(t)["source_citation"]["section"] for t in CHUNK36_TOMB_IDS)
+    assert dist == {"I": 1, "II": 4, "III": 19}, dist
+
+
+def test_chunk36_cemetery_distribution() -> None:
+    """5 royal rows (§ I sun-temple + § II pyramid-complexes) → 'Pyramid-field of
+    Abusir'; 18 § III.A rows → 'North-East and East of Pyramid of Neuserre';
+    1 § III.C row (Werirni) → 'Plain South-East of Pyramids'. The § III.B
+    'Over Mortuary Temple of Neferirkare' cemetery value is intentionally unused
+    — its only named item was an Aramaic-inscribed slab (a find), excluded."""
+    from collections import Counter
+    dist = Counter(_by_id(t)["cemetery"] for t in CHUNK36_TOMB_IDS)
+    assert dist == {
+        "Pyramid-field of Abusir": 5,
+        "North-East and East of Pyramid of Neuserre": 18,
+        "Plain South-East of Pyramids": 1,
+    }, dist
+
+
+def _assert_chunk36_full(
+    row: dict,
+    *,
+    tomb_id: str,
+    occupant_name: object,
+    occupant_role: str,
+    dynasty: object,
+    attribution_certainty: str,
+    page: int,
+    section: str,
+    cemetery: str,
+    notes_from_pm: str,
+    sub_period: object = None,
+    tomb_aliases: list | None = None,
+    occupant_alt_names: list | None = None,
+    co_occupants: list | None = None,
+    co_occupant_roles: list | None = None,
+    shared_with_tombs: list | None = None,
+    is_joint_burial: bool = False,
+    is_unfinished: bool = False,
+) -> None:
+    """Full Rule-5 field assertions for chunk-36 rows (all 23 fields)."""
+    tomb_aliases = [] if tomb_aliases is None else tomb_aliases
+    occupant_alt_names = [] if occupant_alt_names is None else occupant_alt_names
+    co_occupants = [] if co_occupants is None else co_occupants
+    co_occupant_roles = [] if co_occupant_roles is None else co_occupant_roles
+    shared_with_tombs = [] if shared_with_tombs is None else shared_with_tombs
+    assert row["tomb_id"] == tomb_id
+    assert row["occupant_name"] == occupant_name
+    assert row["occupant_role"] == occupant_role
+    assert row["dynasty"] == dynasty
+    assert row["sub_period"] == sub_period
+    assert row["attribution_certainty"] == attribution_certainty
+    assert row["source_citation"]["section"] == section
+    assert row["source_citation"]["page"] == page
+    assert row["source_citation"]["edition"] == EDITION_PM_III_1
+    assert row["is_joint_burial"] is is_joint_burial
+    assert row["is_unfinished"] is is_unfinished
+    assert row["is_uninscribed"] is False
+    assert row["is_usurped"] is False
+    assert row["co_occupants"] == co_occupants
+    assert row["co_occupant_roles"] == co_occupant_roles
+    assert row["shared_with_tombs"] == shared_with_tombs
+    assert row["occupant_alt_names"] == occupant_alt_names
+    assert row["date_bce_approx_start"] is None
+    assert row["date_bce_approx_end"] is None
+    assert row["discoverer"] is None
+    assert row["discovery_year"] is None
+    assert row["memphite_area"] == "Abusir"
+    assert row["cemetery"] == cemetery
+    assert row["tomb_aliases"] == tomb_aliases
+    assert row["notes_from_pm"] == notes_from_pm
+
+
+def test_chunk36_sun_temple_userkaf() -> None:
+    """§ I. Sun-temple of Userkaf — the sole § I royal cult structure. King,
+    Dyn. V, printed p.324."""
+    _assert_chunk36_full(
+        _by_id("ABU-SunTempleUserkaf"),
+        tomb_id="ABU-SunTempleUserkaf",
+        occupant_name="Userkaf",
+        occupant_role="King",
+        dynasty="5",
+        attribution_certainty="attested",
+        page=324,
+        section="I",
+        cemetery="Pyramid-field of Abusir",
+        notes_from_pm=(
+            "Sun-temple of Userkaf, Dyn. V. Upper Temple with obelisk, Lepsius "
+            "'Pyramid' XVII. Excavated by Ricke."
+        ),
+    )
+
+
+def test_chunk36_sahure() -> None:
+    """§ II.A. Pyramid-complex of Saḥurēʿ — King, Dyn. V. macron-ē preserved
+    per printed PDF (egyptologist finding C3). Printed p.326."""
+    _assert_chunk36_full(
+        _by_id("ABU-Sahure"),
+        tomb_id="ABU-Sahure",
+        occupant_name="Saḥurēʿ",
+        occupant_role="King",
+        dynasty="5",
+        attribution_certainty="attested",
+        page=326,
+        section="II",
+        cemetery="Pyramid-field of Abusir",
+        notes_from_pm=(
+            "A. PYRAMID-COMPLEX OF SAḤUREʿ, Dyn. V; Lepsius 'Pyramid' XVIII; "
+            "excavated and published by Borchardt."
+        ),
+    )
+
+
+def test_chunk36_raneferef() -> None:
+    """§ II.D. Pyramid ATTRIBUTED TO Raʿneferef — King, Dyn. V, but PM hedges
+    ('attributed to') → attribution_certainty 'probable', and marks it
+    'Unfinished' → is_unfinished True. Printed p.340."""
+    _assert_chunk36_full(
+        _by_id("ABU-Raneferef"),
+        tomb_id="ABU-Raneferef",
+        occupant_name="Raʿneferef",
+        occupant_role="King",
+        dynasty="5",
+        attribution_certainty="probable",
+        is_unfinished=True,
+        page=340,
+        section="II",
+        cemetery="Pyramid-field of Abusir",
+        notes_from_pm="D. PYRAMID ATTRIBUTED TO RAʿNEFEREF, Dyn. V, Unfinished; Lepsius XXVI.",
+    )
+
+
+def test_chunk36_ptahshepses() -> None:
+    """§ III.A. Ptaḥshepses — Chief Justice and Vizier, Middle Dyn. V, the
+    principal Abûsîr mastaba. Wife Khaʿmerernebti as co-occupant (string form
+    per source-wide convention; role in co_occupant_roles). Cross-references
+    the adjacent 'Children of...' tomb via shared_with_tombs. Printed p.340."""
+    _assert_chunk36_full(
+        _by_id("ABU-Ptahshepses"),
+        tomb_id="ABU-Ptahshepses",
+        occupant_name="Ptaḥshepses",
+        occupant_role="Vizier",
+        dynasty="5",
+        attribution_certainty="attested",
+        page=340,
+        section="III",
+        cemetery="North-East and East of Pyramid of Neuserre",
+        co_occupants=["Khaʿmerernebti"],
+        co_occupant_roles=["Princess"],
+        shared_with_tombs=["ABU-ChildrenOfPtahshepses"],
+        notes_from_pm=(
+            "Chief Justice and Vizier (of Neuserrēʿ), etc. Middle Dyn. V. Wife "
+            "Khaʿmerernebti, King's daughter, Prophetess of Ḥatḥor "
+            "Mistress-of-the-Sycamore. Stone-built mastaba, 'Pyramid' XIX of "
+            "Lepsius, excavated by Žába."
+        ),
+    )
+
+
+def test_chunk36_children_of_ptahshepses() -> None:
+    """§ III.A. Collective 'Children of Ptaḥshepses' burial — no PM-marked
+    principal occupant, so occupant_name null + is_joint_burial True, role
+    'Royal Family'. Two buried children as co_occupants. Reciprocal
+    shared_with_tombs cross-ref. Printed p.342."""
+    _assert_chunk36_full(
+        _by_id("ABU-ChildrenOfPtahshepses"),
+        tomb_id="ABU-ChildrenOfPtahshepses",
+        occupant_name=None,
+        occupant_role="Royal Family",
+        dynasty="5",
+        attribution_certainty="attested",
+        is_joint_burial=True,
+        page=342,
+        section="III",
+        cemetery="North-East and East of Pyramid of Neuserre",
+        co_occupants=["Mertiotes", "Kaḥotp"],
+        co_occupant_roles=["Princess", "Official"],
+        shared_with_tombs=["ABU-Ptahshepses"],
+        notes_from_pm=(
+            "'Children of Ptaḥshepses and Khaʿmerernebti' (see preceding tomb); "
+            "'Grab der Prinzessinnen'; middle or late Dyn. V; false-doors of "
+            "Khaʿmerernebti, Mertiotes (King's daughter) and Kaḥotp (Sole "
+            "companion, Lector-priest); partly brick- and stone-built mastaba."
+        ),
+    )
+
+
+def test_chunk36_inemakhet_joint() -> None:
+    """§ III.A. mR 1 — a four-coffin coordinate burial. PM names Inemakhet
+    (Lector-priest) first but marks no single principal, so is_joint_burial
+    True with occupant_name populated (2/1 agent majority, per merge). Three
+    co_occupants. dynasty null / sub_period 'Middle Kingdom'. Printed p.345."""
+    _assert_chunk36_full(
+        _by_id("ABU-Inemakhet"),
+        tomb_id="ABU-Inemakhet",
+        occupant_name="Inemakhet",
+        occupant_role="Official",
+        dynasty=None,
+        sub_period="Middle Kingdom",
+        attribution_certainty="attested",
+        is_joint_burial=True,
+        page=345,
+        section="III",
+        cemetery="North-East and East of Pyramid of Neuserre",
+        tomb_aliases=["mR 1"],
+        co_occupants=["Inḥotp", "Nakhti", "Situbastet"],
+        co_occupant_roles=["Official", "Unknown", "Unknown"],
+        notes_from_pm=(
+            "mR 1 (Schäfer); Inemakhet, Lector-priest; four coffins in the tomb "
+            "— Inemakhet, Inḥotp (Inspector of prophets of the Pyramid of "
+            "Iny/Neuserrēʿ), Nakhti (woman), Situbastet (woman); Middle Kingdom; "
+            "brick-lined shaft east of Pyramid of Neuserrēʿ."
+        ),
+    )
+
+
+def test_chunk36_harshefhotp_i() -> None:
+    """§ III.A. mR 6 — Ḥarshefḥotp [I], one of the homonymous pair (mR 6 / mR 8).
+    occupant_name carries PM's bracketed ordinal '[I]' (egyptologist finding
+    C5); mR-number in tomb_aliases; dynasty null / sub_period 'Middle Kingdom'.
+    Printed p.346."""
+    _assert_chunk36_full(
+        _by_id("ABU-HarshefhotpI"),
+        tomb_id="ABU-HarshefhotpI",
+        occupant_name="Ḥarshefḥotp [I]",
+        occupant_role="Official",
+        dynasty=None,
+        sub_period="Middle Kingdom",
+        attribution_certainty="attested",
+        page=346,
+        section="III",
+        cemetery="North-East and East of Pyramid of Neuserre",
+        tomb_aliases=["mR 6"],
+        notes_from_pm=(
+            "mR 6 (Schäfer); Ḥarshefḥotp [I], Regulator of a phyle and Chief of "
+            "estate of the Pyramid of Neuserrēʿ; Middle Kingdom."
+        ),
+    )
+
+
+def test_chunk36_abahem_late() -> None:
+    """§ III.A. Sp 14 — a re-used Dyn. XXVI (Late Period) coffin burial.
+    dynasty '26' (open-vocab string) + sub_period 'Late Period'; the good-name
+    ʿAnkh-weḥebreʿ in occupant_alt_names; father Ḳiredebʿakh (Ḳ not Ṣ,
+    egyptologist finding C4); ayin normalised to U+02BF (C2). Printed p.348."""
+    _assert_chunk36_full(
+        _by_id("ABU-Abahem"),
+        tomb_id="ABU-Abahem",
+        occupant_name="ʿAbaḥem",
+        occupant_role="Unknown",
+        dynasty="26",
+        sub_period="Late Period",
+        attribution_certainty="attested",
+        page=348,
+        section="III",
+        cemetery="North-East and East of Pyramid of Neuserre",
+        tomb_aliases=["Sp 14"],
+        occupant_alt_names=["ʿAnkh-weḥebreʿ"],
+        notes_from_pm=(
+            "Late burial Sp 14; lid of anthropoid coffin of ʿAbaḥem called "
+            "ʿAnkh-weḥebreʿ, son of Ḳiredebʿakh, wood, Dyn. XXVI, re-used."
+        ),
+    )
+
+
+def test_reconciled_is_sorted_by_merge_sort_key() -> None:
+    """reconciled.jsonl rows must be in `merge._sort_key` order. This guards the
+    per-chunk APPEND workflow: `raw/` is gitignored so the committed file cannot
+    be regenerated from agent files in CI, and each chunk's rows are appended to
+    the file — appending is only equivalent to a full merge if the rows remain
+    globally `_sort_key`-ordered. Code-review (chunk 36) MEDIUM finding: a future
+    geographically-early Memphite prefix (Abû Rawâsh, Zâwyet el-ʿAryan) would get
+    a low AREA_ORDER rank and a naive append would mis-order it — this test fails
+    loud if that happens."""
+    spec = importlib.util.spec_from_file_location(
+        "merge_pm_memphis_sortcheck", SOURCE_DIR / "merge.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    ids = [r["tomb_id"] for r in _rows()]
+    assert ids == sorted(ids, key=module._sort_key), (
+        "reconciled.jsonl is not in merge._sort_key order — the append workflow "
+        "placed rows out of order"
+    )
+
+
+# === Source-wide co_occupant / joint-burial shape invariants ================
+# Constitutional Rule 3 (deterministic enforcement over convention): these were
+# README-only conventions until the chunk-36 Fable-egyptologist review, which
+# exposed that the README documented `co_occupants` as objects and defined
+# `is_joint_burial` as "PM does NOT mark a principal" — both contradicted by the
+# committed data (240 string-list rows; 21 joint rows carry a named principal).
+# The prose was corrected AND pinned here so the shape can't silently drift.
+
+
+def test_co_occupants_shape_invariant() -> None:
+    """Across every row, `co_occupants` is a list of NAME-STRINGS (never objects)
+    and is index-aligned with the parallel `co_occupant_roles` list (equal
+    length). This is the committed Memphite shape — the object-of-{name,role}
+    form documented earlier was never actually used."""
+    for r in _rows():
+        co = r.get("co_occupants") or []
+        roles = r.get("co_occupant_roles") or []
+        tid = r["tomb_id"]
+        assert all(isinstance(c, str) for c in co), (
+            f"{tid}: co_occupants must be name-strings, got {co!r}"
+        )
+        assert len(co) == len(roles), (
+            f"{tid}: co_occupants ({len(co)}) / co_occupant_roles ({len(roles)}) "
+            "length mismatch — the parallel arrays are index-aligned"
+        )
+
+
+def test_joint_burial_has_co_occupants() -> None:
+    """`is_joint_burial: true` ⇒ `co_occupants` is non-empty. A joint burial by
+    definition holds coordinate occupants beyond (or instead of) the principal,
+    so an empty co_occupants list on a joint row is a data defect. NOTE: the
+    converse does NOT hold — `occupant_name: null` alone does not imply joint
+    (156 anonymous single tombs have a null principal and is_joint_burial=false),
+    so that stronger invariant is deliberately NOT asserted."""
+    offenders = [
+        r["tomb_id"]
+        for r in _rows()
+        if r.get("is_joint_burial") and not (r.get("co_occupants") or [])
+    ]
+    assert not offenders, f"joint burials with empty co_occupants: {offenders}"

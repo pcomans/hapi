@@ -4,7 +4,7 @@ Operational notes for the Phase-0 pipeline. The protocol itself lives in `docs/p
 
 ## Source
 
-- **Vol III.1** *Memphis. Part I. Abû Rawâsh to Abûsîr*, 2nd ed., 1974, ed. Málek. PDF SHA-256 `4817c0e09d126f387ffdc6793517caa125946aca1b6f4a5736a8daf32e167e58`. 349 physical pages, ~50 pages front matter (Roman) + 366 pages body + 30 plates + indexes.
+- **Vol III.1** *Memphis. Part I. Abû Rawâsh to Abûsîr*, 2nd ed., 1974, ed. Málek. PDF SHA-256 `27777b018b327ffd3e5a009cb02d00a8c4bc314a7bff7042af005231a58955ec`. **460 physical pages** (complete: printed pp.1–360 continuous). **Re-fetched 2026-07-04** from `topbib.griffith.ox.ac.uk/pdfs/pm3-1.pdf` to replace an earlier defective scan (SHA `4817c0e0…e167e58`, 349 pp.) that was missing printed pp.313–359 (all of Abûsîr). NB physical pagination differs from the old scan, so chunks 1–35 physical-page refs are relative to the old file; printed-page `source_citation` values remain canonical.
 - **Vol III.2** *Memphis. Part 2. Ṣaqqâra to Dahshûr*, 2nd ed., 1978/1981 fascicles, ed. Málek. PDF SHA-256 `dabb5c207642f1dd7a47de4f3db28f6c59d16ab3f0db8140c9672de3e7ed77df`. To be exercised at chunk 4+ (Saqqara work).
 
 Both PDFs sit at `proprietary/books/` (gitignored, submodule).
