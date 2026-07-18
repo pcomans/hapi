@@ -1,0 +1,14 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,relabel=private",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "runArgs": [
+    "--dns=1.1.1.1",
+    "--dns=8.8.8.8"
+  ],
+  "postCreateCommand": "bash -c 'curl -fsSL https://claude.ai/install.sh | bash && source /usr/local/share/nvm/nvm.sh 2>/dev/null; npm install -g @openai/codex && tic -x -o $HOME/.terminfo .devcontainer/xterm-ghostty.terminfo'"
+}
