@@ -35,7 +35,11 @@ Caveat on "works": everything runs locally. There is no deployment, and `web/` c
 
 ## Phase 0 — sourced, inert, and not as done as previously reported
 
-**4,583 reconciled rows across 12 source directories.** The ten book-derived sources are page-cited and produced by the deterministic OCR → 3-agent-extraction → merge → review pipeline; `idai-gazetteer` and `pharaoh-se` are API/web-derived via committed fetch scripts, so they carry source URLs and retrieval provenance rather than page citations. Ruler titulary (Leprohon 2013), chronology (von Beckerath, Kitchen, Ryholt, Shaw, HKW), Old Kingdom prosopography (Baud), queens (Dodson & Hilton), the Porter & Moss tomb registers for Thebes and Memphis, ~1,000 iDAI gazetteer sites, and the pharaoh.se ruler list.
+**4,583 reconciled rows across 12 source directories**, by three different methods — the split matters, because only the first carries multi-agent reconciliation:
+
+- **Eight sources** (Leprohon, Beckerath, Kitchen, Ryholt, Baud, Dodson & Hilton, both Porter & Moss volumes) went through the full deterministic OCR → 3-agent-extraction → merge → review pipeline, each with a committed `merge.py` and tie-break overrides. These are page-cited.
+- **Two sources** (`shaw-ohae-2000`, `hkw-chronology-2006`) are page-cited transcriptions without multi-agent reconciliation — neither has a `merge.py`. HKW's 207 rows are LLM transcription with manual spot-checking plus four hand-extracted rows.
+- **Two sources** (`idai-gazetteer`, `pharaoh-se`) are API/web-derived via committed fetch scripts, carrying source URLs and retrieval provenance rather than page citations. Ruler titulary (Leprohon 2013), chronology (von Beckerath, Kitchen, Ryholt, Shaw, HKW), Old Kingdom prosopography (Baud), queens (Dodson & Hilton), the Porter & Moss tomb registers for Thebes and Memphis, ~1,000 iDAI gazetteer sites, and the pharaoh.se ruler list.
 
 **Why this is 70–80% and not the 95% previously published here.** [`mvp-tasks.md`](mvp-tasks.md) sets the Phase-0 completion gate at **~5,700–6,500 rows across ~14 sources**. We are at 4,583 across 12. Of its eight items marked *"Must-land before Phase A can start (MVP-blocking)"*, **four are still open** (tasks 4–7) — and the largest has not been started at all. (Task 3, Porter & Moss III, closed when the Abûsîr pyramid-field chunk landed in PR #311 on 2026-07-07; `mvp-tasks.md` still shows it 🟡 and is stale on that point. Task 8's two actionable audits are closed, with the FIP Dyn 7–10 gap standing as an accepted authority gap rather than open work.)
 
