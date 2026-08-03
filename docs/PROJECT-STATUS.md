@@ -37,7 +37,7 @@ Caveat on "works": everything runs locally. There is no deployment, and `web/` c
 
 **4,583 reconciled rows across 12 source directories**, by three different methods — the split matters, because only the first carries multi-agent reconciliation:
 
-- **Eight sources** (Leprohon, Beckerath, Kitchen, Ryholt, Baud, Dodson & Hilton, both Porter & Moss volumes) went through the full deterministic OCR → 3-agent-extraction → merge → review pipeline, each with a committed `merge.py` and tie-break overrides. These are page-cited.
+- **Eight sources** (Leprohon, Beckerath, Kitchen, Ryholt, Baud, Dodson & Hilton, both Porter & Moss volumes) went through the deterministic 3-agent-extraction → merge → review workflow, each with a committed `merge.py`. These are page-cited. The text-acquisition step varies — most are OCR'd, Baud was extracted directly from the PDF text layer — and six of the eight also carry a committed `tie-break-overrides.json`; Baud and Dodson & Hilton needed none.
 - **Two sources** (`shaw-ohae-2000`, `hkw-chronology-2006`) are page-cited transcriptions without multi-agent reconciliation — neither has a `merge.py`. HKW's 207 rows are LLM transcription with manual spot-checking plus four hand-extracted rows.
 - **Two sources** (`idai-gazetteer`, `pharaoh-se`) are API/web-derived via committed fetch scripts, carrying source URLs and retrieval provenance rather than page citations. Ruler titulary (Leprohon 2013), chronology (von Beckerath, Kitchen, Ryholt, Shaw, HKW), Old Kingdom prosopography (Baud), queens (Dodson & Hilton), the Porter & Moss tomb registers for Thebes and Memphis, ~1,000 iDAI gazetteer sites, and the pharaoh.se ruler list.
 
