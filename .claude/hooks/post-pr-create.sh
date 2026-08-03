@@ -312,6 +312,12 @@ fi
 # carry arbitrary `gh` failure output, and escaping only `"` left backslashes,
 # tabs and control characters to produce malformed JSON — which the harness
 # would drop, silently discarding the block AND the warning it carries.
+# MESSAGES is assembled with literal `\n` separators. sed-escaping used to let
+# those through as JSON escapes by accident; jq --arg correctly treats them as
+# the two characters they are, so they must be expanded to real newlines first
+# or the agent reads a message full of `\n`.
+MESSAGES=$(printf '%b' "$MESSAGES")
+
 if [ -n "$BLOCK_REASON" ]; then
   jq -n --arg reason "$BLOCK_REASON" --arg msg "$MESSAGES" \
     '{decision: "block", reason: $reason, systemMessage: $msg}'
