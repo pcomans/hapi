@@ -373,7 +373,45 @@ def test_committed_sources_emit_no_placeholder_names():
     ):
         assert recs[key].prenomina == [], f"{key} should carry no throne name"
 
+    # Independent of the classifier. Asking `_is_absence_sentinel` whether the emitted
+    # values are placeholders is circular — it passes for any spelling the classifier
+    # does not yet know, which is exactly how `unknown (?)` survived the first version
+    # of this guard on 9 committed rows. These literals were found by auditing the
+    # committed sources directly; add to the list, never derive it from the pattern.
+    KNOWN_PLACEHOLDER_LITERALS = {
+        "(unknown)",
+        "unknown (?)",
+        "[prenomen unknown]",
+        "unknown",
+        "unattested",
+        "unbekannt",
+        "n/a",
+        "none",
+        "null",
+        "lost",
+        "lacuna",
+    }
     for r in recs.values():
         for form in [*r.prenomina, *r.horus_names, *r.nomina]:
-            assert not sources_mod._is_absence_sentinel(form.surface)
-            assert not sources_mod._is_absence_sentinel(form.translit)
+            for value in (form.surface, form.translit):
+                if value is None:
+                    continue
+                assert value.strip().casefold() not in KNOWN_PLACEHOLDER_LITERALS, (
+                    f"{r.source_id}/{r.local_id} emits placeholder prose {value!r} as a name"
+                )
+
+
+@pytest.mark.parametrize("value", ["Na", "na", "Ka", "Iy", "Ay", "In"])
+def test_short_real_names_are_not_treated_as_placeholders(value):
+    """`n/a` must never be spelled `n/?a`. Bare `na` is a plausible Egyptian name or
+    transliteration — this corpus already carries the equally short genuine names Ka,
+    Iy, Ay and In — so matching it would silently delete sourced authority data."""
+    assert not sources_mod._is_absence_sentinel(value)
+    assert sources_mod._name_form(value) is not None
+
+
+@pytest.mark.parametrize("value", ["unknown (?)", "unknown?", "(unknown)", "n.a.", "N/A"])
+def test_every_placeholder_spelling_found_in_committed_data_is_caught(value):
+    """`unknown (?)` appears on 9 committed Leprohon rows and the first version of this
+    guard missed all of them."""
+    assert sources_mod._is_absence_sentinel(value)

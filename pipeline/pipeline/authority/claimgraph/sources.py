@@ -233,10 +233,17 @@ def _read_jsonl(root: Path, source: str) -> list[dict]:
 # Matched only as a WHOLE field, never as a substring: real titulary contains these
 # letters (`heqa khasut aper-an-ti`, `mery nefer-kheperu-ra`), and a substring rule
 # would delete genuine names.
+# `n/a` is deliberately NOT written `n/?a`: bare `na` is a plausible Egyptian name or
+# transliteration — this corpus already carries the equally short genuine names `Ka`,
+# `Iy`, `Ay` and `In` — and silently deleting a sourced `Na` would be the rule-6 loss
+# this guard exists to prevent. Only the punctuated forms are unambiguous.
+#
+# The optional trailing `(?)`/`?` catches Leprohon's `unknown (?)` spelling, which the
+# first version of this pattern missed on 9 committed rows.
 _ABSENCE_SENTINEL = re.compile(
     r"^[\[\(\{]?\s*(?:prenomen|nomen|horus[\s-]?name|name)?\s*"
-    r"(?:unknown|unattested|unbekannt|not\s+known|n/?a|none|null|lost|lacuna)"
-    r"\s*[\]\)\}]?$",
+    r"(?:unknown|unattested|unbekannt|not\s+known|n/a|n\.a\.|none|null|lost|lacuna)"
+    r"\s*[\]\)\}]?\s*(?:\(\s*\?\s*\)|\?)?\s*$",
     re.IGNORECASE,
 )
 
