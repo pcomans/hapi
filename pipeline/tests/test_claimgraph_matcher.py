@@ -9,10 +9,14 @@ docstrings (Constitutional Rule 3 — a rule that lives only in prose is a sugge
   * matcher.py — homonym coverage (the reused prenomina that must escalate rather than
     merge), the Dynasty-0 early-Horus carve-out, the name-only→escalate basis, the
     cross-source-only rule, and uniqueness-clash order-independence.
-  * reviewer.py — the verdict-JSON parser's salvage paths, and the Rule-14 guarantee that
-    the reviewer prompt does NOT leak the deterministic stage-1 answer.
-  * verdicts.py — unparseable output escalates the one candidate WITH its raw response
-    persisted (Rule 13); an API error fails the whole run loud (Rule 2).
+  * reviewer.py — the verdict-JSON parser's STRICT contract (a truncated or fenced or
+    prose-wrapped response never becomes a verdict), the completeness of the persisted
+    interaction record (Rule 13), and the Rule-14 guarantee that the reviewer prompt does
+    NOT leak the deterministic stage-1 answer.
+  * verdicts.py — unparseable output escalates the one candidate with EVERY attempt's full
+    interaction persisted (Rule 13); an API error fails the whole run loud (Rule 2); a
+    cached verdict is reusable only while the request that produced it is unchanged, and
+    conflicting cache lines raise instead of resolving by file order (Rule 2/6).
 """
 
 from __future__ import annotations
@@ -35,13 +39,19 @@ from pipeline.authority.claimgraph.normalize import (
     translit_key,
 )
 from pipeline.authority.claimgraph.reviewer import (
+    ANTHROPIC_PARAMETERS,
+    PROVIDER_ANTHROPIC,
     SYSTEM_PROMPT,
     VERDICT_APPROVED,
     VERDICT_ESCALATED,
     VERDICT_REJECTED,
+    ReviewerInteraction,
     ReviewerParseError,
+    Verdict,
     _build_user_prompt,
     _parse_verdict_json,
+    request_digest,
+    review_with_llm,
 )
 from pipeline.authority.claimgraph.matcher import _HOMONYM_SPELLINGS
 from pipeline.authority.claimgraph.sources import SOURCE_AUTHORITY, RulerRecord
@@ -53,15 +63,19 @@ from pipeline.authority.claimgraph import verdicts as verdicts_mod
 
 def test_amasis_flagship_example_collapses():
     """The module docstring's headline claim, now enforced: the German, anglicised, and
-    transliterated spellings of Khnemibre (Amasis) MUST share a normalized key."""
+    transliterated spellings of Khnemibre (Amasis) MUST share a normalized key. The exact
+    key sets are asserted, not merely a non-empty intersection (Rule 5) — a widened
+    normalizer that folded everything together would still pass a truthiness check."""
     german = keys_for_form(NameForm(surface="Chnem-ib-rê"), skeleton=True)
     anglic = keys_for_form(NameForm(surface="khnum ib ra"), skeleton=True)
     translit = keys_for_form(NameForm(surface="", translit="ẖnm ib rꜥ"), skeleton=True)
-    assert german & anglic, "German vs anglicised must intersect"
-    assert german & translit, "German vs transliteration must intersect"
-    assert anglic & translit, "anglicised vs transliteration must intersect"
-    # all three via the shared consonantal skeleton
-    assert "khnmbr" in german & anglic & translit
+    assert german == {"khnemibra", "khnemibre", "khnmbr"}
+    assert anglic == {"khnmbr", "khnumibra"}
+    assert translit == {"hnmibr", "khnmbr", "khnmibra"}
+    # they meet on exactly one key — the shared consonantal skeleton, nothing else
+    assert german & anglic == {"khnmbr"}
+    assert german & translit == {"khnmbr"}
+    assert anglic & translit == {"khnmbr"}
 
 
 def test_german_digraphs_fold_to_ascii_skeleton():
@@ -88,42 +102,67 @@ def test_name_blocker_does_not_use_skeleton():
     name_only explosion) — 'Amenhotep' and 'Amenhatep' differ, but a skeleton would not."""
     a = key_set([NameForm(surface="Amenhotep")])
     b = key_set([NameForm(surface="Amenhetep")])
-    assert not (a & b)
-    # with skeleton on, they would collapse — proving the flag is what gates it
+    assert a == {"amenhotep"}
+    assert b == {"amenhetep"}
+    assert a & b == set()
+    # with skeleton on, they collapse on exactly the vowel-less skeleton — proving the flag
+    # is what gates it, and that nothing else is folding them together.
     a_sk = key_set([NameForm(surface="Amenhotep")], skeleton=True)
     b_sk = key_set([NameForm(surface="Amenhetep")], skeleton=True)
-    assert a_sk & b_sk
+    assert a_sk == {"amenhotep", "mnhtp"}
+    assert b_sk == {"amenhetep", "mnhtp"}
+    assert a_sk & b_sk == {"mnhtp"}
 
 
 # --- matcher.py: homonym list ----------------------------------------------
 
 
 @pytest.mark.parametrize(
-    "spelling",
+    ("spelling", "expected_keys"),
     [
-        "Menkheperre",
-        "Nebmaatre",
-        "Usermaatre",
-        "Neferkare",  # the most-reused throne name — regression guard
-        "Kheperkare",
-        "Sehetepibre",
-        "Wahkare",
-        "Sekhemkare",
-        "Men-cheper-Rê",  # German spelling must ALSO be caught (digraph fold)
+        ("Menkheperre", {"menkheperre", "mnkhprr"}),
+        ("Nebmaatre", {"nbmtr", "nebmaatre"}),
+        ("Usermaatre", {"srmtr", "usermaatre"}),
+        ("Neferkare", {"neferkare", "nfrkr"}),  # most-reused throne name — regression guard
+        ("Kheperkare", {"kheperkare", "khprkr"}),
+        ("Sehetepibre", {"sehetepibre", "shtpbr"}),
+        ("Wahkare", {"wahkare", "whkr"}),
+        ("Sekhemkare", {"sekhemkare", "skhmkr"}),
+        # German spelling must ALSO be caught (digraph fold) — and it yields an extra
+        # element-canonicalised key on top of the two the anglicised spelling produces.
+        ("Men-cheper-Rê", {"menkheperra", "menkheperre", "mnkhprr"}),
     ],
 )
-def test_reused_prenomina_are_homonym_trapped(spelling):
+def test_reused_prenomina_are_homonym_trapped(spelling, expected_keys):
+    """Every key the spelling normalizes to is trapped — asserted as an exact set, so a
+    normalizer change that dropped one of the two paths (leaving a spelling reachable by an
+    untrapped key) fails here instead of passing an `any(...)` check."""
     keys = keys_for_form(NameForm(surface=spelling), skeleton=True)
-    assert any(_is_homonym_key(k) for k in keys), f"{spelling!r} must be a homonym trap"
+    assert keys == expected_keys
+    assert {k for k in keys if _is_homonym_key(k)} == expected_keys
 
 
 def test_sekhemre_prefix_trap():
+    """The Sekhemre-* prefix trap catches the SKELETON key of a compound; the vowelled
+    full-name key is deliberately not on the committed list (it is the prefix that traps)."""
     keys = keys_for_form(NameForm(surface="Sekhemre-Wadjkhau"), skeleton=True)
-    assert any(_is_homonym_key(k) for k in keys)
+    assert keys == {"sekhemrewadjkhau", "skhmrwdjkh"}
+    assert {k for k in keys if _is_homonym_key(k)} == {"skhmrwdjkh"}
 
 
-def test_homonym_keys_nonempty():
-    assert _HOMONYM_KEYS  # the committed list actually produced keys
+def test_homonym_key_set_is_exactly_the_committed_list():
+    """The committed homonym answer-key, pinned key-for-key: a normalizer change that
+    silently stopped producing one of these keys would reopen a known false-merge path."""
+    assert _HOMONYM_KEYS == {
+        "hprkr", "kheperkara", "kheperkare", "khprkara", "khprkr",
+        "menkheperra", "menkheperre", "mnhprr", "mnkhprr", "mnkhprra",
+        "nbmaatra", "nbmtr", "nebmaatra", "nebmaatre",
+        "neferkara", "neferkare", "nfrkara", "nfrkr",
+        "sehetepibra", "sehetepibre", "shtpbr", "shtpibra",
+        "sekhemkara", "sekhemkare", "shmkr", "skhmkara", "skhmkr",
+        "srmtr", "usermaatra", "usermaatre", "wsrmaatra", "wsrmtr",
+        "wahkara", "wahkare", "whkr",
+    }
 
 
 # --- matcher.py: candidate generation --------------------------------------
@@ -252,23 +291,44 @@ def test_parse_clean_json():
         VERDICT_APPROVED,
         "ok",
     )
+    assert _parse_verdict_json('  {"outcome":"rejected","reason":" distinct kings "}\n') == (
+        VERDICT_REJECTED,
+        "distinct kings",
+    )
+    assert _parse_verdict_json('{"reason":"unsure","outcome":"escalated"}') == (
+        VERDICT_ESCALATED,
+        "unsure",
+    )
 
 
-def test_parse_fenced_json():
-    text = '```json\n{"outcome":"rejected","reason":"distinct kings"}\n```'
-    assert _parse_verdict_json(text) == (VERDICT_REJECTED, "distinct kings")
-
-
-def test_parse_salvages_truncated_reason():
-    text = '{"outcome":"escalated","reason":"the reason ran long and got cut off mid-sen'
-    outcome, reason = _parse_verdict_json(text)
-    assert outcome == VERDICT_ESCALATED
-    assert reason.startswith("the reason ran long")
-
-
-def test_parse_unparseable_raises():
+@pytest.mark.parametrize(
+    ("label", "text"),
+    [
+        # THE codex P1: a truncated object must never mint an approval. A regex salvage
+        # would read "approved" out of this and emit an identity edge on a response the
+        # model never finished.
+        ("truncated_approved", '{"outcome":"approved"'),
+        ("truncated_reason", '{"outcome":"escalated","reason":"ran long and got cut off'),
+        # A fence is not the response the system prompt mandates ("ONLY a single JSON
+        # object and nothing else") — stripping it silently accepts an off-contract reply.
+        ("fenced", '```json\n{"outcome":"rejected","reason":"distinct kings"}\n```'),
+        ("prose_around_object", 'Sure! {"outcome":"approved","reason":"same king"} — hope that helps'),
+        ("two_objects", '{"outcome":"approved","reason":"a"}{"outcome":"rejected","reason":"b"}'),
+        ("prose_only", "I think these two are probably the same person."),
+        ("empty", "   "),
+        ("json_but_not_object", '["approved"]'),
+        ("unknown_outcome", '{"outcome":"maybe","reason":"unsure"}'),
+        ("wrong_case_outcome", '{"outcome":"Approved","reason":"same king"}'),
+        ("outcome_not_a_string", '{"outcome":true,"reason":"same king"}'),
+        ("missing_reason", '{"outcome":"approved"}'),
+        ("empty_reason", '{"outcome":"approved","reason":"   "}'),
+        ("reason_not_a_string", '{"outcome":"approved","reason":42}'),
+        ("extra_key", '{"outcome":"approved","reason":"same king","confidence":0.9}'),
+    ],
+)
+def test_parse_rejects_anything_but_one_clean_object(label, text):
     with pytest.raises(ValueError):
-        _parse_verdict_json("I think these two are probably the same person.")
+        _parse_verdict_json(text)
 
 
 # --- reviewer.py: Rule-14 no answer leakage --------------------------------
@@ -302,25 +362,237 @@ def test_reviewer_prompt_does_not_leak_stage1_answer():
 # --- verdicts.py: fail-loud vs escalate-with-provenance --------------------
 
 
-def test_unparseable_after_retries_escalates_with_raw_response():
+def _interaction(**over) -> ReviewerInteraction:
+    """A complete interaction record, as the live reviewer builds one."""
+    base = dict(
+        attempt=1,
+        provider=PROVIDER_ANTHROPIC,
+        requested_model="claude-sonnet-5",
+        model_snapshot="claude-sonnet-5-20260101",
+        parameters=dict(ANTHROPIC_PARAMETERS),
+        system_prompt=SYSTEM_PROMPT,
+        user_prompt="the exact user prompt",
+        raw_response={"content": [{"type": "text", "text": "garbled"}]},
+    )
+    base.update(over)
+    return ReviewerInteraction(**base)
+
+
+def test_unparseable_after_retries_escalates_with_every_attempt_persisted():
     """A persistently-unparseable reviewer escalates THAT candidate (never silently, never
-    aborting the run) AND persists the raw response that drove it (Rule 13)."""
+    aborting the run) AND persists EVERY attempt's complete interaction (Rule 13) — each
+    one a real call that consumed a retry and shaped the escalation."""
+    attempts = []
+
+    def boom(c, a, b):
+        n = len(attempts) + 1
+        attempts.append(n)
+        raise ReviewerParseError(
+            f"bad json #{n}",
+            interaction=_interaction(
+                model_snapshot=f"claude-sonnet-5-snap-{n}",
+                raw_response={"content": [{"type": "text", "text": f"garbled #{n}"}]},
+                parse_error=f"bad json #{n}",
+            ),
+            request_digest="digest-abc",
+        )
+
+    cand = _cand("c", "a", "b", "leprohon", "kitchen")
+    v = verdicts_mod._review_with_retry(
+        boom, cand, None, None, retries=2, model="claude-sonnet-5"
+    )
+    assert attempts == [1, 2, 3]
+    assert v.outcome == VERDICT_ESCALATED
+    assert v.reviewer == "llm"
+    assert v.request_digest == "digest-abc"
+    assert [i.attempt for i in v.interactions] == [1, 2, 3]
+    assert [i.model_snapshot for i in v.interactions] == [
+        "claude-sonnet-5-snap-1",
+        "claude-sonnet-5-snap-2",
+        "claude-sonnet-5-snap-3",
+    ]
+    assert [i.raw_response["content"][0]["text"] for i in v.interactions] == [
+        "garbled #1",
+        "garbled #2",
+        "garbled #3",
+    ]
+    assert [i.parse_error for i in v.interactions] == ["bad json #1", "bad json #2", "bad json #3"]
+    for i in v.interactions:
+        assert i.provider == PROVIDER_ANTHROPIC
+        assert i.requested_model == "claude-sonnet-5"
+        assert i.parameters == {"max_tokens": 600}
+        assert i.system_prompt == SYSTEM_PROMPT
+        assert i.user_prompt == "the exact user prompt"
+
+
+def test_retry_persists_the_superseded_attempts_alongside_the_successful_one():
+    """Attempts 1-2 malformed, attempt 3 parses: all THREE interactions are persisted, in
+    order, on the verdict that shipped — the two discarded responses are exactly the
+    provenance a reader needs to see why the answer took three calls (Rule 13). Each
+    attempt carries distinct metadata so an off-by-one or a last-write-wins bug shows up."""
+    calls = []
+
+    def flaky(c, a, b):
+        n = len(calls) + 1
+        calls.append(n)
+        if n < 3:
+            raise ReviewerParseError(
+                f"bad json #{n}",
+                interaction=_interaction(
+                    model_snapshot=f"snap-{n}",
+                    raw_response={"id": f"msg_{n}", "content": [{"type": "text", "text": f"junk {n}"}]},
+                    parse_error=f"bad json #{n}",
+                ),
+                request_digest="digest-xyz",
+            )
+        return Verdict(
+            candidate_id=c.id,
+            outcome=VERDICT_APPROVED,
+            reason="same king",
+            reviewer="llm",
+            request_digest="digest-xyz",
+            interactions=[
+                _interaction(
+                    model_snapshot=f"snap-{n}",
+                    raw_response={"id": f"msg_{n}", "content": [{"type": "text", "text": '{"outcome":"approved","reason":"same king"}'}]},
+                )
+            ],
+        )
+
+    cand = _cand("c", "a", "b", "leprohon", "kitchen")
+    v = verdicts_mod._review_with_retry(
+        flaky, cand, None, None, retries=2, model="claude-sonnet-5"
+    )
+    assert calls == [1, 2, 3]
+    assert v.outcome == VERDICT_APPROVED
+    assert v.reason == "same king"
+    assert v.request_digest == "digest-xyz"
+    assert [i.attempt for i in v.interactions] == [1, 2, 3]
+    assert [i.model_snapshot for i in v.interactions] == ["snap-1", "snap-2", "snap-3"]
+    assert [i.raw_response["id"] for i in v.interactions] == ["msg_1", "msg_2", "msg_3"]
+    assert [i.parse_error for i in v.interactions] == ["bad json #1", "bad json #2", None]
+    # the request is fully reconstructible from every stored attempt, not just the last
+    for i in v.interactions:
+        assert i.system_prompt == SYSTEM_PROMPT
+        assert i.user_prompt == "the exact user prompt"
+        assert i.parameters == {"max_tokens": 600}
+        assert i.provider == PROVIDER_ANTHROPIC
+        assert i.requested_model == "claude-sonnet-5"
+
+
+def test_retry_fills_in_the_requested_model_when_the_interaction_lacks_one():
+    """Regression (codex P1): the escalation path used to read a bare `model` that was not
+    a parameter of `_review_with_retry` — a NameError on every malformed-response run. The
+    requested model is now passed in explicitly and backfills an interaction that reports
+    none (a malformed body may carry no model at all)."""
 
     def boom(c, a, b):
         raise ReviewerParseError(
             "bad json",
-            prompt="the exact prompt",
-            raw_response={"content": [{"type": "text", "text": "garbled"}]},
-            model_id="m",
-            model_snapshot="claude-sonnet-5-snap",
+            interaction=_interaction(requested_model=None, model_snapshot=None),
+            request_digest="digest-1",
         )
 
     cand = _cand("c", "a", "b", "leprohon", "kitchen")
-    v = verdicts_mod._review_with_retry(boom, cand, None, None, retries=1)
+    v = verdicts_mod._review_with_retry(
+        boom, cand, None, None, retries=1, model="z-ai/glm-5.2"
+    )
     assert v.outcome == VERDICT_ESCALATED
-    assert v.prompt == "the exact prompt"
-    assert v.raw_response == {"content": [{"type": "text", "text": "garbled"}]}
-    assert v.model_snapshot == "claude-sonnet-5-snap"
+    assert [i.requested_model for i in v.interactions] == ["z-ai/glm-5.2", "z-ai/glm-5.2"]
+    assert [i.model_snapshot for i in v.interactions] == [None, None]
+
+
+class _FakeBlock:
+    def __init__(self, text):
+        self.type = "text"
+        self.text = text
+
+
+class _FakeResponse:
+    def __init__(self, text, model="claude-sonnet-5-20260101"):
+        self.content = [_FakeBlock(text)]
+        self.model = model
+        self._text = text
+
+    def model_dump(self, mode="json"):
+        return {"id": "msg_1", "model": self.model, "content": [{"type": "text", "text": self._text}]}
+
+
+class _FakeAnthropic:
+    """Captures the request kwargs so the test can assert the PERSISTED record describes
+    the request that was actually sent."""
+
+    def __init__(self, text):
+        self.text = text
+        self.seen = None
+        self.messages = self
+
+    def create(self, **kwargs):
+        self.seen = kwargs
+        return _FakeResponse(self.text)
+
+
+def test_live_reviewer_persists_the_whole_request_and_response():
+    """Rule 13: the stored interaction must reconstruct the request — system prompt,
+    user prompt, every parameter, provider, requested model, served snapshot, raw body."""
+    a = _rec("leprohon", "leprohon-20", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", "beckerath-20", "Amasis", prenomina=["Chnem-ib-rê"])
+    cand = generate_candidates([a, b])[0]
+    client = _FakeAnthropic('{"outcome":"approved","reason":"shared throne name"}')
+
+    v = review_with_llm(client, cand, a, b, model="claude-sonnet-5")
+
+    assert v.outcome == VERDICT_APPROVED
+    assert v.reason == "shared throne name"
+    assert v.reviewer == "llm"
+    assert len(v.interactions) == 1
+    i = v.interactions[0]
+    assert i.attempt == 1
+    assert i.provider == PROVIDER_ANTHROPIC
+    assert i.requested_model == "claude-sonnet-5"
+    assert i.model_snapshot == "claude-sonnet-5-20260101"
+    assert i.parameters == {"max_tokens": 600}
+    assert i.system_prompt == SYSTEM_PROMPT
+    assert i.user_prompt == _build_user_prompt(cand, a, b)
+    assert i.raw_response == {
+        "id": "msg_1",
+        "model": "claude-sonnet-5-20260101",
+        "content": [{"type": "text", "text": '{"outcome":"approved","reason":"shared throne name"}'}],
+    }
+    assert i.parse_error is None
+    # what was persisted IS what was sent
+    assert client.seen == {
+        "model": "claude-sonnet-5",
+        "max_tokens": 600,
+        "system": SYSTEM_PROMPT,
+        "messages": [{"role": "user", "content": i.user_prompt}],
+    }
+    assert v.request_digest == request_digest(
+        cand, a, b, provider=PROVIDER_ANTHROPIC, model="claude-sonnet-5",
+        parameters=dict(ANTHROPIC_PARAMETERS),
+    )
+
+
+def test_live_reviewer_malformed_output_raises_with_the_interaction_attached():
+    """A truncated 'approved' must NOT become a verdict — it raises, carrying the full
+    interaction so the escalation it drives is still replayable."""
+    a = _rec("leprohon", "leprohon-21", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", "beckerath-21", "Amasis", prenomina=["Chnem-ib-rê"])
+    cand = generate_candidates([a, b])[0]
+    client = _FakeAnthropic('{"outcome":"approved"')
+
+    with pytest.raises(ReviewerParseError) as excinfo:
+        review_with_llm(client, cand, a, b, model="claude-sonnet-5")
+
+    err = excinfo.value
+    assert err.interaction.raw_response["content"][0]["text"] == '{"outcome":"approved"'
+    assert err.interaction.parse_error == str(err)
+    assert err.interaction.system_prompt == SYSTEM_PROMPT
+    assert err.interaction.user_prompt == _build_user_prompt(cand, a, b)
+    assert err.request_digest == request_digest(
+        cand, a, b, provider=PROVIDER_ANTHROPIC, model="claude-sonnet-5",
+        parameters=dict(ANTHROPIC_PARAMETERS),
+    )
 
 
 def test_homonym_trap_forces_escalation_even_if_llm_approves(monkeypatch):
@@ -367,7 +639,7 @@ def test_api_error_fails_loud():
 
     cand = _cand("c", "a", "b", "leprohon", "kitchen")
     with pytest.raises(RuntimeError, match="Live reviewer failed"):
-        verdicts_mod._review_with_retry(boom, cand, None, None, retries=1)
+        verdicts_mod._review_with_retry(boom, cand, None, None, retries=1, model="m")
 
 
 def test_name_only_is_escalated_without_calling_the_reviewer(monkeypatch):
@@ -394,3 +666,90 @@ def test_openrouter_mode_requires_api_key():
     recs = [_rec("leprohon", "leprohon-12", "X", prenomina=["Khnemibre"])]
     with pytest.raises(RuntimeError, match="without an api_key"):
         verdicts_mod.resolve_matches(recs, mode="llm", provider="openrouter", api_key=None)
+
+
+# --- verdicts.py: the resumable cache is request-pinned --------------------
+
+
+def _cached_run(tmp_path, *, model, cache_name="cache.jsonl"):
+    """One resolve_matches run over a single clean prenomen pair, with a verdict cache.
+    Returns (result, cache_path, calls) where `calls` counts live reviewer invocations."""
+    a = _rec("leprohon", "leprohon-30", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", "beckerath-30", "Amasis", prenomina=["Chnem-ib-rê"])
+    by_id = {r.local_id: r for r in (a, b)}
+    calls: list[str] = []
+
+    def reviewer_fn(c, x, y):
+        calls.append(c.id)
+        return Verdict(
+            candidate_id=c.id,
+            outcome=VERDICT_APPROVED,
+            reason="same king",
+            reviewer="llm",
+            request_digest=request_digest(
+                c, by_id[c.a_id], by_id[c.b_id],
+                provider=PROVIDER_ANTHROPIC, model=model,
+                parameters=dict(ANTHROPIC_PARAMETERS),
+            ),
+            interactions=[_interaction(requested_model=model)],
+        )
+
+    cache_path = str(tmp_path / cache_name)
+    res = verdicts_mod.resolve_matches(
+        [a, b], mode="llm", reviewer_fn=reviewer_fn, model=model, cache_path=cache_path
+    )
+    return res, cache_path, calls
+
+
+def test_cached_verdict_is_reused_when_the_request_is_identical(tmp_path):
+    res, cache_path, calls = _cached_run(tmp_path, model="claude-sonnet-5")
+    assert len(res.approved_edges) == 1
+    assert calls == ["cand-beckerath-30|leprohon-30"]
+    # second run over an identical request: the cached verdict is reused, no new call
+    res2, _, calls2 = _cached_run(tmp_path, model="claude-sonnet-5")
+    assert calls2 == []
+    assert len(res2.approved_edges) == 1
+    assert res2.verdicts[0].interactions[0].requested_model == "claude-sonnet-5"
+
+
+def test_cached_verdict_from_a_different_model_raises(tmp_path):
+    _cached_run(tmp_path, model="claude-sonnet-5")
+    # same candidate, different reviewer configuration → the cached verdict does NOT
+    # describe this run and must not be reused (Rule 6/13).
+    with pytest.raises(RuntimeError, match="produced under a DIFFERENT request"):
+        _cached_run(tmp_path, model="z-ai/glm-5.2")
+
+
+def test_conflicting_cache_lines_for_one_candidate_raise(tmp_path):
+    _, cache_path, _ = _cached_run(tmp_path, model="claude-sonnet-5")
+    original = open(cache_path, encoding="utf-8").read().strip()
+    # an appended re-review that disagrees: last-write-wins would silently pick one by file
+    # order — a verdict with no provenance.
+    with open(cache_path, "a", encoding="utf-8") as fh:
+        fh.write(original.replace("verdict_approved", "verdict_rejected") + "\n")
+    with pytest.raises(RuntimeError, match="CONFLICTING entries"):
+        verdicts_mod._load_cache(cache_path)
+
+
+def test_identical_duplicate_cache_lines_are_idempotent(tmp_path):
+    _, cache_path, _ = _cached_run(tmp_path, model="claude-sonnet-5")
+    original = open(cache_path, encoding="utf-8").read().strip()
+    with open(cache_path, "a", encoding="utf-8") as fh:
+        fh.write(original + "\n")
+    cached = verdicts_mod._load_cache(cache_path)
+    assert set(cached) == {"cand-beckerath-30|leprohon-30"}
+    assert cached["cand-beckerath-30|leprohon-30"].outcome == VERDICT_APPROVED
+
+
+def test_cache_round_trip_preserves_every_interaction(tmp_path):
+    _, cache_path, _ = _cached_run(tmp_path, model="claude-sonnet-5")
+    cached = verdicts_mod._load_cache(cache_path)
+    v = cached["cand-beckerath-30|leprohon-30"]
+    assert [i.attempt for i in v.interactions] == [1]
+    i = v.interactions[0]
+    assert isinstance(i, ReviewerInteraction)
+    assert i.provider == PROVIDER_ANTHROPIC
+    assert i.requested_model == "claude-sonnet-5"
+    assert i.parameters == {"max_tokens": 600}
+    assert i.system_prompt == SYSTEM_PROMPT
+    assert i.raw_response == {"content": [{"type": "text", "text": "garbled"}]}

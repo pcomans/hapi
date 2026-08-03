@@ -8,15 +8,18 @@ import json
 import os
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, replace
 from typing import Callable
 
 from .matcher import Candidate, generate_candidates, uniqueness_clashes
 from .reviewer import (
+    PROVIDER_PARAMETERS,
     VERDICT_APPROVED,
     VERDICT_ESCALATED,
+    ReviewerInteraction,
     ReviewerParseError,
     Verdict,
+    request_digest,
     review_deterministic,
     review_with_llm,
     review_with_openrouter,
@@ -79,18 +82,49 @@ class ResolveResult:
     mode: str
 
 
-def _review_with_retry(reviewer_fn, c, a, b, retries: int) -> Verdict:
+def _stamped(
+    interaction: ReviewerInteraction, attempt: int, model: str
+) -> ReviewerInteraction:
+    """Place one interaction in the retry sequence, and fill in the model that was
+    REQUESTED when the reviewer did not report one (the provider's own snapshot may be
+    absent from a malformed body). ``model`` is the run's requested model id, passed in
+    explicitly by :func:`resolve_matches` — it is not in scope here otherwise."""
+    return replace(
+        interaction,
+        attempt=attempt,
+        requested_model=interaction.requested_model or model,
+    )
+
+
+def _review_with_retry(reviewer_fn, c, a, b, retries: int, *, model: str) -> Verdict:
     """``reviewer_fn(candidate, a, b) -> Verdict`` is the provider-bound live reviewer
     (Anthropic or OpenRouter). Retries on any error; a persistent parse failure escalates
-    THIS candidate (with its raw response), any other error fails the run loud (Rule 2)."""
+    THIS candidate (with every attempt's full interaction), any other error fails the run
+    loud (Rule 2).
+
+    EVERY attempt is retained, in order, on the returned verdict — including the malformed
+    ones that a later successful attempt superseded. Each of those was a real call that
+    influenced the decision (it consumed a retry), so dropping it would leave the artifact
+    claiming a clean single-shot interaction that never happened (Rule 13)."""
+    interactions: list[ReviewerInteraction] = []
     last_err: Exception | None = None
-    for _ in range(retries + 1):
+    digest: str | None = None
+    for attempt in range(1, retries + 2):
         try:
-            return reviewer_fn(c, a, b)
-        except ReviewerParseError as err:  # unparseable output — carries the raw response
+            verdict = reviewer_fn(c, a, b)
+        except ReviewerParseError as err:  # unparseable output — carries the interaction
             last_err = err
+            digest = err.request_digest
+            interactions.append(_stamped(err.interaction, attempt, model))
         except Exception as err:  # noqa: BLE001 — transport/API error, retried then raised
+            # No response came back, so there is no interaction to persist; the run fails
+            # loud below rather than pretending a call produced something.
             last_err = err
+        else:
+            verdict.interactions = interactions + [
+                _stamped(i, attempt, model) for i in verdict.interactions
+            ]
+            return verdict
     # An API/transport error is a real blocker (credits, network, auth) → fail loud.
     if not isinstance(last_err, ReviewerParseError):
         raise RuntimeError(
@@ -98,8 +132,8 @@ def _review_with_retry(reviewer_fn, c, a, b, retries: int) -> Verdict:
             f"after {retries + 1} attempts: {last_err}"
         )
     # Unparseable output after retries: escalate THIS candidate (doubt → curator queue),
-    # visibly and counted — never silently, and never aborting the rest of the run. The
-    # offending response drove this escalation, so it is persisted in full (Rule 13).
+    # visibly and counted — never silently, and never aborting the rest of the run. Every
+    # offending response drove this escalation, so all are persisted in full (Rule 13).
     import sys
 
     sys.stderr.write(
@@ -111,26 +145,45 @@ def _review_with_retry(reviewer_fn, c, a, b, retries: int) -> Verdict:
         outcome=VERDICT_ESCALATED,
         reason="Reviewer output could not be parsed after retries; escalated for manual review.",
         reviewer="llm",
-        model_id=last_err.model_id or model,
-        model_snapshot=last_err.model_snapshot,
-        prompt=last_err.prompt,
-        raw_response=last_err.raw_response,
+        request_digest=digest,
+        interactions=interactions,
     )
 
 
+def _verdict_from_json(obj: dict) -> Verdict:
+    """Rehydrate a checkpointed verdict. Any schema drift (missing/unknown key) raises."""
+    data = dict(obj)
+    data["interactions"] = [ReviewerInteraction(**i) for i in data["interactions"]]
+    return Verdict(**data)
+
+
 def _load_cache(cache_path: str) -> dict[str, Verdict]:
-    """Load previously-checkpointed raw verdicts, keyed by candidate id. Last write wins
-    (a re-review appended later supersedes an earlier line for the same candidate)."""
+    """Load previously-checkpointed raw verdicts, keyed by candidate id.
+
+    Two lines for the same candidate are NOT resolved by file order: if they disagree in
+    any field the load raises (Rule 2/6 — a verdict picked by iteration order has no
+    provenance). Byte-identical repeats are idempotent and accepted."""
     out: dict[str, Verdict] = {}
     if not cache_path or not os.path.exists(cache_path):
         return out
+    seen: dict[str, tuple[int, dict]] = {}
     with open(cache_path, encoding="utf-8") as fh:
-        for line in fh:
+        for lineno, line in enumerate(fh, 1):
             line = line.strip()
             if not line:
                 continue
             obj = json.loads(line)
-            out[obj["candidate_id"]] = Verdict(**obj)
+            cid = obj["candidate_id"]
+            prev = seen.get(cid)
+            if prev is not None and prev[1] != obj:
+                raise RuntimeError(
+                    f"Verdict cache {cache_path} holds CONFLICTING entries for candidate "
+                    f"{cid} (line {prev[0]} vs line {lineno}). Refusing to resolve by file "
+                    f"order — delete the cache and re-review (--fresh), or remove the "
+                    f"stale line."
+                )
+            seen[cid] = (lineno, obj)
+            out[cid] = _verdict_from_json(obj)
     return out
 
 
@@ -216,11 +269,35 @@ def resolve_matches(
     else:
         # Resumable checkpoint cache: raw (pre-finalize) verdicts are appended to
         # `cache_path` as each completes, so a mid-run failure (e.g. the API running out
-        # of credits) never wastes prior work — a re-run reviews only the remainder.
+        # of credits) never wastes prior work — a re-run reviews only the remainder. Reuse
+        # is pinned to the request digest below: resuming is only legitimate while the run
+        # is the SAME run.
         cached: dict[str, Verdict] = _load_cache(cache_path) if cache_path else {}
+        if provider not in PROVIDER_PARAMETERS:
+            raise RuntimeError(f"Unknown reviewer provider {provider!r}")
+        parameters = PROVIDER_PARAMETERS[provider]
         verdicts_by_id: dict[str, Verdict] = {}
         for c in candidates:
             if c.id in cached:
+                # A cached verdict may ONLY be reused if the request that produced it is
+                # byte-for-byte the request we would send now — same records, same prompts,
+                # same provider/model/parameters. Otherwise the artifact would claim one
+                # reviewer configuration while its edges were decided under another
+                # (Rule 6/13); refuse rather than silently mix configurations.
+                a, b = by_id.get(c.a_id), by_id.get(c.b_id)
+                if a is None or b is None:
+                    raise RuntimeError(f"Missing record(s) for candidate {c.id}")
+                expected = request_digest(
+                    c, a, b, provider=provider, model=model, parameters=parameters
+                )
+                if cached[c.id].request_digest != expected:
+                    raise RuntimeError(
+                        f"Cached verdict for candidate {c.id} was produced under a "
+                        f"DIFFERENT request (digest {cached[c.id].request_digest} != "
+                        f"{expected}): the records, prompt, provider, model or parameters "
+                        f"changed since it was written. Re-review with --fresh instead of "
+                        f"reusing a verdict that does not describe this configuration."
+                    )
                 verdicts_by_id[c.id] = cached[c.id]
             elif c.basis == "name_only":
                 # Never reaches the paid reviewer — deterministic escalate (see module note).
@@ -241,7 +318,9 @@ def resolve_matches(
             a, b = by_id.get(c.a_id), by_id.get(c.b_id)
             if a is None or b is None:
                 raise RuntimeError(f"Missing record(s) for candidate {c.id}")
-            v = _review_with_retry(reviewer_fn, c, a, b, retries_per_candidate)
+            v = _review_with_retry(
+                reviewer_fn, c, a, b, retries_per_candidate, model=model
+            )
             return c.id, v
 
         try:

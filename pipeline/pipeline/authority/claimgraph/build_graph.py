@@ -106,6 +106,12 @@ def main() -> int:
 
     load = load_all_sources(AUTHORITY_ROOT)
     print(f"[build-graph] loaded {len(load.records)} ruler records: {load.per_source}")
+    for source_id, dropped in sorted(load.non_ruler_rows.items()):
+        reasons = sorted({why for _, why in dropped})
+        print(
+            f"[build-graph] {source_id}: {len(dropped)} row(s) not loaded as rulers "
+            f"({'; '.join(reasons)}): {', '.join(rid for rid, _ in dropped)}"
+        )
 
     doc = build_documentary_graph(load.records)
     print(
@@ -187,8 +193,10 @@ def main() -> int:
     out_path.write_text(json.dumps(artifact, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"[build-graph] wrote {out_path}")
 
-    # Rule-13 reasoning capture: the full reviewer interaction (prompt + raw response +
-    # model snapshot) for every verdict, written separately so the app-facing artifact
+    # Rule-13 reasoning capture: EVERY reviewer interaction behind every verdict — system
+    # + user prompt, provider, requested model, served snapshot, request parameters and the
+    # full raw response, one record per attempt (retries included) — plus the digest of the
+    # request the verdict was reached under. Written separately so the app-facing artifact
     # stays lean. This is the replayable provenance record.
     run_path = out_path.with_name(out_path.stem + ".reviewer-run.jsonl")
     with run_path.open("w", encoding="utf-8") as fh:

@@ -141,7 +141,15 @@ def build_documentary_graph(records: list[RulerRecord]) -> DocumentaryGraph:
 
         for object_id in rec.intra_source_same_as:
             if object_id not in known:
-                continue  # referenced row not loaded — drop, don't invent
+                # A dangling reference is a SOURCED identity assertion ("Kitchen states
+                # these two entries are one man") that we would otherwise erase without
+                # trace. Either the loader dropped a row it should not have, or the source
+                # id is wrong — both are bugs, and both must surface (Rule 2/6).
+                raise ValueError(
+                    f"Intra-source identity from {rec.local_id} references {object_id!r}, "
+                    f"which is not among the loaded records. A sourced identity assertion "
+                    f"must not be silently discarded — fix the loader or the source row."
+                )
             intra.append(
                 IntraSourceIdentity(
                     subject_id=rec.local_id,

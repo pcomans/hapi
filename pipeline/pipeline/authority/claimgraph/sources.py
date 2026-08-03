@@ -1,7 +1,16 @@
 """Per-source adapters: map each source's native ``reconciled.jsonl`` row shape to the
-canonical :class:`RulerRecord`. Extraction only — no cross-source resolution, no
-guessing. A row that isn't an individual ruler (dynasty markers, period headers) is
-dropped here (fail-visible in the load report, never fail-silent)."""
+canonical :class:`RulerRecord`. Extraction only — no cross-source resolution, no guessing.
+
+Every row is read against an explicit schema (:func:`_req_str`, :func:`_opt_int`, …): a
+field of the wrong type is schema drift and RAISES with source id, row id and field path
+— it is never coerced to ``None``/``[]``. A silently-erased ``dynasty: 26 → "26"`` would
+delete a sourced claim and leave no trace that it ever existed (Rule 2/6). A genuinely
+absent nullable field stays ``None``; that is legitimate sparseness, not drift.
+
+The only rows that may be skipped are ones EXPLICITLY classified as non-rulers by the
+source itself (Beckerath's dynasty-marker/period-header rows). Those are counted and
+returned in :class:`LoadResult.non_ruler_rows` — a visible drop report, never a silent
+one. A row that is neither a ruler nor an explicitly-marked non-ruler raises."""
 
 from __future__ import annotations
 
@@ -96,19 +105,111 @@ class RulerRecord:
     stage_group: str | None = None
 
 
-# --- helpers ---------------------------------------------------------------
+# --- strict row-schema accessors -------------------------------------------
 
 
-def _s(v) -> str | None:
-    return v.strip() if isinstance(v, str) and v.strip() else None
+class SourceRowError(ValueError):
+    """A source row violates the committed row schema for its source."""
 
 
-def _n(v) -> int | None:
-    return v if isinstance(v, int) else None
+def _err(source: str, row_id: str, path: str, msg: str) -> SourceRowError:
+    return SourceRowError(f"[{source}] row {row_id}: field {path!r} {msg}")
 
 
-def _list(v) -> list:
-    return v if isinstance(v, list) else []
+def _opt_str(row: dict, path: str, *, source: str, row_id: str) -> str | None:
+    """``None``/absent/empty → ``None``; a present non-string value is drift → raise."""
+    v = row.get(path)
+    if v is None:
+        return None
+    if not isinstance(v, str):
+        raise _err(source, row_id, path, f"must be a string or null, got {type(v).__name__} ({v!r})")
+    return v.strip() or None
+
+
+def _req_str(row: dict, path: str, *, source: str, row_id: str) -> str:
+    v = _opt_str(row, path, source=source, row_id=row_id)
+    if v is None:
+        raise _err(source, row_id, path, "is required but missing/empty")
+    return v
+
+
+def _opt_int(row: dict, path: str, *, source: str, row_id: str) -> int | None:
+    v = row.get(path)
+    if v is None:
+        return None
+    # bool is a subclass of int — a flag landing in a numeric field is drift, not a number.
+    if isinstance(v, bool) or not isinstance(v, int):
+        raise _err(source, row_id, path, f"must be an integer or null, got {type(v).__name__} ({v!r})")
+    return v
+
+
+def _opt_bool(row: dict, path: str, *, source: str, row_id: str) -> bool | None:
+    v = row.get(path)
+    if v is None:
+        return None
+    if not isinstance(v, bool):
+        raise _err(source, row_id, path, f"must be a boolean or null, got {type(v).__name__} ({v!r})")
+    return v
+
+
+def _opt_dict(row: dict, path: str, *, source: str, row_id: str) -> dict:
+    v = row.get(path)
+    if v is None:
+        return {}
+    if not isinstance(v, dict):
+        raise _err(source, row_id, path, f"must be an object or null, got {type(v).__name__} ({v!r})")
+    return v
+
+
+def _str_list(row: dict, path: str, *, source: str, row_id: str) -> list[str]:
+    v = row.get(path)
+    if v is None:
+        return []
+    if not isinstance(v, list):
+        raise _err(source, row_id, path, f"must be a list or null, got {type(v).__name__} ({v!r})")
+    out: list[str] = []
+    for i, e in enumerate(v):
+        if not isinstance(e, str) or not e.strip():
+            raise _err(source, row_id, f"{path}[{i}]", f"must be a non-empty string, got {e!r}")
+        out.append(e.strip())
+    return out
+
+
+def _dict_list(row: dict, path: str, *, source: str, row_id: str) -> list[dict]:
+    v = row.get(path)
+    if v is None:
+        return []
+    if not isinstance(v, list):
+        raise _err(source, row_id, path, f"must be a list or null, got {type(v).__name__} ({v!r})")
+    for i, e in enumerate(v):
+        if not isinstance(e, dict):
+            raise _err(source, row_id, f"{path}[{i}]", f"must be an object, got {type(e).__name__} ({e!r})")
+    return v
+
+
+def _paired_year(
+    row: dict, low_path: str, high_path: str, *, source: str, row_id: str
+) -> int | None:
+    """Beckerath states every absolute date as a LOW/HIGH estimate pair.
+
+    Committed policy (Rule 2 — a documented deterministic rule, not an arbitrary pick):
+    the pair is represented by its LOW-estimate bound, i.e. the smaller BCE year number /
+    later calendar date; the same bound is taken for every row, so the resulting series is
+    internally consistent. The pair must be fully populated or fully absent — a
+    half-populated pair is ambiguous (is the missing side unknown, or equal to the other?)
+    and RAISES rather than falling through to whichever bound happens to exist. Note this
+    is a value test, not a truth test: year ``0`` is a date, not "absent"."""
+    low = _opt_int(row, low_path, source=source, row_id=row_id)
+    high = _opt_int(row, high_path, source=source, row_id=row_id)
+    if (low is None) != (high is None):
+        raise _err(
+            source,
+            row_id,
+            f"{low_path}/{high_path}",
+            f"is a half-populated chronology bound pair (low={low!r}, high={high!r}); "
+            f"cannot tell whether the missing bound is unknown or equal to the other",
+        )
+    return low
 
 
 def _read_jsonl(root: Path, source: str) -> list[dict]:
@@ -122,220 +223,264 @@ def _read_jsonl(root: Path, source: str) -> list[dict]:
     return rows
 
 
-def _from_titulary_list(lst) -> list[NameForm]:
-    """A Leprohon/pharaoh.se-style titulary list entry → NameForm."""
+def _from_titulary_list(row: dict, path: str, *, source: str, row_id: str) -> list[NameForm]:
+    """A Leprohon/pharaoh.se-style titulary list → NameForms. Every entry must be an object
+    carrying at least one of an anglicised/native surface form or a transliteration; an
+    entry with neither is a titulary claim that would vanish without trace → raise."""
     out: list[NameForm] = []
-    for e in _list(lst):
-        if not isinstance(e, dict):
-            continue
-        surface = _s(e.get("anglicised")) or _s(e.get("name")) or ""
-        translit = _s(e.get("transliteration"))
-        if surface or translit:
-            out.append(NameForm(surface=surface, translit=translit))
+    for i, e in enumerate(_dict_list(row, path, source=source, row_id=row_id)):
+        item = f"{path}[{i}]"
+        surface = (
+            _opt_str(e, "anglicised", source=source, row_id=row_id)
+            or _opt_str(e, "name", source=source, row_id=row_id)
+            or ""
+        )
+        translit = _opt_str(e, "transliteration", source=source, row_id=row_id)
+        if not surface and not translit:
+            raise _err(source, row_id, item, f"has neither a name nor a transliteration: {e!r}")
+        out.append(NameForm(surface=surface, translit=translit))
     return out
 
 
 # --- per-source loaders ----------------------------------------------------
 
 
-def load_leprohon(root: Path) -> list[RulerRecord]:
-    auth = SOURCE_AUTHORITY["leprohon"]
+@dataclass
+class SourceLoad:
+    """One source's records plus the explicit, reported reasons rows were NOT loaded."""
+
+    source_id: str
+    records: list[RulerRecord]
+    non_ruler_rows: list[tuple[str, str]] = field(default_factory=list)  # (row id, why)
+
+
+def load_leprohon(root: Path) -> SourceLoad:
+    src = "leprohon"
+    auth = SOURCE_AUTHORITY[src]
     out = []
-    for r in _read_jsonl(root, "leprohon-2013-titulary"):
-        cite = r.get("source_citation") or {}
-        lid = _s(r.get("leprohon_id"))
-        if not lid:
-            # Fail loud (Rule 2): a ruler node with no stable source id can't be
-            # provenance-attributed and would collide with any other id-less row.
-            raise ValueError(f"Leprohon row missing leprohon_id: {r!r}")
+    for i, r in enumerate(_read_jsonl(root, "leprohon-2013-titulary"), 1):
+        # The stable source id is REQUIRED (Rule 2): a ruler node with no stable id can't
+        # be provenance-attributed, and every id-less row would collapse onto the same
+        # ``<source>-None`` primary key in the web artifact.
+        rid = _req_str(r, "leprohon_id", source=src, row_id=f"line {i}")
+        cite = _opt_dict(r, "source_citation", source=src, row_id=rid)
+        pdf_page = _opt_int(cite, "physical_pdf_page", source=src, row_id=rid)
+        stage_suffix = _opt_str(r, "stage_suffix", source=src, row_id=rid)
+        display_name = _req_str(r, "display_name", source=src, row_id=rid)
         out.append(
             RulerRecord(
-                source_id="leprohon",
+                source_id=src,
                 # Prefix like every other loader so ids are globally unique across sources
                 # (the local_id is the web PRIMARY KEY — an unprefixed id risks collision).
-                local_id=f"leprohon-{lid}",
-                display_name=_s(r.get("display_name")) or lid,
-                alt_names=[str(x) for x in _list(r.get("alt_display_names"))],
-                dynasty=_n(r.get("dynasty_number")),
-                dynasty_label=_s(r.get("dynasty_label")),
-                prenomina=_from_titulary_list(r.get("throne_names")),
-                horus_names=_from_titulary_list(r.get("horus_names"))
-                + _from_titulary_list(r.get("later_horus_names")),
-                nomina=_from_titulary_list(r.get("birth_names")),
+                local_id=f"{src}-{rid}",
+                display_name=display_name,
+                alt_names=_str_list(r, "alt_display_names", source=src, row_id=rid),
+                dynasty=_opt_int(r, "dynasty_number", source=src, row_id=rid),
+                dynasty_label=_opt_str(r, "dynasty_label", source=src, row_id=rid),
+                prenomina=_from_titulary_list(r, "throne_names", source=src, row_id=rid),
+                horus_names=_from_titulary_list(r, "horus_names", source=src, row_id=rid)
+                + _from_titulary_list(r, "later_horus_names", source=src, row_id=rid),
+                nomina=_from_titulary_list(r, "birth_names", source=src, row_id=rid),
                 reign_start_bce=None,
                 reign_end_bce=None,
                 intra_source_same_as=[],
                 authority=auth,
-                cited_page=_n(cite.get("printed_page")),
-                cited_pdf_page=(
-                    str(cite.get("physical_pdf_page"))
-                    if cite.get("physical_pdf_page") is not None
-                    else None
-                ),
+                cited_page=_opt_int(cite, "printed_page", source=src, row_id=rid),
+                cited_pdf_page=str(pdf_page) if pdf_page is not None else None,
                 stage_group=(
-                    (_s(r.get("printed_under")) or _s(r.get("display_name")))
-                    if _s(r.get("stage_suffix"))
+                    (_opt_str(r, "printed_under", source=src, row_id=rid) or display_name)
+                    if stage_suffix
                     else None
                 ),
             )
         )
-    return out
+    return SourceLoad(source_id=src, records=out)
 
 
-def load_beckerath(root: Path) -> list[RulerRecord]:
-    auth = SOURCE_AUTHORITY["beckerath"]
+def load_beckerath(root: Path) -> SourceLoad:
+    src = "beckerath"
+    auth = SOURCE_AUTHORITY[src]
     out = []
-    for r in _read_jsonl(root, "beckerath-1997-chronologie"):
-        if r.get("is_dynasty_marker") is True:
-            continue  # period header, not a ruler
-        name = _s(r.get("name"))
-        if not name:
+    non_ruler: list[tuple[str, str]] = []
+    for i, r in enumerate(_read_jsonl(root, "beckerath-1997-chronologie"), 1):
+        rid = _req_str(r, "beckerath_id", source=src, row_id=f"line {i}")
+        if _opt_bool(r, "is_dynasty_marker", source=src, row_id=rid) is True:
+            # The ONLY sanctioned drop: the source itself marks this row as a period
+            # header rather than a king. Reported, never silent.
+            non_ruler.append((rid, "is_dynasty_marker (period header, not a ruler)"))
             continue
+        name = _req_str(r, "name", source=src, row_id=rid)
         prenomina: list[NameForm] = []
-        scalar = _s(r.get("prenomen"))
+        scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
         if scalar:
             prenomina.append(NameForm(surface=scalar))
-        for t in _list(r.get("egyptian_titularies")):
-            if isinstance(t, dict) and _s(t.get("kind")) == "prenomen" and _s(t.get("name")):
-                prenomina.append(NameForm(surface=_s(t.get("name"))))
-        if _s(r.get("egyptian_titulary_kind")) == "prenomen" and _s(r.get("egyptian_titulary")):
-            prenomina.append(NameForm(surface=_s(r.get("egyptian_titulary"))))
-        cite = r.get("source_citation") or {}
+        for j, t in enumerate(_dict_list(r, "egyptian_titularies", source=src, row_id=rid)):
+            kind = _opt_str(t, "kind", source=src, row_id=rid)
+            tname = _opt_str(t, "name", source=src, row_id=rid)
+            if kind is None or tname is None:
+                raise _err(
+                    src, rid, f"egyptian_titularies[{j}]", f"needs both 'kind' and 'name': {t!r}"
+                )
+            if kind == "prenomen":
+                prenomina.append(NameForm(surface=tname))
+        if _opt_str(r, "egyptian_titulary_kind", source=src, row_id=rid) == "prenomen":
+            prenomina.append(
+                NameForm(surface=_req_str(r, "egyptian_titulary", source=src, row_id=rid))
+            )
+        cite = _opt_dict(r, "source_citation", source=src, row_id=rid)
         out.append(
             RulerRecord(
-                source_id="beckerath",
-                local_id=f"beckerath-{_s(r.get('beckerath_id'))}",
+                source_id=src,
+                local_id=f"{src}-{rid}",
                 display_name=name,
-                alt_names=[str(x) for x in _list(r.get("name_variants"))],
-                dynasty=_n(r.get("dynasty")),
-                dynasty_label=_s(r.get("period")),
+                alt_names=_str_list(r, "name_variants", source=src, row_id=rid),
+                dynasty=_opt_int(r, "dynasty", source=src, row_id=rid),
+                dynasty_label=_opt_str(r, "period", source=src, row_id=rid),
                 prenomina=prenomina,
                 horus_names=[],
                 nomina=[NameForm(surface=name)],
-                reign_start_bce=_n(r.get("start_bce_low")) or _n(r.get("start_bce_high")),
-                reign_end_bce=_n(r.get("end_bce_low")) or _n(r.get("end_bce_high")),
+                reign_start_bce=_paired_year(
+                    r, "start_bce_low", "start_bce_high", source=src, row_id=rid
+                ),
+                reign_end_bce=_paired_year(
+                    r, "end_bce_low", "end_bce_high", source=src, row_id=rid
+                ),
                 intra_source_same_as=[],
                 authority=auth,
-                cited_pdf_page=_s(cite.get("pdf_pages")),
+                cited_pdf_page=_opt_str(cite, "pdf_pages", source=src, row_id=rid),
             )
         )
-    return out
+    return SourceLoad(source_id=src, records=out, non_ruler_rows=non_ruler)
 
 
-def load_kitchen(root: Path) -> list[RulerRecord]:
-    auth = SOURCE_AUTHORITY["kitchen"]
+def load_kitchen(root: Path) -> SourceLoad:
+    src = "kitchen"
+    auth = SOURCE_AUTHORITY[src]
     out = []
-    for r in _read_jsonl(root, "kitchen-tipe"):
-        name = _s(r.get("name"))
-        if not name:
-            continue
+    for i, r in enumerate(_read_jsonl(root, "kitchen-tipe"), 1):
+        rid = _req_str(r, "kitchen_id", source=src, row_id=f"line {i}")
+        name = _req_str(r, "name", source=src, row_id=rid)
         prenomina: list[NameForm] = []
         # Prefer the structured set; the scalar is a human rendering
         # ("Usimare, then Sneferre") and must not be treated as one name (ADR-020).
-        for p in _list(r.get("prenomens")):
-            if isinstance(p, dict) and _s(p.get("name")):
-                prenomina.append(NameForm(surface=_s(p.get("name"))))
+        for j, p in enumerate(_dict_list(r, "prenomens", source=src, row_id=rid)):
+            pname = _opt_str(p, "name", source=src, row_id=rid)
+            if pname is None:
+                raise _err(src, rid, f"prenomens[{j}]", f"needs a 'name': {p!r}")
+            prenomina.append(NameForm(surface=pname))
         if not prenomina:
-            scalar = _s(r.get("prenomen"))
+            scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
             if scalar and "," not in scalar and "then" not in scalar.lower():
                 prenomina.append(NameForm(surface=scalar))
-        same = _s(r.get("same_person_as"))
+        same = _opt_str(r, "same_person_as", source=src, row_id=rid)
         out.append(
             RulerRecord(
-                source_id="kitchen",
-                local_id=f"kitchen-{_s(r.get('kitchen_id'))}",
+                source_id=src,
+                local_id=f"{src}-{rid}",
                 display_name=name,
                 alt_names=[],
-                dynasty=_n(r.get("dynasty")),
-                dynasty_label=_s(r.get("polity")),
+                dynasty=_opt_int(r, "dynasty", source=src, row_id=rid),
+                dynasty_label=_opt_str(r, "polity", source=src, row_id=rid),
                 prenomina=prenomina,
                 horus_names=[],
                 nomina=[NameForm(surface=name)],
-                reign_start_bce=_n(r.get("start_bce")),
-                reign_end_bce=_n(r.get("end_bce")),
-                intra_source_same_as=[f"kitchen-{same}"] if same else [],
+                reign_start_bce=_opt_int(r, "start_bce", source=src, row_id=rid),
+                reign_end_bce=_opt_int(r, "end_bce", source=src, row_id=rid),
+                intra_source_same_as=[f"{src}-{same}"] if same else [],
                 authority=auth,
             )
         )
-    return out
+    return SourceLoad(source_id=src, records=out)
 
 
-def load_pharaoh_se(root: Path) -> list[RulerRecord]:
-    auth = SOURCE_AUTHORITY["pharaoh_se"]
+def load_pharaoh_se(root: Path) -> SourceLoad:
+    src = "pharaoh_se"
+    auth = SOURCE_AUTHORITY[src]
     out = []
-    for r in _read_jsonl(root, "pharaoh-se"):
-        display = _s(r.get("display"))
-        if not display:
-            continue
-        prenomina = _from_titulary_list(r.get("throne_names"))
-        scalar = _s(r.get("prenomen"))
+    for i, r in enumerate(_read_jsonl(root, "pharaoh-se"), 1):
+        rid = _req_str(r, "slug", source=src, row_id=f"line {i}")
+        display = _req_str(r, "display", source=src, row_id=rid)
+        prenomina = _from_titulary_list(r, "throne_names", source=src, row_id=rid)
+        scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
         if not prenomina and scalar:
             prenomina.append(NameForm(surface=scalar))
         nomina: list[NameForm] = []
-        if _s(r.get("nomen")):
-            nomina.append(NameForm(surface=_s(r.get("nomen"))))
-        nomina += _from_titulary_list(r.get("birth_names"))
+        nomen = _opt_str(r, "nomen", source=src, row_id=rid)
+        if nomen:
+            nomina.append(NameForm(surface=nomen))
+        nomina += _from_titulary_list(r, "birth_names", source=src, row_id=rid)
         out.append(
             RulerRecord(
-                source_id="pharaoh_se",
-                local_id=f"pharaoh_se-{_s(r.get('slug'))}",
+                source_id=src,
+                local_id=f"{src}-{rid}",
                 display_name=display,
-                alt_names=[str(x) for x in _list(r.get("alt_labels"))],
-                dynasty=_n(r.get("dynasty_number")),
-                dynasty_label=_s(r.get("dynasty_label")),
+                alt_names=_str_list(r, "alt_labels", source=src, row_id=rid),
+                dynasty=_opt_int(r, "dynasty_number", source=src, row_id=rid),
+                dynasty_label=_opt_str(r, "dynasty_label", source=src, row_id=rid),
                 prenomina=prenomina,
-                horus_names=_from_titulary_list(r.get("horus_names")),
+                horus_names=_from_titulary_list(r, "horus_names", source=src, row_id=rid),
                 nomina=nomina,
-                reign_start_bce=_n(r.get("start_year")),
-                reign_end_bce=_n(r.get("end_year")),
+                reign_start_bce=_opt_int(r, "start_year", source=src, row_id=rid),
+                reign_end_bce=_opt_int(r, "end_year", source=src, row_id=rid),
                 intra_source_same_as=[],
                 authority=auth,
             )
         )
-    return out
+    return SourceLoad(source_id=src, records=out)
 
 
-def load_ryholt(root: Path) -> list[RulerRecord]:
-    auth = SOURCE_AUTHORITY["ryholt"]
+def load_ryholt(root: Path) -> SourceLoad:
+    src = "ryholt"
+    auth = SOURCE_AUTHORITY[src]
     out = []
-    for r in _read_jsonl(root, "ryholt-1997-sip"):
-        nomen = _s(r.get("nomen"))
-        prenomen = _s(r.get("prenomen"))
+    for i, r in enumerate(_read_jsonl(root, "ryholt-1997-sip"), 1):
+        rid = _req_str(r, "ryholt_id", source=src, row_id=f"line {i}")
+        nomen = _opt_str(r, "nomen", source=src, row_id=rid)
+        prenomen = _opt_str(r, "prenomen", source=src, row_id=rid)
         display = nomen or prenomen
-        if not display:
-            continue
+        if display is None:
+            # Ryholt has no separate display field: a row with neither a nomen nor a
+            # prenomen has no name at all and cannot be rendered or matched → raise.
+            raise _err(src, rid, "nomen/prenomen", "row has neither a nomen nor a prenomen")
+        prenomen_translit = _opt_str(r, "prenomen_transliterated", source=src, row_id=rid)
         prenomina: list[NameForm] = []
-        if prenomen or _s(r.get("prenomen_transliterated")):
-            prenomina.append(
-                NameForm(surface=prenomen or "", translit=_s(r.get("prenomen_transliterated")))
-            )
+        if prenomen or prenomen_translit:
+            prenomina.append(NameForm(surface=prenomen or "", translit=prenomen_translit))
         horus_names: list[NameForm] = []
-        if _s(r.get("horus_name_transliterated")):
-            horus_names.append(NameForm(surface="", translit=_s(r.get("horus_name_transliterated"))))
+        horus_translit = _opt_str(r, "horus_name_transliterated", source=src, row_id=rid)
+        if horus_translit:
+            horus_names.append(NameForm(surface="", translit=horus_translit))
         out.append(
             RulerRecord(
-                source_id="ryholt",
-                local_id=f"ryholt-{_s(r.get('ryholt_id'))}",
+                source_id=src,
+                local_id=f"{src}-{rid}",
                 display_name=display,
                 alt_names=[],
-                dynasty=_n(r.get("dynasty")),
-                dynasty_label=_s(r.get("dynasty_label")),
+                dynasty=_opt_int(r, "dynasty", source=src, row_id=rid),
+                dynasty_label=_opt_str(r, "dynasty_label", source=src, row_id=rid),
                 prenomina=prenomina,
                 horus_names=horus_names,
-                nomina=[NameForm(surface=nomen or "", translit=_s(r.get("nomen_transliterated")))],
-                reign_start_bce=_n(r.get("date_bce_start")),
-                reign_end_bce=_n(r.get("date_bce_end")),
+                nomina=[
+                    NameForm(
+                        surface=nomen or "",
+                        translit=_opt_str(r, "nomen_transliterated", source=src, row_id=rid),
+                    )
+                ],
+                reign_start_bce=_opt_int(r, "date_bce_start", source=src, row_id=rid),
+                reign_end_bce=_opt_int(r, "date_bce_end", source=src, row_id=rid),
                 intra_source_same_as=[],
                 authority=auth,
             )
         )
-    return out
+    return SourceLoad(source_id=src, records=out)
 
 
 @dataclass
 class LoadResult:
     records: list[RulerRecord]
     per_source: dict[str, int] = field(default_factory=dict)
+    # The drop report the module promises: source id → [(row id, why it is not a ruler)].
+    non_ruler_rows: dict[str, list[tuple[str, str]]] = field(default_factory=dict)
 
 
 def load_all_sources(authority_root: Path) -> LoadResult:
@@ -346,8 +491,17 @@ def load_all_sources(authority_root: Path) -> LoadResult:
         load_pharaoh_se(authority_root),
         load_ryholt(authority_root),
     ]
-    records = [rec for g in groups for rec in g]
-    per_source: dict[str, int] = {}
+    records = [rec for g in groups for rec in g.records]
+    local_ids: dict[str, str] = {}
     for rec in records:
-        per_source[rec.source_id] = per_source.get(rec.source_id, 0) + 1
-    return LoadResult(records=records, per_source=per_source)
+        if rec.local_id in local_ids:
+            raise ValueError(
+                f"Duplicate ruler local_id {rec.local_id!r}: the stable source ids are the "
+                f"web artifact's PRIMARY KEY and must be unique across all sources."
+            )
+        local_ids[rec.local_id] = rec.source_id
+    return LoadResult(
+        records=records,
+        per_source={g.source_id: len(g.records) for g in groups},
+        non_ruler_rows={g.source_id: g.non_ruler_rows for g in groups if g.non_ruler_rows},
+    )

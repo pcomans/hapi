@@ -101,10 +101,41 @@ export async function getClusterById(id: string): Promise<ClusterRow | null> {
   };
 }
 
+/**
+ * Every requested id MUST come back. A cluster's `source_count` / `member_count` are
+ * computed over its member ids, so dropping a member that is absent from the `ruler`
+ * table would render a partial constellation while still claiming the full count — a
+ * silently wrong reunification. The artifact is baked from one build; a member id with no
+ * ruler row means the artifact is internally inconsistent, and that must fail loudly.
+ */
 export async function getRulersByIds(ids: string[]): Promise<RulerRow[]> {
   if (ids.length === 0) return [];
   const ph = ids.map((_, i) => `$${i + 1}`).join(",");
-  return q<RulerRow>(`SELECT * FROM ruler WHERE id IN (${ph})`, ids);
+  const rows = await q<RulerRow>(`SELECT * FROM ruler WHERE id IN (${ph})`, ids);
+  const found = new Set(rows.map((r) => r.id));
+  const missing = ids.filter((id) => !found.has(id));
+  if (missing.length > 0) {
+    throw new Error(
+      `Claim-graph artifact integrity error: ${missing.length} requested ruler id(s) have ` +
+        `no row in the ruler table: ${missing.join(", ")}`,
+    );
+  }
+  return rows;
+}
+
+/**
+ * Resolve cluster member ids against an already-fetched ruler map, in the cluster's own
+ * order. Throws (never filters) when a member is missing — see `getRulersByIds`.
+ */
+export function requireRulers(byId: Map<string, RulerRow>, ids: string[]): RulerRow[] {
+  const missing = ids.filter((id) => !byId.has(id));
+  if (missing.length > 0) {
+    throw new Error(
+      `Claim-graph artifact integrity error: ${missing.length} cluster member(s) missing ` +
+        `from the ruler table: ${missing.join(", ")}`,
+    );
+  }
+  return ids.map((id) => byId.get(id) as RulerRow);
 }
 
 export async function getRuler(id: string): Promise<RulerRow | null> {

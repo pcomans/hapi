@@ -9,7 +9,7 @@ import {
   getClaimsFor,
   getApprovedEdgesAmong,
   getEscalationsTouchingAny,
-  type RulerRow,
+  requireRulers,
 } from "@/lib/queries";
 import { reignLabel, dynastyLabel } from "@/lib/ui";
 
@@ -24,9 +24,7 @@ export default async function ClusterDetail({
 
   const rulers = await getRulersByIds(cluster.member_ids);
   const byId = new Map(rulers.map((r) => [r.id, r]));
-  const members = cluster.member_ids
-    .map((mid) => byId.get(mid))
-    .filter((r): r is RulerRow => !!r);
+  const members = requireRulers(byId, cluster.member_ids);
   const constMembers = members.map((r) => ({
     id: r.id,
     source_id: r.source_id,

@@ -14,9 +14,9 @@ escalated, and doubt routes to escalated.
 
 from __future__ import annotations
 
+import hashlib
 import json
-import re
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from .matcher import Candidate
@@ -27,27 +27,61 @@ VERDICT_REJECTED = "hapi:verdict_rejected"
 VERDICT_RETRACTED = "hapi:verdict_retracted"
 VERDICT_ESCALATED = "hapi:verdict_escalated"
 
+PROVIDER_ANTHROPIC = "anthropic"
+PROVIDER_OPENROUTER = "openrouter"
+
+# The request parameters are committed constants, not caller-tunable knobs: the persisted
+# provenance record (and the cache digest built from it) must describe the request that was
+# actually sent, and a per-call override would let those two drift apart (Rule 4/13).
+# OpenRouter's budget is generous because reasoning models (GLM 5.2) spend completion
+# tokens on reasoning before emitting the JSON answer.
+ANTHROPIC_PARAMETERS: dict[str, Any] = {"max_tokens": 600}
+OPENROUTER_PARAMETERS: dict[str, Any] = {"max_tokens": 3000, "temperature": 0}
+PROVIDER_PARAMETERS: dict[str, dict[str, Any]] = {
+    PROVIDER_ANTHROPIC: ANTHROPIC_PARAMETERS,
+    PROVIDER_OPENROUTER: OPENROUTER_PARAMETERS,
+}
+
+
+@dataclass
+class ReviewerInteraction:
+    """ONE complete request/response round-trip with the reviewer model.
+
+    Constitutional Rule 13: a stored interaction must be enough to *reconstruct and replay
+    the request* — so it holds the provider, the requested model id AND the dated snapshot
+    the provider actually served, every request parameter, the full system prompt, the full
+    user prompt, and the complete raw response body. Every attempt made for a candidate is
+    persisted, not just the one that happened to parse: a malformed attempt influenced the
+    decision (it consumed a retry, and after the last retry it *is* the decision).
+    """
+
+    attempt: int  # 1-based position in the retry sequence for this candidate
+    provider: str
+    requested_model: str | None
+    model_snapshot: str | None
+    parameters: dict[str, Any]
+    system_prompt: str
+    user_prompt: str
+    raw_response: Any
+    parse_error: str | None = None  # set when THIS attempt's output was unparseable
+
 
 class ReviewerParseError(ValueError):
     """The reviewer returned a response that could not be parsed into a verdict. Carries
-    the full interaction (prompt + raw response + model snapshot) so that when this drives
-    an escalation, the response that caused it is still persisted (Constitutional Rule 13):
+    the complete :class:`ReviewerInteraction` so that when this drives an escalation, the
+    request and the response that caused it are still persisted (Constitutional Rule 13):
     a decision must be replayable from a stored request/response, even a malformed one."""
 
     def __init__(
         self,
         message: str,
         *,
-        prompt: str,
-        raw_response: Any,
-        model_id: str | None,
-        model_snapshot: str | None,
+        interaction: ReviewerInteraction,
+        request_digest: str,
     ) -> None:
         super().__init__(message)
-        self.prompt = prompt
-        self.raw_response = raw_response
-        self.model_id = model_id
-        self.model_snapshot = model_snapshot
+        self.interaction = interaction
+        self.request_digest = request_digest
 
 
 @dataclass
@@ -56,11 +90,12 @@ class Verdict:
     outcome: str
     reason: str
     reviewer: str  # "deterministic" | "llm"
-    # Reasoning capture (Rule 13) — populated on the llm path.
-    model_id: str | None = None
-    model_snapshot: str | None = None
-    prompt: str | None = None
-    raw_response: Any = None
+    # Reasoning capture (Rule 13) — populated on the llm path. ``interactions`` holds EVERY
+    # attempt in order; the last one produced ``outcome``. ``request_digest`` pins the exact
+    # request (records + prompts + provider + model + parameters) the verdict was reached
+    # under, so a cached verdict can never be replayed under a different configuration.
+    request_digest: str | None = None
+    interactions: list[ReviewerInteraction] = field(default_factory=list)
 
 
 # --- deterministic path ----------------------------------------------------
@@ -198,26 +233,80 @@ _MAPPING = {
 
 
 def _parse_verdict_json(text: str) -> tuple[str, str]:
-    # strip markdown code fences if present
-    cleaned = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.MULTILINE).strip()
-    m = re.search(r"\{.*\}", cleaned, re.DOTALL)
-    if m:
-        try:
-            obj = json.loads(m.group(0))
-            outcome = _MAPPING.get(str(obj.get("outcome", "")).lower())
-            if outcome:
-                return outcome, obj.get("reason", "(no reason given)")
-        except json.JSONDecodeError:
-            pass  # fall through to lenient salvage (e.g. truncated reason)
-    # Lenient salvage: extract the outcome (and best-effort reason) even from a truncated
-    # or slightly malformed object, so a cut-off long reason doesn't waste the call.
-    om = re.search(r'"outcome"\s*:\s*"(approved|rejected|escalated)"', cleaned, re.IGNORECASE)
-    if om:
-        outcome = _MAPPING[om.group(1).lower()]
-        rm = re.search(r'"reason"\s*:\s*"([^"]*)', cleaned)
-        reason = (rm.group(1).strip() if rm else "(reason truncated)") or "(no reason given)"
-        return outcome, reason
-    raise ValueError(f"Reviewer response was not parseable JSON: {text[:200]!r}")
+    """STRICT parse of the reviewer response: the whole response must be exactly one JSON
+    object with exactly the keys ``outcome`` (one of the three literals the system prompt
+    mandates) and ``reason`` (a non-empty string). Anything else — truncated JSON, a code
+    fence, prose around the object, an extra key, a wrong type — raises.
+
+    There is deliberately NO salvage path. Regex-extracting an ``outcome`` out of a
+    malformed or truncated body turns a broken response into an authoritative verdict: a
+    cut-off ``{"outcome":"approved"`` would mint an identity edge whose stated reason was
+    never actually produced by the model. Malformed output must route through the caller's
+    explicit :class:`ReviewerParseError` path (retry, then escalate that one candidate with
+    every attempt persisted) — it must never approve.
+    """
+    stripped = text.strip()
+    if not stripped:
+        raise ValueError("Reviewer response was empty.")
+    try:
+        obj = json.loads(stripped)
+    except json.JSONDecodeError as err:
+        raise ValueError(
+            f"Reviewer response is not a single valid JSON object ({err}): {text[:200]!r}"
+        ) from err
+    if not isinstance(obj, dict):
+        raise ValueError(
+            f"Reviewer response is JSON but not an object (got {type(obj).__name__}): "
+            f"{text[:200]!r}"
+        )
+    keys = set(obj)
+    if keys != {"outcome", "reason"}:
+        raise ValueError(
+            f"Reviewer response object must have exactly the keys "
+            f"{{'outcome', 'reason'}}, got {sorted(keys)}: {text[:200]!r}"
+        )
+    outcome_raw = obj["outcome"]
+    if not isinstance(outcome_raw, str) or outcome_raw not in _MAPPING:
+        raise ValueError(
+            f"Reviewer response 'outcome' must be one of {sorted(_MAPPING)}, got "
+            f"{outcome_raw!r}: {text[:200]!r}"
+        )
+    reason = obj["reason"]
+    if not isinstance(reason, str) or not reason.strip():
+        raise ValueError(
+            f"Reviewer response 'reason' must be a non-empty string, got {reason!r}: "
+            f"{text[:200]!r}"
+        )
+    return _MAPPING[outcome_raw], reason.strip()
+
+
+def request_digest(
+    candidate: Candidate,
+    a: RulerRecord,
+    b: RulerRecord,
+    *,
+    provider: str,
+    model: str,
+    parameters: dict[str, Any],
+) -> str:
+    """Stable digest of the COMPLETE reviewer request: both source records verbatim, the
+    system + user prompt, the provider, the requested model and every request parameter.
+
+    A verdict is only reusable (from the resumable cache) if this digest still matches:
+    otherwise the artifact would claim one reviewer configuration while its edges were
+    decided under another — provenance that does not describe the decision (Rule 6/13)."""
+    payload = {
+        "candidate_id": candidate.id,
+        "provider": provider,
+        "model": model,
+        "parameters": parameters,
+        "system_prompt": SYSTEM_PROMPT,
+        "user_prompt": _build_user_prompt(candidate, a, b),
+        "record_a": asdict(a),
+        "record_b": asdict(b),
+    }
+    blob = json.dumps(payload, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
 def review_with_llm(
@@ -226,20 +315,34 @@ def review_with_llm(
     a: RulerRecord,
     b: RulerRecord,
     model: str = "claude-opus-4-8",
-    max_tokens: int = 600,
 ) -> Verdict:
     """Review one candidate with the live Anthropic API. Raises on any error (no silent
     fallback — Constitutional Rule 2); the caller decides retry/stop policy.
 
-    A ``ValueError`` signals an unparseable model response specifically (distinct from an
-    API/transport error), so the caller can escalate that one candidate instead of
-    aborting the whole run."""
-    prompt = _build_user_prompt(candidate, a, b)
+    A :class:`ReviewerParseError` signals an unparseable model response specifically
+    (distinct from an API/transport error), so the caller can escalate that one candidate
+    instead of aborting the whole run. Either way the complete interaction — the request
+    parameters, both prompts, the raw body — is attached (Rule 13)."""
+    user_prompt = _build_user_prompt(candidate, a, b)
+    parameters = dict(ANTHROPIC_PARAMETERS)
     resp = client.messages.create(
         model=model,
-        max_tokens=max_tokens,
         system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": prompt}],
+        messages=[{"role": "user", "content": user_prompt}],
+        **parameters,
+    )
+    interaction = ReviewerInteraction(
+        attempt=1,
+        provider=PROVIDER_ANTHROPIC,
+        requested_model=model,
+        model_snapshot=resp.model,
+        parameters=parameters,
+        system_prompt=SYSTEM_PROMPT,
+        user_prompt=user_prompt,
+        raw_response=resp.model_dump(mode="json"),
+    )
+    digest = request_digest(
+        candidate, a, b, provider=PROVIDER_ANTHROPIC, model=model, parameters=parameters
     )
     text = "".join(
         block.text for block in resp.content if getattr(block, "type", None) == "text"
@@ -248,22 +351,17 @@ def review_with_llm(
         outcome, reason = _parse_verdict_json(text)
     except ValueError as err:
         # Attach the full interaction so a parse-driven escalation stays replayable (R13).
+        interaction.parse_error = str(err)
         raise ReviewerParseError(
-            str(err),
-            prompt=prompt,
-            raw_response=resp.model_dump(mode="json"),
-            model_id=model,
-            model_snapshot=resp.model,
+            str(err), interaction=interaction, request_digest=digest
         ) from err
     return Verdict(
         candidate_id=candidate.id,
         outcome=outcome,
         reason=reason,
         reviewer="llm",
-        model_id=model,
-        model_snapshot=resp.model,
-        prompt=prompt,
-        raw_response=resp.model_dump(mode="json"),
+        request_digest=digest,
+        interactions=[interaction],
     )
 
 
@@ -273,32 +371,29 @@ def review_with_openrouter(
     a: RulerRecord,
     b: RulerRecord,
     model: str = "z-ai/glm-5.2",
-    max_tokens: int = 3000,
 ) -> Verdict:
     """Same contract as :func:`review_with_llm`, against an OpenRouter chat model (e.g.
     GLM 5.2). The IDENTICAL de-leaked system+user prompt is used, so a run is directly
     comparable to the Anthropic path. Fails loud on transport/HTTP error (no silent
-    fallback, Rule 2); raises :class:`ReviewerParseError` (with the full body, Rule 13) on
-    an unparseable or empty response so the caller escalates that one candidate.
+    fallback, Rule 2); raises :class:`ReviewerParseError` (with the full interaction,
+    Rule 13) on an unparseable or empty response so the caller escalates that candidate.
 
-    ``max_tokens`` is generous because reasoning models (GLM 5.2) spend completion tokens
-    on reasoning before the JSON answer; too small a budget truncates ``content`` to null.
     The full body — including the model's ``reasoning``/``reasoning_details`` — is captured
     as the replayable provenance record."""
     import httpx
 
-    prompt = _build_user_prompt(candidate, a, b)
+    user_prompt = _build_user_prompt(candidate, a, b)
+    parameters = dict(OPENROUTER_PARAMETERS)
     resp = httpx.post(
         "https://openrouter.ai/api/v1/chat/completions",
         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
         json={
             "model": model,
-            "max_tokens": max_tokens,
-            "temperature": 0,
             "messages": [
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": prompt},
+                {"role": "user", "content": user_prompt},
             ],
+            **parameters,
         },
         timeout=180,
     )
@@ -306,25 +401,38 @@ def review_with_openrouter(
     body = resp.json()
     choice = body["choices"][0]
     text = (choice["message"].get("content") or "").strip()
-    snapshot = body.get("model")
+    interaction = ReviewerInteraction(
+        attempt=1,
+        provider=PROVIDER_OPENROUTER,
+        requested_model=model,
+        model_snapshot=body.get("model"),
+        parameters=parameters,
+        system_prompt=SYSTEM_PROMPT,
+        user_prompt=user_prompt,
+        raw_response=body,
+    )
+    digest = request_digest(
+        candidate, a, b, provider=PROVIDER_OPENROUTER, model=model, parameters=parameters
+    )
     if not text:
+        interaction.parse_error = (
+            f"OpenRouter returned empty content (finish_reason={choice.get('finish_reason')})"
+        )
         raise ReviewerParseError(
-            f"OpenRouter returned empty content (finish_reason={choice.get('finish_reason')})",
-            prompt=prompt, raw_response=body, model_id=model, model_snapshot=snapshot,
+            interaction.parse_error, interaction=interaction, request_digest=digest
         )
     try:
         outcome, reason = _parse_verdict_json(text)
     except ValueError as err:
+        interaction.parse_error = str(err)
         raise ReviewerParseError(
-            str(err), prompt=prompt, raw_response=body, model_id=model, model_snapshot=snapshot,
+            str(err), interaction=interaction, request_digest=digest
         ) from err
     return Verdict(
         candidate_id=candidate.id,
         outcome=outcome,
         reason=reason,
         reviewer="llm",
-        model_id=model,
-        model_snapshot=snapshot,
-        prompt=prompt,
-        raw_response=body,
+        request_digest=digest,
+        interactions=[interaction],
     )

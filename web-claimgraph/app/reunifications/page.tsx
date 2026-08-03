@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Constellation } from "@/components/Constellation";
-import { getMultiSourceClusters, getRulersByIds, type RulerRow } from "@/lib/queries";
+import { getMultiSourceClusters, getRulersByIds, requireRulers } from "@/lib/queries";
 
 export const dynamic = "force-static";
 
@@ -23,10 +23,11 @@ export default async function Reunifications() {
       </div>
       <div className="grid-cards">
         {clusters.map((c) => {
-          const members = c.member_ids
-            .map((id) => byId.get(id))
-            .filter((r): r is RulerRow => !!r)
-            .map((r) => ({ id: r.id, source_id: r.source_id, display_name: r.display_name }));
+          const members = requireRulers(byId, c.member_ids).map((r) => ({
+            id: r.id,
+            source_id: r.source_id,
+            display_name: r.display_name,
+          }));
           return (
             <Link key={c.id} href={`/reunifications/${encodeURIComponent(c.id)}`} className="card" style={{ display: "block" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
