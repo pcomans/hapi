@@ -1,6 +1,6 @@
 # Sweep audit — all Phase-0 authority sources
 
-**Purpose.** Retrospectively run `code-reviewer` and `egyptologist-reviewer` subagents across every committed Phase-0 authority source. Motivated by the session-2026-04-23 retrospective audit which revealed that the `feedback_pr_reviewers.md` policy ("run code-reviewer AND egyptologist-reviewer on every PR") was **only enforced by memory, not by a hook** — so earlier PRs shipped with Gemini coverage alone. The PM Theban / HKW retrospective found a P1 data error (Scorpion I dynasty attribution) plus rule-3 / rule-5 gaps. Other sources likely have similar hidden issues.
+**Purpose.** Retrospectively run `code-reviewer` and `egyptologist-reviewer` subagents across every committed Phase-0 authority source. Motivated by the session-2026-04-23 retrospective audit which revealed that the `feedback_pr_reviewers.md` policy ("run code-reviewer AND egyptologist-reviewer on every PR") was **only enforced by memory, not by a hook** — so earlier PRs shipped with bot-review coverage alone. The PM Theban / HKW retrospective found a P1 data error (Scorpion I dynasty attribution) plus rule-3 / rule-5 gaps. Other sources likely have similar hidden issues.
 
 **This document is a spawn prompt for a coordinator agent.** The coordinator reads this file and executes it; it does not do the reviewing itself. The actual reviewing is done by `code-reviewer` / `egyptologist-reviewer` subagents spawned from the coordinator.
 

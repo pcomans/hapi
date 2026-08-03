@@ -41,7 +41,7 @@ FULL_SHA=$(git rev-parse --verify "$SHA^{commit}") || {
 # NB: do NOT add `--` between `--verify` and the revision — unlike other
 # git subcommands, `rev-parse --verify` treats arguments after `--` as
 # PATHSPECS (file paths), not revisions, so the command fails with
-# "Needed a single revision". Caught live on PR #73 when a Gemini-suggested
+# "Needed a single revision". Caught live on PR #73 when a reviewer-suggested
 # `--` broke the Monitor's seed step on its first arm cycle.
 SHA=$FULL_SHA
 REPO=${3:-$(git remote get-url origin 2>/dev/null | sed -E 's#^.*github\.com[:/]##; s#\.git$##')}
