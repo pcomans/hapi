@@ -258,14 +258,29 @@ fi
 # matches or it does not.
 HEAD_SHA=$(git rev-parse HEAD 2>/dev/null)
 REVIEW_MARKER="<!-- hapi-review-trigger: $HEAD_SHA -->"
+REVIEW_BODY="@codex review
+
+$REVIEW_MARKER"
+
+# A matching comment counts as ours only if WE wrote it and the body is exactly
+# what we emit. A commit SHA is public, so a substring match on the marker let
+# anyone — a person or another bot — post that string and silently suppress the
+# real review request. Suppressing a review is the failure mode this whole hook
+# exists to prevent, so the check demands authorship AND an exact body.
+TRIGGER_AUTHOR=$(gh api user --jq .login 2>/dev/null) || true
 
 # On API failure ALREADY_TRIGGERED stays 0, so we post: a duplicate review is
-# recoverable noise, a missing one is not.
+# recoverable noise, a missing one is not. Same for an unknown author.
 # Guarded with `|| true` so the fallback below is reachable even if this script
 # ever gains `set -e` — under errexit a failed `gh api` would otherwise exit
 # before the validation runs, silently skipping the review.
-ALREADY_TRIGGERED=$(gh api "repos/{owner}/{repo}/issues/$PR_NUMBER/comments" \
-  --jq "[.[] | select((.body // \"\") | contains(\"hapi-review-trigger: $HEAD_SHA\"))] | length" 2>/dev/null) || true
+if [ -n "$TRIGGER_AUTHOR" ]; then
+  ALREADY_TRIGGERED=$(gh api "repos/{owner}/{repo}/issues/$PR_NUMBER/comments" \
+    --jq "[.[] | select(.user.login == \$author) | select((.body // \"\") == \$want)] | length" \
+    --arg author "$TRIGGER_AUTHOR" --arg want "$REVIEW_BODY" 2>/dev/null) || true
+else
+  ALREADY_TRIGGERED=0
+fi
 case "$ALREADY_TRIGGERED" in
   ''|*[!0-9]*) ALREADY_TRIGGERED=0 ;;
 esac
@@ -273,9 +288,7 @@ esac
 if [ "$ALREADY_TRIGGERED" -gt 0 ]; then
   MESSAGES="Codex review already requested for HEAD $HEAD_SHA on PR #$PR_NUMBER — not re-posting.\n$MESSAGES"
 else
-  REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review
-
-$REVIEW_MARKER" 2>&1)
+  REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "$REVIEW_BODY" 2>&1)
   if [ $? -eq 0 ]; then
     if [ "$IS_GIT_PUSH" = true ]; then
       MESSAGES="Codex re-review requested on PR #$PR_NUMBER.\n$MESSAGES"
