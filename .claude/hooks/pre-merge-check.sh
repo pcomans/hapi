@@ -216,7 +216,7 @@ HEREDOC
         cat <<'HEREDOC'
 {
   "decision": "block",
-  "reason": "Merge blocked: REVIEWERS_SPAWNED=1 not set. Before merging, you MUST have spawned code-reviewer AND egyptologist-reviewer subagents in parallel against the PR diff (memory: feedback_pr_reviewers.md), confirmed Gemini/Codex review on the current HEAD via `gh api repos/{owner}/{repo}/pulls/<N>/reviews` (memory: feedback_never_merge_without_gemini_or_codex.md), and addressed every reviewer finding. Once done, re-run with `REVIEWERS_SPAWNED=1 gh pr merge ...` to confirm. Constitutional rule 3: deterministic enforcement over convention."
+  "reason": "Merge blocked: REVIEWERS_SPAWNED=1 not set. Before merging, you MUST have spawned code-reviewer AND egyptologist-reviewer subagents in parallel against the PR diff (memory: feedback_pr_reviewers.md), confirmed the Codex review on the current HEAD via `gh api repos/{owner}/{repo}/pulls/<N>/reviews` (memory: feedback_never_merge_without_codex.md), and addressed every reviewer finding. Once done, re-run with `REVIEWERS_SPAWNED=1 gh pr merge ...` to confirm. Constitutional rule 3: deterministic enforcement over convention."
 }
 HEREDOC
         exit 0

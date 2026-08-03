@@ -20,7 +20,7 @@ The merge-time picks below were superseded by review-cycle PDF verification. The
 
 2. `TT386|notes_from_pm` — 1/1/1 on Wilkinson parenthetical inclusion + site-name spelling. **Pin agent A's `Mináfed`** (acute á; B dropped parenthetical, C OCR-misread as `Mimifed`). PDF p.437 confirmed `Mináfed` per egyptologist P1 F1 PR #294 round 1.
 
-3. `TT389|notes_from_pm` — 1/1/1 on OCR-garbled priest-title cluster (`snulj-priest`, `lz.rk-priest`). **Pin agent A's `smtj-priest` + `ḥsk-priest` + macron-bearing `Amenemōnet`** — PDF p.440 confirmed at PR #294 round 1. The initial merge-time `snwḥ`/`ḥrk` plausibility-decode was wrong; Gemini-#294 round 1 correctly pushed for direct-PDF-pin in tie-break (single source of truth, no redundant CHUNK47_CORRECTIONS).
+3. `TT389|notes_from_pm` — 1/1/1 on OCR-garbled priest-title cluster (`snulj-priest`, `lz.rk-priest`). **Pin agent A's `smtj-priest` + `ḥsk-priest` + macron-bearing `Amenemōnet`** — PDF p.440 confirmed at PR #294 round 1. The initial merge-time `snwḥ`/`ḥrk` plausibility-decode was wrong; the PR #294 round-1 bot review correctly pushed for direct-PDF-pin in tie-break (single source of truth, no redundant CHUNK47_CORRECTIONS).
 
 ## CHUNK47_CORRECTIONS (3)
 
@@ -36,7 +36,7 @@ The merge-time picks below were superseded by review-cycle PDF verification. The
 ## Lessons learned (post-mortem of PR #294 round-1 cycle)
 
 1. **Trust PDF over OCR/agent-majority.** TT389 burnt one round-1 review cycle because the reconciliation agent chose B+C majority on OCR-opaque priest titles instead of agent A's PDF-faithful reading. Always verify against the printed page when the cluster is opaque.
-2. **Pin PDF-confirmed values DIRECTLY in tie-break, don't double-track via CHUNK*_CORRECTIONS.** Gemini's TT389 architectural simplification (single source of truth) was right.
+2. **Pin PDF-confirmed values DIRECTLY in tie-break, don't double-track via CHUNK*_CORRECTIONS.** The bot review's TT389 architectural simplification (single source of truth) was right.
 3. **Same-chunk diacritic consistency check.** TT381 macron drift was the lone outlier within the same chunk where TT389/TT390 preserved macrons — catchable by `grep` for macron-stripped names that match macron-preserved patterns elsewhere in chunk.
 
 ## Other notes

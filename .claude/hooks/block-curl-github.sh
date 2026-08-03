@@ -134,7 +134,7 @@ if [ "$RESULT" = "BLOCK" ]; then
   cat <<'HEREDOC'
 {
   "decision": "block",
-  "reason": "curl to GitHub is blocked. Use `gh` instead — `gh pr create`, `gh pr comment`, `gh pr view`, `gh issue create`, `gh api repos/owner/repo/pulls/N/comments`, etc. Routing through `gh` ensures PR/issue creation triggers the post-pr-create workflow hook (reviewer spawning, /gemini review, /watch-pr-reviews armament). Constitutional rule 3: deterministic enforcement over convention — one tool surface for GitHub, one hook surface."
+  "reason": "curl to GitHub is blocked. Use `gh` instead — `gh pr create`, `gh pr comment`, `gh pr view`, `gh issue create`, `gh api repos/owner/repo/pulls/N/comments`, etc. Routing through `gh` ensures PR/issue creation triggers the post-pr-create workflow hook (reviewer spawning, @codex review, /watch-pr-reviews armament). Constitutional rule 3: deterministic enforcement over convention — one tool surface for GitHub, one hook surface."
 }
 HEREDOC
   exit 0

@@ -167,7 +167,7 @@ These sources don't carry numeric BCE fields; their date semantics live in `dyna
 
 Phase A consumers MUST normalise per-source dates into a canonical envelope before cross-source comparison. The spec below is the target shape. Per-source migration toward it is tracked separately (see "Migration plan" below).
 
-**Suffix convention:** `_older` and `_younger` are deliberately chosen over `_high`/`_low` because BCE numerics invert the usual ordering — the "older" date is numerically the SMALLER value (`-3032` is older than `-2982`). Calling the older value `_high` is the opposite of the standard programming convention where `_high` means max. The temporal-semantic suffix `_older` matches the meaning regardless of sign. Per Gemini PR #195 round-1.
+**Suffix convention:** `_older` and `_younger` are deliberately chosen over `_high`/`_low` because BCE numerics invert the usual ordering — the "older" date is numerically the SMALLER value (`-3032` is older than `-2982`). Calling the older value `_high` is the opposite of the standard programming convention where `_high` means max. The temporal-semantic suffix `_older` matches the meaning regardless of sign. Per the PR #195 round-1 bot review.
 
 **Sources without a slash range** (HKW, Kitchen, Ryholt, Shaw, PM) set `_older == _younger` to the single value. **Null endpoints** set both to null and populate `null_endpoints_reason`.
 
@@ -224,7 +224,7 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
   // === Crosswalk-to-source ===
   // Per-bound qualifier tokens — Beckerath supports asymmetric per-bound
   // forms like `vor 1000 – nach 950`. Singular `source_qualifier_token`
-  // would lose half the information for these rows. Per Gemini PR #195
+  // would lose half the information for these rows. Per the PR #195 bot review,
   // round-6.
   "start_qualifier_token": "ca.",  // verbatim glyph from source on start
                                    // (`"c."` Shaw, `"ca."` Beckerath/Kitchen,
@@ -235,7 +235,7 @@ Phase A consumers MUST normalise per-source dates into a canonical envelope befo
 
 ### Uncertainty (TWO separate field families — do not conflate)
 
-Per Gemini round-1 finding: an earlier draft of this spec proposed a single `existence_certainty` enum that conflated three distinct semantic axes. **They are NOT the same** and must be tracked in separate fields by Phase A consumers.
+Per the round-1 bot-review finding: an earlier draft of this spec proposed a single `existence_certainty` enum that conflated three distinct semantic axes. **They are NOT the same** and must be tracked in separate fields by Phase A consumers.
 
 #### 1. Ruler / person existence-uncertainty
 
@@ -274,7 +274,7 @@ The source flags how confident it is that a particular entity (tomb, monument, a
   //   see #3 below).
   // - name_uncertain (HKW, post-#176) — uncertainty between candidate
   //   names for a chronological slot whose existence is NOT doubted.
-  //   Per Gemini PR #195 round-4: this is a name-attribution flag,
+  //   Per the PR #195 bot review, round-4: this is a name-attribution flag,
   //   not an existence flag. Maps to attribution_certainty=uncertain
   //   when True.
 }
