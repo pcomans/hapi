@@ -916,11 +916,16 @@ def test_terminal_failure_writes_its_interactions_to_disk_before_the_run_dies(tm
 
     cache_path = str(tmp_path / "cache.jsonl")
 
-    with pytest.raises(verdicts_mod.ReviewerRunAborted):
+    with pytest.raises(verdicts_mod.ReviewerRunAbortedGroup) as excinfo:
         verdicts_mod.resolve_matches(
             [a, b], mode="llm", reviewer_fn=boom, model="claude-sonnet-5",
             retries_per_candidate=1, cache_path=cache_path,
         )
+
+    # the same evidence is on the raised error, not only on disk
+    assert [ab.candidate_id for ab in excinfo.value.aborts] == ["cand-beckerath-50|leprohon-50"]
+    assert excinfo.value.as_records() == [ab.as_record() for ab in excinfo.value.aborts]
+    assert cache_path + ".failed-attempts.jsonl" in str(excinfo.value)
 
     # no verdict was reached, so the verdict cache stays empty — a failed attempt is not a
     # decision and must never be resumed as one
@@ -941,6 +946,83 @@ def test_terminal_failure_writes_its_interactions_to_disk_before_the_run_dies(tm
     assert [i["call_error"] for i in rec["interactions"]] == ["HTTP 401", "HTTP 401"]
     assert rec["interactions"][0]["system_prompt"] == SYSTEM_PROMPT
     assert rec["interactions"][0]["user_prompt"] == real_prompt
+
+
+def test_abort_without_a_cache_path_carries_its_evidence_on_the_raised_error():
+    """The DEFAULT configuration has no cache_path, so nothing is written to disk and the
+    raised error is the only copy of the evidence. It must therefore actually carry it."""
+    error_body = {"error": {"code": 401, "message": "No auth credentials found"}}
+    a = _rec("leprohon", "leprohon-51", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", "beckerath-51", "Amasis", prenomina=["Chnem-ib-rê"])
+    real_prompt = _build_user_prompt(generate_candidates([a, b])[0], a, b)
+
+    def boom(c, x, y):
+        raise ReviewerHttpError(
+            "OpenRouter returned HTTP 401",
+            interaction=_interaction(
+                raw_response=error_body, call_error="HTTP 401", user_prompt=real_prompt
+            ),
+            request_digest="digest-401",
+        )
+
+    with pytest.raises(verdicts_mod.ReviewerRunAbortedGroup) as excinfo:
+        verdicts_mod.resolve_matches(
+            [a, b], mode="llm", reviewer_fn=boom, model="claude-sonnet-5",
+            retries_per_candidate=1,
+        )
+
+    err = excinfo.value
+    assert "1 candidate(s) failed after retries" in str(err)
+    assert "only copy" in str(err)
+    assert len(err.aborts) == 1
+    ab = err.aborts[0]
+    assert ab.candidate_id == "cand-beckerath-51|leprohon-51"
+    assert ab.request_digest == "digest-401"
+    assert [i.attempt for i in ab.interactions] == [1, 2]
+    assert [i.raw_response for i in ab.interactions] == [error_body, error_body]
+    assert [i.user_prompt for i in ab.interactions] == [real_prompt, real_prompt]
+
+
+def test_multiple_aborts_are_all_recoverable_from_the_raised_error():
+    """Two candidates abort in the same (no-cache) run: the ids, digests and interactions
+    of BOTH must be recoverable. Collapsing them into the first candidate's abort — as the
+    aggregate message claimed not to do — would silently lose the second."""
+    bodies = {
+        "cand-beckerath-60|leprohon-60": {"error": {"code": 429, "message": "rate limited"}},
+        "cand-beckerath-61|leprohon-61": {"error": {"code": 401, "message": "no credentials"}},
+    }
+    recs = [
+        _rec("leprohon", "leprohon-60", "Amasis", prenomina=["Khnemibre"]),
+        _rec("beckerath", "beckerath-60", "Amasis", prenomina=["Chnem-ib-rê"]),
+        _rec("leprohon", "leprohon-61", "Amenhotep I", prenomina=["Djeserkare"]),
+        _rec("beckerath", "beckerath-61", "Amenophis I", prenomina=["Djeser-ka-Re"]),
+    ]
+    assert {c.id for c in generate_candidates(recs)} == set(bodies)
+
+    def boom(c, x, y):
+        raise ReviewerHttpError(
+            f"provider error for {c.id}",
+            interaction=_interaction(raw_response=bodies[c.id], call_error=f"HTTP {c.id}"),
+            request_digest=f"digest-{c.id}",
+        )
+
+    with pytest.raises(verdicts_mod.ReviewerRunAbortedGroup) as excinfo:
+        verdicts_mod.resolve_matches(
+            recs, mode="llm", reviewer_fn=boom, model="claude-sonnet-5",
+            retries_per_candidate=1,
+        )
+
+    err = excinfo.value
+    assert "2 candidate(s) failed after retries" in str(err)
+    by_id = {ab.candidate_id: ab for ab in err.aborts}
+    assert set(by_id) == set(bodies)
+    for cid, body in bodies.items():
+        ab = by_id[cid]
+        assert ab.request_digest == f"digest-{cid}"
+        assert [i.attempt for i in ab.interactions] == [1, 2]
+        assert [i.raw_response for i in ab.interactions] == [body, body]
+        assert [i.call_error for i in ab.interactions] == [f"HTTP {cid}"] * 2
+        assert cid in str(err)  # every aborted candidate is named in the message
 
 
 def test_exception_carried_error_body_is_persisted():

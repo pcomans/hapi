@@ -86,12 +86,20 @@ class ResolveResult:
     mode: str
 
 
-class ReviewerRunAborted(RuntimeError):
-    """A candidate exhausted its retries on a blocking error (credits, auth, rate limit,
+class ReviewerAbortError(RuntimeError):
+    """Base for terminal reviewer failures. ``aborts`` is ALWAYS the complete per-candidate
+    evidence — one entry per aborted candidate, each with its own id, request digest and
+    interactions — so a handler never has to know whether one candidate or ten ended the
+    run to recover all of it (Constitutional Rule 13)."""
+
+    aborts: list[ReviewerRunAborted]
+
+
+class ReviewerRunAborted(ReviewerAbortError):
+    """ONE candidate exhausted its retries on a blocking error (credits, auth, rate limit,
     network). The run MUST stop — but not silently: the accumulated interactions travel
     with the exception so the caller can persist them before the run dies. These are the
-    calls that ended the run; they are exactly the ones that must stay replayable
-    (Constitutional Rule 13)."""
+    calls that ended the run; they are exactly the ones that must stay replayable."""
 
     def __init__(
         self,
@@ -105,6 +113,7 @@ class ReviewerRunAborted(RuntimeError):
         self.candidate_id = candidate_id
         self.interactions = interactions
         self.request_digest = request_digest
+        self.aborts = [self]
 
     def as_record(self) -> dict:
         return {
@@ -114,6 +123,28 @@ class ReviewerRunAborted(RuntimeError):
             "request_digest": self.request_digest,
             "interactions": [asdict(i) for i in self.interactions],
         }
+
+
+class ReviewerRunAbortedGroup(ReviewerAbortError):
+    """EVERY candidate that aborted in one run. Deliberately not a
+    :class:`ReviewerRunAborted`: this failure belongs to no single candidate, and
+    attributing it to the first one would silently drop the ids, digests, error messages
+    and interactions of the rest — which is the whole point of carrying them. Without a
+    ``cache_path`` this exception is the ONLY place the evidence exists, so it must hold
+    all of it."""
+
+    def __init__(
+        self, aborts: list[ReviewerRunAborted], *, evidence_note: str
+    ) -> None:
+        ids = ", ".join(a.candidate_id for a in aborts)
+        super().__init__(
+            f"Live reviewer aborted the run: {len(aborts)} candidate(s) failed after "
+            f"retries ({ids}). {evidence_note} First failure: {aborts[0]}"
+        )
+        self.aborts = aborts
+
+    def as_records(self) -> list[dict]:
+        return [a.as_record() for a in self.aborts]
 
 
 def _stamped(
@@ -439,21 +470,23 @@ def resolve_matches(
         if aborted:
             import sys
 
-            where = (
-                f" Their full interactions were written to {aborted_path}."
+            # Every abort — id, digest, error and interactions — is on the raised group,
+            # whether or not a cache_path existed to also write it to disk. Without one,
+            # the exception is the only copy, so it carries them ALL: collapsing them into
+            # the first candidate's abort would drop the rest of the evidence at the exact
+            # moment it is needed (Rule 13).
+            evidence_note = (
+                f"Their full interactions were written to {aborted_path}, and are also on "
+                f"this error (.aborts)."
                 if aborted_path
-                else " No cache_path was given, so they are only on the raised error."
+                else "No cache_path was given, so this error (.aborts) is the only copy of "
+                "their interactions."
             )
             sys.stderr.write(
-                f"[reviewer] ABORT: {len(aborted)} candidate(s) failed after retries.{where}\n"
+                f"[reviewer] ABORT: {len(aborted)} candidate(s) failed after retries. "
+                f"{evidence_note}\n"
             )
-            raise ReviewerRunAborted(
-                f"{aborted[0]} [{len(aborted)} candidate(s) aborted in this run;"
-                f"{where}]",
-                candidate_id=aborted[0].candidate_id,
-                interactions=[i for err in aborted for i in err.interactions],
-                request_digest=aborted[0].request_digest,
-            )
+            raise ReviewerRunAbortedGroup(aborted, evidence_note=evidence_note)
         verdicts = [finalize(c, verdicts_by_id[c.id]) for c in candidates]
 
     approved_edges: list[MatchEdge] = []
