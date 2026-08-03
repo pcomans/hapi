@@ -47,6 +47,7 @@ from pipeline.authority.claimgraph.reviewer import (
     VERDICT_APPROVED,
     VERDICT_ESCALATED,
     VERDICT_REJECTED,
+    ReviewerHttpError,
     ReviewerInteraction,
     ReviewerParseError,
     Verdict,
@@ -702,12 +703,16 @@ def test_non_parse_error_attempt_is_still_persisted_when_a_later_attempt_succeed
 
 
 class _FakeHttpResponse:
-    def __init__(self, payload, *, text=None):
+    def __init__(self, payload, *, text=None, status_code=200):
         self._payload = payload
+        self.status_code = status_code
         self.text = text if text is not None else json.dumps(payload)
 
     def raise_for_status(self):
-        return None
+        # Mirrors httpx: an error status raises AFTER the body has been transferred, which
+        # is exactly why the reviewer must capture the body before checking the status.
+        if self.status_code >= 400:
+            raise RuntimeError(f"Server error '{self.status_code}'")
 
     def json(self):
         if self._payload is _NOT_JSON:
@@ -752,6 +757,142 @@ def test_openrouter_malformed_body_escalates_with_the_response_attached(
     assert err.interaction.parameters == {"max_tokens": 3000, "temperature": 0}
     assert err.interaction.system_prompt == SYSTEM_PROMPT
     assert err.interaction.user_prompt == _build_user_prompt(cand, a, b)
+
+
+@pytest.mark.parametrize(
+    ("status", "payload", "text"),
+    [
+        (429, {"error": {"code": 429, "message": "Rate limit exceeded, retry in 12s"}}, None),
+        (400, {"error": {"code": 400, "message": "context length exceeded"}}, None),
+        (401, {"error": {"code": 401, "message": "No auth credentials found"}}, None),
+        (500, _NOT_JSON, "<html>502 Bad Gateway</html>"),
+    ],
+)
+def test_openrouter_error_status_persists_the_error_body(monkeypatch, status, payload, text):
+    """An HTTP error is a real blocker, so it still fails the run loud — but the provider's
+    error BODY (rate-limit window, context-length overflow, auth failure) is the most
+    diagnostic payload in the exchange. `raise_for_status()` used to run before the body was
+    read, so the attempt was recorded as `raw_response=None` with a marker asserting no body
+    was received: a false provenance claim (Rule 13)."""
+    import httpx
+
+    a = _rec("leprohon", "leprohon-46", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", "beckerath-46", "Amasis", prenomina=["Chnem-ib-rê"])
+    cand = generate_candidates([a, b])[0]
+    monkeypatch.setattr(
+        httpx,
+        "post",
+        lambda *args, **kw: _FakeHttpResponse(payload, text=text, status_code=status),
+    )
+
+    with pytest.raises(ReviewerHttpError) as excinfo:
+        review_with_openrouter("key", cand, a, b, model="z-ai/glm-5.2")
+
+    err = excinfo.value
+    assert f"HTTP {status}" in str(err)
+    assert err.interaction.raw_response == (text if payload is _NOT_JSON else payload)
+    assert err.interaction.raw_response is not None
+    assert err.interaction.call_error == (
+        f"OpenRouter returned HTTP {status}; error body captured above."
+    )
+    assert err.interaction.parse_error is None
+    assert err.interaction.parameters == {"max_tokens": 3000, "temperature": 0}
+    assert err.interaction.user_prompt == _build_user_prompt(cand, a, b)
+
+
+def test_http_error_attempt_is_persisted_with_its_body_when_a_later_attempt_succeeds():
+    """Attempt 1 gets a 429 WITH a body, attempt 2 succeeds: the failed attempt is kept in
+    order and carries the provider's error body verbatim — not None."""
+    error_body = {"error": {"code": 429, "message": "Rate limit exceeded, retry in 12s"}}
+    calls = []
+
+    def flaky(c, x, y):
+        n = len(calls) + 1
+        calls.append(n)
+        if n == 1:
+            raise ReviewerHttpError(
+                "OpenRouter returned HTTP 429",
+                interaction=_interaction(
+                    provider="openrouter",
+                    requested_model="z-ai/glm-5.2",
+                    model_snapshot=None,
+                    parameters={"max_tokens": 3000, "temperature": 0},
+                    raw_response=error_body,
+                    call_error="OpenRouter returned HTTP 429; error body captured above.",
+                ),
+                request_digest="digest-http",
+            )
+        return Verdict(
+            candidate_id=c.id,
+            outcome=VERDICT_APPROVED,
+            reason="same king",
+            reviewer="llm",
+            request_digest="digest-http",
+            interactions=[_interaction(model_snapshot="snap-2", raw_response={"id": "msg_2"})],
+        )
+
+    cand, a, b = _pair(47)
+    v = verdicts_mod._review_with_retry(
+        flaky, cand, a, b, retries=2, model="z-ai/glm-5.2", provider="openrouter"
+    )
+    assert calls == [1, 2]
+    assert v.outcome == VERDICT_APPROVED
+    assert [i.attempt for i in v.interactions] == [1, 2]
+    failed = v.interactions[0]
+    assert failed.raw_response == error_body
+    assert failed.call_error == "OpenRouter returned HTTP 429; error body captured above."
+    assert failed.parse_error is None
+
+
+def test_persistent_http_error_still_fails_the_run_loud():
+    """An error status is a blocker (credits, auth, rate limit) — it must never quietly
+    escalate the candidate the way an unparseable response does."""
+
+    def boom(c, x, y):
+        raise ReviewerHttpError(
+            "OpenRouter returned HTTP 401",
+            interaction=_interaction(raw_response={"error": {"code": 401}}),
+            request_digest="digest-http",
+        )
+
+    cand, a, b = _pair(48)
+    with pytest.raises(RuntimeError, match="Live reviewer failed"):
+        verdicts_mod._review_with_retry(
+            boom, cand, a, b, retries=1, model="m", provider=PROVIDER_ANTHROPIC
+        )
+
+
+def test_exception_carried_error_body_is_persisted():
+    """The Anthropic SDK raises `APIStatusError` carrying the server's error payload on
+    `.body` rather than handing back a response, so that payload is captured from the
+    exception instead of being discarded."""
+
+    class _FakeAPIStatusError(Exception):
+        def __init__(self):
+            super().__init__("Error code: 529 - overloaded_error")
+            self.body = {"type": "error", "error": {"type": "overloaded_error"}}
+
+    calls = []
+
+    def flaky(c, x, y):
+        calls.append(len(calls) + 1)
+        if len(calls) == 1:
+            raise _FakeAPIStatusError()
+        return Verdict(
+            candidate_id=c.id,
+            outcome=VERDICT_APPROVED,
+            reason="same king",
+            reviewer="llm",
+            interactions=[_interaction(raw_response={"id": "msg_2"})],
+        )
+
+    cand, a, b = _pair(49)
+    v = verdicts_mod._review_with_retry(
+        flaky, cand, a, b, retries=2, model="claude-sonnet-5", provider=PROVIDER_ANTHROPIC
+    )
+    failed = v.interactions[0]
+    assert failed.raw_response == {"type": "error", "error": {"type": "overloaded_error"}}
+    assert failed.call_error == "_FakeAPIStatusError: Error code: 529 - overloaded_error"
 
 
 def test_name_only_is_escalated_without_calling_the_reviewer(monkeypatch):

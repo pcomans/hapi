@@ -62,21 +62,33 @@ class ReviewerInteraction:
     parameters: dict[str, Any]
     system_prompt: str
     user_prompt: str
-    # The provider's response body, verbatim. ``None`` ONLY when no response was received
-    # (see ``call_error``) — the absence of a response is itself provenance and is recorded,
-    # never omitted.
+    # The provider's response body, verbatim — INCLUDING an HTTP error body (rate-limit,
+    # context-length, auth details). ``None`` ONLY when no bytes were ever received (see
+    # ``call_error``); that absence is itself provenance and is recorded, never omitted.
     raw_response: Any
     parse_error: str | None = None  # set when THIS attempt's response could not be parsed
-    # Set when THIS attempt ended in an exception that carried no response body at all
-    # (connection error, timeout, HTTP error raised before a body was read).
+    # Set when THIS attempt ended in a provider/transport error instead of a usable body.
+    # ``raw_response`` still holds the provider's error body whenever one was returned.
     call_error: str | None = None
 
 
-class ReviewerParseError(ValueError):
-    """The reviewer returned a response that could not be parsed into a verdict. Carries
-    the complete :class:`ReviewerInteraction` so that when this drives an escalation, the
-    request and the response that caused it are still persisted (Constitutional Rule 13):
-    a decision must be replayable from a stored request/response, even a malformed one."""
+def _serialisable(value: Any) -> Any:
+    """Keep a provider payload only in a JSON-writable form (the interaction is persisted
+    as JSON). Anything exotic is preserved as its ``repr`` rather than dropped — losing the
+    payload is what this whole class of bug is about."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, dict):
+        return {str(k): _serialisable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_serialisable(v) for v in value]
+    return repr(value)
+
+
+class ReviewerCallError(Exception):
+    """Base for reviewer failures that carry the complete :class:`ReviewerInteraction`, so
+    the request and whatever the provider returned are still persisted (Constitutional
+    Rule 13): a decision — or a failed attempt that shaped one — must be replayable."""
 
     def __init__(
         self,
@@ -88,6 +100,19 @@ class ReviewerParseError(ValueError):
         super().__init__(message)
         self.interaction = interaction
         self.request_digest = request_digest
+
+
+class ReviewerParseError(ReviewerCallError, ValueError):
+    """The reviewer returned a response that could not be parsed into a verdict. After the
+    retries are spent this escalates THAT candidate, so the malformed response that drove
+    the escalation travels with it."""
+
+
+class ReviewerHttpError(ReviewerCallError, RuntimeError):
+    """The provider answered with an error status. This is a real blocker (rate limit,
+    credits, auth, context length) so it still fails the run loud after retries — but the
+    error BODY the provider sent is the most diagnostic payload in the exchange and is
+    captured, never thrown away by a status check that ran before the body was read."""
 
 
 @dataclass
@@ -394,11 +419,12 @@ def review_with_openrouter(
     """Same contract as :func:`review_with_llm`, against an OpenRouter chat model (e.g.
     GLM 5.2). The IDENTICAL de-leaked system+user prompt is used, so a run is directly
     comparable to the Anthropic path. Fails loud on transport/HTTP error (no silent
-    fallback, Rule 2); raises :class:`ReviewerParseError` (with the full interaction,
-    Rule 13) on an unparseable or empty response so the caller escalates that candidate.
+    fallback, Rule 2) — as :class:`ReviewerHttpError`, carrying the provider's error body;
+    raises :class:`ReviewerParseError` (with the full interaction, Rule 13) on an
+    unparseable or empty response so the caller escalates that candidate.
 
-    The full body — including the model's ``reasoning``/``reasoning_details`` — is captured
-    as the replayable provenance record."""
+    The full body — including the model's ``reasoning``/``reasoning_details``, or the error
+    payload on a 4xx/5xx — is captured as the replayable provenance record."""
     import httpx
 
     user_prompt = _build_user_prompt(candidate, a, b)
@@ -416,7 +442,6 @@ def review_with_openrouter(
         },
         timeout=180,
     )
-    resp.raise_for_status()  # transport/HTTP error → fail loud, caller retries then raises
     digest = request_digest(
         candidate, a, b, provider=PROVIDER_OPENROUTER, model=model, parameters=parameters
     )
@@ -430,21 +455,46 @@ def review_with_openrouter(
             parameters=parameters,
             system_prompt=SYSTEM_PROMPT,
             user_prompt=user_prompt,
-            raw_response=raw,
+            raw_response=_serialisable(raw),
         )
 
-    # From here a response HAS arrived: every failure escalates through the parse-error
-    # path carrying that response verbatim, so the call stays replayable (Rule 13). A body
-    # that is not JSON, or is JSON of an unexpected shape, is exactly such a failure — it
-    # must not surface as a bare exception with the response dropped on the floor.
+    # A response HAS arrived, so the body is captured BEFORE anything can raise on it —
+    # including the status check. A 429/500 carries the provider's most diagnostic payload
+    # (rate-limit window, context-length overflow, auth failure); checking the status first
+    # would throw that away and leave the attempt claiming no body was ever received.
+    body: Any
     try:
         body = resp.json()
     except ValueError as err:
-        interaction = _interaction(resp.text, None)
-        interaction.parse_error = f"OpenRouter response body was not JSON: {err}"
+        json_error = str(err)
+        body = None
+        raw_body: Any = resp.text
+    else:
+        json_error = None
+        raw_body = body
+
+    if resp.status_code >= 400:
+        interaction = _interaction(raw_body, body.get("model") if isinstance(body, dict) else None)
+        interaction.call_error = (
+            f"OpenRouter returned HTTP {resp.status_code}; error body captured above."
+        )
+        raise ReviewerHttpError(
+            f"OpenRouter returned HTTP {resp.status_code} for candidate {candidate.id}: "
+            f"{str(raw_body)[:400]}",
+            interaction=interaction,
+            request_digest=digest,
+        )
+
+    # From here every failure escalates through the parse-error path carrying that response
+    # verbatim, so the call stays replayable (Rule 13). A body that is not JSON, or is JSON
+    # of an unexpected shape, is exactly such a failure — it must not surface as a bare
+    # exception with the response dropped on the floor.
+    if json_error is not None:
+        interaction = _interaction(raw_body, None)
+        interaction.parse_error = f"OpenRouter response body was not JSON: {json_error}"
         raise ReviewerParseError(
             interaction.parse_error, interaction=interaction, request_digest=digest
-        ) from err
+        )
     interaction = _interaction(body, body.get("model") if isinstance(body, dict) else None)
     try:
         choice = body["choices"][0]

@@ -17,10 +17,12 @@ from .reviewer import (
     SYSTEM_PROMPT,
     VERDICT_APPROVED,
     VERDICT_ESCALATED,
+    ReviewerCallError,
     ReviewerInteraction,
     ReviewerParseError,
     Verdict,
     _build_user_prompt,
+    _serialisable,
     request_digest,
     review_deterministic,
     review_with_llm,
@@ -101,14 +103,15 @@ def _stamped(
 def _failed_call_interaction(
     c: Candidate, a, b, attempt: int, *, model: str, provider: str, err: Exception
 ) -> ReviewerInteraction:
-    """Provenance for an attempt that raised something other than a parse error.
+    """Provenance for an attempt that raised an exception carrying no interaction of its
+    own (the reviewer functions attach one to every failure they raise themselves).
 
-    The reviewer functions convert every post-response failure into a
-    :class:`ReviewerParseError` carrying the body, so reaching here means no response body
-    was obtained (connection error, timeout, HTTP status raised before a body was read).
-    That absence is itself provenance: the attempt is recorded with ``raw_response=None``
-    and an explicit ``call_error`` rather than omitted, because it was still a real call
-    that consumed a retry and shaped the outcome (Rule 13)."""
+    Provider SDKs put the server's error payload on the exception — the Anthropic client
+    raises ``APIStatusError`` with a ``body`` rather than handing us a response object — so
+    that payload is captured here instead of being discarded. When there genuinely is none
+    (connection error, timeout), ``raw_response`` stays ``None``: the absence of a response
+    is itself provenance, and the attempt is recorded rather than omitted, because it was
+    still a real call that consumed a retry and shaped the outcome (Rule 13)."""
     return ReviewerInteraction(
         attempt=attempt,
         provider=provider,
@@ -117,7 +120,7 @@ def _failed_call_interaction(
         parameters=dict(PROVIDER_PARAMETERS[provider]),
         system_prompt=SYSTEM_PROMPT,
         user_prompt=_build_user_prompt(c, a, b),
-        raw_response=None,
+        raw_response=_serialisable(getattr(err, "body", None)),
         call_error=f"{type(err).__name__}: {err}",
     )
 
@@ -141,7 +144,9 @@ def _review_with_retry(
     for attempt in range(1, retries + 2):
         try:
             verdict = reviewer_fn(c, a, b)
-        except ReviewerParseError as err:  # unparseable output — carries the interaction
+        except ReviewerCallError as err:
+            # Unparseable output, or an error status whose body the reviewer captured —
+            # either way the complete interaction travels with the exception.
             last_err = err
             digest = err.request_digest
             interactions.append(_stamped(err.interaction, attempt, model))
