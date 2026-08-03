@@ -274,10 +274,16 @@ TRIGGER_AUTHOR=$(gh api user --jq .login 2>/dev/null) || true
 # Guarded with `|| true` so the fallback below is reachable even if this script
 # ever gains `set -e` — under errexit a failed `gh api` would otherwise exit
 # before the validation runs, silently skipping the review.
+# NOTE: `gh api` has no --arg flag (that is jq's), and passing one makes the
+# whole call fail with "unknown flag" — which, with stderr discarded, left the
+# count empty, normalised to 0, and posted every time. The dedupe was silently
+# dead. So fetch with gh, then filter in a separate real jq.
+# --paginate matters: a matching trigger can fall past the first 30 comments on
+# a long-running PR, and missing it means posting a duplicate on every push.
 if [ -n "$TRIGGER_AUTHOR" ]; then
-  ALREADY_TRIGGERED=$(gh api "repos/{owner}/{repo}/issues/$PR_NUMBER/comments" \
-    --jq "[.[] | select(.user.login == \$author) | select((.body // \"\") == \$want)] | length" \
-    --arg author "$TRIGGER_AUTHOR" --arg want "$REVIEW_BODY" 2>/dev/null) || true
+  ALREADY_TRIGGERED=$(gh api --paginate "repos/{owner}/{repo}/issues/$PR_NUMBER/comments" 2>/dev/null \
+    | jq -s --arg author "$TRIGGER_AUTHOR" --arg want "$REVIEW_BODY" \
+        '[.[][] | select(.user.login == $author) | select((.body // "") == $want)] | length' 2>/dev/null) || true
 else
   ALREADY_TRIGGERED=0
 fi
