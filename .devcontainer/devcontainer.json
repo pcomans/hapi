@@ -1,0 +1,15 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,relabel=private",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "remoteUser": "vscode",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "runArgs": [
+    "--dns=1.1.1.1",
+    "--dns=8.8.8.8"
+  ],
+  "postCreateCommand": "bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq tmux && curl -fsSL https://claude.ai/install.sh | bash && source /usr/local/share/nvm/nvm.sh 2>/dev/null; npm install -g @openai/codex && export PATH=\"$HOME/.local/bin:$PATH\" && claude plugin marketplace add openai/codex-plugin-cc && claude plugin install codex@openai-codex --scope user && claude plugin marketplace add pcomans/devpods && claude plugin install git-credentials@devpods --scope user'"
+}
