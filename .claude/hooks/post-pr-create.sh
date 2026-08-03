@@ -249,20 +249,30 @@ fi
 # Trigger the review. Codex never auto-reviews, so BOTH PR creation and
 # subsequent pushes post an explicit trigger.
 #
-# Duplicate suppression is by HEAD SHA, not by gate outcome: skip only when a
-# trigger was already posted AFTER the current HEAD commit was authored, which
-# means this exact revision has one. That kills the re-push duplicate without
-# ever suppressing a revision's FIRST review.
+# Duplicate suppression is by exact HEAD SHA, carried in an invisible marker on
+# the trigger comment itself. Comparing comment timestamps against the commit
+# date instead would mis-suppress whenever a commit's date is older than a
+# previous trigger — routine after a rebase, an amend, a cherry-pick that keeps
+# author dates, or plain clock skew — and mis-suppression costs a revision its
+# FIRST review, the exact failure this hook exists to prevent. A SHA either
+# matches or it does not.
 HEAD_SHA=$(git rev-parse HEAD 2>/dev/null)
-HEAD_DATE=$(git show -s --format=%cI "$HEAD_SHA" 2>/dev/null)
+REVIEW_MARKER="<!-- hapi-review-trigger: $HEAD_SHA -->"
+
+# On API failure ALREADY_TRIGGERED stays 0, so we post: a duplicate review is
+# recoverable noise, a missing one is not.
 ALREADY_TRIGGERED=$(gh api "repos/{owner}/{repo}/issues/$PR_NUMBER/comments" \
-  --jq "[.[] | select((.body // \"\") | ascii_downcase | gsub(\"^\\\\s+|\\\\s+$\";\"\") == \"@codex review\") | select(.created_at > \"$HEAD_DATE\")] | length" 2>/dev/null)
-[ -z "$ALREADY_TRIGGERED" ] && ALREADY_TRIGGERED=0
+  --jq "[.[] | select((.body // \"\") | contains(\"hapi-review-trigger: $HEAD_SHA\"))] | length" 2>/dev/null)
+case "$ALREADY_TRIGGERED" in
+  ''|*[!0-9]*) ALREADY_TRIGGERED=0 ;;
+esac
 
 if [ "$ALREADY_TRIGGERED" -gt 0 ]; then
   MESSAGES="Codex review already requested for HEAD $HEAD_SHA on PR #$PR_NUMBER — not re-posting.\n$MESSAGES"
 else
-  REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review" 2>&1)
+  REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review
+
+$REVIEW_MARKER" 2>&1)
   if [ $? -eq 0 ]; then
     if [ "$IS_GIT_PUSH" = true ]; then
       MESSAGES="Codex re-review requested on PR #$PR_NUMBER.\n$MESSAGES"
@@ -276,25 +286,15 @@ else
 fi
 
 # The review is now requested; emit the gate's block (if any) as the response.
+# Built with `jq -n --arg` rather than hand-rolled sed escaping: MESSAGES can
+# carry arbitrary `gh` failure output, and escaping only `"` left backslashes,
+# tabs and control characters to produce malformed JSON — which the harness
+# would drop, silently discarding the block AND the warning it carries.
 if [ -n "$BLOCK_REASON" ]; then
-  BLOCK_REASON_ESCAPED=$(echo "$BLOCK_REASON" | sed 's/"/\\"/g')
-  MESSAGES_ESCAPED=$(echo "$MESSAGES" | sed 's/"/\\"/g')
-  cat <<HEREDOC
-{
-  "decision": "block",
-  "reason": "$BLOCK_REASON_ESCAPED",
-  "systemMessage": "$MESSAGES_ESCAPED"
-}
-HEREDOC
+  jq -n --arg reason "$BLOCK_REASON" --arg msg "$MESSAGES" \
+    '{decision: "block", reason: $reason, systemMessage: $msg}'
   exit 0
 fi
 
-# Escape for JSON
-MESSAGES_ESCAPED=$(echo "$MESSAGES" | sed 's/"/\\"/g')
-
-cat <<HEREDOC
-{
-  "systemMessage": "$MESSAGES_ESCAPED"
-}
-HEREDOC
+jq -n --arg msg "$MESSAGES" '{systemMessage: $msg}'
 exit 0
