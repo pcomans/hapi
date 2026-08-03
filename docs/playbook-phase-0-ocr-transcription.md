@@ -226,7 +226,7 @@ PR title: `feat: transcribe <Book short name> → sources/<source>`.
 PR body follows the Ryholt PR (#34) template: rights verification, scope, known gaps, test plan, explicit LLM-vs-human labelling ("an actual Egyptologist sign-off pass has NOT been performed").
 
 Then per `CLAUDE.md` PR workflow:
-1. Codex does NOT auto-review. Post `@codex review` via `gh pr comment <N> --body "@codex review"` on PR creation and after every subsequent push.
+1. Codex does NOT auto-review, but `post-pr-create.sh` posts `@codex review` automatically on PR creation and every push. Post it by hand (`gh pr comment <N> --body "@codex review"`) only when the hook reports a failure.
 2. **Arm a `Monitor` via the `/watch-pr-reviews` skill.** Reviews land minutes after the trigger. Sitting idle waiting for the review (or worse, waiting for the user to prompt "look at review comments") breaks the workflow. The Monitor-pattern emits one in-chat notification on the terminal state:
    - Success: a Codex review whose `commit_id` matches the current HEAD.
    - Timeout: no new review in 15 min → verify manually via `curl -H "Authorization: token $(gh auth token)" .../pulls/<N>/reviews`; timeout is not acceptance.

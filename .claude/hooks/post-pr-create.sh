@@ -201,21 +201,13 @@ if [ -z "$PR_NUMBER" ]; then
   exit 0
 fi
 
-# Build the response message. Codex never auto-reviews, so BOTH PR creation
-# and subsequent pushes post an explicit `@codex review` trigger.
 MESSAGES=""
 
-REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review" 2>&1)
-if [ $? -eq 0 ]; then
-  if [ "$IS_GIT_PUSH" = true ]; then
-    MESSAGES="Codex re-review requested on PR #$PR_NUMBER."
-  else
-    MESSAGES="Codex review requested on PR #$PR_NUMBER."
-  fi
-else
-  REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
-  MESSAGES="WARNING: Failed to post @codex review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user."
-fi
+# NOTE: the `@codex review` trigger is deliberately posted LAST, after every
+# local gate below has passed. Posting it first meant a command the task-list
+# gate then rejected had already started a review; fixing the task list and
+# re-pushing fired a second one, so a single change produced duplicate
+# concurrent reviews.
 
 # Add reviewer-spawn requirement for PR creation. Kept focused: reviewer
 # spawning + Monitor armament are the tightly-coupled post-PR-creation
@@ -262,6 +254,20 @@ HEREDOC
 HEREDOC
     exit 0
   fi
+fi
+
+# Every local gate passed — now trigger the review. Codex never auto-reviews,
+# so BOTH PR creation and subsequent pushes post an explicit trigger.
+REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review" 2>&1)
+if [ $? -eq 0 ]; then
+  if [ "$IS_GIT_PUSH" = true ]; then
+    MESSAGES="Codex re-review requested on PR #$PR_NUMBER.\n$MESSAGES"
+  else
+    MESSAGES="Codex review requested on PR #$PR_NUMBER.\n$MESSAGES"
+  fi
+else
+  REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
+  MESSAGES="WARNING: Failed to post @codex review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user.\n$MESSAGES"
 fi
 
 # Escape for JSON

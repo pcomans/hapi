@@ -87,11 +87,13 @@ Run the appropriate commands after any change:
 
 After every push to a PR branch, follow these steps in order:
 
-1. **Trigger a Codex review.** `@codex` (the `chatgpt-codex-connector[bot]` GitHub App) is the **primary and only** automated reviewer on this repo. It does not auto-fire on PR open — it must be triggered explicitly, on PR creation *and* after every subsequent push:
+1. **A Codex review is triggered for you.** `@codex` (the `chatgpt-codex-connector[bot]` GitHub App) is the **primary and only** automated reviewer on this repo, and it does not auto-fire on PR open. The `post-pr-create.sh` hook posts the trigger automatically on both PR creation and every subsequent push, *after* its local gates pass — so **do not post it by hand**, or you will start two concurrent reviews of the same commit.
+
+   Only if the hook reports `WARNING: Failed to post @codex review` do you post it manually as recovery:
    ```bash
    gh pr comment <number> --body "@codex review"
    ```
-   It posts a structured review with inline comments and P1/P2 severity tiers. If the comment itself fails to post (network / TLS / auth), flag it to the user — never silently skip.
+   It posts a structured review with inline comments and P1/P2 severity tiers. If that manual retry also fails, flag it to the user — never silently skip.
 
    **A reviewer that answers with anything other than an actual review has not reviewed the PR.** After triggering, confirm a review actually landed (step 2). An error comment, a "connect your account" notice, a quota warning, and total silence are all the same outcome — none of them is acceptance, and none may be treated as a pending review that will arrive later.
 

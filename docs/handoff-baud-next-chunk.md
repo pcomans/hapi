@@ -147,7 +147,7 @@ Per ADR-017 + playbook. All stages on Claude Opus 4.7.
 7. **Apply reviewer corrections** via new `CHUNK<N>_CORRECTIONS` list.
 8. **Tests** — expand `test_sources_baud_ok_royal_family.py`. Add ≥ 1 flagship-row assertion with every populated field (rule 5). Add ≥ 1 regression test per `fix_rows.py` override.
 9. **Commit, push, open PR.** Stage files explicitly by name (never `git add -A`). Prefix push with `TASK_LIST_UPDATED=1` when `docs/mvp-tasks.md` is in the commit.
-10. **Post-PR reviews:** Codex does NOT auto-review; post `@codex review` on PR open and on every subsequent push. Arm `/watch-pr-reviews` Monitor. Spawn `code-reviewer` + `egyptologist-reviewer` subagents. Prefix every `gh pr comment` / `gh api /repos/.../comments/.../replies` with `SCOPE_CHECKED=1` after invoking `scope-accountability-enforcer` once per review batch.
+10. **Post-PR reviews:** the `post-pr-create.sh` hook posts `@codex review` automatically on PR open and every push — do not post it by hand unless the hook reports a failure. Arm `/watch-pr-reviews` Monitor. Spawn `code-reviewer` + `egyptologist-reviewer` subagents. Prefix every `gh pr comment` / `gh api /repos/.../comments/.../replies` with `SCOPE_CHECKED=1` after invoking `scope-accountability-enforcer` once per review batch.
 
 ---
 

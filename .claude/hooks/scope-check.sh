@@ -132,22 +132,30 @@ for stmt in statements:
         continue
 
     # Reviewer trigger comments are exempt (workflow triggers, not replies).
-    # Look for `--body @codex...`, `--body=@codex...`, `-b @codex...`,
-    # `-b=@codex...`.
+    # The body must be EXACTLY the trigger — a prefix match would exempt any
+    # reply that merely opens by addressing the bot ("@codex thanks, deferring
+    # this to a follow-up"), which is precisely the deferral this gate exists
+    # to catch. Only `@codex review` (modulo surrounding whitespace / case)
+    # bypasses the enforcer.
+    TRIGGERS = {"@codex review"}
+
+    def is_trigger(body):
+        return body.strip().casefold() in TRIGGERS
+
     is_review_trigger = False
     j = 0
     while j < len(rest):
         t = rest[j]
         if t in ("--body", "-b"):
-            if j + 1 < len(rest) and rest[j + 1].lstrip().startswith("@codex"):
+            if j + 1 < len(rest) and is_trigger(rest[j + 1]):
                 is_review_trigger = True
                 break
             j += 2
             continue
-        if t.startswith("--body=") and t[len("--body="):].lstrip().startswith("@codex"):
+        if t.startswith("--body=") and is_trigger(t[len("--body="):]):
             is_review_trigger = True
             break
-        if t.startswith("-b=") and t[len("-b="):].lstrip().startswith("@codex"):
+        if t.startswith("-b=") and is_trigger(t[len("-b="):]):
             is_review_trigger = True
             break
         j += 1

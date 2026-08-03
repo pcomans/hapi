@@ -109,7 +109,7 @@ The egyptologist-reviewer writes corrections directly into `fix_rows.py`'s new c
 ### 9. PR, reviewers, CI
 
 Standard Phase 0 workflow per `CLAUDE.md` § "Pull request workflow":
-1. Push branch, open PR. Codex does NOT auto-review — post `@codex review` as a PR comment on creation and after every subsequent push.
+1. Push branch, open PR. The `post-pr-create.sh` hook posts `@codex review` automatically on creation and every push; post it by hand only if the hook reports a failure.
 2. Spawn `code-reviewer` and `egyptologist-reviewer` subagents in parallel after Codex posts.
 3. Invoke `scope-accountability-enforcer` before replying to any review batch; prefix replies with `SCOPE_CHECKED=1`.
 4. Poll `gh pr checks <N> --watch` until green.
