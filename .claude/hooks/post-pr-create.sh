@@ -202,12 +202,14 @@ if [ -z "$PR_NUMBER" ]; then
 fi
 
 MESSAGES=""
+BLOCK_REASON=""
 
-# NOTE: the `@codex review` trigger is deliberately posted LAST, after every
-# local gate below has passed. Posting it first meant a command the task-list
-# gate then rejected had already started a review; fixing the task list and
-# re-pushing fired a second one, so a single change produced duplicate
-# concurrent reviews.
+# NOTE on ordering: the `@codex review` trigger is posted AFTER the gates
+# below have run, but it is posted whether or not they pass — the gates set
+# BLOCK_REASON rather than exiting. Duplicate reviews are prevented by the
+# HEAD-SHA check at the trigger itself, not by gate outcome. Suppressing the
+# trigger on a failed gate suppressed the FIRST review of a PR that already
+# existed on GitHub, which is strictly worse than the duplicate it avoided.
 
 # Add reviewer-spawn requirement for PR creation. Kept focused: reviewer
 # spawning + Monitor armament are the tightly-coupled post-PR-creation
@@ -227,47 +229,64 @@ if [ "$IS_GIT_PUSH" = true ] || [ "$IS_PR_CREATE" = true ]; then
   AGENT_CLAIMS_UPDATED=$(echo "$CMD" | grep -c 'TASK_LIST_UPDATED=1')
   MVP_IN_DIFF=$(git diff origin/main...HEAD --name-only 2>/dev/null | grep -c 'docs/mvp-tasks.md')
 
+  # The gate records its verdict but does NOT exit here. This hook is
+  # PostToolUse: by the time it runs the push or the PR already happened, so
+  # blocking cannot undo it — it only tells the agent to go fix something.
+  # Exiting early therefore suppressed the REVIEW of a PR that exists on
+  # GitHub regardless, which is how #315 and #316 reached `main`-ready state
+  # with no trigger posted. Bookkeeping debt must not cost a code review.
   if [ "$AGENT_CLAIMS_UPDATED" -gt 0 ] && [ "$MVP_IN_DIFF" -gt 0 ]; then
     : # Both conditions met — allow
   elif [ "$AGENT_CLAIMS_UPDATED" -gt 0 ] && [ "$MVP_IN_DIFF" -eq 0 ]; then
-    cat <<HEREDOC
-{
-  "decision": "block",
-  "reason": "You passed TASK_LIST_UPDATED=1 but docs/mvp-tasks.md has no changes in the branch diff. You must actually update the file before claiming you did."
-}
-HEREDOC
-    exit 0
+    BLOCK_REASON="You passed TASK_LIST_UPDATED=1 but docs/mvp-tasks.md has no changes in the branch diff. You must actually update the file before claiming you did."
   elif [ "$AGENT_CLAIMS_UPDATED" -eq 0 ] && [ "$MVP_IN_DIFF" -gt 0 ]; then
-    cat <<HEREDOC
-{
-  "decision": "block",
-  "reason": "docs/mvp-tasks.md was modified but you did not pass TASK_LIST_UPDATED=1 in your push command. Prefix your push with TASK_LIST_UPDATED=1 to confirm you have reviewed the task list and the changes are correct."
-}
-HEREDOC
-    exit 0
+    BLOCK_REASON="docs/mvp-tasks.md was modified but you did not pass TASK_LIST_UPDATED=1 in your push command. Prefix your push with TASK_LIST_UPDATED=1 to confirm you have reviewed the task list and the changes are correct."
   else
-    cat <<HEREDOC
-{
-  "decision": "block",
-  "reason": "docs/mvp-tasks.md has not been updated on this branch. Before pushing, update the MVP task list to reflect any completed, dropped, or new tasks, then push with TASK_LIST_UPDATED=1 git push ... to confirm."
-}
-HEREDOC
-    exit 0
+    BLOCK_REASON="docs/mvp-tasks.md has not been updated on this branch. Before pushing, update the MVP task list to reflect any completed, dropped, or new tasks, then push with TASK_LIST_UPDATED=1 git push ... to confirm."
   fi
 fi
 
-# Every local gate passed — now trigger the review. Codex never auto-reviews,
-# so BOTH PR creation and subsequent pushes post an explicit trigger.
-REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review" 2>&1)
-if [ $? -eq 0 ]; then
-  if [ "$IS_GIT_PUSH" = true ]; then
-    MESSAGES="Codex re-review requested on PR #$PR_NUMBER.\n$MESSAGES"
-  else
-    MESSAGES="Codex review requested on PR #$PR_NUMBER.\n$MESSAGES"
-  fi
+# Trigger the review. Codex never auto-reviews, so BOTH PR creation and
+# subsequent pushes post an explicit trigger.
+#
+# Duplicate suppression is by HEAD SHA, not by gate outcome: skip only when a
+# trigger was already posted AFTER the current HEAD commit was authored, which
+# means this exact revision has one. That kills the re-push duplicate without
+# ever suppressing a revision's FIRST review.
+HEAD_SHA=$(git rev-parse HEAD 2>/dev/null)
+HEAD_DATE=$(git show -s --format=%cI "$HEAD_SHA" 2>/dev/null)
+ALREADY_TRIGGERED=$(gh api "repos/{owner}/{repo}/issues/$PR_NUMBER/comments" \
+  --jq "[.[] | select((.body // \"\") | ascii_downcase | gsub(\"^\\\\s+|\\\\s+$\";\"\") == \"@codex review\") | select(.created_at > \"$HEAD_DATE\")] | length" 2>/dev/null)
+[ -z "$ALREADY_TRIGGERED" ] && ALREADY_TRIGGERED=0
+
+if [ "$ALREADY_TRIGGERED" -gt 0 ]; then
+  MESSAGES="Codex review already requested for HEAD $HEAD_SHA on PR #$PR_NUMBER — not re-posting.\n$MESSAGES"
 else
-  REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
-  MESSAGES="WARNING: Failed to post @codex review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user.\n$MESSAGES"
+  REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review" 2>&1)
+  if [ $? -eq 0 ]; then
+    if [ "$IS_GIT_PUSH" = true ]; then
+      MESSAGES="Codex re-review requested on PR #$PR_NUMBER.\n$MESSAGES"
+    else
+      MESSAGES="Codex review requested on PR #$PR_NUMBER.\n$MESSAGES"
+    fi
+  else
+    REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
+    MESSAGES="WARNING: Failed to post @codex review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user.\n$MESSAGES"
+  fi
+fi
+
+# The review is now requested; emit the gate's block (if any) as the response.
+if [ -n "$BLOCK_REASON" ]; then
+  BLOCK_REASON_ESCAPED=$(echo "$BLOCK_REASON" | sed 's/"/\\"/g')
+  MESSAGES_ESCAPED=$(echo "$MESSAGES" | sed 's/"/\\"/g')
+  cat <<HEREDOC
+{
+  "decision": "block",
+  "reason": "$BLOCK_REASON_ESCAPED",
+  "systemMessage": "$MESSAGES_ESCAPED"
+}
+HEREDOC
+  exit 0
 fi
 
 # Escape for JSON
