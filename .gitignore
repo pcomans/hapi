@@ -9,6 +9,7 @@ dist/
 node_modules/
 .next/
 out/
+.pnpm-store/
 
 # Environment
 .env
