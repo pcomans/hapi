@@ -261,8 +261,11 @@ REVIEW_MARKER="<!-- hapi-review-trigger: $HEAD_SHA -->"
 
 # On API failure ALREADY_TRIGGERED stays 0, so we post: a duplicate review is
 # recoverable noise, a missing one is not.
+# Guarded with `|| true` so the fallback below is reachable even if this script
+# ever gains `set -e` — under errexit a failed `gh api` would otherwise exit
+# before the validation runs, silently skipping the review.
 ALREADY_TRIGGERED=$(gh api "repos/{owner}/{repo}/issues/$PR_NUMBER/comments" \
-  --jq "[.[] | select((.body // \"\") | contains(\"hapi-review-trigger: $HEAD_SHA\"))] | length" 2>/dev/null)
+  --jq "[.[] | select((.body // \"\") | contains(\"hapi-review-trigger: $HEAD_SHA\"))] | length" 2>/dev/null) || true
 case "$ALREADY_TRIGGERED" in
   ''|*[!0-9]*) ALREADY_TRIGGERED=0 ;;
 esac

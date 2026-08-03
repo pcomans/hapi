@@ -140,7 +140,19 @@ for stmt in statements:
     TRIGGERS = {"@codex review"}
 
     def is_trigger(body):
-        return body.strip().casefold() in TRIGGERS
+        # The trigger line must be exact — a prefix match would exempt any reply
+        # that merely opens by addressing the bot ("@codex thanks, deferring
+        # this…"), which is the deferral this gate exists to catch.
+        #
+        # An HTML comment after it is allowed, and only an HTML comment:
+        # post-pr-create.sh appends `<!-- hapi-review-trigger: <sha> -->` for
+        # duplicate suppression. That marker is invisible in rendered markdown
+        # and carries no prose, so it cannot smuggle a deferral past the gate.
+        # Without this the two hooks contradict each other — one emits a body
+        # the other blocks.
+        stripped = body.strip()
+        without_marker = re.sub(r"<!--.*?-->", "", stripped, flags=re.DOTALL)
+        return without_marker.strip().casefold() in TRIGGERS
 
     is_review_trigger = False
     j = 0
