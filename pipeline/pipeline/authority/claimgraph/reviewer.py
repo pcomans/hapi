@@ -62,8 +62,14 @@ class ReviewerInteraction:
     parameters: dict[str, Any]
     system_prompt: str
     user_prompt: str
+    # The provider's response body, verbatim. ``None`` ONLY when no response was received
+    # (see ``call_error``) — the absence of a response is itself provenance and is recorded,
+    # never omitted.
     raw_response: Any
-    parse_error: str | None = None  # set when THIS attempt's output was unparseable
+    parse_error: str | None = None  # set when THIS attempt's response could not be parsed
+    # Set when THIS attempt ended in an exception that carried no response body at all
+    # (connection error, timeout, HTTP error raised before a body was read).
+    call_error: str | None = None
 
 
 class ReviewerParseError(ValueError):
@@ -344,9 +350,22 @@ def review_with_llm(
     digest = request_digest(
         candidate, a, b, provider=PROVIDER_ANTHROPIC, model=model, parameters=parameters
     )
-    text = "".join(
-        block.text for block in resp.content if getattr(block, "type", None) == "text"
-    ).strip()
+    # A response DID arrive, so every failure from here on must escalate through the
+    # parse-error path carrying that response — including a body whose *structure* is
+    # unexpected. This is not a swallowed exception: it is re-raised as the documented
+    # loud error, with the provenance the escalation depends on attached (Rule 2/13).
+    try:
+        text = "".join(
+            block.text for block in resp.content if getattr(block, "type", None) == "text"
+        ).strip()
+    except (AttributeError, TypeError) as err:
+        interaction.parse_error = (
+            f"Anthropic response had an unexpected content structure: "
+            f"{type(err).__name__}: {err}"
+        )
+        raise ReviewerParseError(
+            interaction.parse_error, interaction=interaction, request_digest=digest
+        ) from err
     try:
         outcome, reason = _parse_verdict_json(text)
     except ValueError as err:
@@ -398,22 +417,45 @@ def review_with_openrouter(
         timeout=180,
     )
     resp.raise_for_status()  # transport/HTTP error → fail loud, caller retries then raises
-    body = resp.json()
-    choice = body["choices"][0]
-    text = (choice["message"].get("content") or "").strip()
-    interaction = ReviewerInteraction(
-        attempt=1,
-        provider=PROVIDER_OPENROUTER,
-        requested_model=model,
-        model_snapshot=body.get("model"),
-        parameters=parameters,
-        system_prompt=SYSTEM_PROMPT,
-        user_prompt=user_prompt,
-        raw_response=body,
-    )
     digest = request_digest(
         candidate, a, b, provider=PROVIDER_OPENROUTER, model=model, parameters=parameters
     )
+
+    def _interaction(raw: Any, snapshot: str | None) -> ReviewerInteraction:
+        return ReviewerInteraction(
+            attempt=1,
+            provider=PROVIDER_OPENROUTER,
+            requested_model=model,
+            model_snapshot=snapshot,
+            parameters=parameters,
+            system_prompt=SYSTEM_PROMPT,
+            user_prompt=user_prompt,
+            raw_response=raw,
+        )
+
+    # From here a response HAS arrived: every failure escalates through the parse-error
+    # path carrying that response verbatim, so the call stays replayable (Rule 13). A body
+    # that is not JSON, or is JSON of an unexpected shape, is exactly such a failure — it
+    # must not surface as a bare exception with the response dropped on the floor.
+    try:
+        body = resp.json()
+    except ValueError as err:
+        interaction = _interaction(resp.text, None)
+        interaction.parse_error = f"OpenRouter response body was not JSON: {err}"
+        raise ReviewerParseError(
+            interaction.parse_error, interaction=interaction, request_digest=digest
+        ) from err
+    interaction = _interaction(body, body.get("model") if isinstance(body, dict) else None)
+    try:
+        choice = body["choices"][0]
+        text = (choice["message"].get("content") or "").strip()
+    except (KeyError, IndexError, TypeError, AttributeError) as err:
+        interaction.parse_error = (
+            f"OpenRouter response had an unexpected structure: {type(err).__name__}: {err}"
+        )
+        raise ReviewerParseError(
+            interaction.parse_error, interaction=interaction, request_digest=digest
+        ) from err
     if not text:
         interaction.parse_error = (
             f"OpenRouter returned empty content (finish_reason={choice.get('finish_reason')})"

@@ -21,6 +21,8 @@ docstrings (Constitutional Rule 3 — a rule that lives only in prose is a sugge
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from pipeline.authority.claimgraph.matcher import (
@@ -52,6 +54,7 @@ from pipeline.authority.claimgraph.reviewer import (
     _parse_verdict_json,
     request_digest,
     review_with_llm,
+    review_with_openrouter,
 )
 from pipeline.authority.claimgraph.matcher import _HOMONYM_SPELLINGS
 from pipeline.authority.claimgraph.sources import SOURCE_AUTHORITY, RulerRecord
@@ -378,6 +381,14 @@ def _interaction(**over) -> ReviewerInteraction:
     return ReviewerInteraction(**base)
 
 
+def _pair(n: int):
+    """A real candidate + both real records — the retry wrapper builds the prompt of a
+    failed attempt from them, so they must be genuine records, not None."""
+    a = _rec("leprohon", f"leprohon-{n}", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", f"beckerath-{n}", "Amasis", prenomina=["Chnem-ib-rê"])
+    return generate_candidates([a, b])[0], a, b
+
+
 def test_unparseable_after_retries_escalates_with_every_attempt_persisted():
     """A persistently-unparseable reviewer escalates THAT candidate (never silently, never
     aborting the run) AND persists EVERY attempt's complete interaction (Rule 13) — each
@@ -397,9 +408,9 @@ def test_unparseable_after_retries_escalates_with_every_attempt_persisted():
             request_digest="digest-abc",
         )
 
-    cand = _cand("c", "a", "b", "leprohon", "kitchen")
+    cand, a, b = _pair(40)
     v = verdicts_mod._review_with_retry(
-        boom, cand, None, None, retries=2, model="claude-sonnet-5"
+        boom, cand, a, b, retries=2, model="claude-sonnet-5", provider=PROVIDER_ANTHROPIC
     )
     assert attempts == [1, 2, 3]
     assert v.outcome == VERDICT_ESCALATED
@@ -459,9 +470,9 @@ def test_retry_persists_the_superseded_attempts_alongside_the_successful_one():
             ],
         )
 
-    cand = _cand("c", "a", "b", "leprohon", "kitchen")
+    cand, a, b = _pair(41)
     v = verdicts_mod._review_with_retry(
-        flaky, cand, None, None, retries=2, model="claude-sonnet-5"
+        flaky, cand, a, b, retries=2, model="claude-sonnet-5", provider=PROVIDER_ANTHROPIC
     )
     assert calls == [1, 2, 3]
     assert v.outcome == VERDICT_APPROVED
@@ -493,9 +504,9 @@ def test_retry_fills_in_the_requested_model_when_the_interaction_lacks_one():
             request_digest="digest-1",
         )
 
-    cand = _cand("c", "a", "b", "leprohon", "kitchen")
+    cand, a, b = _pair(42)
     v = verdicts_mod._review_with_retry(
-        boom, cand, None, None, retries=1, model="z-ai/glm-5.2"
+        boom, cand, a, b, retries=1, model="z-ai/glm-5.2", provider=PROVIDER_ANTHROPIC
     )
     assert v.outcome == VERDICT_ESCALATED
     assert [i.requested_model for i in v.interactions] == ["z-ai/glm-5.2", "z-ai/glm-5.2"]
@@ -637,9 +648,110 @@ def test_api_error_fails_loud():
     def boom(c, a, b):
         raise RuntimeError("credit balance too low")
 
-    cand = _cand("c", "a", "b", "leprohon", "kitchen")
+    cand, a, b = _pair(43)
     with pytest.raises(RuntimeError, match="Live reviewer failed"):
-        verdicts_mod._review_with_retry(boom, cand, None, None, retries=1, model="m")
+        verdicts_mod._review_with_retry(
+            boom, cand, a, b, retries=1, model="m", provider=PROVIDER_ANTHROPIC
+        )
+
+
+def test_non_parse_error_attempt_is_still_persisted_when_a_later_attempt_succeeds():
+    """Rule 13: an attempt that raised something OTHER than a ReviewerParseError was still
+    a real call that consumed a retry, so it must appear in the verdict's interactions —
+    otherwise a run that failed once and then succeeded reports a clean single-shot call
+    that never happened. The absence of a response body is recorded explicitly, not by
+    omitting the attempt."""
+    calls = []
+
+    def flaky(c, x, y):
+        n = len(calls) + 1
+        calls.append(n)
+        if n == 1:
+            # e.g. the OpenRouter body-shape path: a response arrived, then extracting
+            # `body["choices"][0]` blew up.
+            raise KeyError("choices")
+        return Verdict(
+            candidate_id=c.id,
+            outcome=VERDICT_APPROVED,
+            reason="same king",
+            reviewer="llm",
+            request_digest="digest-xyz",
+            interactions=[_interaction(model_snapshot="snap-2", raw_response={"id": "msg_2"})],
+        )
+
+    cand, a, b = _pair(44)
+    v = verdicts_mod._review_with_retry(
+        flaky, cand, a, b, retries=2, model="claude-sonnet-5", provider=PROVIDER_ANTHROPIC
+    )
+    assert calls == [1, 2]
+    assert v.outcome == VERDICT_APPROVED
+    assert [i.attempt for i in v.interactions] == [1, 2]
+    failed, ok = v.interactions
+    assert failed.call_error == "KeyError: 'choices'"
+    assert failed.raw_response is None  # explicit marker: no body was obtained
+    assert failed.parse_error is None
+    assert failed.provider == PROVIDER_ANTHROPIC
+    assert failed.requested_model == "claude-sonnet-5"
+    assert failed.model_snapshot is None
+    assert failed.parameters == {"max_tokens": 600}
+    assert failed.system_prompt == SYSTEM_PROMPT
+    assert failed.user_prompt == _build_user_prompt(cand, a, b)
+    assert ok.call_error is None
+    assert ok.raw_response == {"id": "msg_2"}
+    assert ok.model_snapshot == "snap-2"
+
+
+class _FakeHttpResponse:
+    def __init__(self, payload, *, text=None):
+        self._payload = payload
+        self.text = text if text is not None else json.dumps(payload)
+
+    def raise_for_status(self):
+        return None
+
+    def json(self):
+        if self._payload is _NOT_JSON:
+            raise ValueError("Expecting value: line 1 column 1 (char 0)")
+        return self._payload
+
+
+_NOT_JSON = object()
+
+
+@pytest.mark.parametrize(
+    ("label", "payload", "text", "expected"),
+    [
+        ("no_choices", {"model": "z-ai/glm-5.2"}, None, "unexpected structure"),
+        ("empty_choices", {"model": "z-ai/glm-5.2", "choices": []}, None, "unexpected structure"),
+        ("no_message", {"model": "z-ai/glm-5.2", "choices": [{}]}, None, "unexpected structure"),
+        ("not_json", _NOT_JSON, "<html>502 Bad Gateway</html>", "was not JSON"),
+    ],
+)
+def test_openrouter_malformed_body_escalates_with_the_response_attached(
+    monkeypatch, label, payload, text, expected
+):
+    """A response that ARRIVED must never be lost. A body of unexpected shape used to raise
+    a bare KeyError, discarding the provider's reply — now it raises ReviewerParseError
+    carrying that reply verbatim, so the escalation it drives stays replayable (Rule 13)."""
+    import httpx
+
+    a = _rec("leprohon", "leprohon-45", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", "beckerath-45", "Amasis", prenomina=["Chnem-ib-rê"])
+    cand = generate_candidates([a, b])[0]
+    monkeypatch.setattr(httpx, "post", lambda *args, **kw: _FakeHttpResponse(payload, text=text))
+
+    with pytest.raises(ReviewerParseError) as excinfo:
+        review_with_openrouter("key", cand, a, b, model="z-ai/glm-5.2")
+
+    err = excinfo.value
+    assert expected in str(err)
+    assert err.interaction.raw_response == (text if payload is _NOT_JSON else payload)
+    assert err.interaction.parse_error == str(err)
+    assert err.interaction.provider == "openrouter"
+    assert err.interaction.requested_model == "z-ai/glm-5.2"
+    assert err.interaction.parameters == {"max_tokens": 3000, "temperature": 0}
+    assert err.interaction.system_prompt == SYSTEM_PROMPT
+    assert err.interaction.user_prompt == _build_user_prompt(cand, a, b)
 
 
 def test_name_only_is_escalated_without_calling_the_reviewer(monkeypatch):

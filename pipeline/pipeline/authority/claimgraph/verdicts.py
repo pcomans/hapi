@@ -14,11 +14,13 @@ from typing import Callable
 from .matcher import Candidate, generate_candidates, uniqueness_clashes
 from .reviewer import (
     PROVIDER_PARAMETERS,
+    SYSTEM_PROMPT,
     VERDICT_APPROVED,
     VERDICT_ESCALATED,
     ReviewerInteraction,
     ReviewerParseError,
     Verdict,
+    _build_user_prompt,
     request_digest,
     review_deterministic,
     review_with_llm,
@@ -96,16 +98,43 @@ def _stamped(
     )
 
 
-def _review_with_retry(reviewer_fn, c, a, b, retries: int, *, model: str) -> Verdict:
+def _failed_call_interaction(
+    c: Candidate, a, b, attempt: int, *, model: str, provider: str, err: Exception
+) -> ReviewerInteraction:
+    """Provenance for an attempt that raised something other than a parse error.
+
+    The reviewer functions convert every post-response failure into a
+    :class:`ReviewerParseError` carrying the body, so reaching here means no response body
+    was obtained (connection error, timeout, HTTP status raised before a body was read).
+    That absence is itself provenance: the attempt is recorded with ``raw_response=None``
+    and an explicit ``call_error`` rather than omitted, because it was still a real call
+    that consumed a retry and shaped the outcome (Rule 13)."""
+    return ReviewerInteraction(
+        attempt=attempt,
+        provider=provider,
+        requested_model=model,
+        model_snapshot=None,
+        parameters=dict(PROVIDER_PARAMETERS[provider]),
+        system_prompt=SYSTEM_PROMPT,
+        user_prompt=_build_user_prompt(c, a, b),
+        raw_response=None,
+        call_error=f"{type(err).__name__}: {err}",
+    )
+
+
+def _review_with_retry(
+    reviewer_fn, c, a, b, retries: int, *, model: str, provider: str
+) -> Verdict:
     """``reviewer_fn(candidate, a, b) -> Verdict`` is the provider-bound live reviewer
     (Anthropic or OpenRouter). Retries on any error; a persistent parse failure escalates
     THIS candidate (with every attempt's full interaction), any other error fails the run
     loud (Rule 2).
 
-    EVERY attempt is retained, in order, on the returned verdict — including the malformed
-    ones that a later successful attempt superseded. Each of those was a real call that
-    influenced the decision (it consumed a retry), so dropping it would leave the artifact
-    claiming a clean single-shot interaction that never happened (Rule 13)."""
+    EVERY attempt is retained, in order, on the returned verdict — the malformed ones a
+    later successful attempt superseded, AND the ones that raised without a response. Each
+    was a real call that influenced the decision (it consumed a retry), so dropping it
+    would leave the artifact claiming a clean single-shot interaction that never happened
+    (Rule 13)."""
     interactions: list[ReviewerInteraction] = []
     last_err: Exception | None = None
     digest: str | None = None
@@ -117,9 +146,12 @@ def _review_with_retry(reviewer_fn, c, a, b, retries: int, *, model: str) -> Ver
             digest = err.request_digest
             interactions.append(_stamped(err.interaction, attempt, model))
         except Exception as err:  # noqa: BLE001 — transport/API error, retried then raised
-            # No response came back, so there is no interaction to persist; the run fails
-            # loud below rather than pretending a call produced something.
             last_err = err
+            interactions.append(
+                _failed_call_interaction(
+                    c, a, b, attempt, model=model, provider=provider, err=err
+                )
+            )
         else:
             verdict.interactions = interactions + [
                 _stamped(i, attempt, model) for i in verdict.interactions
@@ -319,7 +351,7 @@ def resolve_matches(
             if a is None or b is None:
                 raise RuntimeError(f"Missing record(s) for candidate {c.id}")
             v = _review_with_retry(
-                reviewer_fn, c, a, b, retries_per_candidate, model=model
+                reviewer_fn, c, a, b, retries_per_candidate, model=model, provider=provider
             )
             return c.id, v
 

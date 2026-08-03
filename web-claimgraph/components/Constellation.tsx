@@ -74,10 +74,23 @@ export function Constellation({
     pos.set(m.id, { x, y, w: chipW(m) });
   });
 
-  const line = (aId: string, bId: string) => {
+  /**
+   * Every connector endpoint MUST be one of this constellation's nodes. Skipping an
+   * unresolvable endpoint would draw a graph that is missing a sourced link while the
+   * surrounding page still reports the full edge/source counts — an inconsistent artifact
+   * rendering as a complete one. A member id with no node here means the baked artifact is
+   * internally inconsistent, and that must fail loudly rather than quietly lose an edge.
+   */
+  const line = (kind: string, aId: string, bId: string) => {
     const a = pos.get(aId);
     const b = pos.get(bId);
-    if (!a || !b) return null;
+    if (!a || !b) {
+      const missing = [!a ? aId : null, !b ? bId : null].filter(Boolean);
+      throw new Error(
+        `Claim-graph artifact integrity error: ${kind} edge ${aId} ↔ ${bId} references ` +
+          `node id(s) absent from this constellation's ${n} member(s): ${missing.join(", ")}`,
+      );
+    }
     return { x1: a.x, y1: a.y, x2: b.x, y2: b.y };
   };
 
@@ -92,8 +105,7 @@ export function Constellation({
     >
       {/* approved connectors (behind nodes) */}
       {edges.map((e, i) => {
-        const l = line(e.a_id, e.b_id);
-        if (!l) return null;
+        const l = line("approved", e.a_id, e.b_id);
         return (
           <line
             key={`a-${i}`}
@@ -108,8 +120,9 @@ export function Constellation({
       })}
       {/* escalated connectors: dashed amber */}
       {escalated.map((e, i) => {
-        const l = line(e.a_id, e.b_id);
-        if (!l) return null;
+        // Escalations touching a record outside this constellation cannot be drawn here;
+        // the caller filters those out before passing them (see reunifications/[id]).
+        const l = line("escalated", e.a_id, e.b_id);
         return (
           <line
             key={`e-${i}`}
