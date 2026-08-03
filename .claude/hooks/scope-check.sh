@@ -21,9 +21,9 @@ CMD=$(printf '%s' "$TOOL_INPUT" | jq -r '.command // .tool_input.command // ""' 
 # Decide via python3 + shlex. Outputs a single token: BLOCK, EXEMPT, or OK.
 #  - BLOCK: at least one statement is `gh pr comment <args>` and SCOPE_CHECKED=1
 #    is not present in the env-var prefix of that statement. Also exclude
-#    `/gemini ...` trigger comments (workflow triggers, not feedback replies).
+#    `@codex ...` trigger comments (workflow triggers, not feedback replies).
 #  - EXEMPT: SCOPE_CHECKED=1 set OR every gh-pr-comment statement is a
-#    /gemini trigger.
+#    @codex trigger.
 #  - OK: no `gh pr comment` invocation at all (e.g. `git commit` whose body
 #    happens to contain the literal string).
 DECISION=$(CMD_TO_CHECK="$CMD" python3 <<'PYEOF'
@@ -131,33 +131,41 @@ for stmt in statements:
     if any(p == "SCOPE_CHECKED=1" for p in env_prefixes):
         continue
 
-    # /gemini trigger comments are exempt (workflow triggers, not replies).
-    # Look for `--body /gemini...`, `--body=/gemini...`, `-b /gemini...`,
-    # `-b=/gemini...`.
-    is_gemini_trigger = False
+    # Reviewer trigger comments are exempt (workflow triggers, not replies).
+    # The body must be EXACTLY the trigger — a prefix match would exempt any
+    # reply that merely opens by addressing the bot ("@codex thanks, deferring
+    # this to a follow-up"), which is precisely the deferral this gate exists
+    # to catch. Only `@codex review` (modulo surrounding whitespace / case)
+    # bypasses the enforcer.
+    TRIGGERS = {"@codex review"}
+
+    def is_trigger(body):
+        return body.strip().casefold() in TRIGGERS
+
+    is_review_trigger = False
     j = 0
     while j < len(rest):
         t = rest[j]
         if t in ("--body", "-b"):
-            if j + 1 < len(rest) and rest[j + 1].lstrip().startswith("/gemini"):
-                is_gemini_trigger = True
+            if j + 1 < len(rest) and is_trigger(rest[j + 1]):
+                is_review_trigger = True
                 break
             j += 2
             continue
-        if t.startswith("--body=") and t[len("--body="):].lstrip().startswith("/gemini"):
-            is_gemini_trigger = True
+        if t.startswith("--body=") and is_trigger(t[len("--body="):]):
+            is_review_trigger = True
             break
-        if t.startswith("-b=") and t[len("-b="):].lstrip().startswith("/gemini"):
-            is_gemini_trigger = True
+        if t.startswith("-b=") and is_trigger(t[len("-b="):]):
+            is_review_trigger = True
             break
         j += 1
-    if is_gemini_trigger:
+    if is_review_trigger:
         continue
 
     print("BLOCK")
     sys.exit(0)
 
-# We saw at least one gh pr comment but every one was exempted (gemini
+# We saw at least one gh pr comment but every one was exempted (reviewer
 # trigger or SCOPE_CHECKED=1).
 if found_any_pr_comment:
     print("EXEMPT")

@@ -4,7 +4,7 @@ description: P1/P2 errors surviving all prior review passes in the committed rec
 type: project
 ---
 
-Three errors survived all prior review passes (original merge → 19 fix_rows.py overrides → Gemini/Codex corrections).
+Three errors survived all prior review passes (original merge → 19 fix_rows.py overrides → bot-review corrections).
 
 **P1 — Row 29.02 Achoris: truncated egyptian_titulary**
 Scan-108 shows "Achoris (Hagor, Chnem-maat-rê)" but reconciled.jsonl has `egyptian_titulary="Chnem-maat-rê"` and `egyptian_titulary_kind="prenomen"`. The "Hagor" nomen is missing. Correct values: `"Hagor, Chnem-maat-rê"` with `egyptian_titulary_kind="mixed"`. Invisible to the disagreement log because the agree-but-wrong pattern surfaced as 2v1 on the same partial value: a majority of agents extracted only the prenomen half ("Chnem-maat-rê"), the third extracted only the nomen ("Hagor"), and no agent emitted the full compound — so the per-field disagreement log shows 2 agents agreeing on the prenomen with no logged content-gap, while the nomen half was silently lost.

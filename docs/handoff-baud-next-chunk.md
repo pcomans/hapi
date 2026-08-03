@@ -147,7 +147,7 @@ Per ADR-017 + playbook. All stages on Claude Opus 4.7.
 7. **Apply reviewer corrections** via new `CHUNK<N>_CORRECTIONS` list.
 8. **Tests** — expand `test_sources_baud_ok_royal_family.py`. Add ≥ 1 flagship-row assertion with every populated field (rule 5). Add ≥ 1 regression test per `fix_rows.py` override.
 9. **Commit, push, open PR.** Stage files explicitly by name (never `git add -A`). Prefix push with `TASK_LIST_UPDATED=1` when `docs/mvp-tasks.md` is in the commit.
-10. **Post-PR reviews:** Gemini Code Assist auto-reviews on PR open; post `/gemini review` on subsequent pushes. Arm `/watch-pr-reviews` Monitor. Spawn `code-reviewer` + `egyptologist-reviewer` subagents. Prefix every `gh pr comment` / `gh api /repos/.../comments/.../replies` with `SCOPE_CHECKED=1` after invoking `scope-accountability-enforcer` once per review batch.
+10. **Post-PR reviews:** the `post-pr-create.sh` hook posts `@codex review` automatically on PR open and every push — do not post it by hand unless the hook reports a failure. Arm `/watch-pr-reviews` Monitor. Spawn `code-reviewer` + `egyptologist-reviewer` subagents. Prefix every `gh pr comment` / `gh api /repos/.../comments/.../replies` with `SCOPE_CHECKED=1` after invoking `scope-accountability-enforcer` once per review batch.
 
 ---
 
@@ -205,6 +205,6 @@ Chunk-2 failure modes seen during the reviewer pass (chunk 3's prompt should kee
 
 ## Memory pointers
 
-- User feedback rules relevant to this work: `feedback_autonomy.md`, `feedback_branch_pr.md`, `feedback_push_after_commit.md`, `feedback_pr_review_replies.md`, `feedback_ci_failures.md`, `feedback_gemini_review.md`, `feedback_pr_reviewers.md`.
+- User feedback rules relevant to this work: `feedback_autonomy.md`, `feedback_branch_pr.md`, `feedback_push_after_commit.md`, `feedback_pr_review_replies.md`, `feedback_ci_failures.md`, `feedback_codex_review_every_pr.md`, `feedback_pr_reviewers.md`.
 - Constitutional rules 1, 2, 5, 6, 12 are the ones this work stresses hardest — scholarly traceability, loud failures, value-assertion tests, raw data preservation, no-excusing-existing-violations.
 - `/watch-pr-reviews` skill for review monitoring after each push.

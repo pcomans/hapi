@@ -20,13 +20,13 @@ set -u
 INPUT=$(cat)
 # `printf %s` (rather than `echo`) is robust against inputs that begin
 # with `-` or contain backslash escapes that some echo implementations
-# interpret. PR #187 Gemini round-2.
+# interpret. PR #187 bot-review round-2.
 COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 
 # Match the four blocking command shapes. Each has both the
 # `command-with-args` form (` ` suffix) AND the bare-command form
 # (no suffix) so commands like `git commit` (no args) don't bypass.
-# PR #187 Gemini round-1 caught the missing bare forms on `git commit`
+# PR #187 bot-review round-1 caught the missing bare forms on `git commit`
 # and `gh pr merge`.
 #
 # The raw `gh api .../pulls` clause was DROPPED in round-2: it was

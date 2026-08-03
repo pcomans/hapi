@@ -189,7 +189,7 @@ Two test files per source:
 - Override resolution paths: 1/1/1 tie + override → override value; 1/1 tie + override → override value; tie without override → raise with diagnostic listing every candidate.
 - Override-loader schema validation: top-level dict, `|` separator present, both halves non-empty, value is dict, value carries `value` + `rationale` keys.
 - `SENTINEL_NULL_STRINGS` includes `"null"` (parity with Leprohon's set; the `"null"` entry was added across the family by Beckerath PR #146's P1.3 finding).
-- Override `value` passes through `_deep_normalise` (Gemini PR #155 round-2 parity).
+- Override `value` passes through `_deep_normalise` (PR #155 round-2 bot-review parity).
 - On-disk pin tests: for every `tie-break-overrides.json` entry, assert reconciled.jsonl carries the resolved value (catches silent regression if someone removes an override).
 - A meta-test `test_post_fix_rows_pipeline_determinism` (per PR #161, closes the constitutional rule 3 gap on the override → fix_rows multi-file convention): pin the FINAL post-fix-rows reconciled.jsonl value for every tie-break override row × field with coverage sanity-checks.
 
@@ -226,9 +226,9 @@ PR title: `feat: transcribe <Book short name> → sources/<source>`.
 PR body follows the Ryholt PR (#34) template: rights verification, scope, known gaps, test plan, explicit LLM-vs-human labelling ("an actual Egyptologist sign-off pass has NOT been performed").
 
 Then per `CLAUDE.md` PR workflow:
-1. Gemini Code Assist auto-reviews new PRs within ~5 minutes — no explicit trigger on PR creation. On subsequent pushes, post `/gemini review` via `gh pr comment <N> --body "/gemini review"` to request a fresh review.
+1. Codex does NOT auto-review, but `post-pr-create.sh` posts `@codex review` automatically on PR creation and every push. Post it by hand (`gh pr comment <N> --body "@codex review"`) only when the hook reports a failure.
 2. **Arm a `Monitor` via the `/watch-pr-reviews` skill.** Reviews land minutes after the trigger. Sitting idle waiting for the review (or worse, waiting for the user to prompt "look at review comments") breaks the workflow. The Monitor-pattern emits one in-chat notification on the terminal state:
-   - Success: a Gemini Code Assist review whose `commit_id` matches the current HEAD.
+   - Success: a Codex review whose `commit_id` matches the current HEAD.
    - Timeout: no new review in 15 min → verify manually via `curl -H "Authorization: token $(gh auth token)" .../pulls/<N>/reviews`; timeout is not acceptance.
    
    See `CLAUDE.md` § "Pull request workflow" step 2 and `.claude/skills/watch-pr-reviews/` for the exact invocation. Filtering on `commit_id == <HEAD>` catches multi-round reviews (reviewers occasionally submit review #2 minutes after #1) without re-surfacing stale reviews of previous commits. Re-arm on each subsequent push so the next push's re-review also gets caught.
@@ -415,7 +415,7 @@ Keep verbatim (source-agnostic):
 - `_normalise_value` + `_deep_normalise` — sentinel-null collapse, recursive across dicts and lists so a `{"page": "-"}` vs `{"page": null}` agent diff doesn't register as a tie.
 - `_normalise_for_merge` — pre-merge canonicalisation hook. Default is a stub returning a shallow copy. Leprohon implements MdC → IFAO transliteration normalisation here for translit sub-fields; other sources currently have no normalisation candidates but the hook is the extension point if a future re-extraction surfaces encoding-style ties.
 - `_load_overrides` — JSON loader with strict validation: `isinstance(raw, dict)` at root, `|` separator in every key, both halves non-empty, every value is a dict carrying `value` + `rationale` keys. UTF-8 encoding on `read_text` (override values can carry Egyptian diacritics).
-- `_majority` signature and body — keyword-only `<id>`/`field` (constitutional rule 10: no Optional fallback for "legacy callers"); returns the tuple `(chosen_value, top_count)` (the count is used by the disagreement-report writer); deep-normalise input; tie detection via `len(most) >= 2 and most[0][1] == most[1][1]`; lookup `TIE_BREAK_OVERRIDES.get((<id>, field))` on tie; if hit, return `(_deep_normalise(override["value"]), top_count)` (Gemini PR #155 round-2 parity for the value); if miss, raise with diagnostic listing every distinct candidate.
+- `_majority` signature and body — keyword-only `<id>`/`field` (constitutional rule 10: no Optional fallback for "legacy callers"); returns the tuple `(chosen_value, top_count)` (the count is used by the disagreement-report writer); deep-normalise input; tie detection via `len(most) >= 2 and most[0][1] == most[1][1]`; lookup `TIE_BREAK_OVERRIDES.get((<id>, field))` on tie; if hit, return `(_deep_normalise(override["value"]), top_count)` (PR #155 round-2 bot-review parity for the value); if miss, raise with diagnostic listing every distinct candidate.
 - `main()` loop: the per-row loop sorts `all_fields` (incidental fix to issue #142 — deterministic merge-disagreements.txt across re-runs) and passes `<id>=<id>, field=field` to `_majority`. Apply `_normalise_for_merge` to each agent's row before the per-field loop.
 
 The override file `tie-break-overrides.json` ships empty `{}` initially. Each tie that surfaces during the first merge run gets:

@@ -1,9 +1,9 @@
 #!/bin/bash
 # PostToolUse hook for PR-related commands:
-# - gh pr create: Gemini Code Assist auto-reviews on PR open; just remind
-#   the agent to document learnings.
-# - git push: post a /gemini review comment so Gemini re-reviews the new
-#   HEAD (auto-review only fires on PR creation, not on subsequent pushes).
+# - gh pr create: post an `@codex review` comment. Unlike the retired
+#   third-party review app, Codex does NOT auto-review on PR open — it
+#   must be triggered explicitly, on creation as well as on every push.
+# - git push: post an `@codex review` comment so Codex re-reviews the new HEAD.
 
 # TOOL_INPUT is a JSON env var with the tool's input parameters
 # For Bash tool, it contains { "command": "..." }. Older hook format
@@ -201,29 +201,20 @@ if [ -z "$PR_NUMBER" ]; then
   exit 0
 fi
 
-# Build the response message. For PR creation the Gemini Code Assist
-# GitHub App auto-reviews; no explicit trigger needed. For subsequent
-# pushes we post `/gemini review` so the bot re-reviews the new HEAD.
 MESSAGES=""
 
-if [ "$IS_GIT_PUSH" = true ]; then
-  REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "/gemini review" 2>&1)
-  if [ $? -eq 0 ]; then
-    MESSAGES="Gemini Code Assist re-review requested on PR #$PR_NUMBER."
-  else
-    REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
-    MESSAGES="WARNING: Failed to post /gemini review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user."
-  fi
-else
-  MESSAGES="Gemini Code Assist will auto-review PR #$PR_NUMBER within ~5 minutes."
-fi
+# NOTE: the `@codex review` trigger is deliberately posted LAST, after every
+# local gate below has passed. Posting it first meant a command the task-list
+# gate then rejected had already started a review; fixing the task list and
+# re-pushing fired a second one, so a single change produced duplicate
+# concurrent reviews.
 
 # Add reviewer-spawn requirement for PR creation. Kept focused: reviewer
 # spawning + Monitor armament are the tightly-coupled post-PR-creation
 # protocol. Task-list updates have their own gate above; doc-learnings
 # are soft and don't belong stacked next to a hard rule (signal dilution).
 if [ "$IS_PR_CREATE" = true ]; then
-  MESSAGES="$MESSAGES\n\nPR #$PR_NUMBER created. Required next actions (the merge will be blocked otherwise):\n1. Spawn code-reviewer AND egyptologist-reviewer subagents IN PARALLEL (single message, two Agent tool calls) against the PR diff.\n2. Arm /watch-pr-reviews so Gemini's review notifies you when it lands.\n3. When merging, prefix the command with REVIEWERS_SPAWNED=1 (e.g. REVIEWERS_SPAWNED=1 gh pr merge $PR_NUMBER --squash --delete-branch). The pre-merge hook blocks without it."
+  MESSAGES="$MESSAGES\n\nPR #$PR_NUMBER created. Required next actions (the merge will be blocked otherwise):\n1. Spawn code-reviewer AND egyptologist-reviewer subagents IN PARALLEL (single message, two Agent tool calls) against the PR diff.\n2. Arm /watch-pr-reviews so the Codex review notifies you when it lands.\n3. When merging, prefix the command with REVIEWERS_SPAWNED=1 (e.g. REVIEWERS_SPAWNED=1 gh pr merge $PR_NUMBER --squash --delete-branch). The pre-merge hook blocks without it."
 fi
 
 # MVP task list guard: agent must pass TASK_LIST_UPDATED=1 AND the file must be in the diff.
@@ -263,6 +254,20 @@ HEREDOC
 HEREDOC
     exit 0
   fi
+fi
+
+# Every local gate passed — now trigger the review. Codex never auto-reviews,
+# so BOTH PR creation and subsequent pushes post an explicit trigger.
+REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "@codex review" 2>&1)
+if [ $? -eq 0 ]; then
+  if [ "$IS_GIT_PUSH" = true ]; then
+    MESSAGES="Codex re-review requested on PR #$PR_NUMBER.\n$MESSAGES"
+  else
+    MESSAGES="Codex review requested on PR #$PR_NUMBER.\n$MESSAGES"
+  fi
+else
+  REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
+  MESSAGES="WARNING: Failed to post @codex review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user.\n$MESSAGES"
 fi
 
 # Escape for JSON
