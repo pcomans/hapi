@@ -201,6 +201,14 @@ if [ -z "$PR_NUMBER" ]; then
   exit 0
 fi
 
+# A real newline, used to assemble MESSAGES. Building the separators here — as
+# opposed to writing literal \n and decoding the finished string with
+# `printf %b` — keeps provider error text verbatim: %b would interpret any
+# backslash sequence gh happens to return, and \c would truncate the rest of
+# the message outright. Losing the tail of a failure message is exactly the
+# kind of silent diagnostic loss this hook exists to prevent.
+NL=$'\n'
+
 MESSAGES=""
 BLOCK_REASON=""
 
@@ -216,7 +224,7 @@ BLOCK_REASON=""
 # protocol. Task-list updates have their own gate above; doc-learnings
 # are soft and don't belong stacked next to a hard rule (signal dilution).
 if [ "$IS_PR_CREATE" = true ]; then
-  MESSAGES="$MESSAGES\n\nPR #$PR_NUMBER created. Required next actions (the merge will be blocked otherwise):\n1. Spawn code-reviewer AND egyptologist-reviewer subagents IN PARALLEL (single message, two Agent tool calls) against the PR diff.\n2. Arm /watch-pr-reviews so the Codex review notifies you when it lands.\n3. When merging, prefix the command with REVIEWERS_SPAWNED=1 (e.g. REVIEWERS_SPAWNED=1 gh pr merge $PR_NUMBER --squash --delete-branch). The pre-merge hook blocks without it."
+  MESSAGES="$MESSAGES$NL${NL}PR #$PR_NUMBER created. Required next actions (the merge will be blocked otherwise):${NL}1. Spawn code-reviewer AND egyptologist-reviewer subagents IN PARALLEL (single message, two Agent tool calls) against the PR diff.${NL}2. Arm /watch-pr-reviews so the Codex review notifies you when it lands.${NL}3. When merging, prefix the command with REVIEWERS_SPAWNED=1 (e.g. REVIEWERS_SPAWNED=1 gh pr merge $PR_NUMBER --squash --delete-branch). The pre-merge hook blocks without it."
 fi
 
 # MVP task list guard: agent must pass TASK_LIST_UPDATED=1 AND the file must be in the diff.
@@ -292,18 +300,18 @@ case "$ALREADY_TRIGGERED" in
 esac
 
 if [ "$ALREADY_TRIGGERED" -gt 0 ]; then
-  MESSAGES="Codex review already requested for HEAD $HEAD_SHA on PR #$PR_NUMBER — not re-posting.\n$MESSAGES"
+  MESSAGES="Codex review already requested for HEAD $HEAD_SHA on PR #$PR_NUMBER — not re-posting.$NL$MESSAGES"
 else
   REVIEW_OUTPUT=$(gh pr comment "$PR_NUMBER" --body "$REVIEW_BODY" 2>&1)
   if [ $? -eq 0 ]; then
     if [ "$IS_GIT_PUSH" = true ]; then
-      MESSAGES="Codex re-review requested on PR #$PR_NUMBER.\n$MESSAGES"
+      MESSAGES="Codex re-review requested on PR #$PR_NUMBER.$NL$MESSAGES"
     else
-      MESSAGES="Codex review requested on PR #$PR_NUMBER.\n$MESSAGES"
+      MESSAGES="Codex review requested on PR #$PR_NUMBER.$NL$MESSAGES"
     fi
   else
     REVIEW_OUTPUT_FLAT=$(echo "$REVIEW_OUTPUT" | tr '\n' ' ')
-    MESSAGES="WARNING: Failed to post @codex review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user.\n$MESSAGES"
+    MESSAGES="WARNING: Failed to post @codex review on PR #$PR_NUMBER: $REVIEW_OUTPUT_FLAT. Do NOT silently skip this — tell the user.$NL$MESSAGES"
   fi
 fi
 
@@ -312,12 +320,6 @@ fi
 # carry arbitrary `gh` failure output, and escaping only `"` left backslashes,
 # tabs and control characters to produce malformed JSON — which the harness
 # would drop, silently discarding the block AND the warning it carries.
-# MESSAGES is assembled with literal `\n` separators. sed-escaping used to let
-# those through as JSON escapes by accident; jq --arg correctly treats them as
-# the two characters they are, so they must be expanded to real newlines first
-# or the agent reads a message full of `\n`.
-MESSAGES=$(printf '%b' "$MESSAGES")
-
 if [ -n "$BLOCK_REASON" ]; then
   jq -n --arg reason "$BLOCK_REASON" --arg msg "$MESSAGES" \
     '{decision: "block", reason: $reason, systemMessage: $msg}'
