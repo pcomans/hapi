@@ -20,6 +20,7 @@ from pathlib import Path
 import pytest
 
 from pipeline.authority.claimgraph.graph_ir import build_documentary_graph
+from pipeline.authority.claimgraph import sources as sources_mod
 from pipeline.authority.claimgraph.sources import (
     SourceRowError,
     load_all_sources,
@@ -315,3 +316,64 @@ def test_duplicate_local_ids_across_sources_raise(tmp_path):
     )
     with pytest.raises(ValueError, match="Duplicate ruler local_id"):
         load_all_sources(tmp_path)
+
+
+# --- absence sentinels ------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "(unknown)",
+        "[Prenomen unknown]",
+        "unknown",
+        "UNKNOWN",
+        " none ",
+        "n/a",
+        "[lost]",
+        "unbekannt",
+    ],
+)
+def test_absence_placeholders_are_not_names(value):
+    """Placeholder prose in a name field says the name is NOT known. Loaded verbatim it
+    normalises into matching keys — `(unknown)` → {unknown, nknwn} — so two kings whose
+    names are equally unrecorded would corroborate each other into a fabricated identity."""
+    assert sources_mod._is_absence_sentinel(value)
+    assert sources_mod._name_form(value) is None
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "[setep] en [ra/imen]",  # Leprohon brackets a RESTORED reading, not an absence
+        "heqa khasut aper-an-ti",  # contains 'a'/'an' — a substring rule would eat it
+        "mery nefer-kheperu-ra",
+        "Nebkheperure",
+        "Hor Aha",
+        "unknown-sounding-but-real",
+    ],
+)
+def test_real_titulary_is_never_mistaken_for_a_placeholder(value):
+    """The match is whole-field only. Real titulary contains these letters, and a
+    substring rule would silently delete genuine sourced names."""
+    assert not sources_mod._is_absence_sentinel(value)
+    assert sources_mod._name_form(value) is not None
+
+
+def test_committed_sources_emit_no_placeholder_names():
+    """The three known cases — Leprohon Teti `(unknown)`, Kitchen Takeloth I and
+    Iuput II `[Prenomen unknown]` — must reach the graph with NO prenomen at all."""
+    loaded = load_all_sources(AUTHORITY_ROOT)
+    records = loaded.records if hasattr(loaded, "records") else loaded
+    recs = {(r.source_id, r.local_id): r for r in records}
+    for key in (
+        ("leprohon", "leprohon-leprohon-6.01"),
+        ("kitchen", "kitchen-22.04"),
+        ("kitchen", "kitchen-23.07"),
+    ):
+        assert recs[key].prenomina == [], f"{key} should carry no throne name"
+
+    for r in recs.values():
+        for form in [*r.prenomina, *r.horus_names, *r.nomina]:
+            assert not sources_mod._is_absence_sentinel(form.surface)
+            assert not sources_mod._is_absence_sentinel(form.translit)
