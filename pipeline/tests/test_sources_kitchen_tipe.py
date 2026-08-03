@@ -161,18 +161,26 @@ def test_shoshenq_vi_parenthesised_doubtful_full_row() -> None:
 
 
 def test_iuput_ii_bracketed_prenomen_unknown_full_row() -> None:
-    """Kitchen prints `[Prenomen unknown]` verbatim on Iuput II's row
-    (and on Takeloth I's 22.04). The bracketed string is preserved as a
-    literal prenomen — NOT normalised to null by the sentinel normaliser —
-    because it is Kitchen's positive assertion that the king had a
-    prenomen whose content is lost. Full-row assertion on Iuput II per rule 5.
+    """Kitchen prints `[Prenomen unknown]` on Iuput II's row (and on Takeloth I's
+    22.04) — his positive assertion that the king reigned but the throne name is not
+    recorded. That assertion is kept, but OUT of the value field: `prenomen` is null
+    and `prenomen_absence` carries the typed reason plus Kitchen's exact printed token.
+
+    Held in `prenomen`, the string was loaded by the claim graph as a throne name;
+    `(unknown)`-class prose normalises to real matching keys, so two kings whose
+    throne names are equally UNrecorded could corroborate each other into one person.
+    Full-row assertion on Iuput II per rule 5.
     """
     r = _row("23.07")
     assert r["kitchen_id"] == "23.07"
     assert r["dynasty"] == 23
     assert r["sequence_in_dynasty"] == 7
     assert r["name"] == "Iuput II"
-    assert r["prenomen"] == "[Prenomen unknown]"
+    assert r["prenomen"] is None
+    assert r["prenomen_absence"] == {
+        "kind": "stated_unknown",
+        "printed_as": "[Prenomen unknown]",
+    }
     assert r["start_bce"] == -731
     assert r["end_bce"] == -720
     assert r["length_of_reign_years"] == 11
@@ -189,7 +197,11 @@ def test_takeloth_i_bracketed_prenomen_unknown_full_row() -> None:
     assert r["dynasty"] == 22
     assert r["sequence_in_dynasty"] == 4
     assert r["name"] == "Takeloth I"
-    assert r["prenomen"] == "[Prenomen unknown]"
+    assert r["prenomen"] is None
+    assert r["prenomen_absence"] == {
+        "kind": "stated_unknown",
+        "printed_as": "[Prenomen unknown]",
+    }
     assert r["start_bce"] == -889
     assert r["end_bce"] == -874
     assert r["length_of_reign_years"] == 15
@@ -338,7 +350,7 @@ def test_tefnakht_i_appears_twice() -> None:
 
 _REQUIRED_180_KEYS = (
     "substream",
-    "prenomen_is_kitchen_unknown",
+    "prenomen_absence",
     "is_co_regent_only",
     "existence_doubtful",
     "same_person_as",
@@ -375,13 +387,32 @@ def test_180_substream_distribution() -> None:
     assert counts == {None: 42, "H": 10, "E": 4, "P": 4}, counts
 
 
-def test_180_prenomen_is_kitchen_unknown_canonical_set() -> None:
-    """Exactly 2 rows where Kitchen prints `[Prenomen unknown]`: 22.04
-    Takeloth I and 23.07 Iuput II. Every other null prenomen is a
-    table-layout omission, not a Kitchen-asserted unknown."""
+def test_180_prenomen_absence_canonical_set() -> None:
+    """Exactly 2 rows where Kitchen prints `[Prenomen unknown]`: 22.04 Takeloth I and
+    23.07 Iuput II. Every other null prenomen is a table-layout omission, not a
+    Kitchen-asserted unknown — and that is exactly the distinction the typed sibling
+    exists to carry: a null `prenomen` alone cannot tell the two apart."""
     expected = {"22.04", "23.07"}
-    actual = {r["kitchen_id"] for r in _rows() if r["prenomen_is_kitchen_unknown"]}
+    actual = {r["kitchen_id"] for r in _rows() if r["prenomen_absence"] is not None}
     assert actual == expected, sorted(actual)
+    for kid in expected:
+        assert _row(kid)["prenomen_absence"] == {
+            "kind": "stated_unknown",
+            "printed_as": "[Prenomen unknown]",
+        }
+
+
+def test_180_no_row_retains_the_placeholder_string_in_prenomen() -> None:
+    """The placeholder never sits in the value field again. `prenomen` is what the
+    claim-graph loader reads as a throne name, and prose there becomes a matching key
+    (`(unknown)` → {unknown, nknwn}) that lets two equally-unrecorded kings corroborate
+    each other. The assertion belongs in `prenomen_absence`, never here."""
+    for r in _rows():
+        assert r["prenomen"] != "[Prenomen unknown]", r["kitchen_id"]
+        assert "prenomen_is_kitchen_unknown" not in r, (
+            f"{r['kitchen_id']}: the superseded boolean is back. Two encodings of one "
+            f"fact is the drift Rule 4 forbids."
+        )
 
 
 def test_180_co_regent_only_canonical_set() -> None:

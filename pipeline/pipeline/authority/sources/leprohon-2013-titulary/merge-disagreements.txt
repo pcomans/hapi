@@ -3741,6 +3741,8 @@ leprohon-33.17 (Ptolemy XV Caesarion):
 
 
 
+
+
 === LLM-APPLIED OVERRIDES — NOT HUMAN-VALIDATED ===
   leprohon-0.03 / horus_names.0.source_note:
     new value: "Gauthier 1907, 1–3, 17–19; von Beckerath 1999, 36–37. Narmer is possibly the King Menes—Egyptian mni (meni), \"The established one\"—of tradition, although some scholars equate the Horus Aha with Menes. See, lately, the discussion in Raffaele 2003, 106–7."
@@ -3964,3 +3966,33 @@ leprohon-33.17 (Ptolemy XV Caesarion):
   leprohon-31.02 / notes:
     new value: "Kings Artaxerxes III and Arses are not known from hieroglyphic sources."
     rationale: Issue #174: restore agent-b prose lost to majority-vote on tie. Source: raw/agent-b-late-period.jsonl.
+  leprohon-4.07 / golden_horus_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "(unknown)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": "See Dobrev 1993, 189 n. 37.", "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 37 (Shepseskaf): 'Golden Horus: (unknown)42' — verified by 3/3 blind arbiters (tie-break-overrides.json leprohon-4.07|golden_horus_names). The printed token moves out of the three name fields into the typed sibling; footnote 42 is retained verbatim in source_note.
+  leprohon-5.04 / nebty_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "unknown"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 39 (Shepseskare): 'Two Ladies: unknown' — bare form, no parens, no hedge (tie-break-overrides.json leprohon-5.04|nebty_names). The entry was already all-null, which is indistinguishable from Leprohon printing nothing; the typed sibling restores the assertion he actually made.
+  leprohon-5.04 / golden_horus_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "unknown"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 39 (Shepseskare): 'Golden Horus: unknown' — bare form (tie-break-overrides.json leprohon-5.04|golden_horus_names, which records that 'the slot is not empty ... but he provides no transliteration / anglicised / translation content'). Same all-null-to-typed migration as the Two Ladies slot.
+  leprohon-6.01 / throne_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "(unknown)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": "See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an unattested Throne name of *Sehetepre for Teti.", "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 42 (Teti): 'Throne: (unknown)72' — verified by 3/3 blind arbiters (tie-break-overrides.json leprohon-6.01|throne_names). This is the row that made the bug concrete: a THRONE name is the matcher's primary corroborator, so '(unknown)' here was a live cross-source merge key. Footnote 72 — Aufrère's proposed but unattested *Sehetepre — is retained verbatim; it is scholarship about the absence and is precisely what must not be lost.
+  leprohon-6.02 / horus_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "(unknown)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 42 (Userkare I): 'Horus: (unknown)' — arbiter-verified (tie-break-overrides.json leprohon-6.02|horus_names), which also records that the slot carries no per-entry footnote, hence source_note stays null.
+  leprohon-6.02 / nebty_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "(unknown)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 42 (Userkare I), Two Ladies slot: '(unknown)'. No tie-break entry exists because all three extraction agents agreed unanimously — valid provenance under Rule 6(a) — and the value is the same printed token the arbiters verified on this page for the Horus slot of the same king.
+  leprohon-6.02 / golden_horus_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "(unknown)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 42 (Userkare I), Golden Horus slot: '(unknown)'. Unanimous 3-agent agreement (Rule 6(a)); same page and same printed token as the arbiter-verified Horus slot of this king.
+  leprohon-6.06 / horus_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "unknown (?)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 43 (Merenre II): 'Horus: unknown (?)' — arbiter-verified (tie-break-overrides.json leprohon-6.06|horus_names). The hedged spelling normalises to exactly the same keys as '(unknown)' ({unknown, nknwn}), so this row was still publishing 'unknown' as a live Horus-name corroborator after the first string guard shipped. Leprohon's '(?)' is retained verbatim in printed_as; no separate vocabulary term is minted for it, because no committed material defines what force the hedge carries.
+  leprohon-6.06 / nebty_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "unknown (?)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 43 (Merenre II), Two Ladies slot: 'unknown (?)'. Unanimous 3-agent agreement (Rule 6(a)); same page and printed token as the arbiter-verified Horus slot of this king.
+  leprohon-6.06 / golden_horus_names.0:
+    new value: {"absence": {"kind": "stated_unknown", "printed_as": "unknown (?)"}, "anglicised": null, "attested_in": [], "is_variant": false, "source_note": null, "translation": null, "transliteration": null, "variant_index": 1}
+    rationale: Leprohon p. 43 (Merenre II), Golden Horus slot: 'unknown (?)'. Unanimous 3-agent agreement (Rule 6(a)); same page and printed token as the arbiter-verified Horus slot of this king.

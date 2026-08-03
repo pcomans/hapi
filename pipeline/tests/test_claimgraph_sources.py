@@ -324,7 +324,12 @@ def test_duplicate_local_ids_across_sources_raise(tmp_path):
 @pytest.mark.parametrize(
     "value",
     [
+        # Every distinct whole-field placeholder spelling found by auditing all five
+        # claim-graph sources. `unknown (?)` is Leprohon's hedged form (p. 43, Merenre
+        # II) and normalises to exactly the same keys as `(unknown)` — the first guard
+        # missed it, so that row kept publishing `unknown` as a Horus corroborator.
         "(unknown)",
+        "unknown (?)",
         "[Prenomen unknown]",
         "unknown",
         "UNKNOWN",
@@ -332,6 +337,9 @@ def test_duplicate_local_ids_across_sources_raise(tmp_path):
         "n/a",
         "[lost]",
         "unbekannt",
+        "(lacuna)",
+        "Missing",
+        "(destroyed)",
     ],
 )
 def test_absence_placeholders_are_not_names(value):
@@ -351,6 +359,11 @@ def test_absence_placeholders_are_not_names(value):
         "Nebkheperure",
         "Hor Aha",
         "unknown-sounding-but-real",
+        # `////` is Leprohon's epigraphic lacuna marker, not a placeholder: it appears
+        # INSIDE genuine names (`Senen////`, `Se /// Kare`) and marks an attested
+        # inscription whose signs are destroyed. Deliberately not a sentinel.
+        "////",
+        "Senen////",
     ],
 )
 def test_real_titulary_is_never_mistaken_for_a_placeholder(value):
@@ -361,8 +374,9 @@ def test_real_titulary_is_never_mistaken_for_a_placeholder(value):
 
 
 def test_committed_sources_emit_no_placeholder_names():
-    """The three known cases — Leprohon Teti `(unknown)`, Kitchen Takeloth I and
-    Iuput II `[Prenomen unknown]` — must reach the graph with NO prenomen at all."""
+    """Every row whose source STATES the name is unknown must reach the graph with no
+    such name at all — Leprohon Teti's throne name, Userkare I's and Merenre II's Horus
+    names, Kitchen's Takeloth I and Iuput II throne names."""
     loaded = load_all_sources(AUTHORITY_ROOT)
     records = loaded.records if hasattr(loaded, "records") else loaded
     recs = {(r.source_id, r.local_id): r for r in records}
@@ -372,8 +386,271 @@ def test_committed_sources_emit_no_placeholder_names():
         ("kitchen", "kitchen-23.07"),
     ):
         assert recs[key].prenomina == [], f"{key} should carry no throne name"
+    for key in (
+        ("leprohon", "leprohon-leprohon-6.02"),
+        ("leprohon", "leprohon-leprohon-6.06"),
+    ):
+        assert recs[key].horus_names == [], f"{key} should carry no Horus name"
 
     for r in recs.values():
         for form in [*r.prenomina, *r.horus_names, *r.nomina]:
             assert not sources_mod._is_absence_sentinel(form.surface)
             assert not sources_mod._is_absence_sentinel(form.translit)
+
+
+# --- typed absence ----------------------------------------------------------
+
+
+_PLACEHOLDER_KEYS = frozenset(
+    {"unknown", "nknwn", "none", "null", "lost", "lacuna", "missing", "mssng",
+     "destroyed", "dstryd", "prenomenunknown"}
+)
+
+
+def test_no_committed_name_normalises_to_a_placeholder_key():
+    """The end-to-end invariant the whole change exists to guarantee: no name form
+    reaching the matcher may normalise to a key that means "not known".
+
+    This is stronger than the string guard — it tests the KEYS, which is where the harm
+    happens. `(unknown)` and `unknown (?)` are different strings that both produce
+    {unknown, nknwn}; a future third spelling would be caught here even if the sentinel
+    regex missed it."""
+    from pipeline.authority.claimgraph.normalize import keys_for_form
+
+    offenders = []
+    for r in load_all_sources(AUTHORITY_ROOT).records:
+        for form in [*r.prenomina, *r.horus_names, *r.nomina]:
+            for k in keys_for_form(form, skeleton=True) & _PLACEHOLDER_KEYS:
+                offenders.append((r.source_id, r.local_id, k, form))
+    assert offenders == [], offenders
+
+
+def test_no_cross_source_candidate_rests_on_a_placeholder_key():
+    """No candidate pair may be generated on a key meaning "not known".
+
+    Leprohon carries eight rows whose `display_name` is Leprohon's own printed
+    designation for a lost king-list entry ("Name Lost", "Five Names Lost", …). Those
+    are legitimately the row's name in the book and are deliberately NOT migrated — but
+    they do feed the loose name blocker, so two of them already share the key
+    `namelost`. Today they collide only within Leprohon and the matcher is cross-source
+    only, so nothing is generated. This test is the tripwire for the day another source
+    contributes such a row."""
+    from pipeline.authority.claimgraph.matcher import generate_candidates
+
+    bad = frozenset(_PLACEHOLDER_KEYS | {"namelost", "nmlst"})
+    for c in generate_candidates(load_all_sources(AUTHORITY_ROOT).records):
+        shared = set(c.shared_prenomen_keys) | set(c.shared_name_keys)
+        assert not (shared & bad), (c.id, sorted(shared & bad))
+
+
+def test_committed_absence_kinds_are_all_in_the_vocabulary():
+    """Rule 3: the controlled vocabulary is enforced, not documented. Every typed
+    absence in every committed claim-graph source must parse — an off-vocabulary `kind`
+    or a missing `printed_as` raises rather than being quietly ignored."""
+    from pipeline.authority.claimgraph.absence import (
+        ABSENCE_KINDS,
+        iter_absence_fields,
+        parse_absence,
+    )
+
+    seen: set[tuple[str, str]] = set()
+    for source, directory in _DIRS.items():
+        path = AUTHORITY_ROOT / directory / "reconciled.jsonl"
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            for dotted, _key, value in iter_absence_fields(row):
+                if value is None:
+                    # Kitchen carries `prenomen_absence: null` on every row for schema
+                    # uniformity. Null means "no absence asserted here" — which is the
+                    # ordinary not-printed case, and carries no vocabulary term.
+                    continue
+                kind, printed = parse_absence(value, where=f"{source}:{dotted}")
+                seen.add((kind, printed))
+
+    assert {k for k, _ in seen} <= ABSENCE_KINDS
+    # Pin the exact printed tokens the committed sources assert, so a silent
+    # re-transcription that drops or invents one fails here (rule 5).
+    assert seen == {
+        ("stated_unknown", "(unknown)"),
+        ("stated_unknown", "unknown"),
+        ("stated_unknown", "unknown (?)"),
+        ("stated_unknown", "[Prenomen unknown]"),
+    }, sorted(seen)
+
+
+def test_migrated_rows_have_their_exact_post_migration_values():
+    """Pin the migrated rows field-by-field (rule 5). `printed_as` is what makes the
+    migration lossless: Leprohon's three spellings and Kitchen's bracketed form all
+    survive verbatim, they just no longer live in the field that means "this IS the
+    name"."""
+    lep = {
+        json.loads(line)["leprohon_id"]: json.loads(line)
+        for line in (AUTHORITY_ROOT / _DIRS["leprohon"] / "reconciled.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+        if line.strip()
+    }
+    expected = {
+        ("leprohon-4.07", "golden_horus_names"): ("(unknown)", "See Dobrev 1993, 189 n. 37."),
+        ("leprohon-5.04", "nebty_names"): ("unknown", None),
+        ("leprohon-5.04", "golden_horus_names"): ("unknown", None),
+        ("leprohon-6.01", "throne_names"): (
+            "(unknown)",
+            "See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed an "
+            "unattested Throne name of *Sehetepre for Teti.",
+        ),
+        ("leprohon-6.02", "horus_names"): ("(unknown)", None),
+        ("leprohon-6.02", "nebty_names"): ("(unknown)", None),
+        ("leprohon-6.02", "golden_horus_names"): ("(unknown)", None),
+        ("leprohon-6.06", "horus_names"): ("unknown (?)", None),
+        ("leprohon-6.06", "nebty_names"): ("unknown (?)", None),
+        ("leprohon-6.06", "golden_horus_names"): ("unknown (?)", None),
+    }
+    for (lid, field), (printed_as, source_note) in expected.items():
+        entry = lep[lid][field][0]
+        assert entry["absence"] == {"kind": "stated_unknown", "printed_as": printed_as}
+        assert entry["transliteration"] is None
+        assert entry["anglicised"] is None
+        assert entry["translation"] is None
+        assert entry["attested_in"] == []
+        assert entry["is_variant"] is False
+        assert entry["variant_index"] == 1
+        # The footnote is scholarship ABOUT the absence (Aufrère's proposed but
+        # unattested *Sehetepre) — the one thing that must NOT be lost.
+        assert entry["source_note"] == source_note, (lid, field)
+
+    kit = {
+        json.loads(line)["kitchen_id"]: json.loads(line)
+        for line in (AUTHORITY_ROOT / _DIRS["kitchen"] / "reconciled.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+        if line.strip()
+    }
+    for kid in ("22.04", "23.07"):
+        assert kit[kid]["prenomen"] is None
+        assert kit[kid]["prenomens"] == []
+        assert kit[kid]["prenomen_absence"] == {
+            "kind": "stated_unknown",
+            "printed_as": "[Prenomen unknown]",
+        }
+
+
+def test_leprohon_lacuna_marker_row_is_deliberately_untouched():
+    """leprohon-19.02 Sety I keeps its `////` Horus variant. `////` is an ATTESTED
+    inscription (Abydos, King's chapel (e)) whose signs are destroyed — a different fact
+    from "the name is unknown", and one with a real `attested_in`. Migrating it would
+    delete a sourced attestation, so it is left alone by design, not by oversight."""
+    row = next(
+        json.loads(line)
+        for line in (AUTHORITY_ROOT / _DIRS["leprohon"] / "reconciled.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+        if line.strip() and json.loads(line)["leprohon_id"] == "leprohon-19.02"
+    )
+    entry = next(e for e in row["horus_names"] if e["transliteration"] == "////")
+    assert entry["anglicised"] == "////"
+    assert entry["translation"] == "(destroyed)"
+    assert entry["attested_in"] == [
+        "Abydos, Great Temple, Seven Chapels — King's chapel (e)"
+    ]
+    assert "absence" not in entry
+
+
+def test_unconsulted_absence_flag_raises(tmp_path):
+    """THE regression this registry exists for. Kitchen shipped a correct, page-cited
+    `prenomen_is_kitchen_unknown` boolean and the loader never read it — for the entire
+    life of the field — while happily loading the placeholder string beside it as a
+    throne name. A typed absence nobody consults is worse than none: it looks like the
+    distinction is being honoured. So it must be loud (rule 2)."""
+    row = dict(_MINIMAL["kitchen"], prenomen_is_kitchen_unknown=True)
+    with pytest.raises(SourceRowError, match="does not consult"):
+        _load(tmp_path, "kitchen", [row])
+
+
+def test_unconsulted_absence_flag_raises_on_a_source_with_none_registered(tmp_path):
+    """The guard is per-source: Beckerath registers no absence fields at all, so ANY
+    such field on a Beckerath row is unconsulted by construction."""
+    row = dict(
+        _MINIMAL["beckerath"],
+        prenomen_absence={"kind": "stated_unknown", "printed_as": "x"},
+    )
+    with pytest.raises(SourceRowError, match="does not consult"):
+        _load(tmp_path, "beckerath", [row])
+
+
+def test_nested_unconsulted_absence_flag_raises(tmp_path):
+    """The scan reaches into nested name-list entries, not just top-level keys — an
+    absence buried in `birth_names[0]` on a source that does not consume it is exactly
+    as invisible as Kitchen's was."""
+    row = dict(
+        _MINIMAL["pharaoh_se"],
+        birth_names=[{"name": "Khufu", "absence": {"kind": "stated_unknown", "printed_as": "x"}}],
+    )
+    with pytest.raises(SourceRowError, match="does not consult"):
+        _load(tmp_path, "pharaoh_se", [row])
+
+
+def test_off_vocabulary_absence_kind_raises(tmp_path):
+    """An unrecognised `kind` is not tolerated: it means the source drew a distinction
+    the loader would silently discard. Extending the vocabulary requires a page
+    citation, not a new string appearing in the data."""
+    row = dict(
+        _MINIMAL["leprohon"],
+        throne_names=[{"absence": {"kind": "vibes", "printed_as": "?"}}],
+    )
+    with pytest.raises(ValueError, match="unknown absence kind"):
+        _load(tmp_path, "leprohon", [row])
+
+
+def test_absence_without_a_printed_token_raises(tmp_path):
+    """`printed_as` is mandatory. Without it the migration would erase what the page
+    actually shows, which is the Rule-6 violation the typed sibling exists to avoid."""
+    row = dict(
+        _MINIMAL["leprohon"],
+        throne_names=[{"absence": {"kind": "stated_unknown"}}],
+    )
+    with pytest.raises(ValueError, match="printed_as"):
+        _load(tmp_path, "leprohon", [row])
+
+
+def test_absence_alongside_a_name_raises(tmp_path):
+    """A source cannot both state the name is unknown and supply it. That is a
+    contradiction in the reconciled row, and reconciled data is sacred — it must fail
+    loudly rather than have the loader pick a winner."""
+    row = dict(
+        _MINIMAL["leprohon"],
+        throne_names=[
+            {
+                "anglicised": "Sehetepre",
+                "absence": {"kind": "stated_unknown", "printed_as": "(unknown)"},
+            }
+        ],
+    )
+    with pytest.raises(SourceRowError, match="AND a name"):
+        _load(tmp_path, "leprohon", [row])
+
+
+def test_kitchen_absence_alongside_a_prenomen_raises(tmp_path):
+    """Same contradiction on Kitchen's scalar-field shape."""
+    row = dict(
+        _MINIMAL["kitchen"],
+        prenomen="Usimare",
+        prenomen_absence={"kind": "stated_unknown", "printed_as": "[Prenomen unknown]"},
+    )
+    with pytest.raises(SourceRowError, match="Both cannot be true"):
+        _load(tmp_path, "kitchen", [row])
+
+
+def test_typed_absence_emits_no_name_but_keeps_the_row(tmp_path):
+    """The point of the whole design: the king still exists as a node, he just carries
+    no throne-name claim. Dropping the ROW would lose the king; dropping only the claim
+    is what the source actually says."""
+    row = dict(
+        _MINIMAL["leprohon"],
+        throne_names=[{"absence": {"kind": "stated_unknown", "printed_as": "(unknown)"}}],
+    )
+    load = _load(tmp_path, "leprohon", [row])
+    assert len(load.records) == 1
+    assert load.records[0].prenomina == []
