@@ -11,7 +11,7 @@ A one-page, honest picture of where Hapi actually is. For the vision and archite
 | **MVP ingest + search** | Museum APIs → canonical schema → search UI | `██████████` **100%** | ✅ Working, 3 museums, local only |
 | **Phase 0 — Authority sourcing** | Extract scholarly reference works into reproducible, page-cited facts | `███████▁▁▁` **~75%** | 🟡 One MVP-blocking source not started |
 | **Phase A — Authority curation** | Reconcile facts into consolidated authority files; link artifacts to rulers/sites | `▁▁▁▁▁▁▁▁▁▁` **0%** | 🔜 Not started, and not yet unblocked |
-| **Phase B — Matching** | Resolve provenance strings to authority IDs; surface companion pieces | `██████▁▁▁▁` **~65% built**<br>`▁▁▁▁▁▁▁▁▁▁` **0% integrated** | 🟠 POC exists, fails review, on no branch that ships |
+| **Phase B — Matching** | Resolve provenance strings to authority IDs; surface companion pieces | **implementation exists**<br>`▁▁▁▁▁▁▁▁▁▁` **0% integrated** | 🟠 POC exists, fails review, on no branch that ships |
 | **Web UX beyond search** | Artifact detail, browse-by-site, museum browse | `▁▁▁▁▁▁▁▁▁▁` **0%** | 🔜 0 of 4 tasks; 2 are blocked on Phase A |
 | **Beta launch** | Deploy, seed, open to users | `▁▁▁▁▁▁▁▁▁▁` **0%** | 🔜 Nothing deployed anywhere |
 | **Map view + companion pieces** _(optional)_ | Post-beta | `▁▁▁▁▁▁▁▁▁▁` **0%** | 🔜 Not started |
@@ -29,7 +29,7 @@ Think of it as a solid **v0.1** (search + filter works) some distance from **v1*
 - **Ingest → normalize → index → search**, for three museums: the Metropolitan Museum of Art (CC0 open-access), Harvard Art Museums, and Brooklyn Museum — roughly **36,000 normalized artifacts**. Three museums is the stated v1 scope in [`prd.md`](prd.md), not a shortfall.
 - **Full-text search** over the indexed artifacts (Typesense), with **faceted filters**: museum, period, dynasty, ruler, site, object type, and pagination.
 - **License-aware image rendering** — CC0 images embed directly; restricted images show a placeholder and a link out, never the asset. Enforced in the web component layer and covered by tests.
-- **A strict, fixture-based test suite** — 2,228 pipeline tests assert specific field values against real museum API responses (no mocks for data shapes).
+- **A strict, fixture-based test suite** — 2,194 pipeline tests on `main` assert specific field values against real museum API responses (no mocks for data shapes).
 
 Caveat on "works": everything runs locally. There is no deployment, and `web/` carries exactly one test file.
 
@@ -37,12 +37,15 @@ Caveat on "works": everything runs locally. There is no deployment, and `web/` c
 
 **4,583 reconciled, page-cited rows across 12 source directories**, each produced by the deterministic OCR → 3-agent-extraction → merge → review pipeline. Ruler titulary (Leprohon 2013), chronology (von Beckerath, Kitchen, Ryholt, Shaw, HKW), Old Kingdom prosopography (Baud), queens (Dodson & Hilton), the Porter & Moss tomb registers for Thebes and Memphis, ~1,000 iDAI gazetteer sites, and the pharaoh.se ruler list.
 
-**Why this is ~75% and not the 95% previously published here.** [`mvp-tasks.md`](mvp-tasks.md) sets the Phase-0 completion gate at **~5,700–6,500 rows across ~14 sources**. We are at 4,583 across 12. Of its eight items marked *"Must-land before Phase A can start (MVP-blocking)"*, four are still open — and the largest has not been started at all:
+**Why this is ~75% and not the 95% previously published here.** [`mvp-tasks.md`](mvp-tasks.md) sets the Phase-0 completion gate at **~5,700–6,500 rows across ~14 sources**. We are at 4,583 across 12. Of its eight items marked *"Must-land before Phase A can start (MVP-blocking)"*, **five are still open** (tasks 3–7) — and the largest has not been started at all:
 
 - **Porter & Moss Vol IV (Lower & Middle Egypt) — Task 7, MVP-blocker added 2026-05-19. Not started; no source directory exists.** Its highest-priority content is the **entire Amarna corpus**, the second-most-dispersed material in Egyptology after Thebes and among the most heavily partaged (Berlin, Cairo, the Met, Boston MFA, Brooklyn). Estimated ~400–700 rows. **It is blocked on one parked schema decision**: PM IV is multi-site, so the per-volume `theban_area` / `memphite_area` field pattern doesn't map, and a generic `site` field vs. field reuse decision was parked on 2026-06-01 and never taken.
 - Dodson & Hilton Ch 5 (Ptolemaic) — zero rows extracted.
 - Dodson & Hilton Ch 4 — roughly 150–200 of 250–300 rows outstanding.
-- Porter & Moss III Abûsîr and PM I mortuary-temple sections — open.
+- Porter & Moss III Abûsîr (task 3) — open.
+- Porter & Moss I mortuary-temple sections (task 6) — open.
+
+**On the ~75% figure specifically:** by row volume it is ~80% (4,583 of the 5,700 low bound); by blocker completion it is 3 of 8 done. 75% splits those and is the more generous of the two readings, not the harsher one.
 
 The previous snapshot described this as "a small tail … acceptable to finish post-MVP." That contradicted this repo's own blocker list, and for the reunification promise specifically, omitting Amarna is not a tail.
 
@@ -62,10 +65,10 @@ It is also, as of today:
 
 - **On no branch that ships.** `git ls-files` returns nothing for `pipeline/pipeline/authority/claimgraph/` or `web-claimgraph/`; the code exists only in [PR #312](https://github.com/pcomans/hapi/pull/312), open since 2026-07-07.
 - **Imported by nothing.** Not wired into `definitions.py`; no Dagster asset consumes it.
-- **Carrying a do-not-merge verdict** from review: 9 findings, 5 of them P1, including a confirmed `NameError` on the malformed-response path that 2,228 passing tests never reach.
+- **Carrying a do-not-merge verdict** from review: 9 findings, 5 of them P1, including a confirmed `NameError` on the malformed-response path that the branch's 2,228 passing tests never reach.
 - **Resolving 14% of candidates** — 226 approved links against 1,344 escalated to a human queue. That escalation rate is the design working as intended (precision-first), but it is not a finished matcher.
 
-Splitting the score is deliberate: a single blended number would hide both that the hard design work is largely done and that none of it is merged.
+The "built" side deliberately carries **no percentage**. There is no agreed denominator for a finished matcher — the module count says work happened, not how much of the job it covers — and a made-up figure would read as measured. What is measurable is the integration: zero.
 
 _(The earlier POC, PR #303, was closed 2026-08-03 as superseded by #312.)_
 
@@ -77,7 +80,7 @@ The previous snapshot said that floor was "unblocked." It isn't, quite. Phase A'
 
 ## Architectural maturity
 
-20 Architecture Decision Records ([`docs/adr/`](adr/)) cover the pipeline/web split, Dagster orchestration, Typesense, schema ownership, authority sourcing, the OCR protocol, and the claim-graph model. Most are implemented; ADR-018 and ADR-020 are designed and awaiting Phase A.
+19 Architecture Decision Records ([`docs/adr/`](adr/) — 001–018 plus 020; there is no 019) cover the pipeline/web split, Dagster orchestration, Typesense, schema ownership, authority sourcing, the OCR protocol, and the claim-graph model. Most are implemented; ADR-018 and ADR-020 are designed and awaiting Phase A.
 
 ## Automated code review
 
