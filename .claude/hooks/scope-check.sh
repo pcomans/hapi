@@ -144,14 +144,23 @@ for stmt in statements:
         # that merely opens by addressing the bot ("@codex thanks, deferring
         # this…"), which is the deferral this gate exists to catch.
         #
-        # An HTML comment after it is allowed, and only an HTML comment:
+        # Exactly one trailing marker is tolerated, matched literally:
         # post-pr-create.sh appends `<!-- hapi-review-trigger: <sha> -->` for
-        # duplicate suppression. That marker is invisible in rendered markdown
-        # and carries no prose, so it cannot smuggle a deferral past the gate.
-        # Without this the two hooks contradict each other — one emits a body
-        # the other blocks.
+        # duplicate suppression, so without this the two hooks contradict each
+        # other — one emits a body the other blocks.
+        #
+        # The pattern is deliberately NOT a generic `<!--.*?-->` strip. HTML
+        # parsers close a comment on `--!>` as well as `-->`, so a generic
+        # strip would remove `<!-- --!>Deferring this finding-->` in full while
+        # GitHub renders the deferral text — a parser differential that walks a
+        # deferral straight past this gate. Only a hex SHA is allowed inside,
+        # and only at the very end.
         stripped = body.strip()
-        without_marker = re.sub(r"<!--.*?-->", "", stripped, flags=re.DOTALL)
+        without_marker = re.sub(
+            r"\s*<!-- hapi-review-trigger: [0-9a-f]{7,40} -->\Z",
+            "",
+            stripped,
+        )
         return without_marker.strip().casefold() in TRIGGERS
 
     is_review_trigger = False
