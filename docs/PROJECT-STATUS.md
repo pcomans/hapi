@@ -9,7 +9,7 @@ A one-page, honest picture of where Hapi actually is. For the vision and archite
 | Phase | What it is | Progress | Status |
 |---|---|---|---|
 | **MVP ingest + search** | Museum APIs → canonical schema → search UI | `██████████` **100%** | ✅ Working, 3 museums, local only |
-| **Phase 0 — Authority sourcing** | Extract scholarly reference works into reproducible, page-cited facts | `███████▁▁▁` **~75%** | 🟡 One MVP-blocking source not started |
+| **Phase 0 — Authority sourcing** | Extract scholarly reference works into reproducible, page-cited facts | `███████▁▁▁` **70–80%** | 🟡 One MVP-blocking source not started |
 | **Phase A — Authority curation** | Reconcile facts into consolidated authority files; link artifacts to rulers/sites | `▁▁▁▁▁▁▁▁▁▁` **0%** | 🔜 Not started, and not yet unblocked |
 | **Phase B — Matching** | Resolve provenance strings to authority IDs; surface companion pieces | **implementation exists**<br>`▁▁▁▁▁▁▁▁▁▁` **0% integrated** | 🟠 POC exists, fails review, on no branch that ships |
 | **Web UX beyond search** | Artifact detail, browse-by-site, museum browse | `▁▁▁▁▁▁▁▁▁▁` **0%** | 🔜 0 of 4 tasks; 2 are blocked on Phase A |
@@ -35,17 +35,16 @@ Caveat on "works": everything runs locally. There is no deployment, and `web/` c
 
 ## Phase 0 — sourced, inert, and not as done as previously reported
 
-**4,583 reconciled, page-cited rows across 12 source directories**, each produced by the deterministic OCR → 3-agent-extraction → merge → review pipeline. Ruler titulary (Leprohon 2013), chronology (von Beckerath, Kitchen, Ryholt, Shaw, HKW), Old Kingdom prosopography (Baud), queens (Dodson & Hilton), the Porter & Moss tomb registers for Thebes and Memphis, ~1,000 iDAI gazetteer sites, and the pharaoh.se ruler list.
+**4,583 reconciled rows across 12 source directories.** The ten book-derived sources are page-cited and produced by the deterministic OCR → 3-agent-extraction → merge → review pipeline; `idai-gazetteer` and `pharaoh-se` are API/web-derived via committed fetch scripts, so they carry source URLs and retrieval provenance rather than page citations. Ruler titulary (Leprohon 2013), chronology (von Beckerath, Kitchen, Ryholt, Shaw, HKW), Old Kingdom prosopography (Baud), queens (Dodson & Hilton), the Porter & Moss tomb registers for Thebes and Memphis, ~1,000 iDAI gazetteer sites, and the pharaoh.se ruler list.
 
-**Why this is ~75% and not the 95% previously published here.** [`mvp-tasks.md`](mvp-tasks.md) sets the Phase-0 completion gate at **~5,700–6,500 rows across ~14 sources**. We are at 4,583 across 12. Of its eight items marked *"Must-land before Phase A can start (MVP-blocking)"*, **five are still open** (tasks 3–7) — and the largest has not been started at all:
+**Why this is 70–80% and not the 95% previously published here.** [`mvp-tasks.md`](mvp-tasks.md) sets the Phase-0 completion gate at **~5,700–6,500 rows across ~14 sources**. We are at 4,583 across 12. Of its eight items marked *"Must-land before Phase A can start (MVP-blocking)"*, **four are still open** (tasks 4–7) — and the largest has not been started at all. (Task 3, Porter & Moss III, closed when the Abûsîr pyramid-field chunk landed in PR #311 on 2026-07-07; `mvp-tasks.md` still shows it 🟡 and is stale on that point. Task 8's two actionable audits are closed, with the FIP Dyn 7–10 gap standing as an accepted authority gap rather than open work.)
 
 - **Porter & Moss Vol IV (Lower & Middle Egypt) — Task 7, MVP-blocker added 2026-05-19. Not started; no source directory exists.** Its highest-priority content is the **entire Amarna corpus**, the second-most-dispersed material in Egyptology after Thebes and among the most heavily partaged (Berlin, Cairo, the Met, Boston MFA, Brooklyn). Estimated ~400–700 rows. **It is blocked on one parked schema decision**: PM IV is multi-site, so the per-volume `theban_area` / `memphite_area` field pattern doesn't map, and a generic `site` field vs. field reuse decision was parked on 2026-06-01 and never taken.
 - Dodson & Hilton Ch 5 (Ptolemaic) — zero rows extracted.
 - Dodson & Hilton Ch 4 — roughly 150–200 of 250–300 rows outstanding.
-- Porter & Moss III Abûsîr (task 3) — open.
-- Porter & Moss I mortuary-temple sections (task 6) — open.
+- Porter & Moss I mortuary-temple sections and QV beyond chunk 8 (task 6) — open.
 
-**On the ~75% figure specifically:** by row volume it is ~80% (4,583 of the 5,700 low bound); by blocker completion it is 3 of 8 done. 75% splits those and is the more generous of the two readings, not the harsher one.
+**How the 70–80% is calculated.** Row volume against the doc's own gate, and nothing else: 4,583 committed rows ÷ the 5,700–6,500 target = 71–80%. It is a range because the gate is a range. No blended or judgement-weighted figure is offered — by the other available measure, blocker completion, it would be 4 of 8.
 
 The previous snapshot described this as "a small tail … acceptable to finish post-MVP." That contradicted this repo's own blocker list, and for the reunification promise specifically, omitting Amarna is not a tail.
 
@@ -59,13 +58,13 @@ What *is* in place is cheap groundwork: the `ruler_id`, `origin_site_id` and `or
 
 ## Phase B — a real proof of concept that ships nowhere
 
-The authority claim graph ([ADR-018](adr/018-authority-as-claim-graph.md)) — a CIDOC CRM 7.1.3 + CRMdig source-attributed model that preserves cross-source disagreement instead of collapsing it, with a deterministic + LLM two-stage matcher and a human-escalation path — is specified in full, and a substantial implementation exists: nine Python modules, 34 tests, five source loaders, and a deployable Next.js demo.
+The authority claim graph ([ADR-018](adr/018-authority-as-claim-graph.md)) — a CIDOC CRM 7.1.3 + CRMdig source-attributed model that preserves cross-source disagreement instead of collapsing it, with a deterministic + LLM two-stage matcher and a human-escalation path — is specified in full, and a substantial implementation exists: nine Python modules, five source loaders, 114 tests, and a deployable Next.js demo.
 
 It is also, as of today:
 
 - **On no branch that ships.** `git ls-files` returns nothing for `pipeline/pipeline/authority/claimgraph/` or `web-claimgraph/`; the code exists only in [PR #312](https://github.com/pcomans/hapi/pull/312), open since 2026-07-07.
 - **Imported by nothing.** Not wired into `definitions.py`; no Dagster asset consumes it.
-- **Carrying a do-not-merge verdict** from review: 9 findings, 5 of them P1, including a confirmed `NameError` on the malformed-response path that the branch's 2,228 passing tests never reach.
+- **Recently carrying a do-not-merge verdict** — 9 findings, 5 of them P1, including a live `NameError` on the malformed-response path that the branch's whole passing suite never reached. Fixes for all nine are now pushed to the branch and awaiting re-review; the verdict stands until that lands.
 - **Resolving 14% of candidates** — 226 approved links against 1,344 escalated to a human queue. That escalation rate is the design working as intended (precision-first), but it is not a finished matcher.
 
 The "built" side deliberately carries **no percentage**. There is no agreed denominator for a finished matcher — the module count says work happened, not how much of the job it covers — and a made-up figure would read as measured. What is measurable is the integration: zero.
