@@ -844,22 +844,103 @@ def test_http_error_attempt_is_persisted_with_its_body_when_a_later_attempt_succ
     assert failed.parse_error is None
 
 
-def test_persistent_http_error_still_fails_the_run_loud():
+def test_persistent_http_error_fails_loud_and_keeps_every_interaction():
     """An error status is a blocker (credits, auth, rate limit) — it must never quietly
-    escalate the candidate the way an unparseable response does."""
+    escalate the candidate the way an unparseable response does. But the calls that ENDED
+    the run are the ones most needed for diagnosis, so the terminal exception carries every
+    attempt, with the provider's error body intact (Rule 13)."""
+    bodies = [
+        {"error": {"code": 429, "message": "Rate limit exceeded, retry in 12s"}},
+        {"error": {"code": 401, "message": "No auth credentials found"}},
+    ]
+    calls = []
+    cand, a, b = _pair(48)
+    real_prompt = _build_user_prompt(cand, a, b)
+
+    def boom(c, x, y):
+        n = len(calls)
+        calls.append(n)
+        raise ReviewerHttpError(
+            f"OpenRouter returned HTTP {bodies[n]['error']['code']}",
+            interaction=_interaction(
+                provider="openrouter",
+                requested_model="z-ai/glm-5.2",
+                parameters={"max_tokens": 3000, "temperature": 0},
+                user_prompt=real_prompt,
+                raw_response=bodies[n],
+                call_error=f"OpenRouter returned HTTP {bodies[n]['error']['code']};"
+                " error body captured above.",
+            ),
+            request_digest="digest-http",
+        )
+
+    with pytest.raises(verdicts_mod.ReviewerRunAborted) as excinfo:
+        verdicts_mod._review_with_retry(
+            boom, cand, a, b, retries=1, model="z-ai/glm-5.2", provider="openrouter"
+        )
+
+    err = excinfo.value
+    assert "Live reviewer failed" in str(err)
+    assert err.candidate_id == cand.id
+    assert err.request_digest == "digest-http"
+    assert [i.attempt for i in err.interactions] == [1, 2]
+    assert [i.raw_response for i in err.interactions] == bodies
+    assert [i.call_error for i in err.interactions] == [
+        "OpenRouter returned HTTP 429; error body captured above.",
+        "OpenRouter returned HTTP 401; error body captured above.",
+    ]
+    for i in err.interactions:
+        assert i.system_prompt == SYSTEM_PROMPT
+        assert i.user_prompt == _build_user_prompt(cand, a, b)
+        assert i.parameters == {"max_tokens": 3000, "temperature": 0}
+
+
+def test_terminal_failure_writes_its_interactions_to_disk_before_the_run_dies(tmp_path):
+    """A candidate that never completes writes no verdict, so without this the provider's
+    final error body would die with the run. The failed attempts are appended to a file
+    NEXT TO the verdict cache — separate, because they are failed attempts and must never
+    be mistaken for a decision on resume."""
+    error_body = {"error": {"code": 401, "message": "No auth credentials found"}}
+    a = _rec("leprohon", "leprohon-50", "Amasis", prenomina=["Khnemibre"])
+    b = _rec("beckerath", "beckerath-50", "Amasis", prenomina=["Chnem-ib-rê"])
+    real_prompt = _build_user_prompt(generate_candidates([a, b])[0], a, b)
 
     def boom(c, x, y):
         raise ReviewerHttpError(
             "OpenRouter returned HTTP 401",
-            interaction=_interaction(raw_response={"error": {"code": 401}}),
+            interaction=_interaction(
+                raw_response=error_body, call_error="HTTP 401", user_prompt=real_prompt
+            ),
             request_digest="digest-http",
         )
 
-    cand, a, b = _pair(48)
-    with pytest.raises(RuntimeError, match="Live reviewer failed"):
-        verdicts_mod._review_with_retry(
-            boom, cand, a, b, retries=1, model="m", provider=PROVIDER_ANTHROPIC
+    cache_path = str(tmp_path / "cache.jsonl")
+
+    with pytest.raises(verdicts_mod.ReviewerRunAborted):
+        verdicts_mod.resolve_matches(
+            [a, b], mode="llm", reviewer_fn=boom, model="claude-sonnet-5",
+            retries_per_candidate=1, cache_path=cache_path,
         )
+
+    # no verdict was reached, so the verdict cache stays empty — a failed attempt is not a
+    # decision and must never be resumed as one
+    assert open(cache_path, encoding="utf-8").read() == ""
+    records = [
+        json.loads(line)
+        for line in open(cache_path + ".failed-attempts.jsonl", encoding="utf-8")
+        if line.strip()
+    ]
+    assert len(records) == 1
+    rec = records[0]
+    assert rec["candidate_id"] == "cand-beckerath-50|leprohon-50"
+    assert rec["aborted"] is True
+    assert "Live reviewer failed" in rec["error"]
+    assert rec["request_digest"] == "digest-http"
+    assert [i["attempt"] for i in rec["interactions"]] == [1, 2]
+    assert [i["raw_response"] for i in rec["interactions"]] == [error_body, error_body]
+    assert [i["call_error"] for i in rec["interactions"]] == ["HTTP 401", "HTTP 401"]
+    assert rec["interactions"][0]["system_prompt"] == SYSTEM_PROMPT
+    assert rec["interactions"][0]["user_prompt"] == real_prompt
 
 
 def test_exception_carried_error_body_is_persisted():

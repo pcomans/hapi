@@ -86,6 +86,36 @@ class ResolveResult:
     mode: str
 
 
+class ReviewerRunAborted(RuntimeError):
+    """A candidate exhausted its retries on a blocking error (credits, auth, rate limit,
+    network). The run MUST stop — but not silently: the accumulated interactions travel
+    with the exception so the caller can persist them before the run dies. These are the
+    calls that ended the run; they are exactly the ones that must stay replayable
+    (Constitutional Rule 13)."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        candidate_id: str,
+        interactions: list[ReviewerInteraction],
+        request_digest: str | None,
+    ) -> None:
+        super().__init__(message)
+        self.candidate_id = candidate_id
+        self.interactions = interactions
+        self.request_digest = request_digest
+
+    def as_record(self) -> dict:
+        return {
+            "candidate_id": self.candidate_id,
+            "aborted": True,
+            "error": str(self),
+            "request_digest": self.request_digest,
+            "interactions": [asdict(i) for i in self.interactions],
+        }
+
+
 def _stamped(
     interaction: ReviewerInteraction, attempt: int, model: str
 ) -> ReviewerInteraction:
@@ -162,11 +192,18 @@ def _review_with_retry(
                 _stamped(i, attempt, model) for i in verdict.interactions
             ]
             return verdict
-    # An API/transport error is a real blocker (credits, network, auth) → fail loud.
+    # An API/transport error is a real blocker (credits, network, auth) → fail loud. The
+    # attempts still travel with the exception: they are the calls that ENDED the run, so
+    # they are the ones most needed for diagnosis, and dropping them here would lose the
+    # provider's final error body entirely (Rule 13). The caller persists them on the way
+    # up before the run dies.
     if not isinstance(last_err, ReviewerParseError):
-        raise RuntimeError(
+        raise ReviewerRunAborted(
             f"Live reviewer failed for candidate {c.id} ({c.a_name} ↔ {c.b_name}) "
-            f"after {retries + 1} attempts: {last_err}"
+            f"after {retries + 1} attempts: {last_err}",
+            candidate_id=c.id,
+            interactions=interactions,
+            request_digest=digest,
         )
     # Unparseable output after retries: escalate THIS candidate (doubt → curator queue),
     # visibly and counted — never silently, and never aborting the rest of the run. Every
@@ -350,6 +387,13 @@ def resolve_matches(
             on_progress(done, total)
         lock = threading.Lock()
         cache_fh = open(cache_path, "a", encoding="utf-8") if cache_path else None
+        # A candidate that exhausts its retries on a blocking error never produces a
+        # verdict, so nothing about it would reach the verdict cache — its interactions
+        # (including the provider's final error body) would die with the run. They are
+        # appended here instead, to a SEPARATE file: these are failed attempts, not
+        # verdicts, and must never be mistaken for a decision on resume (Rule 6/13).
+        aborted_path = cache_path + ".failed-attempts.jsonl" if cache_path else None
+        aborted: list[ReviewerRunAborted] = []
 
         def work(c: Candidate) -> tuple[str, Verdict]:
             a, b = by_id.get(c.a_id), by_id.get(c.b_id)
@@ -360,11 +404,25 @@ def resolve_matches(
             )
             return c.id, v
 
+        aborted_fh = open(aborted_path, "a", encoding="utf-8") if aborted_path else None
         try:
             with ThreadPoolExecutor(max_workers=max_workers) as pool:
                 futures = {pool.submit(work, c): c for c in todo}
                 for fut in as_completed(futures):
-                    cid, v = fut.result()  # re-raises loudly on failure → whole run fails
+                    try:
+                        cid, v = fut.result()  # re-raises loudly → the whole run fails
+                    except ReviewerRunAborted as err:
+                        # Persist FIRST, then keep draining so every aborted candidate's
+                        # attempts are written, and raise once the loop is done. The run
+                        # still dies — it just does not die with the evidence unwritten.
+                        with lock:
+                            aborted.append(err)
+                            if aborted_fh:
+                                aborted_fh.write(
+                                    json.dumps(err.as_record(), ensure_ascii=False) + "\n"
+                                )
+                                aborted_fh.flush()
+                        continue
                     with lock:
                         verdicts_by_id[cid] = v
                         if cache_fh:
@@ -376,6 +434,26 @@ def resolve_matches(
         finally:
             if cache_fh:
                 cache_fh.close()
+            if aborted_fh:
+                aborted_fh.close()
+        if aborted:
+            import sys
+
+            where = (
+                f" Their full interactions were written to {aborted_path}."
+                if aborted_path
+                else " No cache_path was given, so they are only on the raised error."
+            )
+            sys.stderr.write(
+                f"[reviewer] ABORT: {len(aborted)} candidate(s) failed after retries.{where}\n"
+            )
+            raise ReviewerRunAborted(
+                f"{aborted[0]} [{len(aborted)} candidate(s) aborted in this run;"
+                f"{where}]",
+                candidate_id=aborted[0].candidate_id,
+                interactions=[i for err in aborted for i in err.interactions],
+                request_digest=aborted[0].request_digest,
+            )
         verdicts = [finalize(c, verdicts_by_id[c.id]) for c in candidates]
 
     approved_edges: list[MatchEdge] = []
