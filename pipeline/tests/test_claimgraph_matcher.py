@@ -183,11 +183,13 @@ def _rec(
     nomina=None,
     alt_names=None,
     reign_start_bce=None,
+    display_name_absence=None,
 ):
     return RulerRecord(
         source_id=source_id,
         local_id=local_id,
         display_name=display_name,
+        display_name_absence=display_name_absence,
         alt_names=alt_names or [],
         dynasty=dynasty,
         dynasty_label=None,

@@ -20,6 +20,7 @@ from pathlib import Path
 import pytest
 
 from pipeline.authority.claimgraph.graph_ir import build_documentary_graph
+from pipeline.authority.claimgraph.normalize import NameForm as NameFormT
 from pipeline.authority.claimgraph import sources as sources_mod
 from pipeline.authority.claimgraph.sources import (
     SourceRowError,
@@ -425,22 +426,131 @@ def test_no_committed_name_normalises_to_a_placeholder_key():
     assert offenders == [], offenders
 
 
-def test_no_cross_source_candidate_rests_on_a_placeholder_key():
-    """No candidate pair may be generated on a key meaning "not known".
+_LOST_ENTRY_IDS = (
+    "leprohon-leprohon-13.49",
+    "leprohon-leprohon-14.14",
+    "leprohon-leprohon-14.46",
+    "leprohon-leprohon-14.52",
+    "leprohon-leprohon-16.01",
+    "leprohon-leprohon-16.11",
+    "leprohon-leprohon-17.03",
+    "leprohon-leprohon-17.12",
+)
 
-    Leprohon carries eight rows whose `display_name` is Leprohon's own printed
-    designation for a lost king-list entry ("Name Lost", "Five Names Lost", …). Those
-    are legitimately the row's name in the book and are deliberately NOT migrated — but
-    they do feed the loose name blocker, so two of them already share the key
-    `namelost`. Today they collide only within Leprohon and the matcher is cross-source
-    only, so nothing is generated. This test is the tripwire for the day another source
-    contributes such a row."""
+_LOST_ENTRY_KEYS = frozenset(
+    {"namelost", "nmlst", "onenamelost", "threenameslost", "fivenameslost",
+     "eightnameslost", "nnmslst", "thrnmslst", "fvnmslst", "ghtnmslst"}
+)
+
+
+def test_no_cross_source_candidate_rests_on_a_placeholder_key():
+    """No candidate pair may be generated on a key meaning "not known" — including the
+    lost-entry designations. This is the tripwire kept from the previous round; it now
+    guards the fix rather than a deferral."""
     from pipeline.authority.claimgraph.matcher import generate_candidates
 
-    bad = frozenset(_PLACEHOLDER_KEYS | {"namelost", "nmlst"})
+    bad = _PLACEHOLDER_KEYS | _LOST_ENTRY_KEYS
     for c in generate_candidates(load_all_sources(AUTHORITY_ROOT).records):
         shared = set(c.shared_prenomen_keys) | set(c.shared_name_keys)
         assert not (shared & bad), (c.id, sorted(shared & bad))
+
+
+def test_lost_entry_rows_still_render_their_printed_display_name():
+    """The value is KEPT. `display_name` is required, the row must render, and "Name
+    Lost" is genuinely what Leprohon calls the entry — only its second role, supplying a
+    matching key, is withdrawn."""
+    recs = {r.local_id: r for r in load_all_sources(AUTHORITY_ROOT).records}
+    expected = {
+        "leprohon-leprohon-13.49": "One Name Lost",
+        "leprohon-leprohon-14.14": "Name Lost",
+        "leprohon-leprohon-14.46": "Three Names Lost",
+        "leprohon-leprohon-14.52": "Five Names Lost",
+        "leprohon-leprohon-16.01": "Name Lost",
+        "leprohon-leprohon-16.11": "Five Names Lost",
+        "leprohon-leprohon-17.03": "Eight Names Lost",
+        "leprohon-leprohon-17.12": "Three Names Lost",
+    }
+    for local_id, printed in expected.items():
+        rec = recs[local_id]
+        assert rec.display_name == printed
+        # The distinction is carried on the record's TYPE, not re-derived from the
+        # string by whichever consumer remembers to.
+        assert rec.display_name_absence is not None
+        assert rec.display_name_absence.kind == "stated_unknown"
+        assert rec.display_name_absence.printed_as == printed
+
+
+def test_lost_entry_rows_contribute_no_name_key():
+    """None of the eight contributes a matching key at all: their titulary lists are
+    empty and the headword is withdrawn, so there is nothing left to block on."""
+    from pipeline.authority.claimgraph.matcher import _name_keys
+
+    recs = {r.local_id: r for r in load_all_sources(AUTHORITY_ROOT).records}
+    for local_id in _LOST_ENTRY_IDS:
+        assert _name_keys(recs[local_id]) == set(), local_id
+
+
+def test_every_other_record_still_matches_on_its_display_name():
+    """The withdrawal is surgical. Every record WITHOUT a typed display-name absence
+    still contributes its headword to the blocker — otherwise this change would quietly
+    gut the loose name matcher for 1151 records."""
+    from pipeline.authority.claimgraph.matcher import _name_keys
+    from pipeline.authority.claimgraph.normalize import keys_for_form
+
+    checked = 0
+    for r in load_all_sources(AUTHORITY_ROOT).records:
+        if r.display_name_absence is not None:
+            continue
+        expected = keys_for_form(NameFormT(surface=r.display_name))
+        assert expected <= _name_keys(r), r.local_id
+        checked += 1
+    assert checked == 1151, checked
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        # iDAI gazetteer place names. `Kloster` CONTAINS "lost" — a substring rule would
+        # strike real places out of the blocker. The gate is the typed field, never the
+        # string, so these are untouched.
+        "Katharinenkloster",
+        "Simeonskloster",
+        "Jeremias-Kloster",
+        # `Na` was matched by the earlier `n/?a` alternative in the sentinel — a real
+        # name element that an absence pattern must never be able to swallow.
+        "Na",
+        "Nay",
+    ],
+)
+def test_lost_like_and_na_like_real_names_are_unaffected(value):
+    """An absence pattern must never swallow a name that merely resembles it."""
+    assert not sources_mod._is_absence_sentinel(value)
+    assert sources_mod._name_form(value) is not None
+    from pipeline.authority.claimgraph.matcher import _name_keys
+
+    rec = _record_with_display_name(value)
+    assert _name_keys(rec) != set()
+
+
+def _record_with_display_name(name: str):
+    from pipeline.authority.claimgraph.sources import RulerRecord, SOURCE_AUTHORITY
+
+    return RulerRecord(
+        source_id="leprohon",
+        local_id="x",
+        display_name=name,
+        display_name_absence=None,
+        alt_names=[],
+        dynasty=None,
+        dynasty_label=None,
+        prenomina=[],
+        horus_names=[],
+        nomina=[],
+        reign_start_bce=None,
+        reign_end_bce=None,
+        intra_source_same_as=[],
+        authority=SOURCE_AUTHORITY["leprohon"],
+    )
 
 
 def test_committed_absence_kinds_are_all_in_the_vocabulary():
@@ -473,10 +583,19 @@ def test_committed_absence_kinds_are_all_in_the_vocabulary():
     # Pin the exact printed tokens the committed sources assert, so a silent
     # re-transcription that drops or invents one fails here (rule 5).
     assert seen == {
+        # titulary slots — the scholar prints "the name is not known" in the slot
         ("stated_unknown", "(unknown)"),
         ("stated_unknown", "unknown"),
         ("stated_unknown", "unknown (?)"),
         ("stated_unknown", "[Prenomen unknown]"),
+        # display headwords — Leprohon's designation for a lost king-list entry. Same
+        # fact, same vocabulary term; only the value survives, because the row must
+        # render.
+        ("stated_unknown", "One Name Lost"),
+        ("stated_unknown", "Name Lost"),
+        ("stated_unknown", "Three Names Lost"),
+        ("stated_unknown", "Five Names Lost"),
+        ("stated_unknown", "Eight Names Lost"),
     }, sorted(seen)
 
 

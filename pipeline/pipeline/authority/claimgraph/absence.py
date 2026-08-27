@@ -63,7 +63,19 @@ draws the distinction. Absent that, the term does not exist.
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import Any
+from typing import Any, NamedTuple
+
+
+class Absence(NamedTuple):
+    """One parsed typed-absence assertion.
+
+    A NamedTuple so consumers can carry it as a typed value on a record — the
+    distinction "this field's value is a stated absence" then lives in the TYPE, not in
+    a string re-tested downstream by whoever remembers to.
+    """
+
+    kind: str
+    printed_as: str
 
 #: The controlled vocabulary. See the module docstring for why it has one term.
 ABSENCE_KINDS: frozenset[str] = frozenset({"stated_unknown"})
@@ -114,7 +126,7 @@ def iter_absence_fields(obj: Any, path: str = "") -> Iterator[tuple[str, str, An
             yield from iter_absence_fields(v, f"{path}[{i}]")
 
 
-def parse_absence(value: Any, *, where: str) -> tuple[str, str]:
+def parse_absence(value: Any, *, where: str) -> Absence:
     """Validate one typed-absence object → ``(kind, printed_as)``.
 
     Raises on anything off-vocabulary or malformed. An unrecognised ``kind`` is NOT
@@ -142,4 +154,4 @@ def parse_absence(value: Any, *, where: str) -> tuple[str, str]:
             f"{where}: 'printed_as' must be the scholar's exact printed token, got "
             f"{printed_as!r}. Without it the migration would erase what the page shows."
         )
-    return kind, printed_as
+    return Absence(kind, printed_as)
