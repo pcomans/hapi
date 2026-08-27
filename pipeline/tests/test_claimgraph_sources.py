@@ -20,6 +20,7 @@ from pathlib import Path
 import pytest
 
 from pipeline.authority.claimgraph.graph_ir import build_documentary_graph
+from pipeline.authority.claimgraph.absence import ABSENCE_KINDS as _ABSENCE_KINDS
 from pipeline.authority.claimgraph.normalize import NameForm as NameFormT
 from pipeline.authority.claimgraph import sources as sources_mod
 from pipeline.authority.claimgraph.sources import (
@@ -524,8 +525,26 @@ def test_lost_entry_rows_still_render_their_printed_display_name():
         # The distinction is carried on the record's TYPE, not re-derived from the
         # string by whichever consumer remembers to.
         assert rec.display_name_absence is not None
-        assert rec.display_name_absence.kind == "stated_unknown"
+        # `name_lost`, not `stated_unknown`: Leprohon's LOST stubs assert that the
+        # document is damaged, whereas his `(unknown)` titulary slots assert the value
+        # is not known to scholarship. Two claims the source draws in print.
+        assert rec.display_name_absence.kind == "name_lost"
         assert rec.display_name_absence.printed_as == printed
+
+
+@pytest.mark.parametrize("kind", sorted(_ABSENCE_KINDS))
+def test_matcher_exclusion_is_identical_for_every_absence_kind(kind):
+    """The two kinds record a distinction the SOURCES draw; no consumer branches on it.
+    A name withheld because the document is damaged and one withheld because scholarship
+    does not know it are equally unmatchable, so the exclusion must stay kind-agnostic —
+    if a future kind is minted, it is excluded by default rather than by remembering."""
+    from pipeline.authority.claimgraph.matcher import _name_keys
+    from pipeline.authority.claimgraph.absence import Absence
+
+    rec = _record_with_display_name("Name Lost")
+    assert _name_keys(rec) != set(), "sanity: without the typed field it DOES match"
+    rec.display_name_absence = Absence(kind, "Name Lost")
+    assert _name_keys(rec) == set()
 
 
 def test_lost_entry_rows_contribute_no_name_key():
@@ -636,14 +655,15 @@ def test_committed_absence_kinds_are_all_in_the_vocabulary():
         ("stated_unknown", "unknown"),
         ("stated_unknown", "unknown (?)"),
         ("stated_unknown", "[Prenomen unknown]"),
-        # display headwords — Leprohon's designation for a lost king-list entry. Same
-        # fact, same vocabulary term; only the value survives, because the row must
-        # render.
-        ("stated_unknown", "One Name Lost"),
-        ("stated_unknown", "Name Lost"),
-        ("stated_unknown", "Three Names Lost"),
-        ("stated_unknown", "Five Names Lost"),
-        ("stated_unknown", "Eight Names Lost"),
+        # display headwords — Leprohon's stub designation for a king-list entry whose
+        # name the document no longer preserves. A DIFFERENT claim from the titulary
+        # slots above, hence a different kind; and the value survives, because the row
+        # must render.
+        ("name_lost", "One Name Lost"),
+        ("name_lost", "Name Lost"),
+        ("name_lost", "Three Names Lost"),
+        ("name_lost", "Five Names Lost"),
+        ("name_lost", "Eight Names Lost"),
     }, sorted(seen)
 
 

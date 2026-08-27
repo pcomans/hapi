@@ -37,20 +37,53 @@ Placement is by convention, enforced by :func:`iter_absence_fields`:
 
 Vocabulary
 ----------
-``ABSENCE_KINDS`` has exactly ONE term. It is justified only by what the committed
+``ABSENCE_KINDS`` has exactly TWO terms. Each is justified only by what the committed
 sources actually distinguish, never by what is imaginable:
 
-* ``stated_unknown`` — attested in Leprohon p. 37 / 39 / 42 / 43 (``(unknown)``,
-  bare ``unknown``, ``unknown (?)``) and Kitchen (``[Prenomen unknown]``,
-  kitchen-tipe README §85).
+* ``stated_unknown`` — the value is **not known to scholarship**. Attested in Leprohon
+  p. 37 / 39 / 42 / 43 (``(unknown)``, bare ``unknown``, ``unknown (?)``) and Kitchen
+  (``[Prenomen unknown]``, kitchen-tipe README §prenomen_absence).
+* ``name_lost`` — the **source document is damaged** and the name it once carried is
+  not preserved. Attested in Leprohon's SMALLCAP stub headwords ``N. NAME LOST`` /
+  ``N1–N2. <COUNT> NAMES LOST`` (pp. 70, 76, 79, 83, 85, 88).
+
+Why these are two claims and not one. The two wordings never cross contexts in the
+committed corpus: no titulary slot is printed ``lost`` or ``wanting``, and no headword
+is printed ``unknown`` (verified by sweeping every name field of all 395 rows). They
+also describe different situations, and the sources say so:
+
+* The ``LOST`` stubs are documented in ``prompt-dyn13.md`` / ``prompt-dyn13a-14.md``
+  under the heading *"Stub entries for destroyed / missing names"*: "Leprohon sometimes
+  preserves a sequence-numbering slot for a king whose name is **entirely unreadable in
+  his sources** (e.g. a Turin Canon row that survives as a number-only entry without
+  legible name glyphs)", and they are explicitly "Similar to the chunk-3 ``/////`` stub
+  (Dyn 9-10a.02)" — which Leprohon himself glosses "(name missing in the Turin list
+  [4,19])", a damage claim carrying a papyrus column reference. All eight such rows are
+  Dyn 13–17 and carry **zero** name slots: the whole entry is unreadable.
+* The ``(unknown)`` slots are Dyn 4–6 kings whose rows are otherwise richly populated
+  (Teti: five titulary slots, four bearing real names) and where exactly ONE element is
+  absent. Leprohon's own footnote 72 for that slot reads "Aufrère ... has proposed an
+  **unattested** Throne name of *Sehetepre for Teti" — unattested, not lost. Nothing is
+  damaged; the element appears never to have been recorded. Across the corpus, titulary
+  ``source_note``s say "unattested" three times and "lost" zero times.
+
+This module previously collapsed both into ``stated_unknown``, which contradicted its
+own reasoning about ``////`` below: the ``LOST`` stubs sit on the ``////`` side of the
+line — a damaged document — not the ``(unknown)`` side.
+
+Both kinds are treated identically by every consumer today (a name carrying either is
+withheld from the matcher). The distinction is recorded because the sources draw it, not
+because anything currently branches on it.
 
 Deliberately NOT minted:
 
 * a separate term for Leprohon's ``(?)`` hedge on p. 43. The arbiter rationales in
   ``tie-break-overrides.json`` distinguish the three printed *spellings*, but no
   committed material defines what force the ``(?)`` carries, so asserting a second
-  epistemic class would be a guess. The hedge is preserved verbatim in
-  ``printed_as`` instead.
+  epistemic class would be a guess. The hedge is preserved verbatim in ``printed_as``
+  instead. Contrast ``name_lost``: there the two wordings are plain, both printed by
+  Leprohon, and the printed wording IS the committed evidence — which is exactly the
+  difference between recording a distinction and inventing one.
 * a term for ``////`` (Leprohon's epigraphic lacuna marker). That is a different
   fact — an *attested* inscription whose signs are destroyed, not a statement that
   the name is unknown — and no row is migrated to it.
@@ -77,8 +110,9 @@ class Absence(NamedTuple):
     kind: str
     printed_as: str
 
-#: The controlled vocabulary. See the module docstring for why it has one term.
-ABSENCE_KINDS: frozenset[str] = frozenset({"stated_unknown"})
+#: The controlled vocabulary. See the module docstring for why it has exactly these two
+#: terms — and for the distinctions deliberately NOT given a term.
+ABSENCE_KINDS: frozenset[str] = frozenset({"stated_unknown", "name_lost"})
 
 #: Exact key used when the enclosing object owns exactly one name.
 ABSENCE_KEY = "absence"

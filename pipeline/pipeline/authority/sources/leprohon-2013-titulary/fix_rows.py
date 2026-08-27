@@ -1176,9 +1176,22 @@ TYPED_ABSENCE_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # --- typed absence on `display_name` ------------------------------------------
 #
 # Eight rows where Leprohon's SMALLCAP headword is not a name but his designation for a
-# king-list entry whose name is lost. Same fact as the titulary slots above, so the same
-# `stated_unknown` vocabulary term — but the value is KEPT, not nulled: `display_name`
-# is required, the row must render, and "Name Lost" is what the book prints.
+# king-list entry whose name is lost. The value is KEPT, not nulled: `display_name` is
+# required, the row must render, and "Name Lost" is what the book prints.
+#
+# Kind is `name_lost`, NOT the `stated_unknown` used for the titulary slots above —
+# these are two claims, not one. `(unknown)` says the value is not known to scholarship;
+# `LOST` says the document is damaged and the name it carried is not preserved. The
+# wordings never cross contexts (no titulary slot prints "lost", no headword prints
+# "unknown"), all eight rows carry ZERO name slots because the whole entry is unreadable
+# in the Turin Canon, and the chunk prompts file them under "Stub entries for destroyed
+# / missing names ... entirely unreadable in his sources", explicitly likening them to
+# the `/////` stub Leprohon glosses "(name missing in the Turin list [4,19])". By
+# contrast, Teti's `(unknown)` Throne slot sits on a row with four other real names and
+# is footnoted "an *unattested* Throne name". See claimgraph/absence.py.
+#
+# Both kinds are withheld from the matcher identically; the distinction is recorded
+# because the source draws it, not because anything branches on it.
 #
 # What changes is that `display_name` stops playing two roles at once. It fed the loose
 # name blocker, so "Name Lost" (14.14, 16.01), "Three Names Lost" (14.46, 17.12) and
@@ -1193,7 +1206,7 @@ TYPED_ABSENCE_CORRECTIONS: list[tuple[str, str, object, str]] = [
 # would have the model supply information the source already gives (rule 1), and the
 # reviewer's remit is judging identity between two records, not reading headwords.
 DISPLAY_NAME_ABSENCE_CORRECTIONS: list[tuple[str, str, object, str]] = [
-    (lid, "display_name_absence", {"kind": "stated_unknown", "printed_as": printed}, rationale)
+    (lid, "display_name_absence", {"kind": "name_lost", "printed_as": printed}, rationale)
     for lid, printed, rationale in [
         (
             "leprohon-13.49",
