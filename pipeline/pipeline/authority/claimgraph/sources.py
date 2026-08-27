@@ -19,9 +19,59 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from .absence import ABSENCE_KEY, Absence, iter_absence_fields, parse_absence
 from .normalize import NameForm
 
 SOURCE_IDS = ("leprohon", "beckerath", "kitchen", "pharaoh_se", "ryholt")
+
+# Every typed-absence field this loader KNOWS ABOUT, per source, as a dotted path with
+# list indices elided. A row carrying an absence-signalling key that is NOT listed here
+# raises (:func:`_assert_absence_consulted`).
+#
+# This registry exists because of a specific rot: Kitchen shipped
+# ``prenomen_is_kitchen_unknown`` — a correct, page-cited typed assertion that the king
+# exists but his throne name is not recorded — and the loader never read it, while
+# reading the placeholder string in the adjacent ``prenomen`` field as if it were a name.
+# A flag nobody consults is worse than no flag: it looks like the distinction is being
+# honoured. Silence is not acceptable here; an unconsulted absence flag is a loud error.
+_ABSENCE_CONSULTED: dict[str, frozenset[str]] = {
+    "leprohon": frozenset(
+        {
+            "display_name_absence",
+            "throne_names.absence",
+            "horus_names.absence",
+            "later_horus_names.absence",
+            "birth_names.absence",
+            "nebty_names.absence",
+            "golden_horus_names.absence",
+            "later_cartouche_names.absence",
+            "seth_names.absence",
+        }
+    ),
+    "beckerath": frozenset(),
+    "kitchen": frozenset({"prenomen_absence"}),
+    "pharaoh_se": frozenset(),
+    "ryholt": frozenset(),
+}
+
+_LIST_INDEX = re.compile(r"\[\d+\]")
+
+
+def _assert_absence_consulted(row: dict, *, source: str, row_id: str) -> None:
+    """RAISE if the row ships an absence-signalling field the loader does not consult."""
+    for path, _key, _value in iter_absence_fields(row):
+        generic = _LIST_INDEX.sub("", path)
+        if generic not in _ABSENCE_CONSULTED[source]:
+            raise _err(
+                source,
+                row_id,
+                path,
+                "is a typed-absence flag that this loader does not consult. Either read "
+                "it where the claim is built and register it in _ABSENCE_CONSULTED, or "
+                "remove it from the source — an absence assertion nobody reads silently "
+                "rots while the placeholder it describes keeps being loaded as a name.",
+            )
+
 
 SOURCE_LABEL: dict[str, str] = {
     "leprohon": "Leprohon 2013",
@@ -91,6 +141,16 @@ class RulerRecord:
     source_id: str
     local_id: str
     display_name: str
+    # Non-null when ``display_name`` is not a name but the source's printed designation
+    # for an entry whose name is LOST (Leprohon's "Name Lost" / "Five Names Lost").
+    # `display_name` still renders — that is genuinely what the book calls the row — but
+    # the value must never become a matching key: "Name Lost" is not a name two records
+    # can share, and two entries lost in different king lists are not the same king.
+    #
+    # The two roles of `display_name` (what we show / what we match on) are separated
+    # HERE, at the type level, so a consumer must decide which one it wants. Re-testing
+    # the string downstream would put the rule in whichever call site remembered it.
+    display_name_absence: Absence | None
     alt_names: list[str]
     dynasty: int | None
     dynasty_label: str | None
@@ -240,6 +300,19 @@ def _read_jsonl(root: Path, source: str) -> list[dict]:
 #
 # The optional trailing `(?)`/`?` catches Leprohon's `unknown (?)` spelling, which the
 # first version of this pattern missed on 9 committed rows.
+#
+# `missing` and `destroyed` are deliberately NOT alternatives. Neither occurs as a
+# whole-field value in any name-bearing field of any source: the committed instances
+# (`Missing` on pharaoh.se `throne_names[].translation`, `(destroyed)` on Leprohon
+# `horus_names[].translation`) sit in `translation`, which no loader reads, so an
+# alternative for them would guard a shape that cannot reach this function. Adding them
+# would also let the branch assert two incompatible things at once — `(destroyed)` on
+# leprohon-19.02 marks an ATTESTED inscription whose signs are lost, a different fact
+# from "the name is not known", and that row is deliberately preserved (see
+# `test_leprohon_lacuna_marker_row_is_kept_and_matches_on_nothing`). Speculative
+# alternatives also convert a future extractor bug from a loud wrong-name into a silent
+# drop. If such a value ever does land in a name field, the corpus-wide literal audit is
+# where it gets classified from the source first.
 _ABSENCE_SENTINEL = re.compile(
     r"^[\[\(\{]?\s*(?:prenomen|nomen|horus[\s-]?name|name)?\s*"
     r"(?:unknown|unattested|unbekannt|not\s+known|n/a|n\.a\.|none|null|lost|lacuna)"
@@ -286,6 +359,25 @@ def _from_titulary_list(row: dict, path: str, *, source: str, row_id: str) -> li
             or ""
         )
         translit = _opt_str(e, "transliteration", source=source, row_id=row_id)
+        if ABSENCE_KEY in e:
+            # The scholar states this name is not recorded. That is a claim ABOUT the
+            # titulary slot, not a name in it — so the slot is loaded as carrying no
+            # name claim at all. It is deliberately NOT dropped upstream in the data:
+            # "Leprohon prints `(unknown)` here" and "Leprohon prints nothing here" are
+            # different facts, and only the typed sibling keeps them apart.
+            kind, printed_as = parse_absence(
+                e[ABSENCE_KEY], where=f"[{source}] row {row_id}: {item}"
+            )
+            if surface or translit:
+                raise _err(
+                    source,
+                    row_id,
+                    item,
+                    f"carries a typed absence ({kind}, printed as {printed_as!r}) AND a "
+                    f"name ({surface or translit!r}). The source cannot both state the "
+                    f"name is unknown and supply it; one of the two is wrong.",
+                )
+            continue
         if not surface and not translit:
             raise _err(source, row_id, item, f"has neither a name nor a transliteration: {e!r}")
         form = _name_form(surface, translit)
@@ -315,10 +407,20 @@ def load_leprohon(root: Path) -> SourceLoad:
         # be provenance-attributed, and every id-less row would collapse onto the same
         # ``<source>-None`` primary key in the web artifact.
         rid = _req_str(r, "leprohon_id", source=src, row_id=f"line {i}")
+        _assert_absence_consulted(r, source=src, row_id=rid)
         cite = _opt_dict(r, "source_citation", source=src, row_id=rid)
         pdf_page = _opt_int(cite, "physical_pdf_page", source=src, row_id=rid)
         stage_suffix = _opt_str(r, "stage_suffix", source=src, row_id=rid)
+        # `display_name` stays REQUIRED even when Leprohon's designation is "Name Lost":
+        # the row must render, and that IS what the book calls it. Only its second role —
+        # supplying a matching key — is withdrawn, via the typed sibling.
         display_name = _req_str(r, "display_name", source=src, row_id=rid)
+        display_absence = r.get("display_name_absence")
+        display_name_absence = (
+            parse_absence(display_absence, where=f"[{src}] row {rid}: display_name_absence")
+            if display_absence is not None
+            else None
+        )
         out.append(
             RulerRecord(
                 source_id=src,
@@ -326,6 +428,7 @@ def load_leprohon(root: Path) -> SourceLoad:
                 # (the local_id is the web PRIMARY KEY — an unprefixed id risks collision).
                 local_id=f"{src}-{rid}",
                 display_name=display_name,
+                display_name_absence=display_name_absence,
                 alt_names=_str_list(r, "alt_display_names", source=src, row_id=rid),
                 dynasty=_opt_int(r, "dynasty_number", source=src, row_id=rid),
                 dynasty_label=_opt_str(r, "dynasty_label", source=src, row_id=rid),
@@ -356,6 +459,7 @@ def load_beckerath(root: Path) -> SourceLoad:
     non_ruler: list[tuple[str, str]] = []
     for i, r in enumerate(_read_jsonl(root, "beckerath-1997-chronologie"), 1):
         rid = _req_str(r, "beckerath_id", source=src, row_id=f"line {i}")
+        _assert_absence_consulted(r, source=src, row_id=rid)
         if _opt_bool(r, "is_dynasty_marker", source=src, row_id=rid) is True:
             # The ONLY sanctioned drop: the source itself marks this row as a period
             # header rather than a king. Reported, never silent.
@@ -383,6 +487,8 @@ def load_beckerath(root: Path) -> SourceLoad:
                 source_id=src,
                 local_id=f"{src}-{rid}",
                 display_name=name,
+                # Beckerath prints no lost-entry designations; every row has a real name.
+                display_name_absence=None,
                 alt_names=_str_list(r, "name_variants", source=src, row_id=rid),
                 dynasty=_opt_int(r, "dynasty", source=src, row_id=rid),
                 dynasty_label=_opt_str(r, "period", source=src, row_id=rid),
@@ -409,7 +515,15 @@ def load_kitchen(root: Path) -> SourceLoad:
     out = []
     for i, r in enumerate(_read_jsonl(root, "kitchen-tipe"), 1):
         rid = _req_str(r, "kitchen_id", source=src, row_id=f"line {i}")
+        _assert_absence_consulted(r, source=src, row_id=rid)
         name = _req_str(r, "name", source=src, row_id=rid)
+        # Kitchen states, for two kings, that the throne name is not recorded (Table 3;
+        # kitchen-tipe README §prenomen_absence). Consulting it here is the whole point
+        # of the registry above: the flag is READ, and reading it means the row
+        # contributes no prenomen claim rather than a placeholder one.
+        prenomen_absence = r.get("prenomen_absence")
+        if prenomen_absence is not None:
+            parse_absence(prenomen_absence, where=f"[{src}] row {rid}: prenomen_absence")
         prenomina: list[NameForm] = []
         # Prefer the structured set; the scalar is a human rendering
         # ("Usimare, then Sneferre") and must not be treated as one name (ADR-020).
@@ -422,12 +536,22 @@ def load_kitchen(root: Path) -> SourceLoad:
             scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
             if scalar and "," not in scalar and "then" not in scalar.lower():
                 _append(prenomina, scalar)
+        if prenomen_absence is not None and prenomina:
+            raise _err(
+                src,
+                rid,
+                "prenomen_absence",
+                f"states the throne name is not recorded, yet the row also supplies "
+                f"{[f.surface for f in prenomina]!r}. Both cannot be true.",
+            )
         same = _opt_str(r, "same_person_as", source=src, row_id=rid)
         out.append(
             RulerRecord(
                 source_id=src,
                 local_id=f"{src}-{rid}",
                 display_name=name,
+                # Kitchen names every king he tabulates; his only absence is the prenomen.
+                display_name_absence=None,
                 alt_names=[],
                 dynasty=_opt_int(r, "dynasty", source=src, row_id=rid),
                 dynasty_label=_opt_str(r, "polity", source=src, row_id=rid),
@@ -449,6 +573,7 @@ def load_pharaoh_se(root: Path) -> SourceLoad:
     out = []
     for i, r in enumerate(_read_jsonl(root, "pharaoh-se"), 1):
         rid = _req_str(r, "slug", source=src, row_id=f"line {i}")
+        _assert_absence_consulted(r, source=src, row_id=rid)
         display = _req_str(r, "display", source=src, row_id=rid)
         prenomina = _from_titulary_list(r, "throne_names", source=src, row_id=rid)
         scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
@@ -464,6 +589,8 @@ def load_pharaoh_se(root: Path) -> SourceLoad:
                 source_id=src,
                 local_id=f"{src}-{rid}",
                 display_name=display,
+                # pharaoh.se gives every entry a slug-derived display label.
+                display_name_absence=None,
                 alt_names=_str_list(r, "alt_labels", source=src, row_id=rid),
                 dynasty=_opt_int(r, "dynasty_number", source=src, row_id=rid),
                 dynasty_label=_opt_str(r, "dynasty_label", source=src, row_id=rid),
@@ -485,6 +612,11 @@ def load_ryholt(root: Path) -> SourceLoad:
     out = []
     for i, r in enumerate(_read_jsonl(root, "ryholt-1997-sip"), 1):
         rid = _req_str(r, "ryholt_id", source=src, row_id=f"line {i}")
+        # NB Ryholt's `is_lacunose` is NOT an absence flag and is deliberately absent
+        # from the registry: its README §is_lacunose states the `[...]` marker is KEPT
+        # in the name string because it shows the POSITION of missing characters. The
+        # name is present and matchable; only some signs inside it are lost.
+        _assert_absence_consulted(r, source=src, row_id=rid)
         nomen = _opt_str(r, "nomen", source=src, row_id=rid)
         prenomen = _opt_str(r, "prenomen", source=src, row_id=rid)
         display = nomen or prenomen
@@ -507,6 +639,9 @@ def load_ryholt(root: Path) -> SourceLoad:
                 source_id=src,
                 local_id=f"{src}-{rid}",
                 display_name=display,
+                # Ryholt has no display field at all; the name falls back to nomen/prenomen,
+                # and a row with neither already raises above.
+                display_name_absence=None,
                 alt_names=[],
                 dynasty=_opt_int(r, "dynasty", source=src, row_id=rid),
                 dynasty_label=_opt_str(r, "dynasty_label", source=src, row_id=rid),

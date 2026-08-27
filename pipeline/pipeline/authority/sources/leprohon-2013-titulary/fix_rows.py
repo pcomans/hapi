@@ -949,6 +949,321 @@ NOTES_RESTORATIONS: list[tuple[str, str, object, str]] = [
 ]
 
 
+# --- typed absence -----------------------------------------------------------
+#
+# Leprohon prints, in a titulary slot, a statement that the name is not known:
+# `(unknown)` (pp. 37, 42), bare `unknown` (p. 39), `unknown (?)` (p. 43). Those are
+# three spellings of ONE fact, and the extract encoded them three different ways —
+# the literal string in all three name fields, or (for the bare form) an entry with
+# every name field null. Both encodings are wrong in the same way:
+#
+#   * The literal string is loaded as a NAME. `(unknown)` normalises to the matching
+#     keys {unknown, nknwn}, so two kings whose throne names are equally UNrecorded
+#     corroborate each other into an identity — absence behaving like a fact (Rule 2).
+#   * The all-null entry is indistinguishable from "Leprohon prints nothing here".
+#     That silently destroys a sourced scholarly assertion (Rule 1).
+#
+# Both migrate to one representation: name fields null, plus a typed `absence` sibling
+# carrying the scholar's exact printed token (see claimgraph/absence.py). Nothing the
+# page shows is lost — the token simply stops living in the field that means "this IS
+# the name". `translation` goes null with the rest: there is no translation of a name
+# that was never recorded, and "(unknown)" was never Leprohon's gloss of anything.
+#
+# `source_note` is preserved verbatim where the slot carried a footnote: the footnote is
+# real scholarship ABOUT the absence (Aufrère's proposed *Sehetepre for Teti) and is
+# exactly the content that must survive.
+#
+# NOT migrated — a different fact, deliberately left alone:
+#   * leprohon-19.02 horus_names variant 19, `////` with translation `(destroyed)`.
+#     `////` is Leprohon's epigraphic lacuna marker and the entry has a real
+#     `attested_in` (Abydos, Great Temple, King's chapel (e)) — an ATTESTED inscription
+#     whose signs are lost, not a statement that the name is unknown. It also appears
+#     INSIDE genuine names (`Senen////`, `Se /// Kare`), so it is not a placeholder.
+#
+# `display_name` values like "Name Lost" / "Five Names Lost" ARE the same fact and are
+# typed too — but differently, because `display_name` is REQUIRED: the row has to
+# render, and "Name Lost" is genuinely what Leprohon calls the entry. The value is
+# therefore KEPT and only the typed sibling `display_name_absence` is added. See
+# DISPLAY_NAME_ABSENCE_CORRECTIONS below.
+TYPED_ABSENCE_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (
+        "leprohon-4.07",
+        "golden_horus_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": "See Dobrev 1993, 189 n. 37.",
+            "absence": {"kind": "stated_unknown", "printed_as": "(unknown)"},
+        },
+        "Leprohon p. 37 (Shepseskaf): 'Golden Horus: (unknown)42' — verified by 3/3 "
+        "blind arbiters (tie-break-overrides.json leprohon-4.07|golden_horus_names). "
+        "The printed token moves out of the three name fields into the typed sibling; "
+        "footnote 42 is retained verbatim in source_note.",
+    ),
+    (
+        "leprohon-5.04",
+        "nebty_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "unknown"},
+        },
+        "Leprohon p. 39 (Shepseskare): 'Two Ladies: unknown' — bare form, no parens, no "
+        "hedge (tie-break-overrides.json leprohon-5.04|nebty_names). The entry was "
+        "already all-null, which is indistinguishable from Leprohon printing nothing; "
+        "the typed sibling restores the assertion he actually made.",
+    ),
+    (
+        "leprohon-5.04",
+        "golden_horus_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "unknown"},
+        },
+        "Leprohon p. 39 (Shepseskare): 'Golden Horus: unknown' — bare form "
+        "(tie-break-overrides.json leprohon-5.04|golden_horus_names, which records that "
+        "'the slot is not empty ... but he provides no transliteration / anglicised / "
+        "translation content'). Same all-null-to-typed migration as the Two Ladies slot.",
+    ),
+    (
+        "leprohon-6.01",
+        "throne_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": (
+                "See Aufrère (1982, 53–54), who, on the analogy of Pepy I, has proposed "
+                "an unattested Throne name of *Sehetepre for Teti."
+            ),
+            "absence": {"kind": "stated_unknown", "printed_as": "(unknown)"},
+        },
+        "Leprohon p. 42 (Teti): 'Throne: (unknown)72' — verified by 3/3 blind arbiters "
+        "(tie-break-overrides.json leprohon-6.01|throne_names). This is the row that "
+        "made the bug concrete: a THRONE name is the matcher's primary corroborator, so "
+        "'(unknown)' here was a live cross-source merge key. Footnote 72 — Aufrère's "
+        "proposed but unattested *Sehetepre — is retained verbatim; it is scholarship "
+        "about the absence and is precisely what must not be lost.",
+    ),
+    (
+        "leprohon-6.02",
+        "horus_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "(unknown)"},
+        },
+        "Leprohon p. 42 (Userkare I): 'Horus: (unknown)' — arbiter-verified "
+        "(tie-break-overrides.json leprohon-6.02|horus_names), which also records that "
+        "the slot carries no per-entry footnote, hence source_note stays null.",
+    ),
+    (
+        "leprohon-6.02",
+        "nebty_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "(unknown)"},
+        },
+        "Leprohon p. 42 (Userkare I), Two Ladies slot: '(unknown)'. No tie-break entry "
+        "exists because all three extraction agents agreed unanimously — valid "
+        "provenance under Rule 6(a) — and the value is the same printed token the "
+        "arbiters verified on this page for the Horus slot of the same king.",
+    ),
+    (
+        "leprohon-6.02",
+        "golden_horus_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "(unknown)"},
+        },
+        "Leprohon p. 42 (Userkare I), Golden Horus slot: '(unknown)'. Unanimous 3-agent "
+        "agreement (Rule 6(a)); same page and same printed token as the arbiter-verified "
+        "Horus slot of this king.",
+    ),
+    (
+        "leprohon-6.06",
+        "horus_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "unknown (?)"},
+        },
+        "Leprohon p. 43 (Merenre II): 'Horus: unknown (?)' — arbiter-verified "
+        "(tie-break-overrides.json leprohon-6.06|horus_names). The hedged spelling "
+        "normalises to exactly the same keys as '(unknown)' ({unknown, nknwn}), so this "
+        "row was still publishing 'unknown' as a live Horus-name corroborator after the "
+        "first string guard shipped. Leprohon's '(?)' is retained verbatim in "
+        "printed_as; no separate vocabulary term is minted for it, because no committed "
+        "material defines what force the hedge carries.",
+    ),
+    (
+        "leprohon-6.06",
+        "nebty_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "unknown (?)"},
+        },
+        "Leprohon p. 43 (Merenre II), Two Ladies slot: 'unknown (?)'. Unanimous 3-agent "
+        "agreement (Rule 6(a)); same page and printed token as the arbiter-verified "
+        "Horus slot of this king.",
+    ),
+    (
+        "leprohon-6.06",
+        "golden_horus_names.0",
+        {
+            "transliteration": None,
+            "anglicised": None,
+            "translation": None,
+            "variant_index": 1,
+            "is_variant": False,
+            "attested_in": [],
+            "source_note": None,
+            "absence": {"kind": "stated_unknown", "printed_as": "unknown (?)"},
+        },
+        "Leprohon p. 43 (Merenre II), Golden Horus slot: 'unknown (?)'. Unanimous "
+        "3-agent agreement (Rule 6(a)); same page and printed token as the "
+        "arbiter-verified Horus slot of this king.",
+    ),
+]
+
+
+# --- typed absence on `display_name` ------------------------------------------
+#
+# Eight rows where Leprohon's SMALLCAP headword is not a name but his designation for a
+# king-list entry whose name is lost. The value is KEPT, not nulled: `display_name` is
+# required, the row must render, and "Name Lost" is what the book prints.
+#
+# Kind is `name_lost`, NOT the `stated_unknown` used for the titulary slots above —
+# these are two claims, not one. `(unknown)` says the value is not known to scholarship;
+# `LOST` says the document is damaged and the name it carried is not preserved. The
+# wordings never cross contexts (no titulary slot prints "lost", no headword prints
+# "unknown"), all eight rows carry ZERO name slots because the whole entry is unreadable
+# in the Turin Canon, and the chunk prompts file them under "Stub entries for destroyed
+# / missing names ... entirely unreadable in his sources", explicitly likening them to
+# the `/////` stub Leprohon glosses "(name missing in the Turin list [4,19])". By
+# contrast, Teti's `(unknown)` Throne slot sits on a row with four other real names and
+# is footnoted "an *unattested* Throne name". See claimgraph/absence.py.
+#
+# Both kinds are withheld from the matcher identically; the distinction is recorded
+# because the source draws it, not because anything branches on it.
+#
+# What changes is that `display_name` stops playing two roles at once. It fed the loose
+# name blocker, so "Name Lost" (14.14, 16.01), "Three Names Lost" (14.46, 17.12) and
+# "Five Names Lost" (14.52, 16.11) each already collide on a shared key. Today the
+# matcher is cross-source only and all eight are Leprohon's, so nothing is generated —
+# but the keys are live, and two entries lost in DIFFERENT king lists are emphatically
+# not the same king. The loader now withdraws the value from the key-set while still
+# rendering it.
+#
+# Page-cited per row from each row's own `source_citation.printed_page`. Leprohon states
+# this in print, so no reviewer/LLM step is involved or wanted: routing it to a model
+# would have the model supply information the source already gives (rule 1), and the
+# reviewer's remit is judging identity between two records, not reading headwords.
+DISPLAY_NAME_ABSENCE_CORRECTIONS: list[tuple[str, str, object, str]] = [
+    (lid, "display_name_absence", {"kind": "name_lost", "printed_as": printed}, rationale)
+    for lid, printed, rationale in [
+        (
+            "leprohon-13.49",
+            "One Name Lost",
+            "Leprohon p. 70, Dyn 13 entry 49: the SMALLCAP headword reads 'One Name "
+            "Lost' — his designation for a king-list slot whose name is not preserved, "
+            "not a royal name. Kept as display_name (the row must render); withdrawn "
+            "from the matcher key-set, where it produced the key 'onenamelost'.",
+        ),
+        (
+            "leprohon-14.14",
+            "Name Lost",
+            "Leprohon p. 76, Dyn 14 entry 14: headword 'Name Lost'. Shares the key "
+            "'namelost' with leprohon-16.01 — two entries lost in different king lists, "
+            "which are emphatically not the same king.",
+        ),
+        (
+            "leprohon-14.46",
+            "Three Names Lost",
+            "Leprohon p. 79, Dyn 14 entry 46: headword 'Three Names Lost' — one row "
+            "standing for three consecutive unpreserved slots. Shares the key "
+            "'threenameslost' with leprohon-17.12.",
+        ),
+        (
+            "leprohon-14.52",
+            "Five Names Lost",
+            "Leprohon p. 79, Dyn 14 entry 52: headword 'Five Names Lost'. Shares the "
+            "key 'fivenameslost' with leprohon-16.11.",
+        ),
+        (
+            "leprohon-16.01",
+            "Name Lost",
+            "Leprohon p. 83, Dyn 16 entry 1: headword 'Name Lost'. Shares the key "
+            "'namelost' with leprohon-14.14.",
+        ),
+        (
+            "leprohon-16.11",
+            "Five Names Lost",
+            "Leprohon p. 85, Dyn 16 entry 11: headword 'Five Names Lost'. Shares the "
+            "key 'fivenameslost' with leprohon-14.52.",
+        ),
+        (
+            "leprohon-17.03",
+            "Eight Names Lost",
+            "Leprohon p. 88, Dyn 17 entry 3: headword 'Eight Names Lost' — the longest "
+            "such run in the book. Key 'eightnameslost'.",
+        ),
+        (
+            "leprohon-17.12",
+            "Three Names Lost",
+            "Leprohon p. 88, Dyn 17 entry 12: headword 'Three Names Lost'. Shares the "
+            "key 'threenameslost' with leprohon-14.46.",
+        ),
+    ]
+]
+
+
 SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *EARLY_DYNASTIC_CORRECTIONS,
     *FIP_CORRECTIONS,
@@ -962,6 +1277,10 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
     *TIP_LATE_CORRECTIONS,
     *MACEDONIAN_PTOLEMAIC_CORRECTIONS,
     *NOTES_RESTORATIONS,
+    # Last: these replace whole name-list entries, so they must land after any
+    # per-field correction that addresses the same entry.
+    *TYPED_ABSENCE_CORRECTIONS,
+    *DISPLAY_NAME_ABSENCE_CORRECTIONS,
 ]
 
 
@@ -1154,6 +1473,28 @@ def backfill_stage_suffix(rows: list[dict]) -> list[str]:
     return log_lines
 
 
+def backfill_display_name_absence(rows: list[dict]) -> list[str]:
+    """Ensure every row carries `display_name_absence`, defaulting `None`.
+
+    Same rule-4 schema-uniformity motive as `backfill_notes`: without it, 387 rows would
+    lack the key entirely and consumers would need `.get(...)`, which masks
+    missing-vs-null. Here null carries real meaning — "Leprohon's headword IS this
+    king's name" — so it must be stated on every row, not inferred from a missing key.
+
+    Runs BEFORE `DISPLAY_NAME_ABSENCE_CORRECTIONS`, which then sets the eight rows where
+    the headword is a lost-entry designation instead.
+    """
+    log_lines: list[str] = []
+    for row in rows:
+        if "display_name_absence" not in row:
+            row["display_name_absence"] = None
+            log_lines.append(
+                f"  {row['leprohon_id']}: backfilled display_name_absence as null "
+                f"(headword is a real name)"
+            )
+    return log_lines
+
+
 def backfill_name_list_fields(rows: list[dict]) -> list[str]:
     """Ensure every row has every key in `NAME_LIST_FIELDS`, defaulting `[]`.
 
@@ -1232,6 +1573,7 @@ def apply_corrections() -> list[str]:
     # issue #174 fixes. Backfill order vs the other backfill_* passes
     # is independent (they touch disjoint fields).
     log_lines.extend(backfill_notes(rows))
+    log_lines.extend(backfill_display_name_absence(rows))
     log_lines.extend(strip_debug_leakage(rows))
     log_lines.extend(normalize_translit_mdc(rows))
 

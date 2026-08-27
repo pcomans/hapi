@@ -60,4 +60,7 @@ against the source PDF. No human scholar has signed off on this
 extract yet — per ADR-017 step 6, the extract is provisional until
 that happens.
 
-
+-   22.04: prenomen '[Prenomen unknown]' → null + prenomen_absence=stated_unknown
+    rationale: Kitchen, TIPE 3rd ed., Table 3 prints '[Prenomen unknown]' in the prenomen column for this king — a positive assertion that he reigned but his throne name is not recorded (kitchen-tipe README §prenomen_absence). Held in the value field it was loaded as a throne name; `(unknown)`-class prose normalises to real matching keys, so two kings whose throne names are equally UNrecorded could corroborate each other. The printed token is retained verbatim.
+-   23.07: prenomen '[Prenomen unknown]' → null + prenomen_absence=stated_unknown
+    rationale: Kitchen, TIPE 3rd ed., Table 3 prints '[Prenomen unknown]' in the prenomen column for this king — a positive assertion that he reigned but his throne name is not recorded (kitchen-tipe README §prenomen_absence). Held in the value field it was loaded as a throne name; `(unknown)`-class prose normalises to real matching keys, so two kings whose throne names are equally UNrecorded could corroborate each other. The printed token is retained verbatim.

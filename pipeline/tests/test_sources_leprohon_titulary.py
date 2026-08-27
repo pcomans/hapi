@@ -494,6 +494,12 @@ NAME_ENTRY_FIELDS = frozenset(
     }
 )
 
+# Present only on entries where Leprohon PRINTS a statement that the name is not
+# recorded (`(unknown)` / `unknown` / `unknown (?)`). Optional by design: its absence is
+# what distinguishes "Leprohon printed nothing here" from "Leprohon printed 'unknown'",
+# so backfilling it onto every entry would destroy the very distinction it encodes.
+NAME_ENTRY_OPTIONAL_FIELDS = frozenset({"absence"})
+
 
 def test_notes_field_present_on_every_row() -> None:
     """Issue #174: every row carries a `notes` top-level field with type
@@ -587,7 +593,7 @@ def test_name_entries_have_required_fields() -> None:
         for field in NAME_LIST_FIELDS:
             for entry in r[field]:
                 missing = NAME_ENTRY_FIELDS - set(entry)
-                extra = set(entry) - NAME_ENTRY_FIELDS
+                extra = set(entry) - NAME_ENTRY_FIELDS - NAME_ENTRY_OPTIONAL_FIELDS
                 assert not missing, f"{r['leprohon_id']}.{field}: missing {missing}"
                 assert not extra, f"{r['leprohon_id']}.{field}: extra {extra}"
 

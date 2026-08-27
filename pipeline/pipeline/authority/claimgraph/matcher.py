@@ -105,7 +105,19 @@ def _horus_keys(rec: RulerRecord) -> set[str]:
 def _name_keys(rec: RulerRecord) -> set[str]:
     # skeleton OFF here: the loose name blocker must not fold every vowel-differing name
     # together, or name_only candidates explode with no precision benefit.
-    forms: list[NameForm] = [NameForm(surface=rec.display_name)]
+    forms: list[NameForm] = []
+    # `display_name` has two roles — what we render, and what we match on. When the
+    # source's designation is a statement that the name is LOST (Leprohon's "Name Lost",
+    # "Five Names Lost"), only the first role survives: `namelost` is not a name two
+    # records can share, and two king-list entries lost in different lists are not the
+    # same king. Leprohon alone carries eight such rows, two of them already colliding
+    # on `namelost`.
+    #
+    # Gated on the typed field, never on the string: `Kloster` (iDAI's
+    # Katharinenkloster, Simeonskloster, Jeremias-Kloster) CONTAINS "lost", so any
+    # substring test here would strike real places out of the blocker.
+    if rec.display_name_absence is None:
+        forms.append(NameForm(surface=rec.display_name))
     forms += [NameForm(surface=n) for n in rec.alt_names]
     forms += rec.nomina
     return key_set(forms)

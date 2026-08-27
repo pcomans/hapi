@@ -36,6 +36,10 @@ SOURCE_DIR = Path(__file__).parent
 RECONCILED = SOURCE_DIR / "reconciled.jsonl"
 DIFF = SOURCE_DIR / "merge-disagreements.txt"
 
+# The exact token Kitchen prints in the prenomen column of TIPE Table 3 when he asserts
+# the king reigned but his throne name is not recorded (22.04 Takeloth I, 23.07 Iuput II).
+_KITCHEN_PRENOMEN_UNKNOWN = "[Prenomen unknown]"
+
 
 def _compute_concurrency(rows: list[dict]) -> dict[str, list[str]]:
     """Recompute `concurrent_with_kings` for every Dyn-21 row deterministically.
@@ -128,14 +132,21 @@ SPOT_CORRECTIONS: list[tuple[str, str, object, str]] = [
 
 SCHEMA_FIELD_DEFAULTS_180: dict[str, object] = {
     # Shape D — disambiguate the multiple meanings of `null` on the
-    # `prenomen` field. `True` means Kitchen explicitly prints
-    # `[Prenomen unknown]` (a positive assertion that the king exists
-    # but the value isn't recorded). `False` means the table layout
+    # `prenomen` field. A typed-absence object means Kitchen explicitly
+    # prints `[Prenomen unknown]` (a positive assertion that the king
+    # exists but the value isn't recorded). `None` means the table layout
     # doesn't include this column for this row (e.g. HPA list omits
     # prenomen). The analogous `[Length unknown]` sentinel does not
     # appear in the current TIPE extract; if it surfaces in a future
-    # re-extraction, add a parallel `length_is_kitchen_unknown` flag.
-    "prenomen_is_kitchen_unknown": False,
+    # re-extraction, add a parallel `length_absence` field.
+    #
+    # This replaces the earlier boolean `prenomen_is_kitchen_unknown`, which
+    # left the placeholder string sitting IN `prenomen` — where the claim-graph
+    # loader read it as a throne name and normalised it into a matching key.
+    # The assertion now lives out of band and the value field is null; the
+    # printed token is retained verbatim in `printed_as`, so nothing the page
+    # shows is lost. Shape is shared with Leprohon (see claimgraph/absence.py).
+    "prenomen_absence": None,
     # Shape H — kitchen_id substream letter (`H` HPA, `E` Sais-Bubastis-East,
     # `P` Persian/proto-Saite, `None` main-line dynasty).
     "substream": None,
@@ -266,11 +277,37 @@ def _apply_180_migrations(rows: list[dict]) -> list[str]:
             row["substream"] = new_sub
             log.append(f"  {kid}: substream → {new_sub!r}")
 
-        # prenomen_is_kitchen_unknown — explicit `[Prenomen unknown]`
-        new_unk = (row.get("prenomen") == "[Prenomen unknown]")
-        if row["prenomen_is_kitchen_unknown"] != new_unk:
-            row["prenomen_is_kitchen_unknown"] = new_unk
-            log.append(f"  {kid}: prenomen_is_kitchen_unknown → {new_unk}")
+        # prenomen_absence — Kitchen's explicit `[Prenomen unknown]` moved OUT of the
+        # `prenomen` value field into a typed sibling.
+        #
+        # The trigger is "string still present OR absence already recorded", never a
+        # re-derivation from a field this pass just emptied, so the pass is idempotent.
+        # The rationale is logged UNCONDITIONALLY (like SPOT_CORRECTIONS elsewhere) — a
+        # log-on-change-only rule would erase the page-cited justification from
+        # merge-disagreements.txt on the second run, leaving migrated rows in
+        # reconciled.jsonl with no committed trace of why (Rules 1 and 6).
+        #
+        # The superseded boolean from the pre-migration schema is dropped rather than
+        # carried alongside: two encodings of one fact is exactly the drift Rule 4
+        # forbids, and there are no downstream consumers to keep compatible (Rule 10).
+        row.pop("prenomen_is_kitchen_unknown", None)
+        if row.get("prenomen") == _KITCHEN_PRENOMEN_UNKNOWN or row.get("prenomen_absence"):
+            row["prenomen"] = None
+            row["prenomen_absence"] = {
+                "kind": "stated_unknown",
+                "printed_as": _KITCHEN_PRENOMEN_UNKNOWN,
+            }
+            log.append(
+                f"  {kid}: prenomen {_KITCHEN_PRENOMEN_UNKNOWN!r} → null + "
+                f"prenomen_absence=stated_unknown\n"
+                f"    rationale: Kitchen, TIPE 3rd ed., Table 3 prints "
+                f"{_KITCHEN_PRENOMEN_UNKNOWN!r} in the prenomen column for this king — a "
+                f"positive assertion that he reigned but his throne name is not recorded "
+                f"(kitchen-tipe README §prenomen_absence). Held in the value field it was "
+                f"loaded as a throne name; `(unknown)`-class prose normalises to real "
+                f"matching keys, so two kings whose throne names are equally UNrecorded "
+                f"could corroborate each other. The printed token is retained verbatim."
+            )
 
         # is_co_regent_only — union of regex-detected (literal "co-rgt only"
         # in notes) + scholarly overrides (narrative-discussed co-regents
