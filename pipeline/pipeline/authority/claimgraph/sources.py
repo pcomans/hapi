@@ -15,6 +15,7 @@ one. A row that is neither a ruler nor an explicitly-marked non-ruler raises."""
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -223,6 +224,55 @@ def _read_jsonl(root: Path, source: str) -> list[dict]:
     return rows
 
 
+# Placeholder text a source may print IN a name field to say "this name is not known".
+# It is prose, not a name. Loaded verbatim it becomes a matching key — `(unknown)`
+# normalises to {unknown, nknwn} — so two kings whose names are equally UNrecorded
+# corroborate each other into an identity. That is a fabricated corroborator, and the
+# absence of a fact must never behave like a fact (rule 2).
+#
+# Matched only as a WHOLE field, never as a substring: real titulary contains these
+# letters (`heqa khasut aper-an-ti`, `mery nefer-kheperu-ra`), and a substring rule
+# would delete genuine names.
+# `n/a` is deliberately NOT written `n/?a`: bare `na` is a plausible Egyptian name or
+# transliteration — this corpus already carries the equally short genuine names `Ka`,
+# `Iy`, `Ay` and `In` — and silently deleting a sourced `Na` would be the rule-6 loss
+# this guard exists to prevent. Only the punctuated forms are unambiguous.
+#
+# The optional trailing `(?)`/`?` catches Leprohon's `unknown (?)` spelling, which the
+# first version of this pattern missed on 9 committed rows.
+_ABSENCE_SENTINEL = re.compile(
+    r"^[\[\(\{]?\s*(?:prenomen|nomen|horus[\s-]?name|name)?\s*"
+    r"(?:unknown|unattested|unbekannt|not\s+known|n/a|n\.a\.|none|null|lost|lacuna)"
+    r"\s*[\]\)\}]?\s*(?:\(\s*\?\s*\)|\?)?\s*$",
+    re.IGNORECASE,
+)
+
+
+def _is_absence_sentinel(value: str | None) -> bool:
+    return bool(value and _ABSENCE_SENTINEL.match(value.strip()))
+
+
+def _name_form(surface: str | None, translit: str | None = None) -> NameForm | None:
+    """A NameForm, or ``None`` when every form present is placeholder prose.
+
+    Returning ``None`` drops the claim rather than rewriting the committed row: the
+    source faithfully records what its page prints, and editing `reconciled.jsonl`
+    to erase that would be the rule-6 violation this guard exists to avoid.
+    """
+    s = None if _is_absence_sentinel(surface) else (surface or None)
+    t = None if _is_absence_sentinel(translit) else (translit or None)
+    if s is None and t is None:
+        return None
+    return NameForm(surface=s or "", translit=t)
+
+
+def _append(forms: list[NameForm], surface: str | None) -> None:
+    """Append a NameForm unless the value is placeholder prose (see _name_form)."""
+    form = _name_form(surface)
+    if form is not None:
+        forms.append(form)
+
+
 def _from_titulary_list(row: dict, path: str, *, source: str, row_id: str) -> list[NameForm]:
     """A Leprohon/pharaoh.se-style titulary list → NameForms. Every entry must be an object
     carrying at least one of an anglicised/native surface form or a transliteration; an
@@ -238,7 +288,9 @@ def _from_titulary_list(row: dict, path: str, *, source: str, row_id: str) -> li
         translit = _opt_str(e, "transliteration", source=source, row_id=row_id)
         if not surface and not translit:
             raise _err(source, row_id, item, f"has neither a name nor a transliteration: {e!r}")
-        out.append(NameForm(surface=surface, translit=translit))
+        form = _name_form(surface, translit)
+        if form is not None:
+            out.append(form)
     return out
 
 
@@ -313,7 +365,7 @@ def load_beckerath(root: Path) -> SourceLoad:
         prenomina: list[NameForm] = []
         scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
         if scalar:
-            prenomina.append(NameForm(surface=scalar))
+            _append(prenomina, scalar)
         for j, t in enumerate(_dict_list(r, "egyptian_titularies", source=src, row_id=rid)):
             kind = _opt_str(t, "kind", source=src, row_id=rid)
             tname = _opt_str(t, "name", source=src, row_id=rid)
@@ -322,11 +374,9 @@ def load_beckerath(root: Path) -> SourceLoad:
                     src, rid, f"egyptian_titularies[{j}]", f"needs both 'kind' and 'name': {t!r}"
                 )
             if kind == "prenomen":
-                prenomina.append(NameForm(surface=tname))
+                _append(prenomina, tname)
         if _opt_str(r, "egyptian_titulary_kind", source=src, row_id=rid) == "prenomen":
-            prenomina.append(
-                NameForm(surface=_req_str(r, "egyptian_titulary", source=src, row_id=rid))
-            )
+            _append(prenomina, _req_str(r, "egyptian_titulary", source=src, row_id=rid))
         cite = _opt_dict(r, "source_citation", source=src, row_id=rid)
         out.append(
             RulerRecord(
@@ -367,11 +417,11 @@ def load_kitchen(root: Path) -> SourceLoad:
             pname = _opt_str(p, "name", source=src, row_id=rid)
             if pname is None:
                 raise _err(src, rid, f"prenomens[{j}]", f"needs a 'name': {p!r}")
-            prenomina.append(NameForm(surface=pname))
+            _append(prenomina, pname)
         if not prenomina:
             scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
             if scalar and "," not in scalar and "then" not in scalar.lower():
-                prenomina.append(NameForm(surface=scalar))
+                _append(prenomina, scalar)
         same = _opt_str(r, "same_person_as", source=src, row_id=rid)
         out.append(
             RulerRecord(
@@ -403,11 +453,11 @@ def load_pharaoh_se(root: Path) -> SourceLoad:
         prenomina = _from_titulary_list(r, "throne_names", source=src, row_id=rid)
         scalar = _opt_str(r, "prenomen", source=src, row_id=rid)
         if not prenomina and scalar:
-            prenomina.append(NameForm(surface=scalar))
+            _append(prenomina, scalar)
         nomina: list[NameForm] = []
         nomen = _opt_str(r, "nomen", source=src, row_id=rid)
         if nomen:
-            nomina.append(NameForm(surface=nomen))
+            _append(nomina, nomen)
         nomina += _from_titulary_list(r, "birth_names", source=src, row_id=rid)
         out.append(
             RulerRecord(
@@ -444,12 +494,14 @@ def load_ryholt(root: Path) -> SourceLoad:
             raise _err(src, rid, "nomen/prenomen", "row has neither a nomen nor a prenomen")
         prenomen_translit = _opt_str(r, "prenomen_transliterated", source=src, row_id=rid)
         prenomina: list[NameForm] = []
-        if prenomen or prenomen_translit:
-            prenomina.append(NameForm(surface=prenomen or "", translit=prenomen_translit))
+        pren_form = _name_form(prenomen, prenomen_translit)
+        if pren_form is not None:
+            prenomina.append(pren_form)
         horus_names: list[NameForm] = []
         horus_translit = _opt_str(r, "horus_name_transliterated", source=src, row_id=rid)
-        if horus_translit:
-            horus_names.append(NameForm(surface="", translit=horus_translit))
+        horus_form = _name_form(None, horus_translit)
+        if horus_form is not None:
+            horus_names.append(horus_form)
         out.append(
             RulerRecord(
                 source_id=src,
