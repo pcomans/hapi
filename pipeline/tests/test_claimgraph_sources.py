@@ -339,8 +339,6 @@ def test_duplicate_local_ids_across_sources_raise(tmp_path):
         "[lost]",
         "unbekannt",
         "(lacuna)",
-        "Missing",
-        "(destroyed)",
     ],
 )
 def test_absence_placeholders_are_not_names(value):
@@ -362,9 +360,16 @@ def test_absence_placeholders_are_not_names(value):
         "unknown-sounding-but-real",
         # `////` is Leprohon's epigraphic lacuna marker, not a placeholder: it appears
         # INSIDE genuine names (`Senen////`, `Se /// Kare`) and marks an attested
-        # inscription whose signs are destroyed. Deliberately not a sentinel.
+        # inscription whose signs are destroyed. Deliberately not a sentinel — and the
+        # reason `destroyed` is not an alternative in the pattern.
         "////",
         "Senen////",
+        # A whole-field `Missing` / `(destroyed)` is likewise NOT classified as an
+        # absence. Both occur only in `translation`, which no loader reads; treating
+        # them as absences here would guard an unreachable shape and would silently
+        # swallow a future extractor bug that put one in a real name field.
+        "Missing",
+        "(destroyed)",
     ],
 )
 def test_real_titulary_is_never_mistaken_for_a_placeholder(value):
@@ -397,6 +402,49 @@ def test_committed_sources_emit_no_placeholder_names():
         for form in [*r.prenomina, *r.horus_names, *r.nomina]:
             assert not sources_mod._is_absence_sentinel(form.surface)
             assert not sources_mod._is_absence_sentinel(form.translit)
+
+    # Independent of the classifier. Asking `_is_absence_sentinel` whether the emitted
+    # values are placeholders is circular — it passes for any spelling the classifier
+    # does not yet know, which is exactly how `unknown (?)` survived the first version
+    # of this guard on 9 committed rows. These literals were found by auditing the
+    # committed sources directly; add to the list, never derive it from the pattern.
+    KNOWN_PLACEHOLDER_LITERALS = {
+        "(unknown)",
+        "unknown (?)",
+        "[prenomen unknown]",
+        "unknown",
+        "unattested",
+        "unbekannt",
+        "n/a",
+        "none",
+        "null",
+        "lost",
+        "lacuna",
+    }
+    for r in recs.values():
+        for form in [*r.prenomina, *r.horus_names, *r.nomina]:
+            for value in (form.surface, form.translit):
+                if value is None:
+                    continue
+                assert value.strip().casefold() not in KNOWN_PLACEHOLDER_LITERALS, (
+                    f"{r.source_id}/{r.local_id} emits placeholder prose {value!r} as a name"
+                )
+
+
+@pytest.mark.parametrize("value", ["Na", "na", "Ka", "Iy", "Ay", "In"])
+def test_short_real_names_are_not_treated_as_placeholders(value):
+    """`n/a` must never be spelled `n/?a`. Bare `na` is a plausible Egyptian name or
+    transliteration — this corpus already carries the equally short genuine names Ka,
+    Iy, Ay and In — so matching it would silently delete sourced authority data."""
+    assert not sources_mod._is_absence_sentinel(value)
+    assert sources_mod._name_form(value) is not None
+
+
+@pytest.mark.parametrize("value", ["unknown (?)", "unknown?", "(unknown)", "n.a.", "N/A"])
+def test_every_placeholder_spelling_found_in_committed_data_is_caught(value):
+    """`unknown (?)` appears on 9 committed Leprohon rows and the first version of this
+    guard missed all of them."""
+    assert sources_mod._is_absence_sentinel(value)
 
 
 # --- typed absence ----------------------------------------------------------
@@ -656,11 +704,30 @@ def test_migrated_rows_have_their_exact_post_migration_values():
         }
 
 
-def test_leprohon_lacuna_marker_row_is_deliberately_untouched():
-    """leprohon-19.02 Sety I keeps its `////` Horus variant. `////` is an ATTESTED
-    inscription (Abydos, King's chapel (e)) whose signs are destroyed — a different fact
-    from "the name is unknown", and one with a real `attested_in`. Migrating it would
-    delete a sourced attestation, so it is left alone by design, not by oversight."""
+def test_leprohon_lacuna_marker_row_is_kept_and_matches_on_nothing():
+    """leprohon-19.02 Sety I keeps its `////` Horus variant, and this pins BOTH halves of
+    the claim that it is a different fact from "the name is unknown".
+
+    `////` is an ATTESTED inscription (Abydos, King's chapel (e)) whose signs are
+    destroyed, with a real `attested_in`. So: (a) the attestation survives into the graph
+    as a name form rather than being dropped as an absence — which is why `destroyed` is
+    not an alternative in `_ABSENCE_SENTINEL` — and (b) it still contributes no matching
+    key, because the normalizer strips non-alphanumerics, so keeping it corroborates
+    nothing with anyone."""
+    from pipeline.authority.claimgraph.normalize import keys_for_form
+
+    rec = next(
+        r
+        for r in load_all_sources(AUTHORITY_ROOT).records
+        if r.local_id == "leprohon-leprohon-19.02"
+    )
+    kept = [f for f in rec.horus_names if f.surface == "////"]
+    assert len(kept) == 1, "the attested-but-destroyed Horus variant must survive"
+    assert kept[0].translit == "////"
+    assert keys_for_form(kept[0], skeleton=True) == set(), (
+        "it must nonetheless be unmatchable — a lacuna marker is not a corroborator"
+    )
+
     row = next(
         json.loads(line)
         for line in (AUTHORITY_ROOT / _DIRS["leprohon"] / "reconciled.jsonl")

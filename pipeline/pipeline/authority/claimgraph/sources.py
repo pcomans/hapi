@@ -293,20 +293,30 @@ def _read_jsonl(root: Path, source: str) -> list[dict]:
 # Matched only as a WHOLE field, never as a substring: real titulary contains these
 # letters (`heqa khasut aper-an-ti`, `mery nefer-kheperu-ra`), and a substring rule
 # would delete genuine names.
-# The trailing `(?)` alternative is Leprohon's own hedge (p. 43, Merenre II: `Horus:
-# unknown (?)`). It is NOT cosmetic: `unknown (?)` normalises to exactly the same keys
-# as `(unknown)` — {unknown, nknwn} — because the normalizer strips `?` and punctuation.
-# The first version of this guard missed the hedged spelling, so Merenre II went on
-# publishing `unknown` as a live Horus-name corroborator after the guard shipped.
+# `n/a` is deliberately NOT written `n/?a`: bare `na` is a plausible Egyptian name or
+# transliteration — this corpus already carries the equally short genuine names `Ka`,
+# `Iy`, `Ay` and `In` — and silently deleting a sourced `Na` would be the rule-6 loss
+# this guard exists to prevent. Only the punctuated forms are unambiguous.
+#
+# The optional trailing `(?)`/`?` catches Leprohon's `unknown (?)` spelling, which the
+# first version of this pattern missed on 9 committed rows.
+#
+# `missing` and `destroyed` are deliberately NOT alternatives. Neither occurs as a
+# whole-field value in any name-bearing field of any source: the committed instances
+# (`Missing` on pharaoh.se `throne_names[].translation`, `(destroyed)` on Leprohon
+# `horus_names[].translation`) sit in `translation`, which no loader reads, so an
+# alternative for them would guard a shape that cannot reach this function. Adding them
+# would also let the branch assert two incompatible things at once — `(destroyed)` on
+# leprohon-19.02 marks an ATTESTED inscription whose signs are lost, a different fact
+# from "the name is not known", and that row is deliberately preserved (see
+# `test_leprohon_lacuna_marker_row_is_kept_and_matches_on_nothing`). Speculative
+# alternatives also convert a future extractor bug from a loud wrong-name into a silent
+# drop. If such a value ever does land in a name field, the corpus-wide literal audit is
+# where it gets classified from the source first.
 _ABSENCE_SENTINEL = re.compile(
     r"^[\[\(\{]?\s*(?:prenomen|nomen|horus[\s-]?name|name)?\s*"
-    # `n/a` requires the slash. The earlier `n/?a` also matched a bare `Na` — a
-    # perfectly good name element — which would have silently deleted a real sourced
-    # name. Same defect class as a substring rule matching `Kloster` on `lost`: an
-    # absence pattern must never be able to swallow a name that merely resembles it.
-    r"(?:unknown|unattested|unbekannt|not\s+known|n/a|none|null|lost|lacuna"
-    r"|missing|destroyed)"
-    r"\s*[\]\)\}]?\s*(?:\(\s*\?\s*\))?\s*[\]\)\}]?$",
+    r"(?:unknown|unattested|unbekannt|not\s+known|n/a|n\.a\.|none|null|lost|lacuna)"
+    r"\s*[\]\)\}]?\s*(?:\(\s*\?\s*\)|\?)?\s*$",
     re.IGNORECASE,
 )
 
