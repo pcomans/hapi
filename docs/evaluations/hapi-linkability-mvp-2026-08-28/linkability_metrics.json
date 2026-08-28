@@ -1,0 +1,258 @@
+{
+  "ablation": {
+    "ruler": {
+      "attempted_mentions_denominator": 9348,
+      "current_artifacts_with_unique_match": 3888,
+      "current_exact_plus_committed_normalization_unique_mentions": 3946,
+      "incremental_artifacts": 39,
+      "incremental_unique_mentions": 43,
+      "raw_exact_artifacts_with_unique_match": 3849,
+      "raw_exact_unique_mentions": 3903
+    },
+    "site": {
+      "attempted_mentions_denominator": 117607,
+      "current_artifacts_with_unique_match": 16520,
+      "current_exact_plus_committed_normalization_unique_mentions": 36832,
+      "incremental_artifacts": 212,
+      "incremental_unique_mentions": 1871,
+      "raw_exact_artifacts_with_unique_match": 16308,
+      "raw_exact_unique_mentions": 34961
+    },
+    "tomb_monument": {
+      "attempted_mentions_denominator": 4863,
+      "current_artifacts_with_unique_match": 3199,
+      "current_exact_plus_committed_normalization_unique_mentions": 3227,
+      "incremental_artifacts": 3192,
+      "incremental_unique_mentions": 3220,
+      "raw_exact_artifacts_with_unique_match": 7,
+      "raw_exact_unique_mentions": 7
+    }
+  },
+  "cells": {
+    "brooklyn|excavation": {
+      "artifacts_with_ambiguous_mentions": 0,
+      "artifacts_with_at_least_one_unique_resolution": 0,
+      "artifacts_with_unmatched_mentions": 0,
+      "entity_type": "excavation",
+      "mention_resolution_rate_among_attempted": null,
+      "mention_status_counts": {},
+      "mentions": 0,
+      "mentions_with_resolution_attempt_denominator": 0,
+      "museum": "brooklyn",
+      "record_evidence_rate": 0.0,
+      "records_denominator": 7554,
+      "records_with_extracted_evidence": 0,
+      "unique_resolved_mentions": 0
+    },
+    "brooklyn|ruler": {
+      "artifacts_with_ambiguous_mentions": 17,
+      "artifacts_with_at_least_one_unique_resolution": 6,
+      "artifacts_with_unmatched_mentions": 29,
+      "entity_type": "ruler",
+      "mention_resolution_rate_among_attempted": 0.10714285714285714,
+      "mention_status_counts": {
+        "ambiguous": 18,
+        "resolved": 6,
+        "uncertain_identity": 2,
+        "unmatched": 32
+      },
+      "mentions": 58,
+      "mentions_with_resolution_attempt_denominator": 56,
+      "museum": "brooklyn",
+      "record_evidence_rate": 0.007016150383902568,
+      "records_denominator": 7554,
+      "records_with_extracted_evidence": 53,
+      "unique_resolved_mentions": 6
+    },
+    "brooklyn|site": {
+      "artifacts_with_ambiguous_mentions": 32,
+      "artifacts_with_at_least_one_unique_resolution": 1235,
+      "artifacts_with_unmatched_mentions": 2978,
+      "entity_type": "site",
+      "mention_resolution_rate_among_attempted": 0.25377821393523065,
+      "mention_status_counts": {
+        "ambiguous": 32,
+        "resolved": 1293,
+        "unmatched": 3770
+      },
+      "mentions": 5095,
+      "mentions_with_resolution_attempt_denominator": 5095,
+      "museum": "brooklyn",
+      "record_evidence_rate": 0.3942282234577707,
+      "records_denominator": 7554,
+      "records_with_extracted_evidence": 2978,
+      "unique_resolved_mentions": 1293
+    },
+    "brooklyn|tomb_monument": {
+      "artifacts_with_ambiguous_mentions": 0,
+      "artifacts_with_at_least_one_unique_resolution": 0,
+      "artifacts_with_unmatched_mentions": 22,
+      "entity_type": "tomb_monument",
+      "mention_resolution_rate_among_attempted": 0.0,
+      "mention_status_counts": {
+        "unmatched": 22
+      },
+      "mentions": 22,
+      "mentions_with_resolution_attempt_denominator": 22,
+      "museum": "brooklyn",
+      "record_evidence_rate": 0.0029123643102991793,
+      "records_denominator": 7554,
+      "records_with_extracted_evidence": 22,
+      "unique_resolved_mentions": 0
+    },
+    "harvard|excavation": {
+      "artifacts_with_ambiguous_mentions": 0,
+      "artifacts_with_at_least_one_unique_resolution": 0,
+      "artifacts_with_unmatched_mentions": 0,
+      "entity_type": "excavation",
+      "mention_resolution_rate_among_attempted": null,
+      "mention_status_counts": {},
+      "mentions": 0,
+      "mentions_with_resolution_attempt_denominator": 0,
+      "museum": "harvard",
+      "record_evidence_rate": 0.0,
+      "records_denominator": 722,
+      "records_with_extracted_evidence": 0,
+      "unique_resolved_mentions": 0
+    },
+    "harvard|ruler": {
+      "artifacts_with_ambiguous_mentions": 1,
+      "artifacts_with_at_least_one_unique_resolution": 3,
+      "artifacts_with_unmatched_mentions": 1,
+      "entity_type": "ruler",
+      "mention_resolution_rate_among_attempted": 0.625,
+      "mention_status_counts": {
+        "ambiguous": 1,
+        "resolved": 5,
+        "uncertain_identity": 1,
+        "unmatched": 2
+      },
+      "mentions": 9,
+      "mentions_with_resolution_attempt_denominator": 8,
+      "museum": "harvard",
+      "record_evidence_rate": 0.006925207756232687,
+      "records_denominator": 722,
+      "records_with_extracted_evidence": 5,
+      "unique_resolved_mentions": 5
+    },
+    "harvard|site": {
+      "artifacts_with_ambiguous_mentions": 2,
+      "artifacts_with_at_least_one_unique_resolution": 267,
+      "artifacts_with_unmatched_mentions": 540,
+      "entity_type": "site",
+      "mention_resolution_rate_among_attempted": 0.15687426556991774,
+      "mention_status_counts": {
+        "ambiguous": 2,
+        "resolved": 267,
+        "unmatched": 1433
+      },
+      "mentions": 1702,
+      "mentions_with_resolution_attempt_denominator": 1702,
+      "museum": "harvard",
+      "record_evidence_rate": 0.7479224376731302,
+      "records_denominator": 722,
+      "records_with_extracted_evidence": 540,
+      "unique_resolved_mentions": 267
+    },
+    "harvard|tomb_monument": {
+      "artifacts_with_ambiguous_mentions": 0,
+      "artifacts_with_at_least_one_unique_resolution": 0,
+      "artifacts_with_unmatched_mentions": 0,
+      "entity_type": "tomb_monument",
+      "mention_resolution_rate_among_attempted": null,
+      "mention_status_counts": {},
+      "mentions": 0,
+      "mentions_with_resolution_attempt_denominator": 0,
+      "museum": "harvard",
+      "record_evidence_rate": 0.0,
+      "records_denominator": 722,
+      "records_with_extracted_evidence": 0,
+      "unique_resolved_mentions": 0
+    },
+    "met|excavation": {
+      "artifacts_with_ambiguous_mentions": 0,
+      "artifacts_with_at_least_one_unique_resolution": 0,
+      "artifacts_with_unmatched_mentions": 0,
+      "entity_type": "excavation",
+      "mention_resolution_rate_among_attempted": null,
+      "mention_status_counts": {
+        "authority_unavailable": 16403
+      },
+      "mentions": 16403,
+      "mentions_with_resolution_attempt_denominator": 0,
+      "museum": "met",
+      "record_evidence_rate": 0.5864707354571133,
+      "records_denominator": 27969,
+      "records_with_extracted_evidence": 16403,
+      "unique_resolved_mentions": 0
+    },
+    "met|ruler": {
+      "artifacts_with_ambiguous_mentions": 5012,
+      "artifacts_with_at_least_one_unique_resolution": 3879,
+      "artifacts_with_unmatched_mentions": 318,
+      "entity_type": "ruler",
+      "mention_resolution_rate_among_attempted": 0.4238474795346833,
+      "mention_status_counts": {
+        "ambiguous": 5022,
+        "multi_or_range": 810,
+        "resolved": 3935,
+        "temporal_context": 53,
+        "uncertain_identity": 192,
+        "unmatched": 327,
+        "unparsed_structured_value": 1149
+      },
+      "mentions": 11488,
+      "mentions_with_resolution_attempt_denominator": 9284,
+      "museum": "met",
+      "record_evidence_rate": 0.4034466731023633,
+      "records_denominator": 27969,
+      "records_with_extracted_evidence": 11284,
+      "unique_resolved_mentions": 3935
+    },
+    "met|site": {
+      "artifacts_with_ambiguous_mentions": 168,
+      "artifacts_with_at_least_one_unique_resolution": 15018,
+      "artifacts_with_unmatched_mentions": 27722,
+      "entity_type": "site",
+      "mention_resolution_rate_among_attempted": 0.31831062178503744,
+      "mention_status_counts": {
+        "ambiguous": 168,
+        "resolved": 35272,
+        "unmatched": 75370
+      },
+      "mentions": 110810,
+      "mentions_with_resolution_attempt_denominator": 110810,
+      "museum": "met",
+      "record_evidence_rate": 0.9971396903714828,
+      "records_denominator": 27969,
+      "records_with_extracted_evidence": 27889,
+      "unique_resolved_mentions": 35272
+    },
+    "met|tomb_monument": {
+      "artifacts_with_ambiguous_mentions": 0,
+      "artifacts_with_at_least_one_unique_resolution": 3199,
+      "artifacts_with_unmatched_mentions": 1611,
+      "entity_type": "tomb_monument",
+      "mention_resolution_rate_among_attempted": 0.6665978103697583,
+      "mention_status_counts": {
+        "resolved": 3227,
+        "unmatched": 1614
+      },
+      "mentions": 4841,
+      "mentions_with_resolution_attempt_denominator": 4841,
+      "museum": "met",
+      "record_evidence_rate": 0.17090350030390788,
+      "records_denominator": 27969,
+      "records_with_extracted_evidence": 4780,
+      "unique_resolved_mentions": 3227
+    }
+  },
+  "scope": {
+    "canonical_records": 36245,
+    "records_by_museum": {
+      "brooklyn": 7554,
+      "harvard": 722,
+      "met": 27969
+    }
+  }
+}

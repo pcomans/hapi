@@ -1,0 +1,277 @@
+{
+  "checks": [
+    {
+      "check": "all expected generated outputs exist before rerun",
+      "evidence": {
+        "missing": []
+      },
+      "passed": true
+    },
+    {
+      "check": "all deterministic generation commands succeeded",
+      "evidence": [
+        {
+          "returncode": 0,
+          "script": "inventory_inputs.py",
+          "stderr": "",
+          "stdout_sha256": "d51d94a54143e4bf0261ea01e2907ae0fa7f1cbbfc27736e9f301706a2ad5565"
+        },
+        {
+          "returncode": 0,
+          "script": "run_linkability.py",
+          "stderr": "",
+          "stdout_sha256": "e04c1d8cec39bcd48bbfb17dec3bef5b6131dfd765a4a2726e0d3cdff70b918d"
+        },
+        {
+          "returncode": 0,
+          "script": "freeze_review_sample.py",
+          "stderr": "",
+          "stdout_sha256": "ab5c3b2aad065a10f697ea5174e59a337bc7c2454cdf58e407db72ddb5c27b74"
+        },
+        {
+          "returncode": 0,
+          "script": "adjudicate_review.py",
+          "stderr": "",
+          "stdout_sha256": "85368db046935180f1a2299f7ffc6fcd682a00272c715277d43632152468bcb0"
+        },
+        {
+          "returncode": 0,
+          "script": "summarize_evaluation.py",
+          "stderr": "",
+          "stdout_sha256": "675b15e8beed2a03f130c1723a9aefb80fdf94188659ff4467b26d242897415e"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "check": "clean rerun is byte-for-byte deterministic",
+      "evidence": {
+        "changed": [],
+        "missing": []
+      },
+      "passed": true
+    },
+    {
+      "check": "verified canonical and raw corpus counts",
+      "evidence": {
+        "canonical_by_museum": {
+          "brooklyn": 7554,
+          "harvard": 722,
+          "met": 27969
+        },
+        "canonical_linked_raw_by_museum": {
+          "brooklyn": 7554,
+          "harvard": 722,
+          "met": 27969
+        },
+        "canonical_rows": 36245,
+        "raw_rows": 37523
+      },
+      "passed": true
+    },
+    {
+      "check": "authority inventory represents current targets and preserves hard blockers",
+      "evidence": {
+        "excavation_authority": false,
+        "ruler_units": 974,
+        "site_graph_exists": false,
+        "site_rows": 1000,
+        "temple_authority": false
+      },
+      "passed": true
+    },
+    {
+      "check": "full mention and link counts",
+      "evidence": {
+        "links": 43930,
+        "mentions": 150428
+      },
+      "passed": true
+    },
+    {
+      "check": "every mention has an exact valid field span",
+      "evidence": {
+        "bad_span_count": 0,
+        "examples": []
+      },
+      "passed": true
+    },
+    {
+      "check": "resolution cardinalities and target IDs are valid",
+      "evidence": {
+        "bad_count": 0,
+        "examples": []
+      },
+      "passed": true
+    },
+    {
+      "check": "artifact-node links are unique and trace to resolved mentions",
+      "evidence": {
+        "bad_link_count": 0,
+        "duplicate_keys": 0
+      },
+      "passed": true
+    },
+    {
+      "check": "connectivity invariants match recomputed summary",
+      "evidence": {
+        "connectivity_metrics": {
+          "artifact_node_links": 43930,
+          "artifacts_on_shared_nodes_newly_cross_museum_discoverable": 15595,
+          "discoverable_artifacts_by_entity_type": {
+            "ruler": 464,
+            "site": 15551,
+            "tomb_monument": 0
+          },
+          "discoverable_artifacts_by_museum": {
+            "brooklyn": 1154,
+            "harvard": 10,
+            "met": 14431
+          },
+          "linked_artifacts": 17063,
+          "linked_nodes": 280,
+          "model": "shared authority-node incidence; no artifact all-pairs materialized",
+          "nodes_linked_from_at_least_two_museums": 56,
+          "note": "An artifact is counted once overall if any of its resolved nodes also has artifacts from another museum; per-entity counts can overlap.",
+          "shared_nodes_by_entity_type": {
+            "ruler": 8,
+            "site": 48
+          }
+        },
+        "three_museum_shared_nodes": 3
+      },
+      "passed": true
+    },
+    {
+      "check": "frozen sample and adjudication coverage are complete",
+      "evidence": {
+        "adjudication_size": 46,
+        "sample_input_sha256": "b9f496a2b803d148a9d423eaf76af66daf0effd67c47ac6070597ec49aac568f",
+        "sample_size": 46
+      },
+      "passed": true
+    },
+    {
+      "check": "all SILVER cases carry direct URL citations and accepted IDs are current targets",
+      "evidence": {
+        "bad_accepted_targets": [],
+        "bad_citations": []
+      },
+      "passed": true
+    },
+    {
+      "check": "review remains explicitly provisional and does not report recall or estimated precision",
+      "evidence": {
+        "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+        "not_an_estimated_precision": true,
+        "recall": {
+          "reason": "The review frame contains extracted mentions only and has no defensible negative/no-mention denominator.",
+          "reported": false
+        }
+      },
+      "passed": true
+    },
+    {
+      "check": "resolver has no adjudication-file dependency",
+      "evidence": {
+        "forbidden_dependency_strings_present": []
+      },
+      "passed": true
+    },
+    {
+      "check": "gzip outputs use deterministic zero mtime",
+      "evidence": {
+        "artifact_authority_links.ndjson.gz": 0,
+        "mentions.ndjson.gz": 0
+      },
+      "passed": true
+    }
+  ],
+  "generated_hashes_after_rerun": {
+    "adapter_catalog_summary.json": "fe4ab17e1b765e5902ae1e2b2842f55d66b15aea51ad2b1da8e85289465de445",
+    "artifact_authority_links.ndjson.gz": "42978550708d26c9b38d229b8b5dc4b0f061c7344aea6c3cc31a8700f5b22142",
+    "artifact_link_coverage.json": "0a4bff194f6d6a0e7b14285ccff8b841b7b0aa664d8f475418f45c6cab1506ad",
+    "authority_inventory.json": "dc7794e5fc8374d82df9e66a7040b153a1510faaf14b6dec29eb41a94b81aa34",
+    "authority_node_connectivity.json": "30e5fc849d27aa00a688b15b79083a0b1928d18eafcc721fe8a88283ac7b92cd",
+    "connectivity_detail.json": "39d6b49f21b395a7a237fc53e2d6d33215e87c9efd351c700b8cf8f52fe2301f",
+    "connectivity_metrics.json": "a2490b469a20121bc8c3638d71fb6d10d1b76cf8d9657b3f5bd1cb644f1ce7d3",
+    "corpus_inventory.json": "4039fd78e396f62ea6d5c333ea2eb9af30db67f7115ba0c39bd21a68466c4b9d",
+    "field_provenance_metrics.json": "c1c22a01a7e4bb6cc2bfb40df4698c931486863db9f8310b250c75f6e5880325",
+    "linkability_metrics.json": "4ec0a85340b2367a1f63c815d1c31b1497ed7b20cb3a2a68952de1fb8a229b9c",
+    "mentions.ndjson.gz": "b9f496a2b803d148a9d423eaf76af66daf0effd67c47ac6070597ec49aac568f",
+    "review_adjudications.csv": "589f48611cf4a89124dca3fa1df81131e05d33e59185a336afe0af38a2ac848a",
+    "review_adjudications.json": "28d75c57933f706dbe90d43492bb13cef28bcc6542f42268b06d64e54b9722fe",
+    "review_metrics.json": "85368db046935180f1a2299f7ffc6fcd682a00272c715277d43632152468bcb0",
+    "review_sample.csv": "31a349892a4ccfc76c7be8da326c606dc3ee90a4e8d270ad98ccddaf6c42b292",
+    "review_sample.json": "1ee8d34944129c86f69d9a011f6fd4e3e6e808808479d845ee61f0c0ae525a9f",
+    "review_sample_manifest.json": "4ab21ec365b47fc38b3ae3aed8e9c1f2c0961fcc5080f8a69d57926371156780",
+    "silver_false_link_sensitivity.json": "54d3a094a3c7208821dd754e131664e0457b4e82fd105b7e388b08f1fe5de5ff",
+    "top_gaps.json": "ce6a67dc62abf5d157116547e90b50cf2667b0573a58807113f3d5e7f88c6e66",
+    "web_search_log.json": "a9bcd0bb5bfecbdcfc0759455432cb789a338411aff12ab3252c7b900c692da3"
+  },
+  "generated_hashes_before_rerun": {
+    "adapter_catalog_summary.json": "fe4ab17e1b765e5902ae1e2b2842f55d66b15aea51ad2b1da8e85289465de445",
+    "artifact_authority_links.ndjson.gz": "42978550708d26c9b38d229b8b5dc4b0f061c7344aea6c3cc31a8700f5b22142",
+    "artifact_link_coverage.json": "0a4bff194f6d6a0e7b14285ccff8b841b7b0aa664d8f475418f45c6cab1506ad",
+    "authority_inventory.json": "dc7794e5fc8374d82df9e66a7040b153a1510faaf14b6dec29eb41a94b81aa34",
+    "authority_node_connectivity.json": "30e5fc849d27aa00a688b15b79083a0b1928d18eafcc721fe8a88283ac7b92cd",
+    "connectivity_detail.json": "39d6b49f21b395a7a237fc53e2d6d33215e87c9efd351c700b8cf8f52fe2301f",
+    "connectivity_metrics.json": "a2490b469a20121bc8c3638d71fb6d10d1b76cf8d9657b3f5bd1cb644f1ce7d3",
+    "corpus_inventory.json": "4039fd78e396f62ea6d5c333ea2eb9af30db67f7115ba0c39bd21a68466c4b9d",
+    "field_provenance_metrics.json": "c1c22a01a7e4bb6cc2bfb40df4698c931486863db9f8310b250c75f6e5880325",
+    "linkability_metrics.json": "4ec0a85340b2367a1f63c815d1c31b1497ed7b20cb3a2a68952de1fb8a229b9c",
+    "mentions.ndjson.gz": "b9f496a2b803d148a9d423eaf76af66daf0effd67c47ac6070597ec49aac568f",
+    "review_adjudications.csv": "589f48611cf4a89124dca3fa1df81131e05d33e59185a336afe0af38a2ac848a",
+    "review_adjudications.json": "28d75c57933f706dbe90d43492bb13cef28bcc6542f42268b06d64e54b9722fe",
+    "review_metrics.json": "85368db046935180f1a2299f7ffc6fcd682a00272c715277d43632152468bcb0",
+    "review_sample.csv": "31a349892a4ccfc76c7be8da326c606dc3ee90a4e8d270ad98ccddaf6c42b292",
+    "review_sample.json": "1ee8d34944129c86f69d9a011f6fd4e3e6e808808479d845ee61f0c0ae525a9f",
+    "review_sample_manifest.json": "4ab21ec365b47fc38b3ae3aed8e9c1f2c0961fcc5080f8a69d57926371156780",
+    "silver_false_link_sensitivity.json": "54d3a094a3c7208821dd754e131664e0457b4e82fd105b7e388b08f1fe5de5ff",
+    "top_gaps.json": "ce6a67dc62abf5d157116547e90b50cf2667b0573a58807113f3d5e7f88c6e66",
+    "web_search_log.json": "a9bcd0bb5bfecbdcfc0759455432cb789a338411aff12ab3252c7b900c692da3"
+  },
+  "rerun_commands": [
+    {
+      "returncode": 0,
+      "script": "inventory_inputs.py",
+      "stderr": "",
+      "stdout_sha256": "d51d94a54143e4bf0261ea01e2907ae0fa7f1cbbfc27736e9f301706a2ad5565"
+    },
+    {
+      "returncode": 0,
+      "script": "run_linkability.py",
+      "stderr": "",
+      "stdout_sha256": "e04c1d8cec39bcd48bbfb17dec3bef5b6131dfd765a4a2726e0d3cdff70b918d"
+    },
+    {
+      "returncode": 0,
+      "script": "freeze_review_sample.py",
+      "stderr": "",
+      "stdout_sha256": "ab5c3b2aad065a10f697ea5174e59a337bc7c2454cdf58e407db72ddb5c27b74"
+    },
+    {
+      "returncode": 0,
+      "script": "adjudicate_review.py",
+      "stderr": "",
+      "stdout_sha256": "85368db046935180f1a2299f7ffc6fcd682a00272c715277d43632152468bcb0"
+    },
+    {
+      "returncode": 0,
+      "script": "summarize_evaluation.py",
+      "stderr": "",
+      "stdout_sha256": "675b15e8beed2a03f130c1723a9aefb80fdf94188659ff4467b26d242897415e"
+    }
+  ],
+  "scope": "real 36,245-record canonical corpus plus linked raw museum payloads; no fixtures or proxies",
+  "status": "pass",
+  "summary": {
+    "artifact_node_links": 43930,
+    "canonical_records": 36245,
+    "checks": 15,
+    "failed": 0,
+    "mentions": 150428,
+    "passed": 15,
+    "review_cases": 46
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "cells": [
+    {
+      "available_signatures": 9,
+      "entity_type": "ruler",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "ambiguous"
+    },
+    {
+      "available_signatures": 6,
+      "entity_type": "ruler",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "resolved"
+    },
+    {
+      "available_signatures": 2,
+      "entity_type": "ruler",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "uncertain_identity"
+    },
+    {
+      "available_signatures": 22,
+      "entity_type": "ruler",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "unmatched"
+    },
+    {
+      "available_signatures": 1,
+      "entity_type": "site",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "ambiguous"
+    },
+    {
+      "available_signatures": 90,
+      "entity_type": "site",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "resolved"
+    },
+    {
+      "available_signatures": 175,
+      "entity_type": "site",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "unmatched"
+    },
+    {
+      "available_signatures": 1,
+      "entity_type": "tomb_monument",
+      "museum": "brooklyn",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "unmatched"
+    },
+    {
+      "available_signatures": 1,
+      "entity_type": "ruler",
+      "museum": "harvard",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "ambiguous"
+    },
+    {
+      "available_signatures": 5,
+      "entity_type": "ruler",
+      "museum": "harvard",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "resolved"
+    },
+    {
+      "available_signatures": 1,
+      "entity_type": "ruler",
+      "museum": "harvard",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "uncertain_identity"
+    },
+    {
+      "available_signatures": 2,
+      "entity_type": "ruler",
+      "museum": "harvard",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "unmatched"
+    },
+    {
+      "available_signatures": 1,
+      "entity_type": "site",
+      "museum": "harvard",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "ambiguous"
+    },
+    {
+      "available_signatures": 5,
+      "entity_type": "site",
+      "museum": "harvard",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "resolved"
+    },
+    {
+      "available_signatures": 20,
+      "entity_type": "site",
+      "museum": "harvard",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "unmatched"
+    },
+    {
+      "available_signatures": 393,
+      "entity_type": "excavation",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "authority_unavailable"
+    },
+    {
+      "available_signatures": 37,
+      "entity_type": "ruler",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "ambiguous"
+    },
+    {
+      "available_signatures": 95,
+      "entity_type": "ruler",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "multi_or_range"
+    },
+    {
+      "available_signatures": 72,
+      "entity_type": "ruler",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "resolved"
+    },
+    {
+      "available_signatures": 24,
+      "entity_type": "ruler",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "temporal_context"
+    },
+    {
+      "available_signatures": 55,
+      "entity_type": "ruler",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "uncertain_identity"
+    },
+    {
+      "available_signatures": 90,
+      "entity_type": "ruler",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "unmatched"
+    },
+    {
+      "available_signatures": 44,
+      "entity_type": "ruler",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell"
+      ],
+      "status": "unparsed_structured_value"
+    },
+    {
+      "available_signatures": 2,
+      "entity_type": "site",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "ambiguous"
+    },
+    {
+      "available_signatures": 101,
+      "entity_type": "site",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "resolved"
+    },
+    {
+      "available_signatures": 2674,
+      "entity_type": "site",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "unmatched"
+    },
+    {
+      "available_signatures": 96,
+      "entity_type": "tomb_monument",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "resolved"
+    },
+    {
+      "available_signatures": 174,
+      "entity_type": "tomb_monument",
+      "museum": "met",
+      "selected_slots": [
+        "high_frequency_cell",
+        "deterministic_long_tail"
+      ],
+      "status": "unmatched"
+    }
+  ],
+  "counts_by_entity_type": {
+    "excavation": 2,
+    "ruler": 23,
+    "site": 16,
+    "tomb_monument": 5
+  },
+  "counts_by_museum": {
+    "brooklyn": 13,
+    "harvard": 11,
+    "met": 22
+  },
+  "counts_by_sampling_slot": {
+    "deterministic_long_tail": 18,
+    "high_frequency_cell": 28
+  },
+  "counts_by_status": {
+    "ambiguous": 9,
+    "authority_unavailable": 2,
+    "multi_or_range": 1,
+    "resolved": 14,
+    "temporal_context": 1,
+    "uncertain_identity": 3,
+    "unmatched": 15,
+    "unparsed_structured_value": 1
+  },
+  "input": "/tmp/hapi-linkability-mvp/mentions.ndjson.gz",
+  "input_sha256": "b9f496a2b803d148a9d423eaf76af66daf0effd67c47ac6070597ec49aac568f",
+  "label": "FROZEN BEFORE WEB ADJUDICATION — provisional SILVER review sample, never gold truth or human validation",
+  "sample_size": 46,
+  "seed": "hapi-linkability-mvp-review-v1-2026-08-28",
+  "selection_policy": "One highest-artifact-frequency signature per observed museum/entity/status cell; plus one deterministic minimum-frequency signature for every resolved/ambiguous/unmatched ruler/site/tomb cell and authority-unavailable cell when another signature exists.",
+  "signature_definition": [
+    "museum",
+    "entity_type",
+    "status",
+    "expression_type",
+    "casefolded whitespace-collapsed mention",
+    "target_ids"
+  ]
+}

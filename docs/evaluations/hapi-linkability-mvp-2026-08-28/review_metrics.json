@@ -1,0 +1,134 @@
+{
+  "artifact_relation_judgment_counts": {
+    "supported": 33,
+    "supported_context": 2,
+    "supported_joint_reign": 1,
+    "supported_person_but_wrong_authority_type": 2,
+    "supported_range": 1,
+    "uncertain": 4,
+    "uncertain_temporal_bound": 1,
+    "unsupported_duplicate_mention": 1,
+    "unsupported_reference_only": 1
+  },
+  "design_warning": "Deterministic stratified review, deliberately over-sampling statuses/cells; descriptive review fractions are not population estimates.",
+  "failure_category_counts": {
+    "absent_canonical_entity_type": 2,
+    "authority_geographic_scope": 2,
+    "authority_scope": 1,
+    "boundary_punctuation": 2,
+    "context_disambiguation": 2,
+    "entity_typing": 2,
+    "homonym": 1,
+    "incomplete_reconciliation": 7,
+    "missing_alias": 2,
+    "missing_current_target": 6,
+    "missing_short_alias": 1,
+    "missing_target_granularity": 1,
+    "multi_entity_parser": 1,
+    "overlapping_extraction": 1,
+    "place_granularity_homonym": 3,
+    "qualifier_parser": 1,
+    "reference_only_false_link": 1,
+    "tomb_register_scope": 3,
+    "uncertainty_parser": 1
+  },
+  "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+  "recall": {
+    "reason": "The review frame contains extracted mentions only and has no defensible negative/no-mention denominator.",
+    "reported": false
+  },
+  "resolution_judgment_counts": {
+    "correct_abstention": 19,
+    "false_link": 2,
+    "not_applicable": 3,
+    "supported": 12,
+    "underresolved": 10
+  },
+  "sample_sha256": "1ee8d34944129c86f69d9a011f6fd4e3e6e808808479d845ee61f0c0ae525a9f",
+  "sample_size": 46,
+  "sampled_resolved_support": {
+    "false_link_fraction": {
+      "denominator": 14,
+      "fraction": 0.14285714285714285,
+      "numerator": 2
+    },
+    "false_links": 2,
+    "not_an_estimated_precision": true,
+    "sampled_resolved": 14,
+    "support_fraction": {
+      "denominator": 14,
+      "fraction": 0.8571428571428571,
+      "numerator": 12
+    },
+    "supported": 12
+  },
+  "sampled_resolved_support_by_entity_type": {
+    "ruler": {
+      "false_links": 2,
+      "sampled_resolved": 6,
+      "support_fraction": {
+        "denominator": 6,
+        "fraction": 0.6666666666666666,
+        "numerator": 4
+      },
+      "supported": 4
+    },
+    "site": {
+      "false_links": 0,
+      "sampled_resolved": 6,
+      "support_fraction": {
+        "denominator": 6,
+        "fraction": 1.0,
+        "numerator": 6
+      },
+      "supported": 6
+    },
+    "tomb_monument": {
+      "false_links": 0,
+      "sampled_resolved": 2,
+      "support_fraction": {
+        "denominator": 2,
+        "fraction": 1.0,
+        "numerator": 2
+      },
+      "supported": 2
+    }
+  },
+  "sampled_resolved_support_by_museum": {
+    "brooklyn": {
+      "false_links": 1,
+      "sampled_resolved": 4,
+      "support_fraction": {
+        "denominator": 4,
+        "fraction": 0.75,
+        "numerator": 3
+      },
+      "supported": 3
+    },
+    "harvard": {
+      "false_links": 1,
+      "sampled_resolved": 4,
+      "support_fraction": {
+        "denominator": 4,
+        "fraction": 0.75,
+        "numerator": 3
+      },
+      "supported": 3
+    },
+    "met": {
+      "false_links": 0,
+      "sampled_resolved": 6,
+      "support_fraction": {
+        "denominator": 6,
+        "fraction": 1.0,
+        "numerator": 6
+      },
+      "supported": 6
+    }
+  },
+  "span_judgment_counts": {
+    "minor_boundary_error": 2,
+    "supported": 43,
+    "unsupported_overlapping_boundary": 1
+  }
+}

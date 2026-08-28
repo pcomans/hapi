@@ -1,0 +1,23 @@
+{
+  "artifact_node_links": 43930,
+  "artifacts_on_shared_nodes_newly_cross_museum_discoverable": 15595,
+  "discoverable_artifacts_by_entity_type": {
+    "ruler": 464,
+    "site": 15551,
+    "tomb_monument": 0
+  },
+  "discoverable_artifacts_by_museum": {
+    "brooklyn": 1154,
+    "harvard": 10,
+    "met": 14431
+  },
+  "linked_artifacts": 17063,
+  "linked_nodes": 280,
+  "model": "shared authority-node incidence; no artifact all-pairs materialized",
+  "nodes_linked_from_at_least_two_museums": 56,
+  "note": "An artifact is counted once overall if any of its resolved nodes also has artifacts from another museum; per-entity counts can overlap.",
+  "shared_nodes_by_entity_type": {
+    "ruler": 8,
+    "site": 48
+  }
+}

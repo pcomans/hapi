@@ -1,0 +1,1705 @@
+[
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-3317",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Head from a Shabty of King Akhenaten",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='Head from a Shabty of King Akhenaten'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3317"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Lists Akhenaten as an alternate name of Amenhotep IV; this is a current graph source, but is self-published and therefore corroborative rather than sole evidence.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/amenhotep-iv/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum identifies the shabti as Akhenaten; the two current graph units denote one ruler and should not force an ambiguous result.",
+    "expected_identity": "Akhenaten (Amenhotep IV)",
+    "failure_categories": [
+      "incomplete_reconciliation"
+    ],
+    "field_path": "title",
+    "field_value": "Head from a Shabty of King Akhenaten",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Akhenaten",
+    "museum": "brooklyn",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-001",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "cluster-beckerath-18.10",
+      "leprohon-leprohon-18.10b"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-3866",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Relief of King Sobekhotep III",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='Relief of King Sobekhotep III'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3866"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Independent current graph source page for Sobekhotep III, with cited titulary references.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/sobekhotep-iii/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The title names Sobekhotep III; two unreconciled current source units create artificial ambiguity.",
+    "expected_identity": "Sobekhotep III",
+    "failure_categories": [
+      "incomplete_reconciliation"
+    ],
+    "field_path": "title",
+    "field_value": "Relief of King Sobekhotep III",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Sobekhotep III",
+    "museum": "brooklyn",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-002",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "leprohon-leprohon-13.26",
+      "pharaoh_se-Sobekhotep-III"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-3160",
+    "artifact_relation_judgment": "supported_person_but_wrong_authority_type",
+    "artifact_title": "Shabty of Queen Maatkare",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='Shabty of Queen Maatkare'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3160"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Met object page identifies the Dynasty-21 God's Wife Maatkare as daughter of Painedjem I.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/545948"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Met page states that Hatshepsut used Maatkare as her throne name, documenting the homonym.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/544450"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "unsupported",
+    "evidence_note": "A title cue 'Queen' was treated as ruler evidence and the bare homonym Maatkare was linked to Hatshepsut. Institutional comparanda distinguish Dynasty-21 Maatkare from Hatshepsut's throne name.",
+    "expected_identity": "Queen/God's Wife Maatkare, daughter of Painedjem I (not Hatshepsut)",
+    "failure_categories": [
+      "homonym",
+      "entity_typing"
+    ],
+    "field_path": "title",
+    "field_value": "Shabty of Queen Maatkare",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Maatkare",
+    "museum": "brooklyn",
+    "resolution_judgment": "false_link",
+    "sample_id": "review-003",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "cluster-beckerath-18.05"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "cluster-beckerath-22.02"
+    ],
+    "artifact_id": "brooklyn-3635",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "King Osorkon I",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='King Osorkon I'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3635"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page identifies Osorkon I and cites Beckerath and Leprohon.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/osorkon-i/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Museum title and current source-referenced authority agree on Osorkon I.",
+    "expected_identity": "Osorkon I",
+    "failure_categories": [],
+    "field_path": "title",
+    "field_value": "King Osorkon I",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Osorkon I",
+    "museum": "brooklyn",
+    "resolution_judgment": "supported",
+    "sample_id": "review-004",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "cluster-beckerath-22.02"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-3799",
+    "artifact_relation_judgment": "uncertain",
+    "artifact_title": "Ptolemaic Queen (Cleopatra VII?)",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='Ptolemaic Queen (Cleopatra VII?)'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3799"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum title itself marks Cleopatra VII as tentative; abstention is appropriate. The extracted span retains an opening parenthesis.",
+    "expected_identity": null,
+    "failure_categories": [
+      "boundary_punctuation"
+    ],
+    "field_path": "title",
+    "field_value": "Ptolemaic Queen (Cleopatra VII?)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "(Cleopatra VII",
+    "museum": "brooklyn",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-005",
+    "span_judgment": "minor_boundary_error",
+    "system_status": "uncertain_identity",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-19079",
+    "artifact_relation_judgment": "supported_person_but_wrong_authority_type",
+    "artifact_title": "Shabty of Queen Henuttawy",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='Shabty of Queen Henuttawy'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/19079"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "unsupported",
+    "evidence_note": "The museum title supports the person mention, but a generic Queen cue is insufficient to type every queen as a ruler. No ruler link is accepted.",
+    "expected_identity": "Queen Henuttawy (royal person; not established here as a ruler)",
+    "failure_categories": [
+      "entity_typing",
+      "authority_scope"
+    ],
+    "field_path": "title",
+    "field_value": "Shabty of Queen Henuttawy",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Henuttawy",
+    "museum": "brooklyn",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-006",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-3854",
+    "artifact_relation_judgment": "uncertain",
+    "artifact_title": "Amun-Re or King Amunhotep III",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='Amun-Re or King Amunhotep III'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3854"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page for Amenhotep III; museum spelling remains an uncommitted alias gap.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/amenhotep-iii/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Brooklyn explicitly gives an Amun-Re versus Amunhotep III alternative. The adapter missed both the 'or' hedge and the Amunhotep/Amenhotep spelling relation; it should preserve a candidate without asserting a link.",
+    "expected_identity": "Amunhotep III as one explicit alternative, not a certain artifact identification",
+    "failure_categories": [
+      "uncertainty_parser",
+      "missing_alias"
+    ],
+    "field_path": "title",
+    "field_value": "Amun-Re or King Amunhotep III",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Amunhotep III",
+    "museum": "brooklyn",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-007",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-15551",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Toilet Box",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying geographicalLocations[0].name='Kasr el Banat, Fayum, Egypt'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/15551"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "iDAI city target carrying Fayum as an alias.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2042846.html"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "iDAI oasis target also carrying Fayum as an alias.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2751193.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The string contains Fayum but does not by itself select the city versus oasis current targets; retaining both candidates is safer than guessing.",
+    "expected_identity": null,
+    "failure_categories": [
+      "place_granularity_homonym"
+    ],
+    "field_path": "geographicalLocations[0].name",
+    "field_value": "Kasr el Banat, Fayum, Egypt",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Fayum",
+    "museum": "brooklyn",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-008",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "idai:2042846",
+      "idai:2751193"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "idai:2042907"
+    ],
+    "artifact_id": "brooklyn-116772",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Seated Statue of Nakhtsaes",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying geographicalLocations[0].name='Saqqara, Egypt'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/116772"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI record gives Saqqara as an English alias of Saqqāra and types it as an archaeological place.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2042907.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum place and iDAI's Saqqara archaeological/populated-place record agree.",
+    "expected_identity": "Saqqara",
+    "failure_categories": [],
+    "field_path": "geographicalLocations[0].name",
+    "field_value": "Saqqara, Egypt",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Saqqara",
+    "museum": "brooklyn",
+    "resolution_judgment": "supported",
+    "sample_id": "review-009",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "idai:2042907"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "idai:2751316"
+    ],
+    "artifact_id": "brooklyn-3125",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Stela of Lady Horemheb",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying geographicalLocations[0].name='Haraga, Egypt'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3125"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI record for Harageh/Haraga.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2751316.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Haraga is a committed alias on the iDAI Harageh target.",
+    "expected_identity": "Harageh (Haraga)",
+    "failure_categories": [],
+    "field_path": "geographicalLocations[0].name",
+    "field_value": "Haraga, Egypt",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Haraga",
+    "museum": "brooklyn",
+    "resolution_judgment": "supported",
+    "sample_id": "review-010",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "idai:2751316"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-10008",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Statuette Base of Ia-Ib",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying geographicalLocations[0].name='Thebes, Egypt'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/10008"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Live DAI Egypt root; cited only to document the committed-target omission, not injected into matching.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/place/2042786"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Egypt is valid structured museum evidence. The live iDAI Egypt root exists but is absent from the current committed 1,000-row representation, so it was correctly not imported at evaluation time.",
+    "expected_identity": "Egypt",
+    "failure_categories": [
+      "missing_current_target"
+    ],
+    "field_path": "geographicalLocations[0].name",
+    "field_value": "Thebes, Egypt",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Egypt",
+    "museum": "brooklyn",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-011",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-3150",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Jar with Was-Scepters and Ankhs",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying geographicalLocations[0].name='Samayna, Egypt'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3150"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Independent Met object provenance names Samayna, corroborating that this is a place rather than noise.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/558188"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Samayna is a genuine museum place value but no current committed site target matched it.",
+    "expected_identity": "Samayna",
+    "failure_categories": [
+      "missing_current_target"
+    ],
+    "field_path": "geographicalLocations[0].name",
+    "field_value": "Samayna, Egypt",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Samayna",
+    "museum": "brooklyn",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-012",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "brooklyn-3083",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Statuette of a Female Acrobat",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying geographicalLocations[0].name='Tomb D303, Abydos, Egypt'.",
+        "source_type": "museum object page",
+        "url": "https://www.brooklynmuseum.org/objects/3083"
+      }
+    ],
+    "entity_type": "tomb_monument",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The structured Brooklyn location explicitly names Tomb D303 at Abydos. Current PM targets cover committed Theban/Memphite rows, not this local Abydos tomb code.",
+    "expected_identity": "Local tomb D303 at Abydos",
+    "failure_categories": [
+      "missing_current_target",
+      "tomb_register_scope"
+    ],
+    "field_path": "geographicalLocations[0].name",
+    "field_value": "Tomb D303, Abydos, Egypt",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Tomb D303",
+    "museum": "brooklyn",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-013",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-291048",
+    "artifact_relation_judgment": "supported_context",
+    "artifact_title": "Temple or Palace Relief: Charioteers",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying labeltext='This relief fragment dates to the Amarna period, a time in Egypt when the king, Akhenaten, initiated a religious revolution. It was originally part of the wall decoration at the palace-temple complex at Akhenaten’s capital, Tell el-Amarna, but was later transported to Hermopolis Magna during the reign of King Rameses II (1292–1232 BCE). The two cities were roughly 14 miles apart and on opposite banks of the Nile, which would have made transportation of the reliefs by boat fairly easy. The scene depicts two female attendants riding in chariots, most likely during a royal procession. Such events were common at Amarna as Akhenaten and his immediate family would parade from the palace to the Great Temple each day to make offerings to the chief sun god, the Aten. The journey was meant to reflect the sun’s movement across the sky during the day.'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/291048"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Lists Akhenaten as Amenhotep IV's alternate name.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/amenhotep-iv/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Harvard's label uses Akhenaten as historical context for this Amarna relief. Two current graph units denote one identity and should be reconciled.",
+    "expected_identity": "Akhenaten (Amenhotep IV)",
+    "failure_categories": [
+      "incomplete_reconciliation"
+    ],
+    "field_path": "labeltext",
+    "field_value": "This relief fragment dates to the Amarna period, a time in Egypt when the king, Akhenaten, initiated a religious revolution. It was originally part of the wall decoration at the palace-temple complex at Akhenaten’s capital, Tell el-Amarna, but was later transported to Hermopolis Magna during the reign of King Rameses II (1292–1232 BCE). The two cities were roughly 14 miles apart and on opposite banks of the Nile, which would have made transportation of the reliefs by boat fairly easy. The scene depicts two female attendants riding in chariots, most likely during a royal procession. Such events were common at Amarna as Akhenaten and his immediate family would parade from the palace to the Great Temple each day to make offerings to the chief sun god, the Aten. The journey was meant to reflect the sun’s movement across the sky during the day.",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Akhenaten",
+    "museum": "harvard",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-014",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "cluster-beckerath-18.10",
+      "leprohon-leprohon-18.10b"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-354559",
+    "artifact_relation_judgment": "unsupported_reference_only",
+    "artifact_title": "Double-sided Hathor Emblem from a Sistrum",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying commentary='The sistrum was a type of musical instrument shaken at festivals and during religious rituals. Sistra were associated with female deities, especially Hathor, who was the goddess of love, childbirth and ‘female’ activities, such as song and dance. Bronze or wooden sistra were shaken to produce a characteristic \"sesheshet\" rustling sound, which was said to imitate the rustle of papyrus leaves and believed to sooth or pacify the goddess. Faience sistra were not typically used for this purpose because their material could not create the desired noise. Instead, these objects were left as votive objects at temples and many bear dedicatory inscriptions of pharaohs on the handle or naos [1]. Faience sistra bearing the emblem of Hathor have been found in sanctuaries to the goddess where they were left by her devotees.  \\r\\n\\r\\n\\r\\n1. Museum of Fine Arts, Boston 36.337 inscribed to king Amasis, 26th Dynasty; Metropolitan Museum of Art, Naos Sistrum with the name of Apries, no. 17.190.1959, c. 589-570 BCE.\\r\\n\\r\\n\\r\\n \\r\\n'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/354559"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The span is real, but it describes a different museum object used as a comparison. Linking the Harvard artifact itself to Amasis is unsupported.",
+    "expected_identity": "Amasis is mentioned only in a footnote about MFA Boston 36.337",
+    "failure_categories": [
+      "reference_only_false_link"
+    ],
+    "field_path": "commentary",
+    "field_value": "The sistrum was a type of musical instrument shaken at festivals and during religious rituals. Sistra were associated with female deities, especially Hathor, who was the goddess of love, childbirth and ‘female’ activities, such as song and dance. Bronze or wooden sistra were shaken to produce a characteristic \"sesheshet\" rustling sound, which was said to imitate the rustle of papyrus leaves and believed to sooth or pacify the goddess. Faience sistra were not typically used for this purpose because their material could not create the desired noise. Instead, these objects were left as votive objects at temples and many bear dedicatory inscriptions of pharaohs on the handle or naos [1]. Faience sistra bearing the emblem of Hathor have been found in sanctuaries to the goddess where they were left by her devotees.  \r\n\r\n\r\n1. Museum of Fine Arts, Boston 36.337 inscribed to king Amasis, 26th Dynasty; Metropolitan Museum of Art, Naos Sistrum with the name of Apries, no. 17.190.1959, c. 589-570 BCE.\r\n\r\n\r\n \r\n",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Amasis",
+    "museum": "harvard",
+    "resolution_judgment": "false_link",
+    "sample_id": "review-015",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "cluster-beckerath-26.05"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "leprohon-leprohon-33.02a"
+    ],
+    "artifact_id": "harvard-289668",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Temple Relief of Queen Arsinoe II",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying title='Temple Relief of Queen Arsinoe II'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/289668"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum title explicitly identifies Queen Arsinoe II and the current Leprohon source node has the same display identity.",
+    "expected_identity": "Arsinoe II",
+    "failure_categories": [],
+    "field_path": "title",
+    "field_value": "Temple Relief of Queen Arsinoe II",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Arsinoe II",
+    "museum": "harvard",
+    "resolution_judgment": "supported",
+    "sample_id": "review-016",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "leprohon-leprohon-33.02a"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-292642",
+    "artifact_relation_judgment": "uncertain",
+    "artifact_title": "Statuette of a Striding Man",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying dated='probably reign of Pepi II, c. 2246-2152 BCE'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/292642"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current source index includes Pepi II; used only as corroboration because the artifact relation remains uncertain.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaohs/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Harvard qualifies the dating as 'probably reign of Pepi II'; abstention preserves the museum's uncertainty.",
+    "expected_identity": null,
+    "failure_categories": [],
+    "field_path": "dated",
+    "field_value": "probably reign of Pepi II, c. 2246-2152 BCE",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Pepi II",
+    "museum": "harvard",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-017",
+    "span_judgment": "supported",
+    "system_status": "uncertain_identity",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-291048",
+    "artifact_relation_judgment": "unsupported_duplicate_mention",
+    "artifact_title": "Temple or Palace Relief: Charioteers",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying labeltext='This relief fragment dates to the Amarna period, a time in Egypt when the king, Akhenaten, initiated a religious revolution. It was originally part of the wall decoration at the palace-temple complex at Akhenaten’s capital, Tell el-Amarna, but was later transported to Hermopolis Magna during the reign of King Rameses II (1292–1232 BCE). The two cities were roughly 14 miles apart and on opposite banks of the Nile, which would have made transportation of the reliefs by boat fairly easy. The scene depicts two female attendants riding in chariots, most likely during a royal procession. Such events were common at Amarna as Akhenaten and his immediate family would parade from the palace to the Great Temple each day to make offerings to the chief sun god, the Aten. The journey was meant to reflect the sun’s movement across the sky during the day.'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/291048"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "'King Rameses' is a truncated overlapping extraction from 'King Rameses II'; it must not form a separate artifact mention.",
+    "expected_identity": "Ramesses II is captured by the separate maximal span in review-019",
+    "failure_categories": [
+      "overlapping_extraction"
+    ],
+    "field_path": "labeltext",
+    "field_value": "This relief fragment dates to the Amarna period, a time in Egypt when the king, Akhenaten, initiated a religious revolution. It was originally part of the wall decoration at the palace-temple complex at Akhenaten’s capital, Tell el-Amarna, but was later transported to Hermopolis Magna during the reign of King Rameses II (1292–1232 BCE). The two cities were roughly 14 miles apart and on opposite banks of the Nile, which would have made transportation of the reliefs by boat fairly easy. The scene depicts two female attendants riding in chariots, most likely during a royal procession. Such events were common at Amarna as Akhenaten and his immediate family would parade from the palace to the Great Temple each day to make offerings to the chief sun god, the Aten. The journey was meant to reflect the sun’s movement across the sky during the day.",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "King Rameses",
+    "museum": "harvard",
+    "resolution_judgment": "not_applicable",
+    "sample_id": "review-018",
+    "span_judgment": "unsupported_overlapping_boundary",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-291048",
+    "artifact_relation_judgment": "supported_context",
+    "artifact_title": "Temple or Palace Relief: Charioteers",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying labeltext='This relief fragment dates to the Amarna period, a time in Egypt when the king, Akhenaten, initiated a religious revolution. It was originally part of the wall decoration at the palace-temple complex at Akhenaten’s capital, Tell el-Amarna, but was later transported to Hermopolis Magna during the reign of King Rameses II (1292–1232 BCE). The two cities were roughly 14 miles apart and on opposite banks of the Nile, which would have made transportation of the reliefs by boat fairly easy. The scene depicts two female attendants riding in chariots, most likely during a royal procession. Such events were common at Amarna as Akhenaten and his immediate family would parade from the palace to the Great Temple each day to make offerings to the chief sun god, the Aten. The journey was meant to reflect the sun’s movement across the sky during the day.'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/291048"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page for Ramesses II; its dynasty index also lists Rameses II as an alternate spelling.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/ramesses-ii/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Harvard's label explicitly says Rameses II. Current authority uses Ramesses II and still has unreconciled source units; the one-m spelling variant is missing.",
+    "expected_identity": "Ramesses II",
+    "failure_categories": [
+      "missing_alias",
+      "incomplete_reconciliation"
+    ],
+    "field_path": "labeltext",
+    "field_value": "This relief fragment dates to the Amarna period, a time in Egypt when the king, Akhenaten, initiated a religious revolution. It was originally part of the wall decoration at the palace-temple complex at Akhenaten’s capital, Tell el-Amarna, but was later transported to Hermopolis Magna during the reign of King Rameses II (1292–1232 BCE). The two cities were roughly 14 miles apart and on opposite banks of the Nile, which would have made transportation of the reliefs by boat fairly easy. The scene depicts two female attendants riding in chariots, most likely during a royal procession. Such events were common at Amarna as Akhenaten and his immediate family would parade from the palace to the Great Temple each day to make offerings to the chief sun god, the Aten. The journey was meant to reflect the sun’s movement across the sky during the day.",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Rameses II",
+    "museum": "harvard",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-019",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-291707",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Portrait of a woman",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying places[0].displayname='Ancient & Byzantine World, Africa, Fayum (Egypt)'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/291707"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "iDAI city candidate.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2042846.html"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "iDAI oasis candidate.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2751193.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Harvard's place hierarchy supports a Fayum location but does not uniquely distinguish the current city and oasis records.",
+    "expected_identity": null,
+    "failure_categories": [
+      "place_granularity_homonym"
+    ],
+    "field_path": "places[0].displayname",
+    "field_value": "Ancient & Byzantine World, Africa, Fayum (Egypt)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Fayum",
+    "museum": "harvard",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-020",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "idai:2042846",
+      "idai:2751193"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "idai:2379568"
+    ],
+    "artifact_id": "harvard-216208",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Brown glass sherd",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying places[0].displayname='Africa, Egypt, Fustat'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/216208"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI archaeological-site record for Fustat.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2379568.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Harvard's creation place and iDAI Fustat target agree.",
+    "expected_identity": "Fustat",
+    "failure_categories": [],
+    "field_path": "places[0].displayname",
+    "field_value": "Africa, Egypt, Fustat",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Fustat",
+    "museum": "harvard",
+    "resolution_judgment": "supported",
+    "sample_id": "review-021",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "idai:2379568"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "idai:2042814"
+    ],
+    "artifact_id": "harvard-292642",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Statuette of a Striding Man",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying places[0].displayname='Ancient & Byzantine World, Africa, Asyut (Egypt)'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/292642"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI record for Asyūt/Asyut.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2042814.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Asyut is a committed alias of iDAI Asyūt.",
+    "expected_identity": "Asyut",
+    "failure_categories": [],
+    "field_path": "places[0].displayname",
+    "field_value": "Ancient & Byzantine World, Africa, Asyut (Egypt)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Asyut",
+    "museum": "harvard",
+    "resolution_judgment": "supported",
+    "sample_id": "review-022",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "idai:2042814"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-100038",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Fragment with Scenes in Roundels",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying places[0].displayname='Ancient & Byzantine World, Africa, Egypt (Ancient)'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/100038"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported_geographic_container",
+    "evidence_note": "Africa is genuinely present in Harvard's place hierarchy, but the current Egypt-focused site extract does not offer a suitable canonical target. No link is accepted.",
+    "expected_identity": "Africa (broad geographic container)",
+    "failure_categories": [
+      "authority_geographic_scope"
+    ],
+    "field_path": "places[0].displayname",
+    "field_value": "Ancient & Byzantine World, Africa, Egypt (Ancient)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Africa",
+    "museum": "harvard",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-023",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "harvard-286247",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Two Fragments of a Bess",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying places[0].displayname='Ancient & Byzantine World, Europe, Cerveteri (Etruria)'.",
+        "source_type": "museum object page",
+        "url": "https://www.harvardartmuseums.org/collections/object/286247"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The Harvard place is explicit but outside the current Egypt-focused 1,000-row iDAI representation. This is an authority-scope gap, not absence of museum evidence.",
+    "expected_identity": "Cerveteri in Etruria",
+    "failure_categories": [
+      "authority_geographic_scope"
+    ],
+    "field_path": "places[0].displayname",
+    "field_value": "Ancient & Byzantine World, Europe, Cerveteri (Etruria)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Cerveteri (Etruria)",
+    "museum": "harvard",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-024",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-543876",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Head of a statue",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying excavation='MMA excavations'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/543876"
+      }
+    ],
+    "entity_type": "excavation",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The explicit excavation string is valid, but no current committed excavation authority target exists.",
+    "expected_identity": "Metropolitan Museum of Art excavation activity",
+    "failure_categories": [
+      "absent_canonical_entity_type"
+    ],
+    "field_path": "excavation",
+    "field_value": "MMA excavations",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "MMA excavations",
+    "museum": "met",
+    "resolution_judgment": "not_applicable",
+    "sample_id": "review-025",
+    "span_judgment": "supported",
+    "system_status": "authority_unavailable",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-561516",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Vase",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying excavation='Garstang excavations, 1907'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/561516"
+      }
+    ],
+    "entity_type": "excavation",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The explicit excavation string is valid, but no current committed excavation authority target exists.",
+    "expected_identity": "Garstang excavation campaign, 1907",
+    "failure_categories": [
+      "absent_canonical_entity_type"
+    ],
+    "field_path": "excavation",
+    "field_value": "Garstang excavations, 1907",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Garstang excavations, 1907",
+    "museum": "met",
+    "resolution_judgment": "not_applicable",
+    "sample_id": "review-026",
+    "span_judgment": "supported",
+    "system_status": "authority_unavailable",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-329773",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Head of a Man, Belonging to a Block Statue",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='reign of Amenhotep III'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/329773"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page for Amenhotep III.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/amenhotep-iii/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The structured Met reign is unambiguous; duplicate current authority units produce artificial ambiguity.",
+    "expected_identity": "Amenhotep III",
+    "failure_categories": [
+      "incomplete_reconciliation"
+    ],
+    "field_path": "reign",
+    "field_value": "reign of Amenhotep III",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Amenhotep III",
+    "museum": "met",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-027",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "leprohon-leprohon-18.09",
+      "pharaoh_se-Amenhotep-III"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-543949",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Jar with the name of Xerxes the Great in four languages",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='reign of  Xerxes I'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/543949"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page for Xerxes I.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/xerxes-i/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The structured Met reign is unambiguous; duplicate current authority units produce artificial ambiguity.",
+    "expected_identity": "Xerxes I",
+    "failure_categories": [
+      "incomplete_reconciliation"
+    ],
+    "field_path": "reign",
+    "field_value": "reign of  Xerxes I",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Xerxes I",
+    "museum": "met",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-028",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "leprohon-leprohon-27.03",
+      "pharaoh_se-Xerxes-I"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-543872",
+    "artifact_relation_judgment": "supported_range",
+    "artifact_title": "The Statue of the Official Mitry",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='reign of Isesi–Unis'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/543872"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current source index lists Djedkare Isesi and Unis as separate rulers.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaohs/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported_multi_entity",
+    "evidence_note": "The Met value denotes a range across two rulers. Not collapsing it to one node is correct.",
+    "expected_identity": "Reign range from Djedkare Isesi through Unis",
+    "failure_categories": [],
+    "field_path": "reign",
+    "field_value": "reign of Isesi–Unis",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "reign of Isesi–Unis",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-029",
+    "span_judgment": "supported",
+    "system_status": "multi_or_range",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [
+      "pharaoh_se-Amenemhat-I"
+    ],
+    "artifact_id": "met-543885",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Relief fragment with soldiers running with a rope",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='reign of Amenemhat I'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/543885"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page for Amenemhat I.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/amenemhat-i/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The explicit Met reign and current source node agree.",
+    "expected_identity": "Amenemhat I",
+    "failure_categories": [],
+    "field_path": "reign",
+    "field_value": "reign of Amenemhat I",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Amenemhat I",
+    "museum": "met",
+    "resolution_judgment": "supported",
+    "sample_id": "review-030",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "pharaoh_se-Amenemhat-I"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "cluster-beckerath-04.04"
+    ],
+    "artifact_id": "met-545798",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Jar sealing",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='reign of Chephren'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/545798"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Source page explicitly lists Chephren as an alternate name of Khafra and cites Beckerath/Leprohon.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/khafra/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "Chephren is a documented alias of Khafra and the Met reign refers to that ruler.",
+    "expected_identity": "Khafra (Chephren)",
+    "failure_categories": [],
+    "field_path": "reign",
+    "field_value": "reign of Chephren",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Chephren",
+    "museum": "met",
+    "resolution_judgment": "supported",
+    "sample_id": "review-031",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "cluster-beckerath-04.04"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-544009",
+    "artifact_relation_judgment": "uncertain_temporal_bound",
+    "artifact_title": "Relief with two officials or sons of the Vizier Dagi",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='late reign of Mentuhotep II or later'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/544009"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "'Late reign of Mentuhotep II or later' is an open temporal bound, not a unique ruler assertion. Abstention is correct.",
+    "expected_identity": null,
+    "failure_categories": [],
+    "field_path": "reign",
+    "field_value": "late reign of Mentuhotep II or later",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "late reign of Mentuhotep II or later",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-032",
+    "span_judgment": "supported",
+    "system_status": "temporal_context",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-544274",
+    "artifact_relation_judgment": "uncertain",
+    "artifact_title": "Archer's wrist guard",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='Possibly Senwosret I'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/544274"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The value explicitly says 'Possibly Senwosret I'; abstention is correct.",
+    "expected_identity": null,
+    "failure_categories": [],
+    "field_path": "reign",
+    "field_value": "Possibly Senwosret I",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Possibly Senwosret I",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-033",
+    "span_judgment": "supported",
+    "system_status": "uncertain_identity",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [
+      "cluster-beckerath-18.01"
+    ],
+    "artifact_id": "met-544554",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Ceiling Decoration",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='reign of Ahmose'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/544554"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page identifies Ahmose I as the first Dynasty-18 pharaoh.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/ahmose-i/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The bare reign value needs the record's Dynasty-18 context to select Ahmose I. The current adapter intentionally did not add this contextual inference.",
+    "expected_identity": "Ahmose I in Dynasty 18",
+    "failure_categories": [
+      "context_disambiguation",
+      "missing_short_alias"
+    ],
+    "field_path": "reign",
+    "field_value": "reign of Ahmose",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Ahmose",
+    "museum": "met",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-034",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-558590",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Hieratic Ostracon Dated to Year 21 of Ramesses II",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='Reign of Ramesses II, year 21'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/558590"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Current graph source page for Ramesses II.",
+        "source_type": "source-referenced ruler authority",
+        "url": "https://pharaoh.se/ancient-egypt/pharaoh/ramesses-ii/"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported",
+    "evidence_note": "A deterministic typed parser could separate the year-21 qualifier from Ramesses II. Current authority then still has two unreconciled source units.",
+    "expected_identity": "Ramesses II",
+    "failure_categories": [
+      "qualifier_parser",
+      "incomplete_reconciliation"
+    ],
+    "field_path": "reign",
+    "field_value": "Reign of Ramesses II, year 21",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Ramesses II, year 21",
+    "museum": "met",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-035",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-543947",
+    "artifact_relation_judgment": "supported_joint_reign",
+    "artifact_title": "Ointment jar from a Foundation Deposit of Hatshepsut's Valley Temple",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying reign='Joint reign of Hatshepsut and Thutmose III'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/543947"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Met institutional page describes the joint reign and Hatshepsut's Maatkare name.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/559833"
+      }
+    ],
+    "entity_type": "ruler",
+    "entity_type_judgment": "supported_multi_entity",
+    "evidence_note": "The adapter safely declined to collapse a joint reign to one node, but classified the structured value as unparsed rather than emitting two typed mentions.",
+    "expected_identity": "Hatshepsut and Thutmose III as two entities",
+    "failure_categories": [
+      "multi_entity_parser"
+    ],
+    "field_path": "reign",
+    "field_value": "Joint reign of Hatshepsut and Thutmose III",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Joint reign of Hatshepsut and Thutmose III",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-036",
+    "span_judgment": "supported",
+    "system_status": "unparsed_structured_value",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-545209",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Ram with lotus-shaped manger",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying region='Fayum'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/545209"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "iDAI city candidate.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2042846.html"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "iDAI oasis candidate.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2751193.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The explicit region value is Fayum while the current target set contains a city and an oasis with the same alias. Field hierarchy suggests a future typed disambiguator, but this SILVER review abstains.",
+    "expected_identity": null,
+    "failure_categories": [
+      "place_granularity_homonym"
+    ],
+    "field_path": "region",
+    "field_value": "Fayum",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Fayum",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-037",
+    "span_judgment": "supported",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "idai:2042846",
+      "idai:2751193"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "idai:2751407"
+    ],
+    "artifact_id": "met-547202",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Figurine of a Seated Woman",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying subregion='Naqada (Nubt, Ombos)'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/547202"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI Ombos target carries Nubt/Nbwt aliases.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2751407.html"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI Kom Ombo target documents the competing Ombos alias.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2101017.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The full field 'Naqada (Nubt, Ombos)' selects iDAI's Ombos/Nubt record rather than Kom Ombo. The isolated span retained a closing parenthesis and discarded disambiguating context.",
+    "expected_identity": "Ombos/Nubt at Naqada",
+    "failure_categories": [
+      "context_disambiguation",
+      "boundary_punctuation"
+    ],
+    "field_path": "subregion",
+    "field_value": "Naqada (Nubt, Ombos)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Ombos)",
+    "museum": "met",
+    "resolution_judgment": "underresolved",
+    "sample_id": "review-038",
+    "span_judgment": "minor_boundary_error",
+    "system_status": "ambiguous",
+    "target_ids": [
+      "idai:2101017",
+      "idai:2751407"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "idai:2379505"
+    ],
+    "artifact_id": "met-329790",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Shabti of Shedsuhori",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying region='Upper Egypt; Thebes'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/329790"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI administrative/archaeological-area record for Upper Egypt.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2379505.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported_broad_region",
+    "evidence_note": "Upper Egypt is an exact alias of iDAI Aegyptus Superior. This is valid but broad connectivity evidence.",
+    "expected_identity": "Upper Egypt",
+    "failure_categories": [],
+    "field_path": "region",
+    "field_value": "Upper Egypt; Thebes",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Upper Egypt",
+    "museum": "met",
+    "resolution_judgment": "supported",
+    "sample_id": "review-039",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "idai:2379505"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "idai:2751172"
+    ],
+    "artifact_id": "met-544520",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Scarab Commemorating the Construction of an Artificial Lake",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying subregion='Buhen'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/544520"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "DAI record for Buhen/Bouhen.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/doc/2751172.html"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The Met subregion and iDAI Buhen archaeological-site target agree.",
+    "expected_identity": "Buhen",
+    "failure_categories": [],
+    "field_path": "subregion",
+    "field_value": "Buhen",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Buhen",
+    "museum": "met",
+    "resolution_judgment": "supported",
+    "sample_id": "review-040",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "idai:2751172"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-329767",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Bastet holding aegis and basket",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying country='Egypt'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/329767"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Live DAI Egypt root documenting the current committed-target gap.",
+        "source_type": "institutional gazetteer",
+        "url": "https://gazetteer.dainst.org/place/2042786"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported_broad_country",
+    "evidence_note": "Egypt is explicit in the museum field. The live DAI root was not in the committed evaluation target set, so no runtime target was invented.",
+    "expected_identity": "Egypt",
+    "failure_categories": [
+      "missing_current_target"
+    ],
+    "field_path": "country",
+    "field_value": "Egypt",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Egypt",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-041",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-557208",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Coffin of the Chantress of Amun Ansenmes",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying locus='Pit 219'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/557208"
+      }
+    ],
+    "entity_type": "site",
+    "entity_type_judgment": "supported_local_locus",
+    "evidence_note": "Pit 219 is valid local findspot evidence, but the current site authority representation has no artifact-local locus node at this granularity.",
+    "expected_identity": "Local findspot Pit 219",
+    "failure_categories": [
+      "missing_target_granularity"
+    ],
+    "field_path": "locus",
+    "field_value": "Pit 219",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Pit 219",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-042",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [
+      "pm_theban:TT280"
+    ],
+    "artifact_id": "met-544125",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Model of a procession of offering bearers",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying locale='Tomb of Meketre (TT 280, MMA 1101)'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/544125"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Official Griffith Institute Porter–Moss volume I/1 used by the committed tomb register.",
+        "source_type": "scholarly institutional catalogue",
+        "url": "https://www.griffith.ox.ac.uk/topbib/pdf/pm1-1.pdf"
+      }
+    ],
+    "entity_type": "tomb_monument",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum page identifies Meketre's tomb as TT 280; whitespace normalization preserves the same PM code.",
+    "expected_identity": "Theban Tomb 280, tomb of Meketre",
+    "failure_categories": [],
+    "field_path": "locale",
+    "field_value": "Tomb of Meketre (TT 280, MMA 1101)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "TT 280",
+    "museum": "met",
+    "resolution_judgment": "supported",
+    "sample_id": "review-043",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "pm_theban:TT280"
+    ]
+  },
+  {
+    "accepted_target_ids": [
+      "pm_theban:QV55"
+    ],
+    "artifact_id": "met-548357",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Ramesses III and Prince Amenherkhepeshef before Hathor",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying locale='Tomb of Amenherkhepeshef (QV 55)'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/548357"
+      },
+      {
+        "access_note": "direct_url",
+        "evidence_note": "Official Griffith Institute Porter–Moss volume I/2 used by the committed tomb register.",
+        "source_type": "scholarly institutional catalogue",
+        "url": "https://www.griffith.ox.ac.uk/topbib/pdf/pm1-2.pdf"
+      }
+    ],
+    "entity_type": "tomb_monument",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum page explicitly identifies the Tomb of Amenherkhepeshef as QV 55; whitespace normalization preserves the PM code.",
+    "expected_identity": "Valley of the Queens tomb 55, Amenherkhepeshef",
+    "failure_categories": [],
+    "field_path": "locale",
+    "field_value": "Tomb of Amenherkhepeshef (QV 55)",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "QV 55",
+    "museum": "met",
+    "resolution_judgment": "supported",
+    "sample_id": "review-044",
+    "span_judgment": "supported",
+    "system_status": "resolved",
+    "target_ids": [
+      "pm_theban:QV55"
+    ]
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-546750",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Osiris figure for Gautsoshen",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying locale='Tomb MMA 60, Pit'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/546750"
+      }
+    ],
+    "entity_type": "tomb_monument",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum's local tomb identifier is valid, but it is not a TT/QV/KV-style row in the current committed PM representation.",
+    "expected_identity": "Local Met excavation tomb MMA 60",
+    "failure_categories": [
+      "missing_current_target",
+      "tomb_register_scope"
+    ],
+    "field_path": "locale",
+    "field_value": "Tomb MMA 60, Pit",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Tomb MMA 60",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-045",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  },
+  {
+    "accepted_target_ids": [],
+    "artifact_id": "met-547122",
+    "artifact_relation_judgment": "supported",
+    "artifact_title": "Wavy-handled jar",
+    "citations": [
+      {
+        "access_note": "direct URL; value also verified in the unpacked museum raw payload",
+        "evidence_note": "Direct institutional object record underlying locus='Tomb R99S'.",
+        "source_type": "museum object page",
+        "url": "https://www.metmuseum.org/art/collection/search/547122"
+      }
+    ],
+    "entity_type": "tomb_monument",
+    "entity_type_judgment": "supported",
+    "evidence_note": "The museum's local tomb identifier is valid, but the current PM representation does not contain this cemetery-local code.",
+    "expected_identity": "Local cemetery tomb R99S",
+    "failure_categories": [
+      "missing_current_target",
+      "tomb_register_scope"
+    ],
+    "field_path": "locus",
+    "field_value": "Tomb R99S",
+    "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+    "mention_text": "Tomb R99S",
+    "museum": "met",
+    "resolution_judgment": "correct_abstention",
+    "sample_id": "review-046",
+    "span_judgment": "supported",
+    "system_status": "unmatched",
+    "target_ids": []
+  }
+]

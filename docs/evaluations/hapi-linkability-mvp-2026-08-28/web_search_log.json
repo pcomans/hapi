@@ -1,0 +1,86 @@
+{
+  "label": "PROVISIONAL SILVER WEB REVIEW — not gold truth and not human validation",
+  "limitations": [
+    "Harvard object pages were blocked to the web-search client by robots.txt. Their direct institutional URLs and the verified raw Harvard API payload in the corpus remain cited; those cases are not represented as independently re-fetched pages.",
+    "pharaoh.se is a source-referenced but self-published current graph input. It is used as corroboration and graph-source documentation, not as sole gold authority.",
+    "The SILVER sample is stratified and deterministic, not a probability sample; fractions are descriptive only."
+  ],
+  "method": "Searches were executed only after the sample was frozen. Direct museum pages, DAI records, Griffith Institute/Porter–Moss volumes, and source-referenced ruler pages were used. Wikipedia/Wikidata were not used as sole authority and no adjudication was fed back into resolver logic.",
+  "query_groups": [
+    {
+      "purpose": "Brooklyn ruler/object checks",
+      "queries": [
+        "site:brooklynmuseum.org/opencollection/objects/3317 Akhenaten",
+        "site:brooklynmuseum.org/opencollection/objects/3854 Amunhotep III",
+        "site:brooklynmuseum.org/opencollection/objects/3635 Osorkon I"
+      ]
+    },
+    {
+      "purpose": "Maatkare homonym check",
+      "queries": [
+        "site:metmuseum.org/art/collection/search/545948 Maatkare Painedjem",
+        "site:metmuseum.org Maatkare Hatshepsut throne name"
+      ]
+    },
+    {
+      "purpose": "Harvard object checks",
+      "queries": [
+        "site:harvardartmuseums.org/collections/object/291048 Charioteers Akhenaten",
+        "site:harvardartmuseums.org/collections/object/289668 Arsinoe II",
+        "site:harvardartmuseums.org/collections/object/354559 Amasis sistrum"
+      ],
+      "result": "robots.txt blocked direct retrieval"
+    },
+    {
+      "purpose": "DAI site target checks",
+      "queries": [
+        "site:gazetteer.dainst.org/doc/2042907 Saqqara",
+        "site:gazetteer.dainst.org Egypt 2042786"
+      ]
+    },
+    {
+      "purpose": "Porter–Moss tomb checks",
+      "queries": [
+        "site:griffith.ox.ac.uk Topographical Bibliography TT 280 Meketre",
+        "site:griffith.ox.ac.uk Topographical Bibliography QV 55 Amenherkhepeshef"
+      ]
+    },
+    {
+      "purpose": "Ruler identity/alias checks",
+      "queries": [
+        "site:pharaoh.se Amenhotep IV Akhenaten",
+        "site:pharaoh.se Sobekhotep III",
+        "site:pharaoh.se Khafra Chephren",
+        "site:pharaoh.se Ramesses II Rameses II",
+        "site:pharaoh.se Ahmose I",
+        "site:pharaoh.se Xerxes I"
+      ]
+    },
+    {
+      "purpose": "Met tomb pages",
+      "queries": [
+        "site:metmuseum.org/art/collection/search/544125 TT 280 Meketre",
+        "site:metmuseum.org/art/collection/search/548357 QV 55 Amenherkhepeshef"
+      ]
+    },
+    {
+      "purpose": "Missing-place corroboration",
+      "queries": [
+        "site:metmuseum.org Samayna Egypt"
+      ]
+    }
+  ],
+  "representative_audited_urls": [
+    "https://opencollection.brooklynmuseum.org/objects/3317",
+    "https://www.brooklynmuseum.org/opencollection/objects/3854",
+    "https://www.metmuseum.org/art/collection/search/545948",
+    "https://gazetteer.dainst.org/doc/2042907.html",
+    "https://gazetteer.dainst.org/place/2042786",
+    "https://topbib.griffith.ox.ac.uk/",
+    "https://www.griffith.ox.ac.uk/topbib/pdf/pm1-1.pdf",
+    "https://www.metmuseum.org/art/collection/search/548357",
+    "https://pharaoh.se/ancient-egypt/pharaoh/khafra/",
+    "https://pharaoh.se/ancient-egypt/pharaoh/amenhotep-iii/"
+  ],
+  "review_date_utc": "2026-08-28"
+}

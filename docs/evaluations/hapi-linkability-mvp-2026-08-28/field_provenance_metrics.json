@@ -1,0 +1,616 @@
+[
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "explicit_royal_text_cue": 8
+    },
+    "extraction_methods": {
+      "authority_bounded_explicit_cue": 3,
+      "explicit_cue_unmatched_candidate": 5
+    },
+    "field_path": "inscribed",
+    "mentions": 8,
+    "mentions_with_unique_resolution": 1,
+    "museum": "brooklyn",
+    "records_with_mentions": 3,
+    "records_with_unique_resolution": 1,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 2,
+      "resolved": 1,
+      "unmatched": 5
+    }
+  },
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "explicit_royal_text_cue": 50
+    },
+    "extraction_methods": {
+      "authority_bounded_explicit_cue": 23,
+      "explicit_cue_unmatched_candidate": 27
+    },
+    "field_path": "title",
+    "mentions": 50,
+    "mentions_with_unique_resolution": 5,
+    "museum": "brooklyn",
+    "records_with_mentions": 50,
+    "records_with_unique_resolution": 5,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 16,
+      "resolved": 5,
+      "uncertain_identity": 2,
+      "unmatched": 27
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "Place collected": 178,
+      "Place excavated": 645,
+      "Place found": 130,
+      "Place made": 1741,
+      "Place modified": 4,
+      "Place used": 6,
+      "Possible place collected": 295,
+      "Possible place made": 393,
+      "Possible place manufactured": 2,
+      "Possible place purchased": 2,
+      "Reportedly from": 1258
+    },
+    "extraction_methods": {
+      "structured_location_component": 4446,
+      "structured_pre_parenthesis_component": 208
+    },
+    "field_path": "geographicalLocations[0].name",
+    "mentions": 4654,
+    "mentions_with_unique_resolution": 1151,
+    "museum": "brooklyn",
+    "records_with_mentions": 2978,
+    "records_with_unique_resolution": 1140,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 32,
+      "resolved": 1151,
+      "unmatched": 3471
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "Place collected": 22,
+      "Place excavated": 5,
+      "Place found": 15,
+      "Place made": 75,
+      "Possible place collected": 84,
+      "Possible place made": 108,
+      "Possible place purchased": 19,
+      "Reportedly from": 93
+    },
+    "extraction_methods": {
+      "structured_location_component": 393,
+      "structured_pre_parenthesis_component": 28
+    },
+    "field_path": "geographicalLocations[1].name",
+    "mentions": 421,
+    "mentions_with_unique_resolution": 138,
+    "museum": "brooklyn",
+    "records_with_mentions": 218,
+    "records_with_unique_resolution": 137,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "resolved": 138,
+      "unmatched": 283
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "Place collected": 2,
+      "Place made": 5,
+      "Possible place collected": 5,
+      "Possible place made": 4,
+      "Possible place purchased": 4
+    },
+    "extraction_methods": {
+      "structured_location_component": 19,
+      "structured_pre_parenthesis_component": 1
+    },
+    "field_path": "geographicalLocations[2].name",
+    "mentions": 20,
+    "mentions_with_unique_resolution": 4,
+    "museum": "brooklyn",
+    "records_with_mentions": 9,
+    "records_with_unique_resolution": 4,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "resolved": 4,
+      "unmatched": 16
+    }
+  },
+  {
+    "entity_type": "tomb_monument",
+    "evidence_roles": {
+      "Place excavated": 22
+    },
+    "extraction_methods": {
+      "explicit_tomb_code": 22
+    },
+    "field_path": "geographicalLocations[0].name",
+    "mentions": 22,
+    "mentions_with_unique_resolution": 0,
+    "museum": "brooklyn",
+    "records_with_mentions": 22,
+    "records_with_unique_resolution": 0,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "unmatched": 22
+    }
+  },
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "explicit_royal_text_cue": 1
+    },
+    "extraction_methods": {
+      "authority_bounded_explicit_cue": 1
+    },
+    "field_path": "commentary",
+    "mentions": 1,
+    "mentions_with_unique_resolution": 1,
+    "museum": "harvard",
+    "records_with_mentions": 1,
+    "records_with_unique_resolution": 1,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "resolved": 1
+    }
+  },
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "explicit_royal_text_cue": 1
+    },
+    "extraction_methods": {
+      "authority_bounded_explicit_cue": 1
+    },
+    "field_path": "dated",
+    "mentions": 1,
+    "mentions_with_unique_resolution": 0,
+    "museum": "harvard",
+    "records_with_mentions": 1,
+    "records_with_unique_resolution": 0,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "uncertain_identity": 1
+    }
+  },
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "explicit_royal_text_cue": 6
+    },
+    "extraction_methods": {
+      "authority_bounded_explicit_cue": 4,
+      "explicit_cue_unmatched_candidate": 2
+    },
+    "field_path": "labeltext",
+    "mentions": 6,
+    "mentions_with_unique_resolution": 3,
+    "museum": "harvard",
+    "records_with_mentions": 3,
+    "records_with_unique_resolution": 2,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 1,
+      "resolved": 3,
+      "unmatched": 2
+    }
+  },
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "explicit_royal_text_cue": 1
+    },
+    "extraction_methods": {
+      "authority_bounded_explicit_cue": 1
+    },
+    "field_path": "title",
+    "mentions": 1,
+    "mentions_with_unique_resolution": 1,
+    "museum": "harvard",
+    "records_with_mentions": 1,
+    "records_with_unique_resolution": 1,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "resolved": 1
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "Creation Place": 1700
+    },
+    "extraction_methods": {
+      "structured_location_component": 1515,
+      "structured_pre_parenthesis_component": 185
+    },
+    "field_path": "places[0].displayname",
+    "mentions": 1700,
+    "mentions_with_unique_resolution": 267,
+    "museum": "harvard",
+    "records_with_mentions": 540,
+    "records_with_unique_resolution": 267,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 2,
+      "resolved": 267,
+      "unmatched": 1431
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "Find Spot": 2
+    },
+    "extraction_methods": {
+      "structured_location_component": 2
+    },
+    "field_path": "places[1].displayname",
+    "mentions": 2,
+    "mentions_with_unique_resolution": 0,
+    "museum": "harvard",
+    "records_with_mentions": 1,
+    "records_with_unique_resolution": 0,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "unmatched": 2
+    }
+  },
+  {
+    "entity_type": "excavation",
+    "evidence_roles": {
+      "excavation_credit": 16403
+    },
+    "extraction_methods": {
+      "explicit_structured_value": 16403
+    },
+    "field_path": "excavation",
+    "mentions": 16403,
+    "mentions_with_unique_resolution": 0,
+    "museum": "met",
+    "records_with_mentions": 16403,
+    "records_with_unique_resolution": 0,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "authority_unavailable": 16403
+    }
+  },
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "catalogued_reign": 11256
+    },
+    "extraction_methods": {
+      "typed_structured_reign_parser": 11256
+    },
+    "field_path": "reign",
+    "mentions": 11256,
+    "mentions_with_unique_resolution": 3863,
+    "museum": "met",
+    "records_with_mentions": 11256,
+    "records_with_unique_resolution": 3863,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 5004,
+      "multi_or_range": 799,
+      "resolved": 3863,
+      "temporal_context": 53,
+      "uncertain_identity": 185,
+      "unmatched": 203,
+      "unparsed_structured_value": 1149
+    }
+  },
+  {
+    "entity_type": "ruler",
+    "evidence_roles": {
+      "explicit_royal_text_cue": 232
+    },
+    "extraction_methods": {
+      "authority_bounded_explicit_cue": 92,
+      "explicit_cue_unmatched_candidate": 140
+    },
+    "field_path": "title",
+    "mentions": 232,
+    "mentions_with_unique_resolution": 72,
+    "museum": "met",
+    "records_with_mentions": 230,
+    "records_with_unique_resolution": 72,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 18,
+      "multi_or_range": 11,
+      "resolved": 72,
+      "uncertain_identity": 7,
+      "unmatched": 124
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "(none assigned):country": 1,
+      "Country of Origin:country": 7,
+      "Formerly considered made in:country": 1,
+      "From:country": 26358,
+      "Made in:country": 1,
+      "Original from:country": 315,
+      "Original:country": 2,
+      "Possibly from:country": 14,
+      "Presumably from:country": 15,
+      "Probably from:country": 28,
+      "Probably originally from:country": 1,
+      "Said to be found in:country": 2,
+      "Said to be from:country": 56
+    },
+    "extraction_methods": {
+      "structured_location_component": 26706,
+      "structured_pre_parenthesis_component": 95
+    },
+    "field_path": "country",
+    "mentions": 26801,
+    "mentions_with_unique_resolution": 0,
+    "museum": "met",
+    "records_with_mentions": 26706,
+    "records_with_unique_resolution": 0,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "unmatched": 26801
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "(none assigned):locale": 2,
+      "Formerly considered made in:locale": 3,
+      "From:locale": 20336,
+      "Original from:locale": 466,
+      "Original:locale": 11,
+      "Possibly from:locale": 100,
+      "Presumably from:locale": 65,
+      "Probably from:locale": 183,
+      "Probably made for:locale": 2,
+      "Probably originally from:locale": 7,
+      "Said to be from:locale": 12
+    },
+    "extraction_methods": {
+      "structured_location_component": 18753,
+      "structured_pre_parenthesis_component": 2434
+    },
+    "field_path": "locale",
+    "mentions": 21187,
+    "mentions_with_unique_resolution": 74,
+    "museum": "met",
+    "records_with_mentions": 15728,
+    "records_with_unique_resolution": 74,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "resolved": 74,
+      "unmatched": 21113
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "Formerly considered made in:locus": 1,
+      "From:locus": 10335,
+      "Original from:locus": 301,
+      "Original:locus": 5,
+      "Possibly from:locus": 22,
+      "Presumably from:locus": 67,
+      "Probably from:locus": 36,
+      "Probably originally from:locus": 4,
+      "Said to be from:locus": 2
+    },
+    "extraction_methods": {
+      "structured_location_component": 9628,
+      "structured_pre_parenthesis_component": 1145
+    },
+    "field_path": "locus",
+    "mentions": 10773,
+    "mentions_with_unique_resolution": 1,
+    "museum": "met",
+    "records_with_mentions": 7496,
+    "records_with_unique_resolution": 1,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "resolved": 1,
+      "unmatched": 10772
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "(none assigned):region": 3,
+      "Country of Origin:region": 1,
+      "Formerly considered made in:region": 2,
+      "From:region": 29170,
+      "Made for:region": 3,
+      "Made in:region": 1,
+      "Original from:region": 609,
+      "Original:region": 4,
+      "Possibly from:region": 217,
+      "Presumably from:region": 41,
+      "Probably from:region": 556,
+      "Probably originally from:region": 7,
+      "Said to be found in:region": 4,
+      "Said to be from:region": 331
+    },
+    "extraction_methods": {
+      "structured_location_component": 30949
+    },
+    "field_path": "region",
+    "mentions": 30949,
+    "mentions_with_unique_resolution": 22779,
+    "museum": "met",
+    "records_with_mentions": 19451,
+    "records_with_unique_resolution": 11416,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 167,
+      "resolved": 22779,
+      "unmatched": 8003
+    }
+  },
+  {
+    "entity_type": "site",
+    "evidence_roles": {
+      "(none assigned):subregion": 2,
+      "Country of Origin:subregion": 1,
+      "Formerly considered made in:subregion": 1,
+      "From:subregion": 19399,
+      "Made for:subregion": 2,
+      "Made in:subregion": 1,
+      "Original from:subregion": 323,
+      "Original:subregion": 6,
+      "Possibly from:subregion": 152,
+      "Presumably from:subregion": 40,
+      "Probably from:subregion": 544,
+      "Probably originally from:subregion": 264,
+      "Said to be found in:subregion": 2,
+      "Said to be from:subregion": 363
+    },
+    "extraction_methods": {
+      "structured_location_component": 19142,
+      "structured_pre_parenthesis_component": 1958
+    },
+    "field_path": "subregion",
+    "mentions": 21100,
+    "mentions_with_unique_resolution": 12418,
+    "museum": "met",
+    "records_with_mentions": 18639,
+    "records_with_unique_resolution": 12412,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "ambiguous": 1,
+      "resolved": 12418,
+      "unmatched": 8681
+    }
+  },
+  {
+    "entity_type": "tomb_monument",
+    "evidence_roles": {
+      "(none assigned):locale": 1,
+      "Formerly considered made in:locale": 2,
+      "From:locale": 4413,
+      "Original from:locale": 148,
+      "Original:locale": 5,
+      "Possibly from:locale": 7,
+      "Presumably from:locale": 3,
+      "Probably from:locale": 48,
+      "Probably originally from:locale": 1,
+      "Said to be from:locale": 1
+    },
+    "extraction_methods": {
+      "explicit_tomb_code": 4629
+    },
+    "field_path": "locale",
+    "mentions": 4629,
+    "mentions_with_unique_resolution": 3227,
+    "museum": "met",
+    "records_with_mentions": 4569,
+    "records_with_unique_resolution": 3199,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "resolved": 3227,
+      "unmatched": 1402
+    }
+  },
+  {
+    "entity_type": "tomb_monument",
+    "evidence_roles": {
+      "From:locus": 205,
+      "Original from:locus": 1,
+      "Possibly from:locus": 6
+    },
+    "extraction_methods": {
+      "explicit_tomb_code": 212
+    },
+    "field_path": "locus",
+    "mentions": 212,
+    "mentions_with_unique_resolution": 0,
+    "museum": "met",
+    "records_with_mentions": 212,
+    "records_with_unique_resolution": 0,
+    "source_layers": [
+      "raw"
+    ],
+    "span_provenance_output": "mentions.ndjson.gz: field_value, span_start, span_end, mention_text",
+    "status_counts": {
+      "unmatched": 212
+    }
+  }
+]

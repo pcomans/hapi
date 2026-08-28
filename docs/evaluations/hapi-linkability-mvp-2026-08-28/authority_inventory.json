@@ -1,0 +1,130 @@
+{
+  "status": "actual current committed targets only",
+  "ruler": {
+    "representation": "current claim-graph cluster or singleton source-node unit",
+    "path": "/workspaces/content/web-claimgraph/data/claim-graph.json",
+    "git_tracked": true,
+    "sha256": "d8af0176c45d7a7a238665e2c26beb68d75ef759a7ddaafc1545e2810c5c9965",
+    "source_nodes": 1159,
+    "approved_clusters": 124,
+    "clustered_source_nodes": 309,
+    "singleton_source_nodes": 850,
+    "canonical_units_for_this_adapter": 974,
+    "claims": 5913,
+    "name_claims": 4852,
+    "sources": {
+      "leprohon": {
+        "label": "Leprohon 2013",
+        "rulers": 395
+      },
+      "beckerath": {
+        "label": "von Beckerath 1997",
+        "rulers": 166
+      },
+      "kitchen": {
+        "label": "Kitchen (TIP)",
+        "rulers": 60
+      },
+      "pharaoh_se": {
+        "label": "pharaoh.se",
+        "rulers": 381
+      },
+      "ryholt": {
+        "label": "Ryholt 1997",
+        "rulers": 157
+      }
+    }
+  },
+  "site": {
+    "representation": "iDAI reconciled source rows; no consolidated current site graph or curated sites.json exists",
+    "path": "/workspaces/content/pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl",
+    "git_tracked": true,
+    "sha256": "607c5d6f865b6afe89efc6d7c474a554caa756b3ad723a66ddbcf7ef3219dcfd",
+    "site_rows": 1000,
+    "unique_ids": 1000,
+    "display_and_alias_labels": 3723,
+    "casefold_label_collisions": 63,
+    "type_counts": {
+      "archaeological-site": 866,
+      "populated-place": 175,
+      "archaeological-area": 95,
+      "landform": 66,
+      "building-institution": 4,
+      "island": 4,
+      "administrative-unit": 3,
+      "hydrography": 3,
+      "landcover": 3
+    },
+    "parents_resolved_in_file": 434,
+    "parents_outside_filtered_file": 566,
+    "curated_sites_json_exists": false,
+    "site_graph_exists": false,
+    "adapter_target_policy": "Use exact iDAI ids as closest committed site targets; do not invent a hierarchy or canonical merge."
+  },
+  "tomb_monument": {
+    "representation": "two separate Porter-Moss reconciled source registers; no consolidated tomb/site graph",
+    "sources": {
+      "pm_theban": {
+        "path": "/workspaces/content/pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reconciled.jsonl",
+        "git_tracked": true,
+        "sha256": "4414c5b4a3004c3b6d6669e45a4708bf2405e0c952620633cc155a6d4478a2ff",
+        "rows": 484,
+        "unique_tomb_ids": 484,
+        "prefix_counts": {
+          "TT": 409,
+          "KV": 37,
+          "QV": 20,
+          "DAN": 15,
+          "SWV": 3
+        },
+        "rows_with_tomb_aliases": 6
+      },
+      "pm_memphis": {
+        "path": "/workspaces/content/pipeline/pipeline/authority/sources/porter-moss-memphis/reconciled.jsonl",
+        "git_tracked": true,
+        "sha256": "fa497703c1d64a6d734f8255fe9a920cb9c61e44ceb811d4f86b2306fc22e343",
+        "rows": 873,
+        "unique_tomb_ids": 873,
+        "prefix_counts": {
+          "G": 311,
+          "SAQ": 194,
+          "MAR": 100,
+          "D": 40,
+          "DAH": 40,
+          "TPC": 38,
+          "LG": 29,
+          "JKR": 25,
+          "ABU": 24,
+          "SAQD": 22,
+          "JKE": 14,
+          "LS": 13,
+          "S": 6,
+          "SAQE": 5,
+          "STN": 4,
+          "EF": 4,
+          "SAQF": 2,
+          "SAQH": 2
+        },
+        "rows_with_tomb_aliases": 183
+      }
+    },
+    "adapter_target_policy": "Namespace exact current tomb_id rows by PM source; treat as tomb/monument targets, not as a fabricated unified site graph."
+  },
+  "temple": {
+    "dedicated_current_authority": false,
+    "status": "hard blocked for a comprehensive temple-node linkability conclusion; some PM rows describe pyramid/sun-temple monuments but there is no typed, consolidated temple authority"
+  },
+  "excavation": {
+    "dedicated_current_authority": false,
+    "status": "hard blocked for canonical excavation-node resolution; retain raw/canonical excavation evidence only and do not substitute normalized literal strings as nodes"
+  },
+  "implementation_state": {
+    "enrich_assets_present": [],
+    "canonical_resolved_authority_fields_nonnull": {
+      "ruler_id": 0,
+      "origin_site_id": 0,
+      "tomb_temple_id": 0
+    },
+    "adr_015_production_findspot_split_implemented_in_current_canonical_schema": false
+  }
+}

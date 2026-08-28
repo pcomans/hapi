@@ -1,0 +1,19 @@
+{
+  "pm_exact_keys": 1566,
+  "pm_normalized_keys": 1546,
+  "ruler_exact_keys": 4451,
+  "ruler_normalized_keys": 5202,
+  "ruler_targets": 974,
+  "site_exact_keys": 3656,
+  "site_normalized_keys": 3137,
+  "site_targets": 1000,
+  "target_label_collision_counts": {
+    "ruler_exact": 693,
+    "ruler_normalized": 1211,
+    "site_exact": 57,
+    "site_normalized": 61,
+    "tomb_exact": 7,
+    "tomb_normalized": 27
+  },
+  "tomb_monument_targets": 1357
+}

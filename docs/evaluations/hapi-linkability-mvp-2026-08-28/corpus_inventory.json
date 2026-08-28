@@ -1,0 +1,2042 @@
+{
+  "status": "verified real corpus and linked raw payload inventory; no fixtures/proxies",
+  "canonical_rows": 36245,
+  "canonical_by_museum": {
+    "brooklyn": 7554,
+    "harvard": 722,
+    "met": 27969
+  },
+  "raw_rows": 37523,
+  "raw_by_museum": {
+    "met": 27969,
+    "brooklyn": 8832,
+    "harvard": 722
+  },
+  "canonical_linked_raw_by_museum": {
+    "brooklyn": 7554,
+    "harvard": 722,
+    "met": 27969
+  },
+  "raw_only_rows_by_museum": {
+    "met": 0,
+    "brooklyn": 1278,
+    "harvard": 0
+  },
+  "canonical_sha256": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24",
+  "canonical_fields": [
+    "accession_number",
+    "credit_line",
+    "current_location",
+    "date_display",
+    "date_end",
+    "date_start",
+    "description",
+    "dimensions",
+    "dynasty",
+    "excavation_id",
+    "id",
+    "image_url",
+    "license",
+    "materials",
+    "object_type",
+    "origin_certainty",
+    "origin_site_display_name",
+    "origin_site_id",
+    "origin_site_raw",
+    "period",
+    "provenance",
+    "ruler_display_name",
+    "ruler_id",
+    "source_id",
+    "source_museum",
+    "source_url",
+    "thumbnail_url",
+    "title",
+    "tomb_temple_id",
+    "wikidata_id"
+  ],
+  "canonical_authority_field_coverage": {
+    "brooklyn": {
+      "ruler_display_name": 0,
+      "ruler_id": 0,
+      "origin_site_raw": 2978,
+      "origin_site_id": 0,
+      "tomb_temple_id": 0,
+      "excavation_id": 0
+    },
+    "harvard": {
+      "ruler_display_name": 0,
+      "ruler_id": 0,
+      "origin_site_raw": 540,
+      "origin_site_id": 0,
+      "tomb_temple_id": 0,
+      "excavation_id": 0
+    },
+    "met": {
+      "ruler_display_name": 11256,
+      "ruler_id": 0,
+      "origin_site_raw": 27889,
+      "origin_site_id": 0,
+      "tomb_temple_id": 0,
+      "excavation_id": 16403
+    }
+  },
+  "raw_evidence_fields": {
+    "brooklyn": {
+      "policy": {
+        "ruler_structured": [],
+        "ruler_text": [
+          "title",
+          "description",
+          "inscribed",
+          "dates",
+          "objectDate",
+          "provenance"
+        ],
+        "site_structured": [
+          "geographicalLocations"
+        ],
+        "site_text": [
+          "title",
+          "description",
+          "provenance"
+        ],
+        "role_fields": [
+          "geographicalLocations[].type"
+        ]
+      },
+      "ruler_structured": {},
+      "ruler_text": {
+        "title": {
+          "records_nonempty": 7554,
+          "string_values": 7554,
+          "records_with_domain_cue": 123,
+          "domain_cue_spans": 124,
+          "examples": [
+            {
+              "path": "title",
+              "text": "Plaque of King with a Bound Prisoner",
+              "cue_spans": [
+                [
+                  10,
+                  14
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Fragment of a Statue of King Horemheb",
+              "cue_spans": [
+                [
+                  24,
+                  28
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Queen Nefertiti",
+              "cue_spans": [
+                [
+                  0,
+                  5
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head of a King",
+              "cue_spans": [
+                [
+                  10,
+                  14
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Upper Part of Ushabti of Queen Mehitemneskhet",
+              "cue_spans": [
+                [
+                  25,
+                  30
+                ]
+              ]
+            }
+          ]
+        },
+        "description": {
+          "records_nonempty": 2655,
+          "string_values": 2655,
+          "records_with_domain_cue": 153,
+          "domain_cue_spans": 232,
+          "examples": [
+            {
+              "path": "description",
+              "text": "Black granite fragment of a statue of King Horemhab carrying an inscribed staff in left hand. Preserved portion includes only left forearm, adjoining portion of standard and very small area of kilt. Mediocre work. Condition: Preserved portion in good condition.",
+              "cue_spans": [
+                [
+                  38,
+                  42
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Sandstone slab decorated with a sunk relief representation of Queen Nefertiti. Preserved is that portion of the queen's figure from the shoulders to the top of the headband which encircles her heavy wig. The wig has curls \"en echelon\"; a uraeus rises from the front of the headband. The queen, who faces right, has her arms raised before her in a gesture of worship directed towards a now missing representation of the Aten. Before her nose is the sign of life suspended from a ray of sunlight. Behin",
+              "cue_spans": [
+                [
+                  62,
+                  67
+                ],
+                [
+                  112,
+                  117
+                ],
+                [
+                  287,
+                  292
+                ],
+                [
+                  741,
+                  746
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "One unpainted limestone head of a Ptolemaic king wearing a blue crown with uraeus, broken at the neck with no trace of a back pillar.  Condition: Entire left half of left eye missing; nose and uraeus damaged; numerous chips and cracks on crown; small abrasions on both checks; surface very worn.",
+              "cue_spans": [
+                [
+                  44,
+                  48
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Cylinder seal inscribed for King Userkare Khendjer. Condition:  No traces of glaze.  Small chips; dirty.",
+              "cue_spans": [
+                [
+                  28,
+                  32
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Kneeling figures grinding grain. Inscribed for a man names S3-3st. The figure wears a double wig; the facial features are those found in sculpture during the reign of Amenhotep III. Inscriptions are to be found on the body and grinder.  Condition: Right hand missing; part of chest missing; part of surface also missing on right thigh and lap; also right shoulder. Large cracks in wig.",
+              "cue_spans": [
+                [
+                  158,
+                  163
+                ]
+              ]
+            }
+          ]
+        },
+        "inscribed": {
+          "records_nonempty": 152,
+          "string_values": 152,
+          "records_with_domain_cue": 14,
+          "domain_cue_spans": 21,
+          "examples": [
+            {
+              "path": "inscribed",
+              "text": "\"Offerings which the king gives to Ptah-Sokar. May he give invocation offerings, meat and fowl and linen to the Ka of the royal servant Ia-ib, true of voice\"",
+              "cue_spans": [
+                [
+                  21,
+                  25
+                ]
+              ]
+            },
+            {
+              "path": "inscribed",
+              "text": "\"The Good God, Lord of the Two Lands, Maker of Things, The King of Upper and Lower Egypt, Knumibre, Son of Re\".",
+              "cue_spans": [
+                [
+                  59,
+                  63
+                ]
+              ]
+            },
+            {
+              "path": "inscribed",
+              "text": "Inscription on base: \"The King's Wife \"Nefertity\"",
+              "cue_spans": [
+                [
+                  26,
+                  30
+                ]
+              ]
+            },
+            {
+              "path": "inscribed",
+              "text": "Inscribed: \"The King's Wife, Tiy\"",
+              "cue_spans": [
+                [
+                  16,
+                  20
+                ]
+              ]
+            },
+            {
+              "path": "inscribed",
+              "text": "(1) Hail, Sokar-Osiris, Greetings Re-Hor-Akhty and Khepri who created himself. How beautiful is your rising on the horizon (2) when you illuminate the two lands with your rays! (All) the gods rejoice when they see Horus, King of The Sky, the Wnwt-cobra on your head, (3) the Crown of Upper Egypt and the Crown of Lower Egypt on your brow. (4) They have made their seat, while Thoth abides on the prow (of the sun boat.) (5) Thoth abides in order to see the beauty of this, your image. I have come bef",
+              "cue_spans": [
+                [
+                  221,
+                  225
+                ]
+              ]
+            }
+          ]
+        },
+        "dates": {
+          "records_nonempty": 5838,
+          "string_values": 5838,
+          "records_with_domain_cue": 2,
+          "domain_cue_spans": 2,
+          "examples": [
+            {
+              "path": "dates",
+              "text": "Year 8 of a late Ptolemaic of early Roman reign",
+              "cue_spans": [
+                [
+                  42,
+                  47
+                ]
+              ]
+            },
+            {
+              "path": "dates",
+              "text": "Year 8 of a late Ptolemaic or early Roman reign",
+              "cue_spans": [
+                [
+                  42,
+                  47
+                ]
+              ]
+            }
+          ]
+        },
+        "objectDate": {
+          "records_nonempty": 5837,
+          "string_values": 5837,
+          "records_with_domain_cue": 2,
+          "domain_cue_spans": 2,
+          "examples": [
+            {
+              "path": "objectDate",
+              "text": "Year 8 of a late Ptolemaic of early Roman reign",
+              "cue_spans": [
+                [
+                  42,
+                  47
+                ]
+              ]
+            },
+            {
+              "path": "objectDate",
+              "text": "Year 8 of a late Ptolemaic or early Roman reign",
+              "cue_spans": [
+                [
+                  42,
+                  47
+                ]
+              ]
+            }
+          ]
+        },
+        "provenance": {
+          "records_nonempty": 708,
+          "string_values": 708,
+          "records_with_domain_cue": 1,
+          "domain_cue_spans": 1,
+          "examples": [
+            {
+              "path": "provenance",
+              "text": "House R43.2 (House of the King’s Statue), Central City, Tell el-Amarna, Egypt; 1936-1937, excavated by a team led by John Devitt Stringfellow Pendlebury for the Egypt Exploration Society (excavation no. 36/166); 1937, gift of the Egypt Exploration Society to the Brooklyn Museum.",
+              "cue_spans": [
+                [
+                  26,
+                  30
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "site_structured": {
+        "geographicalLocations": {
+          "records_nonempty": 2978,
+          "string_values": 17448,
+          "records_with_domain_cue": 990,
+          "domain_cue_spans": 1024,
+          "examples": [
+            {
+              "path": "geographicalLocations[0].type",
+              "text": "Reportedly from",
+              "cue_spans": [
+                [
+                  11,
+                  15
+                ]
+              ]
+            },
+            {
+              "path": "geographicalLocations[0].type",
+              "text": "Reportedly from",
+              "cue_spans": [
+                [
+                  11,
+                  15
+                ]
+              ]
+            },
+            {
+              "path": "geographicalLocations[1].type",
+              "text": "Reportedly from",
+              "cue_spans": [
+                [
+                  11,
+                  15
+                ]
+              ]
+            },
+            {
+              "path": "geographicalLocations[0].type",
+              "text": "Place excavated",
+              "cue_spans": [
+                [
+                  6,
+                  15
+                ]
+              ]
+            },
+            {
+              "path": "geographicalLocations[0].type",
+              "text": "Place excavated",
+              "cue_spans": [
+                [
+                  6,
+                  15
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "site_text": {
+        "title": {
+          "records_nonempty": 7554,
+          "string_values": 7554,
+          "records_with_domain_cue": 218,
+          "domain_cue_spans": 259,
+          "examples": [
+            {
+              "path": "title",
+              "text": "Fragment from Stela",
+              "cue_spans": [
+                [
+                  9,
+                  13
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Northern Group of Pyramids at Meroe (Kabushiyah) as seen, in 1921, from the NNE Prior to Their Excavation",
+              "cue_spans": [
+                [
+                  67,
+                  71
+                ],
+                [
+                  95,
+                  105
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Fragment from a vessel",
+              "cue_spans": [
+                [
+                  9,
+                  13
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head from a Ba-Bird Statue",
+              "cue_spans": [
+                [
+                  5,
+                  9
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Part of Akhenaten’s Titulary from a Statue Base",
+              "cue_spans": [
+                [
+                  29,
+                  33
+                ]
+              ]
+            }
+          ]
+        },
+        "description": {
+          "records_nonempty": 2655,
+          "string_values": 2655,
+          "records_with_domain_cue": 869,
+          "domain_cue_spans": 1242,
+          "examples": [
+            {
+              "path": "description",
+              "text": "Group of twenty-two small papyrus fragments inscribed in Greek. Only three fragments inscribed on verso. More than one document represented. Most of these fragments bear no more than a few letters.  The hands are literary and the texts appear to cover a range of topics such as medicine, philosophy, and literature. Condition: These fragments were removed from group 16.580.223.",
+              "cue_spans": [
+                [
+                  356,
+                  360
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Marble head of a woman, head turned slightly to (spectator’s) left. Hair bound with fillet, ears pierced, idealized features with short, full mouth, - perhaps representing Aphrodite. Broken from a statue. Mat surface. Condition: Poor. Nose, mouth, and chin shattered. Deep hole in top center of head. Extensive abrasions all over worked surfaces.   .",
+              "cue_spans": [
+                [
+                  190,
+                  194
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Marble head of a man, Zeus type with deep set eyes and heavy curly beard, attributes lost. Condition:  Poor.  Entire surface badly worn with all details lost from top of head and back.",
+              "cue_spans": [
+                [
+                  158,
+                  162
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "One pottery jar, conical shaped with wide mouth and slightly glossy red clay-colored finish. Part of the rim has been broken and poorly reattached.  Condition: The vessel is intact apart from the aforementioned break and the surface is in good condition.",
+              "cue_spans": [
+                [
+                  187,
+                  191
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "A fragment of a naos from the (proper) right side of a naophoros, with two columns of inscription. The stone is black.  Condition: The surface is pocked and pitted in several places.",
+              "cue_spans": [
+                [
+                  21,
+                  25
+                ]
+              ]
+            }
+          ]
+        },
+        "provenance": {
+          "records_nonempty": 708,
+          "string_values": 708,
+          "records_with_domain_cue": 708,
+          "domain_cue_spans": 2091,
+          "examples": [
+            {
+              "path": "provenance",
+              "text": "Archaeological provenance not documented; January 9, 1888, acquired in Egypt by Charles Edwin Wilbour; 1896, inherited from Charles Edwin Wilbour by Charlotte Beebe Wilbour; 1914, inherited from Charlotte Beebe Wilbour by Evangeline Wilbour Blashfield, Theodora Wilbour, and Victor Wilbour; 1916, gift of Evangeline Wilbour Blashfield, Theodora Wilbour, and Victor Wilbour to the Brooklyn Museum.",
+              "cue_spans": [
+                [
+                  15,
+                  25
+                ],
+                [
+                  119,
+                  123
+                ],
+                [
+                  190,
+                  194
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "Archaeological provenance not documented; April 6, 1887, acquired in Egypt by Charles Edwin Wilbour; 1896, inherited from Charles Edwin Wilbour by Charlotte Beebe Wilbour; 1914, gift of Charlotte Beebe Wilbour to Evangeline Wilbour Blashfield, Theodora Wilbour, and Victor Wilbour; 1916, gift of Evangeline Wilbour Blashfield, Theodora Wilbour, and Victor Wilbour to the Brooklyn Museum.",
+              "cue_spans": [
+                [
+                  15,
+                  25
+                ],
+                [
+                  117,
+                  121
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "Archaeological provenance not documented; by 1982, acquired by Fenwick Waddington Wall of New York, NY; 1983, gift of Fenwick Waddington Wall to the Brooklyn Museum.",
+              "cue_spans": [
+                [
+                  15,
+                  25
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "Archaeological provenance not yet documented, probably from Thebes, Egypt; by 1852, acquired in Egypt by Henry Abbott of Cairo, Egypt and New York, NY (no. 406); 1859, purchased from Henry Abbott by the New York Historical Society, New York, NY; 1937, loaned by the New York Historical Society to the Brooklyn Museum; September 1948, purchased from the New York Historical Society by the Brooklyn Museum.",
+              "cue_spans": [
+                [
+                  15,
+                  25
+                ],
+                [
+                  55,
+                  59
+                ],
+                [
+                  178,
+                  182
+                ],
+                [
+                  344,
+                  348
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "Archaeological provenance not yet documented; by 1876, collected in Egypt by Edwin Smith of Connecticut, Italy, and Luxor, Egypt; April 27, 1906, inherited from Edwin Smith by Leonora Sheldon Smith; May 1907, gift of Leonora Sheldon Smith to the New-York Historical Society, New York, NY; September 1948, purchased from the New-York Historical Society by the Brooklyn Museum.",
+              "cue_spans": [
+                [
+                  15,
+                  25
+                ],
+                [
+                  156,
+                  160
+                ],
+                [
+                  315,
+                  319
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "records_with_explicit_tomb_code_any_policy_field": 27,
+      "structured_role_counts": {
+        "Place made": 1616,
+        "Reportedly from": 647,
+        "Place excavated": 288,
+        "Possible place made": 241,
+        "Possible place collected": 172,
+        "Place collected": 158,
+        "Place found": 65,
+        "Possible place purchased": 13,
+        "Place modified": 2,
+        "Place used": 2,
+        "Possible place manufactured": 1
+      }
+    },
+    "harvard": {
+      "policy": {
+        "ruler_structured": [],
+        "ruler_text": [
+          "title",
+          "description",
+          "labeltext",
+          "commentary",
+          "dated",
+          "contextualtext"
+        ],
+        "site_structured": [
+          "places"
+        ],
+        "site_text": [
+          "title",
+          "description",
+          "labeltext",
+          "commentary",
+          "provenance",
+          "contextualtext"
+        ],
+        "role_fields": [
+          "places[].type"
+        ]
+      },
+      "ruler_structured": {},
+      "ruler_text": {
+        "title": {
+          "records_nonempty": 722,
+          "string_values": 722,
+          "records_with_domain_cue": 7,
+          "domain_cue_spans": 7,
+          "examples": [
+            {
+              "path": "title",
+              "text": "Squeeze from a Relief of a Ramesside King with \"Blue Crown,\" Crook, and Flail",
+              "cue_spans": [
+                [
+                  37,
+                  41
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head of a Pharaoh",
+              "cue_spans": [
+                [
+                  10,
+                  17
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Temple Relief of Queen Arsinoe II",
+              "cue_spans": [
+                [
+                  17,
+                  22
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head of a King",
+              "cue_spans": [
+                [
+                  10,
+                  14
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head of a King possibly Nectanabo II, (sculptor's model)",
+              "cue_spans": [
+                [
+                  10,
+                  14
+                ]
+              ]
+            }
+          ]
+        },
+        "description": {
+          "records_nonempty": 96,
+          "string_values": 96,
+          "records_with_domain_cue": 3,
+          "domain_cue_spans": 3,
+          "examples": [
+            {
+              "path": "description",
+              "text": "Squeeze from the Temple of Hathor at Deir el-Medina, and the king is Ptolemy IV. The squeeze is actually reversed/taken from of the back side.",
+              "cue_spans": [
+                [
+                  61,
+                  65
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "The ruler wears the flat red crown of lower Egypt. The two plumes indicating the crown of Amun are missing and were probably made of separate material. There is a \"u\" shaped indentation in the top of the head where the plumes would have been attached. The left ear is mostly broken away; the right ear protrudes. The pillar attached to the back of the head is inscribed with a royal cartouche. The extant part of the cartouche bears the sun disk and the top of the hieroglyphs for Ramses II or III. T",
+              "cue_spans": [
+                [
+                  4,
+                  9
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "This double-sided emblem of the cow-eared, Egyptian goddess Hathor comes from a sistrum or ceremonial rattle. The goddess is frontal, wearing a straight wig, parted in the center, and bound with straight ribbons. Her triangle shaped face is flat with wide-set eyes, broad cheeks, and a flat chin. Her characteristically cow-shaped ears are rendered as flat on either side of the wig. Below her face is a round broad collar with a simple pattern of tube and drop beads. On each of her shoulder sits a ",
+              "cue_spans": [
+                [
+                  924,
+                  931
+                ]
+              ]
+            }
+          ]
+        },
+        "labeltext": {
+          "records_nonempty": 17,
+          "string_values": 17,
+          "records_with_domain_cue": 6,
+          "domain_cue_spans": 11,
+          "examples": [
+            {
+              "path": "labeltext",
+              "text": "Sculptures carved from colorful hard stones quarried in Upper Egypt—quartzite, granodiorite, granite, and basalt—are among the most distinctive monuments of Egyptian art. They show the pharaoh and wealthy officials in a standing, seated, or kneeling pose with frontal orientation. Placed in a temple or tomb, they allowed their owners to participate in the cult and to receive offerings for all eternity. The head of this clean-shaven priest or vizier may have some individual features, but portraits",
+              "cue_spans": [
+                [
+                  185,
+                  192
+                ],
+                [
+                  662,
+                  669
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "After the death of Alexander of Macedon, who conquered Egypt in 332 BCE, control of the country fell to one his generals, Ptolemy, who established the Ptolemaic dynasty. Alexandria, Egypt’s newly founded city, became an important intellectual center. Its arts followed Greek concepts, while architecture and sculpture elsewhere in the country largely adhered to established Egyptian norms. Accordingly, the visual representation of Egypt’s Macedonian rulers includes both Greek-style royal images and",
+              "cue_spans": [
+                [
+                  527,
+                  534
+                ],
+                [
+                  587,
+                  592
+                ],
+                [
+                  641,
+                  645
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "Ancient Egyptian representations of the human body are remarkably consistent — with one exception. In the 14th-century BCE Amarna period, a short-lived religious revolution was accompanied by radical changes in the shape and proportions of the human figure. Pharaoh Amenhotep IV (c. 1349–1336 BCE) promoted the cult of the Aten, the life-giving sun disk, at the expense of better-known gods. As Aten’s representative on earth, he changed his name to Akhenaten (\"beneficial to the Aten\") and built a n",
+              "cue_spans": [
+                [
+                  258,
+                  265
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "This relief fragment dates to the Amarna period, a time in Egypt when the king, Akhenaten, initiated a religious revolution. It was originally part of the wall decoration at the palace-temple complex at Akhenaten’s capital, Tell el-Amarna, but was later transported to Hermopolis Magna during the reign of King Rameses II (1292–1232 BCE). The two cities were roughly 14 miles apart and on opposite banks of the Nile, which would have made transportation of the reliefs by boat fairly easy. The scene ",
+              "cue_spans": [
+                [
+                  74,
+                  78
+                ],
+                [
+                  297,
+                  302
+                ],
+                [
+                  306,
+                  310
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "This relief was part of a doorway in the tomb of an ancient Egyptian official named Ptahshepses Impy. He was an assistant supervisor in the king’s palace. Impy appears here twice with his family: his daughters Kerfet, Ity, and Khuit stand behind him on the left fragment, and his wife Hatkau and son Impy (Jr.) stand behind him on the right. Something, however, is missing in between these family portraits. \r\nThis relief was deliberately cut into at least three pieces, perhaps for sale, at some poi",
+              "cue_spans": [
+                [
+                  140,
+                  144
+                ]
+              ]
+            }
+          ]
+        },
+        "commentary": {
+          "records_nonempty": 40,
+          "string_values": 40,
+          "records_with_domain_cue": 2,
+          "domain_cue_spans": 2,
+          "examples": [
+            {
+              "path": "commentary",
+              "text": "Princess Maatkare was the daughter of the High Priest of Amun Pinedjem I who later became a king of the 21st dynasty. Maatkare held the title God's Wife of Amun which is  the highest rank in the female priesthood of Amun. She was buried  at Thebes (modern Luxor) and had over 100 ushabtis.",
+              "cue_spans": [
+                [
+                  92,
+                  96
+                ]
+              ]
+            },
+            {
+              "path": "commentary",
+              "text": "The sistrum was a type of musical instrument shaken at festivals and during religious rituals. Sistra were associated with female deities, especially Hathor, who was the goddess of love, childbirth and ‘female’ activities, such as song and dance. Bronze or wooden sistra were shaken to produce a characteristic \"sesheshet\" rustling sound, which was said to imitate the rustle of papyrus leaves and believed to sooth or pacify the goddess. Faience sistra were not typically used for this purpose becau",
+              "cue_spans": [
+                [
+                  879,
+                  883
+                ]
+              ]
+            }
+          ]
+        },
+        "dated": {
+          "records_nonempty": 350,
+          "string_values": 350,
+          "records_with_domain_cue": 1,
+          "domain_cue_spans": 1,
+          "examples": [
+            {
+              "path": "dated",
+              "text": "probably reign of Pepi II, c. 2246-2152 BCE",
+              "cue_spans": [
+                [
+                  9,
+                  14
+                ]
+              ]
+            }
+          ]
+        },
+        "contextualtext": {
+          "records_nonempty": 56,
+          "string_values": 168,
+          "records_with_domain_cue": 28,
+          "domain_cue_spans": 59,
+          "examples": [
+            {
+              "path": "contextualtext[0].text",
+              "text": "The striding Apis bull bears the solar disk with a uraeus between its horns. The ears are prominent on the sides of the head, and there are some details apparent around the eyes and snout, but overall there is not the same kind of surface detail on this bull as appears on others in the Harvard collection. The legs are unfinished, with jagged metal on the fronts and backs. The long tail is attached to the body and the back right leg. The feet are connected to a flat rectangular base.\r\n \r\nThis obj",
+              "cue_spans": [
+                [
+                  1071,
+                  1075
+                ],
+                [
+                  1686,
+                  1690
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "The Apis bull stands on an oblong base; both the bull and base are decorated with lines and symbols. Two borders encircle the front of the sun disc between its horns, ending at a small impression where a uraeus would have been. The bull has incised lines all over the face and body, some of which still contain inlaid silver. The lines on the stylized face outline the brow, piriform eyes, and nostrils. The nose and mouth are wide, indicated by long gashes, and the ears are pressed flat against the",
+              "cue_spans": [
+                [
+                  1833,
+                  1837
+                ],
+                [
+                  2448,
+                  2452
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "The seated cat faces frontally, with its long tail resting on its right side on a flat, thin base. The cat has an incised collar of two bands. Lines also indicate the whiskers and fill the area in the triangular, pointed ears. The eyes and nose are modeled. The forelimbs are tubes with no indication of joints, ending in simple paws. The hind limbs are not differentiated from the back of the cat, and only the paws are indicated. Under the tail is a circular-sectioned tang, indicating that the cat",
+              "cue_spans": [
+                [
+                  3121,
+                  3125
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "The flat body of Osiris displays only a slight rise to indicate the buttocks and a faint indentation from the knees to the ankles to indicate the enshrouded legs. He wears the White Crown ornamented with a uraeus whose tail trails upward; possible protrusions on either side of the crown may have supported atef feathers. The face and crown are too heavily corroded to determine specific features. The hands are held side-by-side.\r\n \r\nOsiris was one of the most popular gods of the Egyptian pantheon.",
+              "cue_spans": [
+                [
+                  662,
+                  667
+                ],
+                [
+                  700,
+                  705
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "The large size of this elegant, hollow-cast cat statuette allowed it to hold a mummified animal in its cavity, which was reached through a large circular opening in the bottom. Although the proper left leg has a manufacturing flaw, the splendid creature bears numerous elements of ornamentation. A wide broad collar, probably originally inlaid with another metal, covers the shoulders and chest. In the center of it is a winged aegis on which a slightly redder area indicates the attachment of a cent",
+              "cue_spans": [
+                [
+                  3552,
+                  3556
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "site_structured": {
+        "places": {
+          "records_nonempty": 540,
+          "string_values": 1082,
+          "records_with_domain_cue": 0,
+          "domain_cue_spans": 0,
+          "examples": []
+        }
+      },
+      "site_text": {
+        "title": {
+          "records_nonempty": 722,
+          "string_values": 722,
+          "records_with_domain_cue": 83,
+          "domain_cue_spans": 89,
+          "examples": [
+            {
+              "path": "title",
+              "text": "Squeeze from a Relief of a Ramesside King with \"Blue Crown,\" Crook, and Flail",
+              "cue_spans": [
+                [
+                  8,
+                  12
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "One of 14 Squeezes from Egyptian Manuscripts",
+              "cue_spans": [
+                [
+                  19,
+                  23
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "One of 14 Squeezes from Egyptian Manuscripts",
+              "cue_spans": [
+                [
+                  19,
+                  23
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "One of 14 Squeezes from Egyptian Manuscripts",
+              "cue_spans": [
+                [
+                  19,
+                  23
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "One of 14 Squeezes from Egyptian Manuscripts",
+              "cue_spans": [
+                [
+                  19,
+                  23
+                ]
+              ]
+            }
+          ]
+        },
+        "description": {
+          "records_nonempty": 96,
+          "string_values": 96,
+          "records_with_domain_cue": 28,
+          "domain_cue_spans": 61,
+          "examples": [
+            {
+              "path": "description",
+              "text": "Squeeze of an Egyptian relief from dynasty 19-20; 13th - 11th century.",
+              "cue_spans": [
+                [
+                  30,
+                  34
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Squeeze from the Temple of Hathor at Deir el-Medina, and the king is Ptolemy IV. The squeeze is actually reversed/taken from of the back side.",
+              "cue_spans": [
+                [
+                  8,
+                  12
+                ],
+                [
+                  17,
+                  23
+                ],
+                [
+                  120,
+                  124
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Head of wigged male figure with small oval eyes and large ears overlapping vertically grooved wig. Broken off just below wig, and heavily worn. From a standing or seated statuette.",
+              "cue_spans": [
+                [
+                  144,
+                  148
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "This small Egyptian faience ushabti is a mummiform figure with arms crossed over the abdomen. A single line of hieroglyphic text detailed in a black glaze runs along the front of the figure from below the neck down the length of the figurine. Facial features are also indicated in a black glaze.  The figure is broken at the base and has been dowelled to a wood block. The figure's color is more blue on the backside, while the front has dulled in color and is stained from handling.",
+              "cue_spans": [
+                [
+                  190,
+                  194
+                ],
+                [
+                  469,
+                  473
+                ]
+              ]
+            },
+            {
+              "path": "description",
+              "text": "Light colored plant motifs stand out against a purple background. The plants are symmetrical, 'candelabra' style motifs. \r\n\r\nThis textile is a weft-faced compound weave (samite). Red main warps are visible in areas of damage. Trimmings from the fabric have been positioned along the upper and rightmost edges of this square fragment.",
+              "cue_spans": [
+                [
+                  236,
+                  240
+                ]
+              ]
+            }
+          ]
+        },
+        "labeltext": {
+          "records_nonempty": 17,
+          "string_values": 17,
+          "records_with_domain_cue": 10,
+          "domain_cue_spans": 32,
+          "examples": [
+            {
+              "path": "labeltext",
+              "text": "This portrait can be attributed to the city of Antinoopolis on the Nile because of its characteristic shape, but its subject clearly has more cosmopolitan pretensions: similar hairstyles, clothing, and jewelry can be found in elite portraiture across the Roman Mediterranean.",
+              "cue_spans": [
+                [
+                  217,
+                  222
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "Sculptures carved from colorful hard stones quarried in Upper Egypt—quartzite, granodiorite, granite, and basalt—are among the most distinctive monuments of Egyptian art. They show the pharaoh and wealthy officials in a standing, seated, or kneeling pose with frontal orientation. Placed in a temple or tomb, they allowed their owners to participate in the cult and to receive offerings for all eternity. The head of this clean-shaven priest or vizier may have some individual features, but portraits",
+              "cue_spans": [
+                [
+                  18,
+                  22
+                ],
+                [
+                  293,
+                  299
+                ],
+                [
+                  303,
+                  307
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "\r\nThis relief includes parts of two horizontally stacked scenes from the tomb of a senior official named Tepemankh. In the upper scene, only the feet survive; below, two men are being hauled off for punishment by Tjenti, a policeman who is named in the hieroglyphic text. The men presumably owe a debt to Tepemankh, who would have been depicted farther to the right. \r\n\r\nThe drawing you see here, by Harvard professor Peter Der Manuelian, shows how inscriptions can be studied through a method called",
+              "cue_spans": [
+                [
+                  64,
+                  68
+                ],
+                [
+                  73,
+                  77
+                ],
+                [
+                  811,
+                  815
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "After the death of Alexander of Macedon, who conquered Egypt in 332 BCE, control of the country fell to one his generals, Ptolemy, who established the Ptolemaic dynasty. Alexandria, Egypt’s newly founded city, became an important intellectual center. Its arts followed Greek concepts, while architecture and sculpture elsewhere in the country largely adhered to established Egyptian norms. Accordingly, the visual representation of Egypt’s Macedonian rulers includes both Greek-style royal images and",
+              "cue_spans": [
+                [
+                  560,
+                  564
+                ],
+                [
+                  567,
+                  573
+                ]
+              ]
+            },
+            {
+              "path": "labeltext",
+              "text": "Ancient Egyptian representations of the human body are remarkably consistent — with one exception. In the 14th-century BCE Amarna period, a short-lived religious revolution was accompanied by radical changes in the shape and proportions of the human figure. Pharaoh Amenhotep IV (c. 1349–1336 BCE) promoted the cult of the Aten, the life-giving sun disk, at the expense of better-known gods. As Aten’s representative on earth, he changed his name to Akhenaten (\"beneficial to the Aten\") and built a n",
+              "cue_spans": [
+                [
+                  553,
+                  557
+                ]
+              ]
+            }
+          ]
+        },
+        "commentary": {
+          "records_nonempty": 40,
+          "string_values": 40,
+          "records_with_domain_cue": 33,
+          "domain_cue_spans": 102,
+          "examples": [
+            {
+              "path": "commentary",
+              "text": "The uppermost roundel on this tunic front (containing a hunter and a spotted cat) has a parallel in the Carl Austin Rietz Collection of Coptic Textiles at the California Academy of Sciences (CAS 0389-2389).1 Dimensions are comparable, and both feature dyed warp threads, suggesting that these two pieces came from the same garment.\r\n\r\n1. Carroll, Diane Lee. Looms & Textiles of the Copts: First Millennium Egyptian Textiles in the Carl Austin Rietz Collection of the California Academy of Sciences. S",
+              "cue_spans": [
+                [
+                  309,
+                  313
+                ]
+              ]
+            },
+            {
+              "path": "commentary",
+              "text": "This ushabti belonged to an ancient Egyptian person whose name is not currently known.\r\n\r\nUshabtis are ancient Egyptian funerary figurines that were buried with a deceased person (the owner) and designed to perform tasks for them in the afterlife. They were usually inscribed with the owner’s name. They were believed to be “activated” when the deceased owner recited a portion of the Book of the Dead that explained the ushabti’s duties, which is sometimes inscribed on them (see 2019.354 for an exa",
+              "cue_spans": [
+                [
+                  740,
+                  747
+                ]
+              ]
+            },
+            {
+              "path": "commentary",
+              "text": "This ushabti belonged to an ancient Egyptian person whose name is not currently known.\r\n\r\nUshabtis are ancient Egyptian funerary figurines that were buried with a deceased person (the owner) and designed to perform tasks for them in the afterlife. They were usually inscribed with the owner’s name. They were believed to be “activated” when the deceased owner recited a portion of the Book of the Dead that explained the ushabti’s duties, which is sometimes inscribed on them (see 2019.354 for an exa",
+              "cue_spans": [
+                [
+                  740,
+                  747
+                ]
+              ]
+            },
+            {
+              "path": "commentary",
+              "text": "This silk contains plant motifs similar to those that appear on the so-called 'Akhmim silks' excavated at Akhmim (ancient Panopolis) by Robert Forrer. The candelabra tree motif on the Akhmim silks is discussed by Thelma Thomas, see below.1\r\n\r\nAkhmim silks have been radiocarbon dated to the 7-10th centuries.2\r\n\r\n1. Thelma Thomas, \"'Ornaments of Excellence' from 'the miserable gains of commerce': Luxury Art and Byzantine Culture,\" in Byzantium and Islam: Age of Transition, (New York: Metropolitan ",
+              "cue_spans": [
+                [
+                  93,
+                  102
+                ],
+                [
+                  358,
+                  362
+                ]
+              ]
+            },
+            {
+              "path": "commentary",
+              "text": "The figure on this clavus band is most probably Dionysus, the Greek god of wine. He can be identified by his nudity and the thyrsus (pine-cone topped staff) he holds. \r\n\r\nThis textile band is identical to the right band on a tunic front at the Museum of Fine Arts, Boston (accession number 96.355). Both pieces came from the collection of Denman Waldo Ross and likely once belonged to the same garment.",
+              "cue_spans": [
+                [
+                  316,
+                  320
+                ]
+              ]
+            }
+          ]
+        },
+        "provenance": {
+          "records_nonempty": 151,
+          "string_values": 151,
+          "records_with_domain_cue": 20,
+          "domain_cue_spans": 26,
+          "examples": [
+            {
+              "path": "provenance",
+              "text": "Probably from the London market.",
+              "cue_spans": [
+                [
+                  9,
+                  13
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "From the collection of William A. Koshland",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "From Aswan. Field Marshal Baron Francis Wallace Grenfell, (by 1917), Surrey, England, sold: [Sotheby, London, 12-14 November 1917]. Mr. and Mrs. Paul J. Sachs, Cambridge, MA, (by 1919), bequest; to Fogg Art Museum, 1965.",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "Found in Luxor.",
+              "cue_spans": [
+                [
+                  0,
+                  5
+                ]
+              ]
+            },
+            {
+              "path": "provenance",
+              "text": "Seiden & de Cuevas, Inc., New York, New York. on Long Term Loan to the Fogg Art Museum from 1977 to 1982\r\n",
+              "cue_spans": [
+                [
+                  87,
+                  91
+                ]
+              ]
+            }
+          ]
+        },
+        "contextualtext": {
+          "records_nonempty": 56,
+          "string_values": 168,
+          "records_with_domain_cue": 52,
+          "domain_cue_spans": 203,
+          "examples": [
+            {
+              "path": "contextualtext[0].text",
+              "text": "This sistrum, which has preserved the handle and most of the curving frame, would once have had three metal crossbars threaded through the holes in the frame that would have rattled when shaken. The top of the curved frame is decorated with four small cats, perhaps a mother with kittens, modeled in the round. Three of the cats are reclining, and all face in the same direction. The largest reclining cat reaches out its right paw to touch the back of the central cat sitting in front of it. The sit",
+              "cue_spans": [
+                [
+                  957,
+                  961
+                ],
+                [
+                  2465,
+                  2470
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "The striding Apis bull bears the solar disk with a uraeus between its horns. The ears are prominent on the sides of the head, and there are some details apparent around the eyes and snout, but overall there is not the same kind of surface detail on this bull as appears on others in the Harvard collection. The legs are unfinished, with jagged metal on the fronts and backs. The long tail is attached to the body and the back right leg. The feet are connected to a flat rectangular base.\r\n \r\nThis obj",
+              "cue_spans": [
+                [
+                  993,
+                  997
+                ],
+                [
+                  1159,
+                  1163
+                ],
+                [
+                  1543,
+                  1549
+                ],
+                [
+                  1619,
+                  1629
+                ],
+                [
+                  2114,
+                  2119
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "The Apis bull stands on an oblong base; both the bull and base are decorated with lines and symbols. Two borders encircle the front of the sun disc between its horns, ending at a small impression where a uraeus would have been. The bull has incised lines all over the face and body, some of which still contain inlaid silver. The lines on the stylized face outline the brow, piriform eyes, and nostrils. The nose and mouth are wide, indicated by long gashes, and the ears are pressed flat against the",
+              "cue_spans": [
+                [
+                  1755,
+                  1759
+                ],
+                [
+                  1921,
+                  1925
+                ],
+                [
+                  2305,
+                  2311
+                ],
+                [
+                  2381,
+                  2391
+                ],
+                [
+                  2873,
+                  2878
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "The seated cat faces frontally, with its long tail resting on its right side on a flat, thin base. The cat has an incised collar of two bands. Lines also indicate the whiskers and fill the area in the triangular, pointed ears. The eyes and nose are modeled. The forelimbs are tubes with no indication of joints, ending in simple paws. The hind limbs are not differentiated from the back of the cat, and only the paws are indicated. Under the tail is a circular-sectioned tang, indicating that the cat",
+              "cue_spans": [
+                [
+                  373,
+                  377
+                ],
+                [
+                  832,
+                  836
+                ],
+                [
+                  1454,
+                  1458
+                ],
+                [
+                  2206,
+                  2210
+                ],
+                [
+                  2373,
+                  2377
+                ]
+              ]
+            },
+            {
+              "path": "contextualtext[0].text",
+              "text": "This sistrum handle depicts a molded bust of the goddess Hathor, whose face appears on the front and back, although one side is more carefully rendered than the other. She is frontal, wearing a prominent wig, parted in the middle and with curls at each end. Her cow-shaped ears are rendered flat on the outside of the wig. The face is round, with large wide-set eyes, a broad flat nose, wide mouth, round cheeks, and flat chin. Below the chin is a raised area, and a plain broad collar is rendered. O",
+              "cue_spans": [
+                [
+                  741,
+                  745
+                ],
+                [
+                  1852,
+                  1857
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "records_with_explicit_tomb_code_any_policy_field": 0,
+      "structured_role_counts": {
+        "Creation Place": 540,
+        "Find Spot": 1
+      }
+    },
+    "met": {
+      "policy": {
+        "ruler_structured": [
+          "reign"
+        ],
+        "ruler_text": [
+          "title",
+          "objectDate",
+          "locale",
+          "locus"
+        ],
+        "site_structured": [
+          "country",
+          "region",
+          "subregion",
+          "locale",
+          "locus",
+          "excavation"
+        ],
+        "site_text": [
+          "title"
+        ],
+        "role_fields": [
+          "geographyType"
+        ]
+      },
+      "ruler_structured": {
+        "reign": {
+          "records_nonempty": 11256,
+          "string_values": 11256,
+          "records_with_domain_cue": 11071,
+          "domain_cue_spans": 11241,
+          "examples": [
+            {
+              "path": "reign",
+              "text": "reign of Amenhotep III",
+              "cue_spans": [
+                [
+                  0,
+                  5
+                ]
+              ]
+            },
+            {
+              "path": "reign",
+              "text": "reign of Thutmose III - Amenhotep III",
+              "cue_spans": [
+                [
+                  0,
+                  5
+                ]
+              ]
+            },
+            {
+              "path": "reign",
+              "text": "pontificate of Painedjem II or Psusennes III",
+              "cue_spans": [
+                [
+                  0,
+                  11
+                ]
+              ]
+            },
+            {
+              "path": "reign",
+              "text": "reign of Seti II",
+              "cue_spans": [
+                [
+                  0,
+                  5
+                ]
+              ]
+            },
+            {
+              "path": "reign",
+              "text": "possibly reign of Amasis",
+              "cue_spans": [
+                [
+                  9,
+                  14
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "ruler_text": {
+        "title": {
+          "records_nonempty": 27965,
+          "string_values": 27965,
+          "records_with_domain_cue": 388,
+          "domain_cue_spans": 408,
+          "examples": [
+            {
+              "path": "title",
+              "text": "Head of a Ptolemaic Queen, Possibly Berenike II",
+              "cue_spans": [
+                [
+                  20,
+                  25
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Lion-headed goddess suckling the king",
+              "cue_spans": [
+                [
+                  33,
+                  37
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Profile Face Inlay of King Akhenaten",
+              "cue_spans": [
+                [
+                  22,
+                  26
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head of a King, Probably Khafre, Wearing the White Crown",
+              "cue_spans": [
+                [
+                  10,
+                  14
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Relief Plaque with head of a goddess or a queen",
+              "cue_spans": [
+                [
+                  42,
+                  47
+                ]
+              ]
+            }
+          ]
+        },
+        "objectDate": {
+          "records_nonempty": 27931,
+          "string_values": 27931,
+          "records_with_domain_cue": 0,
+          "domain_cue_spans": 0,
+          "examples": []
+        },
+        "locale": {
+          "records_nonempty": 15728,
+          "string_values": 15728,
+          "records_with_domain_cue": 122,
+          "domain_cue_spans": 122,
+          "examples": [
+            {
+              "path": "locale",
+              "text": "King's House at Amarna",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "Pyramid Temple of King Ahmose",
+              "cue_spans": [
+                [
+                  18,
+                  22
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "King's House at Amarna",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "King's House at Amarna",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "King's House at Amarna",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            }
+          ]
+        },
+        "locus": {
+          "records_nonempty": 7496,
+          "string_values": 7496,
+          "records_with_domain_cue": 21,
+          "domain_cue_spans": 21,
+          "examples": [
+            {
+              "path": "locus",
+              "text": "Shrine of Queen Henhenet",
+              "cue_spans": [
+                [
+                  10,
+                  15
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "Antechamber to King's bedroom",
+              "cue_spans": [
+                [
+                  15,
+                  19
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "Mummy of Queen Henettawy",
+              "cue_spans": [
+                [
+                  9,
+                  14
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "Mummy of Queen Henettawy",
+              "cue_spans": [
+                [
+                  9,
+                  14
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "Mummy of Queen Inhapi",
+              "cue_spans": [
+                [
+                  9,
+                  14
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "site_structured": {
+        "country": {
+          "records_nonempty": 26706,
+          "string_values": 26706,
+          "records_with_domain_cue": 0,
+          "domain_cue_spans": 0,
+          "examples": []
+        },
+        "region": {
+          "records_nonempty": 19451,
+          "string_values": 19451,
+          "records_with_domain_cue": 1,
+          "domain_cue_spans": 1,
+          "examples": [
+            {
+              "path": "region",
+              "text": "Originally from Memphite Region",
+              "cue_spans": [
+                [
+                  11,
+                  15
+                ]
+              ]
+            }
+          ]
+        },
+        "subregion": {
+          "records_nonempty": 18639,
+          "string_values": 18639,
+          "records_with_domain_cue": 204,
+          "domain_cue_spans": 204,
+          "examples": [
+            {
+              "path": "subregion",
+              "text": "Memphite Necropolis",
+              "cue_spans": [
+                [
+                  9,
+                  19
+                ]
+              ]
+            },
+            {
+              "path": "subregion",
+              "text": "Southern Asasif, unfinished temple area",
+              "cue_spans": [
+                [
+                  28,
+                  34
+                ]
+              ]
+            },
+            {
+              "path": "subregion",
+              "text": "Southern Asasif, unfinished temple area",
+              "cue_spans": [
+                [
+                  28,
+                  34
+                ]
+              ]
+            },
+            {
+              "path": "subregion",
+              "text": "Southern Asasif, unfinished temple area",
+              "cue_spans": [
+                [
+                  28,
+                  34
+                ]
+              ]
+            },
+            {
+              "path": "subregion",
+              "text": "Southern Asasif, unfinished temple areaf",
+              "cue_spans": [
+                [
+                  28,
+                  34
+                ]
+              ]
+            }
+          ]
+        },
+        "locale": {
+          "records_nonempty": 15728,
+          "string_values": 15728,
+          "records_with_domain_cue": 11533,
+          "domain_cue_spans": 12398,
+          "examples": [
+            {
+              "path": "locale",
+              "text": "near Unis pyramid",
+              "cue_spans": [
+                [
+                  10,
+                  17
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "Tomb CC 24",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "near Unis pyramid",
+              "cue_spans": [
+                [
+                  10,
+                  17
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "tomb of Imhotep",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locale",
+              "text": "probably Tomb CC 64, burial 9",
+              "cue_spans": [
+                [
+                  9,
+                  13
+                ]
+              ]
+            }
+          ]
+        },
+        "locus": {
+          "records_nonempty": 7496,
+          "string_values": 7496,
+          "records_with_domain_cue": 1173,
+          "domain_cue_spans": 1188,
+          "examples": [
+            {
+              "path": "locus",
+              "text": "Tomb of Hekaemsaf",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "near entrance of tomb",
+              "cue_spans": [
+                [
+                  17,
+                  21
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "Tomb of Hekaemsaf",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "Tomb of Kaemsenu, west wall of cult chapel",
+              "cue_spans": [
+                [
+                  0,
+                  4
+                ]
+              ]
+            },
+            {
+              "path": "locus",
+              "text": "Kaemsenu tomb probably",
+              "cue_spans": [
+                [
+                  9,
+                  13
+                ]
+              ]
+            }
+          ]
+        },
+        "excavation": {
+          "records_nonempty": 16403,
+          "string_values": 16403,
+          "records_with_domain_cue": 16283,
+          "domain_cue_spans": 16284,
+          "examples": [
+            {
+              "path": "excavation",
+              "text": "Egyptian Antiquities Service excavations, 1891",
+              "cue_spans": [
+                [
+                  29,
+                  40
+                ]
+              ]
+            },
+            {
+              "path": "excavation",
+              "text": "Barsanti excavations, 1903",
+              "cue_spans": [
+                [
+                  9,
+                  20
+                ]
+              ]
+            },
+            {
+              "path": "excavation",
+              "text": "Carnarvon/Carter excavations, 1910",
+              "cue_spans": [
+                [
+                  17,
+                  28
+                ]
+              ]
+            },
+            {
+              "path": "excavation",
+              "text": "Egyptian Antiquities Service/Maspero excavations, 1881",
+              "cue_spans": [
+                [
+                  37,
+                  48
+                ]
+              ]
+            },
+            {
+              "path": "excavation",
+              "text": "Egyptian Antiquities Service excavations/Aly Habib 1902",
+              "cue_spans": [
+                [
+                  29,
+                  40
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "site_text": {
+        "title": {
+          "records_nonempty": 27965,
+          "string_values": 27965,
+          "records_with_domain_cue": 3130,
+          "domain_cue_spans": 3635,
+          "examples": [
+            {
+              "path": "title",
+              "text": "Upper half of a woman from a pair or group statue",
+              "cue_spans": [
+                [
+                  22,
+                  26
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head from a figure of Osiris",
+              "cue_spans": [
+                [
+                  5,
+                  9
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Upper half of a woman from a pair or group statue",
+              "cue_spans": [
+                [
+                  22,
+                  26
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head with tripartite wig, probably from a shabti",
+              "cue_spans": [
+                [
+                  35,
+                  39
+                ]
+              ]
+            },
+            {
+              "path": "title",
+              "text": "Head from a Bes Jar",
+              "cue_spans": [
+                [
+                  5,
+                  9
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "records_with_explicit_tomb_code_any_policy_field": 4784,
+      "structured_role_counts": {
+        "From": 26265,
+        "Probably from": 542,
+        "Possibly from": 323,
+        "Original from": 316,
+        "Said to be from": 274,
+        "Probably originally from": 137,
+        "Presumably from": 69,
+        "(none assigned)": 11,
+        "Country of Origin": 7,
+        "Original": 6,
+        "Made for": 2,
+        "Said to be found in": 2,
+        "Made in": 1,
+        "Probably made for": 1,
+        "Formerly considered made in": 1
+      }
+    }
+  }
+}

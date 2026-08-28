@@ -1,0 +1,601 @@
+{
+  "base_metrics_recomputed": {
+    "artifacts_on_shared_nodes": 15595,
+    "discoverable_artifacts_by_entity_type": {
+      "ruler": 464,
+      "site": 15551,
+      "tomb_monument": 0
+    },
+    "shared_nodes": 56,
+    "shared_nodes_by_entity_type": {
+      "ruler": 8,
+      "site": 48
+    }
+  },
+  "concentration": {
+    "top_10_shared_nodes": {
+      "discoverable_artifacts_denominator": 15595,
+      "fraction": 0.8997114459762744,
+      "unique_artifacts": 14031
+    },
+    "top_1_shared_nodes": {
+      "discoverable_artifacts_denominator": 15595,
+      "fraction": 0.7474190445655658,
+      "unique_artifacts": 11656
+    },
+    "top_2_shared_nodes": {
+      "discoverable_artifacts_denominator": 15595,
+      "fraction": 0.751651170246874,
+      "unique_artifacts": 11722
+    },
+    "top_5_shared_nodes": {
+      "discoverable_artifacts_denominator": 15595,
+      "fraction": 0.7522282782943251,
+      "unique_artifacts": 11731
+    }
+  },
+  "interpretation_warning": "Broad and nested place mentions are separate evidence spans. Artifact counts are deduplicated per node, but an artifact may appear on several shared nodes; high-level geography can dominate discoverability.",
+  "model": "Shared current authority-node incidence; no all-pairs materialization.",
+  "museum_combination_counts": {
+    "brooklyn+harvard": 1,
+    "brooklyn+harvard+met": 3,
+    "brooklyn+met": 49,
+    "harvard+met": 3
+  },
+  "three_museum_shared_nodes": 3,
+  "top_shared_nodes": [
+    {
+      "artifact_count": 11656,
+      "artifact_counts_by_museum": {
+        "brooklyn": 288,
+        "met": 11368
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042921",
+      "target_label": "Theben"
+    },
+    {
+      "artifact_count": 11434,
+      "artifact_counts_by_museum": {
+        "brooklyn": 17,
+        "met": 11417
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2379505",
+      "target_label": "Aegyptus Superior"
+    },
+    {
+      "artifact_count": 3050,
+      "artifact_counts_by_museum": {
+        "brooklyn": 5,
+        "met": 3045
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2110510",
+      "target_label": "ad-dayr al-baḥrī"
+    },
+    {
+      "artifact_count": 2482,
+      "artifact_counts_by_museum": {
+        "brooklyn": 3,
+        "met": 2479
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042871",
+      "target_label": "Malqaṭa al-Baʿīrāt"
+    },
+    {
+      "artifact_count": 1531,
+      "artifact_counts_by_museum": {
+        "brooklyn": 4,
+        "met": 1527
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751494",
+      "target_label": "Asasîf"
+    },
+    {
+      "artifact_count": 1066,
+      "artifact_counts_by_museum": {
+        "brooklyn": 159,
+        "met": 907
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2296218",
+      "target_label": "Tell el-Amarna"
+    },
+    {
+      "artifact_count": 780,
+      "artifact_counts_by_museum": {
+        "brooklyn": 320,
+        "harvard": 4,
+        "met": 456
+      },
+      "entity_type": "site",
+      "museum_count": 3,
+      "target_id": "idai:2042907",
+      "target_label": "Saqqāra"
+    },
+    {
+      "artifact_count": 734,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 733
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2096884",
+      "target_label": "Bibân el-Mulûk"
+    },
+    {
+      "artifact_count": 541,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 539
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2101716",
+      "target_label": "al-Qurna"
+    },
+    {
+      "artifact_count": 454,
+      "artifact_counts_by_museum": {
+        "brooklyn": 71,
+        "met": 383
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2412478",
+      "target_label": "Abīdūs"
+    },
+    {
+      "artifact_count": 392,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 391
+      },
+      "entity_type": "ruler",
+      "museum_count": 2,
+      "target_id": "cluster-beckerath-19.07",
+      "target_label": "Siptah"
+    },
+    {
+      "artifact_count": 378,
+      "artifact_counts_by_museum": {
+        "brooklyn": 3,
+        "met": 375
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042900",
+      "target_label": "Qantir"
+    },
+    {
+      "artifact_count": 152,
+      "artifact_counts_by_museum": {
+        "brooklyn": 64,
+        "met": 88
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042877",
+      "target_label": "Memphis"
+    },
+    {
+      "artifact_count": 138,
+      "artifact_counts_by_museum": {
+        "brooklyn": 7,
+        "met": 131
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042854",
+      "target_label": "Hierakonpolis"
+    },
+    {
+      "artifact_count": 115,
+      "artifact_counts_by_museum": {
+        "brooklyn": 5,
+        "met": 110
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2088624",
+      "target_label": "Dendera"
+    },
+    {
+      "artifact_count": 102,
+      "artifact_counts_by_museum": {
+        "brooklyn": 3,
+        "met": 99
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042876",
+      "target_label": "Medînet Hâbu"
+    },
+    {
+      "artifact_count": 92,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 91
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2408810",
+      "target_label": "Tall Basṭa"
+    },
+    {
+      "artifact_count": 81,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 79
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042789",
+      "target_label": "al-Lāhūn"
+    },
+    {
+      "artifact_count": 71,
+      "artifact_counts_by_museum": {
+        "brooklyn": 35,
+        "met": 36
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2089516",
+      "target_label": "al-Ǧīza"
+    },
+    {
+      "artifact_count": 54,
+      "artifact_counts_by_museum": {
+        "brooklyn": 4,
+        "harvard": 1,
+        "met": 49
+      },
+      "entity_type": "site",
+      "museum_count": 3,
+      "target_id": "idai:2042814",
+      "target_label": "Asyūt"
+    },
+    {
+      "artifact_count": 41,
+      "artifact_counts_by_museum": {
+        "brooklyn": 19,
+        "met": 22
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042805",
+      "target_label": "Aḫmīm"
+    },
+    {
+      "artifact_count": 34,
+      "artifact_counts_by_museum": {
+        "brooklyn": 11,
+        "met": 23
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2768166",
+      "target_label": "Tell el-Yahudiya"
+    },
+    {
+      "artifact_count": 33,
+      "artifact_counts_by_museum": {
+        "brooklyn": 29,
+        "met": 4
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042834",
+      "target_label": "Idfū"
+    },
+    {
+      "artifact_count": 33,
+      "artifact_counts_by_museum": {
+        "brooklyn": 4,
+        "met": 29
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2282701",
+      "target_label": "Dahšūr"
+    },
+    {
+      "artifact_count": 30,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 28
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042815",
+      "target_label": "Aswān"
+    },
+    {
+      "artifact_count": 30,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 28
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2178702",
+      "target_label": "Karnak"
+    },
+    {
+      "artifact_count": 30,
+      "artifact_counts_by_museum": {
+        "brooklyn": 11,
+        "met": 19
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751369",
+      "target_label": "Mahasna"
+    },
+    {
+      "artifact_count": 28,
+      "artifact_counts_by_museum": {
+        "brooklyn": 3,
+        "met": 25
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751306",
+      "target_label": "Gebelein"
+    },
+    {
+      "artifact_count": 27,
+      "artifact_counts_by_museum": {
+        "brooklyn": 6,
+        "met": 21
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751316",
+      "target_label": "Harageh"
+    },
+    {
+      "artifact_count": 25,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 24
+      },
+      "entity_type": "ruler",
+      "museum_count": 2,
+      "target_id": "cluster-beckerath-12.05",
+      "target_label": "Senusret III"
+    },
+    {
+      "artifact_count": 25,
+      "artifact_counts_by_museum": {
+        "brooklyn": 20,
+        "met": 5
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042846",
+      "target_label": "al-Fayyūm"
+    },
+    {
+      "artifact_count": 24,
+      "artifact_counts_by_museum": {
+        "harvard": 1,
+        "met": 23
+      },
+      "entity_type": "ruler",
+      "museum_count": 2,
+      "target_id": "cluster-beckerath-26.05",
+      "target_label": "Ahmose III"
+    },
+    {
+      "artifact_count": 24,
+      "artifact_counts_by_museum": {
+        "brooklyn": 20,
+        "met": 4
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042802",
+      "target_label": "Abusir"
+    },
+    {
+      "artifact_count": 23,
+      "artifact_counts_by_museum": {
+        "brooklyn": 4,
+        "met": 19
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751330",
+      "target_label": "Hû"
+    },
+    {
+      "artifact_count": 21,
+      "artifact_counts_by_museum": {
+        "brooklyn": 4,
+        "met": 17
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042869",
+      "target_label": "Al Uqşur"
+    },
+    {
+      "artifact_count": 17,
+      "artifact_counts_by_museum": {
+        "brooklyn": 13,
+        "met": 4
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751511",
+      "target_label": "Elephantine"
+    },
+    {
+      "artifact_count": 16,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 14
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2410500",
+      "target_label": "Ṣān al-Ḥaǧar"
+    },
+    {
+      "artifact_count": 16,
+      "artifact_counts_by_museum": {
+        "brooklyn": 7,
+        "met": 9
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751321",
+      "target_label": "Heliopolis"
+    },
+    {
+      "artifact_count": 10,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 8
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2277744",
+      "target_label": "Koptos"
+    },
+    {
+      "artifact_count": 9,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 8
+      },
+      "entity_type": "ruler",
+      "museum_count": 2,
+      "target_id": "cluster-beckerath-22.02",
+      "target_label": "Osorkon I"
+    },
+    {
+      "artifact_count": 9,
+      "artifact_counts_by_museum": {
+        "brooklyn": 7,
+        "harvard": 1,
+        "met": 1
+      },
+      "entity_type": "site",
+      "museum_count": 3,
+      "target_id": "idai:2042797",
+      "target_label": "Sheikh Ibada"
+    },
+    {
+      "artifact_count": 9,
+      "artifact_counts_by_museum": {
+        "brooklyn": 4,
+        "met": 5
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2110886",
+      "target_label": "Naqada"
+    },
+    {
+      "artifact_count": 9,
+      "artifact_counts_by_museum": {
+        "brooklyn": 5,
+        "met": 4
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751386",
+      "target_label": "Mendes"
+    },
+    {
+      "artifact_count": 8,
+      "artifact_counts_by_museum": {
+        "brooklyn": 7,
+        "met": 1
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751360",
+      "target_label": "Lischt"
+    },
+    {
+      "artifact_count": 7,
+      "artifact_counts_by_museum": {
+        "brooklyn": 3,
+        "met": 4
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042811",
+      "target_label": "Armant"
+    },
+    {
+      "artifact_count": 6,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 5
+      },
+      "entity_type": "ruler",
+      "museum_count": 2,
+      "target_id": "pharaoh_se-Nectanebo-II",
+      "target_label": "Nectanebo II"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 4
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2088811",
+      "target_label": "al-Kāb"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_counts_by_museum": {
+        "brooklyn": 1,
+        "met": 3
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2042898",
+      "target_label": "Philae"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 2
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2106339",
+      "target_label": "Hawāra"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_counts_by_museum": {
+        "brooklyn": 2,
+        "met": 2
+      },
+      "entity_type": "site",
+      "museum_count": 2,
+      "target_id": "idai:2751313",
+      "target_label": "Gurôb"
+    }
+  ]
+}

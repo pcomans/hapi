@@ -1,0 +1,54 @@
+{
+  "label": "POST-HOC PROVISIONAL SILVER SENSITIVITY — not corrected population truth",
+  "purpose": "Shows how the raw connectivity result changes if only sampled resolved links adjudicated false are removed. Unreviewed links remain untouched.",
+  "raw_adapter_metrics": {
+    "artifacts_on_shared_nodes": 15595,
+    "discoverable_artifacts_by_entity_type": {
+      "ruler": 464,
+      "site": 15551,
+      "tomb_monument": 0
+    },
+    "shared_nodes": 56,
+    "shared_nodes_by_entity_type": {
+      "ruler": 8,
+      "site": 48
+    }
+  },
+  "removed_sampled_links": [
+    {
+      "artifact_id": "brooklyn-3160",
+      "entity_type": "ruler",
+      "evidence_note": "A title cue 'Queen' was treated as ruler evidence and the bare homonym Maatkare was linked to Hatshepsut. Institutional comparanda distinguish Dynasty-21 Maatkare from Hatshepsut's throne name.",
+      "sample_id": "review-003",
+      "target_id": "cluster-beckerath-18.05"
+    },
+    {
+      "artifact_id": "harvard-354559",
+      "entity_type": "ruler",
+      "evidence_note": "The span is real, but it describes a different museum object used as a comparison. Linking the Harvard artifact itself to Amasis is unsupported.",
+      "sample_id": "review-015",
+      "target_id": "cluster-beckerath-26.05"
+    }
+  ],
+  "sampled_false_links_removed_metrics": {
+    "artifacts_on_shared_nodes": 15577,
+    "discoverable_artifacts_by_entity_type": {
+      "ruler": 440,
+      "site": 15551,
+      "tomb_monument": 0
+    },
+    "shared_nodes": 55,
+    "shared_nodes_by_entity_type": {
+      "ruler": 7,
+      "site": 48
+    }
+  },
+  "shared_nodes_lost": [
+    {
+      "entity_type": "ruler",
+      "target_id": "cluster-beckerath-26.05",
+      "target_label": "Ahmose III"
+    }
+  ],
+  "warning": "This is not an accuracy-adjusted estimate: the review is stratified, only sampled false links are removed, and unsupported links may remain."
+}

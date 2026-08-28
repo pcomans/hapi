@@ -1,0 +1,71 @@
+{
+  "by_museum": {
+    "brooklyn": {
+      "by_entity_type": {
+        "ruler": {
+          "linked_artifacts": 6,
+          "record_link_rate": 0.0007942811755361397,
+          "records_denominator": 7554
+        },
+        "site": {
+          "linked_artifacts": 1235,
+          "record_link_rate": 0.16348954196452212,
+          "records_denominator": 7554
+        },
+        "tomb_monument": {
+          "linked_artifacts": 0,
+          "record_link_rate": 0.0,
+          "records_denominator": 7554
+        }
+      },
+      "linked_artifacts_any_entity": 1237,
+      "record_link_rate_any_entity": 0.16375430235636748,
+      "records_denominator": 7554
+    },
+    "harvard": {
+      "by_entity_type": {
+        "ruler": {
+          "linked_artifacts": 3,
+          "record_link_rate": 0.004155124653739612,
+          "records_denominator": 722
+        },
+        "site": {
+          "linked_artifacts": 267,
+          "record_link_rate": 0.3698060941828255,
+          "records_denominator": 722
+        },
+        "tomb_monument": {
+          "linked_artifacts": 0,
+          "record_link_rate": 0.0,
+          "records_denominator": 722
+        }
+      },
+      "linked_artifacts_any_entity": 270,
+      "record_link_rate_any_entity": 0.3739612188365651,
+      "records_denominator": 722
+    },
+    "met": {
+      "by_entity_type": {
+        "ruler": {
+          "linked_artifacts": 3879,
+          "record_link_rate": 0.13868926311273194,
+          "records_denominator": 27969
+        },
+        "site": {
+          "linked_artifacts": 15018,
+          "record_link_rate": 0.5369516250134077,
+          "records_denominator": 27969
+        },
+        "tomb_monument": {
+          "linked_artifacts": 3199,
+          "record_link_rate": 0.11437663127033501,
+          "records_denominator": 27969
+        }
+      },
+      "linked_artifacts_any_entity": 15556,
+      "record_link_rate_any_entity": 0.5561872072651864,
+      "records_denominator": 27969
+    }
+  },
+  "definition": "Distinct canonical records with at least one deduplicated artifact-to-current-authority link; exact museum record denominators shown."
+}

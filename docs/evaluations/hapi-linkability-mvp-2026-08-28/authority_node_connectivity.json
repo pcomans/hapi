@@ -1,0 +1,3421 @@
+[
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "beckerath-21.01",
+    "target_label": "Smendes"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-04.04",
+    "target_label": "Chephren"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-04.06",
+    "target_label": "Menkaura"
+  },
+  {
+    "artifact_count": 255,
+    "artifact_counts_by_museum": {
+      "met": 255
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-11.05",
+    "target_label": "Ment-hotpe II."
+  },
+  {
+    "artifact_count": 13,
+    "artifact_counts_by_museum": {
+      "met": 13
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-11.06",
+    "target_label": "Mentuhotep III"
+  },
+  {
+    "artifact_count": 25,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 24
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": true,
+    "target_id": "cluster-beckerath-12.05",
+    "target_label": "Senusret III"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-12.07",
+    "target_label": "Amenemhat IV"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-15.05",
+    "target_label": "Apepi"
+  },
+  {
+    "artifact_count": 20,
+    "artifact_counts_by_museum": {
+      "met": 20
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-18.01",
+    "target_label": "Ahmose (II)"
+  },
+  {
+    "artifact_count": 47,
+    "artifact_counts_by_museum": {
+      "met": 47
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-18.02",
+    "target_label": "Amenhotep I"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-18.05",
+    "target_label": "Hatshepsut"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "harvard": 1,
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": true,
+    "target_id": "cluster-beckerath-18.10",
+    "target_label": "Amenhotep IV"
+  },
+  {
+    "artifact_count": 31,
+    "artifact_counts_by_museum": {
+      "met": 31
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-18.15",
+    "target_label": "Har-em-hab"
+  },
+  {
+    "artifact_count": 40,
+    "artifact_counts_by_museum": {
+      "met": 40
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-19.02",
+    "target_label": "Sethôs I."
+  },
+  {
+    "artifact_count": 392,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 391
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": true,
+    "target_id": "cluster-beckerath-19.07",
+    "target_label": "Siptah"
+  },
+  {
+    "artifact_count": 9,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 8
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": true,
+    "target_id": "cluster-beckerath-22.02",
+    "target_label": "Osorkon I"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-beckerath-25.05",
+    "target_label": "Taharqa"
+  },
+  {
+    "artifact_count": 24,
+    "artifact_counts_by_museum": {
+      "harvard": 1,
+      "met": 23
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": true,
+    "target_id": "cluster-beckerath-26.05",
+    "target_label": "Ahmose III"
+  },
+  {
+    "artifact_count": 21,
+    "artifact_counts_by_museum": {
+      "met": 21
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-1.02",
+    "target_label": "Djer"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-1.04",
+    "target_label": "Den"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-13.20",
+    "target_label": "Amenemhat VII"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-13.27",
+    "target_label": "Neferhotep I"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-13.29",
+    "target_label": "Sobekhotep IV"
+  },
+  {
+    "artifact_count": 11,
+    "artifact_counts_by_museum": {
+      "met": 11
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-13.33",
+    "target_label": "Aya"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-14.05",
+    "target_label": "Sheshi"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-2.02",
+    "target_label": "Nebra"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-2.07",
+    "target_label": "Peribsen"
+  },
+  {
+    "artifact_count": 444,
+    "artifact_counts_by_museum": {
+      "met": 444
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-20.03",
+    "target_label": "Ramesses IV"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-33.06",
+    "target_label": "Ptolemy VI"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-4.01",
+    "target_label": "Sneferu"
+  },
+  {
+    "artifact_count": 7,
+    "artifact_counts_by_museum": {
+      "met": 7
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": false,
+    "target_id": "cluster-leprohon-leprohon-4.02",
+    "target_label": "Khufu"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "approved_claim_graph_cluster",
+    "shared_across_museums": true,
+    "target_id": "cluster-leprohon-leprohon-5.06",
+    "target_label": "Niuserra Ini"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "met": 5
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "kitchen-21H.05",
+    "target_label": "Masaharta"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "kitchen-22.07",
+    "target_label": "Takeloth II"
+  },
+  {
+    "artifact_count": 210,
+    "artifact_counts_by_museum": {
+      "met": 210
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-12.02",
+    "target_label": "Senwosret I"
+  },
+  {
+    "artifact_count": 12,
+    "artifact_counts_by_museum": {
+      "met": 12
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-12.04",
+    "target_label": "Senwosret II"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-13.08",
+    "target_label": "Amenemhat VI"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-18.12",
+    "target_label": "Smenkhkare"
+  },
+  {
+    "artifact_count": 21,
+    "artifact_counts_by_museum": {
+      "met": 21
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-19.08",
+    "target_label": "Tawosret"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-20.01",
+    "target_label": "Sethnakht"
+  },
+  {
+    "artifact_count": 15,
+    "artifact_counts_by_museum": {
+      "met": 15
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-22.01",
+    "target_label": "Sheshonq I"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-22.09",
+    "target_label": "Sheshonq III"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "harvard": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-33.02a",
+    "target_label": "Arsinoe II"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-33.04",
+    "target_label": "Ptolemy IV Philopator"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-33.10",
+    "target_label": "Ptolemy X Alexander I"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-5.02",
+    "target_label": "Sahure"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "leprohon-leprohon-6.04",
+    "target_label": "Merenre (I)"
+  },
+  {
+    "artifact_count": 1305,
+    "artifact_counts_by_museum": {
+      "met": 1305
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Amenemhat-I",
+    "target_label": "Amenemhat I"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Augustus",
+    "target_label": "Augustus"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Bakenrenef",
+    "target_label": "Bakenrenef"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Caligula",
+    "target_label": "Caligula"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Djedkara-Isesi",
+    "target_label": "Djedkara Isesi"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Nectanebo-I",
+    "target_label": "Nectanebo I"
+  },
+  {
+    "artifact_count": 6,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 5
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": true,
+    "target_id": "pharaoh_se-Nectanebo-II",
+    "target_label": "Nectanebo II"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Neferkauhor",
+    "target_label": "Neferkauhor"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Nero",
+    "target_label": "Nero"
+  },
+  {
+    "artifact_count": 10,
+    "artifact_counts_by_museum": {
+      "met": 10
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Pepi-I",
+    "target_label": "Pepi I"
+  },
+  {
+    "artifact_count": 7,
+    "artifact_counts_by_museum": {
+      "met": 7
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Pepi-II",
+    "target_label": "Pepi II"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Psammuthis",
+    "target_label": "Psammuthis"
+  },
+  {
+    "artifact_count": 401,
+    "artifact_counts_by_museum": {
+      "met": 401
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Psamtik-I",
+    "target_label": "Psamtik I"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Psamtik-II",
+    "target_label": "Psamtik II"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Psusennes-II",
+    "target_label": "Psusennes II"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "harvard": 1,
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 2,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": true,
+    "target_id": "pharaoh_se-Ptolemy-II",
+    "target_label": "Ptolemy II"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Ptolemy-V",
+    "target_label": "Ptolemy V"
+  },
+  {
+    "artifact_count": 12,
+    "artifact_counts_by_museum": {
+      "met": 12
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Seti-II",
+    "target_label": "Seti II"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Tausret",
+    "target_label": "Tausret"
+  },
+  {
+    "artifact_count": 456,
+    "artifact_counts_by_museum": {
+      "met": 456
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Thutmose-III",
+    "target_label": "Thutmose III"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "pharaoh_se-Tiberius",
+    "target_label": "Tiberius"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "ryholt-13.25",
+    "target_label": "Seth"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "ryholt-13.26",
+    "target_label": "Sobkhotep III"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "ruler",
+    "museum_count": 1,
+    "representation": "claim_graph_singleton_source_node",
+    "shared_across_museums": false,
+    "target_id": "ryholt-15.4",
+    "target_label": "Khayan"
+  },
+  {
+    "artifact_count": 81,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 79
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042789",
+    "target_label": "al-Lāhūn"
+  },
+  {
+    "artifact_count": 9,
+    "artifact_counts_by_museum": {
+      "brooklyn": 9
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042791",
+    "target_label": "El Ashmunein"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042795",
+    "target_label": "Naukratis"
+  },
+  {
+    "artifact_count": 9,
+    "artifact_counts_by_museum": {
+      "brooklyn": 7,
+      "harvard": 1,
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 3,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042797",
+    "target_label": "Sheikh Ibada"
+  },
+  {
+    "artifact_count": 24,
+    "artifact_counts_by_museum": {
+      "brooklyn": 20,
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042802",
+    "target_label": "Abusir"
+  },
+  {
+    "artifact_count": 67,
+    "artifact_counts_by_museum": {
+      "met": 67
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042804",
+    "target_label": "Umm al-Qaʿāb"
+  },
+  {
+    "artifact_count": 41,
+    "artifact_counts_by_museum": {
+      "brooklyn": 19,
+      "met": 22
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042805",
+    "target_label": "Aḫmīm"
+  },
+  {
+    "artifact_count": 7,
+    "artifact_counts_by_museum": {
+      "brooklyn": 3,
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042811",
+    "target_label": "Armant"
+  },
+  {
+    "artifact_count": 54,
+    "artifact_counts_by_museum": {
+      "brooklyn": 4,
+      "harvard": 1,
+      "met": 49
+    },
+    "entity_type": "site",
+    "museum_count": 3,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042814",
+    "target_label": "Asyūt"
+  },
+  {
+    "artifact_count": 30,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 28
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042815",
+    "target_label": "Aswān"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "harvard": 1
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042819",
+    "target_label": "Baouit"
+  },
+  {
+    "artifact_count": 138,
+    "artifact_counts_by_museum": {
+      "met": 138
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042833",
+    "target_label": "Ḏirāʿ Abū n-Naǧā"
+  },
+  {
+    "artifact_count": 33,
+    "artifact_counts_by_museum": {
+      "brooklyn": 29,
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042834",
+    "target_label": "Idfū"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042840",
+    "target_label": "al-Ḥība"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042843",
+    "target_label": "aṭ-Ṭārif"
+  },
+  {
+    "artifact_count": 25,
+    "artifact_counts_by_museum": {
+      "brooklyn": 20,
+      "met": 5
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042846",
+    "target_label": "al-Fayyūm"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042851",
+    "target_label": "Helwan"
+  },
+  {
+    "artifact_count": 138,
+    "artifact_counts_by_museum": {
+      "brooklyn": 7,
+      "met": 131
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042854",
+    "target_label": "Hierakonpolis"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "brooklyn": 5
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042858",
+    "target_label": "Cairo"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "brooklyn": 5
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042863",
+    "target_label": "Kom-al-Ahmar"
+  },
+  {
+    "artifact_count": 21,
+    "artifact_counts_by_museum": {
+      "brooklyn": 4,
+      "met": 17
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042869",
+    "target_label": "Al Uqşur"
+  },
+  {
+    "artifact_count": 2482,
+    "artifact_counts_by_museum": {
+      "brooklyn": 3,
+      "met": 2479
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042871",
+    "target_label": "Malqaṭa al-Baʿīrāt"
+  },
+  {
+    "artifact_count": 102,
+    "artifact_counts_by_museum": {
+      "brooklyn": 3,
+      "met": 99
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042876",
+    "target_label": "Medînet Hâbu"
+  },
+  {
+    "artifact_count": 152,
+    "artifact_counts_by_museum": {
+      "brooklyn": 64,
+      "met": 88
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042877",
+    "target_label": "Memphis"
+  },
+  {
+    "artifact_count": 45,
+    "artifact_counts_by_museum": {
+      "met": 45
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042878",
+    "target_label": "Merimde-Benisalâme"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "brooklyn": 5
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042881",
+    "target_label": "Mit-Rahineh"
+  },
+  {
+    "artifact_count": 125,
+    "artifact_counts_by_museum": {
+      "met": 125
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042896",
+    "target_label": "Al Bahnasa"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 3
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042898",
+    "target_label": "Philae"
+  },
+  {
+    "artifact_count": 378,
+    "artifact_counts_by_museum": {
+      "brooklyn": 3,
+      "met": 375
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042900",
+    "target_label": "Qantir"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "met": 5
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042902",
+    "target_label": "Qasr el-Sagha"
+  },
+  {
+    "artifact_count": 780,
+    "artifact_counts_by_museum": {
+      "brooklyn": 320,
+      "harvard": 4,
+      "met": 456
+    },
+    "entity_type": "site",
+    "museum_count": 3,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042907",
+    "target_label": "Saqqāra"
+  },
+  {
+    "artifact_count": 20,
+    "artifact_counts_by_museum": {
+      "met": 20
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2042917",
+    "target_label": "Tell el-Balâmûn"
+  },
+  {
+    "artifact_count": 11656,
+    "artifact_counts_by_museum": {
+      "brooklyn": 288,
+      "met": 11368
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2042921",
+    "target_label": "Theben"
+  },
+  {
+    "artifact_count": 10,
+    "artifact_counts_by_museum": {
+      "met": 10
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2087336",
+    "target_label": "Benī Ḥasan al-qadīm"
+  },
+  {
+    "artifact_count": 115,
+    "artifact_counts_by_museum": {
+      "brooklyn": 5,
+      "met": 110
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2088624",
+    "target_label": "Dendera"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2088811",
+    "target_label": "al-Kāb"
+  },
+  {
+    "artifact_count": 71,
+    "artifact_counts_by_museum": {
+      "brooklyn": 35,
+      "met": 36
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2089516",
+    "target_label": "al-Ǧīza"
+  },
+  {
+    "artifact_count": 734,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 733
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2096884",
+    "target_label": "Bibân el-Mulûk"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2101599",
+    "target_label": "Dendur"
+  },
+  {
+    "artifact_count": 541,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 539
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2101716",
+    "target_label": "al-Qurna"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2101738",
+    "target_label": "Tell el-Fara´in"
+  },
+  {
+    "artifact_count": 31,
+    "artifact_counts_by_museum": {
+      "met": 31
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2102146",
+    "target_label": "Maidûm"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 2
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2106339",
+    "target_label": "Hawāra"
+  },
+  {
+    "artifact_count": 3050,
+    "artifact_counts_by_museum": {
+      "brooklyn": 5,
+      "met": 3045
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2110510",
+    "target_label": "ad-dayr al-baḥrī"
+  },
+  {
+    "artifact_count": 9,
+    "artifact_counts_by_museum": {
+      "brooklyn": 4,
+      "met": 5
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2110886",
+    "target_label": "Naqada"
+  },
+  {
+    "artifact_count": 86,
+    "artifact_counts_by_museum": {
+      "met": 86
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2114080",
+    "target_label": "Deir el-Medina"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2118538",
+    "target_label": "Ehnasia el-Medineh"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2121930",
+    "target_label": "Saïs"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2122333",
+    "target_label": "Karanog"
+  },
+  {
+    "artifact_count": 30,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 28
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2178702",
+    "target_label": "Karnak"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2276626",
+    "target_label": "Naǧʿ al-Madāmūd"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2277687",
+    "target_label": "Tell Atrib"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2277693",
+    "target_label": "Kôm Abou Billou"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2277715",
+    "target_label": "Kôm el-Kharaba el-Kebir"
+  },
+  {
+    "artifact_count": 10,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 8
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2277744",
+    "target_label": "Koptos"
+  },
+  {
+    "artifact_count": 17,
+    "artifact_counts_by_museum": {
+      "brooklyn": 17
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2277756",
+    "target_label": "Isnā"
+  },
+  {
+    "artifact_count": 33,
+    "artifact_counts_by_museum": {
+      "brooklyn": 4,
+      "met": 29
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2282701",
+    "target_label": "Dahšūr"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2293921",
+    "target_label": "Meroë"
+  },
+  {
+    "artifact_count": 1066,
+    "artifact_counts_by_museum": {
+      "brooklyn": 159,
+      "met": 907
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2296218",
+    "target_label": "Tell el-Amarna"
+  },
+  {
+    "artifact_count": 7,
+    "artifact_counts_by_museum": {
+      "met": 7
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2331861",
+    "target_label": "Deir el-Haggar"
+  },
+  {
+    "artifact_count": 21,
+    "artifact_counts_by_museum": {
+      "met": 21
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2379057",
+    "target_label": "Napata"
+  },
+  {
+    "artifact_count": 11434,
+    "artifact_counts_by_museum": {
+      "brooklyn": 17,
+      "met": 11417
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2379505",
+    "target_label": "Aegyptus Superior"
+  },
+  {
+    "artifact_count": 260,
+    "artifact_counts_by_museum": {
+      "harvard": 260
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2379568",
+    "target_label": "Fustat"
+  },
+  {
+    "artifact_count": 92,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 91
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2408810",
+    "target_label": "Tall Basṭa"
+  },
+  {
+    "artifact_count": 16,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 14
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2410500",
+    "target_label": "Ṣān al-Ḥaǧar"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "met": 5
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2410811",
+    "target_label": "Bībān al-Ḥarīm"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "brooklyn": 3
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2410915",
+    "target_label": "az-Zaqāzīq"
+  },
+  {
+    "artifact_count": 454,
+    "artifact_counts_by_museum": {
+      "brooklyn": 71,
+      "met": 383
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2412478",
+    "target_label": "Abīdūs"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751143",
+    "target_label": "Abu-Roasch"
+  },
+  {
+    "artifact_count": 6,
+    "artifact_counts_by_museum": {
+      "brooklyn": 6
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751146",
+    "target_label": "Amara West"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751158",
+    "target_label": "Atfih"
+  },
+  {
+    "artifact_count": 8,
+    "artifact_counts_by_museum": {
+      "brooklyn": 8
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751162",
+    "target_label": "Balabisch"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751165",
+    "target_label": "Behbeit el-Hagar"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751172",
+    "target_label": "Buhen"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751173",
+    "target_label": "Bousiris"
+  },
+  {
+    "artifact_count": 52,
+    "artifact_counts_by_museum": {
+      "met": 52
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751179",
+    "target_label": "Deir el-Ballâs"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751182",
+    "target_label": "Deir Rifeh"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751185",
+    "target_label": "Deschasche"
+  },
+  {
+    "artifact_count": 7,
+    "artifact_counts_by_museum": {
+      "met": 7
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751187",
+    "target_label": "Dîmeh"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751193",
+    "target_label": "Fayyum Oasis"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751197",
+    "target_label": "Gebel Adde"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751304",
+    "target_label": "Gebel el-Silsile"
+  },
+  {
+    "artifact_count": 28,
+    "artifact_counts_by_museum": {
+      "brooklyn": 3,
+      "met": 25
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751306",
+    "target_label": "Gebelein"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2,
+      "met": 2
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751313",
+    "target_label": "Gurôb"
+  },
+  {
+    "artifact_count": 27,
+    "artifact_counts_by_museum": {
+      "brooklyn": 6,
+      "met": 21
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751316",
+    "target_label": "Harageh"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751317",
+    "target_label": "Hardai"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751320",
+    "target_label": "Hefat"
+  },
+  {
+    "artifact_count": 16,
+    "artifact_counts_by_museum": {
+      "brooklyn": 7,
+      "met": 9
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751321",
+    "target_label": "Heliopolis"
+  },
+  {
+    "artifact_count": 55,
+    "artifact_counts_by_museum": {
+      "met": 55
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751326",
+    "target_label": "Hibis"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1,
+      "met": 3
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751327",
+    "target_label": "Horbeit"
+  },
+  {
+    "artifact_count": 23,
+    "artifact_counts_by_museum": {
+      "brooklyn": 4,
+      "met": 19
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751330",
+    "target_label": "Hû"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751348",
+    "target_label": "Karanis"
+  },
+  {
+    "artifact_count": 8,
+    "artifact_counts_by_museum": {
+      "brooklyn": 7,
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751360",
+    "target_label": "Lischt"
+  },
+  {
+    "artifact_count": 30,
+    "artifact_counts_by_museum": {
+      "brooklyn": 11,
+      "met": 19
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751369",
+    "target_label": "Mahasna"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751371",
+    "target_label": "Mallawi"
+  },
+  {
+    "artifact_count": 75,
+    "artifact_counts_by_museum": {
+      "met": 75
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751383",
+    "target_label": "Meir"
+  },
+  {
+    "artifact_count": 9,
+    "artifact_counts_by_museum": {
+      "brooklyn": 5,
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751386",
+    "target_label": "Mendes"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "brooklyn": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751388",
+    "target_label": "Mescheich"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751394",
+    "target_label": "Nag-ed-Dêr"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "brooklyn": 3
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751425",
+    "target_label": "Pithom"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751442",
+    "target_label": "Qusiya"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751447",
+    "target_label": "Riqqeh"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751453",
+    "target_label": "Sachebu"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751461",
+    "target_label": "Saujet Abu Mesallem"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751471",
+    "target_label": "Scheich Saîd"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751480",
+    "target_label": "Samannoud"
+  },
+  {
+    "artifact_count": 10,
+    "artifact_counts_by_museum": {
+      "met": 10
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751481",
+    "target_label": "Sidmant al-Jabal"
+  },
+  {
+    "artifact_count": 37,
+    "artifact_counts_by_museum": {
+      "met": 37
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751491",
+    "target_label": "Serabit el-Chadim"
+  },
+  {
+    "artifact_count": 11,
+    "artifact_counts_by_museum": {
+      "brooklyn": 11
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751492",
+    "target_label": "Sesibi"
+  },
+  {
+    "artifact_count": 1531,
+    "artifact_counts_by_museum": {
+      "brooklyn": 4,
+      "met": 1527
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751494",
+    "target_label": "Asasîf"
+  },
+  {
+    "artifact_count": 160,
+    "artifact_counts_by_museum": {
+      "met": 160
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751495",
+    "target_label": "Khokha"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751496",
+    "target_label": "Qurnet Murai"
+  },
+  {
+    "artifact_count": 47,
+    "artifact_counts_by_museum": {
+      "met": 47
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2751499",
+    "target_label": "Tarkhan"
+  },
+  {
+    "artifact_count": 17,
+    "artifact_counts_by_museum": {
+      "brooklyn": 13,
+      "met": 4
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2751511",
+    "target_label": "Elephantine"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2768133",
+    "target_label": "Ballana"
+  },
+  {
+    "artifact_count": 34,
+    "artifact_counts_by_museum": {
+      "brooklyn": 11,
+      "met": 23
+    },
+    "entity_type": "site",
+    "museum_count": 2,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": true,
+    "target_id": "idai:2768166",
+    "target_label": "Tell el-Yahudiya"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "brooklyn": 1
+    },
+    "entity_type": "site",
+    "museum_count": 1,
+    "representation": "idai_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "idai:2769224",
+    "target_label": "Speos Artemidos"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV17",
+    "target_label": "KV17"
+  },
+  {
+    "artifact_count": 23,
+    "artifact_counts_by_museum": {
+      "met": 23
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV18",
+    "target_label": "KV18"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV2",
+    "target_label": "KV2"
+  },
+  {
+    "artifact_count": 20,
+    "artifact_counts_by_museum": {
+      "met": 20
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV20",
+    "target_label": "KV20"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV34",
+    "target_label": "KV34"
+  },
+  {
+    "artifact_count": 8,
+    "artifact_counts_by_museum": {
+      "met": 8
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV35",
+    "target_label": "KV35"
+  },
+  {
+    "artifact_count": 8,
+    "artifact_counts_by_museum": {
+      "met": 8
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV42",
+    "target_label": "KV42"
+  },
+  {
+    "artifact_count": 25,
+    "artifact_counts_by_museum": {
+      "met": 25
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV43",
+    "target_label": "KV43"
+  },
+  {
+    "artifact_count": 15,
+    "artifact_counts_by_museum": {
+      "met": 15
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV46",
+    "target_label": "KV46"
+  },
+  {
+    "artifact_count": 397,
+    "artifact_counts_by_museum": {
+      "met": 397
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV47",
+    "target_label": "KV47"
+  },
+  {
+    "artifact_count": 22,
+    "artifact_counts_by_museum": {
+      "met": 22
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV55",
+    "target_label": "KV55"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV56",
+    "target_label": "KV56"
+  },
+  {
+    "artifact_count": 10,
+    "artifact_counts_by_museum": {
+      "met": 10
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV57",
+    "target_label": "KV57"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV6",
+    "target_label": "KV6"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV62",
+    "target_label": "KV62"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV8",
+    "target_label": "KV8"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:KV9",
+    "target_label": "KV9"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:QV55",
+    "target_label": "QV55"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:QV66",
+    "target_label": "QV66"
+  },
+  {
+    "artifact_count": 35,
+    "artifact_counts_by_museum": {
+      "met": 35
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT1",
+    "target_label": "TT1"
+  },
+  {
+    "artifact_count": 59,
+    "artifact_counts_by_museum": {
+      "met": 59
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT100",
+    "target_label": "TT100"
+  },
+  {
+    "artifact_count": 14,
+    "artifact_counts_by_museum": {
+      "met": 14
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT103",
+    "target_label": "TT103"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT104",
+    "target_label": "TT104"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT108",
+    "target_label": "TT108"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT110",
+    "target_label": "TT110"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT12",
+    "target_label": "TT12"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT120",
+    "target_label": "TT120"
+  },
+  {
+    "artifact_count": 10,
+    "artifact_counts_by_museum": {
+      "met": 10
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT121",
+    "target_label": "TT121"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT125",
+    "target_label": "TT125"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT130",
+    "target_label": "TT130"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT139",
+    "target_label": "TT139"
+  },
+  {
+    "artifact_count": 17,
+    "artifact_counts_by_museum": {
+      "met": 17
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT15",
+    "target_label": "TT15"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT150",
+    "target_label": "TT150"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT16",
+    "target_label": "TT16"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT179",
+    "target_label": "TT179"
+  },
+  {
+    "artifact_count": 17,
+    "artifact_counts_by_museum": {
+      "met": 17
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT181",
+    "target_label": "TT181"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT19",
+    "target_label": "TT19"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT197",
+    "target_label": "TT197"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT20",
+    "target_label": "TT20"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT200",
+    "target_label": "TT200"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT207",
+    "target_label": "TT207"
+  },
+  {
+    "artifact_count": 11,
+    "artifact_counts_by_museum": {
+      "met": 11
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT217",
+    "target_label": "TT217"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT226",
+    "target_label": "TT226"
+  },
+  {
+    "artifact_count": 4,
+    "artifact_counts_by_museum": {
+      "met": 4
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT240",
+    "target_label": "TT240"
+  },
+  {
+    "artifact_count": 8,
+    "artifact_counts_by_museum": {
+      "met": 8
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT252",
+    "target_label": "TT252"
+  },
+  {
+    "artifact_count": 7,
+    "artifact_counts_by_museum": {
+      "met": 7
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT255",
+    "target_label": "TT255"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT277",
+    "target_label": "TT277"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT279",
+    "target_label": "TT279"
+  },
+  {
+    "artifact_count": 997,
+    "artifact_counts_by_museum": {
+      "met": 997
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT280",
+    "target_label": "TT280"
+  },
+  {
+    "artifact_count": 12,
+    "artifact_counts_by_museum": {
+      "met": 12
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT297",
+    "target_label": "TT297"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT3",
+    "target_label": "TT3"
+  },
+  {
+    "artifact_count": 77,
+    "artifact_counts_by_museum": {
+      "met": 77
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT311",
+    "target_label": "TT311"
+  },
+  {
+    "artifact_count": 410,
+    "artifact_counts_by_museum": {
+      "met": 410
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT312",
+    "target_label": "TT312"
+  },
+  {
+    "artifact_count": 13,
+    "artifact_counts_by_museum": {
+      "met": 13
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT313",
+    "target_label": "TT313"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT314",
+    "target_label": "TT314"
+  },
+  {
+    "artifact_count": 22,
+    "artifact_counts_by_museum": {
+      "met": 22
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT315",
+    "target_label": "TT315"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT316",
+    "target_label": "TT316"
+  },
+  {
+    "artifact_count": 108,
+    "artifact_counts_by_museum": {
+      "met": 108
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT319",
+    "target_label": "TT319"
+  },
+  {
+    "artifact_count": 85,
+    "artifact_counts_by_museum": {
+      "met": 85
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT320",
+    "target_label": "TT320"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT326",
+    "target_label": "TT326"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT33",
+    "target_label": "TT33"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT335",
+    "target_label": "TT335"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT34",
+    "target_label": "TT34"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT341",
+    "target_label": "TT341"
+  },
+  {
+    "artifact_count": 71,
+    "artifact_counts_by_museum": {
+      "met": 71
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT353",
+    "target_label": "TT353"
+  },
+  {
+    "artifact_count": 321,
+    "artifact_counts_by_museum": {
+      "met": 321
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT358",
+    "target_label": "TT358"
+  },
+  {
+    "artifact_count": 6,
+    "artifact_counts_by_museum": {
+      "met": 6
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT366",
+    "target_label": "TT366"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT37",
+    "target_label": "TT37"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT38",
+    "target_label": "TT38"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT382",
+    "target_label": "TT382"
+  },
+  {
+    "artifact_count": 18,
+    "artifact_counts_by_museum": {
+      "met": 18
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT39",
+    "target_label": "TT39"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT4",
+    "target_label": "TT4"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT404",
+    "target_label": "TT404"
+  },
+  {
+    "artifact_count": 8,
+    "artifact_counts_by_museum": {
+      "met": 8
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT45",
+    "target_label": "TT45"
+  },
+  {
+    "artifact_count": 6,
+    "artifact_counts_by_museum": {
+      "met": 6
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT48",
+    "target_label": "TT48"
+  },
+  {
+    "artifact_count": 3,
+    "artifact_counts_by_museum": {
+      "met": 3
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT49",
+    "target_label": "TT49"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "met": 5
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT51",
+    "target_label": "TT51"
+  },
+  {
+    "artifact_count": 14,
+    "artifact_counts_by_museum": {
+      "met": 14
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT52",
+    "target_label": "TT52"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT54",
+    "target_label": "TT54"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT55",
+    "target_label": "TT55"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT60",
+    "target_label": "TT60"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT63",
+    "target_label": "TT63"
+  },
+  {
+    "artifact_count": 6,
+    "artifact_counts_by_museum": {
+      "met": 6
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT65",
+    "target_label": "TT65"
+  },
+  {
+    "artifact_count": 5,
+    "artifact_counts_by_museum": {
+      "met": 5
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT66",
+    "target_label": "TT66"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT69",
+    "target_label": "TT69"
+  },
+  {
+    "artifact_count": 233,
+    "artifact_counts_by_museum": {
+      "met": 233
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT71",
+    "target_label": "TT71"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT73",
+    "target_label": "TT73"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT74",
+    "target_label": "TT74"
+  },
+  {
+    "artifact_count": 2,
+    "artifact_counts_by_museum": {
+      "met": 2
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT75",
+    "target_label": "TT75"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT79",
+    "target_label": "TT79"
+  },
+  {
+    "artifact_count": 1,
+    "artifact_counts_by_museum": {
+      "met": 1
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT8",
+    "target_label": "TT8"
+  },
+  {
+    "artifact_count": 22,
+    "artifact_counts_by_museum": {
+      "met": 22
+    },
+    "entity_type": "tomb_monument",
+    "museum_count": 1,
+    "representation": "pm_theban_reconciled_source_row",
+    "shared_across_museums": false,
+    "target_id": "pm_theban:TT93",
+    "target_label": "TT93"
+  }
+]
