@@ -1,0 +1,492 @@
+{
+  "definition": "Top unresolved site-expression groups from the complete pinned baseline mentions, not the 500-row archived top-gaps truncation.",
+  "per_museum": {
+    "brooklyn": [
+      {
+        "artifact_count": 2881,
+        "component_id": "component-brooklyn-01",
+        "mention_count": 3077,
+        "unresolved_status_counts": {
+          "unmatched": 3077
+        }
+      },
+      {
+        "artifact_count": 47,
+        "component_id": "component-brooklyn-02",
+        "mention_count": 47,
+        "unresolved_status_counts": {
+          "unmatched": 47
+        }
+      },
+      {
+        "artifact_count": 37,
+        "component_id": "component-brooklyn-03",
+        "mention_count": 38,
+        "unresolved_status_counts": {
+          "unmatched": 38
+        }
+      },
+      {
+        "artifact_count": 35,
+        "component_id": "component-brooklyn-04",
+        "mention_count": 40,
+        "unresolved_status_counts": {
+          "unmatched": 40
+        }
+      },
+      {
+        "artifact_count": 33,
+        "component_id": "component-brooklyn-05",
+        "mention_count": 33,
+        "unresolved_status_counts": {
+          "unmatched": 33
+        }
+      },
+      {
+        "artifact_count": 32,
+        "component_id": "component-brooklyn-06",
+        "mention_count": 32,
+        "unresolved_status_counts": {
+          "ambiguous": 32
+        }
+      },
+      {
+        "artifact_count": 32,
+        "component_id": "component-brooklyn-07",
+        "mention_count": 33,
+        "unresolved_status_counts": {
+          "unmatched": 33
+        }
+      },
+      {
+        "artifact_count": 31,
+        "component_id": "component-brooklyn-08",
+        "mention_count": 31,
+        "unresolved_status_counts": {
+          "unmatched": 31
+        }
+      },
+      {
+        "artifact_count": 30,
+        "component_id": "component-brooklyn-09",
+        "mention_count": 30,
+        "unresolved_status_counts": {
+          "unmatched": 30
+        }
+      },
+      {
+        "artifact_count": 26,
+        "component_id": "component-brooklyn-10",
+        "mention_count": 26,
+        "unresolved_status_counts": {
+          "unmatched": 26
+        }
+      },
+      {
+        "artifact_count": 22,
+        "component_id": "component-brooklyn-11",
+        "mention_count": 22,
+        "unresolved_status_counts": {
+          "unmatched": 22
+        }
+      },
+      {
+        "artifact_count": 17,
+        "component_id": "component-brooklyn-12",
+        "mention_count": 17,
+        "unresolved_status_counts": {
+          "unmatched": 17
+        }
+      },
+      {
+        "artifact_count": 15,
+        "component_id": "component-brooklyn-13",
+        "mention_count": 15,
+        "unresolved_status_counts": {
+          "unmatched": 15
+        }
+      },
+      {
+        "artifact_count": 15,
+        "component_id": "component-brooklyn-14",
+        "mention_count": 15,
+        "unresolved_status_counts": {
+          "unmatched": 15
+        }
+      },
+      {
+        "artifact_count": 13,
+        "component_id": "component-brooklyn-15",
+        "mention_count": 13,
+        "unresolved_status_counts": {
+          "unmatched": 13
+        }
+      },
+      {
+        "artifact_count": 12,
+        "component_id": "component-brooklyn-16",
+        "mention_count": 12,
+        "unresolved_status_counts": {
+          "unmatched": 12
+        }
+      },
+      {
+        "artifact_count": 12,
+        "component_id": "component-brooklyn-17",
+        "mention_count": 12,
+        "unresolved_status_counts": {
+          "unmatched": 12
+        }
+      },
+      {
+        "artifact_count": 12,
+        "component_id": "component-brooklyn-18",
+        "mention_count": 12,
+        "unresolved_status_counts": {
+          "unmatched": 12
+        }
+      },
+      {
+        "artifact_count": 10,
+        "component_id": "component-brooklyn-19",
+        "mention_count": 10,
+        "unresolved_status_counts": {
+          "unmatched": 10
+        }
+      },
+      {
+        "artifact_count": 10,
+        "component_id": "component-brooklyn-20",
+        "mention_count": 10,
+        "unresolved_status_counts": {
+          "unmatched": 10
+        }
+      }
+    ],
+    "harvard": [
+      {
+        "artifact_count": 534,
+        "component_id": "component-harvard-01",
+        "mention_count": 535,
+        "unresolved_status_counts": {
+          "unmatched": 535
+        }
+      },
+      {
+        "artifact_count": 511,
+        "component_id": "component-harvard-02",
+        "mention_count": 512,
+        "unresolved_status_counts": {
+          "unmatched": 512
+        }
+      },
+      {
+        "artifact_count": 187,
+        "component_id": "component-harvard-03",
+        "mention_count": 187,
+        "unresolved_status_counts": {
+          "unmatched": 187
+        }
+      },
+      {
+        "artifact_count": 168,
+        "component_id": "component-harvard-04",
+        "mention_count": 168,
+        "unresolved_status_counts": {
+          "unmatched": 168
+        }
+      },
+      {
+        "artifact_count": 5,
+        "component_id": "component-harvard-05",
+        "mention_count": 5,
+        "unresolved_status_counts": {
+          "unmatched": 5
+        }
+      },
+      {
+        "artifact_count": 5,
+        "component_id": "component-harvard-06",
+        "mention_count": 5,
+        "unresolved_status_counts": {
+          "unmatched": 5
+        }
+      },
+      {
+        "artifact_count": 4,
+        "component_id": "component-harvard-07",
+        "mention_count": 4,
+        "unresolved_status_counts": {
+          "unmatched": 4
+        }
+      },
+      {
+        "artifact_count": 3,
+        "component_id": "component-harvard-08",
+        "mention_count": 3,
+        "unresolved_status_counts": {
+          "unmatched": 3
+        }
+      },
+      {
+        "artifact_count": 2,
+        "component_id": "component-harvard-09",
+        "mention_count": 2,
+        "unresolved_status_counts": {
+          "unmatched": 2
+        }
+      },
+      {
+        "artifact_count": 2,
+        "component_id": "component-harvard-10",
+        "mention_count": 2,
+        "unresolved_status_counts": {
+          "unmatched": 2
+        }
+      },
+      {
+        "artifact_count": 2,
+        "component_id": "component-harvard-11",
+        "mention_count": 2,
+        "unresolved_status_counts": {
+          "ambiguous": 2
+        }
+      },
+      {
+        "artifact_count": 2,
+        "component_id": "component-harvard-12",
+        "mention_count": 2,
+        "unresolved_status_counts": {
+          "unmatched": 2
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-13",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-14",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-15",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-16",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-17",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-18",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-19",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      },
+      {
+        "artifact_count": 1,
+        "component_id": "component-harvard-20",
+        "mention_count": 1,
+        "unresolved_status_counts": {
+          "unmatched": 1
+        }
+      }
+    ],
+    "met": [
+      {
+        "artifact_count": 26573,
+        "component_id": "component-met-01",
+        "mention_count": 26573,
+        "unresolved_status_counts": {
+          "unmatched": 26573
+        }
+      },
+      {
+        "artifact_count": 4634,
+        "component_id": "component-met-02",
+        "mention_count": 4634,
+        "unresolved_status_counts": {
+          "unmatched": 4634
+        }
+      },
+      {
+        "artifact_count": 3006,
+        "component_id": "component-met-03",
+        "mention_count": 3006,
+        "unresolved_status_counts": {
+          "unmatched": 3006
+        }
+      },
+      {
+        "artifact_count": 1927,
+        "component_id": "component-met-04",
+        "mention_count": 1927,
+        "unresolved_status_counts": {
+          "unmatched": 1927
+        }
+      },
+      {
+        "artifact_count": 1518,
+        "component_id": "component-met-05",
+        "mention_count": 1518,
+        "unresolved_status_counts": {
+          "unmatched": 1518
+        }
+      },
+      {
+        "artifact_count": 1359,
+        "component_id": "component-met-06",
+        "mention_count": 1359,
+        "unresolved_status_counts": {
+          "unmatched": 1359
+        }
+      },
+      {
+        "artifact_count": 1125,
+        "component_id": "component-met-07",
+        "mention_count": 1125,
+        "unresolved_status_counts": {
+          "unmatched": 1125
+        }
+      },
+      {
+        "artifact_count": 997,
+        "component_id": "component-met-08",
+        "mention_count": 997,
+        "unresolved_status_counts": {
+          "unmatched": 997
+        }
+      },
+      {
+        "artifact_count": 997,
+        "component_id": "component-met-09",
+        "mention_count": 997,
+        "unresolved_status_counts": {
+          "unmatched": 997
+        }
+      },
+      {
+        "artifact_count": 920,
+        "component_id": "component-met-10",
+        "mention_count": 920,
+        "unresolved_status_counts": {
+          "unmatched": 920
+        }
+      },
+      {
+        "artifact_count": 908,
+        "component_id": "component-met-11",
+        "mention_count": 908,
+        "unresolved_status_counts": {
+          "unmatched": 908
+        }
+      },
+      {
+        "artifact_count": 717,
+        "component_id": "component-met-12",
+        "mention_count": 717,
+        "unresolved_status_counts": {
+          "unmatched": 717
+        }
+      },
+      {
+        "artifact_count": 570,
+        "component_id": "component-met-13",
+        "mention_count": 570,
+        "unresolved_status_counts": {
+          "unmatched": 570
+        }
+      },
+      {
+        "artifact_count": 552,
+        "component_id": "component-met-14",
+        "mention_count": 552,
+        "unresolved_status_counts": {
+          "unmatched": 552
+        }
+      },
+      {
+        "artifact_count": 505,
+        "component_id": "component-met-15",
+        "mention_count": 505,
+        "unresolved_status_counts": {
+          "unmatched": 505
+        }
+      },
+      {
+        "artifact_count": 452,
+        "component_id": "component-met-16",
+        "mention_count": 452,
+        "unresolved_status_counts": {
+          "unmatched": 452
+        }
+      },
+      {
+        "artifact_count": 430,
+        "component_id": "component-met-17",
+        "mention_count": 430,
+        "unresolved_status_counts": {
+          "unmatched": 430
+        }
+      },
+      {
+        "artifact_count": 414,
+        "component_id": "component-met-18",
+        "mention_count": 414,
+        "unresolved_status_counts": {
+          "unmatched": 414
+        }
+      },
+      {
+        "artifact_count": 397,
+        "component_id": "component-met-19",
+        "mention_count": 397,
+        "unresolved_status_counts": {
+          "unmatched": 397
+        }
+      },
+      {
+        "artifact_count": 397,
+        "component_id": "component-met-20",
+        "mention_count": 397,
+        "unresolved_status_counts": {
+          "unmatched": 397
+        }
+      }
+    ]
+  },
+  "schema_version": "site-graph-v0-top-unmatched-components/1"
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-relation-ledger-1.json",
+  "title": "Frozen candidate relation claims",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "strict_refinement_direction", "relations"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-relation-ledger/1"},
+    "strict_refinement_direction": {"const": "left_target_id_is_narrower_than_right_target_id"},
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["relation_id", "left_target_id", "right_target_id", "relation", "review_decision_key"],
+        "properties": {
+          "relation_id": {"type": "string", "minLength": 1},
+          "left_target_id": {"type": "string", "minLength": 1},
+          "right_target_id": {"type": "string", "minLength": 1},
+          "relation": {"enum": ["strict_refinement", "equivalent", "unrelated"]},
+          "review_decision_key": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}

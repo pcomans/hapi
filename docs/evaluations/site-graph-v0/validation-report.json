@@ -1,0 +1,981 @@
+{
+  "checks": [
+    {
+      "check_id": "frozen_input_bytes",
+      "evidence": {
+        "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/inventory_inputs.py": {
+          "bytes": 14242,
+          "exists": true,
+          "passed": true,
+          "sha256": "baf469b10f877388a3be8a8b5f2eea4f9eac63970cb18cd7a2e862c9ce96ad08"
+        },
+        "docs/evaluations/hapi-linkability-mvp-2026-08-28/scripts/run_linkability.py": {
+          "bytes": 36234,
+          "exists": true,
+          "passed": true,
+          "sha256": "16a2d212c47dc16905021fa08ec9a1225641a465e281b79f0e07589d1c3e59b0"
+        },
+        "external-private/data/artifacts.ndjson.gz": {
+          "bytes": 2756957,
+          "exists": true,
+          "passed": true,
+          "sha256": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24"
+        },
+        "external-private/data/raw_brooklyn.ndjson.gz": {
+          "bytes": 1172655,
+          "exists": true,
+          "passed": true,
+          "sha256": "b68ee05e1f86a664730933ee38b8178c3bcf789a32c017135877f17abf306b31"
+        },
+        "external-private/data/raw_harvard.ndjson.gz": {
+          "bytes": 401722,
+          "exists": true,
+          "passed": true,
+          "sha256": "1ac4e06ce7b3859fefdd43039c8ddbee42c6e3a80311d916db7751be79b8178f"
+        },
+        "external-private/data/raw_met.ndjson.gz": {
+          "bytes": 2473368,
+          "exists": true,
+          "passed": true,
+          "sha256": "cc81d0f676e63137fbe8575982fbb20b2b997686536d6f2a6a634d924da3394e"
+        },
+        "pipeline/pipeline/authority/claimgraph/normalize.py": {
+          "bytes": 7610,
+          "exists": true,
+          "passed": true,
+          "sha256": "ec982b40b246ec08abdfceb84e1fb1dfae4726e0299e88fc83d5dd6da1461cc8"
+        },
+        "pipeline/pipeline/authority/sources/idai-gazetteer/raw.json": {
+          "bytes": 3030361,
+          "exists": true,
+          "passed": true,
+          "sha256": "841b1260e794b381f5ceec32734f8028a28007e86b122ced103f778e8f7e6fca"
+        },
+        "pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl": {
+          "bytes": 411346,
+          "exists": true,
+          "passed": true,
+          "sha256": "607c5d6f865b6afe89efc6d7c474a554caa756b3ad723a66ddbcf7ef3219dcfd"
+        },
+        "pipeline/pipeline/authority/sources/porter-moss-memphis/reconciled.jsonl": {
+          "bytes": 669565,
+          "exists": true,
+          "passed": true,
+          "sha256": "fa497703c1d64a6d734f8255fe9a920cb9c61e44ceb811d4f86b2306fc22e343"
+        },
+        "pipeline/pipeline/authority/sources/porter-moss-theban-necropolis/reconciled.jsonl": {
+          "bytes": 347736,
+          "exists": true,
+          "passed": true,
+          "sha256": "4414c5b4a3004c3b6d6669e45a4708bf2405e0c952620633cc155a6d4478a2ff"
+        },
+        "web-claimgraph/data/claim-graph.json": {
+          "bytes": 4588036,
+          "exists": true,
+          "passed": true,
+          "sha256": "d8af0176c45d7a7a238665e2c26beb68d75ef759a7ddaafc1545e2810c5c9965"
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "external_private_input_verified",
+      "evidence": {
+        "canonical_transport_sha256": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24",
+        "generator_history": "not_available_in_handoff",
+        "pair_side_membership_count": 55455,
+        "private_opportunity_source_count": 80775,
+        "private_record_count": 36245,
+        "selected_signature_count": 50
+      },
+      "passed": true
+    },
+    {
+      "check_id": "public_data_boundary",
+      "evidence": {
+        "forbidden_public_files_absent": [
+          "frozen-opportunity-source.ndjson.gz",
+          "frozen-record-evidence.ndjson.gz",
+          "planned-opportunity-queue.json",
+          "private-opportunity-ledger.json",
+          "private-opportunity-source.ndjson.gz",
+          "private-record-evidence.ndjson.gz"
+        ],
+        "public_aggregate_files": [
+          "baseline-metrics.json",
+          "baseline-node-scope.json",
+          "planned-opportunity-summary.json",
+          "private-ledger-digests.json",
+          "top-unmatched-components.json"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "check_id": "canonical_population_and_private_record_alignment",
+      "evidence": {
+        "artifact_and_museum_alignment": true,
+        "canonical_records": 36245,
+        "private_records": 36245,
+        "records_by_museum": {
+          "brooklyn": 7554,
+          "harvard": 722,
+          "met": 27969
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "node_scope_recomputed_from_crosswalk_and_complete_available_hierarchy",
+      "evidence": {
+        "filtered_1000_parent_outside_filtered_set": 566,
+        "measure_explanation": "566 counts filtered targets whose parent is absent from the filtered 1,000; 699 counts raw records whose parent reference is absent from all 2,075 available raw records.",
+        "raw_2075_parent_reference_outside_raw_set": 699,
+        "scope_counts": {
+          "broad": 200,
+          "specific_candidate": 799,
+          "unclassified": 1
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "headline_metrics_recomputed",
+      "evidence": {
+        "all_three_shared_node_count": 3,
+        "any_two_or_more_shared_node_count": 48,
+        "pair_shared_node_counts": {
+          "brooklyn__harvard": 4,
+          "met__brooklyn": 47,
+          "met__harvard": 3
+        },
+        "per_museum": {
+          "brooklyn": {
+            "absolute_authority_only_maximum_measurable_gain": {
+              "conditional_percentage_point_ceiling": {
+                "denominator": 2978,
+                "numerator": 1743,
+                "value": 0.5852921423774345
+              },
+              "interpretation": "Upper bound if every already-extracted-site-text record lacking a unique link became uniquely resolvable; not an expected effect or an accuracy claim.",
+              "overall_percentage_point_ceiling": {
+                "denominator": 7554,
+                "numerator": 1743,
+                "value": 0.2307386814932486
+              },
+              "records": 1743
+            },
+            "canonical_records": 7554,
+            "extracted_site_text_availability_rate": {
+              "denominator": 7554,
+              "numerator": 2978,
+              "value": 0.3942282234577707
+            },
+            "extracted_site_text_conditional_linkability": {
+              "denominator": 2978,
+              "numerator": 1235,
+              "value": 0.41470785762256546
+            },
+            "extracted_site_text_evidence_records": 2978,
+            "extracted_site_text_without_unique_site_link": 1743,
+            "no_extracted_site_evidence_records": 4576,
+            "overall_linkability": {
+              "denominator": 7554,
+              "numerator": 1235,
+              "value": 0.16348954196452212
+            },
+            "records_with_any_ambiguity": 32,
+            "records_with_any_unmatched_expression": 2978,
+            "records_with_blocking_ambiguity": 8,
+            "records_with_unique_site_link": 1235,
+            "resolution_state_counts": {
+              "blocking_ambiguous_and_unmatched": 8,
+              "no_extracted_site_evidence": 4576,
+              "resolved_with_unresolved_mentions": 1235,
+              "unmatched_only": 1735
+            }
+          },
+          "harvard": {
+            "absolute_authority_only_maximum_measurable_gain": {
+              "conditional_percentage_point_ceiling": {
+                "denominator": 540,
+                "numerator": 273,
+                "value": 0.5055555555555555
+              },
+              "interpretation": "Upper bound if every already-extracted-site-text record lacking a unique link became uniquely resolvable; not an expected effect or an accuracy claim.",
+              "overall_percentage_point_ceiling": {
+                "denominator": 722,
+                "numerator": 273,
+                "value": 0.3781163434903047
+              },
+              "records": 273
+            },
+            "canonical_records": 722,
+            "extracted_site_text_availability_rate": {
+              "denominator": 722,
+              "numerator": 540,
+              "value": 0.7479224376731302
+            },
+            "extracted_site_text_conditional_linkability": {
+              "denominator": 540,
+              "numerator": 267,
+              "value": 0.49444444444444446
+            },
+            "extracted_site_text_evidence_records": 540,
+            "extracted_site_text_without_unique_site_link": 273,
+            "no_extracted_site_evidence_records": 182,
+            "overall_linkability": {
+              "denominator": 722,
+              "numerator": 267,
+              "value": 0.3698060941828255
+            },
+            "records_with_any_ambiguity": 2,
+            "records_with_any_unmatched_expression": 540,
+            "records_with_blocking_ambiguity": 2,
+            "records_with_unique_site_link": 267,
+            "resolution_state_counts": {
+              "blocking_ambiguous_and_unmatched": 2,
+              "no_extracted_site_evidence": 182,
+              "resolved_with_unresolved_mentions": 267,
+              "unmatched_only": 271
+            }
+          },
+          "met": {
+            "absolute_authority_only_maximum_measurable_gain": {
+              "conditional_percentage_point_ceiling": {
+                "denominator": 27889,
+                "numerator": 12871,
+                "value": 0.4615081214815877
+              },
+              "interpretation": "Upper bound if every already-extracted-site-text record lacking a unique link became uniquely resolvable; not an expected effect or an accuracy claim.",
+              "overall_percentage_point_ceiling": {
+                "denominator": 27969,
+                "numerator": 12871,
+                "value": 0.460188065358075
+              },
+              "records": 12871
+            },
+            "canonical_records": 27969,
+            "extracted_site_text_availability_rate": {
+              "denominator": 27969,
+              "numerator": 27889,
+              "value": 0.9971396903714828
+            },
+            "extracted_site_text_conditional_linkability": {
+              "denominator": 27889,
+              "numerator": 15018,
+              "value": 0.5384918785184123
+            },
+            "extracted_site_text_evidence_records": 27889,
+            "extracted_site_text_without_unique_site_link": 12871,
+            "no_extracted_site_evidence_records": 80,
+            "overall_linkability": {
+              "denominator": 27969,
+              "numerator": 15018,
+              "value": 0.5369516250134077
+            },
+            "records_with_any_ambiguity": 168,
+            "records_with_any_unmatched_expression": 27722,
+            "records_with_blocking_ambiguity": 150,
+            "records_with_unique_site_link": 15018,
+            "resolution_state_counts": {
+              "blocking_ambiguous_and_unmatched": 133,
+              "blocking_ambiguous_only": 17,
+              "no_extracted_site_evidence": 80,
+              "resolved_only": 150,
+              "resolved_with_unresolved_mentions": 14868,
+              "unmatched_only": 12721
+            }
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "intent_to_treat_aggregates_and_private_membership_recomputed",
+      "evidence": {
+        "pair_side_ceilings": {
+          "brooklyn__harvard": {
+            "sides": {
+              "brooklyn": {
+                "baseline_pair_partition": {
+                  "baseline_broad_only": 324,
+                  "baseline_specific_present": 8,
+                  "no_baseline_pair_connection": 2636
+                },
+                "credited_effect_opportunity_denominator": 2960,
+                "credited_pair_opportunity_membership_sha256": "1599256caa6928534903fd5d33f8cd6db1af646dd66fe1963699de0aa4a5d5e1",
+                "intent_to_treat_record_count": 2968,
+                "minimum_credited_affected_records_for_continue": 296,
+                "new_pair_connection_ceiling_records": 2636,
+                "strict_refinement_pair_reassignment_ceiling_records": 324
+              },
+              "harvard": {
+                "baseline_pair_partition": {
+                  "baseline_broad_only": 5,
+                  "baseline_specific_present": 2,
+                  "no_baseline_pair_connection": 532
+                },
+                "credited_effect_opportunity_denominator": 537,
+                "credited_pair_opportunity_membership_sha256": "295078b87064dc71908ed04cc9e91cb4b3eeeda14f9480ec3725cbe8f907537b",
+                "intent_to_treat_record_count": 539,
+                "minimum_credited_affected_records_for_continue": 54,
+                "new_pair_connection_ceiling_records": 532,
+                "strict_refinement_pair_reassignment_ceiling_records": 5
+              }
+            }
+          },
+          "met__brooklyn": {
+            "sides": {
+              "brooklyn": {
+                "baseline_pair_partition": {
+                  "baseline_broad_only": 853,
+                  "baseline_specific_present": 298,
+                  "no_baseline_pair_connection": 1817
+                },
+                "credited_effect_opportunity_denominator": 2670,
+                "credited_pair_opportunity_membership_sha256": "eaa086ae0c0defdd416511a5c80e35bb964329894bf4618b36d70ff79aa5b16d",
+                "intent_to_treat_record_count": 2968,
+                "minimum_credited_affected_records_for_continue": 267,
+                "new_pair_connection_ceiling_records": 1817,
+                "strict_refinement_pair_reassignment_ceiling_records": 853
+              },
+              "met": {
+                "baseline_pair_partition": {
+                  "baseline_broad_only": 8514,
+                  "baseline_specific_present": 5611,
+                  "no_baseline_pair_connection": 13056
+                },
+                "credited_effect_opportunity_denominator": 21570,
+                "credited_pair_opportunity_membership_sha256": "a07da98f9d95a001d06b96caccc655f2a936d10ca001d3c7b29aeb3fcf14b32a",
+                "intent_to_treat_record_count": 27181,
+                "minimum_credited_affected_records_for_continue": 2157,
+                "new_pair_connection_ceiling_records": 13056,
+                "strict_refinement_pair_reassignment_ceiling_records": 8514
+              }
+            }
+          },
+          "met__harvard": {
+            "sides": {
+              "harvard": {
+                "baseline_pair_partition": {
+                  "baseline_broad_only": 5,
+                  "baseline_specific_present": 1,
+                  "no_baseline_pair_connection": 533
+                },
+                "credited_effect_opportunity_denominator": 538,
+                "credited_pair_opportunity_membership_sha256": "f1a836f54d7a5ceb40496539fa385c75a6393751527370a4777ff75f0cb2c90c",
+                "intent_to_treat_record_count": 539,
+                "minimum_credited_affected_records_for_continue": 54,
+                "new_pair_connection_ceiling_records": 533,
+                "strict_refinement_pair_reassignment_ceiling_records": 5
+              },
+              "met": {
+                "baseline_pair_partition": {
+                  "baseline_broad_only": 501,
+                  "baseline_specific_present": 1,
+                  "no_baseline_pair_connection": 26679
+                },
+                "credited_effect_opportunity_denominator": 27180,
+                "credited_pair_opportunity_membership_sha256": "9f628a825c4d3c4f3c4df4ea47eb977920df12ca8043204746f0fe18c7f7338a",
+                "intent_to_treat_record_count": 27181,
+                "minimum_credited_affected_records_for_continue": 2718,
+                "new_pair_connection_ceiling_records": 26679,
+                "strict_refinement_pair_reassignment_ceiling_records": 501
+              }
+            }
+          }
+        },
+        "per_museum": {
+          "brooklyn": {
+            "baseline_record_scope_counts": {
+              "broad_only": 864,
+              "no_link": 1733,
+              "specific_candidate_present": 369,
+              "unclassified_only": 2
+            },
+            "intent_to_treat_record_count": 2968,
+            "maximum_credited_affected_records": 2597,
+            "maximum_extracted_site_text_conditional_effect": {
+              "denominator": 2978,
+              "numerator": 2597,
+              "value": 0.8720617864338482
+            },
+            "maximum_overall_effect": {
+              "denominator": 7554,
+              "numerator": 2597,
+              "value": 0.34379136881122585
+            },
+            "new_record_link_ceiling_records": 1733,
+            "selected_signature_count": 10,
+            "strict_refinement_reassignment_ceiling_records": 864
+          },
+          "harvard": {
+            "baseline_record_scope_counts": {
+              "broad_only": 5,
+              "no_link": 272,
+              "specific_candidate_present": 262
+            },
+            "intent_to_treat_record_count": 539,
+            "maximum_credited_affected_records": 277,
+            "maximum_extracted_site_text_conditional_effect": {
+              "denominator": 540,
+              "numerator": 277,
+              "value": 0.512962962962963
+            },
+            "maximum_overall_effect": {
+              "denominator": 722,
+              "numerator": 277,
+              "value": 0.38365650969529086
+            },
+            "new_record_link_ceiling_records": 272,
+            "selected_signature_count": 10,
+            "strict_refinement_reassignment_ceiling_records": 5
+          },
+          "met": {
+            "baseline_record_scope_counts": {
+              "broad_only": 8278,
+              "no_link": 12526,
+              "specific_candidate_present": 6377
+            },
+            "intent_to_treat_record_count": 27181,
+            "maximum_credited_affected_records": 20804,
+            "maximum_extracted_site_text_conditional_effect": {
+              "denominator": 27889,
+              "numerator": 20804,
+              "value": 0.745957187421564
+            },
+            "maximum_overall_effect": {
+              "denominator": 27969,
+              "numerator": 20804,
+              "value": 0.7438235188959205
+            },
+            "new_record_link_ceiling_records": 12526,
+            "selected_signature_count": 30,
+            "strict_refinement_reassignment_ceiling_records": 8278
+          }
+        },
+        "private_opportunity_ledger_canonical_sha256": "45204ffb7d828edf6290bab9ed573ac5abb838811e64289c0cb3e720459c64a1",
+        "selected_signatures": 50
+      },
+      "passed": true
+    },
+    {
+      "check_id": "machine_readable_formulas",
+      "evidence": {
+        "blocking_ambiguity": "|{r in X_m: direct targets empty and any site mention ambiguous}| / |X_m|",
+        "extracted_site_text_availability": "|X_m| / |A_m|",
+        "extracted_site_text_conditional_linkability": "|L_m| / |X_m|",
+        "hhi": "sum_j(I_j^2) / (sum_j I_j)^2",
+        "overall_linkability": "|L_m| / |A_m|",
+        "pair_side_coverage_extracted_site_text_conditional": "D_(m->n) / |X_m|",
+        "pair_side_coverage_overall": "D_(m->n) / |A_m|",
+        "planned_maximum_extracted_site_text_conditional_effect": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |X_m|",
+        "planned_maximum_overall_effect": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |A_m|",
+        "top_k_concentration": "|union of museum-side records incident on its top-k shared identity classes| / |union of museum-side records incident on all its shared identity classes|"
+      },
+      "passed": true
+    },
+    {
+      "check_id": "machine_readable_decision_thresholds",
+      "evidence": {
+        "executable": {
+          "ambiguity_maximum_increase": {
+            "denominator": 200,
+            "numerator": 1
+          },
+          "concentration_maximum_increase": {
+            "denominator": 20,
+            "numerator": 1
+          },
+          "minimum_affected_opportunity_fraction": {
+            "denominator": 10,
+            "numerator": 1
+          },
+          "minimum_gained_distinct_specific_identity_classes": 2,
+          "minimum_reviews_per_credited_decision": 2,
+          "opportunity_museum_protection_signatures": 10,
+          "opportunity_total_signatures": 50
+        },
+        "preregistered": {
+          "ambiguity_maximum_increase": {
+            "denominator": 200,
+            "numerator": 1
+          },
+          "concentration_maximum_increase": {
+            "denominator": 20,
+            "numerator": 1
+          },
+          "minimum_affected_opportunity_fraction": {
+            "denominator": 10,
+            "numerator": 1
+          },
+          "minimum_gained_distinct_specific_identity_classes": 2,
+          "minimum_reviews_per_credited_decision": 2,
+          "opportunity_museum_protection_signatures": 10,
+          "opportunity_total_signatures": 50
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "per_side_top_k_and_hhi_concentration",
+      "evidence": {
+        "brooklyn__harvard": {
+          "brooklyn": {
+            "distinct_connected_records": 332,
+            "node_incidence_hhi": {
+              "denominator": 110224,
+              "numerator": 102466,
+              "value": 0.9296160545797648
+            },
+            "node_incidence_total": 332,
+            "shared_node_count": 4,
+            "top_k_unique_record_concentration": {
+              "1": {
+                "ratio": {
+                  "denominator": 332,
+                  "numerator": 320,
+                  "value": 0.963855421686747
+                },
+                "selected_target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "10": {
+                "ratio": {
+                  "denominator": 332,
+                  "numerator": 332,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              },
+              "5": {
+                "ratio": {
+                  "denominator": 332,
+                  "numerator": 332,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
+            }
+          },
+          "harvard": {
+            "distinct_connected_records": 7,
+            "node_incidence_hhi": {
+              "denominator": 49,
+              "numerator": 19,
+              "value": 0.3877551020408163
+            },
+            "node_incidence_total": 7,
+            "shared_node_count": 4,
+            "top_k_unique_record_concentration": {
+              "1": {
+                "ratio": {
+                  "denominator": 7,
+                  "numerator": 4,
+                  "value": 0.5714285714285714
+                },
+                "selected_target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "10": {
+                "ratio": {
+                  "denominator": 7,
+                  "numerator": 7,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              },
+              "5": {
+                "ratio": {
+                  "denominator": 7,
+                  "numerator": 7,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ]
+              }
+            }
+          }
+        },
+        "met__brooklyn": {
+          "brooklyn": {
+            "distinct_connected_records": 1151,
+            "node_incidence_hhi": {
+              "denominator": 1411344,
+              "numerator": 224178,
+              "value": 0.15884008434513486
+            },
+            "node_incidence_total": 1188,
+            "shared_node_count": 47,
+            "top_k_unique_record_concentration": {
+              "1": {
+                "ratio": {
+                  "denominator": 1151,
+                  "numerator": 320,
+                  "value": 0.27801911381407474
+                },
+                "selected_target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "10": {
+                "ratio": {
+                  "denominator": 1151,
+                  "numerator": 1017,
+                  "value": 0.8835794960903562
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042921",
+                  "idai:2296218",
+                  "idai:2412478",
+                  "idai:2042877",
+                  "idai:2089516",
+                  "idai:2042834",
+                  "idai:2042802",
+                  "idai:2042846",
+                  "idai:2042805"
+                ]
+              },
+              "5": {
+                "ratio": {
+                  "denominator": 1151,
+                  "numerator": 896,
+                  "value": 0.7784535186794093
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042921",
+                  "idai:2296218",
+                  "idai:2412478",
+                  "idai:2042877"
+                ]
+              }
+            }
+          },
+          "met": {
+            "distinct_connected_records": 14392,
+            "node_incidence_hhi": {
+              "denominator": 1171076841,
+              "numerator": 279545257,
+              "value": 0.23870786887160378
+            },
+            "node_incidence_total": 34221,
+            "shared_node_count": 47,
+            "top_k_unique_record_concentration": {
+              "1": {
+                "ratio": {
+                  "denominator": 14392,
+                  "numerator": 11417,
+                  "value": 0.7932879377431906
+                },
+                "selected_target_ids": [
+                  "idai:2379505"
+                ]
+              },
+              "10": {
+                "ratio": {
+                  "denominator": 14392,
+                  "numerator": 13172,
+                  "value": 0.915230683713174
+                },
+                "selected_target_ids": [
+                  "idai:2379505",
+                  "idai:2042921",
+                  "idai:2110510",
+                  "idai:2042871",
+                  "idai:2751494",
+                  "idai:2296218",
+                  "idai:2096884",
+                  "idai:2101716",
+                  "idai:2042907",
+                  "idai:2412478"
+                ]
+              },
+              "5": {
+                "ratio": {
+                  "denominator": 14392,
+                  "numerator": 11423,
+                  "value": 0.7937048360200111
+                },
+                "selected_target_ids": [
+                  "idai:2379505",
+                  "idai:2042921",
+                  "idai:2110510",
+                  "idai:2042871",
+                  "idai:2751494"
+                ]
+              }
+            }
+          }
+        },
+        "met__harvard": {
+          "harvard": {
+            "distinct_connected_records": 6,
+            "node_incidence_hhi": {
+              "denominator": 36,
+              "numerator": 18,
+              "value": 0.5
+            },
+            "node_incidence_total": 6,
+            "shared_node_count": 3,
+            "top_k_unique_record_concentration": {
+              "1": {
+                "ratio": {
+                  "denominator": 6,
+                  "numerator": 4,
+                  "value": 0.6666666666666666
+                },
+                "selected_target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "10": {
+                "ratio": {
+                  "denominator": 6,
+                  "numerator": 6,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ]
+              },
+              "5": {
+                "ratio": {
+                  "denominator": 6,
+                  "numerator": 6,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ]
+              }
+            }
+          },
+          "met": {
+            "distinct_connected_records": 506,
+            "node_incidence_hhi": {
+              "denominator": 256036,
+              "numerator": 210338,
+              "value": 0.8215172866315674
+            },
+            "node_incidence_total": 506,
+            "shared_node_count": 3,
+            "top_k_unique_record_concentration": {
+              "1": {
+                "ratio": {
+                  "denominator": 506,
+                  "numerator": 456,
+                  "value": 0.9011857707509882
+                },
+                "selected_target_ids": [
+                  "idai:2042907"
+                ]
+              },
+              "10": {
+                "ratio": {
+                  "denominator": 506,
+                  "numerator": 506,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042814",
+                  "idai:2042797"
+                ]
+              },
+              "5": {
+                "ratio": {
+                  "denominator": 506,
+                  "numerator": 506,
+                  "value": 1.0
+                },
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042814",
+                  "idai:2042797"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "single_source_type_crosswalk",
+      "evidence": {
+        "actual_idai_types": [
+          "administrative-unit",
+          "archaeological-area",
+          "archaeological-site",
+          "building-institution",
+          "hydrography",
+          "island",
+          "landcover",
+          "landform",
+          "populated-place"
+        ],
+        "crosswalk_types": [
+          "administrative-unit",
+          "archaeological-area",
+          "archaeological-site",
+          "building-institution",
+          "hydrography",
+          "island",
+          "landcover",
+          "landform",
+          "populated-place"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "check_id": "all_json_schemas_executed",
+      "evidence": {
+        "schema_count": 12,
+        "schemas": [
+          "candidate-freeze-manifest.schema.json",
+          "candidate-hierarchy.schema.json",
+          "candidate-source-snapshot.schema.json",
+          "candidate.schema.json",
+          "comparison-report.schema.json",
+          "correction-ledger.schema.json",
+          "opportunity-summary.schema.json",
+          "private-opportunity-ledger.schema.json",
+          "prompt-leakage-audit.schema.json",
+          "relation-ledger.schema.json",
+          "review-artifact.schema.json",
+          "review-ledger.schema.json"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "check_id": "immutable_primary_and_private_correction_policy",
+      "evidence": {
+        "allowed_operations": [
+          "add_direct_target",
+          "remove_direct_target",
+          "replace_direct_target",
+          "set_site_mention_status_count"
+        ],
+        "baseline_policy": "The primary baseline and its public aggregate/digest artifacts are immutable. Corrections are private append-only primitive evidence operations and produce a separately hashed sensitivity run.",
+        "current_primary_corrections_applied": 0,
+        "private_ledger_schema": "schemas/correction-ledger.schema.json",
+        "schema_version": "site-graph-v0-correction-policy/2",
+        "sensitivity_publication": "Only non-bulk aggregate metrics and cryptographic ledger hashes may be released; corrected record and membership ledgers remain private."
+      },
+      "passed": true
+    },
+    {
+      "check_id": "authenticated_deterministic_baseline_reproduction",
+      "evidence": {
+        "committed_public_outputs_match": true,
+        "deterministic_output_count": 17,
+        "run_a": {
+          "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
+          "provenance_sha256": "ba4c53694b5294c09ba218591006078b512b37491ea213e08f13195b07743e58",
+          "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-a",
+          "run_id": "5d0d6cbf-5128-4b3c-8e71-6cfa04d31fbb"
+        },
+        "run_b": {
+          "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
+          "provenance_sha256": "06e2f0625c9a43b5e3f5f9c0c64813eb319bf27913398f1691b446cd1c397865",
+          "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-b",
+          "run_id": "35c832f1-2307-4c27-8a3c-2f6dbd42eb8e"
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "ordered_decision_and_review_census",
+      "evidence": {
+        "decision_rule": {
+          "CONTINUE": "Integrity and every safety gate pass, and at least one museum pair gains at least two credited distinct specific identity classes; each side has credited affected records >= max(1, ceil(0.10 * its fixed nonempty O_pair_side)); and broad-only share over X_m strictly decreases on at least one side without increasing on the other.",
+          "INVALID": "Any schema, hash, exact-population, exact-inventory, pre-freeze, review-artifact, or other integrity failure. No product conclusion is allowed.",
+          "REDESIGN": "Integrity passes, but any baseline loss exists; blocking ambiguity rises by more than 5/1000 of X_m for any museum; or any top-1/top-5/top-10 unique-record-union ratio or incidence HHI exceeds its side-specific limit.",
+          "STOP": "Integrity and safety pass but no pair satisfies every CONTINUE utility condition.",
+          "museum_equality_required": false,
+          "narrowness_without_support_can_satisfy_continue": false,
+          "precedence": [
+            "INVALID",
+            "REDESIGN",
+            "CONTINUE",
+            "STOP"
+          ],
+          "raw_link_rate_growth_can_satisfy_continue": false
+        },
+        "review_census": {
+          "credit_gate": "Census of every credited new-link, strict-refinement, and equivalent decision with two structured independent artifacts.",
+          "held_out_sample": "Optional descriptive audit only. If used, sort all non-credited candidate decision keys by SHA-256('site-graph-v0-descriptive-audit-v1' + U+0000 + decision_key), then take the first min(100, ceil(0.10*N)); freeze the resulting key list before review.",
+          "held_out_sample_is_pass_gate": false,
+          "population_precision_claim_permitted": false,
+          "reviews_per_decision": 2
+        }
+      },
+      "passed": true
+    },
+    {
+      "check_id": "external_handoff_metadata_authenticated",
+      "evidence": {
+        "external_private_prerequisite": "verified",
+        "historical_export_reproducible": false,
+        "known_reproduction_limit": "The handoff does not record the export command/code revision or Dagster run identifiers. Its bytes can be verified and restored using the committed manifest/verifier copies, but the export cannot be regenerated bit-for-bit from repository history alone; baseline_base_commit is the evaluated checkout, not an asserted export-generator commit."
+      },
+      "passed": true
+    },
+    {
+      "check_id": "review_provenance_and_dispositions",
+      "evidence": {
+        "round_1_reviewed_commit": "36c23e7424f3deb901cc86a5019b408d3951c208",
+        "round_2_finding_count": 13,
+        "round_2_reviewed_commit": "0ea47dad1e9e415d0fe76ac1fc0157ce218fbdad"
+      },
+      "passed": true
+    }
+  ],
+  "limitations": [
+    {
+      "effect": "The authorized handoff bytes are verified, but the historical export cannot be regenerated from repository history because its export command, code revision, and pipeline run identifiers were not supplied.",
+      "id": "external_private_export_generator_history_missing"
+    }
+  ],
+  "schema_version": "site-graph-v0-validation-report/3",
+  "scope": "verified real 36,245-record private corpus; fixtures/proxies support no corpus claim",
+  "status": "pass",
+  "summary": {
+    "canonical_records": 36245,
+    "checks": 17,
+    "failed": 0,
+    "passed": 17,
+    "private_record_evidence_gzip_sha256": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
+    "private_record_evidence_uncompressed_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798"
+  }
+}

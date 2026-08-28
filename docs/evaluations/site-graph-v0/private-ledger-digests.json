@@ -1,0 +1,94 @@
+{
+  "canonical_serialization": "UTF-8 compact sorted-key JSON per row followed by LF for NDJSON; UTF-8 compact sorted-key JSON for JSON ledgers",
+  "external_private_input": {
+    "canonical_artifact_transport_gzip_sha256": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24",
+    "canonical_record_count": 36245,
+    "generator_history": "not_available_in_handoff",
+    "status": "external_private_input_verified"
+  },
+  "ledgers": {
+    "private_opportunity_membership": {
+      "bytes": 13556740,
+      "canonical_json_sha256": "45204ffb7d828edf6290bab9ed573ac5abb838811e64289c0cb3e720459c64a1",
+      "intent_to_treat_record_counts_by_museum": {
+        "brooklyn": 2968,
+        "harvard": 539,
+        "met": 27181
+      },
+      "selected_signature_count": 50,
+      "transport_json_sha256": "55c8f6ce56b591a5f413e2e84ea36333bc50a3d6f52e8f37243e28a1a8fdd924"
+    },
+    "private_opportunity_source": {
+      "canonical_row_merkle_sha256": "ca1133c9544baa8ae90649f5e815252aca1d665056fe3658b0b055bc54c9d944",
+      "canonical_uncompressed_ndjson_sha256": "fa0dce58d96e0d22ebb7518c9d569afe5d9e064f49dcfc01f87fc6c4ee31eb1a",
+      "merkle_algorithm": "sha256(canonical compact sorted-key JSON row plus LF) leaves; sha256(left_digest || right_digest), duplicating an odd final digest",
+      "row_count": 80775,
+      "transport_gzip_sha256": "b435807f498dfacaf1f522948df5235e81822de5819fe8c45668cfe285dcdf33"
+    },
+    "private_record_evidence": {
+      "canonical_row_merkle_sha256": "76ce89113febad6b626a608fa58fd998d669f532fce5860e766b8c8f40c577d0",
+      "canonical_uncompressed_ndjson_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+      "merkle_algorithm": "sha256(canonical compact sorted-key JSON row plus LF) leaves; sha256(left_digest || right_digest), duplicating an odd final digest",
+      "row_count": 36245,
+      "transport_gzip_sha256": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8"
+    }
+  },
+  "pair_side_membership": {
+    "brooklyn__harvard": {
+      "brooklyn": {
+        "canonical_json_sha256": "1599256caa6928534903fd5d33f8cd6db1af646dd66fe1963699de0aa4a5d5e1",
+        "category_counts": {
+          "broad_only_pair_connection": 324,
+          "no_baseline_pair_connection": 2636
+        },
+        "record_count": 2960
+      },
+      "harvard": {
+        "canonical_json_sha256": "295078b87064dc71908ed04cc9e91cb4b3eeeda14f9480ec3725cbe8f907537b",
+        "category_counts": {
+          "broad_only_pair_connection": 5,
+          "no_baseline_pair_connection": 532
+        },
+        "record_count": 537
+      }
+    },
+    "met__brooklyn": {
+      "brooklyn": {
+        "canonical_json_sha256": "eaa086ae0c0defdd416511a5c80e35bb964329894bf4618b36d70ff79aa5b16d",
+        "category_counts": {
+          "broad_only_pair_connection": 853,
+          "no_baseline_pair_connection": 1817
+        },
+        "record_count": 2670
+      },
+      "met": {
+        "canonical_json_sha256": "a07da98f9d95a001d06b96caccc655f2a936d10ca001d3c7b29aeb3fcf14b32a",
+        "category_counts": {
+          "broad_only_pair_connection": 8514,
+          "no_baseline_pair_connection": 13056
+        },
+        "record_count": 21570
+      }
+    },
+    "met__harvard": {
+      "harvard": {
+        "canonical_json_sha256": "f1a836f54d7a5ceb40496539fa385c75a6393751527370a4777ff75f0cb2c90c",
+        "category_counts": {
+          "broad_only_pair_connection": 5,
+          "no_baseline_pair_connection": 533
+        },
+        "record_count": 538
+      },
+      "met": {
+        "canonical_json_sha256": "9f628a825c4d3c4f3c4df4ea47eb977920df12ca8043204746f0fe18c7f7338a",
+        "category_counts": {
+          "broad_only_pair_connection": 501,
+          "no_baseline_pair_connection": 26679
+        },
+        "record_count": 27180
+      }
+    }
+  },
+  "public_data_boundary": "This file contains counts and cryptographic digests only. Private ledger rows must be regenerated from the separately supplied verified corpus.",
+  "schema_version": "site-graph-v0-private-ledger-digests/1"
+}

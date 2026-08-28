@@ -1,0 +1,13 @@
+{
+  "schema_version": "site-graph-v0-correction-policy/2",
+  "baseline_policy": "The primary baseline and its public aggregate/digest artifacts are immutable. Corrections are private append-only primitive evidence operations and produce a separately hashed sensitivity run.",
+  "allowed_operations": [
+    "add_direct_target",
+    "remove_direct_target",
+    "replace_direct_target",
+    "set_site_mention_status_count"
+  ],
+  "current_primary_corrections_applied": 0,
+  "private_ledger_schema": "schemas/correction-ledger.schema.json",
+  "sensitivity_publication": "Only non-bulk aggregate metrics and cryptographic ledger hashes may be released; corrected record and membership ledgers remain private."
+}

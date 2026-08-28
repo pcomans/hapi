@@ -1,0 +1,40 @@
+{
+  "schema_version": "site-graph-v0-review-provenance/1",
+  "review_round": 2,
+  "reviewed_commit": "0ea47dad1e9e415d0fe76ac1fc0157ce218fbdad",
+  "reviewer_cli": {
+    "name": "claude",
+    "version": "2.1.247",
+    "agent": "code-reviewer",
+    "model_selector": "opus",
+    "backend_model_id": "not_exposed_by_claude_cli",
+    "backend_snapshot": "not_exposed_by_claude_cli",
+    "temperature": "not_exposed_by_claude_cli",
+    "max_tokens": "not_exposed_by_claude_cli",
+    "permission_mode": "not_exposed_by_claude_cli"
+  },
+  "invocation": "claude -p --agent code-reviewer --output-format text --tools 'Read,Glob,Grep,WebFetch,WebSearch' < /tmp/hapi-327-claude-rereview-prompt.md",
+  "working_directory": "/tmp/hapi-worktrees/issue-327",
+  "declared_tool_set": ["Read", "Glob", "Grep", "WebFetch", "WebSearch"],
+  "observed_tool_limitations": [
+    "reviewer reported no shell access",
+    "WebFetch permission was denied"
+  ],
+  "invocation_time_provenance": {
+    "kind": "filesystem_metadata_not_a_claim_of_process_start_or_finish_time",
+    "prompt_mtime": "2026-08-28 21:50:49.181966770 +0000",
+    "output_mtime": "2026-08-28 22:00:35.491888372 +0000"
+  },
+  "artifacts": {
+    "prompt.md": {
+      "bytes": 1438,
+      "sha256": "100c139713e9332ee582f9b4632479c1ac440574aa37aaf88ad18e3cb237bb8e",
+      "copy_policy": "verbatim"
+    },
+    "raw-output.txt": {
+      "bytes": 27195,
+      "sha256": "da6665870ff7665c75aa99e319be06911ff0eb5967fdaa497854d2228981b9e7",
+      "copy_policy": "verbatim_unaltered"
+    }
+  }
+}

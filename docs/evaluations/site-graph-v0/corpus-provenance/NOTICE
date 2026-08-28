@@ -1,0 +1,66 @@
+Hapi — Egyptian Artifacts Index
+Copyright 2026 Philipp Comans
+
+This product includes first-party software licensed under the Apache License,
+Version 2.0 (see LICENSE).
+
+It also incorporates third-party data and specifications under their own terms.
+The following attributions are required by those terms and must be preserved.
+
+--------------------------------------------------------------------------------
+Vendored specifications
+--------------------------------------------------------------------------------
+
+CIDOC Conceptual Reference Model (CIDOC CRM) v7.1.3, and CRMdig v5.0
+  © CIDOC CRM Special Interest Group (CRM-SIG)
+  Licensed under Creative Commons Attribution 4.0 (CC BY 4.0)
+  https://cidoc-crm.org/
+  Vendored at: pipeline/pipeline/authority/spec/
+  (Used as the conceptual model for the authority claim graph; see ADR-018.)
+
+--------------------------------------------------------------------------------
+Incorporated reference data (committed to this repository)
+--------------------------------------------------------------------------------
+
+iDAI.gazetteer — archaeological site authority
+  © Deutsches Archäologisches Institut (German Archaeological Institute, DAI)
+  Licensed under Creative Commons Attribution 4.0 (CC BY 4.0)
+  https://gazetteer.dainst.org/
+
+pharaoh.se — ruler list / chronology
+  © Peter Lundström
+  Licensed under Creative Commons Attribution 4.0 (CC BY 4.0)
+  https://pharaoh.se/
+
+--------------------------------------------------------------------------------
+Museum data accessed via public APIs (not redistributed in bulk here)
+--------------------------------------------------------------------------------
+
+The Metropolitan Museum of Art — Open Access metadata
+  Released under Creative Commons Zero (CC0 1.0). No attribution required;
+  credited here as a courtesy. https://www.metmuseum.org/
+
+Brooklyn Museum — collection data and images
+  Use is NONCOMMERCIAL with attribution. Image and data display must honor each
+  object's per-record rights. https://www.brooklynmuseum.org/
+
+Harvard Art Museums — collection data and images
+  Use is for NONCOMMERCIAL educational/scholarly purposes; image display is
+  gated per-object by `imagepermissionlevel`. https://harvardartmuseums.org/
+
+NOTE: Because Brooklyn and Harvard terms are noncommercial, any commercial use
+of this project would require revisiting those integrations. Image rendering is
+gated at display time by each artifact's `license` field (see constitutional
+rule 8, "License before render").
+
+--------------------------------------------------------------------------------
+Copyrighted scholarly sources (NOT redistributed)
+--------------------------------------------------------------------------------
+
+The authority layer cites ~20 in-copyright Egyptological reference works
+(Porter & Moss, Leprohon, von Beckerath, Hölbl, Kitchen, Dodson & Hilton,
+Ryholt, Shaw, Baud, and others). The works themselves are NOT included in this
+repository — the source PDFs live in a separate, private submodule and are never
+committed here. Only derived, page-cited factual extracts are present. See
+docs/playbook-phase-0-ocr-transcription.md ("Rights policy") for the project's
+documented sourcing and rights approach.

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-freeze-manifest-1.json",
+  "title": "Authenticated pre-run candidate input freeze",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "release_manifest_sha256", "private_opportunity_ledger_canonical_sha256", "created_at_utc", "created_by", "provenance", "files"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-candidate-freeze-manifest/1"},
+    "contract_version": {"const": "site-graph-v0/2"},
+    "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "private_opportunity_ledger_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "created_by": {"type": "string", "minLength": 1},
+    "provenance": {"type": "object", "minProperties": 1},
+    "files": {
+      "type": "array", "minItems": 3,
+      "contains": {"type": "object", "properties": {"role": {"const": "source_snapshot"}}},
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["role", "path", "sha256", "git_blob_oid", "schema_version"],
+        "properties": {
+          "role": {"enum": ["hierarchy", "source_snapshot", "relation_ledger"]},
+          "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+          "schema_version": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

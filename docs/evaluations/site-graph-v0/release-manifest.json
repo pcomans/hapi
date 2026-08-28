@@ -1,0 +1,249 @@
+{
+  "contract_version": "site-graph-v0-release/2",
+  "files": {
+    "docs/evaluations/site-graph-v0/README.md": {
+      "bytes": 16804,
+      "sha256": "5710c72cde8599fd85794c90ba3a632246dd1e0ed47f0648ef345a06e93ca2fc"
+    },
+    "docs/evaluations/site-graph-v0/baseline-metrics.json": {
+      "bytes": 46789,
+      "sha256": "7f40c8d332e878963eab383440204ea4249a23155f38d7c99cf6ec8f2940552e"
+    },
+    "docs/evaluations/site-graph-v0/baseline-node-scope.json": {
+      "bytes": 610363,
+      "sha256": "601ed89ef622419672ff8df375b0a4cb5c417006ff53670cdc9185bebb424fc9"
+    },
+    "docs/evaluations/site-graph-v0/baseline-rerun-evidence.json": {
+      "bytes": 3511,
+      "sha256": "e541f2c9db7bc8a43a26e184221859b77c2a39179c9fb023958eba89b167a112"
+    },
+    "docs/evaluations/site-graph-v0/corpus-provenance/NOTICE": {
+      "bytes": 3247,
+      "sha256": "9d2395959b9c930d06b1b17410f26208ab79475cc896c47ef175855aca099119"
+    },
+    "docs/evaluations/site-graph-v0/corpus-provenance/bundle-README.md": {
+      "bytes": 4810,
+      "sha256": "1ef13bdc4dd09bc56e2591abaef0c8e52f206d85204606564407f12c51f516af"
+    },
+    "docs/evaluations/site-graph-v0/corpus-provenance/bundle-SHA256SUMS": {
+      "bytes": 1163,
+      "sha256": "d30e0c2c2e07547d4f545b7b7559cfba96199280935e48717de264e36d765e36"
+    },
+    "docs/evaluations/site-graph-v0/corpus-provenance/manifest.json": {
+      "bytes": 1177,
+      "sha256": "1a188bf191dc2e65b2b60bd1a3dd4b029e6d93d79f44f257a7c917912ebf8f1d"
+    },
+    "docs/evaluations/site-graph-v0/corpus-provenance/validation/queries.sql": {
+      "bytes": 6644,
+      "sha256": "b87951eeed184b9493a2eef55f83ab3d7b81e277e7659f25fae9189ca05da6ea"
+    },
+    "docs/evaluations/site-graph-v0/corpus-provenance/validation/results.json": {
+      "bytes": 3696,
+      "sha256": "21bf0712ddbaa37f41408a24bd1c765bbb6c66c4b28001979156cd748e9b70c1"
+    },
+    "docs/evaluations/site-graph-v0/corpus-provenance/validation/verify_bundle.sh": {
+      "bytes": 2975,
+      "sha256": "c9e36f08145bf68e8e8942aad7d056552558758db231c9140369190c842a11b1"
+    },
+    "docs/evaluations/site-graph-v0/correction-policy.json": {
+      "bytes": 707,
+      "sha256": "d17df481515cfc7226c3664edf8fc5a9efd9c7b2cd2e28ac02cc30a80719e515"
+    },
+    "docs/evaluations/site-graph-v0/implementation-evidence.json": {
+      "bytes": 1131,
+      "sha256": "00ae4fd922975f92e03fe20fffcbbef6099de7f17035f182554da110d43288bb"
+    },
+    "docs/evaluations/site-graph-v0/input-snapshot.json": {
+      "bytes": 5343,
+      "sha256": "50bc5dfc1b053b1be0c2d27c228331aee0b4150e5019cb8aea2c4e2ae5fa5263"
+    },
+    "docs/evaluations/site-graph-v0/planned-opportunity-summary.json": {
+      "bytes": 28620,
+      "sha256": "53082c17a51251303498aeccc0946641855053f5dfccebbc7d0577ed6f817e6f"
+    },
+    "docs/evaluations/site-graph-v0/preregistration.json": {
+      "bytes": 20834,
+      "sha256": "8f55882536895f84cad773e8386f8201a3cd03a4cd15d30b8617f69304911621"
+    },
+    "docs/evaluations/site-graph-v0/private-ledger-digests.json": {
+      "bytes": 4064,
+      "sha256": "0c057b6f7eba66499bc799885179616c714c35551bbef96b8cbf248b9eb93206"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-1/disposition.json": {
+      "bytes": 4011,
+      "sha256": "3bf69371894ba227ddb990afe8fb9497bb7335a1f1f88c777c8cf0ea3e2198ad"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-1/metadata.json": {
+      "bytes": 1406,
+      "sha256": "b713a2632bd05ab01dd7d7369c85b1de78362f3adc4f078ce5bd8407a9271b26"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-1/prompt.md": {
+      "bytes": 1298,
+      "sha256": "85879a6c8e7b78bfc7eec98a919c152c38beb0d10f0fa2073a9ce2dbf0b0a378"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-1/raw-output.txt": {
+      "bytes": 16336,
+      "sha256": "166ed8d1a660e90f4ead9c5df8be8d43288e06532eea94ab90158862293d9f18"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-2/disposition.json": {
+      "bytes": 2720,
+      "sha256": "8cdbc8acf3b1ce6cf3bbaa75bdbbae79cd1a8ace46383fce189db2674ca7e369"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-2/metadata.json": {
+      "bytes": 1533,
+      "sha256": "42c004b9d061d9d583c44dc5766d26019df74c0a53e6cbaaf1c06e9bfc32869a"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-2/prompt.md": {
+      "bytes": 1438,
+      "sha256": "100c139713e9332ee582f9b4632479c1ac440574aa37aaf88ad18e3cb237bb8e"
+    },
+    "docs/evaluations/site-graph-v0/reviews/round-2/raw-output.txt": {
+      "bytes": 27195,
+      "sha256": "da6665870ff7665c75aa99e319be06911ff0eb5967fdaa497854d2228981b9e7"
+    },
+    "docs/evaluations/site-graph-v0/schemas/candidate-freeze-manifest.schema.json": {
+      "bytes": 1701,
+      "sha256": "9e7393f1bcf1214526573d9d5fcd01845df5649dca1d6a6538f4363ff83b1dd1"
+    },
+    "docs/evaluations/site-graph-v0/schemas/candidate-hierarchy.schema.json": {
+      "bytes": 1601,
+      "sha256": "8442953d4bcd11890ad10bdb32922b272763049af0437a37367a4c2a45e0fa26"
+    },
+    "docs/evaluations/site-graph-v0/schemas/candidate-source-snapshot.schema.json": {
+      "bytes": 2155,
+      "sha256": "6dc915d8d0db1ec172c0ebbcf417866966658802a5ec617d5ee3d244e92064d8"
+    },
+    "docs/evaluations/site-graph-v0/schemas/candidate.schema.json": {
+      "bytes": 2147,
+      "sha256": "e6edcb97cd8cf05df527948b1f68e68fcdbd8bf04400299173751280fd2cb1d6"
+    },
+    "docs/evaluations/site-graph-v0/schemas/comparison-report.schema.json": {
+      "bytes": 1255,
+      "sha256": "fcf4bc81e0037f548d71903fe799d1de2d637199768ac52408aa94c99155641a"
+    },
+    "docs/evaluations/site-graph-v0/schemas/correction-ledger.schema.json": {
+      "bytes": 3912,
+      "sha256": "0b3c04569e2eb67ca3969ebd03e4c5bb561bf5b1f08db1cf4ec77bdabbf905a7"
+    },
+    "docs/evaluations/site-graph-v0/schemas/opportunity-summary.schema.json": {
+      "bytes": 2926,
+      "sha256": "2a47fa40a2296225f9432b9d715f1db69b4958d02dc9dd43eb4e2d77f38305ba"
+    },
+    "docs/evaluations/site-graph-v0/schemas/private-opportunity-ledger.schema.json": {
+      "bytes": 1756,
+      "sha256": "e025c8feb05d03600228ec54a715391051ae218c1b797744b3d715f2aa53de2b"
+    },
+    "docs/evaluations/site-graph-v0/schemas/prompt-leakage-audit.schema.json": {
+      "bytes": 773,
+      "sha256": "640742a77fb39fac0e87261c4dc01fc7aec44c0a0689f264f721338a01760219"
+    },
+    "docs/evaluations/site-graph-v0/schemas/relation-ledger.schema.json": {
+      "bytes": 1113,
+      "sha256": "508d214bdbff8cc4c273a7c68b3009a38548abf83e32b651b2e9d640119dacde"
+    },
+    "docs/evaluations/site-graph-v0/schemas/review-artifact.schema.json": {
+      "bytes": 3362,
+      "sha256": "e57dc45e4eee56af2c355790d7f45f3b73743dcf3f183074a322fecab7c4d00b"
+    },
+    "docs/evaluations/site-graph-v0/schemas/review-ledger.schema.json": {
+      "bytes": 1726,
+      "sha256": "43346fea58fcd616e4c65373d7ba146f61d73102dc038c1db945669f3b9579c4"
+    },
+    "docs/evaluations/site-graph-v0/scripts/apply_corrections.py": {
+      "bytes": 12266,
+      "sha256": "44240a0273dd5e8777ebb8789829554e2ebdda73554fc05cd0252ed561cfe701"
+    },
+    "docs/evaluations/site-graph-v0/scripts/build_baseline.py": {
+      "bytes": 41052,
+      "sha256": "95d67ed07530c1351a9ad154001aebb252d6ff63087b5e101dafa5e77e688d9d"
+    },
+    "docs/evaluations/site-graph-v0/scripts/candidate_git.py": {
+      "bytes": 3086,
+      "sha256": "91ff26a469a7947b1e6d9f10b12efe038f64c12444857a3900ce86d469cbe152"
+    },
+    "docs/evaluations/site-graph-v0/scripts/compare_baseline_runs.py": {
+      "bytes": 8004,
+      "sha256": "05c688a5c1efee5dcc70505ca3b3e9d3efd42d00b0e7a7298e42ca16a8fa601f"
+    },
+    "docs/evaluations/site-graph-v0/scripts/compare_candidate.py": {
+      "bytes": 51139,
+      "sha256": "58e045fe762990653b738461731bbb74cab0b465a1ec7800c2f1eb111b2090db"
+    },
+    "docs/evaluations/site-graph-v0/scripts/contract_constants.py": {
+      "bytes": 501,
+      "sha256": "ce19420c1d23fa7ead86ac4a1b5a39d184c86b295b2310ef9cec186ce87bc9a6"
+    },
+    "docs/evaluations/site-graph-v0/scripts/freeze_candidate_inputs.py": {
+      "bytes": 5452,
+      "sha256": "dea49e7c77a5391c9d6dbfeb582fcc916042b39a535a24e9f4d2738dbf98ec77"
+    },
+    "docs/evaluations/site-graph-v0/scripts/freeze_release.py": {
+      "bytes": 2334,
+      "sha256": "43b7cb3d0a515800b6feae0dd90087799423b224f428ffe8d84465b14f7770ab"
+    },
+    "docs/evaluations/site-graph-v0/scripts/generate_validation_report.py": {
+      "bytes": 1457,
+      "sha256": "69a2d3fc3f04e40b728196a431029eacfe9496599736d6a9b9a6fa1a7da1ed65"
+    },
+    "docs/evaluations/site-graph-v0/scripts/integrity.py": {
+      "bytes": 4914,
+      "sha256": "aa4536fbba5bf09a0956a62f4eb575e3bcf3020a547e0d68c7b86ee3251c1392"
+    },
+    "docs/evaluations/site-graph-v0/scripts/metrics_core.py": {
+      "bytes": 2216,
+      "sha256": "896a0f24fac83ca7fdce530ff6747bb0c288dd65881d26e6467b4c4fa1470c33"
+    },
+    "docs/evaluations/site-graph-v0/scripts/private_ledgers.py": {
+      "bytes": 11171,
+      "sha256": "9ee25dcf155187fde05e0dca3307b76c44bdaaf6c3e2d75914c1ec29373f6683"
+    },
+    "docs/evaluations/site-graph-v0/scripts/release_contract.py": {
+      "bytes": 4938,
+      "sha256": "a806d91f77e15a1e9042c3a7a363767ae62535a1673acec05cc16a544711c61e"
+    },
+    "docs/evaluations/site-graph-v0/scripts/run_baseline.py": {
+      "bytes": 10922,
+      "sha256": "095423574568d604ec9d0ce1e09216ff2ef392d89ea2111abac73da812cab1cb"
+    },
+    "docs/evaluations/site-graph-v0/scripts/run_two_baselines.py": {
+      "bytes": 1871,
+      "sha256": "ae676e8994fcad107f74821ce8c1563ff124de11d28a47f24d9735e27adc2103"
+    },
+    "docs/evaluations/site-graph-v0/scripts/schema_validation.py": {
+      "bytes": 1025,
+      "sha256": "4837e44747342c52a07e9ab4389a228d7a7cdb423b46b14e1cf98d77132d8c3e"
+    },
+    "docs/evaluations/site-graph-v0/scripts/validate_contract.py": {
+      "bytes": 21569,
+      "sha256": "5786cf60098c2b94ce8b8e0be9f4ce5ba19eb5ffa5e77e601c2817a85956075d"
+    },
+    "docs/evaluations/site-graph-v0/top-unmatched-components.json": {
+      "bytes": 12176,
+      "sha256": "d425a4868eef9071944f33ef09c75baffdc7ca122974de5ae05641746770ecf8"
+    },
+    "docs/evaluations/site-graph-v0/type-crosswalk.json": {
+      "bytes": 2663,
+      "sha256": "4509d2944ddb3f0a30efe0faf1b897d567f685d60523f80c6c2b77d869b07183"
+    },
+    "docs/evaluations/site-graph-v0/validation-report.json": {
+      "bytes": 37504,
+      "sha256": "46b6040df6813d1c5244e354ec5462bdc75cb66757bb2684871169ceaa2c1e93"
+    },
+    "pipeline/pyproject.toml": {
+      "bytes": 813,
+      "sha256": "150ffa1eb5a8a97500c87fde31c109f5191e052e6683c1eb4a17cb6e818b4b26"
+    },
+    "pipeline/tests/test_site_graph_v0_contract.py": {
+      "bytes": 66240,
+      "sha256": "392f94754d3a676d12f1cb838da35c0d611a2fc44253976ad684f13f7f2ab4cc"
+    },
+    "pipeline/uv.lock": {
+      "bytes": 462334,
+      "sha256": "073bc2d51214b673bc3a51bc1f8314bd7b48ea9c070ddd65b403563fd6b4771e"
+    }
+  },
+  "hash_algorithm": "sha256",
+  "inventory_rule": "Exactly REQUIRED_RELEASE_FILES in scripts/release_contract.py. Any addition, removal, or cache-exclusion change requires a separately reviewed contract-version migration.",
+  "pycache_exclusion": "Python cache directories (__pycache__, .pytest_cache) and bytecode suffixes (.pyc, .pyo) are runtime by-products, are never required release files, and are ignored during exact-inventory discovery. No other file or directory is ignored.",
+  "schema_version": "site-graph-v0-release-manifest/2"
+}

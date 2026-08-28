@@ -1,0 +1,265 @@
+{
+  "schema_version": "site-graph-v0-preregistration/3",
+  "preregistered_at_utc": "2026-08-28",
+  "evaluation_scope": "Bounded site-graph-v0 intent-to-treat slice over the frozen 36,245-record Met/Brooklyn/Harvard baseline; no graph is constructed in issue #327.",
+  "symbols": {
+    "A_m": "All frozen canonical records for museum m.",
+    "X_m": "Records in A_m with at least one site-text mention emitted by the frozen extractor and sent to the frozen resolver. X means extracted site text and makes no independent evidence-quality judgment.",
+    "L_m": "Records in X_m with at least one deduplicated unique supported direct site link.",
+    "O_m": "Fixed private intent-to-treat record membership expanded from the result-blind planned opportunity selection for museum m; only counts and hashes are public.",
+    "O_pair_side": "Exact private pair+museum-side members in O_m whose frozen category is no_baseline_pair_connection or broad_only_pair_connection.",
+    "credited_affected_record": "For pair (m,n), a record on side m is credited affected exactly when its artifact ID occurs in authenticated O_pair_side, it carries a doubly reviewed specific direct link in a candidate identity class newly shared by m and n, and it either gains its first pair connection when frozen category=no_baseline_pair_connection or has a supported strict-refinement replacement of a baseline shared broad target when frozen category=broad_only_pair_connection. A global event, an unreviewed link, or improvement only on the opposite museum side is insufficient."
+  },
+  "frozen_artifacts": {
+    "input_snapshot": "input-snapshot.json",
+    "baseline_metrics": "baseline-metrics.json",
+    "baseline_node_scope": "baseline-node-scope.json",
+    "private_record_evidence": {
+      "runtime_path": "private-record-evidence.ndjson.gz",
+      "record_count": 36245,
+      "gzip_transport_sha256": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
+      "canonical_uncompressed_ndjson_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+      "canonical_row_merkle_sha256": "76ce89113febad6b626a608fa58fd998d669f532fce5860e766b8c8f40c577d0",
+      "publicly_redistributed": false
+    },
+    "private_opportunity_ledger": {
+      "runtime_path": "private-opportunity-ledger.json",
+      "canonical_json_sha256": "45204ffb7d828edf6290bab9ed573ac5abb838811e64289c0cb3e720459c64a1",
+      "transport_json_sha256": "55c8f6ce56b591a5f413e2e84ea36333bc50a3d6f52e8f37243e28a1a8fdd924",
+      "publicly_redistributed": false
+    },
+    "private_opportunity_source": {
+      "runtime_path": "private-opportunity-source.ndjson.gz",
+      "gzip_transport_sha256": "b435807f498dfacaf1f522948df5235e81822de5819fe8c45668cfe285dcdf33",
+      "canonical_uncompressed_ndjson_sha256": "fa0dce58d96e0d22ebb7518c9d569afe5d9e064f49dcfc01f87fc6c4ee31eb1a",
+      "canonical_row_merkle_sha256": "ca1133c9544baa8ae90649f5e815252aca1d665056fe3658b0b055bc54c9d944",
+      "publicly_redistributed": false
+    },
+    "public_opportunity_summary": {"path": "planned-opportunity-summary.json", "sha256": "53082c17a51251303498aeccc0946641855053f5dfccebbc7d0577ed6f817e6f"},
+    "private_ledger_digests": {"path": "private-ledger-digests.json", "sha256": "0c057b6f7eba66499bc799885179616c714c35551bbef96b8cbf248b9eb93206"},
+    "type_crosswalk": {
+      "path": "type-crosswalk.json",
+      "sha256": "4509d2944ddb3f0a30efe0faf1b897d567f685d60523f80c6c2b77d869b07183"
+    },
+    "correction_policy": "correction-policy.json",
+    "two_run_evidence": "baseline-rerun-evidence.json"
+  },
+  "primary_record_classification": {
+    "rule": "extracted_site_text_evidence is true exactly when the archived adapter emitted at least one site mention whose status is resolved, ambiguous, or unmatched.",
+    "classification_fields": [
+      "artifact_id",
+      "museum",
+      "extracted_site_text_evidence",
+      "site_mention_count",
+      "site_mention_status_counts",
+      "baseline_resolution_state",
+      "baseline_site_target_ids",
+      "baseline_record_scope",
+      "has_any_ambiguity",
+      "has_blocking_ambiguity",
+      "has_any_unmatched_expression"
+    ],
+    "storage": "The exact record ledger is regenerated only in an authorized private runtime and authenticated by committed canonical content and Merkle hashes; it is not a public release payload.",
+    "post_research_change_permitted": false,
+    "primary_baseline_mutation_permitted": false,
+    "future_factual_corrections": "Append-only schema-validated corrections create separately hashed sensitivity outputs only. They never change, relabel, or replace primary results."
+  },
+  "metric_formulas": {
+    "extracted_site_text_availability": {
+      "expression": "|X_m| / |A_m|",
+      "numerator": "count(extracted_site_text_evidence=true, museum=m)",
+      "denominator": "count(all canonical records, museum=m)"
+    },
+    "overall_linkability": {
+      "expression": "|L_m| / |A_m|",
+      "numerator": "count(nonempty supported direct site target set, museum=m)",
+      "denominator": "count(all canonical records, museum=m)"
+    },
+    "extracted_site_text_conditional_linkability": {
+      "expression": "|L_m| / |X_m|",
+      "numerator": "count(nonempty supported direct site target set, museum=m)",
+      "denominator": "count(extracted_site_text_evidence=true, museum=m)"
+    },
+    "blocking_ambiguity": {
+      "expression": "|{r in X_m: direct targets empty and any site mention ambiguous}| / |X_m|",
+      "numerator": "count(has_blocking_ambiguity=true, museum=m)",
+      "denominator": "count(extracted_site_text_evidence=true, museum=m)"
+    },
+    "planned_maximum_overall_effect": {
+      "expression": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |A_m|"
+    },
+    "planned_maximum_extracted_site_text_conditional_effect": {
+      "expression": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |X_m|"
+    },
+    "pair_side_coverage_overall": {
+      "expression": "D_(m->n) / |A_m|",
+      "D_definition": "distinct museum-m records directly linked to at least one target directly linked from museum n"
+    },
+    "pair_side_coverage_extracted_site_text_conditional": {
+      "expression": "D_(m->n) / |X_m|"
+    },
+    "top_k_concentration": {
+      "expression": "|union of museum-side records incident on its top-k shared identity classes| / |union of museum-side records incident on all its shared identity classes|",
+      "ordering": "descending distinct museum-side artifact incidence, then deterministic identity-class root",
+      "k": [1, 5, 10]
+    },
+    "hhi": {
+      "expression": "sum_j(I_j^2) / (sum_j I_j)^2",
+      "I_j": "deduplicated artifact-target incidence for one museum side and eligible shared target j"
+    }
+  },
+  "connectivity_definitions": {
+    "incidence": "One direct artifact-target incidence after deduplication; ancestor closure is separately tagged and never treated as a direct specificity claim.",
+    "museum_pair": "For unordered pair (m,n), a shared target has at least one eligible direct linked record from each museum. Pair membership is inclusive of all-three targets.",
+    "pair_keys": ["met__brooklyn", "met__harvard", "brooklyn__harvard"],
+    "all_three": "A target with at least one eligible direct linked record from each of Met, Brooklyn, and Harvard.",
+    "single_pooled_pair_result_prohibited": true,
+    "both_museum_sides_and_both_denominators_required": true
+  },
+  "scope_classification": {
+    "crosswalk": "type-crosswalk.json",
+    "baseline_context": "All 2,075 records in the pinned complete available raw iDAI hierarchy, including children omitted from the filtered 1,000-target baseline file.",
+    "candidate_context": "Every new candidate direct target must be derived from nonempty structured source snapshots and complete-available hierarchy topology frozen as authenticated Git blobs in a distinct ancestor commit before result generation. Candidate leafness is never inferred from descendants present or absent in the evaluated slice.",
+    "existing_target_rule": "An existing frozen target always retains its baseline type and scope. Candidate snapshots cannot relabel it.",
+    "broad_precedence": "A node is broad if any mapped type is broad or it has any child in complete available hierarchy context.",
+    "specific_candidate": "A node is only a specific candidate if a frozen type maps specific and no broad rule applies.",
+    "not_quality_evidence": "The deterministic class alone is never identity, link-support, or reassignment evidence.",
+    "known_incompleteness": "The available source hierarchy may omit external parents or descendants. Exact observed omissions are reported; no global hierarchy completeness claim is made."
+  },
+  "support_and_credit": {
+    "general_support_for_changed_direct_link": [
+      "candidate artifact and direct target match the canonical subject-derived link-support decision key",
+      "each review artifact contains at least one structured non-originating-museum independent source citation",
+      "exactly two reviewers with distinct reviewer IDs and independence groups each produce a distinct subject/outcome-bound structured artifact and canonical record hash",
+      "both reviews say supported"
+    ],
+    "llm_review_provenance_required": [
+      "reviewer_id",
+      "exact prompt and exact reviewer input artifacts with SHA-256 and Git blob OIDs",
+      "model selector",
+      "exact backend model ID/snapshot or an explicitly enumerated non-exposure sentinel",
+      "full nonempty parameter object",
+      "full raw response artifact with SHA-256 and Git blob OID",
+      "pre-judgment prompt-leakage audit proving opaque shuffled candidate identifiers, with provenance"
+    ],
+    "review_disagreement": "Unsupported/uncertain disagreement is unresolved, receives no credit, and is counted; it is never adjudicated from candidate performance.",
+    "broad_or_administrative_new_link_improvement_credit": 0,
+    "unclassified_link_improvement_credit": 0,
+    "narrower_node_alone_improvement_credit": 0,
+    "credited_node_distinctness": "The comparator deterministically builds identity classes across baseline and candidate targets using only doubly reviewed equivalent relations. Candidate-declared class IDs are ignored and unsupported aliases cannot preserve retention or inflate gains.",
+    "strict_refinement_extra_support": [
+      "baseline and candidate target IDs are distinct",
+      "a relation ledger frozen in the authenticated pre-run Git commit says strict_refinement",
+      "two independent reviews support that exact node relation",
+      "source-derived frozen hierarchy topology lists the baseline broad target as an ancestor, preserving ancestor semantics",
+      "candidate target is supported and specific under complete hierarchy context"
+    ],
+    "equivalence_support": "Every equivalent relation is subject to the same two-review structured evidence census. Unsupported equivalence neither preserves retention nor changes identity classes.",
+    "review_epistemic_status": "This bounded two-review census is provisional decision support, not a gold standard or a population precision/recall estimate."
+  },
+  "record_event_partition": {
+    "mutually_exclusive": true,
+    "precedence": ["loss", "strict_refinement_reassignment", "new_link", "additional_identity", "uncredited_change", "unchanged"],
+    "new_link": "Baseline direct set empty; candidate has a supported credited specific direct identity.",
+    "strict_refinement_reassignment": "Baseline nonempty; every removed baseline identity is covered by supported strict refinement and no uncovered loss remains. Keeping the old broad direct edge is not required.",
+    "additional_identity": "Baseline nonempty and retained; candidate adds a supported credited identity unrelated to baseline identities.",
+    "unchanged": "No credited change; baseline identities remain through the same or a frozen equivalent direct identity.",
+    "loss": "At least one baseline direct identity is neither preserved/equivalent nor covered by supported strict refinement.",
+    "uncredited_change": "A changed link is broad, unclassified, unsupported, disputed, or otherwise fails credit rules.",
+    "direct_edge_vs_ancestor_semantics": "Comparator separately reports old_direct_edge_preserved and old_direct_edge_replaced_ancestor_semantics_preserved. A supported replacement is excluded from ordinary loss."
+  },
+  "opportunity_design": {
+    "selection": "From every unmatched/ambiguous site mention in pinned baseline outputs: group by museum and ordered frozen normalized keys, rank by descending distinct artifacts then museum/key; select top 10 per museum, then globally fill to exactly 50 signatures.",
+    "artifact_expansion": "All distinct artifacts carrying a selected museum-scoped signature are materialized only in the authenticated private ledger before research. Public opportunity rows expose aggregate counts and expansion hashes, never artifact IDs, source text, normalized expression text, or field paths.",
+    "museum_protection": "Each museum contributes 10 signatures before global fill; record ceilings remain museum-specific and need not be equal.",
+    "intent_to_treat": "Every expanded record remains in denominators after research failure, abstention, reviewer disagreement, lack of support, or broad/administrative classification.",
+    "pair_side_opportunity": "The private ledger materializes exact pair+museum-side artifact membership and exactly one frozen category: no_baseline_pair_connection or broad_only_pair_connection. Candidate numerators must intersect this membership rather than proxying from global events.",
+    "expected_effect_statement": "No expected effect is estimated. Numeric planned values are maximum measurable upper bounds under the frozen slice, not forecasts, precision/recall estimates, or promises of successful research."
+  },
+  "ambiguity_and_abstention": {
+    "ambiguity": "More than one permitted target remains; no target is selected.",
+    "abstention_reasons": [
+      "compound_expression",
+      "conflicting_evidence",
+      "insufficient_identity_evidence",
+      "non_place_context",
+      "reviewer_disagreement",
+      "role_not_supported",
+      "uncertain_expression"
+    ],
+    "abstention_denominator_policy": "Abstentions remain in fixed intent-to-treat denominators and are reported by closed reason.",
+    "missing_extracted_text": "Records outside X_m are reported separately; authority-only work cannot move them into X_m."
+  },
+  "concentration_gate": {
+    "unit": "each museum side of every inclusive pair independently",
+    "top_k_limits": "for each k in {1,5,10}, candidate unique-record-union ratio <= comparable baseline side ratio + 0.05",
+    "hhi_limit": "candidate node-incidence HHI <= comparable baseline side HHI + 0.05",
+    "rationale": "A five-percentage-point absolute tolerance is fixed around each comparable museum-side baseline, avoiding both a pooled masking effect and a threshold fitted to the observed 0.75 pooled Met-Brooklyn value.",
+    "pooled_values": "descriptive only and never gate"
+  },
+  "ordered_decision_rule": {
+    "precedence": ["INVALID", "REDESIGN", "CONTINUE", "STOP"],
+    "INVALID": "Any schema, hash, exact-population, exact-inventory, pre-freeze, review-artifact, or other integrity failure. No product conclusion is allowed.",
+    "REDESIGN": "Integrity passes, but any baseline loss exists; blocking ambiguity rises by more than 5/1000 of X_m for any museum; or any top-1/top-5/top-10 unique-record-union ratio or incidence HHI exceeds its side-specific limit.",
+    "CONTINUE": "Integrity and every safety gate pass, and at least one museum pair gains at least two credited distinct specific identity classes; each side has credited affected records >= max(1, ceil(0.10 * its fixed nonempty O_pair_side)); and broad-only share over X_m strictly decreases on at least one side without increasing on the other.",
+    "STOP": "Integrity and safety pass but no pair satisfies every CONTINUE utility condition.",
+    "raw_link_rate_growth_can_satisfy_continue": false,
+    "museum_equality_required": false,
+    "narrowness_without_support_can_satisfy_continue": false
+  },
+  "machine_thresholds": {
+    "ambiguity_maximum_increase": {"numerator": 1, "denominator": 200},
+    "concentration_maximum_increase": {"numerator": 1, "denominator": 20},
+    "minimum_gained_distinct_specific_identity_classes": 2,
+    "minimum_affected_opportunity_fraction": {"numerator": 1, "denominator": 10},
+    "minimum_reviews_per_credited_decision": 2,
+    "opportunity_museum_protection_signatures": 10,
+    "opportunity_total_signatures": 50
+  },
+  "review_census": {
+    "credit_gate": "Census of every credited new-link, strict-refinement, and equivalent decision with two structured independent artifacts.",
+    "reviews_per_decision": 2,
+    "held_out_sample": "Optional descriptive audit only. If used, sort all non-credited candidate decision keys by SHA-256('site-graph-v0-descriptive-audit-v1' + U+0000 + decision_key), then take the first min(100, ceil(0.10*N)); freeze the resulting key list before review.",
+    "held_out_sample_is_pass_gate": false,
+    "population_precision_claim_permitted": false
+  },
+  "correction_policy": {
+    "schema": "schemas/correction-ledger.schema.json",
+    "append_only_hash_chain": true,
+    "primitive_operations_only": ["add_direct_target", "remove_direct_target", "replace_direct_target", "set_site_mention_status_count"],
+    "nonempty_reviewers_and_structured_citations_required": true,
+    "existing_target_ids_required": true,
+    "rfc3339_timestamps_required": true,
+    "repeated_primitive_requires_explicit_supersession": true,
+    "primary_baseline_mutation_permitted": false,
+    "sensitivity_outputs_separately_hashed": true,
+    "sensitivity_recomputation": "Every dependent record field, headline metric, connectivity metric, concentration metric, and pair-side ITT aggregate is recomputed from corrected primitives; corrected rows and membership remain private."
+  },
+  "threshold_rationale_and_limits": {
+    "queue_10_per_museum_then_50_total": "A bounded product-research workload with minimum museum representation and frequency-based fill. It is a transparent heuristic, not an estimate of an optimal sample size or corpus prevalence.",
+    "minimum_affected_fraction_1_over_10": "A precommitted product decision threshold requiring a nontrivial change relative to each side's own opportunity ceiling. It is not empirically calibrated and does not require equal absolute improvement across museums.",
+    "minimum_two_gained_identity_classes": "A product guard against continuing on a single exceptional identity. Two is a pragmatic floor, not a statistical significance threshold.",
+    "ambiguity_allowance_5_over_1000": "A small precommitted product safety allowance for blocking ambiguity changes. It is not an uncertainty interval or an empirical truth.",
+    "concentration_allowance_1_over_20": "A five-point tolerance relative to each comparable side baseline, chosen before candidate results to prevent concentration regression without fitting the observed pooled Met-Brooklyn value."
+  },
+  "authenticated_candidate_freeze": {
+    "contract": "schemas/candidate-freeze-manifest.schema.json",
+    "required_roles": ["hierarchy", "relation_ledger", "source_snapshot"],
+    "immutability": "Every file byte SHA-256 and Git blob OID is verified from the declared full freeze commit. The result commit must be a distinct descendant; timestamps are descriptive and never establish pre-run ordering.",
+    "source_snapshot_requirement": "At least one nonempty structured source snapshot with explicit provenance and completeness/known-incompleteness declarations is required."
+  },
+  "public_data_boundary": {
+    "public": ["aggregate metrics", "selection rules", "counts", "canonical content hashes", "Merkle roots", "opaque rank IDs"],
+    "private_runtime_only": ["record evidence rows", "opportunity source text and field paths", "artifact expansion membership", "exact pair-side artifact membership", "corrected sensitivity rows"],
+    "generator": "scripts/run_baseline.py deterministically regenerates private ledgers from the authorized verified external corpus; scripts/private_ledgers.py authenticates them against preregistered hashes."
+  },
+  "prohibited_changes": [
+    "authority acquisition in issue #327",
+    "site graph construction in issue #327",
+    "matching, extraction, or normalization behavior changes",
+    "Wikidata use",
+    "post-result opportunity selection or denominator edits",
+    "post-result per-node scope overrides",
+    "population precision or recall claims from provisional silver review"
+  ]
+}

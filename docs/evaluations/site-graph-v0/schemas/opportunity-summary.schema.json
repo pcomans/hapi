@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-opportunity-summary-2.json",
+  "title": "Public aggregate-only intent-to-treat opportunity summary",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "public_data_boundary", "selection_algorithm", "minimum_affected_opportunity_fraction", "denominator_policy", "credit_warning", "selected_signature_count", "opportunities", "per_museum", "pair_side_ceilings", "private_ledger_authentication"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-opportunity-summary/2"},
+    "public_data_boundary": {"type": "string", "minLength": 1},
+    "selection_algorithm": {"type": "object", "minProperties": 1},
+    "minimum_affected_opportunity_fraction": {"$ref": "#/$defs/fraction"},
+    "denominator_policy": {"type": "string", "minLength": 1},
+    "credit_warning": {"type": "string", "minLength": 1},
+    "selected_signature_count": {"type": "integer", "minimum": 1},
+    "opportunities": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["opportunity_id", "selection_rank", "selection_reason", "museum", "unresolved_status_counts", "mention_count", "artifact_count", "artifact_expansion_sha256", "intent_to_treat"],
+        "properties": {
+          "opportunity_id": {"type": "string", "pattern": "^opp-[0-9]{4}$"},
+          "selection_rank": {"type": "integer", "minimum": 1},
+          "selection_reason": {"type": "string", "minLength": 1},
+          "museum": {"enum": ["met", "brooklyn", "harvard"]},
+          "unresolved_status_counts": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 0}},
+          "mention_count": {"type": "integer", "minimum": 1},
+          "artifact_count": {"type": "integer", "minimum": 1},
+          "artifact_expansion_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "intent_to_treat": {"const": true}
+        }
+      }
+    },
+    "per_museum": {"type": "object", "required": ["met", "brooklyn", "harvard"]},
+    "pair_side_ceilings": {"type": "object", "required": ["met__brooklyn", "met__harvard", "brooklyn__harvard"]},
+    "private_ledger_authentication": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical_json_sha256", "transport_json_sha256"],
+      "properties": {
+        "canonical_json_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "transport_json_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "$defs": {
+    "fraction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["numerator", "denominator"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 0},
+        "denominator": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

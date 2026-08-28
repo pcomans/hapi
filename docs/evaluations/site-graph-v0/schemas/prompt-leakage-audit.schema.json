@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-prompt-leakage-audit-1.json",
+  "title": "Prompt leakage audit provenance",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "passed", "opaque_shuffled_candidate_ids", "audit_method", "auditor_id", "executed_at_utc", "findings"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-prompt-leakage-audit/1"},
+    "passed": {"const": true},
+    "opaque_shuffled_candidate_ids": {"const": true},
+    "audit_method": {"type": "string", "minLength": 1},
+    "auditor_id": {"type": "string", "minLength": 1},
+    "executed_at_utc": {"type": "string", "format": "date-time"},
+    "findings": {"type": "array"}
+  }
+}

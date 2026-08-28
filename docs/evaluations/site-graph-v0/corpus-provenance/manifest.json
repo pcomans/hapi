@@ -1,0 +1,38 @@
+{
+  "format_version": 1,
+  "generated_at": "2026-08-28T02:30:52Z",
+  "database": {
+    "postgres_version": "16.13",
+    "alembic_revision": "3a1c350217d9"
+  },
+  "counts": {
+    "canonical_total": 36245,
+    "canonical_by_museum": {
+      "met": 27969,
+      "brooklyn": 7554,
+      "harvard": 722
+    },
+    "raw_total": 37523,
+    "raw_by_museum": {
+      "met": 27969,
+      "brooklyn": 8832,
+      "harvard": 722
+    }
+  },
+  "files": {
+    "canonical": "data/artifacts.ndjson.gz",
+    "raw_met": "data/raw_met.ndjson.gz",
+    "raw_brooklyn": "data/raw_brooklyn.ndjson.gz",
+    "raw_harvard": "data/raw_harvard.ndjson.gz",
+    "postgres_dump": "database/catalog.dump",
+    "sql_schema": "schema/catalog.sql",
+    "artifact_json_schema": "schema/artifacts.schema.json",
+    "validation_results": "validation/results.json"
+  },
+  "canonical_column_count": 30,
+  "caveats": [
+    "ruler_id, origin_site_id, origin_site_display_name, and tomb_temple_id are unpopulated because enrichment was not implemented",
+    "1278 Brooklyn raw rows were intentionally excluded during normalization",
+    "this is a private working-data export; consult NOTICE before redistribution"
+  ]
+}

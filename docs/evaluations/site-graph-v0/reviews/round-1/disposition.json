@@ -1,0 +1,22 @@
+{
+  "schema_version": "site-graph-v0-review-disposition/1",
+  "reviewed_commit_sha": "36c23e7424f3deb901cc86a5019b408d3951c208",
+  "overall_disposition": "accepted_and_repaired",
+  "findings": [
+    {"id": "P1-1", "disposition": "accepted", "repair": "read-only exact release inventory validation and separate explicit freeze command", "evidence": ["scripts/integrity.py", "scripts/freeze_release.py", "pipeline/tests/test_site_graph_v0_contract.py"]},
+    {"id": "P1-2", "disposition": "accepted", "repair": "distinct authenticated reruns, actual-byte rehashing, exact output set, UUID provenance, failure-safe atomic publication", "evidence": ["scripts/run_baseline.py", "scripts/compare_baseline_runs.py", "scripts/run_two_baselines.py"]},
+    {"id": "P1-3", "disposition": "accepted", "repair": "versioned schemas and deterministic executable comparator with adversarial tests", "evidence": ["schemas", "scripts/compare_candidate.py", "pipeline/tests/test_site_graph_v0_contract.py"]},
+    {"id": "P1-4", "disposition": "accepted", "repair": "real-baseline result-blind intent-to-treat queue and numeric museum/pair-side ceilings materialized", "evidence": ["planned-opportunity-queue.json", "frozen-opportunity-source.ndjson.gz", "baseline-metrics.json"]},
+    {"id": "P1-5", "disposition": "accepted", "repair": "strict refinement is exclusive from loss and supports direct-edge replacement with preserved ancestor semantics", "evidence": ["scripts/compare_candidate.py", "preregistration.json"]},
+    {"id": "P1-6", "disposition": "accepted", "repair": "top-k and HHI computed and gated per museum side against comparable baseline plus fixed 0.05 tolerance", "evidence": ["baseline-metrics.json", "scripts/compare_candidate.py"]},
+    {"id": "P1-7", "disposition": "accepted", "repair": "general link support, zero broad/admin improvement credit, frozen actual-source type crosswalk, complete available hierarchy context, distinct identity classes", "evidence": ["type-crosswalk.json", "baseline-node-scope.json", "scripts/compare_candidate.py"]},
+    {"id": "P2-1", "disposition": "accepted", "repair": "review census with two independent hashed artifacts and exact LLM provenance; held-out sample is descriptive only", "evidence": ["schemas/review-ledger.schema.json", "preregistration.json", "scripts/compare_candidate.py"]},
+    {"id": "P2-2", "disposition": "accepted", "repair": "schema-validated append-only correction chain and separately hashed sensitivity generation", "evidence": ["schemas/correction-ledger.schema.json", "scripts/apply_corrections.py", "evidence-corrections.json"]},
+    {"id": "P2-3", "disposition": "accepted", "repair": "CI-collected test recomputes real headline metrics/scope and tests machine-readable rules", "evidence": ["pipeline/tests/test_site_graph_v0_contract.py", "scripts/validate_contract.py"]},
+    {"id": "P2-4", "disposition": "accepted", "repair": "uncompressed canonical NDJSON hash pinned in addition to deterministic gzip transport hash", "evidence": ["preregistration.json", "evidence-corrections.json"]},
+    {"id": "P2-5", "disposition": "accepted", "repair": "verbatim bundle provenance/verifier committed and exact missing export/run provenance disclosed", "evidence": ["corpus-provenance", "input-snapshot.json"]},
+    {"id": "P2-6", "disposition": "accepted", "repair": "E_m renamed X_m/extracted-site-text evidence without a usability claim", "evidence": ["preregistration.json", "frozen-record-evidence.ndjson.gz", "baseline-metrics.json"]},
+    {"id": "P2-7", "disposition": "accepted", "repair": "per-museum top unmatched components derived from complete frozen unresolved mention source", "evidence": ["top-unmatched-components.json", "frozen-opportunity-source.ndjson.gz"]},
+    {"id": "P3", "disposition": "accepted", "repair": "counts read from input snapshot, direct deterministic equality, no sets in serialized output, archived JSON ordering preserved", "evidence": ["scripts", "pipeline/tests/test_site_graph_v0_contract.py"]}
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "site-graph-v0-implementation-evidence/2",
+  "issue": 327,
+  "status": "pass",
+  "public_bulk_derivatives_committed": false,
+  "private_runtime_authentication": "private-ledger-digests.json",
+  "corpus_record_count": 36245,
+  "private_record_evidence_canonical_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+  "private_opportunity_source_canonical_sha256": "fa0dce58d96e0d22ebb7518c9d569afe5d9e064f49dcfc01f87fc6c4ee31eb1a",
+  "private_opportunity_ledger_canonical_sha256": "45204ffb7d828edf6290bab9ed573ac5abb838811e64289c0cb3e720459c64a1",
+  "deterministic_reproduction": {
+    "status": "pass",
+    "evidence": "baseline-rerun-evidence.json",
+    "deterministic_output_count": 17,
+    "run_a_manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
+    "run_b_manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635"
+  },
+  "validation": {
+    "status": "pass",
+    "checks_passed": 17,
+    "checks_failed": 0
+  },
+  "tests": {
+    "status": "pass",
+    "focused": "31 passed",
+    "full_pipeline": "2410 passed"
+  }
+}

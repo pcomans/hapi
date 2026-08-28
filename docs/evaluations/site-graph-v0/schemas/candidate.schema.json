@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-result-2.json",
+  "title": "Authenticated bounded site-graph-v0 candidate result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "candidate_id", "release_manifest_sha256", "private_opportunity_ledger_canonical_sha256", "freeze_commit", "freeze_manifest_path", "freeze_manifest_blob_oid", "run_started_at_utc", "records"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-candidate-result/2"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "private_opportunity_ledger_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "freeze_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "freeze_manifest_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "freeze_manifest_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "run_started_at_utc": {"type": "string", "format": "date-time"},
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["artifact_id", "resolution_status", "abstention_reason", "has_blocking_ambiguity", "direct_links"],
+        "properties": {
+          "artifact_id": {"type": "string", "minLength": 1},
+          "resolution_status": {"enum": ["linked", "ambiguous", "abstained", "unmatched"]},
+          "abstention_reason": {"type": ["string", "null"]},
+          "has_blocking_ambiguity": {"type": "boolean"},
+          "direct_links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["target_id", "support_decision_key"],
+              "properties": {
+                "target_id": {"type": "string", "minLength": 1},
+                "support_decision_key": {"type": ["string", "null"]}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

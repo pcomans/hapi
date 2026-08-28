@@ -1,0 +1,52 @@
+{
+  "authentication": "Authenticated distinct run directories, distinct UUID run IDs, exact output sets, and actual output bytes rehashed against each manifest.",
+  "builder_sha256": "95d67ed07530c1351a9ad154001aebb252d6ff63087b5e101dafa5e77e688d9d",
+  "deterministic_output_count": 17,
+  "deterministic_output_hashes": {
+    "adapter_catalog_summary.json": "fe4ab17e1b765e5902ae1e2b2842f55d66b15aea51ad2b1da8e85289465de445",
+    "artifact_authority_links.ndjson.gz": "42978550708d26c9b38d229b8b5dc4b0f061c7344aea6c3cc31a8700f5b22142",
+    "authority_inventory.json": "15599b98431223f966c7364eae1dbc801d8338bea9a3c8d65606a0df3bd9a3a6",
+    "authority_node_connectivity.json": "30e5fc849d27aa00a688b15b79083a0b1928d18eafcc721fe8a88283ac7b92cd",
+    "baseline-metrics.json": "7f40c8d332e878963eab383440204ea4249a23155f38d7c99cf6ec8f2940552e",
+    "baseline-node-scope.json": "601ed89ef622419672ff8df375b0a4cb5c417006ff53670cdc9185bebb424fc9",
+    "connectivity_metrics.json": "a2490b469a20121bc8c3638d71fb6d10d1b76cf8d9657b3f5bd1cb644f1ce7d3",
+    "corpus_inventory.json": "4039fd78e396f62ea6d5c333ea2eb9af30db67f7115ba0c39bd21a68466c4b9d",
+    "linkability_metrics.json": "4ec0a85340b2367a1f63c815d1c31b1497ed7b20cb3a2a68952de1fb8a229b9c",
+    "mentions.ndjson.gz": "b9f496a2b803d148a9d423eaf76af66daf0effd67c47ac6070597ec49aac568f",
+    "planned-opportunity-summary.json": "53082c17a51251303498aeccc0946641855053f5dfccebbc7d0577ed6f817e6f",
+    "private-ledger-digests.json": "0c057b6f7eba66499bc799885179616c714c35551bbef96b8cbf248b9eb93206",
+    "private-opportunity-ledger.json": "55c8f6ce56b591a5f413e2e84ea36333bc50a3d6f52e8f37243e28a1a8fdd924",
+    "private-opportunity-source.ndjson.gz": "b435807f498dfacaf1f522948df5235e81822de5819fe8c45668cfe285dcdf33",
+    "private-record-evidence.ndjson.gz": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
+    "top-unmatched-components.json": "d425a4868eef9071944f33ef09c75baffdc7ca122974de5ae05641746770ecf8",
+    "top_gaps.json": "ce6a67dc62abf5d157116547e90b50cf2667b0573a58807113f3d5e7f88c6e66"
+  },
+  "input_snapshot_sha256": "50bc5dfc1b053b1be0c2d27c228331aee0b4150e5019cb8aea2c4e2ae5fa5263",
+  "metadata_mismatches": {},
+  "orchestration": {
+    "created_fresh_output_root": "<fresh-output-root>",
+    "created_run_directories": [
+      "<fresh-output-root>/run-a",
+      "<fresh-output-root>/run-b"
+    ],
+    "script": "docs/evaluations/site-graph-v0/scripts/run_two_baselines.py"
+  },
+  "output_mismatches": {},
+  "run_a": {
+    "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
+    "provenance_sha256": "ba4c53694b5294c09ba218591006078b512b37491ea213e08f13195b07743e58",
+    "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-a",
+    "run_id": "5d0d6cbf-5128-4b3c-8e71-6cfa04d31fbb"
+  },
+  "run_b": {
+    "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
+    "provenance_sha256": "06e2f0625c9a43b5e3f5f9c0c64813eb319bf27913398f1691b446cd1c397865",
+    "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-b",
+    "run_id": "35c832f1-2307-4c27-8a3c-2f6dbd42eb8e"
+  },
+  "runner_sha256": "095423574568d604ec9d0ce1e09216ff2ef392d89ea2111abac73da812cab1cb",
+  "schema_version": "site-graph-v0-baseline-rerun-evidence/3",
+  "scope": "verified real 36,245-record private corpus; no fixtures or proxies; private ledgers remain in the runtime directory",
+  "status": "pass",
+  "terminology": "deterministic_reproduction_not_statistical_independence"
+}
