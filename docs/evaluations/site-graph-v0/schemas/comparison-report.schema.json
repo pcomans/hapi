@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-comparison-report-2.json",
+  "$id": "https://hapi.example/schemas/site-graph-v0-comparison-report-3.json",
   "title": "Deterministic authenticated site-graph-v0 comparison report",
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "outcome", "ordered_decision_trace", "integrity", "safety_gates", "event_counts", "event_records", "reassignment_edge_modes", "per_museum", "pairs", "ambiguity_and_abstention", "run_binding", "provenance_status"],
+  "required": ["schema_version", "outcome", "ordered_decision_trace", "integrity", "safety_gates", "event_counts", "event_records", "reassignment_edge_modes", "per_museum", "post_candidate_metrics", "pairs", "ambiguity_and_abstention", "run_binding", "provenance_status"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-comparison-report/2"},
+    "schema_version": {"const": "site-graph-v0-comparison-report/3"},
     "outcome": {"enum": ["INVALID", "REDESIGN", "CONTINUE", "STOP"]},
     "ordered_decision_trace": {"type": "array", "minItems": 1},
     "integrity": {
@@ -21,6 +21,64 @@
     "event_records": {"type": "array"},
     "reassignment_edge_modes": {"type": "object"},
     "per_museum": {"type": "object"},
+    "post_candidate_metrics": {
+      "oneOf": [
+        {"type": "object", "maxProperties": 0},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["linkability_by_museum", "connectivity"],
+          "properties": {
+            "linkability_by_museum": {"$ref": "#/$defs/linkabilityMuseums"},
+            "connectivity": {
+              "type": "object", "additionalProperties": false,
+              "required": ["pairs", "all_three", "any_two_or_more"],
+              "properties": {
+                "pairs": {
+                  "type": "object", "additionalProperties": false,
+                  "required": ["met__brooklyn", "met__harvard", "brooklyn__harvard"],
+                  "properties": {
+                    "met__brooklyn": {
+                      "allOf": [
+                        {"$ref": "#/$defs/pairConnectivity"},
+                        {"properties": {"sides": {"required": ["met", "brooklyn"], "maxProperties": 2}}}
+                      ]
+                    },
+                    "met__harvard": {
+                      "allOf": [
+                        {"$ref": "#/$defs/pairConnectivity"},
+                        {"properties": {"sides": {"required": ["met", "harvard"], "maxProperties": 2}}}
+                      ]
+                    },
+                    "brooklyn__harvard": {
+                      "allOf": [
+                        {"$ref": "#/$defs/pairConnectivity"},
+                        {"properties": {"sides": {"required": ["brooklyn", "harvard"], "maxProperties": 2}}}
+                      ]
+                    }
+                  }
+                },
+                "all_three": {"$ref": "#/$defs/aggregationConnectivity"},
+                "any_two_or_more": {
+                  "allOf": [
+                    {"$ref": "#/$defs/aggregationConnectivity"},
+                    {
+                      "type": "object",
+                      "required": ["exact_museum_combination_counts"],
+                      "properties": {
+                        "exact_museum_combination_counts": {
+                          "type": "object",
+                          "additionalProperties": {"type": "integer", "minimum": 0}
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "pairs": {"type": "object"},
     "ambiguity_and_abstention": {"type": "object"},
     "run_binding": {"type": ["object", "null"]},
@@ -35,6 +93,100 @@
         "upstream_production_lineage": {"enum": ["VERIFIED", "UNAVAILABLE_DISCLOSED", "NOT_APPLICABLE_LOGIC_ONLY"]},
         "overall_contract_status": {"enum": ["READY_SNAPSHOT_CONDITIONAL", "BLOCKED", "INVALID", "NOT_APPLICABLE_LOGIC_ONLY"]},
         "downstream_product_verdict": {"enum": ["CONTINUE", "STOP", "REDESIGN", "INVALID", "NOT_RUN"]}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["outcome"],
+        "properties": {"outcome": {"const": "INVALID"}}
+      },
+      "then": {
+        "properties": {"post_candidate_metrics": {"maxProperties": 0}}
+      },
+      "else": {
+        "properties": {"post_candidate_metrics": {"minProperties": 2}}
+      }
+    }
+  ],
+  "$defs": {
+    "ratio": {
+      "type": "object", "additionalProperties": false,
+      "required": ["numerator", "denominator", "value"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 0},
+        "denominator": {"type": "integer", "minimum": 0},
+        "value": {"type": ["number", "null"]}
+      }
+    },
+    "linkability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["records_with_supported_direct_links", "overall_linkability", "extracted_site_text_conditional_linkability"],
+      "properties": {
+        "records_with_supported_direct_links": {"type": "integer", "minimum": 0},
+        "overall_linkability": {"$ref": "#/$defs/ratio"},
+        "extracted_site_text_conditional_linkability": {"$ref": "#/$defs/ratio"}
+      }
+    },
+    "linkabilityMuseums": {
+      "type": "object", "additionalProperties": false,
+      "required": ["met", "brooklyn", "harvard"],
+      "properties": {
+        "met": {"$ref": "#/$defs/linkability"},
+        "brooklyn": {"$ref": "#/$defs/linkability"},
+        "harvard": {"$ref": "#/$defs/linkability"}
+      }
+    },
+    "scopeCounts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["specific_candidate_present", "broad_only", "unclassified_only"],
+      "properties": {
+        "specific_candidate_present": {"type": "integer", "minimum": 0},
+        "broad_only": {"type": "integer", "minimum": 0},
+        "unclassified_only": {"type": "integer", "minimum": 0}
+      }
+    },
+    "connectivitySide": {
+      "type": "object", "additionalProperties": false,
+      "required": ["connected_records", "overall_connection_rate", "extracted_site_text_conditional_connection_rate", "mutually_exclusive_scope_counts"],
+      "properties": {
+        "connected_records": {"type": "integer", "minimum": 0},
+        "overall_connection_rate": {"$ref": "#/$defs/ratio"},
+        "extracted_site_text_conditional_connection_rate": {"$ref": "#/$defs/ratio"},
+        "mutually_exclusive_scope_counts": {"$ref": "#/$defs/scopeCounts"}
+      }
+    },
+    "connectivitySides": {
+      "type": "object", "minProperties": 2, "maxProperties": 3,
+      "additionalProperties": false,
+      "properties": {
+        "met": {"$ref": "#/$defs/connectivitySide"},
+        "brooklyn": {"$ref": "#/$defs/connectivitySide"},
+        "harvard": {"$ref": "#/$defs/connectivitySide"}
+      }
+    },
+    "pairConnectivity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["shared_identity_class_ids", "shared_identity_class_count", "sides"],
+      "properties": {
+        "shared_identity_class_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "shared_identity_class_count": {"type": "integer", "minimum": 0},
+        "sides": {"$ref": "#/$defs/connectivitySides"}
+      }
+    },
+    "aggregationConnectivity": {
+      "type": "object",
+      "required": ["shared_identity_class_ids", "shared_identity_class_count", "sides"],
+      "properties": {
+        "shared_identity_class_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "shared_identity_class_count": {"type": "integer", "minimum": 0},
+        "sides": {
+          "allOf": [
+            {"$ref": "#/$defs/connectivitySides"},
+            {"required": ["met", "brooklyn", "harvard"], "minProperties": 3}
+          ]
+        }
       }
     }
   }

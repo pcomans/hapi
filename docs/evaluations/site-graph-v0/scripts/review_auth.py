@@ -30,10 +30,91 @@ TRUSTED_REVIEWERS_RELATIVE = (
 )
 REGISTRY_SCHEMA_VERSION = "site-graph-v0-trusted-reviewers/1"
 REVIEW_SCHEMA_VERSION = "site-graph-v0-review-artifact/3"
-AUDIT_SCHEMA_VERSION = "site-graph-v0-prompt-leakage-audit/3"
+AUDIT_SCHEMA_VERSION = "site-graph-v0-prompt-leakage-audit/4"
 SIGNATURE_CONTEXT = "hapi-site-graph-v0-review-evidence/1"
-GUARD_VERSION = "site-graph-v0-deterministic-prompt-leakage-guard/1"
-AUDIT_METHOD = "deterministic_prompt_leakage_guard/1"
+GUARD_VERSION = "site-graph-v0-deterministic-prompt-leakage-guard/2"
+AUDIT_METHOD = "deterministic_prompt_leakage_guard/2"
+PROMPT_ENVELOPE_SCHEMA_VERSION = "site-graph-v0-review-prompt-envelope/1"
+INPUT_ENVELOPE_SCHEMA_VERSION = "site-graph-v0-review-input-envelope/1"
+SHUFFLE_PROVENANCE_SCHEMA_VERSION = "site-graph-v0-review-shuffle-provenance/1"
+SHUFFLE_ALGORITHM = "sha256-ranked-nonidentity/1"
+SHUFFLE_SEED_CONTEXT = "hapi-site-graph-v0-review-shuffle-seed/1"
+SHUFFLE_RANK_CONTEXT = "hapi-site-graph-v0-review-shuffle-rank/1"
+OPAQUE_LABEL_CONTEXT = "hapi-site-graph-v0-review-opaque-label/1"
+OPAQUE_LABEL_PATTERN = re.compile(r"^item-[0-9a-f]{24}$")
+RESPONSE_CONTRACT = {
+    "format": "json_object",
+    "required_fields": ["assessment", "reasoning"],
+}
+
+# These cues are never needed to describe evidence. They either state a result or
+# tell the model how position/order should map to a result. Keeping this list in the
+# verifier prevents a signed audit from silently narrowing the guard.
+DECISION_PROXY_STRINGS = frozenset(
+    {
+        "accept",
+        "accepted",
+        "answer is",
+        "answer key",
+        "approve",
+        "approved",
+        "bottom",
+        "choose first",
+        "choose last",
+        "choose second",
+        "correct",
+        "correct answer",
+        "correct verdict",
+        "different",
+        "false",
+        "first",
+        "first item",
+        "first option",
+        "former",
+        "gold label",
+        "ground truth",
+        "incorrect",
+        "index",
+        "last",
+        "last item",
+        "last option",
+        "latter",
+        "left",
+        "match",
+        "merge",
+        "negative",
+        "no",
+        "oppose",
+        "option",
+        "order",
+        "ordinal",
+        "position",
+        "positive",
+        "preferred",
+        "priority",
+        "probability",
+        "rank",
+        "reject",
+        "rejected",
+        "right",
+        "same",
+        "score",
+        "second",
+        "second item",
+        "second option",
+        "selected",
+        "selection",
+        "sequence",
+        "split",
+        "support",
+        "third",
+        "top",
+        "true",
+        "verdict is",
+        "winner",
+        "yes",
+    }
+)
 
 ArtifactReader = Callable[[dict], bytes]
 
@@ -362,11 +443,13 @@ def load_reviewer_registry(repo: Path, schema_root: Path) -> tuple[dict, dict]:
     }
 
 
-def _forbidden_set_binding(values: Sequence[str], *, label: str) -> dict:
+def _forbidden_set_binding(
+    values: Sequence[str], *, label: str, allow_empty: bool = False
+) -> dict:
     if isinstance(values, (str, bytes)) or not isinstance(values, Sequence):
         raise ReviewAuthenticationError(f"{label} must be a sequence of strings")
     exact = list(values)
-    if not exact:
+    if not exact and not allow_empty:
         raise ReviewAuthenticationError(f"{label} must be nonempty")
     if any(not isinstance(value, str) or not value or value.strip() != value for value in exact):
         raise ReviewAuthenticationError(
@@ -391,20 +474,348 @@ def _compact_text(value: str) -> str:
     return "".join(character for character in _normalized_text(value) if character.isalnum())
 
 
+def canonical_forbidden_values(values: Sequence[str]) -> list[str]:
+    """Collapse Unicode/case-equivalent values without weakening text matching."""
+    if isinstance(values, (str, bytes)) or not isinstance(values, Sequence):
+        raise ReviewAuthenticationError("forbidden values must be a sequence of strings")
+    by_normalized: dict[str, str] = {}
+    for value in sorted(values):
+        _string(value, label="forbidden value")
+        by_normalized.setdefault(_normalized_text(value), value)
+    return sorted(by_normalized.values())
+
+
+def _exact_keys(value: object, expected: set[str], *, label: str) -> dict:
+    if not isinstance(value, dict) or set(value) != expected:
+        raise ReviewAuthenticationError(
+            f"{label} must contain exactly {sorted(expected)}"
+        )
+    return value
+
+
+def _string(value: object, *, label: str) -> str:
+    if not isinstance(value, str) or not value or value.strip() != value:
+        raise ReviewAuthenticationError(
+            f"{label} must be a nonempty string without outer whitespace"
+        )
+    return value
+
+
+def _sha256_string(value: object, *, label: str) -> str:
+    if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None:
+        raise ReviewAuthenticationError(f"{label} must be a lowercase SHA-256")
+    return value
+
+
+def _shuffle_seed_sha256(
+    *,
+    decision_key: str,
+    decision_kind: str,
+    subject: dict,
+) -> str:
+    return canonical_sha256(
+        {
+            "context": SHUFFLE_SEED_CONTEXT,
+            "decision_key": decision_key,
+            "decision_kind": decision_kind,
+            "subject": subject,
+        }
+    )
+
+
+def _shuffle_rank(seed_sha256: str, payload_sha256: str) -> str:
+    return canonical_sha256(
+        {
+            "context": SHUFFLE_RANK_CONTEXT,
+            "seed_sha256": seed_sha256,
+            "payload_sha256": payload_sha256,
+        }
+    )
+
+
+def _opaque_label(seed_sha256: str, payload_sha256: str) -> str:
+    digest = canonical_sha256(
+        {
+            "context": OPAQUE_LABEL_CONTEXT,
+            "seed_sha256": seed_sha256,
+            "payload_sha256": payload_sha256,
+        }
+    )
+    return f"item-{digest[:24]}"
+
+
+def build_structured_input_envelope(
+    payloads: Sequence[dict],
+    *,
+    review_invocation_id: str,
+    decision_key: str,
+    decision_kind: str,
+    subject: dict,
+) -> tuple[dict, dict]:
+    """Build an opaque request input and hidden, signed order provenance.
+
+    The provenance belongs in the pre-invocation audit, not in the bytes sent to
+    the model. The model sees only derived opaque labels and the shuffled order;
+    the verifier can reproduce both exactly.
+    """
+    _string(review_invocation_id, label="review invocation ID")
+    _string(decision_key, label="decision key")
+    _string(decision_kind, label="decision kind")
+    if not isinstance(subject, dict) or len(subject) < 2:
+        raise ReviewAuthenticationError("review subject must be an object with two fields")
+    if isinstance(payloads, (str, bytes)) or not isinstance(payloads, Sequence):
+        raise ReviewAuthenticationError("review payloads must be a sequence")
+    payload_values = list(payloads)
+    if len(payload_values) < 2:
+        raise ReviewAuthenticationError("structured review input requires at least two items")
+    if any(not isinstance(payload, dict) or not payload for payload in payload_values):
+        raise ReviewAuthenticationError("every structured review item payload must be an object")
+    # Canonical hash order is independent of caller order, so a producer cannot put
+    # the intended answer first and rely on knowledge of the shuffle algorithm.
+    payload_hashes = sorted(canonical_sha256(payload) for payload in payload_values)
+    if len(payload_hashes) != len(set(payload_hashes)):
+        raise ReviewAuthenticationError("structured review item payloads must be unique")
+    seed_sha256 = _shuffle_seed_sha256(
+        decision_key=decision_key,
+        decision_kind=decision_kind,
+        subject=subject,
+    )
+    presented_hashes = sorted(
+        payload_hashes, key=lambda digest: (_shuffle_rank(seed_sha256, digest), digest)
+    )
+    # A ranked permutation can be the identity. That does not satisfy the explicit
+    # presentation requirement, so this named algorithm applies one rotation.
+    if presented_hashes == payload_hashes:
+        presented_hashes = presented_hashes[1:] + presented_hashes[:1]
+    payload_by_hash = {
+        canonical_sha256(payload): payload for payload in payload_values
+    }
+    provenance = {
+        "schema_version": SHUFFLE_PROVENANCE_SCHEMA_VERSION,
+        "algorithm": SHUFFLE_ALGORITHM,
+        "seed_sha256": seed_sha256,
+        "source_order_payload_sha256": payload_hashes,
+        "presented_order_payload_sha256": presented_hashes,
+    }
+    input_envelope = {
+        "schema_version": INPUT_ENVELOPE_SCHEMA_VERSION,
+        "review_invocation_id": review_invocation_id,
+        "shuffle_provenance_sha256": canonical_sha256(provenance),
+        "items": [
+            {
+                "opaque_label": _opaque_label(seed_sha256, digest),
+                "payload": payload_by_hash[digest],
+            }
+            for digest in presented_hashes
+        ],
+    }
+    return input_envelope, provenance
+
+
+def build_structured_prompt_envelope(
+    *,
+    review_invocation_id: str,
+    input_envelope_bytes: bytes,
+    task_instructions: str,
+) -> dict:
+    """Build the exact prompt wrapper bound to one structured input envelope."""
+    _string(review_invocation_id, label="review invocation ID")
+    _string(task_instructions, label="task instructions")
+    if not isinstance(input_envelope_bytes, bytes) or not input_envelope_bytes:
+        raise ReviewAuthenticationError("input envelope bytes must be nonempty bytes")
+    return {
+        "schema_version": PROMPT_ENVELOPE_SCHEMA_VERSION,
+        "review_invocation_id": review_invocation_id,
+        "input_envelope_sha256": hashlib.sha256(input_envelope_bytes).hexdigest(),
+        "task_instructions": task_instructions,
+        "response_contract": copy.deepcopy(RESPONSE_CONTRACT),
+    }
+
+
+def _validate_structured_request(
+    prompt_bytes: bytes,
+    input_bytes: bytes,
+    *,
+    shuffle_provenance: dict,
+    review_invocation_id: str,
+    decision_key: str,
+    decision_kind: str,
+    subject: dict,
+) -> dict:
+    prompt = strict_json_object(prompt_bytes, label="review prompt envelope")
+    input_envelope = strict_json_object(input_bytes, label="review input envelope")
+    _require_canonical_artifact_bytes(
+        prompt_bytes, prompt, label="review prompt envelope"
+    )
+    _require_canonical_artifact_bytes(
+        input_bytes, input_envelope, label="review input envelope"
+    )
+    _exact_keys(
+        prompt,
+        {
+            "schema_version",
+            "review_invocation_id",
+            "input_envelope_sha256",
+            "task_instructions",
+            "response_contract",
+        },
+        label="review prompt envelope",
+    )
+    if prompt["schema_version"] != PROMPT_ENVELOPE_SCHEMA_VERSION:
+        raise ReviewAuthenticationError("unsupported review prompt envelope version")
+    if prompt["review_invocation_id"] != review_invocation_id:
+        raise ReviewAuthenticationError("prompt envelope review_invocation_id mismatch")
+    if prompt["input_envelope_sha256"] != hashlib.sha256(input_bytes).hexdigest():
+        raise ReviewAuthenticationError("prompt envelope input-byte binding mismatch")
+    _string(prompt["task_instructions"], label="prompt task instructions")
+    if prompt["response_contract"] != RESPONSE_CONTRACT:
+        raise ReviewAuthenticationError("prompt envelope response contract is not exact")
+
+    _exact_keys(
+        input_envelope,
+        {
+            "schema_version",
+            "review_invocation_id",
+            "shuffle_provenance_sha256",
+            "items",
+        },
+        label="review input envelope",
+    )
+    if input_envelope["schema_version"] != INPUT_ENVELOPE_SCHEMA_VERSION:
+        raise ReviewAuthenticationError("unsupported review input envelope version")
+    if input_envelope["review_invocation_id"] != review_invocation_id:
+        raise ReviewAuthenticationError("input envelope review_invocation_id mismatch")
+    if input_envelope["shuffle_provenance_sha256"] != canonical_sha256(
+        shuffle_provenance
+    ):
+        raise ReviewAuthenticationError("input envelope shuffle provenance binding mismatch")
+
+    _exact_keys(
+        shuffle_provenance,
+        {
+            "schema_version",
+            "algorithm",
+            "seed_sha256",
+            "source_order_payload_sha256",
+            "presented_order_payload_sha256",
+        },
+        label="review shuffle provenance",
+    )
+    if shuffle_provenance["schema_version"] != SHUFFLE_PROVENANCE_SCHEMA_VERSION:
+        raise ReviewAuthenticationError("unsupported review shuffle provenance version")
+    if shuffle_provenance["algorithm"] != SHUFFLE_ALGORITHM:
+        raise ReviewAuthenticationError("unsupported review shuffle algorithm")
+    expected_seed = _shuffle_seed_sha256(
+        decision_key=decision_key,
+        decision_kind=decision_kind,
+        subject=subject,
+    )
+    if shuffle_provenance["seed_sha256"] != expected_seed:
+        raise ReviewAuthenticationError("review shuffle seed/decision binding mismatch")
+    for field in (
+        "source_order_payload_sha256",
+        "presented_order_payload_sha256",
+    ):
+        hashes = shuffle_provenance[field]
+        if (
+            not isinstance(hashes, list)
+            or len(hashes) < 2
+            or len(hashes) != len(set(hashes))
+        ):
+            raise ReviewAuthenticationError(
+                f"review shuffle {field} must contain at least two unique hashes"
+            )
+        for index, digest in enumerate(hashes):
+            _sha256_string(digest, label=f"review shuffle {field}[{index}]")
+    source_hashes = shuffle_provenance["source_order_payload_sha256"]
+    presented_hashes = shuffle_provenance["presented_order_payload_sha256"]
+    if source_hashes != sorted(source_hashes):
+        raise ReviewAuthenticationError("review shuffle source order is not canonical")
+    if set(source_hashes) != set(presented_hashes):
+        raise ReviewAuthenticationError("review shuffle source/presentation census mismatch")
+    expected_presented = sorted(
+        source_hashes,
+        key=lambda digest: (_shuffle_rank(expected_seed, digest), digest),
+    )
+    if expected_presented == source_hashes:
+        expected_presented = expected_presented[1:] + expected_presented[:1]
+    if presented_hashes != expected_presented or presented_hashes == source_hashes:
+        raise ReviewAuthenticationError("review presentation order is not the proven shuffle")
+
+    items = input_envelope["items"]
+    if not isinstance(items, list) or len(items) != len(presented_hashes):
+        raise ReviewAuthenticationError("review input item census differs from shuffle")
+    actual_presented: list[str] = []
+    labels: list[str] = []
+    for index, item in enumerate(items):
+        _exact_keys(item, {"opaque_label", "payload"}, label=f"review item {index}")
+        label = item["opaque_label"]
+        if not isinstance(label, str) or OPAQUE_LABEL_PATTERN.fullmatch(label) is None:
+            raise ReviewAuthenticationError(f"review item {index} label is not opaque")
+        if not isinstance(item["payload"], dict) or not item["payload"]:
+            raise ReviewAuthenticationError(f"review item {index} payload must be an object")
+        digest = canonical_sha256(item["payload"])
+        if label != _opaque_label(expected_seed, digest):
+            raise ReviewAuthenticationError(
+                f"review item {index} opaque label does not derive from provenance"
+            )
+        labels.append(label)
+        actual_presented.append(digest)
+    if len(labels) != len(set(labels)):
+        raise ReviewAuthenticationError("review opaque labels must be unique")
+    if actual_presented != presented_hashes:
+        raise ReviewAuthenticationError("review input items are not in proven presentation order")
+    return {
+        "prompt_schema_version": PROMPT_ENVELOPE_SCHEMA_VERSION,
+        "input_schema_version": INPUT_ENVELOPE_SCHEMA_VERSION,
+        "shuffle_provenance_schema_version": SHUFFLE_PROVENANCE_SCHEMA_VERSION,
+        "shuffle_algorithm": SHUFFLE_ALGORITHM,
+        "review_invocation_id": review_invocation_id,
+        "item_count": len(items),
+        "opaque_labels_canonical_sha256": canonical_sha256(labels),
+        "shuffle_provenance_sha256": canonical_sha256(shuffle_provenance),
+    }
+
+
+def _contains_normalized(haystack: str, needle: str) -> bool:
+    start = r"(?<!\w)" if needle[0].isalnum() else ""
+    end = r"(?!\w)" if needle[-1].isalnum() else ""
+    return re.search(f"{start}{re.escape(needle)}{end}", haystack) is not None
+
+
+def _separator_insensitive_contains(haystack: str, needle: str) -> bool:
+    """Match punctuation variants without finding short IDs inside opaque hashes."""
+    haystack_parts = re.findall(r"[^\W_]+", haystack, flags=re.UNICODE)
+    compact_needle = _compact_text(needle)
+    if len(compact_needle) < 2:
+        return False
+    for start in range(len(haystack_parts)):
+        candidate = ""
+        for part in haystack_parts[start:]:
+            candidate += part
+            if candidate == compact_needle:
+                return True
+            if len(candidate) >= len(compact_needle):
+                break
+    return False
+
+
 def deterministic_leakage_findings(
     prompt_bytes: bytes,
     input_bytes: bytes,
     *,
-    candidate_ids: Sequence[str],
-    source_ids: Sequence[str],
-    answer_strings: Sequence[str],
+    preferred_labels: Sequence[str],
+    aliases: Sequence[str],
+    answer_names: Sequence[str],
+    identifiers: Sequence[str],
+    locators: Sequence[str],
 ) -> list[dict]:
-    """Find answer/identifier leakage anywhere in the exact LLM request bytes.
+    """Find semantic-name, identifier, locator, and decision-cue leakage.
 
-    NFKC + case-folded matching catches superficial casing/Unicode changes.  A second
-    alphanumeric-compacted match catches separator substitutions in identifiers.  The
-    whole request is scanned, so putting an answer in an example or instruction does
-    not exempt it.
+    NFKC + case-folded matching catches superficial casing/Unicode changes. A
+    token-aware compacted match catches separator substitutions without treating
+    substrings of opaque hashes as evidence. The whole exact request is scanned, so
+    putting an answer in an example, payload key, or instruction does not exempt it.
     """
     decoded: list[tuple[str, str]] = []
     for label, raw in (("prompt", prompt_bytes), ("input", input_bytes)):
@@ -420,24 +831,29 @@ def deterministic_leakage_findings(
             raise ReviewAuthenticationError(f"{label} contains a NUL byte")
         decoded.append((label, text))
     categories = (
-        ("answer_string", answer_strings),
-        ("candidate_id", candidate_ids),
-        ("source_id", source_ids),
+        ("preferred_label", preferred_labels, True),
+        ("alias", aliases, True),
+        ("answer_name", answer_names, True),
+        ("identifier", identifiers, True),
+        ("locator", locators, True),
+        ("decision_proxy", sorted(DECISION_PROXY_STRINGS), False),
     )
-    for category, values in categories:
-        _forbidden_set_binding(values, label=f"{category} values")
+    for category, values, allow_empty in categories:
+        _forbidden_set_binding(
+            values, label=f"{category} values", allow_empty=allow_empty
+        )
     findings: list[dict] = []
     for location, text in decoded:
         normalized_haystack = _normalized_text(text)
-        compact_haystack = _compact_text(text)
-        for category, values in categories:
+        for category, values, _ in categories:
             for value in sorted(values):
                 normalized_needle = _normalized_text(value)
-                compact_needle = _compact_text(value)
                 match_kind = None
-                if normalized_needle in normalized_haystack:
+                if _contains_normalized(normalized_haystack, normalized_needle):
                     match_kind = "normalized_literal"
-                elif len(compact_needle) >= 4 and compact_needle in compact_haystack:
+                elif _separator_insensitive_contains(
+                    normalized_haystack, normalized_needle
+                ):
                     match_kind = "separator_insensitive"
                 if match_kind is not None:
                     findings.append(
@@ -463,17 +879,53 @@ def deterministic_guard_record(
     prompt_bytes: bytes,
     input_bytes: bytes,
     *,
-    candidate_ids: Sequence[str],
-    source_ids: Sequence[str],
-    answer_strings: Sequence[str],
+    shuffle_provenance: dict,
+    review_invocation_id: str,
+    decision_key: str,
+    decision_kind: str,
+    subject: dict,
+    preferred_labels: Sequence[str],
+    aliases: Sequence[str],
+    answer_names: Sequence[str],
+    identifiers: Sequence[str],
+    locators: Sequence[str],
 ) -> dict:
     """Return the only acceptable deterministic guard record, or reject leakage."""
-    findings = deterministic_leakage_findings(
+    request_envelope = _validate_structured_request(
         prompt_bytes,
         input_bytes,
-        candidate_ids=candidate_ids,
-        source_ids=source_ids,
-        answer_strings=answer_strings,
+        shuffle_provenance=shuffle_provenance,
+        review_invocation_id=review_invocation_id,
+        decision_key=decision_key,
+        decision_kind=decision_kind,
+        subject=subject,
+    )
+    # Fixed schema/version/hash fields are validated above but are not semantic LLM
+    # content. Scan the exact caller-controlled surfaces from the parsed envelopes;
+    # otherwise a legitimate short numeric locator such as "1" would collide with
+    # the fixed envelope version even though it was never presented as evidence.
+    prompt_envelope = strict_json_object(prompt_bytes, label="review prompt envelope")
+    input_envelope = strict_json_object(input_bytes, label="review input envelope")
+    prompt_surface = canonical_json_bytes(
+        [
+            prompt_envelope["review_invocation_id"],
+            prompt_envelope["task_instructions"],
+        ]
+    )
+    input_surface = canonical_json_bytes(
+        [
+            input_envelope["review_invocation_id"],
+            [item["payload"] for item in input_envelope["items"]],
+        ]
+    )
+    findings = deterministic_leakage_findings(
+        prompt_surface,
+        input_surface,
+        preferred_labels=preferred_labels,
+        aliases=aliases,
+        answer_names=answer_names,
+        identifiers=identifiers,
+        locators=locators,
     )
     if findings:
         rendered = ", ".join(
@@ -488,12 +940,24 @@ def deterministic_guard_record(
         "request_binding_sha256": canonical_sha256(
             {"prompt_sha256": prompt_sha, "input_sha256": input_sha}
         ),
-        "candidate_ids": _forbidden_set_binding(
-            candidate_ids, label="candidate_ids"
+        "request_envelope": request_envelope,
+        "preferred_labels": _forbidden_set_binding(
+            preferred_labels, label="preferred_labels", allow_empty=True
         ),
-        "source_ids": _forbidden_set_binding(source_ids, label="source_ids"),
-        "answer_strings": _forbidden_set_binding(
-            answer_strings, label="answer_strings"
+        "aliases": _forbidden_set_binding(
+            aliases, label="aliases", allow_empty=True
+        ),
+        "answer_names": _forbidden_set_binding(
+            answer_names, label="answer_names", allow_empty=True
+        ),
+        "identifiers": _forbidden_set_binding(
+            identifiers, label="identifiers", allow_empty=True
+        ),
+        "locators": _forbidden_set_binding(
+            locators, label="locators", allow_empty=True
+        ),
+        "decision_proxies": _forbidden_set_binding(
+            sorted(DECISION_PROXY_STRINGS), label="decision_proxies"
         ),
         "result": "PASS",
         "findings": [],
@@ -709,9 +1173,11 @@ def authenticate_prompt_audit(
     signature_bytes: bytes,
     signature_reference: dict,
     read_artifact: ArtifactReader,
-    candidate_ids: Sequence[str],
-    source_ids: Sequence[str],
-    answer_strings: Sequence[str],
+    preferred_labels: Sequence[str],
+    aliases: Sequence[str],
+    answer_names: Sequence[str],
+    identifiers: Sequence[str],
+    locators: Sequence[str],
     invocation_started_at_utc: str,
     usage: ArtifactUsageTracker,
     allow_test_registry: bool = False,
@@ -774,9 +1240,16 @@ def authenticate_prompt_audit(
     recomputed_guard = deterministic_guard_record(
         prompt_raw,
         input_raw,
-        candidate_ids=candidate_ids,
-        source_ids=source_ids,
-        answer_strings=answer_strings,
+        shuffle_provenance=audit["shuffle_provenance"],
+        review_invocation_id=audit["review_invocation_id"],
+        decision_key=audit["decision_key"],
+        decision_kind=audit["decision_kind"],
+        subject=audit["subject"],
+        preferred_labels=preferred_labels,
+        aliases=aliases,
+        answer_names=answer_names,
+        identifiers=identifiers,
+        locators=locators,
     )
     if audit["deterministic_guard"] != recomputed_guard:
         raise ReviewAuthenticationError(
@@ -826,6 +1299,7 @@ def authenticate_prompt_audit(
         "subject": audit["subject"],
         "prompt": audit["prompt"],
         "input": audit["input"],
+        "request_envelope": recomputed_guard["request_envelope"],
         "artifact_sha256": hashlib.sha256(raw_audit).hexdigest(),
         "statement_sha256": statement_sha,
         "signature_sha256": signature_sha,

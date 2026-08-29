@@ -80,7 +80,6 @@ PUBLIC_OPPORTUNITY_FIELDS = (
     "unresolved_status_counts",
     "mention_count",
     "artifact_count",
-    "artifact_expansion_sha256",
     "intent_to_treat",
 )
 PRIVATE_SOURCE_FIELDS = frozenset(

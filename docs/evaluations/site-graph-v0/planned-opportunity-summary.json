@@ -8,7 +8,6 @@
   "opportunities": [
     {
       "artifact_count": 26573,
-      "artifact_expansion_sha256": "4ed9c48e9a1fd9e16ab5255937c998e778ead64b8683667d326d8ada2131724f",
       "intent_to_treat": true,
       "mention_count": 26573,
       "museum": "met",
@@ -21,7 +20,6 @@
     },
     {
       "artifact_count": 4634,
-      "artifact_expansion_sha256": "b7a29652e0086a988cb4ff78ce7cef705ea18846430c104b5558ad9ec22cc045",
       "intent_to_treat": true,
       "mention_count": 4634,
       "museum": "met",
@@ -34,7 +32,6 @@
     },
     {
       "artifact_count": 3006,
-      "artifact_expansion_sha256": "4263acb8bcee29cc95e7b74105ac277f9b7b2f626132663ef59d281982c88c56",
       "intent_to_treat": true,
       "mention_count": 3006,
       "museum": "met",
@@ -47,7 +44,6 @@
     },
     {
       "artifact_count": 2881,
-      "artifact_expansion_sha256": "fcf57fecee9b38ca95a92ee55ded43e2786ff053c9d2f33e7e03b506bbb533d5",
       "intent_to_treat": true,
       "mention_count": 3077,
       "museum": "brooklyn",
@@ -60,7 +56,6 @@
     },
     {
       "artifact_count": 1927,
-      "artifact_expansion_sha256": "02bcc154a491b5be90ebae149dcccd56fa037bd13fe82318856e5cb556666e99",
       "intent_to_treat": true,
       "mention_count": 1927,
       "museum": "met",
@@ -73,7 +68,6 @@
     },
     {
       "artifact_count": 1518,
-      "artifact_expansion_sha256": "1416350c71a77b906eb158bf79bfc6e20d02e72269e063d838583d85eed97ede",
       "intent_to_treat": true,
       "mention_count": 1518,
       "museum": "met",
@@ -86,7 +80,6 @@
     },
     {
       "artifact_count": 1359,
-      "artifact_expansion_sha256": "7e909058e2c1d671086acdad08c8339e48252b822b0e7820d143c097acac6474",
       "intent_to_treat": true,
       "mention_count": 1359,
       "museum": "met",
@@ -99,7 +92,6 @@
     },
     {
       "artifact_count": 1125,
-      "artifact_expansion_sha256": "34ddf41655fe45dd7a3fdd143e7eefb8c2e0f48188df95dfd9d3c140571d6e3b",
       "intent_to_treat": true,
       "mention_count": 1125,
       "museum": "met",
@@ -112,7 +104,6 @@
     },
     {
       "artifact_count": 997,
-      "artifact_expansion_sha256": "8a4362b052c83243dc5003457c26e3e7599f1b488750fcd15bebe7c65c021766",
       "intent_to_treat": true,
       "mention_count": 997,
       "museum": "met",
@@ -125,7 +116,6 @@
     },
     {
       "artifact_count": 997,
-      "artifact_expansion_sha256": "8a4362b052c83243dc5003457c26e3e7599f1b488750fcd15bebe7c65c021766",
       "intent_to_treat": true,
       "mention_count": 997,
       "museum": "met",
@@ -138,7 +128,6 @@
     },
     {
       "artifact_count": 920,
-      "artifact_expansion_sha256": "27f333b2cc665874e32cab4ab61754101aa564f0d967dcaff6a18ed24757609b",
       "intent_to_treat": true,
       "mention_count": 920,
       "museum": "met",
@@ -151,7 +140,6 @@
     },
     {
       "artifact_count": 908,
-      "artifact_expansion_sha256": "4d3d976598a77b4575e6f5aee7ad2a971e4b193110256d6d5d058a0d2773c307",
       "intent_to_treat": true,
       "mention_count": 908,
       "museum": "met",
@@ -164,7 +152,6 @@
     },
     {
       "artifact_count": 717,
-      "artifact_expansion_sha256": "f532693e17b7b08d8d01794ffc35b3f21b45f53e87c92ff8c2a78eca03be646f",
       "intent_to_treat": true,
       "mention_count": 717,
       "museum": "met",
@@ -177,7 +164,6 @@
     },
     {
       "artifact_count": 570,
-      "artifact_expansion_sha256": "89f65b81be8229795ab1cd84b422c00d659d52e7e332344b6d76b63af9dccc3a",
       "intent_to_treat": true,
       "mention_count": 570,
       "museum": "met",
@@ -190,7 +176,6 @@
     },
     {
       "artifact_count": 552,
-      "artifact_expansion_sha256": "ba4f5d84ea87cbeeeff3ce349777fd2184f6259bdcf0585514c42dcc4e6e2c03",
       "intent_to_treat": true,
       "mention_count": 552,
       "museum": "met",
@@ -203,7 +188,6 @@
     },
     {
       "artifact_count": 534,
-      "artifact_expansion_sha256": "9f918f4df57141f6f21c9d7a1a71368b7fe53a48b7ddb45c0f8198a1d8723882",
       "intent_to_treat": true,
       "mention_count": 535,
       "museum": "harvard",
@@ -216,7 +200,6 @@
     },
     {
       "artifact_count": 511,
-      "artifact_expansion_sha256": "2aade4c5587bdbee61eaedeb696beaf1575410aee4257db3aa9088ce32775aa1",
       "intent_to_treat": true,
       "mention_count": 512,
       "museum": "harvard",
@@ -229,7 +212,6 @@
     },
     {
       "artifact_count": 505,
-      "artifact_expansion_sha256": "11faafd463e4deac18a49a8694433639bd672925b8170ad77b8b3be0c7baa5d1",
       "intent_to_treat": true,
       "mention_count": 505,
       "museum": "met",
@@ -242,7 +224,6 @@
     },
     {
       "artifact_count": 452,
-      "artifact_expansion_sha256": "aad69dbcba06f85ba1da171fc798ad97448ad7057c0779d038eac0e326a38541",
       "intent_to_treat": true,
       "mention_count": 452,
       "museum": "met",
@@ -255,7 +236,6 @@
     },
     {
       "artifact_count": 430,
-      "artifact_expansion_sha256": "e2cf4196c88900e0d7b5bb9baafdfa93ccfdfe699f8dac98b39f1750c7d69cf3",
       "intent_to_treat": true,
       "mention_count": 430,
       "museum": "met",
@@ -268,7 +248,6 @@
     },
     {
       "artifact_count": 414,
-      "artifact_expansion_sha256": "d87a02ad5bf2cd6c80c6ca2b650188d809e822ef038c6bda2fb2621c6a4a108e",
       "intent_to_treat": true,
       "mention_count": 414,
       "museum": "met",
@@ -281,7 +260,6 @@
     },
     {
       "artifact_count": 397,
-      "artifact_expansion_sha256": "724c7aa8124eb96b19d3986b09b8c8cd6b6ae63f799a5f56da8139c68443132e",
       "intent_to_treat": true,
       "mention_count": 397,
       "museum": "met",
@@ -294,7 +272,6 @@
     },
     {
       "artifact_count": 397,
-      "artifact_expansion_sha256": "724c7aa8124eb96b19d3986b09b8c8cd6b6ae63f799a5f56da8139c68443132e",
       "intent_to_treat": true,
       "mention_count": 397,
       "museum": "met",
@@ -307,7 +284,6 @@
     },
     {
       "artifact_count": 393,
-      "artifact_expansion_sha256": "3e0611179197b66500b8981775c028b1162494beea4f124efe975fe54a06d076",
       "intent_to_treat": true,
       "mention_count": 393,
       "museum": "met",
@@ -320,7 +296,6 @@
     },
     {
       "artifact_count": 393,
-      "artifact_expansion_sha256": "3e0611179197b66500b8981775c028b1162494beea4f124efe975fe54a06d076",
       "intent_to_treat": true,
       "mention_count": 393,
       "museum": "met",
@@ -333,7 +308,6 @@
     },
     {
       "artifact_count": 393,
-      "artifact_expansion_sha256": "b4b85c8d32914907444cd82759bf65085f5f2ed7c318eef57837ce040af8054f",
       "intent_to_treat": true,
       "mention_count": 393,
       "museum": "met",
@@ -346,7 +320,6 @@
     },
     {
       "artifact_count": 375,
-      "artifact_expansion_sha256": "dec2b9572c2609e15d7e043769f4a4c49e9b50056bbba39739a4f294e61220dd",
       "intent_to_treat": true,
       "mention_count": 375,
       "museum": "met",
@@ -359,7 +332,6 @@
     },
     {
       "artifact_count": 374,
-      "artifact_expansion_sha256": "400524c315183bf8efb9caa24324491f95e0736425873fafd0db907009de18ec",
       "intent_to_treat": true,
       "mention_count": 374,
       "museum": "met",
@@ -372,7 +344,6 @@
     },
     {
       "artifact_count": 327,
-      "artifact_expansion_sha256": "9ab3b3b6abe21fd4f0f2e89ec3446b088251759151f184ba079c42e0b371eed5",
       "intent_to_treat": true,
       "mention_count": 327,
       "museum": "met",
@@ -385,7 +356,6 @@
     },
     {
       "artifact_count": 322,
-      "artifact_expansion_sha256": "25fd5122f250c26a201d62912faa6438b7d74827527092ab2d995dfd4724ddd5",
       "intent_to_treat": true,
       "mention_count": 322,
       "museum": "met",
@@ -398,7 +368,6 @@
     },
     {
       "artifact_count": 321,
-      "artifact_expansion_sha256": "36f528a1abd07065be9aad2744003238c635ef8249e63ab401feba018d08d862",
       "intent_to_treat": true,
       "mention_count": 321,
       "museum": "met",
@@ -411,7 +380,6 @@
     },
     {
       "artifact_count": 321,
-      "artifact_expansion_sha256": "36f528a1abd07065be9aad2744003238c635ef8249e63ab401feba018d08d862",
       "intent_to_treat": true,
       "mention_count": 321,
       "museum": "met",
@@ -424,7 +392,6 @@
     },
     {
       "artifact_count": 312,
-      "artifact_expansion_sha256": "622a9c6efc57d4051c373d2e193f0ff04ad1f89b9cfab2c5d7393998fc960768",
       "intent_to_treat": true,
       "mention_count": 312,
       "museum": "met",
@@ -437,7 +404,6 @@
     },
     {
       "artifact_count": 187,
-      "artifact_expansion_sha256": "327cc66d513fb05837199f0d5d2a8cacf346a4ef691d28605182ea86f1f890aa",
       "intent_to_treat": true,
       "mention_count": 187,
       "museum": "harvard",
@@ -450,7 +416,6 @@
     },
     {
       "artifact_count": 168,
-      "artifact_expansion_sha256": "ab204a68e1b39062a4ac98103d30ad83416d0b003f6d39db8ceac4a2d5c8a4f0",
       "intent_to_treat": true,
       "mention_count": 168,
       "museum": "harvard",
@@ -463,7 +428,6 @@
     },
     {
       "artifact_count": 47,
-      "artifact_expansion_sha256": "15c1b3f596edfa6c3452a8441a567ae8806930c303ef462951f4702f1ffe4526",
       "intent_to_treat": true,
       "mention_count": 47,
       "museum": "brooklyn",
@@ -476,7 +440,6 @@
     },
     {
       "artifact_count": 37,
-      "artifact_expansion_sha256": "340d32fa59235a6590fd350e1a1db90def77b7abc823fc97dcdf5205476146b4",
       "intent_to_treat": true,
       "mention_count": 38,
       "museum": "brooklyn",
@@ -489,7 +452,6 @@
     },
     {
       "artifact_count": 35,
-      "artifact_expansion_sha256": "3134726b972975a9714fa8a3ef984de597ab5d3f84586b75b957c7a497694715",
       "intent_to_treat": true,
       "mention_count": 40,
       "museum": "brooklyn",
@@ -502,7 +464,6 @@
     },
     {
       "artifact_count": 33,
-      "artifact_expansion_sha256": "fd7cc5c34b5a1d61cba7b83122626e846c527d36005da58208a5d02a8ccef23c",
       "intent_to_treat": true,
       "mention_count": 33,
       "museum": "brooklyn",
@@ -515,7 +476,6 @@
     },
     {
       "artifact_count": 32,
-      "artifact_expansion_sha256": "f5db291fabf3b3229e4e260f00175cb345f096f866c2fc7029efe4855265b00f",
       "intent_to_treat": true,
       "mention_count": 32,
       "museum": "brooklyn",
@@ -528,7 +488,6 @@
     },
     {
       "artifact_count": 32,
-      "artifact_expansion_sha256": "a70032c3f3e270dfe01f5b1b186bfe64fdeca49a04f86447f19a2564cec7f53d",
       "intent_to_treat": true,
       "mention_count": 33,
       "museum": "brooklyn",
@@ -541,7 +500,6 @@
     },
     {
       "artifact_count": 31,
-      "artifact_expansion_sha256": "6915e4e4eb1382a7777840ad615773050a9d7f7e533cfb2d32b2033646e0d868",
       "intent_to_treat": true,
       "mention_count": 31,
       "museum": "brooklyn",
@@ -554,7 +512,6 @@
     },
     {
       "artifact_count": 30,
-      "artifact_expansion_sha256": "fdd9ffa08bd06fbc2639fc5005cc3955c6754cf8fa2a0b93fe6eeaf6f09108d2",
       "intent_to_treat": true,
       "mention_count": 30,
       "museum": "brooklyn",
@@ -567,7 +524,6 @@
     },
     {
       "artifact_count": 26,
-      "artifact_expansion_sha256": "374208873f82dcd91606c039c4bbf9a2d3f5a43b492b6ea74b23ac45a75572a9",
       "intent_to_treat": true,
       "mention_count": 26,
       "museum": "brooklyn",
@@ -580,7 +536,6 @@
     },
     {
       "artifact_count": 5,
-      "artifact_expansion_sha256": "6c79cc37620fc50a180afefbe7ed8840313419a8d9b9aea7ee5a81c73b36147f",
       "intent_to_treat": true,
       "mention_count": 5,
       "museum": "harvard",
@@ -593,7 +548,6 @@
     },
     {
       "artifact_count": 5,
-      "artifact_expansion_sha256": "6c79cc37620fc50a180afefbe7ed8840313419a8d9b9aea7ee5a81c73b36147f",
       "intent_to_treat": true,
       "mention_count": 5,
       "museum": "harvard",
@@ -606,7 +560,6 @@
     },
     {
       "artifact_count": 4,
-      "artifact_expansion_sha256": "237db77e9c5bfde426efb10ca76b7854f1a6df39fbbdc8ebd5e5937576fc595e",
       "intent_to_treat": true,
       "mention_count": 4,
       "museum": "harvard",
@@ -619,7 +572,6 @@
     },
     {
       "artifact_count": 3,
-      "artifact_expansion_sha256": "8912119724129bd9770540f4c9c33725da5df7a93b48913c9c83617e8d6ebcaf",
       "intent_to_treat": true,
       "mention_count": 3,
       "museum": "harvard",
@@ -632,7 +584,6 @@
     },
     {
       "artifact_count": 2,
-      "artifact_expansion_sha256": "5b3b350e4ec2de17908f2b50fe0fdbc7e6c011f486e9554b8db3dd1cf52fe340",
       "intent_to_treat": true,
       "mention_count": 2,
       "museum": "harvard",
@@ -645,7 +596,6 @@
     },
     {
       "artifact_count": 2,
-      "artifact_expansion_sha256": "5b3b350e4ec2de17908f2b50fe0fdbc7e6c011f486e9554b8db3dd1cf52fe340",
       "intent_to_treat": true,
       "mention_count": 2,
       "museum": "harvard",
@@ -822,7 +772,7 @@
     "canonical_json_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212",
     "transport_json_sha256": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890"
   },
-  "public_data_boundary": "Aggregate-only release: no artifact IDs, raw mention text, field paths, or normalized expression text. Exact membership is regenerated privately and authenticated by the committed digests.",
+  "public_data_boundary": "Aggregate-only release: no artifact IDs, per-group artifact-expansion hashes, raw mention text, field paths, or normalized expression text. Exact membership is regenerated privately and authenticated by the committed whole-ledger digests. Stable ranks and counts are not claimed opaque or unlinkable.",
   "schema_version": "site-graph-v0-opportunity-summary/2",
   "selected_signature_count": 50,
   "selection_algorithm": {

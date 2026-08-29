@@ -1,5 +1,5 @@
 {
-  "schema_version": "site-graph-v0-implementation-evidence/4",
+  "schema_version": "site-graph-v0-implementation-evidence/5",
   "issue": 327,
   "status": {
     "snapshot_acquisition_integrity": "PASS",
@@ -34,9 +34,16 @@
     "deterministic_output_count": 19,
     "output_mismatches": 0,
     "metadata_mismatches": 0,
-    "run_a_manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
-    "run_b_manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
-    "runtime_attestation_sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321"
+    "run_a_manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+    "run_b_manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+    "runtime_attestation_sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321",
+    "fresh_portable_reproduction": {
+      "run_id": "d275ff62-41a9-4419-82d9-286ca36ea7f5",
+      "manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
+      "deterministic_output_count": 19,
+      "different_path_and_uuid_accepted": true,
+      "absolute_runtime_path_is_a_prerequisite": false
+    }
   },
   "validation": {
     "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
@@ -44,11 +51,11 @@
     "checks_failed": 0,
     "schema_meta_valid_count": 20,
     "schema_representative_valid_instance_count": 20,
-    "schema_adversarial_invalid_instance_count": 40
+    "schema_adversarial_invalid_instance_count": 41
   },
   "tests": {
-    "focused_site_graph_contract": "124 passed",
-    "full_pipeline": "2503 passed",
+    "focused_site_graph_contract": "166 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
+    "full_pipeline": "2545 passed, 2 skipped for the same environment-variable-only archive tests",
     "execution_scope": "local repository-owned uv environment; no pre-PR CI run exists"
   },
   "review_gate": {
@@ -61,7 +68,9 @@
     "trusted_run_attestors": "NOT_CONFIGURED",
     "trusted_source_exporters": "NOT_CONFIGURED",
     "trusted_reviewers_and_auditors": "NOT_CONFIGURED",
+    "trusted_correction_chain": "NOT_CONFIGURED",
     "production_comparator_effect": "FAIL_CLOSED",
+    "production_correction_sensitivity_effect": "FAIL_CLOSED",
     "downstream_product_verdict": "NOT_RUN",
     "required_runtime": {
       "implementation": "CPython",
@@ -71,6 +80,8 @@
       "dependency_lock_sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
     },
     "review_source_binding": "Every signed review must cite authenticated non-originating-museum source records that collectively cover every target in the signed decision subject.",
-    "trusted_completion_requirement": "The same configured trusted attestor must sign start and completion statements binding one invocation to exact freeze, result, candidate, review, source-export, runtime, and manifest bytes."
+    "trusted_completion_requirement": "The same configured trusted attestor must sign start and completion statements binding one invocation to exact freeze, result, candidate, review, source-export, runtime, and manifest bytes.",
+    "record_post_state_requirement": "Every selected record declares its complete final supported direct-link set and exact removed-baseline partition; losses and all post-candidate metrics consume that record state, independently of per-opportunity research failures.",
+    "correction_chain_requirement": "A separately reviewed release must pin a canonical registration artifact from a strict ancestor commit, binding the genuine Git genesis, exact prior ledger head, and both private baseline hashes. Release activation precedes decisions, cited source bytes come from strict decision ancestors, each ledger preserves the registered prefix, and two registered independent human reviewers sign every correction."
   }
 }

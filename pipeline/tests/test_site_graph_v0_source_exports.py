@@ -56,6 +56,8 @@ def _case() -> dict:
         {
             "source_record_id": "source-1",
             "target_id": "target-1",
+            "preferred_label": "Neutral place one",
+            "aliases": ["Neutral alias one"],
             "authority_identity_locator": "logic:target-1",
             "raw_source_types": ["archaeological-site"],
             "parent_ids": [],
@@ -65,6 +67,8 @@ def _case() -> dict:
         {
             "source_record_id": "source-2",
             "target_id": "target-2",
+            "preferred_label": "Neutral place two",
+            "aliases": [],
             "authority_identity_locator": "logic:target-2",
             "raw_source_types": ["archaeological-site"],
             "parent_ids": [],
@@ -73,7 +77,7 @@ def _case() -> dict:
         },
     ]
     export = {
-        "schema_version": "site-graph-v0-authority-source-export/1",
+        "schema_version": "site-graph-v0-authority-source-export/2",
         "source_export_id": "logic-export-1",
         "authority_name": "logic authority",
         "source_kind": "logic-only",
@@ -200,6 +204,24 @@ def test_unsigned_attestation_object_cannot_override_signed_attestation_bytes() 
         match="attestation object differs from authenticated exact bytes",
     ):
         _authenticate(case)
+
+
+def test_signed_export_requires_sorted_alias_census_distinct_from_preferred_label() -> None:
+    case = _case()
+    changed = copy.deepcopy(case["export"])
+    changed["records"][0]["aliases"] = ["Zulu alias", "Alpha alias"]
+    changed["completeness"]["records_canonical_sha256"] = (
+        source_exports.canonical_sha256(changed["records"])
+    )
+    with pytest.raises(candidate_git.CandidateGitError, match="aliases is not sorted"):
+        source_exports.validate_source_export_records(changed)
+
+    changed["records"][0]["aliases"] = ["Neutral place one"]
+    changed["completeness"]["records_canonical_sha256"] = (
+        source_exports.canonical_sha256(changed["records"])
+    )
+    with pytest.raises(candidate_git.CandidateGitError, match="repeat the preferred"):
+        source_exports.validate_source_export_records(changed)
 
 
 def test_release_source_export_policy_fails_closed() -> None:

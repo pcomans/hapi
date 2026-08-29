@@ -111,7 +111,8 @@ independent reviews support the direct identity and, for a reassignment, the exa
 strict-refinement relation. Gained nodes count unique identity classes so
 equivalent IDs cannot inflate improvement. Every equivalence claim itself requires
 the same two structured independent reviews; unsupported equivalence cannot
-preserve retention. Equal normalized authority locators auto-union; any other pair
+preserve retention. Exact authority-locator string equality auto-unions (v0 does
+not perform additional locator normalization); any other pair
 of classes whose separation could inflate gains requires two reviewed positive
 distinctness decisions. Broad-only partitions use the resulting identity-class
 scope, so a candidate-specific alias equivalent to a frozen broad identity remains
@@ -122,9 +123,12 @@ broad. A reviewed equivalent direct-edge replacement is reported as unchanged.
 The generator creates private runtime files `private-opportunity-source.ndjson.gz`
 and `private-opportunity-ledger.json`. They contain exact source and artifact
 membership and are never committed. `planned-opportunity-summary.json` publishes
-only the selection rule, counts, opaque rank IDs, expansion hashes, and numeric
-ceilings; `private-ledger-digests.json` authenticates the private ledgers. Selection
-uses baseline results only:
+only the selection rule, stable rank IDs, aggregate counts, and numeric ceilings;
+`private-ledger-digests.json` authenticates the complete private ledgers. The v0
+release contains no bulk artifact-ID expansion and no raw mention rows. Existing
+aggregate and sampled repository data can correlate labels with ranks or counts,
+so the rank IDs and counts are not claimed opaque or unlinkable. Selection uses
+baseline results only:
 
 1. group unmatched/ambiguous site mentions by museum and exact ordered normalized
    keys;
@@ -147,6 +151,12 @@ every required binding (`linked`, `ambiguous`, `abstained`, `unmatched`,
 `unresolved`, or `research_failure`). Omitted, duplicated, or substituted bindings
 make the run `INVALID`; ambiguity and abstention counts are computed from this
 binding-level census rather than a single aggregate artifact status.
+Each record separately declares its complete final supported direct-link set and
+the exact complementary set of removed frozen baseline links. Selected outcomes
+can justify additions and update only their exact selected mentions; unrelated
+resolved links and unselected mention statuses carry forward. A disputed or
+unsupported attempted link must be reported as an uncredited claim under an
+`unresolved` outcome and cannot suppress ambiguity.
 
 The fixed per-museum maximum credited affected-record upper bounds (new-link
 eligible plus baseline broad-only reassignment eligible) are:
@@ -160,8 +170,9 @@ eligible plus baseline broad-only reassignment eligible) are:
 These are maximum measurable bounds, not expected effects, accuracy claims, or
 forecasts. Pair-side numeric ceilings and 10% thresholds are frozen in the public
 summary and authenticated private membership. `top-unmatched-components.json`
-reports opaque component IDs plus counts/statuses for each museum so ceilings are
-interpretable without redistributing extracted text.
+reports component identifiers plus counts/statuses for each museum so ceilings are
+interpretable without redistributing extracted text; those identifiers are not
+claimed opaque or unlinkable.
 
 The queue size is a bounded research-workload heuristic: ten signatures protect
 each museum before a frequency fill to fifty. The 10% affected floor is a
@@ -173,6 +184,10 @@ a power calculation or empirical truth; museums need not improve equally.
 `scripts/compare_candidate.py` produces exactly one queue-record event with this
 precedence: loss, strict-refinement reassignment, genuinely new link, additional
 identity, uncredited change, unchanged.
+Retention/loss and post-candidate linkability, pair connectivity, all-three,
+any-two-or-more, broad-only, top-k, and HHI metrics all consume the complete final
+record-level identity-class link sets. Equivalent alias replacements are unchanged
+and never satisfy an affected-record floor.
 
 A supported strict refinement is not an ordinary loss. The old broad direct edge
 may be replaced; the authenticated source-derived hierarchy must preserve its
@@ -185,8 +200,10 @@ Candidate hierarchy, relation ledger, and every complete authority source export
 triplet (exact export bytes, trusted-exporter attestation, and detached signature)
 must be committed before the candidate run. The freeze manifest records every
 SHA-256 and Git blob OID. Candidate source records supply raw source types, not
-candidate E55 labels; the comparator maps them through the authenticated crosswalk
-and verifies the exact source-record census plus inverse parent/child closure.
+candidate E55 labels; they also supply the exact preferred label and sorted alias
+census used by the leakage guard. The comparator maps raw types through the
+authenticated crosswalk and verifies the exact source-record census plus inverse
+parent/child closure.
 `trusted-source-exporters.json` is release-authenticated and candidate-authored
 completeness claims have no authority without one of its signatures.
 
@@ -220,9 +237,17 @@ nonempty exact prompt, input,
 and full raw response bytes; Git blob OIDs and SHA-256 values; model selector;
 exact backend snapshot or an enumerated non-exposure sentinel; a full parameter
 object; and a registered auditor's detached signature over a pre-invocation,
-subject/decision/review-bound prompt-leakage audit. Deterministic guards scan the
-exact prompt/input for candidate IDs, source IDs, and known answer strings. Prompt,
-input, response, audit, signature, or invocation reuse fails closed. Disagreement
+subject/decision/review-bound prompt-leakage audit. Prompt and input are canonical
+JSON envelopes. Input items use hash-derived opaque labels and a deterministic
+non-identity SHA-256-ranked presentation order. The seed derives from the canonical
+decision key, kind, and subject rather than a caller-chosen invocation value. The
+signed audit retains the hidden canonical payload-hash order, seed, and exact
+presented-order hashes so the comparator can reproduce the shuffle without revealing
+source order to the model. Deterministic
+guards scan the exact request for authenticated preferred labels and aliases, answer
+names, IDs, locators, and verifier-owned decision/order proxies such as `yes`,
+`approve`, or `first item`. Prompt, input, response, audit, signature, or invocation
+reuse fails closed. Disagreement
 or uncertainty remains unresolved and receives no credit. This provisional census
 is decision support, not gold truth. The reviewer registry is currently
 `NOT_CONFIGURED`, so no production decision can receive review credit.
@@ -254,8 +279,22 @@ Raw link growth, narrowness alone, or equal-museum assumptions cannot pass.
 
 `correction-policy.json` defines the immutable primary policy. An actual correction
 ledger is private and append-only; every nonempty record is schema-validated,
-hash-chained, RFC3339-dated, cites evidence, names at least two reviewers, and
-changes one exact site-mention resolution primitive over existing frozen targets.
+hash-chained, RFC3339-dated, and changes one exact site-mention resolution primitive
+over existing frozen targets. The release policy must pin an exact canonical
+registration artifact from a strict ancestor Git commit. That artifact binds the
+genuine genesis, exact prior ledger head, and both private baseline hashes; the
+verified release-policy activation commit must strictly follow registration and
+strictly precede every review decision, and the proposed ledger must follow those
+decisions while preserving its prior byte-for-byte prefix. Each decision is bound to
+the chain ID and both private baseline hashes, cites exact content-addressed source
+bytes from a strict ancestor of the decision commit, and has signed support from
+exactly two registered human reviewers
+with distinct identities, credentials, and independence groups. Arbitrary reviewer
+strings, same-commit/post-hoc evidence, invented citations, caller-created
+sequence-one roots, and zero commit IDs fail closed. The current policy is
+deliberately `NOT_CONFIGURED`, so no production
+correction sensitivity can run; the primary preregistered analysis has zero
+corrections.
 Resolved mentions have exactly one target, ambiguous mentions at least two,
 unmatched mentions none, and unique record targets cannot exceed resolved mentions.
 A repeated primitive requires explicit supersession. The sensitivity generator
@@ -302,6 +341,12 @@ comparator rejects the same resolved directory, duplicate run IDs, stale manifes
 actual-byte corruption, and missing/extra outputs. “Two” means sequential
 deterministic reproduction with distinct directories/run IDs, not statistical or
 operational independence.
+The committed two-run identities remain release-authenticated historical evidence.
+Read-only validation separately accepts any fresh authenticated reproduction whose
+19 deterministic output hashes, archive/runtime/lock bindings, input snapshot, and
+tool hashes match that release; absolute output path, fresh UUID, and provenance-file
+hash are not equivalence inputs. The original `/tmp` run directories are therefore
+not prerequisites for the documented validation command.
 
 Release sequence after copying deterministic derivatives from either authenticated
 run:

@@ -41,6 +41,7 @@ from review_auth import (
     ReviewAuthenticationError,
     authenticate_prompt_audit,
     authenticate_review_artifact,
+    canonical_forbidden_values,
     load_reviewer_registry,
     require_distinct_registered_reviewers,
     strict_json_object,
@@ -318,6 +319,12 @@ def _derive_candidate_scope(
             scope = "specific_candidate"
         else:
             scope = "unclassified"
+        vocabulary = crosswalk.get("candidate_e55_vocabulary", {}).get(scope, [])
+        if node.get("candidate_e55_type") not in vocabulary:
+            errors.append(
+                f"candidate hierarchy {target_id} E55 type is inconsistent with "
+                f"derived broad-precedence scope {scope}"
+            )
         scope_by_target[target_id] = scope
     return scope_by_target, locator_by_target
 
@@ -385,6 +392,105 @@ def _fraction_from_ratio(value: dict) -> Fraction:
     return Fraction(value.get("numerator", 0), denominator) if denominator else Fraction(0)
 
 
+def _post_candidate_connectivity(
+    class_links_by_artifact: dict[str, set[str]],
+    artifacts_by_museum: dict[str, set[str]],
+    record_counts: dict[str, int],
+    evidence_counts: dict[str, int],
+    identity_scope: dict[str, str],
+) -> dict:
+    """Compute every preregistered connectivity aggregation over identity classes."""
+    classes_by_museum = {
+        museum: set().union(
+            *(class_links_by_artifact[artifact] for artifact in artifacts_by_museum[museum])
+        )
+        if artifacts_by_museum[museum]
+        else set()
+        for museum in MUSEUMS
+    }
+
+    def side(museum: str, eligible: set[str]) -> dict:
+        connected = {
+            artifact
+            for artifact in artifacts_by_museum[museum]
+            if class_links_by_artifact[artifact] & eligible
+        }
+        partitions = Counter(
+            partition_scopes(
+                {
+                    identity_scope[root]
+                    for root in class_links_by_artifact[artifact] & eligible
+                }
+            )
+            for artifact in connected
+        )
+        return {
+            "connected_records": len(connected),
+            "overall_connection_rate": ratio(
+                len(connected), record_counts[museum]
+            ),
+            "extracted_site_text_conditional_connection_rate": ratio(
+                len(connected), evidence_counts[museum]
+            ),
+            "mutually_exclusive_scope_counts": {
+                key: partitions[key]
+                for key in (
+                    "specific_candidate_present",
+                    "broad_only",
+                    "unclassified_only",
+                )
+            },
+        }
+
+    pairs: dict[str, dict] = {}
+    for left, right in PAIRS:
+        shared = classes_by_museum[left] & classes_by_museum[right]
+        pairs[f"{left}__{right}"] = {
+            "shared_identity_class_ids": sorted(shared),
+            "shared_identity_class_count": len(shared),
+            "sides": {
+                left: side(left, shared),
+                right: side(right, shared),
+            },
+        }
+
+    all_three = set.intersection(
+        *(classes_by_museum[museum] for museum in MUSEUMS)
+    )
+    class_museums: dict[str, set[str]] = defaultdict(set)
+    for museum, roots in classes_by_museum.items():
+        for root in roots:
+            class_museums[root].add(museum)
+    any_two = {
+        root for root, museums in class_museums.items() if len(museums) >= 2
+    }
+    exact_combinations = Counter(
+        "+".join(sorted(museums))
+        for museums in class_museums.values()
+        if len(museums) >= 2
+    )
+
+    def aggregation(eligible: set[str]) -> dict:
+        return {
+            "shared_identity_class_ids": sorted(eligible),
+            "shared_identity_class_count": len(eligible),
+            "sides": {
+                museum: side(museum, eligible) for museum in MUSEUMS
+            },
+        }
+
+    return {
+        "pairs": pairs,
+        "all_three": aggregation(all_three),
+        "any_two_or_more": {
+            **aggregation(any_two),
+            "exact_museum_combination_counts": dict(
+                sorted(exact_combinations.items())
+            ),
+        },
+    }
+
+
 def _logic_only_provenance(outcome: str) -> dict:
     return {
         "evidence_scope": "LOGIC_ONLY_TEST_INPUT",
@@ -400,7 +506,7 @@ def _invalid_report(
     errors: list[str], provenance_status: dict | None = None
 ) -> dict:
     return {
-        "schema_version": "site-graph-v0-comparison-report/2",
+        "schema_version": "site-graph-v0-comparison-report/3",
         "outcome": "INVALID",
         "ordered_decision_trace": [
             {"step": "integrity", "passed": False, "errors": sorted(set(errors))}
@@ -411,6 +517,7 @@ def _invalid_report(
         "event_records": [],
         "reassignment_edge_modes": {},
         "per_museum": {},
+        "post_candidate_metrics": {},
         "pairs": {},
         "ambiguity_and_abstention": {},
         "run_binding": None,
@@ -444,6 +551,37 @@ def compare_core(
     baseline_by_id = {row.get("artifact_id"): row for row in baseline_records}
     if None in baseline_by_id or len(baseline_by_id) != len(baseline_records):
         errors.append("baseline record IDs must be nonempty and unique")
+    for artifact_id, row in baseline_by_id.items():
+        status_counts = row.get("site_mention_status_counts", {})
+        mention_count = row.get("site_mention_count")
+        if (
+            not isinstance(status_counts, dict)
+            or not isinstance(mention_count, int)
+            or mention_count < 0
+            or sum(status_counts.values()) != mention_count
+            or any(
+                status not in {"resolved", "ambiguous", "unmatched"}
+                or not isinstance(count, int)
+                or count < 0
+                for status, count in status_counts.items()
+            )
+        ):
+            errors.append(
+                f"baseline {artifact_id} has invalid complete site-mention status accounting"
+            )
+            continue
+        has_any_ambiguity = status_counts.get("ambiguous", 0) > 0
+        has_blocking_ambiguity = (
+            not row.get("baseline_site_target_ids") and has_any_ambiguity
+        )
+        if row.get("has_any_ambiguity") is not has_any_ambiguity:
+            errors.append(
+                f"baseline {artifact_id} has_any_ambiguity differs from the frozen predicate"
+            )
+        if row.get("has_blocking_ambiguity") is not has_blocking_ambiguity:
+            errors.append(
+                f"baseline {artifact_id} has_blocking_ambiguity differs from the frozen predicate"
+            )
     baseline_scope = {
         row.get("target_id"): row.get("scope_class") for row in node_scope.get("nodes", [])
     }
@@ -502,6 +640,51 @@ def compare_core(
             itt_by_id[artifact_id] = row
             itt_bindings_by_id[artifact_id] = set(normalized_bindings)
             museum_by_id[artifact_id] = museum
+
+    binding_mentions: dict[tuple[str, str, str], list[dict]] = {}
+    for opportunity in private_opportunity.get("opportunities", []):
+        opportunity_id = opportunity.get("opportunity_id")
+        for membership in opportunity.get("artifact_memberships", []):
+            artifact_id = membership.get("artifact_id")
+            binding_sha256 = membership.get("opportunity_binding_sha256")
+            key = (artifact_id, opportunity_id, binding_sha256)
+            mentions = membership.get("mentions", [])
+            if (
+                not all(isinstance(value, str) and value for value in key)
+                or key in binding_mentions
+                or mentions
+                != sorted(mentions, key=lambda row: row.get("mention_id", ""))
+                or not mentions
+            ):
+                errors.append(
+                    "private opportunity mention bindings must be nonempty, unique, and "
+                    "sorted by mention ID"
+                )
+                continue
+            mention_ids = [row.get("mention_id") for row in mentions]
+            if (
+                any(not mention_id for mention_id in mention_ids)
+                or len(mention_ids) != len(set(mention_ids))
+                or any(
+                    row.get("status") not in {"resolved", "ambiguous", "unmatched"}
+                    for row in mentions
+                )
+            ):
+                errors.append(
+                    f"private opportunity {opportunity_id}/{artifact_id} has invalid mention census"
+                )
+            binding_mentions[key] = mentions
+    expected_binding_keys = {
+        (artifact_id, opportunity_id, binding_sha256)
+        for artifact_id, bindings in itt_bindings_by_id.items()
+        for opportunity_id, binding_sha256 in bindings
+    }
+    if set(binding_mentions) != expected_binding_keys:
+        errors.append(
+            "private opportunity ledger mention census differs from exact ITT bindings: "
+            f"missing={len(expected_binding_keys - set(binding_mentions))}, "
+            f"extra={len(set(binding_mentions) - expected_binding_keys)}"
+        )
 
     candidate_records = candidate.get("records", [])
     candidate_by_id: dict[str, dict] = {}
@@ -632,6 +815,7 @@ def compare_core(
     }
     opportunity_abstention_reasons: Counter[str] = Counter()
     artifact_candidate_blocking: dict[str, bool] = {}
+    artifact_candidate_status_counts: dict[str, Counter[str]] = {}
 
     for artifact_id in sorted(itt_by_id):
         baseline = baseline_by_id[artifact_id]
@@ -665,14 +849,43 @@ def compare_core(
                 f"candidate {artifact_id} must report exactly one canonically sorted outcome "
                 "for every frozen opportunity binding"
             )
+        final_target_rows = record.get("final_supported_direct_target_ids", [])
+        removed_target_rows = record.get("removed_baseline_target_ids", [])
+        if final_target_rows != sorted(set(final_target_rows)):
+            errors.append(
+                f"candidate {artifact_id} final supported direct targets must be sorted and unique"
+            )
+        if removed_target_rows != sorted(set(removed_target_rows)):
+            errors.append(
+                f"candidate {artifact_id} removed baseline targets must be sorted and unique"
+            )
+        final_targets = set(final_target_rows)
+        removed_targets = set(removed_target_rows)
+        unknown_final = final_targets - all_targets
+        if unknown_final:
+            errors.append(
+                f"candidate {artifact_id} final direct targets lack authenticated scope: "
+                f"{sorted(unknown_final)}"
+            )
+        expected_removed = baseline_targets - final_targets
+        if removed_targets != expected_removed:
+            errors.append(
+                f"candidate {artifact_id} must explicitly and exactly partition every "
+                "baseline direct target as retained or removed"
+            )
+        if removed_targets & final_targets:
+            errors.append(
+                f"candidate {artifact_id} cannot both retain and remove a baseline direct target"
+            )
+
         supported_targets: set[str] = set()
         unsupported_targets: set[str] = set()
-        artifact_candidate_blocking[artifact_id] = any(
-            outcome.get("resolution_status") == "ambiguous" for outcome in outcomes
-        )
+        selected_original_mentions: dict[str, dict] = {}
+        selected_candidate_states: dict[str, tuple[str, tuple[str, ...]]] = {}
         for outcome in outcomes:
             status = outcome.get("resolution_status")
             direct_links = outcome.get("direct_links", [])
+            uncredited_claims = outcome.get("uncredited_link_claims", [])
             abstention_reason = outcome.get("abstention_reason")
             opportunity_binding = (
                 outcome.get("opportunity_id"),
@@ -691,13 +904,22 @@ def compare_core(
                 )
                 continue
             opportunity_outcomes_by_museum[museum_by_id[artifact_id]][status] += 1
+            mention_rows = binding_mentions.get(
+                (artifact_id, opportunity_binding[0], opportunity_binding[1]), []
+            )
+            if not mention_rows:
+                errors.append(
+                    f"candidate {artifact_id}/{opportunity_binding[0]} lacks its exact "
+                    "private selecting-mention binding"
+                )
             if (status == "linked") != bool(direct_links):
                 errors.append(
                     f"candidate {artifact_id}/{opportunity_binding[0]} linked status/direct links mismatch"
                 )
-            if outcome.get("has_blocking_ambiguity") is not (status == "ambiguous"):
+            if status != "unresolved" and uncredited_claims:
                 errors.append(
-                    f"candidate {artifact_id}/{opportunity_binding[0]} blocking ambiguity mismatch"
+                    f"candidate {artifact_id}/{opportunity_binding[0]} rejected link claims "
+                    "must use unresolved status"
                 )
             if status == "abstained":
                 if abstention_reason not in ABSTENTION_REASONS:
@@ -731,13 +953,6 @@ def compare_core(
                         f"candidate {artifact_id} target {target_id} lacks authenticated scope"
                     )
                     continue
-                if target_id in baseline_targets:
-                    if support_key is not None:
-                        errors.append(
-                            f"unchanged direct target {artifact_id}/{target_id} must not claim new support"
-                        )
-                    supported_targets.add(target_id)
-                    continue
                 subject = {
                     "artifact_id": artifact_id,
                     "target_id": target_id,
@@ -746,6 +961,10 @@ def compare_core(
                 }
                 expected_key = decision_key("link_support", subject)
                 if support_key is None:
+                    errors.append(
+                        f"candidate linked outcome {artifact_id}/{target_id} lacks authenticated "
+                        "support and must instead be unresolved"
+                    )
                     unsupported_targets.add(target_id)
                     continue
                 if support_key != expected_key or support_key not in decisions:
@@ -767,14 +986,142 @@ def compare_core(
                             opportunity_binding
                         )
                 else:
+                    errors.append(
+                        f"candidate linked outcome {artifact_id}/{target_id} is disputed or "
+                        "unsupported and must instead be unresolved"
+                    )
                     unsupported_targets.add(target_id)
-        candidate_links[artifact_id] = supported_targets
+            rejected_targets_seen: set[str] = set()
+            for claim in uncredited_claims:
+                target_id = claim.get("target_id")
+                support_key = claim.get("support_decision_key")
+                if (
+                    not target_id
+                    or target_id in rejected_targets_seen
+                    or target_id in targets_seen
+                ):
+                    errors.append(
+                        f"candidate {artifact_id}/{opportunity_binding[0]} rejected link "
+                        "targets must be nonempty, unique, and disjoint from supported links"
+                    )
+                    continue
+                rejected_targets_seen.add(target_id)
+                if target_id not in all_targets:
+                    errors.append(
+                        f"candidate rejected link {artifact_id}/{target_id} lacks authenticated scope"
+                    )
+                    continue
+                subject = {
+                    "artifact_id": artifact_id,
+                    "target_id": target_id,
+                    "opportunity_id": opportunity_binding[0],
+                    "opportunity_binding_sha256": opportunity_binding[1],
+                }
+                expected_key = decision_key("link_support", subject)
+                if support_key != expected_key or support_key not in decisions:
+                    errors.append(
+                        f"candidate rejected link {artifact_id}/{target_id} lacks exact review decision"
+                    )
+                    continue
+                referenced_decisions.add(support_key)
+                if decisions[support_key].get("disagreement"):
+                    unresolved_disagreements.add(support_key)
+                if _decision_supports(
+                    decisions, support_key, "link_support", subject
+                ):
+                    errors.append(
+                        f"candidate rejected link {artifact_id}/{target_id} is supported by its reviews"
+                    )
+                    continue
+                unsupported_targets.add(target_id)
+            direct_target_tuple = tuple(
+                sorted(
+                    link.get("target_id")
+                    for link in direct_links
+                    if isinstance(link.get("target_id"), str)
+                    and link.get("target_id")
+                )
+            )
+            if status == "linked" and len(direct_target_tuple) > len(mention_rows):
+                errors.append(
+                    f"candidate {artifact_id}/{opportunity_binding[0]} claims more unique "
+                    "resolved targets than its exact selecting mentions"
+                )
+            for mention in mention_rows:
+                mention_id = mention["mention_id"]
+                prior_original = selected_original_mentions.get(mention_id)
+                if prior_original is not None and prior_original != mention:
+                    errors.append(
+                        f"private selecting mention {mention_id} has contradictory frozen bindings"
+                    )
+                    continue
+                selected_original_mentions[mention_id] = mention
+                effective_status = (
+                    "resolved"
+                    if status == "linked"
+                    else status
+                    if status in {"ambiguous", "unmatched"}
+                    else mention["status"]
+                )
+                candidate_state = (effective_status, direct_target_tuple)
+                prior_state = selected_candidate_states.get(mention_id)
+                if prior_state is not None and prior_state != candidate_state:
+                    errors.append(
+                        f"candidate outcomes give selecting mention {mention_id} contradictory post-states"
+                    )
+                selected_candidate_states[mention_id] = candidate_state
 
-        covered_baseline = baseline_targets & supported_targets
+        unjustified_final = (final_targets - baseline_targets) - supported_targets
+        omitted_supported = supported_targets - final_targets
+        if unjustified_final:
+            errors.append(
+                f"candidate {artifact_id} final direct targets lack exact supported "
+                f"opportunity reviews: {sorted(unjustified_final)}"
+            )
+        if omitted_supported:
+            errors.append(
+                f"candidate {artifact_id} supported opportunity links are absent from the "
+                f"record-level final direct set: {sorted(omitted_supported)}"
+            )
+        candidate_links[artifact_id] = final_targets
+
+        baseline_status_counts = Counter(baseline.get("site_mention_status_counts", {}))
+        baseline_mention_count = baseline.get("site_mention_count")
+        if (
+            not isinstance(baseline_mention_count, int)
+            or baseline_mention_count < 0
+            or sum(baseline_status_counts.values()) != baseline_mention_count
+            or any(
+                status not in {"resolved", "ambiguous", "unmatched"}
+                or not isinstance(count, int)
+                or count < 0
+                for status, count in baseline_status_counts.items()
+            )
+        ):
+            errors.append(
+                f"baseline {artifact_id} has invalid complete site-mention status accounting"
+            )
+        candidate_status_counts = Counter(baseline_status_counts)
+        for mention in selected_original_mentions.values():
+            original_status = mention["status"]
+            candidate_status_counts[original_status] -= 1
+            if candidate_status_counts[original_status] < 0:
+                errors.append(
+                    f"private selecting mention census exceeds baseline {original_status} "
+                    f"count for {artifact_id}"
+                )
+        for effective_status, _ in selected_candidate_states.values():
+            candidate_status_counts[effective_status] += 1
+        artifact_candidate_status_counts[artifact_id] = candidate_status_counts
+        artifact_candidate_blocking[artifact_id] = (
+            not final_targets and candidate_status_counts["ambiguous"] > 0
+        )
+
+        covered_baseline = baseline_targets & final_targets
         equivalent_pairs: set[tuple[str, str]] = set()
         strict_pairs: set[tuple[str, str]] = set()
         for baseline_target in sorted(baseline_targets):
-            for candidate_target in sorted(supported_targets - baseline_targets):
+            for candidate_target in sorted(final_targets - baseline_targets):
                 if identity.find(candidate_target) == identity.find(baseline_target):
                     equivalent_pairs.add((baseline_target, candidate_target))
                     covered_baseline.add(baseline_target)
@@ -786,6 +1133,8 @@ def compare_core(
         unrelated_credited = {
             target
             for target in credited_links[artifact_id]
+            if identity.find(target)
+            not in {identity.find(value) for value in baseline_targets}
             if not any(
                 (baseline_target, target) in equivalent_pairs | strict_pairs
                 for baseline_target in baseline_targets
@@ -798,7 +1147,7 @@ def compare_core(
             for baseline_target, _ in sorted(strict_pairs):
                 mode = (
                     "old_direct_edge_preserved"
-                    if baseline_target in supported_targets
+                    if baseline_target in final_targets
                     else "old_direct_edge_replaced_ancestor_semantics_preserved"
                 )
                 refinement_modes[mode] += 1
@@ -806,10 +1155,12 @@ def compare_core(
             event = "new_link"
         elif baseline_targets and unrelated_credited:
             event = "additional_identity"
-        elif unsupported_targets or any(
-            not any((baseline_target, target) in equivalent_pairs for baseline_target in baseline_targets)
-            for target in supported_targets - baseline_targets
-        ):
+        elif {identity.find(target) for target in final_targets} == {
+            identity.find(target) for target in baseline_targets
+        }:
+            # A supported equivalent alias changes spelling/direct edge, not identity.
+            event = "unchanged"
+        elif final_targets != baseline_targets:
             event = "uncredited_change"
         else:
             event = "unchanged"
@@ -819,8 +1170,15 @@ def compare_core(
                 "museum": museum_by_id[artifact_id],
                 "event": event,
                 "baseline_direct_target_ids": sorted(baseline_targets),
-                "candidate_supported_direct_target_ids": sorted(supported_targets),
+                "candidate_supported_direct_target_ids": sorted(final_targets),
+                "explicitly_removed_baseline_target_ids": sorted(removed_targets),
                 "uncredited_candidate_target_ids": sorted(unsupported_targets),
+                "baseline_site_mention_status_counts": dict(
+                    sorted(baseline_status_counts.items())
+                ),
+                "candidate_site_mention_status_counts": dict(
+                    sorted(candidate_status_counts.items())
+                ),
                 "supported_strict_refinement_pairs": [
                     list(pair) for pair in sorted(strict_pairs)
                 ],
@@ -949,6 +1307,29 @@ def compare_core(
         artifact_id: {identity.find(target) for target in targets}
         for artifact_id, targets in candidate_links.items()
     }
+    post_candidate_linkability = {}
+    for museum in MUSEUMS:
+        linked_records = sum(
+            bool(candidate_class_links[artifact_id])
+            for artifact_id in artifacts_by_museum[museum]
+        )
+        post_candidate_linkability[museum] = {
+            "records_with_supported_direct_links": linked_records,
+            "overall_linkability": ratio(linked_records, record_counts[museum]),
+            "extracted_site_text_conditional_linkability": ratio(
+                linked_records, evidence_counts[museum]
+            ),
+        }
+    post_candidate_metrics = {
+        "linkability_by_museum": post_candidate_linkability,
+        "connectivity": _post_candidate_connectivity(
+            candidate_class_links,
+            artifacts_by_museum,
+            record_counts,
+            evidence_counts,
+            identity_scope,
+        ),
+    }
     baseline_classes_by_museum = {
         museum: set().union(
             *(baseline_class_links[artifact] for artifact in artifacts_by_museum[museum])
@@ -1072,6 +1453,8 @@ def compare_core(
                     target
                     for target in credited_links.get(artifact_id, set())
                     if identity.find(target) in gained_specific
+                    and identity.find(target)
+                    not in baseline_class_links.get(artifact_id, set())
                     and bool(
                         credited_link_bindings.get(artifact_id, {}).get(target, set())
                         & member_bindings[artifact_id]
@@ -1247,7 +1630,7 @@ def compare_core(
         {"step": "utility", "passed": utility_pass, "outcome": outcome},
     ]
     return {
-        "schema_version": "site-graph-v0-comparison-report/2",
+        "schema_version": "site-graph-v0-comparison-report/3",
         "outcome": outcome,
         "ordered_decision_trace": ordered_trace,
         "integrity": {"passed": True, "errors": []},
@@ -1256,6 +1639,7 @@ def compare_core(
         "event_records": events,
         "reassignment_edge_modes": dict(sorted(refinement_modes.items())),
         "per_museum": per_museum,
+        "post_candidate_metrics": post_candidate_metrics,
         "pairs": pairs,
         "ambiguity_and_abstention": {
             "per_museum": ambiguity_by_museum,
@@ -1311,8 +1695,10 @@ def _validate_review_artifacts(
     usage = ArtifactUsageTracker()
     decisions: dict[str, dict] = {}
     export_by_reference: dict[tuple[str, str, str], dict] = {}
-    source_ids: set[str] = set()
-    answer_strings_by_target: dict[str, set[str]] = defaultdict(set)
+    identifiers: set[str] = set()
+    preferred_labels: set[str] = set()
+    aliases: set[str] = set()
+    locators: set[str] = set()
     for source_export, group in zip(
         source_exports, source_export_groups, strict=True
     ):
@@ -1323,14 +1709,22 @@ def _validate_review_artifacts(
             reference["git_blob_oid"],
         )
         export_by_reference[reference_key] = source_export
+        identifiers.add(source_export["source_export_id"])
+        locators.add(source_export["provenance"]["source_locator"])
         for record in source_export["records"]:
             source_id = record["source_record_id"]
-            source_ids.add(source_id)
-            answer_strings_by_target[record["target_id"]].add(
-                record["authority_identity_locator"]
+            identifiers.update(
+                {
+                    source_id,
+                    record["target_id"],
+                    *record["parent_ids"],
+                    *record["child_ids"],
+                }
             )
-            for locator in record["authority_citations"]:
-                answer_strings_by_target[record["target_id"]].add(locator)
+            preferred_labels.add(record["preferred_label"])
+            aliases.update(record["aliases"])
+            locators.add(record["authority_identity_locator"])
+            locators.update(record["authority_citations"])
 
     def read_bound(reference: dict) -> bytes:
         path = reference["path"]
@@ -1435,28 +1829,18 @@ def _validate_review_artifacts(
                     {
                         str(value)
                         for field, value in subject.items()
-                        if field.endswith("_id") and isinstance(value, str)
+                        if (
+                            field.endswith("_id") or field.endswith("_sha256")
+                        )
+                        and isinstance(value, str)
                     }
                 )
-                candidate_ids = sorted(
-                    {candidate_id or "candidate-id-unavailable", *identifier_values}
-                )
-                target_ids = {
-                    value
-                    for field, value in subject.items()
-                    if "target_id" in field and isinstance(value, str)
-                }
-                answer_strings = sorted(
-                    set(MECHANICAL_REVIEW_ANSWER_TOKENS)
-                    | target_ids
-                    | set().union(
-                        *(answer_strings_by_target.get(target, set()) for target in target_ids)
+                review_identifiers = canonical_forbidden_values(
+                    sorted(
+                        identifiers
+                        | {candidate_id or "candidate-id-unavailable", *identifier_values}
                     )
                 )
-                if not answer_strings:
-                    raise ReviewAuthenticationError(
-                        f"review decision has no mechanically auditable answer strings: {key}"
-                    )
                 authenticated_audit = authenticate_prompt_audit(
                     raw_audit,
                     registry=reviewer_registry,
@@ -1464,9 +1848,13 @@ def _validate_review_artifacts(
                     signature_bytes=read_bound(audit_signature),
                     signature_reference=audit_signature,
                     read_artifact=read_bound,
-                    candidate_ids=candidate_ids,
-                    source_ids=sorted(source_ids),
-                    answer_strings=answer_strings,
+                    preferred_labels=canonical_forbidden_values(
+                        sorted(preferred_labels)
+                    ),
+                    aliases=canonical_forbidden_values(sorted(aliases)),
+                    answer_names=sorted(MECHANICAL_REVIEW_ANSWER_TOKENS),
+                    identifiers=review_identifiers,
+                    locators=canonical_forbidden_values(sorted(locators)),
                     invocation_started_at_utc=interaction["invoked_at_utc"],
                     usage=usage,
                 )

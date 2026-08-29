@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-prompt-leakage-audit-3.json",
+  "$id": "https://hapi.example/schemas/site-graph-v0-prompt-leakage-audit-4.json",
   "title": "Authenticated pre-invocation prompt leakage audit",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "audit_id", "review_id", "review_invocation_id", "decision_key", "decision_kind", "subject", "prompt", "input", "audit_method", "auditor", "executed_at_utc", "deterministic_guard", "authentication"],
+  "required": ["schema_version", "audit_id", "review_id", "review_invocation_id", "decision_key", "decision_kind", "subject", "prompt", "input", "shuffle_provenance", "audit_method", "auditor", "executed_at_utc", "deterministic_guard", "authentication"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-prompt-leakage-audit/3"},
+    "schema_version": {"const": "site-graph-v0-prompt-leakage-audit/4"},
     "audit_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "review_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "review_invocation_id": {"type": "string", "pattern": "^[^\\s]+$"},
@@ -15,7 +15,8 @@
     "subject": {"type": "object", "minProperties": 2},
     "prompt": {"$ref": "#/$defs/artifact"},
     "input": {"$ref": "#/$defs/artifact"},
-    "audit_method": {"const": "deterministic_prompt_leakage_guard/1"},
+    "shuffle_provenance": {"$ref": "#/$defs/shuffle_provenance"},
+    "audit_method": {"const": "deterministic_prompt_leakage_guard/2"},
     "auditor": {
       "type": "object",
       "additionalProperties": false,
@@ -29,13 +30,17 @@
     "deterministic_guard": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["guard_version", "request_binding_sha256", "candidate_ids", "source_ids", "answer_strings", "result", "findings"],
+      "required": ["guard_version", "request_binding_sha256", "request_envelope", "preferred_labels", "aliases", "answer_names", "identifiers", "locators", "decision_proxies", "result", "findings"],
       "properties": {
-        "guard_version": {"const": "site-graph-v0-deterministic-prompt-leakage-guard/1"},
+        "guard_version": {"const": "site-graph-v0-deterministic-prompt-leakage-guard/2"},
         "request_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "candidate_ids": {"$ref": "#/$defs/forbidden_set_binding"},
-        "source_ids": {"$ref": "#/$defs/forbidden_set_binding"},
-        "answer_strings": {"$ref": "#/$defs/forbidden_set_binding"},
+        "request_envelope": {"$ref": "#/$defs/request_envelope_binding"},
+        "preferred_labels": {"$ref": "#/$defs/forbidden_set_binding"},
+        "aliases": {"$ref": "#/$defs/forbidden_set_binding"},
+        "answer_names": {"$ref": "#/$defs/forbidden_set_binding"},
+        "identifiers": {"$ref": "#/$defs/forbidden_set_binding"},
+        "locators": {"$ref": "#/$defs/forbidden_set_binding"},
+        "decision_proxies": {"$ref": "#/$defs/forbidden_set_binding"},
         "result": {"const": "PASS"},
         "findings": {"type": "array", "maxItems": 0}
       }
@@ -58,8 +63,41 @@
       "additionalProperties": false,
       "required": ["count", "canonical_sha256"],
       "properties": {
-        "count": {"type": "integer", "minimum": 1},
+        "count": {"type": "integer", "minimum": 0},
         "canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "shuffle_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "algorithm", "seed_sha256", "source_order_payload_sha256", "presented_order_payload_sha256"],
+      "properties": {
+        "schema_version": {"const": "site-graph-v0-review-shuffle-provenance/1"},
+        "algorithm": {"const": "sha256-ranked-nonidentity/1"},
+        "seed_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_order_payload_sha256": {"$ref": "#/$defs/hash_census"},
+        "presented_order_payload_sha256": {"$ref": "#/$defs/hash_census"}
+      }
+    },
+    "hash_census": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    },
+    "request_envelope_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompt_schema_version", "input_schema_version", "shuffle_provenance_schema_version", "shuffle_algorithm", "review_invocation_id", "item_count", "opaque_labels_canonical_sha256", "shuffle_provenance_sha256"],
+      "properties": {
+        "prompt_schema_version": {"const": "site-graph-v0-review-prompt-envelope/1"},
+        "input_schema_version": {"const": "site-graph-v0-review-input-envelope/1"},
+        "shuffle_provenance_schema_version": {"const": "site-graph-v0-review-shuffle-provenance/1"},
+        "shuffle_algorithm": {"const": "sha256-ranked-nonidentity/1"},
+        "review_invocation_id": {"type": "string", "pattern": "^[^\\s]+$"},
+        "item_count": {"type": "integer", "minimum": 2},
+        "opaque_labels_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "shuffle_provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
     "authentication": {

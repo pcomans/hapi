@@ -41,6 +41,7 @@ def validate_source_export_records(source_export: dict) -> None:
         raise CandidateGitError("authenticated source-export canonical hash mismatch")
     for record in records:
         for field in (
+            "aliases",
             "raw_source_types",
             "parent_ids",
             "child_ids",
@@ -50,6 +51,10 @@ def validate_source_export_records(source_export: dict) -> None:
                 raise CandidateGitError(
                     f"authenticated source-export {field} is not sorted and unique"
                 )
+        if record["preferred_label"] in record["aliases"]:
+            raise CandidateGitError(
+                "authenticated source-export aliases repeat the preferred label"
+            )
 
 
 def validate_source_exporter_registry(

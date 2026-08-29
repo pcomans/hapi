@@ -282,6 +282,13 @@ def test_public_release_excludes_private_corpus_derivatives() -> None:
     assert result.returncode == 0, result.stderr
     assert "frozen-record-evidence.ndjson.gz" in result.stdout
     assert "frozen-opportunity-source.ndjson.gz" in result.stdout
+    summary = json.loads((EVAL_ROOT / "planned-opportunity-summary.json").read_text())
+    assert all(
+        "artifact_expansion_sha256" not in row
+        for row in summary["opportunities"]
+    )
+    readme = (EVAL_ROOT / "README.md").read_text(encoding="utf-8")
+    assert "not claimed opaque or unlinkable" in readme
 
 
 def test_public_boundary_rejects_reintroduced_bulk_derivative(tmp_path: Path) -> None:
@@ -574,6 +581,13 @@ def _comparator_case(tmp_path: Path) -> dict:
                     "extracted_site_text_evidence": True,
                     "baseline_site_target_ids": targets,
                     "baseline_record_scope": "no_link" if not targets else "broad_only",
+                    "site_mention_count": 1 if not targets else 2,
+                    "site_mention_status_counts": (
+                        {"unmatched": 1}
+                        if not targets
+                        else {"resolved": 1, "unmatched": 1}
+                    ),
+                    "has_any_ambiguity": False,
                     "has_blocking_ambiguity": False,
                 }
             )
@@ -599,19 +613,17 @@ def _comparator_case(tmp_path: Path) -> dict:
     opportunity_binding_by_artifact = {}
     for rank, (museum, artifact_ids) in enumerate(museums.items(), 1):
         opportunity_id = f"opp-{rank:04d}"
-        opportunities.append(
-            {
-                "opportunity_id": opportunity_id,
-                "selection_rank": rank,
-                "selection_reason": "logic_only",
-                "museum": museum,
-                "unresolved_status_counts": {"unmatched": len(artifact_ids)},
-                "mention_count": len(artifact_ids),
-                "artifact_count": len(artifact_ids),
-                "artifact_expansion_sha256": canonical_sha256(artifact_ids),
-                "intent_to_treat": True,
-            }
-        )
+        opportunity = {
+            "opportunity_id": opportunity_id,
+            "selection_rank": rank,
+            "selection_reason": "logic_only",
+            "museum": museum,
+            "unresolved_status_counts": {"unmatched": len(artifact_ids)},
+            "mention_count": len(artifact_ids),
+            "artifact_count": len(artifact_ids),
+            "intent_to_treat": True,
+        }
+        opportunities.append(opportunity)
         itt_records[museum] = [
             {
                 "artifact_id": artifact_id,
@@ -671,10 +683,37 @@ def _comparator_case(tmp_path: Path) -> dict:
         "schema_version": "site-graph-v0-private-opportunity-ledger/2",
         "intent_to_treat_records_by_museum": itt_records,
         "credited_pair_opportunity_memberships": pair_memberships,
+        "opportunities": [
+            {
+                **opportunity,
+                "artifact_expansion_sha256": canonical_sha256(
+                    museums[opportunity["museum"]]
+                ),
+                "artifact_memberships": [
+                    {
+                        "artifact_id": artifact_id,
+                        "opportunity_binding_sha256": opportunity_binding_by_artifact[
+                            artifact_id
+                        ]["opportunity_binding_sha256"],
+                        "mentions": [
+                            {
+                                "mention_id": f"mention-{artifact_id}",
+                                "field_path": "sites[0]",
+                                "status": "unmatched",
+                                "target_ids": [],
+                                "normalized_keys": [opportunity["opportunity_id"]],
+                            }
+                        ],
+                    }
+                    for artifact_id in museums[opportunity["museum"]]
+                ],
+            }
+            for opportunity in opportunities
+        ],
     }
     crosswalk = json.loads((EVAL_ROOT / "type-crosswalk.json").read_text())
     snapshot = {
-        "schema_version": "site-graph-v0-authority-source-export/1",
+        "schema_version": "site-graph-v0-authority-source-export/2",
         "source_export_id": "logic-source",
         "authority_name": "logic only",
         "source_kind": "unit-test",
@@ -697,6 +736,8 @@ def _comparator_case(tmp_path: Path) -> dict:
             {
                 "source_record_id": "source-broad-0",
                 "target_id": "broad-0",
+                "preferred_label": "Broad zero",
+                "aliases": [],
                 "authority_identity_locator": "broad-0",
                 "raw_source_types": ["archaeological-area"],
                 "parent_ids": [],
@@ -707,6 +748,8 @@ def _comparator_case(tmp_path: Path) -> dict:
             {
                 "source_record_id": f"source-{target}",
                 "target_id": target,
+                "preferred_label": target.replace("-", " ").title(),
+                "aliases": [],
                 "authority_identity_locator": f"logic:authority:{target}",
                 "raw_source_types": ["archaeological-site"],
                 "parent_ids": ["broad-0"],
@@ -757,13 +800,15 @@ def _comparator_case(tmp_path: Path) -> dict:
                 candidate_records.append(
                     {
                         "artifact_id": artifact_id,
+                        "final_supported_direct_target_ids": [],
+                        "removed_baseline_target_ids": [],
                         "opportunity_outcomes": [
                             {
                                 **binding,
                                 "resolution_status": "unmatched",
                                 "abstention_reason": None,
-                                "has_blocking_ambiguity": False,
                                 "direct_links": [],
+                                "uncredited_link_claims": [],
                             }
                         ],
                     }
@@ -782,15 +827,17 @@ def _comparator_case(tmp_path: Path) -> dict:
             candidate_records.append(
                 {
                     "artifact_id": artifact_id,
+                    "final_supported_direct_target_ids": [target],
+                    "removed_baseline_target_ids": ["broad-0"],
                     "opportunity_outcomes": [
                         {
                             **binding,
                             "resolution_status": "linked",
                             "abstention_reason": None,
-                            "has_blocking_ambiguity": False,
                             "direct_links": [
                                 {"target_id": target, "support_decision_key": key}
                             ],
+                            "uncredited_link_claims": [],
                         }
                     ],
                 }
@@ -841,7 +888,7 @@ def _comparator_case(tmp_path: Path) -> dict:
         "identity_census_policy": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class",
         "relations": relations,
     }
-    candidate = {"schema_version": "site-graph-v0-candidate-result/4", "records": candidate_records}
+    candidate = {"schema_version": "site-graph-v0-candidate-result/5", "records": candidate_records}
     return {
         "baseline": baseline,
         "metrics": metrics,
@@ -873,6 +920,111 @@ def _run_case(case: dict) -> dict:
     )
 
 
+def _add_unaffected_itt_records(case: dict, museum: str, count: int) -> None:
+    """Expand a logic-only ITT side with baseline-retained, non-credited records."""
+    public_opportunity = next(
+        row for row in case["queue"]["opportunities"] if row["museum"] == museum
+    )
+    private_opportunity = next(
+        row
+        for row in case["private_opportunity"]["opportunities"]
+        if row["museum"] == museum
+    )
+    for index in range(count):
+        artifact_id = f"{museum}-filler-{index:02d}"
+        binding = {
+            "opportunity_id": public_opportunity["opportunity_id"],
+            "opportunity_binding_sha256": canonical_sha256(
+                {
+                    "artifact_id": artifact_id,
+                    "opportunity_id": public_opportunity["opportunity_id"],
+                }
+            ),
+        }
+        case["baseline"].append(
+            {
+                "artifact_id": artifact_id,
+                "museum": museum,
+                "extracted_site_text_evidence": True,
+                "baseline_site_target_ids": ["broad-0"],
+                "baseline_record_scope": "broad_only",
+                "site_mention_count": 2,
+                "site_mention_status_counts": {"resolved": 1, "unmatched": 1},
+                "has_any_ambiguity": False,
+                "has_blocking_ambiguity": False,
+            }
+        )
+        case["metrics"]["record_counts_by_museum"][museum] += 1
+        case["metrics"]["per_museum"][museum][
+            "extracted_site_text_evidence_records"
+        ] += 1
+        case["private_opportunity"]["intent_to_treat_records_by_museum"][museum].append(
+            {
+                "artifact_id": artifact_id,
+                "opportunity_bindings": [binding],
+                "baseline_record_scope": "broad_only",
+            }
+        )
+        private_opportunity["artifact_memberships"].append(
+            {
+                "artifact_id": artifact_id,
+                "opportunity_binding_sha256": binding["opportunity_binding_sha256"],
+                "mentions": [
+                    {
+                        "mention_id": f"mention-{artifact_id}",
+                        "field_path": "sites[0]",
+                        "status": "unmatched",
+                        "target_ids": [],
+                        "normalized_keys": [binding["opportunity_id"]],
+                    }
+                ],
+            }
+        )
+        case["candidate"]["records"].append(
+            {
+                "artifact_id": artifact_id,
+                "final_supported_direct_target_ids": ["broad-0"],
+                "removed_baseline_target_ids": [],
+                "opportunity_outcomes": [
+                    {
+                        **binding,
+                        "resolution_status": "unmatched",
+                        "abstention_reason": None,
+                        "direct_links": [],
+                        "uncredited_link_claims": [],
+                    }
+                ],
+            }
+        )
+        for pair_key, pair in case["private_opportunity"][
+            "credited_pair_opportunity_memberships"
+        ].items():
+            if museum not in pair["sides"]:
+                continue
+            pair["sides"][museum].append(
+                {
+                    "artifact_id": artifact_id,
+                    "category": (
+                        "broad_only_pair_connection"
+                        if pair_key == "met__brooklyn"
+                        else "no_baseline_pair_connection"
+                    ),
+                    "opportunity_bindings": [binding],
+                }
+            )
+    for pair_key, pair in case["private_opportunity"][
+        "credited_pair_opportunity_memberships"
+    ].items():
+        if museum not in pair["sides"]:
+            continue
+        denominator = len(pair["sides"][museum])
+        public_side = case["queue"]["pair_side_ceilings"][pair_key]["sides"][museum]
+        public_side["credited_effect_opportunity_denominator"] = denominator
+        public_side["minimum_credited_affected_records_for_continue"] = max(
+            1, (denominator + 9) // 10
+        )
+
+
 def test_supported_strict_refinement_replaces_direct_edge_without_counting_loss(tmp_path: Path) -> None:
     report = _run_case(_comparator_case(tmp_path))
     assert report["outcome"] == "CONTINUE"
@@ -886,15 +1038,206 @@ def test_supported_strict_refinement_replaces_direct_edge_without_counting_loss(
     ] == 2
 
 
-def test_narrower_node_without_review_support_gets_zero_credit(tmp_path: Path) -> None:
+def test_post_candidate_linkability_and_connectivity_are_computed_exactly(
+    tmp_path: Path,
+) -> None:
+    report = _run_case(_comparator_case(tmp_path))
+    schema_validation_module.validate_schema(
+        report,
+        EVAL_ROOT / "schemas/comparison-report.schema.json",
+        "logic-only full candidate metric report",
+    )
+    wrong_pair_sides = copy.deepcopy(report)
+    sides = wrong_pair_sides["post_candidate_metrics"]["connectivity"]["pairs"][
+        "met__brooklyn"
+    ]["sides"]
+    sides["harvard"] = sides.pop("brooklyn")
+    with pytest.raises(schema_validation_module.SchemaValidationError):
+        schema_validation_module.validate_schema(
+            wrong_pair_sides,
+            EVAL_ROOT / "schemas/comparison-report.schema.json",
+            "logic-only wrong pair-side metric report",
+        )
+    metrics = report["post_candidate_metrics"]
+    assert metrics["linkability_by_museum"] == {
+        "met": {
+            "records_with_supported_direct_links": 2,
+            "overall_linkability": _fraction(2, 2),
+            "extracted_site_text_conditional_linkability": _fraction(2, 2),
+        },
+        "brooklyn": {
+            "records_with_supported_direct_links": 2,
+            "overall_linkability": _fraction(2, 2),
+            "extracted_site_text_conditional_linkability": _fraction(2, 2),
+        },
+        "harvard": {
+            "records_with_supported_direct_links": 0,
+            "overall_linkability": _fraction(0, 1),
+            "extracted_site_text_conditional_linkability": _fraction(0, 1),
+        },
+    }
+    pair = metrics["connectivity"]["pairs"]["met__brooklyn"]
+    assert pair["shared_identity_class_count"] == 2
+    assert pair["sides"]["met"]["connected_records"] == 2
+    assert pair["sides"]["met"]["overall_connection_rate"] == _fraction(2, 2)
+    assert pair["sides"]["brooklyn"][
+        "extracted_site_text_conditional_connection_rate"
+    ] == _fraction(2, 2)
+    assert metrics["connectivity"]["all_three"]["shared_identity_class_count"] == 0
+    assert metrics["connectivity"]["any_two_or_more"][
+        "shared_identity_class_count"
+    ] == 2
+    assert metrics["connectivity"]["any_two_or_more"][
+        "exact_museum_combination_counts"
+    ] == {"brooklyn+met": 2}
+
+
+def test_selected_research_failure_preserves_unrelated_frozen_resolved_link(
+    tmp_path: Path,
+) -> None:
     case = _comparator_case(tmp_path)
-    for value in case["decisions"].values():
-        value["supported"] = False
+    record = next(row for row in case["candidate"]["records"] if row["artifact_id"] == "met-a")
+    outcome = record["opportunity_outcomes"][0]
+    support_key = outcome["direct_links"][0]["support_decision_key"]
+    del case["decisions"][support_key]
+    outcome["resolution_status"] = "research_failure"
+    outcome["direct_links"] = []
+    record["final_supported_direct_target_ids"] = ["broad-0"]
+    record["removed_baseline_target_ids"] = []
     report = _run_case(case)
-    assert report["outcome"] == "REDESIGN"  # unsupported replacement is a loss
-    assert report["event_counts"]["strict_refinement_reassignment"] == 0
-    assert report["event_counts"]["new_link"] == 0
-    assert report["event_counts"]["loss"] == 4
+    event = next(row for row in report["event_records"] if row["artifact_id"] == "met-a")
+    assert report["outcome"] == "STOP"
+    assert event["event"] == "unchanged"
+    assert event["candidate_supported_direct_target_ids"] == ["broad-0"]
+    assert event["candidate_site_mention_status_counts"] == {
+        "resolved": 1,
+        "unmatched": 1,
+    }
+    assert report["event_counts"]["loss"] == 0
+
+
+def test_explicit_record_level_removal_drives_loss_and_redesign(tmp_path: Path) -> None:
+    case = _comparator_case(tmp_path)
+    record = next(row for row in case["candidate"]["records"] if row["artifact_id"] == "met-a")
+    outcome = record["opportunity_outcomes"][0]
+    del case["decisions"][outcome["direct_links"][0]["support_decision_key"]]
+    outcome["resolution_status"] = "research_failure"
+    outcome["direct_links"] = []
+    record["final_supported_direct_target_ids"] = []
+    record["removed_baseline_target_ids"] = ["broad-0"]
+    report = _run_case(case)
+    assert report["outcome"] == "REDESIGN"
+    assert report["event_counts"]["loss"] == 1
+    assert report["safety_gates"]["baseline_retention"]["passed"] is False
+
+
+def test_supported_link_with_another_ambiguous_mention_is_not_blocking(
+    tmp_path: Path,
+) -> None:
+    case = _comparator_case(tmp_path)
+    baseline = next(row for row in case["baseline"] if row["artifact_id"] == "met-a")
+    baseline["site_mention_count"] = 3
+    baseline["site_mention_status_counts"] = {
+        "ambiguous": 1,
+        "resolved": 1,
+        "unmatched": 1,
+    }
+    baseline["has_any_ambiguity"] = True
+    baseline["has_blocking_ambiguity"] = False
+    report = _run_case(case)
+    event = next(row for row in report["event_records"] if row["artifact_id"] == "met-a")
+    assert report["outcome"] == "CONTINUE"
+    assert event["candidate_site_mention_status_counts"]["ambiguous"] == 1
+    assert report["safety_gates"]["ambiguity"]["per_museum"]["met"][
+        "candidate_blocking"
+    ] == _fraction(0, 2)
+
+
+def test_unselected_baseline_ambiguity_persists_in_candidate_population(
+    tmp_path: Path,
+) -> None:
+    case = _comparator_case(tmp_path)
+    baseline = next(row for row in case["baseline"] if row["artifact_id"] == "harvard-a")
+    baseline["site_mention_count"] = 2
+    baseline["site_mention_status_counts"] = {"ambiguous": 1, "unmatched": 1}
+    baseline["has_any_ambiguity"] = True
+    baseline["has_blocking_ambiguity"] = True
+    report = _run_case(case)
+    assert report["outcome"] == "CONTINUE"
+    ambiguity = report["safety_gates"]["ambiguity"]["per_museum"]["harvard"]
+    assert ambiguity["baseline_blocking"] == _fraction(1, 1)
+    assert ambiguity["candidate_blocking"] == _fraction(1, 1)
+    assert ambiguity["delta"] == {"numerator": 0, "denominator": 1}
+
+
+def test_disputed_link_is_unresolved_and_cannot_suppress_ambiguity(
+    tmp_path: Path,
+) -> None:
+    case = _comparator_case(tmp_path)
+    baseline = next(row for row in case["baseline"] if row["artifact_id"] == "harvard-a")
+    baseline["site_mention_status_counts"] = {"ambiguous": 1}
+    baseline["has_any_ambiguity"] = True
+    baseline["has_blocking_ambiguity"] = True
+    private_opportunity = next(
+        row
+        for row in case["private_opportunity"]["opportunities"]
+        if row["museum"] == "harvard"
+    )
+    private_opportunity["artifact_memberships"][0]["mentions"][0]["status"] = "ambiguous"
+    record = next(row for row in case["candidate"]["records"] if row["artifact_id"] == "harvard-a")
+    outcome = record["opportunity_outcomes"][0]
+    subject = {
+        "artifact_id": "harvard-a",
+        "target_id": "specific-1",
+        "opportunity_id": outcome["opportunity_id"],
+        "opportunity_binding_sha256": outcome["opportunity_binding_sha256"],
+    }
+    key = decision_key("link_support", subject)
+    case["decisions"][key] = {
+        "decision_kind": "link_support",
+        "subject": subject,
+        "supported": False,
+        "disagreement": True,
+    }
+    outcome["resolution_status"] = "unresolved"
+    outcome["uncredited_link_claims"] = [
+        {"target_id": "specific-1", "support_decision_key": key}
+    ]
+    report = _run_case(case)
+    assert report["outcome"] == "CONTINUE"
+    assert report["safety_gates"]["ambiguity"]["per_museum"]["harvard"][
+        "candidate_blocking"
+    ] == _fraction(1, 1)
+    assert report["ambiguity_and_abstention"][
+        "reviewer_disagreement_decisions_uncredited"
+    ] == 1
+
+
+def test_new_blocking_ambiguity_drives_redesign_threshold(tmp_path: Path) -> None:
+    case = _comparator_case(tmp_path)
+    record = next(row for row in case["candidate"]["records"] if row["artifact_id"] == "harvard-a")
+    record["opportunity_outcomes"][0]["resolution_status"] = "ambiguous"
+    report = _run_case(case)
+    assert report["outcome"] == "REDESIGN"
+    ambiguity = report["safety_gates"]["ambiguity"]["per_museum"]["harvard"]
+    assert ambiguity["passed"] is False
+    assert ambiguity["delta"] == {"numerator": 1, "denominator": 1}
+
+
+def test_linked_outcome_without_review_support_is_invalid(tmp_path: Path) -> None:
+    case = _comparator_case(tmp_path)
+    first_link = next(
+        value
+        for value in case["decisions"].values()
+        if value["decision_kind"] == "link_support"
+    )
+    first_link["supported"] = False
+    report = _run_case(case)
+    assert report["outcome"] == "INVALID"
+    assert any(
+        "disputed or unsupported and must instead be unresolved" in error
+        for error in report["integrity"]["errors"]
+    )
 
 
 def test_slice_leafness_cannot_override_complete_hierarchy_context(tmp_path: Path) -> None:
@@ -923,13 +1266,30 @@ def test_reviewer_disagreement_is_uncredited_and_unresolved(tmp_path: Path) -> N
     )
     first_link["supported"] = False
     first_link["disagreement"] = True
+    decision_key_value = next(
+        key for key, value in case["decisions"].items() if value is first_link
+    )
+    record = next(
+        row
+        for row in case["candidate"]["records"]
+        if row["opportunity_outcomes"][0]["direct_links"]
+        and row["opportunity_outcomes"][0]["direct_links"][0]["support_decision_key"]
+        == decision_key_value
+    )
+    outcome = record["opportunity_outcomes"][0]
+    outcome["resolution_status"] = "unresolved"
+    outcome["uncredited_link_claims"] = outcome.pop("direct_links")
+    outcome["direct_links"] = []
+    record["final_supported_direct_target_ids"] = ["broad-0"]
+    record["removed_baseline_target_ids"] = []
     report = _run_case(case)
-    assert report["outcome"] == "REDESIGN"
+    assert report["outcome"] == "STOP"
     assert report["ambiguity_and_abstention"]["reviewer_disagreement_decisions_uncredited"] == 1
-    assert report["event_counts"]["loss"] == 1
+    assert report["event_counts"]["loss"] == 0
+    assert report["event_counts"]["unchanged"] == 2
 
 
-def test_concentration_is_gated_per_side_against_comparable_baseline(tmp_path: Path) -> None:
+def test_concentration_formulas_use_unique_record_union_and_incidence_hhi() -> None:
     from metrics_core import concentration
 
     links = {
@@ -942,6 +1302,163 @@ def test_concentration_is_gated_per_side_against_comparable_baseline(tmp_path: P
     assert result["top_k_unique_record_concentration"]["5"]["ratio"] == _fraction(3, 3)
     assert result["top_k_unique_record_concentration"]["10"]["ratio"] == _fraction(3, 3)
     assert result["node_incidence_hhi"] == _fraction(8, 16)
+
+
+def test_top_k_and_hhi_concentration_failures_drive_redesign(tmp_path: Path) -> None:
+    case = _comparator_case(tmp_path)
+    for artifact_id in ("met-b", "brooklyn-b"):
+        baseline = next(
+            row for row in case["baseline"] if row["artifact_id"] == artifact_id
+        )
+        baseline["baseline_site_target_ids"] = ["broad-1"]
+        record = next(
+            row for row in case["candidate"]["records"] if row["artifact_id"] == artifact_id
+        )
+        outcome = record["opportunity_outcomes"][0]
+        del case["decisions"][outcome["direct_links"][0]["support_decision_key"]]
+        subject = {
+            "artifact_id": artifact_id,
+            "target_id": "specific-1",
+            "opportunity_id": outcome["opportunity_id"],
+            "opportunity_binding_sha256": outcome["opportunity_binding_sha256"],
+        }
+        key = decision_key("link_support", subject)
+        case["decisions"][key] = {
+            "decision_kind": "link_support",
+            "subject": subject,
+            "supported": True,
+            "disagreement": False,
+        }
+        outcome["direct_links"] = [
+            {"target_id": "specific-1", "support_decision_key": key}
+        ]
+        record["final_supported_direct_target_ids"] = ["specific-1"]
+        record["removed_baseline_target_ids"] = ["broad-1"]
+
+    case["node_scope"]["nodes"].append(
+        {
+            "target_id": "broad-1",
+            "scope_class": "broad",
+            "authority_identity_locator": "broad-1",
+        }
+    )
+    snapshot = case["snapshots"][0]
+    snapshot["records"].append(
+        {
+            "source_record_id": "source-broad-1",
+            "target_id": "broad-1",
+            "preferred_label": "Broad one",
+            "aliases": [],
+            "authority_identity_locator": "broad-1",
+            "raw_source_types": ["archaeological-area"],
+            "parent_ids": [],
+            "child_ids": ["specific-1"],
+            "authority_citations": ["logic:broad-1"],
+        }
+    )
+    specific_record = next(
+        row for row in snapshot["records"] if row["target_id"] == "specific-1"
+    )
+    specific_record["parent_ids"] = ["broad-0", "broad-1"]
+    snapshot["records"].sort(key=lambda row: row["source_record_id"])
+    snapshot["completeness"]["record_count"] = len(snapshot["records"])
+    snapshot["completeness"]["records_canonical_sha256"] = canonical_sha256(
+        snapshot["records"]
+    )
+    case["hierarchy"]["nodes"].append(
+        {
+            "target_id": "broad-1",
+            "candidate_e55_type": "archaeological_area",
+            "child_ids": ["specific-1"],
+            "ancestor_target_ids": [],
+            "source_export_ids": ["logic-source"],
+            "source_record_ids": ["source-broad-1"],
+        }
+    )
+    specific_node = next(
+        row for row in case["hierarchy"]["nodes"] if row["target_id"] == "specific-1"
+    )
+    specific_node["ancestor_target_ids"] = ["broad-0", "broad-1"]
+    subject = {
+        "left_target_id": "specific-1",
+        "right_target_id": "broad-1",
+        "relation": "strict_refinement",
+    }
+    key = decision_key("strict_refinement_support", subject)
+    case["decisions"][key] = {
+        "decision_kind": "strict_refinement_support",
+        "subject": subject,
+        "supported": True,
+        "disagreement": False,
+    }
+    case["relations"]["relations"].append(
+        {
+            "relation_id": "refine-specific-1-broad-1",
+            **subject,
+            "review_decision_key": key,
+        }
+    )
+    report = _run_case(case)
+    assert report["outcome"] == "REDESIGN"
+    side = report["pairs"]["met__brooklyn"]["sides"]["met"]
+    assert side["top_k_concentration_pass"] == {
+        "1": False,
+        "5": True,
+        "10": True,
+    }
+    assert side["hhi_concentration_pass"] is False
+    assert side["concentration_pass"] is False
+
+
+@pytest.mark.parametrize("failed_metric", ["top_k", "hhi"])
+def test_each_concentration_gate_independently_drives_redesign(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failed_metric: str
+) -> None:
+    """Prove neither independently preregistered concentration gate is masked."""
+    baseline_metric = {
+        "shared_node_count": 2,
+        "distinct_connected_records": 10,
+        "node_incidence_total": 20,
+        "node_incidence_hhi": _fraction(1, 2),
+        "top_k_unique_record_concentration": {
+            "1": {"selected_target_ids": ["first"], "ratio": _fraction(1, 2)},
+            "5": {
+                "selected_target_ids": ["first", "second"],
+                "ratio": _fraction(1, 1),
+            },
+            "10": {
+                "selected_target_ids": ["first", "second"],
+                "ratio": _fraction(1, 1),
+            },
+        },
+    }
+    calls = 0
+
+    def controlled_concentration(*_args: object, **_kwargs: object) -> dict:
+        nonlocal calls
+        candidate_call = calls % 2 == 1
+        calls += 1
+        result = copy.deepcopy(baseline_metric)
+        if candidate_call and failed_metric == "top_k":
+            result["top_k_unique_record_concentration"]["1"]["ratio"] = _fraction(
+                3, 5
+            )
+        if candidate_call and failed_metric == "hhi":
+            result["node_incidence_hhi"] = _fraction(3, 5)
+        return result
+
+    monkeypatch.setattr(
+        compare_candidate_module, "concentration", controlled_concentration
+    )
+    report = _run_case(_comparator_case(tmp_path))
+    assert report["outcome"] == "REDESIGN"
+    side = report["pairs"]["met__brooklyn"]["sides"]["met"]
+    if failed_metric == "top_k":
+        assert side["top_k_concentration_pass"]["1"] is False
+        assert side["hhi_concentration_pass"] is True
+    else:
+        assert all(side["top_k_concentration_pass"].values())
+        assert side["hhi_concentration_pass"] is False
 
 
 def test_equivalent_identity_classes_cannot_fake_two_gained_nodes(tmp_path: Path) -> None:
@@ -974,6 +1491,47 @@ def test_equivalent_identity_classes_cannot_fake_two_gained_nodes(tmp_path: Path
     ] == 1
 
 
+def test_equivalent_alias_replacement_is_unchanged_and_never_affected_credit(
+    tmp_path: Path,
+) -> None:
+    case = _comparator_case(tmp_path)
+    relation = next(
+        row
+        for row in case["relations"]["relations"]
+        if row["relation"] == "strict_refinement"
+        and row["left_target_id"] == "specific-1"
+    )
+    del case["decisions"][relation["review_decision_key"]]
+    subject = {
+        "left_target_id": "specific-1",
+        "right_target_id": "broad-0",
+        "relation": "equivalent",
+    }
+    key = decision_key("equivalence_support", subject)
+    case["decisions"][key] = {
+        "decision_kind": "equivalence_support",
+        "subject": subject,
+        "supported": True,
+        "disagreement": False,
+    }
+    relation.clear()
+    relation.update(
+        {
+            "relation_id": "equivalent-specific-1-broad-0",
+            **subject,
+            "review_decision_key": key,
+        }
+    )
+    report = _run_case(case)
+    assert report["outcome"] == "STOP"
+    assert report["event_counts"]["unchanged"] == 3
+    assert report["event_counts"]["strict_refinement_reassignment"] == 2
+    pair = report["pairs"]["met__brooklyn"]
+    assert pair["gained_credited_specific_shared_identity_class_count"] == 1
+    assert pair["sides"]["met"]["credited_affected_records"] == 1
+    assert pair["sides"]["brooklyn"]["credited_affected_records"] == 1
+
+
 def test_pair_numerator_intersects_exact_private_membership_and_category(tmp_path: Path) -> None:
     case = _comparator_case(tmp_path)
     private_side = case["private_opportunity"]["credited_pair_opportunity_memberships"][
@@ -999,15 +1557,94 @@ def test_pair_numerator_intersects_exact_private_membership_and_category(tmp_pat
     }
 
 
+def test_exact_itt_affected_threshold_failure_drives_stop(tmp_path: Path) -> None:
+    case = _comparator_case(tmp_path)
+    _add_unaffected_itt_records(case, "met", 9)
+    _add_unaffected_itt_records(case, "brooklyn", 9)
+
+    met_a = next(
+        row for row in case["candidate"]["records"] if row["artifact_id"] == "met-a"
+    )
+    met_a_outcome = met_a["opportunity_outcomes"][0]
+    subject = {
+        "artifact_id": "met-a",
+        "target_id": "specific-2",
+        "opportunity_id": met_a_outcome["opportunity_id"],
+        "opportunity_binding_sha256": met_a_outcome["opportunity_binding_sha256"],
+    }
+    support_key = decision_key("link_support", subject)
+    case["decisions"][support_key] = {
+        "decision_kind": "link_support",
+        "subject": subject,
+        "supported": True,
+        "disagreement": False,
+    }
+    met_a_outcome["direct_links"].append(
+        {"target_id": "specific-2", "support_decision_key": support_key}
+    )
+    met_a["final_supported_direct_target_ids"] = ["specific-1", "specific-2"]
+    met_a_baseline = next(
+        row for row in case["baseline"] if row["artifact_id"] == "met-a"
+    )
+    met_a_baseline["site_mention_count"] = 3
+    met_a_baseline["site_mention_status_counts"] = {"resolved": 1, "unmatched": 2}
+    met_opportunity = next(
+        row
+        for row in case["private_opportunity"]["opportunities"]
+        if row["museum"] == "met"
+    )
+    met_a_membership = next(
+        row
+        for row in met_opportunity["artifact_memberships"]
+        if row["artifact_id"] == "met-a"
+    )
+    met_a_membership["mentions"].append(
+        {
+            "mention_id": "mention-met-a-extra",
+            "field_path": "sites[1]",
+            "status": "unmatched",
+            "target_ids": [],
+            "normalized_keys": [met_opportunity["opportunity_id"]],
+        }
+    )
+
+    met_b = next(
+        row for row in case["candidate"]["records"] if row["artifact_id"] == "met-b"
+    )
+    met_b_outcome = met_b["opportunity_outcomes"][0]
+    del case["decisions"][met_b_outcome["direct_links"][0]["support_decision_key"]]
+    met_b_outcome["resolution_status"] = "research_failure"
+    met_b_outcome["direct_links"] = []
+    met_b["final_supported_direct_target_ids"] = ["broad-0"]
+    met_b["removed_baseline_target_ids"] = []
+
+    report = _run_case(case)
+    assert report["outcome"] == "STOP"
+    pair = report["pairs"]["met__brooklyn"]
+    assert pair["gained_credited_specific_shared_identity_class_count"] == 2
+    met_side = pair["sides"]["met"]
+    assert met_side["credited_affected_records"] == 1
+    assert met_side["fixed_opportunity_denominator"] == 11
+    assert met_side["minimum_for_continue"] == 2
+    assert met_side["affected_threshold_pass"] is False
+    assert report["safety_gates"]["baseline_retention"]["passed"] is True
+
+
 def test_existing_target_cannot_be_relabelled_by_candidate_snapshot(tmp_path: Path) -> None:
     case = _comparator_case(tmp_path)
     case["node_scope"]["nodes"].append(
-        {"target_id": "other-broad", "scope_class": "broad"}
+        {
+            "target_id": "other-broad",
+            "scope_class": "broad",
+            "authority_identity_locator": "logic:authority:other-broad",
+        }
     )
     case["snapshots"][0]["records"].append(
         {
             "source_record_id": "source-other-broad",
             "target_id": "other-broad",
+            "preferred_label": "Other broad",
+            "aliases": [],
             "authority_identity_locator": "logic:authority:other-broad",
             "raw_source_types": ["archaeological-site"],
             "parent_ids": [],
@@ -1015,7 +1652,8 @@ def test_existing_target_cannot_be_relabelled_by_candidate_snapshot(tmp_path: Pa
             "authority_citations": ["logic:broad-0"],
         }
     )
-    case["snapshots"][0]["completeness"]["record_count"] = 3
+    case["snapshots"][0]["records"].sort(key=lambda row: row["source_record_id"])
+    case["snapshots"][0]["completeness"]["record_count"] = 4
     case["snapshots"][0]["completeness"]["records_canonical_sha256"] = canonical_sha256(
         case["snapshots"][0]["records"]
     )
@@ -1032,6 +1670,34 @@ def test_existing_target_cannot_be_relabelled_by_candidate_snapshot(tmp_path: Pa
     report = _run_case(case)
     assert report["outcome"] == "INVALID"
     assert any("cannot be relabeled" in error for error in report["integrity"]["errors"])
+
+
+def test_candidate_e55_label_must_match_crosswalk_broad_precedence(
+    tmp_path: Path,
+) -> None:
+    case = _comparator_case(tmp_path)
+    records = case["snapshots"][0]["records"]
+    specific_1 = next(row for row in records if row["target_id"] == "specific-1")
+    specific_2 = next(row for row in records if row["target_id"] == "specific-2")
+    specific_1["child_ids"] = ["specific-2"]
+    specific_2["parent_ids"] = ["broad-0", "specific-1"]
+    case["snapshots"][0]["completeness"]["records_canonical_sha256"] = canonical_sha256(
+        records
+    )
+    hierarchy_1 = next(
+        row for row in case["hierarchy"]["nodes"] if row["target_id"] == "specific-1"
+    )
+    hierarchy_2 = next(
+        row for row in case["hierarchy"]["nodes"] if row["target_id"] == "specific-2"
+    )
+    hierarchy_1["child_ids"] = ["specific-2"]
+    hierarchy_2["ancestor_target_ids"] = ["broad-0", "specific-1"]
+    report = _run_case(case)
+    assert report["outcome"] == "INVALID"
+    assert any(
+        "E55 type is inconsistent with derived broad-precedence scope" in error
+        for error in report["integrity"]["errors"]
+    )
 
 
 def test_minimum_fraction_cannot_be_overridden_by_public_aggregate(tmp_path: Path) -> None:

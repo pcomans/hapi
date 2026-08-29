@@ -72,7 +72,12 @@ def _validate_private_run_runtime(
     snapshot: dict,
     reruns: dict,
 ) -> dict:
-    """Verify one exact rerun identity and its truthful runtime provenance."""
+    """Verify a fresh run against deterministic bytes, separately from history.
+
+    The committed rerun identities authenticate the historical release exercise.
+    A later reproduction is accepted by deterministic equivalence and release/input
+    bindings; its directory, UUID, and provenance hash are intentionally irrelevant.
+    """
     # Import only after the caller's release-integrity preflight.  Keeping a required
     # release module out of top-level imports ensures deletion/corruption is reported
     # as an inventory failure before Python attempts to load semantic tooling.
@@ -135,20 +140,6 @@ def _validate_private_run_runtime(
             "dependency_lock": validated_runtime["dependency_lock"],
         }
 
-    manifest_sha256 = sha256(manifest_path)
-    provenance_sha256 = sha256(provenance_path)
-    identity = {
-        "resolved_directory": str(private_run.resolve()),
-        "run_id": provenance.get("run_id") if isinstance(provenance, dict) else None,
-        "manifest_sha256": manifest_sha256,
-        "provenance_sha256": provenance_sha256,
-    }
-    matching_reruns = [
-        label
-        for label in ("run_a", "run_b")
-        if isinstance(reruns.get(label), dict)
-        and all(reruns[label].get(field) == value for field, value in identity.items())
-    ]
     manifest_hashes = (
         manifest.get("deterministic_output_hashes", {})
         if isinstance(manifest, dict)
@@ -165,6 +156,27 @@ def _validate_private_run_runtime(
     requested_output_matches = (
         isinstance(requested_output, str)
         and Path(requested_output).resolve() == private_run.resolve()
+    )
+    historical_rows = [reruns.get(label) for label in ("run_a", "run_b")]
+    historical_identity_authenticated = (
+        reruns.get("schema_version") == "site-graph-v0-baseline-rerun-evidence/3"
+        and all(
+            isinstance(row, dict)
+            and set(row)
+            == {
+                "resolved_directory",
+                "run_id",
+                "manifest_sha256",
+                "provenance_sha256",
+            }
+            and all(isinstance(row[field], str) and row[field] for field in row)
+            for row in historical_rows
+        )
+        and historical_rows[0]["resolved_directory"]
+        != historical_rows[1]["resolved_directory"]
+        and historical_rows[0]["run_id"] != historical_rows[1]["run_id"]
+        and historical_rows[0]["manifest_sha256"]
+        == historical_rows[1]["manifest_sha256"]
     )
     checks = {
         "exact_full_run_output_validation": exact_full_run_validation,
@@ -196,25 +208,48 @@ def _validate_private_run_runtime(
             and provenance.get("runtime_attestation") == runtime_reference
         ),
         "provenance_requested_output_binding": requested_output_matches,
-        "rerun_evidence_runtime_binding": (
+        "historical_release_identity_record_authenticated": historical_identity_authenticated,
+        "fresh_manifest_deterministic_outputs_equal_committed_release": (
+            isinstance(manifest_hashes, dict)
+            and manifest_hashes == rerun_hashes
+            and len(manifest_hashes) == reruns.get("deterministic_output_count")
+            and historical_identity_authenticated
+            and sha256(manifest_path) == historical_rows[0]["manifest_sha256"]
+        ),
+        "fresh_manifest_input_and_tool_bindings_equal_committed_release": (
+            isinstance(manifest, dict)
+            and manifest.get("input_snapshot_sha256")
+            == reruns.get("input_snapshot_sha256")
+            and manifest.get("runner_sha256") == reruns.get("runner_sha256")
+            and manifest.get("builder_sha256") == reruns.get("builder_sha256")
+            and manifest.get("corpus_archive_sha256")
+            == reruns.get("corpus_archive_sha256")
+        ),
+        "committed_rerun_evidence_runtime_binding": (
             runtime_reference is not None
             and reruns.get("runtime_attestation") == runtime_reference
         ),
-        "rerun_evidence_runtime_output_hash": (
+        "committed_rerun_evidence_runtime_output_hash": (
             runtime_reference is not None
             and isinstance(rerun_hashes, dict)
             and rerun_hashes.get("runtime-attestation.json")
             == runtime_reference["sha256"]
         ),
-        "rerun_identity_binding": len(matching_reruns) == 1,
     }
     return {
         "passed": all(checks.values()),
         "missing": [],
         "checks": checks,
-        "matching_rerun": matching_reruns[0] if len(matching_reruns) == 1 else None,
         "runtime_attestation": runtime_reference,
-        "private_run_identity": identity,
+        "historical_release_run_identities": {
+            label: reruns.get(label) for label in ("run_a", "run_b")
+        },
+        "fresh_reproduction_equivalence": {
+            "deterministic_output_count": len(manifest_hashes),
+            "deterministic_output_hashes": manifest_hashes,
+            "manifest_sha256": sha256(manifest_path),
+            "path_uuid_and_provenance_hash_are_not_equivalence_inputs": True,
+        },
         "errors": errors,
     }
 
@@ -647,17 +682,48 @@ def _semantic_report(
     )
 
     correction_policy = read_json(root / "correction-policy.json")
+    correction_trust = correction_policy.get("chain_trust", {})
+    correction_prior_head = correction_trust.get("prior_head", {})
     check(
         "immutable_primary_and_private_correction_policy",
-        correction_policy["current_primary_corrections_applied"] == 0
+        correction_policy.get("schema_version")
+        == "site-graph-v0-correction-policy/4"
+        and type(correction_policy.get("current_primary_corrections_applied")) is int
+        and correction_policy["current_primary_corrections_applied"] == 0
         and correction_policy["allowed_operations"] == ["set_site_mention_resolution"]
         and correction_policy["sensitivity_estimands"][
             "fixed_frozen_intent_to_treat"
         ]
         and correction_policy["sensitivity_estimands"][
             "corrected_source_counterfactual_reselection"
-        ],
-        correction_policy,
+        ]
+        and correction_trust.get("status") == "NOT_CONFIGURED"
+        and correction_trust.get("chain_id")
+        == "hapi-site-graph-v0-private-corrections"
+        and correction_trust.get("ledger_path")
+        == "private/corrections/ledger.json"
+        and correction_trust.get("review_artifact_directory")
+        == "private/corrections/reviews"
+        and correction_trust.get("genesis_commit") is None
+        and correction_trust.get("registration") is None
+        and correction_prior_head
+        == {
+            "sequence": 0,
+            "record_sha256": None,
+            "ledger_commit": None,
+            "ledger_sha256": None,
+            "ledger_git_blob_oid": None,
+        },
+        {
+            "schema_version": correction_policy.get("schema_version"),
+            "current_primary_corrections_applied": correction_policy.get(
+                "current_primary_corrections_applied"
+            ),
+            "allowed_operations": correction_policy.get("allowed_operations"),
+            "sensitivity_estimands": correction_policy.get("sensitivity_estimands"),
+            "chain_trust": correction_trust,
+            "production_sensitivity_status": "BLOCKED_UNTIL_GENUINE_ROOTS_REGISTERED",
+        },
     )
 
     rerun_hashes = reruns.get("deterministic_output_hashes", {})

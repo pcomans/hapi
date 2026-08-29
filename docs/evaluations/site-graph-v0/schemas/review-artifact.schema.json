@@ -9,7 +9,7 @@
     "schema_version": {"const": "site-graph-v0-review-artifact/3"},
     "review_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "decision_key": {"type": "string", "minLength": 1},
-    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support"]},
+    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support", "correction_support"]},
     "subject": {"type": "object", "minProperties": 2},
     "reviewer": {
       "type": "object",
@@ -34,7 +34,8 @@
           "source_kind": {"type": "string", "minLength": 1},
           "locator": {"type": "string", "minLength": 1},
           "evidence_summary": {"type": "string", "minLength": 1},
-          "originating_museum": {"const": false},
+          "originating_museum": {"type": "boolean"},
+          "source_commit": {"type": "string", "pattern": "^(?!(?:0{40}|0{64})$)(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
           "source_artifact": {"$ref": "#/$defs/artifact"}
         }
       }
@@ -116,6 +117,27 @@
     "authentication": {"$ref": "#/$defs/authentication"}
   },
   "allOf": [
+    {
+      "if": {"properties": {"decision_kind": {"const": "correction_support"}}},
+      "then": {
+        "properties": {
+          "citations": {"items": {"required": ["source_commit"]}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"decision_kind": {"not": {"const": "correction_support"}}}},
+      "then": {
+        "properties": {
+          "citations": {
+            "items": {
+              "properties": {"originating_museum": {"const": false}},
+              "not": {"required": ["source_commit"]}
+            }
+          }
+        }
+      }
+    },
     {
       "if": {"properties": {"method": {"const": "human"}}},
       "then": {"properties": {"human_provenance": {"type": "object"}, "llm_interaction": {"type": "null"}}}

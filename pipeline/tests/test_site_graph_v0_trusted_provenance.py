@@ -29,6 +29,7 @@ if str(SCRIPTS) not in sys.path:
 
 import candidate_git  # noqa: E402
 import compare_candidate  # noqa: E402
+import review_auth  # noqa: E402
 import run_baseline  # noqa: E402
 import runtime_attestation  # noqa: E402
 import schema_validation  # noqa: E402
@@ -157,7 +158,7 @@ def test_runtime_attestation_rejects_runtime_or_lock_drift(tmp_path: Path) -> No
 
 def _private_run_runtime_case(tmp_path: Path) -> tuple[Path, dict, dict]:
     private_run = tmp_path / "logic-runtime-run"
-    private_run.mkdir()
+    private_run.mkdir(parents=True)
     snapshot = json.loads((EVALUATION / "input-snapshot.json").read_text())
     for name in sorted(run_baseline.DETERMINISTIC_OUTPUTS):
         _write_bytes(private_run, name, f"logic-only {name}\n".encode())
@@ -249,24 +250,30 @@ def _private_run_runtime_case(tmp_path: Path) -> tuple[Path, dict, dict]:
     }
     _write_json(private_run, "run-provenance.json", provenance)
     evidence = {
+        "schema_version": "site-graph-v0-baseline-rerun-evidence/3",
         "run_a": {
-            "resolved_directory": str(private_run.resolve()),
-            "run_id": provenance["run_id"],
+            "resolved_directory": "/historical/release/run-a",
+            "run_id": "10000000-0000-4000-8000-000000000001",
             "manifest_sha256": hashlib.sha256(
                 (private_run / "run-output-manifest.json").read_bytes()
             ).hexdigest(),
-            "provenance_sha256": hashlib.sha256(
-                (private_run / "run-provenance.json").read_bytes()
-            ).hexdigest(),
+            "provenance_sha256": "1" * 64,
         },
         "run_b": {
-            "resolved_directory": str((tmp_path / "different-run").resolve()),
-            "run_id": "00000000-0000-4000-8000-000000000002",
-            "manifest_sha256": "1" * 64,
+            "resolved_directory": "/historical/release/run-b",
+            "run_id": "10000000-0000-4000-8000-000000000002",
+            "manifest_sha256": hashlib.sha256(
+                (private_run / "run-output-manifest.json").read_bytes()
+            ).hexdigest(),
             "provenance_sha256": "2" * 64,
         },
         "runtime_attestation": runtime_reference,
+        "deterministic_output_count": len(output_hashes),
         "deterministic_output_hashes": output_hashes,
+        "input_snapshot_sha256": manifest["input_snapshot_sha256"],
+        "runner_sha256": manifest["runner_sha256"],
+        "builder_sha256": manifest["builder_sha256"],
+        "corpus_archive_sha256": archive_sha256,
     }
     return private_run, snapshot, evidence
 
@@ -276,9 +283,9 @@ def _private_run_runtime_case(tmp_path: Path) -> tuple[Path, dict, dict]:
     [
         ("runtime_file", "runtime_attestation_matches_release_environment"),
         ("manifest", "manifest_runtime_binding"),
-        ("evidence", "rerun_evidence_runtime_binding"),
-        ("identity", "rerun_identity_binding"),
-        ("resolved_directory", "rerun_identity_binding"),
+        ("evidence", "committed_rerun_evidence_runtime_binding"),
+        ("historical_identity", "historical_release_identity_record_authenticated"),
+        ("historical_directory", "historical_release_identity_record_authenticated"),
         ("requested_output", "provenance_requested_output_binding"),
         ("partial_run", "exact_full_run_output_validation"),
     ],
@@ -291,7 +298,9 @@ def test_private_run_runtime_requires_exact_manifest_and_rerun_evidence(
         REPO, private_run, snapshot, evidence
     )
     assert verified["passed"] is True
-    assert verified["matching_rerun"] == "run_a"
+    assert verified["fresh_reproduction_equivalence"][
+        "path_uuid_and_provenance_hash_are_not_equivalence_inputs"
+    ] is True
 
     if attack == "runtime_file":
         altered = json.loads(
@@ -307,12 +316,12 @@ def test_private_run_runtime_requires_exact_manifest_and_rerun_evidence(
         _write_json(private_run, "run-output-manifest.json", altered)
     elif attack == "evidence":
         evidence["runtime_attestation"]["sha256"] = "4" * 64
-    elif attack == "identity":
-        evidence["run_a"]["run_id"] = "substituted-runtime-run"
-    elif attack == "resolved_directory":
-        evidence["run_a"]["resolved_directory"] = str(
-            (tmp_path / "substituted-run").resolve()
-        )
+    elif attack == "historical_identity":
+        evidence["run_b"]["run_id"] = evidence["run_a"]["run_id"]
+    elif attack == "historical_directory":
+        evidence["run_b"]["resolved_directory"] = evidence["run_a"][
+            "resolved_directory"
+        ]
     elif attack == "requested_output":
         altered = json.loads((private_run / "run-provenance.json").read_text())
         altered["requested_output"] = str((tmp_path / "substituted-run").resolve())
@@ -325,6 +334,35 @@ def test_private_run_runtime_requires_exact_manifest_and_rerun_evidence(
     )
     assert rejected["passed"] is False
     assert rejected["checks"][failed_check] is False
+
+
+def test_fresh_reproduction_path_uuid_and_provenance_are_portable(
+    tmp_path: Path,
+) -> None:
+    left, left_snapshot, evidence = _private_run_runtime_case(tmp_path / "left")
+    right, right_snapshot, _ = _private_run_runtime_case(tmp_path / "right")
+    right_provenance = json.loads((right / "run-provenance.json").read_text())
+    right_provenance["run_id"] = "20000000-0000-4000-8000-000000000099"
+    _write_json(right, "run-provenance.json", right_provenance)
+    left_result = validate_contract._validate_private_run_runtime(
+        REPO, left, left_snapshot, evidence
+    )
+    right_result = validate_contract._validate_private_run_runtime(
+        REPO, right, right_snapshot, evidence
+    )
+    assert left_result["passed"] is True
+    assert right_result["passed"] is True
+    assert left_result == right_result
+
+
+def test_fresh_reproduction_rejects_altered_deterministic_byte(tmp_path: Path) -> None:
+    private_run, snapshot, evidence = _private_run_runtime_case(tmp_path)
+    (private_run / "baseline-metrics.json").write_bytes(b"altered deterministic byte\n")
+    rejected = validate_contract._validate_private_run_runtime(
+        REPO, private_run, snapshot, evidence
+    )
+    assert rejected["passed"] is False
+    assert rejected["checks"]["exact_full_run_output_validation"] is False
 
 
 def test_release_run_completion_policy_remains_fail_closed() -> None:
@@ -413,6 +451,8 @@ def _completion_case(tmp_path: Path) -> dict:
         {
             "source_record_id": "logic-record-1",
             "target_id": "logic-target-1",
+            "preferred_label": "Neutral place one",
+            "aliases": ["Neutral alias one"],
             "authority_identity_locator": "logic:target-1",
             "raw_source_types": ["archaeological-site"],
             "parent_ids": [],
@@ -524,12 +564,33 @@ def _completion_case(tmp_path: Path) -> dict:
             "relations": [],
         },
     )
-    review_prompt_path = "candidate/review-prompt.txt"
+    review_prompt_path = "candidate/review-prompt.json"
     review_input_path = "candidate/review-input.json"
     prompt_audit_path = "candidate/prompt-audit.json"
     prompt_audit_signature_path = "candidate/prompt-audit.sig"
-    _write_bytes(repo, review_prompt_path, b"logic-only review prompt\n")
-    _write_bytes(repo, review_input_path, b'{"logic_only":true}\n')
+    review_invocation_id = "logic-review-invocation"
+    review_decision_key = "logic-decision-key"
+    review_subject = {"artifact_id": "logic-artifact", "target_id": "logic-target-1"}
+    review_input, shuffle_provenance = review_auth.build_structured_input_envelope(
+        [
+            {"description": "Neutral mechanics evidence alpha."},
+            {"description": "Neutral mechanics evidence beta."},
+            {"description": "Neutral mechanics evidence gamma."},
+        ],
+        review_invocation_id=review_invocation_id,
+        decision_key=review_decision_key,
+        decision_kind="link_support",
+        subject=review_subject,
+    )
+    review_input_raw = review_auth.canonical_json_bytes(review_input) + b"\n"
+    review_prompt = review_auth.build_structured_prompt_envelope(
+        review_invocation_id=review_invocation_id,
+        input_envelope_bytes=review_input_raw,
+        task_instructions="Assess the opaque evidence items and provide a reasoned assessment.",
+    )
+    review_prompt_raw = review_auth.canonical_json_bytes(review_prompt) + b"\n"
+    _write_bytes(repo, review_prompt_path, review_prompt_raw)
+    _write_bytes(repo, review_input_path, review_input_raw)
     _write_bytes(repo, prompt_audit_signature_path, b"P" * 64)
     prompt_reference = _working_artifact(repo, review_prompt_path)
     input_reference = _working_artifact(repo, review_input_path)
@@ -542,27 +603,33 @@ def _completion_case(tmp_path: Path) -> dict:
         ),
         "audit_id": "logic-prompt-audit",
         "review_id": "logic-review",
-        "review_invocation_id": "logic-review-invocation",
-        "decision_key": "logic-decision-key",
+        "review_invocation_id": review_invocation_id,
+        "decision_key": review_decision_key,
         "decision_kind": "link_support",
-        "subject": {"artifact_id": "logic-artifact", "target_id": "logic-target-1"},
+        "subject": review_subject,
         "prompt": prompt_reference,
         "input": input_reference,
-        "audit_method": "deterministic_prompt_leakage_guard/1",
+        "shuffle_provenance": shuffle_provenance,
+        "audit_method": review_auth.AUDIT_METHOD,
         "auditor": {
             "auditor_id": "logic-auditor",
             "independence_group": "logic-auditor-group",
         },
         "executed_at_utc": "2026-08-29T00:00:00+00:00",
-        "deterministic_guard": {
-            "guard_version": "site-graph-v0-deterministic-prompt-leakage-guard/1",
-            "request_binding_sha256": "5" * 64,
-            "candidate_ids": {"count": 1, "canonical_sha256": "6" * 64},
-            "source_ids": {"count": 1, "canonical_sha256": "7" * 64},
-            "answer_strings": {"count": 1, "canonical_sha256": "8" * 64},
-            "result": "PASS",
-            "findings": [],
-        },
+        "deterministic_guard": review_auth.deterministic_guard_record(
+            review_prompt_raw,
+            review_input_raw,
+            shuffle_provenance=shuffle_provenance,
+            review_invocation_id=review_invocation_id,
+            decision_key=review_decision_key,
+            decision_kind="link_support",
+            subject=review_subject,
+            preferred_labels=["Neutral place one"],
+            aliases=["Neutral alias one"],
+            answer_names=sorted(compare_candidate.MECHANICAL_REVIEW_ANSWER_TOKENS),
+            identifiers=["logic-artifact", "logic-record-1", "logic-target-1"],
+            locators=["logic:citation-1", "logic:target-1"],
+        ),
         "authentication": {
             "registry_id": "logic-review-registry",
             "signature_context": "hapi-site-graph-v0-review-evidence/1",

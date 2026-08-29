@@ -5,12 +5,24 @@ from __future__ import annotations
 
 import argparse
 import collections
+import copy
+import hashlib
 import json
 import os
 import shutil
+import subprocess
 import tempfile
+from datetime import datetime
 from pathlib import Path
 
+from candidate_git import (
+    blob_oid,
+    is_ancestor,
+    normalize_relative_path,
+    read_authenticated_bytes,
+    read_bytes,
+    resolve_commit,
+)
 from build_baseline import (
     build_metrics,
     build_opportunity_queue,
@@ -25,8 +37,18 @@ from build_baseline import (
     write_json,
 )
 from contract_constants import MINIMUM_AFFECTED_FRACTION, MUSEUMS, PAIRS
+from integrity import verify_release
 from metrics_core import partition_scopes, ratio
 from private_ledgers import verify_private_ledgers
+from review_auth import (
+    ArtifactUsageTracker,
+    authenticate_review_artifact,
+    canonical_json_bytes,
+    canonical_sha256,
+    require_distinct_registered_reviewers,
+    strict_json_object,
+    validate_reviewer_registry,
+)
 from schema_validation import validate_schema
 
 
@@ -43,10 +65,74 @@ DERIVED_RECORD_FIELDS = (
     "has_any_unmatched_expression",
 )
 
+CORRECTION_SCHEMA_VERSION = "site-graph-v0-correction-ledger/4"
+CORRECTION_POLICY_VERSION = "site-graph-v0-correction-policy/4"
+CORRECTION_EVIDENCE_VERSION = "site-graph-v0-correction-evidence-source/1"
+CORRECTION_REGISTRATION_VERSION = "site-graph-v0-correction-chain-registration/1"
+CORRECTION_DECISION_KIND = "correction_support"
+CORRECTION_POLICY_RELATIVE = "docs/evaluations/site-graph-v0/correction-policy.json"
+RELEASE_MANIFEST_RELATIVE = (
+    "docs/evaluations/site-graph-v0/release-manifest.json"
+)
+TRUSTED_REVIEWERS_RELATIVE = (
+    "docs/evaluations/site-graph-v0/trusted-reviewers.json"
+)
+
 
 def record_hash(correction: dict) -> str:
     value = {key: child for key, child in correction.items() if key != "record_sha256"}
     return canonical_json_sha256(value)
+
+
+def correction_decision_hash(correction: dict) -> str:
+    """Hash the complete reviewable decision without its later Git-commit binding.
+
+    Review artifacts and their signatures live in ``decision_commit``.  Including
+    that commit in the signed statement would be circular because the commit ID also
+    depends on those review bytes.  The immutable ledger record subsequently binds
+    the signed decision to that exact commit and to the previous chain hash.
+    """
+    return canonical_json_sha256(
+        {
+            key: value
+            for key, value in correction.items()
+            if key not in {"decision_commit", "record_sha256"}
+        }
+    )
+
+
+def correction_review_subject(ledger: dict, correction: dict) -> dict:
+    """Bind a signed correction to one chain and exact private baseline inputs."""
+    return {
+        "chain_id": ledger["chain_id"],
+        "private_record_evidence_canonical_sha256": ledger[
+            "private_record_evidence_canonical_sha256"
+        ],
+        "private_opportunity_source_canonical_sha256": ledger[
+            "private_opportunity_source_canonical_sha256"
+        ],
+        "correction_id": correction["correction_id"],
+        "correction_decision_sha256": correction_decision_hash(correction),
+    }
+
+
+def correction_review_path(
+    directory: str, chain_id: str, correction_id: str, reviewer_id: str
+) -> str:
+    digest = hashlib.sha256(
+        f"{chain_id}\0{correction_id}\0{reviewer_id}".encode("utf-8")
+    ).hexdigest()
+    return f"{directory}/{digest}.json"
+
+
+def _parse_time(value: str, label: str) -> datetime:
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except (TypeError, ValueError) as error:
+        raise ValueError(f"{label} must be an RFC3339 timestamp") from error
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError(f"{label} must include a timezone")
+    return parsed
 
 
 def _operation_slot(correction: dict) -> str:
@@ -69,6 +155,620 @@ def _validate_resolution_shape(status: str, target_ids: list[str], label: str) -
         raise ValueError(f"{label} ambiguous mention must have at least two targets")
 
 
+def _artifact_reference(reference: object, label: str) -> dict:
+    if not isinstance(reference, dict) or set(reference) != {
+        "path",
+        "sha256",
+        "git_blob_oid",
+    }:
+        raise ValueError(f"{label} must be one exact path/SHA/blob reference")
+    path = normalize_relative_path(reference["path"])
+    sha256_value = reference["sha256"]
+    blob = reference["git_blob_oid"]
+    if (
+        not isinstance(sha256_value, str)
+        or len(sha256_value) != 64
+        or any(character not in "0123456789abcdef" for character in sha256_value)
+        or not isinstance(blob, str)
+        or len(blob) not in {40, 64}
+        or any(character not in "0123456789abcdef" for character in blob)
+    ):
+        raise ValueError(f"{label} SHA/blob values are invalid")
+    return {"path": path, "sha256": sha256_value, "git_blob_oid": blob}
+
+
+def _working_head(repo: Path) -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "--verify", "HEAD^{commit}"],
+        cwd=repo,
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode:
+        raise ValueError(
+            "cannot resolve release-policy activation commit: "
+            + result.stderr.decode("utf-8", errors="replace").strip()
+        )
+    return resolve_commit(repo, result.stdout.decode("ascii").strip())
+
+
+def _require_release_bytes_committed(repo: Path, release_head: str) -> None:
+    """Bind the release-authenticated worktree to one exact Git commit."""
+    manifest_raw = (repo / RELEASE_MANIFEST_RELATIVE).read_bytes()
+    if read_bytes(repo, release_head, RELEASE_MANIFEST_RELATIVE) != manifest_raw:
+        raise ValueError("release manifest is not committed at the activation HEAD")
+    manifest = strict_json_object(manifest_raw, label="release manifest")
+    for relative in sorted(manifest["files"]):
+        working = (repo / relative).read_bytes()
+        if read_bytes(repo, release_head, relative) != working:
+            raise ValueError(
+                f"release-authenticated file is not committed at activation HEAD: {relative}"
+            )
+
+
+def _validate_policy_shape(policy: dict) -> dict:
+    if policy.get("schema_version") != CORRECTION_POLICY_VERSION:
+        raise ValueError("unsupported correction policy version")
+    trust = copy.deepcopy(policy.get("chain_trust"))
+    if not isinstance(trust, dict):
+        raise ValueError("correction policy lacks chain trust")
+    required = {
+        "status",
+        "chain_id",
+        "ledger_path",
+        "review_artifact_directory",
+        "genesis_commit",
+        "prior_head",
+        "registration",
+        "configuration_rule",
+        "current_effect",
+    }
+    if set(trust) != required:
+        raise ValueError("correction chain trust fields differ from the fixed contract")
+    if trust["status"] not in {"CONFIGURED", "NOT_CONFIGURED"}:
+        raise ValueError("correction chain trust status is invalid")
+    for field in ("chain_id", "configuration_rule", "current_effect"):
+        if not isinstance(trust[field], str) or not trust[field].strip():
+            raise ValueError(f"correction chain trust {field} must be nonempty")
+    trust["ledger_path"] = normalize_relative_path(trust["ledger_path"])
+    trust["review_artifact_directory"] = normalize_relative_path(
+        trust["review_artifact_directory"]
+    ).rstrip("/")
+    if not trust["review_artifact_directory"]:
+        raise ValueError("correction review artifact directory must be nonempty")
+    prior = trust["prior_head"]
+    if not isinstance(prior, dict) or set(prior) != {
+        "sequence",
+        "record_sha256",
+        "ledger_commit",
+        "ledger_sha256",
+        "ledger_git_blob_oid",
+    }:
+        raise ValueError("correction chain prior head is malformed")
+    if type(prior["sequence"]) is not int or prior["sequence"] < 0:
+        raise ValueError("correction chain prior sequence is invalid")
+    if trust["status"] == "NOT_CONFIGURED":
+        if trust["genesis_commit"] is not None or trust["registration"] is not None or any(
+            prior[field] is not None
+            for field in (
+                "record_sha256",
+                "ledger_commit",
+                "ledger_sha256",
+                "ledger_git_blob_oid",
+            )
+        ) or prior["sequence"] != 0:
+            raise ValueError("NOT_CONFIGURED correction chain cannot declare trusted roots")
+        raise ValueError(
+            "production correction sensitivity blocked: correction chain trust is NOT_CONFIGURED"
+        )
+    if not isinstance(trust["genesis_commit"], str):
+        raise ValueError("configured correction chain lacks a genesis commit")
+    registration = trust["registration"]
+    if not isinstance(registration, dict) or set(registration) != {
+        "commit",
+        "path",
+        "sha256",
+        "git_blob_oid",
+    }:
+        raise ValueError("configured correction chain lacks an exact registration artifact")
+    if not isinstance(registration["commit"], str):
+        raise ValueError("correction registration commit is invalid")
+    normalized_registration = _artifact_reference(
+        {key: registration[key] for key in ("path", "sha256", "git_blob_oid")},
+        "correction chain registration artifact",
+    )
+    trust["registration"] = {"commit": registration["commit"], **normalized_registration}
+    if prior["sequence"] == 0:
+        if any(
+            prior[field] is not None
+            for field in (
+                "record_sha256",
+                "ledger_commit",
+                "ledger_sha256",
+                "ledger_git_blob_oid",
+            )
+        ):
+            raise ValueError("zero correction head cannot bind a prior ledger")
+    elif any(
+        not isinstance(prior[field], str)
+        for field in (
+            "record_sha256",
+            "ledger_commit",
+            "ledger_sha256",
+            "ledger_git_blob_oid",
+        )
+    ):
+        raise ValueError("nonzero correction head must bind its exact prior ledger")
+    if prior["sequence"] > 0:
+        _artifact_reference(
+            {
+                "path": trust["ledger_path"],
+                "sha256": prior["ledger_sha256"],
+                "git_blob_oid": prior["ledger_git_blob_oid"],
+            },
+            "registered prior correction ledger",
+        )
+        if (
+            len(prior["record_sha256"]) != 64
+            or any(character not in "0123456789abcdef" for character in prior["record_sha256"])
+        ):
+            raise ValueError("registered prior correction record hash is invalid")
+    return trust
+
+
+def _load_registration(
+    repo: Path,
+    trust: dict,
+    ledger: dict,
+    prior_commit: str,
+) -> tuple[dict, str]:
+    reference = trust["registration"]
+    commit = resolve_commit(repo, reference["commit"])
+    raw, _ = read_authenticated_bytes(
+        repo,
+        commit,
+        reference["path"],
+        expected_sha256=reference["sha256"],
+        expected_blob_oid=reference["git_blob_oid"],
+    )
+    registration = strict_json_object(raw, label="correction chain registration")
+    if raw != canonical_json_bytes(registration) + b"\n":
+        raise ValueError("correction chain registration must be canonical JSON")
+    if set(registration) != {
+        "schema_version",
+        "chain_id",
+        "genesis_commit",
+        "prior_head",
+        "private_record_evidence_canonical_sha256",
+        "private_opportunity_source_canonical_sha256",
+        "registered_at_utc",
+    } or registration.get("schema_version") != CORRECTION_REGISTRATION_VERSION:
+        raise ValueError("correction chain registration shape/version is invalid")
+    _parse_time(registration["registered_at_utc"], "correction registered_at_utc")
+    if (
+        registration["chain_id"] != trust["chain_id"]
+        or registration["genesis_commit"] != trust["genesis_commit"]
+        or registration["prior_head"] != trust["prior_head"]
+        or registration["private_record_evidence_canonical_sha256"]
+        != ledger["private_record_evidence_canonical_sha256"]
+        or registration["private_opportunity_source_canonical_sha256"]
+        != ledger["private_opportunity_source_canonical_sha256"]
+    ):
+        raise ValueError("correction registration differs from chain/baseline bindings")
+    genesis = resolve_commit(repo, trust["genesis_commit"])
+    if not is_ancestor(repo, genesis, commit):
+        raise ValueError("correction registration is not descended from genesis")
+    if trust["prior_head"]["sequence"] > 0 and (
+        commit == prior_commit or not is_ancestor(repo, prior_commit, commit)
+    ):
+        raise ValueError("correction registration must postdate the registered prior head")
+    return registration, commit
+
+
+def _load_reviewer_trust(
+    repo: Path, schema_root: Path, *, allow_test_trust: bool
+) -> dict:
+    raw = (repo / TRUSTED_REVIEWERS_RELATIVE).read_bytes()
+    registry = strict_json_object(raw, label="trusted correction reviewer registry")
+    validate_reviewer_registry(
+        registry,
+        schema_path=schema_root / "trusted-reviewers.schema.json",
+        allow_test_registry=allow_test_trust,
+        require_configured=True,
+    )
+    return registry
+
+
+def _validate_evidence_source(raw: bytes, label: str) -> dict:
+    source = strict_json_object(raw, label=label)
+    if raw != canonical_json_bytes(source) + b"\n":
+        raise ValueError(f"{label} must be canonical JSON followed by one newline")
+    if set(source) != {
+        "schema_version",
+        "source_id",
+        "source_kind",
+        "originating_museum",
+        "acquired_at_utc",
+        "provenance",
+        "records",
+    } or source.get("schema_version") != CORRECTION_EVIDENCE_VERSION:
+        raise ValueError(f"{label} has an unsupported correction-evidence shape")
+    if not isinstance(source["source_id"], str) or not source["source_id"]:
+        raise ValueError(f"{label} source_id must be nonempty")
+    if not isinstance(source["source_kind"], str) or not source["source_kind"]:
+        raise ValueError(f"{label} source_kind must be nonempty")
+    if not isinstance(source["originating_museum"], bool):
+        raise ValueError(f"{label} originating_museum must be boolean")
+    _parse_time(source["acquired_at_utc"], f"{label} acquired_at_utc")
+    provenance = source["provenance"]
+    if not isinstance(provenance, dict) or set(provenance) != {
+        "source_locator",
+        "acquisition_method",
+        "producer_identity",
+    } or any(
+        not isinstance(provenance[field], str) or not provenance[field].strip()
+        for field in provenance
+    ):
+        raise ValueError(f"{label} provenance is incomplete")
+    records = source["records"]
+    if not isinstance(records, list) or not records:
+        raise ValueError(f"{label} records must be nonempty")
+    locators: list[str] = []
+    for record in records:
+        if not isinstance(record, dict) or set(record) != {
+            "locator",
+            "evidence_summary",
+            "artifact_ids",
+            "mention_ids",
+            "target_ids",
+        }:
+            raise ValueError(f"{label} contains a malformed evidence record")
+        for field in ("locator", "evidence_summary"):
+            if not isinstance(record[field], str) or not record[field].strip():
+                raise ValueError(f"{label} evidence {field} must be nonempty")
+        for field in ("artifact_ids", "mention_ids", "target_ids"):
+            values = record[field]
+            if (
+                not isinstance(values, list)
+                or values != sorted(set(values))
+                or any(not isinstance(value, str) or not value for value in values)
+            ):
+                raise ValueError(f"{label} evidence {field} must be sorted and unique")
+        locators.append(record["locator"])
+    if locators != sorted(set(locators)):
+        raise ValueError(f"{label} evidence records must have sorted unique locators")
+    return source
+
+
+def _citation_coverage(
+    repo: Path,
+    release_head: str,
+    decision_commit: str,
+    citations: list[dict],
+    correction: dict,
+) -> datetime:
+    covered_artifacts: set[str] = set()
+    covered_mentions: set[str] = set()
+    covered_targets: set[str] = set()
+    seen: set[tuple[str, str, str]] = set()
+    latest_acquisition: datetime | None = None
+    for citation in citations:
+        source_commit = resolve_commit(repo, citation["source_commit"])
+        if source_commit == decision_commit or not is_ancestor(
+            repo, source_commit, decision_commit
+        ):
+            raise ValueError(
+                "correction source commit must be a strict ancestor of its decision"
+            )
+        if not (
+            is_ancestor(repo, source_commit, release_head)
+            or is_ancestor(repo, release_head, source_commit)
+        ):
+            raise ValueError(
+                "correction source commit is not ancestry comparable with registration"
+            )
+        reference = _artifact_reference(
+            citation.get("source_artifact"), "correction citation source artifact"
+        )
+        key = (citation.get("source_id"), citation.get("locator"), reference["path"])
+        if key in seen:
+            raise ValueError("correction review contains a duplicate citation")
+        seen.add(key)
+        raw, _ = read_authenticated_bytes(
+            repo,
+            source_commit,
+            reference["path"],
+            expected_sha256=reference["sha256"],
+            expected_blob_oid=reference["git_blob_oid"],
+        )
+        source = _validate_evidence_source(raw, f"correction evidence {reference['path']}")
+        acquired_at = _parse_time(
+            source["acquired_at_utc"], f"correction evidence {reference['path']} acquired_at_utc"
+        )
+        latest_acquisition = (
+            acquired_at
+            if latest_acquisition is None
+            else max(latest_acquisition, acquired_at)
+        )
+        if (
+            citation.get("source_id") != source["source_id"]
+            or citation.get("source_kind") != source["source_kind"]
+            or citation.get("originating_museum") is not source["originating_museum"]
+        ):
+            raise ValueError("correction citation identity differs from exact evidence bytes")
+        record = next(
+            (
+                row
+                for row in source["records"]
+                if row["locator"] == citation.get("locator")
+                and row["evidence_summary"] == citation.get("evidence_summary")
+            ),
+            None,
+        )
+        if record is None:
+            raise ValueError(
+                "correction citation locator/summary is absent from exact evidence bytes"
+            )
+        covered_artifacts.update(record["artifact_ids"])
+        covered_mentions.update(record["mention_ids"])
+        covered_targets.update(record["target_ids"])
+    operation = correction["operation"]
+    required_targets = set(operation["from_target_ids"]) | set(
+        operation["to_target_ids"]
+    )
+    if correction["artifact_id"] not in covered_artifacts:
+        raise ValueError("correction citations do not cover the exact artifact")
+    if operation["mention_id"] not in covered_mentions:
+        raise ValueError("correction citations do not cover the exact mention")
+    if not required_targets <= covered_targets:
+        raise ValueError("correction citations do not cover every changed target")
+    assert latest_acquisition is not None
+    return latest_acquisition
+
+
+def _prior_ledger(
+    repo: Path,
+    schema_root: Path,
+    trust: dict,
+) -> tuple[list[dict], str]:
+    genesis = resolve_commit(repo, trust["genesis_commit"])
+    prior = trust["prior_head"]
+    if prior["sequence"] == 0:
+        return [], genesis
+    prior_commit = resolve_commit(repo, prior["ledger_commit"])
+    if prior_commit == genesis or not is_ancestor(repo, genesis, prior_commit):
+        raise ValueError("registered correction head is not a descendant of genesis")
+    raw, _ = read_authenticated_bytes(
+        repo,
+        prior_commit,
+        trust["ledger_path"],
+        expected_sha256=prior["ledger_sha256"],
+        expected_blob_oid=prior["ledger_git_blob_oid"],
+    )
+    ledger = strict_json_object(raw, label="registered prior correction ledger")
+    validate_schema(
+        ledger,
+        schema_root / "correction-ledger.schema.json",
+        "registered prior correction ledger",
+    )
+    corrections = ledger["corrections"]
+    if (
+        ledger["chain_id"] != trust["chain_id"]
+        or len(corrections) != prior["sequence"]
+        or corrections[-1]["record_sha256"] != prior["record_sha256"]
+    ):
+        raise ValueError("registered prior correction ledger head binding mismatch")
+    return corrections, prior_commit
+
+
+def authenticate_correction_ledger(
+    repo: Path,
+    evaluation_root: Path,
+    ledger_commit: str | None,
+    ledger_path: str | Path,
+    *,
+    allow_test_trust: bool = False,
+) -> dict:
+    """Authenticate one append-only correction extension and all review evidence."""
+    if ledger_commit is None:
+        raise ValueError("production correction sensitivity requires --correction-commit")
+    schema_root = evaluation_root / "schemas"
+    policy_raw = (evaluation_root / "correction-policy.json").read_bytes()
+    policy = strict_json_object(policy_raw, label="correction policy")
+    trust = _validate_policy_shape(policy)
+    release_integrity = None
+    if not allow_test_trust:
+        release_integrity = verify_release(repo)
+    release_head = _working_head(repo)
+    if not allow_test_trust:
+        _require_release_bytes_committed(repo, release_head)
+    if read_bytes(repo, release_head, CORRECTION_POLICY_RELATIVE) != policy_raw:
+        raise ValueError(
+            "working correction policy is not committed at the release activation HEAD"
+        )
+    normalized_ledger_path = normalize_relative_path(str(ledger_path))
+    if normalized_ledger_path != trust["ledger_path"]:
+        raise ValueError("correction ledger path differs from the registered chain path")
+    commit = resolve_commit(repo, ledger_commit)
+    raw = read_bytes(repo, commit, normalized_ledger_path)
+    ledger = strict_json_object(raw, label="correction ledger")
+    validate_schema(
+        ledger,
+        schema_root / "correction-ledger.schema.json",
+        "private correction ledger",
+    )
+    if ledger["schema_version"] != CORRECTION_SCHEMA_VERSION:
+        raise ValueError("unsupported correction ledger version")
+    if ledger["chain_id"] != trust["chain_id"]:
+        raise ValueError("correction ledger chain ID differs from registered trust root")
+
+    prior_rows, prior_commit = _prior_ledger(repo, schema_root, trust)
+    registration, registration_commit = _load_registration(
+        repo, trust, ledger, prior_commit
+    )
+    if registration_commit == release_head or not is_ancestor(
+        repo, registration_commit, release_head
+    ):
+        raise ValueError(
+            "release policy activation must strictly postdate chain registration"
+        )
+    if commit == release_head or not is_ancestor(repo, release_head, commit):
+        raise ValueError(
+            "correction ledger commit must descend from the registered release policy"
+        )
+    if ledger["corrections"][: len(prior_rows)] != prior_rows:
+        raise ValueError("correction ledger does not byte-for-byte extend its registered prefix")
+    new_rows = ledger["corrections"][len(prior_rows) :]
+    if not new_rows:
+        raise ValueError("correction ledger must append at least one new correction")
+
+    registry = _load_reviewer_trust(
+        repo, schema_root, allow_test_trust=allow_test_trust
+    )
+    review_usage = ArtifactUsageTracker()
+    prior_decision_commit = release_head
+    authenticated_corrections = []
+    for correction in new_rows:
+        decision_commit = resolve_commit(repo, correction["decision_commit"])
+        if not is_ancestor(repo, prior_decision_commit, decision_commit):
+            raise ValueError("correction decision commits are not ancestry ordered")
+        if decision_commit == release_head:
+            raise ValueError("new correction decision must postdate policy activation")
+        if decision_commit == commit or not is_ancestor(repo, decision_commit, commit):
+            raise ValueError("correction ledger must be committed after its signed decision")
+        prior_decision_commit = decision_commit
+
+        reviewer_ids = correction["reviewer_ids"]
+        if reviewer_ids != sorted(set(reviewer_ids)) or len(reviewer_ids) != 2:
+            raise ValueError("correction must name exactly two sorted reviewer IDs")
+        citations = correction["citations"]
+        if citations != sorted(
+            citations,
+            key=lambda row: (
+                row["source_id"],
+                row["locator"],
+                row["source_artifact"]["path"],
+            ),
+        ):
+            raise ValueError("correction citations must be canonically sorted")
+        subject = correction_review_subject(ledger, correction)
+        decision_key = f"{CORRECTION_DECISION_KIND}:{canonical_sha256(subject)}"
+        latest_evidence_acquisition = _citation_coverage(
+            repo, release_head, decision_commit, citations, correction
+        )
+        citation_commits = {
+            (
+                row["source_artifact"]["path"],
+                row["source_artifact"]["sha256"],
+                row["source_artifact"]["git_blob_oid"],
+            ): resolve_commit(repo, row["source_commit"])
+            for row in citations
+        }
+        authenticated_reviews = []
+        latest_signature_time: datetime | None = None
+        for reviewer_id in reviewer_ids:
+            path = correction_review_path(
+                trust["review_artifact_directory"],
+                trust["chain_id"],
+                correction["correction_id"],
+                reviewer_id,
+            )
+            review_raw = read_bytes(repo, decision_commit, path)
+            review = strict_json_object(
+                review_raw, label=f"correction review {path}"
+            )
+            if (
+                review.get("decision_kind") != CORRECTION_DECISION_KIND
+                or review.get("decision_key") != decision_key
+                or review.get("subject") != subject
+                or review.get("outcome") != "supported"
+                or review.get("method") != "human"
+                or review.get("citations") != citations
+                or review.get("reviewer", {}).get("reviewer_id") != reviewer_id
+            ):
+                raise ValueError("correction review is not bound to the exact supported decision")
+
+            def read_bound(reference: dict) -> bytes:
+                normalized = _artifact_reference(
+                    reference, "correction review dependency"
+                )
+                dependency_commit = citation_commits.get(
+                    (
+                        normalized["path"],
+                        normalized["sha256"],
+                        normalized["git_blob_oid"],
+                    ),
+                    decision_commit,
+                )
+                dependency, _ = read_authenticated_bytes(
+                    repo,
+                    dependency_commit,
+                    normalized["path"],
+                    expected_sha256=normalized["sha256"],
+                    expected_blob_oid=normalized["git_blob_oid"],
+                )
+                return dependency
+
+            signature_reference = review["authentication"]["signature"]
+            authenticated = authenticate_review_artifact(
+                review_raw,
+                registry=registry,
+                schema_root=schema_root,
+                signature_bytes=read_bound(signature_reference),
+                signature_reference=signature_reference,
+                read_artifact=read_bound,
+                usage=review_usage,
+                allow_test_registry=allow_test_trust,
+            )
+            review_started_at = _parse_time(
+                review["human_provenance"]["started_at_utc"],
+                "correction human review started_at_utc",
+            )
+            if review_started_at < _parse_time(
+                registration["registered_at_utc"],
+                "correction chain registered_at_utc",
+            ):
+                raise ValueError("correction review predates chain registration")
+            if review_started_at < latest_evidence_acquisition:
+                raise ValueError("correction review predates its cited evidence acquisition")
+            signed_at = _parse_time(
+                authenticated["signed_at_utc"], "correction review signed_at_utc"
+            )
+            latest_signature_time = (
+                signed_at
+                if latest_signature_time is None
+                else max(latest_signature_time, signed_at)
+            )
+            authenticated_reviews.append(authenticated)
+        require_distinct_registered_reviewers(authenticated_reviews)
+        if latest_signature_time is not None and _parse_time(
+            correction["recorded_at_utc"], "correction recorded_at_utc"
+        ) < latest_signature_time:
+            raise ValueError("correction record predates its authenticated reviews")
+        authenticated_corrections.append(
+            {
+                "correction_id": correction["correction_id"],
+                "decision_commit": decision_commit,
+                "reviewer_ids": reviewer_ids,
+            }
+        )
+    return {
+        "ledger": ledger,
+        "metadata": {
+            "commit": commit,
+            "path": normalized_ledger_path,
+            "sha256": hashlib.sha256(raw).hexdigest(),
+            "git_blob_oid": blob_oid(repo, commit, normalized_ledger_path),
+        },
+        "chain_id": trust["chain_id"],
+        "registration_commit": registration_commit,
+        "release_activation_commit": release_head,
+        "release_integrity": release_integrity,
+        "prior_head_sequence": len(prior_rows),
+        "authenticated_corrections": authenticated_corrections,
+    }
+
+
 def _validate_chain(
     ledger: dict,
     records_by_id: dict[str, dict],
@@ -78,6 +778,7 @@ def _validate_chain(
     seen_ids: set[str] = set()
     last_by_slot: dict[str, str] = {}
     previous_hash = None
+    previous_recorded_at: datetime | None = None
     for index, correction in enumerate(ledger["corrections"], 1):
         if correction["sequence"] != index:
             raise ValueError("correction sequences must be contiguous from one")
@@ -88,6 +789,11 @@ def _validate_chain(
             raise ValueError(f"correction {correction_id} hash chain mismatch")
         if correction["record_sha256"] != record_hash(correction):
             raise ValueError(f"correction {correction_id} record hash mismatch")
+        recorded_at = _parse_time(
+            correction["recorded_at_utc"], f"correction {correction_id} recorded_at_utc"
+        )
+        if previous_recorded_at is not None and recorded_at <= previous_recorded_at:
+            raise ValueError("correction timestamps must increase strictly with sequence")
         artifact_id = correction["artifact_id"]
         if artifact_id not in records_by_id:
             raise ValueError(f"correction {correction_id} references unknown artifact")
@@ -131,6 +837,7 @@ def _validate_chain(
         last_by_slot[slot] = correction_id
         seen_ids.add(correction_id)
         previous_hash = correction["record_sha256"]
+        previous_recorded_at = recorded_at
 
 
 def _index_source(
@@ -522,12 +1229,13 @@ def counterfactual_selection_changes(baseline: dict, corrected: dict) -> tuple[d
 def apply(
     repo_root: Path,
     private_run: Path,
-    ledger_path: Path,
+    ledger_path: str | Path,
     output: Path,
+    *,
+    ledger_commit: str | None = None,
 ) -> dict:
     repo_root = repo_root.resolve()
     private_run = private_run.resolve()
-    ledger_path = ledger_path.resolve()
     output = output.resolve()
     evaluation_root = repo_root / "docs/evaluations/site-graph-v0"
     if output.exists():
@@ -535,12 +1243,13 @@ def apply(
     if not output.parent.is_dir():
         raise ValueError(f"sensitivity output parent must exist: {output.parent}")
     verify_private_ledgers(private_run, evaluation_root)
-    ledger = read_json(ledger_path)
-    validate_schema(
-        ledger,
-        evaluation_root / "schemas/correction-ledger.schema.json",
-        "private correction ledger",
+    authentication = authenticate_correction_ledger(
+        repo_root,
+        evaluation_root,
+        ledger_commit,
+        ledger_path,
     )
+    ledger = authentication["ledger"]
     digest_registry = read_json(evaluation_root / "private-ledger-digests.json")
     expected_ledgers = digest_registry["ledgers"]
     if ledger["private_record_evidence_canonical_sha256"] != expected_ledgers[
@@ -674,11 +1383,26 @@ def apply(
             reselection_summary,
         )
         summary = {
-            "schema_version": "site-graph-v0-correction-sensitivity-summary/3",
+            "schema_version": "site-graph-v0-correction-sensitivity-summary/4",
             "primary_baseline_immutable": True,
             "frozen_intent_to_treat_membership_rewritten": False,
             "correction_count": len(ledger["corrections"]),
-            "private_correction_ledger_sha256": sha256(ledger_path),
+            "correction_chain_id": authentication["chain_id"],
+            "registered_prior_head_sequence": authentication[
+                "prior_head_sequence"
+            ],
+            "authenticated_correction_count": len(
+                authentication["authenticated_corrections"]
+            ),
+            "release_manifest_sha256": authentication["release_integrity"][
+                "manifest_sha256"
+            ],
+            "private_correction_ledger_commit": authentication["metadata"]["commit"],
+            "private_correction_ledger_path": authentication["metadata"]["path"],
+            "private_correction_ledger_sha256": authentication["metadata"]["sha256"],
+            "private_correction_ledger_git_blob_oid": authentication["metadata"][
+                "git_blob_oid"
+            ],
             "private_correction_ledger_canonical_sha256": canonical_json_sha256(ledger),
             "primary_private_record_evidence": gzip_ledger_digest(baseline_path),
             "primary_private_opportunity_source": gzip_ledger_digest(source_path),
@@ -712,12 +1436,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--private-run", type=Path, required=True)
-    parser.add_argument("--correction-ledger", type=Path, required=True)
+    parser.add_argument("--correction-commit", required=True)
+    parser.add_argument("--correction-ledger", required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     print(
         json.dumps(
-            apply(args.repo_root, args.private_run, args.correction_ledger, args.output),
+            apply(
+                args.repo_root,
+                args.private_run,
+                args.correction_ledger,
+                args.output,
+                ledger_commit=args.correction_commit,
+            ),
             indent=2,
             sort_keys=True,
         )

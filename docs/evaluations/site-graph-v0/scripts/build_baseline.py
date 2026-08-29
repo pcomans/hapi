@@ -667,7 +667,7 @@ def build_opportunity_queue(
     for rank, row in enumerate(selected, 1):
         artifact_ids = sorted(row["artifact_ids"])
         key = (row["museum"], row["normalized_expression_key"])
-        # Opaque rank identifiers avoid publishing a dictionary-testable hash of source text.
+        # Stable rank identifiers expose ordering only; they are not claimed unlinkable.
         opportunity_id = f"opp-{rank:04d}"
         selected_artifacts[row["museum"]].update(artifact_ids)
         artifact_memberships = [
@@ -697,12 +697,12 @@ def build_opportunity_queue(
             "unresolved_status_counts": dict(sorted(row["statuses"].items())),
             "mention_count": len(row["mention_ids"]),
             "artifact_count": len(artifact_ids),
-            "artifact_expansion_sha256": canonical_list_sha256(artifact_ids),
             "intent_to_treat": True,
         }
         private_queue_rows.append(
             {
                 **common,
+                "artifact_expansion_sha256": canonical_list_sha256(artifact_ids),
                 "normalized_expression_key": row["normalized_expression_key"],
                 "artifact_ids": artifact_ids,
                 "artifact_memberships": artifact_memberships,
@@ -843,9 +843,11 @@ def build_opportunity_queue(
     public_summary = {
         "schema_version": "site-graph-v0-opportunity-summary/2",
         "public_data_boundary": (
-            "Aggregate-only release: no artifact IDs, raw mention text, field paths, or "
-            "normalized expression text. Exact membership is regenerated privately and "
-            "authenticated by the committed digests."
+            "Aggregate-only release: no artifact IDs, per-group artifact-expansion "
+            "hashes, raw mention text, field paths, or normalized expression text. "
+            "Exact membership is regenerated privately and authenticated by the "
+            "committed whole-ledger digests. Stable ranks and counts are not claimed "
+            "opaque or unlinkable."
         ),
         "selection_algorithm": selection_algorithm,
         "minimum_affected_opportunity_fraction": {

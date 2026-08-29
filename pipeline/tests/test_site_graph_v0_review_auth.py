@@ -35,10 +35,9 @@ SUBJECT = {
     "opportunity_binding_sha256": "a" * 64,
 }
 DECISION_KEY = f"link_support:{review_auth.canonical_sha256(SUBJECT)}"
-CANDIDATE_IDS = ["candidate-real-42"]
-SOURCE_IDS = ["source-real-99"]
-ANSWER_STRINGS = [
-    "Secret Answer Site",
+PREFERRED_LABELS = ["Memphis", "Thebes"]
+ALIASES = ["Luxor", "Waset"]
+ANSWER_NAMES = [
     "distinct",
     "equivalent",
     "strict_refinement",
@@ -46,6 +45,8 @@ ANSWER_STRINGS = [
     "uncertain",
     "unsupported",
 ]
+IDENTIFIERS = ["candidate-real-42", "source-real-99"]
+LOCATORS = ["authority:memphis", "authority:thebes"]
 
 
 class ArtifactStore:
@@ -166,6 +167,69 @@ def _placeholder_reference(path: str) -> dict:
     return {"path": path, "sha256": "0" * 64, "git_blob_oid": "0" * 40}
 
 
+def _request_parts(
+    *,
+    review_invocation_id: str,
+    decision_key: str = DECISION_KEY,
+    decision_kind: str = "link_support",
+    subject: dict = SUBJECT,
+    task_instructions: str = (
+        "Assess the evidence attached to the opaque items and provide a reasoned assessment."
+    ),
+    payloads: list[dict] | None = None,
+) -> dict:
+    if payloads is None:
+        payloads = [
+            {"description": "Neutral evidence alpha."},
+            {"description": "Neutral evidence beta."},
+            {"description": "Neutral evidence gamma."},
+        ]
+    input_value, provenance = review_auth.build_structured_input_envelope(
+        payloads,
+        review_invocation_id=review_invocation_id,
+        decision_key=decision_key,
+        decision_kind=decision_kind,
+        subject=subject,
+    )
+    input_raw = review_auth.canonical_json_bytes(input_value) + b"\n"
+    prompt_value = review_auth.build_structured_prompt_envelope(
+        review_invocation_id=review_invocation_id,
+        input_envelope_bytes=input_raw,
+        task_instructions=task_instructions,
+    )
+    return {
+        "prompt_value": prompt_value,
+        "prompt_raw": review_auth.canonical_json_bytes(prompt_value) + b"\n",
+        "input_value": input_value,
+        "input_raw": input_raw,
+        "shuffle_provenance": provenance,
+    }
+
+
+def _guard_for_request(
+    request: dict,
+    *,
+    review_invocation_id: str,
+    decision_key: str = DECISION_KEY,
+    decision_kind: str = "link_support",
+    subject: dict = SUBJECT,
+) -> dict:
+    return review_auth.deterministic_guard_record(
+        request["prompt_raw"],
+        request["input_raw"],
+        shuffle_provenance=request["shuffle_provenance"],
+        review_invocation_id=review_invocation_id,
+        decision_key=decision_key,
+        decision_kind=decision_kind,
+        subject=subject,
+        preferred_labels=PREFERRED_LABELS,
+        aliases=ALIASES,
+        answer_names=ANSWER_NAMES,
+        identifiers=IDENTIFIERS,
+        locators=LOCATORS,
+    )
+
+
 def _sign(
     value: dict,
     *,
@@ -212,34 +276,62 @@ def _build_audit(
     subject: dict = SUBJECT,
     prompt_reference: dict | None = None,
     input_reference: dict | None = None,
-    prompt_bytes: bytes = b"Judge only opaque labels. Examples use invented labels.\n",
-    input_bytes: bytes = b"A: neutral description one\nB: neutral description two\n",
+    prompt_bytes: bytes | None = None,
+    input_bytes: bytes | None = None,
+    shuffle_provenance: dict | None = None,
+    task_instructions: str = (
+        "Assess the evidence attached to the opaque items and provide a reasoned assessment."
+    ),
+    payloads: list[dict] | None = None,
     guard: dict | None = None,
     signed_at_utc: str = "2026-08-28T00:02:00Z",
 ) -> dict:
     store = case["store"]
+    actual_review_id = review_id or f"review-{suffix}"
+    actual_invocation_id = review_invocation_id or f"invocation-{suffix}"
+    if prompt_bytes is None or input_bytes is None or shuffle_provenance is None:
+        if prompt_bytes is not None or input_bytes is not None or shuffle_provenance is not None:
+            raise AssertionError("custom request parts must be supplied together")
+        request = _request_parts(
+            review_invocation_id=actual_invocation_id,
+            decision_key=decision_key,
+            subject=subject,
+            task_instructions=task_instructions,
+            payloads=payloads,
+        )
+        prompt_bytes = request["prompt_raw"]
+        input_bytes = request["input_raw"]
+        shuffle_provenance = request["shuffle_provenance"]
     if prompt_reference is None:
-        prompt_reference = store.add(f"frozen/prompt-{suffix}.txt", prompt_bytes)
+        prompt_reference = store.add(f"frozen/prompt-{suffix}.json", prompt_bytes)
     if input_reference is None:
-        input_reference = store.add(f"frozen/input-{suffix}.txt", input_bytes)
+        input_reference = store.add(f"frozen/input-{suffix}.json", input_bytes)
     if guard is None:
         guard = review_auth.deterministic_guard_record(
             store.read(prompt_reference),
             store.read(input_reference),
-            candidate_ids=CANDIDATE_IDS,
-            source_ids=SOURCE_IDS,
-            answer_strings=ANSWER_STRINGS,
+            shuffle_provenance=shuffle_provenance,
+            review_invocation_id=actual_invocation_id,
+            decision_key=decision_key,
+            decision_kind="link_support",
+            subject=subject,
+            preferred_labels=PREFERRED_LABELS,
+            aliases=ALIASES,
+            answer_names=ANSWER_NAMES,
+            identifiers=IDENTIFIERS,
+            locators=LOCATORS,
         )
     value = {
         "schema_version": review_auth.AUDIT_SCHEMA_VERSION,
         "audit_id": f"audit-{suffix}",
-        "review_id": review_id or f"review-{suffix}",
-        "review_invocation_id": review_invocation_id or f"invocation-{suffix}",
+        "review_id": actual_review_id,
+        "review_invocation_id": actual_invocation_id,
         "decision_key": decision_key,
         "decision_kind": "link_support",
         "subject": subject,
         "prompt": prompt_reference,
         "input": input_reference,
+        "shuffle_provenance": shuffle_provenance,
         "audit_method": review_auth.AUDIT_METHOD,
         "auditor": {
             "auditor_id": auditor_id,
@@ -269,6 +361,7 @@ def _build_audit(
         "artifact_reference": artifact_reference,
         "prompt_reference": prompt_reference,
         "input_reference": input_reference,
+        "shuffle_provenance": shuffle_provenance,
     }
 
 
@@ -286,9 +379,11 @@ def _authenticate_audit(
         signature_bytes=audit["signature"],
         signature_reference=audit["signature_reference"],
         read_artifact=case["store"].read,
-        candidate_ids=CANDIDATE_IDS,
-        source_ids=SOURCE_IDS,
-        answer_strings=ANSWER_STRINGS,
+        preferred_labels=PREFERRED_LABELS,
+        aliases=ALIASES,
+        answer_names=ANSWER_NAMES,
+        identifiers=IDENTIFIERS,
+        locators=LOCATORS,
         invocation_started_at_utc=invocation_started_at_utc,
         usage=usage,
         allow_test_registry=True,
@@ -586,23 +681,23 @@ def test_exact_source_and_raw_response_byte_hashes_are_enforced(auth_case: dict)
 
 
 def test_signed_pass_claim_cannot_hide_leak_in_example(auth_case: dict) -> None:
-    safe_prompt = b"Judge opaque labels only.\n"
-    safe_input = b"A and B contain neutral descriptions.\n"
-    forged_guard = review_auth.deterministic_guard_record(
-        safe_prompt,
-        safe_input,
-        candidate_ids=CANDIDATE_IDS,
-        source_ids=SOURCE_IDS,
-        answer_strings=ANSWER_STRINGS,
+    invocation_id = "invocation-leaked"
+    safe = _request_parts(review_invocation_id=invocation_id)
+    forged_guard = _guard_for_request(
+        safe, review_invocation_id=invocation_id
     )
-    leaked_prompt = (
-        b"Judge opaque labels. Example: candidate-real-42 means Secret Answer Site.\n"
+    leaked = _request_parts(
+        review_invocation_id=invocation_id,
+        task_instructions=(
+            "Use this example mapping: candidate-real-42 denotes Memphis."
+        ),
     )
     audit = _build_audit(
         auth_case,
         suffix="leaked",
-        prompt_bytes=leaked_prompt,
-        input_bytes=safe_input,
+        prompt_bytes=leaked["prompt_raw"],
+        input_bytes=leaked["input_raw"],
+        shuffle_provenance=leaked["shuffle_provenance"],
         guard=forged_guard,
     )
     with pytest.raises(review_auth.ReviewAuthenticationError, match="prompt leakage detected"):
@@ -610,20 +705,21 @@ def test_signed_pass_claim_cannot_hide_leak_in_example(auth_case: dict) -> None:
 
 
 def test_signed_pass_claim_cannot_hide_outcome_token_leak(auth_case: dict) -> None:
-    leaked_prompt = b"Example answer: the correct outcome is supported.\n"
-    safe_input = b"Opaque candidate A and authority B.\n"
-    forged_guard = review_auth.deterministic_guard_record(
-        b"Judge opaque labels without an answer.\n",
-        safe_input,
-        candidate_ids=CANDIDATE_IDS,
-        source_ids=SOURCE_IDS,
-        answer_strings=ANSWER_STRINGS,
+    invocation_id = "invocation-leaked-outcome"
+    safe = _request_parts(review_invocation_id=invocation_id)
+    forged_guard = _guard_for_request(
+        safe, review_invocation_id=invocation_id
+    )
+    leaked = _request_parts(
+        review_invocation_id=invocation_id,
+        task_instructions="The outcome name for this request is supported.",
     )
     audit = _build_audit(
         auth_case,
         suffix="leaked-outcome",
-        prompt_bytes=leaked_prompt,
-        input_bytes=safe_input,
+        prompt_bytes=leaked["prompt_raw"],
+        input_bytes=leaked["input_raw"],
+        shuffle_provenance=leaked["shuffle_provenance"],
         guard=forged_guard,
     )
     with pytest.raises(
@@ -632,22 +728,204 @@ def test_signed_pass_claim_cannot_hide_outcome_token_leak(auth_case: dict) -> No
         _authenticate_audit(auth_case, audit, review_auth.ArtifactUsageTracker())
 
 
-def test_guard_scans_source_ids_in_invocation_input_with_separator_normalization() -> None:
+def test_signed_exact_yes_approve_prompt_is_rejected(auth_case: dict) -> None:
+    invocation_id = "invocation-exact-proxy"
+    safe = _request_parts(review_invocation_id=invocation_id)
+    leaked = _request_parts(
+        review_invocation_id=invocation_id,
+        task_instructions="correct verdict is YES; approve",
+    )
+    audit = _build_audit(
+        auth_case,
+        suffix="exact-proxy",
+        prompt_bytes=leaked["prompt_raw"],
+        input_bytes=leaked["input_raw"],
+        shuffle_provenance=leaked["shuffle_provenance"],
+        guard=_guard_for_request(safe, review_invocation_id=invocation_id),
+    )
+    with pytest.raises(review_auth.ReviewAuthenticationError, match="prompt leakage detected"):
+        _authenticate_audit(auth_case, audit, review_auth.ArtifactUsageTracker())
+
+
+def test_signed_memphis_thebes_and_order_leakage_is_rejected(auth_case: dict) -> None:
+    invocation_id = "invocation-place-leak"
+    safe = _request_parts(review_invocation_id=invocation_id)
+    leaked = _request_parts(
+        review_invocation_id=invocation_id,
+        payloads=[
+            {"description": "Memphis is the first item."},
+            {"description": "Thebes is the second item."},
+            {"description": "Neutral decoy evidence."},
+        ],
+    )
+    audit = _build_audit(
+        auth_case,
+        suffix="place-order-leak",
+        review_invocation_id=invocation_id,
+        prompt_bytes=leaked["prompt_raw"],
+        input_bytes=leaked["input_raw"],
+        shuffle_provenance=leaked["shuffle_provenance"],
+        guard=_guard_for_request(safe, review_invocation_id=invocation_id),
+    )
+    with pytest.raises(review_auth.ReviewAuthenticationError, match="prompt leakage detected"):
+        _authenticate_audit(auth_case, audit, review_auth.ArtifactUsageTracker())
+
+
+def test_request_envelope_proves_nonidentity_order_and_opaque_labels() -> None:
+    request = _request_parts(review_invocation_id="invocation-permutation-proof")
+    provenance = request["shuffle_provenance"]
+    assert (
+        provenance["presented_order_payload_sha256"]
+        != provenance["source_order_payload_sha256"]
+    )
+    labels = [row["opaque_label"] for row in request["input_value"]["items"]]
+    assert len(labels) == len(set(labels)) == 3
+    assert all(review_auth.OPAQUE_LABEL_PATTERN.fullmatch(label) for label in labels)
+    guard = _guard_for_request(
+        request, review_invocation_id="invocation-permutation-proof"
+    )
+    assert guard["request_envelope"]["shuffle_algorithm"] == review_auth.SHUFFLE_ALGORITHM
+    assert guard["request_envelope"]["item_count"] == 3
+    reversed_source = _request_parts(
+        review_invocation_id="invocation-permutation-proof",
+        payloads=[
+            {"description": "Neutral evidence gamma."},
+            {"description": "Neutral evidence beta."},
+            {"description": "Neutral evidence alpha."},
+        ],
+    )
+    assert reversed_source["input_raw"] == request["input_raw"]
+    assert reversed_source["shuffle_provenance"] == provenance
+    other_invocation = _request_parts(
+        review_invocation_id="invocation-permutation-proof-other"
+    )
+    assert other_invocation["shuffle_provenance"] == provenance
+    assert other_invocation["input_raw"] != request["input_raw"]
+
+
+@pytest.mark.parametrize("tamper", ["label", "order", "provenance"])
+def test_signed_structured_request_rejects_unproven_labels_or_order(
+    auth_case: dict, tamper: str
+) -> None:
+    invocation_id = f"invocation-tamper-{'permutation' if tamper == 'order' else tamper}"
+    safe = _request_parts(review_invocation_id=invocation_id)
+    leaked = copy.deepcopy(safe)
+    if tamper == "label":
+        leaked["input_value"]["items"][0]["opaque_label"] = "item-" + "0" * 24
+    elif tamper == "order":
+        leaked["input_value"]["items"][0], leaked["input_value"]["items"][1] = (
+            leaked["input_value"]["items"][1],
+            leaked["input_value"]["items"][0],
+        )
+    else:
+        leaked["shuffle_provenance"]["presented_order_payload_sha256"].reverse()
+        leaked["input_value"]["shuffle_provenance_sha256"] = review_auth.canonical_sha256(
+            leaked["shuffle_provenance"]
+        )
+    leaked["input_raw"] = review_auth.canonical_json_bytes(leaked["input_value"]) + b"\n"
+    leaked["prompt_value"] = review_auth.build_structured_prompt_envelope(
+        review_invocation_id=invocation_id,
+        input_envelope_bytes=leaked["input_raw"],
+        task_instructions=(
+            "Assess the evidence attached to the opaque items and provide a reasoned assessment."
+        ),
+    )
+    leaked["prompt_raw"] = review_auth.canonical_json_bytes(leaked["prompt_value"]) + b"\n"
+    audit = _build_audit(
+        auth_case,
+        suffix=f"tamper-{tamper}",
+        review_invocation_id=invocation_id,
+        prompt_bytes=leaked["prompt_raw"],
+        input_bytes=leaked["input_raw"],
+        shuffle_provenance=leaked["shuffle_provenance"],
+        guard=_guard_for_request(safe, review_invocation_id=invocation_id),
+    )
+    with pytest.raises(
+        review_auth.ReviewAuthenticationError,
+        match="opaque label|presentation order|proven shuffle",
+    ):
+        _authenticate_audit(auth_case, audit, review_auth.ArtifactUsageTracker())
+
+
+def test_guard_scans_identifiers_in_input_with_separator_normalization() -> None:
     findings = review_auth.deterministic_leakage_findings(
         b"Judge the opaque candidates.\n",
         b"Hidden metadata: SOURCE_REAL_99\n",
-        candidate_ids=CANDIDATE_IDS,
-        source_ids=SOURCE_IDS,
-        answer_strings=ANSWER_STRINGS,
+        preferred_labels=PREFERRED_LABELS,
+        aliases=ALIASES,
+        answer_names=ANSWER_NAMES,
+        identifiers=IDENTIFIERS,
+        locators=LOCATORS,
     )
     assert findings == [
         {
             "location": "input",
-            "category": "source_id",
-            "value_sha256": hashlib.sha256(SOURCE_IDS[0].encode()).hexdigest(),
+            "category": "identifier",
+            "value_sha256": hashlib.sha256(IDENTIFIERS[1].encode()).hexdigest(),
             "match_kind": "separator_insensitive",
         }
     ]
+
+
+@pytest.mark.parametrize(
+    ("text", "category"),
+    [
+        ("Mem-phis", "preferred_label"),
+        ("WA SET", "alias"),
+        ("strict-refinement", "answer_name"),
+        ("candidate_real_42", "identifier"),
+        ("authority_thebes", "locator"),
+        ("Y E S", "decision_proxy"),
+        ("first-item", "decision_proxy"),
+    ],
+)
+def test_guard_covers_every_forbidden_semantic_category(
+    text: str, category: str
+) -> None:
+    findings = review_auth.deterministic_leakage_findings(
+        b"Neutral mechanics instruction.\n",
+        text.encode("utf-8"),
+        preferred_labels=PREFERRED_LABELS,
+        aliases=ALIASES,
+        answer_names=ANSWER_NAMES,
+        identifiers=IDENTIFIERS,
+        locators=LOCATORS,
+    )
+    assert category in {finding["category"] for finding in findings}
+
+
+def test_short_numeric_locator_ignores_fixed_version_but_not_payload() -> None:
+    invocation_id = "invocation-numeric-locator"
+    safe = _request_parts(review_invocation_id=invocation_id)
+    kwargs = {
+        "shuffle_provenance": safe["shuffle_provenance"],
+        "review_invocation_id": invocation_id,
+        "decision_key": DECISION_KEY,
+        "decision_kind": "link_support",
+        "subject": SUBJECT,
+        "preferred_labels": PREFERRED_LABELS,
+        "aliases": ALIASES,
+        "answer_names": ANSWER_NAMES,
+        "identifiers": IDENTIFIERS,
+        "locators": ["1"],
+    }
+    assert review_auth.deterministic_guard_record(
+        safe["prompt_raw"], safe["input_raw"], **kwargs
+    )["result"] == "PASS"
+
+    leaked = _request_parts(
+        review_invocation_id=invocation_id,
+        payloads=[
+            {"description": "1"},
+            {"description": "Neutral evidence beta."},
+            {"description": "Neutral evidence gamma."},
+        ],
+    )
+    kwargs["shuffle_provenance"] = leaked["shuffle_provenance"]
+    with pytest.raises(review_auth.ReviewAuthenticationError, match="prompt leakage"):
+        review_auth.deterministic_guard_record(
+            leaked["prompt_raw"], leaked["input_raw"], **kwargs
+        )
 
 
 def test_legacy_opaque_pass_boolean_is_rejected_by_schema(auth_case: dict) -> None:
@@ -689,15 +967,17 @@ def test_prompt_or_input_reuse_across_invocations_is_rejected(auth_case: dict) -
     usage = review_auth.ArtifactUsageTracker()
     first = _build_audit(auth_case, suffix="reuse-a", auditor_id="auditor-a")
     _authenticate_audit(auth_case, first, usage)
-    second = _build_audit(
-        auth_case,
-        suffix="reuse-b",
-        auditor_id="auditor-b",
-        prompt_reference=first["prompt_reference"],
-        input_reference=first["input_reference"],
-    )
-    with pytest.raises(review_auth.ReviewAuthenticationError, match="reused across reviews"):
-        _authenticate_audit(auth_case, second, usage)
+    with pytest.raises(
+        review_auth.ReviewAuthenticationError,
+        match="review_invocation_id mismatch",
+    ):
+        _build_audit(
+            auth_case,
+            suffix="reuse-b",
+            auditor_id="auditor-b",
+            prompt_reference=first["prompt_reference"],
+            input_reference=first["input_reference"],
+        )
 
 
 def test_invocation_and_review_ids_cannot_be_reused_across_decisions(
@@ -715,8 +995,6 @@ def test_invocation_and_review_ids_cannot_be_reused_across_decisions(
         review_invocation_id=first["value"]["review_invocation_id"],
         decision_key="different-decision-key",
         subject=second_subject,
-        prompt_reference=first["prompt_reference"],
-        input_reference=first["input_reference"],
     )
     with pytest.raises(
         review_auth.ReviewAuthenticationError,
@@ -729,14 +1007,13 @@ def test_one_file_cannot_serve_as_both_prompt_and_input(auth_case: dict) -> None
     shared = auth_case["store"].add(
         "frozen/shared-request-part.txt", b"Neutral opaque request bytes.\n"
     )
-    audit = _build_audit(
-        auth_case,
-        suffix="same-role-bytes",
-        prompt_reference=shared,
-        input_reference=shared,
-    )
-    with pytest.raises(review_auth.ReviewAuthenticationError, match="reused"):
-        _authenticate_audit(auth_case, audit, review_auth.ArtifactUsageTracker())
+    with pytest.raises(review_auth.ReviewAuthenticationError, match="not JSON"):
+        _build_audit(
+            auth_case,
+            suffix="same-role-bytes",
+            prompt_reference=shared,
+            input_reference=shared,
+        )
 
 
 def test_review_requires_exact_canonical_artifact_bytes(auth_case: dict) -> None:

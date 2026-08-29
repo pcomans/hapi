@@ -149,6 +149,53 @@ def _add_second_frozen_binding(case: dict, artifact_id: str) -> dict:
                             value["opportunity_binding_sha256"],
                         )
                     )
+    museum = next(
+        name
+        for name, rows in case["private_opportunity"][
+            "intent_to_treat_records_by_museum"
+        ].items()
+        if any(row["artifact_id"] == artifact_id for row in rows)
+    )
+    case["private_opportunity"]["opportunities"].append(
+        {
+            "opportunity_id": extra["opportunity_id"],
+            "selection_rank": 9999,
+            "selection_reason": "logic_only_second_binding",
+            "museum": museum,
+            "unresolved_status_counts": {"unmatched": 1},
+            "mention_count": 1,
+            "artifact_count": 1,
+            "intent_to_treat": True,
+            "artifact_expansion_sha256": contract.canonical_sha256([artifact_id]),
+            "artifact_memberships": [
+                {
+                    "artifact_id": artifact_id,
+                    "opportunity_binding_sha256": extra[
+                        "opportunity_binding_sha256"
+                    ],
+                    "mentions": [
+                        {
+                            "mention_id": f"mention-{artifact_id}-second",
+                            "field_path": "sites[1]",
+                            "status": "unmatched",
+                            "target_ids": [],
+                            "normalized_keys": [extra["opportunity_id"]],
+                        }
+                    ],
+                }
+            ],
+        }
+    )
+    case["private_opportunity"]["opportunities"].sort(
+        key=lambda value: value["selection_rank"]
+    )
+    baseline_record = next(
+        row for row in case["baseline"] if row["artifact_id"] == artifact_id
+    )
+    baseline_record["site_mention_count"] += 1
+    baseline_record["site_mention_status_counts"]["unmatched"] = (
+        baseline_record["site_mention_status_counts"].get("unmatched", 0) + 1
+    )
     record = next(
         row for row in case["candidate"]["records"] if row["artifact_id"] == artifact_id
     )

@@ -67,16 +67,18 @@
                 "https://example.invalid/authority#record-1"
               ],
               "authority_identity_locator": "https://example.invalid/authority#record-1",
+              "aliases": [],
               "child_ids": [],
               "parent_ids": [],
               "raw_source_types": [
                 "settlement"
               ],
               "source_record_id": "record-1",
-              "target_id": "target-1"
+              "target_id": "target-1",
+              "preferred_label": "Fixture target one"
             }
           ],
-          "schema_version": "site-graph-v0-authority-source-export/1",
+          "schema_version": "site-graph-v0-authority-source-export/2",
           "source_export_id": "fixture-export",
           "originating_museum": false,
           "source_kind": "scholarly authority"
@@ -104,16 +106,18 @@
               "https://example.invalid/authority#record-1"
             ],
             "authority_identity_locator": "https://example.invalid/authority#record-1",
+            "aliases": [],
             "child_ids": [],
             "parent_ids": [],
             "raw_source_types": [
               "settlement"
             ],
             "source_record_id": "record-1",
-            "target_id": "target-1"
+            "target_id": "target-1",
+            "preferred_label": "Fixture target one"
           }
         ],
-        "schema_version": "site-graph-v0-authority-source-export/1",
+        "schema_version": "site-graph-v0-authority-source-export/2",
         "source_export_id": "fixture-export",
         "originating_museum": false,
         "source_kind": "scholarly authority"
@@ -194,7 +198,7 @@
               "media_type": "application/json",
               "path": "fixture/source-export.json",
               "role": "authority_source_export",
-              "schema_version": "site-graph-v0-authority-source-export/1",
+              "schema_version": "site-graph-v0-authority-source-export/2",
               "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "source_export_group_id": "fixture-export"
             },
@@ -275,7 +279,7 @@
             "media_type": "application/json",
             "path": "fixture/source-export.json",
             "role": "authority_source_export",
-            "schema_version": "site-graph-v0-authority-source-export/1",
+            "schema_version": "site-graph-v0-authority-source-export/2",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "source_export_group_id": "fixture-export"
           },
@@ -399,6 +403,8 @@
           "records": [
             {
               "artifact_id": "met:1",
+              "final_supported_direct_target_ids": ["target-1"],
+              "removed_baseline_target_ids": [],
               "opportunity_outcomes": [
                 {
                   "abstention_reason": null,
@@ -408,10 +414,10 @@
                       "target_id": "target-1"
                     }
                   ],
-                  "has_blocking_ambiguity": false,
                   "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                   "opportunity_id": "opp-0001",
-                  "resolution_status": "linked"
+                  "resolution_status": "linked",
+                  "uncredited_link_claims": []
                 }
               ]
             }
@@ -432,7 +438,7 @@
             "path": "fixture/run-start.sig",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
-          "schema_version": "site-graph-v0-candidate-result/4"
+          "schema_version": "site-graph-v0-candidate-result/5"
         }
       ],
       "valid": {
@@ -447,6 +453,8 @@
         "records": [
           {
             "artifact_id": "met:1",
+            "final_supported_direct_target_ids": ["target-1"],
+            "removed_baseline_target_ids": [],
             "opportunity_outcomes": [
               {
                 "abstention_reason": null,
@@ -456,10 +464,10 @@
                     "target_id": "target-1"
                   }
                 ],
-                "has_blocking_ambiguity": false,
                 "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 "opportunity_id": "opp-0001",
-                "resolution_status": "linked"
+                "resolution_status": "linked",
+                "uncredited_link_claims": []
               }
             ]
           }
@@ -480,12 +488,35 @@
           "path": "fixture/run-start.sig",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
-        "schema_version": "site-graph-v0-candidate-result/4"
+        "schema_version": "site-graph-v0-candidate-result/5"
       }
     },
     "comparison-report.schema.json": {
       "invalid": [
         {},
+        {
+          "ambiguity_and_abstention": {},
+          "event_counts": {},
+          "event_records": [],
+          "integrity": {"errors": [], "passed": true},
+          "ordered_decision_trace": [{}],
+          "outcome": "CONTINUE",
+          "pairs": {},
+          "per_museum": {},
+          "post_candidate_metrics": {},
+          "provenance_status": {
+            "archive_sha256": "fixture",
+            "downstream_product_verdict": "CONTINUE",
+            "evidence_scope": "AUTHENTICATED_RELEASE_SNAPSHOT",
+            "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+            "snapshot_acquisition_integrity": "PASS",
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
+          },
+          "reassignment_edge_modes": {},
+          "run_binding": {},
+          "safety_gates": {},
+          "schema_version": "site-graph-v0-comparison-report/3"
+        },
         {
           "__undeclared_contract_field__": true,
           "ambiguity_and_abstention": {},
@@ -501,6 +532,7 @@
           "outcome": "INVALID",
           "pairs": {},
           "per_museum": {},
+          "post_candidate_metrics": {},
           "provenance_status": {
             "archive_sha256": "value-comparison-report-schema-provenance_status-archive_sha256-0",
             "downstream_product_verdict": "CONTINUE",
@@ -512,7 +544,7 @@
           "reassignment_edge_modes": {},
           "run_binding": {},
           "safety_gates": {},
-          "schema_version": "site-graph-v0-comparison-report/2"
+          "schema_version": "site-graph-v0-comparison-report/3"
         }
       ],
       "valid": {
@@ -529,6 +561,7 @@
         "outcome": "INVALID",
         "pairs": {},
         "per_museum": {},
+        "post_candidate_metrics": {},
         "provenance_status": {
           "archive_sha256": "value-comparison-report-schema-provenance_status-archive_sha256-0",
           "downstream_product_verdict": "CONTINUE",
@@ -540,7 +573,7 @@
         "reassignment_edge_modes": {},
         "run_binding": {},
         "safety_gates": {},
-        "schema_version": "site-graph-v0-comparison-report/2"
+        "schema_version": "site-graph-v0-comparison-report/3"
       }
     },
     "correction-ledger.schema.json": {
@@ -549,6 +582,7 @@
         {
           "__undeclared_contract_field__": true,
           "baseline_mutated": false,
+          "chain_id": "fixture-correction-chain",
           "corrections": [
             {
               "artifact_id": "value-correction-ledger-schema-corrections[0]-artifact_id-0",
@@ -556,7 +590,15 @@
                 {
                   "evidence_summary": "value-correction-ledger-schema-corrections[0]-citations[0]-evidence_summary-0",
                   "locator": "value-correction-ledger-schema-corrections[0]-citations[0]-locator-0",
-                  "source_id": "value-correction-ledger-schema-corrections[0]-citations[0]-source_id-0"
+                  "originating_museum": false,
+                  "source_artifact": {
+                    "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                    "path": "private/correction-evidence/source-0.json",
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  },
+                  "source_commit": "cccccccccccccccccccccccccccccccccccccccc",
+                  "source_id": "value-correction-ledger-schema-corrections[0]-citations[0]-source_id-0",
+                  "source_kind": "authenticated-correction-source"
                 }
               ],
               "correction_id": "value-correction-ledger-schema-corrections[0]-correction_id-0",
@@ -583,11 +625,12 @@
           ],
           "private_opportunity_source_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "private_record_evidence_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "schema_version": "site-graph-v0-correction-ledger/3"
+          "schema_version": "site-graph-v0-correction-ledger/4"
         }
       ],
       "valid": {
         "baseline_mutated": false,
+        "chain_id": "fixture-correction-chain",
         "corrections": [
           {
             "artifact_id": "value-correction-ledger-schema-corrections[0]-artifact_id-0",
@@ -595,7 +638,15 @@
               {
                 "evidence_summary": "value-correction-ledger-schema-corrections[0]-citations[0]-evidence_summary-0",
                 "locator": "value-correction-ledger-schema-corrections[0]-citations[0]-locator-0",
-                "source_id": "value-correction-ledger-schema-corrections[0]-citations[0]-source_id-0"
+                "originating_museum": false,
+                "source_artifact": {
+                  "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                  "path": "private/correction-evidence/source-0.json",
+                  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                },
+                "source_commit": "cccccccccccccccccccccccccccccccccccccccc",
+                "source_id": "value-correction-ledger-schema-corrections[0]-citations[0]-source_id-0",
+                "source_kind": "authenticated-correction-source"
               }
             ],
             "correction_id": "value-correction-ledger-schema-corrections[0]-correction_id-0",
@@ -622,7 +673,7 @@
         ],
         "private_opportunity_source_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "private_record_evidence_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "schema_version": "site-graph-v0-correction-ledger/3"
+        "schema_version": "site-graph-v0-correction-ledger/4"
       }
     },
     "opportunity-summary.schema.json": {
@@ -639,7 +690,6 @@
           "opportunities": [
             {
               "artifact_count": 1,
-              "artifact_expansion_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
               "intent_to_treat": true,
               "mention_count": 1,
               "museum": "met",
@@ -683,7 +733,6 @@
         "opportunities": [
           {
             "artifact_count": 1,
-            "artifact_expansion_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "intent_to_treat": true,
             "mention_count": 1,
             "museum": "met",
@@ -921,7 +970,7 @@
       ],
       "valid": {
         "audit_id": "audit-1",
-        "audit_method": "deterministic_prompt_leakage_guard/1",
+        "audit_method": "deterministic_prompt_leakage_guard/2",
         "auditor": {
           "auditor_id": "auditor-1",
           "independence_group": "audit-group-1"
@@ -942,22 +991,44 @@
         "decision_key": "link-support:met:1:target-1",
         "decision_kind": "link_support",
         "deterministic_guard": {
-          "answer_strings": {
+          "aliases": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 0
+          },
+          "answer_names": {
             "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "count": 1
           },
-          "candidate_ids": {
+          "decision_proxies": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "identifiers": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "locators": {
             "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "count": 1
           },
           "findings": [],
-          "guard_version": "site-graph-v0-deterministic-prompt-leakage-guard/1",
-          "request_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "result": "PASS",
-          "source_ids": {
+          "guard_version": "site-graph-v0-deterministic-prompt-leakage-guard/2",
+          "preferred_labels": {
             "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "count": 1
-          }
+          },
+          "request_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "request_envelope": {
+            "input_schema_version": "site-graph-v0-review-input-envelope/1",
+            "item_count": 2,
+            "opaque_labels_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "prompt_schema_version": "site-graph-v0-review-prompt-envelope/1",
+            "review_invocation_id": "invocation-1",
+            "shuffle_algorithm": "sha256-ranked-nonidentity/1",
+            "shuffle_provenance_schema_version": "site-graph-v0-review-shuffle-provenance/1",
+            "shuffle_provenance_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "result": "PASS"
         },
         "executed_at_utc": "2026-08-28T00:00:00Z",
         "input": {
@@ -972,7 +1043,20 @@
         },
         "review_id": "review-1",
         "review_invocation_id": "invocation-1",
-        "schema_version": "site-graph-v0-prompt-leakage-audit/3",
+        "schema_version": "site-graph-v0-prompt-leakage-audit/4",
+        "shuffle_provenance": {
+          "algorithm": "sha256-ranked-nonidentity/1",
+          "presented_order_payload_sha256": [
+            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "schema_version": "site-graph-v0-review-shuffle-provenance/1",
+          "seed_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "source_order_payload_sha256": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          ]
+        },
         "subject": {
           "artifact_id": "met:1",
           "target_id": "target-1"
