@@ -687,15 +687,19 @@ def _preflight_release_python_sources(
                     f"{ast.unparse(annotation)}"
                 )
 
-        def check_initializer(value: ast.AST | None) -> None:
+        def check_initializer(
+            value: ast.AST | None,
+            scope_value_kinds: dict[str, str] | None = None,
+        ) -> None:
             if value is None:
                 return
+            kinds = value_kinds if scope_value_kinds is None else scope_value_kinds
             for call in (
                 node for node in ast.walk(value) if isinstance(node, ast.Call)
             ):
                 if (
                     _initializer_expression_kind(
-                        call, imports, assigned_names, value_kinds
+                        call, imports, assigned_names, kinds
                     )
                     is None
                 ):
@@ -704,7 +708,10 @@ def _preflight_release_python_sources(
                         f"{ast.unparse(call.func)}"
                     )
 
-        def check_definition(definition: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
+        def check_definition(
+            definition: ast.FunctionDef | ast.AsyncFunctionDef,
+            scope_value_kinds: dict[str, str] | None = None,
+        ) -> None:
             for decorator in definition.decorator_list:
                 decorator_function = (
                     decorator.func if isinstance(decorator, ast.Call) else decorator
@@ -721,7 +728,7 @@ def _preflight_release_python_sources(
                 *definition.args.defaults,
                 *(item for item in definition.args.kw_defaults if item is not None),
             ]:
-                check_initializer(value)
+                check_initializer(value, scope_value_kinds)
             for argument in [
                 *definition.args.posonlyargs,
                 *definition.args.args,
@@ -734,7 +741,11 @@ def _preflight_release_python_sources(
                 check_annotation(definition.args.kwarg.annotation)
             check_annotation(definition.returns)
 
-        def check_assignment_targets(statement: ast.Assign | ast.AnnAssign) -> None:
+        def check_assignment_targets(
+            statement: ast.Assign | ast.AnnAssign,
+            *,
+            allow_sys_assignment: bool = True,
+        ) -> None:
             targets = (
                 statement.targets if isinstance(statement, ast.Assign) else [statement.target]
             )
@@ -742,6 +753,7 @@ def _preflight_release_python_sources(
                 safe_target = isinstance(target, ast.Name) or (
                     isinstance(target, ast.Attribute)
                     and isinstance(target.value, ast.Name)
+                    and allow_sys_assignment
                     and target.value.id == "sys"
                     and target.attr == "dont_write_bytecode"
                 )
@@ -781,11 +793,22 @@ def _preflight_release_python_sources(
                         else [statement.target]
                     )
                     for target in targets:
-                        if isinstance(target, ast.Name) and value_kind is not None:
+                        if not isinstance(target, ast.Name):
+                            continue
+                        # Assignment evaluates its RHS before rebinding the target.
+                        # Never retain an inferred inert kind after an unrecognized
+                        # reassignment: a later method call could otherwise execute
+                        # an arbitrary replacement object under the stale kind.
+                        if value_kind is None:
+                            value_kinds.pop(target.id, None)
+                        else:
                             value_kinds[target.id] = value_kind
+                        passive_local_classes.discard(target.id)
                 continue
             if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 check_definition(statement)
+                value_kinds.pop(statement.name, None)
+                passive_local_classes.discard(statement.name)
                 continue
             if isinstance(statement, ast.ClassDef):
                 safe_bases = True
@@ -828,14 +851,57 @@ def _preflight_release_python_sources(
                         )
                 for value in [*statement.bases, *(item.value for item in statement.keywords)]:
                     check_initializer(value)
+                class_value_kinds: dict[str, str] = {}
+                class_shadowed_names: set[str] = set()
+
+                def class_scope_value_kinds() -> dict[str, str]:
+                    # Class bodies execute immediately.  Earlier class-local
+                    # bindings shadow globals even when their value kind is not
+                    # recognized, so an unknown local must never resurrect a
+                    # same-named global's previously inferred inert kind.
+                    scope = {
+                        name: kind
+                        for name, kind in value_kinds.items()
+                        if name not in class_shadowed_names
+                    }
+                    scope.update(class_value_kinds)
+                    return scope
+
                 for class_statement in statement.body:
                     if isinstance(class_statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        check_definition(class_statement)
+                        check_definition(
+                            class_statement, class_scope_value_kinds()
+                        )
+                        class_shadowed_names.add(class_statement.name)
+                        class_value_kinds.pop(class_statement.name, None)
                     elif isinstance(class_statement, (ast.Assign, ast.AnnAssign)):
-                        check_assignment_targets(class_statement)
+                        check_assignment_targets(
+                            class_statement, allow_sys_assignment=False
+                        )
                         if isinstance(class_statement, ast.AnnAssign):
                             check_annotation(class_statement.annotation)
-                        check_initializer(class_statement.value)
+                        scope_kinds = class_scope_value_kinds()
+                        check_initializer(class_statement.value, scope_kinds)
+                        if isinstance(class_statement.value, ast.AST):
+                            class_value_kind = _initializer_expression_kind(
+                                class_statement.value,
+                                imports,
+                                assigned_names,
+                                scope_kinds,
+                            )
+                            class_targets = (
+                                class_statement.targets
+                                if isinstance(class_statement, ast.Assign)
+                                else [class_statement.target]
+                            )
+                            for target in class_targets:
+                                if not isinstance(target, ast.Name):
+                                    continue
+                                class_shadowed_names.add(target.id)
+                                if class_value_kind is None:
+                                    class_value_kinds.pop(target.id, None)
+                                else:
+                                    class_value_kinds[target.id] = class_value_kind
                     elif isinstance(class_statement, ast.Expr) and not (
                         isinstance(class_statement.value, ast.Constant)
                         and isinstance(class_statement.value.value, str)
@@ -859,6 +925,19 @@ def _preflight_release_python_sources(
                 )
                 if safe_bases and not statement.keywords and passive_body:
                     passive_local_classes.add(statement.name)
+                else:
+                    passive_local_classes.discard(statement.name)
+                value_kinds.pop(statement.name, None)
+                continue
+            if isinstance(statement, (ast.Import, ast.ImportFrom)):
+                bound_names = (
+                    [alias.asname or alias.name.split(".", 1)[0] for alias in statement.names]
+                    if isinstance(statement, ast.Import)
+                    else [alias.asname or alias.name for alias in statement.names]
+                )
+                for name in bound_names:
+                    value_kinds.pop(name, None)
+                    passive_local_classes.discard(name)
                 continue
             if not isinstance(statement, (ast.Import, ast.ImportFrom)):
                 path_violations.append(

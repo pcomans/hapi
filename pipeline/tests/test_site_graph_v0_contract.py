@@ -231,6 +231,9 @@ def test_validator_rejects_release_corruption_before_semantics(
         "unapproved_import_side_effect",
         "custom_base_side_effect",
         "custom_metaclass_side_effect",
+        "stale_initializer_kind_side_effect",
+        "stale_class_scope_kind_side_effect",
+        "stale_passive_class_side_effect",
     ],
 )
 def test_validator_authenticates_semantic_module_before_import(
@@ -350,6 +353,50 @@ def test_validator_authenticates_semantic_module_before_import(
             + repr(str(marker))
             + ").write_text('executed', encoding='utf-8')\n"
             "class Probe(ExecutingBase):\n"
+            "    pass\n",
+            encoding="utf-8",
+        )
+    elif attack == "stale_initializer_kind_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "P = Path('.')\n"
+            "class Callback:\n"
+            "    @staticmethod\n"
+            "    def resolve():\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "P = Callback\n"
+            "PROBE = P.resolve()\n",
+            encoding="utf-8",
+        )
+    elif attack == "stale_class_scope_kind_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "P = Path('.')\n"
+            "class Callback:\n"
+            "    @staticmethod\n"
+            "    def resolve():\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "class Probe:\n"
+            "    P = Callback\n"
+            "    RESULT = P.resolve()\n",
+            encoding="utf-8",
+        )
+    elif attack == "stale_passive_class_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "class Base:\n"
+            "    pass\n"
+            "class Callback:\n"
+            "    def __init_subclass__(cls):\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "Base = Callback\n"
+            "class Probe(Base):\n"
             "    pass\n",
             encoding="utf-8",
         )
