@@ -16,6 +16,7 @@ import uuid
 from pathlib import Path
 
 from corpus_archive import authenticated_corpus
+from runtime_attestation import build_runtime_attestation
 
 
 ARCHIVED_SCRIPTS = (
@@ -34,6 +35,7 @@ DETERMINISTIC_OUTPUTS = frozenset(
         "corpus-archive-attestation.json",
         "corpus_inventory.json",
         "private-record-evidence.ndjson.gz",
+        "runtime-attestation.json",
         "private-opportunity-source.ndjson.gz",
         "private-opportunity-ledger.json",
         "private-ledger-digests.json",
@@ -117,7 +119,8 @@ def run(
     output: Path,
 ) -> dict:
     repo_root, output = repo_root.resolve(), output.resolve()
-    preflight(repo_root, output)
+    snapshot = preflight(repo_root, output)
+    runtime_attestation = build_runtime_attestation(repo_root, snapshot)
     evaluation_root = repo_root / "docs/evaluations/site-graph-v0"
     snapshot_path = evaluation_root / "input-snapshot.json"
     started = dt.datetime.now(dt.UTC).isoformat()
@@ -131,6 +134,7 @@ def run(
         published = False
         try:
             write_json(temporary / "corpus-archive-attestation.json", archive_attestation)
+            write_json(temporary / "runtime-attestation.json", runtime_attestation)
             env = os.environ.copy()
             env.update(
                 {
@@ -193,7 +197,7 @@ def run(
                 )
             output_hashes = {name: sha256(temporary / name) for name in sorted(DETERMINISTIC_OUTPUTS)}
             manifest = {
-                "schema_version": "site-graph-v0-baseline-run-manifest/2",
+                "schema_version": "site-graph-v0-baseline-run-manifest/3",
                 "commands": commands,
                 "deterministic_output_hashes": output_hashes,
                 "input_snapshot_sha256": sha256(snapshot_path),
@@ -204,6 +208,12 @@ def run(
                     "corpus-archive-attestation.json"
                 ],
                 "corpus_archive_sha256": archive_attestation["archive"]["sha256"],
+                "runtime_attestation": {
+                    "path": "runtime-attestation.json",
+                    "sha256": output_hashes["runtime-attestation.json"],
+                    "python": runtime_attestation["python"],
+                    "dependency_lock": runtime_attestation["dependency_lock"],
+                },
                 "scope": (
                     f"authenticated immutable archive snapshot with {total:,} real private records; "
                     "no fixtures or proxies; private ledgers remain in the runtime directory; "
@@ -219,7 +229,7 @@ def run(
             }
             write_json(temporary / "run-output-manifest.json", manifest)
             provenance = {
-                "schema_version": "site-graph-v0-baseline-run-provenance/2",
+                "schema_version": "site-graph-v0-baseline-run-provenance/3",
                 "run_id": run_id,
                 "started_at_utc": started,
                 "finished_at_utc": dt.datetime.now(dt.UTC).isoformat(),
@@ -237,6 +247,7 @@ def run(
                 "input_snapshot_sha256": manifest["input_snapshot_sha256"],
                 "runner_sha256": manifest["runner_sha256"],
                 "builder_sha256": manifest["builder_sha256"],
+                "runtime_attestation": manifest["runtime_attestation"],
                 "status": manifest["status"],
             }
             write_json(temporary / "run-provenance.json", provenance)

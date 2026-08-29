@@ -57,6 +57,8 @@ compare_core = compare_candidate_module.compare_core
 decision_key = compare_candidate_module.decision_key
 _load_candidate_freeze = compare_candidate_module._load_candidate_freeze
 _validate_review_artifacts = compare_candidate_module._validate_review_artifacts
+CandidateGitError = compare_candidate_module.CandidateGitError
+ReviewAuthenticationError = compare_candidate_module.ReviewAuthenticationError
 classify_current_nodes = build_baseline_module.classify_current_nodes
 OPPORTUNITY_MUSEUM_PROTECTION = build_baseline_module.OPPORTUNITY_MUSEUM_PROTECTION
 OPPORTUNITY_TOTAL_SIGNATURES = build_baseline_module.OPPORTUNITY_TOTAL_SIGNATURES
@@ -217,10 +219,15 @@ def test_every_json_schema_has_executed_valid_and_adversarial_instances() -> Non
     result = execute_schema_contract_tests(
         EVAL_ROOT / "schemas", EVAL_ROOT / "schema-test-cases.json"
     )
-    assert result["meta_valid_schema_count"] == 15
-    assert result["representative_valid_instance_count"] == 15
-    assert result["adversarial_invalid_instance_count"] == 30
-    assert len(result["schemas"]) == 15
+    schema_names = sorted(
+        path.name for path in (EVAL_ROOT / "schemas").glob("*.schema.json")
+    )
+    cases = json.loads((EVAL_ROOT / "schema-test-cases.json").read_text())["cases"]
+    invalid_count = sum(len(case["invalid"]) for case in cases.values())
+    assert result["meta_valid_schema_count"] == len(schema_names)
+    assert result["representative_valid_instance_count"] == len(schema_names)
+    assert result["adversarial_invalid_instance_count"] == invalid_count
+    assert result["schemas"] == schema_names
 
 
 def test_rerun_comparator_rejects_same_resolved_directory(tmp_path: Path) -> None:
@@ -667,16 +674,16 @@ def _comparator_case(tmp_path: Path) -> dict:
     }
     crosswalk = json.loads((EVAL_ROOT / "type-crosswalk.json").read_text())
     snapshot = {
-        "schema_version": "site-graph-v0-candidate-source-snapshot/2",
-        "source_snapshot_id": "logic-source",
+        "schema_version": "site-graph-v0-authority-source-export/1",
+        "source_export_id": "logic-source",
         "authority_name": "logic only",
         "source_kind": "unit-test",
+        "originating_museum": False,
         "acquired_at_utc": "2026-08-28T00:00:00Z",
         "provenance": {
             "source_locator": "logic://complete-source-export",
             "acquisition_method": "purpose-built unit-test construction",
-            "acquired_by": "test fixture",
-            "source_export_sha256": "d" * 64,
+            "producer_identity": "test fixture",
         },
         "completeness": {
             "coverage_statement": "all two logic-only records",
@@ -713,8 +720,8 @@ def _comparator_case(tmp_path: Path) -> dict:
         snapshot["records"]
     )
     hierarchy = {
-        "schema_version": "site-graph-v0-candidate-hierarchy/3",
-        "coverage": "every_target_and_every_record_from_all_authenticated_complete_source_snapshots",
+        "schema_version": "site-graph-v0-candidate-hierarchy/4",
+        "coverage": "every_target_and_every_record_from_all_authenticated_complete_authority_source_exports",
         "known_incompleteness": {
             "closed_world_claim": False,
             "limitations": ["logic-only; not corpus evidence"],
@@ -726,7 +733,7 @@ def _comparator_case(tmp_path: Path) -> dict:
                 "candidate_e55_type": "archaeological_area",
                 "child_ids": ["specific-1", "specific-2"],
                 "ancestor_target_ids": [],
-                "source_snapshot_ids": ["logic-source"],
+                "source_export_ids": ["logic-source"],
                 "source_record_ids": ["source-broad-0"],
             }
         ] + [
@@ -735,7 +742,7 @@ def _comparator_case(tmp_path: Path) -> dict:
                 "candidate_e55_type": "archaeological_site",
                 "child_ids": [],
                 "ancestor_target_ids": ["broad-0"],
-                "source_snapshot_ids": ["logic-source"],
+                "source_export_ids": ["logic-source"],
                 "source_record_ids": [f"source-{target}"],
             }
             for target in ("specific-1", "specific-2")
@@ -746,13 +753,19 @@ def _comparator_case(tmp_path: Path) -> dict:
     for museum, artifact_ids in museums.items():
         for index, artifact_id in enumerate(artifact_ids):
             if museum == "harvard":
+                binding = opportunity_binding_by_artifact[artifact_id]
                 candidate_records.append(
                     {
                         "artifact_id": artifact_id,
-                        "resolution_status": "unmatched",
-                        "abstention_reason": None,
-                        "has_blocking_ambiguity": False,
-                        "direct_links": [],
+                        "opportunity_outcomes": [
+                            {
+                                **binding,
+                                "resolution_status": "unmatched",
+                                "abstention_reason": None,
+                                "has_blocking_ambiguity": False,
+                                "direct_links": [],
+                            }
+                        ],
                     }
                 )
                 continue
@@ -769,11 +782,16 @@ def _comparator_case(tmp_path: Path) -> dict:
             candidate_records.append(
                 {
                     "artifact_id": artifact_id,
-                    "resolution_status": "linked",
-                    "abstention_reason": None,
-                    "has_blocking_ambiguity": False,
-                    "direct_links": [
-                        {"target_id": target, **binding, "support_decision_key": key}
+                    "opportunity_outcomes": [
+                        {
+                            **binding,
+                            "resolution_status": "linked",
+                            "abstention_reason": None,
+                            "has_blocking_ambiguity": False,
+                            "direct_links": [
+                                {"target_id": target, "support_decision_key": key}
+                            ],
+                        }
                     ],
                 }
             )
@@ -820,10 +838,10 @@ def _comparator_case(tmp_path: Path) -> dict:
     relation_ledger = {
         "schema_version": "site-graph-v0-relation-ledger/2",
         "strict_refinement_direction": "left_target_id_is_narrower_than_right_target_id",
-        "identity_census_policy": "every_counted_distinct_class_pair_has_positive_distinctness_or_source_locator_equivalence",
+        "identity_census_policy": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class",
         "relations": relations,
     }
-    candidate = {"schema_version": "site-graph-v0-candidate-result/2", "records": candidate_records}
+    candidate = {"schema_version": "site-graph-v0-candidate-result/4", "records": candidate_records}
     return {
         "baseline": baseline,
         "metrics": metrics,
@@ -1007,7 +1025,7 @@ def test_existing_target_cannot_be_relabelled_by_candidate_snapshot(tmp_path: Pa
             "candidate_e55_type": "archaeological_site",
             "child_ids": [],
             "ancestor_target_ids": [],
-            "source_snapshot_ids": ["logic-source"],
+            "source_export_ids": ["logic-source"],
             "source_record_ids": ["source-other-broad"],
         }
     )
@@ -1192,11 +1210,13 @@ def _candidate_git_fixture(tmp_path: Path) -> dict:
 
 def test_production_candidate_inputs_are_bound_to_distinct_git_commits(tmp_path: Path) -> None:
     fixture = _candidate_git_fixture(tmp_path)
-    with pytest.raises(ValueError, match="NOT_CONFIGURED"):
+    with pytest.raises(CandidateGitError, match="NOT_CONFIGURED"):
         _load_candidate_freeze(
             fixture["repo"],
             fixture["result_commit"],
             fixture["paths"]["result"],
+            "candidate/run-completion-attestation.json",
+            "candidate/run-completion-attestation.sig",
             fixture["release_hash"],
             fixture["private_hash"],
             EVAL_ROOT / "schemas",
@@ -1208,6 +1228,8 @@ def test_production_candidate_binding_rejects_alternate_release(tmp_path: Path) 
     assert "trusted_policy" not in parameters
     assert "candidate_result_path" not in parameters
     assert "review_ledger_path" not in parameters
+    assert "completion_attestation_path" in parameters
+    assert "completion_signature_path" in parameters
 
 
 def test_production_cli_has_no_arbitrary_baseline_or_crosswalk_paths() -> None:
@@ -1219,6 +1241,9 @@ def test_production_cli_has_no_arbitrary_baseline_or_crosswalk_paths() -> None:
     )
     assert "--repo-root" in result.stdout
     assert "--private-run" in result.stdout
+    assert "--run-result-manifest-path" in result.stdout
+    assert "--completion-attestation-path" in result.stdout
+    assert "--completion-signature-path" in result.stdout
     assert "--baseline-records" not in result.stdout
     assert "--baseline-metrics" not in result.stdout
     assert "--opportunity-ledger" not in result.stdout
@@ -1290,29 +1315,26 @@ def _structured_review_fixture(tmp_path: Path) -> tuple[Path, str, dict]:
     return repo, result_commit, ledger
 
 
-def test_structured_review_census_requires_two_distinct_subject_bound_artifacts(
+def test_legacy_unsigned_review_artifacts_cannot_enter_authenticated_census(
     tmp_path: Path,
 ) -> None:
     repo, result_commit, ledger = _structured_review_fixture(tmp_path)
-    decisions = _validate_review_artifacts(
-        repo, result_commit, ledger, EVAL_ROOT / "schemas"
-    )
-    assert next(iter(decisions.values()))["supported"] is True
-    duplicate = copy.deepcopy(ledger)
-    duplicate["decisions"][0]["review_artifacts"][1] = copy.deepcopy(
-        duplicate["decisions"][0]["review_artifacts"][0]
-    )
-    with pytest.raises(ValueError, match="reused|distinct"):
-        _validate_review_artifacts(repo, result_commit, duplicate, EVAL_ROOT / "schemas")
+    with pytest.raises(ReviewAuthenticationError, match="pre-run freeze"):
+        _validate_review_artifacts(
+            repo, result_commit, ledger, EVAL_ROOT / "schemas"
+        )
 
 
-def test_structured_review_artifact_cannot_cover_a_different_decision(tmp_path: Path) -> None:
-    repo, result_commit, ledger = _structured_review_fixture(tmp_path)
-    wrong_subject = {"artifact_id": "other", "target_id": "logic-target"}
-    ledger["decisions"][0]["subject"] = wrong_subject
-    ledger["decisions"][0]["decision_key"] = decision_key("link_support", wrong_subject)
-    with pytest.raises(ValueError, match="not bound"):
-        _validate_review_artifacts(repo, result_commit, ledger, EVAL_ROOT / "schemas")
+def test_review_census_api_requires_authenticated_freeze_and_source_exports() -> None:
+    parameters = inspect.signature(_validate_review_artifacts).parameters
+    for name in (
+        "freeze_commit",
+        "frozen_files",
+        "source_exports",
+        "source_export_groups",
+        "candidate_id",
+    ):
+        assert name in parameters
 
 
 def test_committed_real_corpus_headlines_recompute_from_pinned_inputs() -> None:

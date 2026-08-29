@@ -12,6 +12,10 @@ import uuid
 from pathlib import Path
 
 from run_baseline import DETERMINISTIC_OUTPUTS, FINAL_OUTPUTS, sha256
+from runtime_attestation import validate_runtime_attestation
+
+
+RELEASE_REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
 def read_json(path: Path) -> dict:
@@ -37,7 +41,7 @@ def validate_run(directory: Path) -> dict:
         )
     manifest_path = directory / "run-output-manifest.json"
     manifest = read_json(manifest_path)
-    if manifest.get("schema_version") != "site-graph-v0-baseline-run-manifest/2":
+    if manifest.get("schema_version") != "site-graph-v0-baseline-run-manifest/3":
         raise RuntimeError(f"unsupported run manifest schema: {manifest_path}")
     hashes = manifest.get("deterministic_output_hashes")
     if not isinstance(hashes, dict) or set(hashes) != DETERMINISTIC_OUTPUTS:
@@ -58,11 +62,12 @@ def validate_run(directory: Path) -> dict:
         "corpus_archive_sha256", "corpus_archive_attestation_sha256",
         "temporary_extraction_policy", "canonical_records", "records_by_museum",
         "input_snapshot_sha256", "runner_sha256", "builder_sha256",
+        "runtime_attestation",
         "status",
     }
     if set(provenance) != required:
         raise RuntimeError(f"provenance fields mismatch: {provenance_path}")
-    if provenance["schema_version"] != "site-graph-v0-baseline-run-provenance/2":
+    if provenance["schema_version"] != "site-graph-v0-baseline-run-provenance/3":
         raise RuntimeError(f"unsupported run provenance schema: {provenance_path}")
     try:
         uuid.UUID(provenance["run_id"])
@@ -97,11 +102,28 @@ def validate_run(directory: Path) -> dict:
     for key in (
         "input_snapshot_sha256", "runner_sha256", "builder_sha256",
         "corpus_archive_attestation_sha256", "corpus_archive_sha256",
+        "runtime_attestation",
     ):
         if provenance[key] != manifest[key]:
             raise RuntimeError(f"provenance/manifest {key} mismatch at {directory}")
     if Path(provenance["requested_output"]).resolve() != directory.resolve():
         raise RuntimeError(f"provenance output path mismatch at {directory}")
+    repo_root = RELEASE_REPO_ROOT
+    snapshot_path = repo_root / "docs/evaluations/site-graph-v0/input-snapshot.json"
+    if not snapshot_path.is_file() or sha256(snapshot_path) != manifest["input_snapshot_sha256"]:
+        raise RuntimeError(f"run input snapshot no longer matches its binding at {directory}")
+    snapshot = read_json(snapshot_path)
+    runtime_path = directory / "runtime-attestation.json"
+    runtime = read_json(runtime_path)
+    validate_runtime_attestation(repo_root, snapshot, runtime)
+    expected_runtime_binding = {
+        "path": "runtime-attestation.json",
+        "sha256": sha256(runtime_path),
+        "python": runtime["python"],
+        "dependency_lock": runtime["dependency_lock"],
+    }
+    if manifest["runtime_attestation"] != expected_runtime_binding:
+        raise RuntimeError(f"run runtime-attestation binding mismatch at {directory}")
     attestation_path = directory / "corpus-archive-attestation.json"
     attestation = read_json(attestation_path)
     if (
@@ -137,6 +159,7 @@ def compare(run_a: Path, run_b: Path) -> dict:
         raise RuntimeError("deterministic reproductions must have distinct run_id values")
     stable_fields = (
         "commands", "input_snapshot_sha256", "runner_sha256", "builder_sha256",
+        "runtime_attestation",
         "inventory_path_canonicalization", "corpus_archive_attestation_sha256", "scope",
         "corpus_archive_sha256", "status",
     )
@@ -188,6 +211,7 @@ def compare(run_a: Path, run_b: Path) -> dict:
         "input_snapshot_sha256": left["manifest"]["input_snapshot_sha256"],
         "runner_sha256": left["manifest"]["runner_sha256"],
         "builder_sha256": left["manifest"]["builder_sha256"],
+        "runtime_attestation": left["manifest"]["runtime_attestation"],
         "scope": left["manifest"]["scope"],
         "corpus_archive_sha256": left["provenance"]["corpus_archive_sha256"],
         "production_lineage": {

@@ -2,6 +2,49 @@
   "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "checks": [
     {
+      "check_id": "private_run_runtime_attestation_and_rerun_binding",
+      "evidence": {
+        "checks": {
+          "exact_full_run_output_validation": true,
+          "manifest_runtime_binding": true,
+          "manifest_runtime_output_hash": true,
+          "manifest_schema_version": true,
+          "provenance_requested_output_binding": true,
+          "provenance_runtime_binding": true,
+          "provenance_schema_version": true,
+          "rerun_evidence_runtime_binding": true,
+          "rerun_evidence_runtime_output_hash": true,
+          "rerun_identity_binding": true,
+          "runtime_attestation_matches_release_environment": true
+        },
+        "errors": [],
+        "matching_rerun": "run_a",
+        "missing": [],
+        "passed": true,
+        "private_run_identity": {
+          "manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+          "provenance_sha256": "c4cc8c7d6778dda172d8ffa0e945cdebe7de38294a72f6456566536729096521",
+          "resolved_directory": "/tmp/hapi-327-round4-final-20260829a/run-a",
+          "run_id": "b2926d91-b8ec-47c3-ac68-d09574a0204e"
+        },
+        "runtime_attestation": {
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+          },
+          "path": "runtime-attestation.json",
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          },
+          "sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321"
+        }
+      },
+      "passed": true
+    },
+    {
       "check_id": "authenticated_archive_attestation_bound_to_private_run",
       "evidence": {
         "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
@@ -912,13 +955,15 @@
     {
       "check_id": "all_json_schemas_meta_valid_and_instance_executed",
       "evidence": {
-        "adversarial_invalid_instance_count": 30,
-        "meta_valid_schema_count": 15,
-        "representative_valid_instance_count": 15,
+        "adversarial_invalid_instance_count": 40,
+        "meta_valid_schema_count": 20,
+        "representative_valid_instance_count": 20,
         "schemas": [
+          "authority-source-export-attestation.schema.json",
+          "authority-source-export.schema.json",
+          "baseline-runtime-attestation.schema.json",
           "candidate-freeze-manifest.schema.json",
           "candidate-hierarchy.schema.json",
-          "candidate-source-snapshot.schema.json",
           "candidate.schema.json",
           "comparison-report.schema.json",
           "correction-ledger.schema.json",
@@ -928,19 +973,28 @@
           "relation-ledger.schema.json",
           "review-artifact.schema.json",
           "review-ledger.schema.json",
+          "run-completion-attestation.schema.json",
           "run-result-manifest.schema.json",
           "run-start-receipt.schema.json",
-          "trusted-run-attestors.schema.json"
+          "trusted-reviewers.schema.json",
+          "trusted-run-attestors.schema.json",
+          "trusted-source-exporters.schema.json"
         ]
       },
       "passed": true
     },
     {
-      "check_id": "production_candidate_run_trust_gate_fail_closed",
+      "check_id": "production_candidate_trust_gates_fail_closed",
       "evidence": {
         "downstream_product_verdict": "NOT_RUN",
-        "effect": "Issue #327 can validate the frozen baseline contract, but the production candidate comparator fails closed and downstream_product_verdict remains NOT_RUN until a trusted run attestor is configured. Test-only keys never satisfy this release policy.",
-        "trusted_run_attestor_status": "NOT_CONFIGURED"
+        "effects": {
+          "review_evidence": "Candidate review credit fails closed. Generated test keys exercise signature mechanics only and cannot satisfy this production registry.",
+          "run_completion": "Issue #327 can validate the frozen baseline contract, but the production candidate comparator fails closed and downstream_product_verdict remains NOT_RUN until a trusted run attestor is configured. Test-only keys never satisfy this release policy.",
+          "source_export": "No production candidate source export is currently authorized. Logic-only tests may exercise signature mechanics with a registry whose registry_scope is test_only, but such a registry is rejected by every production entry point."
+        },
+        "trusted_reviewer_status": "NOT_CONFIGURED",
+        "trusted_run_attestor_status": "NOT_CONFIGURED",
+        "trusted_source_exporter_status": "NOT_CONFIGURED"
       },
       "passed": true
     },
@@ -972,18 +1026,57 @@
       "check_id": "authenticated_deterministic_baseline_reproduction",
       "evidence": {
         "committed_public_outputs_match": true,
-        "deterministic_output_count": 18,
+        "deterministic_output_count": 19,
+        "private_run_runtime_binding": {
+          "checks": {
+            "exact_full_run_output_validation": true,
+            "manifest_runtime_binding": true,
+            "manifest_runtime_output_hash": true,
+            "manifest_schema_version": true,
+            "provenance_requested_output_binding": true,
+            "provenance_runtime_binding": true,
+            "provenance_schema_version": true,
+            "rerun_evidence_runtime_binding": true,
+            "rerun_evidence_runtime_output_hash": true,
+            "rerun_identity_binding": true,
+            "runtime_attestation_matches_release_environment": true
+          },
+          "errors": [],
+          "matching_rerun": "run_a",
+          "missing": [],
+          "passed": true,
+          "private_run_identity": {
+            "manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+            "provenance_sha256": "c4cc8c7d6778dda172d8ffa0e945cdebe7de38294a72f6456566536729096521",
+            "resolved_directory": "/tmp/hapi-327-round4-final-20260829a/run-a",
+            "run_id": "b2926d91-b8ec-47c3-ac68-d09574a0204e"
+          },
+          "runtime_attestation": {
+            "dependency_lock": {
+              "bytes": 500187,
+              "path": "pipeline/uv.lock",
+              "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+            },
+            "path": "runtime-attestation.json",
+            "python": {
+              "implementation": "CPython",
+              "implementation_name": "cpython",
+              "version": "3.12.13"
+            },
+            "sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321"
+          }
+        },
         "run_a": {
-          "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
-          "provenance_sha256": "34c5e41795345d94f34ee6d81222e20d48f190758c02e6d36a7e7690724a31c3",
-          "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-a",
-          "run_id": "560c5d95-39f9-4c9d-9075-1aa0c17f59b0"
+          "manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+          "provenance_sha256": "c4cc8c7d6778dda172d8ffa0e945cdebe7de38294a72f6456566536729096521",
+          "resolved_directory": "/tmp/hapi-327-round4-final-20260829a/run-a",
+          "run_id": "b2926d91-b8ec-47c3-ac68-d09574a0204e"
         },
         "run_b": {
-          "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
-          "provenance_sha256": "ca265989438ac42f73300c5f3bb9b6575e3e75e70abdfc270dfb34076c3a4075",
-          "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-b",
-          "run_id": "b0782237-5378-4c38-8e42-095130b83e7f"
+          "manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+          "provenance_sha256": "0e8f6cb26065bf2a777d91bc53d5f295798ca0910eafe956c98e715d67a40679",
+          "resolved_directory": "/tmp/hapi-327-round4-final-20260829a/run-b",
+          "run_id": "58da6f5e-321c-4e40-b51c-66eeb5f4f726"
         }
       },
       "passed": true
@@ -1007,6 +1100,7 @@
           "raw_link_rate_growth_can_satisfy_continue": false
         },
         "review_census": {
+          "citation_subject_binding": "For each review artifact, the exact authenticated non-originating-museum source records cited collectively cover every target_id field in the signed decision subject; unrelated-target citations provide no support.",
           "credit_gate": "Census of every credited new-link, strict-refinement, and equivalent decision with two structured independent artifacts.",
           "held_out_sample": "Optional descriptive audit only. If used, sort all non-credited candidate decision keys by SHA-256('site-graph-v0-descriptive-audit-v1' + U+0000 + decision_key), then take the first min(100, ceil(0.10*N)); freeze the resulting key list before review.",
           "held_out_sample_is_pass_gate": false,
@@ -1069,8 +1163,8 @@
   "release_candidate_binding": {
     "files": {
       "docs/evaluations/site-graph-v0/README.md": {
-        "bytes": 20399,
-        "sha256": "7d39ba4a368819af6b60683038e351d06f9a1d85b586e368983d1ddf4908995d"
+        "bytes": 22187,
+        "sha256": "e653ebbdf3b388cc343804384eb36276351c2f27734234ce2a0f1716a38f8695"
       },
       "docs/evaluations/site-graph-v0/baseline-metrics.json": {
         "bytes": 46789,
@@ -1081,8 +1175,8 @@
         "sha256": "9973bbb7b83244a9bbd194f532f7f4949f98cb203682a46d4e0ae36dedd84493"
       },
       "docs/evaluations/site-graph-v0/baseline-rerun-evidence.json": {
-        "bytes": 4216,
-        "sha256": "b3ce852f2d4ca656e9a48c46a27cdb03d220089290cea7f2266e6ab3b6799a1c"
+        "bytes": 4776,
+        "sha256": "533d973e76ed6d8895a6300a8f70022ed262d7614a7173cbe712f130e1e9991b"
       },
       "docs/evaluations/site-graph-v0/corpus-provenance/NOTICE": {
         "bytes": 3247,
@@ -1117,20 +1211,20 @@
         "sha256": "d2bfa05fb1dc660860d8a73e4a8c269ba03546e3565f353239b2dab26a862d88"
       },
       "docs/evaluations/site-graph-v0/implementation-evidence.json": {
-        "bytes": 2892,
-        "sha256": "b64224bc02d9ede8b99e18b8632fff6aedd17fb6e60a545d5daa08c9a4351ac8"
+        "bytes": 3939,
+        "sha256": "9094b45d95ec7faa1969c864ab5845ae726f49c456b594e5e3f3eb77beaea7f0"
       },
       "docs/evaluations/site-graph-v0/input-snapshot.json": {
-        "bytes": 7808,
-        "sha256": "953c6887c0563515a24ab37aa1e894230d65c6987a13bd172de77e23cd66862d"
+        "bytes": 8083,
+        "sha256": "b95a0d9065e2c41a8c15a8bf48aaef2271c3e851600a8c3daefeb42db15a84b4"
       },
       "docs/evaluations/site-graph-v0/planned-opportunity-summary.json": {
         "bytes": 28620,
         "sha256": "e6aef47a505d64ca8164b74f98bb64da3718065654b458857e743f9d3f05c2a9"
       },
       "docs/evaluations/site-graph-v0/preregistration.json": {
-        "bytes": 23705,
-        "sha256": "786d74e1aba92171c96c0979e3cee483bd40a30d33c276a156f20b7bf1e4b4eb"
+        "bytes": 25277,
+        "sha256": "c9b5d277f154461c16811488c6d38626113b38b8cd4cfae486c533eabfe7b082"
       },
       "docs/evaluations/site-graph-v0/private-ledger-digests.json": {
         "bytes": 4451,
@@ -1169,24 +1263,32 @@
         "sha256": "da6665870ff7665c75aa99e319be06911ff0eb5967fdaa497854d2228981b9e7"
       },
       "docs/evaluations/site-graph-v0/schema-test-cases.json": {
-        "bytes": 44983,
-        "sha256": "94e6b3b0ab2ae3745f32d6063ebdb14736db6417c5c906294aa08d8fd96e5f0d"
+        "bytes": 69961,
+        "sha256": "e75bbc85fb2f8bc05a867992bcdd5f86dd9aa97ef34e0807bb2da3c985159d2c"
+      },
+      "docs/evaluations/site-graph-v0/schemas/authority-source-export-attestation.schema.json": {
+        "bytes": 1850,
+        "sha256": "318d8e76a21eae15b2b71ef63106df21123ff8c04ccaf180111be9e4a472e063"
+      },
+      "docs/evaluations/site-graph-v0/schemas/authority-source-export.schema.json": {
+        "bytes": 2999,
+        "sha256": "c81156a62e46b74363b6fa996925bdfbf9615302ce5b55c392330723a774f354"
+      },
+      "docs/evaluations/site-graph-v0/schemas/baseline-runtime-attestation.schema.json": {
+        "bytes": 1522,
+        "sha256": "092620342cde3a52343d76267817d48bb308d6a75cc8374f113d64ebe9664028"
       },
       "docs/evaluations/site-graph-v0/schemas/candidate-freeze-manifest.schema.json": {
-        "bytes": 2652,
-        "sha256": "332ef582da550d2b6cbac626afb0d9bd8420c1338043fcc4c412655617c6d23e"
+        "bytes": 4436,
+        "sha256": "a82518a4bbb2c7e56323881ab1daf5ccdd6a3d480a19abd05ef38a5d1f36c77b"
       },
       "docs/evaluations/site-graph-v0/schemas/candidate-hierarchy.schema.json": {
-        "bytes": 1924,
-        "sha256": "2d44c037a9affe922afe66705cd08bdb8310edf2575d6423f75b4d7f7e3cc8bd"
-      },
-      "docs/evaluations/site-graph-v0/schemas/candidate-source-snapshot.schema.json": {
-        "bytes": 3039,
-        "sha256": "335760bc7c9f8789d7eb77cfa72042b970999aa8901cbb55023cb02fe5a30f5d"
+        "bytes": 1928,
+        "sha256": "e08d99f277891b137e955ae7f0c82089b004f17de82f9711a026e5bf4e083d5f"
       },
       "docs/evaluations/site-graph-v0/schemas/candidate.schema.json": {
-        "bytes": 2746,
-        "sha256": "81e922c88c7623e0ec218b57b1957ed2a5c4eaa2dedf8cb7d35ea9615a314457"
+        "bytes": 4920,
+        "sha256": "ecde086528fd16a29f77995423c3641a5872518eb77d4b76090c9e45495a13c7"
       },
       "docs/evaluations/site-graph-v0/schemas/comparison-report.schema.json": {
         "bytes": 2296,
@@ -1205,32 +1307,44 @@
         "sha256": "ea18d0fb765e9aef7b0b246a1c38897c64cb2244013c9a3d8d4f9ae0f83942cd"
       },
       "docs/evaluations/site-graph-v0/schemas/prompt-leakage-audit.schema.json": {
-        "bytes": 1788,
-        "sha256": "1d989fe920751c7a2e8d7bc17c0769d379f882a6643012ff5ecbc52a68f737f3"
+        "bytes": 3807,
+        "sha256": "1250e197faa59330cc2df4cd8192633bbb5c7fbefe4a651a85281b109ec37fa9"
       },
       "docs/evaluations/site-graph-v0/schemas/relation-ledger.schema.json": {
-        "bytes": 1309,
-        "sha256": "08e96a4ac42769eac9a4faf5fc5da091d5fbc7fdcec2a39125d9cbc5d6c77505"
+        "bytes": 1369,
+        "sha256": "265a845aef7adba840acce2e270d65a1ee833c31b81484cc12c22c62d298290c"
       },
       "docs/evaluations/site-graph-v0/schemas/review-artifact.schema.json": {
-        "bytes": 5817,
-        "sha256": "04c130e1a1b996b7098899fdd6707066e5d8415b8ada3ca5c60ed79f07e88d67"
+        "bytes": 7302,
+        "sha256": "e4f8d75e1a3c7bd911719c3cb1aa9e005d1d346e3848f3f7954bec8fc39d65fa"
       },
       "docs/evaluations/site-graph-v0/schemas/review-ledger.schema.json": {
         "bytes": 1779,
         "sha256": "346c871f1dbd324ed005fdb67efa3944d682e1380dc7b9f8e8598ca363dffe28"
       },
+      "docs/evaluations/site-graph-v0/schemas/run-completion-attestation.schema.json": {
+        "bytes": 4107,
+        "sha256": "52215f5ceea2dbeb5be156ca86403a45d99eeaeb34825d180dac681d784ffac3"
+      },
       "docs/evaluations/site-graph-v0/schemas/run-result-manifest.schema.json": {
-        "bytes": 1798,
-        "sha256": "28c4630087286a1a5811a8dff274f6e7f0988be53f7c1beb320434039ef74d41"
+        "bytes": 2772,
+        "sha256": "ac0c4084d1d89b28f5ec8a71b39a489aadc100c5316e0305328b98c9a0d44d81"
       },
       "docs/evaluations/site-graph-v0/schemas/run-start-receipt.schema.json": {
-        "bytes": 1888,
-        "sha256": "9b77e49a99a68affa406241bd97edadb730e9ba6e1a59835d6ef9172f464375f"
+        "bytes": 2862,
+        "sha256": "ac4984a682763be893ccd243f753492427c0e3da5f412b3a90d8c3fd2c9a63a2"
+      },
+      "docs/evaluations/site-graph-v0/schemas/trusted-reviewers.schema.json": {
+        "bytes": 3588,
+        "sha256": "c74d1b70300643a6072c1228f0b0552ef27db31f6dbec8795791dc303998f212"
       },
       "docs/evaluations/site-graph-v0/schemas/trusted-run-attestors.schema.json": {
-        "bytes": 1625,
-        "sha256": "90ebad251c7a5f81b398609e339cd36fe83657858d1e59d9cab775f7a48ad811"
+        "bytes": 1712,
+        "sha256": "a389edf811074e1c51f4b1e68c6c6afaef421acf616d5f19badb77a1428162f0"
+      },
+      "docs/evaluations/site-graph-v0/schemas/trusted-source-exporters.schema.json": {
+        "bytes": 1736,
+        "sha256": "265beb6ad59dd37ed058f9c60eb6e8d4caa76e229daaeaaa7ffced19f8f99207"
       },
       "docs/evaluations/site-graph-v0/scripts/apply_corrections.py": {
         "bytes": 30984,
@@ -1245,12 +1359,12 @@
         "sha256": "566aba21ac8652c2328e7eb9f4bf38805a7b70abbbd3f97f39a05b1894071940"
       },
       "docs/evaluations/site-graph-v0/scripts/compare_baseline_runs.py": {
-        "bytes": 10243,
-        "sha256": "0d3322ed210e10aa14553f9c0f9b4f34bae870770e2ed2c564e00b1ce15372fb"
+        "bytes": 11408,
+        "sha256": "f1613c2bde2042b7b0a5e28665f40689f8c080d1712ef7acce01a04411cf61f0"
       },
       "docs/evaluations/site-graph-v0/scripts/compare_candidate.py": {
-        "bytes": 78352,
-        "sha256": "c06e2cf07d75fa20573ae01669c173d0615581689937286d4e62dcb38c24b28a"
+        "bytes": 92219,
+        "sha256": "a5984e7f2960a8e9ae5cfff7bd9cfbe5f6c83922445bb0b151557b7c1f2c0236"
       },
       "docs/evaluations/site-graph-v0/scripts/contract_constants.py": {
         "bytes": 501,
@@ -1261,12 +1375,12 @@
         "sha256": "62b73d8218c5f04d7654cb52a1c164954e317e36a65c3ba329aebe9115d1e688"
       },
       "docs/evaluations/site-graph-v0/scripts/freeze_candidate_inputs.py": {
-        "bytes": 12052,
-        "sha256": "f1bd4da9842b714d8f7e7f4bbc743737ce68d583cceb1668999f07d0e5f4af86"
+        "bytes": 17950,
+        "sha256": "baa335b742d8d88c2a4cbf3b9d93a94f5c81f32bfb0a765253e1b041150e09be"
       },
       "docs/evaluations/site-graph-v0/scripts/freeze_release.py": {
-        "bytes": 4175,
-        "sha256": "79b88fd1e0e44f2de0663914e3c6cd64acb74044ddfb22c08cb34fdf28ef0872"
+        "bytes": 4229,
+        "sha256": "45690d7f8fdfff40afaa49ee7aba3ad706e5887fb4f518fefee33c8828e7fcca"
       },
       "docs/evaluations/site-graph-v0/scripts/generate_validation_report.py": {
         "bytes": 1688,
@@ -1285,32 +1399,56 @@
         "sha256": "0df23599c4f035285167fb51b43369b35c38dd172763400a15f32fa8a14fc476"
       },
       "docs/evaluations/site-graph-v0/scripts/release_contract.py": {
-        "bytes": 6523,
-        "sha256": "70b909aff8f66dded9f12c6a0f7759b582bc50917cc0fbd5cf8f61ebbfa4a750"
+        "bytes": 7571,
+        "sha256": "80dbf3927a0e01ace625dd9d996737b7c1ba6397cafdb9bc9384c7b7cf324ed2"
+      },
+      "docs/evaluations/site-graph-v0/scripts/review_auth.py": {
+        "bytes": 45476,
+        "sha256": "fab2cb33c703fe874e4975574d2cb0ce2e3245084083fdc1745ceb9728a318e8"
       },
       "docs/evaluations/site-graph-v0/scripts/run_baseline.py": {
-        "bytes": 12196,
-        "sha256": "646335aad16dd539bef4c2e842431d839190548351b671627eceafc0444a2af1"
+        "bytes": 12859,
+        "sha256": "205a3edad204292d062ea3f85b0e14166536756372c56bb5d296b44f0543a218"
       },
       "docs/evaluations/site-graph-v0/scripts/run_two_baselines.py": {
         "bytes": 2128,
         "sha256": "fb2c80bc2ea9f3b9d87394ceed4efae120f4e9e2a787c6bc0d32700071652ea1"
       },
+      "docs/evaluations/site-graph-v0/scripts/runtime_attestation.py": {
+        "bytes": 4014,
+        "sha256": "644a34c67fdfcadece45dd2844d87e3137eecd3a672c502a08b6d7977856e0e8"
+      },
       "docs/evaluations/site-graph-v0/scripts/schema_validation.py": {
         "bytes": 3622,
         "sha256": "a239055819007ae685eb6ed5b55f39eb78a5a9191072c05ff3a29cc34b82efa4"
       },
+      "docs/evaluations/site-graph-v0/scripts/source_exports.py": {
+        "bytes": 6652,
+        "sha256": "d3a4144bd137f999602f280fb44385165eb2c8a3d3194a13baa45a83975ad5a3"
+      },
+      "docs/evaluations/site-graph-v0/scripts/trusted_completion.py": {
+        "bytes": 25477,
+        "sha256": "8fe6348b6598a1d73fa95c7b8cf3f66b57b1c30b929025ad4d78f42d3d3be08b"
+      },
       "docs/evaluations/site-graph-v0/scripts/validate_contract.py": {
-        "bytes": 31197,
-        "sha256": "074caaaba477efcb18b1334f2a05c37a979559207e330f61bd0a9cb497b9e825"
+        "bytes": 38611,
+        "sha256": "c83520d002355f59cf51df1293c06152e03f4bfa435d01e54bf55745b3b4bcb8"
       },
       "docs/evaluations/site-graph-v0/top-unmatched-components.json": {
         "bytes": 12176,
         "sha256": "d425a4868eef9071944f33ef09c75baffdc7ca122974de5ae05641746770ecf8"
       },
+      "docs/evaluations/site-graph-v0/trusted-reviewers.json": {
+        "bytes": 736,
+        "sha256": "e2b400a8aefe5216418c802532bc4353a0cc4774828c200e449d18ea4a7af7fd"
+      },
       "docs/evaluations/site-graph-v0/trusted-run-attestors.json": {
-        "bytes": 649,
-        "sha256": "6879cfe14133a60356901a8873dd99508a2b658bc3ff10a5798a2eb1dc45bd21"
+        "bytes": 691,
+        "sha256": "feb4fa83e73d6da7ef6269cb04a102f053d36f211ce646ed4efffa1a9ccbdf23"
+      },
+      "docs/evaluations/site-graph-v0/trusted-source-exporters.json": {
+        "bytes": 731,
+        "sha256": "c253b2af978a5c58b9c92239409603d4b388cf8a667f380203eb03e6f8a26f29"
       },
       "docs/evaluations/site-graph-v0/type-crosswalk.json": {
         "bytes": 2663,
@@ -1325,12 +1463,12 @@
         "sha256": "a4ea0ccadd41e3363c805e8f4c14310114b6772b79c135d161f2d487deada581"
       },
       "pipeline/tests/test_site_graph_v0_candidate_adversarial.py": {
-        "bytes": 19964,
-        "sha256": "11f8f7f8c6f4783fe48632912dc0dbd0506409300c51e9bf1acf10378ab9845f"
+        "bytes": 27008,
+        "sha256": "6b8554ff183eacaacea4765d7820e96a07927422613dee84b6c6ace703905faa"
       },
       "pipeline/tests/test_site_graph_v0_contract.py": {
-        "bytes": 60600,
-        "sha256": "088bf226c3e6bc1fd48f20bb13ed9175e73b2265a7a6485d37f9d9ffa7fd2419"
+        "bytes": 61504,
+        "sha256": "d1a4c0178f4f94e8dc1f16ea570744e2f96b77a08a5b76536d7d898a33796bbc"
       },
       "pipeline/tests/test_site_graph_v0_corrections.py": {
         "bytes": 17052,
@@ -1339,6 +1477,18 @@
       "pipeline/tests/test_site_graph_v0_private_ledgers.py": {
         "bytes": 11467,
         "sha256": "ecf76d9c3c0e61c992c71688a90fb1a204444bda7a2778e1f233fa813fb59186"
+      },
+      "pipeline/tests/test_site_graph_v0_review_auth.py": {
+        "bytes": 28234,
+        "sha256": "216729ac4c20b2098c77f6e3f54518b6e03273f21805b86ad139002cb3e708d8"
+      },
+      "pipeline/tests/test_site_graph_v0_source_exports.py": {
+        "bytes": 7614,
+        "sha256": "7a5003a68aa8f8812a07994b26b8c16c5ab4127e3f531076fbfee494fe4a6549"
+      },
+      "pipeline/tests/test_site_graph_v0_trusted_provenance.py": {
+        "bytes": 39851,
+        "sha256": "786b7d7cbb7ebc81e5532e53e43b9a4771fa457996720605f09392a19b87ee53"
       },
       "pipeline/uv.lock": {
         "bytes": 500187,
@@ -1355,17 +1505,18 @@
     "downstream_product_verdict": "NOT_RUN",
     "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
     "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "pre_pr_ci_status": "PENDING_OUTSIDE_COMMIT",
     "snapshot_acquisition_integrity": "PASS",
     "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
   },
   "summary": {
     "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
     "canonical_records": 36245,
-    "checks": 20,
+    "checks": 21,
     "downstream_product_verdict": "NOT_RUN",
     "failed": 0,
     "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
-    "passed": 20,
+    "passed": 21,
     "private_record_evidence_gzip_sha256": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
     "private_record_evidence_uncompressed_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
     "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"

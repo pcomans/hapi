@@ -86,9 +86,20 @@ def test_production_trust_root_fails_closed_while_not_configured() -> None:
         )
 
 
+def test_comparator_forbids_explicit_review_answer_tokens_from_llm_requests() -> None:
+    assert compare_candidate.MECHANICAL_REVIEW_ANSWER_TOKENS == {
+        "supported",
+        "unsupported",
+        "uncertain",
+        "equivalent",
+        "distinct",
+        "strict_refinement",
+    }
+
+
 def test_link_credit_requires_exact_private_opportunity_binding(tmp_path: Path) -> None:
     case = contract._comparator_case(tmp_path)
-    case["candidate"]["records"][0]["direct_links"][0][
+    case["candidate"]["records"][0]["opportunity_outcomes"][0][
         "opportunity_binding_sha256"
     ] = "f" * 64
     report = contract._run_case(case)
@@ -106,6 +117,131 @@ def test_pair_credit_requires_same_exact_opportunity_binding(tmp_path: Path) -> 
     report = contract._run_case(case)
     assert report["outcome"] == "INVALID"
     assert any("pair-side opportunity binding" in error for error in report["integrity"]["errors"])
+
+
+def _add_second_frozen_binding(case: dict, artifact_id: str) -> dict:
+    extra = {
+        "opportunity_id": "opp-9999",
+        "opportunity_binding_sha256": contract.canonical_sha256(
+            {"artifact_id": artifact_id, "opportunity_id": "opp-9999"}
+        ),
+    }
+    for rows in case["private_opportunity"]["intent_to_treat_records_by_museum"].values():
+        for row in rows:
+            if row["artifact_id"] == artifact_id:
+                row["opportunity_bindings"].append(extra)
+                row["opportunity_bindings"].sort(
+                    key=lambda value: (
+                        value["opportunity_id"],
+                        value["opportunity_binding_sha256"],
+                    )
+                )
+    for pair in case["private_opportunity"][
+        "credited_pair_opportunity_memberships"
+    ].values():
+        for rows in pair["sides"].values():
+            for row in rows:
+                if row["artifact_id"] == artifact_id:
+                    row["opportunity_bindings"].append(extra)
+                    row["opportunity_bindings"].sort(
+                        key=lambda value: (
+                            value["opportunity_id"],
+                            value["opportunity_binding_sha256"],
+                        )
+                    )
+    record = next(
+        row for row in case["candidate"]["records"] if row["artifact_id"] == artifact_id
+    )
+    record["opportunity_outcomes"].append(
+        {
+            **extra,
+            "resolution_status": "research_failure",
+            "abstention_reason": None,
+            "has_blocking_ambiguity": False,
+            "direct_links": [],
+        }
+    )
+    record["opportunity_outcomes"].sort(
+        key=lambda value: (
+            value["opportunity_id"], value["opportunity_binding_sha256"]
+        )
+    )
+    return extra
+
+
+@pytest.mark.parametrize("mutation", ["omitted", "duplicated", "substituted"])
+def test_every_frozen_opportunity_binding_requires_exactly_one_outcome(
+    tmp_path: Path, mutation: str
+) -> None:
+    case = contract._comparator_case(tmp_path)
+    extra = _add_second_frozen_binding(case, "met-a")
+    record = next(
+        row for row in case["candidate"]["records"] if row["artifact_id"] == "met-a"
+    )
+    extra_outcome = next(
+        row
+        for row in record["opportunity_outcomes"]
+        if row["opportunity_id"] == extra["opportunity_id"]
+    )
+    if mutation == "omitted":
+        record["opportunity_outcomes"].remove(extra_outcome)
+    elif mutation == "duplicated":
+        record["opportunity_outcomes"].append(copy.deepcopy(extra_outcome))
+    else:
+        extra_outcome["opportunity_binding_sha256"] = "c" * 64
+    report = contract._run_case(case)
+    assert report["outcome"] == "INVALID"
+    assert any(
+        "exactly one canonically sorted outcome" in error
+        for error in report["integrity"]["errors"]
+    )
+
+
+def test_multi_binding_outcomes_are_reported_by_disposition(tmp_path: Path) -> None:
+    case = contract._comparator_case(tmp_path)
+    _add_second_frozen_binding(case, "met-a")
+    report = contract._run_case(case)
+    assert report["outcome"] == "CONTINUE"
+    met = report["ambiguity_and_abstention"][
+        "opportunity_outcome_counts_by_museum"
+    ]["met"]
+    assert met == {
+        "linked": 2,
+        "ambiguous": 0,
+        "abstained": 0,
+        "unmatched": 0,
+        "unresolved": 0,
+        "research_failure": 1,
+    }
+
+
+def test_gained_identity_is_distinct_from_one_sided_baseline_identity(
+    tmp_path: Path,
+) -> None:
+    case = contract._comparator_case(tmp_path)
+    case["node_scope"]["nodes"].append(
+        {
+            "target_id": "one-sided-broad",
+            "scope_class": "broad",
+            "authority_identity_locator": "logic:one-sided-broad",
+        }
+    )
+    baseline = next(row for row in case["baseline"] if row["artifact_id"] == "met-a")
+    baseline["baseline_site_target_ids"].append("one-sided-broad")
+    outcome = next(
+        row
+        for row in case["candidate"]["records"]
+        if row["artifact_id"] == "met-a"
+    )["opportunity_outcomes"][0]
+    outcome["direct_links"].append(
+        {"target_id": "one-sided-broad", "support_decision_key": None}
+    )
+    report = contract._run_case(case)
+    assert report["outcome"] == "INVALID"
+    assert any(
+        "including one-sided identities" in error
+        for error in report["integrity"]["errors"]
+    )
 
 
 def test_hierarchy_cannot_cherry_pick_one_of_a_targets_source_records(
@@ -134,6 +270,77 @@ def test_hierarchy_cannot_cherry_pick_one_of_a_targets_source_records(
     assert any("all and only its source records" in error for error in report["integrity"]["errors"])
 
 
+@pytest.mark.parametrize("attack", ["wrong_kind", "originating_museum", "invented_locator"])
+def test_review_citation_is_bound_to_exact_independent_source_export(
+    tmp_path: Path, attack: str
+) -> None:
+    case = contract._comparator_case(tmp_path)
+    source_export = copy.deepcopy(case["snapshots"][0])
+    source_record = source_export["records"][0]
+    citation = {
+        "source_id": source_record["source_record_id"],
+        "source_kind": source_export["source_kind"],
+        "locator": source_record["authority_citations"][0],
+    }
+    assert (
+        compare_candidate._require_citation_in_authenticated_export(
+            citation, source_export, label="logic citation"
+        )
+        == source_record["target_id"]
+    )
+    if attack == "wrong_kind":
+        citation["source_kind"] = "candidate-claimed-kind"
+    elif attack == "originating_museum":
+        source_export["originating_museum"] = True
+    else:
+        citation["locator"] = "logic:invented-locator"
+    with pytest.raises(ValueError, match="authenticated export"):
+        compare_candidate._require_citation_in_authenticated_export(
+            citation, source_export, label="logic citation"
+        )
+
+
+@pytest.mark.parametrize(
+    ("subject", "covered_targets", "missing_target"),
+    [
+        (
+            {"artifact_id": "artifact-1", "target_id": "target-wanted"},
+            {"target-unrelated"},
+            "target-wanted",
+        ),
+        (
+            {
+                "left_target_id": "target-left",
+                "right_target_id": "target-right",
+                "relation": "distinct",
+            },
+            {"target-left", "target-unrelated"},
+            "target-right",
+        ),
+    ],
+)
+def test_review_citations_must_cover_every_signed_subject_target(
+    subject: dict, covered_targets: set[str], missing_target: str
+) -> None:
+    with pytest.raises(ValueError, match="lack authenticated source-record coverage") as error:
+        compare_candidate._require_subject_target_citation_coverage(
+            subject, covered_targets, label="logic review"
+        )
+    assert missing_target in str(error.value)
+
+
+def test_review_citations_collectively_cover_relation_subject_targets() -> None:
+    compare_candidate._require_subject_target_citation_coverage(
+        {
+            "left_target_id": "target-left",
+            "right_target_id": "target-right",
+            "relation": "equivalent",
+        },
+        {"target-left", "target-right"},
+        label="logic review",
+    )
+
+
 def test_inverse_parent_edges_are_required_in_derived_children(tmp_path: Path) -> None:
     case = contract._comparator_case(tmp_path)
     snapshot = case["snapshots"][0]
@@ -159,7 +366,7 @@ def test_inverse_parent_edges_are_required_in_derived_children(tmp_path: Path) -
             "candidate_e55_type": "archaeological_site",
             "child_ids": [],
             "ancestor_target_ids": ["broad-0", "specific-1"],
-            "source_snapshot_ids": ["logic-source"],
+            "source_export_ids": ["logic-source"],
             "source_record_ids": ["source-specific-1-child"],
         }
     )
@@ -484,21 +691,11 @@ def _llm_review_fixture(
     return repo, freeze_commit, result_commit, ledger, frozen_files
 
 
-@pytest.mark.parametrize(
-    ("variant", "message"),
-    [
-        ({"reuse_prompt": True}, "reused"),
-        ({"empty_response": True}, "empty"),
-        ({"post_hoc_audit": True}, "git show"),
-    ],
-)
-def test_llm_provenance_rejects_reuse_empty_and_post_hoc_audits(
-    tmp_path: Path, variant: dict, message: str
+def test_review_wrapper_rejects_missing_authenticated_source_export_census(
+    tmp_path: Path,
 ) -> None:
-    repo, freeze_commit, result_commit, ledger, frozen_files = _llm_review_fixture(
-        tmp_path, **variant
-    )
-    with pytest.raises(ValueError, match=message):
+    repo, freeze_commit, result_commit, ledger, frozen_files = _llm_review_fixture(tmp_path)
+    with pytest.raises(ValueError, match="complete authenticated authority-export census"):
         compare_candidate._validate_review_artifacts(
             repo,
             result_commit,

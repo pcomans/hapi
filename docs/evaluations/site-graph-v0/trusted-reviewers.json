@@ -1,0 +1,11 @@
+{
+  "schema_version": "site-graph-v0-trusted-reviewers/1",
+  "registry_id": "hapi-site-graph-v0-production-reviewers",
+  "status": "NOT_CONFIGURED",
+  "trust_tier": "PRODUCTION",
+  "signature_scheme": "ed25519",
+  "signature_context": "hapi-site-graph-v0-review-evidence/1",
+  "identities": [],
+  "configuration_rule": "A separately reviewed release-contract migration must pin authenticated reviewer and prompt-auditor public keys, independence groups, permitted methods, credential provenance, and validity intervals before review evidence can receive production credit.",
+  "current_effect": "Candidate review credit fails closed. Generated test keys exercise signature mechanics only and cannot satisfy this production registry."
+}

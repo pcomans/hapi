@@ -35,6 +35,7 @@ from corpus_archive import (
 from integrity import IntegrityError, sha256, verify_release
 from private_ledgers import verify_private_ledgers, verify_public_boundary
 from release_contract import validation_input_bindings
+from runtime_attestation import validate_runtime_attestation
 from schema_validation import execute_schema_contract_tests, validate_schema
 
 
@@ -65,6 +66,159 @@ def verify_file(path: Path, expected: dict) -> dict:
     return actual
 
 
+def _validate_private_run_runtime(
+    repo_root: Path,
+    private_run: Path,
+    snapshot: dict,
+    reruns: dict,
+) -> dict:
+    """Verify one exact rerun identity and its truthful runtime provenance."""
+    # Import only after the caller's release-integrity preflight.  Keeping a required
+    # release module out of top-level imports ensures deletion/corruption is reported
+    # as an inventory failure before Python attempts to load semantic tooling.
+    from compare_baseline_runs import validate_run as validate_baseline_run
+
+    runtime_path = private_run / "runtime-attestation.json"
+    manifest_path = private_run / "run-output-manifest.json"
+    provenance_path = private_run / "run-provenance.json"
+    paths = {
+        "runtime_attestation": runtime_path,
+        "run_output_manifest": manifest_path,
+        "run_provenance": provenance_path,
+    }
+    missing = sorted(label for label, path in paths.items() if not path.is_file())
+    if missing:
+        return {
+            "passed": False,
+            "missing": missing,
+            "checks": {},
+            "matching_rerun": None,
+        }
+
+    try:
+        runtime = read_json(runtime_path)
+        manifest = read_json(manifest_path)
+        provenance = read_json(provenance_path)
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        return {
+            "passed": False,
+            "missing": [],
+            "checks": {},
+            "matching_rerun": None,
+            "error": f"private-run runtime provenance is unreadable: {error}",
+        }
+
+    errors: list[str] = []
+    exact_full_run_validation = False
+    try:
+        validate_baseline_run(private_run)
+        exact_full_run_validation = True
+    except (KeyError, OSError, TypeError, ValueError, RuntimeError) as error:
+        errors.append(str(error))
+
+    runtime_matches_release = False
+    try:
+        validated_runtime = validate_runtime_attestation(
+            repo_root, snapshot, runtime
+        )
+        runtime_matches_release = True
+    except (KeyError, TypeError, ValueError, RuntimeError) as error:
+        validated_runtime = None
+        errors.append(str(error))
+
+    runtime_reference = None
+    if validated_runtime is not None:
+        runtime_reference = {
+            "path": "runtime-attestation.json",
+            "sha256": sha256(runtime_path),
+            "python": validated_runtime["python"],
+            "dependency_lock": validated_runtime["dependency_lock"],
+        }
+
+    manifest_sha256 = sha256(manifest_path)
+    provenance_sha256 = sha256(provenance_path)
+    identity = {
+        "resolved_directory": str(private_run.resolve()),
+        "run_id": provenance.get("run_id") if isinstance(provenance, dict) else None,
+        "manifest_sha256": manifest_sha256,
+        "provenance_sha256": provenance_sha256,
+    }
+    matching_reruns = [
+        label
+        for label in ("run_a", "run_b")
+        if isinstance(reruns.get(label), dict)
+        and all(reruns[label].get(field) == value for field, value in identity.items())
+    ]
+    manifest_hashes = (
+        manifest.get("deterministic_output_hashes", {})
+        if isinstance(manifest, dict)
+        else {}
+    )
+    rerun_hashes = (
+        reruns.get("deterministic_output_hashes", {})
+        if isinstance(reruns, dict)
+        else {}
+    )
+    requested_output = (
+        provenance.get("requested_output") if isinstance(provenance, dict) else None
+    )
+    requested_output_matches = (
+        isinstance(requested_output, str)
+        and Path(requested_output).resolve() == private_run.resolve()
+    )
+    checks = {
+        "exact_full_run_output_validation": exact_full_run_validation,
+        "runtime_attestation_matches_release_environment": runtime_matches_release,
+        "manifest_schema_version": (
+            isinstance(manifest, dict)
+            and manifest.get("schema_version")
+            == "site-graph-v0-baseline-run-manifest/3"
+        ),
+        "manifest_runtime_binding": (
+            runtime_reference is not None
+            and isinstance(manifest, dict)
+            and manifest.get("runtime_attestation") == runtime_reference
+        ),
+        "manifest_runtime_output_hash": (
+            runtime_reference is not None
+            and isinstance(manifest_hashes, dict)
+            and manifest_hashes.get("runtime-attestation.json")
+            == runtime_reference["sha256"]
+        ),
+        "provenance_schema_version": (
+            isinstance(provenance, dict)
+            and provenance.get("schema_version")
+            == "site-graph-v0-baseline-run-provenance/3"
+        ),
+        "provenance_runtime_binding": (
+            runtime_reference is not None
+            and isinstance(provenance, dict)
+            and provenance.get("runtime_attestation") == runtime_reference
+        ),
+        "provenance_requested_output_binding": requested_output_matches,
+        "rerun_evidence_runtime_binding": (
+            runtime_reference is not None
+            and reruns.get("runtime_attestation") == runtime_reference
+        ),
+        "rerun_evidence_runtime_output_hash": (
+            runtime_reference is not None
+            and isinstance(rerun_hashes, dict)
+            and rerun_hashes.get("runtime-attestation.json")
+            == runtime_reference["sha256"]
+        ),
+        "rerun_identity_binding": len(matching_reruns) == 1,
+    }
+    return {
+        "passed": all(checks.values()),
+        "missing": [],
+        "checks": checks,
+        "matching_rerun": matching_reruns[0] if len(matching_reruns) == 1 else None,
+        "runtime_attestation": runtime_reference,
+        "private_run_identity": identity,
+        "errors": errors,
+    }
+
+
 def _semantic_report(
     repo_root: Path,
     corpus: Path,
@@ -85,6 +239,15 @@ def _semantic_report(
 
     def check(check_id: str, passed: bool, evidence: object) -> None:
         checks.append({"check_id": check_id, "passed": bool(passed), "evidence": evidence})
+
+    private_runtime_validation = _validate_private_run_runtime(
+        repo_root, private_run, snapshot, reruns
+    )
+    check(
+        "private_run_runtime_attestation_and_rerun_binding",
+        private_runtime_validation["passed"],
+        private_runtime_validation,
+    )
 
     runtime_attestation_path = private_run / "corpus-archive-attestation.json"
     runtime_attestation = (
@@ -443,19 +606,43 @@ def _semantic_report(
     )
 
     trusted_attestors = read_json(root / "trusted-run-attestors.json")
+    trusted_source_exporters = read_json(root / "trusted-source-exporters.json")
+    trusted_reviewers = read_json(root / "trusted-reviewers.json")
     validate_schema(
         trusted_attestors,
         root / "schemas/trusted-run-attestors.schema.json",
         "release-pinned trusted run attestors",
     )
+    validate_schema(
+        trusted_source_exporters,
+        root / "schemas/trusted-source-exporters.schema.json",
+        "release-pinned trusted source exporters",
+    )
+    validate_schema(
+        trusted_reviewers,
+        root / "schemas/trusted-reviewers.schema.json",
+        "release-pinned trusted reviewers and auditors",
+    )
     check(
-        "production_candidate_run_trust_gate_fail_closed",
+        "production_candidate_trust_gates_fail_closed",
         trusted_attestors["status"] == "NOT_CONFIGURED"
-        and trusted_attestors["attestors"] == [],
+        and trusted_attestors["attestors"] == []
+        and trusted_source_exporters["status"] == "NOT_CONFIGURED"
+        and trusted_source_exporters["registry_scope"] == "production_release"
+        and trusted_source_exporters["exporters"] == []
+        and trusted_reviewers["status"] == "NOT_CONFIGURED"
+        and trusted_reviewers["trust_tier"] == "PRODUCTION"
+        and trusted_reviewers["identities"] == [],
         {
             "trusted_run_attestor_status": trusted_attestors["status"],
+            "trusted_source_exporter_status": trusted_source_exporters["status"],
+            "trusted_reviewer_status": trusted_reviewers["status"],
             "downstream_product_verdict": "NOT_RUN",
-            "effect": trusted_attestors["current_effect"],
+            "effects": {
+                "run_completion": trusted_attestors["current_effect"],
+                "source_export": trusted_source_exporters["current_effect"],
+                "review_evidence": trusted_reviewers["current_effect"],
+            },
         },
     )
 
@@ -497,11 +684,13 @@ def _semantic_report(
         and reruns.get("builder_sha256") == sha256(root / "scripts/build_baseline.py")
         and reruns.get("corpus_archive_sha256")
         == snapshot["corpus"]["archive_acquisition"]["archive_sha256"]
+        and private_runtime_validation["passed"]
         and public_match,
         {
             "run_a": reruns.get("run_a"),
             "run_b": reruns.get("run_b"),
             "deterministic_output_count": reruns.get("deterministic_output_count"),
+            "private_run_runtime_binding": private_runtime_validation,
             "committed_public_outputs_match": public_match,
         },
     )
@@ -583,6 +772,7 @@ def _semantic_report(
             "overall_contract_status": overall_status,
             "downstream_product_verdict": "NOT_RUN",
             "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
+            "pre_pr_ci_status": "PENDING_OUTSIDE_COMMIT",
         },
         "scope": (
             f"snapshot-conditional evaluation over the authenticated real "

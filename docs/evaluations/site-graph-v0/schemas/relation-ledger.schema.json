@@ -8,7 +8,7 @@
   "properties": {
     "schema_version": {"const": "site-graph-v0-relation-ledger/2"},
     "strict_refinement_direction": {"const": "left_target_id_is_narrower_than_right_target_id"},
-    "identity_census_policy": {"const": "every_counted_distinct_class_pair_has_positive_distinctness_or_source_locator_equivalence"},
+    "identity_census_policy": {"const": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class"},
     "relations": {
       "type": "array",
       "items": {

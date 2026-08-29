@@ -36,7 +36,22 @@ from contract_constants import (
 from integrity import verify_release
 from metrics_core import TOP_K, concentration, partition_scopes, ratio
 from private_ledgers import verify_private_ledgers
+from review_auth import (
+    ArtifactUsageTracker,
+    ReviewAuthenticationError,
+    authenticate_prompt_audit,
+    authenticate_review_artifact,
+    load_reviewer_registry,
+    require_distinct_registered_reviewers,
+    strict_json_object,
+)
 from schema_validation import SchemaValidationError, validate_schema
+from source_exports import (
+    TRUSTED_SOURCE_EXPORTERS_RELATIVE,
+    authenticate_source_export,
+    load_source_exporter_policy,
+)
+from trusted_completion import verify_trusted_completion
 
 
 EVENTS = (
@@ -46,6 +61,16 @@ EVENTS = (
     "unchanged",
     "loss",
     "uncredited_change",
+)
+MECHANICAL_REVIEW_ANSWER_TOKENS = frozenset(
+    {
+        "supported",
+        "unsupported",
+        "uncertain",
+        "equivalent",
+        "distinct",
+        "strict_refinement",
+    }
 )
 ABSTENTION_REASONS = {
     "compound_expression",
@@ -146,26 +171,26 @@ def _raw_type_crosswalk(crosswalk: dict, errors: list[str]) -> dict[str, tuple[s
 
 
 def _derive_candidate_scope(
-    hierarchy: dict, source_snapshots: list[dict], crosswalk: dict, errors: list[str]
+    hierarchy: dict, source_exports: list[dict], crosswalk: dict, errors: list[str]
 ) -> tuple[dict[str, str], dict[str, str]]:
     raw_mapping = _raw_type_crosswalk(crosswalk, errors)
-    snapshots: dict[str, dict] = {}
+    exports: dict[str, dict] = {}
     source_records: dict[str, tuple[str, dict]] = {}
     target_records: dict[str, list[tuple[str, dict]]] = defaultdict(list)
-    for snapshot in source_snapshots:
-        snapshot_id = snapshot.get("source_snapshot_id")
-        if not snapshot_id or snapshot_id in snapshots:
-            errors.append("source snapshot IDs must be nonempty and unique")
+    for source_export in source_exports:
+        export_id = source_export.get("source_export_id")
+        if not export_id or export_id in exports:
+            errors.append("authenticated source export IDs must be nonempty and unique")
             continue
-        snapshots[snapshot_id] = snapshot
-        records = snapshot.get("records", [])
-        completeness = snapshot.get("completeness", {})
+        exports[export_id] = source_export
+        records = source_export.get("records", [])
+        completeness = source_export.get("completeness", {})
         if completeness.get("record_count") != len(records):
-            errors.append(f"source snapshot {snapshot_id} complete record count mismatch")
+            errors.append(f"source export {export_id} complete record count mismatch")
         if completeness.get("records_canonical_sha256") != canonical_sha256(records):
-            errors.append(f"source snapshot {snapshot_id} complete-record hash mismatch")
+            errors.append(f"source export {export_id} complete-record hash mismatch")
         if records != sorted(records, key=lambda row: row.get("source_record_id", "")):
-            errors.append(f"source snapshot {snapshot_id} records are not canonically sorted")
+            errors.append(f"source export {export_id} records are not canonically sorted")
         for record in records:
             record_id = record.get("source_record_id")
             target_id = record.get("target_id")
@@ -179,8 +204,8 @@ def _derive_candidate_scope(
                 values = record.get(field, [])
                 if values != sorted(set(values)):
                     errors.append(f"source record {record_id} {field} is not sorted/unique")
-            source_records[record_id] = (snapshot_id, record)
-            target_records[target_id].append((snapshot_id, record))
+            source_records[record_id] = (export_id, record)
+            target_records[target_id].append((export_id, record))
 
     parent_by_target: dict[str, set[str]] = defaultdict(set)
     children_by_target: dict[str, set[str]] = defaultdict(set)
@@ -238,7 +263,7 @@ def _derive_candidate_scope(
         nodes_by_target[target_id] = node
     if set(nodes_by_target) != set(target_records):
         errors.append(
-            "candidate hierarchy must census every source-snapshot target: "
+            "candidate hierarchy must census every authenticated source-export target: "
             f"missing={sorted(set(target_records) - set(nodes_by_target))}, "
             f"extra={sorted(set(nodes_by_target) - set(target_records))}"
         )
@@ -246,14 +271,14 @@ def _derive_candidate_scope(
     for target_id, node in sorted(nodes_by_target.items()):
         all_records = target_records.get(target_id, [])
         expected_record_ids = sorted(row["source_record_id"] for _, row in all_records)
-        expected_snapshot_ids = sorted({snapshot_id for snapshot_id, _ in all_records})
+        expected_export_ids = sorted({export_id for export_id, _ in all_records})
         if node.get("source_record_ids") != expected_record_ids:
             errors.append(
                 f"candidate hierarchy {target_id} must bind all and only its source records"
             )
-        if node.get("source_snapshot_ids") != expected_snapshot_ids:
+        if node.get("source_export_ids") != expected_export_ids:
             errors.append(
-                f"candidate hierarchy {target_id} source snapshot census mismatch"
+                f"candidate hierarchy {target_id} source export census mismatch"
             )
         locators = {row.get("authority_identity_locator") for _, row in all_records}
         if None in locators or len(locators) != 1:
@@ -309,6 +334,52 @@ def _decision_supports(
     )
 
 
+def _require_citation_in_authenticated_export(
+    citation: dict, source_export: dict, *, label: str
+) -> str:
+    """Bind one claimed independent citation to exact trusted-export bytes."""
+    if (
+        source_export.get("originating_museum") is not False
+        or citation.get("source_kind") != source_export.get("source_kind")
+    ):
+        raise ReviewAuthenticationError(
+            "review citation source kind or museum independence differs "
+            f"from authenticated export: {label}"
+        )
+    for record in source_export.get("records", []):
+        if (
+            record.get("source_record_id") == citation.get("source_id")
+            and citation.get("locator") in record.get("authority_citations", [])
+        ):
+            return record["target_id"]
+    raise ReviewAuthenticationError(
+        f"review citation source/locator is absent from authenticated export: {label}"
+    )
+
+
+def _require_subject_target_citation_coverage(
+    subject: dict, cited_target_ids: set[str], *, label: str
+) -> None:
+    """Require exact authenticated source-record coverage for every subject target."""
+    subject_target_ids = {
+        value
+        for field, value in subject.items()
+        if (field == "target_id" or field.endswith("_target_id"))
+        and isinstance(value, str)
+        and value
+    }
+    if not subject_target_ids:
+        raise ReviewAuthenticationError(
+            f"review decision subject has no target IDs to cite: {label}"
+        )
+    missing = sorted(subject_target_ids - cited_target_ids)
+    if missing:
+        raise ReviewAuthenticationError(
+            "review citations lack authenticated source-record coverage for subject "
+            f"targets {missing}: {label}"
+        )
+
+
 def _fraction_from_ratio(value: dict) -> Fraction:
     denominator = value.get("denominator", 0)
     return Fraction(value.get("numerator", 0), denominator) if denominator else Fraction(0)
@@ -356,7 +427,7 @@ def compare_core(
     crosswalk: dict,
     candidate: dict,
     hierarchy: dict,
-    source_snapshots: list[dict],
+    source_exports: list[dict],
     relation_ledger: dict,
     decisions: dict[str, dict],
 ) -> dict:
@@ -380,7 +451,7 @@ def compare_core(
         errors.append("baseline node scope target IDs must be nonempty and unique")
 
     derived_scope, candidate_authority_locator = _derive_candidate_scope(
-        hierarchy, source_snapshots, crosswalk, errors
+        hierarchy, source_exports, crosswalk, errors
     )
     authority_locator: dict[str, str] = {}
     for row in node_scope.get("nodes", []):
@@ -550,10 +621,17 @@ def compare_core(
         artifact_id: set(targets) for artifact_id, targets in baseline_links.items()
     }
     credited_links: dict[str, set[str]] = defaultdict(set)
-    credited_link_bindings: dict[str, dict[str, tuple[str, str]]] = defaultdict(dict)
+    credited_link_bindings: dict[
+        str, dict[str, set[tuple[str, str]]]
+    ] = defaultdict(lambda: defaultdict(set))
     strict_pairs_by_artifact: dict[str, set[tuple[str, str]]] = defaultdict(set)
     events: list[dict] = []
     refinement_modes: Counter[str] = Counter()
+    opportunity_outcomes_by_museum: dict[str, Counter[str]] = {
+        museum: Counter() for museum in MUSEUMS
+    }
+    opportunity_abstention_reasons: Counter[str] = Counter()
+    artifact_candidate_blocking: dict[str, bool] = {}
 
     for artifact_id in sorted(itt_by_id):
         baseline = baseline_by_id[artifact_id]
@@ -561,73 +639,135 @@ def compare_core(
         record = candidate_by_id.get(artifact_id)
         if record is None:
             continue
-        status = record.get("resolution_status")
-        direct_links = record.get("direct_links", [])
-        abstention_reason = record.get("abstention_reason")
-        if status not in {"linked", "ambiguous", "abstained", "unmatched"}:
-            errors.append(f"candidate {artifact_id} resolution status invalid")
-        if (status == "linked") != bool(direct_links):
-            errors.append(f"candidate {artifact_id} linked status/direct links mismatch")
-        if record.get("has_blocking_ambiguity") is not (status == "ambiguous"):
-            errors.append(f"candidate {artifact_id} blocking ambiguity mismatch")
-        if status == "abstained":
-            if abstention_reason not in ABSTENTION_REASONS:
-                errors.append(f"candidate {artifact_id} abstention reason invalid")
-        elif abstention_reason is not None:
-            errors.append(f"candidate {artifact_id} abstention reason only applies to abstention")
-
-        targets_seen: set[str] = set()
+        outcomes = record.get("opportunity_outcomes", [])
+        outcome_bindings = [
+            (
+                outcome.get("opportunity_id"),
+                outcome.get("opportunity_binding_sha256"),
+            )
+            for outcome in outcomes
+        ]
+        expected_bindings = itt_bindings_by_id.get(artifact_id, set())
+        bindings_well_formed = all(
+            isinstance(opportunity_id, str)
+            and bool(opportunity_id)
+            and isinstance(binding_sha256, str)
+            and bool(binding_sha256)
+            for opportunity_id, binding_sha256 in outcome_bindings
+        )
+        if (
+            not bindings_well_formed
+            or outcome_bindings != sorted(outcome_bindings)
+            or len(outcome_bindings) != len(set(outcome_bindings))
+            or set(outcome_bindings) != expected_bindings
+        ):
+            errors.append(
+                f"candidate {artifact_id} must report exactly one canonically sorted outcome "
+                "for every frozen opportunity binding"
+            )
         supported_targets: set[str] = set()
         unsupported_targets: set[str] = set()
-        for link in direct_links:
-            target_id = link.get("target_id")
-            support_key = link.get("support_decision_key")
+        artifact_candidate_blocking[artifact_id] = any(
+            outcome.get("resolution_status") == "ambiguous" for outcome in outcomes
+        )
+        for outcome in outcomes:
+            status = outcome.get("resolution_status")
+            direct_links = outcome.get("direct_links", [])
+            abstention_reason = outcome.get("abstention_reason")
             opportunity_binding = (
-                link.get("opportunity_id"),
-                link.get("opportunity_binding_sha256"),
+                outcome.get("opportunity_id"),
+                outcome.get("opportunity_binding_sha256"),
             )
-            if not target_id or target_id in targets_seen:
-                errors.append(f"candidate {artifact_id} direct targets must be nonempty and unique")
-                continue
-            targets_seen.add(target_id)
-            if opportunity_binding not in itt_bindings_by_id.get(artifact_id, set()):
+            if status not in {
+                "linked",
+                "ambiguous",
+                "abstained",
+                "unmatched",
+                "unresolved",
+                "research_failure",
+            }:
                 errors.append(
-                    f"candidate link {artifact_id}/{target_id} is not bound to an exact private opportunity"
+                    f"candidate {artifact_id}/{opportunity_binding[0]} resolution status invalid"
                 )
-                unsupported_targets.add(target_id)
                 continue
-            if target_id not in all_targets:
-                errors.append(f"candidate {artifact_id} target {target_id} lacks authenticated scope")
-                continue
-            if target_id in baseline_targets:
-                if support_key is not None:
-                    errors.append(f"unchanged direct target {artifact_id}/{target_id} must not claim new support")
-                supported_targets.add(target_id)
-                continue
-            subject = {
-                "artifact_id": artifact_id,
-                "target_id": target_id,
-                "opportunity_id": opportunity_binding[0],
-                "opportunity_binding_sha256": opportunity_binding[1],
-            }
-            expected_key = decision_key("link_support", subject)
-            if support_key is None:
-                unsupported_targets.add(target_id)
-                continue
-            if support_key != expected_key or support_key not in decisions:
-                errors.append(f"candidate link {artifact_id}/{target_id} lacks exact review decision")
-                unsupported_targets.add(target_id)
-                continue
-            referenced_decisions.add(support_key)
-            if decisions[support_key].get("disagreement"):
-                unresolved_disagreements.add(support_key)
-            if _decision_supports(decisions, support_key, "link_support", subject):
-                supported_targets.add(target_id)
-                if target_scope[target_id] == "specific_candidate":
-                    credited_links[artifact_id].add(target_id)
-                    credited_link_bindings[artifact_id][target_id] = opportunity_binding
-            else:
-                unsupported_targets.add(target_id)
+            opportunity_outcomes_by_museum[museum_by_id[artifact_id]][status] += 1
+            if (status == "linked") != bool(direct_links):
+                errors.append(
+                    f"candidate {artifact_id}/{opportunity_binding[0]} linked status/direct links mismatch"
+                )
+            if outcome.get("has_blocking_ambiguity") is not (status == "ambiguous"):
+                errors.append(
+                    f"candidate {artifact_id}/{opportunity_binding[0]} blocking ambiguity mismatch"
+                )
+            if status == "abstained":
+                if abstention_reason not in ABSTENTION_REASONS:
+                    errors.append(
+                        f"candidate {artifact_id}/{opportunity_binding[0]} abstention reason invalid"
+                    )
+                else:
+                    opportunity_abstention_reasons[abstention_reason] += 1
+            elif abstention_reason is not None:
+                errors.append(
+                    f"candidate {artifact_id}/{opportunity_binding[0]} abstention reason only applies to abstention"
+                )
+            targets_seen: set[str] = set()
+            for link in direct_links:
+                target_id = link.get("target_id")
+                support_key = link.get("support_decision_key")
+                if not target_id or target_id in targets_seen:
+                    errors.append(
+                        f"candidate {artifact_id}/{opportunity_binding[0]} direct targets must be nonempty and unique"
+                    )
+                    continue
+                targets_seen.add(target_id)
+                if opportunity_binding not in expected_bindings:
+                    errors.append(
+                        f"candidate link {artifact_id}/{target_id} is not bound to an exact private opportunity"
+                    )
+                    unsupported_targets.add(target_id)
+                    continue
+                if target_id not in all_targets:
+                    errors.append(
+                        f"candidate {artifact_id} target {target_id} lacks authenticated scope"
+                    )
+                    continue
+                if target_id in baseline_targets:
+                    if support_key is not None:
+                        errors.append(
+                            f"unchanged direct target {artifact_id}/{target_id} must not claim new support"
+                        )
+                    supported_targets.add(target_id)
+                    continue
+                subject = {
+                    "artifact_id": artifact_id,
+                    "target_id": target_id,
+                    "opportunity_id": opportunity_binding[0],
+                    "opportunity_binding_sha256": opportunity_binding[1],
+                }
+                expected_key = decision_key("link_support", subject)
+                if support_key is None:
+                    unsupported_targets.add(target_id)
+                    continue
+                if support_key != expected_key or support_key not in decisions:
+                    errors.append(
+                        f"candidate link {artifact_id}/{target_id} lacks exact review decision"
+                    )
+                    unsupported_targets.add(target_id)
+                    continue
+                referenced_decisions.add(support_key)
+                if decisions[support_key].get("disagreement"):
+                    unresolved_disagreements.add(support_key)
+                if _decision_supports(
+                    decisions, support_key, "link_support", subject
+                ):
+                    supported_targets.add(target_id)
+                    if target_scope[target_id] == "specific_candidate":
+                        credited_links[artifact_id].add(target_id)
+                        credited_link_bindings[artifact_id][target_id].add(
+                            opportunity_binding
+                        )
+                else:
+                    unsupported_targets.add(target_id)
         candidate_links[artifact_id] = supported_targets
 
         covered_baseline = baseline_targets & supported_targets
@@ -743,20 +883,25 @@ def compare_core(
         shared_baseline_roots = {
             identity.find(target) for target in baseline_targets_by_museum[left]
         } & {identity.find(target) for target in baseline_targets_by_museum[right]}
-        shared_baseline_targets = {
+        relevant_baseline_targets = {
             target
             for museum in pair
             for target in baseline_targets_by_museum[museum]
-            if identity.find(target) in shared_baseline_roots
         }
+        baseline_representative_by_root: dict[str, str] = {}
+        for target in sorted(relevant_baseline_targets):
+            baseline_representative_by_root.setdefault(identity.find(target), target)
         for candidate_target in sorted(prospective):
             if identity.find(candidate_target) in shared_baseline_roots:
                 continue
-            for baseline_target in sorted(shared_baseline_targets):
+            for baseline_target in baseline_representative_by_root.values():
+                if identity.find(candidate_target) == identity.find(baseline_target):
+                    continue
                 if not positively_distinct(candidate_target, baseline_target):
                     errors.append(
-                        "prospective gained target lacks positive distinctness from a shared "
-                        f"baseline identity: {candidate_target}/{baseline_target}"
+                        "prospective gained target lacks positive distinctness from a relevant "
+                        "frozen baseline identity (including one-sided identities): "
+                        f"{candidate_target}/{baseline_target}"
                     )
 
     unused_decisions = sorted(set(decisions) - referenced_decisions)
@@ -927,8 +1072,10 @@ def compare_core(
                     target
                     for target in credited_links.get(artifact_id, set())
                     if identity.find(target) in gained_specific
-                    and credited_link_bindings.get(artifact_id, {}).get(target)
-                    in member_bindings[artifact_id]
+                    and bool(
+                        credited_link_bindings.get(artifact_id, {}).get(target, set())
+                        & member_bindings[artifact_id]
+                    )
                 }
                 if not gained_credited_targets:
                     continue
@@ -1041,14 +1188,11 @@ def compare_core(
         row["museum"] for row in baseline_records if row.get("has_blocking_ambiguity")
     )
     candidate_blocking = Counter(baseline_blocking)
-    abstentions: Counter[str] = Counter()
     for artifact_id in sorted(candidate_by_id):
         museum = museum_by_id[artifact_id]
         baseline_value = bool(baseline_by_id[artifact_id].get("has_blocking_ambiguity"))
-        candidate_value = bool(candidate_by_id[artifact_id].get("has_blocking_ambiguity"))
+        candidate_value = artifact_candidate_blocking.get(artifact_id, False)
         candidate_blocking[museum] += int(candidate_value) - int(baseline_value)
-        if candidate_by_id[artifact_id].get("resolution_status") == "abstained":
-            abstentions[candidate_by_id[artifact_id]["abstention_reason"]] += 1
     ambiguity_by_museum = {}
     ambiguity_pass = True
     for museum in MUSEUMS:
@@ -1115,7 +1259,23 @@ def compare_core(
         "pairs": pairs,
         "ambiguity_and_abstention": {
             "per_museum": ambiguity_by_museum,
-            "candidate_abstention_reason_counts": dict(sorted(abstentions.items())),
+            "opportunity_outcome_counts_by_museum": {
+                museum: {
+                    status: opportunity_outcomes_by_museum[museum][status]
+                    for status in (
+                        "linked",
+                        "ambiguous",
+                        "abstained",
+                        "unmatched",
+                        "unresolved",
+                        "research_failure",
+                    )
+                }
+                for museum in MUSEUMS
+            },
+            "candidate_abstention_reason_counts": dict(
+                sorted(opportunity_abstention_reasons.items())
+            ),
             "reviewer_disagreement_decisions_uncredited": len(unresolved_disagreements),
         },
         "run_binding": None,
@@ -1131,20 +1291,68 @@ def _validate_review_artifacts(
     *,
     freeze_commit: str | None = None,
     frozen_files: dict[str, dict] | None = None,
+    source_exports: list[dict] | None = None,
+    source_export_groups: list[dict] | None = None,
+    candidate_id: str | None = None,
 ) -> dict[str, dict]:
-    decisions: dict[str, dict] = {}
-    used_paths: set[str] = set()
-    used_content_hashes: set[str] = set()
-    used_invocation_ids: set[str] = set()
+    """Authenticate the exact two-review census against release trust roots."""
+    if freeze_commit is None:
+        raise ReviewAuthenticationError(
+            "review evidence cannot be authenticated without its pre-run freeze"
+        )
     frozen_files = frozen_files or {}
+    source_exports = source_exports or []
+    source_export_groups = source_export_groups or []
+    if not source_exports or len(source_exports) != len(source_export_groups):
+        raise ReviewAuthenticationError(
+            "review evidence requires the complete authenticated authority-export census"
+        )
+    reviewer_registry, _ = load_reviewer_registry(repo, schema_root)
+    usage = ArtifactUsageTracker()
+    decisions: dict[str, dict] = {}
+    export_by_reference: dict[tuple[str, str, str], dict] = {}
+    source_ids: set[str] = set()
+    answer_strings_by_target: dict[str, set[str]] = defaultdict(set)
+    for source_export, group in zip(
+        source_exports, source_export_groups, strict=True
+    ):
+        reference = group["export"]
+        reference_key = (
+            reference["path"],
+            reference["sha256"],
+            reference["git_blob_oid"],
+        )
+        export_by_reference[reference_key] = source_export
+        for record in source_export["records"]:
+            source_id = record["source_record_id"]
+            source_ids.add(source_id)
+            answer_strings_by_target[record["target_id"]].add(
+                record["authority_identity_locator"]
+            )
+            for locator in record["authority_citations"]:
+                answer_strings_by_target[record["target_id"]].add(locator)
 
-    def claim_unique(path: str, digest: str, label: str) -> None:
-        if path in used_paths:
-            raise ValueError(f"{label} path reused across reviews: {path}")
-        if digest in used_content_hashes:
-            raise ValueError(f"{label} bytes reused across reviews: {digest}")
-        used_paths.add(path)
-        used_content_hashes.add(digest)
+    def read_bound(reference: dict) -> bytes:
+        path = reference["path"]
+        frozen = frozen_files.get(path)
+        commit = result_commit
+        if frozen is not None:
+            if any(
+                reference[field] != frozen[field]
+                for field in ("path", "sha256", "git_blob_oid")
+            ):
+                raise ReviewAuthenticationError(
+                    f"review dependency differs from frozen bytes: {path}"
+                )
+            commit = freeze_commit
+        raw, _ = read_authenticated_bytes(
+            repo,
+            commit,
+            path,
+            expected_sha256=reference["sha256"],
+            expected_blob_oid=reference["git_blob_oid"],
+        )
+        return raw
 
     for ledger_decision in ledger["decisions"]:
         key = ledger_decision["decision_key"]
@@ -1152,96 +1360,62 @@ def _validate_review_artifacts(
         subject = ledger_decision["subject"]
         if key != decision_key(kind, subject) or key in decisions:
             raise ValueError("review decision keys must be canonical and unique")
-        artifacts = []
+        authenticated_reviews = []
         for reference in ledger_decision["review_artifacts"]:
             path = reference["path"]
-            artifact, metadata = read_authenticated_json(
+            raw_artifact, metadata = read_authenticated_bytes(
                 repo,
                 result_commit,
                 path,
                 expected_sha256=reference["sha256"],
                 expected_blob_oid=reference["git_blob_oid"],
             )
-            validate_schema(
-                artifact, schema_root / "review-artifact.schema.json", f"review artifact {path}"
-            )
+            artifact = strict_json_object(raw_artifact, label=f"review artifact {path}")
             if canonical_sha256(artifact) != reference["canonical_record_sha256"]:
                 raise ValueError(f"review artifact canonical record hash mismatch: {path}")
-            claim_unique(path, metadata["sha256"], "review artifact")
+            artifact_owner = (
+                artifact["llm_interaction"]["review_invocation_id"]
+                if artifact["method"] == "llm"
+                else f"human:{artifact['human_provenance']['review_session_id']}"
+            )
+            usage.claim_reference(
+                reference,
+                owner=artifact_owner,
+                role="review_artifact",
+                label="review artifact",
+            )
             if (
                 artifact["decision_key"] != key
                 or artifact["decision_kind"] != kind
                 or artifact["subject"] != subject
             ):
                 raise ValueError(f"review artifact is not bound to ledger decision: {path}")
-            if artifact["method"] == "human":
-                if artifact["llm_interaction"] is not None:
-                    raise ValueError(f"human review has LLM provenance: {path}")
-            else:
+            cited_target_ids: set[str] = set()
+            for citation in artifact["citations"]:
+                source_reference = citation["source_artifact"]
+                reference_key = (
+                    source_reference["path"],
+                    source_reference["sha256"],
+                    source_reference["git_blob_oid"],
+                )
+                if reference_key not in export_by_reference:
+                    raise ReviewAuthenticationError(
+                        f"review citation is not an authenticated authority export: {path}"
+                    )
+                cited_export = export_by_reference[reference_key]
+                cited_target_ids.add(
+                    _require_citation_in_authenticated_export(
+                        citation, cited_export, label=path
+                    )
+                )
+            _require_subject_target_citation_coverage(
+                subject, cited_target_ids, label=path
+            )
+
+            authenticated_audit = None
+            if artifact["method"] == "llm":
                 interaction = artifact["llm_interaction"]
-                if not isinstance(interaction, dict):
-                    raise ValueError(f"LLM review lacks full interaction provenance: {path}")
-                invocation_id = interaction["review_invocation_id"]
-                interaction_payload = {
-                    "review_id": artifact["review_id"],
-                    "review_invocation_id": invocation_id,
-                    "decision_key": key,
-                    "decision_kind": kind,
-                    "subject": subject,
-                    "model": interaction["model"],
-                    "parameters": interaction["parameters"],
-                    "prompt": interaction["prompt"],
-                    "input": interaction["input"],
-                    "raw_response": interaction["raw_response"],
-                    "prompt_leakage_audit": interaction["prompt_leakage_audit"]["artifact"],
-                }
-                if interaction["interaction_binding_sha256"] != canonical_sha256(
-                    interaction_payload
-                ):
-                    raise ValueError(f"LLM interaction binding hash mismatch: {path}")
-                if invocation_id in used_invocation_ids:
-                    raise ValueError(f"LLM review invocation ID reused: {invocation_id}")
-                used_invocation_ids.add(invocation_id)
-                if freeze_commit is None:
-                    raise ValueError("LLM review cannot be validated without its pre-run freeze")
-                prompt_reference = interaction["prompt"]
-                prompt_entry = frozen_files.get(prompt_reference["path"])
-                if (
-                    prompt_entry is None
-                    or prompt_entry.get("role") != "review_prompt"
-                    or any(
-                        prompt_reference[field] != prompt_entry[field]
-                        for field in ("path", "sha256", "git_blob_oid")
-                    )
-                ):
-                    raise ValueError(
-                        f"LLM prompt was not an exact pre-generation frozen input: {path}"
-                    )
-                prompt_raw, _ = read_authenticated_bytes(
-                    repo,
-                    freeze_commit,
-                    prompt_reference["path"],
-                    expected_sha256=prompt_reference["sha256"],
-                    expected_blob_oid=prompt_reference["git_blob_oid"],
-                )
-                if not prompt_raw.strip():
-                    raise ValueError(f"LLM prompt is empty: {prompt_reference['path']}")
-                claim_unique(
-                    prompt_reference["path"], prompt_reference["sha256"], "LLM prompt"
-                )
-                for label in ("input", "raw_response"):
-                    child = interaction[label]
-                    raw, _ = read_authenticated_bytes(
-                        repo,
-                        result_commit,
-                        child["path"],
-                        expected_sha256=child["sha256"],
-                        expected_blob_oid=child["git_blob_oid"],
-                    )
-                    if not raw.strip():
-                        raise ValueError(f"LLM {label} is empty: {child['path']}")
-                    claim_unique(child["path"], child["sha256"], f"LLM {label}")
-                audit_reference = interaction["prompt_leakage_audit"]["artifact"]
+                audit_reference = interaction["prompt_leakage_audit"]
                 audit_entry = frozen_files.get(audit_reference["path"])
                 if (
                     audit_entry is None
@@ -1254,54 +1428,76 @@ def _validate_review_artifacts(
                     raise ValueError(
                         f"LLM prompt audit was not an exact pre-generation frozen input: {path}"
                     )
-                audit, _ = read_authenticated_json(
-                    repo,
-                    freeze_commit,
-                    audit_reference["path"],
-                    expected_sha256=audit_reference["sha256"],
-                    expected_blob_oid=audit_reference["git_blob_oid"],
+                raw_audit = read_bound(audit_reference)
+                audit = strict_json_object(raw_audit, label="prompt leakage audit")
+                audit_signature = audit["authentication"]["signature"]
+                identifier_values = sorted(
+                    {
+                        str(value)
+                        for field, value in subject.items()
+                        if field.endswith("_id") and isinstance(value, str)
+                    }
                 )
-                validate_schema(
-                    audit,
-                    schema_root / "prompt-leakage-audit.schema.json",
-                    f"prompt leakage audit {audit_reference['path']}",
+                candidate_ids = sorted(
+                    {candidate_id or "candidate-id-unavailable", *identifier_values}
                 )
-                if (
-                    audit["review_id"] != artifact["review_id"]
-                    or
-                    audit["review_invocation_id"] != invocation_id
-                    or audit["decision_key"] != key
-                    or audit["decision_kind"] != kind
-                    or audit["subject"] != subject
-                    or audit["prompt"] != prompt_reference
-                ):
-                    raise ValueError(
-                        f"prompt leakage audit is not bound to exact prompt/subject/decision: {path}"
+                target_ids = {
+                    value
+                    for field, value in subject.items()
+                    if "target_id" in field and isinstance(value, str)
+                }
+                answer_strings = sorted(
+                    set(MECHANICAL_REVIEW_ANSWER_TOKENS)
+                    | target_ids
+                    | set().union(
+                        *(answer_strings_by_target.get(target, set()) for target in target_ids)
                     )
-                claim_unique(
-                    audit_reference["path"],
-                    audit_reference["sha256"],
-                    "prompt leakage audit",
                 )
-            artifacts.append({**artifact, "_metadata": metadata})
-        reviewer_ids = [artifact["reviewer"]["reviewer_id"] for artifact in artifacts]
-        groups = [artifact["reviewer"]["independence_group"] for artifact in artifacts]
-        hashes = [artifact["_metadata"]["sha256"] for artifact in artifacts]
-        record_hashes = [canonical_sha256({k: v for k, v in artifact.items() if k != "_metadata"}) for artifact in artifacts]
-        if (
-            len(set(reviewer_ids)) != REVIEWS_PER_CREDITED_DECISION
-            or len(set(groups)) != REVIEWS_PER_CREDITED_DECISION
-            or len(set(hashes)) != REVIEWS_PER_CREDITED_DECISION
-            or len(set(record_hashes)) != REVIEWS_PER_CREDITED_DECISION
-        ):
-            raise ValueError(f"review decision {key} lacks two distinct independent artifacts")
-        outcomes = [artifact["outcome"] for artifact in artifacts]
+                if not answer_strings:
+                    raise ReviewAuthenticationError(
+                        f"review decision has no mechanically auditable answer strings: {key}"
+                    )
+                authenticated_audit = authenticate_prompt_audit(
+                    raw_audit,
+                    registry=reviewer_registry,
+                    schema_root=schema_root,
+                    signature_bytes=read_bound(audit_signature),
+                    signature_reference=audit_signature,
+                    read_artifact=read_bound,
+                    candidate_ids=candidate_ids,
+                    source_ids=sorted(source_ids),
+                    answer_strings=answer_strings,
+                    invocation_started_at_utc=interaction["invoked_at_utc"],
+                    usage=usage,
+                )
+            signature_reference = artifact["authentication"]["signature"]
+            authenticated = authenticate_review_artifact(
+                raw_artifact,
+                registry=reviewer_registry,
+                schema_root=schema_root,
+                signature_bytes=read_bound(signature_reference),
+                signature_reference=signature_reference,
+                read_artifact=read_bound,
+                usage=usage,
+                authenticated_prompt_audit=authenticated_audit,
+            )
+            authenticated_reviews.append(authenticated)
+        require_distinct_registered_reviewers(
+            authenticated_reviews,
+            required_count=REVIEWS_PER_CREDITED_DECISION,
+        )
+        outcomes = [review["outcome"] for review in authenticated_reviews]
         decisions[key] = {
             "decision_kind": kind,
             "subject": subject,
-            "supported": outcomes == ["supported", "supported"],
+            "supported": all(outcome == "supported" for outcome in outcomes),
             "disagreement": len(set(outcomes)) > 1,
-            "review_artifact_sha256": sorted(hashes),
+            "review_artifact_sha256": sorted(
+                review["artifact_sha256"] for review in authenticated_reviews
+            ),
+            "authenticated_reviewer_ids": sorted(
+                review["reviewer_id"] for review in authenticated_reviews
+            ),
         }
     return decisions
 
@@ -1320,6 +1516,8 @@ def _load_trusted_attestor_policy(
         schema_root / "trusted-run-attestors.schema.json",
         "release-pinned trusted run attestors",
     )
+    if policy["registry_scope"] != "production_release":
+        raise CandidateGitError("test-only run-attestor registry rejected in production")
     if policy["status"] != "CONFIGURED":
         raise CandidateGitError(
             "production candidate comparison blocked: trusted run attestors are NOT_CONFIGURED"
@@ -1344,13 +1542,28 @@ def _load_candidate_run(
     repo: Path,
     audit_commit: str,
     run_result_manifest_path: str,
+    completion_attestation_path: str,
+    completion_signature_path: str,
     release_manifest_sha256: str,
     private_ledger_sha256: str,
     schema_root: Path,
 ) -> tuple[dict, dict, list[dict], dict, dict, dict, dict, str, str]:
     """Load one result only through its post-result manifest and release trust root."""
     policy, policy_metadata = _load_trusted_attestor_policy(repo, schema_root)
+    source_exporter_policy, source_exporter_policy_metadata = (
+        load_source_exporter_policy(repo, schema_root, production=True)
+    )
     audit_commit = resolve_commit(repo, audit_commit)
+    completion_verification = verify_trusted_completion(
+        repo,
+        audit_commit,
+        run_result_manifest_path,
+        completion_attestation_path,
+        completion_signature_path,
+        release_manifest_sha256,
+        schema_root=schema_root,
+        production=True,
+    )
     run_manifest, run_manifest_metadata = read_authenticated_json(
         repo, audit_commit, run_result_manifest_path
     )
@@ -1381,7 +1594,7 @@ def _load_candidate_run(
     candidate_reference = run_manifest["candidate_result"]
     review_reference = run_manifest["review_ledger"]
     receipt_reference = run_manifest["run_start_receipt"]
-    signature_reference = run_manifest["run_start_signature"]
+    start_signature_reference = run_manifest["run_start_signature"]
     freeze_reference = run_manifest["freeze_manifest"]
     bound_paths = {
         reference["path"]
@@ -1389,7 +1602,7 @@ def _load_candidate_run(
             candidate_reference,
             review_reference,
             receipt_reference,
-            signature_reference,
+            start_signature_reference,
             freeze_reference,
         )
     }
@@ -1419,9 +1632,9 @@ def _load_candidate_run(
     signature_raw, _ = read_authenticated_bytes(
         repo,
         result_commit,
-        signature_reference["path"],
-        expected_sha256=signature_reference["sha256"],
-        expected_blob_oid=signature_reference["git_blob_oid"],
+        start_signature_reference["path"],
+        expected_sha256=start_signature_reference["sha256"],
+        expected_blob_oid=start_signature_reference["git_blob_oid"],
     )
     try:
         receipt = json.loads(receipt_raw)
@@ -1434,7 +1647,7 @@ def _load_candidate_run(
         raise CandidateGitError("candidate result exact review-ledger binding mismatch")
     if candidate["run_start_receipt"] != receipt_reference:
         raise CandidateGitError("candidate result exact run-start receipt binding mismatch")
-    if candidate["run_start_signature"] != signature_reference:
+    if candidate["run_start_signature"] != start_signature_reference:
         raise CandidateGitError("candidate result exact run-start signature binding mismatch")
     if candidate["freeze_commit"] != freeze_commit or candidate["freeze_manifest"] != freeze_reference:
         raise CandidateGitError("candidate result exact freeze binding mismatch")
@@ -1485,6 +1698,37 @@ def _load_candidate_run(
     ):
         raise CandidateGitError("freeze trusted-attestor policy binding mismatch")
 
+    source_policy_binding = freeze["trusted_source_exporters"]
+    source_policy_at_freeze, source_policy_at_freeze_metadata = (
+        read_authenticated_json(
+            repo,
+            freeze_commit,
+            TRUSTED_SOURCE_EXPORTERS_RELATIVE,
+            expected_sha256=source_policy_binding["raw_sha256"],
+            expected_blob_oid=source_policy_binding["git_blob_oid"],
+        )
+    )
+    if source_policy_at_freeze != source_exporter_policy:
+        raise CandidateGitError(
+            "freeze used a different trusted source-exporter policy"
+        )
+    if (
+        source_policy_binding["path"] != TRUSTED_SOURCE_EXPORTERS_RELATIVE
+        or source_policy_binding["raw_sha256"]
+        != source_exporter_policy_metadata["raw_sha256"]
+        or source_policy_binding["canonical_sha256"]
+        != source_exporter_policy_metadata["canonical_sha256"]
+        or source_policy_binding["status"] != "CONFIGURED"
+        or source_policy_binding["exporter_key_ids"]
+        != sorted(
+            exporter["key_id"]
+            for exporter in source_exporter_policy["exporters"]
+        )
+        or source_policy_at_freeze_metadata["git_blob_oid"]
+        != source_policy_binding["git_blob_oid"]
+    ):
+        raise CandidateGitError("freeze trusted source-exporter policy binding mismatch")
+
     expected_receipt_bindings = {
         "release_manifest_sha256": release_manifest_sha256,
         "trusted_run_attestors_canonical_sha256": policy_metadata["canonical_sha256"],
@@ -1519,11 +1763,15 @@ def _load_candidate_run(
     seen_paths: set[str] = set()
     seen_hashes: set[str] = set()
     loaded: dict[str, dict] = {}
+    loaded_raw: dict[str, bytes] = {}
     frozen_files: dict[str, dict] = {}
     schema_by_role = {
         "hierarchy": "candidate-hierarchy.schema.json",
         "relation_ledger": "relation-ledger.schema.json",
-        "source_snapshot": "candidate-source-snapshot.schema.json",
+        "authority_source_export": "authority-source-export.schema.json",
+        "authority_source_export_attestation": (
+            "authority-source-export-attestation.schema.json"
+        ),
         "prompt_leakage_audit": "prompt-leakage-audit.schema.json",
     }
     for entry in freeze["files"]:
@@ -1533,7 +1781,12 @@ def _load_candidate_run(
         seen_hashes.add(entry["sha256"])
         by_role[entry["role"]].append(entry)
         frozen_files[entry["path"]] = entry
-        if entry["role"] == "review_prompt":
+        if entry["role"] in {
+            "review_prompt",
+            "review_input",
+            "authority_source_export_signature",
+            "prompt_leakage_audit_signature",
+        }:
             raw, _ = read_authenticated_bytes(
                 repo,
                 freeze_commit,
@@ -1542,8 +1795,19 @@ def _load_candidate_run(
                 expected_blob_oid=entry["git_blob_oid"],
             )
             if not raw.strip() or entry["schema_version"] is not None:
-                raise CandidateGitError(f"frozen review prompt is empty or mislabeled: {entry['path']}")
+                raise CandidateGitError(
+                    f"frozen opaque input is empty or mislabeled: {entry['path']}"
+                )
+            if entry["role"] in {
+                "authority_source_export_signature",
+                "prompt_leakage_audit_signature",
+            } and len(raw) != 64:
+                raise CandidateGitError(
+                    f"frozen source-export signature has invalid length: {entry['path']}"
+                )
+            loaded_raw[entry["path"]] = raw
             continue
+        raw = read_bytes(repo, freeze_commit, entry["path"])
         value, _ = read_authenticated_json(
             repo,
             freeze_commit,
@@ -1551,6 +1815,7 @@ def _load_candidate_run(
             expected_sha256=entry["sha256"],
             expected_blob_oid=entry["git_blob_oid"],
         )
+        loaded_raw[entry["path"]] = raw
         if value.get("schema_version") != entry["schema_version"]:
             raise CandidateGitError(f"freeze file schema mismatch: {entry['path']}")
         validate_schema(
@@ -1561,13 +1826,73 @@ def _load_candidate_run(
         loaded[entry["path"]] = value
     if len(by_role["hierarchy"]) != 1 or len(by_role["relation_ledger"]) != 1:
         raise CandidateGitError("freeze must contain exactly one hierarchy and relation ledger")
-    if not by_role["source_snapshot"]:
-        raise CandidateGitError("freeze must contain at least one nonempty source snapshot")
-    if len(by_role["review_prompt"]) != len(by_role["prompt_leakage_audit"]):
-        raise CandidateGitError("every frozen review prompt must have one frozen leakage audit")
+    source_roles = {
+        "authority_source_export",
+        "authority_source_export_attestation",
+        "authority_source_export_signature",
+    }
+    source_entries_by_group: dict[str, dict[str, dict]] = defaultdict(dict)
+    for role in sorted(source_roles):
+        for entry in by_role[role]:
+            group_id = entry.get("source_export_group_id")
+            if not group_id or role in source_entries_by_group[group_id]:
+                raise CandidateGitError(
+                    "authority source-export freeze groups must have one entry per role"
+                )
+            source_entries_by_group[group_id][role] = entry
+    if not source_entries_by_group or any(
+        set(group) != source_roles for group in source_entries_by_group.values()
+    ):
+        raise CandidateGitError(
+            "freeze must contain one complete authenticated triplet per authority source export"
+        )
+    source_exports: list[dict] = []
+    for group_id, group in sorted(source_entries_by_group.items()):
+        export_entry = group["authority_source_export"]
+        attestation_entry = group["authority_source_export_attestation"]
+        signature_entry = group["authority_source_export_signature"]
+        source_export = loaded[export_entry["path"]]
+        attestation = loaded[attestation_entry["path"]]
+        if (
+            source_export["source_export_id"] != group_id
+            or attestation["source_export_id"] != group_id
+            or attestation["detached_signature_path"] != signature_entry["path"]
+        ):
+            raise CandidateGitError(
+                f"authority source-export freeze group binding mismatch: {group_id}"
+            )
+        authenticated = authenticate_source_export(
+            source_export=source_export,
+            source_export_raw=loaded_raw[export_entry["path"]],
+            source_export_metadata={
+                field: export_entry[field]
+                for field in ("path", "sha256", "git_blob_oid")
+            },
+            attestation=attestation,
+            attestation_raw=loaded_raw[attestation_entry["path"]],
+            signature_raw=loaded_raw[signature_entry["path"]],
+            policy=source_exporter_policy,
+            production=True,
+        )
+        source_exports.append(authenticated)
+    audit_count = len(by_role["prompt_leakage_audit"])
+    if any(
+        len(by_role[role]) != audit_count
+        for role in (
+            "review_prompt",
+            "review_input",
+            "prompt_leakage_audit_signature",
+        )
+    ):
+        raise CandidateGitError(
+            "every frozen review prompt/input must have one signed leakage audit"
+        )
     for entry in by_role["prompt_leakage_audit"]:
         audit = loaded[entry["path"]]
         prompt_entry = frozen_files.get(audit["prompt"]["path"])
+        input_entry = frozen_files.get(audit["input"]["path"])
+        audit_signature_reference = audit["authentication"]["signature"]
+        signature_entry = frozen_files.get(audit_signature_reference["path"])
         if (
             prompt_entry is None
             or prompt_entry["role"] != "review_prompt"
@@ -1575,11 +1900,22 @@ def _load_candidate_run(
                 audit["prompt"][field] != prompt_entry[field]
                 for field in ("path", "sha256", "git_blob_oid")
             )
+            or input_entry is None
+            or input_entry["role"] != "review_input"
+            or any(
+                audit["input"][field] != input_entry[field]
+                for field in ("path", "sha256", "git_blob_oid")
+            )
+            or signature_entry is None
+            or signature_entry["role"] != "prompt_leakage_audit_signature"
+            or any(
+                audit_signature_reference[field] != signature_entry[field]
+                for field in ("path", "sha256", "git_blob_oid")
+            )
         ):
             raise CandidateGitError(f"frozen prompt audit binding mismatch: {entry['path']}")
     hierarchy = loaded[by_role["hierarchy"][0]["path"]]
     relations = loaded[by_role["relation_ledger"][0]["path"]]
-    snapshots = [loaded[entry["path"]] for entry in by_role["source_snapshot"]]
     run_binding = {
         "audit_commit": audit_commit,
         "run_result_manifest": {"path": run_result_manifest_path, **run_manifest_metadata},
@@ -1589,14 +1925,34 @@ def _load_candidate_run(
         "candidate_result": candidate_reference,
         "review_ledger": review_reference,
         "run_start_receipt": receipt_reference,
-        "run_start_signature": signature_reference,
+        "run_start_signature": start_signature_reference,
         "trusted_attestor_id": attestor["attestor_id"],
         "trusted_attestor_key_id": attestor["key_id"],
+        "trusted_source_exporters": source_policy_binding,
+        "authority_source_exports": [
+            {
+                "source_export_group_id": group_id,
+                "export": {
+                    field: group["authority_source_export"][field]
+                    for field in ("path", "sha256", "git_blob_oid")
+                },
+                "trusted_export_attestation": {
+                    field: group["authority_source_export_attestation"][field]
+                    for field in ("path", "sha256", "git_blob_oid")
+                },
+                "trusted_export_signature": {
+                    field: group["authority_source_export_signature"][field]
+                    for field in ("path", "sha256", "git_blob_oid")
+                },
+            }
+            for group_id, group in sorted(source_entries_by_group.items())
+        ],
+        "trusted_completion": completion_verification,
     }
     return (
         candidate,
         hierarchy,
-        snapshots,
+        source_exports,
         relations,
         reviews,
         run_binding,
@@ -1616,6 +1972,8 @@ def compare_production(
     private_run: Path,
     audit_commit: str,
     run_result_manifest_path: str,
+    completion_attestation_path: str,
+    completion_signature_path: str,
 ) -> dict:
     repo_root = repo_root.resolve()
     evaluation_root = repo_root / "docs/evaluations/site-graph-v0"
@@ -1642,7 +2000,7 @@ def compare_production(
     (
         candidate,
         hierarchy,
-        snapshots,
+        source_exports,
         relations,
         reviews,
         run_binding,
@@ -1653,6 +2011,8 @@ def compare_production(
         repo_root,
         audit_commit,
         run_result_manifest_path,
+        completion_attestation_path,
+        completion_signature_path,
         release["manifest_sha256"],
         private_ledger_sha,
         schema_root,
@@ -1664,6 +2024,9 @@ def compare_production(
         schema_root,
         freeze_commit=freeze_commit,
         frozen_files=frozen_files,
+        source_exports=source_exports,
+        source_export_groups=run_binding["authority_source_exports"],
+        candidate_id=candidate["candidate_id"],
     )
     baseline_records = read_records(private_run / "private-record-evidence.ndjson.gz")
     metrics = read_json(evaluation_root / "baseline-metrics.json")
@@ -1701,7 +2064,7 @@ def compare_production(
         crosswalk,
         candidate,
         hierarchy,
-        snapshots,
+        source_exports,
         relations,
         decisions,
     )
@@ -1738,6 +2101,8 @@ def main() -> None:
     parser.add_argument("--private-run", type=Path, required=True)
     parser.add_argument("--audit-commit", required=True)
     parser.add_argument("--run-result-manifest-path", required=True)
+    parser.add_argument("--completion-attestation-path", required=True)
+    parser.add_argument("--completion-signature-path", required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     try:
@@ -1746,6 +2111,8 @@ def main() -> None:
             args.private_run,
             args.audit_commit,
             args.run_result_manifest_path,
+            args.completion_attestation_path,
+            args.completion_signature_path,
         )
     except (
         CandidateGitError,

@@ -2,7 +2,7 @@
   "authentication": "Authenticated distinct run directories, distinct UUID run IDs, exact output sets, and actual output bytes rehashed against each manifest.",
   "builder_sha256": "dc4a40aa003ba30329210e0e48612799103d0cad1f4f68b2622d3ee2f54209e8",
   "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
-  "deterministic_output_count": 18,
+  "deterministic_output_count": 19,
   "deterministic_output_hashes": {
     "adapter_catalog_summary.json": "fe4ab17e1b765e5902ae1e2b2842f55d66b15aea51ad2b1da8e85289465de445",
     "artifact_authority_links.ndjson.gz": "42978550708d26c9b38d229b8b5dc4b0f061c7344aea6c3cc31a8700f5b22142",
@@ -20,10 +20,11 @@
     "private-opportunity-ledger.json": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890",
     "private-opportunity-source.ndjson.gz": "46db33e1d365be302bf3273909cd62dc9bd23127505f4f22102864cbc7f50117",
     "private-record-evidence.ndjson.gz": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
+    "runtime-attestation.json": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321",
     "top-unmatched-components.json": "d425a4868eef9071944f33ef09c75baffdc7ca122974de5ae05641746770ecf8",
     "top_gaps.json": "ce6a67dc62abf5d157116547e90b50cf2667b0573a58807113f3d5e7f88c6e66"
   },
-  "input_snapshot_sha256": "953c6887c0563515a24ab37aa1e894230d65c6987a13bd172de77e23cd66862d",
+  "input_snapshot_sha256": "b95a0d9065e2c41a8c15a8bf48aaef2271c3e851600a8c3daefeb42db15a84b4",
   "metadata_mismatches": {},
   "orchestration": {
     "created_fresh_output_root": "<fresh-output-root>",
@@ -43,18 +44,32 @@
     "status": "UNAVAILABLE_DISCLOSED"
   },
   "run_a": {
-    "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
-    "provenance_sha256": "34c5e41795345d94f34ee6d81222e20d48f190758c02e6d36a7e7690724a31c3",
-    "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-a",
-    "run_id": "560c5d95-39f9-4c9d-9075-1aa0c17f59b0"
+    "manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+    "provenance_sha256": "c4cc8c7d6778dda172d8ffa0e945cdebe7de38294a72f6456566536729096521",
+    "resolved_directory": "/tmp/hapi-327-round4-final-20260829a/run-a",
+    "run_id": "b2926d91-b8ec-47c3-ac68-d09574a0204e"
   },
   "run_b": {
-    "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
-    "provenance_sha256": "ca265989438ac42f73300c5f3bb9b6575e3e75e70abdfc270dfb34076c3a4075",
-    "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-b",
-    "run_id": "b0782237-5378-4c38-8e42-095130b83e7f"
+    "manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+    "provenance_sha256": "0e8f6cb26065bf2a777d91bc53d5f295798ca0910eafe956c98e715d67a40679",
+    "resolved_directory": "/tmp/hapi-327-round4-final-20260829a/run-b",
+    "run_id": "58da6f5e-321c-4e40-b51c-66eeb5f4f726"
   },
-  "runner_sha256": "646335aad16dd539bef4c2e842431d839190548351b671627eceafc0444a2af1",
+  "runner_sha256": "205a3edad204292d062ea3f85b0e14166536756372c56bb5d296b44f0543a218",
+  "runtime_attestation": {
+    "dependency_lock": {
+      "bytes": 500187,
+      "path": "pipeline/uv.lock",
+      "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+    },
+    "path": "runtime-attestation.json",
+    "python": {
+      "implementation": "CPython",
+      "implementation_name": "cpython",
+      "version": "3.12.13"
+    },
+    "sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321"
+  },
   "schema_version": "site-graph-v0-baseline-rerun-evidence/3",
   "scope": "authenticated immutable archive snapshot with 36,245 real private records; no fixtures or proxies; private ledgers remain in the runtime directory; historical producer lineage is unavailable",
   "status": {

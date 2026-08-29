@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-baseline-runtime-attestation-1.json",
+  "title": "Exact executing runtime and dependency-lock attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "python", "dependency_lock", "verification"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-baseline-runtime-attestation/1"},
+    "python": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["implementation", "implementation_name", "version"],
+      "properties": {
+        "implementation": {"const": "CPython"},
+        "implementation_name": {"const": "cpython"},
+        "version": {"const": "3.12.13"}
+      }
+    },
+    "dependency_lock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": {"const": "pipeline/uv.lock"},
+        "bytes": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_snapshot_runtime_binding", "executing_interpreter_match", "dependency_lock_match"],
+      "properties": {
+        "input_snapshot_runtime_binding": {"const": "PASS"},
+        "executing_interpreter_match": {"const": "PASS"},
+        "dependency_lock_match": {"const": "PASS"}
+      }
+    }
+  }
+}

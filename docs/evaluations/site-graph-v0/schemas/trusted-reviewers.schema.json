@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-trusted-reviewers-1.json",
+  "title": "Release-pinned trusted reviewer and prompt-auditor identities",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_id", "status", "trust_tier", "signature_scheme", "signature_context", "configuration_rule", "current_effect", "identities"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-trusted-reviewers/1"},
+    "registry_id": {"type": "string", "pattern": "^[^\\s]+$"},
+    "status": {"enum": ["NOT_CONFIGURED", "CONFIGURED"]},
+    "trust_tier": {"enum": ["PRODUCTION", "TEST_ONLY_MECHANICS"]},
+    "signature_scheme": {"const": "ed25519"},
+    "signature_context": {"const": "hapi-site-graph-v0-review-evidence/1"},
+    "configuration_rule": {"type": "string", "minLength": 1},
+    "current_effect": {"type": "string", "minLength": 1},
+    "identities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["principal_id", "independence_group", "identity_kind", "roles", "methods", "key_id", "public_key_base64", "valid_from_utc", "valid_until_utc", "credential_provenance", "trust_basis"],
+        "properties": {
+          "principal_id": {"type": "string", "pattern": "^[^\\s]+$"},
+          "independence_group": {"type": "string", "pattern": "^[^\\s]+$"},
+          "identity_kind": {"enum": ["HUMAN", "AUTOMATED_SERVICE"]},
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"enum": ["reviewer", "prompt_auditor"]}
+          },
+          "methods": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"enum": ["human", "llm", "deterministic_prompt_leakage_guard/1"]}
+          },
+          "key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "public_key_base64": {"type": "string", "pattern": "^[A-Za-z0-9+/]{43}=$"},
+          "valid_from_utc": {"type": "string", "format": "date-time"},
+          "valid_until_utc": {"type": ["string", "null"], "format": "date-time"},
+          "credential_provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["issuer", "credential_id", "verification_method", "verified_at_utc", "evidence_sha256"],
+            "properties": {
+              "issuer": {"type": "string", "minLength": 1},
+              "credential_id": {"type": "string", "minLength": 1},
+              "verification_method": {"type": "string", "minLength": 1},
+              "verified_at_utc": {"type": "string", "format": "date-time"},
+              "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            }
+          },
+          "trust_basis": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "NOT_CONFIGURED"}}},
+      "then": {"properties": {"identities": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "CONFIGURED"}}},
+      "then": {"properties": {"identities": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"trust_tier": {"const": "TEST_ONLY_MECHANICS"}}},
+      "then": {"properties": {"registry_id": {"pattern": "^test-only:"}}}
+    },
+    {
+      "if": {"properties": {"trust_tier": {"const": "PRODUCTION"}}},
+      "then": {"properties": {"registry_id": {"pattern": "^(?!test-only:).+$"}}}
+    }
+  ]
+}

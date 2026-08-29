@@ -1,5 +1,6 @@
 {
   "schema_version": "site-graph-v0-trusted-run-attestors/1",
+  "registry_scope": "production_release",
   "status": "NOT_CONFIGURED",
   "signature_scheme": "ed25519",
   "signature_context": "hapi-site-graph-v0-run-start/1",

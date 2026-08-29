@@ -120,7 +120,7 @@
   "scope_classification": {
     "crosswalk": "type-crosswalk.json",
     "baseline_context": "All 2,075 records in the pinned complete available raw iDAI hierarchy, including children omitted from the filtered 1,000-target baseline file.",
-    "candidate_context": "Every new candidate direct target must be derived from raw source types in nonempty structured source snapshots and complete-available hierarchy topology frozen as authenticated Git blobs in a distinct ancestor commit before result generation. Raw source types are mapped through the authenticated type-crosswalk; candidate-supplied E55 labels are never accepted as source typing. Parent and child references must be inverse-complete across the exact frozen source-record census, and candidate leafness is never inferred from descendants present or absent in the evaluated slice.",
+    "candidate_context": "Every new candidate direct target must be derived from raw source types in nonempty complete authority source exports signed by a release-authenticated exporter, with complete-available hierarchy topology frozen as authenticated Git blobs in a distinct ancestor commit before result generation. Raw source types are mapped through the authenticated type-crosswalk; candidate-supplied E55 labels are never accepted as source typing. Parent and child references must be inverse-complete across the exact signed source-record census, and candidate leafness is never inferred from descendants present or absent in the evaluated slice.",
     "existing_target_rule": "An existing frozen target always retains its baseline type and scope. Candidate snapshots cannot relabel it.",
     "broad_precedence": "A node is broad if any mapped type is broad or it has any child in complete available hierarchy context.",
     "specific_candidate": "A node is only a specific candidate if a frozen type maps specific and no broad rule applies.",
@@ -132,7 +132,7 @@
     "general_support_for_changed_direct_link": [
       "candidate artifact, direct target, opportunity ID, and exact frozen opportunity/mention binding hash match the canonical subject-derived link-support decision key",
       "each review artifact contains at least one structured non-originating-museum independent source citation",
-      "exactly two reviewers with distinct reviewer IDs and independence groups each produce a distinct subject/outcome-bound structured artifact and canonical record hash",
+      "exactly two release-registered reviewers with distinct public keys, reviewer IDs, and independence groups each sign a distinct subject/outcome-bound structured artifact and canonical record hash",
       "both reviews say supported"
     ],
     "llm_review_provenance_required": [
@@ -143,13 +143,14 @@
       "full nonempty parameter object",
       "full raw response artifact with SHA-256 and Git blob OID",
       "a unique nonempty full raw response and unique exact prompt/input artifacts bound to the review ID, decision key, decision kind, and subject",
-      "a content-addressed prompt-leakage audit for that exact prompt and subject, committed in the authenticated freeze ancestor before invocation and never reused"
+      "a registered auditor's signed content-addressed prompt-leakage audit for that exact prompt/input/subject, committed in the authenticated freeze ancestor before invocation and never reused",
+      "deterministic guards reject candidate IDs, source IDs, and known answer strings in the exact prompt/input"
     ],
     "review_disagreement": "Unsupported/uncertain disagreement is unresolved, receives no credit, and is counted; it is never adjudicated from candidate performance.",
     "broad_or_administrative_new_link_improvement_credit": 0,
     "unclassified_link_improvement_credit": 0,
     "narrower_node_alone_improvement_credit": 0,
-    "credited_node_distinctness": "The comparator deterministically builds identity classes across baseline and candidate targets. Identical normalized authority locators auto-union. Every other pair of classes that could inflate a gained-identity count requires two independent reviewed positive-distinctness decisions; omitted or unsupported equivalence/distinctness fails closed. Candidate-declared class IDs are ignored and aliases cannot preserve retention or inflate gains.",
+    "credited_node_distinctness": "The comparator deterministically builds identity classes across baseline and candidate targets. Identical normalized authority locators auto-union. Every gained candidate class is censused against the full relevant baseline identity universe on both museum sides, including one-sided broad identities, and against every other counted candidate class. Every non-equivalent separation requires two signed independent reviewed positive-distinctness decisions; omitted or unsupported equivalence/distinctness fails closed. Candidate-declared class IDs are ignored and aliases cannot preserve retention or inflate gains.",
     "strict_refinement_extra_support": [
       "baseline and candidate target IDs are distinct",
       "a relation ledger frozen in the authenticated pre-run Git commit says strict_refinement",
@@ -176,7 +177,7 @@
     "artifact_expansion": "All distinct artifacts carrying a selected museum-scoped signature are materialized only in the authenticated private ledger before research. Public opportunity rows expose aggregate counts and expansion hashes, never artifact IDs, source text, normalized expression text, or field paths.",
     "museum_protection": "Each museum contributes 10 signatures before global fill; record ceilings remain museum-specific and need not be equal.",
     "intent_to_treat": "Every expanded record remains in denominators after research failure, abstention, reviewer disagreement, lack of support, or broad/administrative classification.",
-    "pair_side_opportunity": "The private ledger materializes exact pair+museum-side artifact membership, every exact selecting (opportunity_id, opportunity_binding_sha256), and exactly one frozen category: no_baseline_pair_connection or broad_only_pair_connection. Candidate decisions must cite and intersect the same binding rather than a different mention on the artifact or a global event.",
+    "pair_side_opportunity": "The private ledger materializes exact pair+museum-side artifact membership, every exact selecting (opportunity_id, opportunity_binding_sha256), and exactly one frozen category: no_baseline_pair_connection or broad_only_pair_connection. Candidate output must exhaustively report exactly one closed disposition for every required binding; every link/review must cite and intersect that same binding rather than a different mention on the artifact or a global event. Omission, duplication, or substitution is INVALID.",
     "expected_effect_statement": "No expected effect is estimated. Numeric planned values are maximum measurable upper bounds under the frozen slice, not forecasts, precision/recall estimates, or promises of successful research."
   },
   "ambiguity_and_abstention": {
@@ -221,6 +222,7 @@
   },
   "review_census": {
     "credit_gate": "Census of every credited new-link, strict-refinement, and equivalent decision with two structured independent artifacts.",
+    "citation_subject_binding": "For each review artifact, the exact authenticated non-originating-museum source records cited collectively cover every target_id field in the signed decision subject; unrelated-target citations provide no support.",
     "reviews_per_decision": 2,
     "held_out_sample": "Optional descriptive audit only. If used, sort all non-credited candidate decision keys by SHA-256('site-graph-v0-descriptive-audit-v1' + U+0000 + decision_key), then take the first min(100, ceil(0.10*N)); freeze the resulting key list before review.",
     "held_out_sample_is_pass_gate": false,
@@ -248,10 +250,10 @@
   },
   "authenticated_candidate_freeze": {
     "contract": "schemas/candidate-freeze-manifest.schema.json",
-    "required_roles": ["hierarchy", "relation_ledger", "source_snapshot"],
-    "conditional_llm_roles": ["review_prompt", "prompt_leakage_audit"],
-    "immutability": "Every file byte SHA-256 and Git blob OID is verified from the declared full freeze commit. The release-pinned trusted-attestor policy is bound by path, raw SHA-256, canonical SHA-256, and Git blob OID. A trusted Ed25519-signed run-start receipt must bind the exact release, freeze commit/manifest/nonce, candidate, and invocation before a distinct descendant result commit can be compared. Self-declared timestamps and Git ancestry alone never establish authentic run ordering.",
-    "source_snapshot_requirement": "At least one nonempty structured source snapshot with explicit provenance and completeness/known-incompleteness declarations is required."
+    "required_roles": ["hierarchy", "relation_ledger", "authority_source_export", "authority_source_export_attestation", "authority_source_export_signature"],
+    "conditional_llm_roles": ["review_prompt", "review_input", "prompt_leakage_audit", "prompt_leakage_audit_signature"],
+    "immutability": "Every file byte SHA-256 and Git blob OID is verified from the declared full freeze commit. Release-authenticated attestor, source-exporter, and reviewer policies are bound by the exact release manifest. A trusted Ed25519-signed run-start receipt binds the exact release, freeze commit/manifest/nonce, candidate, invocation, CPython implementation/version, and dependency-lock bytes before result generation. A second signature from the same trusted attestor binds the same invocation to the distinct descendant result commit and exact result manifest, candidate output, review ledger, and source-export triplets. Self-declared timestamps, Git ancestry, and an unsigned result never establish authentic completion.",
+    "source_export_requirement": "At least one nonempty complete authority source export with explicit provenance and known-incompleteness declarations, exact record census/hash, and a valid detached signature from a release-authenticated source exporter is required."
   },
   "contract_status_model": {
     "snapshot_acquisition_integrity": ["PASS", "BLOCKED", "INVALID"],
@@ -260,7 +262,10 @@
     "overall_contract_status": ["READY_SNAPSHOT_CONDITIONAL", "BLOCKED", "INVALID"],
     "issue_327_downstream_product_verdict": "NOT_RUN",
     "current_trusted_run_attestor_status": "NOT_CONFIGURED",
-    "effect": "The baseline contract may be READY_SNAPSHOT_CONDITIONAL while upstream production lineage remains UNAVAILABLE_DISCLOSED. Production candidate comparison fails closed until a separately reviewed release migration configures a trusted run attestor."
+    "current_trusted_source_exporter_status": "NOT_CONFIGURED",
+    "current_trusted_reviewer_status": "NOT_CONFIGURED",
+    "pre_pr_ci_status": "PENDING_OUTSIDE_COMMIT",
+    "effect": "The baseline contract may be READY_SNAPSHOT_CONDITIONAL while upstream production lineage remains UNAVAILABLE_DISCLOSED. Production candidate comparison fails closed and downstream_product_verdict stays NOT_RUN until a separately reviewed release migration configures genuine run-attestor, source-exporter, and reviewer trust roots. Test-only keys cannot configure a production verdict."
   },
   "public_data_boundary": {
     "public": ["aggregate metrics", "selection rules", "counts", "canonical content hashes", "Merkle roots", "opaque rank IDs"],

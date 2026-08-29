@@ -1,25 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-source-snapshot-2.json",
-  "title": "Frozen complete candidate authority source snapshot",
+  "$id": "https://hapi.example/schemas/site-graph-v0-authority-source-export-1.json",
+  "title": "Complete authenticated authority source export",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "source_snapshot_id", "authority_name", "source_kind", "acquired_at_utc", "provenance", "completeness", "records"],
+  "required": ["schema_version", "source_export_id", "authority_name", "source_kind", "originating_museum", "acquired_at_utc", "provenance", "completeness", "records"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-candidate-source-snapshot/2"},
-    "source_snapshot_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "site-graph-v0-authority-source-export/1"},
+    "source_export_id": {"type": "string", "minLength": 1},
     "authority_name": {"type": "string", "minLength": 1},
     "source_kind": {"type": "string", "minLength": 1},
+    "originating_museum": {"const": false},
     "acquired_at_utc": {"type": "string", "format": "date-time"},
     "provenance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_locator", "acquisition_method", "acquired_by", "source_export_sha256"],
+      "required": ["source_locator", "acquisition_method", "producer_identity"],
       "properties": {
         "source_locator": {"type": "string", "minLength": 1},
         "acquisition_method": {"type": "string", "minLength": 1},
-        "acquired_by": {"type": "string", "minLength": 1},
-        "source_export_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "producer_identity": {"type": "string", "minLength": 1}
       }
     },
     "completeness": {

@@ -1,48 +1,229 @@
 {
   "case_policy": "Each schema has one minimally complete representative and two independent attacks: missing required state and an undeclared top-level field.",
   "cases": {
+    "authority-source-export-attestation.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "detached_signature_path": "fixture/source-export.sig",
+          "export_invocation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exporter_id": "fixture-exporter",
+          "exporter_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "record_count": 1,
+          "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+          "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+          "source_export": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/source-export.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "source_export_id": "fixture-export",
+          "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "valid": {
+        "detached_signature_path": "fixture/source-export.sig",
+        "export_invocation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "exporter_id": "fixture-exporter",
+        "exporter_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "record_count": 1,
+        "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+        "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+        "source_export": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/source-export.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "source_export_id": "fixture-export",
+        "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "authority-source-export.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "acquired_at_utc": "2026-08-28T00:00:00Z",
+          "authority_name": "Fixture authority",
+          "completeness": {
+            "complete_for_candidate_target_derivation": true,
+            "coverage_statement": "Every record in the authenticated export.",
+            "known_incompleteness": [],
+            "record_count": 1,
+            "record_selection_policy": "all_records_in_authenticated_source_export",
+            "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "provenance": {
+            "acquisition_method": "authenticated export",
+            "producer_identity": "fixture-producer",
+            "source_locator": "https://example.invalid/authority"
+          },
+          "records": [
+            {
+              "authority_citations": [
+                "https://example.invalid/authority#record-1"
+              ],
+              "authority_identity_locator": "https://example.invalid/authority#record-1",
+              "child_ids": [],
+              "parent_ids": [],
+              "raw_source_types": [
+                "settlement"
+              ],
+              "source_record_id": "record-1",
+              "target_id": "target-1"
+            }
+          ],
+          "schema_version": "site-graph-v0-authority-source-export/1",
+          "source_export_id": "fixture-export",
+          "originating_museum": false,
+          "source_kind": "scholarly authority"
+        }
+      ],
+      "valid": {
+        "acquired_at_utc": "2026-08-28T00:00:00Z",
+        "authority_name": "Fixture authority",
+        "completeness": {
+          "complete_for_candidate_target_derivation": true,
+          "coverage_statement": "Every record in the authenticated export.",
+          "known_incompleteness": [],
+          "record_count": 1,
+          "record_selection_policy": "all_records_in_authenticated_source_export",
+          "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "provenance": {
+          "acquisition_method": "authenticated export",
+          "producer_identity": "fixture-producer",
+          "source_locator": "https://example.invalid/authority"
+        },
+        "records": [
+          {
+            "authority_citations": [
+              "https://example.invalid/authority#record-1"
+            ],
+            "authority_identity_locator": "https://example.invalid/authority#record-1",
+            "child_ids": [],
+            "parent_ids": [],
+            "raw_source_types": [
+              "settlement"
+            ],
+            "source_record_id": "record-1",
+            "target_id": "target-1"
+          }
+        ],
+        "schema_version": "site-graph-v0-authority-source-export/1",
+        "source_export_id": "fixture-export",
+        "originating_museum": false,
+        "source_kind": "scholarly authority"
+      }
+    },
+    "baseline-runtime-attestation.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          },
+          "schema_version": "site-graph-v0-baseline-runtime-attestation/1",
+          "verification": {
+            "dependency_lock_match": "PASS",
+            "executing_interpreter_match": "PASS",
+            "input_snapshot_runtime_binding": "PASS"
+          }
+        }
+      ],
+      "valid": {
+        "dependency_lock": {
+          "bytes": 500187,
+          "path": "pipeline/uv.lock",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "python": {
+          "implementation": "CPython",
+          "implementation_name": "cpython",
+          "version": "3.12.13"
+        },
+        "schema_version": "site-graph-v0-baseline-runtime-attestation/1",
+        "verification": {
+          "dependency_lock_match": "PASS",
+          "executing_interpreter_match": "PASS",
+          "input_snapshot_runtime_binding": "PASS"
+        }
+      }
+    },
     "candidate-freeze-manifest.schema.json": {
       "invalid": [
         {},
         {
           "__undeclared_contract_field__": true,
-          "candidate_id": "value-candidate-freeze-manifest-schema-candidate_id-0",
-          "contract_version": "site-graph-v0/3",
+          "candidate_id": "fixture-candidate",
+          "contract_version": "site-graph-v0/4",
           "created_at_utc": "2026-08-28T00:00:00Z",
-          "created_by": "value-candidate-freeze-manifest-schema-created_by-0",
+          "created_by": "fixture-freezer",
           "files": [
             {
               "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
               "media_type": "application/json",
-              "path": "fixture/candidate-freeze-manifest-schema-files[0]-path-0",
+              "path": "fixture/hierarchy.json",
               "role": "hierarchy",
-              "schema_version": "value-candidate-freeze-manifest-schema-files[0]-schema_version-0",
-              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              "schema_version": "site-graph-v0-candidate-hierarchy/4",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": null
             },
             {
               "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
               "media_type": "application/json",
-              "path": "fixture/candidate-freeze-manifest-schema-files[1]-path-1",
-              "role": "hierarchy",
-              "schema_version": "value-candidate-freeze-manifest-schema-files[1]-schema_version-1",
-              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              "path": "fixture/relations.json",
+              "role": "relation_ledger",
+              "schema_version": "site-graph-v0-relation-ledger/2",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": null
             },
             {
               "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
               "media_type": "application/json",
-              "path": "fixture/candidate-freeze-manifest-schema-files[2]-path-2",
-              "role": "hierarchy",
-              "schema_version": "value-candidate-freeze-manifest-schema-files[2]-schema_version-2",
-              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              "path": "fixture/source-export.json",
+              "role": "authority_source_export",
+              "schema_version": "site-graph-v0-authority-source-export/1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": "fixture-export"
+            },
+            {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "media_type": "application/json",
+              "path": "fixture/source-export-attestation.json",
+              "role": "authority_source_export_attestation",
+              "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": "fixture-export"
+            },
+            {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "media_type": "application/octet-stream",
+              "path": "fixture/source-export.sig",
+              "role": "authority_source_export_signature",
+              "schema_version": null,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "source_export_group_id": "fixture-export"
             }
           ],
           "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "provenance": {
-            "fixture_property_0": {}
+            "fixture": true
           },
           "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "run_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "schema_version": "site-graph-v0-candidate-freeze-manifest/2",
+          "schema_version": "site-graph-v0-candidate-freeze-manifest/3",
           "trusted_run_attestors": {
             "attestor_key_ids": [
               "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -52,47 +233,78 @@
             "path": "docs/evaluations/site-graph-v0/trusted-run-attestors.json",
             "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             "status": "CONFIGURED"
+          },
+          "trusted_source_exporters": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "exporter_key_ids": [
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "docs/evaluations/site-graph-v0/trusted-source-exporters.json",
+            "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "status": "CONFIGURED"
           }
         }
       ],
       "valid": {
-        "candidate_id": "value-candidate-freeze-manifest-schema-candidate_id-0",
-        "contract_version": "site-graph-v0/3",
+        "candidate_id": "fixture-candidate",
+        "contract_version": "site-graph-v0/4",
         "created_at_utc": "2026-08-28T00:00:00Z",
-        "created_by": "value-candidate-freeze-manifest-schema-created_by-0",
+        "created_by": "fixture-freezer",
         "files": [
           {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
             "media_type": "application/json",
-            "path": "fixture/candidate-freeze-manifest-schema-files[0]-path-0",
+            "path": "fixture/hierarchy.json",
             "role": "hierarchy",
-            "schema_version": "value-candidate-freeze-manifest-schema-files[0]-schema_version-0",
-            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "schema_version": "site-graph-v0-candidate-hierarchy/4",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": null
           },
           {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
             "media_type": "application/json",
-            "path": "fixture/candidate-freeze-manifest-schema-files[1]-path-1",
-            "role": "hierarchy",
-            "schema_version": "value-candidate-freeze-manifest-schema-files[1]-schema_version-1",
-            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "path": "fixture/relations.json",
+            "role": "relation_ledger",
+            "schema_version": "site-graph-v0-relation-ledger/2",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": null
           },
           {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
             "media_type": "application/json",
-            "path": "fixture/candidate-freeze-manifest-schema-files[2]-path-2",
-            "role": "hierarchy",
-            "schema_version": "value-candidate-freeze-manifest-schema-files[2]-schema_version-2",
-            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "path": "fixture/source-export.json",
+            "role": "authority_source_export",
+            "schema_version": "site-graph-v0-authority-source-export/1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": "fixture-export"
+          },
+          {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_type": "application/json",
+            "path": "fixture/source-export-attestation.json",
+            "role": "authority_source_export_attestation",
+            "schema_version": "site-graph-v0-authority-source-export-attestation/1",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": "fixture-export"
+          },
+          {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_type": "application/octet-stream",
+            "path": "fixture/source-export.sig",
+            "role": "authority_source_export_signature",
+            "schema_version": null,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source_export_group_id": "fixture-export"
           }
         ],
         "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "provenance": {
-          "fixture_property_0": {}
+          "fixture": true
         },
         "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "run_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "schema_version": "site-graph-v0-candidate-freeze-manifest/2",
+        "schema_version": "site-graph-v0-candidate-freeze-manifest/3",
         "trusted_run_attestors": {
           "attestor_key_ids": [
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -100,6 +312,16 @@
           "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "path": "docs/evaluations/site-graph-v0/trusted-run-attestors.json",
+          "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "status": "CONFIGURED"
+        },
+        "trusted_source_exporters": {
+          "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "exporter_key_ids": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "docs/evaluations/site-graph-v0/trusted-source-exporters.json",
           "raw_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "status": "CONFIGURED"
         }
@@ -110,7 +332,7 @@
         {},
         {
           "__undeclared_contract_field__": true,
-          "coverage": "every_target_and_every_record_from_all_authenticated_complete_source_snapshots",
+          "coverage": "every_target_and_every_record_from_all_authenticated_complete_authority_source_exports",
           "known_incompleteness": {
             "closed_world_claim": false,
             "derivation_statement": "value-candidate-hierarchy-schema-known_incompleteness-derivation_statement-0",
@@ -126,17 +348,17 @@
               "source_record_ids": [
                 "value-candidate-hierarchy-schema-nodes[0]-source_record_ids[0]-0"
               ],
-              "source_snapshot_ids": [
-                "value-candidate-hierarchy-schema-nodes[0]-source_snapshot_ids[0]-0"
+              "source_export_ids": [
+                "fixture-export"
               ],
               "target_id": "value-candidate-hierarchy-schema-nodes[0]-target_id-0"
             }
           ],
-          "schema_version": "site-graph-v0-candidate-hierarchy/3"
+          "schema_version": "site-graph-v0-candidate-hierarchy/4"
         }
       ],
       "valid": {
-        "coverage": "every_target_and_every_record_from_all_authenticated_complete_source_snapshots",
+        "coverage": "every_target_and_every_record_from_all_authenticated_complete_authority_source_exports",
         "known_incompleteness": {
           "closed_world_claim": false,
           "derivation_statement": "value-candidate-hierarchy-schema-known_incompleteness-derivation_statement-0",
@@ -152,91 +374,13 @@
             "source_record_ids": [
               "value-candidate-hierarchy-schema-nodes[0]-source_record_ids[0]-0"
             ],
-            "source_snapshot_ids": [
-              "value-candidate-hierarchy-schema-nodes[0]-source_snapshot_ids[0]-0"
+            "source_export_ids": [
+              "fixture-export"
             ],
             "target_id": "value-candidate-hierarchy-schema-nodes[0]-target_id-0"
           }
         ],
-        "schema_version": "site-graph-v0-candidate-hierarchy/3"
-      }
-    },
-    "candidate-source-snapshot.schema.json": {
-      "invalid": [
-        {},
-        {
-          "__undeclared_contract_field__": true,
-          "acquired_at_utc": "2026-08-28T00:00:00Z",
-          "authority_name": "value-candidate-source-snapshot-schema-authority_name-0",
-          "completeness": {
-            "complete_for_candidate_target_derivation": true,
-            "coverage_statement": "value-candidate-source-snapshot-schema-completeness-coverage_statement-0",
-            "known_incompleteness": [],
-            "record_count": 1,
-            "record_selection_policy": "all_records_in_authenticated_source_export",
-            "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          },
-          "provenance": {
-            "acquired_by": "value-candidate-source-snapshot-schema-provenance-acquired_by-0",
-            "acquisition_method": "value-candidate-source-snapshot-schema-provenance-acquisition_method-0",
-            "source_export_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "source_locator": "value-candidate-source-snapshot-schema-provenance-source_locator-0"
-          },
-          "records": [
-            {
-              "authority_citations": [
-                "value-candidate-source-snapshot-schema-records[0]-authority_citations[0]-0"
-              ],
-              "authority_identity_locator": "value-candidate-source-snapshot-schema-records[0]-authority_identity_locator-0",
-              "child_ids": [],
-              "parent_ids": [],
-              "raw_source_types": [
-                "value-candidate-source-snapshot-schema-records[0]-raw_source_types[0]-0"
-              ],
-              "source_record_id": "value-candidate-source-snapshot-schema-records[0]-source_record_id-0",
-              "target_id": "value-candidate-source-snapshot-schema-records[0]-target_id-0"
-            }
-          ],
-          "schema_version": "site-graph-v0-candidate-source-snapshot/2",
-          "source_kind": "value-candidate-source-snapshot-schema-source_kind-0",
-          "source_snapshot_id": "value-candidate-source-snapshot-schema-source_snapshot_id-0"
-        }
-      ],
-      "valid": {
-        "acquired_at_utc": "2026-08-28T00:00:00Z",
-        "authority_name": "value-candidate-source-snapshot-schema-authority_name-0",
-        "completeness": {
-          "complete_for_candidate_target_derivation": true,
-          "coverage_statement": "value-candidate-source-snapshot-schema-completeness-coverage_statement-0",
-          "known_incompleteness": [],
-          "record_count": 1,
-          "record_selection_policy": "all_records_in_authenticated_source_export",
-          "records_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        },
-        "provenance": {
-          "acquired_by": "value-candidate-source-snapshot-schema-provenance-acquired_by-0",
-          "acquisition_method": "value-candidate-source-snapshot-schema-provenance-acquisition_method-0",
-          "source_export_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "source_locator": "value-candidate-source-snapshot-schema-provenance-source_locator-0"
-        },
-        "records": [
-          {
-            "authority_citations": [
-              "value-candidate-source-snapshot-schema-records[0]-authority_citations[0]-0"
-            ],
-            "authority_identity_locator": "value-candidate-source-snapshot-schema-records[0]-authority_identity_locator-0",
-            "child_ids": [],
-            "parent_ids": [],
-            "raw_source_types": [
-              "value-candidate-source-snapshot-schema-records[0]-raw_source_types[0]-0"
-            ],
-            "source_record_id": "value-candidate-source-snapshot-schema-records[0]-source_record_id-0",
-            "target_id": "value-candidate-source-snapshot-schema-records[0]-target_id-0"
-          }
-        ],
-        "schema_version": "site-graph-v0-candidate-source-snapshot/2",
-        "source_kind": "value-candidate-source-snapshot-schema-source_kind-0",
-        "source_snapshot_id": "value-candidate-source-snapshot-schema-source_snapshot_id-0"
+        "schema_version": "site-graph-v0-candidate-hierarchy/4"
       }
     },
     "candidate.schema.json": {
@@ -244,61 +388,99 @@
         {},
         {
           "__undeclared_contract_field__": true,
-          "candidate_id": "value-candidate-schema-candidate_id-0",
+          "candidate_id": "fixture-candidate",
           "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "freeze_manifest": {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "path": "fixture/candidate-schema-freeze_manifest-path-0",
+            "path": "fixture/freeze-manifest.json",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
           "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "records": [],
+          "records": [
+            {
+              "artifact_id": "met:1",
+              "opportunity_outcomes": [
+                {
+                  "abstention_reason": null,
+                  "direct_links": [
+                    {
+                      "support_decision_key": "link-support:met:1:target-1",
+                      "target_id": "target-1"
+                    }
+                  ],
+                  "has_blocking_ambiguity": false,
+                  "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "opportunity_id": "opp-0001",
+                  "resolution_status": "linked"
+                }
+              ]
+            }
+          ],
           "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "review_ledger": {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "path": "fixture/candidate-schema-review_ledger-path-0",
+            "path": "fixture/review-ledger.json",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
           "run_start_receipt": {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "path": "fixture/candidate-schema-run_start_receipt-path-0",
+            "path": "fixture/run-start-receipt.json",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
           "run_start_signature": {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "path": "fixture/candidate-schema-run_start_signature-path-0",
+            "path": "fixture/run-start.sig",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
-          "schema_version": "site-graph-v0-candidate-result/3"
+          "schema_version": "site-graph-v0-candidate-result/4"
         }
       ],
       "valid": {
-        "candidate_id": "value-candidate-schema-candidate_id-0",
+        "candidate_id": "fixture-candidate",
         "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         "freeze_manifest": {
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "path": "fixture/candidate-schema-freeze_manifest-path-0",
+          "path": "fixture/freeze-manifest.json",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
         "private_opportunity_ledger_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-        "records": [],
+        "records": [
+          {
+            "artifact_id": "met:1",
+            "opportunity_outcomes": [
+              {
+                "abstention_reason": null,
+                "direct_links": [
+                  {
+                    "support_decision_key": "link-support:met:1:target-1",
+                    "target_id": "target-1"
+                  }
+                ],
+                "has_blocking_ambiguity": false,
+                "opportunity_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "opportunity_id": "opp-0001",
+                "resolution_status": "linked"
+              }
+            ]
+          }
+        ],
         "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "review_ledger": {
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "path": "fixture/candidate-schema-review_ledger-path-0",
+          "path": "fixture/review-ledger.json",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
         "run_start_receipt": {
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "path": "fixture/candidate-schema-run_start_receipt-path-0",
+          "path": "fixture/run-start-receipt.json",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
         "run_start_signature": {
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "path": "fixture/candidate-schema-run_start_signature-path-0",
+          "path": "fixture/run-start.sig",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
-        "schema_version": "site-graph-v0-candidate-result/3"
+        "schema_version": "site-graph-v0-candidate-result/4"
       }
     },
     "comparison-report.schema.json": {
@@ -678,50 +860,122 @@
         {},
         {
           "__undeclared_contract_field__": true,
-          "audit_id": "value-prompt-leakage-audit-schema-audit_id-0",
-          "audit_method": "value-prompt-leakage-audit-schema-audit_method-0",
-          "auditor_id": "value-prompt-leakage-audit-schema-auditor_id-0",
-          "decision_key": "value-prompt-leakage-audit-schema-decision_key-0",
+          "audit_id": "audit-1",
+          "audit_method": "deterministic_prompt_leakage_guard/1",
+          "auditor": {
+            "auditor_id": "auditor-1",
+            "independence_group": "audit-group-1"
+          },
+          "authentication": {
+            "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "principal_id": "auditor-1",
+            "registry_id": "fixture-review-registry",
+            "signature": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/audit.sig",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "signature_context": "hapi-site-graph-v0-review-evidence/1",
+            "signed_at_utc": "2026-08-28T00:00:00Z",
+            "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "decision_key": "link-support:met:1:target-1",
           "decision_kind": "link_support",
+          "deterministic_guard": {
+            "answer_strings": {
+              "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "count": 1
+            },
+            "candidate_ids": {
+              "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "count": 1
+            },
+            "findings": [],
+            "guard_version": "site-graph-v0-deterministic-prompt-leakage-guard/1",
+            "request_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "result": "PASS",
+            "source_ids": {
+              "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "count": 1
+            }
+          },
           "executed_at_utc": "2026-08-28T00:00:00Z",
-          "findings": [],
-          "opaque_shuffled_candidate_ids": true,
-          "passed": true,
-          "prompt": {
+          "input": {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-            "path": "fixture/prompt-leakage-audit-schema-prompt-path-0",
+            "path": "fixture/review-input.json",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
-          "review_id": "value-prompt-leakage-audit-schema-review_id-0",
-          "review_invocation_id": "value-prompt-leakage-audit-schema-review_invocation_id-0",
-          "schema_version": "site-graph-v0-prompt-leakage-audit/2",
+          "prompt": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review-prompt.txt",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "review_id": "review-1",
+          "review_invocation_id": "invocation-1",
+          "schema_version": "site-graph-v0-prompt-leakage-audit/3",
           "subject": {
-            "fixture_property_0": {},
-            "fixture_property_1": {}
+            "artifact_id": "met:1",
+            "target_id": "target-1"
           }
         }
       ],
       "valid": {
-        "audit_id": "value-prompt-leakage-audit-schema-audit_id-0",
-        "audit_method": "value-prompt-leakage-audit-schema-audit_method-0",
-        "auditor_id": "value-prompt-leakage-audit-schema-auditor_id-0",
-        "decision_key": "value-prompt-leakage-audit-schema-decision_key-0",
+        "audit_id": "audit-1",
+        "audit_method": "deterministic_prompt_leakage_guard/1",
+        "auditor": {
+          "auditor_id": "auditor-1",
+          "independence_group": "audit-group-1"
+        },
+        "authentication": {
+          "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "principal_id": "auditor-1",
+          "registry_id": "fixture-review-registry",
+          "signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/audit.sig",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "signature_context": "hapi-site-graph-v0-review-evidence/1",
+          "signed_at_utc": "2026-08-28T00:00:00Z",
+          "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "decision_key": "link-support:met:1:target-1",
         "decision_kind": "link_support",
+        "deterministic_guard": {
+          "answer_strings": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "candidate_ids": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          },
+          "findings": [],
+          "guard_version": "site-graph-v0-deterministic-prompt-leakage-guard/1",
+          "request_binding_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "result": "PASS",
+          "source_ids": {
+            "canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "count": 1
+          }
+        },
         "executed_at_utc": "2026-08-28T00:00:00Z",
-        "findings": [],
-        "opaque_shuffled_candidate_ids": true,
-        "passed": true,
-        "prompt": {
+        "input": {
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-          "path": "fixture/prompt-leakage-audit-schema-prompt-path-0",
+          "path": "fixture/review-input.json",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
-        "review_id": "value-prompt-leakage-audit-schema-review_id-0",
-        "review_invocation_id": "value-prompt-leakage-audit-schema-review_invocation_id-0",
-        "schema_version": "site-graph-v0-prompt-leakage-audit/2",
+        "prompt": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/review-prompt.txt",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "review_id": "review-1",
+        "review_invocation_id": "invocation-1",
+        "schema_version": "site-graph-v0-prompt-leakage-audit/3",
         "subject": {
-          "fixture_property_0": {},
-          "fixture_property_1": {}
+          "artifact_id": "met:1",
+          "target_id": "target-1"
         }
       }
     },
@@ -730,14 +984,14 @@
         {},
         {
           "__undeclared_contract_field__": true,
-          "identity_census_policy": "every_counted_distinct_class_pair_has_positive_distinctness_or_source_locator_equivalence",
+          "identity_census_policy": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class",
           "relations": [],
           "schema_version": "site-graph-v0-relation-ledger/2",
           "strict_refinement_direction": "left_target_id_is_narrower_than_right_target_id"
         }
       ],
       "valid": {
-        "identity_census_policy": "every_counted_distinct_class_pair_has_positive_distinctness_or_source_locator_equivalence",
+        "identity_census_policy": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class",
         "relations": [],
         "schema_version": "site-graph-v0-relation-ledger/2",
         "strict_refinement_direction": "left_target_id_is_narrower_than_right_target_id"
@@ -748,58 +1002,106 @@
         {},
         {
           "__undeclared_contract_field__": true,
+          "authentication": {
+            "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "principal_id": "reviewer-1",
+            "registry_id": "fixture-review-registry",
+            "signature": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/review.sig",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "signature_context": "hapi-site-graph-v0-review-evidence/1",
+            "signed_at_utc": "2026-08-28T00:02:00Z",
+            "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
           "citations": [
             {
-              "evidence_summary": "value-review-artifact-schema-citations[0]-evidence_summary-0",
-              "locator": "value-review-artifact-schema-citations[0]-locator-0",
+              "evidence_summary": "The authority record supports the direct link.",
+              "locator": "https://example.invalid/authority#record-1",
               "originating_museum": false,
-              "source_id": "value-review-artifact-schema-citations[0]-source_id-0",
-              "source_kind": "value-review-artifact-schema-citations[0]-source_kind-0"
+              "source_artifact": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.json",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "source_id": "record-1",
+              "source_kind": "authenticated authority source export"
             }
           ],
-          "decision_key": "value-review-artifact-schema-decision_key-0",
+          "decision_key": "link-support:met:1:target-1",
           "decision_kind": "link_support",
+          "human_provenance": {
+            "completed_at_utc": "2026-08-28T00:01:00Z",
+            "reasoning_utf8_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "review_session_id": "session-1",
+            "started_at_utc": "2026-08-28T00:00:00Z"
+          },
           "llm_interaction": null,
           "method": "human",
           "outcome": "supported",
-          "reasoning": "value-review-artifact-schema-reasoning-0",
-          "review_id": "value-review-artifact-schema-review_id-0",
+          "reasoning": "The cited authority record identifies the proposed target.",
+          "review_id": "review-1",
           "reviewer": {
-            "independence_group": "value-review-artifact-schema-reviewer-independence_group-0",
-            "reviewer_id": "value-review-artifact-schema-reviewer-reviewer_id-0"
+            "independence_group": "review-group-1",
+            "reviewer_id": "reviewer-1"
           },
-          "schema_version": "site-graph-v0-review-artifact/2",
+          "schema_version": "site-graph-v0-review-artifact/3",
           "subject": {
-            "fixture_property_0": {},
-            "fixture_property_1": {}
+            "artifact_id": "met:1",
+            "target_id": "target-1"
           }
         }
       ],
       "valid": {
+        "authentication": {
+          "key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "principal_id": "reviewer-1",
+          "registry_id": "fixture-review-registry",
+          "signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review.sig",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "signature_context": "hapi-site-graph-v0-review-evidence/1",
+          "signed_at_utc": "2026-08-28T00:02:00Z",
+          "statement_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
         "citations": [
           {
-            "evidence_summary": "value-review-artifact-schema-citations[0]-evidence_summary-0",
-            "locator": "value-review-artifact-schema-citations[0]-locator-0",
+            "evidence_summary": "The authority record supports the direct link.",
+            "locator": "https://example.invalid/authority#record-1",
             "originating_museum": false,
-            "source_id": "value-review-artifact-schema-citations[0]-source_id-0",
-            "source_kind": "value-review-artifact-schema-citations[0]-source_kind-0"
+            "source_artifact": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.json",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "source_id": "record-1",
+            "source_kind": "authenticated authority source export"
           }
         ],
-        "decision_key": "value-review-artifact-schema-decision_key-0",
+        "decision_key": "link-support:met:1:target-1",
         "decision_kind": "link_support",
+        "human_provenance": {
+          "completed_at_utc": "2026-08-28T00:01:00Z",
+          "reasoning_utf8_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "review_session_id": "session-1",
+          "started_at_utc": "2026-08-28T00:00:00Z"
+        },
         "llm_interaction": null,
         "method": "human",
         "outcome": "supported",
-        "reasoning": "value-review-artifact-schema-reasoning-0",
-        "review_id": "value-review-artifact-schema-review_id-0",
+        "reasoning": "The cited authority record identifies the proposed target.",
+        "review_id": "review-1",
         "reviewer": {
-          "independence_group": "value-review-artifact-schema-reviewer-independence_group-0",
-          "reviewer_id": "value-review-artifact-schema-reviewer-reviewer_id-0"
+          "independence_group": "review-group-1",
+          "reviewer_id": "reviewer-1"
         },
-        "schema_version": "site-graph-v0-review-artifact/2",
+        "schema_version": "site-graph-v0-review-artifact/3",
         "subject": {
-          "fixture_property_0": {},
-          "fixture_property_1": {}
+          "artifact_id": "met:1",
+          "target_id": "target-1"
         }
       }
     },
@@ -819,6 +1121,168 @@
         "schema_version": "site-graph-v0-review-ledger/3"
       }
     },
+    "run-completion-attestation.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "attestor_id": "fixture-run-attestor",
+          "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "authority_source_exports": [
+            {
+              "export": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.json",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "source_export_group_id": "fixture-export",
+              "trusted_export_attestation": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.attestation.json",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "trusted_export_signature": {
+                "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "path": "fixture/source-export.attestation.sig",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            }
+          ],
+          "candidate_id": "fixture-candidate",
+          "candidate_output": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/candidate-result.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "completed_at_utc": "2026-08-29T00:02:00Z",
+          "contract_version": "site-graph-v0/4",
+          "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "freeze_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/freeze-manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "invocation_id": "fixture-invocation",
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "result_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "result_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-result-manifest.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "review_ledger": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/review-ledger.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_receipt": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt.json",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "run_start_signature": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt.sig",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "runtime": {
+            "dependency_lock": {
+              "bytes": 500187,
+              "path": "pipeline/uv.lock",
+              "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+            },
+            "python": {
+              "implementation": "CPython",
+              "implementation_name": "cpython",
+              "version": "3.12.13"
+            }
+          },
+          "schema_version": "site-graph-v0-run-completion-attestation/1",
+          "signature_context": "hapi-site-graph-v0-run-completion/1",
+          "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "valid": {
+        "attestor_id": "fixture-run-attestor",
+        "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authority_source_exports": [
+          {
+            "export": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.json",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "source_export_group_id": "fixture-export",
+            "trusted_export_attestation": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.attestation.json",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "trusted_export_signature": {
+              "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "path": "fixture/source-export.attestation.sig",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          }
+        ],
+        "candidate_id": "fixture-candidate",
+        "candidate_output": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/candidate-result.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "completed_at_utc": "2026-08-29T00:02:00Z",
+        "contract_version": "site-graph-v0/4",
+        "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "freeze_manifest": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/freeze-manifest.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "invocation_id": "fixture-invocation",
+        "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "result_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "result_manifest": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-result-manifest.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "review_ledger": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/review-ledger.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_receipt": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-start-receipt.json",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "run_start_signature": {
+          "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "path": "fixture/run-start-receipt.sig",
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "runtime": {
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          }
+        },
+        "schema_version": "site-graph-v0-run-completion-attestation/1",
+        "signature_context": "hapi-site-graph-v0-run-completion/1",
+        "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "trusted_source_exporters_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
     "run-result-manifest.schema.json": {
       "invalid": [
         {},
@@ -830,7 +1294,7 @@
             "path": "fixture/run-result-manifest-schema-candidate_result-path-0",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
-          "contract_version": "site-graph-v0/3",
+          "contract_version": "site-graph-v0/4",
           "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "freeze_manifest": {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -854,6 +1318,18 @@
             "path": "fixture/run-result-manifest-schema-run_start_signature-path-0",
             "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
           },
+          "runtime": {
+            "dependency_lock": {
+              "bytes": 500187,
+              "path": "pipeline/uv.lock",
+              "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+            },
+            "python": {
+              "implementation": "CPython",
+              "implementation_name": "cpython",
+              "version": "3.12.13"
+            }
+          },
           "schema_version": "site-graph-v0-run-result-manifest/1",
           "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
@@ -865,7 +1341,7 @@
           "path": "fixture/run-result-manifest-schema-candidate_result-path-0",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
-        "contract_version": "site-graph-v0/3",
+        "contract_version": "site-graph-v0/4",
         "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         "freeze_manifest": {
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -889,19 +1365,29 @@
           "path": "fixture/run-result-manifest-schema-run_start_signature-path-0",
           "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         },
+        "runtime": {
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          }
+        },
         "schema_version": "site-graph-v0-run-result-manifest/1",
         "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       }
     },
     "run-start-receipt.schema.json": {
       "invalid": [
-        {},
         {
-          "__undeclared_contract_field__": true,
           "attestor_id": "fixture/run-start-receipt-schema-attestor_id-0",
           "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
           "candidate_id": "value-run-start-receipt-schema-candidate_id-0",
-          "contract_version": "site-graph-v0/3",
+          "contract_version": "site-graph-v0/4",
           "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "freeze_manifest": {
             "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -915,13 +1401,45 @@
           "signature_context": "hapi-site-graph-v0-run-start/1",
           "started_at_utc": "2026-08-28T00:00:00Z",
           "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "__undeclared_contract_field__": true,
+          "attestor_id": "fixture/run-start-receipt-schema-attestor_id-0",
+          "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "candidate_id": "value-run-start-receipt-schema-candidate_id-0",
+          "contract_version": "site-graph-v0/4",
+          "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "freeze_manifest": {
+            "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "path": "fixture/run-start-receipt-schema-freeze_manifest-path-0",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "invocation_id": "value-run-start-receipt-schema-invocation_id-0",
+          "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "runtime": {
+            "dependency_lock": {
+              "bytes": 500187,
+              "path": "pipeline/uv.lock",
+              "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+            },
+            "python": {
+              "implementation": "CPython",
+              "implementation_name": "cpython",
+              "version": "3.12.13"
+            }
+          },
+          "schema_version": "site-graph-v0-run-start-receipt/1",
+          "signature_context": "hapi-site-graph-v0-run-start/1",
+          "started_at_utc": "2026-08-28T00:00:00Z",
+          "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
         }
       ],
       "valid": {
         "attestor_id": "fixture/run-start-receipt-schema-attestor_id-0",
         "attestor_key_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "candidate_id": "value-run-start-receipt-schema-candidate_id-0",
-        "contract_version": "site-graph-v0/3",
+        "contract_version": "site-graph-v0/4",
         "freeze_commit": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
         "freeze_manifest": {
           "git_blob_oid": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -931,10 +1449,50 @@
         "freeze_nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "invocation_id": "value-run-start-receipt-schema-invocation_id-0",
         "release_manifest_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "runtime": {
+          "dependency_lock": {
+            "bytes": 500187,
+            "path": "pipeline/uv.lock",
+            "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+          },
+          "python": {
+            "implementation": "CPython",
+            "implementation_name": "cpython",
+            "version": "3.12.13"
+          }
+        },
         "schema_version": "site-graph-v0-run-start-receipt/1",
         "signature_context": "hapi-site-graph-v0-run-start/1",
         "started_at_utc": "2026-08-28T00:00:00Z",
         "trusted_run_attestors_canonical_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    "trusted-reviewers.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "configuration_rule": "Production reviewers require externally verified identities.",
+          "current_effect": "Candidate review credit is unavailable until configured.",
+          "identities": [],
+          "registry_id": "site-graph-v0-production-reviewers",
+          "schema_version": "site-graph-v0-trusted-reviewers/1",
+          "signature_context": "hapi-site-graph-v0-review-evidence/1",
+          "signature_scheme": "ed25519",
+          "status": "NOT_CONFIGURED",
+          "trust_tier": "PRODUCTION"
+        }
+      ],
+      "valid": {
+        "configuration_rule": "Production reviewers require externally verified identities.",
+        "current_effect": "Candidate review credit is unavailable until configured.",
+        "identities": [],
+        "registry_id": "site-graph-v0-production-reviewers",
+        "schema_version": "site-graph-v0-trusted-reviewers/1",
+        "signature_context": "hapi-site-graph-v0-review-evidence/1",
+        "signature_scheme": "ed25519",
+        "status": "NOT_CONFIGURED",
+        "trust_tier": "PRODUCTION"
       }
     },
     "trusted-run-attestors.schema.json": {
@@ -945,6 +1503,7 @@
           "attestors": [],
           "configuration_rule": "value-trusted-run-attestors-schema-configuration_rule-0",
           "current_effect": "value-trusted-run-attestors-schema-current_effect-0",
+          "registry_scope": "production_release",
           "schema_version": "site-graph-v0-trusted-run-attestors/1",
           "signature_context": "hapi-site-graph-v0-run-start/1",
           "signature_scheme": "ed25519",
@@ -955,8 +1514,35 @@
         "attestors": [],
         "configuration_rule": "value-trusted-run-attestors-schema-configuration_rule-0",
         "current_effect": "value-trusted-run-attestors-schema-current_effect-0",
+        "registry_scope": "production_release",
         "schema_version": "site-graph-v0-trusted-run-attestors/1",
         "signature_context": "hapi-site-graph-v0-run-start/1",
+        "signature_scheme": "ed25519",
+        "status": "NOT_CONFIGURED"
+      }
+    },
+    "trusted-source-exporters.schema.json": {
+      "invalid": [
+        {},
+        {
+          "__undeclared_contract_field__": true,
+          "configuration_rule": "Production exporters require externally verified signing keys.",
+          "current_effect": "Candidate source exports are unavailable until configured.",
+          "exporters": [],
+          "registry_scope": "production_release",
+          "schema_version": "site-graph-v0-trusted-source-exporters/1",
+          "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+          "signature_scheme": "ed25519",
+          "status": "NOT_CONFIGURED"
+        }
+      ],
+      "valid": {
+        "configuration_rule": "Production exporters require externally verified signing keys.",
+        "current_effect": "Candidate source exports are unavailable until configured.",
+        "exporters": [],
+        "registry_scope": "production_release",
+        "schema_version": "site-graph-v0-trusted-source-exporters/1",
+        "signature_context": "hapi-site-graph-v0-authority-source-export/1",
         "signature_scheme": "ed25519",
         "status": "NOT_CONFIGURED"
       }

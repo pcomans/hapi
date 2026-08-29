@@ -1,0 +1,10 @@
+{
+  "configuration_rule": "A separately reviewed release-contract migration must authenticate the authority export service and pin its Ed25519 public key before candidate source exports can enter a production freeze.",
+  "current_effect": "No production candidate source export is currently authorized. Logic-only tests may exercise signature mechanics with a registry whose registry_scope is test_only, but such a registry is rejected by every production entry point.",
+  "exporters": [],
+  "registry_scope": "production_release",
+  "schema_version": "site-graph-v0-trusted-source-exporters/1",
+  "signature_context": "hapi-site-graph-v0-authority-source-export/1",
+  "signature_scheme": "ed25519",
+  "status": "NOT_CONFIGURED"
+}

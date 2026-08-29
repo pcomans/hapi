@@ -1,25 +1,47 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-run-start-receipt-1.json",
-  "title": "Trusted attestor statement issued when an exact frozen run starts",
+  "$id": "https://hapi.example/schemas/site-graph-v0-run-completion-attestation-1.json",
+  "title": "Trusted attestor statement binding one exact completed candidate run",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "contract_version", "signature_context", "release_manifest_sha256", "trusted_run_attestors_canonical_sha256", "attestor_id", "attestor_key_id", "candidate_id", "invocation_id", "runtime", "freeze_commit", "freeze_manifest", "freeze_nonce", "started_at_utc"],
+  "required": ["schema_version", "contract_version", "signature_context", "release_manifest_sha256", "trusted_run_attestors_canonical_sha256", "trusted_source_exporters_canonical_sha256", "attestor_id", "attestor_key_id", "candidate_id", "invocation_id", "runtime", "run_start_receipt", "run_start_signature", "freeze_commit", "freeze_manifest", "freeze_nonce", "result_commit", "result_manifest", "candidate_output", "review_ledger", "authority_source_exports", "completed_at_utc"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-run-start-receipt/1"},
+    "schema_version": {"const": "site-graph-v0-run-completion-attestation/1"},
     "contract_version": {"const": "site-graph-v0/4"},
-    "signature_context": {"const": "hapi-site-graph-v0-run-start/1"},
+    "signature_context": {"const": "hapi-site-graph-v0-run-completion/1"},
     "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "trusted_run_attestors_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_source_exporters_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "attestor_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "attestor_key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "candidate_id": {"type": "string", "minLength": 1},
     "invocation_id": {"type": "string", "minLength": 1},
     "runtime": {"$ref": "#/$defs/runtime"},
+    "run_start_receipt": {"$ref": "#/$defs/artifact"},
+    "run_start_signature": {"$ref": "#/$defs/artifact"},
     "freeze_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
     "freeze_manifest": {"$ref": "#/$defs/artifact"},
     "freeze_nonce": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "started_at_utc": {"type": "string", "format": "date-time"}
+    "result_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "result_manifest": {"$ref": "#/$defs/artifact"},
+    "candidate_output": {"$ref": "#/$defs/artifact"},
+    "review_ledger": {"$ref": "#/$defs/artifact"},
+    "authority_source_exports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_export_group_id", "export", "trusted_export_attestation", "trusted_export_signature"],
+        "properties": {
+          "source_export_group_id": {"type": "string", "minLength": 1},
+          "export": {"$ref": "#/$defs/artifact"},
+          "trusted_export_attestation": {"$ref": "#/$defs/artifact"},
+          "trusted_export_signature": {"$ref": "#/$defs/artifact"}
+        }
+      }
+    },
+    "completed_at_utc": {"type": "string", "format": "date-time"}
   },
   "$defs": {
     "runtime": {

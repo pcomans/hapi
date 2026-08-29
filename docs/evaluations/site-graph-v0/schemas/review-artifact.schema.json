@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-review-artifact-2.json",
-  "title": "Structured independent evidence review",
+  "$id": "https://hapi.example/schemas/site-graph-v0-review-artifact-3.json",
+  "title": "Authenticated structured independent evidence review",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "review_id", "decision_key", "decision_kind", "subject", "reviewer", "outcome", "method", "citations", "reasoning", "llm_interaction"],
+  "required": ["schema_version", "review_id", "decision_key", "decision_kind", "subject", "reviewer", "outcome", "method", "citations", "reasoning", "human_provenance", "llm_interaction", "authentication"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-review-artifact/2"},
-    "review_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "site-graph-v0-review-artifact/3"},
+    "review_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "decision_key": {"type": "string", "minLength": 1},
     "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support"]},
     "subject": {"type": "object", "minProperties": 2},
@@ -16,8 +16,8 @@
       "additionalProperties": false,
       "required": ["reviewer_id", "independence_group"],
       "properties": {
-        "reviewer_id": {"type": "string", "minLength": 1},
-        "independence_group": {"type": "string", "minLength": 1}
+        "reviewer_id": {"type": "string", "pattern": "^[^\\s]+$"},
+        "independence_group": {"type": "string", "pattern": "^[^\\s]+$"}
       }
     },
     "outcome": {"enum": ["supported", "unsupported", "uncertain"]},
@@ -28,26 +28,45 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["source_id", "source_kind", "locator", "evidence_summary", "originating_museum"],
+        "required": ["source_id", "source_kind", "locator", "evidence_summary", "originating_museum", "source_artifact"],
         "properties": {
           "source_id": {"type": "string", "minLength": 1},
           "source_kind": {"type": "string", "minLength": 1},
           "locator": {"type": "string", "minLength": 1},
           "evidence_summary": {"type": "string", "minLength": 1},
-          "originating_museum": {"const": false}
+          "originating_museum": {"const": false},
+          "source_artifact": {"$ref": "#/$defs/artifact"}
         }
       }
     },
     "reasoning": {"type": "string", "minLength": 1},
+    "human_provenance": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["review_session_id", "started_at_utc", "completed_at_utc", "reasoning_utf8_sha256"],
+          "properties": {
+            "review_session_id": {"type": "string", "pattern": "^[^\\s]+$"},
+            "started_at_utc": {"type": "string", "format": "date-time"},
+            "completed_at_utc": {"type": "string", "format": "date-time"},
+            "reasoning_utf8_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
     "llm_interaction": {
       "oneOf": [
         {"type": "null"},
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["review_invocation_id", "model", "parameters", "prompt", "input", "raw_response", "prompt_leakage_audit", "interaction_binding_sha256"],
+          "required": ["review_invocation_id", "invoked_at_utc", "completed_at_utc", "model", "parameters", "prompt", "input", "raw_response", "prompt_leakage_audit", "interaction_binding_sha256"],
           "properties": {
-            "review_invocation_id": {"type": "string", "minLength": 1},
+            "review_invocation_id": {"type": "string", "pattern": "^[^\\s]+$"},
+            "invoked_at_utc": {"type": "string", "format": "date-time"},
+            "completed_at_utc": {"type": "string", "format": "date-time"},
             "model": {
               "type": "object",
               "additionalProperties": false,
@@ -88,30 +107,22 @@
             "prompt": {"$ref": "#/$defs/artifact"},
             "input": {"$ref": "#/$defs/artifact"},
             "raw_response": {"$ref": "#/$defs/artifact"},
-            "prompt_leakage_audit": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["passed", "opaque_shuffled_candidate_ids", "artifact"],
-              "properties": {
-                "passed": {"const": true},
-                "opaque_shuffled_candidate_ids": {"const": true},
-                "artifact": {"$ref": "#/$defs/artifact"}
-              }
-            },
+            "prompt_leakage_audit": {"$ref": "#/$defs/artifact"},
             "interaction_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
           }
         }
       ]
-    }
+    },
+    "authentication": {"$ref": "#/$defs/authentication"}
   },
   "allOf": [
     {
       "if": {"properties": {"method": {"const": "human"}}},
-      "then": {"properties": {"llm_interaction": {"type": "null"}}}
+      "then": {"properties": {"human_provenance": {"type": "object"}, "llm_interaction": {"type": "null"}}}
     },
     {
       "if": {"properties": {"method": {"const": "llm"}}},
-      "then": {"properties": {"llm_interaction": {"type": "object"}}}
+      "then": {"properties": {"human_provenance": {"type": "null"}, "llm_interaction": {"type": "object"}}}
     }
   ],
   "$defs": {
@@ -123,6 +134,20 @@
         "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
         "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_id", "signature_context", "principal_id", "key_id", "signed_at_utc", "statement_sha256", "signature"],
+      "properties": {
+        "registry_id": {"type": "string", "pattern": "^[^\\s]+$"},
+        "signature_context": {"const": "hapi-site-graph-v0-review-evidence/1"},
+        "principal_id": {"type": "string", "pattern": "^[^\\s]+$"},
+        "key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "signed_at_utc": {"type": "string", "format": "date-time"},
+        "statement_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "signature": {"$ref": "#/$defs/artifact"}
       }
     }
   }

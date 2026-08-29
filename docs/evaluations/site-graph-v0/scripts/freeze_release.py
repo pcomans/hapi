@@ -49,6 +49,7 @@ def main() -> None:
         "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
         "downstream_product_verdict": "NOT_RUN",
         "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
+        "pre_pr_ci_status": "PENDING_OUTSIDE_COMMIT",
     }
     if report.get("status") != expected_ready:
         raise RuntimeError(

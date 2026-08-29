@@ -1,5 +1,5 @@
 {
-  "schema_version": "site-graph-v0-implementation-evidence/3",
+  "schema_version": "site-graph-v0-implementation-evidence/4",
   "issue": 327,
   "status": {
     "snapshot_acquisition_integrity": "PASS",
@@ -7,7 +7,8 @@
     "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
     "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
     "downstream_product_verdict": "NOT_RUN",
-    "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT"
+    "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
+    "pre_pr_ci_status": "PENDING_OUTSIDE_COMMIT"
   },
   "claim_boundary": "The contract and baseline are reproducible from the authenticated private archive snapshot. Historical production export lineage is unavailable, no downstream candidate is evaluated, and checked-in implementer evidence is not external reviewer approval.",
   "public_bulk_derivatives_committed": false,
@@ -30,23 +31,25 @@
   "deterministic_reproduction": {
     "status": "READY_SNAPSHOT_CONDITIONAL",
     "evidence": "baseline-rerun-evidence.json",
-    "deterministic_output_count": 18,
+    "deterministic_output_count": 19,
     "output_mismatches": 0,
     "metadata_mismatches": 0,
-    "run_a_manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
-    "run_b_manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c"
+    "run_a_manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+    "run_b_manifest_sha256": "9dabde82e7c9e566b579d609299ca02252d89691b9c4f51b8ae9bfa81c1059d8",
+    "runtime_attestation_sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321"
   },
   "validation": {
     "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
-    "checks_passed": 20,
+    "checks_passed": 21,
     "checks_failed": 0,
-    "schema_meta_valid_count": 15,
-    "schema_representative_valid_instance_count": 15,
-    "schema_adversarial_invalid_instance_count": 30
+    "schema_meta_valid_count": 20,
+    "schema_representative_valid_instance_count": 20,
+    "schema_adversarial_invalid_instance_count": 40
   },
   "tests": {
-    "focused_site_graph_contract": "67 passed",
-    "full_pipeline": "2446 passed"
+    "focused_site_graph_contract": "124 passed",
+    "full_pipeline": "2503 passed",
+    "execution_scope": "local repository-owned uv environment; no pre-PR CI run exists"
   },
   "review_gate": {
     "historical_round_1_and_round_2_outcome": "REQUEST_CHANGES",
@@ -56,7 +59,18 @@
   },
   "candidate_execution": {
     "trusted_run_attestors": "NOT_CONFIGURED",
+    "trusted_source_exporters": "NOT_CONFIGURED",
+    "trusted_reviewers_and_auditors": "NOT_CONFIGURED",
     "production_comparator_effect": "FAIL_CLOSED",
-    "downstream_product_verdict": "NOT_RUN"
+    "downstream_product_verdict": "NOT_RUN",
+    "required_runtime": {
+      "implementation": "CPython",
+      "implementation_name": "cpython",
+      "version": "3.12.13",
+      "dependency_lock_path": "pipeline/uv.lock",
+      "dependency_lock_sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+    },
+    "review_source_binding": "Every signed review must cite authenticated non-originating-museum source records that collectively cover every target in the signed decision subject.",
+    "trusted_completion_requirement": "The same configured trusted attestor must sign start and completion statements binding one invocation to exact freeze, result, candidate, review, source-export, runtime, and manifest bytes."
   }
 }

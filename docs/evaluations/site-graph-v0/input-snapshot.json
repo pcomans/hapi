@@ -98,7 +98,16 @@
         "sha256": "ec982b40b246ec08abdfceb84e1fb1dfae4726e0299e88fc83d5dd6da1461cc8"
       }
     },
-    "python_baseline_runtime": "CPython 3.14.6"
+    "python_baseline_runtime": {
+      "implementation": "CPython",
+      "implementation_name": "cpython",
+      "version": "3.12.13",
+      "dependency_lock": {
+        "path": "pipeline/uv.lock",
+        "bytes": 500187,
+        "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+      }
+    }
   },
   "current_authority": {
     "files": {

@@ -142,6 +142,11 @@ failure, abstention, disagreement, unsupported scope, and broad/administrative
 results stay in these denominators and earn zero credit.
 Candidate credit requires the exact frozen opportunity/mention binding; another
 mention on the same artifact cannot borrow that artifact’s ITT eligibility.
+The candidate result must exhaustively emit exactly one closed disposition for
+every required binding (`linked`, `ambiguous`, `abstained`, `unmatched`,
+`unresolved`, or `research_failure`). Omitted, duplicated, or substituted bindings
+make the run `INVALID`; ambiguity and abstention counts are computed from this
+binding-level census rather than a single aggregate artifact status.
 
 The fixed per-museum maximum credited affected-record upper bounds (new-link
 eligible plus baseline broad-only reassignment eligible) are:
@@ -176,35 +181,51 @@ direct edge. Any other uncovered baseline identity is a loss. New links require 
 empty baseline set. Additional identities on linked records are never counted as
 new linked records.
 
-Candidate hierarchy, relation ledger, and at least one nonempty structured source
-snapshot must be committed before the candidate run. The freeze manifest records
-every SHA-256 and Git blob OID. Candidate source records supply raw source types,
-not candidate E55 labels; the comparator maps them through the authenticated
-crosswalk and verifies the exact source-record census plus inverse parent/child
-closure. Production comparison additionally requires an Ed25519 run-start receipt
-from a release-pinned trusted attestor, binding the exact release, freeze
-commit/manifest/nonce, candidate, and invocation. Git ancestry and mutable
-timestamps alone cannot establish ordering. `trusted-run-attestors.json` is
-currently honestly `NOT_CONFIGURED`, so production candidate comparison fails
-closed until a separately reviewed release migration pins a real trust root;
-test-only keys never satisfy production binding. Existing baseline targets retain
-frozen scope, while new-target scope/topology is derived from authenticated
-snapshots, never self-attested by the result or inferred from slice leafness.
+Candidate hierarchy, relation ledger, and every complete authority source export
+triplet (exact export bytes, trusted-exporter attestation, and detached signature)
+must be committed before the candidate run. The freeze manifest records every
+SHA-256 and Git blob OID. Candidate source records supply raw source types, not
+candidate E55 labels; the comparator maps them through the authenticated crosswalk
+and verifies the exact source-record census plus inverse parent/child closure.
+`trusted-source-exporters.json` is release-authenticated and candidate-authored
+completeness claims have no authority without one of its signatures.
+
+Production comparison additionally requires two Ed25519 statements from the same
+release-pinned trusted attestor: a start receipt binding the exact release, freeze,
+nonce, candidate, invocation, CPython 3.12.13 runtime, and dependency lock; and a
+completion attestation binding that receipt to the exact result commit, candidate
+output, review ledger, source exports, and result-manifest path/hash/blob. Git
+ancestry and mutable timestamps alone cannot establish ordering, and an unsigned
+result is never comparable. `trusted-run-attestors.json` and
+`trusted-source-exporters.json` are currently honestly `NOT_CONFIGURED`, so
+production candidate comparison fails closed until a separately reviewed release
+migration pins genuine trust roots; test-only keys never satisfy production
+binding. Existing baseline targets retain frozen scope, while new-target
+scope/topology is derived from authenticated exports, never self-attested by the
+result or inferred from slice leafness.
 
 ## Review census and abstention
 
 Every credited changed link, strict refinement, and equivalence receives a census
 review, not a sample gate. Each decision has exactly two distinct structured,
-subject/outcome-bound artifacts from reviewer IDs and independence groups that are
-both distinct. Each artifact carries structured independent non-originating-museum
-citations. LLM review additionally records unique nonempty exact prompt, input, and
-full raw response bytes; Git blob OIDs and SHA-256 values; model selector; exact
-backend snapshot or an enumerated non-exposure sentinel; a full parameter object;
-and a subject/decision/review-bound prompt-leakage audit using opaque shuffled
-candidate IDs. The exact prompt and audit must be frozen in the ancestor commit
-before invocation and cannot be reused across reviews or decisions. Disagreement or
-uncertainty remains unresolved and receives no credit. This provisional census is
-decision support, not gold truth.
+subject/outcome-bound, signed artifacts from reviewer IDs and independence groups
+that are both distinct and registered in the release-authenticated
+`trusted-reviewers.json`. Human review has the same signature and provenance gate;
+an arbitrary reviewer string cannot bypass it. Each artifact carries structured
+independent non-originating-museum citations bound to exact authenticated authority
+export bytes. Collectively, a review's cited source records must cover every target
+in its signed subject; an unrelated export row cannot support a link, equivalence,
+distinctness, or strict-refinement decision. LLM review additionally records unique
+nonempty exact prompt, input,
+and full raw response bytes; Git blob OIDs and SHA-256 values; model selector;
+exact backend snapshot or an enumerated non-exposure sentinel; a full parameter
+object; and a registered auditor's detached signature over a pre-invocation,
+subject/decision/review-bound prompt-leakage audit. Deterministic guards scan the
+exact prompt/input for candidate IDs, source IDs, and known answer strings. Prompt,
+input, response, audit, signature, or invocation reuse fails closed. Disagreement
+or uncertainty remains unresolved and receives no credit. This provisional census
+is decision support, not gold truth. The reviewer registry is currently
+`NOT_CONFIGURED`, so no production decision can receive review credit.
 
 A held-out sample may be added only as a descriptive audit using the exact
 hash-ranked seed/algorithm in `preregistration.json`. It cannot gate credit or
@@ -245,7 +266,7 @@ counterfactual reports additions, removals, and denominator changes without
 rewriting the frozen ITT. Corrected rows/memberships remain private; only aggregate
 metrics and hashes may be released. Primary bytes are never rewritten.
 
-## Integrity, reproduction, and CI
+## Integrity and reproduction
 
 `scripts/release_contract.py` is the immutable versioned required-file inventory outside
 the generated manifest. `release-manifest.json` must match it exactly. Read-only
@@ -305,7 +326,10 @@ The final two-run and test results are recorded in `validation-report.json` and 
 implementation handoff. Logic-only adversarial unit inputs test comparator behavior;
 they make no corpus claim. Corpus headline assertions are recomputed from
 authenticated private runtime ledgers and pinned source bytes; no fixture supports
-a corpus conclusion.
+a corpus conclusion. This branch has no CI run before a PR exists: the commands
+above are local repository-owned test execution, not a CI status. Any later PR CI
+and exact-HEAD external review remain `PENDING_OUTSIDE_COMMIT` until independently
+run after the commit.
 
 ## Review provenance
 
@@ -325,7 +349,7 @@ removed private derivatives never enter public Git history.
 | #327 requirement | Executable evidence |
 |---|---|
 | Exact snapshots and immutable classification | `input-snapshot.json`, private-ledger canonical/Merkle hashes, exact static release contract |
-| Exact formulas and museum denominators | `preregistration.json`, recomputation in `validate_contract.py` and CI |
+| Exact formulas and museum denominators | `preregistration.json`; recomputation in `validate_contract.py` and the collected repository test |
 | Pair/all-three and per-side concentration | `baseline-metrics.json`; side-specific top-k/HHI recomputation and gates |
 | Result-blind planned maximum | private regenerated source/membership authenticated by public aggregate hashes and numeric museum/pair ceilings |
 | Narrower-node defense | one type crosswalk, source-derived frozen hierarchy context, reviewed equivalence union-find, adversarial tests |
@@ -340,7 +364,7 @@ removed private derivatives never enter public Git history.
 ## Limitations
 
 - The pinned available iDAI hierarchy is not a global closed graph; exact known gaps
-  are reported and candidate work must version any stronger source snapshot.
+  are reported and candidate work must version any stronger authenticated source export.
 - No candidate research or candidate graph exists in #327, so the comparator schemas
   are preregistered and tested on logic-only adversarial cases, not presented as a
   candidate result.

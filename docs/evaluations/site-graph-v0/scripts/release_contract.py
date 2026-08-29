@@ -6,7 +6,7 @@ import hashlib
 from pathlib import Path
 
 
-CONTRACT_VERSION = "site-graph-v0-release/3"
+CONTRACT_VERSION = "site-graph-v0-release/4"
 PYCACHE_EXCLUSION = (
     "Python cache directories (__pycache__, .pytest_cache) and bytecode suffixes "
     "(.pyc, .pyo) are runtime by-products, are never required release files, and are "
@@ -20,6 +20,9 @@ CI_RELEASE_FILES = frozenset(
         "pipeline/tests/test_site_graph_v0_contract.py",
         "pipeline/tests/test_site_graph_v0_corrections.py",
         "pipeline/tests/test_site_graph_v0_private_ledgers.py",
+        "pipeline/tests/test_site_graph_v0_review_auth.py",
+        "pipeline/tests/test_site_graph_v0_source_exports.py",
+        "pipeline/tests/test_site_graph_v0_trusted_provenance.py",
         "pipeline/uv.lock",
     }
 )
@@ -55,8 +58,10 @@ REQUIRED_RELEASE_FILES = frozenset(
         "docs/evaluations/site-graph-v0/schema-test-cases.json",
         "docs/evaluations/site-graph-v0/schemas/candidate-freeze-manifest.schema.json",
         "docs/evaluations/site-graph-v0/schemas/candidate-hierarchy.schema.json",
-        "docs/evaluations/site-graph-v0/schemas/candidate-source-snapshot.schema.json",
         "docs/evaluations/site-graph-v0/schemas/candidate.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/authority-source-export.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/authority-source-export-attestation.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/baseline-runtime-attestation.schema.json",
         "docs/evaluations/site-graph-v0/schemas/comparison-report.schema.json",
         "docs/evaluations/site-graph-v0/schemas/correction-ledger.schema.json",
         "docs/evaluations/site-graph-v0/schemas/opportunity-summary.schema.json",
@@ -66,8 +71,11 @@ REQUIRED_RELEASE_FILES = frozenset(
         "docs/evaluations/site-graph-v0/schemas/review-artifact.schema.json",
         "docs/evaluations/site-graph-v0/schemas/review-ledger.schema.json",
         "docs/evaluations/site-graph-v0/schemas/run-result-manifest.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/run-completion-attestation.schema.json",
         "docs/evaluations/site-graph-v0/schemas/run-start-receipt.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/trusted-reviewers.schema.json",
         "docs/evaluations/site-graph-v0/schemas/trusted-run-attestors.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/trusted-source-exporters.schema.json",
         "docs/evaluations/site-graph-v0/scripts/apply_corrections.py",
         "docs/evaluations/site-graph-v0/scripts/build_baseline.py",
         "docs/evaluations/site-graph-v0/scripts/candidate_git.py",
@@ -81,13 +89,19 @@ REQUIRED_RELEASE_FILES = frozenset(
         "docs/evaluations/site-graph-v0/scripts/integrity.py",
         "docs/evaluations/site-graph-v0/scripts/metrics_core.py",
         "docs/evaluations/site-graph-v0/scripts/private_ledgers.py",
+        "docs/evaluations/site-graph-v0/scripts/review_auth.py",
         "docs/evaluations/site-graph-v0/scripts/release_contract.py",
         "docs/evaluations/site-graph-v0/scripts/run_baseline.py",
         "docs/evaluations/site-graph-v0/scripts/run_two_baselines.py",
+        "docs/evaluations/site-graph-v0/scripts/runtime_attestation.py",
         "docs/evaluations/site-graph-v0/scripts/schema_validation.py",
+        "docs/evaluations/site-graph-v0/scripts/source_exports.py",
+        "docs/evaluations/site-graph-v0/scripts/trusted_completion.py",
         "docs/evaluations/site-graph-v0/scripts/validate_contract.py",
         "docs/evaluations/site-graph-v0/top-unmatched-components.json",
         "docs/evaluations/site-graph-v0/trusted-run-attestors.json",
+        "docs/evaluations/site-graph-v0/trusted-reviewers.json",
+        "docs/evaluations/site-graph-v0/trusted-source-exporters.json",
         "docs/evaluations/site-graph-v0/type-crosswalk.json",
         "docs/evaluations/site-graph-v0/validation-report.json",
         *CI_RELEASE_FILES,
