@@ -216,22 +216,6 @@ def _is_main_guard(node: ast.AST) -> bool:
     )
 
 
-SAFE_INITIALIZER_CALL_KINDS = {
-    "builtins.frozenset": "collection",
-    "builtins.list": "collection",
-    "dataclasses.field": "field",
-    "fractions.Fraction": "fraction",
-    "hashlib.sha256": "hash",
-    "json.dumps": "string",
-    "pathlib.Path": "path",
-    "re.compile": "regex",
-}
-SAFE_INITIALIZER_METHOD_KINDS = {
-    ("hash", "hexdigest"): "string",
-    ("path", "as_posix"): "string",
-    ("path", "resolve"): "path",
-    ("string", "encode"): "bytes",
-}
 SAFE_DECORATORS = {"contextlib.contextmanager", "dataclasses.dataclass"}
 ALLOWED_RELEASE_IMPORT_MODULES = frozenset(
     {
@@ -357,33 +341,252 @@ def _initializer_expression_kind(
     assigned: set[str],
     value_kinds: dict[str, str],
 ) -> str | None:
+    """Infer an inert built-in value only for exact release-needed expressions.
+
+    A recognized callee name is deliberately insufficient: several otherwise
+    ordinary constructors and serializers invoke protocols or callbacks supplied
+    through their arguments.  Every allowed call below therefore validates its
+    complete positional and keyword shape before it receives a kind.
+    """
+    if isinstance(node, ast.Constant):
+        if isinstance(node.value, str):
+            return "string"
+        if isinstance(node.value, bool):
+            return "json_boolean"
+        if node.value is None:
+            return "json_null"
+        if isinstance(node.value, (int, float)):
+            return "json_number"
+        if isinstance(node.value, bytes):
+            return "bytes"
+        return None
+    if isinstance(node, ast.Name):
+        if node.id in value_kinds:
+            return value_kinds[node.id]
+        if node.id == "__file__" and node.id not in imports and node.id not in assigned:
+            return "string"
+        return None
+    if isinstance(node, ast.Starred):
+        kind = _initializer_expression_kind(
+            node.value, imports, assigned, value_kinds
+        )
+        return kind if kind in {"tuple", "list", "set", "frozenset"} else None
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        element_kinds = [
+            _initializer_expression_kind(item, imports, assigned, value_kinds)
+            for item in node.elts
+        ]
+        if any(kind is None for kind in element_kinds):
+            return None
+        if isinstance(node, ast.Tuple):
+            return (
+                "json_tuple"
+                if all(kind in _JSON_VALUE_KINDS for kind in element_kinds)
+                else "tuple"
+            )
+        if isinstance(node, ast.List):
+            return (
+                "json_list"
+                if all(kind in _JSON_VALUE_KINDS for kind in element_kinds)
+                else "list"
+            )
+        return "set"
+    if isinstance(node, ast.Dict):
+        key_kinds = [
+            _initializer_expression_kind(key, imports, assigned, value_kinds)
+            if key is not None
+            else None
+            for key in node.keys
+        ]
+        value_kinds_found = [
+            _initializer_expression_kind(value, imports, assigned, value_kinds)
+            for value in node.values
+        ]
+        if all(kind == "string" for kind in key_kinds) and all(
+            kind in _JSON_VALUE_KINDS for kind in value_kinds_found
+        ):
+            return "json_dict"
+        return None
     if isinstance(node, ast.Call):
         direct = _qualified_reference(node.func, imports, assigned)
-        if direct is not None:
-            return SAFE_INITIALIZER_CALL_KINDS.get(direct)
+        if direct in {"builtins.frozenset", "builtins.list"}:
+            if len(node.args) != 1 or node.keywords:
+                return None
+            iterable_kind = _initializer_expression_kind(
+                node.args[0], imports, assigned, value_kinds
+            )
+            if iterable_kind not in {
+                "tuple", "json_tuple", "list", "json_list", "set", "frozenset"
+            }:
+                return None
+            if direct == "builtins.frozenset":
+                return "frozenset"
+            return (
+                "json_list"
+                if iterable_kind in {"json_tuple", "json_list"}
+                else "list"
+            )
+        if direct == "dataclasses.field":
+            return (
+                "field"
+                if not node.args
+                and len(node.keywords) == 1
+                and node.keywords[0].arg == "default_factory"
+                and isinstance(node.keywords[0].value, ast.Name)
+                and node.keywords[0].value.id == "dict"
+                and "dict" not in imports
+                and "dict" not in assigned
+                else None
+            )
+        if direct == "fractions.Fraction":
+            return (
+                "fraction"
+                if len(node.args) == 2
+                and not node.keywords
+                and all(_is_static_integer(argument) for argument in node.args)
+                else None
+            )
+        if direct == "hashlib.sha256":
+            return (
+                "hash"
+                if len(node.args) == 1
+                and not node.keywords
+                and _initializer_expression_kind(
+                    node.args[0], imports, assigned, value_kinds
+                )
+                == "bytes"
+                else None
+            )
+        if direct == "json.dumps":
+            keyword_values = {
+                keyword.arg: keyword.value
+                for keyword in node.keywords
+                if keyword.arg is not None
+            }
+            expected_options = {
+                "ensure_ascii": False,
+                "sort_keys": True,
+                "allow_nan": False,
+            }
+            static_options = all(
+                isinstance(keyword_values.get(name), ast.Constant)
+                and keyword_values[name].value is expected
+                for name, expected in expected_options.items()
+            )
+            separators = keyword_values.get("separators")
+            static_separators = (
+                isinstance(separators, ast.Tuple)
+                and len(separators.elts) == 2
+                and all(isinstance(item, ast.Constant) for item in separators.elts)
+                and tuple(item.value for item in separators.elts) == (",", ":")
+            )
+            return (
+                "string"
+                if len(node.args) == 1
+                and set(keyword_values) == {*expected_options, "separators"}
+                and len(node.keywords) == len(keyword_values)
+                and static_options
+                and static_separators
+                and _initializer_expression_kind(
+                    node.args[0], imports, assigned, value_kinds
+                )
+                in _JSON_VALUE_KINDS
+                else None
+            )
+        if direct == "pathlib.Path":
+            return (
+                "path"
+                if len(node.args) == 1
+                and not node.keywords
+                and _initializer_expression_kind(
+                    node.args[0], imports, assigned, value_kinds
+                )
+                == "string"
+                else None
+            )
+        if direct == "re.compile":
+            flags_are_static = len(node.args) == 1 or (
+                len(node.args) == 2 and _is_static_regex_flag(node.args[1], imports, assigned)
+            )
+            return (
+                "regex"
+                if len(node.args) in {1, 2}
+                and not node.keywords
+                and flags_are_static
+                and _initializer_expression_kind(
+                    node.args[0], imports, assigned, value_kinds
+                )
+                == "string"
+                else None
+            )
         if isinstance(node.func, ast.Attribute):
             receiver_kind = _initializer_expression_kind(
                 node.func.value, imports, assigned, value_kinds
             )
-            return SAFE_INITIALIZER_METHOD_KINDS.get(
-                (receiver_kind, node.func.attr)
-            )
+            if (
+                receiver_kind == "hash"
+                and node.func.attr == "hexdigest"
+                and not node.args
+                and not node.keywords
+            ):
+                return "string"
+            if (
+                receiver_kind == "path"
+                and node.func.attr in {"as_posix", "resolve"}
+                and not node.args
+                and not node.keywords
+            ):
+                return "string" if node.func.attr == "as_posix" else "path"
+            if (
+                receiver_kind == "string"
+                and node.func.attr == "encode"
+                and len(node.args) == 1
+                and not node.keywords
+                and isinstance(node.args[0], ast.Constant)
+                and node.args[0].value == "utf-8"
+            ):
+                return "bytes"
         return None
-    if isinstance(node, ast.Name):
-        return value_kinds.get(node.id)
-    if isinstance(node, ast.Constant) and isinstance(node.value, str):
-        return "string"
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
         left_kind = _initializer_expression_kind(
             node.left, imports, assigned, value_kinds
         )
-        return "path" if left_kind == "path" else None
+        right_kind = _initializer_expression_kind(
+            node.right, imports, assigned, value_kinds
+        )
+        return "path" if left_kind == "path" and right_kind == "string" else None
     if isinstance(node, ast.Attribute) and node.attr == "parent":
         receiver_kind = _initializer_expression_kind(
             node.value, imports, assigned, value_kinds
         )
         return "path" if receiver_kind == "path" else None
     return None
+
+
+_JSON_VALUE_KINDS = {
+    "string", "json_boolean", "json_null", "json_number", "json_tuple",
+    "json_list", "json_dict",
+}
+
+
+def _is_static_integer(node: ast.AST) -> bool:
+    if isinstance(node, ast.Constant):
+        return isinstance(node.value, int) and not isinstance(node.value, bool)
+    return (
+        isinstance(node, ast.UnaryOp)
+        and isinstance(node.op, (ast.UAdd, ast.USub))
+        and isinstance(node.operand, ast.Constant)
+        and isinstance(node.operand.value, int)
+        and not isinstance(node.operand.value, bool)
+    )
+
+
+def _is_static_regex_flag(
+    node: ast.AST, imports: dict[str, str], assigned: set[str]
+) -> bool:
+    return _is_static_integer(node) or _qualified_reference(
+        node, imports, assigned
+    ) in {"re.ASCII", "re.IGNORECASE", "re.MULTILINE", "re.DOTALL", "re.VERBOSE"}
 
 
 def _annotation_is_declarative(node: ast.AST) -> bool:
@@ -509,7 +712,7 @@ def _preflight_release_python_sources(
                 qualified = _qualified_reference(
                     decorator_function, imports, assigned_names
                 )
-                if qualified not in SAFE_DECORATORS:
+                if isinstance(decorator, ast.Call) or qualified not in SAFE_DECORATORS:
                     path_violations.append(
                         f"line {decorator.lineno}: executable decorator "
                         f"{ast.unparse(decorator_function)}"
@@ -615,7 +818,10 @@ def _preflight_release_python_sources(
                     qualified = _qualified_reference(
                         decorator_function, imports, assigned_names
                     )
-                    if qualified not in SAFE_DECORATORS:
+                    if (
+                        isinstance(decorator, ast.Call)
+                        or qualified not in SAFE_DECORATORS
+                    ):
                         path_violations.append(
                             f"line {decorator.lineno}: executable decorator "
                             f"{ast.unparse(decorator_function)}"

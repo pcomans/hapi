@@ -221,6 +221,9 @@ def test_validator_rejects_release_corruption_before_semantics(
         "syntax_corruption",
         "top_level_side_effect",
         "aliased_top_level_side_effect",
+        "json_default_callback_side_effect",
+        "collection_iterator_side_effect",
+        "pathlike_callback_side_effect",
         "argument_annotation_side_effect",
         "return_annotation_side_effect",
         "annotated_assignment_side_effect",
@@ -258,6 +261,41 @@ def test_validator_authenticates_semantic_module_before_import(
             + "X = Path("
             + repr(f"touch {marker}")
             + ")\n",
+            encoding="utf-8",
+        )
+    elif attack == "json_default_callback_side_effect":
+        target.write_text(
+            "import json\n"
+            "from pathlib import Path\n"
+            "def callback(value):\n"
+            "    Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "    return 'serialized'\n"
+            "PROBE = json.dumps(Path, default=callback)\n",
+            encoding="utf-8",
+        )
+    elif attack == "collection_iterator_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "def callback():\n"
+            "    Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "    yield 'value'\n"
+            "PROBE = list(callback())\n",
+            encoding="utf-8",
+        )
+    elif attack == "pathlike_callback_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "class CallbackPath:\n"
+            "    def __fspath__(self):\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "        return '.'\n"
+            "PROBE = Path(CallbackPath())\n",
             encoding="utf-8",
         )
     elif attack == "argument_annotation_side_effect":
