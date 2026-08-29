@@ -390,7 +390,24 @@ def _initializer_expression_kind(
                 if all(kind in _JSON_VALUE_KINDS for kind in element_kinds)
                 else "list"
             )
-        return "set"
+        return (
+            "set"
+            if all(
+                kind
+                in {
+                    "string",
+                    "bytes",
+                    "json_boolean",
+                    "json_null",
+                    "json_number",
+                    "json_tuple",
+                    "set",
+                    "frozenset",
+                }
+                for kind in element_kinds
+            )
+            else None
+        )
     if isinstance(node, ast.Dict):
         key_kinds = [
             _initializer_expression_kind(key, imports, assigned, value_kinds)
@@ -406,7 +423,12 @@ def _initializer_expression_kind(
             kind in _JSON_VALUE_KINDS for kind in value_kinds_found
         ):
             return "json_dict"
-        return None
+        return (
+            "dict"
+            if all(kind == "string" for kind in key_kinds)
+            and all(kind is not None for kind in value_kinds_found)
+            else None
+        )
     if isinstance(node, ast.Call):
         direct = _qualified_reference(node.func, imports, assigned)
         if direct in {"builtins.frozenset", "builtins.list"}:
@@ -420,7 +442,11 @@ def _initializer_expression_kind(
             }:
                 return None
             if direct == "builtins.frozenset":
-                return "frozenset"
+                return (
+                    "frozenset"
+                    if iterable_kind in {"set", "frozenset"}
+                    else None
+                )
             return (
                 "json_list"
                 if iterable_kind in {"json_tuple", "json_list"}
@@ -555,11 +581,54 @@ def _initializer_expression_kind(
             node.right, imports, assigned, value_kinds
         )
         return "path" if left_kind == "path" and right_kind == "string" else None
+    if isinstance(node, ast.BinOp) and isinstance(node.op, (ast.BitOr, ast.Sub)):
+        left_kind = _initializer_expression_kind(
+            node.left, imports, assigned, value_kinds
+        )
+        right_kind = _initializer_expression_kind(
+            node.right, imports, assigned, value_kinds
+        )
+        if left_kind in {"set", "frozenset"} and right_kind in {
+            "set", "frozenset"
+        }:
+            return left_kind
+        return None
+    if isinstance(node, ast.Subscript):
+        receiver_kind = _initializer_expression_kind(
+            node.value, imports, assigned, value_kinds
+        )
+        if receiver_kind == "path_parents" and _is_static_integer(node.slice):
+            return "path"
+        direct = _qualified_reference(node.value, imports, assigned)
+        if (
+            direct == "typing.Callable"
+            and isinstance(node.slice, ast.Tuple)
+            and len(node.slice.elts) == 2
+            and isinstance(node.slice.elts[0], ast.List)
+            and all(
+                isinstance(item, ast.Name)
+                and item.id in {"bytes", "dict", "str"}
+                and item.id not in imports
+                and item.id not in assigned
+                for item in node.slice.elts[0].elts
+            )
+            and isinstance(node.slice.elts[1], ast.Name)
+            and node.slice.elts[1].id in {"bytes", "dict", "str"}
+            and node.slice.elts[1].id not in imports
+            and node.slice.elts[1].id not in assigned
+        ):
+            return "type_expression"
+        return None
     if isinstance(node, ast.Attribute) and node.attr == "parent":
         receiver_kind = _initializer_expression_kind(
             node.value, imports, assigned, value_kinds
         )
         return "path" if receiver_kind == "path" else None
+    if isinstance(node, ast.Attribute) and node.attr == "parents":
+        receiver_kind = _initializer_expression_kind(
+            node.value, imports, assigned, value_kinds
+        )
+        return "path_parents" if receiver_kind == "path" else None
     return None
 
 
@@ -700,19 +769,16 @@ def _preflight_release_python_sources(
                 if scope_assigned_names is None
                 else scope_assigned_names
             )
-            for call in (
-                node for node in ast.walk(value) if isinstance(node, ast.Call)
+            if (
+                _initializer_expression_kind(
+                    value, imports, assigned_for_scope, kinds
+                )
+                is None
             ):
-                if (
-                    _initializer_expression_kind(
-                        call, imports, assigned_for_scope, kinds
-                    )
-                    is None
-                ):
-                    path_violations.append(
-                        f"line {call.lineno}: non-declarative initializer call "
-                        f"{ast.unparse(call.func)}"
-                    )
+                path_violations.append(
+                    f"line {value.lineno}: non-declarative initializer expression "
+                    f"{ast.unparse(value)}"
+                )
 
         def check_definition(
             definition: ast.FunctionDef | ast.AsyncFunctionDef,
@@ -821,7 +887,7 @@ def _preflight_release_python_sources(
                 continue
             if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 check_definition(statement)
-                value_kinds.pop(statement.name, None)
+                value_kinds[statement.name] = "function"
                 passive_local_classes.discard(statement.name)
                 continue
             if isinstance(statement, ast.ClassDef):
@@ -863,8 +929,6 @@ def _preflight_release_python_sources(
                             f"line {decorator.lineno}: executable decorator "
                             f"{ast.unparse(decorator_function)}"
                         )
-                for value in [*statement.bases, *(item.value for item in statement.keywords)]:
-                    check_initializer(value)
                 class_value_kinds: dict[str, str] = {}
                 class_shadowed_names: set[str] = set()
 
@@ -948,7 +1012,7 @@ def _preflight_release_python_sources(
                     passive_local_classes.add(statement.name)
                 else:
                     passive_local_classes.discard(statement.name)
-                value_kinds.pop(statement.name, None)
+                value_kinds[statement.name] = "class"
                 continue
             if isinstance(statement, (ast.Import, ast.ImportFrom)):
                 bound_names = (

@@ -51,7 +51,7 @@
     },
     "docs/evaluations/site-graph-v0/implementation-evidence.json": {
       "bytes": 7144,
-      "sha256": "e661b9e5d514a4ac4ea37fccb020dbd856af5d93043ff35f50394142c63c63bc"
+      "sha256": "a606f1606f367de8cbc1003face2fd0db1e14530f499c13c4205dbcf15915ce5"
     },
     "docs/evaluations/site-graph-v0/input-snapshot.json": {
       "bytes": 8083,
@@ -270,8 +270,8 @@
       "sha256": "8fe6348b6598a1d73fa95c7b8cf3f66b57b1c30b929025ad4d78f42d3d3be08b"
     },
     "docs/evaluations/site-graph-v0/scripts/validate_contract.py": {
-      "bytes": 109111,
-      "sha256": "c139a0e1a53bb7865abeaf4de0089f87a21d3c4e2a55880a977ddcba60a647a8"
+      "bytes": 111390,
+      "sha256": "4e9153c682462bccbbde75f72261cde8b35843ba99f737e01ba5cb04c273af15"
     },
     "docs/evaluations/site-graph-v0/top-unmatched-components.json": {
       "bytes": 12176,
@@ -295,7 +295,7 @@
     },
     "docs/evaluations/site-graph-v0/validation-report.json": {
       "bytes": 72364,
-      "sha256": "0c9301fed438b07f9a7226ec6cc71dbfc8932b15e63de41820837c8a538a25fd"
+      "sha256": "b814fc2f808870d3788e465543bdf4220456f83d12d254ded89afaa856056cbd"
     },
     "pipeline/pyproject.toml": {
       "bytes": 841,
@@ -310,8 +310,8 @@
       "sha256": "974129745ad15383d8ac68c147778ce7ef950eab52947afefa65c33048873061"
     },
     "pipeline/tests/test_site_graph_v0_contract.py": {
-      "bytes": 111155,
-      "sha256": "05f311c7138ca8ae59a366530c31f9e4159c558a6f1d6056c8990e197974ac43"
+      "bytes": 111679,
+      "sha256": "0ffd02fea106cb211db90ec7552bf63c5e534f7c88b17d45e396526130768658"
     },
     "pipeline/tests/test_site_graph_v0_corrections.py": {
       "bytes": 42832,

@@ -235,6 +235,7 @@ def test_validator_rejects_release_corruption_before_semantics(
         "stale_class_scope_kind_side_effect",
         "stale_class_import_alias_side_effect",
         "stale_passive_class_side_effect",
+        "subscription_protocol_side_effect",
     ],
 )
 def test_validator_authenticates_semantic_module_before_import(
@@ -412,6 +413,19 @@ def test_validator_authenticates_semantic_module_before_import(
             "Base = Callback\n"
             "class Probe(Base):\n"
             "    pass\n",
+            encoding="utf-8",
+        )
+    elif attack == "subscription_protocol_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "class Callback:\n"
+            "    @classmethod\n"
+            "    def __class_getitem__(cls, value):\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "        return value\n"
+            "PROBE = Callback[0]\n",
             encoding="utf-8",
         )
     else:
