@@ -217,7 +217,18 @@ def test_validator_rejects_release_corruption_before_semantics(
 
 @pytest.mark.parametrize(
     "attack",
-    ["syntax_corruption", "top_level_side_effect", "aliased_top_level_side_effect"],
+    [
+        "syntax_corruption",
+        "top_level_side_effect",
+        "aliased_top_level_side_effect",
+        "argument_annotation_side_effect",
+        "return_annotation_side_effect",
+        "annotated_assignment_side_effect",
+        "annotation_subscription_side_effect",
+        "unapproved_import_side_effect",
+        "custom_base_side_effect",
+        "custom_metaclass_side_effect",
+    ],
 )
 def test_validator_authenticates_semantic_module_before_import(
     tmp_path: Path, attack: str
@@ -228,6 +239,8 @@ def test_validator_authenticates_semantic_module_before_import(
         / "docs/evaluations/site-graph-v0/scripts/build_baseline.py"
     )
     marker = tmp_path / "semantic-module-executed"
+    importable = tmp_path / "importable"
+    importable.mkdir()
     if attack == "syntax_corruption":
         target.write_text("def invalid syntax(:\n", encoding="utf-8")
     elif attack == "top_level_side_effect":
@@ -238,13 +251,81 @@ def test_validator_authenticates_semantic_module_before_import(
             + ").write_text('executed', encoding='utf-8')\n",
             encoding="utf-8",
         )
-    else:
+    elif attack == "aliased_top_level_side_effect":
         target.write_text(
             target.read_text(encoding="utf-8")
             + "\nfrom os import system as Path\n"
             + "X = Path("
             + repr(f"touch {marker}")
             + ")\n",
+            encoding="utf-8",
+        )
+    elif attack == "argument_annotation_side_effect":
+        target.write_text(
+            "def probe(value: __import__('pathlib').Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')):\n    pass\n",
+            encoding="utf-8",
+        )
+    elif attack == "return_annotation_side_effect":
+        target.write_text(
+            "def probe() -> __import__('pathlib').Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8'):\n    pass\n",
+            encoding="utf-8",
+        )
+    elif attack == "annotated_assignment_side_effect":
+        target.write_text(
+            "PROBE: __import__('pathlib').Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8') = None\n",
+            encoding="utf-8",
+        )
+    elif attack == "annotation_subscription_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "class Evaluated:\n"
+            "    @classmethod\n"
+            "    def __class_getitem__(cls, item):\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "        return cls\n"
+            "def probe(value: Evaluated[int]):\n"
+            "    pass\n",
+            encoding="utf-8",
+        )
+    elif attack == "unapproved_import_side_effect":
+        (importable / "boundary_side_effect_module.py").write_text(
+            "from pathlib import Path\nPath("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n",
+            encoding="utf-8",
+        )
+        target.write_text("import boundary_side_effect_module\n", encoding="utf-8")
+    elif attack == "custom_base_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "class ExecutingBase:\n"
+            "    def __init_subclass__(cls):\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "class Probe(ExecutingBase):\n"
+            "    pass\n",
+            encoding="utf-8",
+        )
+    else:
+        target.write_text(
+            "from pathlib import Path\n"
+            "class Meta(type):\n"
+            "    def __new__(mcls, name, bases, namespace):\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "        return super().__new__(mcls, name, bases, namespace)\n"
+            "class Probe(metaclass=Meta):\n"
+            "    pass\n",
             encoding="utf-8",
         )
     manifest_path = repo / "docs/evaluations/site-graph-v0/release-manifest.json"
@@ -272,6 +353,7 @@ def test_validator_authenticates_semantic_module_before_import(
         check=False,
         capture_output=True,
         text=True,
+        env={**os.environ, "PYTHONPATH": str(importable)},
     )
     payload = json.loads(result.stdout)
     assert result.returncode == 1

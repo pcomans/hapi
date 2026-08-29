@@ -56,8 +56,8 @@
     "authenticated_validator_runs": "historical release identity plus two distinct fresh-path/UUID reproductions each recomputed 22/22 checks and matched the committed report"
   },
   "tests": {
-    "focused_site_graph_contract": "216 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
-    "full_pipeline": "2595 passed, 2 skipped for the same environment-variable-only archive tests",
+    "focused_site_graph_contract": "223 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
+    "full_pipeline": "2602 passed, 2 skipped for the same environment-variable-only archive tests",
     "authorized_real_archive_tests": "8 passed with HAPI_CORPUS_ARCHIVE and HAPI_CORPUS_ARCHIVE_SHA256 explicitly bound to the verified archive and sidecar",
     "execution_scope": "local repository-owned uv environment; no pre-PR CI run exists"
   },
@@ -89,6 +89,7 @@
     "gained_identity_census_requirement": "The complete gained-specific root set is derived before credit and each gained root must be positively distinct from every other gained root and every relevant baseline root, including crossed one-sided additions.",
     "llm_review_requirement": "Raw model bytes must be canonical assessment/reasoning JSON exactly matching the signed wrapper; an immutable release-owned prompt template plus separate signed deterministic and semantic pre-invocation audits are mandatory.",
     "repository_boundary_requirement": "Validation recursively scans the current tree and every local HEAD ancestor for narrowly forbidden private bulk derivative and dump patterns; unavailable Git metadata fails the historical scan closed.",
+    "validator_preimport_requirement": "A standard-library bootstrap verifies inventory and hashes, then statically rejects unapproved imports, import-time annotation evaluation, non-passive inheritance/metaclasses, and other executable top-level release syntax before semantic module import.",
     "correction_chain_requirement": "A separately reviewed release must pin a canonical registration artifact from a strict ancestor commit, binding the genuine Git genesis, exact prior ledger head, and both private baseline hashes. Release activation precedes decisions, cited source bytes come from strict decision ancestors, each ledger preserves the registered prefix, and two registered independent human reviewers sign every correction."
   }
 }

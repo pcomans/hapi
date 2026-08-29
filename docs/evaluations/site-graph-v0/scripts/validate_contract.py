@@ -233,6 +233,76 @@ SAFE_INITIALIZER_METHOD_KINDS = {
     ("string", "encode"): "bytes",
 }
 SAFE_DECORATORS = {"contextlib.contextmanager", "dataclasses.dataclass"}
+ALLOWED_RELEASE_IMPORT_MODULES = frozenset(
+    {
+        "argparse", "ast", "base64", "collections", "contextlib", "copy",
+        "datetime", "gzip", "hashlib", "importlib", "inspect", "io", "json",
+        "os", "platform", "re", "secrets", "shutil", "subprocess", "sys",
+        "tarfile", "tempfile", "unicodedata", "uuid",
+    }
+)
+ALLOWED_RELEASE_FROM_IMPORTS = {
+    "__future__": {"annotations"},
+    "build_baseline": {
+        "build_metrics", "build_opportunity_queue", "canonical_json_sha256",
+        "canonical_list_sha256", "gzip_ledger_digest", "read_gzip_jsonl",
+        "read_json", "resolution_state", "sha256", "validate_site_mention",
+        "write_gzip_jsonl", "write_json",
+    },
+    "candidate_git": {
+        "CandidateGitError", "blob_oid", "ed25519_key_id", "is_ancestor",
+        "normalize_relative_path", "read_authenticated_bytes",
+        "read_authenticated_json", "read_bytes", "resolve_commit",
+        "verify_ed25519_signature",
+    },
+    "collections": {"Counter", "defaultdict"},
+    "compare_baseline_runs": {"atomic_write_json", "compare"},
+    "contract_constants": {
+        "CONCENTRATION_MAXIMUM_INCREASE", "MAXIMUM_NEWLY_BLOCKING_FRACTION",
+        "MINIMUM_AFFECTED_FRACTION", "MINIMUM_GAINED_IDENTITIES", "MUSEUMS",
+        "OPPORTUNITY_MUSEUM_PROTECTION", "OPPORTUNITY_TOTAL_SIGNATURES", "PAIRS",
+        "REVIEWS_PER_CREDITED_DECISION",
+    },
+    "corpus_archive": {"authenticated_corpus", "validate_archive_attestation"},
+    "cryptography.exceptions": {"InvalidSignature"},
+    "cryptography.hazmat.primitives.asymmetric.ed25519": {"Ed25519PublicKey"},
+    "dataclasses": {"dataclass", "field"},
+    "datetime": {"datetime"},
+    "fractions": {"Fraction"},
+    "integrity": {
+        "EVALUATION_RELATIVE", "MANIFEST_NAME", "discovered_release_files",
+        "sha256", "verify_release",
+    },
+    "itertools": {"combinations"},
+    "jsonschema": {"Draft202012Validator", "FormatChecker"},
+    "metrics_core": {"TOP_K", "concentration", "partition_scopes", "ratio"},
+    "pathlib": {"Path", "PurePosixPath"},
+    "private_ledgers": {"verify_private_ledgers"},
+    "release_contract": {
+        "CI_RELEASE_FILES", "CONTRACT_VERSION", "PYCACHE_EXCLUSION",
+        "REQUIRED_RELEASE_FILES", "validation_input_bindings",
+    },
+    "review_auth": {
+        "ArtifactUsageTracker", "ReviewAuthenticationError",
+        "authenticate_prompt_audit", "authenticate_review_artifact",
+        "authenticate_semantic_prompt_audit", "canonical_forbidden_values",
+        "canonical_json_bytes", "canonical_sha256", "load_reviewer_registry",
+        "require_distinct_registered_reviewers", "strict_json_object",
+        "validate_reviewer_registry",
+    },
+    "run_baseline": {"DETERMINISTIC_OUTPUTS", "FINAL_OUTPUTS", "run", "sha256"},
+    "runtime_attestation": {"build_runtime_attestation", "validate_runtime_attestation"},
+    "schema_validation": {
+        "SchemaValidationError", "execute_schema_contract_tests", "validate_schema",
+    },
+    "source_exports": {
+        "TRUSTED_SOURCE_EXPORTERS_RELATIVE", "authenticate_source_export",
+        "load_source_exporter_policy", "validate_source_exporter_registry",
+    },
+    "trusted_completion": {"verify_trusted_completion"},
+    "typing": {"Callable", "Iterable", "Iterator", "Sequence"},
+    "validate_contract": {"semantic_report_for_release_generation"},
+}
 
 
 def _module_bindings(tree: ast.Module) -> tuple[dict[str, str], set[str]]:
@@ -257,6 +327,8 @@ def _module_bindings(tree: ast.Module) -> tuple[dict[str, str], set[str]]:
             statement.target, ast.Name
         ):
             assigned.add(statement.target.id)
+        elif isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            assigned.add(statement.name)
     return imports, assigned
 
 
@@ -314,6 +386,48 @@ def _initializer_expression_kind(
     return None
 
 
+def _annotation_is_declarative(node: ast.AST) -> bool:
+    if isinstance(node, ast.Name):
+        return True
+    if isinstance(node, ast.Attribute):
+        return _annotation_is_declarative(node.value)
+    if isinstance(node, ast.Subscript):
+        return _annotation_is_declarative(node.value) and _annotation_is_declarative(
+            node.slice
+        )
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.BitOr):
+        return _annotation_is_declarative(node.left) and _annotation_is_declarative(
+            node.right
+        )
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        return all(_annotation_is_declarative(item) for item in node.elts)
+    if isinstance(node, ast.Dict):
+        return all(
+            (key is None or _annotation_is_declarative(key))
+            and _annotation_is_declarative(value)
+            for key, value in zip(node.keys, node.values)
+        )
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+        return isinstance(node.operand, ast.Constant) and isinstance(
+            node.operand.value, (int, float, complex)
+        )
+    return isinstance(node, ast.Constant) and isinstance(
+        node.value, (str, int, float, complex, bool, type(None), type(Ellipsis))
+    )
+
+
+def _release_import_is_allowed(statement: ast.Import | ast.ImportFrom) -> bool:
+    if isinstance(statement, ast.Import):
+        return all(
+            alias.name in ALLOWED_RELEASE_IMPORT_MODULES
+            for alias in statement.names
+        )
+    if statement.level != 0 or statement.module not in ALLOWED_RELEASE_FROM_IMPORTS:
+        return False
+    allowed_names = ALLOWED_RELEASE_FROM_IMPORTS[statement.module]
+    return all(alias.name in allowed_names for alias in statement.names)
+
+
 def _preflight_release_python_sources(
     repo_root: Path, required: set[str]
 ) -> dict:
@@ -340,6 +454,35 @@ def _preflight_release_python_sources(
         path_violations: list[str] = []
         imports, assigned_names = _module_bindings(tree)
         value_kinds: dict[str, str] = {}
+        passive_local_classes: set[str] = set()
+        postponed_annotations = any(
+            isinstance(statement, ast.ImportFrom)
+            and statement.module == "__future__"
+            and any(alias.name == "annotations" for alias in statement.names)
+            for statement in tree.body
+        )
+        for import_statement in (
+            statement
+            for statement in tree.body
+            if isinstance(statement, (ast.Import, ast.ImportFrom))
+        ):
+            if not _release_import_is_allowed(import_statement):
+                path_violations.append(
+                    f"line {import_statement.lineno}: import is outside the exact "
+                    f"release allowlist: {ast.unparse(import_statement)}"
+                )
+
+        def check_annotation(annotation: ast.AST | None) -> None:
+            if annotation is not None and not postponed_annotations:
+                path_violations.append(
+                    f"line {annotation.lineno}: annotations require "
+                    "from __future__ import annotations to prevent import-time evaluation"
+                )
+            elif annotation is not None and not _annotation_is_declarative(annotation):
+                path_violations.append(
+                    f"line {annotation.lineno}: executable or non-declarative annotation "
+                    f"{ast.unparse(annotation)}"
+                )
 
         def check_initializer(value: ast.AST | None) -> None:
             if value is None:
@@ -376,6 +519,17 @@ def _preflight_release_python_sources(
                 *(item for item in definition.args.kw_defaults if item is not None),
             ]:
                 check_initializer(value)
+            for argument in [
+                *definition.args.posonlyargs,
+                *definition.args.args,
+                *definition.args.kwonlyargs,
+            ]:
+                check_annotation(argument.annotation)
+            if definition.args.vararg is not None:
+                check_annotation(definition.args.vararg.annotation)
+            if definition.args.kwarg is not None:
+                check_annotation(definition.args.kwarg.annotation)
+            check_annotation(definition.returns)
 
         def check_assignment_targets(statement: ast.Assign | ast.AnnAssign) -> None:
             targets = (
@@ -411,6 +565,8 @@ def _preflight_release_python_sources(
                 continue
             if isinstance(statement, (ast.Assign, ast.AnnAssign)):
                 check_assignment_targets(statement)
+                if isinstance(statement, ast.AnnAssign):
+                    check_annotation(statement.annotation)
                 check_initializer(statement.value)
                 if isinstance(statement.value, ast.AST):
                     value_kind = _initializer_expression_kind(
@@ -429,6 +585,29 @@ def _preflight_release_python_sources(
                 check_definition(statement)
                 continue
             if isinstance(statement, ast.ClassDef):
+                safe_bases = True
+                for base in statement.bases:
+                    safe_base = (
+                        isinstance(base, ast.Name)
+                        and (
+                            base.id in passive_local_classes
+                            or (
+                                base.id in {"RuntimeError", "ValueError"}
+                                and base.id not in imports
+                                and base.id not in assigned_names
+                            )
+                        )
+                    )
+                    if not safe_base:
+                        safe_bases = False
+                        path_violations.append(
+                            f"line {base.lineno}: class base is not a passive local "
+                            f"exception or allowed builtin exception: {ast.unparse(base)}"
+                        )
+                if statement.keywords:
+                    path_violations.append(
+                        f"line {statement.lineno}: class keywords/metaclass are forbidden"
+                    )
                 for decorator in statement.decorator_list:
                     decorator_function = (
                         decorator.func if isinstance(decorator, ast.Call) else decorator
@@ -448,6 +627,8 @@ def _preflight_release_python_sources(
                         check_definition(class_statement)
                     elif isinstance(class_statement, (ast.Assign, ast.AnnAssign)):
                         check_assignment_targets(class_statement)
+                        if isinstance(class_statement, ast.AnnAssign):
+                            check_annotation(class_statement.annotation)
                         check_initializer(class_statement.value)
                     elif isinstance(class_statement, ast.Expr) and not (
                         isinstance(class_statement.value, ast.Constant)
@@ -461,6 +642,17 @@ def _preflight_release_python_sources(
                             f"line {class_statement.lineno}: executable class "
                             f"{type(class_statement).__name__}"
                         )
+                passive_body = all(
+                    isinstance(class_statement, ast.Pass)
+                    or (
+                        isinstance(class_statement, ast.Expr)
+                        and isinstance(class_statement.value, ast.Constant)
+                        and isinstance(class_statement.value.value, str)
+                    )
+                    for class_statement in statement.body
+                )
+                if safe_bases and not statement.keywords and passive_body:
+                    passive_local_classes.add(statement.name)
                 continue
             if not isinstance(statement, (ast.Import, ast.ImportFrom)):
                 path_violations.append(
