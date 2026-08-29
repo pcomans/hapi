@@ -4,40 +4,18 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import collections
+import hashlib
+import importlib
+import inspect
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
 
 sys.dont_write_bytecode = True
-
-from build_baseline import (
-    build_metrics,
-    build_opportunity_queue,
-    canonical_json_sha256,
-    classify_current_nodes,
-    read_gzip_jsonl,
-    read_jsonl,
-)
-from compare_candidate import (
-    AMBIGUITY_MAXIMUM_INCREASE,
-    CONCENTRATION_MAXIMUM_INCREASE,
-    MINIMUM_AFFECTED_FRACTION,
-    MINIMUM_GAINED_IDENTITIES,
-    REVIEWS_PER_CREDITED_DECISION,
-)
-from contract_constants import OPPORTUNITY_MUSEUM_PROTECTION, OPPORTUNITY_TOTAL_SIGNATURES
-from corpus_archive import (
-    CorpusArchiveBlocked,
-    CorpusArchiveInvalid,
-    authenticated_corpus,
-)
-from integrity import IntegrityError, sha256, verify_release
-from private_ledgers import verify_private_ledgers, verify_public_boundary
-from release_contract import validation_input_bindings
-from runtime_attestation import validate_runtime_attestation
-from schema_validation import execute_schema_contract_tests, validate_schema
-
 
 PUBLIC_BASELINE_OUTPUTS = (
     "baseline-metrics.json",
@@ -46,6 +24,804 @@ PUBLIC_BASELINE_OUTPUTS = (
     "private-ledger-digests.json",
     "top-unmatched-components.json",
 )
+
+EVALUATION_RELATIVE = Path("docs/evaluations/site-graph-v0")
+MANIFEST_RELATIVE = EVALUATION_RELATIVE / "release-manifest.json"
+RELEASE_CONTRACT_RELATIVE = EVALUATION_RELATIVE / "scripts/release_contract.py"
+BOOTSTRAP_MANIFEST_VERSION = "site-graph-v0-release-manifest/2"
+BOOTSTRAP_CONTRACT_VERSION = "site-graph-v0-release/4"
+BOOTSTRAP_PYCACHE_EXCLUSION = (
+    "Python cache directories (__pycache__, .pytest_cache) and bytecode suffixes "
+    "(.pyc, .pyo) are runtime by-products, are never required release files, and are "
+    "ignored during exact-inventory discovery. No other file or directory is ignored."
+)
+BOOTSTRAP_INVENTORY_RULE = (
+    "Exactly REQUIRED_RELEASE_FILES in scripts/release_contract.py. Any addition, "
+    "removal, or cache-exclusion change requires a separately reviewed "
+    "contract-version migration."
+)
+BOOTSTRAP_REQUIRED_PATHS = frozenset(
+    {
+        RELEASE_CONTRACT_RELATIVE.as_posix(),
+        (EVALUATION_RELATIVE / "scripts/integrity.py").as_posix(),
+        (EVALUATION_RELATIVE / "scripts/validate_contract.py").as_posix(),
+    }
+)
+IGNORED_PARTS = frozenset({"__pycache__", ".pytest_cache"})
+IGNORED_SUFFIXES = frozenset({".pyc", ".pyo"})
+
+FORBIDDEN_BOUNDARY_BASENAMES = frozenset(
+    {
+        "frozen-record-evidence.ndjson.gz",
+        "frozen-opportunity-source.ndjson.gz",
+        "planned-opportunity-queue.json",
+        "private-record-evidence.ndjson.gz",
+        "private-opportunity-source.ndjson.gz",
+        "private-opportunity-ledger.json",
+    }
+)
+FORBIDDEN_BULK_SUFFIXES = (
+    ".ndjson",
+    ".ndjson.gz",
+    ".jsonl",
+    ".jsonl.gz",
+    ".csv",
+    ".csv.gz",
+    ".tsv",
+    ".tsv.gz",
+    ".parquet",
+    ".sqlite",
+    ".sqlite3",
+    ".db",
+    ".tar",
+    ".tar.gz",
+    ".tgz",
+    ".zip",
+)
+FORBIDDEN_DUMP_NAME = re.compile(
+    r"(?:^|[-_.])(?:"
+    r"artifact[-_.]?ids?(?:[-_.](?:dump|export|expansion|membership|rows?))?"
+    r"|mentions?(?:[-_.](?:dump|export|rows?|source|evidence|texts?))?"
+    r")(?:[-_.]|$)",
+    re.IGNORECASE,
+)
+
+
+class ReleaseIntegrityPreflightError(RuntimeError):
+    """The target release could not be authenticated without executing its code."""
+
+
+def _bootstrap_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _manifest_entry_is_valid(relative: object, expected: object) -> bool:
+    if not isinstance(relative, str) or not relative or "\\" in relative:
+        return False
+    path = Path(relative)
+    return (
+        not path.is_absolute()
+        and relative == path.as_posix()
+        and ".." not in path.parts
+        and isinstance(expected, dict)
+        and set(expected) == {"bytes", "sha256"}
+        and type(expected["bytes"]) is int
+        and expected["bytes"] >= 0
+        and isinstance(expected["sha256"], str)
+        and bool(re.fullmatch(r"[0-9a-f]{64}", expected["sha256"]))
+    )
+
+
+def _contract_literal(node: ast.AST, values: dict[str, object]) -> object:
+    """Evaluate the tiny declarative subset used by release_contract.py."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if isinstance(node, ast.Name) and node.id in values:
+        return values[node.id]
+    if isinstance(node, (ast.Set, ast.List, ast.Tuple)):
+        items: list[object] = []
+        for child in node.elts:
+            if isinstance(child, ast.Starred):
+                expanded = _contract_literal(child.value, values)
+                if not isinstance(expanded, (set, frozenset, list, tuple)):
+                    raise ReleaseIntegrityPreflightError(
+                        "release contract contains a non-collection starred value"
+                    )
+                items.extend(expanded)
+            else:
+                items.append(_contract_literal(child, values))
+        if isinstance(node, ast.Set):
+            return set(items)
+        if isinstance(node, ast.Tuple):
+            return tuple(items)
+        return items
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "frozenset"
+        and len(node.args) == 1
+        and not node.keywords
+    ):
+        value = _contract_literal(node.args[0], values)
+        if not isinstance(value, (set, frozenset, list, tuple)):
+            raise ReleaseIntegrityPreflightError(
+                "release contract frozenset input is not declarative"
+            )
+        return frozenset(value)
+    raise ReleaseIntegrityPreflightError(
+        f"release contract uses unsupported executable syntax: {type(node).__name__}"
+    )
+
+
+def _static_release_contract(path: Path) -> dict[str, object]:
+    try:
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=str(path))
+    except (OSError, UnicodeError, SyntaxError) as error:
+        raise ReleaseIntegrityPreflightError(
+            f"cannot statically read release inventory contract: {error}"
+        ) from error
+    wanted = {
+        "CONTRACT_VERSION",
+        "PYCACHE_EXCLUSION",
+        "CI_RELEASE_FILES",
+        "REQUIRED_RELEASE_FILES",
+    }
+    values: dict[str, object] = {}
+    for statement in tree.body:
+        if not isinstance(statement, (ast.Assign, ast.AnnAssign)):
+            continue
+        if isinstance(statement, ast.Assign):
+            if len(statement.targets) != 1 or not isinstance(statement.targets[0], ast.Name):
+                continue
+            name = statement.targets[0].id
+            value_node = statement.value
+        else:
+            if not isinstance(statement.target, ast.Name) or statement.value is None:
+                continue
+            name = statement.target.id
+            value_node = statement.value
+        if name in wanted:
+            values[name] = _contract_literal(value_node, values)
+    if set(values) != wanted:
+        raise ReleaseIntegrityPreflightError(
+            "release inventory contract lacks required declarative constants: "
+            f"{sorted(wanted - set(values))}"
+        )
+    for name in ("CI_RELEASE_FILES", "REQUIRED_RELEASE_FILES"):
+        value = values[name]
+        if not isinstance(value, (set, frozenset)) or not value or not all(
+            isinstance(item, str) and item for item in value
+        ):
+            raise ReleaseIntegrityPreflightError(
+                f"release inventory contract has invalid {name}"
+            )
+    return values
+
+
+def _is_main_guard(node: ast.AST) -> bool:
+    return (
+        isinstance(node, ast.Compare)
+        and isinstance(node.left, ast.Name)
+        and node.left.id == "__name__"
+        and len(node.ops) == 1
+        and isinstance(node.ops[0], ast.Eq)
+        and len(node.comparators) == 1
+        and isinstance(node.comparators[0], ast.Constant)
+        and node.comparators[0].value == "__main__"
+    )
+
+
+SAFE_INITIALIZER_CALL_KINDS = {
+    "builtins.frozenset": "collection",
+    "builtins.list": "collection",
+    "dataclasses.field": "field",
+    "fractions.Fraction": "fraction",
+    "hashlib.sha256": "hash",
+    "json.dumps": "string",
+    "pathlib.Path": "path",
+    "re.compile": "regex",
+}
+SAFE_INITIALIZER_METHOD_KINDS = {
+    ("hash", "hexdigest"): "string",
+    ("path", "as_posix"): "string",
+    ("path", "resolve"): "path",
+    ("string", "encode"): "bytes",
+}
+SAFE_DECORATORS = {"contextlib.contextmanager", "dataclasses.dataclass"}
+
+
+def _module_bindings(tree: ast.Module) -> tuple[dict[str, str], set[str]]:
+    imports: dict[str, str] = {}
+    assigned: set[str] = set()
+    for statement in tree.body:
+        if isinstance(statement, ast.Import):
+            for alias in statement.names:
+                bound = alias.asname or alias.name.split(".", 1)[0]
+                imports[bound] = alias.name if alias.asname else bound
+        elif isinstance(statement, ast.ImportFrom) and statement.module:
+            for alias in statement.names:
+                if alias.name != "*":
+                    imports[alias.asname or alias.name] = (
+                        f"{statement.module}.{alias.name}"
+                    )
+        elif isinstance(statement, ast.Assign):
+            assigned.update(
+                target.id for target in statement.targets if isinstance(target, ast.Name)
+            )
+        elif isinstance(statement, ast.AnnAssign) and isinstance(
+            statement.target, ast.Name
+        ):
+            assigned.add(statement.target.id)
+    return imports, assigned
+
+
+def _qualified_reference(
+    node: ast.AST, imports: dict[str, str], assigned: set[str]
+) -> str | None:
+    if isinstance(node, ast.Name):
+        if node.id in assigned:
+            return None
+        if node.id in imports:
+            return imports[node.id]
+        if node.id in {"frozenset", "list"}:
+            return f"builtins.{node.id}"
+        return None
+    if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+        root = node.value.id
+        if root in assigned or root not in imports:
+            return None
+        return f"{imports[root]}.{node.attr}"
+    return None
+
+
+def _initializer_expression_kind(
+    node: ast.AST,
+    imports: dict[str, str],
+    assigned: set[str],
+    value_kinds: dict[str, str],
+) -> str | None:
+    if isinstance(node, ast.Call):
+        direct = _qualified_reference(node.func, imports, assigned)
+        if direct is not None:
+            return SAFE_INITIALIZER_CALL_KINDS.get(direct)
+        if isinstance(node.func, ast.Attribute):
+            receiver_kind = _initializer_expression_kind(
+                node.func.value, imports, assigned, value_kinds
+            )
+            return SAFE_INITIALIZER_METHOD_KINDS.get(
+                (receiver_kind, node.func.attr)
+            )
+        return None
+    if isinstance(node, ast.Name):
+        return value_kinds.get(node.id)
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return "string"
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        left_kind = _initializer_expression_kind(
+            node.left, imports, assigned, value_kinds
+        )
+        return "path" if left_kind == "path" else None
+    if isinstance(node, ast.Attribute) and node.attr == "parent":
+        receiver_kind = _initializer_expression_kind(
+            node.value, imports, assigned, value_kinds
+        )
+        return "path" if receiver_kind == "path" else None
+    return None
+
+
+def _preflight_release_python_sources(
+    repo_root: Path, required: set[str]
+) -> dict:
+    """Parse release Python and reject forbidden import-time executable statements.
+
+    Definitions and declarative constant construction remain permitted. Standalone
+    calls, arbitrary control flow, and mutating calls in constant initializers do not.
+    """
+    python_paths = sorted(
+        relative
+        for relative in required
+        if relative.startswith((EVALUATION_RELATIVE / "scripts").as_posix() + "/")
+        and relative.endswith(".py")
+    )
+    violations: dict[str, list[str]] = {}
+    for relative in python_paths:
+        path = repo_root / relative
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        except (OSError, UnicodeError, SyntaxError) as error:
+            raise ReleaseIntegrityPreflightError(
+                f"authenticated release Python syntax is invalid in {relative}: {error}"
+            ) from error
+        path_violations: list[str] = []
+        imports, assigned_names = _module_bindings(tree)
+        value_kinds: dict[str, str] = {}
+
+        def check_initializer(value: ast.AST | None) -> None:
+            if value is None:
+                return
+            for call in (
+                node for node in ast.walk(value) if isinstance(node, ast.Call)
+            ):
+                if (
+                    _initializer_expression_kind(
+                        call, imports, assigned_names, value_kinds
+                    )
+                    is None
+                ):
+                    path_violations.append(
+                        f"line {call.lineno}: non-declarative initializer call "
+                        f"{ast.unparse(call.func)}"
+                    )
+
+        def check_definition(definition: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
+            for decorator in definition.decorator_list:
+                decorator_function = (
+                    decorator.func if isinstance(decorator, ast.Call) else decorator
+                )
+                qualified = _qualified_reference(
+                    decorator_function, imports, assigned_names
+                )
+                if qualified not in SAFE_DECORATORS:
+                    path_violations.append(
+                        f"line {decorator.lineno}: executable decorator "
+                        f"{ast.unparse(decorator_function)}"
+                    )
+            for value in [
+                *definition.args.defaults,
+                *(item for item in definition.args.kw_defaults if item is not None),
+            ]:
+                check_initializer(value)
+
+        def check_assignment_targets(statement: ast.Assign | ast.AnnAssign) -> None:
+            targets = (
+                statement.targets if isinstance(statement, ast.Assign) else [statement.target]
+            )
+            for target in targets:
+                safe_target = isinstance(target, ast.Name) or (
+                    isinstance(target, ast.Attribute)
+                    and isinstance(target.value, ast.Name)
+                    and target.value.id == "sys"
+                    and target.attr == "dont_write_bytecode"
+                )
+                if not safe_target:
+                    path_violations.append(
+                        f"line {target.lineno}: mutating top-level assignment target"
+                    )
+
+        for statement in tree.body:
+            if isinstance(statement, ast.Expr):
+                if not (
+                    isinstance(statement.value, ast.Constant)
+                    and isinstance(statement.value.value, str)
+                ):
+                    path_violations.append(
+                        f"line {statement.lineno}: executable top-level expression"
+                    )
+                continue
+            if isinstance(statement, ast.If):
+                if not _is_main_guard(statement.test) or statement.orelse:
+                    path_violations.append(
+                        f"line {statement.lineno}: non-main top-level control flow"
+                    )
+                continue
+            if isinstance(statement, (ast.Assign, ast.AnnAssign)):
+                check_assignment_targets(statement)
+                check_initializer(statement.value)
+                if isinstance(statement.value, ast.AST):
+                    value_kind = _initializer_expression_kind(
+                        statement.value, imports, assigned_names, value_kinds
+                    )
+                    targets = (
+                        statement.targets
+                        if isinstance(statement, ast.Assign)
+                        else [statement.target]
+                    )
+                    for target in targets:
+                        if isinstance(target, ast.Name) and value_kind is not None:
+                            value_kinds[target.id] = value_kind
+                continue
+            if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                check_definition(statement)
+                continue
+            if isinstance(statement, ast.ClassDef):
+                for decorator in statement.decorator_list:
+                    decorator_function = (
+                        decorator.func if isinstance(decorator, ast.Call) else decorator
+                    )
+                    qualified = _qualified_reference(
+                        decorator_function, imports, assigned_names
+                    )
+                    if qualified not in SAFE_DECORATORS:
+                        path_violations.append(
+                            f"line {decorator.lineno}: executable decorator "
+                            f"{ast.unparse(decorator_function)}"
+                        )
+                for value in [*statement.bases, *(item.value for item in statement.keywords)]:
+                    check_initializer(value)
+                for class_statement in statement.body:
+                    if isinstance(class_statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        check_definition(class_statement)
+                    elif isinstance(class_statement, (ast.Assign, ast.AnnAssign)):
+                        check_assignment_targets(class_statement)
+                        check_initializer(class_statement.value)
+                    elif isinstance(class_statement, ast.Expr) and not (
+                        isinstance(class_statement.value, ast.Constant)
+                        and isinstance(class_statement.value.value, str)
+                    ):
+                        path_violations.append(
+                            f"line {class_statement.lineno}: executable class expression"
+                        )
+                    elif not isinstance(class_statement, (ast.Expr, ast.Pass)):
+                        path_violations.append(
+                            f"line {class_statement.lineno}: executable class "
+                            f"{type(class_statement).__name__}"
+                        )
+                continue
+            if not isinstance(statement, (ast.Import, ast.ImportFrom)):
+                path_violations.append(
+                    f"line {statement.lineno}: executable top-level "
+                    f"{type(statement).__name__}"
+                )
+        if path_violations:
+            violations[relative] = path_violations
+    if violations:
+        raise ReleaseIntegrityPreflightError(
+            "authenticated release Python has import-time side effects: "
+            + json.dumps(violations, sort_keys=True)
+        )
+    return {
+        "parsed_python_file_count": len(python_paths),
+        "forbidden_import_time_side_effects_absent": True,
+    }
+
+
+def _tracked_release_file(path: Path) -> bool:
+    return (
+        path.is_file()
+        and not path.is_symlink()
+        and not any(part in IGNORED_PARTS for part in path.parts)
+        and path.suffix not in IGNORED_SUFFIXES
+    )
+
+
+def _release_surface_entry(path: Path) -> bool:
+    return (
+        (path.is_file() or path.is_symlink())
+        and not any(part in IGNORED_PARTS for part in path.parts)
+        and path.suffix not in IGNORED_SUFFIXES
+    )
+
+
+def authenticate_release_preimport(repo_root: Path) -> dict:
+    """Authenticate inventory and bytes without importing target-release Python."""
+    repo_root = repo_root.resolve()
+    manifest_path = repo_root / MANIFEST_RELATIVE
+    if not manifest_path.is_file() or manifest_path.is_symlink():
+        raise ReleaseIntegrityPreflightError(
+            f"missing regular immutable release manifest: {manifest_path}"
+        )
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise ReleaseIntegrityPreflightError(
+            f"cannot read release manifest: {error}"
+        ) from error
+    if not isinstance(manifest, dict):
+        raise ReleaseIntegrityPreflightError("release manifest must be an object")
+    if set(manifest) != {
+        "schema_version",
+        "contract_version",
+        "hash_algorithm",
+        "pycache_exclusion",
+        "inventory_rule",
+        "files",
+    }:
+        raise ReleaseIntegrityPreflightError("release manifest field inventory mismatch")
+    if manifest.get("schema_version") != BOOTSTRAP_MANIFEST_VERSION:
+        raise ReleaseIntegrityPreflightError("unsupported release manifest schema_version")
+    if manifest.get("contract_version") != BOOTSTRAP_CONTRACT_VERSION:
+        raise ReleaseIntegrityPreflightError("release manifest contract_version mismatch")
+    if manifest.get("hash_algorithm") != "sha256":
+        raise ReleaseIntegrityPreflightError("release manifest must use sha256")
+    if manifest.get("pycache_exclusion") != BOOTSTRAP_PYCACHE_EXCLUSION:
+        raise ReleaseIntegrityPreflightError("release manifest cache exclusion mismatch")
+    if manifest.get("inventory_rule") != BOOTSTRAP_INVENTORY_RULE:
+        raise ReleaseIntegrityPreflightError("release manifest inventory rule mismatch")
+    files = manifest.get("files")
+    if not isinstance(files, dict) or not files:
+        raise ReleaseIntegrityPreflightError(
+            "release manifest files must be a non-empty object"
+        )
+    invalid_entries = sorted(
+        repr(relative)
+        for relative, expected in files.items()
+        if not _manifest_entry_is_valid(relative, expected)
+    )
+    if invalid_entries:
+        raise ReleaseIntegrityPreflightError(
+            f"invalid release manifest entries: {invalid_entries}"
+        )
+    if not BOOTSTRAP_REQUIRED_PATHS <= set(files):
+        raise ReleaseIntegrityPreflightError(
+            "release manifest omits bootstrap-required paths: "
+            f"{sorted(BOOTSTRAP_REQUIRED_PATHS - set(files))}"
+        )
+
+    missing: list[str] = []
+    mismatches: dict[str, dict] = {}
+    for relative in sorted(files):
+        path = repo_root / relative
+        if not _tracked_release_file(path):
+            missing.append(relative)
+            continue
+        try:
+            path.resolve().relative_to(repo_root)
+        except ValueError:
+            mismatches[relative] = {"error": "path resolves outside repo-root"}
+            continue
+        expected = files[relative]
+        actual = {"bytes": path.stat().st_size, "sha256": _bootstrap_sha256(path)}
+        if actual != expected:
+            mismatches[relative] = {"expected": expected, "actual": actual}
+    if missing or mismatches:
+        raise ReleaseIntegrityPreflightError(
+            json.dumps(
+                {"missing": missing, "extra": [], "mismatches": mismatches},
+                sort_keys=True,
+            )
+        )
+
+    contract = _static_release_contract(repo_root / RELEASE_CONTRACT_RELATIVE)
+    required = set(contract["REQUIRED_RELEASE_FILES"])
+    ci_files = set(contract["CI_RELEASE_FILES"])
+    if contract["CONTRACT_VERSION"] != BOOTSTRAP_CONTRACT_VERSION:
+        raise ReleaseIntegrityPreflightError(
+            "static release contract version differs from bootstrap version"
+        )
+    if contract["PYCACHE_EXCLUSION"] != BOOTSTRAP_PYCACHE_EXCLUSION:
+        raise ReleaseIntegrityPreflightError(
+            "static release contract cache exclusion differs from bootstrap rule"
+        )
+    if set(files) != required:
+        raise ReleaseIntegrityPreflightError(
+            "release manifest inventory differs from static contract: "
+            + json.dumps(
+                {
+                    "missing": sorted(required - set(files)),
+                    "extra": sorted(set(files) - required),
+                },
+                sort_keys=True,
+            )
+        )
+
+    evaluation_root = repo_root / EVALUATION_RELATIVE
+    actual_names = {
+        path.relative_to(repo_root).as_posix()
+        for path in evaluation_root.rglob("*")
+        if _release_surface_entry(path) and path.name != MANIFEST_RELATIVE.name
+    }
+    for relative in ci_files:
+        path = repo_root / relative
+        if _release_surface_entry(path):
+            actual_names.add(relative)
+    inventory_missing = sorted(required - actual_names)
+    inventory_extra = sorted(actual_names - required)
+    if inventory_missing or inventory_extra:
+        raise ReleaseIntegrityPreflightError(
+            json.dumps(
+                {
+                    "missing": inventory_missing,
+                    "extra": inventory_extra,
+                    "mismatches": {},
+                },
+                sort_keys=True,
+            )
+        )
+    python_preflight = _preflight_release_python_sources(repo_root, required)
+    return {
+        "manifest_sha256": _bootstrap_sha256(manifest_path),
+        "verified_file_count": len(required),
+        "preimport_authentication": True,
+        "static_inventory_contract_parsed_without_execution": True,
+        "python_source_preflight": python_preflight,
+    }
+
+
+def _candidate_release_preimport(repo_root: Path) -> dict:
+    """Snapshot a dirty release candidate for the sole report-generation entry."""
+    repo_root = repo_root.resolve()
+    contract_path = repo_root / RELEASE_CONTRACT_RELATIVE
+    if not _tracked_release_file(contract_path):
+        raise ReleaseIntegrityPreflightError(
+            f"release inventory contract is not a regular file: {contract_path}"
+        )
+    contract = _static_release_contract(contract_path)
+    if contract["CONTRACT_VERSION"] != BOOTSTRAP_CONTRACT_VERSION:
+        raise ReleaseIntegrityPreflightError(
+            "candidate static release contract version mismatch"
+        )
+    if contract["PYCACHE_EXCLUSION"] != BOOTSTRAP_PYCACHE_EXCLUSION:
+        raise ReleaseIntegrityPreflightError(
+            "candidate static release contract cache exclusion mismatch"
+        )
+    required = set(contract["REQUIRED_RELEASE_FILES"])
+    ci_files = set(contract["CI_RELEASE_FILES"])
+    actual_names = {
+        path.relative_to(repo_root).as_posix()
+        for path in (repo_root / EVALUATION_RELATIVE).rglob("*")
+        if _release_surface_entry(path) and path.name != MANIFEST_RELATIVE.name
+    }
+    for relative in ci_files:
+        if _release_surface_entry(repo_root / relative):
+            actual_names.add(relative)
+    missing = sorted(required - actual_names)
+    extra = sorted(actual_names - required)
+    if missing or extra:
+        raise ReleaseIntegrityPreflightError(
+            "dirty release candidate inventory mismatch: "
+            + json.dumps({"missing": missing, "extra": extra}, sort_keys=True)
+        )
+    files: dict[str, dict[str, int | str]] = {}
+    for relative in sorted(required):
+        path = repo_root / relative
+        if not _tracked_release_file(path):
+            raise ReleaseIntegrityPreflightError(
+                f"candidate release path is not a regular file: {relative}"
+            )
+        try:
+            path.resolve().relative_to(repo_root)
+        except ValueError as error:
+            raise ReleaseIntegrityPreflightError(
+                f"candidate release path resolves outside repo-root: {relative}"
+            ) from error
+        files[relative] = {
+            "bytes": path.stat().st_size,
+            "sha256": _bootstrap_sha256(path),
+        }
+    python_preflight = _preflight_release_python_sources(repo_root, required)
+    activation_sha256 = hashlib.sha256(
+        json.dumps(
+            files,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    return {
+        "activation_sha256": activation_sha256,
+        "candidate_files": files,
+        "candidate_file_count": len(files),
+        "candidate_inventory_snapshotted_before_import": True,
+        "static_inventory_contract_parsed_without_execution": True,
+        "python_source_preflight": python_preflight,
+    }
+
+
+_ACTIVE_RELEASE_ROOT: Path | None = None
+_ACTIVE_RELEASE_MANIFEST_SHA256: str | None = None
+
+
+def _activate_release_modules(repo_root: Path, evidence: dict) -> dict:
+    """Load target-root semantic modules after a caller completed its preflight."""
+    global _ACTIVE_RELEASE_ROOT, _ACTIVE_RELEASE_MANIFEST_SHA256
+    repo_root = repo_root.resolve()
+    activation_sha256 = evidence["activation_sha256"]
+    if (
+        _ACTIVE_RELEASE_ROOT == repo_root
+        and _ACTIVE_RELEASE_MANIFEST_SHA256 == activation_sha256
+    ):
+        return evidence
+
+    scripts_root = (repo_root / EVALUATION_RELATIVE / "scripts").resolve()
+    local_names = {
+        path.stem
+        for path in scripts_root.glob("*.py")
+        if path.is_file() and not path.is_symlink()
+    }
+    for name in sorted(local_names - {"validate_contract"}):
+        sys.modules.pop(name, None)
+    original_path = list(sys.path)
+    sys.path.insert(0, str(scripts_root))
+    importlib.invalidate_caches()
+    try:
+        modules = {
+            name: importlib.import_module(name)
+            for name in (
+                "integrity",
+                "build_baseline",
+                "compare_candidate",
+                "contract_constants",
+                "corpus_archive",
+                "private_ledgers",
+                "release_contract",
+                "runtime_attestation",
+                "schema_validation",
+                "compare_baseline_runs",
+            )
+        }
+        wrong_roots = {}
+        for name in sorted(local_names):
+            module = sys.modules.get(name)
+            module_file = getattr(module, "__file__", None) if module else None
+            if module_file is None:
+                continue
+            path = Path(module_file).resolve()
+            if path.parent != scripts_root:
+                wrong_roots[name] = str(path)
+        if wrong_roots:
+            raise ReleaseIntegrityPreflightError(
+                "semantic release modules resolved outside --repo-root: "
+                + json.dumps(wrong_roots, sort_keys=True)
+            )
+    except BaseException as error:
+        if isinstance(error, KeyboardInterrupt):
+            raise
+        if isinstance(error, ReleaseIntegrityPreflightError):
+            raise
+        raise ReleaseIntegrityPreflightError(
+            "authenticated semantic release module import failed: "
+            f"{type(error).__name__}: {error}"
+        ) from error
+    finally:
+        sys.path[:] = original_path
+
+    build = modules["build_baseline"]
+    candidate = modules["compare_candidate"]
+    constants = modules["contract_constants"]
+    archive = modules["corpus_archive"]
+    integrity = modules["integrity"]
+    ledgers = modules["private_ledgers"]
+    release_contract = modules["release_contract"]
+    runtime = modules["runtime_attestation"]
+    schemas = modules["schema_validation"]
+    baseline_runs = modules["compare_baseline_runs"]
+    globals().update(
+        {
+            "build_metrics": build.build_metrics,
+            "build_opportunity_queue": build.build_opportunity_queue,
+            "canonical_json_sha256": build.canonical_json_sha256,
+            "classify_current_nodes": build.classify_current_nodes,
+            "read_gzip_jsonl": build.read_gzip_jsonl,
+            "read_jsonl": build.read_jsonl,
+            "MAXIMUM_NEWLY_BLOCKING_FRACTION": candidate.MAXIMUM_NEWLY_BLOCKING_FRACTION,
+            "CONCENTRATION_MAXIMUM_INCREASE": candidate.CONCENTRATION_MAXIMUM_INCREASE,
+            "MINIMUM_AFFECTED_FRACTION": candidate.MINIMUM_AFFECTED_FRACTION,
+            "MINIMUM_GAINED_IDENTITIES": candidate.MINIMUM_GAINED_IDENTITIES,
+            "REVIEWS_PER_CREDITED_DECISION": candidate.REVIEWS_PER_CREDITED_DECISION,
+            "OPPORTUNITY_MUSEUM_PROTECTION": constants.OPPORTUNITY_MUSEUM_PROTECTION,
+            "OPPORTUNITY_TOTAL_SIGNATURES": constants.OPPORTUNITY_TOTAL_SIGNATURES,
+            "CorpusArchiveBlocked": archive.CorpusArchiveBlocked,
+            "CorpusArchiveInvalid": archive.CorpusArchiveInvalid,
+            "authenticated_corpus": archive.authenticated_corpus,
+            "IntegrityError": integrity.IntegrityError,
+            "sha256": integrity.sha256,
+            "verify_release": integrity.verify_release,
+            "FORBIDDEN_PUBLIC_FILES": ledgers.FORBIDDEN_PUBLIC_FILES,
+            "PUBLIC_AGGREGATE_FILES": ledgers.PUBLIC_AGGREGATE_FILES,
+            "verify_private_ledgers": ledgers.verify_private_ledgers,
+            "verify_public_boundary": ledgers.verify_public_boundary,
+            "validation_input_bindings": release_contract.validation_input_bindings,
+            "validate_runtime_attestation": runtime.validate_runtime_attestation,
+            "execute_schema_contract_tests": schemas.execute_schema_contract_tests,
+            "validate_schema": schemas.validate_schema,
+            "validate_baseline_run": baseline_runs.validate_run,
+        }
+    )
+    _ACTIVE_RELEASE_ROOT = repo_root
+    _ACTIVE_RELEASE_MANIFEST_SHA256 = activation_sha256
+    return evidence
+
+
+def _activate_authenticated_release(repo_root: Path) -> dict:
+    """Authenticate the frozen release, then load only its target-root modules."""
+    evidence = authenticate_release_preimport(repo_root)
+    evidence["activation_sha256"] = evidence["manifest_sha256"]
+    return _activate_release_modules(repo_root, evidence)
 
 
 def read_json(path: Path):
@@ -56,7 +832,7 @@ def verify_file(path: Path, expected: dict) -> dict:
     actual = {
         "exists": path.is_file(),
         "bytes": path.stat().st_size if path.is_file() else None,
-        "sha256": sha256(path) if path.is_file() else None,
+        "sha256": _bootstrap_sha256(path) if path.is_file() else None,
     }
     actual["passed"] = (
         actual["exists"]
@@ -66,11 +842,286 @@ def verify_file(path: Path, expected: dict) -> dict:
     return actual
 
 
+def _public_boundary_evidence_passed(
+    evidence: object,
+    public_files: set[str] | frozenset[str],
+    forbidden_files: set[str] | frozenset[str],
+) -> bool:
+    return (
+        isinstance(evidence, dict)
+        and set(evidence) == {
+            "public_aggregate_files",
+            "forbidden_public_files_absent",
+        }
+        and isinstance(evidence["public_aggregate_files"], list)
+        and isinstance(evidence["forbidden_public_files_absent"], list)
+        and evidence["public_aggregate_files"] == sorted(public_files)
+        and evidence["forbidden_public_files_absent"] == sorted(forbidden_files)
+    )
+
+
+def _schema_execution_evidence_passed(
+    evidence: object, schema_directory: Path, cases_path: Path
+) -> bool:
+    try:
+        schema_names = sorted(
+            path.name for path in schema_directory.glob("*.schema.json")
+        )
+        cases_document = read_json(cases_path)
+        cases = cases_document["cases"]
+        if (
+            cases_document.get("schema_version")
+            != "site-graph-v0-schema-test-cases/1"
+            or not schema_names
+            or not isinstance(cases, dict)
+            or set(cases) != set(schema_names)
+            or any(
+                not isinstance(cases[name], dict)
+                or set(cases[name]) != {"valid", "invalid"}
+                or not isinstance(cases[name]["invalid"], list)
+                or not cases[name]["invalid"]
+                for name in schema_names
+            )
+        ):
+            return False
+        invalid_count = sum(len(cases[name]["invalid"]) for name in schema_names)
+    except (KeyError, OSError, TypeError, UnicodeError, json.JSONDecodeError):
+        return False
+    return (
+        isinstance(evidence, dict)
+        and set(evidence)
+        == {
+            "meta_valid_schema_count",
+            "representative_valid_instance_count",
+            "adversarial_invalid_instance_count",
+            "schemas",
+        }
+        and all(
+            type(evidence[name]) is int
+            for name in (
+                "meta_valid_schema_count",
+                "representative_valid_instance_count",
+                "adversarial_invalid_instance_count",
+            )
+        )
+        and isinstance(evidence["schemas"], list)
+        and evidence["meta_valid_schema_count"] == len(schema_names)
+        and evidence["representative_valid_instance_count"] == len(schema_names)
+        and evidence["adversarial_invalid_instance_count"] == invalid_count
+        and evidence["schemas"] == schema_names
+    )
+
+
+def _boundary_path_violation(relative: str) -> str | None:
+    path = Path(relative)
+    basename = path.name.casefold()
+    components = {part.casefold().replace("_", "-") for part in path.parts}
+    in_evaluation_release = (
+        relative == EVALUATION_RELATIVE.as_posix()
+        or relative.startswith(EVALUATION_RELATIVE.as_posix() + "/")
+    )
+    if basename in FORBIDDEN_BOUNDARY_BASENAMES:
+        return "known_private_bulk_filename"
+    if components & {"private", "private-data", "private-bulk", "bulk-data"}:
+        return "private_or_bulk_directory"
+    if in_evaluation_release and any(
+        basename.endswith(suffix) for suffix in FORBIDDEN_BULK_SUFFIXES
+    ):
+        return "bulk_data_extension"
+    if FORBIDDEN_DUMP_NAME.search(basename):
+        return "artifact_id_or_mention_dump_name"
+    return None
+
+
+def _run_git(repo_root: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *arguments],
+        cwd=repo_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+
+def scan_public_repository_boundary(repo_root: Path) -> dict:
+    """Scan current release paths and every tree reachable from the current HEAD.
+
+    This deliberately narrow check covers path names across the repository. It does
+    not claim that aggregate ranks/counts are unlinkable, inspect file contents, or
+    cover unreachable/pruned Git objects.
+    """
+    repo_root = repo_root.resolve()
+    current_paths = sorted(
+        path.relative_to(repo_root).as_posix()
+        for path in repo_root.rglob("*")
+        if (path.is_file() or path.is_symlink())
+        and ".git" not in path.relative_to(repo_root).parts
+        and not any(part in IGNORED_PARTS for part in path.parts)
+    )
+    current_violations = [
+        {"path": relative, "reason": reason}
+        for relative in current_paths
+        if (reason := _boundary_path_violation(relative)) is not None
+    ]
+    claim_scope = (
+        "Recursive repository-wide path-name scan in the current checkout and every "
+        "commit tree reachable from HEAD. It detects known private bulk paths and "
+        "artifact-ID/mention-dump filenames everywhere, plus bulk-data extensions "
+        "inside docs/evaluations/site-graph-v0; it does not assert rank/count "
+        "unlinkability, inspect blob contents, or cover unreachable/pruned Git objects."
+    )
+    if not (repo_root / ".git").exists():
+        return {
+            "passed": False,
+            "status": "UNABLE_GIT_METADATA_ABSENT",
+            "claim_scope": claim_scope,
+            "git_metadata_available": False,
+            "current_tree": {
+                "recursive_scan_completed": True,
+                "violations": current_violations,
+            },
+            "git_history": {
+                "all_trees_reachable_from_head_scanned": False,
+                "violations": [],
+            },
+            "inability_reason": (
+                "repo-root has no .git file or directory, so reachable history cannot "
+                "be scanned and the historical public-boundary claim cannot be made"
+            ),
+        }
+
+    inside = _run_git(repo_root, "rev-parse", "--is-inside-work-tree")
+    head_result = _run_git(repo_root, "rev-parse", "--verify", "HEAD^{commit}")
+    commits_result = _run_git(repo_root, "rev-list", "HEAD")
+    roots_result = _run_git(repo_root, "rev-list", "--max-parents=0", "HEAD")
+    commands = (inside, head_result, commits_result, roots_result)
+    if any(command.returncode != 0 for command in commands):
+        errors = [
+            command.stderr.strip() or command.stdout.strip()
+            for command in commands
+            if command.returncode != 0
+        ]
+        return {
+            "passed": False,
+            "status": "UNABLE_GIT_HISTORY_QUERY_FAILED",
+            "claim_scope": claim_scope,
+            "git_metadata_available": True,
+            "current_tree": {
+                "recursive_scan_completed": True,
+                "violations": current_violations,
+            },
+            "git_history": {
+                "all_trees_reachable_from_head_scanned": False,
+                "violations": [],
+            },
+            "inability_reason": "; ".join(errors),
+        }
+    if inside.stdout.strip() != "true":
+        return {
+            "passed": False,
+            "status": "UNABLE_NOT_GIT_WORK_TREE",
+            "claim_scope": claim_scope,
+            "git_metadata_available": True,
+            "current_tree": {
+                "recursive_scan_completed": True,
+                "violations": current_violations,
+            },
+            "git_history": {
+                "all_trees_reachable_from_head_scanned": False,
+                "violations": [],
+            },
+            "inability_reason": "repo-root is not inside a Git work tree",
+        }
+
+    commits = [line for line in commits_result.stdout.splitlines() if line]
+    history_violations: set[tuple[str, str, str]] = set()
+    for commit in commits:
+        tree = subprocess.run(
+            [
+                "git",
+                "ls-tree",
+                "-r",
+                "-z",
+                commit,
+            ],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+        )
+        if tree.returncode != 0:
+            return {
+                "passed": False,
+                "status": "UNABLE_GIT_HISTORY_QUERY_FAILED",
+                "claim_scope": claim_scope,
+                "git_metadata_available": True,
+                "current_tree": {
+                    "recursive_scan_completed": True,
+                    "violations": current_violations,
+                },
+                "git_history": {
+                    "all_trees_reachable_from_head_scanned": False,
+                    "violations": [],
+                },
+                "inability_reason": tree.stderr.decode("utf-8", errors="replace").strip(),
+            }
+        for raw_entry in tree.stdout.split(b"\0"):
+            if not raw_entry:
+                continue
+            try:
+                metadata, raw_path = raw_entry.split(b"\t", 1)
+                _mode, object_type, object_id = metadata.decode("ascii").split(" ")
+                relative = raw_path.decode("utf-8")
+            except (UnicodeError, ValueError):
+                return {
+                    "passed": False,
+                    "status": "UNABLE_GIT_TREE_DECODE_FAILED",
+                    "claim_scope": claim_scope,
+                    "git_metadata_available": True,
+                    "current_tree": {
+                        "recursive_scan_completed": True,
+                        "violations": current_violations,
+                    },
+                    "git_history": {
+                        "all_trees_reachable_from_head_scanned": False,
+                        "violations": [],
+                    },
+                    "inability_reason": "Git tree contains a non-UTF-8 or malformed name",
+                }
+            if object_type != "blob":
+                continue
+            reason = _boundary_path_violation(relative)
+            if reason is not None:
+                history_violations.add((object_id, relative, reason))
+
+    history_rows = [
+        {"object_id": object_id, "path": relative, "reason": reason}
+        for object_id, relative, reason in sorted(history_violations)
+    ]
+    passed = not current_violations and not history_rows
+    return {
+        "passed": passed,
+        "status": "PASS" if passed else "FAIL",
+        "claim_scope": claim_scope,
+        "git_metadata_available": True,
+        "current_tree": {
+            "recursive_scan_completed": True,
+            "violations": current_violations,
+        },
+        "git_history": {
+            "all_trees_reachable_from_head_scanned": True,
+            "violations": history_rows,
+        },
+        "inability_reason": None,
+    }
+
+
 def _validate_private_run_runtime(
     repo_root: Path,
     private_run: Path,
     snapshot: dict,
     reruns: dict,
+    *,
+    _release_activated: bool = False,
 ) -> dict:
     """Verify a fresh run against deterministic bytes, separately from history.
 
@@ -78,11 +1129,8 @@ def _validate_private_run_runtime(
     A later reproduction is accepted by deterministic equivalence and release/input
     bindings; its directory, UUID, and provenance hash are intentionally irrelevant.
     """
-    # Import only after the caller's release-integrity preflight.  Keeping a required
-    # release module out of top-level imports ensures deletion/corruption is reported
-    # as an inventory failure before Python attempts to load semantic tooling.
-    from compare_baseline_runs import validate_run as validate_baseline_run
-
+    if not _release_activated:
+        _activate_authenticated_release(repo_root)
     runtime_path = private_run / "runtime-attestation.json"
     manifest_path = private_run / "run-output-manifest.json"
     provenance_path = private_run / "run-provenance.json"
@@ -259,7 +1307,11 @@ def _semantic_report(
     corpus: Path,
     private_run: Path,
     archive_attestation: dict,
+    *,
+    _release_activated: bool = False,
 ) -> dict:
+    if not _release_activated:
+        _activate_authenticated_release(repo_root)
     root = repo_root / "docs/evaluations/site-graph-v0"
     snapshot = read_json(root / "input-snapshot.json")
     prereg = read_json(root / "preregistration.json")
@@ -276,7 +1328,11 @@ def _semantic_report(
         checks.append({"check_id": check_id, "passed": bool(passed), "evidence": evidence})
 
     private_runtime_validation = _validate_private_run_runtime(
-        repo_root, private_run, snapshot, reruns
+        repo_root,
+        private_run,
+        snapshot,
+        reruns,
+        _release_activated=True,
     )
     check(
         "private_run_runtime_attestation_and_rerun_binding",
@@ -408,7 +1464,20 @@ def _semantic_report(
             ),
         },
     )
-    check("public_data_boundary", True, verify_public_boundary(root))
+    public_boundary = verify_public_boundary(root)
+    check(
+        "public_data_boundary",
+        _public_boundary_evidence_passed(
+            public_boundary, PUBLIC_AGGREGATE_FILES, FORBIDDEN_PUBLIC_FILES
+        ),
+        public_boundary,
+    )
+    repository_boundary = scan_public_repository_boundary(repo_root)
+    check(
+        "public_repository_current_and_reachable_history_boundary",
+        repository_boundary["passed"],
+        repository_boundary,
+    )
 
     canonical = read_gzip_jsonl(corpus / "data/artifacts.ndjson.gz")
     canonical_by_id = {row["id"]: row for row in canonical}
@@ -557,9 +1626,9 @@ def _semantic_report(
     check("machine_readable_formulas", actual_formulas == formula_expected, actual_formulas)
 
     machine_expected = {
-        "ambiguity_maximum_increase": {
-            "numerator": AMBIGUITY_MAXIMUM_INCREASE.numerator,
-            "denominator": AMBIGUITY_MAXIMUM_INCREASE.denominator,
+        "maximum_newly_blocking_fraction": {
+            "numerator": MAXIMUM_NEWLY_BLOCKING_FRACTION.numerator,
+            "denominator": MAXIMUM_NEWLY_BLOCKING_FRACTION.denominator,
         },
         "concentration_maximum_increase": {
             "numerator": CONCENTRATION_MAXIMUM_INCREASE.numerator,
@@ -636,7 +1705,9 @@ def _semantic_report(
     )
     check(
         "all_json_schemas_meta_valid_and_instance_executed",
-        True,
+        _schema_execution_evidence_passed(
+            schema_execution, root / "schemas", root / "schema-test-cases.json"
+        ),
         schema_execution,
     )
 
@@ -894,13 +1965,79 @@ def semantic_report(
     corpus_archive_sidecar: Path,
     private_run: Path,
 ) -> dict:
-    """Authenticate the external archive, then recompute the snapshot contract."""
+    """Authenticate release code and the external archive, then recompute."""
+    _activate_authenticated_release(repo_root)
     with authenticated_corpus(
         repo_root, corpus_archive, corpus_archive_sidecar
     ) as (corpus, archive_attestation):
         return _semantic_report(
-            repo_root, corpus, private_run, archive_attestation
+            repo_root,
+            corpus,
+            private_run,
+            archive_attestation,
+            _release_activated=True,
         )
+
+
+def semantic_report_for_release_generation(
+    repo_root: Path,
+    corpus_archive: Path,
+    corpus_archive_sidecar: Path,
+    private_run: Path,
+) -> dict:
+    """Recompute a report from an exact dirty-candidate snapshot.
+
+    This is deliberately unavailable to the public validation CLI. Its immediate
+    caller must be the target release's generation script; the resulting report still
+    requires a subsequent freeze and ordinary fail-closed validator pass.
+    """
+    repo_root = repo_root.resolve()
+    expected_caller = (
+        repo_root / EVALUATION_RELATIVE / "scripts/generate_validation_report.py"
+    ).resolve()
+    frame = inspect.currentframe()
+    caller = frame.f_back if frame is not None else None
+    caller_file = (
+        Path(caller.f_code.co_filename).resolve() if caller is not None else None
+    )
+    del frame
+    if caller_file != expected_caller:
+        raise ReleaseIntegrityPreflightError(
+            "dirty-candidate report generation is callable only from "
+            f"{expected_caller}"
+        )
+    if Path(__file__).resolve() != (
+        repo_root / EVALUATION_RELATIVE / "scripts/validate_contract.py"
+    ).resolve():
+        raise ReleaseIntegrityPreflightError(
+            "release generation must import validate_contract.py from --repo-root"
+        )
+
+    candidate = _candidate_release_preimport(repo_root)
+    expected_files = candidate["candidate_files"]
+    _activate_release_modules(repo_root, candidate)
+    with authenticated_corpus(
+        repo_root, corpus_archive, corpus_archive_sidecar
+    ) as (corpus, archive_attestation):
+        report = _semantic_report(
+            repo_root,
+            corpus,
+            private_run,
+            archive_attestation,
+            _release_activated=True,
+        )
+    actual_files = {
+        relative: {
+            "bytes": (repo_root / relative).stat().st_size,
+            "sha256": _bootstrap_sha256(repo_root / relative),
+        }
+        for relative in expected_files
+    }
+    if actual_files != expected_files:
+        raise ReleaseIntegrityPreflightError(
+            "release candidate bytes changed during semantic report recomputation"
+        )
+    return report
 
 
 def main() -> None:
@@ -912,8 +2049,8 @@ def main() -> None:
     args = parser.parse_args()
     repo_root = args.repo_root.resolve()
     try:
-        integrity = verify_release(repo_root)
-    except IntegrityError as error:
+        integrity = _activate_authenticated_release(repo_root)
+    except ReleaseIntegrityPreflightError as error:
         print(
             json.dumps(
                 {
@@ -923,6 +2060,7 @@ def main() -> None:
                     "overall_contract_status": "INVALID",
                     "downstream_product_verdict": "NOT_RUN",
                     "phase": "release_integrity",
+                    "semantic_release_modules_activated": False,
                     "error": str(error),
                 },
                 sort_keys=True,

@@ -16,7 +16,7 @@
         "required": ["decision_key", "decision_kind", "subject", "review_artifacts"],
         "properties": {
           "decision_key": {"type": "string", "minLength": 1},
-          "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support"]},
+          "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support", "mention_status_resolution"]},
           "subject": {"type": "object", "minProperties": 2},
           "review_artifacts": {
             "type": "array",

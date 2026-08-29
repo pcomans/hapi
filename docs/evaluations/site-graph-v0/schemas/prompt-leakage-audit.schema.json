@@ -1,22 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-prompt-leakage-audit-4.json",
-  "title": "Authenticated pre-invocation prompt leakage audit",
+  "$id": "https://hapi.example/schemas/site-graph-v0-prompt-leakage-audit-5.json",
+  "title": "Authenticated pre-invocation deterministic or semantic prompt audit",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "audit_id", "review_id", "review_invocation_id", "decision_key", "decision_kind", "subject", "prompt", "input", "shuffle_provenance", "audit_method", "auditor", "executed_at_utc", "deterministic_guard", "authentication"],
+  "required": ["schema_version", "audit_id", "review_id", "review_invocation_id", "decision_key", "decision_kind", "subject", "prompt", "input", "shuffle_provenance", "audit_method", "auditor", "executed_at_utc", "deterministic_guard", "semantic_assessment", "authentication"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-prompt-leakage-audit/4"},
+    "schema_version": {"const": "site-graph-v0-prompt-leakage-audit/5"},
     "audit_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "review_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "review_invocation_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "decision_key": {"type": "string", "minLength": 1},
-    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support"]},
+    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support", "mention_status_resolution"]},
     "subject": {"type": "object", "minProperties": 2},
     "prompt": {"$ref": "#/$defs/artifact"},
     "input": {"$ref": "#/$defs/artifact"},
     "shuffle_provenance": {"$ref": "#/$defs/shuffle_provenance"},
-    "audit_method": {"const": "deterministic_prompt_leakage_guard/2"},
+    "audit_method": {"enum": ["deterministic_prompt_leakage_guard/3", "independent_semantic_prompt_audit/1"]},
     "auditor": {
       "type": "object",
       "additionalProperties": false,
@@ -32,7 +32,7 @@
       "additionalProperties": false,
       "required": ["guard_version", "request_binding_sha256", "request_envelope", "preferred_labels", "aliases", "answer_names", "identifiers", "locators", "decision_proxies", "result", "findings"],
       "properties": {
-        "guard_version": {"const": "site-graph-v0-deterministic-prompt-leakage-guard/2"},
+        "guard_version": {"const": "site-graph-v0-deterministic-prompt-leakage-guard/3"},
         "request_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "request_envelope": {"$ref": "#/$defs/request_envelope_binding"},
         "preferred_labels": {"$ref": "#/$defs/forbidden_set_binding"},
@@ -45,8 +45,24 @@
         "findings": {"type": "array", "maxItems": 0}
       }
     },
+    "semantic_assessment": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/semantic_assessment"}
+      ]
+    },
     "authentication": {"$ref": "#/$defs/authentication"}
   },
+  "allOf": [
+    {
+      "if": {"properties": {"audit_method": {"const": "deterministic_prompt_leakage_guard/3"}}},
+      "then": {"properties": {"semantic_assessment": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"audit_method": {"const": "independent_semantic_prompt_audit/1"}}},
+      "then": {"properties": {"semantic_assessment": {"type": "object"}}}
+    }
+  ],
   "$defs": {
     "artifact": {
       "type": "object",
@@ -88,16 +104,41 @@
     "request_envelope_binding": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["prompt_schema_version", "input_schema_version", "shuffle_provenance_schema_version", "shuffle_algorithm", "review_invocation_id", "item_count", "opaque_labels_canonical_sha256", "shuffle_provenance_sha256"],
+      "required": ["prompt_schema_version", "input_schema_version", "shuffle_provenance_schema_version", "shuffle_algorithm", "prompt_template_sha256", "review_invocation_id", "item_count", "opaque_labels_canonical_sha256", "shuffle_provenance_sha256"],
       "properties": {
-        "prompt_schema_version": {"const": "site-graph-v0-review-prompt-envelope/1"},
-        "input_schema_version": {"const": "site-graph-v0-review-input-envelope/1"},
+        "prompt_schema_version": {"const": "site-graph-v0-review-prompt-envelope/2"},
+        "input_schema_version": {"const": "site-graph-v0-review-input-envelope/2"},
         "shuffle_provenance_schema_version": {"const": "site-graph-v0-review-shuffle-provenance/1"},
         "shuffle_algorithm": {"const": "sha256-ranked-nonidentity/1"},
+        "prompt_template_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "review_invocation_id": {"type": "string", "pattern": "^[^\\s]+$"},
         "item_count": {"type": "integer", "minimum": 2},
         "opaque_labels_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "shuffle_provenance_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "semantic_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_binding_sha256", "prompt_sha256", "input_sha256", "result", "checks", "reasoning", "limitation_acknowledgement"],
+      "properties": {
+        "request_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "prompt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "result": {"const": "PASS"},
+        "checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label_specific_directives", "favorable_assessment_directives", "evidence_warrant_directives", "other_semantic_leakage"],
+          "properties": {
+            "label_specific_directives": {"const": "NONE_OBSERVED"},
+            "favorable_assessment_directives": {"const": "NONE_OBSERVED"},
+            "evidence_warrant_directives": {"const": "NONE_OBSERVED"},
+            "other_semantic_leakage": {"const": "NONE_OBSERVED"}
+          }
+        },
+        "reasoning": {"type": "string", "minLength": 1},
+        "limitation_acknowledgement": {"const": "A signed semantic prompt audit records one independent pre-invocation review; it reduces known leakage risk but does not prove semantic perfection."}
       }
     },
     "authentication": {

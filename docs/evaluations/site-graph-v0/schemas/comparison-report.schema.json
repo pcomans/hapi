@@ -1,11 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-comparison-report-3.json",
+  "$id": "https://hapi.example/schemas/site-graph-v0-comparison-report-4.json",
   "title": "Deterministic authenticated site-graph-v0 comparison report",
   "type": "object", "additionalProperties": false,
   "required": ["schema_version", "outcome", "ordered_decision_trace", "integrity", "safety_gates", "event_counts", "event_records", "reassignment_edge_modes", "per_museum", "post_candidate_metrics", "pairs", "ambiguity_and_abstention", "run_binding", "provenance_status"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-comparison-report/3"},
+    "schema_version": {"const": "site-graph-v0-comparison-report/4"},
     "outcome": {"enum": ["INVALID", "REDESIGN", "CONTINUE", "STOP"]},
     "ordered_decision_trace": {"type": "array", "minItems": 1},
     "integrity": {

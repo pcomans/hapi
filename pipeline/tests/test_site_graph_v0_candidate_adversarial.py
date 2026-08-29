@@ -86,6 +86,31 @@ def test_production_trust_root_fails_closed_while_not_configured() -> None:
         )
 
 
+def test_invalid_comparator_preserves_verified_snapshot_acquisition_status(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(
+        compare_candidate,
+        "verify_private_ledgers",
+        lambda private_run, evaluation_root: {
+            "archive_authentication": {
+                "archive_sha256": "a" * 64,
+                "snapshot_acquisition_integrity": "PASS",
+                "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+            }
+        },
+    )
+    status = compare_candidate._invalid_production_provenance(contract.REPO_ROOT, tmp_path)
+    assert status == {
+        "evidence_scope": "PRODUCTION_COMPARATOR_INVALID",
+        "archive_sha256": "a" * 64,
+        "snapshot_acquisition_integrity": "PASS",
+        "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+        "overall_contract_status": "INVALID",
+        "downstream_product_verdict": "INVALID",
+    }
+
+
 def test_comparator_forbids_explicit_review_answer_tokens_from_llm_requests() -> None:
     assert compare_candidate.MECHANICAL_REVIEW_ANSWER_TOKENS == {
         "supported",
@@ -203,6 +228,7 @@ def _add_second_frozen_binding(case: dict, artifact_id: str) -> dict:
         {
             **extra,
             "resolution_status": "research_failure",
+            "status_support_decision_key": None,
             "abstention_reason": None,
             "has_blocking_ambiguity": False,
             "direct_links": [],
@@ -214,6 +240,144 @@ def _add_second_frozen_binding(case: dict, artifact_id: str) -> dict:
         )
     )
     return extra
+
+
+def _make_record_preserve_baseline(case: dict, artifact_id: str) -> None:
+    baseline = next(
+        row for row in case["baseline"] if row["artifact_id"] == artifact_id
+    )
+    record = next(
+        row for row in case["candidate"]["records"] if row["artifact_id"] == artifact_id
+    )
+    outcome = record["opportunity_outcomes"][0]
+    for link in outcome["direct_links"]:
+        case["decisions"].pop(link["support_decision_key"])
+    contract._drop_status_resolution(case, outcome)
+    outcome["resolution_status"] = "research_failure"
+    outcome["direct_links"] = []
+    outcome["uncredited_link_claims"] = []
+    record["final_supported_direct_target_ids"] = sorted(
+        baseline["baseline_site_target_ids"]
+    )
+    record["removed_baseline_target_ids"] = []
+
+
+def _append_no_link_itt_record(
+    case: dict,
+    *,
+    museum: str,
+    artifact_id: str,
+    baseline_status: str,
+    candidate_status: str,
+    authenticate_status_change: bool,
+) -> dict:
+    opportunity = next(
+        row
+        for row in case["private_opportunity"]["opportunities"]
+        if row["museum"] == museum
+    )
+    public_opportunity = next(
+        row for row in case["queue"]["opportunities"] if row["museum"] == museum
+    )
+    binding = {
+        "opportunity_id": opportunity["opportunity_id"],
+        "opportunity_binding_sha256": contract.canonical_sha256(
+            {"artifact_id": artifact_id, "opportunity_id": opportunity["opportunity_id"]}
+        ),
+    }
+    mention_id = f"mention-{artifact_id}"
+    case["baseline"].append(
+        {
+            "artifact_id": artifact_id,
+            "museum": museum,
+            "extracted_site_text_evidence": True,
+            "baseline_site_target_ids": [],
+            "baseline_record_scope": "no_link",
+            "site_mention_count": 1,
+            "site_mention_status_counts": {baseline_status: 1},
+            "has_any_ambiguity": baseline_status == "ambiguous",
+            "has_blocking_ambiguity": baseline_status == "ambiguous",
+        }
+    )
+    case["metrics"]["record_counts_by_museum"][museum] += 1
+    case["metrics"]["per_museum"][museum][
+        "extracted_site_text_evidence_records"
+    ] += 1
+    case["private_opportunity"]["intent_to_treat_records_by_museum"][museum].append(
+        {
+            "artifact_id": artifact_id,
+            "opportunity_bindings": [binding],
+            "baseline_record_scope": "no_link",
+        }
+    )
+    opportunity["artifact_memberships"].append(
+        {
+            "artifact_id": artifact_id,
+            "opportunity_binding_sha256": binding["opportunity_binding_sha256"],
+            "mentions": [
+                {
+                    "mention_id": mention_id,
+                    "field_path": "sites[0]",
+                    "status": baseline_status,
+                    "target_ids": [],
+                    "normalized_keys": [binding["opportunity_id"]],
+                }
+            ],
+        }
+    )
+    opportunity["artifact_count"] += 1
+    opportunity["mention_count"] += 1
+    opportunity["unresolved_status_counts"][baseline_status] = (
+        opportunity["unresolved_status_counts"].get(baseline_status, 0) + 1
+    )
+    public_opportunity["artifact_count"] += 1
+    public_opportunity["mention_count"] += 1
+    public_opportunity["unresolved_status_counts"][baseline_status] = (
+        public_opportunity["unresolved_status_counts"].get(baseline_status, 0) + 1
+    )
+    outcome = {
+        **binding,
+        "resolution_status": candidate_status,
+        "status_support_decision_key": None,
+        "abstention_reason": None,
+        "direct_links": [],
+        "uncredited_link_claims": [],
+    }
+    case["candidate"]["records"].append(
+        {
+            "artifact_id": artifact_id,
+            "final_supported_direct_target_ids": [],
+            "removed_baseline_target_ids": [],
+            "opportunity_outcomes": [outcome],
+        }
+    )
+    if authenticate_status_change and baseline_status != candidate_status:
+        contract._bind_status_resolution(
+            case,
+            artifact_id=artifact_id,
+            outcome=outcome,
+            baseline_statuses=[{"mention_id": mention_id, "status": baseline_status}],
+            proposed_status=candidate_status,
+        )
+    for pair_key, pair in case["private_opportunity"][
+        "credited_pair_opportunity_memberships"
+    ].items():
+        if museum not in pair["sides"]:
+            continue
+        pair["sides"][museum].append(
+            {
+                "artifact_id": artifact_id,
+                "category": "no_baseline_pair_connection",
+                "opportunity_bindings": [binding],
+            }
+        )
+        denominator = len(pair["sides"][museum])
+        public_side = case["queue"]["pair_side_ceilings"][pair_key]["sides"][museum]
+        public_side["credited_effect_opportunity_denominator"] = denominator
+        public_side["minimum_credited_affected_records_for_continue"] = max(
+            1, (denominator + 9) // 10
+        )
+    return outcome
 
 
 @pytest.mark.parametrize("mutation", ["omitted", "duplicated", "substituted"])
@@ -286,7 +450,7 @@ def test_gained_identity_is_distinct_from_one_sided_baseline_identity(
     report = contract._run_case(case)
     assert report["outcome"] == "INVALID"
     assert any(
-        "including one-sided identities" in error
+        "one-sided identities" in error
         for error in report["integrity"]["errors"]
     )
 
@@ -446,6 +610,203 @@ def test_distinct_counted_classes_require_positive_review_evidence(tmp_path: Pat
     report = contract._run_case(case)
     assert report["outcome"] == "INVALID"
     assert any("positive distinctness" in error for error in report["integrity"]["errors"])
+
+
+def test_crossed_one_sided_additions_require_gained_root_distinctness(
+    tmp_path: Path,
+) -> None:
+    """Met and Brooklyn cannot cross-add two one-sided aliases without a census."""
+    case = contract._comparator_case(tmp_path)
+    for artifact_id, existing_target in (
+        ("met-b", "specific-2"),
+        ("brooklyn-a", "specific-1"),
+    ):
+        baseline = next(
+            row for row in case["baseline"] if row["artifact_id"] == artifact_id
+        )
+        baseline["baseline_site_target_ids"].append(existing_target)
+        baseline["baseline_site_target_ids"].sort()
+        _make_record_preserve_baseline(case, artifact_id)
+    distinct = next(
+        row
+        for row in case["relations"]["relations"]
+        if row["relation"] == "distinct"
+        and {row["left_target_id"], row["right_target_id"]}
+        == {"specific-1", "specific-2"}
+    )
+    case["relations"]["relations"].remove(distinct)
+    del case["decisions"][distinct["review_decision_key"]]
+
+    report = contract._run_case(case)
+
+    assert report["outcome"] == "INVALID"
+    assert any(
+        "gained identity roots lack positive distinctness" in error
+        for error in report["integrity"]["errors"]
+    )
+
+
+@pytest.mark.parametrize("identity_evidence", ["same_locator", "reviewed_equivalence"])
+def test_removing_duplicate_raw_edge_preserves_identity_class_retention(
+    tmp_path: Path, identity_evidence: str
+) -> None:
+    case = contract._comparator_case(tmp_path)
+    alias_locator = "broad-0" if identity_evidence == "same_locator" else "logic:broad-alias"
+    case["node_scope"]["nodes"].append(
+        {
+            "target_id": "broad-alias",
+            "scope_class": "broad",
+            "authority_identity_locator": alias_locator,
+        }
+    )
+    baseline = next(
+        row for row in case["baseline"] if row["artifact_id"] == "met-a"
+    )
+    baseline["baseline_site_target_ids"] = ["broad-0", "broad-alias"]
+    _make_record_preserve_baseline(case, "met-a")
+    record = next(
+        row for row in case["candidate"]["records"] if row["artifact_id"] == "met-a"
+    )
+    record["final_supported_direct_target_ids"] = ["broad-0"]
+    record["removed_baseline_target_ids"] = ["broad-alias"]
+    if identity_evidence == "reviewed_equivalence":
+        subject = {
+            "left_target_id": "broad-0",
+            "right_target_id": "broad-alias",
+            "relation": "equivalent",
+        }
+        key = contract.decision_key("equivalence_support", subject)
+        case["decisions"][key] = {
+            "decision_kind": "equivalence_support",
+            "subject": subject,
+            "supported": True,
+            "disagreement": False,
+        }
+        case["relations"]["relations"].append(
+            {
+                "relation_id": "equivalent-broad-raw-edges",
+                **subject,
+                "review_decision_key": key,
+            }
+        )
+
+    report = contract._run_case(case)
+
+    assert report["outcome"] != "INVALID"
+    event = next(
+        row for row in report["event_records"] if row["artifact_id"] == "met-a"
+    )
+    assert event["event"] == "unchanged"
+    assert event["raw_removed_baseline_direct_target_ids"] == ["broad-alias"]
+    assert event["lost_baseline_identity_class_ids"] == []
+    assert report["event_counts"]["loss"] == 0
+
+
+def test_ambiguous_mentions_cannot_be_declared_unmatched_without_reviewed_resolution(
+    tmp_path: Path,
+) -> None:
+    case = contract._comparator_case(tmp_path)
+    baseline = next(
+        row for row in case["baseline"] if row["artifact_id"] == "harvard-a"
+    )
+    baseline["site_mention_status_counts"] = {"ambiguous": 1}
+    baseline["has_any_ambiguity"] = True
+    baseline["has_blocking_ambiguity"] = True
+    opportunity = next(
+        row
+        for row in case["private_opportunity"]["opportunities"]
+        if row["museum"] == "harvard"
+    )
+    opportunity["artifact_memberships"][0]["mentions"][0]["status"] = "ambiguous"
+    for index in range(31):
+        _append_no_link_itt_record(
+            case,
+            museum="harvard",
+            artifact_id=f"harvard-ambiguous-{index:02d}",
+            baseline_status="ambiguous",
+            candidate_status="unmatched",
+            authenticate_status_change=False,
+        )
+
+    report = contract._run_case(case)
+
+    assert report["outcome"] == "INVALID"
+    status_errors = [
+        error
+        for error in report["integrity"]["errors"]
+        if "mention-status-resolution decision" in error
+    ]
+    assert len(status_errors) == 32
+
+
+def test_newly_blocking_gate_cannot_be_offset_by_authenticated_resolutions(
+    tmp_path: Path,
+) -> None:
+    case = contract._comparator_case(tmp_path)
+    baseline = next(
+        row for row in case["baseline"] if row["artifact_id"] == "harvard-a"
+    )
+    baseline["site_mention_status_counts"] = {"ambiguous": 1}
+    baseline["has_any_ambiguity"] = True
+    baseline["has_blocking_ambiguity"] = True
+    opportunity = next(
+        row
+        for row in case["private_opportunity"]["opportunities"]
+        if row["museum"] == "harvard"
+    )
+    opportunity["artifact_memberships"][0]["mentions"][0]["status"] = "ambiguous"
+    record = next(
+        row
+        for row in case["candidate"]["records"]
+        if row["artifact_id"] == "harvard-a"
+    )
+    outcome = record["opportunity_outcomes"][0]
+    link_subject = {
+        "artifact_id": "harvard-a",
+        "target_id": "specific-1",
+        "opportunity_id": outcome["opportunity_id"],
+        "opportunity_binding_sha256": outcome["opportunity_binding_sha256"],
+    }
+    link_key = contract.decision_key("link_support", link_subject)
+    case["decisions"][link_key] = {
+        "decision_kind": "link_support",
+        "subject": link_subject,
+        "supported": True,
+        "disagreement": False,
+    }
+    contract._bind_status_resolution(
+        case,
+        artifact_id="harvard-a",
+        outcome=outcome,
+        baseline_statuses=[
+            {"mention_id": "mention-harvard-a", "status": "ambiguous"}
+        ],
+        proposed_status="resolved",
+    )
+    outcome["resolution_status"] = "linked"
+    outcome["direct_links"] = [
+        {"target_id": "specific-1", "support_decision_key": link_key}
+    ]
+    record["final_supported_direct_target_ids"] = ["specific-1"]
+    _append_no_link_itt_record(
+        case,
+        museum="harvard",
+        artifact_id="harvard-newly-blocking",
+        baseline_status="unmatched",
+        candidate_status="ambiguous",
+        authenticate_status_change=True,
+    )
+
+    report = contract._run_case(case)
+
+    assert report["outcome"] == "REDESIGN"
+    ambiguity = report["safety_gates"]["ambiguity"]["per_museum"]["harvard"]
+    assert ambiguity["baseline_blocking"] == contract._fraction(1, 2)
+    assert ambiguity["candidate_blocking"] == contract._fraction(1, 2)
+    assert ambiguity["newly_blocking_records"] == 1
+    assert ambiguity["authenticated_resolved_blocking_records"] == 1
+    assert ambiguity["net_delta_descriptive"] == {"numerator": 0, "denominator": 1}
+    assert ambiguity["passed"] is False
 
 
 def test_reviewed_equivalent_replacement_is_unchanged_and_remains_broad(

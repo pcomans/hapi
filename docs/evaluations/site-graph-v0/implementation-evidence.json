@@ -1,5 +1,5 @@
 {
-  "schema_version": "site-graph-v0-implementation-evidence/5",
+  "schema_version": "site-graph-v0-implementation-evidence/6",
   "issue": 327,
   "status": {
     "snapshot_acquisition_integrity": "PASS",
@@ -31,6 +31,7 @@
   "deterministic_reproduction": {
     "status": "READY_SNAPSHOT_CONDITIONAL",
     "evidence": "baseline-rerun-evidence.json",
+    "evidence_sha256": "4b37e080de23841be88ae93554938b6b37ad927e8b1610c4b7a17da406cbd008",
     "deterministic_output_count": 19,
     "output_mismatches": 0,
     "metadata_mismatches": 0,
@@ -38,7 +39,7 @@
     "run_b_manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
     "runtime_attestation_sha256": "2d38586e1ef98e8339e4f6f960b0277295ffe0b7a122ef1b7c2a66b900061321",
     "fresh_portable_reproduction": {
-      "run_id": "d275ff62-41a9-4419-82d9-286ca36ea7f5",
+      "run_id": "3c4b72c6-ab1b-421a-8fe0-1bdd05cb81ab",
       "manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
       "deterministic_output_count": 19,
       "different_path_and_uuid_accepted": true,
@@ -47,15 +48,17 @@
   },
   "validation": {
     "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
-    "checks_passed": 21,
+    "checks_passed": 22,
     "checks_failed": 0,
     "schema_meta_valid_count": 20,
     "schema_representative_valid_instance_count": 20,
-    "schema_adversarial_invalid_instance_count": 41
+    "schema_adversarial_invalid_instance_count": 41,
+    "authenticated_validator_runs": "historical release identity plus two distinct fresh-path/UUID reproductions each recomputed 22/22 checks and matched the committed report"
   },
   "tests": {
-    "focused_site_graph_contract": "166 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
-    "full_pipeline": "2545 passed, 2 skipped for the same environment-variable-only archive tests",
+    "focused_site_graph_contract": "216 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
+    "full_pipeline": "2595 passed, 2 skipped for the same environment-variable-only archive tests",
+    "authorized_real_archive_tests": "8 passed with HAPI_CORPUS_ARCHIVE and HAPI_CORPUS_ARCHIVE_SHA256 explicitly bound to the verified archive and sidecar",
     "execution_scope": "local repository-owned uv environment; no pre-PR CI run exists"
   },
   "review_gate": {
@@ -81,7 +84,11 @@
     },
     "review_source_binding": "Every signed review must cite authenticated non-originating-museum source records that collectively cover every target in the signed decision subject.",
     "trusted_completion_requirement": "The same configured trusted attestor must sign start and completion statements binding one invocation to exact freeze, result, candidate, review, source-export, runtime, and manifest bytes.",
-    "record_post_state_requirement": "Every selected record declares its complete final supported direct-link set and exact removed-baseline partition; losses and all post-candidate metrics consume that record state, independently of per-opportunity research failures.",
+    "record_post_state_requirement": "Every selected record declares its complete final supported direct-link set and exact removed-baseline partition; retention and loss consume identity roots after authenticated equivalence union, while raw edge removals remain separately reported.",
+    "mention_status_and_safety_requirement": "Candidate dispositions do not rewrite mention state. Any selected status transition requires two authenticated subject-bound reviews; the safety gate counts newly blocking records per museum without offset from resolved blockers.",
+    "gained_identity_census_requirement": "The complete gained-specific root set is derived before credit and each gained root must be positively distinct from every other gained root and every relevant baseline root, including crossed one-sided additions.",
+    "llm_review_requirement": "Raw model bytes must be canonical assessment/reasoning JSON exactly matching the signed wrapper; an immutable release-owned prompt template plus separate signed deterministic and semantic pre-invocation audits are mandatory.",
+    "repository_boundary_requirement": "Validation recursively scans the current tree and every local HEAD ancestor for narrowly forbidden private bulk derivative and dump patterns; unavailable Git metadata fails the historical scan closed.",
     "correction_chain_requirement": "A separately reviewed release must pin a canonical registration artifact from a strict ancestor commit, binding the genuine Git genesis, exact prior ledger head, and both private baseline hashes. Release activation precedes decisions, cited source bytes come from strict decision ancestors, each ledger preserves the registered prefix, and two registered independent human reviewers sign every correction."
   }
 }

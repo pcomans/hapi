@@ -29,23 +29,83 @@ TRUSTED_REVIEWERS_RELATIVE = (
     "docs/evaluations/site-graph-v0/trusted-reviewers.json"
 )
 REGISTRY_SCHEMA_VERSION = "site-graph-v0-trusted-reviewers/1"
-REVIEW_SCHEMA_VERSION = "site-graph-v0-review-artifact/3"
-AUDIT_SCHEMA_VERSION = "site-graph-v0-prompt-leakage-audit/4"
+REVIEW_SCHEMA_VERSION = "site-graph-v0-review-artifact/4"
+AUDIT_SCHEMA_VERSION = "site-graph-v0-prompt-leakage-audit/5"
 SIGNATURE_CONTEXT = "hapi-site-graph-v0-review-evidence/1"
-GUARD_VERSION = "site-graph-v0-deterministic-prompt-leakage-guard/2"
-AUDIT_METHOD = "deterministic_prompt_leakage_guard/2"
-PROMPT_ENVELOPE_SCHEMA_VERSION = "site-graph-v0-review-prompt-envelope/1"
-INPUT_ENVELOPE_SCHEMA_VERSION = "site-graph-v0-review-input-envelope/1"
+GUARD_VERSION = "site-graph-v0-deterministic-prompt-leakage-guard/3"
+AUDIT_METHOD = "deterministic_prompt_leakage_guard/3"
+SEMANTIC_AUDIT_METHOD = "independent_semantic_prompt_audit/1"
+PROMPT_ENVELOPE_SCHEMA_VERSION = "site-graph-v0-review-prompt-envelope/2"
+INPUT_ENVELOPE_SCHEMA_VERSION = "site-graph-v0-review-input-envelope/2"
+PROMPT_TEMPLATE_SCHEMA_VERSION = "site-graph-v0-review-prompt-template/1"
 SHUFFLE_PROVENANCE_SCHEMA_VERSION = "site-graph-v0-review-shuffle-provenance/1"
 SHUFFLE_ALGORITHM = "sha256-ranked-nonidentity/1"
 SHUFFLE_SEED_CONTEXT = "hapi-site-graph-v0-review-shuffle-seed/1"
 SHUFFLE_RANK_CONTEXT = "hapi-site-graph-v0-review-shuffle-rank/1"
 OPAQUE_LABEL_CONTEXT = "hapi-site-graph-v0-review-opaque-label/1"
 OPAQUE_LABEL_PATTERN = re.compile(r"^item-[0-9a-f]{24}$")
+OPAQUE_LABEL_SEARCH_PATTERN = re.compile(
+    r"(?<![0-9A-Za-z_-])item-[0-9a-f]{24}(?![0-9A-Za-z_-])"
+)
+LLM_ASSESSMENTS = ("supported", "uncertain", "unsupported")
 RESPONSE_CONTRACT = {
-    "format": "json_object",
-    "required_fields": ["assessment", "reasoning"],
+    "format": "canonical_json_object",
+    "exact_fields": ["assessment", "reasoning"],
+    "assessment_values": list(LLM_ASSESSMENTS),
+    "reasoning_contract": "nonempty_string_without_outer_whitespace",
 }
+DECISION_TASKS = {
+    "link_support": {
+        "claim": "The presented evidence establishes the proposed direct artifact-to-authority link bound to this request.",
+        "question": "Does the presented evidence support that direct-link claim?",
+    },
+    "strict_refinement_support": {
+        "claim": "The proposed authority target is a strict refinement of the baseline authority target bound to this request.",
+        "question": "Does the presented evidence support that directional strict-refinement claim?",
+    },
+    "equivalence_support": {
+        "claim": "The two authority targets bound to this request denote the same authority identity.",
+        "question": "Does the presented evidence support that identity-equivalence claim?",
+    },
+    "distinctness_support": {
+        "claim": "The two authority targets bound to this request denote distinct authority identities.",
+        "question": "Does the presented evidence support that identity-distinctness claim?",
+    },
+    "mention_status_resolution": {
+        "claim": "The proposed mention-resolution status bound to this request is supported relative to the frozen baseline statuses.",
+        "question": "Does the presented evidence support that mention-status claim?",
+    },
+}
+REVIEW_PROMPT_TEMPLATE = {
+    "schema_version": PROMPT_TEMPLATE_SCHEMA_VERSION,
+    "instructions": [
+        "Evaluate only the content presented in each option payload.",
+        "Treat each opaque label only as an option handle and do not infer meaning from its bytes or presentation order.",
+        "Apply only the release-defined task selected by decision_kind. Treat subject_binding_sha256 only as an integrity binding, never as evidence.",
+        "Return exactly one response object satisfying the response contract.",
+    ],
+    "decision_tasks": DECISION_TASKS,
+    "option_slots": {
+        "input_schema_version": INPUT_ENVELOPE_SCHEMA_VERSION,
+        "items_path": "$.items[*]",
+        "opaque_label_path": "$.items[*].opaque_label",
+        "payload_path": "$.items[*].payload",
+    },
+    "response_contract": RESPONSE_CONTRACT,
+}
+PROMPT_TEMPLATE_SHA256 = hashlib.sha256(
+    json.dumps(
+        REVIEW_PROMPT_TEMPLATE,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+).hexdigest()
+SEMANTIC_AUDIT_LIMITATION = (
+    "A signed semantic prompt audit records one independent pre-invocation review; "
+    "it reduces known leakage risk but does not prove semantic perfection."
+)
 
 # These cues are never needed to describe evidence. They either state a result or
 # tell the model how position/order should map to a result. Keeping this list in the
@@ -67,6 +127,9 @@ DECISION_PROXY_STRINGS = frozenset(
         "correct verdict",
         "different",
         "false",
+        "favor",
+        "favorable",
+        "favored",
         "first",
         "first item",
         "first option",
@@ -110,7 +173,10 @@ DECISION_PROXY_STRINGS = frozenset(
         "third",
         "top",
         "true",
+        "unfavorable",
         "verdict is",
+        "warrant",
+        "warrants",
         "winner",
         "yes",
     }
@@ -175,6 +241,27 @@ def _require_canonical_artifact_bytes(raw: bytes, value: dict, *, label: str) ->
         raise ReviewAuthenticationError(
             f"{label} bytes must be exact canonical JSON followed by one newline"
         )
+
+
+def parse_llm_raw_response(raw: bytes) -> dict:
+    """Parse the only authenticated LLM response representation.
+
+    Provider prose, markdown fences, duplicate fields, extra metadata, and wrapper-
+    only decisions are deliberately not accepted as review evidence.
+    """
+    response = strict_json_object(raw, label="LLM raw response")
+    _require_canonical_artifact_bytes(raw, response, label="LLM raw response")
+    _exact_keys(
+        response,
+        {"assessment", "reasoning"},
+        label="LLM raw response",
+    )
+    if response["assessment"] not in LLM_ASSESSMENTS:
+        raise ReviewAuthenticationError(
+            "LLM raw response assessment is not an allowed review outcome"
+        )
+    _string(response["reasoning"], label="LLM raw response reasoning")
+    return response
 
 
 def _parse_time(value: str, *, label: str) -> datetime:
@@ -321,7 +408,8 @@ def _validate_registry_semantics(
             raise ReviewAuthenticationError(
                 f"reviewer roles must be unique and sorted: {principal_id}"
             )
-        allowed_methods = {"human", "llm", AUDIT_METHOD}
+        audit_methods = {AUDIT_METHOD, SEMANTIC_AUDIT_METHOD}
+        allowed_methods = {"human", "llm", *audit_methods}
         if (
             not isinstance(methods, list)
             or not methods
@@ -336,17 +424,17 @@ def _validate_registry_semantics(
             raise ReviewAuthenticationError(
                 f"non-reviewer principal has review methods: {principal_id}"
             )
-        if "prompt_auditor" not in roles and AUDIT_METHOD in methods:
+        if "prompt_auditor" not in roles and set(methods) & audit_methods:
             raise ReviewAuthenticationError(
-                f"non-auditor principal has the audit method: {principal_id}"
+                f"non-auditor principal has an audit method: {principal_id}"
             )
         if "reviewer" in roles and not set(methods) & {"human", "llm"}:
             raise ReviewAuthenticationError(
                 f"reviewer principal lacks a review method: {principal_id}"
             )
-        if "prompt_auditor" in roles and AUDIT_METHOD not in methods:
+        if "prompt_auditor" in roles and not set(methods) & audit_methods:
             raise ReviewAuthenticationError(
-                f"prompt auditor lacks deterministic audit method: {principal_id}"
+                f"prompt auditor lacks an audit method: {principal_id}"
             )
         valid_from = _parse_time(
             identity.get("valid_from_utc", ""),
@@ -544,6 +632,50 @@ def _opaque_label(seed_sha256: str, payload_sha256: str) -> str:
     return f"item-{digest[:24]}"
 
 
+def _iter_json_strings(value: object, path: tuple[object, ...] = ()):
+    """Yield JSON string keys and values with deterministic structural paths."""
+    if isinstance(value, str):
+        yield path, value
+    elif isinstance(value, dict):
+        for key, item in value.items():
+            if isinstance(key, str):
+                yield (*path, "@key"), key
+            yield from _iter_json_strings(item, (*path, key))
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            yield from _iter_json_strings(item, (*path, index))
+
+
+def _reject_opaque_label_channels(
+    value: object,
+    *,
+    allowed_value_paths: set[tuple[object, ...]],
+    label: str,
+) -> None:
+    """Allow concrete opaque labels only in declared option-label value slots."""
+    for path, text in _iter_json_strings(value):
+        matches = list(OPAQUE_LABEL_SEARCH_PATTERN.finditer(text))
+        if not matches:
+            continue
+        if path not in allowed_value_paths or len(matches) != 1 or matches[0].group() != text:
+            raise ReviewAuthenticationError(
+                f"{label} contains an opaque label outside a schema-defined option slot"
+            )
+
+
+def _reject_reserved_payload_slots(payload: dict, *, label: str) -> None:
+    for path, text in _iter_json_strings(payload):
+        if path and path[-1] == "@key" and text == "opaque_label":
+            raise ReviewAuthenticationError(
+                f"{label} cannot define the reserved opaque_label option slot"
+            )
+    _reject_opaque_label_channels(
+        payload,
+        allowed_value_paths=set(),
+        label=label,
+    )
+
+
 def build_structured_input_envelope(
     payloads: Sequence[dict],
     *,
@@ -570,6 +702,8 @@ def build_structured_input_envelope(
         raise ReviewAuthenticationError("structured review input requires at least two items")
     if any(not isinstance(payload, dict) or not payload for payload in payload_values):
         raise ReviewAuthenticationError("every structured review item payload must be an object")
+    for index, payload in enumerate(payload_values):
+        _reject_reserved_payload_slots(payload, label=f"review item payload {index}")
     # Canonical hash order is independent of caller order, so a producer cannot put
     # the intended answer first and rely on knowledge of the shuffle algorithm.
     payload_hashes = sorted(canonical_sha256(payload) for payload in payload_values)
@@ -597,9 +731,13 @@ def build_structured_input_envelope(
         "source_order_payload_sha256": payload_hashes,
         "presented_order_payload_sha256": presented_hashes,
     }
+    claim_semantics = _decision_claim_semantics(decision_kind, subject)
     input_envelope = {
         "schema_version": INPUT_ENVELOPE_SCHEMA_VERSION,
         "review_invocation_id": review_invocation_id,
+        "decision_kind": decision_kind,
+        "subject_binding_sha256": canonical_sha256(subject),
+        "claim_semantics": claim_semantics,
         "shuffle_provenance_sha256": canonical_sha256(provenance),
         "items": [
             {
@@ -612,23 +750,91 @@ def build_structured_input_envelope(
     return input_envelope, provenance
 
 
+def _decision_claim_semantics(decision_kind: str, subject: dict) -> dict:
+    """Return release-defined, identity-free semantics for one exact subject."""
+    task = DECISION_TASKS.get(decision_kind)
+    if task is None:
+        raise ReviewAuthenticationError("unsupported review decision kind")
+    claim = {
+        "decision_kind": decision_kind,
+        "subject_binding_sha256": canonical_sha256(subject),
+        "task": copy.deepcopy(task),
+    }
+    if decision_kind == "mention_status_resolution":
+        proposed_status = subject.get("proposed_status")
+        baseline_statuses = subject.get("baseline_statuses")
+        allowed_statuses = {"resolved", "ambiguous", "unmatched"}
+        if proposed_status not in allowed_statuses:
+            raise ReviewAuthenticationError(
+                "mention-status subject lacks an allowed proposed_status"
+            )
+        if (
+            not isinstance(baseline_statuses, list)
+            or not baseline_statuses
+            or any(
+                not isinstance(row, dict)
+                or set(row) != {"mention_id", "status"}
+                or not isinstance(row["mention_id"], str)
+                or not row["mention_id"]
+                or row["status"] not in allowed_statuses
+                for row in baseline_statuses
+            )
+        ):
+            raise ReviewAuthenticationError(
+                "mention-status subject lacks allowed baseline_statuses"
+            )
+        claim["proposed_status"] = proposed_status
+        claim["baseline_statuses"] = [row["status"] for row in baseline_statuses]
+    return claim
+
+
 def build_structured_prompt_envelope(
     *,
     review_invocation_id: str,
     input_envelope_bytes: bytes,
-    task_instructions: str,
+    task_instructions: str | None = None,
 ) -> dict:
-    """Build the exact prompt wrapper bound to one structured input envelope."""
+    """Build the release-owned prompt bound to one structured input envelope.
+
+    ``task_instructions`` is accepted only as a compatibility placeholder for older
+    producers.  It is deliberately ignored: callers cannot add, remove, or alter
+    model instructions.  The exact template and its digest are release constants.
+    """
     _string(review_invocation_id, label="review invocation ID")
-    _string(task_instructions, label="task instructions")
+    if task_instructions is not None:
+        _string(task_instructions, label="ignored legacy task instructions")
     if not isinstance(input_envelope_bytes, bytes) or not input_envelope_bytes:
         raise ReviewAuthenticationError("input envelope bytes must be nonempty bytes")
+    input_envelope = strict_json_object(
+        input_envelope_bytes, label="review input envelope"
+    )
+    _require_canonical_artifact_bytes(
+        input_envelope_bytes, input_envelope, label="review input envelope"
+    )
+    decision_kind = input_envelope.get("decision_kind")
+    if decision_kind not in DECISION_TASKS:
+        raise ReviewAuthenticationError(
+            "input envelope lacks a release-defined decision task"
+        )
+    subject_binding_sha256 = input_envelope.get("subject_binding_sha256")
+    _sha256_string(
+        subject_binding_sha256, label="input envelope subject binding"
+    )
+    claim_semantics = input_envelope.get("claim_semantics")
+    if not isinstance(claim_semantics, dict):
+        raise ReviewAuthenticationError(
+            "input envelope lacks release-defined claim semantics"
+        )
     return {
         "schema_version": PROMPT_ENVELOPE_SCHEMA_VERSION,
         "review_invocation_id": review_invocation_id,
+        "decision_kind": decision_kind,
+        "subject_binding_sha256": subject_binding_sha256,
+        "claim_semantics": copy.deepcopy(claim_semantics),
+        "decision_task": copy.deepcopy(DECISION_TASKS[decision_kind]),
         "input_envelope_sha256": hashlib.sha256(input_envelope_bytes).hexdigest(),
-        "task_instructions": task_instructions,
-        "response_contract": copy.deepcopy(RESPONSE_CONTRACT),
+        "template_sha256": PROMPT_TEMPLATE_SHA256,
+        "template": copy.deepcopy(REVIEW_PROMPT_TEMPLATE),
     }
 
 
@@ -655,9 +861,13 @@ def _validate_structured_request(
         {
             "schema_version",
             "review_invocation_id",
+            "decision_kind",
+            "subject_binding_sha256",
+            "claim_semantics",
+            "decision_task",
             "input_envelope_sha256",
-            "task_instructions",
-            "response_contract",
+            "template_sha256",
+            "template",
         },
         label="review prompt envelope",
     )
@@ -665,17 +875,38 @@ def _validate_structured_request(
         raise ReviewAuthenticationError("unsupported review prompt envelope version")
     if prompt["review_invocation_id"] != review_invocation_id:
         raise ReviewAuthenticationError("prompt envelope review_invocation_id mismatch")
+    expected_claim_semantics = _decision_claim_semantics(decision_kind, subject)
+    expected_subject_binding = canonical_sha256(subject)
+    if prompt["decision_kind"] != decision_kind:
+        raise ReviewAuthenticationError("prompt envelope decision-kind binding mismatch")
+    if prompt["subject_binding_sha256"] != expected_subject_binding:
+        raise ReviewAuthenticationError("prompt envelope subject binding mismatch")
+    if prompt["claim_semantics"] != expected_claim_semantics:
+        raise ReviewAuthenticationError("prompt envelope claim semantics mismatch")
+    if prompt["decision_task"] != DECISION_TASKS.get(decision_kind):
+        raise ReviewAuthenticationError("prompt envelope decision task is not release-owned")
     if prompt["input_envelope_sha256"] != hashlib.sha256(input_bytes).hexdigest():
         raise ReviewAuthenticationError("prompt envelope input-byte binding mismatch")
-    _string(prompt["task_instructions"], label="prompt task instructions")
-    if prompt["response_contract"] != RESPONSE_CONTRACT:
-        raise ReviewAuthenticationError("prompt envelope response contract is not exact")
+    if prompt["template_sha256"] != PROMPT_TEMPLATE_SHA256:
+        raise ReviewAuthenticationError("prompt envelope template hash is not release-owned")
+    if prompt["template"] != REVIEW_PROMPT_TEMPLATE:
+        raise ReviewAuthenticationError("prompt envelope template is not release-owned")
+    if canonical_sha256(prompt["template"]) != prompt["template_sha256"]:
+        raise ReviewAuthenticationError("prompt envelope template hash mismatch")
+    _reject_opaque_label_channels(
+        prompt,
+        allowed_value_paths=set(),
+        label="review prompt envelope",
+    )
 
     _exact_keys(
         input_envelope,
         {
             "schema_version",
             "review_invocation_id",
+            "decision_kind",
+            "subject_binding_sha256",
+            "claim_semantics",
             "shuffle_provenance_sha256",
             "items",
         },
@@ -685,6 +916,12 @@ def _validate_structured_request(
         raise ReviewAuthenticationError("unsupported review input envelope version")
     if input_envelope["review_invocation_id"] != review_invocation_id:
         raise ReviewAuthenticationError("input envelope review_invocation_id mismatch")
+    if input_envelope["decision_kind"] != decision_kind:
+        raise ReviewAuthenticationError("input envelope decision-kind binding mismatch")
+    if input_envelope["subject_binding_sha256"] != expected_subject_binding:
+        raise ReviewAuthenticationError("input envelope subject binding mismatch")
+    if input_envelope["claim_semantics"] != expected_claim_semantics:
+        raise ReviewAuthenticationError("input envelope claim semantics mismatch")
     if input_envelope["shuffle_provenance_sha256"] != canonical_sha256(
         shuffle_provenance
     ):
@@ -761,6 +998,13 @@ def _validate_structured_request(
             )
         labels.append(label)
         actual_presented.append(digest)
+    _reject_opaque_label_channels(
+        input_envelope,
+        allowed_value_paths={
+            ("items", index, "opaque_label") for index in range(len(items))
+        },
+        label="review input envelope",
+    )
     if len(labels) != len(set(labels)):
         raise ReviewAuthenticationError("review opaque labels must be unique")
     if actual_presented != presented_hashes:
@@ -770,6 +1014,7 @@ def _validate_structured_request(
         "input_schema_version": INPUT_ENVELOPE_SCHEMA_VERSION,
         "shuffle_provenance_schema_version": SHUFFLE_PROVENANCE_SCHEMA_VERSION,
         "shuffle_algorithm": SHUFFLE_ALGORITHM,
+        "prompt_template_sha256": PROMPT_TEMPLATE_SHA256,
         "review_invocation_id": review_invocation_id,
         "item_count": len(items),
         "opaque_labels_canonical_sha256": canonical_sha256(labels),
@@ -900,17 +1145,13 @@ def deterministic_guard_record(
         decision_kind=decision_kind,
         subject=subject,
     )
-    # Fixed schema/version/hash fields are validated above but are not semantic LLM
-    # content. Scan the exact caller-controlled surfaces from the parsed envelopes;
-    # otherwise a legitimate short numeric locator such as "1" would collide with
-    # the fixed envelope version even though it was never presented as evidence.
+    # The prompt template is immutable release content validated above. Scan only
+    # caller-controlled request surfaces; otherwise a short locator such as "1"
+    # could collide with a fixed schema version it did not introduce.
     prompt_envelope = strict_json_object(prompt_bytes, label="review prompt envelope")
     input_envelope = strict_json_object(input_bytes, label="review input envelope")
     prompt_surface = canonical_json_bytes(
-        [
-            prompt_envelope["review_invocation_id"],
-            prompt_envelope["task_instructions"],
-        ]
+        [prompt_envelope["review_invocation_id"]]
     )
     input_surface = canonical_json_bytes(
         [
@@ -961,6 +1202,43 @@ def deterministic_guard_record(
         ),
         "result": "PASS",
         "findings": [],
+    }
+
+
+def semantic_prompt_assessment_record(
+    prompt_bytes: bytes,
+    input_bytes: bytes,
+    *,
+    reasoning: str,
+) -> dict:
+    """Build the signed semantic-auditor statement bound to exact request bytes.
+
+    This helper only builds the statement shape.  The registered human auditor's
+    detached signature supplies provenance for the judgment; neither this helper nor
+    the deterministic guard claims that semantic neutrality can be proven perfectly.
+    """
+    if not isinstance(prompt_bytes, bytes) or not prompt_bytes:
+        raise ReviewAuthenticationError("semantic audit prompt bytes must be nonempty")
+    if not isinstance(input_bytes, bytes) or not input_bytes:
+        raise ReviewAuthenticationError("semantic audit input bytes must be nonempty")
+    _string(reasoning, label="semantic prompt audit reasoning")
+    prompt_sha = hashlib.sha256(prompt_bytes).hexdigest()
+    input_sha = hashlib.sha256(input_bytes).hexdigest()
+    return {
+        "request_binding_sha256": canonical_sha256(
+            {"prompt_sha256": prompt_sha, "input_sha256": input_sha}
+        ),
+        "prompt_sha256": prompt_sha,
+        "input_sha256": input_sha,
+        "result": "PASS",
+        "checks": {
+            "label_specific_directives": "NONE_OBSERVED",
+            "favorable_assessment_directives": "NONE_OBSERVED",
+            "evidence_warrant_directives": "NONE_OBSERVED",
+            "other_semantic_leakage": "NONE_OBSERVED",
+        },
+        "reasoning": reasoning,
+        "limitation_acknowledgement": SEMANTIC_AUDIT_LIMITATION,
     }
 
 
@@ -1181,8 +1459,14 @@ def authenticate_prompt_audit(
     invocation_started_at_utc: str,
     usage: ArtifactUsageTracker,
     allow_test_registry: bool = False,
+    _expected_method: str = AUDIT_METHOD,
 ) -> dict:
-    """Authenticate and independently recompute a signed pre-invocation audit."""
+    """Authenticate and recompute a signed pre-invocation request audit.
+
+    Normal callers authenticate the deterministic artifact.  The private
+    ``_expected_method`` hook is used only by ``authenticate_semantic_prompt_audit``
+    so the two required artifacts cannot be confused.
+    """
     if not isinstance(usage, ArtifactUsageTracker):
         raise ReviewAuthenticationError("a global artifact usage tracker is required")
     audit = strict_json_object(raw_audit, label="prompt leakage audit")
@@ -1196,15 +1480,25 @@ def authenticate_prompt_audit(
     )
     if audit["schema_version"] != AUDIT_SCHEMA_VERSION:
         raise ReviewAuthenticationError("unsupported prompt leakage audit version")
+    if _expected_method not in {AUDIT_METHOD, SEMANTIC_AUDIT_METHOD}:
+        raise ReviewAuthenticationError("unsupported expected prompt audit method")
+    if audit["audit_method"] != _expected_method:
+        raise ReviewAuthenticationError(
+            f"prompt audit method is not the required {_expected_method}"
+        )
     authentication = audit["authentication"]
     identity = _registered_identity(
         registry,
         authentication,
         schema_root=schema_root,
         role="prompt_auditor",
-        method=AUDIT_METHOD,
+        method=_expected_method,
         allow_test_registry=allow_test_registry,
     )
+    if _expected_method == SEMANTIC_AUDIT_METHOD and identity.get("identity_kind") != "HUMAN":
+        raise ReviewAuthenticationError(
+            "semantic prompt auditor must be a registered human identity"
+        )
     if audit["auditor"] != {
         "auditor_id": identity["principal_id"],
         "independence_group": identity["independence_group"],
@@ -1255,6 +1549,38 @@ def authenticate_prompt_audit(
         raise ReviewAuthenticationError(
             "signed prompt audit deterministic guard/input bindings do not recompute"
         )
+    semantic_assessment = audit["semantic_assessment"]
+    if _expected_method == AUDIT_METHOD:
+        if semantic_assessment is not None:
+            raise ReviewAuthenticationError(
+                "deterministic prompt audit cannot carry a semantic assessment"
+            )
+    else:
+        if not isinstance(semantic_assessment, dict):
+            raise ReviewAuthenticationError(
+                "semantic prompt audit lacks its signed semantic assessment"
+            )
+        prompt_sha = hashlib.sha256(prompt_raw).hexdigest()
+        input_sha = hashlib.sha256(input_raw).hexdigest()
+        expected_request_binding = canonical_sha256(
+            {"prompt_sha256": prompt_sha, "input_sha256": input_sha}
+        )
+        if semantic_assessment["prompt_sha256"] != prompt_sha:
+            raise ReviewAuthenticationError(
+                "semantic prompt audit prompt-byte binding mismatch"
+            )
+        if semantic_assessment["input_sha256"] != input_sha:
+            raise ReviewAuthenticationError(
+                "semantic prompt audit input-byte binding mismatch"
+            )
+        if semantic_assessment["request_binding_sha256"] != expected_request_binding:
+            raise ReviewAuthenticationError(
+                "semantic prompt audit request binding mismatch"
+            )
+        _string(
+            semantic_assessment["reasoning"],
+            label="semantic prompt audit reasoning",
+        )
     owner = audit["review_invocation_id"]
     decision_fingerprint = canonical_sha256(
         {
@@ -1270,13 +1596,17 @@ def authenticate_prompt_audit(
     usage.claim_bytes(
         raw_audit,
         owner=owner,
-        role="prompt_leakage_audit",
-        label="prompt leakage audit",
+        role=(
+            "prompt_leakage_audit"
+            if _expected_method == AUDIT_METHOD
+            else "semantic_prompt_audit"
+        ),
+        label=f"{_expected_method} prompt audit",
     )
     usage.claim_reference(
         signature_reference,
         owner=owner,
-        role="prompt_audit_signature",
+        role=f"prompt_audit_signature:{_expected_method}",
         label="prompt audit signature",
     )
     usage.claim_reference(
@@ -1289,7 +1619,7 @@ def authenticate_prompt_audit(
         "registry_id": registry["registry_id"],
         "auditor_id": identity["principal_id"],
         "independence_group": identity["independence_group"],
-        "method": AUDIT_METHOD,
+        "method": _expected_method,
         "key_id": identity["key_id"],
         "audit_id": audit["audit_id"],
         "review_id": audit["review_id"],
@@ -1306,6 +1636,43 @@ def authenticate_prompt_audit(
         "signed_at_utc": authentication["signed_at_utc"],
         "invocation_started_at_utc": invocation_started_at_utc,
     }
+
+
+def authenticate_semantic_prompt_audit(
+    raw_audit: bytes,
+    *,
+    registry: dict,
+    schema_root: Path,
+    signature_bytes: bytes,
+    signature_reference: dict,
+    read_artifact: ArtifactReader,
+    preferred_labels: Sequence[str],
+    aliases: Sequence[str],
+    answer_names: Sequence[str],
+    identifiers: Sequence[str],
+    locators: Sequence[str],
+    invocation_started_at_utc: str,
+    usage: ArtifactUsageTracker,
+    allow_test_registry: bool = False,
+) -> dict:
+    """Authenticate the separate signed human semantic request audit."""
+    return authenticate_prompt_audit(
+        raw_audit,
+        registry=registry,
+        schema_root=schema_root,
+        signature_bytes=signature_bytes,
+        signature_reference=signature_reference,
+        read_artifact=read_artifact,
+        preferred_labels=preferred_labels,
+        aliases=aliases,
+        answer_names=answer_names,
+        identifiers=identifiers,
+        locators=locators,
+        invocation_started_at_utc=invocation_started_at_utc,
+        usage=usage,
+        allow_test_registry=allow_test_registry,
+        _expected_method=SEMANTIC_AUDIT_METHOD,
+    )
 
 
 def llm_interaction_binding_sha256(review: dict) -> str:
@@ -1325,7 +1692,9 @@ def llm_interaction_binding_sha256(review: dict) -> str:
             "prompt": interaction["prompt"],
             "input": interaction["input"],
             "raw_response": interaction["raw_response"],
+            "parsed_response_sha256": interaction["parsed_response_sha256"],
             "prompt_leakage_audit": interaction["prompt_leakage_audit"],
+            "semantic_prompt_audit": interaction["semantic_prompt_audit"],
         }
     )
 
@@ -1340,6 +1709,7 @@ def authenticate_review_artifact(
     read_artifact: ArtifactReader,
     usage: ArtifactUsageTracker,
     authenticated_prompt_audit: dict | None = None,
+    authenticated_semantic_prompt_audit: dict | None = None,
     allow_test_registry: bool = False,
 ) -> dict:
     """Authenticate one human or LLM review and all exact byte dependencies."""
@@ -1390,8 +1760,12 @@ def authenticate_review_artifact(
             label=f"citation source {index}",
         )
     signed_at = _parse_time(authentication["signed_at_utc"], label="review signed_at_utc")
+    parsed_response_sha: str | None = None
     if review["method"] == "human":
-        if authenticated_prompt_audit is not None:
+        if (
+            authenticated_prompt_audit is not None
+            or authenticated_semantic_prompt_audit is not None
+        ):
             raise ReviewAuthenticationError("human review cannot carry a prompt audit")
         provenance = review["human_provenance"]
         started_at = _parse_time(
@@ -1413,7 +1787,11 @@ def authenticate_review_artifact(
         interaction = review["llm_interaction"]
         if not isinstance(authenticated_prompt_audit, dict):
             raise ReviewAuthenticationError(
-                "LLM review requires an authenticated pre-invocation prompt audit"
+                "LLM review requires an authenticated deterministic pre-invocation prompt audit"
+            )
+        if not isinstance(authenticated_semantic_prompt_audit, dict):
+            raise ReviewAuthenticationError(
+                "LLM review requires a separate authenticated semantic pre-invocation prompt audit"
             )
         invoked_at = _parse_time(
             interaction["invoked_at_utc"], label="LLM invoked_at_utc"
@@ -1436,15 +1814,32 @@ def authenticate_review_artifact(
         input_raw = _read_bound_artifact(
             interaction["input"], read_artifact=read_artifact, label="LLM input"
         )
-        _read_bound_artifact(
+        raw_response = _read_bound_artifact(
             interaction["raw_response"],
             read_artifact=read_artifact,
             label="LLM full raw response",
         )
+        parsed_response = parse_llm_raw_response(raw_response)
+        parsed_response_sha = canonical_sha256(parsed_response)
+        if interaction["parsed_response_sha256"] != parsed_response_sha:
+            raise ReviewAuthenticationError("LLM parsed response binding hash mismatch")
+        if review["outcome"] != parsed_response["assessment"]:
+            raise ReviewAuthenticationError(
+                "LLM review wrapper outcome differs from the parsed raw response"
+            )
+        if review["reasoning"] != parsed_response["reasoning"]:
+            raise ReviewAuthenticationError(
+                "LLM review wrapper reasoning differs from the parsed raw response"
+            )
         audit_raw = _read_bound_artifact(
             interaction["prompt_leakage_audit"],
             read_artifact=read_artifact,
-            label="prompt leakage audit",
+            label="deterministic prompt leakage audit",
+        )
+        semantic_audit_raw = _read_bound_artifact(
+            interaction["semantic_prompt_audit"],
+            read_artifact=read_artifact,
+            label="semantic prompt audit",
         )
         expected_audit = {
             "registry_id": registry["registry_id"],
@@ -1461,8 +1856,25 @@ def authenticate_review_artifact(
         for key, expected in expected_audit.items():
             if authenticated_prompt_audit.get(key) != expected:
                 raise ReviewAuthenticationError(
-                    f"authenticated prompt audit {key} does not bind the exact review"
+                    f"authenticated deterministic prompt audit {key} does not bind the exact review"
                 )
+        expected_semantic_audit = {
+            **expected_audit,
+            "artifact_sha256": hashlib.sha256(semantic_audit_raw).hexdigest(),
+        }
+        for key, expected in expected_semantic_audit.items():
+            if authenticated_semantic_prompt_audit.get(key) != expected:
+                raise ReviewAuthenticationError(
+                    f"authenticated semantic prompt audit {key} does not bind the exact review"
+                )
+        if authenticated_prompt_audit.get("method") != AUDIT_METHOD:
+            raise ReviewAuthenticationError(
+                "deterministic prompt audit method does not bind the exact review"
+            )
+        if authenticated_semantic_prompt_audit.get("method") != SEMANTIC_AUDIT_METHOD:
+            raise ReviewAuthenticationError(
+                "semantic prompt audit method does not bind the exact review"
+            )
         if (
             authenticated_prompt_audit["auditor_id"] == identity["principal_id"]
             or authenticated_prompt_audit["independence_group"]
@@ -1470,6 +1882,24 @@ def authenticate_review_artifact(
         ):
             raise ReviewAuthenticationError(
                 "prompt auditor must be independent of the LLM reviewer identity/group"
+            )
+        if (
+            authenticated_semantic_prompt_audit["auditor_id"]
+            == identity["principal_id"]
+            or authenticated_semantic_prompt_audit["independence_group"]
+            == identity["independence_group"]
+        ):
+            raise ReviewAuthenticationError(
+                "semantic prompt auditor must be independent of the LLM reviewer identity/group"
+            )
+        if (
+            authenticated_semantic_prompt_audit["auditor_id"]
+            == authenticated_prompt_audit["auditor_id"]
+            or authenticated_semantic_prompt_audit["independence_group"]
+            == authenticated_prompt_audit["independence_group"]
+        ):
+            raise ReviewAuthenticationError(
+                "semantic and deterministic prompt auditors must be distinct identities/groups"
             )
         if hashlib.sha256(prompt_raw).hexdigest() != interaction["prompt"]["sha256"]:
             raise ReviewAuthenticationError("LLM prompt exact-byte binding mismatch")
@@ -1521,6 +1951,12 @@ def authenticate_review_artifact(
             role="prompt_leakage_audit",
             label="prompt leakage audit",
         )
+        usage.claim_reference(
+            interaction["semantic_prompt_audit"],
+            owner=owner,
+            role="semantic_prompt_audit",
+            label="semantic prompt audit",
+        )
     return {
         "registry_id": registry["registry_id"],
         "reviewer_id": identity["principal_id"],
@@ -1533,6 +1969,7 @@ def authenticate_review_artifact(
         "decision_kind": review["decision_kind"],
         "subject": review["subject"],
         "outcome": review["outcome"],
+        "parsed_response_sha256": parsed_response_sha,
         "artifact_sha256": hashlib.sha256(raw_review).hexdigest(),
         "statement_sha256": statement_sha,
         "signature_sha256": signature_sha,

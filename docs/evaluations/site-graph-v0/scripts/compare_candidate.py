@@ -25,7 +25,7 @@ from candidate_git import (
     verify_ed25519_signature,
 )
 from contract_constants import (
-    AMBIGUITY_MAXIMUM_INCREASE,
+    MAXIMUM_NEWLY_BLOCKING_FRACTION,
     CONCENTRATION_MAXIMUM_INCREASE,
     MINIMUM_AFFECTED_FRACTION,
     MINIMUM_GAINED_IDENTITIES,
@@ -41,6 +41,7 @@ from review_auth import (
     ReviewAuthenticationError,
     authenticate_prompt_audit,
     authenticate_review_artifact,
+    authenticate_semantic_prompt_audit,
     canonical_forbidden_values,
     load_reviewer_registry,
     require_distinct_registered_reviewers,
@@ -506,7 +507,7 @@ def _invalid_report(
     errors: list[str], provenance_status: dict | None = None
 ) -> dict:
     return {
-        "schema_version": "site-graph-v0-comparison-report/3",
+        "schema_version": "site-graph-v0-comparison-report/4",
         "outcome": "INVALID",
         "ordered_decision_trace": [
             {"step": "integrity", "passed": False, "errors": sorted(set(errors))}
@@ -816,6 +817,7 @@ def compare_core(
     opportunity_abstention_reasons: Counter[str] = Counter()
     artifact_candidate_blocking: dict[str, bool] = {}
     artifact_candidate_status_counts: dict[str, Counter[str]] = {}
+    artifact_authenticated_status_resolution: dict[str, bool] = {}
 
     for artifact_id in sorted(itt_by_id):
         baseline = baseline_by_id[artifact_id]
@@ -882,11 +884,13 @@ def compare_core(
         unsupported_targets: set[str] = set()
         selected_original_mentions: dict[str, dict] = {}
         selected_candidate_states: dict[str, tuple[str, tuple[str, ...]]] = {}
+        artifact_authenticated_status_resolution[artifact_id] = False
         for outcome in outcomes:
             status = outcome.get("resolution_status")
             direct_links = outcome.get("direct_links", [])
             uncredited_claims = outcome.get("uncredited_link_claims", [])
             abstention_reason = outcome.get("abstention_reason")
+            status_support_key = outcome.get("status_support_decision_key")
             opportunity_binding = (
                 outcome.get("opportunity_id"),
                 outcome.get("opportunity_binding_sha256"),
@@ -933,6 +937,7 @@ def compare_core(
                     f"candidate {artifact_id}/{opportunity_binding[0]} abstention reason only applies to abstention"
                 )
             targets_seen: set[str] = set()
+            outcome_supported_targets: set[str] = set()
             for link in direct_links:
                 target_id = link.get("target_id")
                 support_key = link.get("support_decision_key")
@@ -980,6 +985,7 @@ def compare_core(
                     decisions, support_key, "link_support", subject
                 ):
                     supported_targets.add(target_id)
+                    outcome_supported_targets.add(target_id)
                     if target_scope[target_id] == "specific_candidate":
                         credited_links[artifact_id].add(target_id)
                         credited_link_bindings[artifact_id][target_id].add(
@@ -1034,18 +1040,73 @@ def compare_core(
                     )
                     continue
                 unsupported_targets.add(target_id)
-            direct_target_tuple = tuple(
-                sorted(
-                    link.get("target_id")
-                    for link in direct_links
-                    if isinstance(link.get("target_id"), str)
-                    and link.get("target_id")
-                )
-            )
-            if status == "linked" and len(direct_target_tuple) > len(mention_rows):
+            direct_target_tuple = tuple(sorted(outcome_supported_targets))
+            if status == "linked" and len(outcome_supported_targets) > len(mention_rows):
                 errors.append(
                     f"candidate {artifact_id}/{opportunity_binding[0]} claims more unique "
-                    "resolved targets than its exact selecting mentions"
+                    "authenticated supported targets than its exact selecting mentions"
+                )
+
+            # Candidate dispositions are not trusted mention post-states.  Only an exact,
+            # independently reviewed status-resolution decision may change a frozen mention
+            # status.  Abstention, unresolved work, and research failure preserve the frozen
+            # status by construction.
+            proposed_status = {
+                "linked": "resolved",
+                "ambiguous": "ambiguous",
+                "unmatched": "unmatched",
+            }.get(status)
+            baseline_statuses = [
+                {"mention_id": mention["mention_id"], "status": mention["status"]}
+                for mention in sorted(mention_rows, key=lambda value: value["mention_id"])
+            ]
+            changes_frozen_status = bool(
+                proposed_status is not None
+                and any(row["status"] != proposed_status for row in baseline_statuses)
+            )
+            status_resolution_supported = False
+            if changes_frozen_status:
+                status_subject = {
+                    "artifact_id": artifact_id,
+                    "opportunity_id": opportunity_binding[0],
+                    "opportunity_binding_sha256": opportunity_binding[1],
+                    "mention_ids": [row["mention_id"] for row in baseline_statuses],
+                    "baseline_statuses": baseline_statuses,
+                    "proposed_status": proposed_status,
+                }
+                expected_status_key = decision_key(
+                    "mention_status_resolution", status_subject
+                )
+                if (
+                    status_support_key != expected_status_key
+                    or status_support_key not in decisions
+                ):
+                    errors.append(
+                        f"candidate {artifact_id}/{opportunity_binding[0]} cannot change "
+                        "a frozen mention status without its exact authenticated "
+                        "mention-status-resolution decision"
+                    )
+                else:
+                    referenced_decisions.add(status_support_key)
+                    if decisions[status_support_key].get("disagreement"):
+                        unresolved_disagreements.add(status_support_key)
+                    status_resolution_supported = _decision_supports(
+                        decisions,
+                        status_support_key,
+                        "mention_status_resolution",
+                        status_subject,
+                    )
+                    if not status_resolution_supported:
+                        errors.append(
+                            f"candidate {artifact_id}/{opportunity_binding[0]} mention "
+                            "status change is disputed or unsupported"
+                        )
+                    else:
+                        artifact_authenticated_status_resolution[artifact_id] = True
+            elif status_support_key is not None:
+                errors.append(
+                    f"candidate {artifact_id}/{opportunity_binding[0]} supplies an unused "
+                    "mention-status-resolution decision"
                 )
             for mention in mention_rows:
                 mention_id = mention["mention_id"]
@@ -1057,10 +1118,10 @@ def compare_core(
                     continue
                 selected_original_mentions[mention_id] = mention
                 effective_status = (
-                    "resolved"
-                    if status == "linked"
-                    else status
-                    if status in {"ambiguous", "unmatched"}
+                    proposed_status
+                    if changes_frozen_status and status_resolution_supported
+                    else proposed_status
+                    if proposed_status == mention["status"]
                     else mention["status"]
                 )
                 candidate_state = (effective_status, direct_target_tuple)
@@ -1117,19 +1178,28 @@ def compare_core(
             not final_targets and candidate_status_counts["ambiguous"] > 0
         )
 
-        covered_baseline = baseline_targets & final_targets
+        baseline_identity_roots = {identity.find(target) for target in baseline_targets}
+        final_identity_roots = {identity.find(target) for target in final_targets}
         equivalent_pairs: set[tuple[str, str]] = set()
         strict_pairs: set[tuple[str, str]] = set()
         for baseline_target in sorted(baseline_targets):
             for candidate_target in sorted(final_targets - baseline_targets):
                 if identity.find(candidate_target) == identity.find(baseline_target):
                     equivalent_pairs.add((baseline_target, candidate_target))
-                    covered_baseline.add(baseline_target)
                 if (candidate_target, baseline_target) in supported_strict:
                     strict_pairs.add((baseline_target, candidate_target))
-                    covered_baseline.add(baseline_target)
         strict_pairs_by_artifact[artifact_id] = strict_pairs
-        losses = baseline_targets - covered_baseline
+        preserved_baseline_roots = set(final_identity_roots) | {
+            identity.find(baseline_target)
+            for baseline_target, _ in strict_pairs
+        }
+        lost_identity_roots = baseline_identity_roots - preserved_baseline_roots
+        losses = {
+            target
+            for target in baseline_targets
+            if identity.find(target) in lost_identity_roots
+        }
+        raw_removed_edges = baseline_targets - final_targets
         unrelated_credited = {
             target
             for target in credited_links[artifact_id]
@@ -1172,6 +1242,7 @@ def compare_core(
                 "baseline_direct_target_ids": sorted(baseline_targets),
                 "candidate_supported_direct_target_ids": sorted(final_targets),
                 "explicitly_removed_baseline_target_ids": sorted(removed_targets),
+                "raw_removed_baseline_direct_target_ids": sorted(raw_removed_edges),
                 "uncredited_candidate_target_ids": sorted(unsupported_targets),
                 "baseline_site_mention_status_counts": dict(
                     sorted(baseline_status_counts.items())
@@ -1183,6 +1254,7 @@ def compare_core(
                     list(pair) for pair in sorted(strict_pairs)
                 ],
                 "lost_baseline_target_ids": sorted(losses),
+                "lost_baseline_identity_class_ids": sorted(lost_identity_roots),
             }
         )
 
@@ -1198,69 +1270,76 @@ def compare_core(
             for first, second in reviewed_pairs
         )
 
-    prospective_shared_targets: dict[tuple[str, str], set[str]] = {}
-    for left, right in PAIRS:
-        left_targets = {
-            target
-            for artifact_id, targets in credited_links.items()
-            if museum_by_id.get(artifact_id) == left
-            for target in targets
-        }
-        right_targets = {
-            target
-            for artifact_id, targets in credited_links.items()
-            if museum_by_id.get(artifact_id) == right
-            for target in targets
-        }
-        shared_roots = {identity.find(target) for target in left_targets} & {
-            identity.find(target) for target in right_targets
-        }
-        prospective_shared_targets[(left, right)] = {
-            target
-            for target in left_targets | right_targets
-            if identity.find(target) in shared_roots
-        }
-
-    prospective_targets = set().union(*prospective_shared_targets.values())
-    for left, right in combinations(sorted(prospective_targets), 2):
-        if identity.find(left) != identity.find(right) and not positively_distinct(left, right):
-            errors.append(
-                f"prospective counted targets lack positive distinctness evidence: {left}/{right}"
-            )
-    baseline_targets_by_museum = {
+    baseline_roots_by_museum = {
         museum: {
-            target
+            identity.find(target)
             for artifact_id, targets in baseline_links.items()
             if baseline_by_id[artifact_id].get("museum") == museum
             for target in targets
         }
         for museum in MUSEUMS
     }
-    for pair, prospective in prospective_shared_targets.items():
-        left, right = pair
-        shared_baseline_roots = {
-            identity.find(target) for target in baseline_targets_by_museum[left]
-        } & {identity.find(target) for target in baseline_targets_by_museum[right]}
-        relevant_baseline_targets = {
-            target
-            for museum in pair
-            for target in baseline_targets_by_museum[museum]
+    candidate_roots_by_museum = {
+        museum: {
+            identity.find(target)
+            for artifact_id, targets in candidate_links.items()
+            if baseline_by_id[artifact_id].get("museum") == museum
+            for target in targets
         }
-        baseline_representative_by_root: dict[str, str] = {}
-        for target in sorted(relevant_baseline_targets):
-            baseline_representative_by_root.setdefault(identity.find(target), target)
-        for candidate_target in sorted(prospective):
-            if identity.find(candidate_target) in shared_baseline_roots:
-                continue
-            for baseline_target in baseline_representative_by_root.values():
-                if identity.find(candidate_target) == identity.find(baseline_target):
-                    continue
-                if not positively_distinct(candidate_target, baseline_target):
-                    errors.append(
-                        "prospective gained target lacks positive distinctness from a relevant "
-                        "frozen baseline identity (including one-sided identities): "
-                        f"{candidate_target}/{baseline_target}"
-                    )
+        for museum in MUSEUMS
+    }
+    credited_roots = {
+        identity.find(target)
+        for targets in credited_links.values()
+        for target in targets
+    }
+    gained_specific_roots_by_pair: dict[tuple[str, str], set[str]] = {}
+    for left, right in PAIRS:
+        baseline_shared = baseline_roots_by_museum[left] & baseline_roots_by_museum[right]
+        final_shared = candidate_roots_by_museum[left] & candidate_roots_by_museum[right]
+        gained_specific_roots_by_pair[(left, right)] = {
+            root
+            for root in final_shared - baseline_shared
+            if identity_scope.get(root) == "specific_candidate"
+            and root in credited_roots
+            and all(
+                any(
+                    identity.find(target) == root
+                    and target_scope[target] == "specific_candidate"
+                    for artifact_id, targets in candidate_links.items()
+                    if baseline_by_id[artifact_id].get("museum") == museum
+                    for target in targets
+                )
+                for museum in (left, right)
+            )
+        }
+
+    # Freeze the complete prospective gained-root census before pair-side credit is
+    # counted.  In particular, crossed additions (each side supplying the other side's
+    # existing identity) cannot evade the pairwise distinctness census.
+    gained_roots = set().union(*gained_specific_roots_by_pair.values())
+    representative_by_root = {
+        root: min(members) for root, members in class_members.items()
+    }
+    for left_root, right_root in combinations(sorted(gained_roots), 2):
+        left = representative_by_root[left_root]
+        right = representative_by_root[right_root]
+        if not positively_distinct(left, right):
+            errors.append(
+                "prospective gained identity roots lack positive distinctness evidence: "
+                f"{left}/{right}"
+            )
+    relevant_baseline_roots = set().union(*baseline_roots_by_museum.values())
+    for gained_root in sorted(gained_roots):
+        candidate_target = representative_by_root[gained_root]
+        for baseline_root in sorted(relevant_baseline_roots - {gained_root}):
+            baseline_target = representative_by_root[baseline_root]
+            if not positively_distinct(candidate_target, baseline_target):
+                errors.append(
+                    "prospective gained target lacks positive distinctness from a relevant "
+                    "frozen baseline identity (including crossed and one-sided identities): "
+                    f"{candidate_target}/{baseline_target}"
+                )
 
     unused_decisions = sorted(set(decisions) - referenced_decisions)
     if unused_decisions:
@@ -1357,26 +1436,7 @@ def compare_core(
         pair_key = f"{left}__{right}"
         baseline_shared = baseline_classes_by_museum[left] & baseline_classes_by_museum[right]
         candidate_shared = candidate_classes_by_museum[left] & candidate_classes_by_museum[right]
-        gained_specific = {
-            root
-            for root in candidate_shared - baseline_shared
-            if identity_scope.get(root) == "specific_candidate"
-            and any(
-                identity.find(target) == root
-                for museum in (left, right)
-                for artifact in artifacts_by_museum[museum]
-                for target in credited_links.get(artifact, set())
-            )
-            and all(
-                any(
-                    identity.find(target) == root
-                    and target_scope[target] == "specific_candidate"
-                    for artifact in artifacts_by_museum[museum]
-                    for target in candidate_links[artifact]
-                )
-                for museum in (left, right)
-            )
-        }
+        gained_specific = gained_specific_roots_by_pair[(left, right)]
 
         sides = {}
         broad_deltas: dict[str, Fraction] = {}
@@ -1444,7 +1504,30 @@ def compare_core(
                             f"{pair_key}/{museum}/{artifact_id} pair-side opportunity binding differs from frozen ITT"
                         ]
                     )
-                member_category[artifact_id] = row["category"]
+                baseline_pair_roots = (
+                    baseline_class_links.get(artifact_id, set()) & baseline_shared
+                )
+                if not baseline_pair_roots:
+                    expected_category = "no_baseline_pair_connection"
+                elif partition_scopes(
+                    {identity_scope[root] for root in baseline_pair_roots}
+                ) == "broad_only":
+                    expected_category = "broad_only_pair_connection"
+                else:
+                    return _invalid_report(
+                        [
+                            f"{pair_key}/{museum}/{artifact_id} is not an eligible frozen "
+                            "raw-category/identity-class opportunity"
+                        ]
+                    )
+                if row.get("category") != expected_category:
+                    return _invalid_report(
+                        [
+                            f"{pair_key}/{museum}/{artifact_id} frozen pair-side raw category "
+                            "is inconsistent with authenticated baseline identity classes"
+                        ]
+                    )
+                member_category[artifact_id] = expected_category
                 member_bindings[artifact_id] = bindings
             pair_event_counts: Counter[str] = Counter()
             affected_artifacts: set[str] = set()
@@ -1571,26 +1654,50 @@ def compare_core(
         row["museum"] for row in baseline_records if row.get("has_blocking_ambiguity")
     )
     candidate_blocking = Counter(baseline_blocking)
+    newly_blocking = Counter()
+    authenticated_resolved_blocking = Counter()
     for artifact_id in sorted(candidate_by_id):
         museum = museum_by_id[artifact_id]
         baseline_value = bool(baseline_by_id[artifact_id].get("has_blocking_ambiguity"))
         candidate_value = artifact_candidate_blocking.get(artifact_id, False)
         candidate_blocking[museum] += int(candidate_value) - int(baseline_value)
+        if candidate_value and not baseline_value:
+            newly_blocking[museum] += 1
+        if (
+            baseline_value
+            and not candidate_value
+            and artifact_authenticated_status_resolution.get(artifact_id, False)
+        ):
+            authenticated_resolved_blocking[museum] += 1
     ambiguity_by_museum = {}
     ambiguity_pass = True
     for museum in MUSEUMS:
-        delta = Fraction(
+        net_delta = Fraction(
             candidate_blocking[museum] - baseline_blocking[museum], evidence_counts[museum]
         )
-        passed = delta <= AMBIGUITY_MAXIMUM_INCREASE
+        newly_blocking_rate = Fraction(
+            newly_blocking[museum], evidence_counts[museum]
+        )
+        passed = newly_blocking_rate <= MAXIMUM_NEWLY_BLOCKING_FRACTION
         ambiguity_pass = ambiguity_pass and passed
         ambiguity_by_museum[museum] = {
             "baseline_blocking": ratio(baseline_blocking[museum], evidence_counts[museum]),
             "candidate_blocking": ratio(candidate_blocking[museum], evidence_counts[museum]),
-            "delta": {"numerator": delta.numerator, "denominator": delta.denominator},
-            "maximum_allowed_delta": {
-                "numerator": AMBIGUITY_MAXIMUM_INCREASE.numerator,
-                "denominator": AMBIGUITY_MAXIMUM_INCREASE.denominator,
+            "newly_blocking_records": newly_blocking[museum],
+            "newly_blocking_rate": {
+                "numerator": newly_blocking_rate.numerator,
+                "denominator": newly_blocking_rate.denominator,
+            },
+            "authenticated_resolved_blocking_records": authenticated_resolved_blocking[
+                museum
+            ],
+            "net_delta_descriptive": {
+                "numerator": net_delta.numerator,
+                "denominator": net_delta.denominator,
+            },
+            "maximum_allowed_newly_blocking_rate": {
+                "numerator": MAXIMUM_NEWLY_BLOCKING_FRACTION.numerator,
+                "denominator": MAXIMUM_NEWLY_BLOCKING_FRACTION.denominator,
             },
             "passed": passed,
         }
@@ -1630,7 +1737,7 @@ def compare_core(
         {"step": "utility", "passed": utility_pass, "outcome": outcome},
     ]
     return {
-        "schema_version": "site-graph-v0-comparison-report/3",
+        "schema_version": "site-graph-v0-comparison-report/4",
         "outcome": outcome,
         "ordered_decision_trace": ordered_trace,
         "integrity": {"passed": True, "errors": []},
@@ -1802,15 +1909,21 @@ def _validate_review_artifacts(
                         citation, cited_export, label=path
                     )
                 )
-            _require_subject_target_citation_coverage(
-                subject, cited_target_ids, label=path
-            )
+            if kind != "mention_status_resolution":
+                _require_subject_target_citation_coverage(
+                    subject, cited_target_ids, label=path
+                )
 
             authenticated_audit = None
+            authenticated_semantic_audit = None
             if artifact["method"] == "llm":
                 interaction = artifact["llm_interaction"]
                 audit_reference = interaction["prompt_leakage_audit"]
+                semantic_audit_reference = interaction["semantic_prompt_audit"]
                 audit_entry = frozen_files.get(audit_reference["path"])
+                semantic_audit_entry = frozen_files.get(
+                    semantic_audit_reference["path"]
+                )
                 if (
                     audit_entry is None
                     or audit_entry.get("role") != "prompt_leakage_audit"
@@ -1822,9 +1935,29 @@ def _validate_review_artifacts(
                     raise ValueError(
                         f"LLM prompt audit was not an exact pre-generation frozen input: {path}"
                     )
+                if (
+                    semantic_audit_entry is None
+                    or semantic_audit_entry.get("role") != "semantic_prompt_audit"
+                    or any(
+                        semantic_audit_reference[field]
+                        != semantic_audit_entry[field]
+                        for field in ("path", "sha256", "git_blob_oid")
+                    )
+                ):
+                    raise ValueError(
+                        "LLM semantic prompt audit was not an exact pre-generation "
+                        f"frozen input: {path}"
+                    )
                 raw_audit = read_bound(audit_reference)
                 audit = strict_json_object(raw_audit, label="prompt leakage audit")
                 audit_signature = audit["authentication"]["signature"]
+                raw_semantic_audit = read_bound(semantic_audit_reference)
+                semantic_audit = strict_json_object(
+                    raw_semantic_audit, label="semantic prompt audit"
+                )
+                semantic_audit_signature = semantic_audit["authentication"][
+                    "signature"
+                ]
                 identifier_values = sorted(
                     {
                         str(value)
@@ -1858,6 +1991,23 @@ def _validate_review_artifacts(
                     invocation_started_at_utc=interaction["invoked_at_utc"],
                     usage=usage,
                 )
+                authenticated_semantic_audit = authenticate_semantic_prompt_audit(
+                    raw_semantic_audit,
+                    registry=reviewer_registry,
+                    schema_root=schema_root,
+                    signature_bytes=read_bound(semantic_audit_signature),
+                    signature_reference=semantic_audit_signature,
+                    read_artifact=read_bound,
+                    preferred_labels=canonical_forbidden_values(
+                        sorted(preferred_labels)
+                    ),
+                    aliases=canonical_forbidden_values(sorted(aliases)),
+                    answer_names=sorted(MECHANICAL_REVIEW_ANSWER_TOKENS),
+                    identifiers=review_identifiers,
+                    locators=canonical_forbidden_values(sorted(locators)),
+                    invocation_started_at_utc=interaction["invoked_at_utc"],
+                    usage=usage,
+                )
             signature_reference = artifact["authentication"]["signature"]
             authenticated = authenticate_review_artifact(
                 raw_artifact,
@@ -1868,6 +2018,7 @@ def _validate_review_artifacts(
                 read_artifact=read_bound,
                 usage=usage,
                 authenticated_prompt_audit=authenticated_audit,
+                authenticated_semantic_prompt_audit=authenticated_semantic_audit,
             )
             authenticated_reviews.append(authenticated)
         require_distinct_registered_reviewers(
@@ -2161,6 +2312,7 @@ def _load_candidate_run(
             "authority-source-export-attestation.schema.json"
         ),
         "prompt_leakage_audit": "prompt-leakage-audit.schema.json",
+        "semantic_prompt_audit": "prompt-leakage-audit.schema.json",
     }
     for entry in freeze["files"]:
         if entry["path"] in seen_paths or entry["sha256"] in seen_hashes:
@@ -2174,6 +2326,7 @@ def _load_candidate_run(
             "review_input",
             "authority_source_export_signature",
             "prompt_leakage_audit_signature",
+            "semantic_prompt_audit_signature",
         }:
             raw, _ = read_authenticated_bytes(
                 repo,
@@ -2189,6 +2342,7 @@ def _load_candidate_run(
             if entry["role"] in {
                 "authority_source_export_signature",
                 "prompt_leakage_audit_signature",
+                "semantic_prompt_audit_signature",
             } and len(raw) != 64:
                 raise CandidateGitError(
                     f"frozen source-export signature has invalid length: {entry['path']}"
@@ -2270,38 +2424,47 @@ def _load_candidate_run(
             "review_prompt",
             "review_input",
             "prompt_leakage_audit_signature",
+            "semantic_prompt_audit",
+            "semantic_prompt_audit_signature",
         )
     ):
         raise CandidateGitError(
-            "every frozen review prompt/input must have one signed leakage audit"
+            "every frozen review prompt/input must have one signed deterministic and "
+            "one signed semantic leakage audit"
         )
-    for entry in by_role["prompt_leakage_audit"]:
-        audit = loaded[entry["path"]]
-        prompt_entry = frozen_files.get(audit["prompt"]["path"])
-        input_entry = frozen_files.get(audit["input"]["path"])
-        audit_signature_reference = audit["authentication"]["signature"]
-        signature_entry = frozen_files.get(audit_signature_reference["path"])
-        if (
-            prompt_entry is None
-            or prompt_entry["role"] != "review_prompt"
-            or any(
-                audit["prompt"][field] != prompt_entry[field]
-                for field in ("path", "sha256", "git_blob_oid")
-            )
-            or input_entry is None
-            or input_entry["role"] != "review_input"
-            or any(
-                audit["input"][field] != input_entry[field]
-                for field in ("path", "sha256", "git_blob_oid")
-            )
-            or signature_entry is None
-            or signature_entry["role"] != "prompt_leakage_audit_signature"
-            or any(
-                audit_signature_reference[field] != signature_entry[field]
-                for field in ("path", "sha256", "git_blob_oid")
-            )
-        ):
-            raise CandidateGitError(f"frozen prompt audit binding mismatch: {entry['path']}")
+    for role, signature_role in (
+        ("prompt_leakage_audit", "prompt_leakage_audit_signature"),
+        ("semantic_prompt_audit", "semantic_prompt_audit_signature"),
+    ):
+        for entry in by_role[role]:
+            audit = loaded[entry["path"]]
+            prompt_entry = frozen_files.get(audit["prompt"]["path"])
+            input_entry = frozen_files.get(audit["input"]["path"])
+            audit_signature_reference = audit["authentication"]["signature"]
+            signature_entry = frozen_files.get(audit_signature_reference["path"])
+            if (
+                prompt_entry is None
+                or prompt_entry["role"] != "review_prompt"
+                or any(
+                    audit["prompt"][field] != prompt_entry[field]
+                    for field in ("path", "sha256", "git_blob_oid")
+                )
+                or input_entry is None
+                or input_entry["role"] != "review_input"
+                or any(
+                    audit["input"][field] != input_entry[field]
+                    for field in ("path", "sha256", "git_blob_oid")
+                )
+                or signature_entry is None
+                or signature_entry["role"] != signature_role
+                or any(
+                    audit_signature_reference[field] != signature_entry[field]
+                    for field in ("path", "sha256", "git_blob_oid")
+                )
+            ):
+                raise CandidateGitError(
+                    f"frozen {role} binding mismatch: {entry['path']}"
+                )
     hierarchy = loaded[by_role["hierarchy"][0]["path"]]
     relations = loaded[by_role["relation_ledger"][0]["path"]]
     run_binding = {
@@ -2478,6 +2641,37 @@ def compare_production(
     return report
 
 
+def _invalid_production_provenance(repo_root: Path, private_run: Path) -> dict:
+    """Keep verified snapshot acquisition separate from candidate/comparator failure."""
+    repo_root = repo_root.resolve()
+    evaluation_root = repo_root / "docs/evaluations/site-graph-v0"
+    archive_sha = "UNAVAILABLE_DUE_TO_INVALID_CONTRACT"
+    snapshot_status = "INVALID"
+    lineage_status = "UNAVAILABLE_DISCLOSED"
+    try:
+        private_verification = verify_private_ledgers(
+            private_run.resolve(), evaluation_root
+        )
+        archive_authentication = private_verification["archive_authentication"]
+        archive_sha = archive_authentication["archive_sha256"]
+        snapshot_status = archive_authentication["snapshot_acquisition_integrity"]
+        lineage_status = archive_authentication["upstream_production_lineage"]
+    except (OSError, KeyError, ValueError, RuntimeError, json.JSONDecodeError):
+        try:
+            snapshot = read_json(evaluation_root / "input-snapshot.json")
+            archive_sha = snapshot["corpus"]["archive_acquisition"]["archive_sha256"]
+        except (OSError, KeyError, ValueError, json.JSONDecodeError):
+            pass
+    return {
+        "evidence_scope": "PRODUCTION_COMPARATOR_INVALID",
+        "archive_sha256": archive_sha,
+        "snapshot_acquisition_integrity": snapshot_status,
+        "upstream_production_lineage": lineage_status,
+        "overall_contract_status": "INVALID",
+        "downstream_product_verdict": "INVALID",
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
@@ -2508,23 +2702,9 @@ def main() -> None:
         ValueError,
         RuntimeError,
     ) as error:
-        try:
-            snapshot = read_json(
-                args.repo_root / "docs/evaluations/site-graph-v0/input-snapshot.json"
-            )
-            archive_sha = snapshot["corpus"]["archive_acquisition"]["archive_sha256"]
-        except (OSError, KeyError, ValueError, json.JSONDecodeError):
-            archive_sha = "UNAVAILABLE_DUE_TO_INVALID_CONTRACT"
         report = _invalid_report(
             [str(error)],
-            {
-                "evidence_scope": "PRODUCTION_COMPARATOR_INVALID",
-                "archive_sha256": archive_sha,
-                "snapshot_acquisition_integrity": "INVALID",
-                "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
-                "overall_contract_status": "INVALID",
-                "downstream_product_verdict": "INVALID",
-            },
+            _invalid_production_provenance(args.repo_root, args.private_run),
         )
     args.output.write_text(
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",

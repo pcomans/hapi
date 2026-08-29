@@ -45,9 +45,11 @@ build_baseline_module = _load_script_module("build_baseline")
 integrity_module = _load_script_module("integrity")
 run_baseline_module = _load_script_module("run_baseline")
 schema_validation_module = _load_script_module("schema_validation")
+release_contract_module = _load_script_module("release_contract")
+validate_contract_module = _load_script_module("validate_contract")
 
 compare = compare_baseline_runs_module.compare
-AMBIGUITY_MAXIMUM_INCREASE = compare_candidate_module.AMBIGUITY_MAXIMUM_INCREASE
+MAXIMUM_NEWLY_BLOCKING_FRACTION = compare_candidate_module.MAXIMUM_NEWLY_BLOCKING_FRACTION
 CONCENTRATION_MAXIMUM_INCREASE = compare_candidate_module.CONCENTRATION_MAXIMUM_INCREASE
 MINIMUM_AFFECTED_FRACTION = compare_candidate_module.MINIMUM_AFFECTED_FRACTION
 MINIMUM_GAINED_IDENTITIES = compare_candidate_module.MINIMUM_GAINED_IDENTITIES
@@ -70,6 +72,20 @@ DETERMINISTIC_OUTPUTS = run_baseline_module.DETERMINISTIC_OUTPUTS
 FINAL_OUTPUTS = run_baseline_module.FINAL_OUTPUTS
 run_baseline = run_baseline_module.run
 execute_schema_contract_tests = schema_validation_module.execute_schema_contract_tests
+validation_input_bindings = release_contract_module.validation_input_bindings
+CONTRACT_VERSION = release_contract_module.CONTRACT_VERSION
+PYCACHE_EXCLUSION = release_contract_module.PYCACHE_EXCLUSION
+REQUIRED_RELEASE_FILES = release_contract_module.REQUIRED_RELEASE_FILES
+authenticate_release_preimport = validate_contract_module.authenticate_release_preimport
+public_boundary_evidence_passed = (
+    validate_contract_module._public_boundary_evidence_passed
+)
+schema_execution_evidence_passed = (
+    validate_contract_module._schema_execution_evidence_passed
+)
+scan_public_repository_boundary = (
+    validate_contract_module.scan_public_repository_boundary
+)
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -125,17 +141,33 @@ def _temporary_release(tmp_path: Path, *, freeze: bool = True) -> Path:
         shutil.copy2(source, destination)
     manifest = target / "release-manifest.json"
     manifest.unlink(missing_ok=True)
+    # Build a provisional, internally bound report in this isolated logic-only copy.
+    # The committed report is intentionally never rewritten by tests.
+    report_path = target / "validation-report.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report["release_candidate_binding"]["files"] = validation_input_bindings(repo)
+    _write_json(report_path, report)
     if freeze:
-        subprocess.run(
-            [
-                sys.executable,
-                str(target / "scripts/freeze_release.py"),
-                "--repo-root",
-                str(repo),
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
+        _write_json(
+            manifest,
+            {
+                "schema_version": "site-graph-v0-release-manifest/2",
+                "contract_version": CONTRACT_VERSION,
+                "hash_algorithm": "sha256",
+                "pycache_exclusion": PYCACHE_EXCLUSION,
+                "inventory_rule": (
+                    "Exactly REQUIRED_RELEASE_FILES in scripts/release_contract.py. "
+                    "Any addition, removal, or cache-exclusion change requires a "
+                    "separately reviewed contract-version migration."
+                ),
+                "files": {
+                    relative: {
+                        "bytes": (repo / relative).stat().st_size,
+                        "sha256": sha256(repo / relative),
+                    }
+                    for relative in sorted(REQUIRED_RELEASE_FILES)
+                },
+            },
         )
         verify_release(repo)
     return repo
@@ -183,6 +215,121 @@ def test_validator_rejects_release_corruption_before_semantics(
     assert before == after, "read-only validation must not repair or rewrite the release"
 
 
+@pytest.mark.parametrize(
+    "attack",
+    ["syntax_corruption", "top_level_side_effect", "aliased_top_level_side_effect"],
+)
+def test_validator_authenticates_semantic_module_before_import(
+    tmp_path: Path, attack: str
+) -> None:
+    repo = _temporary_release(tmp_path)
+    target = (
+        repo
+        / "docs/evaluations/site-graph-v0/scripts/build_baseline.py"
+    )
+    marker = tmp_path / "semantic-module-executed"
+    if attack == "syntax_corruption":
+        target.write_text("def invalid syntax(:\n", encoding="utf-8")
+    elif attack == "top_level_side_effect":
+        target.write_text(
+            target.read_text(encoding="utf-8")
+            + "\n__import__('pathlib').Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n",
+            encoding="utf-8",
+        )
+    else:
+        target.write_text(
+            target.read_text(encoding="utf-8")
+            + "\nfrom os import system as Path\n"
+            + "X = Path("
+            + repr(f"touch {marker}")
+            + ")\n",
+            encoding="utf-8",
+        )
+    manifest_path = repo / "docs/evaluations/site-graph-v0/release-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    relative = target.relative_to(repo).as_posix()
+    manifest["files"][relative] = {
+        "bytes": target.stat().st_size,
+        "sha256": sha256(target),
+    }
+    _write_json(manifest_path, manifest)
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            str(SCRIPTS / "validate_contract.py"),
+            "--repo-root",
+            str(repo),
+            "--corpus-archive",
+            "/does/not/matter",
+            "--corpus-archive-sidecar",
+            "/does/not/matter.sha256",
+            "--private-run",
+            "/does/not/matter",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(result.stdout)
+    assert result.returncode == 1
+    assert payload["phase"] == "release_integrity"
+    assert payload["semantic_release_modules_activated"] is False
+    assert not marker.exists(), "unauthenticated top-level code must never execute"
+
+
+def test_validator_dynamically_loads_authenticated_target_root_modules(
+    tmp_path: Path,
+) -> None:
+    repo = _temporary_release(tmp_path)
+    evidence = authenticate_release_preimport(repo)
+    assert evidence["preimport_authentication"] is True
+    program = """
+import importlib.util
+import json
+import pathlib
+import sys
+spec = importlib.util.spec_from_file_location("isolated_validator", sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+module._activate_authenticated_release(pathlib.Path(sys.argv[2]))
+names = ["build_baseline", "compare_candidate", "integrity", "private_ledgers"]
+print(json.dumps({name: sys.modules[name].__file__ for name in names}, sort_keys=True))
+"""
+    result = subprocess.run(
+        [sys.executable, "-B", "-c", program, str(SCRIPTS / "validate_contract.py"), str(repo)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    scripts_root = (
+        repo / "docs/evaluations/site-graph-v0/scripts"
+    ).resolve()
+    loaded = json.loads(result.stdout)
+    assert loaded
+    assert all(Path(path).resolve().parent == scripts_root for path in loaded.values())
+
+
+def test_dirty_candidate_generation_entry_is_not_a_public_validator_bypass() -> None:
+    with pytest.raises(
+        validate_contract_module.ReleaseIntegrityPreflightError,
+        match="callable only from",
+    ):
+        validate_contract_module.semantic_report_for_release_generation(
+            REPO_ROOT,
+            Path("/does/not/matter"),
+            Path("/does/not/matter.sha256"),
+            Path("/does/not/matter"),
+        )
+    generator = (SCRIPTS / "generate_validation_report.py").read_text(
+        encoding="utf-8"
+    )
+    assert "semantic_report_for_release_generation" in generator
+    assert "from validate_contract import semantic_report\n" not in generator
+
+
 def test_release_inventory_rejects_extra_file(tmp_path: Path) -> None:
     repo = _temporary_release(tmp_path)
     (repo / "docs/evaluations/site-graph-v0/undeclared.txt").write_text("extra")
@@ -228,6 +375,42 @@ def test_every_json_schema_has_executed_valid_and_adversarial_instances() -> Non
     assert result["representative_valid_instance_count"] == len(schema_names)
     assert result["adversarial_invalid_instance_count"] == invalid_count
     assert result["schemas"] == schema_names
+    assert schema_execution_evidence_passed(
+        result, EVAL_ROOT / "schemas", EVAL_ROOT / "schema-test-cases.json"
+    )
+
+
+@pytest.mark.parametrize(
+    ("field", "invalid_value"),
+    [
+        ("meta_valid_schema_count", 0),
+        ("representative_valid_instance_count", 0),
+        ("adversarial_invalid_instance_count", 0),
+        ("schemas", []),
+    ],
+)
+def test_schema_execution_check_rejects_false_returned_evidence(
+    field: str, invalid_value: object
+) -> None:
+    schema_names = sorted(
+        path.name for path in (EVAL_ROOT / "schemas").glob("*.schema.json")
+    )
+    cases = json.loads((EVAL_ROOT / "schema-test-cases.json").read_text())["cases"]
+    evidence = {
+        "meta_valid_schema_count": len(schema_names),
+        "representative_valid_instance_count": len(schema_names),
+        "adversarial_invalid_instance_count": sum(
+            len(cases[name]["invalid"]) for name in schema_names
+        ),
+        "schemas": schema_names,
+    }
+    assert schema_execution_evidence_passed(
+        evidence, EVAL_ROOT / "schemas", EVAL_ROOT / "schema-test-cases.json"
+    )
+    evidence[field] = invalid_value
+    assert not schema_execution_evidence_passed(
+        evidence, EVAL_ROOT / "schemas", EVAL_ROOT / "schema-test-cases.json"
+    )
 
 
 def test_rerun_comparator_rejects_same_resolved_directory(tmp_path: Path) -> None:
@@ -291,6 +474,41 @@ def test_public_release_excludes_private_corpus_derivatives() -> None:
     assert "not claimed opaque or unlinkable" in readme
 
 
+def test_public_boundary_check_is_derived_from_returned_evidence() -> None:
+    public_files = frozenset(
+        {
+            "baseline-metrics.json",
+            "baseline-node-scope.json",
+            "planned-opportunity-summary.json",
+            "private-ledger-digests.json",
+            "top-unmatched-components.json",
+        }
+    )
+    forbidden_files = frozenset(
+        {
+            "frozen-record-evidence.ndjson.gz",
+            "frozen-opportunity-source.ndjson.gz",
+            "planned-opportunity-queue.json",
+            "private-record-evidence.ndjson.gz",
+            "private-opportunity-source.ndjson.gz",
+            "private-opportunity-ledger.json",
+        }
+    )
+    evidence = {
+        "public_aggregate_files": sorted(public_files),
+        "forbidden_public_files_absent": sorted(forbidden_files),
+    }
+    assert public_boundary_evidence_passed(
+        evidence, public_files, forbidden_files
+    )
+    for field in evidence:
+        attacked = copy.deepcopy(evidence)
+        attacked[field] = []
+        assert not public_boundary_evidence_passed(
+            attacked, public_files, forbidden_files
+        )
+
+
 def test_public_boundary_rejects_reintroduced_bulk_derivative(tmp_path: Path) -> None:
     public_root = tmp_path / "public"
     public_root.mkdir()
@@ -318,6 +536,106 @@ def test_public_boundary_rejects_reintroduced_bulk_derivative(tmp_path: Path) ->
     )
     assert result.returncode != 0
     assert "private/bulk files present" in result.stderr
+
+
+def _init_boundary_git_repo(repo: Path) -> None:
+    subprocess.run(["git", "init", "-q", str(repo)], check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "boundary@example.invalid"],
+        cwd=repo,
+        check=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "Boundary Fixture"],
+        cwd=repo,
+        check=True,
+    )
+    root = repo / "docs/evaluations/site-graph-v0"
+    root.mkdir(parents=True)
+    (root / "aggregate.json").write_text("{}\n", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-qm", "base"], cwd=repo, check=True)
+
+
+def test_repository_boundary_scans_current_tree_and_every_head_ancestor() -> None:
+    evidence = scan_public_repository_boundary(REPO_ROOT)
+    assert evidence["passed"] is True
+    assert evidence["status"] == "PASS"
+    assert evidence["current_tree"] == {
+        "recursive_scan_completed": True,
+        "violations": [],
+    }
+    assert evidence["git_history"] == {
+        "all_trees_reachable_from_head_scanned": True,
+        "violations": [],
+    }
+    assert "does not assert rank/count unlinkability" in evidence["claim_scope"]
+
+
+def test_repository_boundary_returns_explicit_inability_without_git(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "export"
+    (root / "docs/evaluations/site-graph-v0").mkdir(parents=True)
+    evidence = scan_public_repository_boundary(root)
+    assert evidence["passed"] is False
+    assert evidence["status"] == "UNABLE_GIT_METADATA_ABSENT"
+    assert evidence["git_metadata_available"] is False
+    assert "historical public-boundary claim cannot be made" in evidence[
+        "inability_reason"
+    ]
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "private/private-record-evidence.ndjson.gz",
+        "exports/artifact-ids.json",
+        "exports/mention-dump.json",
+    ],
+)
+def test_repository_boundary_rejects_recursive_current_tree_dump_names(
+    tmp_path: Path, relative: str
+) -> None:
+    repo = tmp_path / "repo"
+    _init_boundary_git_repo(repo)
+    target = repo / "docs/evaluations/site-graph-v0" / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("logic-only adversarial path\n", encoding="utf-8")
+    evidence = scan_public_repository_boundary(repo)
+    assert evidence["passed"] is False
+    assert evidence["status"] == "FAIL"
+    assert any(
+        row["path"].endswith(relative)
+        for row in evidence["current_tree"]["violations"]
+    )
+
+
+def test_repository_boundary_rejects_deleted_dump_in_non_tip_ancestor(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    _init_boundary_git_repo(repo)
+    leaked = (
+        repo
+        / "docs/evaluations/site-graph-v0/exports/mention-rows.ndjson"
+    )
+    leaked.parent.mkdir(parents=True)
+    leaked.write_text("logic-only adversarial history\n", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-qm", "introduce leak"], cwd=repo, check=True)
+    leaked.unlink()
+    subprocess.run(["git", "add", "-u"], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-qm", "remove leak"], cwd=repo, check=True)
+
+    evidence = scan_public_repository_boundary(repo)
+    assert evidence["passed"] is False
+    assert evidence["current_tree"]["violations"] == []
+    assert evidence["git_history"]["all_trees_reachable_from_head_scanned"] is True
+    assert any(
+        row["path"].endswith("exports/mention-rows.ndjson")
+        for row in evidence["git_history"]["violations"]
+    )
 
 
 def _fraction(numerator: int, denominator: int) -> dict:
@@ -806,6 +1124,7 @@ def _comparator_case(tmp_path: Path) -> dict:
                             {
                                 **binding,
                                 "resolution_status": "unmatched",
+                                "status_support_decision_key": None,
                                 "abstention_reason": None,
                                 "direct_links": [],
                                 "uncredited_link_claims": [],
@@ -824,6 +1143,30 @@ def _comparator_case(tmp_path: Path) -> dict:
                 "supported": True,
                 "disagreement": False,
             }
+            status_subject = {
+                "artifact_id": artifact_id,
+                "opportunity_id": binding["opportunity_id"],
+                "opportunity_binding_sha256": binding[
+                    "opportunity_binding_sha256"
+                ],
+                "mention_ids": [f"mention-{artifact_id}"],
+                "baseline_statuses": [
+                    {
+                        "mention_id": f"mention-{artifact_id}",
+                        "status": "unmatched",
+                    }
+                ],
+                "proposed_status": "resolved",
+            }
+            status_key = decision_key(
+                "mention_status_resolution", status_subject
+            )
+            decisions[status_key] = {
+                "decision_kind": "mention_status_resolution",
+                "subject": status_subject,
+                "supported": True,
+                "disagreement": False,
+            }
             candidate_records.append(
                 {
                     "artifact_id": artifact_id,
@@ -833,6 +1176,7 @@ def _comparator_case(tmp_path: Path) -> dict:
                         {
                             **binding,
                             "resolution_status": "linked",
+                            "status_support_decision_key": status_key,
                             "abstention_reason": None,
                             "direct_links": [
                                 {"target_id": target, "support_decision_key": key}
@@ -888,7 +1232,7 @@ def _comparator_case(tmp_path: Path) -> dict:
         "identity_census_policy": "every_counted_candidate_class_is_censused_against_every_relevant_frozen_baseline_identity_including_one_sided_and_every_other_counted_candidate_class",
         "relations": relations,
     }
-    candidate = {"schema_version": "site-graph-v0-candidate-result/5", "records": candidate_records}
+    candidate = {"schema_version": "site-graph-v0-candidate-result/6", "records": candidate_records}
     return {
         "baseline": baseline,
         "metrics": metrics,
@@ -918,6 +1262,41 @@ def _run_case(case: dict) -> dict:
         case["relations"],
         case["decisions"],
     )
+
+
+def _drop_status_resolution(case: dict, outcome: dict) -> None:
+    key = outcome.get("status_support_decision_key")
+    if key is not None:
+        case["decisions"].pop(key)
+    outcome["status_support_decision_key"] = None
+
+
+def _bind_status_resolution(
+    case: dict,
+    *,
+    artifact_id: str,
+    outcome: dict,
+    baseline_statuses: list[dict],
+    proposed_status: str,
+) -> str:
+    _drop_status_resolution(case, outcome)
+    subject = {
+        "artifact_id": artifact_id,
+        "opportunity_id": outcome["opportunity_id"],
+        "opportunity_binding_sha256": outcome["opportunity_binding_sha256"],
+        "mention_ids": [row["mention_id"] for row in baseline_statuses],
+        "baseline_statuses": baseline_statuses,
+        "proposed_status": proposed_status,
+    }
+    key = decision_key("mention_status_resolution", subject)
+    case["decisions"][key] = {
+        "decision_kind": "mention_status_resolution",
+        "subject": subject,
+        "supported": True,
+        "disagreement": False,
+    }
+    outcome["status_support_decision_key"] = key
+    return key
 
 
 def _add_unaffected_itt_records(case: dict, museum: str, count: int) -> None:
@@ -989,6 +1368,7 @@ def _add_unaffected_itt_records(case: dict, museum: str, count: int) -> None:
                     {
                         **binding,
                         "resolution_status": "unmatched",
+                        "status_support_decision_key": None,
                         "abstention_reason": None,
                         "direct_links": [],
                         "uncredited_link_claims": [],
@@ -1100,6 +1480,7 @@ def test_selected_research_failure_preserves_unrelated_frozen_resolved_link(
     outcome = record["opportunity_outcomes"][0]
     support_key = outcome["direct_links"][0]["support_decision_key"]
     del case["decisions"][support_key]
+    _drop_status_resolution(case, outcome)
     outcome["resolution_status"] = "research_failure"
     outcome["direct_links"] = []
     record["final_supported_direct_target_ids"] = ["broad-0"]
@@ -1121,6 +1502,7 @@ def test_explicit_record_level_removal_drives_loss_and_redesign(tmp_path: Path) 
     record = next(row for row in case["candidate"]["records"] if row["artifact_id"] == "met-a")
     outcome = record["opportunity_outcomes"][0]
     del case["decisions"][outcome["direct_links"][0]["support_decision_key"]]
+    _drop_status_resolution(case, outcome)
     outcome["resolution_status"] = "research_failure"
     outcome["direct_links"] = []
     record["final_supported_direct_target_ids"] = []
@@ -1167,7 +1549,8 @@ def test_unselected_baseline_ambiguity_persists_in_candidate_population(
     ambiguity = report["safety_gates"]["ambiguity"]["per_museum"]["harvard"]
     assert ambiguity["baseline_blocking"] == _fraction(1, 1)
     assert ambiguity["candidate_blocking"] == _fraction(1, 1)
-    assert ambiguity["delta"] == {"numerator": 0, "denominator": 1}
+    assert ambiguity["newly_blocking_rate"] == {"numerator": 0, "denominator": 1}
+    assert ambiguity["net_delta_descriptive"] == {"numerator": 0, "denominator": 1}
 
 
 def test_disputed_link_is_unresolved_and_cannot_suppress_ambiguity(
@@ -1186,6 +1569,7 @@ def test_disputed_link_is_unresolved_and_cannot_suppress_ambiguity(
     private_opportunity["artifact_memberships"][0]["mentions"][0]["status"] = "ambiguous"
     record = next(row for row in case["candidate"]["records"] if row["artifact_id"] == "harvard-a")
     outcome = record["opportunity_outcomes"][0]
+    _drop_status_resolution(case, outcome)
     subject = {
         "artifact_id": "harvard-a",
         "target_id": "specific-1",
@@ -1216,12 +1600,23 @@ def test_disputed_link_is_unresolved_and_cannot_suppress_ambiguity(
 def test_new_blocking_ambiguity_drives_redesign_threshold(tmp_path: Path) -> None:
     case = _comparator_case(tmp_path)
     record = next(row for row in case["candidate"]["records"] if row["artifact_id"] == "harvard-a")
-    record["opportunity_outcomes"][0]["resolution_status"] = "ambiguous"
+    outcome = record["opportunity_outcomes"][0]
+    _bind_status_resolution(
+        case,
+        artifact_id="harvard-a",
+        outcome=outcome,
+        baseline_statuses=[
+            {"mention_id": "mention-harvard-a", "status": "unmatched"}
+        ],
+        proposed_status="ambiguous",
+    )
+    outcome["resolution_status"] = "ambiguous"
     report = _run_case(case)
     assert report["outcome"] == "REDESIGN"
     ambiguity = report["safety_gates"]["ambiguity"]["per_museum"]["harvard"]
     assert ambiguity["passed"] is False
-    assert ambiguity["delta"] == {"numerator": 1, "denominator": 1}
+    assert ambiguity["newly_blocking_rate"] == {"numerator": 1, "denominator": 1}
+    assert ambiguity["net_delta_descriptive"] == {"numerator": 1, "denominator": 1}
 
 
 def test_linked_outcome_without_review_support_is_invalid(tmp_path: Path) -> None:
@@ -1277,6 +1672,7 @@ def test_reviewer_disagreement_is_uncredited_and_unresolved(tmp_path: Path) -> N
         == decision_key_value
     )
     outcome = record["opportunity_outcomes"][0]
+    _drop_status_resolution(case, outcome)
     outcome["resolution_status"] = "unresolved"
     outcome["uncredited_link_claims"] = outcome.pop("direct_links")
     outcome["direct_links"] = []
@@ -1287,6 +1683,45 @@ def test_reviewer_disagreement_is_uncredited_and_unresolved(tmp_path: Path) -> N
     assert report["ambiguity_and_abstention"]["reviewer_disagreement_decisions_uncredited"] == 1
     assert report["event_counts"]["loss"] == 0
     assert report["event_counts"]["unchanged"] == 2
+
+
+def test_mention_plausibility_counts_only_authenticated_supported_targets(
+    tmp_path: Path,
+) -> None:
+    case = _comparator_case(tmp_path)
+    record = next(
+        row
+        for row in case["candidate"]["records"]
+        if row["artifact_id"] == "harvard-a"
+    )
+    outcome = record["opportunity_outcomes"][0]
+    _drop_status_resolution(case, outcome)
+    outcome["resolution_status"] = "unresolved"
+    outcome["direct_links"] = []
+    outcome["uncredited_link_claims"] = []
+    for target_id in ("specific-1", "specific-2"):
+        subject = {
+            "artifact_id": "harvard-a",
+            "target_id": target_id,
+            "opportunity_id": outcome["opportunity_id"],
+            "opportunity_binding_sha256": outcome["opportunity_binding_sha256"],
+        }
+        key = decision_key("link_support", subject)
+        case["decisions"][key] = {
+            "decision_kind": "link_support",
+            "subject": subject,
+            "supported": False,
+            "disagreement": True,
+        }
+        outcome["uncredited_link_claims"].append(
+            {"target_id": target_id, "support_decision_key": key}
+        )
+    report = _run_case(case)
+    assert report["outcome"] == "CONTINUE"
+    assert not any(
+        "more unique authenticated supported targets" in error
+        for error in report["integrity"]["errors"]
+    )
 
 
 def test_concentration_formulas_use_unique_record_union_and_incidence_hhi() -> None:
@@ -1549,12 +1984,12 @@ def test_pair_numerator_intersects_exact_private_membership_and_category(tmp_pat
     public_side["credited_effect_opportunity_denominator"] = 1
     public_side["minimum_credited_affected_records_for_continue"] = 1
     report = _run_case(case)
-    side = report["pairs"]["met__brooklyn"]["sides"]["met"]
-    assert side["credited_affected_records"] == 1
-    assert side["credited_pair_event_counts"] == {
-        "new_pair_connection": 1,
-        "supported_broad_to_specific_pair_refinement": 0,
-    }
+    assert report["outcome"] == "INVALID"
+    assert any(
+        "raw category is inconsistent with authenticated baseline identity classes"
+        in error
+        for error in report["integrity"]["errors"]
+    )
 
 
 def test_exact_itt_affected_threshold_failure_drives_stop(tmp_path: Path) -> None:
@@ -1607,12 +2042,23 @@ def test_exact_itt_affected_threshold_failure_drives_stop(tmp_path: Path) -> Non
             "normalized_keys": [met_opportunity["opportunity_id"]],
         }
     )
+    _bind_status_resolution(
+        case,
+        artifact_id="met-a",
+        outcome=met_a_outcome,
+        baseline_statuses=[
+            {"mention_id": "mention-met-a", "status": "unmatched"},
+            {"mention_id": "mention-met-a-extra", "status": "unmatched"},
+        ],
+        proposed_status="resolved",
+    )
 
     met_b = next(
         row for row in case["candidate"]["records"] if row["artifact_id"] == "met-b"
     )
     met_b_outcome = met_b["opportunity_outcomes"][0]
     del case["decisions"][met_b_outcome["direct_links"][0]["support_decision_key"]]
+    _drop_status_resolution(case, met_b_outcome)
     met_b_outcome["resolution_status"] = "research_failure"
     met_b_outcome["direct_links"] = []
     met_b["final_supported_direct_target_ids"] = ["broad-0"]
@@ -2129,6 +2575,7 @@ def test_every_machine_formula_and_decision_threshold_matches_executable_values(
         "overall_linkability": "|L_m| / |A_m|",
         "extracted_site_text_conditional_linkability": "|L_m| / |X_m|",
         "blocking_ambiguity": "|{r in X_m: direct targets empty and any site mention ambiguous}| / |X_m|",
+        "newly_blocking_ambiguity_safety": "|{r in X_m: baseline blocking=false and candidate blocking=true}| / |X_m|",
         "planned_maximum_overall_effect": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |A_m|",
         "planned_maximum_extracted_site_text_conditional_effect": "(|new-link-eligible records in O_m| + |broad-only strict-refinement-eligible records in O_m|) / |X_m|",
         "pair_side_coverage_overall": "D_(m->n) / |A_m|",
@@ -2137,9 +2584,9 @@ def test_every_machine_formula_and_decision_threshold_matches_executable_values(
         "hhi": "sum_j(I_j^2) / (sum_j I_j)^2",
     }
     assert prereg["machine_thresholds"] == {
-        "ambiguity_maximum_increase": {
-            "numerator": AMBIGUITY_MAXIMUM_INCREASE.numerator,
-            "denominator": AMBIGUITY_MAXIMUM_INCREASE.denominator,
+        "maximum_newly_blocking_fraction": {
+            "numerator": MAXIMUM_NEWLY_BLOCKING_FRACTION.numerator,
+            "denominator": MAXIMUM_NEWLY_BLOCKING_FRACTION.denominator,
         },
         "concentration_maximum_increase": {
             "numerator": CONCENTRATION_MAXIMUM_INCREASE.numerator,

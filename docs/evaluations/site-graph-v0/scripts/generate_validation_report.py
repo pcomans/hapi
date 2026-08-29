@@ -9,7 +9,7 @@ import os
 import tempfile
 from pathlib import Path
 
-from validate_contract import semantic_report
+from validate_contract import semantic_report_for_release_generation
 
 
 def main() -> None:
@@ -20,13 +20,27 @@ def main() -> None:
     parser.add_argument("--private-run", type=Path, required=True)
     args = parser.parse_args()
     repo_root = args.repo_root.resolve()
-    report = semantic_report(
+    report = semantic_report_for_release_generation(
         repo_root,
         args.corpus_archive.resolve(),
         args.corpus_archive_sidecar.resolve(),
         args.private_run.resolve(),
     )
-    print(json.dumps(report["summary"] | {"status": report["status"]}, sort_keys=True))
+    failed_checks = [
+        {
+            "check_id": item["check_id"],
+            "evidence": item["evidence"],
+        }
+        for item in report["checks"]
+        if not item["passed"]
+    ]
+    print(
+        json.dumps(
+            report["summary"]
+            | {"status": report["status"], "failed_checks": failed_checks},
+            sort_keys=True,
+        )
+    )
     if (
         report["status"]["overall_contract_status"]
         != "READY_SNAPSHOT_CONDITIONAL"

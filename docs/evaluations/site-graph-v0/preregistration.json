@@ -84,6 +84,12 @@
     "blocking_ambiguity": {
       "expression": "|{r in X_m: direct targets empty and any site mention ambiguous}| / |X_m|",
       "numerator": "count(has_blocking_ambiguity=true, museum=m)",
+      "denominator": "count(extracted_site_text_evidence=true, museum=m)",
+      "role": "descriptive prevalence on each arm; it is not the safety-gate numerator"
+    },
+    "newly_blocking_ambiguity_safety": {
+      "expression": "|{r in X_m: baseline blocking=false and candidate blocking=true}| / |X_m|",
+      "numerator": "count(newly blocking records, museum=m); candidate reductions never offset this count",
       "denominator": "count(extracted_site_text_evidence=true, museum=m)"
     },
     "planned_maximum_overall_effect": {
@@ -142,17 +148,20 @@
       "exact backend model ID/snapshot or an explicitly enumerated non-exposure sentinel",
       "full nonempty parameter object",
       "full raw response artifact with SHA-256 and Git blob OID",
-      "a unique nonempty full raw response and unique exact prompt/input artifacts bound to the review ID, decision key, decision kind, and subject",
-      "a registered auditor's signed content-addressed prompt-leakage audit for that exact prompt/input/subject, committed in the authenticated freeze ancestor before invocation and never reused",
-      "prompt and input are canonical JSON envelopes whose invocation binding, exact byte linkage, and response contract recompute",
+      "a unique canonical JSON raw response with exactly assessment and reasoning; both values exactly equal the signed wrapper outcome and reasoning",
+      "unique exact prompt/input artifacts bound to the review ID, decision key, decision kind, and subject",
+      "the prompt task/instructions and decision-kind-specific claim semantics are the immutable release-owned template whose canonical SHA-256 is verified; the exact subject is represented by a canonical hash and caller-supplied task, instruction, example, or hint text is never serialized",
+      "separate registered auditors' signed content-addressed deterministic and human semantic prompt audits for that exact prompt/input/subject, committed in the authenticated freeze ancestor before invocation and never reused",
+      "prompt and input are canonical JSON envelopes whose invocation binding, exact byte linkage, immutable template, and response contract recompute",
       "every input item has an opaque label derived from its payload hash and a seed fixed by the canonical decision key, kind, and subject (not a caller-chosen invocation value), and is presented in the deterministic non-identity SHA-256-ranked order proven by hidden canonical payload-hash order and presented-order hashes in the signed audit",
-      "deterministic guards reject authenticated preferred labels and aliases, answer names, IDs, locators, and verifier-owned decision/order proxies in the exact prompt/input"
+      "opaque labels occur only in schema-defined candidate option slots and the deterministic guard rejects authenticated preferred labels and aliases, answer names, IDs, locators, label-specific directives, and verifier-owned decision/order proxies in the exact prompt/input",
+      "the signed semantic audit is an additional fail-closed review and explicitly does not claim deterministic semantic perfection"
     ],
     "review_disagreement": "Unsupported/uncertain disagreement is unresolved, receives no credit, and is counted; it is never adjudicated from candidate performance.",
     "broad_or_administrative_new_link_improvement_credit": 0,
     "unclassified_link_improvement_credit": 0,
     "narrower_node_alone_improvement_credit": 0,
-    "credited_node_distinctness": "The comparator deterministically builds identity classes across baseline and candidate targets. Exact authority-locator string equality auto-unions; no additional locator normalization is implemented in v0. Every gained candidate class is censused against the full relevant baseline identity universe on both museum sides, including one-sided broad identities, and against every other counted candidate class. Every non-equivalent separation requires two signed independent reviewed positive-distinctness decisions; omitted or unsupported equivalence/distinctness fails closed. Candidate-declared class IDs are ignored and aliases cannot preserve retention or inflate gains.",
+    "credited_node_distinctness": "The comparator first derives every pair's complete gained-specific shared identity-root set from final links versus that pair's full baseline shared-identity universe, then unions those gained roots before counting utility. Every gained root is censused against every other gained root and every relevant baseline root across all museum sides, including crossed additions and one-sided broad/specific identities, regardless of which side supplied the credited addition. Exact authority-locator string equality auto-unions; no additional locator normalization is implemented in v0. Every non-equivalent separation requires two signed independent reviewed positive-distinctness decisions; omitted or unsupported equivalence/distinctness fails closed. Candidate-declared class IDs are ignored and aliases cannot preserve retention or inflate gains.",
     "strict_refinement_extra_support": [
       "baseline and candidate target IDs are distinct",
       "a relation ledger frozen in the authenticated pre-run Git commit says strict_refinement",
@@ -173,20 +182,21 @@
     "loss": "At least one baseline direct identity is neither preserved/equivalent nor covered by supported strict refinement.",
     "uncredited_change": "A changed link is broad, unclassified, unsupported, disputed, or otherwise fails credit rules.",
     "direct_edge_vs_ancestor_semantics": "Comparator separately reports old_direct_edge_preserved and old_direct_edge_replaced_ancestor_semantics_preserved. A supported replacement is excluded from ordinary loss.",
-    "candidate_record_post_state": "Each ITT record declares a sorted final supported direct-target set and the exact complementary set of explicitly removed frozen baseline targets. Selected opportunity outcomes justify only new target additions and selected mention states; they never replace the whole record. Unselected frozen mentions and unrelated resolved direct links carry forward. Retention, loss, linkability, connectivity, broad-only partitions, and concentration consume the final record-level set."
+    "candidate_record_post_state": "Each ITT record declares a sorted final supported direct-target set and the exact complementary set of explicitly removed frozen baseline targets. Selected opportunity outcomes justify only new target additions and selected mention states; they never replace the whole record. Unselected frozen mentions and unrelated resolved direct links carry forward. Retention/loss compares baseline and final identity-root sets after authenticated equivalence union; removing one duplicate/equivalent raw direct edge while the identity root remains is unchanged, and raw edge removals are reported separately. Linkability, connectivity, broad-only partitions, and concentration consume the final record-level identity sets."
   },
   "opportunity_design": {
     "selection": "From every unmatched/ambiguous site mention in pinned baseline outputs: group by museum and ordered frozen normalized keys, rank by descending distinct artifacts then museum/key; select top 10 per museum, then globally fill to exactly 50 signatures.",
     "artifact_expansion": "All distinct artifacts carrying a selected museum-scoped signature are materialized only in the authenticated private ledger before research. Public opportunity rows expose aggregate counts, stable ranks, and ceilings, never per-group expansion hashes, artifact IDs, source text, normalized expression text, or field paths. Existing aggregate and sampled repository data may correlate labels with ranks/counts, so no opacity or unlinkability claim is made.",
     "museum_protection": "Each museum contributes 10 signatures before global fill; record ceilings remain museum-specific and need not be equal.",
     "intent_to_treat": "Every expanded record remains in denominators after research failure, abstention, reviewer disagreement, lack of support, or broad/administrative classification.",
-    "pair_side_opportunity": "The private ledger materializes exact pair+museum-side artifact membership, every exact selecting (opportunity_id, opportunity_binding_sha256), and exactly one frozen category: no_baseline_pair_connection or broad_only_pair_connection. Candidate output must exhaustively report exactly one closed disposition for every required binding; every link/review must cite and intersect that same binding rather than a different mention on the artifact or a global event. Omission, duplication, or substitution is INVALID.",
+    "pair_side_opportunity": "The private ledger materializes exact pair+museum-side artifact membership, every exact selecting (opportunity_id, opportunity_binding_sha256), and exactly one frozen raw category: no_baseline_pair_connection or broad_only_pair_connection. The comparator independently derives the same category from authenticated baseline identity classes and fails on disagreement. Candidate output must exhaustively report exactly one closed disposition for every required binding; every link/review must cite and intersect that same binding rather than a different mention on the artifact or a global event. Omission, duplication, substitution, or raw-category/identity-class inconsistency is INVALID.",
     "expected_effect_statement": "No expected effect is estimated. Numeric planned values are maximum measurable upper bounds under the frozen slice, not forecasts, precision/recall estimates, or promises of successful research."
   },
   "ambiguity_and_abstention": {
     "ambiguity": "More than one permitted target remains; no target is selected.",
     "blocking_record_predicate": "A record is blocking exactly when its final supported direct-target set is empty and at least one site mention in the complete overlaid record population is ambiguous.",
-    "candidate_overlay": "Start from every frozen site-mention status on the record, replace only statuses of exact selected private opportunity mentions, and preserve every unselected status. A linked outcome requires authenticated support; an unsupported or disputed claim must be emitted unresolved and cannot suppress an existing ambiguous status.",
+    "candidate_overlay": "Start from every frozen site-mention status on the record and preserve every unselected status. A selected status changes only when a separate exact mention_status_resolution subject (artifact, opportunity binding, complete mention IDs and prior statuses, proposed status) has two authenticated supporting reviews without disagreement. Linked target support alone is insufficient. Abstained, unresolved, and research_failure are research dispositions and preserve the frozen mention status. An unsupported or disputed link/status claim is unresolved and cannot suppress an existing ambiguous status.",
+    "safety_gate": "For each museum, count newly blocking records (baseline predicate false and candidate predicate true) over fixed X_m. This nonnegative numerator is gated at <=1/200; resolved baseline blockers never offset it. Authenticated resolved-blocking records and the net prevalence change are reported separately as descriptive values.",
     "abstention_reasons": [
       "compound_expression",
       "conflicting_evidence",
@@ -209,7 +219,7 @@
   "ordered_decision_rule": {
     "precedence": ["INVALID", "REDESIGN", "CONTINUE", "STOP"],
     "INVALID": "Any schema, hash, exact-population, exact-inventory, pre-freeze, review-artifact, or other integrity failure. No product conclusion is allowed.",
-    "REDESIGN": "Integrity passes, but any baseline loss exists; blocking ambiguity rises by more than 5/1000 of X_m for any museum; or any top-1/top-5/top-10 unique-record-union ratio or incidence HHI exceeds its side-specific limit.",
+    "REDESIGN": "Integrity passes, but any baseline identity-root loss exists; newly blocking records exceed 5/1000 of X_m for any museum (resolved blockers cannot offset them); or any top-1/top-5/top-10 unique-record-union ratio or incidence HHI exceeds its side-specific limit.",
     "CONTINUE": "Integrity and every safety gate pass, and at least one museum pair gains at least two credited distinct specific identity classes; each side has credited affected records >= max(1, ceil(0.10 * its fixed nonempty O_pair_side)); and broad-only share over X_m strictly decreases on at least one side without increasing on the other.",
     "STOP": "Integrity and safety pass but no pair satisfies every CONTINUE utility condition.",
     "raw_link_rate_growth_can_satisfy_continue": false,
@@ -217,7 +227,7 @@
     "narrowness_without_support_can_satisfy_continue": false
   },
   "machine_thresholds": {
-    "ambiguity_maximum_increase": {"numerator": 1, "denominator": 200},
+    "maximum_newly_blocking_fraction": {"numerator": 1, "denominator": 200},
     "concentration_maximum_increase": {"numerator": 1, "denominator": 20},
     "minimum_gained_distinct_specific_identity_classes": 2,
     "minimum_affected_opportunity_fraction": {"numerator": 1, "denominator": 10},
@@ -243,7 +253,7 @@
     "repeated_primitive_requires_explicit_supersession": true,
     "primary_baseline_mutation_permitted": false,
     "sensitivity_outputs_separately_hashed": true,
-    "production_chain_trust": "A release-pinned CONFIGURED policy must pin an exact canonical registration artifact by prior Git commit/path/SHA-256/blob. Registration binds the genuine immutable genesis, exact prior ledger commit/SHA-256/blob/head, and both private baseline hashes; verified release-policy activation strictly follows registration and strictly precedes every decision, each ledger follows the decisions, and every extension byte-for-byte preserves the registered prefix. A caller-selected sequence-one root cannot bootstrap trust. The current release is NOT_CONFIGURED and therefore blocks production correction sensitivity while the primary analysis remains at zero corrections.",
+    "production_chain_trust": "A release-pinned CONFIGURED policy must pin an exact canonical registration artifact by prior Git commit/path/SHA-256/blob. Registration binds the genuine immutable genesis, exact prior ledger commit/SHA-256/blob/head, and both private baseline hashes; verified release-policy activation strictly follows registration and strictly precedes every decision, each ledger follows the decisions, and every extension preserves the registered canonical-entry prefix (semantic canonical JSON entries, not original transport bytes). A caller-selected sequence-one root cannot bootstrap trust. The current release is NOT_CONFIGURED and therefore blocks production correction sensitivity while the primary analysis remains at zero corrections.",
     "authenticated_review_rule": "Each correction decision is bound to its chain ID and both exact private baseline ledger hashes, cites content-addressed evidence bytes read from a Git commit that is a strict ancestor of the decision, and requires signed supported artifacts from exactly two registered human reviewers in distinct independence groups. Arbitrary reviewer IDs, unresolved citations, same-commit/post-hoc evidence, and zero decision commits are invalid.",
     "source_realizability": "Each resolved mention has exactly one existing target, each ambiguous mention has at least two, each unmatched mention has none, and record unique direct targets cannot exceed resolved mentions.",
     "sensitivity_recomputation": "Every dependent record field, headline metric, connectivity metric, concentration metric, and pair-side aggregate is recomputed from corrected primitives. The primary/frozen ITT sensitivity keeps exact frozen membership and denominators; a separately labeled corrected-source counterfactual reports private additions/removals and aggregate denominator changes. Corrected rows and membership remain private."
@@ -252,13 +262,13 @@
     "queue_10_per_museum_then_50_total": "A bounded product-research workload with minimum museum representation and frequency-based fill. It is a transparent heuristic, not an estimate of an optimal sample size or corpus prevalence.",
     "minimum_affected_fraction_1_over_10": "A precommitted product decision threshold requiring a nontrivial change relative to each side's own opportunity ceiling. It is not empirically calibrated and does not require equal absolute improvement across museums.",
     "minimum_two_gained_identity_classes": "A product guard against continuing on a single exceptional identity. Two is a pragmatic floor, not a statistical significance threshold.",
-    "ambiguity_allowance_5_over_1000": "A small precommitted product safety allowance for blocking ambiguity changes. It is not an uncertainty interval or an empirical truth.",
+    "ambiguity_allowance_5_over_1000": "A small precommitted product safety allowance for newly blocking records; reductions never offset new regressions. It is not an uncertainty interval or an empirical truth.",
     "concentration_allowance_1_over_20": "A five-point tolerance relative to each comparable side baseline, chosen before candidate results to prevent concentration regression without fitting the observed pooled Met-Brooklyn value."
   },
   "authenticated_candidate_freeze": {
     "contract": "schemas/candidate-freeze-manifest.schema.json",
     "required_roles": ["hierarchy", "relation_ledger", "authority_source_export", "authority_source_export_attestation", "authority_source_export_signature"],
-    "conditional_llm_roles": ["review_prompt", "review_input", "prompt_leakage_audit", "prompt_leakage_audit_signature"],
+    "conditional_llm_roles": ["review_prompt", "review_input", "prompt_leakage_audit", "prompt_leakage_audit_signature", "semantic_prompt_audit", "semantic_prompt_audit_signature"],
     "immutability": "Every file byte SHA-256 and Git blob OID is verified from the declared full freeze commit. Release-authenticated attestor, source-exporter, and reviewer policies are bound by the exact release manifest. A trusted Ed25519-signed run-start receipt binds the exact release, freeze commit/manifest/nonce, candidate, invocation, CPython implementation/version, and dependency-lock bytes before result generation. A second signature from the same trusted attestor binds the same invocation to the distinct descendant result commit and exact result manifest, candidate output, review ledger, and source-export triplets. Self-declared timestamps, Git ancestry, and an unsigned result never establish authentic completion.",
     "source_export_requirement": "At least one nonempty complete authority source export with explicit provenance and known-incompleteness declarations, exact preferred labels and sorted unique aliases, exact record census/hash, and a valid detached signature from a release-authenticated source exporter is required."
   },

@@ -31,11 +31,74 @@ import candidate_git  # noqa: E402
 import compare_candidate  # noqa: E402
 import review_auth  # noqa: E402
 import run_baseline  # noqa: E402
+import run_two_baselines  # noqa: E402
 import runtime_attestation  # noqa: E402
 import schema_validation  # noqa: E402
 import source_exports  # noqa: E402
 import trusted_completion  # noqa: E402
 import validate_contract  # noqa: E402
+
+
+def test_two_run_reproduction_refuses_tracked_release_destinations(
+    tmp_path: Path,
+) -> None:
+    release_evidence = EVALUATION / "baseline-rerun-evidence.json"
+    with pytest.raises(RuntimeError, match="tracked release"):
+        run_two_baselines.run_two(
+            REPO,
+            tmp_path / "archive.tar.gz",
+            tmp_path / "archive.tar.gz.sha256",
+            tmp_path / "fresh-runs",
+            release_evidence,
+        )
+    with pytest.raises(RuntimeError, match="tracked release"):
+        run_two_baselines.run_two(
+            REPO,
+            tmp_path / "archive.tar.gz",
+            tmp_path / "archive.tar.gz.sha256",
+            EVALUATION / "runtime-runs",
+            tmp_path / "evidence.json",
+        )
+
+
+def test_two_run_reproduction_keeps_repository_clean(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    before = _git(REPO, "status", "--porcelain", "--untracked-files=no")
+
+    def fake_run(
+        _repo: Path,
+        _archive: Path,
+        _sidecar: Path,
+        output: Path,
+    ) -> None:
+        output.mkdir()
+        (output / "logic-only.txt").write_text("deterministic\n", encoding="utf-8")
+
+    def fake_compare(left: Path, right: Path) -> dict:
+        assert (left / "logic-only.txt").read_bytes() == (
+            right / "logic-only.txt"
+        ).read_bytes()
+        return {
+            "schema_version": "logic-only-two-run-test/1",
+            "status": {"overall_contract_status": "READY_SNAPSHOT_CONDITIONAL"},
+        }
+
+    monkeypatch.setattr(run_two_baselines, "run", fake_run)
+    monkeypatch.setattr(run_two_baselines, "compare", fake_compare)
+    output_root = tmp_path / "fresh-runs"
+    evidence_path = tmp_path / "fresh-evidence.json"
+    evidence = run_two_baselines.run_two(
+        REPO,
+        tmp_path / "archive.tar.gz",
+        tmp_path / "archive.tar.gz.sha256",
+        output_root,
+        evidence_path,
+    )
+
+    assert evidence["orchestration"]["created_fresh_output_root"] == "<fresh-output-root>"
+    assert evidence_path.is_file()
+    assert _git(REPO, "status", "--porcelain", "--untracked-files=no") == before
 
 
 def _json_bytes(value: object) -> bytes:
@@ -568,6 +631,8 @@ def _completion_case(tmp_path: Path) -> dict:
     review_input_path = "candidate/review-input.json"
     prompt_audit_path = "candidate/prompt-audit.json"
     prompt_audit_signature_path = "candidate/prompt-audit.sig"
+    semantic_audit_path = "candidate/semantic-prompt-audit.json"
+    semantic_audit_signature_path = "candidate/semantic-prompt-audit.sig"
     review_invocation_id = "logic-review-invocation"
     review_decision_key = "logic-decision-key"
     review_subject = {"artifact_id": "logic-artifact", "target_id": "logic-target-1"}
@@ -592,10 +657,14 @@ def _completion_case(tmp_path: Path) -> dict:
     _write_bytes(repo, review_prompt_path, review_prompt_raw)
     _write_bytes(repo, review_input_path, review_input_raw)
     _write_bytes(repo, prompt_audit_signature_path, b"P" * 64)
+    _write_bytes(repo, semantic_audit_signature_path, b"S" * 64)
     prompt_reference = _working_artifact(repo, review_prompt_path)
     input_reference = _working_artifact(repo, review_input_path)
     prompt_audit_signature_reference = _working_artifact(
         repo, prompt_audit_signature_path
+    )
+    semantic_audit_signature_reference = _working_artifact(
+        repo, semantic_audit_signature_path
     )
     prompt_audit = {
         "schema_version": _schema_const(
@@ -630,6 +699,7 @@ def _completion_case(tmp_path: Path) -> dict:
             identifiers=["logic-artifact", "logic-record-1", "logic-target-1"],
             locators=["logic:citation-1", "logic:target-1"],
         ),
+        "semantic_assessment": None,
         "authentication": {
             "registry_id": "logic-review-registry",
             "signature_context": "hapi-site-graph-v0-review-evidence/1",
@@ -641,6 +711,27 @@ def _completion_case(tmp_path: Path) -> dict:
         },
     }
     _write_json(repo, prompt_audit_path, prompt_audit)
+    semantic_audit = {
+        **copy.deepcopy(prompt_audit),
+        "audit_id": "logic-semantic-prompt-audit",
+        "audit_method": review_auth.SEMANTIC_AUDIT_METHOD,
+        "auditor": {
+            "auditor_id": "logic-semantic-auditor",
+            "independence_group": "logic-semantic-auditor-group",
+        },
+        "semantic_assessment": review_auth.semantic_prompt_assessment_record(
+            review_prompt_raw,
+            review_input_raw,
+            reasoning="Logic-only semantic audit found no answer-bearing directive.",
+        ),
+        "authentication": {
+            **copy.deepcopy(prompt_audit["authentication"]),
+            "principal_id": "logic-semantic-auditor",
+            "key_id": "8" * 64,
+            "signature": semantic_audit_signature_reference,
+        },
+    }
+    _write_json(repo, semantic_audit_path, semantic_audit)
 
     role_specs = (
         (
@@ -703,6 +794,20 @@ def _completion_case(tmp_path: Path) -> dict:
             "prompt_leakage_audit_signature",
             None,
             prompt_audit_signature_path,
+            "application/octet-stream",
+            None,
+        ),
+        (
+            "semantic_prompt_audit",
+            None,
+            semantic_audit_path,
+            "application/json",
+            semantic_audit["schema_version"],
+        ),
+        (
+            "semantic_prompt_audit_signature",
+            None,
+            semantic_audit_signature_path,
             "application/octet-stream",
             None,
         ),

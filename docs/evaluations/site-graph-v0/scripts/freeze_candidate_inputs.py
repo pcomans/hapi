@@ -44,6 +44,38 @@ def _canonical_sha256(value: object) -> str:
     ).hexdigest()
 
 
+def _prompt_audit_request_key(audit: dict) -> tuple[str, str, str, str, str, str]:
+    return (
+        audit["review_id"],
+        audit["review_invocation_id"],
+        audit["decision_key"],
+        audit["decision_kind"],
+        audit["prompt"]["path"],
+        audit["input"]["path"],
+    )
+
+
+def _validate_semantic_prompt_audit_pair(
+    semantic_audit: dict, deterministic_audit: dict
+) -> None:
+    """Require two audit methods to cover one identical frozen request."""
+    if semantic_audit["audit_method"] != "independent_semantic_prompt_audit/1":
+        raise RuntimeError("semantic prompt-audit path has the wrong method")
+    if deterministic_audit["audit_method"] != "deterministic_prompt_leakage_guard/3":
+        raise RuntimeError("deterministic prompt-audit path has the wrong method")
+    if _prompt_audit_request_key(semantic_audit) != _prompt_audit_request_key(
+        deterministic_audit
+    ):
+        raise RuntimeError("semantic prompt audit has no matching deterministic request")
+    if semantic_audit["audit_id"] == deterministic_audit["audit_id"]:
+        raise RuntimeError("semantic and deterministic prompt audits reuse an audit ID")
+    for field in ("subject", "shuffle_provenance", "deterministic_guard"):
+        if semantic_audit[field] != deterministic_audit[field]:
+            raise RuntimeError(
+                f"semantic/deterministic prompt audit {field} mismatch"
+            )
+
+
 def generate(
     repo_root: Path,
     output: Path,
@@ -53,6 +85,7 @@ def generate(
     prompt_leakage_audit_paths: list[str],
     candidate_id: str,
     created_by: str,
+    semantic_prompt_audit_paths: list[str] | None = None,
 ) -> dict:
     repo_root = repo_root.resolve()
     output = output.resolve()
@@ -248,6 +281,10 @@ def generate(
                 signature_metadata["sha256"],
             }
         )
+    semantic_prompt_audit_paths = semantic_prompt_audit_paths or []
+    deterministic_audits_by_request: dict[
+        tuple[str, str, str, str, str, str], dict
+    ] = {}
     for audit_path_value in prompt_leakage_audit_paths:
         audit_path = normalize_relative_path(audit_path_value)
         if audit_path in frozen_paths:
@@ -261,6 +298,10 @@ def generate(
             evaluation_root / "schemas/prompt-leakage-audit.schema.json",
             f"prompt leakage audit {audit_path}",
         )
+        if audit["audit_method"] != "deterministic_prompt_leakage_guard/3":
+            raise RuntimeError(
+                f"deterministic prompt-audit path has the wrong method: {audit_path}"
+            )
         audit_references = (
             ("review_prompt", audit["prompt"], "text/plain"),
             ("review_input", audit["input"], "application/octet-stream"),
@@ -340,6 +381,130 @@ def generate(
                 *reference_entries,
             ]
         )
+        request_key = _prompt_audit_request_key(audit)
+        if request_key in deterministic_audits_by_request:
+            raise RuntimeError("deterministic prompt audit request binding is duplicated")
+        deterministic_audits_by_request[request_key] = audit
+
+    semantic_request_keys: set[tuple[str, str, str, str, str, str]] = set()
+    for audit_path_value in semantic_prompt_audit_paths:
+        audit_path = normalize_relative_path(audit_path_value)
+        if audit_path in frozen_paths:
+            raise RuntimeError(f"candidate freeze input path reused: {audit_path}")
+        audit, audit_metadata = read_authenticated_json(repo_root, head, audit_path)
+        working_audit = repo_root / audit_path
+        if (
+            not working_audit.is_file()
+            or hashlib.sha256(working_audit.read_bytes()).hexdigest()
+            != audit_metadata["sha256"]
+        ):
+            raise RuntimeError(f"semantic prompt audit has uncommitted changes: {audit_path}")
+        validate_schema(
+            audit,
+            evaluation_root / "schemas/prompt-leakage-audit.schema.json",
+            f"semantic prompt audit {audit_path}",
+        )
+        if audit["audit_method"] != "independent_semantic_prompt_audit/1":
+            raise RuntimeError(
+                f"semantic prompt-audit path has the wrong method: {audit_path}"
+            )
+        request_key = _prompt_audit_request_key(audit)
+        deterministic_audit = deterministic_audits_by_request.get(request_key)
+        if deterministic_audit is None:
+            raise RuntimeError(
+                f"semantic prompt audit has no matching deterministic request: {audit_path}"
+            )
+        if request_key in semantic_request_keys:
+            raise RuntimeError(
+                f"semantic prompt audit request binding is duplicated: {audit_path}"
+            )
+        try:
+            _validate_semantic_prompt_audit_pair(audit, deterministic_audit)
+        except RuntimeError as error:
+            raise RuntimeError(f"{error}: {audit_path}") from error
+        for role, reference in (
+            ("review_prompt", audit["prompt"]),
+            ("review_input", audit["input"]),
+        ):
+            relative = normalize_relative_path(reference["path"])
+            frozen_entry = next(
+                (entry for entry in files if entry["path"] == relative), None
+            )
+            if (
+                frozen_entry is None
+                or frozen_entry["role"] != role
+                or any(
+                    reference[field] != frozen_entry[field]
+                    for field in ("path", "sha256", "git_blob_oid")
+                )
+            ):
+                raise RuntimeError(
+                    f"semantic prompt audit does not reuse the exact frozen {role}: {audit_path}"
+                )
+        signature_reference = audit["authentication"]["signature"]
+        signature_path = normalize_relative_path(signature_reference["path"])
+        if signature_path == audit_path or signature_path in frozen_paths:
+            raise RuntimeError(
+                f"semantic prompt audit/signature path is reused: {audit_path}"
+            )
+        signature_raw = read_bytes(repo_root, head, signature_path)
+        if len(signature_raw) != 64:
+            raise RuntimeError(
+                f"semantic prompt audit signature must be exactly 64 bytes: {signature_path}"
+            )
+        signature_sha256 = hashlib.sha256(signature_raw).hexdigest()
+        signature_blob = blob_oid(repo_root, head, signature_path)
+        if (
+            signature_reference["sha256"] != signature_sha256
+            or signature_reference["git_blob_oid"] != signature_blob
+        ):
+            raise RuntimeError(
+                f"semantic prompt audit signature binding mismatch: {audit_path}"
+            )
+        working_signature = repo_root / signature_path
+        if (
+            not working_signature.is_file()
+            or hashlib.sha256(working_signature.read_bytes()).hexdigest()
+            != signature_sha256
+        ):
+            raise RuntimeError(
+                f"semantic prompt audit signature has uncommitted changes: {signature_path}"
+            )
+        if (
+            audit_metadata["sha256"] == signature_sha256
+            or audit_metadata["sha256"] in frozen_hashes
+            or signature_sha256 in frozen_hashes
+        ):
+            raise RuntimeError("semantic prompt audit and signature hashes must be unique")
+        files.extend(
+            [
+                {
+                    "role": "semantic_prompt_audit",
+                    "source_export_group_id": None,
+                    "path": audit_path,
+                    "sha256": audit_metadata["sha256"],
+                    "git_blob_oid": audit_metadata["git_blob_oid"],
+                    "media_type": "application/json",
+                    "schema_version": audit["schema_version"],
+                },
+                {
+                    "role": "semantic_prompt_audit_signature",
+                    "source_export_group_id": None,
+                    "path": signature_path,
+                    "sha256": signature_sha256,
+                    "git_blob_oid": signature_blob,
+                    "media_type": "application/octet-stream",
+                    "schema_version": None,
+                },
+            ]
+        )
+        frozen_paths.update({audit_path, signature_path})
+        frozen_hashes.update({audit_metadata["sha256"], signature_sha256})
+        semantic_request_keys.add(request_key)
+    if semantic_request_keys != set(deterministic_audits_by_request):
+        raise RuntimeError(
+            "every deterministic prompt audit requires exactly one semantic prompt audit"
+        )
     value = {
         "schema_version": "site-graph-v0-candidate-freeze-manifest/3",
         "contract_version": "site-graph-v0/4",
@@ -414,6 +579,7 @@ def main() -> None:
         "--source-export-attestation-path", action="append", default=[]
     )
     parser.add_argument("--prompt-leakage-audit-path", action="append", default=[])
+    parser.add_argument("--semantic-prompt-audit-path", action="append", default=[])
     parser.add_argument("--candidate-id", required=True)
     parser.add_argument("--created-by", required=True)
     args = parser.parse_args()
@@ -428,6 +594,7 @@ def main() -> None:
                 args.prompt_leakage_audit_path,
                 args.candidate_id,
                 args.created_by,
+                semantic_prompt_audit_paths=args.semantic_prompt_audit_path,
             ),
             indent=2,
             sort_keys=True,

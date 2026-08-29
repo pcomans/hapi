@@ -45,15 +45,15 @@
   },
   "run_a": {
     "manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
-    "provenance_sha256": "6b83cb03f2f3e071b48f829c10d1f1bd81157bc829bb97805e25bdc93acb3c97",
-    "resolved_directory": "/tmp/hapi-327-round5-reruns-20260829a/run-a",
-    "run_id": "8a517db6-ad62-417a-9457-e02ea6ca7999"
+    "provenance_sha256": "f4e7007810e02dfecf238a2d994a60b3207c05ac68f9357979050847e5504488",
+    "resolved_directory": "/tmp/hapi-327-round6-release-reruns-20260829a/run-a",
+    "run_id": "b5443184-91bd-4351-862d-362bfaf90469"
   },
   "run_b": {
     "manifest_sha256": "03966f936bfd7e436e9e4d79edced2d622c88199c1cd3bb5cbc8b5306bbf29e7",
-    "provenance_sha256": "e9fe0ff918efb3599d1f105165b2758c889c1464e67cd4a99dba8f452a73d6d0",
-    "resolved_directory": "/tmp/hapi-327-round5-reruns-20260829a/run-b",
-    "run_id": "82cfd353-754a-4f9f-8ba5-5aa1be3301fa"
+    "provenance_sha256": "a9cc00b1733211d4a871dc81e13f867203e778ea667808a999b42660e9140d1e",
+    "resolved_directory": "/tmp/hapi-327-round6-release-reruns-20260829a/run-b",
+    "run_id": "261186b5-0cbf-488d-b586-4fdf23023b29"
   },
   "runner_sha256": "205a3edad204292d062ea3f85b0e14166536756372c56bb5d296b44f0543a218",
   "runtime_attestation": {

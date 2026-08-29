@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-result-5.json",
+  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-result-6.json",
   "title": "Authenticated bounded site-graph-v0 candidate result",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "candidate_id", "release_manifest_sha256", "private_opportunity_ledger_canonical_sha256", "freeze_commit", "freeze_manifest", "review_ledger", "run_start_receipt", "run_start_signature", "records"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-candidate-result/5"},
+    "schema_version": {"const": "site-graph-v0-candidate-result/6"},
     "candidate_id": {"type": "string", "minLength": 1},
     "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "private_opportunity_ledger_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
@@ -39,11 +39,12 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["opportunity_id", "opportunity_binding_sha256", "resolution_status", "abstention_reason", "direct_links", "uncredited_link_claims"],
+              "required": ["opportunity_id", "opportunity_binding_sha256", "resolution_status", "status_support_decision_key", "abstention_reason", "direct_links", "uncredited_link_claims"],
               "properties": {
                 "opportunity_id": {"type": "string", "minLength": 1},
                 "opportunity_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                 "resolution_status": {"enum": ["linked", "ambiguous", "abstained", "unmatched", "unresolved", "research_failure"]},
+                "status_support_decision_key": {"type": ["string", "null"]},
                 "abstention_reason": {"type": ["string", "null"]},
                 "direct_links": {
                   "type": "array",

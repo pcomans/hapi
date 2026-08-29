@@ -114,7 +114,10 @@ the same two structured independent reviews; unsupported equivalence cannot
 preserve retention. Exact authority-locator string equality auto-unions (v0 does
 not perform additional locator normalization); any other pair
 of classes whose separation could inflate gains requires two reviewed positive
-distinctness decisions. Broad-only partitions use the resulting identity-class
+distinctness decisions. The complete gained-root census is derived before pair-side
+credit and checks every gained root against every other gained root and the full
+relevant baseline universe; crossed additions and one-sided specific identities
+cannot evade it. Broad-only partitions use the resulting identity-class
 scope, so a candidate-specific alias equivalent to a frozen broad identity remains
 broad. A reviewed equivalent direct-edge replacement is reported as unchanged.
 
@@ -157,6 +160,11 @@ can justify additions and update only their exact selected mentions; unrelated
 resolved links and unselected mention statuses carry forward. A disputed or
 unsupported attempted link must be reported as an uncredited claim under an
 `unresolved` outcome and cannot suppress ambiguity.
+Candidate dispositions do not themselves change mention state. Any change from a
+frozen selected status requires a separate subject-bound, two-review
+`mention_status_resolution` decision over the exact mention IDs, prior statuses,
+and proposed status. Abstention, unresolved work, and research failure preserve
+the frozen status.
 
 The fixed per-museum maximum credited affected-record upper bounds (new-link
 eligible plus baseline broad-only reassignment eligible) are:
@@ -187,7 +195,10 @@ identity, uncredited change, unchanged.
 Retention/loss and post-candidate linkability, pair connectivity, all-three,
 any-two-or-more, broad-only, top-k, and HHI metrics all consume the complete final
 record-level identity-class link sets. Equivalent alias replacements are unchanged
-and never satisfy an affected-record floor.
+and never satisfy an affected-record floor. Retention compares identity roots after
+authenticated locator/equivalence union: removing a duplicate raw direct edge while
+retaining the same identity is unchanged, and raw edge removals remain separately
+visible in the report.
 
 A supported strict refinement is not an ordinary loss. The old broad direct edge
 may be replaced; the authenticated source-derived hierarchy must preserve its
@@ -234,11 +245,18 @@ export bytes. Collectively, a review's cited source records must cover every tar
 in its signed subject; an unrelated export row cannot support a link, equivalence,
 distinctness, or strict-refinement decision. LLM review additionally records unique
 nonempty exact prompt, input,
-and full raw response bytes; Git blob OIDs and SHA-256 values; model selector;
+and full raw response bytes; the raw response must be canonical JSON with exactly
+`assessment` and `reasoning`, and both must exactly equal the signed wrapper values.
+Git blob OIDs and SHA-256 values; model selector;
 exact backend snapshot or an enumerated non-exposure sentinel; a full parameter
-object; and a registered auditor's detached signature over a pre-invocation,
-subject/decision/review-bound prompt-leakage audit. Prompt and input are canonical
-JSON envelopes. Input items use hash-derived opaque labels and a deterministic
+object; and separate registered auditors' detached signatures over pre-invocation,
+subject/decision/review-bound deterministic and human semantic prompt audits.
+Prompt and input are canonical JSON envelopes. The task/instructions are an
+immutable release-owned hash-bound template, never caller-authored. It selects one
+release-defined decision-kind task and claim, binds the exact subject only by its
+canonical hash, and admits no candidate-authored task, instruction, example, or hint.
+Input items use
+hash-derived opaque labels only in schema-defined option slots and a deterministic
 non-identity SHA-256-ranked presentation order. The seed derives from the canonical
 decision key, kind, and subject rather than a caller-chosen invocation value. The
 signed audit retains the hidden canonical payload-hash order, seed, and exact
@@ -249,14 +267,18 @@ names, IDs, locators, and verifier-owned decision/order proxies such as `yes`,
 `approve`, or `first item`. Prompt, input, response, audit, signature, or invocation
 reuse fails closed. Disagreement
 or uncertainty remains unresolved and receives no credit. This provisional census
-is decision support, not gold truth. The reviewer registry is currently
+is decision support, not gold truth. The additional signed semantic audit reduces
+known leakage risk but does not prove semantic perfection. The reviewer registry is currently
 `NOT_CONFIGURED`, so no production decision can receive review credit.
 
 A held-out sample may be added only as a descriptive audit using the exact
 hash-ranked seed/algorithm in `preregistration.json`. It cannot gate credit or
 support population precision/recall. Candidate ambiguity and closed-reason
-abstentions are reported separately. Blocking ambiguity may rise by no more than
-5/1000 of `X_m` in any museum. That allowance and the two-identity minimum are
+abstentions are reported separately. The safety numerator is newly blocking records
+(baseline nonblocking, candidate blocking), not net prevalence change; resolved
+blockers cannot offset new regressions. Newly blocking records may be no more than
+5/1000 of `X_m` in any museum. Authenticated resolved blockers and net change are
+descriptive outputs. That allowance and the two-identity minimum are
 precommitted product guardrails, not statistical significance thresholds.
 
 ## Ordered outcome
@@ -285,7 +307,8 @@ registration artifact from a strict ancestor Git commit. That artifact binds the
 genuine genesis, exact prior ledger head, and both private baseline hashes; the
 verified release-policy activation commit must strictly follow registration and
 strictly precede every review decision, and the proposed ledger must follow those
-decisions while preserving its prior byte-for-byte prefix. Each decision is bound to
+decisions while preserving its prior canonical-entry prefix. This is equality of
+canonical JSON decision entries, not preservation of original transport bytes. Each decision is bound to
 the chain ID and both private baseline hashes, cites exact content-addressed source
 bytes from a strict ancestor of the decision commit, and has signed support from
 exactly two registered human reviewers
@@ -309,11 +332,24 @@ metrics and hashes may be released. Primary bytes are never rewritten.
 
 `scripts/release_contract.py` is the immutable versioned required-file inventory outside
 the generated manifest. `release-manifest.json` must match it exactly. Read-only
-validation authenticates every byte before parsing any deliverable and rejects
-missing, extra, or changed release files. It never repairs hashes or regenerates a
-manifest. Cache exclusions are limited and documented; a required-file change is a
-separately reviewed contract-version migration. Only the explicit release command
-writes the manifest.
+validation uses a deliberately small standard-library bootstrap to authenticate the
+manifest inventory and every listed byte before importing or executing any semantic
+release module from the requested repository root. The bootstrap itself and the
+manifest bytes it initially parses are therefore trusted validation code; the
+contract does not claim an impossible self-authentication of that bootstrap. Missing,
+extra, changed, syntactically corrupt, or top-level-side-effect release modules fail
+in the integrity phase before semantic import. Validation never repairs hashes or
+regenerates a manifest. Cache exclusions are limited and documented; a required-file
+change is a separately reviewed contract-version migration. Only the explicit
+release command writes the manifest.
+
+The same validation performs a recursive current-tree scan and an all-ancestor Git
+name/blob scan from every local `HEAD` ancestor for the narrowly forbidden private
+bulk derivative and mention/artifact-dump patterns. This is not a blanket claim that
+the repository contains no museum data. If Git metadata is unavailable, historical
+boundary verification reports that inability and fails closed. Runtime
+`__pycache__`, `.pytest_cache`, `.pyc`, and `.pyo` products are excluded only as stated
+in the static release contract and must not be committed.
 
 Create and authenticate two fresh deterministic reproductions in one operation:
 
@@ -328,8 +364,13 @@ uv run --project pipeline python docs/evaluations/site-graph-v0/scripts/run_two_
   --corpus-archive "$HAPI_CORPUS_ARCHIVE" \
   --corpus-archive-sidecar "$HAPI_CORPUS_ARCHIVE_SHA256" \
   --output-root /tmp/hapi-327-final-reruns \
-  --evidence docs/evaluations/site-graph-v0/baseline-rerun-evidence.json
+  --evidence /tmp/hapi-327-final-rerun-evidence.json
 ```
+
+The ordinary two-run command refuses both outputs and evidence inside the tracked
+release directory and refuses to overwrite an existing evidence path. An intentional
+release update requires the explicit `--release-maintainer-mode`; the reproducibility
+workflow above is read-only with respect to tracked release files.
 
 The archive verifier refuses unsafe paths, links/devices, duplicates/overwrites,
 unexpected members, corrupt sidecars, internal checksum mismatches, verifier

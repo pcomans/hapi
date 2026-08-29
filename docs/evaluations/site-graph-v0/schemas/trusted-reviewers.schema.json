@@ -34,7 +34,7 @@
             "type": "array",
             "minItems": 1,
             "uniqueItems": true,
-            "items": {"enum": ["human", "llm", "deterministic_prompt_leakage_guard/2"]}
+            "items": {"enum": ["human", "llm", "deterministic_prompt_leakage_guard/3", "independent_semantic_prompt_audit/1"]}
           },
           "key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "public_key_base64": {"type": "string", "pattern": "^[A-Za-z0-9+/]{43}=$"},

@@ -1,15 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-review-artifact-3.json",
+  "$id": "https://hapi.example/schemas/site-graph-v0-review-artifact-4.json",
   "title": "Authenticated structured independent evidence review",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "review_id", "decision_key", "decision_kind", "subject", "reviewer", "outcome", "method", "citations", "reasoning", "human_provenance", "llm_interaction", "authentication"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-review-artifact/3"},
+    "schema_version": {"const": "site-graph-v0-review-artifact/4"},
     "review_id": {"type": "string", "pattern": "^[^\\s]+$"},
     "decision_key": {"type": "string", "minLength": 1},
-    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support", "correction_support"]},
+    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support", "mention_status_resolution", "correction_support"]},
     "subject": {"type": "object", "minProperties": 2},
     "reviewer": {
       "type": "object",
@@ -63,7 +63,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["review_invocation_id", "invoked_at_utc", "completed_at_utc", "model", "parameters", "prompt", "input", "raw_response", "prompt_leakage_audit", "interaction_binding_sha256"],
+          "required": ["review_invocation_id", "invoked_at_utc", "completed_at_utc", "model", "parameters", "prompt", "input", "raw_response", "parsed_response_sha256", "prompt_leakage_audit", "semantic_prompt_audit", "interaction_binding_sha256"],
           "properties": {
             "review_invocation_id": {"type": "string", "pattern": "^[^\\s]+$"},
             "invoked_at_utc": {"type": "string", "format": "date-time"},
@@ -108,7 +108,9 @@
             "prompt": {"$ref": "#/$defs/artifact"},
             "input": {"$ref": "#/$defs/artifact"},
             "raw_response": {"$ref": "#/$defs/artifact"},
+            "parsed_response_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
             "prompt_leakage_audit": {"$ref": "#/$defs/artifact"},
+            "semantic_prompt_audit": {"$ref": "#/$defs/artifact"},
             "interaction_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
           }
         }
