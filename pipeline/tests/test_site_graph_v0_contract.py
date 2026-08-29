@@ -236,6 +236,9 @@ def test_validator_rejects_release_corruption_before_semantics(
         "stale_class_import_alias_side_effect",
         "stale_passive_class_side_effect",
         "subscription_protocol_side_effect",
+        "sequential_import_alias_rebinding",
+        "rebound_main_guard_side_effect",
+        "shadowed_sys_assignment_side_effect",
     ],
 )
 def test_validator_authenticates_semantic_module_before_import(
@@ -428,6 +431,32 @@ def test_validator_authenticates_semantic_module_before_import(
             "PROBE = Callback[0]\n",
             encoding="utf-8",
         )
+    elif attack == "sequential_import_alias_rebinding":
+        target.write_text(
+            "from fractions import Fraction as Path\n"
+            "PROBE = Path('1/2')\n"
+            "from pathlib import Path\n",
+            encoding="utf-8",
+        )
+    elif attack == "rebound_main_guard_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "__name__ = '__main__'\n"
+            "if __name__ == '__main__':\n"
+            "    Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n",
+            encoding="utf-8",
+        )
+    elif attack == "shadowed_sys_assignment_side_effect":
+        target.write_text(
+            "import sys\n"
+            "class Callback:\n"
+            "    pass\n"
+            "sys = Callback\n"
+            "sys.dont_write_bytecode = True\n",
+            encoding="utf-8",
+        )
     else:
         target.write_text(
             "from pathlib import Path\n"
@@ -472,6 +501,7 @@ def test_validator_authenticates_semantic_module_before_import(
     assert result.returncode == 1
     assert payload["phase"] == "release_integrity"
     assert payload["semantic_release_modules_activated"] is False
+    assert "authenticated release Python" in payload["error"]
     assert not marker.exists(), "unauthenticated top-level code must never execute"
 
 

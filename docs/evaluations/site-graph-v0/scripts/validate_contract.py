@@ -296,13 +296,18 @@ def _module_bindings(tree: ast.Module) -> tuple[dict[str, str], set[str]]:
         if isinstance(statement, ast.Import):
             for alias in statement.names:
                 bound = alias.asname or alias.name.split(".", 1)[0]
-                imports[bound] = alias.name if alias.asname else bound
+                imported = alias.name if alias.asname else bound
+                if bound in imports and imports[bound] != imported:
+                    assigned.add(bound)
+                imports[bound] = imported
         elif isinstance(statement, ast.ImportFrom) and statement.module:
             for alias in statement.names:
                 if alias.name != "*":
-                    imports[alias.asname or alias.name] = (
-                        f"{statement.module}.{alias.name}"
-                    )
+                    bound = alias.asname or alias.name
+                    imported = f"{statement.module}.{alias.name}"
+                    if bound in imports and imports[bound] != imported:
+                        assigned.add(bound)
+                    imports[bound] = imported
         elif isinstance(statement, ast.Assign):
             assigned.update(
                 target.id for target in statement.targets if isinstance(target, ast.Name)
@@ -836,6 +841,8 @@ def _preflight_release_python_sources(
                     and allow_sys_assignment
                     and target.value.id == "sys"
                     and target.attr == "dont_write_bytecode"
+                    and imports.get("sys") == "sys"
+                    and "sys" not in assigned_names
                 )
                 if not safe_target:
                     path_violations.append(
@@ -853,7 +860,12 @@ def _preflight_release_python_sources(
                     )
                 continue
             if isinstance(statement, ast.If):
-                if not _is_main_guard(statement.test) or statement.orelse:
+                if (
+                    not _is_main_guard(statement.test)
+                    or statement.orelse
+                    or "__name__" in imports
+                    or "__name__" in assigned_names
+                ):
                     path_violations.append(
                         f"line {statement.lineno}: non-main top-level control flow"
                     )
