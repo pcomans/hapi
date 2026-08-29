@@ -56,8 +56,8 @@
     "authenticated_validator_runs": "historical release identity plus two distinct fresh-path/UUID reproductions each recomputed 22/22 checks and matched the committed report"
   },
   "tests": {
-    "focused_site_graph_contract": "229 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
-    "full_pipeline": "2608 passed, 2 skipped for the same environment-variable-only archive tests",
+    "focused_site_graph_contract": "230 passed, 2 skipped because archive env variables are intentionally absent; the same authorized archive was exercised by explicit validation commands",
+    "full_pipeline": "2609 passed, 2 skipped for the same environment-variable-only archive tests",
     "authorized_real_archive_tests": "8 passed with HAPI_CORPUS_ARCHIVE and HAPI_CORPUS_ARCHIVE_SHA256 explicitly bound to the verified archive and sidecar",
     "execution_scope": "local repository-owned uv environment; no pre-PR CI run exists"
   },

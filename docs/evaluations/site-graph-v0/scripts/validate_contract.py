@@ -690,16 +690,22 @@ def _preflight_release_python_sources(
         def check_initializer(
             value: ast.AST | None,
             scope_value_kinds: dict[str, str] | None = None,
+            scope_assigned_names: set[str] | None = None,
         ) -> None:
             if value is None:
                 return
             kinds = value_kinds if scope_value_kinds is None else scope_value_kinds
+            assigned_for_scope = (
+                assigned_names
+                if scope_assigned_names is None
+                else scope_assigned_names
+            )
             for call in (
                 node for node in ast.walk(value) if isinstance(node, ast.Call)
             ):
                 if (
                     _initializer_expression_kind(
-                        call, imports, assigned_names, kinds
+                        call, imports, assigned_for_scope, kinds
                     )
                     is None
                 ):
@@ -711,13 +717,19 @@ def _preflight_release_python_sources(
         def check_definition(
             definition: ast.FunctionDef | ast.AsyncFunctionDef,
             scope_value_kinds: dict[str, str] | None = None,
+            scope_assigned_names: set[str] | None = None,
         ) -> None:
+            assigned_for_scope = (
+                assigned_names
+                if scope_assigned_names is None
+                else scope_assigned_names
+            )
             for decorator in definition.decorator_list:
                 decorator_function = (
                     decorator.func if isinstance(decorator, ast.Call) else decorator
                 )
                 qualified = _qualified_reference(
-                    decorator_function, imports, assigned_names
+                    decorator_function, imports, assigned_for_scope
                 )
                 if isinstance(decorator, ast.Call) or qualified not in SAFE_DECORATORS:
                     path_violations.append(
@@ -728,7 +740,9 @@ def _preflight_release_python_sources(
                 *definition.args.defaults,
                 *(item for item in definition.args.kw_defaults if item is not None),
             ]:
-                check_initializer(value, scope_value_kinds)
+                check_initializer(
+                    value, scope_value_kinds, assigned_for_scope
+                )
             for argument in [
                 *definition.args.posonlyargs,
                 *definition.args.args,
@@ -868,9 +882,12 @@ def _preflight_release_python_sources(
                     return scope
 
                 for class_statement in statement.body:
+                    class_assigned_names = assigned_names | class_shadowed_names
                     if isinstance(class_statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
                         check_definition(
-                            class_statement, class_scope_value_kinds()
+                            class_statement,
+                            class_scope_value_kinds(),
+                            class_assigned_names,
                         )
                         class_shadowed_names.add(class_statement.name)
                         class_value_kinds.pop(class_statement.name, None)
@@ -881,12 +898,16 @@ def _preflight_release_python_sources(
                         if isinstance(class_statement, ast.AnnAssign):
                             check_annotation(class_statement.annotation)
                         scope_kinds = class_scope_value_kinds()
-                        check_initializer(class_statement.value, scope_kinds)
+                        check_initializer(
+                            class_statement.value,
+                            scope_kinds,
+                            class_assigned_names,
+                        )
                         if isinstance(class_statement.value, ast.AST):
                             class_value_kind = _initializer_expression_kind(
                                 class_statement.value,
                                 imports,
-                                assigned_names,
+                                class_assigned_names,
                                 scope_kinds,
                             )
                             class_targets = (

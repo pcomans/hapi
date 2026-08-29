@@ -233,6 +233,7 @@ def test_validator_rejects_release_corruption_before_semantics(
         "custom_metaclass_side_effect",
         "stale_initializer_kind_side_effect",
         "stale_class_scope_kind_side_effect",
+        "stale_class_import_alias_side_effect",
         "stale_passive_class_side_effect",
     ],
 )
@@ -383,6 +384,19 @@ def test_validator_authenticates_semantic_module_before_import(
             "class Probe:\n"
             "    P = Callback\n"
             "    RESULT = P.resolve()\n",
+            encoding="utf-8",
+        )
+    elif attack == "stale_class_import_alias_side_effect":
+        target.write_text(
+            "from pathlib import Path\n"
+            "class Callback:\n"
+            "    def __init__(self, value):\n"
+            "        Path("
+            + repr(str(marker))
+            + ").write_text('executed', encoding='utf-8')\n"
+            "class Probe:\n"
+            "    Path = Callback\n"
+            "    RESULT = Path('.')\n",
             encoding="utf-8",
         )
     elif attack == "stale_passive_class_side_effect":
