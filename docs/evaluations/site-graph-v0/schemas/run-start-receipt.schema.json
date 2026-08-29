@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-run-start-receipt-1.json",
+  "title": "Trusted attestor statement issued when an exact frozen run starts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "signature_context", "release_manifest_sha256", "trusted_run_attestors_canonical_sha256", "attestor_id", "attestor_key_id", "candidate_id", "invocation_id", "freeze_commit", "freeze_manifest", "freeze_nonce", "started_at_utc"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-run-start-receipt/1"},
+    "contract_version": {"const": "site-graph-v0/3"},
+    "signature_context": {"const": "hapi-site-graph-v0-run-start/1"},
+    "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_run_attestors_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "attestor_id": {"type": "string", "pattern": "^[^\\s]+$"},
+    "attestor_key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "invocation_id": {"type": "string", "minLength": 1},
+    "freeze_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "freeze_manifest": {"$ref": "#/$defs/artifact"},
+    "freeze_nonce": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "started_at_utc": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+      }
+    }
+  }
+}

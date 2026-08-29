@@ -24,6 +24,7 @@ from contract_constants import (
     OPPORTUNITY_TOTAL_SIGNATURES,
     PAIRS,
 )
+from corpus_archive import validate_archive_attestation
 from metrics_core import concentration, partition_scopes, ratio
 
 ATTEMPT_STATUSES = {"resolved", "ambiguous", "unmatched"}
@@ -84,6 +85,75 @@ def canonical_json_bytes(value: object) -> bytes:
 
 def canonical_json_sha256(value: object) -> str:
     return hashlib.sha256(canonical_json_bytes(value)).hexdigest()
+
+
+def validate_site_mention(mention: dict) -> None:
+    """Reject resolution states that could not have produced direct links."""
+    status = mention["status"]
+    if status not in ATTEMPT_STATUSES:
+        raise RuntimeError(
+            f"site mention {mention['mention_id']} has unsupported status {status!r}"
+        )
+    target_ids = mention.get("target_ids")
+    if not isinstance(target_ids, list) or target_ids != sorted(set(target_ids)):
+        raise RuntimeError(
+            f"site mention {mention['mention_id']} target IDs must be a sorted unique list"
+        )
+    if status == "resolved" and len(target_ids) != 1:
+        raise RuntimeError(
+            f"resolved site mention {mention['mention_id']} must have exactly one target"
+        )
+    if status == "unmatched" and target_ids:
+        raise RuntimeError(
+            f"unmatched site mention {mention['mention_id']} must have no targets"
+        )
+    if status == "ambiguous" and len(target_ids) < 2:
+        raise RuntimeError(
+            f"ambiguous site mention {mention['mention_id']} must have at least two targets"
+        )
+
+
+def mention_binding(mention: dict) -> dict:
+    """Return the complete resolution primitive used in opportunity membership."""
+    validate_site_mention(mention)
+    return {
+        "mention_id": mention["mention_id"],
+        "field_path": mention["field_path"],
+        "status": mention["status"],
+        "target_ids": mention["target_ids"],
+        "normalized_keys": mention.get("normalized_keys") or [],
+        "mention_text_sha256": hashlib.sha256(
+            mention["mention_text"].encode("utf-8")
+        ).hexdigest(),
+    }
+
+
+def opportunity_binding(
+    opportunity_id: str,
+    museum: str,
+    normalized_expression_key: str,
+    artifact_id: str,
+    mentions: list[dict],
+) -> dict:
+    """Bind one ITT artifact to the exact private mentions that selected it."""
+    exact_mentions = sorted(
+        (mention_binding(mention) for mention in mentions),
+        key=lambda row: row["mention_id"],
+    )
+    if not exact_mentions:
+        raise RuntimeError(f"{opportunity_id}/{artifact_id} has no selecting mentions")
+    payload = {
+        "opportunity_id": opportunity_id,
+        "museum": museum,
+        "normalized_expression_key": normalized_expression_key,
+        "artifact_id": artifact_id,
+        "mentions": exact_mentions,
+    }
+    return {
+        "artifact_id": artifact_id,
+        "opportunity_binding_sha256": canonical_json_sha256(payload),
+        "mentions": exact_mentions,
+    }
 
 
 def gzip_ledger_digest(path: Path) -> dict:
@@ -160,6 +230,7 @@ def classify_current_nodes(
         output.append(
             {
                 "target_id": row["id"],
+                "authority_identity_locator": row["id"],
                 "target_label": row["display"],
                 "source_types": sorted(types),
                 "raw_hierarchy_child_ids": sorted(children[row["id"]]),
@@ -226,8 +297,13 @@ def build_record_rows(
     canonical: list[dict], mentions: list[dict], links: list[dict], scope_by_target: dict[str, str]
 ) -> list[dict]:
     site_mentions: dict[str, list[dict]] = collections.defaultdict(list)
+    seen_site_mention_ids: set[str] = set()
     for mention in mentions:
         if mention["entity_type"] == "site":
+            validate_site_mention(mention)
+            if mention["mention_id"] in seen_site_mention_ids:
+                raise RuntimeError(f"duplicate site mention id {mention['mention_id']}")
+            seen_site_mention_ids.add(mention["mention_id"])
             site_mentions[mention["artifact_id"]].append(mention)
 
     site_links: dict[str, list[dict]] = collections.defaultdict(list)
@@ -258,6 +334,10 @@ def build_record_rows(
         )
         if target_ids != resolved_targets_from_mentions:
             raise RuntimeError(f"site link/mention target mismatch for {artifact_id}")
+        if len(target_ids) > status_counts["resolved"]:
+            raise RuntimeError(
+                f"site record {artifact_id} has more unique direct targets than resolved mentions"
+            )
         if bool(artifact_mentions) != bool(statuses):
             raise RuntimeError(f"invalid mention/status accounting for {artifact_id}")
 
@@ -505,8 +585,16 @@ def canonical_list_sha256(values: list[str]) -> str:
 
 def unresolved_site_groups(mentions: list[dict]) -> dict[tuple[str, str], dict]:
     groups: dict[tuple[str, str], dict] = {}
+    seen_mention_ids: set[str] = set()
     for mention in mentions:
-        if mention.get("entity_type") != "site" or mention.get("status") not in {"unmatched", "ambiguous"}:
+        if mention.get("entity_type") != "site":
+            continue
+        validate_site_mention(mention)
+        mention_id = mention["mention_id"]
+        if mention_id in seen_mention_ids:
+            raise RuntimeError(f"duplicate site mention id {mention_id}")
+        seen_mention_ids.add(mention_id)
+        if mention["status"] not in {"unmatched", "ambiguous"}:
             continue
         keys = mention.get("normalized_keys") or []
         normalized_key = "\u241f".join(keys)
@@ -523,6 +611,7 @@ def unresolved_site_groups(mentions: list[dict]) -> dict[tuple[str, str], dict]:
                 "statuses": collections.Counter(),
                 "mention_texts": set(),
                 "field_paths": set(),
+                "mentions_by_artifact": collections.defaultdict(list),
             },
         )
         group["artifact_ids"].add(mention["artifact_id"])
@@ -530,6 +619,7 @@ def unresolved_site_groups(mentions: list[dict]) -> dict[tuple[str, str], dict]:
         group["statuses"][mention["status"]] += 1
         group["mention_texts"].add(mention["mention_text"])
         group["field_paths"].add(mention["field_path"])
+        group["mentions_by_artifact"][mention["artifact_id"]].append(mention)
     return groups
 
 
@@ -573,15 +663,32 @@ def build_opportunity_queue(
     private_queue_rows = []
     public_queue_rows = []
     selected_artifacts: dict[str, set[str]] = collections.defaultdict(set)
-    artifact_opportunities: dict[str, set[str]] = collections.defaultdict(set)
+    artifact_opportunity_bindings: dict[str, list[dict]] = collections.defaultdict(list)
     for rank, row in enumerate(selected, 1):
         artifact_ids = sorted(row["artifact_ids"])
         key = (row["museum"], row["normalized_expression_key"])
         # Opaque rank identifiers avoid publishing a dictionary-testable hash of source text.
         opportunity_id = f"opp-{rank:04d}"
         selected_artifacts[row["museum"]].update(artifact_ids)
-        for artifact_id in artifact_ids:
-            artifact_opportunities[artifact_id].add(opportunity_id)
+        artifact_memberships = [
+            opportunity_binding(
+                opportunity_id,
+                row["museum"],
+                row["normalized_expression_key"],
+                artifact_id,
+                row["mentions_by_artifact"][artifact_id],
+            )
+            for artifact_id in artifact_ids
+        ]
+        for membership in artifact_memberships:
+            artifact_opportunity_bindings[membership["artifact_id"]].append(
+                {
+                    "opportunity_id": opportunity_id,
+                    "opportunity_binding_sha256": membership[
+                        "opportunity_binding_sha256"
+                    ],
+                }
+            )
         common = {
             "opportunity_id": opportunity_id,
             "selection_rank": rank,
@@ -598,6 +705,7 @@ def build_opportunity_queue(
                 **common,
                 "normalized_expression_key": row["normalized_expression_key"],
                 "artifact_ids": artifact_ids,
+                "artifact_memberships": artifact_memberships,
                 "mention_text_examples": sorted(row["mention_texts"])[:5],
                 "field_paths": sorted(row["field_paths"]),
             }
@@ -651,14 +759,28 @@ def build_opportunity_queue(
                 if not pair_targets:
                     counts["no_baseline_pair_connection"] += 1
                     credited_members.append(
-                        {"artifact_id": artifact_id, "category": "no_baseline_pair_connection"}
+                        {
+                            "artifact_id": artifact_id,
+                            "category": "no_baseline_pair_connection",
+                            "opportunity_bindings": sorted(
+                                artifact_opportunity_bindings[artifact_id],
+                                key=lambda item: item["opportunity_id"],
+                            ),
+                        }
                     )
                 elif "specific_candidate" in scopes:
                     counts["baseline_specific_present"] += 1
                 elif "broad" in scopes:
                     counts["baseline_broad_only"] += 1
                     credited_members.append(
-                        {"artifact_id": artifact_id, "category": "broad_only_pair_connection"}
+                        {
+                            "artifact_id": artifact_id,
+                            "category": "broad_only_pair_connection",
+                            "opportunity_bindings": sorted(
+                                artifact_opportunity_bindings[artifact_id],
+                                key=lambda item: item["opportunity_id"],
+                            ),
+                        }
                     )
                 else:
                     counts["baseline_unclassified_only"] += 1
@@ -741,7 +863,10 @@ def build_opportunity_queue(
         museum: [
             {
                 "artifact_id": artifact_id,
-                "opportunity_ids": sorted(artifact_opportunities[artifact_id]),
+                "opportunity_bindings": sorted(
+                    artifact_opportunity_bindings[artifact_id],
+                    key=lambda item: item["opportunity_id"],
+                ),
                 "baseline_record_scope": record_by_id[artifact_id]["baseline_record_scope"],
             }
             for artifact_id in sorted(selected_artifacts[museum])
@@ -749,7 +874,7 @@ def build_opportunity_queue(
         for museum in MUSEUMS
     }
     private_ledger = {
-        "schema_version": "site-graph-v0-private-opportunity-ledger/2",
+        "schema_version": "site-graph-v0-private-opportunity-ledger/3",
         "privacy": "private runtime derivative; must not be committed or redistributed",
         "selection_algorithm": selection_algorithm,
         "selected_signature_count": len(private_queue_rows),
@@ -761,9 +886,17 @@ def build_opportunity_queue(
 
 
 def private_opportunity_source(mentions: list[dict]) -> list[dict]:
-    """Private source ledger needed to reproduce result-blind queue selection."""
-    return sorted(
-        (
+    """Preserve every site mention primitive needed for correction replay."""
+    rows = []
+    seen_ids: set[str] = set()
+    for mention in mentions:
+        if mention.get("entity_type") != "site":
+            continue
+        validate_site_mention(mention)
+        if mention["mention_id"] in seen_ids:
+            raise RuntimeError(f"duplicate site mention id {mention['mention_id']}")
+        seen_ids.add(mention["mention_id"])
+        rows.append(
             {
                 "artifact_id": mention["artifact_id"],
                 "field_path": mention["field_path"],
@@ -772,14 +905,11 @@ def private_opportunity_source(mentions: list[dict]) -> list[dict]:
                 "museum": mention["museum"],
                 "normalized_keys": mention.get("normalized_keys") or [],
                 "status": mention["status"],
+                "target_ids": mention["target_ids"],
                 "entity_type": "site",
             }
-            for mention in mentions
-            if mention.get("entity_type") == "site"
-            and mention.get("status") in {"unmatched", "ambiguous"}
-        ),
-        key=lambda row: row["mention_id"],
-    )
+        )
+    return sorted(rows, key=lambda row: row["mention_id"])
 
 
 def main() -> None:
@@ -791,6 +921,13 @@ def main() -> None:
 
     evaluation_root = args.repo_root / "docs/evaluations/site-graph-v0"
     snapshot = read_json(evaluation_root / "input-snapshot.json")
+    archive_attestation_path = args.run_dir / "corpus-archive-attestation.json"
+    if not archive_attestation_path.is_file():
+        raise RuntimeError(
+            "baseline derivation requires the authenticated runtime corpus archive attestation"
+        )
+    archive_attestation = read_json(archive_attestation_path)
+    validate_archive_attestation(snapshot["corpus"], archive_attestation)
     crosswalk = read_json(evaluation_root / "type-crosswalk.json")
     canonical = read_gzip_jsonl(args.corpus / "data" / "artifacts.ndjson.gz")
     mentions = read_gzip_jsonl(args.run_dir / "mentions.ndjson.gz")
@@ -883,8 +1020,17 @@ def main() -> None:
             "canonical_record_count": expected_records,
             "canonical_artifact_transport_gzip_sha256": snapshot["corpus"]["files"]
             ["data/artifacts.ndjson.gz"]["sha256"],
-            "status": "external_private_input_verified",
-            "generator_history": "not_available_in_handoff",
+            "archive_sha256": archive_attestation["archive"]["sha256"],
+            "snapshot_acquisition_integrity": archive_attestation["status"][
+                "snapshot_acquisition_integrity"
+            ],
+            "upstream_production_lineage": archive_attestation["status"][
+                "upstream_production_lineage"
+            ],
+            "historical_export_reproducibility": "UNAVAILABLE_DISCLOSED",
+            "unavailable_lineage_effect": snapshot["corpus"]["production_lineage"][
+                "effect"
+            ],
         },
         "ledgers": {
             "private_record_evidence": gzip_ledger_digest(private_record_path),

@@ -1,13 +1,20 @@
 {
-  "schema_version": "site-graph-v0-correction-policy/2",
-  "baseline_policy": "The primary baseline and its public aggregate/digest artifacts are immutable. Corrections are private append-only primitive evidence operations and produce a separately hashed sensitivity run.",
+  "schema_version": "site-graph-v0-correction-policy/3",
+  "baseline_policy": "The primary baseline and frozen intent-to-treat membership are immutable. Corrections are append-only exact site-mention resolution transitions and produce a separately hashed sensitivity run.",
   "allowed_operations": [
-    "add_direct_target",
-    "remove_direct_target",
-    "replace_direct_target",
-    "set_site_mention_status_count"
+    "set_site_mention_resolution"
   ],
+  "source_realizability_invariants": [
+    "resolved mentions have exactly one target",
+    "ambiguous mentions have at least two distinct targets",
+    "unmatched mentions have no targets",
+    "unique direct targets never exceed resolved mention count"
+  ],
+  "sensitivity_estimands": {
+    "fixed_frozen_intent_to_treat": "Recompute corrected evidence and outcomes while retaining every original ITT artifact, opportunity binding, pair-side membership, and denominator.",
+    "corrected_source_counterfactual_reselection": "Separately rerun result-blind queue selection from corrected source primitives and report exact private additions/removals plus aggregate denominator changes. This is not the frozen ITT estimand."
+  },
   "current_primary_corrections_applied": 0,
   "private_ledger_schema": "schemas/correction-ledger.schema.json",
-  "sensitivity_publication": "Only non-bulk aggregate metrics and cryptographic ledger hashes may be released; corrected record and membership ledgers remain private."
+  "sensitivity_publication": "Only non-bulk aggregate metrics and cryptographic ledger hashes may be released; corrected mention, record, exact membership, and exact counterfactual change ledgers remain private."
 }

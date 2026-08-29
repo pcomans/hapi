@@ -1,14 +1,23 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-hierarchy-2.json",
-  "title": "Candidate hierarchy derived from frozen complete available source snapshots",
+  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-hierarchy-3.json",
+  "title": "Candidate hierarchy derived from every frozen source record",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "coverage", "known_incompleteness", "nodes"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-candidate-hierarchy/2"},
-    "coverage": {"const": "every_candidate_target_from_all_frozen_available_source_snapshot_records_not_only_evaluated_slice"},
-    "known_incompleteness": {"type": "object", "minProperties": 1},
+    "schema_version": {"const": "site-graph-v0-candidate-hierarchy/3"},
+    "coverage": {"const": "every_target_and_every_record_from_all_authenticated_complete_source_snapshots"},
+    "known_incompleteness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["closed_world_claim", "limitations", "derivation_statement"],
+      "properties": {
+        "closed_world_claim": {"const": false},
+        "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "derivation_statement": {"type": "string", "minLength": 1}
+      }
+    },
     "nodes": {
       "type": "array",
       "minItems": 1,

@@ -1,68 +1,83 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-correction-ledger-2.json",
-  "title": "Private append-only primitive evidence correction ledger",
-  "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "baseline_mutated", "private_record_evidence_canonical_sha256", "corrections"],
+  "$id": "https://hapi.example/schemas/site-graph-v0-correction-ledger-3.json",
+  "title": "Private append-only primitive site-mention correction ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "baseline_mutated",
+    "private_record_evidence_canonical_sha256",
+    "private_opportunity_source_canonical_sha256",
+    "corrections"
+  ],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-correction-ledger/2"},
+    "schema_version": {"const": "site-graph-v0-correction-ledger/3"},
     "baseline_mutated": {"const": false},
-    "private_record_evidence_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "private_record_evidence_canonical_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "private_opportunity_source_canonical_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
     "corrections": {
       "type": "array",
+      "minItems": 1,
       "items": {
-        "type": "object", "additionalProperties": false,
-        "required": ["sequence", "correction_id", "previous_correction_sha256", "supersedes_correction_id", "artifact_id", "operation", "reason", "citations", "reviewer_ids", "decision_commit", "recorded_at_utc", "record_sha256"],
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence",
+          "correction_id",
+          "previous_correction_sha256",
+          "supersedes_correction_id",
+          "artifact_id",
+          "operation",
+          "reason",
+          "citations",
+          "reviewer_ids",
+          "decision_commit",
+          "recorded_at_utc",
+          "record_sha256"
+        ],
         "properties": {
           "sequence": {"type": "integer", "minimum": 1},
           "correction_id": {"type": "string", "minLength": 1},
-          "previous_correction_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "previous_correction_sha256": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-f]{64}$"
+          },
           "supersedes_correction_id": {"type": ["string", "null"]},
           "artifact_id": {"type": "string", "minLength": 1},
           "operation": {
-            "oneOf": [
-              {
-                "type": "object", "additionalProperties": false,
-                "required": ["kind", "target_id"],
-                "properties": {
-                  "kind": {"const": "add_direct_target"},
-                  "target_id": {"type": "string", "minLength": 1}
-                }
-              },
-              {
-                "type": "object", "additionalProperties": false,
-                "required": ["kind", "target_id"],
-                "properties": {
-                  "kind": {"const": "remove_direct_target"},
-                  "target_id": {"type": "string", "minLength": 1}
-                }
-              },
-              {
-                "type": "object", "additionalProperties": false,
-                "required": ["kind", "from_target_id", "to_target_id"],
-                "properties": {
-                  "kind": {"const": "replace_direct_target"},
-                  "from_target_id": {"type": "string", "minLength": 1},
-                  "to_target_id": {"type": "string", "minLength": 1}
-                }
-              },
-              {
-                "type": "object", "additionalProperties": false,
-                "required": ["kind", "status", "from_count", "to_count"],
-                "properties": {
-                  "kind": {"const": "set_site_mention_status_count"},
-                  "status": {"enum": ["resolved", "ambiguous", "unmatched"]},
-                  "from_count": {"type": "integer", "minimum": 0},
-                  "to_count": {"type": "integer", "minimum": 0}
-                }
-              }
-            ]
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "mention_id",
+              "from_status",
+              "from_target_ids",
+              "to_status",
+              "to_target_ids"
+            ],
+            "properties": {
+              "kind": {"const": "set_site_mention_resolution"},
+              "mention_id": {"type": "string", "minLength": 1},
+              "from_status": {"enum": ["resolved", "ambiguous", "unmatched"]},
+              "from_target_ids": {"$ref": "#/$defs/targetIds"},
+              "to_status": {"enum": ["resolved", "ambiguous", "unmatched"]},
+              "to_target_ids": {"$ref": "#/$defs/targetIds"}
+            }
           },
           "reason": {"type": "string", "minLength": 1},
           "citations": {
-            "type": "array", "minItems": 1,
+            "type": "array",
+            "minItems": 1,
             "items": {
-              "type": "object", "additionalProperties": false,
+              "type": "object",
+              "additionalProperties": false,
               "required": ["source_id", "locator", "evidence_summary"],
               "properties": {
                 "source_id": {"type": "string", "minLength": 1},
@@ -71,12 +86,24 @@
               }
             }
           },
-          "reviewer_ids": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "reviewer_ids": {
+            "type": "array",
+            "minItems": 2,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
           "decision_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
           "recorded_at_utc": {"type": "string", "format": "date-time"},
           "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
         }
       }
+    }
+  },
+  "$defs": {
+    "targetIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
     }
   }
 }

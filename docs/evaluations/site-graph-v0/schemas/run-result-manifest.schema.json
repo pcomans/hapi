@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/site-graph-v0-run-result-manifest-1.json",
+  "title": "Post-result manifest binding one exact authenticated candidate run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "release_manifest_sha256", "trusted_run_attestors_canonical_sha256", "result_commit", "freeze_commit", "freeze_manifest", "candidate_result", "review_ledger", "run_start_receipt", "run_start_signature", "attestor_key_id"],
+  "properties": {
+    "schema_version": {"const": "site-graph-v0-run-result-manifest/1"},
+    "contract_version": {"const": "site-graph-v0/3"},
+    "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "trusted_run_attestors_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "result_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "freeze_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "freeze_manifest": {"$ref": "#/$defs/artifact"},
+    "candidate_result": {"$ref": "#/$defs/artifact"},
+    "review_ledger": {"$ref": "#/$defs/artifact"},
+    "run_start_receipt": {"$ref": "#/$defs/artifact"},
+    "run_start_signature": {"$ref": "#/$defs/artifact"},
+    "attestor_key_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
+      }
+    }
+  }
+}

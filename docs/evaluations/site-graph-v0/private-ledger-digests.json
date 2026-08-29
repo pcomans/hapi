@@ -1,29 +1,32 @@
 {
   "canonical_serialization": "UTF-8 compact sorted-key JSON per row followed by LF for NDJSON; UTF-8 compact sorted-key JSON for JSON ledgers",
   "external_private_input": {
+    "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
     "canonical_artifact_transport_gzip_sha256": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24",
     "canonical_record_count": 36245,
-    "generator_history": "not_available_in_handoff",
-    "status": "external_private_input_verified"
+    "historical_export_reproducibility": "UNAVAILABLE_DISCLOSED",
+    "snapshot_acquisition_integrity": "PASS",
+    "unavailable_lineage_effect": "The authenticated archive supports an immutable-snapshot evaluation only. It does not make the upstream historical export reproducible and must never be reported as a passed lineage check.",
+    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
   },
   "ledgers": {
     "private_opportunity_membership": {
-      "bytes": 13556740,
-      "canonical_json_sha256": "45204ffb7d828edf6290bab9ed573ac5abb838811e64289c0cb3e720459c64a1",
+      "bytes": 78045475,
+      "canonical_json_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212",
       "intent_to_treat_record_counts_by_museum": {
         "brooklyn": 2968,
         "harvard": 539,
         "met": 27181
       },
       "selected_signature_count": 50,
-      "transport_json_sha256": "55c8f6ce56b591a5f413e2e84ea36333bc50a3d6f52e8f37243e28a1a8fdd924"
+      "transport_json_sha256": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890"
     },
     "private_opportunity_source": {
-      "canonical_row_merkle_sha256": "ca1133c9544baa8ae90649f5e815252aca1d665056fe3658b0b055bc54c9d944",
-      "canonical_uncompressed_ndjson_sha256": "fa0dce58d96e0d22ebb7518c9d569afe5d9e064f49dcfc01f87fc6c4ee31eb1a",
+      "canonical_row_merkle_sha256": "24fd253af1de4faa7a47357f8f30775d829b2905970aea372e9417dafe85ee28",
+      "canonical_uncompressed_ndjson_sha256": "746cda9908348027ed6b5202f6e7d308776acd472306a6c3535b63c88a545203",
       "merkle_algorithm": "sha256(canonical compact sorted-key JSON row plus LF) leaves; sha256(left_digest || right_digest), duplicating an odd final digest",
-      "row_count": 80775,
-      "transport_gzip_sha256": "b435807f498dfacaf1f522948df5235e81822de5819fe8c45668cfe285dcdf33"
+      "row_count": 117607,
+      "transport_gzip_sha256": "46db33e1d365be302bf3273909cd62dc9bd23127505f4f22102864cbc7f50117"
     },
     "private_record_evidence": {
       "canonical_row_merkle_sha256": "76ce89113febad6b626a608fa58fd998d669f532fce5860e766b8c8f40c577d0",
@@ -36,7 +39,7 @@
   "pair_side_membership": {
     "brooklyn__harvard": {
       "brooklyn": {
-        "canonical_json_sha256": "1599256caa6928534903fd5d33f8cd6db1af646dd66fe1963699de0aa4a5d5e1",
+        "canonical_json_sha256": "8a1e6f76344d617932871511625f958583ba82c2f973e0d58dce6c7cc4e967fe",
         "category_counts": {
           "broad_only_pair_connection": 324,
           "no_baseline_pair_connection": 2636
@@ -44,7 +47,7 @@
         "record_count": 2960
       },
       "harvard": {
-        "canonical_json_sha256": "295078b87064dc71908ed04cc9e91cb4b3eeeda14f9480ec3725cbe8f907537b",
+        "canonical_json_sha256": "2af99f7708aa3e40ef82fd2c6405c2144c0a661930030beb3919d184be3e07cd",
         "category_counts": {
           "broad_only_pair_connection": 5,
           "no_baseline_pair_connection": 532
@@ -54,7 +57,7 @@
     },
     "met__brooklyn": {
       "brooklyn": {
-        "canonical_json_sha256": "eaa086ae0c0defdd416511a5c80e35bb964329894bf4618b36d70ff79aa5b16d",
+        "canonical_json_sha256": "7dce1c5431582dcf989494071a3e7f9ec0f963628edd5407ef3863294ba372b7",
         "category_counts": {
           "broad_only_pair_connection": 853,
           "no_baseline_pair_connection": 1817
@@ -62,7 +65,7 @@
         "record_count": 2670
       },
       "met": {
-        "canonical_json_sha256": "a07da98f9d95a001d06b96caccc655f2a936d10ca001d3c7b29aeb3fcf14b32a",
+        "canonical_json_sha256": "370c0b5502acba8fd7355b5f8beade838055e498b99176cd0aebbf186eac36f1",
         "category_counts": {
           "broad_only_pair_connection": 8514,
           "no_baseline_pair_connection": 13056
@@ -72,7 +75,7 @@
     },
     "met__harvard": {
       "harvard": {
-        "canonical_json_sha256": "f1a836f54d7a5ceb40496539fa385c75a6393751527370a4777ff75f0cb2c90c",
+        "canonical_json_sha256": "99674fa7580c4b2a8cc456ca07638a63d90f140c5eb4d5c74db4b7498d33eb5e",
         "category_counts": {
           "broad_only_pair_connection": 5,
           "no_baseline_pair_connection": 533
@@ -80,7 +83,7 @@
         "record_count": 538
       },
       "met": {
-        "canonical_json_sha256": "9f628a825c4d3c4f3c4df4ea47eb977920df12ca8043204746f0fe18c7f7338a",
+        "canonical_json_sha256": "9b2ce44c0572b3fee10bccd307af5944ddc907719e4b8a64e0abfd60a4ee2433",
         "category_counts": {
           "broad_only_pair_connection": 501,
           "no_baseline_pair_connection": 26679

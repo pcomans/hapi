@@ -7,7 +7,12 @@ import hashlib
 import json
 from pathlib import Path
 
-from release_contract import CONTRACT_VERSION, PYCACHE_EXCLUSION, REQUIRED_RELEASE_FILES
+from release_contract import (
+    CI_RELEASE_FILES,
+    CONTRACT_VERSION,
+    PYCACHE_EXCLUSION,
+    REQUIRED_RELEASE_FILES,
+)
 
 
 EVALUATION_RELATIVE = Path("docs/evaluations/site-graph-v0")
@@ -44,11 +49,7 @@ def discovered_release_files(repo_root: Path) -> set[str]:
         for path in evaluation_root.rglob("*")
         if _tracked_file(path) and path.name != MANIFEST_NAME
     }
-    for relative in (
-        "pipeline/pyproject.toml",
-        "pipeline/tests/test_site_graph_v0_contract.py",
-        "pipeline/uv.lock",
-    ):
+    for relative in CI_RELEASE_FILES:
         path = repo_root / relative
         if _tracked_file(path):
             files.add(relative)

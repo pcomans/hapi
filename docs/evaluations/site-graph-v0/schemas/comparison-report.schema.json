@@ -3,7 +3,7 @@
   "$id": "https://hapi.example/schemas/site-graph-v0-comparison-report-2.json",
   "title": "Deterministic authenticated site-graph-v0 comparison report",
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "outcome", "ordered_decision_trace", "integrity", "safety_gates", "event_counts", "event_records", "reassignment_edge_modes", "per_museum", "pairs", "ambiguity_and_abstention"],
+  "required": ["schema_version", "outcome", "ordered_decision_trace", "integrity", "safety_gates", "event_counts", "event_records", "reassignment_edge_modes", "per_museum", "pairs", "ambiguity_and_abstention", "run_binding", "provenance_status"],
   "properties": {
     "schema_version": {"const": "site-graph-v0-comparison-report/2"},
     "outcome": {"enum": ["INVALID", "REDESIGN", "CONTINUE", "STOP"]},
@@ -22,6 +22,20 @@
     "reassignment_edge_modes": {"type": "object"},
     "per_museum": {"type": "object"},
     "pairs": {"type": "object"},
-    "ambiguity_and_abstention": {"type": "object"}
+    "ambiguity_and_abstention": {"type": "object"},
+    "run_binding": {"type": ["object", "null"]},
+    "provenance_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_scope", "archive_sha256", "snapshot_acquisition_integrity", "upstream_production_lineage", "overall_contract_status", "downstream_product_verdict"],
+      "properties": {
+        "evidence_scope": {"enum": ["AUTHENTICATED_RELEASE_SNAPSHOT", "PRODUCTION_COMPARATOR_INVALID", "LOGIC_ONLY_TEST_INPUT"]},
+        "archive_sha256": {"type": "string", "minLength": 1},
+        "snapshot_acquisition_integrity": {"enum": ["PASS", "BLOCKED", "INVALID", "NOT_APPLICABLE_LOGIC_ONLY"]},
+        "upstream_production_lineage": {"enum": ["VERIFIED", "UNAVAILABLE_DISCLOSED", "NOT_APPLICABLE_LOGIC_ONLY"]},
+        "overall_contract_status": {"enum": ["READY_SNAPSHOT_CONDITIONAL", "BLOCKED", "INVALID", "NOT_APPLICABLE_LOGIC_ONLY"]},
+        "downstream_product_verdict": {"enum": ["CONTINUE", "STOP", "REDESIGN", "INVALID", "NOT_RUN"]}
+      }
+    }
   }
 }

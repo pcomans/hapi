@@ -37,7 +37,7 @@ def validate_run(directory: Path) -> dict:
         )
     manifest_path = directory / "run-output-manifest.json"
     manifest = read_json(manifest_path)
-    if manifest.get("schema_version") != "site-graph-v0-baseline-run-manifest/1":
+    if manifest.get("schema_version") != "site-graph-v0-baseline-run-manifest/2":
         raise RuntimeError(f"unsupported run manifest schema: {manifest_path}")
     hashes = manifest.get("deterministic_output_hashes")
     if not isinstance(hashes, dict) or set(hashes) != DETERMINISTIC_OUTPUTS:
@@ -54,12 +54,15 @@ def validate_run(directory: Path) -> dict:
     provenance = read_json(provenance_path)
     required = {
         "schema_version", "run_id", "started_at_utc", "finished_at_utc", "requested_output",
-        "publication", "repo_root", "corpus_root", "canonical_records", "records_by_museum",
+        "publication", "repo_root", "corpus_archive_logical_locator",
+        "corpus_archive_sha256", "corpus_archive_attestation_sha256",
+        "temporary_extraction_policy", "canonical_records", "records_by_museum",
         "input_snapshot_sha256", "runner_sha256", "builder_sha256",
+        "status",
     }
     if set(provenance) != required:
         raise RuntimeError(f"provenance fields mismatch: {provenance_path}")
-    if provenance["schema_version"] != "site-graph-v0-baseline-run-provenance/1":
+    if provenance["schema_version"] != "site-graph-v0-baseline-run-provenance/2":
         raise RuntimeError(f"unsupported run provenance schema: {provenance_path}")
     try:
         uuid.UUID(provenance["run_id"])
@@ -79,14 +82,44 @@ def validate_run(directory: Path) -> dict:
         or not isinstance(provenance["records_by_museum"], dict)
         or sum(provenance["records_by_museum"].values()) != provenance["canonical_records"]
         or not Path(provenance["repo_root"]).is_absolute()
-        or not Path(provenance["corpus_root"]).is_absolute()
+        or provenance["corpus_archive_logical_locator"] != "HAPI_CORPUS_ARCHIVE"
+        or len(provenance["corpus_archive_sha256"]) != 64
+        or provenance["status"]
+        != {
+            "snapshot_acquisition_integrity": "PASS",
+            "derived_baseline_reproducibility": "PASS",
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+            "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+            "downstream_product_verdict": "NOT_RUN",
+        }
     ):
         raise RuntimeError(f"invalid run provenance values in {provenance_path}")
-    for key in ("input_snapshot_sha256", "runner_sha256", "builder_sha256"):
+    for key in (
+        "input_snapshot_sha256", "runner_sha256", "builder_sha256",
+        "corpus_archive_attestation_sha256", "corpus_archive_sha256",
+    ):
         if provenance[key] != manifest[key]:
             raise RuntimeError(f"provenance/manifest {key} mismatch at {directory}")
     if Path(provenance["requested_output"]).resolve() != directory.resolve():
         raise RuntimeError(f"provenance output path mismatch at {directory}")
+    attestation_path = directory / "corpus-archive-attestation.json"
+    attestation = read_json(attestation_path)
+    if (
+        attestation.get("schema_version")
+        != "site-graph-v0-corpus-archive-attestation/1"
+        or attestation.get("archive", {}).get("sha256")
+        != provenance["corpus_archive_sha256"]
+        or attestation.get("status")
+        != {
+            "snapshot_acquisition_integrity": "PASS",
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+        }
+        or attestation.get("extraction", {}).get("canonical_record_count")
+        != provenance["canonical_records"]
+        or attestation.get("extraction", {}).get("records_by_museum")
+        != provenance["records_by_museum"]
+    ):
+        raise RuntimeError(f"invalid archive attestation values at {directory}")
     return {
         "manifest": manifest,
         "manifest_sha256": sha256(manifest_path),
@@ -104,7 +137,8 @@ def compare(run_a: Path, run_b: Path) -> dict:
         raise RuntimeError("deterministic reproductions must have distinct run_id values")
     stable_fields = (
         "commands", "input_snapshot_sha256", "runner_sha256", "builder_sha256",
-        "inventory_path_canonicalization", "scope",
+        "inventory_path_canonicalization", "corpus_archive_attestation_sha256", "scope",
+        "corpus_archive_sha256", "status",
     )
     metadata_mismatches = {
         key: {"run_a": left["manifest"].get(key), "run_b": right["manifest"].get(key)}
@@ -121,7 +155,15 @@ def compare(run_a: Path, run_b: Path) -> dict:
     passed = not metadata_mismatches and not output_mismatches
     return {
         "schema_version": "site-graph-v0-baseline-rerun-evidence/3",
-        "status": "pass" if passed else "fail",
+        "status": {
+            "snapshot_acquisition_integrity": "PASS",
+            "derived_baseline_reproducibility": "PASS" if passed else "INVALID",
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+            "overall_contract_status": (
+                "READY_SNAPSHOT_CONDITIONAL" if passed else "INVALID"
+            ),
+            "downstream_product_verdict": "NOT_RUN",
+        },
         "terminology": "deterministic_reproduction_not_statistical_independence",
         "authentication": (
             "Authenticated distinct run directories, distinct UUID run IDs, exact output sets, "
@@ -147,6 +189,11 @@ def compare(run_a: Path, run_b: Path) -> dict:
         "runner_sha256": left["manifest"]["runner_sha256"],
         "builder_sha256": left["manifest"]["builder_sha256"],
         "scope": left["manifest"]["scope"],
+        "corpus_archive_sha256": left["provenance"]["corpus_archive_sha256"],
+        "production_lineage": {
+            "status": "UNAVAILABLE_DISCLOSED",
+            "missing": ["export_command", "producer_git_revision", "dagster_run_ids"],
+        },
     }
 
 
@@ -172,7 +219,7 @@ def main() -> None:
     evidence = compare(args.run_a, args.run_b)
     atomic_write_json(args.output, evidence)
     print(json.dumps({"status": evidence["status"], "mismatches": evidence["output_mismatches"]}, sort_keys=True))
-    if evidence["status"] != "pass":
+    if evidence["status"]["overall_contract_status"] != "READY_SNAPSHOT_CONDITIONAL":
         raise SystemExit(1)
 
 

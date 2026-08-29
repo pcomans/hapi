@@ -1,27 +1,29 @@
 {
   "authentication": "Authenticated distinct run directories, distinct UUID run IDs, exact output sets, and actual output bytes rehashed against each manifest.",
-  "builder_sha256": "95d67ed07530c1351a9ad154001aebb252d6ff63087b5e101dafa5e77e688d9d",
-  "deterministic_output_count": 17,
+  "builder_sha256": "dc4a40aa003ba30329210e0e48612799103d0cad1f4f68b2622d3ee2f54209e8",
+  "corpus_archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+  "deterministic_output_count": 18,
   "deterministic_output_hashes": {
     "adapter_catalog_summary.json": "fe4ab17e1b765e5902ae1e2b2842f55d66b15aea51ad2b1da8e85289465de445",
     "artifact_authority_links.ndjson.gz": "42978550708d26c9b38d229b8b5dc4b0f061c7344aea6c3cc31a8700f5b22142",
     "authority_inventory.json": "15599b98431223f966c7364eae1dbc801d8338bea9a3c8d65606a0df3bd9a3a6",
     "authority_node_connectivity.json": "30e5fc849d27aa00a688b15b79083a0b1928d18eafcc721fe8a88283ac7b92cd",
-    "baseline-metrics.json": "7f40c8d332e878963eab383440204ea4249a23155f38d7c99cf6ec8f2940552e",
-    "baseline-node-scope.json": "601ed89ef622419672ff8df375b0a4cb5c417006ff53670cdc9185bebb424fc9",
+    "baseline-metrics.json": "e29ef2e3415fe3e195d46f4dcfc780c8ac66e8829f0aa804a8f2be164abb52fb",
+    "baseline-node-scope.json": "9973bbb7b83244a9bbd194f532f7f4949f98cb203682a46d4e0ae36dedd84493",
     "connectivity_metrics.json": "a2490b469a20121bc8c3638d71fb6d10d1b76cf8d9657b3f5bd1cb644f1ce7d3",
+    "corpus-archive-attestation.json": "b3503a57e3a5da56508d7e4b53b3bcccefddd17831c69e6dc026baa4b9331bb9",
     "corpus_inventory.json": "4039fd78e396f62ea6d5c333ea2eb9af30db67f7115ba0c39bd21a68466c4b9d",
     "linkability_metrics.json": "4ec0a85340b2367a1f63c815d1c31b1497ed7b20cb3a2a68952de1fb8a229b9c",
     "mentions.ndjson.gz": "b9f496a2b803d148a9d423eaf76af66daf0effd67c47ac6070597ec49aac568f",
-    "planned-opportunity-summary.json": "53082c17a51251303498aeccc0946641855053f5dfccebbc7d0577ed6f817e6f",
-    "private-ledger-digests.json": "0c057b6f7eba66499bc799885179616c714c35551bbef96b8cbf248b9eb93206",
-    "private-opportunity-ledger.json": "55c8f6ce56b591a5f413e2e84ea36333bc50a3d6f52e8f37243e28a1a8fdd924",
-    "private-opportunity-source.ndjson.gz": "b435807f498dfacaf1f522948df5235e81822de5819fe8c45668cfe285dcdf33",
+    "planned-opportunity-summary.json": "e6aef47a505d64ca8164b74f98bb64da3718065654b458857e743f9d3f05c2a9",
+    "private-ledger-digests.json": "54d807e7b1deef51ce5c1321de375ad10f78d02b28d94fb4256f67a105cb0b7d",
+    "private-opportunity-ledger.json": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890",
+    "private-opportunity-source.ndjson.gz": "46db33e1d365be302bf3273909cd62dc9bd23127505f4f22102864cbc7f50117",
     "private-record-evidence.ndjson.gz": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
     "top-unmatched-components.json": "d425a4868eef9071944f33ef09c75baffdc7ca122974de5ae05641746770ecf8",
     "top_gaps.json": "ce6a67dc62abf5d157116547e90b50cf2667b0573a58807113f3d5e7f88c6e66"
   },
-  "input_snapshot_sha256": "50bc5dfc1b053b1be0c2d27c228331aee0b4150e5019cb8aea2c4e2ae5fa5263",
+  "input_snapshot_sha256": "953c6887c0563515a24ab37aa1e894230d65c6987a13bd172de77e23cd66862d",
   "metadata_mismatches": {},
   "orchestration": {
     "created_fresh_output_root": "<fresh-output-root>",
@@ -32,21 +34,35 @@
     "script": "docs/evaluations/site-graph-v0/scripts/run_two_baselines.py"
   },
   "output_mismatches": {},
+  "production_lineage": {
+    "missing": [
+      "export_command",
+      "producer_git_revision",
+      "dagster_run_ids"
+    ],
+    "status": "UNAVAILABLE_DISCLOSED"
+  },
   "run_a": {
-    "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
-    "provenance_sha256": "ba4c53694b5294c09ba218591006078b512b37491ea213e08f13195b07743e58",
-    "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-a",
-    "run_id": "5d0d6cbf-5128-4b3c-8e71-6cfa04d31fbb"
+    "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
+    "provenance_sha256": "34c5e41795345d94f34ee6d81222e20d48f190758c02e6d36a7e7690724a31c3",
+    "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-a",
+    "run_id": "560c5d95-39f9-4c9d-9075-1aa0c17f59b0"
   },
   "run_b": {
-    "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
-    "provenance_sha256": "06e2f0625c9a43b5e3f5f9c0c64813eb319bf27913398f1691b446cd1c397865",
-    "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-b",
-    "run_id": "35c832f1-2307-4c27-8a3c-2f6dbd42eb8e"
+    "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
+    "provenance_sha256": "ca265989438ac42f73300c5f3bb9b6575e3e75e70abdfc270dfb34076c3a4075",
+    "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-b",
+    "run_id": "b0782237-5378-4c38-8e42-095130b83e7f"
   },
-  "runner_sha256": "095423574568d604ec9d0ce1e09216ff2ef392d89ea2111abac73da812cab1cb",
+  "runner_sha256": "646335aad16dd539bef4c2e842431d839190548351b671627eceafc0444a2af1",
   "schema_version": "site-graph-v0-baseline-rerun-evidence/3",
-  "scope": "verified real 36,245-record private corpus; no fixtures or proxies; private ledgers remain in the runtime directory",
-  "status": "pass",
+  "scope": "authenticated immutable archive snapshot with 36,245 real private records; no fixtures or proxies; private ledgers remain in the runtime directory; historical producer lineage is unavailable",
+  "status": {
+    "derived_baseline_reproducibility": "PASS",
+    "downstream_product_verdict": "NOT_RUN",
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "snapshot_acquisition_integrity": "PASS",
+    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
+  },
   "terminology": "deterministic_reproduction_not_statistical_independence"
 }

@@ -1,18 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-review-artifact-1.json",
+  "$id": "https://hapi.example/schemas/site-graph-v0-review-artifact-2.json",
   "title": "Structured independent evidence review",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "review_id", "decision_key", "decision_kind", "subject", "reviewer", "outcome", "method", "citations", "reasoning", "llm_interaction"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-review-artifact/1"},
+    "schema_version": {"const": "site-graph-v0-review-artifact/2"},
     "review_id": {"type": "string", "minLength": 1},
     "decision_key": {"type": "string", "minLength": 1},
-    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support"]},
+    "decision_kind": {"enum": ["link_support", "strict_refinement_support", "equivalence_support", "distinctness_support"]},
     "subject": {"type": "object", "minProperties": 2},
     "reviewer": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["reviewer_id", "independence_group"],
       "properties": {
         "reviewer_id": {"type": "string", "minLength": 1},
@@ -22,9 +23,11 @@
     "outcome": {"enum": ["supported", "unsupported", "uncertain"]},
     "method": {"enum": ["human", "llm"]},
     "citations": {
-      "type": "array", "minItems": 1,
+      "type": "array",
+      "minItems": 1,
       "items": {
-        "type": "object", "additionalProperties": false,
+        "type": "object",
+        "additionalProperties": false,
         "required": ["source_id", "source_kind", "locator", "evidence_summary", "originating_museum"],
         "properties": {
           "source_id": {"type": "string", "minLength": 1},
@@ -40,32 +43,81 @@
       "oneOf": [
         {"type": "null"},
         {
-          "type": "object", "additionalProperties": false,
-          "required": ["model_selector", "backend_model_id_or_non_exposure_sentinel", "parameters", "prompt", "input", "raw_response", "prompt_leakage_audit"],
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["review_invocation_id", "model", "parameters", "prompt", "input", "raw_response", "prompt_leakage_audit", "interaction_binding_sha256"],
           "properties": {
-            "model_selector": {"type": "string", "minLength": 1},
-            "backend_model_id_or_non_exposure_sentinel": {"type": "string", "minLength": 1},
-            "parameters": {"type": "object"},
+            "review_invocation_id": {"type": "string", "minLength": 1},
+            "model": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["provider", "model_selector", "backend_model_id", "snapshot_exposure", "snapshot_id", "snapshot_date"],
+              "properties": {
+                "provider": {"type": "string", "minLength": 1},
+                "model_selector": {"type": "string", "minLength": 1},
+                "backend_model_id": {"type": "string", "minLength": 1},
+                "snapshot_exposure": {"enum": ["EXPOSED", "NOT_EXPOSED_BY_PROVIDER_API", "NOT_EXPOSED_BY_CLAUDE_CLI"]},
+                "snapshot_id": {"type": "string", "minLength": 1},
+                "snapshot_date": {"type": ["string", "null"], "format": "date"}
+              },
+              "allOf": [
+                {
+                  "if": {"properties": {"snapshot_exposure": {"const": "EXPOSED"}}},
+                  "then": {"properties": {"snapshot_date": {"type": "string", "format": "date"}}}
+                },
+                {
+                  "if": {"properties": {"snapshot_exposure": {"const": "NOT_EXPOSED_BY_PROVIDER_API"}}},
+                  "then": {"properties": {"snapshot_id": {"const": "not_exposed_by_provider_api"}, "snapshot_date": {"type": "null"}}}
+                },
+                {
+                  "if": {"properties": {"snapshot_exposure": {"const": "NOT_EXPOSED_BY_CLAUDE_CLI"}}},
+                  "then": {"properties": {"snapshot_id": {"const": "not_exposed_by_claude_cli"}, "snapshot_date": {"type": "null"}}}
+                }
+              ]
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["reported_parameters", "unexposed_parameters", "completeness_statement"],
+              "properties": {
+                "reported_parameters": {"type": "object", "minProperties": 1},
+                "unexposed_parameters": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+                "completeness_statement": {"type": "string", "minLength": 1}
+              }
+            },
             "prompt": {"$ref": "#/$defs/artifact"},
             "input": {"$ref": "#/$defs/artifact"},
             "raw_response": {"$ref": "#/$defs/artifact"},
             "prompt_leakage_audit": {
-              "type": "object", "additionalProperties": false,
+              "type": "object",
+              "additionalProperties": false,
               "required": ["passed", "opaque_shuffled_candidate_ids", "artifact"],
               "properties": {
                 "passed": {"const": true},
                 "opaque_shuffled_candidate_ids": {"const": true},
                 "artifact": {"$ref": "#/$defs/artifact"}
               }
-            }
+            },
+            "interaction_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
           }
         }
       ]
     }
   },
+  "allOf": [
+    {
+      "if": {"properties": {"method": {"const": "human"}}},
+      "then": {"properties": {"llm_interaction": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"method": {"const": "llm"}}},
+      "then": {"properties": {"llm_interaction": {"type": "object"}}}
+    }
+  ],
   "$defs": {
     "artifact": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["path", "sha256", "git_blob_oid"],
       "properties": {
         "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},

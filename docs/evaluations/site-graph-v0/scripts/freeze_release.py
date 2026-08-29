@@ -8,7 +8,13 @@ import json
 from pathlib import Path
 
 from integrity import EVALUATION_RELATIVE, MANIFEST_NAME, discovered_release_files, sha256
-from release_contract import CONTRACT_VERSION, PYCACHE_EXCLUSION, REQUIRED_RELEASE_FILES
+from release_contract import (
+    CONTRACT_VERSION,
+    PYCACHE_EXCLUSION,
+    REQUIRED_RELEASE_FILES,
+    validation_input_bindings,
+)
+from schema_validation import execute_schema_contract_tests, validate_schema
 
 
 def main() -> None:
@@ -32,6 +38,46 @@ def main() -> None:
             "refusing to freeze a release outside the static contract: "
             + json.dumps({"missing": missing, "extra": extra}, sort_keys=True)
         )
+    evaluation_root = repo_root / EVALUATION_RELATIVE
+    report = json.loads(
+        (evaluation_root / "validation-report.json").read_text(encoding="utf-8")
+    )
+    expected_ready = {
+        "snapshot_acquisition_integrity": "PASS",
+        "derived_baseline_reproducibility": "PASS",
+        "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+        "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+        "downstream_product_verdict": "NOT_RUN",
+        "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
+    }
+    if report.get("status") != expected_ready:
+        raise RuntimeError(
+            "refusing to freeze a failing or stale validation report: "
+            + json.dumps(report.get("status"), sort_keys=True)
+        )
+    expected_binding = {
+        "hash_algorithm": "sha256",
+        "rule": (
+            "Every static required release file except validation-report.json is "
+            "hashed after semantic recomputation and before release-manifest generation."
+        ),
+        "files": validation_input_bindings(repo_root),
+    }
+    if report.get("release_candidate_binding") != expected_binding:
+        raise RuntimeError(
+            "refusing to freeze a stale validation report: release candidate bytes "
+            "changed after semantic recomputation"
+        )
+    execute_schema_contract_tests(
+        evaluation_root / "schemas", evaluation_root / "schema-test-cases.json"
+    )
+    validate_schema(
+        json.loads(
+            (evaluation_root / "trusted-run-attestors.json").read_text(encoding="utf-8")
+        ),
+        evaluation_root / "schemas/trusted-run-attestors.schema.json",
+        "trusted run-attestor release policy",
+    )
     names = sorted(REQUIRED_RELEASE_FILES)
     value = {
         "schema_version": "site-graph-v0-release-manifest/2",

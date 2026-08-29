@@ -15,15 +15,22 @@ from validate_contract import semantic_report
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
-    parser.add_argument("--corpus", type=Path, required=True)
+    parser.add_argument("--corpus-archive", type=Path, required=True)
+    parser.add_argument("--corpus-archive-sidecar", type=Path, required=True)
     parser.add_argument("--private-run", type=Path, required=True)
     args = parser.parse_args()
     repo_root = args.repo_root.resolve()
     report = semantic_report(
-        repo_root, args.corpus.resolve(), args.private_run.resolve()
+        repo_root,
+        args.corpus_archive.resolve(),
+        args.corpus_archive_sidecar.resolve(),
+        args.private_run.resolve(),
     )
     print(json.dumps(report["summary"] | {"status": report["status"]}, sort_keys=True))
-    if report["status"] != "pass":
+    if (
+        report["status"]["overall_contract_status"]
+        != "READY_SNAPSHOT_CONDITIONAL"
+    ):
         raise SystemExit(1)
     output = repo_root / "docs/evaluations/site-graph-v0/validation-report.json"
     descriptor, temporary_name = tempfile.mkstemp(

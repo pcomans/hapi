@@ -18,6 +18,7 @@ dependencies = [
     "firecrawl-py>=4.22.1",
     "python-dotenv>=1.2.2",
     "anthropic>=0.116.0",
+    "cryptography>=45.0.0",
 ]
 
 [tool.dagster]

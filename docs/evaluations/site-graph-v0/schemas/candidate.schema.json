@@ -1,19 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-result-2.json",
+  "$id": "https://hapi.example/schemas/site-graph-v0-candidate-result-3.json",
   "title": "Authenticated bounded site-graph-v0 candidate result",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "candidate_id", "release_manifest_sha256", "private_opportunity_ledger_canonical_sha256", "freeze_commit", "freeze_manifest_path", "freeze_manifest_blob_oid", "run_started_at_utc", "records"],
+  "required": ["schema_version", "candidate_id", "release_manifest_sha256", "private_opportunity_ledger_canonical_sha256", "freeze_commit", "freeze_manifest", "review_ledger", "run_start_receipt", "run_start_signature", "records"],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-candidate-result/2"},
+    "schema_version": {"const": "site-graph-v0-candidate-result/3"},
     "candidate_id": {"type": "string", "minLength": 1},
     "release_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "private_opportunity_ledger_canonical_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "freeze_commit": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
-    "freeze_manifest_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
-    "freeze_manifest_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
-    "run_started_at_utc": {"type": "string", "format": "date-time"},
+    "freeze_manifest": {"$ref": "#/$defs/artifact"},
+    "review_ledger": {"$ref": "#/$defs/artifact"},
+    "run_start_receipt": {"$ref": "#/$defs/artifact"},
+    "run_start_signature": {"$ref": "#/$defs/artifact"},
     "records": {
       "type": "array",
       "items": {
@@ -30,14 +31,28 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["target_id", "support_decision_key"],
+              "required": ["target_id", "opportunity_id", "opportunity_binding_sha256", "support_decision_key"],
               "properties": {
                 "target_id": {"type": "string", "minLength": 1},
+                "opportunity_id": {"type": "string", "minLength": 1},
+                "opportunity_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                 "support_decision_key": {"type": ["string", "null"]}
               }
             }
           }
         }
+      }
+    }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "git_blob_oid"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "git_blob_oid": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"}
       }
     }
   }

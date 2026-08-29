@@ -1339,7 +1339,7 @@
               "no_baseline_pair_connection": 2636
             },
             "credited_effect_opportunity_denominator": 2960,
-            "credited_pair_opportunity_membership_sha256": "1599256caa6928534903fd5d33f8cd6db1af646dd66fe1963699de0aa4a5d5e1",
+            "credited_pair_opportunity_membership_sha256": "8a1e6f76344d617932871511625f958583ba82c2f973e0d58dce6c7cc4e967fe",
             "intent_to_treat_record_count": 2968,
             "minimum_credited_affected_records_for_continue": 296,
             "new_pair_connection_ceiling_records": 2636,
@@ -1352,7 +1352,7 @@
               "no_baseline_pair_connection": 532
             },
             "credited_effect_opportunity_denominator": 537,
-            "credited_pair_opportunity_membership_sha256": "295078b87064dc71908ed04cc9e91cb4b3eeeda14f9480ec3725cbe8f907537b",
+            "credited_pair_opportunity_membership_sha256": "2af99f7708aa3e40ef82fd2c6405c2144c0a661930030beb3919d184be3e07cd",
             "intent_to_treat_record_count": 539,
             "minimum_credited_affected_records_for_continue": 54,
             "new_pair_connection_ceiling_records": 532,
@@ -1369,7 +1369,7 @@
               "no_baseline_pair_connection": 1817
             },
             "credited_effect_opportunity_denominator": 2670,
-            "credited_pair_opportunity_membership_sha256": "eaa086ae0c0defdd416511a5c80e35bb964329894bf4618b36d70ff79aa5b16d",
+            "credited_pair_opportunity_membership_sha256": "7dce1c5431582dcf989494071a3e7f9ec0f963628edd5407ef3863294ba372b7",
             "intent_to_treat_record_count": 2968,
             "minimum_credited_affected_records_for_continue": 267,
             "new_pair_connection_ceiling_records": 1817,
@@ -1382,7 +1382,7 @@
               "no_baseline_pair_connection": 13056
             },
             "credited_effect_opportunity_denominator": 21570,
-            "credited_pair_opportunity_membership_sha256": "a07da98f9d95a001d06b96caccc655f2a936d10ca001d3c7b29aeb3fcf14b32a",
+            "credited_pair_opportunity_membership_sha256": "370c0b5502acba8fd7355b5f8beade838055e498b99176cd0aebbf186eac36f1",
             "intent_to_treat_record_count": 27181,
             "minimum_credited_affected_records_for_continue": 2157,
             "new_pair_connection_ceiling_records": 13056,
@@ -1399,7 +1399,7 @@
               "no_baseline_pair_connection": 533
             },
             "credited_effect_opportunity_denominator": 538,
-            "credited_pair_opportunity_membership_sha256": "f1a836f54d7a5ceb40496539fa385c75a6393751527370a4777ff75f0cb2c90c",
+            "credited_pair_opportunity_membership_sha256": "99674fa7580c4b2a8cc456ca07638a63d90f140c5eb4d5c74db4b7498d33eb5e",
             "intent_to_treat_record_count": 539,
             "minimum_credited_affected_records_for_continue": 54,
             "new_pair_connection_ceiling_records": 533,
@@ -1412,7 +1412,7 @@
               "no_baseline_pair_connection": 26679
             },
             "credited_effect_opportunity_denominator": 27180,
-            "credited_pair_opportunity_membership_sha256": "9f628a825c4d3c4f3c4df4ea47eb977920df12ca8043204746f0fe18c7f7338a",
+            "credited_pair_opportunity_membership_sha256": "9b2ce44c0572b3fee10bccd307af5944ddc907719e4b8a64e0abfd60a4ee2433",
             "intent_to_treat_record_count": 27181,
             "minimum_credited_affected_records_for_continue": 2718,
             "new_pair_connection_ceiling_records": 26679,

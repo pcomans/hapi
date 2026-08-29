@@ -1,17 +1,31 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hapi.example/schemas/site-graph-v0-private-opportunity-ledger-2.json",
-  "title": "Private exact intent-to-treat membership ledger",
-  "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "privacy", "selection_algorithm", "selected_signature_count", "opportunities", "intent_to_treat_records_by_museum", "credited_pair_opportunity_memberships"],
+  "$id": "https://hapi.example/schemas/site-graph-v0-private-opportunity-ledger-3.json",
+  "title": "Private exact intent-to-treat opportunity and mention-binding ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "privacy",
+    "selection_algorithm",
+    "selected_signature_count",
+    "opportunities",
+    "intent_to_treat_records_by_museum",
+    "credited_pair_opportunity_memberships"
+  ],
   "properties": {
-    "schema_version": {"const": "site-graph-v0-private-opportunity-ledger/2"},
+    "schema_version": {"const": "site-graph-v0-private-opportunity-ledger/3"},
     "privacy": {"type": "string", "minLength": 1},
     "selection_algorithm": {"type": "object", "minProperties": 1},
     "selected_signature_count": {"type": "integer", "minimum": 1},
-    "opportunities": {"type": "array", "minItems": 1},
+    "opportunities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/opportunity"}
+    },
     "intent_to_treat_records_by_museum": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["met", "brooklyn", "harvard"],
       "properties": {
         "met": {"$ref": "#/$defs/ittRecords"},
@@ -20,17 +34,209 @@
       }
     },
     "credited_pair_opportunity_memberships": {
-      "type": "object", "additionalProperties": false,
+      "type": "object",
+      "additionalProperties": false,
       "required": ["met__brooklyn", "met__harvard", "brooklyn__harvard"],
       "properties": {
-        "met__brooklyn": {"$ref": "#/$defs/pair"},
-        "met__harvard": {"$ref": "#/$defs/pair"},
-        "brooklyn__harvard": {"$ref": "#/$defs/pair"}
+        "met__brooklyn": {"$ref": "#/$defs/metBrooklynPair"},
+        "met__harvard": {"$ref": "#/$defs/metHarvardPair"},
+        "brooklyn__harvard": {"$ref": "#/$defs/brooklynHarvardPair"}
       }
     }
   },
   "$defs": {
-    "ittRecords": {"type": "array", "items": {"type": "object", "required": ["artifact_id", "opportunity_ids", "baseline_record_scope"]}},
-    "pair": {"type": "object", "required": ["sides"], "properties": {"sides": {"type": "object"}}}
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "stringList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "opportunityBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["opportunity_id", "opportunity_binding_sha256"],
+      "properties": {
+        "opportunity_id": {"type": "string", "pattern": "^opp-[0-9]{4}$"},
+        "opportunity_binding_sha256": {"$ref": "#/$defs/hash"}
+      }
+    },
+    "mentionBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mention_id",
+        "field_path",
+        "status",
+        "target_ids",
+        "normalized_keys",
+        "mention_text_sha256"
+      ],
+      "properties": {
+        "mention_id": {"type": "string", "minLength": 1},
+        "field_path": {"type": "string", "minLength": 1},
+        "status": {"enum": ["resolved", "ambiguous", "unmatched"]},
+        "target_ids": {"$ref": "#/$defs/stringList"},
+        "normalized_keys": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "mention_text_sha256": {"$ref": "#/$defs/hash"}
+      }
+    },
+    "artifactMembership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "opportunity_binding_sha256", "mentions"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "opportunity_binding_sha256": {"$ref": "#/$defs/hash"},
+        "mentions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/mentionBinding"}
+        }
+      }
+    },
+    "opportunity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opportunity_id",
+        "selection_rank",
+        "selection_reason",
+        "museum",
+        "unresolved_status_counts",
+        "mention_count",
+        "artifact_count",
+        "artifact_expansion_sha256",
+        "intent_to_treat",
+        "normalized_expression_key",
+        "artifact_ids",
+        "artifact_memberships",
+        "mention_text_examples",
+        "field_paths"
+      ],
+      "properties": {
+        "opportunity_id": {"type": "string", "pattern": "^opp-[0-9]{4}$"},
+        "selection_rank": {"type": "integer", "minimum": 1},
+        "selection_reason": {
+          "enum": ["museum_protection_top_10", "global_frequency_fill_to_50"]
+        },
+        "museum": {"enum": ["met", "brooklyn", "harvard"]},
+        "unresolved_status_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ambiguous": {"type": "integer", "minimum": 0},
+            "unmatched": {"type": "integer", "minimum": 0}
+          }
+        },
+        "mention_count": {"type": "integer", "minimum": 1},
+        "artifact_count": {"type": "integer", "minimum": 1},
+        "artifact_expansion_sha256": {"$ref": "#/$defs/hash"},
+        "intent_to_treat": {"const": true},
+        "normalized_expression_key": {"type": "string", "minLength": 1},
+        "artifact_ids": {"$ref": "#/$defs/stringList"},
+        "artifact_memberships": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/artifactMembership"}
+        },
+        "mention_text_examples": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "field_paths": {"$ref": "#/$defs/stringList"}
+      }
+    },
+    "ittRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "opportunity_bindings", "baseline_record_scope"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "opportunity_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/opportunityBinding"}
+        },
+        "baseline_record_scope": {
+          "enum": ["no_link", "broad_only", "specific_candidate_present", "unclassified_only"]
+        }
+      }
+    },
+    "ittRecords": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/ittRecord"}
+    },
+    "pairRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "category", "opportunity_bindings"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "category": {
+          "enum": ["no_baseline_pair_connection", "broad_only_pair_connection"]
+        },
+        "opportunity_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/opportunityBinding"}
+        }
+      }
+    },
+    "pairRecords": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/pairRecord"}
+    },
+    "metBrooklynPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sides"],
+      "properties": {
+        "sides": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["met", "brooklyn"],
+          "properties": {
+            "met": {"$ref": "#/$defs/pairRecords"},
+            "brooklyn": {"$ref": "#/$defs/pairRecords"}
+          }
+        }
+      }
+    },
+    "metHarvardPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sides"],
+      "properties": {
+        "sides": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["met", "harvard"],
+          "properties": {
+            "met": {"$ref": "#/$defs/pairRecords"},
+            "harvard": {"$ref": "#/$defs/pairRecords"}
+          }
+        }
+      }
+    },
+    "brooklynHarvardPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sides"],
+      "properties": {
+        "sides": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["brooklyn", "harvard"],
+          "properties": {
+            "brooklyn": {"$ref": "#/$defs/pairRecords"},
+            "harvard": {"$ref": "#/$defs/pairRecords"}
+          }
+        }
+      }
+    }
   }
 }

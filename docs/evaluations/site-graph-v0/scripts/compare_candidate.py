@@ -9,16 +9,20 @@ import hashlib
 import json
 from collections import Counter, defaultdict
 from fractions import Fraction
+from itertools import combinations
 from pathlib import Path
 
 from build_baseline import build_metrics
 from candidate_git import (
     CandidateGitError,
     blob_oid,
+    ed25519_key_id,
     is_ancestor,
+    read_authenticated_bytes,
     read_authenticated_json,
     read_bytes,
     resolve_commit,
+    verify_ed25519_signature,
 )
 from contract_constants import (
     AMBIGUITY_MAXIMUM_INCREASE,
@@ -52,10 +56,7 @@ ABSTENTION_REASONS = {
     "role_not_supported",
     "uncertain_expression",
 }
-NON_EXPOSURE_SENTINELS = {
-    "not_exposed_by_claude_cli",
-    "not_exposed_by_review_tool",
-}
+TRUSTED_ATTESTORS_RELATIVE = "docs/evaluations/site-graph-v0/trusted-run-attestors.json"
 
 
 def read_json(path: Path) -> dict:
@@ -128,42 +129,98 @@ class UnionFind:
         self.parent[high] = low
 
 
+def _raw_type_crosswalk(crosswalk: dict, errors: list[str]) -> dict[str, tuple[str, str]]:
+    """Build the executable raw-type mapping from every declared mapping section."""
+    mapping: dict[str, tuple[str, str]] = {}
+    for section_name, section in sorted(crosswalk.items()):
+        if not isinstance(section, dict):
+            continue
+        for raw_type, value in sorted(section.items()):
+            if not isinstance(value, dict) or set(value) != {"candidate_e55_type", "scope"}:
+                continue
+            mapped = (value["candidate_e55_type"], value["scope"])
+            if raw_type in mapping and mapping[raw_type] != mapped:
+                errors.append(f"raw source type has conflicting crosswalk entries: {raw_type}")
+            mapping[raw_type] = mapped
+    return mapping
+
+
 def _derive_candidate_scope(
     hierarchy: dict, source_snapshots: list[dict], crosswalk: dict, errors: list[str]
-) -> dict[str, str]:
-    vocabulary = crosswalk.get("candidate_e55_vocabulary", {})
-    broad_types = set(vocabulary.get("broad", []))
-    specific_types = set(vocabulary.get("specific_candidate", []))
-    unclassified_types = set(vocabulary.get("unclassified", []))
-    allowed_types = broad_types | specific_types | unclassified_types
-
+) -> tuple[dict[str, str], dict[str, str]]:
+    raw_mapping = _raw_type_crosswalk(crosswalk, errors)
     snapshots: dict[str, dict] = {}
     source_records: dict[str, tuple[str, dict]] = {}
-    target_records: dict[str, list[dict]] = defaultdict(list)
+    target_records: dict[str, list[tuple[str, dict]]] = defaultdict(list)
     for snapshot in source_snapshots:
         snapshot_id = snapshot.get("source_snapshot_id")
         if not snapshot_id or snapshot_id in snapshots:
             errors.append("source snapshot IDs must be nonempty and unique")
             continue
         snapshots[snapshot_id] = snapshot
-        for record in snapshot.get("records", []):
+        records = snapshot.get("records", [])
+        completeness = snapshot.get("completeness", {})
+        if completeness.get("record_count") != len(records):
+            errors.append(f"source snapshot {snapshot_id} complete record count mismatch")
+        if completeness.get("records_canonical_sha256") != canonical_sha256(records):
+            errors.append(f"source snapshot {snapshot_id} complete-record hash mismatch")
+        if records != sorted(records, key=lambda row: row.get("source_record_id", "")):
+            errors.append(f"source snapshot {snapshot_id} records are not canonically sorted")
+        for record in records:
             record_id = record.get("source_record_id")
+            target_id = record.get("target_id")
             if not record_id or record_id in source_records:
                 errors.append("source record IDs must be nonempty and globally unique")
                 continue
+            if not target_id:
+                errors.append(f"source record {record_id} lacks a target ID")
+                continue
+            for field in ("raw_source_types", "parent_ids", "child_ids", "authority_citations"):
+                values = record.get(field, [])
+                if values != sorted(set(values)):
+                    errors.append(f"source record {record_id} {field} is not sorted/unique")
             source_records[record_id] = (snapshot_id, record)
-            target_records[record.get("target_id")].append(record)
+            target_records[target_id].append((snapshot_id, record))
 
     parent_by_target: dict[str, set[str]] = defaultdict(set)
+    children_by_target: dict[str, set[str]] = defaultdict(set)
     for target_id, records in target_records.items():
-        for record in records:
-            parent_by_target[target_id].update(record.get("parent_ids", []))
+        for _, record in records:
+            for parent in record.get("parent_ids", []):
+                parent_by_target[target_id].add(parent)
+                children_by_target[parent].add(target_id)
+            for child in record.get("child_ids", []):
+                children_by_target[target_id].add(child)
+                parent_by_target[child].add(target_id)
+    referenced_targets = set(parent_by_target) | set(children_by_target)
+    dangling_targets = sorted(referenced_targets - set(target_records))
+    if dangling_targets:
+        errors.append(
+            f"candidate source topology references targets without source records: {dangling_targets}"
+        )
+    for parent, children in sorted(children_by_target.items()):
+        for child in sorted(children):
+            parent_declares_child = any(
+                child in record.get("child_ids", [])
+                for _, record in target_records.get(parent, [])
+            )
+            child_declares_parent = any(
+                parent in record.get("parent_ids", [])
+                for _, record in target_records.get(child, [])
+            )
+            if parent_declares_child != child_declares_parent:
+                errors.append(
+                    f"candidate source topology is not inverse-closed: {parent}/{child}"
+                )
 
     def ancestors(target_id: str) -> set[str]:
         output: set[str] = set()
         frontier = sorted(parent_by_target.get(target_id, set()))
         while frontier:
             parent = frontier.pop(0)
+            if parent == target_id:
+                errors.append(f"candidate source hierarchy contains a cycle at {target_id}")
+                continue
             if parent in output:
                 continue
             output.add(parent)
@@ -171,52 +228,73 @@ def _derive_candidate_scope(
         return output
 
     scope_by_target: dict[str, str] = {}
-    seen_nodes: set[str] = set()
+    locator_by_target: dict[str, str] = {}
+    nodes_by_target: dict[str, dict] = {}
     for node in hierarchy.get("nodes", []):
         target_id = node.get("target_id")
-        if not target_id or target_id in seen_nodes:
+        if not target_id or target_id in nodes_by_target:
             errors.append("candidate hierarchy target IDs must be nonempty and unique")
             continue
-        seen_nodes.add(target_id)
-        snapshot_ids = node.get("source_snapshot_ids", [])
-        record_ids = node.get("source_record_ids", [])
-        if snapshot_ids != sorted(set(snapshot_ids)) or not snapshot_ids:
-            errors.append(f"candidate hierarchy {target_id} snapshot IDs not sorted/unique")
-        if record_ids != sorted(set(record_ids)) or not record_ids:
-            errors.append(f"candidate hierarchy {target_id} record IDs not sorted/unique")
-        records = []
-        for record_id in record_ids:
-            source = source_records.get(record_id)
-            if source is None:
-                errors.append(f"candidate hierarchy {target_id} names unknown source record {record_id}")
-                continue
-            snapshot_id, record = source
-            if snapshot_id not in snapshot_ids or record.get("target_id") != target_id:
-                errors.append(f"candidate hierarchy {target_id} source binding mismatch")
-                continue
-            records.append(record)
-        types = {source_type for record in records for source_type in record.get("source_types", [])}
-        unknown_types = sorted(types - allowed_types)
-        if unknown_types:
-            errors.append(f"candidate hierarchy {target_id} has unmapped source types {unknown_types}")
-        if node.get("candidate_e55_type") not in types:
-            errors.append(f"candidate hierarchy {target_id} primary type not present in source records")
-        children = sorted(
-            {child for record in records for child in record.get("child_ids", [])}
+        nodes_by_target[target_id] = node
+    if set(nodes_by_target) != set(target_records):
+        errors.append(
+            "candidate hierarchy must census every source-snapshot target: "
+            f"missing={sorted(set(target_records) - set(nodes_by_target))}, "
+            f"extra={sorted(set(nodes_by_target) - set(target_records))}"
         )
-        if node.get("child_ids") != children:
-            errors.append(f"candidate hierarchy {target_id} child topology not derived from sources")
+
+    for target_id, node in sorted(nodes_by_target.items()):
+        all_records = target_records.get(target_id, [])
+        expected_record_ids = sorted(row["source_record_id"] for _, row in all_records)
+        expected_snapshot_ids = sorted({snapshot_id for snapshot_id, _ in all_records})
+        if node.get("source_record_ids") != expected_record_ids:
+            errors.append(
+                f"candidate hierarchy {target_id} must bind all and only its source records"
+            )
+        if node.get("source_snapshot_ids") != expected_snapshot_ids:
+            errors.append(
+                f"candidate hierarchy {target_id} source snapshot census mismatch"
+            )
+        locators = {row.get("authority_identity_locator") for _, row in all_records}
+        if None in locators or len(locators) != 1:
+            errors.append(f"candidate hierarchy {target_id} must have one authority locator")
+        else:
+            locator_by_target[target_id] = min(locators)
+        raw_types = {
+            raw_type
+            for _, record in all_records
+            for raw_type in record.get("raw_source_types", [])
+        }
+        unknown_types = sorted(raw_types - set(raw_mapping))
+        if unknown_types:
+            errors.append(
+                f"candidate hierarchy {target_id} has unmapped raw source types {unknown_types}"
+            )
+        mapped = {raw_mapping[value] for value in raw_types if value in raw_mapping}
+        mapped_e55_types = {value[0] for value in mapped}
+        if node.get("candidate_e55_type") not in mapped_e55_types:
+            errors.append(
+                f"candidate hierarchy {target_id} E55 type is not crosswalk-derived"
+            )
+        expected_children = sorted(children_by_target.get(target_id, set()))
+        if node.get("child_ids") != expected_children:
+            errors.append(
+                f"candidate hierarchy {target_id} child topology must include explicit and inverse-parent edges"
+            )
         expected_ancestors = sorted(ancestors(target_id))
         if node.get("ancestor_target_ids") != expected_ancestors:
-            errors.append(f"candidate hierarchy {target_id} ancestor topology not derived from sources")
-        if types & broad_types or children:
+            errors.append(
+                f"candidate hierarchy {target_id} ancestor topology not derived from all sources"
+            )
+        mapped_scopes = {value[1] for value in mapped}
+        if "broad" in mapped_scopes or expected_children:
             scope = "broad"
-        elif types & specific_types:
+        elif "specific_candidate" in mapped_scopes:
             scope = "specific_candidate"
         else:
             scope = "unclassified"
         scope_by_target[target_id] = scope
-    return scope_by_target
+    return scope_by_target, locator_by_target
 
 
 def _decision_supports(
@@ -236,7 +314,20 @@ def _fraction_from_ratio(value: dict) -> Fraction:
     return Fraction(value.get("numerator", 0), denominator) if denominator else Fraction(0)
 
 
-def _invalid_report(errors: list[str]) -> dict:
+def _logic_only_provenance(outcome: str) -> dict:
+    return {
+        "evidence_scope": "LOGIC_ONLY_TEST_INPUT",
+        "archive_sha256": "LOGIC_ONLY_NO_ARCHIVE",
+        "snapshot_acquisition_integrity": "NOT_APPLICABLE_LOGIC_ONLY",
+        "upstream_production_lineage": "NOT_APPLICABLE_LOGIC_ONLY",
+        "overall_contract_status": "NOT_APPLICABLE_LOGIC_ONLY",
+        "downstream_product_verdict": outcome,
+    }
+
+
+def _invalid_report(
+    errors: list[str], provenance_status: dict | None = None
+) -> dict:
     return {
         "schema_version": "site-graph-v0-comparison-report/2",
         "outcome": "INVALID",
@@ -251,6 +342,8 @@ def _invalid_report(errors: list[str]) -> dict:
         "per_museum": {},
         "pairs": {},
         "ambiguity_and_abstention": {},
+        "run_binding": None,
+        "provenance_status": provenance_status or _logic_only_provenance("INVALID"),
     }
 
 
@@ -286,7 +379,21 @@ def compare_core(
     if None in baseline_scope or len(baseline_scope) != len(node_scope.get("nodes", [])):
         errors.append("baseline node scope target IDs must be nonempty and unique")
 
-    derived_scope = _derive_candidate_scope(hierarchy, source_snapshots, crosswalk, errors)
+    derived_scope, candidate_authority_locator = _derive_candidate_scope(
+        hierarchy, source_snapshots, crosswalk, errors
+    )
+    authority_locator: dict[str, str] = {}
+    for row in node_scope.get("nodes", []):
+        target_id = row.get("target_id")
+        locator = row.get("authority_identity_locator")
+        if not isinstance(locator, str) or not locator:
+            errors.append(f"baseline target {target_id} lacks an authenticated authority locator")
+            continue
+        authority_locator[target_id] = locator
+    for target_id, locator in candidate_authority_locator.items():
+        if target_id in authority_locator and authority_locator[target_id] != locator:
+            errors.append(f"candidate target {target_id} authority locator conflicts with baseline")
+        authority_locator[target_id] = locator
     for target_id in sorted(set(derived_scope) & set(baseline_scope)):
         if derived_scope[target_id] != baseline_scope[target_id]:
             errors.append(
@@ -297,6 +404,7 @@ def compare_core(
         target_scope.setdefault(target_id, scope)
 
     itt_by_id: dict[str, dict] = {}
+    itt_bindings_by_id: dict[str, set[tuple[str, str]]] = {}
     museum_by_id: dict[str, str] = {}
     for museum in MUSEUMS:
         rows = private_opportunity.get("intent_to_treat_records_by_museum", {}).get(museum, [])
@@ -307,7 +415,21 @@ def compare_core(
                 continue
             if artifact_id not in baseline_by_id or baseline_by_id[artifact_id].get("museum") != museum:
                 errors.append(f"private ITT artifact {artifact_id} baseline museum mismatch")
+            bindings = row.get("opportunity_bindings", [])
+            normalized_bindings = [
+                (binding.get("opportunity_id"), binding.get("opportunity_binding_sha256"))
+                for binding in bindings
+            ]
+            if (
+                not normalized_bindings
+                or any(not left or not right for left, right in normalized_bindings)
+                or normalized_bindings != sorted(set(normalized_bindings))
+            ):
+                errors.append(
+                    f"private ITT artifact {artifact_id} opportunity bindings must be nonempty, sorted, and unique"
+                )
             itt_by_id[artifact_id] = row
+            itt_bindings_by_id[artifact_id] = set(normalized_bindings)
             museum_by_id[artifact_id] = museum
 
     candidate_records = candidate.get("records", [])
@@ -328,8 +450,10 @@ def compare_core(
     all_targets = set(baseline_scope) | set(derived_scope)
     relations = relation_ledger.get("relations", [])
     supported_equivalences: list[tuple[str, str]] = []
+    supported_distinct: set[tuple[str, str]] = set()
     supported_strict: dict[tuple[str, str], dict] = {}
     relation_ids: set[str] = set()
+    relation_pairs: set[tuple[str, str]] = set()
     referenced_decisions: set[str] = set()
     unresolved_disagreements: set[str] = set()
     for relation in relations:
@@ -344,13 +468,19 @@ def compare_core(
         if left not in all_targets or right not in all_targets:
             errors.append(f"relation {relation_id} references unknown target")
             continue
-        if kind == "unrelated":
-            if review_key is not None:
-                errors.append(f"unrelated relation {relation_id} must not claim a review")
+        pair = tuple(sorted((left, right)))
+        if pair in relation_pairs:
+            errors.append(f"relation pair is duplicated or contradictory: {pair}")
             continue
-        decision_kind = (
-            "equivalence_support" if kind == "equivalent" else "strict_refinement_support"
-        )
+        relation_pairs.add(pair)
+        decision_kind = {
+            "equivalent": "equivalence_support",
+            "distinct": "distinctness_support",
+            "strict_refinement": "strict_refinement_support",
+        }.get(kind)
+        if decision_kind is None:
+            errors.append(f"relation {relation_id} has an unsupported relation kind")
+            continue
         subject = {"left_target_id": left, "right_target_id": right, "relation": kind}
         expected_key = decision_key(decision_kind, subject)
         if review_key != expected_key or review_key not in decisions:
@@ -363,6 +493,16 @@ def compare_core(
             continue
         if kind == "equivalent":
             supported_equivalences.append((left, right))
+        elif kind == "distinct":
+            if (
+                authority_locator.get(left) is not None
+                and authority_locator.get(left) == authority_locator.get(right)
+            ):
+                errors.append(
+                    f"distinct relation {relation_id} contradicts a shared authority locator"
+                )
+                continue
+            supported_distinct.add(pair)
         else:
             if target_scope.get(left) != "specific_candidate":
                 errors.append(f"strict refinement {relation_id} narrower target is not specific")
@@ -380,6 +520,12 @@ def compare_core(
             supported_strict[(left, right)] = relation
 
     identity = UnionFind(all_targets)
+    targets_by_locator: dict[str, list[str]] = defaultdict(list)
+    for target_id, locator in sorted(authority_locator.items()):
+        targets_by_locator[locator].append(target_id)
+    for locator_targets in targets_by_locator.values():
+        for target_id in locator_targets[1:]:
+            identity.union(locator_targets[0], target_id)
     for left, right in sorted(supported_equivalences):
         identity.union(left, right)
 
@@ -404,6 +550,7 @@ def compare_core(
         artifact_id: set(targets) for artifact_id, targets in baseline_links.items()
     }
     credited_links: dict[str, set[str]] = defaultdict(set)
+    credited_link_bindings: dict[str, dict[str, tuple[str, str]]] = defaultdict(dict)
     strict_pairs_by_artifact: dict[str, set[tuple[str, str]]] = defaultdict(set)
     events: list[dict] = []
     refinement_modes: Counter[str] = Counter()
@@ -435,10 +582,20 @@ def compare_core(
         for link in direct_links:
             target_id = link.get("target_id")
             support_key = link.get("support_decision_key")
+            opportunity_binding = (
+                link.get("opportunity_id"),
+                link.get("opportunity_binding_sha256"),
+            )
             if not target_id or target_id in targets_seen:
                 errors.append(f"candidate {artifact_id} direct targets must be nonempty and unique")
                 continue
             targets_seen.add(target_id)
+            if opportunity_binding not in itt_bindings_by_id.get(artifact_id, set()):
+                errors.append(
+                    f"candidate link {artifact_id}/{target_id} is not bound to an exact private opportunity"
+                )
+                unsupported_targets.add(target_id)
+                continue
             if target_id not in all_targets:
                 errors.append(f"candidate {artifact_id} target {target_id} lacks authenticated scope")
                 continue
@@ -447,7 +604,12 @@ def compare_core(
                     errors.append(f"unchanged direct target {artifact_id}/{target_id} must not claim new support")
                 supported_targets.add(target_id)
                 continue
-            subject = {"artifact_id": artifact_id, "target_id": target_id}
+            subject = {
+                "artifact_id": artifact_id,
+                "target_id": target_id,
+                "opportunity_id": opportunity_binding[0],
+                "opportunity_binding_sha256": opportunity_binding[1],
+            }
             expected_key = decision_key("link_support", subject)
             if support_key is None:
                 unsupported_targets.add(target_id)
@@ -463,6 +625,7 @@ def compare_core(
                 supported_targets.add(target_id)
                 if target_scope[target_id] == "specific_candidate":
                     credited_links[artifact_id].add(target_id)
+                    credited_link_bindings[artifact_id][target_id] = opportunity_binding
             else:
                 unsupported_targets.add(target_id)
         candidate_links[artifact_id] = supported_targets
@@ -503,7 +666,10 @@ def compare_core(
             event = "new_link"
         elif baseline_targets and unrelated_credited:
             event = "additional_identity"
-        elif unsupported_targets or (supported_targets - baseline_targets):
+        elif unsupported_targets or any(
+            not any((baseline_target, target) in equivalent_pairs for baseline_target in baseline_targets)
+            for target in supported_targets - baseline_targets
+        ):
             event = "uncredited_change"
         else:
             event = "unchanged"
@@ -521,6 +687,77 @@ def compare_core(
                 "lost_baseline_target_ids": sorted(losses),
             }
         )
+
+    def positively_distinct(left: str, right: str) -> bool:
+        left_root, right_root = identity.find(left), identity.find(right)
+        if left_root == right_root:
+            return False
+        reviewed_pairs = set(supported_distinct) | {
+            tuple(sorted(pair)) for pair in supported_strict
+        }
+        return any(
+            {identity.find(first), identity.find(second)} == {left_root, right_root}
+            for first, second in reviewed_pairs
+        )
+
+    prospective_shared_targets: dict[tuple[str, str], set[str]] = {}
+    for left, right in PAIRS:
+        left_targets = {
+            target
+            for artifact_id, targets in credited_links.items()
+            if museum_by_id.get(artifact_id) == left
+            for target in targets
+        }
+        right_targets = {
+            target
+            for artifact_id, targets in credited_links.items()
+            if museum_by_id.get(artifact_id) == right
+            for target in targets
+        }
+        shared_roots = {identity.find(target) for target in left_targets} & {
+            identity.find(target) for target in right_targets
+        }
+        prospective_shared_targets[(left, right)] = {
+            target
+            for target in left_targets | right_targets
+            if identity.find(target) in shared_roots
+        }
+
+    prospective_targets = set().union(*prospective_shared_targets.values())
+    for left, right in combinations(sorted(prospective_targets), 2):
+        if identity.find(left) != identity.find(right) and not positively_distinct(left, right):
+            errors.append(
+                f"prospective counted targets lack positive distinctness evidence: {left}/{right}"
+            )
+    baseline_targets_by_museum = {
+        museum: {
+            target
+            for artifact_id, targets in baseline_links.items()
+            if baseline_by_id[artifact_id].get("museum") == museum
+            for target in targets
+        }
+        for museum in MUSEUMS
+    }
+    for pair, prospective in prospective_shared_targets.items():
+        left, right = pair
+        shared_baseline_roots = {
+            identity.find(target) for target in baseline_targets_by_museum[left]
+        } & {identity.find(target) for target in baseline_targets_by_museum[right]}
+        shared_baseline_targets = {
+            target
+            for museum in pair
+            for target in baseline_targets_by_museum[museum]
+            if identity.find(target) in shared_baseline_roots
+        }
+        for candidate_target in sorted(prospective):
+            if identity.find(candidate_target) in shared_baseline_roots:
+                continue
+            for baseline_target in sorted(shared_baseline_targets):
+                if not positively_distinct(candidate_target, baseline_target):
+                    errors.append(
+                        "prospective gained target lacks positive distinctness from a shared "
+                        f"baseline identity: {candidate_target}/{baseline_target}"
+                    )
 
     unused_decisions = sorted(set(decisions) - referenced_decisions)
     if unused_decisions:
@@ -634,7 +871,7 @@ def compare_core(
                 for artifact in baseline_connected
                 if partition_scopes(
                     {
-                        target_scope[target]
+                        identity_scope[identity.find(target)]
                         for target in baseline_links[artifact]
                         if identity.find(target) in baseline_shared
                     }
@@ -646,7 +883,7 @@ def compare_core(
                 for artifact in candidate_connected
                 if partition_scopes(
                     {
-                        target_scope[target]
+                        identity_scope[identity.find(target)]
                         for target in candidate_links[artifact]
                         if identity.find(target) in candidate_shared
                     }
@@ -655,7 +892,34 @@ def compare_core(
             }
 
             member_rows = private_pair_memberships[pair_key]["sides"][museum]
-            member_category = {row["artifact_id"]: row["category"] for row in member_rows}
+            member_category: dict[str, str] = {}
+            member_bindings: dict[str, set[tuple[str, str]]] = {}
+            for row in member_rows:
+                artifact_id = row["artifact_id"]
+                binding_rows = [
+                    (
+                        binding.get("opportunity_id"),
+                        binding.get("opportunity_binding_sha256"),
+                    )
+                    for binding in row.get("opportunity_bindings", [])
+                ]
+                bindings = set(binding_rows)
+                if artifact_id in member_category:
+                    return _invalid_report(
+                        [f"{pair_key}/{museum} has duplicate private pair-side artifact"]
+                    )
+                if (
+                    binding_rows != sorted(bindings)
+                    or bindings != itt_bindings_by_id.get(artifact_id, set())
+                    or museum_by_id.get(artifact_id) != museum
+                ):
+                    return _invalid_report(
+                        [
+                            f"{pair_key}/{museum}/{artifact_id} pair-side opportunity binding differs from frozen ITT"
+                        ]
+                    )
+                member_category[artifact_id] = row["category"]
+                member_bindings[artifact_id] = bindings
             pair_event_counts: Counter[str] = Counter()
             affected_artifacts: set[str] = set()
             for artifact_id in sorted(member_category):
@@ -663,6 +927,8 @@ def compare_core(
                     target
                     for target in credited_links.get(artifact_id, set())
                     if identity.find(target) in gained_specific
+                    and credited_link_bindings.get(artifact_id, {}).get(target)
+                    in member_bindings[artifact_id]
                 }
                 if not gained_credited_targets:
                     continue
@@ -852,6 +1118,8 @@ def compare_core(
             "candidate_abstention_reason_counts": dict(sorted(abstentions.items())),
             "reviewer_disagreement_decisions_uncredited": len(unresolved_disagreements),
         },
+        "run_binding": None,
+        "provenance_status": _logic_only_provenance(outcome),
     }
 
 
@@ -860,9 +1128,24 @@ def _validate_review_artifacts(
     result_commit: str,
     ledger: dict,
     schema_root: Path,
+    *,
+    freeze_commit: str | None = None,
+    frozen_files: dict[str, dict] | None = None,
 ) -> dict[str, dict]:
     decisions: dict[str, dict] = {}
     used_paths: set[str] = set()
+    used_content_hashes: set[str] = set()
+    used_invocation_ids: set[str] = set()
+    frozen_files = frozen_files or {}
+
+    def claim_unique(path: str, digest: str, label: str) -> None:
+        if path in used_paths:
+            raise ValueError(f"{label} path reused across reviews: {path}")
+        if digest in used_content_hashes:
+            raise ValueError(f"{label} bytes reused across reviews: {digest}")
+        used_paths.add(path)
+        used_content_hashes.add(digest)
+
     for ledger_decision in ledger["decisions"]:
         key = ledger_decision["decision_key"]
         kind = ledger_decision["decision_kind"]
@@ -872,9 +1155,6 @@ def _validate_review_artifacts(
         artifacts = []
         for reference in ledger_decision["review_artifacts"]:
             path = reference["path"]
-            if path in used_paths:
-                raise ValueError(f"review artifact reused across decisions: {path}")
-            used_paths.add(path)
             artifact, metadata = read_authenticated_json(
                 repo,
                 result_commit,
@@ -887,6 +1167,7 @@ def _validate_review_artifacts(
             )
             if canonical_sha256(artifact) != reference["canonical_record_sha256"]:
                 raise ValueError(f"review artifact canonical record hash mismatch: {path}")
+            claim_unique(path, metadata["sha256"], "review artifact")
             if (
                 artifact["decision_key"] != key
                 or artifact["decision_kind"] != kind
@@ -900,22 +1181,82 @@ def _validate_review_artifacts(
                 interaction = artifact["llm_interaction"]
                 if not isinstance(interaction, dict):
                     raise ValueError(f"LLM review lacks full interaction provenance: {path}")
-                backend = interaction["backend_model_id_or_non_exposure_sentinel"]
-                if backend.startswith("not_exposed") and backend not in NON_EXPOSURE_SENTINELS:
-                    raise ValueError(f"LLM review uses an unrecognized non-exposure sentinel: {path}")
-                if not interaction["parameters"]:
-                    raise ValueError(f"LLM review parameter object must be explicit and nonempty: {path}")
-                for label in ("prompt", "input", "raw_response"):
+                invocation_id = interaction["review_invocation_id"]
+                interaction_payload = {
+                    "review_id": artifact["review_id"],
+                    "review_invocation_id": invocation_id,
+                    "decision_key": key,
+                    "decision_kind": kind,
+                    "subject": subject,
+                    "model": interaction["model"],
+                    "parameters": interaction["parameters"],
+                    "prompt": interaction["prompt"],
+                    "input": interaction["input"],
+                    "raw_response": interaction["raw_response"],
+                    "prompt_leakage_audit": interaction["prompt_leakage_audit"]["artifact"],
+                }
+                if interaction["interaction_binding_sha256"] != canonical_sha256(
+                    interaction_payload
+                ):
+                    raise ValueError(f"LLM interaction binding hash mismatch: {path}")
+                if invocation_id in used_invocation_ids:
+                    raise ValueError(f"LLM review invocation ID reused: {invocation_id}")
+                used_invocation_ids.add(invocation_id)
+                if freeze_commit is None:
+                    raise ValueError("LLM review cannot be validated without its pre-run freeze")
+                prompt_reference = interaction["prompt"]
+                prompt_entry = frozen_files.get(prompt_reference["path"])
+                if (
+                    prompt_entry is None
+                    or prompt_entry.get("role") != "review_prompt"
+                    or any(
+                        prompt_reference[field] != prompt_entry[field]
+                        for field in ("path", "sha256", "git_blob_oid")
+                    )
+                ):
+                    raise ValueError(
+                        f"LLM prompt was not an exact pre-generation frozen input: {path}"
+                    )
+                prompt_raw, _ = read_authenticated_bytes(
+                    repo,
+                    freeze_commit,
+                    prompt_reference["path"],
+                    expected_sha256=prompt_reference["sha256"],
+                    expected_blob_oid=prompt_reference["git_blob_oid"],
+                )
+                if not prompt_raw.strip():
+                    raise ValueError(f"LLM prompt is empty: {prompt_reference['path']}")
+                claim_unique(
+                    prompt_reference["path"], prompt_reference["sha256"], "LLM prompt"
+                )
+                for label in ("input", "raw_response"):
                     child = interaction[label]
-                    raw = read_bytes(repo, result_commit, child["path"])
-                    if hashlib.sha256(raw).hexdigest() != child["sha256"]:
-                        raise ValueError(f"LLM {label} SHA mismatch: {child['path']}")
-                    if blob_oid(repo, result_commit, child["path"]) != child["git_blob_oid"]:
-                        raise ValueError(f"LLM {label} Git blob mismatch: {child['path']}")
+                    raw, _ = read_authenticated_bytes(
+                        repo,
+                        result_commit,
+                        child["path"],
+                        expected_sha256=child["sha256"],
+                        expected_blob_oid=child["git_blob_oid"],
+                    )
+                    if not raw.strip():
+                        raise ValueError(f"LLM {label} is empty: {child['path']}")
+                    claim_unique(child["path"], child["sha256"], f"LLM {label}")
                 audit_reference = interaction["prompt_leakage_audit"]["artifact"]
+                audit_entry = frozen_files.get(audit_reference["path"])
+                if (
+                    audit_entry is None
+                    or audit_entry.get("role") != "prompt_leakage_audit"
+                    or any(
+                        audit_reference[field] != audit_entry[field]
+                        for field in ("path", "sha256", "git_blob_oid")
+                    )
+                ):
+                    raise ValueError(
+                        f"LLM prompt audit was not an exact pre-generation frozen input: {path}"
+                    )
                 audit, _ = read_authenticated_json(
                     repo,
-                    result_commit,
+                    freeze_commit,
                     audit_reference["path"],
                     expected_sha256=audit_reference["sha256"],
                     expected_blob_oid=audit_reference["git_blob_oid"],
@@ -924,6 +1265,23 @@ def _validate_review_artifacts(
                     audit,
                     schema_root / "prompt-leakage-audit.schema.json",
                     f"prompt leakage audit {audit_reference['path']}",
+                )
+                if (
+                    audit["review_id"] != artifact["review_id"]
+                    or
+                    audit["review_invocation_id"] != invocation_id
+                    or audit["decision_key"] != key
+                    or audit["decision_kind"] != kind
+                    or audit["subject"] != subject
+                    or audit["prompt"] != prompt_reference
+                ):
+                    raise ValueError(
+                        f"prompt leakage audit is not bound to exact prompt/subject/decision: {path}"
+                    )
+                claim_unique(
+                    audit_reference["path"],
+                    audit_reference["sha256"],
+                    "prompt leakage audit",
                 )
             artifacts.append({**artifact, "_metadata": metadata})
         reviewer_ids = [artifact["reviewer"]["reviewer_id"] for artifact in artifacts]
@@ -948,63 +1306,244 @@ def _validate_review_artifacts(
     return decisions
 
 
-def _load_candidate_freeze(
+def _load_trusted_attestor_policy(
+    repo: Path, schema_root: Path
+) -> tuple[dict, dict]:
+    path = repo / TRUSTED_ATTESTORS_RELATIVE
+    raw = path.read_bytes()
+    try:
+        policy = json.loads(raw)
+    except json.JSONDecodeError as error:
+        raise CandidateGitError("release-pinned trusted run attestor policy is not JSON") from error
+    validate_schema(
+        policy,
+        schema_root / "trusted-run-attestors.schema.json",
+        "release-pinned trusted run attestors",
+    )
+    if policy["status"] != "CONFIGURED":
+        raise CandidateGitError(
+            "production candidate comparison blocked: trusted run attestors are NOT_CONFIGURED"
+        )
+    attestor_ids = [row["attestor_id"] for row in policy["attestors"]]
+    key_ids = [row["key_id"] for row in policy["attestors"]]
+    if len(attestor_ids) != len(set(attestor_ids)) or len(key_ids) != len(set(key_ids)):
+        raise CandidateGitError("trusted run attestor IDs and key IDs must be unique")
+    for attestor in policy["attestors"]:
+        if ed25519_key_id(attestor["public_key_base64"]) != attestor["key_id"]:
+            raise CandidateGitError(
+                f"trusted run attestor key ID mismatch: {attestor['attestor_id']}"
+            )
+    return policy, {
+        "path": TRUSTED_ATTESTORS_RELATIVE,
+        "raw_sha256": hashlib.sha256(raw).hexdigest(),
+        "canonical_sha256": canonical_sha256(policy),
+    }
+
+
+def _load_candidate_run(
     repo: Path,
-    freeze_commit: str,
-    freeze_manifest_path: str,
-    result_commit: str,
-    candidate_result_path: str,
-    review_ledger_path: str,
+    audit_commit: str,
+    run_result_manifest_path: str,
     release_manifest_sha256: str,
     private_ledger_sha256: str,
     schema_root: Path,
-) -> tuple[dict, dict, list[dict], dict, dict]:
-    freeze_commit = resolve_commit(repo, freeze_commit)
-    result_commit = resolve_commit(repo, result_commit)
+) -> tuple[dict, dict, list[dict], dict, dict, dict, dict, str, str]:
+    """Load one result only through its post-result manifest and release trust root."""
+    policy, policy_metadata = _load_trusted_attestor_policy(repo, schema_root)
+    audit_commit = resolve_commit(repo, audit_commit)
+    run_manifest, run_manifest_metadata = read_authenticated_json(
+        repo, audit_commit, run_result_manifest_path
+    )
+    validate_schema(
+        run_manifest,
+        schema_root / "run-result-manifest.schema.json",
+        "candidate run-result manifest",
+    )
+    if run_manifest["release_manifest_sha256"] != release_manifest_sha256:
+        raise CandidateGitError("run-result manifest release binding mismatch")
+    if (
+        run_manifest["trusted_run_attestors_canonical_sha256"]
+        != policy_metadata["canonical_sha256"]
+    ):
+        raise CandidateGitError("run-result manifest trusted-attestor binding mismatch")
+
+    result_commit = resolve_commit(repo, run_manifest["result_commit"])
+    freeze_commit = resolve_commit(repo, run_manifest["freeze_commit"])
     if freeze_commit == result_commit or not is_ancestor(repo, freeze_commit, result_commit):
         raise CandidateGitError(
             "candidate freeze commit must be a distinct ancestor of the result commit"
         )
-    candidate, _ = read_authenticated_json(repo, result_commit, candidate_result_path)
-    reviews, _ = read_authenticated_json(repo, result_commit, review_ledger_path)
+    if result_commit == audit_commit or not is_ancestor(repo, result_commit, audit_commit):
+        raise CandidateGitError(
+            "candidate result commit must be a distinct ancestor of the audit-manifest commit"
+        )
+
+    candidate_reference = run_manifest["candidate_result"]
+    review_reference = run_manifest["review_ledger"]
+    receipt_reference = run_manifest["run_start_receipt"]
+    signature_reference = run_manifest["run_start_signature"]
+    freeze_reference = run_manifest["freeze_manifest"]
+    bound_paths = {
+        reference["path"]
+        for reference in (
+            candidate_reference,
+            review_reference,
+            receipt_reference,
+            signature_reference,
+            freeze_reference,
+        )
+    }
+    if len(bound_paths) != 5:
+        raise CandidateGitError("run-result manifest artifact paths must be unique")
+    candidate, _ = read_authenticated_json(
+        repo,
+        result_commit,
+        candidate_reference["path"],
+        expected_sha256=candidate_reference["sha256"],
+        expected_blob_oid=candidate_reference["git_blob_oid"],
+    )
+    reviews, _ = read_authenticated_json(
+        repo,
+        result_commit,
+        review_reference["path"],
+        expected_sha256=review_reference["sha256"],
+        expected_blob_oid=review_reference["git_blob_oid"],
+    )
+    receipt_raw, _ = read_authenticated_bytes(
+        repo,
+        result_commit,
+        receipt_reference["path"],
+        expected_sha256=receipt_reference["sha256"],
+        expected_blob_oid=receipt_reference["git_blob_oid"],
+    )
+    signature_raw, _ = read_authenticated_bytes(
+        repo,
+        result_commit,
+        signature_reference["path"],
+        expected_sha256=signature_reference["sha256"],
+        expected_blob_oid=signature_reference["git_blob_oid"],
+    )
+    try:
+        receipt = json.loads(receipt_raw)
+    except json.JSONDecodeError as error:
+        raise CandidateGitError("run-start receipt is not JSON") from error
     validate_schema(candidate, schema_root / "candidate.schema.json", "candidate result")
     validate_schema(reviews, schema_root / "review-ledger.schema.json", "review ledger")
-    if candidate["freeze_commit"] != freeze_commit:
-        raise CandidateGitError("candidate result freeze commit mismatch")
-    if candidate["freeze_manifest_path"] != freeze_manifest_path:
-        raise CandidateGitError("candidate result freeze manifest path mismatch")
-    manifest, manifest_metadata = read_authenticated_json(
+    validate_schema(receipt, schema_root / "run-start-receipt.schema.json", "run-start receipt")
+    if candidate["review_ledger"] != review_reference:
+        raise CandidateGitError("candidate result exact review-ledger binding mismatch")
+    if candidate["run_start_receipt"] != receipt_reference:
+        raise CandidateGitError("candidate result exact run-start receipt binding mismatch")
+    if candidate["run_start_signature"] != signature_reference:
+        raise CandidateGitError("candidate result exact run-start signature binding mismatch")
+    if candidate["freeze_commit"] != freeze_commit or candidate["freeze_manifest"] != freeze_reference:
+        raise CandidateGitError("candidate result exact freeze binding mismatch")
+
+    freeze, freeze_metadata = read_authenticated_json(
         repo,
         freeze_commit,
-        freeze_manifest_path,
-        expected_blob_oid=candidate["freeze_manifest_blob_oid"],
+        freeze_reference["path"],
+        expected_sha256=freeze_reference["sha256"],
+        expected_blob_oid=freeze_reference["git_blob_oid"],
     )
     validate_schema(
-        manifest, schema_root / "candidate-freeze-manifest.schema.json", "candidate freeze"
+        freeze, schema_root / "candidate-freeze-manifest.schema.json", "candidate freeze"
     )
-    bindings = (
+    for label, field, expected in (
         ("release manifest", "release_manifest_sha256", release_manifest_sha256),
         (
             "private opportunity ledger",
             "private_opportunity_ledger_canonical_sha256",
             private_ledger_sha256,
         ),
-    )
-    for label, field, value in bindings:
-        if candidate[field] != value:
+    ):
+        if candidate[field] != expected:
             raise CandidateGitError(f"candidate {label} binding mismatch")
-        if manifest[field] != value:
+        if freeze[field] != expected:
             raise CandidateGitError(f"freeze manifest {label} binding mismatch")
-    if manifest_metadata["git_blob_oid"] != candidate["freeze_manifest_blob_oid"]:
-        raise CandidateGitError("freeze manifest blob mismatch")
+    if candidate["candidate_id"] != freeze["candidate_id"]:
+        raise CandidateGitError("candidate ID differs from pre-run freeze")
+
+    policy_binding = freeze["trusted_run_attestors"]
+    policy_at_freeze, policy_at_freeze_metadata = read_authenticated_json(
+        repo,
+        freeze_commit,
+        TRUSTED_ATTESTORS_RELATIVE,
+        expected_sha256=policy_binding["raw_sha256"],
+        expected_blob_oid=policy_binding["git_blob_oid"],
+    )
+    if policy_at_freeze != policy:
+        raise CandidateGitError("freeze used a different trusted-attestor policy")
+    if (
+        policy_binding["path"] != TRUSTED_ATTESTORS_RELATIVE
+        or policy_binding["raw_sha256"] != policy_metadata["raw_sha256"]
+        or policy_binding["canonical_sha256"] != policy_metadata["canonical_sha256"]
+        or policy_binding["status"] != "CONFIGURED"
+        or policy_binding["attestor_key_ids"]
+        != sorted(attestor["key_id"] for attestor in policy["attestors"])
+        or policy_at_freeze_metadata["git_blob_oid"] != policy_binding["git_blob_oid"]
+    ):
+        raise CandidateGitError("freeze trusted-attestor policy binding mismatch")
+
+    expected_receipt_bindings = {
+        "release_manifest_sha256": release_manifest_sha256,
+        "trusted_run_attestors_canonical_sha256": policy_metadata["canonical_sha256"],
+        "candidate_id": candidate["candidate_id"],
+        "freeze_commit": freeze_commit,
+        "freeze_manifest": freeze_reference,
+        "freeze_nonce": freeze["run_nonce"],
+        "attestor_key_id": run_manifest["attestor_key_id"],
+        "signature_context": policy["signature_context"],
+    }
+    for field, expected in expected_receipt_bindings.items():
+        if receipt[field] != expected:
+            raise CandidateGitError(f"run-start receipt {field} binding mismatch")
+    attestor = next(
+        (
+            row
+            for row in policy["attestors"]
+            if row["key_id"] == receipt["attestor_key_id"]
+            and row["attestor_id"] == receipt["attestor_id"]
+        ),
+        None,
+    )
+    if attestor is None:
+        raise CandidateGitError("run-start receipt was not signed by a release-trusted attestor")
+    verify_ed25519_signature(
+        receipt_raw,
+        signature_raw,
+        public_key_base64=attestor["public_key_base64"],
+    )
 
     by_role: dict[str, list[dict]] = defaultdict(list)
     seen_paths: set[str] = set()
+    seen_hashes: set[str] = set()
     loaded: dict[str, dict] = {}
-    for entry in manifest["files"]:
-        if entry["path"] in seen_paths:
-            raise CandidateGitError("freeze manifest paths must be unique")
+    frozen_files: dict[str, dict] = {}
+    schema_by_role = {
+        "hierarchy": "candidate-hierarchy.schema.json",
+        "relation_ledger": "relation-ledger.schema.json",
+        "source_snapshot": "candidate-source-snapshot.schema.json",
+        "prompt_leakage_audit": "prompt-leakage-audit.schema.json",
+    }
+    for entry in freeze["files"]:
+        if entry["path"] in seen_paths or entry["sha256"] in seen_hashes:
+            raise CandidateGitError("freeze manifest paths and content hashes must be unique")
         seen_paths.add(entry["path"])
+        seen_hashes.add(entry["sha256"])
+        by_role[entry["role"]].append(entry)
+        frozen_files[entry["path"]] = entry
+        if entry["role"] == "review_prompt":
+            raw, _ = read_authenticated_bytes(
+                repo,
+                freeze_commit,
+                entry["path"],
+                expected_sha256=entry["sha256"],
+                expected_blob_oid=entry["git_blob_oid"],
+            )
+            if not raw.strip() or entry["schema_version"] is not None:
+                raise CandidateGitError(f"frozen review prompt is empty or mislabeled: {entry['path']}")
+            continue
         value, _ = read_authenticated_json(
             repo,
             freeze_commit,
@@ -1014,40 +1553,75 @@ def _load_candidate_freeze(
         )
         if value.get("schema_version") != entry["schema_version"]:
             raise CandidateGitError(f"freeze file schema mismatch: {entry['path']}")
-        by_role[entry["role"]].append(entry)
+        validate_schema(
+            value,
+            schema_root / schema_by_role[entry["role"]],
+            f"frozen {entry['role']} {entry['path']}",
+        )
         loaded[entry["path"]] = value
     if len(by_role["hierarchy"]) != 1 or len(by_role["relation_ledger"]) != 1:
         raise CandidateGitError("freeze must contain exactly one hierarchy and relation ledger")
     if not by_role["source_snapshot"]:
         raise CandidateGitError("freeze must contain at least one nonempty source snapshot")
+    if len(by_role["review_prompt"]) != len(by_role["prompt_leakage_audit"]):
+        raise CandidateGitError("every frozen review prompt must have one frozen leakage audit")
+    for entry in by_role["prompt_leakage_audit"]:
+        audit = loaded[entry["path"]]
+        prompt_entry = frozen_files.get(audit["prompt"]["path"])
+        if (
+            prompt_entry is None
+            or prompt_entry["role"] != "review_prompt"
+            or any(
+                audit["prompt"][field] != prompt_entry[field]
+                for field in ("path", "sha256", "git_blob_oid")
+            )
+        ):
+            raise CandidateGitError(f"frozen prompt audit binding mismatch: {entry['path']}")
     hierarchy = loaded[by_role["hierarchy"][0]["path"]]
     relations = loaded[by_role["relation_ledger"][0]["path"]]
     snapshots = [loaded[entry["path"]] for entry in by_role["source_snapshot"]]
-    validate_schema(hierarchy, schema_root / "candidate-hierarchy.schema.json", "hierarchy")
-    validate_schema(relations, schema_root / "relation-ledger.schema.json", "relations")
-    for index, snapshot in enumerate(snapshots):
-        validate_schema(
-            snapshot,
-            schema_root / "candidate-source-snapshot.schema.json",
-            f"source snapshot {index}",
-        )
-    return candidate, hierarchy, snapshots, relations, reviews
+    run_binding = {
+        "audit_commit": audit_commit,
+        "run_result_manifest": {"path": run_result_manifest_path, **run_manifest_metadata},
+        "result_commit": result_commit,
+        "freeze_commit": freeze_commit,
+        "freeze_manifest": {**freeze_reference, "verified": freeze_metadata},
+        "candidate_result": candidate_reference,
+        "review_ledger": review_reference,
+        "run_start_receipt": receipt_reference,
+        "run_start_signature": signature_reference,
+        "trusted_attestor_id": attestor["attestor_id"],
+        "trusted_attestor_key_id": attestor["key_id"],
+    }
+    return (
+        candidate,
+        hierarchy,
+        snapshots,
+        relations,
+        reviews,
+        run_binding,
+        frozen_files,
+        freeze_commit,
+        result_commit,
+    )
+
+
+# Historical test imports use this private name. It now resolves only the secure
+# run-result-manifest loader; the old caller-selected candidate/ledger interface is gone.
+_load_candidate_freeze = _load_candidate_run
 
 
 def compare_production(
     repo_root: Path,
     private_run: Path,
-    freeze_commit: str,
-    freeze_manifest_path: str,
-    result_commit: str,
-    candidate_result_path: str,
-    review_ledger_path: str,
+    audit_commit: str,
+    run_result_manifest_path: str,
 ) -> dict:
     repo_root = repo_root.resolve()
     evaluation_root = repo_root / "docs/evaluations/site-graph-v0"
     schema_root = evaluation_root / "schemas"
     release = verify_release(repo_root)
-    verify_private_ledgers(private_run, evaluation_root)
+    private_verification = verify_private_ledgers(private_run, evaluation_root)
 
     opportunity_summary = read_json(evaluation_root / "planned-opportunity-summary.json")
     private_opportunity = read_json(private_run / "private-opportunity-ledger.json")
@@ -1065,18 +1639,32 @@ def compare_production(
     private_ledger_sha = private_digest["ledgers"]["private_opportunity_membership"][
         "canonical_json_sha256"
     ]
-    candidate, hierarchy, snapshots, relations, reviews = _load_candidate_freeze(
-        repo_root,
+    (
+        candidate,
+        hierarchy,
+        snapshots,
+        relations,
+        reviews,
+        run_binding,
+        frozen_files,
         freeze_commit,
-        freeze_manifest_path,
         result_commit,
-        candidate_result_path,
-        review_ledger_path,
+    ) = _load_candidate_run(
+        repo_root,
+        audit_commit,
+        run_result_manifest_path,
         release["manifest_sha256"],
         private_ledger_sha,
         schema_root,
     )
-    decisions = _validate_review_artifacts(repo_root, result_commit, reviews, schema_root)
+    decisions = _validate_review_artifacts(
+        repo_root,
+        result_commit,
+        reviews,
+        schema_root,
+        freeze_commit=freeze_commit,
+        frozen_files=frozen_files,
+    )
     baseline_records = read_records(private_run / "private-record-evidence.ndjson.gz")
     metrics = read_json(evaluation_root / "baseline-metrics.json")
     node_scope = read_json(evaluation_root / "baseline-node-scope.json")
@@ -1117,6 +1705,24 @@ def compare_production(
         relations,
         decisions,
     )
+    report["run_binding"] = run_binding
+    archive_authentication = private_verification["archive_authentication"]
+    report["provenance_status"] = {
+        "evidence_scope": "AUTHENTICATED_RELEASE_SNAPSHOT",
+        "archive_sha256": archive_authentication["archive_sha256"],
+        "snapshot_acquisition_integrity": archive_authentication[
+            "snapshot_acquisition_integrity"
+        ],
+        "upstream_production_lineage": archive_authentication[
+            "upstream_production_lineage"
+        ],
+        "overall_contract_status": (
+            "READY_SNAPSHOT_CONDITIONAL"
+            if report["outcome"] != "INVALID"
+            else "INVALID"
+        ),
+        "downstream_product_verdict": report["outcome"],
+    }
     validate_schema(report, schema_root / "comparison-report.schema.json", "comparison report")
     return report
 
@@ -1130,22 +1736,16 @@ def main() -> None:
     )
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--private-run", type=Path, required=True)
-    parser.add_argument("--freeze-commit", required=True)
-    parser.add_argument("--freeze-manifest-path", required=True)
-    parser.add_argument("--result-commit", required=True)
-    parser.add_argument("--candidate-result-path", required=True)
-    parser.add_argument("--review-ledger-path", required=True)
+    parser.add_argument("--audit-commit", required=True)
+    parser.add_argument("--run-result-manifest-path", required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     try:
         report = compare_production(
             args.repo_root,
             args.private_run,
-            args.freeze_commit,
-            args.freeze_manifest_path,
-            args.result_commit,
-            args.candidate_result_path,
-            args.review_ledger_path,
+            args.audit_commit,
+            args.run_result_manifest_path,
         )
     except (
         CandidateGitError,
@@ -1153,7 +1753,24 @@ def main() -> None:
         ValueError,
         RuntimeError,
     ) as error:
-        report = _invalid_report([str(error)])
+        try:
+            snapshot = read_json(
+                args.repo_root / "docs/evaluations/site-graph-v0/input-snapshot.json"
+            )
+            archive_sha = snapshot["corpus"]["archive_acquisition"]["archive_sha256"]
+        except (OSError, KeyError, ValueError, json.JSONDecodeError):
+            archive_sha = "UNAVAILABLE_DUE_TO_INVALID_CONTRACT"
+        report = _invalid_report(
+            [str(error)],
+            {
+                "evidence_scope": "PRODUCTION_COMPARATOR_INVALID",
+                "archive_sha256": archive_sha,
+                "snapshot_acquisition_integrity": "INVALID",
+                "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+                "overall_contract_status": "INVALID",
+                "downstream_product_verdict": "INVALID",
+            },
+        )
     args.output.write_text(
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",

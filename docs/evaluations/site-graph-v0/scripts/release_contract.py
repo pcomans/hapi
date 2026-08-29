@@ -2,12 +2,26 @@
 
 from __future__ import annotations
 
+import hashlib
+from pathlib import Path
 
-CONTRACT_VERSION = "site-graph-v0-release/2"
+
+CONTRACT_VERSION = "site-graph-v0-release/3"
 PYCACHE_EXCLUSION = (
     "Python cache directories (__pycache__, .pytest_cache) and bytecode suffixes "
     "(.pyc, .pyo) are runtime by-products, are never required release files, and are "
     "ignored during exact-inventory discovery. No other file or directory is ignored."
+)
+CI_RELEASE_FILES = frozenset(
+    {
+        "pipeline/pyproject.toml",
+        "pipeline/tests/test_site_graph_v0_archive.py",
+        "pipeline/tests/test_site_graph_v0_candidate_adversarial.py",
+        "pipeline/tests/test_site_graph_v0_contract.py",
+        "pipeline/tests/test_site_graph_v0_corrections.py",
+        "pipeline/tests/test_site_graph_v0_private_ledgers.py",
+        "pipeline/uv.lock",
+    }
 )
 # Changing this set is a contract-version migration and requires separate review. The
 # manifest generator may hash exactly this set; it may not infer or expand it.
@@ -38,6 +52,7 @@ REQUIRED_RELEASE_FILES = frozenset(
         "docs/evaluations/site-graph-v0/reviews/round-2/metadata.json",
         "docs/evaluations/site-graph-v0/reviews/round-2/prompt.md",
         "docs/evaluations/site-graph-v0/reviews/round-2/raw-output.txt",
+        "docs/evaluations/site-graph-v0/schema-test-cases.json",
         "docs/evaluations/site-graph-v0/schemas/candidate-freeze-manifest.schema.json",
         "docs/evaluations/site-graph-v0/schemas/candidate-hierarchy.schema.json",
         "docs/evaluations/site-graph-v0/schemas/candidate-source-snapshot.schema.json",
@@ -50,12 +65,16 @@ REQUIRED_RELEASE_FILES = frozenset(
         "docs/evaluations/site-graph-v0/schemas/relation-ledger.schema.json",
         "docs/evaluations/site-graph-v0/schemas/review-artifact.schema.json",
         "docs/evaluations/site-graph-v0/schemas/review-ledger.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/run-result-manifest.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/run-start-receipt.schema.json",
+        "docs/evaluations/site-graph-v0/schemas/trusted-run-attestors.schema.json",
         "docs/evaluations/site-graph-v0/scripts/apply_corrections.py",
         "docs/evaluations/site-graph-v0/scripts/build_baseline.py",
         "docs/evaluations/site-graph-v0/scripts/candidate_git.py",
         "docs/evaluations/site-graph-v0/scripts/compare_baseline_runs.py",
         "docs/evaluations/site-graph-v0/scripts/compare_candidate.py",
         "docs/evaluations/site-graph-v0/scripts/contract_constants.py",
+        "docs/evaluations/site-graph-v0/scripts/corpus_archive.py",
         "docs/evaluations/site-graph-v0/scripts/freeze_candidate_inputs.py",
         "docs/evaluations/site-graph-v0/scripts/freeze_release.py",
         "docs/evaluations/site-graph-v0/scripts/generate_validation_report.py",
@@ -68,10 +87,30 @@ REQUIRED_RELEASE_FILES = frozenset(
         "docs/evaluations/site-graph-v0/scripts/schema_validation.py",
         "docs/evaluations/site-graph-v0/scripts/validate_contract.py",
         "docs/evaluations/site-graph-v0/top-unmatched-components.json",
+        "docs/evaluations/site-graph-v0/trusted-run-attestors.json",
         "docs/evaluations/site-graph-v0/type-crosswalk.json",
         "docs/evaluations/site-graph-v0/validation-report.json",
-        "pipeline/pyproject.toml",
-        "pipeline/tests/test_site_graph_v0_contract.py",
-        "pipeline/uv.lock",
+        *CI_RELEASE_FILES,
     }
 )
+
+VALIDATION_REPORT_RELATIVE = (
+    "docs/evaluations/site-graph-v0/validation-report.json"
+)
+VALIDATION_INPUT_FILES = REQUIRED_RELEASE_FILES - {VALIDATION_REPORT_RELATIVE}
+
+
+def validation_input_bindings(repo_root: Path) -> dict[str, dict[str, int | str]]:
+    """Bind every release candidate byte that must predate the validation report."""
+    bindings = {}
+    for relative in sorted(VALIDATION_INPUT_FILES):
+        path = repo_root / relative
+        digest = hashlib.sha256()
+        with path.open("rb") as handle:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+        bindings[relative] = {
+            "bytes": path.stat().st_size,
+            "sha256": digest.hexdigest(),
+        }
+    return bindings

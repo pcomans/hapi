@@ -1,0 +1,9 @@
+{
+  "schema_version": "site-graph-v0-trusted-run-attestors/1",
+  "status": "NOT_CONFIGURED",
+  "signature_scheme": "ed25519",
+  "signature_context": "hapi-site-graph-v0-run-start/1",
+  "attestors": [],
+  "configuration_rule": "A separately reviewed release-contract migration must pin at least one Ed25519 public key before any downstream candidate run can be authenticated.",
+  "current_effect": "Issue #327 can validate the frozen baseline contract, but the production candidate comparator fails closed and downstream_product_verdict remains NOT_RUN until a trusted run attestor is configured. Test-only keys never satisfy this release policy."
+}

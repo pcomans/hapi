@@ -27,9 +27,15 @@ from compare_candidate import (
     REVIEWS_PER_CREDITED_DECISION,
 )
 from contract_constants import OPPORTUNITY_MUSEUM_PROTECTION, OPPORTUNITY_TOTAL_SIGNATURES
+from corpus_archive import (
+    CorpusArchiveBlocked,
+    CorpusArchiveInvalid,
+    authenticated_corpus,
+)
 from integrity import IntegrityError, sha256, verify_release
 from private_ledgers import verify_private_ledgers, verify_public_boundary
-from schema_validation import validate_schema
+from release_contract import validation_input_bindings
+from schema_validation import execute_schema_contract_tests, validate_schema
 
 
 PUBLIC_BASELINE_OUTPUTS = (
@@ -59,7 +65,12 @@ def verify_file(path: Path, expected: dict) -> dict:
     return actual
 
 
-def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
+def _semantic_report(
+    repo_root: Path,
+    corpus: Path,
+    private_run: Path,
+    archive_attestation: dict,
+) -> dict:
     root = repo_root / "docs/evaluations/site-graph-v0"
     snapshot = read_json(root / "input-snapshot.json")
     prereg = read_json(root / "preregistration.json")
@@ -75,6 +86,24 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
     def check(check_id: str, passed: bool, evidence: object) -> None:
         checks.append({"check_id": check_id, "passed": bool(passed), "evidence": evidence})
 
+    runtime_attestation_path = private_run / "corpus-archive-attestation.json"
+    runtime_attestation = (
+        read_json(runtime_attestation_path) if runtime_attestation_path.is_file() else None
+    )
+    check(
+        "authenticated_archive_attestation_bound_to_private_run",
+        runtime_attestation == archive_attestation,
+        {
+            "archive_sha256": archive_attestation["archive"]["sha256"],
+            "runtime_attestation_sha256": (
+                sha256(runtime_attestation_path)
+                if runtime_attestation_path.is_file()
+                else None
+            ),
+            "exact_attestation_match": runtime_attestation == archive_attestation,
+        },
+    )
+
     frozen_inputs = {}
     for relative, expected in snapshot["corpus"]["files"].items():
         frozen_inputs[f"external-private/{relative}"] = verify_file(corpus / relative, expected)
@@ -88,18 +117,97 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
     )
 
     private_authentication = verify_private_ledgers(private_run, root)
+    external_private_input = private_digests["external_private_input"]
     check(
-        "external_private_input_verified",
-        private_digests["external_private_input"]["status"]
-        == "external_private_input_verified"
+        "authenticated_private_snapshot_input",
+        external_private_input["snapshot_acquisition_integrity"] == "PASS"
+        and external_private_input["upstream_production_lineage"]
+        == "UNAVAILABLE_DISCLOSED"
+        and external_private_input["archive_sha256"]
+        == archive_attestation["archive"]["sha256"]
         and private_authentication["private_record_count"]
         == snapshot["corpus"]["canonical_record_count"],
         {
             **private_authentication,
-            "canonical_transport_sha256": private_digests["external_private_input"][
+            "canonical_transport_sha256": external_private_input[
                 "canonical_artifact_transport_gzip_sha256"
             ],
-            "generator_history": "not_available_in_handoff",
+            "archive_sha256": archive_attestation["archive"]["sha256"],
+            "snapshot_acquisition_integrity": external_private_input[
+                "snapshot_acquisition_integrity"
+            ],
+            "upstream_production_lineage": external_private_input[
+                "upstream_production_lineage"
+            ],
+            "historical_export_reproducibility": external_private_input[
+                "historical_export_reproducibility"
+            ],
+            "unavailable_lineage_effect": external_private_input[
+                "unavailable_lineage_effect"
+            ],
+        },
+    )
+    frozen = prereg["frozen_artifacts"]
+    record_digest = private_digests["ledgers"]["private_record_evidence"]
+    source_digest = private_digests["ledgers"]["private_opportunity_source"]
+    opportunity_digest = private_digests["ledgers"][
+        "private_opportunity_membership"
+    ]
+    preregistered_digest_bindings = {
+        "private_record_evidence": {
+            "runtime_path": "private-record-evidence.ndjson.gz",
+            "record_count": record_digest["row_count"],
+            "gzip_transport_sha256": record_digest["transport_gzip_sha256"],
+            "canonical_uncompressed_ndjson_sha256": record_digest[
+                "canonical_uncompressed_ndjson_sha256"
+            ],
+            "canonical_row_merkle_sha256": record_digest[
+                "canonical_row_merkle_sha256"
+            ],
+            "publicly_redistributed": False,
+        },
+        "private_opportunity_source": {
+            "runtime_path": "private-opportunity-source.ndjson.gz",
+            "record_count": source_digest["row_count"],
+            "gzip_transport_sha256": source_digest["transport_gzip_sha256"],
+            "canonical_uncompressed_ndjson_sha256": source_digest[
+                "canonical_uncompressed_ndjson_sha256"
+            ],
+            "canonical_row_merkle_sha256": source_digest[
+                "canonical_row_merkle_sha256"
+            ],
+            "publicly_redistributed": False,
+        },
+        "private_opportunity_ledger": {
+            "runtime_path": "private-opportunity-ledger.json",
+            "canonical_json_sha256": opportunity_digest["canonical_json_sha256"],
+            "transport_json_sha256": opportunity_digest["transport_json_sha256"],
+            "publicly_redistributed": False,
+        },
+    }
+    check(
+        "preregistered_private_and_public_digest_bindings",
+        all(
+            frozen[name] == value
+            for name, value in preregistered_digest_bindings.items()
+        )
+        and frozen["public_opportunity_summary"]["sha256"]
+        == sha256(root / frozen["public_opportunity_summary"]["path"])
+        and frozen["private_ledger_digests"]["sha256"]
+        == sha256(root / frozen["private_ledger_digests"]["path"])
+        and frozen["type_crosswalk"]["sha256"]
+        == sha256(root / frozen["type_crosswalk"]["path"]),
+        {
+            "private": preregistered_digest_bindings,
+            "public_opportunity_summary_sha256": sha256(
+                root / frozen["public_opportunity_summary"]["path"]
+            ),
+            "private_ledger_digests_sha256": sha256(
+                root / frozen["private_ledger_digests"]["path"]
+            ),
+            "type_crosswalk_sha256": sha256(
+                root / frozen["type_crosswalk"]["path"]
+            ),
         },
     )
     check("public_data_boundary", True, verify_public_boundary(root))
@@ -295,23 +403,29 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
         {type_name for row in raw_hierarchy for type_name in row.get("types", [])}
     )
     crosswalk_types = sorted(crosswalk["idai_gazetteer_actual_hyphenated_types"])
+    unclassified_with_mapped_types = [
+        row["target_id"]
+        for row in recomputed_nodes
+        if row["scope_class"] == "unclassified" and row["source_types"]
+    ]
     check(
         "single_source_type_crosswalk",
         actual_idai_types == crosswalk_types
+        and unclassified_with_mapped_types == []
         and crosswalk["credit_policy"][
             "broad_or_administrative_new_link_improvement_credit"
         ]
         == 0,
-        {"actual_idai_types": actual_idai_types, "crosswalk_types": crosswalk_types},
+        {
+            "actual_idai_types": actual_idai_types,
+            "crosswalk_types": crosswalk_types,
+            "unclassified_targets_with_mapped_source_types": unclassified_with_mapped_types,
+        },
     )
 
-    schema_paths = sorted((root / "schemas").glob("*.schema.json"))
-    for schema_path in schema_paths:
-        # validate_schema checks the meta-schema before validating the harmless empty object.
-        # Instance-bearing schemas are separately exercised below or by comparator tests.
-        from jsonschema import Draft202012Validator
-
-        Draft202012Validator.check_schema(read_json(schema_path))
+    schema_execution = execute_schema_contract_tests(
+        root / "schemas", root / "schema-test-cases.json"
+    )
     validate_schema(
         opportunity_summary,
         root / "schemas/opportunity-summary.schema.json",
@@ -323,21 +437,38 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
         "regenerated private opportunity ledger",
     )
     check(
-        "all_json_schemas_executed",
+        "all_json_schemas_meta_valid_and_instance_executed",
         True,
-        {"schema_count": len(schema_paths), "schemas": [path.name for path in schema_paths]},
+        schema_execution,
+    )
+
+    trusted_attestors = read_json(root / "trusted-run-attestors.json")
+    validate_schema(
+        trusted_attestors,
+        root / "schemas/trusted-run-attestors.schema.json",
+        "release-pinned trusted run attestors",
+    )
+    check(
+        "production_candidate_run_trust_gate_fail_closed",
+        trusted_attestors["status"] == "NOT_CONFIGURED"
+        and trusted_attestors["attestors"] == [],
+        {
+            "trusted_run_attestor_status": trusted_attestors["status"],
+            "downstream_product_verdict": "NOT_RUN",
+            "effect": trusted_attestors["current_effect"],
+        },
     )
 
     correction_policy = read_json(root / "correction-policy.json")
     check(
         "immutable_primary_and_private_correction_policy",
         correction_policy["current_primary_corrections_applied"] == 0
-        and correction_policy["allowed_operations"]
-        == [
-            "add_direct_target",
-            "remove_direct_target",
-            "replace_direct_target",
-            "set_site_mention_status_count",
+        and correction_policy["allowed_operations"] == ["set_site_mention_resolution"]
+        and correction_policy["sensitivity_estimands"][
+            "fixed_frozen_intent_to_treat"
+        ]
+        and correction_policy["sensitivity_estimands"][
+            "corrected_source_counterfactual_reselection"
         ],
         correction_policy,
     )
@@ -349,7 +480,14 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
     check(
         "authenticated_deterministic_baseline_reproduction",
         reruns.get("schema_version") == "site-graph-v0-baseline-rerun-evidence/3"
-        and reruns.get("status") == "pass"
+        and reruns.get("status")
+        == {
+            "snapshot_acquisition_integrity": "PASS",
+            "derived_baseline_reproducibility": "PASS",
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+            "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+            "downstream_product_verdict": "NOT_RUN",
+        }
         and reruns.get("terminology") == "deterministic_reproduction_not_statistical_independence"
         and reruns.get("run_a", {}).get("run_id") != reruns.get("run_b", {}).get("run_id")
         and reruns.get("output_mismatches") == {}
@@ -357,6 +495,8 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
         and reruns.get("input_snapshot_sha256") == sha256(root / "input-snapshot.json")
         and reruns.get("runner_sha256") == sha256(root / "scripts/run_baseline.py")
         and reruns.get("builder_sha256") == sha256(root / "scripts/build_baseline.py")
+        and reruns.get("corpus_archive_sha256")
+        == snapshot["corpus"]["archive_acquisition"]["archive_sha256"]
         and public_match,
         {
             "run_a": reruns.get("run_a"),
@@ -391,11 +531,12 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
         == provenance["verified_bundle_results_sha256"]
     )
     check(
-        "external_handoff_metadata_authenticated",
+        "snapshot_handoff_metadata_bytes_authenticated",
         provenance_bytes_authenticated
         and "cannot be regenerated bit-for-bit" in provenance["known_reproduction_limit"],
         {
-            "external_private_prerequisite": "verified",
+            "snapshot_acquisition_integrity": "PASS",
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
             "historical_export_reproducible": False,
             "known_reproduction_limit": provenance["known_reproduction_limit"],
         },
@@ -403,7 +544,6 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
 
     round_1 = read_json(root / "reviews/round-1/metadata.json")
     round_2 = read_json(root / "reviews/round-2/metadata.json")
-    round_2_disposition = read_json(root / "reviews/round-2/disposition.json")
     review_ok = (
         sha256(root / "reviews/round-1/prompt.md")
         == round_1["raw_artifacts"]["prompt"]["sha256"]
@@ -417,34 +557,57 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
         and round_2["reviewer_cli"]["version"] == "2.1.247"
         and round_2["reviewer_cli"]["model_selector"] == "opus"
         and round_2["reviewer_cli"]["backend_model_id"] == "not_exposed_by_claude_cli"
-        and all(
-            item["disposition"] == "accepted_repaired"
-            for item in round_2_disposition["findings"].values()
-        )
     )
     check(
-        "review_provenance_and_dispositions",
+        "historical_review_provenance_authenticated_not_approval",
         review_ok,
         {
             "round_1_reviewed_commit": round_1["reviewed_commit_sha"],
             "round_2_reviewed_commit": round_2["reviewed_commit"],
-            "round_2_finding_count": len(round_2_disposition["findings"]),
+            "historical_review_outcome": "REQUEST_CHANGES",
+            "exact_current_head_external_review_gate": "PENDING_OUTSIDE_COMMIT",
+            "implementer_dispositions_are_reviewer_approval": False,
         },
     )
 
-    status = "pass" if all(item["passed"] for item in checks) else "fail"
-    record_digest = private_digests["ledgers"]["private_record_evidence"]
+    derived_status = "PASS" if all(item["passed"] for item in checks) else "INVALID"
+    overall_status = (
+        "READY_SNAPSHOT_CONDITIONAL" if derived_status == "PASS" else "INVALID"
+    )
     return {
-        "schema_version": "site-graph-v0-validation-report/3",
-        "status": status,
+        "schema_version": "site-graph-v0-validation-report/4",
+        "status": {
+            "snapshot_acquisition_integrity": "PASS",
+            "derived_baseline_reproducibility": derived_status,
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+            "overall_contract_status": overall_status,
+            "downstream_product_verdict": "NOT_RUN",
+            "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
+        },
         "scope": (
-            f"verified real {snapshot['corpus']['canonical_record_count']:,}-record private "
-            "corpus; fixtures/proxies support no corpus claim"
+            f"snapshot-conditional evaluation over the authenticated real "
+            f"{snapshot['corpus']['canonical_record_count']:,}-record private archive; "
+            "fixtures/proxies support no corpus claim and historical export reproducibility "
+            "is not asserted"
         ),
+        "archive_sha256": archive_attestation["archive"]["sha256"],
+        "production_lineage": snapshot["corpus"]["production_lineage"],
+        "prohibited_claims": snapshot["corpus"]["production_lineage"][
+            "prohibited_inferences"
+        ],
+        "release_candidate_binding": {
+            "hash_algorithm": "sha256",
+            "rule": (
+                "Every static required release file except validation-report.json is "
+                "hashed after semantic recomputation and before release-manifest generation."
+            ),
+            "files": validation_input_bindings(repo_root),
+        },
         "checks": checks,
         "limitations": [
             {
-                "id": "external_private_export_generator_history_missing",
+                "id": "upstream_production_lineage_unavailable_disclosed",
+                "status": "UNAVAILABLE_DISCLOSED",
                 "effect": (
                     "The authorized handoff bytes are verified, but the historical export "
                     "cannot be regenerated from repository history because its export command, "
@@ -461,14 +624,34 @@ def semantic_report(repo_root: Path, corpus: Path, private_run: Path) -> dict:
             "private_record_evidence_uncompressed_sha256": record_digest[
                 "canonical_uncompressed_ndjson_sha256"
             ],
+            "archive_sha256": archive_attestation["archive"]["sha256"],
+            "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+            "overall_contract_status": overall_status,
+            "downstream_product_verdict": "NOT_RUN",
         },
     }
+
+
+def semantic_report(
+    repo_root: Path,
+    corpus_archive: Path,
+    corpus_archive_sidecar: Path,
+    private_run: Path,
+) -> dict:
+    """Authenticate the external archive, then recompute the snapshot contract."""
+    with authenticated_corpus(
+        repo_root, corpus_archive, corpus_archive_sidecar
+    ) as (corpus, archive_attestation):
+        return _semantic_report(
+            repo_root, corpus, private_run, archive_attestation
+        )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
-    parser.add_argument("--corpus", type=Path, required=True)
+    parser.add_argument("--corpus-archive", type=Path, required=True)
+    parser.add_argument("--corpus-archive-sidecar", type=Path, required=True)
     parser.add_argument("--private-run", type=Path, required=True)
     args = parser.parse_args()
     repo_root = args.repo_root.resolve()
@@ -477,24 +660,80 @@ def main() -> None:
     except IntegrityError as error:
         print(
             json.dumps(
-                {"status": "fail", "phase": "release_integrity", "error": str(error)},
+                {
+                    "snapshot_acquisition_integrity": "BLOCKED",
+                    "derived_baseline_reproducibility": "INVALID",
+                    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+                    "overall_contract_status": "INVALID",
+                    "downstream_product_verdict": "NOT_RUN",
+                    "phase": "release_integrity",
+                    "error": str(error),
+                },
                 sort_keys=True,
             )
         )
         raise SystemExit(1) from error
-    report = semantic_report(repo_root, args.corpus.resolve(), args.private_run.resolve())
+    try:
+        report = semantic_report(
+            repo_root,
+            args.corpus_archive.resolve(),
+            args.corpus_archive_sidecar.resolve(),
+            args.private_run.resolve(),
+        )
+    except CorpusArchiveBlocked as error:
+        print(
+            json.dumps(
+                {
+                    "snapshot_acquisition_integrity": "BLOCKED",
+                    "derived_baseline_reproducibility": "BLOCKED",
+                    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+                    "overall_contract_status": "BLOCKED",
+                    "downstream_product_verdict": "NOT_RUN",
+                    "error": str(error),
+                },
+                sort_keys=True,
+            )
+        )
+        raise SystemExit(1) from error
+    except CorpusArchiveInvalid as error:
+        print(
+            json.dumps(
+                {
+                    "snapshot_acquisition_integrity": "INVALID",
+                    "derived_baseline_reproducibility": "BLOCKED",
+                    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+                    "overall_contract_status": "INVALID",
+                    "downstream_product_verdict": "NOT_RUN",
+                    "error": str(error),
+                },
+                sort_keys=True,
+            )
+        )
+        raise SystemExit(1) from error
     committed = read_json(
         repo_root / "docs/evaluations/site-graph-v0/validation-report.json"
     )
     report_matches = report == committed
     output = {
-        "status": report["status"] if report_matches else "fail",
+        "status": (
+            report["status"]
+            if report_matches
+            else {
+                **report["status"],
+                "overall_contract_status": "INVALID",
+                "derived_baseline_reproducibility": "INVALID",
+            }
+        ),
         "release_integrity": integrity,
         "committed_validation_report_matches_recomputation": report_matches,
         **report["summary"],
     }
     print(json.dumps(output, sort_keys=True))
-    if report["status"] != "pass" or not report_matches:
+    if (
+        report["status"]["overall_contract_status"]
+        != "READY_SNAPSHOT_CONDITIONAL"
+        or not report_matches
+    ):
         raise SystemExit(1)
 
 

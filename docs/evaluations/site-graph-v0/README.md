@@ -1,8 +1,9 @@
 # Site graph v0 evaluation contract
 
-Status: preregistered and baseline-frozen for issue #327. This directory defines
-measurement only. It does not acquire authority data, construct a graph, use
-Wikidata, or change extraction, normalization, or matching.
+Status: `READY_SNAPSHOT_CONDITIONAL` for issue #327 contract validation;
+`downstream_product_verdict` is `NOT_RUN`. This directory defines measurement
+only. It does not acquire authority data, construct a graph, use Wikidata, or
+change extraction, normalization, or matching.
 
 The contract evaluates a bounded candidate against the verified 36,245-record
 Met/Brooklyn/Harvard corpus at base commit
@@ -17,14 +18,26 @@ The canonical transport SHA-256 is
 `b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24`;
 museum counts are Met 27,969, Brooklyn 7,554, and Harvard 722.
 
-The local `/tmp/hapi-corpus-2026-08-27` path is an execution checkout, not a
-durable acquisition source. Verbatim copies of its handoff manifest, README,
-verifier, queries, and verification results live in `corpus-provenance/`. They
-record a PostgreSQL 16.13 export at Alembic version `3a1c350217d9`, generated
-`2026-08-28T02:30:52Z`. The handoff does not record its export command/code
-revision or Dagster run identifiers. Its bytes can be verified and restored, but
-the export cannot be regenerated bit-for-bit from repository history alone. The
-base commit is the evaluated checkout, not a claimed export-generator commit.
+The primary frozen input is the authorized external private archive named by
+`HAPI_CORPUS_ARCHIVE`, plus the sidecar named by
+`HAPI_CORPUS_ARCHIVE_SHA256`. `input-snapshot.json` pins archive size
+13,788,812, SHA-256
+`f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b`,
+the sidecar bytes, exact archive member inventory, internal `SHA256SUMS`, bundled
+verifier output, and canonical counts. Release execution safely extracts only
+that authenticated archive into a disposable directory. A pre-existing `/tmp`
+extraction is never an authority input.
+
+Verbatim handoff metadata lives in `corpus-provenance/`. It describes PostgreSQL
+16.13 and Alembic `3a1c350217d9`, but the handoff does not record its export
+command, producer Git revision, or Dagster run identifiers. Accordingly,
+`upstream_production_lineage` is `UNAVAILABLE_DISCLOSED`, never `PASS`. Archive
+acquisition integrity and derived baseline reproducibility can pass for this
+immutable snapshot; the historical export cannot be regenerated from repository
+history. Nothing here establishes that a repository commit or Dagster run
+produced the corpus, that canonical mappers reproduced its raw bytes, that it is
+the latest or complete production snapshot, or that the historical museum API
+export can be regenerated.
 
 ## Exact record denominators
 
@@ -98,7 +111,11 @@ independent reviews support the direct identity and, for a reassignment, the exa
 strict-refinement relation. Gained nodes count unique identity classes so
 equivalent IDs cannot inflate improvement. Every equivalence claim itself requires
 the same two structured independent reviews; unsupported equivalence cannot
-preserve retention.
+preserve retention. Equal normalized authority locators auto-union; any other pair
+of classes whose separation could inflate gains requires two reviewed positive
+distinctness decisions. Broad-only partitions use the resulting identity-class
+scope, so a candidate-specific alias equivalent to a frozen broad identity remains
+broad. A reviewed equivalent direct-edge replacement is reported as unchanged.
 
 ## Intent-to-treat queue and measurable upper bounds
 
@@ -116,12 +133,15 @@ uses baseline results only:
 4. fill globally to exactly 50 groups;
 5. freeze every selected group’s complete private artifact expansion and SHA-256;
 6. materialize exact private pair+museum-side membership with category
-   `no_baseline_pair_connection` or `broad_only_pair_connection`.
+   `no_baseline_pair_connection` or `broad_only_pair_connection`, plus the exact
+   selecting opportunity ID and mention-binding hash for every artifact.
 
 This selects 30 Met, 10 Brooklyn, and 10 Harvard signatures. Expanded
 intent-to-treat records are 27,181 Met, 2,968 Brooklyn, and 539 Harvard. Research
 failure, abstention, disagreement, unsupported scope, and broad/administrative
 results stay in these denominators and earn zero credit.
+Candidate credit requires the exact frozen opportunity/mention binding; another
+mention on the same artifact cannot borrow that artifact’s ITT eligibility.
 
 The fixed per-museum maximum credited affected-record upper bounds (new-link
 eligible plus baseline broad-only reassignment eligible) are:
@@ -158,11 +178,18 @@ new linked records.
 
 Candidate hierarchy, relation ledger, and at least one nonempty structured source
 snapshot must be committed before the candidate run. The freeze manifest records
-every SHA-256 and Git blob OID. Production comparison requires the result commit to
-be a distinct descendant of the full freeze commit; mutable timestamps do not
-establish ordering. Existing baseline targets retain frozen scope, while new-target
-scope/topology is derived from those authenticated snapshots, never self-attested
-by the result or inferred from slice leafness.
+every SHA-256 and Git blob OID. Candidate source records supply raw source types,
+not candidate E55 labels; the comparator maps them through the authenticated
+crosswalk and verifies the exact source-record census plus inverse parent/child
+closure. Production comparison additionally requires an Ed25519 run-start receipt
+from a release-pinned trusted attestor, binding the exact release, freeze
+commit/manifest/nonce, candidate, and invocation. Git ancestry and mutable
+timestamps alone cannot establish ordering. `trusted-run-attestors.json` is
+currently honestly `NOT_CONFIGURED`, so production candidate comparison fails
+closed until a separately reviewed release migration pins a real trust root;
+test-only keys never satisfy production binding. Existing baseline targets retain
+frozen scope, while new-target scope/topology is derived from authenticated
+snapshots, never self-attested by the result or inferred from slice leafness.
 
 ## Review census and abstention
 
@@ -170,12 +197,14 @@ Every credited changed link, strict refinement, and equivalence receives a censu
 review, not a sample gate. Each decision has exactly two distinct structured,
 subject/outcome-bound artifacts from reviewer IDs and independence groups that are
 both distinct. Each artifact carries structured independent non-originating-museum
-citations. LLM review additionally records exact prompt, input, and full raw
-response bytes; Git blob OIDs and SHA-256 values; model selector; exact backend
-snapshot or an enumerated non-exposure sentinel; a full parameter object; and a
-pre-judgment prompt-leakage audit using opaque shuffled candidate IDs. Disagreement
-or uncertainty remains unresolved and receives no credit. This provisional census
-is decision support, not gold truth.
+citations. LLM review additionally records unique nonempty exact prompt, input, and
+full raw response bytes; Git blob OIDs and SHA-256 values; model selector; exact
+backend snapshot or an enumerated non-exposure sentinel; a full parameter object;
+and a subject/decision/review-bound prompt-leakage audit using opaque shuffled
+candidate IDs. The exact prompt and audit must be frozen in the ancestor commit
+before invocation and cannot be reused across reviews or decisions. Disagreement or
+uncertainty remains unresolved and receives no credit. This provisional census is
+decision support, not gold truth.
 
 A held-out sample may be added only as a descriptive audit using the exact
 hash-ranked seed/algorithm in `preregistration.json`. It cannot gate credit or
@@ -204,16 +233,21 @@ Raw link growth, narrowness alone, or equal-museum assumptions cannot pass.
 
 `correction-policy.json` defines the immutable primary policy. An actual correction
 ledger is private and append-only; every nonempty record is schema-validated,
-hash-chained, RFC3339-dated, cites evidence, names at least two reviewers, and uses
-only a primitive direct-target or site-mention-count operation over existing frozen
-targets. A repeated primitive requires explicit supersession. The sensitivity
-generator recomputes every dependent record field plus all headline, connectivity,
-concentration, and pair/ITT aggregates. Corrected rows/memberships remain private;
-only aggregate metrics and hashes may be released. Primary bytes are never rewritten.
+hash-chained, RFC3339-dated, cites evidence, names at least two reviewers, and
+changes one exact site-mention resolution primitive over existing frozen targets.
+Resolved mentions have exactly one target, ambiguous mentions at least two,
+unmatched mentions none, and unique record targets cannot exceed resolved mentions.
+A repeated primitive requires explicit supersession. The sensitivity generator
+recomputes every dependent record field plus all headline, connectivity,
+concentration, and pair aggregates. Its primary sensitivity estimand retains exact
+frozen ITT membership and denominators; a separately labeled corrected-source
+counterfactual reports additions, removals, and denominator changes without
+rewriting the frozen ITT. Corrected rows/memberships remain private; only aggregate
+metrics and hashes may be released. Primary bytes are never rewritten.
 
 ## Integrity, reproduction, and CI
 
-`scripts/release_contract.py` is the immutable versioned 60-file inventory outside
+`scripts/release_contract.py` is the immutable versioned required-file inventory outside
 the generated manifest. `release-manifest.json` must match it exactly. Read-only
 validation authenticates every byte before parsing any deliverable and rejects
 missing, extra, or changed release files. It never repairs hashes or regenerates a
@@ -224,14 +258,24 @@ writes the manifest.
 Create and authenticate two fresh deterministic reproductions in one operation:
 
 ```bash
-python3 docs/evaluations/site-graph-v0/scripts/run_two_baselines.py \
-  --repo-root /tmp/hapi-worktrees/issue-327 \
-  --corpus /tmp/hapi-corpus-2026-08-27 \
+uv run --project pipeline python docs/evaluations/site-graph-v0/scripts/corpus_archive.py \
+  --repo-root /path/to/hapi \
+  --corpus-archive "$HAPI_CORPUS_ARCHIVE" \
+  --corpus-archive-sidecar "$HAPI_CORPUS_ARCHIVE_SHA256" \
+  --attestation-output /tmp/hapi-corpus-archive-attestation.json
+uv run --project pipeline python docs/evaluations/site-graph-v0/scripts/run_two_baselines.py \
+  --repo-root /path/to/hapi \
+  --corpus-archive "$HAPI_CORPUS_ARCHIVE" \
+  --corpus-archive-sidecar "$HAPI_CORPUS_ARCHIVE_SHA256" \
   --output-root /tmp/hapi-327-final-reruns \
   --evidence docs/evaluations/site-graph-v0/baseline-rerun-evidence.json
 ```
 
-The runner preflights before output creation, builds in temporary sibling
+The archive verifier refuses unsafe paths, links/devices, duplicates/overwrites,
+unexpected members, corrupt sidecars, internal checksum mismatches, verifier
+failures, and count mismatches. The runner consumes the same verified temporary
+extraction and includes the exact deterministic archive attestation and its hash in
+every run manifest. It preflights before output creation, builds in temporary sibling
 directories, validates the exact output set, and publishes by atomic rename. The
 comparator rejects the same resolved directory, duplicate run IDs, stale manifests,
 actual-byte corruption, and missing/extra outputs. “Two” means sequential
@@ -242,17 +286,19 @@ Release sequence after copying deterministic derivatives from either authenticat
 run:
 
 ```bash
-python3 docs/evaluations/site-graph-v0/scripts/generate_validation_report.py \
-  --repo-root /tmp/hapi-worktrees/issue-327 \
-  --corpus /tmp/hapi-corpus-2026-08-27 \
+uv run --project pipeline python docs/evaluations/site-graph-v0/scripts/generate_validation_report.py \
+  --repo-root /path/to/hapi \
+  --corpus-archive "$HAPI_CORPUS_ARCHIVE" \
+  --corpus-archive-sidecar "$HAPI_CORPUS_ARCHIVE_SHA256" \
   --private-run /tmp/hapi-327-final-reruns/run-a
-python3 docs/evaluations/site-graph-v0/scripts/freeze_release.py \
-  --repo-root /tmp/hapi-worktrees/issue-327 --replace
-python3 docs/evaluations/site-graph-v0/scripts/validate_contract.py \
-  --repo-root /tmp/hapi-worktrees/issue-327 \
-  --corpus /tmp/hapi-corpus-2026-08-27 \
+uv run --project pipeline python docs/evaluations/site-graph-v0/scripts/freeze_release.py \
+  --repo-root /path/to/hapi --replace
+uv run --project pipeline python docs/evaluations/site-graph-v0/scripts/validate_contract.py \
+  --repo-root /path/to/hapi \
+  --corpus-archive "$HAPI_CORPUS_ARCHIVE" \
+  --corpus-archive-sidecar "$HAPI_CORPUS_ARCHIVE_SHA256" \
   --private-run /tmp/hapi-327-final-reruns/run-a
-cd pipeline && uv run pytest tests/test_site_graph_v0_contract.py -q
+uv run --project pipeline pytest -q pipeline/tests/test_site_graph_v0_*.py
 ```
 
 The final two-run and test results are recorded in `validation-report.json` and the
@@ -265,6 +311,10 @@ a corpus conclusion.
 
 `reviews/round-1/` and `reviews/round-2/` preserve each original prompt and raw
 output verbatim alongside CLI/model/tool metadata and per-finding dispositions.
+Both historical reviews requested changes on earlier SHAs. Implementer
+dispositions document repairs; they are not reviewer approval. Exact-HEAD external
+review occurs after the commit and is reported outside that commit, so checked-in
+self-validation never claims a final reviewer `PASS`.
 Backend details not exposed by the Claude CLI are explicitly recorded as not
 exposed rather than inferred. Reviewed SHAs are preserved in local implementation
 history; the final public branch is constructed from the base with the final tree so

@@ -1,5 +1,15 @@
 {
+  "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
   "checks": [
+    {
+      "check_id": "authenticated_archive_attestation_bound_to_private_run",
+      "evidence": {
+        "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+        "exact_attestation_match": true,
+        "runtime_attestation_sha256": "b3503a57e3a5da56508d7e4b53b3bcccefddd17831c69e6dc026baa4b9331bb9"
+      },
+      "passed": true
+    },
     {
       "check_id": "frozen_input_bytes",
       "evidence": {
@@ -79,14 +89,56 @@
       "passed": true
     },
     {
-      "check_id": "external_private_input_verified",
+      "check_id": "authenticated_private_snapshot_input",
       "evidence": {
+        "archive_authentication": {
+          "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+          "snapshot_acquisition_integrity": "PASS",
+          "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
+        },
+        "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
         "canonical_transport_sha256": "b69fb207b5775f3fca3e3fe6c1dad13df91b0d90afdf196c17d869721be4ca24",
-        "generator_history": "not_available_in_handoff",
+        "historical_export_reproducibility": "UNAVAILABLE_DISCLOSED",
         "pair_side_membership_count": 55455,
-        "private_opportunity_source_count": 80775,
+        "private_opportunity_source_count": 117607,
         "private_record_count": 36245,
-        "selected_signature_count": 50
+        "selected_signature_count": 50,
+        "snapshot_acquisition_integrity": "PASS",
+        "unavailable_lineage_effect": "The authenticated archive supports an immutable-snapshot evaluation only. It does not make the upstream historical export reproducible and must never be reported as a passed lineage check.",
+        "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
+      },
+      "passed": true
+    },
+    {
+      "check_id": "preregistered_private_and_public_digest_bindings",
+      "evidence": {
+        "private": {
+          "private_opportunity_ledger": {
+            "canonical_json_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212",
+            "publicly_redistributed": false,
+            "runtime_path": "private-opportunity-ledger.json",
+            "transport_json_sha256": "49748805775fbe2ad6e6c155af45becca267540cf6a6579f3cb41aa823971890"
+          },
+          "private_opportunity_source": {
+            "canonical_row_merkle_sha256": "24fd253af1de4faa7a47357f8f30775d829b2905970aea372e9417dafe85ee28",
+            "canonical_uncompressed_ndjson_sha256": "746cda9908348027ed6b5202f6e7d308776acd472306a6c3535b63c88a545203",
+            "gzip_transport_sha256": "46db33e1d365be302bf3273909cd62dc9bd23127505f4f22102864cbc7f50117",
+            "publicly_redistributed": false,
+            "record_count": 117607,
+            "runtime_path": "private-opportunity-source.ndjson.gz"
+          },
+          "private_record_evidence": {
+            "canonical_row_merkle_sha256": "76ce89113febad6b626a608fa58fd998d669f532fce5860e766b8c8f40c577d0",
+            "canonical_uncompressed_ndjson_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+            "gzip_transport_sha256": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
+            "publicly_redistributed": false,
+            "record_count": 36245,
+            "runtime_path": "private-record-evidence.ndjson.gz"
+          }
+        },
+        "private_ledger_digests_sha256": "54d807e7b1deef51ce5c1321de375ad10f78d02b28d94fb4256f67a105cb0b7d",
+        "public_opportunity_summary_sha256": "e6aef47a505d64ca8164b74f98bb64da3718065654b458857e743f9d3f05c2a9",
+        "type_crosswalk_sha256": "4509d2944ddb3f0a30efe0faf1b897d567f685d60523f80c6c2b77d869b07183"
       },
       "passed": true
     },
@@ -304,7 +356,7 @@
                   "no_baseline_pair_connection": 2636
                 },
                 "credited_effect_opportunity_denominator": 2960,
-                "credited_pair_opportunity_membership_sha256": "1599256caa6928534903fd5d33f8cd6db1af646dd66fe1963699de0aa4a5d5e1",
+                "credited_pair_opportunity_membership_sha256": "8a1e6f76344d617932871511625f958583ba82c2f973e0d58dce6c7cc4e967fe",
                 "intent_to_treat_record_count": 2968,
                 "minimum_credited_affected_records_for_continue": 296,
                 "new_pair_connection_ceiling_records": 2636,
@@ -317,7 +369,7 @@
                   "no_baseline_pair_connection": 532
                 },
                 "credited_effect_opportunity_denominator": 537,
-                "credited_pair_opportunity_membership_sha256": "295078b87064dc71908ed04cc9e91cb4b3eeeda14f9480ec3725cbe8f907537b",
+                "credited_pair_opportunity_membership_sha256": "2af99f7708aa3e40ef82fd2c6405c2144c0a661930030beb3919d184be3e07cd",
                 "intent_to_treat_record_count": 539,
                 "minimum_credited_affected_records_for_continue": 54,
                 "new_pair_connection_ceiling_records": 532,
@@ -334,7 +386,7 @@
                   "no_baseline_pair_connection": 1817
                 },
                 "credited_effect_opportunity_denominator": 2670,
-                "credited_pair_opportunity_membership_sha256": "eaa086ae0c0defdd416511a5c80e35bb964329894bf4618b36d70ff79aa5b16d",
+                "credited_pair_opportunity_membership_sha256": "7dce1c5431582dcf989494071a3e7f9ec0f963628edd5407ef3863294ba372b7",
                 "intent_to_treat_record_count": 2968,
                 "minimum_credited_affected_records_for_continue": 267,
                 "new_pair_connection_ceiling_records": 1817,
@@ -347,7 +399,7 @@
                   "no_baseline_pair_connection": 13056
                 },
                 "credited_effect_opportunity_denominator": 21570,
-                "credited_pair_opportunity_membership_sha256": "a07da98f9d95a001d06b96caccc655f2a936d10ca001d3c7b29aeb3fcf14b32a",
+                "credited_pair_opportunity_membership_sha256": "370c0b5502acba8fd7355b5f8beade838055e498b99176cd0aebbf186eac36f1",
                 "intent_to_treat_record_count": 27181,
                 "minimum_credited_affected_records_for_continue": 2157,
                 "new_pair_connection_ceiling_records": 13056,
@@ -364,7 +416,7 @@
                   "no_baseline_pair_connection": 533
                 },
                 "credited_effect_opportunity_denominator": 538,
-                "credited_pair_opportunity_membership_sha256": "f1a836f54d7a5ceb40496539fa385c75a6393751527370a4777ff75f0cb2c90c",
+                "credited_pair_opportunity_membership_sha256": "99674fa7580c4b2a8cc456ca07638a63d90f140c5eb4d5c74db4b7498d33eb5e",
                 "intent_to_treat_record_count": 539,
                 "minimum_credited_affected_records_for_continue": 54,
                 "new_pair_connection_ceiling_records": 533,
@@ -377,7 +429,7 @@
                   "no_baseline_pair_connection": 26679
                 },
                 "credited_effect_opportunity_denominator": 27180,
-                "credited_pair_opportunity_membership_sha256": "9f628a825c4d3c4f3c4df4ea47eb977920df12ca8043204746f0fe18c7f7338a",
+                "credited_pair_opportunity_membership_sha256": "9b2ce44c0572b3fee10bccd307af5944ddc907719e4b8a64e0abfd60a4ee2433",
                 "intent_to_treat_record_count": 27181,
                 "minimum_credited_affected_records_for_continue": 2718,
                 "new_pair_connection_ceiling_records": 26679,
@@ -455,7 +507,7 @@
             "strict_refinement_reassignment_ceiling_records": 8278
           }
         },
-        "private_opportunity_ledger_canonical_sha256": "45204ffb7d828edf6290bab9ed573ac5abb838811e64289c0cb3e720459c64a1",
+        "private_opportunity_ledger_canonical_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212",
         "selected_signatures": 50
       },
       "passed": true
@@ -852,14 +904,17 @@
           "landcover",
           "landform",
           "populated-place"
-        ]
+        ],
+        "unclassified_targets_with_mapped_source_types": []
       },
       "passed": true
     },
     {
-      "check_id": "all_json_schemas_executed",
+      "check_id": "all_json_schemas_meta_valid_and_instance_executed",
       "evidence": {
-        "schema_count": 12,
+        "adversarial_invalid_instance_count": 30,
+        "meta_valid_schema_count": 15,
+        "representative_valid_instance_count": 15,
         "schemas": [
           "candidate-freeze-manifest.schema.json",
           "candidate-hierarchy.schema.json",
@@ -872,8 +927,20 @@
           "prompt-leakage-audit.schema.json",
           "relation-ledger.schema.json",
           "review-artifact.schema.json",
-          "review-ledger.schema.json"
+          "review-ledger.schema.json",
+          "run-result-manifest.schema.json",
+          "run-start-receipt.schema.json",
+          "trusted-run-attestors.schema.json"
         ]
+      },
+      "passed": true
+    },
+    {
+      "check_id": "production_candidate_run_trust_gate_fail_closed",
+      "evidence": {
+        "downstream_product_verdict": "NOT_RUN",
+        "effect": "Issue #327 can validate the frozen baseline contract, but the production candidate comparator fails closed and downstream_product_verdict remains NOT_RUN until a trusted run attestor is configured. Test-only keys never satisfy this release policy.",
+        "trusted_run_attestor_status": "NOT_CONFIGURED"
       },
       "passed": true
     },
@@ -881,16 +948,23 @@
       "check_id": "immutable_primary_and_private_correction_policy",
       "evidence": {
         "allowed_operations": [
-          "add_direct_target",
-          "remove_direct_target",
-          "replace_direct_target",
-          "set_site_mention_status_count"
+          "set_site_mention_resolution"
         ],
-        "baseline_policy": "The primary baseline and its public aggregate/digest artifacts are immutable. Corrections are private append-only primitive evidence operations and produce a separately hashed sensitivity run.",
+        "baseline_policy": "The primary baseline and frozen intent-to-treat membership are immutable. Corrections are append-only exact site-mention resolution transitions and produce a separately hashed sensitivity run.",
         "current_primary_corrections_applied": 0,
         "private_ledger_schema": "schemas/correction-ledger.schema.json",
-        "schema_version": "site-graph-v0-correction-policy/2",
-        "sensitivity_publication": "Only non-bulk aggregate metrics and cryptographic ledger hashes may be released; corrected record and membership ledgers remain private."
+        "schema_version": "site-graph-v0-correction-policy/3",
+        "sensitivity_estimands": {
+          "corrected_source_counterfactual_reselection": "Separately rerun result-blind queue selection from corrected source primitives and report exact private additions/removals plus aggregate denominator changes. This is not the frozen ITT estimand.",
+          "fixed_frozen_intent_to_treat": "Recompute corrected evidence and outcomes while retaining every original ITT artifact, opportunity binding, pair-side membership, and denominator."
+        },
+        "sensitivity_publication": "Only non-bulk aggregate metrics and cryptographic ledger hashes may be released; corrected mention, record, exact membership, and exact counterfactual change ledgers remain private.",
+        "source_realizability_invariants": [
+          "resolved mentions have exactly one target",
+          "ambiguous mentions have at least two distinct targets",
+          "unmatched mentions have no targets",
+          "unique direct targets never exceed resolved mention count"
+        ]
       },
       "passed": true
     },
@@ -898,18 +972,18 @@
       "check_id": "authenticated_deterministic_baseline_reproduction",
       "evidence": {
         "committed_public_outputs_match": true,
-        "deterministic_output_count": 17,
+        "deterministic_output_count": 18,
         "run_a": {
-          "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
-          "provenance_sha256": "ba4c53694b5294c09ba218591006078b512b37491ea213e08f13195b07743e58",
-          "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-a",
-          "run_id": "5d0d6cbf-5128-4b3c-8e71-6cfa04d31fbb"
+          "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
+          "provenance_sha256": "34c5e41795345d94f34ee6d81222e20d48f190758c02e6d36a7e7690724a31c3",
+          "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-a",
+          "run_id": "560c5d95-39f9-4c9d-9075-1aa0c17f59b0"
         },
         "run_b": {
-          "manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
-          "provenance_sha256": "06e2f0625c9a43b5e3f5f9c0c64813eb319bf27913398f1691b446cd1c397865",
-          "resolved_directory": "/tmp/hapi-327-final-r2-reruns-v1/run-b",
-          "run_id": "35c832f1-2307-4c27-8a3c-2f6dbd42eb8e"
+          "manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
+          "provenance_sha256": "ca265989438ac42f73300c5f3bb9b6575e3e75e70abdfc270dfb34076c3a4075",
+          "resolved_directory": "/tmp/hapi-327-final-runs-round3/run-b",
+          "run_id": "b0782237-5378-4c38-8e42-095130b83e7f"
         }
       },
       "passed": true
@@ -943,19 +1017,22 @@
       "passed": true
     },
     {
-      "check_id": "external_handoff_metadata_authenticated",
+      "check_id": "snapshot_handoff_metadata_bytes_authenticated",
       "evidence": {
-        "external_private_prerequisite": "verified",
         "historical_export_reproducible": false,
-        "known_reproduction_limit": "The handoff does not record the export command/code revision or Dagster run identifiers. Its bytes can be verified and restored using the committed manifest/verifier copies, but the export cannot be regenerated bit-for-bit from repository history alone; baseline_base_commit is the evaluated checkout, not an asserted export-generator commit."
+        "known_reproduction_limit": "The archive does not record its export command, producer Git revision, or Dagster run identifiers. Its frozen bytes can be authenticated and extracted deterministically, but the upstream historical export cannot be regenerated bit-for-bit from repository history; baseline_base_commit is the evaluated checkout, not an asserted export-generator commit.",
+        "snapshot_acquisition_integrity": "PASS",
+        "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
       },
       "passed": true
     },
     {
-      "check_id": "review_provenance_and_dispositions",
+      "check_id": "historical_review_provenance_authenticated_not_approval",
       "evidence": {
+        "exact_current_head_external_review_gate": "PENDING_OUTSIDE_COMMIT",
+        "historical_review_outcome": "REQUEST_CHANGES",
+        "implementer_dispositions_are_reviewer_approval": false,
         "round_1_reviewed_commit": "36c23e7424f3deb901cc86a5019b408d3951c208",
-        "round_2_finding_count": 13,
         "round_2_reviewed_commit": "0ea47dad1e9e415d0fe76ac1fc0157ce218fbdad"
       },
       "passed": true
@@ -964,18 +1041,333 @@
   "limitations": [
     {
       "effect": "The authorized handoff bytes are verified, but the historical export cannot be regenerated from repository history because its export command, code revision, and pipeline run identifiers were not supplied.",
-      "id": "external_private_export_generator_history_missing"
+      "id": "upstream_production_lineage_unavailable_disclosed",
+      "status": "UNAVAILABLE_DISCLOSED"
     }
   ],
-  "schema_version": "site-graph-v0-validation-report/3",
-  "scope": "verified real 36,245-record private corpus; fixtures/proxies support no corpus claim",
-  "status": "pass",
+  "production_lineage": {
+    "effect": "The authenticated archive supports an immutable-snapshot evaluation only. It does not make the upstream historical export reproducible and must never be reported as a passed lineage check.",
+    "missing": [
+      "export_command",
+      "producer_git_revision",
+      "dagster_run_ids"
+    ],
+    "prohibited_inferences": [
+      "that any repository commit or Dagster run produced this corpus",
+      "that canonical mappers reproduced the raw source bytes",
+      "that this snapshot is the latest or complete production corpus",
+      "that the historical API export can be regenerated"
+    ],
+    "status": "UNAVAILABLE_DISCLOSED"
+  },
+  "prohibited_claims": [
+    "that any repository commit or Dagster run produced this corpus",
+    "that canonical mappers reproduced the raw source bytes",
+    "that this snapshot is the latest or complete production corpus",
+    "that the historical API export can be regenerated"
+  ],
+  "release_candidate_binding": {
+    "files": {
+      "docs/evaluations/site-graph-v0/README.md": {
+        "bytes": 20399,
+        "sha256": "7d39ba4a368819af6b60683038e351d06f9a1d85b586e368983d1ddf4908995d"
+      },
+      "docs/evaluations/site-graph-v0/baseline-metrics.json": {
+        "bytes": 46789,
+        "sha256": "e29ef2e3415fe3e195d46f4dcfc780c8ac66e8829f0aa804a8f2be164abb52fb"
+      },
+      "docs/evaluations/site-graph-v0/baseline-node-scope.json": {
+        "bytes": 662363,
+        "sha256": "9973bbb7b83244a9bbd194f532f7f4949f98cb203682a46d4e0ae36dedd84493"
+      },
+      "docs/evaluations/site-graph-v0/baseline-rerun-evidence.json": {
+        "bytes": 4216,
+        "sha256": "b3ce852f2d4ca656e9a48c46a27cdb03d220089290cea7f2266e6ab3b6799a1c"
+      },
+      "docs/evaluations/site-graph-v0/corpus-provenance/NOTICE": {
+        "bytes": 3247,
+        "sha256": "9d2395959b9c930d06b1b17410f26208ab79475cc896c47ef175855aca099119"
+      },
+      "docs/evaluations/site-graph-v0/corpus-provenance/bundle-README.md": {
+        "bytes": 4810,
+        "sha256": "1ef13bdc4dd09bc56e2591abaef0c8e52f206d85204606564407f12c51f516af"
+      },
+      "docs/evaluations/site-graph-v0/corpus-provenance/bundle-SHA256SUMS": {
+        "bytes": 1163,
+        "sha256": "d30e0c2c2e07547d4f545b7b7559cfba96199280935e48717de264e36d765e36"
+      },
+      "docs/evaluations/site-graph-v0/corpus-provenance/manifest.json": {
+        "bytes": 1177,
+        "sha256": "1a188bf191dc2e65b2b60bd1a3dd4b029e6d93d79f44f257a7c917912ebf8f1d"
+      },
+      "docs/evaluations/site-graph-v0/corpus-provenance/validation/queries.sql": {
+        "bytes": 6644,
+        "sha256": "b87951eeed184b9493a2eef55f83ab3d7b81e277e7659f25fae9189ca05da6ea"
+      },
+      "docs/evaluations/site-graph-v0/corpus-provenance/validation/results.json": {
+        "bytes": 3696,
+        "sha256": "21bf0712ddbaa37f41408a24bd1c765bbb6c66c4b28001979156cd748e9b70c1"
+      },
+      "docs/evaluations/site-graph-v0/corpus-provenance/validation/verify_bundle.sh": {
+        "bytes": 2975,
+        "sha256": "c9e36f08145bf68e8e8942aad7d056552558758db231c9140369190c842a11b1"
+      },
+      "docs/evaluations/site-graph-v0/correction-policy.json": {
+        "bytes": 1397,
+        "sha256": "d2bfa05fb1dc660860d8a73e4a8c269ba03546e3565f353239b2dab26a862d88"
+      },
+      "docs/evaluations/site-graph-v0/implementation-evidence.json": {
+        "bytes": 2892,
+        "sha256": "b64224bc02d9ede8b99e18b8632fff6aedd17fb6e60a545d5daa08c9a4351ac8"
+      },
+      "docs/evaluations/site-graph-v0/input-snapshot.json": {
+        "bytes": 7808,
+        "sha256": "953c6887c0563515a24ab37aa1e894230d65c6987a13bd172de77e23cd66862d"
+      },
+      "docs/evaluations/site-graph-v0/planned-opportunity-summary.json": {
+        "bytes": 28620,
+        "sha256": "e6aef47a505d64ca8164b74f98bb64da3718065654b458857e743f9d3f05c2a9"
+      },
+      "docs/evaluations/site-graph-v0/preregistration.json": {
+        "bytes": 23705,
+        "sha256": "786d74e1aba92171c96c0979e3cee483bd40a30d33c276a156f20b7bf1e4b4eb"
+      },
+      "docs/evaluations/site-graph-v0/private-ledger-digests.json": {
+        "bytes": 4451,
+        "sha256": "54d807e7b1deef51ce5c1321de375ad10f78d02b28d94fb4256f67a105cb0b7d"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-1/disposition.json": {
+        "bytes": 4011,
+        "sha256": "3bf69371894ba227ddb990afe8fb9497bb7335a1f1f88c777c8cf0ea3e2198ad"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-1/metadata.json": {
+        "bytes": 1406,
+        "sha256": "b713a2632bd05ab01dd7d7369c85b1de78362f3adc4f078ce5bd8407a9271b26"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-1/prompt.md": {
+        "bytes": 1298,
+        "sha256": "85879a6c8e7b78bfc7eec98a919c152c38beb0d10f0fa2073a9ce2dbf0b0a378"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-1/raw-output.txt": {
+        "bytes": 16336,
+        "sha256": "166ed8d1a660e90f4ead9c5df8be8d43288e06532eea94ab90158862293d9f18"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-2/disposition.json": {
+        "bytes": 2720,
+        "sha256": "8cdbc8acf3b1ce6cf3bbaa75bdbbae79cd1a8ace46383fce189db2674ca7e369"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-2/metadata.json": {
+        "bytes": 1533,
+        "sha256": "42c004b9d061d9d583c44dc5766d26019df74c0a53e6cbaaf1c06e9bfc32869a"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-2/prompt.md": {
+        "bytes": 1438,
+        "sha256": "100c139713e9332ee582f9b4632479c1ac440574aa37aaf88ad18e3cb237bb8e"
+      },
+      "docs/evaluations/site-graph-v0/reviews/round-2/raw-output.txt": {
+        "bytes": 27195,
+        "sha256": "da6665870ff7665c75aa99e319be06911ff0eb5967fdaa497854d2228981b9e7"
+      },
+      "docs/evaluations/site-graph-v0/schema-test-cases.json": {
+        "bytes": 44983,
+        "sha256": "94e6b3b0ab2ae3745f32d6063ebdb14736db6417c5c906294aa08d8fd96e5f0d"
+      },
+      "docs/evaluations/site-graph-v0/schemas/candidate-freeze-manifest.schema.json": {
+        "bytes": 2652,
+        "sha256": "332ef582da550d2b6cbac626afb0d9bd8420c1338043fcc4c412655617c6d23e"
+      },
+      "docs/evaluations/site-graph-v0/schemas/candidate-hierarchy.schema.json": {
+        "bytes": 1924,
+        "sha256": "2d44c037a9affe922afe66705cd08bdb8310edf2575d6423f75b4d7f7e3cc8bd"
+      },
+      "docs/evaluations/site-graph-v0/schemas/candidate-source-snapshot.schema.json": {
+        "bytes": 3039,
+        "sha256": "335760bc7c9f8789d7eb77cfa72042b970999aa8901cbb55023cb02fe5a30f5d"
+      },
+      "docs/evaluations/site-graph-v0/schemas/candidate.schema.json": {
+        "bytes": 2746,
+        "sha256": "81e922c88c7623e0ec218b57b1957ed2a5c4eaa2dedf8cb7d35ea9615a314457"
+      },
+      "docs/evaluations/site-graph-v0/schemas/comparison-report.schema.json": {
+        "bytes": 2296,
+        "sha256": "20ad2e66f3aa2ff8a0a66b73fe4c4a03c171844f5540b7b046097af91e34e297"
+      },
+      "docs/evaluations/site-graph-v0/schemas/correction-ledger.schema.json": {
+        "bytes": 3674,
+        "sha256": "762be300ce28d847a56ff171a736e6a00a00bf2022444cf4e83a512c070e808a"
+      },
+      "docs/evaluations/site-graph-v0/schemas/opportunity-summary.schema.json": {
+        "bytes": 2926,
+        "sha256": "2a47fa40a2296225f9432b9d715f1db69b4958d02dc9dd43eb4e2d77f38305ba"
+      },
+      "docs/evaluations/site-graph-v0/schemas/private-opportunity-ledger.schema.json": {
+        "bytes": 7802,
+        "sha256": "ea18d0fb765e9aef7b0b246a1c38897c64cb2244013c9a3d8d4f9ae0f83942cd"
+      },
+      "docs/evaluations/site-graph-v0/schemas/prompt-leakage-audit.schema.json": {
+        "bytes": 1788,
+        "sha256": "1d989fe920751c7a2e8d7bc17c0769d379f882a6643012ff5ecbc52a68f737f3"
+      },
+      "docs/evaluations/site-graph-v0/schemas/relation-ledger.schema.json": {
+        "bytes": 1309,
+        "sha256": "08e96a4ac42769eac9a4faf5fc5da091d5fbc7fdcec2a39125d9cbc5d6c77505"
+      },
+      "docs/evaluations/site-graph-v0/schemas/review-artifact.schema.json": {
+        "bytes": 5817,
+        "sha256": "04c130e1a1b996b7098899fdd6707066e5d8415b8ada3ca5c60ed79f07e88d67"
+      },
+      "docs/evaluations/site-graph-v0/schemas/review-ledger.schema.json": {
+        "bytes": 1779,
+        "sha256": "346c871f1dbd324ed005fdb67efa3944d682e1380dc7b9f8e8598ca363dffe28"
+      },
+      "docs/evaluations/site-graph-v0/schemas/run-result-manifest.schema.json": {
+        "bytes": 1798,
+        "sha256": "28c4630087286a1a5811a8dff274f6e7f0988be53f7c1beb320434039ef74d41"
+      },
+      "docs/evaluations/site-graph-v0/schemas/run-start-receipt.schema.json": {
+        "bytes": 1888,
+        "sha256": "9b77e49a99a68affa406241bd97edadb730e9ba6e1a59835d6ef9172f464375f"
+      },
+      "docs/evaluations/site-graph-v0/schemas/trusted-run-attestors.schema.json": {
+        "bytes": 1625,
+        "sha256": "90ebad251c7a5f81b398609e339cd36fe83657858d1e59d9cab775f7a48ad811"
+      },
+      "docs/evaluations/site-graph-v0/scripts/apply_corrections.py": {
+        "bytes": 30984,
+        "sha256": "48f7700b621293d74b7cf4069b78f1236046a2b513e0d7f38b953bf44f326b5b"
+      },
+      "docs/evaluations/site-graph-v0/scripts/build_baseline.py": {
+        "bytes": 47157,
+        "sha256": "dc4a40aa003ba30329210e0e48612799103d0cad1f4f68b2622d3ee2f54209e8"
+      },
+      "docs/evaluations/site-graph-v0/scripts/candidate_git.py": {
+        "bytes": 5617,
+        "sha256": "566aba21ac8652c2328e7eb9f4bf38805a7b70abbbd3f97f39a05b1894071940"
+      },
+      "docs/evaluations/site-graph-v0/scripts/compare_baseline_runs.py": {
+        "bytes": 10243,
+        "sha256": "0d3322ed210e10aa14553f9c0f9b4f34bae870770e2ed2c564e00b1ce15372fb"
+      },
+      "docs/evaluations/site-graph-v0/scripts/compare_candidate.py": {
+        "bytes": 78352,
+        "sha256": "c06e2cf07d75fa20573ae01669c173d0615581689937286d4e62dcb38c24b28a"
+      },
+      "docs/evaluations/site-graph-v0/scripts/contract_constants.py": {
+        "bytes": 501,
+        "sha256": "ce19420c1d23fa7ead86ac4a1b5a39d184c86b295b2310ef9cec186ce87bc9a6"
+      },
+      "docs/evaluations/site-graph-v0/scripts/corpus_archive.py": {
+        "bytes": 16095,
+        "sha256": "62b73d8218c5f04d7654cb52a1c164954e317e36a65c3ba329aebe9115d1e688"
+      },
+      "docs/evaluations/site-graph-v0/scripts/freeze_candidate_inputs.py": {
+        "bytes": 12052,
+        "sha256": "f1bd4da9842b714d8f7e7f4bbc743737ce68d583cceb1668999f07d0e5f4af86"
+      },
+      "docs/evaluations/site-graph-v0/scripts/freeze_release.py": {
+        "bytes": 4175,
+        "sha256": "79b88fd1e0e44f2de0663914e3c6cd64acb74044ddfb22c08cb34fdf28ef0872"
+      },
+      "docs/evaluations/site-graph-v0/scripts/generate_validation_report.py": {
+        "bytes": 1688,
+        "sha256": "9a8e236d0706648962b51e92fa2830b26e5c02d0f94cc54168b92aea076bfa9f"
+      },
+      "docs/evaluations/site-graph-v0/scripts/integrity.py": {
+        "bytes": 4842,
+        "sha256": "9c4cc0902aaae69d0d15cccf3f89df1d64c142ec4ec1cc8bc6240f3a703a2e9c"
+      },
+      "docs/evaluations/site-graph-v0/scripts/metrics_core.py": {
+        "bytes": 2216,
+        "sha256": "896a0f24fac83ca7fdce530ff6747bb0c288dd65881d26e6467b4c4fa1470c33"
+      },
+      "docs/evaluations/site-graph-v0/scripts/private_ledgers.py": {
+        "bytes": 29216,
+        "sha256": "0df23599c4f035285167fb51b43369b35c38dd172763400a15f32fa8a14fc476"
+      },
+      "docs/evaluations/site-graph-v0/scripts/release_contract.py": {
+        "bytes": 6523,
+        "sha256": "70b909aff8f66dded9f12c6a0f7759b582bc50917cc0fbd5cf8f61ebbfa4a750"
+      },
+      "docs/evaluations/site-graph-v0/scripts/run_baseline.py": {
+        "bytes": 12196,
+        "sha256": "646335aad16dd539bef4c2e842431d839190548351b671627eceafc0444a2af1"
+      },
+      "docs/evaluations/site-graph-v0/scripts/run_two_baselines.py": {
+        "bytes": 2128,
+        "sha256": "fb2c80bc2ea9f3b9d87394ceed4efae120f4e9e2a787c6bc0d32700071652ea1"
+      },
+      "docs/evaluations/site-graph-v0/scripts/schema_validation.py": {
+        "bytes": 3622,
+        "sha256": "a239055819007ae685eb6ed5b55f39eb78a5a9191072c05ff3a29cc34b82efa4"
+      },
+      "docs/evaluations/site-graph-v0/scripts/validate_contract.py": {
+        "bytes": 31197,
+        "sha256": "074caaaba477efcb18b1334f2a05c37a979559207e330f61bd0a9cb497b9e825"
+      },
+      "docs/evaluations/site-graph-v0/top-unmatched-components.json": {
+        "bytes": 12176,
+        "sha256": "d425a4868eef9071944f33ef09c75baffdc7ca122974de5ae05641746770ecf8"
+      },
+      "docs/evaluations/site-graph-v0/trusted-run-attestors.json": {
+        "bytes": 649,
+        "sha256": "6879cfe14133a60356901a8873dd99508a2b658bc3ff10a5798a2eb1dc45bd21"
+      },
+      "docs/evaluations/site-graph-v0/type-crosswalk.json": {
+        "bytes": 2663,
+        "sha256": "4509d2944ddb3f0a30efe0faf1b897d567f685d60523f80c6c2b77d869b07183"
+      },
+      "pipeline/pyproject.toml": {
+        "bytes": 841,
+        "sha256": "ec8b061c9d41d5fe6f766ff74e225baaa79615a509ead975c448fda644a1d1ab"
+      },
+      "pipeline/tests/test_site_graph_v0_archive.py": {
+        "bytes": 4696,
+        "sha256": "a4ea0ccadd41e3363c805e8f4c14310114b6772b79c135d161f2d487deada581"
+      },
+      "pipeline/tests/test_site_graph_v0_candidate_adversarial.py": {
+        "bytes": 19964,
+        "sha256": "11f8f7f8c6f4783fe48632912dc0dbd0506409300c51e9bf1acf10378ab9845f"
+      },
+      "pipeline/tests/test_site_graph_v0_contract.py": {
+        "bytes": 60600,
+        "sha256": "088bf226c3e6bc1fd48f20bb13ed9175e73b2265a7a6485d37f9d9ffa7fd2419"
+      },
+      "pipeline/tests/test_site_graph_v0_corrections.py": {
+        "bytes": 17052,
+        "sha256": "33aa784d6333c5fe43ef1326a6c6a359c4b39865c0a3a1c632c93173c24228ac"
+      },
+      "pipeline/tests/test_site_graph_v0_private_ledgers.py": {
+        "bytes": 11467,
+        "sha256": "ecf76d9c3c0e61c992c71688a90fb1a204444bda7a2778e1f233fa813fb59186"
+      },
+      "pipeline/uv.lock": {
+        "bytes": 500187,
+        "sha256": "647f76bca14be56e358fa66c156cc8b9a6dc57f6cd4dbaccd47a3224bcae6f3f"
+      }
+    },
+    "hash_algorithm": "sha256",
+    "rule": "Every static required release file except validation-report.json is hashed after semantic recomputation and before release-manifest generation."
+  },
+  "schema_version": "site-graph-v0-validation-report/4",
+  "scope": "snapshot-conditional evaluation over the authenticated real 36,245-record private archive; fixtures/proxies support no corpus claim and historical export reproducibility is not asserted",
+  "status": {
+    "derived_baseline_reproducibility": "PASS",
+    "downstream_product_verdict": "NOT_RUN",
+    "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT",
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "snapshot_acquisition_integrity": "PASS",
+    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
+  },
   "summary": {
+    "archive_sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
     "canonical_records": 36245,
-    "checks": 17,
+    "checks": 20,
+    "downstream_product_verdict": "NOT_RUN",
     "failed": 0,
-    "passed": 17,
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "passed": 20,
     "private_record_evidence_gzip_sha256": "9954a7589c6334804b76e4e78f56f8b66ec643de3f3e7568b56d70ccda9c73c8",
-    "private_record_evidence_uncompressed_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798"
+    "private_record_evidence_uncompressed_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED"
   }
 }

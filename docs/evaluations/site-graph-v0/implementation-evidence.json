@@ -1,28 +1,62 @@
 {
-  "schema_version": "site-graph-v0-implementation-evidence/2",
+  "schema_version": "site-graph-v0-implementation-evidence/3",
   "issue": 327,
-  "status": "pass",
+  "status": {
+    "snapshot_acquisition_integrity": "PASS",
+    "derived_baseline_reproducibility": "PASS",
+    "upstream_production_lineage": "UNAVAILABLE_DISCLOSED",
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "downstream_product_verdict": "NOT_RUN",
+    "external_exact_head_review_gate": "PENDING_OUTSIDE_COMMIT"
+  },
+  "claim_boundary": "The contract and baseline are reproducible from the authenticated private archive snapshot. Historical production export lineage is unavailable, no downstream candidate is evaluated, and checked-in implementer evidence is not external reviewer approval.",
   "public_bulk_derivatives_committed": false,
   "private_runtime_authentication": "private-ledger-digests.json",
-  "corpus_record_count": 36245,
-  "private_record_evidence_canonical_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
-  "private_opportunity_source_canonical_sha256": "fa0dce58d96e0d22ebb7518c9d569afe5d9e064f49dcfc01f87fc6c4ee31eb1a",
-  "private_opportunity_ledger_canonical_sha256": "45204ffb7d828edf6290bab9ed573ac5abb838811e64289c0cb3e720459c64a1",
+  "archive": {
+    "logical_locator": "HAPI_CORPUS_ARCHIVE",
+    "sha256": "f4aabc2fc03b3ee0b5965bb9b27129e0ac482dae086c6124dd0d73d70276cc5b",
+    "sidecar_logical_locator": "HAPI_CORPUS_ARCHIVE_SHA256",
+    "sidecar_sha256": "f57d0605b2d3a169d165e7286ef0d1cfc4855051a569250105d52ec8df51041e"
+  },
+  "private_runtime_ledgers": {
+    "canonical_record_count": 36245,
+    "site_mention_primitive_count": 117607,
+    "selected_signature_count": 50,
+    "pair_side_membership_count": 55455,
+    "private_record_evidence_canonical_sha256": "47b68b8da95e72f91de76ecf04b1829342b3df852958261e3d5ebcd2d3d3d798",
+    "private_opportunity_source_canonical_sha256": "746cda9908348027ed6b5202f6e7d308776acd472306a6c3535b63c88a545203",
+    "private_opportunity_ledger_canonical_sha256": "00e277decf30df5a86f0a4e153a6fd96c6cb476124040af7e8f6d91547de2212"
+  },
   "deterministic_reproduction": {
-    "status": "pass",
+    "status": "READY_SNAPSHOT_CONDITIONAL",
     "evidence": "baseline-rerun-evidence.json",
-    "deterministic_output_count": 17,
-    "run_a_manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635",
-    "run_b_manifest_sha256": "77730686f9ebb89c1bf5c8f720b3bfdb52de97b0237a5333719c9285d1b81635"
+    "deterministic_output_count": 18,
+    "output_mismatches": 0,
+    "metadata_mismatches": 0,
+    "run_a_manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c",
+    "run_b_manifest_sha256": "063285e020c956a5a43e2983d3add0fc76bf4e292562f89853207b81a8c3961c"
   },
   "validation": {
-    "status": "pass",
-    "checks_passed": 17,
-    "checks_failed": 0
+    "overall_contract_status": "READY_SNAPSHOT_CONDITIONAL",
+    "checks_passed": 20,
+    "checks_failed": 0,
+    "schema_meta_valid_count": 15,
+    "schema_representative_valid_instance_count": 15,
+    "schema_adversarial_invalid_instance_count": 30
   },
   "tests": {
-    "status": "pass",
-    "focused": "31 passed",
-    "full_pipeline": "2410 passed"
+    "focused_site_graph_contract": "67 passed",
+    "full_pipeline": "2446 passed"
+  },
+  "review_gate": {
+    "historical_round_1_and_round_2_outcome": "REQUEST_CHANGES",
+    "historical_reviews_are_current_approval": false,
+    "implementer_dispositions_are_reviewer_approval": false,
+    "exact_head_external_review": "PENDING_OUTSIDE_COMMIT"
+  },
+  "candidate_execution": {
+    "trusted_run_attestors": "NOT_CONFIGURED",
+    "production_comparator_effect": "FAIL_CLOSED",
+    "downstream_product_verdict": "NOT_RUN"
   }
 }

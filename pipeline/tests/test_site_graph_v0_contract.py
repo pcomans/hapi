@@ -8,9 +8,9 @@ or evaluation claim.
 from __future__ import annotations
 
 import copy
-import gzip
 from collections import Counter
 import importlib.util
+import inspect
 import json
 import shutil
 import subprocess
@@ -41,10 +41,10 @@ def _load_script_module(name: str):
 
 compare_baseline_runs_module = _load_script_module("compare_baseline_runs")
 compare_candidate_module = _load_script_module("compare_candidate")
-corrections_module = _load_script_module("apply_corrections")
 build_baseline_module = _load_script_module("build_baseline")
 integrity_module = _load_script_module("integrity")
 run_baseline_module = _load_script_module("run_baseline")
+schema_validation_module = _load_script_module("schema_validation")
 
 compare = compare_baseline_runs_module.compare
 AMBIGUITY_MAXIMUM_INCREASE = compare_candidate_module.AMBIGUITY_MAXIMUM_INCREASE
@@ -57,20 +57,17 @@ compare_core = compare_candidate_module.compare_core
 decision_key = compare_candidate_module.decision_key
 _load_candidate_freeze = compare_candidate_module._load_candidate_freeze
 _validate_review_artifacts = compare_candidate_module._validate_review_artifacts
-apply_corrections = corrections_module.apply
-record_hash = corrections_module.record_hash
 classify_current_nodes = build_baseline_module.classify_current_nodes
 OPPORTUNITY_MUSEUM_PROTECTION = build_baseline_module.OPPORTUNITY_MUSEUM_PROTECTION
 OPPORTUNITY_TOTAL_SIGNATURES = build_baseline_module.OPPORTUNITY_TOTAL_SIGNATURES
 read_jsonl = build_baseline_module.read_jsonl
-write_gzip_jsonl = build_baseline_module.write_gzip_jsonl
-gzip_ledger_digest = build_baseline_module.gzip_ledger_digest
 IntegrityError = integrity_module.IntegrityError
 sha256 = integrity_module.sha256
 verify_release = integrity_module.verify_release
 DETERMINISTIC_OUTPUTS = run_baseline_module.DETERMINISTIC_OUTPUTS
 FINAL_OUTPUTS = run_baseline_module.FINAL_OUTPUTS
-preflight = run_baseline_module.preflight
+run_baseline = run_baseline_module.run
+execute_schema_contract_tests = schema_validation_module.execute_schema_contract_tests
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -115,24 +112,30 @@ def _logic_only_run(path: Path, run_id: str | None = None) -> None:
     assert {item.name for item in path.iterdir()} == FINAL_OUTPUTS
 
 
-def _temporary_release(tmp_path: Path) -> Path:
+def _temporary_release(tmp_path: Path, *, freeze: bool = True) -> Path:
     repo = tmp_path / "repo"
     target = repo / "docs/evaluations/site-graph-v0"
     shutil.copytree(EVAL_ROOT, target, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
-    ci_target = repo / "pipeline/tests"
-    ci_target.mkdir(parents=True)
-    shutil.copy2(Path(__file__), ci_target / Path(__file__).name)
-    shutil.copy2(REPO_ROOT / "pipeline/pyproject.toml", repo / "pipeline/pyproject.toml")
-    shutil.copy2(REPO_ROOT / "pipeline/uv.lock", repo / "pipeline/uv.lock")
+    for relative in sorted(integrity_module.CI_RELEASE_FILES):
+        source = REPO_ROOT / relative
+        destination = repo / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
     manifest = target / "release-manifest.json"
     manifest.unlink(missing_ok=True)
-    subprocess.run(
-        [sys.executable, str(target / "scripts/freeze_release.py"), "--repo-root", str(repo)],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    verify_release(repo)
+    if freeze:
+        subprocess.run(
+            [
+                sys.executable,
+                str(target / "scripts/freeze_release.py"),
+                "--repo-root",
+                str(repo),
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        verify_release(repo)
     return repo
 
 
@@ -161,7 +164,9 @@ def test_validator_rejects_release_corruption_before_semantics(
     }
     result = subprocess.run(
         [sys.executable, "-B", str(repo / "docs/evaluations/site-graph-v0/scripts/validate_contract.py"),
-         "--repo-root", str(repo), "--corpus", "/does/not/matter",
+         "--repo-root", str(repo),
+         "--corpus-archive", "/does/not/matter",
+         "--corpus-archive-sidecar", "/does/not/matter.sha256",
          "--private-run", "/does/not/matter"],
         check=False,
         capture_output=True,
@@ -181,6 +186,41 @@ def test_release_inventory_rejects_extra_file(tmp_path: Path) -> None:
     (repo / "docs/evaluations/site-graph-v0/undeclared.txt").write_text("extra")
     with pytest.raises(IntegrityError, match="extra"):
         verify_release(repo)
+
+
+def test_release_freeze_rejects_report_stale_after_candidate_byte_change(
+    tmp_path: Path,
+) -> None:
+    repo = _temporary_release(tmp_path, freeze=False)
+    readme = repo / "docs/evaluations/site-graph-v0/README.md"
+    readme.write_text(readme.read_text(encoding="utf-8") + "\nstale attack\n")
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(
+                repo
+                / "docs/evaluations/site-graph-v0/scripts/freeze_release.py"
+            ),
+            "--repo-root",
+            str(repo),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1
+    assert "stale validation report" in result.stderr
+    assert not (repo / "docs/evaluations/site-graph-v0/release-manifest.json").exists()
+
+
+def test_every_json_schema_has_executed_valid_and_adversarial_instances() -> None:
+    result = execute_schema_contract_tests(
+        EVAL_ROOT / "schemas", EVAL_ROOT / "schema-test-cases.json"
+    )
+    assert result["meta_valid_schema_count"] == 15
+    assert result["representative_valid_instance_count"] == 15
+    assert result["adversarial_invalid_instance_count"] == 30
+    assert len(result["schemas"]) == 15
 
 
 def test_rerun_comparator_rejects_same_resolved_directory(tmp_path: Path) -> None:
@@ -209,7 +249,12 @@ def test_rerun_comparator_authenticates_outputs_and_provenance(tmp_path: Path, a
 def test_runner_preflight_failure_leaves_no_output(tmp_path: Path) -> None:
     output = tmp_path / "never-created"
     with pytest.raises((RuntimeError, FileNotFoundError)):
-        preflight(REPO_ROOT, tmp_path / "missing-corpus", output)
+        run_baseline(
+            REPO_ROOT,
+            tmp_path / "missing-corpus.tar.gz",
+            tmp_path / "missing-corpus.tar.gz.sha256",
+            output,
+        )
     assert not output.exists()
 
 
@@ -335,7 +380,13 @@ def _legacy_comparator_case(tmp_path: Path) -> dict:
     }
     node_scope = {
         "schema_version": "site-graph-v0-baseline-node-scope/2",
-        "nodes": [{"target_id": "broad-0", "scope_class": "broad"}],
+        "nodes": [
+            {
+                "target_id": "broad-0",
+                "scope_class": "broad",
+                "authority_identity_locator": "broad-0",
+            }
+        ],
     }
     opportunities = []
     for museum, artifact_ids in museums.items():
@@ -528,10 +579,17 @@ def _comparator_case(tmp_path: Path) -> dict:
     }
     node_scope = {
         "schema_version": "site-graph-v0-baseline-node-scope/2",
-        "nodes": [{"target_id": "broad-0", "scope_class": "broad"}],
+        "nodes": [
+            {
+                "target_id": "broad-0",
+                "scope_class": "broad",
+                "authority_identity_locator": "broad-0",
+            }
+        ],
     }
     opportunities = []
     itt_records = {}
+    opportunity_binding_by_artifact = {}
     for rank, (museum, artifact_ids) in enumerate(museums.items(), 1):
         opportunity_id = f"opp-{rank:04d}"
         opportunities.append(
@@ -550,11 +608,24 @@ def _comparator_case(tmp_path: Path) -> dict:
         itt_records[museum] = [
             {
                 "artifact_id": artifact_id,
-                "opportunity_ids": [opportunity_id],
+                "opportunity_bindings": [
+                    {
+                        "opportunity_id": opportunity_id,
+                        "opportunity_binding_sha256": canonical_sha256(
+                            {"artifact_id": artifact_id, "opportunity_id": opportunity_id}
+                        ),
+                    }
+                ],
                 "baseline_record_scope": "no_link" if museum == "harvard" else "broad_only",
             }
             for artifact_id in artifact_ids
         ]
+        opportunity_binding_by_artifact.update(
+            {
+                row["artifact_id"]: row["opportunity_bindings"][0]
+                for row in itt_records[museum]
+            }
+        )
 
     pair_memberships = {}
     pair_summaries = {}
@@ -568,7 +639,11 @@ def _comparator_case(tmp_path: Path) -> dict:
                 else "no_baseline_pair_connection"
             )
             rows = [
-                {"artifact_id": artifact_id, "category": category}
+                {
+                    "artifact_id": artifact_id,
+                    "category": category,
+                    "opportunity_bindings": [opportunity_binding_by_artifact[artifact_id]],
+                }
                 for artifact_id in museums[museum]
             ]
             private_sides[museum] = rows
@@ -592,22 +667,41 @@ def _comparator_case(tmp_path: Path) -> dict:
     }
     crosswalk = json.loads((EVAL_ROOT / "type-crosswalk.json").read_text())
     snapshot = {
-        "schema_version": "site-graph-v0-candidate-source-snapshot/1",
+        "schema_version": "site-graph-v0-candidate-source-snapshot/2",
         "source_snapshot_id": "logic-source",
         "authority_name": "logic only",
         "source_kind": "unit-test",
         "acquired_at_utc": "2026-08-28T00:00:00Z",
-        "provenance": {"scope": "logic-only"},
+        "provenance": {
+            "source_locator": "logic://complete-source-export",
+            "acquisition_method": "purpose-built unit-test construction",
+            "acquired_by": "test fixture",
+            "source_export_sha256": "d" * 64,
+        },
         "completeness": {
             "coverage_statement": "all two logic-only records",
             "known_incompleteness": ["not corpus evidence"],
+            "record_selection_policy": "all_records_in_authenticated_source_export",
+            "record_count": 3,
+            "records_canonical_sha256": "",
             "complete_for_candidate_target_derivation": True,
         },
         "records": [
             {
+                "source_record_id": "source-broad-0",
+                "target_id": "broad-0",
+                "authority_identity_locator": "broad-0",
+                "raw_source_types": ["archaeological-area"],
+                "parent_ids": [],
+                "child_ids": ["specific-1", "specific-2"],
+                "authority_citations": ["logic:broad-0"],
+            }
+        ] + [
+            {
                 "source_record_id": f"source-{target}",
                 "target_id": target,
-                "source_types": ["temple"],
+                "authority_identity_locator": f"logic:authority:{target}",
+                "raw_source_types": ["archaeological-site"],
                 "parent_ids": ["broad-0"],
                 "child_ids": [],
                 "authority_citations": [f"logic:{target}"],
@@ -615,14 +709,30 @@ def _comparator_case(tmp_path: Path) -> dict:
             for target in ("specific-1", "specific-2")
         ],
     }
+    snapshot["completeness"]["records_canonical_sha256"] = canonical_sha256(
+        snapshot["records"]
+    )
     hierarchy = {
-        "schema_version": "site-graph-v0-candidate-hierarchy/2",
-        "coverage": "every_candidate_target_from_all_frozen_available_source_snapshot_records_not_only_evaluated_slice",
-        "known_incompleteness": {"logic_only": True},
+        "schema_version": "site-graph-v0-candidate-hierarchy/3",
+        "coverage": "every_target_and_every_record_from_all_authenticated_complete_source_snapshots",
+        "known_incompleteness": {
+            "closed_world_claim": False,
+            "limitations": ["logic-only; not corpus evidence"],
+            "derivation_statement": "all fixture source records are included",
+        },
         "nodes": [
             {
+                "target_id": "broad-0",
+                "candidate_e55_type": "archaeological_area",
+                "child_ids": ["specific-1", "specific-2"],
+                "ancestor_target_ids": [],
+                "source_snapshot_ids": ["logic-source"],
+                "source_record_ids": ["source-broad-0"],
+            }
+        ] + [
+            {
                 "target_id": target,
-                "candidate_e55_type": "temple",
+                "candidate_e55_type": "archaeological_site",
                 "child_ids": [],
                 "ancestor_target_ids": ["broad-0"],
                 "source_snapshot_ids": ["logic-source"],
@@ -647,7 +757,8 @@ def _comparator_case(tmp_path: Path) -> dict:
                 )
                 continue
             target = f"specific-{index + 1}"
-            subject = {"artifact_id": artifact_id, "target_id": target}
+            binding = opportunity_binding_by_artifact[artifact_id]
+            subject = {"artifact_id": artifact_id, "target_id": target, **binding}
             key = decision_key("link_support", subject)
             decisions[key] = {
                 "decision_kind": "link_support",
@@ -661,7 +772,9 @@ def _comparator_case(tmp_path: Path) -> dict:
                     "resolution_status": "linked",
                     "abstention_reason": None,
                     "has_blocking_ambiguity": False,
-                    "direct_links": [{"target_id": target, "support_decision_key": key}],
+                    "direct_links": [
+                        {"target_id": target, **binding, "support_decision_key": key}
+                    ],
                 }
             )
     relations = []
@@ -685,9 +798,29 @@ def _comparator_case(tmp_path: Path) -> dict:
                 "review_decision_key": key,
             }
         )
+    distinct_subject = {
+        "left_target_id": "specific-1",
+        "right_target_id": "specific-2",
+        "relation": "distinct",
+    }
+    distinct_key = decision_key("distinctness_support", distinct_subject)
+    decisions[distinct_key] = {
+        "decision_kind": "distinctness_support",
+        "subject": distinct_subject,
+        "supported": True,
+        "disagreement": False,
+    }
+    relations.append(
+        {
+            "relation_id": "distinct-specific-targets",
+            **distinct_subject,
+            "review_decision_key": distinct_key,
+        }
+    )
     relation_ledger = {
-        "schema_version": "site-graph-v0-relation-ledger/1",
+        "schema_version": "site-graph-v0-relation-ledger/2",
         "strict_refinement_direction": "left_target_id_is_narrower_than_right_target_id",
+        "identity_census_policy": "every_counted_distinct_class_pair_has_positive_distinctness_or_source_locator_equivalence",
         "relations": relations,
     }
     candidate = {"schema_version": "site-graph-v0-candidate-result/2", "records": candidate_records}
@@ -748,11 +881,20 @@ def test_narrower_node_without_review_support_gets_zero_credit(tmp_path: Path) -
 
 def test_slice_leafness_cannot_override_complete_hierarchy_context(tmp_path: Path) -> None:
     case = _comparator_case(tmp_path)
-    case["hierarchy"]["nodes"][0]["child_ids"] = ["omitted-from-slice-child"]
-    case["snapshots"][0]["records"][0]["child_ids"] = ["omitted-from-slice-child"]
+    node = next(
+        row for row in case["hierarchy"]["nodes"] if row["target_id"] == "specific-1"
+    )
+    record = next(
+        row for row in case["snapshots"][0]["records"] if row["target_id"] == "specific-1"
+    )
+    node["child_ids"] = ["omitted-from-slice-child"]
+    record["child_ids"] = ["omitted-from-slice-child"]
+    case["snapshots"][0]["completeness"]["records_canonical_sha256"] = canonical_sha256(
+        case["snapshots"][0]["records"]
+    )
     report = _run_case(case)
     assert report["outcome"] == "INVALID"
-    assert any("narrower target is not specific" in error for error in report["integrity"]["errors"])
+    assert any("without source records" in error for error in report["integrity"]["errors"])
 
 
 def test_reviewer_disagreement_is_uncredited_and_unresolved(tmp_path: Path) -> None:
@@ -792,6 +934,8 @@ def test_equivalent_identity_classes_cannot_fake_two_gained_nodes(tmp_path: Path
         "relation": "equivalent",
     }
     key = decision_key("equivalence_support", subject)
+    old_relation = case["relations"]["relations"].pop()
+    del case["decisions"][old_relation["review_decision_key"]]
     case["decisions"][key] = {
         "decision_kind": "equivalence_support",
         "subject": subject,
@@ -818,7 +962,12 @@ def test_pair_numerator_intersects_exact_private_membership_and_category(tmp_pat
         "met__brooklyn"
     ]["sides"]["met"]
     private_side[:] = [
-        {"artifact_id": "met-a", "category": "no_baseline_pair_connection"}
+        {
+            "artifact_id": "met-a",
+            "category": "no_baseline_pair_connection",
+            "opportunity_bindings": case["private_opportunity"]
+            ["intent_to_treat_records_by_museum"]["met"][0]["opportunity_bindings"],
+        }
     ]
     public_side = case["queue"]["pair_side_ceilings"]["met__brooklyn"]["sides"]["met"]
     public_side["credited_effect_opportunity_denominator"] = 1
@@ -834,24 +983,32 @@ def test_pair_numerator_intersects_exact_private_membership_and_category(tmp_pat
 
 def test_existing_target_cannot_be_relabelled_by_candidate_snapshot(tmp_path: Path) -> None:
     case = _comparator_case(tmp_path)
+    case["node_scope"]["nodes"].append(
+        {"target_id": "other-broad", "scope_class": "broad"}
+    )
     case["snapshots"][0]["records"].append(
         {
-            "source_record_id": "source-broad-0",
-            "target_id": "broad-0",
-            "source_types": ["temple"],
+            "source_record_id": "source-other-broad",
+            "target_id": "other-broad",
+            "authority_identity_locator": "logic:authority:other-broad",
+            "raw_source_types": ["archaeological-site"],
             "parent_ids": [],
             "child_ids": [],
             "authority_citations": ["logic:broad-0"],
         }
     )
+    case["snapshots"][0]["completeness"]["record_count"] = 3
+    case["snapshots"][0]["completeness"]["records_canonical_sha256"] = canonical_sha256(
+        case["snapshots"][0]["records"]
+    )
     case["hierarchy"]["nodes"].append(
         {
-            "target_id": "broad-0",
-            "candidate_e55_type": "temple",
+            "target_id": "other-broad",
+            "candidate_e55_type": "archaeological_site",
             "child_ids": [],
             "ancestor_target_ids": [],
             "source_snapshot_ids": ["logic-source"],
-            "source_record_ids": ["source-broad-0"],
+            "source_record_ids": ["source-other-broad"],
         }
     )
     report = _run_case(case)
@@ -1020,6 +1177,9 @@ def _candidate_git_fixture(tmp_path: Path) -> dict:
     _git(repo, "add", "candidate")
     _git(repo, "commit", "-qm", "candidate result")
     result_commit = _git(repo, "rev-parse", "HEAD")
+    policy_path = repo / "docs/evaluations/site-graph-v0/trusted-run-attestors.json"
+    policy_path.parent.mkdir(parents=True)
+    shutil.copy2(EVAL_ROOT / "trusted-run-attestors.json", policy_path)
     return {
         "repo": repo,
         "paths": paths,
@@ -1032,26 +1192,11 @@ def _candidate_git_fixture(tmp_path: Path) -> dict:
 
 def test_production_candidate_inputs_are_bound_to_distinct_git_commits(tmp_path: Path) -> None:
     fixture = _candidate_git_fixture(tmp_path)
-    loaded = _load_candidate_freeze(
-        fixture["repo"],
-        fixture["freeze_commit"],
-        fixture["paths"]["freeze"],
-        fixture["result_commit"],
-        fixture["paths"]["result"],
-        fixture["paths"]["reviews"],
-        fixture["release_hash"],
-        fixture["private_hash"],
-        EVAL_ROOT / "schemas",
-    )
-    assert loaded[0]["candidate_id"] == "logic-only"
-    with pytest.raises(ValueError, match="distinct ancestor"):
+    with pytest.raises(ValueError, match="NOT_CONFIGURED"):
         _load_candidate_freeze(
             fixture["repo"],
             fixture["result_commit"],
-            fixture["paths"]["freeze"],
-            fixture["result_commit"],
             fixture["paths"]["result"],
-            fixture["paths"]["reviews"],
             fixture["release_hash"],
             fixture["private_hash"],
             EVAL_ROOT / "schemas",
@@ -1059,19 +1204,10 @@ def test_production_candidate_inputs_are_bound_to_distinct_git_commits(tmp_path:
 
 
 def test_production_candidate_binding_rejects_alternate_release(tmp_path: Path) -> None:
-    fixture = _candidate_git_fixture(tmp_path)
-    with pytest.raises(ValueError, match="release manifest binding mismatch"):
-        _load_candidate_freeze(
-            fixture["repo"],
-            fixture["freeze_commit"],
-            fixture["paths"]["freeze"],
-            fixture["result_commit"],
-            fixture["paths"]["result"],
-            fixture["paths"]["reviews"],
-            "c" * 64,
-            fixture["private_hash"],
-            EVAL_ROOT / "schemas",
-        )
+    parameters = inspect.signature(_load_candidate_freeze).parameters
+    assert "trusted_policy" not in parameters
+    assert "candidate_result_path" not in parameters
+    assert "review_ledger_path" not in parameters
 
 
 def test_production_cli_has_no_arbitrary_baseline_or_crosswalk_paths() -> None:
@@ -1101,7 +1237,7 @@ def _structured_review_fixture(tmp_path: Path) -> tuple[Path, str, dict]:
         _write_json(
             repo / relative,
             {
-                "schema_version": "site-graph-v0-review-artifact/1",
+                "schema_version": "site-graph-v0-review-artifact/2",
                 "review_id": f"review-{suffix}",
                 "decision_key": key,
                 "decision_kind": "link_support",
@@ -1140,8 +1276,8 @@ def _structured_review_fixture(tmp_path: Path) -> tuple[Path, str, dict]:
             }
         )
     ledger = {
-        "schema_version": "site-graph-v0-review-ledger/2",
-        "review_scope": "census_of_every_credited_new_link_strict_refinement_and_equivalence_decision",
+        "schema_version": "site-graph-v0-review-ledger/3",
+        "review_scope": "census_of_every_credited_link_refinement_equivalence_and_positive_distinctness_decision",
         "decisions": [
             {
                 "decision_key": key,
@@ -1179,260 +1315,6 @@ def test_structured_review_artifact_cannot_cover_a_different_decision(tmp_path: 
         _validate_review_artifacts(repo, result_commit, ledger, EVAL_ROOT / "schemas")
 
 
-def _legacy_test_append_only_correction_changes_only_separate_sensitivity_output(tmp_path: Path) -> None:
-    baseline = EVAL_ROOT / "frozen-record-evidence.ndjson.gz"
-    baseline_hash_before = sha256(baseline)
-    primary_metrics_hash_before = sha256(EVAL_ROOT / "baseline-metrics.json")
-    with gzip.open(baseline, "rt", encoding="utf-8") as handle:
-        first = json.loads(next(handle))
-    field = "has_any_unmatched_expression"
-    correction = {
-        "sequence": 1,
-        "correction_id": "logic-only-correction-1",
-        "previous_record_sha256": None,
-        "record_sha256": "",
-        "artifact_id": first["artifact_id"],
-        "field": field,
-        "baseline_value": first[field],
-        "corrected_value": not first[field],
-        "reason": "purpose-built sensitivity isolation test",
-        "citations": ["logic-only:test"],
-        "reviewer_ids": ["reviewer-a", "reviewer-b"],
-        "decision_commit": "abcdef1",
-        "recorded_at_utc": "2026-08-28T00:00:00+00:00",
-    }
-    correction["record_sha256"] = record_hash(correction)
-    committed = json.loads((EVAL_ROOT / "evidence-corrections.json").read_text())
-    ledger = {**committed, "corrections": [correction]}
-    ledger_path = tmp_path / "corrections.json"
-    _write_json(ledger_path, ledger)
-    output = tmp_path / "sensitivity"
-    metadata = apply_corrections(baseline, ledger_path, output)
-    assert sha256(baseline) == baseline_hash_before
-    assert sha256(EVAL_ROOT / "baseline-metrics.json") == primary_metrics_hash_before
-    assert metadata["primary_baseline_unchanged_sha256"] == baseline_hash_before
-    assert metadata["sensitivity_record_evidence_sha256"] != baseline_hash_before
-    assert metadata["sensitivity_metrics_sha256"] == sha256(output / "sensitivity-metrics.json")
-    with gzip.open(output / "sensitivity-record-evidence.ndjson.gz", "rt", encoding="utf-8") as handle:
-        sensitivity_first = json.loads(next(handle))
-    assert {key for key in first if first[key] != sensitivity_first[key]} == {field}
-    assert sensitivity_first[field] is not first[field]
-
-
-def _legacy_test_correction_records_reject_empty_required_evidence(tmp_path: Path) -> None:
-    baseline = EVAL_ROOT / "frozen-record-evidence.ndjson.gz"
-    ledger = json.loads((EVAL_ROOT / "evidence-corrections.json").read_text())
-    bad = {
-        "sequence": 1, "correction_id": "bad", "previous_record_sha256": None,
-        "record_sha256": "", "artifact_id": "missing", "field": "has_any_ambiguity",
-        "baseline_value": False, "corrected_value": True, "reason": "",
-        "citations": [], "reviewer_ids": [], "decision_commit": "",
-        "recorded_at_utc": "",
-    }
-    bad["record_sha256"] = record_hash(bad)
-    path = tmp_path / "bad.json"
-    _write_json(path, {**ledger, "corrections": [bad]})
-    with pytest.raises(ValueError):
-        apply_corrections(baseline, path, tmp_path / "never")
-
-
-def _correction_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
-    repo = tmp_path / "repo"
-    evaluation = repo / "docs/evaluations/site-graph-v0"
-    schemas = evaluation / "schemas"
-    schemas.mkdir(parents=True)
-    shutil.copy2(
-        EVAL_ROOT / "schemas/correction-ledger.schema.json",
-        schemas / "correction-ledger.schema.json",
-    )
-    private_run = tmp_path / "private-run"
-    private_run.mkdir()
-    records = []
-    mentions = []
-    for museum in ("met", "brooklyn", "harvard"):
-        artifact_id = f"{museum}-logic"
-        records.append(
-            {
-                "artifact_id": artifact_id,
-                "museum": museum,
-                "extracted_site_text_evidence": True,
-                "extracted_site_text_rule": "logic-only",
-                "site_mention_count": 1,
-                "site_mention_status_counts": {"unmatched": 1},
-                "baseline_resolution_state": "unmatched_only",
-                "baseline_site_target_ids": [],
-                "baseline_site_target_scope_counts": {},
-                "baseline_record_scope": "no_link",
-                "has_any_ambiguity": False,
-                "has_blocking_ambiguity": False,
-                "has_any_unmatched_expression": True,
-            }
-        )
-        mentions.append(
-            {
-                "artifact_id": artifact_id,
-                "field_path": "logic.place",
-                "mention_id": f"mention-{museum}",
-                "mention_text": f"logic {museum}",
-                "museum": museum,
-                "normalized_keys": [f"logic-{museum}"],
-                "status": "unmatched",
-                "entity_type": "site",
-            }
-        )
-    baseline_path = private_run / "private-record-evidence.ndjson.gz"
-    write_gzip_jsonl(baseline_path, records)
-    write_gzip_jsonl(private_run / "private-opportunity-source.ndjson.gz", mentions)
-    digest = gzip_ledger_digest(baseline_path)
-    _write_json(
-        evaluation / "private-ledger-digests.json",
-        {"ledgers": {"private_record_evidence": digest}},
-    )
-    _write_json(
-        evaluation / "baseline-node-scope.json",
-        {
-            "schema_version": "site-graph-v0-baseline-node-scope/2",
-            "nodes": [{"target_id": "broad-0", "scope_class": "broad"}],
-        },
-    )
-    monkeypatch.setattr(corrections_module, "verify_private_ledgers", lambda *_: {})
-    corrections = []
-    operations = [
-        {
-            "kind": "set_site_mention_status_count",
-            "status": "unmatched",
-            "from_count": 1,
-            "to_count": 0,
-        },
-        {
-            "kind": "set_site_mention_status_count",
-            "status": "resolved",
-            "from_count": 0,
-            "to_count": 1,
-        },
-        {"kind": "add_direct_target", "target_id": "broad-0"},
-    ]
-    previous = None
-    for sequence, operation in enumerate(operations, 1):
-        correction = {
-            "sequence": sequence,
-            "correction_id": f"logic-correction-{sequence}",
-            "previous_correction_sha256": previous,
-            "supersedes_correction_id": None,
-            "artifact_id": "met-logic",
-            "operation": operation,
-            "reason": "purpose-built correction isolation test",
-            "citations": [
-                {
-                    "source_id": "logic-authority",
-                    "locator": f"record-{sequence}",
-                    "evidence_summary": "logic-only evidence",
-                }
-            ],
-            "reviewer_ids": ["reviewer-a", "reviewer-b"],
-            "decision_commit": "a" * 40,
-            "recorded_at_utc": f"2026-08-28T00:00:0{sequence}Z",
-            "record_sha256": "",
-        }
-        correction["record_sha256"] = record_hash(correction)
-        previous = correction["record_sha256"]
-        corrections.append(correction)
-    ledger = {
-        "schema_version": "site-graph-v0-correction-ledger/2",
-        "baseline_mutated": False,
-        "private_record_evidence_canonical_sha256": digest[
-            "canonical_uncompressed_ndjson_sha256"
-        ],
-        "corrections": corrections,
-    }
-    ledger_path = tmp_path / "private-corrections.json"
-    _write_json(ledger_path, ledger)
-    return {
-        "repo": repo,
-        "evaluation": evaluation,
-        "private_run": private_run,
-        "baseline_path": baseline_path,
-        "ledger_path": ledger_path,
-        "ledger": ledger,
-    }
-
-
-def test_append_only_primitive_correction_changes_only_sensitivity_outputs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    fixture = _correction_fixture(tmp_path, monkeypatch)
-    baseline_hash = sha256(fixture["baseline_path"])
-    public_before = {
-        path.relative_to(fixture["evaluation"]).as_posix(): sha256(path)
-        for path in fixture["evaluation"].rglob("*")
-        if path.is_file()
-    }
-    output = tmp_path / "sensitivity"
-    summary = apply_corrections(
-        fixture["repo"], fixture["private_run"], fixture["ledger_path"], output
-    )
-    assert sha256(fixture["baseline_path"]) == baseline_hash
-    assert public_before == {
-        path.relative_to(fixture["evaluation"]).as_posix(): sha256(path)
-        for path in fixture["evaluation"].rglob("*")
-        if path.is_file()
-    }
-    assert summary["primary_baseline_immutable"] is True
-    assert summary["correction_count"] == 3
-    assert summary["sensitivity_private_record_evidence"][
-        "canonical_uncompressed_ndjson_sha256"
-    ] != summary["primary_private_record_evidence"]["canonical_uncompressed_ndjson_sha256"]
-    with gzip.open(
-        output / "private-sensitivity-record-evidence.ndjson.gz", "rt", encoding="utf-8"
-    ) as handle:
-        rows = [json.loads(line) for line in handle]
-    met = next(row for row in rows if row["museum"] == "met")
-    assert met["site_mention_status_counts"] == {"resolved": 1}
-    assert met["baseline_site_target_ids"] == ["broad-0"]
-    assert met["has_any_unmatched_expression"] is False
-    assert (output / "sensitivity-metrics.json").is_file()
-    assert (output / "private-sensitivity-opportunity-ledger.json").is_file()
-
-
-def test_corrections_reject_invented_target_string_boolean_and_ambiguous_repeat(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    fixture = _correction_fixture(tmp_path, monkeypatch)
-    invented = copy.deepcopy(fixture["ledger"])
-    invented["corrections"][2]["operation"]["target_id"] = "invented"
-    invented["corrections"][2]["record_sha256"] = record_hash(invented["corrections"][2])
-    path = tmp_path / "invented.json"
-    _write_json(path, invented)
-    with pytest.raises(ValueError, match="unknown targets"):
-        apply_corrections(fixture["repo"], fixture["private_run"], path, tmp_path / "never-a")
-
-    wrong_type = copy.deepcopy(fixture["ledger"])
-    wrong_type["corrections"][0]["operation"]["from_count"] = "1"
-    wrong_type["corrections"][0]["record_sha256"] = record_hash(wrong_type["corrections"][0])
-    path = tmp_path / "wrong-type.json"
-    _write_json(path, wrong_type)
-    with pytest.raises(ValueError, match="schema validation"):
-        apply_corrections(fixture["repo"], fixture["private_run"], path, tmp_path / "never-b")
-
-    repeated = copy.deepcopy(fixture["ledger"])
-    extra = copy.deepcopy(repeated["corrections"][2])
-    extra.update(
-        {
-            "sequence": 4,
-            "correction_id": "logic-correction-4",
-            "previous_correction_sha256": repeated["corrections"][2]["record_sha256"],
-            "record_sha256": "",
-        }
-    )
-    extra["operation"] = {"kind": "remove_direct_target", "target_id": "broad-0"}
-    extra["record_sha256"] = record_hash(extra)
-    repeated["corrections"].append(extra)
-    path = tmp_path / "repeat.json"
-    _write_json(path, repeated)
-    with pytest.raises(ValueError, match="without exact supersession"):
-        apply_corrections(fixture["repo"], fixture["private_run"], path, tmp_path / "never-c")
-
-
 def test_committed_real_corpus_headlines_recompute_from_pinned_inputs() -> None:
     snapshot = json.loads((EVAL_ROOT / "input-snapshot.json").read_text())
     idai = read_jsonl(REPO_ROOT / "pipeline/pipeline/authority/sources/idai-gazetteer/reconciled.jsonl")
@@ -1447,6 +1329,11 @@ def test_committed_real_corpus_headlines_recompute_from_pinned_inputs() -> None:
         "hierarchy_context": hierarchy,
         "nodes": nodes,
     }
+    assert all(
+        node["scope_class"] != "unclassified"
+        for node in nodes
+        if node["source_types"]
+    )
 
     metrics = json.loads((EVAL_ROOT / "baseline-metrics.json").read_text())
     opportunity = json.loads((EVAL_ROOT / "planned-opportunity-summary.json").read_text())
