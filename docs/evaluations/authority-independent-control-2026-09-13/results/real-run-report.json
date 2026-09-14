@@ -1,0 +1,2407 @@
+{
+  "arms": {
+    "current_authority": {
+      "all_three": {
+        "concentration_by_museum_side": {
+          "brooklyn": {
+            "distinct_connected_records": 331,
+            "node_incidence_hhi": {
+              "denominator": 109561,
+              "numerator": 102465,
+              "value": 0.9352324275974115
+            },
+            "node_incidence_total": 331,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "idai:2042907"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 331,
+                  "numerator": 320,
+                  "value": 0.9667673716012085
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 331,
+                  "numerator": 331,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 331,
+                  "numerator": 331,
+                  "value": 1.0
+                }
+              }
+            }
+          },
+          "harvard": {
+            "distinct_connected_records": 6,
+            "node_incidence_hhi": {
+              "denominator": 36,
+              "numerator": 18,
+              "value": 0.5
+            },
+            "node_incidence_total": 6,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "idai:2042907"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 6,
+                  "numerator": 4,
+                  "value": 0.6666666666666666
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 6,
+                  "numerator": 6,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 6,
+                  "numerator": 6,
+                  "value": 1.0
+                }
+              }
+            }
+          },
+          "met": {
+            "distinct_connected_records": 506,
+            "node_incidence_hhi": {
+              "denominator": 256036,
+              "numerator": 210338,
+              "value": 0.8215172866315674
+            },
+            "node_incidence_total": 506,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "idai:2042907"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 506,
+                  "numerator": 456,
+                  "value": 0.9011857707509882
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042814",
+                  "idai:2042797"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 506,
+                  "numerator": 506,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042814",
+                  "idai:2042797"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 506,
+                  "numerator": 506,
+                  "value": 1.0
+                }
+              }
+            }
+          }
+        },
+        "records_by_museum_side": {
+          "brooklyn": 331,
+          "harvard": 6,
+          "met": 506
+        },
+        "shared_useful_node_count": 3,
+        "shared_useful_nodes_by_entity_type": {
+          "site": 3
+        }
+      },
+      "all_three_museum_shared_useful_nodes": 3,
+      "any_two_museum_shared_useful_nodes": 53,
+      "linked_nodes": 276,
+      "linked_records": 17054,
+      "links": 43920,
+      "per_museum": {
+        "brooklyn": {
+          "by_entity_type": {
+            "ruler": {
+              "records_on_shared_useful_nodes": 5,
+              "shared_useful_nodes_incident": 5
+            },
+            "site": {
+              "records_on_shared_useful_nodes": 1152,
+              "shared_useful_nodes_incident": 48
+            },
+            "tomb_monument": {
+              "records_on_shared_useful_nodes": 0,
+              "shared_useful_nodes_incident": 0
+            }
+          },
+          "concentration_on_any_two_shared_nodes": {
+            "distinct_connected_records": 1154,
+            "node_incidence_hhi": {
+              "denominator": 1425636,
+              "numerator": 224184,
+              "value": 0.15725192124777992
+            },
+            "node_incidence_total": 1194,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "idai:2042907"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 1154,
+                  "numerator": 320,
+                  "value": 0.2772963604852686
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042921",
+                  "idai:2296218",
+                  "idai:2412478",
+                  "idai:2042877",
+                  "idai:2089516",
+                  "idai:2042834",
+                  "idai:2042802",
+                  "idai:2042846",
+                  "idai:2042805"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 1154,
+                  "numerator": 1017,
+                  "value": 0.8812824956672444
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042921",
+                  "idai:2296218",
+                  "idai:2412478",
+                  "idai:2042877"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 1154,
+                  "numerator": 896,
+                  "value": 0.7764298093587522
+                }
+              }
+            }
+          },
+          "records_denominator": 7554,
+          "records_on_any_two_museum_shared_useful_nodes": 1154,
+          "records_with_any_unique_link": 1237,
+          "records_with_extracted_mentions": 2989,
+          "records_with_score_eligible_single_identity_mentions": 2988,
+          "shared_record_rate_over_all_records": {
+            "denominator": 7554,
+            "numerator": 1154,
+            "value": 0.15276674609478422
+          },
+          "shared_record_rate_over_eligible_records": {
+            "denominator": 2988,
+            "numerator": 1154,
+            "value": 0.3862115127175368
+          },
+          "shared_useful_nodes_incident": 53
+        },
+        "harvard": {
+          "by_entity_type": {
+            "ruler": {
+              "records_on_shared_useful_nodes": 0,
+              "shared_useful_nodes_incident": 5
+            },
+            "site": {
+              "records_on_shared_useful_nodes": 7,
+              "shared_useful_nodes_incident": 48
+            },
+            "tomb_monument": {
+              "records_on_shared_useful_nodes": 0,
+              "shared_useful_nodes_incident": 0
+            }
+          },
+          "concentration_on_any_two_shared_nodes": {
+            "distinct_connected_records": 7,
+            "node_incidence_hhi": {
+              "denominator": 49,
+              "numerator": 19,
+              "value": 0.3877551020408163
+            },
+            "node_incidence_total": 7,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "idai:2042907"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 7,
+                  "numerator": 4,
+                  "value": 0.5714285714285714
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 7,
+                  "numerator": 7,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "idai:2042907",
+                  "idai:2042797",
+                  "idai:2042814",
+                  "idai:2042819"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 7,
+                  "numerator": 7,
+                  "value": 1.0
+                }
+              }
+            }
+          },
+          "records_denominator": 722,
+          "records_on_any_two_museum_shared_useful_nodes": 7,
+          "records_with_any_unique_link": 268,
+          "records_with_extracted_mentions": 540,
+          "records_with_score_eligible_single_identity_mentions": 540,
+          "shared_record_rate_over_all_records": {
+            "denominator": 722,
+            "numerator": 7,
+            "value": 0.009695290858725761
+          },
+          "shared_record_rate_over_eligible_records": {
+            "denominator": 540,
+            "numerator": 7,
+            "value": 0.012962962962962963
+          },
+          "shared_useful_nodes_incident": 4
+        },
+        "met": {
+          "by_entity_type": {
+            "ruler": {
+              "records_on_shared_useful_nodes": 429,
+              "shared_useful_nodes_incident": 5
+            },
+            "site": {
+              "records_on_shared_useful_nodes": 14393,
+              "shared_useful_nodes_incident": 48
+            },
+            "tomb_monument": {
+              "records_on_shared_useful_nodes": 0,
+              "shared_useful_nodes_incident": 0
+            }
+          },
+          "concentration_on_any_two_shared_nodes": {
+            "distinct_connected_records": 14411,
+            "node_incidence_hhi": {
+              "denominator": 1200691801,
+              "numerator": 279698771,
+              "value": 0.23294801444221738
+            },
+            "node_incidence_total": 34651,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "idai:2379505"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 14411,
+                  "numerator": 11417,
+                  "value": 0.7922420373325931
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "idai:2379505",
+                  "idai:2042921",
+                  "idai:2110510",
+                  "idai:2042871",
+                  "idai:2751494",
+                  "idai:2296218",
+                  "idai:2096884",
+                  "idai:2101716",
+                  "idai:2042907",
+                  "cluster-beckerath-19.07"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 14411,
+                  "numerator": 12795,
+                  "value": 0.8878634376517938
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "idai:2379505",
+                  "idai:2042921",
+                  "idai:2110510",
+                  "idai:2042871",
+                  "idai:2751494"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 14411,
+                  "numerator": 11423,
+                  "value": 0.7926583859551731
+                }
+              }
+            }
+          },
+          "records_denominator": 27969,
+          "records_on_any_two_museum_shared_useful_nodes": 14411,
+          "records_with_any_unique_link": 15549,
+          "records_with_extracted_mentions": 27956,
+          "records_with_score_eligible_single_identity_mentions": 27895,
+          "shared_record_rate_over_all_records": {
+            "denominator": 27969,
+            "numerator": 14411,
+            "value": 0.5152490257070328
+          },
+          "shared_record_rate_over_eligible_records": {
+            "denominator": 27895,
+            "numerator": 14411,
+            "value": 0.5166158809822549
+          },
+          "shared_useful_nodes_incident": 52
+        }
+      },
+      "per_pair": {
+        "brooklyn__harvard": {
+          "concentration_by_museum_side": {
+            "brooklyn": {
+              "distinct_connected_records": 332,
+              "node_incidence_hhi": {
+                "denominator": 110224,
+                "numerator": 102466,
+                "value": 0.9296160545797648
+              },
+              "node_incidence_total": 332,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "idai:2042907"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 332,
+                    "numerator": 320,
+                    "value": 0.963855421686747
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042797",
+                    "idai:2042814",
+                    "idai:2042819"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 332,
+                    "numerator": 332,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042797",
+                    "idai:2042814",
+                    "idai:2042819"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 332,
+                    "numerator": 332,
+                    "value": 1.0
+                  }
+                }
+              }
+            },
+            "harvard": {
+              "distinct_connected_records": 7,
+              "node_incidence_hhi": {
+                "denominator": 49,
+                "numerator": 19,
+                "value": 0.3877551020408163
+              },
+              "node_incidence_total": 7,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "idai:2042907"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 7,
+                    "numerator": 4,
+                    "value": 0.5714285714285714
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042797",
+                    "idai:2042814",
+                    "idai:2042819"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 7,
+                    "numerator": 7,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042797",
+                    "idai:2042814",
+                    "idai:2042819"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 7,
+                    "numerator": 7,
+                    "value": 1.0
+                  }
+                }
+              }
+            }
+          },
+          "records_both_sides_sum": 339,
+          "records_by_museum_side": {
+            "brooklyn": 332,
+            "harvard": 7
+          },
+          "shared_useful_node_count": 4,
+          "shared_useful_nodes_by_entity_type": {
+            "site": 4
+          }
+        },
+        "met__brooklyn": {
+          "concentration_by_museum_side": {
+            "brooklyn": {
+              "distinct_connected_records": 1153,
+              "node_incidence_hhi": {
+                "denominator": 1423249,
+                "numerator": 224183,
+                "value": 0.1575149534621138
+              },
+              "node_incidence_total": 1193,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "idai:2042907"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 1153,
+                    "numerator": 320,
+                    "value": 0.2775368603642671
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042921",
+                    "idai:2296218",
+                    "idai:2412478",
+                    "idai:2042877",
+                    "idai:2089516",
+                    "idai:2042834",
+                    "idai:2042802",
+                    "idai:2042846",
+                    "idai:2042805"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 1153,
+                    "numerator": 1017,
+                    "value": 0.8820468343451865
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042921",
+                    "idai:2296218",
+                    "idai:2412478",
+                    "idai:2042877"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 1153,
+                    "numerator": 896,
+                    "value": 0.777103209019948
+                  }
+                }
+              }
+            },
+            "met": {
+              "distinct_connected_records": 14411,
+              "node_incidence_hhi": {
+                "denominator": 1200691801,
+                "numerator": 279698771,
+                "value": 0.23294801444221738
+              },
+              "node_incidence_total": 34651,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "idai:2379505"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 14411,
+                    "numerator": 11417,
+                    "value": 0.7922420373325931
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "idai:2379505",
+                    "idai:2042921",
+                    "idai:2110510",
+                    "idai:2042871",
+                    "idai:2751494",
+                    "idai:2296218",
+                    "idai:2096884",
+                    "idai:2101716",
+                    "idai:2042907",
+                    "cluster-beckerath-19.07"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 14411,
+                    "numerator": 12795,
+                    "value": 0.8878634376517938
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "idai:2379505",
+                    "idai:2042921",
+                    "idai:2110510",
+                    "idai:2042871",
+                    "idai:2751494"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 14411,
+                    "numerator": 11423,
+                    "value": 0.7926583859551731
+                  }
+                }
+              }
+            }
+          },
+          "records_both_sides_sum": 15564,
+          "records_by_museum_side": {
+            "brooklyn": 1153,
+            "met": 14411
+          },
+          "shared_useful_node_count": 52,
+          "shared_useful_nodes_by_entity_type": {
+            "ruler": 5,
+            "site": 47
+          }
+        },
+        "met__harvard": {
+          "concentration_by_museum_side": {
+            "harvard": {
+              "distinct_connected_records": 6,
+              "node_incidence_hhi": {
+                "denominator": 36,
+                "numerator": 18,
+                "value": 0.5
+              },
+              "node_incidence_total": 6,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "idai:2042907"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 6,
+                    "numerator": 4,
+                    "value": 0.6666666666666666
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042797",
+                    "idai:2042814"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 6,
+                    "numerator": 6,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042797",
+                    "idai:2042814"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 6,
+                    "numerator": 6,
+                    "value": 1.0
+                  }
+                }
+              }
+            },
+            "met": {
+              "distinct_connected_records": 506,
+              "node_incidence_hhi": {
+                "denominator": 256036,
+                "numerator": 210338,
+                "value": 0.8215172866315674
+              },
+              "node_incidence_total": 506,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "idai:2042907"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 506,
+                    "numerator": 456,
+                    "value": 0.9011857707509882
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042814",
+                    "idai:2042797"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 506,
+                    "numerator": 506,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "idai:2042907",
+                    "idai:2042814",
+                    "idai:2042797"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 506,
+                    "numerator": 506,
+                    "value": 1.0
+                  }
+                }
+              }
+            }
+          },
+          "records_both_sides_sum": 512,
+          "records_by_museum_side": {
+            "harvard": 6,
+            "met": 506
+          },
+          "shared_useful_node_count": 3,
+          "shared_useful_nodes_by_entity_type": {
+            "site": 3
+          }
+        }
+      },
+      "resolution_outcomes": {
+        "brooklyn|excavation": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "brooklyn|ruler": {
+          "distinct_records_by_status": {
+            "abstained": 11,
+            "ambiguous": 17,
+            "resolved": 6,
+            "unmatched": 20
+          },
+          "mentions": 58,
+          "reason_counts": {
+            "authority_ambiguous": 18,
+            "authority_unmatched": 22,
+            "expression:multi_or_range": 10,
+            "expression:uncertain_identity": 2
+          },
+          "status_counts": {
+            "abstained": 12,
+            "ambiguous": 18,
+            "resolved": 6,
+            "unmatched": 22
+          }
+        },
+        "brooklyn|site": {
+          "distinct_records_by_status": {
+            "ambiguous": 32,
+            "resolved": 1235,
+            "unmatched": 2978
+          },
+          "mentions": 5072,
+          "reason_counts": {
+            "authority_ambiguous": 32,
+            "authority_unmatched": 3747
+          },
+          "status_counts": {
+            "ambiguous": 32,
+            "resolved": 1293,
+            "unmatched": 3747
+          }
+        },
+        "brooklyn|temple": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "brooklyn|tomb_monument": {
+          "distinct_records_by_status": {
+            "unmatched": 22
+          },
+          "mentions": 22,
+          "reason_counts": {
+            "authority_unmatched": 22
+          },
+          "status_counts": {
+            "unmatched": 22
+          }
+        },
+        "harvard|excavation": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "harvard|ruler": {
+          "distinct_records_by_status": {
+            "abstained": 5,
+            "ambiguous": 1,
+            "resolved": 1
+          },
+          "mentions": 9,
+          "reason_counts": {
+            "authority_ambiguous": 1,
+            "expression:multi_or_range": 6,
+            "expression:uncertain_identity": 1
+          },
+          "status_counts": {
+            "abstained": 7,
+            "ambiguous": 1,
+            "resolved": 1
+          }
+        },
+        "harvard|site": {
+          "distinct_records_by_status": {
+            "ambiguous": 2,
+            "resolved": 267,
+            "unmatched": 540
+          },
+          "mentions": 1702,
+          "reason_counts": {
+            "authority_ambiguous": 2,
+            "authority_unmatched": 1433
+          },
+          "status_counts": {
+            "ambiguous": 2,
+            "resolved": 267,
+            "unmatched": 1433
+          }
+        },
+        "harvard|temple": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "harvard|tomb_monument": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "met|excavation": {
+          "distinct_records_by_status": {
+            "abstained": 16403
+          },
+          "mentions": 16403,
+          "reason_counts": {
+            "authority_unavailable:excavation": 16403
+          },
+          "status_counts": {
+            "abstained": 16403
+          }
+        },
+        "met|ruler": {
+          "distinct_records_by_status": {
+            "abstained": 2216,
+            "ambiguous": 5009,
+            "resolved": 3871,
+            "unmatched": 310
+          },
+          "mentions": 11488,
+          "reason_counts": {
+            "authority_ambiguous": 5018,
+            "authority_unmatched": 324,
+            "expression:multi_or_range": 828,
+            "expression:temporal_context": 53,
+            "expression:uncertain_identity": 192,
+            "expression:unparsed_structured_value": 1149
+          },
+          "status_counts": {
+            "abstained": 2222,
+            "ambiguous": 5018,
+            "resolved": 3924,
+            "unmatched": 324
+          }
+        },
+        "met|site": {
+          "distinct_records_by_status": {
+            "ambiguous": 167,
+            "resolved": 15019,
+            "unmatched": 27721
+          },
+          "mentions": 106964,
+          "reason_counts": {
+            "authority_ambiguous": 167,
+            "authority_unmatched": 71530
+          },
+          "status_counts": {
+            "ambiguous": 167,
+            "resolved": 35267,
+            "unmatched": 71530
+          }
+        },
+        "met|temple": {
+          "distinct_records_by_status": {
+            "abstained": 2301
+          },
+          "mentions": 2312,
+          "reason_counts": {
+            "authority_unavailable:temple": 2312
+          },
+          "status_counts": {
+            "abstained": 2312
+          }
+        },
+        "met|tomb_monument": {
+          "distinct_records_by_status": {
+            "resolved": 3199,
+            "unmatched": 1611
+          },
+          "mentions": 4841,
+          "reason_counts": {
+            "authority_unmatched": 1614
+          },
+          "status_counts": {
+            "resolved": 3227,
+            "unmatched": 1614
+          }
+        }
+      }
+    },
+    "typed_literal": {
+      "all_three": {
+        "concentration_by_museum_side": {
+          "brooklyn": {
+            "distinct_connected_records": 2882,
+            "node_incidence_hhi": {
+              "denominator": 10562500,
+              "numerator": 8403690,
+              "value": 0.7956156213017751
+            },
+            "node_incidence_total": 3250,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 2882,
+                  "numerator": 2881,
+                  "value": 0.9996530187369882
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 2882,
+                  "numerator": 2882,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 2882,
+                  "numerator": 2882,
+                  "value": 1.0
+                }
+              }
+            }
+          },
+          "harvard": {
+            "distinct_connected_records": 520,
+            "node_incidence_hhi": {
+              "denominator": 270400,
+              "numerator": 260126,
+              "value": 0.9620044378698225
+            },
+            "node_incidence_total": 520,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 520,
+                  "numerator": 510,
+                  "value": 0.9807692307692307
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 520,
+                  "numerator": 520,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 520,
+                  "numerator": 519,
+                  "value": 0.9980769230769231
+                }
+              }
+            }
+          },
+          "met": {
+            "distinct_connected_records": 26799,
+            "node_incidence_hhi": {
+              "denominator": 793548900,
+              "numerator": 707203508,
+              "value": 0.8911908365067358
+            },
+            "node_incidence_total": 28170,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 26799,
+                  "numerator": 26573,
+                  "value": 0.9915668495093101
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 26799,
+                  "numerator": 26799,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 26799,
+                  "numerator": 26795,
+                  "value": 0.9998507406992798
+                }
+              }
+            }
+          }
+        },
+        "records_by_museum_side": {
+          "brooklyn": 2882,
+          "harvard": 520,
+          "met": 26799
+        },
+        "shared_useful_node_count": 6,
+        "shared_useful_nodes_by_entity_type": {
+          "ruler": 1,
+          "site": 5
+        }
+      },
+      "all_three_museum_shared_useful_nodes": 6,
+      "any_two_museum_shared_useful_nodes": 72,
+      "linked_nodes": 3220,
+      "linked_records": 31423,
+      "links": 127632,
+      "per_museum": {
+        "brooklyn": {
+          "by_entity_type": {
+            "ruler": {
+              "records_on_shared_useful_nodes": 18,
+              "shared_useful_nodes_incident": 12
+            },
+            "site": {
+              "records_on_shared_useful_nodes": 2890,
+              "shared_useful_nodes_incident": 60
+            },
+            "tomb_monument": {
+              "records_on_shared_useful_nodes": 0,
+              "shared_useful_nodes_incident": 0
+            }
+          },
+          "concentration_on_any_two_shared_nodes": {
+            "distinct_connected_records": 2894,
+            "node_incidence_hhi": {
+              "denominator": 15896169,
+              "numerator": 8500881,
+              "value": 0.5347754543877836
+            },
+            "node_incidence_total": 3987,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 2894,
+                  "numerator": 2881,
+                  "value": 0.9955079474775398
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+                  "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4",
+                  "literal:1257a4d94ca9d25359e1005cef0a17a0a7108b67eac91d93fa0210b6732db479",
+                  "literal:0c6b26f984f11d7d55f1046bc1b5f8cea545402c65add6d3c1e74d9024f76f52",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:bda55439bc22129daa29e994ef9b63fc46f1269b8a652cf7ca09d4f3ba24f59e",
+                  "literal:6d44229deee593106ad81c8d456f93f9ed0413f675bab3537fac3b68c7a22057"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 2894,
+                  "numerator": 2881,
+                  "value": 0.9955079474775398
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+                  "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 2894,
+                  "numerator": 2881,
+                  "value": 0.9955079474775398
+                }
+              }
+            }
+          },
+          "records_denominator": 7554,
+          "records_on_any_two_museum_shared_useful_nodes": 2894,
+          "records_with_any_unique_link": 2988,
+          "records_with_extracted_mentions": 2989,
+          "records_with_score_eligible_single_identity_mentions": 2988,
+          "shared_record_rate_over_all_records": {
+            "denominator": 7554,
+            "numerator": 2894,
+            "value": 0.3831082870002648
+          },
+          "shared_record_rate_over_eligible_records": {
+            "denominator": 2988,
+            "numerator": 2894,
+            "value": 0.9685408299866132
+          },
+          "shared_useful_nodes_incident": 71
+        },
+        "harvard": {
+          "by_entity_type": {
+            "ruler": {
+              "records_on_shared_useful_nodes": 1,
+              "shared_useful_nodes_incident": 12
+            },
+            "site": {
+              "records_on_shared_useful_nodes": 534,
+              "shared_useful_nodes_incident": 60
+            },
+            "tomb_monument": {
+              "records_on_shared_useful_nodes": 0,
+              "shared_useful_nodes_incident": 0
+            }
+          },
+          "concentration_on_any_two_shared_nodes": {
+            "distinct_connected_records": 534,
+            "node_incidence_hhi": {
+              "denominator": 1113025,
+              "numerator": 545283,
+              "value": 0.4899108285977404
+            },
+            "node_incidence_total": 1055,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 534,
+                  "numerator": 534,
+                  "value": 1.0
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                  "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:c17334039ee1ddde9b8772aef2f429c60d76893a85ca1c81bf9f29b9980ad79c"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 534,
+                  "numerator": 534,
+                  "value": 1.0
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                  "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                  "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 534,
+                  "numerator": 534,
+                  "value": 1.0
+                }
+              }
+            }
+          },
+          "records_denominator": 722,
+          "records_on_any_two_museum_shared_useful_nodes": 534,
+          "records_with_any_unique_link": 540,
+          "records_with_extracted_mentions": 540,
+          "records_with_score_eligible_single_identity_mentions": 540,
+          "shared_record_rate_over_all_records": {
+            "denominator": 722,
+            "numerator": 534,
+            "value": 0.739612188365651
+          },
+          "shared_record_rate_over_eligible_records": {
+            "denominator": 540,
+            "numerator": 534,
+            "value": 0.9888888888888889
+          },
+          "shared_useful_nodes_incident": 8
+        },
+        "met": {
+          "by_entity_type": {
+            "ruler": {
+              "records_on_shared_useful_nodes": 1977,
+              "shared_useful_nodes_incident": 12
+            },
+            "site": {
+              "records_on_shared_useful_nodes": 27198,
+              "shared_useful_nodes_incident": 60
+            },
+            "tomb_monument": {
+              "records_on_shared_useful_nodes": 0,
+              "shared_useful_nodes_incident": 0
+            }
+          },
+          "concentration_on_any_two_shared_nodes": {
+            "distinct_connected_records": 27330,
+            "node_incidence_hhi": {
+              "denominator": 3684004416,
+              "numerator": 981260294,
+              "value": 0.26635698093582305
+            },
+            "node_incidence_total": 60696,
+            "top_k": {
+              "1": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 27330,
+                  "numerator": 26573,
+                  "value": 0.9723015001829491
+                }
+              },
+              "10": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+                  "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c",
+                  "literal:0c6b26f984f11d7d55f1046bc1b5f8cea545402c65add6d3c1e74d9024f76f52",
+                  "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                  "literal:cc3601d6a4421dbbbf22c23ba79d226f5ba6297443fd07eb53b28ca3b643bb26",
+                  "literal:9d1f95b3ef9a1de5d897a4a7b99466b6cadf29799cdfd253171c81e525762d14",
+                  "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 27330,
+                  "numerator": 27079,
+                  "value": 0.9908159531650201
+                }
+              },
+              "5": {
+                "selected_target_ids": [
+                  "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                  "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+                  "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                  "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+                  "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c"
+                ],
+                "unique_record_union_ratio": {
+                  "denominator": 27330,
+                  "numerator": 26757,
+                  "value": 0.9790340285400658
+                }
+              }
+            }
+          },
+          "records_denominator": 27969,
+          "records_on_any_two_museum_shared_useful_nodes": 27330,
+          "records_with_any_unique_link": 27895,
+          "records_with_extracted_mentions": 27956,
+          "records_with_score_eligible_single_identity_mentions": 27895,
+          "shared_record_rate_over_all_records": {
+            "denominator": 27969,
+            "numerator": 27330,
+            "value": 0.9771532768422182
+          },
+          "shared_record_rate_over_eligible_records": {
+            "denominator": 27895,
+            "numerator": 27330,
+            "value": 0.9797454740993009
+          },
+          "shared_useful_nodes_incident": 71
+        }
+      },
+      "per_pair": {
+        "brooklyn__harvard": {
+          "concentration_by_museum_side": {
+            "brooklyn": {
+              "distinct_connected_records": 2882,
+              "node_incidence_hhi": {
+                "denominator": 10569001,
+                "numerator": 8403691,
+                "value": 0.7951263321859843
+              },
+              "node_incidence_total": 3251,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 2882,
+                    "numerator": 2881,
+                    "value": 0.9996530187369882
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                    "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                    "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                    "literal:c17334039ee1ddde9b8772aef2f429c60d76893a85ca1c81bf9f29b9980ad79c"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 2882,
+                    "numerator": 2882,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                    "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 2882,
+                    "numerator": 2882,
+                    "value": 1.0
+                  }
+                }
+              }
+            },
+            "harvard": {
+              "distinct_connected_records": 521,
+              "node_incidence_hhi": {
+                "denominator": 271441,
+                "numerator": 260127,
+                "value": 0.9583187506677325
+              },
+              "node_incidence_total": 521,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 521,
+                    "numerator": 510,
+                    "value": 0.9788867562380038
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                    "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                    "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                    "literal:c17334039ee1ddde9b8772aef2f429c60d76893a85ca1c81bf9f29b9980ad79c"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 521,
+                    "numerator": 521,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                    "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 521,
+                    "numerator": 519,
+                    "value": 0.9961612284069098
+                  }
+                }
+              }
+            }
+          },
+          "records_both_sides_sum": 3403,
+          "records_by_museum_side": {
+            "brooklyn": 2882,
+            "harvard": 521
+          },
+          "shared_useful_node_count": 7,
+          "shared_useful_nodes_by_entity_type": {
+            "ruler": 1,
+            "site": 6
+          }
+        },
+        "met__brooklyn": {
+          "concentration_by_museum_side": {
+            "brooklyn": {
+              "distinct_connected_records": 2894,
+              "node_incidence_hhi": {
+                "denominator": 15888196,
+                "numerator": 8500880,
+                "value": 0.5350437519778835
+              },
+              "node_incidence_total": 3986,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 2894,
+                    "numerator": 2881,
+                    "value": 0.9955079474775398
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                    "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+                    "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4",
+                    "literal:1257a4d94ca9d25359e1005cef0a17a0a7108b67eac91d93fa0210b6732db479",
+                    "literal:0c6b26f984f11d7d55f1046bc1b5f8cea545402c65add6d3c1e74d9024f76f52",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:bda55439bc22129daa29e994ef9b63fc46f1269b8a652cf7ca09d4f3ba24f59e",
+                    "literal:6d44229deee593106ad81c8d456f93f9ed0413f675bab3537fac3b68c7a22057"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 2894,
+                    "numerator": 2881,
+                    "value": 0.9955079474775398
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                    "literal:c2628479e2a365b07eac015e551b08775a4312c90c44185a943af27b78968a7b",
+                    "literal:bcdcaa51803a4947c76ae4faa0cdf9133e512b290669b926d1af9fbf940826c4"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 2894,
+                    "numerator": 2881,
+                    "value": 0.9955079474775398
+                  }
+                }
+              }
+            },
+            "met": {
+              "distinct_connected_records": 27330,
+              "node_incidence_hhi": {
+                "denominator": 3683883025,
+                "numerator": 981260293,
+                "value": 0.2663657576369434
+              },
+              "node_incidence_total": 60695,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 27330,
+                    "numerator": 26573,
+                    "value": 0.9723015001829491
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+                    "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                    "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+                    "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c",
+                    "literal:0c6b26f984f11d7d55f1046bc1b5f8cea545402c65add6d3c1e74d9024f76f52",
+                    "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                    "literal:cc3601d6a4421dbbbf22c23ba79d226f5ba6297443fd07eb53b28ca3b643bb26",
+                    "literal:9d1f95b3ef9a1de5d897a4a7b99466b6cadf29799cdfd253171c81e525762d14",
+                    "literal:0b0833cdad4be5c4c78fca97c15b09a580440adf28ecfe3a14ea2046d57909f1"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 27330,
+                    "numerator": 27079,
+                    "value": 0.9908159531650201
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:35f0c63b60582f0bed2ee49ffdfad4405be47377e307e34793f75e41bc5a430f",
+                    "literal:2d5908b674eb6945509a0a773606b9c62b7c1e3ae0d39f413ae91749b0444e00",
+                    "literal:c32fa2eac3e687a25d5c8d7965b7fe0466596bd5fee37b7384eeba48de1f1fc7",
+                    "literal:922f093470175c304181e3355ea8675e5aa0af40d958024459cf4cddc5bbcb7c"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 27330,
+                    "numerator": 26757,
+                    "value": 0.9790340285400658
+                  }
+                }
+              }
+            }
+          },
+          "records_both_sides_sum": 30224,
+          "records_by_museum_side": {
+            "brooklyn": 2894,
+            "met": 27330
+          },
+          "shared_useful_node_count": 70,
+          "shared_useful_nodes_by_entity_type": {
+            "ruler": 12,
+            "site": 58
+          }
+        },
+        "met__harvard": {
+          "concentration_by_museum_side": {
+            "harvard": {
+              "distinct_connected_records": 534,
+              "node_incidence_hhi": {
+                "denominator": 1110916,
+                "numerator": 545282,
+                "value": 0.49083999150250784
+              },
+              "node_incidence_total": 1054,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 534,
+                    "numerator": 534,
+                    "value": 1.0
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                    "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                    "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 534,
+                    "numerator": 534,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7",
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 534,
+                    "numerator": 534,
+                    "value": 1.0
+                  }
+                }
+              }
+            },
+            "met": {
+              "distinct_connected_records": 26800,
+              "node_incidence_hhi": {
+                "denominator": 793605241,
+                "numerator": 707203509,
+                "value": 0.8911275688009223
+              },
+              "node_incidence_total": 28171,
+              "top_k": {
+                "1": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 26800,
+                    "numerator": 26573,
+                    "value": 0.9915298507462686
+                  }
+                },
+                "10": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698",
+                    "literal:ec0b2941e43ade7b53cb9d5ba68e81eeccd0a91071ff7ea11e4e57065a7013eb",
+                    "literal:401f57bf6b4e35b408710c630d13e4e99820cf8fece2bdcf154470ec1b6682e7"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 26800,
+                    "numerator": 26800,
+                    "value": 1.0
+                  }
+                },
+                "5": {
+                  "selected_target_ids": [
+                    "literal:ae6cee34483fa673b7486245392f4db14decb9c14b2fe9f7fc1e37bd4f764d0f",
+                    "literal:7c4a61f9ea09878df37c6c33f54e9225dd62adeffd084dedd2fa23a4650db74c",
+                    "literal:2441625f93dcfb67e70e17f85b9f843aab0507fbd723923dff80fa5a4eb9fdba",
+                    "literal:b0514f721e5eda880f6a40da4e94d55659b0a2837b10361bcf664d3c7a1cda4e",
+                    "literal:163970e19de38ae4d973cb88b452f7a52892d199a2f87588270138f6d58ba698"
+                  ],
+                  "unique_record_union_ratio": {
+                    "denominator": 26800,
+                    "numerator": 26795,
+                    "value": 0.9998134328358209
+                  }
+                }
+              }
+            }
+          },
+          "records_both_sides_sum": 27334,
+          "records_by_museum_side": {
+            "harvard": 534,
+            "met": 26800
+          },
+          "shared_useful_node_count": 7,
+          "shared_useful_nodes_by_entity_type": {
+            "ruler": 1,
+            "site": 6
+          }
+        }
+      },
+      "resolution_outcomes": {
+        "brooklyn|excavation": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "brooklyn|ruler": {
+          "distinct_records_by_status": {
+            "abstained": 11,
+            "resolved": 42
+          },
+          "mentions": 58,
+          "reason_counts": {
+            "expression:multi_or_range": 10,
+            "expression:uncertain_identity": 2
+          },
+          "status_counts": {
+            "abstained": 12,
+            "resolved": 46
+          }
+        },
+        "brooklyn|site": {
+          "distinct_records_by_status": {
+            "resolved": 2978
+          },
+          "mentions": 5072,
+          "reason_counts": {},
+          "status_counts": {
+            "resolved": 5072
+          }
+        },
+        "brooklyn|temple": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "brooklyn|tomb_monument": {
+          "distinct_records_by_status": {
+            "resolved": 22
+          },
+          "mentions": 22,
+          "reason_counts": {},
+          "status_counts": {
+            "resolved": 22
+          }
+        },
+        "harvard|excavation": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "harvard|ruler": {
+          "distinct_records_by_status": {
+            "abstained": 5,
+            "resolved": 2
+          },
+          "mentions": 9,
+          "reason_counts": {
+            "expression:multi_or_range": 6,
+            "expression:uncertain_identity": 1
+          },
+          "status_counts": {
+            "abstained": 7,
+            "resolved": 2
+          }
+        },
+        "harvard|site": {
+          "distinct_records_by_status": {
+            "resolved": 540
+          },
+          "mentions": 1702,
+          "reason_counts": {},
+          "status_counts": {
+            "resolved": 1702
+          }
+        },
+        "harvard|temple": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "harvard|tomb_monument": {
+          "distinct_records_by_status": {},
+          "mentions": 0,
+          "reason_counts": {},
+          "status_counts": {}
+        },
+        "met|excavation": {
+          "distinct_records_by_status": {
+            "abstained": 16403
+          },
+          "mentions": 16403,
+          "reason_counts": {
+            "authority_unavailable:excavation": 16403
+          },
+          "status_counts": {
+            "abstained": 16403
+          }
+        },
+        "met|ruler": {
+          "distinct_records_by_status": {
+            "abstained": 2216,
+            "resolved": 9116
+          },
+          "mentions": 11488,
+          "reason_counts": {
+            "expression:multi_or_range": 828,
+            "expression:temporal_context": 53,
+            "expression:uncertain_identity": 192,
+            "expression:unparsed_structured_value": 1149
+          },
+          "status_counts": {
+            "abstained": 2222,
+            "resolved": 9266
+          }
+        },
+        "met|site": {
+          "distinct_records_by_status": {
+            "resolved": 27889
+          },
+          "mentions": 106964,
+          "reason_counts": {},
+          "status_counts": {
+            "resolved": 106964
+          }
+        },
+        "met|temple": {
+          "distinct_records_by_status": {
+            "abstained": 2301
+          },
+          "mentions": 2312,
+          "reason_counts": {
+            "authority_unavailable:temple": 2312
+          },
+          "status_counts": {
+            "abstained": 2312
+          }
+        },
+        "met|tomb_monument": {
+          "distinct_records_by_status": {
+            "resolved": 4780
+          },
+          "mentions": 4841,
+          "reason_counts": {},
+          "status_counts": {
+            "resolved": 4841
+          }
+        }
+      }
+    }
+  },
+  "authority_target_counts": {
+    "ruler": 974,
+    "site": 1000,
+    "tomb_monument": 1357
+  },
+  "comparison": {
+    "concentration_deltas": {
+      "brooklyn__harvard": {
+        "brooklyn": {
+          "node_incidence_hhi_authority_minus_literal": 0.13448972239378054,
+          "top_k_unique_record_ratio_authority_minus_literal": {
+            "1": -0.035797597050241214,
+            "10": 0.0,
+            "5": 0.0
+          }
+        },
+        "harvard": {
+          "node_incidence_hhi_authority_minus_literal": -0.5705636486269162,
+          "top_k_unique_record_ratio_authority_minus_literal": {
+            "1": -0.4074581848094324,
+            "10": 0.0,
+            "5": 0.0038387715930902067
+          }
+        }
+      },
+      "met__brooklyn": {
+        "brooklyn": {
+          "node_incidence_hhi_authority_minus_literal": -0.37752879851576965,
+          "top_k_unique_record_ratio_authority_minus_literal": {
+            "1": -0.7179710871132727,
+            "10": -0.1134611131323533,
+            "5": -0.21840473845759178
+          }
+        },
+        "met": {
+          "node_incidence_hhi_authority_minus_literal": -0.03341774319472604,
+          "top_k_unique_record_ratio_authority_minus_literal": {
+            "1": -0.180059462850356,
+            "10": -0.10295251551322637,
+            "5": -0.1863756425848927
+          }
+        }
+      },
+      "met__harvard": {
+        "harvard": {
+          "node_incidence_hhi_authority_minus_literal": 0.009160008497492156,
+          "top_k_unique_record_ratio_authority_minus_literal": {
+            "1": -0.33333333333333337,
+            "10": 0.0,
+            "5": 0.0
+          }
+        },
+        "met": {
+          "node_incidence_hhi_authority_minus_literal": -0.06961028216935483,
+          "top_k_unique_record_ratio_authority_minus_literal": {
+            "1": -0.09034407999528049,
+            "10": 0.0,
+            "5": 0.0001865671641790856
+          }
+        }
+      }
+    },
+    "literal_loss_attribution": {
+      "expression_abstention_mentions": {
+        "brooklyn|ruler": 12,
+        "harvard|ruler": 7,
+        "met|ruler": 2222
+      },
+      "notes": [
+        "Node causes are mutually exclusive and sum to literal-only shared nodes for each pair.",
+        "Actual lost-record cause memberships are nonexclusive because one record can support more than one lost node.",
+        "Unavailable authority types and expression abstentions are reported separately; neither is treated as a wrong match."
+      ],
+      "per_pair": {
+        "brooklyn__harvard": {
+          "actual_lost_records_by_museum": {
+            "brooklyn": 2550,
+            "harvard": 515
+          },
+          "actually_lost_record_cause_memberships_nonexclusive": {
+            "brooklyn": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 5
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 2549,
+                "ambiguous_authority_target": 32
+              }
+            },
+            "harvard": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 1
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 512,
+                "ambiguous_authority_target": 2
+              }
+            }
+          },
+          "literal_only_shared_nodes": 4,
+          "nodes_by_entity_type_and_closed_cause": {
+            "ruler": {
+              "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 1
+            },
+            "site": {
+              "absent_or_unmatched_authority_target": 2,
+              "ambiguous_authority_target": 1
+            }
+          },
+          "supporting_unique_records_by_museum_entity_and_cause": {
+            "brooklyn": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 5
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 2881,
+                "ambiguous_authority_target": 32
+              }
+            },
+            "harvard": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 1
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 512,
+                "ambiguous_authority_target": 2
+              }
+            }
+          }
+        },
+        "met__brooklyn": {
+          "actual_lost_records_by_museum": {
+            "brooklyn": 1742,
+            "met": 12931
+          },
+          "actually_lost_record_cause_memberships_nonexclusive": {
+            "brooklyn": {
+              "ruler": {
+                "absent_or_unmatched_authority_target": 1,
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 4
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 1738,
+                "ambiguous_authority_target": 8
+              }
+            },
+            "met": {
+              "ruler": {
+                "absent_or_unmatched_authority_target": 34,
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 88
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 12905,
+                "ambiguous_authority_target": 161
+              }
+            }
+          },
+          "literal_only_shared_nodes": 28,
+          "nodes_by_entity_type_and_closed_cause": {
+            "ruler": {
+              "absent_or_unmatched_authority_target": 4,
+              "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 4
+            },
+            "site": {
+              "absent_or_unmatched_authority_target": 19,
+              "ambiguous_authority_target": 1
+            }
+          },
+          "supporting_unique_records_by_museum_entity_and_cause": {
+            "brooklyn": {
+              "ruler": {
+                "absent_or_unmatched_authority_target": 5,
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 9
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 2890,
+                "ambiguous_authority_target": 32
+              }
+            },
+            "met": {
+              "ruler": {
+                "absent_or_unmatched_authority_target": 79,
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 1475
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 26805,
+                "ambiguous_authority_target": 167
+              }
+            }
+          }
+        },
+        "met__harvard": {
+          "actual_lost_records_by_museum": {
+            "harvard": 528,
+            "met": 26295
+          },
+          "actually_lost_record_cause_memberships_nonexclusive": {
+            "harvard": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 1
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 528,
+                "ambiguous_authority_target": 2
+              }
+            },
+            "met": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 917
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 26101,
+                "ambiguous_authority_target": 167
+              }
+            }
+          },
+          "literal_only_shared_nodes": 5,
+          "nodes_by_entity_type_and_closed_cause": {
+            "ruler": {
+              "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 1
+            },
+            "site": {
+              "absent_or_unmatched_authority_target": 3,
+              "ambiguous_authority_target": 1
+            }
+          },
+          "supporting_unique_records_by_museum_entity_and_cause": {
+            "harvard": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 1
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 534,
+                "ambiguous_authority_target": 2
+              }
+            },
+            "met": {
+              "ruler": {
+                "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal": 917
+              },
+              "site": {
+                "absent_or_unmatched_authority_target": 26578,
+                "ambiguous_authority_target": 167
+              }
+            }
+          }
+        }
+      },
+      "unavailable_authority_type_mentions": {
+        "met|excavation": 16403,
+        "met|temple": 2312
+      }
+    },
+    "record_gains_and_losses": {
+      "per_museum_any_two": {
+        "brooklyn": {
+          "authority_gained_records": 1,
+          "authority_lost_records": 1741,
+          "connected_in_both_arms": 1153,
+          "net_authority_record_change": -1740
+        },
+        "harvard": {
+          "authority_gained_records": 0,
+          "authority_lost_records": 527,
+          "connected_in_both_arms": 7,
+          "net_authority_record_change": -527
+        },
+        "met": {
+          "authority_gained_records": 12,
+          "authority_lost_records": 12931,
+          "connected_in_both_arms": 14399,
+          "net_authority_record_change": -12919
+        }
+      },
+      "per_pair": {
+        "brooklyn__harvard": {
+          "brooklyn": {
+            "authority_gained_records": 0,
+            "authority_lost_records": 2550,
+            "connected_in_both_arms": 332,
+            "net_authority_record_change": -2550
+          },
+          "harvard": {
+            "authority_gained_records": 1,
+            "authority_lost_records": 515,
+            "connected_in_both_arms": 6,
+            "net_authority_record_change": -514
+          }
+        },
+        "met__brooklyn": {
+          "brooklyn": {
+            "authority_gained_records": 1,
+            "authority_lost_records": 1742,
+            "connected_in_both_arms": 1152,
+            "net_authority_record_change": -1741
+          },
+          "met": {
+            "authority_gained_records": 12,
+            "authority_lost_records": 12931,
+            "connected_in_both_arms": 14399,
+            "net_authority_record_change": -12919
+          }
+        },
+        "met__harvard": {
+          "harvard": {
+            "authority_gained_records": 0,
+            "authority_lost_records": 528,
+            "connected_in_both_arms": 6,
+            "net_authority_record_change": -528
+          },
+          "met": {
+            "authority_gained_records": 1,
+            "authority_lost_records": 26295,
+            "connected_in_both_arms": 505,
+            "net_authority_record_change": -26294
+          }
+        }
+      }
+    },
+    "shared_node_transitions": {
+      "all_three": {
+        "authority_shared_nodes": 3,
+        "authority_shared_nodes_created_only_by_cross_literal_authority_consolidation": 1,
+        "authority_shared_nodes_with_one_common_surface_literal": 2,
+        "authority_transition_by_entity_type": {
+          "site": {
+            "cross_literal_authority_consolidation": 1,
+            "surface_literal_supported": 2
+          }
+        },
+        "literal_shared_nodes": 6,
+        "literal_shared_nodes_lost_by_authority": 4,
+        "literal_shared_nodes_preserved_by_one_common_authority_target": 2,
+        "literal_transition_by_entity_type": {
+          "ruler": {
+            "lost": 1
+          },
+          "site": {
+            "lost": 3,
+            "preserved": 2
+          }
+        }
+      },
+      "per_pair": {
+        "brooklyn__harvard": {
+          "authority_shared_nodes": 4,
+          "authority_shared_nodes_created_only_by_cross_literal_authority_consolidation": 1,
+          "authority_shared_nodes_with_one_common_surface_literal": 3,
+          "authority_transition_by_entity_type": {
+            "site": {
+              "cross_literal_authority_consolidation": 1,
+              "surface_literal_supported": 3
+            }
+          },
+          "literal_shared_nodes": 7,
+          "literal_shared_nodes_lost_by_authority": 4,
+          "literal_shared_nodes_preserved_by_one_common_authority_target": 3,
+          "literal_transition_by_entity_type": {
+            "ruler": {
+              "lost": 1
+            },
+            "site": {
+              "lost": 3,
+              "preserved": 3
+            }
+          }
+        },
+        "met__brooklyn": {
+          "authority_shared_nodes": 52,
+          "authority_shared_nodes_created_only_by_cross_literal_authority_consolidation": 11,
+          "authority_shared_nodes_with_one_common_surface_literal": 41,
+          "authority_transition_by_entity_type": {
+            "ruler": {
+              "cross_literal_authority_consolidation": 1,
+              "surface_literal_supported": 4
+            },
+            "site": {
+              "cross_literal_authority_consolidation": 10,
+              "surface_literal_supported": 37
+            }
+          },
+          "literal_shared_nodes": 70,
+          "literal_shared_nodes_lost_by_authority": 28,
+          "literal_shared_nodes_preserved_by_one_common_authority_target": 42,
+          "literal_transition_by_entity_type": {
+            "ruler": {
+              "lost": 8,
+              "preserved": 4
+            },
+            "site": {
+              "lost": 20,
+              "preserved": 38
+            }
+          }
+        },
+        "met__harvard": {
+          "authority_shared_nodes": 3,
+          "authority_shared_nodes_created_only_by_cross_literal_authority_consolidation": 1,
+          "authority_shared_nodes_with_one_common_surface_literal": 2,
+          "authority_transition_by_entity_type": {
+            "site": {
+              "cross_literal_authority_consolidation": 1,
+              "surface_literal_supported": 2
+            }
+          },
+          "literal_shared_nodes": 7,
+          "literal_shared_nodes_lost_by_authority": 5,
+          "literal_shared_nodes_preserved_by_one_common_authority_target": 2,
+          "literal_transition_by_entity_type": {
+            "ruler": {
+              "lost": 1
+            },
+            "site": {
+              "lost": 4,
+              "preserved": 2
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "authority_gain_node": "an authority shared node for which no one typed surface literal spans the same museum sides",
+    "closed_literal_loss_cause_vocabulary": [
+      "absent_or_unmatched_authority_target",
+      "ambiguous_multiple_unmerged_claim_graph_units_for_same_literal",
+      "ambiguous_authority_target",
+      "mixed_ambiguous_and_unmatched_authority_target",
+      "different_or_nonshared_unique_authority_targets",
+      "partial_unique_resolution_without_common_authority_target",
+      "unavailable_authority_type",
+      "expression_abstention"
+    ],
+    "literal_node_loss": "a shared typed literal node whose supporting mentions do not resolve to one common authority target across those museum sides",
+    "loss_cause": "a mutually exclusive resolver-outcome class for each literal-only shared node; record cause memberships are explicitly nonexclusive",
+    "out_of_scope": {
+      "excavation": "no committed canonical excavation authority",
+      "temple": "no committed canonical temple authority"
+    },
+    "shared_record": "a record incident to at least one shared useful node; deduplicated within each museum side",
+    "shared_useful_node": "a score-eligible ruler/site/tomb node with at least one uniquely linked record on every museum side in the stated pair; this is matching utility, not accuracy or specificity",
+    "typed_literal_node": "entity type + NFC/casefolded/whitespace-collapsed mention text; punctuation and diacritics are retained"
+  },
+  "headline": {
+    "authority_cross_literal_shared_node_gains_by_pair": {
+      "brooklyn__harvard": 1,
+      "met__brooklyn": 11,
+      "met__harvard": 1
+    },
+    "authority_improves_any_two_shared_record_coverage_for_any_museum": false,
+    "current_authority_any_two_shared_nodes": 53,
+    "current_authority_shared_records_by_museum": {
+      "brooklyn": 1154,
+      "harvard": 7,
+      "met": 14411
+    },
+    "net_authority_shared_record_change_by_museum": {
+      "brooklyn": -1740,
+      "harvard": -527,
+      "met": -12919
+    },
+    "typed_literal_any_two_shared_nodes": 72,
+    "typed_literal_shared_records_by_museum": {
+      "brooklyn": 2894,
+      "harvard": 534,
+      "met": 27330
+    }
+  },
+  "identical_mentions_proof": {
+    "all_mention_spans_revalidated": true,
+    "arm_ordered_mention_ids_equal": true,
+    "arm_row_counts_equal": true,
+    "current_authority_arm": {
+      "canonical_uncompressed_sha256": "198081ea66e50a4bba67285eb805f330ff1b03a4cec01daea735b7fe4827fe36",
+      "gzip_sha256": "85ace7eb5671fc5f561367eaa09baf54f4ae15401f280f769451a2e52c5f98a9",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    },
+    "identical_ordered_mentions": true,
+    "mention_ledger": {
+      "canonical_uncompressed_sha256": "b1e7b7ab5d4b64661fc831e125bbe1372f599e87267cb8299119113c9aaf05fd",
+      "gzip_sha256": "14d2fe2983adcda95051a33943eac070129ee108af508fdfe0b0fee3316923b7",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    },
+    "typed_literal_arm": {
+      "canonical_uncompressed_sha256": "cae5d411484b870e57ce908ec6269bd360e2a00e501f87e8e313625fc09e1df3",
+      "gzip_sha256": "0f2f24c2a9fece2c847707024adcd9a720c20ea318965dcdc42606eeb741b021",
+      "ordered_mention_ids_sha256": "28402aaf80a094a76d35ab3d5281d5380366c55483a253271eb1ebae84d7ed73",
+      "rows": 148871
+    }
+  },
+  "limitations": [
+    "This measures deterministic matching/linkability, not correctness, precision, recall, or scholarly usefulness.",
+    "The tested resolver is an archived disposable evaluation adapter; production enrichment is unimplemented.",
+    "The site targets are archived filtered iDAI rows used as raw, unclosed curation-source data rather than a production canonical site graph.",
+    "The literal arm is deliberately conservative: it does not collapse punctuation, spelling, transliteration, or aliases.",
+    "Generic and broad place strings are not hand-filtered; per-side concentration exposes their effect.",
+    "Free-text ruler extraction is limited to explicit royal cues and at most three syntactically bounded name tokens.",
+    "Location parsing is bounded to top-level comma/semicolon components and one leading pre-parenthesis child; it is not a general nested-prose parser.",
+    "Within any location variant, the word temple takes type precedence and suppresses site scoring for that variant; a separately emitted pre-parenthesis child may still be a site.",
+    "Tomb extraction is limited to explicit KV/QV/TT/Tomb-code syntax; authority-recognized free-text aliases cannot cause mention emission.",
+    "Temple and excavation evidence is inventoried but excluded because no committed canonical authority exists for either type.",
+    "The archive proves the frozen snapshot, not upstream database regeneration or current museum API state."
+  ],
+  "question": "Does the frozen archived disposable authority adapter improve cross-museum matching over typed surface-literal equality on identical mentions?",
+  "schema_version": "hapi-authority-independent-control-report/1",
+  "scope": {
+    "base_commit": "97f2e610974f0e89b9c03d409b230dff89edbb1f",
+    "canonical_records": 36245,
+    "conclusion_scope": "this adapter and committed authority-inventory snapshot only",
+    "corpus_snapshot_date": "2026-08-27",
+    "evaluation_date": "2026-09-13",
+    "production_enrichment_implemented": false,
+    "records_by_museum": {
+      "brooklyn": 7554,
+      "harvard": 722,
+      "met": 27969
+    },
+    "scored_entity_types": [
+      "ruler",
+      "site",
+      "tomb_monument"
+    ],
+    "site_input_status": "archived filtered iDAI rows used as raw, unclosed curation-source data; not a production canonical site graph",
+    "tested_resolver": "archived disposable non-production linkability adapter",
+    "unavailable_entity_types_invented_as_nodes": false
+  }
+}
