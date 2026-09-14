@@ -1,0 +1,102 @@
+{
+  "evaluation_date": "2026-09-13",
+  "protocol_inputs": {
+    "artifact_schema": {
+      "path": "docs/evaluations/authority-independent-control-2026-09-13/review-artifact.schema.json",
+      "sha256": "df00d70d043fa35648774a2ab469442c1c713c3ec134f118f86ccea0353ae918"
+    },
+    "launcher_system_prompts": {
+      "prompt_auditor": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/launcher-instructions/prompt-auditor-system-v1.txt",
+        "sha256": "b6a074377058587671f42e90e882d8ecdc8a8ed44aa7a2dfdd5b60b046e745fe"
+      },
+      "review": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/launcher-instructions/review-system-v1.txt",
+        "sha256": "1e594d29f147dac9a7e583fa3b0d1b53e3d14a04800483d0390995118a6b5916"
+      }
+    },
+    "prompts": {
+      "prompt_auditor": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/prompts/prompt-auditor-v2.txt",
+        "sha256": "ede3f433d8cea558102ec2a63519fb8ef40bd96be958c4de8941475f0b088216"
+      },
+      "stage_1_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/prompts/stage-1-reconciler-v2.txt",
+        "sha256": "4e1acd575d28c9e1c1b982834e8b351aadd4e180ef76b7eb698f9103a6890040"
+      },
+      "stage_1_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/prompts/stage-1-reviewer-v2.txt",
+        "sha256": "1dfef886aa223464cf9f02fc64946c65c16c3e54342eb409e6221dc48530e4df"
+      },
+      "stage_2_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/prompts/stage-2-reconciler-v2.txt",
+        "sha256": "967f81333203be50889633d72f50a52fcd3a52e98b32e2276a5beeda321a185f"
+      },
+      "stage_2_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/prompts/stage-2-reviewer-v2.txt",
+        "sha256": "79ab033e72d03323d1ebae9a3f848502aabd92999c5e928500cab86274bb7e46"
+      }
+    },
+    "protocol_version": "hapi-authority-control-traceable-review/2",
+    "raw_response_contracts": {
+      "prompt_auditor": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/raw-response-contracts/prompt-auditor-v1.schema.json",
+        "sha256": "640adb2a47062e6b4b3ba104f5cede5f4ff72633e7348b548dbea73bb06377ab"
+      },
+      "stage_1_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/raw-response-contracts/stage-1-reconciler-v1.schema.json",
+        "sha256": "985587ba23f19c58a7593ddf02b4f57f6be3c3cb2e0703a49e49e261a00a5463"
+      },
+      "stage_1_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/raw-response-contracts/stage-1-reviewer-v1.schema.json",
+        "sha256": "0bde720f8312d34091cfa76dc2df0bf3f55aea68bc6b87fe67b7506f68188525"
+      },
+      "stage_2_reconciler": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/raw-response-contracts/stage-2-reconciler-v1.schema.json",
+        "sha256": "cbe8b2be03448d456fb731f209de8473a060791ca1f766c29598e2815dfdd04b"
+      },
+      "stage_2_reviewer": {
+        "path": "docs/evaluations/authority-independent-control-2026-09-13/raw-response-contracts/stage-2-reviewer-v1.schema.json",
+        "sha256": "28edb9750995e37e6b299233a1a1f9d7a44c3c77f70ead5984ba3800eb6bc4a4"
+      }
+    },
+    "response_wrapper": {
+      "path": "docs/evaluations/authority-independent-control-2026-09-13/scripts/wrap_review_response.py",
+      "sha256": "1e4e14261c44ed9c2d590fb4397245f51d1171e6d91705ffac5c773a6d1fc7c1"
+    },
+    "scorer": {
+      "path": "docs/evaluations/authority-independent-control-2026-09-13/scripts/score_review.py",
+      "sha256": "05aecefc8f758323d32def515d60dc68cec960c67e656328391292f956e31a53"
+    },
+    "validator": {
+      "path": "docs/evaluations/authority-independent-control-2026-09-13/scripts/review_protocol.py",
+      "sha256": "12a8a5c180a885f50945d3f1f50069ff089280acce2c13ce319052dbcf491b08"
+    }
+  },
+  "quality_conclusion_status": "NOT_AVAILABLE",
+  "queue_inputs": {
+    "stage_1_queue_sha256": "cc62d4125290c8cfe8d36aefdcfccbe27547aa490ade9d06b7ea9f53201a9827",
+    "stage_2_custodian_sha256": "66ae2dbce31111c17c96d927ed42bade0111d7d261c1cb8e3cd9b4569928d912"
+  },
+  "reason": "Review is blocked: no genuine immutable provider snapshot is exposed for gpt-5.6-sol and no authorized direct Responses API credential is available.",
+  "required_sequence": [
+    "satisfy_provider_snapshot_and_explicit_launcher_gate",
+    "audit_stage_1_reviewer_composed_input",
+    "run_two_stage_1_reviewers",
+    "audit_stage_1_reconciler_composed_input",
+    "run_stage_1_reconciler_with_explicit_cited_overrides",
+    "release_stage_2_through_official_gate",
+    "audit_stage_2_reviewer_composed_input",
+    "run_two_stage_2_reviewers",
+    "audit_stage_2_reconciler_composed_input",
+    "run_stage_2_reconciler_with_explicit_cited_overrides",
+    "score"
+  ],
+  "review_status": "NOT_RUN",
+  "runtime_readiness": {
+    "blocker": "missing_genuine_immutable_provider_snapshot_and_authorized_api_path",
+    "status": "BLOCKED"
+  },
+  "schema_version": "hapi-authority-control-review-protocol-manifest/3",
+  "valid_review_artifact_count": 0
+}

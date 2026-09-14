@@ -1,0 +1,150 @@
+{
+  "$defs": {
+    "canonicalIdentityResolution": {
+      "additionalProperties": false,
+      "properties": {
+        "citations": {
+          "items": {
+            "pattern": "^https://",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "method": {
+          "enum": [
+            "agreement",
+            "explicit_cited_override"
+          ]
+        },
+        "rationale": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "source_outcomes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "outcome": {
+                "enum": [
+                  "exact_identity",
+                  "different_identity",
+                  "insufficient_evidence"
+                ]
+              },
+              "review_sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "review_sha256",
+              "outcome"
+            ],
+            "type": "object"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        }
+      },
+      "required": [
+        "method",
+        "source_outcomes",
+        "rationale",
+        "citations"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "hapi-authority-control-raw-response/stage-2-reconciler/1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "decisions": {
+      "items": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "properties": {
+              "citations": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "artifact_exceptions": {
+                "minItems": 1
+              }
+            }
+          }
+        ],
+        "properties": {
+          "artifact_exceptions": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "canonical_identity": {
+            "enum": [
+              "exact_identity",
+              "different_identity",
+              "insufficient_evidence"
+            ]
+          },
+          "case_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "pattern": "^https://",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "evidence_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "field_resolutions": {
+            "additionalProperties": false,
+            "properties": {
+              "canonical_identity": {
+                "$ref": "#/$defs/canonicalIdentityResolution"
+              }
+            },
+            "required": [
+              "canonical_identity"
+            ],
+            "type": "object"
+          },
+          "reasoning": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "evidence_sha256",
+          "canonical_identity",
+          "field_resolutions",
+          "reasoning",
+          "citations",
+          "artifact_exceptions"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "decisions"
+  ],
+  "title": "Stage 2 reconciler raw response",
+  "type": "object",
+  "x-hapi-role": "stage_2_reconciler"
+}

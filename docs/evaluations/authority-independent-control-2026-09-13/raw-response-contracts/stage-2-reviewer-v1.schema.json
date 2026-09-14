@@ -1,0 +1,80 @@
+{
+  "$id": "hapi-authority-control-raw-response/stage-2-reviewer/1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "decisions": {
+      "items": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "properties": {
+              "citations": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "artifact_exceptions": {
+                "minItems": 1
+              }
+            }
+          }
+        ],
+        "properties": {
+          "artifact_exceptions": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "canonical_identity": {
+            "enum": [
+              "exact_identity",
+              "different_identity",
+              "insufficient_evidence"
+            ]
+          },
+          "case_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "citations": {
+            "items": {
+              "pattern": "^https://",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "evidence_sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "reasoning": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "evidence_sha256",
+          "canonical_identity",
+          "reasoning",
+          "citations",
+          "artifact_exceptions"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "decisions"
+  ],
+  "title": "Stage 2 reviewer raw response",
+  "type": "object",
+  "x-hapi-role": "stage_2_reviewer"
+}

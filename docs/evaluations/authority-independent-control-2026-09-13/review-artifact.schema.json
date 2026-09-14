@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hapi.example/schemas/authority-control-traceable-review-v2.json",
+  "title": "Hapi authority-control traceable LLM review artifact",
+  "oneOf": [
+    {"$ref": "#/$defs/promptAudit"},
+    {"$ref": "#/$defs/reviewPackage"},
+    {"$ref": "#/$defs/consensusPackage"}
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "modelRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "transport_session_id", "run_date", "model_id", "model_snapshot", "reasoning_effort", "parameters", "launcher_transport", "launcher_system_prompt", "provider_snapshot_evidence", "launcher_envelope", "launcher_envelope_sha256"],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "transport_session_id": {"type": "string", "minLength": 1},
+        "run_date": {"type": "string", "format": "date"},
+        "model_id": {"type": "string", "minLength": 1},
+        "model_snapshot": {"type": "string", "minLength": 1},
+        "reasoning_effort": {"type": "string", "minLength": 1},
+        "parameters": {"type": "object", "minProperties": 1},
+        "launcher_transport": {"enum": ["anthropic_cli_bare_stream_json", "openai_responses_api_jsonl"]},
+        "launcher_system_prompt": {"$ref": "#/$defs/boundInput"},
+        "provider_snapshot_evidence": {"$ref": "#/$defs/boundInput"},
+        "launcher_envelope": {"type": "string", "minLength": 1},
+        "launcher_envelope_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "boundInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "promptAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "auditor_run", "auditor_prompt", "raw_response_contract", "subject_role", "subject_composed_input", "composed_input_sha256", "launcher_transcript_format", "launcher_transcript", "launcher_transcript_sha256", "full_raw_response", "full_raw_response_sha256", "outcome", "findings"],
+      "properties": {
+        "schema_version": {"const": "hapi-authority-control-prompt-audit/2"},
+        "auditor_run": {"$ref": "#/$defs/modelRun"},
+        "auditor_prompt": {"$ref": "#/$defs/boundInput"},
+        "raw_response_contract": {"$ref": "#/$defs/boundInput"},
+        "subject_role": {"enum": ["stage_1_reviewer", "stage_1_reconciler", "stage_2_reviewer", "stage_2_reconciler"]},
+        "subject_composed_input": {"$ref": "#/$defs/boundInput"},
+        "composed_input_sha256": {"$ref": "#/$defs/sha256"},
+        "launcher_transcript_format": {"enum": ["claude_stream_json", "responses_api_jsonl"]},
+        "launcher_transcript": {"type": "string", "minLength": 1},
+        "launcher_transcript_sha256": {"$ref": "#/$defs/sha256"},
+        "full_raw_response": {"type": "string", "minLength": 1},
+        "full_raw_response_sha256": {"$ref": "#/$defs/sha256"},
+        "outcome": {"enum": ["PASS", "FAIL"]},
+        "findings": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "reviewPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "role", "run", "prompt", "queue", "prompt_audit", "raw_response_contract", "composed_input_sha256", "launcher_transcript_format", "launcher_transcript", "launcher_transcript_sha256", "full_raw_response", "full_raw_response_sha256", "decisions"],
+      "properties": {
+        "schema_version": {"const": "hapi-authority-control-traceable-review/2"},
+        "role": {"enum": ["stage_1_reviewer", "stage_2_reviewer"]},
+        "run": {"$ref": "#/$defs/modelRun"},
+        "prompt": {"$ref": "#/$defs/boundInput"},
+        "queue": {"$ref": "#/$defs/boundInput"},
+        "prompt_audit": {"$ref": "#/$defs/boundInput"},
+        "raw_response_contract": {"$ref": "#/$defs/boundInput"},
+        "composed_input_sha256": {"$ref": "#/$defs/sha256"},
+        "launcher_transcript_format": {"enum": ["claude_stream_json", "responses_api_jsonl"]},
+        "launcher_transcript": {"type": "string", "minLength": 1},
+        "launcher_transcript_sha256": {"$ref": "#/$defs/sha256"},
+        "full_raw_response": {"type": "string", "minLength": 1},
+        "full_raw_response_sha256": {"$ref": "#/$defs/sha256"},
+        "decisions": {"type": "array", "minItems": 1, "items": {"type": "object"}}
+      }
+    },
+    "consensusPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "role", "run", "prompt", "queue", "prompt_audit", "source_reviews", "raw_response_contract", "composed_input_sha256", "launcher_transcript_format", "launcher_transcript", "launcher_transcript_sha256", "full_raw_response", "full_raw_response_sha256", "decisions"],
+      "properties": {
+        "schema_version": {"const": "hapi-authority-control-traceable-consensus/2"},
+        "role": {"enum": ["stage_1_reconciler", "stage_2_reconciler"]},
+        "run": {"$ref": "#/$defs/modelRun"},
+        "prompt": {"$ref": "#/$defs/boundInput"},
+        "queue": {"$ref": "#/$defs/boundInput"},
+        "prompt_audit": {"$ref": "#/$defs/boundInput"},
+        "source_reviews": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/boundInput"}},
+        "raw_response_contract": {"$ref": "#/$defs/boundInput"},
+        "composed_input_sha256": {"$ref": "#/$defs/sha256"},
+        "launcher_transcript_format": {"enum": ["claude_stream_json", "responses_api_jsonl"]},
+        "launcher_transcript": {"type": "string", "minLength": 1},
+        "launcher_transcript_sha256": {"$ref": "#/$defs/sha256"},
+        "full_raw_response": {"type": "string", "minLength": 1},
+        "full_raw_response_sha256": {"$ref": "#/$defs/sha256"},
+        "decisions": {"type": "array", "minItems": 1, "items": {"type": "object"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "$id": "hapi-authority-control-raw-response/prompt-auditor/1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "findings": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "evidence": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "P3"
+            ]
+          }
+        },
+        "required": [
+          "severity",
+          "evidence"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    }
+  },
+  "required": [
+    "outcome",
+    "findings"
+  ],
+  "title": "Prompt-auditor raw response",
+  "type": "object",
+  "x-hapi-role": "prompt_auditor"
+}
