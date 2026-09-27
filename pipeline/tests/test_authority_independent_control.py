@@ -148,7 +148,10 @@ def trace_transcript(role: str, raw: str, run: dict, composed_sha256: str) -> st
             "model": run["model_snapshot"],
             "metadata": metadata,
             "output": [],
-            "reasoning": {"effort": run["reasoning_effort"]},
+            "reasoning": {
+                "effort": run["reasoning_effort"],
+                "summary": run["parameters"].get("reasoning", {}).get("summary"),
+            },
             "tools": tools,
             "usage": None,
         },
@@ -252,7 +255,10 @@ def trace_transcript(role: str, raw: str, run: dict, composed_sha256: str) -> st
             "incomplete_details": None,
             "instructions": system_prompt,
             "output": output + [message_item],
-            "reasoning": {"effort": run["reasoning_effort"]},
+            "reasoning": {
+                "effort": run["reasoning_effort"],
+                "summary": run["parameters"].get("reasoning", {}).get("summary"),
+            },
             "tools": tools,
             "usage": {"input_tokens": 1, "output_tokens": 1},
         },
@@ -1079,6 +1085,23 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
             "responses_api_jsonl", no_reasoning_transcript, review_a["full_raw_response"],
             review_a["run"], "stage_1_reviewer", review_a["composed_input_sha256"],
             "reasoning-stripped transcript", require_web=True,
+        )
+    absent_reasoning_events = list(map(json.loads, review_a["launcher_transcript"].splitlines()))
+    for event in absent_reasoning_events:
+        item = event.get("item")
+        if isinstance(item, dict) and item.get("id") == "reasoning-1":
+            item["type"] = "not_reasoning_stub"
+    for item in absent_reasoning_events[-1]["response"]["output"]:
+        if item.get("id") == "reasoning-1":
+            item["type"] = "not_reasoning_stub"
+    absent_reasoning_transcript = "\n".join(
+        json.dumps(event, sort_keys=True) for event in absent_reasoning_events
+    ) + "\n"
+    with pytest.raises(ValueError, match="captured reasoning summary content"):
+        review_protocol.validate_launcher_transcript(
+            "responses_api_jsonl", absent_reasoning_transcript, review_a["full_raw_response"],
+            review_a["run"], "stage_1_reviewer", review_a["composed_input_sha256"],
+            "reasoning-absent transcript", require_web=True,
         )
     fabricated = "\n".join(json.dumps(event) for event in (
         {
@@ -1948,9 +1971,9 @@ def test_committed_report_and_review_digest_are_hash_and_count_bound() -> None:
     digest_sha = review_queue.sha256_path(digest_path)
     assert report_sha == "dd74f6b05d322efe2137c87b4ccd4c0f5b3ad91ccf8479fd45f67607ae2e39df"
     assert manifest_sha == "6c79cb360d2e9e315ef6de2ddab68c857dfe637ed06ed7b93e3e04059a174ed8"
-    assert digest_sha == "43c597deca5f766717642f05c63edda23aebd55ae853596370f180f678611c75"
+    assert digest_sha == "3387929ec78a669d37abb30edc22ccf940812c33cc281a2a25cf88af4be0ba8d"
     assert review_queue.sha256_path(proof_path) == (
-        "2a33f43c745a96d385b569a1072a3709ebcba4cd718cdbfd14e7dbd671315bc6"
+        "3594a539ab4f7884774d8312d849f67659bea438fa6d6d83c991e754fcb43c32"
     )
 
     report = json.loads(report_path.read_text())
@@ -1966,7 +1989,7 @@ def test_committed_report_and_review_digest_are_hash_and_count_bound() -> None:
     assert review_queue.recursive_forbidden_keys(digest) == []
     assert digest["review"] == {
         "protocol_manifest_sha256": (
-                "cb8c18883af7f54c4f47caafc4fc30ff07ef9435f4393851da76ab0387270a38"
+                "8496203bf56d1a51a1ec5516ad7894ca5a535e7e5d32e7095017dc2b4df31ff9"
         ),
         "quality_conclusion_status": "NOT_AVAILABLE",
         "runtime_readiness": "BLOCKED",
@@ -2103,6 +2126,7 @@ def test_committed_report_and_review_digest_are_hash_and_count_bound() -> None:
         digest["output_hashes"]["review_protocol_manifest_sha256"]
     )
     protocol_manifest = json.loads(protocol_manifest_path.read_text())
+    assert protocol_manifest["protocol_inputs"] == digest["input_hashes"]["review_protocol"]
     assert protocol_manifest == {
         **protocol_manifest,
         "review_status": "NOT_RUN",

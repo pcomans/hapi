@@ -230,6 +230,18 @@ when the destination does not already exist. The synthetic
 transport records in unit tests test this contract only; they are not captured provider
 runs and do not establish provider compatibility or a complete real interaction.
 
+A byte-verified transcript proves the transcript wasn't altered after the fact; it does
+not by itself prove the model was ever asked to expose its reasoning. Every run must
+therefore also request reasoning capture, and the transcript itself must show it landed:
+for the OpenAI transport, `parameters.reasoning.summary` must be `auto`, `concise`, or
+`detailed`, and the captured `response.completed` output must contain a `reasoning`-type
+item with at least one non-empty `summary_text` part — the request setting and the
+provider's own `response.reasoning.summary` field must match. For the Claude bare-mode
+transport, `parameters.thinking` must be `{"type": "enabled", "budget_tokens": <positive
+int>}`, and the assistant turn(s) in the transcript must contain at least one non-empty
+`thinking` content block. A run that requests reasoning but whose transcript shows no
+captured reasoning content fails validation, and vice versa.
+
 A Claude prompt audit must use `claude --bare --print` with an explicit persisted system
 prompt, no agent profile, and archived stream-JSON outer/result events. Bare mode requires
 `ANTHROPIC_API_KEY` or a configured `apiKeyHelper`; neither authorized path is available

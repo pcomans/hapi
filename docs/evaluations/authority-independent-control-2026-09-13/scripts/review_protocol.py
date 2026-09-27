@@ -447,6 +447,8 @@ def validate_reasoning_capture_parameters(parameters: dict, transport: str, labe
             raise ValueError(
                 f"{label}.parameters.thinking must enable extended thinking with a positive budget"
             )
+    else:
+        raise ValueError(f"{label}.launcher_transport has no reasoning-capture contract")
 
 
 def validate_model_run(value: dict, label: str, role: str) -> None:
@@ -782,7 +784,7 @@ def validate_launcher_transcript(
             for block in event["message"]["content"]
             if isinstance(block, dict) and block.get("type") == "thinking"
         ]
-        if not thinking_blocks or not all(
+        if not thinking_blocks or not any(
             isinstance(block.get("thinking"), str) and block["thinking"].strip()
             for block in thinking_blocks
         ):
@@ -823,6 +825,7 @@ def validate_launcher_transcript(
             "hapi_request_id": run["request_id"],
             "hapi_composed_input_sha256": expected_composed_input_sha256,
         }
+        expected_reasoning_summary = run["parameters"].get("reasoning", {}).get("summary")
         if (
             created.get("id") != response_id
             or created.get("object") != "response"
@@ -833,6 +836,7 @@ def validate_launcher_transcript(
             or created.get("output") != []
             or created.get("usage") is not None
             or not isinstance(created.get("reasoning"), dict)
+            or created["reasoning"].get("summary") != expected_reasoning_summary
             or not isinstance(created.get("tools"), list)
             or created.get("instructions") != launcher_system_prompt_path(role).read_text(
                 encoding="utf-8"
@@ -863,6 +867,7 @@ def validate_launcher_transcript(
             or completed.get("status") != "completed"
             or completed.get("instructions") != created["instructions"]
             or not isinstance(completed.get("reasoning"), dict)
+            or completed["reasoning"].get("summary") != expected_reasoning_summary
             or not isinstance(completed.get("tools"), list)
         ):
             raise ValueError(f"{label} response.completed metadata mismatch")
@@ -942,10 +947,9 @@ def validate_launcher_transcript(
             item for item in output
             if isinstance(item, dict) and item.get("type") == "reasoning"
         ]
-        if not reasoning_items or not all(
+        if not reasoning_items or not any(
             isinstance(item.get("summary"), list)
-            and item["summary"]
-            and all(
+            and any(
                 isinstance(part, dict)
                 and part.get("type") == "summary_text"
                 and isinstance(part.get("text"), str)
