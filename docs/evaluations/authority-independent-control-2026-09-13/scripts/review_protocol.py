@@ -784,7 +784,7 @@ def validate_launcher_transcript(
             for block in event["message"]["content"]
             if isinstance(block, dict) and block.get("type") == "thinking"
         ]
-        if not thinking_blocks or not any(
+        if not any(
             isinstance(block.get("thinking"), str) and block["thinking"].strip()
             for block in thinking_blocks
         ):
@@ -825,7 +825,9 @@ def validate_launcher_transcript(
             "hapi_request_id": run["request_id"],
             "hapi_composed_input_sha256": expected_composed_input_sha256,
         }
-        expected_reasoning_summary = run["parameters"].get("reasoning", {}).get("summary")
+        # Assumes the Responses API echoes the requested summary level verbatim in
+        # response.reasoning.summary rather than resolving it to a different value.
+        expected_reasoning_summary = run["parameters"]["reasoning"]["summary"]
         if (
             created.get("id") != response_id
             or created.get("object") != "response"
@@ -947,7 +949,7 @@ def validate_launcher_transcript(
             item for item in output
             if isinstance(item, dict) and item.get("type") == "reasoning"
         ]
-        if not reasoning_items or not any(
+        if not any(
             isinstance(item.get("summary"), list)
             and any(
                 isinstance(part, dict)
