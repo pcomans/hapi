@@ -159,7 +159,7 @@
       },
       "validator": {
         "path": "docs/evaluations/authority-independent-control-2026-09-13/scripts/review_protocol.py",
-        "sha256": "12a8a5c180a885f50945d3f1f50069ff089280acce2c13ce319052dbcf491b08"
+        "sha256": "3386d2275096a1339df34a3b258284cedeadffc6315e433ee60367f82bd48765"
       }
     },
     "run_manifest_sha256": "6c79cb360d2e9e315ef6de2ddab68c857dfe637ed06ed7b93e3e04059a174ed8"
@@ -167,7 +167,7 @@
   "output_hashes": {
     "private_answer_key_sha256": "4d0fdb25d6b5320c0272a40c0f4872ca4a9f52d4db8f3c39dde7052482ffae37",
     "private_population_manifest_sha256": "63f2bc4426b9d6f77006781386d7c60182d6e19b6321e367ce0efa9f5ddd2712",
-    "review_protocol_manifest_sha256": "70fd9e7d1bdbe7e033ca4b163088bc03223ebb0781339e16de7d42b0a0813305",
+    "review_protocol_manifest_sha256": "cb8c18883af7f54c4f47caafc4fc30ff07ef9435f4393851da76ab0387270a38",
     "stage_1_queue_sha256": "cc62d4125290c8cfe8d36aefdcfccbe27547aa490ade9d06b7ea9f53201a9827",
     "stage_2_custodian_sha256": "66ae2dbce31111c17c96d927ed42bade0111d7d261c1cb8e3cd9b4569928d912"
   },
@@ -202,7 +202,7 @@
     "total": 96
   },
   "review": {
-    "protocol_manifest_sha256": "70fd9e7d1bdbe7e033ca4b163088bc03223ebb0781339e16de7d42b0a0813305",
+    "protocol_manifest_sha256": "cb8c18883af7f54c4f47caafc4fc30ff07ef9435f4393851da76ab0387270a38",
     "quality_conclusion_status": "NOT_AVAILABLE",
     "runtime_readiness": "BLOCKED",
     "status": "NOT_RUN",

@@ -76,6 +76,7 @@ PROVIDER_BY_TRANSPORT = {
     "openai_responses_api_jsonl": "openai",
 }
 UNPINNED_MODEL_IDS = {"gpt-5.6-sol"}
+REASONING_SUMMARY_LEVELS = {"auto", "concise", "detailed"}
 
 
 def sha256_path(path: Path) -> str:
@@ -420,6 +421,34 @@ def validate_provider_snapshot_evidence(
         raise ValueError(f"{label}.raw Anthropic model response lacks authoritative fields")
 
 
+def validate_reasoning_capture_parameters(parameters: dict, transport: str, label: str) -> None:
+    """Require the request to have actually asked the provider to surface its reasoning.
+
+    A pinned snapshot and a byte-verified transcript prove *which* model answered and
+    *that* the transcript is unaltered; neither proves the model's stated reasoning was
+    requested at all. Provider APIs only emit reasoning content when the caller asks
+    for it, so that request must be present before the transcript is trusted to carry it.
+    """
+    if transport == "openai_responses_api_jsonl":
+        reasoning = parameters.get("reasoning")
+        if not isinstance(reasoning, dict) or reasoning.get("summary") not in REASONING_SUMMARY_LEVELS:
+            raise ValueError(
+                f"{label}.parameters.reasoning.summary must request a captured reasoning summary"
+            )
+    elif transport == "anthropic_cli_bare_stream_json":
+        thinking = parameters.get("thinking")
+        if (
+            not isinstance(thinking, dict)
+            or thinking.get("type") != "enabled"
+            or not isinstance(thinking.get("budget_tokens"), int)
+            or isinstance(thinking.get("budget_tokens"), bool)
+            or thinking["budget_tokens"] <= 0
+        ):
+            raise ValueError(
+                f"{label}.parameters.thinking must enable extended thinking with a positive budget"
+            )
+
+
 def validate_model_run(value: dict, label: str, role: str) -> None:
     require_keys(value, {
         "request_id", "transport_session_id", "run_date", "model_id",
@@ -451,6 +480,7 @@ def validate_model_run(value: dict, label: str, role: str) -> None:
         raise ValueError(f"{label}.launcher_envelope SHA-256 mismatch")
     if not isinstance(value["parameters"], dict) or not value["parameters"]:
         raise ValueError(f"{label}.parameters must be a nonempty object")
+    validate_reasoning_capture_parameters(value["parameters"], transport, label)
     try:
         envelope = json.loads(value["launcher_envelope"])
     except json.JSONDecodeError as error:
@@ -746,6 +776,17 @@ def validate_launcher_transcript(
                 or not message["stop_reason"]
             ):
                 raise ValueError(f"{label} Claude assistant event is incomplete")
+        thinking_blocks = [
+            block
+            for event in assistant_events
+            for block in event["message"]["content"]
+            if isinstance(block, dict) and block.get("type") == "thinking"
+        ]
+        if not thinking_blocks or not all(
+            isinstance(block.get("thinking"), str) and block["thinking"].strip()
+            for block in thinking_blocks
+        ):
+            raise ValueError(f"{label} lacks captured extended-thinking content")
         final_assistant_message = assistant_events[-1]["message"]
         assistant_text = "".join(
             block["text"]
@@ -897,6 +938,23 @@ def validate_launcher_transcript(
             ):
                 raise ValueError(f"{label} completed response lacks a web-search tool declaration")
             _validate_responses_web_pairs(events[1:-1], output, label)
+        reasoning_items = [
+            item for item in output
+            if isinstance(item, dict) and item.get("type") == "reasoning"
+        ]
+        if not reasoning_items or not all(
+            isinstance(item.get("summary"), list)
+            and item["summary"]
+            and all(
+                isinstance(part, dict)
+                and part.get("type") == "summary_text"
+                and isinstance(part.get("text"), str)
+                and part["text"].strip()
+                for part in item["summary"]
+            )
+            for item in reasoning_items
+        ):
+            raise ValueError(f"{label} completed response lacks captured reasoning summary content")
     if not isinstance(final_message, str) or final_message.encode("utf-8") != (
         expected_raw_response.encode("utf-8")
     ):
