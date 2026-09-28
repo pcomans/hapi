@@ -14,6 +14,7 @@ PYCACHE_EXCLUSION = (
 )
 CI_RELEASE_FILES = frozenset(
     {
+        "pipeline/.python-version",
         "pipeline/pyproject.toml",
         "pipeline/tests/test_site_graph_v0_archive.py",
         "pipeline/tests/test_site_graph_v0_candidate_adversarial.py",

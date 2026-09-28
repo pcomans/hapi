@@ -86,6 +86,7 @@ schema_execution_evidence_passed = (
 scan_public_repository_boundary = (
     validate_contract_module.scan_public_repository_boundary
 )
+_boundary_path_violation = validate_contract_module._boundary_path_violation
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -836,6 +837,53 @@ def test_repository_boundary_rejects_recursive_current_tree_dump_names(
     )
 
 
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "docs/evaluations/site-graph-v0/scripts/extract_mentions.py",
+        "docs/evaluations/site-graph-v0/scripts/build_mentions.py",
+        "scripts/mention_protocol.ts",
+        "scripts/artifact_ids.py",
+        "scripts/artifact-ids-resolver.sh",
+    ],
+)
+def test_boundary_path_violation_spares_ordinary_source_filenames(
+    relative: str,
+) -> None:
+    """The dump-name qualifier must be effectively required on source-code names.
+
+    `extract_mentions.py` is a real, already-merged file (PR #339, main@de2002a)
+    that becomes a HEAD ancestor of every branch the instant this contract change
+    merges to `main`. A regex that flags the bare word alone would permanently fail
+    `test_repository_boundary_scans_current_tree_and_every_head_ancestor` on `main`.
+    """
+    assert _boundary_path_violation(relative) is None
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "exports/mentions-dump.ndjson",
+        "exports/mentions_export.json",
+        "exports/mentions.ndjson",
+        "exports/artifact-ids.json",
+        "exports/artifact_ids_dump.csv",
+        "exports/mention-rows.jsonl",
+    ],
+)
+def test_boundary_path_violation_still_catches_dump_like_names(
+    relative: str,
+) -> None:
+    """Genuine dump/ledger-shaped names must still be caught.
+
+    This covers both a qualifier word attached to a source-code-shaped stem
+    (`mentions_export.json`) and a bare word with no qualifier at all on a
+    recognized data-artifact extension (`mentions.ndjson`, `artifact-ids.json`) --
+    the qualifier-required fix for ordinary source files must not weaken either.
+    """
+    assert _boundary_path_violation(relative) == "artifact_id_or_mention_dump_name"
+
+
 def test_repository_boundary_rejects_deleted_dump_in_non_tip_ancestor(
     tmp_path: Path,
 ) -> None:
@@ -910,16 +958,13 @@ def test_repository_boundary_fails_closed_on_shallow_clone(tmp_path: Path) -> No
         text=True,
     ).stdout.strip()
     assert is_shallow == "true", "expected the fetched clone to actually be shallow"
-    try:
-        evidence = scan_public_repository_boundary(shallow_clone)
-        assert evidence["passed"] is False
-        assert evidence["status"] == "UNABLE_GIT_HISTORY_SHALLOW"
-        assert evidence["git_metadata_available"] is True
-        assert evidence["scanned_commit_count"] == 1
-        assert evidence["git_history"]["all_trees_reachable_from_head_scanned"] is False
-        assert "shallow" in evidence["inability_reason"]
-    finally:
-        shutil.rmtree(shallow_clone, ignore_errors=True)
+    evidence = scan_public_repository_boundary(shallow_clone)
+    assert evidence["passed"] is False
+    assert evidence["status"] == "UNABLE_GIT_HISTORY_SHALLOW"
+    assert evidence["git_metadata_available"] is True
+    assert evidence["scanned_commit_count"] == 1
+    assert evidence["git_history"]["all_trees_reachable_from_head_scanned"] is False
+    assert "shallow" in evidence["inability_reason"]
 
 
 def _fraction(numerator: int, denominator: int) -> dict:

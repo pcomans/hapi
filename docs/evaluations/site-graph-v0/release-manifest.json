@@ -2,8 +2,8 @@
   "contract_version": "site-graph-v0-release/4",
   "files": {
     "docs/evaluations/site-graph-v0/README.md": {
-      "bytes": 29874,
-      "sha256": "da46d1f6814cee67965c8daad0e20d5255836c9c391ff61a834c68ac58457b54"
+      "bytes": 30207,
+      "sha256": "ff802075a6fd0e4e49cb887bcbbf56334b93a6442939692e849c218879861ed5"
     },
     "docs/evaluations/site-graph-v0/baseline-metrics.json": {
       "bytes": 46789,
@@ -238,8 +238,8 @@
       "sha256": "874e2146dd94b8452955a84a3944c7a6065ee615a70ae5518bf94b3f66e9e2b4"
     },
     "docs/evaluations/site-graph-v0/scripts/release_contract.py": {
-      "bytes": 7571,
-      "sha256": "80dbf3927a0e01ace625dd9d996737b7c1ba6397cafdb9bc9384c7b7cf324ed2"
+      "bytes": 7607,
+      "sha256": "59dcac663561c6690db05803671f4dcdc64f629984ed010b1b0facd64bf54c81"
     },
     "docs/evaluations/site-graph-v0/scripts/review_auth.py": {
       "bytes": 83208,
@@ -270,8 +270,8 @@
       "sha256": "8fe6348b6598a1d73fa95c7b8cf3f66b57b1c30b929025ad4d78f42d3d3be08b"
     },
     "docs/evaluations/site-graph-v0/scripts/validate_contract.py": {
-      "bytes": 114151,
-      "sha256": "a2254ee2e292639b9a74141e84ba83db2d0e2b04eaf3bd3d4fcf8a50b262d0ef"
+      "bytes": 115500,
+      "sha256": "5b0421641df132d06945ee94bd9ca9fb43ba391e98e4deed29e1437b944f266d"
     },
     "docs/evaluations/site-graph-v0/top-unmatched-components.json": {
       "bytes": 12176,
@@ -297,6 +297,10 @@
       "bytes": 72364,
       "sha256": "e5838730977c8966632f220e69022c8c0def31893a96ea9fbe3808ae86baf5c6"
     },
+    "pipeline/.python-version": {
+      "bytes": 8,
+      "sha256": "aa0d6581054e6e4ff3f91839deca7a854ad37221b8784d060b42d0f847ff1a3b"
+    },
     "pipeline/pyproject.toml": {
       "bytes": 841,
       "sha256": "ec8b061c9d41d5fe6f766ff74e225baaa79615a509ead975c448fda644a1d1ab"
@@ -310,8 +314,8 @@
       "sha256": "974129745ad15383d8ac68c147778ce7ef950eab52947afefa65c33048873061"
     },
     "pipeline/tests/test_site_graph_v0_contract.py": {
-      "bytes": 116227,
-      "sha256": "c210a4955cfb32e4816526ab95800d4c14e58137505f7ff7e72e84b7913f2486"
+      "bytes": 117940,
+      "sha256": "db343b3a2208604a934b5fe184b0c820d539b6fb09864fc76e72c6de382522cb"
     },
     "pipeline/tests/test_site_graph_v0_corrections.py": {
       "bytes": 42832,

@@ -362,7 +362,11 @@ extra, changed, syntactically corrupt, or top-level-side-effect release modules 
 in the integrity phase before semantic import. Validation never repairs hashes or
 regenerates a manifest. Cache exclusions are limited and documented; a required-file
 change is a separately reviewed contract-version migration. Only the explicit
-release command writes the manifest.
+release command writes the manifest. Reproduction requires the exact interpreter
+pinned in `pipeline/.python-version`: `build_runtime_attestation` compares the
+running interpreter's version against the one frozen in the baseline runtime
+attestation with an exact `!=` check, so any other patch version raises rather than
+silently reproducing under a mismatched runtime.
 
 The same validation performs a recursive current-tree scan and an all-ancestor Git
 name/blob scan from every local `HEAD` ancestor for the narrowly forbidden private

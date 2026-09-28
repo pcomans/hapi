@@ -78,7 +78,43 @@ FORBIDDEN_BULK_SUFFIXES = (
     ".tgz",
     ".zip",
 )
+# Ordinary source code (extract_mentions.py, build_mentions.py, ...) contains the
+# bare words "mentions"/"artifact-ids" with no dump-like qualifier and must never
+# match. Requiring the qualifier suffix is the default, safe for every extension.
 FORBIDDEN_DUMP_NAME = re.compile(
+    r"(?:^|[-_.])(?:"
+    r"artifact[-_.]?ids?[-_.](?:dump|export|expansion|membership|rows?)"
+    r"|mentions?[-_.](?:dump|export|rows?|source|evidence|texts?)"
+    r")(?:[-_.]|$)",
+    re.IGNORECASE,
+)
+# On recognized data-artifact extensions (never ordinary source code), the bare
+# word alone is already a real dump/ledger name -- e.g. a private "mentions.ndjson"
+# or "artifact-ids.json" with no qualifier word is still exactly the shape this
+# check exists to catch, so the qualifier is optional only for these extensions.
+# Kept as an explicit literal (rather than derived from FORBIDDEN_BULK_SUFFIXES)
+# because the release-Python preflight only authenticates declarative literal
+# initializers, not derived expressions.
+DUMP_NAME_DATA_LIKE_SUFFIXES = (
+    ".ndjson",
+    ".ndjson.gz",
+    ".jsonl",
+    ".jsonl.gz",
+    ".csv",
+    ".csv.gz",
+    ".tsv",
+    ".tsv.gz",
+    ".parquet",
+    ".sqlite",
+    ".sqlite3",
+    ".db",
+    ".tar",
+    ".tar.gz",
+    ".tgz",
+    ".zip",
+    ".json",
+)
+FORBIDDEN_DUMP_NAME_BARE_OR_QUALIFIED = re.compile(
     r"(?:^|[-_.])(?:"
     r"artifact[-_.]?ids?(?:[-_.](?:dump|export|expansion|membership|rows?))?"
     r"|mentions?(?:[-_.](?:dump|export|rows?|source|evidence|texts?))?"
@@ -1502,7 +1538,15 @@ def _boundary_path_violation(relative: str) -> str | None:
         basename.endswith(suffix) for suffix in FORBIDDEN_BULK_SUFFIXES
     ):
         return "bulk_data_extension"
-    if FORBIDDEN_DUMP_NAME.search(basename):
+    basename_is_data_like = any(
+        basename.endswith(suffix) for suffix in DUMP_NAME_DATA_LIKE_SUFFIXES
+    )
+    dump_name_pattern = (
+        FORBIDDEN_DUMP_NAME_BARE_OR_QUALIFIED
+        if basename_is_data_like
+        else FORBIDDEN_DUMP_NAME
+    )
+    if dump_name_pattern.search(basename):
         return "artifact_id_or_mention_dump_name"
     return None
 
@@ -1525,6 +1569,10 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
     cover unreachable/pruned Git objects. A shallow clone (as CI's default checkout
     produces) cannot expose every local HEAD ancestor, so it fails closed with
     `UNABLE_GIT_HISTORY_SHALLOW` instead of silently scanning only the tip commit.
+
+    `scanned_commit_count` is always present in the returned evidence: it is the
+    number of commits actually identified via `git rev-list HEAD` at the point of
+    return, or `0` on any exit before that count could be determined.
     """
     repo_root = repo_root.resolve()
     current_paths = sorted(
@@ -1560,6 +1608,7 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
                 "all_trees_reachable_from_head_scanned": False,
                 "violations": [],
             },
+            "scanned_commit_count": 0,
             "inability_reason": (
                 "repo-root has no .git file or directory, so reachable history cannot "
                 "be scanned and the historical public-boundary claim cannot be made"
@@ -1570,7 +1619,8 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
     head_result = _run_git(repo_root, "rev-parse", "--verify", "HEAD^{commit}")
     commits_result = _run_git(repo_root, "rev-list", "HEAD")
     roots_result = _run_git(repo_root, "rev-list", "--max-parents=0", "HEAD")
-    commands = (inside, head_result, commits_result, roots_result)
+    shallow_result = _run_git(repo_root, "rev-parse", "--is-shallow-repository")
+    commands = (inside, head_result, commits_result, roots_result, shallow_result)
     if any(command.returncode != 0 for command in commands):
         errors = [
             command.stderr.strip() or command.stdout.strip()
@@ -1590,6 +1640,7 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
                 "all_trees_reachable_from_head_scanned": False,
                 "violations": [],
             },
+            "scanned_commit_count": 0,
             "inability_reason": "; ".join(errors),
         }
     if inside.stdout.strip() != "true":
@@ -1606,29 +1657,10 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
                 "all_trees_reachable_from_head_scanned": False,
                 "violations": [],
             },
+            "scanned_commit_count": 0,
             "inability_reason": "repo-root is not inside a Git work tree",
         }
 
-    shallow_result = _run_git(repo_root, "rev-parse", "--is-shallow-repository")
-    if shallow_result.returncode != 0:
-        return {
-            "passed": False,
-            "status": "UNABLE_GIT_HISTORY_QUERY_FAILED",
-            "claim_scope": claim_scope,
-            "git_metadata_available": True,
-            "current_tree": {
-                "recursive_scan_completed": True,
-                "violations": current_violations,
-            },
-            "git_history": {
-                "all_trees_reachable_from_head_scanned": False,
-                "violations": [],
-            },
-            "scanned_commit_count": 0,
-            "inability_reason": (
-                shallow_result.stderr.strip() or shallow_result.stdout.strip()
-            ),
-        }
     if shallow_result.stdout.strip() == "true":
         shallow_commit_count = len(
             [line for line in commits_result.stdout.splitlines() if line]
@@ -1686,6 +1718,7 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
                     "all_trees_reachable_from_head_scanned": False,
                     "violations": [],
                 },
+                "scanned_commit_count": len(commits),
                 "inability_reason": tree.stderr.decode("utf-8", errors="replace").strip(),
             }
         for raw_entry in tree.stdout.split(b"\0"):
@@ -1709,6 +1742,7 @@ def scan_public_repository_boundary(repo_root: Path) -> dict:
                         "all_trees_reachable_from_head_scanned": False,
                         "violations": [],
                     },
+                    "scanned_commit_count": len(commits),
                     "inability_reason": "Git tree contains a non-UTF-8 or malformed name",
                 }
             if object_type != "blob":
