@@ -310,8 +310,8 @@
       "sha256": "974129745ad15383d8ac68c147778ce7ef950eab52947afefa65c33048873061"
     },
     "pipeline/tests/test_site_graph_v0_contract.py": {
-      "bytes": 115237,
-      "sha256": "17c986436a72672445d67f6ef67c19bf34b450cc271d92f51545c52e369862b1"
+      "bytes": 116227,
+      "sha256": "c210a4955cfb32e4816526ab95800d4c14e58137505f7ff7e72e84b7913f2486"
     },
     "pipeline/tests/test_site_graph_v0_corrections.py": {
       "bytes": 42832,

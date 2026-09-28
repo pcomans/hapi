@@ -870,30 +870,46 @@ def test_repository_boundary_fails_closed_on_shallow_clone(tmp_path: Path) -> No
     shape: a real `git clone --depth 1` of this worktree's current branch,
     scanned with the same function CI relies on for public-boundary enforcement.
     """
-    branch = subprocess.run(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+    head_sha = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
         cwd=REPO_ROOT,
         check=True,
         capture_output=True,
         text=True,
     ).stdout.strip()
     shallow_clone = tmp_path / "shallow-clone"
+    # Do not clone by branch name: on GitHub Actions' `pull_request` trigger the
+    # checkout is a detached-HEAD synthetic merge ref, not a named branch, so
+    # `git clone --branch <name>` has nothing to resolve (and `--abbrev-ref HEAD`
+    # itself just returns the literal string "HEAD" when detached). Fetch the
+    # exact commit SHA directly instead, which works whether HEAD is detached
+    # or on a branch.
+    subprocess.run(["git", "init", str(shallow_clone)], check=True, capture_output=True, text=True)
     subprocess.run(
-        [
-            "git",
-            "clone",
-            "--depth",
-            "1",
-            "--branch",
-            branch,
-            "--single-branch",
-            f"file://{REPO_ROOT}",
-            str(shallow_clone),
-        ],
+        ["git", "-C", str(shallow_clone), "remote", "add", "origin", f"file://{REPO_ROOT}"],
         check=True,
         capture_output=True,
         text=True,
     )
+    subprocess.run(
+        ["git", "-C", str(shallow_clone), "fetch", "--depth", "1", "origin", head_sha],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(shallow_clone), "checkout", "FETCH_HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    is_shallow = subprocess.run(
+        ["git", "-C", str(shallow_clone), "rev-parse", "--is-shallow-repository"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    assert is_shallow == "true", "expected the fetched clone to actually be shallow"
     try:
         evidence = scan_public_repository_boundary(shallow_clone)
         assert evidence["passed"] is False
