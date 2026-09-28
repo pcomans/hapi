@@ -68,7 +68,7 @@ def trace_run(tmp_path: Path, request_id: str, role: str) -> dict:
                 "owned_by": "openai",
             },
         })
-    parameters = {"temperature": 0}
+    parameters = {"temperature": 0, "reasoning": {"effort": "high", "summary": "auto"}}
     system_prompt = review_protocol.launcher_system_prompt_path(role)
     envelope = json.dumps({
         "agent_profile": None,
@@ -148,7 +148,10 @@ def trace_transcript(role: str, raw: str, run: dict, composed_sha256: str) -> st
             "model": run["model_snapshot"],
             "metadata": metadata,
             "output": [],
-            "reasoning": {"effort": run["reasoning_effort"]},
+            "reasoning": {
+                "effort": run["reasoning_effort"],
+                "summary": run["parameters"]["reasoning"]["summary"],
+            },
             "tools": tools,
             "usage": None,
         },
@@ -185,6 +188,30 @@ def trace_transcript(role: str, raw: str, run: dict, composed_sha256: str) -> st
         ])
         output.append(web_item)
         sequence_number += 2
+    reasoning_item = {
+        "id": "reasoning-1",
+        "type": "reasoning",
+        "summary": [{
+            "type": "summary_text",
+            "text": "Weighed the museum evidence against the citation rule.",
+        }],
+    }
+    events.extend([
+        {
+            "type": "response.output_item.added",
+            "sequence_number": sequence_number,
+            "output_index": len(output),
+            "item": {"id": "reasoning-1", "type": "reasoning", "status": "in_progress"},
+        },
+        {
+            "type": "response.output_item.done",
+            "sequence_number": sequence_number + 1,
+            "output_index": len(output),
+            "item": reasoning_item,
+        },
+    ])
+    output.append(reasoning_item)
+    sequence_number += 2
     message_index = len(output)
     message_item = {
         "id": "message-1",
@@ -228,7 +255,10 @@ def trace_transcript(role: str, raw: str, run: dict, composed_sha256: str) -> st
             "incomplete_details": None,
             "instructions": system_prompt,
             "output": output + [message_item],
-            "reasoning": {"effort": run["reasoning_effort"]},
+            "reasoning": {
+                "effort": run["reasoning_effort"],
+                "summary": run["parameters"]["reasoning"]["summary"],
+            },
             "tools": tools,
             "usage": {"input_tokens": 1, "output_tokens": 1},
         },
@@ -785,6 +815,7 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
         },
     })
     system_prompt = review_protocol.launcher_system_prompt_path("prompt_auditor").read_text()
+    claude_parameters = {"thinking": {"type": "enabled", "budget_tokens": 4000}}
     claude_envelope = json.dumps({
         "agent_profile": None,
         "credential_mode": "anthropic_api_key",
@@ -794,7 +825,7 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
             f"--model {claude_snapshot} --system-prompt {shlex.quote(system_prompt)} --tools ''"
         ),
         "model_snapshot": claude_snapshot,
-        "parameters": {"temperature": 0},
+        "parameters": claude_parameters,
         "schema_version": "hapi-authority-control-launcher-envelope/2",
         "system_prompt_sha256": review_protocol.sha256_text(system_prompt),
         "transcript_format": "claude_stream_json",
@@ -804,6 +835,7 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
         "model_id": "claude-test",
         "model_snapshot": claude_snapshot,
         "launcher_transport": "anthropic_cli_bare_stream_json",
+        "parameters": claude_parameters,
         "provider_snapshot_evidence": {
             "path": str(claude_evidence),
             "sha256": review_protocol.sha256_path(claude_evidence),
@@ -811,6 +843,47 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
         "launcher_envelope": claude_envelope,
         "launcher_envelope_sha256": review_protocol.sha256_text(claude_envelope),
     })
+    disabled_thinking_run = copy.deepcopy(claude_run)
+    disabled_thinking_run["parameters"] = {"thinking": {"type": "disabled"}}
+    disabled_thinking_run["launcher_envelope"] = json.dumps(
+        {**json.loads(claude_envelope), "parameters": disabled_thinking_run["parameters"]},
+        sort_keys=True, separators=(",", ":"),
+    )
+    disabled_thinking_run["launcher_envelope_sha256"] = review_protocol.sha256_text(
+        disabled_thinking_run["launcher_envelope"]
+    )
+    with pytest.raises(ValueError, match="must enable extended thinking"):
+        review_protocol.validate_model_run(disabled_thinking_run, "Claude run", "prompt_auditor")
+
+    zero_budget_run = copy.deepcopy(claude_run)
+    zero_budget_run["parameters"] = {"thinking": {"type": "enabled", "budget_tokens": 0}}
+    zero_budget_run["launcher_envelope"] = json.dumps(
+        {**json.loads(claude_envelope), "parameters": zero_budget_run["parameters"]},
+        sort_keys=True, separators=(",", ":"),
+    )
+    zero_budget_run["launcher_envelope_sha256"] = review_protocol.sha256_text(
+        zero_budget_run["launcher_envelope"]
+    )
+    with pytest.raises(ValueError, match="must enable extended thinking"):
+        review_protocol.validate_model_run(zero_budget_run, "Claude run", "prompt_auditor")
+
+    openai_no_summary_run = model_run("openai-no-summary")
+    openai_no_summary_run["parameters"] = {"temperature": 0}
+    openai_no_summary_run["launcher_envelope"] = json.dumps(
+        {**json.loads(openai_no_summary_run["launcher_envelope"]), "parameters": {"temperature": 0}},
+        sort_keys=True, separators=(",", ":"),
+    )
+    openai_no_summary_run["launcher_envelope_sha256"] = review_protocol.sha256_text(
+        openai_no_summary_run["launcher_envelope"]
+    )
+    with pytest.raises(ValueError, match="captured reasoning summary"):
+        review_protocol.validate_model_run(openai_no_summary_run, "OpenAI run", "stage_1_reviewer")
+
+    for transport in review_protocol.TRANSCRIPT_FORMAT_BY_TRANSPORT:
+        with pytest.raises(ValueError) as excinfo:
+            review_protocol.validate_reasoning_capture_parameters({}, transport, "parity check")
+        assert "no reasoning-capture contract" not in str(excinfo.value), transport
+
     with pytest.raises(ValueError, match="exact bare stream-json"):
         review_protocol.validate_model_run(claude_run, "Claude run", "prompt_auditor")
     valid_claude_envelope = json.loads(claude_envelope)
@@ -855,7 +928,14 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
                 "type": "message",
                 "role": "assistant",
                 "model": claude_snapshot,
-                "content": [{"type": "text", "text": claude_raw}],
+                "content": [
+                    {
+                        "type": "thinking",
+                        "thinking": "Weighing the museum evidence against the citation rule.",
+                        "signature": "sig-test",
+                    },
+                    {"type": "text", "text": claude_raw},
+                ],
                 "stop_reason": "end_turn",
             },
         },
@@ -877,6 +957,31 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
         "claude_stream_json", claude_transcript, claude_raw, claude_run,
         "prompt_auditor", claude_input_sha, "synthetic Claude contract trace",
     )
+    no_thinking_events = copy.deepcopy(claude_events)
+    no_thinking_events[2]["message"]["content"] = [
+        block for block in no_thinking_events[2]["message"]["content"]
+        if block["type"] != "thinking"
+    ]
+    no_thinking_transcript = "\n".join(
+        json.dumps(event, sort_keys=True) for event in no_thinking_events
+    ) + "\n"
+    with pytest.raises(ValueError, match="lacks captured extended-thinking content"):
+        review_protocol.validate_launcher_transcript(
+            "claude_stream_json", no_thinking_transcript, claude_raw, claude_run,
+            "prompt_auditor", claude_input_sha, "thinking-stripped Claude contract trace",
+        )
+    blank_thinking_events = copy.deepcopy(claude_events)
+    for block in blank_thinking_events[2]["message"]["content"]:
+        if block["type"] == "thinking":
+            block["thinking"] = ""
+    blank_thinking_transcript = "\n".join(
+        json.dumps(event, sort_keys=True) for event in blank_thinking_events
+    ) + "\n"
+    with pytest.raises(ValueError, match="lacks captured extended-thinking content"):
+        review_protocol.validate_launcher_transcript(
+            "claude_stream_json", blank_thinking_transcript, claude_raw, claude_run,
+            "prompt_auditor", claude_input_sha, "blank-thinking Claude contract trace",
+        )
     skeletal_claude_events = [claude_events[0], claude_events[1], claude_events[-1]]
     skeletal_claude_transcript = "\n".join(
         json.dumps(event, sort_keys=True) for event in skeletal_claude_events
@@ -993,6 +1098,40 @@ def test_traceable_review_protocol_rejects_prompt_leaks_and_uncited_ties(tmp_pat
     assert review_protocol.validate_review_package(
         review_a_path, queue_path, reviewer_prompt, reviewer_audit, auditor_prompt, "1"
     ) == review_a
+    no_reasoning_events = list(map(json.loads, review_a["launcher_transcript"].splitlines()))
+    for event in no_reasoning_events:
+        item = event.get("item")
+        if isinstance(item, dict) and item.get("id") == "reasoning-1":
+            item["summary"] = []
+    for item in no_reasoning_events[-1]["response"]["output"]:
+        if item.get("id") == "reasoning-1":
+            item["summary"] = []
+    no_reasoning_transcript = "\n".join(
+        json.dumps(event, sort_keys=True) for event in no_reasoning_events
+    ) + "\n"
+    with pytest.raises(ValueError, match="captured reasoning summary content"):
+        review_protocol.validate_launcher_transcript(
+            "responses_api_jsonl", no_reasoning_transcript, review_a["full_raw_response"],
+            review_a["run"], "stage_1_reviewer", review_a["composed_input_sha256"],
+            "reasoning-stripped transcript", require_web=True,
+        )
+    absent_reasoning_events = list(map(json.loads, review_a["launcher_transcript"].splitlines()))
+    for event in absent_reasoning_events:
+        item = event.get("item")
+        if isinstance(item, dict) and item.get("id") == "reasoning-1":
+            item["type"] = "not_reasoning_stub"
+    for item in absent_reasoning_events[-1]["response"]["output"]:
+        if item.get("id") == "reasoning-1":
+            item["type"] = "not_reasoning_stub"
+    absent_reasoning_transcript = "\n".join(
+        json.dumps(event, sort_keys=True) for event in absent_reasoning_events
+    ) + "\n"
+    with pytest.raises(ValueError, match="captured reasoning summary content"):
+        review_protocol.validate_launcher_transcript(
+            "responses_api_jsonl", absent_reasoning_transcript, review_a["full_raw_response"],
+            review_a["run"], "stage_1_reviewer", review_a["composed_input_sha256"],
+            "reasoning-absent transcript", require_web=True,
+        )
     fabricated = "\n".join(json.dumps(event) for event in (
         {
             "type": "rollout.started", "base_instructions": system_prompt,
@@ -1861,9 +2000,9 @@ def test_committed_report_and_review_digest_are_hash_and_count_bound() -> None:
     digest_sha = review_queue.sha256_path(digest_path)
     assert report_sha == "dd74f6b05d322efe2137c87b4ccd4c0f5b3ad91ccf8479fd45f67607ae2e39df"
     assert manifest_sha == "6c79cb360d2e9e315ef6de2ddab68c857dfe637ed06ed7b93e3e04059a174ed8"
-    assert digest_sha == "0a502ee27260aa8d595dc9e4363ba5609b1285807c8b0bbdcc1dbee47a0f3732"
+    assert digest_sha == "64e9c769dfaf1f59cd64385e7318d05385e96226787c76ee843b66cea7352195"
     assert review_queue.sha256_path(proof_path) == (
-        "95739341c6b559dc96335d014855b2594604670c6b77fe2fdd00a995738fbff6"
+        "2ae822ad56f33fb49dfc838a9158fbd005a0fa3d276ec5a6ed24df415ffe3422"
     )
 
     report = json.loads(report_path.read_text())
@@ -1879,7 +2018,7 @@ def test_committed_report_and_review_digest_are_hash_and_count_bound() -> None:
     assert review_queue.recursive_forbidden_keys(digest) == []
     assert digest["review"] == {
         "protocol_manifest_sha256": (
-                "70fd9e7d1bdbe7e033ca4b163088bc03223ebb0781339e16de7d42b0a0813305"
+                "2d8efd94c582088a4ee488262e0d3112b5ffcf86bfcd639a60a610bca471f46e"
         ),
         "quality_conclusion_status": "NOT_AVAILABLE",
         "runtime_readiness": "BLOCKED",
@@ -1908,6 +2047,9 @@ def test_committed_report_and_review_digest_are_hash_and_count_bound() -> None:
             "met__harvard": {"authority": 3, "literal": 7},
         },
     }
+    assert digest["input_hashes"]["review_population_builder_sha256"] == (
+        review_queue.sha256_path(CONTROL / "build_review_queue.py")
+    )
     protocol = digest["input_hashes"]["review_protocol"]
     assert protocol["protocol_version"] == "hapi-authority-control-traceable-review/2"
     assert protocol["validator"]["sha256"] == review_queue.sha256_path(
@@ -2016,6 +2158,7 @@ def test_committed_report_and_review_digest_are_hash_and_count_bound() -> None:
         digest["output_hashes"]["review_protocol_manifest_sha256"]
     )
     protocol_manifest = json.loads(protocol_manifest_path.read_text())
+    assert protocol_manifest["protocol_inputs"] == digest["input_hashes"]["review_protocol"]
     assert protocol_manifest == {
         **protocol_manifest,
         "review_status": "NOT_RUN",

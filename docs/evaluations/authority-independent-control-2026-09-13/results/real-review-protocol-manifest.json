@@ -70,7 +70,7 @@
     },
     "validator": {
       "path": "docs/evaluations/authority-independent-control-2026-09-13/scripts/review_protocol.py",
-      "sha256": "12a8a5c180a885f50945d3f1f50069ff089280acce2c13ce319052dbcf491b08"
+      "sha256": "68688be2a51797f49c19768327f61970a91749ae2cea36a31edfabd9ed070972"
     }
   },
   "quality_conclusion_status": "NOT_AVAILABLE",
